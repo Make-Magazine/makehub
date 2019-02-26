@@ -1,0 +1,33 @@
+{
+   "name": "StyleGuide",
+   "version": "1.0.0",
+   "author": "Maker Media",
+   "license": "UNLICENSED",
+   "private": true,
+   "repository": {
+      "type": "git",
+      "url": "git://github.com/Make-Magazine/makehub.git"
+   },
+   "scripts": {
+      "cachebust:update": "npm version patch",
+      "postcachebust:update": "npm run replace:version",
+      "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
+      "scss:universal:compile": "node-sass scss/universal.scss css/universal.min.css --output-style compressed --source-map true",
+      "js:universal:uglify": "uglifyjs js/*.js -o js/min/universal.min.js -c -m --source-map \"root='../../../', url='universal.min.js.map'\"",
+      "onchange:scss:fe": "onchange 'scss/**/*.scss' -- npm run scss:fe:compile",
+      "onchange:scss:universal": "onchange 'scss/**/*.scss' -- npm run scss:universal:compile",
+      "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
+      "onchange:js:universal": "onchange 'js/*.js' -- npm run js:universal:uglify",
+      "build": "npm-run-all js:**:uglify scss:**:compile",
+      "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
+      "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
+   },
+   "devDependencies": {
+      "node-sass": "^4.11.0",
+      "npm-run-all": "^4.1.5",
+      "onchange": "^5.2.0",
+      "replace-in-file": "^3.4.2",
+      "uglify-js": "^3.4.9"
+   },
+   "dependencies": {}
+}

@@ -49,7 +49,7 @@ wp-content/mysql.sql
 /wp-admin
 /wp-includes
 /wp-content/index.php
-/wp-content/themes/twentyten
+/wp-content/themes/twentieth
 /wp-content/themes/index.php
 /wp-content/plugins/index.php
 /wp-content/debug.log
@@ -83,12 +83,12 @@ Thumbs.db
 *.tar
 *.zip
 # ignore everything in the "wp-content" directory, except:
-# "mu-plugins" directory
 # "plugins" directory
 # "themes" directory
 wp-content/*
 !wp-content/plugins/
 !wp-content/themes/
+!wp-content/styleguide/
 # ignore these plugins
 wp-content/plugins/hello.php
 # ignore specific themes
