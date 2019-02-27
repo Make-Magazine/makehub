@@ -14,7 +14,7 @@
 require_once get_template_directory() . '/lib/init.php';
 
 // Defines the child theme (do not remove).
-define( 'CHILD_THEME_NAME', 'make-learn' );
+define( 'CHILD_THEME_NAME', 'Make - Learn' );
 define( 'CHILD_THEME_URL', 'https://makermedia.com' );
 
 // Sets up the Theme.
@@ -73,21 +73,19 @@ add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles' );
 function make_learn_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
+	
    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
 	wp_enqueue_style('font-awesome-css', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css', '', 'all' );
 	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
 	wp_enqueue_style( 'learn-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
-	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', $my_version, true);
-	
+	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
 	
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style'; 
    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
 	
-	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', $my_version, true );
-	
-	
+	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
 	wp_enqueue_style(
 		'make-learn-fonts',
@@ -117,6 +115,7 @@ function make_learn_enqueue_scripts_styles() {
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version);
 
 	wp_enqueue_script(
 		'make-learn',
