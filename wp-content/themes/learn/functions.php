@@ -75,7 +75,8 @@ function learn_enqueue_scripts_styles() {
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
 	wp_enqueue_style( 'learn-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array(), CHILD_THEME_VERSION );
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css');
-	wp_enqueue_style('style.css', get_stylesheet_directory_uri() .  '/style.css', array(), CHILD_THEME_VERSION );
+	// this is their precompiled style, we'll be replacing this with our own stuff soon
+	wp_enqueue_style('old-style.css', get_stylesheet_directory_uri() .  '/old-style.css', array(), CHILD_THEME_VERSION );
 
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );

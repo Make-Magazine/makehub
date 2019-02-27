@@ -1,4 +1,4 @@
-.site-container .title-area a {
+.blinky {
 	animation:blinkingText 1.2s infinite;
 	padding:30px;
 	border: dashed 1px #ccc;
@@ -9,6 +9,10 @@
     50%{    color: transparent; }
     99%{    color:transparent;  }
     100%{   color: #000;    }
+}
+
+html, body {
+	font-family: Roboto, Helvetica-Neue, sans-serif;
 }
 
 .btn-red, .btn-reversed {
