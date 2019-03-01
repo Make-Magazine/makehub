@@ -37,7 +37,7 @@ function make_learn_block_editor_styles() {
 	wp_enqueue_style(
 		'make-learn-gutenberg-fonts',
 		'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
-		array(),
+		array()
 	);
 
 }
