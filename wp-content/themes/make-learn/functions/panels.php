@@ -12,10 +12,10 @@ function dispLayout($row_layout) {
          case 'banner': // FULL WIDTH BANNER WITH OPTIONS FOR H1, H2, BUTTONS AND BG IMAGES
             $return = banner();            
             break;
-         case 'three_column_header_footer': // 3 COLUMN LAYOUT with HEADER and FOOTER
-            $return = get3columnsHeaderFooter();            
+         case 'three_column': // 3 COLUMN LAYOUT with HEADER and FOOTER
+            $return = get3columns();            
             break;
-			case 'three_column_header': // 3 COLUMN LAYOUT with ONLY HEADER
+			case 'three_column_header': // 3 COLUMN LAYOUT with HEADER only
             $return = get3columnsHeader();            
             break;
 			case 'two_column_list': // 2 COLUMN LAYOUT WITH A LIST IN EACH BOx
@@ -65,15 +65,17 @@ function banner() {
 /*********************************************************/
 /*   Function to return 3 column with header and footer  */
 /*********************************************************/
-function get3columnsHeaderFooter() {
+function get3columns() {
    $return = '';
 
-   $return .= '<section class="content-panel three-column-header-footer">
-                <div class="three-column-header text-center">
-					   <img src="' . get_sub_field('column_header_image')['url'] . '" alt="' . get_sub_field('column_header_image')['alt'] . '" />
-						<h2>' . get_sub_field('column_header_text') . '</h2>
+   $return .= '<section class="content-panel three-column">
+                <div class="three-column-header text-center">';
+	               if(get_sub_field('column_header_image')) {
+							$return .= '<img src="' . get_sub_field('column_header_image')['url'] . '" alt="' . get_sub_field('column_header_image')['alt'] . '" />';
+						}
+	$return .= 		'<h2>' . get_sub_field('column_header_text') . '</h2>
 					 </div>
-                <div class="container">
+                <div class="three-column-contents container">
 					   <div class="row">';
 	
    if (have_rows('column_contents')) {
@@ -81,11 +83,11 @@ function get3columnsHeaderFooter() {
       
       while (have_rows('column_contents')) {
          the_row();
-			$return .= '<div class="col-sm-4 col-xs-12">
-			              <a href="' . get_sub_field('column_link') . '" class="make-card">
+			$return .= '<div class="column col-sm-4 col-xs-12">
+			              <a href="' . get_sub_field('column_link') . '" class="make-panel">
 							     <div class="column-info">
 									  <div class="column-title">' . get_sub_field('column_title') . '</div>
-									  <div class="column-name">' . get_sub_field('column_teacher') . '</div>
+									  <div class="column-name">' . get_sub_field('column_name') . '</div>
 								  </div>
 								  <img src="' . get_sub_field('column_picture')['url'] . '" alt="' . get_sub_field('column_picture')['alt'] . '" />
 							  </a>
@@ -122,7 +124,7 @@ function get3columnsHeader() {
       
       while (have_rows('column_contents')) {
          the_row();
-			$return .= '<div class="col-sm-4 col-xs-12">
+			$return .= '<div class="column col-sm-4 col-xs-12">
 			              <a href="' . get_sub_field('column_link') . '" class="make-card">
 							     <img src="' . get_sub_field('column_picture')['url'] . '" alt="' . get_sub_field('column_picture')['alt'] . '" />
 								  <div class="column-info">
@@ -151,11 +153,13 @@ function get3columnsHeader() {
 function get2columnsList() {
    $return = '';
 
-   $return .= '<section class="content-panel 2-column-header">
-                <div class="three-column-header text-center">
-						<h2>' . get_sub_field('column_header_text') . '</h2>
-					 </div>
-                <div class="container">
+   $return .= '<section class="content-panel two-column">';
+	             if(get_sub_field('column_header_text')){
+                  $return .= '<div class="two-column-header text-center">
+						              <h2>' . get_sub_field('column_header_text') . '</h2>
+					               </div>';
+					 }
+   $return .=   '<div class="container-fluid">
 					   <div class="row">';
 	
    if (have_rows('column_contents')) {
@@ -163,7 +167,7 @@ function get2columnsList() {
       
       while (have_rows('column_contents')) {
          the_row();
-			$return .= '<div class="col-sm-6 col-xs-12" ';
+			$return .= '<div class="column col-sm-6 col-xs-12" ';
 				if(get_sub_field('column_background')) { 
 					$return .= 'style="background-image: url(' . get_sub_field('column_background')['url'] . ');"';
 				} 
@@ -173,9 +177,10 @@ function get2columnsList() {
 									if (have_rows('column_list')) {
 										$return .= '<ul class="column-list">';
 											// loop through the list data this goes on forever!!!!
-											/*while (have_rows('column_list')) {
+											while (have_rows('column_list')) {
+											   the_row();
 												$return .= '<li class="column-list-item">' . get_sub_field('column_list_item') . '</li>';
-											}*/
+											}
 										$return .= '</ul>';
 									}
 			$return .=     '</div>

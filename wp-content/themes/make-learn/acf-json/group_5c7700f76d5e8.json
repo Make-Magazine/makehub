@@ -192,8 +192,8 @@
                 },
                 "5c7701144e842": {
                     "key": "5c7701144e842",
-                    "name": "three_column_header_footer",
-                    "label": "Three Column with Header\/Footer",
+                    "name": "three_column",
+                    "label": "Three Column",
                     "display": "block",
                     "sub_fields": [
                         {
@@ -319,8 +319,8 @@
                                 },
                                 {
                                     "key": "field_5c7710a44e723",
-                                    "label": "Column Teacher",
-                                    "name": "column_teacher",
+                                    "label": "Column Text",
+                                    "name": "column_text",
                                     "type": "text",
                                     "instructions": "",
                                     "required": 0,
@@ -714,5 +714,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1551403247
+    "modified": 1551471076
 }

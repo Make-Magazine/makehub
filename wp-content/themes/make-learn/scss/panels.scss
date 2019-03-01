@@ -4,6 +4,9 @@
 	color: #fff;
 	.content-panel {
 		margin-bottom: 45px;
+		&:last-of-type {
+			margin-bottom: 0px;
+		}
 	}
 	h1, h2, h3, h4 { 
 		font-family: "Roboto Light";
@@ -13,45 +16,11 @@
 	.btn { 
 		font-family: "Roboto Light";
 		min-width: 320px;
-		margin: 25px 0;
+		margin-top: 25px;
 	}
 }
 
-.one-column-banner {
-	background-size: cover;
-	background-position: 50%;
-	min-height: 187px;
-}
-
-.three-column-header-footer{
-	.make-card {
-		margin: 25px 20px;
-	}
-	@media screen and (max-width: 996px) {
-		.container { width: 100%; }
-		.make-card { margin: 25px 0px; }
-	}
-	@media screen and (max-width: 767px) {
-		.make-card {
-			height: 100%;
-			margin: 0px;
-			padding: 15px 0px;
-			width: 100%;
-			.column-info {
-				float: right;
-				text-align: left;
-				width: 60%;
-				padding: 0px 25px;
-			}
-			img { 
-				float: right;
-				width: 35%;
-			}
-		}
-	}
-}
-
-.make-card  {
+.make-card, .make-panel  {
 	border: solid 1px #979797;
 	display: block;
 	color: #fff;
@@ -65,7 +34,7 @@
 	.column-title {
 		margin-top: 25px;
 	}
-	.column-name, .column-teacher {
+	.column-text {
 		font-family: "Roboto Light";
 		margin-bottom: 15px;
 	}
@@ -73,3 +42,71 @@
 		color: #fff;
 	}
 }
+
+.one-column-banner {
+	background-size: cover;
+	background-position: 50%;
+	min-height: 187px;
+}
+
+.three-column {
+	.make-panel {
+		margin: 25px 20px;
+		.column-info { 
+			min-height: 100px; 
+			padding: 0px 10px;
+		}
+		@media screen and (max-width: 996px) {
+			margin: 25px 0px;
+		}
+		@media screen and (max-width: 767px) {
+			height: 100%;
+			margin: 0px;
+			padding: 15px 0px;
+			width: 100%;
+			border: 0px;
+			border-bottom: solid 1px #979797;
+			.column-info {
+				float: right;
+				text-align: left;
+				width: 60%;
+				padding: 0px 25px;
+			}
+			img { 
+				float: right;
+				width: 35%;
+			}
+		}
+	}
+	@media screen and (max-width: 767px) {
+		.three-column-contents .row > div:first-child {
+			.make-panel {
+				border-top: solid 1px #979797;
+			}
+		}
+	}
+}
+
+.two-column {
+	.column {
+		background-size: cover;
+		.column-info { 
+			padding: 45px 0px 25px; 
+			.column-title {
+				font-size: 48px;
+				line-height: 46px;
+				margin-bottom: 45px;
+			}
+			.column-list {
+				text-align: left;
+				margin: 0 15% 30px;
+				li {
+					list-style: disc;
+					font-family: "Roboto Light";
+					font-size: 24px;
+				}
+			}
+		}
+	}
+}
+
