@@ -17,12 +17,10 @@ add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_gutenberg_frontend_styles'
 function make_learn_enqueue_gutenberg_frontend_styles() {
 
 	$child_theme_slug = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'make-learn';
-	$frontEndCSS = get_stylesheet_directory_uri() . '/lib/gutenberg/front-end.css';
-	error_log($frontEndCSS);
 
 	wp_enqueue_style(
 		'make-learn-gutenberg',
-		$frontEndCSS,
+		get_stylesheet_directory_uri() . '/lib/gutenberg/front-end.css',
 		array( $child_theme_slug )
 	);
 
@@ -39,7 +37,7 @@ function make_learn_block_editor_styles() {
 	wp_enqueue_style(
 		'make-learn-gutenberg-fonts',
 		'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
-		array()
+		array(),
 	);
 
 }

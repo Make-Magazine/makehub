@@ -19,7 +19,7 @@ function learn_enqueue_gutenberg_frontend_styles() {
 	wp_enqueue_style(
 		'learn-gutenberg',
 		get_stylesheet_directory_uri() . '/lib/gutenberg/front-end.css',
-		array( 'learn' ),
+		array( 'learn' )
 	);
 
 }
@@ -35,7 +35,7 @@ function learn_block_editor_styles() {
 	wp_enqueue_style(
 		'learn-gutenberg-fonts',
 		'https://fonts.googleapis.com/css?family=Muli:200,300,300i,400,400i,600,600i|Open+Sans+Condensed:300',
-		array(),
+		array()
 	);
 
 }
