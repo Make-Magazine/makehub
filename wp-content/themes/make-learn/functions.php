@@ -53,6 +53,11 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.p
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
 
+// Include all function files in the makerfaire/functions directory:
+foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
+   include_once $file;
+}
+
 add_action( 'after_setup_theme', 'genesis_child_gutenberg_support' );
 /**
  * Adds Gutenberg opt-in features and styling.
@@ -79,12 +84,15 @@ function make_learn_enqueue_scripts_styles() {
 	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
 	wp_enqueue_style( 'learn-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
-	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
 	
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style'; 
    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
 	
+	### UNIVERSAL STYLES ###
+	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
+	
+	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
 	wp_enqueue_style(

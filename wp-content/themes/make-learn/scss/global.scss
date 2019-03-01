@@ -55,12 +55,12 @@ html {
 }
 
 .row {
- display: flex;
- flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 .row > [class*=‘col-’] {
- display: flex;
- flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 //Youtube Fancybox modal shortcode [youtube-modal]
@@ -119,26 +119,6 @@ a.red-borders {
   color: #f40b0b;
 }
 
-a {
-  color: #1989C7;
-  font-weight: 400;
-  transition: color 0.1s ease;
-  &:visited {
-    color: #1989C7;
-  }
-  &:active,
-  &:hover,
-  &:focus {
-    color: #37AFED;
-    text-decoration: underline;
-    transition: color 0.1s ease;
-    outline: 0;
-  }
-  &.disabled {
-    color: #9b9b9b;
-    font-weight: 200;
-  }
-}
 
 // Primary Call to Action button
 .btn-cyan {

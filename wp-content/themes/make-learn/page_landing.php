@@ -65,5 +65,37 @@ remove_action( 'genesis_footer', 'genesis_footer_markup_open', 5 );
 remove_action( 'genesis_footer', 'genesis_do_footer' );
 remove_action( 'genesis_footer', 'genesis_footer_markup_close', 15 );
 
-// Runs the Genesis loop.
+// Runs our custom loop instead of the Genesis Loop
+remove_action( 'genesis_loop', 'genesis_do_loop' );
+add_action( 'genesis_loop', 'learn_panels_loop' );
+
+function learn_panels_loop() { ?>
+<div class="container-fluid content-panels">
+   <?php if(have_posts()) : while(have_posts()) : the_post(); ?>
+	
+	<?php 
+	/* <div class="container"> If we wanted to display any straight content, which I see no need for at this time
+      <?php the_content(); ?>
+   </div> */ 
+	?>
+	
+   <?php
+    // check if the flexible content field has rows of data
+    if( have_rows('content_panels')) {
+      // loop through the rows of data
+      while ( have_rows('content_panels') ) {
+        the_row();
+        $row_layout = get_row_layout();
+        echo dispLayout($row_layout);
+      }
+    }
+   ?>
+	
+	<?php endwhile; ?>
+   <?php endif; ?>
+	
+</div>
+<?php }
 genesis();
+
+

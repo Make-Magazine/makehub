@@ -11,9 +11,17 @@
     100%{   color: #000;    }
 }
 
-html, body {
-	font-family: Roboto, Helvetica-Neue, sans-serif;
+// a little normalization of our own
+body > div {
+    font-size: 1rem; // undo genesis font sizing
 }
+.main-content.container, .main-content .container, .main-content.container-fluid, .main-content .container-fluid { 
+	padding: 0px; // no awkward paddings on our bootstrap containers
+}
+a { // don't let genesis molest our links
+	text-decoration: none;
+}
+
 
 .btn-red, .btn-reversed {
 	font-weight: 300;
@@ -77,10 +85,12 @@ html, body {
 	font-size: 16px;
 	font-weight: 300;      
 	height: 50px;
+	padding: 0px 15px;
+	&:visited, &:active { color: #fff; }
 	&:hover {
 		background: #fff;
       color: #005e9a;
-      border-color: #005e9a;
+      border: solid 1px #005e9a;
 	}
 }
 .universal-btn-red {

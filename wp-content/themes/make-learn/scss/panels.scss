@@ -1,0 +1,75 @@
+.content-panels {
+	text-align: center;
+	background: #333;
+	color: #fff;
+	.content-panel {
+		margin-bottom: 45px;
+	}
+	h1, h2, h3, h4 { 
+		font-family: "Roboto Light";
+	}
+	h1{ font-size: 60px; }
+	h2 { font-size: 26px; padding-top: 20px; }
+	.btn { 
+		font-family: "Roboto Light";
+		min-width: 320px;
+		margin: 25px 0;
+	}
+}
+
+.one-column-banner {
+	background-size: cover;
+	background-position: 50%;
+	min-height: 187px;
+}
+
+.three-column-header-footer{
+	.make-card {
+		margin: 25px 20px;
+	}
+	@media screen and (max-width: 996px) {
+		.container { width: 100%; }
+		.make-card { margin: 25px 0px; }
+	}
+	@media screen and (max-width: 767px) {
+		.make-card {
+			height: 100%;
+			margin: 0px;
+			padding: 15px 0px;
+			width: 100%;
+			.column-info {
+				float: right;
+				text-align: left;
+				width: 60%;
+				padding: 0px 25px;
+			}
+			img { 
+				float: right;
+				width: 35%;
+			}
+		}
+	}
+}
+
+.make-card  {
+	border: solid 1px #979797;
+	display: block;
+	color: #fff;
+	font-size: 20px;
+	text-decoration: none;
+	margin: 25px 0;
+	height: 90%;
+	img {
+		margin-bottom: 15px;
+	}
+	.column-title {
+		margin-top: 25px;
+	}
+	.column-name, .column-teacher {
+		font-family: "Roboto Light";
+		margin-bottom: 15px;
+	}
+	&:hover, &:active, &:visited {
+		color: #fff;
+	}
+}
