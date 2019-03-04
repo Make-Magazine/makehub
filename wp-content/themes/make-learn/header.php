@@ -51,6 +51,8 @@ do_action( 'genesis_meta' );
  var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
 </script>
 
+<?php // keep this commented out until domains and analytics are set for the subdomain
+/*
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX"></script>
 <script>
@@ -77,6 +79,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-XXXXXXXXX');</script>
 <!-- End Google Tag Manager -->
+
+*/
+?>
 	
 <?php
 
