@@ -87,7 +87,7 @@ function get3columns() {
 			              <a href="' . get_sub_field('column_link') . '" class="make-panel">
 							     <div class="column-info">
 									  <div class="column-title">' . get_sub_field('column_title') . '</div>
-									  <div class="column-name">' . get_sub_field('column_name') . '</div>
+									  <div class="column-text">' . get_sub_field('column_text') . '</div>
 								  </div>
 								  <img src="' . get_sub_field('column_picture')['url'] . '" alt="' . get_sub_field('column_picture')['alt'] . '" />
 							  </a>
