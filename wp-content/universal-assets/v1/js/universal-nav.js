@@ -121,6 +121,8 @@ function sumomeActive() {
 				break;
 			default: 
 			 	break;
+				// as sites get more universal on the hub, the above switch case will become necessary for less things
+				nextItemUnderNav = jQuery(".main-content");
 		}
 
 		jQuery('#hamburger-click-event, .nav-flyout-underlay').click(function() {
