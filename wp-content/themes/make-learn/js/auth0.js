@@ -28,7 +28,7 @@ window.addEventListener('load', function() {
 	//default profile view to hidden
 	loginBtn.style.display    = 'none';
 	profileView.style.display = 'none';
-
+  /*
 	var userProfile;
 	
 	var progressBar = jQuery(".progress .progress-bar");
@@ -166,7 +166,7 @@ window.addEventListener('load', function() {
       }
       displayButtons();
     }
-  );
+  );*/
 	function errorMsg(message) {
 		var data = {
 			'action'       : 'make_error_log',
