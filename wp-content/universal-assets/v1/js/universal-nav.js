@@ -96,27 +96,26 @@ function sumomeActive() {
          case "dev.makerspace.com":
 				nextItemUnderNav = jQuery(".main-content");
 				break;
+			case "learn.make.co":
+			case "learn.makehub.local":
+			case "learn.makehub.wpengine.com":
+			case "learn.makehub.staging.wpengine.com":
+				universalNavActive("learn");
+				toggleMobileSection("learn");
+				nextItemUnderNav = jQuery(".main-content");
+				break;
 			default:// the default is pretty much makermedia right now
 			 	nextItemUnderNav = jQuery("#page-content");
 		 		break;
 		}
 		switch(shareSection) {
-			case "maker-share/learning":
-			case "makershare/learning":
-			case "makeshare.wpengine.com/learning":
-			case "makershare.staging.wpengine.com/learning":
-			case "makershare.com/learning":
-				universalNavActive("share");
-				toggleMobileSection("share");
-				nextItemUnderNav = jQuery(".site__content");
-				break;
 			case "maker-share/":
 			case "makershare/":
 			case "makeshare.wpengine.com/":
 			case "makershare.staging.wpengine.com/":
 			case "makershare.com/":
-				universalNavActive("share-p");
-				toggleMobileSection("share");
+				universalNavActive("community");
+				toggleMobileSection("community");
 				nextItemUnderNav = jQuery(".main-container");
 				break;
 			default: 
