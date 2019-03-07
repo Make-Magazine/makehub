@@ -86,6 +86,7 @@ function learn_panels_loop() { ?>
       while ( have_rows('content_panels') ) {
         the_row();
         $row_layout = get_row_layout();
+		  //error_log($row_layout);
         echo dispLayout($row_layout);
       }
     }

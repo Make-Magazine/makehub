@@ -21,6 +21,9 @@ function dispLayout($row_layout) {
 			case 'two_column_list': // 2 COLUMN LAYOUT WITH A LIST IN EACH BOx
             $return = get2columnsList();            
             break;
+			case 'two_column_small': // 2 COLUMN LAYOUT WITH SMALLER CARDS
+				$return = get2columnsSmall();
+				break;
       }
    }
    return $return;
@@ -164,7 +167,6 @@ function get2columnsList() {
 	
    if (have_rows('column_contents')) {
       // loop through the rows of data
-      
       while (have_rows('column_contents')) {
          the_row();
 			$return .= '<div class="column col-sm-6 col-xs-12" ';
@@ -176,7 +178,6 @@ function get2columnsList() {
 								   <div class="column-title">' . get_sub_field('column_title') . '</div>';
 									if (have_rows('column_list')) {
 										$return .= '<ul class="column-list">';
-											// loop through the list data this goes on forever!!!!
 											while (have_rows('column_list')) {
 											   the_row();
 												$return .= '<li class="column-list-item">' . get_sub_field('column_list_item') . '</li>';
@@ -186,15 +187,47 @@ function get2columnsList() {
 			$return .=     '</div>
 							</div>	  
 			';
-		}
-              
+		}    
    }
-
    $return .=     '</div>
 	             </div>';
+	
 	if(get_sub_field('column_footer_text')) {
 		$return .= '<a class="btn universal-btn-red" href="' . get_sub_field('column_footer_link') . '">' . get_sub_field('column_footer_text') . '</a>';
 	}
+	
 	$return .= '</section>'; 
+   return $return;
+}
+
+/*********************************************************/
+/*   Function to return 2 column with smaller cards      */
+/*********************************************************/
+function get2columnsSmall() {
+	
+	error_log("something happens");
+   $return = '';
+
+   $return .= '<section class="content-panel two-column">
+	             <div class="container">
+					   <div class="row">';
+	
+   if (have_rows('column_contents')) {
+      // loop through the rows of data
+      while (have_rows('column_contents')) {
+         the_row();
+			$return .= '<div class="column col-md-6 col-sm-12">
+							   <div class="small-card column-info">
+								   <img src="' . get_sub_field('column_image')['url'] . ' "/>
+								   <div class="column-text">' . get_sub_field('column_text') . '</div>
+									<a class="btn universal-btn" href="' . get_sub_field('column_button_link') . '">' . get_sub_field('column_button_text') . '</a>
+								</div>
+							</div>	  
+			';
+		}    
+   }
+   $return .=     '</div>
+	             </div>
+	           </section>'; 
    return $return;
 }
