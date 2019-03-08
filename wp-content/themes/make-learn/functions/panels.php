@@ -38,7 +38,9 @@ function banner() {
    $return .= '<section class="content-panel one-column-banner" ';
 						if(get_sub_field('banner_background')) { 
 							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');"';
-						} 
+						} else {
+							$return .= 'style="min-height: 140px;margin-bottom: -30px;"';
+						}
 	$return .=  '">
                 <div class="container-fluid">
 					   <div class="row">

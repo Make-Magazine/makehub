@@ -9,7 +9,7 @@
 		font-family: "Roboto Light";
 	}
 	h1{ font-size: 60px; }
-	h2 { font-size: 26px; padding-top: 20px; }
+	h2 { font-size: 26px; }
 	.btn { 
 		font-family: "Roboto Light";
 		min-width: 320px;
@@ -52,6 +52,11 @@
 }
 
 .three-column {
+	.three-column-header {
+		img {
+			 padding-bottom: 20px;
+		}
+	}
 	.make-panel {
 		margin: 25px 20px;
 		.column-info { 
