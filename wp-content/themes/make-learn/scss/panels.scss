@@ -40,6 +40,9 @@
 	&:hover, &:active, &:visited {
 		color: #fff;
 	}
+	&:hover {
+		border: solid 2px #00AEEF;
+	}
 }
 
 .one-column-banner {
