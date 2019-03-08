@@ -745,7 +745,7 @@
                                     "label": "Column Image",
                                     "name": "column_image",
                                     "type": "image",
-                                    "instructions": "",
+                                    "instructions": "Small image at the top of the card",
                                     "required": 0,
                                     "conditional_logic": 0,
                                     "wrapper": {
@@ -847,5 +847,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1551996627
+    "modified": 1552068376
 }
