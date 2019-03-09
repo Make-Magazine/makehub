@@ -98,6 +98,22 @@
 	}
 }
 
+.safari-mac .content-panels {
+	@media (min-width: 982px) {
+		.col-md-6 {
+			width: 49.5%;
+		}
+	}
+	@media (min-width: 768px) {
+	  .col-sm-4 {
+		  width: 33%;
+		}
+		.col-sm-6 {
+			width: 49.5%;
+		}
+	}
+}
+
 .two-column {
 	.container-fluid{ 
 		margin-bottom: -45px; // probably remove this as more panels come online
@@ -168,4 +184,6 @@
 		}
 	}
 }
+
+
 
