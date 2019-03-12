@@ -15,14 +15,17 @@ function dispLayout($row_layout) {
          case 'three_column': // 3 COLUMN LAYOUT with HEADER and FOOTER
             $return = get3columns();            
             break;
-			case 'three_column_header': // 3 COLUMN LAYOUT with HEADER only
-            $return = get3columnsHeader();            
+			case 'three_column_cards': // 3 COLUMN LAYOUT with HEADER only
+            $return = get3columnsCards();            
             break;
 			case 'two_column_list': // 2 COLUMN LAYOUT WITH A LIST IN EACH BOx
             $return = get2columnsList();            
             break;
 			case 'two_column_small': // 2 COLUMN LAYOUT WITH SMALLER CARDS
 				$return = get2columnsSmall();
+				break;
+			case 'four_column': // 4 COLUMN LAYOUT WITH OPTIONS INSIDE
+				$return = get4columns();
 				break;
       }
    }
@@ -35,9 +38,15 @@ function dispLayout($row_layout) {
 function banner() {
    $return = '';
 
-   $return .= '<section class="content-panel one-column-banner" ';
+   $return .= '<section class="content-panel one-column-banner ' . get_sub_field('custom_class') . '" ';
+	               // height of the banner is variable based on contents and bg image
 						if(get_sub_field('banner_background')) { 
-							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');"';
+							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');';
+							if(get_sub_field('banner_button_text')) {
+								$return .= 'min-height: 287px;"';
+							}else{
+								$return .= '"';
+							}
 						} else {
 							$return .= 'style="min-height: 140px;margin-bottom: -30px;"';
 						}
@@ -73,7 +82,7 @@ function banner() {
 function get3columns() {
    $return = '';
 
-   $return .= '<section class="content-panel three-column">
+   $return .= '<section class="content-panel three-column ' . get_sub_field('custom_class') . '">
                 <div class="three-column-header text-center">';
 	               if(get_sub_field('column_header_image')) {
 							$return .= '<img src="' . get_sub_field('column_header_image')['url'] . '" alt="' . get_sub_field('column_header_image')['alt'] . '" />';
@@ -111,17 +120,17 @@ function get3columns() {
    return $return;
 }
 
-/*********************************************************/
-/*   Function to return 3 column with header only        */
-/*********************************************************/
-function get3columnsHeader() {
+/********************************************************************/
+/*   Function to return 3 column with makershare style cards        */
+/********************************************************************/
+function get3columnsCards() {
    $return = '';
 
-   $return .= '<section class="content-panel three-column-header">
-                <div class="three-column-header text-center">
-						<h2>' . get_sub_field('column_header_text') . '</h2>
-					 </div>
+   $return .= '<section class="content-panel three-column-cards ' . get_sub_field('custom_class') . '">
                 <div class="container">
+						 <div class="three-column-header text-center">
+							<h2>' . get_sub_field('column_header_text') . '</h2>
+						 </div>
 					   <div class="row">';
 	
    if (have_rows('column_contents')) {
@@ -131,7 +140,9 @@ function get3columnsHeader() {
          the_row();
 			$return .= '<div class="column col-sm-4 col-xs-12">
 			              <a href="' . get_sub_field('column_link') . '" class="make-card">
-							     <img src="' . get_sub_field('column_picture')['url'] . '" alt="' . get_sub_field('column_picture')['alt'] . '" />
+							  	  <div class="image-crop">
+							       <img src="' . get_sub_field('column_picture')['url'] . '" alt="' . get_sub_field('column_picture')['alt'] . '" />
+								  </div>
 								  <div class="column-info">
 									  <div class="column-title">' . get_sub_field('column_title') . '</div>
 									  <div class="column-name">' . get_sub_field('column_teacher') . '</div>
@@ -158,7 +169,7 @@ function get3columnsHeader() {
 function get2columnsList() {
    $return = '';
 
-   $return .= '<section class="content-panel two-column">';
+   $return .= '<section class="content-panel two-column ' . get_sub_field('custom_class') . '">';
 	             if(get_sub_field('column_header_text')){
                   $return .= '<div class="two-column-header text-center">
 						              <h2>' . get_sub_field('column_header_text') . '</h2>
@@ -207,10 +218,9 @@ function get2columnsList() {
 /*********************************************************/
 function get2columnsSmall() {
 	
-	error_log("something happens");
    $return = '';
 
-   $return .= '<section class="content-panel two-column">
+   $return .= '<section class="content-panel two-column ' . get_sub_field('custom_class') . '">
 	             <div class="container">
 					   <div class="row">';
 	

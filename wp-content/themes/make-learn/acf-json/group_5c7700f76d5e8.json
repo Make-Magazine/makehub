@@ -47,6 +47,25 @@
                             "save_other_choice": 0
                         },
                         {
+                            "key": "field_5c88060876dff",
+                            "label": "Custom Class",
+                            "name": "custom_class",
+                            "type": "text",
+                            "instructions": "Specify a custom class for the banner (optional)",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c7843a9d0371",
                             "label": "Banner H1",
                             "name": "banner_h1",
@@ -219,6 +238,25 @@
                             "layout": "vertical",
                             "return_format": "value",
                             "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5c88063076e00",
+                            "label": "Custom Class",
+                            "name": "custom_class",
+                            "type": "text",
+                            "instructions": "Specify a custom class to the panel (optional)",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
                         },
                         {
                             "key": "field_5c7710174e71e",
@@ -403,8 +441,8 @@
                 },
                 "layout_5c771da8b071c": {
                     "key": "layout_5c771da8b071c",
-                    "name": "three_column_header",
-                    "label": "Three Column with Header",
+                    "name": "three_column_cards",
+                    "label": "Three Column Cards",
                     "display": "block",
                     "sub_fields": [
                         {
@@ -430,6 +468,25 @@
                             "layout": "vertical",
                             "return_format": "value",
                             "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5c8805a128cb3",
+                            "label": "Custom Class",
+                            "name": "custom_class",
+                            "type": "text",
+                            "instructions": "Specify a custom class to the panel (optional)",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
                         },
                         {
                             "key": "field_5c771dc4b071d",
@@ -584,6 +641,25 @@
                             "save_other_choice": 0
                         },
                         {
+                            "key": "field_5c88066aa0e95",
+                            "label": "Custom Class",
+                            "name": "custom_class",
+                            "type": "text",
+                            "instructions": "Specify a custom class to the panel (optional)",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c788702dd606",
                             "label": "Column Contents",
                             "name": "column_contents",
@@ -722,6 +798,25 @@
                             "save_other_choice": 0
                         },
                         {
+                            "key": "field_5c88067ba0e97",
+                            "label": "Custom Class",
+                            "name": "custom_class",
+                            "type": "text",
+                            "instructions": "Specify a custom class to the panel (optional)",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c817b20cd8f3",
                             "label": "Column Contents",
                             "name": "column_contents",
@@ -847,5 +942,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1552068376
+    "modified": 1552418472
 }
