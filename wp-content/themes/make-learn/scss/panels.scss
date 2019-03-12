@@ -30,7 +30,7 @@
 	.image-crop {
 		max-height: 225px;
 		overflow: hidden;
-		width: 100%;
+		img { width: 100%; }
 	}
 	.column-info {
 		padding: 0 10px;
