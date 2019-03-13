@@ -27,6 +27,5 @@ jQuery(document).ready(function(){
 				jQuery(this).children(".column-info").children(".column-name").text(upcoming[i].host);
 			});
 		});
-
 	}
 });

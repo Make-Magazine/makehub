@@ -264,7 +264,7 @@ function get4columns() {
 			$return .= '<div class="column col-md-3 col-sm-12">';
 			             if(get_sub_field('type') == "Card") {
 			$return .=     '<a class="polaroid-card" href="' . get_sub_field('column_link') . '">
-								   <img src="' . get_sub_field('column_image')['url'] . '" />
+								   <div class="image-wrap" style="background:url(' . get_sub_field('column_image')['url'] . ') no-repeat;" /></div>
                            <div class="column-title">' . get_sub_field('column_title') . '</div>
 								 </a>';
 							 }else if(get_sub_field('type') == "Button") {
