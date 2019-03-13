@@ -210,8 +210,8 @@
 		.image-wrap {
 			 width: 100%;
 			 height: 250px;
-			 background-size: contain !important;
-			 background-position: center !important;
+			 background-size: cover !important;
+			 background-position: top !important;
 		}
 		@media screen and (max-width:480px) {
 			min-height: 150px;
@@ -238,6 +238,10 @@
 			.column-title {
 				background: transparent;
 				text-align: center;
+			}
+			.image-wrap {
+				background-size: contain !important;
+				background-position: center !important;
 			}
 		}
 		.column-contents {
