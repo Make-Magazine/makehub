@@ -24,7 +24,7 @@ function dispLayout($row_layout) {
 			case 'two_column_small': // 2 COLUMN LAYOUT WITH SMALLER CARDS
 				$return = get2columnsSmall();
 				break;
-			case 'four_column': // 4 COLUMN LAYOUT WITH OPTIONS INSIDE
+			case 'four_columns_flexible': // 4 COLUMN LAYOUT WITH OPTIONS INSIDE
 				$return = get4columns();
 				break;
       }
@@ -236,6 +236,47 @@ function get2columnsSmall() {
 								</div>
 							</div>	  
 			';
+		}    
+   }
+   $return .=     '</div>
+	             </div>
+	           </section>'; 
+   return $return;
+}
+
+/*********************************************************/
+/*   Function to return 4 column with optional cards     */
+/*********************************************************/
+function get4columns() {
+	
+   $return = '';
+
+   $return .= '<section class="content-panel four-column ' . get_sub_field('custom_class') . '">
+	             <div class="container-fluid">
+					   <div class="row">';
+	
+   if (have_rows('column_contents')) {
+      // loop through the rows of data
+		$rowCount = 0;
+      while (have_rows('column_contents')) {
+         the_row();
+			$rowCount += 1;
+			$return .= '<div class="column col-md-3 col-sm-12">';
+			             if(get_sub_field('type') == "Card") {
+			$return .=     '<a class="polaroid-card" href="' . get_sub_field('column_link') . '">
+								   <img src="' . get_sub_field('column_image')['url'] . '" />
+                           <div class="column-title">' . get_sub_field('column_title') . '</div>
+								 </a>';
+							 }else if(get_sub_field('type') == "Button") {
+			$return .=     '<div class="column-contents">
+			                  <div class="column-info">
+								     <div class="column-title">' . get_sub_field('column_title') . '</div>
+									  <div class="column-text">' . get_sub_field('column_text') . '</div>
+									</div>
+									<a class="btn universal-btn-red" href="' . get_sub_field('column_link') . '">' . get_sub_field('column_button_text') . '</a>
+								 </div>';					 
+							 }
+			$return .= '</div>';
 		}    
    }
    $return .=     '</div>
