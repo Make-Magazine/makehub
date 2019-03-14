@@ -1216,7 +1216,7 @@
                 },
                 "layout_5c8a81716a154": {
                     "key": "layout_5c8a81716a154",
-                    "name": "2_column_flexible",
+                    "name": "two_column_flexible",
                     "label": "2 Column Flexible",
                     "display": "block",
                     "sub_fields": [
@@ -1403,5 +1403,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1552581613
+    "modified": 1552588381
 }

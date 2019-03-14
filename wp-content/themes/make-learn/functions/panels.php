@@ -4,7 +4,7 @@
 /* **************************************************** */
 
 function dispLayout($row_layout) {
-	//error_log($row_layout);
+	error_log($row_layout);
    $return = '';
    $activeinactive = get_sub_field('activeinactive');
    if ($activeinactive == 'Active') {
@@ -23,6 +23,9 @@ function dispLayout($row_layout) {
             break;
 			case 'two_column_small': // 2 COLUMN LAYOUT WITH SMALLER CARDS
 				$return = get2columnsSmall();
+				break;
+		   case 'two_column_flexible': // 2 COLUMN LAYOUT WITH OPTIONAL FORMS
+				$return = get2columnsFlexible();
 				break;
 			case 'four_columns_flexible': // 4 COLUMN LAYOUT WITH OPTIONS INSIDE
 				$return = get4columns();
@@ -234,6 +237,52 @@ function get2columnsSmall() {
 								   <div class="column-text">' . get_sub_field('column_text') . '</div>
 									<a class="btn universal-btn" href="' . get_sub_field('column_button_link') . '">' . get_sub_field('column_button_text') . '</a>
 								</div>
+							</div>	  
+			';
+		}    
+   }
+   $return .=     '</div>
+	             </div>
+	           </section>'; 
+   return $return;
+}
+
+/*********************************************************/
+/*   Function to return 2 column with optional forms     */
+/*********************************************************/
+function get2columnsFlexible() {
+	
+   $return = '';
+
+   $return .= '<section class="content-panel two-column-flexible ' . get_sub_field('custom_class') . '">
+	             <div class="container">
+					   <div class="row">';
+	
+   if (have_rows('column_contents')) {
+      // loop through the rows of data
+      while (have_rows('column_contents')) {
+         the_row();
+			$return .= '<div class="column col-md-6 col-sm-12 col-xs-12">
+							   <div class="column-box column-info">
+								   <div class="column-header">' . get_sub_field('column_header') . '</div>
+								   <div class="column-text">' . get_sub_field('column_text') . '</div>';
+		   // might later want to add additional logic for different kinds of email lists than whatcounts
+							   if(get_sub_field('column_form_action')) {
+			$return .= 		  '<form class="form-inline sub-form" id="workshop-form" name="workshop-form" action="https://secure.whatcounts.com/bin/listctrl" method="post" target="_blank">
+										<input type="hidden" class="slid" id="list_' . get_sub_field('column_form_action') . '_yes" name="slid_1" value="' . get_sub_field('column_form_action') . '">
+										<input name="cmd" value="subscribe" type="hidden">
+										<input name="multiadd" value="1" type="hidden">
+			                     <input id="workshop-email" class="form-control nl-panel-input" name="email" placeholder="email address" required="" type="email">
+                              <div class="submit-message hidden">Please enter a valid email</div>
+										<a class="btn universal-btn" name="workshop-button" id="workshop-button">' . get_sub_field('column_button_text') . '</a>
+				               </form>';
+								} else {
+			$return .= 		  '<a class="btn universal-btn" href="' . get_sub_field('column_button_link') . '">' . 
+									  get_sub_field('column_button_text') . 
+								  '</a>';				
+								}
+			
+			$return .= 		'</div>
 							</div>	  
 			';
 		}    

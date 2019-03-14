@@ -28,4 +28,21 @@ jQuery(document).ready(function(){
 			});
 		});
 	}
+	jQuery('.fancybox-thx').trigger('click');
+	
+	// the workshop form isn't very dynamic right meow
+	jQuery( "#workshop-button" ).on('click',function(event) {
+		if(isValidEmailAddress(jQuery("#workshop-email").val())) {
+			jQuery("#workshop-form .submit-message").text("Thanks for signing up!");
+			jQuery("#workshop-form .submit-message").removeClass("hidden");
+			jQuery.post("https://secure.whatcounts.com/bin/listctrl", jQuery('#workshop-form').serialize());
+			event.preventDefault();
+		} else {
+			jQuery("#workshop-form .submit-message").text("Please enter a valid email");
+			jQuery("#workshop-form .submit-message").removeClass("hidden");
+			event.preventDefault();
+		}
+	});
+	
 });
+
