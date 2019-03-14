@@ -2,6 +2,11 @@
 	text-align: center;
 	background: #333;
 	color: #fff;
+	a {
+		&:active, &:focus, &:hover {
+			color: inherit;
+		}
+	}
 	.content-panel {
 		margin-bottom: 45px;
 	}
@@ -25,7 +30,7 @@
 	font-size: 20px;
 	text-decoration: none;
 	margin: 25px 0;
-	height: 90%;
+	height: 91%;
 	max-height: 400px;
 	.image-crop {
 		max-height: 225px;
@@ -36,6 +41,9 @@
 		.column-title {
 			font-family: "Roboto Bold";
 			margin-top: 25px;
+			@media screen and (max-width: 480px) {
+				margin-top: 0px;
+			}
 		}
 		.column-text {
 			font-family: "Roboto Light";
@@ -53,6 +61,7 @@
 
 .make-card {
 	@media screen and (max-width: 767px) {
+		max-height: 135px;
 		.image-crop {
 			float: left;
 			margin-right: 15px;
@@ -112,9 +121,15 @@
 	@media screen and (max-width: 480px) {
 		min-height: 250px;
 		font-size: 15px;
+		padding-bottom: 15px;
 		.column-header { 
 			font-size: 16px;
 			margin-bottom: 10px;
+		}
+		.image-crop {
+			float: none;
+			width: 100%;
+			max-width: none;
 		}
 	}
 }
@@ -134,6 +149,9 @@
       margin: 0 auto;
       right: 0;
       width: 200px;
+		@media screen and (max-width: 480px) {
+			bottom: -30px;
+		}
 	}
 }
 

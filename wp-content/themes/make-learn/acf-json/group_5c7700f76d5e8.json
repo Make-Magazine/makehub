@@ -216,6 +216,25 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_5c8a7920bc817",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "This is just used to label the panel in the admin",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c77253d9cf50",
                             "label": "Active\/Inactive",
                             "name": "activeinactive",
@@ -446,6 +465,25 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_5c8a7931bc818",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "This is just used to label the panel in the admin",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c77256e9cf51",
                             "label": "Active\/Inactive",
                             "name": "activeinactive",
@@ -617,6 +655,25 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_5c8a7940bc819",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "This is just used to label the panel in the admin",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c7886e7dd605",
                             "label": "Active\/Inactive",
                             "name": "activeinactive",
@@ -774,6 +831,25 @@
                     "display": "block",
                     "sub_fields": [
                         {
+                            "key": "field_5c8a796dbc81a",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "This is just used to label the panel in the admin",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
                             "key": "field_5c817a1e5a075",
                             "label": "Active\/Inactive",
                             "name": "activeinactive",
@@ -925,6 +1001,25 @@
                     "label": "4 Columns Flexible",
                     "display": "block",
                     "sub_fields": [
+                        {
+                            "key": "field_5c8a797ebc81b",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "This is just used to label the panel in the admin",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
                         {
                             "key": "field_5c883b2cf8aa6",
                             "label": "Active\/Inactive",
@@ -1118,6 +1213,172 @@
                     ],
                     "min": "",
                     "max": ""
+                },
+                "layout_5c8a81716a154": {
+                    "key": "layout_5c8a81716a154",
+                    "name": "2_column_flexible",
+                    "label": "2 Column Flexible",
+                    "display": "block",
+                    "sub_fields": [
+                        {
+                            "key": "field_5c8a824a6a156",
+                            "label": "Panel Title",
+                            "name": "panel_title",
+                            "type": "text",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": "",
+                            "prepend": "",
+                            "append": "",
+                            "maxlength": ""
+                        },
+                        {
+                            "key": "field_5c8a82236a155",
+                            "label": "Active\/Inactive",
+                            "name": "activeinactive",
+                            "type": "radio",
+                            "instructions": "Activate or Inactivate this panel",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "Active": "Active",
+                                "Inactive": "Inactive"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "default_value": "",
+                            "layout": "vertical",
+                            "return_format": "value",
+                            "save_other_choice": 0
+                        },
+                        {
+                            "key": "field_5c8a825d6a157",
+                            "label": "Column Contents",
+                            "name": "column_contents",
+                            "type": "repeater",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "collapsed": "",
+                            "min": 2,
+                            "max": 2,
+                            "layout": "table",
+                            "button_label": "",
+                            "sub_fields": [
+                                {
+                                    "key": "field_5c8a82946a158",
+                                    "label": "Column Header",
+                                    "name": "column_header",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": ""
+                                },
+                                {
+                                    "key": "field_5c8a82a06a159",
+                                    "label": "Column Text",
+                                    "name": "column_text",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": ""
+                                },
+                                {
+                                    "key": "field_5c8a82ab6a15a",
+                                    "label": "Column Form Action",
+                                    "name": "column_form_action",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": ""
+                                },
+                                {
+                                    "key": "field_5c8a82c16a15b",
+                                    "label": "Column Button Text",
+                                    "name": "column_button_text",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": ""
+                                },
+                                {
+                                    "key": "field_5c8a82cb6a15c",
+                                    "label": "Column Button Link",
+                                    "name": "column_button_link",
+                                    "type": "url",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": ""
+                                }
+                            ]
+                        }
+                    ],
+                    "min": "",
+                    "max": ""
                 }
             },
             "button_label": "Add Row",
@@ -1142,5 +1403,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1552434841
+    "modified": 1552581613
 }
