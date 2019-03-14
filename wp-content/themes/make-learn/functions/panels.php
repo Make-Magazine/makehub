@@ -61,7 +61,13 @@ function banner() {
 		                if(get_sub_field('banner_h2')) { 
 								 $return .= '<h2>' . get_sub_field('banner_h2');
 								 if(get_sub_field('banner_h2_image')) { 
-									 $return .= '<img src="' . get_sub_field('banner_h2_image')['url'] . '" />';
+									 if(get_sub_field('banner_h2_image_link')) {
+									 	$return .= '<a href="' . get_sub_field('banner_h2_image_link') . '">';
+									 }
+									   $return .= '   <img src="' . get_sub_field('banner_h2_image')['url'] . '" />';
+									 if(get_sub_field('banner_h2_image_link')) {
+									 	$return .= '</a>';
+									 }
 								 }
 								 $return .= '</h2>'; 
 							 }
