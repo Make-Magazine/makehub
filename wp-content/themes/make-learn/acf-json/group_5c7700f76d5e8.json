@@ -128,6 +128,22 @@
                             "mime_types": ""
                         },
                         {
+                            "key": "field_5c8aca465500a",
+                            "label": "Banner H2 Image Link",
+                            "name": "banner_h2_image_link",
+                            "type": "url",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "default_value": "",
+                            "placeholder": ""
+                        },
+                        {
                             "key": "field_5c7843e3d0373",
                             "label": "Banner Text",
                             "name": "banner_text",
@@ -1403,5 +1419,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1552588381
+    "modified": 1552599772
 }

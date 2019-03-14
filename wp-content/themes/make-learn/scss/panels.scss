@@ -9,7 +9,10 @@
 		font-family: "Roboto Light";
 	}
 	h1{ font-size: 60px; }
-	h2 { font-size: 26px; }
+	h2 { 
+		font-size: 26px;
+		img { max-height: 40px; margin-left: 15px;}
+	}
 	.btn { 
 		font-family: "Roboto Light";
 		min-width: 320px;
