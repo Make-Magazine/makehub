@@ -4,7 +4,6 @@
 /* **************************************************** */
 
 function dispLayout($row_layout) {
-	error_log($row_layout);
    $return = '';
    $activeinactive = get_sub_field('activeinactive');
    if ($activeinactive == 'Active') {
