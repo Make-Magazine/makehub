@@ -30,14 +30,20 @@ jQuery(document).ready(function(){
 	}
 	jQuery('.fancybox-thx').trigger('click');
 	
+	
 	// the workshop form isn't very dynamic right meow
 	jQuery( "#workshop-button" ).on('click',function(event) {
 		if(isValidEmailAddress(jQuery("#workshop-email").val())) {
 			jQuery("#workshop-form .submit-message").text("Thanks for signing up!");
 			jQuery("#workshop-form .submit-message").removeClass("hidden");
 			jQuery.post("https://secure.whatcounts.com/bin/listctrl", jQuery('#workshop-form').serialize());
+			jQuery("#workshop-form #workshop-email").css("border-color", "#6D6D6D");
+			jQuery("#workshop-form .submit-message").css("color", "#fff");
+			jQuery("#workshop-form #workshop-email").val("");
 			event.preventDefault();
 		} else {
+			jQuery("#workshop-form #workshop-email").css("border-color", "#EA002A");
+			jQuery("#workshop-form .submit-message").css("color", "#EA002A");
 			jQuery("#workshop-form .submit-message").text("Please enter a valid email");
 			jQuery("#workshop-form .submit-message").removeClass("hidden");
 			event.preventDefault();
