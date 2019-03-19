@@ -52,7 +52,7 @@ function banner() {
 						} else {
 							$return .= 'style="min-height: 140px;margin-bottom: -30px;"';
 						}
-	$return .=  '">
+	$return .=  '>
                 <div class="container-fluid">
 					   <div class="row">
 						  <div class="col-xs-12">';
