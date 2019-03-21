@@ -157,6 +157,9 @@
 			bottom: -30px;
 		}
 	}
+	@media screen and (max-width: 480px) {
+		padding-top: 5px;
+	}
 }
 
 .three-column {
