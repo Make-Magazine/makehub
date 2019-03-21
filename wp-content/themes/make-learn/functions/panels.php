@@ -45,7 +45,7 @@ function banner() {
 						if(get_sub_field('banner_background')) { 
 							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');padding-top: 15px;';
 							if(get_sub_field('banner_button_text')) {
-								$return .= 'min-height: 287px;"';
+								$return .= 'min-height: 307px;"';
 							}else{
 								$return .= '"';
 							}
