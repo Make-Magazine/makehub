@@ -43,7 +43,7 @@ function banner() {
    $return .= '<section class="content-panel one-column-banner ' . get_sub_field('custom_class') . '" ';
 	               // height of the banner is variable based on contents and bg image
 						if(get_sub_field('banner_background')) { 
-							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');padding-top: 10px;';
+							$return .= 'style="background-image: url(' . get_sub_field('banner_background')['url'] . ');padding-top: 15px;';
 							if(get_sub_field('banner_button_text')) {
 								$return .= 'min-height: 287px;"';
 							}else{
