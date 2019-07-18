@@ -1,4 +1,4 @@
-var AUTH0_CLIENT_ID    = 'ZIX3RQReetRyVxYUkRJlJJ6LnbND4lq1';
+var AUTH0_CLIENT_ID    = 'DRzbPDCo8kW5sDQ0e5Ynl0yaCAS2iR6e' 
 var AUTH0_DOMAIN       = 'makermedia.auth0.com';
 
 if (typeof templateUrl === 'undefined') {
