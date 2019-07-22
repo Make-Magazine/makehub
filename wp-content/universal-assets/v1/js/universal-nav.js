@@ -10,11 +10,8 @@ function sumomeActive() {
 
 (function($) {
 	var domain = window.location.host;
-	console.log(domain);
 	var parts = domain.split('.');
-	console.log(parts);
 	var subdomain = parts[0];
-	console.log(subdomain);
 	if(subdomain != "community") {
 		jQuery("#community-login").remove();
 	}
