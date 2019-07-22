@@ -159,7 +159,14 @@ function sumomeActive() {
 
 		// fix nav to top on scrolldown, stay fixed for transition from mobile to desktop
 		if (jQuery(window).width() < 578) {
-			jQuery(".auth-target").append(jQuery(".nav-level-1-auth"));
+			var domain = window.location.host;
+			var parts = domain.split('.');
+			var subdomain = parts[0];
+			if(subdomain == "community") {
+				jQuery(".auth-target").append("<a href='https://community.make.co/login' class='btn universal-btn'>Login</a>");
+			}else {
+				jQuery(".auth-target").append(jQuery(".nav-level-1-auth"));
+			}
 			jQuery( "#dropdownMenuLink" ).click(function(){
 				jQuery(".expanding-underline").removeClass("underline-open");
 				jQuery(".nav-flyout-ul").css("display", "none");
