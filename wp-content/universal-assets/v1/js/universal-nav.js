@@ -162,6 +162,7 @@ function sumomeActive() {
 			var domain = window.location.host;
 			var parts = domain.split('.');
 			var subdomain = parts[0];
+			console.log(subdomain);
 			if(subdomain == "community") {
 				jQuery(".auth-target").append("<a href='https://community.make.co/login' class='btn universal-btn'>Login</a>");
 			}else {
