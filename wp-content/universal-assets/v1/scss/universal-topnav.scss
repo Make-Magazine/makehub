@@ -40,12 +40,14 @@ header.universal-nav {
 			float: left;
 			position: relative;
 			&:nth-child(4) {
+				text-align: center;
 				margin-left: 180px;
+				max-width: 100px;
 				@media screen and (min-width: 992px) and (max-width: 1199px) {
-					margin-left: 160px;
+					margin-left: 170px;
 				}
 				@media screen and (min-width: 768px) and (max-width: 991px) {
-					margin-left: 134px;
+					margin-left: 130px;
 				}
 			}
 			a {
@@ -131,7 +133,10 @@ header.universal-nav {
 		&.makerfaire-mobile-logo {
 			display: none;
 		}
-		img { width: 134px; } // for IE
+		img { 
+			width: 134px; 
+			padding: 0px 10px;
+		} 
 		@media screen and (min-width: 768px) and (max-width: 991px) {
 			width: 120px;
 			img { width: 120px; }

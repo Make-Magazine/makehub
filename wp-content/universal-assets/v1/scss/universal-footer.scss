@@ -1,9 +1,9 @@
 .page-template-page-authentication, .page-template-page-authenticated, #makeblog.page-id-539763 { // some pages just don't need the newsletter footer
-                                                                                                  .universal-footer {
-                                                                                                      .newsletter-footer { 
-                                                                                                          display: none;
-                                                                                                      }
-                                                                                                  }
+  .universal-footer {
+		.newsletter-footer { 
+			 display: none;
+		}
+  }
 }
 
 .universal-footer {
@@ -119,25 +119,46 @@
                     width: 34%;
                 }
             }
-            .footer-branding {
-                margin-top: 70px;
-                @media screen and (max-width: 1187px) {
-                    margin-top: 75px;
-                }
-                img { 
-                    max-width: 150px;
-                    margin-bottom: 20px;
-                    @media screen and (max-width: 1187px) {
-                        max-width: 140px;
-                    }
-                }
-                span {
-                    font-size: 24px;
-                    color: #989898;
-                    float: left;
-                    margin-right: 15px;
-                }
-            }
+			   @media screen and (max-width: 992px) {
+			  		.footer-social-section:first-of-type {
+						ul li {
+							padding-bottom: 5px;
+						}
+					}
+					.footer-links, .faire-links {
+						ul li:last-of-type {
+							padding-bottom: 0px;
+						}
+					}
+			   }
+				.footer-branding {
+					img { 
+						max-width: 150px;
+						margin-bottom: 10px;
+						@media screen and (max-width: 1187px) {
+							max-width: 140px;
+						}
+					}
+					span {
+						font-size: 20px;
+						color: #989898;
+						float: left;
+						margin-right: 8px;
+						margin-bottom: 10px;
+					}
+					a { cursor: pointer; }
+					a:nth-of-type(2) {
+						img { 
+							margin-top: 4px;
+							float: left;
+							margin-bottom: 0px;
+						}
+						span:nth-of-type(1) { 
+							margin-right: 0px;
+							margin-left: 8px;
+						}
+					}
+				}
             .footer-social {
                 padding-right: 0px;
                 padding-left: 25px;
@@ -145,14 +166,13 @@
                     padding-right: 1.5%;
                 }
                 .footer-social-section {
-                    min-height: 100px;
+                    max-height: 100px;
                     clear: both;
                     @media screen and (min-width: 992px) {
                         max-width: 170px;
                         margin-left: -10px;
                         float:right;
                     }
-                    &:first-of-type { margin-bottom: 10px; }
                     .footer-label { color: #9B9B9B; }
                     ul { 
                         margin: 0 auto 10px;
@@ -266,9 +286,6 @@
                 min-height: 100px;
             }
         }
-        .align-left {
-            display: flex;
-        }
         form {
             margin-top: 7px;
             font-size: 18px;
@@ -283,7 +300,7 @@
                     padding: 0px;
                 }
                 h3, .more-details {
-                    margin-left: 5%;
+                    margin-left: 15px;
                 }
             }
             .newsletter-section:first-of-type {
@@ -335,6 +352,34 @@
                 color: #fff!important;
                 padding: 0;
             }
+        }
+        // flexbox for makerfaire checkboxes
+        .makerfaire-checkboxes {
+            display: flex;
+            flex-direction: column;
+            .mf-checkbox {
+                display: flex;
+                padding: 0px;
+                @media screen and (max-width: 768px) {
+                    margin-left: 15px;
+                }
+                .sel-container { margin-bottom: 0px; }
+                h5 {
+                    font-size: 18px;
+                }
+            }
+            @media screen and (min-width: 560px) and (max-width: 768px) {
+                flex-direction: row;
+            }
+            @media screen and (min-width: 1200px) {
+                flex-direction: row;
+                .mf-checkbox {
+                    align-content: center;
+                    justify-content: center;
+                    padding-right: 15px;
+                }
+            }
+
         }
 
         @keyframes shake {
@@ -405,9 +450,7 @@
         }
 
         .btn-w-ghost { padding: 0px; }
-        .makerfaire-checkboxes {
-            display: none;
-        }
+
     }
     .newsletter-footer.scrolling {
         position: fixed;
