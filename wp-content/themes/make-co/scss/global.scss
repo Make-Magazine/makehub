@@ -14,7 +14,11 @@ html {
 .content-sidebar-wrap {
 	margin-top: 20px !important; // has to override, sumome. sorry not sorry
 }
-.entry-content { padding-right: 15px; }
+.entry-content { padding: 15px 0; }
+
+@media screen and (max-width: 767px) {
+	h1 { font-size: 2.6em; }
+}
 
 .top15 { 
   margin-top:15px!important;
