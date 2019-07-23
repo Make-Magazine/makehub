@@ -353,6 +353,9 @@ function MM_wordpress_logout() {
 add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
 add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 
+// allow capital letters in usernames
+remove_action( 'sanitize_user', 'strtolower' );
+
 // Set up the Ajax WP Login 
 function MM_WPlogin() {
     //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
