@@ -32,7 +32,7 @@ $pageUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 <div class="vimeography-header">
    <h1>Welcome to the members-only video playlists.</h1>
-   <p>Enjoy hundreds of hours of presentations and talks from recent Maker Faires. We're constantly adding more, so check back often.</p>
+   <p>Enjoy hundreds of hours of presentations and talks from recent Maker Faires. We'll be adding more, so check back often.</p>
    <p>Now viewing:</p>
    <form id="vimeography-galleries" action="<?php echo($pageUrl); ?>" method="get">
       <div class="select">
