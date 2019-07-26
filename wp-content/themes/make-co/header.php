@@ -1,4 +1,4 @@
-<?php
+    <?php
 /**
  * Genesis Framework.
  *
@@ -50,11 +50,8 @@ do_action( 'genesis_meta' );
  var templateUrl = '<?= get_site_url(); ?>';
  var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
 </script>
-
-<?php // keep this commented out until domains and analytics are set for the subdomain
-/*
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-39"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -67,10 +64,15 @@ do_action( 'genesis_meta' );
 		]
 	});
   gtag('js', new Date());
-  gtag('config', 'UA-XXXXXXXXX', {
+
+  gtag('config', 'UA-51157-39', {
 	 'cookie_domain': 'make.co'
   });
 </script>
+
+<?php // keep this commented out until domains and analytics are set for the subdomain
+/*
+
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
