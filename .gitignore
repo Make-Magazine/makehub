@@ -82,6 +82,8 @@ Thumbs.db
 *.rar
 *.tar
 *.zip
+*.ogg
+*.mp3
 # ignore everything in the "wp-content" directory, except:
 # "plugins" directory
 # "themes" directory
@@ -95,3 +97,4 @@ wp-content/plugins/hello.php
 wp-content/themes/twenty*/
 # ignore node/grunt dependency directories
 node_modules/
+
