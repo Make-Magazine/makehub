@@ -385,6 +385,7 @@ function MM_WPlogin() {
     }
 } 
 
+
 /**
  * These Functions Add and Verify the Invisible Google reCAPTCHA on Login
  * Normal users never see the wp-login.php page as they are forwarded to Auth0. 
