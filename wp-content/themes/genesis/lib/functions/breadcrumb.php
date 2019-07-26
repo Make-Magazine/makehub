@@ -62,10 +62,6 @@ function genesis_do_breadcrumbs() {
 		echo $config['prefix'];
 		bcn_display();
 		echo $config['suffix'];
-	} elseif ( function_exists( 'breadcrumbs' ) ) {
-		breadcrumbs();
-	} elseif ( function_exists( 'crumbs' ) ) {
-		crumbs();
 	} elseif ( class_exists( 'WPSEO_Breadcrumbs' ) && genesis_get_option( 'breadcrumbs-enable', 'wpseo_titles' ) ) {
 		yoast_breadcrumb( $config['prefix'], $config['suffix'] );
 	} elseif ( function_exists( 'yoast_breadcrumb' ) && ! class_exists( 'WPSEO_Breadcrumbs' ) ) {

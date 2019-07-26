@@ -48,7 +48,6 @@ function genesis_disable_seo() {
 
 	remove_action( 'show_user_profile', 'genesis_user_seo_fields' );
 	remove_action( 'edit_user_profile', 'genesis_user_seo_fields' );
-	remove_filter( 'user_contactmethods', 'genesis_user_contactmethods' );
 
 	remove_theme_support( 'genesis-seo-settings-menu' );
 	add_filter( 'pre_option_' . GENESIS_SEO_SETTINGS_FIELD, '__return_empty_array' );

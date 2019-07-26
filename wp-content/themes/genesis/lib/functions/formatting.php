@@ -117,7 +117,7 @@ function genesis_a11y_more_link( $more_link_text ) {
 function the_content_limit( $max_characters, $more_link_text = '(more...)', $stripteaser = false ) {
 
 	$content = get_the_content_limit( $max_characters, $more_link_text, $stripteaser );
-	echo apply_filters( 'the_content_limit', $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo apply_filters( 'the_content_limit', $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaping handled in `get_the_content_limit()`.
 
 }
 
@@ -330,6 +330,10 @@ function genesis_formatting_kses( $string ) {
  * @return string The time difference between two dates.
  */
 function genesis_human_time_diff( $older_date, $newer_date = false, $relative_depth = 2 ) {
+
+	if ( ! is_int( $older_date ) ) {
+		return '';
+	}
 
 	// If no newer date is given, assume now.
 	$newer_date = $newer_date ? $newer_date : time();

@@ -47,7 +47,36 @@ function genesis_nav_menu_supported( $menu ) {
  */
 function genesis_superfish_enabled() {
 
-	return ( ! genesis_html5() && genesis_get_option( 'superfish' ) ) || genesis_a11y( 'drop-down-menu' ) || apply_filters( 'genesis_superfish_enabled', false );
+	// Superfish must be disabled if AMP is active.
+ 	if ( genesis_is_amp() ) {
+ 		return false;
+ 	}
+
+	return ( genesis_a11y( 'drop-down-menu' ) || apply_filters( 'genesis_superfish_enabled', false ) );
+
+}
+
+/**
+ * Register the theme's responsive menus' configuration settings.
+ *
+ * @since 3.0.0
+ *
+ * @param array $config Optional. Array of configuration parameters for the responsive menus.
+ *
+ * @return Genesis_Responsive_Menu_Handler returns an instance of the handler.
+ */
+function genesis_register_responsive_menus( array $config = array() ) {
+
+	static $menu_handler = null;
+
+	if ( null === $menu_handler && ! empty( $config ) ) {
+
+		$menu_handler = new Genesis_Menu_Handler( get_stylesheet(), $config );
+		$menu_handler->add_hooks();
+
+	}
+
+	return $menu_handler;
 
 }
 

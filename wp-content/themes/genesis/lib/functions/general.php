@@ -125,6 +125,74 @@ function genesis_get_theme_support_arg( $feature, $arg, $default = '' ) {
 }
 
 /**
+ * Check if the environment is in development mode via SCRIPT_DEBUG constant.
+ *
+ * @since 3.0.0
+ *
+ * @return bool True when debugging scripts, otherwise false.
+ */
+function genesis_is_in_dev_mode() {
+
+	return defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG;
+
+}
+
+/**
+ * Gets the theme handle from the CHILD_THEME_VERSION constant (if defined), or 'Theme Name' header in style.css.
+ *
+ * Uses 'Name' instead of 'Text Domain' because the Theme Name header is more
+ * commonly set and maintained.
+ *
+ * @since 3.0.0
+ *
+ * @return string The theme's handle.
+ */
+function genesis_get_theme_handle() {
+
+	static $handle;
+
+	if ( is_null( $handle ) ) {
+		if ( defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ) {
+			$handle = sanitize_title_with_dashes( CHILD_THEME_NAME );
+		}
+		else {
+			$handle = sanitize_title_with_dashes( wp_get_theme()->get( 'Name' ) );
+		}
+	}
+
+	return $handle;
+
+}
+
+/**
+ * Gets the active theme version from CHILD_THEME_VERSION constant (if defined), style.css in production, or a timestamp if SCRIPT_DEBUG is true.
+ *
+ * @since 3.0.0
+ *
+ * @return string Theme version or current Unix timestamp for use as a cache-busting string.
+ */
+function genesis_get_theme_version() {
+
+	if ( genesis_is_in_dev_mode() ) {
+		return (string) time();
+	}
+
+	static $version;
+
+	if ( is_null( $version ) ) {
+		if ( defined( 'CHILD_THEME_VERSION' ) && CHILD_THEME_VERSION ) {
+			$version = CHILD_THEME_VERSION;
+		}
+		else {
+			$version = wp_get_theme()->get( 'Version' );
+		}
+	}
+
+	return $version;
+
+}
+
+/**
  * Locate and require a config file.
  *
  * First, search child theme for the config. If config file doesn't exist in the child,
@@ -396,11 +464,6 @@ function genesis_html5() {
  * @return bool `true` if current theme supports `genesis-accessibility`, or a specific feature of it, `false` otherwise.
  */
 function genesis_a11y( $arg = 'screen-reader-text' ) {
-
-	// No a11y if not html5.
-	if ( ! genesis_html5() ) {
-		return false;
-	}
 
 	$feature = 'genesis-accessibility';
 

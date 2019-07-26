@@ -56,17 +56,14 @@ class Genesis_Script_Loader {
 	 */
 	public function register_front_scripts() {
 
-		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+		if ( genesis_is_in_dev_mode() ) {
 			$this->suffix = '';
 		}
 
-		wp_register_script( 'superfish', GENESIS_JS_URL . "/menu/superfish{$this->suffix}.js", array( 'jquery', 'hoverIntent' ), '1.7.5', true );
+		wp_register_script( 'superfish', GENESIS_JS_URL . "/menu/superfish{$this->suffix}.js", array( 'jquery', 'hoverIntent' ), '1.7.10', true );
 		wp_register_script( 'superfish-args', apply_filters( 'genesis_superfish_args_url', GENESIS_JS_URL . "/menu/superfish.args{$this->suffix}.js" ), array( 'superfish' ), PARENT_THEME_VERSION, true );
-		wp_register_script( 'superfish-compat', GENESIS_JS_URL . "/menu/superfish.compat{$this->suffix}.js", array( 'jquery' ), PARENT_THEME_VERSION, true );
 		wp_register_script( 'skip-links', GENESIS_JS_URL . "/skip-links{$this->suffix}.js", array(), PARENT_THEME_VERSION, true );
 		wp_register_script( 'drop-down-menu', GENESIS_JS_URL . "/drop-down-menu{$this->suffix}.js", array( 'jquery' ), PARENT_THEME_VERSION, true );
-		wp_register_script( 'html5shiv', GENESIS_JS_URL . "/html5shiv{$this->suffix}.js", array(), '3.7.3', false );
-		wp_register_script( 'genesis_adsense', 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?async=true', array(), PARENT_THEME_VERSION, false );
 
 	}
 
@@ -77,11 +74,11 @@ class Genesis_Script_Loader {
 	 */
 	public function register_admin_scripts() {
 
-		if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) {
+		if ( genesis_is_in_dev_mode() ) {
 			$this->suffix = '';
 		}
 
-		wp_register_script( 'genesis_admin_js', GENESIS_JS_URL . "/admin{$this->suffix}.js", array( 'jquery' ), PARENT_THEME_VERSION, true );
+		wp_register_script( 'genesis_admin_js', GENESIS_JS_URL . "/admin{$this->suffix}.js", array( 'jquery', 'wp-a11y' ), PARENT_THEME_VERSION, true );
 
 	}
 
@@ -96,6 +93,11 @@ class Genesis_Script_Loader {
 	 */
 	public function enqueue_front_scripts() {
 
+		// Scripts not allowed in AMP.
+		if ( genesis_is_amp() ) {
+			return false;
+		}
+
 		// If a single post or page, threaded comments are enabled, and comments are open.
 		if ( is_singular() && get_option( 'thread_comments' ) && comments_open() ) {
 			wp_enqueue_script( 'comment-reply' );
@@ -107,34 +109,11 @@ class Genesis_Script_Loader {
 			wp_enqueue_script( 'superfish' );
 			wp_enqueue_script( 'superfish-args' );
 
-			// Load compatibility script if not running HTML5.
-			if ( ! genesis_html5() ) {
-				wp_enqueue_script( 'superfish-compat' );
-			}
 		}
 
 		// If accessibility support enabled.
 		if ( genesis_a11y( 'skip-links' ) ) {
 			wp_enqueue_script( 'skip-links' );
-		}
-
-		// HTML5 shiv.
-		wp_enqueue_script( 'html5shiv' );
-		wp_script_add_data( 'html5shiv', 'conditional', 'lt IE 9' );
-
-		// AdSense.
-		if ( genesis_get_option( 'adsense_id' ) ) {
-
-			// Allow entries to disable adsense output.
-			if ( is_singular() && genesis_get_custom_field( '_disable_adsense' ) ) {
-				return;
-			}
-
-			wp_enqueue_script( 'genesis_adsense' );
-			wp_add_inline_script(
-				'genesis_adsense',
-				'(adsbygoogle = window.adsbygoogle || []).push({google_ad_client: "' . genesis_get_option( 'adsense_id' ) . '", enable_page_level_ads: true, tag_partner: "genesis"});'
-			);
 		}
 
 	}
@@ -167,7 +146,6 @@ class Genesis_Script_Loader {
 			return;
 
 		}
-
 
 		// If we're viewing an edit post page, make sure we need Genesis SEO JS.
 		if (
@@ -216,7 +194,29 @@ class Genesis_Script_Loader {
 
 		$onboarding = array(
 			'nonce' => wp_create_nonce( 'genesis-onboarding' ),
+			'l10n'  => array(
+				'a11y' => array(
+					'onboarding_started'  => esc_html__( 'The website setup process has started.', 'genesis' ),
+					'onboarding_complete' => esc_html__( 'The website setup process has completed.', 'genesis' ),
+					'step_started'        => esc_html__( 'A setup step has started.', 'genesis' ),
+					'step_completed'      => esc_html__( 'A setup step has completed.', 'genesis' ),
+				),
+			),
 		);
+
+		if ( genesis_is_menu_page( 'genesis-getting-started' ) ) {
+			$genesis_onboarding_plugins = genesis_onboarding_plugins();
+			$genesis_onboarding_content = genesis_onboarding_content();
+			$onboarding['tasks']        = array();
+
+			if ( ! empty( $genesis_onboarding_plugins ) ) {
+				$onboarding['tasks'][] = 'dependencies';
+			}
+
+			if ( ! empty( $genesis_onboarding_content ) ) {
+				$onboarding['tasks'][] = 'content';
+			}
+		}
 
 		wp_localize_script( 'genesis_admin_js', 'genesis_onboarding', $onboarding );
 	}

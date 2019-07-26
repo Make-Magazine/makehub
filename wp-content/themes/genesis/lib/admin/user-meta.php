@@ -11,25 +11,6 @@
  * @link    https://my.studiopress.com/themes/genesis/
  */
 
-add_filter( 'user_contactmethods', 'genesis_user_contactmethods' );
-/**
- * Filter the contact methods registered for users.
- *
- * Currently just adds a Google+ field.
- *
- * @since 1.9.0
- *
- * @param array $contactmethods Array of contact methods.
- * @return array Contact methods.
- */
-function genesis_user_contactmethods( array $contactmethods ) {
-
-	$contactmethods['googleplus'] = __( 'Google+', 'genesis' );
-
-	return $contactmethods;
-
-}
-
 add_action( 'show_user_profile', 'genesis_user_options_fields' );
 add_action( 'edit_user_profile', 'genesis_user_options_fields' );
 /**

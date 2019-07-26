@@ -6,6 +6,132 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 Up until release 2.7.0, this project did _not_ follow semantic versioning. It followed the WordPress policy where updates of x and y in an x.y.z version number means a major release, and updates to z means a patch release.
 
+## [3.0.2] = 2019-07-03
+
+### Fixed
+* Fixed instances of late escaping that were too aggressive.
+* Fixed an issue encountered by the AMP plugin where the use of `uniqid()` breaks the post-processor.
+
+## [3.0.1] - 2019-06-20
+
+### Added
+* Restored `404.php`.
+* Restored `page.php`.
+* Restored `search.php`.
+* Restored `single.php`.
+
+### Removed
+* Removed language files from core while we work on reliability standards.
+
+### Fixed
+* Fixed issue where certain child theme styles fail to load. `CHILD_THEME_NAME` is now used (if available) when returning a theme handle (used when enqueueing CSS).
+
+## [3.0.0] - 2019-06-19
+
+### Added
+* Added AMP support if the WordPress AMP plugin is installed and active (https://wordpress.org/plugins/amp/). This includes an AMP-compatible, responsive menu that theme developers can add via `genesis_register_responsive_menus()`, in place of having to enqueue their own responsive menu scripts.
+* Added `genesis_get_theme_handle()` function that returns a formatted theme handle, via the theme name in `style.css`, for use in places where a string of words (lowercase, separated by dashes) is needed.
+* Added `genesis_get_theme_version()` function to return the version string from the stylesheet header, or the current Unix time if the `SCRIPT_DEBUG` constant is true. This is helpful as a cache-busting string when enqueueing assets, so that you no longer need to add a `CHILD_THEME_VERSION` constant to your `functions.php` that duplicates information in your stylesheet header.
+* Added memoization to `genesis_get_theme_handle()` and `genesis_get_theme_version()` so multiple uses of these functions won't negatively affect performance.
+* Added ability to use the `query_args` custom field to trigger a custom loop in pages (like the old `page_blog.php` used to do).
+* Added db upgrade functions that provide for backward compatibility for sites using the `page_blog.php` and `page_archive.php` page templates.
+* Added Genesis information to the WordPress Site Health admin page.
+
+### Removed
+* Removed Theme and SEO Settings page content. Customizer is now the canonical location for configuring these settings.
+* Removed support for all non-html5 output.
+* Removed `404.php` template.
+* Removed `page.php` template.
+* Removed `page_archive.php` template.
+* Removed `page_blog.php` template.
+* Removed `search.php` template.
+* Removed `single.php` template.
+* Removed Adsense Auto Ads integration, with limited backward compatibility.
+* Removed integration with Google Plus.
+* Removed all styles from `style.css`.
+* Removed all functions deprecated prior to Genesis 2.0.0.
+* Removed compatibility with old and unknown breadcrumb plugins/functions.
+* Removed unused `$backtotop` variable and filter from footer output function.
+* Deprecated the `genesis_nav_right()` callback function.
+
+### Changed
+* Output the responsive viewport meta tag by default.
+
+### Fixed
+* Fixed all known instances of content being output without any escaping or sanitization.
+* Fixed bug where an empty paragraph was output in the archive intro text.
+* Fixed bug in comments where certain markup was appearing out of order.
+* Fixed issue where the Genesis Plugins link was showing for people who did not have permission to install plugins.
+
+## [2.10.1] - 2019-05-07
+
+### Added
+* Added action links (via filter) to the end of the update completed screen.
+
+### Removed
+* Removed automatic redirect to Theme Settings after an update.
+* Removed the function that output a "success" notice after database upgrade. Upgrades are now silent.
+
+### Fixed
+* Fixed issue on Genesis Plugins page that resulted in a fatal error on WP 5.x or older.
+* Fixed issue with the database upgrade that would cause it not to run in certain circumstances.
+
+## [2.10.0] - 2019-05-01
+
+### Added
+* Added `wp genesis core upgrade` WP-CLI Command.
+* Added `wp genesis core version` WP-CLI Command.
+* Added `wp genesis db upgrade` WP-CLI Command.
+* Added `wp genesis db version` WP-CLI Command.
+* Added `wp genesis setting get` WP-CLI Command.
+* Added `wp genesis setting update` WP-CLI Command.
+* Added child theme version to data sent to update server.
+* Added Genesis Plugins page, to allow Genesis plugins to be discovered and installed easily.
+* Added actions hooks before and after content import during Theme Setup.
+* Added `wp_body_open()` to the header template, directly after the opening `<body>` tag.
+* Added ability for Genesis to run a database upgrade after an update.
+
+### Changed
+* Pass all comment markup through the Markup API.
+* Process shortcodes and embeds in archive intro text.
+* Allow for the import of local images during Theme Setup.
+* Made output of the Theme Setup screen conditional based on the content in the onboarding config file.
+* Pass comment author name through Markup API.
+
+### Fixed
+* Fixed broken comment author link in xHTML.
+* Fixed empty H1 on Theme Setup page.
+* Fixed many WordPress code standards warnings and errors.
+* Fixed multiple home links in breadcrumbs under certain circumstances.
+* Fixed instances where users who can't install plugins are sent to onboarding screen.
+
+## [2.9.1] - 2019-03-20
+
+### Fixed
+- Fixed issue where `get_comment_author_link()` was being escaped improperly.
+
+
+## [2.9.0] - 2019-03-13
+### Added
+* Added menu support to onboarding process.
+* Added featured image support to onboarding process.
+* Added support for assigning static Posts page to onboarding process.
+* Added post excerpt support to onboarding process.
+* Added dynamic support for child theme constants.
+* Added support for importing specified settings on theme activation via a config file.
+* Added functions to get, set, and delete settings that eventually expire.
+
+### Changed
+* Improved the onboarding process for screen readers.
+* Update Superfish to 1.7.10.
+* Changed references of "Front Page" to "Homepage" where appropriate.
+* Use the post type's label as linked text in the metabox on CPT archive settings.
+* Changed the Genesis update storage to an expiring setting rather than a transient.
+
+### Removed
+* Removed several Grunt dev tools and replaced with node scripts.
+* Removed sitemap from 404 template (performance and security).
+
 ## [2.8.1] - 2019-01-30
 ### Fixed
 - Fixed `genesis_human_time_diff()` to display accurate relative dates.
@@ -1095,6 +1221,13 @@ _Requires WordPress 3.1.0._
 
 First public release.
 
+[3.0.2]: https://github.com/studiopress/genesis/compare/3.0.1...3.0.2
+[3.0.1]: https://github.com/studiopress/genesis/compare/3.0.0...3.0.1
+[3.0.0]: https://github.com/studiopress/genesis/compare/2.10.1...3.0.0
+[2.10.1]: https://github.com/studiopress/genesis/compare/2.10.0...2.10.1
+[2.10.0]: https://github.com/studiopress/genesis/compare/2.9.1...2.10.0
+[2.9.1]: https://github.com/studiopress/genesis/compare/2.9.0...2.9.1
+[2.9.0]: https://github.com/studiopress/genesis/compare/2.8.1...2.9.0
 [2.8.1]: https://github.com/studiopress/genesis/compare/2.8.0...2.8.1
 [2.8.0]: https://github.com/studiopress/genesis/compare/2.7.3...2.8.0
 [2.7.3]: https://github.com/studiopress/genesis/compare/2.7.2...2.7.3

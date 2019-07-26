@@ -74,26 +74,6 @@ return array(
 					),
 				),
 			),
-			'genesis_adsense'      => array(
-				'title'       => __( 'Google AdSense', 'genesis' ),
-				/* translators: %s: AdSense Auto Ads URL */
-				'description' => sprintf( __( 'Auto Ads must be enabled in your AdSense account for this feature to work properly. <a href="%s">Click here to enable.</a>', 'genesis' ), 'https://www.google.com/adsense/new/myads/auto-ads/' ) .
-									'<br /><br />' .
-									/* translators: %s: AdSense URL */
-									sprintf( __( "Don't have AdSense? <a href='%s' target='_blank' rel='noopener noreferrer'>Click here</a> to sign up!", 'genesis' ), 'https://www.google.com/adsense/start/?utm_source=Genesis&utm_medium=partnerships&utm_campaign=GenesisCustomizer' ),
-				'panel'       => 'genesis',
-				'controls'    => array(
-					'adsense_id' => array(
-						'label'       => __( 'Publisher ID', 'genesis' ),
-						'description' => __( 'Enter your AdSense publisher ID (ca-pub-xxxxxxxxxxxxx) to activate AdSense Auto Ads', 'genesis' ),
-						'section'     => 'genesis_adsense',
-						'type'        => 'text',
-						'settings'    => array(
-							'default' => '',
-						),
-					),
-				),
-			),
 			'genesis_color_scheme' => array(
 				'active_callback' => 'genesis_has_color_schemes',
 				'theme_supports'  => 'genesis-style-selector',
@@ -144,7 +124,7 @@ return array(
 					),
 					'breadcrumb_front_page' => array(
 						'active_callback' => 'genesis_page_show_on_front',
-						'label'           => __( 'Breadcrumbs on Front page', 'genesis' ),
+						'label'           => __( 'Breadcrumbs on Homepage', 'genesis' ),
 						'section'         => 'genesis_breadcrumbs',
 						'type'            => 'checkbox',
 						'settings'        => array(

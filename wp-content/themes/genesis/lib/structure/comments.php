@@ -11,7 +11,6 @@
  * @link    https://my.studiopress.com/themes/genesis/
  */
 
-add_action( 'genesis_after_post', 'genesis_get_comments_template' );
 add_action( 'genesis_after_entry', 'genesis_get_comments_template' );
 /**
  * Output the comments at the end of entries.
@@ -28,7 +27,7 @@ function genesis_get_comments_template() {
 		return;
 	}
 
-	if ( is_singular() && ! in_array( get_post_type(), array( 'post', 'page' ) ) ) {
+	if ( is_singular() && ! in_array( get_post_type(), array( 'post', 'page' ), true ) ) {
 		comments_template( '', true );
 	} elseif ( is_singular( 'post' ) && ( genesis_get_option( 'trackbacks_posts' ) || genesis_get_option( 'comments_posts' ) ) ) {
 		comments_template( '', true );
@@ -44,8 +43,8 @@ add_action( 'genesis_comments', 'genesis_do_comments' );
  *
  * Does the `genesis_list_comments` action.
  *
- * Applies the `genesis_title_comments`, `genesis_prev_comments_link_text`, `genesis_next_comments_link_text`, and
- * `genesis_comments_closed_text` filters.
+ * Applies the `genesis_title_comments`, `genesis_prev_comments_link_text`, `genesis_next_comments_link_text`,
+ * `genesis_no_comments_text` and `genesis_comments_closed_text` filters.
  *
  * @since 1.1.2
  *
@@ -62,14 +61,32 @@ function genesis_do_comments() {
 		return;
 	}
 
+	$no_comments_text     = apply_filters( 'genesis_no_comments_text', '' );
+	$comments_closed_text = apply_filters( 'genesis_comments_closed_text', '' );
+
 	if ( ! empty( $wp_query->comments_by_type['comment'] ) && have_comments() ) {
 
-		genesis_markup( array(
-			'open'   => '<div %s>',
-			'context' => 'entry-comments',
-		) );
+		genesis_markup(
+			array(
+				'open'    => '<div %s>',
+				'context' => 'entry-comments',
+			)
+		);
 
-		echo apply_filters( 'genesis_title_comments', __( '<h3>Comments</h3>', 'genesis' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$comments_title = wp_kses_post( __( '<h3>Comments</h3>', 'genesis' ) );
+
+		/**
+		 * Comments title filter
+		 *
+		 * Allows the comments title to be filtered.
+		 *
+		 * @since ???
+		 *
+		 * @param string $comments_title The comments title.
+		 */
+		$comments_title = apply_filters( 'genesis_title_comments', $comments_title );
+
+		echo $comments_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitize done prior to filter application
 		printf( '<ol %s>', genesis_attr( 'comment-list' ) );
 
 			/**
@@ -87,38 +104,31 @@ function genesis_do_comments() {
 
 		if ( $prev_link || $next_link ) {
 
-			$pagination = sprintf( '<div class="pagination-previous alignleft">%s</div>', $prev_link );
+			$pagination  = sprintf( '<div class="pagination-previous alignleft">%s</div>', $prev_link );
 			$pagination .= sprintf( '<div class="pagination-next alignright">%s</div>', $next_link );
 
-			genesis_markup( array(
-				'open'    => '<div %s>',
+			genesis_markup(
+				array(
+					'open'    => '<div %s>',
+					'close'   => '</div>',
+					'content' => $pagination,
+					'context' => 'comments-pagination',
+				)
+			);
+
+		}
+
+		genesis_markup(
+			array(
 				'close'   => '</div>',
-				'content' => $pagination,
-				'context' => 'comments-pagination',
-			) );
+				'context' => 'entry-comments',
+			)
+		);
 
-		}
-
-		genesis_markup( array(
-			'close'   => '</div>',
-			'context' => 'entry-comments',
-		) );
-
-	}
-	// No comments so far.
-	elseif ( 'open' === get_post()->comment_status && $no_comments_text = apply_filters( 'genesis_no_comments_text', '' ) ) {
-		if ( genesis_html5() ) {
-			echo sprintf( '<div %s>', genesis_attr( 'entry-comments' ) ) . $no_comments_text . '</div>';
-		} else {
-			echo '<div id="comments">' . $no_comments_text . '</div>';
-		}
-	}
-	elseif ( $comments_closed_text = apply_filters( 'genesis_comments_closed_text', '' ) ) {
-		if ( genesis_html5() ) {
-			echo sprintf( '<div %s>', genesis_attr( 'entry-comments' ) ) . $comments_closed_text . '</div>';
-		} else {
-			echo '<div id="comments">' . $comments_closed_text . '</div>';
-		}
+	} elseif ( 'open' === get_post()->comment_status && $no_comments_text ) {
+		echo sprintf( '<div %s>', genesis_attr( 'entry-comments' ) ) . $no_comments_text . '</div>';
+	} elseif ( $comments_closed_text ) {
+		echo sprintf( '<div %s>', genesis_attr( 'entry-comments' ) ) . $comments_closed_text . '</div>';
 	}
 
 }
@@ -154,12 +164,27 @@ function genesis_do_pings() {
 			add_filter( 'genesis_attr_entry-pings', 'genesis_attributes_entry_comments' );
 		}
 
-		genesis_markup( array(
-			'open'    => '<div %s>',
-			'context' => 'entry-pings',
-		) );
+		genesis_markup(
+			array(
+				'open'    => '<div %s>',
+				'context' => 'entry-pings',
+			)
+		);
 
-		echo apply_filters( 'genesis_title_pings', __( '<h3>Trackbacks</h3>', 'genesis' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		$pings_title = wp_kses_post( __( '<h3>Trackbacks</h3>', 'genesis' ) );
+
+		/**
+		 * Pings/trackbacks title filter
+		 *
+		 * Allows the pings/trackbacks title to be filtered.
+		 *
+		 * @since ???
+		 *
+		 * @param string $pings_title The pings/trackbacks title.
+		 */
+		$pings_title = apply_filters( 'genesis_title_pings', $pings_title );
+
+		echo $pings_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitize done prior to filter application
 		echo '<ol class="ping-list">';
 
 			/**
@@ -171,14 +196,27 @@ function genesis_do_pings() {
 
 		echo '</ol>';
 
-		genesis_markup( array(
-			'close'   => '</div>',
-			'context' => 'entry-pings',
-		) );
+		genesis_markup(
+			array(
+				'close'   => '</div>',
+				'context' => 'entry-pings',
+			)
+		);
 
 	} else {
 
-		echo apply_filters( 'genesis_no_pings_text', '' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		/**
+		 * No pings text filter
+		 *
+		 * Allows the text that displays when no pings are present to be filtered.
+		 *
+		 * @since ???
+		 *
+		 * @param string No pings text.
+		 */
+		$no_pings_text = apply_filters( 'genesis_no_pings_text', '' );
+
+		echo $no_pings_text; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- no sanitization necessary here
 
 	}
 
@@ -201,7 +239,7 @@ function genesis_default_list_comments() {
 		'type'        => 'comment',
 		'avatar_size' => 48,
 		'format'      => 'html5', // Not necessary, but a good example.
-		'callback'    => genesis_html5() ? 'genesis_html5_comment_callback' : 'genesis_comment_callback',
+		'callback'    => 'genesis_html5_comment_callback',
 	);
 
 	$args = apply_filters( 'genesis_comment_list_args', $defaults );
@@ -220,75 +258,15 @@ add_action( 'genesis_list_pings', 'genesis_default_list_pings' );
  */
 function genesis_default_list_pings() {
 
-	$args = apply_filters( 'genesis_ping_list_args', array(
-		'type' => 'pings',
-	) );
+	$args = apply_filters(
+		'genesis_ping_list_args',
+		array(
+			'type' => 'pings',
+		)
+	);
 
 	wp_list_comments( $args );
 
-}
-
-/**
- * Comment callback for {@link genesis_default_list_comments()} if HTML5 is not active.
- *
- * Does `genesis_before_comment` and `genesis_after_comment` actions.
- *
- * Applies `comment_author_says_text` and `genesis_comment_awaiting_moderation` filters.
- *
- * @since 1.0.0
- *
- * @param stdClass $comment Comment object.
- * @param array    $args    Comment args.
- * @param int      $depth   Depth of current comment.
- */
-function genesis_comment_callback( $comment, array $args, $depth ) {
-
-	$GLOBALS['comment'] = $comment; ?>
-
-	<li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
-
-		<?php
-		/** This action is documented in lib/structure/comments.php */
-		do_action( 'genesis_before_comment' );
-		?>
-
-		<div class="comment-header">
-			<div class="comment-author vcard">
-				<?php echo get_avatar( $comment, $args['avatar_size'] ); ?>
-				<?php
-				/* translators: 1: get_comment_author_link(), 2: Filtered "says" text. */
-				printf( __( '<cite class="fn">%1$s</cite> <span class="says">%2$s:</span>', 'genesis' ), get_comment_author_link(), apply_filters( 'comment_author_says_text', __( 'says', 'genesis' ) ) );
-				?>
-		 	</div>
-
-			<div class="comment-meta commentmetadata">
-				<a href="<?php echo esc_url( get_comment_link( $comment->comment_ID ) ); ?>"><?php /* translators: 1: Comment date, 2: Comment time. */ printf( __( '%1$s at %2$s', 'genesis' ), get_comment_date(), get_comment_time() ); ?></a>
-				<?php edit_comment_link( __( '(Edit)', 'genesis' ), '' ); ?>
-			</div>
-		</div>
-
-		<div class="comment-content">
-			<?php if ( ! $comment->comment_approved ) : ?>
-				<p class="alert"><?php echo apply_filters( 'genesis_comment_awaiting_moderation', __( 'Your comment is awaiting moderation.', 'genesis' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></p>
-			<?php endif; ?>
-
-			<?php comment_text(); ?>
-		</div>
-
-		<div class="reply">
-			<?php
-			comment_reply_link( array_merge( $args, array(
-				'depth'     => $depth,
-				'max_depth' => $args['max_depth'],
-			) ) );
-			?>
-		</div>
-
-		<?php
-		/** This action is documented in lib/structure/comments.php */
-		do_action( 'genesis_after_comment' );
-
-		// No ending </li> tag because of comment threading.
 }
 
 /**
@@ -305,8 +283,7 @@ function genesis_comment_callback( $comment, array $args, $depth ) {
  * @param int      $depth   Depth of current comment.
  */
 function genesis_html5_comment_callback( $comment, array $args, $depth ) {
-
-	$GLOBALS['comment'] = $comment; ?>
+	?>
 
 	<li <?php comment_class(); ?> id="comment-<?php comment_ID(); ?>">
 	<article <?php echo genesis_attr( 'comment' ); ?>>
@@ -342,13 +319,28 @@ function genesis_html5_comment_callback( $comment, array $args, $depth ) {
 				 *
 				 * @param string $text Comment author says text.
 				 */
-				$comment_author_says_text = apply_filters( 'comment_author_says_text', __( 'says', 'genesis' ) );
+				$comment_author_says_text = apply_filters( 'comment_author_says_text', __( 'says', 'genesis' ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 				if ( ! empty( $comment_author_says_text ) ) {
-					$comment_author_says_text = '<span class="says">' . $comment_author_says_text . '</span>';
+					$comment_author_says_text = ' <span class="says">' . $comment_author_says_text . '</span>';
 				}
 
-				printf( '<span itemprop="name">%s</span> %s', $author, $comment_author_says_text );
+				genesis_markup(
+					array(
+						'open'    => '<span %s>',
+						'close'   => '</span>',
+						'content' => $author,
+						'context' => 'comment-author-name',
+					)
+				);
+
+				$comment_author_says_allowed = array(
+					'span' => array(
+						'class' => array(),
+					),
+				);
+
+				echo wp_kses( $comment_author_says_text, $comment_author_says_allowed );
 				?>
 			</p>
 
@@ -364,11 +356,41 @@ function genesis_html5_comment_callback( $comment, array $args, $depth ) {
 			$comment_date = apply_filters( 'genesis_show_comment_date', true, get_post_type() );
 
 			if ( $comment_date ) {
-				printf( '<p %s>', genesis_attr( 'comment-meta' ) );
-				printf( '<time %s>', genesis_attr( 'comment-time' ) );
-				printf( '<a href="%s" %s>', esc_url( get_comment_link( $comment->comment_ID ) ), genesis_attr( 'comment-time-link' ) );
-				echo    esc_html( get_comment_date() ) . ' ' . __( 'at', 'genesis' ) . ' ' . esc_html( get_comment_time() );
-				echo    '</a></time></p>';
+				$comment_time_link = genesis_markup(
+					array(
+						'open'    => '<a %s>',
+						'context' => 'comment-time-link',
+						'content' => esc_html(
+							sprintf(
+								__( '%1$s at %2$s', 'genesis' ),
+								get_comment_date(),
+								get_comment_time()
+							)
+						),
+						'close'   => '</a>',
+						'params'  => array(
+							'comment' => $comment
+						),
+						'echo'    => false,
+					)
+				);
+				$comment_time = genesis_markup(
+					array(
+						'open'    => '<time %s>',
+						'context' => 'comment-time',
+						'content' => $comment_time_link,
+						'close'   => '</time>',
+						'echo'    => false,
+					)
+				);
+				genesis_markup(
+					array(
+						'open'    => '<p %s>',
+						'context' => 'comment-meta',
+						'content' => $comment_time,
+						'close'   => '</p>',
+					)
+				);
 			}
 
 			edit_comment_link( __( '(Edit)', 'genesis' ), ' ' );
@@ -396,11 +418,16 @@ function genesis_html5_comment_callback( $comment, array $args, $depth ) {
 		</div>
 
 		<?php
-		comment_reply_link( array_merge( $args, array(
-			'depth'  => $depth,
-			'before' => sprintf( '<div %s>', genesis_attr( 'comment-reply' ) ),
-			'after'  => '</div>',
-		) ) );
+		comment_reply_link(
+			array_merge(
+				$args,
+				array(
+					'depth'  => $depth,
+					'before' => sprintf( '<div %s>', genesis_attr( 'comment-reply' ) ),
+					'after'  => '</div>',
+				)
+			)
+		);
 		?>
 
 		<?php
@@ -435,78 +462,11 @@ function genesis_do_comment_form() {
 		return;
 	}
 
-	comment_form( array(
-		'format' => 'html5',
-	) );
-
-}
-
-add_filter( 'comment_form_defaults', 'genesis_comment_form_args' );
-/**
- * Filter the default comment form arguments, used by `comment_form()`.
- *
- * Applies only to XHTML child themes, since Genesis uses default HTML5 comment form where possible.
- *
- * Applies `genesis_comment_form_args` filter.
- *
- * @since 1.8.0
- *
- * @global string $user_identity Display name of the user.
- *
- * @param array $defaults Comment form default arguments.
- * @return array Filtered comment form default arguments.
- */
-function genesis_comment_form_args( array $defaults ) {
-
-	// Use WordPress default HTML5 comment form if themes supports HTML5.
-	if ( genesis_html5() ) {
-		return $defaults;
-	}
-
-	global $user_identity;
-
-	$commenter = wp_get_current_commenter();
-	$req       = get_option( 'require_name_email' );
-	$aria_req  = ( $req ? ' aria-required="true"' : '' );
-
-	$author = '<p class="comment-form-author">' .
-	          '<input id="author" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" size="30" tabindex="1"' . $aria_req . ' />' .
-	          '<label for="author">' . __( 'Name', 'genesis' ) . '</label> ' .
-	          ( $req ? '<span class="required">*</span>' : '' ) .
-	          '</p>';
-
-	$email = '<p class="comment-form-email">' .
-	         '<input id="email" name="email" type="text" value="' . esc_attr( $commenter['comment_author_email'] ) . '" size="30" tabindex="2"' . $aria_req . ' />' .
-	         '<label for="email">' . __( 'Email', 'genesis' ) . '</label> ' .
-	         ( $req ? '<span class="required">*</span>' : '' ) .
-	         '</p>';
-
-	$url = '<p class="comment-form-url">' .
-	       '<input id="url" name="url" type="text" value="' . esc_attr( $commenter['comment_author_url'] ) . '" size="30" tabindex="3" />' .
-	       '<label for="url">' . __( 'Website', 'genesis' ) . '</label>' .
-	       '</p>';
-
-	$comment_field = '<p class="comment-form-comment">' .
-	                 '<textarea id="comment" name="comment" cols="45" rows="8" tabindex="4" aria-required="true"></textarea>' .
-	                 '</p>';
-
-	$args = array(
-		'comment_field'        => $comment_field,
-		'title_reply'          => __( 'Speak Your Mind', 'genesis' ),
-		'comment_notes_before' => '',
-		'comment_notes_after'  => '',
-		'fields'               => array(
-			'author' => $author,
-			'email'  => $email,
-			'url'    => $url,
-		),
+	comment_form(
+		array(
+			'format' => 'html5',
+		)
 	);
-
-	// Merge $args with $defaults.
-	$args = wp_parse_args( $args, $defaults );
-
-	// Return filterable array of $args, along with other optional variables.
-	return apply_filters( 'genesis_comment_form_args', $args, $user_identity, get_the_ID(), $commenter, $req, $aria_req );
 
 }
 
@@ -522,7 +482,7 @@ add_filter( 'get_comments_link', 'genesis_comments_link_filter', 10, 2 );
  */
 function genesis_comments_link_filter( $link, $post_id ) {
 
-	if ( 0 == get_comments_number() ) {
+	if ( 0 === get_comments_number() ) {
 		return get_permalink( $post_id ) . '#respond';
 	}
 

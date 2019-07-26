@@ -36,10 +36,12 @@ function genesis_load_stylesheet() {
  */
 function genesis_enqueue_main_stylesheet() {
 
-	$version = defined( 'CHILD_THEME_VERSION' ) && CHILD_THEME_VERSION ? CHILD_THEME_VERSION : PARENT_THEME_VERSION;
-	$handle  = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'child-theme';
-
-	wp_enqueue_style( $handle, get_stylesheet_uri(), false, $version );
+	wp_enqueue_style(
+		genesis_get_theme_handle(),
+		get_stylesheet_uri(),
+		false,
+		genesis_get_theme_version()
+	);
 
 }
 
@@ -51,7 +53,7 @@ add_action( 'admin_print_styles', 'genesis_load_admin_styles' );
  */
 function genesis_load_admin_styles() {
 
-	$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+	$suffix = genesis_is_in_dev_mode() ? '' : '.min';
 
 	wp_enqueue_style( 'genesis_admin_css', GENESIS_CSS_URL . "/admin{$suffix}.css", array(), PARENT_THEME_VERSION );
 

@@ -85,6 +85,7 @@ function genesis_theme_support() {
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'title-tag' );
 	add_theme_support( 'automatic-feed-links' );
+	add_theme_support( 'body-open' );
 	add_theme_support( 'genesis-inpost-layouts' );
 	add_theme_support( 'genesis-archive-layouts' );
 	add_theme_support( 'genesis-admin-menu' );
@@ -142,7 +143,6 @@ function genesis_theme_support() {
 		add_theme_support(
 			'genesis-accessibility',
 			array(
-				'404-page',
 				'drop-down-menu',
 				'headings',
 				'rems',
@@ -202,10 +202,10 @@ function genesis_constants() {
 	// Define Theme Info Constants.
 	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 	define( 'PARENT_THEME_NAME', 'Genesis' );
-	define( 'PARENT_THEME_VERSION', '2.8.3' );
-	define( 'PARENT_THEME_BRANCH', '2.8' );
-	define( 'PARENT_DB_VERSION', '2800' );
-	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '30 January 2019' ) ) );
+	define( 'PARENT_THEME_VERSION', '3.0.2' );
+	define( 'PARENT_THEME_BRANCH', '3.0' );
+	define( 'PARENT_DB_VERSION', '3001' );
+	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '03 July 2019' ) ) );
 
 	// Define Parent and Child Directory Location and URL Constants.
 	define( 'PARENT_DIR', get_template_directory() );
@@ -350,6 +350,8 @@ function genesis_load_framework() {
 		require_once $admin_dir . 'use-child-theme.php';
 		require_once $admin_dir . 'sanitization.php';
 		require_once $admin_dir . 'privacy-requests.php';
+		require_once $admin_dir . 'plugin-install.php';
+		require_once $admin_dir . 'site-health.php';
 		require_once $admin_dir . 'onboarding/theme-activation.php';
 		require_once $admin_dir . 'onboarding/ajax-functions.php';
 		require_once $functions_dir . 'onboarding.php';
@@ -375,7 +377,11 @@ function genesis_load_framework() {
 
 	// Load CLI command.
 	if ( defined( 'WP_CLI' ) && WP_CLI ) {
-		include PARENT_DIR . '/lib/classes/class-genesis-cli-command.php';
+		WP_CLI::add_command( 'genesis db', 'Genesis_Cli_Db_Command' );
+		WP_CLI::add_command( 'genesis core', 'Genesis_Cli_Core_Command' );
+		WP_CLI::add_command( 'genesis setting', 'Genesis_Cli_Settings_Command' );
+		WP_CLI::add_command( 'genesis option', 'Genesis_Cli_Settings_Command' );
+		WP_CLI::add_command( 'genesis', 'Genesis_Cli_Command' );
 	}
 
 	global $_genesis_formatting_allowedtags;

@@ -47,11 +47,7 @@ function genesis_post_date_shortcode( $atts ) {
 		$display = get_the_time( $atts['format'] );
 	}
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
-	} else {
-		$output = sprintf( '<span class="date published time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], $display, get_the_time( 'c' ) );
-	}
+	$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
 
 	return apply_filters( 'genesis_post_date_shortcode', $output, $atts );
 
@@ -85,11 +81,7 @@ function genesis_post_time_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_time' );
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . get_the_time( $atts['format'] ) . $atts['after'] . '</time>';
-	} else {
-		$output = sprintf( '<span class="date published time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], get_the_time( $atts['format'] ), get_the_time( 'c' ) );
-	}
+	$output = sprintf( '<time %s>', genesis_attr( 'entry-time' ) ) . $atts['before'] . $atts['label'] . get_the_time( $atts['format'] ) . $atts['after'] . '</time>';
 
 	return apply_filters( 'genesis_post_time_shortcode', $output, $atts );
 
@@ -131,11 +123,7 @@ function genesis_post_modified_date_shortcode( $atts ) {
 		$display = get_the_modified_time( $atts['format'] );
 	}
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<time %s>', genesis_attr( 'entry-modified-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
-	} else {
-		$output = sprintf( '<span class="date updated time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], $display, get_the_modified_time( 'c' ) );
-	}
+	$output = sprintf( '<time %s>', genesis_attr( 'entry-modified-time' ) ) . $atts['before'] . $atts['label'] . $display . $atts['after'] . '</time>';
 
 	/**
 	 * Change the output of the post_modified_date shortcode.
@@ -184,11 +172,7 @@ function genesis_post_modified_time_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_modified_time' );
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<time %s>', genesis_attr( 'entry-modified-time' ) ) . $atts['before'] . $atts['label'] . get_the_modified_time( $atts['format'] ) . $atts['after'] . '</time>';
-	} else {
-		$output = sprintf( '<span class="date updated time" title="%5$s">%1$s%3$s%4$s%2$s</span> ', $atts['before'], $atts['after'], $atts['label'], get_the_modified_time( $atts['format'] ), get_the_modified_time( 'c' ) );
-	}
+	$output = sprintf( '<time %s>', genesis_attr( 'entry-modified-time' ) ) . $atts['before'] . $atts['label'] . get_the_modified_time( $atts['format'] ) . $atts['after'] . '</time>';
 
 	/**
 	 * Change the output of the post_modified_time shortcode.
@@ -244,15 +228,11 @@ function genesis_post_author_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author' );
 
-	if ( genesis_html5() ) {
-		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
-		$output .= $atts['before'];
-		$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) ) . esc_html( $author ) . '</span>';
-		$output .= $atts['after'];
-		$output .= '</span>';
-	} else {
-		$output = sprintf( '<span class="author vcard">%2$s<span class="fn">%1$s</span>%3$s</span>', esc_html( $author ), $atts['before'], $atts['after'] );
-	}
+	$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
+	$output .= $atts['before'];
+	$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) ) . esc_html( $author ) . '</span>';
+	$output .= $atts['after'];
+	$output .= '</span>';
 
 	return apply_filters( 'genesis_post_author_shortcode', $output, $atts );
 
@@ -301,17 +281,12 @@ function genesis_post_author_link_shortcode( $atts ) {
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author_link' );
 
-	if ( genesis_html5() ) {
-		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
-		$output .= $atts['before'];
-		$output .= sprintf( '<a href="%s" %s>', $url, genesis_attr( 'entry-author-link' ) );
-		$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) );
-		$output .= esc_html( $author );
-		$output .= '</span></a>' . $atts['after'] . '</span>';
-	} else {
-		$link   = '<a href="' . esc_url( $url ) . '" rel="author external">' . esc_html( $author ) . '</a>';
-		$output = sprintf( '<span class="author vcard">%2$s<span class="fn">%1$s</span>%3$s</span>', $link, $atts['before'], $atts['after'] );
-	}
+	$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
+	$output .= $atts['before'];
+	$output .= sprintf( '<a href="%s" %s>', $url, genesis_attr( 'entry-author-link' ) );
+	$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) );
+	$output .= esc_html( $author );
+	$output .= '</span></a>' . $atts['after'] . '</span>';
 
 	return apply_filters( 'genesis_post_author_link_shortcode', $output, $atts );
 
@@ -354,17 +329,12 @@ function genesis_post_author_posts_link_shortcode( $atts ) {
 
 	$url = get_author_posts_url( get_the_author_meta( 'ID' ) );
 
-	if ( genesis_html5() ) {
-		$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
-		$output .= $atts['before'];
-		$output .= sprintf( '<a href="%s" %s>', $url, genesis_attr( 'entry-author-link' ) );
-		$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) );
-		$output .= esc_html( $author );
-		$output .= '</span></a>' . $atts['after'] . '</span>';
-	} else {
-		$link   = sprintf( '<a href="%s" rel="author">%s</a>', esc_url( $url ), esc_html( $author ) );
-		$output = sprintf( '<span class="author vcard">%2$s<span class="fn">%1$s</span>%3$s</span>', $link, $atts['before'], $atts['after'] );
-	}
+	$output  = sprintf( '<span %s>', genesis_attr( 'entry-author' ) );
+	$output .= $atts['before'];
+	$output .= sprintf( '<a href="%s" %s>', $url, genesis_attr( 'entry-author-link' ) );
+	$output .= sprintf( '<span %s>', genesis_attr( 'entry-author-name' ) );
+	$output .= esc_html( $author );
+	$output .= '</span></a>' . $atts['after'] . '</span>';
 
 	return apply_filters( 'genesis_post_author_posts_link_shortcode', $output, $atts );
 
@@ -470,11 +440,7 @@ function genesis_post_tags_shortcode( $atts ) {
 		return '';
 	}
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<span %s>', genesis_attr( 'entry-tags' ) ) . $tags . '</span>';
-	} else {
-		$output = '<span class="tags">' . $tags . '</span>';
-	}
+	$output = sprintf( '<span %s>', genesis_attr( 'entry-tags' ) ) . $tags . '</span>';
 
 	return apply_filters( 'genesis_post_tags_shortcode', $output, $atts );
 
@@ -518,11 +484,7 @@ function genesis_post_categories_shortcode( $atts ) {
 		return '';
 	}
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<span %s>', genesis_attr( 'entry-categories' ) ) . $atts['before'] . $cats . $atts['after'] . '</span>';
-	} else {
-		$output = '<span class="categories">' . $atts['before'] . $cats . $atts['after'] . '</span>';
-	}
+	$output = sprintf( '<span %s>', genesis_attr( 'entry-categories' ) ) . $atts['before'] . $cats . $atts['after'] . '</span>';
 
 	return apply_filters( 'genesis_post_categories_shortcode', $output, $atts );
 
@@ -577,11 +539,7 @@ function genesis_post_terms_shortcode( $atts ) {
 			return '';
 	}
 
-	if ( genesis_html5() ) {
-		$output = sprintf( '<span %s>', genesis_attr( 'entry-terms' ) ) . $terms . '</span>';
-	} else {
-		$output = '<span class="terms">' . $terms . '</span>';
-	}
+	$output = sprintf( '<span %s>', genesis_attr( 'entry-terms' ) ) . $terms . '</span>';
 
 	return apply_filters( 'genesis_post_terms_shortcode', $output, $terms, $atts );
 
@@ -625,48 +583,5 @@ function genesis_post_edit_shortcode( $atts ) {
 	$output = $edit;
 
 	return apply_filters( 'genesis_post_edit_shortcode', $output, $atts );
-
-}
-
-add_shortcode( 'adsense_hint', 'genesis_entry_adsense_hint' );
-/**
- * Produces adsense hint markup.
- *
- * Request a Google Adsense advert wherever placed.
- *
- * @since 2.6.0
- *
- * @param array|string $atts Shortcode attributes. Empty string if no attributes.
- * @return string Output for `genesis_adsense_hint` shortcode, or empty string if no adsense publisher ID is found.
- */
-function genesis_entry_adsense_hint( $atts ) {
-
-	if ( ! genesis_get_option( 'adsense_id' ) ) {
-		return '';
-	}
-
-	$defaults = array(
-		'id' => '',
-	);
-
-	$atts = shortcode_atts( $defaults, $atts );
-
-	// Generate ID if none provided.
-	if ( ! $atts['id'] ) {
-
-		static $i = 1;
-
-		$atts['id'] = sprintf( 'ad-%d-%d', get_the_ID(), $i );
-		$i++;
-
-	}
-
-	$output  = '<!-- adsense -->';
-	$output .= sprintf(
-		'<div><ins id="%s" style="display: none;" class="adsbygoogle-placeholder"></ins></div>',
-		esc_attr( $atts['id'] )
-	);
-
-	return $output;
 
 }

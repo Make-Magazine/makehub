@@ -47,13 +47,13 @@ class Genesis_Search_Form {
 		$default_strings = array(
 			'label'        => __( 'Search site', 'genesis' ),
 			'placeholder'  => '',
-			'input_value'  => apply_filters( 'the_search_query', get_search_query() ),
+			'input_value'  => apply_filters( 'the_search_query', get_search_query() ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core hook
 			'submit_value' => __( 'Search', 'genesis' ),
 		);
 
 		$this->strings = array_merge( $default_strings, $strings );
 
-		$this->unique_id = 'searchform-' . uniqid( '', true );
+		$this->unique_id = wp_unique_id( 'searchform-' );
 
 	}
 
@@ -61,6 +61,8 @@ class Genesis_Search_Form {
 	 * Return markup.
 	 *
 	 * @since 2.7.0
+	 *
+	 * @param array $args The args array to pass to `genesis_markup()`.
 	 */
 	protected function markup( $args ) {
 		$args = array_merge(
@@ -79,7 +81,7 @@ class Genesis_Search_Form {
 	 * @since 2.7.0
 	 */
 	public function render() {
-		echo $this->get_form();
+		echo $this->get_form(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We need raw output here
 	}
 
 	/**
@@ -117,7 +119,7 @@ class Genesis_Search_Form {
 				'content' => $this->strings['label'],
 				'context' => 'search-form-label',
 				'params'  => array(
-					'input_id' => $this->get_input_id()
+					'input_id' => $this->get_input_id(),
 				),
 			)
 		);

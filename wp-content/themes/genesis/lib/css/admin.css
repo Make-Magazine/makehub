@@ -10,7 +10,8 @@ Loaded on all admin pages */
 	font-style: normal;
 
 	src: url("fonts/genesis-icon.eot");
-	src: url("fonts/genesis-icon.eot?#iefix") format("embedded-opentype"),
+	src:
+		url("fonts/genesis-icon.eot?#iefix") format("embedded-opentype"),
 		url("fonts/genesis-icon.woff") format("woff"),
 		url("fonts/genesis-icon.ttf") format("truetype"),
 		url("fonts/genesis-icon.svg#genesis-icon") format("svg");
@@ -40,7 +41,7 @@ hr.div {
 	display: none;
 }
 
-#adminmenu .toplevel_page_genesis .wp-menu-image:before {
+#adminmenu .toplevel_page_genesis .wp-menu-image::before {
 	font-family: "genesis-icon" !important;
 	content: "\e600";
 }
@@ -217,8 +218,8 @@ hr.div {
 /* # Onboarding CSS */
 
 .genesis-onboarding-page-wrap *,
-.genesis-onboarding-page-wrap *:before,
-.genesis-onboarding-page-wrap *:after {
+.genesis-onboarding-page-wrap *::before,
+.genesis-onboarding-page-wrap *::after {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 }
@@ -234,22 +235,28 @@ h1.genesis-onboarding-page-title {
 	display: inline-block;
 	width: 65%;
 	padding: 4% 5% 5% 5%;
-	box-shadow: 1px 1px 10px rgba(0,0,0,.1);
+	box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.1);
 }
 
-.genesis-onboarding-intro-title {
+.wrap h1.genesis-onboarding-intro-title {
 	font-size: 38px;
 	font-weight: 400;
 	line-height: 1.2;
-	margin: 0 0 .5em 0;
+	margin: 0 0 0.5em 0;
 }
 
 .genesis-onboarding-intro-text {
 	margin-bottom: 1.2em;
 }
 
-.genesis-onboarding-main p {
+.genesis-onboarding-main p,
+.genesis-onboarding-main li li {
 	font-size: 18px;
+}
+
+.genesis-onboarding-main li li {
+	list-style-type: disc;
+	margin-left: 20px;
 }
 
 .genesis-onboarding-button {
@@ -260,7 +267,7 @@ h1.genesis-onboarding-page-title {
 	text-decoration: none;
 	font-weight: bold;
 	padding: 18px 20px;
-	transition: .3s ease;
+	transition: 0.3s ease;
 	text-align: center;
 	display: inline-block;
 }
@@ -269,14 +276,15 @@ h1.genesis-onboarding-page-title {
 	background: #0067cc;
 }
 
-.genesis-onboarding-button:not(.genesis-onboarding-button-alt):hover {
-	box-shadow: inset 0 0 80px rgba(255, 255, 255, 0.25);
+.genesis-onboarding-button:not(.genesis-onboarding-button-alt):hover,
+.genesis-onboarding-button:not(.genesis-onboarding-button-alt):focus {
+	box-shadow: inset 0 0 200px rgba(255, 255, 255, 0.25);
 	cursor: pointer;
 	color: #fff;
 }
 
 .genesis-onboarding-button:not(.genesis-onboarding-button-alt):active {
-	box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.25);
+	box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.25);
 }
 
 .genesis-onboarding-button-alt {
@@ -294,12 +302,12 @@ h1.genesis-onboarding-page-title {
 .genesis-onboarding-button-disabled {
 	pointer-events: none;
 	background: #6c8196;
-	opacity: .7;
+	opacity: 0.7;
 }
 
 .genesis-onboarding-button-disabled + #genesis-onboarding-settings-link {
 	pointer-events: none;
-	opacity: .4;
+	opacity: 0.4;
 }
 
 .genesis-onboarding-list {
@@ -309,10 +317,11 @@ h1.genesis-onboarding-page-title {
 	border-top: dotted 1px #ccc;
 }
 
-.genesis-onboarding-list li {
-	padding-left: 80px;
-	opacity: .8;
-	transition: .3s ease;
+.genesis-onboarding-list > li {
+	padding-left: 70px;
+	opacity: 0.8;
+	transition: 0.3s ease;
+	position: relative;
 }
 
 .genesis-onboarding-list p {
@@ -323,7 +332,7 @@ h1.genesis-onboarding-page-title {
 	margin-bottom: 10px;
 }
 
-.genesis-onboarding-list li:not(:last-child) {
+.genesis-onboarding-list > li:not(:last-child) {
 	border-bottom: dotted 1px #ccc;
 	margin-bottom: 4%;
 	padding-bottom: 1%;
@@ -332,7 +341,7 @@ h1.genesis-onboarding-page-title {
 li.genesis-onboarding-task-final {
 	visibility: hidden;
 	opacity: 0;
-	transition: visibility 0s, opacity 1.0s linear;
+	transition: visibility 0s, opacity 1s linear;
 	height: 0;
 }
 
@@ -354,14 +363,14 @@ li.genesis-onboarding-list-done {
 
 .genesis-onboarding-step-one,
 .genesis-onboarding-step-two {
-	transition: .2s ease;
+	transition: 0.2s ease;
 }
 
 .genesis-onboarding-step-one {
-	border: solid 4px #6c8196;
+	border: solid 3px #6c8196;
 	border-radius: 100px;
-	height: 50px;
-	width: 50px;
+	height: 40px;
+	width: 40px;
 	text-align: center;
 	line-height: 42px;
 	font-size: 24px;
@@ -390,8 +399,8 @@ li.genesis-onboarding-list-done {
 .genesis-onboarding-list-spinner {
 	animation: rotate 2s linear infinite;
 	z-index: 2;
-	width: 50px;
-	height: 50px;
+	width: 40px;
+	height: 40px;
 }
 
 .genesis-onboarding-list-spinner .path {
@@ -401,20 +410,24 @@ li.genesis-onboarding-list-done {
 }
 
 @keyframes rotate {
+
 	100% {
 		transform: rotate(360deg);
 	}
 }
 
 @keyframes dash {
+
 	0% {
 		stroke-dasharray: 1, 150;
 		stroke-dashoffset: 0;
 	}
+
 	50% {
 		stroke-dasharray: 90, 150;
 		stroke-dashoffset: -35;
 	}
+
 	100% {
 		stroke-dasharray: 90, 150;
 		stroke-dashoffset: -124;
@@ -423,7 +436,7 @@ li.genesis-onboarding-list-done {
 
 .genesis-onboarding-list svg polyline,
 .genesis-onboarding-list svg circle {
-	transition: .5s ease;
+	transition: 0.5s ease;
 }
 
 .genesis-onboarding-list-done svg polyline,
@@ -437,7 +450,7 @@ li.genesis-onboarding-list-done {
 }
 
 .genesis-onboarding-list .genesis-onboarding-button {
-	margin-top: .5em;
+	margin-top: 0.5em;
 	margin-right: 5px;
 	pointer-events: none;
 }
@@ -461,7 +474,7 @@ li.genesis-onboarding-list-done {
 
 .genesis-onboarding-screenshot {
 	max-width: 100%;
-	box-shadow: 1px 1px 5px rgba(0,0,0,.08);
+	box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.08);
 	margin-bottom: 2%;
 }
 
@@ -494,6 +507,7 @@ li.genesis-onboarding-list-done {
 }
 
 @media (max-width: 600px) {
+
 	.genesis-onboarding-main,
 	.genesis-onboarding-sidebar {
 		width: 100%;
@@ -501,10 +515,6 @@ li.genesis-onboarding-list-done {
 
 	.genesis-onboarding-sidebar {
 		margin-top: 8%;
-	}
-
-	.genesis-onboarding-intro-title {
-		font-size: 28px;
 	}
 
 	.genesis-onboarding-main p {
@@ -515,7 +525,7 @@ li.genesis-onboarding-list-done {
 		width: 100%;
 	}
 
-	.genesis-onboarding-button + .genesis-onboarding-button  {
+	.genesis-onboarding-button + .genesis-onboarding-button {
 		margin-top: 1em;
 	}
 }

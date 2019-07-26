@@ -45,14 +45,12 @@ class Genesis_Admin_Upgraded extends Genesis_Admin_Basic {
 	}
 
 	/**
-	 * Callback for displaying the What's New admin page.
+	 * Required to use `Genesis_Admin_Basic`.
 	 *
 	 * @since 1.9.0
 	 */
 	public function admin() {
-
 		require_once $this->views_base . '/pages/genesis-admin-upgraded.php';
-
 	}
 
 }
