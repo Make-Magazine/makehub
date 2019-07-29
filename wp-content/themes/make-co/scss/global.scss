@@ -11,6 +11,7 @@ html {
         }
     }
 }
+.genesis-skip-link { display: none; }
 .content-sidebar-wrap {
 	margin-top: 20px !important; // has to override, sumome. sorry not sorry
 }
@@ -20,6 +21,7 @@ html {
 	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
 }
 
+// test removing this proto repsonsiveness at some point
 .top15 { 
   margin-top:15px!important;
 }
