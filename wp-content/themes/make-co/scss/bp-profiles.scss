@@ -5,7 +5,7 @@
 				color: #fff;
 				background: #1987c7;
 			}
-			&.count {
+			.count {
 				color: #fff;
 				background: #ed1e24;
 			}
@@ -14,18 +14,34 @@
 				background: #00adef;
 			}
 		}
-		.checkbox-options {
-			display: grid;
-			grid-template-columns: auto auto auto auto;
-			@media screen and (max-width: 981px) {
-				grid-template-columns: auto auto auto;
-			}
-			@media screen and (max-width: 767px) {
-				grid-template-columns: auto auto;
-			}
-		}
 	}
 	.profile {
-		.screen-heading { display: none; }
+		#profile-edit-form {
+			.screen-heading { display: none; }
+			.checkbox-options {
+				display: grid;
+				grid-template-columns: auto auto auto auto;
+				@media screen and (max-width: 981px) {
+					grid-template-columns: auto auto auto;
+				}
+				@media screen and (max-width: 767px) {
+					grid-template-columns: auto auto;
+				}
+			}
+		}
+		.edit-field { margin-top: 0px; }
+		.button-nav {
+			padding-left: 0px;
+			li {
+				a {
+					padding: 10px;
+					width: 100%;
+					border: solid 12px;
+					border-radius: 5px 5px 0px 0px;
+					display: block;
+					border-bottom: 0px;
+				}
+			}
+		}
 	}
 }
