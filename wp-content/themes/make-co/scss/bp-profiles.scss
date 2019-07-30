@@ -16,8 +16,25 @@
 		}
 	}
 	.profile {
+		h2.screen-heading { display: none; }
+		.bp-tables-user {
+			padding: 10px;
+			border: 1px solid #1987C7;
+			background: #fafafa;
+			display: block;
+			td.label { 
+				color: #333;
+				min-width: 140px;
+				display: block;
+				text-align: left;
+				padding: 15px;
+			}
+		}
+		.profile-group-title {
+			padding-bottom: 3px;
+			border-bottom: 1px solid #1987C7;
+		}
 		#profile-edit-form {
-			.screen-heading { display: none; }
 			.checkbox-options {
 				display: grid;
 				grid-template-columns: auto auto auto auto;

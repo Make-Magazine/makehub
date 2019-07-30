@@ -109,7 +109,7 @@ function sumomeActive() {
 			case "community.make.co":
 				universalNavActive("community");
 				toggleMobileSection("community");
-				//nextItemUnderNav = jQuery(".main-container");
+				nextItemUnderNav = jQuery(".main-content");
 				break;
 			case "learn.make.co":
 			case "learn.makehub.local":
