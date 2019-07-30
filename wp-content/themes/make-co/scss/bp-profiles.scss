@@ -33,7 +33,6 @@
 			}
 			#profile-group-edit-submit {
 				color: #1987C7;
-				color: #1987C7;
 				border: thin solid #1987C7;
 				padding: 10px 30px;
 				&:hover, &:active, &:focus {
@@ -44,14 +43,14 @@
 		}
 		legend {
 			padding-bottom: 3px;
-			border-bottom: 1px solid #ed1e24;
+			border-bottom: 1px solid #1987C7;
 			margin-bottom:10px;
 			font-size: 18px;
 		}
 		.editfield { 
 			margin-top: 0px;
-			border-radius: none;
-			border: solid 1px #ed1e24;
+			border-radius: 0px;
+			border: solid 1px #1987C7;
 		}
 		.button-nav {
 			padding-left: 0px;
@@ -68,8 +67,9 @@
 						font-size: 18px;
 					}
 				}
-				&.current {
-					background: #ed1e24;
+				&.current a {
+					background: #1987C7;
+					color: #fff;
 				}
 			}
 		}
