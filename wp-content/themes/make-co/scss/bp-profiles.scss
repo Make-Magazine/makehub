@@ -27,6 +27,9 @@
 				@media screen and (max-width: 767px) {
 					grid-template-columns: auto auto;
 				}
+				@media screen and (max-width: 480px) {
+					grid-template-columns: auto;
+				}
 			}
 		}
 		.editfield { margin-top: 0px; }
