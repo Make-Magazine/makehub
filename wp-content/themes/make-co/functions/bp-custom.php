@@ -1,7 +1,8 @@
+<?php 
 /**
- * If you are using BP 2.1+, this will insert a Country selectbox.
- * Add the function to bp-custom.php and then visit .../wp-admin/users.php?page=bp-profile-setup
- */
+* If you are using BP 2.1+, this will insert a Country selectbox.
+* Add the function to bp-custom.php and then visit .../wp-admin/users.php?page=bp-profile-setup
+*/
 function bp_add_custom_country_list() {
  
 	if ( !xprofile_get_field_id_from_name('Country') && 'bp-profile-setup' == $_GET['page'] ) {
