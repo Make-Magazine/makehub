@@ -235,3 +235,26 @@ function bp_add_custom_country_list() {
 	}
 }
 add_action('bp_init', 'bp_add_custom_country_list');
+
+// add more info to the member loop if it exists
+function add_info_to_members_loop() {
+	if(xprofile_get_field_data( 'country', bp_get_member_user_id() )) {
+		echo "<p class='profile-field'><b>Country:</b> " . xprofile_get_field_data( 'country', bp_get_member_user_id() ) . "</p>";
+	}
+	if(xprofile_get_field_data( 'city', bp_get_member_user_id() )) {
+   	echo "<p class='profile-field'><b>City:</b> " . xprofile_get_field_data( 'city', bp_get_member_user_id() ) . "</p>";
+	}
+	//this gets the cover image, but not sure how to add it to the css for each entry
+	$member_cover_image_url = bp_attachments_get_attachment('url', array(
+          'object_dir' => 'members',
+          'item_id' =>bp_get_member_user_id(),
+        ));
+}
+add_action( 'bp_directory_members_item', 'add_info_to_members_loop' );
+
+// remove last active status from member directory
+add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
+function ps_remove_last_active ( $meta, $member, $is_loop ){
+	$meta['last_activity'] = '';
+	return $meta;
+} 
