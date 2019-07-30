@@ -111,7 +111,11 @@
 			}
 		}
 	}
-	#ihc-personal-li, .ihc-user-page-top-ap-wrapper, .ihc-ap-menu-item:nth-of-type(2), .ihc-ap-menu-item:last-of-type { 
+	#ihc-personal-li.bp-personal-sub-tab, .ihc-user-page-top-ap-wrapper, .ihc-ap-menu-item:nth-of-type(2), .ihc-ap-menu-item:nth-of-type(6) { 
 		display: none;
+	}
+	.ihc-ap-menu { 
+		padding: 0px;
+		.ihc-ap-menu-item { margin: 0px; }
 	}
 }
