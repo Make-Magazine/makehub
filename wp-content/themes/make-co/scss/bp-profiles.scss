@@ -1,0 +1,31 @@
+#buddypress {
+	.bp-navs {
+		li {
+			&.selected a {
+				color: #fff;
+				background: #1987c7;
+			}
+			&.count {
+				color: #fff;
+				background: #ed1e24;
+			}
+			a:hover {
+				color: #fff;
+				background: #00adef;
+			}
+		}
+		.checkbox-options {
+			display: grid;
+			grid-template-columns: auto auto auto auto;
+			@media screen and (max-width: 981px) {
+				grid-template-columns: auto auto auto;
+			}
+			@media screen and (max-width: 767px) {
+				grid-template-columns: auto auto;
+			}
+		}
+	}
+	.profile {
+		.screen-heading { display: none; }
+	}
+}
