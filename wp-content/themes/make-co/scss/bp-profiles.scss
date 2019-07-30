@@ -5,7 +5,7 @@
 				color: #fff;
 				background: #1987c7;
 			}
-			.count {
+			#user-notifications .count {
 				color: #fff;
 				background: #ed1e24;
 			}
@@ -31,18 +31,42 @@
 					grid-template-columns: auto;
 				}
 			}
+			#profile-group-edit-submit {
+				color: #1987C7;
+				color: #1987C7;
+				border: thin solid #1987C7;
+				padding: 10px 30px;
+				&:hover, &:active, &:focus {
+					background-color: #1987C7;
+					color: #fff;
+				}
+			}
 		}
-		.editfield { margin-top: 0px; }
+		legend {
+			padding-bottom: 3px;
+			border-bottom: 1px solid #ed1e24;
+			margin-bottom:10px;
+			font-size: 18px;
+		}
+		.editfield { 
+			margin-top: 0px;
+			border-radius: none;
+			border: solid 1px #ed1e24;
+		}
 		.button-nav {
 			padding-left: 0px;
+			margin: 0px;
 			li {
 				a {
 					padding: 10px;
 					width: 100%;
-					border: solid 2px;
+					border: solid 1px;
 					border-radius: 5px 5px 0px 0px;
 					display: block;
 					border-bottom: 0px;
+					@media screen and (max-width: 680px) {
+						font-size: 18px;
+					}
 				}
 				&.current {
 					background: #ed1e24;
