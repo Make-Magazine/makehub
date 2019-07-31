@@ -238,11 +238,14 @@ add_action('bp_init', 'bp_add_custom_country_list');
 
 // add more info to the member loop if it exists
 function add_info_to_members_loop() {
-	if(xprofile_get_field_data( 'country', bp_get_member_user_id() )) {
-		echo "<p class='profile-field'><b>Country:</b> " . xprofile_get_field_data( 'country', bp_get_member_user_id() ) . "</p>";
+	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
+	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
+
+	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
+		echo "<p class='profile-field'><b>Country:</b> " . xprofile_get_field_data('country', bp_get_member_user_id()) . "</p>";
 	}
-	if(xprofile_get_field_data( 'city', bp_get_member_user_id() )) {
-   	echo "<p class='profile-field'><b>City:</b> " . xprofile_get_field_data( 'city', bp_get_member_user_id() ) . "</p>";
+	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
+   	echo "<p class='profile-field'><b>City:</b> " . xprofile_get_field_data('city', bp_get_member_user_id()) . "</p>";
 	}
 	//this gets the cover image, but not sure how to add it to the css for each entry
 	$member_cover_image_url = bp_attachments_get_attachment('url', array(
