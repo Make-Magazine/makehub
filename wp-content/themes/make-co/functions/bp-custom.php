@@ -255,6 +255,23 @@ function add_info_to_members_loop() {
 }
 add_action( 'bp_directory_members_item', 'add_info_to_members_loop' ); */
 
+function youzer_add_custom_meta_fields() {
+	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
+	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
+	
+	echo("<span class='yz-name'>");
+	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
+		echo "<i class='fas fa-globe-americas'></i> " . xprofile_get_field_data('country', bp_get_member_user_id());
+	}
+	echo("</span>");
+	echo("<span class='yz-name'>");
+	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
+		echo "<i class='fas fa-city'></i> " . xprofile_get_field_data('city', bp_get_member_user_id());
+	} 
+	echo("</span>");
+}
+add_action( 'bp_directory_members_item_meta', 'youzer_add_custom_meta_fields' );
+
 // remove last active status from member directory
 add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
 function ps_remove_last_active ( $meta, $member, $is_loop ){
