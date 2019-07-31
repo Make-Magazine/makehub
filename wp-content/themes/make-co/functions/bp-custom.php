@@ -278,3 +278,34 @@ function ps_remove_last_active ( $meta, $member, $is_loop ){
 	$meta['last_activity'] = '';
 	return $meta;
 } 
+
+// add sidebar to members directory
+
+function yzc_register_members_directory_sidebars() {
+    register_sidebar(
+        array (
+            'name' => __( 'Members Directory Sidebar', 'youzer' ),
+            'id' => 'yz-members-directory-sidebar',
+            'description' => __( 'Members Directory Sidebar', 'youzer' ),
+            'before_widget' => '<div id="%1$s" class="widget-content %2$s">',
+            'after_widget' => "</div>",
+            'before_title' => '<h3 class="widget-title">',
+            'after_title' => '</h3>',
+        )
+    );
+}
+add_action( 'widgets_init', 'yzc_register_members_directory_sidebars' );
+/**
+ * Call Sidebar.
+ */
+function yzc_members_directory_sidebar() {
+    if ( ! bp_is_members_directory() ) {
+        return;
+    }
+    if ( is_active_sidebar( 'yz-members-directory-sidebar' ) ) {
+        echo '<div class="yz-sidebar-column yz-members-directory-sidebar youzer-sidebar"><div class="yz-column-content">';
+        dynamic_sidebar( 'yz-members-directory-sidebar' );
+        echo '</div></div>';
+    }
+}
+add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
