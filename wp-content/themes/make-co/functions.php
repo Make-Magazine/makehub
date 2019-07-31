@@ -465,6 +465,7 @@ add_action( 'login_footer', function() {
     get_footer();
 });
 
+
 /*
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
 function buddypress_add_last_activity() {
@@ -473,7 +474,6 @@ function buddypress_add_last_activity() {
   // $members =  get_users( 'fields=ID&role=subscriber' );
   
   foreach ( $members as $user_id ) {
-	     error_log($user_id);
         bp_update_user_last_activity( $user_id, bp_core_current_time() );
   }
 

@@ -236,7 +236,7 @@ function bp_add_custom_country_list() {
 }
 add_action('bp_init', 'bp_add_custom_country_list');
 
-// add more info to the member loop if it exists
+/* add more info to the member loop if it exists
 function add_info_to_members_loop() {
 	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
 	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
@@ -253,7 +253,7 @@ function add_info_to_members_loop() {
           'item_id' =>bp_get_member_user_id(),
         ));
 }
-add_action( 'bp_directory_members_item', 'add_info_to_members_loop' );
+add_action( 'bp_directory_members_item', 'add_info_to_members_loop' ); */
 
 // remove last active status from member directory
 add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
