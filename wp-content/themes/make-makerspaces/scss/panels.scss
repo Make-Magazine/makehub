@@ -1,0 +1,422 @@
+.content-panels {
+	text-align: center;
+	background: #333;
+	color: #fff;
+	.content-panel {
+		margin-bottom: 45px;
+	}
+	h1, h2, h3, h4 { 
+		font-family: "Roboto Light";
+	}
+	h1{ font-size: 60px; }
+	h2 { 
+		font-size: 26px;
+		img { max-height: 40px; margin-left: 15px;}
+	}
+	.btn { 
+		font-family: "Roboto Light";
+		min-width: 320px;
+		margin-top: 25px;
+		position: relative;
+		@media screen and (max-width: 480px) {
+			min-width: inherit;
+		}
+	}
+}
+
+.make-card, .make-panel  {
+	border: solid 1px #979797;
+	display: flex;
+	flex-direction: column;
+	color: #fff;
+	font-size: 20px;
+	text-decoration: none;
+	margin: 25px 0;
+	height: 91%;
+	max-height: 400px;
+	.image-crop {
+		max-height: 225px;
+		overflow: hidden;
+	}
+	.column-info {
+		padding: 0 10px;
+		.column-title {
+			font-family: "Roboto Bold";
+			margin-top: 25px;
+			@media screen and (max-width: 480px) {
+				margin-top: 0px;
+			}
+		}
+		.column-text {
+			font-family: "Roboto Light";
+			margin-bottom: 15px;
+		}
+	}
+	
+	&:hover, &:active, &:visited {
+		color: #fff;
+	}
+	&:hover {
+		border: solid 2px #00AEEF;
+	}
+}
+.make-panel { display: block; }
+
+.make-card {
+	@media screen and (max-width: 767px) {
+		flex-direction: row;
+		max-height: 133px;
+		.image-crop {
+			margin-right: 15px;
+			min-width: 40%;
+			max-width: 40%;
+			max-height: 130px;
+			margin-bottom: -10px;
+		}
+		.column-info {
+			font-size: 16px;
+			text-align: left;
+			.column-title {
+				margin-top: 10px;
+				font-family: "Roboto Light";
+			}
+		}
+	}
+}
+
+.three-column-cards {
+	h2 { 
+		text-align: left;
+		margin-bottom: -15px;
+	}
+}
+
+.center-column {
+	display: block;
+	padding: 30px 30px 0px 30px;
+	border: solid 1px #979797;
+	max-width: 750px;
+	min-height: 285px;
+	margin: 0 auto;
+	margin-bottom: 30px;
+	text-align: left;
+	color: #fff;
+	font-size: 20px;
+
+	&:hover, &:active, &:focus {
+		border: solid 2px #00AEEF;
+		color: #fff;
+	}
+	.column-header { 
+		margin-bottom: 15px;
+	}
+	.column-header, .column-title {
+		font-weight: bold;
+	}
+	.image-crop {
+		float: left;
+		max-height: 225px;
+		max-width: 50%;
+		overflow: hidden;
+		margin-right: 30px;
+		margin-bottom: 30px;
+	}
+	
+	@media screen and (max-width: 480px) {
+		min-height: 250px;
+		font-size: 15px;
+		padding-bottom: 15px;
+		.column-header { 
+			font-size: 16px;
+			margin-bottom: 10px;
+		}
+		.image-crop {
+			float: none;
+			width: 100%;
+			max-width: none;
+		}
+	}
+}
+
+.one-column-banner {
+	background-size: cover;
+	background-position: 50%;
+	min-height: 187px;
+	display: flex;
+   align-items: center;
+	justify-content: center;
+	padding: 0 10px;
+	a.btn {
+      position: absolute;
+      bottom: -65px;
+	   left: 0;
+      margin: 0 auto;
+      right: 0;
+      width: 200px;
+		@media screen and (max-width: 480px) {
+			bottom: -30px;
+		}
+	}
+}
+
+.three-column {
+	.three-column-header {
+		img {
+			 padding-bottom: 20px;
+		}
+	}
+	.make-panel {
+		margin: 25px 20px;
+		.column-info { 
+			min-height: 100px; 
+			padding: 0px 10px;
+		}
+		@media screen and (max-width: 996px) {
+			margin: 25px 0px;
+		}
+		@media screen and (max-width: 767px) {
+			height: 100%;
+			margin: 0px;
+			padding: 15px 0px;
+			width: 100%;
+			border: 0px;
+			border-bottom: solid 1px #979797;
+			.column-info {
+				float: right;
+				text-align: left;
+				width: 60%;
+				padding: 0px 25px;
+			}
+			img { 
+				float: right;
+				width: 35%;
+				margin-bottom: 20px;
+			}
+		}
+	}
+	@media screen and (max-width: 767px) {
+		.three-column-contents .row > div:first-child {
+			.make-panel {
+				border-top: solid 1px #979797;
+			}
+		}
+	}
+}
+
+.four-column {
+	.container-fluid {
+		@media screen and (min-width:982px) {
+			padding: 0 15px;
+		}
+	}
+	.column-contents {
+		.column-title { 
+			font-family: "Roboto";
+			font-size: 36px;
+		}
+   }
+	.polaroid-card {
+		display: flex;
+		max-height: 200px;
+		margin: 15px 0;
+		color: #4A4A4A;
+		overflow-y: hidden;
+		background: #fff;
+		border: solid 2px #333;
+		.column-title {
+			font-size: 20px;
+			padding: 15px;
+			background: #cbcbcb;
+			width: 100%;
+			text-align: left;
+		}
+		.image-wrap {
+			 width: 100%;
+			 height: 250px;
+			 background-size: cover !important;
+			 background-position: top !important;
+		}
+		@media screen and (max-width:480px) {
+			min-height: 150px;
+			max-height: 150px;
+		}
+		&:hover, &:active, &:focus {
+			border: solid 2px #00AEEF;
+		}
+	}
+	@media screen and (min-width:1199px) {
+		.column-contents {
+			font-size: 26px;
+		}
+	}
+	@media screen and (min-width:982px) {
+		&.hidden-titles {
+			.column-title { display: none; }
+		}
+		.polaroid-card {
+         margin: 0px;
+			padding: 15px;
+			height: 100%;
+			max-height: 100%;
+			display: flex;
+			justify-content: space-between;
+			flex-direction: column;
+			.column-title {
+				background: transparent;
+				text-align: center;
+			}
+			.image-wrap {
+				background-size: contain !important;
+				background-position: center !important;
+			}
+		}
+		.column-contents {
+			display: flex;
+			justify-content: space-between;
+			flex-direction: column;
+			height: 100%;
+			text-align: left;
+			font-size: 18px;
+			font-family: "Roboto Light";
+			.btn { 
+				min-width: 0px;
+				width: 100%;
+			}
+		}
+	}
+	@media screen and (max-width:981px) {
+		transform: scaleY(-1);
+		.col-sm-12 {
+			transform: scaleY(-1);
+			width: 100%;
+		}
+	}
+}
+
+.two-column {
+	.container-fluid{ 
+		margin-bottom: -45px; // probably remove this as more panels come online
+	}
+	.column {
+		background-size: cover;
+		.column-info { 
+			padding: 45px 0px 25px; 
+			.column-title {
+				font-size: 48px;
+				line-height: 46px;
+				margin-bottom: 45px;
+			}
+			.column-list {
+				text-align: left;
+				margin: 0 15% 30px;
+				li {
+					list-style: disc;
+					font-family: "Roboto Light";
+					font-size: 24px;
+				}
+			}
+		}
+		.small-card {
+			@media screen and (min-width: 981px) {
+				width: 400px;
+			}
+			@media screen and (max-width: 981px) {
+				margin: 0;
+			}
+			margin: 0 auto;
+			padding: 25px 30px;
+			background: #cbcbcb;
+			img { 
+				height: 80px;
+				@media screen and (max-width: 767px) {
+					height: 60px;
+				}
+			}
+			.column-text {
+				margin-top: 10px;
+				color: #4a4a4a;
+				font-family: "Roboto Light";
+				font-size: 20px;
+			}
+			.btn {
+				&::after {
+					font-family: "LinearIcons-Free";
+					content: "\e87a";
+					position: absolute;
+					right: 28%;
+				}
+				@media screen and (max-width: 767px) {
+					min-width: 280px;
+					&::after {
+						right: 25%;
+					}
+				}
+			}
+		}
+		@media screen and (max-width: 981px) {
+			&:first-of-type {
+				.small-card {
+					margin-bottom: 30px;
+					margin-top: -45px;
+				}
+			}
+		}
+	}
+}
+
+.two-column-flexible {
+	@media screen and (min-width: 1200px) {
+		.container .row { margin: 0px 45px; }
+	}
+	.column-box {
+		border: solid 1px #979797;
+		padding: 25px 45px;
+		width: 100%;
+		margin-bottom: 15px;
+		min-height: 260px;
+		display: flex;
+		flex-direction: column;
+		@media screen and (max-width: 480px) {
+			adding: 25px 5px;
+		}
+		.column-header {
+			font-size: 20px;
+			font-family: 'Roboto Medium';
+			margin-bottom: 15px;
+			flex-grow: 1;
+		}
+		.column-text {
+			font-size: 16px;
+		}
+		.universal-btn {
+			width: 100%;
+		}
+		form, .universal-btn {
+		}
+		input[type='email'] {
+			width: 100%;
+			color: #fff;
+			border: solid #6D6D6D 1px;
+			background: transparent;
+		}
+	}
+}
+
+.safari-mac .content-panels {
+	@media (min-width: 982px) {
+		.col-md-6 {
+			width: 49.5%;
+		}
+		.col-md-3 {
+			width: 24.75%;
+		}
+	}
+	@media (min-width: 768px) {
+	  .col-sm-4 {
+		  width: 33%;
+		}
+		.col-sm-6 {
+			width: 49.5%;
+		}
+	}
+}
