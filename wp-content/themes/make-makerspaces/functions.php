@@ -15,7 +15,7 @@ require_once get_template_directory() . '/lib/init.php';
 
 // Defines the child theme (do not remove).
 define( 'CHILD_THEME_NAME', 'Make - Makerspaces' );
-define( 'CHILD_THEME_URL', 'https://make.co' );
+define( 'CHILD_THEME_URL', 'https://makermedia.com' );
 define( 'CHILD_THEME_VERSION', '1.0.0' );
 
  // Load child theme textdomain.
