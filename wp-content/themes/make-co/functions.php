@@ -1,10 +1,10 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
- * This file adds functions to the Make - Co Theme.
+ * This file adds functions to the Make - Community Theme.
  *
- * @package Make - Co
+ * @package Make - Community
  * @author  Maker Media
  * @license GPL-2.0-or-later
  * @link    https://makermedia.com/
@@ -14,8 +14,8 @@
 require_once get_template_directory() . '/lib/init.php';
 
 // Defines the child theme (do not remove).
-define( 'CHILD_THEME_NAME', 'Make - Co' );
-define( 'CHILD_THEME_URL', 'https://makermedia.com' );
+define( 'CHILD_THEME_NAME', 'Make - Community' );
+define( 'CHILD_THEME_URL', 'https://community.make.co' );
 
 // Sets up the Theme.
 require_once get_stylesheet_directory() . '/lib/theme-defaults.php';

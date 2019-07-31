@@ -1,8 +1,8 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
- * This file adds the Genesis Connect for WooCommerce notice to the Make - Co Theme.
+ * This file adds the Genesis Connect for WooCommerce notice to the Make - Community Theme.
  *
  * @package Make - Co
  * @author  Maker Media

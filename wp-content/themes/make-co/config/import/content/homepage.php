@@ -1,6 +1,6 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
  * Homepage content optionally installed after theme activation.
  *

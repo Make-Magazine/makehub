@@ -1,6 +1,6 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
  * Onboarding config to load plugins and homepage content on theme activation.
  *

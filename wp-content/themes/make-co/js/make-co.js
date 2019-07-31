@@ -1,5 +1,5 @@
 /**
- * Make - Co entry point.
+ * Make - Community entry point.
  *
  * @package MakeCo\JS
  * @author  Maker Media
@@ -25,7 +25,7 @@ var makeCo = ( function( $ ) {
 	},
 
 	/**
-	 * Initialize Make - Co Theme
+	 * Initialize Make - Community Theme
 	 *
 	 * Internal functions to execute on full page load.
 	 *

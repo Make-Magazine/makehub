@@ -1,8 +1,8 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
- * This file adds the required helper functions used in the Make - Co Theme.
+ * This file adds the required helper functions used in the Make - Community Theme.
  *
  * @package Make - Co
  * @author  Maker Media

@@ -1,6 +1,6 @@
 <?php
 /**
- * Make - Co child theme.
+ * Make - Community child theme.
  *
  * @author  Maker Media
  * @license GPL-2.0-or-later

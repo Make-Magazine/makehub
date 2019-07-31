@@ -1,8 +1,8 @@
 <?php
 /**
- * Make - Co Theme
+ * Make - Community Theme
  *
- * This file adds the landing page template to the Make - Co Theme.
+ * This file adds the landing page template to the Make - Community Theme.
  *
  * Template Name: Landing
  *
