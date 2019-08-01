@@ -474,7 +474,9 @@ function buddypress_add_last_activity() {
   // $members =  get_users( 'fields=ID&role=subscriber' );
   
   foreach ( $members as $user_id ) {
-        bp_update_user_last_activity( $user_id, bp_core_current_time() );
+	  //error_log(print_r(ihc_get_avatar_for_uid($user_id), TRUE));
+     bp_update_user_last_activity( $user_id, bp_core_current_time() );
+	  xprofile_set_field_data('Profile Photo', $user_id, ihc_get_avatar_for_uid($user_id) );
   }
 
 }
@@ -482,6 +484,7 @@ add_action('bp_init', 'buddypress_add_last_activity' );
 // just in case, prevent a billion activation emails from being sent
 add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
 */
+
 
 /* This won't be necessary, Alicia is going to rename the mm user logins
 $blogusers = get_users( 'blog_id=1' );

@@ -8,13 +8,12 @@ function make_default_avatar ( $value ){
   $avatar_dir = get_stylesheet_directory_uri() . '/images/default-avatars/';
   return $avatar_dir . "custom-avatar" . rand( 0 , 10 ).'.jpg';
 }
-/*
+
 function buddydev_set_default_avatar( $value ) {
   $avatar_dir = get_stylesheet_directory_uri() . '/images/default-avatars/';
   return $avatar_dir . "custom-avatar" . rand( 0 , 10 ).'.jpg';
 }
 add_filter( 'bp_core_avatar_default',   'buddydev_set_default_avatar' );
-*/
 
 // Register the Cover Image feature for Users profiles, this probably only occurs when registering new users or groups
 function bp_default_register_feature() {
