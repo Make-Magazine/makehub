@@ -474,9 +474,7 @@ function buddypress_add_last_activity() {
   // $members =  get_users( 'fields=ID&role=subscriber' );
   
   foreach ( $members as $user_id ) {
-	  //error_log(print_r(ihc_get_avatar_for_uid($user_id), TRUE));
      bp_update_user_last_activity( $user_id, bp_core_current_time() );
-	  xprofile_set_field_data('Profile Photo', $user_id, ihc_get_avatar_for_uid($user_id) );
   }
 
 }
