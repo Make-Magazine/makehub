@@ -1,31 +1,38 @@
 {
-   "name": "Make-Learn",
-   "version": "1.0.6",
-   "author": "Maker Media",
-   "license": "UNLICENSED",
-   "private": true,
-   "repository": {
-      "type": "git",
-      "url": "https://github.com/Make-Magazine/makehub.git"
-   },
-   "scripts": {
-      "cachebust:update": "npm version patch",
-      "postcachebust:update": "npm run replace:version",
-      "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
-      "scss:fe:compile": "node-sass scss/style.scss css/style.min.css --output-style compressed --source-map true",
-      "js:fe:uglify": "uglifyjs js/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
-      "onchange:scss:fe": "onchange 'scss/**/*.scss' -- npm run scss:fe:compile",
-      "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
-      "build": "npm-run-all js:**:uglify scss:**:compile",
-      "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
-      "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
-   },
-   "devDependencies": {
-      "node-sass": "^4.11.0",
-      "npm-run-all": "^4.1.5",
-      "onchange": "^5.2.0",
-      "replace-in-file": "^3.4.2",
-      "uglify-js": "^3.4.9"
-   },
-   "dependencies": {}
+    "name": "Make-Learn",
+    "version": "1.0.6",
+    "author": "Maker Media",
+    "license": "UNLICENSED",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Make-Magazine/makehub.git"
+    },
+    "scripts": {
+        "cachebust:update": "npm version patch",
+        "postcachebust:update": "npm run replace:version",
+        "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
+        "scss:fe:compile": "node-sass scss/style.scss css/style.min.css --output-style compressed --source-map true",
+        "js:fe:uglify": "uglifyjs js/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
+        "js:transpile:map": "babel js/ms-map/ms-map-src.js -d js/ms-map/ms-map-src-es5 --presets=@babel/env",
+        "postjs:transpile:map": "npm run js:map:uglify",
+        "js:map:uglify": "uglifyjs js/ms-map/ms-map-src-es5/ms-map-src.js -o js/min/ms-map.min.js -c -m --source-map \"root='../../../', url='ms-map.min.js.map'\"",
+        "onchange:scss:fe": "onchange 'scss/**/*.scss' -- npm run scss:fe:compile",
+        "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
+        "onchange:vue:map": "onchange './includes/js/ms-map/ms-map-src.js' -- npm run js:transpile:map",
+        "build": "npm-run-all js:**:uglify js:transpile:map scss:**:compile",
+        "build:cachebust": "npm-run-all cachebust:update js:**:uglify js:transpile:map scss:**:compile",
+        "dev": "npm-run-all build -p onchange:js:** js:transpile:map onchange:scss:**"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.2.3",
+        "@babel/core": "^7.2.2",
+        "@babel/preset-env": "^7.3.1",
+        "node-sass": "^4.11.0",
+        "npm-run-all": "^4.1.5",
+        "onchange": "^5.2.0",
+        "replace-in-file": "^3.4.2",
+        "uglify-js": "^3.4.9"
+    },
+    "dependencies": {}
 }

@@ -10,7 +10,7 @@
  * @license GPL-2.0-or-later
  * @link    https://my.studiopress.com/themes/genesis/
  */
-
+remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
 /**
  * Fires at start of header.php, immediately before `genesis_title` action hook to render the Doctype content.
  *

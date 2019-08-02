@@ -4,7 +4,6 @@
  *
  * @package _makerspaces
  */
-remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
 get_header(); ?>
 
    <div class="container directory-container" id="directory">
