@@ -1,0 +1,273 @@
+.directory-container {
+    .map-header .admin-buttons {
+        float: right;
+        margin-top: -3em;
+    }
+    .map-filters-wrp {
+        background-color: #005E9A;
+        padding: 12px 15px;
+        z-index: 100;
+        width: 100%;
+        text-align: center;
+        label {
+            display: inline-block;
+            font-family: "Roboto Light";
+            color: #fff;
+            font-size: 18px;
+            font-weight: 100;
+            margin: 0 20px 10px 0;
+            //float: left;
+        }
+        input {
+            display: inline;
+            font-size: 16px;
+            width: 100%;
+            max-width: 400px;
+            height: 40px;
+            //min-width: 312px;
+        }
+
+        @media all and (max-width: 767px) {
+            .searchbox {  
+                input[type="text"] {
+                    flex: 1;
+                    max-width: initial;
+                }
+            }
+        }
+
+    }
+}
+
+/* adding here */
+.makerspaces-map-wrp {
+    .map-header {
+        margin-bottom: 15px;
+        p { line-height: 1.6em; text-align: center; }
+    }
+
+    nav.map-filters-wrp {
+        background-color: #005E9A;
+        padding: 12px 15px;
+        z-index: 100;
+        width: 100%;
+        text-align: center;
+        h2 {
+            display: inline-block;
+            font-family: "Roboto Light";
+            color: #fff;
+            font-size: 18px;
+            font-weight: 100;
+            margin: 6px 20px 0 15px;
+            a { 
+                color: #fff;
+                &:hover, &:focus, &:active {
+                    color: #ddd;
+                    text-decoration: none;
+                }
+            }
+            @media all and (max-width: 767px) {
+                display: block;
+                padding: 5px;
+            }
+        }
+        .searchbox input[type="text"] {
+            display: inline-block;
+            font-size: 16px;
+            max-width: 400px;
+            padding-right: 23px;
+            height: 40px;
+        }
+        .checkbox {
+            display: inline-block;
+            margin: 5px;
+            font-size: 14px;
+            line-height: 20px;
+            vertical-align: bottom;
+            .fa.fa-square-o, .fa.fa-check-square-o {
+                font-size: 1.5em;
+                vertical-align: middle;
+            }
+            label {
+                padding-left: 0;
+                @media all and (min-width: 1200px) {
+                    padding-left:20px;
+                }
+                @media all and (max-width: 991px) {
+                    padding-left:7px;
+                }
+            }
+        }
+        @media all and (max-width: 767px) {
+            .searchbox {  
+                input[type="text"] {
+                    flex: 1;
+                    max-width: initial;
+                }
+            }
+            .filters {
+                clear: both;
+                min-width: 200px;
+                float: left;
+                margin: 5px 0 -5px 0;
+            }
+        }
+    }
+
+    #makerspaces-map {
+        height: 400px;
+        display: block;
+    }
+
+    .faire-list-table {
+        border-top: solid 1px #3D7B98;
+        @media screen and (max-width: 767px) {
+            border: none;
+            border-top: solid 1px #3D7B98;
+        }
+        .table-striped {
+            .header {
+                font-size: 18px;
+                .fa { 
+                    font-size: 12px;
+                }
+            }
+            .row {
+                padding: 10px 0;
+                font-size: 16px;
+                font-family: "Roboto Light", Helvetica, sans-serif;
+                &:nth-child(even) {
+                    background: #F8F8F8;
+                }
+            }
+        }
+
+    }
+    .loading-spinner {
+        color: white;
+        padding: 190px;
+        font-size: 25px;
+        width: 100%;
+        text-align: center;
+        height: 400px;
+        background-color: #EBF0F3;
+    }
+    .faire-key-boxes {
+        display: flex;
+        font-size: 20px;
+        cursor: pointer;
+        justify-content: space-between;
+        color: white;
+        @media all and (max-width: 767px) {
+            flex-flow:column;
+            margin: 10px 0;
+        }
+        p {
+            font-size: 14px;
+            font-weight: 300;
+        }
+        div {
+            width: 24.5%;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0 15px 0;
+            @media all and (max-width: 767px) {
+                width:100%;
+                margin: 3px 0;
+            }
+        }
+        .flagship-key {
+            background-color: #D42410;
+            &:hover { background-color: #B62601; }
+        }
+        .featured-key {
+            background-color: #01A3E0;
+            &:hover { background-color: #358DC7; }
+        }
+        .mini-key {
+            background-color: #67D0F7;
+            &:hover { background-color: #69BAE1; }
+        }
+        .school-key {
+            background-color: #7ED321;
+            &:hover { background-color: #75BF04; }
+        }
+
+    }
+    .map-app-container {
+        margin-bottom: 20px;
+    }
+}
+
+#map-wrapper {
+    height: 500px;
+    width: 100vw;
+    #map-canvas {
+        height: 100%;
+        width: 100%
+    }
+}
+
+.container-fluid.light-blue {
+    background: #e2f2fd;
+    text-align: center;
+    padding: 20px 0px 30px;
+    .makerspace-bottom-nav {
+        padding: 0 10px;
+        height: 100%;
+        &::after {
+            content: "";
+            background-image: url('/wp-content/themes/make-makerspaces/images/grey-pixel.gif');
+            width: 1px;
+            height: 100px;
+            display: inline-block;
+            position: absolute;
+            top: 25px;
+            right: 0px;
+        }
+        h4 { 
+            height: 40px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            padding: 0 15px;
+        }
+        @media all and (max-width: 991px) {
+            padding: 0 20px;
+            margin-bottom: 32px;
+            &:nth-of-type(2) {
+                &::after {
+                    background-image: none;
+                }
+            }
+        }
+        @media all and (max-width: 767px) { 
+            padding: 0px;
+            h4 {
+                height: auto;
+                margin-bottom: 12px;
+            }
+        }
+        &:first-of-type {
+            @media all and (min-width: 991px) {
+                padding-left: 0px;
+            }
+        }
+        &:last-of-type {
+            @media all and (min-width: 988px) {
+                padding-right: 0px;
+            }
+            &::after {
+                background-image: none;
+            }
+        }
+    }
+}
+.makerspace-news {
+    margin-top: 50px;
+    h2 {        
+        img.logo {
+            margin-bottom: 10px;
+            width: 100px;
+        }
+    }    
+}

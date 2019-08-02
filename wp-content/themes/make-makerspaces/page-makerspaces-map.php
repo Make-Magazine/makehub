@@ -4,7 +4,7 @@
  *
  * @package _makerspaces
  */
-
+remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
 get_header(); ?>
 
    <div class="container directory-container" id="directory">
@@ -13,8 +13,8 @@ get_header(); ?>
          <div class="col-md-12">
             <h1>Makerspace Directory</h1>
             <div class="admin-buttons">
-               <a class="btn btn-blue" href="/register">Add yours <i class="fa fa-plus"></i></a>
-					<a class="btn btn-blue" href="/edit-your-makerspace">Manage <i class="fa fa-pencil-square-o"></i></a>
+                <a class="btn universal-btn" href="/register">Add yours <i class="fa fa-plus"></i></a>
+		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="fa fa-pencil-square-o"></i></a>
             </div>
             <p><?php //echo the_content(); ?></p>
          </div>
@@ -64,19 +64,19 @@ get_header(); ?>
       <div class="row">
          <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
             <h4>Join our global network of makerspaces</h4>
-            <a class="btn btn-blue" href="/register">Add your makerspace</a>
+            <a class="btn universal-btn" href="/register">Add your makerspace</a>
          </div>
          <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
             <h4>See an error or need to update your info?</h4>
-            <a class="btn btn-blue" href="/edit-your-makerspace">Manage your listing</a>					
+            <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>					
          </div>
          <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
             <h4>Get a free PDF guide on starting a makerspace</h4>
-            <a class="btn btn-blue" href="/playbook">Download the playbook</a>
+            <a class="btn universal-btn" href="/playbook">Download the playbook</a>
          </div>
          <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
             <h4>Start your own makerspace today</h4>
-            <a class="btn btn-blue" href="https://learn.make.co/courses/starting-a-school-makerspace/info">Take the course</a>
+            <a class="btn universal-btn" href="https://learn.make.co/courses/starting-a-school-makerspace/info">Take the course</a>
          </div>
       </div>
    </div>
@@ -84,9 +84,9 @@ get_header(); ?>
 
 
 <div class="container makerspace-news">
+    <h2>Makerspace News from <img class="logo" src="https://make.co/wp-content/themes/memberships/img/make_logo.svg" /> magazine</h2>
    <div class="row posts-feeds-wrapper">
-      <h2>Makerspace News from <img class="logo" src="https://make.co/wp-content/themes/memberships/img/make_logo.svg" /> magazine</h2>
-
+      
       <?php
       $rss = fetch_feed('https://makezine.com/tag/makerspaces/feed/');
       if (!is_wp_error($rss)) :
@@ -138,7 +138,7 @@ get_header(); ?>
       <?php endforeach; ?>
       
       <div class="col-xs-12">
-         <a class="btn btn-blue btn-more-articles" href="http://makezine.com/tag/makerspaces/" target="_blank">See more articles</a>
+         <a class="btn universal-btn btn-more-articles" href="http://makezine.com/tag/makerspaces/" target="_blank">See more articles</a>
       </div>
    </div>
 

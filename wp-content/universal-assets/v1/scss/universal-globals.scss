@@ -220,3 +220,7 @@ a { // don't let genesis molest our links
 	-ms-transform: rotate(45deg);
 	transform: rotate(45deg);
 }
+
+.genesis-skip-link {
+    display: none;
+}
