@@ -310,25 +310,8 @@ function make_learn_comments_gravatar( $args ) {
 LOGIN FUNCTIONS 
 ****************************************************/
 
-function cookie_login_warning() { ?>
-    <style type="text/css">
-        .wp-core-ui #login { width: 80%; }
-        #login::before {
-            content: "We are unable to process your login as we have detected that you have cookies blocked. Please make sure cookies are enabled in your browser and try again.";
-            text-align: center;
-            font-size:42px;
-            line-height: 46px;
-        }
-        #form-signin-wrapper {
-            display: none;
-        }
-    </style>
-    <?php
 
-}
-
-add_action('login_enqueue_scripts', 'cookie_login_warning');
-
+/* Old auth0 scripts
 // redirect wp-login.php to the auth0 login page 
 
 function load_auth0_js() {
@@ -383,7 +366,7 @@ function MM_WPlogin() {
         error_log(print_r($userinput, TRUE));
         wp_send_json_error();
     }
-} 
+} */
 
 
 /**
@@ -392,6 +375,27 @@ function MM_WPlogin() {
  * this will stop spam bots from signing up
  */
 /*
+
+/*
+function cookie_login_warning() { ?>
+    <style type="text/css">
+        .wp-core-ui #login { width: 80%; }
+        #login::before {
+            content: "We are unable to process your login as we have detected that you have cookies blocked. Please make sure cookies are enabled in your browser and try again.";
+            text-align: center;
+            font-size:42px;
+            line-height: 46px;
+        }
+        #form-signin-wrapper {
+            display: none;
+        }
+    </style>
+    <?php
+
+}
+
+add_action('login_enqueue_scripts', 'cookie_login_warning');
+
 add_action('login_enqueue_scripts', 'login_recaptcha_script');
 
 function login_recaptcha_script() {
@@ -445,4 +449,50 @@ function wpse45134_filter_option()
     // against `false`
     add_filter( 'pre_option_users_can_register', '__return_zero' );
 } 
+*/
+
+function custom_login_stylesheets() {
+    wp_enqueue_style( 'custom-login', get_stylesheet_directory_uri() . '/css/style-login.css' );
+	 wp_enqueue_style( 'custom-login', '/wp-content/universal-assets/v1/css/universal.css' );
+}
+//This loads the function above on the login page
+add_action( 'login_enqueue_scripts', 'custom_login_stylesheets' );
+
+add_action( 'login_header', function() {
+    get_header();
+});
+add_action( 'login_footer', function() {
+    get_footer();
+});
+
+
+/*
+// this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
+function buddypress_add_last_activity() {
+
+  $members =  get_users( 'blog_id=1&fields=ID' );
+  // $members =  get_users( 'fields=ID&role=subscriber' );
+  
+  foreach ( $members as $user_id ) {
+     bp_update_user_last_activity( $user_id, bp_core_current_time() );
+  }
+
+}
+add_action('bp_init', 'buddypress_add_last_activity' );
+// just in case, prevent a billion activation emails from being sent
+add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
+*/
+
+
+/* This won't be necessary, Alicia is going to rename the mm user logins
+$blogusers = get_users( 'blog_id=1' );
+// Array of WP_User objects.
+foreach ( $blogusers as $user ) {
+	//error_log(print_r($user, TRUE));
+	$new_user_login = substr($user->user_login, 0, strpos($user->user_login, "@"));
+	error_log($new_user_login);
+	if($new_user_login && $new_user_login != "") {
+		$wpdb->update($wpdb->users, array('user_login' => $new_user_login), array('ID' => $user->ID));
+	}
+}
 */

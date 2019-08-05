@@ -1,15 +1,16 @@
 html {
-    overflow-x: hidden;
-    height: 100vh;
-    body { 
-        min-height: 100%;
-        #page-content, #error-page {
-            min-height: calc(100vh - 418px);
-            @media screen and (max-width: 767px) {
-                min-height: calc(100vh - 288px);
-            }
-        }
-    }
+	overflow-x: hidden;
+	height: 100vh;
+	body { 
+		min-height: 100%;
+		.site-container { overflow-y: hidden; }
+		.main-content {
+			min-height: calc(100vh - 418px);
+			@media screen and (max-width: 767px) {
+				min-height: calc(100vh - 288px);
+			}
+		}
+	}
 }
 .genesis-skip-link { display: none; }
 .content-sidebar-wrap {
