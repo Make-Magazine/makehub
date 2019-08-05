@@ -2,6 +2,11 @@
     .map-header .admin-buttons {
         float: right;
         margin-top: -3em;
+		 .btn {
+			 padding: 10px 20px;
+			 display: inline-block;
+			 height: auto;
+		 }
     }
     .map-filters-wrp {
         background-color: #005E9A;

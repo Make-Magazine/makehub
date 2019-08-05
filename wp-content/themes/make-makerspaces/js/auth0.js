@@ -1,9 +1,6 @@
-window.addEventListener('load', function() {
+/* window.addEventListener('load', function() {
 
   // buttons and event listeners
-  /*    If the login button, logout button or profile view elements do not exist
-   *    (such as in wp-admin and wp - login pages) default to a 'fake' element
-   */
   if ( !jQuery( "#newLoginBtn" ).length ) {
     var loginBtn = document.createElement('div');
     loginBtn.setAttribute("id", "newLoginBtn");
@@ -177,3 +174,4 @@ window.addEventListener('load', function() {
 	}
    
 });
+*/
