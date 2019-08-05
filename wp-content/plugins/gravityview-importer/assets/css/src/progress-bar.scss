@@ -1,0 +1,22 @@
+$steps-gap-size: .7rem !default;
+$steps-active-color: $blue !default;
+$steps-completed-color: $grey !default;
+
+@import '~bulma-steps-component/bulma-steps.sass';
+
+.progress-bar {
+
+	.steps-marker {
+		box-shadow: 0 0 0 5px $grey-light;
+	}
+
+	.steps-content p {
+		margin-top: 1rem;
+		font-weight: 300;
+		line-height: 1.1;
+	}
+
+	.is-active .steps-content p {
+		font-weight: 500;
+	}
+}

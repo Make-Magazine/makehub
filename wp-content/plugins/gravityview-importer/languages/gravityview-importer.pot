@@ -1,0 +1,1971 @@
+# Copyright (C) 2019 GravityView
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: GravityView - Gravity Forms Import Entries 2.0\n"
+"Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
+"POT-Creation-Date: 2019-07-31 19:27:25+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Katz Web Services, Inc. <support@katz.co>\n"
+"Language-Team: Katz Web Services, Inc. <support@katz.co>\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Country: United States\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: "
+"__;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;_nx_noop:1,2,3c;esc_"
+"attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;esc_html_x:1,2c;\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-Bookmarks: \n"
+"X-Textdomain-Support: yes\n"
+"X-Generator: grunt-wp-i18n 1.0.3\n"
+
+#: class-gv-import-entries-batch.php:120 class-gv-import-entries-batch.php:228
+msgid "Arguments not allowed here: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:142
+msgid "Could not create import batch in database."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:177
+msgid "Could not save batch in database."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:234
+msgid "Invalid batch ID supplied."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:238
+msgid "Invalid status argument. Allowed: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:243
+msgid "Invalid form ID supplied."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:261
+msgid "Rule %d duplicate field mismatch."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:281
+msgid "Invalid feed ID %s provided for form ID %s."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:285
+msgid "\"feeds\" parameter must be empty for new forms."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:295
+msgid "\"source\" parameter is required"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:300
+msgid "Unknown flags: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:305 class-gv-import-entries-batch.php:309
+#: class-gv-import-entries-batch.php:313
+msgid "Invalid meta structure"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:346
+msgid "Rule %d arguments not allowed here: %d"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:354
+msgid "Rule %d invalid column number."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:358
+msgid "Rule %d field cannot be empty."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:364 class-gv-import-entries-batch.php:369
+#: class-gv-import-entries-batch.php:375
+msgid "Rule %d invalid field ID for form."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:385
+msgid "Rule %d unknown field type."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:393
+msgid "Rule %d unknown flag. Allowed: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:399
+msgid "Rule %d unknown meta. Allowed: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:424
+msgid "Condition arguments not allowed here: %s"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:436
+msgid "Condition invalid column number."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:440
+msgid "Condition invalid operation."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:444
+msgid "Condition invalid literal value."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:453
+msgid "Invalid boolean operator for nested conditions."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:465
+msgid "Malformed condition. Missing column or condition chain."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:486
+msgid "Column meta %d arguments not allowed here: %d"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:492
+msgid "Column meta %d invalid column title."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:498 class-gv-import-entries-batch.php:503
+#: class-gv-import-entries-batch.php:507
+msgid "Column meta %d invalid field ID for form."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:511
+msgid "Column meta %d unknown field type."
+msgstr ""
+
+#: class-gv-import-entries-batch.php:627
+msgid "Unknown batch ID"
+msgstr ""
+
+#: class-gv-import-entries-batch.php:631
+msgid "Batch is not in stop state: %s"
+msgstr ""
+
+#: class-gv-import-entries-core.php:220
+#: class-gv-import-entries-processor.php:519
+msgid "Latitude"
+msgstr ""
+
+#: class-gv-import-entries-core.php:221
+#: class-gv-import-entries-processor.php:520
+msgid "Longitude"
+msgstr ""
+
+#: class-gv-import-entries-core.php:224
+#: class-gv-import-entries-processor.php:521
+msgid "Approval Status"
+msgstr ""
+
+#: class-gv-import-entries-gf-export-screen.php:35
+#: class-gv-import-entries-ui.php:836
+msgid "Entry Notes"
+msgstr ""
+
+#: class-gv-import-entries-gf-toolbar-menu.php:50
+#: class-gv-import-entries-ui.php:943 class-gv-import-entries-ui.php:964
+#: class-gv-import-entries-ui.php:970
+msgid "Import Entries"
+msgstr ""
+
+#: class-gv-import-entries-gf-toolbar-menu.php:55
+msgid "Export Entries"
+msgstr ""
+
+#: class-gv-import-entries-license.php:85
+msgid "Support License Key"
+msgstr ""
+
+#: class-gv-import-entries-license.php:86
+msgid ""
+"Enter the license key that was sent to you on purchase. This enables plugin "
+"updates &amp; support."
+msgstr ""
+
+#: class-gv-import-entries-license.php:94
+msgid "Receive Beta Updates"
+msgstr ""
+
+#: class-gv-import-entries-license.php:95
+msgid ""
+"Get updates for pre-release versions of Import Entries. Pre-release updates "
+"do not install automatically, you will still have the opportunity to ignore "
+"update notifications."
+msgstr ""
+
+#: class-gv-import-entries-license.php:102
+msgid "Receive pre-release updates"
+msgstr ""
+
+#: class-gv-import-entries-license.php:121
+msgid "For support and how-to articles, please visit the %sPlugin Support site%s."
+msgstr ""
+
+#: class-gv-import-entries-license.php:160
+#: class-gv-import-entries-license.php:442
+msgid "Activate License"
+msgstr ""
+
+#: class-gv-import-entries-license.php:161
+#: class-gv-import-entries-license.php:175
+#: class-gv-import-entries-license.php:441
+msgid "Verifying license&hellip;"
+msgstr ""
+
+#: class-gv-import-entries-license.php:167
+#: class-gv-import-entries-license.php:443
+msgid "Deactivate License"
+msgstr ""
+
+#: class-gv-import-entries-license.php:168
+msgid "Deactivating license&hellip;"
+msgstr ""
+
+#: class-gv-import-entries-license.php:174
+msgid "Check License"
+msgstr ""
+
+#: class-gv-import-entries-license.php:429
+msgid "Status"
+msgstr ""
+
+#: class-gv-import-entries-license.php:430
+msgid "There was an error processing the request."
+msgstr ""
+
+#: class-gv-import-entries-license.php:431
+msgid ""
+"Could not deactivate the license. The license key you attempted to "
+"deactivate may not be active or valid."
+msgstr ""
+
+#: class-gv-import-entries-license.php:432
+#: class-gv-import-entries-license.php:433
+msgid "The license key is valid, but it has not been activated for this site."
+msgstr ""
+
+#: class-gv-import-entries-license.php:434
+msgid "Invalid: this license has reached its activation limit."
+msgstr ""
+
+#: class-gv-import-entries-license.php:435
+msgid "The license has been deactivated."
+msgstr ""
+
+#: class-gv-import-entries-license.php:436
+msgid "The license key is valid and active."
+msgstr ""
+
+#: class-gv-import-entries-license.php:437
+msgid "The license key entered is invalid."
+msgstr ""
+
+#: class-gv-import-entries-license.php:438
+msgid "The license key was not defined."
+msgstr ""
+
+#: class-gv-import-entries-license.php:439
+msgid "This license key has been revoked."
+msgstr ""
+
+#: class-gv-import-entries-license.php:440
+msgid ""
+"This license key has expired. %sRenew your license on the GravityView "
+"website%s"
+msgstr ""
+
+#: class-gv-import-entries-license.php:444
+msgid "Verify License"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:282
+msgid "Update Settings"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:335
+msgid "Complete"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:336
+msgid "Cancel"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:337
+msgid "Updated"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:338
+msgid "&hellip;will be added to this form field"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:339
+msgid "Hide Console"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:340
+msgid "Show Console"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:341
+msgid "Wrapping up&hellip;"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:342
+msgid "This field has already been mapped."
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:343
+msgid ""
+"Warning: Existing post content will be overwritten by the imported data. "
+"Proceed?"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:344
+msgid ""
+"Warning: Existing entry values will be overwritten by the imported data. "
+"Proceed?"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:345
+msgid ""
+"No fields have been mapped. Please configure the field mapping before "
+"starting the import."
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:346
+msgid "There was an error on row %s."
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:347
+msgid "Created %s from Row %s"
+msgstr ""
+
+#: class-gv-import-entries-plugin-settings.php:347
+msgid "Entry #%s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:84
+msgid "Batch does not exist"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:91
+msgid "Batch is in stop state. Running no longer possible."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:174
+msgid "Breakpoint on status %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:285
+msgid "Invalid form ID."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:400
+#: class-gv-import-entries-processor.php:566
+msgid "Notes"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:411
+msgid "Created By (User Id)"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:426
+#: class-gv-import-entries-ui.php:1330
+msgid "User IP"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:427
+msgid "IP Address"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:699
+msgid "Column %d"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:885
+msgid "Wait timeout on processing rows. Zombies: %d."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1059
+msgid "No schema provided. Nothing to do."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1570
+msgid "Radio choice is not one of: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1600
+msgid "Select choice is not one of: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1620
+#: class-gv-import-entries-processor.php:1625
+msgid "Poll/Quiz choice is not one of: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1658
+#: class-gv-import-entries-processor.php:1663
+msgid "Survey choice is not one of: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1701
+msgid "Multiselect choice is not one of: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1772
+msgid "ID does not exist for form"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1778
+#: class-gv-import-entries-processor.php:1895
+#: class-gv-import-entries-processor.php:2082
+#: class-gv-import-entries-processor.php:2150
+#: class-gv-import-entries-processor.php:2217
+#: class-gv-import-entries-processor.php:2253
+#: class-gv-import-entries-processor.php:2503
+#: class-gv-import-entries-processor.php:2551
+msgid "Failed to process row ID %d"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1827
+msgid "Entry Notes are not properly formatted."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:1985
+msgid "Checked"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2076
+msgid "Gravity Forms Signature Addon is not active."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2211
+msgid "Gravity Forms Coupons Addon is not active."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2247
+msgid "Invalid coupon code"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2581
+msgid "GravityView Import"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2668
+#: class-gv-import-entries-processor.php:2684
+msgid "No more rows to process."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2701
+msgid "Rollback not possible on a non-logged batch."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2706
+msgid "Rollback failed."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2728
+msgid "Batch is not in \"%s\" state, wrong handler called."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2742
+msgid "Source is no longer readable."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2789
+msgid "Source protocol not supported."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2797
+msgid "Source URL could not be downloaded."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2808
+msgid "Source does not exist."
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2812
+msgid "Source is not readable."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:142
+msgid "Sorry, you are not allowed to create an import batch as this user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:152
+msgid ""
+"Sorry, you are not allowed to create an import batch for a new form as this "
+"user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:174
+msgid "Sorry, you are not allowed to delete an import batch as this user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:183
+#: class-gv-import-entries-rest-batch-controller.php:234
+#: class-gv-import-entries-rest-batch-controller.php:264
+#: class-gv-import-entries-rest-batch-controller.php:315
+msgid "Batch not found."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:204
+msgid "Sorry, you are not allowed to delete batches as this user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:225
+msgid "Sorry, you are not allowed to edit this batch as this user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:255
+#: class-gv-import-entries-rest-batch-controller.php:285
+msgid "Sorry, you are not allowed to get this batch as this user."
+msgstr ""
+
+#: class-gv-import-entries-rest-batch-controller.php:306
+msgid "Sorry, you are not allowed to process this batch as this user."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:118
+msgid ""
+"It appears that you never finished importing %s that you started on %s. Do "
+"you want to resume import or start a new import?"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:119
+msgid "Resume"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:120 class-gv-import-entries-ui.php:327
+msgid "Start New Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:137
+msgid "How would you like to import data?"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:141
+msgid "Coming Soon"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:144
+msgid "Drop file or click anywhere to upload"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:145
+msgid ""
+"Your CSV file data is being added to your site. Please wait while this "
+"completes."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:146
+msgid "Do not close this page."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:151
+msgid "CSV file failed to upload."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:155
+msgid "An Existing Form"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:156
+msgid "Create a New Form"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:157
+msgid "Where would you like to import the entries?"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:159
+msgid "Choose a form for this import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:160
+msgid "No forms were found matching the search criterion."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:161
+msgid "Gravity Forms form does not exist."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:162
+msgid "Type a form name to search"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:163
+msgid "Add a new form"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:164
+msgid "New form name"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:165
+msgid "A form with the same title already exists. Please select a unique title."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:168
+msgid "Please wait while your import data is being processed."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:172
+msgid "We were unable to process your import data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:174
+msgid ""
+"You can skip columns by selecting \"Do Not Import\". To create a new form "
+"field, select \"Add Form Field\"."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:176
+msgid ""
+"Choose which CSV columns will be turned into form fields. Set the field "
+"type to match the data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:177
+msgid "Select Form Field"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:178
+msgid "Import to&hellip;"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:179
+msgid ""
+"This field is already assigned to another column. Do you want to re-assign "
+"it?"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:181
+msgid "Add Form Field"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:182
+msgid "Do Not Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:183
+msgid "Field Type"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:187
+msgid "New field label"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:188
+msgid "Form or field type does not exist."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:189
+msgid "We were unable to add this field."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:190
+msgid "We could not find any data to import."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:191
+msgid ""
+"This can be because your CSV file is malformed, empty or due to a server "
+"error."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:192
+msgid "Only a header row was detected."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:193
+msgid ""
+"GravityView requires a header row and at least one data row. Please "
+"[link]refer to our guide[/link] for CSV file formatting tips."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:194
+msgid "Please try again or select a different import source."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:196
+msgid "Select Import Column"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:198
+msgid ""
+"This will update values for existing entries that share the same Entry ID. "
+"Click Cancel to create new entries during import."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:199
+msgid "One of the columns in your CSV file maps to an Entry ID field."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:201
+msgid "Clear field selection"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:202
+msgid "Open field properties"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:208
+msgid "Field Input Label"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:209
+msgid "CSV Column"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:210
+msgid "Add New Field Input"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:213
+msgid "If this List field will not have Mutliple Columns, click the Cancel button."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:214
+msgid ""
+"A list field can have multiple rows of data that are exported by Gravity "
+"Forms as separate columns in a CSV file."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:215
+msgid "Select one or multiple CSV columns to associate as rows to this field:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:216
+msgid "List Rows"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:217
+msgid "List Columns"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:221
+msgid "Column Name"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:222
+msgid "This column will be re-assigned"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:223
+msgid "Select a CSV Column"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:226
+msgid "This column contains a date."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:230
+msgid "Custom Date Format"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:231
+msgid "Select Date Format:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:232 class-gv-import-entries-ui.php:248
+msgid "Custom Format"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:233
+msgid "Date Not Recognized"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:234
+msgid ""
+"Date field must contain day, month and year values. Consider using a Number "
+"field type instead."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:235 class-gv-import-entries-ui.php:251
+msgid "Live Preview:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:242
+msgid "This column contains a time value."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:246
+msgid "Custom Time Format"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:247
+msgid "Select Time Format:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:249
+msgid "Time Not Recognized"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:250
+msgid ""
+"Time field must contain hour and minute values. Consider using a Number "
+"field type instead."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:258
+msgid "Entry notes not recognized"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:262
+msgid "List data not recognized"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:267
+msgid "Configure Import Options"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:268
+msgid "Create Form And Continue With Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:270
+msgid "Process Feeds"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:271
+msgid "available form feeds will be executed for each entry"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:272
+msgid "Run these actions for each entry:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:275
+msgid "Upload Files"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:276
+msgid "upload files mapped to \"File Upload\" fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:279
+msgid "Ignore Required Form Fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:280
+msgid "entry will be imported even if it is missing required form fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:283
+msgid "Continue Processing If Errors Occur"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:284
+msgid "import will not interrupt when errors are encountered"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:287
+msgid "Overwrite Post Data"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:288
+msgid "existing post content will be overwritten by the imported data"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:291
+msgid "Use Default Field Values"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:292
+msgid "empty fields will be populated with default values"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:295
+msgid "Email Notifications"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:296
+msgid "receive email notification for each imported record"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:299
+msgid "Conditional Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:300
+msgid "only import rows if they match certain conditions"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:310
+msgid "Enter a value"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:311
+msgid "Add another condition"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:312
+msgid "Remove this condition"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:316
+msgid "Preparing to import your data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:317
+msgid "Please wait while we import your data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:318
+msgid "Do not navigate away from this page."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:319
+msgid "We were unable to import your data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:321
+msgid "Import has finished."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:322
+msgid "Import has finished with errors."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:325
+msgid ""
+"Processing could not finish due to a server error. Please try modifying "
+"field mapping or get in touch with our support."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:326
+msgid "View Imported Records"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:328
+msgid "Download Failed Records"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:331
+msgid "and"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:338
+msgid "Server could not be reached or connection was aborted/interrupted."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:339
+msgid "Server returned an empty response."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:340
+msgid "Server returned an invalid response."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:341
+msgid "Network request could not be completed due to an unknown reason."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:342
+msgid "WordPress has returned an unknown error."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:345
+msgid "An Error Has Occured"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:346
+msgid "The importer encountered an error that prevents it from continuing:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:347
+msgid "We&rsquo;re here to help! Share this error with support:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:347 class-gv-import-entries-ui.php:348
+msgid "Contact Support"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:349
+msgid "Processing error log&hellip;"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:352
+msgid "Save"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:353
+msgid "Update"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:354
+msgid "Continue With Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:355
+msgid "Try Again"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:356
+msgid "Please try again or contact support."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:359
+msgid "Field Label Not Available"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:412
+msgid "Street Address"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:417
+msgid "Address Line 2"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:422
+msgid "City"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:427
+msgid "State / Province / Region"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:432
+msgid "ZIP / Postal Code"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:437
+msgid "Country"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:484 class-gv-import-entries-ui.php:492
+#: class-gv-import-entries-ui.php:500 class-gv-import-entries-ui.php:508
+#: class-gv-import-entries-ui.php:515
+msgid "See all Entry Importer help articles"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:608
+msgid "Product %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:647
+msgid "Post Fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:657
+msgid "Product Fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:665 class-gv-import-entries-ui.php:721
+msgid "Entry Properties"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:728
+msgid "Non-Field Data"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:966
+msgid "Import entries into Gravity Forms."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:995
+msgid "Required scripts aren't loading properly. %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:996
+msgid "Please contact support."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1292
+msgid "Entry ID"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1296
+msgid "Entry Status"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1300
+msgid "Entry Date"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1307
+msgid "Entry Updated Date"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1314
+msgid "Entry Is Starred"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1318
+msgid "Entry Is Read"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1322
+msgid "Source URL"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1326
+msgid "User ID"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1334
+msgid "User Agent"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1338
+msgid "Payment Amount"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1342
+msgid "Payment Method"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1346
+msgid "Payment Date"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1351
+msgid "Last Payment Date"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1357
+msgid "Payment Status"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1361
+msgid "Currency"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1365
+msgid "Is Transaction Fulfilled"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1369
+msgid "Transaction ID"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1373
+msgid "Transaction Type"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:1436
+msgid "Feed %d"
+msgstr ""
+
+#: class-gv-import-entries-wp-import-screen.php:38
+msgid "Gravity Forms Entries"
+msgstr ""
+
+#: class-gv-import-entries-wp-import-screen.php:38
+msgid "Import entries into Gravity Forms, by GravityView."
+msgstr ""
+
+#: gravityview-importer.php:61
+msgid ""
+"The %s Extension requires PHP Version %s or newer. Please ask your host to "
+"upgrade your server's PHP."
+msgstr ""
+
+#: gravityview-importer.php:73
+msgid "%s requires Gravity Forms Version %s or higher."
+msgstr ""
+
+#: lib/EDD_SL_Plugin_Updater.php:203
+msgid "There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+
+#: lib/EDD_SL_Plugin_Updater.php:211
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+
+#: lib/EDD_SL_Plugin_Updater.php:401
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: lib/EDD_SL_Plugin_Updater.php:401
+msgid "Error"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "The best way to import entries into Gravity Forms."
+msgstr ""
+
+#: class-gv-import-entries-gf-export-screen.php:29
+msgctxt "First replacement is field label. JSON is a file format."
+msgid "%s (Export as JSON)"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:593
+msgctxt ""
+"Typemap keyword. Part of a word that matches an email field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "email"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:595
+msgctxt ""
+"Typemap keyword. Part of a word that matches a phone field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "fax"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:596
+msgctxt ""
+"Typemap keyword. Part of a word that matches a phone field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "mobile"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:597
+msgctxt ""
+"Typemap keyword. Part of a word that matches a phone field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "phone"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:598
+msgctxt ""
+"Typemap keyword. Part of a word that matches a phone field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "telephone"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:599
+msgctxt ""
+"Typemap keyword. Part of a word that matches a phone field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "cell"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:601
+msgctxt ""
+"Typemap keyword. Part of a word that matches a number field. Has to be "
+"lowercase."
+msgid "number"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:602
+msgctxt ""
+"Typemap keyword. Part of a word that matches a number field. Has to be "
+"lowercase."
+msgid "month"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:603
+msgctxt ""
+"Typemap keyword. Part of a word that matches a number field. Has to be "
+"lowercase."
+msgid "year"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:604
+msgctxt ""
+"Typemap keyword. Part of a word that matches a number field. Has to be "
+"lowercase."
+msgid "count"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:606
+msgctxt ""
+"Typemap keyword. Part of a word that matches a file field. Has to be "
+"lowercase."
+msgid "file"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:608
+msgctxt ""
+"Typemap keyword. Part of a word that matches a URL field. Has to be "
+"lowercase."
+msgid "website"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:609
+msgctxt ""
+"Typemap keyword. Part of a word that matches a URL field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "site"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:610
+msgctxt ""
+"Typemap keyword. Part of a word that matches a URL field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "url"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:612
+msgctxt ""
+"Typemap keyword. Part of a word that matches a textarea field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "bio"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:614
+msgctxt ""
+"Typemap keyword. Part of a word that matches a date field. Has to be "
+"lowercase."
+msgid "date"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:615
+msgctxt ""
+"Typemap keyword. Part of a word that matches a date field. Has to be "
+"lowercase."
+msgid "birthday"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:616
+msgctxt ""
+"Typemap keyword. Part of a word that matches a date field. Has to be "
+"lowercase."
+msgid "anniversary"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:618
+msgctxt ""
+"Typemap keyword. Part of a word that matches a time field. Has to be "
+"lowercase."
+msgid "time"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:619
+msgctxt ""
+"Typemap keyword. Part of a word that matches a time field. Has to be "
+"lowercase."
+msgid "hour"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:620
+msgctxt ""
+"Typemap keyword. Part of a word that matches a time field. Has to be "
+"lowercase."
+msgid "hours"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:622
+msgctxt ""
+"Typemap keyword. Part of a word that matches a hidden field. Has to be "
+"lowercase."
+msgid "hidden"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:624
+msgctxt ""
+"Typemap keyword. Part of a word that matches a total field. Has to be "
+"lowercase."
+msgid "total"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:626
+msgctxt ""
+"Typemap keyword. Part of a word that matches a consent field. Has to be "
+"lowercase."
+msgid "consent"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:629
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "name"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:630
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "prefix"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:631
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "title"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:632
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "first"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:633
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "last"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:634
+msgctxt ""
+"Typemap keyword. Part of a word that matches a name field. Has to be "
+"lowercase."
+msgid "suffix"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:637
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "address"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:638
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "street"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:639
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "street address"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:640
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "address 2"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:641
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "line 2"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:642
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "mailing"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:643
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "mailing address"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:644
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "city"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:650
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase."
+msgid "country"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:645
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "state"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:646
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "province"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:647
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "region"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:648
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "zip"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:649
+msgctxt ""
+"Typemap keyword. Part of a word that matches an address field. Has to be "
+"lowercase. Set to ### if does not apply."
+msgid "postal code"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:652
+msgctxt ""
+"Typemap keyword. Part of a word that matches an entry property. Has to be "
+"lowercase."
+msgid "longitude"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:653
+msgctxt ""
+"Typemap keyword. Part of a word that matches an entry property. Has to be "
+"lowercase."
+msgid "latitude"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:654
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "entry id"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:655
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "entry date"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:656
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "user id"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:657
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "user ip"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:658
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "ip address"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:659
+msgctxt ""
+"Typemap keyword. Part of a word that matches the name of an entry property. "
+"Has to be lowercase."
+msgid "approval status"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:123
+msgctxt "Dialog box - confirm action"
+msgid "Continue"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:124
+msgctxt "Dialog box - confirm action"
+msgid "Confirm"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:125
+msgctxt "Dialog box - cancel action"
+msgid "Cancel"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:126
+msgctxt "Dialog box - close action"
+msgid "Close"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:129
+msgctxt "Import navigation step"
+msgid "Select Source"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:130
+msgctxt "Import navigation step"
+msgid "Select Form"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:131
+msgctxt "Import navigation step"
+msgid "Map Fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:132
+msgctxt "Import navigation step"
+msgid "Configure"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:133
+msgctxt "Import navigation step"
+msgid "Import"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:134
+msgctxt "Change selected GF form"
+msgid "Change Form"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:138
+msgctxt "Import action"
+msgid "Upload CSV"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:139
+msgctxt "Import action"
+msgid "Import from Google Sheets"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:140
+msgctxt "Import action"
+msgid "Connect to FTP"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:148
+msgctxt "%s is replaced with file size in megabytes"
+msgid "Maximum upload file size: %s."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:154
+msgctxt "Where import data is coming from"
+msgid "Import source"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:158
+msgctxt "Action to change form type (existing or new)"
+msgid "Change"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:169
+msgctxt "Import data processing status"
+msgid "Getting form fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:170
+msgctxt "Import data processing status"
+msgid "Creating import task"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:171
+msgctxt "Import data processing status"
+msgid "Getting data preview"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:173
+msgctxt "%s is replace with form name"
+msgid "Map CSV columns to %s form fields"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:175
+msgctxt "%s is replace with form name"
+msgid "Create a form named %s."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:180
+msgctxt "Action to re-assign previously selected column field to a new column"
+msgid "Re-assign"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:184
+msgctxt "gravityview-importer"
+msgid "Field Label"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:185
+msgctxt "gravityview-importer"
+msgid "Field Inputs"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:186
+msgctxt "gravityview-importer"
+msgid "CSV Header"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:195 class-gv-import-entries-ui.php:206
+msgctxt "%s is replaced by GF field type"
+msgid ""
+"The %s field type contains multiple inputs that can be mapped to your "
+"import data."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:197
+msgctxt "Used to indicate danger of performing an action"
+msgid "Warning"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:200
+msgctxt "Indicated that a CSV column is mapped to GF field"
+msgid "Mapped"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:203
+msgctxt "Multi-column list column label"
+msgid "Column"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:207
+msgctxt "Field input"
+msgid "Input"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:218
+msgctxt "%s is replaced with number of columns in a list"
+msgid ""
+"Based on the associated rows, we detected that your list has %s columns. "
+"Please provide a label for each column:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:219
+msgctxt "%s is replaced with list row number"
+msgid "List Row %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:220
+msgctxt "%s is replaced with list column number"
+msgid "List Column %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:227
+msgctxt "%s are replaced with column value and default date format, respectively"
+msgid ""
+"We recognized %s as %s. If this is incorrect, please select one of the "
+"available formats or specify your own:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:228
+msgctxt "%s values are replaced with shortcodes used for date formatting"
+msgid ""
+"We couldn't recognize %s using the default %s format. Please select one of "
+"the other possible formats or specify your own:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:229
+msgctxt "%s are replaced with day (DD), month (MM) and year (YYYY) abbreviations"
+msgid ""
+"Use %s for day, %s for month, %s for year, %s to skip a single character "
+"and %s to skip multiple characters. Day, month, and year are all required "
+"by Gravity Forms."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:236 class-gv-import-entries-ui.php:252
+msgctxt "Helper text showing how the value will be interpreted"
+msgid "%s is recognized as %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:237
+msgctxt "Date format - month"
+msgid "MM"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:238
+msgctxt "Date format - date"
+msgid "DD"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:239
+msgctxt "Date format - year"
+msgid "YYYY"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:243
+msgctxt "%s are replaced with column value and default time format, respectively"
+msgid ""
+"We recognized %s as %s. If this is incorrect, please select one of the "
+"available formats or specify your own:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:244
+msgctxt "%s are replaced with column value and default time format, respectively"
+msgid ""
+"We couldn't recognize %s using the default %s format. Please select one of "
+"the other possible formats or specify your own:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:245
+msgctxt "%s values are replaced with shortcodes used for time formatting"
+msgid ""
+"Use %s for hour, %s for minute, %s for time period, %s to skip a single "
+"character and %s to skip multiple characters"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:253
+msgctxt "Time format - minute"
+msgid "mm"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:254
+msgctxt "Time format - hour"
+msgid "hh"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:255
+msgctxt "Time format - second"
+msgid "ss"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:259
+msgctxt "%s is replaced with the number of recognized entry notes"
+msgid "%s entry note(s)"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:263
+msgctxt ""
+"%s are replaced with the number of detected list columns and rows, "
+"respectively"
+msgid "%s column(s); %s row(s)"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:264
+msgctxt "%s is replaced with the number of detected list rows"
+msgid "%s row(s)"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:301
+msgctxt ""
+"Part of complete sentence: \"Import row if [all|any] of the following "
+"match:\""
+msgid "Import the row if"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:302
+msgctxt ""
+"Part of complete sentence: \"Import row if [all|any] of the following "
+"match:\""
+msgid "of the following match:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:303
+msgctxt ""
+"Part of complete sentence: \"Import row if [all|any] of the following "
+"match:\""
+msgid "all"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:304
+msgctxt ""
+"Part of complete sentence: \"Import row if [all|any] of the following "
+"match:\""
+msgid "any"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:305
+msgctxt "Comparison operator: \"field X [is] Y\""
+msgid "is"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:306
+msgctxt "Comparison operator: \"field X [is not] Y\""
+msgid "is not"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:307
+msgctxt "Comparison operator: \"field X [greater than] Y\""
+msgid "greater than"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:308
+msgctxt "Comparison operator: \"field X [less than] Y\""
+msgid "less than"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:309
+msgctxt "Comparison operator: \"field X [contains] Y\""
+msgid "contains"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:320
+msgctxt "%s are replaced with current and total record count, respectively"
+msgid "Processed %s of %s records"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:323
+msgctxt "%s is replaced with record count"
+msgid "We have processed %s records:"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:324
+msgctxt ""
+"%s are replaced with action (\"imported\" or \"updated\") and record count, "
+"respectively"
+msgid "We have processed and %s all %s records."
+msgstr ""
+
+#: class-gv-import-entries-ui.php:329
+msgctxt "Error report filename; %s is replaced with import batch ID"
+msgid "import_error_report-%s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:332
+msgctxt "Row status"
+msgid "imported"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:333
+msgctxt "Row status"
+msgid "skipped"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:334
+msgctxt "Row status"
+msgid "rejected due to an error ([link]view log[/link])"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:335
+msgctxt "Row status"
+msgid "updated"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:357
+msgctxt "Change selected import source (CSV, FTP, Google Sheets, etc.)"
+msgid "Change Source"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:358
+msgctxt "Change form field mapping"
+msgid "Change Field Mapping"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:444
+msgctxt "Relates to name prefix (e.g., Mr., Ms.)"
+msgid "Prefix"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:449
+msgctxt "Relates to name "
+msgid "First"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:454
+msgctxt "Relates to name"
+msgid "Middle"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:459
+msgctxt "Relates to name"
+msgid "Last"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:464
+msgctxt "Relates to name"
+msgid "Suffix"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:598
+msgctxt "Generates a label for Post fields based on the type of field"
+msgid "Post %s"
+msgstr ""
+
+#: class-gv-import-entries-ui.php:683
+msgctxt "Entry \"meta\", which is additional data often used by plugins."
+msgid "Non-Field Data"
+msgstr ""

@@ -1,0 +1,89 @@
+// Colors
+// @see https://make.wordpress.org/design/handbook/design-guide/foundations/colors/#auxiliary-hues
+
+$black: #0b1015 !default; // Modified with CUSTOM color
+$black-bis: #191e23 !default; // modified with WP color
+$black-ter: #23282d !default; // modified with WP color
+
+$grey-darker: #32373c !default; // modified with WP color
+$grey-dark: #40464d !default; // modified with WP color
+$grey: #6c7781 !default; // modified with WP color
+$grey-light: #b5bcc2 !default; // modified with WP color
+$grey-lighter: #d7dade !default; // modified with WP color
+
+// @see https://codepen.io/hugobaeta/full/RNOzoV/
+$color-wp-blue: #0073aa;
+$color-medium-blue: #00a0d2;
+$color-light-blue: #00b9eb;
+
+$color-accent-red: #dc3232;
+$color-accent-fire-orange: #d54e21;
+$color-accent-orange: #f56e28;
+$color-accent-yellow: #ffb900;
+$color-accent-green: #46b450; //old #64b450;
+$color-accent-blue: $color-medium-blue;
+$color-accent-purple: #826eb4;
+
+$white-ter: #f3f4f5 !default; // modified with WP color
+$white-bis: #fbfbfc !default; // modified with WP color
+$white: hsl(0, 0%, 100%) !default;
+$orange: #f56e28 !default; // modified with WP color
+$yellow: #ee8e0d !default; // modified with WP color TONE (FIRE 40%)
+$green: #31843f !default; // modified with WP color TONE (WP BLUE) 5% / SHADE 25%
+$turquoise: hsl(171, 100%, 41%) !default;
+$cyan: $color-medium-blue !default; // Modified with WP color
+$blue: $color-wp-blue !default; // modified with WP color
+$purple: #826eb4 !default; // modified with WP color
+$red: #dc3232 !default; // modified with WP color
+
+// Typography
+
+$family-sans-serif: BlinkMacSystemFont, -apple-system, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif !default;
+$family-monospace: monospace !default;
+$render-mode: optimizeLegibility !default;
+
+$size-1: 3rem !default;
+$size-2: 2.5rem !default;
+$size-3: 2rem !default;
+$size-4: 1.5rem !default;
+$size-5: 1.25rem !default;
+$size-6: 1rem !default;
+$size-7: 0.75rem !default;
+
+$weight-light: 300 !default;
+$weight-normal: 400 !default;
+$weight-medium: 500 !default;
+$weight-semibold: 600 !default;
+$weight-bold: 700 !default;
+
+// Responsiveness
+
+// The container horizontal gap, which acts as the offset for breakpoints
+$gap: 64px !default;
+
+// 960, 1152, and 1344 have been chosen because they are divisible by both 12 and 16
+$tablet: 769px !default;
+
+// 960px container + 4rem
+$desktop: 960px + 2 * $gap !default;
+
+// 1152px container + 4rem
+$widescreen: 1152px + 2 * $gap !default;
+$widescreen-enabled: true !default;
+
+// 1344px container + 4rem
+$fullhd: 1344px + 2 * $gap !default;
+$fullhd-enabled: true !default;
+
+// Miscellaneous
+
+$easing: ease-out !default;
+$radius-small: 2px !default;
+$radius: 4px !default;
+$radius-large: 6px !default;
+$radius-rounded: 290486px !default;
+$speed: 86ms !default;
+
+// Flags
+
+$variable-columns: true !default;

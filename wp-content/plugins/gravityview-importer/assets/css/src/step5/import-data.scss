@@ -1,0 +1,47 @@
+.import-data {
+	.upload-progress {
+		margin-bottom: 1em;
+		width: 100px;
+		height: 100px;
+		display: inline-block;
+	}
+
+	.hero-body {
+		> .container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+
+			p {
+				margin-bottom: 1.5rem;
+			}
+		}
+	}
+
+	/* Fix for Bulma issue: https://github.com/jgthms/bulma/issues/1646 */
+	.hero.is-light a:not(.button):not(.dropdown-item):not(.tag) {
+		color: $link;
+
+		&:hover {
+			color: $link-hover;
+		}
+	}
+
+	.stats {
+		.imported {
+			font-weight: bold;
+			color: $green;
+		}
+
+		.skipped {
+			font-weight: bold;
+			color: $yellow;
+		}
+
+		.error {
+			font-weight: bold;
+			color: $red;
+		}
+	}
+}
