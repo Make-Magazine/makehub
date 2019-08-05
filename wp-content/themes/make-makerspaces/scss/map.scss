@@ -2,6 +2,11 @@
     .map-header .admin-buttons {
         float: right;
         margin-top: -3em;
+		 .btn {
+			 display: inline-block;
+			 height: auto;
+			 padding: 10px 20px;
+		 }
     }
     .map-filters-wrp {
         background-color: #005E9A;
@@ -270,4 +275,135 @@
             width: 100px;
         }
     }    
+}
+
+// VUE
+
+@-moz-keyframes GGSpinLoader {
+   from { -moz-transform: rotate(0deg); }
+   to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes GGSpinLoader {
+   from { -webkit-transform: rotate(0deg); }
+   to { -webkit-transform: rotate(360deg); }
+}
+@keyframes GGSpinLoader {
+   from {transform:rotate(0deg);}
+   to {transform:rotate(360deg);}
+}
+
+.directory-container {
+
+   .map-table-hidden {
+      display: none;
+   }
+   .message-container {
+      text-align: center;
+      .loading-indicator,
+      .error-indictor {
+         height: 40px;
+         .fa-spinner {
+            animation: GGSpinLoader 0.85s linear infinite;
+         }
+      }
+   }
+
+   .map-header {
+      .admin-buttons {
+         float: right;
+         margin-top: -3em;
+         @media all and (max-width: 991px) {
+            float: none;
+            margin: 0 auto;
+            text-align: center;
+         }
+         .btn .fa {
+            margin-left: 0.25em;
+            font-size: 12px;
+            font-weight: 100;
+         }
+      }
+      // p {
+      //    text-align: center;
+      // }
+      h1 {
+         @media all and (max-width: 768px) {
+            margin-top: 0;
+         }
+      }
+   }
+   .map-filters-wrp {
+      background-color: #005E9A;
+      padding: 12px 15px;
+      z-index: 100;
+      width: 100%;
+      text-align: center;
+      label {
+         display: inline-block;
+         font-family: "Roboto Light";
+         color: #fff;
+         font-size: 18px;
+         font-weight: 100;
+         margin: 0 20px 10px 0;
+         //float: left;
+      }
+      input {
+         display: inline;
+         font-size: 16px;
+         width: 100%;
+         max-width: 400px;
+         height: 40px;
+         //min-width: 312px;
+      }
+
+      @media all and (max-width: 767px) {
+         .searchbox {  
+            input[type="text"] {
+               flex: 1;
+               max-width: initial;
+            }
+         }
+      }
+
+   }
+
+   .col-name {
+      width: 40%;
+   }
+   .col-location {
+      width: 40%;
+   } 
+   // .col-country {
+   //    width: 20%;
+   // } 
+   .col-link {
+      //width: 120px;
+   }
+
+
+   .VueTables__search, .VueTables__limit, .VuePagination__count {
+      display: none;
+   }
+   .VueTables__table {
+      tr {
+         cursor: pointer;
+      }
+      td:nth-child(4), th:nth-child(4) {
+         display: none;
+      }
+      td:nth-child(5), th:nth-child(5) {
+         display: none;
+      }
+      @media screen and (max-width: 1023px) {
+         td:nth-child(3), th:nth-child(3) {
+            display: none;
+         }
+      }
+   }
+
+   @media screen and (max-width: 767px) {
+      .table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {
+         white-space: normal;
+      }
+   }
 }
