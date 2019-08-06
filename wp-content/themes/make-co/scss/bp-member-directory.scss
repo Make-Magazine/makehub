@@ -8,71 +8,96 @@
 			}
 		}
 	}
-	#yz-members-list {
-		.yz-name { height: 14px; }
-	}
-	#members-dir-list {
-		width: calc( 80% );
-		float: left;
-   }
-	// styling for the filter sidebar
-   .yz-sidebar-column {
-		width: calc( 20% - 17.5px);
-		margin-right: 17.5px;
-		.yz-column-content {
-         padding-left: 17.5px;
-			.widget-content {
-				padding: 15px;
-				form {
-					&::before {
-						content: "Directory Filter";
+	#yz-members-directory {
+		flex-direction: column;
+		display: flex;
+		#yz-members-list {
+			.yz-name { height: 14px; }
+		}
+		#members-dir-list {
+			width: calc( 80% );
+			float: left;
+		}
+		// styling for the filter sidebar
+		.yz-sidebar-column {
+			width: calc( 20% - 17.5px);
+			margin-right: 17.5px;
+			position: absolute;
+			right: 0px;
+			margin-top: 105px;
+			.yz-column-content {
+				padding-left: 17.5px;
+				
+				.widget-content {
+					padding: 15px;
+					.widget-title {
 						font-size: 20px;
 						font-weight: 500;
-						margin-bottom: 10px;
-						padding-bottom: 10px;
-						display: block;
-						border-bottom: solid 1px #ccc;
-					}
-					.nice-select { width: 100%; }
-					label { 
-						font-weight: 100;
-						display: block;
-						margin-bottom: -10px;
-						margin-left: 18px;
-						&.bps-label { 
-							padding-bottom: 0px;
-							margin-bottom: -5px;
-							margin-left: 0px;
-							font-weight: 700;
+						padding: 0px;
+						color: #333;
+						border: 0px;
+						@media screen and ( max-width: 1024px ) {
+							cursor: pointer;
+							&::after {
+								font-family: "FontAwesome";
+								content: "\f0c9";
+								float: right;
+							}
 						}
 					}
-					input[type="checkbox"] {
-						margin-left: -18px;
-					}
-					// this should be moved out to universal.scss
-					button {
-						color: #1987C7;
-						border: thin solid #1987C7;
-						padding: 10px 30px;
-						background-color: #fff;
-						&:hover, &:active, &:focus {
-							background-color: #1987C7;
-							color: #fff;
+					form {
+						margin-top: 8px;
+						padding-top: 10px;
+						border-top: solid 1px #999;
+						@media screen and ( max-width: 1024px ) {
+							display: none;
+						}
+						.nice-select { width: 100%; }
+						label { 
+							font-weight: 100;
+							display: block;
+							margin-bottom: -10px;
+							margin-left: 18px;
+							&.bps-label { 
+								padding-bottom: 0px;
+								margin-bottom: -5px;
+								margin-left: 0px;
+								font-weight: 700;
+							}
+						}
+						input[type="checkbox"] {
+							margin-left: -18px;
+						}
+						// this should be moved out to universal.scss
+						button {
+							color: #1987C7;
+							border: thin solid #1987C7;
+							padding: 10px 30px;
+							background-color: #fff;
+							&:hover, &:active, &:focus {
+								background-color: #1987C7;
+								color: #fff;
+							}
 						}
 					}
 				}
 			}
-      }
-   }
-	@media screen and ( max-width: 1024px ) {
-		#members-dir-list,
-		.yz-sidebar-column {
-			 width: initial;
-			 float: none;
-			 margin: 0;            
 		}
-		.yz-sidebar-column .yz-column-content {
-			 padding: 0;
+		@media screen and ( max-width: 1024px ) {
+			#members-dir-list,
+			.yz-sidebar-column {
+				 width: initial;
+				 float: none;
+				 margin: 0; 
+				 position: relative;
+				 order: 1;
+			}
+			.yz-sidebar-column .yz-column-content {
+				 padding: 0;
+			}
+			#members-directory-form {
+				order: 2;
+			}
 		}
 	}
 }
