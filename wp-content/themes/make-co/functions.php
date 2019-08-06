@@ -466,7 +466,7 @@ add_action( 'login_footer', function() {
 });
 
 
-/*
+
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
 function buddypress_add_last_activity() {
 
@@ -481,7 +481,7 @@ function buddypress_add_last_activity() {
 add_action('bp_init', 'buddypress_add_last_activity' );
 // just in case, prevent a billion activation emails from being sent
 add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
-*/
+
 
 
 /* This won't be necessary, Alicia is going to rename the mm user logins
