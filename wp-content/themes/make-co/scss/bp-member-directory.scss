@@ -11,9 +11,6 @@
 	#yz-members-directory {
 		flex-direction: column;
 		display: flex;
-		#yz-members-list {
-			.yz-name { height: 14px; }
-		}
 		#members-dir-list {
 			width: calc( 80% );
 			float: left;
@@ -27,7 +24,6 @@
 			margin-top: 105px;
 			.yz-column-content {
 				padding-left: 17.5px;
-				
 				.widget-content {
 					padding: 15px;
 					.widget-title {

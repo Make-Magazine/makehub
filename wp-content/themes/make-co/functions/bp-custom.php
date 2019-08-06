@@ -280,7 +280,6 @@ function ps_remove_last_active ( $meta, $member, $is_loop ){
 } 
 
 // add sidebar to members directory
-
 function yzc_register_members_directory_sidebars() {
     register_sidebar(
         array (
@@ -309,3 +308,20 @@ function yzc_members_directory_sidebar() {
     }
 }
 add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
+
+/**
+ * If there is certain text in Youzer that isn't descriptive enough, we can change it here
+ */
+function yz_translate_youzer_text( $translated_text ) {
+    switch ( $translated_text ) {
+        case 'widgets settings' :
+            $translated_text = __( 'Overview Settings', 'youzer' );
+            break;
+		  case 'Filter' :
+            $translated_text = __( 'Order', 'youzer' );
+            break;
+    }
+    
+    return $translated_text;
+}
+add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
