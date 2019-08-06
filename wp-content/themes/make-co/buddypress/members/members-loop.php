@@ -13,10 +13,11 @@ bp_nouveau_before_loop(); ?>
 <?php endif; ?>
 
 <?php if ( bp_has_members( bp_ajax_querystring( 'members' ) ) ) : ?>
-
+<div class="container">
+ <div class="row">
+	<div class="col-md-10 col-sm-12">
 	<?php bp_nouveau_pagination( 'top' ); ?>
-   
-	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
+	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> ">
 
 	<?php while ( bp_members() ) : bp_the_member();
 		
@@ -77,6 +78,12 @@ bp_nouveau_before_loop(); ?>
 	</ul>
 
 	<?php bp_nouveau_pagination( 'bottom' ); ?>
+	</div>
+	<div class="col-md-2 col-sm-12">
+		Your Ad here
+	</div>
+ </div>
+</div>
 
 <?php
 else :

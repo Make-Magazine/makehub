@@ -1,4 +1,10 @@
 <?php 
+
+// remove admin bar for non admin users
+if (!current_user_can('manage_options')){
+	define( 'BP_DISABLE_ADMIN_BAR', true );
+}
+
 /**
 * If you are using BP 2.1+, this will insert a Country selectbox.
 * Add the function to bp-custom.php and then visit .../wp-admin/users.php?page=bp-profile-setup
@@ -254,58 +260,3 @@ function add_info_to_members_loop() {
         ));
 }
 add_action( 'bp_directory_members_item', 'add_info_to_members_loop' ); */
-
-function youzer_add_custom_meta_fields() {
-	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
-	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
-	
-	echo("<span class='yz-name'>");
-	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
-		echo "<i class='fas fa-globe-americas'></i> " . xprofile_get_field_data('country', bp_get_member_user_id());
-	}
-	echo("</span>");
-	echo("<span class='yz-name'>");
-	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
-		echo "<i class='fas fa-city'></i> " . xprofile_get_field_data('city', bp_get_member_user_id());
-	} 
-	echo("</span>");
-}
-add_action( 'bp_directory_members_item_meta', 'youzer_add_custom_meta_fields' );
-
-// remove last active status from member directory
-add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
-function ps_remove_last_active ( $meta, $member, $is_loop ){
-	$meta['last_activity'] = '';
-	return $meta;
-} 
-
-// add sidebar to members directory
-
-function yzc_register_members_directory_sidebars() {
-    register_sidebar(
-        array (
-            'name' => __( 'Members Directory Sidebar', 'youzer' ),
-            'id' => 'yz-members-directory-sidebar',
-            'description' => __( 'Members Directory Sidebar', 'youzer' ),
-            'before_widget' => '<div id="%1$s" class="widget-content %2$s">',
-            'after_widget' => "</div>",
-            'before_title' => '<h3 class="widget-title">',
-            'after_title' => '</h3>',
-        )
-    );
-}
-add_action( 'widgets_init', 'yzc_register_members_directory_sidebars' );
-/**
- * Call Sidebar.
- */
-function yzc_members_directory_sidebar() {
-    if ( ! bp_is_members_directory() ) {
-        return;
-    }
-    if ( is_active_sidebar( 'yz-members-directory-sidebar' ) ) {
-        echo '<div class="yz-sidebar-column yz-members-directory-sidebar youzer-sidebar"><div class="yz-column-content">';
-        dynamic_sidebar( 'yz-members-directory-sidebar' );
-        echo '</div></div>';
-    }
-}
-add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
