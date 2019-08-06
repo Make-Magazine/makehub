@@ -10,13 +10,12 @@ function bp_add_custom_country_list() {
 		$country_list_args = array(
 		       'field_group_id'  => 1,
 		       'name'            => 'Country',
-		       'description'	 => 'Please select your country',
+		       'description'	    => '',
 		       'can_delete'      => false,
 		       'field_order' 	 => 2,
 		       'is_required'     => false,
 		       'type'            => 'selectbox',
 		       'order_by'	 => 'custom'
- 
 		);
  
 		$country_list_id = xprofile_insert_field( $country_list_args );
@@ -314,7 +313,7 @@ add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
  */
 function yz_translate_youzer_text( $translated_text ) {
     switch ( $translated_text ) {
-        case 'widgets settings' :
+        case 'Widgets Settings' :
             $translated_text = __( 'Overview Settings', 'youzer' );
             break;
 		  case 'Filter' :
