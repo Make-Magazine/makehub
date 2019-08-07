@@ -323,6 +323,9 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'Filter' :
             $translated_text = __( 'Order', 'youzer' );
             break;
+		  case 'Link Backgorund Image' :
+            $translated_text = __( 'Link Background Image', 'youzer' );
+            break;
     }
     return $translated_text;
 }

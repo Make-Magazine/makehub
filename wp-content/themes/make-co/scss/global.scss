@@ -2,10 +2,8 @@ html {
 	body { 
 		.site-container { 
 			overflow-y: hidden;
-			.yz-page-main-content {
-				z-index: 99;
-			}
 		}
+		&.media { overflow: auto; } // overwrite bootstrap
 	}
 }
 .genesis-skip-link { display: none; }
@@ -16,6 +14,35 @@ html {
 
 @media screen and (max-width: 767px) {
 	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
+}
+
+.nav-level-2 #menu-secondary_universal_menu{
+	.dropdown {
+		&:focus { background: #333; }
+		a.dropdown-toggle {
+			span { 
+				padding: 0px;
+				padding-right: 5px;
+			}
+			span.caret {
+				padding-right: 0px;
+				width: 5px;
+				height: 5px;
+				margin-right: 20px;
+				margin-left: -25px;
+			}
+		}
+		.dropdown-menu {
+			background: #333;
+			min-width: 125px;
+			li { 
+				border: 0px;
+				&:hover {
+					background: #666;
+				}
+			}
+		}
+	}
 }
 
 .top15 { 
