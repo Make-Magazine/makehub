@@ -1,13 +1,9 @@
 html {
-	overflow-x: hidden;
-	height: 100vh;
 	body { 
-		min-height: 100%;
-		.site-container { overflow-y: hidden; }
-		.main-content {
-			min-height: calc(100vh - 418px);
-			@media screen and (max-width: 767px) {
-				min-height: calc(100vh - 288px);
+		.site-container { 
+			overflow-y: hidden;
+			.yz-page-main-content {
+				z-index: 99;
 			}
 		}
 	}
@@ -22,7 +18,6 @@ html {
 	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
 }
 
-// test removing this proto repsonsiveness at some point
 .top15 { 
   margin-top:15px!important;
 }
@@ -98,38 +93,6 @@ body.admin-bar {
   //   margin-top: 32px;
   // }
 }
-
-.flag-banner {
-  width: 100%;
-  height: 23px;
-  background-image: url(../img/bg-border.png);
-  background-repeat: repeat-x;
-  @media (max-width:767px) {
-    &.header-flag {
-      display: none;
-    }
-  }
-}
-
-hr.blue-bottom-border {
-  margin-top: 0;
-  margin-bottom: 0;
-  border-bottom: 5px solid #3FAFED;
-}
-
-a.red-borders {
-  display: block;
-  border-top: 1px solid #f40b0b;
-  border-bottom: 1px solid #f40b0b;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  text-align: center;
-}
-
-.red {
-  color: #f40b0b;
-}
-
 
 // Primary Call to Action button
 .btn-cyan {
@@ -325,11 +288,7 @@ hr.double-line-hr {
     padding-top: 6px;
   }
 }
-.page-template-page-crew .fancybox-skin {
-  @media screen and (max-width: 767px) {
-    padding: 30px !important;
-  }
-}
+
 .fancybox-overlay {
   background: rgba(255, 255, 255, 0.5) !important;
 }

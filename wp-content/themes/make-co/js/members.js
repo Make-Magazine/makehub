@@ -1,5 +1,5 @@
 jQuery(".yz-column-content .widget-title").click(function(){
-	jQuery(".yz-column-content .bps-form").toggle();
+	jQuery(".yz-column-content .bps-form").slideToggle( "slow" );
 });
 // set the default for bps select boxes to 'All'
 jQuery(document).ready(function(){

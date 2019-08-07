@@ -314,13 +314,52 @@ add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
 function yz_translate_youzer_text( $translated_text ) {
     switch ( $translated_text ) {
         case 'Widgets Settings' :
+		  case 'widgets settings' :
             $translated_text = __( 'Overview Settings', 'youzer' );
+            break;
+		  case 'Profile Widgets Settings' :
+			   $translated_text = __( 'Profile Overview Settings', 'youzer' );
             break;
 		  case 'Filter' :
             $translated_text = __( 'Order', 'youzer' );
             break;
     }
-    
     return $translated_text;
 }
 add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
+
+// Exclude users from BuddyPress members list.
+
+function buddydev_exclude_users( $args ) {
+    $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
+    if ( ! is_array( $excluded ) ) {
+        $excluded = explode( ',', $excluded );
+    }
+	
+	 $query_args = array(
+    		  'meta_key' => 'registryoptout', 
+			  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+    		  'fields' => 'ID'
+    	  );
+    $user_ids = get_users($query_args);
+ 
+    $excluded = array_merge( $excluded, $user_ids );
+    $args['exclude'] = $excluded;
+    return $args;
+}
+ 
+add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
+
+// Exclude user from count as well
+function exclude_users_from_count(){
+	$query_args = array(
+		  'meta_key' => 'registryoptout', 
+		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+		  'fields' => 'ID'
+	  );
+	$user_ids = get_users($query_args);
+	$users_excluded = count($user_ids);
+	return (get_user_count() - $users_excluded);
+}
+add_filter('bp_get_total_member_count','exclude_users_from_count');
+
