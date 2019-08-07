@@ -97,17 +97,6 @@
 						input[type="checkbox"] {
 							margin-left: -18px;
 						}
-						// this should be moved out to universal.scss
-						button {
-							color: #1987C7;
-							border: thin solid #1987C7;
-							padding: 10px 30px;
-							background-color: #fff;
-							&:hover, &:active, &:focus {
-								background-color: #1987C7;
-								color: #fff;
-							}
-						}
 						.bps-checkbox {
 							@media screen and ( max-width: 1024px ) and ( min-width: 580px ) {
 								display: grid;

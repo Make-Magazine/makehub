@@ -381,7 +381,7 @@ function bp_groups_tab() {
     $button_args = array(
         'id'         => 'groups',
         'component'  => 'members',
-        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<span>' . count( groups_get_total_group_count() ) .'</span>' ),
+        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<span>' . groups_get_total_group_count() .'</span>' ),
         'link_title' => __( 'Groups', 'buddypress' ),
         'link_class' => 'groups no-ajax',
         'link_href'  => '/groups',
@@ -391,7 +391,7 @@ function bp_groups_tab() {
     );  
      
     ?>
-    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li>
+    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li><li>Total users: <?php var_dump(get_users( array( 'fields' => array( 'display_name' ) ) )); ?></li>
     <?php
 }
 add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
