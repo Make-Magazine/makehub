@@ -391,7 +391,7 @@ function bp_groups_tab() {
     );  
      
     ?>
-    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li><li>Total users: <?php var_dump(get_users( array( 'fields' => array( 'display_name' ) ) )); ?></li>
+    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li>
     <?php
 }
 add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
