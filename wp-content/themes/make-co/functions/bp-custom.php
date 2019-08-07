@@ -366,10 +366,32 @@ function exclude_users_from_count(){
 }
 add_filter('bp_get_total_member_count','exclude_users_from_count');
 
-// hide the overview edit tab
+// hide the overview edit tab if you're not on your page
 function hide_overview_edit_tab() {
   if(bp_displayed_user_id() != get_current_user_id()) {
 	  bp_core_remove_nav_item( 'overview-edit' );
   }
 }
 add_action( 'bp_actions', 'hide_overview_edit_tab' );
+
+/**
+ * Add Groups link to Membership Directory
+ */
+function bp_groups_tab() {
+    $button_args = array(
+        'id'         => 'groups',
+        'component'  => 'members',
+        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<span>' . count( groups_get_total_group_count() ) .'</span>' ),
+        'link_title' => __( 'Groups', 'buddypress' ),
+        'link_class' => 'groups no-ajax',
+        'link_href'  => '/groups',
+        'wrapper'    => false,
+        'block_self' => false,
+        'must_be_logged_in' => false
+    );  
+     
+    ?>
+    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li>
+    <?php
+}
+add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
