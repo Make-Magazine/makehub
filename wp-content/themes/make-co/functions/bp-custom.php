@@ -366,3 +366,10 @@ function exclude_users_from_count(){
 }
 add_filter('bp_get_total_member_count','exclude_users_from_count');
 
+// hide the overview edit tab
+function hide_overview_edit_tab() {
+  if(bp_displayed_user_id() != get_current_user_id()) {
+	  bp_core_remove_nav_item( 'overview-edit' );
+  }
+}
+add_action( 'bp_actions', 'hide_overview_edit_tab' );
