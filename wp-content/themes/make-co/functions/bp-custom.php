@@ -474,4 +474,3 @@ function bp_groups_tab() {
     <?php
 }
 add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
-

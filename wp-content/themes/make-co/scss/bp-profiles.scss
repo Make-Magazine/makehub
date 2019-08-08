@@ -8,8 +8,39 @@
 	.yz-profile-login { display: none; }
 }
 .yz-account-page {
-	.yz-home-button { display: none; }
+	.yz-head-buttons-inner {
+		display: flex;
+		justify-content: center;
+		.yz-home-button { display: none; }
+		.yz-button-item.yz-profile-button a {
+			background-color: #3fafed;
+		}
+		.yz-button-item.yz-networks-button a {
+			background-color: #f51400; 
+		}
+		.yz-button-item.yz-avatar-button a {
+			background-color: #005e9a;
+		}
+		.yz-button-item.yz-cover-button a {
+			background-color: #2C4956;
+		}
+		.yz-button-item.yz-logout-button a {
+			background-color: #333 !important;
+		}
+	}
+	.yza-account-settings { background: #005e9a; }
+	.yza-profile-settings { background: #f51400; }
+	.yza-widgets-settings { background: #3fafed; }
 }
+.activity {
+	a#just-me i { background: #3fafed; }
+	a#activity-mentions i { background: #f51400; }
+	a#activity-favs i { background: #005e9a; }
+	a#activity-friends i { background: #2C4956; }
+	a#aactivity-groups i { background: #333; }
+}
+
+
 // this was for without youzer
 #buddypress {
 	.item-body { margin-top: 0px; }
