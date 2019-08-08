@@ -7,7 +7,6 @@ jQuery(document).ready(function(){
 		jQuery(".bps-selectbox select option").first().html("All");
 		jQuery(".bps-selectbox .list .option").first().html("All");
 		jQuery(".bps-selectbox .list .option").first().attr('data-value', 'All')
-		console.log(jQuery(".bps-selectbox .nice-select .current").text().trim().length);
 		if(!jQuery(".bps-selectbox .nice-select .current").text().trim().length) {
 			jQuery(".bps-selectbox .nice-select .current").text("All");
 		}

@@ -1,12 +1,7 @@
 <?php 
-/**
-* If you are using BP 2.1+, this will insert a Country selectbox.
-* Add the function to bp-custom.php and then visit .../wp-admin/users.php?page=bp-profile-setup
-*/
+// Add all the countries
 function bp_add_custom_country_list() {
- 
 	if ( !xprofile_get_field_id_from_name('Country') && 'bp-profile-setup' == $_GET['page'] ) {
- 
 		$country_list_args = array(
 		       'field_group_id'  => 1,
 		       'name'            => 'Country',
@@ -17,11 +12,8 @@ function bp_add_custom_country_list() {
 		       'type'            => 'selectbox',
 		       'order_by'	 => 'custom'
 		);
- 
 		$country_list_id = xprofile_insert_field( $country_list_args );
- 
 		if ( $country_list_id ) {
- 
 			$countries = array(
 				"United States",			
 				"Afghanistan",
@@ -217,9 +209,7 @@ function bp_add_custom_country_list() {
 				"Zambia",
 				"Zimbabwe"
 			);
-			
 			foreach (  $countries as $country ) {
-				
 				xprofile_insert_field( array(
 					'field_group_id'	=> 1,
 					'parent_id'		=> $country_list_id,
@@ -234,6 +224,94 @@ function bp_add_custom_country_list() {
 	}
 }
 add_action('bp_init', 'bp_add_custom_country_list');
+
+
+function bp_add_custom_state_list() {
+	if ( !xprofile_get_field_id_from_name('State') && 'bp-profile-setup' == $_GET['page'] ) {
+		$state_list_args = array(
+		       'field_group_id'  => 8,
+		       'name'            => 'State',
+		       'description'	    => '',
+		       'can_delete'      => false,
+		       'field_order' 	 => 2,
+		       'is_required'     => false,
+		       'type'            => 'selectbox',
+		       'order_by'	 => 'custom'
+		);
+		$state_list_id = xprofile_insert_field( $state_list_args );
+		if ( $state_list_id ) {
+			$state = array(
+				"Alaska",
+				"Alabama",
+				"American Samoa",
+				"Arizona",
+				"Arkansas",
+				"California",
+				"Colorado",
+				"Connecticut",
+				"District of Columbia",
+				"Delaware",
+				"Florida",
+				"Georgia",
+				"Guam",
+				"Hawaii",
+				"Iowa",
+				"Idaho",
+				"Illinois",
+				"Indiana",
+				"Kansas",
+				"Kentucky",
+				"Louisiana",
+				"Massachusetts",
+				"Maryland",
+				"Maine",
+				"Michigan",
+				"Minnesota",
+				"Missouri",
+				"Mississippi",
+				"Montana",
+				"North Carolina",
+				"North Dakota",
+				"Nebraska",
+				"New Hampshire",
+				"New Jersey",
+				"New Mexico",
+				"Nevada",
+				"New York",
+				"Ohio",
+				"Oklahoma",
+				"Oregon",
+				"Pennsylvania",
+				"Puerto Rico",
+				"Rhode Island",
+				"South Carolina",
+				"South Dakota",
+				"Tennessee",
+				"Texas",
+				"Utah",
+				"Virginia",
+				"Virgin Islands",
+				"Vermont",
+				"Washington",
+				"Wisconsin",
+				"West Virginia",
+				"Wyoming"
+			);
+			foreach (  $states as $state ) {
+				xprofile_insert_field( array(
+					'field_group_id'	=> 1,
+					'parent_id'		=> $state_list_id,
+					'type'			=> 'option',
+					'name'			=> $state,
+					'option_order'   	=> $i++
+				));
+				
+			}
+ 
+		}
+	}
+}
+add_action('bp_init', 'bp_add_custom_state_list');
 
 /* add more info to the member loop if it exists
 function add_info_to_members_loop() {
@@ -378,10 +456,11 @@ add_action( 'bp_actions', 'hide_overview_edit_tab' );
  * Add Groups link to Membership Directory
  */
 function bp_groups_tab() {
+
     $button_args = array(
         'id'         => 'groups',
         'component'  => 'members',
-        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<span>' . groups_get_total_group_count() .'</span>' ),
+        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<div>' . groups_get_total_group_count() .'</div>' ),
         'link_title' => __( 'Groups', 'buddypress' ),
         'link_class' => 'groups no-ajax',
         'link_href'  => '/groups',
@@ -395,3 +474,4 @@ function bp_groups_tab() {
     <?php
 }
 add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
+
