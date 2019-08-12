@@ -1,5 +1,12 @@
 .yz-profile {
 	.yz-profile-login { display: none; }
+	.yz-profile-sidebar {
+		.yz-ad {
+			.yz-edit-widget {
+				display: none;
+			}
+		}
+	}
 }
 .yz-account-page {
 	.yz-head-buttons-inner {
@@ -149,6 +156,7 @@
 			}
 		}
 	}
+	
 	#ihc-personal-li.bp-personal-sub-tab, .ihc-user-page-top-ap-wrapper, .ihc-ap-menu-item:nth-of-type(2), .ihc-ap-menu-item:nth-of-type(6) { 
 		display: none;
 	}
