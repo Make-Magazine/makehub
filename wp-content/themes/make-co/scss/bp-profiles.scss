@@ -1,5 +1,10 @@
 .yz-profile {
 	.yz-profile-login { display: none; }
+	.yz-cover-content {
+		.yz-user-statistics {
+			li:first-of-type { display: none; }
+		}
+	}
 	.yz-profile-sidebar {
 		.yz-ad {
 			.yz-edit-widget {
