@@ -254,11 +254,13 @@ function youzer_add_custom_meta_fields() {
 		echo "<i class='fas fa-globe-americas'></i> " . xprofile_get_field_data('country', bp_get_member_user_id());
 	}
 	echo("</span>");
+	/*
 	echo("<span class='yz-name'>");
 	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
 		echo "<i class='fas fa-city'></i> " . xprofile_get_field_data('city', bp_get_member_user_id());
 	} 
 	echo("</span>");
+	*/
 }
 add_action( 'bp_directory_members_item_meta', 'youzer_add_custom_meta_fields' );
 
