@@ -13,6 +13,7 @@
 		#members-dir-list {
 			width: calc( 80% );
 			float: left;
+			min-height: 1350px;
 		}
 		#yz-members-list {
 			.yzm-user-cover {
@@ -56,6 +57,7 @@
 					}
 				}
 			}
+			.item-meta .activity { display: none; }
 		}
 		.bps_filters {
 			position: absolute;

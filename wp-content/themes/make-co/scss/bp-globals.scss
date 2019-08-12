@@ -11,28 +11,30 @@
 .youzer div.item-list-tabs li.feed a::before {
 	background: #3fafed;
 }
-li#media-all-groups-li, li#media-all-personal-li {
-	a::before, i {
-		background: #3fafed;
+#yz-group-body #subnav, .yz-page-main-content {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li {
+		a::before, i {
+			background: #3fafed;
+		}
 	}
-}
-li#media-photos-personal-li, li#media-photos-groups-li {
-	a::before, i {
-		background: #f51400; 
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li {
+		a::before, i {
+			background: #f51400; 
+		}
 	}
-}
-li#media-videos-personal-li, li#media-videos-groups-li {
-	a::before, i {
-		background: #005e9a;
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li {
+		a::before, i {
+			background: #005e9a;
+		}
 	}
-}
-li#media-audios-personal-li, li#media-audios-groups-li {
-	a::before, i {
-		background: #2C4956;
+	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li {
+		a::before, i {
+			background: #2C4956;
+		}
 	}
-}
-li#media-files-personal-li, li#media-files-groups-li {
-	a::before, i {
-		background: #333;
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li {
+		a::before, i {
+			background: #333;
+		}
 	}
 }

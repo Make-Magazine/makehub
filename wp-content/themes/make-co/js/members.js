@@ -11,4 +11,8 @@ jQuery(document).ready(function(){
 			jQuery(".bps-selectbox .nice-select .current").text("All");
 		}
 	}
+   // if current user is on their profile page, have the avatar link to the change avatar page
+	if(window.location.pathname.replace(/\/$/, "").includes("/members/" + ajax_object.wp_user_nicename )){
+		jQuery(".yz-profile-img").attr("href", "/members/" + ajax_object.wp_user_nicename + "/profile/change-avatar");
+	}
 });
