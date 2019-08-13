@@ -96,6 +96,7 @@ function make_co_enqueue_scripts() {
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
+	wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true );
 	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true );
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
@@ -117,27 +118,28 @@ function make_co_enqueue_scripts() {
 		   'wp_user_nicename' => wp_get_current_user()->user_nicename
 	  )
 	);
+	// settings we need for buddypress themes
+	$store_filter_settings = apply_filters( 'bp_legacy_store_filter_settings', is_user_logged_in() );
+	$params = apply_filters( 'bp_core_get_js_strings', array(
+		// Strings for display.
+		'accepted'            => __( 'Accepted', 'buddypress' ),
+		'close'               => __( 'Close', 'buddypress' ),
+		'comments'            => __( 'comments', 'buddypress' ),
+		'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddypress' ),
+		'mark_as_fav'	      => __( 'Favorite', 'buddypress' ),
+		'my_favs'             => __( 'My Favorites', 'buddypress' ),
+		'rejected'            => __( 'Rejected', 'buddypress' ),
+		'remove_fav'	      => __( 'Remove Favorite', 'buddypress' ),
+		'show_all'            => __( 'Show all', 'buddypress' ),
+		'show_all_comments'   => __( 'Show all comments for this thread', 'buddypress' ),
+		'show_x_comments'     => __( 'Show all comments (%d)', 'buddypress' ),
+		'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddypress' ),
+		'view'                => __( 'View', 'buddypress' ),
 
-		$params = apply_filters( 'bp_core_get_js_strings', array(
-			// Strings for display.
-			'accepted'            => __( 'Accepted', 'buddypress' ),
-			'close'               => __( 'Close', 'buddypress' ),
-			'comments'            => __( 'comments', 'buddypress' ),
-			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddypress' ),
-			'mark_as_fav'	      => __( 'Favorite', 'buddypress' ),
-			'my_favs'             => __( 'My Favorites', 'buddypress' ),
-			'rejected'            => __( 'Rejected', 'buddypress' ),
-			'remove_fav'	      => __( 'Remove Favorite', 'buddypress' ),
-			'show_all'            => __( 'Show all', 'buddypress' ),
-			'show_all_comments'   => __( 'Show all comments for this thread', 'buddypress' ),
-			'show_x_comments'     => __( 'Show all comments (%d)', 'buddypress' ),
-			'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddypress' ),
-			'view'                => __( 'View', 'buddypress' ),
-
-			// Settings.
-			'store_filter_settings' => $store_filter_settings,
-		) );
-		wp_localize_script( 'make-co', 'BP_DTheme', $params );
+		// Settings.
+		'store_filter_settings' => $store_filter_settings,
+	) );
+	wp_localize_script( 'make-co', 'BP_DTheme', $params );
 	
 }
 
