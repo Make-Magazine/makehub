@@ -117,6 +117,27 @@ function make_co_enqueue_scripts() {
 		   'wp_user_nicename' => wp_get_current_user()->user_nicename
 	  )
 	);
+
+		$params = apply_filters( 'bp_core_get_js_strings', array(
+			// Strings for display.
+			'accepted'            => __( 'Accepted', 'buddypress' ),
+			'close'               => __( 'Close', 'buddypress' ),
+			'comments'            => __( 'comments', 'buddypress' ),
+			'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddypress' ),
+			'mark_as_fav'	      => __( 'Favorite', 'buddypress' ),
+			'my_favs'             => __( 'My Favorites', 'buddypress' ),
+			'rejected'            => __( 'Rejected', 'buddypress' ),
+			'remove_fav'	      => __( 'Remove Favorite', 'buddypress' ),
+			'show_all'            => __( 'Show all', 'buddypress' ),
+			'show_all_comments'   => __( 'Show all comments for this thread', 'buddypress' ),
+			'show_x_comments'     => __( 'Show all comments (%d)', 'buddypress' ),
+			'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddypress' ),
+			'view'                => __( 'View', 'buddypress' ),
+
+			// Settings.
+			'store_filter_settings' => $store_filter_settings,
+		) );
+		wp_localize_script( 'make-co', 'BP_DTheme', $params );
 	
 }
 
