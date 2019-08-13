@@ -69,7 +69,11 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
 }
 
 add_action( 'wp_enqueue_scripts', 'make_co_enqueue_scripts', 0);
-// scripts that need to be run first
+/**
+ * Enqueues styles, run this before youzer scripts run
+ *
+ * @since 1.0.0
+ */
 function make_co_enqueue_scripts() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
@@ -92,7 +96,7 @@ function make_co_enqueue_scripts() {
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
-	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true );
+	//wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true );
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
@@ -118,7 +122,7 @@ function make_co_enqueue_scripts() {
 
 add_action( 'wp_enqueue_scripts', 'make_co_enqueue_styles');
 /**
- * Enqueues scripts and styles.
+ * Enqueues styles.
  *
  * @since 1.0.0
  */
