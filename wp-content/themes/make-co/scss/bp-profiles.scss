@@ -38,23 +38,13 @@
 	.yza-profile-settings { background: #f51400; }
 	.yza-widgets-settings { background: #3fafed; }
 }
-
-.activity {
-	a#just-me i { background: #3fafed; }
-	a#activity-mentions i { background: #f51400; }
-	a#activity-favs i { background: #005e9a; }
-	a#activity-friends i { background: #2C4956; }
-	a#activity-groups i { background: #333; }
+// social
+.youzer-section-content > .uk-option-item {
+    padding: 15px 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-.yz-tabs-list-gradient {
-	a#notifications-my-notifications i {
-		background: #f51400;
-	}
-	a#read i {
-		background: #3fafed;
-	}
-}
-
 
 // this was for without youzer
 #buddypress {

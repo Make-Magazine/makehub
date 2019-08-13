@@ -92,11 +92,12 @@ function make_co_enqueue_scripts() {
 		make_learn_responsive_menu_settings()
 	);
 	
-	
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
+	// get all the bp legacy scripts loaded
 	wp_enqueue_script('jquery-cookie', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js', array(), $my_version, true );
+	wp_enqueue_script('jquery-scrollto', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js', array(), $my_version, true );
 	wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true );
 	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true );
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
@@ -119,7 +120,8 @@ function make_co_enqueue_scripts() {
 		   'wp_user_nicename' => wp_get_current_user()->user_nicename
 	  )
 	);
-	// settings we need for buddypress themes
+	
+	// settings we need localized for buddypress themes
 	$store_filter_settings = apply_filters( 'bp_legacy_store_filter_settings', is_user_logged_in() );
 	$params = apply_filters( 'bp_core_get_js_strings', array(
 		// Strings for display.

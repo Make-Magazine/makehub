@@ -38,3 +38,18 @@
 		}
 	}
 }
+.activity {
+	a#just-me i { background: #3fafed; }
+	a#activity-mentions i { background: #f51400; }
+	a#activity-favs i { background: #005e9a; }
+	a#activity-friends i { background: #2C4956; }
+	a#activity-groups i { background: #333; }
+}
+.yz-tabs-list-gradient {
+	a#notifications-my-notifications i {
+		background: #f51400;
+	}
+	a#read i {
+		background: #3fafed;
+	}
+}
