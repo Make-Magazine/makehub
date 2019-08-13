@@ -12,27 +12,27 @@
 	background: #3fafed;
 }
 #yz-group-body #subnav, .yz-page-main-content {
-	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#group-all {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all {
 		a::before, i {
 			background: #3fafed;
 		}
 	}
-	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal  {
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends {
 		a::before, i {
 			background: #f51400; 
 		}
 	}
-	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav  {
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-groups  {
 		a::before, i {
 			background: #005e9a;
 		}
 	}
-	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li {
+	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-favorites {
 		a::before, i {
 			background: #2C4956;
 		}
 	}
-	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li {
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-mentions {
 		a::before, i {
 			background: #333;
 		}
