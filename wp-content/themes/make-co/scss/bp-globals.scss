@@ -12,17 +12,17 @@
 	background: #3fafed;
 }
 #yz-group-body #subnav, .yz-page-main-content {
-	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#group-all {
 		a::before, i {
 			background: #3fafed;
 		}
 	}
-	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li {
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal  {
 		a::before, i {
 			background: #f51400; 
 		}
 	}
-	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li {
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav  {
 		a::before, i {
 			background: #005e9a;
 		}
