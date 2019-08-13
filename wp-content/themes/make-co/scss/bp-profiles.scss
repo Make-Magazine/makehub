@@ -38,12 +38,16 @@
 	.yza-profile-settings { background: #f51400; }
 	.yza-widgets-settings { background: #3fafed; }
 }
-// social
+// 
 .youzer-section-content > .uk-option-item {
     padding: 15px 45px;
     display: flex;
     justify-content: center;
     align-items: center;
+	 width: 50%;
+	&:nth-child(odd) {
+		float: right;
+	}
 }
 
 // this was for without youzer

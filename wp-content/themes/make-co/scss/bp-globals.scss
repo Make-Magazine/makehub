@@ -12,27 +12,27 @@
 	background: #3fafed;
 }
 #yz-group-body #subnav, .yz-page-main-content {
-	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all, .yz-link-inbox {
 		a::before, i {
 			background: #3fafed;
 		}
 	}
-	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends {
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends, .yz-link-notifications {
 		a::before, i {
 			background: #f51400; 
 		}
 	}
-	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-groups  {
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-groups, .yz-link-profile-settings  {
 		a::before, i {
 			background: #005e9a;
 		}
 	}
-	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-favorites {
+	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-favorites, yz-link-account-settings {
 		a::before, i {
 			background: #2C4956;
 		}
 	}
-	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-mentions {
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-mentions, yz-link-widgets-settings {
 		a::before, i {
 			background: #333;
 		}
