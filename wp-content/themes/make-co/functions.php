@@ -68,21 +68,61 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
 	require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
-add_action( 'wp_enqueue_scripts', 'initial_scripts', 0);
+add_action( 'wp_enqueue_scripts', 'make_co_enqueue_scripts', 0);
 // scripts that need to be run first
-function initial_scripts() {
+function make_co_enqueue_scripts() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_enqueue_script(
+		'make-co-responsive-menu',
+		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
+		array( 'jquery' ),
+		$my_version,
+		true
+	);
+
+	wp_localize_script(
+		'make-co-responsive-menu',
+		'genesis_responsive_menu',
+		make_learn_responsive_menu_settings()
+	);
+	
+	
+	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
+	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
+	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
 	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddpress.min.js', array(), $my_version, true );
+	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+
+	wp_enqueue_script(
+		'make-co',
+		get_stylesheet_directory_uri() . '/js/make-co.js',
+		array( 'jquery' ),
+		$my_version,
+		true
+	);
+	
+	wp_localize_script('make-co', 'ajax_object',
+	  array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'home_url' => get_home_url(),
+			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+			'wp_user_email' => wp_get_current_user()->user_email,
+		   'wp_user_nicename' => wp_get_current_user()->user_nicename
+	  )
+	);
+	
 }
 
-add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles');
+add_action( 'wp_enqueue_scripts', 'make_co_enqueue_styles');
 /**
  * Enqueues scripts and styles.
  *
  * @since 1.0.0
  */
-function make_learn_enqueue_scripts_styles() {
+function make_co_enqueue_styles() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
 	
@@ -110,46 +150,6 @@ function make_learn_enqueue_scripts_styles() {
 	);
 
 	wp_enqueue_style( 'dashicons' );
-
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'make-co-responsive-menu',
-		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
-
-	wp_localize_script(
-		'make-co-responsive-menu',
-		'genesis_responsive_menu',
-		make_learn_responsive_menu_settings()
-	);
-	
-	
-	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
-	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
-	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
-	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-	wp_enqueue_script(
-		'make-co',
-		get_stylesheet_directory_uri() . '/js/make-co.js',
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
-	
-	wp_localize_script('make-co', 'ajax_object',
-	  array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'home_url' => get_home_url(),
-			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => wp_get_current_user()->user_email,
-		   'wp_user_nicename' => wp_get_current_user()->user_nicename
-	  )
-	);
 
 }
 
