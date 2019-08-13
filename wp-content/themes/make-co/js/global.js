@@ -14,7 +14,7 @@ function bp_get_cookies() {
 	for (i = 0; i < allCookies.length; i++) {
 		cookie    = allCookies[i];
 		delimiter = cookie.indexOf('=');
-		name      = jq.trim( unescape( cookie.slice(0, delimiter) ) );
+		name      = jQuery.trim( unescape( cookie.slice(0, delimiter) ) );
 		value     = unescape( cookie.slice(delimiter + 1) );
 
 		// if BP cookie, store it
@@ -24,5 +24,5 @@ function bp_get_cookies() {
 	}
 
 	// returns BP cookies as querystring
-	return encodeURIComponent( jq.param(bpCookies) );
+	return encodeURIComponent( jQuery.param(bpCookies) );
 }
