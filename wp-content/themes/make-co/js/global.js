@@ -3,7 +3,7 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
-/* Returns a querystring of BP cookies (cookies beginning with 'bp-') */
+/* Returns a querystring of BP cookies (cookies beginning with 'bp-') 
 function bp_get_cookies() {
 	var allCookies = document.cookie.split(';'),  // get all cookies and split into an array
 		bpCookies      = {},
@@ -25,4 +25,6 @@ function bp_get_cookies() {
 
 	// returns BP cookies as querystring
 	return encodeURIComponent( jQuery.param(bpCookies) );
+	
 }
+*/
