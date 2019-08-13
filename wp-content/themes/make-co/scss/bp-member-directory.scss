@@ -17,7 +17,7 @@
 		}
 		#yz-members-list {
 			.yzm-user-cover {
-				height: 135px;
+				height: 120px;
 			}
 		}
 		.yzm-user-statistics {
@@ -41,7 +41,7 @@
 				padding: 15px 0px;
 				margin-top: 15px;
 				a { 
-					min-width: 120px;
+					min-width: 135px;
 					@media screen and (min-width: 470px) and (max-width: 600px){
 						min-width: 70px;
 						max-width: 70px;
