@@ -68,14 +68,91 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
 	require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
-
-add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles' );
+add_action( 'wp_enqueue_scripts', 'make_co_enqueue_scripts', 0);
 /**
- * Enqueues scripts and styles.
+ * Enqueues styles, run this before youzer scripts run
  *
  * @since 1.0.0
  */
-function make_learn_enqueue_scripts_styles() {
+function make_co_enqueue_scripts() {
+	$my_theme = wp_get_theme();
+   $my_version = $my_theme->get('Version');
+		$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_enqueue_script(
+		'make-co-responsive-menu',
+		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
+		array( 'jquery' ),
+		$my_version,
+		true
+	);
+
+	wp_localize_script(
+		'make-co-responsive-menu',
+		'genesis_responsive_menu',
+		make_learn_responsive_menu_settings()
+	);
+	
+	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
+	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
+	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
+	// get all the bp legacy scripts loaded
+	wp_enqueue_script('jquery-cookie', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js', array(), $my_version, true );
+	wp_enqueue_script('jquery-scrollto', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js', array(), $my_version, true );
+	wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true );
+	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true );
+	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+
+	wp_enqueue_script(
+		'make-co',
+		get_stylesheet_directory_uri() . '/js/make-co.js',
+		array( 'jquery' ),
+		$my_version,
+		true
+	);
+	
+	wp_localize_script('make-co', 'ajax_object',
+	  array(
+			'ajax_url' => admin_url('admin-ajax.php'),
+			'home_url' => get_home_url(),
+			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+			'wp_user_email' => wp_get_current_user()->user_email,
+		   'wp_user_nicename' => wp_get_current_user()->user_nicename
+	  )
+	);
+	
+	// settings we need localized for buddypress themes
+	$store_filter_settings = apply_filters( 'bp_legacy_store_filter_settings', is_user_logged_in() );
+	$params = apply_filters( 'bp_core_get_js_strings', array(
+		// Strings for display.
+		'accepted'            => __( 'Accepted', 'buddypress' ),
+		'close'               => __( 'Close', 'buddypress' ),
+		'comments'            => __( 'comments', 'buddypress' ),
+		'leave_group_confirm' => __( 'Are you sure you want to leave this group?', 'buddypress' ),
+		'mark_as_fav'	      => __( 'Favorite', 'buddypress' ),
+		'my_favs'             => __( 'My Favorites', 'buddypress' ),
+		'rejected'            => __( 'Rejected', 'buddypress' ),
+		'remove_fav'	      => __( 'Remove Favorite', 'buddypress' ),
+		'show_all'            => __( 'Show all', 'buddypress' ),
+		'show_all_comments'   => __( 'Show all comments for this thread', 'buddypress' ),
+		'show_x_comments'     => __( 'Show all comments (%d)', 'buddypress' ),
+		'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddypress' ),
+		'view'                => __( 'View', 'buddypress' ),
+
+		// Settings.
+		'store_filter_settings' => $store_filter_settings,
+	) );
+	wp_localize_script( 'make-co', 'BP_DTheme', $params );
+	
+}
+
+add_action( 'wp_enqueue_scripts', 'make_co_enqueue_styles');
+/**
+ * Enqueues styles.
+ *
+ * @since 1.0.0
+ */
+function make_co_enqueue_styles() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
 	
@@ -103,45 +180,6 @@ function make_learn_enqueue_scripts_styles() {
 	);
 
 	wp_enqueue_style( 'dashicons' );
-
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'make-co-responsive-menu',
-		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
-
-	wp_localize_script(
-		'make-co-responsive-menu',
-		'genesis_responsive_menu',
-		make_learn_responsive_menu_settings()
-	);
-	
-	
-	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
-	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
-	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
-	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-	wp_enqueue_script(
-		'make-co',
-		get_stylesheet_directory_uri() . '/js/make-co.js',
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
-	
-	wp_localize_script('make-co', 'ajax_object',
-	  array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'home_url' => get_home_url(),
-			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => wp_get_current_user()->user_email,
-	  )
-	);
 
 }
 
@@ -310,25 +348,8 @@ function make_learn_comments_gravatar( $args ) {
 LOGIN FUNCTIONS 
 ****************************************************/
 
-function cookie_login_warning() { ?>
-    <style type="text/css">
-        .wp-core-ui #login { width: 80%; }
-        #login::before {
-            content: "We are unable to process your login as we have detected that you have cookies blocked. Please make sure cookies are enabled in your browser and try again.";
-            text-align: center;
-            font-size:42px;
-            line-height: 46px;
-        }
-        #form-signin-wrapper {
-            display: none;
-        }
-    </style>
-    <?php
 
-}
-
-add_action('login_enqueue_scripts', 'cookie_login_warning');
-
+/* Old auth0 scripts
 // redirect wp-login.php to the auth0 login page 
 
 function load_auth0_js() {
@@ -383,7 +404,7 @@ function MM_WPlogin() {
         error_log(print_r($userinput, TRUE));
         wp_send_json_error();
     }
-} 
+} */
 
 
 /**
@@ -392,6 +413,27 @@ function MM_WPlogin() {
  * this will stop spam bots from signing up
  */
 /*
+
+/*
+function cookie_login_warning() { ?>
+    <style type="text/css">
+        .wp-core-ui #login { width: 80%; }
+        #login::before {
+            content: "We are unable to process your login as we have detected that you have cookies blocked. Please make sure cookies are enabled in your browser and try again.";
+            text-align: center;
+            font-size:42px;
+            line-height: 46px;
+        }
+        #form-signin-wrapper {
+            display: none;
+        }
+    </style>
+    <?php
+
+}
+
+add_action('login_enqueue_scripts', 'cookie_login_warning');
+
 add_action('login_enqueue_scripts', 'login_recaptcha_script');
 
 function login_recaptcha_script() {
@@ -445,4 +487,50 @@ function wpse45134_filter_option()
     // against `false`
     add_filter( 'pre_option_users_can_register', '__return_zero' );
 } 
+*/
+
+function custom_login_stylesheets() {
+    wp_enqueue_style( 'custom-login', get_stylesheet_directory_uri() . '/css/style-login.css' );
+	 wp_enqueue_style( 'custom-login', '/wp-content/universal-assets/v1/css/universal.css' );
+}
+//This loads the function above on the login page
+add_action( 'login_enqueue_scripts', 'custom_login_stylesheets' );
+
+add_action( 'login_header', function() {
+    get_header();
+});
+add_action( 'login_footer', function() {
+    get_footer();
+});
+
+
+/*
+// this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
+function buddypress_add_last_activity() {
+
+  $members =  get_users( 'blog_id=1&fields=ID' );
+  // $members =  get_users( 'fields=ID&role=subscriber' );
+  
+  foreach ( $members as $user_id ) {
+     bp_update_user_last_activity( $user_id, bp_core_current_time() );
+  }
+
+}
+add_action('bp_init', 'buddypress_add_last_activity' );
+// just in case, prevent a billion activation emails from being sent
+add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
+*/
+
+
+/* This won't be necessary, Alicia is going to rename the mm user logins
+$blogusers = get_users( 'blog_id=1' );
+// Array of WP_User objects.
+foreach ( $blogusers as $user ) {
+	//error_log(print_r($user, TRUE));
+	$new_user_login = substr($user->user_login, 0, strpos($user->user_login, "@"));
+	error_log($new_user_login);
+	if($new_user_login && $new_user_login != "") {
+		$wpdb->update($wpdb->users, array('user_login' => $new_user_login), array('ID' => $user->ID));
+	}
+}
 */

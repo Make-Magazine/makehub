@@ -1,9 +1,6 @@
+/* commenting this out until we need auth0 again
 window.addEventListener('load', function() {
 
-  // buttons and event listeners
-  /*    If the login button, logout button or profile view elements do not exist
-   *    (such as in wp-admin and wp - login pages) default to a 'fake' element
-   */
   if ( !jQuery( "#newLoginBtn" ).length ) {
     var loginBtn = document.createElement('div');
     loginBtn.setAttribute("id", "newLoginBtn");
@@ -184,7 +181,7 @@ window.addEventListener('load', function() {
 				success: function(data){
 					updateProgressBar("70%");
 					loginRedirect();
-					/* Nobody likes this, but page content is loaded before wp login otherwise */
+					// Nobody likes this, but page content is loaded before wp login otherwise 
 					if(jQuery(".logged-in").length == 0 && jQuery( '#authenticated-redirect' ).length == 0 ) {
 						jQuery("#page-content").load(window.location.href + " #page-content");
 					}
@@ -257,3 +254,4 @@ window.addEventListener('load', function() {
 	}
    
 });
+*/

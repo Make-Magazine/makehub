@@ -1,0 +1,177 @@
+.yz-profile {
+	.yz-profile-login { display: none; }
+	.yz-cover-content {
+		.yz-user-statistics {
+			li:first-of-type { display: none; }
+		}
+	}
+	.yz-profile-sidebar {
+		.yz-ad {
+			.yz-edit-widget {
+				display: none;
+			}
+		}
+	}
+}
+.yz-account-page {
+	.yz-head-buttons-inner {
+		display: flex;
+		justify-content: center;
+		.yz-home-button { display: none; }
+		.yz-button-item.yz-profile-button a {
+			background-color: #3fafed;
+		}
+		.yz-button-item.yz-networks-button a {
+			background-color: #f51400; 
+		}
+		.yz-button-item.yz-avatar-button a {
+			background-color: #005e9a;
+		}
+		.yz-button-item.yz-cover-button a {
+			background-color: #2C4956;
+		}
+		.yz-button-item.yz-logout-button a {
+			background: #333;
+		}
+	}
+	.yza-account-settings { background: #005e9a; }
+	.yza-profile-settings { background: #f51400; }
+	.yza-widgets-settings { background: #3fafed; }
+}
+// 
+.youzer-section-content > .uk-option-item {
+	padding: 15px 45px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	@media screen and (min-width: 740px) {
+		width: 50%;
+		&:nth-child(odd) {
+			float: right;
+		}
+	}
+}
+
+// this was for without youzer
+#buddypress {
+	.item-body { margin-top: 0px; }
+	.bp-navs {
+		border: 0px;
+		box-shadow: 0px;
+		li {
+			&.selected a {
+				color: #fff;
+				background: #1987c7;
+			}
+			#user-notifications .count {
+				color: #fff;
+				background: #ed1e24;
+			}
+			a:hover {
+				color: #fff;
+				background: #00adef;
+			}
+		}
+		&#subnav { 
+			background: #333;
+			margin-top: 0px;
+			li {
+				a { 
+					color:#fff;
+					padding: 9px 15px;
+					&:hover {
+						background: #666;
+					}
+				}
+				&.selected a {
+					background: #777;
+				}
+			}
+		}
+	}
+	.profile {
+		h2.screen-heading { display: none; }
+		.bp-tables-user {
+			padding: 10px;
+			border: 1px solid #1987C7;
+			background: #fafafa;
+			display: block;
+			td.label { 
+				color: #333;
+				min-width: 140px;
+				display: block;
+				text-align: left;
+				padding: 15px;
+			}
+		}
+		.profile-group-title {
+			padding-bottom: 3px;
+			border-bottom: 1px solid #1987C7;
+		}
+		#profile-edit-form {
+			.checkbox-options {
+				display: grid;
+				grid-template-columns: auto auto auto auto;
+				@media screen and (max-width: 981px) {
+					grid-template-columns: auto auto auto;
+				}
+				@media screen and (max-width: 767px) {
+					grid-template-columns: auto auto;
+				}
+				@media screen and (max-width: 480px) {
+					grid-template-columns: auto;
+				}
+			}
+			#profile-group-edit-submit {
+				color: #1987C7;
+				border: thin solid #1987C7;
+				padding: 10px 30px;
+				&:hover, &:active, &:focus {
+					background-color: #1987C7;
+					color: #fff;
+				}
+			}
+		}
+		legend {
+			padding-bottom: 3px;
+			border-bottom: 1px solid #1987C7;
+			margin-bottom:10px;
+			font-size: 18px;
+		}
+		.editfield { 
+			margin-top: 0px;
+			border-radius: 0px;
+			border: solid 1px #1987C7;
+		}
+		.button-nav {
+			padding-left: 0px;
+			margin: 0px;
+			border-bottom: solid #1987C7;
+			li {
+				a {
+					padding: 10px;
+					width: 100%;
+					border: solid 1px;
+					border-radius: 5px 5px 0px 0px;
+					display: block;
+					border-bottom: 0px;
+					@media screen and (max-width: 680px) {
+						font-size: 18px;
+					}
+				}
+				&.current a {
+					background: #1987C7;
+					color: #fff;
+				}
+			}
+		}
+	}
+	
+	#ihc-personal-li.bp-personal-sub-tab, .ihc-user-page-top-ap-wrapper, .ihc-ap-menu-item:nth-of-type(2), .ihc-ap-menu-item:nth-of-type(6) { 
+		display: none;
+	}
+	.ihc-ap-menu { 
+		padding: 0px;
+		.ihc-ap-menu-item { margin: 0px; }
+	}
+}
