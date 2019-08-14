@@ -60,6 +60,22 @@
 	}
 }
 
+// edit visibility buttons
+.youzer {
+	.editfield label[for*="public"] .field-visibility-text::before {
+		background: #3fafed;
+	}
+	.editfield label[for*="adminsonly"] .field-visibility-text::before {
+		background: #f51400;
+	}
+	.editfield label[for*="loggedin"] .field-visibility-text::before {
+		background: #005e9a;
+	}
+	.editfield label[for*="friends"] .field-visibility-text::before {
+		background: #2C4956;
+	}
+}
+
 // this was for without youzer
 #buddypress {
 	.item-body { margin-top: 0px; }
