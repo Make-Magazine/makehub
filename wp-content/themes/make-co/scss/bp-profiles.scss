@@ -20,6 +20,11 @@
 			}
 		}
 	}
+	.yz-settings-menu {
+		a[href*="change-password"] {
+			display: none !important;
+		}
+	}
 }
 .yz-account-page {
 	.yz-head-buttons-inner {
