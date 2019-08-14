@@ -2,6 +2,7 @@ html {
 	body { 
 		.site-container { 
 			overflow-y: hidden;
+			overflow-x: hidden;
 		}
 		&.media { overflow: auto; } // overwrite bootstrap
 	}
