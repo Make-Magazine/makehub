@@ -75,15 +75,19 @@
 }
 .widget_bp_core_members_widget, .widget_bp_groups_widget {
 	.item-options {
-		a#newest-members {
+		a#newest-members, a#newest-groups {
 			background-color: #3fafed;
 		}
-		a#recently-active-members {
+		a#recently-active-members, a#recently-active-groups {
 			background-color: #f51400;
 		}
-		a#popular-members {
+		a#popular-members, a#popular-groups {
 			background-color: #005e9a;
+		}
+		a#alphabetical-groups {
+			background-color: #2C4956;
 		}
 	}
 }
+
 #whats-new-post-in-box label { color: #005e9a; }

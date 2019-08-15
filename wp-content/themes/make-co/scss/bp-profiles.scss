@@ -20,6 +20,13 @@
 			}
 		}
 	}
+	.yz-quick-buttons {
+		.yz-messages-btn, .yz-notification-btn {
+			.yz-button-count {
+				 background-color: #f51400;
+			}
+		}
+	}
 	.yz-settings-menu {
 		a[href*="change-password"] {
 			display: none !important;

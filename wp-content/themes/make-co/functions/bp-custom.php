@@ -390,3 +390,19 @@ function bp_groups_tab() {
 }
 add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
 
+
+/* Something like this is needed to limit what activity shows in the scroll
+add_filter( 'bp_after_has_activities_parse_args', function( $retval ) {
+ if( bp_is_activity_directory() ) {
+   $retval['action'] = array(
+        'activity_update',
+        'activity_comment',
+        'last_activity',
+		  'created_group',
+		  'new_blog_post',
+		  'new_blog_comment',
+    );
+    return $retval;
+  }
+} ); 
+*/

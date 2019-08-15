@@ -19,6 +19,14 @@
 			.yzm-user-cover {
 				height: 100px;
 			}
+			.yzm-user-data {
+				min-height: 325px;
+				display: flex;
+				flex-direction: column;
+				.item {
+					margin-bottom: auto;
+				}
+			}
 		}
 		.yzm-user-statistics {
 			.yz-data-item {
