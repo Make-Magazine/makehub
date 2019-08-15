@@ -507,15 +507,21 @@ add_action( 'login_footer', function() {
 function wpb_sender_email( $original_email_address ) {
     return 'webmaster@make.co';
 }
- 
+
 // Function to change sender name
 function wpb_sender_name( $original_email_from ) {
     return 'Make: Community';
 }
- 
 // Hooking up our functions to WordPress filters 
 add_filter( 'wp_mail_from', 'wpb_sender_email' );
 add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
+// change the subject too
+function makeco_password_subject_filter($old_subject) {
+    $blogname = wp_specialchars_decode(get_option('blogname'), ENT_QUOTES);
+    $subject = sprintf( __('[%s] Password Reset'), $blogname );
+    return $subject;
+}
+add_filter ( 'retrieve_password_title', 'my_retrieve_password_subject_filter', 10, 1 );
 
 /*
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
