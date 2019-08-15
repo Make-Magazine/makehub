@@ -308,10 +308,10 @@ function yz_translate_youzer_text( $translated_text ) {
     switch ( $translated_text ) {
         case 'Widgets Settings' :
 		  case 'widgets settings' :
-            $translated_text = __( 'Overview Settings', 'youzer' );
+            $translated_text = __( 'Advanced Profile settings', 'youzer' );
             break;
 		  case 'Profile Widgets Settings' :
-			   $translated_text = __( 'Profile Overview Settings', 'youzer' );
+			   $translated_text = __( 'Add widgets, media and more!', 'youzer' );
             break;
 		  case 'Filter' :
             $translated_text = __( 'Order', 'youzer' );
