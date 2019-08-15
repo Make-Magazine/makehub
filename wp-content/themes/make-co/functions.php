@@ -517,8 +517,7 @@ add_filter( 'wp_mail_from', 'wpb_sender_email' );
 add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
 // change the subject too
 function makeco_password_subject_filter($old_subject) {
-    $blogname = "Make: Community";
-    $subject = sprintf( __('[%s] Password Reset'), $blogname );
+    $subject = 'Make: Community - Password Reset';
     return $subject;
 }
 add_filter ( 'retrieve_password_title', 'makeco_password_subject_filter', 10, 1 );
