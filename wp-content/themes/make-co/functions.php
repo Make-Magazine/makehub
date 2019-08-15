@@ -503,6 +503,19 @@ add_action( 'login_footer', function() {
     get_footer();
 });
 
+// Function to change email address from wordpress to webmaster
+function wpb_sender_email( $original_email_address ) {
+    return 'webmaster@make.co';
+}
+ 
+// Function to change sender name
+function wpb_sender_name( $original_email_from ) {
+    return 'Make: Community';
+}
+ 
+// Hooking up our functions to WordPress filters 
+add_filter( 'wp_mail_from', 'wpb_sender_email' );
+add_filter( 'wp_mail_from_name', 'wpb_sender_name' );
 
 /*
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
