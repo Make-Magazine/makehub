@@ -521,7 +521,7 @@ function makeco_password_subject_filter($old_subject) {
     $subject = sprintf( __('[%s] Password Reset'), $blogname );
     return $subject;
 }
-add_filter ( 'retrieve_password_title', 'my_retrieve_password_subject_filter', 10, 1 );
+add_filter ( 'retrieve_password_title', 'makeco_password_subject_filter', 10, 1 );
 
 /*
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
