@@ -258,8 +258,7 @@
             padding: 0px;
         }
     }
-    .newsletter-footer {
-        display: none;
+	.newsletter-footer {
         background-image: url("https://make.co/wp-content/themes/memberships/img/makey_logo.svg");
         background-repeat: no-repeat;
         background-position: center;
@@ -282,6 +281,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+			   flex-direction: column;
             @media (min-width:768px) {
                 min-height: 100px;
             }
@@ -339,9 +339,10 @@
         .input-container {
             width: 100%;
             position: relative;
+			   margin-top: 15px;
             .error-message {
                 position: absolute;
-                top: -20px;
+                top: -12px;
                 left: 0;
                 display: block;
                 font-size: 12px;
@@ -379,7 +380,6 @@
                     padding-right: 15px;
                 }
             }
-
         }
 
         @keyframes shake {
@@ -400,9 +400,7 @@
             }
         }
 
-
-
-        input[type=email], input[type=email]:hover,
+        input[type=email], input[type=email]:hover, input[type=text], input[type=text]:hover, 
             input[type=submit], input[type=submit]:hover{
             padding-left: 0px;
             background-color: #005E9A;
@@ -412,8 +410,14 @@
             color: #fff;
             font-size: 18px;
             border-radius: 0px;
+				@media screen and (max-width: 480px) {
+					position: relative;
+					width: 100%;
+			   }
         }
-        input[type=email] { padding-bottom: 15px; }
+        input#LASTNAME { 
+			  padding-bottom: 15px;
+		  }
         input[type=submit], input[type=submit]:hover {
             border: thin white solid;
             height: 45px;
@@ -422,6 +426,17 @@
             text-align: center;
             padding-right: 20px;
             padding-left: 20px;
+			   position: absolute;
+			   right: -20px;
+			   margin-top: 15px;
+			   @media screen and (max-width: 768px) {
+					right: 20px;
+			   }
+			   @media screen and (max-width: 480px) {
+					position: relative;
+					width: 100%;
+					right: 0px;
+			   }
             &:hover, &:active, &:focus {
                 background: #fff;
                 color: #005E9A;

@@ -289,9 +289,10 @@ if ( !class_exists( 'BP_Better_Messages_Hooks' ) ):
         public function pm_link( $link = false )
         {
             if( BP_Better_Messages()->settings['fastStart'] == '1' ){
-                return BP_Better_Messages()->functions->get_link() . '?new-message&fast=1&to=' . bp_core_get_username( bp_displayed_user_id() );
+					error_log(bp_core_get_username( bp_get_member_user_id() ));
+                return BP_Better_Messages()->functions->get_link() . '?new-message&fast=1&to=' . bp_core_get_username(  bp_get_member_user_id() );
             } else {
-                return BP_Better_Messages()->functions->get_link() . '?new-message&to=' . bp_core_get_username( bp_displayed_user_id() );
+                return BP_Better_Messages()->functions->get_link() . '?new-message&to=' . bp_core_get_username(  bp_get_member_user_id() );
             }
         }
 
