@@ -77,6 +77,11 @@
 						}
 					}
 				}
+				.awaiting_response_friend a {
+					@media screen and (min-width: 595px) and (max-width: 670px){
+						line-height:24px;
+					}
+				}
 			}
 			.item-meta .activity { display: none; }
 		}
@@ -86,6 +91,9 @@
 			right: 20px;
 			br { display: none; }
 			a { padding-left: 15px; }
+		}
+		#directory-show-search a::before {
+			background: #005e9a;
 		}
 		.yz-directory-filter {
 			.item-list-tabs {
