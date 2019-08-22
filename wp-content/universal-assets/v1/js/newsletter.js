@@ -74,14 +74,14 @@ var newsletterSignupManager = function() {
             'vendor': 'mailchimp',
             'beltOff': true
          },
-			/*'learn': {
+			'learn': {
             'domains': 'learn.makehub, learn.makehub.local, learn.makehub.wpengine.com, learn.stagemakehub.wpengine.com, learn.devmakehub.wpengine.com, learn.makehub.staging.wpengine.com, learn.make.co',
             'header': 'Subscribe for Make: Community News',
             'listID': '64d256630b',
             'groupID': '926889',
             'vendor': 'mailchimp',
             'beltOff': true
-         },*/
+         },
 			'community': {
             'domains': 'makehub, makehub.local, makehub.wpengine.com, stagemakehub.wpengine.com, devmakehub.wpengine.com, makehub.staging.wpengine.com, community.make.co',
             'header': 'Subscribe for Make: Community News',
