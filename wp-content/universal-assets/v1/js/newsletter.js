@@ -1,11 +1,12 @@
 // newsletter signup logic
 
 var newsletterSignupManager = function() {
-
    var vendors = {
          'mailchimp': {
             'postURL': 'https://makermedia.us9.list-manage.com/subscribe/post?u=4e536d5744e71c0af50c0678c&id=',
             'emailSel': '#EMAIL', // NOTE (ts): it turns out this id is VERY important for proper form operation, do not change!
+				'firstnameSel': '#FNAME',
+				'lastnameSel': '#LNAME',
             'templateSel': '#mc-form-template' // not currently used
          },
          'whatcounts': {
@@ -19,58 +20,74 @@ var newsletterSignupManager = function() {
       sites = {
          'makeco': {
             'domains': 'makeco, makeco.wpengine.com, makeco.staging.wpengine.com, makeco.com, make.co, stage.make.co, dev.make.co',
-            'header': 'Sign up for the Make: Membership newsletter',
-            'listID': '609e43360a',
-            'groupID': '38209',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '926889',
             'vendor': 'mailchimp',
             'beltOff': true
          },
          'makermedia': {
             'domains': 'maker-media, makermedia, makermedia.wpengine.com, makermedia.staging.wpengine.com, makermedia.com, stage.makermedia.com, dev.makermedia.com',
-            'header': 'Sign up for the Make: magazine newsletter',
-            'listID': '6B5869DC547D3D46B52F3516A785F101',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '926889',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
          'makerfaire': {
             'domains': 'maker-faire, makerfaire, makerfaire.wpengine.com, makerfaire.staging.wpengine.com, makerfaire.com, stage.makerfaire.com, dev.makerfaire.com',
-            'header': 'Sign up for the Maker Faire newsletter',
-            'listID': '6B5869DC547D3D46E66DEF1987C64E7A',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '926889',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
          'makezine': {
             'domains': 'make-zine, makezine, makezine.wpengine.com, makezine.staging.wpengine.com, makezine.com, stage.makezine.com, dev.makezine.com',
-            'header': 'Sign up for the Make: magazine newsletter',
-            'listID': '6B5869DC547D3D46B52F3516A785F101',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '38209',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
          'makershed': {
             'domains': 'makershed, www.makershed.com',
-            'header': 'Sign up for the Maker Shed newsletter',
-            'listID': '6B5869DC547D3D46510F6AB3E701BA0A',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '38209',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
          'makerspaces': {
             'domains': 'makerspaces, makerspaces.wpengine.com, makerspaces.staging.wpengine.com, spaces.makerspace.com, makerspaces.make.co, stage.makerspace.com, dev.makerspace.com',
-            'header': 'Stay in the loop with our Maker Pro newsletter',
-            'listID': '6B5869DC547D3D467B33E192ADD9BE4B',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '38209',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
          'makershare': {
             'domains': 'maker-share, makershare, makeshare.wpengine.com, makershare.staging.wpengine.com, makershare.com',
-            'header': 'Sign up for the Maker Share newsletter',
-            'listID': '6B5869DC547D3D46072290AE725EC932',
-            'groupID': false,
-            'vendor': 'whatcounts',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '38209',
+            'vendor': 'mailchimp',
+            'beltOff': true
+         },
+			'learn': {
+            'domains': 'learn.makehub, learn.makehub.local, learn.makehub.wpengine.com, learn.stagemakehub.wpengine.com, learn.devmakehub.wpengine.com, learn.makehub.staging.wpengine.com, learn.make.co',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '926889',
+            'vendor': 'mailchimp',
+            'beltOff': true
+         },
+			'community': {
+            'domains': 'makehub, makehub.local, makehub.wpengine.com, stagemakehub.wpengine.com, devmakehub.wpengine.com, makehub.staging.wpengine.com, community.make.co',
+            'header': 'Subscribe for Make: Community News',
+            'listID': '64d256630b',
+            'groupID': '926889',
+            'vendor': 'mailchimp',
             'beltOff': true
          },
       },
@@ -143,6 +160,17 @@ var newsletterSignupManager = function() {
          }
          return valid;
       }
+		_publicNewsletterSignupManager.validateName = function(nameVal) {
+         var valid = false,
+         $nameInput = '#' + nameVal;
+			if(jQuery($nameInput).val()) {
+            jQuery($nameInput).next().addClass('hidden');
+            valid = true;
+         } else {
+            jQuery($nameInput).next().removeClass('hidden');
+         }
+         return valid;
+      }
 
       // Replace the form for Whatcounts if applicable - NOTE (ts): eventually we could remove this?
       if(_publicNewsletterSignupManager.settings.vendor === 'whatcounts') {
@@ -202,7 +230,7 @@ var newsletterSignupManager = function() {
          //    }
          // }
          // if makerfaire and valid checkboxes, or for any other site without checkboxes, validate email
-         if(_publicNewsletterSignupManager.validateEmail()) {
+         if(_publicNewsletterSignupManager.validateEmail() && _publicNewsletterSignupManager.validateName("FNAME") && _publicNewsletterSignupManager.validateName("LNAME")) {
             event.preventDefault(); // prevents fall-through to form 'action' attr
             // trigger recpatcha manually
             grecaptcha.execute();
@@ -214,7 +242,7 @@ var newsletterSignupManager = function() {
          }
 
       });
-
+		
    } // end if currentSite
 
 /* =============   Return the public object   ================  */
@@ -248,6 +276,8 @@ jQuery(document).ready(function(){
                //console.log(data);
                jQuery('#subscribe-button').removeClass('working');
                jQuery(signupManager.settings.emailSel).val("");
+				   jQuery(signupManager.settings.firstnameSel).val("");
+				   jQuery(signupManager.settings.lastnameSel).val("");
                jQuery('.makerfaire-checkboxes input[type="checkbox').each(function(idx,el) {
                   jQuery(el).prop('checked', false);
                });

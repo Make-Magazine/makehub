@@ -1,15 +1,11 @@
 html {
-    overflow-x: hidden;
-    height: 100vh;
-    body { 
-        min-height: 100%;
-        #page-content, #error-page {
-            min-height: calc(100vh - 418px);
-            @media screen and (max-width: 767px) {
-                min-height: calc(100vh - 288px);
-            }
-        }
-    }
+	body { 
+		.site-container { 
+			overflow-y: hidden;
+			overflow-x: hidden;
+		}
+		&.media { overflow: auto; } // overwrite bootstrap
+	}
 }
 .genesis-skip-link { display: none; }
 .content-sidebar-wrap {
@@ -21,7 +17,47 @@ html {
 	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
 }
 
-// test removing this proto repsonsiveness at some point
+.nav-level-2 #menu-secondary_universal_menu{
+	.dropdown {
+		&:focus { background: #333; }
+		a.dropdown-toggle {
+			span { 
+				padding: 0px;
+				padding-right: 5px;
+			}
+			span.caret {
+				padding-right: 0px;
+				width: 5px;
+				height: 5px;
+				margin-right: 20px;
+				margin-left: -25px;
+			}
+		}
+		.dropdown-menu {
+			background: #333;
+			min-width: 125px;
+			li { 
+				border: 0px;
+				&:hover {
+					background: #666;
+				}
+			}
+		}
+		.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover { background-color: #666; }
+	}
+}
+
+button, input[type="submit"] {
+	color: #1987C7;
+	border: thin solid #1987C7;
+	padding: 10px 30px;
+	background-color: #fff;
+	&:hover, &:active, &:focus {
+		background-color: #1987C7;
+		color: #fff;
+	}
+}
+
 .top15 { 
   margin-top:15px!important;
 }
@@ -97,38 +133,6 @@ body.admin-bar {
   //   margin-top: 32px;
   // }
 }
-
-.flag-banner {
-  width: 100%;
-  height: 23px;
-  background-image: url(../img/bg-border.png);
-  background-repeat: repeat-x;
-  @media (max-width:767px) {
-    &.header-flag {
-      display: none;
-    }
-  }
-}
-
-hr.blue-bottom-border {
-  margin-top: 0;
-  margin-bottom: 0;
-  border-bottom: 5px solid #3FAFED;
-}
-
-a.red-borders {
-  display: block;
-  border-top: 1px solid #f40b0b;
-  border-bottom: 1px solid #f40b0b;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  text-align: center;
-}
-
-.red {
-  color: #f40b0b;
-}
-
 
 // Primary Call to Action button
 .btn-cyan {
@@ -324,11 +328,7 @@ hr.double-line-hr {
     padding-top: 6px;
   }
 }
-.page-template-page-crew .fancybox-skin {
-  @media screen and (max-width: 767px) {
-    padding: 30px !important;
-  }
-}
+
 .fancybox-overlay {
   background: rgba(255, 255, 255, 0.5) !important;
 }

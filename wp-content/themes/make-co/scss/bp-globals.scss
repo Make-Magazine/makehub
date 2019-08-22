@@ -1,0 +1,93 @@
+.bp-user, .buddypress.directory, .groups {
+	.main-content.container {
+		width: 100%;
+	}
+	.youzer input[type="search"]  {
+		width: 100%;
+	}
+}
+
+// wall and group buttons (Groups Media)
+.youzer div.item-list-tabs li.feed a::before {
+	background: #3fafed;
+}
+#yz-group-body #subnav, .yz-page-main-content {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all, li#friends-friends-my-friends-personal-li {
+		a::before, i {
+			background: #3fafed;
+		}
+	}
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends, li#friends-requests-personal-li {
+		a::before, i {
+			background: #f51400; 
+		}
+	}
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-groups {
+		a::before, i {
+			background: #005e9a;
+		}
+	}
+	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-favorites {
+		a::before, i {
+			background: #2C4956;
+		}
+	}
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-mentions {
+		a::before, i {
+			background: #333;
+		}
+	}
+}
+.activity {
+	a#just-me i { background: #3fafed; }
+	a#activity-mentions i { background: #f51400; }
+	a#activity-favs i { background: #005e9a; }
+	a#activity-friends i { background: #2C4956; }
+	a#activity-groups i { background: #333; }
+}
+.yz-tabs-list-gradient {
+	a#notifications-my-notifications i {
+		background: #f51400;
+	}
+	a#read i {
+		background: #3fafed;
+	}
+}
+.yz-my-account-widget .yz-menu-icon-colorful {
+	.yz-link-inbox i { 
+		background-color: #3fafed;
+	}
+	.yz-link-notifications i {
+		background-color: #f51400;
+	}
+	.yz-link-friendship-requests i {
+		background-color: #005e9a;
+	}
+	.yz-link-profile-settings i {
+		background-color: #2C4956;
+	}
+	.yz-link-account-settings i {
+		background-color: #333;
+	}
+	.yz-link-widgets-settings i {
+		background-color: #3fafed;
+	}
+}
+.widget_bp_core_members_widget, .widget_bp_groups_widget {
+	.item-options {
+		a#newest-members, a#newest-groups {
+			background-color: #3fafed;
+		}
+		a#recently-active-members, a#recently-active-groups {
+			background-color: #f51400;
+		}
+		a#popular-members, a#popular-groups {
+			background-color: #005e9a;
+		}
+		a#alphabetical-groups {
+			background-color: #2C4956;
+		}
+	}
+}
+
+#whats-new-post-in-box label { color: #005e9a; }
