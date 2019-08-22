@@ -91,6 +91,10 @@
 	}
 }
 
+#friend-list #message.error { // a bandaid for now, since friend requests are being accepted with a false error
+	display: none;
+}
+
 // this was for without youzer
 #buddypress {
 	.item-body { margin-top: 0px; }

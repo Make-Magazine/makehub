@@ -1,7 +1,6 @@
 // newsletter signup logic
 
 var newsletterSignupManager = function() {
-   console.log("ok");
    var vendors = {
          'mailchimp': {
             'postURL': 'https://makermedia.us9.list-manage.com/subscribe/post?u=4e536d5744e71c0af50c0678c&id=',
