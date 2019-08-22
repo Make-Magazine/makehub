@@ -28,7 +28,6 @@ jQuery(document).ready(function(){
 			});
 		});
 	}
-	
 	// the workshop form isn't very dynamic right meow
 	jQuery( "#workshop-button" ).on('click',function(event) {
 		if(isValidEmailAddress(jQuery("#workshop-email").val())) {
