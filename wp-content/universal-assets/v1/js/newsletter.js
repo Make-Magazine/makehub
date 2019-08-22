@@ -278,13 +278,13 @@ jQuery(document).ready(function(){
                jQuery(signupManager.settings.emailSel).val("");
 				   jQuery(signupManager.settings.firstnameSel).val("");
 				   jQuery(signupManager.settings.lastnameSel).val("");
-               jQuery('.makerfaire-checkboxes input[type="checkbox').each(function(idx,el) {
+               /*jQuery('.makerfaire-checkboxes input[type="checkbox').each(function(idx,el) {
                   jQuery(el).prop('checked', false);
-               });
+               });*/
                
                jQuery('.fancybox-thx').trigger('click');
                jQuery('.nl-modal-email-address').text(email);
-               jQuery('.whatcounts-signup2 #email').val(email);
+               //jQuery('.whatcounts-signup2 #email').val(email);
                signupManager.beltOff();
             });
       } else {
