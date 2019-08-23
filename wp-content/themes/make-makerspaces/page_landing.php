@@ -1,80 +1,44 @@
-<?php get_header(); 
+<?php
 
-//determine the parent page slug
- $par_post = get_post($post->post_parent);
- $slug = $par_post->post_name;
-?>
+/**
+ * Template Name: Landing
+ *
+ * @package Make - Co
+ * @author  Make Community
+ * @license GPL-2.0-or-later
+ * @link    https://make.co/
+ */
+// Add our custom loop
+add_action('genesis_loop', 'spaces_map_loop');
 
-<div class="clear"></div>
+function spaces_map_loop() {
+    echo 'you are in the loop';
+    /*
+    $args = array(
+        'category_name' => 'genesis-office-hours', // replace with your category slug
+        'orderby' => 'post_date',
+        'order' => 'DESC',
+        'posts_per_page' => '12', // overrides posts per page in theme settings
+    );
+    $loop = new WP_Query($args);
+    if ($loop->have_posts()) {
+        // loop through posts
+        while ($loop->have_posts()): $loop->the_post();
+            $video_id = esc_attr(genesis_get_custom_field('cd_youtube_id'));
+            $video_thumbnail = '<img src="http://img.youtube.com/vi/' . $video_id . '/0.jpg" alt="" />';
+            $video_link = 'http://www.youtube.com/watch?v=' . $video_id;
+            echo '<div class="one-third first">';
+            echo '<a href="' . $video_link . '" target="_blank">' . $video_thumbnail . '</a>';
+            echo '</div>';
+            echo '<div class="two-thirds">';
+            echo '<h4>' . get_the_title() . '</h4>';
+            echo '<p>' . get_the_date() . '</p>';
+            echo '<p><a href="' . $video_link . '" target="_blank">Watch It</a> | <a href="' . get_permalink() . '" target="_blank">Show Notes</a></p>';
+            echo '</div>';
+        endwhile;
+    }
+    wp_reset_postdata();*/
+}
 
-<div class="container">
-
-	<div class="row">
-
-		<div class="content col-md-8">
-
-			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
-
-				<article <?php post_class(); ?>>
-
-					<!--<p class="categories"><?php the_category(', '); ?></p>-->
-
-					<?php /*<h1><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h1> */ ?>
-
-					<?php /*<p class="meta top">By <?php the_author_posts_link(); ?>, <?php the_time('Y/m/d \@ g:i a') ?></p> */ ?>
-
-					<?php the_content(); ?>
-
-					<div class="clear"></div>
-
-					<?php /*
-					<div class="row">
-
-						<div class="postmeta">
-
-							<div class="span-thumb img-thumbnail">
-
-								<?php echo get_avatar( get_the_author_meta('user_email'), 72); ?>
-
-							</div>
-
-							<div class="span-well well">
-
-								<p>Posted by <?php the_author_posts_link(); ?> | <a href="<?php the_permalink(); ?>"><?php the_time('l F jS, Y g:i A'); ?></a></p>
-								<p>Categories: <?php the_category(', '); ?> | <?php comments_popup_link(); ?> <?php edit_post_link('Fix me...', ' | '); ?></p>
-
-							</div>
-
-						</div>
-
-						<div class="clear"></div>
-
-					</div>
-					*/ ?>
-
-				</article>
-
-			<?php endwhile; ?>
-
-				<ul class="pager">
-
-					<li class="previous"><?php previous_posts_link('&larr; Previous Page'); ?></li>
-					<li class="next"><?php next_posts_link('Next Page &rarr;'); ?></li>
-
-				</ul>
-
-			<?php else: ?>
-
-				<p><?php _e('Sorry, no posts matched your criteria.'); ?></p>
-
-			<?php endif; ?>
-
-		</div><!--Content-->
-
-		<?php get_sidebar(); ?>
-
-	</div>
-
-</div><!--Container-->
-
-<?php get_footer(); ?>
+//* Run the Genesis loop
+genesis();

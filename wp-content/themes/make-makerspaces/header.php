@@ -1,4 +1,4 @@
-<?php
+    <?php
 /**
  * Genesis Framework.
  *
@@ -10,7 +10,7 @@
  * @license GPL-2.0-or-later
  * @link    https://my.studiopress.com/themes/genesis/
  */
-remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
+
 /**
  * Fires at start of header.php, immediately before `genesis_title` action hook to render the Doctype content.
  *
@@ -50,11 +50,8 @@ do_action( 'genesis_meta' );
  var templateUrl = '<?= get_site_url(); ?>';
  var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
 </script>
-
-<?php // keep this commented out until domains and analytics are set for the subdomain
-/*
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-39"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -67,10 +64,15 @@ do_action( 'genesis_meta' );
 		]
 	});
   gtag('js', new Date());
-  gtag('config', 'UA-XXXXXXXXX', {
+
+  gtag('config', 'UA-51157-39', {
 	 'cookie_domain': 'make.co'
   });
 </script>
+
+<?php // keep this commented out until domains and analytics are set for the subdomain
+/*
+
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -140,7 +142,7 @@ do_action( 'genesis_before_header' );
           wp_nav_menu( array(
               'menu'              => 'secondary_universal_menu',
               'theme_location'    => 'secondary_universal_menu',
-              'depth'             => 1,
+        
               'container'         => '',
               'container_class'   => '',
               'link_before'       => '<span>',
@@ -172,7 +174,7 @@ do_action( 'genesis_after_header' );
 
 genesis_markup(
 	array(
-		'open'    => '<div class="main-content container-fluid">',
+		'open'    => '<div class="main-content container">',
 		'context' => 'site-inner',
 	)
 );

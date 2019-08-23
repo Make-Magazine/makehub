@@ -4,7 +4,15 @@
  *
  * @package _makerspaces
  */
-get_header(); ?>
+//* Force full width content layout
+add_filter( 'genesis_site_layout', '__genesis_return_full_width_content' );
+remove_action( 'genesis_entry_header', 'genesis_do_post_title' );
+// Add our custom loop
+add_action('genesis_loop', 'spaces_map_loop');
+
+function spaces_map_loop() {
+    // Remove posts.
+    remove_action( 'Genesis_loop', 'Genesis_do_loop' ); ?>
 
    <div class="container directory-container" id="directory">
 
@@ -118,4 +126,7 @@ get_header(); ?>
 
 </div>
 
-<?php get_footer(); ?>
+<?php
+} //end function
+
+Genesis();
