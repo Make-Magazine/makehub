@@ -15,6 +15,9 @@ main.content {
 	margin-top: 0px !important; // has to override, sumome. sorry not sorry
 }
 
+// until sitekey is validated
+.newsletter-footer { display: none; }
+
 .nav-level-2 #menu-secondary_universal_menu li span { width: 160px; }
 
 .top15 { 

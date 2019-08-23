@@ -23,7 +23,7 @@ genesis_markup(
       </span>
     </div>
     <div class="col-sm-8 col-xs-12 nl-modal">
-      <h3>Awesome!</h3>
+      <h3 style="text-align:center">Awesome!</h3>
       <p style="color:#333;text-align:center;margin-top:20px;">Thanks for signing up.</p>
     </div>
     <div class="clearfix"></div>
@@ -36,10 +36,6 @@ genesis_markup(
   </div>
   <div class="clearfix"></div>
 </div>
-
-<?php if(is_front_page()){ ?>
-	<script async>(function(s,u,m,o,j,v){j=u.createElement(m);v=u.getElementsByTagName(m)[0];j.async=1;j.src=o;j.dataset.sumoSiteId='6d09a6b9f0dfb10b9fbcebf5702dcbe99280f2a4fedcc1e8d64c47156312fd1a';v.parentNode.insertBefore(j,v)})(window,document,'script','//load.sumo.com/');</script>
-<?php } ?>
 
 </body>
 </html>
