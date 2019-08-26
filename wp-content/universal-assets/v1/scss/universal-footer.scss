@@ -289,6 +289,8 @@
         form {
             margin-top: 7px;
             font-size: 18px;
+			   box-shadow: 0 0px !important;
+			   background: transparent;
             .row { // believe it or not some sites don't have this
                    display: flex;
                    flex-wrap: wrap;
