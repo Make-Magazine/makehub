@@ -1,4 +1,4 @@
-    <?php
+<?php
 /**
  * Genesis Framework.
  *
@@ -10,28 +10,26 @@
  * @license GPL-2.0-or-later
  * @link    https://my.studiopress.com/themes/genesis/
  */
-
 /**
  * Fires at start of header.php, immediately before `genesis_title` action hook to render the Doctype content.
  *
  * @since 1.3.0
  */
-do_action( 'genesis_doctype' );
+do_action('genesis_doctype');
 
 /**
  * Fires immediately after `genesis_doctype` action hook, in header.php to render the document title.
  *
  * @since 1.0.0
  */
-do_action( 'genesis_title' );
+do_action('genesis_title');
 
 /**
  * Fires immediately after `genesis_title` action hook, in header.php to render the meta elements.
  *
  * @since 1.0.0
  */
-do_action( 'genesis_meta' );
-
+do_action('genesis_meta');
 ?>
 
 <meta http-equiv="content-type" content="<?php bloginfo('html_type'); ?>; charset=<?php bloginfo('charset'); ?>" />
@@ -47,55 +45,57 @@ do_action( 'genesis_meta' );
 <meta name="theme-color" content="#ffffff">
 
 <script type="text/javascript">
- var templateUrl = '<?= get_site_url(); ?>';
- var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
+    var templateUrl = '<?= get_site_url(); ?>';
+    var logoutURL = '<?php echo wp_logout_url(home_url()); ?>';
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-39"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('set','linker', {
-		'accept_incoming': true,
-		'domains': [
-			'make.co',
-			'makermedia.auth0.com',
-			'makeco.staging.wpengine.com'
-		]
-	});
-  gtag('js', new Date());
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+    gtag('set', 'linker', {
+        'accept_incoming': true,
+        'domains': [
+            'make.co',
+            'makermedia.auth0.com',
+            'makeco.staging.wpengine.com'
+        ]
+    });
+    gtag('js', new Date());
 
-  gtag('config', 'UA-51157-39', {
-	 'cookie_domain': 'make.co'
-  });
+    gtag('config', 'UA-51157-39', {
+        'cookie_domain': 'make.co'
+    });
 </script>
 
-<?php // keep this commented out until domains and analytics are set for the subdomain
+<?php
+// keep this commented out until domains and analytics are set for the subdomain
 /*
 
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-XXXXXXXXX');</script>
-<!-- End Google Tag Manager -->
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-XXXXXXXXX');</script>
+  <!-- End Google Tag Manager -->
 
-*/
+ */
 ?>
-	
-<?php
 
+<?php
 wp_head(); // We need this for plugins.
 ?>
 </head>
 <?php
 genesis_markup(
-	array(
-		'open'    => '<body %s>',
-		'context' => 'body',
-	)
+        array(
+            'open' => '<body %s>',
+            'context' => 'body',
+        )
 );
 
 /**
@@ -103,13 +103,13 @@ genesis_markup(
  *
  * @since 1.0.0
  */
-do_action( 'genesis_before' );
+do_action('genesis_before');
 
 genesis_markup(
-	array(
-		'open'    => '<div %s>',
-		'context' => 'site-container',
-	)
+        array(
+            'open' => '<div %s>',
+            'context' => 'site-container',
+        )
 );
 
 /**
@@ -117,7 +117,7 @@ genesis_markup(
  *
  * @since 1.0.0
  */
-do_action( 'genesis_before_header' );
+do_action('genesis_before_header');
 
 /**
  * Fires to display the main header content.
@@ -132,34 +132,34 @@ do_action( 'genesis_before_header' );
 <!-- End Google Tag Manager (noscript) -->
 <header class="universal-nav">
 
-   <?php // Nav Level 1 and Hamburger
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-topnav.html');
-   ?>
+<?php
+// Nav Level 1 and Hamburger      
+include WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html';
+?>
 
-  <div class="nav-level-2">
-    <div class="container">
-        <?php
-          wp_nav_menu( array(
-              'menu'              => 'secondary_universal_menu',
-              'theme_location'    => 'secondary_universal_menu',
-        
-              'container'         => '',
-              'container_class'   => '',
-              'link_before'       => '<span>',
-              'link_after'        => '</span>',
-              'menu_class'        => 'nav navbar-nav',
-              'fallback_cb'       => 'wp_bootstrap_navwalker::fallback',
-              'walker'            => new wp_bootstrap_navwalker())
-          );
-        ?>
+    <div class="nav-level-2">
+        <div class="container">
+            <?php
+            wp_nav_menu(array(
+                'menu' => 'secondary_universal_menu',
+                'theme_location' => 'secondary_universal_menu',
+                'container' => '',
+                'container_class' => '',
+                'link_before' => '<span>',
+                'link_after' => '</span>',
+                'menu_class' => 'nav navbar-nav',
+                'fallback_cb' => 'wp_bootstrap_navwalker::fallback',
+                'walker' => new wp_bootstrap_navwalker())
+            );
+            ?>
+        </div>
+    </div><!-- .nav-level-2 -->
+
+    <div id="nav-flyout">
+<?php
+echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html');
+?>
     </div>
-  </div><!-- .nav-level-2 -->
-
-  <div id="nav-flyout">
-   <?php
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html');
-   ?>
-  </div>
 
 </header>
 <div class="nav-flyout-underlay"></div>
@@ -170,15 +170,13 @@ do_action( 'genesis_before_header' );
  *
  * @since 1.0.0
  */
-do_action( 'genesis_after_header' );
+do_action('genesis_after_header');
 
 genesis_markup(
-	array(
-		'open'    => '<div class="main-content container">',
-		'context' => 'site-inner',
-	)
+        array(
+            'open' => '<div class="main-content container">',
+            'context' => 'site-inner',
+        )
 );
-genesis_structural_wrap( 'site-inner' );
-
-
+genesis_structural_wrap('site-inner');
 ?>
