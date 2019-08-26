@@ -18,7 +18,7 @@
  *
  * @return string Hex color code for link color.
  */
-function make_learn_customizer_get_default_link_color() {
+function make_makerspaces_customizer_get_default_link_color() {
 
 	return '#0073e5';
 
@@ -32,7 +32,7 @@ function make_learn_customizer_get_default_link_color() {
  *
  * @return string Hex color code for accent color.
  */
-function make_learn_customizer_get_default_accent_color() {
+function make_makerspaces_customizer_get_default_accent_color() {
 
 	return '#0073e5';
 
@@ -46,7 +46,7 @@ function make_learn_customizer_get_default_accent_color() {
  * @param string $color A color in hex format.
  * @return string The hex code for the most contrasting color: dark grey or white.
  */
-function make_learn_color_contrast( $color ) {
+function make_makerspaces_color_contrast( $color ) {
 
 	$hexcolor = str_replace( '#', '', $color );
 	$red      = hexdec( substr( $hexcolor, 0, 2 ) );
@@ -69,7 +69,7 @@ function make_learn_color_contrast( $color ) {
  * @param int    $change The amount to reduce or increase brightness by.
  * @return string Hex code for the adjusted color brightness.
  */
-function make_learn_color_brightness( $color, $change ) {
+function make_makerspaces_color_brightness( $color, $change ) {
 
 	$hexcolor = str_replace( '#', '', $color );
 

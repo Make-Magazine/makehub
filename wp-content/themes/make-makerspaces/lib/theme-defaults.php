@@ -10,7 +10,7 @@
  * @link    https://makermedia.com/
  */
 
-add_filter( 'genesis_theme_settings_defaults', 'make_learn_theme_defaults' );
+add_filter( 'genesis_theme_settings_defaults', 'make_makerspaces_theme_defaults' );
 /**
  * Updates theme settings on reset.
  *
@@ -19,7 +19,7 @@ add_filter( 'genesis_theme_settings_defaults', 'make_learn_theme_defaults' );
  * @param array $defaults Original theme settings defaults.
  * @return array Modified defaults.
  */
-function make_learn_theme_defaults( $defaults ) {
+function make_makerspaces_theme_defaults( $defaults ) {
 
 	$defaults['blog_cat_num']              = 6;
 	$defaults['breadcrumb_front_page']     = 0;
@@ -33,13 +33,13 @@ function make_learn_theme_defaults( $defaults ) {
 
 }
 
-add_action( 'after_switch_theme', 'make_learn_theme_setting_defaults' );
+add_action( 'after_switch_theme', 'make_makerspaces_theme_setting_defaults' );
 /**
  * Updates theme settings on activation.
  *
  * @since 2.2.3
  */
-function make_learn_theme_setting_defaults() {
+function make_makerspaces_theme_setting_defaults() {
 
 	if ( function_exists( 'genesis_update_settings' ) ) {
 
@@ -61,7 +61,7 @@ function make_learn_theme_setting_defaults() {
 
 }
 
-add_filter( 'simple_social_default_styles', 'make_learn_social_default_styles' );
+add_filter( 'simple_social_default_styles', 'make_makerspaces_social_default_styles' );
 /**
  * Set Simple Social Icon defaults.
  *
@@ -70,7 +70,7 @@ add_filter( 'simple_social_default_styles', 'make_learn_social_default_styles' )
  * @param array $defaults Social style defaults.
  * @return array Modified social style defaults.
  */
-function make_learn_social_default_styles( $defaults ) {
+function make_makerspaces_social_default_styles( $defaults ) {
 
 	$args = array(
 		'alignment'              => 'alignleft',

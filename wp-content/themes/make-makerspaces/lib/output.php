@@ -10,24 +10,24 @@
  * @link    https://makermedia.com/
  */
 
-add_action( 'wp_enqueue_scripts', 'make_learn_css' );
+add_action( 'wp_enqueue_scripts', 'make_makerspaces_css' );
 /**
  * Checks the settings for the link color, and accent color.
  * If any of these value are set the appropriate CSS is output.
  *
  * @since 2.2.3
  */
-function make_learn_css() {
+function make_makerspaces_css() {
 
 	$handle = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'child-theme';
 
-	$color_link   = get_theme_mod( 'make_learn_link_color', make_learn_customizer_get_default_link_color() );
-	$color_accent = get_theme_mod( 'make_learn_accent_color', make_learn_customizer_get_default_accent_color() );
+	$color_link   = get_theme_mod( 'make_makerspaces_link_color', make_makerspaces_customizer_get_default_link_color() );
+	$color_accent = get_theme_mod( 'make_makerspaces_accent_color', make_makerspaces_customizer_get_default_accent_color() );
 	$logo         = wp_get_attachment_image_src( get_theme_mod( 'custom_logo' ), 'full' );
 
 	if ( $logo ) {
 		$logo_height           = absint( $logo[2] );
-		$logo_max_width        = get_theme_mod( 'make_learn_logo_width', 350 );
+		$logo_max_width        = get_theme_mod( 'make_makerspaces_logo_width', 350 );
 		$logo_width            = absint( $logo[1] );
 		$logo_ratio            = $logo_width / max( $logo_height, 1 );
 		$logo_effective_height = min( $logo_width, $logo_max_width ) / max( $logo_ratio, 1 );
@@ -36,7 +36,7 @@ function make_learn_css() {
 
 	$css = '';
 
-	$css .= ( make_learn_customizer_get_default_link_color() !== $color_link ) ? sprintf(
+	$css .= ( make_makerspaces_customizer_get_default_link_color() !== $color_link ) ? sprintf(
 		'
 
 		a,
@@ -58,7 +58,7 @@ function make_learn_css() {
 		$color_link
 	) : '';
 
-	$css .= ( make_learn_customizer_get_default_accent_color() !== $color_accent ) ? sprintf(
+	$css .= ( make_makerspaces_customizer_get_default_accent_color() !== $color_accent ) ? sprintf(
 		'
 
 		button:focus,
@@ -89,7 +89,7 @@ function make_learn_css() {
 		}
 		',
 		$color_accent,
-		make_learn_color_contrast( $color_accent )
+		make_makerspaces_color_contrast( $color_accent )
 	) : '';
 
 	$css .= ( has_custom_logo() && ( 200 <= $logo_effective_height ) ) ?

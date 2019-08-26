@@ -8,41 +8,41 @@
  * @link    https://makermedia.com/
  */
 
-add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_gutenberg_frontend_styles' );
+add_action( 'wp_enqueue_scripts', 'make_makerspaces_enqueue_gutenberg_frontend_styles' );
 /**
  * Enqueues Gutenberg front-end styles.
  *
  * @since 2.7.0
  */
-function make_learn_enqueue_gutenberg_frontend_styles() {
+function make_makerspaces_enqueue_gutenberg_frontend_styles() {
 
-	$child_theme_slug = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'make-learn';
+	$child_theme_slug = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? sanitize_title_with_dashes( CHILD_THEME_NAME ) : 'make-makerspaces';
 
 	wp_enqueue_style(
-		'make-learn-gutenberg',
+		'make-makerspaces-gutenberg',
 		get_stylesheet_directory_uri() . '/lib/gutenberg/front-end.css',
 		array( $child_theme_slug )
 	);
 
 }
 
-add_action( 'enqueue_block_editor_assets', 'make_learn_block_editor_styles' );
+add_action( 'enqueue_block_editor_assets', 'make_makerspaces_block_editor_styles' );
 /**
  * Enqueues Gutenberg admin editor fonts and styles.
  *
  * @since 2.7.0
  */
-function make_learn_block_editor_styles() {
+function make_makerspaces_block_editor_styles() {
 
 	wp_enqueue_style(
-		'make-learn-gutenberg-fonts',
+		'make-makerspaces-gutenberg-fonts',
 		'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
 		array()
 	);
 
 }
 
-add_filter( 'body_class', 'make_learn_blocks_body_classes' );
+add_filter( 'body_class', 'make_makerspaces_blocks_body_classes' );
 /**
  * Adds body classes to help with block styling.
  *
@@ -55,7 +55,7 @@ add_filter( 'body_class', 'make_learn_blocks_body_classes' );
  * @param array $classes The original classes.
  * @return array The modified classes.
  */
-function make_learn_blocks_body_classes( $classes ) {
+function make_makerspaces_blocks_body_classes( $classes ) {
 
 	if ( ! is_singular() || ! function_exists( 'has_blocks' ) || ! function_exists( 'parse_blocks') ) {
 		return $classes;
@@ -105,13 +105,13 @@ add_theme_support(
 	genesis_get_config( 'editor-color-palette' )
 );
 
-add_action( 'after_setup_theme', 'make_learn_content_width', 0 );
+add_action( 'after_setup_theme', 'make_makerspaces_content_width', 0 );
 /**
  * Set content width to match the “wide” Gutenberg block width.
  */
-function make_learn_content_width() {
+function make_makerspaces_content_width() {
 
 	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- See https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/issues/924
-	$GLOBALS['content_width'] = apply_filters( 'make_learn_content_width', 1062 );
+	$GLOBALS['content_width'] = apply_filters( 'make_makerspaces_content_width', 1062 );
 
 }

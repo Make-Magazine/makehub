@@ -10,7 +10,7 @@
  * @link    https://makermedia.com/
  */
 
-add_action( 'customize_register', 'make_learn_customizer_register' );
+add_action( 'customize_register', 'make_makerspaces_customizer_register' );
 /**
  * Registers settings and controls with the Customizer.
  *
@@ -18,12 +18,12 @@ add_action( 'customize_register', 'make_learn_customizer_register' );
  *
  * @param WP_Customize_Manager $wp_customize Customizer object.
  */
-function make_learn_customizer_register( $wp_customize ) {
+function make_makerspaces_customizer_register( $wp_customize ) {
 
 	$wp_customize->add_setting(
-		'make_learn_link_color',
+		'make_makerspaces_link_color',
 		array(
-			'default'           => make_learn_customizer_get_default_link_color(),
+			'default'           => make_makerspaces_customizer_get_default_link_color(),
 			'sanitize_callback' => 'sanitize_hex_color',
 		)
 	);
@@ -31,20 +31,20 @@ function make_learn_customizer_register( $wp_customize ) {
 	$wp_customize->add_control(
 		new WP_Customize_Color_Control(
 			$wp_customize,
-			'make_learn_link_color',
+			'make_makerspaces_link_color',
 			array(
-				'description' => __( 'Change the color of post info links, hover color of linked titles, hover color of menu items, and more.', 'make-learn' ),
-				'label'       => __( 'Link Color', 'make-learn' ),
+				'description' => __( 'Change the color of post info links, hover color of linked titles, hover color of menu items, and more.', 'make-makerspaces' ),
+				'label'       => __( 'Link Color', 'make-makerspaces' ),
 				'section'     => 'colors',
-				'settings'    => 'make_learn_link_color',
+				'settings'    => 'make_makerspaces_link_color',
 			)
 		)
 	);
 
 	$wp_customize->add_setting(
-		'make_learn_accent_color',
+		'make_makerspaces_accent_color',
 		array(
-			'default'           => make_learn_customizer_get_default_accent_color(),
+			'default'           => make_makerspaces_customizer_get_default_accent_color(),
 			'sanitize_callback' => 'sanitize_hex_color',
 		)
 	);
@@ -52,18 +52,18 @@ function make_learn_customizer_register( $wp_customize ) {
 	$wp_customize->add_control(
 		new WP_Customize_Color_Control(
 			$wp_customize,
-			'make_learn_accent_color',
+			'make_makerspaces_accent_color',
 			array(
-				'description' => __( 'Change the default hover color for button links, the menu button, and submit buttons. This setting does not apply to buttons created with the Buttons block.', 'make-learn' ),
-				'label'       => __( 'Accent Color', 'make-learn' ),
+				'description' => __( 'Change the default hover color for button links, the menu button, and submit buttons. This setting does not apply to buttons created with the Buttons block.', 'make-makerspaces' ),
+				'label'       => __( 'Accent Color', 'make-makerspaces' ),
 				'section'     => 'colors',
-				'settings'    => 'make_learn_accent_color',
+				'settings'    => 'make_makerspaces_accent_color',
 			)
 		)
 	);
 
 	$wp_customize->add_setting(
-		'make_learn_logo_width',
+		'make_makerspaces_logo_width',
 		array(
 			'default'           => 350,
 			'sanitize_callback' => 'absint',
@@ -72,13 +72,13 @@ function make_learn_customizer_register( $wp_customize ) {
 
 	// Add a control for the logo size.
 	$wp_customize->add_control(
-		'make_learn_logo_width',
+		'make_makerspaces_logo_width',
 		array(
-			'label'       => __( 'Logo Width', 'make-learn' ),
-			'description' => __( 'The maximum width of the logo in pixels.', 'make-learn' ),
+			'label'       => __( 'Logo Width', 'make-makerspaces' ),
+			'description' => __( 'The maximum width of the logo in pixels.', 'make-makerspaces' ),
 			'priority'    => 9,
 			'section'     => 'title_tagline',
-			'settings'    => 'make_learn_logo_width',
+			'settings'    => 'make_makerspaces_logo_width',
 			'type'        => 'number',
 			'input_attrs' => array(
 				'min' => 100,

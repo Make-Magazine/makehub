@@ -24,15 +24,15 @@ load_child_theme_textdomain( 'makerspaces' );
 // Sets up the Theme.
 require_once get_stylesheet_directory() . '/lib/theme-defaults.php';
 
-add_action( 'after_setup_theme', 'make_learn_localization_setup' );
+add_action( 'after_setup_theme', 'make_makerspaces_localization_setup' );
 /**
  * Sets localization (do not remove).
  *
  * @since 1.0.0
  */
-function make_learn_localization_setup() {
+function make_makerspaces_localization_setup() {
 
-	load_child_theme_textdomain( 'make-learn', get_stylesheet_directory() . '/languages' );
+	load_child_theme_textdomain( 'make-makerspaces', get_stylesheet_directory() . '/languages' );
 
 }
 
@@ -73,13 +73,13 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
 }
 
 
-add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles' );
+add_action( 'wp_enqueue_scripts', 'make_makerspaces_enqueue_scripts_styles' );
 /**
  * Enqueues scripts and styles.
  *
  * @since 1.0.0
  */
-function make_learn_enqueue_scripts_styles() {
+function make_makerspaces_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
    $my_version = $my_theme->get('Version');
 	
@@ -87,7 +87,7 @@ function make_learn_enqueue_scripts_styles() {
 	wp_enqueue_style('font-awesome-css', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css', '', 'all' );
 	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-	wp_enqueue_style( 'learn-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
+	wp_enqueue_style( 'makerspaces-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
 	
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style'; 
@@ -97,10 +97,10 @@ function make_learn_enqueue_scripts_styles() {
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
 	
 	### SUBTHEME STYLES ###
-	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
+	wp_enqueue_style('make-makerspaces-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
 	wp_enqueue_style(
-		'make-learn-fonts',
+		'make-makerspaces-fonts',
 		'//fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
 		array(),
 		$my_version
@@ -110,7 +110,7 @@ function make_learn_enqueue_scripts_styles() {
 
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_enqueue_script(
-		'make-learn-responsive-menu',
+		'make-makerspaces-responsive-menu',
 		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
 		array( 'jquery' ),
 		$my_version,
@@ -118,9 +118,9 @@ function make_learn_enqueue_scripts_styles() {
 	);
 
 	wp_localize_script(
-		'make-learn-responsive-menu',
+		'make-makerspaces-responsive-menu',
 		'genesis_responsive_menu',
-		make_learn_responsive_menu_settings()
+		make_makerspaces_responsive_menu_settings()
 	);
 	
 	
@@ -141,14 +141,14 @@ function make_learn_enqueue_scripts_styles() {
 	}
 
 	wp_enqueue_script(
-		'make-learn',
-		get_stylesheet_directory_uri() . '/js/make-learn.js',
+		'make-makerspaces',
+		get_stylesheet_directory_uri() . '/js/make-makerspaces.js',
 		array( 'jquery' ),
 		$my_version,
 		true
 	);
 	
-	wp_localize_script('make-learn', 'ajax_object',
+	wp_localize_script('make-makerspaces', 'ajax_object',
 	  array(
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'home_url' => get_home_url(),
@@ -168,12 +168,12 @@ remove_action( 'genesis_meta', 'genesis_load_stylesheet' );
  *
  * @since 2.3.0
  */
-function make_learn_responsive_menu_settings() {
+function make_makerspaces_responsive_menu_settings() {
 
 	$settings = array(
-		'mainMenu'         => __( 'Menu', 'make-learn' ),
+		'mainMenu'         => __( 'Menu', 'make-makerspaces' ),
 		'menuIconClass'    => 'dashicons-before dashicons-menu',
-		'subMenu'          => __( 'Submenu', 'make-learn' ),
+		'subMenu'          => __( 'Submenu', 'make-makerspaces' ),
 		'subMenuIconClass' => 'dashicons-before dashicons-arrow-down-alt2',
 		'menuClasses'      => array(
 			'combine' => array(
@@ -226,7 +226,7 @@ genesis_unregister_layout( 'sidebar-sidebar-content' );
 remove_filter( 'genesis_nav_items', 'genesis_nav_right', 10, 2 );
 remove_filter( 'wp_nav_menu_items', 'genesis_nav_right', 10, 2 );
 
-add_action( 'genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes' );
+add_action( 'genesis_theme_settings_metaboxes', 'make_makerspaces_remove_metaboxes' );
 /**
  * Removes output of unused admin settings metaboxes.
  *
@@ -234,14 +234,14 @@ add_action( 'genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes' );
  *
  * @param string $_genesis_admin_settings The admin screen to remove meta boxes from.
  */
-function make_learn_remove_metaboxes( $_genesis_admin_settings ) {
+function make_makerspaces_remove_metaboxes( $_genesis_admin_settings ) {
 
 	remove_meta_box( 'genesis-theme-settings-header', $_genesis_admin_settings, 'main' );
 	remove_meta_box( 'genesis-theme-settings-nav', $_genesis_admin_settings, 'main' );
 
 }
 
-add_filter( 'genesis_customizer_theme_settings_config', 'make_learn_remove_customizer_settings' );
+add_filter( 'genesis_customizer_theme_settings_config', 'make_makerspaces_remove_customizer_settings' );
 /**
  * Removes output of header and front page breadcrumb settings in the Customizer.
  *
@@ -250,7 +250,7 @@ add_filter( 'genesis_customizer_theme_settings_config', 'make_learn_remove_custo
  * @param array $config Original Customizer items.
  * @return array Filtered Customizer items.
  */
-function make_learn_remove_customizer_settings( $config ) {
+function make_makerspaces_remove_customizer_settings( $config ) {
 
 	unset( $config['genesis']['sections']['genesis_header'] );
 	unset( $config['genesis']['sections']['genesis_breadcrumbs']['controls']['breadcrumb_front_page'] );
@@ -269,7 +269,7 @@ add_action( 'genesis_header', 'genesis_do_nav', 12 );
 remove_action( 'genesis_after_header', 'genesis_do_subnav' );
 add_action( 'genesis_footer', 'genesis_do_subnav', 10 );
 
-add_filter( 'wp_nav_menu_args', 'make_learn_secondary_menu_args' );
+add_filter( 'wp_nav_menu_args', 'make_makerspaces_secondary_menu_args' );
 /**
  * Reduces secondary navigation menu to one level depth.
  *
@@ -278,7 +278,7 @@ add_filter( 'wp_nav_menu_args', 'make_learn_secondary_menu_args' );
  * @param array $args Original menu options.
  * @return array Menu options with depth set to 1.
  */
-function make_learn_secondary_menu_args( $args ) {
+function make_makerspaces_secondary_menu_args( $args ) {
 
 	if ( 'secondary' !== $args['theme_location'] ) {
 		return $args;
@@ -289,7 +289,7 @@ function make_learn_secondary_menu_args( $args ) {
 
 }
 
-add_filter( 'genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar' );
+add_filter( 'genesis_author_box_gravatar_size', 'make_makerspaces_author_box_gravatar' );
 /**
  * Modifies size of the Gravatar in the author box.
  *
@@ -298,13 +298,13 @@ add_filter( 'genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar'
  * @param int $size Original icon size.
  * @return int Modified icon size.
  */
-function make_learn_author_box_gravatar( $size ) {
+function make_makerspaces_author_box_gravatar( $size ) {
 
 	return 90;
 
 }
 
-add_filter( 'genesis_comment_list_args', 'make_learn_comments_gravatar' );
+add_filter( 'genesis_comment_list_args', 'make_makerspaces_comments_gravatar' );
 /**
  * Modifies size of the Gravatar in the entry comments.
  *
@@ -313,7 +313,7 @@ add_filter( 'genesis_comment_list_args', 'make_learn_comments_gravatar' );
  * @param array $args Gravatar settings.
  * @return array Gravatar settings with modified size.
  */
-function make_learn_comments_gravatar( $args ) {
+function make_makerspaces_comments_gravatar( $args ) {
 
 	$args['avatar_size'] = 60;
 	return $args;

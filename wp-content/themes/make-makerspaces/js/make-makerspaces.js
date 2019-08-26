@@ -1,12 +1,12 @@
 /**
  * Make - Makerspaces entry point.
  *
- * @package MakeLearn\JS
+ * @package MakeMakerspaces\JS
  * @author  Maker Media
  * @license GPL-2.0-or-later
  */
 
-var makeLearn = ( function( $ ) {
+var makeMakerspaces = ( function( $ ) {
 	'use strict';
 
 	/**
@@ -56,4 +56,4 @@ var makeLearn = ( function( $ ) {
 
 })( jQuery );
 
-jQuery( window ).on( 'load', makeLearn.load );
+jQuery( window ).on( 'load', makeMakerspaces.load );
