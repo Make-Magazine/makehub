@@ -1,4 +1,4 @@
-/*window.addEventListener('load', function() {
+/* window.addEventListener('load', function() {
 
   // buttons and event listeners
   if ( !jQuery( "#newLoginBtn" ).length ) {
