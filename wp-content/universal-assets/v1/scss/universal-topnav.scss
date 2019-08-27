@@ -170,6 +170,21 @@ app-header .nav-level-1-auth #profile-view .dropdown-menu {
 	right: -400px;
 }
 
+a#newLoginBtn {
+	display: block;
+}
+a#newLogoutBtn {
+	display: none;
+}
+.logged-in {
+	a#newLoginBtn {
+		display: none;
+	}
+	a#newLogoutBtn {
+		display: block;
+	}
+}
+
 .nav-level-1-auth {
 	margin-top: 0;
 	margin-bottom: 0;
