@@ -14,7 +14,7 @@
  */
 function custom_home_page_setup() {
     // Remove posts.
-    remove_action( 'Genesis_loop', 'Genesis_do_loop' );
+    //remove_action( 'Genesis_loop', 'Genesis_do_loop' );
     ?>
     <div class = "container-fluid content-panels">
     <?php if (have_posts()) : while (have_posts()) : the_post();
