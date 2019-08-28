@@ -52,3 +52,21 @@ function make_rss_func($atts) {
 }
 
 add_shortcode('make_rss', 'make_rss_func');
+
+function make_tint_func($atts) {
+    $a = shortcode_atts(array(
+        'personalization_id' => '',
+        'title' => '',
+        'hashtags' => ""
+            ), $atts);
+
+    $args = [
+        'personalization_id' => $a['personalization_id'],
+        'title' => $a['title'],
+        'hashtags' => $a['hashtags']
+    ];
+    require_once 'MF-Social-Block.php';
+    return do_social_block($args);    
+}
+
+add_shortcode('make_tint', 'make_tint_func');
