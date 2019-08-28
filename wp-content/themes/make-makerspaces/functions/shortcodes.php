@@ -3,9 +3,9 @@
 // [make_rss title="Makerspace", feed="https://makezine.com/tag/makerspaces/feed/", moreLink="http://makezine.com/tag/makerspaces/", number=4]
 function make_rss_func( $atts ) {
 	$a = shortcode_atts( array(
-		'title' => 'Makerspace',
-		'feed' => 'https://makezine.com/tag/makerspaces/feed/',
-                'moreLink' => "http://makezine.com/tag/makerspaces/",
+		'title' => '',
+		'feed' => 'https://makezine.com/feed/',
+                'moreLink' => "",
                 'number'=> 4
 	), $atts );
         
@@ -38,10 +38,11 @@ function make_rss_func( $atts ) {
          </div>
       </div>
       <?php endforeach; ?>
-      
+      <?php if($a['moreLink']!=''){ ?>
       <div class="col-xs-12">
-         <a class="btn universal-btn btn-more-articles" href="<?php echo $a['more_link']?>" target="_blank">See more articles</a>
+         <a class="btn universal-btn btn-more-articles" href="<?php echo $a['moreLink'];?>" target="_blank">See more articles</a>
       </div>
+      <?php } ?>
    </div>
 
 </div>
