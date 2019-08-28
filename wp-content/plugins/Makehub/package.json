@@ -1,0 +1,31 @@
+{
+   "name": "MakeHub",
+   "version": "1.0.15",
+   "author": "Make Community",
+   "license": "UNLICENSED",
+   "private": true,
+   "repository": {
+      "type": "git",
+      "url": "https://github.com/Make-Magazine/makehub.git"
+   },
+   "scripts": {
+      "cachebust:update": "npm version patch",
+      "postcachebust:update": "npm run replace:version",
+      "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
+      "scss:fe:compile": "node-sass scss/style.scss css/style.min.css --output-style compressed --source-map true",
+      "js:fe:uglify": "uglifyjs js/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
+      "onchange:scss:fe": "onchange 'scss/**/*.scss' -- npm run scss:fe:compile",
+      "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
+      "build": "npm-run-all js:**:uglify scss:**:compile",
+      "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
+      "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
+   },
+   "devDependencies": {
+      "node-sass": "^4.11.0",
+      "npm-run-all": "^4.1.5",
+      "onchange": "^5.2.0",
+      "replace-in-file": "^3.4.2",
+      "uglify-js": "^3.4.9"
+   },
+   "dependencies": {}
+}
