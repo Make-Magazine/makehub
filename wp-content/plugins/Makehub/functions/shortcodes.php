@@ -6,7 +6,7 @@ function make_rss_func($atts) {
         'title' => '',
         'feed' => 'https://makezine.com/feed/',
         'moreLink' => "",
-        'number' => 4
+        'number' => 6
             ), $atts);
     $return = '    
     <div class="container makerspace-news">
@@ -25,13 +25,13 @@ function make_rss_func($atts) {
     } else {
         foreach ($rss_items as $item) {
             $return .= '
-                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                         <div class="post-feed">
                             <a class="full-link" href="' . esc_url($item->get_permalink()) . '" target="_blank">
                                 <div class="title">
-                                    <img src="' . get_first_image_url($item->get_content()) . '" alt="' . $a['title'] . ' post featured image">
                                     <p class="p-title">' . esc_html($item->get_title()) . '</p>
-                                    <p>' . shorten(get_summary($item->get_content()), 100) . '</p>
+                                    <img src="' . get_first_image_url($item->get_content()) . '" alt="' . esc_html($item->get_title()) . ' featured image">                                    
+                                    <p>' . shorten(get_summary($item->get_content()), 120) . '</p>
                                 </div>
                             </a>
                         </div>
