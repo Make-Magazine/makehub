@@ -145,41 +145,55 @@ if ( yz_is_wall_posting_form_active() ) :
 		
 		<?php do_action( 'yz_before_wall_post_form_actions' ); ?>
 
-		<?php if ( bp_is_active( 'groups' ) && ! bp_is_my_profile() && ! bp_is_group() ) : ?>
-
-			<div id="whats-new-post-in-box">
+		<div class="yz-form-tools">
 				
-				<label for="yz-whats-new-post-in" ><?php _e( 'Post in:', 'youzer' ); ?></label>
-				<select id="yz-whats-new-post-in" name="yz-whats-new-post-in">
-					<option selected="selected" value="0"><?php _e( 'My Profile', 'youzer' ); ?></option>
+			<?php do_action( 'bp_activity_post_form_tools' ); ?>
+			
+			<?php do_action( 'bp_activity_before_post_form_tools' ); ?>
 
-					<?php if ( bp_has_groups( 'user_id=' . bp_loggedin_user_id() . '&type=alphabetical&max=100&per_page=100&populate_extras=0&update_meta_cache=0' ) ) :
-						while ( bp_groups() ) : bp_the_group(); ?>
+			<?php if ( apply_filters( 'yz_allow_wall_upload_attachments', true ) ) : ?>
+				<div class="yz-wall-upload-btn yz-form-tool" data-yztooltip="<?php _e( 'upload attachment', 'youzer' ); ?>"><i class="fas fa-paperclip"></i></div>
+			<?php endif; ?>
+			
+			<?php do_action( 'bp_activity_after_post_form_tools' ); ?>
 
-							<option value="<?php bp_group_id(); ?>"><?php bp_group_name(); ?></option>
+		</div>
+		<div class="yz-posting-form-actions">
+			
+			<?php if ( bp_is_active( 'groups' ) && ! bp_is_my_profile() && ! bp_is_group() ) : ?>
 
-						<?php endwhile;
-					endif; ?>
+				<div id="whats-new-post-in-box">
+					
+					<label for="yz-whats-new-post-in" ><?php _e( 'Post in:', 'youzer' ); ?></label>
+					<select id="yz-whats-new-post-in" name="yz-whats-new-post-in">
+						<option selected="selected" value="0"><?php _e( 'My Profile', 'youzer' ); ?></option>
 
-				</select>
-			</div>
-			<input type="hidden" id="yz-whats-new-post-object" name="yz-whats-new-post-object" value="groups" />
+						<?php if ( bp_has_groups( 'user_id=' . bp_loggedin_user_id() . '&type=alphabetical&max=100&per_page=100&populate_extras=0&update_meta_cache=0' ) ) :
+							while ( bp_groups() ) : bp_the_group(); ?>
 
-		<?php elseif ( bp_is_group_activity() ) : ?>
+								<option value="<?php bp_group_id(); ?>"><?php bp_group_name(); ?></option>
 
-			<input type="hidden" id="yz-whats-new-post-object" name="yz-whats-new-post-object" value="groups" />
-			<input type="hidden" id="yz-whats-new-post-in" name="yz-whats-new-post-in" value="<?php bp_group_id(); ?>" />
+							<?php endwhile;
+						endif; ?>
 
-		<?php endif; ?>
+					</select>
+				</div>
+				<input type="hidden" id="yz-whats-new-post-object" name="yz-whats-new-post-object" value="groups" />
 
-		<?php if ( apply_filters( 'yz_allow_wall_upload_attachments', true ) ) : ?>
-		<a class="yz-wall-upload-btn">
-			<i class="fas fa-paperclip"></i><?php _e( 'upload attachment', 'youzer' ); ?>
-		</a>
-		<?php endif; ?>
+			<?php elseif ( bp_is_group_activity() ) : ?>
 
-		<button type="submit" name="aw-whats-new-submit" class="yz-wall-post" ><?php esc_attr_e( 'Post', 'youzer' ); ?></button>
-		
+				<input type="hidden" id="yz-whats-new-post-object" name="yz-whats-new-post-object" value="groups" />
+				<input type="hidden" id="yz-whats-new-post-in" name="yz-whats-new-post-in" value="<?php bp_group_id(); ?>" />
+
+			<?php endif; ?>
+
+			<?php do_action( 'yz_wall_before_submit_form_action' ); ?>
+			
+			<button type="submit" name="aw-whats-new-submit" class="yz-wall-post" ><?php esc_attr_e( 'Post', 'youzer' ); ?></button>
+			
+			<?php do_action( 'yz_wall_after_submit_form_action' ); ?>
+			
+		</div>
 
 			<?php
 
@@ -191,6 +205,8 @@ if ( yz_is_wall_posting_form_active() ) :
 			do_action( 'bp_activity_post_form_options' ); ?>
 
 	</div>
+
+	<?php do_action( 'bp_activity_post_form_after_actions' ) ?>
 	
 	<div class="yz-wall-attachments">
 		<input hidden="true" id="yz-upload-attachments" type="file" name="attachments[]" multiple>

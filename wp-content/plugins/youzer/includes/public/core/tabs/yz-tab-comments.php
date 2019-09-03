@@ -112,7 +112,7 @@ class YZ_Comments_Tab {
 					<div class="yz-comment-head">
 						<div class="yz-comment-img"><?php echo bp_core_fetch_avatar( array('item_id' => $args['user_id'], 'type' => 'thumb' ) ); ?></div>
 						<div class="yz-comment-meta">
-							<h3 class="yz-comment-fullname"><?php  echo $user_fullname; ?></h3>
+							<a href="<?php echo $post_url; ?>" class="yz-comment-fullname"><?php echo get_the_title( $post_id ); ?></a>
 							<?php if ( 'on' == $display_button ) : ?>
 								<a href="<?php echo $comment_url; ?>" class="view-comment-button">
 									<i class="fas fa-comment-dots"></i><?php _e( 'View Comment', 'youzer' ); ?>

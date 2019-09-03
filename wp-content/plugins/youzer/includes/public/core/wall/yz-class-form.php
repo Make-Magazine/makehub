@@ -363,6 +363,25 @@ class Youzer_Wall_Form {
 	 */
 	function save_meta( $activity_id, $data ) {
 		
+		// Save Post Privacy.
+		if ( isset( $data['yz-activity-privacy'] ) && ! empty( $data['yz-activity-privacy'] ) ) {
+			if ( ! isset( $data['yz-whats-new-post-in'] ) || ( isset( $data['yz-whats-new-post-in'] ) && $data['yz-whats-new-post-in'] == 0 ) ) {
+
+				$this->save_privacy( $activity_id, $data['yz-activity-privacy'] );
+			
+			}
+		}
+
+		// Save Post Tagged Users.
+		if ( isset( $data['tagged_users'] ) && ! empty( $data['tagged_users'] ) ) {
+			bp_activity_update_meta( $activity_id, 'tagged_users', $data['tagged_users'] );
+			do_action( 'yz_after_activity_tagged_users_save', $activity_id, $data['tagged_users'] );
+		}
+		// Save Post Feeling / Activity.
+		if ( isset( $data['mood_value'] ) && ! empty( $data['mood_value'] ) ) {
+			bp_activity_update_meta( $activity_id, 'mood', array( 'type' => $data['mood_type'], 'value' => $data['mood_value'] ) );
+		}
+
 		if ( ! isset( $data['post_type'] ) ) {
 			return;
 		}
@@ -404,6 +423,21 @@ class Youzer_Wall_Form {
 
 				break;
 		}
+
+	}
+
+	/**
+	 * Save Activity Privacy.
+	 */
+	function save_privacy( $activity_id, $privacy ) {
+
+		global $wpdb, $bp;
+
+		// Prepare SQL
+		$sql = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET privacy = %s WHERE id = %d", $privacy, $activity_id );
+
+		// Update Privacy
+		$wpdb->query( $sql );
 
 	}
 

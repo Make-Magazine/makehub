@@ -149,9 +149,8 @@ class Youzer {
 
         // Youzer Url Path.
         define( 'YZ_URL', plugin_dir_url( __FILE__ ) );
-        
         // Version.
-        define( 'YZ_Version', apply_filters( 'youzer_version', '2.3.3' ) );
+        define( 'YZ_Version', apply_filters( 'youzer_version', '2.3.4' ) );
 
         // Templates Path.
         define( 'YZ_TEMPLATE', YZ_PATH . 'includes/public/templates/' );

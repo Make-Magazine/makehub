@@ -3,7 +3,7 @@
  * Plugin Name: Youzer
  * Plugin URI:  https://youzer.kainelabs.com
  * Description: Youzer is a Community & User Profiles Management Solution with a Secure Membership System, Front-end Account Settings, Powerful Admin Panel, 14 Header Styles, +20 Profile Widgets, 16 Color Schemes, Advanced Author Widgets, Fully Responsive Design, Extremely Customizable and a Bunch of Unlimited Features Provided By KaineLabs.
- * Version:     2.3.3
+ * Version:     2.3.4
  * Author:      Youssef Kaine
  * Author URI:  https://www.kainelabs.com
  * License:     GPL-2.0+
@@ -23,7 +23,7 @@ define( 'YOUZER_BASENAME', plugin_basename( __FILE__ ) );
  */
 function yz_have_required_plugins() {
 
-    $required_plugins = array( 'buddypress' => 'bp-loader' );
+    $required_plugins = apply_filters( 'youzer_required_plugin', array( 'buddypress' => 'bp-loader' ) );
 
     // Get Active Plugins List.
     $active_plugins = (array) get_option( 'active_plugins', array() );
@@ -154,3 +154,40 @@ function youzer_init() {
 }
 
 add_action( 'init', 'youzer_init' );
+
+
+/**
+ * This function runs when WordPress completes its upgrade process
+ */
+function yz_upgrade_completed( $upgrader_object, $options ) {
+
+    // If an update has taken place and the updated type is plugins and the plugins element exists
+    if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+
+    // Iterate through the plugins being updated and check if ours is there
+    foreach ( $options['plugins'] as $plugin ) {
+
+        if ( $plugin == YOUZER_BASENAME ) {
+
+            // Remove this later
+            if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
+
+                global $bp, $wpdb;
+
+                $row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'" );
+
+                if ( empty( $row ) ) {
+                    $wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'" );
+                }
+
+                update_option( 'yz_install_bp_activity_privacy', 1 );
+
+            }
+        }
+    }
+
+    }
+
+}
+
+add_action( 'upgrader_process_complete', 'yz_upgrade_completed', 10, 2 );

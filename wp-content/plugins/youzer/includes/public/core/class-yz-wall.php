@@ -18,6 +18,11 @@ class Youzer_Wall {
 		// Fomat Post
 		add_filter( 'bp_get_activity_content_body', array( &$this, 'get_activity_content_body' ), 10, 2 );
 
+		// Open Activity Post and Comment link on new tabs.
+		add_filter( 'bp_get_activity_content_body', array( &$this, 'open_links_in_new_tabs' ) );
+		add_filter( 'bp_activity_comment_content', array( &$this, 'open_links_in_new_tabs' ) );
+		add_filter( 'bp_get_the_thread_message_content', array( &$this, 'open_links_in_new_tabs' ) );
+
 		// Remove Blog Posts Default Content .
 		add_filter( 'bp_activity_create_summary', '__return_false' );
 
@@ -49,6 +54,21 @@ class Youzer_Wall {
     	$functions = new Youzer_Wall_Functions();
     	$attachments = new Youzer_Wall_Attachments();
 
+    	if ( yz_enable_activity_privacy() ) {
+	    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-privacy.php';
+	    	$privacy = new Youzer_Wall_Privacy();
+    	}
+
+    	if ( yz_enable_activity_mood() ) {
+	    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-mood.php';
+	    	$mood = new Youzer_Mood();
+    	}
+
+    	if ( yz_enable_activity_tag_friends() ) {
+			require_once YZ_PUBLIC_CORE . 'wall/yz-class-tag-users.php';
+			$tag_users = new Youzer_Wall_Tag_Users();
+    	}
+
     }
 
 	/**
@@ -57,23 +77,6 @@ class Youzer_Wall {
 	function get_activity_content_body( $content, $activity ) {
 	    // Check if activity content is not empty.
 	    if ( ! empty( $content ) ) {
-
-		  	$pattern = '/<a(.*?)?href=[\'"]?[\'"]?(.*?)?>/i';
-		    
-		    $content = preg_replace_callback($pattern, function($m){
-		        $tpl = array_shift($m);
-		        $hrf = isset($m[1]) ? $m[1] : null;
-		        if ( preg_match('/target=[\'"]?(.*?)[\'"]?/i', $tpl) ) {
-		            return $tpl;
-		        }
-		        if ( trim($hrf) && 0 === strpos($hrf, '#') ) {
-		            return $tpl; // anchor links
-		        }
-		        return preg_replace_callback('/href=/i', function($m2){
-		            return sprintf('target="_blank" %s', array_shift($m2));
-		        }, $tpl);
-		    }, $content);
-		    
 	    	$content = '<div class="activity-inner">' . $content . '</div>';
 	    }
 	    
@@ -145,7 +148,7 @@ class Youzer_Wall {
      * Get Wall Attachments.
      */
 	function post_attachments( $activity = null ) {
-
+		
 		// Get Attachments
 		$attachments = yz_get_activity_attachments( $activity->id );
 
@@ -905,6 +908,39 @@ class Youzer_Wall {
         // Exit.
         exit;
 
+	}
+
+	/**
+	 * Open Wall Post & Comment Content On New Tab.
+	 */
+	function open_links_in_new_tabs( $content ) {
+
+		if ( ! empty( $content ) ) {
+
+		  	$pattern = '/<a(.*?)?href=[\'"]?[\'"]?(.*?)?>/i';
+		    
+		    $content = preg_replace_callback( $pattern, function( $m ) {
+			        
+		        $tpl = array_shift( $m );
+		        $hrf = isset( $m[1] ) ? $m[1] : null;
+		        
+		        if ( preg_match( '/target=[\'"]?(.*?)[\'"]?/i', $tpl ) ) {
+		            return $tpl;
+		        }
+
+		        if ( trim( $hrf ) && 0 === strpos( $hrf, '#' ) ) {
+		            return $tpl;
+		        }
+
+		        return preg_replace_callback( '/href=/i', function( $m2 ) {
+		            return sprintf( 'target="_blank" %s', array_shift( $m2 ) );
+		        }, $tpl );
+
+	    	}, $content );
+
+		}
+	    
+		return $content;
 	}
 
     /**

@@ -64,13 +64,13 @@
 		/**
 		 * Display Activity tools.
 		 */
-		$( document ).on( 'click',  '.yz-show-item-tools', function ( e ) {
+		$( document ).on( 'click',  '.yz-item .yz-show-item-tools', function ( e ) {
 
 			// Switch Current Icon.
 			$( this ).toggleClass( 'yz-close-item-tools' );
 
 			// Show / Hide Tools.
-			$( this ).closest( '.yz-item, .activity-item' ).find( '.yz-item-tools' ).fadeToggle();
+			$( this ).closest( '.yz-item' ).find( '.yz-item-tools' ).fadeToggle();
 
 		});
 

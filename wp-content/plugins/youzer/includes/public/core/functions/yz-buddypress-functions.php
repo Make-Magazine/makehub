@@ -32,8 +32,15 @@ add_action( 'wp_print_styles', 'yz_deregister_bp_styles', 15 );
 /**
  * Register Youzer Buddypress Templates Folder Location
  */
-function yz_bp_register_template_location() {
+function yz_plugin_template_location() {
     return YZ_TEMPLATE . '/';
+}
+
+/**
+ * Theme Template location.
+ */
+function yz_theme_template_location() {
+    return get_template_directory() . '/youzer';
 }
 
 /**
@@ -64,7 +71,8 @@ function yz_bp_overload_templates() {
 
     // Get New Templates Location
     if ( function_exists( 'bp_register_template_stack' ) ) {
-        bp_register_template_stack( 'yz_bp_register_template_location', 1 );
+        bp_register_template_stack( 'yz_theme_template_location', 0 );
+        bp_register_template_stack( 'yz_plugin_template_location', 1 );
     }
      
     // If Viewing A Member Page, Overload The Template

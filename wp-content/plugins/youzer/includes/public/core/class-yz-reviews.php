@@ -171,7 +171,6 @@ class Youzer_Reviews {
 
 	}
 
-
 	/**
 	 * Handle Delete User Review
 	 */

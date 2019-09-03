@@ -82,6 +82,43 @@ function yz_wall_settings() {
 
     $Yz_Settings->get_field(
         array(
+            'title' => __( 'Posting Form Settings', 'youzer' ),
+            'class' => 'ukai-box-3cols',
+            'type'  => 'openBox'
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'checkbox',
+            'id'    => 'yz_activity_privacy',
+            'title' => __( 'Privacy', 'youzer' ),
+            'desc'  => __( 'Enable activity posts privacy', 'youzer' ),
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'checkbox',
+            'id'    => 'yz_activity_mood',
+            'title' => __( 'Feeling / Activity', 'youzer' ),
+            'desc'  => __( 'Enable posts feeling and activity', 'youzer' ),
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'checkbox',
+            'id'    => 'yz_activity_tag_friends',
+            'title' => __( 'Tag Friends', 'youzer' ),
+            'desc'  => __( 'Enable tagging friends in posts', 'youzer' ),
+        )
+    );
+
+    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
+
+    $Yz_Settings->get_field(
+        array(
             'title' => __( 'Filters Settings', 'youzer' ),
             'type'  => 'openBox'
         )

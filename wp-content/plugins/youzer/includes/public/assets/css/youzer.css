@@ -149,6 +149,7 @@ body .youzer :after {
 
 .youzer button {
     background-image: initial;
+    box-shadow: none;
 }
 
 .youzer form {
@@ -401,6 +402,10 @@ html.touch .youzer select {
 
 .yz-tool-btn.yz-review-btn {
     background-color: #f9c321;
+}
+
+.yz-tool-btn.yz-report-btn {
+    background-color: #F44336;
 }
 
 /**
@@ -1392,6 +1397,13 @@ i.yz-small-verified-icon {
 
 .yz-notif-item .yz-notif-content .yz-notif-time i {
     margin-right: 5px;
+    font-size: 13px;
+}
+
+.yz-notif-item .yz-notif-content .yz-notif-time i,
+.yz-notif-item .yz-notif-content .yz-notif-time .yz-notif-date {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .rtl .yz-notif-item .yz-notif-content .yz-notif-time i {
@@ -1442,6 +1454,7 @@ i.yz-small-verified-icon {
     background-color: #FFC107;
 }
 
+.yz-notif-icons-colorful .yz-notif-yz_new_tag .yz-notif-icon i,
 .yz-notif-icons-colorful .yz-notif-new_message .yz-notif-icon i {
     background-color: #FFC107;
 }
@@ -2246,10 +2259,10 @@ div#message.info,
 }
 
 #whats-new-post-in-box .nice-select {
-    height: 39px;
+    height: 40px;
     margin-left: 5px;
     min-width: 100px;
-    line-height: 35px;
+    line-height: 40px;
     padding-right: 30px;
     border: 1px solid #eee;
     background-color: transparent;
@@ -2265,7 +2278,7 @@ div#message.info,
 
 #whats-new-post-in-box .nice-select:after {
     right: 15px;
-    margin-top: -5px;
+    margin-top: -3px;
 }
 
 .rtl #whats-new-post-in-box .nice-select:after {
@@ -2275,7 +2288,7 @@ div#message.info,
 
 #whats-new-post-in-box .nice-select .current {
     font-size: 11px;
-    line-height: 35px;
+    line-height: 38px;
 }
 
 #whats-new-post-in-box select {
@@ -3369,14 +3382,16 @@ a.button:before,
     background-color: #FFC107;
 }
 
-.yz-pin-tool .yz-tool-icon i {
-    color: #fff;
-}
-
 .yz-bookmark-tool .yz-tool-icon  {
     background-color: #03A9F4;
 }
 
+.yz-report-tool .yz-tool-icon  {
+    background-color: #F44336;
+}
+
+.yz-pin-tool .yz-tool-icon i,
+.yz-report-tool .yz-tool-icon i,
 .yz-bookmark-tool .yz-tool-icon i {
     color: #fff;
 }
@@ -3653,7 +3668,7 @@ a.button:before,
 .yz-tooltip:after,
 [data-yztooltip]:after {
     color: #fff;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     line-height: 12px;
     padding: 10px 15px;
@@ -3839,7 +3854,6 @@ a.button:before,
     border-radius: 3px;
 }
 
-
 .yz-modal-title {
     background: #24c6dc;
     background: url(../images/back-pattern.png),linear-gradient(to left,#FFC107 ,#FF5722);
@@ -3928,6 +3942,20 @@ a.button:before,
     -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
 }
+/**
+ * Buddypress Reset
+ */
+#buddypress.youzer div.item-list-tabs {
+    background: #fff;
+}
+
+#buddypress.youzer a.bp-primary-action span:after,
+#buddypress.youzer #reply-title small a span:after,
+#buddypress.youzer a.bp-primary-action span:before,
+#buddypress.youzer #reply-title small a span:before {
+    content: '';
+}
+
 /***
  * Loader
  */

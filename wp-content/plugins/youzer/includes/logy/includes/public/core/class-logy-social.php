@@ -94,7 +94,6 @@ class Logy_Social {
 	        		}
 	        	}
 
-
 				// Create User.
 	        	$user_id = $this->create_new_user( $user_profile );
 

@@ -174,19 +174,6 @@ function yz_bp_customize_toolbar( $wp_admin_bar ) {
 
         }
 
-        if ( bp_is_active( 'settings' ) ) {
-
-        // Modify "Settings - Email" Title.
-        $wp_admin_bar->add_node(
-            array(
-                'parent' => 'my-account-settings',
-                'title'  => __( 'Change Password', 'youzer' ),
-                'id'     => 'my-account-settings-change-password',
-                'href'   => bp_loggedin_user_domain() . bp_get_settings_slug() . '/change-password'
-            )
-        );
-    }
-
         // Remove "Settings( General & Profile )" Link.
         $wp_admin_bar->remove_node( 'my-account-settings-general' );
         $wp_admin_bar->remove_node( 'my-account-settings-profile' );
@@ -240,3 +227,26 @@ function yz_rename_profile_activity_tab() {
 }
 
 add_action( 'bp_actions', 'yz_rename_profile_activity_tab', 1 );
+
+/**
+ * Install Buddypress Activity Privacy.
+ */
+function yz_install_bp_activity_privacy() {
+
+    if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
+
+        global $bp, $wpdb;
+
+        $row = $wpdb->get_results(  "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'"  );
+
+        if ( empty( $row ) ) {
+           $wpdb->query("ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'");
+        }
+
+        update_option( 'yz_install_bp_activity_privacy', 1 );
+    
+    }
+
+}
+
+add_action( 'admin_init', 'yz_install_bp_activity_privacy' );

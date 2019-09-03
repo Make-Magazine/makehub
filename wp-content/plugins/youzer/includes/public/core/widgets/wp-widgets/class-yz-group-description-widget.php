@@ -50,7 +50,7 @@ class YZ_Group_Description_Widget extends WP_Widget {
 				<i class="fas fa-file-alt"></i>
 				<?php echo _e( 'description', 'youzer' ); ?>
 			</div>
-			<div class="yz-group-widget-content"><?php echo $group_description; ?></div>
+			<div class="yz-group-widget-content"><?php echo apply_filters( 'the_content', html_entity_decode( $group_description ) ); ?></div>
 		</div>
 
 		<?php

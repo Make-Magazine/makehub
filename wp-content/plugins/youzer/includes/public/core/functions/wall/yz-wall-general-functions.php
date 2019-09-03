@@ -5,6 +5,10 @@
  */
 function yz_activity_action_wall_posts( $action, $activity ) {
 
+	if ( $activity->component == 'gamipress' ) {
+		return $action;
+	}
+
 	// Get User & Post Data.
 	$post_link = yz_get_wall_post_url( $activity->id );
 	$user_link = bp_core_get_userlink( $activity->user_id );
@@ -17,6 +21,7 @@ function yz_activity_action_wall_posts( $action, $activity ) {
 		case 'activity_slideshow':
 		case 'activity_status':
 		case 'activity_quote':
+		case 'activity_photo':
 		case 'activity_video':
 		case 'activity_audio':
 		case 'activity_link':
@@ -36,35 +41,35 @@ function yz_activity_action_wall_posts( $action, $activity ) {
 				__( '%1s Changed their profile cover', 'youzer' ), $user_link );
 			break;
 
-		case 'activity_photo':
 
-			// Get Attachments.
-			$attachments = (array) unserialize( bp_activity_get_meta( $activity->id, 'attachments' ) );
+		// 	// Get Attachments.
+		// 	$attachments = (array) yz_get_activity_attachments( $activity->id );
 
-			// Get Attchments Number.
-			$photos_nbr = count( $attachments );
+		// 	// Get Attchments Number.
+		// 	$photos_nbr = count( $attachments );
 
-			if ( $photos_nbr < 2 ) {
+		// 	if ( $photos_nbr < 2 ) {
 
-				// Add Group Post Action.
-				if ( yz_wall_is_group_post( $activity ) ) {
-					$action = sprintf( __( '%1s posted', 'youzer' ), $user_link );
-				} else {
-					$action = $user_link;
-				}
+		// 		// Add Group Post Action.
+		// 		if ( yz_wall_is_group_post( $activity ) ) {
+		// 			$action = sprintf( __( '%1s posted', 'youzer' ), $user_link );
+		// 		} else {
+		// 			$action = $user_link;
+		// 		}
 
-			} else {
+		// 	} else {
 
-				// Get Action Label.
-				$action_label = sprintf( _n( 'a new photo', '%s new photos', $photos_nbr, 'youzer' ), $photos_nbr );
+		// 		// Get Action Label.
+		// 		$action_label = sprintf( _n( 'a new photo', '%s new photos', $photos_nbr, 'youzer' ), $photos_nbr );
 
-				// Get Wall Post Action.
-				$action = sprintf( __( '%1s added <a href="%2s">%3s</a>', 'youzer' ), $user_link, $post_link, $action_label );
+		// 		// Get Wall Post Action.
+		// 		$action = sprintf( __( '%1s added <a href="%2s">%3s</a>', 'youzer' ), $user_link, $post_link, $action_label );
 
-			}
+		// 	}
 
-			break;
+		// 	break;
 	};
+
 
 	$action = apply_filters( 'yz_activity_post_action_before_group_description', $action, $activity, $user_link, $post_link );
 
@@ -76,6 +81,13 @@ function yz_activity_action_wall_posts( $action, $activity ) {
 		! in_array( $activity->type, $hide_group_description ) ) {
 		$group = groups_get_group( $activity->item_id );
 		$action .= sprintf( __( ' in the group %1s', 'youzer' ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' );
+	} else {
+		$mood = apply_filters( 'yz_activity_post_mood', false, $activity );
+		$tagged_users = apply_filters( 'yz_activity_post_tagged_users', false, $activity );
+
+		if ( ! empty( $tagged_users ) || ! empty( $mood ) ) {
+			$action .=  ' ' . __( 'is', 'youzer' ) . $mood . $tagged_users;
+		}
 	}
 
 	// Return Action
@@ -400,37 +412,14 @@ function yz_wall_modal( $args = false ) {
 	?>
 
 	<div class="yz-wall-modal">
-		<div class="yz-wall-modal-title" ><?php echo $args['title']; ?>
-		</div>
+		<div class="yz-wall-modal-title"><?php if ( isset( $args['icon'] ) ) echo '<i class="' . $args['icon'] . '"></i>'; echo $args['title']; ?><i class="fas fa-times yz-wall-modal-close"></i></div>
 		<div class="yz-wall-modal-content">
 			<?php $content_function( $args['item_id'] ); ?>
 		</div>
-		<div class="yz-wall-modal-actions">
-			<button class="yz-wall-modal-button yz-wall-modal-close"><?php _e( 'close', 'youzer' ); ?></button>
-		</div>
 	</div>
 
 	<?php
 }
-
-/**
- * Get Wall Model Container.
- */
-function yz_add_wall_modal(){ ?>
-	
-	<!-- Wall Modal. -->
-	<div id="yz-wall-modal"></div>
-	<div class="yz-wall-modal-overlay">
-		<div class="yz-modal-loader">
-			<i class="fas fa-spinner fa-spin"></i>
-		</div>
-	</div>
-
-	<?php
-}
-
-add_action( 'bp_after_single_activity_post', 'yz_add_wall_modal' );
-add_action( 'bp_after_activity_loop', 'yz_add_wall_modal' );
 
 /**
  * Get who liked a post Modal.
@@ -461,33 +450,55 @@ function yz_get_who_liked_post_list( $post_id ) {
 	// Get Liked Users.
 	$users = yz_get_who_liked_activities( $post_id );
 
+	// Get Users List.
+	yz_get_popup_user_list( $users );
+
+}
+
+/**
+ * Get who liked a post List.
+ */
+function yz_get_activity_tagged_users( $activity_id ) {
+
+	// Get Tagged Users.
+	$users = bp_activity_get_meta( $activity_id, 'tagged_users' );
+
+	// Remove First User as it's already shown.
+	if ( isset($users[0] ) ) {
+		unset( $users[0] );
+	}
+
+	// Get Users List.
+	yz_get_popup_user_list( $users );
+
+}
+
+/**
+ * Users Pop Up List.
+ **/
+function yz_get_popup_user_list( $users ) {
+	
+	if ( empty( $users ) ) {
+		return;
+	}
+
 	echo '<div class="yz-users-who-list">';
 
 	foreach ( $users as $user_id ) {
 
-		// Get Username.
-		$username = bp_core_get_username( $user_id );
-
-		// Get User Display Name.
-		$user_link = bp_core_get_user_domain( $user_id );
-
-		// Get User Avatar.
-    	$avatar = bp_core_fetch_avatar( array( 'type'=> 'thumb', 'item_id'=> $user_id ) );
-        
 		?>
 
 		<div class="yz-list-item">
-			<a href="<?php echo $user_link; ?>" class="yz-item-avatar"><?php echo $avatar; ?></a>
+			<a href="<?php echo bp_core_get_user_domain( $user_id ); ?>" class="yz-item-avatar"><?php echo bp_core_fetch_avatar( array( 'type'=> 'thumb', 'item_id'=> $user_id ) ); ?></a>
 			<div class="yz-item-data">
 				<div class="yz-item-name"><?php echo bp_core_get_userlink( $user_id ); ?></div>
-				<div class="yz-item-meta">@ <?php echo $username; ?></div>
+				<div class="yz-item-meta">@ <?php echo bp_core_get_username( $user_id ); ?></div>
 			</div>
 		</div>
 
 	<?php }
 
-	echo '</div>';
-
+	echo '</div>';	
 }
 
 /**
@@ -755,7 +766,7 @@ function yz_get_activity_time_stamp_meta( $content = '' ) {
      *
      * @param string $content Activity content with the activity metadata added.
      */
-    return apply_filters( 'bp_insert_activity_meta', $new_content, $content );
+    return apply_filters( 'bp_insert_activity_meta', $new_content, $content, $activities_template->activity->id );
 }
 
 function yz_get_activity_page_class() {
@@ -1142,4 +1153,130 @@ function yz_get_embed_video_thumbnails( $provider, $id, $size = null ) {
 
 	return apply_filters( 'yz_get_wall_embed_video_thumbnails', $data );
 
+}
+
+
+/***
+ * Feeling / Activity
+ */
+function yz_wall_mood_categories() {
+
+	$items = array(
+		'feeling' => array(
+			'title' => __( 'feeling', 'youzer' ),
+			'question' => __( 'How are you feeling?', 'youzer' ),
+			'icon' => 'fas fa-smile',
+			'color' => '#ffc107'
+		),
+		'celebrating' => array(
+			'title' => __( 'celebrating', 'youzer' ),
+			'question' => __( 'What are you celebrating?', 'youzer' ),
+			'icon' => 'fas fa-birthday-cake',
+			'color' => '#2196F3'
+		),
+		'watching' => array(
+			'title' => __( 'watching', 'youzer' ),
+			'question' => __( 'What are you watching?', 'youzer' ),
+			'icon' => 'fas fa-glasses',
+			'color' => '#F44336'
+		),
+		'eating' => array(
+			'title' => __( 'eating', 'youzer' ),
+			'question' => __( 'What are you eating?', 'youzer' ),
+			'icon' => 'fas fa-utensils',
+			'color' => '#707dc3'
+		),
+		'drinking' => array(
+			'title' => __( 'drinking', 'youzer' ),
+			'question' => __( 'What are you drinking?', 'youzer' ),
+			'icon' => 'fas fa-glass-cheers',
+			'color' => '#0dc5b4'
+		),
+		'travelling' => array(
+			'title' => __( 'travelling', 'youzer' ),
+			'question' => __( 'Where are you going?', 'youzer' ),
+			'icon' => 'fas fa-map-marked-alt',
+			'color' => '#f7407e'
+		),
+		'listening' => array(
+			'title' => __( 'listening', 'youzer' ),
+			'question' => __( 'What are you listening to?', 'youzer' ),
+			'icon' => 'fas fa-headphones-alt',
+			'color' => '#5365ca'
+		),
+		'looking' => array(
+			'title' => __( 'looking for', 'youzer' ),
+			'question' => __( 'What are you looking for?', 'youzer' ),
+			'icon' => 'fas fa-search',
+			'color' => '#ff5722'
+		),
+		'thinking' => array(
+			'title' => __( 'thinking', 'youzer' ),
+			'question' => __( 'What are you thinking about?', 'youzer' ),
+			'icon' => 'fas fa-brain',
+			'color' => '#16a1e6'
+		),
+		'reading' => array(
+			'title' => __( 'reading', 'youzer' ),
+			'question' => __( 'What are you reading?', 'youzer' ),
+			'icon' => 'fas fa-book-reader',
+			'color' => '#ff5b93'
+		),
+		'playing' => array(
+			'title' => __( 'playing', 'youzer' ),
+			'question' => __( 'What are you playing?', 'youzer' ),
+			'icon' => 'fas fa-gamepad',
+			'color' => '#ff5548'
+		),
+		'supporting' => array(
+			'title' => __( 'supporting', 'youzer' ),
+			'question' => __( 'What are you supporting?', 'youzer' ),
+			'icon' => 'fas fa-thumbs-up',
+			'color' => '#ff9800'
+		)
+	);
+
+	return apply_filters( 'yz_wall_mood_categories', $items ); 
+}
+
+/**
+ * Get Feeling Emojis.
+ */
+function yz_get_mood_feeling_emojis() {
+	$emojis = array(
+		'happy' 	=> __( 'Happy', 'youzer' ),
+		'blessed' 	=> __( 'Blessed', 'youzer' ),
+		'excited' 	=> __( 'Excited', 'youzer' ),
+		'lovely'  	=> __( 'Lovely', 'youzer' ),
+		'sad' 	  	=> __( 'Sad', 'youzer' ),
+		'sleepy'  	=> __( 'Sleepy', 'youzer' ),
+		'angry' 	=> __( 'Angry', 'youzer' ),
+		'crazy'   	=> __( 'Crazy', 'youzer' ),
+		'evil' 		=> __( 'Evil', 'youzer' ),
+		'furious'	=> __( 'Furious', 'youzer' ),
+		'inlove'	=> __( 'In love', 'youzer' ),
+		'confused' 	=> __( 'Confused', 'youzer' ),
+		'silly' 	=> __( 'Silly', 'youzer' ),
+		'annoyed' 	=> __( 'Annoyed', 'youzer' ),
+		'mad' 		=> __( 'Mad', 'youzer' ),
+		'sick'		=> __( 'Sick', 'youzer' ),
+		'shy' 		=> __( 'Shy', 'youzer' ),
+		'surprised' => __( 'Surprised', 'youzer' ),
+		'cool' 		=> __( 'Cool', 'youzer' ),
+		'determined'=> __( 'Determined', 'youzer' ),
+		'tired' 	=> __( 'Tired', 'youzer' ),
+		'shocked' 	=> __( 'Shocked', 'youzer' ),
+		'relaxed' 	=> __( 'Relaxed', 'youzer' ),
+		'rich' 		=> __( 'rich', 'youzer' ),
+		'weird' 	=> __( 'Weird', 'youzer' ),
+	);
+
+	return $emojis;
+}
+
+/**
+ * Get Feeling Emoji By type
+ */
+function yz_get_mood_emojis_image( $emoji ) {
+	return apply_filters( 'yz_get_mood_emojis_image', YZ_PA . 'images/emojis/' . $emoji . '.png', $emoji );
 }

@@ -9,7 +9,7 @@ function yz_posts_add_bookmark_tool( $tools, $post_id ) {
 		return $tools;
 	}
 
-	if ( yz_get_bookmark_id( bp_loggedin_user_id(), bp_get_activity_id(), 'activity' ) ) {
+	if ( yz_get_bookmark_id( bp_loggedin_user_id(), $post_id, 'activity' ) ) {
 		// Get Unpin Button Data.
 		$action = 'unsave';
 		$class = 'yz-unsave-post';

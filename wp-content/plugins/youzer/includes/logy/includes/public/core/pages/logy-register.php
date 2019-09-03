@@ -144,7 +144,7 @@ class Logy_Register {
 		?>
 		
 		<div class="logy-recaptcha-container">
-			<div class="g-recaptcha" data-sitekey="<?php echo $captcha_key; ?>"></div>
+			<div class="g-recaptcha"<?php do_action( 'yz_recaptcha_attributes' ); ?> data-sitekey="<?php echo $captcha_key; ?>"></div>
 		</div>
 
 		<?php
@@ -337,7 +337,7 @@ class Logy_Register {
 		// Get Captcha Language !
 		$language = apply_filters( 'yz_captcha_language' , 'en' );
 
-		echo "<script src='https://www.google.com/recaptcha/api.js?hl=$language'></script>";
+		echo apply_filters( 'youzer_signup_captcha', "<script src='https://www.google.com/recaptcha/api.js?hl=$language'></script>" );
 	}
 
 	/**

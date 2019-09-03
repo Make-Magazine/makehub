@@ -53,7 +53,7 @@ class YZ_Portfolio {
 
 	        // Get Photo Data .
             $photo_link  = esc_url( $photo['link'] );
-            $photo_title = sanitize_text_field( $photo['title'] );
+            $photo_title = esc_attr( $photo['title'] );
 
             // If Photo Link is not available replace it with Photo Source Link
             if ( ! $photo_link ) {

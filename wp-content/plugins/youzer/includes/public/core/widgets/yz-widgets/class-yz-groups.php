@@ -31,18 +31,28 @@ class YZ_Groups_Widget {
             return;
         }
         
-        // Get Member Groups Number.
-        $groups_nbr = yz_get_group_total_for_member( bp_displayed_user_id() );
+        global $groups_template;
 
-        if ( $groups_nbr <= 0 ) {
-            return;
-        }
-        
+        // Back up the global.
+        $old_groups_template = $groups_template;
+
+
         global $Youzer;
 
         // Get User Max Groups Number to show in the widget.
         $max_groups = yz_options( 'yz_wg_max_groups_items' );
         
+        $group_args = array(
+            'user_id'         => bp_displayed_user_id(),
+            'per_page'        => $max_groups,
+            'max'             => $max_groups
+        );
+
+        if ( bp_has_groups( $group_args ) ) :
+
+        // Get Groups Number.
+        $groups_nbr = bp_get_group_total_for_member();
+
         // Get User Data
         $avatar_border_style = yz_options( 'yz_wg_groups_avatar_img_format' );
 
@@ -50,45 +60,43 @@ class YZ_Groups_Widget {
         $list_class = array( 'yz-items-list-widget', 'yz-profile-list-widget', 'yz-profile-groups-widget' );
 
         // Add Widgets Avatars Border Style Class.
-        $list_class[] = 'yz-list-avatar-' . $avatar_border_style;
-
-        $groups_ids = groups_get_user_groups( bp_displayed_user_id() );
-
-        // Limit Groups Number
-        $groups_ids = array_slice( $groups_ids['groups'], 0, $max_groups );
-
-        ?>
+        $list_class[] = 'yz-list-avatar-' . $avatar_border_style; ?>
         
         <div class="<?php echo yz_generate_class( $list_class ); ?>">
 
-            <?php foreach ( $groups_ids as $group_id ) : ?>
+            <?php while ( bp_groups() ) : bp_the_group(); ?>
 
-            <?php $group = groups_get_group( array( 'group_id' => $group_id ) ); ?>
-            <?php $group_url = bp_get_group_permalink( $group ); ?>
+                <div class="yz-list-item">
 
-            <div class="yz-list-item">
+                    <a href="<?php bp_group_permalink(); ?>" class="yz-item-avatar"><?php bp_group_avatar_thumb(); ?></a>
 
-                <a href="<?php echo $group_url; ?>" class="yz-item-avatar"><?php echo bp_core_fetch_avatar( array( 'item_id' => $group_id, 'object' => 'group' ) ); ?></a>
-
-                <div class="yz-item-data">
-                    <a href="<?php echo $group_url; ?>" class="yz-item-name"><?php echo $group->name; ?></a>
-                    <div class="yz-item-meta">
-                        <div class="yz-meta-item"><?php $Youzer->group->status( $group ); ?></div>
+                    <div class="yz-item-data">
+                        <a href="<?php bp_group_permalink(); ?>" class="yz-item-name"><?php bp_group_name() ?></a>
+                        <div class="yz-item-meta">
+                            <div class="yz-meta-item"><?php $Youzer->group->status( $groups_template->group ); ?></div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <?php endforeach; ?>
+            <?php endwhile; ?>
 
-            <?php if ( $groups_nbr > $max_groups ) : ?>
-                <div class="yz-more-items">
-                    <a href="<?php echo bp_core_get_user_domain( bp_displayed_user_id() ) . bp_get_groups_slug();?>"><?php echo sprintf( __( 'Show All Groups ( %s )', 'youzer' ), $groups_nbr ); ?></a>
-                </div>
-            <?php endif; ?>
+                <?php if ( $groups_nbr > $max_groups ) : ?>
+                    <div class="yz-more-items">
+                        <a href="<?php echo bp_core_get_user_domain( bp_displayed_user_id() ) . bp_get_groups_slug();?>"><?php echo sprintf( __( 'Show All Groups ( %s )', 'youzer' ), $groups_nbr ); ?></a>
+                    </div>
+                <?php endif; ?>
 
         </div>
 
         <?php
+
+        else: return;
+
+        endif;
+
+        // Back up the global.
+        $groups_template = $old_groups_template;
+
     }
 
     /**

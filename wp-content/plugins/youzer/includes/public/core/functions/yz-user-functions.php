@@ -403,6 +403,23 @@ add_action( 'before_delete_post', 'yz_delete_user_posts_count_transient', 1 );
 add_action( 'wp_insert_post', 'yz_delete_user_posts_count_transient', 10, 3 );
 
 /**
+ * Change Posts Counts After Changing Authors.
+ */
+function yz_on_author_update_change_posts_count( $post_ID, $post_after, $post_before ) {
+
+    if ( $post_after->post_author != $post_before->post_author ) {
+            
+        // Delete Transient.
+        delete_transient( 'yz_count_user_posts_' . $post_after->post_author );
+        delete_transient( 'yz_count_user_posts_' . $post_before->post_author );
+
+    }
+
+}
+
+add_action( 'post_updated', 'yz_on_author_update_change_posts_count', 10, 3 );
+
+/**
  * Get User Statistics
  */
 function yz_get_user_statistic_number( $user_id, $type ) {

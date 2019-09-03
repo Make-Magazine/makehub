@@ -70,6 +70,13 @@
                       cache: true,
                       index: 1
                    }]);
+                },
+                keypress: function( editor, e ) {
+                    if ( e.which == 13 && !e.shiftKey ) {
+                        e.preventDefault();
+                        this.trigger( 'change' );
+                        $( editor ).closest( 'form' ).find( '.yz-send-comment' ).click();
+                    }
                 }     
               }
             });
@@ -117,7 +124,20 @@
         };
       }
 
+
     }
+
+
+
+    /**
+     * # Modal.
+     */
+    $( 'div.activity' ).on( 'click', 'a.acomment-reply' , function( e ) {
+        var li = $( this ).closest( 'li.activity-item' ), comment_id = li.attr( 'id' ).substr( 9, li.attr( 'id' ).length );
+        setTimeout(function(){
+            $( '#ac-form-' + comment_id ).find( '.emojionearea-editor' ).focus();
+        }, 200);
+    });
 
   });
 

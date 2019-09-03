@@ -22,7 +22,9 @@ $request = bp_ajax_querystring( 'activity' );
 		<ul id="activity-stream" class="activity-list item-list">
 
 	<?php endif; ?>
-
+	
+	<?php do_action( 'yz_before_activity_loop_posts' ); ?>
+	
 	<?php while ( bp_activities() ) : bp_the_activity(); ?>
 
 		<?php bp_get_template_part( 'activity/entry' ); ?>

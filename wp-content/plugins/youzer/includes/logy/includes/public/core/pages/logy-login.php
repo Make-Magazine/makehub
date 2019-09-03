@@ -101,11 +101,11 @@ class Logy_Login {
 	* Redirect on Login failed.
 	*/
 	function logy_login_fail( $username ) {
-
+		
 		if ( function_exists( 'wp_doing_ajax' ) && wp_doing_ajax() ) {
 			return false;
 		}
-
+		
 		// Get Login Page Url.
 		$login_url = logy_page_url( 'login' );
 

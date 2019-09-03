@@ -50,7 +50,7 @@ class YZ_Media_Tab  {
         // Add Group 'Media' Nav.
         bp_core_new_subnav_item(
             array(
-                'slug' => 'media',
+                'slug' => $media_slug,
                 'parent_slug' => $group->slug,
                 'name' => __( 'Media', 'youzer' ),
                 'parent_url' => bp_get_group_permalink( $group ),

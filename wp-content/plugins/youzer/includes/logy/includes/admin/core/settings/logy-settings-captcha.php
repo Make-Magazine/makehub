@@ -15,7 +15,7 @@ function logy_captcha_settings() {
             'msg_type'  => 'info',
             'type'      => 'msgBox',
             'id'        => 'logy_msgbox_captcha',
-            'msg'       => sprintf( __( 'To get your keys Visit <strong><a href="%s">The reCAPTCHA Site</a></strong> or Check the documentation.', 'youzer' ), $captcha_url )
+            'msg'       => sprintf( __( 'To get your keys visit <strong><a href="%s">The reCAPTCHA Site</a></strong> and make sure to use the Recaptcha V2. or Check the documentation.', 'youzer' ), $captcha_url )
         )
     );
 

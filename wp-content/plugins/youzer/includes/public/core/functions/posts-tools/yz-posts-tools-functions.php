@@ -6,7 +6,7 @@
 function yz_get_activity_tools() {
 
 	// Get Activity ID.
-	$activity_id = bp_get_activity_id();
+	$activity_id = $_POST['activity_id'];
 
 	// Get Tools Data.
 	$tools = array();
@@ -15,12 +15,10 @@ function yz_get_activity_tools() {
 	$tools = apply_filters( 'yz_activity_tools', $tools, $activity_id );
 
 	if ( empty( $tools ) ) {
-		return false;
+		wp_send_json_error();
 	}
 
-	// Display "Show Activity Tools Button". 
-	add_action( 'bp_before_activity_entry_header', 'yz_add_activity_thumbtack_icon' );
-
+	ob_start();
 
 	?>
 	
@@ -35,10 +33,22 @@ function yz_get_activity_tools() {
 	</div>
 
 	<?php
+
+	$content = ob_get_clean();
+
+	wp_send_json_success( $content );
+
+	die();
+
 }
 
-add_action( 'bp_before_activity_entry_content', 'yz_get_activity_tools' );
+// add_action( 'bp_before_activity_entry_content', 'yz_get_activity_tools' );
 
+add_action( 'wp_ajax_yz_get_activity_tools', 'yz_get_activity_tools' );
+
+
+// Display "Show Activity Tools Button". 
+add_action( 'bp_before_activity_entry_header', 'yz_add_activity_thumbtack_icon' );
 
 /**
  * Get Attributes
@@ -58,18 +68,10 @@ function yz_get_item_attributes( $attributes = null ) {
 /**
  * Add Pinned Icon
  */
-function yz_add_activity_thumbtack_icon() {
-
-	// Get Icon.
-	$icon = '<i class="fas fa-angle-down"></i>';
-
-	// Filter
-	$icon = apply_filters( 'yz_display_activity_tools_icon', $icon );
-	
-	?>
+function yz_add_activity_thumbtack_icon() {	?>
 
 	<div class="yz-show-item-tools">
-		<?php echo $icon; ?>
+		<?php echo apply_filters( 'yz_display_activity_tools_icon', '<i class="fas fa-ellipsis-h"></i>' ); ?>
 	</div>
 	
 	<?php

@@ -70,7 +70,7 @@ function yz_exclude_sticky_posts( $query ) {
 }
 
 add_filter( 'bp_ajax_querystring', 'yz_exclude_sticky_posts', 999 );
-add_filter( 'bp_legacy_theme_ajax_querystring', 'yz_exclude_sticky_posts', 999 );
+// add_filter( 'bp_legacy_theme_ajax_querystring', 'yz_exclude_sticky_posts', 999 );
 
 /**
  * Add Pinned Activity Class
@@ -124,7 +124,6 @@ function yz_is_post_pinned( $activity_id = null ) {
 
 /**
  * Profile Set Stick Post
- */
 function yz_profile_wall_set_sticky_post( $query, $args ) {
 
 	if ( ! bp_is_group_activity() && ! bp_is_activity_directory() ) {
@@ -153,7 +152,45 @@ function yz_profile_wall_set_sticky_post( $query, $args ) {
 
 }
 
-add_filter( 'bp_activity_get', 'yz_profile_wall_set_sticky_post', 1, 2 );
+*/
+
+/**
+ * Add Sticky Posts.
+ */
+function yz_add_activity_sticksy_posts( ) {
+
+	if ( isset( $_POST['page'] ) && $_POST['page'] > 1 ) {
+		return;
+	}
+
+	// Get Sticky Posts ID's.
+	$posts_ids = yz_get_sticky_posts_ids();
+
+	if ( empty( $posts_ids ) ) {
+		return;
+	}
+
+	global $activities_template;
+
+	$old_activities_template = $activities_template;
+
+	if ( bp_has_activities( array( 'in' => $posts_ids, 'per_page' => count( explode( ',', $posts_ids ) ) , 'show_hidden' => 1, 'display_comments' => 'threaded' ) ) ) {
+	
+		add_filter( 'yz_activity_new_post_action', 'yz_activity_pinned_tag', 10, 2 );
+	
+		while ( bp_activities() ) : bp_the_activity();
+			bp_get_template_part( 'activity/entry' );
+		endwhile; 
+	
+		remove_filter( 'yz_activity_new_post_action', 'yz_activity_pinned_tag', 10, 2 );
+
+	}
+
+	$activities_template = $old_activities_template;
+
+}
+
+add_action( 'yz_before_activity_loop_posts', 'yz_add_activity_sticksy_posts' );
 
 /**
  * Check is User Can Pin Activities.
@@ -241,11 +278,6 @@ function yz_get_sticky_posts_ids( $component = null, $group_id = null ) {
  */
 function yz_activity_pinned_tag( $action, $activity ) {
 
-	// Check if Activity is pinned.
-	if ( ! yz_is_post_pinned( $activity->id ) ) {
-		return $action;
-	}
-
 	// Get Tag.
 	$pinned_tag = '<span class="yz-pinned-post-tag"><i class="fas fa-thumbtack"></i>' . __( 'pinned post' ) . '</span>';
 
@@ -255,8 +287,6 @@ function yz_activity_pinned_tag( $action, $activity ) {
 	return $action . $pinned_tag;
 
 }
-
-add_filter( 'yz_activity_new_post_action', 'yz_activity_pinned_tag', 10, 2 );
 
 /**
  * Check if Sticky Posts are Enabled.

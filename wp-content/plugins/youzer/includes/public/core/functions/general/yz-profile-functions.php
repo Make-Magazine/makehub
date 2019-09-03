@@ -126,9 +126,9 @@ function yz_get_social_buttons( $user_id = false ) {
         return;
     }
     
-    if ( ! bp_is_active( 'friends' ) && ! bp_is_active( 'messages' ) ) {
-        return false;
-    }
+    // if ( ! bp_is_active( 'friends' ) && ! bp_is_active( 'messages' ) ) {
+    //     return false;
+    // }
 
     ?>
 

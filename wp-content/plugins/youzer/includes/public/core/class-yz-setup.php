@@ -72,8 +72,8 @@ class Youzer_Setup {
             update_option( 'yz_profile_default_tab', 'overview' );
 		}
 
-		if ( ! get_option( 'installed_youzer_2.3.3' ) ) {
-            update_option( 'installed_youzer_2.3.3', 1 );
+		if ( ! get_option( 'installed_youzer_2.3.4' ) ) {
+            update_option( 'installed_youzer_2.3.4', 1 );
 		}
 
 	}
@@ -198,6 +198,20 @@ class Youzer_Setup {
 		 	time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			PRIMARY KEY (id)
 		) $charset_collate;";
+
+		if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
+
+			global $bp, $wpdb;
+
+			$row = $wpdb->get_results(  "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'"  );
+
+			if ( empty( $row ) ) {
+			   $wpdb->query("ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'");
+			}
+
+			update_option( 'yz_install_bp_activity_privacy', 1 );
+		
+		}
 
 		// $sql[] = "CREATE TABLE $albums_table (
 		// 	id BIGINT(20) NOT NULL AUTO_INCREMENT,

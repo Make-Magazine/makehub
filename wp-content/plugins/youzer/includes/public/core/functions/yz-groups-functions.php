@@ -453,5 +453,6 @@ add_action( 'groups_membership_accepted', 'yz_user_groups_count_transient', 10, 
  * Group Media Slug
  **/
 function yz_group_media_slug() {
-	return apply_filters( 'yz_group_media_slug', 'media' );
+	$slug = function_exists( 'is_rtmedia_page' ) ? 'group-media' : 'media';
+	return apply_filters( 'yz_group_media_slug', $slug );
 }

@@ -185,6 +185,7 @@ function yz_standard_options() {
         'yz_comments_tab_title'       => __( 'Comments', 'youzer' ),
 
         // Media Tab
+        'yz_user-media_tab_icon'        => 'fas fa-photo-video',
         'yz_media_tab_icon'        => 'fas fa-photo-video',
         'yz_media_tab_title'       => __( 'Media', 'youzer' ),
 
@@ -417,6 +418,9 @@ function yz_standard_options() {
         'yz_files_max_size' => 3,
 
         // Wall Settings
+        'yz_activity_privacy' => 'on',
+        'yz_activity_mood' => 'on',
+        'yz_activity_tag_friends' => 'on',
         'yz_enable_youzer_activity_filter' => 'on',
         'yz_enable_wall_url_preview' => 'on',
         'yz_enable_wall_activity_loader' => 'on',
@@ -649,11 +653,13 @@ function yz_standard_options() {
  */
 function yz_is_membership_system_active() {
 
+    $active = false;
+
     if ( 'off' != get_option( 'yz_activate_membership_system' ) ) {
-        return true;
+        $active = true;
     }
 
-    return false;
+    return apply_filters( 'yz_is_membership_system_active', $active );
 
 }
 
