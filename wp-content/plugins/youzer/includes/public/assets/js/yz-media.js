@@ -74,7 +74,6 @@
 
 				var	$c = $( '<div class="yz-media-group-' + type + '" data-active="true"></div>' ).append( '<div class="yz-media-widget-content">' + html + '</div>' );
 				var view_all  = $c.find( '.yz-media-view-all' ).clone();
-				console.log( view_all );
 					$c.find( '.yz-media-view-all' ).remove();
 					// Set New Current Tab & Remove Loading Icon.
 					parent.find( '.yz-media-filter .yz-filter-content' ).removeClass( 'yz-current-filter' );

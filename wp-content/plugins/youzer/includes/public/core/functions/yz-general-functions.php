@@ -885,6 +885,7 @@ function youzer_scripts_vars() {
         'gotit' => __( 'Got it!', 'youzer' ),
         'done' => __( 'Done !', 'youzer' ),
         'ops' => __( 'Oops !', 'youzer' ),
+        'slideshow_speed' => 5,
         'youzer_url' => YZ_URL,
     );
 
@@ -895,16 +896,9 @@ function youzer_scripts_vars() {
  * Enable Activity Loader
  */
 function yz_enable_wall_activity_loader() {
-    
-    // Activate
-    $activate = yz_options( 'yz_enable_wall_activity_loader' );
-
-    if ( wp_is_mobile() ) {
-        $activate = 'off';
-
-    }
-
-    return apply_filters( 'yz_enable_wall_activity_loader', $activate );
+    // if ( wp_is_mobile() ) {
+    //     $activate = 'off';
+    return apply_filters( 'yz_enable_wall_activity_loader', yz_options( 'yz_enable_wall_activity_loader' ) );
 }
 
 /**
@@ -1099,6 +1093,9 @@ function yz_get_tag_attributes( $args = null ) {
     $atts = '';
 
     foreach ( $args as $key => $value ) {
+        if ( $key == 'icon' ) {
+            continue;
+        }
         $atts .= "data-$key='$value'";
     }
 

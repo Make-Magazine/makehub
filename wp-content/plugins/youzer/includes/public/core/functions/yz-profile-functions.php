@@ -567,5 +567,6 @@ add_action( 'wp_enqueue_scripts', 'yz_404_profile_scripts' );
  * Media Slug
  */
 function yz_profile_media_slug() {
-    return apply_filters( 'yz_profile_media_slug', 'media' );
+    $slug = function_exists( 'is_rtmedia_page' ) ? 'user-media' : 'media';
+    return apply_filters( 'yz_profile_media_slug', $slug );
 }

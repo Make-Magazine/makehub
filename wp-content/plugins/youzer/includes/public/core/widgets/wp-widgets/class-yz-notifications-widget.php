@@ -150,7 +150,7 @@ class YZ_Notifications_Widget extends WP_Widget {
 			<a href="<?php echo $notification->href; ?>" class="yz-notif-icon"><?php echo yz_get_notification_icon( $notification ); ?></a>
 			<div class="yz-notif-content">
 				<a href="<?php echo $notification->href; ?>" class="yz-notif-desc"><?php echo $notification->content; ?></a>
-				<span class="yz-notif-time"><i class="far fa-clock"></i><?php echo bp_core_time_since( $notification->date_notified ); ?></span>
+				<div class="yz-notif-time"><i class="far fa-clock"></i><span class="yz-notif-date"><?php echo bp_core_time_since( $notification->date_notified ); ?></span></div>
 			</div>
 		</div>
 							

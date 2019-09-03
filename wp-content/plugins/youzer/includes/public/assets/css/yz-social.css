@@ -22,11 +22,13 @@
     background-color: transparent;
 }
 
+#buddypress.youzer .social-buttons .generic-button a,
 .buddypress .youzer .social-buttons .generic-button a,
 .yz-social-buttons .follow-button a,
 .yz-social-buttons .friendship-button a,
 .yz-social-buttons .message-button a {
     color: #fff;
+    border: none;
     font-size: 13px;
     height: initial;
     min-width: 110px;
@@ -331,9 +333,14 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
 /**
  * Friends Request.
  */
+/*.youzer div.item-list-tabs#subnav {
+    margin: 0 0 35px;
+}*/
+
+/*#buddypress.youzer div.item-list-tabs,*/
 .youzer div.item-list-tabs {
     padding: 15px 20px;
-    margin-bottom: 35px;
+    margin: 0 0 35px;
     background-color: #fff;
 }
 
@@ -355,7 +362,19 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     margin-right: 0;
 }
 
+#buddypress.youzer div.item-list-tabs li a:hover,
+#buddypress.youzer div.item-list-tabs li.selected a,
+#buddypress.youzer div.item-list-tabs li.current a{
+    background-color: transparent;
+    font-weight: 600;
+    color: initial;
+}
+
+#buddypress.youzer div.item-list-tabs:not(#subnav) ul li a,
+#buddypress.youzer div.item-list-tabs:not(#subnav) ul li > span,
+#buddypress.youzer div.item-list-tabs li a,
 .youzer div.item-list-tabs li a {
+    padding: 0;
     margin: 5px 0;
     color: #898989;
     font-size: 11px;
@@ -1064,10 +1083,62 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     text-transform: capitalize;
 }
 
+#message-thread .message-metadata .yz-report-message,
 #message-thread .message-metadata .activity {
-    display: block;
-    color: #b7b7b7;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#message-thread .message-metadata .yz-report-message i {
+    color: #a6a6a6;
+    font-size: 16px;
+    visibility: hidden;
+}
+
+#message-thread .message-metadata .yz-report-message {
+    cursor: pointer;
+    position: absolute;
+    right: 25px;
+    top: 2px;
+}
+
+#message-thread .message-metadata .yz-report-message i {
+        -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#message-thread .message-box:hover .yz-report-message i {
+    visibility: visible;
+}
+
+#message-thread .message-metadata .yz-report-message .yz-report-comment-title,
+.youzer .activity-comments .acomment-meta a .time-since {
+    color: #a6a6a6;
+    font-size: 10px;
+    line-height: 10px;
+    display: inline-block;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+#message-thread .message-metadata .yz-report-message span.yz-separator-point {
+    top: 1px;
+    margin: 0 5px 0 0;
+    color: #d4d4d4;
+    font-size: 16px;
+    position: relative;
+    display: inline-block;
+}
+
+#message-thread .message-metadata .message-meta {
     margin-top: 6px;
+}
+
+#message-thread .message-metadata .activity {
+    /*display: block;*/
+    color: #b7b7b7;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.05em;

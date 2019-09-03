@@ -5,7 +5,7 @@
  */
 function yz_follow_message_button( $user_id ) {
 
-	$user_id = !empty( $user_id ) ? $user_id : bp_displayed_user_id();
+	$user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
 	
 	if ( bp_is_active( 'messages' ) ) {
 

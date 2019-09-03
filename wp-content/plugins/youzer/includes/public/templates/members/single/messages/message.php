@@ -24,18 +24,23 @@
 
 		<?php bp_the_thread_message_sender_avatar( 'type=thumb&width=45&height=45' ); ?>
 		<div class="message-metadata-head">
-		<?php if ( bp_get_the_thread_message_sender_link() ) : ?>
-	
-			<a href="<?php bp_the_thread_message_sender_link(); ?>"><?php bp_the_thread_message_sender_name(); ?><?php yz_the_user_verification_icon( bp_get_the_thread_message_sender_id() );?></a>
+			<?php if ( bp_get_the_thread_message_sender_link() ) : ?>
+		
+				<a href="<?php bp_the_thread_message_sender_link(); ?>"><?php bp_the_thread_message_sender_name(); ?><?php yz_the_user_verification_icon( bp_get_the_thread_message_sender_id() );?></a>
 
-		<?php else : ?>
+			<?php else : ?>
 
-			<strong><?php bp_the_thread_message_sender_name(); ?><?php yz_the_user_verification_icon( bp_get_the_thread_message_sender_id() );?></strong>
+				<strong><?php bp_the_thread_message_sender_name(); ?><?php yz_the_user_verification_icon( bp_get_the_thread_message_sender_id() );?></strong>
 
-		<?php endif; ?>
+			<?php endif; ?>
 
-		<span class="activity"><?php bp_the_thread_message_time_since(); ?></span>
+			<div class="message-meta">
+				<span class="activity"><?php bp_the_thread_message_time_since(); ?></span>
+				<?php do_action( 'yz_after_thread_message_time_meta' ); ?>
+			</div>
+
 		</div>
+
 		<?php if ( bp_is_active( 'messages', 'star' ) ) : ?>
 			<div class="message-star-actions">
 				<?php bp_the_message_star_action_link(); ?>

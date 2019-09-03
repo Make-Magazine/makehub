@@ -36,9 +36,9 @@ function yz_comments_settings() {
 
     $Yz_Settings->get_field(
         array(
-            'title' => __( 'username', 'youzer' ),
+            'title' => __( 'Title', 'youzer' ),
             'id'    => 'yz_display_comment_username',
-            'desc'  => __( 'show comments username', 'youzer' ),
+            'desc'  => __( 'show comments title', 'youzer' ),
             'type'  => 'checkbox'
         )
     );

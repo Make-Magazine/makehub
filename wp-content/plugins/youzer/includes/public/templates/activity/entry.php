@@ -29,7 +29,7 @@ do_action( 'bp_before_activity_entry' ); ?>
 				</a>
 			</div>
 
-			<div class="activity-head"><?php bp_activity_action( array( 'no_timestamp' => true ) ); echo yz_get_activity_time_stamp_meta(); ?></div>
+			<div class="activity-head"><?php bp_activity_action( array( 'no_timestamp' => true ) );?><div class="yz-timestamp-area"><?php echo yz_get_activity_time_stamp_meta(); ?></div></div>
 
 		</div>
 		
@@ -103,7 +103,6 @@ do_action( 'bp_before_activity_entry' ); ?>
 			<?php if ( is_user_logged_in() && bp_activity_can_comment() ) : ?>
 
 				<form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php bp_activity_id(); ?>" class="ac-form"<?php bp_activity_comment_form_nojs_display(); ?>>
-					<div class="ac-reply-avatar"><?php bp_loggedin_user_avatar( 'width=' . BP_AVATAR_THUMB_WIDTH . '&height=' . BP_AVATAR_THUMB_HEIGHT ); ?></div>
 					<div class="ac-reply-content">
 						<div class="ac-textarea">
 							<label for="ac-input-<?php bp_activity_id(); ?>" class="bp-screen-reader-text"><?php
@@ -112,7 +111,8 @@ do_action( 'bp_before_activity_entry' ); ?>
 							?></label>
 							<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>" placeholder="<?php _e( 'Write a Comment ...', 'youzer' ); ?>"></textarea>
 						</div>
-						<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Post', 'youzer' ); ?>" /> &nbsp; <a href="#" class="ac-reply-cancel"><?php _e( 'Cancel', 'youzer' ); ?></a>
+						<div class="yz-send-comment"><i class="fas fa-paper-plane"></i></button>
+						<!-- <a href="#" class="ac-reply-cancel"><?php _e( 'Cancel', 'youzer' ); ?></a> -->
 						<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>" />
 					</div>
 

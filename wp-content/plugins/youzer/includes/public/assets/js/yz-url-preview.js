@@ -148,7 +148,6 @@
                 return;
             }
 
-
             var get_url = $text.match( URL_REGEX );
 
             if ( ! isUrl( get_url[0] ) ) {

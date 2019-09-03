@@ -107,9 +107,7 @@ class YZ_Project {
     					<?php endif; ?>
     				</div>
 
-    				<div class="yz-project-text">
-    					<p><?php echo $project_description; ?></p>
-    				</div>
+    				<div class="yz-project-text"><?php echo apply_filters( 'the_content', $project_description ); ?></div>
 
     				<?php if ( 'on' == $display_tags ) : ?>
         				<div class="yz-project-tags">
@@ -188,7 +186,7 @@ class YZ_Project {
                 'title' => __( 'project description', 'youzer' ),
                 'id'    => 'wg_project_desc',
                 'desc'  => __( 'add project description', 'youzer' ),
-                'type'  => 'textarea'
+                'type'  => 'wp_editor'
             ), true
         );
 

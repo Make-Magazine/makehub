@@ -6,13 +6,16 @@ add_action( 'bp_setup_globals', 'yz_register_notifications' );
 function yz_register_notifications() {
 
     // Register component manually into buddypress() singleton
-    buddypress()->yz_like_notification = new stdClass;
+    buddypress()->youzer = new stdClass;
+    // buddypress()->yz_tag_notification = new stdClass;
 
 	// Add notification callback function
-    buddypress()->yz_like_notification->notification_callback = 'yz_format_new_like_notifications';
+    buddypress()->youzer->notification_callback = 'yz_format_notifications';
+    // buddypress()->yz_tag_notification->notification_callback = 'yz_format_new_tag_notifications';
 
     // Now register components into active components array
-    buddypress()->active_components['yz_like_notification'] = 1;
+    buddypress()->active_components['youzer'] = 1;
+    // buddypress()->active_components['yz_tag_notification'] = 1;
 
 }
 
@@ -21,18 +24,25 @@ function yz_register_notifications() {
  */
 function yz_add_user_like_notification( $activity_id, $user_id = 0 ) {
 
-	if ( bp_loggedin_user_id() == $user_id ) {
+    // Get Activity.
+    $activity = new BP_Activity_Activity( $activity_id );
+
+    // yz_write_log( 'jodjodjk' );
+	if ( $activity->user_id == $user_id ) {
 		return;
 	}
+
 	// Get Acitivy
-    $activity = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+    // $activity = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
+
+
 
     bp_notifications_add_notification(
     	array(
-	        'user_id'           => $activity["activities"][0]->user_id,
+	        'user_id'           => $activity->user_id,
 	        'item_id'           => $activity_id,
 	        'secondary_item_id' => $user_id,
-	        'component_name'    => 'yz_like_notification',
+	        'component_name'    => 'youzer',
 	        'component_action'  => 'yz_new_like',
 	        'date_notified'     => bp_core_current_time(),
 	        'is_new'            => 1,
@@ -43,6 +53,10 @@ function yz_add_user_like_notification( $activity_id, $user_id = 0 ) {
 
 add_action( 'bp_activity_add_user_favorite', 'yz_add_user_like_notification', 10, 2 );
 
+
+/**
+ * Set Youzer Notification.
+ */
 function yz_format_new_like_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
 
     // New custom notifications
@@ -54,27 +68,25 @@ function yz_format_new_like_notifications( $action, $item_id, $secondary_item_id
             $custom_title = sprintf( __( '%s liked your post', 'youzer' ), bp_core_get_user_displayname( $secondary_item_id ) );
             $activity_link      = bp_activity_get_permalink( $item_id ) ;
 
-            $custom_link = wp_nonce_url(
-add_query_arg(array('action' => 'yz_new_like_mark_read', 'activity_id' => $item_id ), $activity_link ), 'yz_new_like_mark_read_' . $item_id );
-            // $custom_link = bp_core_get_user_domain( $secondary_item_id  ) . '?bpf_read';
+            $custom_link = wp_nonce_url( add_query_arg( array( 'action' => 'yz_new_like_mark_read', 'activity_id' => $item_id ), $activity_link ), 'yz_new_like_mark_read_' . $item_id );
 
         } else {
+
             $custom_text = sprintf( __( '%d more users liked your post', 'youzer' ), $total_items );
             $custom_title = sprintf( __( '%d more users liked your post', 'youzer' ), $total_items );
 
             if ( bp_is_active( 'notifications' ) ) {
                 $custom_link = bp_get_notifications_permalink();
-            } else {
-                $link = bp_loggedin_user_domain() . $bp->follow->followers->slug . '/?new';
             }
+
         }
  
         // WordPress Toolbar
         if ( 'string' === $format ) {
-            $return = apply_filters( 'custom_filter', '<a href="' . esc_url( $custom_link ) . '" title="' . esc_attr( $custom_title ) . '">' . esc_html( $custom_text ) . '</a>', $custom_text, $custom_link );
+            $return = apply_filters( 'yz_format_new_like_notifications', '<a href="' . esc_url( $custom_link ) . '" title="' . esc_attr( $custom_title ) . '">' . esc_html( $custom_text ) . '</a>', $custom_text, $custom_link );
             // Deprecated BuddyBar
         } else {
-            $return = apply_filters( 'custom_filter', array(
+            $return = apply_filters( 'yz_format_new_like_notifications', array(
                 'text' => $custom_text,
                 'link' => $custom_link
             ), $custom_link, (int) $total_items, $custom_text, $custom_title );
@@ -89,8 +101,54 @@ add_query_arg(array('action' => 'yz_new_like_mark_read', 'activity_id' => $item_
 }
 
 /**
- * Mark Likes notifications as read when reading a topic
- *
+ * Set Youzer Notification.
+ */
+function yz_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
+
+    // New custom notifications
+    if ( 'yz_new_like' === $action ) {
+
+        if ( 1 == $total_items ) {
+
+            $custom_text = sprintf( __( '%s liked your post', 'youzer' ), bp_core_get_user_displayname( $secondary_item_id ) );
+            $custom_title = sprintf( __( '%s liked your post', 'youzer' ), bp_core_get_user_displayname( $secondary_item_id ) );
+            $activity_link      = bp_activity_get_permalink( $item_id ) ;
+
+            $custom_link = wp_nonce_url( add_query_arg( array( 'action' => 'yz_new_like_mark_read', 'activity_id' => $item_id ), $activity_link ), 'yz_new_like_mark_read_' . $item_id );
+
+        } else {
+
+            $custom_text = sprintf( __( '%d more users liked your post', 'youzer' ), $total_items );
+            $custom_title = sprintf( __( '%d more users liked your post', 'youzer' ), $total_items );
+
+            if ( bp_is_active( 'notifications' ) ) {
+                $custom_link = bp_get_notifications_permalink();
+            } else {
+                $link = bp_loggedin_user_domain() . $bp->follow->followers->slug . '/?new';
+            }
+        }
+ 
+        // WordPress Toolbar
+        if ( 'string' === $format ) {
+            $return = apply_filters( 'yz_format_new_like_notifications', '<a href="' . esc_url( $custom_link ) . '" title="' . esc_attr( $custom_title ) . '">' . esc_html( $custom_text ) . '</a>', $custom_text, $custom_link );
+            // Deprecated BuddyBar
+        } else {
+            $return = apply_filters( 'yz_format_new_like_notifications', array(
+                'text' => $custom_text,
+                'link' => $custom_link
+            ), $custom_link, (int) $total_items, $custom_text, $custom_title );
+        }
+        
+        return $return;
+        
+    }
+
+    return apply_filters( 'yz_format_notifications', $action, $item_id, $secondary_item_id, $total_items, $format );
+    
+}
+
+/**
+ * Mark Likes notifications as read when reading a topic.
  */
 function yz_buddypress_mark_like_notifications_as_read( $action = '' ) {
 

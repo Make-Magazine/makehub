@@ -533,7 +533,7 @@ class Youzer_User {
 		// Change Password Link
 		$links['change-password'] = array(
 			'icon'	=> 'fas fa-lock',
-			'href'	=> yz_get_settings_url( 'change-password', $user_id ),
+			'href'	=> yz_get_settings_url( 'general', $user_id ),
 			'title'	=> __( 'change password', 'youzer' )
 		);
 

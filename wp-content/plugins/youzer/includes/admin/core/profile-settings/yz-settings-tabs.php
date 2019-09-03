@@ -72,7 +72,7 @@ function yz_tabs_settings() {
         array(
             'title' => __( 'numbers background', 'youzer' ),
             'id'    => 'yz_pagination_bg_color',
-            'desc'  => __( 'pages numbers backgorund', 'youzer' ),
+            'desc'  => __( 'pages numbers background', 'youzer' ),
             'type'  => 'color'
         )
     );

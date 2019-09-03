@@ -878,7 +878,7 @@ add_filter( 'nav_menu_link_attributes', 'yz_add_login_page_attribute', 10, 3 );
  */
 function yz_add_login_popup_page_class( $items ) {
 
-    if ( ! logy_is_login_popup_active() ) {
+    if ( ! logy_is_login_popup_active() || is_user_logged_in() ) {
         return $items;
     }
 

@@ -53,7 +53,7 @@
 			}
 
 		}
-		
+
 		/**
 		 * # Modal.
 		 */
@@ -76,6 +76,36 @@
 				var $new_modal = $( '#yz-wall-modal' ).append( response );		
 			    // Display Modal
 				$new_modal.find( '.yz-wall-modal' ).addClass( 'yz-wall-modal-show' );
+				// Hide Loader
+				$( '.yz-wall-modal-overlay' ).find( '.yz-modal-loader' ).hide();
+			});
+
+		});
+
+		/**
+		 * Show Activity Tagged Users.
+		 */
+		$( document ).on( 'click', '.yz-show-tagged-users' , function( e ) {
+			
+			e.preventDefault();
+			
+			$( '.yz-wall-modal-overlay' ).fadeIn( 500, function() {
+				$( this ).find( '.yz-modal-loader' ).fadeIn( 400 );
+			});
+
+			// Init Vars.
+			var li = $( this ).closest( 'li.activity-item' );
+			var data = {
+				'action': 'yz_activity_tagged_users_modal',
+				'post_id': li.attr( 'id' ).substr( 9, li.attr( 'id' ).length )
+			};
+
+			// Show Modal.
+			jQuery.post( Youzer.ajax_url, data, function( response ) {
+				var $new_modal = $( '#yz-wall-modal' ).append( response );		
+			    // Display Modal
+				$new_modal.find( '.yz-wall-modal' ).addClass( 'yz-wall-modal-show' );
+	    		// $new_modal.css( { 'position': 'absolute', 'top': $( document ).scrollTop() + 100 } );
 				// Hide Loader
 				$( '.yz-wall-modal-overlay' ).find( '.yz-modal-loader' ).hide();
 			});
@@ -251,9 +281,16 @@
 	    });
 
 		/**
+		 * Nice Select - Add Attribute value to current.
+		 */
+		$( document ).on( 'click', '.nice-select .option', function( e ) {
+			$( this ).parent().prev( '.current' ).attr( 'data-value', $( this ).attr( 'data-value' ) );
+		});
+		
+		/**
 		 * Shortcodes Pagination.
 		 */
-		$( '#activity-stream' ).on( 'click', 'li.load-more', function(e) {
+		$( '#activity-stream' ).on( 'click', 'li.load-more', function( e ) {
 
 			if ( $( this ).closest('.yz-activity-shortcode')[0] ) {
 
@@ -289,6 +326,50 @@
 			    return false;
 
 			}
+
+		});
+
+		// Add Modal DIv.
+		$( 'body' ).append( '<div id="yz-wall-modal"></div><div class="yz-wall-modal-overlay"><div class="yz-modal-loader"><i class="fas fa-spinner fa-spin"></i></div></div>' );
+		
+
+		/**
+		 * Display Activity tools.
+		 */
+		$( document ).on( 'click',  '.activity-item .yz-show-item-tools', function ( e ) {
+
+			var button = $( this );
+
+			if ( button.hasClass( 'loading' ) ) {
+				return;
+			}
+
+			button.addClass( 'loading' );
+
+			var li = button.closest( 'li.activity-item' ), default_icon = button.find( 'i' ).attr( 'class' );
+
+
+			if ( button.hasClass( 'loaded' ) ) {
+				li.find( '.yz-activity-tools' ).fadeToggle();
+				return;
+			}
+
+			button.find( 'i' ).attr( 'class', 'fas fa-spin fa-spinner' );
+
+			// Get Activity Tools.
+	        $.ajax({
+	            type: 'POST',
+	            url: ajaxurl,
+	            dataType: 'json',
+	            data: { 'activity_id' : li.attr( 'id' ).substr( 9, li.attr( 'id' ).length ), 'action': 'yz_get_activity_tools' },
+	            success: function( response ) {
+	            	button.find( 'i' ).attr( 'class', default_icon );
+	            	button.addClass( 'loaded' );
+	            	if ( response.success ) {
+	            		li.prepend( $( response.data ).fadeIn() );
+	            	}
+	            }
+	        });
 
 		});
 

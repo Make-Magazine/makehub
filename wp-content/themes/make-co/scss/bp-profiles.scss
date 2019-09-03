@@ -92,7 +92,7 @@
 }
 
 #friend-list #message.error { // a bandaid for now, since friend requests are being accepted with a false error
-	display: none;
+	display: none !important;
 }
 
 // this was for without youzer

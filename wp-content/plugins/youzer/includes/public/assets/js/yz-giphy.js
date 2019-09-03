@@ -226,7 +226,8 @@
 			var args = $.extend( {
 			    api_key: "aFFKTuSMjd6j0wwjpFCPXZipQbcnw3vB",
 			    limit: Yz_Wall.giphy_limit,
-			    fmt: "json"
+			    fmt: "json",
+			    rating: "g"
         	}, options ), i, items = '', display_load_more;
 
 			$.ajax({

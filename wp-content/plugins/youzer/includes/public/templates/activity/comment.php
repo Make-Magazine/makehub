@@ -26,10 +26,19 @@ do_action( 'bp_before_activity_comment' ); ?>
 		<div class="comment-inner">
 			
 			<div class="acomment-meta">
-				<?php
-				/* translators: 1: user profile link, 2: user name, 3: activity permalink, 4: ISO8601 timestamp, 5: activity relative timestamp */
-				printf( __( '<a href="%1$s">%2$s</a><a href="%3$s" class="activity-time-since"><i class="far fa-clock"></i><span class="time-since" data-livestamp="%4$s">%5$s</span></a>', 'youzer' ), bp_get_activity_comment_user_link(), bp_get_activity_comment_name(), bp_get_activity_comment_permalink(), bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded() ), bp_get_activity_comment_date_recorded() );
-				?>
+				<a href="<?php echo bp_get_activity_comment_user_link() ?>"><?php echo bp_get_activity_comment_name(); ?></a>
+				<div class="acomment-meta-time">
+				
+					<?php do_action( 'yz_activity_comment_before_time_meta' ) ?>
+				
+					<a href="<?php echo bp_get_activity_comment_permalink(); ?>" class="activity-time-since"><i class="far fa-clock"></i><span class="time-since" data-livestamp="<?php echo bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded() ); ?>"><?php echo bp_get_activity_comment_date_recorded(); ?></span></a>
+
+					<?php do_action( 'yz_activity_comment_after_time_meta' ) ?>
+				
+				</div>
+			
+				<?php do_action( 'yz_activity_comment_after_meta' ) ?>
+			
 			</div>
 
 			<div class="acomment-content"><?php bp_activity_comment_content(); ?></div>

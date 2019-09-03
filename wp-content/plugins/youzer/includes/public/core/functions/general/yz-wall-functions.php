@@ -387,3 +387,63 @@ function yz_add_new_wall_post_actions() {
 }
 
 add_action( 'bp_register_activity_actions', 'yz_add_new_wall_post_actions' );
+
+/**
+ * Activity Mood
+ */
+function yz_enable_activity_mood() {
+
+	$active = false;
+
+	if ( 'on' == yz_options( 'yz_activity_mood' ) ) {
+		$active = true;
+	}
+
+	return apply_filters( 'yz_enable_activity_mood', $active );
+
+}
+
+/**
+ * Activity Privacy
+ */
+function yz_enable_activity_privacy() {
+
+	$active = false;
+
+	if ( 'on' == yz_options( 'yz_activity_privacy' ) ) {
+		$active = true;
+	}
+
+	return apply_filters( 'yz_enable_activity_privacy', $active );
+
+}
+
+/**
+ * Activity Mood
+ */
+function yz_enable_activity_tag_friends() {
+
+	$active = false;
+
+	if ( 'on' == yz_options( 'yz_activity_tag_friends' ) ) {
+		$active = true;
+	}
+
+	return apply_filters( 'yz_enable_activity_tag_friends', $active );
+
+}
+
+/**
+ * Activity Hashtags
+ */
+function yz_enable_activity_hastags() {
+
+	$active = false;
+
+	if ( 'on' == yz_options( 'yz_activity_hashtags' ) ) {
+		$active = true;
+	}
+
+	return apply_filters( 'yz_enable_activity_hastags', $active );
+
+}

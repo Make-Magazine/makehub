@@ -577,7 +577,7 @@ class Youzer_Account {
 					
 				</div>
 				<div class="yz-account-head-content">
-					<h2>@ <?php echo bp_get_displayed_user_fullname(); ?></h2>
+					<h2><?php echo bp_get_displayed_user_fullname(); ?></h2>
 					<span><?php printf( esc_html__( 'member since %1$s', 'youzer' ), $member_year ); ?></span>
 				</div>
 			</div>

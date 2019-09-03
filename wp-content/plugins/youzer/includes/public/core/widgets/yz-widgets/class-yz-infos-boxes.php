@@ -171,8 +171,10 @@ class YZ_Info_Box {
             $field = new BP_XProfile_Field( $field_id );
             
             // Get Field Value.
-            $value = bp_get_profile_field_data( array( 'user_id' => bp_displayed_user_id(), 'field' => $field_id ) );
+            $value = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $field_id, bp_displayed_user_id() ) ); 
 
+            // bp_get_profile_field_data( array( 'user_id' => (), 'field' => $field_id ) );
+            
             // Get Field Title.
             $title = $field->name;
 
@@ -190,11 +192,6 @@ class YZ_Info_Box {
         if ( empty( $value ) ) {
             return false;
         }
-        
-        // Check User Website Url.
-        if ( 'user_url' == $args['box_id'] ) {
-            $value = '<a href="' . esc_url( $value ). '">' . yz_esc_url( $value ) . '</a>';
-        }
 
 		?>
 
@@ -206,7 +203,7 @@ class YZ_Info_Box {
 				<h2 class="yz-box-title"><?php echo $title; ?></h2>
 			</div>
 			<div class="yz-box-content">
-				<p><?php echo $value; ?></p>
+				<p><?php echo apply_filters( 'bp_get_profile_field_data', $value ); ?></p>
 			</div>
 		</div>
 

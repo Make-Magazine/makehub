@@ -1390,6 +1390,10 @@
     text-transform: uppercase;
 }
 
+.yz-box-content p a {
+    color: #fff;
+}
+
 .yz-box-address {
     background: #FF4E50;
     background: url(../images/dotted-bg.png),linear-gradient(to left, #F9D423 , #FF4E50);
@@ -1933,9 +1937,14 @@
     width: calc( 100% - 70px );
 }
 
+.yz-tab-comment .yz-comment-meta ul {
+    margin-top: 4px;
+}
+
 .yz-tab-comment .yz-comment-meta ul li {
     color: #9facb9;
     font-size: 10px;
+    line-height: 10px;
     margin-right: 25px;
     letter-spacing: 1px;
     display: inline-block;

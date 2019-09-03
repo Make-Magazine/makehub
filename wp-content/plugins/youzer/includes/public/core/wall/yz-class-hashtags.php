@@ -323,22 +323,6 @@ class Youzer_Wall_Hashtags {
 			return;
 		}
 
-		// Install Hashtags Table.
-		if ( ! get_option( 'installed_youzer_2.2.9' ) ) {
-
-		    // Include Setup File.    
-		    require_once dirname( YOUZER_FILE ) .  '/includes/public/core/class-yz-setup.php';
-		    
-		    // Init Setup Class.
-		    $Youzer_Setup = new Youzer_Setup();
-
-		    // Build Database.
-		    $Youzer_Setup->build_database_tables();
-
-            update_option( 'installed_youzer_2.2.9', 1 );
-
-		}
-
 		global $wpdb;
 
 		// Get Current Time.

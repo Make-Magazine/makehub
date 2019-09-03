@@ -143,6 +143,11 @@ function yz_profile_tabs_default_value() {
 		'visibility' => 'on',
 		'icon' => 'fas fa-trophy',
 	);
+	// Profile Settings Args.
+	$tabs['events'] = array(
+		'visibility' => 'on',
+		'icon' => 'fas fa-calendar-week',
+	);
 
 	return $tabs;
 }
@@ -347,6 +352,7 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 
 	switch ( $option_id ) {
 
+		case 'yz_ctabs_events_profile_icon':
 		case 'yz_ctabs_wall_just-me_icon':
 			$icon = 'fas fa-user-circle';
 			break;
@@ -414,23 +420,45 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 			$icon = 'fas fa-paper-plane';
 			break;
 
+		case 'yz_ctabs_user-media_all_icon':
 		case 'yz_ctabs_media_all_icon':
 			$icon = 'fas fa-photo-video';
 			break;
 	
+		case 'yz_ctabs_user-media_videos_icon':
 		case 'yz_ctabs_media_videos_icon':
 			$icon = 'fas fa-film';
 			break;
 	
+		case 'yz_ctabs_user-media_audios_icon':
 		case 'yz_ctabs_media_audios_icon':
 			$icon = 'fas fa-volume-up';
 			break;
 	
+		case 'yz_ctabs_user-media_photos_icon':
 		case 'yz_ctabs_media_photos_icon':
 			$icon = 'fas fa-image';
 			break;
+			
+		case 'yz_ctabs_user-media_files_icon':
 		case 'yz_ctabs_media_files_icon':
 			$icon = 'fas fa-file-import';
+			break;
+	
+		case 'yz_ctabs_events_attending_icon':
+			$icon = 'fas fa-calendar-check';
+			break;		
+			
+		case 'yz_ctabs_events_my-locations_icon':
+			$icon = 'fas fa-map-marked-alt';
+			break;
+	
+		case 'yz_ctabs_events_my-events_icon':
+			$icon = 'fas fa-calendar-alt';
+			break;
+	
+		case 'yz_ctabs_events_my-bookings_icon':
+			$icon = 'fas fa-ticket-alt';
 			break;
 	
 	}
@@ -1206,7 +1234,7 @@ function yz_user_account_avatar() {
         <div class="yz-primary-nav-settings">
             <div class="yz-primary-nav-img" style="background-image: url(<?php echo bp_core_fetch_avatar( array(
             'item_id' => $user_id, 'type' => 'thumbnail', 'html' => false ) ); ?>)"></div>
-            <span><?php echo apply_filters( 'yz_account_avatar_shortcode_username', bp_core_get_username( $user_id ) ); ?></span>
+            <span><?php echo apply_filters( 'yz_account_avatar_shortcode_username', bp_core_get_username( $user_id ), $user_id ); ?></span>
             <?php if ( 'on' == $display_icon ) : ?><i class="fas fa-angle-down yz-settings-icon"></i><?php endif; ?>
         </div>
         
@@ -1222,11 +1250,16 @@ add_shortcode( 'youzer_account_avatar', 'yz_user_account_avatar' );
 /**
  * Activate Shortcode in Wordpress Menu
  */
-function yz_activate_wp_menus_shortcodes( $title, $item, $args, $depth ) {
-    return do_shortcode( $title );
+function yz_activate_wp_menus_shortcodes( $items ) {
+    return do_shortcode( $items );
 }
+add_filter( 'wp_nav_menu_items', 'yz_activate_wp_menus_shortcodes', 10 );
 
-add_filter( 'nav_menu_item_title', 'yz_activate_wp_menus_shortcodes', 10, 4 );
+// function yz_activate_wp_menus_shortcodes( $title, $item, $args, $depth ) {
+//     return do_shortcode( $title );
+// }
+
+// add_filter( 'nav_menu_item_title', 'yz_activate_wp_menus_shortcodes', 10, 4 );
 
 /**
  * Replace Wordpress Menu Variable

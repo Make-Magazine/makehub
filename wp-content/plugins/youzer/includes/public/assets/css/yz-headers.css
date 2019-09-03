@@ -401,6 +401,7 @@ body:not(.rtl) .yzb-author .yz-use-borders li:last-child {
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 0;
     width: 135px;
     height: 135px;
     position: absolute;

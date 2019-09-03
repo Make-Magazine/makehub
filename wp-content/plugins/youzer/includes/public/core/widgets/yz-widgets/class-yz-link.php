@@ -93,7 +93,7 @@ class YZ_Link {
 
         $Yz_Settings->get_field(
             array(
-                'title' => __( 'link backgorund image', 'youzer' ),
+                'title' => __( 'link background image', 'youzer' ),
                 'id'    => 'wg_link_img',
                 'desc'  => __( 'upload link cover', 'youzer' ),
                 'type'  => 'image'

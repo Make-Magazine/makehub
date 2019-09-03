@@ -7,7 +7,7 @@
 	    $.youzer_sliders_init = function() {
 
 			// Set Up Variables.
-			var $progressBar, $bar, $elem, isPause, tick, percentTime, time = 4;
+			var $progressBar, $bar, $elem, isPause, tick, percentTime, time = Youzer.slideshow_speed;
 			
 			var yz_auto_slideshow = ( Youzer.slideshow_auto == '1' ) ? true : false;
 
@@ -74,17 +74,9 @@
 			/**
 			 * SlideShow
 			 */
-
 			var yz_slides_height = ( Youzer.slides_height_type == 'auto' ) ? true : false; 
-
-	    	if ( $( '.yz-slider' )[0] && $( '.yz-slider li' ).length > 1 ) {
-
-			    // Init the carousel
-			    $( '.yz-slider' ).owlCarousel( {
-					slideSpeed 		: 500,
-					autoplay 		: false,
-					paginationSpeed : 500,
-					loop			: false,
+			var slideshow_attr = {
+					paginationSpeed : 1000,
 					singleItem 		: true,
 					navigation 		: true,
 					afterMove 		: moved,
@@ -92,40 +84,22 @@
 					afterInit 		: progressBar,
 					startDragging 	: pauseOnDragging,
 			    	autoHeight		: yz_slides_height
-			    } );
+			   };
+	    	if ( $( '.yz-slider' )[0] && $( '.yz-slider li' ).length > 1 ) {
+
+			    // Init the carousel
+			    $( '.yz-slider' ).yz_owlCarousel( slideshow_attr );
 			}
 
 		    $.yz_wall_slider = function() {
 
 			    // Init the carousel
-			    $( '.yzw-slider' ).owlCarousel( {
-					autoplay 		: false,
-					slideSpeed 		: 500,
-					paginationSpeed : 500,
-					singleItem 		: true,
-					navigation 		: true,
-					afterMove 		: moved,
-					transitionStyle : 'fade',
-					afterInit 		: progressBar,
-					startDragging 	: pauseOnDragging,
-			    	autoHeight		: yz_slides_height
-			    } );
+			    $( '.yzw-slider' ).yz_owlCarousel( slideshow_attr );
 		    }
 
 		    $( '.yzw-slider' ).each( function( i, obj ) {
 		    	if ( ! $( obj ).hasClass( 'owl-carousel' ) ) {
-		    		$( obj ).owlCarousel( {
-						autoplay 		: false,
-						slideSpeed 		: 500,
-						paginationSpeed : 500,
-						singleItem 		: true,
-						navigation 		: true,
-						afterMove 		: moved,
-						transitionStyle : 'fade',
-						afterInit 		: progressBar,
-						startDragging 	: pauseOnDragging,
-				    	autoHeight		: yz_slides_height
-				    } );
+		    		$( obj ).yz_owlCarousel( slideshow_attr );
 		    	}
 			});
 
