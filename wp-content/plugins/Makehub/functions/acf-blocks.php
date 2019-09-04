@@ -47,7 +47,7 @@ function landing_hero_block_render_callback($block){
 		$return = '';
 		$return .= '<div class="container-fluid landing-hero'.($scrolling === "yes" ? ' scrolling' : '').'" style="background-image: url('. get_field('background_image')['image'].');">
 							<div class="row">';
-		$first .=        '<div class="col-md-8 col-sm-7 col-xs-12 six-column">';
+		$first =         '<div class="col-md-8 col-sm-7 col-xs-12 six-column">';
 		if (have_rows('six_column_spread')) {
 			$first .= '<div class="container-fluid">
 								<div class="row six-column-row">';
@@ -68,7 +68,7 @@ function landing_hero_block_render_callback($block){
 							</div>";
 		}
 		$first .= '      </div>';
-		$second .= '     <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg">'.get_field('main_content').'</div>';
+		$second = '      <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg">'.get_field('main_content').'</div>';
 
 		// here we get tricky and allow users to switch the position of the six column spread and the 
 		if(get_field('switch_position')[0] == 'switch') {
@@ -89,9 +89,9 @@ function two_column_media_block_render_callback($block){
 		$return = '';
 		$return .= '<div class="container-fluid two-column-media'.($color === "fff" ? ' white-bg' : '').'" style="background-color:#'.$color.';">
 							<div class="row">';
-		$first .=        '<div class="col-sm-6 col-xs-12 media-column" style="background-image:url('.get_field('media_side')['image']['url'].');">';
+		$first =         '<div class="col-sm-6 col-xs-12 media-column" style="background-image:url('.get_field('media_side')['image']['url'].');">';
 		$first .=        '</div>';
-		$second .= '     <div class="col-sm-6 col-xs-12 wysiwyg"><h2>'.get_field('text_side')['title'].'</h2>'.get_field('text_side')['text'].'</div>';
+		$second = '       <div class="col-sm-6 col-xs-12 wysiwyg"><h2>'.get_field('text_side')['title'].'</h2>'.get_field('text_side')['text'].'</div>';
 		// here we get tricky and allow users to switch the position of the six column spread and the 
 		if(get_field('switch_position')[0] == 'switch') {
 			$return .= $second . $first;
