@@ -71,7 +71,7 @@ function landing_hero_block_render_callback($block){
 		$second = '      <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg">'.get_field('main_content').'</div>';
 
 		// here we get tricky and allow users to switch the position of the six column spread and the 
-		if(get_field('switch_position')[0] == 'switch') {
+		if(get_field('switch_position')[0]) {
 			$return .= $second . $first;
 		} else {
 			$return .= $first . $second;
@@ -93,7 +93,7 @@ function two_column_media_block_render_callback($block){
 		$first .=        '</div>';
 		$second = '       <div class="col-sm-6 col-xs-12 wysiwyg"><h2>'.get_field('text_side')['title'].'</h2>'.get_field('text_side')['text'].'</div>';
 		// here we get tricky and allow users to switch the position of the six column spread and the 
-		if(get_field('switch_position')[0] == 'switch') {
+		if(get_field('switch_position')[0]) {
 			$return .= $second . $first;
 		} else {
 			$return .= $first . $second;
