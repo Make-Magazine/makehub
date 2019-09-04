@@ -1,0 +1,37 @@
+.two-column-media {
+	min-height: 300px;
+	color: #fff;
+	padding-left: 75px !important;
+	&.white-bg {
+		color: #333;
+	}
+	.row {
+		min-height: 300px;
+		padding: 0px 15px;
+		.media-column {
+			background-repeat: no-repeat;
+			background-position: center;
+			-webkit-transition: all .5s;
+		   -moz-transition: all .5s;
+		   -o-transition: all .5s;
+		   transition: all .5s;
+			background-size: 50%;
+		}
+		&:hover {
+			.media-column {
+				background-size: 100%;
+			}
+		}
+		.wysiwyg {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			h2 {
+				font-family: "Roboto Light";
+			}
+			p {
+				font-size: 16px;
+			}
+		}
+	}
+}
