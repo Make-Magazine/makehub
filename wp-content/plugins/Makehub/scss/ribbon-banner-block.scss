@@ -1,10 +1,12 @@
 .ribbon-banner.container-fluid {
+	color: #fff;
 	a, a:hover, a:focus, a:visited {
 		text-decoration: none !important;
 		color: #fff;
 	}
 	p { padding-bottom: 20px; }
 	&.white-bg {
+		color: #333;
 		a, a:hover, a:focus, a:visited {
 			color: #333;
 		}
