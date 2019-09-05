@@ -36,6 +36,15 @@ function custom_acf_blocks() {
 			'icon'              => 'analytics',
 			'keywords'          => array( 'media', 'two column' ),
 		));
+		acf_register_block(array(
+			'name'              => 'ribbon_banner',
+			'title'             => ('Ribbon Banner'),
+			'description'       => ('Header, text and link on colored background'),
+			'render_callback'   => 'ribbon_banner_block_render_callback',
+			'category'          => 'acf-blocks',
+			'icon'              => 'minus',
+			'keywords'          => array( 'banner', 'one column' ),
+		));
 	}
 }
 add_action( 'acf/init', 'custom_acf_blocks' );
@@ -98,6 +107,26 @@ function two_column_media_block_render_callback($block){
 		} else {
 			$return .= $first . $second;
 		}
+		$return .=     '</div>
+						</div>';
+		echo $return;
+	}
+}
+
+// One column ribbon with background
+function ribbon_banner_block_render_callback($block){
+   $color = get_field('background_color');
+	if (get_field('activeinactive') == 'show') {
+		$return = '';
+		$return .= '<div class="container-fluid ribbon-banner'.($color === "fff" ? ' white-bg' : '').'" style="background-color:#'.$color.';"><div class="container">';
+		if(get_field('link')) {
+			$return .= '<a href="'.get_field('link').'">';
+		}
+		$return .= '<h2>'.get_field('header').'</h2>';
+		$return .= '<p>'.get_field('text').'</p>';
+		if(get_field('link')) {
+			$return .= '</a>';
+		}				
 		$return .=     '</div>
 						</div>';
 		echo $return;
