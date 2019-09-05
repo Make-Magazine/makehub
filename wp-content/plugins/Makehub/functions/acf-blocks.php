@@ -57,7 +57,7 @@ function grid_block_split_block_render_callback($block){
 		$return .= '<div class="container-fluid grid-column-split'.($scrolling === "yes" ? ' scrolling' : '').'" style="background-image: url('. get_field('background_image')['image'].');">
 							<div class="row">';
 		if(get_field('header')){
-			$return .=     '<div class="col-xs-12"><h1>'.get_field('header').'</h1>';
+			$return .=     '<div class="col-xs-12"><h1>'.get_field('header').'</h1></div>';
 		}
 		$first =         '<div class="col-md-8 col-sm-7 col-xs-12 grid-column">';
 		if (have_rows('grid_column_spread')) {
@@ -83,7 +83,7 @@ function grid_block_split_block_render_callback($block){
 				$first .= '		</div>';
 				            if(get_sub_field('link')){ $first .= '</a>'; }
 				$first .= '</div>';
-			}
+			} // end while loop
 			$first .= "   </div>
 							</div>";
 		}
