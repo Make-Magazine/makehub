@@ -1,28 +1,37 @@
-.landing-hero {
+.grid-column-split {
+	h1 {
+		color:#fff;
+		font-family: "Roboto Light";
+		text-align: center;
+		margin-bottom: 0px;
+	}
 	&.scrolling {
-	   animation: left-to-right 15s linear infinite;
+	   animation: left-to-right 20s linear infinite;
 		background-position: 0px 0px;
 		background-repeat: repeat;
 	}
-	.wysiwyg, .six-column {
+	.wysiwyg, .grid-column{
 		padding: 0px;
 	}
-	.six-column { padding-right: 18px; }
-	.six-column-row {
+	.grid-column { padding-right: 18px; }
+	.grid-column-row {
 		margin: 18px 0px 18px 18px;
 		@media screen and (max-width: 768px) {
 			margin-right: 18px;
 		}
-		.six-column-content {
+		a {
+			text-decoration: none;
+			color: #fff;
+		}
+		.grid-column-content {
 			padding: 0px;
-			a {
+			.grid-column-inner {
 				display: flex;
 				flex-direction: column;
 				margin: 15px;
 				padding: 15px;
 				min-height: 200px;
 				color: #fff;
-				text-decoration: none;
 				text-align: center;
 				border-radius: 2px;
 				box-shadow: 5px 5px 5px rgba(0,0,0,.13);
@@ -34,6 +43,12 @@
 				 -moz-transition: all .5s;
 				 -o-transition: all .5s;
 				 transition: all .5s;
+				&.rows-4 { 
+					flex-direction: row; 
+					justify-content: center;
+					align-items: center;
+					min-height: 180px;
+				}
 				&:hover {
 					background-size: 250px;
 				}
@@ -51,6 +66,9 @@
 					font-size: 36px;
 					font-weight: bold;
 					flex-grow: 1;
+					@media screen and (min-width: 768px) and (max-width: 980px) {
+						font-size: 24px;
+					}
 				}
 				.btn {
 					margin-bottom: 5px;

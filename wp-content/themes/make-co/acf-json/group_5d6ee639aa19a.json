@@ -1,6 +1,6 @@
 {
     "key": "group_5d6ee639aa19a",
-    "title": "Landing Hero Block",
+    "title": "Grid Block Split",
     "fields": [
         {
             "key": "field_5d6ee65e946c8",
@@ -27,11 +27,30 @@
             "save_other_choice": 0
         },
         {
+            "key": "field_5d717edaf7286",
+            "label": "Header",
+            "name": "header",
+            "type": "text",
+            "instructions": "Optional h1 to appear above group (note: multiple h1s on a page will hurt seo)",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
             "key": "field_5d6ee6a5946c9",
-            "label": "Six Column Spread",
-            "name": "six_column_spread",
+            "label": "Grid Column Spread",
+            "name": "grid_column_spread",
             "type": "repeater",
-            "instructions": "Fill in six blocks of content",
+            "instructions": "Fill in blocks of content",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -52,7 +71,15 @@
                     "type": "text",
                     "instructions": "",
                     "required": 0,
-                    "conditional_logic": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_5d717153aef44",
+                                "operator": "==",
+                                "value": "4"
+                            }
+                        ]
+                    ],
                     "wrapper": {
                         "width": "",
                         "class": "",
@@ -72,6 +99,33 @@
                     "instructions": "Optional text, can display price etc",
                     "required": 0,
                     "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_5d716b6d12b37",
+                    "label": "Button Text",
+                    "name": "button_text",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_5d717153aef44",
+                                "operator": "==",
+                                "value": "4"
+                            }
+                        ]
+                    ],
                     "wrapper": {
                         "width": "",
                         "class": "",
@@ -249,6 +303,30 @@
             "toggle": 0,
             "return_format": "value",
             "save_custom": 0
+        },
+        {
+            "key": "field_5d717153aef44",
+            "label": "How many of the boxes to display?",
+            "name": "how_many_of_the_boxes_to_display",
+            "type": "radio",
+            "instructions": "Either display 4 or 6 boxes",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "4": "6",
+                "6": "4"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": 4,
+            "layout": "vertical",
+            "return_format": "value",
+            "save_other_choice": 0
         }
     ],
     "location": [
@@ -256,7 +334,7 @@
             {
                 "param": "block",
                 "operator": "==",
-                "value": "acf\/landing-hero-block"
+                "value": "acf\/grid-block-split"
             }
         ]
     ],
@@ -268,5 +346,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1567629011
+    "modified": 1567719954
 }

@@ -19,10 +19,10 @@ add_filter( 'block_categories', 'acf_blocks', 10, 2);
 function custom_acf_blocks() {
    if( function_exists('acf_register_block') ) {
 		acf_register_block(array(
-			'name'              => 'landing_hero_block',
-			'title'             => ('Landing Hero'),
-			'description'       => ('6 boxes on one side, one on the other, scrolling background'),
-			'render_callback'   => 'landing_hero_block_render_callback',
+			'name'              => 'grid_block_split',
+			'title'             => ('Grid Block Split'),
+			'description'       => ('4/6 boxes on one side, one on the other, scrolling background'),
+			'render_callback'   => 'grid_block_split_block_render_callback',
 			'category'          => 'acf-blocks',
 			'icon'              => 'feedback',
 			'keywords'          => array( 'hero', 'landing-page' ),
@@ -49,29 +49,40 @@ function custom_acf_blocks() {
 }
 add_action( 'acf/init', 'custom_acf_blocks' );
 
-// whose got six boxes on one side and a wysiwyg editor on the other? this guy
-function landing_hero_block_render_callback($block){
+// whose got 4/6 boxes on one side and a wysiwyg editor on the other? this guy
+function grid_block_split_block_render_callback($block){
    if (get_field('activeinactive') == 'show') {
 		$scrolling = get_field('background_image')['scrolling'][0];
 		$return = '';
-		$return .= '<div class="container-fluid landing-hero'.($scrolling === "yes" ? ' scrolling' : '').'" style="background-image: url('. get_field('background_image')['image'].');">
+		$return .= '<div class="container-fluid grid-column-split'.($scrolling === "yes" ? ' scrolling' : '').'" style="background-image: url('. get_field('background_image')['image'].');">
 							<div class="row">';
-		$first =         '<div class="col-md-8 col-sm-7 col-xs-12 six-column">';
-		if (have_rows('six_column_spread')) {
+		if(get_field('header')){
+			$return .=     '<div class="col-xs-12"><h1>'.get_field('header').'</h1>';
+		}
+		$first =         '<div class="col-md-8 col-sm-7 col-xs-12 grid-column">';
+		if (have_rows('grid_column_spread')) {
 			$first .= '<div class="container-fluid">
-								<div class="row six-column-row">';
-			while (have_rows('six_column_spread')) {
+								<div class="row grid-column-row">';
+			// only repeat for the number of boxes we've set to display
+			$curRow = 1;
+			$gridRows = intval(get_field('how_many_of_the_boxes_to_display'));
+			if($gridRows === 6) { $gridRows = 4; }
+			while (have_rows('grid_column_spread') && ($curRow <= $gridRows)) {
 				the_row();
+				$curRow += 1;
 				$color = get_sub_field('color');
 				if($color === "ffffff") { $color = "fff"; }
 				// background image for the link boxes are optional
-				$first .= '<div class="col-md-4 col-sm-6 col-xs-12 six-column-content">
-									<a href="'.get_sub_field('link').'" '.($color === "fff" ? ' class="white-bg"' : '').' style="background-color:#'.$color.';background-image:url('.get_sub_field('background_image')['url'].');">
-										<h5>'.get_sub_field('title').'</h5>
-										<div class="text">'.get_sub_field('text').'</div>
-										<button class="btn">Sign Up</button>
-									</a>
-								</div>';
+				$first .= '<div class="col-md-'.get_field('how_many_of_the_boxes_to_display').' col-sm-6 col-xs-12 grid-column-content">';
+				           if(get_sub_field('link')){ $first .= '<a href="'.get_sub_field('link').'">'; }
+				$first .= '		<div class="grid-column-inner rows-'.$gridRows.($color === "fff" ? ' white-bg' : '').'" style="background-color:#'.$color.';background-image:url('.get_sub_field('background_image')['url'].');">';
+				if(get_sub_field('title')){ $first .= '<h5>'.get_sub_field('title').'</h5>'; }
+				$first .= '			<div class="text">'.get_sub_field('text').'</div>';
+				// only show the button if there's a link and button text
+				if(get_sub_field('link') != '' && get_sub_field('button_text') != ''){ $first .= '<button class="btn">'.get_sub_field('button_text').'</button>'; }
+				$first .= '		</div>';
+				            if(get_sub_field('link')){ $first .= '</a>'; }
+				$first .= '</div>';
 			}
 			$first .= "   </div>
 							</div>";
@@ -90,6 +101,8 @@ function landing_hero_block_render_callback($block){
 		echo $return;
 	}
 }
+
+
 
 // Two column layout with media on one side and a wysiwyg editor on the other
 function two_column_media_block_render_callback($block){
