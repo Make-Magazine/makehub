@@ -127,6 +127,7 @@ function login_form_shortcode() {
 						 position: absolute;
 						 bottom: 29px;
 						 left: 53%;
+						 width: 39%;
 						 text-transform: capitalize;
 						 height: 46px;
 						 background: #1987C7;
