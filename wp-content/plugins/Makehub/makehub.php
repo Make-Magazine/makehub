@@ -26,6 +26,6 @@ function makehub_enqueue_scripts(){
 
 add_action( 'wp_enqueue_scripts', 'makehub_enqueue_styles');
 function makehub_enqueue_styles() {
-    $my_version = '1.0.24';
+    $my_version = '1.0.28';
     wp_enqueue_style('makehub-style', plugins_url( '/css/style.min.css', __FILE__ ), array(), $my_version );
 }
