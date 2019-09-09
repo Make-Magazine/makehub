@@ -139,7 +139,7 @@ function login_form_shortcode() {
 				  </style>';
 	$return .= '<div id="login-shortcode">';
 	$return .= wp_login_form( array( 'echo' => false ) );
-	$return .= '<a href="/join" class="btn universal-btn register">Register Now</a></div>';
+	$return .= '<a href="/join" class="btn universal-btn register">Join Now</a></div>';
 	return $return;
 }
 add_shortcode('login_form', 'login_form_shortcode');
