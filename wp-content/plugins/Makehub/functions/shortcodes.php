@@ -82,6 +82,7 @@ function login_form_shortcode() {
 						margin: 30px auto;
 						border-radius: 5px;
 						box-shadow: 5px 5px 5px rgba(0,0,0,.13);
+						position: relative;
 					}
 					#login-shortcode h1 a { display: none; }
 					#login-shortcode:before {
@@ -97,9 +98,6 @@ function login_form_shortcode() {
 						font-weight: 400;
 						overflow: hidden;
 						background: #fff;
-					}
-					#login-shortcode form#loginform label {
-						width: 100%;
 					}
 					#login-shortcode form#loginform input[type=text], #login-shortcode form#loginform input[type=password] {
 						width: 100%;
@@ -121,36 +119,27 @@ function login_form_shortcode() {
 						-ms-transition: all 0.3s linear 0s;
 						-o-transition: all 0.3s linear 0s;
 					}
-					#login-shortcode form#loginform .submit .button.button-large {
-						width: 100%;
-						margin-top: 5px;
-						color: #fff !important;
-						width: 100%;
-						border: none;
-						background: none repeat scroll 0 0 #33b5e5 !important;
-						border-color: #1a9bcb !important;
-						box-shadow: none !important;
-						border-radius: 3px;
-						text-transform: capitalize;
-						font-size: 14px;
-						font-weight: 400;
-						-webkit-font-smoothing: antialiased;
-						-moz-osx-font-smoothing: grayscale;
-						-webkit-transition: all 0.3s linear 0s;
-						-moz-transition: all 0.3s linear 0s;
-						-ms-transition: all 0.3s linear 0s;
-						-o-transition: all 0.3s linear 0s;
-						transition: all 0.3s linear 0s;
-						padding: 10px 30px 11px;
-						height: auto;
+					#login-shortcode form#loginform input[type=submit] {
+					   width: 50%;
 					}
-					#login-shortcode form#loginform .submit .button.button-large:hover {
-						background: none repeat scroll 0 0 #1a9bcb !important;
+					#login-shortcode .register {
+					    border-radius: 0px;
+						 position: absolute;
+						 bottom: 29px;
+						 left: 53%;
+						 text-transform: capitalize;
+						 height: 46px;
+						 background: #1987C7;
+						 border-color: #1987C7;
+					}
+					#login-shortcode .register:hover {
+					    background: #fff;
+						 color: #1987C7;
 					}
 				  </style>';
 	$return .= '<div id="login-shortcode">';
 	$return .= wp_login_form( array( 'echo' => false ) );
-	$return .= '</div>';
+	$return .= '<a href="/join" class="btn universal-btn register">Register Now</a></div>';
 	return $return;
 }
 add_shortcode('login_form', 'login_form_shortcode');
