@@ -136,7 +136,9 @@ function ribbon_banner_block_render_callback($block){
 			$return .= '<a href="'.get_field('link').'">';
 		}
 		$return .= '<h2>'.get_field('header').'</h2>';
-		$return .= '<p>'.get_field('text').'</p>';
+		if(get_field('text')) {
+			$return .= '<p>'.get_field('text').'</p>';
+		}
 		if(get_field('link')) {
 			$return .= '</a>';
 		}				
