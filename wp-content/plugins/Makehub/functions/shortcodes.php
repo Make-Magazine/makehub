@@ -73,12 +73,12 @@ add_shortcode('make_tint', 'make_tint_func');
 
 function login_form_shortcode() {
 	if ( is_user_logged_in() )
-		return '<div style="padding: 35px 50px 0px 10px;;">
+		return '<div style="padding: 35px 30px 0px;">
 		        <h2 style="color:#fff;margin-top:0px;font-weight: 300;">Welcome, '.bp_core_get_user_displayname( bp_loggedin_user_id() ).'</h2>
-		        <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn" style="width:100%;">My Profile</a></p>
-		        <p><a href="/groups" class="btn universal-btn" style="width:100%;">Browse Groups</a></p>
-				  <p><a href="/members" class="btn universal-btn" style="width:100%;">Member Directory</a></p>
-				  <p><a href="/activity" class="btn universal-btn" style="width:100%;">Home</a></p>
+		        <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
+		        <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
+				  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
+				  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Home</a></p>
 				  </div>';
 	$return = '<style type="text/css">
 	            #login-shortcode {
