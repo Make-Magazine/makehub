@@ -319,6 +319,12 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'Link Backgorund Image' :
             $translated_text = __( 'Link Background Image', 'youzer' );
             break;
+		  case 'Posts' :
+            $translated_text = __( 'Blog Posts', 'youzer' );
+            break;
+		  case 'New Post' :
+            $translated_text = __( 'New Blog Post', 'youzer' );
+            break;
     }
     return $translated_text;
 }
