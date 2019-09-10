@@ -22,9 +22,9 @@ add_action( 'login_footer', function() {
 // handle users without access to certain pages
 function no_access_modal() {
 	// if user is logged in, but they still got the access denied flag, they are an expired user.
-	$error_message = "It looks like you don't have access to this page. Please purchase a membership to continue.";
+	$error_message = "You don't have access to this page, but we want you to be a part of our community.<br /><a href='javascript:jQuery.fancybox.close();'><b>Please Join!</b></a>";
 	if(is_user_logged_in() == "true") {
-    	$error_message = "It looks like your membership has expired! You can check your membership <a href='/account/?ihc_ap_menu=subscription'>here</a>, or purchase a new membership on this page to continue.";
+    	$error_message = "Your membership has expired! You can check your membership <a href='/account/?ihc_ap_menu=subscription'>here</a>, or purchase a new membership on this page to continue.";
 	}
    $return = '<div class="fancybox-access-denied" style="display:none;">
 					  <div style="padding:15px;">
@@ -34,10 +34,10 @@ function no_access_modal() {
 							</span>
 						 </div>
 						 <div class="col-sm-8 col-xs-8" style="padding:0px;">
-							<h3 style="margin-top:20%;margin-left:30%;font-weight:bold;">Uh Oh!</h3>
+							<h3 style="margin-top:20%;margin-left:39%;font-weight:bold;">Uh Oh!</h3>
 						 </div>
 						 <div class="clearfix"></div>
-						 <div class="col-sm-12"><p style="color:#333;text-align:center;margin-top:20px;">'.$error_message.'</p></div>
+						 <div class="col-sm-12"><p style="color:#333;text-align:center;margin-top:20px;padding-bottom:10px;">'.$error_message.'</p></div>
 					  </div>
 					</div>
 					<script type="text/javascript">
