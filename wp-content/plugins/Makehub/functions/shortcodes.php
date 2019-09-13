@@ -70,3 +70,83 @@ function make_tint_func($atts) {
 }
 
 add_shortcode('make_tint', 'make_tint_func');
+
+function login_form_shortcode() {
+	if ( is_user_logged_in() )
+		return '<div style="padding: 35px 30px 0px;">
+		        <h2 style="color:#fff;margin-top:0px;font-weight: 300;">Welcome, '.bp_core_get_user_displayname( bp_loggedin_user_id() ).'</h2>
+		        <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
+		        <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
+				  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
+				  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Home</a></p>
+				  </div>';
+	$return = '<style type="text/css">
+	            #login-shortcode {
+						width: 320px;
+						padding: 10px 0 ;
+						background: #fff;
+						margin: 30px auto;
+						border-radius: 5px;
+						box-shadow: 5px 5px 5px rgba(0,0,0,.13);
+						position: relative;
+					}
+					#login-shortcode h1 a { display: none; }
+					#login-shortcode:before {
+						content: "Login";
+						font-size: 2.3em;
+						margin-left: 24px;
+					}
+					#login-shortcode form#loginform{
+						border-top: 7px solid #33b5e5;
+						margin-top: 10px;
+						margin-left: 0;
+						padding: 26px 24px 9px;
+						font-weight: 400;
+						overflow: hidden;
+						background: #fff;
+					}
+					#login-shortcode form#loginform input[type=text], #login-shortcode form#loginform input[type=password] {
+						width: 100%;
+						border: 1px solid rgba(0, 0, 0, 0.1);
+						border-radius: 2px;
+						color: #2b2b2b;
+						padding: 8px 10px 7px;
+						background-color: #fafafa;
+						margin-bottom: 7px;
+						height: auto !important;
+						font-size: 14px;
+						font-weight: 300;
+						background-color: #edf0f5;
+						box-shadow: 2px 0px 30px rgba(0,0,0,0);
+						-webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
+						-moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
+						-webkit-transition: all 0.3s linear 0s;
+						-moz-transition: all 0.3s linear 0s;
+						-ms-transition: all 0.3s linear 0s;
+						-o-transition: all 0.3s linear 0s;
+					}
+					#login-shortcode form#loginform input[type=submit] {
+					   width: 50%;
+					}
+					#login-shortcode .register {
+					    border-radius: 0px;
+						 position: absolute;
+						 bottom: 29px;
+						 left: 53%;
+						 width: 39%;
+						 text-transform: capitalize;
+						 height: 46px;
+						 background: #1987C7;
+						 border-color: #1987C7;
+					}
+					#login-shortcode .register:hover {
+					    background: #fff;
+						 color: #1987C7;
+					}
+				  </style>';
+	$return .= '<div id="login-shortcode">';
+	$return .= wp_login_form( array( 'echo' => false ) );
+	$return .= '<a href="/join" class="btn universal-btn register">Join Now</a></div>';
+	return $return;
+}
+add_shortcode('login_form', 'login_form_shortcode');

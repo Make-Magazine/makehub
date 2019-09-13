@@ -101,6 +101,17 @@ a { // don't let genesis molest our links
 		border-color: #EA002A;
 	}
 }
+.universal-btn-reversed {
+	@extend .universal-btn;
+	background-color: #FFF;
+	border-color: #005e9a;
+	color: #005e9a !important;
+	&:hover {
+		color: #FFF !important;
+		background-color: #005e9a;
+	}
+}
+
 
 .sub-caption-dark {
 	padding: 10px 15px;

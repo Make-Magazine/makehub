@@ -394,7 +394,7 @@ add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
 function remove_bp_activity( $activity_object ) {
 
     $exclude = array( 'new_avatar', 'new_cover', 'friendship_created', 'joined_group');
-	 error_log(print_r($activity_object->type, TRUE)); /* shows each activity name as it happens */
+	 //error_log(print_r($activity_object->type, TRUE)); /* shows each activity name as it happens */
     if( in_array( $activity_object->type, $exclude ) )
         $activity_object->type = false;
 }
