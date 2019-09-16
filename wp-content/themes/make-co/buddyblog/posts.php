@@ -49,11 +49,15 @@
 								<div class="col-sm-5 col-xs-12 post-featured-image<?php if(!has_post_thumbnail(get_the_ID())){echo(' no-thumbnail');} ?>" style="background-image:url('<?php echo(has_post_thumbnail( get_the_ID() ) ? the_post_thumbnail_url() : get_stylesheet_directory_uri()."/images/grey-makey.png"); ?>')"></div>
 								<div class="col-sm-7 col-xs-12 yz-post-inner-content">
 									<div class="yz-post-head">
-										<h2 class="yz-post-title"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Permanent Link to', 'buddyblog' ) . " " . the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+										<h2 class="yz-post-title"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Read ', 'buddyblog' ) . " " . the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
 										<div class="yz-post-meta">
 											<ul>
-												<li><i class="far fa-calendar-alt"></i><?php printf( __( '%1$s <span>in %2$s</span>', 'buddyblog' ), get_the_date(), get_the_category_list( ', ' ) ); ?></li>
-												<li><i class="fas fa-tags"></i><?php the_tags(  __( 'Tags: ', 'buddyblog' ), ', ' ); ?> </li>
+												<li><i class="far fa-calendar-alt"></i><?php printf( __( '%1$s', 'buddyblog' ), get_the_date() ); ?></li>
+												<li>
+													<?php if(has_tag()){ ?>
+														<i class="fas fa-tags"></i><?php the_tags(  __( 'Tags: ', 'buddyblog' ), ', ' ); ?> 
+													<?php } ?>
+												</li>
 												<li><i class="far fa-comments"></i><?php comments_popup_link( __( 'No Comments &#187;', 'buddyblog' ), __( '1 Comment &#187;', 'buddyblog' ), __( '% Comments &#187;', 'buddyblog' ) ); ?></li>
 											</ul>
 										</div>

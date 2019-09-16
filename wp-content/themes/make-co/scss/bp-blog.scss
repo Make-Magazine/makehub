@@ -1,3 +1,10 @@
+#my-posts i {
+	background: #4fc8ff
+}
+#blog-edit-personal-li i {
+	background: #f51400;
+}
+
 .type-blog_posts {
 	background: #fff;
 	margin-bottom: 30px;
@@ -10,8 +17,9 @@
 		background-repeat: no-repeat;
 		background-color: #4fc8ff;
 		background-position: center center;
-		height: 250px;
+		min-height: 250px;
 		overflow: hidden;
+		transition: all .5s;
 		&.no-thumbnail {
 			background-size: 30%;
 			padding: 15px;
@@ -20,6 +28,9 @@
 	.yz-tab-post {
 		.yz-post-text {
 			margin-bottom: 0px;
+		}
+		.yz-read-more {
+			margin-top: 15px;
 		}
 	}
 	.post-actions {
@@ -31,5 +42,36 @@
 			font-size: 14px;
 			font-weight: bold;
 		}
+	}
+}
+
+.bp-simple-post-form {
+	label { 
+		width: 100%;
+		font-size: 18px;
+		margin-bottom: 20px;
+	}
+	input {
+		width: 90%;
+		float: right;
+		color: #9a9a9a;
+		font-weight: 500;
+		box-shadow: none;
+		padding: 12px 15px;
+		border: 1px solid #eee;
+		background-color: #fff;
+		margin-top: -10px;
+		@media screen and (max-width: 768px) {
+			width: 100%;
+			margin-top: 5px;
+		}
+		&#submit {
+			width: 200px;
+			float: left;
+		}
+	}
+	.wp-editor-tools {
+		float: right;
+		margin-top: -20px;
 	}
 }

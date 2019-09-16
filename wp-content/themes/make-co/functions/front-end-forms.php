@@ -89,10 +89,7 @@ add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
  */
 function custom_excerpt_more( $more ) {
     if ( ! is_single() ) {
-        $more = sprintf( '<a class="yz-read-more" href="%1$s">%2$s</a>',
-            get_permalink( get_the_ID() ),
-            __( '<div class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></div>Read More', 'textdomain' )
-        );
+        $more = '<a class="yz-read-more" href="'.get_permalink( get_the_ID()).'"><span class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></span>Read More</a>';
     }
     return $more;
 }
