@@ -51,7 +51,7 @@
 		font-size: 18px;
 		margin-bottom: 20px;
 	}
-	input {
+	input[type=text], input[type=submit] {
 		width: 90%;
 		float: right;
 		color: #9a9a9a;
@@ -66,12 +66,39 @@
 			margin-top: 5px;
 		}
 		&#submit {
-			width: 200px;
+			width: 100%;
 			float: left;
 		}
 	}
 	.wp-editor-tools {
 		float: right;
 		margin-top: -20px;
+	}
+	#insert-media-button, #set-post-thumbnail {
+		background-color: #005e9a;
+		color: #fff;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		border-radius: 0;
+		border-radius: 2px;
+		-webkit-border-radius: 2px;
+		text-transform: uppercase;
+		font-size: 16px;
+		font-weight: 300;      
+		height: 40px;
+		padding: 0px 10px;
+		border: solid 1px #005e9a;
+		width: 200px;
+		&:hover, &:visited, &:active  {
+			color: #005e9a !important;
+			background-color: #fff;
+		}
+	}
+	#insert-media-button {
+		display: block;
+		margin-top: -5px;
+		margin-bottom: 10px;
 	}
 }
