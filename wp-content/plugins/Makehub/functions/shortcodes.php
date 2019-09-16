@@ -79,6 +79,7 @@ function login_form_shortcode() {
 		        <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
 				  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
 				  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Newsfeed</a></p>
+				  <p><a href="/digital-library" class="btn universal-btn-reversed" style="width:100%;">View Digital Magazine</a></p>
 				  </div>';
 	$return = '<style type="text/css">
 	            #login-shortcode {

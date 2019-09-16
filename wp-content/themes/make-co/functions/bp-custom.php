@@ -319,6 +319,9 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'Link Backgorund Image' :
             $translated_text = __( 'Link Background Image', 'youzer' );
             break;
+		  case 'Ultimate Membership Pro' :
+            $translated_text = __( 'Membership Account', 'youzer' );
+            break;
     }
     return $translated_text;
 }
