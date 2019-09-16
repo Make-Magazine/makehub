@@ -2,10 +2,34 @@
 	background: #fff;
 	margin-bottom: 30px;
 	display: block;
+	.row { 
+		margin: 0px;
+	}
 	.post-featured-image {
-		img {
-			width: 100%;
-			height: auto;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-color: #4fc8ff;
+		background-position: center center;
+		height: 250px;
+		overflow: hidden;
+		&.no-thumbnail {
+			background-size: 30%;
+			padding: 15px;
+		}
+	}
+	.yz-tab-post {
+		.yz-post-text {
+			margin-bottom: 0px;
+		}
+	}
+	.post-actions {
+		position: absolute;
+		top: 35px;
+		right: 40px;
+		a {
+			padding-left: 15px;
+			font-size: 14px;
+			font-weight: bold;
 		}
 	}
 }

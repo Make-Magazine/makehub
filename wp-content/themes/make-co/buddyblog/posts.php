@@ -45,27 +45,24 @@
 						 </div> */ ?>
 
 						 <div class="post-content container-fluid">
-							<div class="row">
-								<div class="col-sm-4 col-xs-12 post-featured-image">
-									<a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Permanent Link to', 'buddyblog' ) . " " . the_title_attribute(); ?>">
-								    <?php if ( function_exists( 'has_post_thumbnail' ) && has_post_thumbnail( get_the_ID() ) ){
-												the_post_thumbnail();
-										    }else{ ?>
-												<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/grey-makey.png" />
-								    <?php } ?>
-									</a>
-								</div>
-								<div class="col-sm-8 col-xs-12">
-									<h2 class="posttitle"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Permanent Link to', 'buddyblog' ) . " " . the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+							<div class="row yz-tab-post">
+								<div class="col-sm-5 col-xs-12 post-featured-image<?php if(!has_post_thumbnail(get_the_ID())){echo(' no-thumbnail');} ?>" style="background-image:url('<?php echo(has_post_thumbnail( get_the_ID() ) ? the_post_thumbnail_url() : get_stylesheet_directory_uri()."/images/grey-makey.png"); ?>')"></div>
+								<div class="col-sm-7 col-xs-12 yz-post-inner-content">
+									<div class="yz-post-head">
+										<h2 class="yz-post-title"><a href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Permanent Link to', 'buddyblog' ) . " " . the_title_attribute(); ?>"><?php the_title(); ?></a></h2>
+										<div class="yz-post-meta">
+											<ul>
+												<li><i class="far fa-calendar-alt"></i><?php printf( __( '%1$s <span>in %2$s</span>', 'buddyblog' ), get_the_date(), get_the_category_list( ', ' ) ); ?></li>
+												<li><i class="fas fa-tags"></i><?php the_tags(  __( 'Tags: ', 'buddyblog' ), ', ' ); ?> </li>
+												<li><i class="far fa-comments"></i><?php comments_popup_link( __( 'No Comments &#187;', 'buddyblog' ), __( '1 Comment &#187;', 'buddyblog' ), __( '% Comments &#187;', 'buddyblog' ) ); ?></li>
+											</ul>
+										</div>
+									</div>
 
-								  <p class="date"><?php printf( __( '%1$s <span>in %2$s</span>', 'buddyblog' ), get_the_date(), get_the_category_list( ', ' ) ); ?></p>
-
-								  <div class="entry">
+								  <div class="yz-post-text">
 										<?php the_excerpt(); ?>
 										<?php wp_link_pages( array( 'before' => '<div class="page-link"><p>' . __( 'Pages: ', 'buddyblog' ), 'after' => '</p></div>', 'next_or_number' => 'number' ) ); ?>
 								  </div>
-								  <a class="btn universal-btn" href="<?php the_permalink(); ?>" rel="bookmark" title="<?php _e( 'Permanent Link to', 'buddyblog' ) . " " . the_title_attribute(); ?>">Read More</a>
-								  <p class="postmetadata"><?php the_tags( '<span class="tags">' . __( 'Tags: ', 'buddyblog' ), ', ', '</span>' ); ?> <span class="comments"><?php comments_popup_link( __( 'No Comments &#187;', 'buddyblog' ), __( '1 Comment &#187;', 'buddyblog' ), __( '% Comments &#187;', 'buddyblog' ) ); ?></span></p>
 
 								  <div class="post-actions">
 										<?php echo buddyblog_get_post_publish_unpublish_link( get_the_ID() );?>

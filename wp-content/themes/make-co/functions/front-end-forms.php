@@ -77,7 +77,7 @@ if( function_exists('bp_new_simple_blog_post_form' ) ) {
  * @return int (Maybe) modified excerpt length.
  */
 function custom_excerpt_length( $length ) {
-    return 20;
+    return 15;
 }
 add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
 
@@ -89,9 +89,9 @@ add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
  */
 function custom_excerpt_more( $more ) {
     if ( ! is_single() ) {
-        $more = sprintf( '<p><a class="read-more" href="%1$s">%2$s</a></p>',
+        $more = sprintf( '<a class="yz-read-more" href="%1$s">%2$s</a>',
             get_permalink( get_the_ID() ),
-            __( 'Read More &rarr;', 'textdomain' )
+            __( '<div class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></div>Read More', 'textdomain' )
         );
     }
     return $more;
