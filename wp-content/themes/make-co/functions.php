@@ -486,21 +486,6 @@ function make_learn_comments_gravatar($args) {
   }
  */
 
-function custom_login_stylesheets() {
-    wp_enqueue_style('custom-login', get_stylesheet_directory_uri() . '/css/style-login.css');
-    wp_enqueue_style('custom-login', '/wp-content/universal-assets/v1/css/universal.css');
-}
-
-//This loads the function above on the login page
-add_action('login_enqueue_scripts', 'custom_login_stylesheets');
-
-add_action('login_header', function() {
-    get_header();
-});
-add_action('login_footer', function() {
-    get_footer();
-});
-
 // Function to change email address from wordpress to webmaster
 function wpb_sender_email($original_email_address) {
     return 'webmaster@make.co';
