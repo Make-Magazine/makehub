@@ -13,10 +13,11 @@ function create_posttypes() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'projects'),
+			   'supports' => array('comments', 'thumbnail', 'excerpt'),
         )
     );
 	 register_post_type(
-	 		  'blog_posts',
+	 	  'blog_posts',
         array(
             'labels' => array(
                 'name' => __( 'Blog Posts' ),
@@ -25,6 +26,7 @@ function create_posttypes() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'blog'),
+			   'supports' => array('comments', 'thumbnail', 'excerpt'),
         )
 	 );
 }
@@ -67,3 +69,31 @@ function front_end_form_func($atts) {
 if( function_exists('bp_new_simple_blog_post_form' ) ) {
 	add_shortcode('front_end_form', 'front_end_form_func');
 }
+	
+/**
+ * Filter the except length to 20 words.
+ *
+ * @param int $length Excerpt length.
+ * @return int (Maybe) modified excerpt length.
+ */
+function custom_excerpt_length( $length ) {
+    return 20;
+}
+add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
+
+/**
+ * Filter the excerpt "read more" string.
+ *
+ * @param string $more "Read more" excerpt string.
+ * @return string (Maybe) modified "read more" excerpt string.
+ */
+function custom_excerpt_more( $more ) {
+    if ( ! is_single() ) {
+        $more = sprintf( '<p><a class="read-more" href="%1$s">%2$s</a></p>',
+            get_permalink( get_the_ID() ),
+            __( 'Read More &rarr;', 'textdomain' )
+        );
+    }
+    return $more;
+}
+add_filter( 'excerpt_more', 'custom_excerpt_more' );
