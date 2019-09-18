@@ -2,7 +2,6 @@
 // add acf titles to admin for ease of use
 function acf_flexible_content_layout_title( $title, $field, $layout, $i ) {
 	
-	error_log($title);
    $newTitle = '';
 	
    if( $panelTitle = get_sub_field('panel_title') ) {

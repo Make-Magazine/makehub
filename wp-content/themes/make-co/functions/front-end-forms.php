@@ -13,7 +13,13 @@ function create_posttypes() {
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'projects'),
-			   'supports' => array('comments', 'thumbnail', 'excerpt'),
+			   'supports' => array('comments', 'thumbnail', 'excerpt', 'buddypress-activity'),
+				'bp_activity' => array(
+					'component_id' => buddypress()->activity->id,
+					'action_id'    => 'new_projects',
+					'contexts'     => array( 'activity', 'member' ),
+					'position'     => 40,
+			  ),
         )
     );
 	 register_post_type(
@@ -21,16 +27,56 @@ function create_posttypes() {
         array(
             'labels' => array(
                 'name' => __( 'Blog Posts' ),
-                'singular_name' => __( 'Blog Post' )
+                'singular_name' => __( 'Blog Post' ),
+					 'bp_activity_admin_filter' => __( 'Published a new Blog Post' ),
+        			 'bp_activity_front_filter' => __( 'Blog Posts'),
+					 'bp_activity_new_post'     => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
+        			 'bp_activity_new_post_ms'  => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
+					 'bp_activity_new_comment'           => __( '%1$s commented on a <a href="%2$s">Blog Post</a>', 'custom-textdomain' ),
+    				 'bp_activity_new_comment_ms'        => __( '%1$s commented on a <a href="%2$s">Blog Post</a>', 'custom-textdomain' )
             ),
             'public' => true,
             'has_archive' => true,
             'rewrite' => array('slug' => 'blog'),
-			   'supports' => array('comments', 'thumbnail', 'excerpt'),
+			   'supports' => array('comments', 'editor', 'author', 'thumbnail', 'excerpt', 'buddypress-activity'),
+				'bp_activity' => array(
+					'component_id' => buddypress()->activity->id,
+					'action_id'    => 'new_blog_posts',
+					'contexts'     => array( 'activity', 'member' ),
+					'position'     => 40,
+			  ),
         )
 	 );
 }
 add_action( 'init', 'create_posttypes' );
+
+// Add the excerpt of a blog post to the activity feed. formatting is stripped out of cpt[content], unfortunately
+function record_cpt_activity_content( $cpt ) {
+
+	if ( 'new_blog_posts' === $cpt['type'] ) {
+		global $wpdb, $post, $bp;
+		//$cpt['action'] .= " - " . get_the_title($cpt['secondary_item_id']);
+		$cpt['content'] = get_the_post_thumbnail( $cpt['secondary_item_id'] );
+		$cpt['content'] .= get_the_excerpt( $cpt['secondary_item_id'] );
+		//$theimg = wp_get_attachment_image_src( get_post_thumbnail_id( $cpt['secondary_item_id'] ) );
+		//$cpt['content'] .= $theimg;
+		//error_log(print_r($theimg, TRUE));
+	}
+   //error_log(print_r($cpt, TRUE));
+	return $cpt;
+}
+add_filter('bp_after_activity_add_parse_args', 'record_cpt_activity_content');
+
+// and delete the activity associated with a post when the post is deleted, matching it by the content of the post... which is a lot easier than just matching the postid to the activity id for some reason
+add_action( 'before_delete_post', 'delete_post_activity' );
+function delete_post_activity( $postid ){;
+	bp_activity_delete(
+		array(
+			//'user_id' => bp_displayed_user_id(),
+			'content' => get_the_excerpt($postid)
+		)
+	);
+}
 
 /**
  * Register the blog post form

@@ -406,6 +406,8 @@ function remove_bp_activity( $activity_object ) {
 }
 add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
 
+
+
 /* Something like this is needed to limit what activity shows in the scroll
 add_filter( 'bp_after_has_activities_parse_args', function( $retval ) {
  if( bp_is_activity_directory() ) {
