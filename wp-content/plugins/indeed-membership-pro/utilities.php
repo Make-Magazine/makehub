@@ -2558,7 +2558,7 @@ function indeed_create_form_element($attr=array()){
 						$min = isset($temp_settings['ihc_level_dynamic_price_levels_min'][$lid]) && $temp_settings['ihc_level_dynamic_price_levels_min'][$lid]!='' ? $temp_settings['ihc_level_dynamic_price_levels_min'][$lid] : 0;
 						$max = isset($temp_settings['ihc_level_dynamic_price_levels_max'][$lid]) && $temp_settings['ihc_level_dynamic_price_levels_max'][$lid]!='' ? $temp_settings['ihc_level_dynamic_price_levels_max'][$lid] : $level_price;
 						$step = isset($temp_settings['ihc_level_dynamic_price_step']) ? $temp_settings['ihc_level_dynamic_price_step'] : 0.01;
-						$str .= "<input type='number' onChange='ihcDynamicPriceUpdateGlobal();' onBlur='ihcDynamicPriceUpdateGlobal();' min='$min' max='$max' class='{$attr['class']}' step='$step' value='$level_price' name='ihc_dynamic_price' id='ihc_dynamic_price' />";
+						$str .= "<input type='range' onChange='ihcDynamicPriceUpdateGlobal();' onBlur='ihcDynamicPriceUpdateGlobal();' min='$min' max='$max' class='{$attr['class']}' step='$step' value='$level_price' name='ihc_dynamic_price' id='ihc_dynamic_price' oninput='setPrice.value = \"$\" + ihc_dynamic_price.value + \".00\"' /><output name='setPrice' id='setPrice'><b>$$level_price.00</b> <i>(choose your desired amount)</i></output>";
 					}
 				}
 				break;
