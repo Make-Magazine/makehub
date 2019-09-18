@@ -85,13 +85,15 @@ Thumbs.db
 *.ogg
 *.mp3
 *.bin
+# ignore wp-content/uploads
+wp-content/uploads
 # ignore everything in the "wp-content" directory, except:
 # "plugins" directory
 # "themes" directory
-wp-content/*
-!wp-content/plugins/
-!wp-content/themes/
-!wp-content/universal-assets/
+# wp-content/*
+# !wp-content/plugins/
+# !wp-content/themes/
+#!wp-content/universal-assets/
 # ignore these plugins
 wp-content/plugins/hello.php
 # ignore specific themes
