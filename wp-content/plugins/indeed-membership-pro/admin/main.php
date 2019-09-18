@@ -313,6 +313,7 @@ function ihc_head(){
 	wp_enqueue_style( 'ihc_bootstrap-slider', IHC_URL . 'admin/assets/css/bootstrap-slider.css' );
 	wp_enqueue_script( 'ihc-bootstrap-slider', IHC_URL . 'admin/assets/js/bootstrap-slider.js' );
 
+
 	if (isset($_REQUEST['page']) && $_REQUEST['page']=='ihc_manage'){
 		if (!empty($_GET['tab']) && $_GET['tab']!='orders'){
 			wp_enqueue_style( 'ihc_bootstrap', IHC_URL . 'admin/assets/css/bootstrap.css' );
@@ -1284,4 +1285,13 @@ function ihc_nav_menu_hook()
 function ihc_print_custom_nav_menu()
 {
 		require_once IHC_PATH . 'admin/includes/tabs/custom_nav_menu_box.php';
+}
+
+add_action( 'ihc_admin_dashboard_after_top_menu', 'ihc_check_allow_fopen' );
+function ihc_check_allow_fopen()
+{
+		$allow = ini_get( 'allow_url_fopen' );
+		if (!$allow ){
+				echo '<div class="ihc-not-set"><strong>' . __("'allow_url_fopen' directive is disabled. In order for Ultimate Membership Pro to work properly this directive has to be set 'on'. Contact your hosting provider for more details.", 'ihc') . ' </strong></div>';
+		}
 }

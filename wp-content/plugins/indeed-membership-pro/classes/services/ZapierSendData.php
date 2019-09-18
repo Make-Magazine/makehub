@@ -37,7 +37,7 @@ class ZapierSendData
             'user_full_name'      => \Ihc_Db::getUserFulltName($uid),
             'level_name'          => \Ihc_Db::get_level_name_by_lid($lid)
         );
-        $data = $data + \Ihc_Db::getLastOrderIdByUserAndLevel( $uid, $lid );
+        $data = $data + \Ihc_Db::getLastOrderDataByUserAndLevel( $uid, $lid );
         $endpoint = $this->settings['ihc_zapier_new_order_webhook'];
         return $this->send( $endpoint, $data );
     }
@@ -51,7 +51,7 @@ class ZapierSendData
             'user_full_name'      => \Ihc_Db::getUserFulltName($uid),
             'level_name'          => \Ihc_Db::get_level_name_by_lid($lid)
         );
-        $data = $data + \Ihc_Db::getLastOrderIdByUserAndLevel( $uid, $lid );
+        $data = $data + \Ihc_Db::getLastOrderDataByUserAndLevel( $uid, $lid );
         $endpoint = $this->settings['ihc_zapier_order_completed_webhook'];
         return $this->send( $endpoint, $data );
     }

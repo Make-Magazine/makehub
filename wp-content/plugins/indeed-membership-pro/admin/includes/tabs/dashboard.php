@@ -1,7 +1,7 @@
 <?php
 $currency = get_option('ihc_currency');
 echo ihc_inside_dashboard_error_license();
-
+	do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <div style="width: 97%">
 	<div class="ihc-dashboard-title">

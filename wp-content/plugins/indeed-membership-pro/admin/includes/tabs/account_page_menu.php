@@ -4,8 +4,9 @@ $data['metas'] = ihc_return_meta_arr('account_page_menu');//getting metas
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
 
-if (!empty($_GET['delete'])){
+if ( !empty($_GET['delete']) && empty($_POST['ihc_account_page_menu_add_new-the_slug']) ){
 	Ihc_Db::account_page_menu_delete_custom_item($_GET['delete']);
 }
 if (!empty($_POST['ihc_account_page_menu_add_new-the_slug']) && !empty($_POST['ihc_account_page_menu_add_new-the_slug'])){

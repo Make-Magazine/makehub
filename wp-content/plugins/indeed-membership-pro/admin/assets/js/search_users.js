@@ -6,6 +6,7 @@ var ihcSearchUsers = {
     deselectAllLevelsSelector   : '',
     selectAllRolesSelector      : '',
     deselectAllRolesSelector    : '',
+    limitSelector               : '',
 
     levels                      : [],
     roles                       : [],
@@ -168,6 +169,9 @@ var ihcSearchUsers = {
             baseUrl += '&emailVerification=1';
         }
 
+        baseUrl += '&ihc_limit=' + jQuery(obj.limitSelector).val();
+        //alert(1);
+
         /// and do redirect
         window.location.href = baseUrl;
 
@@ -194,6 +198,7 @@ jQuery(document).ready(function(){
         selectAllLevelsSelector     : '.js-ihc-select-all-levels',
         deselectAllLevelsSelector   : '.js-ihc-deselect-all-levels',
         selectAllRolesSelector      : '.js-ihc-select-all-roles',
-        deselectAllRolesSelector    : '.js-ihc-deselect-all-roles'
+        deselectAllRolesSelector    : '.js-ihc-deselect-all-roles',
+        limitSelector               : '.js-ihc-search-users-limit'
     });
 });

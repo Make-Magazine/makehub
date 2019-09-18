@@ -43,7 +43,8 @@ $tabs_arr = array(
 			</a>
 			</div>
 			<div class="ihc-dashboard-menu">
-				<ul>
+            	<div class="ihc-admin-mobile-bttn-wrapp"><i class="ihc-admin-mobile-bttn"></i></div>
+				<ul  class="ihc-dashboard-menu-items">
 				<?php
 					foreach($tabs_arr as $k=>$v){
 						$selected = '';

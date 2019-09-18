@@ -14,6 +14,7 @@ if (isset($_POST['ihc_bttn'])){
 	echo ihc_check_default_pages_set();//set default pages message
 	echo ihc_check_payment_gateways();
 	echo ihc_is_curl_enable();
+	do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <div class="iump-wrapper">
 <div class="ihc-dashboard-form-wrap">

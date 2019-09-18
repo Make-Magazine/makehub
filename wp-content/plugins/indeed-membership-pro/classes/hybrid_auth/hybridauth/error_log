@@ -592,3 +592,138 @@ Stack trace:
 #4 {main}
 
 Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[28-Jun-2019 20:12:01 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[29-Jun-2019 05:57:48 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[29-Jun-2019 12:28:25 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[29-Jun-2019 13:47:17 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[29-Jun-2019 16:40:24 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[03-Jul-2019 23:54:10 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[04-Jul-2019 09:22:16 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[04-Jul-2019 13:25:21 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[04-Jul-2019 17:30:22 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[04-Jul-2019 19:43:10 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[04-Jul-2019 22:13:42 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[05-Jul-2019 01:17:07 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[09-Jul-2019 11:25:59 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[10-Jul-2019 09:33:20 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217
+[15-Jul-2019 14:30:21 Europe/Bucharest] PHP Fatal error:  Uncaught exception 'Hybrid_Exception' with message 'You cannot access this page directly.' in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php:211
+Stack trace:
+#0 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(117): Hybrid_Endpoint->authInit()
+#1 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(51): Hybrid_Endpoint->processAuthStart()
+#2 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php(72): Hybrid_Endpoint->__construct(NULL)
+#3 /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/index.php(15): Hybrid_Endpoint::process()
+#4 {main}
+
+Next exception 'Hybrid_Exception' with message 'Endpoint: Error while trying to init Hyb in /home/azzaroro/public_html/indeed/vs/5.1/wp-content/plugins/indeed-membership-pro/classes/hybrid_auth/hybridauth/Hybrid/Endpoint.php on line 217

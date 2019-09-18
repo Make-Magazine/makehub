@@ -285,9 +285,6 @@ if(!class_exists('ihcStripe')){
 						$trial_end = strtotime("+ ".$trial_period_days." days");
 					}
 
-					///
-					//file_put_contents( IHC_PATH . 'log.log', serialize( $plan ) );
-
 					$return_data_plan = \Stripe\Plan::create($plan);
 					try {
 							$return_data_plan = \Stripe\Plan::create($plan);
@@ -297,11 +294,13 @@ if(!class_exists('ihcStripe')){
 
 					//$customer_arr['plan'] = $ihc_plan_code;
 
+
 					try {
 							$customer = \Stripe\Customer::create($customer_arr);
 					} catch (Exception $e){
 							return false;
 					}
+
 
 					$resource =  \Stripe\Subscription::create(array(
 						"customer" 				=> $customer->id,
@@ -329,12 +328,26 @@ if(!class_exists('ihcStripe')){
 					}
 				} else {
 					/// SINGLE PAYMENT
+					try {
+    					$charge = \Stripe\Charge::create(array(
+																		'customer' => $customer->id,
+																		'amount'   => $amount,
+																		'currency' => $this->currency,
+							));
+					    $success = 1;
+					    $paymentProcessor="Credit card (www.stripe.com)";
+					} catch (Exception $e) {
+							$error1 = $e->getMessage();
+							$cardError = true;
+					}
+					/*
 					$charge = \Stripe\Charge::create(array(
 							'customer' => $customer->id,
 							'amount'   => $amount,
 							'currency' => $this->currency,
 
 					));
+					*/
 				}
 
 				$amount = $amount/100;
@@ -345,6 +358,9 @@ if(!class_exists('ihcStripe')){
 						'item_name' => $this->level_data[$post_data['lid']]['name'],
 						'customer' => $customer->id,
 				);
+				if ( !empty( $cardError ) ){
+						$response_return[ 'cardErrors' ] = true;
+				}
 				if ($sub_id){
 					$response_return['subscription'] = $sub_id;
 				}

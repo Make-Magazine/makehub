@@ -420,9 +420,10 @@ if (!function_exists('ihc_print_level_link')):
  */
 function ihc_print_level_link( $attr, $content='', $print_payments=false, $subscription_plan=false ){
 
-	if (!empty($_POST['stripeToken']) && (empty($_GET['ihc_register']) || $_GET['ihc_register']!='create_message') && empty( $subscription_plan ) && !defined('IHC_PAYMENT_WITH_STRIPE_WAS_MADE') ){
+	if (!empty($_POST['stripeToken']) && (empty($_GET['ihc_register']) || $_GET['ihc_register']!='create_message') && !defined('IHC_PAYMENT_WITH_STRIPE_WAS_MADE') ){  // && empty( $subscription_plan )
 		/// STRIPE PAYMENT
 		ihc_pay_new_lid_with_stripe($_POST);//available in functions.php
+		define( 'IHC_PAYMENT_WITH_STRIPE_WAS_MADE', true );
 		unset($_POST['stripeToken']);
 	} else if (isset($_GET['ihc_success_bt'])){
 		/// BT PAYMENT

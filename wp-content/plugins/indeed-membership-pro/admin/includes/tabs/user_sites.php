@@ -4,6 +4,8 @@ $data['metas'] = ihc_return_meta_arr('user_sites');//getting metas
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
+
 $levels = get_option('ihc_levels');
 ?>
 <div class="iump-wrapper">

@@ -231,6 +231,9 @@ Bank NAME<br/>',
 						'ihc_stripe_checkout_v2_select_order' 			=> 11,
 						'ihc_stripe_checkout_v2_locale_code' 				=> 'en',
 						'ihc_stripe_checkout_v2_label' 							=> 'Stripe Checkout',
+						'ihc_stripe_checkout_v2_success_page'				=> -1,
+						'ihc_stripe_checkout_v2_cancel_page'				=> -1,
+						'ihc_stripe_checkout_v2_use_user_email'			=> 0,
 			);
 			break;
 		case 'login':
@@ -2237,8 +2240,9 @@ function indeed_create_form_element($attr=array()){
 
 			case 'single_checkbox':
 				$str = "";
+				$checked = empty($attr['value']) ? '' : 'checked';
 				$str .= '<div class="ihc-tos-wrap" id="' . $attr['id'] . '">'
-				    		. '<input type="checkbox" value="1" name="' . $attr['name'] . '" class="' . $attr['class'] . '" />'
+				    		. '<input type="checkbox" value="1" name="' . $attr['name'] . '" class="' . $attr['class'] . '" '.$checked.' />'
 								. $attr['label'];
 				if (!empty($attr['sublabel'])){
 						$str .= '<label class="iump-form-sublabel">' . ihc_correct_text($attr['sublabel']) . '</label>';
@@ -2554,7 +2558,7 @@ function indeed_create_form_element($attr=array()){
 						$min = isset($temp_settings['ihc_level_dynamic_price_levels_min'][$lid]) && $temp_settings['ihc_level_dynamic_price_levels_min'][$lid]!='' ? $temp_settings['ihc_level_dynamic_price_levels_min'][$lid] : 0;
 						$max = isset($temp_settings['ihc_level_dynamic_price_levels_max'][$lid]) && $temp_settings['ihc_level_dynamic_price_levels_max'][$lid]!='' ? $temp_settings['ihc_level_dynamic_price_levels_max'][$lid] : $level_price;
 						$step = isset($temp_settings['ihc_level_dynamic_price_step']) ? $temp_settings['ihc_level_dynamic_price_step'] : 0.01;
-						$str .= "<input type='range' onChange='ihcDynamicPriceUpdateGlobal();' onBlur='ihcDynamicPriceUpdateGlobal();' min='$min' max='$max' class='{$attr['class']}' step='$step' value='$level_price' name='ihc_dynamic_price' id='ihc_dynamic_price' oninput='setPrice.value = \"$\" + ihc_dynamic_price.value + \".00\"' /><output name='setPrice' id='setPrice'><b>$$level_price.00</b> <i>(choose your desired amount)</i></output>";
+						$str .= "<input type='number' onChange='ihcDynamicPriceUpdateGlobal();' onBlur='ihcDynamicPriceUpdateGlobal();' min='$min' max='$max' class='{$attr['class']}' step='$step' value='$level_price' name='ihc_dynamic_price' id='ihc_dynamic_price' />";
 					}
 				}
 				break;
@@ -3550,7 +3554,10 @@ function ihc_print_bank_transfer_order($u_id, $l_id){
 	}
 	//get amount
 	$level_data = ihc_get_level_by_id($l_id);
-	$amount = $level_data['price'];
+	$orderId = \Ihc_Db::getLastOrderIdByUserAndLevel( $u_id, $l_id );
+	$orderAmount = \Ihc_Db::getOrderAmount( $orderId );
+	$amount = isset( $orderAmount ) ? $orderAmount : '';
+	// $amount = $level_data['price'];
 
 
 	/*************************** DYNAMIC PRICE ***************************/
@@ -3818,8 +3825,10 @@ function ihc_make_csv_user_list( $attributes=array() )
 			$levelStatus = isset( $attributes['levelStatus'] ) ? $attributes['levelStatus'] : '';
 			$emailVerification = isset( $attributes['emailVerification'] ) && $attributes['emailVerification'] ? 1 : 0;
 			$searchUsers = new \Indeed\Ihc\Db\SearchUsers();
-			$searchUsers->setLimit( $limit )
-									->setOffset( $start )
+
+			$searchUsers->setLimit(0)
+									//->setLimit( $limit )
+									//->setOffset( $start )
 									->setOrder( $order )
 									->setLid( $search_level )
 									->setSearchWord( $search_query )
@@ -4858,12 +4867,12 @@ function ihc_get_coupon_by_id($id=0){
 	} else {
 		$arr = array(
 						"code" => "",
-						"discount_type" => "price",
-						"discount_value" => '',
-						"period_type" => "date_range",
-						"repeat" => "",
+						"discount_type" => "percentage",
+						"discount_value" => '10',
+						"period_type" => "unlimited",
+						"repeat" => "10",
 						"target_level" => "",
-						"reccuring" => "",
+						"reccuring" => "1",
 						"start_time" => '',
 						"end_time" => '',
 						"box_color" => ihc_generate_color_hex(),
@@ -6671,13 +6680,16 @@ function ihcGetTransactionDetails($txnId='')
 		} else if (!empty($paymentData['level'])){
 				$lid = $paymentData['level'];
 		}
-		return array(
+
+		$array = array(
 				'uid'								=> $data->u_id,
 				'lid'								=> $lid,
 				'amount'						=> $paymentData['amount'],
 				'orders'						=> unserialize($data->orders),
 				'ihc_payment_type'  => $paymentData['ihc_payment_type'],
 		);
+
+		return $array;
 }
 endif;
 
@@ -6707,7 +6719,7 @@ function ihc_list_all_payments()
 								'paypal' 										=> 'PayPal',
 							  'authorize' 								=> 'Authorize',
 							  'stripe' 										=> 'Stripe',
-								//'stripe_checkout_v2'				=> 'Stripe Checkout',
+								'stripe_checkout_v2'				=> 'Stripe Checkout',
 							  'twocheckout' 							=> '2Checkout',
 							 	'bank_transfer' 						=> 'Bank Transfer',
 								'braintree' 								=> 'Braintree',

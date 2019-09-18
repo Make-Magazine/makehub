@@ -8,6 +8,7 @@
 	echo ihc_check_default_pages_set();//set default pages message
 	echo ihc_check_payment_gateways();
 	echo ihc_is_curl_enable();
+	do_action( "ihc_admin_dashboard_after_top_menu" );
 
 	if (empty($_GET['subtab'])){
 		$_GET['subtab'] = 'manage';
@@ -118,7 +119,7 @@
 						<div class="iump-form-line">
 							<label class="iump-labels-special"><?php _e("Period Type", 'ihc');?></label>
 							<select name="period_type" onChange="ihcSelectShDiv(this, '#the_date_range', 'date_range');"><?php
-								$arr = array('date_range' => __("Date Range", 'ihc'), 'unlimited'=>"Unlimited");
+								$arr = array('date_range' => __("Date Range", 'ihc'), 'unlimited'=>__("Unlimited", 'ihc'));
 								foreach ($arr as $k=>$v){
 									$selected = ($meta_arr['period_type']==$k) ? 'selected' : '';
 									?>

@@ -30,6 +30,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 			<form action="" method="post">
 				<div class="ihc-stuffbox">
@@ -282,6 +283,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		if ( empty( $meta_arr['ihc_recaptcha_version'] ) ){
 				$meta_arr['ihc_recaptcha_version'] = 'v2';
 		}
@@ -299,29 +301,47 @@ switch ($subtab){
 								</div>
 
 								<div class="js-ihc-recaptcha-v2-wrapp" style="<?php if ( $meta_arr['ihc_recaptcha_version'] == 'v3' ) echo 'display: none;';?>" >
-										<h5><?php _e( 'reCAPTCHA v2', 'ihc');?></h5>
-										<div>
-											<?php _e('Public Key:', 'ihc');?> <input type="text" name="ihc_recaptcha_public" value="<?php echo $meta_arr['ihc_recaptcha_public'];?>" class="ihc-deashboard-middle-text-input"/>
+                                	<div class="iump-form-line">
+										<h4><?php _e( 'reCAPTCHA v2', 'ihc');?></h4>
+										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
+											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span> 
+                                            <input type="text" name="ihc_recaptcha_public" value="<?php echo $meta_arr['ihc_recaptcha_public'];?>" class="form-control ihc-deashboard-middle-text-input" style="" />
 										</div>
-										<div>
-											<?php _e('Private Key:', 'ihc');?> <input type="text" name="ihc_recaptcha_private" value="<?php echo $meta_arr['ihc_recaptcha_private'];?>" class="ihc-deashboard-middle-text-input" />
+										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
+											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>  
+                                            <input type="text" name="ihc_recaptcha_private" value="<?php echo $meta_arr['ihc_recaptcha_private'];?>" class="form-control ihc-deashboard-middle-text-input" style="" />
 										</div>
 										<div class="">
-												<?php _e('Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.
+											<p><strong><?php _e('How to setup:', 'ihc');?></strong></p>
+                                            <p>	<?php _e('1. Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.</p>  
+                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>  
+                                            <p>	<?php _e('3. Choose "reCAPTCHA v2" with "Im not a robot" Checkbox.', 'ihc');?></p>
+                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p> 
+                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p> 
 										</div>
+                                     </div>   
 								</div>
 
 								<div class="js-ihc-recaptcha-v3-wrapp" style="<?php if ( $meta_arr['ihc_recaptcha_version'] == 'v2' ) echo 'display: none;';?> ">
-										<h5><?php _e( 'reCAPTCHA v3', 'ihc');?></h5>
-										<div>
-											<?php _e('Site Key:', 'ihc');?> <input type="text" name="ihc_recaptcha_public_v3" value="<?php echo $meta_arr['ihc_recaptcha_public_v3'];?>" class="ihc-deashboard-middle-text-input"/>
+                                <div class="iump-form-line">
+										<h4><?php _e( 'reCAPTCHA v3', 'ihc');?></h4>
+										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
+											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span>  
+                                            <input type="text" name="ihc_recaptcha_public_v3" value="<?php echo $meta_arr['ihc_recaptcha_public_v3'];?>" class="form-control ihc-deashboard-middle-text-input"/>
 										</div>
-										<div>
-											<?php _e('Secret Key:', 'ihc');?> <input type="text" name="ihc_recaptcha_private_v3" value="<?php echo $meta_arr['ihc_recaptcha_private_v3'];?>" class="ihc-deashboard-middle-text-input" />
+										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
+											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>  
+                                            <input type="text" name="ihc_recaptcha_private_v3" value="<?php echo $meta_arr['ihc_recaptcha_private_v3'];?>" class="form-control ihc-deashboard-middle-text-input" />
 										</div>
 										<div class="">
-												<?php _e('Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.
+                                        	<p><strong><?php _e('How to setup:', 'ihc');?></strong></p>
+											<p> <?php _e('1. Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.</p>
+                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>  
+                                            <p>	<?php _e('3. Choose "reCAPTCHA v3".', 'ihc');?></p>
+                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p> 
+                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p> 
 										</div>
+                                  </div>      
 								</div>
 
 								<div style="margin-top: 15px;">
@@ -349,6 +369,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 					<form action="" method="post">
 						<div class="ihc-stuffbox">
@@ -482,6 +503,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 			<form action="" method="post">
 
@@ -525,6 +547,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
 			<div class="ihc-stuffbox">
@@ -569,6 +592,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
 			<div class="ihc-stuffbox">
@@ -711,6 +735,7 @@ switch ($subtab){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			$pages = $pages + ihc_get_redirect_links_as_arr_for_select();
 			?>
 			<form action="" method="post">
@@ -872,6 +897,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
 			<div class="ihc-stuffbox">
@@ -976,6 +1002,7 @@ switch ($subtab){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
 

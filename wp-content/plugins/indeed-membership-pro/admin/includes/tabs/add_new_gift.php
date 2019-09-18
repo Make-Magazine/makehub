@@ -7,6 +7,8 @@
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
+
 $data['id'] = (isset($_GET['id'])) ? $_GET['id'] : 0;
 $data['metas'] = Ihc_Db::gift_templates_get_metas($data['id']);
 $levels = ihc_get_levels_with_payment();

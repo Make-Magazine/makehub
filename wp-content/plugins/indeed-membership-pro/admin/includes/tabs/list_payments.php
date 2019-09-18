@@ -8,7 +8,7 @@ echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
-
+do_action( "ihc_admin_dashboard_after_top_menu" );
 
 if (isset($_REQUEST['delete'])){
 	ihc_delete_payment_entry($_REQUEST['delete']);
@@ -44,9 +44,6 @@ if (isset($_REQUEST['details_id'])){
 
 	if (!empty($data->history)){
 
-		//print the history
-		//$dat = preg_replace('!s:(\d+):"(.*?)";!e', "'s:'.strlen('$2').':\"$2\";'", $data->history);
-		//$dat = preg_replace_callback('!s:(\d+):"(.*?)";!e', 'indeed_preg_match_callback', $data->history);
 		$dat = $data->history;
 
 		$dat = unserialize($dat);
@@ -128,11 +125,11 @@ if ($offset + $limit>$total_items){
 $limit = 25;
 include_once IHC_PATH . 'classes/Ihc_Pagination.class.php';
 $pagination = new Ihc_Pagination(array(
-										'base_url' => $url,
-										'param_name' => 'ihc_payments_list_p',
-										'total_items' => $total_items,
-										'items_per_page' => $limit,
-										'current_page' => $current_page,
+										'base_url' 						=> $url,
+										'param_name' 					=> 'ihc_payments_list_p',
+										'total_items' 				=> $total_items,
+										'items_per_page' 			=> $limit,
+										'current_page' 				=> $current_page,
 ));
 $pagination_str = $pagination->output();
 

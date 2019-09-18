@@ -1513,3 +1513,8 @@ jQuery( document ).ready(function(){
 		});
 
 });
+jQuery(document).ready(function(){
+	jQuery('.ihc-admin-mobile-bttn').on('click', function(){
+		jQuery('.ihc-dashboard-menu-items').toggle();
+	});
+});

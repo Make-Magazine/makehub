@@ -34,7 +34,7 @@ class GutenbergEditorIntegration
     {
         global $current_screen;
         if (!isset($current_screen)) {
-            $current_screen = get_current_screen(); 
+            $current_screen = get_current_screen();
         }
         if ( !method_exists($current_screen, 'is_block_editor') || !$current_screen->is_block_editor() ) {
             return;

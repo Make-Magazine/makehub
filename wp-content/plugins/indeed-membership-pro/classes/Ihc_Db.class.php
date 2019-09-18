@@ -993,7 +993,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 	$q .= " AND uid=%d";
 			$q = $wpdb->prepare($q, $uid);
 		 }
-		 $q .= " ORDER BY create_date DESC LIMIT %d OFFSET %d;";
+		 $q .= " ORDER BY id DESC LIMIT %d OFFSET %d;";
 		 $q = $wpdb->prepare($q, $limit, $offset);
 		 $data = $wpdb->get_results($q);
 		 if ($data){
@@ -1788,6 +1788,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 				foreach ($data as $object){
 					$array = json_decode($object->payment_data, TRUE);
 
+
 					if (empty($array['level']) && !empty($array['custom'])){
 						$temp_paypal_data = json_decode(stripslashes($array['custom']), TRUE);
 						$array['level'] = (isset($temp_paypal_data['level_id'])) ? $temp_paypal_data['level_id'] : '';
@@ -1804,6 +1805,10 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 							$payment_type = 'paypal';
 							break;
 						}
+					}
+					if ( isset( $array['lid'] ) && $array['lid'] == $lid && isset($array['ihc_payment_type']) ){
+							$payment_type = $array['ihc_payment_type'];
+							break;
 					}
 				}
 			}
@@ -4267,7 +4272,37 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			return end( $orders );
 	}
 
+	public static function getLastOrderByTxnId( $txnId='' )
+	{
+			global $wpdb;
+			if ( !$txnId ){
+					return false;
+			}
+			$query = $wpdb->prepare( "SELECT a.id FROM
+																			{$wpdb->prefix}ihc_orders a
+																			INNER JOIN {$wpdb->prefix}ihc_orders_meta b
+																			ON a.id=b.order_id
+																			WHERE
+																			b.meta_key='txn_id'
+																			AND
+																			b.meta_value=%d
+																			ORDER BY a.id DESC
+			", $txnId );
+			return $wpdb->get_var( $query );
+	}
+
 	public static function getLastOrderIdByUserAndLevel( $uid=0, $lid=0 )
+	{
+			global $wpdb;
+			if ( !$uid || !$lid ){
+					return false;
+			}
+			$data = $wpdb->get_var( $wpdb->prepare( "SELECT id
+																									FROM {$wpdb->prefix}ihc_orders WHERE uid=%d AND lid=%d ORDER BY id DESC LIMIT 1;", $uid, $lid ) );
+			return $data;
+	}
+
+	public static function getLastOrderDataByUserAndLevel( $uid=0, $lid=0 )
 	{
 			global $wpdb;
 			if ( !$uid || !$lid ){
@@ -4376,6 +4411,17 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			return $wpdb->query( $query );
 	}
 
+	public static function isSubscriptionTrial( $txnId='', $uid=0, $lid=0 )
+	{
+			if ( empty($txnId) || empty($uid) || empty($lid) ){
+					return false;
+			}
+			if ( !self::level_has_trial_period( $lid ) ){
+					return;
+			}
+
+	}
+
 	public static function level_has_trial_period( $lid=0 )
 	{
 			if ( !$lid ){
@@ -4477,6 +4523,23 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			unset( $data[$key] );
 			return update_option( 'ihc_media_hash_data', $data );
 	}
+
+	public static function isListingUserAcceptEnabled()
+	{
+			$registerFields = get_option( 'ihc_user_fields' );
+			if ( !$registerFields ){
+					return false;
+			}
+			$accept = ihc_array_value_exists( $registerFields, 'ihc_memberlist_accept', 'name' );
+			if ( !$accept ){
+					return false;
+			}
+			if ( empty( $registerFields[$accept] ) || empty( $registerFields[$accept]['display_public_reg'] ) ){
+					return false;
+			}
+			return true;
+	}
+
 
 }
 

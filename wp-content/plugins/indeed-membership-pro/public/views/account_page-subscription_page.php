@@ -1,6 +1,6 @@
 <?php $excluded_from_cancel = array('payza', 'braintree', 'bank_transfer');?>
 <?php $needReasons = ihc_is_magic_feat_active( 'reason_for_cancel' );?>
-
+<?php $allPaymentTypes = ihc_list_all_payments();?>
 <div class="ihc-ap-wrap">
 	<?php if (!empty($data['title'])):?>
 		<h3><?php echo do_shortcode($data['title']);?></h3>
@@ -69,7 +69,7 @@
 					<td class="ihc_account_level_status"><span class="ihc-level-status-set-<?php echo $status;?>"><?php echo $status;?></span></td>
 
 
-                    <td class="ihc-remove-onmobile ihc-content-center">
+                    <td class="ihc-level-type-wrapp ihc-remove-onmobile ihc-content-center">
 
 					<?php switch($level_data['access_type']){
 						case 'unlimited':
@@ -148,22 +148,23 @@
 
                     </td>
 
-                    <td class="ihc-remove-onmobile"><?php echo ihc_convert_date_to_us_format($time_data['start_time']);?></td>
+                    <td class="ihc-level-start-time-wrapp ihc-remove-onmobile"><?php echo ihc_convert_date_to_us_format($time_data['start_time']);?></td>
 
 					<?php
 					if ($expire && $expire!='--' && $expire!=__('Expired', 'ihc')){
-						?><td><?php echo ihc_convert_date_to_us_format($expire);?></td><?php
+						?><td class="ihc-level-end-time-wrapp"><?php echo ihc_convert_date_to_us_format($expire);?></td><?php
 					} else {
-						?><td><?php echo $expire; ?></td>
+						?><td class="ihc-level-end-time-wrapp"><?php echo $expire; ?></td>
 						<?php
 					}?>
 
                     <?php
+
 					$paid_type = $level_data['payment_type'];
 					if ($paid_type == 'payment') $paid_type = __('Paid', 'ihc');
 					else $paid_type = __('Free', 'ihc');
 					?>
-                    <td class="ihc-remove-onmobile ihc-content-capitalize"><?php echo $paid_type;?></td>
+                    <td class="ihc-level-paid-status-wrapp ihc-remove-onmobile ihc-content-capitalize"><?php echo $paid_type;?></td>
 
 
 
@@ -177,9 +178,10 @@
 					}
 
 					$via ='';
-					if($payment_type_for_this_level) $via = 'via <span>'.$payment_type_for_this_level.'</span>';
+					$paymentTypeLabel = isset( $allPaymentTypes[$payment_type_for_this_level] ) ? $allPaymentTypes[$payment_type_for_this_level] : $payment_type_for_this_level;
+					if($payment_type_for_this_level) $via = 'via <span>'.$paymentTypeLabel.'</span>';
 					?>
-                    <td class="ihc-remove-onmobile ihc-subscription-table-price"><?php echo $price.$per; ?><div class="ihc-level-payment-via"><?php echo $via; ?></div></td>
+                    <td class="ihc-level-price-wrapp ihc-remove-onmobile ihc-subscription-table-price"><?php echo $price.$per; ?><div class="ihc-level-payment-via"><?php echo $via; ?></div></td>
 
                     <td>
                     <div class="ihc-subscription-table-actions ihc-content-right" id="<?php echo $hidden_div;?>">

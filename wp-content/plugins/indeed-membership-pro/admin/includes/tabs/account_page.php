@@ -3,6 +3,8 @@ echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
+
 if (isset($_POST['ihc_save'])){
 	//update/save
 	ihc_save_update_metas('account_page');

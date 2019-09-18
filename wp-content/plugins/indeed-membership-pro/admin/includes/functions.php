@@ -831,9 +831,23 @@ function ihc_check_payment_gateways(){
 			}
 		}
 		if ($paid_levels){
-			$payments_gateways = array('paypal', 'authorize', 'twocheckout', 'bank_transfer', 'stripe', 'braintree', 'payza', 'mollie', 'pagseguro', 'paypal_express_checkout');
+			/*
+			$payments_gateways = array(
+																		'paypal',
+																		'authorize',
+																		'twocheckout',
+																		'bank_transfer',
+																		'stripe',
+																		'braintree',
+																		'payza',
+																		'mollie',
+																		'pagseguro',
+																		'paypal_express_checkout'
+			);
+			*/
+			$payments_gateways = ihc_list_all_payments();
 			$err_msg = TRUE;
-			foreach ($payments_gateways as $payment_gateway){
+			foreach ($payments_gateways as $payment_gateway => $label ){
 				if (ihc_check_payment_available($payment_gateway)){
 					$err_msg = FALSE;
 					break;

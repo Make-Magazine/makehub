@@ -1287,6 +1287,10 @@ class UserAddEdit
 							} else if ( $value['display_admin'] == 1 && !$this->is_public && $this->type == 'edit' ){
 									$custom_meta_user[$name] = '';
 							}
+					} else if ( $value['type']=='single_checkbox' && empty( $_POST[$name] )) {
+							if ( $name == 'ihc_memberlist_accept' || $name == 'ihc_optin_accept' ){
+									$custom_meta_user[$name] = 0;
+							}
 					}
 			}
 
@@ -1444,6 +1448,9 @@ class UserAddEdit
 										$trans_info['ihc_payment_type'] = 'stripe';
 									}
 									unset($_POST['stripeToken']);
+								}
+								if ( !empty( $pay_result['cardErrors'] ) ){
+										\Indeed\Ihc\JsAlerts::setError( __( 'Stripe: Card is not valid', 'ihc' ) );
 								}
 							}
 							break;
@@ -1832,10 +1839,16 @@ class UserAddEdit
 						}
 
 						if ($secret){
+							/*
 							if (!class_exists('ReCaptcha')){
 								include_once IHC_PATH . 'classes/ReCaptcha/ReCaptcha.php';
 							}
 							$recaptcha = new ReCaptcha($secret);
+							*/
+
+							require_once IHC_PATH . 'classes/services/ReCaptcha/autoload.php';
+							$recaptcha = new \ReCaptcha\ReCaptcha( $secret, new \ReCaptcha\RequestMethod\CurlPost() );
+
 							$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 
 							if (!$resp->isSuccess()){
@@ -2177,6 +2190,8 @@ class UserAddEdit
 								break;
 
 							default:
+									$this->handle_levels_assign($lid);
+									update_user_meta($this->user_id, 'ihc_user_levels', $user_levels);
 									$options = array(
 											'uid'										=> $this->user_id,
 											'lid'										=> $lid,
@@ -2186,6 +2201,7 @@ class UserAddEdit
 											'ihc_dynamic_price'			=> esc_sql(@$_POST['ihc_dynamic_price']),
 											'defaultRedirect'				=> $url_return,
 									);
+
 									$paymentObject = new \Indeed\Ihc\DoPayment($options, $this->payment_gateway, $url_return);
 									$paymentObject->insertOrder()->processing();
 								break;

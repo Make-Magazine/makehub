@@ -9,6 +9,8 @@ echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
+
 $meta_arr = array(
 							'num_of_entries' => 10,
 							'entries_per_page' => 5,
@@ -49,7 +51,16 @@ jQuery(document).ready(function(){
 	$tab = (empty($_GET['subtab'])) ? 'shortcode_generator' : $_GET['subtab'];
 	switch ($tab){
 		case 'shortcode_generator':
+
+			$showWorning = \Ihc_Db::isListingUserAcceptEnabled();
 ?>
+<?php if ( $showWorning ):?>
+		<div class='ihc-error-global-dashboard-message'>
+				<div class='ihc-close-notice ihc-js-close-admin-dashboard-notice'>x</div>
+				<p><?php _e( 'Warning: "Accept display on MembersList" field is activated on Register form. Members Directory showcase will include only users who accepted.', 'ihc' );?></p>
+		</div>
+<?php endif;?>
+
 	<div class="ihc-user-list-wrap">
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text"><?php _e('Members Directory', 'ihc');?></span>

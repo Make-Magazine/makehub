@@ -2,7 +2,7 @@
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='paypal') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=paypal';?>"><?php _e('PayPal', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='authorize') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=authorize';?>"><?php _e('Authorize', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='stripe') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=stripe';?>"><?php _e('Stripe', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='stripe_checkout_v2') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=stripe_checkout_v2';?>"><?php _e('Stripe Checkout V2', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='stripe_checkout') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=stripe_checkout';?>"><?php _e('Stripe Checkout', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='twocheckout') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=twocheckout';?>"><?php _e('2Checkout', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='braintree') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=braintree';?>"><?php _e('Braintree', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='payza') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=payza';?>"><?php _e('Payza', 'ihc');?></a>
@@ -22,6 +22,7 @@ if (empty($_GET['subtab'])){
 	echo ihc_check_default_pages_set();//set default pages message
 	echo ihc_check_payment_gateways();
 	echo ihc_is_curl_enable();
+	do_action( "ihc_admin_dashboard_after_top_menu" );
 	?>
 	<div class="iump-page-title">Ultimate Membership Pro -
 		<span class="second-text">
@@ -60,16 +61,16 @@ if (empty($_GET['subtab'])){
 		   </a>
 		</div>
 
-		<!-- div class="iump-payment-box-wrap">
+		<div class="iump-payment-box-wrap">
 			 <?php $pay_stat = ihc_check_payment_status( 'stripe_checkout_v2' ); ?>
-			 <a href="<?php echo $url.'&tab='.$tab.'&subtab=stripe_checkout_v2';?>">
+			 <a href="<?php echo $url.'&tab='.$tab.'&subtab=stripe_checkout';?>">
 			<div class="iump-payment-box <?php echo $pay_stat['active']; ?>">
-				<div class="iump-payment-box-title">Stripe Checkout V2</div>
+				<div class="iump-payment-box-title">Stripe Checkout</div>
 								<div class="iump-payment-box-type"><?php _e( 'OffSite payment solution (3d secure ready)', 'ihc' );?></div>
 				<div class="iump-payment-box-bottom">Settings: <span><?php echo $pay_stat['settings']; ?></span></div>
 			</div>
 			 </a>
-		</div -->
+		</div>
 
 		<div class="iump-payment-box-wrap">
 		   <?php $pay_stat = ihc_check_payment_status('twocheckout'); ?>
@@ -157,6 +158,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -294,6 +296,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -428,12 +431,13 @@ if (empty($_GET['subtab'])){
 			<?php
 		break;
 
-		case 'stripe_checkout_v2':
+		case 'stripe_checkout':
 		ihc_save_update_metas('payment_stripe_checkout_v2');//save update metas
 		$meta_arr = ihc_return_meta_arr('payment_stripe_checkout_v2');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<div class="iump-page-title">Ultimate Membership Pro -
 			<span class="second-text">
@@ -442,7 +446,7 @@ if (empty($_GET['subtab'])){
 		</div>
 		<form action="" method="post">
 		<div class="ihc-stuffbox">
-					<h3><?php _e('Stripe Activation:', 'ihc');?></h3>
+					<h3><?php _e('Stripe Checkout Activation', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
 							<h4><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </h4>
@@ -459,40 +463,47 @@ if (empty($_GET['subtab'])){
 					</div>
 				</div>
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Stripe Settings:', 'ihc');?></h3>
+				<h3><?php _e('Stripe Checkout Settings', 'ihc');?></h3>
 				<div class="inside">
-					<div class="iump-form-line">
-						<label class="iump-labels"><?php _e('Secret Key:', 'ihc');?></label>
-						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_secret_key'];?>" name="ihc_stripe_checkout_v2_secret_key" style="width: 300px;" />
+                <div class="row" style="margin-left: 0px;">
+                  <div class="col-xs-6">
+					<div class="iump-form-line input-group">
+						<span class="input-group-addon" ><?php _e('Secret Key:', 'ihc');?></span>
+						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_secret_key'];?>" name="ihc_stripe_checkout_v2_secret_key"  class="form-control" />
 					</div>
-					<div class="iump-form-line">
-						<label class="iump-labels"><?php _e('Publishable Key:', 'ihc');?></label>
-						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_publishable_key'];?>" name="ihc_stripe_checkout_v2_publishable_key" style="width: 300px;" />
+					<div class="iump-form-line input-group">
+						<span class="input-group-addon" ><?php _e('Publishable Key:', 'ihc');?></span>
+						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_publishable_key'];?>" name="ihc_stripe_checkout_v2_publishable_key" class="form-control"/>
 					</div>
+				  </div>
+                  </div>
 
 					<div class="iump-form-line">
 						<?php
 							$site_url = site_url();
 							$site_url = trailingslashit($site_url);
-							$notify_url = add_query_arg('ihc_action', 'stripe_checkout_v2', $site_url);
+							$notify_url = add_query_arg( 'ihc_action', 'stripe_checkout', $site_url );
 							_e("<strong>Important:</strong> set your 'Webhook' to: ");
 							echo '<strong>' . $notify_url . '</strong>'; /// admin_url("admin-ajax.php") . "?action=ihc_twocheckout_ins"
 						?>
 					</div>
 
-					<div style="font-size: 11px; color: #333; padding-left: 10px;">
+					<div style="font-size: 13px; padding-left: 10px; line-height:25px;">
 						<ul class="ihc-info-list">
 							<li><?php _e('1. Go to', 'ihc');?> <a href="http://stripe.com" target="_blank">http://stripe.com</a> <?php _e('and login with username and password.', 'ihc');?></li>
 							<li><?php _e('2. After that click on "Dashboard", and then select "Your account" - "Account settings".', 'ihc');?></li>
 							<li><?php _e('3. A popup will appear and you must go to API Keys, here you will find the "Secret Key" and	"Publishable Key".', 'ihc');?></li>
-							<li><?php echo __("4. Set your Web Hook URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong>';?></li>
+							<li><?php echo __("4. Set your Web Hook URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong>';?> <?php _e('choosing to trigger for "All Events".', 'ihc');?></li>
+                            <li><?php echo __("5. Enable Email notifications from  <strong>Manage payments that require 3D Secure</strong> on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/billing/automatic" target="_blank">https://dashboard.stripe.com/account/billing/automatic</a>';?></li>
+                            <li><?php echo __("6. Customize Stripe Checkout page and Emails on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/branding" target="_blank">https://dashboard.stripe.com/account/branding</a>';?></li>
 						</ul>
 					</div>
 					<div class="iump-form-line">
+                    <h2><?php _e('Test Credentials', 'ihc');?></h2>
 												<p><?php _e('For Test/Sandbox mode use the next credentials available:', 'ihc');?></p>
 												<a href="https://stripe.com/docs/testing" target="_blank">https://stripe.com/docs/testing</a>
 													<p><?php _e('Example:', 'ihc');?></p>
-													<p><?php _e('Credit Card: ', 'ihc');?>4000000000003063</p>
+													<p><?php _e('Credit Card: ', 'ihc');?>4000002500003155</p>
 													<p><?php _e('Expire Time: ', 'ihc');?>1222</p>
 											</div>
 					<div class="ihc-wrapp-submit-bttn iump-submit-form">
@@ -501,12 +512,18 @@ if (empty($_GET['subtab'])){
 				</div>
 			</div>
 
+<?php
+$pages = ihc_get_all_pages();
+?>
 							<div class="ihc-stuffbox">
-								<h3><?php _e('Other Settings:', 'ihc');?></h3>
+								<h3><?php _e('Additional Settings', 'ihc');?></h3>
 								<div class="inside">
 									<div class="iump-form-line iump-no-border">
-										<label class="iump-labels"><?php _e('Language:', 'ihc');?></label>
-										<select name="ihc_stripe_checkout_v2_locale_code">
+                                    <div class="row" style="margin-left: 0px;">
+                                     <div class="col-xs-4">
+										<h4><?php _e('Stripe Checkout page Language:', 'ihc');?></h4>
+                                        <div>
+										<select name="ihc_stripe_checkout_v2_locale_code" class="form-control">
 												<?php
 														$locales = array(
 																	'zh' => 'Simplified Chinese',
@@ -527,8 +544,72 @@ if (empty($_GET['subtab'])){
 														<option value="<?php echo $k;?>" <?php if ($meta_arr['ihc_stripe_checkout_v2_locale_code']==$k) echo 'selected';?> ><?php echo $v;?></option>
 												<?php endforeach;?>
 										</select>
+                                      </div>
 									</div>
 
+								 </div>
+                                 </div>
+
+									<div class="iump-form-line iump-no-border">
+                                    <div class="row" style="margin-left: 0px;">
+                                     <div class="col-xs-4">
+										<h4><?php _e('Success redirect page:', 'ihc');?></h4>
+                                        <div>
+										<select name="ihc_stripe_checkout_v2_success_page" class="form-control">
+												<option value="-1" <?php if($meta_arr['ihc_stripe_checkout_v2_success_page']==-1)echo 'selected';?> >...</option>
+												<?php
+													if ($pages){
+														foreach ($pages as $k=>$v){
+															?>
+																<option value="<?php echo $k;?>" <?php if($meta_arr['ihc_stripe_checkout_v2_success_page']==$k)echo 'selected';?> ><?php echo $v;?></option>
+															<?php
+														}
+													}
+												?>
+										</select>
+                                      </div>
+									</div>
+
+								 </div>
+                                 </div>
+
+									<div class="iump-form-line iump-no-border">
+                                    <div class="row" style="margin-left: 0px;">
+                                     <div class="col-xs-4">
+										<h4><?php _e('Cancel redirect page:', 'ihc');?></h4>
+                                        <div>
+										<select name="ihc_stripe_checkout_v2_cancel_page" class="form-control">
+												<option value="-1" <?php if($meta_arr['ihc_stripe_checkout_v2_cancel_page']==-1)echo 'selected';?> >...</option>
+												<?php
+													if ($pages){
+														foreach ($pages as $k=>$v){
+															?>
+																<option value="<?php echo $k;?>" <?php if($meta_arr['ihc_stripe_checkout_v2_cancel_page']==$k)echo 'selected';?> ><?php echo $v;?></option>
+															<?php
+														}
+													}
+												?>
+										</select>
+                                      </div>
+									</div>
+
+								 </div>
+                                 </div>
+
+									<div class="iump-form-line">
+
+                                    <div class="row" style="margin-left: 0px;">
+                                     <div class="col-xs-4">
+											<h4><?php _e( "Autocomplete Stripe Checkout Email Address with current user account.", 'ihc' );?></h4>
+											<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+													<input type="checkbox" class="iump-switch" onclick="iumpCheckAndH(this, '#ihc_stripe_checkout_v2_use_user_email');" <?php if ( !empty( $meta_arr['ihc_stripe_checkout_v2_use_user_email'] ) ) echo 'checked';?> />
+													<div class="switch" style="display:inline-block;"></div>
+											</label>
+											<input type="hidden" name="ihc_stripe_checkout_v2_use_user_email" id="ihc_stripe_checkout_v2_use_user_email" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_use_user_email'];?>">
+									</div>
+
+								 </div>
+                                 </div>
 									<div class="ihc-wrapp-submit-bttn iump-submit-form">
 										<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 									</div>
@@ -536,18 +617,21 @@ if (empty($_GET['subtab'])){
 							</div>
 
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Multi-Payment Selection:', 'ihc');?></h3>
+				<h3><?php _e('Multi-Payment Selection', 'ihc');?></h3>
 				<div class="inside">
-					<div class="iump-form-line iump-no-border">
-						<label class="iump-labels"><?php _e('Label:', 'ihc');?></label>
-						<input type="text" name="ihc_stripe_checkout_v2_label" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_label'];?>" />
+                <div class="row" style="margin-left: 0px;">
+                  <div class="col-xs-3">
+					<div class="iump-form-line iump-no-border input-group">
+						<span class="input-group-addon"><?php _e('Label:', 'ihc');?></span>
+						<input type="text" name="ihc_stripe_checkout_v2_label" class="form-control" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_label'];?>" />
 					</div>
 
-					<div class="iump-form-line iump-no-border">
-						<label class="iump-labels"><?php _e('Order:', 'ihc');?></label>
-						<input type="number" min="1" name="ihc_stripe_checkout_v2_select_order" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_select_order'];?>" />
+					<div class="iump-form-line iump-no-border input-group">
+						<span class="input-group-addon"><?php _e('Order:', 'ihc');?></span>
+						<input type="number" min="1" name="ihc_stripe_checkout_v2_select_order" class="form-control" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_select_order'];?>" />
 					</div>
-
+					</div>
+                    </div>
 					<div class="ihc-wrapp-submit-bttn iump-submit-form">
 						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
@@ -564,6 +648,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -628,7 +713,7 @@ if (empty($_GET['subtab'])){
                         	<p><?php _e('For Test/Sandbox mode use the next credentials available:', 'ihc');?></p>
                         	<a href="https://developer.authorize.net/hello_world/testing_guide/" target="_blank">https://developer.authorize.net/hello_world/testing_guide/</a>
                             <p><?php _e('Example:', 'ihc');?></p>
-                            <p><?php _e('Credit Card: ', 'ihc');?>4111111111111111</p>
+                            <p><?php _e('Credit Card: ', 'ihc');?>370000000000002</p>
                             <p><?php _e('Expire Time: ', 'ihc');?>1222</p>
                         </div>
 						<div class="ihc-wrapp-submit-bttn iump-submit-form">
@@ -666,6 +751,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -706,7 +792,7 @@ if (empty($_GET['subtab'])){
 							<input type="text" value="<?php echo $meta_arr['ihc_twocheckout_private_key'];?>" name="ihc_twocheckout_private_key" style="width: 300px;" />
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels"><?php _e('Account Number:', 'ihc');?></label>
+							<label class="iump-labels"><?php _e('Merchant Code (Account Number):', 'ihc');?></label>
 							<input type="text" value="<?php echo $meta_arr['ihc_twocheckout_account_number'];?>" name="ihc_twocheckout_account_number" style="width: 300px;" />
 						</div>
 						<div class="iump-form-line">
@@ -786,6 +872,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
@@ -907,6 +994,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
@@ -935,7 +1023,7 @@ if (empty($_GET['subtab'])){
 					<h3><?php _e('Bank Transfer Message:', 'ihc');?></h3>
 					<div class="inside">
 							<div style="padding-left: 5px; width: 70%;display:inline-block;">
-								<?php wp_editor( $meta_arr['ihc_bank_transfer_message'], 'ihc_bank_transfer_message', array('textarea_name'=>'ihc_bank_transfer_message', 'quicktags'=>TRUE) );?>
+								<?php wp_editor( stripslashes($meta_arr['ihc_bank_transfer_message']), 'ihc_bank_transfer_message', array('textarea_name'=>'ihc_bank_transfer_message', 'quicktags'=>TRUE) );?>
 							</div>
 							<div style="width: 25%; display: inline-block; vertical-align: top;margin-left: 10px; color: #333;">
 								<div>{siteurl}</div>
@@ -983,6 +1071,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
@@ -1068,6 +1157,7 @@ if (empty($_GET['subtab'])){
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
 		echo ihc_is_curl_enable();
+		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -1150,6 +1240,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -1209,7 +1300,7 @@ if (empty($_GET['subtab'])){
 								<p>4. <?php _e( 'If you do not have one, create with "Request API signature" option', 'ihc' );?></p>
 								<p>5. <?php _e( 'Copy credentials received on the next page (API Username, API Password, Signature)', 'ihc' );?></p>
 								<p><?php _e( 'for sandbox', 'ihc' );?> <a target="_blank" href="https://www.sandbox.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">https://www.sandbox.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature</a></p>
-								<p><?php _e( 'for sandbox', 'ihc' );?> <a target="_blank" href="https://www.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">https://www.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature</a></p>
+								<p><?php _e( 'for live environment', 'ihc' );?> <a target="_blank" href="https://www.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">https://www.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature</a></p>
 							</div>
 
 							<div class="iump-form-line iump-no-border">
@@ -1252,6 +1343,7 @@ if (empty($_GET['subtab'])){
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
+			do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">

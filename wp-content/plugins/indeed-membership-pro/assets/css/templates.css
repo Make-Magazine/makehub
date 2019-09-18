@@ -8225,6 +8225,57 @@ margin:0 auto;
     float: left;
 	}
 	
+	.ihc-account-subscr-list thead, .ihc-account-subscr-list tfoot {
+    display: none;
+	}
+	.ihc-account-subscr-list tbody {
+    display: block;
+	}
+	.ihc-account-subscr-list tr{
+		display:block;
+		display: flow-root;
+    padding: 5px !important;
+    box-sizing: border-box;
+    /* margin-bottom: 20px; */
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+	}
+	.ihc-subscription-table-actions{
+		width:auto;
+	}
+	.ihc-account-subscr-list tr td {
+    display: block;
+    text-align: right!important;
+	padding: 0 !important;
+	}
+	.ihc-account-subscr-list .ihc-level-name-wrapp{
+		padding: 10px 0 !important;
+		    font-size: 14px;
+	}
+	.ihc-account-subscr-list .ihc-level-end-time-wrapp, .ihc-account-subscr-list .ihc-level-start-time-wrapp{
+		    display: inline-flex;	
+	}
+	.ihc-account-subscr-list .ihc-level-end-time-wrapp:before{
+		content:" - ";
+		padding:0 5px;
+	}
+	.ihc-account-subscr-list .ihc-level-paid-status-wrapp{
+		padding-top:10px !important;
+	}
+	.ihc-account-subscr-list .ihc-subscription-table-actions{
+		padding-top:10px !important;	
+	}
+	.ihc-account-subscr-list .iump-subscription-table-button{
+		margin-right:0px;
+		margin-left:6px;
+	}
+	.iump-user-page-name{
+		font-size:14px;
+	}
+	.ihc-ap-top-theme-4 .iump-user-page-name {
+    margin-bottom: 10px !important;
+}
+	
 }
 /*--RESPONSIVE TABLE---*/
 @media (max-width: 620px) {

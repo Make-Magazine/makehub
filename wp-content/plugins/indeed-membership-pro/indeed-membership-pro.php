@@ -3,7 +3,7 @@
 Plugin Name: Indeed Ultimate Membership Pro
 Plugin URI: https://www.wpindeed.com/
 Description: The most complete and easy to use Membership Plugin, ready to allow or restrict your content, Page for certain Users.
-Version: 8.1
+Version: 8.3.2
 Author: indeed
 Author URI: https://www.wpindeed.com
 */
@@ -101,6 +101,8 @@ $ihcMediaSecurity = new \Indeed\Ihc\UploadFilesSecurity();
 $ihcGeneralActions = new \Indeed\Ihc\GeneralActions();
 
 $ihcWpLoginCustomCss = new \Indeed\Ihc\WpLogin();
+
+$IhcJsAlerts = new \Indeed\Ihc\JsAlerts();
 
 /******************** END MODULES **************************/
 
@@ -973,9 +975,15 @@ function ihc_add_custom_top_menu_dashboard(){
 
 	/// PAYMENT GATEWAYS
 	$gateways = ihc_get_active_payments_services();
+	if ( isset($gateways['stripe_checkout_v2']) ){
+			unset( $gateways['stripe_checkout_v2'] );
+			$gateways['stripe_checkout'] = __( 'Stripe Checkout', 'ihc' );
+	}
 	foreach ($gateways as $k=>$v){
 		$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_payment_gateways', 'id'=>'ihc_dashboard_menu_gateway_' . $k, 'title'=>$v, 'href'=>admin_url('admin.php?page=ihc_manage&tab=payment_settings&subtab=' . $k), 'meta'=>array()));
 	}
+
+
 	$magicFeatures = ihcGetListOfMagicFeatures();
 	foreach ( $magicFeatures as $k => $magicFeature ){
 			$wp_admin_bar->add_menu(array('parent'=>'magic_feat', 'id'=>'magic_feat_' . $k, 'title'=> $magicFeature['label'], 'href'=> $magicFeature['link'], 'meta'=>array()));
@@ -984,13 +992,13 @@ function ihc_add_custom_top_menu_dashboard(){
 
 	/// DEFAULT PAGES
 	$array = array(
-					'ihc_general_login_default_page' => __('Login', 'ihc'),
-					'ihc_general_register_default_page' => __('Register', 'ihc'),
-					'ihc_subscription_plan_page' => __('Subscription Plan', 'ihc'),
-					'ihc_general_lost_pass_page' => __('Lost Password', 'ihc'),
-					'ihc_general_logout_page' => __('LogOut', 'ihc'),
-					'ihc_general_user_page' => __('User Account Page', 'ihc'),
-					'ihc_general_tos_page' => __('TOS', 'ihc'),
+					'ihc_general_login_default_page' 				=> __('Login', 'ihc'),
+					'ihc_general_register_default_page' 		=> __('Register', 'ihc'),
+					'ihc_subscription_plan_page' 						=> __('Subscription Plan', 'ihc'),
+					'ihc_general_lost_pass_page' 						=> __('Lost Password', 'ihc'),
+					'ihc_general_logout_page' 							=> __('LogOut', 'ihc'),
+					'ihc_general_user_page' 								=> __('User Account Page', 'ihc'),
+					'ihc_general_tos_page' 									=> __('TOS', 'ihc'),
 	);
 	foreach ($array as $k=>$v){
 		$page = get_option($k);
@@ -1196,7 +1204,7 @@ function ihc_payment_gate_check(){
 				$directLogin = new \Indeed\Ihc\Services\DirectLogin();
 				$directLogin->handleRequest($token);
 				break;
-			case 'stripe_checkout_v2':
+			case 'stripe_checkout':
 				$object = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
 				$object->webhook();
 				break;

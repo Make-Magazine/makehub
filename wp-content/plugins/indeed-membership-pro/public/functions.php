@@ -884,7 +884,6 @@ function ihc_pay_new_lid_with_stripe($request=array()){
 	 * @return boolean
 	 */
 	 $ihc_dont_pay_after_discount = false;
-
 	if (isset($request['stripeToken']) && isset($request['stripeEmail']) && isset($request['lid']) && isset($request['uid']) ) {
 
 		if (!class_exists('ihcStripe')){

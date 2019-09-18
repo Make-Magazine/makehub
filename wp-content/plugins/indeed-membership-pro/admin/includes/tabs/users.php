@@ -86,6 +86,7 @@ if (!empty($ihc_error_register) && count($ihc_error_register)>0){
 echo ihc_check_default_pages_set();
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
 
 	if (isset($_REQUEST['ihc-edit-user']) || isset($_REQUEST['ihc-new-user'])){
 		//add edit user
@@ -392,10 +393,14 @@ $individual_page = get_option( 'ihc_individual_page_enabled' );
 								<div style="display: inline-block;float: left;" >
 									<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" onClick="ihcFirstConfirm('<?php _e('Are You Sure You want to delete selected Users?');?>');" class="button button-primary button-large"/>
 								</div>
-
+<?php
+$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+$url = remove_query_arg('ihc_limit', $url);
+$url = remove_query_arg('ihcdu_page', $url);
+?>
 								<div style="display: inline-block;float: right;margin-right:10px;">
 									<strong><?php _e('Number of Users to Display:', 'ihc');?></strong>
-									<select name="ihc_limit" onChange="window.location = '<?php echo admin_url('admin.php');?>?page=ihc_manage&tab=users&ihc_limit='+this.value;">
+									<select name="ihc_limit" class="js-ihc-search-users-limit" onChange="window.location = '<?php echo $url;?>&ihc_limit='+this.value;">
 										<?php
 											foreach(array(5,25,50,100,200,500) as $v){
 												?>

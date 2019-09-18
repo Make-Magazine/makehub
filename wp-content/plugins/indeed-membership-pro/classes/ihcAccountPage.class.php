@@ -250,7 +250,7 @@ if (!class_exists('ihcAccountPage')){
 					}
 					$data['menu'][$k]['class'] = 'ihc-ap-menu-item';
 					$data['menu'][$k]['class'] .= ($k==$this->tab) ? ' ihc-ap-menu-item-selected' : '';
-					if ( isset( $v['url'] ) ){
+					if ( !empty( $v['url'] ) ){
 							$data['menu'][$k]['url'] = $v['url'];
 					} else {
 							$data['menu'][$k]['url'] = add_query_arg( 'ihc_ap_menu', $k, $this->base_url );

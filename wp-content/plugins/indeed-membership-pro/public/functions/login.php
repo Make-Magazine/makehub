@@ -200,10 +200,15 @@ function ihc_do_check_login_recaptcha($url=''){
 	 }
 	if ($secret){
 		if (isset($_POST['g-recaptcha-response'])){
+			/*
 			if (!class_exists('ReCaptcha')){
 				require_once IHC_PATH . 'classes/ReCaptcha/ReCaptcha.php';
 			}
 			$recaptcha = new ReCaptcha($secret);
+			*/
+			
+			require_once IHC_PATH . 'classes/services/ReCaptcha/autoload.php';
+			$recaptcha = new \ReCaptcha\ReCaptcha( $secret, new \ReCaptcha\RequestMethod\CurlPost() );
 			$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
 			if (!$resp->isSuccess()){
 				$captcha_error = TRUE;

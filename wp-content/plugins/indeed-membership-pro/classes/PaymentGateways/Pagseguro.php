@@ -135,14 +135,16 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                   $trialTimeType = 'Days';
                   break;
                 case 'W':
-                  $trialTimeType = 'Days';
+                  $trialTimeType = 'Weekly';
                   $trialTimeValue = $trialTimeValue * 7;
                   break;
                 case 'M':
-                  $trialTimeType = 'Months';
+                  $trialTimeType = 'Monthly';
+				  $trialTimeValue = $trialTimeValue * 30;
                   break;
                 case 'Y':
-                  $trialTimeType = 'Years';
+                  $trialTimeType = 'Yearly';
+				  $trialTimeValue = $trialTimeValue * 365;
                   break;
             }
             $trial = TRUE;

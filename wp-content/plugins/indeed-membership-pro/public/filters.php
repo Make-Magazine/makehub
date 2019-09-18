@@ -131,7 +131,7 @@ function ihc_filter_query_list_posts($query) {
 	 * @param object
 	 * @return object
 	 */
-	  if (get_option('ihc_listing_show_hidden_post_pages')){
+	 if (get_option('ihc_listing_show_hidden_post_pages')){
 	  		return $query;
 	  }
 	  if (function_exists('is_bbpress') && get_post_type() == 'topic'){
@@ -159,9 +159,12 @@ function ihc_filter_query_list_posts($query) {
 												ORDER BY a.post_id'
 				);
 
+
+
 				if (!empty($data) && is_array($data)){
 					$iump_posts_not_in = array();
 					$posts = array();
+
 					foreach ($data as $object){
 						$post_id = $object->post_id;
 						if (!empty($object->who)){
@@ -169,28 +172,47 @@ function ihc_filter_query_list_posts($query) {
 						} else if (!empty($object->type)){
 							$posts[$post_id]['type'] = $object->type;
 						}
+
+
 						//////////
+						$block = 0;
 						if (!empty($posts[$post_id]) && !empty($posts[$post_id]['who']) && !empty($posts[$post_id]['type'])){
 							$for = explode(',', $posts[$post_id]['who']);
 							$block = ihc_test_if_must_block($posts[$post_id]['type'], $current_user, $for, $post_id);
 							if ($block){
 								$iump_posts_not_in[] = $post_id;
 							}
+
 							unset($posts[$post_id]);
 						}
 					}
+
 					unset($posts);
 					unset($data);
 				}
 			}
 
+			if (!empty($iump_posts_not_in)){
+					$query->set( 'post__not_in', $iump_posts_not_in );
+			}
 
-		if (!empty($iump_posts_not_in)){
-			$query->set('post__not_in', $iump_posts_not_in);
-		}
+			/// post types
+			$LockRules = new Indeed\Ihc\LockRules();
+			$disabledPostTypes = $LockRules->setPostId( 0 )->getBlockedPostTypes();
+			if ( $disabledPostTypes ){
+      		$searchablePostTypes = get_post_types( array( 'exclude_from_search' => false ) );
+					foreach ( $disabledPostTypes as $disabledPostType ){
+							if ( isset( $searchablePostTypes[$disabledPostType] ) ){
+									unset( $searchablePostTypes[$disabledPostType] );
+							}
+					}
+					$query->set( 'post_type', $searchablePostTypes );
+			}
+
 	 }
 	 return $query;
 }
+
 
 function ihc_filter_print_bank_transfer_message($content = ''){
 	/*

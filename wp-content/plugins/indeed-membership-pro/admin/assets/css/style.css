@@ -2944,21 +2944,34 @@ color: #21759b;
     font-size: 12px !important;
 }
 
-@media screen and (max-width: 1280px) {
-.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title div{
-	/*display:none;*/
+
+.ihc-admin-mobile-bttn:before {
+    color: #b4b9be;
+    content: "\f0c9";
+    font: normal normal normal 40px/1 FontAwesome-ihc;
+    line-height: 40px;
 }
+.ihc-admin-mobile-bttn-wrapp{
+	display: none;
+	width: 100%;
+	height: 40px;
+	clear: both;
 }
-@media screen and (max-width: 1440px) {
-    .ihc-coupon-admin-box-wrap{
-       width: 33%;
-    }
+.ihc-admin-mobile-bttn {
+	width: 40px;
+    height: 40px;
+	text-align: center;
+	float: right;
+	margin-bottom: 10px;
+	cursor: pointer;
 }
-@media (max-width: 1500px){
-	.ihc-magic-box-wrap{
-		width: 33%;
-	}
+.ihc-admin-mobile-bttn:hover, .ihc-admin-mobile-bttn:focus {
+    
+    outline: 0;
 }
+
+
+
 
 /*** SEARCH USERS **********/
 .ihc-search-user-select-filter-bttn{
@@ -3070,4 +3083,70 @@ color: #21759b;
 }
 .ihc-filter-search{
 	padding:40px 0;
+}
+
+
+
+@media screen and (max-width: 1280px) {
+.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title div{
+	/*display:none;*/
+}
+}
+@media screen and (max-width: 1440px) {
+    .ihc-coupon-admin-box-wrap{
+       width: 33%;
+    }
+}
+@media (max-width: 1500px){
+	.ihc-magic-box-wrap{
+		width: 33%;
+	}
+}
+@media screen and (max-width: 782px){
+	.iump-wrapper .ihc-admin-tables tbody td, .iump-wrapper .ihc-admin-tables tbody th{
+		    display: table-cell !important;	
+	}
+	.ihc-filters-wrapper .col-xs-8, .ihc-filters-wrapper .col-xs-6, .ihc-filters-wrapper .col-xs-4{
+		float:none;
+		width:100%;
+	}
+	.iump-pagination-wrapper{
+		margin-top:15px;	
+	}
+	.ihc-special-buttons-users{
+		margin-top:15px;
+	}
+	.ihc-subtab-menu .ihc-subtab-menu-item:first-child{
+		    margin-left: 0px;
+	}
+}
+@media (max-width: 361px){
+	.ihc-admin-mobile-bttn-wrapp{
+		display:block;
+	}
+	.ihc-dashboard-menu-items{
+		/*min-width: 0px !important;*/
+		display: none;
+	}
+	.ihc-dashboard-menu ul{
+		height:auto;
+		background-color: rgba(80,103,107,1.0);
+		margin-top:-10px;
+	}
+	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu ul li{
+		float:none;
+		display:block;
+		width:100%;
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+	}
+	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title{
+		padding: 8px 1px;
+		    line-height: 11px;
+	}
+	.ihc-dashboard-menu-items .fa-ihc-menu{
+		font-size:20px;
+	}
+	.ihc-magic-box-wrap{
+		width: 100%;
+	}
 }

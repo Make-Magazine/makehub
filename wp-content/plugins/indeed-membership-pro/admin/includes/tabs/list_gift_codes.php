@@ -1,6 +1,6 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php _e('Settings', 'ihc');?></a>		
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php _e('Generated Membership Gift Codes', 'ihc');?></a>	
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php _e('Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php _e('Generated Membership Gift Codes', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -10,6 +10,7 @@ if (isset($_GET['delete_generated_code'])){
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
+do_action( "ihc_admin_dashboard_after_top_menu" );
 
 $limit = 25;
 $total = Ihc_Db::get_count_all_gift_codes();
@@ -35,7 +36,7 @@ $pagination_object = new Ihc_Pagination(array(
 $pagination = $pagination_object->output();
 if ($offset + $limit>$total){
 	$limit = $total - $offset;
-} 
+}
 $data = Ihc_Db::get_all_gift_codes($limit, $offset);
 
 $currency = get_option('ihc_currency');
@@ -43,12 +44,12 @@ $levels = get_option('ihc_levels');
 $levels[-1]['label'] = __('All', 'ihc');
 ?>
 <div class="iump-wrapper">
-<div class="iump-page-title">Ultimate Membership Pro - 
+<div class="iump-page-title">Ultimate Membership Pro -
 			<span class="second-text">
 				<?php _e('MemberShip Codes', 'ihc');?>
 			</span>
 </div>
-		
+
 <?php if (!empty($data)):?>
 <table class="wp-list-table widefat fixed tags ihc-admin-tables" style="margin-top: 50px;">
 	<thead>
@@ -66,7 +67,7 @@ $levels[-1]['label'] = __('All', 'ihc');
 		<tr class="<?php if($i%2==0) echo 'alternate';?>">
 			<td style="color: #21759b; font-weight:bold; width:120px;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;"><?php echo $gift['username'];?></td>
 			<td><?php echo $gift['code'];?></td>
-			<td><?php 
+			<td><?php
 				if ($gift['discount_type']=='price'){
 					echo ihc_format_price_and_currency($currency, $gift['discount_value']);
 				} else {
@@ -75,24 +76,24 @@ $levels[-1]['label'] = __('All', 'ihc');
 			?></td>
 			<td>
 				<div class="level-type-list ">
-				<?php 
+				<?php
 					$l = $gift['target_level'];
 					if (isset($levels[$l]) && isset($levels[$l]['label'])){
-						echo $levels[$l]['label'];		
-					} 
+						echo $levels[$l]['label'];
+					}
 				?>
 				</div>
 			</td>
-			<td><?php 
+			<td><?php
 				if ($gift['is_active']):
 					_e('Unused', 'ihc');
 				else :
 					_e('Used', 'ihc');
-				endif;	
+				endif;
 			?></td>
 			<td><a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code&delete_generated_code=' . $gift_id);?>"><?php _e('Delete', 'ihc');?></a></td>
 		</tr>
-	<?php 
+	<?php
 	$i++;
 	endforeach;?>
 </table>

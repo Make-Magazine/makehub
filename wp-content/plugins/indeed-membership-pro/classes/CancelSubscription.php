@@ -49,7 +49,7 @@ class CancelSubscription
           if (isset($arr['ihc_payment_type'])){
             //in case we know the payment type
             $this->paymentGateway = $arr['ihc_payment_type'];
-            if ($this->paymentGateway=='stripe' || $this->paymentGateway=='twocheckout' || $this->paymentGateway=='authorize' ){
+            if ($this->paymentGateway=='stripe' || $this->paymentGateway=='twocheckout' || $this->paymentGateway=='authorize' || $this->paymentGateway=='stripe_checkout_v2' ){
                 $this->transactionId = $obj->txn_id;
                 break;
             }
@@ -109,6 +109,10 @@ class CancelSubscription
     				break;
           case 'pagseguro':
             $obj = new \Indeed\Ihc\PaymentGateways\Pagseguro();
+            $unsubscribe = $obj->cancelSubscription( $this->transactionId );
+            break;
+          case 'stripe_checkout_v2':
+            $obj = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
             $unsubscribe = $obj->cancelSubscription( $this->transactionId );
             break;
     		}

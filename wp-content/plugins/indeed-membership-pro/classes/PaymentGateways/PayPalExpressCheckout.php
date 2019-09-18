@@ -133,13 +133,13 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
             $amount = number_format((float)$amount, 2, '.', '');
             $object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-            $redirect = $object->setRecurringPayment($levelData['description'])->getAuthorizeURL();
+            $redirect = $object->setRecurringPayment($levelData['label'])->getAuthorizeURL();
             if ($redirect){
                 $this->redirectUrl = $redirect;
             }
             $token = $object->getToken();
             $extraPaymentData = array(
-                'description'               => $levelData['description'],
+                'description'               => $levelData['label'],
                 'recurringLimit'            => $recurringLimit,
                 'intervalType'              => $intervalType,
                 'intervalValue'             => $intervalValue,
