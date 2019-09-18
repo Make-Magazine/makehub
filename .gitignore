@@ -84,6 +84,7 @@ Thumbs.db
 *.zip
 *.ogg
 *.mp3
+*.bin
 # ignore everything in the "wp-content" directory, except:
 # "plugins" directory
 # "themes" directory
