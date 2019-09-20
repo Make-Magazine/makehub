@@ -50,38 +50,65 @@ function create_posttypes() {
 }
 add_action( 'init', 'create_posttypes' );
 
-// Add the excerpt of a blog post to the activity feed. formatting is stripped out of cpt[content], unfortunately
+/**
+ *   Add the title and featurex image of a blog post to the activity feed. 
+ */ 
 function record_cpt_activity_content( $cpt ) {
 
 	if ( 'new_blog_posts' === $cpt['type'] ) {
 		global $wpdb, $post, $bp;
-		//$cpt['action'] .= " - " . get_the_title($cpt['secondary_item_id']);
 		$cpt['content'] = get_the_post_thumbnail( $cpt['secondary_item_id'] );
-		$cpt['content'] .= get_the_excerpt( $cpt['secondary_item_id'] );
-		//$theimg = wp_get_attachment_image_src( get_post_thumbnail_id( $cpt['secondary_item_id'] ) );
-		//$cpt['content'] .= $theimg;
-		//error_log(print_r($theimg, TRUE));
+		$cpt['content'] .= get_the_title( $cpt['secondary_item_id'] );
 	}
-   //error_log(print_r($cpt, TRUE));
+
 	return $cpt;
 }
 add_filter('bp_after_activity_add_parse_args', 'record_cpt_activity_content');
 
-// and delete the activity associated with a post when the post is deleted, matching it by the content of the post... which is a lot easier than just matching the postid to the activity id for some reason
+/**
+ *   Delete activity if it's secondary item id matches the postid of the deleted post
+ */ 
 add_action( 'before_delete_post', 'delete_post_activity' );
 function delete_post_activity( $postid ){;
-	bp_activity_delete(
-		array(
-			//'user_id' => bp_displayed_user_id(),
-			'content' => get_the_excerpt($postid)
-		)
-	);
+	bp_activity_delete( array( 'secondary_item_id' => $postid ) );
 }
 
+function use_profile_as_comment_author_url( $url, $id, $comment ) {
+    if ( $comment->user_id ) {
+        return get_author_posts_url( $comment->user_id );
+    }
+    return $url;
+}
+add_filter( 'get_comment_author_url', 'use_profile_as_comment_author_url', 10, 3 );
+
+
+    function format_comment($comment, $args, $depth) {
+    
+       $GLOBALS['comment'] = $comment; ?>
+       
+        <li <?php comment_class(); ?> id="li-comment-<?php comment_ID() ?>">
+                
+            <div class="comment-intro">
+                <?php printf(__('%1$s'), get_comment_date(), get_comment_time()) ?>
+                <em>by</em> 
+                <?php printf(__('%s'), get_comment_author_link()) ?>
+            </div>
+            
+            <?php if ($comment->comment_approved == '0') : ?>
+                <em><php _e('Your comment is awaiting moderation.') ?></em><br />
+            <?php endif; ?>
+            
+            <?php comment_text(); ?>
+            
+            <div class="reply">
+                <?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
+            </div>
+        
+<?php }
+
 /**
- * Register the blog post form
+ * Register the blog post form Might NOT NEED ALL THIS BECAUSE OF BUDDYBLOG
  *
- */
 function blog_post_form() {
     $settings = array(
         'post_type'             => 'blog_posts',
@@ -115,12 +142,10 @@ function front_end_form_func($atts) {
 if( function_exists('bp_new_simple_blog_post_form' ) ) {
 	add_shortcode('front_end_form', 'front_end_form_func');
 }
+*/
 	
 /**
  * Filter the except length to 20 words.
- *
- * @param int $length Excerpt length.
- * @return int (Maybe) modified excerpt length.
  */
 function custom_excerpt_length( $length ) {
     return 15;
@@ -129,9 +154,6 @@ add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
 
 /**
  * Filter the excerpt "read more" string.
- *
- * @param string $more "Read more" excerpt string.
- * @return string (Maybe) modified "read more" excerpt string.
  */
 function custom_excerpt_more( $more ) {
     if ( ! is_single() ) {
