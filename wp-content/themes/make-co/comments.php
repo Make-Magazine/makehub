@@ -1,5 +1,5 @@
 <?php
-   echo("Fine");
+
 	// Bail if post type doesn't support comments
 	if ( ! post_type_supports( get_post_type(), 'comments' ) )
 		return;

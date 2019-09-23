@@ -81,31 +81,6 @@ function use_profile_as_comment_author_url( $url, $id, $comment ) {
 }
 add_filter( 'get_comment_author_url', 'use_profile_as_comment_author_url', 10, 3 );
 
-
-    function format_comment($comment, $args, $depth) {
-    
-       $GLOBALS['comment'] = $comment; ?>
-       
-        <li <?php comment_class(); ?> id="li-comment-<?php comment_ID() ?>">
-                
-            <div class="comment-intro">
-                <?php printf(__('%1$s'), get_comment_date(), get_comment_time()) ?>
-                <em>by</em> 
-                <?php printf(__('%s'), get_comment_author_link()) ?>
-            </div>
-            
-            <?php if ($comment->comment_approved == '0') : ?>
-                <em><php _e('Your comment is awaiting moderation.') ?></em><br />
-            <?php endif; ?>
-            
-            <?php comment_text(); ?>
-            
-            <div class="reply">
-                <?php comment_reply_link(array_merge( $args, array('depth' => $depth, 'max_depth' => $args['max_depth']))) ?>
-            </div>
-        
-<?php }
-
 /**
  * Register the blog post form Might NOT NEED ALL THIS BECAUSE OF BUDDYBLOG
  *

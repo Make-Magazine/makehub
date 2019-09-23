@@ -87,7 +87,7 @@
 							     $bp->displayed_user->id = null;
 							   ?>
 							  	<div id="comments">
-									<ol class="commentlist">
+									<ol class="comment-list">
 										<?php echo wp_list_comments('callback=format_comment&page=' . $post->ID); ?>
 									</ol><!-- .comment-list -->
 
