@@ -56,7 +56,7 @@
 					 <div class="user-post">
 						  <div class="post-header">
 						  		<h1><?php the_title();?></h1>
-							  	<span class="alignright"><?php printf( __( 'Posted on %1$s', 'buddyblog' ), get_the_time( get_option( 'date_format' ) ) ); ?></span>
+							  	<span class="alignright"><?php printf( __( '%1$s', 'buddyblog' ), get_the_time( get_option( 'date_format' ) ) ); ?></span>
 						  </div>
 
 						  <div class="post-entry">

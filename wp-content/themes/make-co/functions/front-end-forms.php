@@ -54,11 +54,11 @@ add_action( 'init', 'create_posttypes' );
  *   Add the title and featurex image of a blog post to the activity feed. 
  */ 
 function record_cpt_activity_content( $cpt ) {
-
 	if ( 'new_blog_posts' === $cpt['type'] ) {
 		global $wpdb, $post, $bp;
-		$cpt['content'] = get_the_post_thumbnail( $cpt['secondary_item_id'] );
-		$cpt['content'] .= get_the_title( $cpt['secondary_item_id'] );
+		$cpt['content'] = '<a href="'.$cpt['primary_link'].'">'
+			. get_the_post_thumbnail($cpt['secondary_item_id']) . '</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">' . get_the_title($cpt['secondary_item_id']) . '</a>';
 	}
 
 	return $cpt;
@@ -132,7 +132,7 @@ add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
  */
 function custom_excerpt_more( $more ) {
     if ( ! is_single() ) {
-        $more = '<a class="yz-read-more" href="'.get_permalink( get_the_ID()).'"><span class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></span>Read More</a>';
+        $more = '... <a class="yz-read-more" href="'.get_permalink( get_the_ID()).'"><span class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></span>Read More</a>';
     }
     return $more;
 }
