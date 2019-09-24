@@ -26,6 +26,9 @@
 		}
 	}
 	.yz-tab-post {
+		.yz-post-meta {
+			li:last-of-type span { display: none; }
+		}
 		.yz-post-text {
 			margin-bottom: 0px;
 		}
