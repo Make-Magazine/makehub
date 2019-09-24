@@ -1,4 +1,189 @@
 <?php 
+function youzer_add_custom_meta_fields() {
+	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
+	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
+	
+	echo("<span class='yz-name'>");
+	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
+		echo "<i class='fas fa-globe-americas'></i> " . xprofile_get_field_data('country', bp_get_member_user_id());
+	}
+	echo("</span>");
+	/*
+	echo("<span class='yz-name'>");
+	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
+		echo "<i class='fas fa-city'></i> " . xprofile_get_field_data('city', bp_get_member_user_id());
+	} 
+	echo("</span>");
+	*/
+}
+add_action( 'bp_directory_members_item_meta', 'youzer_add_custom_meta_fields' );
+
+// remove last active status from member directory
+add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
+function ps_remove_last_active ( $meta, $member, $is_loop ){
+	$meta['last_activity'] = '';
+	return $meta;
+} 
+
+// add sidebar to members directory
+function yzc_register_members_directory_sidebars() {
+    register_sidebar(
+        array (
+            'name' => __( 'Members Directory Sidebar', 'youzer' ),
+            'id' => 'yz-members-directory-sidebar',
+            'description' => __( 'Members Directory Sidebar', 'youzer' ),
+            'before_widget' => '<div id="%1$s" class="widget-content %2$s">',
+            'after_widget' => "</div>",
+            'before_title' => '<h3 class="widget-title">',
+            'after_title' => '</h3>',
+        )
+    );
+}
+add_action( 'widgets_init', 'yzc_register_members_directory_sidebars' );
+/**
+ * Call Sidebar.
+ */
+function yzc_members_directory_sidebar() {
+    if ( ! bp_is_members_directory() ) {
+        return;
+    }
+    if ( is_active_sidebar( 'yz-members-directory-sidebar' ) ) {
+        echo '<div class="yz-sidebar-column yz-members-directory-sidebar youzer-sidebar"><div class="yz-column-content">';
+        dynamic_sidebar( 'yz-members-directory-sidebar' );
+        echo '</div></div>';
+    }
+}
+add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
+
+/**
+ * If there is certain text in Youzer that isn't descriptive enough, we can change it here
+ */
+function yz_translate_youzer_text( $translated_text ) {
+    switch ( $translated_text ) {
+        case 'Widgets Settings' :
+		  case 'widgets settings' :
+            $translated_text = __( 'Advanced Profile settings', 'youzer' );
+            break;
+		  case 'Profile Widgets Settings' :
+			   $translated_text = __( 'Add widgets, media and more!', 'youzer' );
+            break;
+		  case 'Filter' :
+            $translated_text = __( 'Order', 'youzer' );
+            break;
+		  case 'Link Backgorund Image' :
+            $translated_text = __( 'Link Background Image', 'youzer' );
+            break;
+		  case 'Posts' :
+            $translated_text = __( 'Blog Posts', 'youzer' );
+            break;
+		  case 'New Post' :
+            $translated_text = __( 'New Blog Post', 'youzer' );
+            break;
+    }
+    return $translated_text;
+}
+add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
+
+// Exclude users from BuddyPress members list.
+
+function buddydev_exclude_users( $args ) {
+    $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
+    if ( ! is_array( $excluded ) ) {
+        $excluded = explode( ',', $excluded );
+    }
+	
+	 $query_args = array(
+    		  'meta_key' => 'registryoptout', 
+			  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+    		  'fields' => 'ID'
+    	  );
+    $user_ids = get_users($query_args);
+ 
+    $excluded = array_merge( $excluded, $user_ids );
+    $args['exclude'] = $excluded;
+    return $args;
+}
+ 
+add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
+
+// Exclude user from count as well
+function exclude_users_from_count(){
+	$query_args = array(
+		  'meta_key' => 'registryoptout', 
+		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+		  'fields' => 'ID'
+	  );
+	$user_ids = get_users($query_args);
+	$users_excluded = count($user_ids);
+	return (get_user_count() - $users_excluded);
+}
+add_filter('bp_get_total_member_count','exclude_users_from_count');
+
+// hide the overview edit tab if you're not on your page
+function hide_overview_edit_tab() {
+  if(bp_displayed_user_id() != get_current_user_id()) {
+	  bp_core_remove_nav_item( 'overview-edit' );
+  }
+}
+add_action( 'bp_actions', 'hide_overview_edit_tab' );
+
+/**
+ * Add Groups link to Membership Directory
+ */
+function bp_groups_tab() {
+
+    $button_args = array(
+        'id'         => 'groups',
+        'component'  => 'members',
+        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<div>' . groups_get_total_group_count() .'</div>' ),
+        'link_title' => __( 'Groups', 'buddypress' ),
+        'link_class' => 'groups no-ajax',
+        'link_href'  => '/groups',
+        'wrapper'    => false,
+        'block_self' => false,
+        'must_be_logged_in' => false
+    );  
+     
+    ?>
+    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li>
+    <?php
+}
+add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
+
+/* Something like this is needed to limit what activity shows in the scroll */
+function remove_bp_activity( $activity_object ) {
+    $exclude = array( 'new_avatar', 'new_cover', 'friendship_created', 'joined_group');
+	 //error_log(print_r($activity_object->type, TRUE)); /* shows each activity name as it happens */
+    if( in_array( $activity_object->type, $exclude ) )
+        $activity_object->type = false;
+}
+add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
+
+// if we want some random page to behave like a buddy press page
+function set_displayed_user( $user_id ) {
+	global $bp;
+	$bp->displayed_user->id = $user_id;
+	$bp->displayed_user->domain = bp_core_get_user_domain( $bp->displayed_user->id );
+	$bp->displayed_user->userdata = bp_core_get_core_userdata( $bp->displayed_user->id );
+	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
+}
+
+/* Something like this is needed to limit what activity shows in the scroll
+add_filter( 'bp_after_has_activities_parse_args', function( $retval ) {
+ if( bp_is_activity_directory() ) {
+   $retval['action'] = array(
+        'activity_update',
+        'activity_comment',
+        'last_activity',
+		  'created_group',
+		  'new_blog_post',
+		  'new_blog_comment',
+    );
+    return $retval;
+  }
+} ); 
+*/
+
 // Add all the countries
 function bp_add_custom_country_list() {
 	if ( !xprofile_get_field_id_from_name('Country') && 'bp-profile-setup' == $_GET['page'] ) {
@@ -244,177 +429,3 @@ function add_info_to_members_loop() {
         ));
 }
 add_action( 'bp_directory_members_item', 'add_info_to_members_loop' ); */
-
-function youzer_add_custom_meta_fields() {
-	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
-	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
-	
-	echo("<span class='yz-name'>");
-	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
-		echo "<i class='fas fa-globe-americas'></i> " . xprofile_get_field_data('country', bp_get_member_user_id());
-	}
-	echo("</span>");
-	/*
-	echo("<span class='yz-name'>");
-	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
-		echo "<i class='fas fa-city'></i> " . xprofile_get_field_data('city', bp_get_member_user_id());
-	} 
-	echo("</span>");
-	*/
-}
-add_action( 'bp_directory_members_item_meta', 'youzer_add_custom_meta_fields' );
-
-// remove last active status from member directory
-add_filter( 'bp_nouveau_get_member_meta', 'ps_remove_last_active',10,3 );
-function ps_remove_last_active ( $meta, $member, $is_loop ){
-	$meta['last_activity'] = '';
-	return $meta;
-} 
-
-// add sidebar to members directory
-function yzc_register_members_directory_sidebars() {
-    register_sidebar(
-        array (
-            'name' => __( 'Members Directory Sidebar', 'youzer' ),
-            'id' => 'yz-members-directory-sidebar',
-            'description' => __( 'Members Directory Sidebar', 'youzer' ),
-            'before_widget' => '<div id="%1$s" class="widget-content %2$s">',
-            'after_widget' => "</div>",
-            'before_title' => '<h3 class="widget-title">',
-            'after_title' => '</h3>',
-        )
-    );
-}
-add_action( 'widgets_init', 'yzc_register_members_directory_sidebars' );
-/**
- * Call Sidebar.
- */
-function yzc_members_directory_sidebar() {
-    if ( ! bp_is_members_directory() ) {
-        return;
-    }
-    if ( is_active_sidebar( 'yz-members-directory-sidebar' ) ) {
-        echo '<div class="yz-sidebar-column yz-members-directory-sidebar youzer-sidebar"><div class="yz-column-content">';
-        dynamic_sidebar( 'yz-members-directory-sidebar' );
-        echo '</div></div>';
-    }
-}
-add_action( 'bp_after_directory_members', 'yzc_members_directory_sidebar' );
-
-/**
- * If there is certain text in Youzer that isn't descriptive enough, we can change it here
- */
-function yz_translate_youzer_text( $translated_text ) {
-    switch ( $translated_text ) {
-        case 'Widgets Settings' :
-		  case 'widgets settings' :
-            $translated_text = __( 'Advanced Profile settings', 'youzer' );
-            break;
-		  case 'Profile Widgets Settings' :
-			   $translated_text = __( 'Add widgets, media and more!', 'youzer' );
-            break;
-		  case 'Filter' :
-            $translated_text = __( 'Order', 'youzer' );
-            break;
-		  case 'Link Backgorund Image' :
-            $translated_text = __( 'Link Background Image', 'youzer' );
-            break;
-		  case 'Ultimate Membership Pro' :
-            $translated_text = __( 'Membership Account', 'youzer' );
-            break;
-    }
-    return $translated_text;
-}
-add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
-
-// Exclude users from BuddyPress members list.
-
-function buddydev_exclude_users( $args ) {
-    $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
-    if ( ! is_array( $excluded ) ) {
-        $excluded = explode( ',', $excluded );
-    }
-	
-	 $query_args = array(
-    		  'meta_key' => 'registryoptout', 
-			  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
-    		  'fields' => 'ID'
-    	  );
-    $user_ids = get_users($query_args);
- 
-    $excluded = array_merge( $excluded, $user_ids );
-    $args['exclude'] = $excluded;
-    return $args;
-}
- 
-add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
-
-// Exclude user from count as well
-function exclude_users_from_count(){
-	$query_args = array(
-		  'meta_key' => 'registryoptout', 
-		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
-		  'fields' => 'ID'
-	  );
-	$user_ids = get_users($query_args);
-	$users_excluded = count($user_ids);
-	return (get_user_count() - $users_excluded);
-}
-add_filter('bp_get_total_member_count','exclude_users_from_count');
-
-// hide the overview edit tab if you're not on your page
-function hide_overview_edit_tab() {
-  if(bp_displayed_user_id() != get_current_user_id()) {
-	  bp_core_remove_nav_item( 'overview-edit' );
-  }
-}
-add_action( 'bp_actions', 'hide_overview_edit_tab' );
-
-/**
- * Add Groups link to Membership Directory
- */
-function bp_groups_tab() {
-
-    $button_args = array(
-        'id'         => 'groups',
-        'component'  => 'members',
-        'link_text'  => sprintf( __( 'Groups %s', 'buddypress' ), '<div>' . groups_get_total_group_count() .'</div>' ),
-        'link_title' => __( 'Groups', 'buddypress' ),
-        'link_class' => 'groups no-ajax',
-        'link_href'  => '/groups',
-        'wrapper'    => false,
-        'block_self' => false,
-        'must_be_logged_in' => false
-    );  
-     
-    ?>
-    <li id="groups-all"><?php echo bp_get_button( $button_args ); ?></li>
-    <?php
-}
-add_action( 'bp_members_directory_member_types', 'bp_groups_tab' );
-
-/* Something like this is needed to limit what activity shows in the scroll */
-function remove_bp_activity( $activity_object ) {
-
-    $exclude = array( 'new_avatar', 'new_cover', 'friendship_created', 'joined_group');
-	 //error_log(print_r($activity_object->type, TRUE)); /* shows each activity name as it happens */
-    if( in_array( $activity_object->type, $exclude ) )
-        $activity_object->type = false;
-}
-add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
-
-/* Something like this is needed to limit what activity shows in the scroll
-add_filter( 'bp_after_has_activities_parse_args', function( $retval ) {
- if( bp_is_activity_directory() ) {
-   $retval['action'] = array(
-        'activity_update',
-        'activity_comment',
-        'last_activity',
-		  'created_group',
-		  'new_blog_post',
-		  'new_blog_comment',
-    );
-    return $retval;
-  }
-} ); 
-*/
