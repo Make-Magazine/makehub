@@ -261,7 +261,7 @@ add_action('woocommerce_register_form',array('LoginNocaptcha', 'nocaptcha_form')
     }
 
     public static function authenticate($user_or_email, $username = null, $password = null) {
-        if (isset($_SERVER['PHP_SELF']) && basename($_SERVER['PHP_SELF']) !== 'wp-login.php' && //calling context must be wp-login.php
+        if (isset($_SERVER['PHP_SELF'])  && //calling context must be wp-login.php
             !isset($_POST['woocommerce-login-nonce']) && !isset($_POST['woocommerce-lost-password-nonce']) && !isset($_POST['woocommerce-register-nonce']) ) { //or a WooCommerce form
             //bypass reCaptcha checking
             update_option('login_nocaptcha_notice', time());

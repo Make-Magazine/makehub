@@ -26,14 +26,14 @@ function create_posttypes() {
 	 	  'blog_posts',
         array(
             'labels' => array(
-                'name' => __( 'Blog Posts' ),
-                'singular_name' => __( 'Blog Post' ),
-					 'bp_activity_admin_filter' => __( 'Published a new Blog Post' ),
-        			 'bp_activity_front_filter' => __( 'Blog Posts'),
-					 'bp_activity_new_post'     => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
-        			 'bp_activity_new_post_ms'  => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
-					 'bp_activity_new_comment'           => __( '%1$s commented on a <a href="%2$s">Blog Post</a>', 'custom-textdomain' ),
-    				 'bp_activity_new_comment_ms'        => __( '%1$s commented on a <a href="%2$s">Blog Post</a>', 'custom-textdomain' )
+                'name' 								=> __( 'Blog Posts' ),
+                'singular_name' 					=> __( 'Blog Post' ),
+					 'bp_activity_admin_filter'   => __( 'Published a new Blog Post' ),
+        			 'bp_activity_front_filter'   => __( 'Blog Posts'),
+					 'bp_activity_new_post'       => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
+        			 'bp_activity_new_post_ms'    => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
+					 'bp_activity_new_comment'    => __( '%1$s commented on a <a href="%2$s">Blog Post</a>' ),
+    				 'bp_activity_new_comment_ms' => __( '%1$s commented on a <a href="%2$s">Blog Post</a>' )
             ),
             'public' => true,
             'has_archive' => true,
@@ -50,6 +50,8 @@ function create_posttypes() {
 }
 add_action( 'init', 'create_posttypes' );
 
+
+
 /**
  *   Add the title and featurex image of a blog post to the activity feed. 
  */ 
@@ -64,6 +66,7 @@ function record_cpt_activity_content( $cpt ) {
 	return $cpt;
 }
 add_filter('bp_after_activity_add_parse_args', 'record_cpt_activity_content');
+
 
 /**
  *   Delete activity if it's secondary item id matches the postid of the deleted post
