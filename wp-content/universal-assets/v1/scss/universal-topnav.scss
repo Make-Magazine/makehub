@@ -47,7 +47,8 @@ header.universal-nav {
 					margin-left: 170px;
 				}
 				@media screen and (min-width: 768px) and (max-width: 991px) {
-					margin-left: 130px;
+					margin-left: 110px;
+					margin-right: -10px;
 				}
 			}
 			a {
@@ -190,6 +191,9 @@ a#LogoutBtn {
 	margin-bottom: 0;
 	float: right;
 	padding-left: 0px;
+	position: absolute;
+    top: 0px;
+    right: 30px;
 	@media screen and (max-width: 576px) {
 		display: none;
 	}
