@@ -61,6 +61,19 @@ if(isset($_GET['access']) && $_GET['access'] === "denied") {
 	add_action( 'wp_footer', 'no_access_modal' );
 }
 
+/**
+* Remove the register link from the wp-login.php script
+* https://wphelper.site/remove-register-link-wordpress-login/
+*/
+add_filter('option_users_can_register', function($value) {
+    $script = basename(parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH));
+ 
+    if ($script == 'wp-login.php') {
+        $value = false;
+    }
+    return $value;
+});
+
 /* Old auth0 scripts
 // redirect wp-login.php to the auth0 login page 
 
