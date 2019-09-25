@@ -38,11 +38,11 @@ do_action( 'bp_before_activity_entry' ); ?>
 			 $custom_post_id = bp_get_activity_secondary_item_id();
 			 if ($custom_post_id) { ?>
 		      <div class="activity-inner"> <?php
-				  if (has_post_thumbnail( custom_post_id ) ) {
-						$theimg = wp_get_attachment_image_src( get_post_thumbnail_id( custom_post_id ), 'large' ); ?>
-						<div class="img_container"><a href="<?php echo get_post_permalink(custom_post_id); ?>"> <img style="thumbnail" style="width:100%;" src="<?php echo $theimg[0]; ?>"></a></div>
+				  if (has_post_thumbnail( $custom_post_id ) ) {
+						$theimg = wp_get_attachment_image_src( get_post_thumbnail_id( $custom_post_id ), 'large' ); ?>
+						<div class="img_container"><a href="<?php echo get_post_permalink($custom_post_id); ?>"> <img style="thumbnail" style="width:100%;" src="<?php echo $theimg[0]; ?>"></a></div>
 						<p>
-				  			<?php echo get_post_field('post_title', custom_post_id); ?>
+				  			<?php echo get_post_field('post_title', $custom_post_id); ?>
 						</p>
 					</div>
 				  <?php } ?>
