@@ -140,6 +140,15 @@
 
 // Individual blog pages
 .single-blog_posts {
+	.breadcrumbs {
+		padding-top: 10px;
+		margin-bottom: -20px;
+		a {
+			text-transform: capitalize;
+			font-weight: bold;
+			color: #333;
+		}
+	}
 	.main-content.container {
 		width: 100%;
 	}
