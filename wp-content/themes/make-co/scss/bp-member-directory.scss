@@ -96,6 +96,13 @@
 			}
 			.yzm-user-data {
 				border: solid #005e9a;
+				background: rgba(63, 175, 237, .2);
+				.yzm-user-actions {
+					border-top: 1px solid rgba(0, 94, 154, .2);
+					.friendship-button { display: none; }
+					.yz-profile-settings { background: #fff; }
+				}
+				.yz-name, .yz-name i, .yz-fullname { color: #666; }
 			}
 		}
 		.bps_filters {

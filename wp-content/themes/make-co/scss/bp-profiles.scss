@@ -219,3 +219,21 @@
 		.ihc-ap-menu-item { margin: 0px; }
 	}
 }
+// if the member is type makerspace
+.member-type-makerspace {
+	.main-content.container {
+		&::before {
+			content: 'Makerspace';
+			color: #fff;
+			background: #005e9a;
+			padding: 3px 10px;
+			font-weight: bold;
+			width: 100%;
+			text-align: center;
+			font-size: 24px;
+		}
+		.yz-profile-content {
+			background: rgba(63, 175, 237, .2);;
+		}
+	}
+}
