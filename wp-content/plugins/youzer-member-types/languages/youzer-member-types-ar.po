@@ -1,0 +1,245 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Youzer Member Types\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-04-29 19:18+0100\n"
+"PO-Revision-Date: 2019-04-29 21:32+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.1.1\n"
+"Last-Translator: \n"
+"Language-Team: Youzer\n"
+"Language: ar\n"
+
+#: class.youzer-member-types.php:98
+msgid "Settings"
+msgstr "الإعدادت"
+
+#: class.youzer-member-types.php:99
+msgid "Documentation"
+msgstr "الوثائق"
+
+#: class.youzer-member-types.php:100
+msgid "About"
+msgstr "عن الإضافة"
+
+#: youzer-member-types.php:30
+#, php-format
+msgid ""
+"<strong> Notice : </strong>Please install and activate <strong><a href=\"%1s"
+"\">Youzer</strong></a> plugin to use the <strong>Youzer - Member Types</"
+"strong> extension."
+msgstr ""
+"<strong>اشعار:</strong> الرجاء تثبيت وتنشيط <strong><a href=\"%1s\">Youzer</"
+"a></strong>لتستطيع استخدام <strong>Youzer - Member Types</strong> ."
+
+#: admin/class.yz-member-types-admin.php:30
+msgid "Member Types settings"
+msgstr "إعدادات أنواع الأعضاء"
+
+#: admin/class.yz-member-types-admin.php:79
+msgid "update member type"
+msgstr "تحديث نوع العضو"
+
+#: admin/class.yz-member-types-admin.php:80
+msgid "No member types Found !"
+msgstr "لم يتم العثور علي أي نوع من الأعضاء!"
+
+#: admin/class.yz-member-types-admin.php:81
+msgid "member type name is empty!"
+msgstr "اسم نوع العضو فارغ!"
+
+#: admin/class.yz-member-types-admin.php:82
+msgid "member type slug is empty!"
+msgstr "Slug نوع العضو فارغ !"
+
+#: admin/class.yz-member-types-admin.php:83
+msgid "member type singular name is empty!"
+msgstr "مفرد كلمة نوع العضو فارغ"
+
+#: admin/class.yz-member-types-admin.php:84
+msgid "member type singular name should be all lowercase !"
+msgstr "يجب ان يكون اسم نوع العضو المفرد بحروف لاتينية صغيره!"
+
+#: admin/class.yz-member-types-admin.php:85
+msgid "member type singular name should not contain spaces !"
+msgstr "اسم نوع العضو المفرد يجب ان لا يحتوي علي مسافات!"
+
+#: admin/class.yz-member-types-settings.php:18
+msgid "-- Select Default Type --"
+msgstr "--حدد نوع العضو الافتراضي--"
+
+#: admin/class.yz-member-types-settings.php:64
+msgid "Registration Settings"
+msgstr "إعدادات التسجيل"
+
+#: admin/class.yz-member-types-settings.php:72
+msgid "create new member type"
+msgstr "إنشاء نوع عضو جديد"
+
+#: admin/class.yz-member-types-settings.php:77
+msgid "Enable Member Types While Registration"
+msgstr "تمكين أنواع الأعضاء اثناء التسجيل"
+
+#: admin/class.yz-member-types-settings.php:78
+msgid "make member types selectable in the registration form"
+msgstr "جعل أنواع الأعضاء قابله لإختيار في صفحة التسجيل"
+
+#: admin/class.yz-member-types-settings.php:86
+msgid "Set Default Members Type"
+msgstr "تعيين نوع الأعضاء الافتراضي"
+
+#: admin/class.yz-member-types-settings.php:87
+msgid "works only if the the option above is disabled"
+msgstr "يعمل فقط إذا تم تعطيل الخيار أعلاه"
+
+#: admin/class.yz-member-types-settings.php:98
+msgid "general Settings"
+msgstr "الاعدادات العامة"
+
+#: admin/class.yz-member-types-settings.php:105
+msgid "Enable Member Types"
+msgstr "تفعيل أنواع الأعضاء"
+
+#: admin/class.yz-member-types-settings.php:106
+msgid "activate member types"
+msgstr "تنشيط أنواع الأعضاء"
+
+#: admin/class.yz-member-types-settings.php:114
+msgid "Enable Member Types Modification"
+msgstr "تفعيل إمكانية تعديل أنواع الأعضاء"
+
+#: admin/class.yz-member-types-settings.php:115
+msgid "enable users to edit the member type after registration"
+msgstr "تمكين المستخدمين من تعديل نوع العضو بعد التسجيل"
+
+#: admin/class.yz-member-types-settings.php:123
+msgid "Display Member Types in Infos Tab"
+msgstr "أظهر نوع العضو في صفحة بيانات العضو"
+
+#: admin/class.yz-member-types-settings.php:124
+msgid "show member types in the infos tab"
+msgstr "أظهر نوع العضو في صفحة بيانات الأعضاء"
+
+#: admin/class.yz-member-types-settings.php:132
+msgid "Allow members with no type"
+msgstr "مكن الأعضاء من البقاء من دون نوع عضو"
+
+#: admin/class.yz-member-types-settings.php:133
+msgid "give the users the ability to stay with no member types"
+msgstr "أعطي للأعضاء إمكانية البقاء بدون نوع عضو"
+
+#: admin/class.yz-member-types-settings.php:166
+msgid "enable member type"
+msgstr "فعل نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:167
+msgid "enable this member type"
+msgstr "فعل نوع هذا العضو"
+
+#: admin/class.yz-member-types-settings.php:177
+msgid "display in registration form"
+msgstr "أظهر نوع العضو في صفحة التسجيل"
+
+#: admin/class.yz-member-types-settings.php:178
+msgid "make this type selectable in the registration form"
+msgstr "جعل أنواع الأعضاء قابله لإختيار في صفحة التسجيل"
+
+#: admin/class.yz-member-types-settings.php:188
+msgid "member type icon"
+msgstr "ايقونة نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:189
+msgid "select member type icon"
+msgstr "ايقونة نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:199
+msgid "member type ID"
+msgstr "معرف نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:200
+msgid ""
+"Should be in english letters and without spaces you can use only underscores "
+"to link words example: company_ceo"
+msgstr ""
+"يجب أن يكون بحروف لاتينية وبدون مسافات وتستطيع فقط استعمال \"_\" للربط بين "
+"الكلمات مثال :  company_seo"
+
+#: admin/class.yz-member-types-settings.php:209
+msgid "member type name"
+msgstr "إسم نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:210
+#: admin/class.yz-member-types-settings.php:230
+msgid "example: students"
+msgstr "مثال : الاساتذة"
+
+#: admin/class.yz-member-types-settings.php:219
+msgid "member type singular name"
+msgstr "مفرد كلمة نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:220
+msgid "example: student"
+msgstr "مثال : أستاذ"
+
+#: admin/class.yz-member-types-settings.php:229
+msgid "member type directory slug"
+msgstr "Slug مكتبة نوع العضو"
+
+#: admin/class.yz-member-types-settings.php:239
+msgid "display in members directory"
+msgstr "أظهر صفحة نوع العضو في مكتبة الاعضاء"
+
+#: admin/class.yz-member-types-settings.php:240
+msgid "show member type tab in members directory"
+msgstr "أظهر صفحة نوع العضو في مكتبة الاعضاء"
+
+#: admin/class.yz-member-types-settings.php:268
+msgid "icon background left color"
+msgstr "لون يسار خلفية الأيقونة"
+
+#: admin/class.yz-member-types-settings.php:269
+msgid "directory icon background left color"
+msgstr "لون يسار خلفية الأيقونة في مكتبة الأعضاء"
+
+#: admin/class.yz-member-types-settings.php:278
+msgid "icon background right color"
+msgstr "لون يمين خلفية الأيقونة"
+
+#: admin/class.yz-member-types-settings.php:279
+msgid "directory icon background right color"
+msgstr "لون يمين خلفية الأيقونة في مكتبة الاعضاء"
+
+#: admin/class.yz-member-types-settings.php:324
+msgid "add new member type"
+msgstr "أضف نوع عضو جديد"
+
+#: public/classes/yz-xprofile-member-types-field.php:25
+msgctxt "xprofile field type category"
+msgid "Single Fields"
+msgstr "حقل وحيد"
+
+#: public/classes/yz-xprofile-member-types-field.php:26
+msgctxt "xprofile field type"
+msgid "Member Types"
+msgstr "أنواع الأعضاء"
+
+#: public/classes/yz-xprofile-member-types-field.php:114
+msgid "----"
+msgstr ""
+
+#: public/classes/yz-xprofile-member-types-field.php:163
+msgid "Select"
+msgstr "اختر"
+
+#: public/functions/yz-member-types-functions.php:349
+#, php-format
+msgid "%1s %2s"
+msgstr ""

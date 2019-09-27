@@ -80,6 +80,24 @@
 			}
 			.item-meta .activity { display: none; }
 		}
+		.member-type-makerspace {
+			.yzm-user-cover {
+				&::before {
+					content: 'Makerspace';
+					color: #fff;
+					background: #005e9a;
+					padding-top: 0px;
+					position: relative;
+					top: 15px;
+					border-radius: 5px;
+					padding: 3px 10px;
+					font-weight: bold;
+				}
+			}
+			.yzm-user-data {
+				border: solid #005e9a;
+			}
+		}
 		.bps_filters {
 			position: absolute;
 			top: 115px;
@@ -106,6 +124,9 @@
 				}
 				li#members-personal {
 					display: none;
+				}
+				li#members-makerspace a i {
+					background: #005e9a !important;
 				}
 				li a div {
 					float: right;

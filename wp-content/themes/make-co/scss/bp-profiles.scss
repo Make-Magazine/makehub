@@ -55,6 +55,12 @@
 	.yza-account-settings { background: #005e9a; }
 	.yza-profile-settings { background: #f51400; }
 	.yza-widgets-settings { background: #3fafed; }
+	.editfield .clear-value, .editfield .field-visibility-settings .field-visibility-settings-close,  .editfield .field-visibility-settings-notoggle .visibility-toggle-link, .editfield .field-visibility-settings-toggle .visibility-toggle-link {
+		background: #005e9a;
+	}
+	.yz-save-options {
+		background: #3fafed;
+	}
 }
 // 
 .youzer-section-content > .uk-option-item {
