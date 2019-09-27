@@ -49,9 +49,11 @@
 
             <?php do_action( 'youzer_profile_settings' ); ?>
 				<?php do_action( 'youzer_profile_navbar' ); ?>
-
+				<div class="container breadcrumbs">
+					<a href="<?php echo(bp_core_get_user_domain($bp->displayed_user->id).'blog'); ?>">&laquo; Back to <?php echo(bp_displayed_user_username()); ?>'s Blog</a>
+				</div>
 				<main class="yz-page-main-content">
-
+ 
 					<?php do_action( 'bp_before_member_home_content' ); ?>
 					 <div class="user-post">
 						  <div class="post-header">
