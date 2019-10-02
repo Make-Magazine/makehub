@@ -9,6 +9,10 @@
 .blog.edit {
 	a.edit-attachment { display: none; }
 }
+// also don't show edit for blog post activity
+a[data-activity-type=new_blog_posts] {
+	display: none;
+}
 
 .type-blog_posts {
 	background: #fff;
