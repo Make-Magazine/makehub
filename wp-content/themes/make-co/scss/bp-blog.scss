@@ -5,6 +5,11 @@
 	background: #f51400;
 }
 
+// remove the edit image for now
+.blog.edit {
+	a.edit-attachment { display: none; }
+}
+
 .type-blog_posts {
 	background: #fff;
 	margin-bottom: 30px;
