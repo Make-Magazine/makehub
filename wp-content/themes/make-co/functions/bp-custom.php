@@ -410,7 +410,6 @@ function bp_add_custom_country_list() {
 }
 add_action('bp_init', 'bp_add_custom_country_list');
 
-
 /* add more info to the member loop if it exists
 function add_info_to_members_loop() {
 	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not

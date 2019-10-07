@@ -50,7 +50,16 @@ class YZ_Info_Tab {
         endif;
 
         do_action( 'bp_after_profile_loop_content' );
+		  /*
+		 	// Get Overview Widgets
+			$profile_widgets = yz_options( 'yz_profile_main_widgets' );
 
+			// Filter 
+			$profile_widgets = apply_filters( 'yz_profile_main_widgets', $profile_widgets );
+
+			// Get Widget Content.
+			youzer()->widgets->get_widget_content( $profile_widgets );	
+        */
     }
 
 }
