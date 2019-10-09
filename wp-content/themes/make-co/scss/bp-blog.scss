@@ -229,6 +229,7 @@ a[data-activity-type=new_blog_posts] {
 					line-height: 24px;
 					margin-bottom: 15px;
 				}
+				li { list-style: inherit; }
 			}
 			.edit-btn {
 				float: right;
