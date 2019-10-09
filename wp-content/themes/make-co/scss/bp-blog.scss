@@ -230,6 +230,14 @@ a[data-activity-type=new_blog_posts] {
 					margin-bottom: 15px;
 				}
 				li { list-style: inherit; }
+				ul {
+					list-style: disc;
+					padding-left: 30px;
+					margin-top: 10px;
+					li {
+						margin-bottom: 10px;
+					}
+				}
 			}
 			.edit-btn {
 				float: right;
