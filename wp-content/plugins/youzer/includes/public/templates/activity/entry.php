@@ -44,6 +44,7 @@ do_action( 'bp_before_activity_entry' ); ?>
 						<p>
 				  			<?php echo get_post_field('post_title', $custom_post_id); ?>
 						</p>
+						<a href="<?php echo get_post_permalink($custom_post_id); ?>" class="btn universal-btn">Read More</a>
 					</div>
 				  <?php } ?>
 			 <?php }else{

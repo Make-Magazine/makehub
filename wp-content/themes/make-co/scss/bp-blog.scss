@@ -9,6 +9,16 @@
 .blog.edit {
 	a.edit-attachment { display: none; }
 }
+
+.new_blog_posts {
+	.universal-btn {
+		color: #fff !important;
+		height: 30px;
+		&:hover {
+			color: #005e9a !important;
+		}
+	}
+}
 // also don't show edit for blog post activity
 a[data-activity-type=new_blog_posts] {
 	display: none;

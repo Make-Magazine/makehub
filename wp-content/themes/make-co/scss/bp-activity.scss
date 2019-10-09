@@ -6,3 +6,87 @@
 		margin-bottom: 20px;
 	}
 }
+
+// Recent Blog posts widget
+.widget_blog_posts_widget {
+	margin-bottom: 20px !important;
+	.inner-widget {
+		padding: 15px;
+		.widget-item {
+			min-height: 65px;
+			border-bottom: solid 1px #f1f1f1;
+			margin-bottom: 10px;
+			a {display: flex;}
+			.widget-image {
+				min-width: 50px;
+				height: 50px;
+				overflow: hidden;
+				margin-right: 10px;
+				img { width: 100%; }
+			}
+			.widget-info {
+				margin-bottom: 15px;
+				p { margin-top: 5px; }
+			}
+			&:last-of-type {
+				border-bottom: 0px;
+				margin-bottom: 0px;
+				padding-bottom: 0px;
+			}
+		}
+	}
+	@media screen and (max-width: 768px) {
+		display: none;
+	}
+}
+
+// Makershed widget
+.widget_shopify_widget {
+	.product-feed-item {
+		padding: 15px;
+		border-bottom: solid 1px #f1f1f1;
+		a {
+			display: flex;
+			flex-direction: row;
+			.product-image {
+				flex-basis: 100%;
+				margin-right: 15px;
+				overflow: hidden;
+				height: 100px;
+				img {
+					width: 100%;
+				}
+			}
+			.product-info { 
+				flex-basis: 100%; 
+				h3, span.price  { 
+					font-size: 14px;
+					line-height: 18px;
+				}
+				h3 {
+					margin-bottom: 10px;
+				}
+			}
+			
+			@media screen and (max-width: 768px) {
+				flex-direction:column;
+				.product-image {
+					width: 100%;
+					border-bottom: solid 2px #ccc;
+					max-height: 200px;
+					padding-right: 0px;
+					overflow: hidden;
+					margin-bottom: 15px;
+					img {
+						width: 100%;
+					}
+				}
+				h3, span.price  { 
+					font-size: 24px;
+					line-height: 36px;
+				}
+			}
+		}
+
+	}
+}
