@@ -7,6 +7,15 @@
 	}
 }
 
+.dropdown-menu[data-strategy="yz_mentions"] {
+	li.textcomplete-item.active {
+		background: #3fafed;
+		a, a:hover { background: none; 
+			span, small {color: #fff;}
+		}
+	}
+}
+
 // wall and group buttons (Groups Media)
 .youzer div.item-list-tabs li.feed a::before {
 	background: #3fafed;

@@ -27,6 +27,21 @@
 			display: none !important;
 		}
 	}
+	#messages-inbox-personal-li #inbox i{
+		background: #3fafed;
+	}
+	#messages-starred-personal-li #starred i {
+		background: #f51400; 
+	}
+	#messages-sentbox-personal-li	#sentbox i {
+		background: #005e9a;
+	}
+	#messages-compose-personal-li #compose i {
+		background: #2C4956;
+	}
+	li .yzmsg-show-search i {
+		background: #333;
+	}
 }
 #yz-profile-navmenu .yz-settings-menu {
 	width: 240px !important;
