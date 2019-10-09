@@ -1,5 +1,4 @@
 <?php 
-/* Comment this out until it's ready for primetime
 
 // Create widget to display shopify collection
 
@@ -156,5 +155,3 @@ class shopify_widget extends WP_Widget {
 		return $instance;
 	}
 } // Class ends
-
-*/
