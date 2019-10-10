@@ -19,10 +19,11 @@
 			a {display: flex;}
 			.widget-image {
 				min-width: 50px;
+				max-width: 50px;
 				height: 50px;
 				overflow: hidden;
 				margin-right: 10px;
-				img { width: 100%; }
+				img { width: 100%; height: auto; }
 			}
 			.widget-info {
 				margin-bottom: 15px;

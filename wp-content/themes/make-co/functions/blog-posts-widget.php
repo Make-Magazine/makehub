@@ -18,21 +18,17 @@ class Blog_Posts_Widget extends WP_Widget{
 			echo $before_title . $title . $after_title;
 		}
 		global $post;
-		add_image_size( 'blog_post_widget_size', 60, 60, true );
 		$posts = new WP_Query();
 		$posts->query('post_type=blog_posts&posts_per_page=' . $numberOfBlogPosts );
 		$return = '<div class="inner-widget">';
 		if($posts->found_posts > 0) {
 			foreach($posts->posts as $post) {
-				/*$args = array( need to install jetpack first
-               'resize' => '60,60',
-               'quality' => '80',
-               'strip' => 'all',
-            );
-      		$photon = jetpack_photon_url(get_the_post_thumbnail($post->ID, $args);*/
+      		$image_url = photon_image_url(get_the_post_thumbnail_url($post->ID), 50, 50, 'resize');
 				$return .= '<div class="widget-item">
 				              <a href="'.get_post_permalink($post->ID).'">
-								    <div class="widget-image">'.get_the_post_thumbnail($post->ID, 'blog_post_widget_size').'</div>
+								    <div class="widget-image">
+									   <img src="'.$image_url.'" />
+									 </div>
 									 <div class="widget-info">'.$post->post_title.' <p>by '.get_author_name($post->post_author).'</p>
 									 </div>
 								  </a>';
