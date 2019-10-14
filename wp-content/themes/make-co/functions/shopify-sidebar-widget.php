@@ -93,7 +93,7 @@ class shopify_widget extends WP_Widget {
 
 			// Build each product
 			$return .= '<div class="product-feed-item">
-								<a href="'.$shop_url.'/products/'.$product_handle.'">
+								<a href="'.$shop_url.'/products/'.$product_handle.'" target="_blank">
 									<div class="product-image">
 										<img src="'.$product_image_src.'" alt="'.$product_title.'"/>
 									</div>
