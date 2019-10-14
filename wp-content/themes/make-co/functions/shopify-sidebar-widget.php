@@ -57,7 +57,6 @@ class shopify_widget extends WP_Widget {
 
 		// Loop through products in the collection
 		for ( $prod = 0; $prod < 3; $prod++ ) {
-
 			// Get the product ID for the current product
 			$product_id = $collects['collects'][$prod]['product_id'];
 			// Get the product data from the API (using the ID)
@@ -100,7 +99,7 @@ class shopify_widget extends WP_Widget {
 									</div>
 									<div class="product-info">
 										<h3>'.$product_title.'</h3>';
-										if ( $variant_inventory > 0 ) {
+										if ( $variant_inventory != 0 ) { // negative inventory denotes digital downloads
 											if ( $variant_price > 0 ) {
 												$return .= '<span class="price small">';
 												if ( $variant_price > 0 ) {
