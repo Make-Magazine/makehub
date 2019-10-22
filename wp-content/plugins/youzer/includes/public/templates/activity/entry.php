@@ -44,6 +44,7 @@ do_action( 'bp_before_activity_entry' ); ?>
 						<p>
 				  			<?php echo get_post_field('post_title', $custom_post_id); ?>
 						</p>
+						<a href="<?php echo get_post_permalink($custom_post_id); ?>" class="btn universal-btn">Read More</a>
 					</div>
 				  <?php } ?>
 			 <?php }else{
@@ -72,14 +73,17 @@ do_action( 'bp_before_activity_entry' ); ?>
 				<?php if ( bp_activity_can_favorite() ) : ?>
 					<?php echo yz_get_post_like_button(); ?>
 				<?php endif; ?>
+            <?php if ($custom_post_id) { ?>
+					<a href="<?php echo(get_post_permalink($custom_post_id)); ?>#commentform" class="button acomment-reply">Comment</a>
+			   <?php }else { ?>
+			      <?php if ( bp_activity_can_comment() ) : ?>
+						<a href="<?php bp_activity_comment_link(); ?>" class="button acomment-reply bp-primary-action" id="acomment-comment-<?php bp_activity_id(); ?>"><?php yz_wall_get_comment_button_title() ?></a>
+					<?php endif; ?>
 
-				<?php if ( bp_activity_can_comment() ) : ?>
-					<a href="<?php bp_activity_comment_link(); ?>" class="button acomment-reply bp-primary-action" id="acomment-comment-<?php bp_activity_id(); ?>"><?php yz_wall_get_comment_button_title() ?></a>
-				<?php endif; ?>
+					<?php do_action( 'bp_activity_after_comment_button' ); ?>
 
-				<?php do_action( 'bp_activity_after_comment_button' ); ?>
-
-				<?php if ( bp_activity_user_can_delete() ) bp_activity_delete_link(); ?>
+					<?php if ( bp_activity_user_can_delete() ) bp_activity_delete_link(); ?>
+			   <?php } ?>
 
 				<?php
 

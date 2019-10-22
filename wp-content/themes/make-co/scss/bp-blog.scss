@@ -5,6 +5,25 @@
 	background: #f51400;
 }
 
+// remove the edit image for now
+.blog.edit {
+	a.edit-attachment { display: none; }
+}
+
+.new_blog_posts {
+	.universal-btn {
+		color: #fff !important;
+		height: 30px;
+		&:hover {
+			color: #005e9a !important;
+		}
+	}
+}
+// also don't show edit for blog post activity
+a[data-activity-type=new_blog_posts] {
+	display: none;
+}
+
 .type-blog_posts {
 	background: #fff;
 	margin-bottom: 30px;
@@ -219,6 +238,15 @@
 					font-size: 18px;
 					line-height: 24px;
 					margin-bottom: 15px;
+				}
+				li { list-style: inherit; }
+				ul {
+					list-style: disc;
+					padding-left: 30px;
+					margin-top: 10px;
+					li {
+						margin-bottom: 10px;
+					}
 				}
 			}
 			.edit-btn {

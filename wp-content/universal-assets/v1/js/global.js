@@ -83,11 +83,27 @@ function mobileCheck(){
    return check;
 };
 
+// Copy element value to clipboard
 function copyInput(elementId) {
   var copyText = document.getElementById(elementId);
   copyText.select();
   document.execCommand("copy");
 } 
+
+// get hostname
+function get_hostname(url) {
+    var m = url.match(/^http:\/\/[^/]+/);
+    return m ? m[0] : null;
+}
+
+// remove the hubspot code for anything other than prod sites
+var prodDomains = ["https://community.make.co", "https://learn.make.co", "https://makerspaces.make.co"];
+jQuery(document).ready(function(){
+	if(jQuery.inArray(get_hostname(window.location.href), prodDomains) < 0) {
+		jQuery("#hs-script-loader").remove();
+	}
+});
+
 
 
 // for newsletter thank you popups

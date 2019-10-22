@@ -51,16 +51,16 @@ function create_posttypes() {
 add_action( 'init', 'create_posttypes' );
 
 
-
 /**
- *   Add the title and featurex image of a blog post to the activity feed. 
+ *   Add the title and featured image of a blog post to the activity feed. 
  */ 
 function record_cpt_activity_content( $cpt ) {
 	if ( 'new_blog_posts' === $cpt['type'] ) {
 		global $wpdb, $post, $bp;
 		$cpt['content'] = '<a href="'.$cpt['primary_link'].'">'
 			. get_the_post_thumbnail($cpt['secondary_item_id']) . '</a>';
-		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">' . get_the_title($cpt['secondary_item_id']) . '</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">test ' . get_the_title($cpt['secondary_item_id']) . '</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'" class="btn universal-btn">Read More</a>';
 	}
 
 	return $cpt;
