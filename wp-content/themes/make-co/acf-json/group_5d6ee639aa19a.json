@@ -154,6 +154,22 @@
                     "placeholder": ""
                 },
                 {
+                    "key": "field_5db0d7933843d",
+                    "label": "Logged In Link",
+                    "name": "logged_in_link",
+                    "type": "url",
+                    "instructions": "Change the link destination if user is logged in",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": ""
+                },
+                {
                     "key": "field_5d6ee789946cd",
                     "label": "Color",
                     "name": "color",
@@ -346,5 +362,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1567719954
+    "modified": 1571870707
 }
