@@ -72,16 +72,19 @@ function grid_block_split_block_render_callback($block){
 				$curRow += 1;
 				$color = get_sub_field('color');
 				if($color === "ffffff") { $color = "fff"; }
+				$link = ''; // different link if logged in
+		      if(get_sub_field('link')){ $link = get_sub_field('link'); }
+		      if(is_user_logged_in() && get_sub_field('logged_in_link')){ $link = get_sub_field('logged_in_link'); }
 				// background image for the link boxes are optional
 				$first .= '<div class="col-md-'.get_field('how_many_of_the_boxes_to_display').' col-sm-6 col-xs-12 grid-column-content">';
-				           if(get_sub_field('link')){ $first .= '<a href="'.get_sub_field('link').'">'; }
+				           if($link != ''){ $first .= '<a href="'.$link.'">'; }
 				$first .= '		<div class="grid-column-inner rows-'.$gridRows.($color === "fff" ? ' white-bg' : '').'" style="background-color:#'.$color.';background-image:url('.get_sub_field('background_image')['url'].');">';
 				if(get_sub_field('title')){ $first .= '<h5>'.get_sub_field('title').'</h5>'; }
 				$first .= '			<div class="text">'.get_sub_field('text').'</div>';
 				// only show the button if there's a link and button text
-				if(get_sub_field('link') != '' && get_sub_field('button_text') != ''){ $first .= '<button class="btn">'.get_sub_field('button_text').'</button>'; }
+				if($link != '' && get_sub_field('button_text') != ''){ $first .= '<button class="btn">'.get_sub_field('button_text').'</button>'; }
 				$first .= '		</div>';
-				            if(get_sub_field('link')){ $first .= '</a>'; }
+				            if($link != ''){ $first .= '</a>'; }
 				$first .= '</div>';
 			} // end while loop
 			$first .= "   </div>
