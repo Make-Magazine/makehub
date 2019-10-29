@@ -38,7 +38,7 @@ class Field_Settings_Helper {
 	 * Bind hooks
 	 */
 	private function setup() {
-	    //save meta.
+		// save meta.
 		add_action( 'xprofile_fields_saved_field', array( $this, 'save_meta' ) );
 
 		add_action( 'xprofile_field_after_submitbox', array( $this, 'show_select2_box_settings' ) );
@@ -55,38 +55,33 @@ class Field_Settings_Helper {
 		switch ( $field->type ) {
 
 			case 'checkbox_acceptance':
-
-				$data = isset( $_POST['bpxcftr_tos_content'] ) ? $_POST['bpxcftr_tos_content'] : '';
-				$data = sanitize_textarea_field( $data );
+				$data = isset( $_POST['bpxcftr_tos_content'] ) ? wp_unslash( $_POST['bpxcftr_tos_content'] ) : '';
+				$data = wp_kses_post( $data );
 				bp_xprofile_update_field_meta( $field->id, 'tos_content', $data );
 
 				break;
 
 			case 'select_custom_post_type':
-
-			    $data = isset( $_POST['bpxcftr_selected_post_type'] ) ? $_POST['bpxcftr_selected_post_type'] : '';
+				$data = isset( $_POST['bpxcftr_selected_post_type'] ) ? wp_unslash( $_POST['bpxcftr_selected_post_type'] ) : '';
 				$data = sanitize_text_field( $data ); // seriously, we should validate against the post tye.
 				bp_xprofile_update_field_meta( $field->id, 'selected_post_type', $data );
 
 				break;
 
 			case 'multiselect_custom_post_type':
-
-				$data = isset( $_POST['bpxcftr_multi_selected_post_type'] ) ? $_POST['bpxcftr_multi_selected_post_type'] : '';
+				$data = isset( $_POST['bpxcftr_multi_selected_post_type'] ) ? wp_unslash( $_POST['bpxcftr_multi_selected_post_type'] ) : '';
 				bp_xprofile_update_field_meta( $field->id, 'selected_post_type', $data );
 
 				break;
 
 			case 'select_custom_taxonomy':
-
-			    $data = isset( $_POST['bpxcftr_selected_taxonomy'] ) ? $_POST['bpxcftr_selected_taxonomy'] : '';
+				$data = isset( $_POST['bpxcftr_selected_taxonomy'] ) ? wp_unslash( $_POST['bpxcftr_selected_taxonomy'] ) : '';
 				bp_xprofile_update_field_meta( $field->id, 'selected_taxonomy', $data );
 
 				break;
 
 			case 'multiselect_custom_taxonomy':
-
-				$data = isset( $_POST['bpxcftr_multi_selected_taxonomy'] ) ? $_POST['bpxcftr_multi_selected_taxonomy'] : '';
+				$data = isset( $_POST['bpxcftr_multi_selected_taxonomy'] ) ? wp_unslash( $_POST['bpxcftr_multi_selected_taxonomy'] ) : '';
 				bp_xprofile_update_field_meta( $field->id, 'selected_taxonomy', $data );
 
 				$allow_terms = isset( $_POST['bpxcftr_multi_tax_allow_new_terms'] ) ? 1 : 0;
@@ -100,17 +95,15 @@ class Field_Settings_Helper {
 				break;
 
 			case 'number_minmax':
-
-				$min = isset( $_POST['bpxcftr_minmax_min'] ) ? $_POST['bpxcftr_minmax_min'] : 0;
+				$min = isset( $_POST['bpxcftr_minmax_min'] ) ? intval( $_POST['bpxcftr_minmax_min'] ) : 0;
 				bp_xprofile_update_field_meta( $field->id, 'min_val', $min );
 
-				$max = isset( $_POST['bpxcftr_minmax_max'] ) ? $_POST['bpxcftr_minmax_max'] : 0;
+				$max = isset( $_POST['bpxcftr_minmax_max'] ) ? intval( $_POST['bpxcftr_minmax_max'] ) : 0;
 				bp_xprofile_update_field_meta( $field->id, 'max_val', $max );
 
 				break;
 
 			case 'slider':
-
 				$min = isset( $_POST['bpxcftr_slider_min'] ) ? $_POST['bpxcftr_slider_min'] : 0;
 				bp_xprofile_update_field_meta( $field->id, 'min_val', $min );
 
@@ -120,7 +113,6 @@ class Field_Settings_Helper {
 				break;
 
 			case 'decimal_number':
-
 				$precision = isset( $_POST['bpxcftr_decimal_precision'] ) ? $_POST['bpxcftr_decimal_precision'] : 0;
 				bp_xprofile_update_field_meta( $field->id, 'precision', $precision );
 
@@ -130,7 +122,6 @@ class Field_Settings_Helper {
 				break;
 
 			case 'birthdate':
-
 				$show_age = isset( $_POST['bpxcftr_birtdate_show_age'] ) ? 1 : 0;
 				bp_xprofile_update_field_meta( $field->id, 'show_age', $show_age );
 
@@ -145,10 +136,13 @@ class Field_Settings_Helper {
 
 				$hide_months = isset( $_POST['bpxcftr_birtdate_hide_months'] ) ? 1 : 0;
 				bp_xprofile_update_field_meta( $field->id, 'hide_months', $hide_months );
+
+				$age_label = isset( $_POST['bpxcftr_birthdate_age_label'] ) ? trim( wp_unslash( $_POST['bpxcftr_birthdate_age_label'] ) ) : '';
+				bp_xprofile_update_field_meta( $field->id, 'age_label', $age_label );
+
 				break;
 
             case 'fromto':
-
 	            $value_type = isset( $_POST['bpxcftr_fromto_value_type'] ) ? $_POST['bpxcftr_fromto_value_type'] : '';
 	            bp_xprofile_update_field_meta( $field->id, 'value_type', $value_type );
 
@@ -160,6 +154,16 @@ class Field_Settings_Helper {
 	            bp_xprofile_update_field_meta( $field->id, 'to_value', $from_value );
 
 	            break;
+
+			case 'token':
+				$data = isset( $_POST['bpxcftr_token_tokens'] ) ? wp_unslash( $_POST['bpxcftr_token_tokens'] ) : '';
+				$data = sanitize_textarea_field( $data );
+				bp_xprofile_update_field_meta( $field->id, 'token_tokens', $data );
+				// Ignore case?
+				$is_ignored = isset( $_POST['bpxcftr_token_ignore_case']) ? 1: 0;
+				bp_xprofile_update_field_meta( $field->id, 'token_ignore_case', $is_ignored );
+
+				break;
 		}
 	}
 
