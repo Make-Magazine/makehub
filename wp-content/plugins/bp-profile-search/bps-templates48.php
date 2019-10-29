@@ -114,7 +114,11 @@ function bps_escaped_form_data49 ()
 		$f->error_message = esc_html ($f->error_message);
 
 		$options = array ();
-		foreach ($f->options as $key => $label)  $options[esc_attr ($key)] = esc_attr ($label);
+		foreach ($f->options as $key => $label)
+		{
+			if ($key === 0)  $key = ' 0';
+			$options[esc_attr ($key)] = esc_attr ($label);
+		}
 		$f->options = $options;
 	}
 
@@ -149,5 +153,33 @@ function bps_escaped_filters_data49 ()
 	usort ($F->fields, function($a, $b) {return ($a->order <= $b->order)? -1: 1;});
 
 	do_action ('bps_before_filters', $F);
+	return $F;
+}
+
+function bps_escaped_details_data ()
+{
+	$F = new stdClass;
+	$F->fields = array ();
+
+	$details = bps_get_details ();
+	foreach ($details as $code)
+	{
+		$f = bps_parsed_field ($code);
+		if (!isset ($f->get_value) || !is_callable ($f->get_value))  continue;
+
+		$f->d_label = (isset ($f->filter) && isset ($f->label))? $f->label: $f->name;
+		call_user_func ($f->get_value, $f);
+
+		$f->d_label = esc_html ($f->d_label);
+		if (!is_array ($f->d_value))
+			$f->d_value = esc_html (stripslashes ($f->d_value));
+		else foreach ($f->d_value as $k => $value)
+			$f->d_value[$k] = esc_html (stripslashes ($value));
+
+		do_action ('bps_field_before_details', $f);
+		$F->fields[] = $f;
+	}
+
+	do_action ('bps_before_details', $F);
 	return $F;
 }

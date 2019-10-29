@@ -111,7 +111,7 @@ class bps_Fields
 
 		case 'range':
 		case 'age_range':
-			return (!empty ($f->value['min']) && !empty ($f->value['max']) && $f->value['min'] == $f->value['max']);
+			return (isset ($f->value['min']) && isset ($f->value['max']) && $f->value['min'] == $f->value['max']);
 
 		case 'one_of':
 			return (count ($f->value) == 1);
@@ -123,6 +123,8 @@ class bps_Fields
 
 	public static function set_filters ($f)
 	{
+		if (isset ($f->filters))  return true;
+
 		$format = isset ($f->format)? $f->format: 'none';
 		$enum = (isset ($f->options) && is_array ($f->options))? count ($f->options): 0;
 		$selector = $format. ($enum? '/e': '');
@@ -154,15 +156,10 @@ class bps_Fields
 		$display = $display[$selector][$filter];
 
 		if (is_string ($display))
-		{
 			$f->display = $display;
-		}
 		else
-		{
-			$default = (isset ($f->type) && in_array ($f->type, $display))? $f->type: $display[0];
-			$choice = apply_filters ('bps_field_display', $default, $f);	// deprecated filter -- to be removed -- use 'bps_field_before_search_form' instead	
-			$f->display = in_array ($choice, $display)? $choice: $default;
-		}
+			$f->display = (isset ($f->type) && in_array ($f->type, $display))? $f->type: $display[0];
+
 		return true;
 	}
 }

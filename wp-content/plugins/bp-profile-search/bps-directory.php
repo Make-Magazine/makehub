@@ -49,7 +49,7 @@ function bps_directories ()		// published interface, 20190324
 	return $dirs;
 }
 
-add_shortcode ('bps_directory', 'bps_set_directory_data');
+add_shortcode ('bps_directory', '');
 function bps_set_directory_data ($attr, $content)
 {
 	global $bps_directory_data;
@@ -127,6 +127,8 @@ function bps_set_directory_data ($attr, $content)
 
 	$cookie = apply_filters ('bps_cookie_name', 'bps_directory');
 	setcookie ($cookie, http_build_query ($bps_directory_data), 0, COOKIEPATH);
+
+	return '';
 }
 
 function bps_get_directory_data ()
@@ -169,6 +171,8 @@ function bps_before_directory ()
 	$data = bps_get_directory_data ();
 	if (isset ($data['order_by']))  bps_set_sort_options ($data['order_by']);
 
+	add_action ('bp_members_directory_order_options', 'bps_display_sort_options');
+
 	$request = bps_get_request ('filters');
 	if (!empty ($request))
 		bps_call_template ('members/bps-filters', array ($request, true));
@@ -208,8 +212,6 @@ function bps_set_sort_options ($options)
 			$bps_sort_options['-'. $code] = $label. " &#x21E3;";
 		}
 	}
-
-	add_action ('bp_members_directory_order_options', 'bps_display_sort_options');
 }
 
 function bps_display_sort_options ()
@@ -219,6 +221,7 @@ function bps_display_sort_options ()
 	$version = BPS_VERSION;
 	echo "\n<!-- BP Profile Search $version -->\n";
 
+	if (!isset ($bps_sort_options))  $bps_sort_options = array ();
 	$sort_options = apply_filters ('bps_sort_options', $bps_sort_options);
 	foreach ($sort_options as $code => $label)
 	{
@@ -230,7 +233,6 @@ function bps_display_sort_options ()
 	echo "\n<!-- BP Profile Search end -->\n";
 }
 
-add_filter ('bp_user_query_uid_clauses', 'bps_uid_clauses', 99, 2);
 function bps_uid_clauses ($sql, $object)
 {
 	$code = $object->query_vars['type']; 
@@ -263,6 +265,9 @@ function bps_before_loop ()
 
 	$data = bps_get_directory_data ();
 	if (isset ($data['show']))  bps_set_details ($data['show']);
+
+	add_filter ('bp_user_query_uid_clauses', 'bps_uid_clauses', 99, 2);
+	add_action ('bp_directory_members_item', 'bps_display_details');
 }
 
 function bps_set_details ($codes)
@@ -277,22 +282,21 @@ function bps_set_details ($codes)
 	}
 }
 
-add_action ('bp_directory_members_item', 'bps_display_details');
-function bps_display_details ()
+function bps_get_details ()
 {
 	global $bps_details;
 
 	$details = isset ($bps_details)? $bps_details: array ();
 	$details = apply_filters ('bps_details', $details);
-	foreach ($details as $code)
-	{
-		$f = bps_parsed_field ($code);
-		if (!isset ($f->get_value) || !is_callable ($f->get_value))  continue;
 
-		$label = (isset ($f->filter) && isset ($f->label))? $f->label: $f->name;
-		$value = call_user_func ($f->get_value, $f);
-		bps_call_template ('members/bps-field-value', array ($label, $value));
-	}
+	return $details;
+}
+
+function bps_display_details ()
+{
+	$details = bps_get_details ();
+	if (!empty ($details))
+		bps_call_template ('members/bps-details');
 }
 
 function bps_is_directory ()

@@ -64,6 +64,7 @@ function bps_allowed_keys ($form)
 		$keys[] = $code. '_label';
 	}
 
+	$keys = apply_filters ('bps_allowed_keys', $keys);
 	return $keys;
 }
 

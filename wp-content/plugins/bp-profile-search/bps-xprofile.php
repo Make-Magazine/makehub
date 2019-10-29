@@ -195,12 +195,20 @@ function bps_xprofile_get_value ($f)
 	$value = BP_XProfile_ProfileData::get_value_byid ($f->id, $members_template->member->ID);
 
 	if ($f->format == 'set')
-		return stripslashes (implode (', ', unserialize ($value)));
-
-	if ($f->format == 'date' && isset ($f->filter) && $f->filter == 'age_range')
-		return date_diff(date_create ($value), date_create ('today'))->y;
-
-	return xprofile_filter_format_field_value_by_type (stripslashes ($value), $f->type, $f->id);
+	{
+		$f->d_format = 'array';
+		$f->d_value = unserialize ($value);
+	}
+	else if ($f->format == 'date' && isset ($f->filter) && $f->filter == 'age_range')
+	{
+		$f->d_format = 'age';
+		$f->d_value = date_diff(date_create ($value), date_create ('today'))->y;
+	}
+	else
+	{
+		$f->d_format = $f->format;
+		$f->d_value = $value;
+	}
 }
 
 function bps_xprofile_format ($type, $field_id)

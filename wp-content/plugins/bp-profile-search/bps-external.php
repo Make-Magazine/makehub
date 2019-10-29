@@ -1,5 +1,85 @@
 <?php
 
+add_filter ('bps_add_fields', 'bps_groups_setup', 99);
+function bps_groups_setup ($fields)
+{
+	global $groups_template;
+
+	if (!bp_is_active ('groups'))  return $fields;
+
+	$options = array ();
+	$args = array ('user_id' => 0, 'show_hidden' => true, 'type' => 'alphabetical');
+	if (bp_has_groups ($args))  while (bp_groups ())
+	{
+		bp_the_group ();
+		if ($groups_template->group->user_has_access)
+			$options[bp_get_group_id ()] = bp_get_group_name ();
+	}
+	if (empty ($options))  return $fields;
+
+	$f = new stdClass;
+	$f->group = __('User groups', 'bp-profile-search');
+	$f->code = 'groups';
+	$f->name = __('Groups', 'bp-profile-search');
+	$f->description = __('User groups', 'bp-profile-search');
+
+	$f->format = 'set';
+	$f->options = $options;
+	$f->filters = array ('match_any');
+
+	$f->search = 'bps_groups_search';
+	$f->get_value = 'bps_groups_get_value';
+
+	$fields[] = $f;
+
+	return $fields;
+}
+
+function bps_groups_search ($f)
+{
+	global $bp, $wpdb;
+
+	$value = $f->value;
+	$filter = $f->format. '_'.  ($f->filter == ''? 'is': $f->filter);
+
+	$sql = array ('select' => '', 'where' => array ());
+	$sql['select'] = "SELECT DISTINCT user_id FROM {$bp->groups->table_name_members}";
+	$sql['where']['confirmed'] = "is_confirmed = 1";
+	$sql['where']['banned'] = "is_banned = 0";
+	
+	switch ($filter)
+	{
+	case 'set_match_any':
+		$values = implode (', ', (array)$value);
+		$sql['where'][$filter] = "group_id IN ($values)";
+		break;
+
+	default:
+		return array ();
+	}
+
+	$sql = apply_filters ('bps_field_sql', $sql, $f);
+	$query = $sql['select']. ' WHERE '. implode (' AND ', $sql['where']);
+
+	$results = $wpdb->get_col ($query);
+	return $results;
+}
+
+function bps_groups_get_value ($f)
+{
+	global $members_template;
+
+	$values = array ();
+	$groups = groups_get_user_groups ($members_template->member->ID);
+	$groups = $groups['groups'];
+	foreach ($groups as $group)
+		if (isset ($f->options[$group]))  $values[] = $f->options[$group];
+	sort ($values);
+
+	$f->d_format = 'array';
+	$f->d_value = $values;
+}
+
 add_filter ('bps_add_fields', 'bps_users_setup', 99);
 function bps_users_setup ($fields)
 {
@@ -117,9 +197,10 @@ function bps_usermeta_setup ($fields)
 		'last_name'				=> 'text',
 		'role'					=> array ('text', bps_get_roles ()),
 		'roles'					=> array ('set', bps_get_roles ()),
-		'total_friend_count'	=> 'integer',
-		'total_group_count'		=> 'integer',
 	);
+
+	if (bp_is_active ('friends'))  $meta_keys['total_friend_count'] = 'integer';
+	if (bp_is_active ('groups'))  $meta_keys['total_group_count'] = 'integer';
 
 	$meta_keys = apply_filters ('bps_usermeta_keys', $meta_keys);
 	foreach ($meta_keys as $meta_key => $format)

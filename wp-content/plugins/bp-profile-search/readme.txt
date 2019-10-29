@@ -1,32 +1,108 @@
 === BP Profile Search ===
 Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
-Requires at least: 4.6
+Requires at least: 4.7
 Tested up to: 5.2
 Requires PHP: 5.3
-Stable tag: 5.0.5
+Stable tag: 5.2.1
 
-Custom members search forms and results pages, and custom members directories for your BuddyPress site.
+Member search and member directories for BuddyPress.
 
 == Description ==
 
-With BP Profile Search you can build custom Members search forms, and custom Members directories or search results pages.
+BP Profile Search is a member search and member directories plugin for BuddyPress. It provides:
 
-You can search BuddyPress profile fields, the *users* and *usermeta* tables (including roles), and user taxonomies (including BP member types). A location field type with a search by distance becomes available when you install a free companion plugin, see [BP Distance Search](https://wordpress.org/plugins/bp-distance-search/) for details.
+<ul>
+	<li>A form builder to build the member search forms</li>
 
-To build a search form, use the form settings, and select the form's search results page among the existing Members directories.
+	<li>The [bps_directory] shortcode to customize the BuddyPress Members directory, or to build additional member directories</li>
+</ul>
 
-You can display a search form:
+Each search form has a <em>target directory</em>. When you run a search, the form’s target directory is filtered, i.e. it is searched and also used to show the search results.
 
-* in its Members directory, using the option *Add to Directory* in the form settings
-* in a sidebar or widget area, using the widget *Profile Search*
-* in a post or page, using the shortcode<br><code>[bps_form id='id of your form']</code>
+= Build a search form =
 
-To build a Members directory, use the shortcode <code>[bps_directory]</code>, see the [Custom Directories](https://dontdream.it/bp-profile-search/custom-directories/) tutorial.
+With the form builder you can:
 
-A detailed documentation is available on the [BP Profile Search](https://www.dontdream.it/bp-profile-search/) page.
+<ul>
+	<li>Add, remove, and reorder the search fields</li>
 
-Requires at least BuddyPress 2.4 -- Tested up to BuddyPress 4.3.0
+	<li>Use as search fields the BuddyPress profile fields, the <em>users</em> and <em>usermeta</em> data (including roles), the BuddyPress user groups, and the user taxonomies (including BuddyPress member types)</li>
+
+	<li>Use <em>search by distance</em> fields when you install the free companion plugin <a href="https://wordpress.org/plugins/bp-distance-search/">BP Distance Search</a></li>
+
+	<li>Select, for each search field, one of the available search modes</li>
+
+	<li>Select the BuddyPress Members directory, or one of the member directories built with this plugin, as the target directory</li>
+
+	<li>Select the form template to display your form</li>
+
+	<li>If in doubt, use the <em>Help</em> tab above the screen title</li>
+</ul>
+
+The form template works just like any other BuddyPress template. To override a form template, copy it to the 'buddypress/members' directory in your theme’s root, then edit the new copy according to your needs.
+
+= Display a search form =
+
+After you build your search form, you can display it:
+
+<ul>
+	<li>In its target directory, using the option <em>Add to Directory</em> in the form settings</li>
+
+	<li>In a sidebar or widget area, using the widget <em>Profile Search</em></li>
+
+	<li>In a post or page, using the shortcode [bps_form]</li>
+</ul>
+
+= Run a search =
+
+On the front-end, when you hit the <em>Search</em> button in a form, BP Profile Search opens the form's target directory and filters it with your search filters. Both the <em>All Members</em> tab and the <em>My Friends</em> tab are filtered.
+
+Additionally, the plugin:
+
+<ul>
+	<li>Displays an <em>active filters</em> section containing the active search filters and a <em>Clear</em> button to clear them</li>
+
+	<li>Displays for each member a <em>member details</em> section containing the values of the searched fields</li>
+
+	<li>Adds to the <em>Order By</em> drop-down the options to sort the directory by the searched fields</li>
+</ul>
+
+The <em>active filters</em> section and the <em>member details</em> section are displayed by two dedicated templates, that can be overridden just like any other BuddyPress template.
+
+= Build a member directory =
+
+With the [bps_directory] shortcode you can:
+
+<ul>
+	<li>Customize the BuddyPress Members directory, or build additional member directories</li>
+
+	<li>Add hidden filters to a directory</li>
+
+	<li>Add more sort options to a directory</li>
+
+	<li>Show additional member information in each <em>member details</em> section, e.g. the value of profile fields</li>
+
+	<li>Use a different Members directory template for each directory</li>
+</ul>
+
+You can enter the shortcode in an empty page to build a new member directory, or you can enter it in the BuddyPress Members page to customize the BuddyPress Members directory.
+
+= Additional documentation =
+
+<ul>
+	<li><a href="https://www.dontdream.it/bp-profile-search/form-builder/">Form Builder</a></li>
+
+	<li><a href="https://dontdream.it/bp-profile-search/search-modes/">Search Modes</a></li>
+
+	<li><a href="https://dontdream.it/bp-profile-search/custom-directories/">Custom Directories</a></li>
+
+	<li><a href="https://dontdream.it/bp-profile-search/form-templates/">Form Templates</a></li>
+</ul>
+
+Tested up to BuddyPress 5.0.0
+
+In the screenshots below, the <em>City</em> field is provided by the free companion plugin <a href="https://wordpress.org/plugins/bp-distance-search/">BP Distance Search</a>.
 
 == Installation ==
 
@@ -42,6 +118,13 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.2.1 =
+* Fixed conflict with the BP Legacy group members template, introduced in 5.2
+= 5.2 =
+* Added search by group, to find members belonging to the selected group(s)
+= 5.1 =
+* Added the bps-details template, to customize the member details section
+* Removed the bps-field-value template, replaced by bps-details
 = 5.0.5 =
 * Fixed bug with *range* and *age_range* in old templates, introduced in 5.0.2
 = 5.0.4 =
