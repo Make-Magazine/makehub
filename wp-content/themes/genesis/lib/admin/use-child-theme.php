@@ -24,11 +24,11 @@ function genesis_use_child_theme_notice() {
 		return;
 	}
 
-	$allowed_html = array(
-		'a' => array(
-			'href' => array(),
-		),
-	);
+	$allowed_html = [
+		'a' => [
+			'href' => [],
+		],
+	];
 
 	include GENESIS_VIEWS_DIR . '/misc/use-child-theme-notice.php';
 

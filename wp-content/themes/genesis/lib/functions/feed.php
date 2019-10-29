@@ -28,7 +28,7 @@ function genesis_feed_links_filter( $output, $feed ) {
 	$feed_uri          = genesis_get_option( 'feed_uri' );
 	$comments_feed_uri = genesis_get_option( 'comments_feed_uri' );
 
-	if ( $feed_uri && ! mb_strpos( $output, 'comments' ) && in_array( $feed, array( '', 'rss2', 'rss', 'rdf', 'atom' ) ) ) {
+	if ( $feed_uri && ! mb_strpos( $output, 'comments' ) && in_array( $feed, [ '', 'rss2', 'rss', 'rdf', 'atom' ], true ) ) {
 		$output = esc_url( $feed_uri );
 	}
 

@@ -26,13 +26,13 @@ class Genesis_Admin_Plugins extends Genesis_Admin_Basic {
 	public function __construct() {
 		$this->redirect_to = network_admin_url( 'plugin-install.php?s=studiopress&tab=search&type=author' );
 
-		$menu_ops = array(
-			'submenu' => array(
+		$menu_ops = [
+			'submenu' => [
 				'parent_slug' => 'genesis',
 				'page_title'  => __( 'Genesis Plugins', 'genesis' ),
 				'menu_title'  => __( 'Genesis Plugins', 'genesis' ),
-			),
-		);
+			],
+		];
 
 		$this->create( 'genesis-plugins', $menu_ops );
 	}

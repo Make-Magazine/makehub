@@ -41,6 +41,6 @@ add_action( 'admin_init', 'genesis_settings_sanitizer_init' );
  */
 function genesis_settings_sanitizer_init() {
 
-	new Genesis_Settings_Sanitizer( new Genesis_Sanitizer );
+	new Genesis_Settings_Sanitizer( new Genesis_Sanitizer() );
 
 }

@@ -378,6 +378,69 @@ window[ 'genesis' ] = {
 	},
 
 	/**
+	 * Stores the saved Starter Pack choice and triggers the first onboarding step.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @function
+	 *
+	 * @param {String} pack The chosen starter pack.
+	 */
+	onboardingInstallPack: function( pack ) {
+
+		if ( ! pack ) {
+			return;
+		}
+
+		jQuery.ajax( {
+			data: {
+				action: 'genesis_do_onboarding_pack_selection',
+				pack: pack,
+				nonce: genesis_onboarding.nonce,
+			},
+			type: 'post',
+			dataType: 'json',
+			url: ajaxurl,
+			success: function( response ) {
+
+				// Update tasks to run based on what the chosen pack supports.
+				if ( response.data.tasks ) {
+					genesis_onboarding.tasks = response.data.tasks;
+					genesis.onboardingTasks = genesis_onboarding.tasks;
+				}
+
+				// Hide the pack info modal if visible.
+				$overlayCloseButton = jQuery( '#js-modal-close' );
+				if ( $overlayCloseButton.length ) {
+					$overlayCloseButton.click();
+				}
+
+				// Hide the pack selection area.
+				jQuery( '.genesis-onboarding-starter-packs' ).addClass( 'genesis-onboarding-area-hidden' );
+
+				// Show dependencies progress area.
+				if ( response.data.tasks.includes( 'dependencies' ) ) {
+					jQuery( '.genesis-onboarding-task-dependencies' )
+						.addClass( 'genesis-onboarding-area-visible' )
+						.removeClass( 'genesis-onboarding-area-hidden' );
+				}
+
+				// Show content progress area.
+				if ( response.data.tasks.includes( 'content' ) || response.data.hasMenus ) {
+					jQuery( '.genesis-onboarding-task-content' )
+						.addClass( 'genesis-onboarding-area-visible' )
+						.removeClass( 'genesis-onboarding-area-hidden' );
+				}
+
+				// Start the onboarding process.
+				window.setTimeout( function() {
+					genesis.doOnboardingTask( genesis.onboardingTasks[0], 0 );
+				}, 500 );
+			}
+		});
+	},
+
+	/**
 	 * Initialises all aspects of the scripts.
 	 *
 	 * Generally ordered with stuff that inserts new elements into the DOM first,
@@ -420,6 +483,25 @@ window[ 'genesis' ] = {
 			wp.a11y.speak( genesis_onboarding.l10n.a11y.onboarding_started, 'polite' );
 			genesis.doOnboardingTask( event.target.dataset.task, event.target.dataset.step );
 		} );
+
+		// Make “install pack” buttons trigger the installation process.
+		jQuery( 'body' ).on( 'click', '.genesis-install-pack', function( event ) {
+
+			// Hide all “install pack” buttons to prevent double runs.
+			jQuery( '.genesis-install-pack' ).prop( 'disabled', true );
+
+			genesis.onboardingInstallPack( event.target.dataset.pack );
+
+		});
+
+		// Make the enter key open the “Pack Details” view.
+		jQuery( '.genesis-onboarding-page-starter-packs .pack-image' ).keypress( function( event ) {
+			var ENTER_KEY = 13;
+			if ( event.which === ENTER_KEY ) {
+				jQuery( this ).click();
+				event.preventDefault();
+			}
+		});
 
 	}
 

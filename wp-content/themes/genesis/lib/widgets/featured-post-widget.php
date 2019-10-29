@@ -34,7 +34,7 @@ class Genesis_Featured_Post extends WP_Widget {
 	 */
 	public function __construct() {
 
-		$this->defaults = array(
+		$this->defaults = [
 			'title'                   => '',
 			'posts_cat'               => '',
 			'posts_num'               => '',
@@ -59,18 +59,18 @@ class Genesis_Featured_Post extends WP_Widget {
 			'extra_title'             => '',
 			'more_from_category'      => '',
 			'more_from_category_text' => __( 'More Posts from this Category', 'genesis' ),
-		);
+		];
 
-		$widget_ops = array(
+		$widget_ops = [
 			'classname'   => 'featured-content featuredpost',
 			'description' => __( 'Displays featured posts with thumbnails', 'genesis' ),
-		);
+		];
 
-		$control_ops = array(
+		$control_ops = [
 			'id_base' => 'featured-post',
 			'width'   => 505,
 			'height'  => 350,
-		);
+		];
 
 		parent::__construct( 'featured-post', __( 'Genesis - Featured Posts', 'genesis' ), $widget_ops, $control_ops );
 
@@ -96,13 +96,15 @@ class Genesis_Featured_Post extends WP_Widget {
 		// Merge with defaults.
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
 
 		if ( ! empty( $instance['title'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base ) . $args['after_title'];
 		}
 
-		$query_args = array(
+		$query_args = [
 			'post_type'           => 'post',
 			'cat'                 => $instance['posts_cat'],
 			'showposts'           => $instance['posts_num'],
@@ -110,14 +112,14 @@ class Genesis_Featured_Post extends WP_Widget {
 			'orderby'             => $instance['orderby'],
 			'order'               => $instance['order'],
 			'ignore_sticky_posts' => $instance['exclude_sticky'],
-		);
+		];
 
 		// Exclude displayed IDs from this loop?
 		if ( $instance['exclude_displayed'] ) {
 			$query_args['post__not_in'] = (array) $_genesis_displayed_ids;
 		}
 
-		$wp_query = new WP_Query( $query_args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Reset later.
+		$wp_query = new WP_Query( $query_args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reset later.
 
 		if ( have_posts() ) {
 
@@ -128,22 +130,22 @@ class Genesis_Featured_Post extends WP_Widget {
 				$_genesis_displayed_ids[] = get_the_ID();
 
 				genesis_markup(
-					array(
+					[
 						'open'    => '<article %s>',
 						'context' => 'entry',
-						'params'  => array(
+						'params'  => [
 							'is_widget' => true,
-						),
-					)
+						],
+					]
 				);
 
 				$image = genesis_get_image(
-					array(
+					[
 						'format'  => 'html',
 						'size'    => $instance['image_size'],
 						'context' => 'featured-post-widget',
-						'attr'    => genesis_parse_attr( 'entry-image-widget', array() ),
-					)
+						'attr'    => genesis_parse_attr( 'entry-image-widget', [] ),
+					]
 				);
 
 				if ( $image && $instance['show_image'] ) {
@@ -152,7 +154,9 @@ class Genesis_Featured_Post extends WP_Widget {
 						'<a href="%s" class="%s"%s>%s</a>',
 						esc_url( get_permalink() ),
 						esc_attr( $instance['image_alignment'] ),
-						$role, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
+						$role,
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
 						wp_make_content_images_responsive( $image )
 					);
 				}
@@ -169,7 +173,7 @@ class Genesis_Featured_Post extends WP_Widget {
 
 					if ( ! empty( $instance['show_title'] ) ) {
 
-						$title = get_the_title() ? get_the_title() : __( '(no title)', 'genesis' );
+						$title = get_the_title() ?: __( '(no title)', 'genesis' );
 
 						/**
 						 * Filter the featured post widget title.
@@ -230,46 +234,46 @@ class Genesis_Featured_Post extends WP_Widget {
 						$heading = genesis_a11y( 'headings' ) ? 'h4' : 'h2';
 
 						$header .= genesis_markup(
-							array(
+							[
 								'open'    => "<{$heading} %s>",
 								'close'   => "</{$heading}>",
 								'context' => 'entry-title',
 								'content' => sprintf( '<a href="%s">%s</a>', get_permalink(), $title ),
-								'params'  => array(
+								'params'  => [
 									'is_widget' => true,
 									'wrap'      => $heading,
-								),
+								],
 								'echo'    => false,
-							)
+							]
 						);
 
 					}
 
 					if ( ! empty( $instance['show_byline'] ) && ! empty( $instance['post_info'] ) ) {
 						$header .= genesis_markup(
-							array(
+							[
 								'open'    => '<p %s>',
 								'close'   => '</p>',
 								'context' => 'entry-meta',
 								'content' => genesis_strip_p_tags( do_shortcode( $instance['post_info'] ) ),
-								'params'  => array(
+								'params'  => [
 									'is_widget' => true,
-								),
+								],
 								'echo'    => false,
-							)
+							]
 						);
 					}
 
 					genesis_markup(
-						array(
+						[
 							'open'    => '<header %s>',
 							'close'   => '</header>',
 							'context' => 'entry-header',
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
+							],
 							'content' => $header,
-						)
+						]
 					);
 
 				}
@@ -277,13 +281,13 @@ class Genesis_Featured_Post extends WP_Widget {
 				if ( ! empty( $instance['show_content'] ) ) {
 
 					genesis_markup(
-						array(
+						[
 							'open'    => '<div %s>',
 							'context' => 'entry-content',
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
-						)
+							],
+						]
 					);
 
 					if ( 'excerpt' === $instance['show_content'] ) {
@@ -294,33 +298,33 @@ class Genesis_Featured_Post extends WP_Widget {
 						global $more;
 
 						$orig_more = $more;
-						$more      = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Temporary change.
+						$more      = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Temporary change.
 
 						the_content( genesis_a11y_more_link( esc_html( $instance['more_text'] ) ) );
 
-						$more = $orig_more; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Global is being restored.
+						$more = $orig_more; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Global is being restored.
 					}
 
 					genesis_markup(
-						array(
+						[
 							'close'   => '</div>',
 							'context' => 'entry-content',
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
-						)
+							],
+						]
 					);
 
 				}
 
 				genesis_markup(
-					array(
+					[
 						'close'   => '</article>',
 						'context' => 'entry',
-						'params'  => array(
+						'params'  => [
 							'is_widget' => true,
-						),
-					)
+						],
+					]
 				);
 
 			}
@@ -332,18 +336,19 @@ class Genesis_Featured_Post extends WP_Widget {
 		// The EXTRA Posts (list).
 		if ( ! empty( $instance['extra_num'] ) ) {
 			if ( ! empty( $instance['extra_title'] ) ) {
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				echo $args['before_title'] . '<span class="more-posts-title">' . esc_html( $instance['extra_title'] ) . '</span>' . $args['after_title'];
 			}
 
 			$offset = (int) $instance['posts_num'] + (int) $instance['posts_offset'];
 
-			$query_args = array(
+			$query_args = [
 				'cat'       => $instance['posts_cat'],
 				'showposts' => $instance['extra_num'],
 				'offset'    => $offset,
-			);
+			];
 
-			$wp_query = new WP_Query( $query_args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Reset later.
+			$wp_query = new WP_Query( $query_args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reset later.
 
 			$listitems = '';
 
@@ -356,7 +361,7 @@ class Genesis_Featured_Post extends WP_Widget {
 					$listitems .= sprintf( '<li><a href="%s">%s</a></li>', esc_url( get_permalink() ), esc_html( get_the_title() ) );
 				}
 
-				if ( mb_strlen( $listitems ) > 0 ) {
+				if ( '' !== $listitems ) {
 					printf( '<ul class="more-posts">%s</ul>', $listitems ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped before.
 				}
 			}
@@ -374,6 +379,7 @@ class Genesis_Featured_Post extends WP_Widget {
 			);
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['after_widget'];
 
 	}
@@ -430,7 +436,7 @@ class Genesis_Featured_Post extends WP_Widget {
 				<p>
 					<label for="<?php echo esc_attr( $this->get_field_id( 'posts_cat' ) ); ?>"><?php esc_html_e( 'Category', 'genesis' ); ?>:</label>
 					<?php
-					$categories_args = array(
+					$categories_args = [
 						'name'            => $this->get_field_name( 'posts_cat' ),
 						'id'              => $this->get_field_id( 'posts_cat' ),
 						'selected'        => $instance['posts_cat'],
@@ -438,7 +444,7 @@ class Genesis_Featured_Post extends WP_Widget {
 						'hierarchical'    => 1,
 						'show_option_all' => __( 'All Categories', 'genesis' ),
 						'hide_empty'      => '0',
-					);
+					];
 					wp_dropdown_categories( $categories_args );
 					?>
 				</p>
@@ -526,7 +532,7 @@ class Genesis_Featured_Post extends WP_Widget {
 					<select id="<?php echo esc_attr( $this->get_field_id( 'image_size' ) ); ?>" class="genesis-image-size-selector" name="<?php echo esc_attr( $this->get_field_name( 'image_size' ) ); ?>">
 						<?php
 						$sizes = genesis_get_image_sizes();
-						foreach ( (array) $sizes as $name => $size ) {
+						foreach ( $sizes as $name => $size ) {
 							printf( '<option value="%s" %s>%s (%sx%s)</option>', esc_attr( $name ), selected( $name, $instance['image_size'], false ), esc_html( $name ), esc_html( $size['width'] ), esc_html( $size['height'] ) );
 						}
 						?>

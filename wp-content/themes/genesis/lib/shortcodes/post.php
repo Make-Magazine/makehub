@@ -30,13 +30,13 @@ add_shortcode( 'post_date', 'genesis_post_date_shortcode' );
  */
 function genesis_post_date_shortcode( $atts ) {
 
-	$defaults = array(
+	$defaults = [
 		'after'          => '',
 		'before'         => '',
 		'format'         => get_option( 'date_format' ),
 		'label'          => '',
 		'relative_depth' => 2,
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_date' );
 
@@ -72,12 +72,12 @@ add_shortcode( 'post_time', 'genesis_post_time_shortcode' );
  */
 function genesis_post_time_shortcode( $atts ) {
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
 		'format' => get_option( 'time_format' ),
 		'label'  => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_time' );
 
@@ -106,13 +106,13 @@ add_shortcode( 'post_modified_date', 'genesis_post_modified_date_shortcode' );
  */
 function genesis_post_modified_date_shortcode( $atts ) {
 
-	$defaults = array(
+	$defaults = [
 		'after'          => '',
 		'before'         => '',
 		'format'         => get_option( 'date_format' ),
 		'label'          => '',
 		'relative_depth' => 2,
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_modified_date' );
 
@@ -163,12 +163,12 @@ add_shortcode( 'post_modified_time', 'genesis_post_modified_time_shortcode' );
  */
 function genesis_post_modified_time_shortcode( $atts ) {
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
 		'format' => get_option( 'time_format' ),
 		'label'  => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_modified_time' );
 
@@ -221,10 +221,10 @@ function genesis_post_author_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author' );
 
@@ -274,10 +274,10 @@ function genesis_post_author_link_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author_link' );
 
@@ -320,10 +320,10 @@ function genesis_post_author_posts_link_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_author_posts_link' );
 
@@ -368,14 +368,14 @@ function genesis_post_comments_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'       => '',
 		'before'      => '',
 		'hide_if_off' => 'enabled',
 		'more'        => __( '% Comments', 'genesis' ),
 		'one'         => __( '1 Comment', 'genesis' ),
 		'zero'        => __( 'Leave a Comment', 'genesis' ),
-	);
+	];
 	$atts     = shortcode_atts( $defaults, $atts, 'post_comments' );
 
 	if ( 'enabled' === $atts['hide_if_off'] && ( ! genesis_get_option( 'comments_posts' ) || ! comments_open() ) ) {
@@ -390,13 +390,13 @@ function genesis_post_comments_shortcode( $atts ) {
 	$comments = sprintf( '<a href="%s">%s</a>', get_comments_link(), $comments );
 
 	$output = genesis_markup(
-		array(
+		[
 			'open'    => '<span class="entry-comments-link">',
 			'close'   => '</span>',
 			'content' => $atts['before'] . $comments . $atts['after'],
 			'context' => 'comments-shortcode',
 			'echo'    => false,
-		)
+		]
 	);
 
 	return apply_filters( 'genesis_post_comments_shortcode', $output, $atts );
@@ -426,11 +426,11 @@ function genesis_post_tags_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => __( 'Tagged With: ', 'genesis' ),
 		'sep'    => ', ',
-	);
+	];
 	$atts     = shortcode_atts( $defaults, $atts, 'post_tags' );
 
 	$tags = get_the_tag_list( $atts['before'], trim( $atts['sep'] ) . ' ', $atts['after'] );
@@ -469,11 +469,11 @@ function genesis_post_categories_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'sep'    => ', ',
 		'before' => __( 'Filed Under: ', 'genesis' ),
 		'after'  => '',
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_categories' );
 
@@ -509,12 +509,12 @@ add_shortcode( 'post_terms', 'genesis_post_terms_shortcode' );
  */
 function genesis_post_terms_shortcode( $atts ) {
 
-	$defaults = array(
+	$defaults = [
 		'after'    => '',
 		'before'   => __( 'Filed Under: ', 'genesis' ),
 		'sep'      => ', ',
 		'taxonomy' => 'category',
-	);
+	];
 
 	/**
 	 * Post terms shortcode defaults.
@@ -567,11 +567,11 @@ function genesis_post_edit_shortcode( $atts ) {
 		return '';
 	}
 
-	$defaults = array(
+	$defaults = [
 		'after'  => '',
 		'before' => '',
 		'link'   => __( '(Edit)', 'genesis' ),
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'post_edit' );
 

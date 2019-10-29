@@ -29,14 +29,14 @@ class Genesis_Admin_Upgraded extends Genesis_Admin_Basic {
 
 		$page_id = 'genesis-upgraded';
 
-		$menu_ops = array(
-			'submenu' => array(
+		$menu_ops = [
+			'submenu' => [
 				'parent_slug' => 'admin.php',
 				'menu_title'  => '',
 				/* translators: %s: Genesis version. */
 				'page_title'  => sprintf( __( 'Welcome to Genesis %s', 'genesis' ), PARENT_THEME_BRANCH ),
-			),
-		);
+			],
+		];
 
 		$this->create( $page_id, $menu_ops );
 

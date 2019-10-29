@@ -46,7 +46,7 @@ final class Genesis_Requirements_Views {
 	 * Adds necessary hooks for displaying requirements messaging.
 	 */
 	public function add_hooks() {
-		add_action( 'admin_notices', array( $this, 'admin_notice' ) );
+		add_action( 'admin_notices', [ $this, 'admin_notice' ] );
 	}
 
 	/**

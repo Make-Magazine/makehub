@@ -116,10 +116,10 @@ final class Genesis_Contributor {
 	 * @return string Contributor's role.
 	 */
 	public function get_named_role() {
-		$roles = array(
+		$roles = [
 			'contributor'    => __( 'Contributor', 'genesis' ),
 			'lead-developer' => __( 'Lead Developer', 'genesis' ),
-		);
+		];
 
 		if ( isset( $roles[ $this->role ] ) ) {
 			return $roles[ $this->role ];

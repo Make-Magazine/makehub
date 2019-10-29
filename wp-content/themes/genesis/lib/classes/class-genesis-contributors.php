@@ -46,7 +46,7 @@ class Genesis_Contributors {
 	 * @param array $people Data set of people who have contributed to Genesis.
 	 */
 	public function __construct( array $people ) {
-		$all = array();
+		$all = [];
 
 		foreach ( $people as $key => $person ) {
 			if ( ! isset( $person['role'] ) ) {
@@ -84,7 +84,7 @@ class Genesis_Contributors {
 	 * @return Genesis_Contributor[]
 	 */
 	public function find_by_role( $role ) {
-		$people = array();
+		$people = [];
 		foreach ( $this->people as $key => $person ) {
 			if ( $role === $person->get_role() ) {
 				$people[ $key ] = $person;

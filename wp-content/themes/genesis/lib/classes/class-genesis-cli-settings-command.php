@@ -87,7 +87,7 @@ class Genesis_Cli_Settings_Command {
 
 		$option_key = isset( $assoc_args['option_key'] ) ? $assoc_args['option_key'] : null;
 
-		if ( genesis_update_settings( array( $args[0] => $args[1] ), $option_key ) ) {
+		if ( genesis_update_settings( [ $args[0] => $args[1] ], $option_key ) ) {
 			WP_CLI::success( __( 'Setting saved.', 'genesis' ) );
 			return;
 		}

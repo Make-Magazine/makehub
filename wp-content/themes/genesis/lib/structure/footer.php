@@ -55,17 +55,17 @@ function genesis_footer_widget_areas() {
 		if ( $widgets ) {
 
 			$inside .= genesis_markup(
-				array(
+				[
 					'open'    => '<div %s>',
 					'close'   => '</div>',
 					'context' => 'footer-widget-area',
 					'content' => $widgets,
 					'echo'    => false,
-					'params'  => array(
+					'params'  => [
 						'column' => $counter,
 						'count'  => $footer_widgets,
-					),
-				)
+					],
+				]
 			);
 
 		}
@@ -83,13 +83,13 @@ function genesis_footer_widget_areas() {
 		$_inside .= genesis_get_structural_wrap( 'footer-widgets', 'close' );
 
 		$output .= genesis_markup(
-			array(
+			[
 				'open'    => '<div %s>' . genesis_sidebar_title( 'Footer' ),
 				'close'   => '</div>',
 				'content' => $_inside,
 				'context' => 'footer-widgets',
 				'echo'    => false,
-			)
+			]
 		);
 
 	}
@@ -119,10 +119,10 @@ add_action( 'genesis_footer', 'genesis_footer_markup_open', 5 );
 function genesis_footer_markup_open() {
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<footer %s>',
 			'context' => 'site-footer',
-		)
+		]
 	);
 	genesis_structural_wrap( 'footer', 'open' );
 
@@ -140,10 +140,10 @@ function genesis_footer_markup_close() {
 
 	genesis_structural_wrap( 'footer', 'close' );
 	genesis_markup(
-		array(
+		[
 			'close'   => '</footer>',
 			'context' => 'site-footer',
-		)
+		]
 	);
 
 }
@@ -160,18 +160,24 @@ add_action( 'genesis_footer', 'genesis_do_footer' );
  */
 function genesis_do_footer() {
 
-	$creds_text = wp_kses_post( sprintf( '[footer_copyright before="%s "] &#x000B7; [footer_childtheme_link before="" after=" %s"] [footer_genesis_link url="https://www.studiopress.com/" before=""] &#x000B7; [footer_wordpress_link] &#x000B7; [footer_loginout]', __( 'Copyright', 'genesis' ), __( 'on', 'genesis' ) ) );
-
 	/**
-	 * Adjust footer credit text.
+	 * Deprecated. Adjust footer credit text.
 	 *
 	 * @since 1.0.1
+	 * @deprecated 3.1.0
 	 *
 	 * @param string The credit text.
 	 */
-	$creds_text = apply_filters( 'genesis_footer_creds_text', $creds_text );
+	apply_filters_deprecated(
+		'genesis_footer_creds_text',
+		[ '' ],
+		'3.1.0',
+		'genesis_pre_get_option_footer_text',
+		__( 'This filter is no longer supported. You can now modify your footer text using the Theme Settings.', 'genesis' )
+	);
 
-	$output = '<p>' . genesis_strip_p_tags( $creds_text ) . '</p>';
+	$creds_text = wp_kses_post( genesis_get_option( 'footer_text' ) );
+	$output     = '<p>' . genesis_strip_p_tags( $creds_text ) . '</p>';
 
 	/**
 	 * Adjust full footer output.

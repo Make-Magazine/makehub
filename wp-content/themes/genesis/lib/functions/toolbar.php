@@ -36,14 +36,14 @@ function genesis_cpt_archive_settings_link( $wp_admin_bar ) {
 		return $wp_admin_bar;
 	}
 	// Add our toolbar link.
-	$args = array(
+	$args = [
 		'id'    => 'cpt-archive-settings',
 		'title' => __( 'Edit Archive Settings', 'genesis' ),
 		'href'  => admin_url( "edit.php?post_type={$post_type}&page=genesis-cpt-archive-{$post_type}" ),
-		'meta'  => array(
+		'meta'  => [
 			'class' => '',
-		),
-	);
+		],
+	];
 	$wp_admin_bar->add_node( $args );
 
 	return $wp_admin_bar;

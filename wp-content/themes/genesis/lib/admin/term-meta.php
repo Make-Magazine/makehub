@@ -22,7 +22,7 @@ function genesis_term_meta_defaults() {
 
 	return apply_filters(
 		'genesis_term_meta_defaults',
-		array(
+		[
 			'headline'            => '',
 			'intro_text'          => '',
 			'display_title'       => 0, // Vestigial.
@@ -34,7 +34,7 @@ function genesis_term_meta_defaults() {
 			'noindex'             => 0,
 			'nofollow'            => 0,
 			'noarchive'           => 0,
-		)
+		]
 	);
 
 }
@@ -50,9 +50,9 @@ add_action( 'admin_init', 'genesis_add_taxonomy_archive_options' );
 function genesis_add_taxonomy_archive_options() {
 
 	foreach ( get_taxonomies(
-		array(
+		[
 			'public' => true,
-		)
+		]
 	) as $tax_name ) {
 		add_action( $tax_name . '_edit_form', 'genesis_taxonomy_archive_options', 10, 2 );
 	}
@@ -88,9 +88,9 @@ add_action( 'admin_init', 'genesis_add_taxonomy_seo_options' );
 function genesis_add_taxonomy_seo_options() {
 
 	foreach ( get_taxonomies(
-		array(
+		[
 			'public' => true,
-		)
+		]
 	) as $tax_name ) {
 		add_action( $tax_name . '_edit_form', 'genesis_taxonomy_seo_options', 10, 2 );
 	}
@@ -134,9 +134,9 @@ function genesis_add_taxonomy_layout_options() {
 	}
 
 	foreach ( get_taxonomies(
-		array(
+		[
 			'public' => true,
-		)
+		]
 	) as $tax_name ) {
 		add_action( $tax_name . '_edit_form', 'genesis_taxonomy_layout_options', 10, 2 );
 	}
@@ -184,7 +184,7 @@ function genesis_get_term_filter( $term, $taxonomy ) {
 	}
 
 	// Still set $term->meta and apply filter, for backward compatibility.
-	$term->meta = apply_filters( 'genesis_term_meta', array(), $term, $taxonomy );
+	$term->meta = apply_filters( 'genesis_term_meta', [], $term, $taxonomy );
 
 	return $term;
 
@@ -245,7 +245,8 @@ function genesis_term_meta_save( $term_id, $tt_id ) {
 		return;
 	}
 
-	$values = isset( $_POST['genesis-meta'] ) ? (array) $_POST['genesis-meta'] : array();
+	// phpcs:ignore WordPress.Security.NonceVerification.Missing -- $_POST['genesis-meta'] is not a nonce field.
+	$values = isset( $_POST['genesis-meta'] ) ? (array) $_POST['genesis-meta'] : [];
 
 	$values = wp_parse_args( $values, genesis_term_meta_defaults() );
 

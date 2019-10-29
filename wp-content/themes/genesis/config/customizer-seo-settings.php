@@ -18,284 +18,262 @@
  *
  * @since 2.6.0
  */
-return array(
-	'genesis-seo' => array(
+return [
+	'genesis-seo' => [
 		'active_callback' => 'genesis_seo_active',
 		'title'           => __( 'Theme SEO Settings', 'genesis' ),
 		'description'     => __( 'Customize the various theme SEO settings.', 'genesis' ),
 		'settings_field'  => 'genesis-seo-settings',
 		'control_prefix'  => 'genesis-seo',
 		'theme_supports'  => 'genesis-customizer-seo-settings',
-		'sections'        => array(
-			'genesis_seo_doctitle'    => array(
+		'sections'        => [
+			'genesis_seo_doctitle'  => [
 				'title'    => __( 'Document Title', 'genesis' ),
 				'panel'    => 'genesis-seo',
-				'controls' => array(
-					'append_site_title'    => array(
+				'controls' => [
+					'append_site_title'    => [
 						'label'    => __( 'Add site name to document title on inner pages? ', 'genesis' ),
 						'section'  => 'genesis_seo_doctitle',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'doctitle_sep'         => array(
+						],
+					],
+					'doctitle_sep'         => [
 						'label'       => __( 'Document Title Separator', 'genesis' ),
 						'description' => __( 'If the title consists of two parts (original title and optional addition), then the separator will go in between them.', 'genesis' ),
 						'section'     => 'genesis_seo_doctitle',
 						'type'        => 'text',
-						'settings'    => array(
+						'settings'    => [
 							'default' => '-',
-						),
-					),
-					'doctitle_seplocation' => array(
+						],
+					],
+					'doctitle_seplocation' => [
 						'label'       => __( 'Document Title Order', 'genesis' ),
 						'description' => __( 'Determines which side the added title text will go on.', 'genesis' ),
 						'section'     => 'genesis_seo_doctitle',
 						'type'        => 'select',
-						'choices'     => array(
+						'choices'     => [
 							'left'  => __( 'Additions on left', 'genesis' ),
 							'right' => __( 'Additions on right', 'genesis' ),
-						),
-						'settings'    => array(
+						],
+						'settings'    => [
 							'default' => 'right',
-						),
-					),
-				),
-			),
-			'genesis_seo_homepage'    => array(
+						],
+					],
+				],
+			],
+			'genesis_seo_homepage'  => [
 				'title'    => __( 'Homepage', 'genesis' ),
 				'panel'    => 'genesis-seo',
-				'controls' => array(
-					'home_h1_on'              => array(
+				'controls' => [
+					'home_h1_on'              => [
 						'label'    => __( 'Primary Title H1', 'genesis' ),
 						'section'  => 'genesis_seo_homepage',
 						'type'     => 'radio',
-						'choices'  => array(
+						'choices'  => [
 							'title'       => __( 'Site Title', 'genesis' ),
 							'description' => __( 'Site Description (tagline)', 'genesis' ),
 							'neither'     => __( 'None', 'genesis' ),
-						),
-						'settings' => array(
+						],
+						'settings' => [
 							'default' => 'title',
-						),
-					),
-					'home_doctitle'           => array(
+						],
+					],
+					'home_doctitle'           => [
 						'label'       => __( 'Homepage Document Title', 'genesis' ),
 						'description' => __( 'If you leave the document title field blank, your site’s title will be used instead.', 'genesis' ),
 						'section'     => 'genesis_seo_homepage',
 						'type'        => 'text',
-						'settings'    => array(
+						'settings'    => [
 							'default' => '',
-						),
-					),
-					'append_description_home' => array(
+						],
+					],
+					'append_description_home' => [
 						'label'    => __( 'Add site description (tagline) to document title on home page? ', 'genesis' ),
 						'section'  => 'genesis_seo_homepage',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'home_description'        => array(
+						],
+					],
+					'home_description'        => [
 						'label'       => __( 'Meta Description', 'genesis' ),
 						'description' => __( 'The meta description can be used to determine the text used under the title on search engine results pages.', 'genesis' ),
 						'section'     => 'genesis_seo_homepage',
 						'type'        => 'textarea',
-						'settings'    => array(
+						'settings'    => [
 							'default' => '',
-						),
-					),
-					'home_keywords'           => array(
+						],
+					],
+					'home_keywords'           => [
 						'label'       => __( 'Meta Keywords', 'genesis' ),
 						'description' => __( 'Keywords are generally ignored by Search Engines.', 'genesis' ),
 						'section'     => 'genesis_seo_homepage',
 						'type'        => 'text',
-						'settings'    => array(
+						'settings'    => [
 							'default' => '',
-						),
-					),
-					'home_noindex'            => array(
+						],
+					],
+					'home_noindex'            => [
 						'label'    => __( 'Apply noindex to the homepage', 'genesis' ),
 						'section'  => 'genesis_seo_homepage',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'home_nofollow'           => array(
+						],
+					],
+					'home_nofollow'           => [
 						'label'    => __( 'Apply nofollow to the homepage', 'genesis' ),
 						'section'  => 'genesis_seo_homepage',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'home_noarchive'          => array(
+						],
+					],
+					'home_noarchive'          => [
 						'label'    => __( 'Apply noarchive to the homepage', 'genesis' ),
 						'section'  => 'genesis_seo_homepage',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-				),
-			),
-			'genesis_seo_dochead'     => array(
+						],
+					],
+				],
+			],
+			'genesis_seo_dochead'   => [
 				'title'       => __( 'Document Head', 'genesis' ),
 				'description' => __( 'By default, WordPress places several tags in your document title. Most of these tags are completely unnecessary, and provide no SEO value whatsoever; they just make your site slower to load. Choose which tags you would like included in your document title. If you do not know what something is, leave it unchecked.', 'genesis' ),
 				'panel'       => 'genesis-seo',
-				'controls'    => array(
-					'head_adjacent_posts_rel_link' => array(
+				'controls'    => [
+					'head_adjacent_posts_rel_link' => [
 						'label'    => __( 'Adjacent Posts rel link tags', 'genesis' ),
 						'section'  => 'genesis_seo_dochead',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'head_wlwmanifest_link'        => array(
+						],
+					],
+					'head_wlwmanifest_link'        => [
 						'label'    => __( 'Include Windows Live Writer Support Tag?', 'genesis' ),
 						'section'  => 'genesis_seo_dochead',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'head_shortlink'               => array(
+						],
+					],
+					'head_shortlink'               => [
 						'label'    => __( 'Include Shortlink Tag?', 'genesis' ),
 						'section'  => 'genesis_seo_dochead',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-				),
-			),
-			'genesis_seo_indexing'    => array(
+						],
+					],
+				],
+			],
+			'genesis_seo_indexing'  => [
 				'title'       => __( 'Indexing', 'genesis' ),
 				'description' => __( 'Apply noindex to the archive pages below.', 'genesis' ),
 				'panel'       => 'genesis-seo',
-				'controls'    => array(
-					'noindex_cat_archive'    => array(
+				'controls'    => [
+					'noindex_cat_archive'    => [
 						'label'    => __( 'Category Archives', 'genesis' ),
 						'section'  => 'genesis_seo_indexing',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 1,
-						),
-					),
-					'noindex_tag_archive'    => array(
+						],
+					],
+					'noindex_tag_archive'    => [
 						'label'    => __( 'Tag Archives', 'genesis' ),
 						'section'  => 'genesis_seo_indexing',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 1,
-						),
-					),
-					'noindex_author_archive' => array(
+						],
+					],
+					'noindex_author_archive' => [
 						'label'    => __( 'Author Archives', 'genesis' ),
 						'section'  => 'genesis_seo_indexing',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 1,
-						),
-					),
-					'noindex_date_archive'   => array(
+						],
+					],
+					'noindex_date_archive'   => [
 						'label'    => __( 'Date Archives', 'genesis' ),
 						'section'  => 'genesis_seo_indexing',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 1,
-						),
-					),
-					'noindex_search_archive' => array(
+						],
+					],
+					'noindex_search_archive' => [
 						'label'    => __( 'Search Results', 'genesis' ),
 						'section'  => 'genesis_seo_indexing',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 1,
-						),
-					),
-				),
-			),
-			'genesis_seo_archiving'   => array(
+						],
+					],
+				],
+			],
+			'genesis_seo_archiving' => [
 				'title'       => __( 'Archiving', 'genesis' ),
 				'description' => __( 'Apply noarchive to the pages below.', 'genesis' ),
 				'panel'       => 'genesis-seo',
-				'controls'    => array(
-					'noarchive'                => array(
+				'controls'    => [
+					'noarchive'                => [
 						'label'    => __( 'Entire Site', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'noarchive_cat_archive'    => array(
+						],
+					],
+					'noarchive_cat_archive'    => [
 						'label'    => __( 'Category Archives', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'noarchive_tag_archive'    => array(
+						],
+					],
+					'noarchive_tag_archive'    => [
 						'label'    => __( 'Tag Archives', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'noarchive_author_archive' => array(
+						],
+					],
+					'noarchive_author_archive' => [
 						'label'    => __( 'Author Archives', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'noarchive_date_archive'   => array(
+						],
+					],
+					'noarchive_date_archive'   => [
 						'label'    => __( 'Date Archives', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-					'noarchive_search_archive' => array(
+						],
+					],
+					'noarchive_search_archive' => [
 						'label'    => __( 'Search Results', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
 						'type'     => 'checkbox',
-						'settings' => array(
+						'settings' => [
 							'default' => 0,
-						),
-					),
-				),
-			),
-			'genesis_seo_directories' => array(
-				'title'    => __( 'Directories', 'genesis' ),
-				'panel'    => 'genesis-seo',
-				'controls' => array(
-					'noodp'  => array(
-						'label'    => __( 'Apply noodp to entire site?', 'genesis' ),
-						'section'  => 'genesis_seo_directories',
-						'type'     => 'checkbox',
-						'settings' => array(
-							'default' => 1,
-						),
-					),
-					'noydir' => array(
-						'label'    => __( 'Apply noydir to entire site?', 'genesis' ),
-						'section'  => 'genesis_seo_directories',
-						'type'     => 'checkbox',
-						'settings' => array(
-							'default' => 1,
-						),
-					),
-				),
-			),
-		),
-	),
-);
+						],
+					],
+				],
+			],
+		],
+	],
+];

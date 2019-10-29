@@ -51,7 +51,7 @@ function genesis_check_requirements() {
  */
 function genesis_activate_fallback_theme( $stylesheet, WP_Theme $old_theme ) {
 
-	unset( $_GET['activated'] );
+	unset( $_GET['activated'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 	if ( $old_theme->exists() && strpos( $old_theme->get_stylesheet(), 'genesis' ) === false ) {
 		$fallback_stylesheet = $old_theme->get_stylesheet();

@@ -20,7 +20,7 @@ wp_nonce_field( 'genesis_inpost_layout_save', 'genesis_inpost_layout_nonce' );
 if ( genesis_has_multiple_layouts() ) :
 	$genesis_layout = genesis_get_custom_field( '_genesis_layout' );
 	?>
-	<tr valign="top">
+	<tr>
 		<th scope="row"><?php esc_html_e( 'Select Layout', 'genesis' ); ?></th>
 		<td>
 			<fieldset class="genesis-layout-selector">
@@ -35,11 +35,11 @@ if ( genesis_has_multiple_layouts() ) :
 				<?php
 
 				genesis_layout_selector(
-					array(
+					[
 						'name'     => 'genesis_layout[_genesis_layout]',
 						'selected' => $genesis_layout,
-						'type'     => array( 'singular', get_post_type(), get_the_ID() ),
-					)
+						'type'     => [ 'singular', get_post_type(), get_the_ID() ],
+					]
 				);
 				?>
 			</fieldset>
@@ -47,12 +47,12 @@ if ( genesis_has_multiple_layouts() ) :
 	</tr>
 <?php endif; ?>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row"><label for="genesis_custom_body_class"><?php esc_html_e( 'Custom Body Class', 'genesis' ); ?></label></th>
 		<td><p><input class="large-text" type="text" name="genesis_layout[_genesis_custom_body_class]" id="genesis_custom_body_class" value="<?php echo esc_attr( genesis_get_custom_field( '_genesis_custom_body_class' ) ); ?>" /></p></td>
 	</tr>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row"><label for="genesis_custom_post_class"><?php esc_html_e( 'Custom Post Class', 'genesis' ); ?></label></th>
 		<td><p><input class="large-text" type="text" name="genesis_layout[_genesis_custom_post_class]" id="genesis_custom_post_class" value="<?php echo esc_attr( genesis_get_custom_field( '_genesis_custom_post_class' ) ); ?>" /></p></td>
 	</tr>

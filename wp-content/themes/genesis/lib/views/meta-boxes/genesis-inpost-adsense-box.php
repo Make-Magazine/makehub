@@ -15,7 +15,7 @@ wp_nonce_field( 'genesis_inpost_adsense_save', 'genesis_inpost_adsense_nonce' );
 ?>
 <table class="form-table">
 	<tbody>
-	<tr valign="top">
+	<tr>
 		<th scope="row">
 			<strong><?php esc_html_e( 'AdSense Output', 'genesis' ); ?></strong>
 		</th>

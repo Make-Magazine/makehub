@@ -49,9 +49,9 @@ class Genesis_Admin_Meta_Boxes extends Genesis_Admin_Boxes {
 
 		$this->do_meta_box(
 			$object,
-			array(
+			[
 				'id' => $id,
-			)
+			]
 		);
 
 	}

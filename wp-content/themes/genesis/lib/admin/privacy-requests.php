@@ -22,15 +22,15 @@ add_filter( 'wp_privacy_personal_data_erasers', 'genesis_privacy_personal_data_e
  */
 function genesis_privacy_personal_data_erasers( array $erasers ) {
 
-	$erasers['genesis_author_archives'] = array(
+	$erasers['genesis_author_archives'] = [
 		'eraser_friendly_name' => __( 'Genesis Author Archive Data', 'genesis' ),
 		'callback'             => 'genesis_erase_author_archive_info',
-	);
+	];
 
-	$erasers['genesis_update_email_address'] = array(
+	$erasers['genesis_update_email_address'] = [
 		'eraser_friendly_name' => __( 'Update Notification Email Address', 'genesis' ),
 		'callback'             => 'genesis_erase_update_notification_email_address',
-	);
+	];
 
 	return $erasers;
 }
@@ -46,12 +46,12 @@ function genesis_privacy_personal_data_erasers( array $erasers ) {
  */
 function genesis_erase_author_archive_info( $email_address ) {
 
-	$response = array(
+	$response = [
 		'items_removed'  => false,
 		'items_retained' => false,
-		'messages'       => array(),
+		'messages'       => [],
 		'done'           => true,
-	);
+	];
 
 	if ( empty( $email_address ) ) {
 		return $response;
@@ -92,15 +92,15 @@ function genesis_erase_author_archive_info( $email_address ) {
  * @return array
  */
 function genesis_erase_update_notification_email_address( $email_address ) {
-	$response = array(
+	$response = [
 		'items_removed'  => false,
 		'items_retained' => false,
-		'messages'       => array(),
+		'messages'       => [],
 		'done'           => true,
-	);
+	];
 
 	if ( strtolower( genesis_get_option( 'update_email_address' ) ) === strtolower( $email_address ) ) {
-		genesis_update_settings( array( 'update_email_address' => 'unset' ) );
+		genesis_update_settings( [ 'update_email_address' => 'unset' ] );
 		$response['items_removed'] = true;
 		$response['messages'][]    = __( 'Update Notification Email Address removed.', 'genesis' );
 	}
@@ -120,10 +120,10 @@ add_filter( 'wp_privacy_personal_data_exporters', 'genesis_privacy_personal_data
  * @return array Updated data exporters.
  */
 function genesis_privacy_personal_data_exporters( array $exporters ) {
-	$exporters['genesis_author_archives'] = array(
+	$exporters['genesis_author_archives'] = [
 		'exporter_friendly_name' => __( 'Genesis Author Archive Data', 'genesis' ),
 		'callback'               => 'genesis_export_author_archive_info',
-	);
+	];
 
 	return $exporters;
 }
@@ -141,19 +141,19 @@ function genesis_export_author_archive_info( $email_address ) {
 
 	$email_address = trim( $email_address );
 
-	$export_data = array();
+	$export_data = [];
 
 	$user = get_user_by( 'email', $email_address );
 
 	if ( ! $user ) {
-		return array(
+		return [
 			'data' => $export_data,
 			'done' => true,
-		);
+		];
 	}
 
 	foreach ( genesis_get_author_archive_fields() as $key => $name ) {
-		$user_meta_export = array();
+		$user_meta_export = [];
 
 		$export_value = get_user_meta( $user->ID, $key, true );
 
@@ -161,23 +161,23 @@ function genesis_export_author_archive_info( $email_address ) {
 			continue;
 		}
 
-		$user_meta_export[] = array(
+		$user_meta_export[] = [
 			'name'  => $name,
 			'value' => $export_value,
-		);
+		];
 
-		$export_data[] = array(
+		$export_data[] = [
 			'group_id'    => 'genesis_author_archive_info',
 			'group_label' => __( 'Genesis Author Archive Data', 'genesis' ),
 			'item_id'     => "user-{$user->ID}",
 			'data'        => $user_meta_export,
-		);
+		];
 	}
 
-	return array(
+	return [
 		'data' => $export_data,
 		'done' => true,
-	);
+	];
 }
 
 /**
@@ -188,11 +188,11 @@ function genesis_export_author_archive_info( $email_address ) {
  * @return array
  */
 function genesis_get_author_archive_fields() {
-	return array(
+	return [
 		'headline'         => __( 'Custom Archive Headline', 'genesis' ),
 		'intro_text'       => __( 'Custom Description Text', 'genesis' ),
 		'doctitle'         => __( 'Custom Document Title', 'genesis' ),
 		'meta_description' => __( 'Meta Description', 'genesis' ),
 		'meta_keywords'    => __( 'Meta Keywords', 'genesis' ),
-	);
+	];
 }

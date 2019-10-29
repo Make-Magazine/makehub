@@ -34,7 +34,7 @@ class Genesis_Featured_Page extends WP_Widget {
 	 */
 	public function __construct() {
 
-		$this->defaults = array(
+		$this->defaults = [
 			'title'           => '',
 			'page_id'         => '',
 			'show_image'      => 0,
@@ -44,18 +44,18 @@ class Genesis_Featured_Page extends WP_Widget {
 			'show_content'    => 0,
 			'content_limit'   => '',
 			'more_text'       => '',
-		);
+		];
 
-		$widget_ops = array(
+		$widget_ops = [
 			'classname'   => 'featured-content featuredpage',
 			'description' => __( 'Displays featured page with thumbnails', 'genesis' ),
-		);
+		];
 
-		$control_ops = array(
+		$control_ops = [
 			'id_base' => 'featured-page',
 			'width'   => 200,
 			'height'  => 250,
-		);
+		];
 
 		parent::__construct( 'featured-page', __( 'Genesis - Featured Page', 'genesis' ), $widget_ops, $control_ops );
 
@@ -80,17 +80,19 @@ class Genesis_Featured_Page extends WP_Widget {
 		// Merge with defaults.
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
 
 		// Set up the author bio.
 		if ( ! empty( $instance['title'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base ) . $args['after_title'];
 		}
 
-		$wp_query = new WP_Query( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Reset later.
-			array(
+		$wp_query = new WP_Query( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reset later.
+			[
 				'page_id' => $instance['page_id'],
-			)
+			]
 		);
 
 		if ( have_posts() ) {
@@ -100,22 +102,22 @@ class Genesis_Featured_Page extends WP_Widget {
 				the_post();
 
 				genesis_markup(
-					array(
+					[
 						'open'    => '<article %s>',
 						'context' => 'entry',
-						'params'  => array(
+						'params'  => [
 							'is_widget' => true,
-						),
-					)
+						],
+					]
 				);
 
 				$image = genesis_get_image(
-					array(
+					[
 						'format'  => 'html',
 						'size'    => $instance['image_size'],
 						'context' => 'featured-page-widget',
-						'attr'    => genesis_parse_attr( 'entry-image-widget', array() ),
-					)
+						'attr'    => genesis_parse_attr( 'entry-image-widget', [] ),
+					]
 				);
 
 				if ( $image && $instance['show_image'] ) {
@@ -124,14 +126,16 @@ class Genesis_Featured_Page extends WP_Widget {
 						'<a href="%s" class="%s"%s>%s</a>',
 						esc_url( get_permalink() ),
 						esc_attr( $instance['image_alignment'] ),
-						$role, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
+						$role,
+						// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaping breaks output here
 						wp_make_content_images_responsive( $image )
 					);
 				}
 
 				if ( ! empty( $instance['show_title'] ) ) {
 
-					$title = get_the_title() ? get_the_title() : __( '(no title)', 'genesis' );
+					$title = get_the_title() ?: __( '(no title)', 'genesis' );
 
 					/**
 					 * Filter the featured page widget title.
@@ -169,29 +173,29 @@ class Genesis_Featured_Page extends WP_Widget {
 					$heading = genesis_a11y( 'headings' ) ? 'h4' : 'h2';
 
 					$entry_title = genesis_markup(
-						array(
+						[
 							'open'    => "<{$heading} %s>",
 							'close'   => "</{$heading}>",
 							'context' => 'entry-title',
 							'content' => sprintf( '<a href="%s">%s</a>', get_permalink(), $title ),
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
 								'wrap'      => $heading,
-							),
+							],
 							'echo'    => false,
-						)
+						]
 					);
 
 					genesis_markup(
-						array(
+						[
 							'open'    => '<header %s>',
 							'close'   => '</header>',
 							'context' => 'entry-header',
 							'content' => $entry_title,
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
-						)
+							],
+						]
 					);
 
 				}
@@ -199,13 +203,13 @@ class Genesis_Featured_Page extends WP_Widget {
 				if ( ! empty( $instance['show_content'] ) ) {
 
 					genesis_markup(
-						array(
+						[
 							'open'    => '<div %s>',
 							'context' => 'entry-content',
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
-						)
+							],
+						]
 					);
 
 					if ( empty( $instance['content_limit'] ) ) {
@@ -213,36 +217,36 @@ class Genesis_Featured_Page extends WP_Widget {
 						global $more;
 
 						$orig_more = $more;
-						$more      = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Temporary change.
+						$more      = 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Temporary change.
 
 						the_content( genesis_a11y_more_link( $instance['more_text'] ) );
 
-						$more = $orig_more; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Global is being restored.
+						$more = $orig_more; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Global is being restored.
 
 					} else {
 						the_content_limit( (int) $instance['content_limit'], genesis_a11y_more_link( esc_html( $instance['more_text'] ) ) );
 					}
 
 					genesis_markup(
-						array(
+						[
 							'close'   => '</div>',
 							'context' => 'entry-content',
-							'params'  => array(
+							'params'  => [
 								'is_widget' => true,
-							),
-						)
+							],
+						]
 					);
 
 				}
 
 				genesis_markup(
-					array(
+					[
 						'close'   => '</article>',
 						'context' => 'entry',
-						'params'  => array(
+						'params'  => [
 							'is_widget' => true,
-						),
-					)
+						],
+					]
 				);
 
 			}
@@ -251,6 +255,7 @@ class Genesis_Featured_Page extends WP_Widget {
 		// Restore original query.
 		wp_reset_query(); // phpcs:ignore WordPress.WP.DiscouragedFunctions.wp_reset_query_wp_reset_query -- Making sure the query is really reset.
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['after_widget'];
 
 	}
@@ -299,14 +304,14 @@ class Genesis_Featured_Page extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'page_id' ) ); ?>"><?php esc_html_e( 'Page', 'genesis' ); ?>:</label>
 			<?php
 			wp_dropdown_pages(
-				array(
+				[
 					// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- False positive.
 					'name'     => $this->get_field_name( 'page_id' ),
 					'id'       => $this->get_field_id( 'page_id' ),
 					'exclude'  => get_option( 'page_for_posts' ),
 					'selected' => $instance['page_id'],
 					// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-				)
+				]
 			);
 			?>
 		</p>
@@ -323,7 +328,7 @@ class Genesis_Featured_Page extends WP_Widget {
 			<select id="<?php echo esc_attr( $this->get_field_id( 'image_size' ) ); ?>" class="genesis-image-size-selector" name="<?php echo esc_attr( $this->get_field_name( 'image_size' ) ); ?>">
 				<?php
 				$sizes = genesis_get_image_sizes();
-				foreach ( (array) $sizes as $name => $size ) {
+				foreach ( $sizes as $name => $size ) {
 					echo '<option value="' . esc_attr( $name ) . '" ' . selected( $name, $instance['image_size'], false ) . '>' . esc_html( $name ) . ' (' . absint( $size['width'] ) . 'x' . absint( $size['height'] ) . ')</option>';
 				}
 				?>

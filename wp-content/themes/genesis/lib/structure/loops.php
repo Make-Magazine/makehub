@@ -21,16 +21,16 @@ function genesis_do_loop() {
 
 	if ( is_singular( 'page' ) && genesis_get_custom_field( 'query_args' ) ) {
 
-		$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+		$paged = get_query_var( 'paged' ) ?: 1;
 
 		/*
 		 * Convert custom field string to args array.
 		 */
 		$query_args = wp_parse_args(
 			genesis_get_custom_field( 'query_args' ),
-			array(
+			[
 				'paged' => $paged,
-			)
+			]
 		);
 
 		genesis_custom_loop( $query_args );
@@ -84,10 +84,10 @@ function genesis_standard_loop() {
 			do_action( 'genesis_before_entry' );
 
 			genesis_markup(
-				array(
+				[
 					'open'    => '<article %s>',
 					'context' => 'entry',
-				)
+				]
 			);
 
 			/**
@@ -106,10 +106,10 @@ function genesis_standard_loop() {
 			do_action( 'genesis_before_entry_content' );
 
 			genesis_markup(
-				array(
+				[
 					'open'    => '<div %s>',
 					'context' => 'entry-content',
-				)
+				]
 			);
 			/**
 			 * Fires inside the standard loop, inside the entry content markup.
@@ -118,10 +118,10 @@ function genesis_standard_loop() {
 			 */
 			do_action( 'genesis_entry_content' );
 			genesis_markup(
-				array(
+				[
 					'close'   => '</div>',
 					'context' => 'entry-content',
-				)
+				]
 			);
 
 			/**
@@ -140,10 +140,10 @@ function genesis_standard_loop() {
 			do_action( 'genesis_entry_footer' );
 
 			genesis_markup(
-				array(
+				[
 					'close'   => '</article>',
 					'context' => 'entry',
-				)
+				]
 			);
 
 			/**
@@ -194,17 +194,17 @@ function genesis_standard_loop() {
  *
  * @param array $args Loop configuration.
  */
-function genesis_custom_loop( $args = array() ) {
+function genesis_custom_loop( $args = [] ) {
 
 	global $wp_query, $more;
 
-	$defaults = array(); // For forward compatibility.
+	$defaults = []; // For forward compatibility.
 	$args     = apply_filters( 'genesis_custom_loop_args', wp_parse_args( $args, $defaults ), $args, $defaults );
 
-	$wp_query = new WP_Query( $args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Reset later.
+	$wp_query = new WP_Query( $args ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Reset later.
 
 	// Only set $more to 0 if we're on an archive.
-	$more = is_singular() ? $more : 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Handle archives.
+	$more = is_singular() ? $more : 0; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Handle archives.
 
 	genesis_standard_loop();
 
@@ -226,7 +226,7 @@ function genesis_custom_loop( $args = array() ) {
  *
  * @param array $args Associative array for grid loop configuration.
  */
-function genesis_grid_loop( $args = array() ) {
+function genesis_grid_loop( $args = [] ) {
 
 	// Global vars.
 	global $_genesis_loop_args;
@@ -236,7 +236,7 @@ function genesis_grid_loop( $args = array() ) {
 		'genesis_grid_loop_args',
 		wp_parse_args(
 			$args,
-			array(
+			[
 				'features'              => 2,
 				'features_on_all'       => false,
 				'feature_image_size'    => 0,
@@ -246,7 +246,7 @@ function genesis_grid_loop( $args = array() ) {
 				'grid_image_class'      => 'alignleft',
 				'grid_content_limit'    => 0,
 				'more'                  => __( 'Read more', 'genesis' ) . '&#x02026;',
-			)
+			]
 		)
 	);
 
@@ -256,7 +256,7 @@ function genesis_grid_loop( $args = array() ) {
 	}
 
 	// What page are we on?
-	$paged = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
+	$paged = get_query_var( 'paged' ) ?: 1;
 
 	// Potentially remove features on page 2+.
 	if ( $paged > 1 && ! $args['features_on_all'] ) {
@@ -308,7 +308,7 @@ function genesis_grid_loop_post_class( array $classes ) {
 
 	global $_genesis_loop_args, $wp_query;
 
-	$grid_classes = array();
+	$grid_classes = [];
 
 	if ( $_genesis_loop_args['features'] && $wp_query->current_post < $_genesis_loop_args['features'] ) {
 		$grid_classes[] = 'genesis-feature';
@@ -343,18 +343,19 @@ function genesis_grid_loop_content() {
 		if ( $_genesis_loop_args['feature_image_size'] ) {
 
 			$image = genesis_get_image(
-				array(
+				[
 					'size'    => $_genesis_loop_args['feature_image_size'],
 					'context' => 'grid-loop-featured',
 					'attr'    => genesis_parse_attr(
 						'entry-image-grid-loop',
-						array(
+						[
 							'class' => $_genesis_loop_args['feature_image_class'],
-						)
+						]
 					),
-				)
+				]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $image is html markup.
 			printf( '<a href="%s">%s</a>', esc_url( get_permalink() ), $image );
 
 		}
@@ -368,18 +369,19 @@ function genesis_grid_loop_content() {
 		if ( $_genesis_loop_args['grid_image_size'] ) {
 
 			$image = genesis_get_image(
-				array(
+				[
 					'size'    => $_genesis_loop_args['grid_image_size'],
 					'context' => 'grid-loop',
 					'attr'    => genesis_parse_attr(
 						'entry-image-grid-loop',
-						array(
+						[
 							'class' => $_genesis_loop_args['grid_image_class'],
-						)
+						]
 					),
-				)
+				]
 			);
 
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $image is html markup.
 			printf( '<a href="%s">%s</a>', esc_url( get_permalink() ), $image );
 
 		}
@@ -388,6 +390,7 @@ function genesis_grid_loop_content() {
 			the_content_limit( (int) $_genesis_loop_args['grid_content_limit'], genesis_a11y_more_link( esc_html( $_genesis_loop_args['more'] ) ) );
 		} else {
 			the_excerpt();
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- genesis_a11y_more_link returns html markup.
 			printf( '<a href="%s" class="more-link">%s</a>', esc_url( get_permalink() ), genesis_a11y_more_link( esc_html( $_genesis_loop_args['more'] ) ) );
 		}
 	}

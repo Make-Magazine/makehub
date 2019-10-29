@@ -54,14 +54,14 @@ class Genesis_Admin_CPT_Archive_Settings extends Genesis_Admin_Boxes {
 
 		$page_id = 'genesis-cpt-archive-' . $this->post_type->name;
 
-		$menu_ops = array(
-			'submenu' => array(
+		$menu_ops = [
+			'submenu' => [
 				'parent_slug' => 'edit.php?post_type=' . $this->post_type->name,
 				'page_title'  => apply_filters( 'genesis_cpt_archive_settings_page_label', __( 'Archive Settings', 'genesis' ) ),
 				'menu_title'  => apply_filters( 'genesis_cpt_archive_settings_menu_label', __( 'Archive Settings', 'genesis' ) ),
 				'capability'  => apply_filters( "genesis_cpt_archive_settings_capability_{$this->post_type->name}", 'manage_options' ),
-			),
-		);
+			],
+		];
 
 		// Handle non-top-level CPT menu items.
 		if ( is_string( $this->post_type->show_in_menu ) ) {
@@ -70,13 +70,13 @@ class Genesis_Admin_CPT_Archive_Settings extends Genesis_Admin_Boxes {
 			$menu_ops['submenu']['menu_position'] = $this->post_type->menu_position;
 		}
 
-		$page_ops = array(); // Use defaults.
+		$page_ops = []; // Use defaults.
 
 		$settings_field = GENESIS_CPT_ARCHIVE_SETTINGS_FIELD_PREFIX . $this->post_type->name;
 
 		$default_settings = apply_filters(
 			'genesis_cpt_archive_settings_defaults',
-			array(
+			[
 				'headline'    => '',
 				'intro_text'  => '',
 				'doctitle'    => '',
@@ -87,13 +87,13 @@ class Genesis_Admin_CPT_Archive_Settings extends Genesis_Admin_Boxes {
 				'noindex'     => 0,
 				'nofollow'    => 0,
 				'noarchive'   => 0,
-			),
+			],
 			$this->post_type->name
 		);
 
 		$this->create( $page_id, $menu_ops, $page_ops, $settings_field, $default_settings );
 
-		add_action( 'genesis_settings_sanitizer_init', array( $this, 'sanitizer_filters' ) );
+		add_action( 'genesis_settings_sanitizer_init', [ $this, 'sanitizer_filters' ] );
 	}
 
 	/**
@@ -108,30 +108,30 @@ class Genesis_Admin_CPT_Archive_Settings extends Genesis_Admin_Boxes {
 		genesis_add_option_filter(
 			'no_html',
 			$this->settings_field,
-			array(
+			[
 				'headline',
 				'doctitle',
 				'description',
 				'keywords',
 				'body_class',
 				'layout',
-			)
+			]
 		);
 		genesis_add_option_filter(
 			'unfiltered_or_safe_html',
 			$this->settings_field,
-			array(
+			[
 				'intro_text',
-			)
+			]
 		);
 		genesis_add_option_filter(
 			'one_zero',
 			$this->settings_field,
-			array(
+			[
 				'noindex',
 				'nofollow',
 				'noarchive',
-			)
+			]
 		);
 	}
 

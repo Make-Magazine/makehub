@@ -38,9 +38,9 @@ $genesis_tax = get_taxonomy( $object->taxonomy );
 				wp_editor(
 					get_term_meta( $object->term_id, 'intro_text', true ),
 					'genesis-meta-intro-text',
-					array(
+					[
 						'textarea_name' => 'genesis-meta[intro_text]',
-					)
+					]
 				);
 				?>
 				<p class="description"><?php esc_html_e( 'Leave empty if you do not want to display any intro text.', 'genesis' ); ?></p>

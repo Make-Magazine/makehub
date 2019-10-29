@@ -55,7 +55,7 @@ abstract class Genesis_Admin_Form extends Genesis_Admin {
 	 */
 	public function settings_init() {
 
-		add_action( "{$this->pagehook}_settings_page_form", array( $this, 'form' ) );
+		add_action( "{$this->pagehook}_settings_page_form", [ $this, 'form' ] );
 
 	}
 

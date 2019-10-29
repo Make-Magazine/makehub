@@ -42,14 +42,14 @@ class Genesis_Search_Form {
 	 *
 	 * @param array $strings Optional. Array of strings. Default is an empty array.
 	 */
-	public function __construct( array $strings = array() ) {
+	public function __construct( array $strings = [] ) {
 
-		$default_strings = array(
+		$default_strings = [
 			'label'        => __( 'Search site', 'genesis' ),
 			'placeholder'  => '',
 			'input_value'  => apply_filters( 'the_search_query', get_search_query() ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core hook
 			'submit_value' => __( 'Search', 'genesis' ),
-		);
+		];
 
 		$this->strings = array_merge( $default_strings, $strings );
 
@@ -67,9 +67,9 @@ class Genesis_Search_Form {
 	protected function markup( $args ) {
 		$args = array_merge(
 			$args,
-			array(
+			[
 				'echo' => false,
-			)
+			]
 		);
 
 		return genesis_markup( $args );
@@ -94,12 +94,12 @@ class Genesis_Search_Form {
 	public function get_form() {
 
 		return $this->markup(
-			array(
+			[
 				'open'    => '<form %s>',
 				'close'   => '</form>',
 				'content' => $this->get_label() . $this->get_input() . $this->get_submit(),
 				'context' => 'search-form',
-			)
+			]
 		);
 
 	}
@@ -113,15 +113,15 @@ class Genesis_Search_Form {
 	 */
 	protected function get_label() {
 		return $this->markup(
-			array(
+			[
 				'open'    => '<label %s>',
 				'close'   => '</label>',
 				'content' => $this->strings['label'],
 				'context' => 'search-form-label',
-				'params'  => array(
+				'params'  => [
 					'input_id' => $this->get_input_id(),
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -134,15 +134,15 @@ class Genesis_Search_Form {
 	 */
 	protected function get_input() {
 		return $this->markup(
-			array(
+			[
 				'open'    => '<input %s>',
 				'context' => 'search-form-input',
-				'params'  => array(
+				'params'  => [
 					'id'          => $this->get_input_id(),
 					'value'       => $this->strings['input_value'],
 					'placeholder' => $this->strings['placeholder'],
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -155,13 +155,13 @@ class Genesis_Search_Form {
 	 */
 	protected function get_submit() {
 		return $this->markup(
-			array(
+			[
 				'open'    => '<input %s>',
 				'context' => 'search-form-submit',
-				'params'  => array(
+				'params'  => [
 					'value' => $this->strings['submit_value'],
-				),
-			)
+				],
+			]
 		);
 	}
 

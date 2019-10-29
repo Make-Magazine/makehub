@@ -55,10 +55,10 @@ function genesis_load_admin_styles() {
 
 	$suffix = genesis_is_in_dev_mode() ? '' : '.min';
 
-	wp_enqueue_style( 'genesis_admin_css', GENESIS_CSS_URL . "/admin{$suffix}.css", array(), PARENT_THEME_VERSION );
+	wp_enqueue_style( 'genesis_admin_css', GENESIS_CSS_URL . "/admin{$suffix}.css", [], PARENT_THEME_VERSION );
 
 	if ( is_rtl() ) {
-		wp_enqueue_style( 'genesis_admin_rtl_css', GENESIS_CSS_URL . "/admin-rtl{$suffix}.css", array(), PARENT_THEME_VERSION );
+		wp_enqueue_style( 'genesis_admin_rtl_css', GENESIS_CSS_URL . "/admin-rtl{$suffix}.css", [], PARENT_THEME_VERSION );
 	}
 
 }

@@ -86,7 +86,7 @@ abstract class Genesis_Admin_Boxes extends Genesis_Admin {
 	 */
 	public function add_meta_box( $handle, $title, $priority = 'default' ) {
 
-		add_meta_box( $handle, $title, array( $this, 'do_meta_box' ), $this->pagehook, 'main', $priority );
+		add_meta_box( $handle, $title, [ $this, 'do_meta_box' ], $this->pagehook, 'main', $priority );
 
 	}
 
@@ -114,11 +114,11 @@ abstract class Genesis_Admin_Boxes extends Genesis_Admin {
 	 */
 	public function settings_init() {
 
-		add_action( 'load-' . $this->pagehook, array( $this, 'metaboxes' ) );
-		add_action( $this->pagehook . '_settings_page_boxes', array( $this, 'do_metaboxes' ) );
+		add_action( 'load-' . $this->pagehook, [ $this, 'metaboxes' ] );
+		add_action( $this->pagehook . '_settings_page_boxes', [ $this, 'do_metaboxes' ] );
 
 		if ( method_exists( $this, 'layout_columns' ) ) {
-			add_filter( 'screen_layout_columns', array( $this, 'layout_columns' ), 10, 2 );
+			add_filter( 'screen_layout_columns', [ $this, 'layout_columns' ], 10, 2 );
 		}
 
 	}

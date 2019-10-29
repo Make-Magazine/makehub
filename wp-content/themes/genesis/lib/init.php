@@ -14,8 +14,8 @@
 /**
  * Check system requirements before loading the full framework.
  */
-require_once dirname( __FILE__ ) . '/functions/requirements.php';
-require_once dirname( __FILE__ ) . '/classes/class-genesis-requirements-views.php';
+require_once __DIR__ . '/functions/requirements.php';
+require_once __DIR__ . '/classes/class-genesis-requirements-views.php';
 
 $genesis_requirements_messages = genesis_check_requirements();
 
@@ -40,8 +40,35 @@ function genesis_autoload_register( $class_name ) {
 		return null;
 	}
 
-	$file_name = strtolower( str_replace( array( 'StudioPress\Genesis\\', '\\', '_' ), array( '', '-', '-' ), $class_name ) );
+	// class-{classname}.php structure.
+	$file_name = strtolower( str_replace( [ 'StudioPress\Genesis\\', '\\', '_' ], [ '', '-', '-' ], $class_name ) );
 	$file      = get_template_directory() . '/lib/classes/class-' . $file_name . '.php';
+
+	if ( file_exists( $file ) ) {
+		require $file;
+	}
+
+	return $file;
+}
+
+spl_autoload_register( 'genesis_autoload_register_psr4' );
+/**
+ * Allow StudioPress\Genesis namespaced files to be loaded automatically.
+ *
+ * @since 3.1.0
+ *
+ * @param string $class_name Class name.
+ * @return mixed|null|string Null if the classname format is not recognized otherwise the file path.
+ */
+function genesis_autoload_register_psr4( $class_name ) {
+
+	// If the class being requested does not start with our prefix, we know it's not one in our project.
+	if ( 0 !== strpos( $class_name, 'StudioPress\Genesis' ) ) {
+		return null;
+	}
+
+	$file_name = str_replace( [ 'StudioPress\\', 'Genesis\\', '\\' ], [ '', '', '/' ], $class_name );
+	$file      = get_template_directory() . '/lib/classes/' . $file_name . '.php';
 
 	if ( file_exists( $file ) ) {
 		require $file;
@@ -100,10 +127,10 @@ function genesis_theme_support() {
 	// Maybe add support for Genesis menus.
 	if ( ! current_theme_supports( 'genesis-menus' ) ) {
 
-		$menus = array(
+		$menus = [
 			'primary'   => __( 'Primary Navigation Menu', 'genesis' ),
 			'secondary' => __( 'Secondary Navigation Menu', 'genesis' ),
-		);
+		];
 
 		/**
 		 * Filter for the menus that Genesis supports by default.
@@ -121,7 +148,7 @@ function genesis_theme_support() {
 	// Maybe add support for structural wraps.
 	if ( ! current_theme_supports( 'genesis-structural-wraps' ) ) {
 
-		$structural_wraps = array( 'header', 'menu-primary', 'menu-secondary', 'footer-widgets', 'footer' );
+		$structural_wraps = [ 'header', 'menu-primary', 'menu-secondary', 'footer-widgets', 'footer' ];
 
 		/**
 		 * Filter for the structural wraps that Genesis supports by default.
@@ -138,17 +165,17 @@ function genesis_theme_support() {
 
 	// Turn on HTML5 and responsive viewport if Genesis is active.
 	if ( ! is_child_theme() ) {
-		add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ) );
+		add_theme_support( 'html5', [ 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ] );
 		add_theme_support( 'genesis-responsive-viewport' );
 		add_theme_support(
 			'genesis-accessibility',
-			array(
+			[
 				'drop-down-menu',
 				'headings',
 				'rems',
 				'search-form',
 				'skip-links',
-			)
+			]
 		);
 	}
 
@@ -162,8 +189,8 @@ add_action( 'genesis_init', 'genesis_post_type_support' );
  */
 function genesis_post_type_support() {
 
-	add_post_type_support( 'post', array( 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-rel-author' ) );
-	add_post_type_support( 'page', array( 'genesis-seo', 'genesis-scripts', 'genesis-layouts' ) );
+	add_post_type_support( 'post', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-rel-author' ] );
+	add_post_type_support( 'page', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-title-toggle' ] );
 
 }
 
@@ -175,7 +202,7 @@ add_action( 'init', 'genesis_post_type_support_post_meta', 11 );
  */
 function genesis_post_type_support_post_meta() {
 
-	$public_post_types = get_post_types( array( 'public' => true ) );
+	$public_post_types = get_post_types( [ 'public' => true ] );
 
 	foreach ( $public_post_types as $post_type ) {
 		if ( 'page' !== $post_type ) {
@@ -202,10 +229,10 @@ function genesis_constants() {
 	// Define Theme Info Constants.
 	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 	define( 'PARENT_THEME_NAME', 'Genesis' );
-	define( 'PARENT_THEME_VERSION', '3.0.2' );
-	define( 'PARENT_THEME_BRANCH', '3.0' );
-	define( 'PARENT_DB_VERSION', '3001' );
-	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '03 July 2019' ) ) );
+	define( 'PARENT_THEME_VERSION', '3.1.2' );
+	define( 'PARENT_THEME_BRANCH', '3.1' );
+	define( 'PARENT_DB_VERSION', '3101' );
+	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '5 September 2019' ) ) );
 
 	// Define Parent and Child Directory Location and URL Constants.
 	define( 'PARENT_DIR', get_template_directory() );
@@ -303,6 +330,7 @@ function genesis_load_framework() {
 
 	// Load Functions.
 	$functions_dir = $lib_dir . 'functions/';
+	require_once $functions_dir . 'version.php';
 	require_once $functions_dir . 'upgrade.php';
 	require_once $functions_dir . 'compat.php';
 	require_once $functions_dir . 'general.php';
@@ -318,6 +346,8 @@ function genesis_load_framework() {
 	require_once $functions_dir . 'feed.php';
 	require_once $functions_dir . 'toolbar.php';
 	require_once $functions_dir . 'head.php';
+	require_once $functions_dir . 'post-meta.php';
+	require_once $functions_dir . 'rest.php';
 
 	if ( apply_filters( 'genesis_load_deprecated', true ) ) {
 		require_once $functions_dir . 'deprecated.php';
@@ -343,6 +373,7 @@ function genesis_load_framework() {
 	// Load Admin.
 	$admin_dir = $lib_dir . 'admin/';
 	if ( is_admin() ) {
+		require_once $admin_dir . 'install.php';
 		require_once $admin_dir . 'menu.php';
 		require_once $admin_dir . 'dashboard.php';
 		require_once $admin_dir . 'admin-functions.php';
@@ -352,6 +383,7 @@ function genesis_load_framework() {
 		require_once $admin_dir . 'privacy-requests.php';
 		require_once $admin_dir . 'plugin-install.php';
 		require_once $admin_dir . 'site-health.php';
+		require_once $admin_dir . 'widget-import.php';
 		require_once $admin_dir . 'onboarding/theme-activation.php';
 		require_once $admin_dir . 'onboarding/ajax-functions.php';
 		require_once $functions_dir . 'onboarding.php';

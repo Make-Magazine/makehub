@@ -27,17 +27,17 @@ function genesis_site_health_info( $info ) {
 		return $info;
 	}
 
-	$info['genesis'] = array(
+	$info['genesis'] = [
 		'label' => __( 'Genesis', 'genesis' ),
-	);
+	];
 
 	foreach ( $options as $name => $value ) {
 		if ( $value ) {
-			$info['genesis']['fields'][ $name ] = array(
+			$info['genesis']['fields'][ $name ] = [
 				'label'   => $name,
 				'value'   => $value,
-				'private' => 'update_email_address' === $name ? true : false,
-			);
+				'private' => 'update_email_address' === $name,
+			];
 		}
 	}
 
@@ -58,11 +58,11 @@ function genesis_child_theme_recommendations( $info ) {
 	$deprecated_theme_supports = genesis_get_child_theme_recommendations();
 
 	if ( $deprecated_theme_supports ) {
-		$info['wp-active-theme']['fields']['genesis_recommendations'] = array(
+		$info['wp-active-theme']['fields']['genesis_recommendations'] = [
 			'label'   => __( 'Genesis recommendations', 'genesis' ),
 			'value'   => $deprecated_theme_supports,
 			'private' => false,
-		);
+		];
 	}
 
 	return $info;
@@ -82,7 +82,7 @@ function genesis_get_child_theme_recommendations() {
 		return;
 	}
 
-	$recommendations = array();
+	$recommendations = [];
 
 	if ( get_theme_support( 'genesis-responsive-viewport' ) ) {
 		$recommendations[] = '"genesis-responsive-viewport" theme support can be removed';

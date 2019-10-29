@@ -83,28 +83,28 @@ class Genesis_Menu_Handler {
 	public static function init_config( array $config ) {
 
 		// Initialize the script configuration.
-		$script = array(
+		$script = [
 			'mainMenu'            => __( 'Menu', 'genesis' ),
 			'menuIconClass'       => 'dashicons-before dashicons-menu',
 			'menuIconOpenedClass' => 'dashicons-before dashicons-no-alt',
 			'subMenu'             => __( 'Submenu', 'genesis' ),
 			'subMenuIconClass'    => 'dashicons-before dashicons-arrow-down-alt2',
-			'menuClasses'         => array(
-				'combine' => array(),
-				'others'  => array(),
-			),
-		);
+			'menuClasses'         => [
+				'combine' => [],
+				'others'  => [],
+			],
+		];
 		if ( isset( $config['script'] ) ) {
 			$script = array_merge( $script, $config['script'] );
 		}
 
 		// Initialize the extras configuration.
-		$extras = array(
+		$extras = [
 			'media_query_width' => '1023px',
 			'css'               => '',
 			'enable_AMP'        => true,
 			'enable_non_AMP'    => true,
-		);
+		];
 		if ( isset( $config['extras'] ) ) {
 			$extras = array_merge( $extras, $config['extras'] );
 		}
@@ -120,8 +120,8 @@ class Genesis_Menu_Handler {
 	 */
 	public function add_hooks() {
 
-		add_action( 'genesis_meta', array( $this, 'create_nonamp_or_amp_menu' ), 5 );
-		add_filter( 'amp_content_sanitizers', array( $this, 'add_amp_menu_combiner' ) );
+		add_action( 'genesis_meta', [ $this, 'create_nonamp_or_amp_menu' ], 5 );
+		add_filter( 'amp_content_sanitizers', [ $this, 'add_amp_menu_combiner' ] );
 
 	}
 
@@ -153,7 +153,7 @@ class Genesis_Menu_Handler {
 			return;
 		}
 
-		require_once dirname( __FILE__ ) . '/class-genesis-menu.php';
+		require_once __DIR__ . '/class-genesis-menu.php';
 
 		$this->menu = new Genesis_Menu( $this->theme_name, $this->script_config );
 
@@ -170,7 +170,7 @@ class Genesis_Menu_Handler {
 			return;
 		}
 
-		require_once dirname( __FILE__ ) . '/class-genesis-amp-menu.php';
+		require_once __DIR__ . '/class-genesis-amp-menu.php';
 
 		$this->push_single_combine_onto_others();
 
@@ -205,11 +205,11 @@ class Genesis_Menu_Handler {
 		}
 
 		// Let's make sure the class is loaded into memory.
-		require_once dirname( __FILE__ ) . '/class-genesis-amp-menu-combiner.php';
+		require_once __DIR__ . '/class-genesis-amp-menu-combiner.php';
 
-		$sanitizers['Genesis_AMP_Menu_Combiner'] = array(
+		$sanitizers['Genesis_AMP_Menu_Combiner'] = [
 			'combine' => $this->script_config['menuClasses']['combine'],
-		);
+		];
 
 		return $sanitizers;
 	}
@@ -239,7 +239,7 @@ class Genesis_Menu_Handler {
 				$this->script_config['menuClasses']['combine']
 			)
 		);
-		$this->script_config['menuClasses']['combine'] = array();
+		$this->script_config['menuClasses']['combine'] = [];
 
 		$this->did_push_single_combine_onto_others = true;
 

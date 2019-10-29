@@ -30,7 +30,7 @@ function genesis_do_onboarding_process() {
 	$next_step        = $step;
 	$percent_complete = 0;
 	$complete         = false;
-	$errors           = array();
+	$errors           = [];
 
 	/**
 	 * Install plugin dependencies.
@@ -42,13 +42,13 @@ function genesis_do_onboarding_process() {
 
 		if ( $total_onboarding_plugins === $step ) {
 			wp_send_json_success(
-				array(
+				[
 					'task'             => 'dependencies',
 					'percent_complete' => 100,
 					'next_step'        => 0,
 					'complete'         => true,
 					'errors'           => $errors,
-				)
+				]
 			);
 		}
 
@@ -58,13 +58,13 @@ function genesis_do_onboarding_process() {
 			$errors[] = $installed->get_error_message();
 			$next_step++;
 			wp_send_json_success(
-				array(
+				[
 					'percent_complete' => $percent_complete,
 					'next_step'        => $next_step,
 					'task'             => $task,
 					'complete'         => $complete,
 					'errors'           => $errors,
-				)
+				]
 			);
 		}
 
@@ -81,13 +81,13 @@ function genesis_do_onboarding_process() {
 		}
 
 		wp_send_json_success(
-			array(
+			[
 				'percent_complete' => $percent_complete,
 				'task'             => 'dependencies',
 				'next_step'        => $next_step,
 				'complete'         => $complete,
 				'errors'           => $errors,
-			)
+			]
 		);
 	}
 
@@ -98,7 +98,7 @@ function genesis_do_onboarding_process() {
 
 		$content = genesis_onboarding_content();
 
-		$imported = genesis_onboarding_import_content( $content, $step );
+		$imported = genesis_onboarding_import_content( $content );
 
 		if ( ! empty( $imported['errors'] ) ) {
 			$errors[] = $imported['errors'];
@@ -117,14 +117,14 @@ function genesis_do_onboarding_process() {
 		}
 
 		wp_send_json_success(
-			array(
+			[
 				'percent_complete'   => 100,
 				'task'               => 'content',
 				'next_step'          => 0,
 				'complete'           => true,
 				'homepage_edit_link' => isset( $imported['homepage_edit_link'] ) ? $imported['homepage_edit_link'] : false,
 				'errors'             => $errors,
-			)
+			]
 		);
 	}
 
@@ -132,12 +132,47 @@ function genesis_do_onboarding_process() {
 	 * Send a default response in the unlikely event we reach this.
 	 */
 	wp_send_json_success(
-		array(
+		[
 			'percent_complete' => 100,
 			'task'             => $task,
 			'next_step'        => $next_step,
 			'complete'         => true,
 			'errors'           => $errors,
-		)
+		]
 	);
+}
+
+add_action( 'wp_ajax_genesis_do_onboarding_pack_selection', 'genesis_do_onboarding_pack_selection' );
+/**
+ * Set the chosen Starter Pack.
+ *
+ * Temporarily store the chosen starter pack in a `genesis_onboarding_chosen_pack`
+ * option so that onboarding functions can return information specific to that pack.
+ *
+ * Sends a JSON response that includes tasks to run for the chosen pack, which the
+ * calling JavaScript code uses to update and trigger needed onboarding tasks.
+ *
+ * @since 3.1.0
+ */
+function genesis_do_onboarding_pack_selection() {
+
+	check_ajax_referer( 'genesis-onboarding', 'nonce' );
+
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$pack = isset( $_POST['pack'] ) ? sanitize_key( $_POST['pack'] ) : '';
+
+	update_option( 'genesis_onboarding_chosen_pack', $pack, false );
+
+	$menus = genesis_onboarding_navigation_menus();
+
+	wp_send_json_success(
+		[
+			'tasks'    => genesis_onboarding_tasks(),
+			'hasMenus' => count( $menus ) > 0,
+		]
+	);
+
 }

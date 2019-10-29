@@ -48,21 +48,21 @@ $search_label = apply_filters( 'genesis_search_form_label', '' );
  */
 $search_button_text = apply_filters( 'genesis_search_button_text', esc_attr__( 'Search', 'genesis' ) );
 
-$strings = array(
+$strings = [
 	'label'        => $search_label,
 	'placeholder'  => empty( $search_query ) ? $search_text : '',
 	'input_value'  => $search_query,
 	'submit_value' => $search_button_text,
-);
+];
 
-if ( genesis_a11y( 'search-form' ) && empty( $search_label ) ) {
+if ( empty( $search_label ) && genesis_a11y( 'search-form' ) ) {
 	$strings['label'] = $search_text;
 }
 
 $form = new Genesis_Search_Form( $strings );
 
 // Used for filter param 2.
-$search_query_or_text = $search_query ? $search_query : $search_text;
+$search_query_or_text = $search_query ?: $search_text;
 
 /**
  * Allow the form output to be filtered.

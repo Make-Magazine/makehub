@@ -22,37 +22,37 @@ $url = GENESIS_ADMIN_IMAGES_URL . '/layouts/';
  *
  * @since 2.8.0
  */
-return array(
-	'content-sidebar'         => array(
+return [
+	'content-sidebar'         => [
 		'label'   => __( 'Content, Primary Sidebar', 'genesis' ),
 		'img'     => $url . 'cs.gif',
 		'default' => is_rtl() ? false : true,
-		'type'    => array( 'site' ),
-	),
-	'sidebar-content'         => array(
+		'type'    => [ 'site' ],
+	],
+	'sidebar-content'         => [
 		'label'   => __( 'Primary Sidebar, Content', 'genesis' ),
 		'img'     => $url . 'sc.gif',
 		'default' => is_rtl() ? true : false,
-		'type'    => array( 'site' ),
-	),
-	'content-sidebar-sidebar' => array(
+		'type'    => [ 'site' ],
+	],
+	'content-sidebar-sidebar' => [
 		'label' => __( 'Content, Primary Sidebar, Secondary Sidebar', 'genesis' ),
 		'img'   => $url . 'css.gif',
-		'type'  => array( 'site' ),
-	),
-	'sidebar-sidebar-content' => array(
+		'type'  => [ 'site' ],
+	],
+	'sidebar-sidebar-content' => [
 		'label' => __( 'Secondary Sidebar, Primary Sidebar, Content', 'genesis' ),
 		'img'   => $url . 'ssc.gif',
-		'type'  => array( 'site' ),
-	),
-	'sidebar-content-sidebar' => array(
+		'type'  => [ 'site' ],
+	],
+	'sidebar-content-sidebar' => [
 		'label' => __( 'Secondary Sidebar, Content, Primary Sidebar', 'genesis' ),
 		'img'   => $url . 'scs.gif',
-		'type'  => array( 'site' ),
-	),
-	'full-width-content'      => array(
+		'type'  => [ 'site' ],
+	],
+	'full-width-content'      => [
 		'label' => __( 'Full Width Content', 'genesis' ),
 		'img'   => $url . 'c.gif',
-		'type'  => array( 'site' ),
-	),
-);
+		'type'  => [ 'site' ],
+	],
+];

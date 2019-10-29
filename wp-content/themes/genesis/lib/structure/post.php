@@ -51,7 +51,7 @@ function genesis_reset_loops() {
 
 	// Reset loop args.
 	global $_genesis_loop_args;
-	$_genesis_loop_args = array();
+	$_genesis_loop_args = [];
 
 	/**
 	 * Fires after resetting the loop actions back to their defaults.
@@ -79,7 +79,7 @@ function genesis_entry_post_class( $classes ) {
 
 	// Add "entry" to the post class array.
 	$classes[] = 'entry';
-	$classes   = array_diff( $classes, array( 'hentry' ) );
+	$classes   = array_diff( $classes, [ 'hentry' ] );
 
 	return $classes;
 
@@ -165,13 +165,65 @@ function genesis_do_post_format_image() {
 
 }
 
+
+/**
+ * Is the entry header hidden for the current page?
+ *
+ * Indicates that the “Hide title” checkbox is enabled and checked.
+ *
+ * @since 3.1.0
+ *
+ * @return bool True if title is hidden, false otherwise.
+ */
+function genesis_entry_header_hidden_on_current_page() {
+
+	/**
+	 * Override hide title state for the current page.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param bool $genesis_title_hidden True to hide title, false to show it.
+	 */
+	$genesis_title_hidden = apply_filters( 'genesis_title_hidden', null );
+
+	if ( is_bool( $genesis_title_hidden ) ) {
+		return $genesis_title_hidden;
+	}
+
+	// The “hide title” option is currently offered on singulars
+	// and on the blog posts page.
+	if ( ! is_singular() && ! ( is_home() && ! is_front_page() ) ) {
+		return false;
+	}
+
+	/**
+	 * Prevents the “hide title” checkbox from appearing or functioning by returning false.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param bool $title_toggle_enabled True if title toggle is enabled, false otherwise.
+	 */
+	$title_toggle_enabled = apply_filters( 'genesis_title_toggle_enabled', true );
+
+	if ( ! $title_toggle_enabled ) {
+		return false;
+	}
+
+	return get_post_meta( get_queried_object_id(), '_genesis_hide_title', true );
+
+}
+
 add_action( 'genesis_entry_header', 'genesis_entry_header_markup_open', 5 );
 /**
  * Echo the opening structural markup for the entry header.
  *
+ * @since 3.1.0 Suppress output if “hide title” checkbox is ticked.
  * @since 2.0.0
  */
 function genesis_entry_header_markup_open() {
+	if ( ! is_home() && genesis_entry_header_hidden_on_current_page() ) {
+		return;
+	}
 	printf( '<header %s>', genesis_attr( 'entry-header' ) );
 }
 
@@ -179,9 +231,13 @@ add_action( 'genesis_entry_header', 'genesis_entry_header_markup_close', 15 );
 /**
  * Echo the closing structural markup for the entry header.
  *
+ * @since 3.1.0 Suppress output if “hide title” checkbox is ticked.
  * @since 2.0.0
  */
 function genesis_entry_header_markup_close() {
+	if ( ! is_home() && genesis_entry_header_hidden_on_current_page() ) {
+		return;
+	}
 	echo '</header>';
 }
 
@@ -192,11 +248,16 @@ add_action( 'genesis_entry_header', 'genesis_do_post_title' );
  * The `genesis_post_title_text` filter is applied on the text of the title, while the `genesis_post_title_output`
  * filter is applied on the echoed markup.
  *
+ * @since 3.1.0 Suppress output if “hide title” checkbox is ticked.
  * @since 1.1.0
  *
  * @return void Return early if the filtered trimmed title is an empty string.
  */
 function genesis_do_post_title() {
+
+	if ( ! is_home() && genesis_entry_header_hidden_on_current_page() ) {
+		return;
+	}
 
 	$title = apply_filters( 'genesis_post_title_text', get_the_title() );
 
@@ -207,13 +268,13 @@ function genesis_do_post_title() {
 	// Link it, if necessary.
 	if ( ! is_singular() && apply_filters( 'genesis_link_post_title', true ) ) {
 		$title = genesis_markup(
-			array(
+			[
 				'open'    => '<a %s>',
 				'close'   => '</a>',
 				'content' => $title,
 				'context' => 'entry-title-link',
 				'echo'    => false,
-			)
+			]
 		);
 	}
 
@@ -222,6 +283,16 @@ function genesis_do_post_title() {
 
 	// Also, if HTML5 with semantic headings, wrap in H1.
 	$wrap = genesis_get_seo_option( 'semantic_headings' ) ? 'h1' : $wrap;
+
+	// Wrap in H2 on static homepages if Primary Title H1 is set to title or description.
+	if (
+		is_front_page()
+		&& ! is_home()
+		&& genesis_seo_active()
+		&& 'neither' !== genesis_get_seo_option( 'home_h1_on' )
+	) {
+		$wrap = 'h2';
+	}
 
 	/**
 	 * Entry title wrapping element.
@@ -236,16 +307,16 @@ function genesis_do_post_title() {
 
 	// Build the output.
 	$output = genesis_markup(
-		array(
+		[
 			'open'    => "<{$wrap} %s>",
 			'close'   => "</{$wrap}>",
 			'content' => $title,
 			'context' => 'entry-title',
-			'params'  => array(
+			'params'  => [
 				'wrap' => $wrap,
-			),
+			],
 			'echo'    => false,
-		)
+		]
 	);
 
 	echo apply_filters( 'genesis_post_title_output', $output, $wrap, $title ) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- title output is left unescaped to accommodate trusted user input. See https://codex.wordpress.org/Function_Reference/the_title#Security_considerations.
@@ -279,12 +350,12 @@ function genesis_post_info() {
 	}
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<p %s>',
 			'close'   => '</p>',
 			'content' => genesis_strip_p_tags( $filtered ),
 			'context' => 'entry-meta-before-content',
-		)
+		]
 	);
 
 }
@@ -302,24 +373,95 @@ function genesis_do_post_image() {
 
 	if ( ! is_singular() && genesis_get_option( 'content_archive_thumbnail' ) ) {
 		$img = genesis_get_image(
-			array(
+			[
 				'format'  => 'html',
 				'size'    => genesis_get_option( 'image_size' ),
 				'context' => 'archive',
-				'attr'    => genesis_parse_attr( 'entry-image', array() ),
-			)
+				'attr'    => genesis_parse_attr( 'entry-image', [] ),
+			]
 		);
 
 		if ( ! empty( $img ) ) {
 			genesis_markup(
-				array(
+				[
 					'open'    => '<a %s>',
 					'close'   => '</a>',
 					'content' => wp_make_content_images_responsive( $img ),
 					'context' => 'entry-image-link',
-				)
+				]
 			);
 		}
+	}
+
+}
+
+/**
+ * Gets the singular image for the current post.
+ *
+ * Applies the `genesis_singular_image_size` filter.
+ *
+ * @since 3.1.1.
+ *
+ * @return string|bool Singular image element HTML or `false`.
+ */
+function genesis_get_singular_image() {
+
+	$post_type = get_post_type();
+	$sizes     = genesis_get_image_sizes();
+	$size      = ( isset( $sizes[ "genesis-singular-image-{$post_type}" ] ) ) ? "genesis-singular-image-{$post_type}" : 'genesis-singular-images';
+
+	if ( 'genesis-singular-images' === $size && ! isset( $sizes['genesis-singular-images'] ) ) {
+		$size = genesis_get_option( 'image_size' );
+	}
+
+	/**
+	 * Overrides the singular image size.
+	 *
+	 * @since 3.1.1 Pass $post_type as additional argument.
+	 * @since 3.1.0
+	 *
+	 * @param string $size The image size to use for the singular image.
+	 */
+	$size = apply_filters( 'genesis_singular_image_size', $size, $post_type );
+
+	return genesis_get_image(
+		[
+			'format' => 'html',
+			'size'   => $size,
+			'attr'   => genesis_parse_attr( 'singular-entry-image', [] ),
+		]
+	);
+
+}
+
+add_action( 'genesis_entry_content', 'genesis_do_singular_image', 8 );
+/**
+ * Echoes the post image on singular pages.
+ *
+ * If this is a singular page and the option is set to show the features image, then it gets the image size
+ * as per the post type supports and echoes it.
+ *
+ * @since 3.1.0
+ */
+function genesis_do_singular_image() {
+
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	if ( genesis_singular_image_hidden_on_current_page() ) {
+		return;
+	}
+
+	$img = genesis_get_singular_image();
+
+	if ( ! empty( $img ) ) {
+		genesis_markup(
+			[
+				'content' => wp_make_content_images_responsive( $img ),
+				'context' => 'singular-entry-image',
+			]
+		);
 	}
 
 }
@@ -386,23 +528,23 @@ add_action( 'genesis_entry_content', 'genesis_do_post_content_nav', 12 );
 function genesis_do_post_content_nav() {
 
 	wp_link_pages(
-		array(
+		[
 			'before'      => genesis_markup(
-				array(
+				[
 					'open'    => '<div %s>',
 					'context' => 'entry-pagination',
 					'echo'    => false,
-				)
+				]
 			) . __( 'Pages:', 'genesis' ),
 			'after'       => genesis_markup(
-				array(
+				[
 					'close'   => '</div>',
 					'context' => 'entry-pagination',
 					'echo'    => false,
-				)
+				]
 			),
 			'link_before' => genesis_a11y( 'screen-reader-text' ) ? '<span class="screen-reader-text">' . __( 'Page ', 'genesis' ) . '</span>' : '',
-		)
+		]
 	);
 
 }
@@ -459,6 +601,7 @@ add_action( 'genesis_loop_else', 'genesis_do_noposts' );
  */
 function genesis_do_noposts() {
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Text Produced by a third party
 	printf( '<div class="entry"><p>%s</p></div>', apply_filters( 'genesis_noposts_text', __( 'Sorry, no content matched your criteria.', 'genesis' ) ) );
 
 }
@@ -518,12 +661,12 @@ function genesis_post_meta() {
 	}
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<p %s>',
 			'close'   => '</p>',
 			'content' => genesis_strip_p_tags( $filtered ),
 			'context' => 'entry-meta-after-content',
-		)
+		]
 	);
 
 }
@@ -681,6 +824,7 @@ function genesis_author_box( $context = '', $deprecated = null ) {
 		return $output;
 	}
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $output;
 
 }
@@ -701,10 +845,10 @@ function genesis_after_entry_widget_area() {
 
 	genesis_widget_area(
 		'after-entry',
-		array(
+		[
 			'before' => '<div class="after-entry widget-area">',
 			'after'  => '</div>',
-		)
+		]
 	);
 
 }
@@ -745,12 +889,12 @@ function genesis_prev_next_posts_nav() {
 		$pagination .= $next_link ? sprintf( '<div class="pagination-next alignright">%s</div>', $next_link ) : '';
 
 		genesis_markup(
-			array(
+			[
 				'open'    => '<div %s>',
 				'close'   => '</div>',
 				'content' => $pagination,
 				'context' => 'archive-pagination',
-			)
+			]
 		);
 
 	}
@@ -811,10 +955,10 @@ function genesis_numeric_posts_nav() {
 	}
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'archive-pagination',
-		)
+		]
 	);
 
 	$before_number = genesis_a11y( 'screen-reader-text' ) ? '<span class="screen-reader-text">' . __( 'Page ', 'genesis' ) . '</span>' : '';
@@ -823,6 +967,7 @@ function genesis_numeric_posts_nav() {
 
 	// Previous Post Link.
 	if ( get_previous_posts_link() ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is hardcoded and safe, not set via input.
 		printf( '<li class="pagination-previous">%s</li>' . "\n", get_previous_posts_link( apply_filters( 'genesis_prev_link_text', '&#x000AB; ' . __( 'Previous Page', 'genesis' ) ) ) );
 	}
 
@@ -830,7 +975,8 @@ function genesis_numeric_posts_nav() {
 	if ( ! in_array( 1, $links, true ) ) {
 		$class = 1 === $paged ? ' class="active"' : '';
 
-		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url( get_pagenum_link( 1 ) ), $before_number . '1' );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is known to be safe, not set via input.
+		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( 1 ), $before_number . '1' );
 
 		if ( ! in_array( 2, $links, true ) ) {
 			echo '<li class="pagination-omission">&#x02026;</li>' . "\n";
@@ -849,11 +995,12 @@ function genesis_numeric_posts_nav() {
 
 		printf(
 			'<li%s><a href="%s"%s>%s</a></li>' . "\n",
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is hardcoded and safe, not set via input.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
 			$class,
 			esc_url( get_pagenum_link( $link ) ),
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is hardcoded and safe, not set via input.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
 			$aria,
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
 			$before_number . $link
 		);
 	}
@@ -866,21 +1013,23 @@ function genesis_numeric_posts_nav() {
 		}
 
 		$class = $paged === $max ? ' class="active"' : '';
-		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url( get_pagenum_link( $max ) ), $before_number . $max );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
+		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( $max ), $before_number . $max );
 
 	}
 
 	// Next Post Link.
 	if ( get_next_posts_link() ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_next_posts_link () will return markup
 		printf( '<li class="pagination-next">%s</li>' . "\n", get_next_posts_link( apply_filters( 'genesis_next_link_text', __( 'Next Page', 'genesis' ) . ' &#x000BB;' ) ) );
 	}
 
 	echo '</ul>';
 	genesis_markup(
-		array(
+		[
 			'close'   => '</div>',
 			'context' => 'archive-pagination',
-		)
+		]
 	);
 
 	echo "\n";
@@ -902,10 +1051,10 @@ function genesis_adjacent_entry_nav() {
 	}
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'adjacent-entry-pagination',
-		)
+		]
 	);
 
 	$previous_post_text = '<span class="adjacent-post-link">&#xAB; %title</span>';
@@ -913,12 +1062,12 @@ function genesis_adjacent_entry_nav() {
 		$previous_post_text = '<span class="screen-reader-text">' . esc_html__( 'Previous Post:', 'genesis' ) . ' </span>' . $previous_post_text;
 	}
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'pagination-previous',
 			'content' => get_previous_post_link( '%link', $previous_post_text ),
 			'close'   => '</div>',
-		)
+		]
 	);
 
 	$next_post_text = '<span class="adjacent-post-link">%title &#xBB;</span>';
@@ -926,19 +1075,19 @@ function genesis_adjacent_entry_nav() {
 		$next_post_text = '<span class="screen-reader-text">' . esc_html__( 'Next Post:', 'genesis' ) . ' </span>' . $next_post_text;
 	}
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'pagination-next',
 			'content' => get_next_post_link( '%link', $next_post_text ),
 			'close'   => '</div>',
-		)
+		]
 	);
 
 	genesis_markup(
-		array(
+		[
 			'close'   => '</div>',
 			'context' => 'adjacent-entry-pagination',
-		)
+		]
 	);
 
 }

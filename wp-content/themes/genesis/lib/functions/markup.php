@@ -38,17 +38,17 @@
  * }
  * @return string|null Markup.
  */
-function genesis_markup( $args = array() ) {
+function genesis_markup( $args = [] ) {
 
-	$defaults = array(
+	$defaults = [
 		'html5'   => '',
 		'context' => '',
 		'open'    => '',
 		'close'   => '',
 		'content' => '',
 		'echo'    => true,
-		'params'  => array(),
-	);
+		'params'  => [],
+	];
 
 	$args = wp_parse_args( $args, $defaults );
 
@@ -69,6 +69,7 @@ function genesis_markup( $args = array() ) {
 			return $pre;
 		}
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We print html on purpose to render the page
 		echo $pre;
 		return null;
 
@@ -93,7 +94,7 @@ function genesis_markup( $args = array() ) {
 		if ( ! $args['echo'] ) {
 			return $tag;
 		}
-
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We print html on purpose to render the page
 		echo $tag;
 		return null;
 
@@ -101,7 +102,7 @@ function genesis_markup( $args = array() ) {
 
 	if ( $args['context'] ) {
 
-		$open = $args['open'] ? sprintf( $args['open'], genesis_attr( $args['context'], array(), $args ) ) : '';
+		$open = $args['open'] ? sprintf( $args['open'], genesis_attr( $args['context'], [], $args ) ) : '';
 
 		/**
 		 * Contextual filter to modify 'open' markup.
@@ -176,12 +177,13 @@ function genesis_markup( $args = array() ) {
 	}
 
 	if ( $args['echo'] ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We print html on purpose to render the page
 		echo $open . $content . $close;
 
 		return null;
-	} else {
-		return $open . $content . $close;
 	}
+
+	return $open . $content . $close;
 
 }
 
@@ -197,11 +199,11 @@ function genesis_markup( $args = array() ) {
  * @param array  $args       Optional. Custom data to pass to filter.
  * @return array Merged and filtered attributes.
  */
-function genesis_parse_attr( $context, $attributes = array(), $args = array() ) {
+function genesis_parse_attr( $context, $attributes = [], $args = [] ) {
 
-	$defaults = array(
+	$defaults = [
 		'class' => sanitize_html_class( $context ),
-	);
+	];
 
 	$attributes = wp_parse_args( $attributes, $defaults );
 
@@ -222,7 +224,7 @@ function genesis_parse_attr( $context, $attributes = array(), $args = array() ) 
  * @param array  $args       Optional. Custom data to pass to filter.
  * @return string String of HTML attributes and values.
  */
-function genesis_attr( $context, $attributes = array(), $args = array() ) {
+function genesis_attr( $context, $attributes = [], $args = [] ) {
 
 	$attributes = genesis_parse_attr( $context, $attributes, $args );
 
@@ -286,6 +288,7 @@ add_filter( 'genesis_attr_head', 'genesis_attributes_head' );
  * Add attributes for head element.
  *
  * @since 2.2.0
+ * @since 3.1.0 Moved microdata schema to `lib/functions/schema.php`.
  *
  * @param array $attributes Existing attributes for `head` element.
  * @return array Amended attributes for `head` element.
@@ -293,13 +296,6 @@ add_filter( 'genesis_attr_head', 'genesis_attributes_head' );
 function genesis_attributes_head( $attributes ) {
 
 	$attributes['class'] = '';
-
-	if ( ! is_front_page() ) {
-		return $attributes;
-	}
-
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/WebSite';
 
 	return $attributes;
 
@@ -310,72 +306,14 @@ add_filter( 'genesis_attr_body', 'genesis_attributes_body' );
  * Add attributes for body element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to `lib/functions/schema.php`.
  *
  * @param array $attributes Existing attributes for `body` element.
  * @return array Amended attributes for `body` element.
  */
 function genesis_attributes_body( $attributes ) {
 
-	$attributes['class']     = implode( ' ', get_body_class() );
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/WebPage';
-
-	// Search results pages.
-	if ( is_search() ) {
-		$attributes['itemtype'] = 'https://schema.org/SearchResultsPage';
-	}
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_site-header', 'genesis_attributes_header' );
-/**
- * Add attributes for site header element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for site header element.
- * @return array Amended attributes for site header element.
- */
-function genesis_attributes_header( $attributes ) {
-
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/WPHeader';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_site-title', 'genesis_attributes_site_title' );
-/**
- * Add attributes for site title element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for site title element.
- * @return array Amended attributes for site title element.
- */
-function genesis_attributes_site_title( $attributes ) {
-
-	$attributes['itemprop'] = 'headline';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_site-description', 'genesis_attributes_site_description' );
-/**
- * Add attributes for site description element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for site description element.
- * @return array Amended attributes for site description element.
- */
-function genesis_attributes_site_description( $attributes ) {
-
-	$attributes['itemprop'] = 'description';
+	$attributes['class'] = implode( ' ', get_body_class() );
 
 	return $attributes;
 
@@ -398,92 +336,19 @@ function genesis_attributes_header_widget_area( $attributes ) {
 
 }
 
-add_filter( 'genesis_attr_breadcrumb', 'genesis_attributes_breadcrumb' );
-/**
- * Add attributes for breadcrumbs wrapper.
- *
- * @since 2.2.0
- *
- * @param array $attributes Existing attributes for breadcrumbs wrapper element.
- * @return array Amended attributes for breadcrumbs wrapper element.
- */
-function genesis_attributes_breadcrumb( $attributes ) {
-
-	// Homepage breadcrumb content contains no links, so no schema.org attributes are needed.
-	if ( is_home() ) {
-		return $attributes;
-	}
-
-	// Omit attributes if generic breadcrumb functions are in use.
-	if ( function_exists( 'breadcrumbs' ) || function_exists( 'crumbs' ) ) {
-		return $attributes;
-	}
-
-	// Breadcrumb NavXT plugin needs RDFa attributes on the breadcrumb wrapper.
-	if ( function_exists( 'bcn_display' ) ) {
-		$attributes['typeof'] = 'BreadcrumbList';
-		$attributes['vocab']  = 'https://schema.org/';
-		return $attributes;
-	}
-
-	// Yoast SEO uses JSON-LD and Yoast Breadcrumbs emits no schema.org markup, so no attributes needed.
-	$yoast_seo_breadcrumbs_enabled    = class_exists( 'WPSEO_Breadcrumbs' ) && genesis_get_option( 'breadcrumbs-enable', 'wpseo_titles' );
-	$yoast_breadcrumbs_plugin_enabled = function_exists( 'yoast_breadcrumb' ) && ! class_exists( 'WPSEO_Breadcrumbs' );
-
-	if ( $yoast_seo_breadcrumbs_enabled || $yoast_breadcrumbs_plugin_enabled ) {
-		return $attributes;
-	}
-
-	// Genesis breadcrumbs require microdata on the wrapper.
-	$attributes['itemprop']  = 'breadcrumb';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/BreadcrumbList';
-
-	if ( is_singular( 'post' ) || is_archive() || is_home() || is_page_template( 'page_blog.php' ) ) {
-		unset( $attributes['itemprop'] );
-	}
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_breadcrumb-link-wrap', 'genesis_attributes_breadcrumb_link_wrap' );
-/**
- * Add attributes for breadcrumb item element.
- *
- * @since 2.2.0
- *
- * @param array $attributes Existing attributes for breadcrumb item element.
- * @return array Amended attributes for breadcrumb item element.
- */
-function genesis_attributes_breadcrumb_link_wrap( $attributes ) {
-
-	$attributes['itemprop']  = 'itemListElement';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/ListItem';
-
-	return $attributes;
-
-}
-
 add_filter( 'genesis_attr_breadcrumb-link-wrap-meta', 'genesis_attributes_breadcrumb_link_wrap_meta' );
 /**
  * Add attributes for breadcrumb link wrap meta element.
  *
  * @since 2.7.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for breadcrumb link wrap meta element.
  * @return array Amended attributes for breadcrumb link wrap meta element.
  */
 function genesis_attributes_breadcrumb_link_wrap_meta( $attributes ) {
 
-	static $position = 0;
-
-	$position++;
-
-	$attributes['class']    = '';
-	$attributes['itemprop'] = 'position';
-	$attributes['content']  = $position;
+	$attributes['class'] = '';
 
 	return $attributes;
 
@@ -494,6 +359,7 @@ add_filter( 'genesis_attr_breadcrumb-link', 'genesis_attributes_breadcrumb_link'
  * Add attributes for breadcrumb link element.
  *
  * @since 2.7.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array  $attributes Existing attributes for breadcrumb link element.
  * @param string $context   Not used. Markup context (ie. `footer-widget-area`).
@@ -502,25 +368,7 @@ add_filter( 'genesis_attr_breadcrumb-link', 'genesis_attributes_breadcrumb_link'
  */
 function genesis_attributes_breadcrumb_link( $attributes, $context, $args ) {
 
-	$attributes['href']     = esc_url( $args['params']['href'] );
-	$attributes['itemprop'] = 'item';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_breadcrumb-link-text-wrap', 'genesis_attributes_breadcrumb_link_text_wrap' );
-/**
- * Add attributes for breadcrumb link text wrap.
- *
- * @since 2.7.0
- *
- * @param array $attributes Existing attributes for breadcrumb link text wrap.
- * @return array Amended attributes for breadcrumb link text wrap.
- */
-function genesis_attributes_breadcrumb_link_text_wrap( $attributes ) {
-
-	$attributes['itemprop'] = 'name';
+	$attributes['href'] = esc_url( $args['params']['href'] );
 
 	return $attributes;
 
@@ -531,18 +379,16 @@ add_filter( 'genesis_attr_search-form', 'genesis_attributes_search_form' );
  * Add attributes for search form.
  *
  * @since 2.2.0
+ * @since 3.1.0 Moved microdata schema to `lib/functions/schema.php`.
  *
  * @param array $attributes Existing attributes for search form element.
  * @return array Amended attributes for search form element.
  */
 function genesis_attributes_search_form( $attributes ) {
 
-	$attributes['itemprop']  = 'potentialAction';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/SearchAction';
-	$attributes['method']    = 'get';
-	$attributes['action']    = home_url( '/' );
-	$attributes['role']      = 'search';
+	$attributes['method'] = 'get';
+	$attributes['action'] = home_url( '/' );
+	$attributes['role']   = 'search';
 
 	return $attributes;
 
@@ -559,11 +405,11 @@ add_filter( 'genesis_markup_search-form_content', 'genesis_markup_search_form_co
  */
 function genesis_markup_search_form_content( $content ) {
 
-	$meta = array(
+	$meta = [
 		'open'    => '<meta %s>',
 		'context' => 'search-form-meta',
 		'echo'    => false,
-	);
+	];
 
 	return $content . genesis_markup( $meta );
 
@@ -574,15 +420,15 @@ add_filter( 'genesis_attr_search-form-meta', 'genesis_attributes_search_form_met
  * Add attributes for search form meta tag.
  *
  * @since 2.7.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for search form meta element.
  * @return array Amended attributes for search form meta element.
  */
 function genesis_attributes_search_form_meta( $attributes ) {
 
-	$attributes['class']    = '';
-	$attributes['itemprop'] = 'target';
-	$attributes['content']  = home_url( '/?s={s}' );
+	$attributes['class']   = '';
+	$attributes['content'] = home_url( '/?s={s}' );
 
 	return $attributes;
 
@@ -603,7 +449,7 @@ add_filter( 'genesis_markup_search-form-label_close', 'genesis_markup_search_for
  */
 function genesis_markup_search_form_label_control( $tag, $args ) {
 
-	if ( '' == $args['content'] ) {
+	if ( '' === $args['content'] ) {
 		return '';
 	}
 
@@ -639,6 +485,7 @@ add_filter( 'genesis_attr_search-form-input', 'genesis_attributes_search_form_in
  * Add attributes for search form input element.
  *
  * @since 2.7.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array  $attributes Existing attributes for footer widget area wrapper elements.
  * @param string $context    Not used. Markup context (ie. `footer-widget-area`).
@@ -647,11 +494,10 @@ add_filter( 'genesis_attr_search-form-input', 'genesis_attributes_search_form_in
  */
 function genesis_attributes_search_form_input( $attributes, $context, $args ) {
 
-	$attributes['type']     = 'search';
-	$attributes['itemprop'] = 'query-input';
-	$attributes['name']     = 's';
+	$attributes['type'] = 'search';
+	$attributes['name'] = 's';
 
-	foreach ( array( 'id', 'value', 'placeholder' ) as $param ) {
+	foreach ( [ 'id', 'value', 'placeholder' ] as $param ) {
 		if ( isset( $args['params'][ $param ] ) ) {
 			$attributes[ $param ] = $args['params'][ $param ];
 		}
@@ -718,41 +564,19 @@ function genesis_attributes_nav_secondary( $attributes ) {
 
 }
 
-add_filter( 'genesis_attr_nav-primary', 'genesis_attributes_nav' );
-add_filter( 'genesis_attr_nav-secondary', 'genesis_attributes_nav' );
-add_filter( 'genesis_attr_nav-header', 'genesis_attributes_nav' );
-/**
- * Add typical attributes for navigation elements.
- *
- * Used for primary navigation, secondary navigation, and custom menu widgets in the header right widget area.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for navigation elements.
- * @return array Amended attributes for navigation elements.
- */
-function genesis_attributes_nav( $attributes ) {
-
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/SiteNavigationElement';
-
-	return $attributes;
-
-}
-
 add_filter( 'genesis_attr_nav-link-wrap', 'genesis_attributes_nav_link_wrap' );
 /**
  * Add attributes for the span wrap around navigation item links.
  *
  * @since 2.2.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for span wrap around navigation item links.
  * @return array Amended attributes for span wrap around navigation item links.
  */
 function genesis_attributes_nav_link_wrap( $attributes ) {
 
-	$attributes['class']    = '';
-	$attributes['itemprop'] = 'name';
+	$attributes['class'] = '';
 
 	return $attributes;
 
@@ -765,6 +589,7 @@ add_filter( 'genesis_attr_nav-link', 'genesis_attributes_nav_link' );
  * Since we're utilizing a filter that plugins might also want to filter, don't overwrite class here.
  *
  * @since 2.2.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @link https://github.com/studiopress/genesis/issues/1226
  *
@@ -773,10 +598,7 @@ add_filter( 'genesis_attr_nav-link', 'genesis_attributes_nav_link' );
  */
 function genesis_attributes_nav_link( $attributes ) {
 
-	$class = str_replace( 'nav-link', '', $attributes['class'] );
-
-	$attributes['class']    = $class;
-	$attributes['itemprop'] = 'url';
+	$attributes['class'] = str_replace( 'nav-link', '', $attributes['class'] );
 
 	return $attributes;
 
@@ -921,6 +743,7 @@ add_filter( 'genesis_attr_entry', 'genesis_attributes_entry' );
  * Add attributes for entry element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for entry element.
  * @return array Amended attributes for entry element.
@@ -928,13 +751,6 @@ add_filter( 'genesis_attr_entry', 'genesis_attributes_entry' );
 function genesis_attributes_entry( $attributes ) {
 
 	$attributes['class'] = implode( ' ', get_post_class() );
-
-	if ( ! is_main_query() && ! genesis_is_blog_template() ) {
-		return $attributes;
-	}
-
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/CreativeWork';
 
 	return $attributes;
 
@@ -945,14 +761,14 @@ add_filter( 'genesis_attr_entry-image', 'genesis_attributes_entry_image' );
  * Add attributes for entry image element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for entry image element.
  * @return array Amended attributes for entry image element.
  */
 function genesis_attributes_entry_image( $attributes ) {
 
-	$attributes['class']    = genesis_get_option( 'image_alignment' ) . ' post-image entry-image';
-	$attributes['itemprop'] = 'image';
+	$attributes['class'] = genesis_get_option( 'image_alignment' ) . ' post-image entry-image';
 
 	return $attributes;
 
@@ -978,55 +794,36 @@ function genesis_attributes_entry_image_link( $attributes ) {
 
 }
 
+add_filter( 'genesis_attr_singular-entry-image', 'genesis_attributes_singular_entry_image' );
+/**
+ * Add attributes for singular entry image element.
+ *
+ * @since 3.1.0
+ *
+ * @param array $attributes Existing attributes for singular entry image element.
+ * @return array Amended attributes for singular entry image element.
+ */
+function genesis_attributes_singular_entry_image( $attributes ) {
+
+	$attributes['class'] = 'singular-image entry-image';
+
+	return $attributes;
+
+}
+
 add_filter( 'genesis_attr_entry-image-widget', 'genesis_attributes_entry_image_widget' );
 /**
  * Add attributes for entry image element shown in a widget.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for entry image element shown in a widget.
  * @return array Amended attributes for entry image element shown in a widget.
  */
 function genesis_attributes_entry_image_widget( $attributes ) {
 
-	$attributes['class']    = 'entry-image attachment-' . get_post_type();
-	$attributes['itemprop'] = 'image';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-image-grid-loop', 'genesis_attributes_entry_image_grid_loop' );
-/**
- * Add attributes for entry image element shown in a grid loop.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for entry image element shown in a grid loop.
- * @return array Amended attributes for entry image element shown in a grid loop.
- */
-function genesis_attributes_entry_image_grid_loop( $attributes ) {
-
-	$attributes['itemprop'] = 'image';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-author', 'genesis_attributes_entry_author' );
-/**
- * Add attributes for author element for an entry.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for author element for an entry.
- * @return array Amended attributes for author element for an entry.
- */
-function genesis_attributes_entry_author( $attributes ) {
-
-	$attributes['itemprop']  = 'author';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/Person';
+	$attributes['class'] = 'entry-image attachment-' . get_post_type();
 
 	return $attributes;
 
@@ -1037,84 +834,14 @@ add_filter( 'genesis_attr_entry-author-link', 'genesis_attributes_entry_author_l
  * Add attributes for entry author link element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for entry author link element.
  * @return array Amended attributes for entry author link element.
  */
 function genesis_attributes_entry_author_link( $attributes ) {
 
-	$attributes['itemprop'] = 'url';
-	$attributes['rel']      = 'author';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-author-name', 'genesis_attributes_entry_author_name' );
-/**
- * Add attributes for entry author name element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for entry author name element.
- * @return array Amended attributes for entry author name element.
- */
-function genesis_attributes_entry_author_name( $attributes ) {
-
-	$attributes['itemprop'] = 'name';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-time', 'genesis_attributes_entry_time' );
-/**
- * Add attributes for time element for an entry.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for time element for an entry.
- * @return array Amended attributes for time element for an entry.
- */
-function genesis_attributes_entry_time( $attributes ) {
-
-	$attributes['itemprop'] = 'datePublished';
-	$attributes['datetime'] = get_the_time( 'c' );
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-modified-time', 'genesis_attributes_entry_modified_time' );
-/**
- * Add attributes for modified time element for an entry.
- *
- * @since 2.1.0
- *
- * @param array $attributes Existing attributes for modified time element for an entry.
- * @return array Amended attributes for modified time element for an entry.
- */
-function genesis_attributes_entry_modified_time( $attributes ) {
-
-	$attributes['itemprop'] = 'dateModified';
-	$attributes['datetime'] = get_the_modified_time( 'c' );
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-title', 'genesis_attributes_entry_title' );
-/**
- * Add attributes for entry title element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for entry title element.
- * @return array Amended attributes for entry title element.
- */
-function genesis_attributes_entry_title( $attributes ) {
-
-	$attributes['itemprop'] = 'headline';
+	$attributes['rel'] = 'author';
 
 	return $attributes;
 
@@ -1133,27 +860,6 @@ function genesis_attributes_entry_title_link( $attributes ) {
 
 	$attributes['rel']  = 'bookmark';
 	$attributes['href'] = get_permalink();
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_entry-content', 'genesis_attributes_entry_content' );
-/**
- * Add attributes for entry content element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for entry content element.
- * @return array Amended attributes for entry content element.
- */
-function genesis_attributes_entry_content( $attributes ) {
-
-	if ( ! is_main_query() && ! genesis_is_blog_template() ) {
-		return $attributes;
-	}
-
-	$attributes['itemprop'] = 'text';
 
 	return $attributes;
 
@@ -1219,35 +925,14 @@ add_filter( 'genesis_attr_comment', 'genesis_attributes_comment' );
  * Add attributes for single comment element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for single comment element.
  * @return array Amended attributes for single comment element.
  */
 function genesis_attributes_comment( $attributes ) {
 
-	$attributes['class']     = '';
-	$attributes['itemprop']  = 'comment';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/Comment';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_comment-author', 'genesis_attributes_comment_author' );
-/**
- * Add attributes for comment author element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for comment author element.
- * @return array Amended attributes for comment author element.
- */
-function genesis_attributes_comment_author( $attributes ) {
-
-	$attributes['itemprop']  = 'author';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/Person';
+	$attributes['class'] = '';
 
 	return $attributes;
 
@@ -1258,49 +943,14 @@ add_filter( 'genesis_attr_comment-author-link', 'genesis_attributes_comment_auth
  * Add attributes for comment author link element.
  *
  * @since 2.1.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for comment author link element.
  * @return array Amended attributes for comment author link element.
  */
 function genesis_attributes_comment_author_link( $attributes ) {
 
-	$attributes['rel']      = 'external nofollow';
-	$attributes['itemprop'] = 'url';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_comment-author-name', 'genesis_attributes_comment_author_name' );
-/**
- * Add attributes for comment author name element.
- *
- * @since 2.10.0
- *
- * @param array $attributes Existing attributes for comment author name element.
- * @return array Amended attributes for comment author name element.
- */
-function genesis_attributes_comment_author_name( $attributes ) {
-
-	$attributes['itemprop'] = 'name';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_comment-time', 'genesis_attributes_comment_time' );
-/**
- * Add attributes for comment time element.
- *
- * @since 2.1.0
- *
- * @param array $attributes Existing attributes for comment time element.
- * @return array Amended attributes for comment time element.
- */
-function genesis_attributes_comment_time( $attributes ) {
-
-	$attributes['datetime'] = esc_attr( get_comment_time( 'c' ) );
-	$attributes['itemprop'] = 'datePublished';
+	$attributes['rel'] = 'external nofollow';
 
 	return $attributes;
 
@@ -1311,51 +961,17 @@ add_filter( 'genesis_attr_comment-time-link', 'genesis_attributes_comment_time_l
  * Add attributes for comment time link element.
  *
  * @since 2.1.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for comment time link element.
  * @param array $context Not used. Markup context (ie. `footer-widget-area`).
+ * @param array $args Arguments.
  * @return array Amended attributes for comment time link.
  */
 function genesis_attributes_comment_time_link( $attributes, $context, $args ) {
-	$comment                = $args['params']['comment'];
-	$attributes['href']     = get_comment_link( $comment->comment_ID );
-	$attributes['itemprop'] = 'url';
 
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_comment-content', 'genesis_attributes_comment_content' );
-/**
- * Add attributes for comment content container.
- *
- * @since 2.1.0
- *
- * @param array $attributes Existing attributes for comment content container.
- * @return array Amended attributes for comment content container.
- */
-function genesis_attributes_comment_content( $attributes ) {
-
-	$attributes['itemprop'] = 'text';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_author-box', 'genesis_attributes_author_box' );
-/**
- * Add attributes for author box element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for author box element.
- * @return array Amended attributes for author box element.
- */
-function genesis_attributes_author_box( $attributes ) {
-
-	$attributes['itemprop']  = 'author';
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/Person';
+	$comment            = $args['params']['comment'];
+	$attributes['href'] = get_comment_link( $comment->comment_ID );
 
 	return $attributes;
 
@@ -1366,6 +982,7 @@ add_filter( 'genesis_attr_sidebar-primary', 'genesis_attributes_sidebar_primary'
  * Add attributes for primary sidebar element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for primary sidebar element.
  * @return array Amended attributes for primary sidebar element.
@@ -1375,8 +992,6 @@ function genesis_attributes_sidebar_primary( $attributes ) {
 	$attributes['class']      = 'sidebar sidebar-primary widget-area';
 	$attributes['role']       = 'complementary';
 	$attributes['aria-label'] = __( 'Primary Sidebar', 'genesis' );
-	$attributes['itemscope']  = true;
-	$attributes['itemtype']   = 'https://schema.org/WPSideBar';
 
 	return $attributes;
 
@@ -1387,6 +1002,7 @@ add_filter( 'genesis_attr_sidebar-secondary', 'genesis_attributes_sidebar_second
  * Add attributes for secondary sidebar element.
  *
  * @since 2.0.0
+ * @since 3.1.0 Moved microdata schema to lib/functions/schema.php.
  *
  * @param array $attributes Existing attributes for secondary sidebar element.
  * @return array Amended attributes for secondary sidebar element.
@@ -1396,26 +1012,6 @@ function genesis_attributes_sidebar_secondary( $attributes ) {
 	$attributes['class']      = 'sidebar sidebar-secondary widget-area';
 	$attributes['role']       = 'complementary';
 	$attributes['aria-label'] = __( 'Secondary Sidebar', 'genesis' );
-	$attributes['itemscope']  = true;
-	$attributes['itemtype']   = 'https://schema.org/WPSideBar';
-
-	return $attributes;
-
-}
-
-add_filter( 'genesis_attr_site-footer', 'genesis_attributes_site_footer' );
-/**
- * Add attributes for site footer element.
- *
- * @since 2.0.0
- *
- * @param array $attributes Existing attributes for site footer element.
- * @return array Amended attributes for site footer element.
- */
-function genesis_attributes_site_footer( $attributes ) {
-
-	$attributes['itemscope'] = true;
-	$attributes['itemtype']  = 'https://schema.org/WPFooter';
 
 	return $attributes;
 

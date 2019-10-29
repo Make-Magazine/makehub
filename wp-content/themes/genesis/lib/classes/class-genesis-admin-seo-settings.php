@@ -34,13 +34,13 @@ class Genesis_Admin_SEO_Settings extends Genesis_Admin_Basic {
 
 		$page_id = 'seo-settings';
 
-		$menu_ops = array(
-			'submenu' => array(
+		$menu_ops = [
+			'submenu' => [
 				'parent_slug' => 'genesis',
 				'page_title'  => __( 'Genesis - SEO Settings', 'genesis' ),
 				'menu_title'  => __( 'SEO Settings', 'genesis' ),
-			),
-		);
+			],
+		];
 
 		$settings_field = GENESIS_SEO_SETTINGS_FIELD;
 

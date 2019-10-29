@@ -19,19 +19,19 @@ $genesis_php_version = '5.3';
  *
  * @since 2.7.0
  */
-return array(
-	'wordpress' => array(
+return [
+	'wordpress' => [
 		'version' => $genesis_wp_version,
-		'i18n'    => array(
-			/* translators: 1: Version of WordPress that Genesis requires. 2: The WordPress version on this site */
+		'i18n'    => [
+			/* translators: 1: Version of WordPress that Genesis requires, 2: The WordPress version on this site */
 			'requirements' => sprintf( __( 'Genesis requires WordPress version %1$s or higher. You are using version %2$s. Please upgrade WordPress to use Genesis.', 'genesis' ), $genesis_wp_version, $GLOBALS['wp_version'] ),
-		),
-	),
-	'php'       => array(
+		],
+	],
+	'php'       => [
 		'version' => $genesis_php_version,
-		'i18n'    => array(
-			/* translators: 1: Version of PHP that Genesis requires. 2: The PHP version on this site */
+		'i18n'    => [
+			/* translators: 1: Version of PHP that Genesis requires, 2: The PHP version on this site */
 			'requirements' => sprintf( __( 'Genesis requires PHP version %1$s or higher. You are using version %2$s. Please <a href="%3$s">upgrade PHP</a> to use Genesis.', 'genesis' ), $genesis_php_version, PHP_VERSION, 'https://wordpress.org/support/upgrade-php/' ),
-		),
-	),
-);
+		],
+	],
+];

@@ -28,11 +28,11 @@ $genesis_allowed_code = [
 	<?php
 	printf(
 		wp_kses(
-			// Translators: Genesis version, changelog URI.
-			__( 'Congratulations for successfully updating to Genesis %s. We keep a <a href="%s" target="_blank" rel="noopener noreferrer">detailed changelog</a> for each release. Feel free to take a look!', 'genesis' ),
+			/* translators: 1: Genesis version, 2: Changelog URI. */
+			__( 'Congratulations for successfully updating to Genesis %1$s. We keep a <a href="%2$s" target="_blank" rel="noopener noreferrer">detailed changelog</a> for each release. Feel free to take a look!', 'genesis' ),
 			$genesis_allowed_code
 		),
-		PARENT_THEME_VERSION,
+		esc_html( PARENT_THEME_VERSION ),
 		'https://genesischangelog.com/'
 	);
 	?>

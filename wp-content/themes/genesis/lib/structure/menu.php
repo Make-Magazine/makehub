@@ -85,10 +85,10 @@ function genesis_do_nav() {
 	}
 
 	genesis_nav_menu(
-		array(
+		[
 			'theme_location' => 'primary',
 			'menu_class'     => $class,
-		)
+		]
 	);
 
 }
@@ -114,10 +114,10 @@ function genesis_do_subnav() {
 	}
 
 	genesis_nav_menu(
-		array(
+		[
 			'theme_location' => 'secondary',
 			'menu_class'     => $class,
-		)
+		]
 	);
 
 }

@@ -85,13 +85,13 @@ function genesis_customizer_seo_settings( Genesis_Customizer $genesis_customizer
  */
 function genesis_get_color_schemes_for_customizer() {
 	if ( ! genesis_has_color_schemes() ) {
-		return array();
+		return [];
 	}
 
 	$color_schemes = get_theme_support( 'genesis-style-selector' );
 
 	return array_merge(
-		array( '' => __( 'Default', 'genesis' ) ),
+		[ '' => __( 'Default', 'genesis' ) ],
 		array_shift( $color_schemes )
 	);
 }
@@ -121,7 +121,7 @@ function genesis_has_color_schemes() {
  * @return bool True if Header section should be shown, false otherwise.
  */
 function genesis_show_header_customizer_callback() {
-	return ! current_theme_supports( 'genesis-custom-header' ) && ! current_theme_supports( 'custom-header' );
+	return ! current_theme_supports( 'genesis-custom-header' ) && ! current_theme_supports( 'custom-header' ) && ! current_theme_supports( 'genesis-custom-logo' );
 }
 
 /**
@@ -144,4 +144,50 @@ function genesis_posts_show_on_front() {
  */
 function genesis_page_show_on_front() {
 	return 'page' === get_option( 'show_on_front' );
+}
+
+add_filter( 'genesis_customizer_theme_settings_config', 'genesis_add_singular_image_output_customizer_checkboxes' );
+/**
+ * Return the config that includes the genesis_single controls.
+ *
+ * @since 3.1.0
+ *
+ * @param array $config Config array.
+ *
+ * @return array New config including the genesis_single controls.
+ */
+function genesis_add_singular_image_output_customizer_checkboxes( $config ) {
+
+	if ( ! isset( $config['genesis']['sections']['genesis_single'] ) ) {
+		return;
+	}
+
+	$types_with_singular_images_support = get_post_types_by_support( 'genesis-singular-images' );
+
+	$controls = [];
+
+	if ( isset( $config['genesis']['sections']['genesis_single']['controls'] ) ) {
+		$controls = $config['genesis']['sections']['genesis_single']['controls'];
+	}
+
+	foreach ( $types_with_singular_images_support as $type ) {
+		if ( ! post_type_exists( $type ) ) {
+			continue;
+		}
+		$post_type = get_post_type_object( $type );
+
+		$controls[ "show_featured_image_${type}" ] = [
+			// translators: the post type label.
+			'label'    => sprintf( __( 'Show Featured Images on %s', 'genesis' ), $post_type->label ),
+			'section'  => 'genesis_single',
+			'type'     => 'checkbox',
+			'settings' => [
+				'default' => 0,
+			],
+		];
+	}
+
+	$config['genesis']['sections']['genesis_single']['controls'] = $controls;
+
+	return $config;
 }

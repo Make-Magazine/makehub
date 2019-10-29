@@ -31,10 +31,10 @@ function genesis() {
 	do_action( 'genesis_before_content_sidebar_wrap' );
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'content-sidebar-wrap',
-		)
+		]
 	);
 
 		/**
@@ -45,10 +45,10 @@ function genesis() {
 		do_action( 'genesis_before_content' );
 
 		genesis_markup(
-			array(
+			[
 				'open'    => '<main %s>',
 				'context' => 'content',
-			)
+			]
 		);
 
 			/**
@@ -73,10 +73,10 @@ function genesis() {
 			do_action( 'genesis_after_loop' );
 
 		genesis_markup(
-			array(
+			[
 				'close'   => '</main>', // End .content.
 				'context' => 'content',
-			)
+			]
 		);
 
 		/**
@@ -87,10 +87,10 @@ function genesis() {
 		do_action( 'genesis_after_content' );
 
 	genesis_markup(
-		array(
+		[
 			'close'   => '</div>',
 			'context' => 'content-sidebar-wrap',
-		)
+		]
 	);
 
 	/**

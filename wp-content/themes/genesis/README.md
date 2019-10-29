@@ -13,6 +13,8 @@ https://my.studiopress.com/themes/genesis/
 
 For more specific instructions on getting started, please download the Genesis for Beginners User Manual (PDF format) at http://www.studiopress.com/download/genesis-for-beginners.pdf.
 
+Additionally, see the Developer Documentation at https://studiopress.github.io/genesis/.
+
 ## Widget Areas
 
 * Primary Sidebar - This is the primary sidebar if you are using the Content-Sidebar, Sidebar-Content, Content-Sidebar-Sidebar, Sidebar-Sidebar-Content or Sidebar-Content-Sidebar layout.

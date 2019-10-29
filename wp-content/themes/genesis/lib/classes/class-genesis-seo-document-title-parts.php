@@ -71,7 +71,7 @@ class Genesis_SEO_Document_Title_Parts {
 	 * @param array $parts Optional. A default $parts array that can be used as a fallback.
 	 * @return array Return a contextual array of document title parts.
 	 */
-	public function get_parts( array $parts = array() ) {
+	public function get_parts( array $parts = [] ) {
 
 		$this->parts = wp_parse_args( $parts, $this->parts );
 
@@ -123,7 +123,7 @@ class Genesis_SEO_Document_Title_Parts {
 		$home_doctitle      = genesis_get_seo_option( 'home_doctitle' );
 		$append_description = genesis_get_seo_option( 'append_description_home' );
 
-		$this->parts[ self::TITLE ] = $home_doctitle ? $home_doctitle : $this->parts[ self::TITLE ];
+		$this->parts[ self::TITLE ] = $home_doctitle ?: $this->parts[ self::TITLE ];
 
 		if ( ! $append_description ) {
 			unset( $this->parts[ self::TAGLINE ] );
@@ -162,14 +162,14 @@ class Genesis_SEO_Document_Title_Parts {
 	 */
 	public function get_singular_title_parts( $post_id = null ) {
 
-		$supported_title_keys = array(
+		$supported_title_keys = [
 			'_genesis_title',
 			'_aioseo_title',
 			'_headspace_title',
 			'thesis_title',
 			'title_tag',
 			'title',
-		);
+		];
 
 		foreach ( $supported_title_keys as $key ) {
 			if ( genesis_get_custom_field( $key, $post_id ) ) {
@@ -251,9 +251,9 @@ class Genesis_SEO_Document_Title_Parts {
 	 * @return array Document title parts.
 	 */
 	public function get_default_parts() {
-		return array(
+		return [
 			'title' => get_bloginfo( 'name', 'display' ),
-		);
+		];
 	}
 
 }

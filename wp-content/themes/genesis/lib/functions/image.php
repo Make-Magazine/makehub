@@ -24,13 +24,13 @@ function genesis_get_image_id( $index = 0, $post_id = null ) {
 
 	$image_ids = array_keys(
 		get_children(
-			array(
-				'post_parent'    => $post_id ? $post_id : get_the_ID(),
+			[
+				'post_parent'    => $post_id ?: get_the_ID(),
 				'post_type'      => 'attachment',
 				'post_mime_type' => 'image',
 				'orderby'        => 'menu_order',
 				'order'          => 'ASC',
-			)
+			]
 		)
 	);
 
@@ -60,9 +60,9 @@ function genesis_get_image_id( $index = 0, $post_id = null ) {
  * @param array|string $args Optional. Image query arguments. Default is empty array.
  * @return string|bool Return image element HTML, URL of image, or `false`.
  */
-function genesis_get_image( $args = array() ) {
+function genesis_get_image( $args = [] ) {
 
-	$defaults = array(
+	$defaults = [
 		'post_id'  => null,
 		'format'   => 'html',
 		'size'     => 'full',
@@ -70,7 +70,7 @@ function genesis_get_image( $args = array() ) {
 		'attr'     => '',
 		'fallback' => 'first-attached',
 		'context'  => '',
-	);
+	];
 
 	/**
 	 * A filter on the default parameters used by `genesis_get_image()`.
@@ -148,17 +148,18 @@ function genesis_get_image( $args = array() ) {
  * @param array|string $args Optional. Image query arguments. Default is empty array.
  * @return null|false Returns `false` if URL is empty.
  */
-function genesis_image( $args = array() ) {
+function genesis_image( $args = [] ) {
 
 	$image = genesis_get_image( $args );
 
 	if ( $image ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $image;
 
 		return null;
-	} else {
-		return false;
 	}
+
+	return false;
 
 }
 
@@ -189,21 +190,21 @@ function genesis_get_image_sizes() {
 		return $pre;
 	}
 
-	$sizes = array();
+	$sizes = [];
 
 	foreach ( get_intermediate_image_sizes() as $size ) {
 		if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
-			$sizes[ $size ] = array(
+			$sizes[ $size ] = [
 				'width'  => absint( $_wp_additional_image_sizes[ $size ]['width'] ),
 				'height' => absint( $_wp_additional_image_sizes[ $size ]['height'] ),
 				'crop'   => $_wp_additional_image_sizes[ $size ]['crop'],
-			);
+			];
 		} else {
-			$sizes[ $size ] = array(
+			$sizes[ $size ] = [
 				'width'  => absint( get_option( "{$size}_size_w" ) ),
 				'height' => absint( get_option( "{$size}_size_h" ) ),
 				'crop'   => (bool) get_option( "{$size}_crop" ),
-			);
+			];
 		}
 	}
 
@@ -212,7 +213,7 @@ function genesis_get_image_sizes() {
 	 *
 	 * @param array $sizes Two-dimensional, with `width`, `height` and `crop` sub-keys.
 	 */
-	return apply_filters( 'genesis_get_image_sizes', $sizes );
+	return (array) apply_filters( 'genesis_get_image_sizes', $sizes );
 }
 
 /**
@@ -224,12 +225,64 @@ function genesis_get_image_sizes() {
  */
 function genesis_get_image_sizes_for_customizer() {
 
-	$sizes = array();
+	$sizes = [];
 
 	foreach ( (array) genesis_get_image_sizes() as $name => $size ) {
 		$sizes[ $name ] = $name . ' (' . absint( $size['width'] ) . ' &#x000D7; ' . absint( $size['height'] ) . ')';
 	}
 
 	return $sizes;
+
+}
+
+/**
+ * Is the singular featured image set to display on the current page?
+ *
+ * @since 3.1.0
+ *
+ * @return bool True if the singular featured image is hidden or will not display.
+ */
+function genesis_singular_image_hidden_on_current_page() {
+
+	$post_type                = get_post_type();
+	$supports_singular_images = post_type_supports( $post_type, 'genesis-singular-images' );
+	$singular_images_enabled  = genesis_get_option( "show_featured_image_{$post_type}" );
+
+	/**
+	 * Prevents the “hide featured image” checkbox from appearing or functioning by returning false.
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param bool $image_toggle_enabled True if featured image toggle is enabled, false otherwise.
+	 */
+	$image_toggle_enabled = apply_filters( 'genesis_singular_image_toggle_enabled', true );
+
+	if ( ! $supports_singular_images || ! $singular_images_enabled || ! $image_toggle_enabled ) {
+		return true;
+	}
+
+	return get_post_meta( get_queried_object_id(), '_genesis_hide_singular_image', true );
+
+}
+
+/**
+ * Which post types have singular images enabled and active?
+ *
+ * @since 3.1.0
+ *
+ * @return array The singular images with active 'genesis-singular-images' support.
+ */
+function genesis_post_types_with_singular_images_enabled() {
+
+	$result             = [];
+	$types_with_support = get_post_types_by_support( 'genesis-singular-images' );
+
+	foreach ( $types_with_support as $type ) {
+		if ( genesis_get_option( "show_featured_image_{$type}", GENESIS_SETTINGS_FIELD, false ) ) {
+			$result[] = $type;
+		}
+	}
+
+	return $result;
 
 }

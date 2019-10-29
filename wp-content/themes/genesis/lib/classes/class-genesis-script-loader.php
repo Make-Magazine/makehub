@@ -37,15 +37,16 @@ class Genesis_Script_Loader {
 	public function add_hooks() {
 
 		// Register scripts early to allow replacement by plugin/child theme.
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_front_scripts' ), 0 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_admin_scripts' ), 0 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'register_front_scripts' ], 0 );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_admin_scripts' ], 0 );
 
 		// Enqueue the scripts.
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_front_scripts' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'maybe_enqueue_admin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_admin_scripts' ] );
+		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_block_editor_scripts' ] );
 
 		// Enable extra attributes for enqueued wp_enqueue_scripts.
-		add_filter( 'script_loader_tag', array( $this, 'maybe_enable_attrs' ), 10, 3 );
+		add_filter( 'script_loader_tag', [ $this, 'maybe_enable_attrs' ], 10, 3 );
 
 	}
 
@@ -60,10 +61,10 @@ class Genesis_Script_Loader {
 			$this->suffix = '';
 		}
 
-		wp_register_script( 'superfish', GENESIS_JS_URL . "/menu/superfish{$this->suffix}.js", array( 'jquery', 'hoverIntent' ), '1.7.10', true );
-		wp_register_script( 'superfish-args', apply_filters( 'genesis_superfish_args_url', GENESIS_JS_URL . "/menu/superfish.args{$this->suffix}.js" ), array( 'superfish' ), PARENT_THEME_VERSION, true );
-		wp_register_script( 'skip-links', GENESIS_JS_URL . "/skip-links{$this->suffix}.js", array(), PARENT_THEME_VERSION, true );
-		wp_register_script( 'drop-down-menu', GENESIS_JS_URL . "/drop-down-menu{$this->suffix}.js", array( 'jquery' ), PARENT_THEME_VERSION, true );
+		wp_register_script( 'superfish', GENESIS_JS_URL . "/menu/superfish{$this->suffix}.js", [ 'jquery', 'hoverIntent' ], '1.7.10', true );
+		wp_register_script( 'superfish-args', apply_filters( 'genesis_superfish_args_url', GENESIS_JS_URL . "/menu/superfish.args{$this->suffix}.js" ), [ 'superfish' ], PARENT_THEME_VERSION, true );
+		wp_register_script( 'skip-links', GENESIS_JS_URL . "/skip-links{$this->suffix}.js", [], PARENT_THEME_VERSION, true );
+		wp_register_script( 'drop-down-menu', GENESIS_JS_URL . "/drop-down-menu{$this->suffix}.js", [ 'jquery' ], PARENT_THEME_VERSION, true );
 
 	}
 
@@ -78,7 +79,93 @@ class Genesis_Script_Loader {
 			$this->suffix = '';
 		}
 
-		wp_register_script( 'genesis_admin_js', GENESIS_JS_URL . "/admin{$this->suffix}.js", array( 'jquery', 'wp-a11y' ), PARENT_THEME_VERSION, true );
+		wp_register_script( 'genesis_admin_js', GENESIS_JS_URL . "/admin{$this->suffix}.js", [ 'jquery', 'wp-a11y' ], PARENT_THEME_VERSION, true );
+		wp_register_script( 'van11y-accessible-modal-window-aria', GENESIS_JS_URL . '/vendor/modal/van11y-accessible-modal-window-aria.min.js', '', PARENT_THEME_VERSION, true );
+
+	}
+
+	/**
+	 * Enqueue scripts specific to the Block Editor.
+	 *
+	 * @since 3.1.0
+	 */
+	public function enqueue_block_editor_scripts() {
+
+		$visible_panels = $this->visible_genesis_sidebar_panels();
+
+		if ( empty( $visible_panels ) ) {
+			return;
+		}
+
+		wp_enqueue_script(
+			'genesis-sidebar',
+			GENESIS_JS_URL . '/build/genesis-sidebar.js',
+			[ 'wp-components', 'wp-edit-post', 'wp-element', 'wp-plugins', 'wp-polyfill' ],
+			PARENT_THEME_VERSION,
+			true
+		);
+
+		// Breadcrumbs panel.
+		if ( isset( $visible_panels['breadcrumbs'] ) ) {
+			wp_enqueue_script(
+				'genesis-breadcrumbs-toggle',
+				GENESIS_JS_URL . '/build/breadcrumbs-toggle.js',
+				[ 'wp-a11y', 'wp-api-fetch', 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-polyfill' ],
+				PARENT_THEME_VERSION,
+				true
+			);
+		}
+
+		// Title panel.
+		if ( isset( $visible_panels['title'] ) ) {
+			wp_enqueue_script(
+				'genesis-title-toggle',
+				GENESIS_JS_URL . '/build/title-toggle.js',
+				[ 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-polyfill' ],
+				PARENT_THEME_VERSION,
+				true
+			);
+		}
+
+		// Images panel.
+		if ( isset( $visible_panels['images'] ) ) {
+			wp_enqueue_script(
+				'genesis-image-toggle',
+				GENESIS_JS_URL . '/build/image-toggle.js',
+				[ 'wp-a11y', 'wp-api-fetch', 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-polyfill' ],
+				PARENT_THEME_VERSION,
+				true
+			);
+		}
+
+		// Layout panel.
+		if ( isset( $visible_panels['layout'] ) ) {
+			wp_enqueue_script(
+				'genesis-layout-toggle',
+				GENESIS_JS_URL . '/build/layout-toggle.js',
+				[ 'wp-api-fetch', 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-polyfill' ],
+				PARENT_THEME_VERSION,
+				true
+			);
+		}
+
+		// Custom Classes panel.
+		if ( isset( $visible_panels['custom-classes'] ) ) {
+			wp_enqueue_script(
+				'genesis-custom-classes',
+				GENESIS_JS_URL . '/build/custom-classes.js',
+				[ 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-i18n', 'wp-plugins', 'wp-polyfill' ],
+				PARENT_THEME_VERSION,
+				true
+			);
+		}
+
+		// Set up translations for all scripts with the wp-i18n dependency.
+		wp_set_script_translations( 'genesis-breadcrumbs-toggle', 'genesis', GENESIS_LANGUAGES_DIR );
+		wp_set_script_translations( 'genesis-title-toggle', 'genesis', GENESIS_LANGUAGES_DIR );
+		wp_set_script_translations( 'genesis-image-toggle', 'genesis', GENESIS_LANGUAGES_DIR );
+		wp_set_script_translations( 'genesis-layout-toggle', 'genesis', GENESIS_LANGUAGES_DIR );
+		wp_set_script_translations( 'genesis-custom-classes', 'genesis', GENESIS_LANGUAGES_DIR );
 
 	}
 
@@ -129,6 +216,10 @@ class Genesis_Script_Loader {
 	 */
 	public function maybe_enqueue_admin_scripts( $hook_suffix ) {
 
+		if ( genesis_is_menu_page( 'genesis-getting-started' ) ) {
+			wp_enqueue_script( 'van11y-accessible-modal-window-aria' );
+		}
+
 		// Only add thickbox/preview if there is an update to Genesis available.
 		if ( genesis_update_check() ) {
 
@@ -149,7 +240,7 @@ class Genesis_Script_Loader {
 
 		// If we're viewing an edit post page, make sure we need Genesis SEO JS.
 		if (
-			in_array( $hook_suffix, array( 'post-new.php', 'post.php' ), true )
+			in_array( $hook_suffix, [ 'post-new.php', 'post.php' ], true )
 			&& ! genesis_seo_disabled()
 			&& post_type_supports( get_post_type(), 'genesis-seo' )
 		) {
@@ -170,52 +261,42 @@ class Genesis_Script_Loader {
 
 		wp_enqueue_script( 'genesis_admin_js' );
 
-		$strings = array(
+		$strings = [
 			'categoryChecklistToggle' => __( 'Select / Deselect All', 'genesis' ),
 			'saveAlert'               => __( 'The changes you made will be lost if you navigate away from this page.', 'genesis' ),
 			'confirmUpgrade'          => __( 'Updating Genesis will overwrite the current installed version of Genesis. Are you sure you want to update?. "Cancel" to stop, "OK" to update.', 'genesis' ),
 			'confirmReset'            => __( 'Are you sure you want to reset?', 'genesis' ),
-		);
+		];
 
 		wp_localize_script( 'genesis_admin_js', 'genesisL10n', $strings );
 
-		$toggles = array(
+		$toggles = [
 			// Checkboxes - when checked, show extra settings.
-			'update'                    => array( '#genesis-settings\\[update\\]', '#genesis_update_notification_setting', '_checked' ),
-			'content_archive_thumbnail' => array( '#genesis-settings\\[content_archive_thumbnail\\]', '#genesis_image_extras', '_checked' ),
+			'update'                    => [ '#genesis-settings\\[update\\]', '#genesis_update_notification_setting', '_checked' ],
+			'content_archive_thumbnail' => [ '#genesis-settings\\[content_archive_thumbnail\\]', '#genesis_image_extras', '_checked' ],
 			// Checkboxes - when unchecked, show extra settings.
-			'semantic_headings'         => array( '#genesis-seo-settings\\[semantic_headings\\]', '#genesis_seo_h1_wrap', '_unchecked' ),
+			'semantic_headings'         => [ '#genesis-seo-settings\\[semantic_headings\\]', '#genesis_seo_h1_wrap', '_unchecked' ],
 			// Select toggles.
-			'nav_extras'                => array( '#genesis-settings\\[nav_extras\\]', '#genesis_nav_extras_twitter', 'twitter' ),
-			'content_archive'           => array( '#genesis-settings\\[content_archive\\]', '#genesis_content_limit_setting', 'full' ),
-		);
+			'nav_extras'                => [ '#genesis-settings\\[nav_extras\\]', '#genesis_nav_extras_twitter', 'twitter' ],
+			'content_archive'           => [ '#genesis-settings\\[content_archive\\]', '#genesis_content_limit_setting', 'full' ],
+		];
 
 		wp_localize_script( 'genesis_admin_js', 'genesis_toggles', apply_filters( 'genesis_toggles', $toggles ) );
 
-		$onboarding = array(
+		$onboarding = [
 			'nonce' => wp_create_nonce( 'genesis-onboarding' ),
-			'l10n'  => array(
-				'a11y' => array(
+			'l10n'  => [
+				'a11y' => [
 					'onboarding_started'  => esc_html__( 'The website setup process has started.', 'genesis' ),
 					'onboarding_complete' => esc_html__( 'The website setup process has completed.', 'genesis' ),
 					'step_started'        => esc_html__( 'A setup step has started.', 'genesis' ),
 					'step_completed'      => esc_html__( 'A setup step has completed.', 'genesis' ),
-				),
-			),
-		);
+				],
+			],
+		];
 
 		if ( genesis_is_menu_page( 'genesis-getting-started' ) ) {
-			$genesis_onboarding_plugins = genesis_onboarding_plugins();
-			$genesis_onboarding_content = genesis_onboarding_content();
-			$onboarding['tasks']        = array();
-
-			if ( ! empty( $genesis_onboarding_plugins ) ) {
-				$onboarding['tasks'][] = 'dependencies';
-			}
-
-			if ( ! empty( $genesis_onboarding_content ) ) {
-				$onboarding['tasks'][] = 'content';
-			}
+			$onboarding['tasks'] = genesis_onboarding_tasks();
 		}
 
 		wp_localize_script( 'genesis_admin_js', 'genesis_onboarding', $onboarding );
@@ -233,10 +314,10 @@ class Genesis_Script_Loader {
 	 */
 	public function maybe_enable_attrs( $tag, $handle, $src ) {
 
-		$supported_attributes = array(
+		$supported_attributes = [
 			'async',
 			'defer',
-		);
+		];
 
 		$decoded_src = wp_specialchars_decode( $src );
 
@@ -261,6 +342,85 @@ class Genesis_Script_Loader {
 		}
 
 		return $tag;
+
+	}
+
+	/**
+	 * Determines which Genesis sidebar panels should be visible for the current post type.
+	 *
+	 * Intended for use on WordPress admin pages only.
+	 *
+	 * @since 3.1.1
+	 *
+	 * @param string $post_type Defaults to current post type if not passed.
+	 * @return array Genesis editor sidebar panels that should be displayed for the given post type, with key as panel name.
+	 */
+	public function visible_genesis_sidebar_panels( $post_type = '' ) {
+
+		$visible_panels = [];
+
+		if ( ! $post_type ) {
+			$current_screen = get_current_screen();
+			$post_type      = $current_screen->post_type ?: '';
+		}
+
+		if ( ! post_type_supports( $post_type, 'custom-fields' ) ) {
+			return [];
+		}
+
+		$post_type_is_public = false;
+		$post_type_info      = get_post_type_object( $post_type );
+
+		if ( ! is_null( $post_type_info ) && $post_type_info->public ) {
+			$post_type_is_public = true;
+		}
+
+		// Breadcrumbs panel.
+		$breadcrumbs_toggle_enabled  = apply_filters( 'genesis_breadcrumbs_toggle_enabled', true );
+		$supports_breadcrumbs_toggle = post_type_supports( $post_type, 'genesis-breadcrumbs-toggle' );
+
+		if (
+			current_theme_supports( 'genesis-breadcrumbs' )
+			&& $breadcrumbs_toggle_enabled
+			&& $supports_breadcrumbs_toggle
+		) {
+			$visible_panels['breadcrumbs'] = 1;
+		}
+
+		// Title panel.
+		$title_toggle_enabled  = apply_filters( 'genesis_title_toggle_enabled', true );
+		$supports_title_toggle = post_type_supports( $post_type, 'genesis-title-toggle' );
+
+		if ( $title_toggle_enabled && $supports_title_toggle ) {
+			$visible_panels['title'] = 1;
+		}
+
+		// Image panel.
+		$editing_blog_page    = 'page' === get_option( 'show_on_front' ) && (int) get_option( 'page_for_posts' ) === get_the_ID();
+		$image_toggle_enabled = apply_filters( 'genesis_singular_image_toggle_enabled', true );
+
+		if (
+			$image_toggle_enabled
+			&& post_type_supports( $post_type, 'genesis-singular-images' )
+			&& ! $editing_blog_page
+		) {
+			$visible_panels['images'] = 1;
+		}
+
+		// Layout panel.
+		$inpost_layouts_supported = current_theme_supports( 'genesis-inpost-layouts' );
+		$supports_genesis_layouts = post_type_supports( $post_type, 'genesis-layouts' );
+
+		if ( $inpost_layouts_supported && $supports_genesis_layouts ) {
+			$visible_panels['layout'] = 1;
+		}
+
+		// Custom classes panel.
+		if ( $post_type_is_public ) {
+			$visible_panels['custom-classes'] = 1;
+		}
+
+		return $visible_panels;
 
 	}
 

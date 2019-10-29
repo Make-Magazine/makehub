@@ -37,10 +37,10 @@ wp_head(); // We need this for plugins.
 </head>
 <?php
 genesis_markup(
-	array(
+	[
 		'open'    => '<body %s>',
 		'context' => 'body',
-	)
+	]
 );
 
 if ( function_exists( 'wp_body_open' ) ) {
@@ -55,10 +55,10 @@ if ( function_exists( 'wp_body_open' ) ) {
 do_action( 'genesis_before' );
 
 genesis_markup(
-	array(
+	[
 		'open'    => '<div %s>',
 		'context' => 'site-container',
-	)
+	]
 );
 
 /**
@@ -83,9 +83,9 @@ do_action( 'genesis_header' );
 do_action( 'genesis_after_header' );
 
 genesis_markup(
-	array(
+	[
 		'open'    => '<div %s>',
 		'context' => 'site-inner',
-	)
+	]
 );
 genesis_structural_wrap( 'site-inner' );

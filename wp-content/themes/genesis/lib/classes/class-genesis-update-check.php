@@ -82,7 +82,7 @@ class Genesis_Update_Check {
 	 *
 	 * @since 2.7.0
 	 */
-	protected $update = array();
+	protected $update = [];
 
 	/**
 	 * Constructor.
@@ -95,7 +95,7 @@ class Genesis_Update_Check {
 
 		$this->post_url      = $config[ self::POST_URL_KEY ];
 		$this->post_args     = $config[ self::POST_ARGS_KEY ];
-		$this->req_data_keys = isset( $config[ self::REQ_DATA_KEY ] ) ? $config[ self::REQ_DATA_KEY ] : array();
+		$this->req_data_keys = isset( $config[ self::REQ_DATA_KEY ] ) ? $config[ self::REQ_DATA_KEY ] : [];
 
 	}
 
@@ -123,17 +123,17 @@ class Genesis_Update_Check {
 	 * Validate the format and data of the update response.
 	 *
 	 * @param array $response The response to validate.
-	 * @return bool Empty array if invalid, otherwise unaltered response.
+	 * @return array Empty array if invalid, otherwise unaltered response.
 	 */
 	protected function validate_response( $response ) {
 
 		if ( ! is_array( $response ) ) {
-			return array();
+			return [];
 		}
 
 		foreach ( $this->req_data_keys as $req ) {
 			if ( ! array_key_exists( $req, $response ) ) {
-				return array();
+				return [];
 			}
 		}
 

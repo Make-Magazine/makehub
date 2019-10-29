@@ -22,7 +22,7 @@ function genesis_theme_activation_redirect() {
 
 	global $pagenow;
 
-	if ( 'themes.php' !== $pagenow || ! isset( $_GET['activated'] ) || ! is_admin() ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification
+	if ( 'themes.php' !== $pagenow || ! isset( $_GET['activated'] ) || ! is_admin() ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return;
 	}
 
@@ -63,7 +63,7 @@ function genesis_import_child_theme_settings() {
 		return false;
 	}
 
-	foreach ( (array) $config as $key => $value ) {
+	foreach ( $config as $key => $value ) {
 		$settings_saved = is_array( $value ) ? genesis_update_settings( $value, $key ) : update_option( $key, $value );
 	}
 

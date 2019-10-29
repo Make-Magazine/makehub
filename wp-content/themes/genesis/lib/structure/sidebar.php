@@ -53,10 +53,10 @@ function genesis_do_sidebar_alt() {
 function genesis_default_widget_area_content( $name ) {
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<section class="widget widget_text">',
 			'context' => 'default-widget-content-wrap',
-		)
+		]
 	);
 
 	echo '<div class="widget-wrap">';
@@ -81,10 +81,10 @@ function genesis_default_widget_area_content( $name ) {
 	echo '</div>';
 
 	genesis_markup(
-		array(
+		[
 			'close'   => '</section>',
 			'context' => 'default-widget-content-wrap',
-		)
+		]
 	);
 
 }

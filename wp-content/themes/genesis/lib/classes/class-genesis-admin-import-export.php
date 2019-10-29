@@ -39,18 +39,18 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 
 		$page_id = 'genesis-import-export';
 
-		$menu_ops = array(
-			'submenu' => array(
+		$menu_ops = [
+			'submenu' => [
 				'parent_slug' => 'genesis',
 				'page_title'  => __( 'Genesis - Import/Export', 'genesis' ),
 				'menu_title'  => __( 'Import/Export', 'genesis' ),
-			),
-		);
+			],
+		];
 
 		$this->create( $page_id, $menu_ops );
 
-		add_action( 'admin_init', array( $this, 'export' ) );
-		add_action( 'admin_init', array( $this, 'import' ) );
+		add_action( 'admin_init', [ $this, 'export' ] );
+		add_action( 'admin_init', [ $this, 'import' ] );
 
 	}
 
@@ -96,13 +96,13 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 			return;
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- We don't need nonce verification here
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- We don't need nonce verification here
 		if ( isset( $_REQUEST['imported'] ) && 'true' === $_REQUEST['imported'] ) {
 			printf( '<div id="message" class="updated" role="alert"><p><strong>%s</strong></p></div>', esc_html__( 'Settings successfully imported.', 'genesis' ) );
 		} elseif ( isset( $_REQUEST['error'] ) && 'true' === $_REQUEST['error'] ) {
 			printf( '<div id="message" class="error" role="alert"><p><strong>%s</strong></p></div>', esc_html__( 'There was a problem importing your settings. Please try again.', 'genesis' ) );
 		}
-		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	}
 
@@ -118,16 +118,16 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 	 */
 	protected function get_export_options() {
 
-		$options = array(
-			'theme' => array(
+		$options = [
+			'theme' => [
 				'label'          => __( 'Theme Settings', 'genesis' ),
 				'settings-field' => GENESIS_SETTINGS_FIELD,
-			),
-			'seo'   => array(
+			],
+			'seo'   => [
 				'label'          => __( 'SEO Settings', 'genesis' ),
 				'settings-field' => GENESIS_SEO_SETTINGS_FIELD,
-			),
-		);
+			],
+		];
 
 		return (array) apply_filters( 'genesis_export_options', $options );
 
@@ -204,10 +204,10 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 
 		$options = $this->get_export_options();
 
-		$settings = array();
+		$settings = [];
 
 		// Exported file name always starts with "genesis".
-		$prefix = array( 'genesis' );
+		$prefix = [ 'genesis' ];
 
 		// Loop through set(s) of options.
 		foreach ( (array) $export_data as $export => $value ) {
@@ -289,16 +289,16 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 		if ( ! $options || $_FILES['genesis-import-upload']['error'] ) {
 			genesis_admin_redirect(
 				'genesis-import-export',
-				array(
+				[
 					'error' => 'true',
-				)
+				]
 			);
 			exit;
 		}
 
 		// Identify the settings keys that we should import.
 		$exportables     = $this->get_export_options();
-		$importable_keys = array();
+		$importable_keys = [];
 		foreach ( $exportables as $exportable ) {
 			$importable_keys[] = $exportable['settings-field'];
 		}
@@ -313,9 +313,9 @@ class Genesis_Admin_Import_Export extends Genesis_Admin_Basic {
 		// Redirect, add success flag to the URI.
 		genesis_admin_redirect(
 			'genesis-import-export',
-			array(
+			[
 				'imported' => 'true',
-			)
+			]
 		);
 		exit;
 

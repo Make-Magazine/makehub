@@ -28,7 +28,8 @@
 		 *
 		 * @param string $page_hook Page hook.
 		 */
-		do_action( "{$this->pagehook}_settings_page_form", $this->pagehook ); // WPCS: prefix ok.
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
+		do_action( "{$this->pagehook}_settings_page_form", $this->pagehook );
 		?>
 
 		<div class="bottom-buttons">

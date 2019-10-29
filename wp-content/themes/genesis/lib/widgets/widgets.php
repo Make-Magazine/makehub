@@ -46,22 +46,22 @@ add_action( 'load-themes.php', 'genesis_remove_default_widgets_from_header_right
 function genesis_remove_default_widgets_from_header_right() {
 
 	// Some tomfoolery for a faux activation hook.
-	if ( ! isset( $_REQUEST['activated'] ) || 'true' !== $_REQUEST['activated'] ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No data is being processed.
+	if ( ! isset( $_REQUEST['activated'] ) || 'true' !== $_REQUEST['activated'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- No data is being processed.
 		return;
 	}
 
 	$widgets  = get_option( 'sidebars_widgets' );
-	$defaults = array(
+	$defaults = [
 		0 => 'search-2',
 		1 => 'recent-posts-2',
 		2 => 'recent-comments-2',
 		3 => 'archives-2',
 		4 => 'categories-2',
 		5 => 'meta-2',
-	);
+	];
 
 	if ( isset( $widgets['header-right'] ) && $defaults === $widgets['header-right'] ) {
-		$widgets['header-right'] = array();
+		$widgets['header-right'] = [];
 		update_option( 'sidebars_widgets', $widgets );
 	}
 

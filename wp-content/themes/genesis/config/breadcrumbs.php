@@ -18,27 +18,27 @@
  *
  * @since 2.7.0
  */
-return array(
+return [
 	'home'                    => __( 'Home', 'genesis' ),
 	'sep'                     => ' <span aria-label="breadcrumb separator">/</span> ',
 	'list_sep'                => ', ',
 	'prefix'                  => genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'breadcrumb',
 			'echo'    => false,
-		)
+		]
 	),
 	'suffix'                  => genesis_markup(
-		array(
+		[
 			'close'   => '</div>',
 			'context' => 'breadcrumb',
 			'echo'    => false,
-		)
+		]
 	),
 	'heirarchial_attachments' => true,
 	'heirarchial_categories'  => true,
-	'labels'                  => array(
+	'labels'                  => [
 		'prefix'    => __( 'You are here: ', 'genesis' ),
 		'author'    => __( 'Archives for ', 'genesis' ),
 		'category'  => __( 'Archives for ', 'genesis' ),
@@ -48,5 +48,5 @@ return array(
 		'tax'       => __( 'Archives for ', 'genesis' ),
 		'post_type' => __( 'Archives for ', 'genesis' ),
 		'404'       => __( 'Not found: ', 'genesis' ),
-	),
-);
+	],
+];

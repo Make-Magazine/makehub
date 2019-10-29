@@ -45,7 +45,7 @@ class Genesis_Settings_Sanitizer {
 	 *
 	 * @var array Options
 	 */
-	public $options = array();
+	public $options = [];
 
 	/**
 	 * Constructor.
@@ -67,7 +67,7 @@ class Genesis_Settings_Sanitizer {
 		 *
 		 * @param Genesis_Settings_Sanitizer $this The Genesis_Settings_Sanitizer object.
 		 */
-		do_action_ref_array( 'genesis_settings_sanitizer_init', array( &$this ) );
+		do_action_ref_array( 'genesis_settings_sanitizer_init', [ &$this ] );
 
 	}
 
@@ -97,7 +97,7 @@ class Genesis_Settings_Sanitizer {
 			$this->options[ $option ][ $suboption ] = $filter;
 		}
 
-		add_filter( 'sanitize_option_' . $option, array( $this, 'sanitize' ), 10, 2 );
+		add_filter( 'sanitize_option_' . $option, [ $this, 'sanitize' ], 10, 2 );
 
 		return true;
 
@@ -138,16 +138,16 @@ class Genesis_Settings_Sanitizer {
 	 */
 	public function get_available_filters() {
 
-		$default_filters = array(
-			'one_zero'                 => array( $this->sanitizer, 'one_zero' ),
-			'no_html'                  => array( $this->sanitizer, 'no_html' ),
-			'absint'                   => array( $this->sanitizer, 'absint' ),
-			'safe_html'                => array( $this->sanitizer, 'safe_html' ),
-			'requires_unfiltered_html' => array( $this->sanitizer, 'requires_unfiltered_html' ),
-			'unfiltered_or_safe_html'  => array( $this->sanitizer, 'unfiltered_or_safe_html' ),
-			'url'                      => array( $this->sanitizer, 'url' ),
-			'email_address'            => array( $this->sanitizer, 'email_address' ),
-		);
+		$default_filters = [
+			'one_zero'                 => [ $this->sanitizer, 'one_zero' ],
+			'no_html'                  => [ $this->sanitizer, 'no_html' ],
+			'absint'                   => [ $this->sanitizer, 'absint' ],
+			'safe_html'                => [ $this->sanitizer, 'safe_html' ],
+			'requires_unfiltered_html' => [ $this->sanitizer, 'requires_unfiltered_html' ],
+			'unfiltered_or_safe_html'  => [ $this->sanitizer, 'unfiltered_or_safe_html' ],
+			'url'                      => [ $this->sanitizer, 'url' ],
+			'email_address'            => [ $this->sanitizer, 'email_address' ],
+		];
 
 		/**
 		 * Filter the available sanitization filter types.

@@ -12,7 +12,7 @@
  */
 
 $genesis_layout = get_the_author_meta( 'layout', $object->ID );
-$genesis_layout = $genesis_layout ? $genesis_layout : '';
+$genesis_layout = $genesis_layout ?: '';
 ?>
 <h2><?php esc_html_e( 'Layout Settings', 'genesis' ); ?></h2>
 <p><span class="description"><?php esc_html_e( 'These settings apply to this author\'s archive pages.', 'genesis' ); ?></span></p>
@@ -35,11 +35,11 @@ $genesis_layout = $genesis_layout ? $genesis_layout : '';
 
 					<?php
 					genesis_layout_selector(
-						array(
+						[
 							'name'     => 'genesis-meta[layout]',
 							'selected' => $genesis_layout,
-							'type'     => array( 'archive', 'author', $object->ID ),
-						)
+							'type'     => [ 'archive', 'author', $object->ID ],
+						]
 					);
 					?>
 

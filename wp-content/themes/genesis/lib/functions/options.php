@@ -31,7 +31,7 @@
 function genesis_get_option( $key, $setting = null, $use_cache = true ) {
 
 	// The default is set here, so it doesn't have to be repeated in the function arguments for genesis_option() too.
-	$setting = $setting ? $setting : GENESIS_SETTINGS_FIELD;
+	$setting = $setting ?: GENESIS_SETTINGS_FIELD;
 
 	// Allow child theme to short circuit this function.
 	$pre = apply_filters( "genesis_pre_get_option_{$key}", null, $setting );
@@ -56,8 +56,8 @@ function genesis_get_option( $key, $setting = null, $use_cache = true ) {
 	}
 
 	// Setup caches.
-	static $settings_cache = array();
-	static $options_cache  = array();
+	static $settings_cache = [];
+	static $options_cache  = [];
 
 	// Check options cache.
 	if ( isset( $options_cache[ $setting ][ $key ] ) ) {
@@ -99,6 +99,7 @@ function genesis_get_option( $key, $setting = null, $use_cache = true ) {
  */
 function genesis_option( $key, $setting = null, $use_cache = true ) {
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo genesis_get_option( $key, $setting, $use_cache );
 
 }
@@ -163,6 +164,7 @@ function genesis_get_cpt_option( $key, $post_type_name = '', $use_cache = true )
  */
 function genesis_cpt_option( $key, $post_type_name, $use_cache = true ) {
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo genesis_get_cpt_option( $key, $post_type_name, $use_cache );
 
 }
@@ -184,6 +186,7 @@ function genesis_custom_field( $field, $output_pattern = '%s', $post_id = null )
 
 	$value = genesis_get_custom_field( $field, $post_id );
 	if ( $value ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		printf( $output_pattern, $value );
 	}
 
@@ -278,7 +281,7 @@ function genesis_save_custom_fields( array $data, $nonce_action, $nonce_name, $p
 	}
 
 	// Cycle through $data, insert value or delete field.
-	foreach ( (array) $data as $field => $value ) {
+	foreach ( $data as $field => $value ) {
 		// Save $value, or delete if the $value is empty.
 		if ( $value ) {
 			update_post_meta( $post->ID, $field, $value );

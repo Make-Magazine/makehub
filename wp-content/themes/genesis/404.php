@@ -23,19 +23,19 @@ add_action( 'genesis_loop', 'genesis_404' );
 function genesis_404() {
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<article class="entry">',
 			'context' => 'entry-404',
-		)
+		]
 	);
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<h1 %s>',
 			'close'   => '</h1>',
 			'content' => apply_filters( 'genesis_404_entry_title', __( 'Not found, error 404', 'genesis' ) ),
 			'context' => 'entry-title',
-		)
+		]
 	);
 
 	$genesis_404_content = sprintf(
@@ -56,19 +56,19 @@ function genesis_404() {
 	$genesis_404_content = apply_filters( 'genesis_404_entry_content', $genesis_404_content );
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'close'   => '</div>',
 			'content' => $genesis_404_content . get_search_form( 0 ),
 			'context' => 'entry-content',
-		)
+		]
 	);
 
 	genesis_markup(
-		array(
+		[
 			'close'   => '</article>',
 			'context' => 'entry-404',
-		)
+		]
 	);
 
 }

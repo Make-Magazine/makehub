@@ -72,7 +72,7 @@ class Genesis_Menu {
 	 */
 	public function add_hooks() {
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
 	}
 
@@ -88,7 +88,7 @@ class Genesis_Menu {
 		wp_enqueue_script(
 			"{$this->theme_name}-responsive-menu",
 			GENESIS_JS_URL . "/menu/responsive-menus{$this->suffix}.js",
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::SCRIPT_VERSION,
 			true
 		);

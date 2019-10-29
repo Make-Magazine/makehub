@@ -77,7 +77,7 @@ function genesis_document_title_separator( $sep ) {
 
 	$sep = genesis_get_seo_option( 'doctitle_sep' );
 
-	return $sep ? $sep : '-';
+	return $sep ?: '-';
 
 }
 
@@ -446,14 +446,14 @@ function genesis_custom_header() {
 	add_filter( 'genesis_pre_get_option_blog_title', '__return_empty_array' );
 
 	// Cast, if necessary.
-	$genesis_custom_header = isset( $genesis_custom_header[0] ) && is_array( $genesis_custom_header[0] ) ? $genesis_custom_header[0] : array();
+	$genesis_custom_header = isset( $genesis_custom_header[0] ) && is_array( $genesis_custom_header[0] ) ? $genesis_custom_header[0] : [];
 
 	// Merge defaults with passed arguments.
 	$args = wp_parse_args(
 		$genesis_custom_header,
 		apply_filters(
 			'genesis_custom_header_defaults',
-			array(
+			[
 				'width'                 => 960,
 				'height'                => 80,
 				'textcolor'             => '333333',
@@ -461,14 +461,14 @@ function genesis_custom_header() {
 				'header_image'          => '%s/images/header.png',
 				'header_callback'       => '',
 				'admin_header_callback' => '',
-			)
+			]
 		)
 	);
 
 	// Push $args into theme support array.
 	add_theme_support(
 		'custom-header',
-		array(
+		[
 			'default-image'       => sprintf( $args['header_image'], get_stylesheet_directory_uri() ),
 			'header-text'         => $args['no_header_text'] ? false : true,
 			'default-text-color'  => $args['textcolor'],
@@ -478,7 +478,70 @@ function genesis_custom_header() {
 			'header-selector'     => '.site-header',
 			'wp-head-callback'    => $args['header_callback'],
 			'admin-head-callback' => $args['admin_header_callback'],
+		]
+	);
+
+}
+
+add_action( 'after_setup_theme', 'genesis_custom_logo' );
+/**
+ * Add support for the WordPress custom logo feature.
+ *
+ * Passes add_theme_support() arguments from `genesis-custom-logo` to `custom-logo`.
+ *
+ * Applies `genesis_custom_logo_defaults` filter.
+ *
+ * @since 3.1.0
+ *
+ * @return void Return early if `custom-logo` is supported or `genesis-custom-logo` is not supported in the theme.
+ */
+function genesis_custom_logo() {
+
+	$wp_custom_logo = get_theme_support( 'custom-logo' );
+
+	// If WP custom logo is active, no need to continue.
+	if ( $wp_custom_logo ) {
+		return;
+	}
+
+	$genesis_custom_logo = get_theme_support( 'genesis-custom-logo' );
+
+	// If Genesis custom is not active, do nothing.
+	if ( ! $genesis_custom_logo ) {
+		return;
+	}
+
+	// Blog title option is obsolete when custom logo is active.
+	add_filter( 'genesis_pre_get_option_blog_title', '__return_empty_array' );
+
+	// Cast, if necessary.
+	$genesis_custom_logo = isset( $genesis_custom_logo[0] ) && is_array( $genesis_custom_logo[0] ) ? $genesis_custom_logo[0] : [];
+
+	// Merge defaults with passed arguments.
+	$args = wp_parse_args(
+		$genesis_custom_logo,
+		apply_filters(
+			'genesis_custom_logo_defaults',
+			[
+				'height'      => 100,
+				'width'       => 400,
+				'flex-height' => true,
+				'flex-width'  => true,
+				'header-text' => '',
+			]
 		)
+	);
+
+	// Push $args into theme support array.
+	add_theme_support(
+		'custom-logo',
+		[
+			'header-text' => $args['header-text'],
+			'height'      => $args['height'],
+			'width'       => $args['width'],
+			'flex-height' => $args['flex-height'],
+			'flex-width'  => $args['flex-height'],
+		]
 	);
 
 }
@@ -549,10 +612,10 @@ add_action( 'genesis_header', 'genesis_header_markup_open', 5 );
 function genesis_header_markup_open() {
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<header %s>',
 			'context' => 'site-header',
-		)
+		]
 	);
 
 	genesis_structural_wrap( 'header' );
@@ -569,10 +632,10 @@ function genesis_header_markup_close() {
 
 	genesis_structural_wrap( 'header', 'close' );
 	genesis_markup(
-		array(
+		[
 			'close'   => '</header>',
 			'context' => 'site-header',
-		)
+		]
 	);
 
 }
@@ -592,40 +655,40 @@ function genesis_do_header() {
 	global $wp_registered_sidebars;
 
 	genesis_markup(
-		array(
+		[
 			'open'    => '<div %s>',
 			'context' => 'title-area',
-		)
+		]
 	);
 
-		/**
-		 * Fires inside the title area, before the site description hook.
-		 *
-		 * @since 2.6.0
-		 */
-		do_action( 'genesis_site_title' );
+	/**
+	 * Fires inside the title area, before the site description hook.
+	 *
+	 * @since 2.6.0
+	 */
+	do_action( 'genesis_site_title' );
 
-		/**
-		 * Fires inside the title area, after the site title hook.
-		 *
-		 * @since 1.0.0
-		 */
-		do_action( 'genesis_site_description' );
+	/**
+	 * Fires inside the title area, after the site title hook.
+	 *
+	 * @since 1.0.0
+	 */
+	do_action( 'genesis_site_description' );
 
 	genesis_markup(
-		array(
+		[
 			'close'   => '</div>',
 			'context' => 'title-area',
-		)
+		]
 	);
 
 	if ( has_action( 'genesis_header_right' ) || ( isset( $wp_registered_sidebars['header-right'] ) && is_active_sidebar( 'header-right' ) ) ) {
 
 		genesis_markup(
-			array(
+			[
 				'open'    => '<div %s>',
 				'context' => 'header-widget-area',
-			)
+			]
 		);
 
 			/**
@@ -641,12 +704,26 @@ function genesis_do_header() {
 			remove_filter( 'wp_nav_menu', 'genesis_header_menu_wrap' );
 
 		genesis_markup(
-			array(
+			[
 				'close'   => '</div>',
 				'context' => 'header-widget-area',
-			)
+			]
 		);
 
+	}
+
+}
+
+add_action( 'after_setup_theme', 'genesis_output_custom_logo', 11 );
+/**
+ * Adds the WordPress custom logo inside the title area, before the site title hook.
+ *
+ * @since 3.1.0
+ */
+function genesis_output_custom_logo() {
+
+	if ( current_theme_supports( 'genesis-custom-logo' ) ) {
+		add_action( 'genesis_site_title', 'the_custom_logo', 0 );
 	}
 
 }
@@ -656,6 +733,7 @@ add_action( 'genesis_site_title', 'genesis_seo_site_title' );
  * Echo the site title into the header.
  *
  * Depending on the SEO option set by the user, this will either be wrapped in an `h1` or `p` element.
+ * The Site Title will be wrapped in a link to the homepage, if a custom logo is not in use.
  *
  * Applies the `genesis_seo_title` filter before echoing.
  *
@@ -664,16 +742,16 @@ add_action( 'genesis_site_title', 'genesis_seo_site_title' );
 function genesis_seo_site_title() {
 
 	// Set what goes inside the wrapping tags.
-	$inside = wp_kses_post( sprintf( '<a href="%s">%s</a>', trailingslashit( home_url() ), get_bloginfo( 'name' ) ) );
+	$inside = current_theme_supports( 'genesis-custom-logo' ) && has_custom_logo() ? wp_kses_post( get_bloginfo( 'name' ) ) : wp_kses_post( sprintf( '<a href="%s">%s</a>', trailingslashit( home_url() ), get_bloginfo( 'name' ) ) );
 
 	// Determine which wrapping tags to use.
 	$wrap = genesis_is_root_page() && 'title' === genesis_get_seo_option( 'home_h1_on' ) ? 'h1' : 'p';
 
-	// A little fallback, in case an SEO plugin is active.
-	$wrap = genesis_is_root_page() && ! genesis_get_seo_option( 'home_h1_on' ) ? 'h1' : $wrap;
+	// Fallback for static homepage if an SEO plugin is active.
+	$wrap = genesis_is_root_page() && genesis_seo_disabled() ? 'p' : $wrap;
 
-	// Wrap homepage site title in p tags if static front page.
-	$wrap = is_front_page() && ! is_home() ? 'p' : $wrap;
+	// Fallback for latest posts if an SEO plugin is active.
+	$wrap = is_front_page() && is_home() && genesis_seo_disabled() ? 'h1' : $wrap;
 
 	// And finally, $wrap in h1 if HTML5 & semantic headings enabled.
 	$wrap = genesis_get_seo_option( 'semantic_headings' ) ? 'h1' : $wrap;
@@ -691,16 +769,16 @@ function genesis_seo_site_title() {
 
 	// Build the title.
 	$title = genesis_markup(
-		array(
+		[
 			'open'    => sprintf( "<{$wrap} %s>", genesis_attr( 'site-title' ) ),
 			'close'   => "</{$wrap}>",
 			'content' => $inside,
 			'context' => 'site-title',
 			'echo'    => false,
-			'params'  => array(
+			'params'  => [
 				'wrap' => $wrap,
-			),
-		)
+			],
+		]
 	);
 
 	/**
@@ -737,9 +815,6 @@ function genesis_seo_site_description() {
 	// Determine which wrapping tags to use.
 	$wrap = genesis_is_root_page() && 'description' === genesis_get_seo_option( 'home_h1_on' ) ? 'h1' : 'p';
 
-	// Wrap homepage site description in p tags if static front page.
-	$wrap = is_front_page() && ! is_home() ? 'p' : $wrap;
-
 	// And finally, $wrap in h2 if HTML5 & semantic headings enabled.
 	$wrap = genesis_get_seo_option( 'semantic_headings' ) ? 'h2' : $wrap;
 
@@ -756,21 +831,22 @@ function genesis_seo_site_description() {
 
 	// Build the description.
 	$description = genesis_markup(
-		array(
+		[
 			'open'    => sprintf( "<{$wrap} %s>", genesis_attr( 'site-description' ) ),
 			'close'   => "</{$wrap}>",
 			'content' => $inside,
 			'context' => 'site-description',
 			'echo'    => false,
-			'params'  => array(
+			'params'  => [
 				'wrap' => $wrap,
-			),
-		)
+			],
+		]
 	);
 
 	// Output (filtered).
 	$output = $inside ? apply_filters( 'genesis_seo_description', $description, $inside, $wrap ) : '';
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $output;
 
 }
@@ -786,8 +862,8 @@ function genesis_seo_site_description() {
 function genesis_header_menu_args( $args ) {
 
 	$args['container']   = '';
-	$args['link_before'] = $args['link_before'] ? $args['link_before'] : sprintf( '<span %s>', genesis_attr( 'nav-link-wrap' ) );
-	$args['link_after']  = $args['link_after'] ? $args['link_after'] : '</span>';
+	$args['link_before'] = $args['link_before'] ?: sprintf( '<span %s>', genesis_attr( 'nav-link-wrap' ) );
+	$args['link_after']  = $args['link_after'] ?: '</span>';
 	$args['menu_class'] .= ' genesis-nav-menu';
 	$args['menu_class'] .= genesis_superfish_enabled() ? ' js-superfish' : '';
 
@@ -806,13 +882,13 @@ function genesis_header_menu_args( $args ) {
 function genesis_header_menu_wrap( $menu ) {
 
 	return genesis_markup(
-		array(
+		[
 			'open'    => sprintf( '<nav %s>', genesis_attr( 'nav-header' ) ),
 			'close'   => '</nav>',
 			'content' => $menu,
 			'context' => 'header-nav',
 			'echo'    => false,
-		)
+		]
 	);
 
 }
@@ -835,19 +911,19 @@ function genesis_skip_links() {
 	genesis_skiplinks_markup();
 
 	// Determine which skip links are needed.
-	$links = array();
+	$links = [];
 
 	if ( genesis_nav_menu_supported( 'primary' ) && has_nav_menu( 'primary' ) ) {
 		$links['genesis-nav-primary'] = esc_html__( 'Skip to primary navigation', 'genesis' );
 	}
 
-	$links['genesis-content'] = esc_html__( 'Skip to content', 'genesis' );
+	$links['genesis-content'] = esc_html__( 'Skip to main content', 'genesis' );
 
 	if ( 'full-width-content' !== genesis_site_layout() ) {
 		$links['genesis-sidebar-primary'] = esc_html__( 'Skip to primary sidebar', 'genesis' );
 	}
 
-	if ( in_array( genesis_site_layout(), array( 'sidebar-sidebar-content', 'sidebar-content-sidebar', 'content-sidebar-sidebar' ), true ) ) {
+	if ( in_array( genesis_site_layout(), [ 'sidebar-sidebar-content', 'sidebar-content-sidebar', 'content-sidebar-sidebar' ], true ) ) {
 		$links['genesis-sidebar-secondary'] = esc_html__( 'Skip to secondary sidebar', 'genesis' );
 	}
 
@@ -882,6 +958,7 @@ function genesis_skip_links() {
 
 	$skiplinks .= '</ul>';
 
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	echo $skiplinks;
 
 }

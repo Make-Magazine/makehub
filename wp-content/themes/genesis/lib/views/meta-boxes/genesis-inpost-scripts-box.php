@@ -16,7 +16,7 @@ wp_nonce_field( 'genesis_inpost_scripts_save', 'genesis_inpost_scripts_nonce' );
 <table class="form-table">
 	<tbody>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row">
 			<label for="genesis_scripts"><strong><?php esc_html_e( 'Header Scripts', 'genesis' ); ?></strong></label>
 		</th>
@@ -33,7 +33,7 @@ wp_nonce_field( 'genesis_inpost_scripts_save', 'genesis_inpost_scripts_nonce' );
 		</td>
 	</tr>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row">
 			<label for="genesis_scripts_body"><strong><?php esc_html_e( 'Body Scripts', 'genesis' ); ?></strong></label>
 		</th>
@@ -44,7 +44,7 @@ wp_nonce_field( 'genesis_inpost_scripts_save', 'genesis_inpost_scripts_nonce' );
 		</td>
 	</tr>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row">
 			<label for="genesis_scripts_body_position"><?php esc_html_e( 'Body Scripts Position', 'genesis' ); ?></label>
 		</th>

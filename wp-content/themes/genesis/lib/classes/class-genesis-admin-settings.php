@@ -36,24 +36,24 @@ class Genesis_Admin_Settings extends Genesis_Admin_Basic {
 
 		$menu_ops = apply_filters(
 			'genesis_theme_settings_menu_ops',
-			array(
-				'main_menu'     => array(
-					'sep'        => array(
+			[
+				'main_menu'     => [
+					'sep'        => [
 						'sep_position'   => '58.995',
 						'sep_capability' => 'edit_theme_options',
-					),
+					],
 					'page_title' => 'Theme Settings',
 					'menu_title' => 'Genesis',
 					'capability' => 'edit_theme_options',
 					'icon_url'   => GENESIS_ADMIN_IMAGES_URL . '/genesis-menu.png',
 					'position'   => '58.996',
-				),
-				'first_submenu' => array( // Do not use without 'main_menu'.
+				],
+				'first_submenu' => [ // Do not use without 'main_menu'.
 					'page_title' => __( 'Theme Settings', 'genesis' ),
 					'menu_title' => __( 'Theme Settings', 'genesis' ),
 					'capability' => 'edit_theme_options',
-				),
-			)
+				],
+			]
 		);
 
 		$this->create( $page_id, $menu_ops );

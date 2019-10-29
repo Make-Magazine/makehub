@@ -29,7 +29,7 @@ abstract class Genesis_Customizer_Base {
 
 		// Register new Customizer elements.
 		if ( method_exists( $this, 'register' ) ) {
-			add_action( 'customize_register', array( $this, 'register' ), 15 );
+			add_action( 'customize_register', [ $this, 'register' ], 15 );
 		} else {
 			_doing_it_wrong( 'Genesis_Customizer_Base', esc_html__( 'When extending Genesis_Customizer_Base, you must create a register method.', 'genesis' ), '2.1.0' );
 		}
@@ -91,10 +91,10 @@ abstract class Genesis_Customizer_Base {
 
 			$wp_customize->add_setting(
 				$this->get_field_name( $key ),
-				array(
+				[
 					'default' => $default,
 					'type'    => 'option',
-				)
+				]
 			);
 
 		}

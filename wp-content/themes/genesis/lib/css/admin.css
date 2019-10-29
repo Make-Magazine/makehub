@@ -215,6 +215,27 @@ hr.div {
 	clear: both;
 }
 
+/* Genesis block editor */
+.genesis-sidebar-label-disabled {
+	color: #f44336;
+}
+
+.genesis-sidebar-text-button {
+	background: none;
+	border: none;
+	color: #0073aa;
+	cursor: pointer;
+	font: inherit;
+	margin-top: 3px;
+	padding: 0 !important;
+	text-decoration: underline;
+}
+
+.genesis-sidebar-text-button:focus,
+.genesis-sidebar-text-button:hover {
+	color: #00a0d2;
+}
+
 /* # Onboarding CSS */
 
 .genesis-onboarding-page-wrap *,
@@ -315,6 +336,10 @@ h1.genesis-onboarding-page-title {
 	margin-top: 5%;
 	padding-top: 2%;
 	border-top: dotted 1px #ccc;
+}
+
+.genesis-onboarding-page-starter-packs .genesis-onboarding-list {
+	margin-top: 20px;
 }
 
 .genesis-onboarding-list > li {
@@ -528,4 +553,260 @@ li.genesis-onboarding-list-done {
 	.genesis-onboarding-button + .genesis-onboarding-button {
 		margin-top: 1em;
 	}
+}
+
+/* Onboarding Starter Packs
+---------------------------- */
+.genesis-onboarding-page-starter-packs .genesis-onboarding-main {
+	width: 100%;
+}
+
+.genesis-onboarding-starter-packs {
+	margin-top: 40px;
+}
+
+.genesis-onboarding-area-hidden {
+	height: 0;
+	margin: 0;
+	opacity: 0;
+	visibility: hidden;
+}
+
+.genesis-onboarding-area-visible {
+	opacity: 1;
+	visibility: visible;
+}
+
+.genesis-onboarding-starter-packs .pack-summary {
+	border: 1px solid #ddd;
+	cursor: pointer;
+	margin-bottom: 20px;
+	position: relative;
+}
+
+.genesis-onboarding-starter-packs .pack-image:focus img,
+.genesis-onboarding-starter-packs .pack-image:hover img {
+	opacity: 0.4;
+}
+
+.genesis-onboarding-starter-packs .pack-screenshot img {
+	max-width: 100%;
+}
+
+.genesis-onboarding-starter-packs .pack-details {
+	box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.1);
+	display: flex;
+	height: 48px;
+	justify-content: space-between;
+}
+
+.genesis-onboarding-starter-packs .pack-name {
+	font-size: 15px;
+	height: 18px;
+	line-height: 1;
+	margin: 15px;
+	max-width: 80%;
+	overflow: hidden;
+	padding: 0;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.genesis-onboarding-starter-packs .pack-actions {
+	margin: 10px 15px;
+}
+
+.genesis-onboarding-starter-packs .pack-overlay {
+	background: rgba(0, 0, 0, 0.7);
+	border-radius: 3px;
+	color: #fff;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: 600;
+	left: 20%;
+	opacity: 0;
+	padding: 15px 12px;
+	position: absolute;
+	right: 20%;
+	text-align: center;
+	text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+	top: 35%;
+	transition: opacity 0.1s ease-in-out;
+}
+
+.genesis-onboarding-starter-packs .pack-image:focus .pack-overlay,
+.genesis-onboarding-starter-packs .pack-image:hover .pack-overlay {
+	opacity: 1;
+}
+
+.pack-info {
+	display: none;
+}
+
+.pack-info-details {
+	margin-left: 30px;
+}
+
+.pack-info-details p,
+.pack-info-details ul {
+	font-size: 16px;
+	line-height: 1.4;
+}
+
+.pack-info-details ul {
+	list-style: disc;
+	padding-left: 16px;
+}
+.pack-info-screenshot img {
+	border: 1px solid #ddd;
+	margin-bottom: 20px;
+	max-width: 80%;
+}
+
+.pack-info-actions {
+	margin-bottom: 30px;
+}
+
+.pack-info-name {
+	font-size: 28px;
+	font-weight: 400;
+	line-height: 1.2;
+	margin: 0 0 0.5em 0;
+}
+
+.pack-info-details ul {
+	margin: 0 0 30px 0;
+}
+
+@media (min-width: 900px) {
+
+	.pack-info-wrap {
+		display: flex;
+	}
+
+	.pack-info-screenshot,
+	.pack-info-details {
+		width: 50%;
+	}
+
+	.pack-info-screenshot img {
+		max-width: 100%;
+	}
+
+	.genesis-onboarding-starter-packs {
+		display: grid;
+		grid-gap: 30px;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	}
+
+	.genesis-onboarding-starter-packs .pack-summary {
+		margin-bottom: 0;
+	}
+
+	.genesis-onboarding-starter-packs .pack-name {
+		max-width: 60%;
+	}
+
+}
+
+@media (min-width: 1300px) {
+
+	.genesis-onboarding-starter-packs {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr);
+	}
+
+	.genesis-onboarding-page-starter-packs .genesis-onboarding-intro-text {
+		width: 65%;
+	}
+
+}
+
+/* Accessible overlay - van11y-accessible-modal-window-aria
+----------------------------------------------------------- */
+
+dialog {
+	border: 0;
+	display: block;
+}
+
+/* Removes scroll when modal is opened. */
+.no-scroll {
+	overflow: hidden;
+}
+
+.genesis-modal-overlay {
+	background: rgba(238, 238, 238, 0.9);
+	bottom: 0;
+	cursor: pointer;
+	left: 0;
+	position: fixed;
+	right: 0;
+	top: 0;
+	z-index: 0;
+}
+
+.genesis-modal-overlay[data-background-click="disabled"] {
+	cursor: auto;
+}
+
+.genesis-modal {
+	background: #fff;
+	box-shadow: 0 1px 20px 5px rgba(0, 0, 0, 0.1);
+	left: 10%;
+	max-height: 78vh;
+	overflow: auto;
+	padding: 3em 2em 2em 2em;
+	position: fixed;
+	right: auto;
+	top: 5%;
+	width: 70%;
+	z-index: 100;
+}
+
+.genesis-modal-overlay .invisible {
+	border: 0;
+	clip: rect(0, 0, 0, 0);
+	height: 1px;
+	overflow: hidden;
+	position: absolute !important;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+.genesis-modal-close {
+	background: transparent;
+	border: 0;
+	cursor: pointer;
+	margin: 0;
+	padding: 0.25em;
+	position: absolute;
+	right: 15px;
+	top: 15px;
+}
+
+.genesis-modal-close img {
+	height: 35px;
+	width: 35px;
+}
+
+.genesis-modal-close:active,
+.genesis-modal-close:focus {
+	outline: 1px dotted #000;
+}
+
+.genesis-modal-close:active,
+.genesis-modal-close:focus,
+.genesis-modal-close:hover {
+	opacity: 0.7;
+}
+
+@media (min-width: 900px) {
+
+	.genesis-modal {
+		left: 18%;
+		max-height: 98vh;
+		top: 10%;
+		width: 70%;
+	}
+
 }

@@ -105,7 +105,7 @@ class Genesis_AMP_Menu_Combiner extends AMP_Base_Sanitizer {
 			$menu_items = $nav_menu->cloneNode( true );
 
 			// Combine the menu items with the main menu.
-			// phpcs:disable WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			for ( $index = 0; $index < $menu_items->childNodes->length; $index++ ) {
 				$menu_item = $menu_items->childNodes->item( $index );
 
@@ -131,7 +131,7 @@ class Genesis_AMP_Menu_Combiner extends AMP_Base_Sanitizer {
 	 *
 	 * @param string $attribute Nav menu's `id` or `class` attribute.
 	 *
-	 * @return bool|DOMElement Nav's `<ul>` element upon success; else `false`.
+	 * @return bool|DOMNode Nav's `<ul>` element upon success; else `false`.
 	 */
 	protected function find_nav_ul( $attribute ) {
 

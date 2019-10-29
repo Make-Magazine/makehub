@@ -25,7 +25,7 @@ function genesis_get_seo_meta_description() {
 
 	// If we're on the root page.
 	if ( genesis_is_root_page() ) {
-		$description = genesis_get_seo_option( 'home_description' ) ? genesis_get_seo_option( 'home_description' ) : get_bloginfo( 'description' );
+		$description = genesis_get_seo_option( 'home_description' ) ?: get_bloginfo( 'description' );
 	}
 
 	// When the page is set as the Posts Page in WordPress core, use the $post_id of the page when loading SEO values.
@@ -57,7 +57,7 @@ function genesis_get_seo_meta_description() {
 		$description      = ! empty( $term_description ) ? $term_description : '';
 	} elseif ( is_post_type_archive() && genesis_has_post_type_archive_support() ) {
 		$cpt_description = genesis_get_cpt_option( 'description' );
-		$description     = $cpt_description ? $cpt_description : '';
+		$description     = $cpt_description ?: '';
 	} elseif ( is_author() ) {
 		$description = get_the_author_meta( 'meta_description', (int) get_query_var( 'author' ) );
 	}
@@ -114,7 +114,7 @@ function genesis_get_seo_meta_keywords() {
 		$term     = get_queried_object();
 		$keywords = get_term_meta( $term->term_id, 'keywords', true );
 	} elseif ( is_post_type_archive() && genesis_has_post_type_archive_support() ) {
-		$keywords = genesis_get_cpt_option( 'keywords' ) ? genesis_get_cpt_option( 'keywords' ) : '';
+		$keywords = genesis_get_cpt_option( 'keywords' ) ?: '';
 	} elseif ( is_author() ) {
 		$keywords = get_the_author_meta( 'meta_keywords', (int) get_query_var( 'author' ) );
 	}
@@ -132,7 +132,7 @@ function genesis_get_seo_meta_keywords() {
 }
 
 /**
- * Determine the `noindex`, `nofollow`, `noodp`, `noydir`, `noarchive` robots meta code for the current context.
+ * Determine the `noindex`, `nofollow`, `noarchive` robots meta code for the current context.
  *
  * @since 2.4.0
  *
@@ -146,13 +146,11 @@ function genesis_get_robots_meta_content() {
 	$post_id = null;
 
 	// Defaults.
-	$directives = array(
+	$directives = [
 		'noindex'   => '',
 		'nofollow'  => '',
 		'noarchive' => genesis_get_seo_option( 'noarchive' ) ? 'noarchive' : '',
-		'noodp'     => genesis_get_seo_option( 'noodp' ) ? 'noodp' : '',
-		'noydir'    => genesis_get_seo_option( 'noydir' ) ? 'noydir' : '',
-	);
+	];
 
 	// Check root page SEO settings, set noindex, nofollow and noarchive.
 	if ( genesis_is_root_page() ) {
@@ -208,7 +206,7 @@ function genesis_get_robots_meta_content() {
 	 *
 	 * @since 2.4.0
 	 *
-	 * @param array $directives May contain keys for `noindex`, `nofollow`, `noodp`, `noydir`, `noarchive`.
+	 * @param array $directives May contain keys for `noindex`, `nofollow`, `noarchive`.
 	 */
 	$directives = apply_filters( 'genesis_get_robots_meta_content', $directives );
 

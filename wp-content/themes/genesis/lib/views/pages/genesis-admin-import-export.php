@@ -23,7 +23,7 @@
 				<td>
 					<p>
 					<?php
-					/* translators: JOSN file extension. */
+					/* translators: %s: JSON file extension. */
 					printf( esc_html__( 'Upload the data file (%s) from your computer and we\'ll import your settings.', 'genesis' ), genesis_code( '.json' ) );
 					?>
 					</p>
@@ -34,7 +34,7 @@
 							<input type="hidden" name="genesis-import" value="1" />
 							<label for="genesis-import-upload">
 								<?php
-								// translators: Maximum size import files can have.
+								/* translators: %s: Maximum size import files can have. */
 								printf( esc_html__( 'Upload File (Maximum Size: %s): ', 'genesis' ), esc_html( ini_get( 'post_max_size' ) ) );
 								?>
 							</label>
@@ -52,7 +52,7 @@
 				<td>
 					<p>
 					<?php
-					/* translators: JOSN file extension. */
+					/* translators: %s: JSON file extension. */
 					printf( esc_html__( 'When you click the button below, Genesis will generate a data file (%s) for you to save to your computer.', 'genesis' ), genesis_code( '.json' ) );
 					?>
 					</p>

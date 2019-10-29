@@ -118,6 +118,97 @@ function genesis_layout_body_classes( array $classes ) {
 
 }
 
+add_filter( 'body_class', 'genesis_title_hidden_body_class' );
+/**
+ * Adds a `genesis-title-hidden` body class if title output is suppressed on the current page.
+ *
+ * @since 3.1.0
+ *
+ * @param array $classes Existing body classes.
+ * @return array Amended body classes.
+ */
+function genesis_title_hidden_body_class( array $classes ) {
+
+	if ( genesis_entry_header_hidden_on_current_page() ) {
+		$classes[] = 'genesis-title-hidden';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'body_class', 'genesis_breadcrumbs_hidden_body_class' );
+/**
+ * Adds a `genesis-breadcrumbs-hidden` body class if breadcrumbs are hidden on the current page.
+ *
+ * @since 3.1.0
+ *
+ * @param array $classes Existing body classes.
+ * @return array Amended body classes.
+ */
+function genesis_breadcrumbs_hidden_body_class( array $classes ) {
+
+	if ( genesis_breadcrumbs_hidden_on_current_page() || genesis_breadcrumbs_disabled_on_current_page() ) {
+		$classes[] = 'genesis-breadcrumbs-hidden';
+		return $classes;
+	}
+
+	$classes[] = 'genesis-breadcrumbs-visible';
+
+	return $classes;
+
+}
+
+add_filter( 'body_class', 'genesis_singular_image_hidden_body_class' );
+/**
+ * Adds a `genesis-singular-image-hidden` body class if “hide featured image” is enabled.
+ *
+ * @since 3.1.0
+ *
+ * @param array $classes Existing body classes.
+ * @return array Amended body classes.
+ */
+function genesis_singular_image_hidden_body_class( array $classes ) {
+
+	if ( ! is_singular() ) {
+		return $classes;
+	}
+
+	if ( ! post_type_supports( get_post_type(), 'genesis-singular-images' ) ) {
+		return $classes;
+	}
+
+	if ( genesis_singular_image_hidden_on_current_page() ) {
+		$classes[] = 'genesis-singular-image-hidden';
+	}
+
+	return $classes;
+
+}
+
+add_filter( 'body_class', 'genesis_singular_image_visible_body_class' );
+/**
+ * Adds a `genesis-singular-image-visible` body class.
+ *
+ * @since 3.1.1
+ *
+ * @param array $classes Existing body classes.
+ * @return array Amended body classes.
+ */
+function genesis_singular_image_visible_body_class( array $classes ) {
+
+	if (
+		is_singular()
+		&& ! genesis_singular_image_hidden_on_current_page()
+		&& genesis_get_singular_image()
+	) {
+		$classes[] = 'genesis-singular-image-visible';
+	}
+
+	return $classes;
+
+}
+
 add_filter( 'body_class', 'genesis_archive_no_results_body_class' );
 /**
  * Add archive-no-results body class on empty archive pages.
@@ -223,7 +314,7 @@ function genesis_get_sidebar_alt() {
 	$site_layout = genesis_site_layout();
 
 	// Don't load sidebar-alt on pages that don't need it.
-	if ( in_array( $site_layout, array( 'content-sidebar', 'sidebar-content', 'full-width-content' ), true ) ) {
+	if ( in_array( $site_layout, [ 'content-sidebar', 'sidebar-content', 'full-width-content' ], true ) ) {
 		return;
 	}
 

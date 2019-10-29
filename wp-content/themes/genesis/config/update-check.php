@@ -20,19 +20,21 @@ global $wp_version;
  *
  * @since 2.7.0
  */
-return array(
+return [
 	'post_url'      => 'https://api.genesistheme.com/update-themes/',
-	'post_args'     => array(
-		'body' => array(
+	'post_args'     => [
+		'body' => [
 			'genesis_version' => PARENT_THEME_VERSION,
 			'html5'           => current_theme_supports( 'html5' ),
-			'php_version'     => phpversion(),
+			'php_version'     => PHP_VERSION,
 			'uri'             => home_url(),
 			'stylesheet'      => get_stylesheet(),
 			'theme_version'   => wp_get_theme()->get( 'Version' ),
+			'locale'          => get_locale(),
+			'multisite'       => is_multisite(),
 			'user-agent'      => "WordPress/$wp_version;",
 			'wp_version'      => $wp_version,
-		),
-	),
-	'req_data_keys' => array( 'theme', 'new_version', 'url', 'package', 'changelog_url' ),
-);
+		],
+	],
+	'req_data_keys' => [ 'theme', 'new_version', 'url', 'package', 'changelog_url' ],
+];

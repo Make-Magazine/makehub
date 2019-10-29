@@ -32,7 +32,7 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 	 */
 	public function __construct() {
 
-		$this->defaults = array(
+		$this->defaults = [
 			'title'          => '',
 			'alignment'      => 'left',
 			'user'           => '',
@@ -42,18 +42,18 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 			'page'           => '',
 			'page_link_text' => __( 'Read More', 'genesis' ) . '&#x02026;',
 			'posts_link'     => '',
-		);
+		];
 
-		$widget_ops = array(
+		$widget_ops = [
 			'classname'   => 'user-profile',
 			'description' => __( 'Displays user profile block with Gravatar', 'genesis' ),
-		);
+		];
 
-		$control_ops = array(
+		$control_ops = [
 			'id_base' => 'user-profile',
 			'width'   => 200,
 			'height'  => 250,
-		);
+		];
 
 		parent::__construct( 'user-profile', esc_html__( 'Genesis - User Profile', 'genesis' ), $widget_ops, $control_ops );
 
@@ -71,9 +71,11 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 		// Merge with defaults.
 		$instance = wp_parse_args( (array) $instance, $this->defaults );
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $args['before_widget'];
 
 		if ( ! empty( $instance['title'] ) ) {
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base ) . $args['after_title'];
 		}
 
@@ -97,6 +99,7 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 
 		$text .= $instance['page'] ? sprintf( ' <a class="pagelink" href="%s">%s</a>', get_page_link( $instance['page'] ), $instance['page_link_text'] ) : '';
 
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo wpautop( $text );
 
 		// If posts link option checked, add posts link to output.
@@ -153,11 +156,11 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_name( 'user' ) ); ?>"><?php esc_html_e( 'Select a user. The email address for this account will be used to pull the Gravatar image.', 'genesis' ); ?></label><br />
 			<?php
 			wp_dropdown_users(
-				array(
+				[
 					'who'      => 'authors',
 					'name'     => $this->get_field_name( 'user' ),
 					'selected' => $instance['user'],
-				)
+				]
 			);
 			?>
 		</p>
@@ -166,12 +169,12 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_html_e( 'Gravatar Size', 'genesis' ); ?>:</label>
 			<select id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>">
 				<?php
-				$sizes = array(
+				$sizes = [
 					__( 'Small', 'genesis' )       => 45,
 					__( 'Medium', 'genesis' )      => 65,
 					__( 'Large', 'genesis' )       => 85,
 					__( 'Extra Large', 'genesis' ) => 125,
-				);
+				];
 				$sizes = apply_filters( 'genesis_gravatar_sizes', $sizes );
 				foreach ( (array) $sizes as $label => $size ) {
 					?>
@@ -197,7 +200,7 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 				<input type="radio" name="<?php echo esc_attr( $this->get_field_name( 'author_info' ) ); ?>" id="<?php echo esc_attr( $this->get_field_id( 'author_info' ) ); ?>_val2" value="text" <?php checked( $instance['author_info'], 'text' ); ?>/>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'author_info' ) ); ?>_val2"><?php esc_html_e( 'Custom Text (below)', 'genesis' ); ?></label><br />
 				<label for="<?php echo esc_attr( $this->get_field_id( 'bio_text' ) ); ?>" class="screen-reader-text"><?php esc_html_e( 'Custom Text Content', 'genesis' ); ?></label>
-				<textarea id="<?php echo esc_attr( $this->get_field_id( 'bio_text' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'bio_text' ) ); ?>" class="widefat" rows="6" cols="4"><?php echo htmlspecialchars( $instance['bio_text'] ); ?></textarea>
+				<textarea id="<?php echo esc_attr( $this->get_field_id( 'bio_text' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'bio_text' ) ); ?>" class="widefat" rows="6" cols="4"><?php echo esc_html( $instance['bio_text'] ); ?></textarea>
 			</p>
 		</fieldset>
 
@@ -205,11 +208,11 @@ class Genesis_User_Profile_Widget extends WP_Widget {
 			<label for="<?php echo esc_attr( $this->get_field_name( 'page' ) ); ?>"><?php esc_html_e( 'Choose your extended "About Me" page from the list below. This will be the page linked to at the end of the about me section.', 'genesis' ); ?></label><br />
 			<?php
 			wp_dropdown_pages(
-				array(
+				[
 					'name'             => $this->get_field_name( 'page' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- False positive.
 					'show_option_none' => esc_html__( 'None', 'genesis' ), // WP core uses this value without further escaping, so we escape it here.
 					'selected'         => $instance['page'], // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- False positive.
-				)
+				]
 			);
 			?>
 		</p>

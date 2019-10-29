@@ -142,9 +142,9 @@ class Genesis_Customizer {
 	 */
 	public function register_setting( $setting_name, $setting, $panel ) {
 
-		$defaults = array(
+		$defaults = [
 			'type' => 'option',
-		);
+		];
 
 		$setting = wp_parse_args( $setting, $defaults );
 

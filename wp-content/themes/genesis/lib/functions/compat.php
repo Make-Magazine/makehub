@@ -54,22 +54,6 @@ if ( ! function_exists( 'mb_strrpos' ) ) {
 	}
 }
 
-if ( ! function_exists( 'mb_strlen' ) ) {
-	/**
-	 * Add compatibility for undefined mb_strlen() by deferring to strlen().
-	 *
-	 * @since 2.0.0
-	 *
-	 * @param string $string   The string being checked for length.
-	 * @param string $encoding Optional. The encoding parameter is not used in `strlen()`. Default is an empty string.
-	 * @return int The number of characters in the string having character encoding `$encoding`.
-	 *             A multi-byte character is counted as 1. Returns false if the given encoding is invalid.
-	 */
-	function mb_strlen( $string, $encoding = '' ) {
-		return strlen( $string );
-	}
-}
-
 if ( ! function_exists( 'mb_strtolower' ) ) {
 	/**
 	 * Add compatibility for undefined mb_strtolower() by deferring to strtolower().
@@ -101,8 +85,8 @@ if ( ! function_exists( 'wp_unique_id' ) ) {
 	 * @param string $prefix Prefix for the returned ID.
 	 * @return string Unique ID.
 	 */
-	function wp_unique_id( $prefix = '' ) {
+	function wp_unique_id( $prefix = '' ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- adding backwards compatibility.
 		static $id_counter = 0;
-		return $prefix . (string) ++$id_counter;
+		return $prefix . ( ++$id_counter );
 	}
 }

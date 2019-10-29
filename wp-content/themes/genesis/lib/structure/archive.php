@@ -62,7 +62,7 @@ function genesis_do_taxonomy_title_description() {
 	 *
 	 * @param string $intro_text The current archive intro text.
 	 */
-	$intro_text = apply_filters( 'genesis_term_intro_text_output', $intro_text ? $intro_text : '' );
+	$intro_text = apply_filters( 'genesis_term_intro_text_output', $intro_text ?: '' );
 
 	/**
 	 * Fires at end of doing taxonomy archive title and description.
@@ -107,7 +107,7 @@ function genesis_do_author_title_description() {
 	}
 
 	$intro_text = get_the_author_meta( 'intro_text', (int) get_query_var( 'author' ) );
-	$intro_text = apply_filters( 'genesis_author_intro_text_output', $intro_text ? $intro_text : '' );
+	$intro_text = apply_filters( 'genesis_author_intro_text_output', $intro_text ?: '' );
 
 	/** This action is documented in lib/structure/archive.php */
 	do_action( 'genesis_archive_title_descriptions', $heading, $intro_text, 'author-archive-description' );
@@ -167,7 +167,7 @@ function genesis_do_cpt_archive_title_description() {
 	}
 
 	$intro_text = genesis_get_cpt_option( 'intro_text' );
-	$intro_text = apply_filters( 'genesis_cpt_archive_intro_text_output', $intro_text ? $intro_text : '' );
+	$intro_text = apply_filters( 'genesis_cpt_archive_intro_text_output', $intro_text ?: '' );
 
 	/** This action is documented in lib/structure/archive.php */
 	do_action( 'genesis_archive_title_descriptions', $heading, $intro_text, 'cpt-archive-description' );
@@ -257,6 +257,10 @@ function genesis_do_posts_page_heading() {
 		return;
 	}
 
+	if ( genesis_entry_header_hidden_on_current_page() ) {
+		return;
+	}
+
 	/** This action is documented in lib/structure/archive.php */
 	do_action( 'genesis_archive_title_descriptions', get_the_title( $posts_page ), '', 'posts-page-description' );
 
@@ -277,10 +281,10 @@ function genesis_do_archive_headings_open( $heading = '', $intro_text = '', $con
 	if ( $heading || $intro_text ) {
 
 		genesis_markup(
-			array(
+			[
 				'open'    => '<div %s>',
 				'context' => $context,
-			)
+			]
 		);
 
 	}
@@ -301,10 +305,10 @@ function genesis_do_archive_headings_close( $heading = '', $intro_text = '', $co
 	if ( $heading || $intro_text ) {
 
 		genesis_markup(
-			array(
+			[
 				'close'   => '</div>',
 				'context' => $context,
-			)
+			]
 		);
 
 	}
@@ -341,6 +345,7 @@ add_action( 'genesis_archive_title_descriptions', 'genesis_do_archive_headings_i
 function genesis_do_archive_headings_intro_text( $heading = '', $intro_text = '', $context = '' ) {
 
 	if ( $context && $intro_text ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $intro_text;
 	}
 

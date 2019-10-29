@@ -11,6 +11,775 @@
  * @link    https://my.studiopress.com/themes/genesis/
  */
 
+use StudioPress\Genesis\Upgrade;
+
+/**
+ * Upgrade the database for changes in db version 3001.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_3001() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_3001() )->upgrade();
+}
+
+/**
+ * Migrate query_args and/or template for pages using page_blog.php template in 3.0.0.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_3001_page_blog() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::migrate_blog_pages()' );
+
+	( new Upgrade\Upgrade_DB_3001() )->migrate_blog_pages();
+}
+
+/**
+ * Generate page_archive.php template file for blogs using default Genesis page_archive.php.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_3001_page_archive() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::migrate_archive_pages()' );
+
+	( new Upgrade\Upgrade_DB_3001() )->migrate_archive_pages();
+}
+
+/**
+ * Determine if the 'Blog' page template is available.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ *
+ * @return bool True if the 'Blog' template theme exists. False if else.
+ */
+function genesis_theme_has_page_blog_template() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::blog_template_exists()' );
+
+	return ( new Upgrade\Upgrade_DB_3001() )->blog_template_exists();
+}
+
+/**
+ * Determine if the 'Archive' page template is available.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ *
+ * @return bool True if the 'Archive' template theme exists. False if else.
+ */
+function genesis_theme_has_page_archive_template() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::archive_template_exists()' );
+
+	return ( new Upgrade\Upgrade_DB_3001() )->archive_template_exists();
+}
+
+/**
+ * Create the 'page_blog.php' file within child theme if missing.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ *
+ * @return int|bool|void Void if file exists, number of bytes written, or false if error.
+ */
+function genesis_create_page_blog_file() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::create_blog_template()' );
+
+	( new Upgrade\Upgrade_DB_3001() )->create_blog_template();
+}
+
+/**
+ * Create the 'page_archive.php' file within child theme if missing.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ *
+ * @return int|bool|void Void if file exists, number of bytes written, or false if error.
+ */
+function genesis_create_page_archive_file() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3001::create_archive_template()' );
+
+	( new Upgrade\Upgrade_DB_3001() )->create_archive_template();
+}
+
+/**
+ * Upgrade the database for changes in db version 3000.
+ *
+ * @since 3.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_3000() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_3000::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_3000() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2700.
+ *
+ * @since 2.7.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2700() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2700::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2700() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2603.
+ *
+ * @since 2.6.1
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2603() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2603::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2603() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2501.
+ *
+ * @since 2.5.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2501() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2501::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2501() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2403.
+ *
+ * @since 2.4.2
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2403() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2403::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2403() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2209.
+ *
+ * @since 2.2.6
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2209() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2209::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2209() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2207.
+ *
+ * @since 2.2.4
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2207() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2207::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2207() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2201.
+ *
+ * @since 2.2.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2201() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2201::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2201() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2100.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2100() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2100::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2100() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2003.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2003() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2003::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2003() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 2001.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_2001() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2001::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_2001() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 1901.
+ *
+ * @since 1.9.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_1901() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_1901::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_1901() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 1800.
+ *
+ * @since 1.8.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_upgrade_1800() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_1800::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_1800() )->upgrade();
+}
+
+/**
+ * Upgrade the database to version 1700.
+ *
+ * Also removes old user meta box options, as the UI changed.
+ *
+ * @since 1.7.0
+ *
+ * @deprecated 3.1.0
+ *
+ * @global wpdb $wpdb WordPress database object.
+ */
+function genesis_upgrade_1700() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_1700::upgrade()' );
+
+	( new Upgrade\Upgrade_DB_1700() )->upgrade();
+}
+
+/**
+ * Convert term meta for new title/description options.
+ *
+ * Called in `genesis_upgrade_1800()`.
+ *
+ * @since 2.6.0
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_convert_term_meta() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_1800::convert_term_meta()' );
+
+	( new Upgrade\Upgrade_DB_1800() )->convert_term_meta();
+}
+
+/**
+ * Strip slashes from header and body scripts saved as post meta.
+ *
+ * Called in `genesis_upgrade_2603()`.
+ *
+ * @since 2.6.1
+ *
+ * @deprecated 3.1.0
+ */
+function genesis_unslash_post_meta_scripts() {
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Upgrade\Upgrade_DB_2603::unslash_post_meta_scripts()' );
+
+	( new Upgrade\Upgrade_DB_2603() )->unslash_post_meta_scripts();
+}
+
+/**
+ * Add attributes for site footer element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for site footer element.
+ * @return array Amended attributes for site footer element.
+ */
+function genesis_attributes_site_footer( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\site_footer' );
+
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/WPFooter';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for author box element.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for author box element.
+ * @return array Amended attributes for author box element.
+ */
+function genesis_attributes_author_box( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\author_box' );
+
+	$attributes['itemprop']  = 'author';
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/Person';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for comment content container.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for comment content container.
+ * @return array Amended attributes for comment content container.
+ */
+function genesis_attributes_comment_content( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\comment_content' );
+
+	$attributes['itemprop'] = 'text';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for comment time element.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for comment time element.
+ * @return array Amended attributes for comment time element.
+ */
+function genesis_attributes_comment_time( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\comment_time' );
+
+	$attributes['datetime'] = esc_attr( get_comment_time( 'c' ) );
+	$attributes['itemprop'] = 'datePublished';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for comment author name element.
+ *
+ * @since 2.10.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for comment author name element.
+ * @return array Amended attributes for comment author name element.
+ */
+function genesis_attributes_comment_author_name( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\comment_author_name' );
+
+	$attributes['itemprop'] = 'name';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for comment author element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for comment author element.
+ * @return array Amended attributes for comment author element.
+ */
+function genesis_attributes_comment_author( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\comment_author' );
+
+	$attributes['itemprop']  = 'author';
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/Person';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for entry content element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for entry content element.
+ * @return array Amended attributes for entry content element.
+ */
+function genesis_attributes_entry_content( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_content' );
+
+	if ( ! is_main_query() && ! genesis_is_blog_template() ) {
+		return $attributes;
+	}
+
+	$attributes['itemprop'] = 'text';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for entry title element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for entry title element.
+ * @return array Amended attributes for entry title element.
+ */
+function genesis_attributes_entry_title( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_title' );
+
+	$attributes['itemprop'] = 'headline';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for modified time element for an entry.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for modified time element for an entry.
+ * @return array Amended attributes for modified time element for an entry.
+ */
+function genesis_attributes_entry_modified_time( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_modified_time' );
+
+	$attributes['itemprop'] = 'dateModified';
+	$attributes['datetime'] = get_the_modified_time( 'c' );
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for time element for an entry.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for time element for an entry.
+ * @return array Amended attributes for time element for an entry.
+ */
+function genesis_attributes_entry_time( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_time' );
+
+	$attributes['itemprop'] = 'datePublished';
+	$attributes['datetime'] = get_the_time( 'c' );
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for entry author name element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for entry author name element.
+ * @return array Amended attributes for entry author name element.
+ */
+function genesis_attributes_entry_author_name( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_author_name' );
+
+	$attributes['itemprop'] = 'name';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for author element for an entry.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for author element for an entry.
+ * @return array Amended attributes for author element for an entry.
+ */
+function genesis_attributes_entry_author( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_author' );
+
+	$attributes['itemprop']  = 'author';
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/Person';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for entry image element shown in a grid loop.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for entry image element shown in a grid loop.
+ * @return array Amended attributes for entry image element shown in a grid loop.
+ */
+function genesis_attributes_entry_image_grid_loop( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\entry_image_grid_loop' );
+
+	$attributes['itemprop'] = 'image';
+
+	return $attributes;
+
+}
+
+/**
+ * Add typical attributes for navigation elements.
+ *
+ * Used for primary navigation, secondary navigation, and custom menu widgets in the header right widget area.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for navigation elements.
+ * @return array Amended attributes for navigation elements.
+ */
+function genesis_attributes_nav( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\attributes_nav' );
+
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/SiteNavigationElement';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for breadcrumb link text wrap.
+ *
+ * @since 2.7.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for breadcrumb link text wrap.
+ * @return array Amended attributes for breadcrumb link text wrap.
+ */
+function genesis_attributes_breadcrumb_link_text_wrap( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\breadcrumb_link_text_wrap' );
+
+	$attributes['itemprop'] = 'name';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for breadcrumb item element.
+ *
+ * @since 2.1.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for breadcrumb item element.
+ * @return array Amended attributes for breadcrumb item element.
+ */
+function genesis_attributes_breadcrumb_link_wrap( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\breadcrumb_link_wrap' );
+
+	$attributes['itemprop']  = 'itemListElement';
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/ListItem';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for breadcrumbs wrapper.
+ *
+ * @since 2.2.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for breadcrumbs wrapper element.
+ * @return array Amended attributes for breadcrumbs wrapper element.
+ */
+function genesis_attributes_breadcrumb( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\breadcrumb' );
+
+	// Homepage breadcrumb content contains no links, so no schema.org attributes are needed.
+	if ( is_home() ) {
+		return $attributes;
+	}
+
+	// Omit attributes if generic breadcrumb functions are in use.
+	if ( function_exists( 'breadcrumbs' ) || function_exists( 'crumbs' ) ) {
+		return $attributes;
+	}
+
+	// Breadcrumb NavXT plugin needs RDFa attributes on the breadcrumb wrapper.
+	if ( function_exists( 'bcn_display' ) ) {
+		$attributes['typeof'] = 'BreadcrumbList';
+		$attributes['vocab']  = 'https://schema.org/';
+		return $attributes;
+	}
+
+	// Yoast SEO uses JSON-LD and Yoast Breadcrumbs emits no schema.org markup, so no attributes needed.
+	$yoast_seo_breadcrumbs_enabled    = class_exists( 'WPSEO_Breadcrumbs' ) && genesis_get_option( 'breadcrumbs-enable', 'wpseo_titles' );
+	$yoast_breadcrumbs_plugin_enabled = function_exists( 'yoast_breadcrumb' ) && ! class_exists( 'WPSEO_Breadcrumbs' );
+
+	if ( $yoast_seo_breadcrumbs_enabled || $yoast_breadcrumbs_plugin_enabled ) {
+		return $attributes;
+	}
+
+	// Genesis breadcrumbs require microdata on the wrapper.
+	$attributes['itemprop']  = 'breadcrumb';
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/BreadcrumbList';
+
+	if ( is_singular( 'post' ) || is_archive() || is_home() || is_page_template( 'page_blog.php' ) ) {
+		unset( $attributes['itemprop'] );
+	}
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for site description element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for site description element.
+ * @return array Amended attributes for site description element.
+ */
+function genesis_attributes_site_description( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\site_description' );
+
+	$attributes['itemprop'] = 'description';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for site title element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for site title element.
+ * @return array Amended attributes for site title element.
+ */
+function genesis_attributes_site_title( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\site_title' );
+
+	$attributes['itemprop'] = 'headline';
+
+	return $attributes;
+
+}
+
+/**
+ * Add attributes for site header element.
+ *
+ * @since 2.0.0
+ *
+ * @deprecated 3.1.0 Replaced with namespaced functions in `lib/functions/schema.php`.
+ *
+ * @param array $attributes Existing attributes for site header element.
+ * @return array Amended attributes for site header element.
+ */
+function genesis_attributes_header( $attributes ) {
+
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\site_header' );
+
+	$attributes['itemscope'] = true;
+	$attributes['itemtype']  = 'https://schema.org/WPHeader';
+
+	return $attributes;
+
+}
+
 /**
  * Filter the Primary Navigation menu items, appending either RSS links, search form, twitter link, or today's date.
  *
@@ -175,13 +944,13 @@ function genesis_footer_backtotop_shortcode( $atts ) {
 
 	_deprecated_function( __FUNCTION__, '3.0.0' );
 
-	$defaults = array(
+	$defaults = [
 		'after'    => '',
 		'before'   => '',
 		'href'     => '#wrap',
 		'nofollow' => true,
 		'text'     => __( 'Return to top of page', 'genesis' ),
-	);
+	];
 
 	$atts = shortcode_atts( $defaults, $atts, 'footer_backtotop' );
 
@@ -198,7 +967,7 @@ function genesis_footer_backtotop_shortcode( $atts ) {
  * @deprecated 2.10.1
  */
 function genesis_upgraded_notice() {
-	 _deprecated_function( __FUNCTION__, '2.10.1' );
+	_deprecated_function( __FUNCTION__, '2.10.1' );
 }
 
 /**
@@ -475,7 +1244,7 @@ function genesis_rel_publisher() {
  * @param array $args Menu arguments.
  * @return null|string HTML for menu, unless `genesis_pre_nav` filter returns something truthy.
  */
-function genesis_nav( $args = array() ) {
+function genesis_nav( $args = [] ) {
 
 	_deprecated_function( __FUNCTION__, '2.2.0', 'genesis_nav_menu' );
 
@@ -484,7 +1253,7 @@ function genesis_nav( $args = array() ) {
 	}
 
 	// Default arguments.
-	$defaults = array(
+	$defaults = [
 		'theme_location' => '',
 		'type'           => 'pages',
 		'sort_column'    => 'menu_order, post_title',
@@ -493,7 +1262,7 @@ function genesis_nav( $args = array() ) {
 		'echo'           => true,
 		'link_before'    => '',
 		'link_after'     => '',
-	);
+	];
 
 	$defaults = apply_filters( 'genesis_nav_default_args', $defaults );
 	$args     = wp_parse_args( $args, $defaults );
@@ -510,10 +1279,10 @@ function genesis_nav( $args = array() ) {
 
 	// Show Home in the menu (mostly copied from WP source).
 	if ( isset( $args['show_home'] ) && ! empty( $args['show_home'] ) ) {
-		if ( true === $args['show_home'] || '1' === $args['show_home'] || 1 === $args['show_home'] ) {
+		$text = $args['show_home'];
+
+		if ( in_array( $args['show_home'], [ true, '1', 1 ], true ) ) {
 			$text = apply_filters( 'genesis_nav_home_text', __( 'Home', 'genesis' ), $args );
-		} else {
-			$text = $args['show_home'];
 		}
 
 		if ( is_front_page() && ! is_paged() ) {
@@ -539,9 +1308,9 @@ function genesis_nav( $args = array() ) {
 
 	// Add menu items.
 	if ( 'pages' === $args['type'] ) {
-		$menu .= str_replace( array( "\r", "\n", "\t" ), '', wp_list_pages( $list_args ) );
+		$menu .= str_replace( [ "\r", "\n", "\t" ], '', wp_list_pages( $list_args ) );
 	} elseif ( 'categories' === $args['type'] ) {
-		$menu .= str_replace( array( "\r", "\n", "\t" ), '', wp_list_categories( $list_args ) );
+		$menu .= str_replace( [ "\r", "\n", "\t" ], '', wp_list_categories( $list_args ) );
 	}
 
 	// Apply filters to the nav items.
@@ -558,12 +1327,13 @@ function genesis_nav( $args = array() ) {
 	$menu = apply_filters( 'genesis_nav', $menu, $args );
 
 	if ( $args['echo'] ) {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo $menu;
 
 		return null;
-	} else {
-		return $menu;
 	}
+
+	return $menu;
 
 }
 

@@ -30,7 +30,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @var array Holds the breadcrumb arguments
 	 */
-	protected $args = array();
+	protected $args = [];
 
 	/**
 	 * Constructor. Set up cacheable values and settings.
@@ -52,7 +52,7 @@ class Genesis_Breadcrumb {
 	 * @param array $args Breadcrumb arguments.
 	 * @return string HTML markup for final completed markup.
 	 */
-	public function get_output( $args = array() ) {
+	public function get_output( $args = [] ) {
 
 		/**
 		 * Filter the Genesis breadcrumb arguments.
@@ -86,7 +86,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @param array $args Breadcrumb arguments.
 	 */
-	public function output( $args = array() ) {
+	public function output( $args = [] ) {
 
 		echo $this->get_output( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- We need raw output here.
 
@@ -265,7 +265,7 @@ class Genesis_Breadcrumb {
 	 */
 	protected function get_search_crumb() {
 
-		$crumb = $this->args['labels']['search'] . '"' . esc_html( apply_filters( 'the_search_query', get_search_query() ) ) . '"'; // WPCS: prefix ok.
+		$crumb = $this->args['labels']['search'] . '"' . esc_html( apply_filters( 'the_search_query', get_search_query() ) ) . '"'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core WP hook.
 
 		/**
 		 * Filter the Search page breadcrumb.
@@ -326,13 +326,13 @@ class Genesis_Breadcrumb {
 					if ( is_array( $post->ancestors ) ) {
 						$ancestors = array_values( $post->ancestors );
 					} else {
-						$ancestors = array( $post->ancestors );
+						$ancestors = [ $post->ancestors ];
 					}
 				} else {
-					$ancestors = array( $post->post_parent );
+					$ancestors = [ $post->post_parent ];
 				}
 
-				$crumbs = array();
+				$crumbs = [];
 				foreach ( $ancestors as $ancestor ) {
 					array_unshift(
 						$crumbs,
@@ -433,7 +433,7 @@ class Genesis_Breadcrumb {
 					$cat_crumb = $this->get_term_parents( $categories[0]->cat_ID, 'category', true ) . $this->args['sep'];
 				}
 			} else {
-				$crumbs = array();
+				$crumbs = [];
 				// Don't show parent categories (unless the post happen to be explicitly in them).
 				foreach ( $categories as $category ) {
 					$crumbs[] = $this->get_breadcrumb_link(
@@ -584,7 +584,7 @@ class Genesis_Breadcrumb {
 	 */
 	protected function get_year_crumb() {
 
-		$year = get_query_var( 'm' ) ? get_query_var( 'm' ) : get_query_var( 'year' );
+		$year = get_query_var( 'm' ) ?: get_query_var( 'year' );
 
 		$crumb = $this->args['labels']['date'] . $year;
 
@@ -738,7 +738,7 @@ class Genesis_Breadcrumb {
 	 *
 	 * @return string HTML markup of recursive linked crumbs of category, tag or custom taxonomy parents.
 	 */
-	protected function get_term_parents( $parent_id, $taxonomy, $link = false, array $visited = array() ) {
+	protected function get_term_parents( $parent_id, $taxonomy, $link = false, array $visited = [] ) {
 
 		$parent = get_term( (int) $parent_id, $taxonomy );
 
@@ -776,13 +776,13 @@ class Genesis_Breadcrumb {
 	protected function get_breadcrumb_link_text( $content ) {
 
 		return genesis_markup(
-			array(
+			[
 				'open'    => '<span %s>',
 				'close'   => '</span>',
 				'content' => $content,
 				'context' => 'breadcrumb-link-text-wrap',
 				'echo'    => false,
-			)
+			]
 		);
 
 	}
@@ -797,11 +797,11 @@ class Genesis_Breadcrumb {
 	protected function get_breadcrumb_link_meta() {
 
 		return genesis_markup(
-			array(
+			[
 				'open'    => '<meta %s>',
 				'context' => 'breadcrumb-link-wrap-meta',
 				'echo'    => false,
-			)
+			]
 		);
 
 	}
@@ -817,13 +817,13 @@ class Genesis_Breadcrumb {
 	protected function get_breadcrumb_link_wrap( $content ) {
 
 		return genesis_markup(
-			array(
+			[
 				'open'    => '<span %s>',
 				'close'   => '</span>',
 				'content' => $content,
 				'context' => 'breadcrumb-link-wrap',
 				'echo'    => false,
-			)
+			]
 		);
 
 	}
@@ -846,16 +846,16 @@ class Genesis_Breadcrumb {
 		$title = '';
 
 		$link = genesis_markup(
-			array(
+			[
 				'open'    => '<a %s>',
 				'close'   => '</a>',
 				'content' => $this->get_breadcrumb_link_text( $content ),
 				'context' => 'breadcrumb-link',
-				'params'  => array(
+				'params'  => [
 					'href' => $url,
-				),
+				],
 				'echo'    => false,
-			)
+			]
 		);
 
 		/**

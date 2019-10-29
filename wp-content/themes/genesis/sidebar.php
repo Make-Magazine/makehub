@@ -13,10 +13,10 @@
 
 // Output primary sidebar structure.
 genesis_markup(
-	array(
+	[
 		'open'    => '<aside %s>' . genesis_sidebar_title( 'sidebar' ),
 		'context' => 'sidebar-primary',
-	)
+	]
 );
 
 /**
@@ -42,8 +42,8 @@ do_action( 'genesis_after_sidebar_widget_area' );
 
 // End .sidebar-primary.
 genesis_markup(
-	array(
+	[
 		'close'   => '</aside>',
 		'context' => 'sidebar-primary',
-	)
+	]
 );

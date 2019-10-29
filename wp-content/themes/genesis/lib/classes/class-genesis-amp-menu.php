@@ -30,7 +30,7 @@ class Genesis_AMP_Menu {
 	 *
 	 * @var array
 	 */
-	protected $responsive_config = array();
+	protected $responsive_config = [];
 
 	/**
 	 * Array of script configurations parameters.
@@ -74,7 +74,7 @@ class Genesis_AMP_Menu {
 	 *     @type string $data The JSON data inside the <amp-state>.
 	 * }
 	 */
-	private $submenu_states = array();
+	private $submenu_states = [];
 
 	/**
 	 * The <amp-state> value for a submenu that is not expanded.
@@ -130,7 +130,7 @@ class Genesis_AMP_Menu {
 		$target_menu    = key( $this->responsive_config );
 
 		// Initialize the hamburger's configuration.
-		$this->hamburger_config = array(
+		$this->hamburger_config = [
 			'theme_location'  => $theme_location,
 			'label'           => $this->script_config['mainMenu'],
 			'icon_closed'     => $this->script_config['menuIconClass'],
@@ -138,7 +138,7 @@ class Genesis_AMP_Menu {
 			'filter_location' => '',
 			'state_id'        => $this->convert_to_camel_case( "{$target_menu}Expanded" ),
 			'state'           => false,
-		);
+		];
 
 		if ( 'primary' === $theme_location ) {
 			$filter_location = 'do_nav';
@@ -158,21 +158,21 @@ class Genesis_AMP_Menu {
 	 */
 	public function add_hooks() {
 
-		add_action( 'wp_enqueue_scripts', array( $this, 'add_custom_css' ), 20 );
+		add_action( 'wp_enqueue_scripts', [ $this, 'add_custom_css' ], 20 );
 
 		foreach ( $this->script_config['menuClasses'] as $combine_or_other ) {
 			foreach ( $combine_or_other as $theme_location ) {
 				$theme_location = ltrim( $theme_location, '.' );
-				add_filter( "genesis_attr_{$theme_location}", array( $this, 'add_nav_class_attribute' ) );
+				add_filter( "genesis_attr_{$theme_location}", [ $this, 'add_nav_class_attribute' ] );
 			}
 		}
 
-		add_filter( "genesis_{$this->hamburger_config['filter_location']}", array( $this, 'add_hamburger_button' ) );
-		add_filter( "genesis_attr_nav-{$this->hamburger_config['theme_location']}-toggle", array( $this, 'add_hamburger_attributes' ) );
-		add_filter( "genesis_attr_nav-{$this->hamburger_config['theme_location']}", array( $this, 'add_hamburger_target_menu_attributes' ) );
-		add_filter( 'walker_nav_menu_start_el', array( $this, 'add_nav_submenu_toggle' ), 10, 4 );
-		add_filter( 'genesis_attr_sub-menu-toggle', array( $this, 'add_submenu_toggle_attributes' ), 10, 3 );
-		add_action( 'genesis_after', array( $this, 'output_submenu_amp_states' ) );
+		add_filter( "genesis_{$this->hamburger_config['filter_location']}", [ $this, 'add_hamburger_button' ] );
+		add_filter( "genesis_attr_nav-{$this->hamburger_config['theme_location']}-toggle", [ $this, 'add_hamburger_attributes' ] );
+		add_filter( "genesis_attr_nav-{$this->hamburger_config['theme_location']}", [ $this, 'add_hamburger_target_menu_attributes' ] );
+		add_filter( 'walker_nav_menu_start_el', [ $this, 'add_nav_submenu_toggle' ], 10, 4 );
+		add_filter( 'genesis_attr_sub-menu-toggle', [ $this, 'add_submenu_toggle_attributes' ], 10, 3 );
+		add_action( 'genesis_after', [ $this, 'output_submenu_amp_states' ] );
 
 	}
 
@@ -282,13 +282,13 @@ class Genesis_AMP_Menu {
 		);
 
 		$hamburger_output = genesis_markup(
-			array(
+			[
 				'open'    => '<button %s>',
 				'close'   => '</button>',
 				'context' => "{$nav_name}-toggle",
 				'content' => $this->hamburger_config['label'],
 				'echo'    => false,
-			)
+			]
 		);
 
 		return $state_output . $hamburger_output . $nav_output;
@@ -383,7 +383,7 @@ class Genesis_AMP_Menu {
 
 		// Create the toggle button.
 		$item_output .= genesis_markup(
-			array(
+			[
 				'open'           => '<button %s>',
 				'close'          => '</button>',
 				'context'        => 'sub-menu-toggle',
@@ -392,7 +392,7 @@ class Genesis_AMP_Menu {
 				'state_id'       => $state_id,
 				'theme_location' => $args->theme_location,
 				'submenu_index'  => $this->submenu_index,
-			)
+			]
 		);
 
 		return $item_output;
@@ -447,7 +447,7 @@ class Genesis_AMP_Menu {
 
 		return preg_replace_callback(
 			'/[_,-](.?)/',
-			function( $matches ) {
+			static function( $matches ) {
 				return strtoupper( $matches[1] );
 			},
 			$string

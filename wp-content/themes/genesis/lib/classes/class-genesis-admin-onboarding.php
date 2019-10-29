@@ -26,13 +26,13 @@ final class Genesis_Admin_Onboarding extends Genesis_Admin_Basic {
 
 		$page_id = 'genesis-getting-started';
 
-		$menu_ops = array(
-			'submenu' => array(
-				'parent_slug' => 'admin.php',
+		$menu_ops = [
+			'submenu' => [
+				'parent_slug' => 'genesis',
 				'page_title'  => __( 'Genesis - Getting Started', 'genesis' ),
-				'menu_title'  => __( 'Getting Started', 'genesis' ),
-			),
-		);
+				'menu_title'  => __( 'Child Theme Setup', 'genesis' ),
+			],
+		];
 
 		$this->create( $page_id, $menu_ops );
 	}
@@ -41,6 +41,12 @@ final class Genesis_Admin_Onboarding extends Genesis_Admin_Basic {
 	 * Loads the onboarding admin page.
 	 */
 	public function admin() {
-		include GENESIS_VIEWS_DIR . '/pages/genesis-admin-onboarding.php';
+		if ( genesis_onboarding_starter_packs() ) {
+			delete_option( 'genesis_onboarding_chosen_pack' );
+			include GENESIS_VIEWS_DIR . '/pages/genesis-admin-onboarding-packs.php';
+		} else {
+			include GENESIS_VIEWS_DIR . '/pages/genesis-admin-onboarding.php';
+		}
 	}
+
 }

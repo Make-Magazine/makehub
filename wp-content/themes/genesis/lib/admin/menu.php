@@ -146,7 +146,9 @@ function genesis_add_cpt_archive_page() {
 	foreach ( $post_types as $post_type ) {
 		if ( genesis_has_post_type_archive_support( $post_type->name ) ) {
 			$admin_object_name = '_genesis_admin_cpt_archives_' . $post_type->name;
+			// phpcs:ignore PHPCompatibility.Variables.ForbiddenGlobalVariableVariable.NonBareVariableFound -- Programatically generated name of global
 			global ${$admin_object_name};
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Programatically generated name of global 
 			${$admin_object_name} = new Genesis_Admin_CPT_Archive_Settings( $post_type );
 		}
 	}

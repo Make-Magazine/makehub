@@ -11,6 +11,8 @@
  * @link    https://my.studiopress.com/themes/genesis/
  */
 
+use \StudioPress\Genesis\Admin\WidgetImport;
+
 /**
  * Return a cached onboarding config.
  *
@@ -44,7 +46,13 @@ function genesis_onboarding_active() {
 		return false;
 	}
 
-	if ( genesis_onboarding_plugins() || genesis_onboarding_content() || genesis_onboarding_navigation_menus() ) {
+	if (
+		genesis_onboarding_plugins()
+		|| genesis_onboarding_content()
+		|| genesis_onboarding_navigation_menus()
+		|| genesis_onboarding_starter_packs()
+
+	) {
 		return true;
 	}
 
@@ -61,7 +69,34 @@ function genesis_onboarding_active() {
 function genesis_onboarding_plugins() {
 	$config = genesis_onboarding_config();
 
-	return isset( $config['dependencies']['plugins'] ) ? $config['dependencies']['plugins'] : array();
+	$starter_packs = genesis_onboarding_starter_packs();
+	$chosen_pack   = get_option( 'genesis_onboarding_chosen_pack' );
+
+	if ( $starter_packs && $chosen_pack && isset( $starter_packs[ $chosen_pack ]['config']['dependencies']['plugins'] ) ) {
+		return $starter_packs[ $chosen_pack ]['config']['dependencies']['plugins'];
+	}
+
+	return isset( $config['dependencies']['plugins'] ) ? (array) $config['dependencies']['plugins'] : [];
+}
+
+/**
+ * Returns an array of widgets provided by Genesis or the child theme.
+ *
+ * @since 3.1.0
+ *
+ * @return array
+ */
+function genesis_onboarding_widgets() {
+	$config = genesis_onboarding_config();
+
+	$starter_packs = genesis_onboarding_starter_packs();
+	$chosen_pack   = get_option( 'genesis_onboarding_chosen_pack' );
+
+	if ( $starter_packs && $chosen_pack && isset( $starter_packs[ $chosen_pack ]['config']['widgets'] ) ) {
+		return $starter_packs[ $chosen_pack ]['config']['widgets'];
+	}
+
+	return isset( $config['widgets'] ) ? (array) $config['widgets'] : [];
 }
 
 /**
@@ -69,10 +104,18 @@ function genesis_onboarding_plugins() {
  *
  * @since 2.9.0
  *
+ * @param string $pack The starter pack slug to return the plugins list for.
  * @return string An unordered list of plugins, or empty string if no valid plugins in list.
  */
-function genesis_onboarding_plugins_list() {
+function genesis_onboarding_plugins_list( $pack = '' ) {
 	$plugins = genesis_onboarding_plugins();
+
+	if ( $pack ) {
+		$config = genesis_onboarding_config();
+		if ( isset( $config['starter_packs'][ $pack ]['config']['dependencies']['plugins'] ) ) {
+			$plugins = $config['starter_packs'][ $pack ]['config']['dependencies']['plugins'];
+		}
+	}
 
 	if ( ! $plugins ) {
 		return '';
@@ -83,7 +126,7 @@ function genesis_onboarding_plugins_list() {
 	$link_pattern = '<a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">(%s)</span></a>';
 	$new_window   = __( 'new window', 'genesis' );
 
-	foreach ( (array) $plugins as $plugin ) {
+	foreach ( $plugins as $plugin ) {
 		if ( empty( $plugin['name'] ) || empty( $plugin['slug'] ) ) {
 			continue;
 		}
@@ -91,7 +134,100 @@ function genesis_onboarding_plugins_list() {
 		$plugin_list     .= sprintf( '<li>%s</li>', $plugin_list_item );
 	}
 
-	return $plugin_list ? sprintf( '<ul>%s</ul>', $plugin_list ) : '';
+	if ( $plugin_list ) {
+		$plugin_list = sprintf( '<ul>%s</ul>', $plugin_list );
+	}
+
+	if ( $pack ) {
+		$title       = sprintf( '<h2>%s</h2>', esc_html__( 'Recommended plugins', 'genesis' ) );
+		$plugin_list = $title . $plugin_list;
+	}
+
+	return $plugin_list;
+}
+
+/**
+ * Build HTML for an unordered list of onboarding content provided the child theme.
+ *
+ * @since 3.1.0
+ *
+ * @param string $pack The starter pack slug to return the plugins list for.
+ * @return string An unordered list of plugins, or empty string if no valid plugins in list.
+ */
+function genesis_onboarding_content_list( $pack = '' ) {
+	$content = genesis_onboarding_content();
+
+	if ( $pack ) {
+		$config = genesis_onboarding_config();
+		if ( isset( $config['starter_packs'][ $pack ]['config']['content'] ) ) {
+			$content = $config['starter_packs'][ $pack ]['config']['content'];
+		}
+	}
+
+	if ( ! $content ) {
+		return '';
+	}
+
+	$content_list = '';
+
+	foreach ( $content as $item ) {
+		if ( empty( $item['post_title'] ) ) {
+			continue;
+		}
+		$content_list .= sprintf( '<li>%s</li>', $item['post_title'] );
+	}
+
+	if ( $content_list ) {
+		$content_list = sprintf( '<ul>%s</ul>', $content_list );
+	}
+
+	if ( $pack ) {
+		$title        = sprintf( '<h2>%s</h2>', esc_html__( 'Demo content', 'genesis' ) );
+		$content_list = $title . $content_list;
+	}
+
+	return $content_list;
+}
+
+/**
+ * Output HTML to show a selection of starter packs if supported by the theme.
+ *
+ * @since 3.1.0
+ */
+function genesis_onboarding_starter_packs_list() {
+	$packs = genesis_onboarding_starter_packs();
+
+	if ( ! $packs ) {
+		esc_html_e( 'No Starter Packs found.', 'genesis' );
+	}
+
+	foreach ( $packs as $pack_slug => $pack ) {
+		if ( empty( $pack['title'] ) || empty( $pack['thumbnail'] ) ) {
+			continue;
+		}
+
+		$pack_image = sprintf(
+			'<img src="%1s" alt="%2s" />',
+			esc_url( $pack['thumbnail'] ),
+			/* translators: %s: Starter Pack name, such as “Small Business” */
+			sprintf( esc_attr__( 'Learn more about the %s starter pack.', 'genesis' ), $pack['title'] )
+		);
+
+		$pack_install_label = sprintf(
+			/* translators: %s: Starter Pack name, such as “Small Business” */
+			__( 'Install the %s starter pack.', 'genesis' ),
+			$pack['title']
+		);
+
+		$pack_demo_label = sprintf(
+			/* translators: %s: Starter Pack name, such as “Small Business” */
+			__( 'View the %s starter pack demo (opens in new window).', 'genesis' ),
+			$pack['title']
+		);
+
+		include GENESIS_VIEWS_DIR . '/onboarding/starter-pack-summary.php';
+		include GENESIS_VIEWS_DIR . '/onboarding/starter-pack-info.php';
+	}
 }
 
 /**
@@ -104,7 +240,14 @@ function genesis_onboarding_plugins_list() {
 function genesis_onboarding_content() {
 	$config = genesis_onboarding_config();
 
-	return isset( $config['content'] ) ? $config['content'] : array();
+	$starter_packs = genesis_onboarding_starter_packs();
+	$chosen_pack   = get_option( 'genesis_onboarding_chosen_pack' );
+
+	if ( $starter_packs && $chosen_pack && isset( $starter_packs[ $chosen_pack ]['config']['content'] ) ) {
+		return $starter_packs[ $chosen_pack ]['config']['content'];
+	}
+
+	return isset( $config['content'] ) ? $config['content'] : [];
 }
 
 /**
@@ -136,7 +279,53 @@ function genesis_onboarding_install_language_packs() {
 function genesis_onboarding_navigation_menus() {
 	$config = genesis_onboarding_config();
 
-	return isset( $config['navigation_menus'] ) ? $config['navigation_menus'] : array();
+	$starter_packs = genesis_onboarding_starter_packs();
+	$chosen_pack   = get_option( 'genesis_onboarding_chosen_pack' );
+
+	if ( $starter_packs && $chosen_pack && isset( $starter_packs[ $chosen_pack ]['config']['navigation_menus'] ) ) {
+		return $starter_packs[ $chosen_pack ]['config']['navigation_menus'];
+	}
+
+	return isset( $config['navigation_menus'] ) ? $config['navigation_menus'] : [];
+}
+
+/**
+ * Returns an array of onboarding starter pack configuration data
+ * provided by Genesis or the child theme.
+ *
+ * @since 3.1.0
+ * @return array
+ */
+function genesis_onboarding_starter_packs() {
+	$config = genesis_onboarding_config();
+
+	return isset( $config['starter_packs'] ) ? $config['starter_packs'] : [];
+}
+
+/**
+ * Gets onboarding tasks from those declared in the theme's `onboarding.php`.
+ *
+ * An onboarding task is a step during the theme setup process, such as
+ * installing plugins or adding page content.
+ *
+ * @since 3.1.0
+ *
+ * @return array The tasks to run.
+ */
+function genesis_onboarding_tasks() {
+	$plugins = genesis_onboarding_plugins();
+	$content = genesis_onboarding_content();
+	$tasks   = [];
+
+	if ( ! empty( $plugins ) ) {
+		$tasks[] = 'dependencies';
+	}
+
+	if ( ! empty( $content ) ) {
+		$tasks[] = 'content';
+	}
+
+	return $tasks;
 }
 
 /**
@@ -148,7 +337,7 @@ function genesis_onboarding_navigation_menus() {
  */
 function genesis_onboarding_create_navigation_menus() {
 
-	$errors = array();
+	$errors = [];
 	$config = genesis_onboarding_navigation_menus();
 	if ( ! $config ) {
 		return $errors;
@@ -162,22 +351,13 @@ function genesis_onboarding_create_navigation_menus() {
 			continue;
 		}
 
-		$menu_id = false;
-
-		$menu_object = wp_get_nav_menu_object( $menu_label );
-
-		if ( ! $menu_object ) {
-			$menu_id = wp_create_nav_menu( $menu_label );
-		}
+		$menu_label = genesis_unique_menu_name( $menu_label );
+		$menu_id    = wp_create_nav_menu( $menu_label );
 
 		if ( is_wp_error( $menu_id ) ) {
 			/* translators: 1: Title of the menu, 2: The error message. */
 			$errors[] = sprintf( esc_html__( 'There was an error creating the %1$s menu. Error: %2$s', 'genesis' ), $menu_label, $menu_id->get_error_message() );
 			continue;
-		}
-
-		if ( ! $menu_id && is_object( $menu_object ) ) {
-			$menu_id = $menu_object->term_id;
 		}
 
 		$menu_locations[ $registered_menu ] = $menu_id;
@@ -196,10 +376,10 @@ function genesis_onboarding_create_navigation_menus() {
  * @return array Empty array if successful, an array of error messages if not.
  */
 function genesis_onboarding_create_navigation_menu_items() {
-	$errors         = array();
+	$errors         = [];
 	$menus_config   = genesis_onboarding_navigation_menus();
 	$menu_locations = get_nav_menu_locations();
-	$imported_posts = get_option( 'genesis_onboarding_imported_post_ids', array() );
+	$imported_posts = get_option( 'genesis_onboarding_imported_post_ids', [] );
 
 	foreach ( $menus_config as $menu_location => $menu_location_config ) {
 		if ( ! isset( $menu_locations[ $menu_location ] ) ) {
@@ -208,11 +388,11 @@ function genesis_onboarding_create_navigation_menu_items() {
 
 		$menu_id = $menu_locations[ $menu_location ];
 
-		$new_menu_item = array();
+		$new_menu_item = [];
 
 		foreach ( $menu_location_config as $slug => $menu_item ) {
 
-			$new_menu_item[ $slug ] = array();
+			$new_menu_item[ $slug ] = [];
 
 			if ( ! empty( $menu_item['parent'] ) ) {
 				$new_menu_item[ $slug ]['parent'] = $menu_item['parent'];
@@ -229,14 +409,14 @@ function genesis_onboarding_create_navigation_menu_items() {
 			$nav_menu_item_id = wp_update_nav_menu_item(
 				$menu_id,
 				0,
-				array(
+				[
 					'menu-item-title'     => $menu_item['title'],
 					'menu-item-status'    => 'publish',
 					'menu-item-type'      => 'post_type',
 					'menu-item-object'    => $post_object->post_type,
 					'menu-item-object-id' => $post_object->ID,
 					'menu-item-parent-id' => $menu_item_parent_id,
-				)
+				]
 			);
 
 			if ( is_wp_error( $nav_menu_item_id ) ) {
@@ -282,13 +462,13 @@ function genesis_onboarding_install_dependencies( array $dependencies, $step = 0
 
 	if ( ! array_key_exists( $onboarding_plugin['slug'], $existing_plugins ) ) {
 
-		remove_action( 'upgrader_process_complete', array( 'Language_Pack_Upgrader', 'async_upgrade' ), 20 );
+		remove_action( 'upgrader_process_complete', [ 'Language_Pack_Upgrader', 'async_upgrade' ], 20 );
 
 		add_action( 'upgrader_process_complete', 'genesis_onboarding_install_language_packs', 20 );
 
 		$short_slug = strtok( $onboarding_plugin['slug'], '/' );
 
-		$api = plugins_api( 'plugin_information', array( 'slug' => $short_slug ) );
+		$api = plugins_api( 'plugin_information', [ 'slug' => $short_slug ] );
 
 		if ( is_wp_error( $api ) ) {
 			/**
@@ -324,11 +504,11 @@ function genesis_onboarding_install_dependencies( array $dependencies, $step = 0
  */
 function genesis_onboarding_import_content( array $content ) {
 
-	$errors = array();
+	$errors = [];
 
 	$homepage_edit_link = false;
 
-	$post_defaults = array(
+	$post_defaults = [
 		'post_content'   => '',
 		'post_excerpt'   => '',
 		'post_status'    => 'publish',
@@ -336,7 +516,7 @@ function genesis_onboarding_import_content( array $content ) {
 		'post_type'      => 'post',
 		'comment_status' => 'closed',
 		'ping_status'    => 'closed',
-	);
+	];
 
 	if ( ! empty( $content ) ) {
 
@@ -347,7 +527,7 @@ function genesis_onboarding_import_content( array $content ) {
 		 */
 		do_action( 'genesis_onboarding_before_import_content', $content );
 
-		$imported_post_ids = array();
+		$imported_post_ids = [];
 
 		foreach ( $content as $key => $post ) {
 
@@ -394,15 +574,15 @@ function genesis_onboarding_import_content( array $content ) {
 				}
 
 				if ( ! is_readable( $local_image_path ) ) {
-					/* translators: 1: Path to local image file. */
-					$errors[] = sprintf( esc_html__( 'Could not read the file: %1$s.', 'genesis' ), $local_image_path );
+					/* translators: %s: Path to local image file. */
+					$errors[] = sprintf( esc_html__( 'Could not read the file: %s.', 'genesis' ), $local_image_path );
 					continue;
 				}
 
-				$file = array(
+				$file = [
 					'name'     => basename( $featured_image_url ),
 					'tmp_name' => $local_image_path,
-				);
+				];
 
 				$attachment_id = media_handle_sideload( $file, $post_id );
 
@@ -433,8 +613,35 @@ function genesis_onboarding_import_content( array $content ) {
 
 	}
 
-	return array(
+	return [
 		'homepage_edit_link' => $homepage_edit_link,
 		'errors'             => $errors,
-	);
+	];
+}
+
+add_action( 'genesis_onboarding_after_import_content', 'genesis_onboarding_import_widgets', 10, 2 );
+/**
+ * Inserts widgets from the onboarding config file.
+ *
+ * @since 3.1.0
+ *
+ * @param array $content The content config.
+ * @param array $imported_posts Imported posts with content short name as keys and IDs as values.
+ */
+function genesis_onboarding_import_widgets( $content, $imported_posts ) {
+	$widget_areas = genesis_onboarding_widgets();
+
+	if ( ! $widget_areas ) {
+		return;
+	}
+
+	// Move widgets in areas we are going to populate to the Inactive Widgets area.
+	WidgetImport\clear_widget_areas( array_keys( $widget_areas ) );
+
+	foreach ( $widget_areas as $area => $widgets ) {
+		foreach ( $widgets as $widget ) {
+			$widget_args = WidgetImport\swap_placeholders( $widget['args'], $imported_posts );
+			WidgetImport\insert_widget( $area, $widget['type'], $widget_args );
+		}
+	}
 }

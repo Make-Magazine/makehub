@@ -16,7 +16,7 @@ $genesis_layout = $this->get_field_value( 'layout' );
 <table class="form-table">
 <tbody>
 	<?php if ( $this->layout_enabled ) : ?>
-	<tr valign="top">
+	<tr>
 		<th scope="row"><?php esc_html_e( 'Select Layout', 'genesis' ); ?></th>
 		<td>
 			<fieldset class="genesis-layout-selector">
@@ -33,11 +33,11 @@ $genesis_layout = $this->get_field_value( 'layout' );
 				<?php
 
 				genesis_layout_selector(
-					array(
+					[
 						'name'     => $this->get_field_name( 'layout' ),
 						'selected' => $genesis_layout,
-						'type'     => array( 'archive', 'post-type-archive-' . $this->post_type->name ),
-					)
+						'type'     => [ 'archive', 'post-type-archive-' . $this->post_type->name ],
+					]
 				);
 				?>
 
@@ -46,7 +46,7 @@ $genesis_layout = $this->get_field_value( 'layout' );
 	</tr>
 	<?php endif; ?>
 
-	<tr valign="top">
+	<tr>
 		<th scope="row"><label for="<?php $this->field_id( 'body_class' ); ?>"><b><?php esc_html_e( 'Custom Body Class', 'genesis' ); ?></b></label></th>
 		<td>
 			<p><input class="large-text" type="text" name="<?php $this->field_name( 'body_class' ); ?>" id="<?php $this->field_id( 'body_class' ); ?>" value="<?php echo esc_attr( $this->get_field_value( 'body_class' ) ); ?>" /></p>

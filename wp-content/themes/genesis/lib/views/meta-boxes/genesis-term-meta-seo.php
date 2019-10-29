@@ -46,21 +46,21 @@
 			<td>
 				<label for="genesis-meta[noindex]"><input name="genesis-meta[noindex]" id="genesis-meta[noindex]" type="checkbox" value="1" <?php checked( get_term_meta( $object->term_id, 'noindex', true ) ); ?> />
 				<?php
-					/* translators: Meta noindex attribute. */
+					/* translators: %s: robots meta content attribute value, such as 'noindex', 'nofollow' or 'noarchive'. */
 					printf( esc_html__( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'noindex' ) );
 				?>
 				</label><br />
 
 				<label for="genesis-meta[nofollow]"><input name="genesis-meta[nofollow]" id="genesis-meta[nofollow]" type="checkbox" value="1" <?php checked( get_term_meta( $object->term_id, 'nofollow', true ) ); ?> />
 				<?php
-					/* translators: Meta nofollow attribute. */
+					/* translators: %s: robots meta content attribute value, such as 'noindex', 'nofollow' or 'noarchive'. */
 					printf( esc_html__( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'nofollow' ) );
 				?>
 				</label><br />
 
 				<label for="genesis-meta[noarchive]"><input name="genesis-meta[noarchive]" id="genesis-meta[noarchive]" type="checkbox" value="1" <?php checked( get_term_meta( $object->term_id, 'noarchive', true ) ); ?> />
 				<?php
-					/* translators: Meta noarchive attribute. */
+					/* translators: %s: robots meta content attribute value, such as 'noindex', 'nofollow' or 'noarchive'. */
 					printf( esc_html__( 'Apply %s to this archive?', 'genesis' ), genesis_code( 'noarchive' ) );
 				?>
 				</label>

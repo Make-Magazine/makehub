@@ -65,11 +65,7 @@ function genesis_disable_seo() {
  */
 function genesis_seo_disabled() {
 
-	if ( defined( 'GENESIS_SEO_DISABLED' ) && GENESIS_SEO_DISABLED ) {
-		return true;
-	}
-
-	return false;
+	return defined( 'GENESIS_SEO_DISABLED' ) && GENESIS_SEO_DISABLED;
 
 }
 
@@ -101,6 +97,10 @@ function genesis_seo_compatibility_check() {
 		genesis_disable_seo();
 	}
 
+	if ( ! genesis_is_wpseo_outputting_jsonld() && ! apply_filters( 'genesis_disable_microdata', false ) ) {
+		include_once dirname( __FILE__ ) . '/schema.php';
+	}
+
 	// Disable Genesis <title> generation if SEO Title Tag is active.
 	if ( function_exists( 'seo_title_tag' ) ) {
 		remove_filter( 'wp_title', 'genesis_default_title', 10 );
@@ -126,25 +126,92 @@ function genesis_detect_seo_plugins() {
 		apply_filters(
 			'genesis_detect_seo_plugins',
 			// Add to this array to add new plugin checks.
-			array(
+			[
 
 				// Classes to detect.
-				'classes'   => array(
+				'classes'   => [
 					'All_in_One_SEO_Pack',
 					'All_in_One_SEO_Pack_p',
 					'HeadSpace_Plugin',
 					'Platinum_SEO_Pack',
 					'wpSEO',
 					'SEO_Ultimate',
-				),
+				],
 
 				// Functions to detect.
-				'functions' => array(),
+				'functions' => [],
 
 				// Constants to detect.
-				'constants' => array( 'WPSEO_VERSION', 'SEOPRESS_VERSION' ),
-			)
+				'constants' => [ 'WPSEO_VERSION', 'SEOPRESS_VERSION' ],
+			]
 		)
 	);
 
+}
+
+add_action( 'save_post', 'genesis_maybe_clear_primary_title_h1' );
+/**
+ * Sets the Primary Title H1 Genesis SEO setting to None if a heading level one
+ * is found on a static homepage.
+ *
+ * @since 3.1.0
+ *
+ * @param int $post_id The page to check for an h1.
+ */
+function genesis_maybe_clear_primary_title_h1( $post_id ) {
+
+	if (
+		! $post_id
+		|| genesis_seo_disabled()
+		|| wp_is_post_revision( $post_id )
+		|| ! has_blocks( $post_id )
+	) {
+		return;
+	}
+
+	if ( 'page' !== get_option( 'show_on_front' ) ) {
+		return;
+	}
+
+	if ( (int) get_option( 'page_on_front' ) !== $post_id ) {
+		return;
+	}
+
+	$seo_options = get_option( GENESIS_SEO_SETTINGS_FIELD );
+
+	if ( 'neither' === $seo_options['home_h1_on'] ) {
+		return;
+	}
+
+	$post = get_post( $post_id );
+
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	$post_has_h1_block = preg_match( '/wp:heading {.+1.*}/', $post->post_content );
+
+	if ( $post_has_h1_block ) {
+		$seo_options['home_h1_on'] = 'neither';
+		update_option( GENESIS_SEO_SETTINGS_FIELD, $seo_options );
+	}
+
+}
+
+/**
+ * Determines if JSON-LD is enabled from 3rd party plugins.
+ *
+ * @since 3.1.0
+ *
+ * @return bool True if enabled, false if else.
+ */
+function genesis_is_wpseo_outputting_jsonld() {
+	$wpseo_ld_enabled = (
+		defined( 'WPSEO_VERSION' )
+		&& version_compare( WPSEO_VERSION, '11.0-RC0', '>=' )
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+		&& apply_filters( 'wpseo_json_ld_output', true )
+	);
+
+	return apply_filters( 'genesis_is_wpseo_outputting_jsonld', $wpseo_ld_enabled );
 }

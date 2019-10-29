@@ -18,13 +18,13 @@
  *
  * @param array $args Optional. Arguments for enabling author box. Default is empty array.
  */
-function genesis_enable_author_box( $args = array() ) {
+function genesis_enable_author_box( $args = [] ) {
 
 	$args = wp_parse_args(
 		$args,
-		array(
+		[
 			'type' => 'single',
-		)
+		]
 	);
 
 	if ( 'single' === $args['type'] ) {
@@ -44,7 +44,7 @@ function genesis_enable_author_box( $args = array() ) {
  * @param array  $query_args Optional. Associative array of query string arguments (key => value). Default is an empty array.
  * @return void Return early if first argument, `$page`, is falsy.
  */
-function genesis_admin_redirect( $page, array $query_args = array() ) {
+function genesis_admin_redirect( $page, array $query_args = [] ) {
 
 	if ( ! $page ) {
 		return;
@@ -52,7 +52,7 @@ function genesis_admin_redirect( $page, array $query_args = array() ) {
 
 	$url = html_entity_decode( menu_page_url( $page, 0 ) );
 
-	foreach ( (array) $query_args as $key => $value ) {
+	foreach ( $query_args as $key => $value ) {
 		if ( empty( $key ) && empty( $value ) ) {
 			unset( $query_args[ $key ] );
 		}
@@ -116,7 +116,7 @@ function genesis_get_theme_support_arg( $feature, $arg, $default = '' ) {
 		return $support[0][ $arg ];
 	}
 
-	if ( in_array( $arg, (array) $support[0] ) ) {
+	if ( in_array( $arg, (array) $support[0], true ) ) {
 		return true;
 	}
 
@@ -154,8 +154,7 @@ function genesis_get_theme_handle() {
 	if ( is_null( $handle ) ) {
 		if ( defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ) {
 			$handle = sanitize_title_with_dashes( CHILD_THEME_NAME );
-		}
-		else {
+		} else {
 			$handle = sanitize_title_with_dashes( wp_get_theme()->get( 'Name' ) );
 		}
 	}
@@ -182,8 +181,7 @@ function genesis_get_theme_version() {
 	if ( is_null( $version ) ) {
 		if ( defined( 'CHILD_THEME_VERSION' ) && CHILD_THEME_VERSION ) {
 			$version = CHILD_THEME_VERSION;
-		}
-		else {
+		} else {
 			$version = wp_get_theme()->get( 'Version' );
 		}
 	}
@@ -208,7 +206,7 @@ function genesis_get_config( $config ) {
 	$parent_file = sprintf( '%s/config/%s.php', get_template_directory(), $config );
 	$child_file  = sprintf( '%s/config/%s.php', get_stylesheet_directory(), $config );
 
-	$data = array();
+	$data = [];
 
 	if ( is_readable( $child_file ) ) {
 		$data = require $child_file;
@@ -286,7 +284,7 @@ function genesis_is_menu_page( $pagehook = '' ) {
 	}
 
 	// May be too early for $page_hook.
-	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === $pagehook ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- Checking request inside wp-admin, no further processing.
+	if ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] === $pagehook ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checking request inside wp-admin, no further processing.
 		return true;
 	}
 
@@ -338,16 +336,21 @@ function genesis_is_blog_template() {
  *
  * @since 2.0.0
  *
+ * @global WP_Query $wp_the_query Query object.
+ *
  * @param string $post_type_name Post type name.
  * @return string Post type name of global `$post`.
  */
 function genesis_get_global_post_type_name( $post_type_name = '' ) {
 
 	if ( ! $post_type_name ) {
-		$post_type_name = get_post_type();
-		if ( false === get_post_type() ) {
-			$post_type_name = get_query_var( 'post_type' );
+		global $wp_the_query;
+		$queried_object = $wp_the_query->get_queried_object();
+		if ( is_a( $queried_object, 'WP_Post_Type' ) ) {
+			return $queried_object->name;
 		}
+
+		return get_post_type();
 	}
 
 	return $post_type_name;
@@ -387,13 +390,13 @@ function genesis_get_cpt_archive_types() {
 
 	$args = apply_filters(
 		'genesis_cpt_archives_args',
-		array(
+		[
 			'public'       => true,
 			'show_ui'      => true,
 			'show_in_menu' => true,
 			'has_archive'  => true,
 			'_builtin'     => false,
-		)
+		]
 	);
 
 	$genesis_cpt_archive_types = get_post_types( $args, 'objects' );
@@ -411,7 +414,7 @@ function genesis_get_cpt_archive_types() {
  */
 function genesis_get_cpt_archive_types_names() {
 
-	$post_type_names = array();
+	$post_type_names = [];
 	foreach ( genesis_get_cpt_archive_types() as $post_type ) {
 		$post_type_names[] = $post_type->name;
 	}
@@ -432,7 +435,7 @@ function genesis_has_post_type_archive_support( $post_type_name = '' ) {
 
 	$post_type_name = genesis_get_global_post_type_name( $post_type_name );
 
-	return in_array( $post_type_name, genesis_get_cpt_archive_types_names() ) &&
+	return in_array( $post_type_name, genesis_get_cpt_archive_types_names(), true ) &&
 		post_type_supports( $post_type_name, 'genesis-cpt-archives-settings' );
 
 }
@@ -484,7 +487,7 @@ function genesis_a11y( $arg = 'screen-reader-text' ) {
 	}
 
 	// Support for specific arg found.
-	if ( in_array( $arg, $support[0] ) ) {
+	if ( in_array( $arg, $support[0], true ) ) {
 		return true;
 	}
 
@@ -579,13 +582,13 @@ function genesis_get_sitemap( $heading = 'h2' ) {
 function genesis_plugin_install_link( $plugin_slug = '', $text = '' ) {
 
 	$page = 'plugin-install.php';
-	$args = array(
+	$args = [
 		'tab'       => 'plugin-information',
 		'TB_iframe' => true,
 		'width'     => 600,
 		'height'    => 550,
 		'plugin'    => $plugin_slug,
-	);
+	];
 
 	$url = add_query_arg( $args, admin_url( $page ) );
 

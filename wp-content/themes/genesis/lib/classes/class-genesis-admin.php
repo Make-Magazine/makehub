@@ -126,30 +126,30 @@ abstract class Genesis_Admin {
 	 *
 	 * @return void Return early if page ID is not set.
 	 */
-	public function create( $page_id = '', array $menu_ops = array(), array $page_ops = array(), $settings_field = '', array $default_settings = array() ) {
+	public function create( $page_id = '', array $menu_ops = [], array $page_ops = [], $settings_field = '', array $default_settings = [] ) {
 
-		$this->page_id = $this->page_id ? $this->page_id : $page_id;
+		$this->page_id = $this->page_id ?: $page_id;
 
 		if ( ! $this->page_id ) {
 			return;
 		}
 
-		$this->menu_ops         = $this->menu_ops ? $this->menu_ops : $menu_ops;
-		$this->page_ops         = $this->page_ops ? $this->page_ops : $page_ops;
-		$this->settings_field   = $this->settings_field ? $this->settings_field : $settings_field;
-		$this->default_settings = $this->default_settings ? $this->default_settings : $default_settings;
-		$this->help_base        = $this->help_base ? $this->help_base : GENESIS_VIEWS_DIR . '/help/' . $page_id . '-';
-		$this->views_base       = $this->views_base ? $this->views_base : GENESIS_VIEWS_DIR;
+		$this->menu_ops         = $this->menu_ops ?: $menu_ops;
+		$this->page_ops         = $this->page_ops ?: $page_ops;
+		$this->settings_field   = $this->settings_field ?: $settings_field;
+		$this->default_settings = $this->default_settings ?: $default_settings;
+		$this->help_base        = $this->help_base ?: GENESIS_VIEWS_DIR . '/help/' . $page_id . '-';
+		$this->views_base       = $this->views_base ?: GENESIS_VIEWS_DIR;
 
 		$this->page_ops = wp_parse_args(
 			$this->page_ops,
-			array(
+			[
 				'save_button_text'  => __( 'Save Changes', 'genesis' ),
 				'reset_button_text' => __( 'Reset Settings', 'genesis' ),
 				'saved_notice_text' => __( 'Settings saved.', 'genesis' ),
 				'reset_notice_text' => __( 'Settings reset.', 'genesis' ),
 				'error_notice_text' => __( 'Error saving settings.', 'genesis' ),
-			)
+			]
 		);
 
 		// Check to make sure there we are only creating one menu per subclass.
@@ -165,28 +165,28 @@ abstract class Genesis_Admin {
 		}
 
 		// Create the menu(s). Conditional logic happens within the separate methods.
-		add_action( 'admin_menu', array( $this, 'maybe_add_main_menu' ), 5 );
-		add_action( 'admin_menu', array( $this, 'maybe_add_first_submenu' ), 5 );
-		add_action( 'admin_menu', array( $this, 'maybe_add_submenu' ) );
+		add_action( 'admin_menu', [ $this, 'maybe_add_main_menu' ], 5 );
+		add_action( 'admin_menu', [ $this, 'maybe_add_first_submenu' ], 5 );
+		add_action( 'admin_menu', [ $this, 'maybe_add_submenu' ] );
 
 		// Redirect to location on access, if specified.
-		add_action( 'admin_init', array( $this, 'maybe_redirect' ), 1000 );
+		add_action( 'admin_init', [ $this, 'maybe_redirect' ], 1000 );
 
 		// Set up settings and notices.
-		add_action( 'admin_init', array( $this, 'register_settings' ) );
-		add_action( 'admin_notices', array( $this, 'notices' ) );
+		add_action( 'admin_init', [ $this, 'register_settings' ] );
+		add_action( 'admin_notices', [ $this, 'notices' ] );
 
 		// Load the page content (meta boxes or custom form).
-		add_action( 'admin_init', array( $this, 'settings_init' ) );
+		add_action( 'admin_init', [ $this, 'settings_init' ] );
 
 		// Load help tab.
-		add_action( 'admin_init', array( $this, 'load_help' ) );
+		add_action( 'admin_init', [ $this, 'load_help' ] );
 
 		// Load contextual assets (registered admin page).
-		add_action( 'admin_init', array( $this, 'load_assets' ) );
+		add_action( 'admin_init', [ $this, 'load_assets' ] );
 
 		// Add a sanitizer/validator.
-		add_filter( 'pre_update_option_' . $this->settings_field, array( $this, 'save' ), 10, 2 );
+		add_filter( 'pre_update_option_' . $this->settings_field, [ $this, 'save' ], 10, 2 );
 
 	}
 
@@ -201,14 +201,14 @@ abstract class Genesis_Admin {
 		if ( isset( $this->menu_ops['main_menu']['sep'] ) ) {
 			$sep = wp_parse_args(
 				$this->menu_ops['main_menu']['sep'],
-				array(
+				[
 					'sep_position'   => '',
 					'sep_capability' => '',
-				)
+				]
 			);
 
 			if ( $sep['sep_position'] && $sep['sep_capability'] ) {
-				$GLOBALS['menu'][ $sep['sep_position'] ] = array( '', $sep['sep_capability'], 'separator', '', 'genesis-separator wp-menu-separator' ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- Intentionally overriding the global here.
+				$GLOBALS['menu'][ $sep['sep_position'] ] = [ '', $sep['sep_capability'], 'separator', '', 'genesis-separator wp-menu-separator' ]; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Intentionally overriding the global here.
 			}
 		}
 
@@ -216,16 +216,16 @@ abstract class Genesis_Admin {
 		if ( isset( $this->menu_ops['main_menu'] ) && is_array( $this->menu_ops['main_menu'] ) ) {
 			$menu = wp_parse_args(
 				$this->menu_ops['main_menu'],
-				array(
+				[
 					'page_title' => '',
 					'menu_title' => '',
 					'capability' => 'edit_theme_options',
 					'icon_url'   => '',
 					'position'   => '',
-				)
+				]
 			);
 
-			$this->pagehook = add_menu_page( $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, array( $this, 'admin' ), $menu['icon_url'], $menu['position'] );
+			$this->pagehook = add_menu_page( $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, [ $this, 'admin' ], $menu['icon_url'], $menu['position'] );
 		}
 
 	}
@@ -249,14 +249,14 @@ abstract class Genesis_Admin {
 		if ( isset( $this->menu_ops['first_submenu'] ) && is_array( $this->menu_ops['first_submenu'] ) ) {
 			$menu = wp_parse_args(
 				$this->menu_ops['first_submenu'],
-				array(
+				[
 					'page_title' => '',
 					'menu_title' => '',
 					'capability' => 'edit_theme_options',
-				)
+				]
 			);
 
-			$this->pagehook = add_submenu_page( $this->page_id, $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, array( $this, 'admin' ) );
+			$this->pagehook = add_submenu_page( $this->page_id, $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, [ $this, 'admin' ] );
 		}
 
 	}
@@ -272,15 +272,15 @@ abstract class Genesis_Admin {
 		if ( isset( $this->menu_ops['submenu'] ) && is_array( $this->menu_ops['submenu'] ) ) {
 			$menu = wp_parse_args(
 				$this->menu_ops['submenu'],
-				array(
+				[
 					'parent_slug' => '',
 					'page_title'  => '',
 					'menu_title'  => '',
 					'capability'  => 'edit_theme_options',
-				)
+				]
 			);
 
-			$this->pagehook = add_submenu_page( $menu['parent_slug'], $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, array( $this, 'admin' ) );
+			$this->pagehook = add_submenu_page( $menu['parent_slug'], $menu['page_title'], $menu['menu_title'], $menu['capability'], $this->page_id, [ $this, 'admin' ] );
 		}
 
 	}
@@ -299,7 +299,7 @@ abstract class Genesis_Admin {
 		}
 
 		// Allow users to access the page if a special query flag is set.
-		if ( $this->redirect_bypass && isset( $_REQUEST[ $this->redirect_bypass ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- We don't need nonce verification here
+		if ( $this->redirect_bypass && isset( $_REQUEST[ $this->redirect_bypass ] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- We don't need nonce verification here
 			return;
 		}
 
@@ -329,9 +329,9 @@ abstract class Genesis_Admin {
 		register_setting(
 			$this->settings_field,
 			$this->settings_field,
-			array(
+			[
 				'default' => $this->default_settings,
-			)
+			]
 		);
 
 		if ( ! genesis_get_option( 'theme_version' ) ) {
@@ -346,16 +346,16 @@ abstract class Genesis_Admin {
 			if ( update_option( $this->settings_field, $this->default_settings ) ) {
 				genesis_admin_redirect(
 					$this->page_id,
-					array(
+					[
 						'reset' => 'true',
-					)
+					]
 				);
 			} else {
 				genesis_admin_redirect(
 					$this->page_id,
-					array(
+					[
 						'error' => 'true',
-					)
+					]
 				);
 			}
 			exit;
@@ -376,7 +376,7 @@ abstract class Genesis_Admin {
 			return;
 		}
 
-		// phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- We don't need nonce verification here
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- We don't need nonce verification here
 		if ( isset( $_REQUEST['settings-updated'] ) && 'true' === $_REQUEST['settings-updated'] ) {
 			printf( '<div id="message" class="updated"><p><strong>%s</strong></p></div>', esc_html( $this->page_ops['saved_notice_text'] ) );
 		} elseif ( isset( $_REQUEST['reset'] ) && 'true' === $_REQUEST['reset'] ) {
@@ -384,7 +384,7 @@ abstract class Genesis_Admin {
 		} elseif ( isset( $_REQUEST['error'] ) && 'true' === $_REQUEST['error'] ) {
 			printf( '<div id="message" class="updated"><p><strong>%s</strong></p></div>', esc_html( $this->page_ops['error_notice_text'] ) );
 		}
-		// phpcs:enable WordPress.Security.NonceVerification.NoNonceVerification
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 	}
 
@@ -423,7 +423,7 @@ abstract class Genesis_Admin {
 	public function load_help() {
 
 		if ( method_exists( $this, 'help' ) ) {
-			add_action( "load-{$this->pagehook}", array( $this, 'help' ) );
+			add_action( "load-{$this->pagehook}", [ $this, 'help' ] );
 		}
 
 	}
@@ -445,12 +445,12 @@ abstract class Genesis_Admin {
 		}
 
 		$current_screen->add_help_tab(
-			array(
+			[
 				'id'       => $this->pagehook . '-' . $id,
 				'title'    => $title,
 				'content'  => '',
-				'callback' => array( $this, 'help_content' ),
-			)
+				'callback' => [ $this, 'help_content' ],
+			]
 		);
 
 	}
@@ -506,12 +506,12 @@ abstract class Genesis_Admin {
 
 		// Hook scripts method.
 		if ( method_exists( $this, 'scripts' ) ) {
-			add_action( "load-{$this->pagehook}", array( $this, 'scripts' ) );
+			add_action( "load-{$this->pagehook}", [ $this, 'scripts' ] );
 		}
 
 		// Hook styles method.
 		if ( method_exists( $this, 'styles' ) ) {
-			add_action( "load-{$this->pagehook}", array( $this, 'styles' ) );
+			add_action( "load-{$this->pagehook}", [ $this, 'styles' ] );
 		}
 
 	}

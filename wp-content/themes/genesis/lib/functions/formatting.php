@@ -174,7 +174,7 @@ function genesis_strip_attr( $text, $elements, $attributes, $two_passes = true )
 	$elements_pattern = implode( '|', (array) $elements );
 
 	// Build patterns.
-	$patterns = array();
+	$patterns = [];
 	foreach ( (array) $attributes as $attribute ) {
 		$patterns[] = sprintf( '~(<(?:%s(?=\s+))[^>]*)\s+%s(?:=(?:[\\\'"][^\\\'"]+[\\\'"]|(?:[^\s>\/]|\/(?!>))+))?([^>]*>)~', $elements_pattern, $attribute );
 	}
@@ -202,16 +202,15 @@ function genesis_strip_attr( $text, $elements, $attributes, $two_passes = true )
  * @return string Unescaped URL for the a paged post.
  */
 function genesis_paged_post_url( $i, $post_id = 0 ) {
-
 	global $wp_rewrite;
 
 	$post = get_post( $post_id );
 
-	if ( 1 == $i ) {
+	if ( 1 === (int) $i ) {
 		$url = get_permalink( $post_id );
-	} elseif ( '' == get_option( 'permalink_structure' ) || in_array( $post->post_status, array( 'draft', 'pending' ) ) ) {
+	} elseif ( '' === get_option( 'permalink_structure' ) || in_array( $post->post_status, [ 'draft', 'pending' ], true ) ) {
 		$url = add_query_arg( 'page', $i, get_permalink( $post_id ) );
-	} elseif ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) == $post->ID ) {
+	} elseif ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) === $post->ID ) {
 		$url = trailingslashit( get_permalink( $post_id ) ) . user_trailingslashit( "$wp_rewrite->pagination_base/" . $i, 'single_paged' );
 	} else {
 		$url = trailingslashit( get_permalink( $post_id ) ) . user_trailingslashit( $i, 'single_paged' );
@@ -245,9 +244,9 @@ function genesis_sanitize_html_classes( $classes, $return_format = 'input' ) {
 
 	if ( 'array' === $return_format ) {
 		return $sanitized_classes;
-	} else {
-		return implode( ' ', $sanitized_classes );
 	}
+
+	return implode( ' ', $sanitized_classes );
 
 }
 
@@ -264,33 +263,33 @@ function genesis_formatting_allowedtags() {
 
 	return apply_filters(
 		'genesis_formatting_allowedtags',
-		array(
-			'a'          => array(
-				'href'  => array(),
-				'title' => array(),
-			),
-			'b'          => array(),
-			'blockquote' => array(),
-			'br'         => array(),
-			'div'        => array(
-				'align' => array(),
-				'class' => array(),
-				'style' => array(),
-			),
-			'em'         => array(),
-			'i'          => array(),
-			'p'          => array(
-				'align' => array(),
-				'class' => array(),
-				'style' => array(),
-			),
-			'span'       => array(
-				'align' => array(),
-				'class' => array(),
-				'style' => array(),
-			),
-			'strong'     => array(),
-		)
+		[
+			'a'          => [
+				'href'  => [],
+				'title' => [],
+			],
+			'b'          => [],
+			'blockquote' => [],
+			'br'         => [],
+			'div'        => [
+				'align' => [],
+				'class' => [],
+				'style' => [],
+			],
+			'em'         => [],
+			'i'          => [],
+			'p'          => [
+				'align' => [],
+				'class' => [],
+				'style' => [],
+			],
+			'span'       => [
+				'align' => [],
+				'class' => [],
+				'style' => [],
+			],
+			'strong'     => [],
+		]
 	);
 
 }
@@ -336,7 +335,7 @@ function genesis_human_time_diff( $older_date, $newer_date = false, $relative_de
 	}
 
 	// If no newer date is given, assume now.
-	$newer_date = $newer_date ? $newer_date : time();
+	$newer_date = $newer_date ?: time();
 
 	// Difference in seconds.
 	$since = absint( $newer_date - $older_date );
@@ -346,31 +345,31 @@ function genesis_human_time_diff( $older_date, $newer_date = false, $relative_de
 	}
 
 	// Hold units of time in seconds, and their pluralised strings (not translated yet).
-	$units = array(
+	$units = [
 		/* translators: %s: Number of year(s). */
-		array( 31536000, _nx_noop( '%s year', '%s years', 'time difference', 'genesis' ) ),  // 60 * 60 * 24 * 365
+		[ 31536000, _nx_noop( '%s year', '%s years', 'time difference', 'genesis' ) ],  // 60 * 60 * 24 * 365
 		/* translators: %s: Number of month(s). */
-		array( 2592000, _nx_noop( '%s month', '%s months', 'time difference', 'genesis' ) ), // 60 * 60 * 24 * 30
+		[ 2592000, _nx_noop( '%s month', '%s months', 'time difference', 'genesis' ) ], // 60 * 60 * 24 * 30
 		/* translators: %s: Number of week(s). */
-		array( 604800, _nx_noop( '%s week', '%s weeks', 'time difference', 'genesis' ) ),    // 60 * 60 * 24 * 7
+		[ 604800, _nx_noop( '%s week', '%s weeks', 'time difference', 'genesis' ) ],    // 60 * 60 * 24 * 7
 		/* translators: %s: Number of day(s). */
-		array( 86400, _nx_noop( '%s day', '%s days', 'time difference', 'genesis' ) ),       // 60 * 60 * 24
+		[ 86400, _nx_noop( '%s day', '%s days', 'time difference', 'genesis' ) ],       // 60 * 60 * 24
 		/* translators: %s: Number of hour(s). */
-		array( 3600, _nx_noop( '%s hour', '%s hours', 'time difference', 'genesis' ) ),      // 60 * 60
+		[ 3600, _nx_noop( '%s hour', '%s hours', 'time difference', 'genesis' ) ],      // 60 * 60
 		/* translators: %s: Number of minute(s). */
-		array( 60, _nx_noop( '%s minute', '%s minutes', 'time difference', 'genesis' ) ),
+		[ 60, _nx_noop( '%s minute', '%s minutes', 'time difference', 'genesis' ) ],
 		/* translators: %s: Number of second(s). */
-		array( 1, _nx_noop( '%s second', '%s seconds', 'time difference', 'genesis' ) ),
-	);
+		[ 1, _nx_noop( '%s second', '%s seconds', 'time difference', 'genesis' ) ],
+	];
 
 	// Build output with as many units as specified in $relative_depth.
-	$relative_depth = (int) $relative_depth ? (int) $relative_depth : 2;
+	$relative_depth = (int) $relative_depth ?: 2;
 
 	$i = 0;
 
 	$counted_seconds = 0;
 
-	$date_partials        = array();
+	$date_partials        = [];
 	$amount_date_partials = 0;
 	$amount_units         = count( $units );
 
