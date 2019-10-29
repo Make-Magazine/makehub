@@ -128,12 +128,13 @@ function login_form_shortcode() {
 					}
 					#login-shortcode form#loginform input[type=submit] {
 					   width: 50%;
+						margin-left: 50%;
 					}
 					#login-shortcode .register {
 					    border-radius: 0px;
 						 position: absolute;
 						 bottom: 29px;
-						 left: 53%;
+						 left: 25px;
 						 width: 39%;
 						 text-transform: capitalize;
 						 height: 46px;
