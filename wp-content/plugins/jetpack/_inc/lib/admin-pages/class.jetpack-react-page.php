@@ -219,6 +219,8 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			require_once JETPACK__PLUGIN_DIR . 'class.jetpack-affiliate.php';
 		}
 
+		$current_user_data = jetpack_current_user_data();
+
 		return array(
 			'WP_API_root' => esc_url_raw( rest_url() ),
 			'WP_API_nonce' => wp_create_nonce( 'wp_rest' ),
@@ -236,13 +238,12 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 				'isInIdentityCrisis' => Jetpack::validate_sync_error_idc_option(),
 				'sandboxDomain' => JETPACK__SANDBOX_DOMAIN,
 			),
-			'connectUrl' => Jetpack::init()->build_connect_url( true, false, false ),
+			'connectUrl' => $current_user_data['isConnected'] == false ? Jetpack::init()->build_connect_url( true, false, false ) : '',
 			'dismissedNotices' => $this->get_dismissed_jetpack_notices(),
 			'isDevVersion' => Jetpack::is_development_version(),
 			'currentVersion' => JETPACK__VERSION,
 			'is_gutenberg_available' => true,
 			'getModules' => $modules,
-			'showJumpstart' => jetpack_show_jumpstart(),
 			'rawUrl' => Jetpack::build_raw_urls( get_home_url() ),
 			'adminUrl' => esc_url( admin_url() ),
 			'stats' => array(
@@ -259,7 +260,7 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			'settings' => $this->get_flattened_settings( $modules ),
 			'userData' => array(
 //				'othersLinked' => Jetpack::get_other_linked_admins(),
-				'currentUser'  => jetpack_current_user_data(),
+				'currentUser'  => $current_user_data,
 			),
 			'siteData' => array(
 				'icon' => has_site_icon()
@@ -295,7 +296,8 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 			'tracksUserData' => Jetpack_Tracks_Client::get_connected_user_tracks_identity(),
 			'currentIp' => function_exists( 'jetpack_protect_get_ip' ) ? jetpack_protect_get_ip() : false,
 			'lastPostUrl' => esc_url( $last_post ),
-			'externalServicesConnectUrls' => $this->get_external_services_connect_urls()
+			'externalServicesConnectUrls' => $this->get_external_services_connect_urls(),
+			'calypsoEnv' => Jetpack::get_calypso_env(),
 		);
 	}
 
@@ -320,40 +322,6 @@ class Jetpack_React_Page extends Jetpack_Admin_Page {
 		$settings = $core_api_endpoint->get_all_options();
 		return $settings->data;
 	}
-}
-
-/*
- * Only show Jump Start on first activation.
- * Any option 'jumpstart' other than 'new connection' will hide it.
- *
- * The option can be of 4 things, and will be stored as such:
- * new_connection      : Brand new connection - Show
- * jumpstart_activated : Jump Start has been activated - dismiss
- * jumpstart_dismissed : Manual dismissal of Jump Start - dismiss
- * jetpack_action_taken: Deprecated since 7.3 But still listed here to respect behaviour for old versions.
- *                       Manual activation of a module already happened - dismiss.
- *
- * @todo move to functions.global.php when available
- * @since 3.6
- * @return bool | show or hide
- */
-function jetpack_show_jumpstart() {
-	if ( ! Jetpack::is_active() ) {
-		return false;
-	}
-	$jumpstart_option = Jetpack_Options::get_option( 'jumpstart' );
-
-	$hide_options = array(
-		'jumpstart_activated',
-		'jetpack_action_taken',
-		'jumpstart_dismissed'
-	);
-
-	if ( ! $jumpstart_option || in_array( $jumpstart_option, $hide_options ) ) {
-		return false;
-	}
-
-	return true;
 }
 
 /**
