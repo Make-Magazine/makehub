@@ -1,0 +1,75 @@
+tr th {
+    padding-right: 20px;
+    text-align: right;
+}
+tr {
+	font-size: 13px;
+}
+.email-template {
+    min-height: 200px;
+    width: 400px;
+    max-width: 400px;
+}
+.samplecsv {
+    background-color: green;
+    border: 1px solid;
+    border-radius: 5px;
+    color: #fff;
+    padding: 10px;
+    right: 10%;
+}
+.quicklinks a {
+    color: blue;
+    font-size: 16px;
+    font-weight: lighter;
+}
+.otherlinks {
+    background-color: green;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 20px 20px;
+    position: absolute;
+    right: 5%;
+}
+.quicklinks.other_plugins > p {
+    color: #fff;
+    font-size: 15px;
+}
+.quicklinks h3 {
+    color: #c0c0c0;
+}
+.section2 > div {
+    display: inline-block;
+    width: 45%;
+}
+.bmi_meta .bmi_tag-grey {
+    background: whiteSmoke none repeat scroll 0 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 5px;
+    position: relative;
+}
+.bmi_meta .bmi_tag-blue {
+    background: #2997c8 none repeat scroll 0 0;
+    border: 1px solid #2997c8;
+    border-radius: 10px;
+    color: #fff;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 5px;
+    position: relative;
+    text-decoration: none;
+}
+.bmi_meta {
+    display: inline-block;
+}
+.bmi_meta .bmi_tag-green {
+    color: green;
+}
+.bmi_meta .bmi_tag-blue1 {
+    color: #2997c8;
+}
