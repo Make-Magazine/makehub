@@ -260,10 +260,12 @@
 	}
 	// if the member type is a makerspace and the member has makerspace level membership
 	&.member-level-makerspace {
-		&::before {
-			content: 'Featured Makerspace';
-			background: #f51400;
+		.main-content.container {
+			&::before {
+				content: 'Featured Makerspace';
+				background: #f51400;
+			}
+			.yz-social-buttons { display: table-cell; }
 		}
-		.yz-social-buttons { display: table-cell; }
 	}
 }
