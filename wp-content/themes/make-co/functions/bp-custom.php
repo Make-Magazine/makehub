@@ -174,9 +174,11 @@ function add_featured_makerspace_class( $classes ) {
 	global $members_template;
 	$uid = $members_template->member->ID;
 	$user_meta = get_user_meta($uid);
-	$user_level = $user_meta['ihc_user_levels'][0];
-   if($user_level == 7) {
-		$classes[] = "member-level-makerspace";
+	if($user_meta['ihc_user_levels']) {
+		$user_level = $user_meta['ihc_user_levels'][0];
+		if($user_level == 7) {
+			$classes[] = "member-level-makerspace";
+		}
 	}
 	return $classes;
 }
@@ -187,10 +189,12 @@ function featured_makerspaces_to_the_top() {
    $members =  get_users( 'blog_id=1&fields=ID' );
    foreach ( $members as $user_id ) {
 		$user_meta = get_user_meta($user_id);
-		$user_level = $user_meta['ihc_user_levels'][0];
-		$member_type = bp_get_member_type($user_id);
-		if($user_meta['ihc_user_levels'][0] == 7 && $member_type == "makerspace") {
-			bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		if($user_meta['ihc_user_levels']) {
+			$user_level = $user_meta['ihc_user_levels'][0];
+			$member_type = bp_get_member_type($user_id);
+			if($user_meta['ihc_user_levels'][0] == 7 && $member_type == "makerspace") {
+				bp_update_user_last_activity( $user_id, bp_core_current_time() );
+			}
 		}
    }
 }
