@@ -168,9 +168,12 @@ function set_displayed_user( $user_id ) {
 	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
 }
 
+//********************************************//
+//        Makerspace related changes          //
+//********************************************//
 // if the membership level is makerspace/smallbusiness, add a class to the user card
 // we can then see if they have the member type class and level class to determine if they should be featured
-function add_featured_makerspace_class( $classes ) {
+function add_featured_ms_class_directory( $classes ) {
 	global $members_template;
 	$uid = $members_template->member->ID;
 	$user_meta = get_user_meta($uid);
@@ -182,7 +185,20 @@ function add_featured_makerspace_class( $classes ) {
 	}
 	return $classes;
 }
-add_filter( 'bp_get_member_class', 'add_featured_makerspace_class' );
+add_filter( 'bp_get_member_class', 'add_featured_ms_class_directory' );
+
+function add_featured_ms_class_profile( $classes ) {
+	$uid = bp_displayed_user_id();
+	$user_meta = get_user_meta($uid);
+	if(!empty($user_meta['ihc_user_levels'])) {
+		$user_level = $user_meta['ihc_user_levels'][0];
+		if($user_level == 7) {
+			$classes[] = "member-level-makerspace";
+		}
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'add_featured_ms_class_profile', 12 );
 
 // by adding last activity at init, we'll bring the featured makerspaces to the top
 function featured_makerspaces_to_the_top() {

@@ -255,5 +255,15 @@
 				}
 			}
 		}
+		i.fa-edit { display: none; }
+		.yz-social-buttons { display: none; }
+	}
+	// if the member type is a makerspace and the member has makerspace level membership
+	&.member-level-makerspace {
+		&::before {
+			content: 'Featured Makerspace';
+			background: #f51400;
+		}
+		.yz-social-buttons { display: table-cell; }
 	}
 }

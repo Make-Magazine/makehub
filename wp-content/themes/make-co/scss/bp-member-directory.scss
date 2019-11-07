@@ -77,6 +77,10 @@
 							background: #f6f6f6;
 						}
 					}
+					&.profile-settings {
+						padding: 12px 0px;
+						margin: 0px 20px;
+					}
 				}
 			}
 			.item-meta .activity { display: none; }
@@ -100,8 +104,8 @@
 				border: solid #005e9a;
 				background: rgba(63, 175, 237, .2);
 				.yzm-user-actions {
+					display: none;
 					border-top: 1px solid rgba(0, 94, 154, .2);
-					.friendship-button { display: none; }
 					.yz-profile-settings { background: #fff; }
 				}
 				.yz-name, .yz-name i, .yz-fullname { color: #666; }
@@ -120,6 +124,7 @@
 					border: solid #f51400;
 					background: rgba(245, 20, 0, .2);
 					.yzm-user-actions {
+						display: flex;
 						border-top: 1px solid rgba(245, 20, 0, .2);
 					}
 				}
