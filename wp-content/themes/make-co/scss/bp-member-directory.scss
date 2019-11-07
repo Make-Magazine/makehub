@@ -20,7 +20,7 @@
 				height: 100px;
 			}
 			.yzm-user-data {
-				min-height: 325px;
+				min-height: 340px;
 				display: flex;
 				flex-direction: column;
 				.item {
@@ -42,6 +42,7 @@
 		.yz-card-show-avatar-border .yz-item-avatar {
 			margin-bottom: 5px;
 		}
+		
 		.yzm-user-data {
 			.yzm-user-actions {
 				display: flex;
@@ -80,6 +81,7 @@
 			}
 			.item-meta .activity { display: none; }
 		}
+
 		.member-type-makerspace {
 			.yzm-user-cover {
 				&::before {
@@ -103,6 +105,24 @@
 					.yz-profile-settings { background: #fff; }
 				}
 				.yz-name, .yz-name i, .yz-fullname { color: #666; }
+				.item-meta .yz-name:first-of-type {
+					display: none;
+				}
+			}
+			&.member-level-makerspace {
+				.yzm-user-cover {
+					&::before {
+						content: 'Featured Makerspace';
+						background: #f51400;
+					}
+				}
+				.yzm-user-data {
+					border: solid #f51400;
+					background: rgba(245, 20, 0, .2);
+					.yzm-user-actions {
+						border-top: 1px solid rgba(245, 20, 0, .2);
+					}
+				}
 			}
 		}
 		.bps_filters {
@@ -116,7 +136,11 @@
 			background: #005e9a;
 		}
 		.yz-directory-filter {
-			.item-list-tabs {
+			.item-list-tabs, .item-list-tabs:not(#subnav) {
+				li.selected a {
+					font-weight: bold;
+					color: #333;
+				}
 				li#groups-all {
 					a::before {
 						font-family: "FontAwesome";

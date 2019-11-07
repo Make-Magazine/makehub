@@ -168,21 +168,34 @@ function set_displayed_user( $user_id ) {
 	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
 }
 
-/* Something like this is needed to limit what activity shows in the scroll
-add_filter( 'bp_after_has_activities_parse_args', function( $retval ) {
- if( bp_is_activity_directory() ) {
-   $retval['action'] = array(
-        'activity_update',
-        'activity_comment',
-        'last_activity',
-		  'created_group',
-		  'new_blog_post',
-		  'new_blog_comment',
-    );
-    return $retval;
-  }
-} ); 
-*/
+// if the membership level is makerspace/smallbusiness, add a class to the user card
+// we can then see if they have the member type class and level class to determine if they should be featured
+function add_featured_makerspace_class( $classes ) {
+	global $members_template;
+	$uid = $members_template->member->ID;
+	$user_meta = get_user_meta($uid);
+	$user_level = $user_meta['ihc_user_levels'][0];
+   if($user_level == 7) {
+		$classes[] = "member-level-makerspace";
+	}
+	return $classes;
+}
+add_filter( 'bp_get_member_class', 'add_featured_makerspace_class' );
+
+// by adding last activity at init, we'll bring the featured makerspaces to the top
+function featured_makerspaces_to_the_top() {
+   $members =  get_users( 'blog_id=1&fields=ID' );
+   foreach ( $members as $user_id ) {
+		$user_meta = get_user_meta($user_id);
+		$user_level = $user_meta['ihc_user_levels'][0];
+		$member_type = bp_get_member_type($user_id);
+		if($user_meta['ihc_user_levels'][0] == 7 && $member_type == "makerspace") {
+			bp_update_user_last_activity( $user_id, bp_core_current_time() );
+		}
+   }
+}
+add_action('bp_init', 'featured_makerspaces_to_the_top' );
+
 
 // Add all the countries
 function bp_add_custom_country_list() {
