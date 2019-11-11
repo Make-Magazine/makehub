@@ -240,13 +240,16 @@
 	.field_type_checkbox, .field_type_radio {
 		.yz-info-data {
 			visibility: hidden;
+			display: block;
 			a { 
 				visibility: visible;
 				display: block;
 				margin-bottom: -20px;
 				padding-left: 8px;
 				&::before {
-					content: " •";
+					content: "•";
+					padding-right: 5px;
+					font-weight: bold''
 				}
 				&:first-of-type { margin-top: 10px; }
 				&:last-of-type { margin-bottom: 0px; }
