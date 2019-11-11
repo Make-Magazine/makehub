@@ -237,20 +237,19 @@
 
 // make radio and checkbox lists bulleted
 .yz-infos-content {
-	.field_type_checkbox {
+	.field_type_checkbox, .field-type-radio {
 		.yz-info-data {
 			visibility: hidden;
 			a { 
 				visibility: visible;
 				display: block;
 				margin-bottom: -20px;
-				padding-left: 5px;
+				padding-left: 8px;
 				&::before {
 					content: " •";
 				}
-				&:last-of-type {
-					margin-bottom: 0px;
-				}
+				&:first-of-type { margin-top: 10px; }
+				&:last-of-type { margin-bottom: 0px; }
 			}
 		}
 	}
