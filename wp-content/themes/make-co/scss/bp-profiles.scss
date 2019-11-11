@@ -234,6 +234,25 @@
 		.ihc-ap-menu-item { margin: 0px; }
 	}
 }
+
+// make radio and checkbox lists bulleted
+.yz-infos-content {
+	.field_type_radio, .field_type_checkbox {
+		.yz-info-data {
+			visibility: hidden;
+			a { 
+				visibility: visible;
+				display: block;
+				&::before {
+					content: "•";
+				}
+				&:first-of-type {
+					padding-left: 5px;
+				}
+			}
+		}
+	}
+}
 // if the member is type makerspace
 .member-type-makerspace {
 	.main-content.container {

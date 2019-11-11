@@ -142,9 +142,13 @@
 		}
 		.yz-directory-filter {
 			.item-list-tabs, .item-list-tabs:not(#subnav) {
-				li.selected a {
-					font-weight: bold;
-					color: #333;
+				li.selected {
+					background: rgba(63, 175, 237, .2);
+					border-radius: 5px;
+					a {
+						font-weight: bold;
+						color: #333;
+					}
 				}
 				li#groups-all {
 					a::before {
