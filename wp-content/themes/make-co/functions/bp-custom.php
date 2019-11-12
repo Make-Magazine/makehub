@@ -79,8 +79,11 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'New Post' :
             $translated_text = __( 'New Blog Post', 'youzer' );
             break;
-		  case 'All Members' :
-            $translated_text = __( 'All', 'youzer' );
+		  case 'All Members %s' :
+            $translated_text = __( 'All %s', 'buddypress' );
+            break;
+		  case 'Order By:' :
+            $translated_text = __( 'Order:', 'buddypress' );
             break;
     }
     return $translated_text;
@@ -171,6 +174,7 @@ function default_member_type( $user_id ) {
 	}
 }
 // make users members if they don't have another member type
+/* run once, then delete
 function members_membertypes() {
   $members =  get_users( 'blog_id=1&fields=ID' );
   foreach ( $members as $user_id ) {
@@ -180,6 +184,7 @@ function members_membertypes() {
   }
 }
 add_action('bp_init', 'members_membertypes' );
+*/
 
 //********************************************//
 //        Makerspace related functions        //
