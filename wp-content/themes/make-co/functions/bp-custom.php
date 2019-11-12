@@ -79,6 +79,9 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'New Post' :
             $translated_text = __( 'New Blog Post', 'youzer' );
             break;
+		  case 'All Members' :
+            $translated_text = __( 'All', 'youzer' );
+            break;
     }
     return $translated_text;
 }

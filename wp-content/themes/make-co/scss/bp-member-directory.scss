@@ -20,7 +20,7 @@
 				height: 100px;
 			}
 			.yzm-user-data {
-				min-height: 340px;
+				min-height: 350px;
 				display: flex;
 				flex-direction: column;
 				.item {
@@ -154,7 +154,7 @@
 					a::before {
 						font-family: "FontAwesome";
 						content: "\f0c0";
-						background: #3fafed;
+						background: #2C4956;
 					}
 				}
 				li#members-all {
@@ -168,22 +168,31 @@
 				li#members-makerspace a i {
 					background: #005e9a !important;
 				}
-				li a div {
-					float: right;
-					font-size: 11px;
-					min-width: 20px;
-					margin-left: 10px;
-					margin-top: 5px;
-					padding: 2px 8px;
-					line-height: 18px;
-					text-align: center;
-					display: inline-block;
-					background-color: #eee;
-					border-radius: 3px;
-					-webkit-border-radius: 3px;
-					-moz-border-radius: 3px;
-					-ms-border-radius: 3px;
-					-o-border-radius: 3px;
+				li#members-member a i {
+					background: #3fafed !important;
+				}
+				li a {
+					margin-right: 5px;
+					i, &::before {
+						margin-right: 8px;
+					}
+					div {
+						float: right;
+						font-size: 11px;
+						min-width: 20px;
+						margin-left: 10px;
+						margin-top: 5px;
+						padding: 2px 8px;
+						line-height: 18px;
+						text-align: center;
+						display: inline-block;
+						background-color: #eee;
+						border-radius: 3px;
+						-webkit-border-radius: 3px;
+						-moz-border-radius: 3px;
+						-ms-border-radius: 3px;
+						-o-border-radius: 3px;
+					}
 				}
 			}
 		}
