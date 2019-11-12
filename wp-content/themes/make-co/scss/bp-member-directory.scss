@@ -265,7 +265,9 @@
 							}
 						}
 						.bps-radio {
+							label { margin-left: 0px; }
 							a { display: none; }
+							br:last-of-type { display: none; }
 						}
 					}
 				}
