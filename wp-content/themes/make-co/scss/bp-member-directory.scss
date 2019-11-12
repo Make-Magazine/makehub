@@ -198,7 +198,6 @@
 			#yz-directory-search-box {
 				border: 0px;
 				padding-left: 0px;
-				#members_search { padding: 0 10px; }
 				@media screen and ( min-width: 1024px ) {
 					#members_search_submit { display: none; }
 				}
@@ -264,6 +263,9 @@
 									min-width: 250px;
 								}
 							}
+						}
+						.bps-radio {
+							a { display: none; }
 						}
 					}
 				}

@@ -25,6 +25,9 @@ function ps_remove_last_active ( $meta, $member, $is_loop ){
 	return $meta;
 } 
 
+//********************************************//
+//         Members Directory Sidebar          //
+//********************************************//
 // add sidebar to members directory
 function yzc_register_members_directory_sidebars() {
     register_sidebar(
