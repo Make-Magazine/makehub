@@ -131,7 +131,6 @@ add_action( 'bp_actions', 'hide_overview_edit_tab' );
  * Add Groups link to Membership Directory
  */
 function bp_groups_tab() {
-
     $button_args = array(
         'id'         => 'groups',
         'component'  => 'members',
@@ -167,6 +166,17 @@ function set_displayed_user( $user_id ) {
 	$bp->displayed_user->userdata = bp_core_get_core_userdata( $bp->displayed_user->id );
 	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
 }
+
+// make each user a 'Member' user type when they register if it isn't set already
+add_action( 'user_register', 'default_member_type', 10, 1 );
+function default_member_type( $user_id ) {
+	error_log("Before user type is" . bp_get_member_type($user_id));
+	if ( !bp_get_member_type($user_id) ) {
+		error_log("this should be assigning the member type");
+		bp_set_member_type( $user_id, 'member' );
+	}
+}
+
 
 //********************************************//
 //        Makerspace related changes          //
