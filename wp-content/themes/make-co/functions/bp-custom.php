@@ -84,8 +84,9 @@ function yz_translate_youzer_text( $translated_text ) {
 }
 add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
 
-// Exclude users from BuddyPress members list.
-
+//********************************************//
+//         Opted Out user functions           //
+//********************************************//
 function buddydev_exclude_users( $args ) {
     $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
     if ( ! is_array( $excluded ) ) {
@@ -103,9 +104,7 @@ function buddydev_exclude_users( $args ) {
     $args['exclude'] = $excluded;
     return $args;
 }
- 
 add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
-
 // Exclude user from count as well
 function exclude_users_from_count(){
 	$query_args = array(
@@ -158,28 +157,29 @@ function remove_bp_activity( $activity_object ) {
 }
 add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
 
-// if we want some random page to behave like a buddy press page
-function set_displayed_user( $user_id ) {
-	global $bp;
-	$bp->displayed_user->id = $user_id;
-	$bp->displayed_user->domain = bp_core_get_user_domain( $bp->displayed_user->id );
-	$bp->displayed_user->userdata = bp_core_get_core_userdata( $bp->displayed_user->id );
-	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
-}
-
+//********************************************//
+//           Member type: Members             //
+//********************************************//
 // make each user a 'Member' user type when they register if it isn't set already
 add_action( 'user_register', 'default_member_type', 10, 1 );
 function default_member_type( $user_id ) {
-	error_log("Before user type is" . bp_get_member_type($user_id));
 	if ( !bp_get_member_type($user_id) ) {
-		error_log("this should be assigning the member type");
 		bp_set_member_type( $user_id, 'member' );
 	}
 }
-
+// make users members if they don't have another member type
+function members_membertypes() {
+  $members =  get_users( 'blog_id=1&fields=ID' );
+  foreach ( $members as $user_id ) {
+     if ( !bp_get_member_type($user_id) ) {
+		bp_set_member_type( $user_id, 'member' );
+	}
+  }
+}
+add_action('bp_init', 'members_membertypes' );
 
 //********************************************//
-//        Makerspace related changes          //
+//        Makerspace related functions        //
 //********************************************//
 // if the membership level is makerspace/smallbusiness, add a class to the user card
 // we can then see if they have the member type class and level class to determine if they should be featured
@@ -452,6 +452,19 @@ function bp_add_custom_country_list() {
 	}
 }
 add_action('bp_init', 'bp_add_custom_country_list');
+
+//********************************************//
+//               MISC: Functions              //
+//********************************************//
+
+// if we want some random page to behave like a buddy press page (e.g. the blog pages)
+function set_displayed_user( $user_id ) {
+	global $bp;
+	$bp->displayed_user->id = $user_id;
+	$bp->displayed_user->domain = bp_core_get_user_domain( $bp->displayed_user->id );
+	$bp->displayed_user->userdata = bp_core_get_core_userdata( $bp->displayed_user->id );
+	$bp->displayed_user->fullname = bp_core_get_user_displayname( $bp->displayed_user->id );
+}
 
 
 /* add more info to the member loop if it exists
