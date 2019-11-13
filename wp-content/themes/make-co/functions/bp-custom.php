@@ -82,6 +82,9 @@ function yz_translate_youzer_text( $translated_text ) {
 		  case 'New Post' :
             $translated_text = __( 'New Blog Post', 'youzer' );
             break;
+		  case 'Ultimate Membership Pro' :
+			   $translated_text = __( 'Membership Details', 'youzer' );
+            break;
 		  case 'All Members %s' :
             $translated_text = __( 'All %s', 'buddypress' );
             break;

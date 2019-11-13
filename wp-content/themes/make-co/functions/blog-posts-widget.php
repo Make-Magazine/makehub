@@ -29,8 +29,7 @@ class Blog_Posts_Widget extends WP_Widget{
 								    <div class="widget-image">
 									   <img src="'.$image_url.'" />
 									 </div>
-									 <div class="widget-info">'.$post->post_title.' <p>by '.get_author_name($post->post_author).'</p>
-									 </div>
+									 <div class="widget-info">'.$post->post_title.' <p>by '.get_the_author_meta('display_name', $post->post_author).'</p></div>
 								  </a>';
 				$return .= '</div>';
 			}
