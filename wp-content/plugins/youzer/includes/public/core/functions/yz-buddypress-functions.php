@@ -12,6 +12,16 @@ function yz_is_bp_active() {
     return false;
 }
 
+
+/**
+ * Change Buddypress Assets Path
+ */
+function yz_buddypress_assets_path( $options ) {
+    return YZ_PA;
+}
+
+add_filter( 'bp_get_theme_compat_url', 'yz_buddypress_assets_path' );
+
 /**
  * Disable Buddypress Default CSS.
  */
@@ -40,7 +50,7 @@ function yz_plugin_template_location() {
  * Theme Template location.
  */
 function yz_theme_template_location() {
-    return get_template_directory() . '/youzer';
+    return yz_get_theme_template_path() . '/youzer';
 }
 
 /**
@@ -314,14 +324,16 @@ function yz_buddypress_bp_init() {
 
         $hashtag = substr( $_GET['s'], 0, 1 );
 
-        if ( $hashtag != '#' ) {
-            return;
-        }
+        $bp_pages = get_option( 'bp-pages' );
 
-        $bp = buddypress();
+        if ( $hashtag == '#' || get_option( 'page_on_front' ) == $bp_pages['activity'] ) {
 
-        if ( $bp->pages->activity->id == get_option( 'page_on_front' ) ) {
-            $bp->current_component = 'activity';
+            $bp = buddypress();
+
+            if ( $bp->pages->activity->id == get_option( 'page_on_front' ) ) {
+                $bp->current_component = 'activity';
+            }
+            // return;
         }
 
     } 

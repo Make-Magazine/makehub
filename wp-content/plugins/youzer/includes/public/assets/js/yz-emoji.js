@@ -5,13 +5,16 @@
   $( document ).ready( function() {
 
     if ( jQuery().emojioneArea ) {
-
-        $.yz_init_wall_textarea_emojionearea = function( element  ) {
+        // Yz_Emoji.posts_visibility == 'on'
+        if ( $( '.yz-load-posts-emojis' )[0] ) {
+        $.yz_init_wall_textarea_emojionearea = function( element ) {
             return element.emojioneArea( {
                 pickerPosition: 'bottom',
                 autocomplete: true,
+                saveEmojisAs : 'image',
                 events: {
                 ready: function () {
+                  // form.find( '.emojionearea-button-open' ).click();
                   this.editor.textcomplete([{
                       id: 'yz_mentions',
                       match: /\B@([\-\d\w]*)$/,
@@ -35,20 +38,20 @@
             }
           );
         }
-
-        // Activate Emojis in Posts.
-        if ( Yz_Emoji.posts_visibility == 'on' ) {
-          var el = $.yz_init_wall_textarea_emojionearea( $( '.yz-wall-textarea' ) );
-        }
+        var el = $.yz_init_wall_textarea_emojionearea( $( '.yz-wall-textarea' ) );
+      }
 
             
-        // Activate Emojis in Posts Comments.
-      if ( Yz_Emoji.comments_visibility == 'on' ) {
+        // Activate Emojis in Posts Comments.Yz_Emoji.comments_visibility == 'on'
+      if ( $( '.yz-comments-emojis' )[0]  ) {
+        // Add Emojis.
+        // $( '.ac-textarea' ).addClass( 'yz-comments-emojis' ).append( '<div class="yz-load-emojis"><i class="far fa-smile"></i></div>' );
 
         // Init Comments Emoji Function
         $.yz_init_comments_emoji = function() {
           var yz_emoji_textarea = $( '.youzer .ac-form textarea' ).emojioneArea( {
                 pickerPosition: 'bottom',
+                 saveEmojisAs : 'image',
                 autocomplete: true,
                 events: {
                 ready: function () {
@@ -82,9 +85,10 @@
             });
           return yz_emoji_textarea;
         }
+          var comment_el = $.yz_init_comments_emoji();
 
         // Init Vars.
-        var comment_el = $.yz_init_comments_emoji();
+        // var comment_el = $.yz_init_comments_emoji();
 
           // Reset Reply Form after submit.
           $( 'body' ).on( 'append','.activity-comments ul', function(e){
@@ -100,16 +104,17 @@
 
           // Reload Emoji Comments After Loading More Posts.
           $( document ).ajaxComplete(function() {
+            $( '.yz-load-emojis' ).remove();
             $.yz_init_comments_emoji();
-        });
+          });
 
       }
 
       // Activate Emojis in Messages.
-      if ( Yz_Emoji.messages_visibility == 'on' ) {
+      if ( $( '.yz-load-messages-emojis' )[0] ) {
         // Enable Emoji.
         var message_el = $( '#send-reply textarea,.yzmsg-form-item #message_content' )
-        .emojioneArea( { pickerPosition: 'bottom' } );
+        .emojioneArea( { pickerPosition: 'bottom', saveEmojisAs : 'image' } );
         // Override Val Function.
         var originalVal = this.originalVal = $.fn.val;
         $.fn.val = function(value) {
@@ -126,8 +131,6 @@
 
 
     }
-
-
 
     /**
      * # Modal.

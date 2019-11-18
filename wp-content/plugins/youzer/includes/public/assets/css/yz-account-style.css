@@ -118,7 +118,7 @@
     float: right;
 }
 
-.uk-option-item .option-infos label {
+#youzer .uk-option-item .option-infos label {
     display: flex;
     color: #89afc1;
     font-size: 13px;
@@ -164,7 +164,7 @@
     text-decoration: none;
 }
 
-.youzer .option-content input:not([type=radio]):not(.uk-upload-button):not(.wp-color-picker):not(.wp-picker-clear) {
+#youzer .option-content input:not([type=radio]):not(.uk-upload-button):not(.wp-color-picker):not(.wp-picker-clear) {
     /*width: 70%;*/
     color: #9a9a9a;
     font-size: 13px;
@@ -208,6 +208,7 @@
 .youzer.yz-account-page .nice-select .current {
     line-height: 45px;
     height: 45px;
+    text-align: left;
 }
 
 
@@ -1599,7 +1600,7 @@ position: relative;
     padding: 15px 25px;
 }
 
-.youzer .editfield fieldset legend {
+#youzer .editfield fieldset legend {
     margin: 0;
     padding: 0;
     border: none;
@@ -1610,8 +1611,8 @@ position: relative;
     text-transform: capitalize;
 }
 
-.youzer .editfield legend .bp-required-field-label,
-.youzer .editfield label .bp-required-field-label {
+#youzer .editfield legend .bp-required-field-label,
+#youzer .editfield label .bp-required-field-label {
     color: #8c8c8c;
     font-size: 10px;
     margin-left: 5px;
@@ -1630,14 +1631,14 @@ position: relative;
     margin-right: 5px;
 }
 
-.youzer .editfield input:not([type=radio]):not([type=checkbox]){
+#youzer .editfield input:not([type=radio]):not([type=checkbox]) {
     width: 100%;
     color: #9a9a9a;
     font-size: 13px;
     font-weight: 500;
-    box-shadow: none;
     padding: 12px 15px;
     border: 1px solid #eee;
+    box-shadow: none !important;
     background-color: transparent;
 }
 
@@ -1671,9 +1672,29 @@ position: relative;
     margin-right: 8px;
 }
 
+#youzer .editfield select[multiple=multiple] {
+    height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+#youzer .editfield select[multiple=multiple] option {
+    padding: 8px 12px;
+}
+
+.youzer .editfield select[multiple=multiple]:before {
+    content: '';
+    display: none;
+}
+
 .youzer .editfield .input-options.datebox-selects select,
 .youzer .editfield .input-options.datebox-selects .nice-select {
     margin-right: 12px;
+    width: initial;
+}
+
+.youzer .editfield .input-options.datebox-selects .nice-select .list {
+    width: initial;
 }
 
 .youzer .editfield.field_type_radio .description,
@@ -1700,7 +1721,7 @@ position: relative;
     margin-right: 15px;
 }
 
-.youzer .editfield .description {
+.rtl .youzer .editfield .description {
     margin-right: 0;
     margin-left: 15px;
 }
@@ -1755,6 +1776,7 @@ position: relative;
 .youzer .editfield label .field-visibility-text:before {
     color: #898989;
     cursor: pointer;
+    font-weight: 600;
     font-size: inherit;
     text-rendering: auto;
     display: inline-block;
@@ -2073,6 +2095,9 @@ position: relative;
 /**
  * More CSS
  */
+
+#youzer .option-content input:not([type=radio]):not(.uk-upload-button):not(.wp-color-picker):not(.wp-picker-clear),
+#youzer .editfield input:not([type=radio]):not([type=checkbox]),
 .settings-inner-content .options-section-title h2,
 .youzer .option-content input:not([type=radio]),
 .yz-settings-sidebar .yz-account-menus ul li a,
@@ -2256,7 +2281,10 @@ position: relative;
         margin: auto;
         max-width: 200px;
     }
-
+    
+    .yz-account-settings-menu,    
+    .youzer .settings-main-content,
+    .yz-account-header,
     .option-infos {
         margin-bottom: 15px;
     }
@@ -2331,14 +2359,14 @@ position: relative;
     .yz-page-main-content {
         padding: 25px 25px 0 25px;
     }
-
+/*
     .yz-settings-sidebar .account-infos,
     .yz-settings-sidebar .yz-account-menus,
     .youzer .settings-main-content,
     .yz-account-header {
         margin-bottom: 25px;
     }
-
+*/
     .rtl .yza-form-actions,
     .yza-form-actions {
         float: none;
@@ -2354,6 +2382,7 @@ position: relative;
     .yza-item-button {
         width: 100%;
         margin: auto;
+        height: 50px;
         display: block;
         line-height: 24px;
         padding: 15px 12px;
@@ -2426,8 +2455,10 @@ position: relative;
         padding: 25px;
     }
 
-    .youzer .option-content 
+    #youzer .option-content 
     input:not([type=radio]):not(.uk-upload-button):not(.yz-picker-input):not(.wp-picker-clear) {
+        height: 45px;
+        margin-bottom: 0;
         width: 100% !important;
     }
 

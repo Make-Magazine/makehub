@@ -1,6 +1,8 @@
 /**
  * Light Green Scheme
  */
+.yz-aqua-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
+.yz-aqua-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-aqua-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-aqua-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-aqua-scheme .youzer table tfoot tr,
@@ -92,6 +94,16 @@
 .yz-aqua-scheme .button.accept {
     background: #1abc9c;
     color: #fff;
+}
+
+@media screen and ( max-width: 768px ) {
+	.yz-aqua-scheme #youzer .yz-group div.item-list-tabs li.last label,
+	.yz-aqua-scheme #youzer .yz-profile div.item-list-tabs li.last label,
+	.yz-aqua-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+	.yz-aqua-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+		background: #1abc9c;
+    	color: #fff;
+	}
 }
 
 .yz-aqua-scheme .youzer .yzwc-main-content address .yz-bullet,

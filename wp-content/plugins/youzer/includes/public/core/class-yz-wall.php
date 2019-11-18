@@ -33,7 +33,7 @@ class Youzer_Wall {
 		add_action( 'bp_activity_new_update_content', array( &$this, 'activate_autoembed' ) );
 
 		// Add Wall Commnets Number for Non Logged-In Users.
-		add_action( 'bp_activity_entry_meta_non_logged_in', array( &$this, 'show_wall_post_comments_number' ) );
+		add_action( 'bp_activity_entry_meta_non_logged_in', array( &$this, 'show_wall_post_comments_number' ), 999 );
 
     }
 
@@ -74,7 +74,7 @@ class Youzer_Wall {
 	/**
 	 * Get Wall Post Content.
 	 */
-	function get_activity_content_body( $content, $activity ) {
+	function get_activity_content_body( $content = null, $activity = null ) {
 	    // Check if activity content is not empty.
 	    if ( ! empty( $content ) ) {
 	    	$content = '<div class="activity-inner">' . $content . '</div>';
@@ -841,6 +841,7 @@ class Youzer_Wall {
 		<?php
 
 	}
+
 	/**
 	 * Wall Filter Bar.
 	 */
@@ -1000,6 +1001,9 @@ class Youzer_Wall {
 
             case 'empty_quote_text':
                 return __( "Please fill the quote text field.", 'youzer' );
+
+            case 'word_inappropriate':
+                return __( "You have used an inappropriate word.", 'youzer' );
 
             case 'no_attachments':
                 return __( "No attachment was uploaded.", 'youzer' );

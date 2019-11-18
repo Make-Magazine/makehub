@@ -31,10 +31,12 @@
 			});
 
 			$( '.ukai_tags_field' ).keypress( function( e ) {
+		   // $( document ).on( 'keypress', '.ukai_tags_field', function(e) {
+
+   				var keycode = (e.keyCode ? e.keyCode : e.which);
 
 				// If user Clicks Enter
-				if ( e.which == '13' ) {
-
+				if ( keycode == 13 ) {
 					var tag 		 = $( this ).val(),
 						tags_form 	 = $( this ).closest( '.ukai_tags' ),
 						field_name	 = tags_form.data( 'optionName' ),

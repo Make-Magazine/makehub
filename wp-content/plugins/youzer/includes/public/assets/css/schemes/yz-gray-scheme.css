@@ -1,6 +1,8 @@
 /**
  * Gray Scheme
  */
+.yz-gray-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
+.yz-gray-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-gray-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-gray-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-gray-scheme .youzer table tfoot tr,
@@ -92,6 +94,16 @@
 .yz-gray-scheme .button.accept  {
     background: #9e9e9e;
     color: #fff;
+}
+
+@media screen and ( max-width: 768px ) {
+	.yz-gray-scheme #youzer .yz-group div.item-list-tabs li.last label,
+	.yz-gray-scheme #youzer .yz-profile div.item-list-tabs li.last label,
+	.yz-gray-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+	.yz-gray-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+		background: #9e9e9e;
+    	color: #fff;
+	}
 }
 
 .yz-gray-scheme .yz-product-price.yz-variable-price,

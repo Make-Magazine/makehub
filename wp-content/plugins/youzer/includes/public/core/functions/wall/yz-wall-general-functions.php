@@ -399,7 +399,7 @@ function yz_show_who_liked_activities() {
 
 }
 
-add_action( 'bp_activity_entry_meta_non_logged_in', 'yz_show_who_liked_activities' );
+add_action( 'bp_activity_entry_meta_non_logged_in', 'yz_show_who_liked_activities', 99 );
 
 /**
  * Get Wall Model.
@@ -544,6 +544,8 @@ function yz_get_single_wall_post() {
 
     ?>
 
+    <?php do_action( 'bp_before_single_activity_post' ); ?>
+
     <div class="activity no-ajax">
         <?php if ( bp_has_activities( 'display_comments=threaded&show_hidden=true&include=' . bp_current_action() ) ) : ?>
 
@@ -676,7 +678,7 @@ function yz_profile_activity_tab_filter_bar() {
         <li id="activity-filter-select" class="last">
             <label for="activity-filter-by"><?php _e( 'Show:', 'youzer' ); ?></label>
             <select id="activity-filter-by">
-                <option value="<?php echo yz_wall_show_everything_filter(); ?>"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
+                <option value="-1"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
 
                 <?php bp_activity_show_filters(); ?>
 
@@ -704,6 +706,7 @@ add_action( 'yz_profile_main_content', 'yz_profile_activity_tab_filter_bar' );
  * Fix Buddypress Time Since
  */
 function yz_get_activity_time_stamp_meta( $content = '' ) {
+	
     global $activities_template;
 
     // Strip any legacy time since placeholders from BP 1.0-1.1.
@@ -766,7 +769,7 @@ function yz_get_activity_time_stamp_meta( $content = '' ) {
      *
      * @param string $content Activity content with the activity metadata added.
      */
-    return apply_filters( 'bp_insert_activity_meta', $new_content, $content, $activities_template->activity->id );
+    return apply_filters( 'yz_insert_activity_meta', $new_content, $content, $activities_template->activity->id );
 }
 
 function yz_get_activity_page_class() {
@@ -1004,7 +1007,7 @@ function yz_wall_form_post_types_buttons() {
 		<div class="yz-wall-opts-item">
 			<input type="radio" value="<?php echo $post_type['id']; ?>" name="post_type" id="yz-wall-add-<?php echo $post_type['id']; ?>" <?php if ( $checked ) echo 'checked'; ?> data-uploader="<?php echo $post_type['uploader']; ?>">
 			<label class="yz-wall-add-<?php echo $post_type['id']; ?>" for="yz-wall-add-<?php echo $post_type['id']; ?>">
-				<i class="<?php echo $post_type['icon']; ?>"></i><?php echo $post_type['name']; ?>
+				<i class="<?php echo $post_type['icon']; ?>"></i><span><?php echo $post_type['name']; ?></span>
 			</label>
 		</div>
 

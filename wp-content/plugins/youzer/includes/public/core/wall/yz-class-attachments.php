@@ -30,7 +30,8 @@ class Youzer_Wall_Attachments {
 	 * Save Activity Attachments
 	 */
 	function save_attachments( $activity_id, $data ) {
-		
+
+
 		if ( empty( $data['attachments_files'] ) ) {
 			if ( ! empty( bp_activity_get_meta( $activity_id, 'attachments' ) ) ) {
 				bp_activity_delete_meta( $activity_id, 'attachments' );
@@ -107,9 +108,11 @@ class Youzer_Wall_Attachments {
 						
 						if ( ! empty( $thumbnails ) ) {
 							$video_data['thumbnail'] = $thumbnails;
+							$video_data['file_size'] = 0;
 						}
 
 						$atts[] = $video_data;
+
 					}
 
 				}

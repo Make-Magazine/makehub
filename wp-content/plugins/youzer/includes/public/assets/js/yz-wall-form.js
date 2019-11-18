@@ -4,6 +4,39 @@
 
 	$( document ).ready( function() {
 
+		var load_wall_form_js = false;
+
+		/**
+		 * Load Wall Assets.
+		 */
+    	$( document ).on( 'input click', '.yz-wall-textarea, .ac-input', function() {
+    		$( this ).next( '.yz-load-emojis' ).attr( 'data-cursor', $( this ).prop("selectionStart") );
+    	});
+
+    	$( document ).on( 'focus', '.yz-wall-textarea', function() {
+    		if ( load_wall_form_js == false ) {
+	    		// Load Live Preview Scripts.
+    			if ( Yz_Wall.url_preview == 'on' ) {
+			        $( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/yz-url-preview.min.css' } ).appendTo( 'head' );
+			        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-url-preview.min.js' } ).appendTo( 'head' );
+    			}
+	    		load_wall_form_js = true;
+    		}
+	    });
+
+		/**
+		 * Load Emojis JS.
+		 */
+    	$( document ).on( 'click', '.yz-load-emojis', function() {
+        	var form = $( this ).closest( 'form' );
+	        $( this ).find( 'i' ).attr(  'class', 'fas fa-spin fa-spinner' );
+        	$( this ).addClass( 'loading' );
+			$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/textcomplete.min.js' } ).appendTo( 'head' );
+	        $( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/emojionearea.min.css' } ).appendTo( 'head' );
+	        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/emojionearea.min.js' } ).appendTo( 'head' );
+	        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-emoji.min.js' } ).appendTo( 'head' );
+	    });
+
 		/**
 		 * Submit Wall Posts.
 		 */
@@ -159,7 +192,6 @@
 					if ( inputs.post_type == 'activity_slideshow' )  {
 						$.youzer_sliders_init();
 					}
-					
 
 					// Reset Form.
 					form.get( 0 ).reset();
@@ -177,6 +209,11 @@
 		            form.find( '#yz-whats-new-post-in' ).next( '.nice-select' ).find( '.list div' ).first().trigger( 'click' );
 		            form.find( '.yz-wall-options input:radio[name="post_type"]' ).first().trigger( 'change' );
 		            form.find( '.yz-lp-prepost .lp-button-cancel' ).trigger( 'click' );
+
+		            if ( inputs.post_type == 'activity_giphy' ) {
+		            	form.find( '.yz-delete-giphy-item' ).trigger( 'click' );
+		            	form.find( '.yz-giphy-submit-search' ).val( '' ).trigger( 'click' );
+		            }
 
 					// reset vars to get newest activities
 					newest_activities = '';
@@ -922,7 +959,7 @@
 
 			// Add Category Title.
 			parent.find( '.yz-list-items-title' ).text( el.attr( 'data-category-title' ) );
-			parent.find( 'input[name="mood_type"]' ).val( el.attr( 'data-category-title' ) );
+			parent.find( 'input[name="mood_type"]' ).val( el.attr( 'data-category' ) );
 
 			// Hide Categories.
 			parent.find( '.yz-list-categories' ).fadeOut();
@@ -1182,9 +1219,6 @@
 			target.addClass( 'loading' );
 			old_icon = target.find( 'i' ).attr( 'class' );
 			target.find( 'i' ).attr( 'class', 'fas fa-spinner fa-spin' );
-
-			// console( 'olaaa' );
-
 
 			/* Activity comment posting */
 			// if ( target.attr('name') === 'ac_form_submit' ) {

@@ -184,6 +184,10 @@
 /**
  * Pagination
  */
+.youzer .tablenav {
+    display: none;
+}
+
 .youzer .tablenav-pages {
     padding: 0;
     width: 100%;
@@ -522,8 +526,8 @@
 @media screen and ( max-width: 1024px ) {
 
 	.yz-user-badges-tab .yz-user-badge-item {
-     	width: 200px;
-     	margin: 0 25px 25px 0;
+     	width: 219px;
+     	margin: 0 15px 15px 0;
 	}
 
 	.yz-user-badges-tab .yz-user-badge-item:nth-child(3n){
@@ -531,7 +535,7 @@
 	}
 
 	.yz-user-badges-tab .yz-user-badge-item:nth-child(4n){
-	    margin-right: 25px;
+	    margin-right: 15px;
 	}
 
 }
@@ -539,8 +543,7 @@
 @media screen and ( max-width: 768px ) {
 	
 	.yz-user-badges-tab .yz-user-badge-item {
-	    width: 209px;
-	    margin: 0 35px 35px 0;
+	    width: 236px;
 	}
 
 }
@@ -563,12 +566,11 @@
     }
 
 	.yz-user-badges-tab .yz-user-badge-item {
-	    width: 175px;    
-	    margin: 0 25px 25px 0;
+	    width: 190px;    
 	}
 
 	.yz-user-badges-tab .yz-user-badge-item:nth-child(3n){
-	    margin-right: 25px;
+	    margin-right: 15px;
 	}
 
 	.yz-user-badges-tab .yz-user-badge-item:nth-child(2n){
@@ -588,7 +590,6 @@
 
 	.yz-user-badges-tab .yz-user-badge-item {
 		width: 100%;
-		margin: 0 15px 15px 0;
 
 	}
 

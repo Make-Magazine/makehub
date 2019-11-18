@@ -33,23 +33,7 @@ do_action( 'bp_before_activity_entry' ); ?>
 
 		</div>
 		
-		
-		<?php //bp_activity_content_body(); // if this is a custom post id, serve the feeatured image and title
-			 $custom_post_id = bp_get_activity_secondary_item_id();
-			 if ($custom_post_id) { ?>
-		      <div class="activity-inner"> <?php
-				  if (has_post_thumbnail( $custom_post_id ) ) {
-						$theimg = wp_get_attachment_image_src( get_post_thumbnail_id( $custom_post_id ), 'large' ); ?>
-						<div class="img_container"><a href="<?php echo get_post_permalink($custom_post_id); ?>"> <img style="thumbnail" style="width:100%;" src="<?php echo $theimg[0]; ?>"></a></div>
-						<p>
-				  			<?php echo get_post_field('post_title', $custom_post_id); ?>
-						</p>
-						<a href="<?php echo get_post_permalink($custom_post_id); ?>" class="btn universal-btn">Read More</a>
-					</div>
-				  <?php } ?>
-			 <?php }else{
-				 bp_activity_content_body();
-			 } ?>
+		<?php bp_activity_content_body(); ?>
 
 		<?php
 
@@ -73,17 +57,12 @@ do_action( 'bp_before_activity_entry' ); ?>
 				<?php if ( bp_activity_can_favorite() ) : ?>
 					<?php echo yz_get_post_like_button(); ?>
 				<?php endif; ?>
-            <?php if ($custom_post_id) { ?>
-					<a href="<?php echo(get_post_permalink($custom_post_id)); ?>#commentform" class="button acomment-reply">Comment</a>
-			   <?php }else { ?>
-			      <?php if ( bp_activity_can_comment() ) : ?>
-						<a href="<?php bp_activity_comment_link(); ?>" class="button acomment-reply bp-primary-action" id="acomment-comment-<?php bp_activity_id(); ?>"><?php yz_wall_get_comment_button_title() ?></a>
-					<?php endif; ?>
 
-					<?php do_action( 'bp_activity_after_comment_button' ); ?>
+				<?php if ( bp_activity_can_comment() ) : ?>
+					<a href="<?php bp_activity_comment_link(); ?>" class="button acomment-reply bp-primary-action" id="acomment-comment-<?php bp_activity_id(); ?>"><?php yz_wall_get_comment_button_title() ?></a>
+				<?php endif; ?>
 
-					<?php if ( bp_activity_user_can_delete() ) bp_activity_delete_link(); ?>
-			   <?php } ?>
+				<?php do_action( 'bp_activity_after_comment_button' ); ?>
 
 				<?php
 
@@ -120,15 +99,17 @@ do_action( 'bp_before_activity_entry' ); ?>
 			<?php bp_activity_comments(); ?>
 
 			<?php if ( is_user_logged_in() && bp_activity_can_comment() ) : ?>
-
+				<?php $emoji_active = yz_options( 'yz_enable_comments_emoji' ) == 'on' ? true : false; ?>
 				<form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php bp_activity_id(); ?>" class="ac-form"<?php bp_activity_comment_form_nojs_display(); ?>>
 					<div class="ac-reply-content">
-						<div class="ac-textarea">
+						<div class="ac-textarea<?php if ( $emoji_active ) echo ' yz-comments-emojis';?>">
 							<label for="ac-input-<?php bp_activity_id(); ?>" class="bp-screen-reader-text"><?php
-								/* translators: accessibility text */
 								_e( 'Comment', 'youzer' );
 							?></label>
 							<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>" placeholder="<?php _e( 'Write a Comment ...', 'youzer' ); ?>"></textarea>
+							<?php if ( $emoji_active ) : ?>
+								<div class="yz-load-emojis"><i class="far fa-smile"></i></div>
+							<?php endif; ?>
 						</div>
 						<div class="yz-send-comment"><i class="fas fa-paper-plane"></i></button>
 						<!-- <a href="#" class="ac-reply-cancel"><?php _e( 'Cancel', 'youzer' ); ?></a> -->

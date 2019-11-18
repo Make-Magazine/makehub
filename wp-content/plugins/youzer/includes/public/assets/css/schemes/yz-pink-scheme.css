@@ -1,6 +1,8 @@
 /**
  * Pink Scheme
  */
+.yz-pink-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
+.yz-pink-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-pink-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-pink-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-pink-scheme .youzer table tfoot tr,
@@ -92,6 +94,16 @@
 .yz-pink-scheme .button.accept {
     background: #FF4966;
     color: #fff;
+}
+
+@media screen and ( max-width: 768px ) {
+	.yz-pink-scheme #youzer .yz-group div.item-list-tabs li.last label,
+	.yz-pink-scheme #youzer .yz-profile div.item-list-tabs li.last label,
+	.yz-pink-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+	.yz-pink-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+		background: #FF4966;
+    	color: #fff;
+	}
 }
 
 .yz-pink-scheme .yz-product-price.yz-variable-price,
