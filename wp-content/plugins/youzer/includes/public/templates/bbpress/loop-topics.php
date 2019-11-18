@@ -16,10 +16,10 @@
 	<li class="bbp-header">
 
 		<ul class="forum-titles">
-			<li class="bbp-topic-title"><?php _e( 'Topic', 'bbpress' ); ?></li>
-			<li class="bbp-topic-voice-count"><?php _e( 'Voices', 'bbpress' ); ?></li>
-			<li class="bbp-topic-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'bbpress' ) : _e( 'Posts', 'bbpress' ); ?></li>
-			<li class="bbp-topic-freshness"><?php _e( 'Freshness', 'bbpress' ); ?></li>
+			<li class="bbp-topic-title"><?php _e( 'Topic', 'youzer' ); ?></li>
+			<li class="bbp-topic-voice-count"><?php _e( 'Voices', 'youzer' ); ?></li>
+			<li class="bbp-topic-reply-count"><?php bbp_show_lead_topic() ? _e( 'Replies', 'youzer' ) : _e( 'Posts', 'youzer' ); ?></li>
+			<li class="bbp-topic-freshness"><?php _e( 'Freshness', 'youzer' ); ?></li>
 		</ul>
 
 	</li>

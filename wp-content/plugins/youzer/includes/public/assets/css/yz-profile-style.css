@@ -42,6 +42,8 @@
     position: relative;
 }
 
+/*#yz-profile-navmenu .yz-social-buttons*/
+
 .yz-vertical-wild-navbar .yz-page-main-content {
     padding-top: 0;
 }
@@ -50,6 +52,11 @@
 .yz-404-profile.yz-vertical-layout .yz-page-main-content {
     margin: 0;
     padding-top: 0;
+}
+
+.yz-social-buttons .yz-follow-message-button .message-button .yz-send-message {
+    border: 1px solid #f6f6f6;
+    background-color: white;
 }
 
 /**
@@ -129,6 +136,7 @@
 .yz-widget .yz-widget-content p {
     margin-bottom: 0;
     line-height: 24px;
+    font-size: 13px;
 }
 
 .yz-widget.yz-website .yz-widget-content p a,
@@ -1581,6 +1589,7 @@
     font-size: 12px;
     display: block;
     color: #8a8a8a;
+    font-weight: 600;
 }
 
 .yz-recent-posts .yz-post-meta ul li {
@@ -1736,7 +1745,7 @@
     margin-bottom: 20px;
 }
 
-.yz-tab-post .yz-post-title a {
+#youzer .yz-tab-post .yz-post-title a {
     color: #8c9094;
     display: block;
     font-size: 14px;
@@ -2506,7 +2515,11 @@
 }
 
 .youzer .yz-boxed-navbar .yz-profile-navmenu {
-    margin-left: 35px;
+    margin-left: 25px;
+}
+
+.youzer .yz-boxed-navbar .yz-profile-navmenu .yz-navbar-item a {
+    min-width: 125px;
 }
 
 .rtl .youzer .yz-boxed-navbar .yz-profile-navmenu {
@@ -3227,7 +3240,7 @@
     display: block;
     cursor: pointer;
     font-size: 13px;
-    font-weight: 400;
+    font-weight: 600;
     text-align: left;
     overflow: hidden;
     position: relative;
@@ -3472,7 +3485,6 @@ body .lb-outerContainer {
         padding: 35px 35px 0;
     }
 
-
     /* Vertical Layout Css */
 
     .yz-vertical-layout .yz-content {
@@ -3511,16 +3523,40 @@ body .lb-outerContainer {
     .youzer .tablenav-pages,
     .mycred-history #buddypress.youzer .mycred-table,
     .yz-tab-title-box {
-        margin-bottom: 25px;
+        margin-bottom: 15px;
     }
+
+
+    .yz-horizontal-layout .yz-page-main-content {
+        padding: 15px 15px 0;
+    }
+
     
+    .yz-widget,
+    .yz-hdr-v7,
+    .yz-loading,
+    .yz-tab-post,
+    .yz-tab-comment,
+    .yz-profile-login,
+    .yz-tab-title-box,
+    .youzer .tablenav-pages,
+    .mycred-history #buddypress.youzer .mycred-table,
+    .yz-main-column .yz-reviews .yz-widget-content .yz-review-item,
+    .youzer.yz-vertical-layout #yz-profile-header {
+        margin-bottom: 15px;
+    }
+   
 }
 
 @media screen and ( max-width: 768px ) {
 
+    .yz-pagination {
+        margin-bottom: 0;
+    }
+
     .youzer.yz-vertical-wild-navbar #yz-profile-navmenu {
         width: 100%;
-        margin: 0 auto 35px;
+        margin: 0 auto 15px;
     }
     
     .yz-quick-buttons .yz-button-item span,
@@ -3642,7 +3678,7 @@ body .lb-outerContainer {
     }
     
     #yz-profile-navmenu .yz-social-buttons {
-        top: 11px;
+        top: 9px;
     }
 
     .yz-responsive-menu {
@@ -3654,7 +3690,7 @@ body .lb-outerContainer {
     }
 
     .yz-horizontal-layout .yz-page-main-content {
-        padding: 35px 35px 0;
+        padding: 15px 15px 0;
     }
 
     .yz-profile-sidebar.yz-portfolio-content figure .yz-projet-img,
@@ -3680,7 +3716,7 @@ body .lb-outerContainer {
     .youzer .tablenav-pages,
     .mycred-history #buddypress.youzer .mycred-table,
     .youzer.yz-vertical-layout #yz-profile-header {
-        margin-bottom: 35px;
+        margin-bottom: 15px;
     }
 
     .youzer.yz-vertical-layout .yz-inner-content {
@@ -3692,7 +3728,7 @@ body .lb-outerContainer {
     }
 
     .youzer.yz-vertical-layout {
-        padding: 0 35px;
+        padding: 0 15px;
     }
 
     .yz-vertical-layout .yz-nav-settings {
@@ -3728,6 +3764,10 @@ body .lb-outerContainer {
     .yz-sidebar-column .yz-review-item .yz-item-head .yz-item-img {
         margin-right: auto; 
     }*/
+
+    .yz-main-column .yz-reviews .yz-widget-content {
+        padding: 15px;
+    }
 
 }
 
@@ -3787,23 +3827,6 @@ body .lb-outerContainer {
         padding-top: 25px;
     }
 
-    .yz-widget,
-    .yz-hdr-v7,
-    .yz-loading,
-    .yz-tab-post,
-    .yz-tab-comment,
-    .yz-profile-login,
-    .yz-tab-title-box,
-    .youzer .tablenav-pages,
-    .mycred-history #buddypress.youzer .mycred-table,
-    .youzer.yz-vertical-layout #yz-profile-header {
-        margin-bottom: 25px;
-    }
-
-    .yz-pagination {
-        margin-bottom: 10px;
-    }
-
     .yz-horizontal-layout.yz-wild-content #yz-profile-navmenu:not(.yz-boxed-navbar) .yz-nav-settings {
         margin: 0 0 0 15px;
     }
@@ -3817,10 +3840,10 @@ body .lb-outerContainer {
         position: relative;
     }
 
-    .yz-horizontal-layout .yz-page-main-content {
+/*    .yz-horizontal-layout .yz-page-main-content {
         padding: 25px 25px 0;
     }
-
+*/
     .yz-main-column .yz-post-content .yz-post-thumbnail,
     .yz-main-column .yz-project-content .yz-project-thumbnail,
     .yz-main-column .yz-tab-posts .yz-post-thumbnail {

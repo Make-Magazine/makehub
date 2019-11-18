@@ -46,8 +46,7 @@ class YZ_Video {
             <div class="fittobox">
                 <?php
                     if ( false != filter_var( $video_url, FILTER_VALIDATE_URL )  ) {
-                        $content = apply_filters( 'the_content', $video_url );
-                        echo $content;
+                        echo apply_filters( 'the_content', $video_url );   
                     }
                 ?>
             </div>

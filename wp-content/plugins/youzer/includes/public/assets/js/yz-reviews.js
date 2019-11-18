@@ -163,7 +163,7 @@
 				// Append Content.
 				$( 'body' ).append( $form );
 
-	    		$form.css( { 'position': 'absolute', 'top': $( document ).scrollTop() + 100 } );
+	    		$form.find( '.yz-modal' ).css( { 'position': 'absolute', 'top': $( document ).scrollTop() + 100 } );
 
 	    		if ( ! $( '.yz-modal-overlay')[0] ) {	
 	    			$( 'body' ).append( '<div class="yz-modal-overlay"></div>' );

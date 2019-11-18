@@ -284,6 +284,7 @@ add_filter( 'bp_activity_comment_name', 'yz_add_member_name_verification_icon', 
  * Allow Activity Actions Tags. 
  */
 function yz_allowed_activity_actions_tags( $activity_allowedtags ) {
+	$activity_allowedtags['img']['class']        = array();
 	$activity_allowedtags['i']                   = array();
 	$activity_allowedtags['i']['class']          = array();
 	unset( $activity_allowedtags['a']['data-bp-tooltip'] );

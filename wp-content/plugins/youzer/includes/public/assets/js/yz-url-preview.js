@@ -40,16 +40,11 @@
             }
         });
 
-        // Track Emojiareaone Pasting.
-        $( document ).on( 'paste', '.emojionearea-editor', function( e ) {
-            $.yz_get_link_preview_data( $( this ).closest( 'form' ), $( this ).text() );
-        });
-
         // Track Emojiareaone Keyup.
         $( document ).on( 'keyup', '.emojionearea-editor', function( e ) {
-            if ( ( e.which == 13 || e.which == 32 || e.which == 17 ) ) {
+            // if ( ( e.which == 13 || e.which == 32 || e.which == 17 ) ) {
                 $.yz_get_link_preview_data( $( this ).closest( 'form' ), $( this ).text() );
-            }
+            // }
         });
 
         // Hide Thumbnail
@@ -133,6 +128,7 @@
             form.find( '.lp-preview-pagination' ).find( '.lp-preview-thubmnail-pagination' ).text( index + 1 );
         
         }
+
         /**
          * Get Link Preview.
          */

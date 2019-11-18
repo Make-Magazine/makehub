@@ -1,6 +1,8 @@
 /**
  * Orange Scheme
  */
+.yz-orange-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
+.yz-orange-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-orange-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-orange-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-orange-scheme .youzer table tfoot tr,
@@ -92,6 +94,17 @@
 .yz-orange-scheme .button.accept  {
     background: #FFC952;
     color: #fff;
+}
+
+
+@media screen and ( max-width: 768px ) {
+	.yz-orange-scheme #youzer .yz-group div.item-list-tabs li.last label,
+	.yz-orange-scheme #youzer .yz-profile div.item-list-tabs li.last label,
+	.yz-orange-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+	.yz-orange-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+		background: #FFC952;
+    	color: #fff;
+	}
 }
 
 .yz-orange-scheme .yz-product-price.yz-variable-price,

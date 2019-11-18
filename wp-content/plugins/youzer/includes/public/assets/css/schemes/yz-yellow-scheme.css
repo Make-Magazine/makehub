@@ -1,6 +1,8 @@
 /**
  * Yellow Scheme
  */
+.yz-yellow-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
+.yz-yellow-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-yellow-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-yellow-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-yellow-scheme .youzer table tfoot tr,
@@ -94,6 +96,17 @@
 	background: #fff952;
 	color: #757575;
 }
+
+@media screen and ( max-width: 768px ) {
+	.yz-yellow-scheme #youzer .yz-group div.item-list-tabs li.last label,
+	.yz-yellow-scheme #youzer .yz-profile div.item-list-tabs li.last label,
+	.yz-yellow-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+	.yz-yellow-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+		background: #fff952;
+    	color: #fff;
+	}
+}
+
 
 .yz-yellow-scheme .youzer .yzwc-main-content address .yz-bullet,
 .yz-yellow-scheme .youzer ul.woocommerce-thankyou-order-details  + p,

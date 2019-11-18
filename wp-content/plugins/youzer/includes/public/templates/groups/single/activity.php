@@ -20,7 +20,7 @@
 		<li id="activity-filter-select" class="last">
 			<label for="activity-filter-by"><?php _e( 'Show:', 'youzer' ); ?></label>
 			<select id="activity-filter-by">
-				<option value="<?php echo yz_wall_show_everything_filter(); ?>"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
+				<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
 
 				<?php bp_activity_show_filters( 'group' ); ?>
 

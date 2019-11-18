@@ -28,8 +28,7 @@ class Youzer_Extensions {
 	    	__( 'Extensions (Add-Ons)', 'youzer' ),
 	    	'administrator',
 	    	'yz-extensions',
-	    	array( &$this, 'extensions_page_content' ),
-	    	false
+	    	array( &$this, 'extensions_page_content' )
 	    );
 	}
 
@@ -118,3 +117,5 @@ class Youzer_Extensions {
 	}
 
 }
+
+		$extentions = new Youzer_Extensions();

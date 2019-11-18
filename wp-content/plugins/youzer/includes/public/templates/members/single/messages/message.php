@@ -9,7 +9,7 @@
 
 ?>
 
-<div class="message-box <?php bp_the_thread_message_css_class(); ?>">
+<div id="thread-message-<?php bp_the_thread_message_id(); ?>" class="message-box <?php bp_the_thread_message_css_class(); ?>">
 
 	<div class="message-metadata">
 
