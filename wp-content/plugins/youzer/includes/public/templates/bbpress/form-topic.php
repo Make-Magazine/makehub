@@ -37,9 +37,9 @@
 					<i class="fas fa-pencil-alt"></i>
 					<?php
 						if ( bbp_is_topic_edit() )
-							printf( __( 'Now Editing &ldquo;%s&rdquo;', 'youzer' ), bbp_get_topic_title() );
+							printf( __( 'Now Editing &ldquo;%s&rdquo;', 'bbpress' ), bbp_get_topic_title() );
 						else
-							bbp_is_single_forum() ? printf( __( 'Create New Topic in &ldquo;%s&rdquo;', 'youzer' ), bbp_get_forum_title() ) : _e( 'Create New Topic', 'youzer' );
+							bbp_is_single_forum() ? printf( __( 'Create New Topic in &ldquo;%s&rdquo;', 'bbpress' ), bbp_get_forum_title() ) : _e( 'Create New Topic', 'bbpress' );
 					?>
 
 				</div>
@@ -50,7 +50,7 @@
 				<?php if ( !bbp_is_topic_edit() && bbp_is_forum_closed() ) : ?>
 
 					<div class="bbp-template-notice">
-						<p><?php _e( 'This forum is marked as closed to new topics, however your posting capabilities still allow you to do so.', 'youzer' ); ?></p>
+						<p><?php _e( 'This forum is marked as closed to new topics, however your posting capabilities still allow you to do so.', 'bbpress' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -58,7 +58,7 @@
 				<?php if ( current_user_can( 'unfiltered_html' ) ) : ?>
 
 					<div class="bbp-template-notice">
-						<p><?php _e( 'Your account has the ability to post unrestricted HTML content.', 'youzer' ); ?></p>
+						<p><?php _e( 'Your account has the ability to post unrestricted HTML content.', 'bbpress' ); ?></p>
 					</div>
 
 				<?php endif; ?>
@@ -72,7 +72,7 @@
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<div class="yz-bbp-form-item yz-bbp-form-item-text">
-						<label for="bbp_topic_title"><?php printf( __( 'Topic Title (Maximum Length : %d) :', 'youzer' ), bbp_get_title_max_length() ); ?></label>
+						<label for="bbp_topic_title"><?php printf( __( 'Topic Title (Maximum Length : %d) :', 'bbpress' ), bbp_get_title_max_length() ); ?></label>
 						<input type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</div>
 
@@ -87,7 +87,7 @@
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes :','youzer' ); ?></label>
+							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes :','bbpress' ); ?></label>
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -98,7 +98,7 @@
 						<?php do_action( 'bbp_theme_before_topic_form_tags' ); ?>
 
 						<div class="yz-bbp-form-item yz-bbp-form-item-text">
-							<label for="bbp_topic_tags"><?php _e( 'Topic Tags :', 'youzer' ); ?></label>
+							<label for="bbp_topic_tags"><?php _e( 'Topic Tags :', 'bbpress' ); ?></label>
 							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags" id="bbp_topic_tags" <?php disabled( bbp_is_topic_spam() ); ?> />
 						</div>
 
@@ -111,10 +111,10 @@
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
 						<div class="yz-bbp-form-item yz-bbp-form-item-select">
-							<label for="bbp_forum_id"><?php _e( 'Forum:', 'youzer' ); ?></label>
+							<label for="bbp_forum_id"><?php _e( 'Forum:', 'bbpress' ); ?></label>
 							<?php
 								bbp_dropdown( array(
-									'show_none' => __( '(No Forum)', 'youzer' ),
+									'show_none' => __( '(No Forum)', 'bbpress' ),
 									'selected'  => bbp_get_form_topic_forum()
 								) );
 							?>
@@ -130,7 +130,7 @@
 
 						<div class="yz-bbp-form-item yz-bbp-form-item-select">
 
-							<label for="bbp_stick_topic"><?php _e( 'Topic Type :', 'youzer' ); ?></label>
+							<label for="bbp_stick_topic"><?php _e( 'Topic Type :', 'bbpress' ); ?></label>
 
 							<?php bbp_form_topic_type_dropdown(); ?>
 
@@ -142,7 +142,7 @@
 
 						<div class="yz-bbp-form-item yz-bbp-form-item-select">
 
-							<label for="bbp_topic_status"><?php _e( 'Topic Status :', 'youzer' ); ?></label>
+							<label for="bbp_topic_status"><?php _e( 'Topic Status :', 'bbpress' ); ?></label>
 
 							<?php bbp_form_topic_status_dropdown(); ?>
 
@@ -161,11 +161,11 @@
 
 							<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'youzer' ); ?></label>
+								<label for="bbp_topic_subscription"><?php _e( 'Notify the author of follow-up replies via email', 'bbpress' ); ?></label>
 
 							<?php else : ?>
 
-								<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'youzer' ); ?></label>
+								<label for="bbp_topic_subscription"><?php _e( 'Notify me of follow-up replies via email', 'bbpress' ); ?></label>
 
 							<?php endif; ?>
 						</div>
@@ -182,11 +182,11 @@
 
 							<div class="yz-bbp-form-item yz-bbp-form-item-checkbox">
 								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" type="checkbox" value="1" <?php bbp_form_topic_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_log_topic_edit"><?php _e( 'Keep a log of this edit:', 'youzer' ); ?></label>
+								<label for="bbp_log_topic_edit"><?php _e( 'Keep a log of this edit:', 'bbpress' ); ?></label>
 							</div>
 
 							<div class="yz-bbp-form-item yz-bbp-form-item-text">
-								<label for="bbp_topic_edit_reason"><?php printf( __( 'Optional reason for editing:', 'youzer' ), bbp_get_current_user_name() ); ?></label>
+								<label for="bbp_topic_edit_reason"><?php printf( __( 'Optional reason for editing:', 'bbpress' ), bbp_get_current_user_name() ); ?></label>
 								<input type="text" value="<?php bbp_form_topic_edit_reason(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_edit_reason" id="bbp_topic_edit_reason" />
 							</div>
 						</div>
@@ -201,7 +201,7 @@
 
 						<?php do_action( 'bbp_theme_before_topic_form_submit_button' ); ?>
 
-						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><i class="fas fa-paper-plane"></i><?php _e( 'Submit', 'youzer' ); ?></button>
+						<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_topic_submit" name="bbp_topic_submit" class="button submit"><i class="fas fa-paper-plane"></i><?php _e( 'Submit', 'bbpress' ); ?></button>
 
 						<?php do_action( 'bbp_theme_after_topic_form_submit_button' ); ?>
 
@@ -226,7 +226,7 @@
 
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bbp-template-notice">
-			<p><?php printf( __( 'The forum &#8216;%s&#8217; is closed to new topics and replies.', 'youzer' ), bbp_get_forum_title() ); ?></p>
+			<p><?php printf( __( 'The forum &#8216;%s&#8217; is closed to new topics and replies.', 'bbpress' ), bbp_get_forum_title() ); ?></p>
 		</div>
 	</div>
 
@@ -234,7 +234,7 @@
 
 	<div id="no-topic-<?php bbp_topic_id(); ?>" class="bbp-no-topic">
 		<div class="bbp-template-notice">
-			<p><?php is_user_logged_in() ? _e( 'You cannot create new topics.', 'youzer' ) : _e( 'You must be logged in to create new topics.', 'youzer' ); ?></p>
+			<p><?php is_user_logged_in() ? _e( 'You cannot create new topics.', 'bbpress' ) : _e( 'You must be logged in to create new topics.', 'bbpress' ); ?></p>
 		</div>
 	</div>
 

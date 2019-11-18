@@ -67,7 +67,6 @@
     border: none;
     text-align: left;
     overflow: hidden;
-    line-height: 16px;
     position: relative;
     margin: 0 0 35px 0;
 }
@@ -343,7 +342,6 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     padding: 15px 20px;
     margin: 0 0 35px;
     background-color: #fff;
-    border-radius: 3px;
 }
 
 .youzer div.item-list-tabs li {
@@ -351,87 +349,9 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     float: left;
 }
 
-.youzer div.item-list-tabs li#activity-filter-select i {
-    color: #9b9b9b;
-    background-color: #f6f6f6;
-}
-
-.youzer div.item-list-tabs li .yz-dropdown-area {
-    right: 0;
-    top: 111px;
-    width: 334px;
-    padding: 15px;
-     display: none; 
-    background: #f6f6f6;
-    text-align: center;
-    position: absolute;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    /*box-shadow: 0 4px 3px rgba(0, 0, 0, 0.1);*/
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-
-.youzer div.item-list-tabs li .yz-dropdown-area:before,
-.youzer div.item-list-tabs li .yz-dropdown-area:after {
-  content: ' ';
-  display: block;
-  border-style: solid;
-  border-width: 0 .5em .8em .5em;
-  border-color: transparent;
-  position: absolute;
-}
-
-.youzer div.item-list-tabs li#activity-filter-select .yz-dropdown-area:after,
-.youzer div.item-list-tabs li#activity-filter-select .yz-dropdown-area:before {
-    right: 90px;
-}
-
-.youzer div.item-list-tabs li.yz-activity-show-search .yz-dropdown-area:after,
-.youzer div.item-list-tabs li.yz-activity-show-search .yz-dropdown-area:before {
-    right: 38px;
-}
-
-.youzer div.item-list-tabs li .yz-dropdown-area:before {
-  top: -.8em;
-  /*border-bottom-color: #eaeaea;*/
-}
-
-.youzer div.item-list-tabs li .yz-dropdown-area:after {
-    top: -.7em;
-    border-bottom-color: #f6f6f6;
-}
-
-.youzer div.item-list-tabs li.yz-activity-show-search {
-    float: right;
-    margin-top: 2px;
-    /*position: relative;*/
-}
-
-.youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i {
-    color: #fff;
-    background-color: #a4aaca;
-}
-
-.youzer div.item-list-tabs li#activity-filter-select .yz-activity-show-filter i,
-.youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i {
-    width: 42px;
-    height: 42px;
-    line-height: 42px;
-    text-align: center;
-    border-radius: 3px;
-    margin-left: 8px;
-    cursor: pointer;
-    display: inline-block;
-    vertical-align: middle;
-}
-
 .youzer div.item-list-tabs li.last {
     float: right;
     margin-top: 2px;
-}
-
-#youzer .yz-profile div.item-list-tabs li.last {
-    float: right;
 }
 
 .rtl .youzer div.item-list-tabs li.last {
@@ -442,12 +362,12 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     margin-right: 0;
 }
 
-#youzer .youzer div.item-list-tabs li a:hover,
-#youzer .youzer div.item-list-tabs li.selected a,
-#youzer .youzer div.item-list-tabs li.current a{
+#buddypress.youzer div.item-list-tabs li a:hover,
+#buddypress.youzer div.item-list-tabs li.selected a,
+#buddypress.youzer div.item-list-tabs li.current a{
     background-color: transparent;
     font-weight: 600;
-    /*color: initial;*/
+    color: initial;
 }
 
 #buddypress.youzer div.item-list-tabs:not(#subnav) ul li a,
@@ -620,7 +540,7 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     vertical-align: middle;
 }
 
-#youzer .item-list-tabs li label {
+.item-list-tabs li label {
     width: auto;
     color: #969696;
     font-size: 13px;
@@ -643,27 +563,12 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     margin-left: 5px;
 }
 
-#yz-wall-nav .item-list-tabs li.yz-activity-show-search label,
-#yz-wall-nav .item-list-tabs li#activity-filter-select label {
-    display: inline-block;
-    background: #a4aaca;
-    padding: 15px;
-    border-radius: 3px;
-    margin: 0;
-    font-size: 13px;
-    line-height: 15px;
-    color: #fff;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 13px;
-}
-
 /**
  * Notifications
  */
 
-#youzer table.messages-notices,
-#youzer table.notifications {
+#buddypress table.messages-notices,
+#buddypress table.notifications {
     margin: 0;
     padding: 0;
     width: 100%;
@@ -680,8 +585,8 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     border-bottom: 1px solid #f3f3f3;
 }
 
-#youzer .messages-notices thead th,
-#youzer .notifications thead th {
+#buddypress .messages-notices thead th,
+#buddypress .notifications thead th {
     border: none;
     /*color: #828282;*/
     font-size: 13px;
@@ -691,12 +596,12 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     text-align: center;
 }
 
-#youzer .notifications thead th.actions {
+#buddypress .notifications thead th.actions {
     width: 20%;
 }
 
-#youzer table.messages-notices tr,
-#youzer table.notifications tr {
+#buddypress table.messages-notices tr,
+#buddypress table.notifications tr {
     border: none;
     border-bottom: 1px solid #f6f6f6;
 }
@@ -706,8 +611,8 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     text-align: center;
 }
 
-#youzer .messages-notices tbody td,
-#youzer .notifications tbody td {
+#buddypress .messages-notices tbody td,
+#buddypress .notifications tbody td {
     padding: 20px 5px;
 }
 
@@ -926,7 +831,6 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
 }
 
 .item-list-tabs #search-message-form #messages_search {
-    margin: 0;
     height: 45px;
     color: #898989;
     font-size: 13px;
@@ -981,10 +885,6 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
 /**
  * Compose Message Form.
  */
-.yz-compose-message-textarea {
-    position: relative;
-}
-
 #send_message_form .submit #send {
     border: none;
     font-size: 12px;
@@ -1005,11 +905,10 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     margin-bottom: 25px;
 }
 
-#youzer .yzmsg-form-item label {
+.yzmsg-form-item label {
     display: block;
     color: #898989;
     font-size: 13px;
-    line-height: 20px;
     font-weight: 600;
     margin-bottom: 15px;
     text-transform: capitalize; 
@@ -1025,7 +924,7 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     line-height: 26px;
 }
 
-#youzer .yzmsg-form-item input[type="text"]:not(.search) {
+.yzmsg-form-item input[type="text"]:not(.search) {
     width: 50%;
     height: 41px;
     color: #898989;
@@ -1200,7 +1099,7 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     cursor: pointer;
     position: absolute;
     right: 25px;
-    top: 1px;
+    top: 2px;
 }
 
 #message-thread .message-metadata .yz-report-message i {
@@ -1264,7 +1163,7 @@ body:not(.notifications):not(.messages) .youzer .pagination .pagination-links {
     margin-bottom: 0;
 }
 
-#youzer #send-reply {
+#send-reply {
     padding: 25px;
     margin-bottom: 35px;
     background-color: #f9f9f9;
@@ -1431,7 +1330,6 @@ ul.acfb-holder {
 }
 
 ul.acfb-holder input#send-to-input {
-    margin: 0;
     width: 50%;
     display: block;
 }
@@ -1671,8 +1569,8 @@ li.friend-tab span.p {
     left: 0;
 }
 
-#youzer a.message-action-star,
-#youzer a.message-action-unstar {
+#buddypress a.message-action-star,
+#buddypress a.message-action-unstar {
     border-bottom: 0;
     text-decoration: none;
     outline: none;
@@ -1702,8 +1600,8 @@ a.message-action-star:hover {
     content: "\f155";
 }
 
-#youzer table.messages-notices thead .yz_field_indication,
-#youzer table.notifications thead .yz_field_indication{
+#buddypress table.messages-notices thead .yz_field_indication,
+#buddypress table.notifications thead .yz_field_indication{
     border-color: rgba(255, 255, 255, 0.75);
 }
 
@@ -1781,7 +1679,7 @@ a.message-action-star:hover {
 /**
  * Mutual Css
  */
-#youzer .youzer select {
+.youzer select {
     -webkit-tap-highlight-color: transparent;
     background-color: #f6f6f6;
     box-sizing: border-box;
@@ -1793,7 +1691,6 @@ a.message-action-star:hover {
     font-size: 14px;
     height: 38px;
     line-height: 39px;
-    margin: 0;
     outline: none;
     padding: 0 10px 0 10px;
     position: relative;
@@ -1832,13 +1729,6 @@ a.message-action-star:hover {
     -moz-border-radius: 2px;
     -ms-border-radius: 2px;
     -o-border-radius: 2px;
-}
-
-.youzer .message-content img.emojioneemoji {
-    max-width: 20px;
-    display: inline-block;
-    vertical-align: middle;
-    margin: -.2ex .15em .2ex;
 }
 
 #send-reply,
@@ -1915,7 +1805,6 @@ ul.acfb-holder li.friend-tab img,
     -o-border-radius: 100%;
 }
 
-#message-recipients .highlight h2,
 .yzmsg-form-item textarea,
 #send-reply #send_reply_button,
 #sitewide-notice #message button,
@@ -1934,100 +1823,18 @@ ul.acfb-holder li.friend-tab img,
     .messages-options-nav,
     table.messages-notices,
     .notifications-options-nav,
-    .my-groups .youzer #yz-groups-list li .yz-group-data,
     .my-friends .youzer #friend-list li:last-of-type,
     .youzer:not(.yz-global-wall) .item-list-tabs:not(#group-create-tabs),
     .follows .youzer #yz-members-list li:last-of-type .yzm-user-data,
     .my-friends .youzer #yz-members-list li:last-of-type .yzm-user-data,
-    .my-groups .youzer #yz-groups-list li:last-of-type .yz-group-data,
-    .follows .youzer #yz-members-list li .yzm-user-data,
-    .my-friends .youzer #yz-members-list li .yzm-user-data {
-        margin-bottom: 15px !important;
+    .my-groups .youzer #yz-groups-list li:last-of-type .yz-group-data {
+        margin-bottom: 25px !important;
     }
+
 }
 
 @media screen and ( max-width: 768px ) {
-    
-    #youzer .yz-group div.item-list-tabs,
-    #youzer .yz-profile div.item-list-tabs {
-        display: none;
-        padding: 0;
-        margin: 0;
-    }
 
-    #youzer .yz-group div.item-list-tabs li,
-    #youzer .yz-profile div.item-list-tabs li {
-        width: 100%;
-        float: none;
-        display: block;
-        padding: 0 20px 20px;
-    }
-
-    #youzer .yz-group div.item-list-tabs li:first-child,
-    #youzer .yz-profile div.item-list-tabs li:first-child {
-        padding-top: 20px;
-    }
-
-    #youzer .yz-group div.item-list-tabs li a,
-    #youzer .yz-profile div.item-list-tabs li a {
-        margin: 0;
-        font-size: 13px;
-        text-transform: initial;
-    }
-
-    #youzer .yz-group div.item-list-tabs li.last,
-    #youzer .yz-profile div.item-list-tabs li.last {
-        float: none;
-        width: 100%;
-        padding: 20px;
-        margin-top: 0;
-        border-top: 1px solid #f6f6f6;
-    }
-
-    #youzer .yz-group div.item-list-tabs li.last label,
-    #youzer .yz-profile div.item-list-tabs li.last label {
-        display: inline-block;
-        background: #a4aaca;
-        padding: 15px;
-        border-radius: 3px;
-        margin: 0;
-        font-size: 13px;
-        line-height: 15px;
-        color: #fff;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 13px;
-    }
-
-    #youzer .yz-group div.item-list-tabs li.last .nice-select,
-    #youzer .yz-group div.item-list-tabs li.last select,
-    #youzer .yz-profile div.item-list-tabs li.last .nice-select,
-    #youzer .yz-profile div.item-list-tabs li.last select {
-        display: block;
-        width: 100%;
-        padding: 0;
-    }
-
-    #youzer .yz-group div.item-list-tabs li.last .nice-select.open .list,
-    #youzer .yz-profile div.item-list-tabs li.last .nice-select.open .list {
-        width: 100%;
-    }   
-
-    #youzer .yz-group div.item-list-tabs li.last .nice-select .current,
-    #youzer .yz-profile div.item-list-tabs li.last .nice-select .current {
-        text-align: center;
-    }
-
-    #youzer .yz-group div.item-list-tabs li.last .nice-select,
-    #youzer .yz-group div.item-list-tabs li.last select,
-    #youzer .yz-group div.item-list-tabs li.last .nice-select .current,
-    #youzer .yz-profile div.item-list-tabs li.last .nice-select,
-    #youzer .yz-profile div.item-list-tabs li.last select,
-    #youzer .yz-profile div.item-list-tabs li.last .nice-select .current {
-        height: 45px;
-        line-height: 45px;
-    }
-/*
     #message,
     .youzer .pagination,
     table.notifications,
@@ -2039,9 +1846,9 @@ ul.acfb-holder li.friend-tab img,
     .follows .youzer #yz-members-list li:last-of-type .yzm-user-data,
     .my-friends .youzer #yz-members-list li:last-of-type .yzm-user-data,
     .my-groups .youzer #yz-groups-list li:last-of-type .yz-group-data {
-        margin-bottom: 15px !important;
+        margin-bottom: 35px !important;
     }
-*/
+
     .youzer:not(.yz-group) .item-list-tabs:not(.activity-type-tabs-subnav) ul li.last {
         float: none;
         margin-top: 0;
@@ -2060,11 +1867,6 @@ ul.acfb-holder li.friend-tab img,
     .rtl #send-reply .emojionearea .emojionearea-editor,
     .rtl #send-reply textarea {
         padding: 30px 100px 30px 30px;
-    }
-
-    .item-list-tabs #search-message-form {
-        padding: 20px;
-        margin: 0;
     }
 }
 
@@ -2125,7 +1927,7 @@ ul.acfb-holder li.friend-tab img,
         padding: 15px;
         display: block;
     }
-    /*
+    
     #message,
     #send-reply,
     #send_message_form,
@@ -2142,7 +1944,7 @@ ul.acfb-holder li.friend-tab img,
     .my-groups .youzer #yz-groups-list li:last-of-type .yz-group-data {
         margin-bottom: 25px !important;
     }
-*/
+
     /**
      * Friends - Request.
      */
@@ -2219,8 +2021,8 @@ ul.acfb-holder li.friend-tab img,
         margin-bottom: 15px;
     }
 
-    #youzer .messages-notices tbody td,
-    #youzer .notifications tbody td {
+    #buddypress .messages-notices tbody td,
+    #buddypress .notifications tbody td {
         padding: 8px 15px;
         border-bottom: none;
     }
@@ -2327,14 +2129,10 @@ ul.acfb-holder li.friend-tab img,
     #send_message_form {
         padding: 25px;
     }
-
-    .youzer div.item-list-tabs li {
-        float: none;
-    }
 }
 
 @media screen and ( max-width: 375px ) {
-    /*
+    
     #message,
     #send-reply,
     #send_message_form,
@@ -2353,7 +2151,7 @@ ul.acfb-holder li.friend-tab img,
     .my-groups .youzer #yz-groups-list li:last-of-type .yz-group-data {
         margin-bottom: 15px !important;
     }
-*/
+
     .follows .youzer #yz-members-list li .yzm-user-data,
     .my-friends .youzer #yz-members-list li .yzm-user-data,
     .my-groups .youzer #yz-groups-list .yz-group-data {

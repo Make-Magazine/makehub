@@ -44,10 +44,7 @@
 
 	<div class="yzmsg-form-item">
 		<label for="message_content"><?php _e( 'Message', 'youzer' ); ?></label>
-		<div class="yz-compose-message-textarea">
 		<textarea name="content" id="message_content" rows="15" cols="40"><?php bp_messages_content_value(); ?></textarea>
-		<?php if ( 'on' == yz_options( 'yz_enable_messages_emoji' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
-		</div>
 	</div>
 
 	<input type="hidden" name="send_to_usernames" id="send-to-usernames" value="<?php bp_message_get_recipient_usernames(); ?>" class="<?php bp_message_get_recipient_usernames(); ?>" />

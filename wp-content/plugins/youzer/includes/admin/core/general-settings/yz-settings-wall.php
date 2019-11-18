@@ -292,24 +292,6 @@ function yz_wall_settings() {
 
     $Yz_Settings->get_field(
         array(
-            'title' => __( 'Activity Moderation Settings', 'youzer' ),
-            'type'  => 'openBox'
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'taxonomy',
-            'id'    => 'yz_moderation_keys',
-            'title' => __( 'Forbidden Community Words', 'youzer' ),
-            'desc'  => __( 'Add a list of forbidden words that cannot be used on the activity posts and comments.', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-    $Yz_Settings->get_field(
-        array(
             'title' => __( 'Posts Per Page Settings', 'youzer' ),
             'type'  => 'openBox'
         )

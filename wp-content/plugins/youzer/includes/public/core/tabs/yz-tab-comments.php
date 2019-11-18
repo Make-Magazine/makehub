@@ -51,8 +51,9 @@ class YZ_Comments_Tab {
 		yz_loading();
 		echo '</div>';
 
-		yz_profile_posts_comments_pagination();	
-		
+		if ( 'on' == yz_options( 'yz_display_comments_tab' ) && yz_is_user_have_comments() && yz_check_pagination( 'comments' ) && bp_is_current_component( 'comments' ) ) {
+			yz_profile_posts_comments_pagination();	
+		}
 	}
 
 	/**

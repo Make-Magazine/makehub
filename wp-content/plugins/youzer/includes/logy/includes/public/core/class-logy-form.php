@@ -19,7 +19,7 @@ class Logy_Form {
 
 		do_action( 'logy_before_' . $form . '_form' );
 
-		echo '<div id="logy" class="logy logy-page-box yz-page">';
+		echo '<div class="logy logy-page-box">';
 		$this->get_form( $form, $attributes );
 		echo '</div>';
 
@@ -60,7 +60,7 @@ class Logy_Form {
 			<?php $this->get_form_header( $form ); ?>
 			<?php $this->get_form_messages( $attributes ); ?>
 
-			<form id="logy-form" class="logy-<?php echo $form; ?>-form" method="post" action="<?php echo $action; ?>">
+			<form class="logy-<?php echo $form; ?>-form" method="post" action="<?php echo $action; ?>">
 
 				<!-- After Form Buttons -->
 				<?php do_action( 'logy_before_' . $form . '_fields', $shortcode_attrs ); ?>

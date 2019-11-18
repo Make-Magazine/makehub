@@ -205,8 +205,6 @@ class Youzer_Styling {
                                 .yz-vertical-layout .yz-content,
                                 .youzer .yz-boxed-navbar,
                                 .youzer .wild-content,
-                                #yz-members-directory,
-                                #yz-groups-list,
                                 .yz-page-main-content,
                                 .yz-header-content,
                                 .yz-cover-content',
@@ -1032,9 +1030,6 @@ class Youzer_Styling {
         $pattern = 'url(' . YZ_PA . 'images/dotted-bg.png)';     
 
         $custom_css = "
-
-.youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
-#yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-community-hashtags .yz-hashtag-item:hover,
 .youzer table tfoot tr,
@@ -1129,15 +1124,6 @@ div.bbp-submit-wrapper button,
                 background-color: $scheme_color !important;
             }
 
-@media screen and ( max-width: 768px ) {
-    #youzer .yz-group div.item-list-tabs li.last label,
-    #youzer .yz-profile div.item-list-tabs li.last label,
-    #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-    #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-        background-color: $scheme_color !important;
-        color: #fff;
-    }
-}
             .yz-bbp-topic-head-meta .yz-bbp-head-meta-last-updated a:not(.bbp-author-name),
             .widget_display_topics li .topic-author a.bbp-author-name,
             .activity-header .activity-head p a:not(:first-child),

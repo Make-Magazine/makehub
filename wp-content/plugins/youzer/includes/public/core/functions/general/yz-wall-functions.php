@@ -19,25 +19,23 @@ add_action( 'init', 'yz_rename_activity_slug', 1 );
  */
 function yz_display_wall_post_meta() {
 	
+	if ( is_user_logged_in() ) {
+		return true;
+	}
+
 	$show = true;
-
-	// if ( is_user_logged_in() ) {
-	// 	return true;
-	// }
-
-	// $show = true;
 	
 	// Get Post Likes
 	$post_likes = (int) yz_get_who_liked_activities( bp_get_activity_id() );
 
-	// // Get Post Comments
+	// Get Post Comments
 	$post_comments = (int) bp_activity_get_comment_count();
-	//
+
 	if ( 0 == $post_comments && $post_likes <= 0 && ! is_user_logged_in() ) {
-		$show = false;
+		return false;
 	}
 
-	return apply_filters( 'yz_display_wall_post_meta', $show );
+	return true;
 }
 
 /**

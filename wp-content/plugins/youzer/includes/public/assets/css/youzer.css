@@ -14,7 +14,6 @@
 /* Fonts */
 body .youzer,
 body .youzer h3,
-body #youzer input,
 body .youzer input,
 body .youzer button {
     font-family: 'Open Sans', sans-serif;
@@ -153,10 +152,8 @@ body .youzer :after {
     box-shadow: none;
 }
 
-body #youzer form,
 .youzer form {
     text-align: initial;
-    margin: 0;
 }
 
 .youzer .radio {
@@ -169,14 +166,6 @@ body #youzer form,
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-tap-highlight-color: transparent;
-}
-
-#youzer a.loading {
-    opacity: 1;
-}
-
-#youzer a.remove {
-    text-indent: 0;
 }
 
 .youzer a:focus,
@@ -209,7 +198,6 @@ body #youzer form,
 .youzer button:focus,
 .youzer textarea:focus {
     outline:0;
-    box-shadow: none;
 }
 
 .logy header,
@@ -269,10 +257,9 @@ body #youzer form,
     box-shadow: none;
 }
 
-#youzer select:not([multiple]),
-html.touch #youzer select {
+.youzer select:not([multiple]),
+html.touch .youzer select {
     background: initial;
-    display: none;
 }
 
 /**
@@ -309,9 +296,6 @@ html.touch #youzer select {
     line-height: 14px;
     padding: 15px 5px;
     text-align: center;
-    vertical-align: middle;
-    letter-spacing: initial;
-    text-transform: initial;
 }
 
 .youzer table tbody tr {
@@ -324,7 +308,6 @@ html.touch #youzer select {
     color: #7c838a;
     font-size: 13px;
     font-weight: 400;
-    border: none;
 }
 
 .youzer table tbody td a {
@@ -358,10 +341,6 @@ html.touch #youzer select {
     overflow: visible;
 }
 
-.youzer input {
-    box-shadow: none !important;
-}
-
 .youzer input[type="checkbox"],
 .youzer input[type="radio"] {
     margin: 0;
@@ -387,15 +366,12 @@ html.touch #youzer select {
 .youzer select,
 .youzer-dialog,
 .youzer textarea,
-#youzer div textarea,
 .youzer a.button,
 #sitewide-notice,
 .yz-tooltip:after,
 .widget.buddypress,
 .youzer-dialog-desc,
 .yz-items-list-widget,
-.yz-modal-actions a,
-.yz-modal-actions button,
 .yz-my-account-widget,
 [data-yztooltip]:after,
 .yz-tool-btn .yz-tool-name,
@@ -485,7 +461,7 @@ i.yz-small-verified-icon {
 .yz-tools {
     top: 0;
     right: 0;
-    z-index: 1;
+    z-index: 9;
     opacity: 0;
     position: absolute;
     -webkit-transition: all .5s ease-in-out;
@@ -677,7 +653,7 @@ i.yz-small-verified-icon {
 }
 
 /* Green */
-.yz-tabs-list-gradient a#group-events i,
+
 .yz-tabs-list-gradient div.item-list-tabs li:nth-child(4) a:before,
 .yz-tabs-list-gradient a#forum:before,
 .yz-tabs-list-gradient a#sentbox i,
@@ -919,8 +895,8 @@ i.yz-small-verified-icon {
  * Members & Groups Widget
  */
 
-body div.widget.buddypress.widget_bp_groups_widget div.item-options a,
-body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
+.widget_bp_groups_widget .item-options a,
+.widget_bp_core_members_widget .item-options a {
     color: #fff !important;
     font-size: 10px;
     box-shadow: none;
@@ -930,7 +906,6 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
     display: inline-block;
     text-decoration: none;
     letter-spacing: 0.05em;
-    border: none !important;
     background-color: #898989;
     text-transform: uppercase;
 }
@@ -1078,8 +1053,8 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
     margin-bottom: 10px;
 }
 
-body .bbp_widget_login .bbp-login-form label,
-body #bp-login-widget-form label {
+.bbp_widget_login .bbp-login-form label,
+#bp-login-widget-form label {
     color: #7c838a;
     font-size: 14px;
     font-weight: 600;
@@ -1654,7 +1629,7 @@ body #bp-login-widget-form label {
     background-color: #fff;
 }
 
-#youzer #message p {
+#message p {
     margin: 0;
     padding: 0;
     color: #898989;
@@ -1753,26 +1728,17 @@ div#message.info,
     background-color: #f2f2f2;
 }
 
-body .youzer-sidebar .buddypress div.item-options {
+.youzer-sidebar .item-options {
     margin-top: 15px;
 }
-/*
+
 .youzer-sidebar .item-options,
 .youzer-sidebar .item-list  {
-}*/
+    padding: 0 25px;
+}
 
 .youzer-sidebar .item-list {
-    padding-bottom: 25px !important;
-}
-
-body .buddypress.widget .item-options,
-body .buddypress.widget .item-list {
-    padding: 0 25px !important;
-    float: initial !important;
-}
-
-body .buddypress.widget .item-list {
-    padding-bottom: 25px !important;
+    padding-bottom: 25px;
 }
 
 .youzer-sidebar .yz-items-list-widget  {
@@ -2048,7 +2014,7 @@ body .buddypress.widget .item-list {
     line-height: 39px;
     outline: none;
     padding-left: 18px;
-    padding-right: 35px;
+    padding-right: 30px;
     position: relative;
     -webkit-transition: all 0.2s ease-in-out;
     transition: all 0.2s ease-in-out;
@@ -2089,7 +2055,7 @@ body .buddypress.widget .item-list {
     content: '';
     display: block;
     height: 5px;
-    margin-top: -5px;
+    margin-top: -4px;
     pointer-events: none;
     position: absolute;
     top: 50%;
@@ -2102,7 +2068,7 @@ body .buddypress.widget .item-list {
     -webkit-transition: all 0.15s ease-in-out;
     transition: all 0.15s ease-in-out;
     width: 5px;
-    right: 15px;
+    right: 12px;
 }
 
 .rtl .youzer div.item-list-tabs .yz-bar-select:after,
@@ -2119,7 +2085,6 @@ body .buddypress.widget .item-list {
     font-weight: 600;
     overflow: hidden;
     line-height: 40px;
-    text-align: center;
     word-break: break-all;
     text-transform: capitalize;
 }
@@ -2259,16 +2224,16 @@ body .buddypress.widget .item-list {
 .no-csspointerevents .nice-select.open .list {
     display: block;
 }
-/*
+
 .youzer div.item-list-tabs .nice-select,
 .youzer div.item-list-tabs .yz-bar-select,
 #yz-wall-nav .nice-select {
     height: 40px;
-    min-width: 125px;
+    min-width: 151px;
     line-height: 37px;
     padding-right: 30px;
     vertical-align: middle;
-}*/
+}
 
 .rtl .youzer div.item-list-tabs .nice-select,
 .rtl .youzer div.item-list-tabs .yz-bar-select,
@@ -2428,7 +2393,6 @@ body .buddypress.widget .item-list {
     padding: 0;
 }
 
-#yz-modal .yz-modal-2rows:after,
 .yz-media .yz-media-group:after,
 .yz-page-main-content:after,
 .yz-wall-actions:after,
@@ -2469,7 +2433,6 @@ body .buddypress.widget .item-list {
 
 .youzer-dialog-container .yz-dialog-buttons a:hover {
     border-color: #d0d0d0;
-    text-decoration: none;
 }
 
 .yz-is-visible .youzer-dialog-container {
@@ -2626,6 +2589,7 @@ a.button:before,
     border-radius: 1px;
 }
 
+#yz-wall-nav,
 .yz-scrolltotop i,
 .yz-product-actions a,
 .yz-product-content .yz-product-tags li,
@@ -2642,7 +2606,6 @@ a.button:before,
 }
 
 #message,
-#yz-wall-nav,
 .nice-select,
 .yz-tool-btn,
 .yz-tooltip:after,
@@ -2783,31 +2746,6 @@ a.button:before,
 }
 
 /**
- * Emojis One CSS.
- */
-.yz-load-emojis {
-    top: 9px;
-    right: 9px;
-    width: 18px;
-    cursor: pointer;
-    position: absolute;
-}
-
-.yz-load-emojis i {
-    font-size: 17px;
-    color: #bbb;
-}
-
-.yz-load-emojis i:hover {
-    color: #898989;
-}
-
-.yz-comments-emojis .yz-load-emojis {
-    top: 15px;
-    left: 20px;
-}
-
-/**
  * is online/offline
  */
 .yzb-head-content .yzb-user-status {
@@ -2838,7 +2776,7 @@ a.button:before,
 -------------------------------------------------------------- */
 
 .bbp-login-form fieldset legend {
-    display: none !important;
+    display: none;
 }
 
 .bbp-login-form .bbp-username input,
@@ -2850,10 +2788,6 @@ a.button:before,
 .bbp-login-form label {
     width: 140px;
     display: inline-block;
-}
-
-.bbp_widget_login .bbp-login-form button {
-    min-height: 50px;
 }
 
 #sidebar .bbp-login-form label {
@@ -2982,12 +2916,6 @@ a.button:before,
     font-weight: 600;
 }
 
-.widget_display_topics li a.bbp-forum-title:before {
-    content: '';
-    padding: 0;
-    margin: 0;
-}
-
 .yz-follow-message-button,
 .widget_display_topics li .topic-author img,
 .widget_display_topics li .topic-author a.bbp-author-avatar {
@@ -3029,7 +2957,6 @@ a.button:before,
 }
 
 .widget_display_forums li a:before {
-    padding: 0;
     width: 35px;
     height: 35px;
     color: #ffffff;
@@ -3460,7 +3387,7 @@ a.button:before,
 }
 
 .yz-report-tool .yz-tool-icon  {
-    background-color: #7b7b7b;
+    background-color: #F44336;
 }
 
 .yz-pin-tool .yz-tool-icon i,
@@ -3514,10 +3441,6 @@ a.button:before,
 
 .yz-item-tool.yz-delete-tool .yz-tool-icon {
     background-color: #F44336;
-}
-
-.yz-item-tool.yz-edit-tool .yz-tool-icon {
-    background-color: #1fc36a;
 }
 
 .yz-item-tool.yz-edit-tool .yz-tool-icon i,
@@ -3810,17 +3733,17 @@ a.button:before,
 /**
  * Modal
  */
-#yz-modal .yz-modal * {
+.yz-modal * {
      -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
             box-sizing: border-box;
 }
 
-#yz-modal .yz-modal .uk-option-item  {
+.yz-modal .uk-option-item  {
     margin-bottom: 25px;
 }
 
-#yz-modal .yz-modal .uk-option-item .option-title {
+.yz-modal .uk-option-item .option-title {
     margin: 0;
     display: flex;
     color: #838a9a;
@@ -3829,7 +3752,7 @@ a.button:before,
     text-transform: capitalize;
 }
 
-#yz-modal .yz-modal .uk-option-item .option-desc {
+.yz-modal .uk-option-item .option-desc {
     display: block;
     color: #929292;
     font-size: 13px;
@@ -3837,24 +3760,22 @@ a.button:before,
     text-transform: lowercase;
 }
 
-#yz-modal .yz-modal .uk-option-item .option-desc:first-letter {
+.yz-modal .uk-option-item .option-desc:first-letter {
     text-transform: capitalize;
 }
 
-#yz-modal .yz-modal .uk-option-item input[type=text],
-#yz-modal .yz-modal .uk-option-item input[type=email] {
+.yz-modal .uk-option-item input[type=text] {
     height: 45px;
     padding: 8px 12px;
 }
 
-#yz-modal .yz-modal .uk-option-item textarea {
+.yz-modal .uk-option-item textarea {
     height: 100px;
     padding: 15px;
 }
 
-#yz-modal .yz-modal .uk-option-item input[type=text],
-#yz-modal .yz-modal .uk-option-item input[type=email],
-#yz-modal .yz-modal .uk-option-item textarea {
+.yz-modal .uk-option-item input[type=text],
+.yz-modal .uk-option-item textarea {
     color: #9a9a9a;
     font-size: 13px;
     box-shadow: none;
@@ -3866,30 +3787,11 @@ a.button:before,
     width: 100%;
 }
 
-#yz-modal .yz-modal .uk-option-item select,
-#yz-modal .yz-modal .uk-option-item .nice-select {
-    margin-top: 15px;
-}
-
-#yz-modal .yz-modal .uk-option-item:last-of-type {
+.yz-modal .uk-option-item:last-of-type {
     margin-bottom: 0;
 }
 
-#yz-modal .yz-modal-2rows .uk-option-item:nth-child(1) {
-    width: 48%;
-    float: left;
-}
-
-#yz-modal .yz-modal-2rows .uk-option-item:nth-child(2) {
-    width: 48%;
-    float: right;
-}
-
-#yz-modal .yz-modal-2rows .uk-option-item:last-of-type {
-    margin-bottom: 25px;
-}
-
-#yz-modal .yz-modal {
+.yz-modal {
     left: 0;
     right: 0;
     top: 80px;
@@ -3923,7 +3825,7 @@ a.button:before,
     visibility: visible;
 }
 
-#yz-modal .yz-modal-title {
+.yz-modal-title {
     text-transform: capitalize;
     background-size: cover;
     position: relative;
@@ -3935,13 +3837,13 @@ a.button:before,
     margin: 0;
 }
 
-#yz-modal .yz-modal-title > i,
-#yz-modal .yz-modal-title .yz-modal-title-text {
+.yz-modal-title > i,
+.yz-modal-title .yz-modal-title-text {
     display: inline-block;
     vertical-align: middle;
 }
 
-#yz-modal .yz-modal-title > i {
+.yz-modal-title > i {
     width: 35px;
     height: 35px;
     color: #ffffff;
@@ -3952,7 +3854,7 @@ a.button:before,
     border-radius: 3px;
 }
 
-#yz-modal .yz-modal-title {
+.yz-modal-title {
     background: #24c6dc;
     background: url(../images/back-pattern.png),linear-gradient(to left,#FFC107 ,#FF5722);
     background: url(../images/back-pattern.png),-webkit-linear-gradient(right,#FFC107 ,#FF5722);
@@ -3962,25 +3864,25 @@ a.button:before,
     text-align: right;
 }
 
-#yz-modal .yz-modal-content {
+.yz-modal-content {
     margin: 10px;
     color: #929292;
     font-size: 13px;
-    /*overflow-y: auto;*/
+    overflow-y: auto;
     font-weight: 300;
-    /*max-height: 350px;*/
+    max-height: 350px;
     position: relative;
     padding: 20px 25px;
 }
 
-#yz-modal .yz-modal-actions {
+.yz-modal-actions {
     text-align: right;
     padding: 0 35px 25px;
     background-color: #fff;
 }
 
-#yz-modal .yz-modal-actions a,
-#yz-modal .yz-modal-actions button {
+.yz-modal-actions a,
+.yz-modal-actions button {
     margin: 0;
     font-size: 13px;
     border: none;
@@ -3998,17 +3900,17 @@ a.button:before,
     margin-right: 10px;
 }
 
-#yz-modal .yz-modal-save {
+.yz-modal-save {
     background-color: #47ca74;
     color: #fff;
 }
 
-#yz-modal .yz-modal-close {
+.yz-modal-close {
     background-color: #f1f1f1;
     color: #8a8a8a;
 }
 
-#yz-modal .yz-modal-actions .yz-modal-delete {
+.yz-modal-actions .yz-modal-delete {
     color: #fff;
     cursor: pointer;
     margin-top: 15px;
@@ -4016,7 +3918,7 @@ a.button:before,
     background-color: #6c6c6c;
 }
 
-#yz-modal .yz-modal-close-icon {
+.yz-modal-close-icon {
     top: 18px;
     right: 35px;
     cursor: pointer;
@@ -4027,19 +3929,7 @@ a.button:before,
     font-size: 10px !important;
 }
 
-#yz-modal .yz-big-close-icon .yz-modal-close-icon {
-    top: 22px;
-    text-align: center;
-    line-height: 30px !important;
-    height: 30px;
-    width: 30px;
-    padding: 0;
-    position: absolute;
-    font-size: 12px!important;
-}
-
-
-#yz-modal .yz-modal-actions button.loading i:before {
+.yz-modal-actions button.loading i:before {
     font-weight: 700;
     content: "\f110" !important;
     -webkit-transition: all 0.5s ease;
@@ -4048,11 +3938,10 @@ a.button:before,
     transition: all 0.5s ease;
 }
 
-#yz-modal .yz-modal-actions button.loading i {   
+.yz-modal-actions button.loading i {   
     -webkit-animation: fa-spin 2s infinite linear;
     animation: fa-spin 2s infinite linear;
 }
-
 /**
  * Buddypress Reset
  */
@@ -4176,10 +4065,6 @@ a.button:before,
     border-radius: 100%;
 }
 
-.yz-mobile-nav {
-    display: none;
-}
-
 /**
  * Mix Max
  */
@@ -4206,109 +4091,8 @@ body.my-listing.buddypress {
     }
 }
 
-#youzer .avia-iframe-wrap {
-    margin: 0;
-}
-
 /** Display all icons by default on mobile devices. **/
-@media screen and ( max-width: 1024px ) {
-
-    .youzer .yz-page-main-content {
-        padding: 15px 15px 0;
-    }
-
-    .yz-horizontal-layout .yz-sidebar-column .yz-column-content {
-        margin-left: 7.5px;
-    }
-    
-    .yz-horizontal-layout .yz-main-column .yz-column-content {
-        margin-right: 7.5px;
-    }
-
-    .youzer table {
-        margin-bottom: 15px;
-    }
-    
-}
-
-
 @media screen and ( max-width: 768px ) {
-
-    .yz-mobile-nav {
-        display: block;
-        overflow: hidden;
-        border-radius: 3px;
-        margin-bottom: 15px;
-        padding: 0 5px;
-        background: #f1f1f1;
-    }
-
-    
-    .yz-mobile-nav .yz-mobile-nav-item {
-        float: left;
-        width: 33.3333%;
-        padding: 10px 5px;
-        cursor: pointer;
-        text-align: center;
-    }
-    .yz-mobile-nav .yz-mobile-nav-item .yz-mobile-nav-container {
-        background: #fff;
-        padding: 15px;
-        width: 100%;
-        border-radius: 3px;
-    }
-
-    .yz-mobile-nav .yz-mobile-nav-item:last-of-type {
-        border: none;
-    }
-
-    .yz-inline-mobile-nav {
-        padding: 0;
-    }
-
-    .yz-inline-mobile-nav .yz-mobile-nav-item {
-        padding: 8px;
-        width: 100%;
-        text-align: left;
-    }
-
-    .yz-inline-mobile-nav .yz-mobile-nav-item .yz-mobile-nav-container {
-        text-align: center;
-    }
-
-    .yz-mobile-nav .yz-mobile-nav-item i {
-        display: block;
-        color: #9f9f9f;
-        width: 35px;
-        height: 35px;
-        background: #f6f6f6;
-        border-radius: 50px;
-        text-align: center;
-        margin: auto;
-        line-height: 35px;
-    }
-
-    .yz-inline-mobile-nav .yz-mobile-nav-item i {
-        display: inline-block;
-    }
-
-    .yz-mobile-nav .yz-mobile-nav-item a {
-        margin-top: 12px;
-        padding: 0;
-        border: none;
-        color: #9f9f9f;
-        font-size: 13px;
-        display: block;
-        cursor: pointer;
-        font-weight: 600;
-        text-transform: capitalize;
-    }
-
-    .yz-inline-mobile-nav .yz-mobile-nav-item a {
-        margin: 0 0 0 10px;
-        display: inline-block;
-    }
-
 /*
     .yz-modal {
         position: absolute;
@@ -4350,10 +4134,6 @@ body.my-listing.buddypress {
 }
 
 @media screen and ( max-width: 475px ) {
-
-    .youzer .yz-page-main-content {
-        padding: 15px 15px 0;
-    }
 
     .youzer-sidebar .widget-content,
     .youzer-sidebar .yz-mycred-balance-box-widget {
@@ -4412,39 +4192,17 @@ body.my-listing.buddypress {
         bottom: 20px;
     }
 
-    #yz-modal .yz-modal {
+    .yz-modal {
         width: 95%;
         margin-top: 0;
         top: 60px;
     }
 
-    #yz-modal .yz-modal-content {
+    .yz-modal-content {
         padding: 20px 15px;
     }
     
-    #yz-modal .yz-modal-actions {
+    .yz-modal-actions {
         padding: 0 25px 25px;
     }
-
-    #yz-modal .yz-modal-2rows .uk-option-item {
-        width: 100% !important;
-        float: none !important;
-    }
-    
-    #yz-modal .yz-modal .uk-option-item .nice-select,
-    #yz-modal .yz-modal .uk-option-item select,
-    #yz-modal .nice-select.open .list {
-        width: 100%;
-    }
-    .youzer table tbody td:empty {
-        padding: 0;
-    }
-}
-
-@media screen and ( max-width: 320px ) {
-    
-    .yz-mobile-nav .yz-mobile-nav-item .yz-mobile-nav-container {
-        padding: 10px;
-    }
-
 }

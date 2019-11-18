@@ -3,7 +3,7 @@
  * Plugin Name: Youzer
  * Plugin URI:  https://youzer.kainelabs.com
  * Description: Youzer is a Community & User Profiles Management Solution with a Secure Membership System, Front-end Account Settings, Powerful Admin Panel, 14 Header Styles, +20 Profile Widgets, 16 Color Schemes, Advanced Author Widgets, Fully Responsive Design, Extremely Customizable and a Bunch of Unlimited Features Provided By KaineLabs.
- * Version:     2.3.6
+ * Version:     2.3.4
  * Author:      Youssef Kaine
  * Author URI:  https://www.kainelabs.com
  * License:     GPL-2.0+
@@ -11,7 +11,6 @@
  * Text Domain: youzer
  * Domain Path: /languages/
  */
-
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
@@ -96,7 +95,7 @@ if ( defined( 'YOUZER_LATE_LOAD' ) ) {
     // Set Globals.    
     $GLOBALS['Youzer'] = youzer();
 
-    do_action( 'after_youzer_init' );
+    do_action( 'before_youzer_init' );
 }
 
 /**
@@ -157,38 +156,38 @@ function youzer_init() {
 add_action( 'init', 'youzer_init' );
 
 
-// /**
-//  * This function runs when WordPress completes its upgrade process
-//  */
-// function yz_upgrade_completed( $upgrader_object, $options ) {
+/**
+ * This function runs when WordPress completes its upgrade process
+ */
+function yz_upgrade_completed( $upgrader_object, $options ) {
 
-//     // If an update has taken place and the updated type is plugins and the plugins element exists
-//     if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
+    // If an update has taken place and the updated type is plugins and the plugins element exists
+    if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
 
-//     // Iterate through the plugins being updated and check if ours is there
-//     foreach ( $options['plugins'] as $plugin ) {
+    // Iterate through the plugins being updated and check if ours is there
+    foreach ( $options['plugins'] as $plugin ) {
 
-//         if ( $plugin == YOUZER_BASENAME ) {
+        if ( $plugin == YOUZER_BASENAME ) {
 
-//             // Remove this later
-//             if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
+            // Remove this later
+            if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
 
-//                 global $bp, $wpdb;
+                global $bp, $wpdb;
 
-//                 $row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'" );
+                $row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'" );
 
-//                 if ( empty( $row ) ) {
-//                     $wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'" );
-//                 }
+                if ( empty( $row ) ) {
+                    $wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'" );
+                }
 
-//                 update_option( 'yz_install_bp_activity_privacy', 1 );
+                update_option( 'yz_install_bp_activity_privacy', 1 );
 
-//             }
-//         }
-//     }
+            }
+        }
+    }
 
-//     }
+    }
 
-// }
+}
 
-// add_action( 'upgrader_process_complete', 'yz_upgrade_completed', 10, 2 );
+add_action( 'upgrader_process_complete', 'yz_upgrade_completed', 10, 2 );

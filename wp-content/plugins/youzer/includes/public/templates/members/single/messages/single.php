@@ -109,8 +109,6 @@
 
 				<textarea name="content" id="message_content" rows="15" cols="40" placeholder="<?php _e( 'Write a reply ...', 'youzer' ); ?>"></textarea>
 
-				<?php if ( 'on' == yz_options( 'yz_enable_messages_emoji' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
-				
 				<?php
 
 				/**

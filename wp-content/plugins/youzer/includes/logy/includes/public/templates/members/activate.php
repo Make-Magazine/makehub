@@ -9,7 +9,7 @@
 
 <?php $attributes = $Logy->login->attributes(); ?>
 
-<div id="logy-form" class="logy logy-page-box yz-page">
+<div class="logy logy-page-box">
 	
 	<div class="<?php echo $Logy->form->get_form_class( $attributes ); ?>">
 	

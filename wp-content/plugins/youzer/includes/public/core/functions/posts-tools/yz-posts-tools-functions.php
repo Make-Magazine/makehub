@@ -68,18 +68,10 @@ function yz_get_item_attributes( $attributes = null ) {
 /**
  * Add Pinned Icon
  */
-function yz_add_activity_thumbtack_icon() {
-
-	$show_tools = apply_filters( 'yz_display_activity_tools', is_user_logged_in() );
-
-	if ( ! $show_tools ) {
-		return;
-	}
-	
-	?>
+function yz_add_activity_thumbtack_icon() {	?>
 
 	<div class="yz-show-item-tools">
-		<?php echo apply_filters( 'yz_activity_tools_icon', '<i class="fas fa-ellipsis-h"></i>' ); ?>
+		<?php echo apply_filters( 'yz_display_activity_tools_icon', '<i class="fas fa-ellipsis-h"></i>' ); ?>
 	</div>
 	
 	<?php

@@ -65,52 +65,6 @@ document = window.document || {};
                 .push([element, event, target]);
         });
     }
-    function createRange(node, chars, range) {
-        if (!range) {
-            range = document.createRange()
-            range.selectNode(node);
-            range.setStart(node, 0);
-        }
-
-        if (chars.count === 0) {
-            range.setEnd(node, chars.count);
-        } else if (node && chars.count >0) {
-            if (node.nodeType === Node.TEXT_NODE) {
-                if (node.textContent.length < chars.count) {
-                    chars.count -= node.textContent.length;
-                } else {
-                     range.setEnd(node, chars.count);
-                     chars.count = 0;
-                }
-            } else {
-                for (var lp = 0; lp < node.childNodes.length; lp++) {
-                    range = createRange(node.childNodes[lp], chars, range);
-
-                    if (chars.count === 0) {
-                       break;
-                    }
-                }
-            }
-       } 
-
-       return range;
-    };
-
-    function setCurrentCursorPosition( element, chars) {
-        var range;
-        if (chars >= 0) {
-            var selection = window.getSelection();
-
-            range = createRange(element.parentNode, { count: chars });
-
-            if (range) {
-                range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
-            }
-        }
-    };
-
     function getTemplate(template, unicode, shortname) {
         var imageType = emojione.imageType, imagePath;
         if (imageType=='svg'){
@@ -1313,7 +1267,7 @@ document = window.document || {};
         })
 
         .on("@source.change", function() {
-            // self.setText(source[sourceValFunc]());
+            self.setText(source[sourceValFunc]());
             trigger('change');
         })
 
@@ -1576,11 +1530,6 @@ document = window.document || {};
                             readyCallbacks.shift().call();
                         }
                         cdn.isLoading = false;
-                        $( '.yz-load-emojis i' ).remove();
-                        setCurrentCursorPosition( $( '.yz-load-emojis.loading' ).closest( 'form' ).find( '.emojionearea-editor' ).get( 0 ),  $( '.yz-load-emojis.loading' ).attr('data-cursor') );
-                        $( '.yz-load-emojis.loading' ).closest( 'form' ).find( '.emojionearea-button-open' ).click();
-                        $( '.yz-load-emojis' ).remove();
-
                     }
                 });
             } else {
@@ -1621,7 +1570,6 @@ document = window.document || {};
             init(self, element, options);
         });
     };
-
     function bindEvent(self, event) {
         event = event.replace(/^@/, '');
         var id = self.id;

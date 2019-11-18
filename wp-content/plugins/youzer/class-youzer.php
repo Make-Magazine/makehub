@@ -106,12 +106,9 @@ class Youzer {
                 self::$instance->wall = new Youzer_Wall();
                 self::$instance->styling  = new Youzer_Styling();
                 self::$instance->account_verification = new Youzer_Account_Verification();
-                // global $bp;
-                // print_r(buddypress());
-                // if ( yz_is_account_page() ) {
-                    require_once YZ_PUBLIC_CORE . 'pages/yz-account.php';
-                    self::$instance->account  = new Youzer_Account();
-                // }
+                
+                require_once YZ_PUBLIC_CORE . 'pages/yz-account.php';
+                self::$instance->account  = new Youzer_Account();
             // }
 
             global $Youzer_Admin;
@@ -153,7 +150,7 @@ class Youzer {
         // Youzer Url Path.
         define( 'YZ_URL', plugin_dir_url( __FILE__ ) );
         // Version.
-        define( 'YZ_Version', apply_filters( 'youzer_version', '2.3.6' ) );
+        define( 'YZ_Version', apply_filters( 'youzer_version', '2.3.4' ) );
 
         // Templates Path.
         define( 'YZ_TEMPLATE', YZ_PATH . 'includes/public/templates/' );

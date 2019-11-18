@@ -2,7 +2,7 @@
  * Create Group Form.
  */
 
-#youzer #create-group-form {
+#create-group-form {
 	width: 80%;
 	margin: 50px auto;
 	max-width: 850px;
@@ -92,10 +92,10 @@
 	margin-bottom: 35px;
 }
 
-#youzer .yz-group-settings-tab .radio label,
-#youzer #group-settings-form .radio label,
-#youzer .yz-group-settings-tab label,
-#youzer #group-settings-form label {
+.yz-group-settings-tab .radio label,
+#group-settings-form .radio label,
+.yz-group-settings-tab label,
+#group-settings-form label {
 	display: block;
     color: #898989;
     font-size: 13px;
@@ -131,11 +131,10 @@
 #group-settings-form input[type=radio],
 #group-settings-form input[type=checkbox] {
 	vertical-align: middle;
-    margin-right: 5px;
 }
 
-#youzer .yz-group-settings-tab textarea,
-#youzer #group-settings-form textarea {
+.yz-group-settings-tab textarea,
+#group-settings-form textarea {
 	width: 100%;
     height: 150px;
     color: #898989;
@@ -170,10 +169,9 @@
     margin-bottom: 10px;
 }
 
-#yz-group-body form input[type=submit]:not(#members_search_submit) {
+#yz-group-body form input[type=submit] {
     width: 100%;
-    height: 55px;
-    padding: 0;
+    height: 50px;
 }
 
 .yz-group-settings-tab fieldset legend,
@@ -194,7 +192,7 @@
 }
 
 #group-settings-form p:last-of-type {
-    /*margin-bottom: 0;*/
+    margin-bottom: 0;
 }
 
 .yz-group-settings-tab fieldset ul,
@@ -350,8 +348,6 @@
     vertical-align: middle;
     display: inline-block;
     margin-right: 12px;
-    width: 35px;
-    height: 35px;
 }
 
 #invite-list ul li label {
@@ -465,10 +461,6 @@
 
 .yz-group-navmenu a#nav-forum:before {
     content: '\f4ad';
-}
-
-.yz-group-navmenu a#events:before {
-    content: "\f784";
 }
 
 .youzer div.item-list-tabs li a#group-media-all:before,
@@ -665,10 +657,6 @@
     vertical-align: middle;
 }
 
-.youzer .yz-boxed-navbar #yz-group-buttons {
-    padding: 0 35px;
-}
-
 #yz-group-buttons .group-button a {
     font-size: 13px;
     min-width: 150px;
@@ -802,7 +790,6 @@
 }
 
 .group-members #search-members-form label input {
-    margin: 0;
     height: 42px;
     width: 180px;
     color: #898989;
@@ -878,7 +865,6 @@
 }
 
 .yz-group-manage-members-search #search-members-form #members_search {
-    margin: 0;
     width: 100%;
     height: 42px;
     color: #898989;
@@ -1012,7 +998,7 @@
     display: block;
 }
 
-#youzer .group-members-list .item .item-meta {
+.youzer .group-members-list .item .item-meta {
     color: #969696;
     font-size: 10px;
     font-weight: 600;
@@ -1064,7 +1050,6 @@
 }
 
 .youzer .group-members-list .action a {
-    padding: 0;
     margin: 5px;
     display: inline-block;
 }
@@ -1080,7 +1065,7 @@
     text-transform: uppercase;
 }
 
-#youzer .group-members-list .item .item-meta {
+.youzer .group-members-list .item .item-meta {
     margin: 0;
     color: #969696;
     font-size: 10px;
@@ -1241,7 +1226,7 @@
     content: '\f165';
 }
 
-#youzer .group-request-list .action a.remove {
+.youzer .group-request-list .action a.remove {
     color: #8a8a8a;
     border: 1px solid #eee;
     background-color: transparent;
@@ -1280,10 +1265,6 @@
 /**
  * Leader Board.
  */
-#yz-group-body {
-    position: relative;
-}
-
 #yz-group-body h1:before {
     content: "\f0cb";
     font-weight: 600;
@@ -1397,7 +1378,7 @@
     -o-border-radius: 2px;
 }
 
-.youzer .yz-boxed-navbar,
+
 #group-create-tabs li,
 .youzer .group-members-list li,
 .yz-group-manage-members-search,
@@ -1477,24 +1458,14 @@
 @media screen and ( max-width: 1024px ) {
 
     #invite-list,
-    #yz-group-body h1,
-    .youzer .yz-profile-header,
     #send-invite-form,
-    .youzer .group-members-list li,
-    .youzer #yz-members-list li .yzm-user-data,
-    .youzer #yz-members-list li:last-of-type .yzm-user-data,
     #group-settings-form,
     .yz-group-manage-members-search,
     .youzer-sidebar .widget-content,
     .yz-group-infos-widget,
-    .youzer .group-request-list li,
     .yz-my-account-widget,
     .yz-wp-widget-box a {
-        margin-bottom: 15px !important;
-    }
-
-    #group-settings-form .yz-group-field-item, .yz-group-settings-tab .yz-group-field-item {
-        margin-bottom: 20px;
+        margin-bottom: 25px !important;
     }
 
 }
@@ -1507,9 +1478,9 @@
     }
 
     #yz-profile-navmenu #yz-group-buttons {
-        top: 6px;
+        top: 11px;
         padding: 0;
-        right: 15px;
+        right: 35px;
         position: absolute;
     }
 
@@ -1544,8 +1515,7 @@
         float: none;
         display: block;
         text-align: left;
-        padding: 0;
-        /*padding: 0 20px 0 15px;*/
+        padding: 0 20px 0 15px;
     }
 
     .youzer .yz-profile-navmenu > .yz-navbar-item:nth-last-child(2) {
@@ -1587,23 +1557,6 @@
         opacity: 1;
     }
 
-    .group-members #youzer #search-members-form label input {
-        width: 100%;
-    }
-
-    .group-members #youzer #search-members-form label {
-        margin: 0;
-        width: 100%;
-    }
-
-    .group-members #search-members-form #members_search_submit {
-        width: 100%;
-        height: 45px;
-        margin-top: 12px;
-        line-height: 45px;
-    }
-    
-/*
     #invite-list,
     #send-invite-form,
     #group-settings-form,
@@ -1613,7 +1566,7 @@
     .yz-my-account-widget,
     .yz-wp-widget-box a {
         margin-bottom: 35px !important;
-    }*/
+    }
 
     #create-group-form {
         margin: 0;
@@ -1632,6 +1585,11 @@
     
     #group-settings-form {
         padding: 25px;
+    }
+
+    .group-members #search-members-form label {
+        margin: 0;
+        width: 100%;
     }
 
     #create-group-form #group-settings-form {
@@ -1676,7 +1634,7 @@
         border-top: 1px solid #f5f5f5;
     }
 
-    #youzer #yz-members-list .yzm-user-actions a {
+    .youzer #yz-members-list .yzm-user-actions a {
         margin: 0;
         width: 100%;
         padding: 15px;
@@ -1696,18 +1654,18 @@
         border-top: 1px solid #f5f5f5;
     }
 
-    #youzer #friend-list.group-request-list .action a {
+    .youzer .group-request-list .action a {
         margin: 0;
         width: 100%;
         padding: 15px;
         display: block;
     }
 
-    #youzer #yz-members-list .yzm-user-actions a {
+    .youzer #yz-members-list .yzm-user-actions a {
         margin-top: 12px;
     }
 
-    #youzer #yz-members-list .yzm-user-actions div:first-child a {
+    .youzer #yz-members-list .yzm-user-actions div:first-child a {
         margin-top: 0;
     }
     
@@ -1735,6 +1693,17 @@
         display: block;
     }
 
+    .group-members #search-members-form label input {
+        width: 100%;
+    }
+
+    .group-members #search-members-form #members_search_submit {
+        width: 100%;
+        height: 45px;
+        margin-top: 12px;
+        line-height: 45px;
+    }
+    
     .rtl .youzer .group-members-list .action,
     .youzer .group-members-list .action {
         float: none;
@@ -1744,7 +1713,7 @@
         text-align: center;
         border-top: 1px solid #f6f6f6;
     }
-    /*
+    
     #invite-list,
     #send-invite-form,
     #group-settings-form,
@@ -1756,7 +1725,7 @@
     .yz-wp-widget-box a {
         margin-bottom: 25px !important;
     }
-    */
+    
     .youzer .group-request-list .item-avatar,
     .youzer #yz-members-list .yz-item-avatar {
         margin-right: 12px;
@@ -1769,16 +1738,12 @@
 }
 
 @media screen and ( max-width: 375px ) {
-    #yz-group-body h1 {
-        padding: 0 25px;
-        font-size: 13px;
-    }
 
     #create-group-form #group-settings-form,
     #create-group-form {
         padding: 15px;
     }
-/*
+
     #invite-list,
     #send-invite-form,
     #group-settings-form,
@@ -1790,7 +1755,7 @@
     .yz-my-account-widget,
     .yz-wp-widget-box a {
         margin-bottom: 15px !important;
-    }*/
+    }
 
     #yz-profile-navmenu #yz-group-buttons .group-button {
         margin: 0 20px;

@@ -1,8 +1,6 @@
 /**
  * Dark Orange Scheme
  */
-.yz-darkorange-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
-.yz-darkorange-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-darkorange-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-darkorange-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-darkorange-scheme .youzer table tfoot tr,
@@ -94,16 +92,6 @@
 .yz-darkorange-scheme .button.accept  {
     background: #FF5534;
     color: #fff;
-}
-
-@media screen and ( max-width: 768px ) {
-	.yz-darkorange-scheme #youzer .yz-group div.item-list-tabs li.last label,
-	.yz-darkorange-scheme #youzer .yz-profile div.item-list-tabs li.last label,
-	.yz-darkorange-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-	.yz-darkorange-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-		background: #FF5534;
-    	color: #fff;
-	}
 }
 
 .yz-darkorange-scheme .yz-product-price.yz-variable-price,

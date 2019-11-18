@@ -334,7 +334,7 @@ class Youzer_Setup {
 	    // Create post object
 	    $my_post = array(
 	      'post_title'    => __( '[{{{site.name}}}] Reset Your Account Password', 'youzer' ),
-	      'post_content'  => __( "We got a request to reset your account password. If you made this request, visit the following link to reset your password: <a href=\"{{password.reset.url}}\">{{password.reset.url}}</a>\n\n If this was a mistake, just ignore this email and nothing will happen.", "youzer" ),  // HTML email content.
+	      'post_content'  => __( "We got a request to reset your account password. If you made this request, visit the following link to reset your password: <a href=\"{{password.reset.url}}\">{{password.reset.url}}</a>\n\n If this was a mistake, just ignore this email and nothing will happen.", "logy" ),  // HTML email content.
 	      'post_excerpt'  => __( "We got a request to reset your account password. If you made this request, visit the following link to reset your password: {{password.reset.url}}\n\n If this was a mistake, just ignore this email and nothing will happen.", 'youzer' ),  // Plain text email content.
 	      'post_status'   => 'publish',
 	      'post_type' => bp_get_email_post_type() // this is the post type for emails

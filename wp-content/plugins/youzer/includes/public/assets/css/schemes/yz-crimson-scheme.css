@@ -1,9 +1,6 @@
 /**
  * Crimson Scheme
  */
-
-.yz-crimson-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
-.yz-crimson-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-crimson-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-crimson-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-crimson-scheme .youzer table tfoot tr,
@@ -95,16 +92,6 @@
 .yz-crimson-scheme .button.accept  {
     background: #f75d52;
     color: #fff;
-}
-
-@media screen and ( max-width: 768px ) {
-	.yz-crimson-scheme #youzer .yz-group div.item-list-tabs li.last label,
-	.yz-crimson-scheme #youzer .yz-profile div.item-list-tabs li.last label,
-	.yz-crimson-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-	.yz-crimson-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-		background: #f75d52;
-    	color: #fff;
-	}
 }
 
 .yz-crimson-scheme .yz-product-price.yz-variable-price,

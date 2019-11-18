@@ -27,10 +27,6 @@ if ( yz_is_wall_posting_form_active() ) :
 	?>" <?php if ( bp_is_group() ) : ?> data-suggestions-group-id="<?php echo esc_attr( (int) bp_get_current_group_id() ); ?>" <?php endif; ?>
 			><?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo sanitize_textarea_field( $_GET['r'] ); ?> <?php endif; ?></textarea>
 
-
-		<?php if ( 'on' == yz_options( 'yz_enable_posts_emoji' ) ) : ?><div class="yz-load-emojis yz-load-posts-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
-		
-			<!--  -->
 		<?php if ( 'on' == yz_options( 'yz_enable_wall_link' ) ) : ?>
 		<div class="yz-wall-custom-form yz-wall-link-form" data-post-type="activity_link">
 

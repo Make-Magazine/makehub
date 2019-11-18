@@ -717,6 +717,7 @@ function yz_init_reviews() {
         require_once YZ_PUBLIC_CORE . 'functions/yz-reviews-functions.php';
         require_once YZ_PUBLIC_CORE . 'reviews/yz-reviews-query.php';
         $Youzer->reviews = new Youzer_Reviews();
+
     }
 
 }
@@ -787,7 +788,7 @@ function yz_modal( $args, $modal_function, $options = null ) {
     $title        = $args['title'];
     $button_id    = $args['button_id'];
     $title_icon = isset( $args['title_icon'] ) ? $args['title_icon'] : ''; 
-    $default_submit_icon = isset( $args['operation'] ) && $args['operation'] == 'add' ? 'fas fa-edit' : 'fas fa-sync-alt'; 
+    $default_submit_icon = isset( $args['operation'] ) && $args['operation'] == 'add' ? 'far fa-edit' : 'fas fa-sync-alt'; 
     $submit_btn_icon = isset( $args['submit_button_icon'] ) ? $args['submit_button_icon'] : $default_submit_icon;
     $button_title = isset( $args['button_title'] ) ? $args['button_title'] : __( 'save', 'youzer' );
     $show_close = isset( $args['show_close'] ) ? $args['show_close'] : true;
@@ -796,21 +797,12 @@ function yz_modal( $args, $modal_function, $options = null ) {
     $delete_btn_id = isset( $args['delete_button_id'] ) ? $args['delete_button_id'] : null;
     $delete_btn_item_id = isset( $args['delete_button_item_id'] ) ? $args['delete_button_item_id'] : null;
 
-    $clases = array( 'yz-modal' );
-
-    if ( ! empty( $title_icon ) ) {
-        $clases[] = 'yz-big-close-icon';
-    }
-
-    $clases = implode( ' ', $clases );
     ?>
 
-    <div id="yz-modal">
-    
     <?php if ( isset( $args['modal_type'] ) && $args['modal_type'] == 'div' ) : ?>
-        <div class="<?php echo $clases; ?>" id="<?php echo $args['id'] ;?>">
+        <div class="yz-modal" id="<?php echo $args['id'] ;?>">
     <?php else : ?>
-        <form class="<?php echo $clases; ?>" id="<?php echo $args['id'] ;?>" method="post" >
+        <form class="yz-modal" id="<?php echo $args['id'] ;?>" method="post" >
     <?php endif; ?>
         <div class="yz-modal-title" data-title="<?php echo $title; ?>">
             <?php if ( ! empty( $title_icon ) ) : ?><i class="<?php echo $title_icon; ?>"></i><?php endif;?>
@@ -821,7 +813,7 @@ function yz_modal( $args, $modal_function, $options = null ) {
         <div class="yz-modal-content">
             <?php
                 if ( is_array( $modal_function ) ) {
-                    call_user_func(array( $modal_function[0], $modal_function[1] ), $options );
+                    call_user_func(array( $modal_function[0], $modal_function[1] ) );
                 } else {
                     $modal_function( $options );
                 }
@@ -856,7 +848,7 @@ function yz_modal( $args, $modal_function, $options = null ) {
     <?php else : ?>
         </form>
     <?php endif; ?>
-    </div>
+
     <?php
 }
 
@@ -894,7 +886,6 @@ function youzer_scripts_vars() {
         'done' => __( 'Done !', 'youzer' ),
         'ops' => __( 'Oops !', 'youzer' ),
         'slideshow_speed' => 5,
-        'assets' => YZ_PA,
         'youzer_url' => YZ_URL,
     );
 
@@ -905,15 +896,9 @@ function youzer_scripts_vars() {
  * Enable Activity Loader
  */
 function yz_enable_wall_activity_loader() {
-
-    $can = yz_options( 'yz_enable_wall_activity_loader' );
-    
-    if ( wp_is_mobile() ) {
-        $can = 'off';
-    }
-
-    return apply_filters( 'yz_enable_wall_activity_loader', $can );
-
+    // if ( wp_is_mobile() ) {
+    //     $activate = 'off';
+    return apply_filters( 'yz_enable_wall_activity_loader', yz_options( 'yz_enable_wall_activity_loader' ) );
 }
 
 /**
@@ -1116,16 +1101,3 @@ function yz_get_tag_attributes( $args = null ) {
 
     return apply_filters( '', $atts, $args );
 }
-
-/**
- * Redirect Buddypress No access page to login page.
- */
-function yz_redirect_bp_no_access_to_login_page( $data ) {
-    if ( $data['mode'] == 2 ) {
-        $data['mode'] = 1;
-        $data['root'] = yz_get_login_page_url();
-    }
-    return $data;
-}
-
-add_filter( 'bp_core_no_access', 'yz_redirect_bp_no_access_to_login_page' );

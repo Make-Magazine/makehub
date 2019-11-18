@@ -453,7 +453,6 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 			$icon = 'fas fa-map-marked-alt';
 			break;
 	
-		case 'yz_ctabs_groups_group-events_icon':
 		case 'yz_ctabs_events_my-events_icon':
 			$icon = 'fas fa-calendar-alt';
 			break;

@@ -31,6 +31,14 @@
 	display: table;
 }
 
+/*#buddypress.youzer div.item-list-tabs:not(#subnav) ul li a,
+#buddypress.youzer div.item-list-tabs:not(#subnav) ul li > span {
+	font-size: initial;
+	border: none;
+	padding: 0;
+}*/
+
+/*#buddypress.youzer .yz-directory-filter .item-list-tabs li a,*/
 #buddypress.youzer div.item-list-tabs:not(#subnav) ul li a,
 #buddypress.youzer div.item-list-tabs:not(#subnav) ul li > span,
 .yz-directory-filter #directory-show-filter a,
@@ -113,8 +121,8 @@
 	margin-right: 5px;
 }	
 
-#youzer .yz-directory-filter .item-list-tabs li label,
-#youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+.yz-directory-filter .item-list-tabs li label,
+.yz-directory-filter .item-list-tabs li#members-order-select label {
 	width: auto;
     color: #969696;
     font-size: 11px;
@@ -134,21 +142,16 @@
 	margin-right: 10px;
 }
 
-#youzer .yz-directory-filter .item-list-tabs li select {
-    margin: 0;
-    width: 120px;
-    height: 40px;
+.yz-directory-filter .item-list-tabs li select {
+	border: 0;
+    width: 140px;
+    height: 37px;
     color: #8a8a8a;
+    padding: 0 12px;
     font-size: 13px;
     font-weight: 600;
-    text-align: center;
-    display: inline-block;
-    vertical-align: middle;
-    border: none !!important;
-    background-color: #f6f6f6;
+    background-color: #f2f2f2;
     text-transform: uppercase;
-    padding: 0 18px !important;
-    box-shadow: none !!important;
 }
 
 /** # Filter Bar Icons **/
@@ -216,14 +219,6 @@
 /**
  * # 2.0 Search Box
  */
-#youzer #search-groups-form {
-	margin: 0;
-}
-
-#youzer #groups_search {
-	margin-right: 4px;
-}
-
 #yz-directory-search-box {
 	margin-left: 10px;
     padding-left: 10px;
@@ -258,8 +253,7 @@
     padding: 5px 15px;
     display: inline-block;
     vertical-align: middle;
-    box-shadow: none !important;
-    border: 1px solid #eee !important;
+    border: 1px solid #eee;
 }
 
 
@@ -464,7 +458,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 }
 
 .yzm-user-statistics {
-	padding: 0 25px;
 	margin-bottom: 25px;
 }
 
@@ -537,24 +530,19 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 .yzm-user-actions a {
 	margin: 0;
 	padding: 0;
-	border: none;
+	color: #838383;
 	height: 50px;
 	width: initial;
+	border: none;
 	display: block;
-	color: #838383;
 	font-size: 13px;
 	font-weight: 600;
     line-height: 50px;
-	text-indent: initial;
     letter-spacing: inherit;
 	background-color: #f6f6f6;
 	text-transform: capitalize;
 }
-/*
-.yzm-user-actions a.yz-send-message {
-	background-color: #fff;
-}
-*/
+
 #buddypress.youzer .yz-card-action-buttons-block div.generic-button a,
 .buddypress .yz-card-action-buttons-block  div.generic-button a,
 .yz-card-action-buttons-block .yzm-user-actions a {
@@ -609,8 +597,8 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	margin: 0 0 0 8px;
 }
 
-#youzer .yzm-user-actions .yzmd-second-btn,
-#youzer .yzm-user-actions .yz-send-message {
+.yzm-user-actions .yzmd-second-btn,
+.yzm-user-actions .yz-send-message {
     color: #898989;
     margin-right: 5px;
     border: 1px solid #eee;
@@ -793,14 +781,12 @@ body #buddypress #yz-directory-search-box form input[type=submit],
     border: none;
     text-align: left;
     overflow: hidden;
-    line-height: 16px;
     position: relative;
     margin: 0 17.5px 35px;
 }
 
 .yz-directory .pagination .page-numbers:not(.current):hover {
     color: #777;
-    background-color: #fff;
 }
 
 .yz-directory .pagination .page-numbers {
@@ -817,7 +803,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
     text-align: center;
     display: inline-block;
     text-transform: uppercase;
-    box-shadow: none !important;
 }
 
 .yz-directory #group-dir-pag-bottom:empty {
@@ -888,7 +873,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	margin: 0 0 0 10px;
 }
 
-#youzer .yz-directory-filter .item-list-tabs li select,
 #yz-directory-search-box form input[type=submit],
 #yz-directory-search-box form input[type=text],
 #yz-groups-list .item .item-meta span,
@@ -923,7 +907,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
     -o-border-radius: 2px;
 }
 
-.yz-directory-filter,
 #yz-groups-list li .yz-group-data,
 #yz-members-list li .yzm-user-data,
 .yzg-user-statistics .yz-data-item span,
@@ -998,37 +981,10 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 }
 
 @media screen and ( max-width: 1024px ) {
-	.youzer.yz-directory .yz-page-main-content {
-		padding: 25px 7.5px 0;
-	}
 
-	.yz-directory-filter {
-		padding: 15px;
-		margin: 0 auto 25px;
-    	width: calc( 100% - 25px );
-	}
-
-	#yz-groups-list li .yz-group-data,
-	#yz-members-list li .yzm-user-data {
-		margin: 0 12.5px 25px;
-	}
-
-	/*
-	#yz-members-list li:nth-child(3n) .yzm-user-data {
-		margin: 0 15px 15px 0;	
-	}
-
-	#yz-members-list li:nth-child(even) .yzm-user-data {
-	    margin: 0 0 15px 7.5px;
-	}
-
-	#yz-members-list li:nth-child(odd) .yzm-user-data {
-		margin-right: 7.5px;
-	}
-*/
 	.yz-directory-filter #directory-show-search a,
 	.yz-directory-filter .item-list-tabs li a {
-		margin-right: 8px;
+		margin-right: 12px;
 	}
 
 	#yz-directory-search-box form input[type=text] {
@@ -1041,7 +997,7 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	
 	.yz-groups-directory-page #yz-directory-search-box form input[type=text] {
 		margin-right: 0;
-		width: calc( 100% - 128px );
+		width: calc( 100% - 160px );
 	}
 
 	.yz-directory-filter #directory-show-filter,
@@ -1054,7 +1010,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 		display: none;
 	}
 
-	.youzer #groups-order-select,
 	.youzer #members-order-select {
 		display: none;
 		margin-top: 15px;
@@ -1084,6 +1039,15 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 		display: inline;
 	}
 
+	.youzer .yz-page-main-content {
+    	padding: 25px 25px 0;
+	}
+
+	.yz-directory-filter #directory-show-search a,
+	.yz-directory-filter .item-list-tabs li a {
+		margin-right: 15px;
+	}
+
 	/* Search Box */
 	.rtl #yz-directory-search-box,
 	#yz-directory-search-box {
@@ -1103,8 +1067,7 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	}
 
 	.yz-directory-filter .item-list-tabs li #members-dir-search label {
-		margin: 0;
-	    width: calc( 100% - 124px );
+	    width: calc( 100% - 155px );
 	}
 
 	#yz-directory-search-box form input[type=text] {
@@ -1119,30 +1082,51 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 
 	#yz-directory-search-box form input[type=submit] {
 		height: 45px;
-		width: 120px;
+		width: 150px;
 	}
 
 	.youzer #message,
+	.yz-directory-filter,
 	#yz-directory-pagination .pagination-inner {
-		margin: 0 0 15px 0;
+		margin: 0 0 25px 0;
 	}
-/*	
+
+	#yz-groups-list li {
+		width: 50%;		
+	}
+
 	#yz-groups-list li .yz-group-data,
 	#yz-groups-list li:nth-child(3n) .yz-group-data {
-		margin: 0 15px 15px 0;	
+		margin: 0 25px 25px 0;	
 	}
 
 	#yz-groups-list li:nth-child(even) .yz-group-data {
-	    margin: 0 0 15px 7.5px;
+	    margin: 0 0 25px 12.5px;
 	}
 
 	#yz-groups-list li:nth-child(odd) .yz-group-data {
-		margin-right: 7.5px;
+		margin-right: 12.5px;
 	}
-*/
+
+	#yz-members-list li {
+		width: 50%;		
+	}
+
+	#yz-members-list li .yzm-user-data,
+	#yz-members-list li:nth-child(3n) .yzm-user-data {
+		margin: 0 25px 25px 0;	
+	}
+
+	#yz-members-list li:nth-child(even) .yzm-user-data {
+	    margin: 0 0 25px 12.5px;
+	}
+
+	#yz-members-list li:nth-child(odd) .yzm-user-data {
+		margin-right: 12.5px;
+	}
+
 	.yz-directory .pagination {
-		margin: 0 auto 25px;
-    	width: calc( 100% - 25px )
+		margin-bottom: 25px;
 	}
 
 	.yz-directory .pagination-inner {
@@ -1154,73 +1138,10 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	}
 }
 
-@media screen and ( max-width: 768px ) {
-
-	.youzer.yz-directory .yz-mobile-nav {
-		margin: 0 auto 25px;
-    	width: calc( 100% - 25px );
-	}
-
-	#yz-groups-list li,
-	#yz-members-list li {
-		width: 50%;		
-	}
-
-	/*.yz-directory-filter #directory-show-search a,*/
-	.yz-directory-filter .item-list-tabs li a {
-		margin: 0 0 15px 0;
-		width: 100%;
-	}
-
-	.yz-directory-filter .item-list-tabs li:last-of-type a {
-		margin-bottom: 0;		
-	}
-	
-	.yz-directory-filter .item-list-tabs li a span { 
-		padding: 0;
-		float: right;
-		height: 30px;
-		min-width: 30px;
-		line-height: 30px;
-	}
-
-	#youzer .yz-directory-filter {
-		padding: 0;
-		margin: 0;
-		background: transparent;
-	    width: calc( 100% - 25px );
-    	margin: auto;
-	}
-	
-	.yz-directory-filter .item-list-tabs:not(#subnav) ul {
-		display: none;
-		padding: 20px;
-		background-color: #fff;
-		margin-bottom: 25px;
-	}
-	
-	.youzer #groups-order-select,
-	#yz-directory-search-box,
-	.youzer #members-order-select {
-		margin-bottom: 25px;
-		padding: 15px;
-		text-align: center;
-		border: none;
-		background: #fff;
-	}
-
-	#yz-directory-search-box,
-	.youzer #groups-order-select,
-	.youzer #members-order-select,
-	.yz-directory-filter .item-list-tabs:not(#subnav) ul {
-		border-radius: 3px;
-	}
-
+@media screen and ( max-width: 475px ) {
 	.yz-directory-filter #directory-show-filter,
-	.yz-directory-filter #directory-show-search {
-		display: none
-	}
-
+	.yz-directory-filter #directory-show-search,
+	.yz-directory-filter #directory-show-search a,
 	.yz-directory-filter .item-list-tabs,
 	.yz-directory-filter .item-list-tabs li,
 	.yz-directory-filter .item-list-tabs ul {
@@ -1228,65 +1149,16 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 		display: block;
 	}
 
-	#yz-directory-pagination .pagination-inner, .youzer #message, .yz-directory-filter {
-		margin: 0 0 15px 0;
-	}
-/*.yz-groups-directory-page #yz-directory-search-box form input[type=text]
 	.yz-groups-directory-page #yz-directory-search-box form input[type=text] {
 		width: 100%;
 	}
-*/
-	#youzer .yz-directory-filter .item-list-tabs li#members-order-select label,
-	#youzer .yz-directory-filter .item-list-tabs li#groups-order-select label {
-		display: inline-block;
-	    background: #a4aaca;
-	    padding: 15px;
-	    border-radius: 3px;
-	    margin: 0;
-	    font-size: 13px;
-	    line-height: 15px;
-	    color: #fff;
-	    width: 100%;
-	    text-align: center;
-	    margin-bottom: 13px;
-	}
-
-	#youzer  .yz-directory-filter .nice-select,
-	#youzer  .yz-directory-filter select {
-	    display: block;
-	    width: 100%;
-	    padding: 0;
-	}
-
-	#youzer .yz-directory-filter .nice-select.open .list {
-	    width: 100%;
-	}
-
-	#youzer .yz-directory-filter .nice-select .current {
-	    text-align: center;
-	}
-
-	#youzer .yz-directory-filter .nice-select,
-	#youzer .yz-directory-filter select,
-	#youzer .yz-directory-filter .nice-select .current {
-	    height: 45px;
-	    line-height: 45px;
-	}
-
-	#youzer .nice-select:after {
-		right: 15px;
-	}
-}
-
-@media screen and ( max-width: 475px ) {
-	
 	
 	#yz-members-list li,
 	#yz-groups-list li {
 		width: 100%;
 		float: none;
 	}
-/*
+
 	#yz-members-list li:nth-child(even) .yzm-user-data,
 	#yz-members-list li:nth-child(odd) .yzm-user-data,
 	#yz-members-list li:nth-child(3n) .yzm-user-data,
@@ -1297,14 +1169,13 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	#yz-groups-list li:nth-child(2n) .yz-group-data,
 	#yz-members-list li .yzm-user-data,
 	#yz-groups-list li .yz-group-data {
-		margin: 0 0 15px 0;
-	}*/
+		margin: 0 0 25px 0;
+	}
 
 	.yz-directory-filter .item-list-tabs li #members-dir-search label {
 		width: 100%;
 	}
 	
-	.yz-groups-directory-page #yz-directory-search-box form input[type=text],
 	#yz-directory-search-box form input[type=text] {
 		height: 46px;
 	    width: 100%;
@@ -1336,25 +1207,6 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	.yzm-user-actions .yz-send-message {
 		display: block;
 		margin-top: 15px;
-	}
-
-}
-
-
-@media screen and ( max-width: 375px ) {
-	
-	.youzer.yz-directory .yz-page-main-content {
-	    padding: 15px 0 0;
-	}
-
-	.yz-directory-filter .item-list-tabs:not(#subnav) ul,
-	#yz-directory-search-box,
-	.yz-directory .pagination,
-	.youzer #groups-order-select,
-	.youzer #members-order-select,
-	#yz-members-list li .yzm-user-data,
-	.youzer.yz-directory .yz-mobile-nav {
-		margin-bottom: 15px;
 	}
 
 }

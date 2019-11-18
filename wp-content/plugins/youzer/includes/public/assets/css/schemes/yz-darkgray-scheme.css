@@ -1,9 +1,6 @@
 /**
  * Drak Gray Scheme
  */
-
-.yz-darkgray-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
-.yz-darkgray-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-darkgray-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-darkgray-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-darkgray-scheme .youzer table tfoot tr,
@@ -95,16 +92,6 @@
 .yz-darkgray-scheme .button.accept  {
     background: #868E96;
     color: #fff;
-}
-
-@media screen and ( max-width: 768px ) {
-	.yz-darkgray-scheme #youzer .yz-group div.item-list-tabs li.last label,
-	.yz-darkgray-scheme #youzer .yz-profile div.item-list-tabs li.last label,
-	.yz-darkgray-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-	.yz-darkgray-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-		background: #868E96;
-    	color: #fff;
-	}
 }
 
 .yz-darkgray-scheme .yz-product-price.yz-variable-price,

@@ -3,6 +3,7 @@
  * BuddyPress - Users Messages
  */
 ?>
+
 <div class="item-list-tabs no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'youzer' ); ?>" role="navigation">
 	<ul>
 		<?php bp_get_options_nav(); ?>

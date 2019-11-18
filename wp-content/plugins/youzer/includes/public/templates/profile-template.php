@@ -12,11 +12,9 @@ $header_class  = $Youzer->header->get_class( 'user' );
 
 ?>
 
-<div id="youzer">
-
 <?php do_action( 'youzer_profile_before_profile' ); ?>
-	
-<div id="<?php echo apply_filters( 'yz_profile_template_id', 'yz-bp' ); ?>" class="youzer noLightbox yz-page yz-profile <?php echo yz_get_profile_class(); ?>">
+
+<div id="buddypress" class="youzer yz-page yz-profile <?php echo yz_get_profile_class(); ?>">
 	
 	<?php do_action( 'youzer_profile_before_content' ); ?>
 
@@ -75,5 +73,3 @@ $header_class  = $Youzer->header->get_class( 'user' );
 </div>
 
 <?php do_action( 'youzer_profile_after_profile' ); ?>
-
-</div>

@@ -13,14 +13,14 @@ function yz_add_pin_posts_tool( $tools, $post_id ) {
 		// Get Unpin Button Data.
 		$action = 'unpin';
 		$class = 'yz-unpin-post';
-		$title = __( 'Unpin', 'youzer' );
+		$title = __( 'Unpin Post', 'youzer' );
 		$icon  = 'fas fa-thumbtack fa-flip-vertical';
 	} else {
 		// Get Pin Button Data.
 		$action = 'pin';
 		$icon  = 'fas fa-thumbtack';
 		$class = 'yz-pin-post';
-		$title = __( 'Pin', 'youzer' );
+		$title = __( 'Pin Post', 'youzer' );
 	}
 
 	// Get Tool Data.
@@ -77,6 +77,14 @@ add_filter( 'bp_ajax_querystring', 'yz_exclude_sticky_posts', 999 );
  */
 function yz_add_pinned_post_class( $class ) {
 
+	// Get Activity ID.
+	$activity_id = bp_get_activity_id();
+
+	// Check if activity is pinned.
+	if ( ! yz_is_post_pinned( $activity_id ) ) {
+		return $class;
+	}
+
 	// Add Pinned Class.
 	$class .= ' yz-pinned-post';
 
@@ -87,6 +95,7 @@ function yz_add_pinned_post_class( $class ) {
 
 }
 
+add_filter( 'bp_get_activity_css_class', 'yz_add_pinned_post_class' );
 
 /**
  * Check if Activity is Pinned
@@ -167,7 +176,6 @@ function yz_add_activity_sticksy_posts( ) {
 
 	if ( bp_has_activities( array( 'in' => $posts_ids, 'per_page' => count( explode( ',', $posts_ids ) ) , 'show_hidden' => 1, 'display_comments' => 'threaded' ) ) ) {
 	
-		add_filter( 'bp_get_activity_css_class', 'yz_add_pinned_post_class' );
 		add_filter( 'yz_activity_new_post_action', 'yz_activity_pinned_tag', 10, 2 );
 	
 		while ( bp_activities() ) : bp_the_activity();
@@ -175,7 +183,6 @@ function yz_add_activity_sticksy_posts( ) {
 		endwhile; 
 	
 		remove_filter( 'yz_activity_new_post_action', 'yz_activity_pinned_tag', 10, 2 );
-		remove_filter( 'bp_get_activity_css_class', 'yz_add_pinned_post_class' );
 
 	}
 
@@ -272,7 +279,7 @@ function yz_get_sticky_posts_ids( $component = null, $group_id = null ) {
 function yz_activity_pinned_tag( $action, $activity ) {
 
 	// Get Tag.
-	$pinned_tag = '<span class="yz-pinned-post-tag"><i class="fas fa-thumbtack"></i><span>' . __( 'pinned post' ) . '</span></span>';
+	$pinned_tag = '<span class="yz-pinned-post-tag"><i class="fas fa-thumbtack"></i>' . __( 'pinned post' ) . '</span>';
 
 	// Filter Pinned Tag.
 	$pinned_tag = apply_filters( 'yz_activity_pinned_tag', $pinned_tag );
@@ -468,8 +475,8 @@ function yz_sticky_posts_scripts() {
         $script_data = array(
             'current_component' => bp_is_groups_component() ? 'groups' : 'activity',
             'security_nonce' => wp_create_nonce( 'yz-sticky-posts' ),
-            'unpin_post' => __( 'Unpin', 'youzer' ),
-            'pin_post' => __( 'Pin', 'youzer' ),
+            'unpin_post' => __( 'Unpin Post', 'youzer' ),
+            'pin_post' => __( 'Pin Post', 'youzer' ),
         );
 
         // Get Current Group

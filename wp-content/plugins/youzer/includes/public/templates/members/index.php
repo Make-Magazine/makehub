@@ -9,9 +9,8 @@
  * @since 1.5.0
  */
 do_action( 'bp_before_directory_members_page' ); ?>
-<div id="youzer">
-	
-<div id="<?php echo apply_filters( 'yz_members_template_id', 'yz-bp' ); ?>" class="youzer <?php echo yz_members_directory_class() ?>">
+
+<div id="buddypress" class="youzer <?php echo yz_members_directory_class() ?>">
 
 	<main class="yz-page-main-content">
 
@@ -45,13 +44,8 @@ do_action( 'bp_before_directory_members_page' ); ?>
 
 			<?php if ( yz_display_md_filter_bar() ) : ?>
 
-			<div class="yz-mobile-nav">
-				<div id="directory-show-menu" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a><?php _e( 'Menu', 'youzer' ); ?></a></div></div>
-				<div id="directory-show-search" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-search"></i><a><?php _e( 'Search', 'youzer' ); ?></a></div></div>
-				<div id="directory-show-filter" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-sliders-h"></i><a><?php _e( 'Filter', 'youzer' ); ?></a></div></div>
-			</div>
-			
 			<div class="yz-directory-filter">
+
 				<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Members directory main navigation', 'youzer' ); ?>" role="navigation">
 					<ul>
 						<li class="selected" id="members-all"><a href="<?php bp_members_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'youzer' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
@@ -71,11 +65,10 @@ do_action( 'bp_before_directory_members_page' ); ?>
 
 					</ul>
 				</div><!-- .item-list-tabs -->
-						
 
 				<div id="directory-show-search"><a><?php _e( 'Search', 'youzer' ); ?></a></div>
 				<div id="directory-show-filter"><a><?php _e( 'Filter', 'youzer' ); ?></a></div>
-				
+						
 				<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Members directory secondary navigation', 'youzer' ); ?>" role="navigation">
 					<ul>
 						<?php
@@ -159,8 +152,6 @@ do_action( 'bp_before_directory_members_page' ); ?>
 		</div><!-- #buddypress -->
 
 	</main>
-
-</div>
 
 </div>
 

@@ -7,7 +7,7 @@
 		/**
 		 * Display Activity tools.
 		 */
-		$( '#youzer' ).on( 'click', 'a.page-numbers', function ( e ) {
+		$( '#buddypress' ).on( 'click', 'a.page-numbers', function ( e ) {
 			// if ( target.parent().parent().hasClass( 'pagination' )  ) {
 				var button_clone = $( this ).clone().html( '<i class="fas fa-spinner fa-spin"></i>' );
 				$( this ).hide( 0, function(){
@@ -27,24 +27,44 @@
 		});
 
 		// Display Search Box.
-    	$( '#directory-show-search' ).on( 'click', function( e ) {
+    	$( '#directory-show-search a' ).on( 'click', function( e ) {
     		e.preventDefault();
-    		$( '.yz-directory-filter #members-order-select,.yz-directory-filter #groups-order-select,.yz-directory-filter .item-list-tabs:not(#subnav) ul' ).fadeOut( 1 );
     		$( '#yz-directory-search-box' ).fadeToggle();
 		});
 
 		// Display Search Box.
-    	$( '#directory-show-filter' ).on( 'click', function( e ) {
+    	$( '#directory-show-filter a' ).on( 'click', function( e ) {
     		e.preventDefault();
-    		$( '#yz-directory-search-box,.yz-directory-filter .item-list-tabs:not(#subnav) ul' ).fadeOut( 1 );
-    		$( '.yz-directory-filter #members-order-select, .yz-directory-filter #groups-order-select' ).fadeToggle();
+    		$( '.yz-directory-filter #members-order-select' ).fadeToggle();
 		});
 
-		// Display Search Box.
-    	$( '#directory-show-menu' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		$( '#yz-directory-search-box,.yz-directory-filter #members-order-select,.yz-directory-filter #groups-order-select' ).fadeOut( 1 );
-    		$( '.yz-directory-filter .item-list-tabs:not(#subnav) ul' ).fadeToggle();
+		var resizeTimer;
+
+		$( window ).on( 'resize', function ( e ) {
+
+			// Init Vars.
+			var window_changed;
+
+		    clearTimeout( resizeTimer );
+
+		    resizeTimer = setTimeout( function () {
+		    	
+		    	if ( $.browser.mobile ) {
+			    	window_changed = $( window ).width() != app.size.window_width;
+				} else {
+					window_changed = true;
+				}
+
+	    		if ( window_changed ) {
+			        if ( $( window ).width() > 1024 ) {
+			        	$( '#directory-show-search' ).fadeOut( 200 );
+			        	$( '#yz-directory-search-box' ).fadeIn( 200 );
+			        } else {
+			        	$( '#directory-show-search' ).fadeIn( 200 );
+			        	$( '#yz-directory-search-box' ).fadeOut( 200 );
+			        }
+		 		}
+			}, 250 );
 		});
 
 		// Activate Members Masonry Layout.
@@ -83,18 +103,6 @@
 
 		}
 
-
-		// Display Search Box.
-    	$( '#directory-show-search a' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		$( '#yz-directory-search-box' ).fadeToggle();
-		});
-
-		// Display Search Box.
-    	$( '#directory-show-filter a' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		$( '.yz-directory-filter #members-order-select, .yz-directory-filter #groups-order-select' ).fadeToggle();
-		});
 
 	});
 

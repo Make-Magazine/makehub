@@ -1,9 +1,6 @@
 /**
  * dark Blue Scheme
  */
-
-.yz-darkblue-scheme .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
-.yz-darkblue-scheme #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-darkblue-scheme .yz-media-filter .yz-filter-item .yz-current-filter,
 .yz-darkblue-scheme .yz-community-hashtags .yz-hashtag-item:hover,
 .yz-darkblue-scheme .youzer table tfoot tr,
@@ -95,16 +92,6 @@
 .yz-darkblue-scheme .button.accept  {
     background: #5798b7;
     color: #fff;
-}
-
-@media screen and ( max-width: 768px ) {
-	.yz-darkblue-scheme #youzer .yz-group div.item-list-tabs li.last label,
-	.yz-darkblue-scheme #youzer .yz-profile div.item-list-tabs li.last label,
-	.yz-darkblue-scheme #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-	.yz-darkblue-scheme #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-		background: #5798b7;
-    	color: #fff;
-	}
 }
 
 .yz-darkblue-scheme .yz-product-price.yz-variable-price,

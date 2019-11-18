@@ -46,7 +46,7 @@ class Youzer_Group {
 				<div class="yz-open-nav">
 					<button class="yz-responsive-menu"><span>toggle menu</span></button>
 				</div>
-				<ul class="yz-profile-navmenu" id="object-nav" aria-label="Group primary navigation" role="navigation">
+				<ul class="item-list-tabs no-ajax yz-profile-navmenu" id="object-nav" aria-label="Group primary navigation" role="navigation">
 
 					<?php bp_get_options_nav(); ?>
 
@@ -454,7 +454,7 @@ class Youzer_Group {
 				<?php endif; ?>
 
 				<?php if ( 'on' == $display_members ) : ?>
-					<?php $members_number = str_replace( array( ' ', '&nbsp;', ',' ),'',  $members_number ); ?>
+					<?php $members_number = str_replace( array( ' ', '&nbsp;' ),'',  $members_number ); ?>
 					<li>
 						<div class="yz-snumber" title="<?php echo $members_number; ?>"><?php echo $this->get_statistic_number( $members_number ); ?></div>
 						<h3 class="yz-sdescription"><?php _e( 'members', 'youzer' ); ?></h3>
@@ -487,7 +487,7 @@ class Youzer_Group {
 
 		// Get Number Letter
 		foreach( $abbrevs as $exponent => $abbrev ) {
-			if ( $number >= pow( 10, $exponent ) ) {
+			if( $number >= pow( 10, $exponent ) ) {
 				$display_num = $number / pow( 10, $exponent );
 				$decimals = ( $exponent >= 3 && round( $display_num ) < 100 ) ? 1 : 0;
 				$number_format = number_format( $display_num, $decimals );

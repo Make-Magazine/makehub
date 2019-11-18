@@ -5,10 +5,8 @@
 	$( document ).ready( function() {
 
 		var giphy_search = $( '.yz-giphy-submit-search' ),
-			giphy_search_text = giphy_search.text(),
 			gihpy_grid_sizer = '<div class="yz-giphy-grid-sizer"></div>',
 			giphy_load_more = $( '.yz-load-more-giphys' ),
-			giphy_loadmore_text = giphy_load_more.text(),
 			selected_giphy = $( '.yz-selected-giphy-item' ),
 			masonryOptions = {
 			    itemSelector: '.yz-giphy-item',
@@ -170,9 +168,10 @@
 		 */
 		$.fn.yz_giphy_masonryImagesReveal = function( form, $items, display_load_more ) {
 			
-			var giphy_search = form.find( '.yz-giphy-submit-search' ),
-			giphy_load_more = form.find( '.yz-load-more-giphys' ),
-			msnry = this.data( 'masonry' );
+			var giphy_search = form.find( '.yz-giphy-submit-search' );
+			var giphy_load_more = form.find( '.yz-load-more-giphys' );
+			var msnry = this.data( 'masonry' );
+			
 			var itemSelector = msnry.options.itemSelector;
 
 			// hide by default
@@ -199,19 +198,19 @@
 					// Hide Search Loader
 					if ( giphy_search.hasClass( 'loading' ) ) {
 						giphy_search.removeClass( 'loading' );
-						giphy_search.html( giphy_search_text );
+						giphy_search.html( 'Search' );
 					}
 
 					// Hide Load More Loader
 					if ( giphy_load_more.hasClass( 'loading' ) ) {
 						giphy_load_more.removeClass( 'loading' );
-						giphy_load_more.html( giphy_loadmore_text );
+						giphy_load_more.html( 'Load More' );
 					}
 
-				});
+					// Scroll Dwon On load More.
+					form.find( '.yz-giphy-items-content' ).animate({ scrollTop: form.find( '.yz-giphy-items-content' ).prop( 'scrollHeight' )}, 1000 );
 
-				// Scroll Dwon On load More.
-				form.find( '.yz-giphy-items-content' ).animate({ scrollTop: form.find( '.yz-giphy-items-content' ).prop( 'scrollHeight' )}, 1000 );
+				});
 
 			});
 

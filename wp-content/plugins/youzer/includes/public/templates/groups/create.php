@@ -10,8 +10,6 @@
  */
 do_action( 'bp_before_create_group_page' ); ?>
 
-<div id="youzer">
-
 <div class="youzer yz-create-new-group-page <?php echo yz_group_page_class(); ?>">
 
 	<?php
@@ -528,8 +526,6 @@ do_action( 'bp_before_create_group_page' ); ?>
 	 * @since 1.6.0
 	 */
 	do_action( 'bp_after_create_group_content_template' ); ?>
-
-</div>
 
 </div>
 

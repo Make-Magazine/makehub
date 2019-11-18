@@ -4,39 +4,35 @@ class Youzer_Account {
 
 	function __construct() {
 
+		// Rename Account Tabs.
+		add_action( 'bp_actions', array( &$this, 'rename_tabs' ), 10 );
+		
+		add_filter( 'yz_account_menu_icon', array( &$this, 'get_account_menu_icon' ), 10, 2 );
+
+		//  Settings Scripts
+		add_action( 'wp_enqueue_scripts', array( &$this, 'settings_scripts' ) );
+
+		// Settings Sidebar Menu
+		add_action( 'youzer_settings_menus', array( &$this, 'settings_header' ) );
+
 		// Get Settings.
 		add_action( 'bp_init', array( &$this, 'settings' ) );
 
 		// Delete Account
 		add_action( 'bp_actions', array( &$this, 'delete_account' ) );
+
+		// Is Avatar Page.
+		add_action( 'bp_init', array( &$this, 'avatar_is_front_edit' ) );
+
+		// Add Account Settings Pages.
+		add_action( 'bp_actions', array( &$this, 'account_setting_menus' ) );
+	
 	}
 
 	/**
 	 * Settings.
 	 */
 	function settings ()  {
-
-		if ( ! yz_is_account_page() ) {
-			return;
-		}
-
-		// Is Avatar Page.
-		// add_action( 'bp_init', array( &$this, 'avatar_is_front_edit' ) );
-
-		// Rename Account Tabs.
-		add_action( 'bp_actions', array( &$this, 'rename_tabs' ), 10 );
-
-		// Add Account Settings Pages.
-		add_action( 'bp_actions', array( &$this, 'account_setting_menus' ) );
-	
-		// Settings Sidebar Menu
-		add_action( 'youzer_settings_menus', array( &$this, 'settings_header' ) );
-
-		// Change Icons.
-		add_filter( 'yz_account_menu_icon', array( &$this, 'get_account_menu_icon' ), 10, 2 );
-
-		//  Settings Scripts
-		add_action( 'wp_enqueue_scripts', array( &$this, 'settings_scripts' ) );
 
 		if ( bp_is_current_component( 'profile' ) ) {
 			// Redirect Default Tab.
@@ -906,7 +902,7 @@ class Youzer_Account {
 	 * # Account Scripts .
 	 */
 	function settings_scripts() {
-	
+		
 		global $Yz_Translation;
 
 	    // Widgets Builder
@@ -914,6 +910,7 @@ class Youzer_Account {
 
         // Load Profile Settings CSS.
         wp_enqueue_style( 'yz-account-css', YZ_PA . 'css/yz-account-style.min.css', array( 'yz-panel-css' ), YZ_Version );
+		
 
 	    // Admin Panel Script
 	    wp_enqueue_script( 'yz-panel', YZ_PA . 'js/yz-settings-page.min.js', array( 'jquery' ), YZ_Version, true );

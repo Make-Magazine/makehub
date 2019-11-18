@@ -12,6 +12,7 @@ function yz_public_scripts() {
     // Youzer Global Script
     wp_enqueue_script( 'youzer', YZ_PA . 'js/youzer.min.js', $jquery, YZ_Version, true );
 
+    // Font.
     wp_enqueue_style( 'yz-opensans', 'https://fonts.googleapis.com/css?family=Open+Sans:400,600', array(), YZ_Version );
 
     // Youzer Css.
@@ -70,12 +71,6 @@ function yz_public_scripts() {
         yz_common_scripts();
     }
 
-
-    if ( bp_is_messages_conversation() || bp_is_messages_compose_screen() ) {
-        wp_enqueue_script( 'yz-messages', YZ_PA .'js/yz-messages.min.js', $jquery, YZ_Version, true );
-    }
-            
-
     // Global Youzer JS
     wp_enqueue_style( 'yz-icons' );
 
@@ -108,7 +103,7 @@ function yz_common_scripts() {
 add_action( 'wp_enqueue_scripts', 'yz_activity_scripts' );
 
 function yz_activity_scripts() {
-
+    
     if ( ! yz_is_activity_component() ) {
         return;
     }
@@ -124,13 +119,13 @@ function yz_activity_scripts() {
     wp_enqueue_style( 'yz-profile' );
 
     // Enable Url Live Preview
-    // $enable_url_preview = yz_options( 'yz_enable_wall_url_preview' );
+    $enable_url_preview = yz_options( 'yz_enable_wall_url_preview' );
 
-    // if ( 'on' == $enable_url_preview ) {
-    //     // URL Preview CSS
-    //     wp_enqueue_script( 'yz-url-preview', YZ_PA . 'js/yz-url-preview.min.js', array( 'jquery' ), YZ_Version );
-    //     wp_enqueue_style( 'yz-url-preview', YZ_PA . 'css/yz-url-preview.min.css', array(), YZ_Version );
-    // }
+    if ( 'on' == $enable_url_preview ) {
+        // URL Preview CSS
+        wp_enqueue_script( 'yz-url-preview', YZ_PA . 'js/yz-url-preview.min.js', array( 'jquery' ), YZ_Version );
+        wp_enqueue_style( 'yz-url-preview', YZ_PA . 'css/yz-url-preview.min.css', array(), YZ_Version );
+    }
 
     // Load Carousel CSS and JS.
     wp_enqueue_style( 'yz-carousel-css', YZ_PA . 'css/owl.carousel.min.css', array(), YZ_Version );
@@ -159,7 +154,6 @@ function yz_activity_scripts() {
                 'invalid_file_size' => $Youzer->wall->msg( 'invalid_file_size' ),
                 'max_one_file'      => $Youzer->wall->msg( 'max_one_file' ),
                 'base_url'          => $YZ_upload_url,
-                'url_preview'       => yz_options( 'yz_enable_wall_url_preview' ),
                 'giphy_limit'       => 12,
             ) );
 
@@ -386,7 +380,7 @@ function yz_dequeue_buddypress_css() {
     wp_dequeue_style( 'bp-twentyseventeen' );
 }
 
-// add_action( 'wp_enqueue_scripts', 'yz_dequeue_buddypress_css', 999 );
+add_action( 'wp_enqueue_scripts', 'yz_dequeue_buddypress_css', 999 );
 
 /**
  * Emoji Scripts
@@ -394,7 +388,7 @@ function yz_dequeue_buddypress_css() {
 function yz_emoji_scripts() {
 
     if ( ! is_user_logged_in() ) {
-        // return false;
+        return false;
     }
 
     // Emojionearea Scripts
@@ -404,55 +398,54 @@ function yz_emoji_scripts() {
     wp_enqueue_script( 'yz-emoji', YZ_PA . 'js/yz-emoji.min.js', array(), YZ_Version );
 
 }
-// add_action( 'wp_enqueue_scripts', 'yz_emoji_scripts', 999 );
 
 /**
  * Emoji Scripts
  */
-// function yz_call_emoji_scripts() {
+function yz_call_emoji_scripts() {
 
-//     // Get Emoji Visibility
-//     $emoji_visibility = array();
+    // Get Emoji Visibility
+    $emoji_visibility = array();
     
-//     if ( bp_is_messages_conversation() || bp_is_messages_compose_screen() ) {
+    if ( bp_is_messages_conversation() || bp_is_messages_compose_screen() ) {
             
-//         // Get Visibility Options.
-//         $messages_emoji = yz_options( 'yz_enable_messages_emoji' );
+        // Get Visibility Options.
+        $messages_emoji = yz_options( 'yz_enable_messages_emoji' );
 
-//         if ( 'on' == $messages_emoji ) {
-//             $emoji_visibility['messages_visibility'] = $messages_emoji;
-//         }
+        if ( 'on' == $messages_emoji ) {
+            $emoji_visibility['messages_visibility'] = $messages_emoji;
+        }
 
-//     }
+    }
 
-//     if ( yz_is_activity_component() ) {
+    if ( yz_is_activity_component() ) {
 
-//         // Get Visibility Options.
-//         $posts_emoji    = yz_options( 'yz_enable_posts_emoji' );
-//         $comments_emoji = yz_options( 'yz_enable_comments_emoji' );
+        // Get Visibility Options.
+        $posts_emoji    = yz_options( 'yz_enable_posts_emoji' );
+        $comments_emoji = yz_options( 'yz_enable_comments_emoji' );
         
-//         if ( 'on' == $posts_emoji ) {
-//             $emoji_visibility['posts_visibility'] = $posts_emoji;
-//         }
+        if ( 'on' == $posts_emoji ) {
+            $emoji_visibility['posts_visibility'] = $posts_emoji;
+        }
 
-//         if ( 'on' == $comments_emoji ) {
-//             $emoji_visibility['comments_visibility'] = $comments_emoji;
-//         }
+        if ( 'on' == $comments_emoji ) {
+            $emoji_visibility['comments_visibility'] = $comments_emoji;
+        }
 
-//     }
+    }
 
-//     if ( empty( $emoji_visibility ) ) {
-//         return false;
-//     }
+    if ( empty( $emoji_visibility ) ) {
+        return false;
+    }
 
-//     yz_emoji_scripts();
+    yz_emoji_scripts();
 
-//     // Localize Emoji Script.
-//     wp_localize_script( 'yz-emoji', 'Yz_Emoji', $emoji_visibility );
+    // Localize Emoji Script.
+    wp_localize_script( 'yz-emoji', 'Yz_Emoji', $emoji_visibility );
 
-// }
+}
 
-// add_action( 'wp_enqueue_scripts', 'yz_call_emoji_scripts' );
+add_action( 'wp_enqueue_scripts', 'yz_call_emoji_scripts' );
 
 /**
  * Widgets Enqueue scripts.

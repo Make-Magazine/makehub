@@ -54,7 +54,8 @@ class Logy_Admin {
 	    	__( 'Membership Settings', 'youzer' ),
 	    	'administrator',
 	    	'yz-membership-settings',
-	    	array( &$this->dashboard, 'general_settings' )
+	    	array( &$this->dashboard, 'general_settings' ),
+	    	false
 	    );
 
 	}

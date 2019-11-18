@@ -75,10 +75,6 @@ function youzer_remove_themes_default_bp_css() {
 	if ( $theme == 'OceanWP' || $theme == 'OceanWP Child' ) {
 		wp_dequeue_style( 'oceanwp-buddypress' );
 	}
-	
-	if ( $theme == 'Enfold' || $theme == 'Enfold Child' ) {
-		wp_dequeue_style( 'avia-bbpress' );
-	}
 
 }
 

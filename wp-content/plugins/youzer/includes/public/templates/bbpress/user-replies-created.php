@@ -22,7 +22,7 @@
 
 			<?php else : ?>
 
-				<p><?php bbp_is_user_home() ? _e( 'You have not replied to any topics.', 'youzer' ) : _e( 'This user has not replied to any topics.', 'youzer' ); ?></p>
+				<p><?php bbp_is_user_home() ? _e( 'You have not replied to any topics.', 'bbpress' ) : _e( 'This user has not replied to any topics.', 'bbpress' ); ?></p>
 
 			<?php endif; ?>
 

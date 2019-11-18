@@ -63,21 +63,21 @@ function yz_bbp_forum_topic_head( $args = array() ) {
 	$time_since  = bbp_get_topic_freshness_link( $topic_id        );
 
 	// Singular/Plural
-	$voice_count = sprintf( _n( '%s voice', '%s voices', $vc_int, 'youzer' ), $voice_count );
+	$voice_count = sprintf( _n( '%s voice', '%s voices', $vc_int, 'bbpress' ), $voice_count );
 
 	// Topic has replies
 	$last_reply = bbp_get_topic_last_reply_id( $topic_id );
 	if ( !empty( $last_reply ) ) {
 		$last_updated_by = bbp_get_author_link( array( 'post_id' => $last_reply, 'size' => $r['size'] ) );
-		$retstr          = sprintf( esc_html__( 'last updated by %1$s %2$s', 'youzer' ), $last_updated_by, $time_since );
+		$retstr          = sprintf( esc_html__( 'last updated by %1$s %2$s', 'bbpress' ), $last_updated_by, $time_since );
 
 	// Topic has no replies
 	} elseif ( ! empty( $voice_count ) && ! empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This topic contains %1$s and has %2$s.', 'youzer' ), $voice_count, $reply_count );
+		$retstr = sprintf( esc_html__( 'This topic contains %1$s and has %2$s.', 'bbpress' ), $voice_count, $reply_count );
 
 	// Topic has no replies and no voices
 	} elseif ( empty( $voice_count ) && empty( $reply_count ) ) {
-		$retstr = sprintf( esc_html__( 'This topic has no replies.', 'youzer' ), $voice_count, $reply_count );
+		$retstr = sprintf( esc_html__( 'This topic has no replies.', 'bbpress' ), $voice_count, $reply_count );
 	}
 
 	// Add the 'view all' filter back
@@ -176,7 +176,7 @@ function yz_bbp_single_forum_head_meta(  $args = '' ) {
 
 	// Has replies
 	if ( ! empty( $reply_count ) ) {
-		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'youzer' ), $reply_count );
+		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'bbpress' ), $reply_count );
 	}
 
 	// Forum has active data
@@ -187,7 +187,7 @@ function yz_bbp_single_forum_head_meta(  $args = '' ) {
 
 	// Forum has no last active data
 	} else {
-		$topic_text      = sprintf( _n( '%s topic', '%s topics', $tc_int, 'youzer' ), $topic_count );
+		$topic_text      = sprintf( _n( '%s topic', '%s topics', $tc_int, 'bbpress' ), $topic_count );
 	}
 
 	// Forum has active data
@@ -196,17 +196,17 @@ function yz_bbp_single_forum_head_meta(  $args = '' ) {
 		if ( !empty( $reply_count ) ) {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'youzer' ),$last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'bbpress' ),$last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.',    'youzer' ), $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.',    'bbpress' ), $last_updated_by, $time_since );
 			}
 
 		} else {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
-				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'youzer' ), $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'bbpress' ), $last_updated_by, $time_since );
 			} else {
-				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'youzer' ), $last_updated_by, $time_since );
+				$retstr = sprintf( esc_html__( 'last updated by %1$s %2$s.', 'bbpress' ), $last_updated_by, $time_since );
 			}
 		}
 

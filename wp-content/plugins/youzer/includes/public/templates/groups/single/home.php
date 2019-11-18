@@ -7,9 +7,8 @@ global $Youzer;
 <?php if ( bp_has_groups() ) : while ( bp_groups() ) : bp_the_group(); ?>
 
 <?php do_action( 'youzer_group_before_group' ); ?>
-<div id="youzer">
-	
-<div id="<?php echo apply_filters( 'yz_group_template_id', 'yz-bp' ); ?>" class="youzer <?php echo yz_group_page_class(); ?>">
+
+<div id="buddypress" class="youzer <?php echo yz_group_page_class(); ?>">
 	
 	<?php do_action( 'youzer_group_before_content' ); ?>
 
@@ -45,7 +44,6 @@ global $Youzer;
 
 </div>
 
-</div>
 <?php do_action( 'youzer_group_after_group' ); ?>
 
 <?php endwhile; endif; ?>

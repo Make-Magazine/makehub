@@ -93,9 +93,6 @@ class Youzer_Fields {
 		// Get Disabled Field.
 		$disabled = isset( $option['disabled'] ) && $option['disabled'] == true ? 'disabled="disabled"' : '';
 
-		// Get Disabled Field.
-		$required = isset( $option['required'] ) && $option['required'] == true ? 'required' : '';
-
 		switch ( $option['type'] ) :
 
 		case 'open':
@@ -263,13 +260,12 @@ class Youzer_Fields {
 		<?php break;
 
 		case 'text':
-		case 'email':
 
 		$placeholder = isset( $option['placeholder'] ) ? $field_title : null;
 
 		?>
 
-			<input type="<?php echo $option['type']; ?>" id="<?php echo $field_id; ?>" <?php echo $field_name; ?> placeholder="<?php echo $placeholder; ?>" value="<?php echo $real_value; ?>" <?php echo $disabled; echo $required; ?>/>
+			<input type="text" id="<?php echo $field_id; ?>" <?php echo $field_name; ?> placeholder="<?php echo $placeholder; ?>" value="<?php echo $real_value; ?>" <?php echo $disabled; ?>/>
 
 		<?php break;
 
@@ -447,8 +443,8 @@ class Youzer_Fields {
 				$active_attr = 'checked';
 			}
 
+
 			if ( ! isset( $option['opts'] ) ) :
-				$field_id = $options_name == 'youzer_options' ? $field_id : str_replace( array('[', ']') , '_', $options_name ) . $field_id; 
 			?>
 
 			<div class="ukai-checkbox-item">
@@ -459,6 +455,7 @@ class Youzer_Fields {
 			<?php 
 			
 			else :
+
 				foreach ( $option['opts'] as $key => $value ) {
 
 					if ( isset( $option['no_options'] ) ) {
@@ -577,7 +574,7 @@ class Youzer_Fields {
 			<ul class="ukai_tags" data-option-name="<?php echo $field_name; ?>[]">
 
 				<li class="tagAdd taglist">
-					<input type="text" class="ukai_tags_field" tabindex="-1" placeholder="<?php _e( 'Type Something Then Hit Enter!', 'youzer' ); ?>">
+					<input type="text" class="ukai_tags_field">
 				</li>
 
 				<?php

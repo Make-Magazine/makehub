@@ -15,13 +15,13 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-reply-author"><?php  _e( 'Author',  'youzer' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-reply-author"><?php  _e( 'Author',  'bbpress' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-reply-content">
 
 			<?php if ( !bbp_show_lead_topic() ) : ?>
 
-				<span class="yz-single-topic-lead-title"><?php _e( 'Posts', 'youzer' ); ?></span>
+				<span class="yz-single-topic-lead-title"><?php _e( 'Posts', 'bbpress' ); ?></span>
 
 				<?php bbp_topic_subscription_link( array( 'before' => false ) ); ?>
 
@@ -29,7 +29,7 @@
 
 			<?php else : ?>
 
-				<?php _e( 'Replies', 'youzer' ); ?>
+				<?php _e( 'Replies', 'bbpress' ); ?>
 
 			<?php endif; ?>
 
@@ -57,17 +57,17 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-reply-author"><?php  _e( 'Author',  'youzer' ); ?></div>
+		<div class="bbp-reply-author"><?php  _e( 'Author',  'bbpress' ); ?></div>
 
 		<div class="bbp-reply-content">
 
 			<?php if ( !bbp_show_lead_topic() ) : ?>
 
-				<?php _e( 'Posts', 'youzer' ); ?>
+				<?php _e( 'Posts', 'bbpress' ); ?>
 
 			<?php else : ?>
 
-				<?php _e( 'Replies', 'youzer' ); ?>
+				<?php _e( 'Replies', 'bbpress' ); ?>
 
 			<?php endif; ?>
 

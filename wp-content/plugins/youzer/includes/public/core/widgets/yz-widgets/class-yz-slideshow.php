@@ -132,7 +132,6 @@ class YZ_Slideshow {
             // Get Slide Image Url
             $item_img = yz_get_file_url( $slide );
 
-            // echo $item_img;
             // Check Slide Image Existence
             if ( ! yz_is_image_exists( $item_img ) ) {
                 continue;

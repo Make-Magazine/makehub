@@ -867,19 +867,12 @@ function youzer_template( $old_template ) {
     // Init Var.
     $enable_youzer_page = bp_current_component() && ! is_404();
 
+    // Filter
+    $enable_youzer_page = apply_filters( 'yz_enable_youzer_page', $enable_youzer_page );
+
     // Check if its youzer plugin page
-    if ( apply_filters( 'yz_enable_youzer_page', $enable_youzer_page ) ) {
-        
-        // Get Data.
-        $file = 'youzer-template.php';
-        $path = yz_get_theme_template_path();
-
-        if ( file_exists( $path . '/youzer/' . $file ) ) {
-            $new_template = $path . '/youzer/' . $file;
-        } else {
-            $new_template = YZ_TEMPLATE . 'youzer-template.php';
-        }
-
+    if ( $enable_youzer_page ) {
+        $new_template = YZ_TEMPLATE . 'youzer-template.php';
     }
 
     return apply_filters( 'youzer_template', $new_template, $old_template );
@@ -889,19 +882,9 @@ function youzer_template( $old_template ) {
 add_filter( 'template_include', 'youzer_template', 99999 );
 
 /**
- * Get Template Path.
- */
-function yz_get_theme_template_path() {
-    // Get Path.
-    $path = is_child_theme() ?  get_theme_file_path() : get_template_directory();
-    return apply_filters( 'yz_get_theme_template_path', $path );
-}
-
-
-/**
  * Write Log.
  **/
-function yz_write_log( $log )  {
+function yz_write_log ( $log )  {
       if ( is_array( $log ) || is_object( $log ) ) {
          error_log( print_r( $log, true ) );
       } else {
@@ -1140,9 +1123,6 @@ function yz_get_excerpt( $content, $limit = 12 ) {
     
     // Strip Shortcodes
     $excerpt = do_shortcode( $content ); 
-
-    // Strip Remaining shortcodes.
-    $excerpt = preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $excerpt);
 
     // Strip Tag.
     $excerpt = wp_strip_all_tags( $excerpt );
@@ -1471,15 +1451,3 @@ function yz_upload_image_by_url( $link = false ) {
     return false;
            
 }
-
-// // <?php
-// // Change Emoji PNG CDN
-// function yzc_edit_emoji_png_url( $url ) {
-//     return 'https://cdn.jsdelivr.net/emojione/assets/3.1/png/32/';
-// }
-// add_filter( 'emoji_url', 'yzc_edit_emoji_png_url' );
-// // Change Emoji SVG CDN
-// function yzc_edit_emoji_svg_url( $url ) {
-//     return 'https://cdn.jsdelivr.net/emojione/assets/svg/';
-// }
-// add_filter( 'emoji_svg_url', 'yzc_edit_emoji_svg_url' );

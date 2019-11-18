@@ -491,41 +491,6 @@
 			return yz_origAppend.apply( this, arguments ).trigger( 'append' );
 		};
 
-		$( '<div class="yz-mobile-nav yz-inline-mobile-nav">'+
-			'<div class="yz-mobile-nav-item yz-show-tab-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a>Menu</a></div></div>' + '</div>'
-		).insertBefore( $( '.yz-profile div.item-list-tabs,.yz-group div.item-list-tabs' )  );	
-
-		var yz_resizeTimer;
-
-		$( window ).on( 'resize', function ( e ) {
-
-			// Init Vars.
-			var window_changed;
-
-		    clearTimeout( yz_resizeTimer );
-
-		    yz_resizeTimer = setTimeout( function () {
-		    	
-		    	if ( $.browser.mobile ) {
-			    	window_changed = $( window ).width() != app.size.window_width;
-				} else {
-					window_changed = true;
-				}
-
-	    		if ( window_changed ) {
-			        if ( $( window ).width() > 768 ) {
-			        	$( '.item-list-tabs, .item-list-tabs ul, #yz-directory-search-box, #members-order-select,#groups-order-select,.yz-profile-navmenu' ).fadeIn().removeAttr("style");;
-			        }
-		 		}
-			}, 250 );
-		});
-
-		// Display Search Box.
-    	$( '.yz-show-tab-menu' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		$( '.item-list-tabs' ).fadeToggle();
-		});
-		
 	});
 
 })( jQuery );

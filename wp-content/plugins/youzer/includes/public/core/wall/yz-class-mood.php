@@ -23,9 +23,10 @@ class Youzer_Mood {
 	 * Mood Action.
 	 */
 	function action( $action, $activity ) {
+
 		// Get Post Mood
 		$mood = bp_activity_get_meta( $activity->id, 'mood' );
-
+		
 		if ( empty( $mood ) ) {
 			return $mood;	
 		}
@@ -33,9 +34,8 @@ class Youzer_Mood {
 		$moods = yz_wall_mood_categories();
 
 		if ( isset( $moods[ $mood['type'] ] ) ) {
-			$data = $moods[ $mood['type'] ];
 			
-			$mood_title = yz_get_mood_feeling_emojis();
+			$data = $moods[ $mood['type'] ];
 
 			// Get Mood Icon.
 			$icon = '<i class="' . $data['icon'] . '" style="background-color:' . $data['color'] . ';"></i>';
@@ -44,7 +44,7 @@ class Youzer_Mood {
 				$icon = '<img class="yz-mood-feeling-image" src="' . yz_get_mood_emojis_image( $mood['value'] ) . '" alt="">';
 			}
 
-			$action .= ' ' . sprintf( '<span class="yz-wall-mood">%1s %2s %3s<span>', $icon, $data['title'], $mood_title[ $mood['value'] ] );
+			$action .= ' ' . sprintf( __( '<span class="yz-wall-mood">%1s %2s %3s<span>', 'youzer' ), $icon, $data['title'], $mood['value'] );
 		}
 
 		return $action;
@@ -135,9 +135,6 @@ class Youzer_Mood {
 					</div>
 				<?php endforeach; ?>
 			</div>
-
-			<?php do_action( 'yz_mood_categories_items_list' ); ?>
-
 		<?php }
 
 		$content = ob_get_clean();

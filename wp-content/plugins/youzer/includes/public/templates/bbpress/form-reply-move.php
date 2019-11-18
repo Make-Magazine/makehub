@@ -27,37 +27,37 @@
 
 					<div class="yz-bbp-box-title">
 						<i class="fas fa-paper-plane"></i>
-						<?php printf( __( 'Move reply "%s"', 'youzer' ), bbp_get_reply_title() ); ?>
+						<?php printf( __( 'Move reply "%s"', 'bbpress' ), bbp_get_reply_title() ); ?>
 					</div>
 
 					<div class="yz-bbp-box-content">
 
 						<div class="bbp-template-notice info">
-							<p><?php _e( 'You can either make this reply a new topic with a new title, or merge it into an existing topic.', 'youzer' ); ?></p>
+							<p><?php _e( 'You can either make this reply a new topic with a new title, or merge it into an existing topic.', 'bbpress' ); ?></p>
 						</div>
 
 						<div class="bbp-template-notice">
-							<p><?php _e( 'If you choose an existing topic, replies will be ordered by the time and date they were created.', 'youzer' ); ?></p>
+							<p><?php _e( 'If you choose an existing topic, replies will be ordered by the time and date they were created.', 'bbpress' ); ?></p>
 						</div>
 
 						<fieldset class="bbp-form">
-							<legend><?php _e( 'Move Method', 'youzer' ); ?></legend>
+							<legend><?php _e( 'Move Method', 'bbpress' ); ?></legend>
 
 							<div class="yz-bbp-fieldset-content">
 
 								<div class="yz-bbp-form-item yz-bbp-form-item-radio">
 									<input name="bbp_reply_move_option" id="bbp_reply_move_option_reply" type="radio" checked="checked" value="topic" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_reply_move_option_reply"><?php printf( __( 'New topic in <strong>%s</strong> titled:', 'youzer' ), bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ); ?></label>
+									<label for="bbp_reply_move_option_reply"><?php printf( __( 'New topic in <strong>%s</strong> titled:', 'bbpress' ), bbp_get_forum_title( bbp_get_reply_forum_id( bbp_get_reply_id() ) ) ); ?></label>
 								</div>
 								<div class="yz-bbp-form-item yz-bbp-form-item-text">
-									<input type="text" id="bbp_reply_move_destination_title" value="<?php printf( __( 'Moved: %s', 'youzer' ), bbp_get_reply_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
+									<input type="text" id="bbp_reply_move_destination_title" value="<?php printf( __( 'Moved: %s', 'bbpress' ), bbp_get_reply_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_reply_move_destination_title" />
 								</div>
 
 							<?php if ( bbp_has_topics( array( 'show_stickies' => false, 'post_parent' => bbp_get_reply_forum_id( bbp_get_reply_id() ), 'post__not_in' => array( bbp_get_reply_topic_id( bbp_get_reply_id() ) ) ) ) ) : ?>
 
 								<div class="yz-bbp-form-item yz-bbp-form-item-radio>
 									<input name="bbp_reply_move_option" id="bbp_reply_move_option_existing" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_reply_move_option_existing"><?php _e( 'Use an existing topic in this forum:', 'youzer' ); ?></label>
+									<label for="bbp_reply_move_option_existing"><?php _e( 'Use an existing topic in this forum:', 'bbpress' ); ?></label>
 								</div>
 								
 								<div class="yz-bbp-form-item yz-bbp-form-item-select">
@@ -79,11 +79,11 @@
 						</fieldset>
 
 						<div class="bbp-template-notice error">
-							<p><?php _e( '<strong>WARNING:</strong> This process cannot be undone.', 'youzer' ); ?></p>
+							<p><?php _e( '<strong>WARNING:</strong> This process cannot be undone.', 'bbpress' ); ?></p>
 						</div>
 
 						<div class="bbp-submit-wrapper">
-							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php _e( 'Submit', 'youzer' ); ?></button>
+							<button type="submit" tabindex="<?php bbp_tab_index(); ?>" id="bbp_move_reply_submit" name="bbp_move_reply_submit" class="button submit"><?php _e( 'Submit', 'bbpress' ); ?></button>
 						</div>
 					</div>
 
@@ -95,7 +95,7 @@
 	<?php else : ?>
 
 		<div id="no-reply-<?php bbp_reply_id(); ?>" class="bbp-no-reply">
-			<div class="entry-content"><?php is_user_logged_in() ? _e( 'You do not have the permissions to edit this reply!', 'youzer' ) : _e( 'You cannot edit this reply.', 'youzer' ); ?></div>
+			<div class="entry-content"><?php is_user_logged_in() ? _e( 'You do not have the permissions to edit this reply!', 'bbpress' ) : _e( 'You cannot edit this reply.', 'bbpress' ); ?></div>
 		</div>
 
 	<?php endif; ?>

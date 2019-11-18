@@ -50,7 +50,7 @@ class Youzer_Admin_Ajax {
 
 		        // Save Option or Delete Option if Empty
 		        if ( isset( $option ) ) {
-		        	update_option( $option, $the_value, false );
+		        	update_option( $option, $the_value, true );
 		        } else {
 		        	delete_option( $option );
 		        }
@@ -82,7 +82,7 @@ class Youzer_Admin_Ajax {
 		    	$active_styles = array_unique( $active_styles );
 
 		    	// Save New Styles.
-		    	update_option( 'yz_active_styles', array_filter( $active_styles ), false );
+		    	update_option( 'yz_active_styles', array_filter( $active_styles ), true );
 
 		    }
 		    
@@ -163,8 +163,8 @@ class Youzer_Admin_Ajax {
 	    	$main_widgets    = $data['yz_profile_main_widgets'];
 	    	$sidebar_widgets = $data['yz_profile_sidebar_widgets'];
 	    	// Update Options
-	    	update_option( 'yz_profile_main_widgets', $main_widgets, false );
-	    	update_option( 'yz_profile_sidebar_widgets', $sidebar_widgets, false );
+	    	update_option( 'yz_profile_main_widgets', $main_widgets, true );
+	    	update_option( 'yz_profile_sidebar_widgets', $sidebar_widgets, true );
 	    	// Hook.
 	    	do_action( 'yz_after_saving_profile_structure' );
 	    }
@@ -192,7 +192,7 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Update Pages in Database.
-		$update_pages = update_option( 'logy_pages', $logy_pages, false );
+		$update_pages = update_option( 'logy_pages', $logy_pages );
 
 		if ( $update_pages ) {
 			foreach ( $logy_pages as $page => $id ) {
@@ -212,11 +212,11 @@ class Youzer_Admin_Ajax {
 			return false;
 		}
 
-    	$update_options = update_option( 'yz_social_networks', $networks, false );
+    	$update_options = update_option( 'yz_social_networks', $networks, true );
 
 		// Update Next Network ID
     	if ( $update_options ) {
-			update_option( 'yz_next_snetwork_nbr', $this->get_next_ID( $networks, 'snetwork' ), false );
+			update_option( 'yz_next_snetwork_nbr', $this->get_next_ID( $networks, 'snetwork' ) );
     	}
 
 	}
@@ -232,11 +232,11 @@ class Youzer_Admin_Ajax {
 		}
 		
 		// Update Tabs.
-    	$update_options = update_option( 'yz_custom_tabs', $tabs, false );
+    	$update_options = update_option( 'yz_custom_tabs', $tabs, true );
 
 		// Update Next ID
     	if ( $update_options ) {
-			update_option( 'yz_next_custom_tab_nbr', $this->get_next_ID( $tabs, 'custom_tab' ), false );
+			update_option( 'yz_next_custom_tab_nbr', $this->get_next_ID( $tabs, 'custom_tab' ), true );
     	}
 
 	}
@@ -252,7 +252,7 @@ class Youzer_Admin_Ajax {
 		}
 		
 		// Update Types.
-    	$update_options = update_option( 'yz_user_tags', $tags, false );
+    	$update_options = update_option( 'yz_user_tags', $tags, true );
 
 		// Update Next ID
     	if ( $update_options ) {
@@ -281,14 +281,14 @@ class Youzer_Admin_Ajax {
 		$Yz_Widgets = $Youzer->widgets;
 
 		// Update ads List.
-    	$update_options = update_option( 'yz_ads', $yz_ads, false );
+    	$update_options = update_option( 'yz_ads', $yz_ads, true );
 
     	// If ADS not updated stop function right here.
 		if ( ! $update_options ) {
 			return false;
 		} else {
 			// Update Next Ad ID
-			update_option( 'yz_next_ad_nbr', $this->get_next_ID( $yz_ads, 'ad' ), false );
+			update_option( 'yz_next_ad_nbr', $this->get_next_ID( $yz_ads, 'ad' ) );
     	}
 
 	    // Get Overview and Sidebar Widgets
@@ -327,8 +327,8 @@ class Youzer_Admin_Ajax {
 	    }
 
 		// Update Overview & Sidebar Widgets.
-		update_option( 'yz_profile_main_widgets', $overview_wgs, false );
-		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, false );
+		update_option( 'yz_profile_main_widgets', $overview_wgs, true );
+		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, true );
 
 	}
 
@@ -346,14 +346,14 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Update ads List.
-    	$update_options = update_option( 'yz_custom_widgets', $yz_cw, false );
+    	$update_options = update_option( 'yz_custom_widgets', $yz_cw, true );
 
     	// If widgets not updated stop function right here.
 		if ( ! $update_options ) {
 			return false;
 		} else {
 			// Update Next ID
-			update_option( 'yz_next_custom_widget_nbr', $this->get_next_ID( $yz_cw, 'custom_widget' ), false );
+			update_option( 'yz_next_custom_widget_nbr', $this->get_next_ID( $yz_cw, 'custom_widget' ) );
     	}
 
 	    // Get Overview and Sidebar Widgets
@@ -396,8 +396,8 @@ class Youzer_Admin_Ajax {
 	    }
 
 		// Update Overview & Sidebar Widgets.
-		update_option( 'yz_profile_main_widgets', $overview_wgs, false );
-		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, false );
+		update_option( 'yz_profile_main_widgets', $overview_wgs, true );
+		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, true );
 
 	}
 
@@ -417,7 +417,7 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Update Youzer Pages in Database.
-		$update_pages = update_option( 'youzer_pages', $youzer_pages, false );
+		$update_pages = update_option( 'youzer_pages', $youzer_pages );
 
 		if ( $update_pages ) {
 			foreach ( $youzer_pages as $page => $id ) {
@@ -470,7 +470,7 @@ class Youzer_Admin_Ajax {
 		// Reset Options
 		foreach ( $default_options as $option => $value ) {
 			if ( get_option( $option ) ) {
-				update_option( $option, $value, false );
+				update_option( $option, $value, true );
 			}
 		}
 
@@ -548,7 +548,7 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Save Active Styles
-		update_option( 'yz_active_styles', $active_styles, false );
+		update_option( 'yz_active_styles', $active_styles, true );
 
 		die( '1' );
 	}

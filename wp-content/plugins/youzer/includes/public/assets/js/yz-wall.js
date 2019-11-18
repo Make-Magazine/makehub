@@ -36,7 +36,6 @@
 				// Init Effect On Activity Filters
 				var yz_observer = new MutationObserver(function( mutations ) {
 					$.yz_init_wall_posts_effect();
-					// console.log( 'hamdolah' );
 				});
 				 
 				// Pass in the target node, as well as the observer options
@@ -47,7 +46,6 @@
 				// Init Effect On Activity Filters
 				var yz_observer = new MutationObserver(function( mutations ) {
 					$.yz_init_wall_posts_effect();
-					// console.log( 'hamdola2h' );
 				});
 				 
 				// Pass in the target node, as well as the observer options
@@ -84,41 +82,6 @@
 
 		});
 
-		/**
-		 * # Modal.
-		 */
-		$( document ).on( 'click', '.yz-delete-post' , function( e ) {
-			/* Delete activity stream items */
-			var target = $( this ),
-			li = target.parents( 'div.activity ul li' ),
-			timestamp = li.prop( 'class' ).match( /date-recorded-([0-9]+)/ );
-
-			target.addClass('loading');
-			jq.post( ajaxurl, {
-				action: 'delete_activity',
-				'cookie': bp_get_cookies(),
-				'id': $( this ).parent().attr( 'data-activity-id' ),
-				'_wpnonce': target.attr( 'data-nonce' )
-			},
-			function(response) {
-
-				if ( response[0] + response[1] === '-1' ) {
-					li.prepend( response.substr( 2, response.length ) );
-					li.children('#message').hide().fadeIn(300);
-				} else {
-					li.slideUp(300);
-
-					// reset vars to get newest activities
-					if ( timestamp && activity_last_recorded === timestamp[1] ) {
-						newest_activities = '';
-						activity_last_recorded  = 0;
-					}
-				}
-			});
-
-		});
-
-		
 		/**
 		 * Show Activity Tagged Users.
 		 */
@@ -375,18 +338,21 @@
 		 */
 		$( document ).on( 'click',  '.activity-item .yz-show-item-tools', function ( e ) {
 
-			var button = $( this ), li = button.closest( 'li.activity-item' ), default_icon = button.find( 'i' ).attr( 'class' );
-
-			if ( button.hasClass( 'loaded' ) ) {
-				li.find( '.yz-activity-tools' ).fadeToggle();
-				return;
-			}
+			var button = $( this );
 
 			if ( button.hasClass( 'loading' ) ) {
 				return;
 			}
 
 			button.addClass( 'loading' );
+
+			var li = button.closest( 'li.activity-item' ), default_icon = button.find( 'i' ).attr( 'class' );
+
+
+			if ( button.hasClass( 'loaded' ) ) {
+				li.find( '.yz-activity-tools' ).fadeToggle();
+				return;
+			}
 
 			button.find( 'i' ).attr( 'class', 'fas fa-spin fa-spinner' );
 
@@ -399,60 +365,12 @@
 	            success: function( response ) {
 	            	button.find( 'i' ).attr( 'class', default_icon );
 	            	button.addClass( 'loaded' );
-	            	button.removeClass( 'loading' );
 	            	if ( response.success ) {
 	            		li.prepend( $( response.data ).fadeIn() );
 	            	}
 	            }
 	        });
 
-		});
-
-
-		// Display Search Box.
-    	$( '.yz-activity-show-search-form' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		var button = $( this ), parent = button.closest( 'ul' );
-    		parent.find( '#activity-filter-select .yz-dropdown-area' ).fadeOut( 1, function() {
-    			button.closest( 'li' ).find( '.yz-dropdown-area' ).fadeToggle();
-    			button.closest( 'li' ).find( 'input' ).focus();
-    		});
-		});
-
-		// Display Search Box.
-    	$( '.yz-activity-show-filter' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		var button = $( this ), parent = button.closest( 'ul' );
-    		parent.find( '.yz-activity-show-search .yz-dropdown-area' ).fadeOut( 1, function() {
-    			button.closest( 'li' ).find( '.yz-dropdown-area' ).fadeToggle();
-    		} );
-		});
-
-
-		// Display Search Box.
-    	$( '.yz-show-activity-search' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		var parent = $( this ).parents( '#youzer' ),
-    		element = parent.find( '.yz-activity-show-search .yz-dropdown-area' );
-    		parent.find( '#activity-filter-select .yz-dropdown-area, .activity-type-tabs' ).fadeOut();
-    		element.fadeToggle();
-    		element.find( 'input' ).focus();
-		});	
-
-		// Display Filter Box.
-    	$( '.yz-show-activity-filter' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		var parent = $( this ).parents( '#youzer' );
-    		parent.find( '.yz-activity-show-search .yz-dropdown-area, .activity-type-tabs' ).fadeOut();
-    		parent.find( '#activity-filter-select .yz-dropdown-area' ).fadeToggle();
-		});
-
-		// Display Menu Box.
-    	$( '.yz-show-activity-menu' ).on( 'click', function( e ) {
-    		e.preventDefault();
-    		var parent = $( this ).parents( '#youzer' );
-    		parent.find( '#subnav .yz-dropdown-area' ).fadeOut();
-    		parent.find( '.activity-type-tabs' ).fadeToggle();
 		});
 
 	});
