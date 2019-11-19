@@ -174,7 +174,7 @@ do_action('genesis_after_header');
 
 genesis_markup(
         array(
-            'open' => '<div class="main-content container">',
+            'open' => '<div class="main-content container-fluid">',
             'context' => 'site-inner',
         )
 );
