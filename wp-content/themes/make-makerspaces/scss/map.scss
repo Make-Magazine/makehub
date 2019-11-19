@@ -239,11 +239,6 @@
         @media all and (max-width: 991px) {
             padding: 0 20px;
             margin-bottom: 32px;
-            &:nth-of-type(2) {
-                &::after {
-                    background-image: none;
-                }
-            }
         }
         @media all and (max-width: 767px) { 
             padding: 0px;

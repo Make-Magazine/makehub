@@ -69,21 +69,17 @@ function spaces_map_loop() {
 <div class="container-fluid light-blue">
    <div class="container">
       <div class="row">
-         <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
+         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
             <h4>Join our global network of makerspaces</h4>
-            <a class="btn universal-btn" href="/register">Add your makerspace</a>
+            <a class="btn btn-blue" href="/register">Add your makerspace</a>
          </div>
-         <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
+         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
             <h4>See an error or need to update your info?</h4>
-            <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>					
+            <a class="btn btn-blue" href="/edit-your-makerspace">Manage your listing</a>					
          </div>
-         <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
+         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
             <h4>Get a free PDF guide on starting a makerspace</h4>
-            <a class="btn universal-btn" href="/playbook">Download the playbook</a>
-         </div>
-         <div class="col-md-3 col-sm-6 col-xs-12 makerspace-bottom-nav">
-            <h4>Start your own makerspace today</h4>
-            <a class="btn universal-btn" href="https://learn.make.co/courses/starting-a-school-makerspace/info">Take the course</a>
+            <a class="btn btn-blue" href="/playbook">Download the playbook</a>
          </div>
       </div>
    </div>
