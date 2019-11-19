@@ -29,7 +29,53 @@ class Youzer_Wall_Functions  {
 		// Hide Private Users Posts.
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'hide_private_users_posts' ), 10 );
 
+		// Add Delete Post Tool
+		add_filter( 'yz_activity_tools', array( $this, 'add_delete_activity_tool' ), 99, 2 );
+
+		// Add Embeds Wrapper.
+		add_filter( 'bp_embed_oembed_html',  array( $this, 'embed_videos_container' ), 10, 4 );
 	}
+
+	/**
+	 * Embeds Wrapper.
+	 */
+	function embed_videos_container( $html, $url, $attr, $rawattr ) {
+
+		// Wrapped Providers.
+		$providers = array( 'soundcloud.com', 'vimeo.com', 'youtube.com', 'youtu.be', 'dailymotion.com' );
+
+		foreach ( $providers as $provider ) {
+			
+			if ( strpos( $url, $provider ) !== false ) {
+				return '<div class="yz-embed-wrapper">' . $html . '</div>';	
+			}
+		}
+
+	    return $html;
+	}
+
+	/**
+	 * Add Delete Activity Tool.
+	 */
+	function add_delete_activity_tool( $tools, $post_id ) {
+		
+		if ( ! bp_activity_user_can_delete() ) {
+			return $tools;
+		}
+
+		// Get Tool Data.
+		$tools[] = array(
+			'icon' => 'fas fa-trash-alt',
+			'title' =>  __( 'Delete', 'youzer' ),
+			'action' => 'delete-activity',
+			'class' => array( 'yz-delete-tool', 'yz-delete-post' ),
+			'attributes' => array( 'item-type' => 'activity', 'nonce' => wp_create_nonce( 'bp_activity_delete_link' ) )
+		);
+
+		return $tools;
+	}
+
+
 
 	/**
 	 * Get Wall Posts Per page
@@ -58,6 +104,7 @@ class Youzer_Wall_Functions  {
 
 		}
 
+		// echo $query;
 		return $query;
 	    
 	}
@@ -68,18 +115,15 @@ class Youzer_Wall_Functions  {
 	function activity_default_filter( $retval ) { 
 	    
 	    // Youzer Filter Option.
-	    $use_youzer_filter = yz_options( 'yz_enable_youzer_activity_filter' );
-
-	    if ( 'off' == $use_youzer_filter ) {
+	    if ( 'off' == yz_options( 'yz_enable_youzer_activity_filter' ) ) {
 	        return $retval;
 	    }
 	    
-	    $show_everything = yz_wall_show_everything_filter();
-
-	    if ( ! isset( $retval['type'] ) || ( isset( $retval['type'] ) && $retval['type'] == $show_everything ) )  {
+	    if ( ! isset( $retval['type'] ) || ( isset( $retval['type'] ) && $retval['type'] == 'null' ) )  {
+		    $show_everything = yz_wall_show_everything_filter();
 	        $retval['action'] = $show_everything;    
 	    }
-	    
+
 	    return $retval;
 
 	}

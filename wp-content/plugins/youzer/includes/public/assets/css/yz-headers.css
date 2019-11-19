@@ -903,7 +903,7 @@ body:not(.rtl) .yzb-author .yz-use-borders li:last-child {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 9999;
+    z-index: 2;
     position: absolute;
 }
 
@@ -1305,10 +1305,25 @@ body:not(.rtl) .yzb-author .yz-use-borders li:last-child {
 
 }
 
+@media screen and ( max-width: 1024px ) {
+
+    .youzer #yz-profile-navmenu.yz-boxed-navbar {
+        margin: 0 15px;
+    }
+    .yz-hdr-v2 {
+        margin-bottom: 15px;
+    }
+}
+
 @media screen and ( max-width: 768px ) {
 
+    .youzer #yz-profile-navmenu.yz-boxed-navbar {
+        margin: 0 15px;
+        width: initial;
+    }
+    
     .youzer .yz-boxed-navbar {
-        width: 90%;
+        width: 100%;
     }
 
     /* Header Version 1 */

@@ -70,7 +70,6 @@ class YZ_Info_Tab {
 		  $profile_widgets = apply_filters( 'yz_profile_main_widgets', $profile_widgets );
 		  // Get Widget Content.
 		  youzer()->widgets->get_widget_content( $profile_widgets );	
-        
     }
 
 }

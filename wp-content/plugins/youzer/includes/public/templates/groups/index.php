@@ -11,8 +11,9 @@
 do_action( 'bp_before_directory_groups_page' ); ?>
 
 <?php $icons_style = yz_options( 'yz_tabs_list_icons_style' ); ?>
-
-<div id="buddypress" class="youzer <?php echo yz_groups_directory_class(); ?>">
+<div id="youzer">
+	
+<div id="<?php echo apply_filters( 'yz_group_template_id', 'yz-bp' ); ?>" class="youzer <?php echo yz_groups_directory_class(); ?>">
 
 	<main class="yz-page-main-content">
 
@@ -35,7 +36,13 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 		 * @since 1.1.0
 		 */
 		do_action( 'bp_before_directory_groups_content' ); ?>
-		
+
+		<div class="yz-mobile-nav">
+			<div id="directory-show-menu" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a><?php _e( 'Menu', 'youzer' ); ?></a></div></div>
+			<div id="directory-show-search" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-search"></i><a><?php _e( 'Search', 'youzer' ); ?></a></div></div>
+			<div id="directory-show-filter" class="yz-mobile-nav-item"><div class="yz-mobile-nav-container"><i class="fas fa-sliders-h"></i><a><?php _e( 'Filter', 'youzer' ); ?></a></div></div>
+		</div>
+				
 		<div class="yz-directory-filter">
 			
 		<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Groups directory main navigation', 'youzer' ); ?>">
@@ -159,6 +166,8 @@ do_action( 'bp_before_directory_groups_page' ); ?>
 		</div><!-- #buddypress -->
 
 	</main>
+
+</div>
 
 </div>
 <?php

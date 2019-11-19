@@ -91,3 +91,159 @@
 
 	}
 }
+
+//Overwrite Youzer update - maybe delete these after the next youzer update
+#buddypress div.item-list-tabs .yz-activity-search {
+	border: 1px solid #f1f1f1;
+	background-color: #fff;
+	border-radius: 50px;
+	overflow: hidden;
+	input {
+		border: none;
+		padding: 10px 0 10px 25px;
+		float: left;
+		width: calc( 100% - 55px );
+		height: 45px;
+		margin: 0;
+		font-size: 13px;
+		color: #898989;
+		font-weight: 600;
+		&::placeholder, ::-webkit-input-placeholder, ::-moz-placeholder, ::-ms-input-placeholder {
+			font-weight: 600;
+    		color: #898989;
+		}
+	}
+	button {
+		float: right;
+		border: none;
+		background: transparent;
+		display: inline-block;
+		padding: 0;
+		margin: 0;
+		box-shadow: none;
+	}
+	i {
+		 display: inline-block;
+		 float: right;
+		 height: 45px;
+		 width: 50px;
+		 text-align: center;
+		 border-radius: 100%;
+		 line-height: 45px;
+		 background: #fff;
+		 cursor: pointer;
+		 color: #969696;
+	}
+}
+#buddypress .activity-meta a {
+    padding: 0;
+    border: none;
+    color: #939BA3;
+    font-size: 13px;
+    height: initial;
+    font-weight: 600;
+    box-shadow: none;
+    line-height: 14px;
+    margin: 0 15px 0 0;
+    display: inline-block;
+    vertical-align: middle;
+    background-image: initial;
+    background-color: transparent;
+}
+#buddypress .activity-meta .yz-post-liked-by a {
+	width: 35px;
+	height: 35px;
+	cursor: pointer;
+	margin: 0 -5px 0 0;
+	margin-right: -5px;
+	border: 3px solid #fff;
+	display: inline-block;
+	background-size: cover;
+	background-position: center;
+}
+
+.rtl #buddypress .activity-meta a {
+    margin: 0 0 0 15px;
+}
+
+#buddypress .activity-meta i,
+#buddypress .activity-meta a:before {
+    color: #cccbcb;
+    margin-right: 8px;
+}
+
+#buddypress .activity-meta i {
+    vertical-align: middle;
+}
+
+.rtl .youzer .yz-wall-embed .yz-embed-meta .yz-embed-meta-item i,
+.rtl #buddypress .activity-meta a:before {
+    margin: 0 0 0 8px;
+}
+
+#buddypress .activity-meta a.acomment-reply:before {
+    content: '\f075';
+}
+
+.youzer .acomment-options a.yz-edit-activity.loading:before,
+#buddypress .activity-meta a.yz-edit-activity.loading:before {
+    content: '\f110';
+    font-weight: 800;
+}
+
+#buddypress .activity-meta a.yz-edit-activity::before,
+.youzer .acomment-options a.yz-edit-activity::before {
+    content: "\f044";
+}
+
+.youzer .yz-send-comment i.loading:before,
+.youzer .acomment-options .loading:before,
+#buddypress .activity-meta a:not(.fav):not(.unfav):not(.yz-report-activity).loading:before {
+    content: '\f110' !important;
+    font-weight: 700;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+}
+
+#buddypress .activity-meta a.loading:before {
+    top: initial;
+    height: initial;
+    right: initial;
+    width: initial;
+    left: initial;
+    position: relative;
+}
+
+#buddypress .activity-meta a.view:before {
+    content: '\f086';
+    font-weight: 200;
+}
+
+#buddypress .activity-meta a.unfav:before,
+#buddypress .activity-meta a.fav:before {
+    content: '\f004';
+}
+
+.youzer .acomment-options a:not(.loading).yz-edit-activity:hover:before,
+#buddypress .activity-meta a:not(.loading).yz-edit-activity:hover:before,
+.youzer .acomment-options a:not(.loading).delete-activity-single:hover:before,
+.youzer .acomment-options a:not(.loading).delete-activity:hover:before,
+#buddypress .activity-meta a:not(.loading).acomment-delete:hover:before,
+#buddypress .activity-meta a.acomment-reply:hover:before,
+#buddypress .activity-meta a.delete-activity:hover:before {
+    color: #a0a0a0;
+    -webkit-transition: all 0.5s ease;
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+#buddypress .activity-meta a.delete-activity-single:before,
+#buddypress .activity-meta a.delete-activity:before {
+    content: '\f2ed';
+}
+
+.youzer .acomment-options a:hover,
+#buddypress .activity-meta a:hover {
+    text-decoration: none !important;
+}

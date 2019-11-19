@@ -13,7 +13,7 @@ function yz_mycred_get_user_balance_box( $user_id = null , $title = null, $point
 	$user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
 
 	// Get Ballance 
-	$user_balance = mycred_get_users_balance( $user_id );
+	$user_balance = mycred_get_users_fcred( $user_id );
 
 	// Load myCRED with this points type.
 	$mycred = mycred( 'mycred_default' );

@@ -47,9 +47,8 @@ class YZ_Posts_Tab {
 		echo '</div>';
 
 		// Pagination Script.
-		if ( 'on' == yz_options( 'yz_display_posts_tab' ) && yz_is_user_have_posts() && yz_check_pagination( 'posts' ) && bp_is_current_component( 'posts' ) ) {
- 			yz_profile_posts_comments_pagination();
-		}
+ 		yz_profile_posts_comments_pagination();
+		
 
 	}
 
@@ -73,6 +72,15 @@ class YZ_Posts_Tab {
 
 		echo '<div class="yz-posts-page" data-post-page="' . $posts_page . '">';
 
+		// Show / Hide Post Elements
+		$display_meta 		= yz_options( 'yz_display_post_meta' );
+		$display_date 		= yz_options( 'yz_display_post_date' );
+		$display_cats 		= yz_options( 'yz_display_post_cats' );
+		$display_excerpt	= yz_options( 'yz_display_post_excerpt' );
+		$display_readmore 	= yz_options( 'yz_display_post_readmore' );
+		$display_comments 	= yz_options( 'yz_display_post_comments' );
+		$display_meta_icons = yz_options( 'yz_display_post_meta_icons' );
+
 		foreach ( $blogs_ids as $b ) {
 
 		    switch_to_blog( $b->blog_id );
@@ -95,20 +103,11 @@ class YZ_Posts_Tab {
 				$post_excerpt 		= yz_get_excerpt( get_the_content(), 25 );
 				$post_comments_nbr 	= wp_count_comments( $post_id );
 
-				// Show / Hide Post Elements
-				$display_meta 		= yz_options( 'yz_display_post_meta' );
-				$display_date 		= yz_options( 'yz_display_post_date' );
-				$display_cats 		= yz_options( 'yz_display_post_cats' );
-				$display_excerpt	= yz_options( 'yz_display_post_excerpt' );
-				$display_readmore 	= yz_options( 'yz_display_post_readmore' );
-				$display_comments 	= yz_options( 'yz_display_post_comments' );
-				$display_meta_icons = yz_options( 'yz_display_post_meta_icons' );
-
 			?>
 
 			<div class="yz-tab-post">
 
-				<?php yz_get_post_thumbnail( array( 'post_id' => get_the_ID() ) ); ?>
+				<?php yz_get_post_thumbnail( array( 'post_id' => $post_id ) ); ?>
 
 				<div class="yz-post-container">
 
@@ -117,7 +116,7 @@ class YZ_Posts_Tab {
 						<div class="yz-post-head">
 
 							<h2 class="yz-post-title">
-								<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+								<a href="<?php the_permalink( $post_id ); ?>"><?php echo get_the_title( $post_id ); ?></a>
 							</h2>
 
 							<?php if ( 'on' == $display_meta ) : ?>
@@ -131,7 +130,7 @@ class YZ_Posts_Tab {
 											<?php if ( 'on' == $display_meta_icons ) : ?>
 												<i class="far fa-calendar-alt"></i>
 											<?php endif; ?>
-											<?php echo get_the_date(); ?>
+											<?php echo get_the_date( '', $post_id ); ?>
 										</li>
 									<?php endif; ?>
 
@@ -164,7 +163,7 @@ class YZ_Posts_Tab {
 						<?php endif; ?>
 
 						<?php if ( 'on' == $display_readmore ) : ?>
-							<a href="<?php the_permalink(); ?>" class="yz-read-more">
+							<a href="<?php the_permalink( $post_id ); ?>" class="yz-read-more">
 								<div class="yz-rm-icon">
 									<i class="fas fa-angle-double-right"></i>
 								</div>

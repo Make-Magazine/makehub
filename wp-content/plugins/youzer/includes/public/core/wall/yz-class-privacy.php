@@ -14,7 +14,7 @@ class Youzer_Wall_Privacy {
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'where' ), 2, 2 );
 
 		// Add Post Privacy.
-		add_filter( 'bp_insert_activity_meta', array( $this, 'add_posts_privacy' ), 10, 3 );
+		add_filter( 'yz_insert_activity_meta', array( $this, 'add_posts_privacy' ), 10, 3 );
 
 		// Check Sticy Post Visibility.
 		add_filter( 'yz_get_sticky_posts', array( $this, 'hide_private_sticky_posts' ), 10, 2 );
@@ -48,7 +48,7 @@ class Youzer_Wall_Privacy {
 	 * Check Sticky Post Visibilyty.
 	 */
 	function sticky_post_visibility( $activity_id ) {
-		
+
 		// Set Default Visibility.
 		$visibility = true;
 
@@ -237,15 +237,11 @@ class Youzer_Wall_Privacy {
 	 */
 	function add_posts_privacy( $time, $default_content, $activity_id ) {
 
-		$privacy = $this->get_privacy( $activity_id );
-		
-		if ( empty( $privacy ) ) {
-			return $time;
-		}
+		global $activities_template;
 
 		$options = $this->privacy_options();
 
-		$content = '<i class="' . $options[ $privacy ]['icon'] . '"></i>';
+		$content = '<i class="' . $options[ $activities_template->activity->privacy ]['icon'] . '"></i>';
 
 		return $content . '<span class="yz-separator-point">•</span>' . $time;
 	}

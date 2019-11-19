@@ -21,12 +21,12 @@
 	background: #3fafed;
 }
 #yz-group-body #subnav, .yz-page-main-content {
-	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all, li#friends-friends-my-friends-personal-li {
+	li#media-all-groups-li, li#media-all-personal-li, li#edit-details-groups-li, li#membership-requests-groups-li, li#groups-all, li#activity-all, li#friends-friends-my-friends-personal-li, li#groups-groups-my-groups-personal-li {
 		a::before, i {
 			background: #3fafed;
 		}
 	}
-	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends, li#friends-requests-personal-li, li#ihc-ihc-personal-li {
+	li#media-photos-personal-li, li#media-photos-groups-li, li#group-settings-groups-li, li#delete-group-groups-li, li#groups-personal, li#activity-friends, li#friends-requests-personal-li, li#ihc-ihc-personal-li, li#groups-invites-personal-li {
 		a::before, i {
 			background: #f51400; 
 		}

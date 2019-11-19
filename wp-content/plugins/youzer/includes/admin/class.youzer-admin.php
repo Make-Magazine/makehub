@@ -34,6 +34,7 @@ class Youzer_Admin {
 		require_once YZ_ADMIN_CORE . 'functions/yz-general-functions.php';
 		require_once YZ_ADMIN_CORE . 'functions/yz-account-functions.php';
 		require_once YZ_ADMIN_CORE . 'functions/yz-profile-functions.php';
+		require_once YZ_ADMIN_CORE . 'yz-extensions.php';
 		// require_once YZ_ADMIN_CORE . 'functions/yz-update-notifier.php';
 
 		if ( ! class_exists( 'EDD_SL_Plugin_Updater' ) ) {
@@ -93,7 +94,6 @@ class Youzer_Admin {
 		require_once YZ_ADMIN_CORE . 'yz-admin-dashboard.php';
 		require_once YZ_ADMIN_CORE . 'yz-admin-panel.php';
 		require_once YZ_ADMIN_CORE . 'yz-admin-ajax.php';
-		require_once YZ_ADMIN_CORE . 'yz-extensions.php';
 
 		// General Settings .
 		require_once YZ_ADMIN_CORE . 'general-settings/yz-settings-wall.php';
@@ -142,7 +142,6 @@ class Youzer_Admin {
 		$this->panel 	  = new Youzer_Panel();
 		$this->dashboard  = new Youzer_Dashboard();
 		$this->ajax 	  = new Youzer_Admin_Ajax();
-		$this->extentions = new Youzer_Extensions();
 
 	}
 
@@ -152,7 +151,7 @@ class Youzer_Admin {
 	function admin_init() {
 
 		// Show Youzer Panel to Admin's Only.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'manage_options' ) && ! apply_filters( 'yz_show_youzer_panel', false ) ) {
 			return false;
 		}
 
@@ -173,8 +172,7 @@ class Youzer_Admin {
 	    	__( 'General Settings', 'youzer' ),
 	    	'administrator',
 	    	'youzer-panel',
-	    	array( &$this->dashboard, 'general_settings' ),
-	    	false
+	    	array( &$this->dashboard, 'general_settings' )
 	    );
 
 	    // Add "Profile Settings" Page .
@@ -184,8 +182,7 @@ class Youzer_Admin {
 	    	__( 'Profile Settings', 'youzer' ),
 	    	'administrator',
 	    	'yz-profile-settings',
-	    	array( &$this->dashboard, 'profile_settings' ),
-	    	false
+	    	array( &$this->dashboard, 'profile_settings' )
 	    );
 
 	    // Add "Widgets Settings" Page .
@@ -195,8 +192,7 @@ class Youzer_Admin {
 	    	__( 'Widgets Settings', 'youzer' ),
 	    	'administrator',
 	    	'yz-widgets-settings',
-	    	array( &$this->dashboard, 'widgets_settings' ),
-	    	false
+	    	array( &$this->dashboard, 'widgets_settings' )
 	    );
 
 	}

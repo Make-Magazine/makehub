@@ -27,7 +27,7 @@ function yz_group_page_class() {
 
     // Get Elements Border Style.
     $class[] = 'yz-wg-border-' . yz_options( 'yz_wgs_border_style' );
-
+   
     $class = apply_filters( 'yz_group_class', $class );
 
     return yz_generate_class( $class );
@@ -388,6 +388,7 @@ function yz_get_group_header_tools() {
 	}
 
 	yz_get_group_tools( $group->id, 'full-btns' );
+
 }
 
 add_action( 'youzer_group_header', 'yz_get_group_header_tools' );

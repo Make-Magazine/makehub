@@ -176,11 +176,15 @@ class YZ_Post_Author_Widget extends WP_Widget {
 	public function widget( $args, $instance ) {
 
 		// Check IF it's a Post Page.
-		$supported_post_types = apply_filters( 'yz_post_author_widget_supported_types' , array( 'post', 'listing', 'content' ) );
-		
-		if ( ! is_singular( $supported_post_types ) ) {
+		$supported_post_types = apply_filters( 'yz_post_author_widget_supported_types' , array( 'post', 'listing', 'content', 'store' ) );
+		 
+        global $post;
+        
+        // print_r( $post );
+		if ( ! is_singular( $supported_post_types ) && $post->post_type != 'product' ) {
 			return false;
 		}
+		
 
 		// Get Data.
 		$hide_title = $instance['hide_title'] ? 'on' : 'off';

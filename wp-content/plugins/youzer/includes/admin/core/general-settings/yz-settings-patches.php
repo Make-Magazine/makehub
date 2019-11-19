@@ -23,7 +23,94 @@ add_filter( 'yz_panel_general_settings_menus', 'yz_patches_settings_menu', 9999 
  * # Add Patches Settings Tab
  */
 function yz_patches_settings() {
+
 	do_action( 'yz_patches_settings' );
+	wp_enqueue_script( 'jquery' );
+
+	?>
+
+	<script type="text/javascript">
+	
+	( function( $ ) {
+
+		/**
+		 * Process Updating Fields.
+		 */
+		$.yzc_patch_process_step = function( current_button, action, step, perstep, total, self ) {
+					console.log ( action );
+					console.log ( step );
+					console.log ( perstep );
+					console.log ( total );
+			$.ajax({
+				type: 'POST',
+				url: ajaxurl,
+				data: {
+					action: action,
+					step: step,
+					total: total,
+					perstep: perstep,
+				},
+				dataType: "json",
+				success: function( response ) {
+					console.log( response );
+					if ( 'done' == response.step ) {
+
+						current_button.addClass( 'yz-is-updated' );
+
+						// window.location = response.url;
+						current_button.html( '<i class="fas fa-check"></i>Done !' );
+
+					} else {
+
+						current_button.find( '.yz-button-progress' ).animate({
+							width: response.percentage + '%',
+						}, 50, function() {
+							// Animation complete.
+						});
+
+						var total_items = ( response.step * response.perstep ) - response.perstep,
+							items = total_items < response.total ? total_items : response.total;
+
+						current_button.find( '.yz-items-count' ).html( items );
+
+						$.yzc_patch_process_step( current_button, action, parseInt( response.step ), parseInt( response.perstep ), parseInt( response.total ), self );
+
+					}
+
+				}
+			}).fail( function ( response ) {
+				if ( window.console && window.console.log ) {
+					console.log( response );
+				}
+			});
+
+		}
+
+		$( 'body' ).on( 'click', 'a[data-run-patch="true"]', function(e) {
+
+			if ( $( this ).hasClass( 'yz-is-updated' ) ) {
+				return;
+			}
+
+			e.preventDefault();
+
+			var per_step = $( this ).data( 'perstep' );
+			var total = $( this ).data( 'total' );
+			var action = $( this ).data( 'action' );
+
+			$( this ).html( '<i class="fas fa-spinner fa-spin"></i>Updating <div class="yz-button-progress"></div><span class="yz-items-count">' + 1 + '</span>' + ' / ' + total + ' ' + $( this ).data( 'items' ) );
+
+			// Start The process.
+			$.yzc_patch_process_step( $( this ), action, 1, per_step, total, self );
+
+		});
+
+	})( jQuery );
+
+	</script>
+
+	<?php	
+
 }
 
 /**
@@ -286,10 +373,43 @@ function yz_patch_move_to_new_media_system() {
     // if ( ! get_option( 'yz_patch_new_media_system' ) ) {
     //     return false;
     // }
-
     global $Yz_Settings, $wpdb, $bp;
-	
+
 	$already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_patch_new_media_system' ) : get_option( 'yz_patch_new_media_system' );
+
+	$total = $wpdb->get_var( "SELECT count(*) FROM {$bp->activity->table_name} WHERE type IN ( 'activity_status', 'activity_photo', 'activity_link', 'activity_slideshow', 'activity_quote', 'activity_video', 'activity_audio', 'activity_file', 'new_cover', 'new_avatar')" );
+
+
+	if ( ! $already_installed && $total == 0 ) {
+
+	    if ( is_multisite() ) {
+	        update_blog_option( BP_ROOT_BLOG, 'yz_patch_new_media_system', true );
+	    } else {
+	        update_option( 'yz_patch_new_media_system', true );
+	    }
+			
+		// Install New Widget.
+		$overview_widgets = yz_options( 'yz_profile_main_widgets' );
+		$sidebar_widgets  = yz_options( 'yz_profile_sidebar_widgets' );
+		$all_widgets      = array_merge( $overview_widgets, $sidebar_widgets );
+		
+		$install_widget = true;
+
+		foreach ( $all_widgets as $widget ) {
+			if ( key( $widget ) == 'wall_media' )  {
+				$install_widget = false;
+			}
+		}
+
+		if ( $install_widget == true ) {
+			$sidebar_widgets[] = array( 'wall_media' => 'visible' );
+			update_option( 'yz_profile_sidebar_widgets', $sidebar_widgets );
+		}
+
+	}
+
+	$already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_patch_new_media_system' ) : get_option( 'yz_patch_new_media_system' );
+	
 	
 	$patche_status = $already_installed ? '<span class="yz-title-status">' . __( 'Installed', 'youzer' ) . '</span>' : '';
 
@@ -299,9 +419,6 @@ function yz_patch_move_to_new_media_system() {
             'type'  => 'openBox'
         )
     );
-
-	$total = $wpdb->get_var( "SELECT count(*) FROM {$bp->activity->table_name} WHERE type IN ( 'activity_status', 'activity_photo', 'activity_link', 'activity_slideshow', 'activity_quote', 'activity_video', 'activity_audio', 'activity_file', 'new_cover', 'new_avatar')" );
-
 
 	$button_args = array(
     	'class' => 'yz-wild-field',
@@ -343,85 +460,6 @@ function yz_patch_move_to_new_media_system() {
 
     $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
-	?>
-
-	<script type="text/javascript">
-
-		/**
-		 * Process Updating Fields.
-		 */
-		$.yzc_patch_process_step = function( current_button, action, step, perstep, total, self ) {
-
-					console.log ( action );
-					console.log ( step );
-					console.log ( perstep );
-					console.log ( total );
-			$.ajax({
-				type: 'POST',
-				url: ajaxurl,
-				data: {
-					action: action,
-					step: step,
-					total: total,
-					perstep: perstep,
-				},
-				dataType: "json",
-				success: function( response ) {
-					if ( 'done' == response.step ) {
-
-						current_button.addClass( 'yz-is-updated' );
-
-						// window.location = response.url;
-						current_button.html( '<i class="fas fa-check"></i>Done !' );
-
-					} else {
-
-						current_button.find( '.yz-button-progress' ).animate({
-							width: response.percentage + '%',
-						}, 50, function() {
-							// Animation complete.
-						});
-
-						var total_items = ( response.step * response.perstep ) - response.perstep,
-							items = total_items < response.total ? total_items : response.total;
-
-						current_button.find( '.yz-items-count' ).html( items );
-
-						$.yzc_patch_process_step( current_button, action, parseInt( response.step ), parseInt( response.perstep ), parseInt( response.total ), self );
-
-					}
-
-				}
-			}).fail( function ( response ) {
-				if ( window.console && window.console.log ) {
-					console.log( response );
-				}
-			});
-
-		}
-
-		$( 'body' ).on( 'click', 'a[data-run-patch="true"]', function(e) {
-
-			if ( $( this ).hasClass( 'yz-is-updated' ) ) {
-				return;
-			}
-
-			e.preventDefault();
-
-			var per_step = $( this ).data( 'perstep' );
-			var total = $( this ).data( 'total' );
-			var action = $( this ).data( 'action' );
-
-			$( this ).html( '<i class="fas fa-spinner fa-spin"></i>Updating <div class="yz-button-progress"></div><span class="yz-items-count">' + 1 + '</span>' + ' / ' + total + ' ' + $( this ).data( 'items' ) );
-
-			// Start The process.
-			$.yzc_patch_process_step( $( this ), action, 1, per_step, total, self );
-
-		});
-
-	</script>
-
-	<?php	
 }
 
 
@@ -685,4 +723,161 @@ function yz_patch_move_media_get_image_args( $image_url ) {
 
 	return $args;
 
+}
+
+
+
+/***
+ * Optimize Data Baze.
+ */
+// add_action( 'yz_patches_settings', 'yz_patch_optimize_database' );
+
+function yz_patch_optimize_database() {
+
+
+    // if ( ! get_option( 'yz_patch_new_media_system' ) ) {
+    //     return false;
+    // }
+delete_option( 'yz_patch_optimize_database' );
+    global $Yz_Settings, $wpdb;
+	
+	$already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_patch_optimize_database' ) : get_option( 'yz_patch_optimize_database' );
+	
+	$patche_status = $already_installed ? '<span class="yz-title-status">' . __( 'Installed', 'youzer' ) . '</span>' : '';
+
+    $Yz_Settings->get_field(
+        array(
+            'title' => sprintf( __( 'Optimize Youzer Database. %s', 'youzer' ), $patche_status ),
+            'type'  => 'openBox'
+        )
+    );
+
+	$total = $wpdb->get_var( "SELECT COUNT(*) FROM " . $wpdb->prefix . "options WHERE autoload = 'yes' AND option_name Like 'yz_%'" );
+
+	$button_args = array(
+    	'class' => 'yz-wild-field',
+        'desc'  => __( 'Before many youzer options were called on all the pages by running this patch they will be called only when needed. This operation will increase your website pages speed.', 'youzer' ),
+        'button_title' => __( 'Optimize Now', 'youzer' ),
+        'button_data' => array(
+        	'run-patch' => 'true',
+        	'step' => 1,
+        	'items' => 'Options',
+        	'action' => 'yz_patch_optimize_database',
+        	'total' => $total,
+        	'perstep' => apply_filters( 'yz_patch_move_wptobp_per_step', $total ),
+        ),
+        'id'    => 'yz-run-optimize-database-patch',
+        'type'  => 'button'
+    );
+	
+	if ( $already_installed ) {
+		unset( $button_args['button_title'] );
+	}
+
+    $Yz_Settings->get_field( $button_args );
+
+    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
+
+    	// $step = 1;
+    	// $per_step = 100;
+    	// $offset = $step > 1 ? ( $per_step * ( $step - 1 ) ) : 0;
+
+
+	    // Get Global Request
+		// $options = $wpdb->get_results( "SELECT option_id FROM " . $wpdb->prefix . "options WHERE autoload = 'yes' AND option_name LIKE 'yz_%' LIMIT $per_step OFFSET $offset", ARRAY_A );
+
+		// $options = wp_list_pluck( $options, 'option_id' );
+
+		// print_r($options);
+	    // Get Global Request
+		$options = $wpdb->get_results( "SELECT option_id FROM " . $wpdb->prefix . "options WHERE autoload = 'yes' AND option_name Like 'yz_%'", ARRAY_A );
+		$options = wp_list_pluck( $options, 'option_id' );
+
+		echo implode(',', $options);
+}
+
+
+/**
+ * Migrating Ajax Call.
+ */
+function yz_patche_optimize_database_ajax() {
+	
+	// Init Vars.	
+	$total = isset( $_POST['total'] ) ? absint( $_POST['total'] ): null;
+	$step = isset( $_POST['step'] ) ? absint( $_POST['step'] ) : null;
+	$perstep = isset( $_POST['perstep'] ) ? absint( $_POST['perstep'] ) : null;
+
+	$ret = yz_patche_optimize_database_process_step( $step, $perstep, $total );
+
+	// Get Percentage.
+	$percentage = ( $step * $perstep / $total ) * 100;
+
+	if ( $ret ) {
+		$step += 1;
+		echo json_encode( array( 'users' => $ret, 'step' => $step, 'total'=> $total, 'perstep' => $perstep, 'percentage' => $percentage ) ); exit;
+	} else {
+		echo json_encode( array( 'step' => 'done' ) ); exit;
+	}
+
+}
+
+add_action( 'wp_ajax_yz_patch_optimize_database', 'yz_patche_optimize_database_ajax' );
+
+
+/**
+ * Migration Process.
+ */
+function yz_patche_optimize_database_process_step( $step, $per_step, $total  ) {
+	// Init Vars
+	$more = false;
+	$i      = 1;
+	$offset = $step > 1 ? ( $per_step * ( $step - 1 ) ) : 0;
+
+	$done = $offset > $total ? true :  false;
+	
+	if ( ! $done ) {
+
+		$more = true;
+
+		global $bp, $wpdb;
+
+	    // Get Global Request
+		$options = $wpdb->get_results( "SELECT option_id FROM " . $wpdb->prefix . "options WHERE autoload = 'yes' AND option_name LIKE 'yz_%' LIMIT $per_step OFFSET $offset", ARRAY_A );
+
+		$options = wp_list_pluck( $options, 'option_id' );
+
+		if ( empty( $options ) ) {
+			return false;
+		}
+
+		// foreach ( $options as $option_id ) {
+		// 	$wpdb->update( 
+		// 		$wpdb->prefix . 'options', 
+		// 		array( 
+		// 			'autoload' => 'no',	// string
+		// 		), 
+		// 		array( 'option_id' => $option_id ), 
+		// 		array( 
+		// 			'%s',	// value1
+		// 		), 
+		// 		array( '%d' ) 
+		// 	);
+		// }
+
+		// $sql = $wpdb->prepare(,  );
+		// yz_write_log( $sql );
+
+		$wpdb->query( "UPDATE " . $wpdb->prefix . "options SET autoload = 'no' WHERE option_name LIKE 'yz_%' " );
+
+	} else {
+
+	    if ( is_multisite() ) {
+	        update_blog_option( BP_ROOT_BLOG, 'yz_patch_optimize_database', true );
+	    } else {
+	        update_option( 'yz_patch_optimize_database', true );
+	    }
+
+	}
+
+	return $more;
 }
