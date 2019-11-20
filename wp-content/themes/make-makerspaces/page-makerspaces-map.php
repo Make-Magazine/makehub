@@ -33,13 +33,13 @@ function spaces_map_loop() {
       <div class="map-table-hidden" ref="mapTableWrapper" >
 
          <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-12">
                <div id="map" ref="map" style="height: 40px;"></div>
             </div>
          </div>
 
          <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-12">
 
                <div class="map-filters-wrp">
                   <form action="" class="" @submit="filterOverride">
@@ -53,7 +53,7 @@ function spaces_map_loop() {
          </div>
 
          <div class="row">
-            <div class="col-md-12">
+            <div class="col-xs-12">
                <v-client-table :data="tableData" :columns="columns" :options="options" @row-click="onRowClick" ref="directoryGrid">
                   <span slot="mmap_eventname" slot-scope="props">
                      <a :href="props.row.mmap_url" target="_blank" title="Visit site in new window">{{ props.row.mmap_eventname }}</a>

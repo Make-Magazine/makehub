@@ -10,8 +10,8 @@
  * @package _makerspaces
  */
 
-//* Remove primary sidebar
-remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
+//* Force full width content layout
+add_filter( 'genesis_site_layout', '__genesis_return_full_width_content' );
 
 // add a nice little container class to our main content
 add_filter( 'genesis_attr_content', 'themeprefix_primary_nav_id' );
