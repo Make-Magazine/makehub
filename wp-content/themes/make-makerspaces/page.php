@@ -10,6 +10,9 @@
  * @package _makerspaces
  */
 
+//* Remove primary sidebar
+remove_action( 'genesis_sidebar', 'genesis_do_sidebar' );
+
 // add a nice little container class to our main content
 add_filter( 'genesis_attr_content', 'themeprefix_primary_nav_id' );
 function themeprefix_primary_nav_id( $attributes ) {
