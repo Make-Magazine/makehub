@@ -166,5 +166,52 @@ ul.gfgeo-geocoder-meta-fields-wrapper li .custom-field-content input {
 }
 
 body .gform_wrapper li.gfield.gfgeo-hidden-fields {
-    display: none ! important;
+    display: none;
 }
+
+.gfgeo-directions-panel-holder {
+	max-height: 350px;
+	display: inline-block;
+	overflow: scroll;
+}
+
+.gfgeo-directions-panel-holder .adp-directions {
+	border: 0;
+	width: 100%;
+	display: inline-block;
+	table-layout: initial;
+}
+
+.gfgeo-directions-panel-holder .adp-directions .adp-step, 
+.gfgeo-directions-panel-holder .adp-directions .adp-substep {
+	border: 0;
+	border-top: 1px solid #cdcdcd;
+}
+
+.gfgeo-directions-panel-holder .adp-directions td.adp-substep:nth-child(1),
+.gfgeo-directions-panel-holder .adp-directions td.adp-substep:nth-child(2) {
+	width: 3%;
+	max-width: 25px;
+}
+
+.gfgeo-directions-panel-holder .adp-directions td.adp-substep:nth-child(3) {
+	width: 50%;
+}
+
+.gfgeo-directions-panel-holder .adp-directions td.adp-substep:nth-child(4) {
+	width: 5%;
+	max-width: 45px;
+}
+
+.gfgeo-directions-panel-holder table.adp-placemark tr td:nth-child(1) {
+	width: 40px;
+}
+.gfgeo-directions-panel-holder table.adp-placemark td {
+	vertical-align: middle;
+	border: 0;
+}
+
+.gfgeo-directions-panel-holder .adp-placemark img {
+
+}
+

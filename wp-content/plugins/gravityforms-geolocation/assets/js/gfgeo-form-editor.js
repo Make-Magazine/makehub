@@ -113,7 +113,10 @@ jQuery( document ).ready( function($) {
 				}
 
 				// clear select option. We will create it again below
-				jQuery( jQuery( 'select#gfgeo-geocoder-id, select#gfgeo-distance-destination-geocoder-id, select#gfgeo-gmw-post-integration-phone, select#gfgeo-gmw-post-integration-fax, select#gfgeo-gmw-post-integration-email, select#gfgeo-gmw-post-integration-website' ).find( 'option:gt(0)' ).remove() );
+				jQuery( jQuery( 'select#gfgeo-geocoder-id, select#gfgeo-distance-directions-panel-id, select#gfgeo-distance-destination-geocoder-id, select#gfgeo-gmw-post-integration-phone, select#gfgeo-gmw-post-integration-fax, select#gfgeo-gmw-post-integration-email, select#gfgeo-gmw-post-integration-website' ).find( 'option:gt(0)' ).remove() );
+					
+				// with map dropdown for route option.
+				//jQuery( jQuery( 'select#gfgeo-geocoder-id, select#gfgeo-distance-travel-route-map-id, select#gfgeo-distance-directions-panel-id, select#gfgeo-distance-destination-geocoder-id, select#gfgeo-gmw-post-integration-phone, select#gfgeo-gmw-post-integration-fax, select#gfgeo-gmw-post-integration-email, select#gfgeo-gmw-post-integration-website' ).find( 'option:gt(0)' ).remove() );
 				
 				//jQuery( '.gfgeo-distance-geocoders-items' ).children().remove();
 
@@ -156,8 +159,17 @@ jQuery( document ).ready( function($) {
 								SetFieldProperty( 'gfgeo_distance_geocoders', checkedValues );
 							} });
 						}*/
-						
+			
 					// Otherwise, check for different fields that can serve as GMW Contact info fields
+					} else if ( this.type == 'gfgeo_map' ) {
+
+						// Currently disabled.
+						//jQuery( jQuery( 'select#gfgeo-distance-travel-route-map-id' ).append( jQuery( '<option>' ).attr( 'value', this.id ).text( 'Map ID - ' + this.id ) ) );
+
+					} else if ( this.type == 'gfgeo_directions_panel' ) {
+
+						jQuery( jQuery( 'select#gfgeo-distance-directions-panel-id' ).append( jQuery( '<option>' ).attr( 'value', this.id ).text( 'Directions Panel - ' + this.id ) ) );
+						
 					} else if ( jQuery.inArray( this.type, [ 'post_custom_field', 'phone', 'email', 'website', 'text', 'number', 'hidden', 'checkbox', 'select', 'radio', 'paragraph', 'html' ] ) != -1 ) {
 	
 				 		jQuery( jQuery( 'select#gfgeo-gmw-post-integration-phone, select#gfgeo-gmw-post-integration-fax, select#gfgeo-gmw-post-integration-email, select#gfgeo-gmw-post-integration-website' ).append( jQuery( '<option>' ).attr( 'value', this.id ).text( this.label + ' - ( field ID ' + this.id + ')' ) ) );		
@@ -219,6 +231,9 @@ jQuery( document ).ready( function($) {
 		    	jQuery( '#gfgeo-distance-destination-geocoder-id' ).val( field.gfgeo_distance_destination_geocoder_id );
 		    	jQuery( '#gfgeo-distance-travel-mode' ).val( field['gfgeo_distance_travel_mode'] );
 		    	jQuery( '#gfgeo-distance-unit-system' ).val( field['gfgeo_distance_unit_system'] );
+		    	//jQuery( '#gfgeo-distance-travel-route-map-id' ).val( field.gfgeo_distance_travel_route_map_id );
+		    	jQuery( '#gfgeo-distance-travel-show-route-on-map' ).attr( 'checked', field.gfgeo_distance_travel_show_route_on_map == true );
+		    	jQuery( '#gfgeo-distance-directions-panel-id' ).val( field.gfgeo_distance_directions_panel_id );
 		    	jQuery( '#gfgeo-google-maps-link' ).attr( 'checked', field['gfgeo_google_maps_link'] == true );
 		    	jQuery( '#gfgeo-gmw-post-integration' ).attr( 'checked', field['gfgeo_gmw_post_integration'] == true );
 		    	jQuery( '#gfgeo-gmw-post-integration-phone' ).val( field['gfgeo_gmw_post_integration_phone'] );
@@ -282,6 +297,7 @@ jQuery( document ).ready( function($) {
 		        jQuery( '#gfgeo-page-locator').attr( 'disabled', false );
 		        jQuery( '#gfgeo-gmw-post-integration').attr( 'disabled', false );
 		        jQuery( '#gfgeo-gmw-user-integration').attr( 'disabled', false );
+		        jQuery( 'select#gfgeo-distance-directions-panel-id option' ).prop( 'disabled', false );
 		        
 		        if ( field.type == 'gfgeo_geocoder' ) {
 
@@ -309,6 +325,11 @@ jQuery( document ).ready( function($) {
 						// gmw user integration
 						if ( val.gfgeo_gmw_user_integration != undefined && val.gfgeo_gmw_user_integration == true && val.id != field.id ) {
 							jQuery( '#gfgeo-gmw-user-integration' ).attr( 'disabled', true );
+						}
+
+						// gmw user integration
+						if ( val.gfgeo_distance_directions_panel_id != undefined && val.gfgeo_distance_directions_panel_id != '' && val.gfgeo_distance_directions_panel_id != field.gfgeo_distance_directions_panel_id ) {
+							jQuery( 'select#gfgeo-distance-directions-panel-id option[value="' + val.gfgeo_distance_directions_panel_id +'"]' ).prop( 'disabled', true );
 						} 
 					}
 				});			

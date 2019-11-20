@@ -181,6 +181,12 @@ class GFGEO_Render_Form {
 				$form['fields'][ $key ]['cssClass'] .= ' gfgeo-hidden-fields ' . $field['type'];
 			}
 
+			// add class to geocoder fields.
+			if ( 'gfgeo_directions_panel' === $field['type'] ) {
+
+				$form['fields'][ $key ]['cssClass'] .= ' gfgeo-hidden-fields ' . $field['type'];
+			}
+
 			// add class to dynamic fields.
 			if ( ! empty( $field['gfgeo_geocoder_id'] ) && ! empty( $field['gfgeo_dynamic_location_field'] ) ) {
 				$form['fields'][ $key ]['cssClass'] .= ' gfgeo-geocoded-field-' . $geocoder_id . ' gfgeo-' . $field['gfgeo_dynamic_location_field'];

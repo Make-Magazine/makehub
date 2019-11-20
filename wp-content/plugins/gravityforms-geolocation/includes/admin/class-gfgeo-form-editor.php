@@ -369,7 +369,7 @@ class GFGEO_Form_Editor {
 			<li class="field_setting gfgeo-geocoder-settings gfgeo-distance-settings-group gfgeo-settings-group">
 
 				<label for="gfgeo-distance" class="section_label">
-					<?php esc_attr_e( 'Distance', 'gfgeo' ); ?>
+					<?php esc_attr_e( 'Driving Distance', 'gfgeo' ); ?>
 				</label>
 
 				<ul class="gfgeo-settings-group-inner">
@@ -422,6 +422,52 @@ class GFGEO_Form_Editor {
 						>
 							<option value="imperial"><?php esc_html_e( 'Imperial ( Miles )', 'gfgeo' ); ?></option>
 							<option value="metric"><?php esc_html_e( 'Metric ( Kilometers )', 'gfgeo' ); ?></option>
+						</select>
+					</li>
+
+					<!-- distance map ID -  -->
+
+					<?php /* <li class="gfgeo-distance-travel-route-map-id gfgeo-settings-section">
+						<label for="gfgeo-distance-travel-route-map-id"> 
+							<?php esc_html_e( 'Display Driving Route', 'gfgeo' ); ?> 
+							<?php gform_tooltip( 'gfgeo_distance_travel_route_map_id_tt' ); ?>
+						</label> 
+						<select 
+							name="gfgeo_distance_travel_route_map_id" 
+							id="gfgeo-distance-travel-route-map-id"
+							class="gfgeo-distance-travel-route-map-id"
+							onchange="SetFieldProperty( 'gfgeo_distance_travel_route_map_id', jQuery( this ).val() );"
+						>
+						<!-- values for this field generate by jquery function -->
+						<option value=""><?php esc_html_e( 'Disabled', 'gfgeo' ); ?></option>
+						</select>
+					</li> */ ?>
+
+					<li class="gfgeo-distance-travel-show-route-on-map gfgeo-settings-section">
+						<input 
+							type="checkbox" 
+							id="gfgeo-distance-travel-show-route-on-map" 
+							onclick="SetFieldProperty( 'gfgeo_distance_travel_show_route_on_map', this.checked );" 
+						/>
+						<label for="gfgeo-distance-travel-show-route-on-map" class="inline"> 
+							<?php esc_html_e( 'Display Route On the Map', 'gfgeo' ); ?> 
+							<?php gform_tooltip( 'gfgeo_distance_travel_show_route_on_map_tt' ); ?>
+						</label>
+					</li>
+
+					<li class="gfgeo-distance-directions-panel-id gfgeo-settings-section">
+						<label for="gfgeo-distance-directions-panel-id"> 
+							<?php esc_html_e( 'Display Driving Directions', 'gfgeo' ); ?> 
+							<?php gform_tooltip( 'gfgeo_distance_directions_panel_id_tt' ); ?>
+						</label> 
+						<select 
+							name="gfgeo_distance_directions_panel_id" 
+							id="gfgeo-distance-directions-panel-id"
+							class="gfgeo-distance-directions-panel-id"
+							onchange="SetFieldProperty( 'gfgeo_distance_directions_panel_id', jQuery( this ).val() );"
+						>
+						<!-- values for this field generate by jquery function -->
+						<option value=""><?php esc_html_e( 'Disabled', 'gfgeo' ); ?></option>
 						</select>
 					</li>
 				</ul>
@@ -919,9 +965,11 @@ class GFGEO_Form_Editor {
 		$tooltips['gfgeo_default_longitude_tt'] = __( 'Enter the longitude of the initial location that will be displayed in the geolocation fields, attached to this geocoder, when the form first loads. Otherwise, leave  the field blank.', 'gfgeo' );
 
 		// Distance.
-		$tooltips['gfgeo_distance_destination_geocoder_id_tt'] = __( 'Select the geocoder which you would like to calculate the distance to.', 'gfgeo' );
-		$tooltips['gfgeo_distance_travel_mode_tt']             = __( 'Select the travel mode.', 'gfgeo' );
-		$tooltips['gfgeo_distance_unit_system_tt']             = __( 'Select the unit system that will be used when calculating the distance.', 'gfgeo' );
+		$tooltips['gfgeo_distance_destination_geocoder_id_tt']  = __( 'Select the geocoder which you would like to calculate the distance to.', 'gfgeo' );
+		$tooltips['gfgeo_distance_travel_mode_tt']              = __( 'Select the travel mode.', 'gfgeo' );
+		$tooltips['gfgeo_distance_unit_system_tt']              = __( 'Select the unit system that will be used when calculating the distance.', 'gfgeo' );
+		$tooltips['gfgeo_distance_travel_show_route_on_map_tt'] = __( 'Display driving route on a map.', 'gfgeo' );
+		$tooltips['gfgeo_distance_directions_panel_id_tt']      = __( 'Display driving directions.', 'gfgeo' );
 
 		// GEO my WP integration.
 		$tooltips['gfgeo_gmw_post_integration_tt'] = __( 'Check this checkbox if you\'d like to sync this geocoder with GEO my WP Posts Locator add-on. This location will then be saved in GEO my WP database and the post attached to it ( if at all created or udpated )will be searchable via GEO my WP search forms', 'gfgeo' );
