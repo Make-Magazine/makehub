@@ -14,7 +14,7 @@ function spaces_map_loop() {
     // Remove posts.
     remove_action( 'Genesis_loop', 'Genesis_do_loop' ); ?>
 
-   <div class="container directory-container" id="directory">
+   <div class="container-fluid inner-container directory-container" id="directory">
 
       <div class="row map-header">
          <div class="col-md-12">
