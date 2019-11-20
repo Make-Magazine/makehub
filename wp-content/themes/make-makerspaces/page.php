@@ -10,30 +10,18 @@
  * @package _makerspaces
  */
 
-get_header(); ?>
+//* Add landing body class to the head
 
-  <div class="container">
-
-    <div class="row">
-
-      <div class="col-xs-12">
-
-      	<?php while ( have_posts() ) : the_post(); ?>
-
-      		<?php get_template_part( 'content', 'page' ); ?>
-
-      		<?php
-      			// If comments are open or we have at least one comment, load up the comment template
-      			if ( comments_open() || '0' != get_comments_number() )
-      				comments_template();
-      		?>
-
-      	<?php endwhile; // end of the loop. ?>
-
-      </div>
-
-    </div>
-
-  </div>
-
-<?php get_footer(); ?>
+//* Force full width content layout
+add_filter( 'genesis_site_layout', '__genesis_return_full_width_content' );
+//* Remove navigation
+remove_action( 'genesis_after_header', 'genesis_do_nav', 15 );
+remove_action( 'genesis_footer', 'genesis_do_subnav', 7 );
+//* Remove site footer widgets
+remove_action( 'genesis_before_footer', 'genesis_footer_widget_areas' );
+//* Remove site footer elements
+remove_action( 'genesis_footer', 'genesis_footer_markup_open', 5 );
+remove_action( 'genesis_footer', 'genesis_do_footer' );
+remove_action( 'genesis_footer', 'genesis_footer_markup_close', 15 );
+//* Run the Genesis loop
+genesis();
