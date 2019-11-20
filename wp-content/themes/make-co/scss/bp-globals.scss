@@ -16,6 +16,11 @@
 	}
 }
 
+.youzer {
+	.dashicons, .dashicons-before::before {
+		font-family: 'dashicons';
+	}
+}
 // wall and group buttons (Groups Media)
 .youzer div.item-list-tabs li.feed a::before {
 	background: #3fafed;
