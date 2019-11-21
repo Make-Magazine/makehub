@@ -1,22 +1,20 @@
 <?php
 
-add_action('gform_entry_created_5', 'makerspace_to_community', 10, 2);
-add_action('gform_after_update_entry_5', 'makerspace_to_community', 10, 2);
+add_action('gform_entry_created', 'makerspace_to_community', 10, 2);
+add_action('gform_after_update_entry', 'makerspace_to_community', 10, 2);
 
 /*
  * Triggered when a new entry is created or a current one is updated for form 5 Makerspace Directory
  */
 
 function makerspace_to_community($entry, $form) {
+    $email = $entry[141];
+    
+    //If user already exists then assign ID and update the account.    
+    $userdata = array('user_email'=>$email, 'user_url'=>$entry[2], 'display_name'=>$entry[1], 'user_login'=>$email);
+    
     //Check whether the user already exist or not
-    $user_details = get_user_by('email', $userdata['user_email']);
-
-    //If user already exists then assign ID and update the account.
-    //TBD - set user data
-    //user_email
-    //user_url
-    //display_name
-    //user_login
+    $user_details = get_user_by( 'email', $userdata['user_email'] );
     if ($user_details) {
         //TBD - update if email,  website, or name changes
 
@@ -25,10 +23,12 @@ function makerspace_to_community($entry, $form) {
         $user_id = wp_update_user($userdata);
         $custom_send_email_flag = 0;
     } else { //no, add them
+        
         $user_id = wp_insert_user($userdata);
         $custom_send_email_flag = 1;
     }
 
+    GLOBAL $wpdb;
     $gf_field_arr = array();
     //set $bpmeta array with submitted data
     $sql = "select * from wp_ms_bp_xref";
@@ -37,7 +37,7 @@ function makerspace_to_community($entry, $form) {
         $gf_field_arr[$row->gf_field_id] = $row->bp_field_id;
     }
     //loop thru form object extract field from array
-    foreach ($form['field'] as $field) {
+    foreach ($form['fields'] as $field) {
         $field_id = $field->id;
         //is this one of the fields we are looking for?
         if (isset($gf_field_arr[$field_id])) {
@@ -45,13 +45,14 @@ function makerspace_to_community($entry, $form) {
             if ($field['type'] == 'checkbox') {
                 if (isset($field['inputs']) && !empty($field['inputs'])) {
                     $bp_field_ar = array();
+                    
                     foreach ($field['inputs'] as $choice) {
-                        if (isset($entry[$choice->id])) {
-                            $bp_field_arr[] = $entry[$choice->id];
+                        if (isset($entry[$choice['id']])) {
+                            $bp_field_arr[] = $entry[$choice['id']];
                         }
                     }
 
-                    $bp_field_arr = array_filter($cvalue, function( $item ) {
+                    $bp_field_arr = array_filter($bp_field_arr, function( $item ) {
                         return !empty($item[0]);
                     });
                     $bpmeta[$gf_field_arr[$field_id]] = $bp_field_arr;
@@ -62,7 +63,7 @@ function makerspace_to_community($entry, $form) {
                 }
             }
         }
-    }
+    }    
     
     //Upload user avatar if image is set
     if ($bpmeta['avatar']) {
@@ -113,14 +114,18 @@ function makerspace_to_community($entry, $form) {
         $bp_xprofile_fields[$value->id] = $value->name;
         $bp_fields_type[$value->id] = $value->type;
     }
-
+        
+    //echo '$bp_fields_type';
+    //var_dump($bp_fields_type);        
+        
     // Insert xprofile field visibility state for user level.
     update_user_meta($user_id, 'bp_xprofile_visibility_levels', $xprofile_fields_visibility);
 
     if (isset($bpmeta)) {
         //Added an entry in user_meta table for current user meta key is last_activity
+        //TBD - figure out how to do this 
         bp_update_user_last_activity($user_id, date('Y-m-d H:i:s'));
-
+         
         foreach ($bpmeta as $bpmetakeyid => $bpmetavalue) {
             $current_field_type = $bp_fields_type[$bpmetakeyid];
             if ('image' === $current_field_type || $current_field_type == 'file') {
@@ -140,6 +145,7 @@ function makerspace_to_community($entry, $form) {
     }
 
     // If no error, let's update the user meta too!
+    
     if ($usermeta) {
         if (array_key_exists('bp_member_types', $usermeta)) {
             $bp_member_types = $usermeta['bp_member_types'];

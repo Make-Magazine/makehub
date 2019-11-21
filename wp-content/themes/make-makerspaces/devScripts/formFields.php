@@ -139,7 +139,7 @@ $result = $mysqli->query($sql) or trigger_error($mysqli->error."[$sql]");
               }
               ?>
             </td>
-            <td><?php echo $field['inputName'];?></td>
+            <td><?php echo (isset($field['inputName'])?$field['inputName']:'');?></td>
             <td class="tcenter"><?php echo (isset($field['visibility']) && $field['visibility']=='administrative'?'<i class="fa fa-check" aria-hidden="true"></i>':'');?></td>
             <td class="tcenter"><?php echo ($field['isRequired']?'<i class="fa fa-check" aria-hidden="true"></i>':'');?></td>                      
           </tr>
