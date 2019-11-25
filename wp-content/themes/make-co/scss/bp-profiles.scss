@@ -272,14 +272,9 @@
 		}
 		.yz-profile-content {
 			background: rgba(63, 175, 237, .2);
-			.yz-social-buttons {
-				.friendship-button {
-					display: none;
-				}
-			}
 		}
 		i.fa-edit { display: none; }
-		.yz-social-buttons { display: none; }
+		#yz-profile-navmenu .yz-social-buttons { display: none; }
 	}
 	// if the member type is a makerspace and the member has makerspace level membership
 	&.member-level-makerspace {
@@ -288,7 +283,9 @@
 				content: 'Featured Makerspace';
 				background: #f51400;
 			}
-			.yz-social-buttons { display: table-cell; }
+			#yz-profile-navmenu .yz-social-buttons { 
+				display: table-cell; 
+			}
 		}
 	}
 }
