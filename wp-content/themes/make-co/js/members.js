@@ -1,6 +1,18 @@
 jQuery(".yz-column-content .widget-title").click(function(){
 	jQuery(".yz-column-content .bps-form").slideToggle( "slow" );
 });
+
+// hide or show long list of checkboxes
+jQuery(".bps-checkbox .bps-label").click(function(){
+	if(jQuery(this).hasClass('active')) {
+		jQuery(this).removeClass('active');
+		jQuery(this).nextAll().css( "display", "none" );
+	} else {
+		jQuery(this).addClass('active');
+		jQuery(this).nextAll().css( "display", "inline" );
+	}
+});
+
 // set the default for bps select boxes to 'All'
 jQuery(document).ready(function(){
 	if(jQuery(".bps-selectbox").length) {
