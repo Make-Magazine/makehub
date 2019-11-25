@@ -7,11 +7,15 @@ add_action('gform_after_update_entry', 'makerspace_to_community', 10, 2);
  * Triggered when a new entry is created or a current one is updated for form 5 Makerspace Directory
  */
 
-function makerspace_to_community($entry, $form) {
+function makerspace_to_community($entry, $form) {    
     $email = $entry[141];
     
     //If user already exists then assign ID and update the account.    
-    $userdata = array('user_email'=>$email, 'user_url'=>$entry[2], 'display_name'=>$entry[1], 'user_login'=>$email);
+    $userdata = array('user_email'=>$email, 
+                        'user_url'=>$entry[2], 
+                        'display_name'=>$entry[1], 
+                        'user_login'=>$email,
+                        'user_pass'  =>  NULL);
     
     //Check whether the user already exist or not
     $user_details = get_user_by( 'email', $userdata['user_email'] );
@@ -20,14 +24,20 @@ function makerspace_to_community($entry, $form) {
 
         $userdata['ID'] = $user_details->data->ID;
 
-        $user_id = wp_update_user($userdata);
-        $custom_send_email_flag = 0;
+        $user_id = wp_update_user($userdata);        
     } else { //no, add them
-        
-        $user_id = wp_insert_user($userdata);
-        $custom_send_email_flag = 1;
+        //switch_to_blog(1); //get role from main blog
+        $user_id = wp_insert_user($userdata);        
+        wp_update_user( array ('ID' => $user_id, 'role' => 'subscriber') ) ;                
+        add_user_to_blog( 1, $user_id, 'subscriber' ); //add user to main blog           
     }
-
+    
+    //set member type to makerspace
+    $member_type = bp_set_member_type($user_id, 'Makerspace');
+    switch_to_blog(1);
+    $tt_ids = wp_set_object_terms( $user_id, 'Makerspace', bp_get_member_type_tax_name());
+    restore_current_blog();
+    
     GLOBAL $wpdb;
     $gf_field_arr = array();
     //set $bpmeta array with submitted data
@@ -44,7 +54,7 @@ function makerspace_to_community($entry, $form) {
             //what type is this?
             if ($field['type'] == 'checkbox') {
                 if (isset($field['inputs']) && !empty($field['inputs'])) {
-                    $bp_field_ar = array();
+                    $bp_field_arr = array();
                     
                     foreach ($field['inputs'] as $choice) {
                         if (isset($entry[$choice['id']])) {
@@ -115,8 +125,8 @@ function makerspace_to_community($entry, $form) {
         $bp_fields_type[$value->id] = $value->type;
     }
         
-    //echo '$bp_fields_type';
-    //var_dump($bp_fields_type);        
+    //echo '$bpmeta';
+    //var_dump($bpmeta);        
         
     // Insert xprofile field visibility state for user level.
     update_user_meta($user_id, 'bp_xprofile_visibility_levels', $xprofile_fields_visibility);
@@ -142,24 +152,5 @@ function makerspace_to_community($entry, $form) {
                 xprofile_set_field_data($bpmetakeyid, $user_id, $bpmetavalue);
             }
         }
-    }
-
-    // If no error, let's update the user meta too!
-    
-    if ($usermeta) {
-        if (array_key_exists('bp_member_types', $usermeta)) {
-            $bp_member_types = $usermeta['bp_member_types'];
-            unset($usermeta['bp_member_types']);
-            $bp_member_types_arr = explode('::', $bp_member_types);
-            foreach ($bp_member_types_arr as $type) {
-                // Set the member type of user $user_id to $type.
-                $member_type = bp_set_member_type($user_id, $type);
-            }
-        }
-
-        foreach ($usermeta as $metakey => $metavalue) {
-            $metavalue = maybe_unserialize($metavalue);
-            update_user_meta($user_id, $metakey, $metavalue);
-        }
-    }
+    }    
 }
