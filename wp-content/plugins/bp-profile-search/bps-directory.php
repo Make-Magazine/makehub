@@ -2,14 +2,13 @@
 
 function bps_set_directory ()
 {
-	global $post;
 	global $shortcode_tags;
 
-	if (isset ($post->post_type) && $post->post_type == 'page')
+	if ($dir = bps_is_directory ())  if (!empty ($dir->content))
 	{
 		$saved_shortcodes = $shortcode_tags;
 		$shortcode_tags = array ('bps_directory' => 'bps_set_directory_data');
-		do_shortcode ($post->post_content);
+		do_shortcode ($dir->content);
 		$shortcode_tags = $saved_shortcodes;
 
 		wp_enqueue_script ('bps-directory', plugins_url ('bps-directory.js', __FILE__), array ('bp-jquery-cookie'), BPS_VERSION);
@@ -32,6 +31,7 @@ function bps_directories ()		// published interface, 20190324
 		$dirs[$members] = new stdClass;
 		$dirs[$members]->id = $members;
 		$dirs[$members]->title = get_the_title ($members);
+		$dirs[$members]->content = get_the_content ($members);
 		$dirs[$members]->path = parse_url (get_page_link ($members), PHP_URL_PATH);
 	}
 
@@ -41,6 +41,7 @@ function bps_directories ()		// published interface, 20190324
 		$dirs[$page->ID] = new stdClass;
 		$dirs[$page->ID]->id = $page->ID;
 		$dirs[$page->ID]->title = $page->post_title;
+		$dirs[$page->ID]->content = $page->post_content;
 		$dirs[$page->ID]->path = parse_url (get_page_link ($page->ID), PHP_URL_PATH);
 		$dirs[$page->ID]->replace = true;
 	}

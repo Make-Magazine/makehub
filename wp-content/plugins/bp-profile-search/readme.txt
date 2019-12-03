@@ -4,7 +4,7 @@ Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.7
 Tested up to: 5.2
 Requires PHP: 5.3
-Stable tag: 5.2.1
+Stable tag: 5.2.2
 
 Member search and member directories for BuddyPress.
 
@@ -18,7 +18,7 @@ BP Profile Search is a member search and member directories plugin for BuddyPres
 	<li>The [bps_directory] shortcode to customize the BuddyPress Members directory, or to build additional member directories</li>
 </ul>
 
-Each search form has a <em>target directory</em>. When you run a search, the form’s target directory is filtered, i.e. it is searched and also used to show the search results.
+Each search form has a <em>target directory</em>. When you run a search, the form’s target directory is searched and is also used to show the search results.
 
 = Build a search form =
 
@@ -56,7 +56,7 @@ After you build your search form, you can display it:
 
 = Run a search =
 
-On the front-end, when you hit the <em>Search</em> button in a form, BP Profile Search opens the form's target directory and filters it with your search filters. Both the <em>All Members</em> tab and the <em>My Friends</em> tab are filtered.
+On the front-end, when you hit a form's <em>Search</em> button, BP Profile Search shows the form's target directory filtered according to your search. Both the <em>All Members</em> tab and the <em>My Friends</em> tab are filtered.
 
 Additionally, the plugin:
 
@@ -118,6 +118,9 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.2.2 =
+* Improved the form builder UI
+* Added workaround to prevent conflict with *WC Vendors Marketplace*
 = 5.2.1 =
 * Fixed conflict with the BP Legacy group members template, introduced in 5.2
 = 5.2 =

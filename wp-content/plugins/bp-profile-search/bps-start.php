@@ -310,12 +310,6 @@ function bps_admin_head ()
 
 function _bps_admin_js ()
 {
-	$translations = array (
-		'drag' => __('drag to reorder fields', 'bp-profile-search'),
-		'field' => __('select field', 'bp-profile-search'),
-		'remove' => __('Remove', 'bp-profile-search'),
-	);
 	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable'), BPS_VERSION);
 //	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable', 'react', 'react-dom'), BPS_VERSION);
-	wp_localize_script ('bps-admin', 'bps_strings', $translations);
 }

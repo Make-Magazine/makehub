@@ -11,12 +11,8 @@ function bps_add_meta_boxes ()
 
 function bps_fields_box ($post)
 {
-	$bps_options = bps_meta ($post->ID);
-
-	list ($groups, $fields) = bps_get_fields ();
-	echo '<script>var bps_groups = ['. json_encode ($groups). '];</script>';
+	$meta = bps_meta ($post->ID);
 ?>
-
 	<div id="field_box" class="field_box">
 		<p>
 			<span class="bps_col1"></span>
@@ -25,45 +21,61 @@ function bps_fields_box ($post)
 			<span class="bps_col4"><strong>&nbsp;<?php _e('Description', 'bp-profile-search'); ?></strong></span>&nbsp;
 			<span class="bps_col5"><strong>&nbsp;<?php _e('Search Mode', 'bp-profile-search'); ?></strong></span>
 		</p>
-<?php
 
-	foreach ($bps_options['field_code'] as $k => $id)
-	{
-		if (empty ($fields[$id]))  continue;
+	<?php foreach ($meta['field_code'] as $k => $code) { ?>
+		<div id="field_div<?php echo $k; ?>" class="sortable"><?php bps_field_row ($code, $k, $meta); ?></div>
+	<?php } ?>
 
-		$field = $fields[$id];
-		$label = esc_attr ($bps_options['field_label'][$k]);
-		$default = esc_attr ($field->name);
-		$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
-		$desc = esc_attr ($bps_options['field_desc'][$k]);
-		$default = esc_attr ($field->description);
-		$showdesc = empty ($desc)? "placeholder=\"$default\"": "value=\"$desc\"";
-?>
-
-		<div id="field_div<?php echo $k; ?>" class="sortable">
-			<span class="bps_col1" title="<?php _e('drag to reorder fields', 'bp-profile-search'); ?>">&nbsp;&#x21C5;</span>
-<?php
-			_bps_field_select ($groups, "bps_options[field_name][$k]", "field_name$k", $id);
-?>
-			<input class="bps_col3" type="text" name="bps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
-			<input class="bps_col4" type="text" name="bps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
-<?php
-			_bps_filter_select ($field, "bps_options[field_mode][$k]", "field_mode$k", $bps_options['field_mode'][$k]);
-?>
-			<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e('Remove', 'bp-profile-search'); ?></a>
-		</div>
-<?php
-	}
-?>
 	</div>
-	<input type="hidden" id="field_next" value="<?php echo count ($bps_options['field_code']); ?>" />
-	<p><a href="javascript:add_field()"><?php _e('Add Field', 'bp-profile-search'); ?></a></p>
+	<input type="hidden" id="field_next" value="<?php echo count ($meta['field_code']); ?>" />
+	<p><input id="add_field" type="submit" value="<?php _e('Add Field', 'bp-profile-search'); ?>"></p>
 <?php
 }
 
-function _bps_field_select ($groups, $name, $id, $value)
+function bps_field_row ($code, $k, $meta = false)
+{
+	list ($groups, $fields) = bps_get_fields ();
+	if (empty ($fields[$code]))  return false;
+
+	$field = $fields[$code];
+	$label = $meta? esc_attr ($meta['field_label'][$k]): '';
+	$default = esc_attr ($field->name);
+	$showlabel = empty ($label)? "placeholder=\"$default\"": "value=\"$label\"";
+	$desc = $meta? esc_attr ($meta['field_desc'][$k]): '';
+	$default = esc_attr ($field->description);
+	$showdesc = empty ($desc)? "placeholder=\"$default\"": "value=\"$desc\"";
+?>
+	<span class="bps_col1" title="<?php _e('drag and drop to reorder fields', 'bp-profile-search'); ?>">&nbsp;&#x21C5;</span>
+	<?php _bps_field_select ($groups, "bps_options[field_name][$k]", "field_name$k", $code); ?>
+	<input class="bps_col3" type="text" name="bps_options[field_label][<?php echo $k; ?>]" id="field_label<?php echo $k; ?>" <?php echo $showlabel; ?> />
+	<input class="bps_col4" type="text" name="bps_options[field_desc][<?php echo $k; ?>]" id="field_desc<?php echo $k; ?>" <?php echo $showdesc; ?> />
+	<?php _bps_filter_select ($field, "bps_options[field_mode][$k]", "field_mode$k", $meta? $meta['field_mode'][$k]: 'none'); ?>
+
+	<a class="remove_field delete" href="javascript:void(0)"><?php _e('Remove', 'bp-profile-search'); ?></a>
+	<span class="spinner"></span>
+<?php
+	return true;
+}
+
+function bps_field_selector ($k)
+{
+	list ($groups, ) = bps_get_fields ();
+?>
+	<div id="field_div<?php echo $k; ?>" class="sortable">
+		<span class="bps_col1" title="<?php _e('drag and drop to reorder fields', 'bp-profile-search'); ?>">&nbsp;&#x21C5;</span>
+		<?php _bps_field_select ($groups, "bps_options[field_name][$k]", "field_name$k", $code, true); ?>
+		<a class="remove_field delete" href="javascript:void(0)"><?php _e('Remove', 'bp-profile-search'); ?></a>
+		<span class="spinner"></span>
+	</div>
+<?php
+}
+
+function _bps_field_select ($groups, $name, $id, $value, $first = false)
 {
 	echo "<select class='bps_col2' name='$name' id='$id'>\n";
+	if ($first)
+		echo "<option value='0'>". __('select a field', 'bp-profile-search'). "</option>\n";
+
 	foreach ($groups as $group => $fields)
 	{
 		$group = esc_attr ($group);
@@ -145,11 +157,26 @@ function bps_template ($post)
 <?php
 }
 
+add_action ('wp_ajax_field_selector', 'bps_ajax_field_selector');
+function bps_ajax_field_selector ()
+{
+	bps_field_selector ($_POST['counter']);
+	wp_die ();
+}
+
+add_action ('wp_ajax_field_row', 'bps_ajax_field_row');
+function bps_ajax_field_row ()
+{
+	$counter = str_replace ('field_div', '', $_POST['container']);
+	bps_field_row ($_POST['field'], $counter);
+	wp_die ();
+}
+
 add_action ('wp_ajax_template_options', 'bps_ajax_template_options');
 function bps_ajax_template_options ()
 {
 	bps_template_options ($_POST['form'], $_POST['template']);
-	exit;
+	wp_die ();
 }
 
 function bps_template_options ($form, $template)
@@ -218,20 +245,17 @@ function bps_update_meta ($form, $post)
 	$meta['field_desc'] = array ();
 	$meta['field_mode'] = array ();
 
-	list ($x, $fields) = bps_get_fields ();
-
-	$codes = array ();
+	$codes = array ('0');
 	$posted = isset ($_POST['bps_options'])? $_POST['bps_options']: array ();
 	if (isset ($posted['field_name']))  foreach ($posted['field_name'] as $k => $code)
 	{
-		if (empty ($fields[$code]))  continue;
 		if (in_array ($code, $codes))  continue;
 
 		$codes[] = $code;
 		$meta['field_code'][] = $code;
-		$meta['field_label'][] = isset ($posted['field_label'][$k])? stripslashes ($posted['field_label'][$k]): '';
-		$meta['field_desc'][] = isset ($posted['field_desc'][$k])? stripslashes ($posted['field_desc'][$k]): '';
-		$meta['field_mode'][] = bps_Fields::valid_filter ($fields[$code], isset ($posted['field_mode'][$k])? $posted['field_mode'][$k]: 'none');
+		$meta['field_label'][] = stripslashes ($posted['field_label'][$k]);
+		$meta['field_desc'][] = stripslashes ($posted['field_desc'][$k]);
+		$meta['field_mode'][] = $posted['field_mode'][$k];
 
 		bps_set_wpml ($form, $code, 'label', end ($meta['field_label']));
 		bps_set_wpml ($form, $code, 'comment', end ($meta['field_desc']));
