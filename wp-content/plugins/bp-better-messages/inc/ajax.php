@@ -51,6 +51,25 @@ if ( !class_exists( 'BP_Better_Messages_Ajax' ) ):
              */
             add_action('wp_ajax_bp_better_messages_exclude_user_from_thread', array( $this, 'exclude_user_from_thread' ));
             add_action('wp_ajax_bp_better_messages_add_user_to_thread', array($this, 'add_user_to_thread') );
+
+            /**
+             * List threads
+             */
+
+            add_action( 'wp_ajax_bp_messages_get_more_threads', array( $this, 'get_more_threads' ) );
+        }
+
+        public function get_more_threads(){
+            $user_id = get_current_user_id();
+            $loaded_threads = (array) $_POST['loaded_threads'];
+
+            $threads = BP_Better_Messages()->functions->get_threads( $user_id, $loaded_threads );
+
+            foreach ( $threads as $thread ) {
+                echo BP_Better_Messages()->functions->render_thread( $thread );
+            }
+
+            exit;
         }
 
         public function add_user_to_thread(){

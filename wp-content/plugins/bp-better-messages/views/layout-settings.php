@@ -130,7 +130,7 @@ defined( 'ABSPATH' ) || exit;
         <a class="nav-tab nav-tab-active" id="general-tab" href="#general"><?php _e( 'General', 'bp-better-messages' ); ?></a>
         <a class="nav-tab" id="chat-tab" href="#chat"><?php _e( 'Messages', 'bp-better-messages' ); ?></a>
         <a class="nav-tab" id="attachments-tab" href="#attachments"><?php _e( 'Attachments', 'bp-better-messages' ); ?></a>
-        <a class="nav-tab" id="attachments-tab" href="#rooms"><?php _e( 'Rooms', 'bp-better-messages' ); ?></a>
+        <!--<a class="nav-tab" id="attachments-tab" href="#rooms"><?php _e( 'Rooms', 'bp-better-messages' ); ?></a>-->
     </div>
     <form action="" method="POST">
         <?php wp_nonce_field( 'bp-better-messages-settings' ); ?>
@@ -366,12 +366,29 @@ defined( 'ABSPATH' ) || exit;
                         <p style="font-size: 10px;"><?php _e( 'Choose the page where chat will be based instead ob BP Profile', 'bp-better-messages' ); ?></p>
                     </th>
                     <td>
-                        <?php wp_dropdown_pages(array(
-                            'show_option_none' => __('Disabled', 'tax-network'),
-                            'name' => 'chatPage',
-                            'selected' => $this->settings[ 'chatPage' ],
-                            'option_none_value' => '0'
-                        )); ?>
+                        <?php
+                        if( defined('ICL_LANGUAGE_CODE') ){
+                            global $sitepress;
+                            $backup_code = ICL_LANGUAGE_CODE;
+                            $default_code = $sitepress->get_default_language();
+                            $sitepress->switch_lang( $default_code );
+                            wp_dropdown_pages(array(
+                                'show_option_none' => __('Disabled', 'tax-network'),
+                                'name' => 'chatPage',
+                                'selected' => $this->settings[ 'chatPage' ],
+                                'option_none_value' => '0'
+                            ));
+                            $sitepress->switch_lang( $backup_code );
+
+                        } else {
+                            wp_dropdown_pages(array(
+                                'show_option_none' => __('Disabled', 'tax-network'),
+                                'name' => 'chatPage',
+                                'selected' => $this->settings[ 'chatPage' ],
+                                'option_none_value' => '0'
+                            ));
+                        }
+                        ?>
                     </td>
                 </tr>
                 </tbody>

@@ -3,7 +3,7 @@ Contributors: wordplus
 Donate link: https://www.wordplus.org/donate/
 Tags: BuddyPress, messages, bp messages, private messages, pm, chat, live, realtime, chat system, communication, messaging, social, users, ajax, websocket
 Requires at least: 4.0
-Tested up to: 5.1.1
+Tested up to: 5.3
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -91,6 +91,11 @@ Instead of standard notification on each new message, plugin will group messages
 1. Files attachments
 
 == Changelog ==
+
+= 1.9.7.10 =
+* Performance improvement
+* Improvement for WPML
+* Fixed couple of bugs
 
 = 1.9.7.9 =
 * Security Update

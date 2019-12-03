@@ -198,8 +198,13 @@ if ( !class_exists( 'BP_Better_Messages_Hooks' ) ):
 
         public function chat_page($content){
             $page_id = get_the_ID();
+            $chat_page_id = BP_Better_Messages()->settings['chatPage'];
 
-            if( BP_Better_Messages()->settings['chatPage'] != $page_id ) return $content;
+            if( defined('ICL_LANGUAGE_CODE') ){
+                $chat_page_id = apply_filters( 'wpml_object_id', $page_id, 'page', true, ICL_LANGUAGE_CODE );
+            }
+
+            if( $chat_page_id != $page_id ) return $content;
 
             if( ! is_user_logged_in() ){
                 ob_start();
@@ -289,10 +294,9 @@ if ( !class_exists( 'BP_Better_Messages_Hooks' ) ):
         public function pm_link( $link = false )
         {
             if( BP_Better_Messages()->settings['fastStart'] == '1' ){
-					error_log(bp_core_get_username( bp_get_member_user_id() ));
-                return BP_Better_Messages()->functions->get_link() . '?new-message&fast=1&to=' . bp_core_get_username(  bp_get_member_user_id() );
+                return BP_Better_Messages()->functions->get_link() . '?new-message&fast=1&to=' . bp_core_get_username( bp_displayed_user_id() );
             } else {
-                return BP_Better_Messages()->functions->get_link() . '?new-message&to=' . bp_core_get_username(  bp_get_member_user_id() );
+                return BP_Better_Messages()->functions->get_link() . '?new-message&to=' . bp_core_get_username( bp_displayed_user_id() );
             }
         }
 

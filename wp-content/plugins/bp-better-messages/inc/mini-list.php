@@ -55,11 +55,17 @@ class BP_Better_Messages_Mini_List
             <?php if(in_array('messages', $tabs)){ ?>
                 <div class="messages">
                     <?php if ( !empty( $threads ) ) { ?>
-                        <div class="scroller scrollbar-inner">
+                        <div class="scroller scrollbar-inner threads-list-wrapper">
                             <div class="threads-list">
                                 <?php foreach ( $threads as $thread ) {
                                     echo BP_Better_Messages()->functions->render_thread( $thread );
                                 } ?>
+
+                                <div class="loading-messages">
+                                    <div class="bounce1"></div>
+                                    <div class="bounce2"></div>
+                                    <div class="bounce3"></div>
+                                </div>
                             </div>
                         </div>
                     <?php } else { ?>

@@ -619,9 +619,11 @@
 }
 
 .bp-messages-wrap .threads-list {
+    position: relative;
     display: table;
     width: 100%;
     table-layout: auto;
+    padding-bottom: 50px;
 }
 
 .bp-messages-wrap .threads-list .thread {
@@ -1558,6 +1560,19 @@
     height: 12px;
     top: 5px;
     right: 5px;
+}
+
+.threads-list-wrapper{
+    position: relative;
+}
+
+.threads-list-wrapper.all-loaded .threads-list{
+    padding-bottom: 0;
+}
+
+.threads-list-wrapper .loading-messages{
+    top: auto;
+    bottom: 10px;
 }
 
 .loading-messages {

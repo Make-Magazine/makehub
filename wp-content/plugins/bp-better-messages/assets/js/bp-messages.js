@@ -677,10 +677,49 @@
         function controlScroll(y, x) {
             if(typeof event === 'undefined') return false;
             var _thread = $(event.target).attr('data-id');
+            var is_threads_list = $(event.target).hasClass('threads-list-wrapper');
             if(typeof loadedAll[_thread] == 'undefined') loadedAll[_thread] = false;
-            if(y.scroll <= 10 && _thread && loadedAll[_thread] === false) {
+            if(y.scroll <= 10 && _thread && loadedAll[_thread] === false ) {
                 loadMoreMessages(_thread);
             }
+
+            if( is_threads_list && (y.maxScroll - y.scroll) <= 25 ){
+                loadMoreThreads( event.target );
+            }
+        }
+
+
+        function loadMoreThreads(element) {
+            var wrapper = $( element );
+            if( wrapper.hasClass('loading-more') || wrapper.hasClass('all-loaded') ) return false;
+
+            wrapper.addClass('loading-more');
+            wrapper.find('.loading-messages').show();
+
+            var loadedThreads = [];
+            var loader = wrapper.find('.loading-messages');
+
+            wrapper.find('.threads-list > .thread').each(function () {
+                loadedThreads.push( $(this).data('id') );
+            });
+
+            $.post(
+                BP_Messages.ajaxUrl,
+                {
+                    'action'         : 'bp_messages_get_more_threads',
+                    'loaded_threads' : loadedThreads
+                }, function (html) {
+                    $(html).insertBefore( loader );
+                    wrapper.removeClass('loading-more');
+                    wrapper.find('.loading-messages').hide();
+
+                    if( html.trim() === '' ){
+                        wrapper.addClass('all-loaded');
+                    }
+
+                }
+            );
+
         }
 
         function loadMoreMessages(thread_id) {
@@ -712,7 +751,6 @@
                     delete loadingMore[thread_id];
                 }
             );
-
         }
 
         if(bpMessagesWrap.hasClass('bp-messages-mobile')) {

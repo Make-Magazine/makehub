@@ -49,16 +49,62 @@ if ( !class_exists( 'BP_Better_Messages_Functions' ) ):
             return esc_attr($subject);
         }
 
-        public function get_threads( $user_id = 0 )
+        public function get_threads( $user_id = 0, $exclude_threads = [] )
         {
             global $wpdb;
 
-            $threads = $wpdb->get_results( $wpdb->prepare( "
+            if( is_array( $exclude_threads )  && count( $exclude_threads ) > 0 ){
+                foreach( $exclude_threads as $key => $value ){
+                    $exclude_threads[ $key ] = intval( $value );
+                }
+
+                $threads = $wpdb->get_results($wpdb->prepare( "
+                    SELECT
+                    `{$wpdb->base_prefix}bp_messages_recipients`.`thread_id`,
+                    `{$wpdb->base_prefix}bp_messages_recipients`.`unread_count`,
+                    messages.*
+                    FROM
+                        {$wpdb->base_prefix}bp_messages_recipients
+                    RIGHT OUTER JOIN (
+                          SELECT max(date_sent) as date_sent, thread_id
+                          FROM `{$wpdb->base_prefix}bp_messages_messages`
+                          group by thread_id
+                    ) messages
+                    ON `{$wpdb->base_prefix}bp_messages_recipients`.`thread_id` = messages.`thread_id`
+                    WHERE
+                        `user_id` = %d AND `is_deleted` = 0
+                        AND `{$wpdb->base_prefix}bp_messages_recipients`.`thread_id` NOT IN (" . implode(',', $exclude_threads) . ")
+                    ORDER BY messages.`date_sent` DESC
+                    LIMIT 0, 10
+                ", $user_id));
+            } else {
+                $threads = $wpdb->get_results( $wpdb->prepare( "
+                    SELECT
+                    `{$wpdb->base_prefix}bp_messages_recipients`.`thread_id`,
+                    `{$wpdb->base_prefix}bp_messages_recipients`.`unread_count`,
+                    messages.*
+                    FROM
+                        {$wpdb->base_prefix}bp_messages_recipients
+                    RIGHT OUTER JOIN (
+                          SELECT max(date_sent) as date_sent, thread_id
+                          FROM `{$wpdb->base_prefix}bp_messages_messages`
+                          group by thread_id
+                    ) messages
+                    ON `{$wpdb->base_prefix}bp_messages_recipients`.`thread_id` = messages.`thread_id`
+                    WHERE
+                        `user_id` = %d AND `is_deleted` = 0
+                    ORDER BY messages.`date_sent` DESC
+                    LIMIT 0, 10
+                ", $user_id ) );
+            }
+
+
+            /* $threads = $wpdb->get_results( $wpdb->prepare( "
                 SELECT thread_id, unread_count
                 FROM   {$wpdb->base_prefix}bp_messages_recipients
                 WHERE  `user_id` = %d
                 AND    `is_deleted` = 0
-            ", $user_id ) );
+            ", $user_id ) );*/
 
             foreach ( $threads as $index => $thread ) {
                 $recipients = array();
@@ -97,11 +143,12 @@ if ( !class_exists( 'BP_Better_Messages_Functions' ) ):
                 $threads[ $index ]->html = BP_Better_Messages()->functions->render_thread( $threads[ $index ] );
             }
 
+            /*
             usort( $threads, function ( $item1, $item2 ) {
                 if ( strtotime( $item1->date_sent ) == strtotime( $item2->date_sent ) ) return 0;
 
                 return ( strtotime( $item1->date_sent ) < strtotime( $item2->date_sent ) ) ? 1 : -1;
-            } );
+            } );*/
 
             return $threads;
         }
