@@ -1,14 +1,14 @@
 /**
- * Adds a “hide title” checkbox to Genesis Block Editor sidebar in a
- * Title panel. Unchecked by default.
+ * Adds a “hide footer widgets” checkbox to Genesis Block Editor sidebar in a
+ * Footer Widgets panel. Unchecked by default.
  *
- * If checked and the post is updated or published, `_genesis_hide_title`
+ * If checked and the post is updated or published, `_genesis_hide_footer_widgets`
  * is set to true in post meta.
  *
- * To disable the checkbox, use the PHP `genesis_title_toggle_enabled`
- * filter: `add_filter( 'genesis_title_toggle_enabled', '__return_false' );`.
+ * To disable the checkbox, use the PHP `genesis_footer_widgets_toggle_enabled`
+ * filter: `add_filter( 'genesis_footer_widgets_toggle_enabled', '__return_false' );`.
  *
- * @since   3.1.0
+ * @since   3.2.0
  * @package Genesis\JS
  * @author  StudioPress
  * @license GPL-2.0-or-later
@@ -30,21 +30,21 @@ import { registerPlugin } from '@wordpress/plugins';
 import { newMeta } from '../editor/new-meta.js';
 
 /**
- * Checkbox component for the hide title option.
+ * Checkbox component for the hide footer widgets option.
  *
  * @param {Object} props Component properties.
- * @return {Object} hideTitleComponent
+ * @return {Object} hideFooterWidgetsComponent
  */
-function genesisHideTitleComponent( { hideTitle = false, onUpdate } ) {
+function genesisHideFooterWidgetsComponent( { hideFooterWidgets = false, onUpdate } ) {
 	return (
 		<Fragment>
 			<Fill name="GenesisSidebar">
-				<PanelBody initialOpen={ true } title={ __( 'Title', 'genesis' ) }>
+				<PanelBody initialOpen={ true } title={ __( 'Footer Widgets', 'genesis' ) }>
 					<PanelRow>
 						<CheckboxControl
-							label={ __( 'Hide Title', 'genesis' ) }
-							checked={ !! hideTitle }
-							onChange={ () => onUpdate( ! hideTitle ) }
+							label={ __( 'Hide Footer Widgets', 'genesis' ) }
+							checked={ !! hideFooterWidgets }
+							onChange={ () => onUpdate( ! hideFooterWidgets ) }
 						/>
 					</PanelRow>
 				</PanelBody>
@@ -59,16 +59,16 @@ function genesisHideTitleComponent( { hideTitle = false, onUpdate } ) {
 const render = compose( [
 	withSelect( () => {
 		return {
-			hideTitle: select( 'core/editor' ).getEditedPostAttribute( 'meta' )._genesis_hide_title,
+			hideFooterWidgets: select( 'core/editor' ).getEditedPostAttribute( 'meta' )._genesis_hide_footer_widgets,
 		};
 	} ),
 	withDispatch( ( dispatch ) => ( {
-		onUpdate( hideTitle ) {
+		onUpdate( hideFooterWidgets ) {
 			dispatch( 'core/editor' ).editPost(
-				{ meta: newMeta( '_genesis_hide_title', !! hideTitle ) }
+				{ meta: newMeta( '_genesis_hide_footer_widgets', !! hideFooterWidgets ) }
 			);
 		},
 	} ) ),
-] )( genesisHideTitleComponent );
+] )( genesisHideFooterWidgetsComponent );
 
-registerPlugin( 'genesis-title-toggle', { render } );
+registerPlugin( 'genesis-footer-widgets-toggle', { render } );

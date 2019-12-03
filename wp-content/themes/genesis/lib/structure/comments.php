@@ -242,6 +242,7 @@ function genesis_default_list_comments() {
 		'avatar_size' => 48,
 		'format'      => 'html5', // Not necessary, but a good example.
 		'callback'    => 'genesis_html5_comment_callback',
+		'add_below'   => 'article-comment',
 	];
 
 	$args = apply_filters( 'genesis_comment_list_args', $defaults );

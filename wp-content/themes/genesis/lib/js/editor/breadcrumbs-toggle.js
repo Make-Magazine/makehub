@@ -28,6 +28,7 @@ import { registerPlugin } from '@wordpress/plugins';
  * Internal dependencies
  */
 import { GenesisBreadcrumbsToggleInfo } from '../components/breadcrumbs-toggle-info.js';
+import { newMeta } from '../editor/new-meta.js';
 
 /**
  * Checkbox component for the hide breadcrumbs option.
@@ -35,7 +36,7 @@ import { GenesisBreadcrumbsToggleInfo } from '../components/breadcrumbs-toggle-i
  * @param {Object} props Component properties.
  * @return {Object} hideBreadcrumbsComponent
  */
-function genesisHideBreadcrumbsComponent( { hideBreadcrumbs, onUpdate } ) {
+function genesisHideBreadcrumbsComponent( { hideBreadcrumbs = false, onUpdate } ) {
 	return (
 		<Fragment>
 			<Fill name="GenesisSidebar">
@@ -43,7 +44,7 @@ function genesisHideBreadcrumbsComponent( { hideBreadcrumbs, onUpdate } ) {
 					<PanelRow>
 						<CheckboxControl
 							label={ __( 'Hide Breadcrumbs', 'genesis' ) }
-							checked={ hideBreadcrumbs }
+							checked={ !! hideBreadcrumbs }
 							onChange={ () => onUpdate( ! hideBreadcrumbs ) }
 						/>
 					</PanelRow>
@@ -67,18 +68,9 @@ const render = compose( [
 	} ),
 	withDispatch( ( dispatch ) => ( {
 		onUpdate( hideBreadcrumbs ) {
-			const currentMeta = select( 'core/editor' ).getEditedPostAttribute( 'meta' );
-			const genesisMeta = Object.keys( currentMeta )
-				.filter( ( key ) => key.startsWith( '_genesis' ) )
-				.reduce( ( obj, key ) => {
-					obj[ key ] = currentMeta[ key ];
-					return obj;
-				}, {} );
-			const newMeta = {
-				...genesisMeta,
-				_genesis_hide_breadcrumbs: hideBreadcrumbs,
-			};
-			dispatch( 'core/editor' ).editPost( { meta: newMeta } );
+			dispatch( 'core/editor' ).editPost(
+				{ meta: newMeta( '_genesis_hide_breadcrumbs', !! hideBreadcrumbs ) }
+			);
 		},
 	} ) ),
 ] )( genesisHideBreadcrumbsComponent );

@@ -46,6 +46,9 @@ function genesis_register_post_meta() {
 	// Hide image: true if featured image should be hidden, false or empty otherwise.
 	register_meta( 'post', '_genesis_hide_singular_image', $args );
 
+	// Hide footer widgets: true if widgets should be hidden, false or empty otherwise.
+	register_meta( 'post', '_genesis_hide_footer_widgets', $args );
+
 	// Body class: string to add to the body element class attribute.
 	register_meta( 'post', '_genesis_custom_body_class', $string_args );
 

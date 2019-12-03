@@ -15,6 +15,11 @@ import { compose } from '@wordpress/compose';
 import { select, withSelect, withDispatch } from '@wordpress/data';
 import { TextControl } from '@wordpress/components';
 
+/**
+ * Internal dependencies
+ */
+import { newMeta } from '../editor/new-meta.js';
+
 function BodyControl( { bodyClass, onUpdate } ) {
 	return (
 		<TextControl
@@ -33,18 +38,9 @@ export const BodyClassTextControl = compose( [
 	} ),
 	withDispatch( ( dispatch ) => ( {
 		onUpdate( newClass ) {
-			const currentMeta = select( 'core/editor' ).getEditedPostAttribute( 'meta' );
-			const genesisMeta = Object.keys( currentMeta )
-				.filter( ( key ) => key.startsWith( '_genesis' ) )
-				.reduce( ( obj, key ) => {
-					obj[ key ] = currentMeta[ key ];
-					return obj;
-				}, {} );
-			const newMeta = {
-				...genesisMeta,
-				_genesis_custom_body_class: newClass,
-			};
-			dispatch( 'core/editor' ).editPost( { meta: newMeta } );
+			dispatch( 'core/editor' ).editPost(
+				{ meta: newMeta( '_genesis_custom_body_class', newClass ) }
+			);
 		},
 	} ) ),
 ] )( BodyControl );

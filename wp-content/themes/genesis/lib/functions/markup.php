@@ -33,8 +33,10 @@
  *     @type string context Markup context.
  *     @type string open    Opening HTML markup.
  *     @type string close   Closing HTML markup.
+ *     @type array  atts    Initial attributes to apply to `open`, before filters.
  *     @type string content Content to be placed between open and close HTML markup.
  *     @type bool   echo    Flag indicating whether to echo or return the resultant string.
+ *     @type array  params  Additional information/data to pass to the various filters.
  * }
  * @return string|null Markup.
  */
@@ -45,6 +47,7 @@ function genesis_markup( $args = [] ) {
 		'context' => '',
 		'open'    => '',
 		'close'   => '',
+		'atts'    => [],
 		'content' => '',
 		'echo'    => true,
 		'params'  => [],
@@ -102,7 +105,7 @@ function genesis_markup( $args = [] ) {
 
 	if ( $args['context'] ) {
 
-		$open = $args['open'] ? sprintf( $args['open'], genesis_attr( $args['context'], [], $args ) ) : '';
+		$open = $args['open'] ? sprintf( $args['open'], genesis_attr( $args['context'], $args['atts'], $args ) ) : '';
 
 		/**
 		 * Contextual filter to modify 'open' markup.
@@ -933,6 +936,7 @@ add_filter( 'genesis_attr_comment', 'genesis_attributes_comment' );
 function genesis_attributes_comment( $attributes ) {
 
 	$attributes['class'] = '';
+	$attributes['id']    = 'article-comment-' . get_comment_ID();
 
 	return $attributes;
 

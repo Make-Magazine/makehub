@@ -22,10 +22,11 @@ final class Genesis_Silent_Upgrader_Skin extends WP_Upgrader_Skin {
 	 * Overrides the parent method to prevent screen output.
 	 *
 	 * @param string $string Not used.
+	 * @param mixed  ...$args Optional text replacements.
 	 *
 	 * @return bool
 	 */
-	public function feedback( $string ) {
+	public function feedback( $string, ...$args ) {
 		return false;
 	}
 

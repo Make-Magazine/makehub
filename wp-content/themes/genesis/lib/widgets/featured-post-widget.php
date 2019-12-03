@@ -190,7 +190,7 @@ class Genesis_Featured_Post extends WP_Widget {
 						 *     @type int    $posts_offset            Number of posts to skip when
 						 *                                           retrieving.
 						 *     @type string $orderby                 Field to order posts by.
-						 *     @type string $order                   ASC fr ascending order, DESC for
+						 *     @type string $order                   ASC for ascending order, DESC for
 						 *                                           descending order of posts.
 						 *     @type bool   $exclude_displayed       True if posts shown in main output
 						 *                                           should be excluded from this widget

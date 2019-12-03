@@ -159,15 +159,15 @@ add_filter( 'genesis_customizer_theme_settings_config', 'genesis_add_singular_im
 function genesis_add_singular_image_output_customizer_checkboxes( $config ) {
 
 	if ( ! isset( $config['genesis']['sections']['genesis_single'] ) ) {
-		return;
+		return $config;
 	}
 
 	$types_with_singular_images_support = get_post_types_by_support( 'genesis-singular-images' );
 
-	$controls = [];
+	$new_controls = [];
 
 	if ( isset( $config['genesis']['sections']['genesis_single']['controls'] ) ) {
-		$controls = $config['genesis']['sections']['genesis_single']['controls'];
+		$orig_controls = $config['genesis']['sections']['genesis_single']['controls'];
 	}
 
 	foreach ( $types_with_singular_images_support as $type ) {
@@ -176,7 +176,7 @@ function genesis_add_singular_image_output_customizer_checkboxes( $config ) {
 		}
 		$post_type = get_post_type_object( $type );
 
-		$controls[ "show_featured_image_${type}" ] = [
+		$new_controls[ "show_featured_image_${type}" ] = [
 			// translators: the post type label.
 			'label'    => sprintf( __( 'Show Featured Images on %s', 'genesis' ), $post_type->label ),
 			'section'  => 'genesis_single',
@@ -187,7 +187,7 @@ function genesis_add_singular_image_output_customizer_checkboxes( $config ) {
 		];
 	}
 
-	$config['genesis']['sections']['genesis_single']['controls'] = $controls;
+	$config['genesis']['sections']['genesis_single']['controls'] = $new_controls + $orig_controls;
 
 	return $config;
 }

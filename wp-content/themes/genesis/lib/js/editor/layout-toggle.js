@@ -19,6 +19,11 @@ import { registerPlugin } from '@wordpress/plugins';
 import { SelectControl, Fill, Panel, PanelBody, Spinner } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
+/**
+ * Internal dependencies
+ */
+import { newMeta } from '../editor/new-meta.js';
+
 class genesisLayoutToggleComponent extends Component {
 	constructor( props ) {
 		super( props );
@@ -78,18 +83,9 @@ const render = compose( [
 	} ),
 	withDispatch( ( dispatch ) => ( {
 		onChange( layout ) {
-			const currentMeta = select( 'core/editor' ).getEditedPostAttribute( 'meta' );
-			const genesisMeta = Object.keys( currentMeta )
-				.filter( ( key ) => key.startsWith( '_genesis' ) )
-				.reduce( ( obj, key ) => {
-					obj[ key ] = currentMeta[ key ];
-					return obj;
-				}, {} );
-			const newMeta = {
-				...genesisMeta,
-				_genesis_layout: layout,
-			};
-			dispatch( 'core/editor' ).editPost( { meta: newMeta } );
+			dispatch( 'core/editor' ).editPost(
+				{ meta: newMeta( '_genesis_layout', layout ) }
+			);
 		},
 	} ) ),
 ] )( genesisLayoutToggleComponent );

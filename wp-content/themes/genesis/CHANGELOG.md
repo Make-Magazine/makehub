@@ -6,6 +6,39 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 Up until release 2.7.0, this project did _not_ follow semantic versioning. It followed the WordPress policy where updates of x and y in an x.y.z version number means a major release, and updates to z means a patch release.
 
+## [3.2.1] - 2019-11-14
+
+### Fixed
+* Accessibility: Prevent screenreader text such as “interim pages omitted” from appearing in paginated navigation for themes that have not added Genesis accessibility support.
+
+### Changed
+* Tooling: Allow PHP short array and ternary syntax.
+
+## [3.2.0] - 2019-11-13
+
+### Added
+* Feature: Open Graph Tag support (off by default, disabled if select plugins are outputting OG tags).
+* Feature: Ability to disable footer widgets on single entries.
+* Feature: Lazy load images in Chrome 76+ (off by default, enabled with `genesis-lazy-load-images` theme support).
+* Feature: Modify entry meta output via Theme Settings in customizer.
+
+### Changed
+* Admin: Theme Setup CSS tweak
+* Filter: Added `genesis_amp_menu_css` filter for AMP inline styles for control over the output.
+* Accessibility: Added aria labels, screen reader text to numeric entry navigation.
+* `genesis_markup()` now accepts `atts` to add attributes to markup at the point of use.
+
+## [3.1.3] - 2019-11-06
+
+### Fixed
+* Ensure unchecked checkboxes in the Genesis editor sidebar save correctly with WordPress 5.3.
+* Prevent a warning during One-click Theme Setup under WordPress 5.3.
+* Display comment reply forms directly below the comment instead of after nested responses.
+* Remove empty entry-meta wrappers if post info or meta is removed via a filter.
+* Prevent a fatal error that could occur when visiting the Customizer if the `genesis_footer_output` filter was used with more than one argument.
+* Make sure that the `[footer_childtheme_link]` shortcode renders if the Theme URI stylesheet header is missing but the theme declares a `CHILD_THEME_URL`.
+* Correct the deprecation message for `genesis_attributes_nav`.
+
 ## [3.1.2] - 2019-09-05
 
 ### Fixed
@@ -1304,6 +1337,9 @@ _Requires WordPress 3.1.0._
 
 First public release.
 
+[3.2.1]: https://github.com/studiopress/genesis/compare/3.2.0...3.2.1
+[3.2.0]: https://github.com/studiopress/genesis/compare/3.1.3...3.2.0
+[3.1.3]: https://github.com/studiopress/genesis/compare/3.1.2...3.1.3
 [3.1.2]: https://github.com/studiopress/genesis/compare/3.1.1...3.1.2
 [3.1.1]: https://github.com/studiopress/genesis/compare/3.1.0...3.1.1
 [3.1.0]: https://github.com/studiopress/genesis/compare/3.0.3...3.1.0

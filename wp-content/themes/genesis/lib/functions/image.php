@@ -286,3 +286,23 @@ function genesis_post_types_with_singular_images_enabled() {
 	return $result;
 
 }
+
+add_filter( 'wp_get_attachment_image_attributes', 'genesis_image_loading', 10, 3 );
+/**
+ * Filter the attributes of all images retrieved with `wp_get_attachment_image`, add `loading="lazy"` to enable lazy loading in Chrome.
+ *
+ * @since 3.2.0
+ *
+ * @param array $attr Attributes for the image markup.
+ *
+ * @return array The filtered $attr array.
+ */
+function genesis_image_loading( $attr ) {
+	if ( ! current_theme_supports( 'genesis-lazy-load-images' ) ) {
+		return $attr;
+	}
+
+	$attr['loading'] = 'lazy';
+
+	return $attr;
+}

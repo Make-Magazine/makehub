@@ -225,7 +225,28 @@ return [
 				'title'       => __( 'Singular Content', 'genesis' ),
 				'description' => __( 'Modify the settings for individual entries such as posts and pages.', 'genesis' ),
 				'panel'       => 'genesis',
-				'controls'    => [],
+				'controls'    => [
+					'entry_meta_before_content' => [
+						'label'       => __( 'Entry Meta (above content)', 'genesis' ),
+						/* translators: %s: Link to post shortcodes documentation */
+						'description' => sprintf( __( 'The entry meta text that will appear above your entry content. Can include <a href="%s" target="_blank" rel="noopener noreferrer">post shortcodes</a>.', 'genesis' ), 'https://studiopress.github.io/genesis/basics/genesis-shortcodes/#post-shortcodes' ),
+						'section'     => 'genesis_single',
+						'type'        => 'textarea',
+						'settings'    => [
+							'default' => '[post_date] ' . __( 'by', 'genesis' ) . ' [post_author_posts_link] [post_comments] [post_edit]',
+						],
+					],
+					'entry_meta_after_content'  => [
+						'label'       => __( 'Entry Meta (below content)', 'genesis' ),
+						/* translators: %s: Link to post shortcodes documentation */
+						'description' => sprintf( __( 'The entry meta text that will appear below your entry content. Can include <a href="%s" target="_blank" rel="noopener noreferrer">post shortcodes</a>.', 'genesis' ), 'https://studiopress.github.io/genesis/basics/genesis-shortcodes/#post-shortcodes' ),
+						'section'     => 'genesis_single',
+						'type'        => 'textarea',
+						'settings'    => [
+							'default' => '[post_categories] [post_tags]',
+						],
+					],
+				],
 			],
 			'genesis_archives'     => [
 				'title'    => __( 'Content Archives', 'genesis' ),
@@ -298,7 +319,7 @@ return [
 			],
 			'genesis_footer'       => [
 				'active_callback' => function() {
-					return is_null( apply_filters( 'genesis_footer_output', null ) );
+					return is_null( apply_filters( 'genesis_footer_output', null, '', '' ) );
 				},
 				'title'           => __( 'Footer', 'genesis' ),
 				'panel'           => 'genesis',

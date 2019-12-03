@@ -181,6 +181,9 @@ class Genesis_AMP_Menu {
 	 */
 	public function add_custom_css() {
 
+		$media_query = esc_attr( $this->extras_config['media_query_width'] );
+		$extra       = $this->extras_config['css'];
+
 		$css = sprintf(
 			'
 			/* Genesis+AMP responsive menu styles.
@@ -238,9 +241,20 @@ class Genesis_AMP_Menu {
 				%2$s
 
 			}',
-			esc_attr( $this->extras_config['media_query_width'] ),
-			$this->extras_config['css']
+			$media_query,
+			$extra
 		);
+
+		/**
+		 * Filter the CSS output.
+		 *
+		 * @since 3.1.1
+		 *
+		 * @param string $css         The default CSS output.
+		 * @param string $media_query The media query set in theme config.
+		 * @param string $extra       The extra CSS set in theme config.
+		 */
+		$css = apply_filters( 'genesis_amp_menu_css', $css, $media_query, $extra );
 
 		wp_add_inline_style( genesis_get_theme_handle(), $css );
 

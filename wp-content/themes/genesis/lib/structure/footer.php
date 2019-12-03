@@ -11,6 +11,39 @@
  * @link    https://my.studiopress.com/themes/genesis/
  */
 
+/**
+ * Are footer widgets hidden for the current page?
+ *
+ * Indicates that the “Hide Footer Widgets” checkbox is enabled and checked.
+ *
+ * @since 3.2.0
+ *
+ * @return bool True if footer widgets are hidden, false otherwise.
+ */
+function genesis_footer_widgets_hidden_on_current_page() {
+
+	// No “hide footer widgets” option is currently offered on non-singular page types, such as category archives.
+	if ( ! is_singular() && ! is_home() ) {
+		return false;
+	}
+
+	/**
+	 * Prevents the “hide footer widgets” checkbox from appearing or functioning by returning false.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param bool $footer_widgets_toggle_enabled True if footer widgets toggle is enabled, false otherwise.
+	 */
+	$footer_widgets_toggle_enabled = apply_filters( 'genesis_footer_widgets_toggle_enabled', true );
+
+	if ( ! $footer_widgets_toggle_enabled ) {
+		return false;
+	}
+
+	return get_post_meta( get_queried_object_id(), '_genesis_hide_footer_widgets', true );
+
+}
+
 add_action( 'genesis_before_footer', 'genesis_footer_widget_areas' );
 /**
  * Echo the markup necessary to facilitate the footer widget areas.
@@ -30,7 +63,7 @@ function genesis_footer_widget_areas() {
 
 	$footer_widgets = get_theme_support( 'genesis-footer-widgets' );
 
-	if ( ! $footer_widgets || ! isset( $footer_widgets[0] ) || ! is_numeric( $footer_widgets[0] ) ) {
+	if ( ! $footer_widgets || ! isset( $footer_widgets[0] ) || ! is_numeric( $footer_widgets[0] ) || genesis_footer_widgets_hidden_on_current_page() ) {
 		return;
 	}
 

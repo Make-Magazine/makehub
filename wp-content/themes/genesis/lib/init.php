@@ -166,13 +166,11 @@ function genesis_theme_support() {
 	// Turn on HTML5 and responsive viewport if Genesis is active.
 	if ( ! is_child_theme() ) {
 		add_theme_support( 'html5', [ 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ] );
-		add_theme_support( 'genesis-responsive-viewport' );
 		add_theme_support(
 			'genesis-accessibility',
 			[
 				'drop-down-menu',
 				'headings',
-				'rems',
 				'search-form',
 				'skip-links',
 			]
@@ -189,8 +187,8 @@ add_action( 'genesis_init', 'genesis_post_type_support' );
  */
 function genesis_post_type_support() {
 
-	add_post_type_support( 'post', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-rel-author' ] );
-	add_post_type_support( 'page', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-title-toggle' ] );
+	add_post_type_support( 'post', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-footer-widgets-toggle' ] );
+	add_post_type_support( 'page', [ 'genesis-seo', 'genesis-scripts', 'genesis-layouts', 'genesis-breadcrumbs-toggle', 'genesis-footer-widgets-toggle', 'genesis-title-toggle' ] );
 
 }
 
@@ -229,10 +227,10 @@ function genesis_constants() {
 	// Define Theme Info Constants.
 	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 	define( 'PARENT_THEME_NAME', 'Genesis' );
-	define( 'PARENT_THEME_VERSION', '3.1.2' );
-	define( 'PARENT_THEME_BRANCH', '3.1' );
-	define( 'PARENT_DB_VERSION', '3101' );
-	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '5 September 2019' ) ) );
+	define( 'PARENT_THEME_VERSION', '3.2.1' );
+	define( 'PARENT_THEME_BRANCH', '3.2' );
+	define( 'PARENT_DB_VERSION', '3200' );
+	define( 'PARENT_THEME_RELEASE_DATE', date_i18n( 'F j, Y', strtotime( '14 November 2019' ) ) );
 
 	// Define Parent and Child Directory Location and URL Constants.
 	define( 'PARENT_DIR', get_template_directory() );
@@ -342,6 +340,7 @@ function genesis_load_framework() {
 	require_once $functions_dir . 'layout.php';
 	require_once $functions_dir . 'formatting.php';
 	require_once $functions_dir . 'seo.php';
+	require_once $functions_dir . 'open-graph.php';
 	require_once $functions_dir . 'widgetize.php';
 	require_once $functions_dir . 'feed.php';
 	require_once $functions_dir . 'toolbar.php';

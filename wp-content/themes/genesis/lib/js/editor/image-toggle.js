@@ -25,6 +25,7 @@ import { registerPlugin } from '@wordpress/plugins';
  * Internal dependencies
  */
 import { GenesisImageToggleInfo } from '../components/image-toggle-info.js';
+import { newMeta } from '../editor/new-meta.js';
 
 /**
  * Checkbox component for the hide title option.
@@ -32,7 +33,7 @@ import { GenesisImageToggleInfo } from '../components/image-toggle-info.js';
  * @param {Object} props Component properties.
  * @return {Object} GenesisHideFeaturedImageComponent.
  */
-function GenesisHideFeaturedImageComponent( { hideFeaturedImage, onUpdate } ) {
+function GenesisHideFeaturedImageComponent( { hideFeaturedImage = false, onUpdate } ) {
 	return (
 		<Fragment>
 			<Fill name="GenesisSidebar">
@@ -40,7 +41,7 @@ function GenesisHideFeaturedImageComponent( { hideFeaturedImage, onUpdate } ) {
 					<PanelRow>
 						<CheckboxControl
 							label={ __( 'Hide Featured Image', 'genesis' ) }
-							checked={ hideFeaturedImage }
+							checked={ !! hideFeaturedImage }
 							onChange={ () => onUpdate( ! hideFeaturedImage ) }
 						/>
 					</PanelRow>
@@ -64,18 +65,9 @@ const render = compose( [
 	} ),
 	withDispatch( ( dispatch ) => ( {
 		onUpdate( hideFeaturedImage ) {
-			const currentMeta = select( 'core/editor' ).getEditedPostAttribute( 'meta' );
-			const genesisMeta = Object.keys( currentMeta )
-				.filter( ( key ) => key.startsWith( '_genesis' ) )
-				.reduce( ( obj, key ) => {
-					obj[ key ] = currentMeta[ key ];
-					return obj;
-				}, {} );
-			const newMeta = {
-				...genesisMeta,
-				_genesis_hide_singular_image: hideFeaturedImage,
-			};
-			dispatch( 'core/editor' ).editPost( { meta: newMeta } );
+			dispatch( 'core/editor' ).editPost(
+				{ meta: newMeta( '_genesis_hide_singular_image', !! hideFeaturedImage ) }
+			);
 		},
 	} ) ),
 ] )( GenesisHideFeaturedImageComponent );

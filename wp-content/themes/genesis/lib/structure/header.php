@@ -192,9 +192,7 @@ add_action( 'genesis_meta', 'genesis_responsive_viewport' );
  *
  * @since 1.9.0
  * @since 2.7.0 Adds `minimum-scale=1` when AMP URL.
- * @since 3.0 Do not check if theme support `genesis-responsive-viewport`
- *
- * @return void Return early if child theme does not support `genesis-responsive-viewport`.
+ * @since 3.0 Do not check if theme supports `genesis-responsive-viewport`.
  */
 function genesis_responsive_viewport() {
 	/**
@@ -929,7 +927,7 @@ function genesis_skip_links() {
 
 	if ( current_theme_supports( 'genesis-footer-widgets' ) ) {
 		$footer_widgets = get_theme_support( 'genesis-footer-widgets' );
-		if ( isset( $footer_widgets[0] ) && is_numeric( $footer_widgets[0] ) && is_active_sidebar( 'footer-1' ) ) {
+		if ( isset( $footer_widgets[0] ) && is_numeric( $footer_widgets[0] ) && is_active_sidebar( 'footer-1' ) && ! genesis_footer_widgets_hidden_on_current_page() ) {
 			$links['genesis-footer-widgets'] = esc_html__( 'Skip to footer', 'genesis' );
 		}
 	}

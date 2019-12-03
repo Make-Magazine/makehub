@@ -616,7 +616,7 @@ function genesis_attributes_entry_image_grid_loop( $attributes ) {
  */
 function genesis_attributes_nav( $attributes ) {
 
-	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\attributes_nav' );
+	_deprecated_function( __FUNCTION__, '3.1.0', '\StudioPress\Genesis\Functions\Schema\nav_primary' );
 
 	$attributes['itemscope'] = true;
 	$attributes['itemtype']  = 'https://schema.org/SiteNavigationElement';

@@ -75,6 +75,14 @@ function genesis_footer_childtheme_link_shortcode( $atts ) {
 	$name = wp_get_theme()->get( 'Name' );
 	$url  = wp_get_theme()->get( 'ThemeURI' );
 
+	if ( ! $name ) {
+		$name = defined( 'CHILD_THEME_NAME' ) && CHILD_THEME_NAME ? CHILD_THEME_NAME : '';
+	}
+
+	if ( ! $url ) {
+		$url = defined( 'CHILD_THEME_URL' ) && CHILD_THEME_URL ? CHILD_THEME_URL : '';
+	}
+
 	if ( ! $name || ! $url || ! is_child_theme() ) {
 		return null;
 	}

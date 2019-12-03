@@ -209,6 +209,37 @@ function genesis_singular_image_visible_body_class( array $classes ) {
 
 }
 
+add_filter( 'body_class', 'genesis_footer_widgets_hidden_body_class' );
+/**
+ * Adds `genesis-footer-widgets-hidden` and genesis-footer-widgets-visible` body classes if footer widgets
+ * are supported by the child theme and the Footer Widgets Panel is available in the Genesis Sidebar.
+ *
+ * @since 3.2.0
+ *
+ * @param array $classes Existing body classes.
+ * @return array Amended body classes.
+ */
+function genesis_footer_widgets_hidden_body_class( array $classes ) {
+
+	$footer_widgets                = get_theme_support( 'genesis-footer-widgets' );
+	$footer_widgets_toggle_enabled = apply_filters( 'genesis_footer_widgets_toggle_enabled', true );
+
+	// Return if theme does not support footer widgets or the Footer Widgets sidebar panel is disabled.
+	if ( ! $footer_widgets || ! isset( $footer_widgets[0] ) || ! is_numeric( $footer_widgets[0] ) || ! $footer_widgets_toggle_enabled ) {
+		return $classes;
+	}
+
+	if ( ! is_active_sidebar( 'footer-1' ) || genesis_footer_widgets_hidden_on_current_page() ) {
+		$classes[] = 'genesis-footer-widgets-hidden';
+		return $classes;
+	}
+
+	$classes[] = 'genesis-footer-widgets-visible';
+
+	return $classes;
+
+}
+
 add_filter( 'body_class', 'genesis_archive_no_results_body_class' );
 /**
  * Add archive-no-results body class on empty archive pages.

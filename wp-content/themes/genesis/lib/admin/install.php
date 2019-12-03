@@ -41,6 +41,8 @@ function insert_default_settings() {
 			'breadcrumb_attachment'     => 0,
 			'comments_pages'            => 0,
 			'comments_posts'            => 1,
+			'entry_meta_before_content' => '[post_date] ' . __( 'by', 'genesis' ) . ' [post_author_posts_link] [post_comments] [post_edit]',
+			'entry_meta_after_content'  => '[post_categories] [post_tags]',
 			'trackbacks_pages'          => 0,
 			'trackbacks_posts'          => 1,
 			'content_archive'           => 'full',

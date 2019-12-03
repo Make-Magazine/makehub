@@ -20,6 +20,24 @@ namespace StudioPress\Genesis\Upgrade;
  */
 class Upgrade_DB_3100 implements Upgrade_DB_Interface {
 	/**
+	 * The Genesis Simple Edits option key constant value.
+	 *
+	 * @var string $gse_settings_field
+	 *
+	 * @since 3.2.0
+	 */
+	public $gse_settings_field;
+
+	/**
+	 * Constructor.
+	 *
+	 * @since 3.2.0
+	 */
+	public function __construct() {
+		$this->gse_settings_field = defined( 'GSE_SETTINGS_FIELD' ) ? GSE_SETTINGS_FIELD : null;
+	}
+
+	/**
 	 * Upgrade method.
 	 *
 	 * @since 3.1.0
@@ -36,7 +54,7 @@ class Upgrade_DB_3100 implements Upgrade_DB_Interface {
 	 */
 	public function create_footer_setting() {
 		$footer_text_default   = sprintf( '[footer_copyright before="%s "] · [footer_childtheme_link before="" after=" %s"] [footer_genesis_link url="https://www.studiopress.com/" before=""] · [footer_wordpress_link] · [footer_loginout]', __( 'Copyright', 'genesis' ), __( 'on', 'genesis' ) );
-		$old_footer_creds_text = defined( 'GSE_SETTINGS_FIELD' ) ? genesis_get_option( 'footer_creds_text', GSE_SETTINGS_FIELD ) : apply_filters( 'genesis_footer_creds_text', null );
+		$old_footer_creds_text = is_null( $this->gse_settings_field ) ? apply_filters( 'genesis_footer_creds_text', null ) : genesis_get_option( 'footer_creds_text', $this->gse_settings_field );
 
 		genesis_update_settings(
 			[

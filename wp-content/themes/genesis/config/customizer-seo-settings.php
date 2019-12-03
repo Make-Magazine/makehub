@@ -27,7 +27,7 @@ return [
 		'control_prefix'  => 'genesis-seo',
 		'theme_supports'  => 'genesis-customizer-seo-settings',
 		'sections'        => [
-			'genesis_seo_doctitle'  => [
+			'genesis_seo_doctitle'   => [
 				'title'    => __( 'Document Title', 'genesis' ),
 				'panel'    => 'genesis-seo',
 				'controls' => [
@@ -63,7 +63,7 @@ return [
 					],
 				],
 			],
-			'genesis_seo_homepage'  => [
+			'genesis_seo_homepage'   => [
 				'title'    => __( 'Homepage', 'genesis' ),
 				'panel'    => 'genesis-seo',
 				'controls' => [
@@ -141,7 +141,7 @@ return [
 					],
 				],
 			],
-			'genesis_seo_dochead'   => [
+			'genesis_seo_dochead'    => [
 				'title'       => __( 'Document Head', 'genesis' ),
 				'description' => __( 'By default, WordPress places several tags in your document title. Most of these tags are completely unnecessary, and provide no SEO value whatsoever; they just make your site slower to load. Choose which tags you would like included in your document title. If you do not know what something is, leave it unchecked.', 'genesis' ),
 				'panel'       => 'genesis-seo',
@@ -172,7 +172,7 @@ return [
 					],
 				],
 			],
-			'genesis_seo_indexing'  => [
+			'genesis_seo_indexing'   => [
 				'title'       => __( 'Indexing', 'genesis' ),
 				'description' => __( 'Apply noindex to the archive pages below.', 'genesis' ),
 				'panel'       => 'genesis-seo',
@@ -219,7 +219,7 @@ return [
 					],
 				],
 			],
-			'genesis_seo_archiving' => [
+			'genesis_seo_archiving'  => [
 				'title'       => __( 'Archiving', 'genesis' ),
 				'description' => __( 'Apply noarchive to the pages below.', 'genesis' ),
 				'panel'       => 'genesis-seo',
@@ -267,6 +267,22 @@ return [
 					'noarchive_search_archive' => [
 						'label'    => __( 'Search Results', 'genesis' ),
 						'section'  => 'genesis_seo_archiving',
+						'type'     => 'checkbox',
+						'settings' => [
+							'default' => 0,
+						],
+					],
+				],
+			],
+			'genesis_seo_open_graph' => [
+				'title'           => __( 'Open Graph', 'genesis' ),
+				'description'     => __( 'Enable Open Graph to output tags that help social networks display images and page information when sharing your content.', 'genesis' ),
+				'active_callback' => 'genesis_open_graph_available',
+				'panel'           => 'genesis-seo',
+				'controls'        => [
+					'open_graph' => [
+						'label'    => __( 'Enable Open Graph', 'genesis' ),
+						'section'  => 'genesis_seo_open_graph',
 						'type'     => 'checkbox',
 						'settings' => [
 							'default' => 0,

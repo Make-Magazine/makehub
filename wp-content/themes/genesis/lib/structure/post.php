@@ -343,9 +343,10 @@ function genesis_post_info() {
 		return;
 	}
 
-	$filtered = apply_filters( 'genesis_post_info', '[post_date] ' . __( 'by', 'genesis' ) . ' [post_author_posts_link] [post_comments] [post_edit]' );
+	$post_info = wp_kses_post( genesis_get_option( 'entry_meta_before_content' ) );
+	$filtered  = apply_filters( 'genesis_post_info', $post_info );
 
-	if ( false === trim( $filtered ) ) {
+	if ( '' === trim( $filtered ) ) {
 		return;
 	}
 
@@ -543,7 +544,7 @@ function genesis_do_post_content_nav() {
 					'echo'    => false,
 				]
 			),
-			'link_before' => genesis_a11y( 'screen-reader-text' ) ? '<span class="screen-reader-text">' . __( 'Page ', 'genesis' ) . '</span>' : '',
+			'link_before' => genesis_a11y() ? '<span class="screen-reader-text">' . __( 'Page ', 'genesis' ) . '</span>' : '',
 		]
 	);
 
@@ -654,9 +655,10 @@ function genesis_post_meta() {
 		return;
 	}
 
-	$filtered = apply_filters( 'genesis_post_meta', '[post_categories] [post_tags]' );
+	$post_meta = wp_kses_post( genesis_get_option( 'entry_meta_after_content' ) );
+	$filtered  = apply_filters( 'genesis_post_meta', $post_meta );
 
-	if ( false === trim( $filtered ) ) {
+	if ( '' === trim( $filtered ) ) {
 		return;
 	}
 
@@ -961,14 +963,21 @@ function genesis_numeric_posts_nav() {
 		]
 	);
 
-	$before_number = genesis_a11y( 'screen-reader-text' ) ? '<span class="screen-reader-text">' . __( 'Page ', 'genesis' ) . '</span>' : '';
+	$before_number = genesis_a11y() ? '<span class="screen-reader-text">' . __( 'Go to page', 'genesis' ) . '</span>' : '';
 
-	echo '<ul>';
+	if ( genesis_a11y() ) {
+		printf( '<ul role="navigation" aria-label="%s">', esc_attr__( 'Pagination', 'genesis' ) );
+	} else {
+		echo '<ul>';
+	}
 
 	// Previous Post Link.
 	if ( get_previous_posts_link() ) {
+		$ally_label = __( '<span class="screen-reader-text">Go to</span> Previous Page', 'genesis' );
+		$label      = genesis_a11y() ? $ally_label : __( 'Previous Page', 'genesis' );
+		$link       = get_previous_posts_link( apply_filters( 'genesis_prev_link_text', '&#x000AB; ' . $label ) );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is hardcoded and safe, not set via input.
-		printf( '<li class="pagination-previous">%s</li>' . "\n", get_previous_posts_link( apply_filters( 'genesis_prev_link_text', '&#x000AB; ' . __( 'Previous Page', 'genesis' ) ) ) );
+		printf( '<li class="pagination-previous">%s</li>' . "\n", $link );
 	}
 
 	// Link to first page, plus ellipses if necessary.
@@ -976,10 +985,13 @@ function genesis_numeric_posts_nav() {
 		$class = 1 === $paged ? ' class="active"' : '';
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is known to be safe, not set via input.
-		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( 1 ), $before_number . '1' );
+		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( 1 ), trim( $before_number . ' 1' ) );
 
 		if ( ! in_array( 2, $links, true ) ) {
-			echo '<li class="pagination-omission">&#x02026;</li>' . "\n";
+			$a11y_label = sprintf( '<span class="screen-reader-text">%s</span> &#x02026;', __( 'Interim pages omitted', 'genesis' ) );
+			$label      = genesis_a11y() ? $a11y_label : '&#x02026;';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is known to be safe, not set via input.
+			printf( '<li class="pagination-omission">%s</li> ' . "\n", $label );
 		}
 	}
 
@@ -1001,7 +1013,7 @@ function genesis_numeric_posts_nav() {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
 			$aria,
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
-			$before_number . $link
+			trim( $before_number . ' ' . $link )
 		);
 	}
 
@@ -1009,19 +1021,25 @@ function genesis_numeric_posts_nav() {
 	if ( ! in_array( $max, $links, true ) ) {
 
 		if ( ! in_array( $max - 1, $links, true ) ) {
-			echo '<li class="pagination-omission">&#x02026;</li>' . "\n";
+			$a11y_label = sprintf( '<span class="screen-reader-text">%s</span> &#x02026;', __( 'Interim pages omitted', 'genesis' ) );
+			$label      = genesis_a11y() ? $a11y_label : '&#x02026;';
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is known to be safe, not set via input.
+			printf( '<li class="pagination-omission">%s</li> ' . "\n", $label );
 		}
 
 		$class = $paged === $max ? ' class="active"' : '';
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is safe, not set via input.
-		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( $max ), $before_number . $max );
+		printf( '<li%s><a href="%s">%s</a></li>' . "\n", $class, get_pagenum_link( $max ), trim( $before_number . ' ' . $max ) );
 
 	}
 
 	// Next Post Link.
 	if ( get_next_posts_link() ) {
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_next_posts_link () will return markup
-		printf( '<li class="pagination-next">%s</li>' . "\n", get_next_posts_link( apply_filters( 'genesis_next_link_text', __( 'Next Page', 'genesis' ) . ' &#x000BB;' ) ) );
+		$ally_label = __( '<span class="screen-reader-text">Go to</span> Next Page', 'genesis' );
+		$label      = genesis_a11y() ? $ally_label : __( 'Next Page', 'genesis' );
+		$link       = get_next_posts_link( apply_filters( 'genesis_next_link_text', $label . ' &#x000BB;' ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Value is hardcoded and safe, not set via input.
+		printf( '<li class="pagination-next">%s</li>' . "\n", $link );
 	}
 
 	echo '</ul>';
