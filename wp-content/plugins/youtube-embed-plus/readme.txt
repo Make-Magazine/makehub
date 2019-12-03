@@ -3,8 +3,8 @@ Contributors: embedplus
 Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
 Tags: youtube gallery, video gallery, youtube channel, youtube live, live stream
 Requires at least: 4.0
-Tested up to: 5.2
-Stable tag: 13.1.2.1
+Tested up to: 5.3
+Stable tag: 13.1.2.4
 License: GPLv3 or later
 
 YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, or YouTube.com live stream (with GDPR options)
@@ -13,7 +13,7 @@ YouTube Embed WordPress Plugin. Embed a responsive video, YouTube channel galler
 
 **Your WordPress YouTube embed, YouTube gallery (channel and playlist), and even YouTube live stream can be customized in a wide variety of ways with this plugin. Here are a few recently added features:**
 
-* Compatible with the WordPress 5.0 Gutenberg block editor (it also stays backwards-compatible with the classic editor). Both the Gutenberg block selector and the Gutenberg classic block will show the YouTube wizard button.  For the Gutenberg block selector, click on the (+) sign for the block editor list. The YouTube Wizard block is located under the "Embeds" category (make sure you choose "YouTube **Wizard**"). See more on [how to embed a YouTube video, gallery, or livestream with the WordPress Gutenberg block editor here >>](https://www.embedplus.com/embed-youtube-video-gallery-livestream-wordpress-gutenberg-block-editor.aspx)
+* Compatible with the WordPress 5.0+ Gutenberg block editor (it also stays backwards-compatible with the classic editor). Both the Gutenberg block selector and the Gutenberg classic block will show the YouTube wizard button.  For the Gutenberg block selector, click on the (+) sign for the block editor list. The YouTube Wizard block is located under the "Embeds" category (make sure you choose "YouTube **Wizard**"). See more on [how to embed a YouTube video, gallery, or livestream with the WordPress Gutenberg block editor here >>](https://www.embedplus.com/embed-youtube-video-gallery-livestream-wordpress-gutenberg-block-editor.aspx)
 * Privacy and Consent - Improved privacy and GDPR compliance options like YouTube no cookie, YouTube API restrictions, and a customizable GDPR consent message
 * YouTube gallery capability (channel and playlist) – The ability to make playlist and channel embeds have a gallery layout. By default, the plugin can generate a grid-based [responsive playlist or channel gallery >>](https://www.embedplus.com/responsive-youtube-playlist-channel-gallery-for-wordpress.aspx). Your visitors can browse through pages of video thumbnails and choose from videos that are pulled from an entire YouTube channel or playlist.
 * YouTube gallery auto continuous play - embed a playlist or channel gallery and allow it to play one video after the next without requiring viewers to click a thumbnail
@@ -146,6 +146,19 @@ You can also start and end each individual video at particular times. Like the a
 9. YouTube Embed Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 13.1.2.4 =
+* Pagination and autonext allow the current video to play
+* Pagination on mobile fix
+* vi deprecation announcement
+
+= Embed Plus for YouTube WordPress Plugin 13.1.2.3 =
+* gallery thumbnail mobile tap/scroll fix
+
+= Embed Plus for YouTube WordPress Plugin 13.1.2.2 =
+* Wizard open/close fix
+* iOS gallery thumbnail click fix
+* class-oembed deprecation fix
 
 = Embed Plus for YouTube WordPress Plugin 13.1.2.1 =
 * Compatibility with legacy versions of PHP

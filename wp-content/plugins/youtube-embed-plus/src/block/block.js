@@ -69,7 +69,7 @@ registerBlockType("epyt/youtube", {
 	),
 	category: "embed", // Block category — Group blocks together based on common traits E.g. common, formatting, layout widgets, embed.
 	keywords: [__("gallery"), __("live"), __("video")], // playlist
-	description: __( 'Embed a video, playlist, channel, gallery, or live stream.' ),
+	description: __('Embed a video, playlist, channel, gallery, or live stream.'),
 	attributes: {
 		shortcode: {
 			type: "string",
@@ -132,7 +132,7 @@ registerBlockType("epyt/youtube", {
 					this.hideModal(); // close modal
 					this.gbPreviewSetup("onMessage");
 				}
-			} catch (err) {}
+			} catch (err) { }
 		};
 
 		gbPreviewSetup = debounce(myContext => {
@@ -198,14 +198,15 @@ registerBlockType("epyt/youtube", {
 						</div>
 						<div className="components-placeholder__fieldset">
 							<div>
-								<Button isDefault onClick={this.showModal}>
+								<Button isDefault isLarge onClick={ this.showModal }>
 									Open Wizard
 								</Button>
 								{this.state.show ? (
 									<Modal
 										title="YouTube Wizard"
 										className="epytblock epytblock__modal"
-										onRequestClose={this.hideModal}
+										onRequestClose={ this.hideModal }
+										shouldCloseOnClickOutside={false}
 									>
 										<iframe
 											title="YouTube Wizard"
@@ -225,6 +226,7 @@ registerBlockType("epyt/youtube", {
 		}
 	},
 
+	/**/
 	/**
 	 * The save function defines the way in which the different attributes should be combined
 	 * into the final markup, which is then serialized by Gutenberg into post_content.
@@ -233,7 +235,7 @@ registerBlockType("epyt/youtube", {
 	 *
 	 * @link https://wordpress.org/gutenberg/handbook/block-api/block-edit-save/
 	 */
-	save: function(props) {
+	save: function (props) {
 		return <Fragment>{props.attributes.shortcode}</Fragment>;
 	}
 });

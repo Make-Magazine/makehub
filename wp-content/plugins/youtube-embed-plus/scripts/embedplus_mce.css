@@ -72,7 +72,6 @@ body #TB_window.epyt-thickbox {
     background-origin: padding-box;
     background-size: auto;
     border-radius: 3px;
-    border: 1px solid #bbbbbb;
     box-sizing: border-box;
     /*color: #333;*/
     cursor: pointer;
@@ -93,10 +92,7 @@ body #TB_window.epyt-thickbox {
 
 #dashboard_right_now .page-count a.ytprefs_glance_button:before, #dashboard_right_now .page-count span.ytprefs_glance_button:before
 {
-    content: '';
-    width: 20px;
-    height: 20px;
-    background:transparent url('../images/youtubeicon16off.png') no-repeat scroll 0px 1px;
+   content: "\f236";
 }
 
 /* menu button */

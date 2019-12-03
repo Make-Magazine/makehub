@@ -46,7 +46,7 @@ input.ui-widget[type=text] {
     margin: 0;
     padding: .4em 1em;
     width: 450px;
-
+    line-height: 2;
 }
 
 .txt-button-align input.ui-widget[type=text],
@@ -57,6 +57,7 @@ input.ui-widget[type=text] {
 
 #epyt_wiz_wrap .ui-button {
     font-weight: bold;
+    line-height: 2;
 }
 
 #epyt_wiz_wrap .ui-icon {

@@ -30,6 +30,9 @@
 </div>
 <div class="vi-demo-col-content">
     <div class="vi-demo">
+        <div class="login-expire">
+            Note: The vi feature is being deprecated in the next version.<br>Please contact ext@embedplus.com for questions.
+        </div>
         <?php
         $multiCatWarning = '';
         if (!empty(self::$alloptions[self::$opt_vi_js_settings]['iabCategory']))
@@ -81,11 +84,11 @@
                     <h2>Earn 10x higher CPMs</h2>
                     <p class="description">Where should we send your welcome and revenue info?</p>
                     <p>
-                        <input class="textinput regular-text ytvi-register-email" type="text" placeholder="Your email" />
+                        <input disabled class="textinput regular-text ytvi-register-email" type="text" placeholder="Your email" />
                     </p>
                     <p class="description">
                         <label>
-                            <input type="checkbox" class="ytvi-step-1--confirm"/>
+                            <input disabled type="checkbox" class="ytvi-step-1--confirm"/>
                             I understand that vi will create my account using my email, my domain, and EmbedPlus as the referral.
                         </label>
                     </p>
@@ -162,21 +165,17 @@
     </div>
 </div>
 <?php
-if (!self::vi_cover_prompt_yes())
+if (true) //!self::vi_cover_prompt_yes())
 {
     ?>
     <div class="clearboth vi-cover-clear"></div>
     <div class="vi-cover-prompt">
         <h1>
-            Hey! We have a new optional feature to help you earn income by embedding relevant video content that offers you up to 10x higher CPMs than display advertising. 
-            <br>
-            <br>
-            Are you interested in learning more about this free feature?
+            Note: The vi feature is being deprecated in the next version.<br>Please contact ext@embedplus.com for questions.
         </h1>
         <p class="vi-cover-prompt-buttons">
-            <button type="button" class="button-primary vi-cover-prompt-yes">Yes, tell me more.</button>
-            <button type="button" class="button-secondary vi-cover-prompt-maybe">Maybe later.</button>
-            <button type="button" class="button-secondary vi-cover-prompt-no">No, hide this feature.</button>
+            <button type="button" class="button-primary vi-cover-prompt-yes">Close</button>            
+            <button type="button" class="button-secondary vi-cover-prompt-no">Hide this feature</button>
         </p>
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" class="viblurfilter-svg">
         <defs>
