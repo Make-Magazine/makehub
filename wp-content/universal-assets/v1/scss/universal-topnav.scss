@@ -51,6 +51,11 @@ header.universal-nav {
 					margin-right: -10px;
 				}
 			}
+			&.nav-community {
+				@media screen and (min-width: 992px) and (max-width: 1199px) {
+					margin-left: -15px;
+				}
+			}
 			a {
 				font-size: 16px;
 				padding: 0 23px;
@@ -251,6 +256,7 @@ a#LogoutBtn {
 		a#LogoutBtn {
 			float: right;
 			margin: 15px;
+			margin-right: 0px;
 			text-transform: uppercase;
 		}
   }
