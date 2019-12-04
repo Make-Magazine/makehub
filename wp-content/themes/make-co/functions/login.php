@@ -1,9 +1,8 @@
 <?php 
-
 /****************************************************
 LOGIN FUNCTIONS 
 ****************************************************/
-
+/*
 // customize the wp-login page
 function custom_login_stylesheets() {
     wp_enqueue_style( 'custom-login', get_stylesheet_directory_uri() . '/css/style-login.css' );
@@ -60,11 +59,12 @@ function no_access_modal() {
 if(isset($_GET['access']) && $_GET['access'] === "denied") {
 	add_action( 'wp_footer', 'no_access_modal' );
 }
-
+*/
 /**
 * Remove the register link from the wp-login.php script
 * https://wphelper.site/remove-register-link-wordpress-login/
 */
+/*
 add_filter('option_users_can_register', function($value) {
     $script = basename(parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH));
  
@@ -73,3 +73,5 @@ add_filter('option_users_can_register', function($value) {
     }
     return $value;
 });
+ * 
+ */
