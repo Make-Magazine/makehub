@@ -9,17 +9,19 @@
 		/**
 		 * Get Edit Form.
 		 **/
-		$( document ).on( 'click', '.yz-edit-activity', function( e ) {
+		$( document ).on( 'click', '.yz-edit-activity, .yz-edit-post', function( e ) {
 
 			e.preventDefault();
 			
 			// Check if there's no other edit button is clicked on the same time.
-			if ( $( '.yz-edit-activity.loading' )[0] ) {
+			if ( $( '.yz-edit-activity.loading,.yz-edit-post.loading' )[0] ) {
 				return;
 			}
 
 			// Init Vars.
-			var $link = $( this ), $form, $form_wrapper, activity_type = $link.data( 'activity-type' );
+			var $link = $( this ), $form, $form_wrapper,
+			activity_id = $link.parents( 'li' ).attr('id').split('-')[1],
+			activity_type = $link.attr( 'data-activity-type' );
 
 			if ( $link.hasClass( 'loading' ) ) {
 				return;
@@ -38,13 +40,27 @@
 			var data = {
 				'action': 'yz_get_edit_activity_form',
 				'yz_edit_activity_nonce': Youzer.security_nonce,
-				'activity_id': $link.data( 'activity-id' ),
+				'activity_id': activity_id,
 				'activity_type': activity_type,
 			};
 
+// 			$.ajax({
+//   url:ajaxurl,
+//   type:"POST",
+//   data:data,
+//   contentType:"application/json; charset=utf-8",
+//   dataType:"json",
+//   success: function(response){
+  							
+// 				// Get Response.
+// 				response = $.parseJSON( response );
+// 				console.log( response );
+
+//   }
+// });
 			// Process Verification.
 			$.post( Youzer.ajax_url, data, function( response ) {
-					
+						
 				// Get Response.
 				response = $.parseJSON( response );
 
@@ -132,23 +148,71 @@
 				$form.find( 'textarea[name="status"]' ).val( response.content );
 				
 			    // Activate Emojis in Posts.
-			    if ( typeof Yz_Emoji !== 'undefined' ) {
-
+			    // if ( response.posts_emojis == 'on' || response.comments_emojis == 'on' ) {
 				    if (  
-				    	 ( activity_type == 'activity_comment' && Yz_Emoji.comments_visibility == 'on' )
+				    	 ( activity_type == 'activity_comment' && response.comments_emojis == 'on' )
 				    	||
-				    	( activity_type != 'activity_comment' && Yz_Emoji.posts_visibility == 'on' ) 
+				    	( activity_type != 'activity_comment' && response.posts_emojis == 'on' ) 
 				    	) {
-						$.yz_init_wall_textarea_emojionearea( $form.find( '.yz-wall-textarea' ) );
-						$form.find( '.emojionearea-editor' ).html( response.content );
+
+    				if ( ! jQuery().emojioneArea ) {
+				        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/emojionearea.min.js' } ).appendTo( 'head' );
+				        $( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/emojionearea.min.css' } ).appendTo( 'head' );
+				        // }
+					} else {
+						$form.find( '.yz-wall-textarea' ).emojioneArea( {
+			                pickerPosition: 'bottom',
+			                autocomplete: true,
+			                saveEmojisAs : 'image',
+			                events: {
+			                ready: function () {
+			                  // form.find( '.emojionearea-button-open' ).click();
+			                  this.editor.textcomplete([{
+			                      id: 'yz_mentions',
+			                      match: /\B@([\-\d\w]*)$/,
+			                      search: function ( term, callback ) {
+			                          var mentions = bp.mentions.users;
+			                          callback( $.map(mentions, function ( mention ) {
+			                          return mention.ID.indexOf( term ) === 0 || mention.name.indexOf( term ) === 0 ? mention : null;
+			                      }));
+			                      },
+			                      template: function ( mention ) {
+			                          return '<img src="' + mention.image + '" /><span class="username">@' + mention.ID + '</span><small>' +mention.name+ '</small>';
+			                      },
+			                      replace: function ( mention ) {
+			                          return '@' + mention.ID + '&nbsp;';
+			                      },
+			                      cache: true,
+			                      index: 1
+			                   }]);
+			                }     
+			              }
+            			} );
+						// $.yz_init_wall_textarea_emojionearea( $form.find( '.yz-wall-textarea' ) );
+						// $form.find( '.emojionearea-editor' ).html( response.content );
 					}
+			    } else {
+			    	$form.find( '.yz-load-emojis' ).remove();
 			    }
+
+			  //   // Activate Emojis in Posts.
+			  //   if ( typeof Yz_Emoji !== 'undefined' ) {
+
+				 //    if (  
+				 //    	 ( activity_type == 'activity_comment' && Yz_Emoji.comments_visibility == 'on' )
+				 //    	||
+				 //    	( activity_type != 'activity_comment' && Yz_Emoji.posts_visibility == 'on' ) 
+				 //    	) {
+					// 	$.yz_init_wall_textarea_emojionearea( $form.find( '.yz-wall-textarea' ) );
+					// 	$form.find( '.emojionearea-editor' ).html( response.content );
+					// }
+			  //   }
 
 				// Update Form Submit Button.
 				$form.find( '.yz-wall-post' ).attr( {
 					'class': 'yz-update-post',
-					'data-activity-type': $link.data( 'activity-type' ),
-					'data-activity-id': $link.data( 'activity-id' ),
+					'data-activity-type': activity_type,
+					'data-activity-id': activity_id,
 				} ).text( Youzer.save_changes );
 
 				// Set Field Values.
@@ -207,7 +271,7 @@
 					button = $( this ),
 					button_title = $( this ).text(),
 					$form   = $( this ).closest( '#yz-wall-form' ),
-					target = current_edit_button.parent().hasClass( 'activity-meta' ) ? 'activity' : 'comment',
+					target = current_edit_button.parent().hasClass( 'activity-meta' ) || current_edit_button.parent().hasClass( 'yz-activity-tools' )  ? 'activity' : 'comment',
 					inputs = {}, post_data, object;
 
 			if ( button.hasClass( 'loading' ) ) {
@@ -245,7 +309,8 @@
 					'content': $form.find( '.yz-wall-textarea' ).val(),
 					'target': target
 					}, inputs );
-				
+
+
 			$.ajax({
 				type: 'POST',
 				url : ajaxurl,
@@ -276,6 +341,7 @@
 				
 					}
 
+				// console.log ( res );
 	    			// Update Comment.
 					if ( target == 'comment' && res.content ) {
 						// Display Live Edit.

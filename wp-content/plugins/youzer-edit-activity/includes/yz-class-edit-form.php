@@ -24,6 +24,33 @@ class Youzer_Activity_Edit_Form {
 			add_action( 'yz_activity_scripts', array( $this, 'assets' ) );
 		}
 		
+		// Add Edit Post Tool
+		add_filter( 'yz_activity_tools', array( $this, 'edit_activity_tool' ), 20, 2 );
+
+	}
+
+
+	/**
+	 * Add Delete Activity Tool.
+	 */
+	function edit_activity_tool( $tools, $post_id ) {
+		
+		$activity = new BP_Activity_Activity( $post_id );
+
+		if ( ! yzea_is_activity_editable( $activity ) ) {
+			return $tools;
+		}
+
+		// Get Tool Data.
+		$tools[] = array(
+			'icon' => 'fas fa-edit',
+			'title' =>  __( 'Edit', 'youzer' ),
+			'action' => 'edit-activity',
+			'class' => array( 'yz-edit-tool', 'yz-edit-post' ),
+			'attributes' => array( 'activity-type' => $activity->type )
+		);
+
+		return $tools;
 	}
 
 	/**
@@ -133,8 +160,15 @@ class Youzer_Activity_Edit_Form {
 		// Get Activity.
 		$activity = new BP_Activity_Activity( $activity_id );
 
+		// Replace Emojis
+		$activity->content = $this->replace_emojis_with_code( $activity->content );
+
+		// Get Emojis Values.
+        $retval['posts_emojis'] = yz_options( 'yz_enable_posts_emoji' );
+        $retval['comments_emojis'] = yz_options( 'yz_enable_comments_emoji' );
+
 		// Get Activity Content.
-		$retval['content'] = wp_strip_all_tags( $activity->content );
+		$retval['content'] = strip_tags( stripslashes_deep( $activity->content ), '<img>' );
 
 		// Get Activity Meta.
 		$retval['meta'] = $this->get_activity_meta( $activity_id, $activity->type );
@@ -159,6 +193,30 @@ class Youzer_Activity_Edit_Form {
 		return $retval;
 	}
 	
+	/**
+	 * Replace Emojis with their code.
+	 */
+	function replace_emojis_with_code( $content ) {
+
+		$dom = new DOMDocument();
+		
+		// since you have a fragment, wrap it in a <body>
+		$dom->loadHTML( '<?xml encoding="utf-8" ?><body>'.$content . '</body>' );
+		
+		$links = $dom->getElementsByTagName( 'img' );
+		
+		while ( $link = $links[0] ) {
+			$link->parentNode->insertBefore( new DOMText( $link->getAttribute( 'alt' ) ) , $link );
+			$link->parentNode->removeChild($link);
+		}
+
+		$result = $dom->saveHTML( $dom->getElementsByTagName( 'body' )[0] );
+
+		$output = substr( $result, strlen( '<body>' ), -strlen( '</body>' ) );
+
+		return $output;
+	}
+
 	/**
 	 * Get Activity Mood.
 	 */
@@ -418,6 +476,10 @@ class Youzer_Activity_Edit_Form {
 	 */
 	public function add_edit_activity_button() {
 
+		if ( ! apply_filters( 'yz_show_activity_meta_edit_button', false ) ) {
+			return;
+		}
+
 		global $activities_template;
 
 		// Get Activity.
@@ -510,6 +572,9 @@ class Youzer_Activity_Edit_Form {
 		// Init Wall Form.
 		$wall_form = new Youzer_Wall_Form();
 
+		// Validate Form.
+		$wall_form->validate( $_POST, true );
+
 		// Save Attachments
 		if ( yzea_is_user_can_edit_attachments() ) {
     		
@@ -517,7 +582,7 @@ class Youzer_Activity_Edit_Form {
     		$attachments = new Youzer_Wall_Attachments();
 			$attachments->save_attachments( $activity_id, $_POST );
 			
-			if ( isset(  $_POST['delete_attachments'] ) ) {
+			if ( isset( $_POST['delete_attachments'] ) ) {
 				// Delete Deleted Attachments.
 				$attachments->delete_attachments_by_media_id( $_POST['delete_attachments'] );
 			}
@@ -526,9 +591,6 @@ class Youzer_Activity_Edit_Form {
 			add_filter( 'yz_validate_wall_form_attachments', '__return_false' );
 			add_filter( 'yz_validate_wall_form_slideshow', '__return_false' );
 		}
-
-		// Validate Form.
-		$wall_form->validate( $_POST, true );
 
 		// Save Post Meta
         $activity->content = apply_filters( 'yzea_activity_content', $args['content'], $activity_id );

@@ -111,7 +111,6 @@ function yzea_is_activity_editable( $activity = null ) {
 		$component = $activity->component;
 	}
 
-
 	$editable = false;
 
 	if ( ! yzea_is_moderator() ) {

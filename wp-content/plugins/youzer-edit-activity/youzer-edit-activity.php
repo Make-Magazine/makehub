@@ -7,9 +7,9 @@
  * Author URI:  https://www.kainelabs.com/ 
  * Text Domain: youzer-edit-activity
  * Domain Path: /languages/
- * Version:     1.0.3
+ * Version:     1.0.4
  */
-// return;
+
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
@@ -68,7 +68,7 @@ class Youzer_Edit_Activity {
 		define( 'YZEA_URL', plugin_dir_url( __FILE__ ) );
 
 		// Plugin Version.
-		define( 'YZEA_VERSION', '1.0.3' );
+		define( 'YZEA_VERSION', '1.0.4' );
 
 	}
 
