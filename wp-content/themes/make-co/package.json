@@ -1,6 +1,6 @@
 {
    "name": "Make-Co",
-   "version": "1.0.31",
+   "version": "1.0.32",
    "author": "Maker Media",
    "license": "UNLICENSED",
    "private": true,
@@ -21,11 +21,11 @@
       "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"
    },
    "devDependencies": {
-      "node-sass": "^4.11.0",
+      "node-sass": "^4.13.0",
       "npm-run-all": "^4.1.5",
       "onchange": "^5.2.0",
-      "replace-in-file": "^3.4.2",
-      "uglify-js": "^3.4.9"
+      "replace-in-file": "^3.4.4",
+      "uglify-js": "^3.7.1"
    },
    "dependencies": {}
 }
