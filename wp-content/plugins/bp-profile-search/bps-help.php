@@ -6,9 +6,9 @@ function bps_help ()
 
 	$title_00 = __('Display a Form', 'bp-profile-search');
 	$content_00 = '
-<p>'. __('After you create and configure your search form, you can display it:', 'bp-profile-search'). '</p>
+<p>'. __('After you build your search form, you can display it:', 'bp-profile-search'). '</p>
 <ul>
-<li>'. sprintf (__('In its Members Directory page, using the option %s', 'bp-profile-search'), '<em>'. __('Add to Directory', 'bp-profile-search'). '</em>'). '</li>
+<li>'. sprintf (__('In its target directory, using the option %s', 'bp-profile-search'), '<em>'. __('Add Form to Directory', 'bp-profile-search'). '</em>'). '</li>
 <li>'. sprintf (__('In a sidebar or widget area, using the widget %s', 'bp-profile-search'), '<em>'. __('Profile Search', 'bp-profile-search'). '</em>'). '</li>
 <li>'. sprintf (__('In a post or page, using the shortcode: %s (*)', 'bp-profile-search'), "<br><strong>[bps_form id=form_id]</strong>"). '</li>
 <li>'. sprintf (__('Anywhere in your theme, using the PHP code: %s (*)', 'bp-profile-search'), "<br><strong>&lt;?php do_action ('bps_display_form', form_id); ?&gt;</strong>"). '</li>
@@ -37,33 +37,33 @@ function bps_help ()
 	$title_03 = __('Form Settings', 'bp-profile-search');
 	$content_03 = '
 <p>
+<strong>'. __('Target Directory', 'bp-profile-search'). '</strong><br>'.
+__('Select the member directory that will be filtered using this search form. You can choose:', 'bp-profile-search'). '
+</p>
+<ul>
+<li>'. __('The BuddyPress Members directory', 'bp-profile-search'). '</li>
+<li>'. __('One of the member directories built with this plugin', 'bp-profile-search'). '</li>
+</ul>
+<p>'. sprintf (__('You can create a member directory using the shortcode %1$s. To learn more, see the %2$s page.', 'bp-profile-search'), '<strong>[bps_directory]</strong>', '<a href="http://dontdream.it/bp-profile-search/custom-directories/" target="_blank">Custom Directories</a>'). '</p>
+<p>
+<strong>'. __('Add Form to Directory', 'bp-profile-search'). '</strong><br>'.
+__('Choose whether to display this form in its target directory.', 'bp-profile-search'). '
+</p>
+<p>
 <strong>'. __('Form Method', 'bp-profile-search'). '</strong><br>'.
 __('Select your form’s <em>method</em> attribute.', 'bp-profile-search'). '
 </p>
 <ul>
-<li>'. __('POST: the form data are not visible in the URL and it’s not possible to bookmark the results page', 'bp-profile-search'). '</li>
-<li>'. __('GET: the form data are sent as URL variables and it’s possible to bookmark the results page', 'bp-profile-search'). '</li>
-</ul>
-<p>
-<strong>'. __('Directory (Results Page)', 'bp-profile-search'). '</strong><br>'.
-__('Select the Members Directory page to be used as your form’s results page. You can choose:', 'bp-profile-search'). '
-</p>
-<ul>
-<li>'. __('The BuddyPress Members Directory page', 'bp-profile-search'). '</li>
-<li>'. __('A custom Members Directory page', 'bp-profile-search'). '</li>
-</ul>
-<p>'. sprintf (__('You can create a custom Members Directory page using the shortcode %1$s. To learn more, see the %2$s tutorial.', 'bp-profile-search'), '<strong>[bps_directory]</strong>', '<a href="http://dontdream.it/bp-profile-search/custom-directories/" target="_blank">Custom Directories</a>'). '</p>
-<p>
-<strong>'. __('Add to Directory', 'bp-profile-search'). '</strong><br>'.
-__('Choose whether to add your form to the above Members Directory page.', 'bp-profile-search'). '
-</p>';
+<li>'. __('POST: the form data are not visible in the URL and it’s not possible to bookmark the search results', 'bp-profile-search'). '</li>
+<li>'. __('GET: the form data are visible in the URL and it’s possible to bookmark the search results', 'bp-profile-search'). '</li>
+</ul>';
 
 	$title_04 = __('Persistent Search', 'bp-profile-search');
 	$content_04 = '
 <p>'. __('Enable or disable the <em>persistent search</em> feature.', 'bp-profile-search'). '</p>
 <ul>
 <li>'. __('If enabled, a search is cleared when the user hits the <em>Clear</em> button', 'bp-profile-search'). '</li>
-<li>'. __('If disabled, a search is cleared when the user hits the <em>Clear</em> button, or navigates away from the results page', 'bp-profile-search'). '</li>
+<li>'. __('If disabled, a search is cleared when the user hits the <em>Clear</em> button, or navigates away from the target directory', 'bp-profile-search'). '</li>
 </ul>
 <p>'. __('This selection applies to all your forms at once.', 'bp-profile-search'). '</p>';
 

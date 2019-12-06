@@ -1,10 +1,10 @@
 === BP Profile Search ===
 Contributors: dontdream
 Tags: buddypress, directory, members, users, profile, search, filter
-Requires at least: 4.7
-Tested up to: 5.2
-Requires PHP: 5.3
-Stable tag: 5.2.2
+Requires at least: 4.8
+Tested up to: 5.3
+Requires PHP: 5.6
+Stable tag: 5.2.3
 
 Member search and member directories for BuddyPress.
 
@@ -18,7 +18,7 @@ BP Profile Search is a member search and member directories plugin for BuddyPres
 	<li>The [bps_directory] shortcode to customize the BuddyPress Members directory, or to build additional member directories</li>
 </ul>
 
-Each search form has a <em>target directory</em>. When you run a search, the form’s target directory is searched and is also used to show the search results.
+Each search form has a <em>target directory</em>. When you run a search, the form's target directory is filtered according to your search.
 
 = Build a search form =
 
@@ -40,14 +40,14 @@ With the form builder you can:
 	<li>If in doubt, use the <em>Help</em> tab above the screen title</li>
 </ul>
 
-The form template works just like any other BuddyPress template. To override a form template, copy it to the 'buddypress/members' directory in your theme’s root, then edit the new copy according to your needs.
+The form template works just like any other BuddyPress template. To override a form template, copy it to the <em>buddypress/members</em> directory in your theme's root, then edit the new copy according to your needs.
 
 = Display a search form =
 
 After you build your search form, you can display it:
 
 <ul>
-	<li>In its target directory, using the option <em>Add to Directory</em> in the form settings</li>
+	<li>In its target directory, using the option <em>Add Form to Directory</em> in the form settings</li>
 
 	<li>In a sidebar or widget area, using the widget <em>Profile Search</em></li>
 
@@ -56,7 +56,7 @@ After you build your search form, you can display it:
 
 = Run a search =
 
-On the front-end, when you hit a form's <em>Search</em> button, BP Profile Search shows the form's target directory filtered according to your search. Both the <em>All Members</em> tab and the <em>My Friends</em> tab are filtered.
+On the front-end, when you hit the <em>Search</em> button in a form, BP Profile Search shows the form's target directory filtered according to your search. Both the <em>All Members</em> tab and the <em>My Friends</em> tab are filtered.
 
 Additionally, the plugin:
 
@@ -118,6 +118,9 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.2.3 =
+* Fixed bug preventing adding new search fields with Firefox
+* Minor changes to the form builder UI
 = 5.2.2 =
 * Improved the form builder UI
 * Added workaround to prevent conflict with *WC Vendors Marketplace*
@@ -333,7 +336,7 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 = 3.4.1 =
 * Added *selectbox* profile fields as candidates for the *Value Range Search*
 = 3.4 =
-* Added the *Value Range Search* option - thanks to Florian Shießl
+* Added the *Value Range Search* option - thanks to Florian Shie�l
 = 3.3 =
 * Added pagination for search results
 * Added searching in the *My Friends* tab of the Members directory

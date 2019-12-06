@@ -21,17 +21,30 @@ if (is_admin ())
 {
 ?>
 	<p><strong><?php _e('jQuery UI Theme', 'bp-profile-search'); ?></strong></p>
-	<select name="options[theme]">
+	<select id="ui_theme" name="options[theme]">
 	<?php foreach (bps_jquery_ui_themes() as $theme => $name) { ?>
 		<option value="<?php echo $theme; ?>" <?php selected ($options['theme'], $theme); ?>><?php echo $name; ?></option>
 	<?php } ?>
 	</select>
 
-	<p><strong><?php _e('Collapsible Form', 'bp-profile-search'); ?></strong></p>
-	<select name="options[collapsible]">
-		<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
-		<option value='No' <?php selected ($options['collapsible'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
-	</select>
+	<div id="ui_collapsible">
+		<p><strong><?php _e('Collapsible Form', 'bp-profile-search'); ?></strong></p>
+		<select name="options[collapsible]">
+			<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
+			<option value='No' <?php selected ($options['collapsible'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
+		</select>
+	</div>
+
+	<script>
+		jQuery(function ($) {
+			$('#ui_theme').change(function () {
+				if (this.value == '')
+					$('#ui_collapsible').hide('slow');
+				else
+					$('#ui_collapsible').show('slow');
+			});
+		});
+	</script>
 <?php
 	return 'end_of_options 4.9';
 }

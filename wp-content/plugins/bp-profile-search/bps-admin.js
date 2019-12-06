@@ -11,7 +11,7 @@ jQuery(function ($) {
 		var spinner = $('#bps_template .spinner');
 		var save_button = $('#publish');
 		var data = {
-			'action': 'template_options',
+			'action': 'bps_template_options',
 			'form': $('#form_id').val(),
 			'template': $('#template option:selected').val()
 		};
@@ -30,7 +30,7 @@ jQuery(function ($) {
 		var save_button = $('input[type=submit]');
 		var counter = $('#field_next').val();
 		var data = {
-			'action': 'field_selector',
+			'action': 'bps_field_selector',
 			'counter': counter
 		};
 
@@ -42,6 +42,8 @@ jQuery(function ($) {
 			$('#field_next').val(+counter+1);
 			save_button.removeAttr('disabled');
 		});
+
+		return false;
 	});
 
 	$('#field_box').on('change', 'select.bps_col2', function () {
@@ -49,7 +51,7 @@ jQuery(function ($) {
 		var save_button = $('#publish');
 		var container = $(this).parent().attr('id');
 		var data = {
-			'action': 'field_row',
+			'action': 'bps_field_row',
 			'field': this.value,
 			'container': container
 		};

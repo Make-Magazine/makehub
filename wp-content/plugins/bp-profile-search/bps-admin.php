@@ -107,29 +107,29 @@ function bps_attributes ($post)
 {
 	$options = bps_meta ($post->ID);
 ?>
-	<p><strong><?php _e('Form Method', 'bp-profile-search'); ?></strong></p>
-	<select name="options[method]" id="method">
-		<option value='POST' <?php selected ($options['method'], 'POST'); ?>><?php _e('POST', 'bp-profile-search'); ?></option>
-		<option value='GET' <?php selected ($options['method'], 'GET'); ?>><?php _e('GET', 'bp-profile-search'); ?></option>
-	</select>
-
-	<p><strong><?php _e('Directory (Results Page)', 'bp-profile-search'); ?></strong></p>
+	<p><strong><?php _e('Target Directory', 'bp-profile-search'); ?></strong></p>
 	<select name="options[action]" id="action">
 <?php
 	$dirs = bps_directories ();
 	foreach ($dirs as $dir)
 	{
 ?>
-		<option value='<?php echo esc_attr($dir->id); ?>' <?php selected ($options['action'], $dir->id); ?>><?php echo esc_html($dir->title); ?></option>
+		<option value='<?php echo $dir->id; ?>' <?php selected ($options['action'], $dir->id); ?>><?php echo esc_html($dir->title); ?></option>
 <?php
 	}
 ?>
 	</select>
 
-	<p><strong><?php _e('Add to Directory', 'bp-profile-search'); ?></strong></p>
+	<p><strong><?php _e('Add Form to Directory', 'bp-profile-search'); ?></strong></p>
 	<select name="options[directory]" id="directory">
 		<option value='Yes' <?php selected ($options['directory'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
 		<option value='No' <?php selected ($options['directory'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
+	</select>
+
+	<p><strong><?php _e('Form Method', 'bp-profile-search'); ?></strong></p>
+	<select name="options[method]" id="method">
+		<option value='POST' <?php selected ($options['method'], 'POST'); ?>><?php _e('POST', 'bp-profile-search'); ?></option>
+		<option value='GET' <?php selected ($options['method'], 'GET'); ?>><?php _e('GET', 'bp-profile-search'); ?></option>
 	</select>
 
 	<p><?php _e('Need help? Use the Help tab above the screen title.'); ?></p>
@@ -157,14 +157,14 @@ function bps_template ($post)
 <?php
 }
 
-add_action ('wp_ajax_field_selector', 'bps_ajax_field_selector');
+add_action ('wp_ajax_bps_field_selector', 'bps_ajax_field_selector');
 function bps_ajax_field_selector ()
 {
 	bps_field_selector ($_POST['counter']);
 	wp_die ();
 }
 
-add_action ('wp_ajax_field_row', 'bps_ajax_field_row');
+add_action ('wp_ajax_bps_field_row', 'bps_ajax_field_row');
 function bps_ajax_field_row ()
 {
 	$counter = str_replace ('field_div', '', $_POST['container']);
@@ -172,7 +172,7 @@ function bps_ajax_field_row ()
 	wp_die ();
 }
 
-add_action ('wp_ajax_template_options', 'bps_ajax_template_options');
+add_action ('wp_ajax_bps_template_options', 'bps_ajax_template_options');
 function bps_ajax_template_options ()
 {
 	bps_template_options ($_POST['form'], $_POST['template']);
@@ -225,8 +225,8 @@ function bps_persistent ($post)
 	$persistent = bps_get_option ('persistent', '1');
 ?>
 	<select name="options[persistent]" id="persistent">
-		<option value='1' <?php selected ($persistent, '1'); ?>><?php _e('Enabled', 'bp-profile-search'); ?></option>
-		<option value='0' <?php selected ($persistent, '0'); ?>><?php _e('Disabled', 'bp-profile-search'); ?></option>
+		<option value='1' <?php selected ($persistent, '1'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
+		<option value='0' <?php selected ($persistent, '0'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
 	</select>
 <?php
 }
