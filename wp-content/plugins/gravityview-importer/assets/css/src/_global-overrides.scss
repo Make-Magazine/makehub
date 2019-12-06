@@ -35,3 +35,8 @@ span.spinner-custom {
 	float: none;
 	margin: auto .25rem
 }
+
+// Fixes Issue #326
+:global( #gv-import-entries select ) {
+	background: transparent none;
+}

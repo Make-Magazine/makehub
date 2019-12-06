@@ -71,28 +71,28 @@ const getRegexFromFormat = ( format ) => {
 
 	switch ( format ) {
 		case 'm/d/Y':
-			parsedFormat = '%M/%D/%Y';
+			parsedFormat = '%M/%D/%YYYY';
 			break;
 		case 'd/m/Y':
-			parsedFormat = '%D/%M/%Y';
+			parsedFormat = '%D/%M/%YYYY';
 			break;
 		case 'd-m-Y':
-			parsedFormat = '%D-%M-%Y';
+			parsedFormat = '%D-%M-%YYYY';
 			break;
 		case 'd.m.Y':
-			parsedFormat = '%D\\.%M\\.%Y';
+			parsedFormat = '%D\\.%M\\.%YYYY';
 			break;
 		case 'Y/m/d':
-			parsedFormat = '%Y/%M/%D';
+			parsedFormat = '%YYYY/%M/%D';
 			break;
 		case 'Y-m-d':
-			parsedFormat = '%Y-%M-%D';
+			parsedFormat = '%YYYY-%M-%D';
 			break;
 		case 'Y.m.d':
-			parsedFormat = '%Y\\.%M\\.%D';
+			parsedFormat = '%YYYY\\.%M\\.%D';
 			break;
 		case 'Y-m-d G:i':
-			parsedFormat = '%Y-%M-%D \\d+:\\d+';
+			parsedFormat = '%YYYY-%M-%D \\d+:\\d+';
 	}
 
 	return parsedFormat
@@ -100,7 +100,8 @@ const getRegexFromFormat = ( format ) => {
 		.replace( /\~/g, '.' )
 		.replace( /%M/, '(?<month>\\d{1,2}|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)' )
 		.replace( /%D/, '(?<day>\\d{1,2})' )
-		.replace( /%Y/, '(?<year>\\d{4,})' );
+		.replace( /%YYYY/, '(?<year>\\d{4})' )
+		.replace( /%Y/, '(?<year>\\d{2}(?:\\d{2})?)' );
 };
 
 export default class DateFormatFilter extends Component {

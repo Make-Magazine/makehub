@@ -64,9 +64,9 @@ class UI {
 		$this->plugin_version = $plugin_version;
 
 		/**
-		 * @filter `gravityview-import-entries-access-capability` Filter to control plugin's minimum access rights
+		 * @filter `gravityview/import/capabilities` Filter to control plugin's minimum access rights
 		 *
-		 * @param array Array of WP caps required to view the Import Entries screen (default: `[ "manage_options", "gravityforms_import_entries" ]`)
+		 * @param  [in,out] array Array of WP caps required to view the Import Entries screen (default: `[ "manage_options", "gravityforms_import_entries" ]`)
 		 */
 		$this->_capabilities = apply_filters( 'gravityview/import/capabilities', $this->_capabilities );
 
@@ -101,8 +101,9 @@ class UI {
 		$last_batch = $batch[0];
 
 		return array(
-			'id'   => $last_batch['id'],
-			'date' => date_i18n( get_option( 'date_format' ), $last_batch['updated'] ),
+			'id'        => $last_batch['id'],
+			'date'      => date_i18n( get_option( 'date_format' ), $last_batch['updated'] ),
+			'timestamp' => $last_batch['updated'],
 		);
 	}
 
@@ -295,6 +296,10 @@ class UI {
 					'title'       => esc_html__( 'Email Notifications', 'gravityview-importer' ),
 					'description' => esc_html__( 'receive email notification for each imported record', 'gravityview-importer' ),
 				),
+				'skip_validation'     => array(
+					'title'       => esc_html__( 'Skip Field Validation', 'gravityview-importer' ),
+					'description' => esc_html__( "do not validate imported data", 'gravityview-importer' ),
+				),
 				'conditional_import'  => array(
 					'title'            => esc_html__( 'Conditional Import', 'gravityview-importer' ),
 					'description'      => esc_html__( 'only import rows if they match certain conditions', 'gravityview-importer' ),
@@ -322,9 +327,11 @@ class UI {
 				'import_finished_with_errors'      => esc_html__( 'Import has finished with errors.', 'gravityview-importer' ),
 				'processed_x_records'              => esc_html_x( 'We have processed %s records:', '%s is replaced with record count', 'gravityview-importer' ),
 				'processed_and_imported_x_records' => esc_html_x( 'We have processed and %s all %s records.', '%s are replaced with action ("imported" or "updated") and record count, respectively', 'gravityview-importer' ),
+				'processed_x_before_failed'        => esc_html_x( '%s records: %s were %s before the import encountered an error', '%s are replaced with total number of records, action (imported or updated) and number of processed records, respectively ', 'gravityview-importer' ),
 				'no_records_processed_error'       => esc_html__( 'Processing could not finish due to a server error. Please try modifying field mapping or get in touch with our support.', 'gravityview-importer' ),
 				'view_imported_records'            => esc_html__( 'View Imported Records', 'gravityview-importer' ),
 				'start_new_import'                 => esc_html__( 'Start New Import', 'gravityview-importer' ),
+				'modify_import_configuration'      => esc_html__( 'Modify Import Configuration', 'gravityview-importer' ),
 				'download_failed_records'          => esc_html__( 'Download Failed Records', 'gravityview-importer' ),
 				'error_report_filename'            => esc_html_x( 'import_error_report-%s', 'Error report filename; %s is replaced with import batch ID', 'gravityview-importer' ),
 				'row'                              => esc_html_x( 'Row #%s', '', 'gravityview-importer' ),
@@ -379,6 +386,7 @@ class UI {
 			'action_form_data'      => self::AJAX_ACTION_FORM_DATA,
 			'action_add_form_field' => self::AJAX_ACTION_ADD_FORM_FIELD,
 			'localization'          => self::strings(),
+			'locale'                => str_replace( '_', '-', get_locale() ), // JS uses dash instead of underscore for locales
 			'forms'                 => $this->get_forms(),
 			'field_types'           => $this->get_available_field_types(),
 			'api_url'               => get_rest_url( null, Core::rest_namespace ),
@@ -540,21 +548,21 @@ class UI {
 				'iconImage'   => 'question',
 				'zIndex'      => 9991,
 			),
-		    // Help Scout length limit is 200 characters
+			// Help Scout length limit is 200 characters
 			'session-data' => array(
 				'Plugin Version'    => mb_substr( $this->plugin_version, 0, 200 ),
 				'WordPress Version' => mb_substr( get_bloginfo( 'version', 'display' ), 0, 200 ),
 				'PHP Version'       => mb_substr( phpversion() . ' on ' . esc_html( rgar( $_SERVER, 'SERVER_SOFTWARE' ) ), 200 ),
 			),
-            'prefill' => array(
-                'name'  => mb_substr( $current_user->display_name, 0, 80 ),
-                'email' => mb_substr( $current_user->user_email, 0, 80 ),
-            ),
+			'prefill'      => array(
+				'name'  => mb_substr( $current_user->display_name, 0, 80 ),
+				'email' => mb_substr( $current_user->user_email, 0, 80 ),
+			),
 		);
 
-		if( ! $property ) {
-		    return $beacon_configuration;
-        }
+		if ( ! $property ) {
+			return $beacon_configuration;
+		}
 
 		return rgars( $beacon_configuration, $property, $beacon_configuration );
 	}
@@ -869,7 +877,8 @@ JS;
 				'gquiz_percent',
 				'gquiz_grade',
 				'gquiz_is_pass',
-				'gsurvey_score'
+				'gsurvey_score',
+				'creditcard',
 			),
 			'new'      => array(
 				'poll',
@@ -963,13 +972,19 @@ JS;
 
 		$menu_text = esc_html__( 'Import Entries', 'gravityview-importer' );
 
-		$menu_text = sprintf( '<span title="%s">%s</span>', esc_html__( 'Import entries into Gravity Forms.', 'gravityview-importer' ), $menu_text );
+		$menu_text = sprintf( '<span title="%s" style="margin: 0;">%s</span>', esc_html__( 'Import entries into Gravity Forms.', 'gravityview-importer' ), $menu_text );
+
+		$which_cap = \GFCommon::current_user_can_which( $this->_capabilities );
+
+		if ( empty( $which_cap ) ) {
+			$which_cap = 'gform_full_access';
+		}
 
 		add_submenu_page(
 			'gf_edit_forms',
 			esc_html__( 'Import Entries', 'gravityview-importer' ),
 			$menu_text,
-			true,
+			$which_cap,
 			self::PAGE_SLUG,
 			array( $this, 'render_screen' )
 		);
@@ -985,17 +1000,22 @@ JS;
 	 */
 	public function render_screen() {
 
+		/**
+		 * @deprecated Renamed to `gravityview/import/ui/before`
+		 */
 		do_action( 'gravityview-import/before-import' );
+
+		do_action( 'gravityview/import/ui/before' );
 
 		?>
         <div class="wrap">
             <a href="https://gravityview.co/" id="gv-logo">GravityView</a>
             <div id="gv-import-entries">
                 <div class="error inline"><p><?php
-                    printf( esc_html__( 'Required scripts aren\'t loading properly. %s', '%s is replaced with "Please contact support" link.', 'gravityview-importer' ),
-                        sprintf( '<a href="mailto:support@gravityview.co">%s</a>', esc_html__( 'Please contact support.', 'gravityview-importer' ) )
-                    );
-                    ?></p></div>
+						printf( esc_html__( 'Required scripts aren\'t loading properly. %s', '%s is replaced with "Please contact support" link.', 'gravityview-importer' ),
+							sprintf( '<a href="mailto:support@gravityview.co">%s</a>', esc_html__( 'Please contact support.', 'gravityview-importer' ) )
+						);
+						?></p></div>
                 <!-- (Dynamic content populated by JS)
                  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
                  ┃    ____                 _ _       __     ___                 ┃▒
@@ -1011,7 +1031,12 @@ JS;
         </div>
 		<?php
 
+		/**
+		 * @deprecated Renamed to `gravityview/import/ui/after`
+		 */
 		do_action( 'gravityview-import/after-import' );
+
+		do_action( 'gravityview/import/ui/after' );
 	}
 
 	/**
@@ -1344,13 +1369,16 @@ JS;
 			array(
 				'id'     => 'payment_date',
 				'label'  => esc_html__( 'Payment Date', 'gravityview-importer' ),
-				'filter' => 'dateFormat'
+				'with_properties' => true,
+				'filter'          => 'dateFormat',
+				'filterData'      => 'Y-m-d G:i',
 			),
 			array(
 				'id'              => 'last_payment_date',
 				'label'           => esc_html__( 'Last Payment Date', 'gravityview-importer' ),
 				'with_properties' => true,
-				'filter'          => 'dateFormat'
+				'filter'          => 'dateFormat',
+				'filterData'      => 'Y-m-d G:i',
 			),
 			array(
 				'id'    => 'payment_status',

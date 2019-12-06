@@ -16,6 +16,7 @@ import _ from 'lodash';
 import { createHashHistory } from 'history';
 import classNames from 'classnames/bind';
 import { replacePlaceholders, unescapeString } from 'js/helpers/string-manipulations';
+import dayjs from 'dayjs';
 
 import styles from 'css/app';
 
@@ -221,7 +222,7 @@ class App extends Component {
 				JSON.stringify( {
 					progress,
 					importData,
-					date: Date.now(),
+					date: dayjs().valueOf(),
 				} ),
 			);
 		},
@@ -312,36 +313,54 @@ class App extends Component {
 	 * Run on component mount: check if import is being resumed
 	 */
 	componentDidMount() {
-		const localStorageState = this.state.getStateFromLocalStorage();
-		const excludeStepsFromResume = [ 'step1SelectSource', 'step1Upload', 'step1Google', 'step1Ftp', 'step2SelectForm' ];
-
 		// Initialize current URL on load (handleRouteChange is otherwise only called during navigation)
 		this.handleRouteChange( { pathname: window.location.href.split( '#' )[ 1 ] } );
+
+		// Resume interrupted import
+		this.maybeResumeImport();
+	}
+
+	/**
+	 * Detect and resume interrupted import
+	 *
+	 * @return {void}
+	 */
+	maybeResumeImport() {
+		const localStorageState = this.state.getStateFromLocalStorage();
+		const excludeStepsFromResume = [ 'step1SelectSource', 'step1Upload', 'step1Google', 'step1Ftp', 'step2SelectForm' ];
 
 		if ( ! localStorageState || _.includes( excludeStepsFromResume, _.get( localStorageState, 'progress.stepRouteId' ) ) ) {
 			return;
 		}
 
 		const { date, importData } = localStorageState;
-		const { last_batch: lastBatch } = pluginData;
+		const { last_batch: lastBatch = {} } = pluginData;
+
 		const batchData = {
-			date: ( new Date( date ) ).toDateString(),
+			formattedDate: dayjs( date ).format( 'MMMM D, YYYY' ),
+			hoursSinceLastImport: dayjs().diff( dayjs( date ), 'hour' ),
 			filename: _.get( localStorageState, 'importData.file.name' ),
 		};
 
 		// Get localized batch last update date
 		if ( lastBatch && lastBatch.id === importData.batchId ) {
 			batchData.date = lastBatch.date;
+			batchData.hoursSinceLastImport = dayjs().diff( dayjs.unix( lastBatch.timestamp ), 'hour' );
 		}
 
-		// Offer to restore previously interrupted import task
+		// Do not resume if more than 2 hours elapsed since last attempt
+		if ( ! batchData.filename || batchData.hoursSinceLastImport > 2 ) {
+			return this.state.clearLocalStorageState();
+		}
+
+		// Offer to resume previously interrupted import task
 		this.state.displayModalDialog( {
 			automationId: 'resume_upload_modal',
 			content: replacePlaceholders(
 				pluginData.localization.app.previous_import_detected, // It appears that you never finished importing %s that you started on %s. Do you want to resume import or start anew?,
 				[
 					`<strong>${ batchData.filename }</strong>`,
-					`<strong>${ batchData.date }</strong>`,
+					`<strong>${ batchData.formattedDate }</strong>`,
 				],
 			),
 			buttons: [

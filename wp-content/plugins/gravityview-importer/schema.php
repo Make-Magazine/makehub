@@ -227,6 +227,7 @@ function gv_import_entries_get_batch_json_schema() {
 					"lock",        // Lock tables for read, write during processing
 					"soft",        // Allow errors in rows through, process to the end
 					"require",     // Do not ignore required fields, consider errored if a field is missing
+					"valid",       // All data is unconditionally valid (unless overridden by filters), but sanitized
 					"notify",      // Run notifications for all imported entries
 					"keepsource",  // Do not remove the local source after import when deleting this batch
 					"remove"       // Remove batch once it has finished with no errors and skips
@@ -383,7 +384,7 @@ function gv_import_entries_get_batch_json_schema() {
 				'type'        => 'object',
 				'properties'  =>  array(
 					'rows'    =>  array(
-						'description' => 'The number of rows in the source.',
+						'description' => 'The number of rows in the source. Available as we are parsing.',
 						'type'        => 'integer',
 						'context'     =>  array( 'view', 'edit' ),
 						'readonly'    =>  true,
@@ -431,6 +432,12 @@ function gv_import_entries_get_batch_json_schema() {
 			'progress'  => array(
 				'type'        => 'object',
 				'properties'  =>  array(
+					'total'             =>  array(
+						'description' => 'Total amount of rows in the CSV.',
+						'type'        => 'integer',
+						'context'     =>  array( 'view' ),
+						'readonly'    =>  true,
+					),
 					'new'             =>  array(
 						'description' => 'Rows that have not been processed yet.',
 						'type'        => 'integer',

@@ -39,15 +39,15 @@
         "authors": [
             {
                 "name": "suin",
-                "role": "Developer, Renaming Specialist",
                 "email": "suinyeze@gmail.com",
-                "homepage": "https://www.facebook.com/suinyeze"
+                "homepage": "https://www.facebook.com/suinyeze",
+                "role": "Developer, Renaming Specialist"
             },
             {
                 "name": "reoring",
-                "role": "Developer",
                 "email": "mori.reo@gmail.com",
-                "homepage": "https://www.facebook.com/reoring"
+                "homepage": "https://www.facebook.com/reoring",
+                "role": "Developer"
             }
         ],
         "description": "CSV import/export library",

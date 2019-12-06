@@ -189,6 +189,7 @@ const makeRequest = ( { url, method, requestData, responseType, responseHandler,
 		if ( requestOptions.method === 'put' ) {
 			requestOptions.headers = _.assign( {}, requestOptions.headers, { 'Content-Type': 'application/json; charset=utf-8' } );
 			requestOptions.body = JSON.stringify( requestData );
+			requestOptions.method = 'post'; // set method to POST to avoid compatibility issues with PUT (some servers forbid/do not implement this method)
 		}
 	}
 

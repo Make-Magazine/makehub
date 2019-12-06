@@ -6,6 +6,7 @@ import appStyles from 'css/app';
 import { pluginData } from 'js/app';
 import ToggleElement from 'js/shared/toggle-element';
 import ConditionalImport from './partials/conditional-import';
+import { unescapeString } from 'js/helpers/string-manipulations';
 import Beacon from 'js/shared/helpscout-beacon';
 
 const styles = classNames.bind( appStyles );
@@ -46,6 +47,9 @@ export default class Configure extends Component {
 				conditions: null,
 			},
 			emailNotifications: {
+				checked: false,
+			},
+			skipValidation: {
 				checked: false,
 			},
 		},
@@ -366,6 +370,29 @@ export default class Configure extends Component {
 	}
 
 	/**
+	 * Render option that allows skipping field validation
+	 *
+	 * @return {ReactElement} JSX markup
+	 */
+	skipValidationOption() {
+		const option = 'skipValidation';
+		const { importData: { form } } = this.props.context;
+
+		// Display option only for existing forms
+		return form.type !== 'new' && (
+			<>
+				{ this.renderToggleElement(
+					option,
+					pluginData.localization.configure.skip_validation.title, // Skip Field Validation
+					unescapeString( pluginData.localization.configure.skip_validation.description ), // disregard field's validation logic
+					null,
+					'5d770c4204286364bc8ee89e',
+				) }
+			</>
+		);
+	}
+
+	/**
 	 * Update state with new option settings
 	 *
 	 * @param {string} option
@@ -389,7 +416,7 @@ export default class Configure extends Component {
 	 * Go to import data step
 	 */
 	goToNextStep() {
-		const { importData } = this.props.context;
+		const { importData, progress } = this.props.context;
 		const { options } = this.state;
 
 		importData.options = { flags: [] };
@@ -414,9 +441,15 @@ export default class Configure extends Component {
 			importData.options.flags.push( 'notify' );
 		}
 
+		if ( options.skipValidation.checked ) {
+			importData.options.flags.push( 'valid' );
+		}
+
 		importData.useDefaultFieldValues = options.useDefaultFieldValues.checked === true;
 
-		this.props.context.setState( { importData } );
+		progress.stepData.step5ImportData = null;
+
+		this.props.context.setState( { importData, progress } );
 
 		this.props.history.push( this.props.context.routes.step5ImportData.path );
 	}
@@ -457,6 +490,9 @@ export default class Configure extends Component {
 						{ this.displayConditionalImportOption() }
 
 						{ this.displayEmailNotificationsOption() }
+
+						{ this.skipValidationOption() }
+
 					</div>
 				</section>
 

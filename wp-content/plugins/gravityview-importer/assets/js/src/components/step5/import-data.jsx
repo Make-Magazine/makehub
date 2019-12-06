@@ -3,7 +3,7 @@
 import _ from 'lodash';
 import { AJAX, API } from 'js/helpers/server-requests';
 import { pluginData } from 'js/app';
-import { addPeriodToString, joinJSXArray, replacePlaceholderLinks, replacePlaceholders } from 'js/helpers/string-manipulations';
+import { addPeriodToString, i18nFormatNumber, joinJSXArray, replacePlaceholderLinks, replacePlaceholders } from 'js/helpers/string-manipulations';
 import classNames from 'classnames/bind';
 import appStyles from 'css/app';
 import { Circle } from 'rc-progress';
@@ -29,6 +29,8 @@ export default class ImportData extends Component {
 		},
 		error: {},
 		batchResponse: {},
+		restartProcessing: false,
+		errorReport: [],
 	};
 
 	/**
@@ -67,20 +69,27 @@ export default class ImportData extends Component {
 		// Step 1 - update batch status and set schema with mapped fields
 		const step1UpdateBatch = () => {
 			const { importData: { schema, batchId, options, conditions, useDefaultFieldValues } } = this.props.context;
+			const { restartProcessing } = this.state;
+
 			let updatedSchema = schema;
 
 			if ( useDefaultFieldValues ) {
 				updatedSchema = _.map( updatedSchema, ( field ) => ( { ...field, flags: [ 'default' ] } ) );
 			}
 
+			const requestData = ( ! restartProcessing ) ? {
+				status: 'process',
+				id: batchId,
+				schema: updatedSchema,
+				conditions,
+				...options,
+			} : {
+				status: 'process',
+				id: batchId,
+			};
+
 			API.update( {
-				requestData: {
-					status: 'process',
-					id: batchId,
-					schema: updatedSchema,
-					conditions,
-					...options,
-				},
+				requestData,
 				responseHandler: ( res ) => {
 					const { status } = res;
 
@@ -95,6 +104,7 @@ export default class ImportData extends Component {
 						} );
 					}
 					this.setState( { status: 'importing' }, () => {
+						this.setState( { restartProcessing: false } );
 						this.saveCurrentProgress();
 
 						step2ProcessImportBatch();
@@ -115,6 +125,12 @@ export default class ImportData extends Component {
 					id: batchId,
 				},
 				successHandler: ( res ) => {
+					const { status } = res;
+
+					if ( status !== 'error' && status !== 'done' ) {
+						return this.setState( { batchResponse: res, restartProcessing: true } );
+					}
+
 					this.setState( { progress: this.calculateImportProgress( res ), batchResponse: res }, this.saveCurrentProgress );
 				},
 				errorHandler,
@@ -124,16 +140,21 @@ export default class ImportData extends Component {
 		// Monitor progress every 1.5 seconds
 		const monitorProgress = () => {
 			const { importData: { batchId } } = this.props.context;
+			const { status: stateStatus, restartProcessing } = this.state;
+
+			if ( restartProcessing ) {
+				return step1UpdateBatch();
+			}
 
 			API.get( {
 				requestData: {
 					id: batchId,
 				},
 				successHandler: ( res ) => {
-					const { status, error } = res;
+					const { status: responseStatus, error: responseError } = res;
 
 					// Continue monitoring if the batch is still being imported/processed
-					if ( status === 'importing' || status === 'process' || status === 'processing' ) {
+					if ( stateStatus !== 'error' && ( responseStatus === 'importing' || responseStatus === 'process' || responseStatus === 'processing' ) ) {
 						return this.setState( { progress: this.calculateImportProgress( res ), batchResponse: res }, () => setTimeout( monitorProgress, 1000 ) );
 					}
 
@@ -141,10 +162,13 @@ export default class ImportData extends Component {
 					this.maybeAssignIdToNewForm( res );
 
 					// Process batch error
-					if ( status === 'error' || status !== 'done' ) {
-						return errorHandler( {
-							message: addPeriodToString( error ),
-							batchResponse: res,
+					if ( responseStatus === 'error' || responseStatus !== 'done' ) {
+						return this.getRowErrorReport().then( ( errorReport ) => {
+							return errorHandler( {
+								message: addPeriodToString( responseError ),
+								batchResponse: res,
+								errorReport,
+							} );
 						} );
 					}
 
@@ -160,12 +184,13 @@ export default class ImportData extends Component {
 
 		// Handle server errors
 		const errorHandler = ( err ) => {
-			const { message, batchResponse: res = {} } = err;
+			const { message, batchResponse: res = {}, errorReport = [] } = err;
 
 			this.setState( {
 				status: 'error',
 				error: { message },
 				batchResponse: res,
+				errorReport,
 			}, this.saveCurrentProgress );
 		};
 
@@ -322,8 +347,8 @@ export default class ImportData extends Component {
 					{ /* Processed X of Y records */ }
 					{ replacePlaceholders(
 						pluginData.localization.import_data.processed_x_of_y_records, [
-							`<strong>${ processed + skipped + error }</strong>`,
-							`<strong>${ total }</strong>`,
+							`<strong>${ i18nFormatNumber( processed + skipped + error ) }</strong>`,
+							`<strong>${ i18nFormatNumber( total ) }</strong>`,
 						],
 					) }
 				</p>
@@ -357,6 +382,14 @@ export default class ImportData extends Component {
 				recreateBatch: true,
 			} ),
 		};
+		const modifyImportConfigurationButton = {
+			automationId: 'change_field_mapping',
+			label: pluginData.localization.import_data.modify_import_configuration, /* Modify Import Configuration */
+			action: () => this.changeFieldMapping( {
+				recreateBatch: true,
+				goToConfigureStep: true,
+			} ),
+		};
 		let buttons;
 
 		if ( progress.processed === meta.rows ) {
@@ -364,10 +397,10 @@ export default class ImportData extends Component {
 			buttons = [ viewImportedRecordsButton, startnewImportButton ];
 		} else if ( progress.skipped === meta.rows || progress.error === meta.rows ) {
 			// All records were skipped or rejected
-			buttons = [ changeFieldMappingButton, startnewImportButton ];
+			buttons = [ changeFieldMappingButton, modifyImportConfigurationButton, startnewImportButton ];
 		} else {
 			// Some fields were imported
-			buttons = [ viewImportedRecordsButton, changeFieldMappingButton, startnewImportButton ];
+			buttons = [ viewImportedRecordsButton, modifyImportConfigurationButton, changeFieldMappingButton, startnewImportButton ];
 		}
 
 		return (
@@ -503,7 +536,7 @@ export default class ImportData extends Component {
 		const { importData: { batchId } } = this.props.context;
 
 		return new Promise( ( resolve ) => {
-			if ( errorReport ) {
+			if ( errorReport && errorReport.length ) {
 				return resolve( errorReport );
 			}
 
@@ -513,7 +546,7 @@ export default class ImportData extends Component {
 				},
 				responseHandler: ( res ) => {
 					// Response must be in [{data:[],error,number},{...}] format
-					return _.get( res, '[0][data]' ).length;
+					return _.get( res, '[0][error]' );
 				},
 				successHandler: ( res ) => {
 					this.setState( { errorReport: res }, () => {
@@ -537,7 +570,7 @@ export default class ImportData extends Component {
 	 */
 	displayErrorLogModalWindow() {
 		this.getRowErrorReport().then( ( errorReport ) => {
-			if ( ! errorReport ) {
+			if ( ! errorReport || ! errorReport.length ) {
 				return;
 			}
 
@@ -591,10 +624,31 @@ export default class ImportData extends Component {
 	 * @return {ReactElement} JSX markup
 	 */
 	getBatchFinalProgressReport() {
-		const { batchResponse = {} } = this.state;
-		const { progress, meta } = batchResponse;
+		const { batchResponse = {}, errorReport } = this.state;
+		const { progress, meta, flags, status } = batchResponse;
 		const { importData: { overwriteEntryData } } = this.props.context;
 		const actionType = ( overwriteEntryData ) ? pluginData.localization.import_data.updated : pluginData.localization.import_data.imported; // updated|imported
+
+		// "Continue processing" is turned off and processing failed
+		if ( status === 'error' && ! _.includes( flags, 'soft' ) ) {
+			const errorMessage = replacePlaceholders(
+				// %s records: %s were %s before the import encountered an error
+				pluginData.localization.import_data.processed_x_before_failed, [
+					`<strong>${ i18nFormatNumber( meta.rows ) }</strong>`,
+					`<strong>${ i18nFormatNumber( progress.processed ) }</strong>`,
+					actionType,
+				],
+			);
+
+			return ( errorReport ) ?
+				<>
+					{ errorMessage }:
+					<br /><br />
+					{ /* Row #%s */ }
+					{ replacePlaceholders( pluginData.localization.import_data.row, [ i18nFormatNumber( errorReport[ 0 ].number ) ] ) }: <strong>{ errorReport[ 0 ].error }</strong>
+				</> :
+				<>{ errorMessage }.</>;
+		}
 
 		// No records were processed
 		if ( _.isEmpty( batchResponse ) || ( ! progress.processed && ( progress.skipped !== meta.rows && progress.error !== meta.rows ) ) ) {
@@ -606,8 +660,9 @@ export default class ImportData extends Component {
 			return replacePlaceholders(
 				// We have processed and imported|updated all %s records.
 				pluginData.localization.import_data.processed_and_imported_x_records, [
+					`<strong>${ i18nFormatNumber( progress.processed ) }</strong>`,
 					actionType,
-					`<strong>${ progress.processed }</strong>`,
+					`<strong>${ i18nFormatNumber( progress.processed ) }</strong>`,
 				],
 			);
 		}
@@ -618,18 +673,18 @@ export default class ImportData extends Component {
 		const rowsProcessedMessage = replacePlaceholders(
 			// We have processed %s records:
 			pluginData.localization.import_data.processed_x_records, [
-				`<strong>${ rowsProcessed }</strong>`,
+				`<strong>${ i18nFormatNumber( rowsProcessed ) }</strong>`,
 			],
 		);
 
 		if ( progress.processed ) {
 			// %s imported|updated
-			stats.push( <><span className={ styles( 'imported' ) }>{ progress.processed }</span> { actionType }</> );
+			stats.push( <><span className={ styles( 'imported' ) }>{ i18nFormatNumber( progress.processed ) }</span> { actionType }</> );
 		}
 
 		if ( progress.skipped ) {
 			// %s skipped
-			stats.push( <><span className={ styles( 'imported' ) }>{ progress.skipped }</span> { pluginData.localization.import_data.skipped }</> );
+			stats.push( <><span className={ styles( 'imported' ) }>{ i18nFormatNumber( progress.skipped ) }</span> { pluginData.localization.import_data.skipped /* skipped */ }</> );
 		}
 
 		if ( progress.error ) {
@@ -644,7 +699,7 @@ export default class ImportData extends Component {
 				],
 			);
 
-			stats.push( <><span className={ styles( 'error' ) }>{ progress.error }</span> { rejectedMessage }</> );
+			stats.push( <><span className={ styles( 'error' ) }>{ i18nFormatNumber( progress.error ) }</span> { rejectedMessage }</> );
 		}
 
 		return (

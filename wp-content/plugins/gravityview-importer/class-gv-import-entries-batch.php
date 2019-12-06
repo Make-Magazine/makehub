@@ -269,12 +269,6 @@ class Batch {
 			// All given feeds have to be active.
 			$feeds    = \GFAPI::get_feeds( array(), $form['id'], null, true );
 			$feed_ids = is_wp_error( $feeds ) ? array() : wp_list_pluck( $feeds, 'id' );
-			/**
-			 * @filter `gravityview/import/feeds` Filter with form feed IDs that are executed for each entry during import
-			 * @param   array[in,out] $feed_ids   List of feed IDs
-			 * @param   int           $form_id    Form ID
-			 */
-			$feed_ids = apply_filters( 'gravityview/import/feeds', $feed_ids, $form['id'] );
 
 			foreach ( $args['feeds'] as $feed_id ) {
 				if ( ! in_array( $feed_id, $feed_ids ) ) {
@@ -659,14 +653,19 @@ class Batch {
 
 		$progress = $wpdb->get_results( $wpdb->prepare( "SELECT status, COUNT(status) c FROM {$tables['rows']} WHERE batch_id = %d GROUP BY status", $post->ID ), ARRAY_A );
 
+		$total = ( empty( $post->progress ) || empty( $post->progress['total'] ) ) ? 0 : $post->progress['total'];
+
 		return array(
 			'id'          => $post->ID,
 			'status'      => $post->status,
 			'error'       => $post->error ? : '',
 			'progress'    => wp_parse_args(
-				array_combine(
-					wp_list_pluck( $progress, 'status' ), array_map( 'intval', wp_list_pluck( $progress, 'c' ) )
-				), array_combine( array( 'new', 'processing', 'processed', 'skipped', 'error' ), array_fill( 0, 5, 0 ) )
+				array_merge(
+					array( 'total' => $total ),
+					array_combine(
+						wp_list_pluck( $progress, 'status' ), array_map( 'intval', wp_list_pluck( $progress, 'c' ) )
+					)
+				), array_combine( array( 'total', 'new', 'processing', 'processed', 'skipped', 'error' ), array_fill( 0, 6, 0 ) )
 			),
 			'created'     => $post->created,
 			'updated'     => $post->updated,
@@ -678,6 +677,7 @@ class Batch {
 			'source'      => $post->source,
 			'flags'       => $post->flags ? : array(),
 			'meta'        => $post->meta ? : array(
+				'total'   => 0,
 				'rows'    => 0,
 				'columns' => array(),
 				'excerpt' => array(),

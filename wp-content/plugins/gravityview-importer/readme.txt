@@ -1,6 +1,6 @@
 === GravityView Importer ===
-Requires at least: 3.8
-Tested up to: 5.2.2
+Requires at least: 5.0
+Tested up to: 5.3
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 3 or higher
@@ -18,6 +18,106 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravityview.
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.1.4 on November 18, 2019 =
+
+* Confirmed compatibility with WordPress 5.3
+* Fixed: Appearance-only conflict with WordPress 5.3
+* Fixed: When CSVs contained invalid characters, the CSV containing the errors would fail to be generated
+* Fixed: PHP warnings on the Gravity Forms logging page
+
+= 2.1.3 on November 8, 2019 =
+
+* Fixed: PHP error on servers running PHP 5.6
+* Fixed: Compatibility with the [Invisible reCaptcha](https://wordpress.org/plugins/invisible-recaptcha/) plugin
+* Fixed: Format the number of rejected items during an import according to locale
+* Fixed: Sometimes error logs were empty
+
+__Developer Updates:__
+
+* Added: `gravityview/import/run/batch` filter to alter the batch before it's run
+
+= 2.1.2 on October 23, 2019 =
+
+* Improved: Force Gravity Forms to show whether the Add-On Feeds table exists in the database
+* Fixed: Disable Gravity Forms Akismet integration when importing entries
+* Fixed: Compatibility with the [Zero Spam](https://wordpress.org/plugins/zero-spam/) plugin
+* Fixed: Use `POST` instead of `PUT` for REST API calls, for compatibility purposes
+* Fixed: Warnings on malformed or empty Entry Notes fields
+* Fixed: Invalid UTF-8 character breaks the field mapping screen
+* Fixed: Minor display issues with WordPress 5.3
+* Fixed: JavaScript errors in field mapping
+* Updated: Russian translation (thanks, Viktor S!)
+
+= 2.1.1 on October 16, 2019 =
+
+* Improved: Allow changing Name field labels when creating a new form
+* Improved: Lots of improvements to error handling when sites are unresponsive or plugins conflict
+* Improved: Make sure to always show Feed database tables on the Gravity Forms System Status page
+* Fixed: Allow configuring payment date format
+* Fixed: Make sure that Feeds are not processed unless checked
+* Fixed: Warnings when importing products with Radio input types
+* Fixed: Importing products with radio inputs and drowpdowns
+* Fixed: Importing into sites when not using "pretty permalinks"
+* Fixed: Fix sequential field ID assignment bug
+* Fixed: Conflict with the WishList Member Debug Mode
+* Updated: Polish translation (thanks, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+
+= 2.1 on September 19, 2019 =
+
+* Added: Option to skip validation for imported data
+* Improved: Allow returning to configuration step after import failure
+* Improved: Widen column names in the Map Fields step
+* Improved: Allow importing two-digit year formats (`09/09/19`)
+* Improved: Don't automatically map User ID columns
+* Improved: Save configuration when changing new form field labels
+* Improved: Removed "Credit Card" fields from the list of fields available to import
+* Fixed: Sub-labels for new Address fields were not being properly set
+* Fixed: Skip completely empty rows
+* Fixed: Import stats are now localized properly
+* Updated: 100% Polish translation! (thank you, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+
+__Developer Updates:__
+
+* Added: `/test/` REST API endpoint for future health checks for ability to import
+* Added: `gravityview/import/field/validate` and `gravityview/import/entry/validate` filters, allowing you to modify whether or not to suppress validation for entries or specific fields
+* Renamed `gravityview/import/export/note_types/blacklist` filter to `gravityview/export/note_types/blacklist`
+* Added: `$column` parameter to `gravityview/import/parse/typemap` filter
+* Moved: `gravityview/import/fields/multi-input` out of the column loop
+* Added: `gravityview/import/settings/enabled` filter
+    - Deprecated: `gravityview-import/show-settings`
+* Added: `gravityview/import/settings/before` action
+* Added: `gravityview/import/settings/after` action
+    - Deprecated: `gravityview-import/before-settings`
+    - Deprecated: `gravityview-import/after-settings`
+
+= 2.0.2.2 on August 7, 2019 =
+
+* Fixed: License activation script not loading for some sites
+
+= 2.0.2.1 on August 6, 2019 =
+
+* Fixed: Issue affecting some sites where administrators were unable to access the Import Entries screen
+
+= 2.0.2 on August 5, 2019 =
+
+* Added: Add WordPress 5.0+ plugin requirement
+    * This fixes issues with scripts not loading and not being able to access the Import Entries page
+    * Shows a notice when the plugin is running on a site running less than WordPress 5.0
+* Improved: Hide "existing form" option when no forms are available
+* Improved: Do not resume interrupted import after 2 hours
+* Fixed: Do not resume when uploaded file is no longer available
+
+__Developer Updates:__
+
+* Added hooks:
+    * Filter `gravityview/import/processor/args`
+    * Action `gravityview/import/processor/init`
+* Restored more v1 filters, and also started transition to new filter naming structure
+    * `gravityview-import/import-cap` is deprecated. Use `gravityview/import/rest/cap` instead.
+    * `gravityview-importer/use-default-value` is deprecated. Use `gravityview/import/column/default` instead.
+    * `gravityview-importer/after-update` is deprecated. Use `gravityview/import/entry/updated` instead.
+    * `gravityview-importer/after-add` is deprecated. Use `gravityview/import/entry/created` instead.
 
 = 2.0.1 on July 31, 2019 =
 

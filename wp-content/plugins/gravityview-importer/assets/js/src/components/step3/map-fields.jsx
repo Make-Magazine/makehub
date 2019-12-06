@@ -41,6 +41,8 @@ export default class MapFields extends Component {
 		addNewFormFieldButton: createRef(),
 	};
 
+	routeParameters = this.props.context.routeChangeParameters || {};
+
 	state = {
 		initialized: false,
 		processing: {
@@ -61,7 +63,7 @@ export default class MapFields extends Component {
 	 * @return {void}
 	 */
 	componentDidMount() {
-		const { progress: { stepData }, routes, defaultRoute, routeChangeParameters: { recreateBatch, reuseExistingSchema } = {} } = this.props.context;
+		const { importData: { form, schema }, progress: { stepData }, routes, defaultRoute } = this.props.context;
 
 		// Navigate to form selection if required data is not set
 		if ( _.isEmpty( stepData.step2SelectForm ) ) {
@@ -69,15 +71,13 @@ export default class MapFields extends Component {
 		}
 
 		// Check if we're restarting interrupted import task and update state with previously saved progress data
-		if ( ! _.isEmpty( stepData[ this.STEP_ROUTE_ID ] ) && ! recreateBatch ) {
+		if ( ! _.isEmpty( stepData[ this.STEP_ROUTE_ID ] ) && ! this.routeParameters.recreateBatch ) {
 			const savedProgress = stepData[ this.STEP_ROUTE_ID ];
 
 			// If we're returning from the "import data" step and the new form has been created, update column mapping to use field IDs instead of field types
-			if ( reuseExistingSchema ) {
-				this.props.context.setState( { routeChangeParameters: {} } );
-
-				savedProgress.formFields = this.props.context.importData.form.fields;
-				savedProgress.selectedColumnFields = this.convertSchemaToSelectedColumnFields( this.props.context.importData.schema, savedProgress.selectedColumnFields );
+			if ( _.isEmpty( savedProgress.formFields ) && ! _.isEmpty( form.fields ) ) {
+				savedProgress.formFields = form.fields;
+				savedProgress.selectedColumnFields = this.convertSchemaToSelectedColumnFields( schema, savedProgress.selectedColumnFields );
 			}
 
 			return this.setState( savedProgress, () => {
@@ -105,8 +105,6 @@ export default class MapFields extends Component {
 	 * Get form fields, create import batch and fetch first XX rows
 	 */
 	bootstrapFieldMapping() {
-		const { routeChangeParameters } = this.props.context;
-
 		// Step 1 - get form fields
 		const step1GetFormFields = () => AJAX.post( {
 			requestData: {
@@ -183,22 +181,25 @@ export default class MapFields extends Component {
 				return res.meta && res.meta.columns && res.meta.excerpt;
 			},
 			successHandler: ( res ) => {
-				const { importData: { form } } = this.props.context;
+				const { importData: { form, schema } } = this.props.context;
+				const { processing } = this.state;
 				const importData = _.slice( res.meta.excerpt, 0, this.DATA_PREVIEW_ROWS );
 				const columnCount = _.size( res.meta.excerpt[ 0 ] );
-				const processing = this.state.processing;
 
 				const fieldOrTypeIds = form.type === 'new' ?
 					_.flatten( _.map( pluginData.field_types, ( type ) => type.inputs && type.virtual_id ? _.keys( type.inputs ) : String( type.id ) ) ) :
 					_.flatten( _.map( this.state.formFields, ( field ) => field.inputs ? _.keys( field.inputs ) : String( field.id ) ) );
 
 				const mappedIds = [];
+
 				const selectedColumnFields = _.times( columnCount, ( columnIndex ) => {
 					if ( form.type === 'new' ) {
 						const type = res.meta.columns[ columnIndex ] && _.includes( fieldOrTypeIds, String( res.meta.columns[ columnIndex ].field ) ) ? String( res.meta.columns[ columnIndex ].field ) : this.DEFAULT_NEW_FIELD_TYPE;
+						const labelShouldBeStripped = /(Address|Name) \((.*?)\)/.exec( importData[ 0 ][ columnIndex ] );
+						const label = labelShouldBeStripped ? labelShouldBeStripped[ 1 ] : importData[ 0 ][ columnIndex ]; // strip Address and Name prefixes
 
 						return {
-							label: importData[ 0 ][ columnIndex ],
+							label,
 							type,
 							columnIndex,
 							_data: getFormField( type, pluginData.field_types ),
@@ -229,8 +230,24 @@ export default class MapFields extends Component {
 						processing,
 						importData,
 						selectedColumnFields: columnFields,
-					}, this.saveCurrentProgress );
+					}, () => {
+						this.saveCurrentProgress();
+						if ( this.routeParameters.goToConfigureStep ) {
+							this.goToNextStep();
+						}
+					} );
 				};
+
+				// When schema already exists, it means that mapping was previously done on a new form and we now need to assign proper IDs to each mapped field
+				if ( form.type !== 'new' && ! _.isEmpty( schema ) ) {
+					_.map( schema, ( data ) => {
+						selectedColumnFields[ data.column ].id = data.field;
+						selectedColumnFields[ data.column ]._data = getFormField( data.field, form.fields );
+					} );
+
+					// Update state and save to local storage
+					return updateState( selectedColumnFields );
+				}
 
 				// Display warning message when one of the columns is automapped to an Entry ID
 				if ( _.includes( mappedIds, 'id' ) ) {
@@ -284,7 +301,7 @@ export default class MapFields extends Component {
 			this.setState( { processing } );
 		};
 
-		if ( routeChangeParameters.recreateBatch ) {
+		if ( this.routeParameters.recreateBatch ) {
 			// If batch is being recreated, update component state with form fields from app state and go straight to batch creation step
 			const { importData: { form: { type: formType, fields: formFields } } } = this.props.context;
 
@@ -444,7 +461,10 @@ export default class MapFields extends Component {
 				this.setState( {
 					selectedColumnFields: updatedSelectedColumnFields,
 					multiInputFields: this.filterMultiInputFields( updatedMultiInputFields, updatedSelectedColumnFields ),
-				}, () => this.props.context.dismissModalDialog() );
+				}, () => {
+					this.props.context.dismissModalDialog();
+					this.saveCurrentProgress();
+				} );
 			},
 			onClose: () => {
 				this.props.context.dismissModalDialog();
@@ -457,6 +477,20 @@ export default class MapFields extends Component {
 		this.props.context.displayModalDialog( {
 			component: <MultiInputMapping { ...props } />,
 		} );
+	}
+
+	/**
+	 * Handle changes to the new form column field label
+	 *
+	 * @param {number|string} columnIndex Column index
+	 */
+	handleNewFormColumnLabelChange( columnIndex ) {
+		const { selectedColumnFields } = this.state;
+		const label = this.DOM[ `column-${ columnIndex }-label` ].value || '';
+
+		selectedColumnFields[ columnIndex ].label = label;
+
+		this.setState( { selectedColumnFields }, this.saveCurrentProgress );
 	}
 
 	processMappedField( field, columnIndex, selectedColumnFields ) {
@@ -697,7 +731,7 @@ export default class MapFields extends Component {
 	 * Go to import options configuration step
 	 */
 	goToNextStep() {
-		const { importData } = this.props.context;
+		const { importData, progress } = this.props.context;
 		const { form } = importData;
 		const { selectedColumnFields, multiInputFields } = this.state;
 
@@ -717,7 +751,7 @@ export default class MapFields extends Component {
 						const [ , type, index, inputId ] = multiInputTypeRegex.exec( field.type );
 
 						// Multi-input fields with dynamic inputs (e.g., checkboxes) will have "inputs" property with data for each input (ID and label)
-						fieldName = ( multiInputFields[ type ][ index ].inputs ) ? multiInputFields[ type ][ index ].inputs[ inputId ].label : multiInputFields[ type ][ index ].label;
+						fieldName = ( multiInputFields[ type ][ index ].inputs ) ? multiInputFields[ type ][ index ].inputs[ inputId ].label : fieldName;
 
 						meta.parent_name = multiInputFields[ field.multiInputField.type ][ field.multiInputField.index ].label;
 					}
@@ -785,7 +819,9 @@ export default class MapFields extends Component {
 
 		importData.batchId = this.state.importBatchId;
 
-		this.props.context.setState( { importData } );
+		progress.stepData.step5ImportData = null;
+
+		this.props.context.setState( { importData, progress } );
 
 		this.props.history.push( this.props.context.routes.step4Configure.path );
 	}
@@ -1101,7 +1137,10 @@ export default class MapFields extends Component {
 												if ( multiInputFieldDetails ) {
 													const _type = multiInputFieldDetails[ 1 ];
 													const _index = parseInt( multiInputFieldDetails[ 2 ], 10 );
-													multiInputFieldLabel = this.state.multiInputFields[ _type ][ _index ].label;
+
+													if ( _type !== 'address' && _type !== 'name' ) {
+														multiInputFieldLabel = this.state.multiInputFields[ _type ][ _index ].label;
+													}
 												}
 
 												return (
@@ -1123,7 +1162,7 @@ export default class MapFields extends Component {
 																				value={ multiInputFieldLabel || selectedColumnFields[ columnIndex ].label }
 																				id={ `column-${ columnIndex }-label` }
 																				placeholder={ pluginData.localization.map_fields.add_new_field_label }
-																				onChange={ () => this.handleNewFormColumnChange( columnIndex ) }
+																				onChange={ () => this.handleNewFormColumnLabelChange( columnIndex ) }
 																			/>
 																		</div>
 																	</div>
@@ -1241,11 +1280,14 @@ export default class MapFields extends Component {
 															/* Header for existing form */
 															<>
 																<div className={ styles( 'columns', 'is-mobile' ) }>
-																	<div className={ styles( 'column', 'is-4' ) }>
+																	<div className={ styles( 'column', 'is-6' ) }>
 																		<p className={ styles( 'label', 'is-size-7', 'is-uppercase', 'has-text-weight-normal', 'has-text-grey' ) }>
 																			{ pluginData.localization.map_fields.data_header }
 																		</p>
-																		<p className={ styles( 'csv-header-data', 'is-size-6' ) }>
+																		<p
+																			className={ styles( 'csv-header-data', 'is-size-6' ) }
+																			title={ this.state.importData[ 0 ][ columnIndex ] }
+																		>
 																			{ this.state.importData[ 0 ][ columnIndex ] }
 																		</p>
 																	</div>

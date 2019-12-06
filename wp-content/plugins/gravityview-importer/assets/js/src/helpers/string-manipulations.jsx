@@ -1,5 +1,6 @@
 import ReactHtmlParser from 'react-html-parser';
 import reactStringReplace from 'react-string-replace';
+import { pluginData } from 'js/app';
 import _ from 'lodash';
 
 /**
@@ -157,3 +158,6 @@ export const findByProperty = ( object, property, value ) => {
 
 	return result;
 };
+
+export const i18nFormatNumber = ( number ) => new Intl.NumberFormat( pluginData.locale || 'en-US' ).format( number );
+

@@ -94,6 +94,23 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 				),
 			),
 		) );
+
+		register_rest_route( Core::rest_namespace, "/test/?", array(
+			array(
+				'methods'             => \WP_REST_Server::ALLMETHODS,
+				'callback'            => array( $this, 'test' ),
+				'args'                => array(
+				),
+			),
+		) );
+	}
+
+	/**
+	 * A simple REST API test endpoint for preflight checks in our UI.
+	 * @since develop
+	 */
+	public function test( $request ) {
+		return rest_ensure_response( $request->get_method() );
 	}
 
 	/**
@@ -116,7 +133,11 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function create_batch( $request ) {
-		$batch = Batch::create( $request->get_params() );
+		$params = $request->get_params();
+
+		$this->clean_params( $params );
+
+		$batch = Batch::create( $params );
 		return rest_ensure_response( $batch );
 	}
 
@@ -127,14 +148,19 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	 * @return true|WP_Error           True if the request has access to create batches, WP_Error object otherwise.
 	 */
 	public function can_create_batch( $request ) {
+		/**
+		 * @deprecated Use `gravityview/import/rest/cap`
+		 */
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
 
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @filter gravityview/import/rest/cap Modify the REST capability required to import entries. By default: `gravityforms_edit_entries`.
+		 * @param[in,out] string  $cap        The required capability.
+		 * @param         string  $permission The accessed permission. Set to the permission check callback method name.
+		 * @param WP_REST_Request $request    The REST request.
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_create_batch' );
-		
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
+
 		// We are about to edit entries, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
 			return new \WP_Error(
@@ -159,13 +185,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_delete_batch( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_delete_batch' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to delete a batch, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -189,13 +214,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_delete_batches( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_delete_batches' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to delete all the batches, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -210,13 +234,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_update_batch( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_update_batch' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to edit a batch, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -240,13 +263,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_get_batch( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_get_batch' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to get batch data, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -270,13 +292,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_get_batches( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_get_batches' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to get batch data, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -291,13 +312,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	}
 
 	public function can_process_batch( $request ) {
-
 		/**
-		 * @filter gravityview-import/import-cap Modify the capability required to import entries. By default: `gravityforms_edit_entries`
-		 * @since 1.0
-		 * @since 2.0 Added context second parameter
+		 * @deprecated Use `gravityview/import/rest/cap`
 		 */
-		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries', 'can_process_batch' );
+		$required_cap = apply_filters( 'gravityview-import/import-cap', 'gravityforms_edit_entries' );
+
+		$required_cap = apply_filters( 'gravityview/import/rest/cap', $required_cap, __FUNCTION__, $request );
 
 		// We are about to process batch data, so make sure the current user can do this.
 		if ( ! \GFCommon::current_user_can_any( $required_cap ) ) {
@@ -350,8 +370,12 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 	public function update_batch( $request ) {
 		$batch = Batch::get( $request->get_param( 'id' ) );
 
+		$params = $request->get_params();
+
+		$this->clean_params( $params );
+
 		// @todo PUT vs. PATCH
-		$batch = array_merge( $batch, $request->get_params() );
+		$batch = array_merge( $batch, $params );
 
 		return rest_ensure_response( Batch::update( $batch ) );
 	}
@@ -369,6 +393,9 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 			fputcsv( $csv, $batch['meta']['excerpt'][0] );
 
 			foreach ( $rows as $row ) {
+				if ( ! $row['data'] ) {
+					$row['data'] = array(); // empty invalid data
+				}
 				fputcsv( $csv, $row['data'] );
 			}
 
@@ -396,5 +423,10 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 
 	public function validate_batch_args( $args ) {
 		return Batch::validate( $args );
+	}
+
+	private function clean_params( &$params ) {
+		unset( $params['rest_route'] ); // No permalinks enabled
+		unset( $params['wlmdebug'] ); // WishList member debug mode
 	}
 }

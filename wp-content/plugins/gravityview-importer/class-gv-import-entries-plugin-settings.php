@@ -195,13 +195,32 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 */
 	function render_settings( $sections ) {
 
+		/**
+		 * @deprecated Renamed to `gravityview/import/settings/before'
+		 */
 		do_action( 'gravityview-import/before-settings' );
 
-		if ( apply_filters( 'gravityview-import/show-settings', $this->show_settings ) ) {
+		do_action( 'gravityview/import/settings/before' );
+
+		/**
+		 * @deprecated Use `gravityview/import/settings/enabled`
+		 */
+		$show = apply_filters( 'gravityview-import/show-settings', $this->show_settings );
+
+		/**
+		 * @filter `gravityview/import/settings/enabled` Hide the settings for reasons unknown.
+		 * @param boolean $show Show or not. Default: true.
+		 */
+		if ( apply_filters( 'gravityview/import/settings/enabled', $show ) ) {
 			parent::render_settings( $sections );
 		}
 
+		/**
+		 * @deprecated Renamed to `gravityview/import/settings/after'
+		 */
 		do_action( 'gravityview-import/after-settings' );
+
+		do_action( 'gravityview/import/settings/after' );
 	}
 
 	/**

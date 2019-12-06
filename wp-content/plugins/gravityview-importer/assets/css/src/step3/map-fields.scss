@@ -22,6 +22,10 @@ $column-width: 25rem;
 
 		.csv-header-data {
 			margin-top: .7rem;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			width: 12rem;
 		}
 
 		div.control {
@@ -30,19 +34,19 @@ $column-width: 25rem;
 
 			&:not(.new-form) {
 				select, .select {
-					max-width: 15rem;
+					max-width: 10.75rem;
 				}
 
 				&.with-properties, &.with-clear {
 					&.with-properties {
 						select, .select {
-							width: 11.75rem;
+							width: 7.5rem;
 						}
 					}
 
 					select, .select {
 						display: block;
-						width: 13.25rem;
+						width: 9.25rem;
 					}
 				}
 			}

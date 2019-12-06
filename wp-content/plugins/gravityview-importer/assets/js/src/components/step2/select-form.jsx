@@ -198,7 +198,7 @@ export default class SelectForm extends Component {
 					</div>
 
 					<div className={ styles( 'columns' ) }>
-						{ pluginData.forms && (
+						{ pluginData.forms.length ?
 							/* Import into existing form (when forms exist) */
 							<>
 								<div className={ styles( 'column', 'is-3' ) }>
@@ -216,8 +216,8 @@ export default class SelectForm extends Component {
 										</p>
 									</div>
 								</div>
-							</>
-						) }
+							</> : null
+						}
 
 						<div className={ styles( 'column', 'is-3' ) }>
 							<div

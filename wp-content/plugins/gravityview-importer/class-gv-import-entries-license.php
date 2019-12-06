@@ -137,8 +137,7 @@ class GravityView_Import_License {
 
 	public function settings_edd_license_activation( $field, $echo ) {
 
-		$script_debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-		wp_enqueue_script( 'gv-importer-admin-edd-license', $this->Addon->get_base_url() . '/assets/js/admin-edd-license' . $script_debug . '.js', array( 'jquery' ) );
+		wp_enqueue_script( 'gv-importer-admin-edd-license', $this->Addon->get_base_url() . '/assets/js/admin-edd-license.js', array( 'jquery' ) );
 
 		$status = trim( $this->Addon->get_plugin_setting( 'license_key_status' ) );
 		$key    = $this->Addon->get_plugin_setting( 'license_key' );

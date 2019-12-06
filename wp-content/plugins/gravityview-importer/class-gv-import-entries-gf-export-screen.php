@@ -61,11 +61,11 @@ function filter_gform_leads_before_export_add_notes( $leads = array(), $form = a
 	}
 
 	/**
-	 * @filter `gravityview/import/export/note_types/blacklist` List of note_types to exclude from export.
+	 * @filter `gravityview/export/note_types/blacklist` List of note_types to exclude from export.
 	 * @since 2.0
-	 * @param array $note_types_blacklist Default: empty array
+	 * @param array $note_types_blacklist Default: [ gravityview ]
 	 */
-	$note_types_blacklist = apply_filters( 'gravityview/import/export/note_types/blacklist', array( 'gravityview' ) );
+	$note_types_blacklist = apply_filters( 'gravityview/export/note_types/blacklist', array( 'gravityview' ) );
 
 	foreach ( $leads as &$lead ) {
 

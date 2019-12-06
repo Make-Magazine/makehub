@@ -42,7 +42,11 @@ class Core {
 
 		require_once $plugin_dir_path . 'class-gv-import-entries-gf-export-screen.php';
 
+		require_once $plugin_dir_path . 'class-gv-import-entries-gf-system-status-screen.php';
+
 		require_once $plugin_dir_path . 'schema.php';
+
+		require_once $plugin_dir_path . 'compat.php';
 
 		self::maybe_upgrade();
 
@@ -154,7 +158,7 @@ class Core {
 		) );
 	}
 
-	/** 
+	/**
 	 * Whether a column is an entry column (vs. a meta)
 	 *
 	 * @param string $column The column.
