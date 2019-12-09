@@ -22,3 +22,36 @@
 		margin: 0px;
 	}
 }
+
+
+// For the auth0 login form on the front page
+#auth0-login-form {
+    margin-top: 35px;
+}
+.auth0-lock.auth0-lock {
+	.auth0-lock-header {
+		border-bottom: 7px solid #33b5e5;
+	}
+	.auth0-lock.auth0-lock .auth0-lock-content-wrapper {
+		padding-top: 10px;
+	}
+   .auth0-lock-header-logo {
+		display: none;
+	}
+	.auth0-lock-name {
+		color: #333;
+		font-size: 2em;
+		padding: 15px;
+		font-family: Roboto;
+		text-align: left;
+	}
+	.auth0-lock-submit { 
+      background-color: #1987C7 !important; 
+	}
+	.auth0-lock-submit:hover {
+		background-color: #fff !important; 
+		color: #1987C7 !important; 
+		border: solid 1px #1987C7;
+	}
+	.auth0-lock-tabs li:last-of-type { display: none; }
+}
