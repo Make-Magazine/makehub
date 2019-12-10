@@ -3,6 +3,7 @@
 	.main-content.container { width: 100%; }
 	#page-content.bluetoad {
 		padding-top: 0px;
+		margin-bottom: 40px;
 		@media screen and (max-width: 768px) {
 		  	padding-top: 50px;
 		}
@@ -11,6 +12,7 @@
 			height: 100vh;
 			border: none;
 			margin-bottom: -10px;
+			padding-bottom: 150px;
 		}
 	}
 }
@@ -26,7 +28,25 @@
 
 // For the auth0 login form on the front page
 #auth0-login-form {
-    margin-top: 35px;
+   margin-top: 35px;
+	.join-btn {
+		position: absolute;
+		top: 58px;
+		right: 0px;
+		z-index: 9999;
+		height: 20px;
+		width: 85px;
+		font-weight: bold;
+		background: #005e9a;
+		border-solid: 1px #005e9a;
+		a { color: #fff; }
+		&:hover{
+			background:#fff;
+			a{
+				color: #005e9a;
+			}
+		}
+	}
 }
 .auth0-lock.auth0-lock {
 	.auth0-lock-header {
@@ -36,7 +56,8 @@
 		padding-top: 10px;
 	}
    .auth0-lock-header-logo {
-		display: none !important;
+		visibility:hidden;
+      pointer-events:none;
 	}
 	.auth0-lock-name {
 		color: #333;
