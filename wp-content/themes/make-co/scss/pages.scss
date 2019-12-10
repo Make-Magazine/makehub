@@ -3,6 +3,7 @@
 	.main-content.container { width: 100%; }
 	#page-content.bluetoad {
 		padding-top: 0px;
+		margin-bottom: 40px;
 		@media screen and (max-width: 768px) {
 		  	padding-top: 50px;
 		}
@@ -11,6 +12,7 @@
 			height: 100vh;
 			border: none;
 			margin-bottom: -10px;
+			padding-bottom: 150px;
 		}
 	}
 }
