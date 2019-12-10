@@ -36,14 +36,14 @@
 		z-index: 9999;
 		height: 20px;
 		width: 85px;
-		font-weight: bold;
-		background: #005e9a;
+		font-weight: 400;
+		background: #1987C7;
 		border-solid: 1px #005e9a;
 		a { color: #fff; }
 		&:hover{
 			background:#fff;
 			a{
-				color: #005e9a;
+				color: #1987C7;
 			}
 		}
 	}
@@ -56,8 +56,7 @@
 		padding-top: 10px;
 	}
    .auth0-lock-header-logo {
-		visibility:hidden;
-      pointer-events:none;
+		display: none;
 	}
 	.auth0-lock-name {
 		color: #333;
@@ -74,5 +73,8 @@
 		color: #1987C7 !important; 
 		border: solid 1px #1987C7;
 	}
-	.auth0-lock-tabs li:last-of-type { display: none; }
+	.auth0-lock-tabs li:last-of-type { 
+		visibility:hidden;
+      pointer-events:none;
+	}
 }
