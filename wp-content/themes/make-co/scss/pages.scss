@@ -52,11 +52,8 @@
 	.auth0-lock-header {
 		border-bottom: 7px solid #33b5e5;
 	}
-	.auth0-lock.auth0-lock .auth0-lock-content-wrapper {
-		padding-top: 10px;
-	}
    .auth0-lock-header-logo {
-		display: none;
+		display: none !important;
 	}
 	.auth0-lock-name {
 		color: #333;
