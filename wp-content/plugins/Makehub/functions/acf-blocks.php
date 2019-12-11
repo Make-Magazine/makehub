@@ -91,7 +91,18 @@ function grid_block_split_block_render_callback($block){
 							</div>";
 		}
 		$first .= '      </div>';
-		$second = '      <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg">'.get_field('main_content').'</div>';
+		if ( is_user_logged_in() && is_front_page() ) { // if we're on the front page, we can assume the login shortcode was in the wysiwyg and it should have a different display when logged in
+			$second = '	  <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg" style="padding: 35px 30px 0px;">
+								  <h2 style="color:#fff;margin-top:0px;font-weight: 300;">Welcome, '.bp_core_get_user_displayname( bp_loggedin_user_id() ).'</h2>
+								  <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
+								  <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
+								  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
+								  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Newsfeed</a></p>
+								  <p><a href="/digital-library" class="btn universal-btn-reversed" style="width:100%;">View Digital Magazine</a></p>
+							  </div>';
+		} else {
+			$second = '   <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg">'.get_field('main_content').'</div>';
+		}
 
 		// here we get tricky and allow users to switch the position of the six column spread and the 
 		if(get_field('switch_position')) {
