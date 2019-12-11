@@ -31,10 +31,10 @@
    margin-top: 35px;
 	.join-btn {
 		position: absolute;
-		top: 58px;
+		top: 59px;
 		right: 0px;
 		z-index: 9999;
-		height: 20px;
+		height: 19px;
 		width: 85px;
 		font-weight: 400;
 		background: #1987C7;
@@ -73,5 +73,8 @@
 	.auth0-lock-tabs li:last-of-type { 
 		visibility:hidden;
       pointer-events:none;
+	}
+	.auth0-global-message.auth0-global-message-error {
+		width: 133px;
 	}
 }
