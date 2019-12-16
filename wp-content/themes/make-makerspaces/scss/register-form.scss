@@ -1,0 +1,265 @@
+// .gform_wrapper,
+// .gform_wrapper .makerspace-directory,
+// .gform_wrapper.gv-edit-entry-wrapper,
+.gform_wrapper {
+
+   .gform_heading {
+      display: none;
+   }
+}
+.gform_wrapper .gform_body {
+
+   h2 {
+      margin-bottom: 5px;
+      margin-top: 0;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ccc !important;
+   }
+
+   .top_label div.ginput_container {
+      margin-top: 0px;
+   }
+
+   input:not([type=radio]):not([type=checkbox]):not([type=submit]):not([type=button]):not([type=image]):not([type=file]) {
+      font-size: inherit;
+      font-family: inherit;
+      padding: 5px 4px;
+      letter-spacing: normal;
+      height: 40px;
+      padding: 6px 12px;
+      font-size: 16px;
+      line-height: 1.42857143;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+   }
+
+   textarea {
+      font-size: inherit;
+      font-family: inherit;
+      padding: 5px 4px;
+      letter-spacing: normal;
+      padding: 6px 12px;
+      font-size: 16px;
+      line-height: 1.42857143;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+      -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+   }
+
+   li.gfield ul.gfield_radio li input[type=radio]+input[type=text] {
+      height: 25px !important;
+   }
+
+   ul li.gfield {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      margin-top: 0;
+   }
+
+   label, 
+   label.gfield_label,
+   .gfield_radio li label,
+   .gfield_checkbox li label {
+      font-size: 16px;
+      font-weight: 400;
+      .gfield_required {
+         color: #EB002A;
+      }
+   }
+   label.gfield_label {
+      font-weight: 700;
+   }
+
+   select {
+      font-size: 16px;
+      padding: 1em;
+      height: 40px;
+      background-color: #fff;
+   }
+
+   // Styled File Upload input - TBD, work-in-progress... not super good
+   // label ~ .ginput_container.ginput_container_fileupload::after {
+   //    content: "Choose a File";
+   //    cursor: pointer;
+   //    position: relative;
+   //    top: -35px;
+   //    z-index: -1;
+   //    width: auto;
+   //    max-width: 140px;
+
+   //    background-color: #005E9A;
+   //    box-shadow: none;
+   //    border: thin white solid;
+   //    color: #fff;
+   //    border-radius: 0px;
+   //    text-transform: uppercase;
+   //    font-size: 14px;
+   //    font-weight: 300;
+   //    padding: 10px 20px;
+   // }
+   // label ~ .ginput_container.ginput_container_fileupload:hover::after {
+   //    background: #fff;
+   //    color: #005E9A;
+   //    border-color: #005E9A;
+   // }
+   // input[type="file"] {
+   //    opacity: 0;
+   //    padding: 16px;
+   //    cursor: pointer;
+   // }
+
+   // Styled checkbox
+   .ginput_container_checkbox ul.gfield_checkbox {
+      li[class^="gchoice_"] {
+         input[type="checkbox"] {
+            opacity: 0;
+         }
+         input[type="checkbox"] + label::after {
+            content: none;
+         }
+         input[type="checkbox"]:checked + label::after {
+            content: "";
+         }
+         input[type="checkbox"]:focus + label::before {
+            outline: rgb(59, 153, 252) auto 5px;
+         }
+         label {
+            position: relative;
+            margin-left: 10px;
+         }
+         label::before,
+         label::after {
+            position: absolute;
+         }
+         label::before{
+            content: "";
+            display: inline-block;
+            top: 3px;
+            height: 16px;
+            width: 16px;
+            margin-left: -21px;
+            border: 2px solid #ccc;
+            border-radius: 2px;
+         }
+         label::after {
+            content: "";
+            display: inline-block;
+            height: 5px;
+            width: 9px;
+            border-left: 2px solid #ccc;
+            border-bottom: 2px solid #ccc;
+            left: 3px;
+            top: 7px;
+            transform: rotate(-45deg);
+            margin-left: -20px;
+         }
+         input[type="checkbox"]:checked + label {
+            font-weight: 400; //#1987C7;
+            &::before,
+            &::after {
+               border-color: #1987C7;
+            }
+         }
+      }
+   }
+
+   // Styled radio button
+   .ginput_container_radio ul.gfield_radio {
+      li[class^="gchoice_"] {
+         input[type="radio"] {
+            opacity: 0;
+         }
+         input[type="radio"] + label::after {
+            content: none;
+         }
+         input[type="radio"]:checked + label::after {
+            content: "";
+         }
+         input[type="radio"]:focus + label::before {
+            outline: rgb(59, 153, 252) auto 5px;
+         }
+         label {
+            position: relative;
+            margin-left: 12px;
+         }
+         label::before,
+         label::after {
+            position: absolute;
+         }
+         label::before{
+            content: "";
+            display: inline-block;
+            top: 3px;
+            height: 16px;
+            width: 16px;
+            margin-left: -21px;
+            border: 2px solid #ccc;
+            border-radius: 50%;
+         }
+         input[type=radio]:checked+label::before {
+            box-shadow: inset 0 0 0 1rem #0079b8;
+            border: 1px solid #0079b8;
+         }
+         input[type="radio"]:checked + label {
+            font-weight: 400;
+         }
+      }
+   }
+
+   // Overrides for form error state
+   div.validation_error {
+      color: #EB002A;
+      border-color: #EB002A;
+   }
+
+   .gfield_error .gfield_label {
+      color: #EB002A;
+   }
+
+   li.gfield_error input:not([type=radio]):not([type=checkbox]):not([type=submit]):not([type=button]):not([type=image]):not([type=file]), li.gfield_error textarea {
+      border-color: #EB002A;
+   }
+
+   li.gfield.gfield_error, li.gfield.gfield_error.gfield_contains_required.gfield_creditcard_warning {
+      margin-bottom: 0!important;
+   }
+
+   .validation_message,
+   .gfield_description.validation_message {
+      color: #EB002A;
+      padding-bottom: 0;
+   }
+
+   li.gfield.gfield_error {
+      background-color: transparent;
+      border: none;
+      // margin-bottom: 0;
+   }
+   li.gfield.gfield_error.gfield_contains_required div.ginput_container,
+   li.gfield.gfield_error.gfield_contains_required label.gfield_label {
+      margin-top: 0;
+   }
+   
+
+   //li.gfield_error div.ginput_complex.ginput_container label,
+   li.gfield_error ul.gfield_checkbox,
+   li.gfield_error ul.gfield_radio {
+      color: #333;
+   }
+
+}
