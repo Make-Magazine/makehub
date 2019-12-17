@@ -15,6 +15,440 @@ main.content {
 	margin-top: 0px !important; // has to override, sumome. sorry not sorry
 }
 
+
+body {
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.main-content {
+	padding-top: 25px;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 200;
+  small {
+    font-weight: 300;
+  }
+}
+
+h1 {
+	margin-bottom: 15px;
+	font-size: 32px;
+	line-height: 1.1em;
+	text-align: center;
+	@media all and (max-width: 767px) {
+		font-size:22px;
+	}
+}
+h2 {
+	font-size: 30px;
+}
+h3 {
+  font-size: 26px;
+  font-weight: 300;
+}
+h4 {
+  font-size: 20px;
+  margin-top: 12px;
+}
+h5 {
+  font-size: 18px;
+}
+h6 {
+  font-size: 12px;
+}
+
+a {
+  color: #1989C7;
+  font-weight: 400;
+  transition: color 0.1s ease;
+  &:visited {
+    color: #1989C7;
+  }
+  &:active,
+  &:hover,
+  &:focus {
+    color: #37AFED;
+    text-decoration: underline;
+    transition: color 0.1s ease;
+  }
+  &.disabled {
+    color: #9b9b9b;
+    font-weight: 200;
+  }
+}
+
+.no-js .mf-form div.step,
+.no-js .mf-breadcrumbs,
+.js .hide-if-js,
+.no-js .hide-if-no-js {
+  display: none;
+}
+
+.center {
+  text-align: center;
+}
+
+.clear {
+  clear: both;
+}
+
+.lead,
+.large {
+  font-size: 20px;
+  ul {
+    li {
+      line-height: 120%;
+    }
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  color: #37AFED;
+	&:hover {
+		color: #23527c;
+	}
+}
+
+ul,
+ol {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5em;
+  color: #333;
+  list-style-type: square;
+}
+
+// Add 15px padding to any side
+.padtop {
+  padding-top: 15px !important;
+}
+
+.padbottom {
+  padding-bottom: 15px !important;
+}
+
+.padleft {
+  padding-left: 15px !important;
+}
+
+.padright {
+  padding-right: 15px !important;
+}
+
+// Get rid of all margin
+.nomargins {
+  margin: 0px !important;
+}
+
+// WordPress post thumbnails
+.post_thumb {
+  margin-right: 10px;
+  img {
+    padding: 3px;
+    border: 1px solid #aaa;
+    background-color: #eee;
+  }
+}
+
+.btn {
+  &:visited {
+    color: #fff;
+  }
+}
+
+.blue-btn {
+	color: #fff;
+	font-size: 18px;
+	background: #005e9a;
+	padding: 8px 15px;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	border-radius: 3px;
+	border: solid 1px #005e9a;
+	&:hover, &:visited, &:active, &:focus {
+		color: #005e9a;
+		background: #fff;
+	}
+}
+
+// gform button
+.gform_button.button {
+   background-color: #005E9A;
+   box-shadow: none;
+   border: thin white solid;
+   color: #fff;
+   border-radius: 0px;
+   text-transform: uppercase;
+   font-size: 14px;
+   font-weight: 300;
+   padding: 10px 20px;
+   &:hover {
+      background: #fff;
+      color: #005E9A;
+      border-color: #005E9A;
+   }
+}
+
+.btn-lt-blue {
+  color: #4a4a4a;
+  background-color: #67D0F7;
+  border: none;
+  &:hover, &:focus {
+    color: #4a4a4a;
+    background-color: #69BAE1;
+  }
+}
+
+.btn-contrast-border {
+  border: solid 2px #1989C7;
+  margin: 3px;
+  color: #333;
+  background: #fff;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 3px 12px;
+  transition: all 0.15s ease;
+  &:visited {
+    color: #333;
+  }
+  &:hover, &:active, &:focus{
+    color: white;
+    border: solid 2px #4EBEFC;
+    background: #4EBEFC;
+    transition: all 0.15s ease;
+  }
+}
+
+
+hr.double-line-hr {
+  height: 3px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-top: 2px dotted #ffcc66;
+  border-bottom: 3px solid #67bde1;
+}
+
+.location-holder-top {
+  background: url(../img/bg-border.png);
+  background-repeat: repeat-x;
+  background-position: top;
+}
+
+.location-holder-bottom {
+  background: url(../img/bg-border.png);
+  background-repeat: repeat-x;
+  background-position: bottom;
+}
+
+// Form input field boxes
+.formfield {
+	padding: 6px 8px;
+	margin-bottom: 10px;
+	font-size: 15px;
+	line-height: 1em;
+	border: 2px solid #cccccc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+// Form Input Radio and Check Boxes
+input[type=radio].fa-radio {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  ~ label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f1db";
+    letter-spacing: 10px;
+    font-size: 1.2em;
+    //color: #0090C7;
+    width: 1.4em;
+  }
+  &:checked ~ label:before  {
+    content: "\f00c";
+    font-size: 1.2em;
+    color: #0090C7;
+    letter-spacing: 5px;
+  }
+  &:focus ~ label:before,
+  &:focus ~ label {
+    //color: green;
+  }
+}
+input[type=checkbox].fa-checkbox {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  ~ label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f096";
+    letter-spacing: 10px;
+    font-size: 1.2em;
+    //color: #0090C7;
+    width: 1.4em;
+    vertical-align: bottom;
+  }
+  &:checked ~ label:before  {
+    content: "\f046";
+    font-size: 1.2em;
+    color: #0090C7;
+    letter-spacing: 5px;
+    vertical-align: bottom;
+  }
+  &:focus ~ label:before,
+  &:focus ~ label {
+    //color: green;
+  }
+}
+
+
+
+.font-narrower {
+  font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+}
+// input checkbox with fontawesome:
+.checkbox-fa-icon {
+  display: none;
+  &~.fa.fa-check-square-o {
+    display: none;
+    color: #0090C7;
+  }
+  &~.fa.fa-square-o {
+    display: inline;
+    padding-right: 2px;
+    color: #0090C7;
+  }
+  &:checked {
+    &~.fa.fa-check-square-o {
+      display: inline;
+    }
+    &~.fa.fa-square-o {
+      display: none;
+    }
+  }
+}
+
+// SOCIAL MEDIA ROUND ICONS
+.social-network-container {
+  margin-top: 0;
+  ul.social-network {
+    float: left;
+    list-style: none;
+    display: inline;
+    margin-left:0 !important;
+    margin-bottom: 0;
+    padding: 0;
+
+    li {
+      display: inline;
+      margin: 0 5px;
+    }
+    li:first-child {
+      margin-left: 0;
+    }
+    a.icoRss:hover {
+      background-color: #F56505;
+    }
+    a.icoFacebook:hover {
+      background-color:#3B5998;
+    }
+    a.icoTwitter:hover {
+      background-color:#33ccff;
+    }
+    a.icoInstagram:hover {
+      background-color:#3f729b;
+    }
+    a.icoGoogle-plus:hover {
+      background-color:#DC4E41;
+    }
+    a.icoPinterest:hover {
+      background-color:#cc2127;
+    }
+    a.icoLinkedin:hover {
+      background-color:#007bb7;
+    }
+    a.icoYoutube:hover {
+      background-color: #bb0000;
+    }
+    a.icoInstagram:hover i, 
+    a.icoFacebook:hover i, 
+    a.icoTwitter:hover i,
+    a.icoPinterest:hover i, 
+    a.icoVimeo:hover i, 
+    a.icoLinkedin:hover i {
+      color:#fff;
+    }
+    a.socialIcon:hover, .socialHoverClass {
+      color:#44BCDD;
+    }
+
+    &.social-circle i {
+      color: #fff;
+      margin:0;
+      line-height:30px;
+      text-align: center;
+    }
+
+    &.social-circle li a {
+      display:inline-block;
+      position:relative;
+      margin:0 auto 0 auto;
+      -moz-border-radius:50%;
+      -webkit-border-radius:50%;
+      border-radius:50%;
+      text-align:center;
+      width: 30px;
+      height: 30px;
+      font-size:20px;
+      background-color: #D3D3D3;
+      -webkit-transition: all 0.2s;
+      -moz-transition: all 0.2s;
+      -o-transition: all 0.2s;
+      -ms-transition: all 0.2s;
+      transition: all 0.2s;
+    }
+
+    &.social-circle li a:hover {
+      -webkit-transition: all 0.2s;
+      -moz-transition: all 0.2s;
+      -o-transition: all 0.2s;
+      -ms-transition: all 0.2s;
+      transition: all 0.2s;
+    }
+  }
+}
+
+
 // our special little override of container fluid for purposes
 .container-fluid.inner-container {
 	width: 90%;
@@ -322,11 +756,6 @@ hr.double-line-hr {
     display: inline-block;
     font-size: 18px;
     padding-top: 6px;
-  }
-}
-.page-template-page-crew .fancybox-skin {
-  @media screen and (max-width: 767px) {
-    padding: 30px !important;
   }
 }
 .fancybox-overlay {
