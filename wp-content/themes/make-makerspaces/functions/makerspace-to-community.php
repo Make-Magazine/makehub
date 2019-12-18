@@ -1,7 +1,8 @@
 <?php
 
-add_action('gform_entry_created', 'makerspace_to_community', 10, 2);
-add_action('gform_after_update_entry', 'makerspace_to_community', 10, 2);
+add_action('gform_entry_created_5', 'makerspace_to_community', 10, 2);
+add_action('gform_after_update_entry_5', 'makerspace_to_community', 10, 2);
+
 
 /*
  * Triggered when a new entry is created or a current one is updated for form 5 Makerspace Directory
