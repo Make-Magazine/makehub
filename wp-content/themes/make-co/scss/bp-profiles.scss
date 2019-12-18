@@ -273,13 +273,17 @@
 		.yz-profile-content {
 			background: rgba(63, 175, 237, .2);
 		}
+		// don't let makerspaces edit profiles
 		i.fa-edit { display: none; }
 		#yz-profile-navmenu .yz-social-buttons { display: none; }
-		.yz-settings-menu a {
-			&:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
-				display: none;
-			}
+	}
+	.yz-settings-menu a {
+		&:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3) {
+			display: none;
 		}
+	}
+	.yz-settings-sidebar {
+		.yz-account-settings-menu { display: none; }
 	}
 	// if the member type is a makerspace and the member has makerspace level membership
 	&.member-level-makerspace {
