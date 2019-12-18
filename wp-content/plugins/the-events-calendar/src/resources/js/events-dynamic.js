@@ -164,4 +164,4 @@ var tribe_dynamic_help_text = tribe_dynamic_help_text || {};
 		}
 	} );
 
-})( jQuery, tribe_dynamic_helper_text );
+})( jQuery, tribe_dynamic_help_text );

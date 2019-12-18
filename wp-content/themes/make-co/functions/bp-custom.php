@@ -180,7 +180,7 @@ function default_member_type( $user_id ) {
 	}
 }
 // make users members if they don't have another member type
-/* run once, then delete
+
 function members_membertypes() {
   $members =  get_users( 'blog_id=1&fields=ID' );
   foreach ( $members as $user_id ) {
@@ -190,7 +190,7 @@ function members_membertypes() {
   }
 }
 add_action('bp_init', 'members_membertypes' );
-*/
+
 
 //********************************************//
 //        Makerspace related functions        //
