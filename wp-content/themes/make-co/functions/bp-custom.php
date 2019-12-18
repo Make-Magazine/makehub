@@ -2,9 +2,9 @@
 
 //Page Slug Body Class
 function add_slug_body_class( $classes ) {
-	global $post;
-	if ( isset( $post ) ) {
-		$classes[] = $post->post_type . '-' . $post->post_name;
+	$urlPath = trim(str_replace("/","-",$_SERVER['REQUEST_URI']), '-');
+	if ($urlPath) {
+		$classes[] = "page-" . $urlPath;
 	}
 	return $classes;
 }
