@@ -1,4 +1,15 @@
 <?php 
+
+//Page Slug Body Class
+function add_slug_body_class( $classes ) {
+	global $post;
+	if ( isset( $post ) ) {
+		$classes[] = $post->post_type . '-' . $post->post_name;
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'add_slug_body_class' );
+
 function youzer_add_custom_meta_fields() {
 	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
 	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
@@ -180,7 +191,7 @@ function default_member_type( $user_id ) {
 	}
 }
 // make users members if they don't have another member type
-
+/* run once, then delete
 function members_membertypes() {
   $members =  get_users( 'blog_id=1&fields=ID' );
   foreach ( $members as $user_id ) {
@@ -190,7 +201,7 @@ function members_membertypes() {
   }
 }
 add_action('bp_init', 'members_membertypes' );
-
+*/
 
 //********************************************//
 //        Makerspace related functions        //
