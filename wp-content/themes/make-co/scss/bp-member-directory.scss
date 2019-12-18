@@ -307,14 +307,14 @@
 			.yz-directory-filter {
 				.item-list-tabs, .item-list-tabs:not(#subnav) {
 					li.selected {
-						background: transparent
+						background: transparent;
 						border: 0px;
 						a {
 							font-weight: normal;
 							color: rgb(150, 150, 150);
 						}
 					}
-					li.#members-member {
+					li#members-member {
 						background: rgba(63, 175, 237, .2);
 						border-radius: 5px;
 						a {
@@ -331,14 +331,14 @@
 			.yz-directory-filter {
 				.item-list-tabs, .item-list-tabs:not(#subnav) {
 					li.selected {
-						background: transparent
+						background: transparent;
 						border: 0px;
 						a {
 							font-weight: normal;
 							color: rgb(150, 150, 150);
 						}
 					}
-					li.#members-makerspace {
+					li#members-makerspace {
 						background: rgba(63, 175, 237, .2);
 						border-radius: 5px;
 						a {
