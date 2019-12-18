@@ -11,20 +11,20 @@ var tribe_dynamic_helper_text = tribe_dynamic_helper_text || {};
 	obj.field_class       = '.event-dynamic-helper-text';
 	obj.date_fmt_settings = {
 		dateSettings : {
-			days        : tribe_dynamic_helper_text.days,
-			daysShort   : tribe_dynamic_helper_text.daysShort,
-			months      : tribe_dynamic_helper_text.months,
-			monthsShort : tribe_dynamic_helper_text.monthsShort,
+			days        : tribe_dynamic_help_text.days,
+			daysShort   : tribe_dynamic_help_text.daysShort,
+			months      : tribe_dynamic_help_text.months,
+			monthsShort : tribe_dynamic_help_text.monthsShort,
 		}
 	};
 
 	obj.date_fmt = new DateFormatter( obj.date_fmt_settings );
-	obj.text     = JSON.parse( tribe_dynamic_helper_text.msgs );
+	obj.text     = JSON.parse( tribe_dynamic_help_text.msgs );
 
 	// Date Formats
-	obj.date_with_year    = tribe_dynamic_helper_text.date_with_year;
-	obj.date_no_year      = tribe_dynamic_helper_text.date_no_year;
-	obj.datepicker_format = tribe_dynamic_helper_text.datepicker_format;
+	obj.date_with_year    = tribe_dynamic_help_text.date_with_year;
+	obj.date_no_year      = tribe_dynamic_help_text.date_no_year;
+	obj.datepicker_format = tribe_dynamic_help_text.datepicker_format;
 
 	// Setup object variables
 	obj.dynamic_text, obj.start_date, obj.start_time, obj.end_date, obj.end_time, obj.all_day = '';
