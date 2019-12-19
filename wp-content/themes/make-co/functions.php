@@ -20,14 +20,14 @@ define('CHILD_THEME_URL', 'https://community.make.co');
 // Sets up the Theme.
 require_once get_stylesheet_directory() . '/lib/theme-defaults.php';
 
-add_action('after_setup_theme', 'make_learn_localization_setup');
+add_action('after_setup_theme', 'make_co_localization_setup');
 
 /**
  * Sets localization (do not remove).
  *
  * @since 1.0.0
  */
-function make_learn_localization_setup() {
+function make_co_localization_setup() {
 
     load_child_theme_textdomain('make-co', get_stylesheet_directory() . '/languages');
 }
@@ -77,40 +77,40 @@ add_action('wp_enqueue_scripts', 'make_co_enqueue_scripts', 0);
  * @since 1.0.0
  */
 function make_co_enqueue_scripts() {
-    $my_theme = wp_get_theme();
-    $my_version = $my_theme->get('Version');
-    $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
-    wp_enqueue_script(
-            'make-co-responsive-menu',
-            get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
-            array('jquery'),
-            $my_version,
-            true
-    );
+	$my_theme = wp_get_theme();
+	$my_version = $my_theme->get('Version');
+	$suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
+	wp_enqueue_script(
+		'make-co-responsive-menu',
+		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
+		array('jquery'),
+		$my_version,
+		true
+	);
 
-    wp_localize_script(
-            'make-co-responsive-menu',
-            'genesis_responsive_menu',
-            make_learn_responsive_menu_settings()
-    );
+	wp_localize_script(
+		'make-co-responsive-menu',
+		'genesis_responsive_menu',
+		make_co_responsive_menu_settings()
+	);
 
-    wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
-    wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
-    // get all the bp legacy scripts loaded
-    wp_enqueue_script('jquery-cookie', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js', array(), $my_version, true);
-    wp_enqueue_script('jquery-scrollto', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js', array(), $my_version, true);
-    wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true);
-    wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true);
-    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
-    wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
+	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
+	// get all the bp legacy scripts loaded
+	wp_enqueue_script('jquery-cookie', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js', array(), $my_version, true);
+	wp_enqueue_script('jquery-scrollto', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js', array(), $my_version, true);
+	wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true);
+	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true);
+	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
-    wp_enqueue_script(
-            'make-co',
-            get_stylesheet_directory_uri() . '/js/make-co.js',
-            array('jquery'),
-            $my_version,
-            true
-    );
+	wp_enqueue_script(
+		'make-co',
+		get_stylesheet_directory_uri() . '/js/make-co.js',
+		array('jquery'),
+		$my_version,
+		true
+	);
 
     wp_localize_script('make-co', 'ajax_object',
             array(
@@ -190,7 +190,7 @@ remove_action('genesis_meta', 'genesis_load_stylesheet');
  *
  * @since 2.3.0
  */
-function make_learn_responsive_menu_settings() {
+function make_co_responsive_menu_settings() {
 
     $settings = array(
         'mainMenu' => __('Menu', 'make-co'),
@@ -247,7 +247,7 @@ genesis_unregister_layout('sidebar-sidebar-content');
 remove_filter('genesis_nav_items', 'genesis_nav_right', 10, 2);
 remove_filter('wp_nav_menu_items', 'genesis_nav_right', 10, 2);
 
-add_action('genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes');
+add_action('genesis_theme_settings_metaboxes', 'make_co_remove_metaboxes');
 
 /**
  * Removes output of unused admin settings metaboxes.
@@ -256,13 +256,13 @@ add_action('genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes');
  *
  * @param string $_genesis_admin_settings The admin screen to remove meta boxes from.
  */
-function make_learn_remove_metaboxes($_genesis_admin_settings) {
+function make_co_remove_metaboxes($_genesis_admin_settings) {
 
     remove_meta_box('genesis-theme-settings-header', $_genesis_admin_settings, 'main');
     remove_meta_box('genesis-theme-settings-nav', $_genesis_admin_settings, 'main');
 }
 
-add_filter('genesis_customizer_theme_settings_config', 'make_learn_remove_customizer_settings');
+add_filter('genesis_customizer_theme_settings_config', 'make_co_remove_customizer_settings');
 
 /**
  * Removes output of header and front page breadcrumb settings in the Customizer.
@@ -272,7 +272,7 @@ add_filter('genesis_customizer_theme_settings_config', 'make_learn_remove_custom
  * @param array $config Original Customizer items.
  * @return array Filtered Customizer items.
  */
-function make_learn_remove_customizer_settings($config) {
+function make_co_remove_customizer_settings($config) {
 
     unset($config['genesis']['sections']['genesis_header']);
     unset($config['genesis']['sections']['genesis_breadcrumbs']['controls']['breadcrumb_front_page']);
@@ -290,7 +290,7 @@ add_action('genesis_header', 'genesis_do_nav', 12);
 remove_action('genesis_after_header', 'genesis_do_subnav');
 add_action('genesis_footer', 'genesis_do_subnav', 10);
 
-add_filter('wp_nav_menu_args', 'make_learn_secondary_menu_args');
+add_filter('wp_nav_menu_args', 'make_co_secondary_menu_args');
 
 /**
  * Reduces secondary navigation menu to one level depth.
@@ -300,7 +300,7 @@ add_filter('wp_nav_menu_args', 'make_learn_secondary_menu_args');
  * @param array $args Original menu options.
  * @return array Menu options with depth set to 1.
  */
-function make_learn_secondary_menu_args($args) {
+function make_co_secondary_menu_args($args) {
 
     if ('secondary' !== $args['theme_location']) {
         return $args;
@@ -310,7 +310,7 @@ function make_learn_secondary_menu_args($args) {
     return $args;
 }
 
-add_filter('genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar');
+add_filter('genesis_author_box_gravatar_size', 'make_co_author_box_gravatar');
 
 /**
  * Modifies size of the Gravatar in the author box.
@@ -320,12 +320,12 @@ add_filter('genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar')
  * @param int $size Original icon size.
  * @return int Modified icon size.
  */
-function make_learn_author_box_gravatar($size) {
+function make_co_author_box_gravatar($size) {
 
     return 90;
 }
 
-add_filter('genesis_comment_list_args', 'make_learn_comments_gravatar');
+add_filter('genesis_comment_list_args', 'make_co_comments_gravatar');
 
 /**
  * Modifies size of the Gravatar in the entry comments.
@@ -335,156 +335,12 @@ add_filter('genesis_comment_list_args', 'make_learn_comments_gravatar');
  * @param array $args Gravatar settings.
  * @return array Gravatar settings with modified size.
  */
-function make_learn_comments_gravatar($args) {
+function make_co_comments_gravatar($args) {
 
     $args['avatar_size'] = 60;
     return $args;
 }
 
-/* * **************************************************
-  LOGIN FUNCTIONS
- * ************************************************** */
-
-
-/* Old auth0 scripts
-  // redirect wp-login.php to the auth0 login page
-
-  function load_auth0_js() {
-  //auth0
-  wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.6.1/auth0.min.js', array(), false);
-  wp_enqueue_script('auth0Login', get_stylesheet_directory_uri() . '/auth0/js/auth0login.js', array(), false);
-  }
-
-  add_action('login_enqueue_scripts', 'load_auth0_js', 10);
-
-  // Set up the Ajax Logout
-  add_action('wp_ajax_mm_wplogout', 'MM_wordpress_logout');
-  add_action('wp_ajax_nopriv_mm_wplogout', 'MM_wordpress_logout');
-
-  function MM_wordpress_logout() {
-  //check_ajax_referer( 'ajax-logout-nonce', 'ajaxsecurity' );
-  wp_logout();
-  ob_clean(); // probably overkill for this, but good habit
-  wp_send_json_success();
-  }
-
-  add_action('wp_ajax_mm_wplogin', 'MM_WPlogin');
-  add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
-
-  // allow capital letters in usernames
-  remove_action( 'sanitize_user', 'strtolower' );
-
-  // Set up the Ajax WP Login
-  function MM_WPlogin() {
-  //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
-  global $wpdb; // access to the database
-  //use auth0 plugin to log people into wp
-  $a0_plugin = new WP_Auth0();
-  $a0_options = WP_Auth0_Options::Instance();
-  $users_repo = new WP_Auth0_UsersRepo($a0_options);
-  $users_repo->init();
-
-  $login_manager = new WP_Auth0_LoginManager($users_repo, $a0_options);
-  $login_manager->init();
-
-  //get the user information passed from auth0
-  $userinput = filter_input_array(INPUT_POST);
-  $userinfo = (object) $userinput['auth0_userProfile'];
-  $userinfo->email_verified = true;
-  $access_token = filter_input(INPUT_POST, 'auth0_access_token', FILTER_SANITIZE_STRING);
-  $id_token = filter_input(INPUT_POST, 'auth0_id_token', FILTER_SANITIZE_STRING);
-
-  if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
-  wp_send_json_success();
-  } else {
-  error_log('Failed login');
-  error_log(print_r($userinput, TRUE));
-  wp_send_json_error();
-  }
-  } */
-
-
-/**
- * These Functions Add and Verify the Invisible Google reCAPTCHA on Login
- * Normal users never see the wp-login.php page as they are forwarded to Auth0. 
- * this will stop spam bots from signing up
- */
-/*
-
-  /*
-  function cookie_login_warning() { ?>
-  <style type="text/css">
-  .wp-core-ui #login { width: 80%; }
-  #login::before {
-  content: "We are unable to process your login as we have detected that you have cookies blocked. Please make sure cookies are enabled in your browser and try again.";
-  text-align: center;
-  font-size:42px;
-  line-height: 46px;
-  }
-  #form-signin-wrapper {
-  display: none;
-  }
-  </style>
-  <?php
-
-  }
-
-  add_action('login_enqueue_scripts', 'cookie_login_warning');
-
-  add_action('login_enqueue_scripts', 'login_recaptcha_script');
-
-  function login_recaptcha_script() {
-  wp_register_script('recaptcha_login', 'https://www.google.com/recaptcha/api.js');
-  wp_enqueue_script('recaptcha_login');
-  }
-
-  add_action('login_form', 'display_recaptcha_on_login');
-
-  function display_recaptcha_on_login() {
-  echo "<script>
-  function onSubmit(token) {
-  document.getElementById('loginform').submit();
-  }
-  </script>
-  <button class='g-recaptcha' data-sitekey='6Lf_-kEUAAAAAHtDfGBAleSvWSynALMcgI1hc_tP' data-callback='onSubmit' data-size='invisible' style='display:none;'>Submit</button>";
-  }
-
-  add_filter('wp_authenticate_user', 'verify_recaptcha_on_login', 10, 2);
-
-  function verify_recaptcha_on_login($user, $password) {
-  if (isset($_POST['g-recaptcha-response'])) {
-  $response = wp_remote_get('https://www.google.com/recaptcha/api/siteverify?secret=6Lf_-kEUAAAAAHtDfGBAleSvWSynALMcgI1hc_tP&response=' . $_POST['g-recaptcha-response']);
-  $response = json_decode($response['body'], true);
-
-  if (true == $response['success']) {
-  return $user;
-  } else {
-  // FIXME: This one fires if your password is incorrect... Check if password was incorrect before returning this error...
-  return new WP_Error( 'Captcha Invalid', __('<strong>ERROR</strong>: You are a bot') );
-  }
-  } else {
-  return new WP_Error('Captcha Invalid', __('<strong>ERROR</strong>: You are a bot. If not then enable JavaScript.'));
-  }
-  }
-
-  add_action( 'login_form_lostpassword', 'wpse45134_filter_option' );
-  add_action( 'login_form_retrievepassword', 'wpse45134_filter_option' );
-  add_action( 'login_form_register', 'wpse45134_filter_option' );
-
- */
-
-/**
- * Simple wrapper around a call to add_filter to make sure we only
- * filter an option on the login page.
- */
-/*
-  function wpse45134_filter_option()
-  {
-  // use __return_zero because pre_option_{$opt} checks
-  // against `false`
-  add_filter( 'pre_option_users_can_register', '__return_zero' );
-  }
- */
 
 // Function to change email address from wordpress to webmaster
 function wpb_sender_email($original_email_address) {
