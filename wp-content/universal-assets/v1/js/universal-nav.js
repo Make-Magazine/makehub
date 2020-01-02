@@ -155,12 +155,12 @@
             })
         }
         if (jQuery(window).width() < 767) {
-            nextItemUnderNav.css("margin-top", "55px"); // initially start it lower as well
+            nextItemUnderNav.css("margin-top", "115px"); // initially start it lower as well
         }
         jQuery(window).on('resize', function () {
             if (jQuery(window).width() < 767) {
                 y_pos = 0;
-                nextItemUnderNav.css("margin-top", "55px");
+                nextItemUnderNav.css("margin-top", "115px");
                 jQuery(".nav-flyout-ul").css("display", "none");
             } else {
                 if (jQuery(".banner-bar").height) {
@@ -191,7 +191,7 @@
                 } else {
                     jQuery(".nav-hamburger .container, #nav-flyout").css("margin-top", "0px");
                 }
-                nextItemUnderNav.css("margin-top", "55px");
+                nextItemUnderNav.css("margin-top", "115px");
             } else if (scrollTop <= y_pos) {
                 e.removeClass("main-nav-scrolled");
                 jQuery("body").removeClass("scrolled");
