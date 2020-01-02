@@ -14,7 +14,7 @@ html {
 .entry-content { padding: 15px 0; }
 
 @media screen and (max-width: 767px) {
-	h1, .entry-title { font-size: 2.6em; margin-top: 45px; }
+	h1, .entry-title { font-size: 2.6em; margin-top: 75px; } // 45px without the pseudo-me banner
 }
 
 .nav-level-2 #menu-secondary_universal_menu{
