@@ -1,0 +1,14 @@
+jQuery("document").ready(function(){
+	// If it's a profile page
+	if(jQuery(".bp-user").length) {
+		jQuery('.yz-profile-navmenu .yz-navbar-item').each(function() {
+			// add classes to identify the user navbar items
+			var navItemClass = jQuery(this).text().trim().replace(/\s+/g, '-').toLowerCase().replace(/0\s*$/, '');
+			jQuery(this).addClass(navItemClass);
+			if(jQuery(".bp-user").not('.member-type-makerspace') && jQuery(".bp-user").not('.member-level-makerspace') && jQuery(this).hasClass("")){
+				console.log("test");
+				jQuery(this).remove;
+			}
+		});
+	}
+});

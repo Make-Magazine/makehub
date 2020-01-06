@@ -12,7 +12,7 @@ function sumomeActive() {
 	var domain = window.location.host;
 	var parts = domain.split('.');
 	var subdomain = parts[0];
-	if(subdomain != "community") {
+	if(subdomain != "community") { // what is this?
 		jQuery("#community-login").remove();
 	}
 	// keep these from happening before any angular or login scripts
@@ -222,39 +222,5 @@ function sumomeActive() {
 			jQuery( this ).prop( 'title', jQuery( this ).prop( "title" ).replace(/(<([^>]+)>)/ig," "));
 		});
 
-		//var memInterest = getUrlParam("membership-interest");
-		jQuery( "#menu-secondary_universal_menu a, .nav-flyout-ul a" ).on( "click", function() {
-			var href = jQuery(this).prop( "href" );
-			if(href.indexOf( "video" ) != -1) {
-				delete_cookie( "membership-interest" );
-				setCookie( "membership-interest", "video", 1 );
-			}
-			else if (href.indexOf( "live-learning" ) != -1) {
-				delete_cookie( "membership-interest" );
-				setCookie( "membership-interest", "live-learning", 1 );
-			}else {
-				delete_cookie( "membership-interest" );
-				setCookie( "membership-interest", "digital-magazine", 1 );
-			}
-		});
-
-		// Subnav highlighting for conversion page(s) on Make.co maybe this could just be moved to a make.co specific nav script?
-		function conversionPageHighlights(){
-			var memInterest = getCookie( 'membership-interest' ),
-				 $subNav,
-				 $subNavItem;
-			if(getUrlParam("interest")) {
-				memInterest = getUrlParam("interest");
-			}
-			if(memInterest && (firstpath === 'mm-error' || window.location.href.indexOf("-upgrade") > -1 )) {
-				$subNav = jQuery('#menu-secondary_universal_menu');
-				$subNavItem = $subNav.find('[href*="'+memInterest.replace(/ .*/,'')+'"]').closest('li');
-				// Probably don't strictly need this, but just to be safe
-				$subNav.find('li').each(function(el) {
-					jQuery(el).removeClass('active');
-				});
-				$subNavItem.addClass('active');
-			}
-		}
 	});
 })(jQuery);

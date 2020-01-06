@@ -258,10 +258,6 @@
 	}
 }
 
-// it would be great if events navbar item had an actual class, until then, it should be the second from last one
-.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2) {
-	display: none;
-}
 // if the member is type makerspace
 .member-type-makerspace {
 	.main-content.container {
