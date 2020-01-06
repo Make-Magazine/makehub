@@ -257,6 +257,11 @@
 		}
 	}
 }
+
+// it would be great if events navbar item had an actual class, until then, it should be the second from last one
+.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2) {
+	display: none;
+}
 // if the member is type makerspace
 .member-type-makerspace {
 	.main-content.container {
@@ -293,9 +298,16 @@
 				content: 'Featured Makerspace';
 				background: #f51400;
 			}
-			#yz-profile-navmenu .yz-social-buttons, #yz-profile-navmenu .yz-settings-area .yz-quick-buttons, .yz-navbar-view-more { 
+			#yz-profile-navmenu .yz-social-buttons, .yz-navbar-view-more { 
 				display: table-cell; 
 			}
+			#yz-profile-navmenu .yz-settings-area .yz-quick-buttons {
+				display: inline-block;
+			}
+			.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2) {
+				display: block;
+			}
 		}
+		
 	}
 }
