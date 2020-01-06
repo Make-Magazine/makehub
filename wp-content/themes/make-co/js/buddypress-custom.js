@@ -5,7 +5,7 @@ jQuery("document").ready(function(){
 			// add classes to identify the user navbar items
 			var navItemClass = jQuery(this).text().trim().replace(/\s+/g, '-').toLowerCase().replace(/0\s*$/, '');
 			jQuery(this).addClass(navItemClass);
-			if(jQuery(".bp-user").not('.member-type-makerspace') && jQuery(".bp-user").not('.member-level-makerspace') && jQuery(this).hasClass("")){
+			if(jQuery(".bp-user").not('.member-type-makerspace') && jQuery(".bp-user").not('.member-level-makerspace') && jQuery(this).hasClass("events")){
 				console.log("test");
 				jQuery(this).remove;
 			}
