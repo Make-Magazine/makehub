@@ -1,8 +1,11 @@
 <?php
 
 add_action('gform_entry_created_5', 'makerspace_to_community', 10, 2);
-add_action('gform_after_update_entry_5', 'makerspace_to_community', 10, 2);
-
+add_action('gform_after_update_entry_5', 'pre_makerspace_to_community', 10, 2);
+function pre_makerspace_to_community($form, $entry_id){
+    $entry = GFAPI::get_entry( $entry_id );
+    makerspace_to_community($entry, $form);
+}
 
 /*
  * Triggered when a new entry is created or a current one is updated for form 5 Makerspace Directory
@@ -11,28 +14,26 @@ add_action('gform_after_update_entry_5', 'makerspace_to_community', 10, 2);
 function makerspace_to_community($entry, $form) {    
     $email = $entry[141];
     
-    //If user already exists then assign ID and update the account.    
-    $userdata = array('user_email'=>$email, 
+    //Check whether the user already exist or not
+    $user_details = get_user_by("email", trim($email));
+        
+    if($user_details) { //does user exist?
+        //If user already exists then assign ID and update the website and display name            
+        $userdata = array('user_url'=>$entry[2], 'display_name'=>$entry[1]);
+        
+        $userdata['ID'] = $user_details->data->ID;        
+        $user_id = $user_details->data->ID;        
+        wp_update_user($userdata);        
+    } else { //no, add them        
+        $userdata = array('user_email'=>$email, 
                         'user_url'=>$entry[2], 
                         'display_name'=>$entry[1], 
-                        'user_login'=>$email,
-                        'user_pass'  =>  NULL);
-    
-    //Check whether the user already exist or not
-    $user_details = get_user_by( 'email', $userdata['user_email'] );
-    if ($user_details) {
-        //TBD - update if email,  website, or name changes
-
-        $userdata['ID'] = $user_details->data->ID;
-
-        $user_id = wp_update_user($userdata);        
-    } else { //no, add them
-        //switch_to_blog(1); //get role from main blog
+                        'user_login'=>$email);        
         $user_id = wp_insert_user($userdata);        
         wp_update_user( array ('ID' => $user_id, 'role' => 'subscriber') ) ;                
         add_user_to_blog( 1, $user_id, 'subscriber' ); //add user to main blog           
     }
-    
+   
     //set member type to makerspace
     $member_type = bp_set_member_type($user_id, 'Makerspace');
     switch_to_blog(1);
@@ -42,11 +43,13 @@ function makerspace_to_community($entry, $form) {
     GLOBAL $wpdb;
     $gf_field_arr = array();
     //set $bpmeta array with submitted data
+    $bpmeta = array();
     $sql = "select * from wp_ms_bp_xref";
     $results = $wpdb->get_results($sql);
     foreach ($results as $row) {
         $gf_field_arr[$row->gf_field_id] = $row->bp_field_id;
     }
+
     //loop thru form object extract field from array
     foreach ($form['fields'] as $field) {
         $field_id = $field->id;
@@ -77,25 +80,26 @@ function makerspace_to_community($entry, $form) {
     }    
     
     //Upload user avatar if image is set
-    if ($bpmeta['avatar']) {
+    if ($bpmeta['avatar']) {        
+        define( 'AVATARS', ABSPATH . 'wp-content/uploads/avatars' );
+        if ( ! file_exists( AVATARS ) ) mkdir( AVATARS, 0777 );
         $image_dir = AVATARS . '/' . $user_id;
         mkdir($image_dir, 0777);
         $current_time = time();
         $destination_bpfull = $image_dir . '/' . $current_time . '-bpfull.jpg';
         $destination_bpthumb = $image_dir . '/' . $current_time . '-bpthumb.jpg';
-
-        if (array_key_exists('avatar', $usermeta)) {
-            $usermeta['avatar'] = str_replace(' ', '%20', $bpmeta['avatar']);
-            $bpfull = $bpthumb = wp_get_image_editor($bpmeta['avatar']);
-
-            // Handle 404 avatar url
-            if (!is_wp_error($bpfull)) {
-                $bpfull->resize(150, 150, true);
-                $bpfull->save($destination_bpfull);
-                $bpthumb->resize(50, 50, true);
-                $bpthumb->save($destination_bpthumb);
-            }
-        }
+                
+        
+        $usermeta['avatar'] = str_replace(' ', '%20', $bpmeta['avatar']);
+        $bpfull = $bpthumb = wp_get_image_editor($bpmeta['avatar']);
+        
+        // Handle 404 avatar url
+        if (!is_wp_error($bpfull)) {
+            $bpfull->resize(150, 150, true);
+            $bpfull->save($destination_bpfull);
+            $bpthumb->resize(50, 50, true);
+            $bpthumb->save($destination_bpthumb);
+        }        
     }
 
     //xprofile field visibility
@@ -124,21 +128,17 @@ function makerspace_to_community($entry, $form) {
     foreach ($bp_extra_fields as $value) {
         $bp_xprofile_fields[$value->id] = $value->name;
         $bp_fields_type[$value->id] = $value->type;
-    }
-        
-    //echo '$bpmeta';
-    //var_dump($bpmeta);        
+    }         
         
     // Insert xprofile field visibility state for user level.
     update_user_meta($user_id, 'bp_xprofile_visibility_levels', $xprofile_fields_visibility);
 
     if (isset($bpmeta)) {
         //Added an entry in user_meta table for current user meta key is last_activity
-        //TBD - figure out how to do this 
         bp_update_user_last_activity($user_id, date('Y-m-d H:i:s'));
          
         foreach ($bpmeta as $bpmetakeyid => $bpmetavalue) {
-            $current_field_type = $bp_fields_type[$bpmetakeyid];
+            $current_field_type = (isset($bp_fields_type[$bpmetakeyid])?$bp_fields_type[$bpmetakeyid]:'');
             if ('image' === $current_field_type || $current_field_type == 'file') {
                 $sql = 'SELECT id FROM wp_bp_xprofile_data WHERE field_id = ' . $bpmetakeyid . ' AND user_id = ' . $user_id;
                 $result = $wpdb->get_var($sql);
