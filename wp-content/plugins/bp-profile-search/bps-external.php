@@ -129,10 +129,12 @@ function bps_users_search ($f)
 	switch ($filter)
 	{
 	case 'text_contains':
+		$value = stripslashes ($value);
 		$sql['where'][$filter] = bps_sql_expression ("{$f->code} LIKE %s", $value, true);
 		break;
 
 	case 'text_is':
+		$value = stripslashes ($value);
 		$sql['where'][$filter] = bps_sql_expression ("{$f->code} = %s", $value);
 		break;
 
@@ -242,10 +244,12 @@ function bps_usermeta_search ($f)
 	switch ($filter)
 	{
 	case 'text_contains':
+		$value = stripslashes ($value);
 		$sql['where'][$filter] = bps_sql_expression ("meta_value LIKE %s", $value, true);
 		break;
 
 	case 'text_is':
+		$value = stripslashes ($value);
 		$sql['where'][$filter] = bps_sql_expression ("meta_value = %s", $value);
 		break;
 

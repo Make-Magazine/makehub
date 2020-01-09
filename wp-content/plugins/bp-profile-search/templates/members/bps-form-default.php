@@ -27,7 +27,7 @@ if (is_admin ())
 	<?php } ?>
 	</select>
 
-	<div id="ui_collapsible">
+	<div id="ui_collapsible" <?php if ($options['theme'] == '') echo 'style="display: none;"'; ?>>
 		<p><strong><?php _e('Collapsible Form', 'bp-profile-search'); ?></strong></p>
 		<select name="options[collapsible]">
 			<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>

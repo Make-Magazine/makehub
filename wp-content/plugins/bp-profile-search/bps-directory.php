@@ -329,8 +329,20 @@ add_filter ('bp_get_template_part', 'bps_directory_index', 10, 2);
 function bps_directory_index ($templates, $slug)
 {
 	$data = bps_get_directory_data ();
+	if (!empty ($data['template']) && $slug == 'members/index')
+		$templates = array ($data['template']. '.php');
 
-	if (!empty ($data['template']) && $slug == 'members/index')  return array ($data['template']. '.php');
+	if (bps_debug ())
+	{
+		echo "<!--\n";
+		foreach ($templates as $template)
+		{
+			$path = str_replace (WP_CONTENT_DIR, '', bp_locate_template ($template));
+			echo "path $path\n";
+		}
+		echo "-->\n";
+	}
+
 	return $templates;
 }
 
@@ -339,7 +351,16 @@ add_filter ('bp_nouveau_object_template_path', 'bps_directory_ajax');
 function bps_directory_ajax ($template_path)
 {
 	$data = bps_get_directory_data ();
+	if (!empty ($data['ajax_template']))
+		$template_path = bp_locate_template ($data['ajax_template']. '.php');
 
-	if (!empty ($data['ajax_template']))  return bp_locate_template ($data['ajax_template']. '.php');
+	if (bps_debug ())
+	{
+		$path = str_replace (WP_CONTENT_DIR, '', $template_path);
+		echo "<!--\n";
+		echo "path $path\n";
+		echo "-->\n";
+	}
+
 	return $template_path;
 }
