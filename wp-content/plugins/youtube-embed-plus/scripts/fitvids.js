@@ -48,6 +48,14 @@ var epdofitvids = epdofitvids || function ($)
                 if (this.tagName.toLowerCase() === 'embed' && $this.parent('object').length || $this.parent('.fluid-width-video-wrapper').length) {
                     return;
                 }
+                if ($this.is('[data-origwidth]:not([width])'))
+                {
+                    $this.attr('width', $this.data('origwidth'));
+                }
+                if ($this.is('[data-origheight]:not([height])'))
+                {
+                    $this.attr('height', $this.data('origheight'));
+                }                
                 var height = (this.tagName.toLowerCase() === 'object' || ($this.attr('height') && !isNaN(parseInt($this.attr('height'), 10)))) ? parseInt($this.attr('height'), 10) : $this.height(),
                         width = !isNaN(parseInt($this.attr('width'), 10)) ? parseInt($this.attr('width'), 10) : $this.width(),
                         aspectRatio = height / width;

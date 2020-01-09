@@ -1,12 +1,12 @@
 <?php
 /*
 Plugin Name: Vimeography
-Plugin URI: http://vimeography.com
+Plugin URI: https://vimeography.com
 Description: Vimeography is the easiest way to set up a custom Vimeo gallery on your site.
-Version: 2.0.10
+Version: 2.1
 Requires PHP: 5.3
 Author: Dave Kiss
-Author URI: http://davekiss.com
+Author URI: https://davekiss.com
 License: GPL3
 Text Domain: vimeography
 */
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Vimeography' ) ) {
       define( 'VIMEOGRAPHY_CUSTOMIZATIONS_PATH',  WP_CONTENT_DIR . '/vimeography/assets/css/' );
       define( 'VIMEOGRAPHY_CUSTOMIZATIONS_URL',   content_url() . '/vimeography/assets/css/' );
       define( 'VIMEOGRAPHY_BASENAME', plugin_basename( __FILE__ ) );
-      define( 'VIMEOGRAPHY_VERSION', '2.0.10');
+      define( 'VIMEOGRAPHY_VERSION', '2.1');
       define( 'VIMEOGRAPHY_CURRENT_PAGE', basename($_SERVER['PHP_SELF']));
       define( 'VIMEOGRAPHY_ACCESS_TOKEN', 'eaf47146f04b5550a3e394f3bbf8273f');
     }
@@ -175,7 +175,7 @@ if ( ! class_exists( 'Vimeography' ) ) {
 
         // If the array doesn't contain one of the following strings, it
         // must be either a user or a video
-        if (in_array($url[0], array('album', 'albums', 'showcase', 'showcases', 'channels', 'groups', 'categories', 'tags')) !== TRUE) {
+        if (in_array($url[0], array('album', 'albums', 'showcase', 'showcases', 'channels', 'groups', 'categories', 'tags')) !== true) {
           if (is_numeric($url[0])) {
             array_unshift($url, 'videos');
           } else {
