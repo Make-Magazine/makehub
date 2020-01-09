@@ -287,6 +287,7 @@
 	.yz-settings-sidebar {
 		.yz-account-settings-menu { display: none; }
 	}
+	.yz-navbar-item.friends { display: none; }
 	// if the member type is a makerspace and the member has makerspace level membership
 	&.member-level-makerspace {
 		.main-content.container {
@@ -300,7 +301,7 @@
 			#yz-profile-navmenu .yz-settings-area .yz-quick-buttons {
 				display: inline-block;
 			}
-			.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2) {
+			.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2), .yz-navbar-item.friends {
 				display: block;
 			}
 		}

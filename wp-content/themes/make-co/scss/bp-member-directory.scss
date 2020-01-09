@@ -1,12 +1,4 @@
 .buddypress.directory {
-	#members-list {
-		.item-entry {
-			.profile-field {
-				margin-bottom: 3px;
-				font-size: 14px;
-			}
-		}
-	}
 	#yz-members-directory {
 		flex-direction: column;
 		display: flex;
@@ -16,6 +8,7 @@
 			min-height: 1350px;
 		}
 		#yz-members-list {
+			li { height: 375px; }
 			.yzm-user-cover {
 				height: 100px;
 			}
