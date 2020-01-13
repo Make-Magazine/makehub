@@ -90,7 +90,6 @@ function makerspace_to_community($entry, $form) {
         $destination_bpfull = $image_dir . '/' . $current_time . '-bpfull.jpg';
         $destination_bpthumb = $image_dir . '/' . $current_time . '-bpthumb.jpg';
         
-        $usermeta['avatar'] = str_replace(' ', '%20', $bpmeta['avatar']);
         $bpfull = $bpthumb = wp_get_image_editor($bpmeta['avatar']);
         
         // Handle 404 avatar url
@@ -99,7 +98,6 @@ function makerspace_to_community($entry, $form) {
             $bpfull->save($destination_bpfull);
             $bpthumb->resize(50, 50, true);
             $bpthumb->save($destination_bpthumb);
-			   $bpmeta['avatar'] = $destination_bpfull;
         }        
     }
 
