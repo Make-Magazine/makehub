@@ -499,7 +499,7 @@ function gv_extension_advanced_filtering_load() {
 				) {
 
 				    // Force "all" when filtering by "created by"
-					$init_filter_vars['mode'] = 'all';
+					//$init_filter_vars['mode'] = 'all';
 
 					/**
 					 * Customise the capabilities that define an Administrator able to view entries in frontend when filtered by Created_by
@@ -540,7 +540,7 @@ function gv_extension_advanced_filtering_load() {
 			if ( ( ! empty( $role_filters ) ) && ( ! isset( $created_by_index ) ) ) {
 
 				// Force "all" when filtering by "created by"
-				$init_filter_vars['mode'] = 'all';
+				//$init_filter_vars['mode'] = 'all';
 
 				static $users_for_role = array();
 
