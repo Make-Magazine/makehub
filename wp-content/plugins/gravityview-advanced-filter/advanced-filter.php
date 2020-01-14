@@ -132,7 +132,7 @@ function gv_extension_advanced_filtering_load() {
 				do_action('gravityview_log_error', 'GravityView_Advanced_Filtering[filter_search_criteria] Empty View ID.' );
 
 				$criteria['search_criteria']['field_filters'][] = self::get_lock_filter();
-				$criteria['search_criteria']['field_filters']['mode'] = 'all';
+				//$criteria['search_criteria']['field_filters']['mode'] = 'all';
 
 				return $criteria;
 			}
@@ -487,7 +487,7 @@ function gv_extension_advanced_filtering_load() {
 
 				if ( 'created_by' === $filter['key'] ) {
 					$created_by_index = $k;
-                }
+                                }
 
 				// Only show listings created by the current user.
 				// This will return no entries if the user is logged out.
@@ -503,14 +503,16 @@ function gv_extension_advanced_filtering_load() {
 
 					/**
 					 * Customise the capabilities that define an Administrator able to view entries in frontend when filtered by Created_by
-					 *
+					 *ß
 					 * @param array|string $capabilities List of admin capabilities
 					 * @param int $post_id View ID where the filter is set
 					 *
 					 * @since 1.0.9
 					 */
 					$view_all_entries_caps = apply_filters( 'gravityview/adv_filter/admin_caps', array( 'manage_options', 'gravityforms_view_entries', 'gravityview_edit_others_entries' ), $post_id );
-
+                                        //MAKE: hardcode - Alicia W. the plugin would force the filter mode to all if the created by is set to current user. This bypasses this and allows us to choose the mode.ß 
+                                        $filter['value'] = get_current_user_id();
+/*
 					if ( $filter['value'] === 'created_by_or_admin' && GVCommon::has_cap( $view_all_entries_caps ) ) {
 						unset( $init_filter_vars[ $k ] );
 						unset( $created_by_index );
@@ -518,7 +520,7 @@ function gv_extension_advanced_filtering_load() {
 					} else {
 						$filter['value'] = get_current_user_id();
 					}
-
+*/
 				}
 
 				if ( 'created_by_user_role' === $filter['key'] ) {
