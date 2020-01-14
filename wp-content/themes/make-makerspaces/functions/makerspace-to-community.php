@@ -81,16 +81,16 @@ function makerspace_to_community($entry, $form) {
     
     //Upload user avatar if image is set
     if ($bpmeta['avatar']) {        
+
         define( 'AVATARS', ABSPATH . 'wp-content/uploads/avatars' );
         if ( ! file_exists( AVATARS ) ) mkdir( AVATARS, 0777 );
         $image_dir = AVATARS . '/' . $user_id;
-        mkdir($image_dir, 0777);
+		  if ( ! file_exists( $image_dir ) ) mkdir( $image_dir, 0777 );
         $current_time = time();
         $destination_bpfull = $image_dir . '/' . $current_time . '-bpfull.jpg';
         $destination_bpthumb = $image_dir . '/' . $current_time . '-bpthumb.jpg';
-                
         
-        $usermeta['avatar'] = str_replace(' ', '%20', $bpmeta['avatar']);
+		  $bpmeta['avatar'] = str_replace( ' ', '%20', $bpmeta['avatar'] );
         $bpfull = $bpthumb = wp_get_image_editor($bpmeta['avatar']);
         
         // Handle 404 avatar url
@@ -99,7 +99,10 @@ function makerspace_to_community($entry, $form) {
             $bpfull->save($destination_bpfull);
             $bpthumb->resize(50, 50, true);
             $bpthumb->save($destination_bpthumb);
+			   // And make sure it updates on the bp side
+			   update_user_meta( $user_id, 'author_avatar', $destination_bpfull );
         }        
+		 
     }
 
     //xprofile field visibility

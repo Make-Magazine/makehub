@@ -2413,7 +2413,7 @@ function _bp_strip_spans_from_title( $title_part = '' ) {
 	$title = $title_part;
 	$span = strpos( $title, '<span' );
 	if ( false !== $span ) {
-		$title = substr( $title, 0, $span);
+		  $title = substr( $title, 0, $span );
 	}
 	return trim( $title );
 }

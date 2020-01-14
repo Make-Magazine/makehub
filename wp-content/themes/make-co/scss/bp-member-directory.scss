@@ -1,12 +1,4 @@
 .buddypress.directory {
-	#members-list {
-		.item-entry {
-			.profile-field {
-				margin-bottom: 3px;
-				font-size: 14px;
-			}
-		}
-	}
 	#yz-members-directory {
 		flex-direction: column;
 		display: flex;
@@ -16,6 +8,7 @@
 			min-height: 1350px;
 		}
 		#yz-members-list {
+			li { height: 375px; }
 			.yzm-user-cover {
 				height: 100px;
 			}
@@ -215,9 +208,9 @@
 					padding: 15px;
 					.widget-title {
 						font-size: 20px;
-						font-weight: 500;
+						font-weight: 600;
 						padding: 0px;
-						color: #333;
+						color: #666;
 						border: 0px;
 						@media screen and ( max-width: 1024px ) {
 							cursor: pointer;
@@ -241,11 +234,13 @@
 							display: block;
 							margin-bottom: -10px;
 							margin-left: 18px;
+							color: #898989;
 							&.bps-label { 
 								padding-bottom: 0px;
 								margin-bottom: -5px;
 								margin-left: 0px;
-								font-weight: 700;
+								font-weight: 500;
+								color: #666;
 								span { display: none; }
 							}
 						}
@@ -263,11 +258,12 @@
 							}
 							label, br { display: none; }
 							label.bps-label { 
+								color: #666;
 								display: block;
 								&::after {
 									content: "Show";
 									font-size: 12px;
-									color: #0000EE;
+									color: #1987C7;
 								}
 								&.active {
 									&::after {

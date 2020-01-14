@@ -4,7 +4,7 @@ Tags: buddypress, directory, members, users, profile, search, filter
 Requires at least: 4.8
 Tested up to: 5.3
 Requires PHP: 5.6
-Stable tag: 5.2.3
+Stable tag: 5.2.4
 
 Member search and member directories for BuddyPress.
 
@@ -100,7 +100,7 @@ You can enter the shortcode in an empty page to build a new member directory, or
 	<li><a href="https://dontdream.it/bp-profile-search/form-templates/">Form Templates</a></li>
 </ul>
 
-Tested up to BuddyPress 5.0.0
+Tested up to BuddyPress 5.1.0
 
 In the screenshots below, the <em>City</em> field is provided by the free companion plugin <a href="https://wordpress.org/plugins/bp-distance-search/">BP Distance Search</a>.
 
@@ -118,6 +118,9 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.2.4 =
+* Last version to support old form templates, see [New form template structure](https://dontdream.it/new-form-template-structure/)
+* Fixed bug with quotes in *users* and *usermeta* searches
 = 5.2.3 =
 * Fixed bug preventing adding new search fields with Firefox
 * Minor changes to the form builder UI

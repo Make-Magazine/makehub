@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed and YouTube Gallery WordPress Plugin. Embed a responsive video, YouTube channel, playlist gallery, or live stream
-  Version: 13.1.2.4
+  Version: 13.1.2.5
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
  */
@@ -34,7 +34,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '13.1.2.4';
+    public static $version = '13.1.2.5';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -107,6 +107,7 @@ class YouTubePrefs
     public static $opt_gallery_customnext = 'gallery_customnext';
     public static $opt_not_live_content = 'not_live_content';
     public static $opt_admin_off_scripts = 'admin_off_scripts';
+    public static $opt_ajax_save = 'ajax_save';
     public static $opt_onboarded = 'onboarded';
     public static $opt_alloptions = 'youtubeprefs_alloptions';
     public static $alloptions = null;
@@ -253,6 +254,7 @@ class YouTubePrefs
         add_filter('ytprefs_filter_the_content_light', array(get_class(), 'filter_the_content_light'));
 
         add_action("wp_ajax_my_embedplus_onboarding_save_ajax", array(get_class(), 'onboarding_save_ajax'));
+        add_action("wp_ajax_my_embedplus_settings_save_ajax", array(get_class(), 'settings_save_ajax'));
         add_action("wp_ajax_my_embedplus_onboarding_save_apikey_ajax", array(get_class(), 'onboarding_save_apikey_ajax'));
         add_action("wp_ajax_my_embedplus_glance_vids", array(get_class(), 'my_embedplus_glance_vids'));
         add_action("wp_ajax_my_embedplus_glance_count", array(get_class(), 'my_embedplus_glance_count'));
@@ -1750,6 +1752,7 @@ class YouTubePrefs
         $_not_live_content = '';
         $_debugmode = 0;
         $_admin_off_scripts = 0;
+        $_ajax_save = 1;
         $_onboarded = 0;
         $_old_script_method = 0;
 
@@ -1836,6 +1839,7 @@ class YouTubePrefs
             $_gallery_customprev = self::tryget($arroptions, self::$opt_gallery_customprev, $_gallery_customprev);
             $_not_live_content = self::tryget($arroptions, self::$opt_not_live_content, $_not_live_content);
             $_admin_off_scripts = self::tryget($arroptions, self::$opt_admin_off_scripts, $_admin_off_scripts);
+            $_ajax_save = self::tryget($arroptions, self::$opt_ajax_save, $_ajax_save);
             $_onboarded = 0; // self::tryget($arroptions, self::$opt_onboarded, $_onboarded);
 
             $_vi_active = self::tryget($arroptions, self::$opt_vi_active, $_vi_active);
@@ -1922,6 +1926,7 @@ class YouTubePrefs
             self::$opt_not_live_content => $_not_live_content,
             self::$opt_debugmode => $_debugmode,
             self::$opt_admin_off_scripts => $_admin_off_scripts,
+            self::$opt_ajax_save => $_ajax_save,
             self::$opt_onboarded => $_onboarded,
             self::$opt_old_script_method => $_old_script_method,
             self::$opt_vi_active => $_vi_active,
@@ -2919,7 +2924,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update fixes pagination and autonext issues for Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update supports better responsive sizing in widgets and fixes a &quot;save settings&quot; issue for Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version. Please contact ext@embedplus.com for questions.";
@@ -3002,288 +3007,12 @@ class YouTubePrefs
 
         // See if the user has posted us some information
         // If they did, this hidden field will be set to 'Y'
-        if (isset($_POST[$ytprefs_submitted]) && $_POST[$ytprefs_submitted] == 'Y')
+        if (isset($_POST[$ytprefs_submitted]) && $_POST[$ytprefs_submitted] == 'Y' && check_admin_referer('_epyt_save', '_epyt_nonce'))
         {
-            check_admin_referer('_epyt_save', '_epyt_nonce');
-            // Read their posted values
-
-            $new_options = array();
-            $new_options[self::$opt_center] = self::postchecked(self::$opt_center) ? 1 : 0;
-            $new_options[self::$opt_glance] = self::postchecked(self::$opt_glance) ? 1 : 0;
-            $new_options[self::$opt_autoplay] = self::postchecked(self::$opt_autoplay) ? 1 : 0;
-            $new_options[self::$opt_debugmode] = self::postchecked(self::$opt_debugmode) ? 1 : 0;
-            $new_options[self::$opt_admin_off_scripts] = self::postchecked(self::$opt_admin_off_scripts) ? 1 : 0;
-            $new_options[self::$opt_old_script_method] = self::postchecked(self::$opt_old_script_method) ? 1 : 0;
-            $new_options[self::$opt_cc_load_policy] = self::postchecked(self::$opt_cc_load_policy) ? 1 : 0;
-            $new_options[self::$opt_iv_load_policy] = self::postchecked(self::$opt_iv_load_policy) ? 1 : 3;
-            $new_options[self::$opt_loop] = self::postchecked(self::$opt_loop) ? 1 : 0;
-            $new_options[self::$opt_modestbranding] = self::postchecked(self::$opt_modestbranding) ? 1 : 0;
-            $new_options[self::$opt_fs] = self::postchecked(self::$opt_fs) ? 1 : 0;
-            $new_options[self::$opt_playsinline] = self::postchecked(self::$opt_playsinline) ? 1 : 0;
-            $new_options[self::$opt_origin] = self::postchecked(self::$opt_origin) ? 1 : 0;
-            $new_options[self::$opt_controls] = self::postchecked(self::$opt_controls) ? 1 : 0;
-            $new_options[self::$opt_color] = self::postchecked(self::$opt_color) ? 'red' : 'white';
-            $new_options[self::$opt_nocookie] = self::postchecked(self::$opt_nocookie) ? 1 : 0;
-            $new_options[self::$opt_gdpr_consent] = self::postchecked(self::$opt_gdpr_consent) ? 1 : 0;
-            $new_options[self::$opt_playlistorder] = self::postchecked(self::$opt_playlistorder) ? 1 : 0;
-            $new_options[self::$opt_acctitle] = self::postchecked(self::$opt_acctitle) ? 1 : 0;
-            $new_options[self::$opt_migrate] = self::postchecked(self::$opt_migrate) ? 1 : 0;
-            $new_options[self::$opt_migrate_youtube] = self::postchecked(self::$opt_migrate_youtube) ? 1 : 0;
-            $new_options[self::$opt_migrate_embedplusvideo] = self::postchecked(self::$opt_migrate_embedplusvideo) ? 1 : 0;
-            $new_options[self::$opt_oldspacing] = self::postchecked(self::$opt_oldspacing) ? 1 : 0;
-            $new_options[self::$opt_frontend_only] = self::postchecked(self::$opt_frontend_only) ? 1 : 0;
-            $new_options[self::$opt_responsive] = self::postchecked(self::$opt_responsive) ? 1 : 0;
-            $new_options[self::$opt_widgetfit] = self::postchecked(self::$opt_widgetfit) ? 1 : 0;
-            $new_options[self::$opt_evselector_light] = self::postchecked(self::$opt_evselector_light) ? 1 : 0;
-            $new_options[self::$opt_stop_mobile_buffer] = self::postchecked(self::$opt_stop_mobile_buffer) ? 1 : 0;
-            $new_options[self::$opt_restrict_wizard] = self::postchecked(self::$opt_restrict_wizard) ? 1 : 0;
-            $new_options[self::$opt_ajax_compat] = self::postchecked(self::$opt_ajax_compat) ? 1 : 0;
-            $new_options[self::$opt_defaultdims] = self::postchecked(self::$opt_defaultdims) ? 1 : 0;
-            $new_options[self::$opt_defaultvol] = self::postchecked(self::$opt_defaultvol) ? 1 : 0;
-            $new_options[self::$opt_dohl] = self::postchecked(self::$opt_dohl) ? 1 : 0;
-            $new_options[self::$opt_onboarded] = self::postchecked(self::$opt_onboarded) ? 1 : 0;
-            $new_options[self::$opt_gallery_hideprivate] = self::postchecked(self::$opt_gallery_hideprivate) ? 1 : 0;
-            $new_options[self::$opt_gallery_showtitle] = self::postchecked(self::$opt_gallery_showtitle) ? 1 : 0;
-            $new_options[self::$opt_gallery_showpaging] = self::postchecked(self::$opt_gallery_showpaging) ? 1 : 0;
-            $new_options[self::$opt_gallery_autonext] = self::postchecked(self::$opt_gallery_autonext) ? 1 : 0;
-            $new_options[self::$opt_gallery_thumbplay] = self::postchecked(self::$opt_gallery_thumbplay) ? 1 : 0;
-            $new_options[self::$opt_gallery_channelsub] = self::postchecked(self::$opt_gallery_channelsub) ? 1 : 0;
-            $new_options[self::$opt_gallery_customarrows] = self::postchecked(self::$opt_gallery_customarrows) ? 1 : 0;
-            $new_options[self::$opt_gallery_collapse_grid] = self::postchecked(self::$opt_gallery_collapse_grid) ? 1 : 0;
-            $new_options[self::$opt_vi_hide_monetize_tab] = self::postchecked(self::$opt_vi_hide_monetize_tab) ? 1 : 0;
-
-            $_rel = 0;
-            try
-            {
-                $_rel = is_numeric(trim($_POST[self::$opt_rel])) ? intval(trim($_POST[self::$opt_rel])) : $_rel;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_rel] = $_rel;
-
-
-            $_gdpr_consent_message = '';
-            try
-            {
-                $_gdpr_consent_message = wp_kses_post(stripslashes($_POST[self::$opt_gdpr_consent_message]));
-            }
-            catch (Exception $ex)
-            {
-                $_gdpr_consent_message = '';
-            }
-            $new_options[self::$opt_gdpr_consent_message] = $_gdpr_consent_message;
-
-            $_gdpr_consent_button = '';
-            try
-            {
-                $_gdpr_consent_button = wp_kses_post(stripslashes($_POST[self::$opt_gdpr_consent_button]));
-            }
-            catch (Exception $ex)
-            {
-                $_gdpr_consent_button = '';
-            }
-            $new_options[self::$opt_gdpr_consent_button] = $_gdpr_consent_button;
-
-            $_ytapi_load = 'light';
-            try
-            {
-                $_ytapi_load_temp = $_POST[self::$opt_ytapi_load];
-                if (in_array($_ytapi_load_temp, array('always', 'light', 'never')))
-                {
-                    $_ytapi_load = $_ytapi_load_temp;
-                }
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_ytapi_load] = $_ytapi_load;
-
-            $_restrict_wizard_roles = self::$dft_roles;
-            try
-            {
-                $_restrict_wizard_roles = is_array($_POST[self::$opt_restrict_wizard_roles]) ? $_POST[self::$opt_restrict_wizard_roles] : $_restrict_wizard_roles;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_restrict_wizard_roles] = $_restrict_wizard_roles;
-
-
-            $_defaultwidth = '';
-            try
-            {
-                $_defaultwidth = is_numeric(trim($_POST[self::$opt_defaultwidth])) ? intval(trim($_POST[self::$opt_defaultwidth])) : $_defaultwidth;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_defaultwidth] = $_defaultwidth;
-
-            $_defaultheight = '';
-            try
-            {
-                $_defaultheight = is_numeric(trim($_POST[self::$opt_defaultheight])) ? intval(trim($_POST[self::$opt_defaultheight])) : $_defaultheight;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_defaultheight] = $_defaultheight;
-
-            $_responsive_all = 1;
-            try
-            {
-                $_responsive_all = is_numeric(trim($_POST[self::$opt_responsive_all])) ? intval(trim($_POST[self::$opt_responsive_all])) : $_responsive_all;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_responsive_all] = $_responsive_all;
-
-            $_vol = '';
-            try
-            {
-                $_vol = is_numeric(trim($_POST[self::$opt_vol])) ? intval(trim($_POST[self::$opt_vol])) : $_vol;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_vol] = $_vol;
-
-            $_gallery_pagesize = 15;
-            try
-            {
-                $_gallery_pagesize = is_numeric(trim($_POST[self::$opt_gallery_pagesize])) ? intval(trim($_POST[self::$opt_gallery_pagesize])) : $_gallery_pagesize;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_gallery_pagesize] = $_gallery_pagesize;
-
-
-            $_gallery_columns = 3;
-            try
-            {
-                $_gallery_columns = is_numeric(trim($_POST[self::$opt_gallery_columns])) ? intval(trim($_POST[self::$opt_gallery_columns])) : $_gallery_columns;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_gallery_columns] = $_gallery_columns;
-
-
-            $_gallery_collapse_grid_breaks = self::$dft_bpts;
-            try
-            {
-                $_gallery_collapse_grid_breaks = is_array($_POST[self::$opt_gallery_collapse_grid_breaks]) ? $_POST[self::$opt_gallery_collapse_grid_breaks] : $_gallery_collapse_grid_breaks;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_gallery_collapse_grid_breaks] = $_gallery_collapse_grid_breaks;
-
-
-
-            $_gallery_scrolloffset = 20;
-            try
-            {
-                $_gallery_scrolloffset = is_numeric(trim($_POST[self::$opt_gallery_scrolloffset])) ? intval(trim($_POST[self::$opt_gallery_scrolloffset])) : $_gallery_scrolloffset;
-            }
-            catch (Exception $ex)
-            {
-                
-            }
-            $new_options[self::$opt_gallery_scrolloffset] = $_gallery_scrolloffset;
-
-            $_gallery_channelsublink = '';
-            try
-            {
-                $_gallery_channelsublink = trim(strip_tags($_POST[self::$opt_gallery_channelsublink]));
-                $pieces = explode('?', $_gallery_channelsublink);
-                $_gallery_channelsublink = trim($pieces[0]);
-            }
-            catch (Exception $ex)
-            {
-                $_gallery_channelsublink = '';
-            }
-            $new_options[self::$opt_gallery_channelsublink] = $_gallery_channelsublink;
-
-
-            $_gallery_channelsubtext = '';
-            try
-            {
-                $_gallery_channelsubtext = stripslashes(trim($_POST[self::$opt_gallery_channelsubtext]));
-            }
-            catch (Exception $ex)
-            {
-                $_gallery_channelsubtext = '';
-            }
-            $new_options[self::$opt_gallery_channelsubtext] = $_gallery_channelsubtext;
-
-
-            $_gallery_custom_prev = 'Prev';
-            try
-            {
-                $_gallery_custom_prev = trim(strip_tags($_POST[self::$opt_gallery_customprev]));
-            }
-            catch (Exception $ex)
-            {
-                $_gallery_custom_prev = 'Prev';
-            }
-            $new_options[self::$opt_gallery_customprev] = $_gallery_custom_prev;
-
-
-            $_gallery_custom_next = 'Next';
-            try
-            {
-                $_gallery_custom_next = trim(strip_tags($_POST[self::$opt_gallery_customnext]));
-            }
-            catch (Exception $ex)
-            {
-                $_gallery_custom_next = 'Next';
-            }
-            $new_options[self::$opt_gallery_customnext] = $_gallery_custom_next;
-
-
-            $_not_live_content = '';
-            try
-            {
-                $_not_live_content = wp_kses_post(stripslashes($_POST[self::$opt_not_live_content]));
-            }
-            catch (Exception $ex)
-            {
-                $_not_live_content = '';
-            }
-            $new_options[self::$opt_not_live_content] = $_not_live_content;
-
-
-            $_apikey = '';
-            try
-            {
-                $_apikey = trim(str_replace(array(' ', "'", '"'), array('', '', ''), strip_tags($_POST[self::$opt_apikey])));
-            }
-            catch (Exception $ex)
-            {
-                $_apikey = '';
-            }
-            $new_options[self::$opt_apikey] = $_apikey;
-
-
-            $all = $new_options + $all;
-
-            update_option(self::$opt_alloptions, $all);
+            $result = self::settings_save($all);
+            $all = get_option(self::$opt_alloptions);
             ?>
-            <div class="updated"><p><strong><?php _e('Changes saved.'); ?> <em>If you're using a separate caching plugin and you do not see your changes after saving, <strong class="orange">you need to reset your cache.</strong></em></strong></p></div>
+            <div class="updated"><p><strong><?php echo wp_kses_post($result['message']) ?></strong></p></div>
             <?php
         }
         ?>
@@ -3327,6 +3056,14 @@ class YouTubePrefs
                 background: -ms-linear-gradient(top,  #2ea2cc 0%,#007396 98%); /* IE10+ */
                 background: linear-gradient(to bottom,  #2ea2cc 0%,#007396 98%); /* W3C */
                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2ea2cc', endColorstr='#007396',GradientType=0 ); /* IE6-9 */
+            }
+            .wp-core-ui p.submit .button-primary[disabled] {
+                opacity: .4;
+                transition: opacity ease-in-out .3s;
+            }
+            .wp-core-ui p.submit .button-primary[disabled]:after {
+                content: url(<?php echo admin_url('images/wpspin_light.gif') ?>);
+                padding-left: 3px;
             }
             p.submit em {display: inline-block; padding-left: 20px; vertical-align: middle; width: 240px; margin-top: -6px;}
             #opt_pro {box-shadow: 0px 0px 5px 0px #1870D5; width: 320px;vertical-align: top;}
@@ -3524,7 +3261,7 @@ class YouTubePrefs
                                     <br>
                                 </label>
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>-1" value="-1" <?php checked($all[self::$opt_rel], -1); ?>>
-                                <label for="<?php echo self::$opt_rel; ?>-1">Hide related videos at the end of playback <sup class="orange">new</sup></label> &nbsp;&nbsp;
+                                <label for="<?php echo self::$opt_rel; ?>-1">Hide related videos at the end of playback</label> &nbsp;&nbsp;
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>0" value="0" <?php checked($all[self::$opt_rel], 0); ?>>
                                 <label for="<?php echo self::$opt_rel; ?>0">Show related videos only from the video's channel</label> &nbsp;&nbsp;
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>1" value="1" <?php checked($all[self::$opt_rel], 1); ?>>
@@ -3942,6 +3679,13 @@ class YouTubePrefs
                         </p>
                         <div class="ytindent chx">
                             <p>
+                                <input name="<?php echo self::$opt_ajax_save; ?>" id="<?php echo self::$opt_ajax_save; ?>" <?php checked($all[self::$opt_ajax_save], 1); ?> type="checkbox" class="checkbox">
+                                <label for="<?php echo self::$opt_ajax_save; ?>">
+                                    <b class="chktitle">Save Settings with AJAX: </b> <sup class="orange">new</sup> 
+                                    Turn this option off if you are having trouble saving your settings.
+                                </label>
+                            </p>
+                            <p>
                                 <input name="<?php echo self::$opt_old_script_method; ?>" id="<?php echo self::$opt_old_script_method; ?>" <?php checked($all[self::$opt_old_script_method], 1); ?> type="checkbox" class="checkbox">
                                 <label for="<?php echo self::$opt_old_script_method; ?>">
                                     <b class="chktitle">Use Legacy Scripts: </b>
@@ -3979,7 +3723,7 @@ class YouTubePrefs
                             <p>
                                 <input name="<?php echo self::$opt_frontend_only; ?>" id="<?php echo self::$opt_frontend_only; ?>" <?php checked($all[self::$opt_frontend_only], 1); ?> type="checkbox" class="checkbox">
                                 <label for="<?php echo self::$opt_frontend_only; ?>">
-                                    <b class="chktitle">Don't Run Shortcode In Admin:</b> <sup class="orange">new</sup> 
+                                    <b class="chktitle">Don't Run Shortcode In Admin:</b>
                                     Checking this will only allow the shortcode to run on the front-end of your website, and not in the admin area.
                                 </label>
                             </p>
@@ -4248,8 +3992,9 @@ class YouTubePrefs
         <script type="text/javascript">
             (function ($)
             {
-                window.savevalidate = function ()
+                window.savevalidate = function (e)
                 {
+                    var $formDefaults = $(e.target);
                     var valid = true;
                     var $tabFocus = '';
                     var alertmessage = '';
@@ -4330,7 +4075,46 @@ class YouTubePrefs
                         var tabSelector = '.wrap-ytprefs .nav-tab-wrapper .nav-tab[href=#' + $tabFocus.attr('id') + ']';
                         $(tabSelector).click();
                     }
-                    return valid;
+                    if (!$formDefaults.find('#ajax_save').is(':checked'))
+                    {
+                        return valid;
+                    }
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////////// MAIN PREFS AJAX SAVE                    
+                    if (valid)
+                    {
+                        e.preventDefault();
+                        (window.tinyMCE || window.tinymce).triggerSave();
+                        $formDefaults.find('.ytprefs-submit').prop('disabled', true);
+
+                        var formData = $formDefaults.ytprefsFormJSON();
+                        formData.action = 'my_embedplus_settings_save_ajax';
+
+                        $.ajax({
+                            type: "post",
+                            dataType: "json",
+                            timeout: 30000,
+                            url: window._EPYTA_ ? window._EPYTA_.wpajaxurl : ajaxurl,
+                            data: formData,
+                            success: function (response)
+                            {
+                                alertify.alert(response ? response.message : 'Sorry, there was an error submitting your settings.', function ()
+                                {
+                                    if (response.type == 'success')
+                                    {
+                                        window.top.location.href = window._EPYTA_.admin_url_ytprefs;
+                                    }
+                                });
+                            },
+                            error: function (xhr, ajaxOptions, thrownError)
+                            {
+                                alertify.alert('Sorry, there was an error saving your settings. ' + (thrownError ? thrownError : ''));
+                            },
+                            complete: function ()
+                            {
+                                $formDefaults.find('.ytprefs-submit').prop('disabled', false);
+                            }
+                        });
+                    }
                 };
 
                 var mydomain = escape("http://" + window.location.host.toString());
@@ -4359,9 +4143,9 @@ class YouTubePrefs
                         $('.wrap-ytprefs .nav-tab-wrapper a[href="' + window.location.hash + '"]').click();
                     }
 
-                    $('#ytform').on('submit', function ()
+                    $('#ytform').on('submit', function (e)
                     {
-                        return window.savevalidate();
+                        return window.savevalidate(e);
                     });
 
                     jQuery('#<?php echo self::$opt_defaultdims; ?>').change(function ()
@@ -4526,6 +4310,306 @@ class YouTubePrefs
         {
             add_thickbox();
         }
+    }
+
+    public static function settings_save($all)
+    {
+        $new_options = array();
+        $new_options[self::$opt_center] = self::postchecked(self::$opt_center) ? 1 : 0;
+        $new_options[self::$opt_glance] = self::postchecked(self::$opt_glance) ? 1 : 0;
+        $new_options[self::$opt_autoplay] = self::postchecked(self::$opt_autoplay) ? 1 : 0;
+        $new_options[self::$opt_debugmode] = self::postchecked(self::$opt_debugmode) ? 1 : 0;
+        $new_options[self::$opt_admin_off_scripts] = self::postchecked(self::$opt_admin_off_scripts) ? 1 : 0;
+        $new_options[self::$opt_old_script_method] = self::postchecked(self::$opt_old_script_method) ? 1 : 0;
+        $new_options[self::$opt_cc_load_policy] = self::postchecked(self::$opt_cc_load_policy) ? 1 : 0;
+        $new_options[self::$opt_iv_load_policy] = self::postchecked(self::$opt_iv_load_policy) ? 1 : 3;
+        $new_options[self::$opt_loop] = self::postchecked(self::$opt_loop) ? 1 : 0;
+        $new_options[self::$opt_modestbranding] = self::postchecked(self::$opt_modestbranding) ? 1 : 0;
+        $new_options[self::$opt_fs] = self::postchecked(self::$opt_fs) ? 1 : 0;
+        $new_options[self::$opt_playsinline] = self::postchecked(self::$opt_playsinline) ? 1 : 0;
+        $new_options[self::$opt_origin] = self::postchecked(self::$opt_origin) ? 1 : 0;
+        $new_options[self::$opt_controls] = self::postchecked(self::$opt_controls) ? 1 : 0;
+        $new_options[self::$opt_color] = self::postchecked(self::$opt_color) ? 'red' : 'white';
+        $new_options[self::$opt_nocookie] = self::postchecked(self::$opt_nocookie) ? 1 : 0;
+        $new_options[self::$opt_gdpr_consent] = self::postchecked(self::$opt_gdpr_consent) ? 1 : 0;
+        $new_options[self::$opt_playlistorder] = self::postchecked(self::$opt_playlistorder) ? 1 : 0;
+        $new_options[self::$opt_acctitle] = self::postchecked(self::$opt_acctitle) ? 1 : 0;
+        $new_options[self::$opt_migrate] = self::postchecked(self::$opt_migrate) ? 1 : 0;
+        $new_options[self::$opt_migrate_youtube] = self::postchecked(self::$opt_migrate_youtube) ? 1 : 0;
+        $new_options[self::$opt_migrate_embedplusvideo] = self::postchecked(self::$opt_migrate_embedplusvideo) ? 1 : 0;
+        $new_options[self::$opt_oldspacing] = self::postchecked(self::$opt_oldspacing) ? 1 : 0;
+        $new_options[self::$opt_frontend_only] = self::postchecked(self::$opt_frontend_only) ? 1 : 0;
+        $new_options[self::$opt_responsive] = self::postchecked(self::$opt_responsive) ? 1 : 0;
+        $new_options[self::$opt_widgetfit] = self::postchecked(self::$opt_widgetfit) ? 1 : 0;
+        $new_options[self::$opt_evselector_light] = self::postchecked(self::$opt_evselector_light) ? 1 : 0;
+        $new_options[self::$opt_stop_mobile_buffer] = self::postchecked(self::$opt_stop_mobile_buffer) ? 1 : 0;
+        $new_options[self::$opt_restrict_wizard] = self::postchecked(self::$opt_restrict_wizard) ? 1 : 0;
+        $new_options[self::$opt_ajax_compat] = self::postchecked(self::$opt_ajax_compat) ? 1 : 0;
+        $new_options[self::$opt_defaultdims] = self::postchecked(self::$opt_defaultdims) ? 1 : 0;
+        $new_options[self::$opt_defaultvol] = self::postchecked(self::$opt_defaultvol) ? 1 : 0;
+        $new_options[self::$opt_dohl] = self::postchecked(self::$opt_dohl) ? 1 : 0;
+        $new_options[self::$opt_onboarded] = self::postchecked(self::$opt_onboarded) ? 1 : 0;
+        $new_options[self::$opt_gallery_hideprivate] = self::postchecked(self::$opt_gallery_hideprivate) ? 1 : 0;
+        $new_options[self::$opt_gallery_showtitle] = self::postchecked(self::$opt_gallery_showtitle) ? 1 : 0;
+        $new_options[self::$opt_gallery_showpaging] = self::postchecked(self::$opt_gallery_showpaging) ? 1 : 0;
+        $new_options[self::$opt_gallery_autonext] = self::postchecked(self::$opt_gallery_autonext) ? 1 : 0;
+        $new_options[self::$opt_gallery_thumbplay] = self::postchecked(self::$opt_gallery_thumbplay) ? 1 : 0;
+        $new_options[self::$opt_gallery_channelsub] = self::postchecked(self::$opt_gallery_channelsub) ? 1 : 0;
+        $new_options[self::$opt_gallery_customarrows] = self::postchecked(self::$opt_gallery_customarrows) ? 1 : 0;
+        $new_options[self::$opt_gallery_collapse_grid] = self::postchecked(self::$opt_gallery_collapse_grid) ? 1 : 0;
+        $new_options[self::$opt_vi_hide_monetize_tab] = self::postchecked(self::$opt_vi_hide_monetize_tab) ? 1 : 0;
+
+        $_rel = 0;
+        try
+        {
+            $_rel = is_numeric(trim($_POST[self::$opt_rel])) ? intval(trim($_POST[self::$opt_rel])) : $_rel;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_rel] = $_rel;
+
+
+        $_gdpr_consent_message = '';
+        try
+        {
+            $_gdpr_consent_message = wp_kses_post(stripslashes($_POST[self::$opt_gdpr_consent_message]));
+        }
+        catch (Exception $ex)
+        {
+            $_gdpr_consent_message = '';
+        }
+        $new_options[self::$opt_gdpr_consent_message] = $_gdpr_consent_message;
+
+        $_gdpr_consent_button = '';
+        try
+        {
+            $_gdpr_consent_button = wp_kses_post(stripslashes($_POST[self::$opt_gdpr_consent_button]));
+        }
+        catch (Exception $ex)
+        {
+            $_gdpr_consent_button = '';
+        }
+        $new_options[self::$opt_gdpr_consent_button] = $_gdpr_consent_button;
+
+        $_ytapi_load = 'light';
+        try
+        {
+            $_ytapi_load_temp = $_POST[self::$opt_ytapi_load];
+            if (in_array($_ytapi_load_temp, array('always', 'light', 'never')))
+            {
+                $_ytapi_load = $_ytapi_load_temp;
+            }
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_ytapi_load] = $_ytapi_load;
+
+        $_restrict_wizard_roles = self::$dft_roles;
+        try
+        {
+            $_restrict_wizard_roles = is_array($_POST[self::$opt_restrict_wizard_roles]) ? $_POST[self::$opt_restrict_wizard_roles] : $_restrict_wizard_roles;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_restrict_wizard_roles] = $_restrict_wizard_roles;
+
+
+        $_defaultwidth = '';
+        try
+        {
+            $_defaultwidth = is_numeric(trim($_POST[self::$opt_defaultwidth])) ? intval(trim($_POST[self::$opt_defaultwidth])) : $_defaultwidth;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_defaultwidth] = $_defaultwidth;
+
+        $_defaultheight = '';
+        try
+        {
+            $_defaultheight = is_numeric(trim($_POST[self::$opt_defaultheight])) ? intval(trim($_POST[self::$opt_defaultheight])) : $_defaultheight;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_defaultheight] = $_defaultheight;
+
+        $_responsive_all = 1;
+        try
+        {
+            $_responsive_all = is_numeric(trim($_POST[self::$opt_responsive_all])) ? intval(trim($_POST[self::$opt_responsive_all])) : $_responsive_all;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_responsive_all] = $_responsive_all;
+
+        $_vol = '';
+        try
+        {
+            $_vol = is_numeric(trim($_POST[self::$opt_vol])) ? intval(trim($_POST[self::$opt_vol])) : $_vol;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_vol] = $_vol;
+
+        $_gallery_pagesize = 15;
+        try
+        {
+            $_gallery_pagesize = is_numeric(trim($_POST[self::$opt_gallery_pagesize])) ? intval(trim($_POST[self::$opt_gallery_pagesize])) : $_gallery_pagesize;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_gallery_pagesize] = $_gallery_pagesize;
+
+
+        $_gallery_columns = 3;
+        try
+        {
+            $_gallery_columns = is_numeric(trim($_POST[self::$opt_gallery_columns])) ? intval(trim($_POST[self::$opt_gallery_columns])) : $_gallery_columns;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_gallery_columns] = $_gallery_columns;
+
+
+        $_gallery_collapse_grid_breaks = self::$dft_bpts;
+        try
+        {
+            $_gallery_collapse_grid_breaks = is_array($_POST[self::$opt_gallery_collapse_grid_breaks]) ? $_POST[self::$opt_gallery_collapse_grid_breaks] : $_gallery_collapse_grid_breaks;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_gallery_collapse_grid_breaks] = $_gallery_collapse_grid_breaks;
+
+
+
+        $_gallery_scrolloffset = 20;
+        try
+        {
+            $_gallery_scrolloffset = is_numeric(trim($_POST[self::$opt_gallery_scrolloffset])) ? intval(trim($_POST[self::$opt_gallery_scrolloffset])) : $_gallery_scrolloffset;
+        }
+        catch (Exception $ex)
+        {
+            
+        }
+        $new_options[self::$opt_gallery_scrolloffset] = $_gallery_scrolloffset;
+
+        $_gallery_channelsublink = '';
+        try
+        {
+            $_gallery_channelsublink = trim(strip_tags($_POST[self::$opt_gallery_channelsublink]));
+            $pieces = explode('?', $_gallery_channelsublink);
+            $_gallery_channelsublink = trim($pieces[0]);
+        }
+        catch (Exception $ex)
+        {
+            $_gallery_channelsublink = '';
+        }
+        $new_options[self::$opt_gallery_channelsublink] = $_gallery_channelsublink;
+
+
+        $_gallery_channelsubtext = '';
+        try
+        {
+            $_gallery_channelsubtext = stripslashes(trim($_POST[self::$opt_gallery_channelsubtext]));
+        }
+        catch (Exception $ex)
+        {
+            $_gallery_channelsubtext = '';
+        }
+        $new_options[self::$opt_gallery_channelsubtext] = $_gallery_channelsubtext;
+
+
+        $_gallery_custom_prev = 'Prev';
+        try
+        {
+            $_gallery_custom_prev = trim(strip_tags($_POST[self::$opt_gallery_customprev]));
+        }
+        catch (Exception $ex)
+        {
+            $_gallery_custom_prev = 'Prev';
+        }
+        $new_options[self::$opt_gallery_customprev] = $_gallery_custom_prev;
+
+
+        $_gallery_custom_next = 'Next';
+        try
+        {
+            $_gallery_custom_next = trim(strip_tags($_POST[self::$opt_gallery_customnext]));
+        }
+        catch (Exception $ex)
+        {
+            $_gallery_custom_next = 'Next';
+        }
+        $new_options[self::$opt_gallery_customnext] = $_gallery_custom_next;
+
+
+        $_not_live_content = '';
+        try
+        {
+            $_not_live_content = wp_kses_post(stripslashes($_POST[self::$opt_not_live_content]));
+        }
+        catch (Exception $ex)
+        {
+            $_not_live_content = '';
+        }
+        $new_options[self::$opt_not_live_content] = $_not_live_content;
+
+
+        $_apikey = '';
+        try
+        {
+            $_apikey = trim(str_replace(array(' ', "'", '"'), array('', '', ''), strip_tags($_POST[self::$opt_apikey])));
+        }
+        catch (Exception $ex)
+        {
+            $_apikey = '';
+        }
+        $new_options[self::$opt_apikey] = $_apikey;
+
+
+        $all = $new_options + $all;
+
+        update_option(self::$opt_alloptions, $all);
+        return array(
+            'type' => 'success',
+            'message' => 'Changes were saved. <em>If you are using a separate caching plugin and you do not see your changes after saving, <strong class="orange">you need to reset your cache.</strong></em>'
+        );
+    }
+
+    public static function settings_save_ajax()
+    {
+        $result = array();
+        if (check_ajax_referer('_epyt_save', '_epyt_nonce', false) && current_user_can('manage_options'))
+        {
+            $all = get_option(self::$opt_alloptions);
+            $result = self::settings_save($all);
+        }
+        else
+        {
+            $result['type'] = 'error';
+            $result['message'] = 'Sorry, there was a problem saving your settings.';
+        }
+        echo json_encode($result);
+        die();
     }
 
     public static function onboarding_save_valid(&$input)
@@ -4748,7 +4832,7 @@ class YouTubePrefs
                                     <br>
                                 </label>
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>-1" value="-1" <?php checked($all[self::$opt_rel], -1); ?>>
-                                <label for="<?php echo self::$opt_rel; ?>-1">Hide related videos at the end of playback <sup class="orange">new</sup></label> &nbsp;&nbsp;
+                                <label for="<?php echo self::$opt_rel; ?>-1">Hide related videos at the end of playback</label> &nbsp;&nbsp;
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>0" value="0" <?php checked($all[self::$opt_rel], 0); ?>>
                                 <label for="<?php echo self::$opt_rel; ?>0">Show related videos only from the video's channel</label> &nbsp;&nbsp;
                                 <input type="radio" name="<?php echo self::$opt_rel; ?>" id="<?php echo self::$opt_rel; ?>1" value="1" <?php checked($all[self::$opt_rel], 1); ?>>
@@ -4975,14 +5059,14 @@ class YouTubePrefs
                 {
                     setTimeout(function ()
                     {
-                        jQuery('input.ytprefs-submit').val('Save Changes');
+                        jQuery('.ytprefs-submit').text('Save Changes');
                     }, 3000);
                 });</script>
             <?php
         }
         ?>
         <p class="submit">
-            <input type="submit" name="Submit" class="button-primary ytprefs-submit" value="<?php _e($button_label) ?>" />
+            <button type="submit" name="Submit" class="button-primary ytprefs-submit"><?php _e($button_label) ?></button>
             <em>If you're using a separate caching plugin and you do not see your changes after saving, <strong class="orange">you need to reset your cache.</strong></em>
         </p>
         <?php

@@ -5,7 +5,8 @@ jQuery("document").ready(function(){
 			// add classes to identify the user navbar items
 			var navItemClass = jQuery(this).text().trim().replace(/\s+/g, '-').toLowerCase().replace(/[0-9]\s*$/, '');
 			jQuery(this).addClass(navItemClass);
-			if(jQuery(".bp-user").not('.member-type-makerspace') && jQuery(".bp-user").not('.member-level-makerspace') && jQuery(this).hasClass("events")){
+			// remove events navbar item unless it's a featured makerspace
+			if(!jQuery(".bp-user").is('.member-type-makerspace.member-level-makerspace') && jQuery(this).hasClass("events")){
 				jQuery(this).remove();
 			}
 		});
