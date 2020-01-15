@@ -190,18 +190,20 @@ function default_member_type( $user_id ) {
 		bp_set_member_type( $user_id, 'member' );
 	}
 }
-// make users members if they don't have another member type
+// make users members if they don't have another member type and they actually have a subscription
 /* run once, then delete
 function members_membertypes() {
   $members =  get_users( 'blog_id=1&fields=ID' );
   foreach ( $members as $user_id ) {
-     if ( !bp_get_member_type($user_id) ) {
-		bp_set_member_type( $user_id, 'member' );
-	}
+	 $user_meta = get_user_meta($user_id);
+    if ( !bp_get_member_type($user_id) && isset($user_meta['ihc_user_levels'][0]) ) {
+		 bp_set_member_type( $user_id, 'member' );
+	 } 
   }
 }
 add_action('bp_init', 'members_membertypes' );
 */
+
 
 //********************************************//
 //        Makerspace related functions        //
