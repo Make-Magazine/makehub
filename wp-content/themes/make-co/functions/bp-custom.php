@@ -184,7 +184,7 @@ add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
 //           Member type: Members             //
 //********************************************//
 // make each user a 'Member' user type when they register if it isn't set already
-add_action( 'user_register', 'default_member_type', 10, 1 );
+add_action('ihc_action_after_subscription_activated', 'default_member_type', 10, 1 );
 function default_member_type( $user_id ) {
 	if ( !bp_get_member_type($user_id) ) {
 		bp_set_member_type( $user_id, 'member' );
