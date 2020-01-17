@@ -33,32 +33,6 @@ var gvAdvancedFilters = {
 	},
 
 	/**
-	 * Locks the search mode to "All" if "Created By" includes a value not an user ID (added by GV)
-	 *
-	 * @since 1.2
-	 */
-	lockCreatedBy: function( e ) {
-
-		var $mode = $('select[name="mode"]', gvAdvancedFilters.filters );
-
-		$mode.attr( 'disabled', null );
-
-		$( '.gform-field-filter', gvAdvancedFilters.filters ).each( function ( index ) {
-
-			var filter_field = $( '.gform-filter-field', $( this ) ).val(),
-				filter_value = $( '.gform-filter-value', $( this ) ).val();
-
-			if (
-				filter_field.length && filter_field.match( /created_by/ ) &&
-				filter_value.length && ! filter_value.match( /^[0-9]+?$/ )
-			) {
-				$mode.val('all').attr('disabled', 'disabled');
-				return false;
-			}
-		});
-	},
-
-	/**
 	 * Allow typing relative dates in datepicker fields.
 	 * @internal For existing fields (if not working), you may need to toggle the comparison dropdown before it works.
 	 * @see http://api.jqueryui.com/datepicker/

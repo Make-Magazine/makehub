@@ -1,4 +1,4 @@
-# Copyright (C) 2018 GravityView
+# Copyright (C) 2020 GravityView
 # This file is distributed under the same license as the GravityView - Advanced Filter Extension package.
 msgid ""
 msgstr ""
@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Katz Web Services, Inc. <support@katz.co>\n"
 "Language-Team: Katz Web Services, Inc. <support@katz.co>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
@@ -39,27 +39,27 @@ msgstr ""
 msgid "Limit to Logged-in User Entries"
 msgstr ""
 
-#: advanced-filter.php:419 advanced-filter.php:751
+#: advanced-filter.php:419 advanced-filter.php:753
 msgid "Created By"
 msgstr ""
 
-#: advanced-filter.php:419 advanced-filter.php:759
+#: advanced-filter.php:419 advanced-filter.php:761
 msgid "Currently Logged-in User"
 msgstr ""
 
-#: advanced-filter.php:420 advanced-filter.php:755
+#: advanced-filter.php:420 advanced-filter.php:757
 msgid "Currently Logged-in User (Disabled for Administrators)"
 msgstr ""
 
-#: advanced-filter.php:625
+#: advanced-filter.php:627
 msgid "Any Role of Current User"
 msgstr ""
 
-#: advanced-filter.php:663
+#: advanced-filter.php:665
 msgid "Created By User Role"
 msgstr ""
 
-#: advanced-filter.php:830
+#: advanced-filter.php:832
 msgid "Entry Approval Status"
 msgstr ""
 
