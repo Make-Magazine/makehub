@@ -123,7 +123,7 @@ function makerspace_to_community($entry, $form) {
     $bp_fields_visibility = $wpdb->get_results($xprofile_visibility_sql);
     $xprofile_fields_visibility = array(1 => 'public');
 
-    foreach ((array) $bp_fields_visibility as $bp_field_visibility) {
+    foreach ((array) $bp_fields_visibility as $bp_field_visibility) {        
         $xprofile_fields_visibility[$bp_field_visibility->object_id] = $bp_field_visibility->meta_value;
     }
 
@@ -132,7 +132,7 @@ function makerspace_to_community($entry, $form) {
         $bp_xprofile_fields[$value->id] = $value->name;
         $bp_fields_type[$value->id] = $value->type;
     }         
-        
+             
     // Insert xprofile field visibility state for user level.
     update_user_meta($user_id, 'bp_xprofile_visibility_levels', $xprofile_fields_visibility);
 
@@ -152,7 +152,13 @@ function makerspace_to_community($entry, $form) {
                     $sql = 'UPDATE wp_bp_xprofile_data SET value = "' . $bpmetavalue . '", last_updated = "' . $date . '" WHERE id = ' . $result . ' AND field_id = ' . $bpmetakeyid . ' AND user_id = ' . $user_id;
                 }
                 $wpdb->query($sql);
-            } else {
+            } else {                
+                // Is the answer to the makerspace question, 'No'? None
+                if($bpmetavalue == 'No' || $bpmetavalue == 'None'){
+                    //set the value to blank as blank answers don't show in BP                    
+                    $bpmetavalue = '';                    
+                } //no, continue and update the value
+                            
                 xprofile_set_field_data($bpmetakeyid, $user_id, $bpmetavalue);
             }
         }
