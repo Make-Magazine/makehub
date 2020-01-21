@@ -107,9 +107,9 @@ function yz_translate_youzer_text( $translated_text ) {
 }
 add_filter( 'gettext', 'yz_translate_youzer_text', 10 );
 
-//********************************************//
-//         Opted Out user functions           //
-//********************************************//
+//****************************************************************//
+//         Excluded Users: Opt Out, Expired, Uncomfirmed          //
+//****************************************************************//
 function buddydev_exclude_users( $args ) {
     $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
     if ( ! is_array( $excluded ) ) {
@@ -122,13 +122,16 @@ function buddydev_exclude_users( $args ) {
     		  'fields' => 'ID'
     	  );
     $user_ids = get_users($query_args);
+	 error_log("Exclude Users");
+	 error_log(print_r($user_ids, TRUE));
  
     $excluded = array_merge( $excluded, $user_ids );
     $args['exclude'] = $excluded;
     return $args;
 }
 add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
-// Exclude user from count as well
+
+// Exclude user from count if opted out, expired or no subscription
 function exclude_users_from_count(){
 	$query_args = array(
 		  'meta_key' => 'registryoptout', 
@@ -136,10 +139,21 @@ function exclude_users_from_count(){
 		  'fields' => 'ID'
 	  );
 	$user_ids = get_users($query_args);
-	$users_excluded = count($user_ids);
+	$users_opted_out = count($user_ids);
+	global $wpdb;
+   $q = "SELECT user_id FROM `" . $wpdb->prefix . "ihc_user_levels`
+		   WHERE 1=1
+		   AND DATE(expire_time)=DATE('0000-00-00 00:00:00')";
+   $users_no_subscription = count($wpdb->get_results($q));
+	error_log("Exclude Users");
+	error_log(print_r($wpdb->get_results($q), TRUE));
+	
+	$users_excluded = $users_opted_out + $users_no_subscription;
 	return (get_user_count() - $users_excluded);
 }
 add_filter('bp_get_total_member_count','exclude_users_from_count');
+
+
 
 // hide the overview edit tab if you're not on your page
 function hide_overview_edit_tab() {
@@ -183,26 +197,47 @@ add_action('bp_activity_before_save', 'remove_bp_activity', 1, 15 );
 //********************************************//
 //           Member type: Members             //
 //********************************************//
-// make each user a 'Member' user type when they register if it isn't set already
+// make each user a 'Member' user type when they successfully subscribe
 add_action('ihc_action_after_subscription_activated', 'default_member_type', 10, 1 );
 function default_member_type( $user_id ) {
 	if ( !bp_get_member_type($user_id) ) {
 		bp_set_member_type( $user_id, 'member' );
 	}
 }
+// if membership lapses, is canceled or deleted, remove the member type so they don't show up in the members directory count
+add_action('ihc_action_after_cancel_subscription,', 'remove_member_types', 10, 1 );
+add_action('ihc_action_after_subscription_delete', 'remove_member_types', 10, 1 );
+add_action('iihc_action_level_has_expired', 'remove_member_types', 10, 1 );
+function remove_member_types( $user_id ) {
+	if ( bp_get_member_type($user_id) == 'member' ) {
+		bp_set_member_type( $user_id, '' );
+	}
+}
+
 // make users members if they don't have another member type and they actually have a subscription
 /* run once, then delete
 function members_membertypes() {
   $members =  get_users( 'blog_id=1&fields=ID' );
   foreach ( $members as $user_id ) {
+    bp_set_member_type( $user_id, '' );
 	 $user_meta = get_user_meta($user_id);
-    if ( !bp_get_member_type($user_id) && isset($user_meta['ihc_user_levels'][0]) ) {
+    if ( !bp_get_member_type($user_id) && isset($user_meta['ihc_user_levels'][0]) && strpos($user_meta['ihc_user_levels'][0], ',') === false) {
 		 bp_set_member_type( $user_id, 'member' );
 	 } 
   }
+  global $wpdb;
+  $q = "SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM `" . $wpdb->prefix . "ihc_user_levels`
+		  WHERE 1=1
+		  AND DATE(expire_time)=DATE('0000-00-00 00:00:00')";
+  $u_ids = $wpdb->get_results($q);
+  if ($u_ids){
+		foreach ($u_ids as $u_data){
+			bp_set_member_type( $u_data->user_id, '' );
+		}
+  }
 }
-add_action('bp_init', 'members_membertypes' );
-*/
+add_action('bp_init', 'members_membertypes' ); */
+
 
 
 //********************************************//
