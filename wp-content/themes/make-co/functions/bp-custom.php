@@ -117,66 +117,38 @@ add_filter('gettext', 'yz_translate_youzer_text', 10);
 //****************************************************************//
 //         Excluded Users: Opt Out and Unconfirmed          //
 //****************************************************************//
-function buddydev_exclude_users($args) {
-    $excluded = isset($args['exclude']) ? $args['exclude'] : array();
-    if (!is_array($excluded)) {
-        $excluded = explode(',', $excluded);
+function buddydev_exclude_users( $args ) {
+    $excluded = isset( $args['exclude'] ) ? $args['exclude'] : array();
+    if ( ! is_array( $excluded ) ) {
+        $excluded = explode( ',', $excluded );
     }
-
-    $query_args = array(
-        'meta_key' => 'registryoptout',
-        'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
-        'fields' => 'ID'
-    );
-    $opted_out = get_users($query_args);
 	
-	 global $wpdb;
-    // get users without confirmed subscriptions
-    $q = "SELECT user_id FROM " . $wpdb->prefix . "ihc_user_levels where DATE(expire_time)=DATE('0000-00-00 00:00:00')";    
-    $users_unconfirmed = $wpdb->get_results($q);      
-	 $users_unconfirmed_ids = array();
-	 foreach ($users_unconfirmed as $user){
-		 array_push($users_unconfirmed_ids, $user->user_id);
-	 }
-
-    $excluded = array_merge($excluded, $opted_out, $users_unconfirmed_ids);
-	 error_log("Excluded opted out: " . count($opted_out));
-	 error_log("Excluded unconfirmed: " . count($users_unconfirmed_ids));
-	 error_log("Excluded total: " . (count($users_unconfirmed_ids) + count($opted_out)));
-	 $total_users = count_users();
-	 error_log("Total user count: " . $total_users['total_users']);
-	 error_log("Total users not excluded: " . ($total_users['total_users']-(count($users_unconfirmed_ids) + count($opted_out)) ) );
-	
+	 $query_args = array(
+    		  'meta_key' => 'registryoptout', 
+			  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+    		  'fields' => 'ID'
+    	  );
+    $user_ids = get_users($query_args);
+ 
+    $excluded = array_merge( $excluded, $user_ids );
     $args['exclude'] = $excluded;
     return $args;
 }
+ 
+add_filter( 'bp_after_has_members_parse_args', 'buddydev_exclude_users' );
 
-add_filter('bp_after_has_members_parse_args', 'buddydev_exclude_users');
-
-// Exclude user from count if opted out, expired or no subscription
-function exclude_users_from_count() {
-    global $wpdb;
-    //get number of users who have opted out of being in the directory
-    $query_args = array(
-        'meta_key' => 'registryoptout',
-        'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
-        'fields' => 'ID'
-    );
-    $user_ids = get_users($query_args);
-    $users_opted_out = count($user_ids);
-    
-    // get number of users with valid subscriptions (including expired)    
-    $q = "SELECT count(*) FROM " . $wpdb->prefix . "ihc_user_levels where expire_time <> '0000-00-00 00:00:00'";    
-    $users_subscription = $wpdb->get_var($q);  
-	 error_log("Users opted out: " . $users_opted_out);
-	 error_log("Users with subscriptions: " . $users_subscription);
-    
-    //return the total users with a subscription minus the users who have opted out of the directory
-	 error_log("Count: " . ($users_subscription - $users_opted_out));
-    return ($users_subscription - $users_opted_out);
+// Exclude user from count as well
+function exclude_users_from_count(){
+	$query_args = array(
+		  'meta_key' => 'registryoptout', 
+		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+		  'fields' => 'ID'
+	  );
+	$user_ids = get_users($query_args);
+	$users_excluded = count($user_ids);
+	return (get_user_count() - $users_excluded);
 }
-
-add_filter('bp_get_total_member_count', 'exclude_users_from_count', 99);
+add_filter('bp_get_total_member_count','exclude_users_from_count');
 
 // hide the overview edit tab if you're not on your page
 function hide_overview_edit_tab() {
@@ -245,28 +217,27 @@ function remove_member_types($user_id) {
 
 // make users members if they don't have another member type and they actually have a subscription
 /* run once, then delete
-  function members_membertypes() {
-  $members =  get_users( 'blog_id=1&fields=ID' );
-  foreach ( $members as $user_id ) {
-  bp_set_member_type( $user_id, '' );
-  $user_meta = get_user_meta($user_id);
-  if ( !bp_get_member_type($user_id) && isset($user_meta['ihc_user_levels'][0]) && strpos($user_meta['ihc_user_levels'][0], ',') === false) {
-  bp_set_member_type( $user_id, 'member' );
-  }
-  }
-  global $wpdb;
-  $q = "SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM `" . $wpdb->prefix . "ihc_user_levels`
-  WHERE 1=1
-  AND DATE(expire_time)=DATE('0000-00-00 00:00:00')";
-  $u_ids = $wpdb->get_results($q);
-  if ($u_ids){
-  foreach ($u_ids as $u_data){
-  bp_set_member_type( $u_data->user_id, '' );
-  }
-  }
-  }
-  add_action('bp_init', 'members_membertypes' ); */
-
+function members_membertypes() {
+	$members =  get_users( 'blog_id=1&fields=ID' );
+	$query_args = array(
+		  'meta_key' => 'registryoptout', 
+		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
+		  'fields' => 'ID'
+	  );
+	$excluded = get_users($query_args);
+	$countedMembers = array_diff($members, $excluded);
+	foreach ( $countedMembers as $user_id ) {
+		bp_set_member_type( $user_id, '' );
+		$user_meta = get_user_meta($user_id);
+		// Later might want to add these two to make sure that our count doesn't include people with no level && isset($user_meta['ihc_user_levels'][0])
+		if ( !bp_get_member_type($user_id) ) {
+			bp_set_member_type( $user_id, 'member' );
+		}
+	}
+	global $wpdb;
+}
+add_action('bp_init', 'members_membertypes' ); 
+*/
 
 
 //********************************************//
