@@ -1,7 +1,7 @@
 <?php
 
-add_action('gform_entry_created_5', 'makerspace_to_community', 10, 2);
-add_action('gform_after_update_entry_5', 'pre_makerspace_to_community', 10, 2);
+add_action('gform_entry_created', 'makerspace_to_community', 10, 2);
+add_action('gform_after_update_entry', 'pre_makerspace_to_community', 10, 2);
 function pre_makerspace_to_community($form, $entry_id){
     $entry = GFAPI::get_entry( $entry_id );
     makerspace_to_community($entry, $form);
