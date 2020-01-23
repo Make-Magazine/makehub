@@ -115,7 +115,7 @@ function yz_translate_youzer_text($translated_text) {
 add_filter('gettext', 'yz_translate_youzer_text', 10);
 
 //****************************************************************//
-//         Excluded Users: Opt Out, Expired, Uncomfirmed          //
+//         Excluded Users: Opt Out and Unconfirmed          //
 //****************************************************************//
 function buddydev_exclude_users($args) {
     $excluded = isset($args['exclude']) ? $args['exclude'] : array();
@@ -128,11 +128,25 @@ function buddydev_exclude_users($args) {
         'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
         'fields' => 'ID'
     );
-    $user_ids = get_users($query_args);
-    error_log("Exclude Users");
-    error_log(print_r($user_ids, TRUE));
+    $opted_out = get_users($query_args);
+	
+	 global $wpdb;
+    // get users without confirmed subscriptions
+    $q = "SELECT user_id FROM " . $wpdb->prefix . "ihc_user_levels where DATE(expire_time)=DATE('0000-00-00 00:00:00')";    
+    $users_unconfirmed = $wpdb->get_results($q);      
+	 $users_unconfirmed_ids = array();
+	 foreach ($users_unconfirmed as $user){
+		 array_push($users_unconfirmed_ids, $user->user_id);
+	 }
 
-    $excluded = array_merge($excluded, $user_ids);
+    $excluded = array_merge($excluded, $opted_out, $users_unconfirmed_ids);
+	 error_log("Excluded opted out: " . count($opted_out));
+	 error_log("Excluded unconfirmed: " . count($users_unconfirmed_ids));
+	 error_log("Excluded total: " . (count($users_unconfirmed_ids) + count($opted_out)));
+	 $total_users = count_users();
+	 error_log("Total user count: " . $total_users['total_users']);
+	 error_log("Total users not excluded: " . ($total_users['total_users']-(count($users_unconfirmed_ids) + count($opted_out)) ) );
+	
     $args['exclude'] = $excluded;
     return $args;
 }
@@ -153,9 +167,12 @@ function exclude_users_from_count() {
     
     // get number of users with valid subscriptions (including expired)    
     $q = "SELECT count(*) FROM " . $wpdb->prefix . "ihc_user_levels where expire_time <> '0000-00-00 00:00:00'";    
-    $users_subscription = $wpdb->get_var($q);        
+    $users_subscription = $wpdb->get_var($q);  
+	 error_log("Users opted out: " . $users_opted_out);
+	 error_log("Users with subscriptions: " . $users_subscription);
     
     //return the total users with a subscription minus the users who have opted out of the directory
+	 error_log("Count: " . ($users_subscription - $users_opted_out));
     return ($users_subscription - $users_opted_out);
 }
 
