@@ -98,6 +98,7 @@ function grid_block_split_block_render_callback($block){
 								  <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
 								  <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
 								  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
+								  <p><a href="/members/type/makerspaces" class="btn universal-btn-reversed" style="width:100%;">Makerspace Directory</a></p>
 								  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Newsfeed</a></p>
 								  <p><a href="/digital-library" class="btn universal-btn-reversed" style="width:100%;">View Digital Magazine</a></p>
 							  </div>';
