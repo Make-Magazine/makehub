@@ -182,7 +182,6 @@ function bp_groups_tab() {
 add_action('bp_members_directory_member_types', 'bp_groups_tab');
 
 /* Something like this is needed to limit what activity shows in the scroll */
-
 function remove_bp_activity($activity_object) {
     $exclude = array('new_avatar', 'new_cover', 'friendship_created', 'joined_group');
     //error_log(print_r($activity_object->type, TRUE)); /* shows each activity name as it happens */
@@ -214,30 +213,6 @@ function remove_member_types($user_id) {
         bp_set_member_type($user_id, '');
     }
 }
-
-// make users members if they don't have another member type and they actually have a subscription
-/* run once, then delete
-function members_membertypes() {
-	$members =  get_users( 'blog_id=1&fields=ID' );
-	$query_args = array(
-		  'meta_key' => 'registryoptout', 
-		  'meta_value' => 'a:1:{i:0;s:3:"Yes";}',
-		  'fields' => 'ID'
-	  );
-	$excluded = get_users($query_args);
-	$countedMembers = array_diff($members, $excluded);
-	foreach ( $countedMembers as $user_id ) {
-		bp_set_member_type( $user_id, '' );
-		$user_meta = get_user_meta($user_id);
-		// Later might want to add these two to make sure that our count doesn't include people with no level && isset($user_meta['ihc_user_levels'][0])
-		if ( !bp_get_member_type($user_id) ) {
-			bp_set_member_type( $user_id, 'member' );
-		}
-	}
-	global $wpdb;
-}
-add_action('bp_init', 'members_membertypes' ); 
-*/
 
 
 //********************************************//
