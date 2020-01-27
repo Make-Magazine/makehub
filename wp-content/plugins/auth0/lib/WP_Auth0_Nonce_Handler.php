@@ -40,6 +40,14 @@ class WP_Auth0_Nonce_Handler {
 	private $unique;
 
 	/**
+	 * SameSite cookie attribute set to None.
+	 * Used for Implicit login flow.
+	 *
+	 * @var bool
+	 */
+	private $same_site_none;
+
+	/**
 	 * Private to prevent cloning.
 	 */
 	private function __clone() {}
@@ -51,9 +59,8 @@ class WP_Auth0_Nonce_Handler {
 
 	/**
 	 * WP_Auth0_Nonce_Handler constructor.
-	 * Private to prevent new instances of this class.
 	 */
-	private function __construct() {
+	public function __construct() {
 		$this->init();
 	}
 
@@ -64,11 +71,13 @@ class WP_Auth0_Nonce_Handler {
 		// If a NONCE_COOKIE_NAME is not defined then we don't need to persist the nonce value.
 		if ( defined( static::NONCE_COOKIE_NAME ) && isset( $_COOKIE[ static::get_storage_cookie_name() ] ) ) {
 			// Have a cookie, don't want to generate a new one.
-			$this->unique = $_COOKIE[ static::get_storage_cookie_name()  ];
+			$this->unique = $_COOKIE[ static::get_storage_cookie_name() ];
 		} else {
 			// No cookie, need to create one.
 			$this->unique = $this->generate_unique();
 		}
+
+		$this->same_site_none = (bool) wp_auth0_get_option( 'auth0_implicit_workflow' );
 	}
 
 	/**
@@ -125,6 +134,9 @@ class WP_Auth0_Nonce_Handler {
 	public function validate( $value ) {
 		$cookie_name = static::get_storage_cookie_name();
 		$valid       = isset( $_COOKIE[ $cookie_name ] ) ? $_COOKIE[ $cookie_name ] === $value : false;
+		if ( $this->same_site_none && ! $valid ) {
+			$valid = isset( $_COOKIE[ '_' . $cookie_name ] ) ? $_COOKIE[ '_' . $cookie_name ] === $value : false;
+		}
 		$this->reset();
 		return $valid;
 	}
@@ -166,13 +178,99 @@ class WP_Auth0_Nonce_Handler {
 	 * @return bool
 	 */
 	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
-		if ( $cookie_exp <= time() ) {
-			unset( $_COOKIE[ $cookie_name ] );
-			$cookie_exp = 0;
-		} else {
-			$_COOKIE[ $cookie_name ] = $cookie_value;
+		$illegal_chars = ",; \t\r\n\013\014";
+		if ( strpbrk( $cookie_name, $illegal_chars ) || strpbrk( $cookie_value, $illegal_chars ) ) {
+			WP_Auth0_ErrorManager::insert_auth0_error(
+				__METHOD__,
+				new WP_Error(
+					'invalid_cookie',
+					'Cookie names and values cannot contain any of the following: ' . wp_slash( $illegal_chars )
+				)
+			);
+			return false;
 		}
-		return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/' );
+
+		// Cookie is being deleted.
+		if ( $cookie_exp <= time() ) {
+
+			// Delete SameSite=None fallback cookie.
+			if ( $this->same_site_none ) {
+				unset( $_COOKIE[ '_' . $cookie_name ] );
+				$this->write_cookie( '_' . $cookie_name, '', 0 );
+			}
+
+			unset( $_COOKIE[ $cookie_name ] );
+			return $this->write_cookie( $cookie_name, '', 0 );
+		}
+
+		$_COOKIE[ $cookie_name ] = $cookie_value;
+
+		// Set SameSite=None fallback cookie and use headers for main cookie.
+		if ( $this->same_site_none ) {
+			$_COOKIE[ '_' . $cookie_name ] = $cookie_value;
+			$this->write_cookie_header( $cookie_name, $cookie_value, $cookie_exp );
+			return $this->write_cookie( '_' . $cookie_name, $cookie_value, $cookie_exp );
+		}
+
+		return $this->write_cookie( $cookie_name, $cookie_value, $cookie_exp );
+	}
+
+	/**
+	 * Build the header to use when setting SameSite cookies.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
+	 *
+	 * @param string  $name   Cookie name.
+	 * @param string  $value  Cookie value.
+	 * @param integer $expire Cookie expiration timecode.
+	 *
+	 * @return string
+	 *
+	 * @see https://github.com/php/php-src/blob/master/ext/standard/head.c#L77
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function get_same_site_cookie_header( $name, $value, $expire ) {
+		$date = new \Datetime();
+		$date->setTimestamp( $expire )->setTimezone( new \DateTimeZone( 'GMT' ) );
+
+		return sprintf(
+			'Set-Cookie: %s=%s; path=/; expires=%s; HttpOnly; SameSite=None; Secure',
+			$name,
+			$value,
+			$date->format( $date::COOKIE )
+		);
+	}
+
+	/**
+	 * Wrapper around PHP core setcookie() function to assist with testing.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
+	 *
+	 * @param string  $name   Complete cookie name to set.
+	 * @param string  $value  Value of the cookie to set.
+	 * @param integer $expire Expiration time in Unix timecode format.
+	 *
+	 * @return boolean
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function write_cookie( $name, $value, $expire ) {
+		return setcookie( $name, $value, $expire, '/', '', false, true );
+	}
+
+	/**
+	 * Wrapper around PHP core header() function to assist with testing.
+	 * NOTE: Validity of $name and $value is not checked here; see handle_cookie().
+	 *
+	 * @param string  $name   Complete cookie name to set.
+	 * @param string  $value  Value of the cookie to set.
+	 * @param integer $expire Expiration time in Unix timecode format.
+	 *
+	 * @return void
+	 *
+	 * @codeCoverageIgnore
+	 */
+	protected function write_cookie_header( $name, $value, $expire ) {
+		header( $this->get_same_site_cookie_header( $name, $value, $expire ), false );
 	}
 
 	/**
@@ -181,6 +279,7 @@ class WP_Auth0_Nonce_Handler {
 	 * @return string
 	 */
 	public static function get_storage_cookie_name() {
+		// phpcs:ignore
 		return apply_filters( 'auth0_nonce_cookie_name', static::NONCE_COOKIE_NAME );
 	}
 }
