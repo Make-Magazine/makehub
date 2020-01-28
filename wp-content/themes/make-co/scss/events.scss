@@ -17,6 +17,19 @@
 		.events-community-post-content {
 			padding-bottom: 30px;
 		}
+		.my-events-display-options { 
+			background: #fff;
+			display: flex;
+		   width: 150px;
+			align-items: center;
+			justify-content: center;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			height: 30px;
+			&:hover {
+				background: #ccc;
+			}
+		}
 		.buddypress-events-calendar-details {
 			table {
 				thead tr, tfoot tr {
@@ -45,6 +58,7 @@
 			#s2id_event-group {
 				display: none;
 			}
+			&#event_group { display: none; }
 		}
 	}
 }

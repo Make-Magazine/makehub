@@ -11,4 +11,9 @@ jQuery("document").ready(function(){
 			}
 		});
 	}
+	// get the autocomplete working for the directory search form
+	if(jQuery("#search-members-form")) {
+		jQuery("#search-members-form").attr('role', 'search');
+		jQuery("#search-members-form #members_search").attr("name", "s");
+	}
 });
