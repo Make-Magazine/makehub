@@ -24,12 +24,12 @@ get_header(); ?>
 
   </div>
 
-  <div class="playbook-page-hero" style="background: url(/wp-content/themes/makerspaces/img/home-header.png) no-repeat center center;"></div>
+  <div class="playbook-page-hero" style="background: url(/wp-content/themes/makerspaces/images/home-header.png) no-repeat center center;"></div>
 
   <div class="container playbook-page-body">
 
     <div class="playbook-cover">
-      <img src="/wp-content/themes/makerspaces/img/Playbook-cover.png" alt="Makerspace playbook PDF cover" />
+      <img src="/wp-content/themes/makerspaces/images/Playbook-cover.png" alt="Makerspace playbook PDF cover" />
     </div>
 
     <div class="row">
@@ -123,8 +123,8 @@ get_header(); ?>
 					<a href="/edit-your-makerspace"><button class="btn blue-btn">Manage your listing</button></a>
 				</div>
 				<div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
-					<h4>Start your own makerspace today</h4>
-					<a href="https://learn.make.co/courses/starting-a-school-makerspace/info"><button class="btn blue-btn">Take the course</button></a>
+					<h4>Join Make: Community</h4>
+					<a href="https://community.make.co"><button class="btn blue-btn">Learn More</button></a>
 				</div>
 			</div>
 		</div>
@@ -132,7 +132,7 @@ get_header(); ?>
 
 </div>
 
-<a target="_blank" style="display:none;" id="playbook_dl" href="/wp-content/themes/makerspaces/img/Makerspace-Playbook.pdf">Makerspace Playbook</a>
+<a target="_blank" style="display:none;" id="playbook_dl" href="/wp-content/themes/makerspaces/images/Makerspace-Playbook.pdf">Makerspace Playbook</a>
 
 
 <?php get_footer(); ?>

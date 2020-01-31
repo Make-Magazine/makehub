@@ -1,0 +1,86 @@
+.playbook-page {
+   .playbook-header {
+      text-align: center;
+      p { font-size: 20px; margin-bottom: 20px; }
+   }
+   .playbook-page-hero {
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover !important;
+      height: 25vw;
+      @media screen and (min-width: 768px) and (max-width: 991px) {
+         height: 25vw;
+      }
+      @media screen and (max-width: 767px) {
+         height: 50vw;
+         background: url(/wp-content/themes/makerspaces/images/home-header-m.png) no-repeat center center;
+      }
+   }
+   .playbook-page-body {
+      padding-top: 80px;
+      padding-bottom: 40px;
+      @media screen and (max-width: 767px) {
+         padding-top: 20px;
+      }
+      .playbook-cover {
+         position: relative;
+         margin-bottom: 30px;
+         @media screen and (max-width: 767px) {
+            margin-bottom: 15px;
+         }
+      }
+      img {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         max-width: 275px;
+         -webkit-box-shadow: 4px 4px 7px 0px rgba(51,50,51,0.5);
+         -moz-box-shadow: 4px 4px 7px 0px rgba(51,50,51,0.5);
+         box-shadow: 4px 4px 7px 0px rgba(51,50,51,0.5);
+         @media screen and (max-width: 767px) {
+            max-width: 35vw;
+         }
+      }
+      .playbook-page-body-l {
+         @media screen and (min-width: 768px) {
+            padding-left: 40px;
+         }
+         .playbook-sub-form {
+            margin-top: 30px;
+            @media screen and (min-width: 768px) {
+               margin-right: 1vw;
+            }
+         }
+      }
+      .playbook-page-body-r {
+         @media screen and (min-width: 768px) {
+            margin-top: -65px;
+         }
+         p { line-height: 1.2em; }
+         .small { margin-top: 40px; }
+      }
+   }
+   form {
+      margin: 0 0 20px;
+      input[name=email], input[name=name] {
+         padding: 12px 18px;
+         font-size: 15px;
+         line-height: 1em;
+         border: 1px solid #c8c8c8;
+         width: 100%;
+         border-top-left-radius: 4px;
+         -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+         box-sizing: border-box;
+         -webkit-box-shadow: 3px 3px 4px -5px rgba(0,0,0,0.75);
+         -moz-box-shadow: 3px 3px 4px -5px rgba(0,0,0,0.75);
+         box-shadow: 3px 3px 4px -5px rgba(0,0,0,0.75);
+         margin-bottom: 15px;
+      }
+
+      .btn {
+         padding: 20px 0;
+      }
+
+   }
+}
