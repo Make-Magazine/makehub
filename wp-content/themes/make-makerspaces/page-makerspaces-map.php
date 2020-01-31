@@ -77,10 +77,10 @@ function spaces_map_loop() {
             <h4>See an error or need to update your info?</h4>
             <a class="btn universal-btn" href="/edit-your-makerspace">Manage your listing</a>					
          </div>
-         <div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
-            <h4>Get a free PDF guide on starting a makerspace</h4>
-            <a class="btn universal-btn" href="/playbook">Download the playbook</a>
-         </div>
+			<div class="col-md-4 col-sm-4 col-xs-12 makerspace-bottom-nav">
+				<h4>Join Make: Community</h4>
+				<a href="https://community.make.co"><button class="btn blue-btn">Learn More</button></a>
+			</div>
       </div>
    </div>
 </div>  
