@@ -185,6 +185,16 @@ function make_co_enqueue_styles() {
 // remove the subtheme level style.css to use it as a version
 remove_action('genesis_meta', 'genesis_load_stylesheet');
 
+add_filter('show_admin_bar', 'remove_admin_bar', PHP_INT_MAX);
+// if you're not an admin, don't show the admin bar
+function remove_admin_bar(){
+    if (current_user_can('administrator')) {
+        return true;
+    }
+    return false;
+}
+
+
 /**
  * Defines responsive menu settings.
  *
