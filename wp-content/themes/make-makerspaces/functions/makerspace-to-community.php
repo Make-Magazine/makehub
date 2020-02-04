@@ -42,9 +42,9 @@ function makerspace_to_community($entry, $form) {
 
     //set member type to makerspace
     switch_to_blog(1);
-    $member_type = bp_set_member_type($user_id, 'Makerspace');
+    $member_type = bp_set_member_type($user_id, 'maker_space');
     
-    $tt_ids = wp_set_object_terms($user_id, 'Makerspace', bp_get_member_type_tax_name());
+    $tt_ids = wp_set_object_terms($user_id, 'maker_space', bp_get_member_type_tax_name());
     restore_current_blog();
 
     GLOBAL $wpdb;
