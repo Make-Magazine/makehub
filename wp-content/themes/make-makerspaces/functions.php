@@ -160,13 +160,16 @@ function make_makerspaces_enqueue_scripts_styles() {
 // remove the subtheme level style.css to use it as a version
 remove_action( 'genesis_meta', 'genesis_load_stylesheet' );
 
+// remove the subtheme level style.css to use it as a version
+remove_action( 'genesis_meta', 'genesis_load_stylesheet' );
 // if you're not an admin, don't show the admin bar
-add_action('after_setup_theme', 'remove_admin_bar'); 
-function remove_admin_bar() {
-	if (!current_user_can('administrator') && !is_admin()) {
-	  show_admin_bar(false);
-	}
+function remove_admin_bar(){
+    if (current_user_can('administrator')) {
+        return true;
+    }
+    return false;
 }
+
 
 /**
  * Defines responsive menu settings.
@@ -323,11 +326,4 @@ function make_makerspaces_comments_gravatar( $args ) {
 	$args['avatar_size'] = 60;
 	return $args;
 
-}
-// REMOVE ADMIN BAR FOR NON ADMIN USERS
-add_action('after_setup_theme', 'remove_admin_bar_makerspace');
-function remove_admin_bar_makerspace() {
-	if (!current_user_can('administrator') && !is_admin()) {
-	  show_admin_bar(false);
-	}
 }
