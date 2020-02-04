@@ -324,3 +324,11 @@ function make_makerspaces_comments_gravatar( $args ) {
 	return $args;
 
 }
+
+// REMOVE ADMIN BAR FOR NON ADMIN USERS
+add_action('after_setup_theme', 'remove_admin_bar');
+function remove_admin_bar() {
+	if (!current_user_can('administrator') && !is_admin()) {
+	  show_admin_bar(false);
+	}
+}
