@@ -6,7 +6,7 @@ jQuery("document").ready(function(){
 			var navItemClass = jQuery(this).text().trim().replace(/\s+/g, '-').toLowerCase().replace(/[0-9]\s*$/, '');
 			jQuery(this).addClass(navItemClass);
 			// remove events navbar item unless it's a featured makerspace
-			if(!jQuery(".bp-user").is('.member-type-makerspace.member-level-makerspace') && !jQuery(".bp-user").is('.member-type-producer') && jQuery(this).hasClass("events")){
+			if(!jQuery(".bp-user").is('.member-type-maker_space.member-level-makerspace') && !jQuery(".bp-user").is('.member-type-producer') && jQuery(this).hasClass("events")){
 				jQuery(this).remove();
 			}
 		});

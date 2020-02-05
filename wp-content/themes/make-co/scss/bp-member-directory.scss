@@ -79,7 +79,7 @@
 			.item-meta .activity { display: none; }
 		}
 
-		.member-type-makerspace {
+		.member-type-maker_space {
 			.yzm-user-cover {
 				&::before {
 					content: 'Makerspace';
@@ -156,7 +156,7 @@
 				li#members-personal {
 					display: none;
 				}
-				li#members-makerspace a i {
+				li#members-maker_space a i {
 					background: #005e9a !important;
 				}
 				li#members-member a i {
@@ -322,7 +322,7 @@
 			}
 		}
 	}
-	&.page-members-type-makerspace {
+	&.page-members-type-maker_space {
 		#yz-members-directory {
 			.yz-directory-filter {
 				.item-list-tabs, .item-list-tabs:not(#subnav) {
@@ -334,7 +334,7 @@
 							color: rgb(150, 150, 150);
 						}
 					}
-					li#members-makerspace {
+					li#members-maker_space {
 						background: rgba(63, 175, 237, .2);
 						border-radius: 5px;
 						a {
