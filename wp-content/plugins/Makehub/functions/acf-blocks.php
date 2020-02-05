@@ -96,7 +96,7 @@ function grid_block_split_block_render_callback($block){
 								  <h2 style="color:#fff;margin-top:0px;font-weight: 300;">Welcome, '.bp_core_get_user_displayname( bp_loggedin_user_id() ).'</h2>
 								  <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
 								  <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
-								  <p><a href="/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
+								  <p><a href="/members/type/members" class="btn universal-btn-reversed" style="width:100%;">Member Directory</a></p>
 								  <p><a href="/members/type/makerspaces" class="btn universal-btn-reversed" style="width:100%;">Makerspace Directory</a></p>
 								  <p><a href="/activity" class="btn universal-btn-reversed" style="width:100%;">Newsfeed</a></p>
 								  <p><a href="/digital-library" class="btn universal-btn-reversed" style="width:100%;">View Digital Magazine</a></p>
