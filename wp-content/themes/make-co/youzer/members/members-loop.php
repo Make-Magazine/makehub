@@ -75,14 +75,14 @@ do_action( 'bp_before_members_loop' ); ?>
 						do_action( 'bp_directory_members_item_meta' ); ?>
 					
 					<?php 
-					   if(bp_get_member_type(bp_get_member_user_id()) == 'maker_space') {
+					if(bp_get_member_type(bp_get_member_user_id()) == 'maker_space') {
+						if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) { ?>
+							<span class="yz-name"><i class="fas fa-city"></i><?php echo xprofile_get_field_data('city', bp_get_member_user_id()); 
 							if(xprofile_get_field_data('state / province', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('state / province'), $hidden_fields)) { ?>
-								<span class="yz-name"><i class="fas fa-map-marker-alt"></i><?php echo xprofile_get_field_data('state / province', bp_get_member_user_id()); ?></span>
-					<?php }
-					      if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) { ?>
-								<span class="yz-name"><i class="fas fa-city"></i><?php echo xprofile_get_field_data('city', bp_get_member_user_id()); ?>
-					         </span>
-					<?php } 
+								<i class="fas fa-map-marker-alt"></i><?php echo xprofile_get_field_data('state / province', bp_get_member_user_id()); ?>
+							<?php } ?>
+						</span>
+					<?php }  
 					} ?>
 
 				</div>
