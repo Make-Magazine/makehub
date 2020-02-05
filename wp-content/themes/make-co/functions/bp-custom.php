@@ -259,13 +259,12 @@ function featured_makerspaces_to_the_top() {
         if (!empty($user_meta['ihc_user_levels'])) {
             $user_level = $user_meta['ihc_user_levels'][0];
             $member_type = bp_get_member_type($user_id);
-            if ($user_meta['ihc_user_levels'][0] == 7 && $member_type == "makerspace") {
+            if ($user_meta['ihc_user_levels'][0] == 7 && $member_type == "maker_space") {
                 bp_update_user_last_activity($user_id, bp_core_current_time());
             }
         }
     }
 }
-
 add_action('bp_init', 'featured_makerspaces_to_the_top');
 
 // Add all the countries
