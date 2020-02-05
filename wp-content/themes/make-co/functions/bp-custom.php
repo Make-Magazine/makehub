@@ -503,22 +503,3 @@ function set_displayed_user($user_id) {
     $bp->displayed_user->userdata = bp_core_get_core_userdata($bp->displayed_user->id);
     $bp->displayed_user->fullname = bp_core_get_user_displayname($bp->displayed_user->id);
 }
-
-/* add more info to the member loop if it exists
-function add_info_to_members_loop() {
-	// if a field is set to hidden, we'll save it to an array to check whether we should display it or not
-	$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
-
-	if(xprofile_get_field_data('country', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('country'), $hidden_fields)) {
-		echo "<p class='profile-field'><b>Country:</b> " . xprofile_get_field_data('country', bp_get_member_user_id()) . "</p>";
-	}
-	if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) {
-   	echo "<p class='profile-field'><b>City:</b> " . xprofile_get_field_data('city', bp_get_member_user_id()) . "</p>";
-	}
-	//this gets the cover image, but not sure how to add it to the css for each entry
-	$member_cover_image_url = bp_attachments_get_attachment('url', array(
-          'object_dir' => 'members',
-          'item_id' =>bp_get_member_user_id(),
-        ));
-}
-add_action( 'bp_directory_members_item', 'add_info_to_members_loop' ); */
