@@ -1,0 +1,13 @@
+h1, .auth0-lock-header-logo { display: none; }
+.auth0-lock-header { text-align: left; }
+.auth0-lock-header-bg {
+	position: absolute;
+	height: 118px;
+	width: 100%;
+	overflow: hidden;
+	top: 0;
+	left: 0;
+	pointer-events: none;
+}
+.auth0-lock-tabs li:last-of-type { display: none; }
+#extra-options { display: none; }

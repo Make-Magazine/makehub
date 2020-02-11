@@ -111,7 +111,7 @@
 	display: none !important;
 }
 
-.yz-slider.yz-slides-fixed-height {
+.buddypress .yz-slider.yz-slides-fixed-height {
 	height: 400px;
 }
 
@@ -191,7 +191,7 @@
 
 // add some kind of explanation to the media page
 .bp-user.media {
-	#subnav::after {
-		content: "A List of all Media uploaded for this user";
+	.yz-media::before {
+		content: "A List of all Media uploaded through widgets and social activity for this user";
 	}
 }
