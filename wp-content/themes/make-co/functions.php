@@ -374,6 +374,21 @@ function makeco_password_subject_filter($old_subject) {
 
 add_filter('retrieve_password_title', 'makeco_password_subject_filter', 10, 1);
 
+function custom_login_stylesheets() {
+    wp_enqueue_style('custom-login', '/wp-content/themes/make-co/css/style-login.css');
+    wp_enqueue_style('custom-login', '/wp-content/universal-assets/v1/css/universal.css');
+}
+
+// style the login page and give it the universal header and footer
+add_action('login_enqueue_scripts', 'custom_login_stylesheets');
+
+add_action('login_header', function() {
+    get_header();
+});
+add_action('login_footer', function() {
+    get_footer();
+});
+
 /*
 // this will add all users, but will have to be commented out so it doesn't run everytime a page is loaded
 function buddypress_add_last_activity() {
