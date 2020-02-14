@@ -192,6 +192,12 @@
 // add some kind of explanation to the media page
 .bp-user.media {
 	.yz-media::before {
-		content: "A List of all Media uploaded through widgets and social activity for this user";
+		content: "A List of all Media uploaded via widgets and social activity for this user";
+		margin-bottom: 30px;
+		display: block;
+		padding: 15px 25px;
+		background: #fff;
+		border-radius: 3px;
+		color: #666;
 	}
 }
