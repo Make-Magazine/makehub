@@ -61,3 +61,10 @@ body.login div#login form#loginform .submit .button.button-large {
 body.login div#login form#loginform .submit .button.button-large:hover {
 	background: none repeat scroll 0 0 #1a9bcb !important;
 }
+#subscribe-form {
+	border: none;
+}
+#login #nav { visibility: hidden; }
+#login #nav a:first-of-type { display: none; }
+#login #nav a:last-of-type { visibility: visible; }
+.login input[type="text"] { margin-bottom: 0px; }
