@@ -37,7 +37,7 @@ do_action( 'bp_before_members_loop' ); ?>
 
 				<?php if ( bp_is_members_directory() ) : ?>
 					
-					<?php yz_members_directory_user_cover( bp_get_member_user_id() ); ?>
+				<a href="<?php bp_member_permalink(); ?>"><?php yz_members_directory_user_cover( bp_get_member_user_id() ); ?></a>
 
 					<a href="<?php bp_member_permalink(); ?>" class="yz-item-avatar">
 						<div class="yz-member-avatar"><?php bp_member_avatar( 'type=full&width=100&height=100' ); ?></div>
@@ -52,9 +52,9 @@ do_action( 'bp_before_members_loop' ); ?>
 
 				<?php endif; ?>
 
-			<div class="item">
+			<a href="<?php bp_member_permalink(); ?>" class="item">
 				<div class="item-title">
-					<a class="yz-fullname" href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a>
+					<?php bp_member_name(); ?>
 				</div>
 
 				<div class="item-meta">
@@ -105,7 +105,7 @@ do_action( 'bp_before_members_loop' ); ?>
 				  * bp_member_profile_data( 'field=the field name' );
 				  */
 				?>
-			</div>
+			</a>
 
 			<?php 
 				if ( bp_is_directory() ) {

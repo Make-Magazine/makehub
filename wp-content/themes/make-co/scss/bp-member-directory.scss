@@ -11,14 +11,18 @@
 			li { height: 375px; }
 			.yzm-user-cover {
 				height: 100px;
+				cursor: pointer;
 			}
 			.yzm-user-data {
 				min-height: 350px;
 				display: flex;
 				flex-direction: column;
-				.item-meta { margin-bottom: 0px; }
+				
 				.item {
-					margin-bottom: auto;
+					flex-grow: 1;
+					cursor: pointer;
+					color: #818181;
+					.item-meta { cursor: pointer; }
 				}
 			}
 		}
