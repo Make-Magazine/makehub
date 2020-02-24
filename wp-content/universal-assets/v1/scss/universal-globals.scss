@@ -88,6 +88,14 @@ a { // don't let genesis molest our links
 		border-color: #EA002A;
 	}
 }
+.universal-btn-navy {
+	@extend .universal-btn;
+	background-color: #151733;
+	&:hover {
+		color: #151733;
+		border-color: #151733;
+	}
+}
 .universal-btn-reversed {
 	@extend .universal-btn;
 	background-color: #FFF;
