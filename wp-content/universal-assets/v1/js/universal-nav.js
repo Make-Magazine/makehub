@@ -56,15 +56,19 @@
                 }
                 break;
             case "makeco":
+				case "makehub":
+				case "makehub.local":
             case "makeco.wpengine.com":
             case "makeco.staging.wpengine.com":
+            case "devmakehub.wpengine.com":
+            case "stagemakehub.wpengine.com":
             case "make.co":
+				case "comunity.make.co":
             case "stage.make.co":
             case "dev.make.co":
                 universalNavActive("make");
                 toggleMobileSection("make");
                 nextItemUnderNav = jQuery(".page-content");
-                conversionPageHighlights();
                 break;
             case "makershed":
             case "www.makershed":
@@ -90,15 +94,6 @@
             case "makerspaces.make.co":
             case "stage.makerspace.com":
             case "dev.makerspace.com":
-                nextItemUnderNav = jQuery(".main-content");
-                break;
-            case "makehub.local":
-            case "makehub":
-            case "devmakehub.wpengine.com":
-            case "stagemakehub.wpengine.com":
-            case "community.make.co":
-                universalNavActive("community");
-                toggleMobileSection("community");
                 nextItemUnderNav = jQuery(".main-content");
                 break;
             case "learn.make.co":
@@ -151,17 +146,16 @@
             jQuery(".auth-target").append(jQuery(".nav-level-1-auth"));
             jQuery("#dropdownMenuLink").click(function () {
                 jQuery(".expanding-underline").removeClass("underline-open");
-                jQuery(".nav-flyout-ul").css("display", "none");
+                //jQuery(".nav-flyout-ul").css("display", "none");
             })
         }
         if (jQuery(window).width() < 767) {
-            nextItemUnderNav.css("margin-top", "115px"); // initially start it lower as well
+            nextItemUnderNav.css("margin-top", "70px"); // initially start it lower as well
         }
         jQuery(window).on('resize', function () {
             if (jQuery(window).width() < 767) {
                 y_pos = 0;
-                nextItemUnderNav.css("margin-top", "115px");
-                jQuery(".nav-flyout-ul").css("display", "none");
+                nextItemUnderNav.css("margin-top", "70px");
             } else {
                 if (jQuery(".banner-bar").height) {
                     y_pos = jQuery(".banner-bar").height() + jQuery(".nav-level-1").height();
@@ -173,6 +167,8 @@
                 jQuery(".nav-flyout-ul").css("display", "block");
             }
             if (jQuery(window).width() < 578) {
+					 jQuery(".nav-flyout-ul").css("display", "none");
+					 jQuery(".active-site .nav-flyout-ul").css("display", "block");
                 jQuery(".auth-target").append(jQuery(".nav-level-1-auth"));
             } else {
                 jQuery("nav.container").prepend(jQuery(".nav-level-1-auth"));
