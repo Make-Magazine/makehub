@@ -67,7 +67,7 @@
                 break;
 				case "devmakehub.wpengine.com":
             case "stagemakehub.wpengine.com":
-				case "comunity.make.co":
+				case "community.make.co":
 				case "makehub":
 				case "makehub.local":
 				    universalNavActive("make");
