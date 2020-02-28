@@ -154,12 +154,12 @@
             })
         }
         if (jQuery(window).width() < 767) {
-            nextItemUnderNav.css("margin-top", "70px"); // initially start it lower as well
+            nextItemUnderNav.css("margin-top", "100px"); // initially start it lower as well
         }
         jQuery(window).on('resize', function () {
             if (jQuery(window).width() < 767) {
                 y_pos = 0;
-                nextItemUnderNav.css("margin-top", "70px");
+                nextItemUnderNav.css("margin-top", "100px");
             } else {
                 if (jQuery(".banner-bar").height) {
                     y_pos = jQuery(".banner-bar").height() + jQuery(".nav-level-1").height();
