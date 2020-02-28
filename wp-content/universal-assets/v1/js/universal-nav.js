@@ -56,19 +56,23 @@
                 }
                 break;
             case "makeco":
-				case "makehub":
-				case "makehub.local":
             case "makeco.wpengine.com":
             case "makeco.staging.wpengine.com":
-            case "devmakehub.wpengine.com":
-            case "stagemakehub.wpengine.com":
             case "make.co":
-				case "comunity.make.co":
             case "stage.make.co":
             case "dev.make.co":
                 universalNavActive("make");
                 toggleMobileSection("make");
                 nextItemUnderNav = jQuery(".page-content");
+                break;
+				case "devmakehub.wpengine.com":
+            case "stagemakehub.wpengine.com":
+				case "comunity.make.co":
+				case "makehub":
+				case "makehub.local":
+				    universalNavActive("make");
+                toggleMobileSection("make");
+                nextItemUnderNav = jQuery(".main-content");
                 break;
             case "makershed":
             case "www.makershed":
