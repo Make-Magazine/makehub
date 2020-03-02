@@ -109,8 +109,8 @@
 				.yz-name, .yz-name i, .yz-fullname { 
 					color: #666; 
 					word-wrap: break-word;
-					padding: 0 15px;
 				}
+				.yz-name { padding: 0 15px; }
 			}
 			.yzm-user-actions .message-button a { background-color :#fff; }
 			&.member-level-makerspace {
