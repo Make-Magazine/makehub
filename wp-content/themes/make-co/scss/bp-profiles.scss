@@ -1,5 +1,16 @@
 .yz-profile {
 	.yz-profile-login { display: none; }
+	.yz-profile-header {
+		.edit-btn-wrap {
+			position: absolute;
+			bottom: 10px;
+			right: 10px;
+			.btn {
+				height: 30px;
+				margin-left: 15px;
+			}
+		}
+	}
 	.yz-profile-sidebar {
 		.yz-ad {
 			.yz-edit-widget {
