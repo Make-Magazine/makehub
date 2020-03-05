@@ -43,7 +43,7 @@ class shopify_widget extends WP_Widget {
 		$collection_id = $instance['collection_id'];
 
 		// Create the API URL for the Shopify collect
-		$collects_url = $api_url . '/admin/collects.json?collection_id=' . $collection_id . '&limit=3';
+		$collects_url = $api_url . '/admin/api/2020-01/collects.json?collection_id=' . $collection_id . '&limit=3';
 
 		$collects_content = @file_get_contents( $collects_url );
 
@@ -60,7 +60,7 @@ class shopify_widget extends WP_Widget {
 			// Get the product ID for the current product
 			$product_id = $collects['collects'][$prod]['product_id'];
 			// Get the product data from the API (using the ID)
-			$product_url = $api_url . '/admin/products/' . $product_id . '.json?fields=images,title,variants,handle';
+			$product_url = $api_url . '/admin/api/2020-01/products/' . $product_id . '.json?fields=images,title,variants,handle';
 			// Decode the JSON for the product data
 			$product_json = json_decode( @file_get_contents( $product_url ), true );
 
