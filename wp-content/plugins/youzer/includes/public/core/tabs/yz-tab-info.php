@@ -44,32 +44,36 @@ class YZ_Info_Tab {
                 );
 
                 youzer()->widgets->yz_widget_core( $custom_infos_args );
+		          if(bp_get_the_profile_group_id() == 1) {
+						if(bp_is_my_profile() == true) {
+							$return = '<div class="yz-widget yz_effect yz-white-bg yz-wg-title-icon-bg fadeIn">
+											 <div class="yz-widget-main-content">
+												<a href="'.bp_loggedin_user_domain().'widgets" class="yz-widget-head">
+												  <h2 class="yz-widget-title">
+													  <i class="fas fa-id-card"></i>Add Profile Widgets
+												  </h2>
+												  <i class="far fa-edit yz-edit-widget"></i>
+												</a>
+											 </div>
+										  </div>';
+							echo $return;
+						}
+						// Get Overview Widgets and add them to the bottom of the info page
+						$profile_widgets = yz_options( 'yz_profile_main_widgets' );
+						// Filter 
+						$profile_widgets = apply_filters( 'yz_profile_main_widgets', $profile_widgets );
+						// Get Widget Content.
+						youzer()->widgets->get_widget_content( $profile_widgets );	
+					 }
 
-        endif; endwhile;
+             endif; 
+		 
+		  endwhile;
         
         endif;
 
         do_action( 'bp_after_profile_loop_content' );
 		 
-		  if(bp_is_my_profile() == true) {
-		  		$return = '<div class="yz-widget yz-custom_infos yz_effect yz-white-bg yz-wg-title-icon-bg fadeIn">
-				             <div class="yz-widget-main-content">
-									<a href="'.bp_loggedin_user_domain().'widgets" class="yz-widget-head">
-									  <h2 class="yz-widget-title">
-									     <i class="fas fa-id-card"></i>Add Profile Widgets
-									  </h2>
-									  <i class="far fa-edit yz-edit-widget"></i>
-									</a>
-								 </div>
-							  </div>';
-			   echo $return;
-		  }
-		  // Get Overview Widgets and add them to the bottom of the info page
-		  $profile_widgets = yz_options( 'yz_profile_main_widgets' );
-		  // Filter 
-		  $profile_widgets = apply_filters( 'yz_profile_main_widgets', $profile_widgets );
-		  // Get Widget Content.
-		  youzer()->widgets->get_widget_content( $profile_widgets );	
     }
 
 }

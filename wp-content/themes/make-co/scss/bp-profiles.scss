@@ -135,19 +135,27 @@
 		.yz-info-data {
 			visibility: hidden;
 			display: block;
-			a { 
-				visibility: visible;
-				display: block;
-				margin-bottom: -20px;
-				padding-left: 8px;
-				&::before {
-					content: "•";
-					padding-right: 5px;
-					font-weight: bold''
-				}
-				&:first-of-type { margin-top: 10px; }
-				&:last-of-type { margin-bottom: 0px; }
+			width: 100%;
+			p {
+				margin-top: 10px;
+				margin-bottom: 0px;
+				width: 100%;
+				display: grid;
+				grid-template-columns: 33% 33% 33%;
+				a { 
+					visibility: visible;
+					display: block;
+					margin-bottom: -20px;
+					padding-left: 8px;
+					&::before {
+						content: "•";
+						padding-right: 5px;
+						font-weight: bold;
+					}
+					&:nth-of-type(3) { margin-top: -20px; }
+				}			
 			}
+
 		}
 	}
 }
