@@ -138,22 +138,27 @@
 			width: 100%;
 			p {
 				margin-top: 10px;
-				margin-bottom: 0px;
+				margin-bottom: 20px;
 				width: 100%;
 				display: grid;
 				grid-template-columns: 33% 33% 33%;
 				a { 
 					visibility: visible;
 					display: block;
-					margin-bottom: -20px;
+					margin-bottom: -19px;
 					padding-left: 8px;
+					word-wrap: break-word;
 					&::before {
 						content: "•";
 						padding-right: 5px;
 						font-weight: bold;
 					}
 					&:nth-of-type(3) { margin-top: -20px; }
-				}			
+				}		
+				@media (max-width: 480px) {
+					grid-template-columns: 100%;
+					a:nth-of-type(3) { margin-top: 0px; }
+				}
 			}
 
 		}
