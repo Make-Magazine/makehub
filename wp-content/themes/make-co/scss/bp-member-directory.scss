@@ -100,7 +100,6 @@
 			}
 			.yzm-user-data {
 				border: solid #005e9a;
-				background: rgba(63, 175, 237, .2);
 				.yzm-user-actions {
 					display: none;
 					border-top: 1px solid rgba(0, 94, 154, .2);
@@ -122,10 +121,11 @@
 				}
 				.yzm-user-data {
 					border: solid #f51400;
-					background: rgba(245, 20, 0, .2);
 					.yzm-user-actions {
 						display: flex;
 						border-top: 1px solid rgba(245, 20, 0, .2);
+						padding-top: 0px;
+						padding-bottom: 0px;
 					}
 				}
 			}
