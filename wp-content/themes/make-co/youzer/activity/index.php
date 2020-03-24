@@ -136,9 +136,9 @@ do_action( 'bp_before_directory_activity' ); ?>
 					</ul>
 				</div><!-- .item-list-tabs -->
 				<div class="item-list-tabs">
-					<ul>
-						<li id="groups-link"><a href="/groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
-					</ul>
+					<div id="groups-link">
+						<a href="/groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
+					</div>
 				</div>
 
 				<div class="item-list-tabs activity-type-tabs-subnav no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Activity secondary navigation', 'youzer' ); ?>" role="navigation">

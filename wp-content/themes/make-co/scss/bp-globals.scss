@@ -46,7 +46,7 @@
 			background: #2C4956;
 		}
 	}
-	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-groups, li#groups-link {
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-groups, div#groups-link {
 		a::before, i {
 			background: #333;
 		}
@@ -114,6 +114,26 @@
 	margin-bottom: 10px;
 }
 //override for groups
-#yz-wall-nav #groups-link a::before {
-    content: '\f0c0';
+#yz-wall-nav #groups-link {
+	display: inline-block;
+	float: left;
+	a {
+		padding: 0;
+		margin: 5px 0;
+		color: #898989;
+		font-size: 11px;
+		font-weight: 600;
+		margin-right: 12px;
+		display: inline-block;
+		text-transform: uppercase;
+		&::before {
+      	content: '\f0c0';
+			width: 32px;
+			height: 32px;
+			font-size: 14px;
+			line-height: 32px;
+			text-align: center;
+			border-radius: 20px;
+		}
+	}
 }
