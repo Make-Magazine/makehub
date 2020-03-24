@@ -135,5 +135,16 @@
 			text-align: center;
 			border-radius: 20px;
 		}
+		span {
+			font-size: 11px;
+			min-width: 20px;
+			margin-left: 5px;
+			padding: 2px 8px;
+			font-weight: 600;
+			line-height: 18px;
+			text-align: center;
+			display: inline-block;
+			background-color: #eee;
+		}
 	}
 }
