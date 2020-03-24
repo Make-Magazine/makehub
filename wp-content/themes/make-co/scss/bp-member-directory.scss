@@ -315,7 +315,6 @@
 						background: transparent;
 						border: 0px;
 						a {
-							font-weight: normal;
 							color: rgb(150, 150, 150);
 						}
 					}
@@ -331,7 +330,7 @@
 			}
 		}
 	}
-	&.page-members-type-maker_space {
+	&.page-members-type-maker_space, &.page-members-type-makerspaces {
 		#yz-members-directory {
 			.yz-directory-filter {
 				.item-list-tabs, .item-list-tabs:not(#subnav) {
@@ -339,7 +338,6 @@
 						background: transparent;
 						border: 0px;
 						a {
-							font-weight: normal;
 							color: rgb(150, 150, 150);
 						}
 					}

@@ -5,12 +5,27 @@
 	#yz-wall-nav, #yz-wall-form, .yz-my-account-widget, .activity-list > li {
 		margin-bottom: 20px;
 	}
+	#yz-wall-nav {
+		.item-list-tabs, .item-list-tabs:not(#subnav) {
+			li.selected {
+				background: rgba(63, 175, 237, .2);
+				border-radius: 5px;
+				margin-right: 8px;
+				a {
+					font-weight: bold;
+					margin: 5px;
+					color: rgb(150, 150, 150);
+				}
+			}
+		}
+	}
 }
 
 // Recent Blog posts widget
 .widget_blog_posts_widget {
 	margin-bottom: 20px !important;
 	.inner-widget {
+		padding-bottom: 10px;
 		padding-bottom: 10px;
 		.widget-item {
 			min-height: 65px;

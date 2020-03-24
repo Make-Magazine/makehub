@@ -36,17 +36,17 @@
 			background: #f51400; 
 		}
 	}
-	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-groups {
+	li#media-videos-personal-li, li#media-videos-groups-li, li#group-avatar-groups-li, li#group-create-nav, li#activity-favorites {
 		a::before, i {
 			background: #005e9a;
 		}
 	}
-	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-favorites {
+	li#media-audios-personal-li, li#media-audios-groups-li, li#group-cover-image-groups-li, li#activity-mentions {
 		a::before, i {
 			background: #2C4956;
 		}
 	}
-	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-mentions {
+	li#media-files-personal-li, li#media-files-groups-li, li#manage-members-groups-li, li#activity-groups, li#groups-link {
 		a::before, i {
 			background: #333;
 		}
@@ -112,4 +112,8 @@
 .youzer .activity-content img {
 	height: auto;
 	margin-bottom: 10px;
+}
+//override for groups
+#yz-wall-nav #groups-link a::before {
+    content: '\f0c0';
 }
