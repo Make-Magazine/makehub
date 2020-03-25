@@ -26,7 +26,7 @@ foreach ($user_levels as &$user_level) {
 	}
 }
 
-if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space") {
+if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space" || user_can( $uid, 'administrator' )) {
 	
 ?>
 
@@ -117,7 +117,7 @@ if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_t
 						<div class="yz-cover-content">
 							<div class="yz-inner-content">
 								<div class="yz-profile-photo yz-photo-circle yz-photo-border yz-profile-photo-effect">
-									<a href="" class="yz-profile-img"><img src="http://makehub.local/wp-content/themes/make-co/images/default-avatars/custom-avatar0.jpg" alt="User Avatar"></a>
+									<div class="yz-profile-img"><img src="http://makehub.local/wp-content/themes/make-co/images/default-avatars/custom-avatar0.jpg" alt="User Avatar"></div>
 								</div>					
 								<div class="yz-head-content">
 									<div class="yz-name">
