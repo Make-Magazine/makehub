@@ -40,6 +40,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			</div>
 			
 			<div id="yz-wall-nav">
+				<h4 style="margin-bottom:10px;text-transform:uppercase;">Filters</h4>
 				<div class="item-list-tabs activity-type-tabs" aria-label="<?php esc_attr_e( 'Sitewide activities navigation', 'youzer' ); ?>" role="navigation">
 					<ul>
 						<?php
@@ -137,7 +138,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 				</div><!-- .item-list-tabs -->
 				<div class="item-list-tabs">
 					<div id="groups-link">
-						<a href="/groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
+						<a href="/groups/my-groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
 					</div>
 				</div>
 
@@ -251,7 +252,13 @@ do_action( 'bp_before_directory_activity' ); ?>
 			<div class="yz-column-content">
 				<?php do_action( 'yz_global_wall_sidebar' ); ?>
 			</div>
+			<a id="groups-link" class="yz-link-item yz-link-groups" href="/groups/my-groups"><i class="fas fa-group"></i><div class="yz-link-title"><?php printf( __( 'My Groups %s', 'youzer' ), '<span class="yz-link-count">' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></div></a>
 		</div>
+		<script type="text/javascript">
+			jQuery(document).ready(function(){
+				jQuery(".yz-link-friendship-requests").after(jQuery("#groups-link.yz-link-item.yz-link-groups"));
+			});
+		</script>
 
 	<?php
 
