@@ -1,5 +1,8 @@
 .buddypress.directory {
-	.yz-page-main-content { min-width: 95% !important; }
+	.yz-page-main-content { 
+		min-width: 95% !important;
+		padding-top: 50px;
+	}
 	#yz-members-directory {
 		display: flex;
 		max-width: 100%;
@@ -140,8 +143,8 @@
 		}
 		.bps_filters {
 			position: absolute;
-			top: 115px;
-			right: 20px;
+			top: 15px;
+			right: 10px;
 			br { display: none; }
 			a { padding-left: 15px; }
 		}
