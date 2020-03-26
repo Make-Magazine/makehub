@@ -19,6 +19,29 @@
 			}
 		}
 	}
+	@media screen and (min-width:982px) {
+		#yz-wall-nav {
+			width: 22%;
+			float: left;
+			margin-right: 30px;
+			position: relative;
+			div.item-list-tabs li .yz-dropdown-area {
+				left: 0;
+				top: auto;
+				bottom: -130px;
+				width: 100%;
+			}
+			div.item-list-tabs li.yz-activity-show-search .yz-dropdown-area {
+				bottom: -75px;
+			}
+		}
+		.yz-main-column {
+			width: 47%;
+		}
+		.yz-sidebar-column {
+			width: 27.8%;
+		}
+	}
 }
 
 // Recent Blog posts widget
