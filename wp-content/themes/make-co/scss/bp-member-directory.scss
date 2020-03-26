@@ -1,30 +1,47 @@
 .buddypress.directory {
+	.yz-page-main-content { min-width: 95% !important; }
 	#yz-members-directory {
-		flex-direction: column;
 		display: flex;
-		#members-dir-list {
-			width: calc( 80% );
-			float: left;
-			min-height: 1350px;
-		}
-		#yz-members-list {
-			li { height: 375px; }
-			.yzm-user-cover {
-				height: 100px;
-				cursor: pointer;
+		max-width: 100%;
+		.yz-directory-filter { 
+			width: 200px;
+			max-height: 250px;
+			.item-list-tabs li {
+				margin-bottom: 20px;
+				&#yz-directory-search-box { margin-left: 0px;}
 			}
-			.yzm-user-data {
-				min-height: 350px;
-				display: flex;
-				flex-direction: column;
-				
-				.item {
-					flex-grow: 1;
+		}
+		#members-directory-form {
+			width: calc(100% - 450px);
+			#yz-members-list {
+				li { height: 375px; }
+				.yzm-user-cover {
+					height: 100px;
 					cursor: pointer;
-					color: #818181;
-					.item-meta { cursor: pointer; }
+				}
+				.yzm-user-data {
+					min-height: 350px;
+					display: flex;
+					flex-direction: column;
+					.item {
+						flex-grow: 1;
+						cursor: pointer;
+						color: #818181;
+						.item-meta { cursor: pointer; }
+					}
 				}
 			}
+		}
+		@media screen and (max-width:1040px) {
+			flex-direction: column;
+			.yz-directory-filter { 
+				width: calc(100% - 35px);
+				#subnav { float: right; }
+			}
+			.yz-sidebar-column {
+				margin: 0px 20px !important;
+			}
+			#members-directory-form { width: 100%; }
 		}
 		.yzm-user-statistics {
 			.yz-data-item {
@@ -48,8 +65,7 @@
 				padding: 15px 0px;
 				margin-top: 15px;
 				a { 
-					min-width: 135px;
-					@media screen and (min-width: 470px) and (max-width: 600px){
+					@media screen and (min-width: 1070px) {
 						min-width: 70px;
 						max-width: 70px;
 						visibility: hidden;
@@ -58,23 +74,15 @@
 							visibility: visible;
 							background: #3fafed;
 						}
-						&.yz-send-message::before {
-							background: #f6f6f6;
-						}
-					}
-					@media screen and (min-width: 1010px) and (max-width: 1120px){
-						min-width: 70px;
-						max-width: 70px;
-						visibility: hidden;
-						&::before {
-							padding: 0px 25px;
+						&.yz-profile-settings { 
 							visibility: visible;
-							background: #3fafed;
-						}
-						&.yz-send-message::before {
-							background: #f6f6f6;
+							min-width: 90%;
 						}
 					}
+					&.yz-send-message::before {
+						background: #f6f6f6;
+					}
+
 					&.profile-settings {
 						padding: 12px 0px;
 						margin: 0px 20px;
@@ -141,6 +149,7 @@
 			background: #005e9a;
 		}
 		.yz-directory-filter {
+			#subnav { float: none; }
 			.item-list-tabs, .item-list-tabs:not(#subnav) {
 				li.selected {
 					background: rgba(63, 175, 237, .2);
@@ -206,15 +215,12 @@
 		
 		// styling for the filter sidebar
 		.yz-sidebar-column {
-			width: calc( 20% - 17.5px);
-			margin-right: 17.5px;
-			position: absolute;
-			right: 0px;
-			margin-top: 105px;
+			width: 250px;
 			.yz-column-content {
 				padding-left: 17.5px;
 				.widget-content {
 					padding: 15px;
+					margin-bottom: 25px;
 					.widget-title {
 						font-size: 20px;
 						font-weight: 600;
