@@ -4,15 +4,15 @@
 		display: flex;
 		max-width: 100%;
 		.yz-directory-filter { 
-			width: 200px;
-			max-height: 250px;
+			width: 230px;
+			max-height: 400px;
 			.item-list-tabs li {
 				margin-bottom: 20px;
 				&#yz-directory-search-box { margin-left: 0px;}
 			}
 		}
 		#members-directory-form {
-			width: calc(100% - 450px);
+			width: calc(100% - 480px);
 			#yz-members-list {
 				li { height: 375px; }
 				.yzm-user-cover {
