@@ -19,6 +19,11 @@
 			}
 		}
 	}
+	@media screen and (min-width:1200px) {
+		.yz-page-main-content {
+			max-width: 95%;
+		}
+	}
 	@media screen and (min-width:982px) {
 		#yz-wall-nav {
 			width: 22%;
@@ -40,6 +45,9 @@
 		}
 		.yz-sidebar-column {
 			width: 27.8%;
+			.yz-column-content {
+				margin-left: 10px;
+			}
 		}
 	}
 }
