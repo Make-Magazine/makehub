@@ -52,7 +52,7 @@ do_action( 'bp_before_directory_members_page' ); ?>
 			</div>
 			
 			<div class="yz-directory-filter">
-				<h4 style="margin-bottom:10px;text-transform:uppercase;">Filters</h4>
+				<h4 class="filter-title">Filters</h4>
 				<div class="item-list-tabs" aria-label="<?php esc_attr_e( 'Members directory main navigation', 'youzer' ); ?>" role="navigation">
 					<ul>
 						<li class="selected" id="members-all"><a href="<?php bp_members_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'youzer' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>

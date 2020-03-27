@@ -39,7 +39,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			</div>
 			
 			<div id="yz-wall-nav">
-				<h4 style="margin-bottom:10px;text-transform:uppercase;">Filters</h4>
+				<h4 class="filter-title">Filters</h4>
 				<div class="item-list-tabs activity-type-tabs" aria-label="<?php esc_attr_e( 'Sitewide activities navigation', 'youzer' ); ?>" role="navigation">
 					<ul>
 						<?php

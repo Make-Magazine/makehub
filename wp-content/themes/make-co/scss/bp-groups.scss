@@ -1,3 +1,23 @@
 #yz-groups-list {
 	max-width: 100%;
 }
+.yz-groups-directory-page {
+	@media screen and ( min-width: 982px ) {
+		.yz-directory-filter {
+			width: 20%;
+			float: left;
+			#yz-directory-search-box {
+				margin: 0px;
+				padding: 0px;
+				border: 0px;
+				#groups_search_submit {
+					margin: 15px 0;
+				}
+			}
+		}
+		#groups-directory-form {
+			width: 76.5%;
+			float: right;
+		}
+	}
+}

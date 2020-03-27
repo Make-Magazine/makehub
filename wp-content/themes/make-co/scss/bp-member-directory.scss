@@ -10,8 +10,9 @@
 			width: 230px;
 			max-height: 400px;
 			.item-list-tabs li {
-				margin-bottom: 20px;
-				&#yz-directory-search-box { margin-left: 0px;}
+				&#yz-directory-search-box { 
+					margin-left: 0px;
+				}
 			}
 		}
 		#members-directory-form {
@@ -156,14 +157,6 @@
 		.yz-directory-filter {
 			#subnav { float: none; }
 			.item-list-tabs, .item-list-tabs:not(#subnav) {
-				li.selected {
-					background: rgba(63, 175, 237, .2);
-					border-radius: 5px;
-					a {
-						font-weight: bold;
-						color: #333;
-					}
-				}
 				li#groups-all {
 					a::before {
 						font-family: "FontAwesome";
@@ -215,9 +208,6 @@
 				@media screen and ( min-width: 1024px ) {
 					#members_search_submit { display: none; }
 				}
-			}
-			@media screen and (max-width: 768px) {
-				h4 { display: none; }
 			}
 		}
 		
