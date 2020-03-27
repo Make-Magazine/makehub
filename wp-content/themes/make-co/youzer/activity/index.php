@@ -256,7 +256,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 		</div>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
-				jQuery(".yz-link-friendship-requests").after(jQuery("#groups-link.yz-link-item.yz-link-groups"));
+				jQuery(".yz-link-inbox").after(jQuery("#groups-link.yz-link-item.yz-link-groups"));
 			});
 		</script>
 
