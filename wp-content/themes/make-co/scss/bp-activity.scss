@@ -19,6 +19,16 @@
 			}
 		}
 	}
+	#activity-stream {
+		.activity {
+			p {
+				overflow: hidden;
+			}
+			.wp-embedded-content { 
+				max-width: 100%;
+			}
+		}
+	}
 	@media screen and (min-width:1200px) {
 		.yz-page-main-content {
 			max-width: 95%;
