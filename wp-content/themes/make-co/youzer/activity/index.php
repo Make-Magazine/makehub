@@ -12,7 +12,6 @@
 /**
  * # Get Acitivity Class.
  */
- var_dump(bp_loggedin_user_domain()); 
 do_action( 'bp_before_directory_activity' ); ?>
 
 <div id="<?php echo apply_filters( 'yz_activity_template_id', 'buddypress' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
