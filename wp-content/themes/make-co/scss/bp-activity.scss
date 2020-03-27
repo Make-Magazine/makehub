@@ -34,6 +34,14 @@
 			max-width: 95%;
 		}
 	}
+	@media screen and (min-width:1024px) {
+		#yz-wall-nav {
+			div.item-list-tabs li .yz-dropdown-area {
+				z-index: 99;
+				top: 95px;
+			}
+		}
+	}
 	@media screen and (min-width:982px) {
 		#yz-wall-nav {
 			width: 22%;
@@ -62,6 +70,9 @@
 				margin-left: 10px;
 			}
 		}
+	}
+	@media screen and (max-width: 768px) {
+		h4 { display: none; }
 	}
 }
 

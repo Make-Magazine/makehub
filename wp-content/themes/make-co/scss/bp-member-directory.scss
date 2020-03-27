@@ -214,6 +214,9 @@
 					#members_search_submit { display: none; }
 				}
 			}
+			@media screen and (max-width: 768px) {
+				h4 { display: none; }
+			}
 		}
 		
 		// styling for the filter sidebar
