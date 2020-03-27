@@ -82,6 +82,9 @@
 							min-width: 90%;
 						}
 					}
+					&.yz-send-message::before {
+						background: transparent;
+					}
 
 					&.profile-settings {
 						padding: 12px 0px;
@@ -125,6 +128,8 @@
 					&::before {
 						content: 'Featured Makerspace';
 						background: #f51400;
+						line-height: 26px;
+						z-index: 9;
 					}
 				}
 				.yzm-user-data {
