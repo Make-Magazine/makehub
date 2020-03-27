@@ -12,7 +12,7 @@
 /**
  * # Get Acitivity Class.
  */
-
+ var_dump(bp_loggedin_user_domain()); 
 do_action( 'bp_before_directory_activity' ); ?>
 
 <div id="<?php echo apply_filters( 'yz_activity_template_id', 'buddypress' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
@@ -138,7 +138,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 				</div><!-- .item-list-tabs -->
 				<div class="item-list-tabs">
 					<div id="groups-link">
-						<a href="/groups/my-groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
+						<a href="<?php echo(bp_loggedin_user_domain()); ?>/groups/my-groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
 					</div>
 				</div>
 
@@ -250,9 +250,9 @@ do_action( 'bp_before_directory_activity' ); ?>
 
 		<div class="yz-sidebar-column yz-group-sidebar youzer-sidebar">
 			<div class="yz-column-content">
-				<?php do_action( 'yz_global_wall_sidebar' ); ?>
+				<?php do_action( 'yz_global_wall_sidebar' );?>
 			</div>
-			<a id="groups-link" class="yz-link-item yz-link-groups" href="/groups/my-groups"><i class="fas fa-group"></i><div class="yz-link-title"><?php printf( __( 'My Groups %s', 'youzer' ), '<span class="yz-link-count">' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></div></a>
+			<a id="groups-link" class="yz-link-item yz-link-groups" href="<?php echo(bp_loggedin_user_domain()); ?>groups/my-groups"><i class="fas fa-group"></i><div class="yz-link-title"><?php printf( __( 'My Groups %s', 'youzer' ), '<span class="yz-link-count">' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></div></a>
 		</div>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){

@@ -30,6 +30,9 @@
 			float: left;
 			margin-right: 30px;
 			position: relative;
+			div.item-list-tabs:not(#subnav) li, div.item-list-tabs a{
+				width: 100%;
+			}
 			div.item-list-tabs li .yz-dropdown-area {
 				left: 0;
 				top: auto;
