@@ -4,7 +4,7 @@ class Logy_Styling {
 
     function __construct() {
 
-        add_action( 'wp_enqueue_scripts', array( &$this, 'custom_styling' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'custom_styling' ) );
 
     }
 
@@ -301,7 +301,7 @@ class Logy_Styling {
             $selector = $key['selector'];
             $property = $key['property'];
 
-            $option = logy_options( $key['id'] );
+            $option = yz_option( $key['id'] );
             $option = isset( $option['color'] ) ? $option['color'] : $option;
             if ( empty( $key['type'] ) && ! empty( $option ) ) {
                 $unit = isset( $key['unit'] ) ? $key['unit'] : null;

@@ -47,93 +47,34 @@ function yz_delete_buddypress_follwers_script() {
 }
 
 add_action( 'wp_enqueue_scripts', 'yz_delete_buddypress_follwers_script', 999 );
-	
+		// remove_action( 'bp_adminbar_menus', 'bp_follow_group_buddybar_items' );
+
 /**
  * # Setup Tabs.
  */
 function yz_bpfollwers_tabs() {
 
-	$bp = buddypress();
+	// $bp = buddypress();
 
 	// Remove Settings Profile, General Pages
 	bp_core_remove_nav_item( 'followers' );
 	bp_core_remove_nav_item( 'following' );
 
-	$follow_slug = yz_bpfollowers_follows_tab_slug();
+	// Remove Follow Menu - Admin Bar.
+	remove_action( 'bp_follow_setup_admin_bar', 'bp_follow_user_setup_toolbar' );
 
-	// Add Follows Tab.
-	bp_core_new_nav_item(
-	    array( 
-	        'position' => 100,
-	        'slug' => $follow_slug, 
-	        'name' => __( 'Follows' , 'youzer' ), 
-	        'default_subnav_slug' => 'following',
-	        'parent_slug' => $bp->profile->slug,
-	        'screen_function' => 'yz_bpfollwers_follow_screen_following', 
-	        'parent_url' => bp_loggedin_user_domain() . "$follow_slug/"
-	    )
-	);
-
-	// Add Follwers Sub Tab.
-    bp_core_new_subnav_item( array(
-            'slug' => 'followers',
-            'name' => __( 'followers', 'youzer' ),
-            'parent_slug' => yz_bpfollowers_follows_tab_slug(),
-            'parent_url' => bp_displayed_user_domain() . "$follow_slug/",
-            'screen_function' => 'yz_bpfollwers_follow_screen_following',
-        )
-    );
-
-	// Add Following Sub Tab.
-    bp_core_new_subnav_item( array(
-            'slug' => 'following',
-            'name' => __( 'following', 'youzer' ),
-            'parent_slug' => yz_bpfollowers_follows_tab_slug(),
-            'parent_url' => bp_displayed_user_domain() . "$follow_slug/",
-            'screen_function' => 'yz_bpfollwers_follow_screen_following',
-        )
-    );
 }
 
-add_action( 'bp_setup_nav', 'yz_bpfollwers_tabs', 99 );
-
-/**
- * Get Follows Tab Screen Function.
- */
-function yz_bpfollwers_follow_screen_following() {
-	
-	do_action( 'bp_follow_screen_following' );
-
-    add_action( 'bp_template_content', 'yz_get_user_following_template' );
-
-    // Load Tab Template
-    bp_core_load_template( 'buddypress/members/single/plugins' );
-}
-
-/**
- * Get Follows Tab Content.
- */
-function yz_get_user_following_template() {
-	bp_get_template_part( 'members/single/follows' );
-}
-
-/**
- * Follows Slug.
- */
-function yz_bpfollowers_follows_tab_slug() {
-	return apply_filters( 'yz_bpfollowers_follows_tab_slug', 'follows' );
-}
+add_action( 'bp_actions', 'yz_bpfollwers_tabs', 99 );
 
 /**
  * Add Statitics Options
  */
-function yz_add_follows_statitics( $statistics ) {
-	$statistics['followers'] = __( 'followers', 'youzer' );
-	$statistics['following'] = __( 'following', 'youzer' );
-	return $statistics;
-}
+// function yz_add_follows_statitics( $statistics ) {
+// 	return $statistics;
+// }
 
-add_filter( 'yz_get_user_statistics_details', 'yz_add_follows_statitics' );
+// add_filter( 'yz_get_user_statistics_details', 'yz_add_follows_statitics' );
 
 /**
  * Get Statistics Value
@@ -164,14 +105,14 @@ function yz_get_md_follows_statistics( $user_id ) {
 
 	?>
 
-    <?php if ( 'on' == yz_options( 'yz_enable_md_user_followers_statistics' ) ) :  ?>
+    <?php if ( 'on' == yz_option( 'yz_enable_md_user_followers_statistics', 'on' ) ) :  ?>
        	<?php $followers_nbr = bp_follow_get_the_followers_count( array( 'object_id' => $user_id ) ); ?>
         <a href="<?php echo yz_get_user_profile_page( 'follows/followers', $user_id ); ?>" class="yz-data-item yz-data-followers" data-yztooltip="<?php echo sprintf( _n( '%s follower', '%s followers', $followers_nbr, 'youzer' ), $followers_nbr ); ?>">
             <span class="dashicons dashicons-rss"></span>
         </a>
     <?php endif; ?>
 
-    <?php if ( 'on' == yz_options( 'yz_enable_md_user_following_statistics' ) ) :  ?>
+    <?php if ( 'on' == yz_option( 'yz_enable_md_user_following_statistics', 'on' ) ) :  ?>
        	<?php $following_nbr = bp_follow_get_the_following_count( array( 'object_id' => $user_id ) ); ?>
         <a href="<?php echo yz_get_user_profile_page( 'follows/following', $user_id ); ?>" class="yz-data-item yz-data-following" data-yztooltip="<?php echo sprintf( __( '%s following', 'youzer' ) , $following_nbr ); ?>">
             <span class="dashicons dashicons-redo"></span>

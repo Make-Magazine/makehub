@@ -76,6 +76,107 @@ class Youzer_Setup {
             update_option( 'installed_youzer_2.3.4', 1 );
 		}
 
+		// Create Pages
+		$this->create_pages();
+
+	}
+
+	/**
+	 * Create Pages
+	 */
+	function create_pages() {
+
+	    // Plugin Pages
+	    $pages = array();
+
+	    $pages[] = array(
+	        'title' => __( 'Login', 'youzer' ),
+	        'slug'  => 'login',
+	        'meta'  => '_logy_core',
+	        'pages' => 'logy_pages'
+	    );
+
+	    $pages[] = array(
+	        'title' => __( 'Password Reset', 'youzer' ),
+	        'slug'  => 'lost-password',
+	        'meta'  => '_logy_core',
+	        'pages' => 'logy_pages'
+	    );
+
+	    $pages[] = array(
+	        'title' => __( 'Complete Registration', 'youzer' ),
+	        'slug'  => 'complete-registration',
+	        'meta'  => '_logy_core',
+	        'pages' => 'logy_pages'
+	    );
+
+	    // Get Logy Pages
+	    $logy_pages = get_option( 'logy_pages' );
+
+	    foreach ( $pages as $page ) {
+	        $slug = $page['slug'];
+	        if ( ! isset( $logy_pages[ $slug ] ) ) {
+	            $this->add_new_plugin_page( $page );
+	        }
+	    }
+
+	}
+
+	/**
+	 * Create New Plugin Page.
+	 */
+	function add_new_plugin_page( $args ) {
+
+	    // Get Page Slug
+	    $slug = $args['slug'];
+
+	    // Check that the page doesn't exist already
+	    $is_page_exists = yz_get_post_id( 'page', $args['meta'], $slug );
+
+	    if ( $is_page_exists ) {
+
+	        if ( ! isset( $pages[ $slug ] ) ) {
+
+	            // init Array.
+	            $pages = get_option( $args['pages'] );
+
+	            // Get Page ID
+	            $page_id = yz_get_post_id( 'page', $args['meta'], $slug );
+
+	            // Add New Page Data.
+	            $pages[ $slug ] = $page_id;
+	            
+	            update_option( $args['pages'], $pages );
+	        }
+
+	        return false;
+	    }
+
+	    $user_page = array(
+	        'post_title'     => $args['title'],
+	        'post_name'      => $slug,
+	        'post_type'      => 'post',
+	        'post_status'    => 'publish',
+	        'post_author'    =>  1,
+	        'comment_status' => 'closed'
+	    );
+
+	    $post_id = wp_insert_post( $user_page );
+
+	    wp_update_post( array('ID' => $post_id, 'post_type' => 'page' ) );
+
+	    update_post_meta( $post_id, $args['meta'], $slug );
+
+	    // init Array.
+	    $pages = get_option( $args['pages'] );
+
+	    // Add New Page Data.
+	    $pages[ $slug ] = $post_id;
+
+	    if ( isset( $pages ) ) {
+	        update_option( $args['pages'], $pages );
+	    }
+
 	}
 
     /**
@@ -195,6 +296,8 @@ class Youzer_Setup {
 			data LONGTEXT NULL,
 			item_id int(11) NOT NULL,
 			privacy varchar(10) NOT NULL,
+			type varchar(10) DEFAULT 'none' NOT NULL,
+			component varchar(10) DEFAULT 'activity' NOT NULL,
 		 	time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 			PRIMARY KEY (id)
 		) $charset_collate;";
@@ -369,7 +472,7 @@ class Youzer_Setup {
 	    $xprofile_option_id = 'yz_install_xprofile_groups';
 
 	    // Check if the plugin is already installed.
-	    $already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, $xprofile_option_id ) : get_option( $xprofile_option_id );
+	    $already_installed = yz_option( $xprofile_option_id );
 
 	    if ( $already_installed ) {
 	    	return;
@@ -497,8 +600,8 @@ class Youzer_Setup {
 	        // Set the plugin to be installed
 	        update_option( $xprofile_option_id, true );
 	        // save the contact info data.
-	        update_option( 'yz_xprofile_contact_info_group_ids', $contact_info );
-	        update_option( 'yz_xprofile_profile_info_group_ids', $profile_info );
+	        update_option( 'yz_xprofile_contact_info_group_ids', $contact_info, 'no' );
+	        update_option( 'yz_xprofile_profile_info_group_ids', $profile_info, 'no' );
 	    }
 
 	}

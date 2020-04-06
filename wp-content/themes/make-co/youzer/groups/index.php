@@ -10,7 +10,8 @@
  */
 do_action( 'bp_before_directory_groups_page' ); ?>
 
-<?php $icons_style = yz_options( 'yz_tabs_list_icons_style' ); ?>
+<?php $icons_style = yz_options( 'yz_tabs_list_icons_style', 'yz-tabs-list-gradient' ); ?>
+
 <div id="youzer">
 	
 <div id="<?php echo apply_filters( 'yz_group_template_id', 'yz-bp' ); ?>" class="youzer <?php echo yz_groups_directory_class(); ?>">

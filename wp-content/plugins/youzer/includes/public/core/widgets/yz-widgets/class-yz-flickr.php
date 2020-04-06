@@ -3,28 +3,6 @@
 class YZ_Flickr {
 
     /**
-     * # Flickr Widget Arguments.
-     */
-    function args() {
-
-        // Get Widget Args
-        $args = array(
-            'menu_order'    => 100,
-            'widget_name'   => 'flickr',
-            'widget_icon'   => 'fab fa-flickr',
-            'main_data'     => 'wg_flickr_account_id',
-            'widget_title'  => yz_options( 'yz_wg_flickr_title' ),
-            'load_effect'   => yz_options( 'yz_flickr_load_effect' ),
-            'display_title' => yz_options( 'yz_wg_flickr_display_title' )
-        );
-
-        // Filter
-        $args = apply_filters( 'yz_flickr_widget_args', $args );
-
-        return $args;
-    }
-
-    /**
      * # Content.
      */
     function widget() {
@@ -36,7 +14,7 @@ class YZ_Flickr {
             return;
         }
         
-        $photos_number = yz_options( 'yz_wg_max_flickr_items' );
+        $photos_number = yz_option( 'yz_wg_max_flickr_items', 6 );
 
         // Get Flickr Photos.
         $flickr_photos = $this->get_flickr_photos( $flickr_id, $photos_number );
@@ -132,121 +110,6 @@ class YZ_Flickr {
         }
 
         return $feed;
-    }
-
-    /**
-     * # Settings.
-     */
-    function settings() {
-
-        global $Yz_Settings;
-
-        // Get Args 
-        $args = $this->args();
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => yz_options( 'yz_wg_flickr_title' ),
-                'id'    => $args['widget_name'],
-                'icon'  => $args['widget_icon'],
-                'type'  => 'open'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'flickr ID', 'youzer' ),
-                'id'    => 'wg_flickr_account_id',
-                'desc'  => __( 'flickr ID format example : 12345678@N07', 'youzer' ),
-                'type'  => 'text'
-            ), true
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'close' ) );
-
-    }
-
-    /**
-     * # Admin Settings.
-     */
-    function admin_settings() {
-
-        global $Yz_Settings;
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'general Settings', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'display title', 'youzer' ),
-                'id'    => 'yz_wg_flickr_display_title',
-                'desc'  => __( 'show widget title', 'youzer' ),
-                'type'  => 'checkbox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget title', 'youzer' ),
-                'id'    => 'yz_wg_flickr_title',
-                'desc'  => __( 'add widget title', 'youzer' ),
-                'type'  => 'text'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'loading effect', 'youzer' ),
-                'opts'  => $Yz_Settings->get_field_options( 'loading_effects' ),
-                'desc'  => __( 'how you want the widget to be loaded ?', 'youzer' ),
-                'id'    => 'yz_flickr_load_effect',
-                'type'  => 'select'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'allowed Photos number', 'youzer' ),
-                'id'    => 'yz_wg_max_flickr_items',
-                'desc'  => __( 'maximum allowed photos', 'youzer' ),
-                'std'   => 6,
-                'type'  => 'number'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget styling settings', 'youzer' ),
-                'class' => 'ukai-box-2cols',
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'icon hover background', 'youzer' ),
-                'id'    => 'yz_wg_flickr_img_icon_bg_color',
-                'desc'  => __( 'zoom icon hover background color', 'youzer' ),
-                'type'  => 'color'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'icon hover color', 'youzer' ),
-                'id'    => 'yz_wg_flickr_img_icon_color',
-                'desc'  => __( 'zoom icon hover color', 'youzer' ),
-                'type'  => 'color'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
     }
 
 }

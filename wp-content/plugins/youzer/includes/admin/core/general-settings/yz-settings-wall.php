@@ -51,14 +51,14 @@ function yz_wall_settings() {
         )
     );
 
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_sticky_posts',
-            'title' => __( 'Enable Sticky Posts', 'youzer' ),
-            'desc'  => __( 'allow admins to pin/unpin posts', 'youzer' ),
-        )
-    );
+    // $Yz_Settings->get_field(
+    //     array(
+    //         'type'  => 'checkbox',
+    //         'id'    => 'yz_enable_sticky_posts',
+    //         'title' => __( 'Enable Sticky Posts', 'youzer' ),
+    //         'desc'  => __( 'allow admins to pin/unpin posts', 'youzer' ),
+    //     )
+    // );
 
     $Yz_Settings->get_field(
         array(
@@ -124,14 +124,14 @@ function yz_wall_settings() {
         )
     );
 
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_youzer_activity_filter',
-            'title' => __( 'Enable Youzer Activity Filter', 'youzer' ),
-            'desc'  => __( 'use youzer activity filter', 'youzer' ),
-        )
-    );
+    // $Yz_Settings->get_field(
+    //     array(
+    //         'type'  => 'checkbox',
+    //         'id'    => 'yz_enable_youzer_activity_filter',
+    //         'title' => __( 'Enable Youzer Activity Filter', 'youzer' ),
+    //         'desc'  => __( 'use youzer activity filter', 'youzer' ),
+    //     )
+    // );
 
     $Yz_Settings->get_field(
         array(
@@ -229,7 +229,7 @@ function yz_wall_settings() {
     
     $Yz_Settings->get_field(
         array(
-            'title' => __( 'Attachments Settings', 'youzer' ),
+            'title' => __( 'Activity Attachments Settings', 'youzer' ),
             'type'  => 'openBox'
         )
     );
@@ -256,8 +256,8 @@ function yz_wall_settings() {
         array(
             'type'  => 'taxonomy',
             'id'    => 'yz_atts_allowed_images_exts',
-            'title' => __( 'Image Extentions', 'youzer' ),
-            'desc'  => __( 'allowed image extentions', 'youzer' ),
+            'title' => __( 'Image extensions', 'youzer' ),
+            'desc'  => __( 'allowed image extensions', 'youzer' ),
         )
     );
     
@@ -265,8 +265,8 @@ function yz_wall_settings() {
         array(
             'type'  => 'taxonomy',
             'id'    => 'yz_atts_allowed_videos_exts',
-            'title' => __( 'Video Extentions', 'youzer' ),
-            'desc'  => __( 'allowed video extentions', 'youzer' ),
+            'title' => __( 'Video extensions', 'youzer' ),
+            'desc'  => __( 'allowed video extensions', 'youzer' ),
         )
     );
     
@@ -274,8 +274,8 @@ function yz_wall_settings() {
         array(
             'type'  => 'taxonomy',
             'id'    => 'yz_atts_allowed_audios_exts',
-            'title' => __( 'Audio Extentions', 'youzer' ),
-            'desc'  => __( 'allowed audio extentions', 'youzer' ),
+            'title' => __( 'Audio extensions', 'youzer' ),
+            'desc'  => __( 'allowed audio extensions', 'youzer' ),
         )
     );
     
@@ -283,11 +283,47 @@ function yz_wall_settings() {
         array(
             'type'  => 'taxonomy',
             'id'    => 'yz_atts_allowed_files_exts',
-            'title' => __( 'Files Extentions', 'youzer' ),
-            'desc'  => __( 'allowed files extentions', 'youzer' ),
+            'title' => __( 'Files extensions', 'youzer' ),
+            'desc'  => __( 'allowed files extensions', 'youzer' ),
         )
     );
     
+    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
+
+    $Yz_Settings->get_field(
+        array(
+            'title' => __( 'Comments Attachments Settings', 'youzer' ),
+            'type'  => 'openBox'
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'checkbox',
+            'id'    => 'yz_wall_comments_attachments',
+            'title' => __( 'Comments Attachments', 'youzer' ),
+            'desc'  => __( 'enable comments attachments', 'youzer' ),
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'taxonomy',
+            'id'    => 'yz_wall_comments_attachments_extensions',
+            'title' => __( 'Allowed Extensions', 'youzer' ),
+            'desc'  => __( 'allowed extensions list', 'youzer' ),
+        )
+    );
+
+    $Yz_Settings->get_field(
+        array(
+            'type'  => 'number',
+            'id'    => 'yz_wall_comments_attachments_max_size',
+            'title' => __( 'Max File Size', 'youzer' ),
+            'desc'  => __( 'attachment max size by megabytes', 'youzer' ),
+        )
+    );
+
     $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
     $Yz_Settings->get_field(
@@ -352,185 +388,29 @@ function yz_wall_settings() {
         )
     );
 
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_status',
-            'title' => __( 'Status', 'youzer' ),
-            'desc'  => __( 'enable status posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_photo',
-            'title' => __( 'Photo', 'youzer' ),
-            'desc'  => __( 'enable photo posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_slideshow',
-            'title' => __( 'Slideshow', 'youzer' ),
-            'desc'  => __( 'enable slideshow posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_link',
-            'title' => __( 'Link', 'youzer' ),
-            'desc'  => __( 'enable link posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_quote',
-            'title' => __( 'Quote', 'youzer' ),
-            'desc'  => __( 'enable quote posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_giphy',
-            'title' => __( 'Gif', 'youzer' ),
-            'desc'  => __( 'enable gif posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_video',
-            'title' => __( 'Video', 'youzer' ),
-            'desc'  => __( 'enable video posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_audio',
-            'title' => __( 'Audio', 'youzer' ),
-            'desc'  => __( 'enable audio posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_file',
-            'title' => __( 'File', 'youzer' ),
-            'desc'  => __( 'enable file posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_new_cover',
-            'title' => __( 'New Cover', 'youzer' ),
-            'desc'  => __( 'enable new cover posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_new_avatar',
-            'title' => __( 'new avatar', 'youzer' ),
-            'desc'  => __( 'enable new avatar posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_new_member',
-            'title' => __( 'new member', 'youzer' ),
-            'desc'  => __( 'enable new registered member posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_friendship_created',
-            'title' => __( 'Friendship Created', 'youzer' ),
-            'desc'  => __( 'enable friendship created posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_friendship_accepted',
-            'title' => __( 'Friendship Accepted', 'youzer' ),
-            'desc'  => __( 'enable friendship accepted posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_created_group',
-            'title' => __( 'Group Created', 'youzer' ),
-            'desc'  => __( 'enable groupd created posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_joined_group',
-            'title' => __( 'Group Joined', 'youzer' ),
-            'desc'  => __( 'enable groupd joined posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_new_blog_post',
-            'title' => __( 'New Blog Post', 'youzer' ),
-            'desc'  => __( 'enable new blog posts', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_new_blog_comment',
-            'title' => __( 'New Blog Comment', 'youzer' ),
-            'desc'  => __( 'enable new blog Comments', 'youzer' ),
-        )
-    );
-
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_comments',
-            'title' => __( 'Comments Post', 'youzer' ),
-            'desc'  => __( 'enable post comments posts', 'youzer' ),
-        )
-    );
+    $post_types = yz_activity_post_types();
     
-    $Yz_Settings->get_field(
-        array(
-            'type'  => 'checkbox',
-            'id'    => 'yz_enable_wall_updated_profile',
-            'title' => __( 'Updated Profile Post', 'youzer' ),
-            'desc'  => __( 'enable updated profile posts', 'youzer' ),
-        )
-    );
+    // Get Unallowed Types.
+    $unallowed_types = array_flip( get_option( 'yz_unallowed_activities' ) );
+
+    if ( isset( $unallowed_types['friendship_accepted,friendship_created'] ) ) {
+        $unallowed_types['friendship_accepted'] = 'on';
+        $unallowed_types['friendship_created'] = 'on';
+    }
+
+    foreach ( $post_types as $post_type => $name ) {
+
+        $Yz_Settings->get_field(
+            array(
+                'type'  => 'checkbox',
+                'std'   => isset( $unallowed_types[ $post_type ] ) ? 'off' : 'on',
+                'id'    => $post_type,
+                'title' => $name,
+                'desc'  => sprintf( __( 'enable activity %s posts', 'youzer' ), $name ),
+            ), false, 'yz_unallowed_activities'
+        );
+
+    }
 
     do_action( 'yz_wall_posts_visibility_settings' );
 

@@ -1,29 +1,11 @@
-<?php 
-
-/**
- * # Add Woocommerce Settings Tab
- */
-function yz_woocommerce_settings_menu( $tabs ) {
-
-	$tabs['woocommerce'] = array(
-        'id'    => 'woocommerce',
-   	    'icon'  => 'fas fa-shopping-cart',
-   	    'function' => 'yz_woocommerce_settings',
-   	    'title' => __( 'Woocommerce settings', 'youzer' ),
-    );
-    
-    return $tabs;
-
-}
-
-add_filter( 'yz_panel_general_settings_menus', 'yz_woocommerce_settings_menu' );
+<?php
 
 /**
  * # Add Woocommerce Settings Tab
  */
 function yz_woocommerce_settings() {
 
-    global $Youzer_Admin, $Yz_Settings;
+    global $Yz_Settings;
 
     $Yz_Settings->get_field(
         array(

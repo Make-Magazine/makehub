@@ -1,9 +1,3 @@
-<?php
-
-global $Youzer;
-
-?>
-
 <?php if ( bp_has_groups() ) : while ( bp_groups() ) : bp_the_group(); ?>
 
 <?php do_action( 'youzer_group_before_group' ); ?>
@@ -15,7 +9,7 @@ global $Youzer;
 
 	<div class="yz-content">
 		
-		<header id="yz-group-header" class="<?php echo $Youzer->header->get_class( 'group' ); ?>">
+		<header id="yz-group-header" class="<?php echo yz_headers()->get_class( 'group' ); ?>">
 
 			<?php do_action( 'youzer_group_header' ); ?>
 

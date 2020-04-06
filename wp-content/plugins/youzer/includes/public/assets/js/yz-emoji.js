@@ -6,7 +6,8 @@
 
     if ( jQuery().emojioneArea ) {
         // Yz_Emoji.posts_visibility == 'on'
-        if ( $( '.yz-load-posts-emojis' )[0] ) {
+        if ( $( '.yz-load-posts-emojis' )[0] || $('#yz-edit-activity-form')[0] ) {
+          alert('in');
         $.yz_init_wall_textarea_emojionearea = function( element ) {
             return element.emojioneArea( {
                 pickerPosition: 'bottom',
@@ -35,8 +36,7 @@
                    }]);
                 }     
               }
-            }
-          );
+            } );
         }
         var el = $.yz_init_wall_textarea_emojionearea( $( '.yz-wall-textarea' ) );
       }

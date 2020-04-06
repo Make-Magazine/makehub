@@ -13,7 +13,7 @@ function yz_is_user_have_user_tags() {
 	$have_content = false;
 
 	// Get User Tags
-	$user_tags = yz_options( 'yz_user_tags' );
+	$user_tags = yz_option( 'yz_user_tags' );
 	
 	if ( empty( $user_tags ) ) {
 		return false;
@@ -60,40 +60,34 @@ function yzc_get_xprofile_data_shortcode( $atts ) {
         return;
     }
 
+    $content = '';
+    
     // Get Hidden Fields.
     $hidden_fields = bp_xprofile_get_hidden_fields_for_user();
 
-    ob_start();
+    foreach ( $fields as $field_id ) { 
 
-    ?>
+        if ( in_array( $field_id, $hidden_fields ) )  {
+            continue;
+        }
 
-    <div class="yz-infos-content">
-        
-        <?php 
+        // Get Field Value.
+        $field_data = bp_get_profile_field_data( array( 'user_id' => $options['user_id'],'field' => $field_id ) );
 
-            foreach ( $fields as $field_id ) : 
+        // Get Field Data
+        $field = new BP_XProfile_Field( $field_id );
 
-                if ( in_array( $field_id, $hidden_fields ) )  {
-                    return;
-                }
-                // Get Field Value.
-                $field_data = bp_get_profile_field_data( array( 'user_id' => $options['user_id'],'field' => $field_id ) );
+        if ( ! empty( $field_data ) ) {
+            $content .= '<div class="yz-info-item yz-info-item-'. $field_id . '"><div class="yz-info-label">'. $field->name . '</div><div class="yz-info-data">' . $field_data . '</div></div>';
+        }
 
-                // Get Field Data
-                $field = new BP_XProfile_Field( $field_id );
-                
-            ?>
-            <?php if ( ! empty( $field_data ) ) : ?>
-            <div class="yz-info-item yz-info-item-<?php echo $field_id; ?>">
-                <div class="yz-info-label"><?php echo $field->name; ?></div>
-                <div class="yz-info-data"><?php echo $field_data; ?></div>
-            </div>
-            <?php endif; ?>
-        <?php endforeach; ?>
-    </div>
-    <?php
+    }
 
-    return ob_get_clean();
+    if ( ! empty( $content ) ) {
+        $content = '<div class="yz-infos-content">' . $content . '</div>';
+    }
+
+    return $content;
 }
 
 /**
@@ -103,7 +97,7 @@ function yzc_get_xprofile_data_shortcode( $atts ) {
 add_shortcode( 'yz_xprofile_group', 'yz_get_xprofile_group_shortcode' );
 
 function yz_get_xprofile_group_shortcode( $atts = null ) {
-    //
+
     $options = shortcode_atts( array(
         'user_id' => bp_displayed_user_id() ? bp_displayed_user_id() : bp_loggedin_user_id(),
         'profile_group_id' => false,
@@ -113,9 +107,15 @@ function yz_get_xprofile_group_shortcode( $atts = null ) {
         return false;
     }
 
+    // Include Widgets
+    require_once YZ_PUBLIC_CORE . 'class-yz-widgets.php';
+    require_once YZ_PUBLIC_CORE . 'widgets/yz-widgets/class-yz-custom-infos.php';
+
     ob_start();
-    
+
     do_action( 'bp_before_profile_loop_content' );
+    
+    $custom_infos = new YZ_Custom_Infos();
     
     if ( bp_has_profile( $options ) ) : while ( bp_profile_groups() ) : bp_the_profile_group();
             
@@ -123,19 +123,16 @@ function yz_get_xprofile_group_shortcode( $atts = null ) {
                 
             $group_id = bp_get_the_profile_group_id();
 
-            // Custom infos Widget Arguments
-            $custom_infos_args = array(
-                'widget_icon'       => yz_get_xprofile_group_icon( $group_id ),
-                'widget_title'      => bp_get_the_profile_group_name(),
-                'widget_name'       => 'custom_infos',
-            );
-
-            youzer()->widgets->custom_infos->widget( $custom_infos_args );
+            yz_widgets()->yz_widget_core( 'custom_infos', $custom_infos, array(
+                'icon'   => yz_get_xprofile_group_icon( $group_id ),
+                'name'  => bp_get_the_profile_group_name(),
+                'id'   => 'custom_infos',
+                'load_effect' => 'fadeIn'
+            ) );
 
     endif; endwhile;
     
     endif;
-
     do_action( 'bp_after_profile_loop_content' );
 
     return ob_get_clean();

@@ -10,14 +10,14 @@
 
             if ( current_wg_nbr > yz_max_slideshow_img  )  {
 				// Show Error Message
-                $.yz_DialogMsg( 'error', yz.items_nbr + yz_max_slideshow_img );
+                $.yz_DialogMsg( 'error', Yz_Slideshow.items_nbr + yz_max_slideshow_img );
                 return false;
             }
 
             e.preventDefault();
 
             var slideshow_button = $.ukai_form_input( {
-                    label_title : yz.upload_photo,
+                    label_title : Yz_Slideshow.upload_photo,
                     options_name : 'youzer_slideshow',
                     input_id    : 'yz_slideshow_' + yz_ss_nextCell,
                     cell         : yz_ss_nextCell,
@@ -39,9 +39,56 @@
             yz_ss_nextCell++;
 
             // Check Account Items List
-            $.yz_CheckItemsList();
+            $.yz_CheckList();
 
         });
+        
+        /**
+         * Remove Items.
+         */
+        $( document ).on( 'click', '.yz-delete-item', function( e ) {
+            
+            // Get Widget Name.
+            var item = $( this );
+
+            $( this ).parent().fadeOut( function() {
+
+                // Remove Item
+                $( this ).remove();
+
+                // Delete Photo
+                var img_url = item.parent().find( '.yz-photo-url' ).val();
+
+                if ( img_url ) {
+                    $.yz_DeletePhoto( img_url );
+                    $.yz_DeletePhoto( item.parent().find( '.yz-photo-thumbnail' ).val() );
+                }
+
+                // Check Widget Items
+                $.yz_CheckList();
+            
+            });
+
+        });
+
+        /**
+         * # Check Account Items
+         */
+        $.yz_CheckList = function() {
+
+            // Check Slideshow List.
+            if ( $( '.yz-wg-slideshow-options li' )[0] ) {
+                $( '.yz-no-slideshow' ).remove();
+            } else if ( ! $( '.yz-no-slideshow' )[0] ) {
+                $( '.yz-wg-slideshow-options' ).append(
+                    '<p class="yz-no-content yz-no-slideshow">' + Yz_Slideshow.no_items + '</p>'
+                );
+            }
+
+        }
+    
+        // Check Account Items List.
+        $.yz_CheckList();        
 
     });
 

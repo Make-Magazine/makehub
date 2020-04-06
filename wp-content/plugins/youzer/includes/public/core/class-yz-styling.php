@@ -2,26 +2,32 @@
 
 class Youzer_Styling {
 
+    /**
+     * Instance of this class.
+     */
+    protected static $instance = null;
+
+    /**
+     * Return the instance of this class.
+     */
+    public static function get_instance() {
+        if ( null === self::$instance ) {
+            self::$instance = new self;
+        }
+
+        return self::$instance;
+    }
+
     function __construct() {
 
         // Add Filters
-        add_filter( 'youzer_styling', array( &$this, 'global_styling' ) );
-        add_filter( 'youzer_styling', array( &$this, 'group_styling' ) );
-        add_filter( 'youzer_styling', array( &$this, 'profile404_styling' ) );
-        add_filter( 'youzer_styling', array( &$this, 'profile_styling' ) );
-        add_filter( 'youzer_styling', array( &$this, 'posts_tab_styling' ) );
-        add_filter( 'youzer_styling', array( &$this, 'comments_tab_styling' ) );
+        add_action( 'wp_enqueue_scripts', array( $this, 'custom_scheme' ) );
 
-        // iNIT
-        // add_action( 'init', array( &$this, 'get_active_styles' ) );
-
-        add_action( 'wp_enqueue_scripts', array( &$this, 'custom_scheme' ) );
-        add_action( 'wp_enqueue_scripts', array( &$this, 'custom_styling' ) );
-        add_action( 'wp_enqueue_scripts', array( &$this, 'gradient_styling' ) );
-        add_action( 'wp_enqueue_scripts', array( &$this, 'init_styling_networks' ) );
-
+        // Call Global Styling.
+        // add_action( 'wp_enqueue_scripts', array( $this, 'global_styles' ) );
+        
     }
-
+    
     /**
      * Get All Styles
      */
@@ -29,12 +35,12 @@ class Youzer_Styling {
 
         // Get Styles
         $styles = array_merge(
-            $this->posts_tab_styling( array(), true ),
-            $this->comments_tab_styling( array(), true ),
-            $this->group_styling( array(), true ),
-            $this->profile_styling( array(), true ),
-            $this->profile404_styling( array(), true ),
-            $this->global_styling( array(), true )
+            $this->posts_tab_styling(),
+            $this->comments_tab_styling(),
+            $this->group_styling(),
+            $this->profile_styling(),
+            $this->profile404_styling(),
+            $this->global_styling()
         );
 
         if ( $query == 'ids' ) {
@@ -53,47 +59,9 @@ class Youzer_Styling {
     }
 
     /**
-     * Get Active Fields!
-     */
-    function get_active_styles() {
-        
-        // Get Option.
-        $option_id = 'set_active_styles';
-
-        // Check if Function Already executed !
-        if ( get_option( $option_id ) ) {
-            return;
-        }
-
-        // Init Vars.
-        $active_styles = array();
-
-        // Get Styles Ids.
-        $styles_ids = $this->get_all_styles( 'ids' );
-        
-        foreach ( $styles_ids as $id ) {
-
-            // Get Value.
-            $get_value = yz_options( $id );
-
-            if ( isset( $get_value['color'] ) && ! empty( $get_value['color'] )  ) {
-                $active_styles[] = $id;
-            }
-
-        }
-
-        update_option( $option_id, $active_styles );
-
-    }
-
-    /**
      * Posts Tab Styling
      */
-    function posts_tab_styling( $elements = array(), $get_array = false ) {
-        
-        if ( ! bp_is_current_component( 'posts' ) && ! $get_array ) {
-            return $elements;
-        }
+    function posts_tab_styling() {
 
         $data = array(
             array(
@@ -133,17 +101,13 @@ class Youzer_Styling {
             )
         );
 
-        return array_merge( $elements, $data );
+        return $data;
     }
 
     /**
      * Comments Tab Styling
      */
-    function comments_tab_styling( $elements = array(), $get_array = false ) {
-
-        if ( ! bp_is_current_component( 'comments' ) && ! $get_array ) {
-            return $elements;
-        }
+    function comments_tab_styling() {
 
         $data = array(
             array(
@@ -188,14 +152,14 @@ class Youzer_Styling {
             )
         );
         
-        return array_merge( $elements, $data );
+        return $data;
 
     }
 
     /**
      * Global Styling
      */
-    function global_styling( $elements = array(), $get_array = false ) {
+    function global_styling() {
 
         $data = array(
             array(
@@ -280,17 +244,13 @@ class Youzer_Styling {
             )
         );
         
-        return array_merge( $elements, $data );
+        return $data;
     }
 
     /**
      * Profile 404 Styling
      */
-    function profile404_styling( $elements = array(), $get_array = false ) {
-        
-        if ( ! yz_is_404_profile() && ! $get_array ) {
-            return $elements;
-        }
+    function profile404_styling() {
 
         $data = array(
             array(
@@ -315,17 +275,13 @@ class Youzer_Styling {
             )
         );
         
-        return array_merge( $elements, $data );
+        return $data;
     }
 
     /**
      * Group Styling
      */
-    function group_styling( $elements = array(), $get_array = false ) {
-
-        if ( ! bp_is_group() && ! $get_array ) {
-            return $elements;
-        }
+    function group_styling() {
 
         $data = array(
             array(
@@ -371,17 +327,13 @@ class Youzer_Styling {
             )
         );
 
-        return array_merge( $elements, $data );
+        return $data;
     }
 
     /**
      * Styling Data.
      */
-    function profile_styling( $elements = null, $get_array = false ) {
-
-        if ( ! bp_is_user() && ! $get_array ) {
-            return $elements;
-        }
+    function profile_styling() {
 
         $data = array(
             // Profile Header Styling,
@@ -887,29 +839,53 @@ class Youzer_Styling {
             )
         );
 
-        return array_merge( $elements, $data );
-    }
-
-    /**
-     * Styling Elements 
-     */
-    function styles_data( $elements = array() ) {
-        return apply_filters( 'youzer_styling', $elements );
+        return $data;
     }
 
     /**
      * Custom Styling.
      */
-    function custom_styling() {
-
-        // Page Styles
-        $page_styles = $this->styles_data();
+    function custom_styling( $component = 'global' ) {
 
         // Get Active Styles.
-        $active_styles = yz_options( 'yz_active_styles' );
+        $active_styles = yz_option( 'yz_active_styles' );
         
         if ( empty( $active_styles ) ) {
             return;
+        }
+
+        if ( ! empty( $component ) ) {
+
+            switch ( $component ) {
+
+                case 'global':
+                    $page_styles = $this->global_styling();
+                    break;
+                
+                case 'posts':
+                    $page_styles = $this->posts_tab_styling();
+                    break;
+                
+                case 'comments':
+                    $page_styles = $this->comments_tab_styling();
+                    break;
+
+                case 'profile':
+                    $page_styles = $this->profile_styling();
+                    break;
+
+                case 'groups':
+                    $page_styles = $this->group_styling();
+                    break;
+                    
+                case '404_profile':
+                    $page_styles = $this->profile404_styling();
+                    break;
+                
+                default:
+                    break;
+            }
+
         }
 
         foreach ( $page_styles as $key => $data ) {
@@ -932,7 +908,7 @@ class Youzer_Styling {
             $selector = $key['selector'];
             $property = $key['property'];
 
-            $option = yz_options( $key['id'] );
+            $option = yz_option( $key['id'] );
             $option = isset( $option['color'] ) ? $option['color'] : $option;
             if ( empty( $key['type'] ) && ! empty( $option ) ) {
                 $unit = isset( $key['unit'] ) ? $key['unit'] : null;
@@ -946,93 +922,29 @@ class Youzer_Styling {
     }
 
     /**
-     * # Init Styling Networking Styling.
-     */
-    function init_styling_networks() {
-        // Styling Header Networks
-        $this->styling_networks( 'header' );
-        // Styling Widget Networks
-        $this->styling_networks( 'widget' );
-    }
-
-    /**
-     * # Header Social Networks Styling.
-     */
-    function styling_networks( $element = null ) {
-
-        // Get Social Networks Data
-        $social_networks  = yz_options( 'yz_social_networks' );
-        $display_networks = yz_options( 'yz_display_' . $element . '_networks' );
-
-        // if Element is Widget Make Networks Visible.
-        if ( 'widget' == $element ) {
-            $element = 'wg';
-            $display_networks = 'on';
-        }
-
-        if ( 'on' != $display_networks || empty( $social_networks ) ) {
-            return false;
-        }
-
-        wp_enqueue_style(
-            'youzer-customStyle',
-            YZ_AA . 'css/custom-script.css'
-        );
-
-        // Get Networks Type & Size.
-        $networks_size = yz_options( 'yz_wg_sn_icons_size' );
-        $networks_type = yz_options( 'yz_' . $element . '_sn_bg_type' );
-
-        // Get Styling Element.
-        $icon = ( 'wg' == $element && 'full-width' == $networks_size ) ? 'a' : 'i';
-
-        foreach ( $social_networks as $network => $data ) {
-
-            // Get network Color
-            $color = $data['color'];
-
-            // Prepare selector
-            $selector = ".yz-$element-networks.yz-icons-$networks_type .$network $icon";
-
-            if ( 'colorful' == $networks_type ) {
-                $property = "background-color";
-            } elseif ( 'silver' == $networks_type || 'transparent' == $networks_type ) {
-                $selector .= ':hover';
-                $property = "background-color";
-            } else {
-                $selector .= ':hover';
-                $property = "color";
-            }
-
-            // Prepare Css Code
-            $icon_css = "$selector { $property: $color !important; }";
-
-            // Add Css To The Page
-            wp_add_inline_style( 'youzer-customStyle', $icon_css );
-        }
-    }
-
-    /**
      * Custom Scheme.
      */
     function custom_scheme() {
 
         // Check if is using a custom scheme is enabled.
-        $use_custom_scheme = yz_options( 'yz_enable_profile_custom_scheme' );
+        if ( 'on' != yz_option( 'yz_enable_profile_custom_scheme', 'off' ) ) {
+            return;
+        }
+
         // Get Custom Scheme Color
-        $scheme_color = yz_options( 'yz_profile_custom_scheme_color' );
+        $scheme_color = yz_option( 'yz_profile_custom_scheme_color' );
         $scheme_color = $scheme_color['color'];
 
-        if ( 'on' != $use_custom_scheme || empty( $scheme_color ) ) {
-            return false;
+        if ( empty( $scheme_color ) )  {
+            return;
         }
 
         // Custom Styling File.
-        wp_enqueue_style( 'youzer-customStyle', YZ_AA . 'css/custom-script.css' );   
-        $pattern = 'url(' . YZ_PA . 'images/dotted-bg.png)';     
+        wp_enqueue_style( 'youzer-customStyle', YZ_AA . 'css/custom-script.css' );
+
+        $pattern = 'url(' . YZ_PA . 'images/dotted-bg.png)';
 
         $custom_css = "
-
 .youzer div.item-list-tabs li.yz-activity-show-search .yz-activity-show-search-form i,
 #yz-wall-nav .item-list-tabs li#activity-filter-select label,
 .yz-media-filter .yz-filter-item .yz-current-filter,
@@ -1062,7 +974,8 @@ class Youzer_Styling {
 .yz-forums-topic-item .yz-forums-topic-icon i,
 .yz-forums-forum-item .yz-forums-forum-icon i,
 div.bbp-submit-wrapper button,
-#bbpress-forums li.bbp-header, 
+#bbpress-forums li.bbp-header,
+#bbpress-forums .bbp-search-form #bbp_search_submit,
 #bbpress-forums #bbp-search-form #bbp_search_submit,
 .widget_display_search #bbp_search_submit,
 .widget_display_forums li a:before,
@@ -1126,62 +1039,58 @@ div.bbp-submit-wrapper button,
 .yz-tab-title-box,
 .yzw-file-post,
 .button.accept {
-                background-color: $scheme_color !important;
-            }
+            background-color: $scheme_color !important;
+        }
 
 @media screen and ( max-width: 768px ) {
-    #youzer .yz-group div.item-list-tabs li.last label,
-    #youzer .yz-profile div.item-list-tabs li.last label,
-    #youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
-    #youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
-        background-color: $scheme_color !important;
-        color: #fff;
-    }
+#youzer .yz-group div.item-list-tabs li.last label,
+#youzer .yz-profile div.item-list-tabs li.last label,
+#youzer .yz-directory-filter .item-list-tabs li#groups-order-select label,
+#youzer .yz-directory-filter .item-list-tabs li#members-order-select label {
+    background-color: $scheme_color !important;
+    color: #fff;
 }
-            .yz-bbp-topic-head-meta .yz-bbp-head-meta-last-updated a:not(.bbp-author-name),
-            .widget_display_topics li .topic-author a.bbp-author-name,
-            .activity-header .activity-head p a:not(:first-child),
-            #message-recipients .highlight .highlight-meta a,
-            .thread-sender .thread-from .from .thread-count,
-            .yz-profile-navmenu .yz-navbar-item a:hover i,
-            .widget_display_replies li a.bbp-author-name,
-            .yz-profile-navmenu .yz-navbar-item a:hover,
-            .yz-link-main-content .yz-link-url:hover,
-            .yz-wall-new-post .yz-post-title a:hover,
-            .yz-recent-posts .yz-post-title a:hover,
-            .yz-post-content .yz-post-title a:hover,
-            .yz-group-settings-tab fieldset legend,
-            .yz-wall-link-data .yz-wall-link-url,
-            .yz-tab-post .yz-post-title a:hover,
-            .yz-project-tags .yz-tag-symbole,
-            .yz-post-tags .yz-tag-symbole,
-            .yz-group-navmenu li a:hover {
-                color: $scheme_color !important;
-            }
-            
-            .yz-bbp-topic-head,
-            .youzer .yzwc-main-content address .yz-bullet,
-            .yz-profile-navmenu .yz-navbar-item.yz-active-menu,
-            .yz-group-navmenu li.current {
-                border-color: $scheme_color !important;
-            }
+}
+        .yz-bbp-topic-head-meta .yz-bbp-head-meta-last-updated a:not(.bbp-author-name),
+        .widget_display_topics li .topic-author a.bbp-author-name,
+        .activity-header .activity-head p a:not(:first-child),
+        #message-recipients .highlight .highlight-meta a,
+        .thread-sender .thread-from .from .thread-count,
+        .yz-profile-navmenu .yz-navbar-item a:hover i,
+        .widget_display_replies li a.bbp-author-name,
+        .yz-profile-navmenu .yz-navbar-item a:hover,
+        .yz-link-main-content .yz-link-url:hover,
+        .yz-wall-new-post .yz-post-title a:hover,
+        .yz-recent-posts .yz-post-title a:hover,
+        .yz-post-content .yz-post-title a:hover,
+        .yz-group-settings-tab fieldset legend,
+        .yz-wall-link-data .yz-wall-link-url,
+        .yz-tab-post .yz-post-title a:hover,
+        .yz-project-tags .yz-tag-symbole,
+        .yz-post-tags .yz-tag-symbole,
+        .yz-group-navmenu li a:hover {
+            color: $scheme_color !important;
+        }
+        
+        .yz-bbp-topic-head,
+        .youzer .yzwc-main-content address .yz-bullet,
+        .yz-profile-navmenu .yz-navbar-item.yz-active-menu,
+        .yz-group-navmenu li.current {
+            border-color: $scheme_color !important;
+        }
 
-            body .quote-with-img:before,body .yz-link-content,body .yz-no-thumbnail,body a.yz-settings-widget {
-                background: $scheme_color $pattern !important;
-            }
-        ";
+        body .quote-with-img:before,body .yz-link-content,body .yz-no-thumbnail,body a.yz-settings-widget {
+            background: $scheme_color $pattern !important;
+        }
+    ";
 
-        wp_add_inline_style( 'youzer-customStyle', $custom_css );
+    wp_add_inline_style( 'youzer-customStyle', $custom_css );
     }
 
     /**
      * Gradient Elements.
      */
     function get_gradient_elements( $elements = null, $get_array = false ) {
-
-        if ( ! bp_is_user() && ! $get_array ) {
-            return $elements;
-        }
 
         $elements = array();
 
@@ -1229,56 +1138,65 @@ div.bbp-submit-wrapper button,
     /**
      * Gradient Styling.
      */
-    function gradient_styling() {
+    function gradient_styling( $element ) {
 
-        // Get Active Styles.
-        $active_styles = yz_options( 'yz_active_styles' );
+        // Get Options Data
+        $left_color  = yz_option( $element['left_color'] );
+        $right_color = yz_option( $element['right_color'] );
 
-        // Get Elements
-        $elements = $this->get_gradient_elements( array(), true );
+        // Get Colors
+        $left_color  = isset( $left_color['color'] ) ? $left_color['color'] : null;
+        $right_color =  isset( $right_color['color'] ) ? $right_color['color'] : null;
 
-        foreach ( $elements as $key => $data ) {
-            if ( ! in_array( $data['left_color'], $active_styles ) && ! in_array( $data['right_color'], $active_styles ) ) {
-                unset( $elements[ $key ] );
-            }            
-        }
+        // if the one of the values are empty go out.
+        if ( ! empty( $left_color ) || ! empty( $right_color ) ) {
 
-        if ( empty( $elements ) ) {
-            return false;
-        }
-
-        // Pattern Path
-        foreach ( $elements as $element ) {
-
-            // Get Target
-            $target = isset( $element['target'] ) ? $element['target'] : 'yz-profile';
             // Get Pattern Data.
             $pattern_type = isset( $element['pattern'] ) ? 'geopattern' : 'dotted-bg'; 
             $pattern = 'url(' . YZ_PA . 'images/' . $pattern_type . '.png)';
 
-            // Get Options Data
-            $selector    = $element['selector'];
-            $left_color  = yz_options( $element['left_color'] );
-            $right_color = yz_options( $element['right_color'] );
-
-            // Get Colors
-            $left_color  = isset( $left_color['color'] ) ? $left_color['color'] : null;
-            $right_color =  isset( $right_color['color'] ) ? $right_color['color'] : null;
-
-            // if the one of the values are empty go out.
-            if ( empty( $left_color ) || empty( $right_color ) ) {
-                continue;
-            }
-
-            $custom_css = "
-                $selector {
+            echo '<style type="text/css">';
+            echo "{$element['selector']} {
                     background: $pattern,linear-gradient(to right, $left_color , $right_color ) !important;
                     background: $pattern,-webkit-linear-gradient(left, $left_color , $right_color ) !important;
-                }
-            ";
-
-            wp_add_inline_style( $target, $custom_css );
+                }";
+            echo '</style>';
         }
     }
 
+    /**
+     * Custom Snippets.
+     */
+    function custom_snippets( $component ) {
+
+        if ( 'off' == yz_option( 'yz_enable_' . $component . '_custom_styling', 'off' ) ) {
+            return false;
+        }
+
+        // Get CSS Code.
+        $custom_css = yz_option( 'yz_' . $component . '_custom_styling' );
+
+        if ( empty( $custom_css ) ) {
+            return false;
+        }
+
+        // Custom Styling File.
+        wp_enqueue_style( 'youzer-customStyle', YZ_AA . 'css/custom-script.css' );
+
+        wp_add_inline_style( 'youzer-customStyle', $custom_css );
+
+    }
 }
+
+
+/**
+ * Get a unique instance of Youzer Styling.
+ */
+function yz_styling() {
+    return Youzer_Styling::get_instance();
+}
+
+/**
+ * Launch Youzer Styling!
+ */
+yz_styling();

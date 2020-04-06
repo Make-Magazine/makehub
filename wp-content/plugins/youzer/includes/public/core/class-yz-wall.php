@@ -2,38 +2,60 @@
 
 class Youzer_Wall {
 
-	protected $youzer;
+	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Return the instance of this class.
+	 *
+	 * @since 3.0.0
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
 
     public function __construct() {
 
+    	// Enqueue Scripts.
+    	if ( bp_is_activity_component() ) {
+			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+    	} else {
+	    	$this->scripts();
+    	}
+    	
     	// Include Wall Functions.
     	$this->include_files();
 
     	// Add Wall Sidebar.
-		add_action( 'yz_global_wall_sidebar', array( &$this, 'get_wall_sidebar' ) );
+		add_action( 'yz_global_wall_sidebar', array( $this, 'get_wall_sidebar' ) );
 		
 		// Wall Post Attachments
-		add_action( 'bp_activity_entry_content', array( &$this, 'get_post' ) );
+		add_action( 'bp_activity_entry_content', array( $this, 'get_post' ) );
 
 		// Fomat Post
-		add_filter( 'bp_get_activity_content_body', array( &$this, 'get_activity_content_body' ), 10, 2 );
+		add_filter( 'bp_insert_activity_meta', array( $this, 'hide_activity_time_stamp' ),10, 2 );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'get_activity_content_body' ), 10, 2 );
 
 		// Open Activity Post and Comment link on new tabs.
-		add_filter( 'bp_get_activity_content_body', array( &$this, 'open_links_in_new_tabs' ) );
-		add_filter( 'bp_activity_comment_content', array( &$this, 'open_links_in_new_tabs' ) );
-		add_filter( 'bp_get_the_thread_message_content', array( &$this, 'open_links_in_new_tabs' ) );
+		add_filter( 'bp_get_activity_content_body', array( $this, 'open_links_in_new_tabs' ) );
+		add_filter( 'bp_activity_comment_content', array( $this, 'open_links_in_new_tabs' ) );
+		add_filter( 'bp_activity_comment_content', array( $this, 'add_comment_attachments' ) );
+		add_filter( 'bp_get_the_thread_message_content', array( $this, 'open_links_in_new_tabs' ) );
 
-		// Remove Blog Posts Default Content .
-		add_filter( 'bp_activity_create_summary', '__return_false' );
-
-		// Edit Wall Filters.
-		add_filter( 'bp_get_activity_show_filters_options', array( &$this, 'edit_wall_filter' ) );
+	    // Remove Activity Action Filter
+	    remove_filter( 'bp_get_activity_action', 'bp_activity_filter_kses', 1 );
 
 		// Add Embed Urls in a new line so they can be converted to iframes.
-		add_action( 'bp_activity_new_update_content', array( &$this, 'activate_autoembed' ) );
+		add_action( 'bp_activity_new_update_content', array( $this, 'activate_autoembed' ) );
 
 		// Add Wall Commnets Number for Non Logged-In Users.
-		add_action( 'bp_activity_entry_meta_non_logged_in', array( &$this, 'show_wall_post_comments_number' ), 999 );
+		add_action( 'bp_activity_entry_meta_non_logged_in', array( $this, 'show_wall_post_comments_number' ), 999 );
 
     }
 
@@ -43,47 +65,52 @@ class Youzer_Wall {
     function include_files() {
 
     	// Include Files.
-    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-form.php';
-    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-hashtags.php';
-    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-functions.php';
-    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-attachments.php';
-
-    	// Init Classes.
-    	$form = new Youzer_Wall_Form();
-    	$hastags = new Youzer_Wall_Hashtags();
-    	$functions = new Youzer_Wall_Functions();
-    	$attachments = new Youzer_Wall_Attachments();
+    	require YZ_PUBLIC_CORE . 'wall/yz-class-form.php';
+    	require YZ_PUBLIC_CORE . 'wall/yz-class-hashtags.php';
+    	require YZ_PUBLIC_CORE . 'wall/yz-class-functions.php';
 
     	if ( yz_enable_activity_privacy() ) {
-	    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-privacy.php';
-	    	$privacy = new Youzer_Wall_Privacy();
+	    	require YZ_PUBLIC_CORE . 'wall/yz-class-privacy.php';
     	}
 
     	if ( yz_enable_activity_mood() ) {
-	    	require_once YZ_PUBLIC_CORE . 'wall/yz-class-mood.php';
-	    	$mood = new Youzer_Mood();
+	    	require YZ_PUBLIC_CORE . 'wall/yz-class-mood.php';
     	}
 
     	if ( yz_enable_activity_tag_friends() ) {
-			require_once YZ_PUBLIC_CORE . 'wall/yz-class-tag-users.php';
-			$tag_users = new Youzer_Wall_Tag_Users();
+			require YZ_PUBLIC_CORE . 'wall/yz-class-tag-users.php';
     	}
 
+    	if ( yz_is_sticky_posts_active() ) {
+			require YZ_PUBLIC_CORE . 'wall/yz-class-sticky-posts.php';
+    	}
+    	
+	    if ( $this->is_bookmark_active() ) {
+			require YZ_PUBLIC_CORE . 'wall/yz-class-bookmarks.php';
+    	}
+    	
     }
+
+    /**
+	 * Check if Bookmarking Posts Option is Enabled.
+	 */
+	function is_bookmark_active() {
+	    $activate = 'on' == yz_option( 'yz_enable_bookmarks', 'on' ) ? true : false;
+	    return apply_filters( 'yz_is_bookmarks_active', $activate );
+	}
 
 	/**
 	 * Get Wall Post Content.
 	 */
 	function get_activity_content_body( $content = null, $activity = null ) {
+
 	    // Check if activity content is not empty.
 	    if ( ! empty( $content ) ) {
 	    	$content = '<div class="activity-inner">' . $content . '</div>';
 	    }
 	    
-	    // Filter
-	    $content = apply_filters( 'yz_get_activity_content_body', $content, $activity );
+	    return apply_filters( 'yz_get_activity_content_body', $content, $activity );
 
-	    return $content;
 	}
 
     /**
@@ -139,9 +166,82 @@ class Youzer_Wall {
 
 		// Get Embed Post.
 	    if ( ! empty( $content ) ) {
-	    	echo '<div class="yz-activity-embed"><p>' . $content . '</p></div>';
+	    	echo '<div class="yz-activity-embed">' . $content . '</div>';
     	}
     		
+    }
+
+    /**
+     * Comment Attachments.
+     */
+    function add_comment_attachments( $content ) {
+
+    	// Get Comment ID.
+    	$comment_id = bp_get_activity_comment_id();
+
+    	if ( empty( $comment_id ) ) {
+    		if ( isset( $_POST['activity_id'] ) && ! empty( $_POST['activity_id'] ) ) {
+    			$comment_id = $_POST['activity_id'];
+    		} 
+    	}
+
+    	// Get Attachments.
+		$attachments = yz_get_activity_attachments( $comment_id, 'src', 'comment' );
+
+		if ( ! empty( $attachments ) ) {
+
+			ob_start();
+
+			// Get File Type.
+			$type = yz_get_file_type( $attachments[0]['original'] );
+
+			switch ( $type ) {
+
+				case 'image':
+					$this->get_wall_post_images( $attachments, $comment_id );
+					break;
+
+				case 'file':
+
+					// Get Attachment Data
+					$data = yz_get_activity_attachments( $comment_id, 'data' );
+
+					?>
+
+					<a rel="nofollow" href="<?php echo yz_get_media_url( $attachments[0] ); ?>" class="yz-comment-file">
+						<span class="yz-file-icon"><i class="fas fa-download yz-attachment-file-icon"></i></span>
+						<span class="yzw-file-details">
+							<span class="yzw-file-title" title="<?php echo $data[0]['real_name']; ?>"><?php echo yz_get_filename_excerpt( $data[0]['real_name'], 45 ); ?></span>
+							<span class="yzw-file-size"><?php echo yz_file_format_size( $data[0]['file_size'] ); ?></span>
+						</span>
+					</a>
+
+					<?php
+
+					break;
+				
+				case 'video':
+					$this->get_wall_post_video( $attachments );
+					break;
+
+				case 'audio':
+					$this->get_wall_post_audio( $attachments );
+					break;
+
+				default:
+					break;
+			}
+
+			$attachments = ob_get_contents();
+
+			ob_end_clean();
+
+			$content =  $content . '<div class="yz-comment-attachments">' . $attachments . '</div>';
+
+		}
+
+    	return $content;
+    
     }
 
     /**
@@ -197,12 +297,45 @@ class Youzer_Wall {
 	}
 
 	/**
+	 * Open Wall Post & Comment Content On New Tab.
+	 */
+	function open_links_in_new_tabs( $content ) {
+
+		if ( ! empty( $content ) ) {
+
+		  	$pattern = '/<a(.*?)?href=[\'"]?[\'"]?(.*?)?>/i';
+		    
+		    $content = preg_replace_callback( $pattern, function( $m ) {
+			        
+		        $tpl = array_shift( $m );
+		        $hrf = isset( $m[1] ) ? $m[1] : null;
+		        
+		        if ( preg_match( '/target=[\'"]?(.*?)[\'"]?/i', $tpl ) ) {
+		            return $tpl;
+		        }
+
+		        if ( trim( $hrf ) && 0 === strpos( $hrf, '#' ) ) {
+		            return $tpl;
+		        }
+
+		        return preg_replace_callback( '/href=/i', function( $m2 ) {
+		            return sprintf( 'target="_blank" %s', array_shift( $m2 ) );
+		        }, $tpl );
+
+	    	}, $content );
+
+		}
+	    
+		return $content;
+	}
+
+	/**
 	 * Cover Post.
 	 */
 	function get_wall_post_cover( $attachments ) {
 
 		// Get Cover Photo Url.
-		$cover_url =  yz_get_wall_file_url( $attachments[0] );
+		$cover_url =  yz_get_media_url( $attachments[0] );
 		
 		if ( $cover_url ) {
 			echo '<img src="' . $cover_url . '" alt="">';
@@ -216,7 +349,7 @@ class Youzer_Wall {
 	function get_wall_post_avatar( $attachments, $activity_id ) {
 
 		// Get avatar Photo Url.
-		$avatar_url = yz_get_wall_file_url( $attachments[0] );
+		$avatar_url = yz_get_media_url( $attachments[0] );
 
 		if ( ! empty( $avatar_url ) ) {
 			echo '<a href="' . $avatar_url . '" data-lightbox="yz-post-' . $activity_id . '" class="yz-img-with-padding"><img src="' . $avatar_url . '" alt=""></a>';
@@ -246,7 +379,7 @@ class Youzer_Wall {
 	function get_wall_post_quote( $attachments, $activity_id ) {
 
 		// Get Quote Cover Url. 
-		$cover_img = ! empty( $attachments ) ? yz_get_wall_file_url( $attachments[0] ) : false;
+		$cover_img = ! empty( $attachments ) ? yz_get_media_url( $attachments[0] ) : false;
 
 		// Get Link Data
 		$quote_txt = bp_activity_get_meta( $activity_id, 'yz-quote-text' );
@@ -281,19 +414,15 @@ class Youzer_Wall {
 		// Get Attachment Data
 		$data = yz_get_activity_attachments( $activity_id, 'data' );
 
-		// Get File Data
-		$real_name = $data[0]['real_name'];
-	    $file_url  = yz_get_wall_file_url( $attachments[0] ); 
-		$name_excerpt = yz_get_filename_excerpt( $real_name, 45 );
-		$file_size = yz_file_format_size( $data[0]['file_size'] );
-
 		?>
 
 		<div class="yzw-file-post">
 			<i class="fas fa-cloud-download-alt yzw-file-icon"></i>
-			<div class="yzw-file-title" title="<?php echo $real_name; ?>"><?php echo $name_excerpt; ?></div>
-			<div class="yzw-file-size"><?php echo $file_size; ?></div>
-			<a rel="nofollow" href="<?php echo $file_url; ?>" class="yzw-file-download"><i class="fas fa-download"></i><?php _e( 'download', 'youzer' ); ?></a>
+			<div class="yzw-file-details">
+				<div class="yzw-file-title" title="<?php echo $data[0]['real_name']; ?>"><?php echo yz_get_filename_excerpt( $data[0]['real_name'], 45 ); ?></div>
+				<div class="yzw-file-size"><?php echo yz_file_format_size( $data[0]['file_size'] ); ?></div>
+			</div>
+			<a rel="nofollow" href="<?php echo yz_get_media_url( $attachments[0] ); ?>" class="yzw-file-download"><i class="fas fa-download"></i><?php _e( 'download', 'youzer' ); ?></a>
 		</div>
 
 		<?php
@@ -313,7 +442,7 @@ class Youzer_Wall {
 
 		<a class="yz-wall-link-content" rel="nofollow" href="<?php echo $link_url; ?>" target="_blank">
 			<?php if ( ! empty( $attachments ) && isset( $attachments[0]['original'] ) ) : ?>
-				<img src="<?php echo yz_get_wall_file_url( $attachments[0] ); ?>" alt="">
+				<img src="<?php echo yz_get_media_url( $attachments[0] ); ?>" alt="">
 			<?php endif; ?>
 			<div class="yz-wall-link-data">
 				<div class="yz-wall-link-title"><?php echo $link_title; ?></div>
@@ -323,6 +452,39 @@ class Youzer_Wall {
 		</a>
 
 		<?php
+	}
+
+	/**
+	 * Get Url Preview
+	 */
+	function get_activity_url_preview( $activity_id, $activity_content = null ) {
+
+		// Get Url Data.
+		$url = bp_activity_get_meta( $activity_id, 'url_preview' );
+
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		// Unserialize data.
+		$url = is_serialized( $url ) ? unserialize( $url ) : maybe_unserialize( base64_decode( $url ) );
+		
+		if ( ! $this->show_url_preview( $url, $activity_content ) ) {
+			return;
+		}
+
+		?>
+ 
+		<a class="yz-wall-link-content" rel="nofollow" href="<?php echo $url['link']; ?>" target="_blank">
+			<?php if ( ! empty( $url['image'] ) && ( empty( $url['use_thumbnail'] ) || $url['use_thumbnail'] == 'off' ) ) : ?><div class="yz-wall-link-thumbnail" style="background-image:url(<?php echo $url['image']; ?>);"></div><?php endif; ?>
+			<div class="yz-wall-link-data">
+				<?php if ( ! empty( $url['title'] ) ) : ?><div class="yz-wall-link-title"><?php echo $url['title']; ?></div><?php endif; ?>
+				<?php if ( ! empty( $url['description'] ) ) : ?><div class="yz-wall-link-desc"><?php echo $url['description']; ?></div><?php endif; ?>
+				<?php if ( ! empty( $url['site'] ) ) : ?><div class="yz-wall-link-url"><?php echo $url['site']; ?></div><?php endif; ?>
+			</div>
+		</a>
+		<?php
+
 	}
 
 	/**
@@ -350,6 +512,10 @@ class Youzer_Wall {
 			if ( isset( $match[0] ) && ! empty( $match[0] ) ) {
 
 				foreach ( array_unique( $match[0] ) as $link ) {
+					
+					if ( strpos( $link, '?s=%23' ) !== false ) {
+						continue;								
+					}
 
 					if ( wp_oembed_get( $link ) ) {
 						$show = false;
@@ -381,36 +547,6 @@ class Youzer_Wall {
 
 		return apply_filters( 'yz_display_activity_live_url_preview', $show );
 	}
-
-	/**
-	 * Get Url Preview
-	 */
-	function get_activity_url_preview( $activity_id, $activity_content = null ) {
-
-		// Get Url Data.
-		$url = bp_activity_get_meta( $activity_id, 'url_preview' );
-
-		// Unserialize data.
-		$url = is_serialized( $url ) ? unserialize( $url ) : maybe_unserialize( base64_decode( $url ) );
-		
-		if ( ! $this->show_url_preview( $url, $activity_content ) ) {
-			return;
-		}
-
-		?>
- 
-		<a class="yz-wall-link-content" rel="nofollow" href="<?php echo $url['link']; ?>" target="_blank">
-			<?php if ( ! empty( $url['image'] ) && ( empty( $url['use_thumbnail'] ) || $url['use_thumbnail'] == 'off' ) ) : ?><div class="yz-wall-link-thumbnail" style="background-image:url(<?php echo $url['image']; ?>);"></div><?php endif; ?>
-			<div class="yz-wall-link-data">
-				<?php if ( ! empty( $url['title'] ) ) : ?><div class="yz-wall-link-title"><?php echo $url['title']; ?></div><?php endif; ?>
-				<?php if ( ! empty( $url['description'] ) ) : ?><div class="yz-wall-link-desc"><?php echo $url['description']; ?></div><?php endif; ?>
-				<?php if ( ! empty( $url['site'] ) ) : ?><div class="yz-wall-link-url"><?php echo $url['site']; ?></div><?php endif; ?>
-			</div>
-		</a>
-		<?php
-
-	}
-
 	/**
 	 * Audio Post.
 	 */
@@ -419,7 +555,7 @@ class Youzer_Wall {
 		?>
 
 		<audio controls>
-			<source src="<?php echo yz_get_wall_file_url( $attachments[0] ); ?>" type="audio/mpeg">
+			<source src="<?php echo yz_get_media_url( $attachments[0] ); ?>" type="audio/mpeg">
 			<?php _e( 'Your browser does not support the audio element.', 'youzer' ); ?>
 		</audio>
 
@@ -437,11 +573,8 @@ class Youzer_Wall {
 		if ( ! isset( $video['provider'] ) || $video['provider'] != 'local' ) {
 			return;
 		}
-
-
-		$video_content = '<video width="100%" controls preload="metadata"><source src="' . yz_get_wall_file_url( $attachments[0], true ) . '" type="video/mp4">' . __( 'Your browser does not support the video tag.', 'youzer' ) . '</video>';
 	
-		echo apply_filters( 'yz_get_wall_post_video', $video_content, $attachments );
+		echo apply_filters( 'yz_get_wall_post_video', '<video width="100%" controls preload="metadata"><source src="' . yz_get_media_url( $attachments[0], true ) . '" type="video/mp4">' . __( 'Your browser does not support the video tag.', 'youzer' ) . '</video>', $attachments );
 
 	}
 
@@ -451,7 +584,7 @@ class Youzer_Wall {
 	function get_wall_post_slideshow( $slides ) {
 
         // Get Slides Height Option
-        $height_option = yz_options( 'yz_slideshow_height_type' );
+        $height_option = yz_option( 'yz_slideshow_height_type', 'fixed' );
 
 		?>
 
@@ -462,7 +595,7 @@ class Youzer_Wall {
 	       	foreach ( $slides as $slide ) :
 
 	        // Get Slide Image Url
-	        $slide_url = yz_get_wall_file_url( $slide );
+	        $slide_url = yz_get_media_url( $slide );
 
 		?>
 
@@ -497,7 +630,7 @@ class Youzer_Wall {
 
 		if ( 1 == $count_atts && ! empty( $attachments[0] ) ) { ?>
 			
-			<?php $img_url = yz_get_wall_file_url( $attachments[0] ); ?>
+			<?php $img_url = yz_get_media_url( $attachments[0] ); ?>
 			<?php 
 				$size = yz_get_image_size( $img_url ); 
 				$class = isset( $size[0] ) && ( $size[0] < 800 ) ? 'yz-img-with-padding' : 'yz-full-width-img';
@@ -516,7 +649,7 @@ class Youzer_Wall {
 
 				<?php foreach( $attachments as $i => $attachment ) : ?>
 					
-					<?php $img_url = yz_get_wall_file_url( $attachment ); ?>
+					<?php $img_url = yz_get_media_url( $attachment ); ?>
 					<a class="yz-post-img<?php echo $i + 1;?>" rel="nofollow" href="<?php echo $img_url; ?>" data-lightbox="yz-post-<?php echo $activity_id; ?>">
 						<div class="yz-post-img" style="background-image: url(<?php echo $img_url; ?>)"></div>
 					</a>
@@ -530,7 +663,7 @@ class Youzer_Wall {
 			<div class="yz-post-4imgs">
 				
 				<?php foreach( $attachments as $i => $attachment ) : ?>
-				<?php $img_url = yz_get_wall_file_url( $attachment ); ?>
+				<?php $img_url = yz_get_media_url( $attachment ); ?>
 				<a class="yz-post-img<?php echo $i + 1; if ( 3 == $i && $count_atts > 4  ) { echo ' yz-post-plus4imgs'; }?>" href="<?php echo $img_url; ?>" rel="nofollow" data-lightbox="yz-post-<?php echo $activity_id; ?>">
 					<div class="yz-post-img" style="background-image: url(<?php echo $img_url; ?>)">
 						<?php 
@@ -558,10 +691,6 @@ class Youzer_Wall {
 			return false;
 		}
 
-		ob_start();
-		
-		global $Youzer;
-
 	    $group = groups_get_group( array( 'group_id' => $group_id ) );
 
 	    // Get Group Avatar
@@ -574,12 +703,10 @@ class Youzer_Wall {
 			)
 		);
 
+		ob_start();
+	
 		// Get Cover Photo Path.
-	    $cover_path = bp_attachments_get_attachment( 'url', array(
-	        'object_dir' => 'groups',
-	        'item_id' => $group_id
-	        )
-	    );
+	    $cover_path = yz_get_group_cover( $group_id );
 
 	    // Get Profile Link.
 	    $group_url = bp_get_group_permalink( $group );
@@ -590,13 +717,13 @@ class Youzer_Wall {
 		?>
 
 	 	<div class="yz-wall-embed yz-wall-embed-group">
-	 		<div class="yz-embed-cover" <?php $this->get_embed_item_cover( $cover_path ); ?>></div>
+	 		<div class="yz-embed-cover" <?php echo $cover_path; ?>></div>
 	 		<a href="<?php echo $group_url; ?>" class="yz-embed-avatar" style="background-image: url( <?php echo $avatar_path; ?> );"></a>
 	 		<div class="yz-embed-data">
 	 			<div class="yz-embed-head">
 		 			<a href="<?php echo $group_url; ?>" class="yz-embed-name"><?php echo $group->name; ?></a>
 		 			<div class="yz-embed-meta">
-		 				<div class="yz-embed-meta-item"><?php $Youzer->group->status( $group ); ?></div>
+		 				<div class="yz-embed-meta-item"><?php echo yz_get_group_status( $group->status ); ?></div>
 		 				<div class="yz-embed-meta-item">
 		 					<i class="fas fa-users"></i><span><?php echo sprintf( _n( '%s member', '%s members', $members_count, 'youzer' ), bp_core_number_format( $members_count ) ); ?></span>
 		 				</div>
@@ -628,8 +755,6 @@ class Youzer_Wall {
 			return false;
 		}
 
-		global $Youzer;
-
 		ob_start();
 
 		// Get Avatar Path.
@@ -642,7 +767,7 @@ class Youzer_Wall {
 		);
 
 		// Get Cover Photo Path.
-	    $cover_path = $Youzer->user->cover( 'url', $user_id );
+	    $cover_path = yz_get_user_cover( 'url', $user_id );
 
 	    // Get Profile Link.
 	    $profile_url = bp_core_get_user_domain( $user_id );
@@ -696,7 +821,6 @@ class Youzer_Wall {
 		echo "style='background-image:url( $cover_path ); $cover_style'";
 
 	}
-
 
 	/**
 	 * 	Wall New Post Thumbnail
@@ -843,40 +967,6 @@ class Youzer_Wall {
 	}
 
 	/**
-	 * Wall Filter Bar.
-	 */
-	function edit_wall_filter( $filters ) {
-
-		// Get Wall Post Types.
-		$post_types = yz_get_wall_post_types_visibility();
-
-		foreach ( $filters as $filter => $name ) {
-			if ( isset( $post_types[ $filter ] ) && 'off' == $post_types[ $filter ] ) {
-				unset( $filters[ $filter ] );
-			}
-		}
-
-		// Unset Friendship Filter.
-		if ( 'off' == $post_types['friendship_created'] && 'off' == $post_types['friendship_accepted'] ) {
-			if ( isset( $filters['friendship_accepted,friendship_created'] ) ) {
-				unset( $filters['friendship_accepted,friendship_created'] );
-			}
-		}
-
-		// Get Unwanted Filters.
-		$unwanted_filters = array( 'group_details_updated', 'activity_update', 'update_avatar', 'updated_profile' );
-
-		// Unset Unwanted Filters.
-		foreach ( $unwanted_filters as $filter ) {
-			if ( isset( $filters[ $filter ] ) ) {
-				unset( $filters[ $filter ] );
-			}
-		}
-
-		return $filters;
-	}
-
-	/**
 	 * Call Wall Sidebar
 	 */
 	function get_wall_sidebar() {
@@ -892,141 +982,86 @@ class Youzer_Wall {
 
 	}
 
-	/**
-	 * Redirect User.
-	 */
-	public function redirect( $action, $code, $redirect_to = null ) {
-
-	    // Get Reidrect page.
-	    $redirect_to = ! empty( $redirect_to ) ? $redirect_to : wp_get_referer();
-
-	    // Add Message.
-	    bp_core_add_message( $this->msg( $code ), $action );
-
-		// Redirect User.
-        wp_redirect( $redirect_to );
-
-        // Exit.
-        exit;
-
-	}
-
-	/**
-	 * Open Wall Post & Comment Content On New Tab.
-	 */
-	function open_links_in_new_tabs( $content ) {
-
-		if ( ! empty( $content ) ) {
-
-		  	$pattern = '/<a(.*?)?href=[\'"]?[\'"]?(.*?)?>/i';
-		    
-		    $content = preg_replace_callback( $pattern, function( $m ) {
-			        
-		        $tpl = array_shift( $m );
-		        $hrf = isset( $m[1] ) ? $m[1] : null;
-		        
-		        if ( preg_match( '/target=[\'"]?(.*?)[\'"]?/i', $tpl ) ) {
-		            return $tpl;
-		        }
-
-		        if ( trim( $hrf ) && 0 === strpos( $hrf, '#' ) ) {
-		            return $tpl;
-		        }
-
-		        return preg_replace_callback( '/href=/i', function( $m2 ) {
-		            return sprintf( 'target="_blank" %s', array_shift( $m2 ) );
-		        }, $tpl );
-
-	    	}, $content );
-
-		}
-	    
-		return $content;
-	}
-
     /**
-     * Get Attachments Error Message.
+     * Activity Scripts.
      */
-    public function msg( $code ) {
+    function scripts() {
 
-        // Messages
-        switch ( $code ) {
+	    // Wall JS.
+	    wp_enqueue_script( 'yz-wall', YZ_PA . 'js/yz-wall.min.js', array( 'jquery' ), YZ_Version );
 
-            case 'invalid_image_extension':
-            	// Get Image Allowed Extentions.
-            	$image_extentions = yz_get_allowed_extentions( 'image', 'text' );
-                return sprintf( __( 'Invalid Image Extension.<br> Only %1s are allowed.', 'youzer' ), $image_extentions );
+	    // Wall Css
+	    wp_enqueue_style( 'yz-wall', YZ_PA . 'css/yz-wall.min.css', array(), YZ_Version );
 
-            case 'invalid_video_extension':
-            	// Get Video Allowed Extentions.
-            	$video_extentions = yz_get_allowed_extentions( 'video', 'text' );
-                return sprintf( __( 'Invalid Video Extension.<br> Only %1s are allowed.', 'youzer' ), $video_extentions );
+	    // Load Profile Style
+	    wp_enqueue_style( 'yz-profile', YZ_PA . 'css/yz-profile-style.min.css', array(), YZ_Version );;
 
-            case 'invalid_file_extension':
-            	// Get File Allowed Extentions.
-            	$file_extentions = yz_get_allowed_extentions( 'file', 'text' );
-                return sprintf( __( 'Invalid file extension.<br> Only %1s are allowed.', 'youzer' ), $file_extentions );
+	    // Load Carousel CSS and JS.
+	    wp_enqueue_style( 'yz-carousel-css', YZ_PA . 'css/owl.carousel.min.css', array(), YZ_Version );
+	    wp_enqueue_script( 'yz-carousel-js', YZ_PA . 'js/owl.carousel.min.js', array(), YZ_Version );
+	    wp_enqueue_script( 'yz-slider', YZ_PA . 'js/yz-slider.min.js', array(), YZ_Version );
 
-            case 'invalid_audio_extension':
-            	// Get Audio Allowed Extentions.
-            	$audio_extentions = yz_get_allowed_extentions( 'audio', 'text' );
-                return sprintf( __( 'Invalid Audio Extension.<br> Only %1s are allowed.', 'youzer' ), $audio_extentions );
+	    if ( is_user_logged_in() ) {
+	        
+	        global $YZ_upload_url;
 
-            case 'unpermitted_extension':
-                return __( 'Sorry, this file type is not permitted for security reasons.', 'youzer' );
+	        // Wall Uploader
+	        wp_enqueue_script( 'yz-wall-form', YZ_PA . 'js/yz-wall-form.min.js', array( 'jquery' ), YZ_Version, true );
 
-            case 'max_one_file':
-                return __( "You can't upload more than one file.", 'youzer' );
+	        $wall_args = apply_filters( 'yz_wall_js_args', array(
+	                'max_one_file'      => __( "You can't upload more than one file.", 'youzer' ),
+	                'base_url'          => $YZ_upload_url,
+	                'giphy_limit'       => 12,
+	            ) );
 
-            case 'empty_status':
-                return __( "Please type some text before posting.", 'youzer' );
-                
-            case 'invalid_post_type':
-                return __( "Invalid post type.", 'youzer' );
+	        // Localize Script.
+	        wp_localize_script( 'yz-wall-form', 'Yz_Wall', $wall_args );
 
-            case 'invalid_link_url':
-                return __( "Invalid link url.", 'youzer' );
+	        if ( 'on' == yz_option( 'yz_enable_wall_giphy', 'on' ) ) {
+	            // Giphy Script.
+	            wp_enqueue_script( 'yz-giphy', YZ_PA . 'js/yz-giphy.min.js', array( 'jquery', 'masonry' ), YZ_Version, true );
+	        }
 
-            case 'empty_link_url':
-                return __( "Empty link url.", 'youzer' );
+	    }
+	    
+	    if ( yz_enable_wall_posts_effect() ) {
+	        // Load View Port Checker Script
+	        wp_enqueue_script( 'yz-viewchecker', YZ_PA . 'js/yz-viewportChecker.min.js', array( 'jquery' ), YZ_Version, true  );
+	    }
+	    
+	    // yz_common_scripts();
+	    
+	    // if its not the activity directory exit.
+	    if ( bp_is_activity_directory() && 'on' == yz_option( 'yz_enable_activity_custom_styling', 'off' ) ) {
+	        // Get CSS Code.
+	        $custom_css = yz_option( 'yz_activity_custom_styling' );
+	        if ( ! empty( $custom_css ) ) {
+	            // Custom Styling File.
+	            wp_enqueue_style( 'youzer-customStyle', YZ_AA . 'css/custom-script.css' );
+	            wp_add_inline_style( 'youzer-customStyle', $custom_css );
+	        }
+	    }
 
-            case 'empty_link_title':
-                return __( "Please fill the link title field.", 'youzer' );
-
-            case 'empty_link_desc':
-                return __( "Please fill the link description field.", 'youzer' );
-
-            case 'empty_quote_owner':
-                return __( "Please fill the quote owner field.", 'youzer' );
-
-            case 'empty_quote_text':
-                return __( "Please fill the quote text field.", 'youzer' );
-
-            case 'word_inappropriate':
-                return __( "You have used an inappropriate word.", 'youzer' );
-
-            case 'no_attachments':
-                return __( "No attachment was uploaded.", 'youzer' );
-
-            case 'slideshow_need_images':
-                return __( "Slideshows need at least 2 images to work.", 'youzer' );
-
-            case 'select_image':
-                return __( 'Please select an image image before posting.', 'youzer' );
-
-            case 'select_gif_image':
-                return __( 'Please select a Gif image.', 'youzer' );
-
-            case 'max_files_number':
-        		$max_files = yz_options( 'yz_attachments_max_nbr' );
-                return sprintf( __( "You can't upload more than %d files.", 'youzer' ), $max_files );
-                
-            case 'invalid_file_size':
-        		$max_size = yz_options( 'yz_attachments_max_size' );
-                return sprintf( __( 'File too large. File must be less than %g megabytes.', 'youzer' ), $max_size );
-        }
-
-        return __( 'An unknown error occurred. Please try again later.', 'youzer' );
+	    do_action( 'yz_activity_scripts' );
     }
 
+	/**
+	 * Hide Activity Content Tipstamp.
+	 */
+    function hide_activity_time_stamp( $new_content, $old_content ) {
+    	return $old_content;
+    }
+   
 }
+
+/**
+ * Get a unique instance of Youzer Activity.
+ */
+function yz_activity() {
+	return Youzer_Wall::get_instance();
+}
+
+/**
+ * Launch Youzer Activity!
+ */
+yz_activity();

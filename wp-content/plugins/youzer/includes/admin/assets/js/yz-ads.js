@@ -73,7 +73,7 @@
 			// Get Form Values
 			$.yz_EditForm( {
 				item		: ad_item,
-				form_title	: yz.update_ad,
+				form_title	: Yz_Ads.update_ad,
 				button_id	: 'yz-update-ad',
 				form 		: $( '#yz-ads-form' )
 			} );
@@ -152,7 +152,7 @@
 			if (  ! o.AD_title || titleAlreadyeExist ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.empty_ad,
+                    msg  : Yz_Ads.empty_ad,
                     type : 'error'
                 } );
                 return false;
@@ -167,7 +167,7 @@
 				if ( o.AD_code == null || $.trim( o.AD_code ) == '' ) {
 					// Show Error Message
 					$.ShowPanelMessage( {
-						msg  : yz.code_empty,
+						msg  : Yz_Ads.code_empty,
 						type : 'error'
 					} );
 					return false;
@@ -186,7 +186,7 @@
 			if ( ! AD_banner ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.empty_banner,
+                    msg  : Yz_Ads.empty_banner,
                     type : 'error'
                 } );
                 return false;
@@ -199,6 +199,21 @@
 
 			return true;
 		}
+
+		/**
+		 * Remove Item.
+		 */
+		$( document ).on( 'click', '.yz-delete-ad', function() {
+
+			// Remove item
+			$( this ).closest( 'li' ).remove();
+			
+			if ( ! $( '.yz-ad-item' )[0] ) {
+				$( '#yz_ads' )
+				.append( '<p class="yz-no-content yz-no-ads">' + Yz_Ads.no_ads + '</p>' );
+			}
+
+		});
 
 	});
 

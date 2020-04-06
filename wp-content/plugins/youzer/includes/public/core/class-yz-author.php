@@ -2,47 +2,23 @@
 
 class Youzer_Author {
 
-	function __construct() {
-		// Add Shortcode.
-		add_shortcode( 'youzer_author_box', array( &$this, 'youzer_author_box' ) );
-	}
+	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
 
 	/**
-	 * Author Box Shortcode
+	 * Return the instance of this class.
 	 */
-	function youzer_author_box( $atts ) {
-	
-
-		$box_args = shortcode_atts(
-			array(
-				'user_id' 			=> false,
-				'layout'  			=> yz_options( 'yz_author_layout' ),
-				'meta_icon'  		=> yz_options( 'yz_author_meta_icon' ),
-				'meta_type'  		=> yz_options( 'yz_author_meta_type' ),
-				'networks_type'	  	=> yz_options( 'yz_author_sn_bg_type' ),
-				'networks_format' 	=> yz_options( 'yz_author_sn_bg_style' ),
-				'cover_overlay'		=> yz_options( 'yz_enable_author_overlay' ),
-				'cover_pattern'		=> yz_options( 'yz_enable_author_pattern' ),
-				'statistics_bg' 	=> yz_options( 'yz_author_use_statistics_bg' ),
-				'statistics_border' => yz_options( 'yz_author_use_statistics_borders' ),
-		), $atts );
-
-		// Don't Show Author box if the admin didn't set the user id.
-		if ( empty( $box_args['user_id'] ) || 0 == $box_args['user_id'] ) {
-			return false;
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
 		}
 
-		// Set Settings Target.
-		$box_args['target'] = 'author';
-
-		ob_start();
-		
-		// Display Box.
-		$this->get_author_box( $box_args );
-    	
-    	return ob_get_clean();
-
+		return self::$instance;
 	}
+
+	function __construct() { /** Do Nothing Here **/ }
 
 	/**
 	 * Author Box
@@ -114,8 +90,6 @@ class Youzer_Author {
 	 */
 	function get_elements( $args = null ) {
 
-		global $Youzer;
-
 		$elements = array( 'cover', 'content' );
 
 		// Get Header Structure
@@ -126,7 +100,7 @@ class Youzer_Author {
 			if ( isset( $header_args[ $element ] ) ) :
 
 				if ( 'cover' == $element ) {
-					$cover = $Youzer->user->cover( 'style', $args['user_id'] );
+					$cover = yz_users()->cover( 'style', $args['user_id'] );
 					echo "<div class='yz-header-cover' $cover>";
 				} elseif ( 'content' == $element ) {
 					echo "<div class='yzb-author-content'>";
@@ -136,7 +110,7 @@ class Youzer_Author {
 				foreach ( $header_args[ $element ] as $element ) {
 					do_action( 'yz_before_author_box_' . $element, $args );
 					$function = "get_box_$element";
-					$Youzer->user->$element( $args, $args['user_id'] );
+					yz_users()->$element( $args, $args['user_id'] );
 					do_action( 'yz_after_author_box_' . $element, $args );
 				}
 				echo '</div>';
@@ -174,3 +148,15 @@ class Youzer_Author {
 	}
 
 }
+
+/**
+ * Get a unique instance of Author Box.
+ */
+function yz_author_box() {
+	return Youzer_Author::get_instance();
+}
+
+/**
+ * Launch Youzer Author Box!
+ */
+yz_author_box();

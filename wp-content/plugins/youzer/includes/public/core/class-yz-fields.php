@@ -2,9 +2,27 @@
 
 class Youzer_Fields {
 
-	function __construct() {
+	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Return the instance of this class.
+	 */
+	public static function get_instance() {
+
+		if ( null === self::$instance ) {
+		
+			self::$instance = new self;
+
+		}
+
+		return self::$instance;
 
 	}
+
+	function __construct() { /** **/ }
 
 	/**
 	 * # Fields Generator.
@@ -72,8 +90,6 @@ class Youzer_Fields {
 	}
 
 	function get_option( $options_name, $is_user, $option, $real_value ) {
-
-		global $Youzer;
 
 		// Get Filed Data.
 		$field_id    = isset( $option['id'] ) ? $option['id'] : null;
@@ -285,7 +301,7 @@ class Youzer_Fields {
 
 		?>
 
-			<input type="number" step="<?php echo $step; ?>" class="yz-number-input" value="<?php echo $real_value; ?>" id="<?php echo $field_id; ?>" <?php echo $field_name; ?> />
+			<input type="number"  class="yz-number-input" value="<?php echo $real_value; ?>" id="<?php echo $field_id; ?>" <?php echo $field_name; ?> />
 
 		<?php break;
 
@@ -689,7 +705,7 @@ class Youzer_Fields {
 	 */
 	function copyright() { 
 
-		if ( 'off' == yz_options( 'yz_enable_settings_copyright' ) ) {
+		if ( 'off' == yz_option( 'yz_enable_settings_copyright', 'on' ) ) {
 			return false;
 		}
 		
@@ -920,3 +936,19 @@ class Youzer_Fields {
 		return $options[ $element ];
 	}
 }
+
+/**
+ * Get a unique instance of Youzer Fields.
+ */
+function yz_fields() {
+	return Youzer_Fields::get_instance();
+}
+
+global $Yz_Settings;
+
+/**
+ * Launch Youzer Fields!
+ */
+// yz_fields();
+
+$Yz_Settings = yz_fields();

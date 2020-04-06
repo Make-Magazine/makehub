@@ -11,29 +11,9 @@ class Youzer {
      * Init Vars
      */
     private static $instance;
-    public $profile;
-    public $group;
-    public $header;
-    public $account;
     public $fields;
-    public $user;
-    public $tabs;
-    public $ajax;
-    public $wall;
-    public $media;
-    public $widgets;
     public $styling;
-    public $account_verification;
 
-    function profile_tabs() {
-
-        if ( yz_is_account_page() ) {
-            require_once YZ_PUBLIC_CORE . 'pages/yz-account.php';
-            self::$instance->account  = new Youzer_Account();
-        }
-
-    }
-    
     /**
      * Main Youzer Instance.
      */
@@ -47,84 +27,55 @@ class Youzer {
             self::$instance->setup_constants();
 
             add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
-            // add_action( 'bp_ready', array( self::$instance, 'profile_tabs' ) );
+            add_action( 'bp_init', array( self::$instance, 'buddypress_init' ) );
+            add_action( 'bbp_init', array( self::$instance, 'bbpress_init' ) );
+            add_action( 'woocommerce_init', array( self::$instance, 'woocommerce_init' ) );
 
             // Include General Functions
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-general-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-account-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-profile-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-admin-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-scripts-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/general/yz-wall-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/yz-navbar-functions.php';
-            require_once YZ_PUBLIC_CORE . 'woocommerce/yz-woocommerce-functions.php';
-            require_once YZ_PUBLIC_CORE . 'functions/yz-export-functions.php';
-
-
-            require_once YZ_PUBLIC_CORE . 'class-yz-fields.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-general-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-account-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-profile-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-admin-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-scripts-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/general/yz-wall-functions.php';
+            include YZ_PUBLIC_CORE . 'woocommerce/yz-woocommerce-functions.php';
+            include YZ_PUBLIC_CORE . 'functions/yz-export-functions.php';
             
-            self::$instance->fields   = new Youzer_Fields();
+            // self::$instance->fields   = new Youzer_Fields();
 
-            // if ( wp_doing_ajax() || is_youzer_panel() || ! is_admin() ) {
-
-                require_once YZ_PUBLIC_CORE . 'functions/yz-general-functions.php';
-                require_once YZ_PUBLIC_CORE . 'functions/yz-admin-functions.php';
-                require_once YZ_PUBLIC_CORE . 'functions/yz-scripts-functions.php';
-                require_once YZ_PUBLIC_CORE . 'functions/yz-xprofile-functions.php';
-                require_once YZ_PUBLIC_CORE . 'functions/yz-account-functions.php';
-
-                // Include Files.
-                require_once YZ_PUBLIC_CORE . 'class-yz-tabs.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-tab-info.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-tab-media.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-tab-posts.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-custom-tabs.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-tab-overview.php';
-                require_once YZ_PUBLIC_CORE . 'tabs/yz-tab-comments.php';
-
-                
-                // Profile Functions
-                require_once YZ_PUBLIC_CORE . 'functions/yz-profile-functions.php';
-                require_once YZ_PUBLIC_CORE . 'pages/yz-profile.php';
-                require_once YZ_PUBLIC_CORE . 'wall/yz-class-media.php';
-
-                // Youzer Account Settings.
-               self::$instance->include_widgets();
-                
-                self::$instance->includes();
-                                
-                // Init Classes
-                self::$instance->profile  = new Youzer_Profile();
-                self::$instance->widgets = new Youzer_Widgets();
-                self::$instance->tabs     = new Youzer_Tabs();
-                self::$instance->group    = new Youzer_Group();
-                self::$instance->header   = new Youzer_Header();
-                self::$instance->author   = new Youzer_Author();
-                self::$instance->user     = new Youzer_User();
-                self::$instance->ajax     = new Youzer_Ajax();
-                self::$instance->media  = new Youzer_Wall_Media();
-                self::$instance->wall = new Youzer_Wall();
-                self::$instance->styling  = new Youzer_Styling();
-                self::$instance->account_verification = new Youzer_Account_Verification();
-                // global $bp;
-                // print_r(buddypress());
-                // if ( yz_is_account_page() ) {
-                    require_once YZ_PUBLIC_CORE . 'pages/yz-account.php';
-                    self::$instance->account  = new Youzer_Account();
-                // }
+            include YZ_PUBLIC_CORE . 'class-yz-styling.php';
+            include YZ_PUBLIC_CORE . 'wall/yz-class-media.php';
+            
+            // if ( yz_is_bpfollowers_active() ) {
+            //     require YZ_PUBLIC_CORE . 'functions/yz-buddypress-followers-integration.php';
             // }
 
-            global $Youzer_Admin;
+            // if ( wp_doing_ajax() || ! is_admin() ) {
+            if ( wp_doing_ajax() || ! is_admin() ) {
+
+                include YZ_PUBLIC_CORE . 'functions/yz-general-functions.php';
+                include YZ_PUBLIC_CORE . 'functions/yz-admin-functions.php';
+                include YZ_PUBLIC_CORE . 'functions/yz-scripts-functions.php';
+                include YZ_PUBLIC_CORE . 'functions/yz-xprofile-functions.php';
+                include YZ_PUBLIC_CORE . 'functions/yz-profile-functions.php';
+
+                self::$instance->includes();
+
+                if ( wp_doing_ajax() ) {
+                    include YZ_PUBLIC_CORE . 'class-yz-ajax.php';
+                }
+
+            }
             
             // Init Admin
             if ( is_admin() ) {
-                require_once YZ_PATH . 'includes/admin/class.youzer-admin.php';
-                $Youzer_Admin = new Youzer_Admin();
+                // global $Youzer_Admin;
+                include YZ_PATH . 'includes/admin/class.youzer-admin.php';
             }
 
             // Include Membership System.
             if ( yz_is_membership_system_active() ) {
-                require_once YZ_PATH . 'includes/logy/logy.php';
+                include YZ_PATH . 'includes/logy/logy.php';
             }
 
             // Setup Globals.
@@ -139,11 +90,121 @@ class Youzer {
     }
 
     /**
+     * Buddypress Init
+     **/
+    function buddypress_init() {
+    
+        include YZ_PUBLIC_CORE . 'class-yz-tabs.php';
+        include YZ_PUBLIC_CORE . 'class-yz-fields.php';
+        include YZ_PUBLIC_CORE . 'class-yz-hashtags.php';
+        include YZ_PUBLIC_CORE . 'class-yz-attachments.php';
+
+        if ( yz_is_bpfollowers_active() ) {
+            require YZ_PUBLIC_CORE . 'functions/yz-buddypress-followers-integration.php';
+        }
+
+        $doing_ajax = wp_doing_ajax();
+
+        if ( is_buddypress() || $doing_ajax ) {
+
+            // Init Groups
+            if ( bp_is_groups_component() ) {
+
+                require_once YZ_PUBLIC_CORE . 'class-yz-header.php';
+                require_once YZ_PUBLIC_CORE . 'class-yz-groups.php';
+
+                if ( bp_is_group_activity() ) {
+                    $this->include_activity_files();
+                }
+
+            }
+
+            if ( bp_is_activity_component() || $doing_ajax ) {
+                $this->include_activity_files();
+            }
+
+            if ( bp_is_user() ) {
+
+                include YZ_PUBLIC_CORE . 'class-yz-widgets.php';
+
+                // Account Functions.
+                if ( yz_is_account_page() ) {
+                    include YZ_PUBLIC_CORE . 'pages/yz-account.php';
+                } else {    
+                    include YZ_PUBLIC_CORE . 'functions/yz-navbar-functions.php';
+                    include YZ_PUBLIC_CORE . 'class-yz-user.php';
+                    include YZ_PUBLIC_CORE . 'pages/yz-profile.php';
+                    include YZ_PUBLIC_CORE . 'class-yz-author.php';
+                    include YZ_PUBLIC_CORE . 'class-yz-header.php';
+                }
+
+            }
+
+            if ( bp_is_members_directory() ) {
+                include YZ_PUBLIC_CORE . 'class-yz-user.php';
+            }
+
+            if ( bp_is_groups_directory() ) {
+                include YZ_PUBLIC_CORE . 'class-yz-user.php';
+            }
+            
+            if ( bp_is_messages_component() ) {
+                require_once YZ_PUBLIC_CORE . 'class-yz-messages.php';
+            }
+
+        } else {
+
+            if ( is_404() ) {
+                require_once YZ_PUBLIC_CORE . 'functions/yz-404profile-functions.php';
+            }
+
+        }
+
+    }
+    
+    /**
+     * BBpress Init
+     */    
+    function bbpress_init() {
+
+        // if ( is_bbpress() ) {
+            require_once YZ_PUBLIC_CORE . 'functions/yz-bbpress.php';
+        // }
+
+    }
+
+    /**
+     * Woocommerce Init
+     */    
+    function woocommerce_init() {
+
+        require YZ_PUBLIC_CORE . 'functions/yz-woocommerce.php';
+        
+        if ( yz_is_woocommerce_active() ) {
+            
+            // Init Actions
+            add_action( 'bp_init', 'yz_is_cart_page' );
+
+            global $Youzer;
+            require YZ_PUBLIC_CORE . 'woocommerce/yz-woocommerce.php';
+            require YZ_PUBLIC_CORE . 'woocommerce/yz-wc-activity.php';
+            require YZ_PUBLIC_CORE . 'woocommerce/yz-wc-templates.php';
+            require YZ_PUBLIC_CORE . 'woocommerce/yz-wc-redirects.php';
+            $Youzer->wc = new Youzer_Woocommerce();
+        }
+
+    }
+
+    /**
+     * Include Activity.
+     */
+    function include_activity_files() {
+        require_once YZ_PUBLIC_CORE . 'functions/wall/yz-wall-general-functions.php';
+        require_once YZ_PUBLIC_CORE . 'class-yz-wall.php';
+    }
+
+    /**
      * Setup plugin constants.
-     *
-     * @access private
-     * @since 2.1.0
-     * @return void
      */
     private function setup_constants() {
 
@@ -152,8 +213,9 @@ class Youzer {
 
         // Youzer Url Path.
         define( 'YZ_URL', plugin_dir_url( __FILE__ ) );
+        
         // Version.
-        define( 'YZ_Version', apply_filters( 'youzer_version', '2.3.6' ) );
+        define( 'YZ_Version', apply_filters( 'youzer_version', '2.4.7' ) );
 
         // Templates Path.
         define( 'YZ_TEMPLATE', YZ_PATH . 'includes/public/templates/' );
@@ -165,7 +227,7 @@ class Youzer {
         // Assets ( PA = Public Assets & AA = Admin Assets ).
         define( 'YZ_PA', plugin_dir_url( __FILE__ ) . 'includes/public/assets/' );
         define( 'YZ_AA', plugin_dir_url( __FILE__ ) . 'includes/admin/assets/' );
-        
+
         // Define Buddypress Avatars Dimensions.
         if ( ! defined( 'BP_AVATAR_THUMB_WIDTH' ) ) {
             define( 'BP_AVATAR_THUMB_WIDTH', 50 );
@@ -211,59 +273,33 @@ class Youzer {
     private function includes() {
 
         // Youzer General Functions.
-        require_once YZ_PUBLIC_CORE . 'functions/yz-buddypress-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-groups-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-user-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-messages-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-notifications-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-mailchimp-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-mailster-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-account-verification-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-authentication-functions.php';
-        
-        if ( yz_is_bpfollowers_active() ) {
-            require_once YZ_PUBLIC_CORE . 'functions/yz-buddypress-followers-integration.php';
-        }
+        require YZ_PUBLIC_CORE . 'functions/yz-buddypress-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-groups-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-user-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-messages-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-notifications-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-mailchimp-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-mailster-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-account-verification-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-authentication-functions.php';
         
         if ( yz_is_mycred_installed() ) {
-            require_once YZ_PUBLIC_CORE . 'mycred/yz-mycred-functions.php';
+            require YZ_PUBLIC_CORE . 'mycred/yz-mycred-functions.php';
         }
         
-        if ( yz_is_bbpress_installed() ) {
-            require_once YZ_PUBLIC_CORE . 'functions/yz-bbpress.php';
-        }
-
-        if ( yz_is_woocommerce_installed() ) {
-            require_once YZ_PUBLIC_CORE . 'functions/yz-woocommerce.php';
-        }
-
-        // Wall Functions.
-        require_once YZ_PUBLIC_CORE . 'functions/wall/yz-wall-general-functions.php';
-
-        // Posts Tools.
-        require_once YZ_PUBLIC_CORE . 'functions/posts-tools/yz-posts-tools-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/posts-tools/yz-wall-sticky-posts-functions.php';
-
         // Directory Functions.
-        require_once YZ_PUBLIC_CORE . 'functions/directories/yz-members-directory-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/directories/yz-groups-directory-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/directories/yz-members-directory-functions.php';
+        require YZ_PUBLIC_CORE . 'functions/directories/yz-groups-directory-functions.php';
 
         // Youzer Classes.
-        require_once YZ_PUBLIC_CORE . 'class-yz-header.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-author.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-user.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-ajax.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-wall.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-groups.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-styling.php';
-        require_once YZ_PUBLIC_CORE . 'class-yz-account-verification.php';
-
-        require_once YZ_PUBLIC_CORE . 'install.php';
+        require YZ_PUBLIC_CORE . 'install.php';
 
         // Integrations
-        require_once YZ_PUBLIC_CORE . 'functions/yz-rtmedia-functions.php';
-        require_once YZ_PUBLIC_CORE . 'functions/yz-themes-fixes.php';
-        
+        if ( defined( 'RTMEDIA_VERSION' ) ) {
+            require YZ_PUBLIC_CORE . 'functions/yz-rtmedia-functions.php';
+        }
+
+        // require_once YZ_PUBLIC_CORE . 'functions/yz-themes-fixes.php';
 
     }
 
@@ -272,10 +308,7 @@ class Youzer {
      */
     private function youzer_globals() {
 
-        global $wpdb, $Yz_Translation, $Yz_Settings, $YZ_upload_url, $YZ_upload_dir, $Logy_users_table, $Yz_bookmark_table, $Yz_reviews_table, $YZ_upload_folder, $Yz_media_table, $Yz_albums_table;
-
-        // Get Data.
-        $Yz_Settings = $this->fields;
+        global $wpdb, $YZ_upload_url, $YZ_upload_dir, $Logy_users_table, $Yz_bookmark_table, $Yz_reviews_table, $YZ_upload_folder, $Yz_media_table, $Yz_albums_table;
 
         // Get Uploads Directory Path.
         $upload_dir = wp_upload_dir();
@@ -285,9 +318,6 @@ class Youzer {
         $YZ_upload_url = apply_filters( 'youzer_upload_url', $upload_dir['baseurl'] . '/'. $YZ_upload_folder . '/', $upload_dir['baseurl'] );
         $YZ_upload_dir = apply_filters( 'youzer_upload_dir', $upload_dir['basedir'] . '/' . $YZ_upload_folder  . '/' , $upload_dir['basedir'] );
 
-        // Translation Data.
-        $Yz_Translation = $this->global_localize();
-
         // Get Table Names.
         $Logy_users_table = $wpdb->prefix . 'logy_users';
         $Yz_bookmark_table = $wpdb->prefix . 'yz_bookmark';
@@ -295,96 +325,6 @@ class Youzer {
         $Yz_media_table = $wpdb->prefix . 'yz_media';
         $Yz_albums_table = $wpdb->prefix . 'yz_albums';
         
-    }
-
-    /**
-     * Include Widgets
-     */
-    function include_widgets() {
-        
-        // Widgets Class.
-        require_once YZ_PUBLIC_CORE . 'class-yz-widgets.php';
-        
-    }
-
-    /**
-     * Youzer Text Domain
-     */
-    function global_localize() {
-        
-        global $YZ_upload_url;
-
-        // Init Var.
-        $localize = array(
-            'try_later'             => __( 'Something went wrong, please try again later.', 'youzer' ),
-            'reset_error'           => __( 'An error occurred while resetting the options!', 'youzer' ),
-            'move_wg'               => __( 'This widget can\'t be moved to the other side.', 'youzer' ),
-            'empty_network'         => __( 'Network name is empty or already exists!', 'youzer' ),
-            'empty_wg'              => __( 'Widget title is empty or already exists!', 'youzer' ),
-            'empty_ad'              => __( 'Ad name is empty or already exists!', 'youzer' ),
-            'items_nbr'             => __( 'The number of items allowed is ', 'youzer' ),
-            'reset_dialog_title'    => __( 'Resetting Options Confirmation', 'youzer' ),
-            'name_exist'            => __( 'This name already exists!', 'youzer' ),
-            'no_networks'           => __( 'No social networks Found !', 'youzer' ),
-            'no_custom_widgets'     => __( 'No custom widgets found!', 'youzer' ),
-            'required_fields'       => __( 'All fields are required!', 'youzer' ),
-            'invalid_url'           => __( 'Please enter a valid URL.', 'youzer' ),
-            'utag_name_empty'       => __( 'User tag name is empty!', 'youzer' ),
-            'empty_banner'          => __( 'Banner field is empty !', 'youzer' ),
-            'banner_url'            => __( 'Banner URL not working!', 'youzer' ),
-            'serv_desc_desc'        => __( 'add service description', 'youzer' ),
-            'tab_url_empty'         => __( 'Tab link URL is empty!', 'youzer' ),
-            'no_custom_tabs'        => __( 'No custom tabs found!', 'youzer' ),
-            'tab_code_empty'        => __( 'Tab content is empty!', 'youzer' ),
-            'empty_field'           => __( 'Field name is empty!', 'youzer' ),
-            'update_user_tag'       => __( 'Update user tags type', 'youzer' ),
-            'no_user_tags'          => __( 'No user tags found!', 'youzer' ),
-            'serv_desc_icon'        => __( 'select service icon', 'youzer' ),
-            'service_desc'          => __( 'service description', 'youzer' ),
-            'tab_title_empty'       => __( 'Tab title is empty!', 'youzer' ),
-            'empty_options'         => __( 'Options are empty !', 'youzer' ),
-            'no_wg'                 => __( 'No widgets found!', 'youzer' ),
-            'serv_desc_title'       => __( 'type service title', 'youzer' ),
-            'code_empty'            => __( 'Ad Code is Empty!', 'youzer' ),
-            'skill_desc_percent'    => __( 'skill bar percent', 'youzer' ),
-            'skill_desc_title'      => __( 'type skill title', 'youzer' ),
-            'no_items'              => __( 'No items found!', 'youzer' ),
-            'skill_desc_color'      => __( 'Skill bar color', 'youzer' ),
-            'processing'            => __( 'Processing... !', 'youzer' ),
-            'no_ads'                => __( 'No ads found!', 'youzer' ),
-            'update_network'        => __( 'update network', 'youzer' ),
-            'update_widget'         => __( 'update widget', 'youzer' ),
-            'service_title'         => __( 'service title', 'youzer' ),
-            'update_field'          => __( 'update field', 'youzer' ),
-            'service_icon'          => __( 'service icon', 'youzer' ),
-            'save_changes'          => __( 'save changes', 'youzer' ),
-            'upload_photo'          => __( 'upload photo', 'youzer' ),
-            'error_msg'             => __( 'Oops, error!', 'youzer' ),
-            'photo_title'           => __( 'photo title', 'youzer' ),
-            'show_wg'               => __( 'Show Widget', 'youzer' ),
-            'hide_wg'               => __( 'Hide Widget', 'youzer' ),
-            'edit_item'             => __( 'delete item', 'youzer' ),
-            'photo_path'            => __( 'photo path', 'youzer' ),
-            'update_tab'            => __( 'update tab', 'youzer' ),
-            'bar_percent'           => __( 'percent (%)', 'youzer' ),
-            'photo_link'            => __( 'photo link', 'youzer' ),
-            'success_msg'           => __( "Success !", 'youzer' ),
-            'edit_item'             => __( 'edit item', 'youzer' ),
-            'update_ad'             => __( 'update ad', 'youzer' ),
-            'got_it'                => __( 'Got it!', 'youzer' ),
-            'bar_title'             => __( 'title', 'youzer' ),
-            'bar_color'             => __( 'color', 'youzer' ),
-            'done'                  => __( 'save', 'youzer' ),
-            'drag_widgets_items'    => 1,
-            // Passing Data.
-            'default_img' => YZ_PA . 'images/default-img.png',
-            'ajax_url'    => admin_url( 'admin-ajax.php' ),
-            'upload_url' => $YZ_upload_url
-
-        );
-
-        return apply_filters( 'yz_global_localize_vars', $localize );
-
     }
 
     /**

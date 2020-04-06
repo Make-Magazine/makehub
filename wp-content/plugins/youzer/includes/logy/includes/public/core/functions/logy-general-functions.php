@@ -1,137 +1,15 @@
 <?php
 
 /**
- * Repair Logy Pages
- */
-function logy_repair_pages() {
-
-    // Plugin Pages
-    $pages = array();
-
-    $pages[] = array(
-        'title' => __( 'Login', 'youzer' ),
-        'slug'  => 'login',
-        'meta'  => '_logy_core',
-        'pages' => 'logy_pages'
-    );
-
-    $pages[] = array(
-        'title' => __( 'Password Reset', 'youzer' ),
-        'slug'  => 'lost-password',
-        'meta'  => '_logy_core',
-        'pages' => 'logy_pages'
-    );
-
-    $pages[] = array(
-        'title' => __( 'Complete Registration', 'youzer' ),
-        'slug'  => 'complete-registration',
-        'meta'  => '_logy_core',
-        'pages' => 'logy_pages'
-    );
-
-    // Get Logy Pages
-    $logy_pages = get_option( 'logy_pages' );
-
-    foreach ( $pages as $page ) {
-        $slug = $page['slug'];
-        if ( ! isset( $logy_pages[ $slug ] ) ) {
-            logy_add_new_plugin_page( $page );
-        }
-    }
-
-}
-
-add_action( 'init', 'logy_repair_pages' );
-
-/**
- * Create New Plugin Page.
- */
-function logy_add_new_plugin_page( $args ) {
-
-    // Get Page Slug
-    $slug = $args['slug'];
-
-    // Check that the page doesn't exist already
-    $is_page_exists = yz_get_post_id( 'page', $args['meta'], $slug );
-
-    if ( $is_page_exists ) {
-
-        if ( ! isset( $pages[ $slug ] ) ) {
-
-            // init Array.
-            $pages = get_option( $args['pages'] );
-
-            // Get Page ID
-            $page_id = yz_get_post_id( 'page', $args['meta'], $slug );
-
-            // Add New Page Data.
-            $pages[ $slug ] = $page_id;
-            
-            update_option( $args['pages'], $pages );
-        }
-
-        return false;
-    }
-
-    $user_page = array(
-        'post_title'     => $args['title'],
-        'post_name'      => $slug,
-        'post_type'      => 'post',
-        'post_status'    => 'publish',
-        'post_author'    =>  1,
-        'comment_status' => 'closed'
-    );
-
-    $post_id = wp_insert_post( $user_page );
-
-    wp_update_post( array('ID' => $post_id, 'post_type' => 'page' ) );
-
-    update_post_meta( $post_id, $args['meta'], $slug );
-
-    // init Array.
-    $pages = get_option( $args['pages'] );
-
-    // Add New Page Data.
-    $pages[ $slug ] = $post_id;
-
-    if ( isset( $pages ) ) {
-        update_option( $args['pages'], $pages );
-    }
-
-}
-
-/**
- * Logy Options
- */
-function logy_options( $option_id ) {
-
-    $option_value = get_option( $option_id );
-
-    // Filter Options.
-    if ( has_filter( 'logy_edit_options' ) ) {
-        $option_value = apply_filters( 'logy_edit_options', $option_id );
-    }
-
-    if ( ! isset( $option_value ) || empty( $option_value ) ) {
-        $Yz_default_options = yz_standard_options();
-        if ( isset( $Yz_default_options[ $option_id ] ) ) {
-            $option_value = $Yz_default_options[ $option_id ];
-        }
-    }
-
-    return $option_value;
-}
-
-/**
  * # Get Plugin Pages
  */
 function logy_pages( $request_type = null, $id = null ) {
 
     // Get pages.
-    $logy_pages = logy_options( 'logy_pages' );
+    $logy_pages = yz_option( 'logy_pages' );
 
     // Switch Key <=> Values
-    if ( 'ids' == $request_type ) {
+    if ( 'ids' == $request_type && ! empty( $logy_pages ) ) {
         $pages_ids = array_flip( $logy_pages );
         return $pages_ids;
     }
@@ -164,10 +42,14 @@ function logy_is_page( $page ) {
         if ( ! isset( $bp_pages[ $page ] ) ) {
             return false;
         }
-    }
+    } else{
+        
+        $page_id = logy_page_id( $page );
 
-    if ( is_page( logy_page_id( $page ) ) ) {
-        return true;
+        if ( ! empty( $page_id ) && is_page( $page_id ) ) {
+            return true;
+        }
+
     }
 
     return false;
@@ -177,15 +59,17 @@ function logy_is_page( $page ) {
  * # Get Page Template.
  */
 function logy_template( $page_template ) {
+
     // check if its logy plugin page
     if ( is_logy_page() ) {
-		// Print Template
 		return LOGY_PATH . 'includes/public/templates/logy-template.php';
     }
+
     return $page_template;
+
 }
 
-add_filter( 'page_template', 'logy_template' );
+add_filter( 'page_template', 'logy_template', 10 );
 
 /**
  * # Get Page Shortcode.
@@ -193,7 +77,7 @@ add_filter( 'page_template', 'logy_template' );
 function logy_get_page_shortcode( $page_id = null ) {
 
     // Get Plugin Pages.
-    $pages = array_flip( logy_options( 'logy_pages' ) );
+    $pages = array_flip( yz_option( 'logy_pages' ) );
 
     // Get Page Name.
     $page = $pages[ $page_id ];
@@ -202,58 +86,6 @@ function logy_get_page_shortcode( $page_id = null ) {
     $shortcode = '[logy_' . str_replace( '-', '_', $page ) . '_page]';
 
     return $shortcode;
-}
-
-/**
- * # Get Page URL.
- */
-function logy_page_url( $page_name ) {
-
-	// Get Page Data
-    $page_id = logy_page_id( $page_name );
-
-    // Get Page Url.
-    $page_url = trailingslashit( get_permalink( $page_id ) );
-
-	// Return Page Url.
-    return apply_filters( 'logy_page_url', $page_url, $page_name, $page_id );
-
-}
-
-/**
- * # Get Page ID.
- */
-function logy_page_id( $page ) {
-
-    // Get Logy Pages.
-    $pages = get_option( 'logy_pages' );
-
-    $page_id = isset( $pages[ $page ] ) ? $pages[ $page ] : null;
-
-    if ( 'register' == $page || 'activate' == $page ) {
-        // Get Buddypress Pages.
-        $bp_pages = get_option( 'bp-pages' );
-        // Get Page ID.
-        $page_id = isset( $bp_pages[ $page ] ) ? $bp_pages[ $page ] : false;
-    }
-    
-    return $page_id;
-}
-
-/**
- * Get Wordpress Pages
- */
-function logy_get_pages() {
-
-    // Set Up Variables
-    $pages    = array();
-    $wp_pages = get_pages();
-
-    foreach ( $wp_pages as $page ) {
-        $pages[ $page->ID ] = sprintf( __( '%1s ( ID : %2d )','youzer' ), $page->post_title, $page->ID );
-    }
-
-    return $pages;
 }
 
 /**
@@ -370,34 +202,6 @@ function logy_get_dialog_msg( $type = null ) {
 }  
 
 /**
- * Edit Navigation Menu
- */
-function logy_edit_nav_menu( $items, $args ) {
-
-    // Set up Array's.
-    $forms_pages = array( logy_page_id( 'register' ), logy_page_id( 'lost-password' ) );
-
-    foreach( $items as $key => $item ) {
-
-        // if user logged-in change the Login Page title to Logout.
-        if ( $item->object_id == logy_page_id( 'login' ) && is_user_logged_in() ) {
-            $item->url   = wp_logout_url();
-            $item->title = __( 'Logout', 'youzer' );
-        }
-
-        // if user is logged-in remove the register page from menu.
-        if ( in_array( $item->object_id, $forms_pages ) && is_user_logged_in() ) {
-            unset( $items[ $key ] );
-        }
-
-    }
-
-    return $items;
-}
-
-add_filter( 'wp_nav_menu_objects', 'logy_edit_nav_menu', 10, 2 );
-
-/**
  * Fix Url Path.
  */
 function logy_fix_path( $url ) {
@@ -483,49 +287,8 @@ function is_registration_incomplete() {
  * Check If Limit login is enabled.
  */
 function is_limit_login_enabled() {
-
-    // Get Limit Login Option
-    $enabled = logy_options( 'logy_enable_limit_login' );
-
-    // Check ?
-    if ( 'on' == $enabled ) {
-        return true;
-    }
-
-    return false;
+    return yz_option( 'logy_enable_limit_login', 'on' ) == 'on' ? true : false;
 }
-
-/**
- * Hide Dashboard Admin Bar For Non Admins.
- */
-function logy_hide_dashboard() {
-
-    if ( current_user_can( 'administrator' ) ) {
-        return false;
-    }
-
-    // Setup Variables.
-    $hide_dashboard = logy_options( 'logy_hide_subscribers_dash' );
-
-    if ( 'on' != $hide_dashboard ) {
-        return false;
-    }
-
-    // Hide Admin Bar.
-    if ( ! is_admin() && current_user_can( 'subscriber' ) ) {
-        show_admin_bar( false );
-    }
-
-    // Hide Admin Dashboard.
-    if ( is_admin() && current_user_can( 'subscriber' ) &&
-        ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-        wp_redirect( home_url() );
-        exit;
-    }
-
-}
-
-add_action( 'init', 'logy_hide_dashboard' );
 
 /**
  * Login Form Short Code "[youzer_login]"; 
@@ -801,30 +564,14 @@ function logy_core_render_message() {
  * is Ajax Login Enabled
  */
 function logy_is_ajax_login_active() {
-
-    // Check if Ajax Login is enabled.
-    $ajax_login = yz_options( 'yz_enable_ajax_login' );
-
-    if ( $ajax_login == 'on' ) {
-        return true;
-    }
-    
-    return false;
+    return yz_option( 'yz_enable_ajax_login', 'off' ) == 'on' ? true : false;
 }
 
 /**
  * Check if Login Popup is Enabled.
  */
 function logy_is_login_popup_active() {
-
-    // Check if Login Popup is enabled.
-    $login_popup = yz_options( 'yz_enable_login_popup' );
-
-    if ( $login_popup == 'on' ) {
-        return true;
-    }
-    
-    return false;
+    return yz_option( 'yz_enable_login_popup', 'on' ) == 'on' ? true : false;
 }
 
 /**

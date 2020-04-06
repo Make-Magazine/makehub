@@ -2,14 +2,6 @@
 /**
  * Template Name: Youzer Profile Template
  */
-
-global $Youzer;
-
-// Get Header Data
-$header_effect = yz_options( 'yz_hdr_load_effect' );
-$header_data   = $Youzer->widgets->get_loading_effect( $header_effect );
-$header_class  = $Youzer->header->get_class( 'user' );
-
 ?>
 
 <div id="youzer">
@@ -24,7 +16,7 @@ $header_class  = $Youzer->header->get_class( 'user' );
 
 		<?php do_action( 'youzer_profile_before_header' ); ?>
 
-		<header id="yz-profile-header" class="<?php echo $header_class; ?>" <?php echo $header_data; ?>>
+		<header id="yz-profile-header" class="<?php echo yz_headers()->get_class( 'user' ); ?>" <?php echo yz_widgets()->get_loading_effect( yz_option( 'yz_hdr_load_effect', 'fadeIn' ) ); ?>>
 
 			<?php do_action( 'youzer_profile_header' ); ?>
 

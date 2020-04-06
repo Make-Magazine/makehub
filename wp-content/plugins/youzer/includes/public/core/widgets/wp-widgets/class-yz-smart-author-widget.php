@@ -21,8 +21,6 @@ class YZ_Smart_Author_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-	    
 		// Default Widget Settings
 	    $defaults = array(
 	        'default_user_id' => false,
@@ -43,9 +41,8 @@ class YZ_Smart_Author_Widget extends WP_Widget {
 
 	    // Get Input's Data.
 		$meta_types = yz_get_panel_profile_fields();
-		$box_layouts = $Youzer->fields->get_field_options( 'author_box_layouts' );
-		$networks_icons_types = $Youzer->fields->get_field_options( 'icons_colors' );
-		$networks_icons_styles = $Youzer->fields->get_field_options( 'border_styles' );
+		$networks_icons_types = array( 'silver' => __( 'Silver', 'youzer' ), 'colorful' => __( 'Colorful', 'youzer' ), 'transparent' => __( 'Transparent', 'youzer' ), 'no-bg' => __( 'No Background', 'youzer' ) );
+		$networks_icons_styles = array( 'flat' => __( 'Flat', 'youzer' ), 'radius' => __( 'Radius', 'youzer' ), 'circle' => __( 'Circle', 'youzer' ) );
 
 		?>
 
@@ -72,23 +69,23 @@ class YZ_Smart_Author_Widget extends WP_Widget {
 	        <input class="checkbox" type="checkbox" <?php checked( $instance['show_cover_pattern'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_cover_pattern' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_cover_pattern' ) ); ?>" /> 
 	        <label for="<?php echo $this->get_field_id( 'show_cover_pattern' ); ?>"><?php _e( 'Show Cover Pattern', 'youzer' ); ?></label>
     	</p>
-
+	   
 		<!-- Author Box Layout-->
 	    <p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"><?php esc_attr_e( 'Author Box Layout', 'youzer' ); ?></label> 
 	        <select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $box_layouts as $layout_id => $layout_name ) { ?>
-	            	<option <?php selected( $instance['layout'], $layout_id ); ?> value="<?php echo $layout_id; ?>"><?php echo $layout_name; ?></option>
+	            <?php for ( $i = 1; $i <= 6; $i++ ) {?>
+	            	<option <?php selected( $instance['layout'], 'yzb-author-v' . $i ); ?> value="<?php echo 'yzb-author-v' . $i; ?>"><?php echo sprintf( __( 'Layout Version %d', 'youzer' ), $i ); ?></option>
 	            <?php } ?>      
 	        </select>
 	    </p>
 		
-		<!-- Author Meta types-->   
+		<!-- Author Box Layout-->
 	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'meta_type' ) ); ?>"><?php esc_attr_e( 'Author Meta Type', 'youzer' ); ?></label>
-	        <select id="<?php echo $this->get_field_id( 'meta_type' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'meta_type' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $meta_types as $meta_id => $meta_name ) { ?>
-	            	<option <?php selected( $instance['meta_type'], $meta_id ); ?> value="<?php echo $meta_id; ?>"><?php echo $meta_name; ?></option>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"><?php esc_attr_e( 'Author Box Layout', 'youzer' ); ?></label> 
+	        <select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>" class="widefat" style="width:100%;">
+	            <?php for ( $i = 1; $i <= 6; $i++ ) {?>
+	            	<option <?php selected( $instance['layout'], 'yzb-author-v' . $i ); ?> value="<?php echo 'yzb-author-v' . $i; ?>"><?php echo sprintf( __( 'Layout Version %d', 'youzer' ), $i ); ?></option>
 	            <?php } ?>      
 	        </select>
 	    </p>

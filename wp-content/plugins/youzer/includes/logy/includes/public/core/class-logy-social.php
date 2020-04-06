@@ -10,8 +10,10 @@ class Logy_Social {
 
     	$this->logy = &$Logy;
 
+    	$this->process_authentication();
+
 		// Actions.
-		add_action( 'init', array( $this, 'process_authentication' ) );
+		// add_action( 'init', array( $this, 'process_authentication' ) );
 
 	}
 
@@ -20,9 +22,9 @@ class Logy_Social {
 	 */
 	public function process_authentication() {
 
-		if ( is_user_logged_in() ) {
-			return false;
-		}
+		// if ( is_user_logged_in() ) {
+		// 	return false;
+		// }
 		
 	    // Get Data.
 	    $mode = $this->get_mode();
@@ -73,7 +75,6 @@ class Logy_Social {
         	// Get User Data.
 			$user_data = $this->get_user_data( $hybridauth, $provider );
 
-			// die ( print_r( $hybridauth->getUserProfile() ));
 	        if ( ! empty( $user_data['user_id'] ) ) {
 	        	// Process Login ...
 	        	$this->authenticate_user( $user_data['user_id'], $redirect_to );
@@ -89,7 +90,7 @@ class Logy_Social {
 				$user_profile = $user_data['user_profile'];
 
 	        	if ( is_multisite() ) {
-	        		if ( $this->logy->query->wpmu_is_user_need_confirmation( $user_profile->email ) ) {
+	        		if ( $this->wpmu_is_user_need_confirmation( $user_profile->email ) ) {
 	        			$this->display_inactive_account_msg();
 	        		}
 	        	}
@@ -99,7 +100,7 @@ class Logy_Social {
 
 	        	if ( $user_id > 0 ) {
 	        		// Store All User Social Account Data In Database.
-	        		$this->logy->query->store_user_data( $user_id, $provider, $user_profile );
+	        		$this->store_user_data( $user_id, $provider, $user_profile );
 	        	}
 
 				if ( yz_social_registration_needs_activation() ) {
@@ -117,6 +118,24 @@ class Logy_Social {
 
     }
     
+	/**
+	 * Get User By Provider And ID.
+	 */
+	public function wpmu_is_user_need_confirmation( $email ) {
+		
+		global $wpdb;
+
+		// Get Result
+		$result = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM " . $wpdb->prefix . "logy_users WHERE email = %s AND user_id = 0", $email ) );
+		
+		if ( $result > 0 ) {
+			return true;
+		}
+
+		// Return Result.
+		return false;
+	}
+
 	/**
 	 * Create New User.
 	 */
@@ -174,7 +193,7 @@ class Logy_Social {
 		 	$user->displayName = ! empty( $user_login ) ? $user_login : $user->displayName;
 			
 			// Register User.
-			$this->logy->social->bp_register_user( $user );
+			$this->bp_register_user( $user );
 
 			die();
 		}
@@ -188,7 +207,7 @@ class Logy_Social {
 	public function get_user_data( $adapter, $provider ) {
 		
     	// Get User Profile Data.
-		$user_profile = $this->get_user_profile( $adapter );
+		$user_profile = $this->getUserProfile( $adapter );
 
 		// Create Logy Session.
 		$user_profile_data = logy_user_profile_data( 'get' );
@@ -205,7 +224,7 @@ class Logy_Social {
         $user_email = $user_profile->email;
 
         // Get User ID.
-        $user_id = $this->logy->query->get_user_by_provider( $provider, $uid, $user_email );
+        $user_id = $this->get_user_by_provider( $provider, $uid, $user_email );
 			
 		/**
 		 * Check if User Already Registered
@@ -217,7 +236,7 @@ class Logy_Social {
 
 			// Get User ID By Verified Email.
 			if ( ! $user_id ) {
-				$user_id = $this->logy->query->get_user_verified_email( $user_email );
+				$user_id = $this->get_user_verified_email( $user_email );
 			}
 		}
         
@@ -226,6 +245,43 @@ class Logy_Social {
 
         // Return Data.
 		return $user_data;
+	}
+
+	/**
+	 * Get User By Provider And ID.
+	 */
+	public function get_user_by_provider( $provider, $uid, $email = null ) {
+
+		global $wpdb;
+
+		// Get SQL.
+		$sql = "SELECT user_id FROM " . $wpdb->prefix . "logy_users WHERE provider = %s AND identifier = %s";
+
+		// if ( ! empty( $email ) && $provider == 'Facebook' ) {
+		// 	$sql = "SELECT user_id FROM $this->users_table WHERE provider = %s AND email = %s";
+		// 	$uid = $email;
+		// }
+
+		// Get Result
+		$result = $wpdb->get_var( $wpdb->prepare( $sql, $provider, $uid ) );
+
+		// Return Result.
+		return $result;
+	}
+
+
+	/**
+	 * Get User ID by Verified Email.
+	 */
+	function get_user_verified_email( $email ) {
+
+		global $wpdb;
+		// Get SQL.
+		$sql = "SELECT user_id FROM " . $wpdb->prefix . "logy_users WHERE emailverified = %s";
+		// Get Result
+		$result = $wpdb->get_var( $wpdb->prepare( $sql, $email ) );
+		// Return Result.
+		return $result;
 	}
 	 
 	/**
@@ -265,7 +321,7 @@ class Logy_Social {
 		$provider = ! empty( $get_session ) ? $get_session->provider : $this->get_provider();
 
 		// Store All User Social Account Data In Database.
-		$this->logy->query->store_user_data( $user_id, $provider, $user );
+		$this->store_user_data( $user_id, $provider, $user );
 
 		if ( yz_social_registration_needs_activation() ) {
 			if ( bp_registration_needs_activation() ) {
@@ -368,7 +424,7 @@ class Logy_Social {
 		);
 
 		// Insert User and Get User ID.
-		$user_id = $this->logy->social->bp_register_user( $user_data );
+		$user_id = $this->bp_register_user( $user_data );
 
 		if ( is_wp_error( $user_id ) ) {
 			// Parse errors into a string and append as parameter to redirect
@@ -380,7 +436,7 @@ class Logy_Social {
 			$get_session = json_decode( logy_user_session_data( 'get' ) );
 
 			// Store All User Social Account Data In Database.
-			$this->logy->query->store_user_data( $user_id, $get_session->provider, $user );
+			$this->store_user_data( $user_id, $get_session->provider, $user );
 
 			if ( yz_social_registration_needs_activation() ) {
 				if ( bp_registration_needs_activation() ) {
@@ -523,7 +579,7 @@ class Logy_Social {
 	/**
 	 * Get Provide Adapter.
 	 */
-	function get_user_profile( $adapter ) {
+	function getUserProfile( $adapter ) {
 
         if ( $adapter->isConnected() ) {
         	$profile = $adapter->getUserProfile();
@@ -533,23 +589,6 @@ class Logy_Social {
         // Display Can't Connect to provider Message
         $this->redirect( 'cant_connect' );
 
-	}
-
-	/**
-	 * Get Provide Adapter.
-	 */
-	function get_adapter( $provider ) {
-		// // Inculde Authetification.
-		// if ( ! class_exists( 'Hybrid_Auth', false ) ) {
-	 //    	require_once( YZ_PUBLIC_CORE . 'hybridauth/Hybrid/Auth.php' );
-		// }
-
-		// if ( ! class_exists( 'Hybrid_Endpoint', false ) ) {
-		//     require_once( YZ_PUBLIC_CORE . 'hybridauth/Hybrid/Endpoint.php' );
-		// }
-
-		// Return Adapter
-		return HybridAuth::getAdapter( $provider );
 	}
 
 	/**
@@ -570,9 +609,18 @@ class Logy_Social {
 	public function clear_session() {
 
 		// Clear Sessions.
-		unset( $_SESSION['HA::STORE'] );
-		unset( $_SESSION['HA::CONFIG'] );
-		unset( $_SESSION['logy::profile'] );
+		if ( isset( $_SESSION['HA::STORE'] ) ) {
+			unset( $_SESSION['HA::STORE'] );
+		}
+
+		if ( isset( $_SESSION['HA::CONFIG'] ) ) {
+			unset( $_SESSION['HA::CONFIG'] );
+		}
+
+		if ( isset( $_SESSION['logy::profile'] ) ) {
+			unset( $_SESSION['logy::profile'] );
+		}
+		
 		logy_user_session_data( 'delete' );
 		logy_user_profile_data( 'delete' );
 
@@ -623,20 +671,20 @@ class Logy_Social {
         $network = strtolower( $provider );
 
 		// Get Network status 
-		$network_status = logy_options( 'logy_' . $network . '_app_status' );
+		$network_status = yz_option( 'logy_' . $network . '_app_status' );
 
 		// Check if network is enabled.
 		$is_enabled = ( 'off' == $network_status ) ? false: true;
 
 		// Get Networks Params. 
 		$config['keys'] = array(
-			'secret' 	=> logy_options( 'logy_' . $network . '_app_secret' ),
+			'secret' 	=> yz_option( 'logy_' . $network . '_app_secret' ),
 		);
 
 		if ( $network == 'twitter' ) {
-			$config['keys']['key'] = logy_options( 'logy_' . $network . '_app_key' );
+			$config['keys']['key'] = yz_option( 'logy_' . $network . '_app_key' );
 		} else {
-			$config['keys']['id'] = logy_options( 'logy_' . $network . '_app_key' );
+			$config['keys']['id'] = yz_option( 'logy_' . $network . '_app_key' );
 		}
 
 		if ( 'Google' == $provider ) {
@@ -693,6 +741,123 @@ class Logy_Social {
 		return $inactive_account_msg . $resend_string;
 
     }
+
+
+	/**
+	 * Store User Data Into Database.
+	 */
+	public function store_user_data( $user_id = null, $provider, $profile ) {
+		
+		// Update Buddypress User Meta.
+		yz_update_user_profile_meta( $user_id, $profile );
+
+		// Update User Avatar.
+		if ( isset( $profile->photoURL ) && ! empty( $profile->photoURL ) ) {
+			
+			// Upload Image Localy.
+			$profile_photo = yz_upload_image_by_url( $profile->photoURL );
+			
+			if ( ! empty( $profile_photo ) ) {
+				$profile->photoURL = $profile_photo;
+			}
+
+			if ( is_multisite() ) {
+				update_user_option( $user_id, 'logy_avatar', $profile->photoURL );
+			} else {
+				update_user_meta( $user_id, 'logy_avatar', $profile->photoURL );
+			}
+		
+		}
+		
+		if ( isset( $profile->firstname ) ) {
+			update_user_meta( $user_id, 'first_name', $profile->firstname );
+		}
+
+		if ( isset( $profile->lastname ) ) {
+			update_user_meta( $user_id, 'last_name', $profile->firstname );
+		}
+
+		// Get Profile Hash
+		$new_hash = sha1( serialize( $profile ) );		
+
+		// Get User Old Profile Data.
+		$old_profile = $this->get_user_profile( $user_id, $provider, $profile->identifier );
+ 		
+		// Check if user data changed since last login.
+		if ( ! empty( $old_profile ) && $old_profile[0]->profile_hash == $new_hash ) {
+			return false;	
+		}
+
+		// Get Table ID.
+		$table_id = ! empty( $old_profile ) ? $old_profile[0]->id : null;
+
+		// Get Table Data.
+		$table_data = array(
+			'id' => $table_id,
+			'user_id' => $user_id,
+			'provider' => $provider,
+			'profile_hash' => $new_hash
+		);
+
+		// Get Table Fields.
+		$fields = array( 
+			'identifier', 
+			'profileurl', 
+			'websiteurl', 
+			'photourl', 
+			'displayname', 
+			'description', 
+			'firstname', 
+			'lastname', 
+			'gender', 
+			'language', 
+			'age', 
+			'birthday', 
+			'birthmonth', 
+			'birthyear', 
+			'email', 
+			'emailverified', 
+			'phone', 
+			'address', 
+			'country', 
+			'region', 
+			'city', 
+			'zip'
+		);
+
+		foreach( $profile as $key => $value ) {
+			// Transform Key To LowerCase.
+			$key = strtolower( $key );
+			// Get Table Data.
+			if ( in_array( $key, $fields ) ) {
+				$table_data[ $key ] = (string) $value;
+			}
+		}
+
+		global $wpdb;
+
+		// Replace Data.
+		$wpdb->replace( $wpdb->prefix . 'logy_users', $table_data ); 
+
+		return false;
+	}
+
+
+	/**
+	 * Get User Profile Data.
+	 */
+	public function get_user_profile( $user_id, $provider, $uid ) {
+		
+		global $wpdb;
+
+		// Get SQL Request.
+		$sql = "SELECT * FROM " . $wpdb->prefix ."logy_users WHERE user_id = %d AND provider = %s AND identifier = %s";
+
+		// Get Result.		
+		$result = $wpdb->get_results( $wpdb->prepare( $sql, $user_id, $provider, $uid ) );
+
+		return $result;
+	}
 
 	/**
 	 * Get Provider.

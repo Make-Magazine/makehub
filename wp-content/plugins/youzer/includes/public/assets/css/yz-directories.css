@@ -612,7 +612,7 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 #youzer .yzm-user-actions .yzmd-second-btn,
 #youzer .yzm-user-actions .yz-send-message {
     color: #898989;
-    margin-right: 5px;
+    /*margin-right: 5px;*/
     border: 1px solid #eee;
     background-color: transparent;
 }
@@ -765,7 +765,7 @@ body #buddypress #yz-directory-search-box form input[type=submit],
 	font-size: 13px;
 	min-width: 140px;    
 	font-weight: 600;
-	line-height: 20px;
+	line-height: 14px;
 	text-transform: capitalize;
 	background-color: #f6f6f6;
 }

@@ -1,7 +1,33 @@
 <?php
 
 /**
- * Force Xprofile Compoentn
+ * Set Default ProfileTab.
+ */
+function yz_set_profile_default_tab() {
+
+    if ( bp_is_user() ) {
+
+        // Get Default Tab.
+        $default_tab = yz_option( 'yz_profile_default_tab', 'overview' );
+
+        if ( ! empty( $default_tab ) )  {
+            
+            buddypress()->active_components[ $default_tab ] = 1;
+
+            // Set Default Tab
+            if ( ! defined( 'BP_DEFAULT_COMPONENT' ) ) {
+                define( 'BP_DEFAULT_COMPONENT', $default_tab );
+            }
+
+        }
+
+    }
+}
+
+add_action( 'bp_init', 'yz_set_profile_default_tab', 3 );
+
+/**
+ * Force Xprofile Component
  */
 function yz_force_xprofile_activation( $components ) {
 
@@ -12,6 +38,7 @@ function yz_force_xprofile_activation( $components ) {
     }
 
     return $components;
+
 }
 
 add_filter( 'bp_active_components', 'yz_force_xprofile_activation', 10 );
@@ -22,16 +49,62 @@ add_filter( 'bp_active_components', 'yz_force_xprofile_activation', 10 );
 function yz_options( $option_id ) {
 
     // Get Option Value.
-    $option_value = get_option( $option_id );
+    if ( ! is_multisite() ) {
+        $option_value = get_option( $option_id );
+    } else {
+        $option_value = get_blog_option( null, $option_id );
+    }
 
     // Filter Option Value.
     $option_value = apply_filters( 'youzer_edit_options', $option_value, $option_id );
 
     if ( ! isset( $option_value ) || empty( $option_value ) ) {
-        $Yz_default_options = yz_standard_options();
+        $Yz_default_options = yz_default_options();
         if ( isset( $Yz_default_options[ $option_id ] ) ) {
             $option_value = $Yz_default_options[ $option_id ];
         }
+    }
+
+    return $option_value;
+}
+
+/**
+ * Get Option
+ */
+function yz_option( $option, $default = null ) {
+    
+    if ( ! is_multisite() ) {
+        $option_value = get_option( $option, $default );
+    } else {
+        $option_value = get_blog_option( null, $option, $default );
+    }
+
+    return $option_value;
+}
+
+/**
+ * Update Option
+ */
+function yz_update_option( $option, $value = null, $autoload = false ) {
+    
+    if ( ! is_multisite() ) {
+        $option_value = update_option( $option, $value,  $autoload );
+    } else {
+        $option_value = update_blog_option( null, $option, $value );
+    }
+
+    return $option_value;
+}
+
+/**
+ * Delete Option
+ */
+function yz_delete_option( $option ) {
+    
+     if ( ! is_multisite() ) {
+        $option_value = delete_option( $option );
+    } else {
+        $option_value = delete_blog_option( null, $option );
     }
 
     return $option_value;
@@ -44,11 +117,11 @@ function yz_get_select_options( $option_id ) {
 
     // Set Up Variables
     $array_values  = array();
-    $option_value  = get_option( $option_id );
+    $option_value  = yz_option( $option_id );
 
     // Get Default Value
     if ( ! $option_value ) {
-        $Yz_default_options = yz_standard_options();
+        $Yz_default_options = yz_default_options();
         $option_value = $Yz_default_options[ $option_id ];
     }
 
@@ -60,21 +133,20 @@ function yz_get_select_options( $option_id ) {
 }
 
 /**
- * # Youzer Standard Options .
+ * # Youzer Default Options .
  */
-function yz_standard_options() {
+function yz_default_options() {
 
     $default_options = array(
 
         // Author Box
-        'yz_author_photo_effect'        => 'on',
+        // 'yz_author_photo_effect'        => 'on',
         'yz_display_author_networks'    => 'on',
         'yz_enable_author_pattern'      => 'on',
         'yz_enable_author_overlay'      => 'on',
         'yz_author_photo_border_style'  => 'circle',
         'yz_author_sn_bg_type'          => 'silver',
         'yz_author_sn_bg_style'         => 'radius',
-        'yz_author_meta_type'           => 'location',
         'yz_author_meta_type'           => 'full_location',
         'yz_author_meta_icon'           => 'fas fa-map-marker',
         'yz_author_layout'              => 'yzb-author-v1',
@@ -93,8 +165,8 @@ function yz_standard_options() {
         // User Profile Header  
         'yz_profile_photo_effect'           => 'on',
         'yz_display_header_site'            => 'on',
-        'yz_display_header_networks'        => 'on',
-        'yz_display_header_location'        => 'on',
+        // 'yz_display_header_networks'        => 'on',
+        // 'yz_display_header_location'        => 'on',
         'yz_enable_header_pattern'          => 'on',
         'yz_enable_header_overlay'          => 'on',
         'yz_header_enable_user_status'      => 'on',
@@ -153,41 +225,20 @@ function yz_standard_options() {
         'yz_display_post_cats'       => 'on',
         'yz_display_post_comments'   => 'on',
         'yz_display_post_readmore'   => 'on',
-        'yz_display_posts_tab'       => 'on',
         'yz_display_post_meta_icons' => 'on',
-        'yz_posts_tab_icon'          => 'fas fa-pencil-alt',
-        'yz_posts_tab_title'         => __( 'Posts', 'youzer' ),
 
         // Overview Tab
-        'yz_display_overview_tab' => 'on',
-        'yz_overview_tab_icon'    => 'fas fa-globe-asia',
-        'yz_bookmarks_tab_icon'    => 'fas fa-bookmark',
-        'yz_reviews_tab_icon'       => 'fas fa-star',
-        'yz_overview_tab_title'   => __( 'Overview', 'youzer' ),
-
-        // Overview Tab
-        'yz_display_wall_tab' => 'on',
-        'yz_wall_tab_icon'    => 'fas fa-address-card',
-        'yz_wall_tab_title'   => __( 'Wall', 'youzer' ),
-
-        // infos Tab
-        'yz_display_infos_tab'  => 'on',
-        'yz_info_tab_icon'      => 'fas fa-info',
-        'yz_info_tab_title' => __( 'Info', 'youzer' ),
+        // 'yz_wall_tab_icon'    => 'fas fa-address-card',
+        // 'yz_wall_tab_title'   => __( 'Wall', 'youzer' ),
 
         // Comments Tab
         'yz_profile_comments_nbr'     => 5,
         'yz_display_comment_date'     => 'on',
-        'yz_display_comments_tab'     => 'on',
         'yz_display_view_comment'     => 'on',
         'yz_display_comment_username' => 'on',
-        'yz_comments_tab_icon'        => 'far fa-comments',
-        'yz_comments_tab_title'       => __( 'Comments', 'youzer' ),
 
         // Media Tab
         'yz_user-media_tab_icon'        => 'fas fa-photo-video',
-        'yz_media_tab_icon'        => 'fas fa-photo-video',
-        'yz_media_tab_title'       => __( 'Media', 'youzer' ),
 
         // Widgets Settings
         'yz_display_wg_title_icon' => 'on',
@@ -195,10 +246,11 @@ function yz_standard_options() {
         'yz_wgs_border_style'      => 'radius',
 
         // Display Widget Titles
-        'yz_wg_media_display_title'     => 'on',
-        'yz_wg_sn_display_title'        => 'on',
         'yz_wg_link_display_title'      => 'off',
         'yz_wg_quote_display_title'     => 'off',
+        'yz_wg_slideshow_display_title' => 'off',
+        'yz_wg_user_tags_display_title' => 'off',
+        'yz_wg_media_display_title'     => 'on',
         'yz_wg_video_display_title'     => 'on',
         'yz_wg_rposts_display_title'    => 'on',
         'yz_wg_skills_display_title'    => 'on',
@@ -210,13 +262,13 @@ function yz_standard_options() {
         'yz_wg_reviews_display_title'   => 'on',
         'yz_wg_groups_display_title'    => 'on',
         'yz_wg_instagram_display_title' => 'on',
-        'yz_wg_slideshow_display_title' => 'off',
-        'yz_wg_user_tags_display_title' => 'off',
         'yz_wg_user_badges_display_title' => 'on',
         'yz_wg_user_balance_display_title' => 'off',
+        'yz_wg_social_networks_display_title' => 'on',
 
         // Widget Titles
         'yz_wg_post_title'      => __( 'Post', 'youzer' ),
+        'yz_wg_project_title'   => __( 'Project', 'youzer' ),
         'yz_wg_link_title'      => __( 'Link', 'youzer' ),
         'yz_wg_video_title'     => __( 'Video', 'youzer' ),
         'yz_wg_media_title'     => __( 'Media', 'youzer' ),
@@ -226,7 +278,6 @@ function yz_standard_options() {
         'yz_wg_reviews_title'   => __( 'Reviews', 'youzer' ),
         'yz_wg_friends_title'   => __( 'Friends', 'youzer' ),
         'yz_wg_groups_title'    => __( 'Groups', 'youzer' ),
-        'yz_wg_project_title'   => __( 'Project', 'youzer' ),
         'yz_wg_aboutme_title'   => __( 'About me', 'youzer' ),
         'yz_wg_services_title'  => __( 'Services', 'youzer' ),
         'yz_wg_portfolio_title' => __( 'Portfolio', 'youzer' ),
@@ -299,30 +350,24 @@ function yz_standard_options() {
         ),
 
         // Login Page Settings.
-        'yz_login_page' => null,
         'yz_login_page_type' => 'url',
         'yz_enable_ajax_login' => 'off',
         'yz_enable_login_popup' => 'off',
-        // 'yz_login_page_url' => wp_login_url(),
 
         // Services
         'yz_wg_max_services' => 4,
         'yz_display_service_icon' => 'on',
         'yz_display_service_text' => 'on',
         'yz_display_service_title' => 'on',
-        'yz_wg_service_icon_bg_format' => 'circle',
+        // 'yz_wg_service_icon_bg_format' => 'circle',
         'yz_wg_services_layout' => 'vertical-services-layout',
 
         // Slideshow
         'yz_wg_max_slideshow_items' => 3,
         'yz_slideshow_height_type' => 'fixed',
-        'yz_display_slideshow_title' => 'off',
 
         // Portfolio
         'yz_wg_max_portfolio_items' => 9,
-        'yz_display_portfolio_url'  => 'on',
-        'yz_display_portfolio_zoom' => 'on',
-        'yz_display_portfolio_title' => 'on',
 
         // Flickr
         'yz_wg_max_flickr_items' => 6,
@@ -330,21 +375,15 @@ function yz_standard_options() {
         // Friends
         'yz_wg_max_friends_items' => 5,
         'yz_wg_friends_layout' => 'list',
-        'yz_wg_friends_avatar_img_format' => 'circle',
 
         // Groups
         'yz_wg_max_groups_items' => 3,
-        'yz_wg_groups_avatar_img_format' => 'circle',
 
         // Instagram
         'yz_wg_max_instagram_items' => 9,
-        'yz_display_instagram_url'  => 'on',
-        'yz_display_instagram_zoom' => 'on',
-        'yz_display_instagram_title' => 'on',
 
         // Recent Posts
         'yz_wg_max_rposts' => 3,
-        'yz_wg_rposts_img_format' => 'circle',
 
         // Use Profile Effects
         'yz_use_effects' => 'off',
@@ -352,35 +391,35 @@ function yz_standard_options() {
 
         // Profile Main Content Available Widgets
         'yz_profile_main_widgets' => array(
-            array( 'slideshow'  => 'visible' ),
-            array( 'project'    => 'visible' ),
-            array( 'skills'     => 'visible' ),
-            array( 'portfolio'  => 'visible' ),
-            array( 'quote'      => 'visible' ),
-            array( 'instagram'  => 'visible' ),
-            array( 'services'   => 'visible' ),
-            array( 'post'       => 'visible' ),
-            array( 'link'       => 'visible' ),
-            array( 'video'      => 'visible' ),
-            array( 'reviews'    => 'visible' ),
+            'slideshow'  => 'visible',
+            'project'    => 'visible',
+            'skills'     => 'visible',
+            'portfolio'  => 'visible',
+            'quote'      => 'visible',
+            'instagram'  => 'visible',
+            'services'   => 'visible',
+            'post'       => 'visible',
+            'link'       => 'visible',
+            'video'      => 'visible',
+            'reviews'    => 'visible',
         ),
 
         // Profile Sidebar Available Widgets
         'yz_profile_sidebar_widgets' => array (
-            array( 'user_balance'    => 'visible' ),
-            array( 'user_badges'     => 'visible' ),
-            array( 'about_me'        => 'visible' ),
-            array( 'wall_media'      => 'visible' ),
-            array( 'social_networks' => 'visible' ),
-            array( 'friends'         => 'visible' ),
-            array( 'flickr'          => 'visible' ),
-            array( 'groups'          => 'visible' ),
-            array( 'recent_posts'    => 'visible' ),
-            array( 'user_tags'       => 'visible' ),
-            array( 'email'           => 'visible' ),
-            array( 'address'         => 'visible' ),
-            array( 'website'         => 'visible' ),
-            array( 'phone'           => 'visible' ),
+            'user_balance'    => 'visible',
+            'user_badges'     => 'visible',
+            'about_me'        => 'visible',
+            'wall_media'      => 'visible',
+            'social_networks' => 'visible',
+            'friends'         => 'visible',
+            'flickr'          => 'visible',
+            'groups'          => 'visible',
+            'recent_posts'    => 'visible',
+            'user_tags'       => 'visible',
+            'email'           => 'visible',
+            'address'         => 'visible',
+            'website'         => 'visible',
+            'phone'           => 'visible',
         ),
 
         // Profile 404
@@ -395,9 +434,6 @@ function yz_standard_options() {
         'yz_enable_panel_fixed_save_btn' => 'on',
         'yz_panel_scheme' => 'uk-yellow-scheme',
         'yz_tabs_list_icons_style' => 'yz-tabs-list-gradient',
-
-        // Tabs Settings.
-        'yz_display_profile_tabs_count' => 'on',
 
         // Panel Messages.
         'yz_msgbox_mailchimp' => 'on',
@@ -421,35 +457,41 @@ function yz_standard_options() {
         'yz_activity_privacy' => 'on',
         'yz_activity_mood' => 'on',
         'yz_activity_tag_friends' => 'on',
-        'yz_enable_youzer_activity_filter' => 'on',
+        // 'yz_enable_youzer_activity_filter' => 'on',
         'yz_enable_wall_url_preview' => 'on',
         'yz_enable_wall_activity_loader' => 'on',
         'yz_enable_wall_activity_effects' => 'on',
         'yz_enable_wall_posts_reply' => 'on',
-        'yz_enable_wall_giphy' => 'on',
         'yz_enable_wall_posts_likes' => 'on',
         'yz_enable_wall_posts_comments' => 'on',
         'yz_enable_wall_posts_deletion' => 'on',
         'yz_enable_activity_directory_filter_bar' => 'on',
         'yz_attachments_max_size' => 10,
         'yz_attachments_max_nbr'  => 200,
-        'yz_atts_allowed_images_exts' => array(
-            'png', 'jpg', 'jpeg', 'gif'
+        'yz_atts_allowed_images_exts' => array( 'png', 'jpg', 'jpeg', 'gif' ),
+        'yz_atts_allowed_videos_exts' => array( 'mp4', 'ogg', 'ogv', 'webm' ),
+        'yz_atts_allowed_audios_exts' => array( 'mp3', 'ogg', 'wav' ),
+        'yz_atts_allowed_files_exts'  => array( 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'pdf', 'rar', 'zip', 'mp4', 'mp3', 'ogg', 'pfi' ),
+
+        // Comments Attachments.
+        'yz_wall_comments_attachments' => 'on',
+        'yz_wall_comments_attachments_max_size' => 10,
+        'yz_wall_comments_attachments_extensions' => array(
+            'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'pdf', 'rar', 'zip', 'mp4', 'mp3', 'wav', 'ogg', 'pfi'
         ),
-        'yz_atts_allowed_videos_exts' => array(
-            'mp4', 'ogg', 'ogv', 'webm',
-        ),
-        'yz_atts_allowed_audios_exts' => array(
-            'mp3', 'ogg', 'wav',
-        ),
-        'yz_atts_allowed_files_exts' => array(
+        
+        // Messages Attachments.
+        'yz_messages_attachments' => 'on',
+        'yz_messages_attachments_max_size' => 10,
+        'yz_messages_attachments_extensions' => array(
             'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx', 'pdf', 'rar',
-            'zip', 'mp4', 'mp3', 'ogg', 'pfi'
+            'zip', 'mp4', 'mp3', 'wav', 'ogg', 'pfi'
         ),
 
         // Reviews Settings
         'yz_enable_reviews' => 'off',
         'yz_user_reviews_privacy' => 'public',
+        'yz_enable_author_box_ratings' => 'on',
         'yz_allow_users_reviews_edition' => 'off',
         'yz_profile_reviews_per_page' => 25,
         'yz_wg_max_reviews_items' => 3,
@@ -460,7 +502,6 @@ function yz_standard_options() {
         'yz_enable_bookmarks_privacy' => 'private',
 
         // Sticky Posts.
-        'yz_enable_sticky_posts' => 'on',
         'yz_enable_groups_sticky_posts' => 'on',
         'yz_enable_activity_sticky_posts' => 'on',
         
@@ -482,6 +523,7 @@ function yz_standard_options() {
         'yz_enable_wall_video' => 'on',
         'yz_enable_wall_quote' => 'on',
         'yz_enable_wall_status' => 'on',
+        'yz_enable_wall_giphy' => 'on',
         'yz_enable_wall_comments' => 'off',
         'yz_enable_wall_new_cover' => 'on',
         'yz_enable_wall_new_member' => 'on',
@@ -500,9 +542,6 @@ function yz_standard_options() {
 
         // Profile Settings
         'yz_allow_private_profiles' => 'off',
-
-        // Profile Settings
-        'yz_disable_bp_registration' => 'off',
 
         // Members Directory
         'yz_md_users_per_page' => 18,
@@ -526,7 +565,6 @@ function yz_standard_options() {
         // Groups Directory
         'yz_gd_groups_per_page' => 18,
         'yz_enable_gd_cards_cover' => 'on',
-        'yz_show_gd_cards_online_only' => 'on',
         'yz_enable_gd_groups_statistics' => 'on',
         'yz_enable_gd_cards_avatar_border' => 'on',
         'yz_enable_gd_cards_actions_buttons' => 'on',
@@ -557,6 +595,7 @@ function yz_standard_options() {
         'yz_enable_posts_emoji' => 'on',
         'yz_enable_comments_emoji' => 'on',
         'yz_enable_messages_emoji' => 'on',
+        'yz_enable_messages_attachments' => 'on',
 
         // General.
         'yz_buttons_border_style' => 'oval',
@@ -585,9 +624,8 @@ function yz_standard_options() {
         // Social Login
         'logy_social_btns_icons_position'   => 'logy-icons-left',
         'logy_social_btns_format'           => 'logy-border-radius',
-        'logy_social_btns_type'             => 'logy-only-icon',
+        'logy_social_btns_type'             => 'logy-only-icons',
         'logy_enable_social_login'          => 'on',
-        'logy_use_auth_modal'               => 'on',
         'logy_enable_social_login_email_confirmation' => 'on',
 
         // Lost Password Form
@@ -599,12 +637,9 @@ function yz_standard_options() {
         // Register Form
         'logy_show_terms_privacy_note'      => 'on',
         'logy_signup_form_enable_header'    => 'on',
-        'logy_signup_form_layout'           => 'logy-field-v1',
-        'logy_signup_icons_position'        => 'logy-icons-left',
         'logy_signup_actions_layout'        => 'logy-regactions-v1',
         'logy_signup_btn_icons_position'    => 'logy-icons-left',
         'logy_signup_btn_format'            => 'logy-border-radius',
-        'logy_signup_fields_format'         => 'logy-border-flat',
         'logy_signup_signin_btn_title'      => __( 'Log In', 'youzer' ),
         'logy_signup_form_title'            => __( 'Sign Up', 'youzer' ),
         'logy_signup_register_btn_title'    => __( 'Sign Up', 'youzer' ),
@@ -628,7 +663,6 @@ function yz_standard_options() {
         'yz_enable_woocommerce' => 'off',
         'yz_enable_mailster' => 'off',
         'yz_enable_mailchimp' => 'off',
-        'logy_notify_admin_on_registration' => 'on',
 
         // Admin Toolbar & Dashboard
         'logy_hide_subscribers_dash' => 'off',
@@ -641,26 +675,44 @@ function yz_standard_options() {
         'yz_active_styles' => array(),
 
     );
+
+    if ( yz_is_mycred_installed() ) {
+
+        // Options.
+        $mycred_options = array(
+            'yz_enable_mycred' => 'on',
+            'yz_badges_tab_icon' => 'fas fa-trophy',
+            'yz_enable_cards_mycred_badges' => 'on',
+            'yz_wg_max_card_user_badges_items' => 4,
+            'yz_mycred-history_tab_icon' => 'fas fa-history',
+            'yz_author_box_max_user_badges_items' => 3,
+            'yz_enable_author_box_mycred_badges' => 'on',
+            'yz_mycred_badges_tab_title' => __( 'Badges', 'youzer' ),
+            'yz_ctabs_mycred-history_thismonth_icon' => 'far fa-calendar-alt',
+            'yz_ctabs_leaderboard_month_icon' => 'far fa-calendar-alt',
+            'yz_ctabs_mycred-history_today_icon' => 'fas fa-calendar-check',
+            'yz_ctabs_leaderboard_today_icon' => 'fas fa-calendar-check',
+            'yz_ctabs_mycred-history_mycred-history_icon' => 'fas fa-calendar',
+            'yz_ctabs_mycred-history_thisweek_icon' => 'fas fa-calendar-times',
+            'yz_ctabs_leaderboard_week_icon' => 'fas fa-calendar-plus',
+            'yz_ctabs_mycred-history_yesterday_icon' => 'fas fa-calendar-minus',
+            'yz_ctabs_achievements_all_icon' => 'fas fa-award',
+            'yz_ctabs_achievements_earned_icon' => 'fas fa-user-check',
+            'yz_ctabs_achievements_unearned_icon' => 'fas fa-user-times',
+        );
+
+        $default_options = yz_array_merge( $default_options, $mycred_options );
+    }
     
-    // Filter.
-    $default_options = apply_filters( 'yz_default_options', $default_options );
-    
-    return $default_options;
+    return apply_filters( 'yz_default_options', $default_options );
 }
 
 /**
  * # Is Youzer Membership system is active.
  */
 function yz_is_membership_system_active() {
-
-    $active = false;
-
-    if ( 'off' != get_option( 'yz_activate_membership_system' ) ) {
-        $active = true;
-    }
-
+    $active = yz_option( 'yz_activate_membership_system', 'on' ) == 'off' ? false : true;
     return apply_filters( 'yz_is_membership_system_active', $active );
-
 }
 
 /**
@@ -669,9 +721,7 @@ function yz_is_membership_system_active() {
 function yz_get_current_page_url() {
 
     // Build the redirect URL.
-    $redirect_url  = is_ssl() ? 'https://' : 'http://';
-    $redirect_url .= $_SERVER['HTTP_HOST'];
-    $redirect_url .= $_SERVER['REQUEST_URI'];
+    $redirect_url = is_ssl() ? 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']: 'http://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
     return $redirect_url;
 }
@@ -684,19 +734,11 @@ function yz_generate_class( $classes ) {
     return implode( ' ' , array_filter( (array) $classes ) );
 }
 
-
 /**
  * # Get Profile Photo.
  */
 function yz_get_image_url( $img_url = null ) {
-
-    if ( ! empty( $img_url ) ) {
-        $img_path = $img_url;
-    } else {
-        $img_path = YZ_PA . 'images/default-img.png';
-    }
-
-    return $img_path;
+    return ! empty( $img_url ) ? $img_url : YZ_PA . 'images/default-img.png';
 }
 
 /**
@@ -737,66 +779,56 @@ function yz_popup_dialog( $type = null ) {
 
     <div id="uk_popup_<?php echo $form_type; ?>" class="uk-popup uk-<?php echo $form_class; ?>-popup" style="display: none">
         <div class="uk-popup-container">
-            <div class="uk-popup-msg"><?php yz_get_dialog_msg( $form_type ); ?></div>
-            <ul class="uk-buttons"><?php yz_get_dialog_buttons( $form_type ); ?></ul>
+            <div class="uk-popup-msg"><?php
+
+                if ( 'reset_all' == $form_type ) : ?>
+
+                <span class="dashicons dashicons-warning"></span>
+                <h3><?php _e( 'Are you sure you want to reset all the settings?', 'youzer' ); ?></h3>
+                <p><?php _e( 'Be careful! this will reset all the youzer plugin settings.', 'youzer' ); ?></p>
+
+                <?php elseif ( 'reset_tab' == $form_type ) : ?>
+
+                <span class="dashicons dashicons-warning"></span>
+                <h3><?php _e( 'Are you sure you want to do this ?', 'youzer' ); ?></h3>
+                <p><?php _e( 'Be careful! This will reset all the current tab settings.', 'youzer' ); ?></p>
+
+                <?php elseif ( 'error' == $form_type ) : ?>
+
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3><?php _e( 'Oops!', 'youzer' ); ?></h3>
+                <div class="uk-msg-content"></div>
+
+            <?php endif; ?>
+            </div>
+
+            <ul class="uk-buttons"><?php 
+
+                // Get Cancel Button title.
+                $confirm = __( 'confirm', 'youzer' );
+                $cancel  = ( 'error' == $form_type ) ? __( 'Got it!', 'youzer' ) : __( 'cancel', 'youzer' );
+
+                if ( 'reset_all' == $form_type ) : ?>
+                    <li>
+                        <a class="uk-confirm-popup yz-confirm-reset" data-reset="all"><?php echo $confirm; ?></a>
+                    </li>
+                <?php elseif ( 'reset_tab' == $form_type ) : ?>
+                    <li>
+                        <a class="uk-confirm-popup yz-confirm-reset" data-reset="tab"><?php echo $confirm; ?></a>
+                    </li>
+                <?php endif; ?>
+
+                <li><a class="uk-close-popup"><?php echo $cancel; ?></a></li>
+
+                <?php
+
+             ?></ul>
             <i class="fas fa-times uk-popup-close"></i>
         </div>
     </div>
 
     <?php
 }
-
-/**
- * Get Pop Up Dialog Buttons
- */
-function yz_get_dialog_buttons( $type = null ) {
-
-    // Get Cancel Button title.
-    $confirm = __( 'confirm', 'youzer' );
-    $cancel  = ( 'error' == $type ) ? __( 'Got it!', 'youzer' ) : __( 'cancel', 'youzer' );
-
-    if ( 'reset_all' == $type ) : ?>
-        <li>
-            <a class="uk-confirm-popup yz-confirm-reset" data-reset="all"><?php echo $confirm; ?></a>
-        </li>
-    <?php elseif ( 'reset_tab' == $type ) : ?>
-        <li>
-            <a class="uk-confirm-popup yz-confirm-reset" data-reset="tab"><?php echo $confirm; ?></a>
-        </li>
-    <?php endif; ?>
-
-    <li><a class="uk-close-popup"><?php echo $cancel; ?></a></li>
-
-    <?php
-}
-
-/**
- * Get Pop Up Dialog Message
- */
-function yz_get_dialog_msg( $type = null ) {
-
-    if ( 'reset_all' == $type ) : ?>
-
-    <span class="dashicons dashicons-warning"></span>
-    <h3><?php _e( 'Are you sure you want to reset all the settings?', 'youzer' ); ?></h3>
-    <p><?php _e( 'Be careful! this will reset all the youzer plugin settings.', 'youzer' ); ?></p>
-
-    <?php elseif ( 'reset_tab' == $type ) : ?>
-
-    <span class="dashicons dashicons-warning"></span>
-    <h3><?php _e( 'Are you sure you want to do this ?', 'youzer' ); ?></h3>
-    <p><?php _e( 'Be careful! This will reset all the current tab settings.', 'youzer' ); ?></p>
-
-    <?php elseif ( 'error' == $type ) : ?>
-
-    <i class="fas fa-exclamation-triangle"></i>
-    <h3><?php _e( 'Oops!', 'youzer' ); ?></h3>
-    <div class="uk-msg-content"></div>
-
-    <?php endif;
-
-}
-
 
 /**
  * # Form Messages.
@@ -864,11 +896,8 @@ function youzer_template( $old_template ) {
     // New Template.
     $new_template = $old_template;
 
-    // Init Var.
-    $enable_youzer_page = bp_current_component() && ! is_404();
-
     // Check if its youzer plugin page
-    if ( apply_filters( 'yz_enable_youzer_page', $enable_youzer_page ) ) {
+    if ( apply_filters( 'yz_enable_youzer_page', bp_current_component() ) ) {
         
         // Get Data.
         $file = 'youzer-template.php';
@@ -902,18 +931,18 @@ function yz_get_theme_template_path() {
  * Write Log.
  **/
 function yz_write_log( $log )  {
-      if ( is_array( $log ) || is_object( $log ) ) {
-         error_log( print_r( $log, true ) );
-      } else {
-         error_log( $log );
-      }
-   }
+    if ( is_array( $log ) || is_object( $log ) ) {
+        error_log( print_r( $log, true ) );
+    } else {
+        error_log( $log );
+    }
+}
 
 /**
  * Get File URL By Name.
  */
 function yz_get_file_url( $file ) {
-    
+
     if ( empty( $file ) ) {
         return false;
     }
@@ -952,7 +981,7 @@ function yz_get_file_url( $file ) {
 /**
  * Get File URL By Name.
  */
-function yz_get_wall_file_url( $file, $show_original = false ) {
+function yz_get_media_url( $file, $show_original = false ) {
 
     if ( empty( $file ) ) {
         return false;
@@ -972,7 +1001,7 @@ function yz_get_wall_file_url( $file, $show_original = false ) {
     }
     
     // Return File Url.
-    return apply_filters( 'yz_get_wall_file_url', $YZ_upload_url . $file_name, $file_name );
+    return apply_filters( 'yz_get_media_url', $YZ_upload_url . $file_name, $file_name );
 
 }
 
@@ -1001,9 +1030,6 @@ function yz_save_image_thumbnail( $file, $activity_id = null ) {
     // Get File Path.
     $file_path = $YZ_upload_dir . $filename;
 
-    // Get New Image Path.
-    $new_img_path = $YZ_upload_dir . $file_name . '_thumb.jpg';
-
     switch ( $file_type['type'] ) {
 
         case 'image/jpeg': {
@@ -1025,34 +1051,14 @@ function yz_save_image_thumbnail( $file, $activity_id = null ) {
     // Get Compression Quality.
     $quality = apply_filters( 'yz_attachments_compression_quality', 80 );
 
-    if ( imagejpeg( $img, $new_img_path , $quality ) ) {
+    // Get New Image Path.
+    $thumb_filename = wp_unique_filename( $YZ_upload_dir, $file_name . '-thumb.jpg' );
 
-        // Get New File Name.
-        $file_basename = $file_name . '_thumb.jpg';
+    if ( imagejpeg( $img, $YZ_upload_dir . $thumb_filename , $quality ) ) {
 
-        // if ( yz_is_activity_component() ) {
+        imagedestroy( $img );
 
-        //     // Get Activity ID.
-        //     $activity_id = bp_get_activity_id() ? bp_get_activity_id() : $activity_id;
-
-        //     // Get Attachments.
-        //     $attachments = (array) unserialize( bp_activity_get_meta( $activity_id, 'attachments' ) );
-
-        //     // Get File Key
-        //     $file_key = array_search( $file, $attachments );
-
-        //     // // Add Thumbnail To Data.
-        //     $attachments[ $file_key ]['thumbnail'] = $file_basename;
-
-        //     // Serialize Data.
-        //     $attachments = serialize( $attachments );
-            
-        //     // Update Data.
-        //     bp_activity_update_meta( $activity_id, 'attachments', $attachments );
-
-        // }
-
-        return $file_basename;
+        return $thumb_filename;
 
     }
     
@@ -1238,33 +1244,21 @@ function yz_is_mycred_installed() {
 /**
  * Check is BBpress is Installed & Active.
  */
-function yz_is_bbpress_installed() {
+// function yz_is_bbpress_installed() {
 
-    if ( ! class_exists( 'bbPress' ) )  {
-        return false;
-    }
+//     if ( ! class_exists( 'bbPress' ) )  {
+//         return false;
+//     }
 
-    return true;
+//     return true;
 
-}
+// }
 
 /**
  * Check is bbpress is Installed & Active.
  */
 function yz_is_bbpress_active() {
-    
-    if ( ! yz_is_bbpress_installed() ) {
-        return false;
-    }
-
-    // Get Value.
-    $is_bbpress_enabled = yz_options( 'yz_enable_bbpress' );
-
-    if ( 'off' == $is_bbpress_enabled ) {
-        return false;
-    }
-
-    return true;
+    return yz_option( 'yz_enable_bbpress', 'on' ) == 'on' ? true : false;
 }
 
 /**
@@ -1423,6 +1417,13 @@ function yz_get_server_var( $server_key, $filter_type = 'FILTER_SANITIZE_STRING'
 }
 
 /**
+ * Check Is Buddypress Followers installed !
+ */
+function yz_is_bpfollowers_active() {
+    return apply_filters( 'yz_is_follows_active', defined( 'BP_FOLLOW_DIR' ) ? true : false );
+}
+
+/**
  * Upload Image By Url.
  **/
 function yz_upload_image_by_url( $link = false ) {
@@ -1472,14 +1473,140 @@ function yz_upload_image_by_url( $link = false ) {
            
 }
 
-// // <?php
-// // Change Emoji PNG CDN
-// function yzc_edit_emoji_png_url( $url ) {
-//     return 'https://cdn.jsdelivr.net/emojione/assets/3.1/png/32/';
-// }
-// add_filter( 'emoji_url', 'yzc_edit_emoji_png_url' );
-// // Change Emoji SVG CDN
-// function yzc_edit_emoji_svg_url( $url ) {
-//     return 'https://cdn.jsdelivr.net/emojione/assets/svg/';
-// }
-// add_filter( 'emoji_svg_url', 'yzc_edit_emoji_svg_url' );
+// Buddypress ID.
+function yz_buddypress_id() {
+    return 'buddypress';
+}
+
+/*
+ * Get File Format Size.
+ **/
+function yz_file_format_size( $size ) {
+
+    // Get Sizes.
+    $sizes = array(
+        __( 'Bytes', 'youzer' ),
+        __( 'KB', 'youzer' ),
+        __( 'MB', 'youzer' )
+    );
+
+    if ( 0 == $size ) { 
+        return( 'n/a' );
+    } else {
+        return ( round( $size/pow( 1024, ( $i = floor( log( $size, 1024 ) ) ) ), 2 ) . ' ' . $sizes[ $i ] );
+    }
+
+}
+
+/**
+ * Array Merge.
+ */
+function yz_array_merge( $array, $array2 ) {
+    foreach( $array2 as $k => $i ) {
+        $array[ $k ] = $i;
+    }
+    return $array;
+}
+
+
+/**
+ * # Get Files Name Excerpt.
+ */
+function yz_get_filename_excerpt( $name, $lenght = 25 ) {
+
+    // Get Name Lenght.
+    $text_lenght = strlen( $name );
+
+    // If Name is not too long keep it.
+    if ( $text_lenght < $lenght ) {
+        return $name;
+    }
+
+    // Return The New Name.
+    return substr_replace( $name, '...', $lenght / 2, $text_lenght - $lenght );
+}
+
+/**
+ * Disable Gravatars
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
+
+/**
+ * Get Image Size.
+ */
+function yz_get_image_size( $url, $referer = null ) {
+
+    if ( ! function_exists( 'curl_version' ) ) {
+        return array( 0, 0 );
+    }
+    
+    // Set headers    
+    $headers = array( 'Range: bytes=0-131072' );   
+
+    if ( ! empty( $referer ) ) { array_push( $headers, 'Referer: ' . $referer ); }
+
+    // Get remote image
+    $ch = curl_init();    
+    curl_setopt( $ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.2) AppleWebKit/536.6 (KHTML, like Gecko) Chrome/20.0.1090.0 Safari/536.6' );
+    curl_setopt( $ch, CURLOPT_URL, $url );
+    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+    curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 1 );
+    curl_setopt($ch, CURLOPT_TIMEOUT,  5);
+    $data = curl_exec( $ch );
+    $http_status = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+    $curl_errno = curl_errno( $ch );
+    curl_close( $ch );
+
+    // Get network stauts
+    if ( $http_status != 200 ) {
+        // echo 'HTTP Status[' . $http_status . '] Error [' . $curl_errno . ']';
+        return array( 0, 0 );
+    }
+
+    // Process image
+    $image = imagecreatefromstring( $data );
+    $dims = array( imagesx( $image ), imagesy( $image ) );
+    imagedestroy( $image );
+
+    return $dims;
+}
+
+/**
+ * Check if Review Option is Enabled.
+ */
+function yz_is_reviews_active() {
+    $activate = yz_option( 'yz_enable_reviews', 'off' ) == 'on' ? true : false;
+    return apply_filters( 'yz_is_reviews_active', $activate );
+}
+
+/**
+ * Init Reviews
+ */
+function yz_init_reviews() {
+    
+    if ( yz_is_reviews_active() ) {
+        global $Youzer;
+        require YZ_PUBLIC_CORE . 'class-yz-reviews.php';
+        require YZ_PUBLIC_CORE . 'functions/yz-reviews-functions.php';
+        require YZ_PUBLIC_CORE . 'reviews/yz-reviews-query.php';
+        $Youzer->reviews = new Youzer_Reviews();
+    }
+
+}
+
+add_action( 'plugins_loaded', 'yz_init_reviews', 999 );
+
+
+/**
+ * Check is Mycred is Installed & Active.
+ */
+function yz_is_mycred_active() {
+    
+    if ( ! yz_is_mycred_installed() ) {
+        return false;
+    }
+
+    return apply_filters( 'yz_is_mycred_active', 'on' == yz_option( 'yz_enable_mycred', 'on' ) ? true : false );
+
+}

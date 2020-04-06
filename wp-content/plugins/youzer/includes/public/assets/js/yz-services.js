@@ -10,7 +10,7 @@
 
             if ( current_wg_nbr > yz_max_services_nbr )  {
                 // Show Error Message
-                $.yz_DialogMsg( 'error', yz.items_nbr + yz_max_services_nbr );
+                $.yz_DialogMsg( 'error', Yz_Services.items_nbr + yz_max_services_nbr );
                 return false;
             }
 
@@ -20,8 +20,8 @@
                     option_item     : 'icon',
                     cell            : yz_service_nextCell,
                     options_name    : 'youzer_services',
-                    input_desc      : yz.serv_desc_icon,
-                    label_title     : yz.service_icon,
+                    input_desc      : Yz_Services.serv_desc_icon,
+                    label_title     : Yz_Services.service_icon,
                     input_type      : 'icon',
                     inner_option    : true
                 }),
@@ -29,9 +29,9 @@
                 service_title = $.ukai_form_input( {
                     option_item     : 'title',
                     cell            : yz_service_nextCell,
-                    input_desc      : yz.serv_desc_title,
+                    input_desc      : Yz_Services.serv_desc_title,
                     options_name    : 'youzer_services',
-                    label_title     : yz.service_title,
+                    label_title     : Yz_Services.service_title,
                     input_type      : 'text',
                     inner_option    : true
                 }),
@@ -40,8 +40,8 @@
                     option_item     : 'description',
                     cell            : yz_service_nextCell,
                     options_name    : 'youzer_services',
-                    input_desc      : yz.serv_desc_desc,
-                    label_title     : yz.service_desc,
+                    input_desc      : Yz_Services.serv_desc_desc,
+                    label_title     : Yz_Services.service_desc,
                     input_type      : 'textarea',
                     inner_option    : true
                 });
@@ -56,9 +56,45 @@
             yz_service_nextCell++;
 
             // Check Account Items List
-            $.yz_CheckItemsList();
+            $.yz_CheckList();
 
         });
+
+        /**
+         * Remove Items.
+         */
+        $( document ).on( 'click', '.yz-delete-item', function( e ) {
+            
+            $( this ).parent().fadeOut( function() {
+
+                // Remove Item
+                $( this ).remove();
+
+                // Check Widget Items
+                $.yz_CheckList();
+            
+            });
+
+        });
+
+        /**
+         * # Check Account Items
+         */
+        $.yz_CheckList = function() {
+
+            // Check Services List.
+            if ( $( '.yz-wg-services-options li' )[0] ) {
+                $( '.yz-no-services' ).remove();
+            } else if ( ! $( '.yz-no-services' )[0] ) {
+                $( '.yz-wg-services-options' ).append(
+                    '<p class="yz-no-content yz-no-services">' + Yz_Services.no_items + '</p>'
+                );
+            }
+
+        }
+    
+        // Check Account Items List.
+        $.yz_CheckList();        
 
     });
 

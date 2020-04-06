@@ -4,17 +4,15 @@
  * BuddyPress - Activity Post Form
  */
 
+do_action( 'bp_activity_before_post_form' );
+
 if ( yz_is_wall_posting_form_active() ) :
 
 ?>
 
-<form action="<?php bp_activity_post_form_action(); ?>" method="post" id="yz-wall-form" name="whats-new-form" enctype="multipart/form-data">
+<form action="<?php bp_activity_post_form_action(); ?>" method="post" id="yz-wall-form" class="yz-wall-form" name="whats-new-form" enctype="multipart/form-data">
 	
-	<div class="yz-wall-options">
-
-		<?php yz_wall_form_post_types_buttons(); ?>
-
-	</div>
+	<div class="yz-wall-options"><?php do_action( 'yz_activity_form_post_types' );  ?></div>
 
 	<div id="whats-new-content" class="yz-wall-content">
 
@@ -28,10 +26,10 @@ if ( yz_is_wall_posting_form_active() ) :
 			><?php if ( isset( $_GET['r'] ) ) : ?>@<?php echo sanitize_textarea_field( $_GET['r'] ); ?> <?php endif; ?></textarea>
 
 
-		<?php if ( 'on' == yz_options( 'yz_enable_posts_emoji' ) ) : ?><div class="yz-load-emojis yz-load-posts-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
+		<?php if ( 'on' == yz_option( 'yz_enable_posts_emoji', 'on' ) ) : ?><div class="yz-load-emojis yz-load-posts-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
 		
 			<!--  -->
-		<?php if ( 'on' == yz_options( 'yz_enable_wall_link' ) ) : ?>
+		<?php if ( 'on' == yz_option( 'yz_enable_wall_link', 'on' ) ) : ?>
 		<div class="yz-wall-custom-form yz-wall-link-form" data-post-type="activity_link">
 
 			<div class="yz-wall-cf-item">
@@ -49,7 +47,7 @@ if ( yz_is_wall_posting_form_active() ) :
 		</div>
 		<?php endif; ?>
 	
-		<?php if ( 'on' == yz_options( 'yz_enable_wall_url_preview' ) ) : ?>
+		<?php if ( 'on' == yz_option( 'yz_enable_wall_url_preview', 'on' ) ) : ?>
 			<div class="yz-lp-prepost" data-loaded="false">
 				<div class="lp-prepost-container">
 					
@@ -102,7 +100,7 @@ if ( yz_is_wall_posting_form_active() ) :
 
     	<?php endif; ?>
             
-		<?php if ( 'on' == yz_options( 'yz_enable_wall_quote' ) ) : ?>
+		<?php if ( 'on' == yz_option( 'yz_enable_wall_quote', 'on' ) ) : ?>
 		<div class="yz-wall-custom-form yz-wall-quote-form" data-post-type="activity_quote">
 
 			<div class="yz-wall-cf-item">
@@ -116,7 +114,7 @@ if ( yz_is_wall_posting_form_active() ) :
 		</div>
 		<?php endif; ?>
 
-		<?php if ( 'on' == yz_options( 'yz_enable_wall_giphy' ) ) : ?>
+		<?php if ( 'on' == yz_option( 'yz_enable_wall_giphy', 'on' ) ) : ?>
 		<div class="yz-wall-custom-form yz-wall-giphy-form" data-post-type="activity_giphy">
 
 			<div class="yz-giphy-loading-preview"><i class="fas fa-spin fa-spinner"></i></div>
@@ -213,12 +211,21 @@ if ( yz_is_wall_posting_form_active() ) :
 	<?php do_action( 'bp_activity_post_form_after_actions' ) ?>
 	
 	<div class="yz-wall-attachments">
-		<input hidden="true" id="yz-upload-attachments" type="file" name="attachments[]" multiple>
+		<input hidden="true" class="yz-upload-attachments" type="file" name="attachments[]" multiple>
 		<div class="yz-form-attachments"></div>
 	</div>
 
 	<?php wp_nonce_field( 'yz_post_update', '_yz_wpnonce_post_update' ); ?>
 
+	<?php
+
+	/**
+	 * Fires after the activity post form.
+	 *
+	 * @since 1.2.0
+	 */
+	do_action( 'bp_after_activity_post_form' ); ?>
+	
 </form>
 
 <?php endif; ?>

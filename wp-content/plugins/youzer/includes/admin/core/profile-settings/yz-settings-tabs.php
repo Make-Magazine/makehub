@@ -8,6 +8,8 @@ function yz_tabs_settings() {
 
     global $Yz_Settings;
 
+    // include_once YZ_PUBLIC_CORE . 'class-yz-tabs.php';
+    
     $Yz_Settings->get_field(
         array(
             'title' => __( 'tabs general settings', 'youzer' ),
@@ -20,14 +22,14 @@ function yz_tabs_settings() {
     $default_option = array( '' => __( '-- Select Default Tab --', 'youzer' ) );
     $default_tab_options = $default_option + $default_tab_options;
 
-    $Yz_Settings->get_field(
-        array(
-            'id'    => 'yz_display_profile_tabs_count',
-            'title' => __( 'Display tabs count', 'youzer' ),
-            'desc'  => __( 'show profile tabs count', 'youzer' ),
-            'type'  => 'checkbox'
-        )
-    );
+    // $Yz_Settings->get_field(
+    //     array(
+    //         'id'    => 'yz_display_profile_tabs_count',
+    //         'title' => __( 'Display tabs count', 'youzer' ),
+    //         'desc'  => __( 'show profile tabs count', 'youzer' ),
+    //         'type'  => 'checkbox'
+    //     )
+    // );
 
     $Yz_Settings->get_field(
         array(
@@ -41,16 +43,15 @@ function yz_tabs_settings() {
 
    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
+
     // Get Tabs
     $custom_tabs = yz_get_profile_primary_nav();
 
-    if ( empty( $custom_tabs ) ) {
-        return false;
+    if ( ! empty( $custom_tabs ) ) {
+        yz_custom_buddypress_tabs_settings( $custom_tabs );
     }
 
     // Get Custom Tabs Settings.
-    yz_custom_buddypress_tabs_settings( $custom_tabs );
-        
     $Yz_Settings->get_field(
         array(
             'title' => __( 'pagination styling settings', 'youzer' ),
@@ -107,6 +108,7 @@ function yz_custom_buddypress_tabs_settings( $custom_tabs ) {
 
     // Default Tab Values.
     $default_tabs = yz_profile_tabs_default_value();
+    $tabs_settings = yz_option( 'yz_profile_tabs' );
 
     foreach ( $custom_tabs as $tab ) {
 
@@ -119,15 +121,6 @@ function yz_custom_buddypress_tabs_settings( $custom_tabs ) {
         // Get Tab Slug
         $tab_slug = isset( $tab['slug'] ) ? $tab['slug'] : null;
 
-        // Get Tab ID.
-        $tab_id = 'yz_ctabs_' . $tab['slug'] . '_icon';
-
-        // Get Default Tab Icon
-        $std_icon = isset( $default_tabs[ $tab_slug ] ) ? $default_tabs[ $tab_slug ]['icon'] : 'fas fa-globe';
-
-        // Get Default Tab Visibility
-        $std_visibility = isset( $default_tabs[ $tab_slug ] ) ? $default_tabs[ $tab_slug ]['visibility'] : 'on';
-
         $Yz_Settings->get_field(
             array(
                 'title' => sprintf( __( '%s tab', 'youzer' ), $tab_name ),
@@ -137,55 +130,60 @@ function yz_custom_buddypress_tabs_settings( $custom_tabs ) {
             )
         );
 
+        $default_visibility = isset( $default_tabs[ $tab_slug ] ) ? $default_tabs[ $tab_slug ]['visibility'] : 'on';
+
         $Yz_Settings->get_field(
             array(
                 'type'  => 'checkbox',
-                'std'   => $std_visibility,
-                'id'    => 'yz_display_' . $tab_slug . '_tab',
+                'std'   => yz_admin_get_tab_option_value( $tab_slug, 'visibility', $default_visibility ),
+                'id'    => 'visibility',
                 'title' => sprintf( __( 'Display tab', 'youzer' ), $tab_name ),
                 'desc'  => sprintf( __( 'show %s tab', 'youzer' ), $tab_name ),
-            )
+            ), false, 'yz_profile_tabs[' . $tab_slug .']'
         );
+
+        $default_icon = isset( $default_tabs[ $tab_slug ] ) ? $default_tabs[ $tab_slug ]['icon'] : 'fas fa-globe-asia';
 
         $Yz_Settings->get_field(
             array(
                 'type'  => 'icon',
-                'std'   => $std_icon,
-                'id'    => 'yz_' . $tab_slug . '_tab_icon',
+                'std'   => yz_admin_get_tab_option_value( $tab_slug, 'icon', $default_icon ),
+                'id'    => 'icon',
                 'title' => sprintf( __( '%s icon', 'youzer' ), $tab_name ),
                 'desc'  => sprintf( __( '%s tab icon', 'youzer' ), $tab_name ),
-            )
+            ), false, 'yz_profile_tabs[' . $tab_slug .']'
         );
 
         $Yz_Settings->get_field(
             array(
                 'type'  => 'text',
-                'std'   => $tab_name,
-                'id'    => 'yz_' . $tab_slug . '_tab_title',
+                'std'   => yz_admin_get_tab_option_value( $tab_slug, 'name', $tab_name ),
+                'id'    => 'name',
                 'title' => sprintf( __( '%s title', 'youzer' ), $tab_name ),
                 'desc' => sprintf( __( '%s tab title', 'youzer' ), $tab_name ),
-            )
+            ), false, 'yz_profile_tabs[' . $tab_slug .']'
         );
 
         $Yz_Settings->get_field(
             array(
+                'id'    => 'position',
                 'type'  => 'number',
-                'std'   => $tab['position'],
-                'id'    => 'yz_' . $tab_slug . '_tab_order',
+                'std'   => yz_admin_get_tab_option_value( $tab_slug, 'position', $tab['position'] ),
                 'title' => sprintf( __( '%s order', 'youzer' ), $tab_name ),
                 'desc'  => sprintf( __( '%s tab order', 'youzer' ), $tab_name ),
-            )
+            ), false, 'yz_profile_tabs[' . $tab_slug .']'
         );
 
         if ( in_array( $tab_slug, yz_profile_deletable_tabs() ) ) {
+
             $Yz_Settings->get_field(
                 array(
-                    'std'   => 'off',
+                    'std'   => yz_admin_get_tab_option_value( $tab_slug, 'deleted', 'off' ),
                     'type'  => 'checkbox',
-                    'id'    => 'yz_delete_' . $tab_slug . '_tab',
+                    'id'    => 'deleted',
                     'title' => sprintf( __( 'Delete tab', 'youzer' ), $tab_name ),
                     'desc'  => sprintf( __( 'Delete %s tab', 'youzer' ), $tab_name ),
-                )
+                ), false, 'yz_profile_tabs[' . $tab_slug .']'
             );
         }
 
@@ -196,83 +194,79 @@ function yz_custom_buddypress_tabs_settings( $custom_tabs ) {
 }
 
 /**
- * # Get Third Party Tabs Settings.
+ * Get Tab Option
  */
-function yz_profile_subtabs_settings() {
+function yz_admin_get_tab_option_value( $slug, $option, $std = null ) {
 
-    // Get Primary Third Party Tabs.
-    $primary_tabs = yz_get_profile_third_party_tabs();
+    $tabs = yz_option( 'yz_profile_tabs' );
 
-    if ( empty( $primary_tabs ) ) {
-        // Get Message.
-        $no_subtabs = __( 'Sorry, No Subtabs Settings Exist !' );
-        // Print Message.
-        echo '<p class="yz-no-content">' . $no_subtabs . '</p>';
-        return false;
+    if ( isset( $tabs[ $slug ][ $option ] ) ) {
+        return $tabs[ $slug ][ $option ];
     }
 
-    // Init Vars.
-    $bp = buddypress();
-
-    foreach ( $primary_tabs as $primary_tab ) {
-
-        // Get Tab Slug
-        $tab_slug = isset( $primary_tab['slug'] ) ? $primary_tab['slug'] : null;
-
-        // Get Tab Navigation  Menu
-        $secondary_tabs = $bp->members->nav->get_secondary( array( 'parent_slug' => $tab_slug ) );
-
-        if ( empty( $secondary_tabs ) ) {
-            continue;
-        }
-
-        // Get Settings.
-        yz_third_party_subtabs_settings( $secondary_tabs, $primary_tab );
-
-    }
-
+    return $std;
 }
 
 /**
- * Get Third Party SubTabs Settings
+ * Profile Default Nav Options
  */
-function yz_third_party_subtabs_settings( $tabs, $primary_tab ) {
+function yz_get_profile_default_nav_options() {
 
-    global $Yz_Settings;
+    // Get Youzer Custom Tabs
+    $primary_tabs = yz_get_profile_primary_nav();
 
-    // Get Primary Tab Slug
-    $primary_slug = isset( $primary_tab['slug'] ) ? $primary_tab['slug'] : null;
-
-    // Get Primary Tab Name
-    $primary_name = isset( $primary_tab['name'] ) ? $primary_tab['name'] : $primary_slug;
-
-    $Yz_Settings->get_field(
-        array(
-            'title' => sprintf( __( '%s Sub Tabs Settings', 'youzer' ), $primary_name ),
-            'type'  => 'openBox'
-        )
-    );
-
-    foreach ( $tabs as $tab ) {
-
-        // Get Tab Name
-        $tab_name = isset( $tab['name'] ) ? $tab['name'] : $tab['slug'];
-
-        // Get Tab ID.
-        $tab_id = 'yz_ctabs_' . $primary_slug . '_' . $tab['slug'] . '_icon';
-
-        $Yz_Settings->get_field(
-            array(
-                'std' => 'fas fa-globe',
-                'type'  => 'icon',
-                'id'    => $tab_id,
-                'title' => sprintf( __( '%s icon', 'youzer' ), $tab_name ),
-                'desc' => sprintf( __( '%s tab icon', 'youzer' ), $tab_name ),
-            )   
-        );
-    
+    if ( empty( $primary_tabs ) ) {
+        return false;
     }
-    
-    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
+    // Init
+    $tab_options = array();
+
+    foreach ( $primary_tabs as $tab ) {
+        
+        // Get Tab Slug.
+        $tab_slug = $tab['slug'];
+        
+        // Get Tab ID.
+        $tab_id = yz_get_custom_tab_id_by_slug( $tab_slug );
+
+        // Get Custom Tab Link.
+        if ( yz_is_custom_tab( $tab_id ) ) {
+
+            // Get Tab Type.
+            $tab_type = yz_get_custom_tab_data( $tab_id, 'type' );
+
+            if ( 'link' == $tab_type ) {
+                continue;
+            }
+        }
+
+        // Check is Tab Deleted.
+        // if ( yz_is_profile_tab_deleted( $tab_slug ) ) {
+        //     continue;
+        // }
+
+        // Set Option.
+        $tab_options[ $tab_slug ] = _bp_strip_spans_from_title( $tab['name'] );
+
+    }
+
+    return $tab_options;
+}
+
+/**
+ * Get Profile Deletable Tabs.
+ */
+function yz_profile_deletable_tabs() {
+
+    // Get Default Tabs Slugs.
+    $default_tabs = yz_get_youzer_default_tabs();
+
+    // Get Youzer Custom Tabs Slugs.
+    $custom_tabs = (array) yz_custom_youzer_tabs_slugs();
+
+    // Merge Tabs Slugs.
+    $all_tabs = array_merge( $default_tabs, $custom_tabs );
+
+    return $all_tabs;
 }

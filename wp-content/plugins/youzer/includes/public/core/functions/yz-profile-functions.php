@@ -15,41 +15,31 @@ function yz_get_profile_class() {
     $profile_class[] = 'yz-wild-content';
 
     // Get Tabs List Icons Style
-    $profile_class[] = yz_options( 'yz_tabs_list_icons_style' );
+    $profile_class[] = yz_option( 'yz_tabs_list_icons_style', 'yz-tabs-list-gradient' );
 
     // Get Elements Border Style.
-    $profile_class[] = 'yz-wg-border-' . yz_options( 'yz_wgs_border_style' );
+    $profile_class[] = 'yz-wg-border-' . yz_option( 'yz_wgs_border_style', 'radius' );
 
     // Get Navbar Layout
-    $navbar_layout = yz_options( 'yz_vertical_layout_navbar_type' );
+    $navbar_layout = yz_option( 'yz_vertical_layout_navbar_type', 'wild-navbar' );
 
     // Get Page Buttons Style
-    $profile_class[] = 'yz-page-btns-border-' . yz_options( 'yz_buttons_border_style' );
+    $profile_class[] = 'yz-page-btns-border-' . yz_option( 'yz_buttons_border_style', 'oval' );
 
     // Add Vertical Wild Navbar. 
     if ( yz_is_wild_navbar_active() ) { 
         $profile_class[] = "yz-vertical-wild-navbar";
     }
 
-    // Get Profile 404 Page Class
-    $profile_class[] = yz_is_404_profile() ? ' yz-404-profile' : null;
-
-    return yz_generate_class( $profile_class );
+    return apply_filters( 'yz_profile_class', yz_generate_class( $profile_class ) );
 }
 
 /**
  * Check is Wild Navbar Activated
  */
 function yz_is_wild_navbar_active() {
-
-    // Get Profile Layout
-    $profile_layout = yz_get_profile_layout();
-
-    // Get Navbar Layout
-    $navbar_layout = yz_options( 'yz_vertical_layout_navbar_type' );
-
     // Add Vertical Wild Navbar. 
-    if ( 'yz-vertical-layout' == $profile_layout && 'wild-navbar' == $navbar_layout ) { 
+    if ( 'yz-vertical-layout' == yz_get_profile_layout() && 'wild-navbar' == yz_option( 'yz_vertical_layout_navbar_type', 'wild-navbar' ) ) {
         return true;
     }
 
@@ -57,74 +47,27 @@ function yz_is_wild_navbar_active() {
 }
 
 /**
- * # Navbar Settings Menu.
- */
-function yz_account_settings_menu() {
-    
-    do_action( 'yz_profile_navbar_right_area' );
-    
-    // Get Header Layout.
-    $header_layout = yz_get_profile_layout();
-
-    if ( ! bp_is_my_profile() && 'yz-horizontal-layout' == $header_layout  ) {
-        yz_get_social_buttons();
-        return false;
-    }
-
-    if ( ! bp_is_my_profile() ) {
-        return false;
-    }
-
-    ?>
-
-    <div class="yz-settings-area">
-
-        <?php 
-
-            // Get Navbar Quick Buttons.
-            if ( 'yz-horizontal-layout' == $header_layout || yz_is_wild_navbar_active() ) {
-                yz_user_quick_buttons( bp_loggedin_user_id() );
-            }
-
-        ?>
-
-        <?php if ( apply_filters( 'yz_display_user_profile_quick_menu', true ) ):  ?>
-        <div class="yz-nav-settings">
-            <div class="yz-settings-img"><?php echo bp_core_fetch_avatar( array( 'item_id' => bp_displayed_user_id(), 'type' => 'thumb', 'width' => 35, 'height' => 35 ) ); ?></div>
-            <i class="fas fa-angle-down yz-settings-icon"></i>
-        </div>
-        <?php global $Youzer; $Youzer->user->settings(); ?>
-        <?php endif; ?>
-        
-    </div>
-
-    <?php
-
-}
-
-/**
  * # Add Login Button to Profile Page.
  */
 function yz_sidebar_login_button() {
 
-    // Get Login Button Visibility Option.
-    $hide_button = ( 'off' == yz_options( 'yz_profile_login_button' ) ) ? true : false;
-
     // Check Visibility Requirements.
-    if ( $hide_button || 'yz-vertical-layout' == yz_get_profile_layout() || is_user_logged_in() ) {
+    if ( is_user_logged_in() || 'off' == yz_option( 'yz_profile_login_button', 'on' ) || 'yz-vertical-layout' == yz_get_profile_layout() ) {
         return false;
     }
 
-    global $Youzer, $wp;
+    $widgets = yz_widgets();
 
     // Get Box Data Attribute
-    $box_data = $Youzer->widgets->get_loading_effect( 'fadeInDown' );
+    $box_data = $widgets->get_loading_effect( 'fadeInDown' );
 
     // Get Box Class Name.
     $box_class[] = 'yz-profile-login';
 
     // Get Effect Style
-    $box_class[] = $Youzer->widgets->get_loading_effect( 'fadeInDown', 'class' );
+    $box_class[] = $widgets->get_loading_effect( 'fadeInDown', 'class' );
+
+    unset( $widgets );
 
     ?>
 
@@ -146,25 +89,20 @@ function yz_post_img() {
 
     global $post;
 
-    // Get Post Format
-    $post_format = get_post_format();
-    $post_format = ! empty( $post_format ) ? $post_format : 'standard';
 
     if ( has_post_thumbnail() ) {
 
-        // Get Data
-        $post_thumb = get_the_post_thumbnail_url( 'large' );
-
     ?>
 
-    <div class="yz-post-img" style="background-image: url(<?php echo $post_thumb; ?>);"></div>
+    <div class="yz-post-img" style="background-image: url(<?php echo get_the_post_thumbnail_url( 'large' ); ?>);"></div>
 
     <?php
 
     } elseif ( ! has_post_thumbnail() ) {
-        echo '<div class="ukai-alt-thumbnail">';
-        echo '<div class="thumbnail-icon"><i class="'. yz_get_format_icon( $post_format ) .'"></i></div>';
-        echo '</div>';
+        // Get Post Format
+        $post_format = get_post_format();
+        $post_format = ! empty( $post_format ) ? $post_format : 'standard';
+        echo '<div class="ukai-alt-thumbnail"><div class="thumbnail-icon"><i class="'. yz_get_format_icon( $post_format ) .'"></i></div></div>';
     }
 }
 
@@ -290,7 +228,7 @@ add_action( 'bp_setup_nav', 'yz_hide_profile_settings_page_for_other_users', 15 
  */
 function yz_display_profile() {
 
-    if ( 'off' == yz_options( 'yz_allow_private_profiles' ) ) {
+    if ( 'off' == yz_option( 'yz_allow_private_profiles', 'off' ) ) {
         return true;
     }
 
@@ -333,109 +271,6 @@ function yz_attachments_get_cover_image_dimensions( $wh ) {
 add_filter( 'bp_attachments_get_cover_image_dimensions', 'yz_attachments_get_cover_image_dimensions' );
 
 /**
- * 404 Porfile Template
- */
-function yz_404_profile_template() {
-
-    // Get Header
-    get_header();
-
-    // Get Profile Template.
-    include YZ_TEMPLATE . 'profile-template.php';
-
-    // Get Footer
-    get_footer();
-    
-}
-
-/**
- * # Get 404 Profile Template
- */
-function yz_get_404_profile_template( $template ) {
-
-    if ( is_404() && yz_is_404_profile() ) {
-
-        if ( ! yz_show_spammer_404() ) {
-
-            global $wp_query;
-
-            status_header( 200 );
-            
-            // Mark Page As 404.
-            $wp_query->is_404 = false;
-
-        }
-
-        // Add 404 Profile Content.
-        add_filter( 'yz_user_profile_username', 'yz_add_404_profile_page_username' );
-        add_action( 'yz_get_profile_header_user_meta', 'yz_add_404_profile_header_meta' );
-        add_action( 'yz_profile_main_content', array( youzer()->profile, 'profile_404' ) );
-        add_filter( 'yz_user_profile_avatar_img', 'yz_404_user_profile_avatar' );
-        add_filter( 'yz_user_profile_cover', 'yz_404_user_profile_cover' );
-        
-        return yz_404_profile_template();
-
-    }
-
-    return $template;
-}
-
-add_filter( 'youzer_template', 'yz_get_404_profile_template' );
-
-/**
- * 404 Profile Username
- */
-function yz_add_404_profile_page_username() {
-    return __( '404 Profile', 'youzer' );
-}
-
-/**
- * 404 Profile Meta.
- */
-function yz_add_404_profile_header_meta() {
-
-    // Get Meta.
-    $meta = '<li><i class="fas fa-map-marker-alt"></i><span>' . __( '404 city', 'youzer' ) . '</span></li>';
-    $meta .= '<li><i class="fas fa-link"></i><span>' . __( 'www.page.404', 'youzer' ) . '</span></li>';
-
-    echo apply_filters( 'yz_add_404_profile_header_meta', $meta );
-
-}
-
-/**
- * Change Cover.
- */
-function yz_404_user_profile_cover( $default_cover ) {
-
-    // Get Cover Path.
-    $cover_path = yz_options( 'yz_profile_404_cover' );
-    
-    if ( ! empty( $cover_path ) ) {
-        return "style='background-image:url( $cover_path ); background-size: cover;'";
-    }
-
-    return $default_cover;
-}
-
-/**
- * Change Avatar.
- */
-function yz_404_user_profile_avatar( $default_avatar ) {
-
-    // Get 404 Profile Picture
-    $avatar_404 = yz_options( 'yz_profile_404_photo' );
-
-    if ( ! empty( $avatar_404 ) ) {
-        return yz_get_avatar_img_by_url( $avatar_404 );
-    }
-
-    return $default_avatar;
-}
-
-/**
- * Profile Cover
- */
-/**
  * Replace Author Url By Buddypress Profile Url.
  */
 function yz_edit_author_link_url( $link, $author_id ) {
@@ -464,24 +299,6 @@ function yz_redirect_author_page_to_bp_profile() {
 add_action( 'template_redirect', 'yz_redirect_author_page_to_bp_profile', 5 );
 
 /**
- * Set Default Profile Avatar.
- */
-function yz_set_default_profile_avatar( $avatar, $params ) {
-
-    // Get Default Avatar.
-    $default_avatar = yz_options( 'yz_default_profiles_avatar' );
-
-    if ( empty( $default_avatar ) ) {
-        $default_avatar = $avatar;
-    }
-
-    return apply_filters( 'yz_set_default_profile_avatar', $default_avatar, $params );
-
-}
-
-add_filter( 'bp_core_default_avatar_user', 'yz_set_default_profile_avatar', 10, 2 );
-
-/**
  * Check if User Has Gravatar
  */
 function yz_user_has_gravatar( $email_address ) {
@@ -503,70 +320,45 @@ function yz_user_has_gravatar( $email_address ) {
 /**
  * Add Profiles Open Graph Support.
  */
-function yz_profiles_open_graph() {
+// function yz_profiles_open_graph() {
 
-    if ( ! bp_is_user() || bp_is_single_activity() ) {
-        return false;
-    }
+//     if ( ! bp_is_user() || bp_is_single_activity() ) {
+//         return false;
+//     }
 
-    // global $Youzer;
+//     // Get Displayed Profile user id.
+//     $user_id = bp_displayed_user_id();
 
-    // Get Displayed Profile user id.
-    $user_id = bp_displayed_user_id();
-
-    // Get Username
-    $user_name = bp_core_get_user_displayname( $user_id );
+//     // Get Username
+//     $user_name = bp_core_get_user_displayname( $user_id );
     
-    // Get User Cover.
-    $user_cover = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'members', 'item_id' => $user_id ) );
+//     // Get User Cover.
+//     $user_cover = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'members', 'item_id' => $user_id ) );
 
-    // Get User Cover Image
-    $user_image = apply_filters( 'yz_og_profile_cover_image', $user_cover );
+//     // Get User Cover Image
+//     $user_image = apply_filters( 'yz_og_profile_cover_image', $user_cover );
 
-    // Get Avatar if Cover Not found.
-    if ( empty( $user_image ) ) {
-        $user_image = apply_filters( 'yz_og_profile_default_thumbnail', null );
-        $size = array( 'width' => BP_AVATAR_THUMB_WIDTH, 'height' => BP_AVATAR_THUMB_HEIGHT );
-    } else {
-        $size = bp_attachments_get_cover_image_dimensions( 'xprofile' );
-    }
+//     // Get Avatar if Cover Not found.
+//     if ( empty( $user_image ) ) {
+//         $user_image = apply_filters( 'yz_og_profile_default_thumbnail', null );
+//         $size = array( 'width' => BP_AVATAR_THUMB_WIDTH, 'height' => BP_AVATAR_THUMB_HEIGHT );
+//     } else {
+//         $size = bp_attachments_get_cover_image_dimensions( 'xprofile' );
+//     }
 
-    // Get User Description.
-    $user_desc = get_the_author_meta( 'description', $user_id );
+//     // Get User Description.
+//     $user_desc = get_the_author_meta( 'description', $user_id );
 
-    // Get Page Url !
-    $url = bp_core_get_user_domain( $user_id );
+//     // Get Page Url !
+//     $url = bp_core_get_user_domain( $user_id );
 
-    // if description empty get about me description
-    if ( empty( $user_desc ) ) {
-        $user_desc = get_the_author_meta( 'wg_about_me_bio', $user_id );
-    }
+//     // if description empty get about me description
+//     if ( empty( $user_desc ) ) {
+//         $user_desc = get_the_author_meta( 'wg_about_me_bio', $user_id );
+//     }
 
+//     yz_get_open_graph_tags( 'profile', $url, $user_name, $user_desc, $user_image, $size );
 
-    yz_get_open_graph_tags( 'profile', $url, $user_name, $user_desc, $user_image, $size );
+// }
 
-}
-
-add_action( 'wp_head', 'yz_profiles_open_graph' );
-
-/**
- * # 404 Profile Scripts.
- */
-function yz_404_profile_scripts() {
-
-    if ( yz_is_404_profile() ) {
-        wp_enqueue_style( 'yz-profile' );
-        wp_enqueue_style( 'yz-schemes' );
-    }
-
-}
-
-add_action( 'wp_enqueue_scripts', 'yz_404_profile_scripts' );
-
-/**
- * Media Slug
- */
-function yz_profile_media_slug() {
-    $slug = function_exists( 'is_rtmedia_page' ) ? 'user-media' : 'media';
-    return apply_filters( 'yz_profile_media_slug', $slug );
-}
+// add_action( 'wp_head', 'yz_profiles_open_graph' );

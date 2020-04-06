@@ -58,10 +58,8 @@ do_action( 'bp_before_groups_loop' ); ?>
 					<?php do_action( 'bp_directory_groups_after_group_name' ); ?>
 					<div class="item-meta">
 						<?php if ( bp_is_groups_directory() ) : ?>
-							<?php global $Youzer; ?>
 							<div class="group-status">
-								<?php $group = groups_get_group( array( 'group_id' => bp_get_group_id() ) );?>
-								<?php $Youzer->group->status( $group ); ?>
+								<?php echo yz_get_group_status( bp_get_group_status() ); ?>
 							</div>
 						<?php else : ?>
 							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_group_last_active( 0, array( 'relative' => false ) ) ); ?>"><?php printf( __( 'active %s', 'youzer' ), bp_get_group_last_active() ); ?></span>
@@ -85,7 +83,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 					}
 				?>
 
-				<?php if ( 'on' == yz_options( 'yz_enable_gd_cards_actions_buttons' ) && is_user_logged_in() ) : ?>
+				<?php if ( 'on' == yz_option( 'yz_enable_gd_cards_actions_buttons', 'on' ) && is_user_logged_in() ) : ?>
 				<div class="action"><?php
 
 					/**

@@ -6,7 +6,7 @@
 function yz_admin_pages() {
     // Youzer Admin Pages
     $admin_pages = array(
-        'youzer-panel', 'yz-profile-settings', 'yz-widgets-settings', 'yz-membership-settings'
+        'youzer-panel', 'yz-profile-settings', 'yz-widgets-settings', 'yz-membership-settings', 'yz-extensions-settings'
     );
 
     return apply_filters( 'yz_admin_pages', $admin_pages );
@@ -162,17 +162,17 @@ function yz_bp_customize_toolbar( $wp_admin_bar ) {
 
         }
         
-        if (  bp_is_active( 'activity' ) ) {
+        // if (  bp_is_active( 'activity' ) ) {
 
-            // Modify "Activity" Title.
-            $wp_admin_bar->add_node(
-                array(
-                    'id'   => 'my-account-activity',
-                    'title'=> yz_options( 'yz_wall_tab_title' )
-                )
-            );
+        //     // Modify "Activity" Title.
+        //     $wp_admin_bar->add_node(
+        //         array(
+        //             'id'   => 'my-account-activity',
+        //             'title'=> yz_options( 'yz_wall_tab_title' )
+        //         )
+        //     );
 
-        }
+        // }
 
         // Remove "Settings( General & Profile )" Link.
         $wp_admin_bar->remove_node( 'my-account-settings-general' );
@@ -184,56 +184,11 @@ function yz_bp_customize_toolbar( $wp_admin_bar ) {
 add_action( 'admin_bar_menu', 'yz_bp_customize_toolbar', 999 );
 
 /**
- * Remove Topbar activity menu
- */
-function yz_remove_top_bar_activity_menu( $wp_admin_bar ) {
-
-    if ( bp_is_active( 'activity' ) && 'on' == yz_options( 'yz_display_wall_tab' ) ) {
-        return false;
-    }
-        
-    // Remove Activity Menu.
-    $wp_admin_bar->remove_node( 'my-account-activity' );
-
-}
-
-add_action( 'admin_bar_menu', 'yz_remove_top_bar_activity_menu', 999 );
-
-/**
- * Change Activity Name to wall.
- */
-function yz_rename_profile_activity_tab() {
-    
-    if ( ! bp_is_user() ) {
-        return false;
-    }
-
-    if ( bp_is_active( 'activity' ) ) {
-        // Get Wall Tab.
-        $tab_title = yz_options( 'yz_wall_tab_title' );
-
-        // Change "Activity" to "wall"
-        buddypress()->members->nav->edit_nav( array( 'name' => $tab_title, 'position' => 3 ), bp_get_activity_slug() );
-    }
-
-    if ( bp_is_active( 'settings' ) ) {
-        // Change "Settings" to "Account Settings"
-        buddypress()->members->nav->edit_nav( array( 'name' => __( 'Account Settings', 'youzer' ) ), bp_get_settings_slug() );
-    }
-
-    // Change "Profile" to "Profile Settings"
-    buddypress()->members->nav->edit_nav( array( 'name' => __( 'Profile Settings', 'youzer' ) ), bp_get_profile_slug() );
-
-}
-
-add_action( 'bp_actions', 'yz_rename_profile_activity_tab', 1 );
-
-/**
  * Install Buddypress Activity Privacy.
  */
 function yz_install_bp_activity_privacy() {
 
-    if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
+    if ( ! yz_option( 'yz_install_bp_activity_privacy' ) ) {
 
         global $bp, $wpdb;
 
@@ -243,7 +198,7 @@ function yz_install_bp_activity_privacy() {
            $wpdb->query("ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'");
         }
 
-        update_option( 'yz_install_bp_activity_privacy', 1 );
+        update_option( 'yz_install_bp_activity_privacy', 1, 'no' );
     
     }
 

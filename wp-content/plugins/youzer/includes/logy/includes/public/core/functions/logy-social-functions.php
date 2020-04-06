@@ -14,7 +14,7 @@ function logy_get_social_login_box( $attrs = null ) {
     $providers = apply_filters( 'yz_forms_social_login_providers', logy_get_providers() );
 
     // Get Buttons Type
-    $btns_type = isset( $attrs['social_button_type'] ) ? $attrs['social_button_type'] : logy_options( 'logy_social_btns_type' );
+    $btns_type = isset( $attrs['social_button_type'] ) ? $attrs['social_button_type'] : yz_option( 'logy_social_btns_type', 'logy-only-icons' );
 
     // Action
 	do_action( 'logy_social_box_style' );
@@ -65,50 +65,6 @@ add_action( 'logy_before_login_fields', 'logy_get_social_login_box' );
 add_action( 'bp_before_account_details_fields', 'logy_get_social_login_box' );
 
 /**
- * Get Available Social Networks.
- */
-function logy_get_providers() {
-	return apply_filters( 'logy_providers_list', array( 'Facebook', 'Twitter', 'Google', 'LinkedIn', 'Instagram', 'TwitchTV' ) );
-}
-
-/**
- * Get Providers Data.
- */
-function logy_get_provider_data( $provider ) {
-
-	$data = array(
-		'Facebook' => array(
-			'app'	   => 'id',
-			'icon' 	   => 'fab fa-facebook-f'
-		),
-		'Twitter' => array(
-			'app'	   => 'key',
-			'icon' 	   => 'fab fa-twitter'
-		),
-		'Google' => array(
-			'app'	   => 'id',
-			'icon' 	   => 'fab fa-google'
-		),
-		'LinkedIn' => array(
-			'app'	   => 'id',
-			'icon' 	   => 'fab fa-linkedin-in'
-		),
-		'Instagram' => array(
-			'app'	   => 'id',
-			'icon' 	   => 'fab fa-instagram'
-		),
-		'TwitchTV' => array(
-			'app'	   => 'id',
-			'icon' 	   => 'fab fa-twitch'
-		)
-	);
-
-	$data = apply_filters( 'logy_providers_data', $data );
-
-	return $data[ $provider ];
-}
-
-/**
  * Get Social Buttons Class
  */
 function logy_get_social_box_class( $attrs = null ) {
@@ -120,13 +76,13 @@ function logy_get_social_box_class( $attrs = null ) {
 	$class[] = 'logy-social-buttons';
 
 	// Get Button Type
-	$class[] = isset( $attrs['social_button_type'] ) ? $attrs['social_button_type'] : logy_options( 'logy_social_btns_type' );
+	$class[] = isset( $attrs['social_button_type'] ) ? $attrs['social_button_type'] : yz_option( 'logy_social_btns_type', 'logy-only-icons' );
 
 	// Get Button Border Type
-	$class[] = logy_options( 'logy_social_btns_format' );
+	$class[] = yz_option( 'logy_social_btns_format', 'logy-border-radius' );
 
 	// Get Button Icons Position.
-	$class[] = logy_options( 'logy_social_btns_icons_position' );
+	$class[] = yz_option( 'logy_social_btns_icons_position', 'logy-icons-left' );
 
 	// Filter Class
 	$class = apply_filters( 'logy_social_box_class', $class );
@@ -141,7 +97,7 @@ function logy_is_social_login_enabled() {
 
 	// init Vars.
 	$available_network = false;
-	$is_social_login_enabled = logy_options( 'logy_enable_social_login' );
+	$is_social_login_enabled = yz_option( 'logy_enable_social_login', 'on' );
 
 	if ( 'off' == $is_social_login_enabled ) {
 		return false;
@@ -177,14 +133,12 @@ function logy_is_provider_available( $provider ) {
 
 	$network = strtolower( $provider );
 
-	$is_enabled = logy_options( 'logy_' . $network . '_app_status' );
-
-	if ( 'off' == $is_enabled ) {
+	if ( 'off' == yz_option( 'logy_' . $network . '_app_status' ) ) {
 		return false;
 	}
 
-	$app_key = logy_options( 'logy_' . $network . '_app_key' );
-	$app_secret = logy_options( 'logy_' . $network . '_app_secret' );
+	$app_key = yz_option( 'logy_' . $network . '_app_key' );
+	$app_secret = yz_option( 'logy_' . $network . '_app_secret' );
 
 	if ( empty( $app_key ) || empty( $app_secret ) ) {
 		return false;
@@ -192,34 +146,6 @@ function logy_is_provider_available( $provider ) {
 
 	return true;
 }
-
-/**
- * Edit User Activity Default Avatar.
- */
-function yz_set_social_media_default_avatar_url( $avatar_url = null, $params = null ) {
-	if ( ! isset( $params['item_id'] ) ) {
-		return $avatar_url;
-	}
-	// Get User Custom Avatar.
-	$user_custom_avatar = yz_get_user_social_avatar( $params['item_id'] );
-
-	if ( $user_custom_avatar ) {
-	    return esc_url( $user_custom_avatar );
-	}
-
-    return $avatar_url;
-}
-
-add_filter( 'yz_set_default_profile_avatar', 'yz_set_social_media_default_avatar_url', 10, 2 );
-
-/**
- * Disable Gravatars
- */
-function yz_disable_gravatars( $no_grav = null ) {
-	return true;
-}
-
-add_filter( 'bp_core_fetch_avatar_no_grav', 'yz_disable_gravatars' );
 
 /**
  * Check if User Has Gravatar
@@ -333,11 +259,11 @@ function yz_update_user_profile_meta_after_confirmation( $user_id ) {
 	if ( is_multisite() ) {
 		$activated_user_id = get_userdata( $user_id );
 		$a_user_email = $activated_user_id->user_email;
-		$a_social_data = $Logy->query->wpmu_update_user_social_data( $a_user_email, $user_id );		
+		$a_social_data = logy_wpmu_update_user_social_data( $a_user_email, $user_id );		
 	}
 	
 
-	$profile = $Logy->query->get_user_stored_social_data( $user_id );
+	$profile = logy_get_user_stored_social_data( $user_id );
 
 	if ( empty( $profile ) ) {
 		return false;
@@ -384,20 +310,34 @@ function yz_update_user_profile_meta_after_confirmation( $user_id ) {
 
 add_action( 'bp_core_activated_user', 'yz_update_user_profile_meta_after_confirmation' );
 
+/**
+ * Get User By Email.
+ */
+function logy_wpmu_update_user_social_data( $email, $user_id ) {
+
+	global $wpdb;
+
+	// Update User ID
+	$result = $wpdb->update( $wpdb->prefix . 'logy_users', array( 'user_id' => $user_id ), array( 'email' => $email ) );
+	// Return Result.
+	return $result;
+}
 
 /**
- * Get User Social Login Avatar
+ * Get User Stored Data
  */
-function yz_get_user_social_avatar( $user_id = null ) {
+function logy_get_user_stored_social_data( $user_id ) {
 
-	$user_id = ! empty( $user_id ) ? $user_id : bp_loggedin_user_id();
+	global $wpdb;
 
-	if ( is_multisite() ) {
-		return get_user_option( 'logy_avatar', $user_id );
-	}
+	// Get SQL.
+	$sql = "SELECT * FROM " . $wpdb->prefix . "logy_users WHERE user_id = %d";
 
-	return get_user_meta( $user_id, 'logy_avatar', true );
+	// Get Result
+	$result = $wpdb->get_results( $wpdb->prepare( $sql, $user_id ) );
+	$result = isset( $result[0] ) ? $result[0] : null;
 
+	return $result;
 }
 
 /**
@@ -410,18 +350,26 @@ function yz_mu_store_social_login_data( $user_id = null ) {
 	// Get Provider.
 	$provider = $Logy->social->get_provider();
 
+    // Inculue Files.
+	if ( ! class_exists( 'Hybridauth', false ) ) {
+		require_once( YZ_PUBLIC_CORE . "hybridauth/autoload.php" );
+		require_once( YZ_PUBLIC_CORE . "hybridauth/Hybridauth.php" );
+	}
+
+	// Create an Instance with The Config Data.
+	$class = "Hybridauth\\Provider\\$provider";
+    $hybridauth = new $class( $Logy->social->get_config( $provider ) );
+
 	if ( empty( $provider ) ) {
 		return;
 	}
 
 	// // Get User Data.
-	$user_data = $Logy->social->get_user_data( $provider );
-
-	global $Logy;
+	$user_data = $Logy->social->get_user_data( $hybridauth, $provider );
 
 	if ( isset( $user_data['user_profile'] ) && ! empty( $user_data['user_profile'] ) ) {
 		// Store Data.
-		$Logy->query->wpmu_store_user_data( $provider, $user_data['user_profile'] );
+		logy_wpmu_store_user_data( $provider, $user_data['user_profile'] );
 	}
 
 }
@@ -464,6 +412,64 @@ function yz_disable_account_confirmation( $user_id, $user_login, $user_password,
 add_action( 'bp_core_signup_user', 'yz_disable_account_confirmation', 10, 5 );
 
 /**
+ * WPMU - Store User Data Into Database.
+ */
+function logy_wpmu_store_user_data( $provider, $profile ) {
+
+	$new_hash = sha1( serialize( $profile ) );		
+
+	// Get Table Data.
+	$table_data = array(
+		'id' => null,
+		'user_id' => 0,
+		'provider' => $provider,
+		'profile_hash' => $new_hash
+	);
+
+	// Get Table Fields.
+	$fields = array( 
+		'identifier', 
+		'profileurl', 
+		'websiteurl', 
+		'photourl', 
+		'displayname', 
+		'description', 
+		'firstname', 
+		'lastname', 
+		'gender', 
+		'language', 
+		'age', 
+		'birthday', 
+		'birthmonth', 
+		'birthyear', 
+		'email', 
+		'emailverified', 
+		'phone', 
+		'address', 
+		'country', 
+		'region', 
+		'city', 
+		'zip'
+	);
+
+	foreach( $profile as $key => $value ) {
+		// Transform Key To LowerCase.
+		$key = strtolower( $key );
+		// Get Table Data.
+		if ( in_array( $key, $fields ) ) {
+			$table_data[ $key ] = (string) $value;
+		}
+	}
+
+	global $wpdb;
+
+	// Replace Data.
+	$wpdb->replace( $wpdb->prefix . 'logy_users', $table_data ); 
+
+	return false;
+}
+
+/**
  * Disable Sending An activation Key For Social Login.
  */
 function yz_disable_send_activation_key_for_social_login( $activate, $user_id = null, $user_email= null, $activation_key= null, $user_meta = null ) {
@@ -474,9 +480,11 @@ function yz_disable_send_activation_key_for_social_login( $activate, $user_id = 
 
 	// Get User Meta.
 	$user_meta = maybe_unserialize( $user_meta );
+	
 	if ( isset( $user_meta['social_login'] ) ) {
 		return false;
 	}
+
 	return $activate;
 }
 
@@ -488,12 +496,6 @@ add_filter( 'bp_core_signup_send_activation_key', 'yz_disable_send_activation_ke
 function yz_social_registration_needs_activation() {
 
 	// Get Confirmation status.
-	$enable_confirmation = yz_options( 'logy_enable_social_login_email_confirmation' );
-
-	if ( 'on' == $enable_confirmation ) {
-		return true;
-	}
-
-	return false;
+	return 'on' == yz_option( 'logy_enable_social_login_email_confirmation', 'on' ) ? true : false;
 
 }

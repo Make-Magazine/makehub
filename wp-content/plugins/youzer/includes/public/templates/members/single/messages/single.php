@@ -109,7 +109,11 @@
 
 				<textarea name="content" id="message_content" rows="15" cols="40" placeholder="<?php _e( 'Write a reply ...', 'youzer' ); ?>"></textarea>
 
-				<?php if ( 'on' == yz_options( 'yz_enable_messages_emoji' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
+				
+				<div class="yz-message-form-tools">
+					<?php if ( 'on' == yz_option( 'yz_enable_messages_emoji', 'on' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
+				</div>
+				
 				
 				<?php
 
@@ -121,9 +125,17 @@
 				do_action( 'bp_after_message_reply_box' ); ?>
 			
 			</div>
-
+			
+			<?php if ( apply_filters( 'yz_enable_messages_attachments', true ) && 'on' == yz_option( 'yz_messages_attachments', 'on' ) ) : ?><div class="yz-upload-btn"><i class="fas fa-paperclip"></i><span class="yz-upload-btn-title"><?php _e( 'Upload attachment', 'youzer' ); ?></span></div>
+			<?php endif; ?>
+					
 			<div class="submit">
 				<button type="submit" name="send" id="send_reply_button"><i class="fas fa-paper-plane"></i><?php esc_attr_e( 'Send', 'youzer' ); ?></button>
+			</div>
+			
+			<div class="yz-wall-attachments">
+				<input hidden="true" class="yz-upload-attachments" type="file" name="attachments[]" multiple>
+				<div class="yz-form-attachments"></div>
 			</div>
 
 			<input type="hidden" id="thread_id" name="thread_id" value="<?php bp_the_thread_id(); ?>" />

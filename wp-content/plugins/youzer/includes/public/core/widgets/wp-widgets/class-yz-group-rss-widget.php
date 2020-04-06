@@ -74,8 +74,6 @@ class YZ_Group_Rss_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 		// Default Widget Settings
 	    $defaults = array(
 	        'left_color'  => '#FF5722',

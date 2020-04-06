@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * Disable Gravatars
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+
+/**
  * Check Is Youzer Panel Page.
  */
 function is_youzer_panel_page( $page_name ) {
@@ -135,7 +140,7 @@ function yz_move_wp_fields_to_bp_notice() {
 
     $patch_url = add_query_arg( array( 'page' => 'youzer-panel&tab=patches' ), admin_url( 'admin.php' ) );
 
-    $media_already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_patch_new_media_system' ) : get_option( 'yz_patch_new_media_system' );
+    $media_already_installed = yz_option( 'yz_patch_new_media_system' );
 
     if ( ! $media_already_installed ) { ?>
 
@@ -147,9 +152,33 @@ function yz_move_wp_fields_to_bp_notice() {
 
     }
 
-    if ( get_option( 'install_youzer_2.1.5_options' ) ) {
+    $media_already_installed2 = yz_option( 'yz_patch_new_media_system2' );
 
-        $already_installed = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_patch_move_wptobp' ) : get_option( 'yz_patch_move_wptobp' );
+        
+    if ( ! $media_already_installed2 ) { ?>
+
+        <div class="notice notice-warning">
+            <p><?php echo sprintf( __( "<strong>Youzer - Media Optimization Patch :<br> </strong>Please Run The Following Patch <strong><a href='%1s'> Upgrade Media System Database.</a></strong> This operation will improve the media system structure.", 'youzer' ), $patch_url ); ?></p>
+        </div>
+        
+        <?php
+
+    }
+    
+    $database_optimized = yz_option( 'yz_patch_optimize_database' );
+    if ( ! $database_optimized ) { ?>
+
+        <div class="notice notice-warning">
+            <p><?php echo sprintf( __( "<strong>Youzer - Database Optimization Patch :<br> </strong>Please Run The Following Patch <strong><a href='%1s'>Optimize Youzer Database</a></strong> This will increase your website speed.", 'youzer' ), $patch_url ); ?></p>
+        </div>
+        
+        <?php
+
+    }
+
+    if ( yz_option( 'install_youzer_2.1.5_options' ) ) {
+
+        $already_installed = yz_option( 'yz_patch_move_wptobp' );
         
         if ( ! $already_installed ) { ?>
 
@@ -198,7 +227,10 @@ function yz_display_new_extension_notice() {
     $yzea_notice = 'yz_hide_yzea_notice';
     $yzpc_notice = 'yz_hide_yzpc_notice';
     $yzbm_notice = 'yz_hide_yzbm_notice';
+    $yzbmr_presale_notice = 'yz_hide_yzbmr_presale_notice';
+    // $yzcm2019_notice = 'yz_hide_cm2019_notice';
     $load_lightbox = false;
+
     if ( isset( $_GET['yz-dismiss-extension-notice'] ) ) {
 
         if ( $_GET['yz-dismiss-extension-notice'] == $yzea_notice ) {
@@ -213,9 +245,93 @@ function yz_display_new_extension_notice() {
             update_option( $yzbm_notice, 1 );   
         }
 
+        if ( $_GET['yz-dismiss-extension-notice'] == $yzbmr_presale_notice ) {
+            update_option( $yzbmr_presale_notice, 1 );   
+        }
+
+        // if ( $_GET['yz-dismiss-extension-notice'] == $yzcm2019_notice ) {
+        //     update_option( $yzcm2019_notice, 1 );   
+        // }
+
     }
 
-    if ( ! get_option( $yzea_notice ) ) {
+    // if ( ! yz_option( $yzcm2019_notice ) ) {
+
+    //     $cyber_date = new DateTime( '2019/12/04' );
+    //     $now = new DateTime();
+
+    //     if ( $cyber_date > $now ) {
+
+    //         $data4 = array(
+    //             'notice_id' => $yzcm2019_notice,
+    //             'utm_campaign' => 'youzer-cyber-monday-2019',
+    //             'utm_medium' => 'admin-banner',
+    //             'utm_source' => 'clients-site',
+    //             'title' => 'Youzer Extensions Black Friday + Cyber Monday Sale ! ',
+    //             'link' => 'https://www.kainelabs.com/',
+    //             'buy_now' => 'https://www.kainelabs.com/?',
+    //             'image' => 'https://cldup.com/xpIs2BKnIw.png',
+    //             'description' => "Save <strong>50%</strong> on all the youzer extensions.<br>Limited Time Offer Ends <strong>03 December</strong>"
+    //          );
+
+    //         // Get Extension.
+    //         yz_get_notice_addon( $data4 );
+    //     }
+    // }
+
+    if ( ! yz_option( $yzbmr_presale_notice ) ) {
+        $load_lightbox = true;
+        $data = array(
+            'notice_id' => $yzbmr_presale_notice,
+            'utm_campaign' => 'youzer-membership-restrictions-presale',
+            'utm_medium' => 'admin-banner',
+            'utm_source' => 'clients-site',
+            'title' => '<div style="background: #a3e05c; color: #fff; padding: 10px 15px; border-radius: 3px; font-size: 14px;margin-bottom:20px;font-weight: 400;">Use Coupon Code <strong>YOUZER30</strong> to benefit from <strong>30% Off</strong> Discount On All Products ends <strong>10 April 2020</strong>.</div>[Presale] Buddypress Membership Restrictions - 50% OFF Ends 10 April 2020',
+            'link' => 'https://www.kainelabs.com/downloads/buddypress-membership-restrictions/',
+            'buy_now' => 'https://www.kainelabs.com/checkout/?edd_action=add_to_cart&download_id=46428&edd_options%5Bprice_id%5D=1',
+            'image' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/03/thumbnail.png',
+            'description' => 'Instead of spending thousands of dollars on customizations Meet the most complete buddypress membership restrictions plugin to restrict buddypress community features and content for visitors, members or by user role to take the full control over what your website users get exclusive access to.<div style="background: #20325e; color: #fff; padding: 10px 15px; border-radius: 3px; font-size: 13px;margin-top: 15px;">Use Coupon Code <strong>BMR50</strong> to benifit from <strong>50% Off</strong> Discount on <strong>Buddypress Membership Restrictions</strong> ends <strong>10 April 2020</strong>.</div>',
+            'features' => array(
+                'Set Members, Visitors ( Non Logged In Users ) Or By User Role Restrictions.',
+                'Set Custom Redirect Page for Visitors, Members or By User Role.',
+                'Set Buddypress Components Restrictions.',
+                'Set Wordpress Pages & Buddypress Pages Restrictions.',
+                'Set The Maximum Restrictions & Minimum Requirements For Activity Posts & Comments.',
+                'Set Public, Private, Hidden Groups Restrictions.',
+                'Set Friendship, Messages, Follows, Reviews Restrictions.',
+                'Set Profile Tabs & Profile Widgets Restrictions.',
+                'And much much more ... check all the detailed features on the add-on description page !'
+            ),
+            'images' => array(
+                array( 'title' => 'Components Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/components-restrictions.png' ),
+                array( 'title' => 'Activity Form Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-form-restrictions.png' ),
+                array( 'title' => 'Activity Posting Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-posting-restrictions.png' ),
+                array( 'title' => 'Activity Posting Requirements', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-posting-requirements.png' ),
+                array( 'title' => 'Activity Feed Post Types Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-feed-post-types-restrictions.png' ),
+                array( 'title' => 'Activity Post Buttons Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-post-buttons-restrictions.png' ),
+                array( 'title' => 'Activity Comments Requirements', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-comments-requirements.png' ),
+                array( 'title' => 'Activity Comments Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/activity-comments-restrictions.png' ),
+                array( 'title' => 'Groups Creation Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/groups-creation-restrictions.png' ),
+                array( 'title' => 'Public Groups Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/public-groups-restrictions.png' ),
+                array( 'title' => 'Hidden Groups Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/hidden-groups-restrictions.png' ),
+                array( 'title' => 'Private Group Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/private-groups-restrictions.png' ),
+                array( 'title' => 'Buddypress Pages Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/buddypress-pages-restrictions.png' ),
+                array( 'title' => 'Friendship Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/friendship-restrictions.png' ),
+                array( 'title' => 'Messages Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/messages-restrictions.png' ),
+                array( 'title' => 'Follows Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/follows-restrictions.png' ),
+                array( 'title' => 'Profile Tab Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/profile-tabs-restrictions.png' ),
+                array( 'title' => 'Reviews Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/reviews-restrictions.png' ),
+                array( 'title' => 'Wordpress Pages Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/wordpress-pages-restrictions.png' ),
+                array( 'title' => 'Profile Widgets Creation Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/profile-widgets-creation-restrictions.png' ),
+                array( 'title' => 'Profile Widgets Visibility Restrictions', 'link' => 'https://www.kainelabs.com/wp-content/uploads/edd/2020/04/profile-widgets-visibility-restrictions.png' ),
+            )
+         );
+
+        // Get Extension.
+        yz_get_notice_addon( $data );
+    }
+
+    if ( ! yz_option( $yzea_notice ) ) {
         $load_lightbox = true;
         $data = array(
             'notice_id' => $yzea_notice,
@@ -250,7 +366,7 @@ function yz_display_new_extension_notice() {
         yz_get_notice_addon( $data );
     }
 
-    if ( ! get_option( $yzpc_notice ) ) {
+    if ( ! yz_option( $yzpc_notice ) ) {
         $load_lightbox = true;
         $data2 = array(
             'notice_id' => $yzpc_notice,
@@ -285,7 +401,7 @@ function yz_display_new_extension_notice() {
         yz_get_notice_addon( $data2 );
     }
 
-    if ( ! get_option( $yzbm_notice ) ) {
+    if (  ! yz_option( $yzbm_notice ) ) {
         $load_lightbox = true;
         $data3 = array(
             'notice_id' => $yzbm_notice,
@@ -480,6 +596,10 @@ function yz_get_notice_addon( $data ) {
             padding: 4px 12px 5px;
         }
 
+        .yz_hide_cm2019_notice .yz-addon-view-features {
+            display: none !important;
+        }
+
     </style>
 
     <?php
@@ -491,7 +611,7 @@ function yz_get_notice_addon( $data ) {
 
         ?>
     
-    <div class="yz-addon-notice updated notice notice-success">
+    <div class="yz-addon-notice updated notice notice-success <?php echo $data['notice_id']; ?>">
         <!-- <div class="yz-addon-notice-img" style="background-image:url(<?php echo $data['image']; ?>);"></div> -->
         <img class="yz-addon-notice-img" src="<?php echo $data['image']; ?>" alt="">
         <div class="yz-addon-notice-content">
@@ -518,6 +638,94 @@ function yz_get_notice_addon( $data ) {
                 <a href="<?php echo $buy; ?>" class="yz-addon-buy-now">Buy Now</a>
                 <a href="<?php echo add_query_arg( 'yz-dismiss-extension-notice', $data['notice_id'], yz_get_current_page_url() ); ?>" type="button" class="yz-addon-delete-notice">Delete Notice</a>
             </div>
+        </div>
+    </div>
+
+    <?php
+}
+
+// /**
+//  * Widgets Enqueue scripts.
+//  */
+// function yz_widgets_enqueue_scripts( $hook_suffix ) {
+
+//     if ( 'widgets.php' !== $hook_suffix ) {
+//         return;
+//     }
+
+//     yz_iconpicker_scripts();
+
+// }
+
+// add_action( 'admin_enqueue_scripts', 'yz_widgets_enqueue_scripts' );
+/**
+ * Get Activity Posts Types
+ */
+function yz_activity_post_types() {
+
+    // Get Post Types Visibility
+    $post_types = array(
+        'activity_status'       => __( 'Status', 'youzer' ),
+        'activity_photo'        => __( 'Photo', 'youzer' ),
+        'activity_slideshow'    => __( 'Slideshow', 'youzer' ),
+        'activity_link'         => __( 'Link', 'youzer' ),
+        'activity_quote'        => __( 'Quote', 'youzer' ),
+        'activity_giphy'        => __( 'Gif', 'youzer' ),
+        'activity_video'        => __( 'Video', 'youzer' ),
+        'activity_audio'        => __( 'Audio', 'youzer' ),
+        'activity_file'         => __( 'File', 'youzer' ),
+        'new_cover'             => __( 'New Cover', 'youzer' ),
+        'new_avatar'            => __( 'New Avatar', 'youzer' ),
+        'new_member'            => __( 'New Member', 'youzer' ),
+        'friendship_created'    => __( 'Friendship Created', 'youzer' ),
+        'friendship_accepted'   => __( 'Friendship Accepted', 'youzer' ),
+        'created_group'         => __( 'Group Created', 'youzer' ),
+        'joined_group'          => __( 'Group Joined', 'youzer' ),
+        'new_blog_post'         => __( 'New Blog Post', 'youzer' ),
+        'new_blog_comment'      => __( 'New Blog Comment', 'youzer' ),
+        // 'activity_comment'      => __( 'Comment Post', 'youzer' ),
+        'updated_profile'       => __( 'Updates Profile', 'youzer' )
+    );
+
+    if ( class_exists( 'Woocommerce' ) ) {
+        $post_types['new_wc_product'] = __( 'New Product', 'youzer' );
+        $post_types['new_wc_purchase'] = __( 'New Purchase', 'youzer' );
+    }
+
+    if ( class_exists( 'bbPress' ) ) {
+        $post_types['bbp_topic_create'] = __( 'Forum Topic', 'youzer' );
+        $post_types['bbp_reply_create'] = __( 'Forum Reply', 'youzer' );
+    }
+
+    return apply_filters( 'yz_activity_post_types', $post_types );
+}
+
+/**
+ * Admin Modal Form
+ */
+function yz_panel_modal_form( $args, $modal_function ) {
+
+    $title        = $args['title'];
+    $button_id    = $args['button_id'];
+    $button_title = isset( $args['button_title'] ) ? $args['button_title'] : __( 'save', 'youzer' );
+    
+    ?>
+
+    <div class="yz-md-modal yz-md-effect-1" id="<?php echo $args['id'] ;?>">
+        <h3 class="yz-md-title" data-title="<?php echo $title; ?>">
+            <?php echo $title; ?>
+            <i class="fas fa-times yz-md-close-icon"></i>
+        </h3>
+        <div class="yz-md-content">
+            <?php $modal_function(); ?>
+        </div>
+        <div class="yz-md-actions">
+            <button id="<?php echo $button_id; ?>" data-add="<?php echo $button_id; ?>" class="yz-md-button yz-md-save">
+                <?php echo $button_title ?>
+            </button>
+            <button class="yz-md-button yz-md-close">
+                <?php _e( 'close', 'youzer' ); ?>
+            </button>
         </div>
     </div>
 

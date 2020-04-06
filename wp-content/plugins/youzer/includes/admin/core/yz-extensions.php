@@ -5,10 +5,10 @@ class Youzer_Extensions {
 	function __construct() {
 
 		// Add Youzer Plugin Admin Pages.
-		add_action( 'admin_menu', array( &$this, 'add_extensions_page' ), 99 );
+		add_action( 'admin_menu', array( $this, 'add_extensions_page' ), 99 );
 
 		// Load Admin Scripts & Styles .
-		add_action( 'admin_print_styles', array( &$this, 'extensions_styles' ) );
+		add_action( 'admin_print_styles', array( $this, 'extensions_styles' ) );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class Youzer_Extensions {
 	    	__( 'Extensions (Add-Ons)', 'youzer' ),
 	    	'administrator',
 	    	'yz-extensions',
-	    	array( &$this, 'extensions_page_content' )
+	    	array( $this, 'extensions_page_content' )
 	    );
 	}
 

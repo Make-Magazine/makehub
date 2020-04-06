@@ -170,6 +170,7 @@
 }
 
 #activation-form .logy-form-item label {
+    display: block;
     margin-bottom: 15px;   
 }
 
@@ -466,6 +467,8 @@ body .logy-form a.logy-link-button:hover {
     font-size: 13px;
     font-weight: 600;
     /*border-radius: 0;*/
+    box-shadow: none;
+    text-shadow: none;
     text-align: center;
     position: relative;
     text-transform: uppercase;
@@ -1028,7 +1031,7 @@ form#logy_signup_form label {
     font-size: 10px;
     margin-left: 5px;
     font-weight: 400;
-    line-height: 1
+    line-height: 14px;
     border-radius: 2px;
     padding: 2px 7px 3px;
     display: inline-block;

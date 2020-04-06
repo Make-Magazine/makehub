@@ -26,147 +26,18 @@ function yz_profile_navigation_menu() {
 }
 
 /**
- * Profile Get Tab Visibility
- */
-function yz_get_profile_tab_visibility( $slug ) {
-
-	// Get Default Tabs Args.
-	$defaults = yz_profile_tabs_default_value();
-
-	// Get Default Visibility.
-	$default_visibility = isset( $defaults[ $slug ]['visibility'] ) ? $defaults[ $slug ]['visibility'] : 'on';
-
-	// Get visibility.
-	$option_id = 'yz_display_' . $slug . '_tab';
-
-	// Get Option.
-	$visibility_value = get_option( $option_id );
-
-	// Get Visibility
-	$visibility = ! empty( $visibility_value ) ? $visibility_value : $default_visibility;
-
-	// Filter Visibility
-	$visibility = apply_filters( 'yz_profile_tab_visibility', $visibility, $slug );
-
-	return $visibility;
-
-}
-
-/**
- * Profile Tabs Default Values
- */
-function yz_profile_tabs_default_value() {
-
-	// Init 
-	$tabs = array();
-
-	// Overview Args.
-	$tabs['overview'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-globe-asia',
-	);
-
-	// Wall Args.
-	$tabs['wall'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-address-card',
-	);
-
-	// Info Args.
-	$tabs['info'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-info',
-	);
-
-	// Comments Args.
-	$tabs['comments'] = array(
-		'visibility' => 'on',
-		'icon' => 'far fa-comments',
-	);
-
-	// Posts Args.
-	$tabs['posts'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-pencil-alt',
-	);
-
-	// Friends Args.
-	$tabs['friends'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-handshake',
-	);
-
-	// Friends Args.
-	$tabs['follows'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-rss',
-	);
-
-	// Groups Args.
-	$tabs['groups'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-users',
-	);
-
-	// Notifications Args.
-	$tabs['notifications'] = array(
-		'visibility' => 'off',
-		'icon' => 'fas fa-bell',
-	);
-
-	// Messages Args.
-	$tabs['messages'] = array(
-		'visibility' => 'off',
-		'icon' => 'fas fa-envelope-open-text',
-	);
-	
-	// Widgets Settings Args.
-	$tabs['widgets'] = array(
-		'visibility' => 'off',
-		'icon' => 'fas fa-sliders',
-	);
-
-	// Account Settings Args.
-	$tabs['settings'] = array(
-		'visibility' => 'off',
-		'icon' => 'fas fa-cogs',
-	);
-
-	// Profile Settings Args.
-	$tabs['profile'] = array(
-		'visibility' => 'off',
-		'icon' => 'fas fa-user-circle',
-	);
-	
-	// Profile Settings Args.
-	$tabs['badges'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-trophy',
-	);
-	// Profile Settings Args.
-	$tabs['events'] = array(
-		'visibility' => 'on',
-		'icon' => 'fas fa-calendar-week',
-	);
-
-	return $tabs;
-}
-
-/**
  * Filter Navigation Menu
  */
 function yz_get_displayed_user_nav() {
-    
-    global $Youzer;
-    
+
     // Init Vars.
-    $display_icons = yz_options( 'yz_display_navbar_icons' );
+    $display_icons = yz_option( 'yz_display_navbar_icons', 'on' );
 
     // Get Navbar Items.
     $profile_navbar = (array) yz_get_profile_primary_nav();
 
     // Get Menus Limit
-    $menus_limit = yz_options( 'yz_profile_navbar_menus_limit' );
+    $menus_limit = yz_option( 'yz_profile_navbar_menus_limit', 5 );
 
     // Get Visible Menu
     $visible_menu = array_slice( $profile_navbar, 0, $menus_limit );
@@ -174,18 +45,17 @@ function yz_get_displayed_user_nav() {
     // Get Hidden View More Menu
     $view_more_menu = array_slice( $profile_navbar, $menus_limit );
 
-    foreach ( $visible_menu as $menu_item ) {
-    	// Get Menu Data.
-    	$menu_data = yz_get_profile_menu_item_data( $menu_item );
+    $current_component = bp_current_component();
 
-    	if ( ! $menu_data ) {
-    		continue;
-    	}
-    	
+    foreach ( $visible_menu as $menu_item ) {
+		
+		// Get Link.
+		$link = bp_loggedin_user_domain() ? str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $menu_item->link ) : trailingslashit( bp_displayed_user_domain() . $menu_item->link );
+        
         ?>
 
-        <li class="yz-navbar-item <?php echo $menu_data['class']; ?>"><a href="<?php echo esc_url( $menu_data['link'] ); ?>"><?php if ( 'on' == $display_icons && ! empty( $menu_data['icon'] ) ) { echo apply_filters( 'yz_profile_navbar_menu_icon', '<i class="' . $menu_data['icon'].'"></i>', $menu_data ); } ?><?php echo $menu_data['title']; ?></a>
-        </li>
+        <li class="yz-navbar-item <?php echo $current_component == $menu_item->slug ? 'yz-active-menu': ''; ?>"><a href="<?php echo $link; ?>"><?php if ( 'on' == $display_icons ) { echo apply_filters( 'yz_profile_navbar_menu_icon', '<i class="' . $menu_item->icon .'"></i>', $menu_item ); } ?><?php echo $menu_item->name; ?></a>
+    	</li>
 
         <?php
 
@@ -207,15 +77,12 @@ function yz_get_displayed_user_nav() {
     
     foreach ( $view_more_menu as $menu_item ) :
 
-    	$menu_data = yz_get_profile_menu_item_data( $menu_item );
-
-    	if ( ! $menu_data ) {
-    		continue;
-    	}
-
-        ?>
+		// Get Link.
+		$link = bp_loggedin_user_domain() ? str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $menu_item->link ) : trailingslashit( bp_displayed_user_domain() . $menu_item->link );
         
-        <li class="yz-navbar-item <?php echo $menu_data['class']; ?>"><a href="<?php echo esc_url( $menu_data['link'] ); ?>"><?php if ( 'on' == $display_icons && ! empty( $menu_data['icon'] ) ) { echo apply_filters( 'yz_profile_navbar_menu_icon', '<i class="' . $menu_data['icon'].'"></i>', $menu_data ); } ?><?php echo $menu_data['title']; ?></a>
+        ?>
+
+        <li class="yz-navbar-item <?php echo $current_component == $menu_item->slug ? 'yz-active-menu': ''; ?>"><a href="<?php echo $link; ?>"><?php if ( 'on' == $display_icons ) { echo apply_filters( 'yz_profile_navbar_menu_icon', '<i class="' . $menu_item->icon.'"></i>', $menu_item ); } ?><?php echo $menu_item->name; ?></a>
 
         <?php
 
@@ -226,95 +93,6 @@ function yz_get_displayed_user_nav() {
 }
 
 add_filter( 'bp_nav_menu_args', 'yz_filter_profile_nav_menu', 10 );
-
-/**
- * Get Menu Data
- */
-function yz_get_profile_menu_item_data( $menu_item ) {
-
-    // Init Menu Data
-    $menu_data = array();
-
-    // Get Tab Class.
-    $menu_data['class'] = bp_is_current_component( $menu_item->slug ) ? 'yz-active-menu': null;
-    
-    // Get Tab Icon
-    $menu_data['icon'] = yz_get_profile_nav_menu_icon( $menu_item->slug );
-    
-    // Get Tab Link
-    $menu_data['link'] = yz_get_profile_nav_menu_link( $menu_item );
-    
-    // Delete Tabs Count.
-    $show_count = yz_options( 'yz_display_profile_tabs_count' );
-
-    // Get Tab title.
-    $menu_data['title'] = ( $show_count == 'off' ) ? _bp_strip_spans_from_title( $menu_item->name ) : $menu_item->name;
-
-    return $menu_data;
-}
-
-/**
- * Get Profile Navigation Menu Link
- */
-function yz_get_profile_nav_menu_link( $menu_item = null ) {
-
-
- 	// Get Tab Link.
-    if ( bp_loggedin_user_domain() ) {
-        $tab_link = str_replace( bp_loggedin_user_domain(), bp_displayed_user_domain(), $menu_item->link );
-    } else {
-        $tab_link = trailingslashit( bp_displayed_user_domain() . $menu_item->link );
-    }
-
-	// Get Tab ID.
-	$tab_id = yz_get_custom_tab_id_by_slug( $menu_item->slug );
-
-    // Get Custom Tab Link.
-	if ( yz_is_custom_tab( $tab_id ) ) {
-
-		// Get Tab Type.
-		$tab_type = yz_get_custom_tab_data( $tab_id, 'type' );
-
-		if ( 'link' == $tab_type ) {
-			// Get Tab Link.
-			$tab_link = yz_get_custom_tab_data( $tab_id, 'link' );
-			// Filter Tab Url.
-			$tab_link = apply_filters( 'yz_profile_custom_tab_url', $tab_link );
-		}
-
-	}
-
-	return $tab_link;
-}
-
-/**
- * Get Profile Navigation Menu Icon
- */
-function yz_get_profile_nav_menu_icon( $slug = null ) {
-
-    global $Youzer;
-
-    // Default Tab Values.
-    $default_tabs = yz_profile_tabs_default_value();
-
-    // Default Icon.
-    $default_icon = isset( $default_tabs[ $slug ] ) ? $default_tabs[ $slug ]['icon'] : 'fas fa-globe-asia';
-
-	// Get Option ID.
-	$option_id = 'yz_' . $slug . '_tab_icon';
-
-	// Get Option.
-	$icon_value = yz_options( $option_id );
-
-	// Get Icon.
-	$icon = ! empty( $icon_value ) ? $icon_value : $default_icon;
-
-    // Filter Icon.
-    $icon = apply_filters( 'yz_profile_nav_menu_icon', $icon, $slug );
-
-    return $icon;
-
-}
 
 /**
  * Get Profile Sub Navigation Menu Icon
@@ -329,7 +107,7 @@ function yz_get_profile_subnav_menu_icon( $subnav_item ) {
 
 	// Get Option ID.
 	$option_id = 'yz_ctabs_' . $tab_slug . '_icon';
-	
+
 	// Get Option.
 	$icon_value = yz_options( $option_id );
 
@@ -338,10 +116,7 @@ function yz_get_profile_subnav_menu_icon( $subnav_item ) {
 		$icon = $icon_value;
 	}
 
-    // Filter Icon.
-    $icon = apply_filters( 'yz_profile_subnav_menu_icon', $icon, $option_id );
-
-    return $icon;
+    return apply_filters( 'yz_profile_subnav_menu_icon', $icon, $option_id );
 
 }
 
@@ -353,11 +128,11 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 	switch ( $option_id ) {
 
 		case 'yz_ctabs_events_profile_icon':
-		case 'yz_ctabs_wall_just-me_icon':
+		case 'yz_ctabs_activity_just-me_icon':
 			$icon = 'fas fa-user-circle';
 			break;
 
-		case 'yz_ctabs_wall_following_icon':
+		case 'yz_ctabs_activity_following_icon':
 			$icon = 'fas fa-rss';
 			break;
 			
@@ -371,20 +146,20 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 
 		case 'yz_ctabs_friends_my-friends_icon':
 		case 'yz_ctabs_groups_my-groups_icon':
-		case 'yz_ctabs_wall_groups_icon':
+		case 'yz_ctabs_activity_groups_icon':
 			$icon = 'fas fa-users';
 			break;
 
 		case 'yz_ctabs_friends_requests_icon':
-		case 'yz_ctabs_wall_friends_icon':
+		case 'yz_ctabs_activity_friends_icon':
 			$icon = 'fas fa-handshake';
 			break;
 
-		case 'yz_ctabs_wall_mentions_icon':
+		case 'yz_ctabs_activity_mentions_icon':
 			$icon = 'fas fa-at';
 			break;
 
-		case 'yz_ctabs_wall_favorites_icon':
+		case 'yz_ctabs_activity_favorites_icon':
 			$icon = 'fas fa-heart';
 			break;
 
@@ -470,69 +245,6 @@ function yz_profile_subnav_menu_default_icons( $icon = null, $option_id = null )
 add_filter( 'yz_profile_subnav_menu_icon', 'yz_profile_subnav_menu_default_icons', 10, 2 );
 
 /**
- * Get Primary Navigation Menu Icon
- */
-function yz_get_profile_primary_nav() {
-
-	global $bp;
-
-	// Init Array().
-	$new_primary_nav = array();
-
-	// Get Original Primary Nav
-	$primary_nav = $bp->members->nav->get_primary();
-
-	// Hidden Tabs
-	$hidden_tabs = array( 'yz-home', 'widgets', 'profile', 'settings' );
-
-	// Filter Hidden Tabs.
-	$hidden_tabs = apply_filters( 'yz_profile_hidden_tabs', $hidden_tabs );
-
-	foreach ( $primary_nav as $nav ) {
-
-		// Don't Show Youzer Hidden Tabs.
-		if ( in_array( $nav['slug'], $hidden_tabs ) ) {
-			continue;
-		}
-
-		if ( ! is_admin() ) {
-
-			// Hide Invisible Tabs.
-			if ( 'off' == yz_get_profile_tab_visibility( $nav['slug'] ) ) {
-				continue;
-			}
-
-			// Check if tab should be displayed for the current user.
-		    if ( empty( $nav['show_for_displayed_user'] ) && ! bp_is_my_profile() ) {
-				continue;
-		    }
-
-		    // Hide Comments Menu if User Have no comments.
-		    if ( apply_filters( 'yz_show_profile_comments_tab_if_user_has_comments', true ) ) {
-			    if ( $nav['slug'] == 'comments' && ! yz_is_user_have_comments() ) {
-					continue;
-			    }
-		    }
-
-		    // Hide Posts Menu if User Have no posts.
-		    if ( apply_filters( 'yz_show_profile_posts_tab_if_user_has_posts', true ) ) {
-			    if ( $nav['slug'] == 'posts' && ! yz_is_user_have_posts() ) {
-					continue;
-			    }
-			}
-		}
-
-		// Add Tab.
-		$new_primary_nav[] = $nav;
-	}
-
-	// Filter Primary Nav.
-	$new_primary_nav = apply_filters( 'yz_profile_primary_nav', $new_primary_nav );
-
-	return $new_primary_nav;
-}
-
-/**
  * Primary Tabs Slugs
  */
 function yz_get_profile_primary_nav_slugs() {
@@ -553,54 +265,6 @@ function yz_get_profile_primary_nav_slugs() {
 	return $tabs_slugs;
 
 }
-/**
- * Profile Default Nav Options
- */
-function yz_get_profile_default_nav_options() {
-
-	// Get Youzer Custom Tabs
-	$primary_tabs = yz_get_profile_primary_nav();
-
-	if ( empty( $primary_tabs ) ) {
-		return false;
-	}
-
-	global $Youzer;
-
-	// Init
-	$tab_options = array();
-
-	foreach ( $primary_tabs as $tab ) {
-		
-		// Get Tab Slug.
-		$tab_slug = $tab['slug'];
-		
-		// Get Tab ID.
-		$tab_id = yz_get_custom_tab_id_by_slug( $tab_slug );
-
-        // Get Custom Tab Link.
-		if ( yz_is_custom_tab( $tab_id ) ) {
-
-			// Get Tab Type.
-			$tab_type = yz_get_custom_tab_data( $tab_id, 'type' );
-
-			if ( 'link' == $tab_type ) {
-				continue;
-			}
-		}
-
-		// Check is Tab Deleted.
-		if ( yz_is_profile_tab_deleted( $tab_slug ) ) {
-			continue;
-		}
-
-		// Set Option.
-		$tab_options[ $tab_slug ] = _bp_strip_spans_from_title( $tab['name'] );
-
-	}
-
-	return $tab_options;
-}
 
 /**
  * Check Is Navigation  deleted by slug.
@@ -608,7 +272,7 @@ function yz_get_profile_default_nav_options() {
 function yz_is_profile_tab_deleted( $slug ) {
 
 	// Get Delete Tab Value.
-	$delete_tab = get_option( 'yz_delete_' . $slug . '_tab' );
+	$delete_tab = yz_option( 'yz_delete_' . $slug . '_tab' );
 
 	if ( ! empty( $delete_tab ) && 'on' == $delete_tab ) {
 		return true;	
@@ -621,11 +285,7 @@ function yz_is_profile_tab_deleted( $slug ) {
  * Youzer Default Tabs.
  */
 function yz_get_youzer_default_tabs() {
-
-	// Default Tabs.
-	$tabs = array( 'overview', 'info', 'posts', 'comments', 'media', 'badges' );
-
-	return $tabs;
+	return apply_filters( 'youzer_default_tabs', array( 'overview', 'info', 'posts', 'comments', 'media', 'badges', 'reviews', 'bookmarks', 'activity', 'shop' ) );
 }
 
 /**
@@ -720,7 +380,7 @@ function yz_get_profile_third_party_tabs() {
 function yz_get_all_youzer_tabs_slugs() {
 
 	// Get All Youzer Default Tabs.
-	$youzer_tabs = array( 'yz-home', 'profile', 'settings', 'widgets', 'messages', 'notifications', 'friends', 'groups', 'comments', 'media', 'posts', 'wall', 'overview', 'info', 'badges', 'follows' ); 
+	$youzer_tabs = array( 'yz-home', 'profile', 'settings', 'widgets', 'messages', 'notifications', 'friends', 'groups', 'comments', 'media', 'posts', 'activity', 'overview', 'info', 'badges', 'follows' ); 
 
 	// Get Youzer Custom Tabs Slugs.
 	$custom_tabs = (array) yz_custom_youzer_tabs_slugs();
@@ -737,7 +397,7 @@ function yz_get_all_youzer_tabs_slugs() {
 function yz_custom_youzer_tabs( $query = null ) {
 
 	// Get Custom Tabs
-	$custom_tabs = yz_options( 'yz_custom_tabs' );
+	$custom_tabs = yz_option( 'yz_custom_tabs' );
 
 	if ( empty( $custom_tabs ) ) {
 		return false;
@@ -752,15 +412,12 @@ function yz_custom_youzer_tabs( $query = null ) {
 			continue;
 		}
 
-		// Get Custom Tab Args.
-		$custom_args = array(
+		// Add tab to the tabs list.
+		$tabs[ $tab_id ] = array(
 			'tab_name'    => $tab_id,
 			'tab_title'   => $data['title'],
             'tab_slug'	  => isset( $data['slug'] ) ? $data['slug'] : yz_get_custom_tab_slug( $data['title'] )
 		);
-
-		// Add tab to the tabs list.
-		$tabs[ $tab_id ] = $custom_args;
 
 	}
 
@@ -924,7 +581,7 @@ function yz_get_custom_tab_slug( $tab_title ) {
  * Get Custom Tab Settings.
  */
 function yz_get_custom_tab_data( $tab_name, $data_type  ) {
-    $tabs = yz_options( 'yz_custom_tabs' );
+    $tabs = yz_option( 'yz_custom_tabs' );
     return $tabs[ $tab_name ][ $data_type ];
 }
 
@@ -937,7 +594,7 @@ function yz_get_tab_name_by_slug( $current_tab_slug ) {
     $current_tab = false;
 
     // Get All Custom Tabs.
-    $tabs = yz_options( 'yz_custom_tabs' );
+    $tabs = yz_option( 'yz_custom_tabs' );
 
     if ( empty( $tabs ) ) {
         return false;
@@ -959,317 +616,69 @@ function yz_get_tab_name_by_slug( $current_tab_slug ) {
 }
 
 /**
- * Get Tab visibility
- */
-function yz_get_tab_visibility( $option_id ) {
-
-    // Get Option Value.
-    $option_value = get_option( $option_id );
-
-    // Filter Option Value.
-    $option_value = apply_filters( 'yz_get_tab_visibility', $option_value, $option_id );
-
-    if ( $option_value ) {
-        return $option_value;
-    }
-
-    return 'on';
-}
-/**
- * Get Profile Deletable Tabs.
- */
-function yz_profile_deletable_tabs() {
-
-    // Get Default Tabs Slugs.
-    $default_tabs = yz_get_youzer_default_tabs();
-
-	// Get Youzer Custom Tabs Slugs.
-	$custom_tabs = (array) yz_custom_youzer_tabs_slugs();
-
-	// Merge Tabs Slugs.
-	$all_tabs = array_merge( $default_tabs, $custom_tabs );
-
-	return $all_tabs;
-}
-
-/**
- * Delete Profile Navigation Menu
- */
-function yz_delete_profile_navigation_menu() {
-
-	if ( ! bp_is_user() ) {
-		return false;
-	}
-
-	// Get Deletable Tabs Slugs.
-	$all_tabs = yz_profile_deletable_tabs();
-
-    foreach ( $all_tabs as $slug ) {
-
-		if ( yz_is_profile_tab_deleted( $slug ) && ! is_admin() ) {
-			bp_core_remove_nav_item( $slug );
-		}
-
-	}
-
-}
-
-add_action( 'bp_setup_nav', 'yz_delete_profile_navigation_menu', 999 );
-
-/**
  * Update Profile Navigation Menu
  */
 function yz_update_profile_navigation_menu() {
-	
+
 	if ( ! bp_is_user() ) {
 		return;	
 	}
 
+	$tabs = apply_filters( 'yz_profile_tabs', yz_option( 'yz_profile_tabs' ) );
+
+	$bp = buddypress();
+
     // Get Primary Tabs.
     $primary_tabs = yz_get_profile_primary_nav();
+    $default_tabs = yz_profile_tabs_default_value();
 
     foreach ( $primary_tabs as $tab ) {
 
     	// Get Tab Slug
     	$slug = $tab['slug'];
 
-    	// Init Array.
-    	$tab_args = array();
+		if ( isset( $tabs[ $slug ]['deleted'] ) ) {
+			bp_core_remove_nav_item( $slug );
+		} else {
 
-    	// Get New Tab Name.
-		$tab_title = get_option( 'yz_' . $slug . '_tab_title' );
+	    	// Init Array.
+	    	$args = array();
 
-		if ( ! empty( $tab_title ) ) {	
-			$tab_args['name'] = yz_get_new_profile_tab_title( $tab_title, $tab['name'] );
+	    	// Change Tab Title.
+			if ( isset( $tabs[ $slug ]['name'] ) ) {
+				$args['name'] = $tabs[ $slug ]['name'];
+			}
+
+	    	// Change Tab Position.
+			if ( isset( $tabs[ $slug ]['position'] ) ) {
+				$args['position'] = $tabs[ $slug ]['position'];
+			}
+
+	    	// Change Tab Position.
+			if ( isset( $tabs[ $slug ]['visibility'] ) ) {
+				$args['visibility'] = 'off';
+			}
+
+			// Change Tab Icon.
+			if ( isset( $tabs[ $slug ]['icon'] ) ) {
+				$args['icon'] = $tabs[ $slug ]['icon'];
+			} else {
+				$args['icon'] = isset( $default_tabs[ $slug ]['icon'] ) ? $default_tabs[ $slug ]['icon'] : 'fas fa-globe-asia';
+			}
+
+		    // Get Custom Tab Link.
+			// if ( false !== strpos( $slug, 'yz_custom_tab_' ) ) {
+			// 	$args['link'] = yz_get_custom_tab_data( $slug, 'link' );
+			// }
+
+	    	$bp->members->nav->edit_nav( $args, $tab['slug'] );
+
 		}
-
-    	// Get New Tab Order.
-		$tab_order = get_option( 'yz_' . $slug . '_tab_order' );
-
-		if ( ! empty( $tab_order ) && is_numeric( $tab_order ) ) {
-			$tab_args['position'] = $tab_order;
-		}	
-
-		if ( empty( $tab_args ) ) {
-			continue;
-		}
-
-	    buddypress()->members->nav->edit_nav( $tab_args, $tab['slug'] );
 	
     }
+
+    unset( $bp, $args );
 
 }
 
 add_action( 'bp_actions', 'yz_update_profile_navigation_menu' );
-
-/**
- * Get New Updated Title
- */
-function yz_get_new_profile_tab_title( $new_title = null, $old_title ) {
-
-	if ( ! empty( $new_title ) ) {
-		// Get Old Title Count.
-		$count = strstr( $old_title, '<span' );
-		$new_title = ! empty( $count ) ? $new_title . $count : $new_title;
-	}
-
-	return $new_title;
-}
-
-/**
- * Set Default Profile Tab
- */
-function yz_get_default_profile_tab() {
-
-    // Get default tab
-    $default_tab = get_option( 'yz_profile_default_tab' );
-
-    if ( ! empty( $default_tab ) && ! yz_is_profile_tab_deleted( $default_tab ) ) {
-    	return $default_tab;
-    }
-
-    return yz_get_youzer_default_tab();
-}
-
-/**
- * Get Youzer Default Profile Tab.
- */
-function yz_get_youzer_default_tab() {
-
-	// Init Var.
-	$default_tab = false;
-
-    // Get Youzer Default Tab.
-	$youzer_tabs = yz_get_youzer_default_tabs();
-
-	if ( empty( $youzer_tabs ) ) {
-		return false;
-	}
-
-	foreach ( $youzer_tabs as $tab ) {
-		if ( ! yz_is_profile_tab_deleted( $tab ) ) {
-			$default_tab = $tab;
-			break; 
-		}
-	}
-
-	return $default_tab;
-}
-
-/** 
- * Set Default Profile Tab.
- */
-function yz_set_default_profile_tab() {
-
-	if ( ! bp_is_user() ) {
-		return false;
-	}
-
-	// Get Default Tab.
-	$default_tab = yz_get_default_profile_tab();
-
-	if ( empty( $default_tab ) )  {
-		return false;
-	}
-
-	add_filter( 'bp_is_active', 'yz_enable_default_profile_tab_component', 10, 2 ); 
-	
-	// Set Default Tab
-	if ( ! defined( 'BP_DEFAULT_COMPONENT' ) ) {
-    	define( 'BP_DEFAULT_COMPONENT', $default_tab );
-	}
-
-}
-
-add_action( 'bp_init', 'yz_set_default_profile_tab', 3 );
-
-/**
- * Enable Default Tab Component.
- */
-function yz_enable_default_profile_tab_component( $retval, $component ) {
-
-	if ( bp_is_user() && $component == BP_DEFAULT_COMPONENT ) {
-		return true;
-	}
-
-    return $retval; 
-};
-         
-/**
- * Display Select Default Tab Message.
- */
-function yz_reset_profile_default_tab_msg() {
-
-	// Get default tab
-    $default_tab = get_option( 'yz_profile_default_tab' );
-
-	if ( ! empty( $default_tab ) ) {
-		return false;
-	}
-
-	// Get Settings Url.
-	$tabs_settings_url = admin_url( 'admin.php?page=yz-profile-settings&tab=tabs' );
-
-	// Get Message Class.
-	$class = 'notice notice-info is-dismissible';
-
-	// Get Message Content.
-	$message = sprintf( __( 'The default profile tab is deleted or does not exist, Please choose another one from the <a href="%s">Profile Tabs Settings</a> !!', 'youzer' ), $tabs_settings_url );
-
-	// Print Message.
-	printf( '<div class="%1$s"><strong><p>%2$s</p></strong></div>', esc_attr( $class ), $message );
-
-
-}
-
-add_action( 'admin_notices', 'yz_reset_profile_default_tab_msg' );
-
-/**
- * Disable Profile Default Tab.
- */
-function yz_disable_profile_default_tab() {
-	
-	if ( ! is_admin() ) {
-		return false;
-	}	
-
-	// Get default tab
-    $default_tab = get_option( 'yz_profile_default_tab' );
-
-	// Get Available Default Tabs.
-	$available_tabs = yz_get_profile_default_nav_options();
-
-	// Get Available Tabs Slugs
-	$available_tabs_slugs = array_keys( $available_tabs );
-
-	// Delete tab if not exist.
-	if ( ! empty( $default_tab ) && ! in_array( $default_tab, $available_tabs_slugs ) ) {
-		delete_option( 'yz_profile_default_tab' );
-	}
-
-}
-
-add_action( 'bp_ready', 'yz_disable_profile_default_tab', 9999 );
-
-/**
- * Create Menu Shortcode.
- */
-function yz_user_account_avatar() {
-
-	if ( ! is_user_logged_in() ) {
-		return false;
-	}
-
-	// Get Data
-	$display_icon = yz_options( 'yz_disable_wp_menu_avatar_icon' );
-
-	// Get Logged-IN User ID.
-	$user_id = bp_loggedin_user_id();
-
-	ob_start();
-
-    ?>
-
-    <div class="yz-primary-nav-area">
-
-        <div class="yz-primary-nav-settings">
-            <div class="yz-primary-nav-img" style="background-image: url(<?php echo bp_core_fetch_avatar( array(
-            'item_id' => $user_id, 'type' => 'thumbnail', 'html' => false ) ); ?>)"></div>
-            <span><?php echo apply_filters( 'yz_account_avatar_shortcode_username', bp_core_get_username( $user_id ), $user_id ); ?></span>
-            <?php if ( 'on' == $display_icon ) : ?><i class="fas fa-angle-down yz-settings-icon"></i><?php endif; ?>
-        </div>
-        
-    </div>
-
-    <?php
-
-    return ob_get_clean();;
-}
-
-add_shortcode( 'youzer_account_avatar', 'yz_user_account_avatar' );
-
-/**
- * Activate Shortcode in Wordpress Menu
- */
-function yz_activate_wp_menus_shortcodes( $items ) {
-    return do_shortcode( $items );
-}
-add_filter( 'wp_nav_menu_items', 'yz_activate_wp_menus_shortcodes', 10 );
-
-// function yz_activate_wp_menus_shortcodes( $title, $item, $args, $depth ) {
-//     return do_shortcode( $title );
-// }
-
-// add_filter( 'nav_menu_item_title', 'yz_activate_wp_menus_shortcodes', 10, 4 );
-
-/**
- * Replace Wordpress Menu Variable
- */
-function yz_wp_menu_custom_tag_override( $atts, $item, $args ) {
-    $user = wp_get_current_user();
-    $newlink = str_replace( '#yz_user#', $user->user_login, $atts['href'] );
-    $atts['href'] = $newlink;
-    return $atts;
-}
-
-add_filter( 'nav_menu_link_attributes', 'yz_wp_menu_custom_tag_override', 10, 3 );

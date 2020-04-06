@@ -292,6 +292,7 @@ body #buddypress .activity-list li.load-more a:hover,
 }
 
 .youzer .activity-header p {
+    padding: 0;
     color: #969696;
     font-size: 13.5px;
     line-height: 18px;
@@ -416,8 +417,8 @@ body #buddypress .activity-list li.load-more a:hover,
     margin: 0 0 0 12px;
 }
 
-.youzer .activity-inner + .yz-activity-embed,
-.youzer .activity-inner + .yz-post-attachments {
+.youzer .activity-inner + .yz-post-attachments,
+.youzer .activity-inner + .yz-activity-embed {
     margin-top: 20px;
 }
 
@@ -425,6 +426,7 @@ body #buddypress .activity-list li.load-more a:hover,
     margin-top: 20px;
 }
 
+.youzer .activity-inner p:empty,
 .youzer .yz-post-attachments:empty {
     display: none;
 }
@@ -457,6 +459,7 @@ body #buddypress .activity-list li.load-more a:hover,
 }
 
 .youzer .activity-inner p {
+    padding: 0;
     color: #939ba3;
     font-size: 14px;
     margin-bottom: 15px;
@@ -481,6 +484,7 @@ body #buddypress .activity-list li.load-more a:hover,
     font-weight: 600;
     box-shadow: none;
     line-height: 14px;
+    text-shadow: none;
     margin: 0 15px 0 0;
     display: inline-block;
     vertical-align: middle;
@@ -607,7 +611,7 @@ body #buddypress .activity-list li.load-more a:hover,
     overflow: initial;
 }
 
-.youzer select.yz-activity-privacy {
+#youzer select.yz-activity-privacy {
     display: none;
 }
 
@@ -768,10 +772,10 @@ body #buddypress .activity-list li.load-more a:hover,
     float: left;
 }
 
-.youzer .activity-meta .yz-post-comments-nbr i {
+#youzer .activity-meta .yz-post-comments-nbr i {
     width: 35px;
     height: 35px;
-    color: #898989;
+    color: #a7a6a6;
     font-size: 14px;
     line-height: 35px;
     margin-right: 8px;
@@ -867,6 +871,62 @@ body #buddypress .activity-list li.load-more a:hover,
     max-width: 100%;
 }
 
+.youzer .acomment-content .yz-comment-attachments {
+    margin-top: 15px;
+}
+
+.yz-comment-attachments audio,
+.yz-comment-attachments video {
+    display: block;
+    width: 100%;
+}
+
+.youzer .yz-comment-attachments a.yz-comment-file {
+    display: inline-block;
+    background: #f9f9f9;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 0;
+}
+
+.yz-comment-file .yz-file-icon {
+    margin-right: 15px;
+}
+
+.yz-comment-file .yz-file-icon i {
+    color: #fff;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 3px;
+    text-align: center;
+    background: #1fc36a;
+}
+
+.yz-comment-file .yzw-file-details,
+.yz-comment-file .yz-file-icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.yz-comment-file .yzw-file-title,
+.yz-comment-file .yzw-file-size {
+    display: block;
+}
+
+.yz-comment-file .yzw-file-title {
+    color: #898989;
+    font-weight: 600;
+    line-height: 22px;
+    font-size: 13px;
+}
+
+.yz-comment-file .yzw-file-size {
+    color: #898989;
+    font-size: 13px;
+    font-weight: 400;
+}
+
 .youzer .acomment-content img.emojioneemoji,
 .youzer .activity-content img.emojioneemoji {
     max-width: 20px;
@@ -953,6 +1013,7 @@ body #buddypress .activity-list li.load-more a:hover,
     font-size: 13px;
     font-weight: 600;
     margin-top: 10px;
+    word-break: break-all;
 }
 
 /* # Wall - Slideshow Post */
@@ -1031,14 +1092,20 @@ body #buddypress .activity-list li.load-more a:hover,
 
 .yzw-quote-content blockquote {
     padding: 0;
+    width: 75%;
     border: none;
+    letter-spacing: 0;
+    font-size: 18px;
+    font-weight: 400;
     line-height: 32px;
     margin: 0 0 20px 0;
     text-align: initial;
     font-style: inherit;
-    width: 75%;
-    font-size: 18px;
     margin: 0 auto 20px;
+}
+
+.yzw-quote-content blockquote:before {
+    border:none;
 }
 
 .yzw-quote-post .yzw-quote-owner {
@@ -1166,6 +1233,11 @@ body #buddypress .activity-list li.load-more a:hover,
 /* # Wall - File Post **/
 
 .yzw-file-post {
+    padding: 20px;
+    text-align: left;
+}
+
+.yz-post-attachments .yzw-file-post {
     padding: 35px 25px;
     text-align: center;
 }
@@ -1174,30 +1246,55 @@ body #buddypress .activity-list li.load-more a:hover,
     color: #fff;
     font-size: 14px;
     font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.yz-post-attachments .yzw-file-post .yzw-file-title {
     margin-bottom: 10px;
 }
+
+.yz-comment-attachments .yzw-file-post .yzw-file-icon,
+.yz-comment-attachments .yzw-file-details {
+    display: inline-block;
+    vertical-align: middle;
+} 
 
 .yzw-file-post .yzw-file-size {
     color: #f6f6f6;
     font-size: 12px;
-    margin-bottom: 20px;
+    line-height: 12px;
     text-transform: uppercase;
+}
+
+.yz-post-attachments .yzw-file-post .yzw-file-size {
+    margin-bottom: 20px;
 }
 
 .yzw-file-post .yzw-file-icon {
     color: #fff;
-    font-size: 84px;
-    margin-bottom: 15px;
+    font-size: 42px;
+    margin: 0 12px 0 0;
 }
 
-.yzw-file-post .yzw-file-download {
+.yz-post-attachments .yzw-file-post .yzw-file-icon {
+    font-size: 84px;
+    margin: 0 0 15px;
+}
+
+.yzw-file-post a.yzw-file-download {
+    margin: 0;
     color: #999;
+    float: right;
     font-size: 12px;
     font-weight: 600;
     padding: 10px 25px;
     display: inline-block;
     background-color: #fff;
     text-transform: uppercase;
+}
+
+.yz-post-attachments .yzw-file-post .yzw-file-download {
+    float: none;
 }
 
 .yzw-file-post .yzw-file-download i {
@@ -1335,11 +1432,11 @@ body #buddypress .activity-list li.load-more a:hover,
     left: 16px;
 }
 
+.youzer #activity-stream .ac-form .yz-wall-upload-btn,
 .youzer #activity-stream .ac-form .yz-send-comment {
     top: 5px;
     margin: 0;
     padding: 0;
-    right: 10px;
     width: 40px;
     height: 40px;
     cursor: pointer;
@@ -1351,11 +1448,21 @@ body #buddypress .activity-list li.load-more a:hover,
     background-color: transparent;
 }
 
+.youzer #activity-stream .ac-form .yz-send-comment {
+    right: 10px;
+}
+
+.youzer #activity-stream .ac-form .yz-wall-upload-btn {
+    right: 45px;
+}
+
+.youzer #activity-stream .ac-form .yz-wall-upload-btn i,
 .youzer #activity-stream .ac-form .yz-send-comment i {
     color: #b2b2b2;
     font-size: 18px;
 }
 
+.youzer #activity-stream .ac-form .yz-wall-upload-btn i:hover,
 .youzer #activity-stream .ac-form .yz-send-comment i:hover {
     color: #a5a4a4;
 }
@@ -1391,20 +1498,21 @@ body #buddypress .activity-list li.load-more a:hover,
 }
 
 .youzer #activity-stream .ac-reply-content button.rtmedia-comment-media-upload {
-    vertical-align: middle;
-    width: 45px;
-    height: 45px;
+vertical-align: middle;
+    width: 35px;
+    height: 35px;
     padding: 0;
     margin: 0;
     border-radius: 3px;
-    line-height: initial;
+    line-height: 35px;
     color: #898989;
     background: #ededed;
-    margin-top: 20px;
+    margin: 20px 5px 0 0;
 }
 
 .youzer #activity-stream .ac-reply-content button.rtmedia-comment-media-upload span {
-    font-size: 21px;
+    font-size: 18px;
+    line-height: 35px;
 }
 
 .youzer #activity-stream .ac-reply-content a {
@@ -1423,10 +1531,11 @@ body #buddypress .activity-list li.load-more a:hover,
 }
 
 .youzer #activity-stream .ac-reply-content input[type='submit'] {
-    color: #fff;
+    margin-top: 20px;
+    color: #ffffff;
     border: none;
     width: initial;
-    height: 30px;
+    height: 35px;
     font-size: 11px;
     box-shadow: none;
     font-weight: 600;
@@ -1436,7 +1545,7 @@ body #buddypress .activity-list li.load-more a:hover,
     display: inline-block;
     letter-spacing: .05em;
     background-image: none;
-    background-color: #898989;
+    background-color: #939eab;
     text-transform: uppercase;
 }
 
@@ -1480,6 +1589,7 @@ body #buddypress .activity-list li.load-more a:hover,
 
 .youzer .activity-comments {
     background-color: #f4f4f4;
+    margin: 0 !important;
 }
 
 .youzer .activity-comments > ul {
@@ -1634,6 +1744,7 @@ body #buddypress .activity-list li.load-more a:hover,
     font-size: 13px;
     line-height: 24px;
     font-weight: 400;
+    padding: 0;
 }
 
 .youzer .acomment-content,
@@ -1651,6 +1762,9 @@ body #buddypress .activity-list li.load-more a:hover,
     font-size: 13px;
     font-weight: 600;
     margin-right: 15px;
+    box-shadow: none;
+    border: none;
+    text-shadow: none;
     background-color: transparent;
 }
 
@@ -1773,6 +1887,7 @@ body #buddypress .activity-list li.load-more a:hover,
     color: #8c9094;
     font-size: 14px;
     min-height: 100px;
+    background-color: transparent;
 }
 
 #yz-wall-form .yz-wall-textarea,
@@ -1902,7 +2017,7 @@ body #buddypress .activity-list li.load-more a:hover,
     border-top: 1px solid #f6f6f6;
 }
 
-#yz-upload-attachments {
+.yz-upload-attachments {
     display: none !important;
 }
 
@@ -2007,10 +2122,13 @@ body #buddypress .activity-list li.load-more a:hover,
  * Wall - Attachments
  */
 
-.yz-wall-attachments .yz-form-attachments {
+#yz-wall-form .yz-wall-attachments .yz-form-attachments {
     padding: 15px;
-    overflow: hidden;
     border-top: 1px solid #f6f6f6;
+}
+
+.yz-wall-attachments .yz-form-attachments {
+    overflow: hidden;
 }
 
 .yz-wall-attachments .yz-form-attachments:empty {
@@ -2020,139 +2138,6 @@ body #buddypress .activity-list li.load-more a:hover,
 #yz-wall-form #yz-add-attachments i {
     font-size: 16px;
     margin-right: 8px;
-}
-
-/* # Wall Preview - File */
-
-#yz-wall-form .yz-file-preview {
-    width: 50%;
-    margin: 10px;
-    display: block;
-    overflow: hidden;
-    line-height: 18px;
-    background: #f5f5f5;
-    padding: 3px 15px 6px;
-
-}
-
-#yz-wall-form .yz-file-preview .yz-attachment-details .yz-file-icon {
-    color: #999;
-    font-size: 12px;
-    margin-right: 8px; 
-}
-
-.rtl #yz-wall-form .yz-file-preview .yz-attachment-details .yz-file-icon {
-    margin-right: 0;
-    margin-left: 8px;
-}
-
-#yz-wall-form .yz-file-preview .yz-attachment-details .yz-file-name {
-    color: #7d7d7d;
-    font-size: 11px;
-    font-weight: 600;
-}
-
-#yz-wall-form .yz-file-preview .yz-attachment-details .yz-delete-attachment {
-    color: #999;
-    float: right;
-    font-size: 12px;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-.rtl #yz-wall-form .yz-file-preview .yz-attachment-details .yz-delete-attachment {
-    float: left;
-}
-
-#yz-wall-form .yz-file-preview .yz-file-progress {
-    clear: both;
-    display: block;
-    margin-top: 8px;
-    background: rgba(0,0,0,0.10);
-}
-
-#yz-wall-form .yz-file-preview .yz-file-progress .yz-file-upload.yz-file-uploaded {
-    background-color: #74c3e6 !important;
-}
-
-#yz-wall-form .yz-file-preview .yz-file-progress .yz-file-upload {
-    padding: 2px;
-    display: block;
-    margin-bottom: 5px;
-    background-color: #a9a9a9;
-}
-
-/* # Wall Preview - Image */
-
-#yz-wall-form .yz-image-preview {
-    float: left;
-    width: 80px;
-    height: 80px;
-    margin: 10px;
-    position: relative;
-    background-size: cover;
-    background-color: #f5f5f5;
-    background-repeat: no-repeat;
-}
-
-.rtl #yz-wall-form .yz-image-preview {
-    float: right;
-}
-
-#yz-wall-form .yz-image-preview .yz-attachment-details .yz-file-icon {
-    color: #999;
-    font-size: 14px;
-    line-height: 75px;
-}
-
-#yz-wall-form .yz-image-preview .yz-file-progress .yz-file-upload {
-    padding: 2px;
-    display: block;
-    background-color: #a9a9a9;
-}
-
-#yz-wall-form .yz-image-preview .yz-file-progress .yz-file-upload.yz-file-uploaded {
-    background-color: #74c3e6 !important;
-}
-
-#yz-wall-form .yz-image-preview .yz-file-progress {
-    bottom: 0;
-    width: 100%;
-    display: block;
-    position: absolute;
-    background: rgba(0,0,0,0.10);
-}
-
-#yz-wall-form .yz-image-preview:hover .yz-attachment-details .yz-delete-attachment {
-    opacity: 1;
-}
-
-#yz-wall-form .yz-image-preview .yz-attachment-details .yz-delete-attachment {
-    top: 50%;
-    left: 50%;
-    opacity: 0;
-    color: #fff;
-    width: 40px;
-    height: 40px;
-    margin: auto;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 38px;
-    text-align: center;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.60);
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
-    -webkit-transition: all 0.3s ease-in-out;
-    -moz-transition: all 0.3s ease-in-out;
-    -o-transition: all 0.3s ease-in-out;
-    transition: all 0.3s ease-in-out;
-}
-
-#yz-wall-form .yz-image-preview .yz-attachment-details {
-    text-align: center;
-    line-height: 80px;
 }
 
 /*
@@ -3005,6 +2990,10 @@ body #buddypress .activity-list li.load-more a:hover,
     margin: 0;
 }
 
+.yz-activity-shortcode {
+    display: initial !important;
+}
+
 .yz-activity-shortcode .yz-page {
     padding: 35px;
 }
@@ -3250,6 +3239,7 @@ body #buddypress .activity-list li.load-more a:hover,
     color: #8d8c8c;
     font-size: 14px;
     line-height: 25px;
+    padding: 0;
 }
 
 .yz-wall-new-post .yz-post-excerpt p:last-of-type {
@@ -3724,6 +3714,7 @@ body #buddypress .activity-list li.load-more a:hover,
 
 .yz-product-content .yz-product-meta ul li i {
     margin-right: 5px;
+    font-size: 12px;
 }
 
 .rtl .yz-product-content .yz-product-meta ul li i {
@@ -3740,6 +3731,7 @@ body #buddypress .activity-list li.load-more a:hover,
 
 .yz-product-content .yz-product-text p {
     margin: 0;
+    padding: 0;
     color: #8d8c8c;
     font-size: 13px;
     line-height: 24px;
@@ -3838,6 +3830,7 @@ body #buddypress .activity-list li.load-more a:hover,
 .yz-product-action-button .yz-btn-icon i {
     width: 35px;
     height: 32px;
+    font-size: 13px;
     line-height: 32px;
     text-align: center;
 }
@@ -4106,9 +4099,8 @@ body #buddypress .activity-list li.load-more a:hover,
 #yz-wall-nav li a span,
 .yz-activity-pinned-icon i,
 .yz-wall-modal-actions button ,
-#yz-wall-form .yz-file-preview,
-#yz-wall-form .yz-image-preview,
 .yzw-quote-post .yzw-quote-owner,
+.yz-comment-attachments .yzw-file-post,
 .yzw-file-post .yzw-file-download,
 .youzer .yz-wall-embed .yz-embed-avatar,
 .youzer #activity-stream .ac-form textarea,
@@ -4146,8 +4138,7 @@ body #buddypress .activity-list li.load-more a:hover,
 .yz-wall-options .yz-wall-opts-item label,
 .yz-page-btns-border-oval .yz-wall-embed .yz-embed-action .group-button a,
 .yz-page-btns-border-oval .yz-wall-embed .yz-embed-action .message-button a,
-.yz-page-btns-border-oval .yz-wall-embed .yz-embed-action .friendship-button a,
-#yz-wall-form .yz-image-preview .yz-attachment-details .yz-delete-attachment {
+.yz-page-btns-border-oval .yz-wall-embed .yz-embed-action .friendship-button a {
     border-radius: 50px;
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
@@ -4500,8 +4491,8 @@ body #buddypress .activity-list li.load-more a:hover,
     }
 
     .youzer .yz-show-item-tools {
-        top: 5px;
-        right: 8px;
+        top: 0;
+        right: 0;
     }
 
     .youzer .yz-show-item-tools:not(.loading) i:before {
@@ -4649,7 +4640,7 @@ body #buddypress .activity-list li.load-more a:hover,
         text-indent: -99999px;
     }
 
-    .youzer .activity-meta .yz-post-comments-nbr i,
+    #youzer .activity-meta .yz-post-comments-nbr i,
     .youzer .activity-meta .yz-post-comments-nbr span {
         text-indent: 0;
         float: left;
@@ -4884,6 +4875,28 @@ body #buddypress .activity-list li.load-more a:hover,
     
     .yz-wall-actions .yz-posting-form-actions {
         float: none;
+    }
+
+    .yz-comment-attachments .yzw-file-details,
+    .yz-comment-attachments .yzw-file-post .yzw-file-icon {
+        display: block;
+    }
+
+    .yzw-file-post {
+        text-align: center;
+    }
+
+    .yzw-file-post .yzw-file-icon {
+        margin-bottom: 15px;
+    }
+
+    /*.yzw-file-post .yzw-file-title {
+        margin-bottom: 10px;
+    }
+*/
+    .yzw-file-post a.yzw-file-download {
+        float: none;
+        margin-top: 15px;
     }
 
 }

@@ -1,17 +1,35 @@
 <?php
 
+if ( ! class_exists( 'Youzer_Header' ) ) {
+
 class Youzer_Header {
 
+	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Return the instance of this class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+	
 	function __construct() {
 
 		// Add Profile Header
-		add_action( 'youzer_profile_header', array( &$this, 'profile_header' ) );
+		add_action( 'youzer_profile_header', array( $this, 'profile_header' ) );
 
 		// Add Group Header
-		add_action( 'youzer_group_header', array( &$this, 'group_header' ) );
+		add_action( 'youzer_group_header', array( $this, 'group_header' ) );
 
 		// Remove Issues With Prefetching Adding Extra Views
-		remove_action( 'wp_head', array( &$this, 'adjacent_posts_rel_link_wp_head' ) , 10, 0 );
+		remove_action( 'wp_head', array( $this, 'adjacent_posts_rel_link_wp_head' ) , 10, 0 );
 
 	}
 
@@ -24,10 +42,8 @@ class Youzer_Header {
 			return;
 		}
 
-		global $Youzer;
-
 		// Get Header Layout.
-		$header_layout = yz_options( 'yz_header_layout' );
+		$header_layout = yz_option( 'yz_header_layout', 'hdr-v1' );
 
 		if ( false !== strpos( $header_layout, 'yzb-author' ) ) {
 			// Get Auhtor Box Arguments.
@@ -35,16 +51,16 @@ class Youzer_Header {
 				'target'  	=> 'header',
 				'layout'  	=> $header_layout,
 				'user_id' 	=> bp_displayed_user_id(),
-				'meta_icon' => yz_options( 'yz_header_meta_icon' ),
-				'meta_type' => yz_options( 'yz_header_meta_type' ),
-				'cover_overlay'	=> yz_options( 'yz_enable_header_overlay' ),
-				'cover_pattern'	=> yz_options( 'yz_enable_header_pattern' )
+				'meta_icon' => yz_option( 'yz_header_meta_icon', 'fas fa-map-marker-alt' ),
+				'meta_type' => yz_option( 'yz_header_meta_type', 'full_location' ),
+				'cover_overlay'	=> yz_option( 'yz_enable_header_overlay', 'on' ),
+				'cover_pattern'	=> yz_option( 'yz_enable_header_pattern', 'on' )
 			);
 			// Get Author Box Header.
-	 		$Youzer->author->get_author_box( $args );
+	 		yz_author_box()->get_author_box( $args );
 		} else {
 			// Get Standard Header.
-			$this->get_header( 'user' );
+			$this->get_header( 'yz_users' );
 		}
 
 	}
@@ -58,13 +74,11 @@ class Youzer_Header {
 			return;
 		}
 
-		global $Youzer;
-
-		// Get Header Layout.
-		$header_layout = yz_options( 'yz_group_header_layout' );
+		// // Get Header Layout.
+		// $header_layout = yz_option( 'yz_group_header_layout', 'hdr-v1' );
 
 		// Get Standard Header.
-		$this->get_header( 'group' );
+		$this->get_header( 'yz_groups' );
 
 	}
 
@@ -73,11 +87,9 @@ class Youzer_Header {
 	 */
 	function get_header( $component ) {
 
-		global $Youzer;
-
 		?>
 
-		<div class="yz-header-cover" <?php $Youzer->$component->cover(); ?>>
+		<div class="yz-header-cover" <?php $component()->cover(); ?>>
 			<?php do_action( 'yz_before_header_cover' ); ?>
 			<div class="yz-cover-content">
 				<?php do_action( 'yz_before_header_cover_content' ); ?>
@@ -120,18 +132,17 @@ class Youzer_Header {
 		$header_class[] = 'yz-profile-header';
 
 		// Get Options.
-
 		if ( 'user' == $component ) {
-			$header_type 	= yz_options( 'yz_header_type' );
-			$header_layout 	= yz_options( 'yz_header_layout' );
-			$header_effect 	= yz_options( 'yz_hdr_load_effect' );
-			$header_overlay	= yz_options( 'yz_enable_header_overlay' );
-			$header_pattern	= yz_options( 'yz_enable_header_pattern' );
+			// $header_type 	= yz_option( 'yz_header_type' );
+			$header_layout 	= yz_option( 'yz_header_layout', 'hdr-v1' );
+			$header_effect 	= yz_option( 'yz_hdr_load_effect', 'fadeIn' );
+			$header_overlay	= yz_option( 'yz_enable_header_overlay', 'on' );
+			$header_pattern	= yz_option( 'yz_enable_header_pattern', 'on' );
 		} elseif ( 'group' == $component ) {
-			$header_type 	= yz_options( 'yz_group_header_type' );
-			$header_layout 	= yz_options( 'yz_group_header_layout' );
-			$header_overlay	= yz_options( 'yz_enable_group_header_overlay' );
-			$header_pattern	= yz_options( 'yz_enable_group_header_pattern' );
+			// $header_type 	= yz_option( 'yz_group_header_type' );
+			$header_layout 	= yz_option( 'yz_group_header_layout', 'hdr-v1' );
+			$header_overlay	= yz_option( 'yz_enable_group_header_overlay', 'on' );
+			$header_pattern	= yz_option( 'yz_enable_group_header_pattern', 'on' );
 		}
 
 		// Add a class depending on another one.
@@ -156,7 +167,7 @@ class Youzer_Header {
 
 		if ( 'user' == $component ) {
 			// Add effect class.
-		 	$header_class[] = youzer()->widgets->get_loading_effect( $header_effect, 'class' );
+		 	$header_class[] = yz_widgets()->get_loading_effect( $header_effect, 'class' );
 		}
 
 	 	// Return Class Name.
@@ -216,10 +227,10 @@ class Youzer_Header {
 		$args = apply_filters( 'yz_profile_headers_args', $args );
 
 		// Get Header Layout.
-		if ( 'user' == $component ) {
-			$header_layout = yz_options( 'yz_header_layout' );
-		} elseif ( 'group' == $component ) {
-			$header_layout = yz_options( 'yz_group_header_layout' );
+		if ( 'yz_users' == $component ) {
+			$header_layout = yz_option( 'yz_header_layout', 'hdr-v1' );
+		} elseif ( 'yz_groups' == $component ) {
+			$header_layout = yz_option( 'yz_group_header_layout', 'hdr-v1' );
 		}
 
 		// Mutual Structure
@@ -241,15 +252,28 @@ class Youzer_Header {
 
 		// Get Header Structure
 		$header_args = $this->get_header_structure( $component );
-
 		if ( isset( $header_args[ $row ][ $target ] ) ) :
-			global $Youzer;
 			foreach ( $header_args[ $row ][ $target ] as $element ) {
 				do_action( 'yz_before_header_' . $element .'_' . $target );
-				$Youzer->$component->$element();
+				$component()->$element();
 				do_action( 'yz_after_header_' . $element .'_' . $target );
 			}
 		endif;
 
 	}
+}
+
+
+/**
+ * Get a unique instance of Youzer Header.
+ */
+function yz_headers() {
+	return Youzer_Header::get_instance();
+}
+
+/**
+ * Launch Youzer Groups!
+ */
+yz_headers();
+
 }

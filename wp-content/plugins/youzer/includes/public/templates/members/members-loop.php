@@ -103,7 +103,7 @@ do_action( 'bp_before_members_loop' ); ?>
 				}
 			?>
 
-			<?php if ( 'on' == yz_options( 'yz_enable_md_cards_actions_buttons' ) && is_user_logged_in() ) : ?>
+			<?php if ( 'on' == yz_option( 'yz_enable_md_cards_actions_buttons', 'on' ) && is_user_logged_in() ) : ?>
 			
 			<div class="yzm-user-actions">
 

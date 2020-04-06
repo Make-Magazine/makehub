@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Xprofile Fields Functions.
  */
@@ -44,7 +43,7 @@ function yz_save_xprofile_group_icon( $group ) {
 	$group_icon = $_POST['fields_group_icon'];
 	
 	// Save Group Icon.
-	update_option( 'yz_xprofile_group_icon_' . $group->id , $group_icon );
+	update_option( 'yz_xprofile_group_icon_' . $group->id , $group_icon, 'no' );
 
 }
 
@@ -57,8 +56,7 @@ function yz_xprofile_groups_scripts( $hook ) {
 
     if ( isset( $_GET['page'] ) && 'bp-profile-setup' == $_GET['page'] ) {
         wp_enqueue_style( 'yz-icons' );
-        wp_enqueue_style( 'yz-iconpicker' );
-        wp_enqueue_script( 'yz-iconpicker' );
+        yz_iconpicker_scripts();
     }
 
 }

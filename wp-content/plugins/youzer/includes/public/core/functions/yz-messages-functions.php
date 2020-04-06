@@ -194,3 +194,80 @@ function yz_get_context_user_id( $user_id = false ) {
     return apply_filters( 'yz_get_context_user_id', $user_id );
 
 }
+
+/**
+ * Get Activity Attachments.
+ */
+function yz_get_message_attachments( $message_id = null, $field = 'src' ) {
+
+    if ( empty( $message_id ) ) {
+        return;
+    }
+
+    global $wpdb, $Yz_media_table;
+
+    // Prepare Sql
+    $sql = $wpdb->prepare( "SELECT $field FROM $Yz_media_table WHERE item_id = %d AND component = 'message'", $message_id );
+
+    $result = $wpdb->get_row( $sql , ARRAY_A );
+
+    if ( ! empty( $result ) ) {
+        $result =  maybe_unserialize( $result[ $field ] );
+    }
+
+    return $result;
+
+}
+
+/**
+ * Allow Empty Messages That contains Attachments.
+ */
+function yz_allow_messages_without_content( $content ) {
+    return str_replace( '{{{yz_message_attachment}}}', '', $content );
+}
+
+add_filter( 'messages_message_content_before_save', 'yz_allow_messages_without_content' );
+
+/**
+ * Get Message Attachment.
+ */
+function yz_add_message_attachments( $content ) {
+
+    $message_id = bp_get_the_thread_message_id();
+
+    $attachments = yz_get_message_attachments( $message_id );
+
+    if ( empty( $attachments ) ) {
+        return $content;
+    }
+
+    // Get File Type.
+    switch ( yz_get_file_type( $attachments['original'] ) ) {
+
+        case 'image':
+            $img_url = yz_get_media_url( $attachments );
+            $attachment = '<a href="' .  $img_url .'" rel="nofollow" data-lightbox="yz-post-'. $message_id . '"><img src="' . $img_url . '" alt="" /></a>';
+            break;
+        
+        case 'audio':
+            $attachment = '<audio controls><source src="' . yz_get_media_url( $attachments, true ) . '" type="audio/mpeg">' . __( 'Your browser does not support the audio element.', 'youzer' ) . '</audio>';
+            break;
+        
+        case 'video':
+            $attachment = '<video width="100%" controls preload="metadata"><source src="' . yz_get_media_url( $attachments, true ) . '" type="video/mp4">' . __( 'Your browser does not support the video tag.', 'youzer' ) . '</video>';
+            break;
+        
+        case 'file':
+            $data = yz_get_message_attachments( $message_id, 'data' );
+            $attachment = '<a class="yz-message-file" rel="nofollow" href="' . yz_get_media_url( $attachments ) .'"><span class="yz-file-icon"><i class="fas fa-download yz-attachment-file-icon"></i></span><span class="yzw-file-details"><span class="yzw-file-title" title="'. $data['real_name']. '">' . yz_get_filename_excerpt( $data['real_name'], 45 ) . '</span><span class="yzw-file-size">' . yz_file_format_size( $data['file_size'] ) . '</span></span></a>';
+            break;
+        
+        default:
+            $attachment = '';
+            break;
+    }
+
+    return $content . '<div class="yz-message-attachment">' . $attachment . '</div>';
+}
+
+add_filter( 'bp_get_the_thread_message_content', 'yz_add_message_attachments' );

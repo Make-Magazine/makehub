@@ -7,7 +7,7 @@
 		/**
 		 * Pin / Unpin Post.
 		 */
-		$( document ).on( 'click',  ".yz-pin-tool", function ( e ) {
+		$( document ).on( 'click',  '.yz-pin-tool', function ( e ) {
 
     		e.preventDefault();
 
@@ -26,12 +26,13 @@
     		// Get Button Data.
 			var data = {
 				action: 'yz_handle_sticky_posts',
-				group_id: Yz_Sticky_Posts.current_group,
-				security: Yz_Sticky_Posts.security_nonce,
+				security: Youzer.security_nonce,
 				operation: $( this ).attr( 'data-action' ),
-				component: Yz_Sticky_Posts.current_component,
+				component: $( this ).closest( '.activity-item ' ).hasClass( 'groups' ) ? 'groups' : 'activity',
 				post_id: $( this ).closest( '.yz-activity-tools' ).attr( 'data-activity-id' ),
 			};
+
+			console.log( data.component );
 
 			// Process Verification.
 			$.post( ajaxurl, data, function( response ) {
@@ -64,8 +65,7 @@
 					}
 
 					// Get Button Title.
-					yz_pin_btn_title = ( res.action == 'pin' ) ?
-					Yz_Sticky_Posts.pin_post : Yz_Sticky_Posts.unpin_post;
+					yz_pin_btn_title = ( res.action == 'pin' ) ? res.pin : res.unpin;
 
 					// Update Button title.
 					yz_curent_pin_btn.find( '.yz-tool-name' ).text(  yz_pin_btn_title );

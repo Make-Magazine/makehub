@@ -17,12 +17,13 @@ function logy_is_bp_registration_completed() {
 function logy_register_bp_template() {
      
     if ( function_exists( 'bp_register_template_stack'  ) ) {
-        bp_register_template_stack( 'logy_register_bp_templates_location', 1 );
+        bp_register_template_stack( 'logy_register_bp_templates_location', 0 );
     }
 
 }
-add_action( 'bp_init', 'logy_register_bp_template' );
 
+add_action( 'init', 'logy_register_bp_template', 9999 );
+     
 /**
  * # Register Buddypress Custom Template Location .
  */
@@ -110,13 +111,13 @@ function logy_bp_retrieve_password() {
 function yz_buddypress_register_form_terms() {
 
     // Display terms and conditions & privacy policy.
-    if ( 'off' == logy_options( 'logy_show_terms_privacy_note' ) ) {
+    if ( 'off' == yz_option( 'logy_show_terms_privacy_note', 'on' ) ) {
         return false;
     }
 
     // Get Data
-    $terms_url = logy_options( 'logy_terms_url' );
-    $privacy_url = logy_options( 'logy_privacy_url' );
+    $terms_url = yz_option( 'logy_terms_url' );
+    $privacy_url = yz_option( 'logy_privacy_url' );
 
     ?>
 

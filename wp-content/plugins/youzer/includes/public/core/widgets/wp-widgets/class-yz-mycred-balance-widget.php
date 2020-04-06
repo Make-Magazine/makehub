@@ -20,8 +20,6 @@ class YZ_Mycred_Balance_Widget extends WP_Widget {
 	 * @param array $instance Previously saved values from database.
 	 */
 	public function form( $instance ) {
-
-		global $Youzer;
 	    
 		// Default Widget Settings
 	    $defaults = array(

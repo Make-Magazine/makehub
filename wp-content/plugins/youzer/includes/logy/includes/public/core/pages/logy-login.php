@@ -25,7 +25,6 @@ class Logy_Login {
 			// Redirects.
 			add_filter( 'authenticate', array( $this, 'maybe_redirect_at_authenticate' ), 101, 3 );
 			add_filter( 'login_redirect', array( $this, 'redirect_after_login' ), 10, 3 );
-			add_action( 'wp_logout', array( $this, 'redirect_after_logout' ) );
 			add_action( 'wp_login_failed', array( $this, 'logy_login_fail' ), 9999 );
 
 		}
@@ -135,11 +134,11 @@ class Logy_Login {
 		if ( ! $requested_redirect_to && isset( $user->ID ) ) {
 			if ( user_can( $user, 'manage_options' ) ) {
 				// Get Admin Redirect Page
-				$admin_redirect_page = logy_options( 'logy_admin_after_login_redirect' );
+				$admin_redirect_page = yz_option( 'logy_admin_after_login_redirect', 'dashboard' );
 				$redirect_to = $this->get_redirect_page( $admin_redirect_page, $user->ID );
 			} else {
 				// Get User Redirect Page
-				$user_redirect_page  = logy_options( 'logy_user_after_login_redirect' );
+				$user_redirect_page  = yz_option( 'logy_user_after_login_redirect', 'home' );
 				$redirect_to = $this->get_redirect_page( $user_redirect_page, $user->ID );
 			}
 		}
@@ -183,43 +182,43 @@ class Logy_Login {
 	/**
 	 * Messages Attributes
 	 */
-	function messages_attributes() {
-		// Pass the redirect parameter to the WordPress login functionality: by default,
-		// don't specify a redirect, but if a valid redirect URL has been passed as
-		// request parameter, use it.
-		$attributes['redirect'] = '';
-		if ( isset( $_REQUEST['redirect_to'] ) ) {
-			$attributes['redirect'] = wp_validate_redirect( $_REQUEST['redirect_to'], $attributes['redirect'] );
-		}
+	// function messages_attributes() {
+	// 	// Pass the redirect parameter to the WordPress login functionality: by default,
+	// 	// don't specify a redirect, but if a valid redirect URL has been passed as
+	// 	// request parameter, use it.
+	// 	$attributes['redirect'] = '';
+	// 	if ( isset( $_REQUEST['redirect_to'] ) ) {
+	// 		$attributes['redirect'] = wp_validate_redirect( $_REQUEST['redirect_to'], $attributes['redirect'] );
+	// 	}
 
-		// Error messages
-		$errors = array();
-		if ( isset( $_REQUEST['login'] ) ) {
-			$error_codes = explode( ',', $_REQUEST['login'] );
-			foreach ( $error_codes as $code ) {
-				$errors[] = $this->logy->form->get_error_message( $code );
-			}
-		}
+	// 	// Error messages
+	// 	$errors = array();
+	// 	if ( isset( $_REQUEST['login'] ) ) {
+	// 		$error_codes = explode( ',', $_REQUEST['login'] );
+	// 		foreach ( $error_codes as $code ) {
+	// 			$errors[] = $this->logy->form->get_error_message( $code );
+	// 		}
+	// 	}
 
-		// Filter Errors.
-		$errors = apply_filters( 'logy_login_errors', $errors );
+	// 	// Filter Errors.
+	// 	$errors = apply_filters( 'logy_login_errors', $errors );
 
-		$attributes['errors'] = $errors;
+	// 	$attributes['errors'] = $errors;
 
-		// Check if the user just registered
-		$attributes['registered'] = isset( $_REQUEST['registered'] );
+	// 	// Check if the user just registered
+	// 	$attributes['registered'] = isset( $_REQUEST['registered'] );
 
-		// Check if user just logged out
-		$attributes['logged_out'] = isset( $_REQUEST['logged_out'] ) && $_REQUEST['logged_out'] == true;
+	// 	// Check if user just logged out
+	// 	$attributes['logged_out'] = isset( $_REQUEST['logged_out'] ) && $_REQUEST['logged_out'] == true;
 
-		// Check if the user just requested a new password
-		$attributes['lost_password_sent'] = isset( $_REQUEST['checkemail'] ) && $_REQUEST['checkemail'] == 'confirm';
+	// 	// Check if the user just requested a new password
+	// 	$attributes['lost_password_sent'] = isset( $_REQUEST['checkemail'] ) && $_REQUEST['checkemail'] == 'confirm';
 
-		// Check if user just updated password
-		$attributes['password_updated'] = isset( $_REQUEST['password'] ) && $_REQUEST['password'] == 'changed';
+	// 	// Check if user just updated password
+	// 	$attributes['password_updated'] = isset( $_REQUEST['password'] ) && $_REQUEST['password'] == 'changed';
 
-		return $attributes;
-	}
+	// 	return $attributes;
+	// }
 
 	/**
 	 * Attributes
@@ -294,96 +293,6 @@ class Logy_Login {
         }
 
         return esc_url( $page_url );
-	}
-
-	/**
-	 * Form Actions Class
-	 */
-	function get_actions_class() {
-
-		// Create New Array();
-		$actions_class = array();
-
-		// Add Form Actions Main Class
-		$actions_class[] = 'logy-form-actions';
-
-		// Get Actions Layout
-		$actions_layout = logy_options( 'logy_login_actions_layout' );
-
-		// Get Form Options Data
-
-		$one_button = array(
-			'logy-actions-v3', 'logy-actions-v6'
-		);
-
-		$forgot_password = array(
-			'logy-actions-v2', 'logy-actions-v5', 'logy-actions-v9', 'logy-actions-v10'
-		);
-
-		$use_icons	= array(
-			'logy-actions-v4', 'logy-actions-v5', 'logy-actions-v6', 'logy-actions-v7',
-			'logy-actions-v10'
-		);
-
-		$full_witdh	= array(
-			'logy-actions-v1', 'logy-actions-v3', 'logy-actions-v4', 'logy-actions-v6',
-			'logy-actions-v9', 'logy-actions-v10'
-		);
-
-		$half_witdh	= array(
-			'logy-actions-v2', 'logy-actions-v5', 'logy-actions-v7', 'logy-actions-v8'
-		);
-
-		// Get One Button Class.
-		$actions_class[] = in_array( $actions_layout, $one_button ) ? 'logy-one-button' : null;
-
-		// Get Buttons icons Class.
-		$actions_class[] = in_array( $actions_layout, $use_icons ) ? 'logy-buttons-icons' : null;
-
-		// Get full Width Class.
-		$actions_class[] = in_array( $actions_layout, $full_witdh ) ? 'logy-fullwidth-button' : null;
-
-		// Get Half Width Class.
-		$actions_class[] = in_array( $actions_layout, $half_witdh ) ? 'logy-halfwidth-button' : null;
-
-		// Get "Forgot Password" Class.
-		$actions_class[] = in_array( $actions_layout, $forgot_password ) ? 'logy-lost-pswd' : null;
-
-		// Get Button Border Style.
-		$actions_class[] = logy_options( 'logy_login_btn_format' );
-
-		// Get Button Icons Position.
-		if ( in_array( $actions_layout, $use_icons ) ) {
-			$actions_class[] = logy_options( 'logy_login_btn_icons_position' );
-		}
-
-		// Return Action Area Classes
-		return logy_generate_class( $actions_class );
-
-	}
-
-	/**
-	 * Redirect to custom page after the user has been logged out.
-	 */
-	public function redirect_after_logout() {
-
-		// Get Redirect Page
-		$redirect_to = logy_options( 'logy_after_logout_redirect' );
-
-		// Get Redirect Url
-		if ( 'login' == $redirect_to ) {
-			$redirect_url = logy_page_url( 'login' ) . '?logged_out=true';
-		} elseif ( 'profile' == $redirect_to ) {
-			$redirect_url = bp_loggedin_user_domain( get_current_user_id() );
-		} elseif ( 'members_directory' == $redirect_to ) {
-			$redirect_url = bp_get_members_directory_permalink();
-		} else {
-			$redirect_url = home_url();
-		}
-
-		// Redirect User
-		wp_safe_redirect( $redirect_url );
-		exit;
 	}
 
 }

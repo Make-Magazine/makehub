@@ -3,26 +3,6 @@
 class YZ_Groups_Widget {
 
     /**
-     * # Groups Widget Arguments.
-     */
-    function args() {
-
-        // Get Widget Args
-        $args = array(
-            'widget_icon'   => 'fas fa-users',
-            'widget_name'   => 'groups',
-            'widget_title'  => yz_options( 'yz_wg_groups_title' ),
-            'load_effect'   => yz_options( 'yz_groups_load_effect' ),
-            'display_title' => yz_options( 'yz_wg_groups_display_title' )
-        );
-
-        // Filter
-        $args = apply_filters( 'yz_groups_widget_args', $args );
-
-        return $args;
-    }
-    
-    /**
      * # Content.
      */
     function widget() {
@@ -36,11 +16,8 @@ class YZ_Groups_Widget {
         // Back up the global.
         $old_groups_template = $groups_template;
 
-
-        global $Youzer;
-
         // Get User Max Groups Number to show in the widget.
-        $max_groups = yz_options( 'yz_wg_max_groups_items' );
+        $max_groups = yz_option( 'yz_wg_max_groups_items', 3 );
         
         $group_args = array(
             'user_id'         => bp_displayed_user_id(),
@@ -53,14 +30,11 @@ class YZ_Groups_Widget {
         // Get Groups Number.
         $groups_nbr = bp_get_group_total_for_member();
 
-        // Get User Data
-        $avatar_border_style = yz_options( 'yz_wg_groups_avatar_img_format' );
-
         // Get Widget Class.
         $list_class = array( 'yz-items-list-widget', 'yz-profile-list-widget', 'yz-profile-groups-widget' );
 
         // Add Widgets Avatars Border Style Class.
-        $list_class[] = 'yz-list-avatar-' . $avatar_border_style; ?>
+        $list_class[] = 'yz-list-avatar-circle'; ?>
         
         <div class="<?php echo yz_generate_class( $list_class ); ?>">
 
@@ -73,7 +47,7 @@ class YZ_Groups_Widget {
                     <div class="yz-item-data">
                         <a href="<?php bp_group_permalink(); ?>" class="yz-item-name"><?php bp_group_name() ?></a>
                         <div class="yz-item-meta">
-                            <div class="yz-meta-item"><?php $Youzer->group->status( $groups_template->group ); ?></div>
+                            <div class="yz-meta-item"><?php echo yz_get_group_status( $groups_template->group->status ); ?></div>
                         </div>
                     </div>
                 </div>
@@ -97,77 +71,6 @@ class YZ_Groups_Widget {
         // Back up the global.
         $groups_template = $old_groups_template;
 
-    }
-
-    /**
-     * # Admin Settings.
-     */
-    function admin_settings() {
-
-        global $Yz_Settings;
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'general Settings', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'display title', 'youzer' ),
-                'id'    => 'yz_wg_groups_display_title',
-                'desc'  => __( 'show widget title', 'youzer' ),
-                'type'  => 'checkbox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget title', 'youzer' ),
-                'id'    => 'yz_wg_groups_title',
-                'desc'  => __( 'add widget title', 'youzer' ),
-                'type'  => 'text'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'loading effect', 'youzer' ),
-                'opts'  => $Yz_Settings->get_field_options( 'loading_effects' ),
-                'desc'  => __( 'how you want the widget to be loaded ?', 'youzer' ),
-                'id'    => 'yz_groups_load_effect',
-                'type'  => 'select'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'allowed groups number', 'youzer' ),
-                'id'    => 'yz_wg_max_groups_items',
-                'desc'  => __( 'maximum number of groups to display', 'youzer' ),
-                'type'  => 'number'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'Groups Avatar border style', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'id'    => 'yz_wg_groups_avatar_img_format',
-                'type'  => 'imgSelect',
-                'opts'  => $Yz_Settings->get_field_options( 'image_formats' )
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
     }
 
 }

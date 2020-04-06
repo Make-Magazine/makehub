@@ -4,19 +4,23 @@
 add_action( 'bp_setup_globals', 'yz_register_notifications' );
 
 function yz_register_notifications() {
+    
+    $buddypress = buddypress();
 
     // Register component manually into buddypress() singleton
-    buddypress()->youzer = new stdClass;
+    $buddypress->youzer = new stdClass;
     // buddypress()->yz_tag_notification = new stdClass;
 
 	// Add notification callback function
-    buddypress()->youzer->notification_callback = 'yz_format_notifications';
+    $buddypress->youzer->notification_callback = 'yz_format_notifications';
     // buddypress()->yz_tag_notification->notification_callback = 'yz_format_new_tag_notifications';
 
     // Now register components into active components array
-    buddypress()->active_components['youzer'] = 1;
+    $buddypress->active_components['youzer'] = 1;
     // buddypress()->active_components['yz_tag_notification'] = 1;
 
+    unset( $buddypress );
+    
 }
 
 /**
@@ -27,15 +31,9 @@ function yz_add_user_like_notification( $activity_id, $user_id = 0 ) {
     // Get Activity.
     $activity = new BP_Activity_Activity( $activity_id );
 
-    // yz_write_log( 'jodjodjk' );
 	if ( $activity->user_id == $user_id ) {
 		return;
 	}
-
-	// Get Acitivy
-    // $activity = bp_activity_get_specific( array( 'activity_ids' => $activity_id ) );
-
-
 
     bp_notifications_add_notification(
     	array(
@@ -106,7 +104,7 @@ function yz_format_new_like_notifications( $action, $item_id, $secondary_item_id
 function yz_format_notifications( $action, $item_id, $secondary_item_id, $total_items, $format = 'string' ) {
 
     // New custom notifications
-    if ( 'yz_new_like' === $action ) {
+    if ( 'yz_new_like' === $action && bp_is_active( 'activity' ) ) {
 
         if ( 1 == $total_items ) {
 

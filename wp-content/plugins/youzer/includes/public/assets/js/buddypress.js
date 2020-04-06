@@ -1203,6 +1203,11 @@ jq(document).ready( function() {
 
 	/* Add / Remove friendship buttons */
 	jq( '#members-dir-list, #members-group-list, #item-header' ).on('click', '.friendship-button a', function() {
+		
+		if ( jq( this ).hasClass( 'awaiting_response_friend' ) ) {
+			return;
+		}
+
 		jq(this).parent().addClass('loading');
 		var fid   = jq(this).attr('id'),
 			nonce   = jq(this).attr('href'),

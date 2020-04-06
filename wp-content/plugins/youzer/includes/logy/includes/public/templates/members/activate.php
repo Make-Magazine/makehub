@@ -7,9 +7,9 @@
 
 <?php global $Logy; ?>
 
-<?php $attributes = $Logy->login->attributes(); ?>
+<?php $attributes = $Logy->form->get_attributes( 'login' ); ?>
 
-<div id="logy-form" class="logy logy-page-box yz-page">
+<div class="logy logy-page-box yz-page">
 	
 	<div class="<?php echo $Logy->form->get_form_class( $attributes ); ?>">
 	
@@ -55,7 +55,9 @@
 				do_action( 'template_notices' ); ?>
 
 			</div>
-
+			
+			<div id="logy-form">
+					
 			<form action="" method="get" class="standard-form" id="activation-form">
 				<?php if ( ! bp_get_current_activation_key() ) : ?>
 				<p class="logy-field-info"><?php _e( 'Please provide a valid activation key.', 'youzer' ); ?></p>
@@ -69,6 +71,7 @@
 				<?php do_action( 'logy_after_activate_buttons' ); ?>
 				
 			</form>
+			</div>
 
 		<?php endif; ?>
 

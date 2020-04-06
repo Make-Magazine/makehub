@@ -5,10 +5,10 @@ class Youzer_WC_Redirects {
 
     public function __construct() {
 
-        add_action( 'template_redirect',  array( &$this, 'get_redirect_link' ) );
-        add_filter( 'page_link',  array( &$this, 'redirect_link' ), 10, 2 );
-        add_filter( 'woocommerce_get_myaccount_page_permalink',  array( &$this, 'account_url' ) );
-        add_filter( 'woocommerce_get_view_order_url', array( &$this, 'get_view_order_url' ), 10, 2 );
+        add_action( 'template_redirect', array( $this, 'get_redirect_link' ) );
+        add_filter( 'page_link',  array( $this, 'redirect_link' ), 10, 2 );
+        add_filter( 'woocommerce_get_myaccount_page_permalink',  array( $this, 'account_url' ) );
+        add_filter( 'woocommerce_get_view_order_url', array( $this, 'get_view_order_url' ), 10, 2 );
         add_filter( 'woocommerce_get_endpoint_url', array( $this, 'endpoint_url' ), 10, 4 );
 
     }
@@ -20,6 +20,13 @@ class Youzer_WC_Redirects {
 
         // Init Vars.
         $default = $url;
+
+        // Get Supported Pages.
+        $supported_pages = yz_supported_wc_pages();
+
+        if ( in_array( $endpoint, array( 'order-pay', 'order-received' ) ) && ! isset( $supported_pages['checkout'] ) ) {
+            return $default;
+        }
 
         $base_path = yz_get_wocommerce_url();
 
@@ -40,7 +47,6 @@ class Youzer_WC_Redirects {
 
             case 'order-received':
                 $url = $base_path . '/checkout/' . $endpoint . '/' . $value;
-
                 break;
 
             case 'set-default-payment-method':
@@ -57,7 +63,7 @@ class Youzer_WC_Redirects {
                 break;
         }
 
-        return apply_filters( 'yz_woocommerce_get_endpoint_url', $url );
+        return apply_filters( 'yz_woocommerce_get_endpoint_url', $url, $default );
 
     }
 
@@ -83,16 +89,16 @@ class Youzer_WC_Redirects {
     
     }
 
-	/**
-	 * Redirect Woocommerce My Account Page.
-	 */
-	function redirect_myaccount_page() {
-		if ( is_user_logged_in() && is_account_page() && apply_filters( 'yz_wc_enable_my_account_redirect', true ) ) {
-			$redirect_url = bp_loggedin_user_domain() . yz_woocommerce_tab_slug();
-			wp_redirect( $redirect_url );
-			exit;
-		}
-	}
+    /**
+     * Redirect Woocommerce My Account Page.
+     */
+    function redirect_myaccount_page() {
+        if ( is_user_logged_in() && is_account_page() && apply_filters( 'yz_wc_enable_my_account_redirect', true ) ) {
+            $redirect_url = bp_loggedin_user_domain() . yz_woocommerce_tab_slug();
+            wp_redirect( $redirect_url );
+            exit;
+        }
+    }
 
     /**
      * Redirect.
@@ -223,6 +229,7 @@ class Youzer_WC_Redirects {
         if ( ! empty( $bp->pages ) ) {
 
             // Get WC Pages.
+            $loggedin_user_id = bp_loggedin_user_id();
             $cart_page_id     = wc_get_page_id( 'cart' );
             $checkout_page_id = wc_get_page_id( 'checkout' );
             $account_page_id  = wc_get_page_id( 'myaccount' );
@@ -260,6 +267,7 @@ class Youzer_WC_Redirects {
     function get_woocommerce_page_link_by_id( $page_id, $page_link ) {
 
         // Get WC Pages.
+        $loggedin_user_id = bp_loggedin_user_id();
         $cart_page_id     = wc_get_page_id( 'cart' );
         $checkout_page_id = wc_get_page_id( 'checkout' );
         $account_page_id  = wc_get_page_id( 'myaccount' );
@@ -267,10 +275,10 @@ class Youzer_WC_Redirects {
         switch ( $page_id ) {
         
             case $cart_page_id:
-                return yz_get_wocommerce_url( 'cart' );
+                return yz_get_wocommerce_url( 'cart', $loggedin_user_id );
 
             case $checkout_page_id:
-                return yz_get_wocommerce_url( 'checkout');
+                return yz_get_wocommerce_url( 'checkout', $loggedin_user_id );
 
             case $account_page_id:
                 return yz_get_wocommerce_url();

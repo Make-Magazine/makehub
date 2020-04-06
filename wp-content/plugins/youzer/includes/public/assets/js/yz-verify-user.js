@@ -56,8 +56,7 @@
 					yz_curent_verf_btn.find( '.yz-tool-icon i' ).attr( 'class', yz_verf_btn_icon );
 
 					// Get Button Title.
-					yz_verf_btn_title = ( res.action == 'verify' ) ?
-					Yz_Verification.verify_account : Yz_Verification.unverify_account;
+					yz_verf_btn_title = ( res.action == 'verify' ) ? res.verify_account : res.unverify_account;
 
 					// Update Button title.
 					yz_curent_verf_btn.find( '.yz-tool-name' ).text(  yz_verf_btn_title );

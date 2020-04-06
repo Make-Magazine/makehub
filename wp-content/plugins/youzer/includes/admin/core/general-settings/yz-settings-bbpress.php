@@ -1,29 +1,11 @@
-<?php 
-
-/**
- * # Add BBpress Settings Tab
- */
-function yz_bbpress_settings_menu( $tabs ) {
-
-	$tabs['bbpress'] = array(
-   	    'icon'  => 'far fa-comments',
-   	    'id'    => 'bbpress',
-   	    'function' => 'yz_bbpress_settings',
-   	    'title' => __( 'BBpress settings', 'youzer' ),
-    );
-    
-    return $tabs;
-
-}
-
-add_filter( 'yz_panel_general_settings_menus', 'yz_bbpress_settings_menu' );
+<?php
 
 /**
  * # Add BBpress Settings Tab
  */
 function yz_bbpress_settings() {
 
-    global $Youzer_Admin, $Yz_Settings;
+    global $Yz_Settings;
 
     $Yz_Settings->get_field(
         array(

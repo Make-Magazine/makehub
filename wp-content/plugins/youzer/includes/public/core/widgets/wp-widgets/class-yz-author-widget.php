@@ -21,22 +21,20 @@ class YZ_Author_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 		// Default Widget Settings
 	    $defaults = array(
 			'user_id'				  => '1',
 	        'hide_title' 			  => 'on',
 	        'title' 				  => __( 'Post Author', 'youzer' ),
-	        'layout' 				  => yz_options( 'yz_author_layout' ),
-	        'meta_icon' 			  => yz_options( 'yz_author_meta_icon' ),
-	        'meta_type' 			  => yz_options( 'yz_author_meta_type' ),
-	        'networks_icons_type'  	  => yz_options( 'yz_author_sn_bg_type' ),
-	        'networks_icons_style' 	  => yz_options( 'yz_author_sn_bg_style' ),
-	        'show_cover_pattern' 	  => yz_options( 'yz_enable_author_pattern' ),
-	        'show_cover_overlay' 	  => yz_options( 'yz_enable_author_overlay' ),
-	        'statistics_silver_bg' 	  => yz_options( 'yz_author_use_statistics_bg' ),
-	        'show_statistics_borders' => yz_options( 'yz_author_use_statistics_borders' ),
+	        'layout' 				  => yz_option( 'yz_author_layout', 'yzb-author-v1' ),
+	        'meta_icon' 			  => yz_option( 'yz_author_meta_icon', 'fas fa-map-marker' ),
+	        'meta_type' 			  => yz_option( 'yz_author_meta_type', 'full_location' ),
+	        'networks_icons_type'  	  => yz_option( 'yz_author_sn_bg_type', 'silver' ),
+	        'networks_icons_style' 	  => yz_option( 'yz_author_sn_bg_style', 'radius' ),
+	        'show_cover_pattern' 	  => yz_option( 'yz_enable_author_pattern', 'on' ),
+	        'show_cover_overlay' 	  => yz_option( 'yz_enable_author_overlay', 'on' ),
+	        'statistics_silver_bg' 	  => yz_option( 'yz_author_use_statistics_bg', 'on' ),
+	        'show_statistics_borders' => yz_option( 'yz_author_use_statistics_borders', 'on' ),
 	    );
 
 	    // Get Widget Data.
@@ -44,9 +42,8 @@ class YZ_Author_Widget extends WP_Widget {
 
 	    // Get Input's Data.
 		$meta_types = yz_get_panel_profile_fields();
-		$box_layouts = $Youzer->fields->get_field_options( 'author_box_layouts' );
-		$networks_icons_types = $Youzer->fields->get_field_options( 'icons_colors' );
-		$networks_icons_styles = $Youzer->fields->get_field_options( 'border_styles' );
+		$networks_icons_types = array( 'silver' => __( 'Silver', 'youzer' ), 'colorful' => __( 'Colorful', 'youzer' ), 'transparent' => __( 'Transparent', 'youzer' ), 'no-bg' => __( 'No Background', 'youzer' ) );
+		$networks_icons_styles = array( 'flat' => __( 'Flat', 'youzer' ), 'radius' => __( 'Radius', 'youzer' ), 'circle' => __( 'Circle', 'youzer' ) );
 
 		?>
 
@@ -84,8 +81,8 @@ class YZ_Author_Widget extends WP_Widget {
 	    <p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"><?php esc_attr_e( 'Author Box Layout', 'youzer' ); ?></label> 
 	        <select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $box_layouts as $layout_id => $layout_name ) { ?>
-	            	<option <?php selected( $instance['layout'], $layout_id ); ?> value="<?php echo $layout_id; ?>"><?php echo $layout_name; ?></option>
+	            <?php for ( $i = 1; $i <= 6; $i++ ) {?>
+	            	<option <?php selected( $instance['layout'], 'yzb-author-v' . $i ); ?> value="<?php echo 'yzb-author-v' . $i; ?>"><?php echo sprintf( __( 'Layout Version %d', 'youzer' ), $i ); ?></option>
 	            <?php } ?>      
 	        </select>
 	    </p>

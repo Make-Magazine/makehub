@@ -33,7 +33,7 @@ class Logy_Limit {
 		$user_ip = $this->get_user_address();
 
 		// Get Current Lockouts.
-		$lockouts = logy_options( 'logy_login_lockouts' );
+		$lockouts = yz_option( 'logy_login_lockouts' );
 
 		// if currently locked-out, do not add to retries.
 		if ( ! is_array( $lockouts ) ) {
@@ -46,7 +46,7 @@ class Logy_Limit {
 		}
 
 		// Get User IP Retries Data.
-		$retries = logy_options( 'logy_login_retries' );
+		$retries = yz_option( 'logy_login_retries' );
 			
 		if ( ! is_array( $retries ) ) {
 			$retries = array();
@@ -60,10 +60,10 @@ class Logy_Limit {
 		}
 
 		// Get Retry Expiration Date.
-		$retries[ $user_ip ]['expired'] = time() + logy_options( 'logy_retries_duration' );
+		$retries[ $user_ip ]['expired'] = time() + yz_option( 'logy_retries_duration', 1200 );
 
 		// Save Retry Without lockout the login.
-		if ( ( $retries[ $user_ip ]['retries'] % logy_options( 'logy_allowed_retries' ) ) != 0 ) {
+		if ( ( $retries[ $user_ip ]['retries'] % yz_option( 'logy_allowed_retries', 4 ) ) != 0 ) {
 			// Update Data
 			$this->update_data( $retries );
 			return false;
@@ -74,16 +74,16 @@ class Logy_Limit {
 		 */
 
 		// Get Maximum Retries Number.
-		$max_retries = logy_options( 'logy_allowed_retries' ) * logy_options( 'logy_allowed_lockouts' );
+		$max_retries = yz_option( 'logy_allowed_retries', 4 ) * yz_option( 'logy_allowed_lockouts', 2 );
 
 		// Set Long Louckout
 		if ( $retries[ $user_ip ]['retries'] >= $max_retries ) {
 			// Get Long Duration Value.
-			$lockouts[ $user_ip ] = time() + logy_options( 'logy_long_lockout_duration' );
+			$lockouts[ $user_ip ] = time() + yz_option( 'logy_long_lockout_duration', 86400 );
 			unset( $retries[ $user_ip ] );
 		} else {
 			// Set Short Lockout
-			$lockouts[ $user_ip ] = time() + logy_options( 'logy_short_lockout_duration' );
+			$lockouts[ $user_ip ] = time() + yz_option( 'logy_short_lockout_duration', 43200 );
 		}
 
 		// Update Statistics & Retries & Lockouts.
@@ -101,7 +101,7 @@ class Logy_Limit {
 		$user_ip = $this->get_user_address();
 
 		// Get Retreis
-		$retries = logy_options( 'logy_login_retries' );
+		$retries = yz_option( 'logy_login_retries' );
 
 		// Update Retries
 		if ( isset( $retries[ $user_ip ] ) ) {
@@ -120,7 +120,7 @@ class Logy_Limit {
 		$now = time();
 
 		// Remove Expired Retries.
-		$retries = ! empty( $retries ) ? $retries : logy_options( 'logy_login_retries' );
+		$retries = ! empty( $retries ) ? $retries : yz_option( 'logy_login_retries' );
 
 		// Check if result is an array.
 		if ( is_array( $retries ) ) {
@@ -140,7 +140,7 @@ class Logy_Limit {
 		$now = time();
 
 		// Get Available Louckouts
-		$lockouts = ! empty( $lockouts ) ? $lockouts : logy_options( 'logy_login_lockouts' );
+		$lockouts = ! empty( $lockouts ) ? $lockouts : yz_option( 'logy_login_lockouts' );
 
 		// Check if result is an array.
 		if ( is_array( $lockouts ) ) {
@@ -194,10 +194,10 @@ class Logy_Limit {
 		$user_ip = $this->get_user_address();
 
 		// Get All Retries.
-		$retries = logy_options( 'logy_login_retries' );
+		$retries = yz_option( 'logy_login_retries' );
 
 		// Get Allowed Retries Number.
-		$allowed_retries = logy_options( 'logy_allowed_retries' );
+		$allowed_retries = yz_option( 'logy_allowed_retries' );
 
 		// No Retries Found
 		if ( ! is_array( $retries ) || ! isset( $retries[ $user_ip ] ) || time() > $retries[ $user_ip ]['expired'] ) {
@@ -205,7 +205,7 @@ class Logy_Limit {
 		}
 
 		// Get Allowed Retries number
-		if ( ( $retries[ $user_ip ]['retries'] % $allowed_retries ) == 0 ) {
+		if ( $allowed_retries == 0 || ( $retries[ $user_ip ]['retries'] % $allowed_retries ) == 0 ) {
 			return $errors;
 		}
 
@@ -238,7 +238,7 @@ class Logy_Limit {
 		$ip = $this->get_user_address();
 
 		// Get Available Lockouts.
-		$lockouts = logy_options( 'logy_login_lockouts' );
+		$lockouts = yz_option( 'logy_login_lockouts' );
 
 		// Get Main Message.
 		$msg[] = __( 'Too many failed login attempts.', 'youzer' );
@@ -288,7 +288,7 @@ class Logy_Limit {
 		$ip = $this->get_user_address();
 
 		/* lockout active? */
-		$lockouts = logy_options( 'logy_login_lockouts' );
+		$lockouts = yz_option( 'logy_login_lockouts' );
 
 		// Get User IP.
 		$user_ip = isset( $lockouts[ $ip ] ) ? $lockouts[ $ip ] : false;
@@ -308,7 +308,7 @@ class Logy_Limit {
 	public function update_statistics() {
 		
 		// Get Total Lockouts Number.
-		$total_lockouts = logy_options( 'logy_total_lockouts' );
+		$total_lockouts = yz_option( 'logy_total_lockouts' );
 
 		// Update Statistics
 		if ( ! $total_lockouts ) {

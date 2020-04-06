@@ -440,7 +440,7 @@ function yz_get_social_networks_fields() {
     $networks_fields = array();
 
     // Get Social Networks
-    $social_networks = yz_options( 'yz_social_networks' );
+    $social_networks = yz_option( 'yz_social_networks' );
 
     if ( empty( $social_networks ) ) {
         return false;

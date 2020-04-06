@@ -23,13 +23,10 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 	    // Get Widget Data.
 	    $instance = wp_parse_args( (array) $instance,
 	    	array(
 		    	'title' => __( 'People You May Know', 'youzer' ),
-		        'avatar_border_style' => 'circle',
 		        'show_buttons' => 'on',
 		        'limit' => '5',
 	    	)
@@ -38,7 +35,6 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 	    // Get Input's Data.
 		$limit = absint( $instance['limit'] );
 		$title = strip_tags( $instance['title'] );
-		$avatar_border_styles = $Youzer->fields->get_field_options( 'border_styles' );
 
 		?>
 
@@ -60,16 +56,6 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 	        <input class="checkbox" type="checkbox" <?php checked( $instance['show_buttons'], 'on' ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_buttons' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_buttons' ) ); ?>" /> 
 	        <label for="<?php echo $this->get_field_id( 'show_buttons' ); ?>"><?php _e( 'Show Buttons', 'youzer' ); ?></label>
     	</p>
-
-		<!-- Avatar Border Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'avatar_border_style' ) ); ?>"><?php esc_attr_e( 'Avatar Border Style', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'avatar_border_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'avatar_border_style' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $avatar_border_styles as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['avatar_border_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
 		
 		<?php 
 	}
@@ -85,7 +71,6 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 		$instance['limit'] = absint( $new_instance['limit'] );
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['show_buttons'] = $new_instance['show_buttons'];
-		$instance['avatar_border_style'] = strip_tags( $new_instance['avatar_border_style'] );
 
 		return $instance;
 	}
@@ -99,11 +84,8 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 			return false;
 		}
 		
-		// Get User ID.
-		$user_id = bp_loggedin_user_id();
-
 		// Get Friend Suggestions
-		$friend_suggestions = $this->get_friend_suggestions( $user_id );
+		$friend_suggestions = $this->get_friend_suggestions( bp_loggedin_user_id() );
 
 		// Hide Widget IF There's No suggestions.
 		if ( empty( $friend_suggestions ) ) {
@@ -168,16 +150,10 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 
 		// Get 'Show Button' Option Value
 		$show_buttons = $args['show_buttons'] ? 'on' : 'off';
-
-		// Get Widget Class.
-		$list_class = array( 'yz-items-list-widget', 'yz-suggested-friends-widget' );
-
-		// Add Widgets Avatars Border Style Class.
-		$list_class[] = 'yz-list-avatar-' . $args['avatar_border_style'];
 		
 		?>
 
-		<div class="<?php echo yz_generate_class( $list_class ); ?>">
+		<div class="yz-items-list-widget yz-suggested-friends-widget 'yz-list-avatar-circle">
 
 			<?php foreach ( $friend_suggestions as $friend_id ) : ?>
 
@@ -215,6 +191,36 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 			<?php endforeach; ?>
 		</div>
 
+		<script type="text/javascript">
+				
+			/**
+			 * Save New Removed Friend Suggestions.
+			 */
+			jQuery( document ).on( 'click', '.yz-suggested-friends-widget .yz-close-button', function ( e ) {
+				
+				e.preventDefault();
+				
+				//hide the suggestion
+				var item = jQuery( this ).closest( '.yz-list-item' );
+				
+				jQuery( item ).fadeOut( 400, function() {
+					jQuery( this ).remove();
+				});
+
+				var url = jQuery( this ).attr( 'href' );
+				
+				jQuery.post( Youzer.ajax_url, {
+					action: 'yz_friends_refused_suggestion',
+					suggestion_id: jQuery.yz_get_var_in_url( url, 'suggestion_id' ),
+					_wpnonce: jQuery.yz_get_var_in_url( url, '_wpnonce' )
+				});
+
+				return false;
+
+			});
+
+		</script>
+
 		<?php
 
 	}
@@ -238,13 +244,23 @@ class YZ_Friend_Suggestions_Widget extends WP_Widget {
 		}
 
 		foreach ( $user_friends as $friend_id ) {
-			$friends_of_friends = array_merge( $friends_of_friends, friends_get_friend_user_ids( $friend_id ) );
+
+			$friends = friends_get_friend_user_ids( $friend_id );
+
+			if ( ! empty( $friends ) ) {
+
+				foreach ( $friends as $id ) {
+					$friends_of_friends[] = $id;
+				}
+
+			}
+
 		}
 		
 		// Remove Repeated ID's.
 		$friends_of_friends = array_unique( $friends_of_friends );
 
-		return $friends_of_friends;
+		return apply_filters( 'yz_friends_suggestions_friends_of_friends', $friends_of_friends );
 
 	}
 

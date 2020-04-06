@@ -3115,7 +3115,8 @@ readers do not read off random characters that represent icons */
 
 .fa-renren:before {
   content: "\f18b"; }
-
+  
+.youzer .fa-reply:before,
 .fa-reply:before {
   content: "\f3e5"; }
 

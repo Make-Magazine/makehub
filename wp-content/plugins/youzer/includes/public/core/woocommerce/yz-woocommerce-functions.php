@@ -7,15 +7,9 @@ add_action( 'transition_post_status', 'yz_wc_add_new_product_activity' , 10, 3 )
  * Add prodcut to activity stream.
  */
 function yz_wc_add_new_product_activity( $new_status, $old_status, $post ) {
-	
-	if ( ! bp_is_active( 'activity' ) || yz_options( 'yz_enable_wc_product_activity' ) != 'on' ) {
-		return false;
-	}
 
-    if ( $post->post_type !== 'product' ) return;
+    if ( ! bp_is_active( 'activity' ) || $post->post_type !== 'product' || 'publish' !== $new_status || 'publish' === $old_status ) return;
  
-    if ( 'publish' !== $new_status or 'publish' === $old_status ) return;
-
     if ( ! $product = wc_get_product( $post ) ) {
         return;
     }
@@ -23,7 +17,7 @@ function yz_wc_add_new_product_activity( $new_status, $old_status, $post ) {
     $user_link = bp_core_get_userlink( $post->post_author );
 
     // Get Activity Action.
-    $action = apply_filters( 'yz_new_wc_product_action', sprintf(__( '%s added new product', 'youzer' ), $user_link ), $post->ID );
+    $action = apply_filters( 'yz_new_wc_product_action', sprintf( __( '%s added new product', 'youzer' ), $user_link ), $post->ID );
 
     // record the activity
     bp_activity_add( array(
@@ -34,8 +28,6 @@ function yz_wc_add_new_product_activity( $new_status, $old_status, $post ) {
         'type'      => 'new_wc_product',
     ) );
 
-    return;
-
 }
 
 /**
@@ -45,7 +37,6 @@ function yz_woocommerce_tab_slug() {
 	return apply_filters( 'yz_woocommerce_tab_slug', 'shop' );
 }
 
-
 /**
  * Adds an activity stream item when a user has purchased a new product(s).
  */
@@ -53,7 +44,7 @@ add_action( 'woocommerce_order_status_completed', 'yz_wc_add_new_order_activity'
 
 function yz_wc_add_new_order_activity( $order_id ) {
 
-	if ( ! bp_is_active( 'activity' ) || yz_options( 'yz_enable_wc_purchase_activity' ) != 'on' ) {
+	if ( ! bp_is_active( 'activity' ) || yz_option( 'yz_enable_wc_purchase_activity', 'off' ) != 'on' ) {
 		return false;
 	}
 

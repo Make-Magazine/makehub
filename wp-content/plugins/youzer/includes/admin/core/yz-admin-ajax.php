@@ -5,10 +5,10 @@ class Youzer_Admin_Ajax {
 	function __construct() {
 
 		// Save Settings
-		add_action( 'wp_ajax_youzer_admin_data_save',  array( &$this, 'save_settings' ) );
+		add_action( 'wp_ajax_youzer_admin_data_save',  array( $this, 'save_settings' ) );
 
 		// Reset Settings
-		add_action( 'wp_ajax_youzer_reset_settings',  array( &$this, 'reset_settings' ) );
+		add_action( 'wp_ajax_youzer_reset_settings',  array( $this, 'reset_settings' ) );
 
 	}
 
@@ -25,49 +25,66 @@ class Youzer_Admin_Ajax {
 
 		unset( $data['security'], $data['action'] );
 
-		global $Youzer;
+		// Include Styles.
+        require_once YZ_PUBLIC_CORE . 'class-yz-styling.php';
 
 	    // Youzer Panel options
 	    $options = isset( $data['youzer_options'] ) ? $data['youzer_options'] : null;
 	   
 	    // Save Options
 	    if ( $options ) {
+	    	
+	    	// Get Default Options.
+	    	$default_options = yz_default_options();
 
 	    	// Get Active Styles.
-	    	$active_styles = yz_options( 'yz_active_styles' );
+	    	$active_styles = yz_option( 'yz_active_styles', array() );
 
 	    	// Get All Youzer Styles 
-	    	$all_styles = $Youzer->styling->get_all_styles( 'ids' );
+	    	$all_styles = yz_styling()->get_all_styles( 'ids' );
 
 		    foreach ( $options as $option => $value ) {
 		    	
 		    	// Get Option Value
 		        if ( ! is_array( $value ) ) {
-		        	$the_value = stripslashes( $value );
+		        		$the_value = stripslashes( $value );
 		        } else {
+		        	
 		        	$the_value = $value;
+		        	
+		        	if ( isset( $value['color'] ) && empty( $value['color'] ) ) {
+		        		$the_value = '';
+		        	}
+
 		        }
 
 		        // Save Option or Delete Option if Empty
-		        if ( isset( $option ) ) {
-		        	update_option( $option, $the_value, false );
+		        if ( ! empty( $the_value ) ) {
+		        	
+		        	if ( isset( $default_options[ $option ] ) && $the_value == $default_options[ $option ] ) {
+		        		yz_delete_option( $option );
+		        	} else {
+		        		yz_update_option( $option, $the_value, false );
+		        	}
+
 		        } else {
-		        	delete_option( $option );
+		        	yz_delete_option( $option );
 		        }
 
 		        // Update Active Style.
 		        if ( in_array( $option, $all_styles ) ) {
 
 		        	// Get Option Key.
-		        	$option_key = array_search( $option, $all_styles );
+		        	$option_key = array_search( $option, $active_styles );
 
-		        	if ( isset( $the_value['color'] ) && empty( $the_value['color'] ) ) {
-		        		unset( $active_styles[ $option_key ] );
+		        	if ( ! empty( $the_value ) && isset( $active_styles[ $option_key ] ) ) {
 		        		continue;
 		        	}
 
 		        	if ( empty( $the_value ) ) {
-		        		unset( $active_styles[ $option_key ] );
+		        		if ( isset( $active_styles[ $option_key ] ) ) {
+		        			unset( $active_styles[ $option_key ] );
+		        		}
 		        		continue;
 		        	}
 
@@ -79,11 +96,13 @@ class Youzer_Admin_Ajax {
 		    if ( ! empty( $active_styles ) ) {
 
 		    	// Get Unique Values.
-		    	$active_styles = array_unique( $active_styles );
+		    	$active_styles = array_filter( array_unique( $active_styles ) );
 
 		    	// Save New Styles.
-		    	update_option( 'yz_active_styles', array_filter( $active_styles ), false );
+        		yz_update_option( 'yz_active_styles', $active_styles, false );
 
+		    } else {
+				yz_delete_option( BP_ROOT_BLOG, 'yz_active_styles' );
 		    }
 		    
 	    }
@@ -93,9 +112,9 @@ class Youzer_Admin_Ajax {
 		
         if ( isset( $options[ $disable_account_deletion ] ) ) {
 	    	if ( 'on' == $options[ $disable_account_deletion ] ) {
-	    		update_option( $disable_account_deletion, 0 );
+	    		yz_update_option( $disable_account_deletion, 0 );
 	    	} else {
-	    		update_option( $disable_account_deletion, 1 );
+	    		yz_update_option( $disable_account_deletion, 1 );
 	    	}
 	    }
 
@@ -103,9 +122,9 @@ class Youzer_Admin_Ajax {
 		$register_opts = 'users_can_register';
         if ( isset( $options[ $register_opts ] ) ) {
 	    	if ( 'on' == $options[ $register_opts ] ) {
-	    		update_option( $register_opts, 1 );
+	    		yz_update_option( $register_opts, 1 );
 	    	} else {
-	    		update_option( $register_opts, 0 );
+	    		yz_update_option( $register_opts, 0 );
 	    	}
 	    }
 
@@ -121,40 +140,27 @@ class Youzer_Admin_Ajax {
 
 	    // Save Ads.
 		if ( isset( $data['yz_ads_form'] ) ) {
-			$yz_ads = $data['yz_ads'];
-			$this->save_ads( $yz_ads );
+			$this->save_ads( $data['yz_ads'] );
 		}
 
 	    // Save Social Networks.
 	    if ( isset( $data['yz_networks_form'] ) ) {
-     		// Social Networks options
-	    	$yz_sn = $data['yz_networks'];
-		    // Update Options
-	    	$this->save_social_networks( $yz_sn );
+	    	$this->save_social_networks( $data['yz_networks'] );
 	    }
 
 	    // Save Custom Widgets.
 	    if ( isset( $data['yz_custom_widgets_form'] ) ) {
-     		// Custom Widgets options
-	    	$yz_cw = $data['yz_custom_widgets'];
-		    // Update Options
-	    	$this->save_custom_widgets( $yz_cw );
+	    	$this->save_custom_widgets( $data['yz_custom_widgets'] );
 	    }
 
 	    // Save Custom Widgets.
 	    if ( isset( $data['yz_custom_tabs_form'] ) ) {
-     		// Custom Widgets options
-	    	$yz_ct = $data['yz_custom_tabs'];
-		    // Update Options
-	    	$this->save_custom_tabs( $yz_ct );
+	    	$this->save_custom_tabs( $data['yz_custom_tabs'] );
 	    }
 
 	    // Save User Tags.
 	    if ( isset( $data['yz_user_tags_form'] ) ) {
-     		// User Tags Options
-	    	$yz_ut = $data['yz_user_tags'];
-		    // Update Options
-	    	$this->save_user_tags( $yz_ut );
+	    	$this->save_user_tags( $data['yz_user_tags'] );
 	    }
 
 	    // Save Profile Structure.
@@ -162,18 +168,129 @@ class Youzer_Admin_Ajax {
 	    	// Get Data
 	    	$main_widgets    = $data['yz_profile_main_widgets'];
 	    	$sidebar_widgets = $data['yz_profile_sidebar_widgets'];
+
 	    	// Update Options
-	    	update_option( 'yz_profile_main_widgets', $main_widgets, false );
-	    	update_option( 'yz_profile_sidebar_widgets', $sidebar_widgets, false );
+	    	yz_update_option( 'yz_profile_main_widgets', $main_widgets, false );
+	    	yz_update_option( 'yz_profile_sidebar_widgets', $sidebar_widgets, false );
+
+
+		    $hidden = array();
+
+		    $overview_widgets = yz_options( 'yz_profile_main_widgets' );
+		    $sidebar_widgets = yz_options( 'yz_profile_sidebar_widgets' );
+
+		    $all_widgets = array_merge( $main_widgets, $sidebar_widgets );
+
+		    foreach ( $all_widgets as $widget_name => $visibility ) {
+	            if ( $visibility == 'invisible' ) {
+	                $hidden[] = $widget_name;
+	            }
+		    }
+
+		    if ( ! empty( $hidden ) ) {
+		        yz_update_option( 'yz_profile_hidden_widgets' , $hidden );
+		    } else {
+		        yz_update_option( 'yz_profile_hidden_widgets' );
+		    }
+
 	    	// Hook.
 	    	do_action( 'yz_after_saving_profile_structure' );
+	    }
+
+	    if ( isset( $data['yz_unallowed_activities'] ) ) {
+
+	    	$unallowed_activities = array();
+
+	    	foreach ( $data['yz_unallowed_activities'] as $activity_type => $activity_visibilty ) {
+
+	    		if ( $activity_visibilty != 'on' ) {
+
+	    			$unallowed_activities[] = $activity_type;
+
+	    			if ( $activity_type == 'activity_status' ) {
+	    				$unallowed_activities[] = 'activity_update';
+	    			}
+
+	    		}
+
+	    	}
+
+			// if ( in_array( 'friendship_accepted', $unallowed_activities ) && in_array( 'friendship_created', $unallowed_activities ) ) {
+			// 	$unallowed_activities[] = 'friendship_accepted,friendship_created';	
+			// 	foreach ( array( 'friendship_accepted', 'friendship_created' ) as $type ) {
+			// 		if ( ( $key = array_search( $type, $unallowed_activities ) ) !== false) {
+			// 			unset( $unallowed_activities[ $key ] );
+			// 		}
+			// 	}
+			// }
+
+			if ( empty( $unallowed_activities ) ) {
+				yz_delete_option( 'yz_unallowed_activities' );
+			} else {
+				yz_update_option( 'yz_unallowed_activities', $unallowed_activities );
+			}
+	    
+	    }
+
+	    if ( isset( $data['yz_profile_tabs'] ) ) {
+			// require_once YZ_PUBLIC_CORE . 'class-yz-tabs.php';
+			$new_tabs = $data['yz_profile_tabs'];
+			$tabs = array();
+			$old_tabs = yz_get_profile_primary_nav();
+			$default_tabs = yz_profile_tabs_default_value();
+			yz_write_log( $old_tabs );
+			foreach ( $old_tabs as $old_tab ) {
+
+				if ( isset( $new_tabs[ $old_tab['slug'] ] ) ) {
+
+					$new_tab = $new_tabs[ $old_tab['slug'] ];
+					
+					if ( ! empty( $new_tab['position'] ) && $new_tab['position'] != $old_tab['position'] && is_numeric( $new_tab['position'] ) ) {
+						$tabs[ $old_tab['slug'] ]['position'] = $new_tab['position'];
+					}
+
+					$old_title = _bp_strip_spans_from_title( $old_tab['name'] );
+
+					if ( ! empty( $new_tab['name']) && $new_tab['name'] != $old_title ) {
+						$count = strstr( $old_title, '<span' );
+						$tabs[ $old_tab['slug'] ]['name'] = ! empty( $count ) ? $new_tab['name'] . $count : $new_tab['name'];
+					}
+
+					if ( $new_tab['visibility'] != 'on' ) {
+						$tabs[ $old_tab['slug'] ]['visibility'] = 'off';
+					}
+
+					if ( $new_tab['icon'] != 'fas fa-globe-asia' ) {
+						if ( isset( $default_tabs[ $old_tab['slug'] ]['icon'] ) ) {
+							if ( $new_tab['icon'] != $default_tabs[ $old_tab['slug'] ]['icon'] ) {
+								$tabs[ $old_tab['slug'] ]['icon'] =  $new_tab['icon'];
+							}
+						} else {
+							$tabs[ $old_tab['slug'] ]['icon'] = $new_tab['icon'];	
+						}
+					}
+
+					if ( isset( $new_tab['deleted']  ) && $new_tab['deleted'] == 'on' ) {
+						$tabs[ $old_tab['slug'] ]['deleted'] = 'on';
+					}
+
+				}
+			}
+
+			if ( empty( $tabs ) ) {
+				yz_delete_option( 'yz_profile_tabs' );
+			} else {
+				yz_update_option( 'yz_profile_tabs', $tabs );
+			}
+
 	    }
 
 	    // Actions
 	    do_action( 'yz_panel_save_settings', $data );
 
-	   	die( '1' );
-
+		wp_send_json_success( array( 'result' => 1, 'message' => __( 'Success !', 'youzer' ) ) );
+		exit();
+	
 	}
 
 	/**
@@ -192,12 +309,12 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Update Pages in Database.
-		$update_pages = update_option( 'logy_pages', $logy_pages, false );
+		$update_pages = yz_update_option( 'logy_pages', $logy_pages, false );
 
 		if ( $update_pages ) {
 			foreach ( $logy_pages as $page => $id ) {
 				// Update Option ID
-				update_option( $page, $id );
+				yz_update_option( $page, $id );
 			}
 		}
 	}
@@ -208,15 +325,15 @@ class Youzer_Admin_Ajax {
 	function save_social_networks( $networks ) {
 
 		if ( empty( $networks ) ) {
-			delete_option( 'yz_social_networks' );
+			yz_delete_option( 'yz_social_networks' );
 			return false;
 		}
 
-    	$update_options = update_option( 'yz_social_networks', $networks, false );
+    	$update_options = yz_update_option( 'yz_social_networks', $networks, false );
 
 		// Update Next Network ID
     	if ( $update_options ) {
-			update_option( 'yz_next_snetwork_nbr', $this->get_next_ID( $networks, 'snetwork' ), false );
+			yz_update_option( 'yz_next_snetwork_nbr', $this->get_next_ID( $networks, 'snetwork' ), false );
     	}
 
 	}
@@ -227,16 +344,16 @@ class Youzer_Admin_Ajax {
 	function save_custom_tabs( $tabs ) {
 
 		if ( empty( $tabs ) ) {
-			delete_option( 'yz_custom_tabs' );
+			yz_delete_option( 'yz_custom_tabs' );
 			return false;
 		}
 		
 		// Update Tabs.
-    	$update_options = update_option( 'yz_custom_tabs', $tabs, false );
+    	$update_options = yz_update_option( 'yz_custom_tabs', $tabs, false );
 
 		// Update Next ID
     	if ( $update_options ) {
-			update_option( 'yz_next_custom_tab_nbr', $this->get_next_ID( $tabs, 'custom_tab' ), false );
+			yz_update_option( 'yz_next_custom_tab_nbr', $this->get_next_ID( $tabs, 'custom_tab' ), false );
     	}
 
 	}
@@ -247,18 +364,16 @@ class Youzer_Admin_Ajax {
 	function save_user_tags( $tags ) {
 
 		if ( empty( $tags ) ) {
-			delete_option( 'yz_user_tags' );
+			yz_delete_option( 'yz_user_tags' );
 			return false;
 		}
 		
 		// Update Types.
-    	$update_options = update_option( 'yz_user_tags', $tags, false );
+    	$update_options = yz_update_option( 'yz_user_tags', $tags, false );
 
 		// Update Next ID
     	if ( $update_options ) {
-			update_option(
-				'yz_next_user_tag_nbr', $this->get_next_ID( $tags, 'user_tag' )
-			);
+			yz_update_option( 'yz_next_user_tag_nbr', $this->get_next_ID( $tags, 'user_tag' ) );
     	}
 
 	}
@@ -276,19 +391,15 @@ class Youzer_Admin_Ajax {
 			}
 		}
 
-	    global $Youzer;
-
-		$Yz_Widgets = $Youzer->widgets;
-
 		// Update ads List.
-    	$update_options = update_option( 'yz_ads', $yz_ads, false );
+    	$update_options = yz_update_option( 'yz_ads', $yz_ads, false );
 
     	// If ADS not updated stop function right here.
 		if ( ! $update_options ) {
 			return false;
 		} else {
 			// Update Next Ad ID
-			update_option( 'yz_next_ad_nbr', $this->get_next_ID( $yz_ads, 'ad' ), false );
+			yz_update_option( 'yz_next_ad_nbr', $this->get_next_ID( $yz_ads, 'ad' ), false );
     	}
 
 	    // Get Overview and Sidebar Widgets
@@ -299,36 +410,42 @@ class Youzer_Admin_Ajax {
 	    $all_widgets = array_merge( $overview_wgs, $sidebar_wgs );
 
 	    // Get Ads Widgets
-	    $ads_widgets = $Yz_Widgets->ad->get_ads_widgets( $all_widgets );
+	    $ads_widgets = $this->get_ads_widgets( $all_widgets );
 
-	    // Delete Removed ADS.
-	    foreach ( $ads_widgets as $key => $ad_widget ) {
+	    if ( ! empty( $ads_widgets ) ) {
 
-	        // if ad name is not found.
-	        if ( ! isset( $yz_ads[ key ( $ad_widget ) ] ) ) {
+		    // Delete Removed ADS.
+		    foreach ( $ads_widgets as $widget_name => $visibility ) {
 
-	            if ( in_array( $ad_widget, $sidebar_wgs ) ) {
-	                // if the removed ad in the sidebar remove it.
-	                unset( $sidebar_wgs[ array_search( $ad_widget, $sidebar_wgs) ] );
-	            } else {
-	                // if the removed ad in the overview remove it.
-	                unset( $overview_wgs[ array_search( $ad_widget, $overview_wgs) ] );
-	            }
+		        // if widget name is not found.
+		        if ( ! isset( $yz_ads[ $widget_name ] ) ) {
 
-	        }
+		            // if the removed widget in the sidebar remove it.
+		            if ( isset( $sidebar_wgs[ $widget_name ] ) ) {
+		                unset( $sidebar_wgs[ $widget_name ]  );
+		            }
+
+	                // if the removed widget in the overview remove it.
+		            if ( isset( $overview_wgs[ $widget_name ] ) ) {
+		                unset( $overview_wgs[ $widget_name ]  );
+		            }
+
+		        }
+
+		    }
 
 	    }
 
-	    foreach ( $yz_ads as $ad => $data ) {
-	        $new_ad = array( $ad => 'visible' );
-	        if ( ! $Yz_Widgets->ad->is_key_exist( $all_widgets, $ad ) ) {
-	        	$sidebar_wgs[] = $new_ad;
+
+	    foreach ( $yz_ads as $ad_id => $data ) {
+	        if ( ! isset( $all_widgets[ $ad_id ] ) ) {
+	        	$sidebar_wgs[ $ad_id ] = 'visible';
 	        }
 	    }
 
 		// Update Overview & Sidebar Widgets.
-		update_option( 'yz_profile_main_widgets', $overview_wgs, false );
-		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, false );
+		yz_update_option( 'yz_profile_main_widgets', $overview_wgs, 'no' );
+		yz_update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, 'no' );
 
 	}
 
@@ -346,14 +463,14 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Update ads List.
-    	$update_options = update_option( 'yz_custom_widgets', $yz_cw, false );
+    	$update_options = yz_update_option( 'yz_custom_widgets', $yz_cw, false );
 
     	// If widgets not updated stop function right here.
 		if ( ! $update_options ) {
 			return false;
 		} else {
 			// Update Next ID
-			update_option( 'yz_next_custom_widget_nbr', $this->get_next_ID( $yz_cw, 'custom_widget' ), false );
+			yz_update_option( 'yz_next_custom_widget_nbr', $this->get_next_ID( $yz_cw, 'custom_widget' ), false );
     	}
 
 	    // Get Overview and Sidebar Widgets
@@ -363,41 +480,42 @@ class Youzer_Admin_Ajax {
 	    // Merge Overview & Sidebar widgets
 	    $all_widgets = array_merge( $overview_wgs, $sidebar_wgs );
 
-	    global $Youzer;
-
-        $custom_widget_class = $Youzer->widgets->custom_widgets;
-
 	    // Get Custom Widgets.
-	    $custom_widgets = $custom_widget_class->get_custom_widgets( $all_widgets );
+	    $custom_widgets = $this->get_custom_widgets( $all_widgets );
 
-	    // Delete Removed widgets.
-	    foreach ( $custom_widgets as $key => $custom_widget ) {
+	    if ( ! empty( $custom_widgets ) ) {
 
-	        // if widget name is not found.
-	        if ( ! isset( $yz_cw[ key( $custom_widget ) ] ) ) {
+		    // Delete Removed widgets.
+		    foreach ( $custom_widgets as $widget_name => $visibility ) {
 
-	            if ( in_array( $custom_widget, $sidebar_wgs ) ) {
-	                // if the removed widget in the sidebar remove it.
-	                unset( $sidebar_wgs[ array_search( $custom_widget, $sidebar_wgs) ] );
-	            } else {
+		        // if widget name is not found.
+		        if ( ! isset( $yz_cw[ $widget_name ] ) ) {
+
+		            // if the removed widget in the sidebar remove it.
+		            if ( isset( $sidebar_wgs[ $widget_name ] ) ) {
+		                unset( $sidebar_wgs[ $widget_name ]  );
+		            }
+
 	                // if the removed widget in the overview remove it.
-	                unset( $overview_wgs[ array_search( $custom_widget, $overview_wgs) ] );
-	            }
+		            if ( isset( $overview_wgs[ $widget_name ] ) ) {
+		                unset( $overview_wgs[ $widget_name ]  );
+		            }
 
-	        }
+		        }
+
+		    }
 
 	    }
 
-	    foreach ( $yz_cw as $widget => $data ) {
-	        $new_widget = array( $widget => 'visible' );
-	        if ( ! $custom_widget_class->is_key_exist( $all_widgets, $widget ) ) {
-	        	$sidebar_wgs[] = $new_widget;
+	    foreach ( $yz_cw as $widget_key => $data ) {
+	        if ( ! isset( $all_widgets[ $widget_key ] ) ) {
+	        	$sidebar_wgs[ $widget_key ] = 'visible';
 	        }
 	    }
 
 		// Update Overview & Sidebar Widgets.
-		update_option( 'yz_profile_main_widgets', $overview_wgs, false );
-		update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, false );
+		yz_update_option( 'yz_profile_main_widgets', $overview_wgs, 'no' );
+		yz_update_option( 'yz_profile_sidebar_widgets', $sidebar_wgs, 'no' );
 
 	}
 
@@ -454,41 +572,41 @@ class Youzer_Admin_Ajax {
 		do_action( 'yz_before_reset_all_settings' );
 		
 		// Delete Active Styles.
-	    delete_option( 'yz_active_styles' );
+	    yz_delete_option( 'yz_active_styles' );
 
 		// Reset Membership Settings.
 		if ( yz_is_membership_system_active() ) {
-			global $Logy_Admin;
-			$Logy_Admin->reset_settings();
+			$this->membership_reset_settings();
 		}
 
-		global $Youzer;
-
 		// Get Default Options.
-		$default_options = yz_standard_options();
+		$default_options = yz_default_options();
 
 		// Reset Options
 		foreach ( $default_options as $option => $value ) {
-			if ( get_option( $option ) ) {
-				update_option( $option, $value, false );
+			if ( yz_option( $option ) ) {
+				yz_update_option( $option, $value, false );
 			}
 		}
 
 		// Reset Styling Input's
-        foreach ( $Youzer->styling->get_all_styles() as $key ) {
-			if ( get_option( $key['id'] ) ) {
-				delete_option( $key['id'] );
+        foreach ( yz_styling()->get_all_styles() as $key ) {
+			if ( yz_option( $key['id'] ) ) {
+				yz_delete_option( $key['id'] );
 			}
         }
 
         // Reset Gradient Elements
-        foreach ( $Youzer->styling->get_gradient_elements() as $key ) {
-			if ( get_option( $key['left_color'] ) ) {
-				delete_option( $key['left_color'] );
+        foreach ( yz_styling()->get_gradient_elements() as $key ) {
+			
+			if ( yz_option( $key['left_color'] ) ) {
+				yz_delete_option( $key['left_color'] );
 			}
-			if ( get_option( $key['right_color'] ) ) {
-				delete_option( $key['right_color'] );
+			
+			if ( yz_option( $key['right_color'] ) ) {
+				yz_delete_option( $key['right_color'] );
 			}
+
         }
 
 		// Specific Options
@@ -504,12 +622,14 @@ class Youzer_Admin_Ajax {
 
 		// Reset Specific Options
 		foreach ( $specific_options as $option ) {
-			if ( get_option( $option ) ) {
-				delete_option( $option );
+			if ( yz_option( $option ) ) {
+				yz_delete_option( $option );
 			}
 		}
 
-		die( '1' );
+		wp_send_json_success( array( 'result' => 1, 'message' => __( 'Success !', 'youzer' ) ) );
+		exit();
+
 	}
 
 	/**
@@ -522,14 +642,14 @@ class Youzer_Admin_Ajax {
 		}
 
     	// Get Active Styles.
-    	$active_styles = yz_options( 'yz_active_styles' );
+    	$active_styles = yz_option( 'yz_active_styles' );
 
 		// Reset Tab Options
 		foreach ( $tab_options as $option => $value ) {
 
 			// Rest Options.
-			if ( get_option( $option ) ) {
-				delete_option( $option );
+			if ( yz_option( $option ) ) {
+				yz_delete_option( $option );
 			}
 			
 			// Delete Reseted Active Styles.
@@ -548,9 +668,15 @@ class Youzer_Admin_Ajax {
 		}
 
 		// Save Active Styles
-		update_option( 'yz_active_styles', $active_styles, false );
+		if ( ! empty( $active_styles ) ) {
+			yz_update_option( 'yz_active_styles', $active_styles, false );
+		} else {
+			yz_delete_option( 'yz_active_styles' );
+		}
 
-		die( '1' );
+		wp_send_json_success( array( 'result' => 1, 'message' => __( 'Success !', 'youzer' ) ) );
+		exit();
+
 	}
 
 
@@ -570,11 +696,110 @@ class Youzer_Admin_Ajax {
 
 		// Get ID's Data.
 		$new_ID = max( $new_keys ); 
-		$old_ID = yz_options( 'yz_next_' . $item . '_nbr' );
+		$old_ID = yz_option( 'yz_next_' . $item . '_nbr' );
 		$max_ID = ( $new_ID < $old_ID ) ? $old_ID : $new_ID;
 
 		// Return Biggest Key.
 		return $max_ID + 1;
 	}
+
+    /**
+     * Get Exist ADS widgets
+     */
+    function get_custom_widgets( $widgets ) {
+
+        // Set Up new array
+        $custom_widgets = array();
+
+        foreach ( $widgets as $widget_name => $visibility ) {
+            // If key contains 'yz_custom_widget_'.
+            if ( false !== strpos( $widget_name, 'yz_custom_widget_' ) ) {
+                $custom_widgets[ $widget_name ] = $visibility;
+            }
+        }
+
+        return $custom_widgets;
+    }
+
+
+    /**
+     * Get Exist ADS widgets
+     */
+    function get_ads_widgets( $widgets ) {
+
+        // Set Up new array
+        $ads_widgets = array();
+
+        foreach ( $widgets as $widget_name => $data ) {
+            // If key contains 'yz_ad_'.
+            if ( false !== strpos( $widget_name, 'yz_ad_' ) ) {
+                $ads_widgets[ $widget_name ] = $data;
+            }
+        }
+
+        return $ads_widgets;
+    }
+	
+	/**
+	 * Reset Settings.
+	 */
+	function membership_reset_settings() {
+
+		global $Logy;
+
+		// Reset Styling Input's
+        foreach ( $Logy->styling->styles_data() as $key ) {
+			if ( yz_option( $key['id'] ) ) {
+				delete_option( $key['id'] );
+			}
+        }
+
+		// Specific Options.
+		$specific_options = array(
+			'logy_login_cover',
+			'logy_signup_cover',
+			'logy_lostpswd_cover'
+		);
+
+		// Reset Specific Options.
+		foreach ( $specific_options as $option ) {
+			if ( ys_option( $option ) ) {
+				yz_delete_option( $option );
+			}
+		}
+
+		// Get Providers.
+		$providers = logy_get_providers();
+
+		// Reset Social Provider Input's.
+        foreach ( $providers as $provider ) {
+
+        	// Transform Provider Name to lower case.
+        	$provider = strtolower( $provider );
+
+        	// Reset Provider Status's
+			if ( yz_option( 'logy_' . $provider . '_app_status' ) ) {
+				yz_delete_option( 'logy_' . $provider . '_app_status' );
+			}
+
+        	// Reset Provider Keys.
+			if ( yz_option( 'logy_' . $provider . '_app_key' ) ) {
+				yz_delete_option( 'logy_' . $provider . '_app_key' );
+			}
+
+        	// Reset Provider Secret Keys.
+			if ( yz_option( 'logy_' . $provider . '_app_secret' ) ) {
+				yz_delete_option( 'logy_' . $provider . '_app_secret' );
+			}
+
+        	// Reset Provider Notes.
+			if ( yz_option( 'logy_' . $provider .'_setup_steps' ) ) {
+				yz_delete_option( 'logy_' . $provider .'_setup_steps' );
+			}
+
+        }
+	}
 	
 }
+
+$ajax = new Youzer_Admin_Ajax();

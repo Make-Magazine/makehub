@@ -9,18 +9,16 @@
 		    return ! $.trim( el.html() );
 		}
 
-		if ( jQuery().niceSelect ) {
+		if ( $( '.youzer select:not([multiple="multiple"])' ).get( 0 ) || $( '.logy select' ).get( 0 ) ) {
+    		$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/jquery.nice-select.min.js' } ).appendTo( 'head' );
 			$( '.youzer select:not([multiple="multiple"])' ).niceSelect();
-			
+			$( '.logy select' ).not( '[multiple="multiple"]' ).niceSelect();
 		}
 		
 		// Textarea Auto Height.
-		if ( jQuery().yz_autosize ) {
+		if ( $( '.youzer textarea' ).get( 0 ) ) {
+    		$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/autosize.min.js' } ).appendTo( 'head' );
 			yz_autosize( $( '.youzer textarea' ) );
-		}
-
-		if ( jQuery().niceSelect ) {
-			$( '.logy select' ).not( '[multiple="multiple"]' ).niceSelect();
 		}
 
     	$( '.yzw-form-show-all' ).on( 'click', function( e ) {
@@ -71,62 +69,6 @@
 
 			// Show / Hide Tools.
 			$( this ).closest( '.yz-item' ).find( '.yz-item-tools' ).fadeToggle();
-
-		});
-
-		/**
-		 * Save New Removed Group Suggestions.
-		 */
-		$( document ).on( 'click',  ".yz-suggested-groups-widget .yz-close-button", function ( e ) {
-			
-			e.preventDefault();
-			
-			//hide the suggestion
-			var item = $( this ).closest( '.yz-list-item' );
-			
-			$( item ).fadeOut( 400, function() {
-				$( this ).remove();
-			});
-
-			var url = $( this ).attr( 'href' ),
-				nonce = $.yz_get_var_in_url( url, '_wpnonce' ),
-				suggested_group_id = $.yz_get_var_in_url( url, 'suggestion_id' );
-			
-			$.post( Youzer.ajax_url, {
-				action: 'yz_groups_refused_suggestion',
-				suggestion_id: suggested_group_id,
-				_wpnonce: nonce
-			});
-
-			return false;
-
-		});
-
-		/**
-		 * Save New Removed Friend Suggestions.
-		 */
-		$( document ).on( 'click', ".yz-suggested-friends-widget .yz-close-button", function ( e ) {
-			
-			e.preventDefault();
-			
-			//hide the suggestion
-			var item = $( this ).closest( '.yz-list-item' );
-			
-			$( item ).fadeOut( 400, function() {
-				$( this ).remove();
-			});
-
-			var url = $( this ).attr( 'href' ),
-				nonce = $.yz_get_var_in_url( url, '_wpnonce' ),
-				suggested_friend_id = $.yz_get_var_in_url( url, 'suggestion_id' );
-			
-			$.post( Youzer.ajax_url, {
-				action: 'yz_friends_refused_suggestion',
-				suggestion_id: suggested_friend_id,
-				_wpnonce: nonce
-			});
-
-			return false;
 
 		});
 
@@ -266,17 +208,6 @@
 	        e.preventDefault();
 	        $( '.yz-popup-login' ).removeClass( 'yz-is-visible' );
 	    });
-
-		// Show/Hide Primary Nav Message
-		$( '.yz-primary-nav-settings' ).click( function( e ) {
-	        e.preventDefault();
-	        // Get Parent Box.
-			var settings_box = $( this ).closest( '.yz-primary-nav-area' );
-			// Toggle Menu.
-			settings_box.toggleClass( 'open-settings-menu' );
-			// Display or Hide Box.
-	        settings_box.find( '.yz-settings-menu' ).fadeToggle( 400 );
-		});
 
 	    // Ajax Login.
 	    $( '.logy-login-form' ).on( 'submit', function( e ) {
@@ -492,7 +423,7 @@
 		};
 
 		$( '<div class="yz-mobile-nav yz-inline-mobile-nav">'+
-			'<div class="yz-mobile-nav-item yz-show-tab-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a>Menu</a></div></div>' + '</div>'
+			'<div class="yz-mobile-nav-item yz-show-tab-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a>' + Youzer.menu_title + '</a></div></div>' + '</div>'
 		).insertBefore( $( '.yz-profile div.item-list-tabs,.yz-group div.item-list-tabs' )  );	
 
 		var yz_resizeTimer;
@@ -525,7 +456,46 @@
     		e.preventDefault();
     		$( '.item-list-tabs' ).fadeToggle();
 		});
-		
+
+		// Display Search Box.
+    	$( '.yz-tool-btn' ).on( 'click', function( e ) {
+
+    		e.preventDefault();
+
+    		if ( $( this ).hasClass( 'yz-verify-btn' ) && ! $( 'body' ).hasClass( 'yz-verify-script-loaded' ) ) {
+    			$( 'body' ).addClass( 'yz-verify-script-loaded' );
+    			$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-verify-user.min.js' } ).appendTo( 'head' );
+    			$( this ).trigger( 'click' );
+    		}
+
+    		if ( $( this ).hasClass( 'yz-review-btn' ) && ! $( 'body' ).hasClass( 'yz-review-script-loaded' ) ) {
+    			$( 'body' ).addClass( 'yz-review-script-loaded' );
+    			$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-reviews.min.js' } ).appendTo( 'head' );
+    			$( this ).trigger( 'click' );
+    		}
+
+		});
+
+
+		// Display Menu Box.
+    	$( document ).on( 'click', '.youzer a[data-lightbox]', function( e ) {
+    		
+    		if ( window.hasOwnProperty( 'yz_disable_lightbox' ) ) {
+    			e.preventDefault();
+    			return;
+			}
+
+    		e.preventDefault();
+
+    		if ( ! $( 'body' ).hasClass( 'yz-lightbox-script-loaded' ) ) {
+    			$( 'body' ).addClass( 'yz-lightbox-script-loaded' );
+		        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/lightbox.min.js' } ).appendTo( 'head' );
+	    		$( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/lightbox.min.css' } ).appendTo( 'head' );
+    			$( this ).trigger( 'click' );
+    		}
+
+		});
+
 	});
 
 })( jQuery );

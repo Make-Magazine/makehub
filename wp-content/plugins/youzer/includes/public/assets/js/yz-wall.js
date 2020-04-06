@@ -1,9 +1,10 @@
+var yz_load_attachments = false;
 ( function( $ ) {
 
 	'use strict';
 
 	$( document ).ready( function() {
-		
+
 		if ( jQuery().viewportChecker ) {
 
 			/**
@@ -403,6 +404,17 @@
 	            	if ( response.success ) {
 	            		li.prepend( $( response.data ).fadeIn() );
 	            	}
+
+	            	// Include Sticky Scripts.
+	            	if ( $( response.data ).find( '.yz-pin-tool' ).get( 0 ) ) {
+						$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-sticky-posts.min.js' } ).appendTo( 'head' );
+	            	}
+	            	
+	            	// Include Bookmark Scripts.
+	            	if ( $( response.data ).find( '.yz-bookmark-tool' ).get( 0 ) ) {
+						$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-bookmark-posts.min.js' } ).appendTo( 'head' );
+	            	}
+	            	
 	            }
 	        });
 

@@ -5,13 +5,11 @@
  */
 function yz_group_page_class() {
 
-	global $Youzer;
-
     // New Array
     $class = array();
 
     // Get Group Layout
-    $class[] = $Youzer->group->layout();
+    $class[] = 'yz-horizontal-layout';
 
     // Get Group Page
     $class[] = 'yz-page yz-group';
@@ -20,138 +18,19 @@ function yz_group_page_class() {
     $class[] = 'yz-wild-content';
 
     // Get Tabs List Icons Style
-    $class[] = yz_options( 'yz_tabs_list_icons_style' );
+    $class[] = yz_option( 'yz_tabs_list_icons_style', 'yz-tabs-list-gradient' );
 
     // Get Page Buttons Style
-    $class[] = 'yz-page-btns-border-' . yz_options( 'yz_buttons_border_style' );
+    $class[] = 'yz-page-btns-border-' . yz_option( 'yz_buttons_border_style', 'oval' );
 
     // Get Elements Border Style.
-    $class[] = 'yz-wg-border-' . yz_options( 'yz_wgs_border_style' );
+    $class[] = 'yz-wg-border-' . yz_option( 'yz_wgs_border_style', 'radius' );
    
     $class = apply_filters( 'yz_group_class', $class );
 
     return yz_generate_class( $class );
 }
 
-/**
- * Create Group New Subnavs.
- */
-function yz_add_new_groups_subnavs() {
-
-	// Check if its a group page.
-	if ( ! bp_is_groups_component() || ! bp_is_single_item() ) {
-		return false;
-	}
-
-	global $bp;
-
-	$group = $bp->groups->current_group;
-
-	// Add Group 'Infos' Nav.
-	bp_core_new_subnav_item(
-		array(
-			'slug' => 'group-info',
-			'parent_slug' => $group->slug,
-			'name' => __( 'Info', 'youzer' ),
-			'parent_url' => bp_get_group_permalink( $group ),
-			'screen_function' => 'yz_groups_screen_group_infos',
-			'position' => 10
-		)
-	);
-
-	// Get Requests Number
-	$requests_nbr = yz_get_group_membership_requests_count( $group->id );
-
-	if ( bp_is_item_admin() && 'private' ==  bp_get_group_status( $group ) && '0' != $requests_nbr ) {
-		// Create 'Requests' Subnav.
-		bp_core_new_subnav_item( array(
-				'name' => sprintf( __( 'Requests %s', 'youzer' ), '<span>' . number_format( $requests_nbr ) . '</span>' ),
-				'parent_slug' => $group->slug,
-				'slug' => 'membership-requests',
-				'parent_url' => trailingslashit( bp_get_group_permalink( $group ) . 'admin' ),
-				'screen_function' => 'groups_screen_group_admin',
-				'position' => 60
-			)
-		);
-	}
-
-}
-
-add_action( 'wp', 'yz_add_new_groups_subnavs' );
-
-/**
- * Get Group Infos Page Title.
- */
-function yz_groups_screen_group_infos_title() {
-	_e( 'Information', 'youzer' );
-}
-
-/**
- * Get Group Infos Page Content.
- */
-function yz_groups_screen_group_infos_content() {
-
-	global $bp;
-
-	$group = $bp->groups->current_group;
-
-	?>
-	
-	<div class="yz-group-infos-widget">
-		<div class="yz-group-widget-title">
-			<i class="fas fa-file-alt"></i>
-			<?php echo _e( 'description', 'youzer' ); ?>
-		</div>
-		<div class="yz-group-widget-content"><?php echo apply_filters( 'the_content', html_entity_decode( $group->description ) ); ?></div>
-	</div>
-
-	<?php
-
-}
-
-/**
- * Add New Group Infos Page.
- */
-function yz_groups_screen_group_infos() {
-
-	add_action( 'bp_template_title', 'yz_groups_screen_group_infos_title' );
-	add_action( 'bp_template_content', 'yz_groups_screen_group_infos_content' );
-
-	$templates = array( 'groups/single/plugins.php', 'plugin-template.php' );
-
-    // Load Tab Template
-    bp_core_load_template( 'buddypress/groups/single/plugins' );
-
-}
-
-/**
- * Add New Group Media Page.
- */
-function yz_groups_screen_media() {
-
-    global $Youzer;
-
-    // Call Media Tab Content.
-	add_action( 'bp_template_content',  array( &$Youzer->tabs->media, 'group_tab' ) );
-
-    // Load Tab Template
-    bp_core_load_template( 'buddypress/groups/single/plugins' );
-
-}
-
-/**
- * Get Group Membership requests Count.
- */
-function yz_get_group_membership_requests_count( $group_id ) {
-
-	global $bp, $wpdb;
-
-	// Result.
-	$requests_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND inviter_id = 0 AND group_id = $group_id" );
-
-	return $requests_count;
-
-}
 
 /**
  * Get Friends List To invite
@@ -216,6 +95,34 @@ function yz_get_widget_defaults_settings( $widget_id ) {
 }
 
 /**
+ * Get Group Status
+ */
+function yz_get_group_status( $group_status ) {
+
+	// Get Group Status Data
+	switch ( $group_status ) {
+
+		case 'public':
+			$icon = 'fas fa-globe-asia';
+			$type = __( 'Public Group', 'youzer' );
+			break;
+
+		case 'private':
+			$icon = 'fas fa-lock';
+			$type = __( 'Private Group', 'youzer' );
+			break;
+
+		case 'hidden':
+			$icon = 'fas fa-user-secret';
+			$type = __( 'Hidden Group', 'youzer' );
+			break;
+	}
+
+	// Print Status
+	return '<i class="' . $icon . '"></i><span>' . $type . '</span>';
+}
+
+/**
  * Call Groups Sidebar
  */
 function yz_get_groups_sidebar() {
@@ -255,7 +162,7 @@ function is_group_have_networks( $group_id = null ) {
     $group_id = ! empty( $group_id ) ? $group_id : null;
 
     // Get Social Networks
-    $social_networks = yz_options( 'yz_group_social_networks' );
+    $social_networks = yz_option( 'yz_group_social_networks' );
 
     // Unserialize data
     if ( is_serialized( $social_networks ) ) {
@@ -274,58 +181,21 @@ function is_group_have_networks( $group_id = null ) {
 }
 
 /**
- * Hide Request Membership Nav
- */
-function yz_hide_request_membership_from_menu( $code ) {
-	return false;
-}
-
-add_filter( 'bp_get_options_nav_request-membership', 'yz_hide_request_membership_from_menu' );
-
-/**
- * Display Group Sidebar.
- */
-function yz_show_group_sidebar() {
-	
-	if ( is_super_admin() ) {
-		return true;
-	}
-
-	global $bp;
-
-	// Get Current Group Status.
-	$status = $bp->groups->current_group->status;
-
-	// Get Current Group ID
-	$group_id = $bp->groups->current_group->id;
-
-	if ( $status == 'private' && ( ! is_user_logged_in() || ! groups_is_user_member( bp_loggedin_user_id(), $group_id ) ) )  {
-		return false;
-	}
-
-	return true;
-}
-
-/**
  * Set Default Groups Avatar.
  */
 function yz_set_group_default_avatar( $avatar, $params ) {
 
     // Get Default Avatar.
-    $default_avatar = yz_options( 'yz_default_groups_avatar' );
+    $default_avatar = yz_option( 'yz_default_groups_avatar' );
 
     if ( empty( $default_avatar ) ) {
         return $avatar;
     }
-
-    // Set Avatar.
-    $avatar = $default_avatar;
     
-    return $avatar;
+    return $default_avatar;
 }
 
 add_filter( 'bp_core_default_avatar_group', 'yz_set_group_default_avatar', 10, 2 );
-
 
 /**
  * Add Groups Open Graph Support.
@@ -421,18 +291,14 @@ function yz_get_group_total_for_member( $user_id = null ) {
     // Get User ID.
     $user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
 
-    // Get Transient Option.
-    $transient_id = 'yz_count_user_groups_' . $user_id;
+    $user_groups = get_transient( 'yz_count_user_groups_' . $user_id );
 
-    $user_groups = get_transient( $transient_id );
-
-    if ( false === $user_groups ) :
+    if ( false === $user_groups ) {
 
         $user_groups = bp_get_group_total_for_member( $user_id );
         
-        set_transient( $transient_id, $user_groups, 12 * HOUR_IN_SECONDS );
-        
-    endif;
+        set_transient( 'yz_count_user_groups_' . $user_id, $user_groups, 12 * HOUR_IN_SECONDS );
+    }
 
     return $user_groups;
 }
@@ -456,4 +322,49 @@ add_action( 'groups_membership_accepted', 'yz_user_groups_count_transient', 10, 
 function yz_group_media_slug() {
 	$slug = function_exists( 'is_rtmedia_page' ) ? 'group-media' : 'media';
 	return apply_filters( 'yz_group_media_slug', $slug );
+}
+
+/**
+ * Get Group Cover.
+ */
+function yz_get_group_cover( $group_id = null ) {
+
+	$group_id = ! empty( $group_id ) ? $group_id : bp_get_group_id();
+
+	// Get Cover Photo Path.
+	$cover_path = bp_attachments_get_attachment(
+		'url',
+		array(
+	      'item_id' 	=> $group_id,
+	      'object_dir'  => 'groups',
+	    )
+	);
+
+	// Get Default Cover.
+	if ( empty( $cover_path ) ) {
+		$cover_path = yz_option( 'yz_default_groups_cover' );
+	}
+
+	// Get Cover Style.
+	$cover_style = 'background-size: cover;';
+
+	// If Cover not exist use .
+	if ( empty( $cover_path ) ) {
+		// If cover image not exist use pattern.
+		$cover_path = YZ_PA . 'images/geopattern.png';				
+		// Get Cover Style.
+		$cover_style = 'background-size: auto;';
+	}
+
+	// Get Cover
+	$cover = "style='background-image:url( $cover_path ); $cover_style'";
+
+	return $cover;
+	// return Cover Style
+	// if ( 'style' == $query ) {
+	// }
+
+	// Print Cover.
+	// echo $cover;
+	// }
 }

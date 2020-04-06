@@ -21,7 +21,7 @@
 
 		// Change Form Data.
 		o.form.find( '.yz-md-title' ).html( o.form_title + close_icon );
-		o.form.find( '.yz-md-save' ).text( yz.save_changes );
+		o.form.find( '.yz-md-save' ).text( Yz_Functions.save_changes );
 		o.form.find( '.yz-md-save' ).attr( 'id', o.button_id );
 
 		// Change Form Values
@@ -124,7 +124,7 @@
 			close_icon 	= '<i class="fas fa-times yz-md-close-icon"></i>', type;
 
 		// Change Form Data Again.
-		form.find( '.yz-md-save' ).text( yz.done );
+		form.find( '.yz-md-save' ).text( Yz_Functions.done );
 		form.find( '.yz-md-title' ).html( form.find( '.yz-md-title' ).data( 'title' ) + close_icon );
 		form.find( '.yz-md-save' ).attr( 'id', form.find( '.yz-md-save' ).data( 'add' ) );
 
@@ -231,7 +231,7 @@
 			if ( field_value == null || $.trim( field_value ) == '' ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.required_fields,
+                    msg  : Yz_Functions.required_fields,
                     type : 'error'
                 });
                 is_empty = true;
@@ -471,78 +471,21 @@
 	}
 
 	/**
-	 * # Remove Item.
-	 */
-	$( '.yz-delete-item' ).live( 'click' , function() {
-
-		$( this ).parent().addClass( 'removered' ).fadeOut( function() {
-
-			// Get Item Object
-			var item = $( this ).closest( 'li' );
-
-			// Remove item
-			item.remove();
-			
-			// Remove Widget from the List Of widgets
-			if ( item.attr( 'data-ad-name') ) {
-				// Check for Ads Existence.
-				$.yz_CheckItemsList( 'ads' );
-			} else if ( item.attr( 'data-emoji-name') ) {
-				// Check for Reactions Existence.
-				$.yz_CheckItemsList( 'reactions' );
-			} else if ( item.attr( 'data-network-name') ) {
-				// Check for Networks Existence.
-				$.yz_CheckItemsList( 'networks' );
-			} else if ( item.attr( 'data-widget-name') ) {
-				// Check for Custom Widgets Existence.
-				$.yz_CheckItemsList( 'custom-widgets' );
-			} else if ( item.attr( 'data-tab-name') ) {
-				// Check for Custom Tab Existence.
-				$.yz_CheckItemsList( 'custom-tabs' );
-			} else if ( item.attr( 'data-member-type-name') ) {
-				// Check for Member Types Existence.
-				$.yz_CheckItemsList( 'member-types' );
-			} else if ( item.attr( 'data-user-tag-name') ) {
-				// Check for User Tags Existence.
-				$.yz_CheckItemsList( 'user-tags' );
-			}
-
-		});
-
-	});
-
-	/**
 	 * # Check for Widget Existence.
 	 */
 	$.yz_CheckItemsList = function( item ) {
-
-		// Check Widget List.
-		if ( item === 'widgets' ) {
-			if ( $( '.yz-widget-item' )[0] ) {
-				$( '.yz-fields-button' ).fadeIn();
-				$( '.yz-no-wg' ).remove();
-			} else if ( ! $( '.yz-no-wg' )[0] ) {
-				$( '.yz-fields-button' ).fadeOut();
-				$( '#yz_widgets' ).append( '<p class="yz-no-content yz-no-wg">' + yz.no_wg + '</p>' );
-			}
-		}
 
 		// Check Ads List
 		if ( item === 'ads' ) {
 			if ( $( '.yz-ad-item' )[0] ) {
 				$( '.yz-no-ads' ).remove();
-			} else if ( ! $( '.yz-no-ads' )[0] ) {
-				$( '#yz_ads' )
-				.append( '<p class="yz-no-content yz-no-ads">' + yz.no_ads + '</p>' );
 			}
 		}
+
 		// Check Reactions List
 		if ( item === 'reactions' ) {
 			if ( $( '.yz-emoji-item' )[0] ) {
 				$( '.yz-no-emojis' ).remove();
-			} else if ( ! $( '.yz-no-emojis' )[0] ) {
-				$( '#yz_reactions' )
-				.append( '<p class="yz-no-content yz-no-emojis">' + yz.no_emojis + '</p>' );
 			}
 		}
 
@@ -550,9 +493,6 @@
 		if ( item === 'networks' ) {
 			if ( $( '.yz-network-item' )[0] ) {
 				$( '.yz-no-networks' ).remove();
-			} else if ( ! $( '.yz-no-networks' )[0] ) {
-				$( '#yz_networks' )
-				.append( '<p class="yz-no-content yz-no-networks">' + yz.no_networks + '</p>' );
 			}
 		}
 
@@ -560,9 +500,6 @@
 		if ( item === 'custom-widgets' ) {
 			if ( $( '.yz-custom-widget-item' )[0] ) {
 				$( '.yz-no-custom-widgets' ).remove();
-			} else if ( ! $( '.yz-no-custom-widgets' )[0] ) {
-				$( '#yz_custom_widgets' )
-				.append( '<p class="yz-no-content yz-no-custom-widgets">' + yz.no_custom_widgets + '</p>' );
 			}
 		}
 
@@ -570,9 +507,6 @@
 		if ( item === 'custom-tabs' ) {
 			if ( $( '.yz-custom-tab-item' )[0] ) {
 				$( '.yz-no-custom-tabs' ).remove();
-			} else if ( ! $( '.yz-no-custom-tabs' )[0] ) {
-				$( '#yz_custom_tabs' )
-				.append( '<p class="yz-no-content yz-no-custom-tabs">' + yz.no_custom_tabs + '</p>' );
 			}
 		}
 
@@ -580,9 +514,6 @@
 		if ( item === 'member-types' ) {
 			if ( $( '.yz-member-type-item' )[0] ) {
 				$( '.yz-no-member-types' ).remove();
-			} else if ( ! $( '.yz-no-member-types' )[0] ) {
-				$( '#yz_member_types' )
-				.append( '<p class="yz-no-content yz-no-member-types">' + yz.no_member_types + '</p>' );
 			}
 		}
 
@@ -590,9 +521,6 @@
 		if ( item === 'user-tags' ) {
 			if ( $( '.yz-user-tag-item' )[0] ) {
 				$( '.yz-no-user-tags' ).remove();
-			} else if ( ! $( '.yz-no-user-tags' )[0] ) {
-				$( '#yz_user_tags' )
-				.append( '<p class="yz-no-content yz-no-user-tags">' + yz.no_user_tags + '</p>' );
 			}
 		}
 

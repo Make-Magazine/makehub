@@ -2,96 +2,121 @@
 
 class Logy {
 
-    protected $plugin_slug;
-
-    protected $version;
-
     public function __construct() {
 
-        // Init Data.
-        $this->version = '1.0.0';
-        $this->plugin_slug = 'logy-slug';
-
         // Load Functions.
-        $this->init_logy();
+        add_action( 'init', array( $this, 'init' ) );
+
+        // Hide Dashboard
+        add_action( 'after_setup_theme', array( $this, 'hide_dashboard' ) );
+
+        // Add Widgets.
+        add_action( 'widgets_init', array( $this, 'load_widgets' ) );
+    }
+
+    /**
+     * Register & Load widgets
+     */
+    function load_widgets() {
         
-        // Load Global Variables.
-        $this->logy_globals();
+        require LOGY_CORE . 'class-logy-widgets.php';
+
+        // Register Login Widget
+        register_widget( 'logy_login_widget' );
+        
+        // Register Registration Widget
+        register_widget( 'logy_register_widget' );
+
+        // Reset Password Widget
+        register_widget( 'logy_reset_password_widget' );
+    }
+
+    /**
+     * Hide Dashboard Admin Bar For Non Admins.
+     */
+    function hide_dashboard() {
+
+        if ( is_super_admin() ) {
+            return;
+        }
+        
+        if ( is_multisite() ) {
+
+            global $blog_id;
+
+            if ( ! current_user_can_for_blog( $blog_id, 'subscriber' ) ) {
+                return;
+            }
+
+        } else {
+
+            if ( ! current_user_can( 'subscriber' ) ) {
+                return;
+            }
+
+        }
+        
+        if ( 'on' != yz_option( 'logy_hide_subscribers_dash', 'off' ) ) {
+            return;
+        }
+
+        // ECHO 'allla';
+
+        // Hide Admin Bar.
+        if ( ! is_admin() ) {
+            show_admin_bar( false );
+        }
+
+        // Hide Admin Dashboard.
+        if ( is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+            wp_redirect( home_url() );
+            exit;
+        }
 
     }
 
     /**
      * # Init Logy Files
      */
-    private function init_logy() {
+    function init() {
 
-        require_once LOGY_CORE . 'functions/logy-general-functions.php';
-        require_once LOGY_CORE . 'functions/logy-social-functions.php';
-    
-        // General Functions
-        require_once LOGY_CORE . 'functions/logy-admin-functions.php';
-        require_once LOGY_CORE . 'functions/logy-bp-functions.php';
+        // Global Functions.
+        require LOGY_CORE . 'general/logy-general-functions.php';
 
-        // Classes
+        if ( ! is_user_logged_in() ) {
+
+            include LOGY_CORE . 'functions/logy-general-functions.php';
+            include LOGY_CORE . 'functions/logy-social-functions.php';
+        
+            // General Functions
+            include LOGY_CORE . 'functions/logy-bp-functions.php';
+
+            // Classes
+            include LOGY_CORE . 'class-logy-form.php';
+            include LOGY_CORE . 'class-logy-query.php';
+            include LOGY_CORE . 'class-logy-social.php';
+            include LOGY_CORE . 'class-logy-rewrite.php';
+            include LOGY_CORE . 'class-logy-styling.php';
+            include LOGY_CORE . 'class-logy-limit.php';
+
+            // Include Main Pages
+            include LOGY_CORE . 'pages/logy-login.php';
+            include LOGY_CORE . 'pages/logy-register.php';
+            include LOGY_CORE . 'pages/logy-lost-password.php';
+            include LOGY_CORE . 'pages/logy-complete-registration.php';
+
+            // Init Classes
+            $this->login          = new Logy_Login();
+            $this->form           = new Logy_Form();
+            $this->social         = new Logy_Social();
+            $this->limit          = new Logy_Limit();
+            $this->styling        = new Logy_Styling();
+            $this->register       = new Logy_Register();
+            
+        }
+
+        // Global Files.
         require_once LOGY_CORE . 'class-logy-widgets.php';
-        require_once LOGY_CORE . 'class-logy-form.php';
-        require_once LOGY_CORE . 'class-logy-query.php';
-        require_once LOGY_CORE . 'class-logy-social.php';
-        require_once LOGY_CORE . 'class-logy-rewrite.php';
-        require_once LOGY_CORE . 'class-logy-styling.php';
-        require_once LOGY_CORE . 'class-logy-widgets.php';
-        require_once LOGY_CORE . 'class-logy-limit.php';
-
-        // Include Main Pages
-        require_once LOGY_CORE . 'pages/logy-login.php';
-        require_once LOGY_CORE . 'pages/logy-register.php';
-        require_once LOGY_CORE . 'pages/logy-lost-password.php';
-        require_once LOGY_CORE . 'pages/logy-complete-registration.php';
-
-        // Init Classes
-        $this->login          = new Logy_Login();
-        $this->form           = new Logy_Form();
-        $this->social         = new Logy_Social();
-        $this->query          = new Logy_Query();
-        $this->limit          = new Logy_Limit();
-        $this->rewrite        = new Logy_Rewrite();
-        $this->styling        = new Logy_Styling();
-        $this->register       = new Logy_Register();
-        $this->lost_password  = new Logy_Lost_Password();
-        $this->complete_registration  = new Logy_Complete_Registration();
         
     }
-    
-    /**
-     * # Logy Global Variables .
-     */
-    private function logy_globals() {
-
-        global $wpdb, $Logy_Translation, $Logy_Settings;
-        
-        // Translation Data.
-        $Logy_Translation = array(
-            'try_later'             => __( 'Something went wrong, please try again later.', 'youzer' ),
-            'reset_error'           => __( 'An error occurred while resetting the options!', 'youzer' ),
-            'reset_dialog_title'    => __( 'Resetting Options Confirmation', 'youzer' ),
-            'required_fields'       => __( 'All fields are required!', 'youzer' ),
-            'empty_field'           => __( 'Field Name is Empty!', 'youzer' ),
-            'empty_options'         => __( 'Options are empty !', 'youzer' ),
-            'processing'            => __( 'processing... !', 'youzer' ),
-            'save_changes'          => __( 'save changes', 'youzer' ),
-            'error_msg'             => __( 'Oops, error!', 'youzer' ),
-            'photo_link'            => __( 'photo link', 'youzer' ),
-            'success_msg'           => __( "Success !", 'youzer' ),
-            'edit_item'             => __( 'edit item', 'youzer' ),
-            'got_it'                => __( 'Got it!', 'youzer' ),
-            'done'                  => __( 'save', 'youzer' ),
-
-            // Passing Data.
-            'default_img' => LOGY_PA . 'images/default-img.png',
-            'ajax_url'    => admin_url( 'admin-ajax.php' )
-
-        );
-
-    }
-
 }

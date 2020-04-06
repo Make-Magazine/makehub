@@ -2,38 +2,100 @@
 
 class Youzer_Group {
 
-	function __construct() {
+	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
 
-		// Group Navbar Content
-		add_action( 'youzer_group_navbar', array( &$this, 'navbar' ) );
+	/**
+	 * Return the instance of this class.
+	 */
+	public static function get_instance() {
 
-		// Group Main Content
-		add_action( 'yz_group_main_content', array( &$this, 'main_content' ) );
+		if ( null === self::$instance ) {
+		
+			self::$instance = new self;
 
-		// Group Body
-		add_action( 'yz_group_main_column', array( &$this, 'body' ) );
+			self::$instance->create_new_tabs();
 
-		// Load Groups Scripts
-		add_action( 'wp_enqueue_scripts', array( &$this, 'scripts' ) );
+			add_filter( 'bp_get_options_nav_request-membership', '__return_false' );
 
+			// Group Navbar Content
+			add_action( 'youzer_group_navbar', array( self::$instance, 'navbar' ) );
+
+			// Group Main Content
+			add_action( 'yz_group_main_content', array( self::$instance, 'main_content' ) );
+
+			// Group Body
+			add_action( 'yz_group_main_column', array( self::$instance, 'body' ) );
+
+			// Load Groups Scripts
+			add_action( 'wp_enqueue_scripts', array( self::$instance, 'scripts' ) );
+
+		}
+
+		return self::$instance;
+
+	}
+
+	function __construct() { /** Do Nothing Here **/ }
+
+	/**
+	 * Create New Tabs.
+	 */
+	function create_new_tabs() {
+
+		// Check if its a group page.
+		if ( ! bp_is_single_item() ) {
+			return false;
+		}
+
+		global $bp;
+
+		$group = $bp->groups->current_group;
+
+		// Add Group 'Infos' Nav.
+		bp_core_new_subnav_item(
+			array(
+				'slug' => 'group-info',
+				'parent_slug' => $group->slug,
+				'name' => __( 'Info', 'youzer' ),
+				'parent_url' => bp_get_group_permalink( $group ),
+				'screen_function' =>  array( $this, 'group_info_screen' ),
+				'position' => 10
+			)
+		);
+
+
+		if ( bp_is_item_admin() && 'private' == bp_get_group_status( $group ) ) {
+
+			// Get Requests Number
+			$requests_nbr = $this->get_group_membership_requests_count( $group->id );
+
+			if ( '0' != $requests_nbr ) {
+				// Create 'Requests' Subnav.
+				bp_core_new_subnav_item( array(
+						'name' => sprintf( __( 'Requests %s', 'youzer' ), '<span>' . number_format( $requests_nbr ) . '</span>' ),
+						'parent_slug' => $group->slug,
+						'slug' => 'membership-requests',
+						'parent_url' => trailingslashit( bp_get_group_permalink( $group ) . 'admin' ),
+						'screen_function' => 'groups_screen_group_admin',
+						'position' => 60
+					)
+				);
+			}
+
+		}
 
 	}
 
 	/**
-	 * # Get Profile Layout
+	 * # Get Group Layout
 	 */
 	function layout() {
-
 	    // Set Up Variable
-	    $group_layout = yz_options( 'yz_group_header_layout' );
-
-	    if ( false !== strpos( $group_layout, 'yz-card' ) ) {
-	        $layout = 'yz-vertical-layout';
-	    } else {
-	        $layout = 'yz-horizontal-layout';
-	    }
-
-	    return $layout;
+	    $group_layout = yz_option( 'yz_group_header_layout', 'hdr-v1' );
+	    return false !== strpos( $group_layout, 'yz-card' ) ? 'yz-vertical-layout' : 'yz-horizontal-layout';
 	}
 
 	/**
@@ -85,13 +147,10 @@ class Youzer_Group {
 	function get_navbar_class() {
 
 		// Create Empty Array.
-		$navbar_class = array();
-
-		// Main Class.
-		$navbar_class[] = 'yz-group-navmenu';
+		$navbar_class = array( 'yz-group-navmenu' );
 
 		// Get Options.
-		$header_layout = yz_options( 'yz_group_header_layout' );
+		$header_layout = yz_option( 'yz_group_header_layout', 'hdr-v1' );
 
 		// Add a class depending on another one.
 		if ( 'hdr-v2' == $header_layout || 'hdr-v7' == $header_layout ) {
@@ -115,7 +174,7 @@ class Youzer_Group {
 			</div>
 		</div>
 
-		<?php if ( yz_show_group_sidebar() ) : ?>
+		<?php if ( $this->show_group_sidebar() ) : ?>
 		<div class="yz-sidebar-column yz-group-sidebar youzer-sidebar">
 			<div class="yz-column-content">
 				<?php do_action( 'yz_group_sidebar' ); ?>
@@ -124,7 +183,7 @@ class Youzer_Group {
 		<?php endif; ?>
 
 		<!-- Scroll to top -->
-		<?php if ( 'on' == yz_options( 'yz_display_group_scrolltotop' ) ) : ?>
+		<?php if ( 'on' == yz_option( 'yz_display_group_scrolltotop', 'off' ) ) : ?>
 			<?php yz_scroll_to_top(); ?>
 		<?php endif; ?>
 
@@ -133,6 +192,29 @@ class Youzer_Group {
 		<?php
 	}
 
+	/**
+	 * Display Group Sidebar.
+	 */
+	function show_group_sidebar() {
+		
+		if ( is_super_admin() ) {
+			return true;
+		}
+
+		global $bp;
+
+		// Get Current Group Status.
+		$status = $bp->groups->current_group->status;
+
+		// Get Current Group ID
+		$group_id = $bp->groups->current_group->id;
+
+		if ( $status == 'private' && ( ! is_user_logged_in() || ! groups_is_user_member( bp_loggedin_user_id(), $group_id ) ) )  {
+			return false;
+		}
+
+		return true;
+	}
 	/**
 	 * Body
 	 */
@@ -234,64 +316,8 @@ class Youzer_Group {
 	/**
 	 * # Cover.
 	 */
-	function cover( $query = null, $group_id = null ) {
-
-		$group_id = ! empty( $group_id ) ? $group_id : bp_get_group_id();
-
-		// Get Cover Photo Path.
-		$cover_path = bp_attachments_get_attachment(
-			'url',
-			array(
-	          'item_id' 	=> $group_id,
-	          'object_dir'  => 'groups',
-	        )
-		);
-
-	    // Get Default Cover.
-		if ( empty( $cover_path ) ) {
-	    	$cover_path = yz_options( 'yz_default_groups_cover' );
-		}
-		
-		// Get Cover Style.
-		$cover_style = 'background-size: cover;';
-
-		// If Cover not exist use .
-		if ( empty( $cover_path ) ) {
-
-			// Get Data.
-			$avatar = bp_core_fetch_avatar( array(
-				'avatar_dir' => 'group-avatars',
-				'item_id'    => $group_id,
-				'object' 	 => 'group',
-				'type'	  	 => 'full',
-				'html' 	  	 => false
-				)
-			);
-
-			$avatar_as_cover = yz_options( 'yz_group_header_use_avatar_as_cover' );
-
-			// The group avatar as cover ( works only with Vertical Layouts ).
-			if ( 'on' == $avatar_as_cover && ! empty( $avatar ) && 'yz-vertical-layout' == $this->layout() ) {
-				$cover_path = $avatar;
-			} else {
-				// If cover image not exist use pattern.
-				$cover_path = YZ_PA . 'images/geopattern.png';				
-				// Get Cover Style.
-				$cover_style = 'background-size: auto;';
-			}
-
-		}
-
-		// Get Cover
-		$cover = "style='background-image:url( $cover_path ); $cover_style'";
-
-		// return Cover Style
-		if ( 'style' == $query ) {
-			return $cover;
-		}
-
-		// Print Cover.
-		echo $cover;
+	function cover( $group_id = null ) {
+		echo yz_get_group_cover( $group_id );
 	}
 
 	/**
@@ -304,11 +330,11 @@ class Youzer_Group {
 		$group_id = isset( $args['group_id'] ) ? $args['group_id'] : bp_get_group_id();
 
 		// Get Avatar Border Style
-		$border_style = yz_options( 'yz_group_' . $target . '_avatar_border_style' );
-		$show_border  = yz_options( 'yz_enable_group_' . $target . '_avatar_border' );
+		$border_style = yz_option( 'yz_group_' . $target . '_avatar_border_style', 'circle' );
+		$show_border  = yz_option( 'yz_enable_group_' . $target . '_avatar_border', 'on' );
 
 		// Get Data
-		$photo_effect = yz_options( 'yz_group_avatar_effect' );
+		$photo_effect = yz_option( 'yz_group_photo_effect', 'on' );
 		
 		$img_path = bp_core_fetch_avatar( array(
 			'avatar_dir' => 'group-avatars',
@@ -331,10 +357,7 @@ class Youzer_Group {
 			$photo_class[] = 'yz-profile-photo-effect';
 		}
 
-		// Generate Photo Class
-		$photo_class = yz_generate_class( $photo_class );
-
-		echo "<div class='$photo_class'>";
+		echo "<div class='" . yz_generate_class( $photo_class ) . "'>";
 		echo "<div class='yz-profile-img'>$img_path</div>";
 		echo "</div>";
 	}
@@ -354,8 +377,8 @@ class Youzer_Group {
 	function meta() {
 
 		// Show / Hide Elements
-		$display_privacy  = yz_options( 'yz_display_group_header_privacy' );
-		$display_activity = yz_options( 'yz_display_group_header_activity' );
+		$display_privacy  = yz_option( 'yz_display_group_header_privacy', 'on' );
+		$display_activity = yz_option( 'yz_display_group_header_activity', 'on' );
 
 		if ( 'on' == $display_privacy || 'on' == $display_activity ) :
 
@@ -410,10 +433,16 @@ class Youzer_Group {
 	 */
 	function statistics( $args = null ) {
 
-		global $Youzer;
-
 		// Set Up Variable.
 		$target = isset( $args['target'] ) ? $args['target'] : 'header';
+
+		// Show / Hide Elements.
+		$display_posts 	 = yz_option( 'yz_display_group_' . $target . '_posts', 'on' );
+		$display_members = yz_option( 'yz_display_group_' . $target . '_members', 'on' );
+
+		if ( 'on' != $display_posts && 'on' != $display_members ) {
+			return false;
+		}
 
 		// Get Group ID.
 		$group_id = isset( $args['group_id'] ) ? $args['group_id'] : bp_get_group_id();
@@ -422,19 +451,11 @@ class Youzer_Group {
 		$members_number = bp_get_group_total_members();
 		$posts_number 	= yz_get_group_total_posts_count( $group_id );
 
-		// Show / Hide Elements.
-		$display_posts 	 = yz_options( 'yz_display_group_' . $target . '_posts' );
-		$display_members = yz_options( 'yz_display_group_' . $target . '_members' );
-
-		if ( 'on' != $display_posts && 'on' != $display_members ) {
-			return false;
-		}
-
 		// Get Statistics Data.
 		$data = yz_get_args(
 			array(
-				'statistics_bg' 	=> yz_options( 'yz_group_' . $target . '_use_statistics_bg' ),
-				'statistics_border' => yz_options( 'yz_group_' . $target . '_use_statistics_borders' ),
+				'statistics_bg' 	=> yz_option( 'yz_group_' . $target . '_use_statistics_bg', 'on' ),
+				'statistics_border' => yz_option( 'yz_group_' . $target . '_use_statistics_borders', 'on' ),
 		), $args );
 
 		// Get Statistics Class Name.
@@ -541,10 +562,10 @@ class Youzer_Group {
 		}
 
 		// Get Social Networks
-		$social_networks = yz_options( 'yz_group_social_networks' );
+		$social_networks = yz_option( 'yz_group_social_networks' );
 
 		// Display Networks Icons
-		$display_networks = yz_options( 'yz_display_group_' . $element . '_networks' );
+		$display_networks = yz_option( 'yz_display_group_' . $element . '_networks', 'on' );
 
 		// if Element is Widget Make it Networks Visible.
 		if ( 'widget' == $element ) {
@@ -560,12 +581,13 @@ class Youzer_Group {
 		// Get networks Data.
 		$data = yz_get_args(
 			array(
-				'networks_type'   => yz_options( 'yz_group_' . $element . '_sn_bg_type' ),
-				'networks_format' => yz_options( 'yz_group_' . $element . '_sn_bg_style' ),
+				'networks_type'   => yz_option( 'yz_group_' . $element . '_sn_bg_type', 'silver' ),
+				'networks_format' => yz_option( 'yz_group_' . $element . '_sn_bg_style', 'circle' ),
 		), $args );
 
 		// Get Networks Size
-		$networks_size = yz_options( 'yz_group_wg_sn_icons_size' );
+		$networks_size = yz_option( 'yz_group_wg_sn_icons_size', 'full-width' );
+		
 		if ( 'wg' == $element ) {
 			$networks_class[] = "yz-icons-$networks_size";
 		}
@@ -610,10 +632,21 @@ class Youzer_Group {
 	 */
 	function scripts() {
 
-		if ( ! bp_is_groups_component() ) {
-			return;
-		}
+		// if ( ! bp_is_groups_component() ) {
+		// 	return;
+		// }
+		if ( bp_is_group() ) {
 
+			// Groups Custom Styling
+			$styling = yz_styling();
+			$styling->custom_styling( 'groups' );
+			$styling->custom_snippets( 'groups' );
+			unset( $styling );
+
+        }
+
+       	wp_enqueue_style( 'yz-groups', YZ_PA .'css/yz-groups.min.css', array( 'yz-bp-uploader' ), YZ_Version );
+		
 		// Init Vars
 		$jquery = array( 'jquery' );
 		
@@ -623,4 +656,72 @@ class Youzer_Group {
         wp_enqueue_script( 'yz-slider', YZ_PA . 'js/yz-slider.min.js', $jquery, YZ_Version, true );
     
 	}
+
+	/**
+	 * Add New Group Infos Page.
+	 */
+	function group_info_screen() {
+
+		add_action( 'bp_template_title', array( $this, 'group_info_title' ) );
+		add_action( 'bp_template_content', array( $this, 'group_info_content' ) );
+
+	    // Load Tab Template
+	    bp_core_load_template( 'buddypress/groups/single/plugins' );
+
+	}
+
+	/**
+	 * Get Group Infos Page Title.
+	 */
+	function group_info_title() {
+		_e( 'Information', 'youzer' );
+	}
+
+	/**
+	 * Get Group Infos Page Content.
+	 */
+	function group_info_content() {
+
+		global $bp;
+
+		$group = $bp->groups->current_group;
+
+		?>
+		
+		<div class="yz-group-infos-widget">
+			<div class="yz-group-widget-title">
+				<i class="fas fa-file-alt"></i>
+				<?php echo _e( 'description', 'youzer' ); ?>
+			</div>
+			<div class="yz-group-widget-content"><?php echo apply_filters( 'the_content', html_entity_decode( $group->description ) ); ?></div>
+		</div>
+
+		<?php
+
+	}
+
+	/**
+	 * Get Group Membership requests Count.
+	 */
+	function get_group_membership_requests_count( $group_id ) {
+		global $bp, $wpdb;
+
+		// Result.
+		$requests_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND inviter_id = 0 AND group_id = $group_id" );
+
+		return $requests_count;
+
+	}
 }
+
+/**
+ * Get a unique instance of Youzer Groups.
+ */
+function yz_groups() {
+	return Youzer_Group::get_instance();
+}
+
+/**
+ * Launch Youzer Groups!
+ */
+yz_groups();

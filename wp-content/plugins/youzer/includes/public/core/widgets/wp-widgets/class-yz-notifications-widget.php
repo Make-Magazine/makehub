@@ -19,14 +19,10 @@ class YZ_Notifications_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 	    // Get Widget Data.
 	    $instance = wp_parse_args( (array) $instance,
 		    array(
 		    	'title' => __( 'Notifications', 'youzer' ),
-		        'icons_border_style' => 'circle',
-		        'icons_style' => 'colorful',
 		        'limit' => '5'
 		    )
 	     );
@@ -34,12 +30,6 @@ class YZ_Notifications_Widget extends WP_Widget {
 	    // Get Input's Data.
 		$limit = absint( $instance['limit'] );
 		$title = strip_tags( $instance['title'] );
-		$border_style = $Youzer->fields->get_field_options( 'border_styles' );
-		$icons_style = array(
-			'silver'	=> __( 'Silver', 'youzer' ),
-			'colorful'	=> __( 'Colorful', 'youzer' ),
-			'no-bg'		=> __( 'No background', 'youzer' )
-		);
 
 		?>
 
@@ -56,26 +46,6 @@ class YZ_Notifications_Widget extends WP_Widget {
 			</label>
 		</p>
 
-		<!-- Icons Background Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'icons_style' ) ); ?>"><?php esc_attr_e( 'Icons Background Style:', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'icons_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'icons_style' ) ); ?>" class="widefat" style="width'100%;">
-	            <?php foreach( $icons_style as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['icons_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
-
-		<!-- Icons Border Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'icons_border_style' ) ); ?>"><?php esc_attr_e( 'Icons Border Style:', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'icons_border_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'icons_border_style' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $border_style as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['icons_border_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
-		
 		<?php 
 	}
 	
@@ -89,8 +59,6 @@ class YZ_Notifications_Widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['limit'] = absint( $new_instance['limit'] );
 		$instance['title'] = strip_tags( $new_instance['title'] );
-		$instance['icons_style'] = strip_tags( $new_instance['icons_style'] );
-		$instance['icons_border_style'] = strip_tags( $new_instance['icons_border_style'] );
 
 		return $instance;
 	}
@@ -142,7 +110,7 @@ class YZ_Notifications_Widget extends WP_Widget {
 		
 		?>
 
-		<div class="yz-notifications-widget yz-notif-icons-<?php echo $args['icons_border_style']; ?> yz-notif-icons-<?php echo $args['icons_style']; ?>">
+		<div class="yz-notifications-widget yz-notif-icons-circle yz-notif-icons-colorful">
 		
 		<?php foreach ( $notifications as $notification ) : ?>
 

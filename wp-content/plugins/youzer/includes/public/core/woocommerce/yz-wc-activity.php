@@ -5,63 +5,58 @@ class Youzer_WC_Activity {
     public function __construct() {
     	
 		// Get Product Content.
-		add_filter( 'yz_get_activity_content_body', array( &$this, 'get_activity_content' ), 10, 2 );
+		add_filter( 'yz_get_activity_content_body', array( $this, 'get_activity_content' ), 10, 2 );
 
 		// Add to cart with ajax.		
-		add_action( 'wp_ajax_woocommerce_ajax_add_to_cart', array( &$this, 'add_to_cart' ) );
-		add_action( 'wp_ajax_nopriv_woocommerce_ajax_add_to_cart', array( &$this, 'add_to_cart' ) );
+		add_action( 'wp_ajax_woocommerce_ajax_add_to_cart', array( $this, 'add_to_cart' ) );
+		add_action( 'wp_ajax_nopriv_woocommerce_ajax_add_to_cart', array( $this, 'add_to_cart' ) );
 		
-		// Enable WC Activity Posts.    
-		add_filter( 'yz_wall_post_types_visibility', array( &$this, 'enable_activity_posts' ) );
-		add_filter( 'yz_wall_show_everything_filter_actions', array( &$this, 'add_show_everything_filter_actions' ) );
-
-		$this->enable_product_posts = yz_options( 'yz_enable_wc_product_activity' );
-		$this->enable_purchase_posts = yz_options( 'yz_enable_wc_purchase_activity' );
+		// Register Activity Actions.
+		add_action( 'bp_register_activity_actions', array( $this, 'activity_actions' ), 10 );
+		// add_action( 'yz_wall_show_everything_filter_actions', array( $this, 'actions' ) );
 
 	}
 
 	/**
-	 * Enable Activity Woocommerce Posts Visibility.
+	 * Add Woocommerce Activity Actions.
 	 */
-	function enable_activity_posts( $post_types ) {
-		if ( $this->enable_product_posts == 'on' ) {
-	    	$post_types['new_wc_product'] = 'on';
-		}
-		if ( $this->enable_purchase_posts == 'on' ) {
-	    	$post_types['new_wc_purchase'] = 'on';
-		}
-	    return $post_types;
+	function activity_actions() {
+		// ECHO 'haaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+		// Init Vars
+		$bp = buddypress();
+
+		bp_activity_set_action(
+			$bp->activity->id,
+			'new_wc_product',
+			__( 'added a new Product', 'youzer' ),
+			'yz_activity_action_wall_posts',
+			__( 'Products', 'youzer' ),
+			array( 'activity', 'member' )
+		);
+
+		bp_activity_set_action(
+			$bp->activity->id,
+			'new_wc_purchase',
+			__( 'purchased a new Product', 'youzer' ),
+			'yz_activity_action_wall_posts',
+			__( 'Purchases', 'youzer' ),
+			array( 'activity', 'member' )
+		);
+
 	}
 
-
-	/**
-	 * Enable Activity Woocommerce Filter Visibility.
-	 */
-	function add_show_everything_filter_actions( $actions ) {
-
-		if ( $this->enable_product_posts == 'on' ) {
-			$actions[] = 'new_wc_product';
-		}
-
-		if ( $this->enable_purchase_posts == 'on' ) {
-			$actions[] = 'new_wc_purchase';
-		}
-		
-		return $actions;
-	}
-
-
+	// function actions( $actions ) {
+	// 	$actions[] = 'new_wc_purchase';
+	// 	$actions[] = 'new_wc_product';
+	// 	return $actions;
+	// }
 	/**
 	 * Get Prodcut Post Content
 	 */
 	function get_activity_content( $content, $activity ) {
 
-
 	    if ( 'new_wc_purchase' == $activity->type ) {
 
-			$order = new WC_Order(  );
-
-	    	// $items = $order->get_items();
 			$product = wc_get_product( $activity->item_id );
 			
 			if ( empty( $product ) ) {
@@ -70,7 +65,7 @@ class Youzer_WC_Activity {
 
     		$args = yz_wc_get_activity_product_args( $product );
 
-	    	return  yz_get_woocommerce_product( $args );
+	    	return yz_get_woocommerce_product( $args );
 
 		} elseif ( 'new_wc_product' == $activity->type ) {
 			$product = wc_get_product( $activity->item_id  );
