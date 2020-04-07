@@ -29,4 +29,8 @@
 	.yz-group-navmenu a#nav-makedrive::before {
 		content: '\f0a0';
 	}
+	#makedrive-groups-li a::before {
+		content: '\f0a0';
+		color: #3fafed;
+	}
 } 
