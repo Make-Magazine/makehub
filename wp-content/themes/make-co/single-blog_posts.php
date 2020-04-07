@@ -19,17 +19,13 @@
 
 	query_posts( $query_args );
 	global $post;
-   //var_dump($post);
-
-	global $Youzer; 
    
    // we're going to display this page like it belongs to the author
 	set_displayed_user(get_the_author_meta('ID'));
 
-	// Get Header Data
-	$header_effect = yz_options( 'yz_hdr_load_effect' );
-	$header_data   = $Youzer->widgets->get_loading_effect( $header_effect );
-	$header_class  = $Youzer->header->get_class( 'user' );
+	$cover_image_url = bp_attachments_get_attachment( 'url', array( 'item_id' => bp_displayed_user_id() ) );
+	$city_meta = yz_options( 'yz_hheader_meta_type_2' );
+    $city_value = yz_get_user_field_data( $city_meta, bp_displayed_user_id() );
 
    do_action( 'youzer_profile_before_profile' );
 
@@ -40,8 +36,32 @@
 
 	<div class="yz-content">
 
-		<header id="yz-profile-header" class="<?php echo $header_class; ?>" <?php echo $header_data; ?>>
+		<header id="yz-profile-header" class="yz-profile-header yz-hdr-v1 yz-hdr-v8 yz-header-overlay yz-header-pattern yz_effect">
 			<?php do_action( 'youzer_profile_header' ); ?>
+			<div class="yz-header-cover" style="background-image:url(<?php echo $cover_image_url; ?>);background-size:cover;">
+				<div class="yz-cover-content">
+					<div class="yz-inner-content">
+						<div class="yz-profile-photo yz-photo-circle yz-photo-border yz-profile-photo-effect">
+							<a href="<?php echo bp_core_get_user_domain($bp->displayed_user->id); ?>" class="yz-profile-img">
+								<img src="<?php echo bp_core_fetch_avatar(array('item_id'=>$bp->displayed_user->id, 'html'=>false)); ?>" class="avatar user-2-avatar avatar-150 photo" alt="Profile Photo" width="150" height="150">
+							</a>
+						</div>					
+						<div class="yz-head-content">
+							<div class="yz-name">
+								<h2><?php echo bp_displayed_user_username() ?></h2>
+							</div>
+							<div class="yz-usermeta">
+								<ul>
+									<li><i class="fas fa-globe"></i><span><?php echo bp_displayed_user_username() ?></span></li>
+									<?php if(!empty($city_value)) { ?>
+									<li><i class="far fa-hospital"></i><span><?php echo $city_value; ?></span></li>
+									<?php } ?>
+								</ul>
+							</div>											
+						</div>						
+					</div>	
+				</div>
+			</div>
 		</header>
    	<div class="yz-profile-content">
 

@@ -21,3 +21,12 @@
 		}
 	}
 }
+
+.single-item.groups {
+	.yz-group-navmenu a#nav-events::before {
+		content: '\f073';
+	}
+	.yz-group-navmenu a#nav-makedrive::before {
+		content: '\f0a0';
+	}
+} 
