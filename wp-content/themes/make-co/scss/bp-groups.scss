@@ -23,6 +23,7 @@
 }
 
 .single-item.groups {
+	#nav-events-groups-li { display: none; }
 	.yz-group-navmenu a#nav-events::before {
 		content: '\f073';
 	}
@@ -31,6 +32,6 @@
 	}
 	#makedrive-groups-li a::before {
 		content: '\f0a0';
-		color: #3fafed;
+		background-color: #3fafed;
 	}
 } 
