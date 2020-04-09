@@ -3,7 +3,7 @@ body { overflow-x: hidden; }
 .banner-bar {
 	color: #fff;
 	background:	#333;
-	font-size: 2em;
+	font-size: 18px;
 	.container {
 		height: 60px;
 		display: flex;
@@ -12,14 +12,12 @@ body { overflow-x: hidden; }
 		text-align: center
 	}
 	@media screen and (max-width: 767px) {
-		font-size: 1.8em;
 		top: 0px;
 		position: fixed;
 		width: 100%;
 		z-index:999999;
 	}
 	@media screen and (max-width: 465px) {
-		font-size: 1.6em;
 		.container {
 			padding: 0px;
 		}
