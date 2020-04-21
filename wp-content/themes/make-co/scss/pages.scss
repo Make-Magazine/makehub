@@ -81,3 +81,57 @@
 .auth0-lock-opened-in-frame .auth0-lock-form { margin-top: 40px; }
 .auth0-lock-with-tabs.auth0-lock-opened-in-frame .auth0-lock-form { margin-top: 0px; }
 .auth0-lock-with-tabs.auth0-lock-opened-in-frame .auth0-lock-name { margin-left: 0px; }
+
+
+/////////// JOIN PAGE //////////////////
+.page-join {
+	p { font-size: 18px; }
+	.content-sidebar-wrap {
+		margin-top: 0px !important;
+	}
+	.header-text {
+		position: absolute;
+		padding: 15px;
+		border-radius: 5px;
+		text-align: left;
+	}
+	.entry-header {
+	    background: url('../images/join-heros/5.png');
+	    background-size: cover;
+		background-position: center;
+	    height: 400px;
+		width: 180%;
+		margin-left: -40%;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		.header-text {
+			margin: 50px;
+			background: rgba(21, 23, 51,0.8);
+			color: #fff;
+			position: absolute;
+			max-width: 1170px;
+			left: 0px;
+		}
+		@media screen and (max-width: 768px) {
+			height: 450px;
+			.header-text {
+				margin: 15px;
+				h1 {
+					font-size: 1.8em;
+				}
+			}
+		}
+		h1{ 
+			text-align: left;
+			margin-top: 10px;
+			font-weight: 700;
+		}
+		h1.entry-title{
+			display: none;
+		} 
+	}
+	@media screen and (max-width: 768px) {
+		p { padding: 0px 15px; }
+	}
+}
