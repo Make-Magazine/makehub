@@ -100,10 +100,10 @@
 		width: 170%;
 		margin-left: -35%;
 		display: flex;
-		align-items: flex-end;
+		align-items: center;
 		justify-content: center;
 		.header-text {
-			margin: 50px;
+			margin: 15px;
 			background: rgba(21, 23, 51,0.8);
 			color: #fff;
 			position: relative;
@@ -116,7 +116,6 @@
 		@media screen and (max-width: 768px) {
 			height: 500px;
 			.header-text {
-				margin: 15px;
 				width: 100vw;
 				h1 {
 					font-size: 1.8em;
