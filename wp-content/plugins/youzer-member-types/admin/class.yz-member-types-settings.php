@@ -138,7 +138,7 @@ class Youzer_Member_Types_Settings {
         $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
         // Get New Member Types Form.
-        $Youzer_Admin->panel->modal( $modal_args, array( &$this, 'form' ) );
+        yz_panel_modal_form( $modal_args, array( &$this, 'form' ) );
 
         // Get Member Types List.
         $this->get_types_list();
