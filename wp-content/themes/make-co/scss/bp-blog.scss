@@ -158,7 +158,8 @@ a[data-activity-type=new_blog_posts] {
 			font-size: 16px;
 		}
 	}
-	.mce-toolbar .mce-container-body .mce-flow-layout-item.mce-last { display: none; }
+	// hide the vimeogrpahy button, cuz it doesn't work
+	.mce-toolbar.mce-first .mce-container-body.mce-flow-layout .mce-flow-layout-item.mce-last { display: none; }
 }
 
 // Individual blog pages
