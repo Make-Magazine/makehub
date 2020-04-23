@@ -5,15 +5,15 @@ class Youzer_WC_Templates {
     public function __construct() {
 
     	// Shortcodes.
-		add_shortcode( 'youzer_woocommerce_orders',  array( &$this, 'orders' ) );
-		add_shortcode( 'youzer_woocommerce_addresses',  array( &$this, 'addresses' ) );
-		add_shortcode( 'youzer_woocommerce_downloads',  array( &$this, 'downloads' ) );
-		add_shortcode( 'youzer_payment_methods',  array( &$this, 'payment_methods' ) );
-		add_shortcode( 'youzer_woocommerce_edit_account',  array( &$this, 'edit_account' ) );
+		add_shortcode( 'youzer_woocommerce_orders', array( $this, 'orders' ) );
+		add_shortcode( 'youzer_woocommerce_addresses', array( $this, 'addresses' ) );
+		add_shortcode( 'youzer_woocommerce_downloads', array( $this, 'downloads' ) );
+		add_shortcode( 'youzer_payment_methods',  array( $this, 'payment_methods' ) );
+		add_shortcode( 'youzer_woocommerce_edit_account',  array( $this, 'edit_account' ) );
 
 		// Template Filters.
-		add_filter( 'woocommerce_locate_template',  array( &$this, 'locate_template' ), 0, 3 );
-		add_filter( 'wc_get_template',  array( &$this, 'disable_themes_templates_on_profile' ), 10, 5 );
+		add_filter( 'woocommerce_locate_template', array( $this, 'locate_template' ), 0, 3 );
+		add_filter( 'wc_get_template',  array( $this, 'disable_themes_templates_on_profile' ), 10, 5 );
 
 	}
 

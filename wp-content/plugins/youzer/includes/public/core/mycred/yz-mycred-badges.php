@@ -86,7 +86,7 @@ function yz_mycred_profile_badges_widget_content() {
 	$user_id = bp_displayed_user_id();
 
 	// Get Bages max number.
-	$max_badges = yz_options( 'yz_wg_max_user_badges_items' );
+	$max_badges = yz_option( 'yz_wg_max_user_badges_items', 12 );
 
 	// Get Badges
 	yz_mycred_get_user_badges( $user_id, $max_badges, 'text' );
@@ -106,26 +106,24 @@ function yz_mycred_badges_slug() {
 /**
  * Add Badges Tab
  */
-function yz_add_mycred_badges_tab() {
+// function yz_add_mycred_badges_tab() {
 
-	global $bp;
+// 	global $bp;
 
-	// Add Badges Tab.
-    bp_core_new_nav_item(
-        array( 
-            'position' => 100,
-            'slug' => yz_mycred_badges_slug(), 
-            'parent_slug' => $bp->profile->slug,
-            'default_subnav_slug' => yz_mycred_badges_slug(),
-            'name' => yz_options( 'yz_mycred_badges_tab_title' ), 
-            'screen_function' => 'yz_profile_mycred_badges_tab_screen', 
-            'parent_url' => bp_loggedin_user_domain() . yz_mycred_badges_slug()
-        )
-    );
+// 	// Add Badges Tab.
+//     bp_core_new_nav_item(
+//         array( 
+//             'position' => 100,
+//             'slug' => apply_filters( 'yz_mycred_badges_slug', 'badges' ), 
+//             'parent_slug' => $bp->profile->slug,
+//             'name' => yz_option( 'yz_mycred_badges_tab_title', __( 'Badges', 'youzer' ) ), 
+//             'screen_function' => 'yz_profile_mycred_badges_tab_screen', 
+//         )
+//     );
 
-}
+// }
 
-add_action( 'bp_setup_nav', 'yz_add_mycred_badges_tab', 1 );
+// add_action( 'bp_setup_nav', 'yz_add_mycred_badges_tab', 1 );
 
 /**
  * Get Badges Tab Template
@@ -182,7 +180,6 @@ function yz_get_mycred_badges_page_content() {
 			foreach ( $user_badges as $badge_id => $level ) {
 
 				$badge = mycred_get_badge( $badge_id, $level );
-				// print_r($level);
 
 				if ( $badge === false ) continue;
 
@@ -222,9 +219,7 @@ function yz_md_display_user_badges() {
 	}
 	
     // Get badges visibility
-    $show_badges = yz_options( 'yz_enable_cards_mycred_badges' );
-
-    if ( 'off' == $show_badges ) {
+    if ( 'off' == yz_option( 'yz_enable_cards_mycred_badges', 'on' ) ) {
         return;
     }
 
@@ -232,13 +227,11 @@ function yz_md_display_user_badges() {
     $user_id = bp_get_member_user_id();
 
     // Get Bages max number.
-    $max_badges = yz_options( 'yz_wg_max_card_user_badges_items' );
+    $max_badges = yz_option( 'yz_wg_max_card_user_badges_items', 4 );
 
     ?>
 
-    <div class="yz-md-user-badges">
-        <?php yz_mycred_get_user_badges( $user_id, $max_badges, 'box' ); ?>
-    </div>
+    <div class="yz-md-user-badges"><?php yz_mycred_get_user_badges( $user_id, $max_badges, 'box' ); ?></div>
 
     <?php
 }
@@ -251,20 +244,16 @@ add_action( 'bp_directory_members_item', 'yz_md_display_user_badges');
 function yz_mycred_author_box_badges( $args = null ) {
 
     // Get badges visibility
-    $show_badges = yz_options( 'yz_enable_author_box_mycred_badges' );
-
-    if ( 'off' == $show_badges ) {
+    if ( 'off' == yz_option( 'yz_enable_author_box_mycred_badges', 'on' ) ) {
         return;
     }
 
     // Get Bages max number.
-    $max_badges = yz_options( 'yz_author_box_max_user_badges_items' );
+    $max_badges = yz_option( 'yz_author_box_max_user_badges_items', 3 );
 
     ?>
 
-    <div class="yzb-user-badges">
-        <?php yz_mycred_get_user_badges( $args['user_id'], $max_badges, 'box' ); ?>
-    </div>
+    <div class="yzb-user-badges"><?php yz_mycred_get_user_badges( $args['user_id'], $max_badges, 'box' ); ?></div>
 
     <?php
 }
@@ -290,4 +279,4 @@ function yz_mycred_is_user_have_widgets( $widget_visibility, $widget_name ) {
     return true;
 }
 
-add_filter( 'yz_profile_widget_visibility', 'yz_mycred_is_user_have_widgets', 10, 2 ); 
+// add_filter( 'yz_profile_widget_visibility', 'yz_mycred_is_user_have_widgets', 10, 2 ); 

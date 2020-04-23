@@ -1,26 +1,6 @@
 <?php
 
 class YZ_Friends {
-
-    /**
-     * # Friends Widget Arguments.
-     */
-    function args() {
-
-        // Get Widget Args
-        $args = array(
-            'widget_name'   => 'friends',
-            'widget_icon'   => 'fas fa-handshake',
-            'widget_title'  => yz_options( 'yz_wg_friends_title' ),
-            'load_effect'   => yz_options( 'yz_friends_load_effect' ),
-            'display_title' => yz_options( 'yz_wg_friends_display_title' )
-        );
-
-        // Filter
-        $args = apply_filters( 'yz_friends_widget_args', $args );
-
-        return $args;
-    }
     
     /**
      * # Content.
@@ -39,14 +19,11 @@ class YZ_Friends {
         }
         
         // Get Widget Layout.
-        $widget_layout = yz_options( 'yz_wg_friends_layout' );
+        $widget_layout = yz_option( 'yz_wg_friends_layout', 'list' );
 
         // Get User Max Friends Number to show in the widget.
-        $max_friends = yz_options( 'yz_wg_max_friends_items' );
-        
-        // Get User Data
-        $avatar_border_style = yz_options( 'yz_wg_friends_avatar_img_format' );
-        
+        $max_friends = yz_option( 'yz_wg_max_friends_items', 5 );
+
         // Get User Friends List.
         $user_friends = friends_get_friend_user_ids( bp_displayed_user_id() );
 
@@ -58,7 +35,7 @@ class YZ_Friends {
             'yz-profile-friends-widget',
             'yz-items-' . $widget_layout . '-widget',
             'yz-profile-' . $widget_layout . '-widget',
-            'yz-list-avatar-' . $avatar_border_style
+            'yz-list-avatar-circle'
         );
 
         ?>
@@ -100,87 +77,6 @@ class YZ_Friends {
         </div>
         
         <?php
-    }
-
-    /**
-     * # Admin Settings.
-     */
-    function admin_settings() {
-
-        global $Yz_Settings;
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'general Settings', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'display title', 'youzer' ),
-                'id'    => 'yz_wg_friends_display_title',
-                'desc'  => __( 'show widget title', 'youzer' ),
-                'type'  => 'checkbox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget title', 'youzer' ),
-                'id'    => 'yz_wg_friends_title',
-                'desc'  => __( 'add widget title', 'youzer' ),
-                'type'  => 'text'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'Widget Layout', 'youzer' ),
-                'opts'  => $Yz_Settings->get_field_options( 'friends_layout' ),
-                'desc'  => __( 'select widget layout', 'youzer' ),
-                'id'    => 'yz_wg_friends_layout',
-                'type'  => 'select'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'loading effect', 'youzer' ),
-                'opts'  => $Yz_Settings->get_field_options( 'loading_effects' ),
-                'desc'  => __( 'how you want the widget to be loaded ?', 'youzer' ),
-                'id'    => 'yz_friends_load_effect',
-                'type'  => 'select'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'allowed friends number', 'youzer' ),
-                'id'    => 'yz_wg_max_friends_items',
-                'desc'  => __( 'maximum number of friends to display', 'youzer' ),
-                'type'  => 'number'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'Friends Avatar border style', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'id'    => 'yz_wg_friends_avatar_img_format',
-                'type'  => 'imgSelect',
-                'opts'  => $Yz_Settings->get_field_options( 'image_formats' )
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
     }
 
 }

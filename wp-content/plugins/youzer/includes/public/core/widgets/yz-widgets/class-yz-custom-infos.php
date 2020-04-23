@@ -2,9 +2,19 @@
 
 class YZ_Custom_Infos {
 
+    // public $args;
+
     public function __construct() {
-        add_action( 'yz_profile_widgets_edit_link', array( &$this, 'yz_set_xprofile_widgets_settings_edit_url' ), 10, 2 );
+        // $this->args = $args;
+        add_action( 'yz_profile_widgets_edit_link', array( $this, 'yz_set_xprofile_widgets_settings_edit_url' ), 10, 2 );
     }
+
+    /**
+     * Custom Info Args.
+     */
+    // function args() {
+    //     return $this->args;
+    // }
 
     /**
      * # Custom Informations.
@@ -45,10 +55,9 @@ class YZ_Custom_Infos {
      */
     function yz_set_xprofile_widgets_settings_edit_url( $edit_url, $widget_name ) {
 
-        if ( ! bp_is_active( 'xprofile' )  ) {
-            return $edit_url;
-        }
-
+        // if ( ! bp_is_active( 'xprofile' )  ) {
+        //     return $edit_url;
+        // }
         if ( 'custom_infos' == $widget_name ) {
             $group_id = bp_get_the_profile_group_id();
             return yz_get_profile_settings_url( 'edit/group/' . $group_id );

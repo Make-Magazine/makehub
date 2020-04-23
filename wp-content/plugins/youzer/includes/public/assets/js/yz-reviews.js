@@ -55,7 +55,7 @@
 
 		    		// Change Button Title.
 					if ( yz_review_button.parent().attr( 'class' ) != 'yz-item-tools' ) {
-	    				yz_review_button.find( '.yz-tool-name' ).text( Yz_Reviews.edit_review );
+	    				yz_review_button.find( '.yz-tool-name' ).text( res.edit_review );
 					}
 
 					// Update Button Action
@@ -258,7 +258,7 @@
 				    		});
 		    				
 				    		// Change Button Title.
-				    		yz_review_button.find( '.yz-tool-name' ).text( Yz_Reviews.edit_review );
+				    		yz_review_button.find( '.yz-tool-name' ).text( res.edit_review );
 			    			
 			    			yz_review_button.remove();
 		    			}

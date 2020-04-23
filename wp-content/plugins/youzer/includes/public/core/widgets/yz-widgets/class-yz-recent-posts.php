@@ -3,28 +3,6 @@
 class YZ_Recent_Posts {
 
     /**
-     * # Recent Posts Arguments.
-     */
-    function args() {
-
-        // Get Widget Args
-        $args = array(
-            'widget_icon'   => 'fas fa-newspaper',
-            'widget_name'   => 'recent_posts',
-            'main_data'     => 'recent_posts',
-            'widget_title'  => yz_options( 'yz_wg_rposts_title' ),
-            'load_effect'   => yz_options( 'yz_rposts_load_effect' ),
-            'display_title' => yz_options( 'yz_wg_rposts_display_title' )
-        );
-
-        // Filter
-        $args = apply_filters( 'yz_recent_posts_widget_args', $args );
-
-        return $args;
-    }
-    
-
-    /**
      * # Content.
      */
     function widget() {
@@ -34,19 +12,16 @@ class YZ_Recent_Posts {
             'author'  => bp_displayed_user_id(),
             'orderby' => 'date',
             'order'   => 'desc',
-            'numberposts' => yz_options( 'yz_wg_max_rposts' )
+            'numberposts' => yz_option( 'yz_wg_max_rposts', 3 )
         ) );
 
         if ( empty( $recent_posts ) ) {
             return;
         }
 
-        // Init Vars.
-        $photos_border = yz_options( 'yz_wg_rposts_img_format' );
-
 		?>
 		
-        <div class="yz-posts-by-author yz-recent-posts yz-rp-img-<?php echo $photos_border; ?>">
+        <div class="yz-posts-by-author yz-recent-posts yz-rp-img-circle">
             <?php foreach ( $recent_posts as $post ) : ?>
             <div class="yz-post-item">
                 <?php yz_get_post_thumbnail( array( 'post_id' => $post->ID, 'img_size' => 'thumbnail' ) );
@@ -65,106 +40,4 @@ class YZ_Recent_Posts {
         <?php
 
     }
-
-    /**
-     * # Admin Settings.
-     */
-    function admin_settings() {
-
-        global $Yz_Settings;
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'general Settings', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget title', 'youzer' ),
-                'id'    => 'yz_wg_rposts_title',
-                'desc'  => __( 'type widget title', 'youzer' ),
-                'type'  => 'text'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'loading effect', 'youzer' ),
-                'opts'  => $Yz_Settings->get_field_options( 'loading_effects' ),
-                'desc'  => __( 'how you want the widget to be loaded?', 'youzer' ),
-                'id'    => 'yz_rposts_load_effect',
-                'type'  => 'select'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'display title', 'youzer' ),
-                'id'    => 'yz_wg_rposts_display_title',
-                'desc'  => __( 'show widget title', 'youzer' ),
-                'type'  => 'checkbox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'allowed posts number', 'youzer' ),
-                'desc'  => __( 'maximum allowed posts', 'youzer' ),
-                'id'    => 'yz_wg_max_rposts',
-                'std'   => 3,
-                'type'  => 'number'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'posts thumbnail border style', 'youzer' ),
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'id'    => 'yz_wg_rposts_img_format',
-                'type'  => 'imgSelect',
-                'opts'  => $Yz_Settings->get_field_options( 'image_formats' )
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'widget styling settings', 'youzer' ),
-                'class' => 'ukai-box-2cols',
-                'type'  => 'openBox'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'post title', 'youzer' ),
-                'desc'  => __( 'post title color', 'youzer' ),
-                'id'    => 'yz_wg_rposts_title_color',
-                'type'  => 'color'
-            )
-        );
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'post date', 'youzer' ),
-                'id'    => 'yz_wg_rposts_date_color',
-                'desc'  => __( 'post date color', 'youzer' ),
-                'type'  => 'color'
-            )
-        );
-
-        $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
-    }
-
 }

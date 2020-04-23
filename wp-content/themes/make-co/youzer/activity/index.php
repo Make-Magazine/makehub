@@ -12,11 +12,13 @@
 /**
  * # Get Acitivity Class.
  */
+
 do_action( 'bp_before_directory_activity' ); ?>
 
-<div id="<?php echo apply_filters( 'yz_activity_template_id', 'buddypress' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
-	
+<div id="youzer">
 
+<div id="<?php echo apply_filters( 'yz_activity_template_id', 'yz-bp' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
+	
 	<div class="yz-content">
 		
 		<main class="yz-page-main-content">
@@ -30,7 +32,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			 */
 			do_action( 'bp_before_directory_activity_content' ); ?>
 
-			<?php if ( 'on' == yz_options( 'yz_enable_activity_directory_filter_bar' ) && apply_filters( 'yz_enable_activity_directory_filter_bar', true ) ) : ?>
+			<?php if ( 'on' == yz_option( 'yz_enable_activity_directory_filter_bar', 'on' ) && apply_filters( 'yz_enable_activity_directory_filter_bar', true ) ) : ?>
 			
 			<div class="yz-mobile-nav">
 				<div class="yz-mobile-nav-item yz-show-activity-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a><?php _e( 'Menu', 'youzer' ); ?></a></div></div>
@@ -85,9 +87,9 @@ do_action( 'bp_before_directory_activity' ); ?>
 
 							<?php /* if ( bp_is_active( 'groups' ) ) : ?>
 
-								  if ( bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) : ?>
+								<?php if ( bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) : ?>
 
-									<li id="activity-groups"><a href="/groups"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
+									<li id="activity-groups"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/'; ?>"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
 
 								<?php endif; ?>
 
@@ -281,4 +283,5 @@ do_action( 'bp_before_directory_activity' ); ?>
 	
 	</div><!-- .yz-content -->
 
+</div>
 </div>

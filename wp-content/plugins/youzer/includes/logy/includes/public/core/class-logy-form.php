@@ -33,7 +33,7 @@ class Logy_Form {
 	function get_form( $form, $shortcode_attrs = null ) {
 
 		// Get Form Attributes
-		$attributes = $this->logy->$form->attributes();
+		$attributes = $this->get_attributes( $form );
 		$elements 	= $this->get_form_elements( $form );
 
 		// Get Action Link
@@ -81,6 +81,192 @@ class Logy_Form {
 	}
 
 	/**
+	 * Form Attributes.
+	 */
+	function get_attributes( $form ) {
+
+		$attrs = array();
+
+		switch ( $form ) {
+
+			case 'login':
+
+				// Add Form Type & Action to generate form class later.
+				$attrs['form_type']   = 'login';
+				$attrs['form_action'] = 'login';
+
+				// Get Login Box Classes.
+				$attrs['action_class'] = $this->get_actions_class( 'login' );
+				$attrs['form_class']   = $this->get_form_class( $attrs );
+
+				// Form Elements Visibilty Settings.
+				$attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
+				$attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
+
+				// Form Actions Elements Visibilty Settings.
+				$attrs['actions_lostpswd'] = ( false !== strpos( $attrs['action_class'], 'logy-lost-pswd' ) ) ? true : false;
+				$attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
+
+				break;
+			
+			case 'register':
+			case 'complete_registration':
+
+				// Add Form Type & Action to generate form class later.
+				$attrs['form_type']   = 'signup';
+				$attrs['form_action'] = 'signup';
+
+				// Get Login Box Classes.
+				$attrs['action_class'] = $this->get_actions_class( 'register' );
+				$attrs['form_class'] = $this->get_form_class( $attrs );
+
+				// Form Elements Visibilty Settings.
+				$attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
+				$attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
+
+				// Form Actions Elements Visibilty Settings.
+				$attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
+
+				break;
+			
+			case 'lost_password':
+
+				// Add Form Type & Action to generate form class later.
+				$attrs['form_type']   = 'login';
+				$attrs['form_action'] = 'lost-password';
+
+				// Get Login Box Classes.
+				$attrs['action_class'] = $this->get_actions_class( 'login' );
+				$attrs['form_class']   = $this->get_form_class( $attrs );
+
+				// Form Elements Visibilty Settings.
+				$attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
+				$attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
+
+				// Form Actions Elements Visibilty Settings.
+				$attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
+
+				break;
+			
+				// break;
+			
+			default:
+				break;
+		}
+
+		return $attrs;
+
+	}
+
+	/**
+	 * Signup
+	 */
+	function get_actions_class( $type ) {
+		
+		// Array.
+		$actions_class = array( 'logy-form-actions' );
+
+		switch ( $type ) {
+
+			case 'login':
+
+				// Get Actions Layout
+				$actions_layout = yz_option( 'logy_login_actions_layout', 'logy-actions-v1' );
+
+				// Get Form Options Data
+
+				$one_button = array(
+					'logy-actions-v3', 'logy-actions-v6'
+				);
+
+				$forgot_password = array(
+					'logy-actions-v2', 'logy-actions-v5', 'logy-actions-v9', 'logy-actions-v10'
+				);
+
+				$use_icons	= array(
+					'logy-actions-v4', 'logy-actions-v5', 'logy-actions-v6', 'logy-actions-v7',
+					'logy-actions-v10'
+				);
+
+				$full_witdh	= array(
+					'logy-actions-v1', 'logy-actions-v3', 'logy-actions-v4', 'logy-actions-v6',
+					'logy-actions-v9', 'logy-actions-v10'
+				);
+
+				$half_witdh	= array(
+					'logy-actions-v2', 'logy-actions-v5', 'logy-actions-v7', 'logy-actions-v8'
+				);
+
+				// Get One Button Class.
+				$actions_class[] = in_array( $actions_layout, $one_button ) ? 'logy-one-button' : null;
+
+				// Get Buttons icons Class.
+				$actions_class[] = in_array( $actions_layout, $use_icons ) ? 'logy-buttons-icons' : null;
+
+				// Get full Width Class.
+				$actions_class[] = in_array( $actions_layout, $full_witdh ) ? 'logy-fullwidth-button' : null;
+
+				// Get Half Width Class.
+				$actions_class[] = in_array( $actions_layout, $half_witdh ) ? 'logy-halfwidth-button' : null;
+
+				// Get "Forgot Password" Class.
+				$actions_class[] = in_array( $actions_layout, $forgot_password ) ? 'logy-lost-pswd' : null;
+
+				// Get Button Border Style.
+				$actions_class[] = yz_option( 'logy_login_btn_format', 'logy-border-radius' );
+
+				// Get Button Icons Position.
+				if ( in_array( $actions_layout, $use_icons ) ) {
+					$actions_class[] = yz_option( 'logy_login_btn_icons_position', 'logy-icons-left' );
+				}
+
+				break;
+			
+			case 'register':
+
+				// Get Actions Layout
+				$actions_layout = yz_option( 'logy_signup_actions_layout', 'logy-regactions-v1' );
+
+				// Get One Button Class.
+				if ( in_array( $actions_layout, array( 'logy-regactions-v5', 'logy-regactions-v6' ) ) ) {
+					$actions_class[] = 'logy-one-button';
+				}
+
+				// Get Buttons icons Class.
+				if ( in_array( $actions_layout, array( 'logy-regactions-v3', 'logy-regactions-v4', 'logy-regactions-v6' ) ) ) {
+					$actions_class[] = 'logy-buttons-icons';
+					$actions_class[] = yz_option( 'logy_signup_btn_icons_position', 'logy-icons-left' );
+				}
+
+				// Get full Width Class.
+				if ( in_array( $actions_layout, array( 'logy-regactions-v1', 'logy-regactions-v3', 'logy-regactions-v5', 'logy-regactions-v6' ) ) ) {
+					$actions_class[] = 'logy-fullwidth-button';
+				}
+
+				// Get Half Width Class.
+				if ( in_array( $actions_layout, array( 'logy-regactions-v2', 'logy-regactions-v4' ) ) ) {
+					$actions_class[] = 'logy-halfwidth-button';
+				}
+
+				// Get Button Border Style.
+				$actions_class[] = yz_option( 'logy_signup_btn_format', 'logy-border-radius' );
+
+				// If Buddypress
+				if ( logy_is_page( 'register' ) && logy_is_bp_registration_completed() ){
+					$actions_class[] = 'logy-bp-registration-completed';
+				}
+
+				break;
+			
+			default:
+				break;
+		}
+
+		// Return Action Area Classes
+		return logy_generate_class( $actions_class );
+	}
+
+	/**
 	 * Form Header
 	 */
 	function get_form_header( $form ) {
@@ -90,17 +276,17 @@ class Logy_Form {
 			$form_title = __( 'Activate Account', 'youzer' );
 			$form_subtitle = __( 'Activate Your Account', 'youzer' );
 		} elseif ( 'lost_password' == $form ) {
-			$form_title = logy_options( 'logy_lostpswd_form_title' );
-			$form_subtitle = logy_options( 'logy_lostpswd_form_subtitle' );
+			$form_title = yz_option( 'logy_lostpswd_form_title', __( 'Forgot your password?', 'youzer' ) );
+			$form_subtitle = yz_option( 'logy_lostpswd_form_subtitle', __( 'Reset your account password', 'youzer' ) );
 		} elseif ( 'register' == $form ) {
-			$form_title = logy_options( 'logy_signup_form_title' );
-			$form_subtitle = logy_options( 'logy_signup_form_subtitle' );
+			$form_title = yz_option( 'logy_signup_form_title', __( 'Sign Up', 'youzer' ) );
+			$form_subtitle = yz_option( 'logy_signup_form_subtitle', __( 'Create New Account', 'youzer' ) );
 		} elseif ( 'complete_registration' == $form ) {
 			$form_title = __( 'Complete Registration', 'youzer' );
 			$form_subtitle = __( 'Complete Registration Steps', 'youzer' );
 		} else {
-			$form_title = logy_options( 'logy_login_form_title' );
-			$form_subtitle 	= logy_options( 'logy_login_form_subtitle' );
+			$form_title = yz_option( 'logy_login_form_title', __( 'Login', 'youzer' ) );
+			$form_subtitle 	= yz_option( 'logy_login_form_subtitle', __( 'Sign in to your account', 'youzer' ) );
 		}
 
 		// Sanitize Form Title & Subtitle
@@ -117,20 +303,19 @@ class Logy_Form {
 		}
 
 		// Get Cover Data
-		$form_cover = esc_url( logy_options( 'logy_' . $form . '_cover' ) );
-		$enable_cover = logy_options( 'logy_' . $form . '_form_enable_header' );
+		$form_cover = esc_url( yz_option( 'logy_' . $form . '_cover' ) );
 		$cover_class = ! empty( $form_cover ) ? 'logy-custom-cover' : 'logy-default-cover';
 
 		// If cover photo not exist use pattern.
 		if ( ! $form_cover ) {
-			$form_cover  = LOGY_PA . 'images/geopattern.png';
+			$form_cover = LOGY_PA . 'images/geopattern.png';
 		}
 
 		?>
 
     	<header class="logy-form-header">
-	    	<?php if ( 'on' == $enable_cover ) : ?>
-	    		<div class="logy-form-cover <?php echo $cover_class; ?>" style="background-image: url( <?php echo $form_cover; ?> )">
+	    	<?php if ( 'on' == yz_option( 'logy_' . $form . '_form_enable_header', 'on' ) ) : ?>
+	    		<div class="logy-form-cover <?php echo $cover_class; ?>" style="background-image: url( <?php echo apply_filters( 'yz_' . $form . '_form_cover', $form_cover ); ?> )">
 			        <h2 class="form-cover-title"><?php echo $form_title; ?></h2>
 	    		</div>
 	    	<?php else : ?>
@@ -186,13 +371,13 @@ class Logy_Form {
 				'item' 	=> 'submit',
 				'icon'	=> 'fas fa-sign-in-alt',
 				'name' => 'signin_submit',
-				'title' => logy_options( 'logy_login_signin_btn_title' )
+				'title' => yz_option( 'logy_login_signin_btn_title', __( 'Log In', 'youzer' ) )
 			);
 
 			if ( get_option( 'users_can_register' ) ) :
 				
 				// Get Custom Registration Link.
-				$custom_registration = logy_options( 'logy_login_custom_register_link' );
+				$custom_registration = yz_option( 'logy_login_custom_register_link' );
 				
 				// Get Registration Link.
 				$register_page_link = ! empty( $custom_registration ) ? $custom_registration : logy_page_url( 'register' );
@@ -201,7 +386,7 @@ class Logy_Form {
 					'item' 	=> 'link',
 					'icon'	=> 'fas fa-pencil-alt',
 					'url'	=> $register_page_link,
-					'title' => logy_options( 'logy_login_register_btn_title' )
+					'title' => yz_option( 'logy_login_register_btn_title', __( 'Create New Account', 'youzer' ) )
 				);
 			endif;
 
@@ -257,10 +442,10 @@ class Logy_Form {
 			$fields[] = array( 'item' => 'captcha' );
 
 			// Display terms and conditions & privacy policy.
-			if ( 'on' == logy_options( 'logy_show_terms_privacy_note' ) ) {
+			if ( 'on' == yz_option( 'logy_show_terms_privacy_note', 'on' ) ) {
 
-				$terms_url = logy_options( 'logy_terms_url' );
-				$privacy_url = logy_options( 'logy_privacy_url' );
+				$terms_url = yz_option( 'logy_terms_url' );
+				$privacy_url = yz_option( 'logy_privacy_url' );
 
 				$fields[] = array(
 					'item'  => 'note',
@@ -274,15 +459,15 @@ class Logy_Form {
 					'item' 	=> 'submit',
 					'icon'	=> 'fas fa-pencil-alt',
 					'name'  => 'signup_submit',
-					'title' => logy_options( 'logy_signup_register_btn_title' )
+					'title' => yz_option( 'logy_signup_register_btn_title', __( 'Sign Up', 'youzer' ) )
 				);
 			}
 
 			$actions[] = array(
 				'item' 	=> 'link',
 				'icon'	=> 'fas fa-sign-in-alt',
-				'url'	=> logy_page_url( 'login' ),
-				'title' => logy_options( 'logy_signup_signin_btn_title' )
+				'url'	=> yz_get_login_page_url(),
+				'title' => yz_option( 'logy_signup_signin_btn_title', __( 'Log In', 'youzer' ) )
 			);
 
 			break;
@@ -411,7 +596,7 @@ class Logy_Form {
 				$actions[] = array(
 					'icon'	=> 'fas fa-undo',
 					'item' 	=> 'submit',
-					'title'	=> logy_options( 'logy_lostpswd_submit_btn_title' )
+					'title'	=> yz_option( 'logy_lostpswd_submit_btn_title', __( 'Reset Password', 'youzer' ) )
 				);
 
 			} else {
@@ -433,14 +618,14 @@ class Logy_Form {
 				$actions[] = array(
 					'item' 	=> 'submit',
 					'icon'	=> 'fas fa-undo',
-					'title' => logy_options( 'logy_lostpswd_submit_btn_title' )
+					'title' => yz_option( 'logy_lostpswd_submit_btn_title', __( 'Reset Password', 'youzer' ) )
 				);
 				
 				$actions[] = array(
 					'item' 	=> 'link',
 					'icon'	=> 'fas fa-sign-in-alt',
 					'url'	=> logy_page_url( 'login' ),
-					'title' => logy_options( 'logy_signup_signin_btn_title' )
+					'title' => yz_option( 'logy_signup_signin_btn_title', __( 'Log In', 'youzer' ) )
 				);
 			}
 			break;
@@ -489,13 +674,13 @@ class Logy_Form {
 		);
 
 		// Get Form Layout
-		$form_layout = logy_options( 'logy_' . $form_type . '_form_layout' );
+		$form_layout = yz_option( 'logy_' . $form_type . '_form_layout', 'logy-field-v1' );
 
 		// Check if header is Enable Or Disabled.
 		if ( 'lost-password' == $attributes['form_action'] ) {
-			$use_header = logy_options( 'logy_lostpswd_form_enable_header' );
+			$use_header = yz_option( 'logy_lostpswd_form_enable_header', 'on' );
 		} else {
-			$use_header = logy_options( 'logy_' . $form_type . '_form_enable_header' );
+			$use_header = yz_option( 'logy_' . $form_type . '_form_enable_header', 'on' );
 		}
 
 		// Main Form Class
@@ -533,12 +718,12 @@ class Logy_Form {
 		$form_class[] = in_array( $form_layout, $full_border ) ? 'logy-full-border' : 'logy-bottom-border';
 
 		// Get Border Format.
-		$form_class[] = logy_options( 'logy_' . $form_type . '_fields_format' );
+		$form_class[] = yz_option( 'logy_' . $form_type . '_fields_format', 'logy-border-flat' );
 
 		// Icons Options
 		if ( in_array( $form_layout, $use_icons ) ) {
 			// Get icons position.
-			$form_class[] = logy_options( 'logy_' . $form_type . '_icons_position' );
+			$form_class[] = yz_option( 'logy_' . $form_type . '_icons_position', 'logy-icons-left' );
 			// Get icons background.
 			$form_class[] = in_array( $form_layout, $silver_icons ) ? 'logy-silver-icons' : 'logy-nobg-icons';
 		}
@@ -551,7 +736,9 @@ class Logy_Form {
 				isset( $attributes['registered'] )
 			) ? 'logy-form-msgs' : null;
 		} else {
-			$form_class[] = count( $attributes[ 'errors' ] ) > 0 ? 'logy-form-msgs' : null;
+			if ( isset( $attributes['errors'] ) ) {
+				$form_class[] = count( $attributes['errors'] ) > 0 ? 'logy-form-msgs' : null;
+			}
 		}
 
 		// Return Form Classes.
@@ -566,15 +753,15 @@ class Logy_Form {
 		?>
 		
 		<?php do_action( 'logy_form_notices' ); ?>
-
-		<?php if ( count( $attrs['errors'] ) > 0 )  : ?>
+<!-- 
+		< ?php if ( count( $attrs['errors'] ) > 0 )  : ?>
 			<div class="logy-form-message logy-error-msg">
-				<?php foreach ( $attrs['errors'] as $error_msg ) : ?>
-					<p><strong><?php _e( 'ERROR', 'youzer' ); ?> !</strong><?php echo $error_msg; ?></p>
-				<?php endforeach; ?>
+				< ?php foreach ( $attrs['errors'] as $error_msg ) : ?>
+					<p><strong>< ?php _e( 'ERROR', 'youzer' ); ?> !</strong>< ?php echo $error_msg; ?></p>
+				< ?php endforeach; ?>
 			</div>
-		<?php endif; ?>
-
+		< ?php endif; ?>
+ -->
 		<?php if ( isset( $attrs['registered'] ) && $attrs['registered'] ) : ?>
 			<div class="logy-form-message logy-success-msg">
 				<p>
@@ -755,7 +942,7 @@ class Logy_Form {
 	 * Lost Password Link
 	 */
 	function lost_password_field() {
-		$field_title = sanitize_text_field( logy_options( 'logy_login_lostpswd_title' ) );
+		$field_title = sanitize_text_field( yz_option( 'logy_login_lostpswd_title', __( 'Lost password?', 'youzer'  ) ) );
 		$lostpswd = apply_filters( 'yz_lostpassword_url', wp_lostpassword_url() );
 		echo '<a class="logy-forgot-password" href="' . $lostpswd . '">' . $field_title . '</a>';
 	}
@@ -793,8 +980,8 @@ class Logy_Form {
 			case 'registration_closed':
 				return __( 'Registering new users is currently not allowed.', 'youzer' );
 
-			case 'wrong_captcha':
-				return __( 'The CAPTCHA check failed. Try again!', 'youzer' );
+			// case 'wrong_captcha':
+				// return __( 'The CAPTCHA check failed. Try again!', 'youzer' );
 
 			case 'empty_username':
 				return __( 'You do have an email address, right?', 'youzer' );

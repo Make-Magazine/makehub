@@ -7,25 +7,25 @@ class Youzer_Reviews {
 		$this->query = new Youzer_Reviews_Query();
 
 		// Actions.
-		add_action( 'wp_ajax_yz_handle_user_reviews', array( &$this, 'handle_user_reviews' ) );
-		add_action( 'wp_ajax_yz_delete_user_review', array( &$this, 'delete_user_review' ) );
-		add_action( 'wp_enqueue_scripts', array( &$this, 'scripts' ) );
-		add_action( 'bp_setup_nav', array( &$this, 'setup_tabs' ) );
-		add_action( 'yz_user_tools', array( &$this, 'get_user_review_tool' ), 10, 2 );
-		add_action( 'yz_before_review_head', array( &$this, 'get_review_tools' ) );
-		add_action( 'yz_author_box_ratings_content', array( &$this, 'author_box_ratings' ) );
-		add_action( 'bp_directory_members_item', array( &$this, 'add_members_directory_cards_ratings' ), 100 );
+		add_action( 'wp_ajax_yz_handle_user_reviews', array( $this, 'handle_user_reviews' ) );
+		add_action( 'wp_ajax_yz_delete_user_review', array( $this, 'delete_user_review' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
+		add_action( 'bp_setup_nav', array( $this, 'setup_tabs' ) );
+		add_action( 'yz_user_tools', array( $this, 'get_user_review_tool' ), 10, 2 );
+		add_action( 'yz_before_review_head', array( $this, 'get_review_tools' ) );
+		add_action( 'yz_author_box_ratings_content', array( $this, 'author_box_ratings' ) );
+		add_action( 'bp_directory_members_item', array( $this, 'add_members_directory_cards_ratings' ), 100 );
 
 		// Filters.
-		add_filter( 'yz_review_tools', array( &$this, 'add_review_tools' ), 10, 2 );
+		add_filter( 'yz_review_tools', array( $this, 'add_review_tools' ), 10, 2 );
 
 		// Reviews - Ajax Pagination.
-		add_action( 'wp_ajax_nopriv_yz_reviews_pagination', array( &$this, 'pagination' ) );
-		add_action( 'wp_ajax_yz_reviews_pagination', array( &$this, 'pagination' ) );
+		add_action( 'wp_ajax_nopriv_yz_reviews_pagination', array( $this, 'pagination' ) );
+		add_action( 'wp_ajax_yz_reviews_pagination', array( $this, 'pagination' ) );
 
 		// Statistics
-		add_filter( 'yz_get_user_statistics_details', array( &$this, 'add_ratings_statitics' ) );
-		add_filter( 'yz_get_user_statistic_number', array( &$this, 'get_ratings_statistics_values' ), 10, 3 );
+		// add_filter( 'yz_get_user_statistics_details', array( $this, 'add_ratings_statitics' ) );
+		add_filter( 'yz_get_user_statistic_number', array( $this, 'get_ratings_statistics_values' ), 10, 3 );
 
 	}
 		
@@ -167,6 +167,11 @@ class Youzer_Reviews {
 
 		}
 
+		// Response Words
+        $response['add_review'] = __( 'add review', 'youzer' );
+        $response['edit_review'] = __( 'edit review', 'youzer' );
+        $response['delete_review'] = __( 'delete review', 'youzer' );
+
 		die( json_encode( $response ) );
 
 	}
@@ -224,17 +229,14 @@ class Youzer_Reviews {
 	    wp_enqueue_style( 'yz-reviews', YZ_PA . 'css/yz-reviews.min.css', array(), YZ_Version );
 
 	    // Call Bookmark Posts Script.
-	    wp_enqueue_script( 'yz-reviews', YZ_PA . 'js/yz-reviews.min.js', array( 'jquery' ), YZ_Version, true );
+	    // wp_enqueue_script( 'yz-reviews', YZ_PA . 'js/yz-reviews.min.js', array( 'jquery' ), YZ_Version, true );
 
 	    // Get Data
-	    $script_data = array(
-	        'add_review' => __( 'add review', 'youzer' ),
-	        'edit_review' => __( 'edit review', 'youzer' ),
-	        'delete_review' => __( 'delete review', 'youzer' )
-	    );
+	    // $script_data = array(
+	    // );
 
-	    // Localize Script.
-	    wp_localize_script( 'yz-reviews', 'Yz_Reviews', $script_data );
+	    // // Localize Script.
+	    // wp_localize_script( 'yz-reviews', 'Yz_Reviews', $script_data );
 
 	    $reviews_slug = yz_reviews_tab_slug();
 
@@ -307,8 +309,6 @@ class Youzer_Reviews {
 	 */
 	function pagination() {
 
-		global $Youzer;
-
 		// Get Page Offset.
 		$offset = ( $_POST['page'] - 1 ) *  $_POST['per_page'];
 
@@ -335,7 +335,7 @@ class Youzer_Reviews {
 	function author_box_ratings( $args = null ) {
 
 	    // Get ratings visibility
-	    $show_ratings = yz_options( 'yz_enable_author_box_ratings' );
+	    $show_ratings = yz_option( 'yz_enable_author_box_ratings', 'on' );
 
 	    if ( 'off' == $show_ratings ) {
 	        return;
@@ -431,14 +431,6 @@ class Youzer_Reviews {
 		// Get User ID.
 		yz_get_ratings_details( array( 'user_id' => $user_id ) );
 
-	}
-
-	/**
-	 * Add Statitics Options
-	 */
-	function add_ratings_statitics( $statistics ) {
-		$statistics['ratings'] = __( 'Ratings', 'youzer' );
-		return $statistics;
 	}
 
 	/**

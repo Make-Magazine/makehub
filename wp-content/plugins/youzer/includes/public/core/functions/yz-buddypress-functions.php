@@ -151,27 +151,6 @@ function yz_edit_friendship_buttons_text( $button ) {
 add_filter( 'bp_get_add_friend_button', 'yz_edit_friendship_buttons_text', 999 );
 
 /**
- * Disables BuddyPress' registration process and fallsback to WordPress' one.
- */
-function yz_disable_bp_registration() {
-
-    if ( yz_is_logy_active() || is_user_logged_in() ) {
-        return false;
-    }
-    
-	$disable_registration = yz_options( 'yz_disable_bp_registration' );
-
-	if ( 'off' == $disable_registration ) {
-		return false;
-	}
-
-	remove_action( 'bp_init',    'bp_core_wpsignup_redirect' );
-	remove_action( 'bp_screens', 'bp_core_screen_signup' );
-}
-
-add_action( 'bp_loaded', 'yz_disable_bp_registration' );
-
-/**
  * Is Youzer Custom Component
  */
 function yz_is_youzer_custom_component() {
@@ -215,40 +194,6 @@ function yz_edit_my_profile_menu_link( $items ) {
 add_filter( 'wp_nav_menu_objects', 'yz_edit_my_profile_menu_link', 10 );
 
 /**
- * Strip Emoji From Content.
- */
-function yz_hide_emoji_from_content() {
-    
-    if ( is_admin() ) {
-        return false;
-    }
-
-    if ( yz_is_activity_component() ) {
-
-        // Hide Posts Emoji
-        if ( 'off' == yz_options( 'yz_enable_posts_emoji' ) ) {
-            add_filter( 'bp_get_activity_content_body', 'yz_remove_emoji' );
-        }
-
-        // Hide Comments Emoji
-        if ( 'off' == yz_options( 'yz_enable_comments_emoji' ) ) {
-            add_filter( 'bp_activity_comment_content', 'yz_remove_emoji' );
-        }
-    
-    }
-
-    // Hide Messages Emoji.
-    if ( bp_is_messages_component() && 'off' == yz_options( 'yz_enable_messages_emoji' ) ) {
-        add_filter( 'bp_get_the_thread_message_content', 'yz_remove_emoji' );
-        add_filter( 'bp_get_message_thread_excerpt', 'yz_remove_emoji' );
-        add_filter( 'bp_get_message_notice_text', 'yz_remove_emoji' );
-    }
-
-}
-
-add_action( 'bp_init', 'yz_hide_emoji_from_content' );
-
-/**
  * Check is User Online.
  */
 function yz_is_user_online( $user_id = null ) {
@@ -284,17 +229,12 @@ function yz_is_user_online( $user_id = null ) {
  */
 function yz_add_user_online_status_icon( $username = null, $user_id = null ) {
 
-    // Get User status visibility.
-    $status_visibility = yz_options( 'yz_header_enable_user_status' );
-
-    if ( 'off' == $status_visibility ) {
-        return $username;
-    }
-
-    if ( yz_is_user_online( $user_id ) ) {
-        $username .= "<span class='yz-user-status yz-user-online'>" . __( 'online', 'youzer' ) . "</span>";
-    } else {
-        $username .= "<span class='yz-user-status yz-user-offline'>" . __( 'offline', 'youzer' ) . "</span>";
+    if ( 'on' == yz_option( 'yz_header_enable_user_status', 'on' ) ) {
+        if ( yz_is_user_online( $user_id ) ) {
+            $username .= "<span class='yz-user-status yz-user-online'>" . __( 'online', 'youzer' ) . '</span>';
+        } else {
+            $username .= "<span class='yz-user-status yz-user-offline'>" . __( 'offline', 'youzer' ) . '</span>';
+        }
     }
 
     return $username;
@@ -302,18 +242,6 @@ function yz_add_user_online_status_icon( $username = null, $user_id = null ) {
 }
 
 add_filter( 'yz_user_profile_username', 'yz_add_user_online_status_icon', 999 );
-
-/**
- * Disable Activity Action Filter.
- **/
-function yz_disable_activity_action_filter() {
-
-    // Remove Activity Action Filter
-    remove_filter( 'bp_get_activity_action', 'bp_activity_filter_kses', 1 );
-
-}
-
-add_action( 'bp_init', 'yz_disable_activity_action_filter' );
 
 /**
  * Set Search Page.
@@ -324,16 +252,16 @@ function yz_buddypress_bp_init() {
 
         $hashtag = substr( $_GET['s'], 0, 1 );
 
-        $bp_pages = get_option( 'bp-pages' );
+        $bp_pages = yz_option( 'bp-pages' );
 
-        if ( $hashtag == '#' || get_option( 'page_on_front' ) == $bp_pages['activity'] ) {
+        if ( $hashtag == '#' || yz_option( 'page_on_front' ) == $bp_pages['activity'] ) {
 
             $bp = buddypress();
 
-            if ( $bp->pages->activity->id == get_option( 'page_on_front' ) ) {
+            if ( $bp->pages->activity->id == yz_option( 'page_on_front' ) ) {
                 $bp->current_component = 'activity';
             }
-            // return;
+
         }
 
     } 
@@ -341,3 +269,16 @@ function yz_buddypress_bp_init() {
 }
 
 add_action( 'bp_init', 'yz_buddypress_bp_init', 3 );
+
+/**
+ *
+ */
+
+// function umm() {
+//     // Remove Settings Profile, General Pages
+//     bp_core_remove_nav_item( 'followers' );
+//     bp_core_remove_nav_item( 'following' );
+
+// }
+// add_action( 'bp_follow_setup_nav', 'umm' , 10 );
+//         remove_action( 'bp_adminbar_menus', 'bp_follow_group_buddybar_items' );

@@ -6,19 +6,13 @@
 function yz_members_directory_class() {
 
     // New Array
-    $directory_class = array();
-
-    // Add Directory Class
-    $directory_class[] = 'yz-directory';
-    
-    // Add Page Class
-    $directory_class[] = 'yz-page yz-members-directory-page';
+    $directory_class = array( 'yz-directory yz-page yz-members-directory-page' );
 
     // Add Scheme Class
-    $directory_class[] = yz_options( 'yz_profile_scheme' );
+    $directory_class[] = yz_option( 'yz_profile_scheme', 'yz-blue-scheme' );
 
     // Add Lists Icons Styles Class
-    $directory_class[] = yz_options( 'yz_tabs_list_icons_style' );
+    $directory_class[] = yz_option( 'yz_tabs_list_icons_style', 'yz-tabs-list-gradient' );
 
     return yz_generate_class( $directory_class );
 }
@@ -28,18 +22,13 @@ function yz_members_directory_class() {
  */
 function yz_members_directory_user_cover( $user_id ) { 
 
-    if ( 'off' == yz_options( 'yz_enable_md_cards_cover' ) ) {
+    if ( 'off' == yz_option( 'yz_enable_md_cards_cover', 'on' ) ) {
         return false;
     }
 
-    global $Youzer;
-
-    // Get User Cover.
-    $user_cover = $Youzer->user->cover( 'style', $user_id );       
-
     ?>
 
-    <div class="yzm-user-cover" <?php echo $user_cover; ?>>
+    <div class="yzm-user-cover" <?php echo yz_get_user_cover( 'style', $user_id ); ?>>
         <?php do_action( 'yz_members_directory_cover_content' ); ?>
     </div>
 
@@ -53,12 +42,12 @@ function yz_members_directory_user_cover( $user_id ) {
 function yz_edit_members_directory_class( $classes ) {
 
     // Add OffLine Class.
-    if ( 'off' == yz_options( 'yz_show_md_cards_online_only' ) && ! in_array( 'is-online', $classes ) ) {
+    if ( ! in_array( 'is-online', $classes ) && 'off' == yz_option( 'yz_show_md_cards_online_only', 'on' ) ) {
         $classes[] = 'is-offline';
     }
 
     // Remove User Status Class
-    if ( 'off' == yz_options( 'yz_enable_md_cards_status' ) ) {
+    if ( 'off' == yz_option( 'yz_enable_md_cards_status', 'on' ) ) {
 
         // Get Values Keys.
         $is_online = array_search( 'is-online', $classes );
@@ -76,7 +65,7 @@ function yz_edit_members_directory_class( $classes ) {
     
     }
 
-    if ( 'on' == yz_options( 'yz_enable_md_cards_cover' ) ) {
+    if ( 'on' == yz_option( 'yz_enable_md_cards_cover', 'on' ) ) {
         $classes[] = 'yz-show-cover';
     }
 
@@ -90,8 +79,7 @@ add_filter( 'bp_get_member_class', 'yz_edit_members_directory_class' );
  */
 function yz_members_directory_members_per_page( $loop ) {
     if ( bp_is_members_directory() ) {
-        $users_per_page = yz_options( 'yz_md_users_per_page' );
-        $loop['per_page'] = $users_per_page;
+        $loop['per_page'] = yz_option( 'yz_md_users_per_page', 18 );
     }
     return $loop;
 }
@@ -114,7 +102,7 @@ function yz_members_list_class() {
     }
 
     // Get Avatar Border Visibility.
-    $enable_avatar_border = yz_options( 'yz_enable_md_cards_avatar_border' );
+    $enable_avatar_border = yz_option( 'yz_enable_md_cards_avatar_border', 'off' );
 
     if ( 'on' == $enable_avatar_border) {
 
@@ -124,19 +112,19 @@ function yz_members_list_class() {
     }
 
     // Get Cards Avatar Style.
-    $avatar_border_style = yz_options( 'yz_md_cards_avatar_border_style' );
+    $avatar_border_style = yz_option( 'yz_md_cards_avatar_border_style', 'circle' );
 
     // Add Avatar Border Style.
     $classes[] = 'yz-card-avatar-border-' . $avatar_border_style;
 
     // Get Buttons Layout.
-    $buttons_layout = yz_options( 'yz_md_cards_buttons_layout' );
+    $buttons_layout = yz_option( 'yz_md_cards_buttons_layout', 'block' );
     
     // Add Buttons Layout.    
     $classes[] = 'yz-card-action-buttons-' . $buttons_layout;
     
     // Get Buttons Border Style.
-    $buttons_border_style = yz_options( 'yz_md_cards_buttons_border_style' );
+    $buttons_border_style = yz_option( 'yz_md_cards_buttons_border_style', 'oval' );
 
     // Add Buttons Border Style.    
     $classes[] = 'yz-card-action-buttons-border-' . $buttons_border_style;
@@ -162,16 +150,18 @@ function yz_get_md_current_user_settings( $user_id = false ) {
     }
 
     // Get Buttons Layout
-    $buttons_layout = yz_options( 'yz_md_cards_buttons_layout' );
+    $buttons_layout = yz_option( 'yz_md_cards_buttons_layout', 'block' );
 
     ?>
     
+    <?php if ( bp_is_active( 'xprofile' ) ) : ?>
     <a href="<?php echo yz_get_profile_settings_url( false, $user_id ); ?>" class="yz-profile-settings"><i class="fas fa-user-circle"></i><?php _e( 'profile settings', 'youzer' ); ?></a>
+    <?php endif; ?>
 
     <?php if ( bp_is_active( 'friends' ) && bp_is_active( 'messages' ) && 'block' == $buttons_layout ) : ?>
 
         <?php if ( bp_is_active( 'settings' ) ) : ?>
-            <a href="<?php echo yz_get_settings_url( false, $user_id ); ?>" class="yzmd-second-btn"><i class="fas fa-cogs"></i><?php _e( 'account settings', 'youzer' ); ?></a>
+            <a href="<?php echo bp_core_get_user_domain( $user_id ) . bp_get_settings_slug(); ?>" class="yzmd-second-btn"><i class="fas fa-cogs"></i><?php _e( 'account settings', 'youzer' ); ?></a>
         <?php else : ?>
             <a href="<?php echo yz_get_widgets_settings_url( false, $user_id ); ?>" class="yzmd-second-btn"><i class="fas fa-sliders-h"></i><?php _e( 'widgets settings', 'youzer' ); ?></a>
         <?php endif; ?>
@@ -188,16 +178,9 @@ add_action( 'bp_directory_members_actions', 'yz_get_md_current_user_settings' );
  */
 function yz_get_member_statistics_data( $user_id ) {
 
-	if ( 'off' == yz_options( 'yz_enable_md_users_statistics' ) ) {
+	if ( 'off' == yz_option( 'yz_enable_md_users_statistics', 'on' ) ) {
 		return false;
 	}
-
-	global $Youzer;
-
-	// Get Comments Number
-	$posts_nbr = yz_get_user_posts_nbr( $user_id );
-	$views_nbr = $Youzer->user->views( $user_id );
-	$comments_nbr = yz_get_comments_number( $user_id );
 
     ?>
 
@@ -205,25 +188,28 @@ function yz_get_member_statistics_data( $user_id ) {
 
         <?php do_action( 'yz_before_members_directory_card_statistics', $user_id  ); ?>
 
-        <?php if ( 'on' == yz_options( 'yz_enable_md_user_posts_statistics' ) ) : ?>
+        <?php if ( 'on' == yz_option( 'yz_enable_md_user_posts_statistics', 'on' ) ) : ?>
+            <?php $posts_nbr = yz_get_user_posts_nbr( $user_id ); ?>
         <a <?php if (  $posts_nbr > 0 ) { ?> href="<?php echo yz_get_user_profile_page( 'posts', $user_id ); ?>" <?php } ?> class="yz-data-item yz-data-posts" data-yztooltip="<?php echo sprintf( _n( '%s post', '%s posts', $posts_nbr, 'youzer' ), $posts_nbr ); ?>">
             <span class="dashicons dashicons-edit"></span>
         </a>
         <?php endif; ?>
 
-        <?php if ( 'on' == yz_options( 'yz_enable_md_user_comments_statistics' ) ) : ?>
+        <?php if ( 'on' == yz_option( 'yz_enable_md_user_comments_statistics', 'on' ) ) : ?>
+            <?php $comments_nbr = yz_get_comments_number( $user_id );  ?>
         <a <?php if (  $comments_nbr > 0 ) { ?>  href="<?php echo yz_get_user_profile_page( 'comments', $user_id ); ?>" <?php } ?> class="yz-data-item yz-data-comments" data-yztooltip="<?php echo sprintf( _n( '%s comment', '%s comments', $comments_nbr, 'youzer' ), $comments_nbr ); ?>">
             <span class="dashicons dashicons-format-status"></span>
         </a>
         <?php endif; ?>
 
-        <?php if ( 'on' == yz_options( 'yz_enable_md_user_views_statistics' ) ) : ?>
+        <?php if ( 'on' == yz_option( 'yz_enable_md_user_views_statistics', 'on' ) ) : ?>
+            <?php $views_nbr = get_post_meta( $user_id, 'profile_views_count', true ); ?>
         <a href="<?php echo bp_member_permalink(); ?>" class="yz-data-item yz-data-vues" data-yztooltip="<?php echo sprintf( _n( '%s view', '%s views', $views_nbr, 'youzer' ), $views_nbr ); ?>">
             <span class="dashicons dashicons-welcome-view-site"></span>
         </a>
         <?php endif; ?>
 
-        <?php if ( 'on' == yz_options( 'yz_enable_md_user_friends_statistics' ) && bp_is_active( 'friends' ) ) :  ?>
+        <?php if ( 'on' == yz_option( 'yz_enable_md_user_friends_statistics', 'on' ) && bp_is_active( 'friends' ) ) :  ?>
 	       <?php $friends_nbr = friends_get_total_friend_count( $user_id ); ?>
             <a href="<?php echo yz_get_user_profile_page( 'friends', $user_id ); ?>" class="yz-data-item yz-data-friends" data-yztooltip="<?php echo sprintf( _n( '%s friend', '%s friends', $friends_nbr, 'youzer' ), $friends_nbr ); ?>">
                 <span class="dashicons dashicons-groups"></span>
@@ -243,7 +229,7 @@ function yz_get_member_statistics_data( $user_id ) {
 function yz_get_md_user_meta( $user_id = null ) {
 
     // Get Custom Card Meta Availability
-    $custom_meta = yz_options( 'yz_enable_md_custom_card_meta' );
+    $custom_meta = yz_option( 'yz_enable_md_custom_card_meta', 'off' );
 
     if ( 'off' == $custom_meta || ! bp_is_members_directory() ) {
 
@@ -255,8 +241,8 @@ function yz_get_md_user_meta( $user_id = null ) {
     }
 
     // Get Custom Meta Data
-    $meta_icon  = yz_options( 'yz_md_card_meta_icon' );
-    $field_id   = yz_options( 'yz_md_card_meta_field' );
+    $meta_icon  = yz_option( 'yz_md_card_meta_icon', 'at' );
+    $field_id   = yz_option( 'yz_md_card_meta_field', 'user_login' );
     $meta_value = yz_get_user_field_data( $field_id, $user_id );
 
     if ( empty( $meta_value ) ) {
@@ -279,18 +265,21 @@ function yz_get_md_user_meta( $user_id = null ) {
 function yz_get_user_field_data( $field_id = null, $user_id = null ) {
     
     // Get Hidden Fields.
-    $hidden_fields = bp_xprofile_get_hidden_fields_for_user();
+    if ( bp_is_active( 'xprofile' ) ) {
 
-    if ( in_array( $field_id, $hidden_fields ) )  {
-        return;
+        $hidden_fields = bp_xprofile_get_hidden_fields_for_user();
+
+        if ( in_array( $field_id, $hidden_fields ) )  {
+            return;
+        }
+
     }
 
     if ( bp_is_active( 'xprofile' ) && is_numeric( $field_id ) ) {
         // Get Field Data.
         $meta_value = xprofile_get_field_data( $field_id, $user_id, 'comma' );
     } elseif ( $field_id == 'full_location' ) {
-        global $Youzer;
-        $meta_value = $Youzer->user->location( true, $user_id );
+        $meta_value = yz_users()->location( true, $user_id );
     } elseif ( $field_id == 'user_url' ) {
         $meta_value = yz_get_xprofile_field_value( 'user_url', $user_id );
     } else {
@@ -332,7 +321,7 @@ function youzer_members_shortcode( $atts ) {
     add_filter( 'bp_after_has_members_parse_args', 'yz_set_members_directory_shortcode_atts' );
 
     if ( $yz_md_shortcode_atts['show_filter'] == false ) {
-        add_filter( 'yz_display_members_directory_filter', 'yz_disable_md_shortcode_filter' );
+        add_filter( 'yz_display_members_directory_filter', '__return_false' );
     }
     
     ob_start();
@@ -346,7 +335,7 @@ function youzer_members_shortcode( $atts ) {
    
 
     if ( $yz_md_shortcode_atts['show_filter'] == false ) {
-        remove_filter( 'yz_display_members_directory_filter', 'yz_disable_md_shortcode_filter' );
+        remove_filter( 'yz_display_members_directory_filter', '__return_false' );
     }
 
     // Unset Global Value.
@@ -375,9 +364,9 @@ function yz_set_members_directory_shortcode_atts( $loop ) {
 /**
  * Members Directory - Hide Filter.
  */
-function yz_disable_md_shortcode_filter() {
-    return false;
-}
+// function yz_disable_md_shortcode_filter() {
+//     return false;
+// }
 
 /**
  * Enable Members Directory Component For Shortcode.

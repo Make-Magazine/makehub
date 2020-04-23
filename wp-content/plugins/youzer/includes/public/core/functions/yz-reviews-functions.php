@@ -63,53 +63,55 @@ function yz_is_user_can_receive_reviews( $user_id = null ) {
 function yz_is_user_can_see_reviews() {
 	
 	// Init var.
-	$visibility = false;
-
-	// Get Who can see reviews.
-	$privacy = yz_options( 'yz_user_reviews_privacy' );
-
-	switch ( $privacy ) {
-
-		case 'public':
-			$visibility = true;
-			break;
-		
-		case 'private':
-
-			$visibility = bp_core_can_edit_settings() ? true : false;
-
-			break;
-
-		case 'loggedin':
-
-			$visibility = is_user_logged_in() ? true : false;
-
-			break;
-
-		case 'friends':
-
-			if ( bp_is_active( 'friends' ) ) {
-
-				// Get User ID
-				$loggedin_user = bp_loggedin_user_id();
-
-				// Get Profile User ID
-				$profile_user = bp_displayed_user_id();
-
-				$visibility = friends_check_friendship( $loggedin_user, $profile_user ) ? true : false;
-
-			}
-
-			break;
-		
-		default:
-			$visibility = false;
-			break;
-
-	}
+	// $visibility = false;
 
 	if ( bp_core_can_edit_settings() ) {
 		$visibility = true;
+	} else {
+
+		// Get Who can see reviews.
+		$privacy = yz_option( 'yz_user_reviews_privacy', 'public' );
+
+		switch ( $privacy ) {
+
+			case 'public':
+				$visibility = true;
+				break;
+			
+			case 'private':
+
+				$visibility = bp_core_can_edit_settings() ? true : false;
+
+				break;
+
+			case 'loggedin':
+
+				$visibility = is_user_logged_in() ? true : false;
+
+				break;
+
+			case 'friends':
+
+				if ( bp_is_active( 'friends' ) ) {
+
+					// Get User ID
+					$loggedin_user = bp_loggedin_user_id();
+
+					// Get Profile User ID
+					$profile_user = bp_displayed_user_id();
+
+					$visibility = friends_check_friendship( $loggedin_user, $profile_user ) ? true : false;
+
+				}
+
+				break;
+			
+			default:
+				$visibility = false;
+				break;
+
+		}
+
 	}
 
 	return apply_filters( 'yz_is_user_can_see_reviews', $visibility );
@@ -336,7 +338,7 @@ function yz_is_user_can_edit_reviews( $review = null ) {
 	// Init Vars
 	$can = false;
 
-	if ( 'on' == yz_options( 'yz_allow_users_reviews_edition' ) && isset( $review['reviewer'] ) && $review['reviewer'] == bp_loggedin_user_id() ) {
+	if ( 'on' == yz_option( 'yz_allow_users_reviews_edition', 'off' ) && isset( $review['reviewer'] ) && $review['reviewer'] == bp_loggedin_user_id() ) {
 		$can = true;
 	}
 
@@ -443,7 +445,7 @@ function yz_get_user_reviews( $args = null ) {
 		'pagination' => false,
 		'show_more' => false,
 		'order_by' => 'desc',
-		'per_page' => yz_options( 'yz_profile_reviews_per_page' ),
+		'per_page' => yz_option( 'yz_profile_reviews_per_page', 25 ),
 		)
 	);
 

@@ -8,8 +8,8 @@ class Youzer_Wall_Tag_Users {
 	function __construct( ) {
 
 		// Add Tool
-		add_action( 'bp_activity_after_post_form_tools', array( &$this, 'tool' ) );
-		add_action( 'yz_after_wall_post_form_textarea', array( &$this, 'search_box' ) );
+		add_action( 'bp_activity_after_post_form_tools', array( $this, 'tool' ) );
+		add_action( 'yz_after_wall_post_form_textarea', array( $this, 'search_box' ) );
 
 		// Hide Private Users Posts.
 		add_filter( 'yz_activity_post_tagged_users', array( $this, 'action' ), 10, 2 );
@@ -61,7 +61,13 @@ class Youzer_Wall_Tag_Users {
 	/**
 	 * Add Tag Users Tool
 	 */
-	function tool() { ?>
+	function tool() {
+
+		if ( ! apply_filters( 'yz_enable_activity_form_tagged_users', true ) ) {
+			return;
+		}
+
+		?>
 		<div class="yz-tag-users-tool yz-form-tool" data-yztooltip="<?php _e( 'tag friends', 'youzer' ); ?>"><i class="fas fa-user-tag"></i></div>
 		<?php
 	}
@@ -263,3 +269,5 @@ class Youzer_Wall_Tag_Users {
 	}
 
 }
+
+$tag_users = new Youzer_Wall_Tag_Users();

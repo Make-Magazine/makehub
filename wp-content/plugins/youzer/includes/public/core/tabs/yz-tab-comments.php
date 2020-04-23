@@ -7,49 +7,24 @@ class YZ_Comments_Tab {
 	 */
 	function tab() { 
 
-		global $Youzer;
-
-		// Comments Tab Arguments
-		$args = array(
-			'tab_order'	  => 40,
-			'tab_name' 	  => 'comments',
-			'tab_slug' 	  => 'comments',
-            'tab_id'	  => 'youzer-comments',
-			'tab_icon'	  => yz_options( 'yz_comments_tab_icon' ),
-			'tab_title'   => yz_options( 'yz_comments_tab_title' ),
-			'display_tab' => yz_options( 'yz_display_comments_tab' )
-		);
-
-	    $Youzer->tabs->core( $args );
-
-	}
-
-    /**
-     * # Tab Content.
-     */
-	function tab_content() {
-
 		// Get Comments Page Number
 		$paged = get_query_var( 'page' ) ? get_query_var( 'page' ) : 1;
 
 		// Get Max Comments Per Page
-		$commentsNbr = yz_options( 'yz_profile_comments_nbr' );
+		$commentsNbr = yz_option( 'yz_profile_comments_nbr', 5 );
 
-		// Get Comments Offset
-		$offset = ( $paged - 1 ) * $commentsNbr;
+		echo '<div class="yz-tab yz-comments"><div id="yz-main-comments" class="yz-tab yz-tab-comments">';
 
-		// Comments Pagination Settings
-		$args = array(
+		$this->comments_core( array(
 			'user_id' => bp_displayed_user_id(),
 			'number'  => $commentsNbr,
-			'offset'  => $offset,
+			'offset'  => ( $paged - 1 ) * $commentsNbr,
 			'paged'   => $paged
-		);
+		) );
 
-		echo '<div id="yz-main-comments" class="yz-tab yz-tab-comments">';
-		$this->comments_core( $args );
 		yz_loading();
-		echo '</div>';
+		
+		echo '</div></div>';
 
 		yz_profile_posts_comments_pagination();	
 		
@@ -76,6 +51,17 @@ class YZ_Comments_Tab {
 		// Comment Loop
 		if ( $comments ) {
 
+			// Show / Hide Comment Elements
+			$display_date 	  = yz_option( 'yz_display_comment_date', 'on' );
+			$display_button   = yz_option( 'yz_display_view_comment', 'on' );
+			$display_username = yz_option( 'yz_display_comment_username', 'on' );
+
+			// Get Comment Author Data
+			$last_name		 = yz_data( 'last_name', $args['user_id'] );
+			$first_name		 = yz_data( 'first_name', $args['user_id'] );
+			$comment_author  = yz_data( 'user_login', $args['user_id'] );
+			$user_fullname	 = $first_name . ' ' . $last_name;
+
 			?>
 
 			<div class="yz-comments-page" data-post-page="<?php echo $comments_page; ?>">
@@ -89,20 +75,9 @@ class YZ_Comments_Tab {
 				$post_id 		 = $comment->comment_post_ID;
 				$comment_content = $comment->comment_content;
 
-				// Get Comment Author Data
-				$last_name		 = yz_data( 'last_name', $args['user_id'] );
-				$first_name		 = yz_data( 'first_name', $args['user_id'] );
-				$comment_author  = yz_data( 'user_login', $args['user_id'] );
-				$user_fullname	 = $first_name . ' ' . $last_name;
-
 				// Get Comment Url
 				$post_url	 = get_the_permalink( $post_id );
 				$comment_url = $post_url . "#comment-" . $comment_ID;
-
-				// Show / Hide Comment Elements
-				$display_date 	  = yz_options( 'yz_display_comment_date' );
-				$display_button   = yz_options( 'yz_display_view_comment' );
-				$display_username = yz_options( 'yz_display_comment_username' );
 
 			?>
 
@@ -161,7 +136,7 @@ class YZ_Comments_Tab {
 	function pagination( $total_comments, $base = null ) {
 
 		//Get Comments Per Page Number
-		$commentsNbr = yz_options( 'yz_profile_comments_nbr' );
+		$commentsNbr = yz_option( 'yz_profile_comments_nbr', 5 );
 		$commentsNbr = $commentsNbr ? $commentsNbr : 1;
 
 		// Get total Pages Number

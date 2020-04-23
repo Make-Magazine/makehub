@@ -18,42 +18,37 @@ class Youzer_Woocommerce {
 		$this->activity = new Youzer_WC_Activity();
 
 		// Hooks.
-		add_action( 'bp_setup_nav',  array( &$this, 'setup_tabs' ) );
-		add_action( 'bp_setup_admin_bar',  array( &$this, 'topbar_menu' ), 300 );
-		add_action( 'yz_user_account_privacy_settings', array( &$this, 'privacy_settings' ) );
-		add_filter( 'yz_default_options', array( $this, 'default_options' ) );
-		add_action( 'yz_wall_posts_visibility_settings',  array( &$this, 'posts_visibility_settings' ) );
+		add_action( 'bp_setup_nav',  array( $this, 'setup_tabs' ) );
+		add_action( 'bp_setup_admin_bar',  array( $this, 'topbar_menu' ), 300 );
+		add_filter( 'yz_default_options', array( $this, 'default_options' ), 10 );
 
 	}
-	 
+
 	/**
 	 * # Setup Tabs.
 	 */
 	function setup_tabs() {
 		
-		$is_youzer_panel = is_youzer_panel();
+		// $is_youzer_panel = is_youzer_panel();
 
-		if ( bp_is_my_profile() || $is_youzer_panel ) {
+		$bp = buddypress();
 
-			$bp = buddypress();
+		$parent_slug = bp_displayed_user_domain() . $this->slug . '/';
 
-			$parent_slug = bp_displayed_user_domain() . $this->slug . '/';
+		// Add Woocommerce Tab.
+		bp_core_new_nav_item(
+			array( 
+				'position' => 250,
+				'slug' => $this->slug, 
+				'parent_url' => $parent_slug,
+				'default_subnav_slug' => apply_filters( 'yz_profile_woocommerce_default_tab', 'cart' ),
+				'parent_slug' => $bp->profile->slug,
+				'name' => __( 'Shop' , 'youzer' ), 
+				'screen_function' =>  array( $this, 'screen' ),
+			)
+		);
 
-			// Add Woocommerce Tab.
-			bp_core_new_nav_item(
-				array( 
-					'position' => 250,
-					'slug' => $this->slug, 
-					'parent_url' => $parent_slug,
-					'default_subnav_slug' => apply_filters( 'yz_profile_woocommerce_default_tab', 'cart' ),
-					'parent_slug' => $bp->profile->slug,
-					'name' => __( 'Shop' , 'youzer' ), 
-					'screen_function' => 'yz_woocommerce_screen',
-				)
-			);
-		}
-
-		if ( yz_is_woocommerce_tab() || $is_youzer_panel ) {
+		if ( bp_is_my_profile() && yz_is_woocommerce_tab() ) {
 			$access = bp_core_can_edit_settings();
 			$sub_tabs = yz_woocommerce_sub_tabs();
 
@@ -64,13 +59,34 @@ class Youzer_Woocommerce {
 						'parent_slug' => $this->slug,
 						'parent_url' => $parent_slug,
 						'position' => $tab['position'],
-						'screen_function' => 'yz_woocommerce_screen',
+						'screen_function' => array( $this, 'screen' ),
 						'user_has_access' => $access 
 					)
 				);
 			}
 
 		}
+	}
+
+	/**
+	 * Woocommerce Screen.
+	 **/
+	function screen() {
+		
+		do_action( 'yz_woocommerce_screen' );
+	    
+	    add_action( 'bp_template_content', array( $this, 'get_user_woocommerce_template' ) );
+
+	    // Load Tab Template
+	    bp_core_load_template( 'buddypress/members/single/plugins' );
+
+	}
+
+	/**
+	 * Get Woocommerce Tab Content.
+	 */
+	function get_user_woocommerce_template() {
+		bp_get_template_part( 'members/single/woocommerce' );
 	}
 
 	/**
@@ -122,23 +138,6 @@ class Youzer_Woocommerce {
 	    }
 	      
 	}
-
-	/**
-	 * Privacy Settings
-	 */
-	function privacy_settings( $Yz_Settings ) {
-
-        $Yz_Settings->get_field(
-            array(
-                'title' => __( 'Activity Stream Purchases', 'youzer' ),
-                'desc'  => __( "Post my purchases in the activity stream.", 'youzer' ),
-                'id'    => 'yz_wc_purchase_activity',
-                'type'  => 'checkbox',
-                'std'   => apply_filters( 'yz_wc_purchase_activity', 'on' ),
-            ), true, 'youzer_options'
-        );
-
-	}
 	
 	/**
 	 * # Default Options 
@@ -161,35 +160,33 @@ class Youzer_Woocommerce {
 			'yz_ctabs_' . $this->slug . '_subscriptions_icon' => 'fas fa-clipboard-list',
 	    );
 	    
-	    $options = array_merge( $options, $yzsq_options );
-
-	    return $options;
+	    return yz_array_merge( $options, $yzsq_options );
 	}
 
 	/**
 	 * Add Activity Posts Visibility
 	 **/
-	function posts_visibility_settings( $post_types ) {
+	// function posts_visibility_settings( $post_types ) {
 	    
-	    global $Yz_Settings;
+	//     global $Yz_Settings;
 
-	    $Yz_Settings->get_field(
-	        array(
-	            'type'  => 'checkbox',
-	            'id'    => 'yz_enable_wc_product_activity',
-	            'title' => __( 'New Product', 'youzer' ),
-	            'desc'  => __( 'enable new product posts', 'youzer' ),
-	        )
-	    );
-	    $Yz_Settings->get_field(
-	        array(
-	            'type'  => 'checkbox',
-	            'id'    => 'yz_enable_wc_purchase_activity',
-	            'title' => __( 'User Purchases', 'youzer' ),
-	            'desc'  => __( 'enable users purchases posts', 'youzer' ),
-	        )
-	    );
+	//     $Yz_Settings->get_field(
+	//         array(
+	//             'type'  => 'checkbox',
+	//             'id'    => 'yz_enable_wc_product_activity',
+	//             'title' => __( 'New Product', 'youzer' ),
+	//             'desc'  => __( 'enable new product posts', 'youzer' ),
+	//         )
+	//     );
+	//     $Yz_Settings->get_field(
+	//         array(
+	//             'type'  => 'checkbox',
+	//             'id'    => 'yz_enable_wc_purchase_activity',
+	//             'title' => __( 'User Purchases', 'youzer' ),
+	//             'desc'  => __( 'enable users purchases posts', 'youzer' ),
+	//         )
+	//     );
 
-	}
+	// }
 
 }

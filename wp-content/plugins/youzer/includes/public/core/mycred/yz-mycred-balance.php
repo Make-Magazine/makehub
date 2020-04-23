@@ -71,7 +71,7 @@ function yz_mycred_get_user_balance_box( $user_id = null , $title = null, $point
 function yz_mycred_profile_balance_widget_content() {
 
 	// Get Widget Title.
-	$title = yz_options( 'yz_wg_user_balance_title' );
+	$title = yz_option( 'yz_wg_user_balance_title', __( 'User Balance', 'youzer' ) );
 	
 	// Get Widget.
 	yz_mycred_get_user_balance_box( null, $title );
@@ -110,7 +110,7 @@ function yz_get_md_mycred_statistics( $user_id ) {
 
 	?>
 
-    <?php if ( 'on' == yz_options( 'yz_enable_md_user_points_statistics' ) ) :  ?>
+    <?php if ( 'on' == yz_option( 'yz_enable_md_user_points_statistics', 'on' ) ) :  ?>
        	<?php $points = mycred_get_users_balance( $user_id ); ?>
         <a href="<?php echo yz_get_user_profile_page( 'mycred-history', $user_id ); ?>" class="yz-data-item yz-data-points" data-yztooltip="<?php echo sprintf( _n( '%s point', '%s points', $points, 'youzer' ), $points ); ?>">
             <span class="dashicons dashicons-awards"></span>

@@ -8,13 +8,13 @@
 		 * Woocommerce Add to cart with ajax.
 		 */
 		$( document ).on( 'click', '.yz-activate-addon-key', function (e) {
-
+			// return;
 		    e.preventDefault();
 		    
 		    var button = $( this );
 
 		    if ( button.hasClass( 'loading' ) ) {
-	        console.log ( 'nanana' );
+	        // console.log ( 'nanana' );
 		    	return;
 		    }
 
@@ -22,18 +22,19 @@
 	        	title = button.text(),
 	        	data = {
 		        action: 'yz_save_addon_key_license',
-		        license: button.prev( '.yz-addon-license-key' ).val(),
-		        nounce : button.data( 'nounce' ),
+		        license: $( '.yz-addon-license-key' ).find( 'input' ).val(),
+		        // nounce : button.data( 'nounce' ),
 		        // product_id : button.data( 'product-id' ),
 		        product_name : button.data( 'product-name' ),
-		        name: button.prev( 'input' ).attr( 'name' )
+		        name: button.data( 'option-name' )
 		    };
-		    
+		    console.log( data);
 		    $.ajax({
 		        type: 'post',
-		        url: Yz_Automatic_Updates.ajax_url,
+		        url: yz.ajax_url,
 		        data: data,
 		        beforeSend: function (response) {
+		        	// console.log( button );
 		        	button.addClass( 'loading' );
 		            button.html( '<i class="fas fa-spin fa-spinner"></i>' );
 		            parent.find( '.yz-addon-license-msg' ).remove();
@@ -43,17 +44,20 @@
 		        	button.removeClass( 'loading' );
 		        },
 		        success: function (response) {
-	            	
 	            	// Get Response Data.
-	            	var response = $.parseJSON( response );
+	            	// var response = $.parseJSON( response );
+	            console.log( response );
 	            	
-		            if ( response.error ) {
-		            	button.parent().append( '<div class="yz-addon-license-msg yz-addon-error-msg">' +  response.error + '</div>' );
-		            } else {
+		            if ( response.success ) {
 		            	button.parent().hide( 100, function() {
-		            		button.closest( '.yz-addon-license-area' ).append( '<div class="yz-addon-license-msg yz-addon-success-msg">' +  response.success + '</div>' );
-		            		$( this ).remove();
+		            		$.ShowPanelMessage( { msg : response.data.message, type : 'success' });
+				            location.reload();
+		            		// button.closest( '.yz-addon-license-area' ).append( '<div class="yz-addon-license-msg yz-addon-success-msg">' +  response.success + '</div>' );
+		            		// $( this ).remove();
 		            	});
+		            } else {
+		            	$.ShowPanelMessage( { msg : response.data.message, type : 'error' });
+		            	// button.parent().append( '<div class="yz-addon-license-msg yz-addon-error-msg">' +  response.error + '</div>' );
 		            }
 		        }
 		    });

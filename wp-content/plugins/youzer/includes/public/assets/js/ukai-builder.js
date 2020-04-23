@@ -66,7 +66,7 @@
 
 		    case 'image':
                 input = '<div class="yz-uploader-item">';
-                input += '<div class="yz-photo-preview" style="background-image: url(' + yz.default_img + ');"></div>';
+                input += '<div class="yz-photo-preview" style="background-image: url(' + Yz_Account.default_img + ');"></div>';
                 input += '<label for="' + s.input_id + '" class="yz-upload-photo">' + s.label_title + '</label>';
                 input += '<input id="' + s.input_id + '" type="file" name="' + s.input_id + '" class="yz_upload_file" accept="image/*" />';
                 input += '<input type="hidden" name="' + s.options_name + '[' + s.cell + '][original]' + '" ' + ' class="yz-photo-url"' + '>';
@@ -114,7 +114,7 @@
     };
 
     // Make items Draggable
-    var yz_enable_dragging = ( yz.drag_widgets_items == '1' ) ? true : false;
+    var yz_enable_dragging = ( Youzer_Builder.drag_widgets_items == '1' ) ? true : false;
     if ( yz_enable_dragging == true ) {
         $( '.yz-wg-opts' ).sortable();
     }

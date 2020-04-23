@@ -72,7 +72,7 @@
 			// Get Form Values
 			$.yz_EditForm( {
 				button_id	: 'yz-update-custom-tab',
-				form_title	: yz.update_tab,
+				form_title	: Yz_Custom_Tabs.update_tab,
 				form 		: tabs_form,
 				item 		: tab_item
 			});
@@ -125,7 +125,7 @@
 			if ( o.tab_title == null || $.trim( o.tab_title ) == '') {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.tab_title_empty,
+                    msg  : Yz_Custom_Tabs.tab_title_empty,
                     type : 'error'
                 } );
                 return false;
@@ -142,7 +142,7 @@
 			if ( nameAlreadyeExist ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.name_exist,
+                    msg  : Yz_Functions.name_exist,
                     type : 'error'
                 });
                 return false;
@@ -154,7 +154,7 @@
 				if ( o.tab_link == null || $.trim( o.tab_link ) == '' ) {
 					// Show Error Message
 					$.ShowPanelMessage( {
-						msg  : yz.tab_url_empty,
+						msg  : Yz_Custom_Tabs.tab_url_empty,
 						type : 'error'
 					} );
 					return false;
@@ -164,7 +164,7 @@
 				if ( o.tab_content == null || $.trim( o.tab_content ) == '' ) {
 					// Show Error Message
 					$.ShowPanelMessage( {
-						msg  : yz.tab_code_empty,
+						msg  : Yz_Custom_Tabs.tab_code_empty,
 						type : 'error'
 					} );
 					return false;
@@ -174,6 +174,21 @@
 
 			return true;
 		}
+
+		/**
+		 * Remove Item.
+		 */
+		$( document ).on( 'click', '.yz-delete-custom-tab', function() {
+
+			// Remove item
+			$( this ).closest( 'li' ).remove();
+			
+			if ( ! $( '.yz-custom-tab-item' )[0] ) {
+				$( '#yz_custom_tabs' )
+				.append( '<p class="yz-no-content yz-no-custom-tabs">' + Yz_Custom_Tabs.no_custom_tabs + '</p>' );
+			}
+
+		});
 
 		/**
 		 * Get Fields by Tab type .

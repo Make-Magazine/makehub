@@ -19,8 +19,6 @@ class YZ_Verified_Users_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 	    // Get Widget Data.
 	    $instance = wp_parse_args( (array) $instance,
 	    	array(
@@ -32,7 +30,6 @@ class YZ_Verified_Users_Widget extends WP_Widget {
 	    // Get Input's Data.
 		$limit = absint( $instance['limit'] );
 		$title = strip_tags( $instance['title'] );
-		$avatar_border_styles = $Youzer->fields->get_field_options( 'border_styles' );
 
 		?>
 

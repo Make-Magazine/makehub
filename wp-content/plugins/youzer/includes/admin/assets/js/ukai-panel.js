@@ -3,6 +3,8 @@
 	'use strict';
 
 	$( document ).ready( function () {
+	    
+	    var yz_save_changes_title =  $( '.panel-top-actions button.yz-save-options' ).text();
 
 		/**
 	     * # Uploader.
@@ -42,27 +44,18 @@
 
 	            $( '#youzer-wait-message' ).hide();
 	            
-	            if ( response == 1 ) {
+	            if ( response.success ) {
 	                // Show Success Message
-	                $.ShowPanelMessage( { type: 'success' } );
-	            } else if ( response == 0 ) {
+	                $.ShowPanelMessage( { type: 'success', msg : response.data.message } );
+		            // Refresh Page
+		            if ( response.data.result == 'refresh' ) {
+		                location.reload();
+		            }
+	            } else {
 	                // Show Error Message
-	                $.ShowPanelMessage( {
-	                    msg  : yz.try_later,
-	                    type : 'error'
-	                });
-	            } else if ( response != 'refresh' ) {
-					// Show Error Message
-					$.ShowPanelMessage( {
-						msg  : response,
-						type : 'error'
-					});
-	            } else if ( response == 'refresh' ) {
-	                // Show Success Message
-	                $.ShowPanelMessage( { type: 'success' } );
-	                // Refresh Page
-	                location.reload();
+	                $.ShowPanelMessage( { msg : response.data.message, type : 'error' });
 	            }
+
 	        });
 	    });
 
@@ -82,7 +75,7 @@
 	                // Disable Save Button while saving Options.
 	                $( this ).prop( 'disabled', true );
 	                // Changing Button Text
-	                var text = '<i class="fas fa-spinner fa-spin"></i>' + yz.processing ;
+	                var text = '<i class="fas fa-spinner fa-spin"></i>';
 	                $( this ).html( text ).fadeIn( 1000);
 	            });
 	        } else if ( settings.step == 'end' ) {
@@ -91,7 +84,7 @@
 	            // Processing Saving
 	            $( '.yz-save-options' ).fadeOut( 200, function() {
 	                // Changing Button Text
-	                $( this ).html( yz.save_changes ).fadeIn( 1000 );
+	                $( this ).html( yz_save_changes_title ).fadeIn( 1000 );
 	                // Enable Save Button Again.
 	                $( this ).prop( 'disabled', false );
 	            });
@@ -204,18 +197,14 @@
 
 			$.post( yz.ajax_url, data, function( response ) {
 				$( '#youzer-wait-message' ).hide();
-				if ( response == 1 ) {
-					// Show Success Message
-                	$.ShowPanelMessage( { type: 'success' } );
-	                // Refresh Page
-	                location.reload();
-				} else {
-					// Show Error Message
-					$.ShowPanelMessage( {
-						msg  : yz.reset_error,
-						type : 'error'
-					});
-				}
+	            if ( response.success ) {
+	                // Show Success Message
+	                $.ShowPanelMessage( { type: 'success', msg : response.data.message } );
+		            location.reload();
+	            } else {
+	                // Show Error Message
+	                $.ShowPanelMessage( { msg : yz.reset_error, type : 'error' });
+	            }
 			});
         });
 

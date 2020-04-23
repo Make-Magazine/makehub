@@ -3,21 +3,23 @@
 /***
  * Media Tab.
  */
-class YZ_Media_Tab  {
+class YZ_Media_Tab {
 
     /**
      * Constructor
      */
     function __construct() {
 
-        // Add Account Settings Pages.
-        add_action( 'bp_setup_nav', array( &$this, 'groups_media_tab' ) );
+        add_action( 'bp_enqueue_scripts', array( $this, 'scripts' ) );
         
         // Add Account Settings Pages.
-        add_action( 'bp_setup_nav', array( &$this, 'add_sub_tabs' ) );
+        $this->groups_media_tab();
+        
+        // Add Account Settings Pages.
+        $this->add_sub_tabs();
 
     }
-    
+
     /**
      * Group SubTabs
      */
@@ -33,7 +35,7 @@ class YZ_Media_Tab  {
     function groups_media_tab() {
 
         // Check if its a group page.
-        if ( ! bp_is_groups_component() || ! bp_is_single_item() || 'off' == yz_options( 'yz_enable_groups_media' ) ) {
+        if ( ! bp_is_groups_component() || ! bp_is_single_item() || 'off' == yz_option( 'yz_enable_groups_media', 'on' ) ) {
             return false;
         }
 
@@ -54,7 +56,7 @@ class YZ_Media_Tab  {
                 'parent_slug' => $group->slug,
                 'name' => __( 'Media', 'youzer' ),
                 'parent_url' => bp_get_group_permalink( $group ),
-                'screen_function' => 'yz_groups_screen_media',
+                'screen_function' => array( $this, 'groups_media_screen' ),
                 'default_subnav_slug' => 'all',
                 'position' => 12
             ), 'groups'
@@ -65,7 +67,7 @@ class YZ_Media_Tab  {
             // Add Media Sub Pages.
             foreach ( $this->sub_tabs() as $page ) {
 
-                if ( $page['slug'] != 'all' && 'on' != yz_options( 'yz_show_group_media_tab_' . $page['slug'] ) ) {
+                if ( $page['slug'] != 'all' && 'on' != yz_option( 'yz_show_group_media_tab_' . $page['slug'], 'on' ) ) {
                     continue;
                 }
 
@@ -75,7 +77,7 @@ class YZ_Media_Tab  {
                         'parent_slug' => $media_slug,
                         'item_css_id' => 'media-' . $page['slug'],
                         'parent_url' => bp_get_group_permalink( $group )  . "$media_slug/",
-                        'screen_function' => 'yz_groups_screen_media',
+                        'screen_function' => array( $this, 'groups_media_screen' ),
                     ), 'groups'
                 );
             }
@@ -85,20 +87,31 @@ class YZ_Media_Tab  {
     }
 
     /**
+     * Get Group Tab.
+     */
+    function groups_media_screen() {
+
+        // Call Media Tab Content.
+        add_action( 'bp_template_content', array( $this, 'group_tab' ) );
+
+        // Load Tab Template
+        bp_core_load_template( 'buddypress/groups/single/plugins' );
+
+    }
+
+    /**
      * Group Tab.
      */
     function group_tab() {
 
-        global $Youzer;
-
         $current_tab = bp_action_variable();
 
         if ( empty( $current_tab ) ) {
-            $layout = yz_options( 'yz_group_media_tab_layout' );
-            $limit = yz_options( 'yz_group_media_tab_per_page' );
+            $layout = yz_option( 'yz_group_media_tab_layout', '4columns' );
+            $limit = yz_option( 'yz_group_media_tab_per_page', 8 );
         } else {
-            $layout = yz_options( 'yz_group_media_subtab_layout' );
-            $limit = yz_options( 'yz_group_media_subtab_per_page' );
+            $layout = yz_option( 'yz_group_media_subtab_layout', '3columns' );
+            $limit = yz_option( 'yz_group_media_subtab_per_page', 24 );
         }
 
         $args = array( 'group_id' => bp_get_current_group_id(), 'layout' => $layout, 'limit' => $limit, 'pagination' => true );
@@ -132,10 +145,11 @@ class YZ_Media_Tab  {
                 // Delete Pagination.
                 unset( $args['pagination'] );
 
-                if ( 'on' == yz_options( 'yz_show_group_media_tab_photos' ) ) $this->get_photos( $args ); 
-                if ( 'on' == yz_options( 'yz_show_group_media_tab_videos' ) ) $this->get_videos( $args ); 
-                if ( 'on' == yz_options( 'yz_show_group_media_tab_audios' ) ) $this->get_audios( $args ); 
-                if ( 'on' == yz_options( 'yz_show_group_media_tab_files' ) ) $this->get_files( $args ); 
+                if ( 'on' == yz_option( 'yz_show_group_media_tab_photos', 'on' ) ) $this->get_photos( $args ); 
+                if ( 'on' == yz_option( 'yz_show_group_media_tab_videos', 'on' ) ) $this->get_videos( $args ); 
+                if ( 'on' == yz_option( 'yz_show_group_media_tab_audios', 'on' ) ) $this->get_audios( $args ); 
+                if ( 'on' == yz_option( 'yz_show_group_media_tab_files', 'on' ) ) $this->get_files( $args ); 
+
                 break;
         }
         
@@ -164,7 +178,7 @@ class YZ_Media_Tab  {
         // Add Media Sub Pages.
         foreach ( $this->sub_tabs() as $page ) {
 
-            if (  $page['slug'] != 'all' && 'on' != yz_options( 'yz_show_profile_media_tab_' . $page['slug'] ) ) {
+            if (  $page['slug'] != 'all' && 'on' != yz_option( 'yz_show_profile_media_tab_' . $page['slug'], 'on' ) ) {
                 continue;
             }
 
@@ -173,7 +187,7 @@ class YZ_Media_Tab  {
                     'name' => $page['title'],
                     'parent_slug' => $media_slug,
                     'parent_url' => bp_displayed_user_domain() . "$media_slug/",
-                    'screen_function' => 'yz_get_profile_media_sub_tabs',
+                    'screen_function' => array( $this, 'get_profile_media_sub_tabs' ),
                 )
             );
         }
@@ -184,21 +198,19 @@ class YZ_Media_Tab  {
      */
     function tab() {
 
-        global $Youzer;
-        
         $args = array(
             'user_id' => bp_displayed_user_id(),
-            'limit' => yz_options( 'yz_profile_media_tab_per_page' ),
-            'layout' => yz_options( 'yz_profile_media_tab_layout' )
+            'limit' => yz_option( 'yz_profile_media_tab_per_page', 8 ),
+            'layout' => yz_option( 'yz_profile_media_tab_layout', '4columns' )
         );
-        
+
         ?>
         
         <div class="yz-tab yz-media yz-media-<?php echo $args['layout']; ?>">
-            <?php if ( 'on' == yz_options( 'yz_show_profile_media_tab_photos' ) ) $this->get_photos( $args ); ?>
-            <?php if ( 'on' == yz_options( 'yz_show_profile_media_tab_videos' ) ) $this->get_videos( $args ); ?>
-            <?php if ( 'on' == yz_options( 'yz_show_profile_media_tab_audios' ) ) $this->get_audios( $args ); ?>
-            <?php if ( 'on' == yz_options( 'yz_show_profile_media_tab_files' ) ) $this->get_files( $args ); ?>
+            <?php if ( 'on' == yz_option( 'yz_show_profile_media_tab_photos', 'on' ) ) $this->get_photos( $args ); ?>
+            <?php if ( 'on' == yz_option( 'yz_show_profile_media_tab_videos', 'on' ) ) $this->get_videos( $args ); ?>
+            <?php if ( 'on' == yz_option( 'yz_show_profile_media_tab_audios', 'on' ) ) $this->get_audios( $args ); ?>
+            <?php if ( 'on' == yz_option( 'yz_show_profile_media_tab_files', 'on' ) ) $this->get_files( $args ); ?>
         </div>
 
         <?php
@@ -213,8 +225,8 @@ class YZ_Media_Tab  {
         $args = array(
             'pagination' => true,
             'user_id' => bp_displayed_user_id(),
-            'layout' => yz_options( 'yz_profile_media_subtab_layout' ),
-            'limit' => yz_options( 'yz_profile_media_subtab_per_page' )
+            'layout' => yz_option( 'yz_profile_media_subtab_layout', '3columns' ),
+            'limit' => yz_option( 'yz_profile_media_subtab_per_page', 24 )
         );
 
         echo "<div class='yz-tab yz-media yz-media-{$args['layout']}'>";
@@ -232,7 +244,6 @@ class YZ_Media_Tab  {
             case 'files':
                 $this->get_files( $args );
                 break;
-            
         }
         
         echo '</div>';
@@ -277,8 +288,6 @@ class YZ_Media_Tab  {
      **/
     function get_photos( $args = null ) {
 
-        global $Youzer;
-
         ?>
 
         <div class="yz-media-group yz-media-group-photos">
@@ -290,14 +299,14 @@ class YZ_Media_Tab  {
                 </div>
                 <div class="yz-media-head-right">
                     <?php if ( bp_current_action() != 'photos' ) : ?>
-                    <a href="<?php echo $Youzer->media->get_media_by_type_slug( $args ) . '/photos'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a> 
+                    <a href="<?php echo yz_media()->get_media_by_type_slug( $args ) . '/photos'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a> 
                     <?php endif; ?>             
                 </div>
             </div>
 
             <div class="yz-media-group-content">
                 <div class="yz-media-items">
-                    <?php $Youzer->media->get_photos_items( $args ); ?>
+                    <?php yz_media()->get_photos_items( $args ); ?>
                 </div>
             </div>
 
@@ -310,8 +319,6 @@ class YZ_Media_Tab  {
      **/
     function get_videos( $args = null ) {
 
-        global $Youzer;
-
         ?>
 
         <div class="yz-media-group yz-media-group-videos">
@@ -323,14 +330,14 @@ class YZ_Media_Tab  {
                 </div>
                 <div class="yz-media-head-right">
                     <?php if ( bp_current_action() != 'videos' ) : ?>
-                    <a href="<?php echo $Youzer->media->get_media_by_type_slug( $args ). '/videos'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
+                    <a href="<?php echo yz_media()->get_media_by_type_slug( $args ). '/videos'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
                     <?php endif; ?>             
                 </div>
             </div>
 
             <div class="yz-media-group-content">
                 <div class="yz-media-items">
-                    <?php $Youzer->media->get_videos_items( $args ); ?>
+                    <?php yz_media()->get_videos_items( $args ); ?>
                 </div>
             </div>
 
@@ -343,8 +350,6 @@ class YZ_Media_Tab  {
      * Get Audios
      **/
     function get_audios( $args = null ) {
-        
-        global $Youzer;
 
         ?>
 
@@ -358,14 +363,14 @@ class YZ_Media_Tab  {
                 <div class="yz-media-head-right">
 
                     <?php if ( bp_current_action() != 'audios' ) : ?>
-                    <a href="<?php echo $Youzer->media->get_media_by_type_slug( $args ) . '/audios'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
+                    <a href="<?php echo yz_media()->get_media_by_type_slug( $args ) . '/audios'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
                     <?php endif; ?>             
                 </div>
             </div>
 
             <div class="yz-media-group-content">
                 <div class="yz-media-items">
-                    <?php $Youzer->media->get_audios_items( $args ); ?>
+                    <?php yz_media()->get_audios_items( $args ); ?>
                 </div>
             </div>
 
@@ -378,8 +383,6 @@ class YZ_Media_Tab  {
      * Get Files
      **/
     function get_files( $args = null ) {
-        
-        global $Youzer;
 
         ?>
 
@@ -393,14 +396,14 @@ class YZ_Media_Tab  {
                 <div class="yz-media-head-right">
 
                     <?php if ( bp_current_action() != 'files' ) : ?>
-                    <a href="<?php echo $Youzer->media->get_media_by_type_slug( $args ) . '/files'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
+                    <a href="<?php echo yz_media()->get_media_by_type_slug( $args ) . '/files'; ?>" class="yz-media-group-view-all"><?php _e( 'view all', 'youzer' ); ?></a>
                     <?php endif; ?>             
                 </div>
             </div>
 
             <div class="yz-media-group-content">
                 <div class="yz-media-items">
-                    <?php $Youzer->media->get_files_items( $args ); ?>
+                    <?php yz_media()->get_files_items( $args ); ?>
                 </div>
             </div>
 
@@ -413,7 +416,6 @@ class YZ_Media_Tab  {
      * Scripts
      */
     function scripts() {
-        global $Youzer;
-        $Youzer->media->scripts();
+        yz_media()->scripts();
     }
 }

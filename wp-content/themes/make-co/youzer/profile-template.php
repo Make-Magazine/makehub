@@ -3,13 +3,6 @@
  * Template Name: Youzer Profile Template
  */
 
-global $Youzer;
-
-// Get Header Data
-$header_effect = yz_options( 'yz_hdr_load_effect' );
-$header_data   = $Youzer->widgets->get_loading_effect( $header_effect );
-$header_class  = $Youzer->header->get_class( 'user' );
-
 $uid = bp_displayed_user_id();
 $user_meta = get_user_meta($uid);
 $user_levels = explode(",",$user_meta['ihc_user_levels'][0]);
@@ -42,7 +35,7 @@ if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_t
 
 		<?php do_action( 'youzer_profile_before_header' ); ?>
 
-		<header id="yz-profile-header" class="<?php echo $header_class; ?>" <?php echo $header_data; ?>>
+		<header id="yz-profile-header" class="<?php echo yz_headers()->get_class( 'user' ); ?>" <?php echo yz_widgets()->get_loading_effect( yz_option( 'yz_hdr_load_effect', 'fadeIn' ) ); ?>>
 
 			<?php do_action( 'youzer_profile_header' ); ?>
 			<?php // if user is owner of this profile, give them a link to change their background image

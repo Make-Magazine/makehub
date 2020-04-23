@@ -3,52 +3,26 @@
 class YZ_Posts_Tab {
 
 	/**
-	 * Tab Core
+	 * Tab Content
 	 */
 	function tab() {
-		
-		global $Youzer;
-
-		// Posts Tab Arguments
-		$args = array(
-			'tab_order'	  => 30,
-			'tab_name' 	  => 'posts',
-			'tab_slug' 	  => 'posts',
-            'tab_id'	  => 'youzer-posts',
-			'tab_icon'	  => yz_options( 'yz_posts_tab_icon' ),
-			'tab_title'   => yz_options( 'yz_posts_tab_title' ),
-			'display_tab' => yz_options( 'yz_display_posts_tab' )
-		);
-
-	    $Youzer->tabs->core( $args );
-	}
-
-	/**
-	 * # Tab Content
-	 */
-	function tab_content() {
-
-		// Get Data.
-		$postsNbr = yz_options( 'yz_profile_posts_per_page' );
-		$paged 	  = get_query_var( 'page' ) ? get_query_var( 'page' ) : 1;
 
 		// Prepare Posts Arguments.
 		$args = array(
 			'order' 		 => 'DESC',
-			'paged' 		 => $paged,
+			'paged' 		 => get_query_var( 'page' ) ? get_query_var( 'page' ) : 1,
 			'post_status'	 => 'publish',
-			'posts_per_page' => $postsNbr,
+			'posts_per_page' => yz_option( 'yz_profile_posts_per_page', 5 ),
 			'author' 		 => bp_displayed_user_id(),
 		);
 
-		echo '<div id="yz-main-posts" class="yz-tab yz-tab-posts">';
+		echo '<div class="yz-tab yz-posts"><div id="yz-main-posts" class="yz-tab yz-tab-posts">';
 		$this->posts_core( $args );
 		yz_loading();
-		echo '</div>';
+		echo '</div></div>';
 
 		// Pagination Script.
  		yz_profile_posts_comments_pagination();
-		
 
 	}
 
@@ -73,13 +47,13 @@ class YZ_Posts_Tab {
 		echo '<div class="yz-posts-page" data-post-page="' . $posts_page . '">';
 
 		// Show / Hide Post Elements
-		$display_meta 		= yz_options( 'yz_display_post_meta' );
-		$display_date 		= yz_options( 'yz_display_post_date' );
-		$display_cats 		= yz_options( 'yz_display_post_cats' );
-		$display_excerpt	= yz_options( 'yz_display_post_excerpt' );
-		$display_readmore 	= yz_options( 'yz_display_post_readmore' );
-		$display_comments 	= yz_options( 'yz_display_post_comments' );
-		$display_meta_icons = yz_options( 'yz_display_post_meta_icons' );
+		$display_meta 		= yz_option( 'yz_display_post_meta', 'on' );
+		$display_date 		= yz_option( 'yz_display_post_date', 'on' );
+		$display_cats 		= yz_option( 'yz_display_post_cats', 'on' );
+		$display_excerpt	= yz_option( 'yz_display_post_excerpt', 'on' );
+		$display_readmore 	= yz_option( 'yz_display_post_readmore', 'on' );
+		$display_comments 	= yz_option( 'yz_display_post_comments', 'on' );
+		$display_meta_icons = yz_option( 'yz_display_post_meta_icons', 'on' );
 
 		foreach ( $blogs_ids as $b ) {
 

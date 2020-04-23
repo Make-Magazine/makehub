@@ -21,8 +21,6 @@ class YZ_Post_Author_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-	    
 		// Default Widget Settings
 	    $defaults = array(
 	        'hide_title' => 'on',
@@ -43,9 +41,8 @@ class YZ_Post_Author_Widget extends WP_Widget {
 
 	    // Get Input's Data.
 		$meta_types = yz_get_panel_profile_fields();
-		$box_layouts = $Youzer->fields->get_field_options( 'author_box_layouts' );
-		$networks_icons_types = $Youzer->fields->get_field_options( 'icons_colors' );
-		$networks_icons_styles = $Youzer->fields->get_field_options( 'border_styles' );
+		$networks_icons_types = array( 'silver' => __( 'Silver', 'youzer' ), 'colorful' => __( 'Colorful', 'youzer' ), 'transparent' => __( 'Transparent', 'youzer' ), 'no-bg' => __( 'No Background', 'youzer' ) );
+		$networks_icons_styles = array( 'flat' => __( 'Flat', 'youzer' ), 'radius' => __( 'Radius', 'youzer' ), 'circle' => __( 'Circle', 'youzer' ) );
 
 		?>
 
@@ -77,8 +74,8 @@ class YZ_Post_Author_Widget extends WP_Widget {
 	    <p>
 			<label for="<?php echo esc_attr( $this->get_field_id( 'layout' ) ); ?>"><?php esc_attr_e( 'Author Box Layout', 'youzer' ); ?></label> 
 	        <select id="<?php echo $this->get_field_id( 'layout' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'layout' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $box_layouts as $layout_id => $layout_name ) { ?>
-	            	<option <?php selected( $instance['layout'], $layout_id ); ?> value="<?php echo $layout_id; ?>"><?php echo $layout_name; ?></option>
+	            <?php for ( $i = 1; $i <= 6; $i++ ) {?>
+	            	<option <?php selected( $instance['layout'], 'yzb-author-v' . $i ); ?> value="<?php echo 'yzb-author-v' . $i; ?>"><?php echo sprintf( __( 'Layout Version %d', 'youzer' ), $i ); ?></option>
 	            <?php } ?>      
 	        </select>
 	    </p>
@@ -180,11 +177,9 @@ class YZ_Post_Author_Widget extends WP_Widget {
 		 
         global $post;
         
-        // print_r( $post );
 		if ( ! is_singular( $supported_post_types ) && $post->post_type != 'product' ) {
 			return false;
 		}
-		
 
 		// Get Data.
 		$hide_title = $instance['hide_title'] ? 'on' : 'off';

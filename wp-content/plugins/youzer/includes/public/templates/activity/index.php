@@ -15,9 +15,10 @@
 
 do_action( 'bp_before_directory_activity' ); ?>
 
-<div id="<?php echo apply_filters( 'yz_activity_template_id', 'buddypress' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
-	
+<div id="youzer">
 
+<div id="<?php echo apply_filters( 'yz_activity_template_id', 'yz-bp' ); ?>" class="youzer yz-page noLightbox <?php echo yz_get_activity_page_class(); ?>">
+	
 	<div class="yz-content">
 		
 		<main class="yz-page-main-content">
@@ -31,7 +32,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			 */
 			do_action( 'bp_before_directory_activity_content' ); ?>
 
-			<?php if ( 'on' == yz_options( 'yz_enable_activity_directory_filter_bar' ) && apply_filters( 'yz_enable_activity_directory_filter_bar', true ) ) : ?>
+			<?php if ( 'on' == yz_option( 'yz_enable_activity_directory_filter_bar', 'on' ) && apply_filters( 'yz_enable_activity_directory_filter_bar', true ) ) : ?>
 			
 			<div class="yz-mobile-nav">
 				<div class="yz-mobile-nav-item yz-show-activity-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a><?php _e( 'Menu', 'youzer' ); ?></a></div></div>
@@ -270,4 +271,5 @@ do_action( 'bp_before_directory_activity' ); ?>
 	
 	</div><!-- .yz-content -->
 
+</div>
 </div>

@@ -33,14 +33,15 @@ do_action( 'bp_before_activity_comment' ); ?>
 				
 					<a href="<?php echo bp_get_activity_comment_permalink(); ?>" class="activity-time-since"><i class="far fa-clock"></i><span class="time-since" data-livestamp="<?php echo bp_core_get_iso8601_date( bp_get_activity_comment_date_recorded() ); ?>"><?php echo bp_get_activity_comment_date_recorded(); ?></span></a>
 
-					<?php do_action( 'yz_activity_comment_after_time_meta' ) ?>
+					<?php do_action( 'yz_activity_comment_after_time_meta' ); ?>
 				
 				</div>
 			
-				<?php do_action( 'yz_activity_comment_after_meta' ) ?>
+				<?php do_action( 'yz_activity_comment_after_meta' ); ?>
 			
 			</div>
 
+			<div class="acomment-attachments"><?php do_action( 'yz_activity_comment_attachments' ); ?></div>
 			<div class="acomment-content"><?php bp_activity_comment_content(); ?></div>
 
 		</div>

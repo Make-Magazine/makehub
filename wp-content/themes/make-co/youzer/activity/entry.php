@@ -120,21 +120,34 @@ do_action( 'bp_before_activity_entry' ); ?>
 			<?php bp_activity_comments(); ?>
 
 			<?php if ( is_user_logged_in() && bp_activity_can_comment() ) : ?>
-
+				<?php $emoji_active = yz_option( 'yz_enable_comments_emoji', 'on' ) == 'on' ? true : false; ?>
 				<form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php bp_activity_id(); ?>" class="ac-form"<?php bp_activity_comment_form_nojs_display(); ?>>
 					<div class="ac-reply-content">
-						<div class="ac-textarea">
+						<div class="ac-textarea<?php if ( $emoji_active ) echo ' yz-comments-emojis';?>">
 							<label for="ac-input-<?php bp_activity_id(); ?>" class="bp-screen-reader-text"><?php
-								/* translators: accessibility text */
 								_e( 'Comment', 'youzer' );
 							?></label>
 							<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>" placeholder="<?php _e( 'Write a Comment ...', 'youzer' ); ?>"></textarea>
+							<?php if ( $emoji_active ) : ?>
+								<div class="yz-load-emojis"><i class="far fa-smile"></i></div>
+							<?php endif; ?>
 						</div>
-						<div class="yz-send-comment"><i class="fas fa-paper-plane"></i></button>
-						<!-- <a href="#" class="ac-reply-cancel"><?php _e( 'Cancel', 'youzer' ); ?></a> -->
+						<?php $comments_attachments = yz_option( 'yz_wall_comments_attachments', 'on' ); ?>
+						<input type="submit" name="ac_form_submit" value="<?php esc_attr_e( 'Post', 'buddypress' ); ?>" style="display: none;" />
+						<div class="yz-send-comment"><i class="fas fa-paper-plane"></i></div>
+						<?php if ( $comments_attachments == 'on' ) : ?>
+						<div class="yz-wall-upload-btn"><i class="fas fa-paperclip"></i></div>
+						<?php endif; ?>
+						<!-- </button> -->
 						<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>" />
 					</div>
-
+					<?php if ( $comments_attachments == 'on' ) : ?>
+					<div class="yz-wall-attachments">
+						<input hidden="true" class="yz-upload-attachments" type="file" name="attachments[]">
+						<div class="yz-form-attachments"></div>
+					</div>
+					<?php endif; ?>
+					
 					<?php
 
 					/**

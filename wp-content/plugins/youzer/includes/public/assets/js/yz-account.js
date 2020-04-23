@@ -8,29 +8,6 @@
 			$( '.youzer select' ).not( '[multiple="multiple"]' ).niceSelect();
 		}
 
-	    // Make items Removable
-		$( document ).on( 'click', '.yz-delete-item', function( e ) {
-	    	// Get Widget Name.
-	    	var widget    = $( this ).parent().data( 'wg' ),
-	    		form_id   = $( this ).closest( 'form' ).attr( 'id' ),
-	    		img_url   = $( this ).parent().find( '.yz-photo-url' ).val(),
-	    		img_thumb = $( this ).parent().find( '.yz-photo-thumbnail' ).val();
-
-	        $( this ).parent().addClass( 'removered' ).fadeOut( function() {
-	        	// Remove Item
-	            $( this ).remove();
-		    	// Delete Photo.
-	           	if ( ( 'slideshow' == widget || 'portfolio' == widget ) && img_url ) {
-	           		// Delete Photo
-		    		$.yz_DeletePhoto( img_url );
-		    		$.yz_DeletePhoto( img_thumb );
-	    		}
-	    		// Check Widget Items
-            	$.yz_CheckItemsList();
-		    });
-
-	    });
-
 	    /**
 	     * Show Files Browser
 	     */
@@ -66,7 +43,7 @@
 		  	formData.append( 'action', 'upload_files' );
 
 	        $.ajax( {
-	            url         : yz.ajax_url,
+	            url         : Youzer.ajax_url,
 	            type        : "POST",
 	            data        : formData,
 	            contentType : false,
@@ -106,7 +83,7 @@
 	            		$( this ).remove();
 	            		// Display Photo Preview.
 	            		preview.fadeOut( 100, function() {
-		            		$( this ).css( 'background-image', 'url(' + yz.upload_url + res.thumbnail + ')' ).fadeIn( 400 );
+		            		$( this ).css( 'background-image', 'url(' + res.upload_url + res.thumbnail + ')' ).fadeIn( 400 );
 		            		// Update Photo Url
 		            		field.find( '.yz-photo-url' ).val( res.original ).change();
 		            		field.find( '.yz-photo-thumbnail' ).val( res.thumbnail ).change();
@@ -115,7 +92,7 @@
 					        // Get Form Data
 					        var data = field.closest( 'form' ).serialize() + '&die=true';
 			        		// Save Form Data
-			        		$.post( yz.ajax_url, data );
+			        		$.post( Youzer.ajax_url, data );
 	            		});
 	            	});
 	            }
@@ -156,7 +133,7 @@
 			$.yz_DeletePhoto( thumb_url );
 
 			// Reset Preview Image.
-		    img_field.find( '.yz-photo-preview' ).css( 'background-image', 'url(' + yz.default_img + ')' );
+		    img_field.find( '.yz-photo-preview' ).css( 'background-image', 'url(' + Yz_Account.default_img + ')' );
 
 		    // Hide Trash Icon.
 		    $( this ).removeClass( 'yz-show-trash' );
@@ -165,54 +142,9 @@
 	        var data = img_field.closest( 'form' ).serialize() + '&die=true';
 
     		// Save Form Data
-    		$.post( yz.ajax_url, data );
+    		$.post( Youzer.ajax_url, data );
 
 		});
-
-	    /**
-	     * # Check Account Items
-	     */
-		$.yz_CheckItemsList = function() {
-
-			// Check Skills List.
-			if ( $( '.yz-wg-skills-options li' )[0] ) {
-				$( '.yz-no-skills' ).remove();
-			} else if ( ! $( '.yz-no-skills' )[0] ) {
-				$( '.yz-wg-skills-options' ).append(
-					'<p class="yz-no-content yz-no-skills">' + yz.no_items + '</p>'
-				);
-			}
-
-			// Check Services List.
-			if ( $( '.yz-wg-services-options li' )[0] ) {
-				$( '.yz-no-services' ).remove();
-			} else if ( ! $( '.yz-no-services' )[0] ) {
-				$( '.yz-wg-services-options' ).append(
-					'<p class="yz-no-content yz-no-services">' + yz.no_items + '</p>'
-				);
-			}
-
-			// Check Portfolio List.
-			if ( $( '.yz-wg-portfolio-options li' )[0] ) {
-				$( '.yz-no-portfolio' ).remove();
-			} else if ( ! $( '.yz-no-portfolio' )[0] ) {
-				$( '.yz-wg-portfolio-options' ).append(
-					'<p class="yz-no-content yz-no-portfolio">' + yz.no_items + '</p>'
-				);
-			}
-
-			// Check Slideshow List.
-			if ( $( '.yz-wg-slideshow-options li' )[0] ) {
-				$( '.yz-no-slideshow' ).remove();
-			} else if ( ! $( '.yz-no-slideshow' )[0] ) {
-				$( '.yz-wg-slideshow-options' ).append(
-					'<p class="yz-no-content yz-no-slideshow">' + yz.no_items + '</p>'
-				);
-			}
-
-		}
-
-		$.yz_CheckItemsList();
 
 	    /*
 	     * Delete Photo
@@ -242,7 +174,7 @@
 			var account_photo = $( this ).val();
 			// If Input Value Empty Use Default Image
 			if ( ! account_photo ) {
-				account_photo = yz.default_img;
+				account_photo = Yz_Account.default_img;
 			}
 			// Change Account Photo.
 		    $( '.yz-account-img' ).fadeOut( 200, function() {

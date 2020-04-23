@@ -4,15 +4,7 @@
  * Check if Account Verification Enabled.
  */
 function yz_is_account_verification_enabled() {
-
-	// Get Value.
-	$is_verification_enabled = yz_options( 'yz_enable_account_verification' );
-
-	if ( 'on' == $is_verification_enabled ) {
-		return true;
-	}
-
-	return false;
+	return 'on' == yz_option( 'yz_enable_account_verification', 'on' ) ? true : false;
 }
 
 /**
@@ -52,14 +44,13 @@ function yz_is_user_account_verified( $user_id ) {
 		return false;
 	}
 
-	// Get User Meta Value
-	$verification_value = get_user_meta( $user_id, 'yz_account_verified', true );
+	$status = false;
 
-	if ( 'on' == $verification_value ) {
-		return true;
+	if ( 'on' == get_user_meta( $user_id, 'yz_account_verified', true ) ) {
+		$status = true;
 	}
 
-	return false;
+	return apply_filters( 'yz_is_user_account_verified', $status, $user_id );
 }
 
 /**
@@ -348,22 +339,3 @@ function yz_verified_users_shortcode( $atts = null ) {
 }
 
 add_shortcode( 'youzer_verified_users', 'yz_verified_users_shortcode' );
-
-/**
- * Verify Accounts Script
- **/
-function yz_verify_account_script() {
-
-    if ( yz_is_user_can_verify_accounts() ) {
-        wp_enqueue_script( 'yz-verify-user', YZ_PA . 'js/yz-verify-user.min.js', array( 'jquery' ), YZ_Version, true );
-        // Localize Script.
-        wp_localize_script( 'yz-verify-user', 'Yz_Verification', array(
-            'verify_account' => __( 'Verify Account', 'youzer' ),
-            'unverify_account' => __( 'Unverify Account', 'youzer' ),
-            )
-        );
-    }
-
-}
-
-add_action( 'wp_enqueue_scripts', 'yz_verify_account_script' );

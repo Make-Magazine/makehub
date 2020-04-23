@@ -15,7 +15,6 @@
 do_action( 'bp_before_member_plugin_template' ); ?>
 
 <?php if ( ! bp_is_current_component_core() && yz_is_current_tab_has_children() ) : ?>
-
 <div class="item-list-tabs yz-default-subnav no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Member secondary navigation', 'youzer' ); ?>" role="navigation">
 	<ul>
 		<?php bp_get_options_nav(); ?>

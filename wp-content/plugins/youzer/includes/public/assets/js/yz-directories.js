@@ -21,7 +21,7 @@
 		});
 
 		// Add Loading Button
-        $( '#yz-groups-list,#yz-members-list' ).on( 'click', 'a.group-button:not(.membership-requested),.friendship-button a', function(e) {
+        $( '#yz-groups-list,#yz-members-list' ).on( 'click', 'a.group-button:not(.membership-requested),.friendship-button:not(.awaiting_response_friend) a', function(e) {
         	e.preventDefault();
     		$( this ).addClass( 'yz-btn-loading' );
 		});

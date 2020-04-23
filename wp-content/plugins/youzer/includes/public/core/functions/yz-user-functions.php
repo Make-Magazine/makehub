@@ -104,7 +104,7 @@ function yz_is_user_has_networks( $user_id = null ) {
     $user_id = ! empty( $user_id ) ? $user_id : null;
 
     // Get Social Networks
-    $social_networks = yz_options( 'yz_social_networks' );
+    $social_networks = yz_option( 'yz_social_networks' );
 
     if ( empty( $social_networks ) ) {
         return false;
@@ -209,7 +209,7 @@ function yz_check_pagination( $type ) {
         
         // Set Up Variables.
         $user_posts_nbr = 0;
-        $posts_per_page = yz_options( 'yz_profile_posts_per_page' );
+        $posts_per_page = yz_option( 'yz_profile_posts_per_page', 5 );
 
         foreach( $blogs_ids as $b ) {
             switch_to_blog( $b->blog_id );
@@ -226,7 +226,7 @@ function yz_check_pagination( $type ) {
 
         // Set Up Variables.
         $comments_nbr = yz_get_comments_number( bp_displayed_user_id() );
-        $comments_per_page = yz_options( 'yz_profile_comments_nbr' );
+        $comments_per_page = yz_option( 'yz_profile_comments_nbr', 5 );
 
         // Check if comments require pagination.
         if ( $comments_nbr > $comments_per_page ) {
@@ -265,35 +265,6 @@ function yz_get_comments_number( $user_id ) {
 }
 
 /**
- * Check Custom Widgets Content.
- */
-function yz_check_custom_widget( $widget_id ) {
-
-    // Get Custom Widgets
-    $custom_widgets = yz_options( 'yz_custom_widgets' );
-
-    // Check If the widget ID already exists.
-    if ( empty( $custom_widgets ) || ! isset( $custom_widgets[ $widget_id ] ) ) {
-        return false;
-    }
-
-    // Check if widget have no fields.
-    if ( ! isset( $custom_widgets[ $widget_id ]['fields'] ) ) {
-        return false;
-    }
-
-    // Remove empty fields from the widgets.
-    $fields = array_filter( $custom_widgets[ $widget_id ]['fields'] );
-
-    // Check If there's fields inside the custom widget.
-    if ( empty( $fields ) ) {
-        return false;
-    }
-
-    return true;
-}
-
-/**
  * Check Image Existence.
  */
 function yz_is_image_exists( $img_url ) {
@@ -323,7 +294,7 @@ function yz_author_widget_networks_style( $args ) {
 
     $icon_css = null;
     $networks_type   = $args['networks_type'];
-    $social_networks = yz_options( 'yz_social_networks' );
+    $social_networks = yz_option( 'yz_social_networks' );
 
     foreach ( $social_networks as $network => $data ) {
 
@@ -422,7 +393,7 @@ add_action( 'post_updated', 'yz_on_author_update_change_posts_count', 10, 3 );
 /**
  * Get User Statistics
  */
-function yz_get_user_statistic_number( $user_id, $type ) {
+function yz_get_user_statistic_number( $user_id, $type, $order = null ) {
 
     $value = null;
 
@@ -437,9 +408,121 @@ function yz_get_user_statistic_number( $user_id, $type ) {
             break;
         
         case 'views':
-            $value = youzer()->user->views( $user_id );
+            $value = yz_users()->views( $user_id );
             break;
     }
 
-    return apply_filters( 'yz_get_user_statistic_number', $value, $user_id, $type );    
+    return apply_filters( 'yz_get_user_statistic_number', $value, $user_id, $type, $order );    
+}
+
+/**
+ * Get User Cover
+ */
+function yz_get_user_cover( $query = null, $user_id = null ) {
+
+    // Get User ID.
+    $user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
+
+    // Get Cover Photo Path.
+    $cover_path = bp_attachments_get_attachment( 'url', array(
+        'object_dir' => 'members', 'item_id' => $user_id
+        )
+    );
+
+    // Get Default Cover.
+    if ( empty( $cover_path ) ) {
+        $cover_path = yz_option( 'yz_default_profiles_cover' );
+    }
+
+    // Get Cover Style.
+    $cover_style = 'background-size: cover;';
+
+    // If Cover not exist use .
+    if ( empty( $cover_path ) ) {
+
+        // Get Data.
+        $default_avatar = bp_core_avatar_default();
+        $photo_as_cover = yz_option( 'yz_header_use_photo_as_cover', 'off' );
+        $profile_layout = yz_get_profile_layout();
+        $profile_photo  = bp_core_fetch_avatar( 
+            array(
+                'item_id' => $user_id,
+                'type'    => 'full',
+                'html'    => false,
+            )
+        );
+
+        // The profile photo as cover ( works only with Vertical Layouts ).
+        if ( 'on' == $photo_as_cover && bp_get_user_has_avatar( $user_id ) && 'yz-vertical-layout' == $profile_layout ) {
+            $cover_path = $profile_photo;
+        } else {
+            // If cover photo not exist use pattern.
+            $cover_path = yz_get_default_profile_cover();               
+            // Get Cover Style.
+            $cover_style = 'background-size: auto;';
+
+        }
+
+    }
+
+    if ( 'url' == $query ) {
+        return apply_filters( 'yz_user_profile_cover_link', $cover_path, $user_id );
+    }
+
+    // Get Cover
+    $cover = "style='background-image:url( $cover_path ); $cover_style'";
+
+    // return Cover Style
+    if ( 'style' == $query ) {
+        return apply_filters( 'yz_user_profile_cover_styling', $cover, $user_id );
+    }
+
+    // Print Cover.
+    return apply_filters( 'yz_user_profile_cover', $cover, $user_id );
+
+}
+
+
+// Add Shortcode.
+add_shortcode( 'youzer_author_box', 'youzer_author_box' );
+
+/**
+ * Author Box Shortcode
+ */
+function youzer_author_box( $atts ) {
+    // Get Box Args.
+    $box_args = shortcode_atts(
+        array(
+            'user_id'           => false,
+            'layout'            => yz_option( 'yz_author_layout', 'yzb-author-v1' ),
+            'meta_icon'         => yz_option( 'yz_author_meta_icon', 'fas fa-map-marker' ),
+            'meta_type'         => yz_option( 'yz_author_meta_type', 'full_location' ),
+            'networks_type'     => yz_option( 'yz_author_sn_bg_type', 'silver' ),
+            'networks_format'   => yz_option( 'yz_author_sn_bg_style', 'radius' ),
+            'cover_overlay'     => yz_option( 'yz_enable_author_overlay', 'on' ),
+            'cover_pattern'     => yz_option( 'yz_enable_author_pattern', 'on' ),
+            'statistics_bg'     => yz_option( 'yz_author_use_statistics_bg', 'on' ),
+            'statistics_border' => yz_option( 'yz_author_use_statistics_borders', 'on' ),
+    ), $atts );
+
+    // Don't Show Author box if the admin didn't set the user id.
+    if ( empty( $box_args['user_id'] ) || 0 == $box_args['user_id'] ) {
+        return false;
+    }
+
+    // Include Author Class.
+    require_once YZ_PUBLIC_CORE . 'class-yz-author.php';
+    require_once YZ_PUBLIC_CORE . 'class-yz-user.php';
+
+
+    // Set Settings Target.
+    $box_args['target'] = 'author';
+
+    ob_start();
+    
+    // Display Box.
+    yz_author_box()->get_author_box( $box_args );
+    
+    return ob_get_clean();
+
 }

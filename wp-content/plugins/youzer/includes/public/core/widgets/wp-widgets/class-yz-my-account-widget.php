@@ -19,30 +19,10 @@ class YZ_My_Account_Widget extends WP_Widget {
 	 */
 	public function form( $instance ) {
 
-		global $Youzer;
-
 	    // Get Widget Data.
 	    $instance = wp_parse_args( (array) $instance, $this->default_options() );
 
-	    // Get Input's Data.
-		$border_style = $Youzer->fields->get_field_options( 'border_styles' );
-		$icons_style = array(
-			'silver'	=> __( 'Silver', 'youzer' ),
-			'colorful'	=> __( 'Colorful', 'youzer' ),
-			'no-bg'		=> __( 'No background', 'youzer' )
-		);
-
 		?>
-
-		<!-- Avatar Border Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'avatar_border_style' ) ); ?>"><?php esc_attr_e( 'Avatar Border Style:', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'avatar_border_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'avatar_border_style' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $border_style as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['avatar_border_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
 
 		<!-- Hide Sections. -->   
 		<p>
@@ -60,26 +40,6 @@ class YZ_My_Account_Widget extends WP_Widget {
 		    <label for="<?php echo $this->get_field_id( 'hide_links' ) . $name; ?>"><?php echo $item['name']; ?></label><br>
 		    <?php endforeach; ?>
 		</p>
-
-		<!-- Icons Background Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'icons_style' ) ); ?>"><?php esc_attr_e( 'Icons Background Style:', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'icons_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'icons_style' ) ); ?>" class="widefat" style="width'100%;">
-	            <?php foreach( $icons_style as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['icons_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
-
-		<!-- Icons Border Style -->
-	    <p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'icons_border_style' ) ); ?>"><?php esc_attr_e( 'Icons Border Style:', 'youzer' ); ?></label> 
-	        <select id="<?php echo $this->get_field_id( 'icons_border_style' ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'icons_border_style' ) ); ?>" class="widefat" style="width:100%;">
-	            <?php foreach( $border_style as $style_id => $style_name ) { ?>
-	            	<option <?php selected( $instance['icons_border_style'], $style_id ); ?> value="<?php echo $style_id; ?>"><?php echo $style_name; ?></option>
-	            <?php } ?>      
-	        </select>
-	    </p>
 		
 		<?php 
 	}
@@ -93,9 +53,6 @@ class YZ_My_Account_Widget extends WP_Widget {
 
 		// Update Fields..
 		$instance = $old_instance;
-		$instance['icons_style'] = strip_tags( $new_instance['icons_style'] );
-		$instance['icons_border_style'] = strip_tags( $new_instance['icons_border_style'] );
-		$instance['avatar_border_style'] = strip_tags( $new_instance['avatar_border_style'] );
 		
 		// Save Hide Links
 		foreach ( $this->hide_links() as $name => $item ) {
@@ -156,14 +113,14 @@ class YZ_My_Account_Widget extends WP_Widget {
 		<div class="yz-my-account-widget">
 
 			<div class="yz-widget-header">
-				<a href="<?php echo $profile_url; ?>" class="yz-head-avatar yz-avatar-border-<?php echo $args['avatar_border_style']; ?>"><?php echo $avatar; ?></a>
+				<a href="<?php echo $profile_url; ?>" class="yz-head-avatar yz-avatar-border-radius"><?php echo $avatar; ?></a>
 				<div class="yz-widget-head">
 					<span class="yz-hello"><?php _e ( 'hello !' , 'youzer' ); ?></span>
 					<a href="<?php echo $profile_url; ?>" class="yz-user-name"><?php echo bp_core_get_user_displayname( $user_id ); ?></a>
 				</div>
 			</div>
 
-			<div class="yz-menu-links yz-menu-icon-<?php echo $args['icons_border_style']; ?> yz-menu-icon-<?php echo $args['icons_style']; ?>">
+			<div class="yz-menu-links yz-menu-icon-circle yz-menu-icon-colorful">
 
 			<?php if ( 'off' == $hide_sections['account']['hide'] ) : ?>
 			
@@ -236,7 +193,7 @@ class YZ_My_Account_Widget extends WP_Widget {
 				<?php endif; ?>
 
 				<?php if (  bp_is_active( 'settings' ) && 'off' == $hide_links['account-settings']['hide'] ) : ?>
-				<a href="<?php echo yz_get_settings_url( false, $user_id ); ?>" class="yz-link-item yz-link-account-settings">
+				<a href="<?php echo bp_core_get_user_domain( $user_id ) . bp_get_settings_slug(); ?>" class="yz-link-item yz-link-account-settings">
 					<i class="fas fa-cogs"></i>
 					<div class="yz-link-title"><?php _e( 'account settings' , 'youzer' ); ?></div>
 				</a>
@@ -307,9 +264,6 @@ class YZ_My_Account_Widget extends WP_Widget {
 		$default_options = array(
 	        'hide_sections' => $this->hide_sections(),
 	        'hide_links' => $this->hide_links(),
-	        'avatar_border_style' => 'radius',
-	        'icons_border_style' => 'circle',
-	        'icons_style' => 'colorful',
 	    );
 
 		return $default_options;

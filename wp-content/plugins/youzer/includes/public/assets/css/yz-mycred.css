@@ -390,6 +390,10 @@
     margin-bottom: 15px;
 }
 
+.yz-md-user-badges:empty {
+    display: none;
+}
+
 .yzb-user-badges .yz-user-badges .yz-badge-item,
 .yz-md-user-badges .yz-user-badges .yz-badge-item {
     margin: 0 5px 5px 5px;

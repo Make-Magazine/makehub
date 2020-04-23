@@ -538,7 +538,7 @@ position: relative;
     background-color: #f2f2f2;
 }
 
-.yz-no-content {
+.youzer .yz-no-content {
     margin: 0;
     font-size: 13px;
     color: #9E9E9E;
@@ -1631,7 +1631,7 @@ position: relative;
     margin-right: 5px;
 }
 
-#youzer .editfield input:not([type=radio]):not([type=checkbox]) {
+#youzer .editfield input:not([type=radio]):not([type=checkbox]):not( .ed_button ) {
     width: 100%;
     color: #9a9a9a;
     font-size: 13px;
@@ -1685,6 +1685,10 @@ position: relative;
 .youzer .editfield select[multiple=multiple]:before {
     content: '';
     display: none;
+}
+
+.youzer .editfield .input-options.datebox-selects label {
+    display: inline-block;
 }
 
 .youzer .editfield .input-options.datebox-selects select,
@@ -2106,6 +2110,7 @@ position: relative;
 .youzer .option-content textarea,
 .youzer .option-content select,
 .uk-option-item .option-desc,
+.yz-uploader-change-item h2,
 .yz-account-header ul li a,
 .youzer .action-button,
 .yz-account-head span,

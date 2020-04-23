@@ -65,7 +65,7 @@
 			// Get Form Values
 			$.yz_EditForm( {
 				button_id	: 'yz-update-custom-widget',
-				form_title	: yz.update_widget,
+				form_title	: Yz_Custom_Widgets.update_widget,
 				form 		: widgets_form,
 				item 		: widget_item
 			});
@@ -126,7 +126,7 @@
 			if ( nameAlreadyeExist ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.name_exist,
+                    msg  : Yz_Functions.name_exist,
                     type : 'error'
                 });
                 return false;
@@ -134,6 +134,20 @@
 
 			return true;
 		}
+
+		/**
+		 * Remove Item.
+		 */
+		$( document ).on( 'click', '.yz-delete-custom-widget', function() {
+
+			// Remove item
+			$( this ).closest( 'li' ).remove();
+
+			if ( ! $( '.yz-custom-widget-item' )[0] ) {
+				$( '#yz_custom_widgets' ) .append( '<p class="yz-no-content yz-no-custom-widgets">' + Yz_Custom_Widgets.no_custom_widgets + '</p>' );
+			}
+
+		});
 
 	});
 

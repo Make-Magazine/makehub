@@ -13,16 +13,10 @@ define( 'LOGY_PA', plugin_dir_url( __FILE__ ) . 'includes/public/assets/' );
 // Templates Path.
 define( 'LOGY_TEMPLATE', LOGY_PATH . 'includes/public/templates/' );
 
-global $Logy, $Logy_Admin;
+global $Logy;
 
 // Init.
 require_once LOGY_PATH . 'class.logy.php';
 
 // Init Class
 $Logy = new Logy();
-
-// Init Admin
-if ( is_admin() ) {
-    require_once LOGY_PATH . 'includes/admin/class-logy-admin.php';
-    $Logy_Admin = new Logy_Admin();
-}

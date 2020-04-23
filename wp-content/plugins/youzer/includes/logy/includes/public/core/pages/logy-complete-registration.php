@@ -17,7 +17,7 @@ class Logy_Complete_Registration {
 		add_shortcode( 'logy_complete_registration_page', array( $this, 'get_form' ) );
 
 		// Complete Registration.
-		add_action( 'init', array( $this, 'register_user' ) );
+		$this->register_user();
 
     }
 	
@@ -27,19 +27,6 @@ class Logy_Complete_Registration {
 	public function get_form() {
 		// Render the form.
 		return $this->logy->form->get_page( 'complete_registration' );
-	}
-
-	/**
-	 * Attributes
-	 */
-	function attributes() {
-
-		$attrs = $this->logy->register->attributes();
-
-		// Edit Button title
-		$attrs['submit_title'] = __( 'Complete Registration', 'youzer' );
-
-		return $attrs;
 	}
 
 	/**
@@ -177,3 +164,5 @@ class Logy_Complete_Registration {
 	}
 
 }
+
+$complete_registration  = new Logy_Complete_Registration();

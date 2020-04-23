@@ -39,6 +39,20 @@ function yzc_add_rtmedia_content() {
 add_action( 'yz_group_main_column', 'yzc_add_rtmedia_content' );
 add_action( 'yz_profile_main_column', 'yzc_add_rtmedia_content' );
 
+// Add Activity Filter.
+add_filter( 'yz_activity_template_id', 'yz_buddypress_id' );
+
+// Add Profile Template Filter.
+function yz_set_profile_template_id( $id ) {
+
+    if ( bp_is_activity_component() ) {
+        $id =  'buddypress';
+    }
+    return $id;
+}
+
+add_action( 'yz_profile_template_id', 'yz_set_profile_template_id' );
+
 
 // /**
 //  * Disable Youzer Template Dor Rtmedia Ajax Call.

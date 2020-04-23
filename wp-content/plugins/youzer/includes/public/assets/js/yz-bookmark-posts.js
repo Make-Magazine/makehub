@@ -61,8 +61,7 @@
 					}
 
 					// Get Button Title.
-					yz_btn_title = ( res.action == 'save' ) ?
-					Yz_Bookmark_Posts.save_post : Yz_Bookmark_Posts.unsave_post;
+					yz_btn_title = ( res.action == 'save' ) ? res.save_post : res.unsave_post;
 
 					// Update Button title.
 					yz_curent_btn.find( '.yz-tool-name' ).text( yz_btn_title );

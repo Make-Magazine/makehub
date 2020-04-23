@@ -9,6 +9,7 @@
 		 */
 		$( document ).on( 'click', '#yz-add-user-tag' , function( e ) {
 
+			
 			e.preventDefault();
 
 			// Get Data.
@@ -65,7 +66,7 @@
 			// Get Form Values
 			$.yz_EditForm( {
 				button_id	: 'yz-update-user-tag',
-				form_title	: yz.update_user_tag,
+				form_title	: Yz_User_Tags.update_user_tag,
 				form 		: user_tags_form,
 				item 		: user_tag_item
 			});
@@ -117,7 +118,7 @@
 			if ( o.tag_name == null || $.trim( o.tag_name ) == '' ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.utag_name_empty,
+                    msg  : Yz_User_Tags.utag_name_empty,
                     type : 'error'
                 } );
                 return false;
@@ -134,7 +135,7 @@
 			if ( nameAlreadyeExist ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.name_exist,
+                    msg  : Yz_Functions.name_exist,
                     type : 'error'
                 });
                 return false;
@@ -142,6 +143,20 @@
 
 			return true;
 		}
+
+		/**
+		 * Remove Item.
+		 */
+		$( document ).on( 'click', '.yz-delete-user-tag', function() {
+
+			// Remove item
+			$( this ).closest( 'li' ).remove();
+
+			if ( ! $( '.yz-user-tag-item' )[0] ) {
+				$( '#yz_user_tags' ).append( '<p class="yz-no-content yz-no-user-tags">' + Yz_User_Tags.no_user_tags + '</p>' );
+			}
+
+		});
 
 	});
 

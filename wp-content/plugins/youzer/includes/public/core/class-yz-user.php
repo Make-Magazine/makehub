@@ -3,6 +3,22 @@
 class Youzer_User {
 
 	/**
+	 * Instance of this class.
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Return the instance of this class.
+	 */
+	public static function get_instance() {
+		if ( null === self::$instance ) {
+			self::$instance = new self;
+		}
+
+		return self::$instance;
+	}
+
+	/**
 	 * # Cover.
 	 */
 	function cover( $query = null, $user_id = null ) {
@@ -18,7 +34,7 @@ class Youzer_User {
 
 	    // Get Default Cover.
 		if ( empty( $cover_path ) ) {
-	    	$cover_path = yz_options( 'yz_default_profiles_cover' );
+	    	$cover_path = yz_option( 'yz_default_profiles_cover' );
 		}
 
 		// Get Cover Style.
@@ -29,7 +45,6 @@ class Youzer_User {
 
 			// Get Data.
 			$default_avatar = bp_core_avatar_default();
-			$photo_as_cover = yz_options( 'yz_header_use_photo_as_cover' );
 			$profile_layout = yz_get_profile_layout();
 			$profile_photo 	= bp_core_fetch_avatar( 
 				array(
@@ -40,7 +55,7 @@ class Youzer_User {
 			);
 
 			// The profile photo as cover ( works only with Vertical Layouts ).
-			if ( 'on' == $photo_as_cover && bp_get_user_has_avatar( $user_id ) && 'yz-vertical-layout' == $profile_layout ) {
+			if ( 'on' == yz_option( 'yz_header_use_photo_as_cover', 'off' ) && bp_get_user_has_avatar( $user_id ) && 'yz-vertical-layout' == $profile_layout ) {
 				$cover_path = $profile_photo;
 			} else {
 				// If cover photo not exist use pattern.
@@ -79,11 +94,7 @@ class Youzer_User {
 		$target  = isset( $args['target'] ) ? $args['target'] : 'header';
 
 		// Get Photo Border Style
-		$border_style = yz_options( 'yz_' . $target . '_photo_border_style' );
-		$show_border  = apply_filters( 'yz_enable_' . $target . '_photo_border', 'on' );
-
-		// Get Photo Data
-		$photo_effect = yz_options( 'yz_profile_photo_effect' );
+		$border_style = yz_option( 'yz_' . $target . '_photo_border_style', 'circle' );
 
 		$img_path = bp_core_fetch_avatar( 
 			array(
@@ -102,28 +113,19 @@ class Youzer_User {
 		$photo_class[] 	= 'yz-profile-photo';
 		$photo_class[] 	= "yz-photo-$border_style";
 
-		if ( 'on' == $show_border ) {
+		if ( 'on' == apply_filters( 'yz_enable_' . $target . '_photo_border', 'on' ) ) {
 			$photo_class[] = 'yz-photo-border';
 		}
 
-		if ( 'on' == $photo_effect && 'circle' == $border_style ) {
+		if ( 'circle' == $border_style && 'on' ==  yz_option( 'yz_profile_photo_effect', 'on' ) ) {
 			$photo_class[] = 'yz-profile-photo-effect';
 		}
 
-		// Generate Photo Class
-		$photo_class = yz_generate_class( $photo_class );
-
 		// Get Profile Url
 		$profile_url = bp_core_get_user_domain( $user_id );
-		
-		// Filter Profile Url.
-		$profile_url = apply_filters( 'yz_user_profile_avatar_link', $profile_url, $user_id );
 
-		// Filter Profile Url.
-		$avatar_img = apply_filters( 'yz_user_profile_avatar_img', $img_path, $user_id );
-
-		echo "<div class='$photo_class'>";
-		echo "<a href='$profile_url' class='yz-profile-img'>$avatar_img</a>";
+		echo "<div class='" . yz_generate_class( $photo_class ) . "'>";
+		echo "<a href='" . apply_filters( 'yz_user_profile_avatar_link', $profile_url, $user_id ) . "' class='yz-profile-img'>" . apply_filters( 'yz_user_profile_avatar_img', $img_path, $user_id ) . "</a>";
 		echo "</div>";
 
 
@@ -156,8 +158,8 @@ class Youzer_User {
 
 		// Init Vars.
 		$user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
-		$first_meta = yz_options( 'yz_hheader_meta_type_1' );
-		$second_meta = yz_options( 'yz_hheader_meta_type_2' );
+		$first_meta = yz_option( 'yz_hheader_meta_type_1', 'full_location' );
+		$second_meta = yz_option( 'yz_hheader_meta_type_2', 'user_url' );
 
 		$meta = '';
 
@@ -165,7 +167,7 @@ class Youzer_User {
 			// Get First Meta Value.
 			$first_value = yz_get_user_field_data( $first_meta, $user_id );
 			if ( ! empty( $first_value ) ) {
-				$first_icon = yz_options( 'yz_hheader_meta_icon_1' );
+				$first_icon = yz_option( 'yz_hheader_meta_icon_1', 'fas fa-map-marker-alt' );
 				$meta .= apply_filters( 'yz_get_profile_header_meta_1', '<li><i class="' . $first_icon . '"></i><span>' . sanitize_text_field( $first_value ) . '</span></li>', $first_value, $first_icon );
 			}
 		}
@@ -174,17 +176,18 @@ class Youzer_User {
 			// Get Second Meta Value.
 			$second_value = yz_get_user_field_data( $second_meta, $user_id );
 			if ( ! empty( $second_value ) ) {
-				$second_icon = yz_options( 'yz_hheader_meta_icon_2' );
+				$second_icon = yz_option( 'yz_hheader_meta_icon_2', 'fas fa-link' );
 				$meta .= apply_filters( 'yz_get_profile_header_meta_2', '<li><i class="' . $second_icon . '"></i><span>' . sanitize_text_field( $second_value ) . '</span></li>', $second_value, $second_icon );
 			}
 		}
 
-		if ( ! empty( $meta ) || yz_is_404_profile() ) {
+		if ( ! empty( $meta ) ) {
 			echo '<div class="yz-usermeta"><ul>' . $meta;
 				do_action( 'yz_get_profile_header_user_meta' );
 			echo '</ul></div>';
 		}
 
+		do_action( 'yz_after_profile_header_user_meta' );
 	}
 
 	/**
@@ -201,7 +204,7 @@ class Youzer_User {
 		}
 
 		// Get Location
-		if ( ! empty( $user_country ) &&  empty( $user_city ) ) {
+		if ( ! empty( $user_country ) && empty( $user_city ) ) {
 			$user_location = $user_country;
 		} elseif (  empty( $user_country ) && ! empty( $user_city ) ) {
 			$user_location = $user_city;
@@ -266,11 +269,14 @@ class Youzer_User {
 			return false;
 		}
 
+		// Networks Styling.
+		$this->styling_networks( $element );
+
 		// Get Social Networks
-		$social_networks = yz_options( 'yz_social_networks' );
+		$social_networks = yz_option( 'yz_social_networks' );
 
 		// Display Networks Icons
-		$display_networks = yz_options( 'yz_display_' . $element . '_networks' );
+		$display_networks = yz_option( 'yz_display_' . $element . '_networks', 'on' );
 
 		// if Element is Widget Make it Networks Visible.
 		if ( 'widget' == $element ) {
@@ -286,8 +292,8 @@ class Youzer_User {
 		// Get networks Data.
 		$data = yz_get_args(
 			array(
-				'networks_type'   => yz_options( 'yz_' . $element . '_sn_bg_type' ),
-				'networks_format' => yz_options( 'yz_' . $element . '_sn_bg_style' ),
+				'networks_type'   => yz_option( 'yz_' . $element . '_sn_bg_type', 'colorful' ),
+				'networks_format' => yz_option( 'yz_' . $element . '_sn_bg_style', 'radius' ),
 		), $args );
 
 		// Get Networks Size
@@ -332,11 +338,71 @@ class Youzer_User {
 	}
 
 	/**
+	 * Networks Styling.
+	 **/
+
+    /**
+     * # Header Social Networks Styling.
+     */
+    function styling_networks( $element = null ) {
+
+        // Get Social Networks Data
+        $social_networks  = yz_option( 'yz_social_networks' );
+        $display_networks = yz_option( 'yz_display_' . $element . '_networks', 'on' );
+
+        // if Element is Widget Make Networks Visible.
+        if ( 'widget' == $element ) {
+            $element = 'wg';
+            $display_networks = 'on';
+        }
+
+        if ( 'on' != $display_networks || empty( $social_networks ) ) {
+            return false;
+        }
+
+        // Get Networks Type & Size.
+        $networks_size = yz_option( 'yz_wg_sn_icons_size', 'full-width' );
+        $networks_type = yz_option( 'yz_' . $element . '_sn_bg_type', 'colorful' );
+
+        // Get Styling Element.
+        $icon = ( 'wg' == $element && 'full-width' == $networks_size ) ? 'a' : 'i';
+
+        echo '<style type="text/css">';
+
+        foreach ( $social_networks as $network => $data ) {
+
+            // Get network Color
+            $color = $data['color'];
+
+            // Prepare selector
+            $selector = ".yz-$element-networks.yz-icons-$networks_type .$network $icon";
+
+            if ( 'colorful' == $networks_type ) {
+                $property = "background-color";
+            } elseif ( 'silver' == $networks_type || 'transparent' == $networks_type ) {
+                $selector .= ':hover';
+                $property = "background-color";
+            } else {
+                $selector .= ':hover';
+                $property = "color";
+            }
+
+            // Prepare Css Code
+            echo  "$selector { $property: $color !important; }";
+
+        }
+
+        echo '</style>';
+
+    }
+
+	/**
 	 * # Profile Statistics.
 	 */
 	function statistics( $args = null ) {
+		
+		wp_enqueue_style( 'yz-lato', 'https://fonts.googleapis.com/css?family=Lato:400', array(), YZ_Version );
 
-		// global $Youzer;
 		$statistics_details = yz_get_user_statistics_details();
 
 		// Set Up Variable.
@@ -346,14 +412,14 @@ class Youzer_User {
 		$user_id = isset( $args['user_id'] ) ? $args['user_id'] : bp_displayed_user_id();
 		
 		// Get Types.
-		$first_statistic_type = yz_options( 'yz_' . $target . '_first_statistic' );
-		$second_statistic_type = yz_options( 'yz_' . $target . '_second_statistic' );
-		$third_statistic_type = yz_options( 'yz_' . $target . '_third_statistic' );
+		$first_statistic_type = yz_option( 'yz_' . $target . '_first_statistic', 'posts' );
+		$second_statistic_type = yz_option( 'yz_' . $target . '_second_statistic', 'comments' );
+		$third_statistic_type = yz_option( 'yz_' . $target . '_third_statistic', 'views' );
 		
 		// Show/Hide Elements.
-		$display_first_statistic  = yz_options( 'yz_display_' . $target . '_first_statistic' );
-		$display_third_statistic  = yz_options( 'yz_display_' . $target . '_third_statistic' );
-		$display_second_statistic = yz_options( 'yz_display_' . $target . '_second_statistic' );
+		$display_first_statistic  = yz_option( 'yz_display_' . $target . '_first_statistic', 'on' );
+		$display_third_statistic  = yz_option( 'yz_display_' . $target . '_third_statistic', 'on' );
+		$display_second_statistic = yz_option( 'yz_display_' . $target . '_second_statistic', 'on' );
 		// }
 		
 		if ( 'on' != $display_first_statistic && 'on' != $display_third_statistic && 'on' != $display_second_statistic ) {
@@ -363,8 +429,8 @@ class Youzer_User {
 		// Get Statistics Data.
 		$data = yz_get_args(
 			array(
-				'statistics_bg' 	=> yz_options( 'yz_' . $target . '_use_statistics_bg' ),
-				'statistics_border' => yz_options( 'yz_' . $target . '_use_statistics_borders' ),
+				'statistics_bg' 	=> yz_option( 'yz_' . $target . '_use_statistics_bg', 'on' ),
+				'statistics_border' => yz_option( 'yz_' . $target . '_use_statistics_borders', 'on' ),
 		), $args );
 
 		// Get Statistics Class Name.
@@ -382,7 +448,7 @@ class Youzer_User {
 								return;
 							}
 
-							$first_nbr = yz_is_404_profile() ? 4 : yz_get_user_statistic_number( $user_id, $first_statistic_type );
+							$first_nbr = yz_get_user_statistic_number( $user_id, $first_statistic_type, 'first' );
 						 ?>
 
 						<li>
@@ -394,7 +460,7 @@ class Youzer_User {
 
 					<?php if ( 'on' == $display_second_statistic && isset( $statistics_details[ $second_statistic_type ] )) : ?>
 
-						<?php $second_nbr = yz_is_404_profile() ? 0 :yz_get_user_statistic_number( $user_id, $second_statistic_type ); ?>
+						<?php $second_nbr = yz_get_user_statistic_number( $user_id, $second_statistic_type, 'second' ); ?>
 
 						<li>
 							<div class="yz-snumber" title="<?php echo $second_nbr; ?>"><?php echo $this->get_statistic_number( $second_nbr ); ?></div>
@@ -405,7 +471,7 @@ class Youzer_User {
 					<?php if ( 'on' == $display_third_statistic && isset( $statistics_details[ $third_statistic_type ] ) ) : ?>
 						
 						<?php 
-							$third_nbr = yz_is_404_profile() ? 4 : yz_get_user_statistic_number( $user_id, $third_statistic_type );
+							$third_nbr = yz_get_user_statistic_number( $user_id, $third_statistic_type, 'third' );
 						?>
 
 						<li>
@@ -467,7 +533,7 @@ class Youzer_User {
 		<div class="yzb-account-menu">
 
 		<?php if ( ! is_user_logged_in() ) : ?>
-			<?php if ( bp_is_user() || yz_is_404_profile() ) : ?>
+			<?php if ( bp_is_user() ) : ?>
 			<a class="yzb-button yzb-login" data-show-youzer-login="true" href="<?php echo yz_get_login_page_url(); ?>">
 				<i class="fas fa-user"></i>
 				<span class="yzb-button-title"><?php _e( 'login', 'youzer' ); ?></span>
@@ -484,78 +550,6 @@ class Youzer_User {
 			<?php yz_get_social_buttons( $user_id ); ?>
 		<?php endif; ?>
 
-		</div>
-
-		<?php
-	}
-
-	/**
-	 * # Settings.
-	 */
-	function settings( $user_id = null ) {
-
-	    // Get User ID.
-	    $user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
-
-		// New Array
-		$links = array();
-
-		// Profile Settings
-		$links['profile'] = array(
-			'icon'	=> 'fas fa-user',
-			'href'	=> yz_get_profile_settings_url( false, $user_id ),
-			'title'	=> __( 'profile Settings', 'youzer' )
-		);
-
-    	if ( bp_is_active( 'settings' ) ) {
-			// Account Settings
-			$links['account'] = array(
-				'icon'	=> 'fas fa-cogs',
-				'href'	=> yz_get_settings_url( false, $user_id ),
-				'title'	=> __( 'Account Settings', 'youzer' )
-			);
-    	}
-
-		// Widgets Settings
-		$links['widgets'] = array(
-			'icon'	=> 'fas fa-sliders-h',
-			'href'	=> yz_get_widgets_settings_url( false, $user_id ),
-			'title'	=> __( 'Widgets Settings', 'youzer' )
-		);
-
-		// Change Photo Link
-		$links['change-photo'] = array(
-			'icon'	=> 'fas fa-camera-retro',
-			'href'	=> yz_get_profile_settings_url( 'change-avatar', $user_id ),
-			'title'	=> __( 'change avatar', 'youzer' )
-		);
-
-		// Change Password Link
-		$links['change-password'] = array(
-			'icon'	=> 'fas fa-lock',
-			'href'	=> yz_get_settings_url( 'general', $user_id ),
-			'title'	=> __( 'change password', 'youzer' )
-		);
-
-		// Logout Link
-		$links['logout'] = array(
-			'icon'	=> 'fas fa-power-off',
-			'href'	=> wp_logout_url(),
-			'title'	=> __( 'logout', 'youzer' )
-		);
-
-		// Filter.
-		$links = apply_filters( 'yz_get_profile_account_menu', $links, $user_id );
-
-		?>
-
-		<div class="yz-settings-menu">
-			<?php foreach ( $links as $link ) : ?>
-				<a href="<?php echo esc_url( $link['href'] ); ?>">
-					<div class="yz-icon"><i class="<?php echo $link['icon'];?>"></i></div>
-					<span class="yzb-button-title"><?php echo $link['title']; ?></span>
-				</a>
-			<?php endforeach; ?>
 		</div>
 
 		<?php
@@ -697,3 +691,15 @@ class Youzer_User {
 		}
 	}
 }
+
+/**
+ * Get a unique instance of Youzer Users.
+ */
+function yz_users() {
+	return Youzer_User::get_instance();
+}
+
+/**
+ * Launch Youzer Users!
+ */
+yz_users();

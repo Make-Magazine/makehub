@@ -18,7 +18,7 @@ class Logy_Lost_Password {
 		add_action( 'login_form_lostpassword', array( $this, 'redirect_to_logy_lostpassword' ) );
 		add_action( 'login_form_rp', array( $this, 'redirect_to_logy_password_reset' ) );
 		add_action( 'login_form_resetpass', array( $this, 'redirect_to_logy_password_reset' ) );
-		add_action( 'template_redirect', array( &$this, 'check_reset_page_link' ) );
+		add_action( 'template_redirect', array( $this, 'check_reset_page_link' ) );
 
 		// Handlers for form posting actions
 		add_action( 'login_form_lostpassword', array( $this, 'do_password_lost' ) );
@@ -171,21 +171,6 @@ class Logy_Lost_Password {
 	function attributes() {
 
 		$attrs = $this->messages_attributes();
-
-		// Add Form Type & Action to generate form class later.
-		$attrs['form_type']   = 'login';
-		$attrs['form_action'] = 'lost-password';
-
-		// Get Login Box Classes.
-		$attrs['action_class'] = $this->logy->login->get_actions_class();
-		$attrs['form_class']   = $this->logy->form->get_form_class( $attrs );
-
-		// Form Elements Visibilty Settings.
-		$attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
-		$attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
-
-		// Form Actions Elements Visibilty Settings.
-		$attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
 
 		return $attrs;
 	}
@@ -368,3 +353,5 @@ class Logy_Lost_Password {
 
 	}
 }
+
+$lost_password  = new Logy_Lost_Password();

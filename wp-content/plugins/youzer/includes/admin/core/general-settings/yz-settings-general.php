@@ -89,14 +89,14 @@ function yz_general_settings() {
         )
     );
 
-    $Yz_Settings->get_field(
-        array(
-            'title' => __( 'Disable Buddypress Registration', 'youzer' ),
-            'desc'  => __( 'works only if the Youzer Membership System is disabled', 'youzer' ),
-            'id'    => 'yz_disable_bp_registration',
-            'type'  => 'checkbox'
-        )
-    );
+    // $Yz_Settings->get_field(
+    //     array(
+    //         'title' => __( 'Disable Buddypress Registration', 'youzer' ),
+    //         'desc'  => __( 'works only if the Youzer Membership System is disabled', 'youzer' ),
+    //         'id'    => 'yz_disable_bp_registration',
+    //         'type'  => 'checkbox'
+    //     )
+    // );
 
     $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 

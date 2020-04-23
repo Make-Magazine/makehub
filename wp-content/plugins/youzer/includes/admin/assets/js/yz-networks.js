@@ -63,7 +63,7 @@
 			// Get Form Values
 			$.yz_EditForm( {
 				button_id	: 'yz-update-network',
-				form_title	: yz.update_network,
+				form_title	: Yz_Networks.update_network,
 				form 		: networks_form,
 				item 		: network_item
 			});
@@ -124,7 +124,7 @@
 			if ( nameAlreadyeExist ) {
 				// Show Error Message
                 $.ShowPanelMessage( {
-                    msg  : yz.name_exist,
+                    msg  : Yz_Functions.name_exist,
                     type : 'error'
                 });
                 return false;
@@ -132,6 +132,21 @@
 
 			return true;
 		}
+		
+		/**
+		 * Remove Item.
+		 */
+		$( document ).on( 'click', '.yz-delete-network', function() {
+
+			// Remove item
+			$( this ).closest( 'li' ).remove();
+
+			if ( ! $( '.yz-network-item' )[0] ) {
+				$( '#yz_networks' )
+				.append( '<p class="yz-no-content yz-no-networks">' + Yz_Networks.no_networks + '</p>' );
+			}
+
+		});
 
 	});
 

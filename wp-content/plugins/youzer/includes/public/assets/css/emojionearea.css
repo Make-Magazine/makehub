@@ -484,6 +484,7 @@
         float: left;
         display: block;
         width: 24px;
+        max-width: initial;
         height: 24px; }
       /* line 465, ../scss/emojionearea.scss */
       .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojibtn img.lazy-emoji {

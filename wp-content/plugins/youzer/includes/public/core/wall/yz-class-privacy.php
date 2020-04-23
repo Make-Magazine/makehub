@@ -8,7 +8,7 @@ class Youzer_Wall_Privacy {
 	function __construct( ) {
 
 		// Add Tool
-		add_action( 'bp_activity_before_post_form_tools', array( &$this, 'tool' ) );
+		add_action( 'bp_activity_before_post_form_tools', array( $this, 'tool' ) );
 
 		// Hide Private Users Posts.
 		add_filter( 'bp_activity_get_where_conditions', array( $this, 'where' ), 2, 2 );
@@ -78,10 +78,16 @@ class Youzer_Wall_Privacy {
 			
 			case 'friends':
 
-				// Get Activity.
-				$activity = new BP_Activity_Activity( $activity_id );
+				if ( bp_is_active( 'friends' ) ) {
 
-				if ( bp_loggedin_user_id() != $activity->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $activity->user_id ) ) {
+					// Get Activity.
+					$activity = new BP_Activity_Activity( $activity_id );
+
+					if ( bp_loggedin_user_id() != $activity->user_id && ! friends_check_friendship( bp_loggedin_user_id(), $activity->user_id ) ) {
+						$visibility = false;
+					}
+				
+				} else {
 					$visibility = false;
 				}
 
@@ -186,7 +192,6 @@ class Youzer_Wall_Privacy {
 
 		}
 
-
 		return $where;
 
 	}
@@ -196,10 +201,14 @@ class Youzer_Wall_Privacy {
 	 */
 	function tool() {
 
+		if ( ! apply_filters( 'yz_enable_activity_form_privacy', true ) ) {
+			return;
+		}
+
 		if ( bp_is_group() ) {
 			return;
 		}
-		
+	
 		$options = $this->privacy_options();
 
 		?>
@@ -241,8 +250,12 @@ class Youzer_Wall_Privacy {
 
 		$options = $this->privacy_options();
 
-		$content = '<i class="' . $options[ $activities_template->activity->privacy ]['icon'] . '"></i>';
+		$privacy = ! empty( $activities_template->activity->privacy ) ? $activities_template->activity->privacy : $this->get_privacy( $activity_id );
+
+		$content = '<i class="' . $options[ $privacy ]['icon'] . '"></i>';
 
 		return $content . '<span class="yz-separator-point">•</span>' . $time;
 	}
 }
+
+$privacy = new Youzer_Wall_Privacy();

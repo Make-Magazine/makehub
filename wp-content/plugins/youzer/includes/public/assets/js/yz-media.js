@@ -4,6 +4,17 @@
 
 	$( document ).ready( function() {
 
+		// Display Search Box.
+    	$( '.yz-video-lightbox' ).on( 'click', function( e ) {
+    		e.preventDefault();
+    		if ( ! $( 'body' ).hasClass( 'yz-media-lightbox-loaded' ) ) {
+    			$( 'body' ).addClass( 'yz-media-lightbox-loaded' );
+    			$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-media-lightbox.min.js' } ).appendTo( 'head' );
+    			$( this ).trigger( 'click' );
+    		}
+		});
+
+
 		// Get Page Number
 		function yz_media_find_page_number( el ) {
 			el.find( '.yz-page-symbole' ).remove();

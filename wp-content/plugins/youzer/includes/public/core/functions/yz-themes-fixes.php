@@ -1,21 +1,5 @@
 <?php
 
-// Kleo Theme Fixes.
-add_filter( 'enable_kleo_bp_dir_send_private_message_button', '__return_false' );
-add_action( 'after_setup_theme', 'kleo_remove_bp_dynamic_style', 14 );
-
-function kleo_remove_bp_dynamic_style() {
-
-   remove_filter( 'kleo_dynamic_main', 'kleo_buddypress_dynamic_style', 12 );
-
-	if ( is_buddypress() ) {
-		remove_action( 'wp_enqueue_scripts', 'kleo_load_woocommerce_css', 20 );
-	}
-
-	remove_action( 'bbp_enqueue_scripts', 'kleo_bbpress_register_style', 15 );
-
-}
-
 /**
  * Bimber Theme Fix
  */
@@ -31,6 +15,7 @@ add_filter( 'bimber_bp_load_css', 'yz_disable_bimber_theme_bp_css' );
 add_filter( 'ghostpool_bbpress_css', '__return_false' );
 add_filter( 'ghostpool_buddypress_main_css', '__return_false' );
 add_filter( 'ghostpool_woocommerce_css', 'yz_disable_woocommerce_css' );
+
 function yz_disable_woocommerce_css( $active ) {
 	if ( function_exists( 'yz_is_woocommerce_tab' ) && yz_is_woocommerce_tab() ) {
     	return false;
@@ -38,15 +23,6 @@ function yz_disable_woocommerce_css( $active ) {
 	return $active;
 }
 
-/**
- * Kleo Theme Fix
- */
-function yz_remove_kleo_bp_css() {
-	wp_dequeue_style( 'bp-parent-css' );
-	wp_dequeue_style( 'kleo-bbpress' );	
-}
-
-add_action( 'wp_enqueue_scripts' , 'yz_remove_kleo_bp_css', 999 );
 
 /**
  * My Listing Theme Fix

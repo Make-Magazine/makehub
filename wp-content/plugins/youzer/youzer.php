@@ -3,7 +3,7 @@
  * Plugin Name: Youzer
  * Plugin URI:  https://youzer.kainelabs.com
  * Description: Youzer is a Community & User Profiles Management Solution with a Secure Membership System, Front-end Account Settings, Powerful Admin Panel, 14 Header Styles, +20 Profile Widgets, 16 Color Schemes, Advanced Author Widgets, Fully Responsive Design, Extremely Customizable and a Bunch of Unlimited Features Provided By KaineLabs.
- * Version:     2.3.6
+ * Version:     2.4.7
  * Author:      Youssef Kaine
  * Author URI:  https://www.kainelabs.com
  * License:     GPL-2.0+
@@ -11,53 +11,19 @@
  * Text Domain: youzer
  * Domain Path: /languages/
  */
-
+// return;
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-// Youzer Basename
-define( 'YOUZER_BASENAME', plugin_basename( __FILE__ ) );
-
-/**
- * Check For Required Plugins.
- */
-function yz_have_required_plugins() {
-
-    $required_plugins = apply_filters( 'youzer_required_plugin', array( 'buddypress' => 'bp-loader' ) );
-
-    // Get Active Plugins List.
-    $active_plugins = (array) get_option( 'active_plugins', array() );
-
-    // Is Multisite ??
-    if ( is_multisite() ) {
-        // Get Site Wide Plugins.
-        $sitewide_plugins = get_site_option( 'active_sitewide_plugins', array() );
-        // Merge Plugins.
-        $active_plugins = array_merge( $active_plugins, $sitewide_plugins );
-    }
-
-    foreach ( $required_plugins as $key => $required ) {
-
-        // Get Plugin Path.
-        $required = ! is_numeric( $key ) ? "{$key}/{$required}.php" : "{$required}/{$required}.php";
-
-        if (
-            ! in_array( $required, $active_plugins )
-            &&
-            ! array_key_exists( $required, $active_plugins )
-        )
-            return false;
-    }
-    return true;
-}
-
-if ( ! yz_have_required_plugins() ) {
-    require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+if ( ! class_exists( 'Buddypress' ) ) {
     deactivate_plugins( plugin_basename( __FILE__ ) );
     wp_die( __( 'Please install and activate <strong><a href="https://wordpress.org/plugins/buddypress/">Buddypress</strong></a> plugin to use the <strong>Youzer</strong> plugin .', 'youzer' ), 'Youzer dependency check', array( 'back_link' => true ) );
     return;
 }
+
+// Youzer Basename
+define( 'YOUZER_BASENAME', plugin_basename( __FILE__ ) );
 
 define( 'YOUZER_FILE', __FILE__ );
 
@@ -101,11 +67,6 @@ if ( defined( 'YOUZER_LATE_LOAD' ) ) {
 
 /**
  * Determine whether BuddyPress is in the process of being deactivated.
- *
- * @since 1.6.0
- *
- * @param string $basename BuddyPress basename.
- * @return bool True if deactivating BuddyPress, false if not.
  */
 function yz_is_deactivation( $basename = '' ) {
     if ( ! function_exists( 'buddypress' ) ) {
@@ -155,40 +116,3 @@ function youzer_init() {
 }
 
 add_action( 'init', 'youzer_init' );
-
-
-// /**
-//  * This function runs when WordPress completes its upgrade process
-//  */
-// function yz_upgrade_completed( $upgrader_object, $options ) {
-
-//     // If an update has taken place and the updated type is plugins and the plugins element exists
-//     if ( $options['action'] == 'update' && $options['type'] == 'plugin' && isset( $options['plugins'] ) ) {
-
-//     // Iterate through the plugins being updated and check if ours is there
-//     foreach ( $options['plugins'] as $plugin ) {
-
-//         if ( $plugin == YOUZER_BASENAME ) {
-
-//             // Remove this later
-//             if ( ! get_option( 'yz_install_bp_activity_privacy' ) ) {
-
-//                 global $bp, $wpdb;
-
-//                 $row = $wpdb->get_results( "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE table_name = '{$bp->activity->table_name}' AND column_name = 'privacy'" );
-
-//                 if ( empty( $row ) ) {
-//                     $wpdb->query( "ALTER TABLE {$bp->activity->table_name} ADD privacy varchar(10) NULL DEFAULT 'public'" );
-//                 }
-
-//                 update_option( 'yz_install_bp_activity_privacy', 1 );
-
-//             }
-//         }
-//     }
-
-//     }
-
-// }
-
-// add_action( 'upgrader_process_complete', 'yz_upgrade_completed', 10, 2 );

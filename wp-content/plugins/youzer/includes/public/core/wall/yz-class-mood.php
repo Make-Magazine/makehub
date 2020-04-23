@@ -3,13 +3,12 @@
  * Wall Feeling / Activity.
  */
 class Youzer_Mood {
-	
 
 	function __construct( ) {
 
 		// Add Tool
-		add_action( 'bp_activity_after_post_form_tools', array( &$this, 'tool' ) );
-		add_action( 'yz_after_wall_post_form_textarea', array( &$this, 'search_box' ) );
+		add_action( 'bp_activity_after_post_form_tools', array( $this, 'tool' ) );
+		add_action( 'yz_after_wall_post_form_textarea', array( $this, 'search_box' ) );
 
 		// Handle Save Form Post - Ajax Request.
 		add_action( 'wp_ajax_yz_feeling_activity_get_categories', array( $this, 'get_categories_list' ) );
@@ -44,7 +43,8 @@ class Youzer_Mood {
 				$icon = '<img class="yz-mood-feeling-image" src="' . yz_get_mood_emojis_image( $mood['value'] ) . '" alt="">';
 			}
 
-			$action .= ' ' . sprintf( '<span class="yz-wall-mood">%1s %2s %3s<span>', $icon, $data['title'], $mood_title[ $mood['value'] ] );
+			$mood_value = isset( $mood_title[ $mood['value'] ] ) ?  $mood_title[ $mood['value'] ] : $mood['value'];
+			$action .= ' ' . sprintf( '<span class="yz-wall-mood">%1s %2s %3s<span>', $icon, $data['title'], $mood_value );
 		}
 
 		return $action;
@@ -53,9 +53,10 @@ class Youzer_Mood {
 	/**
 	 * Add Feeling/Activity Tool.
 	 */
-	function tool() { ?>
+	function tool() {	
+		if ( apply_filters( 'yz_enable_activity_form_mood', true ) ) { ?>
 		<div class="yz-user-mood-tool yz-form-tool" data-yztooltip="<?php _e( 'Feeling / Activity', 'youzer' ); ?>"><i class="far fa-smile"></i></div>
-		<?php
+		<?php }
 	}
 
 	/**
@@ -148,3 +149,5 @@ class Youzer_Mood {
 	}
 
 }
+
+$mood = new Youzer_Mood();

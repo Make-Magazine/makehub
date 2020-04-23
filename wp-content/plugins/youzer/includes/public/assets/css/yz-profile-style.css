@@ -134,9 +134,10 @@
 }
 
 .yz-widget .yz-widget-content p {
-    margin-bottom: 0;
     line-height: 24px;
+    margin-bottom: 0;
     font-size: 13px;
+    padding: 0;
 }
 
 .yz-widget.yz-website .yz-widget-content p a,
@@ -248,6 +249,8 @@
 .yz-quote-content blockquote {
     padding: 0;
     border: none;
+    font-weight: 400;
+    letter-spacing: 0;
     line-height: 32px;
     margin: 0 0 20px 0;
     font-style: inherit;
@@ -492,7 +495,7 @@
     height: 32px;
     font-size: 11px;
     padding: 0 14px;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 32px;
     letter-spacing: 1px;
     display: inline-block;
@@ -511,7 +514,7 @@
     right: 10px;
     color: #85a6c1;
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 22px;
     position: absolute;
 }
@@ -1796,6 +1799,7 @@
 .yz-tab-post .yz-post-text p {
     font-size: 13px;
     color: #8d8c8c;
+    padding: 0;
     line-height: 24px;
 }
 
@@ -2790,11 +2794,11 @@
     border: none;
 }
 
-.yz-profile-navmenu .yz-nav-view-more-menu li a span.count {
+.yz-profile-navmenu .yz-nav-view-more-menu li a span {
     float: right;
 }
 
-.rtl .yz-profile-navmenu .yz-nav-view-more-menu li a span.count {
+.rtl .yz-profile-navmenu .yz-nav-view-more-menu li a span {
     float: left;
 }
 
@@ -3057,14 +3061,11 @@
 .yz-box-404 h2,
 .yz-info-msg p,
 .yz-post-type,
+.yz-skillbar-title,
+.yz-skill-bar-percent,
 .yz-box-404 p,
 .yz-item-title {
     font-family: 'Open Sans', sans-serif;
-}
-
-.yz-skillbar-title,
-.yz-skill-bar-percent {
-    font-family: 'Roboto', 'Open Sans', sans-serif;
 }
 
 .yz-wg-border-radius.yz-vertical-layout #yz-profile-navmenu,
@@ -3311,6 +3312,7 @@
     color: #fff;
     display: block;
     font-size: 22px;
+    text-align: inherit;
     margin-bottom: 20px;
 }
 
@@ -3724,7 +3726,8 @@ body .lb-outerContainer {
     }
 
     .youzer.yz-vertical-layout .yz-page-main-content {
-        padding-bottom: 0;
+        padding: 0;
+        /*padding-bottom: 0;*/
     }
 
     .youzer.yz-vertical-layout {

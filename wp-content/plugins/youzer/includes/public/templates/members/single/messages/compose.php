@@ -46,8 +46,12 @@
 		<label for="message_content"><?php _e( 'Message', 'youzer' ); ?></label>
 		<div class="yz-compose-message-textarea">
 		<textarea name="content" id="message_content" rows="15" cols="40"><?php bp_messages_content_value(); ?></textarea>
-		<?php if ( 'on' == yz_options( 'yz_enable_messages_emoji' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
+
+		<div class="yz-message-form-tools">
+			<?php if ( 'on' == yz_option( 'yz_enable_messages_emoji', 'on' ) ) : ?><div class="yz-load-emojis yz-load-messages-emojis"><i class="far fa-smile"></i></div><?php endif; ?>
 		</div>
+		</div>
+		
 	</div>
 
 	<input type="hidden" name="send_to_usernames" id="send-to-usernames" value="<?php bp_message_get_recipient_usernames(); ?>" class="<?php bp_message_get_recipient_usernames(); ?>" />
@@ -61,10 +65,17 @@
 	 */
 	do_action( 'bp_after_messages_compose_content' ); ?>
 
+	<?php if ( apply_filters( 'yz_enable_messages_attachments', true ) && 'on' == yz_option( 'yz_messages_attachments', 'on' ) ) : ?><div class="yz-upload-btn"><i class="fas fa-paperclip"></i><span class="yz-upload-btn-title"><?php _e( 'Upload attachment', 'youzer' ); ?></span></div><?php endif; ?>
+				
 	<div class="submit">
 		<input type="submit" value="<?php esc_attr_e( "Send Message", 'youzer' ); ?>" name="send" id="send" />
 	</div>
 
+	<div class="yz-wall-attachments">
+		<input hidden="true" class="yz-upload-attachments" type="file" name="attachments[]" multiple>
+		<div class="yz-form-attachments"></div>
+	</div>
+	
 	<?php wp_nonce_field( 'messages_send_message' ); ?>
 </form>
 

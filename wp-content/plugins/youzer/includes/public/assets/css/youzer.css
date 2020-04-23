@@ -368,6 +368,13 @@ html.touch #youzer select {
     padding: 0;
 }
 
+.youzer .radio input[type=radio] {
+    opacity: 1;
+    width: initial;
+    height: initial;
+    position: relative;
+}
+
 .rtl .youzer input[type="checkbox"],
 .rtl .youzer input[type="radio"] {
     margin-right: 0;
@@ -926,6 +933,7 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
     box-shadow: none;
     font-weight: 600;
     padding: 6px 12px;
+    text-shadow: none;
     margin: 10px 8px 0 0;
     display: inline-block;
     text-decoration: none;
@@ -963,6 +971,7 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
 .widget_bp_core_members_widget #members-list .vcard {
     padding: 0;
     border: none;
+    box-shadow: none;
     overflow: hidden;
     margin: 25px 0 0 0;
     list-style-type: none;
@@ -990,6 +999,7 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
 
 .widget_bp_groups_widget #groups-list li .item-title a,
 .widget_bp_core_members_widget #members-list .vcard .item-title a {
+    border: none;
     color: #7c838a;
     font-size: 13px;
     font-weight: 600;
@@ -1010,6 +1020,9 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
 /**
  * Login Widget.
  */
+.logged-in .widget_bp_core_login_widget {
+    overflow: hidden;
+}
 
 .widget_bp_core_login_widget .bp-login-widget-user-avatar,
 .widget_bp_core_login_widget .bp-login-widget-user-link {
@@ -1041,7 +1054,9 @@ body div.widget.buddypress.widget_bp_core_members_widget div.item-options a {
 }
 
 .widget_bp_core_login_widget .bp-login-widget-user-logout a:before {
+    opacity: 1;
     content: "\f011";
+    font-weight: 700 !important;
 }
 
 /** # Login Form **/
@@ -1769,6 +1784,7 @@ body .buddypress.widget .item-options,
 body .buddypress.widget .item-list {
     padding: 0 25px !important;
     float: initial !important;
+    border: none;
 }
 
 body .buddypress.widget .item-list {
@@ -2026,7 +2042,15 @@ body .buddypress.widget .item-list {
     color: #fff;
     display: block;
     font-size: 22px;
+    text-align: inherit;
     margin-bottom: 20px;
+}
+
+#youzer .youzer-sidebar .widget-content .textwidget {
+    color: #858f94;
+    font-size: 13px;
+    line-height: 18px;
+    padding: 15px 25px; 
 }
 
 /**
@@ -2198,8 +2222,9 @@ body .buddypress.widget .item-list {
     padding: 0;
     pointer-events: none;
     position: absolute;
-    top: 100%;
     left: 0;
+    top: 100%;
+    max-height: 400px;
     -webkit-transform-origin: 50% 0;
     -ms-transform-origin: 50% 0;
     transform-origin: 50% 0;
@@ -2551,6 +2576,9 @@ body .buddypress.widget .item-list {
 /**
  * Mutual
  */
+.youzer i.far {
+    font-family: "Font Awesome 5 Free"!important; 
+}
 
 .youzer [data-icon]:before, .youzer i.fas {
     font-family: "Font Awesome 5 Free"!important; 
@@ -2559,6 +2587,7 @@ body .buddypress.widget .item-list {
 
 .youzer i.fab {
     font-family: "Font Awesome 5 Brands" !important;
+    top: initial;
 }
 
 a.button:before,
@@ -3411,7 +3440,7 @@ a.button:before,
 }
 
 .youzer .group-button.loading a:before,
-.friendship-button.loading a:before,
+.friendship-button:not(.awaiting_response_friend).loading a:before,
 .yz-social-buttons .yz-follow-message-button .follow-button a.loading:before,
 .yz-item-tools .yz-item-tool.loading .yz-tool-icon i:before {
     content: "\f110" !important;
@@ -3476,8 +3505,13 @@ a.button:before,
 }
 
 .yz-show-item-tools {
-    top: 25px;
-    right: 25px;
+    top: 15px;
+    width: 30px;
+    cursor: pointer;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    right: 20px;
     position: absolute;
 }
 
@@ -3687,6 +3721,10 @@ a.button:before,
     clip: rect(1px, 1px, 1px, 1px);
 }
 
+.lb-container {
+    padding: 4px;
+}
+
 /**
  * KaineLabs Tooltip
  */
@@ -3869,6 +3907,17 @@ a.button:before,
 #yz-modal .yz-modal .uk-option-item select,
 #yz-modal .yz-modal .uk-option-item .nice-select {
     margin-top: 15px;
+}
+
+#yz-modal .yz-modal .uk-option-item select {
+    font-size: 13px;
+    margin-top: 15px;
+    background: #eee;
+    border: 1px solid #eee;
+    padding: 5px 15px;
+    font-weight: 600;
+    color: #898988;
+    text-transform: capitalize;
 }
 
 #yz-modal .yz-modal .uk-option-item:last-of-type {

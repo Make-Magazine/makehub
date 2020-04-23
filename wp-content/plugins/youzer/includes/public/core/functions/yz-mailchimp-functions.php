@@ -6,26 +6,19 @@
 function yz_is_mailchimp_active() {
 
     // Check if MailChimp Sync is Enabled.
-    $mailchimp_enabled = yz_options( 'yz_enable_mailchimp' );
-
-    if ( $mailchimp_enabled == 'off' ) {
+    if ( yz_option( 'yz_enable_mailchimp', 'off' ) == 'off' ) {
         return false;
     }
 
     // Get Mailchimp API Key.
-    $api_key = yz_options( 'yz_mailchimp_api_key' );
-
-    if ( empty( $api_key ) ) {
+    if ( empty( yz_option( 'yz_mailchimp_api_key' ) ) ) {
         return false;
     }
 
-    // Get Mailchimp List ID.
-    $list_id = yz_options( 'yz_mailchimp_list_id' );
-
-    if ( empty( $list_id ) ) {
+    // Check Mailchimp List ID.
+    if ( empty( yz_option( 'yz_mailchimp_list_id' ) ) ) {
         return false;
     }
-
 
     return true;
     
@@ -57,7 +50,7 @@ function yz_subscribe_user_to_mailchimp( $user_id, $key, $user ) {
     );
 
     // Get List ID.
-    $list_id = yz_options( 'yz_mailchimp_list_id' );
+    $list_id = yz_option( 'yz_mailchimp_list_id' );
 
     // Add User To Mailchimp List.
     yz_syncMailchimp( $list_id, $user_data );
@@ -72,7 +65,7 @@ add_action( 'bp_core_activated_user', 'yz_subscribe_user_to_mailchimp', 10, 3 );
 function yz_syncMailchimp( $list_id, $data ) {
 
     // Get API Key.
-    $apiKey = yz_options( 'yz_mailchimp_api_key' );
+    $apiKey = yz_option( 'yz_mailchimp_api_key' );
 
     // Get Member ID.
     $memberId = md5( strtolower( $data['email'] ) );

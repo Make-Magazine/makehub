@@ -22,19 +22,10 @@ function yz_is_account_page() {
  */
 function yz_get_all_profile_fields() {
 
-    // Get BP fields
-    $bp_fields = yz_get_bp_profile_fields();
-
-    // Get Youzer Fields
-    $yz_fields = yz_get_youzer_profile_fields();
-
     // Merge All Fields
-    $all_fields = array_merge( $bp_fields, $yz_fields );
+    $all_fields = yz_array_merge( yz_get_bp_profile_fields(), yz_get_youzer_profile_fields() );
 
-    // Filter
-    $all_fields = apply_filters( 'yz_get_all_profile_fields', $all_fields );
-
-    return $all_fields;
+    return apply_filters( 'yz_get_all_profile_fields', $all_fields );
 
 }
 
@@ -52,9 +43,7 @@ function yz_get_youzer_profile_fields() {
     );
 
     // Filter
-    $fields = apply_filters( 'yz_get_youzer_profile_fields', $fields );
-
-    return $fields;
+    return apply_filters( 'yz_get_youzer_profile_fields', $fields );
 }
 
 /**
@@ -63,8 +52,8 @@ function yz_get_youzer_profile_fields() {
 function yz_get_youzer_xprofile_fields() {
 
     // Get Profile Fields.
-    $profile_fields = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_xprofile_contact_info_group_ids' ) : get_option( 'yz_xprofile_contact_info_group_ids' );
-    $contact_fields = is_multisite() ? get_blog_option( BP_ROOT_BLOG, 'yz_xprofile_profile_info_group_ids' ) : get_option( 'yz_xprofile_profile_info_group_ids' );
+    $profile_fields = yz_option( 'yz_xprofile_contact_info_group_ids' );
+    $contact_fields = yz_option( 'yz_xprofile_profile_info_group_ids' );
 
     $all_fields = (array) $contact_fields + (array) $profile_fields;
 
@@ -72,10 +61,7 @@ function yz_get_youzer_xprofile_fields() {
         unset( $all_fields['group_id'] );
     }
 
-    // Filter
-    $fields = apply_filters( 'yz_get_youzer_xprofile_fields', $all_fields );
-
-    return $fields;
+    return apply_filters( 'yz_get_youzer_xprofile_fields', $all_fields );
 }
 
 /**
@@ -128,7 +114,11 @@ function yz_get_user_statistics_details() {
     $statistics = array(
         'posts'     => __( 'Posts', 'youzer' ),
         'comments'  => __( 'Comments', 'youzer' ),
-        'views'     => __( 'Views', 'youzer' )
+        'views'     => __( 'Views', 'youzer' ),
+        'ratings'   => __( 'Ratings', 'youzer' ),       
+        'followers' => __( 'Followers', 'youzer' ),       
+        'following' => __( 'Following', 'youzer' ),  
+        'points'    => __( 'Points', 'youzer' )  
     );
 
     return apply_filters( 'yz_get_user_statistics_details', $statistics );
@@ -161,24 +151,24 @@ add_action( 'xprofile_profile_field_data_updated', 'yz_sync_bp_and_wp_fields', 1
 /**
  * Get Settings Url.
  */
-function yz_get_settings_url( $slug = false, $user_id = null ) {
+// function yz_get_settings_url( $slug = false, $user_id = null ) {
 
-    if ( ! bp_is_active( 'settings' ) ) {
-        return false;
-    }
+//     if ( ! bp_is_active( 'settings' ) ) {
+//         return false;
+//     }
 
-    // Get User ID.
-    $user_id =! empty( $user_id ) ? $user_id :  bp_displayed_user_id();
+//     // Get User ID.
+//     $user_id =! empty( $user_id ) ? $user_id :  bp_displayed_user_id();
 
-    // Get User Settings Page Url.
-    $url = bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() . '/';
+//     // Get User Settings Page Url.
+//     $url = bp_core_get_user_domain( $user_id ) . bp_get_settings_slug() . '/';
 
-    if ( $slug ) {
-        $url = $url . $slug;
-    }
+//     if ( $slug ) {
+//         $url = $url . $slug;
+//     }
 
-    return $url;
-}
+//     return $url;
+// }
 
 /**
  * Get Profile Url.
@@ -194,17 +184,10 @@ function yz_get_profile_settings_url( $slug = false, $user_id = null ) {
     if ( ! empty( $slug ) ) {
         $url = $url . $slug;
     } else {
-        $url .= yz_get_default_profile_settings_tab();
+        $url .= apply_filters( 'yz_profile_settings_default_tab', 'edit/group/1' );
     }
 
     return $url;
-}
-
-/**
- * Get Default Profile Settings Tab.
- */
-function yz_get_default_profile_settings_tab() {
-    return apply_filters( 'yz_profile_settings_default_tab', 'edit/group/1' );
 }
 
 /**

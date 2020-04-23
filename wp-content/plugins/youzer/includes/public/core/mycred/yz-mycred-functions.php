@@ -1,28 +1,6 @@
 <?php
 
 /**
- * Check is Mycred is Installed & Active.
- */
-function yz_is_mycred_active() {
-    
-    if ( ! yz_is_mycred_installed() ) {
-    	return false;
-    }
-
-	// Get Value.
-	$is_mycred_enabled = yz_options( 'yz_enable_mycred' );
-	
-    if ( 'on' == $is_mycred_enabled ) {
-        $activate = true;
-    } else {
-        $activate = false;
-    }
-
-    return apply_filters( 'yz_is_mycred_active', $activate );
-
-}
-
-/**
  * Include MyCRED Files.
  */
 function yz_init_mycred() {
@@ -32,12 +10,13 @@ function yz_init_mycred() {
 	}
 
 	// Balance Functions.
-    require_once YZ_PUBLIC_CORE . 'mycred/yz-mycred-balance.php';
+    require YZ_PUBLIC_CORE . 'mycred/yz-mycred-balance.php';
 
 	// Badges Functions.
 	if ( defined( 'myCRED_BADGE_VERSION' ) ) {
-    	require_once YZ_PUBLIC_CORE . 'mycred/yz-mycred-badges.php';
+    	require YZ_PUBLIC_CORE . 'mycred/yz-mycred-badges.php';
 	}
+
 }
 
 add_action( 'setup_theme', 'yz_init_mycred' );
@@ -61,40 +40,38 @@ function yz_mycred_scripts( $hook_suffix ) {
 
 add_action( 'wp_enqueue_scripts', 'yz_mycred_scripts' );
 
-/**
- * # Default Options 
- */
-function yz_mycred_default_options( $options ) {
+// /**
+//  * # Default Options 
+//  */
+// function yz_mycred_default_options( $options ) {
 
-    // Options.
-    $yzsq_options = array(
-		'yz_enable_mycred' => 'on',
-		'yz_badges_tab_icon' => 'fas fa-trophy',
-		'yz_enable_cards_mycred_badges' => 'on',
-		'yz_wg_max_card_user_badges_items' => 4,
-		'yz_mycred-history_tab_icon' => 'fas fa-history',
-		'yz_author_box_max_user_badges_items' => 3,
-		'yz_enable_author_box_mycred_badges' => 'on',
-		'yz_mycred_badges_tab_title' => __( 'Badges', 'youzer' ),
-		'yz_ctabs_mycred-history_thismonth_icon' => 'far fa-calendar-alt',
-		'yz_ctabs_leaderboard_month_icon' => 'far fa-calendar-alt',
-		'yz_ctabs_mycred-history_today_icon' => 'fas fa-calendar-check',
-		'yz_ctabs_leaderboard_today_icon' => 'fas fa-calendar-check',
-		'yz_ctabs_mycred-history_mycred-history_icon' => 'fas fa-calendar',
-		'yz_ctabs_mycred-history_thisweek_icon' => 'fas fa-calendar-times',
-		'yz_ctabs_leaderboard_week_icon' => 'fas fa-calendar-plus',
-		'yz_ctabs_mycred-history_yesterday_icon' => 'fas fa-calendar-minus',
-		'yz_ctabs_achievements_all_icon' => 'fas fa-award',
-		'yz_ctabs_achievements_earned_icon' => 'fas fa-user-check',
-		'yz_ctabs_achievements_unearned_icon' => 'fas fa-user-times',
-    );
-    
-    $options = array_merge( $options, $yzsq_options );
+//     // Options.
+//     $yzsq_options = array(
+// 		'yz_enable_mycred' => 'on',
+// 		'yz_badges_tab_icon' => 'fas fa-trophy',
+// 		'yz_enable_cards_mycred_badges' => 'on',
+// 		'yz_wg_max_card_user_badges_items' => 4,
+// 		'yz_mycred-history_tab_icon' => 'fas fa-history',
+// 		'yz_author_box_max_user_badges_items' => 3,
+// 		'yz_enable_author_box_mycred_badges' => 'on',
+// 		'yz_mycred_badges_tab_title' => __( 'Badges', 'youzer' ),
+// 		'yz_ctabs_mycred-history_thismonth_icon' => 'far fa-calendar-alt',
+// 		'yz_ctabs_leaderboard_month_icon' => 'far fa-calendar-alt',
+// 		'yz_ctabs_mycred-history_today_icon' => 'fas fa-calendar-check',
+// 		'yz_ctabs_leaderboard_today_icon' => 'fas fa-calendar-check',
+// 		'yz_ctabs_mycred-history_mycred-history_icon' => 'fas fa-calendar',
+// 		'yz_ctabs_mycred-history_thisweek_icon' => 'fas fa-calendar-times',
+// 		'yz_ctabs_leaderboard_week_icon' => 'fas fa-calendar-plus',
+// 		'yz_ctabs_mycred-history_yesterday_icon' => 'fas fa-calendar-minus',
+// 		'yz_ctabs_achievements_all_icon' => 'fas fa-award',
+// 		'yz_ctabs_achievements_earned_icon' => 'fas fa-user-check',
+// 		'yz_ctabs_achievements_unearned_icon' => 'fas fa-user-times',
+//     );
 
-    return $options;
-}
+//     return yz_array_merge( $options, $yzsq_options );
+// }
 
-add_filter( 'yz_default_options', 'yz_mycred_default_options' );
+// add_filter( 'yz_default_options', 'yz_mycred_default_options' );
 
 
 /**
@@ -144,12 +121,12 @@ add_filter( 'mycred_ranking_row', 'yz_mycred_leader_board_widget', 10, 5 );
 /**
  * Add Statitics Options
  */
-function yz_add_mycred_statitics( $statistics ) {
-	$statistics['points'] = __( 'Points', 'youzer' );
-	return $statistics;
-}
+// function yz_add_mycred_statitics( $statistics ) {
+// 	$statistics['points'] = 
+// 	return $statistics;
+// }
 
-add_filter( 'yz_get_user_statistics_details', 'yz_add_mycred_statitics' );
+// add_filter( 'yz_get_user_statistics_details', 'yz_add_mycred_statitics' );
 
 /**
  * Get Statistics Value

@@ -2,16 +2,16 @@
 
 class Logy_Register {
 
-	protected $logy;
+	// protected $logy;
 	
 	/**
 	 * Init Registration Actions & Filters.
 	 */
 	public function __construct() {
 
-		global $Logy;
+		// global $Logy;
 
-    	$this->logy = &$Logy;
+    	// $this->logy = &$Logy;
 
         if ( apply_filters( 'yz_enable_registration_hooks', true ) ) {
 
@@ -62,16 +62,12 @@ class Logy_Register {
 	 */
 	function is_captcha_active() {
 
-	    // Get Captcha Visibility Option.
-	    $use_captcha = logy_options( 'logy_enable_recaptcha' );
-	    if ( 'off' == $use_captcha )  {
+	    if ( 'off' == yz_option( 'logy_enable_recaptcha', 'on' ) )  {
 	        return false;
 	    }
 
-	    // Get Captcha Options
-	    $site_key   = logy_options( 'logy_recaptcha_site_key' );
-	    $secret_key = logy_options( 'logy_recaptcha_secret_key' );
-	    if ( empty( $site_key ) || empty( $secret_key ) ) {
+	    // Check Captcha Options.
+	    if ( empty( yz_option( 'logy_recaptcha_site_key' ) ) || empty( yz_option( 'logy_recaptcha_secret_key' ) ) ) {
 	        return false;
 	    }
 
@@ -113,7 +109,7 @@ class Logy_Register {
 			'https://www.google.com/recaptcha/api/siteverify',
 			array(
 				'body' => array(
-					'secret' 	=> logy_options( 'logy_recaptcha_secret_key' ),
+					'secret' 	=> yz_option( 'logy_recaptcha_secret_key' ),
 					'response' 	=> $captcha_response
 				)
 			)
@@ -136,15 +132,10 @@ class Logy_Register {
 	/**
 	 * Add Captcha
 	 */
-	function add_captcha() {
-
-		// Get ReCaptcha
-		$captcha_key = logy_options( 'logy_recaptcha_site_key' );
-
-		?>
+	function add_captcha() { ?>
 		
 		<div class="logy-recaptcha-container">
-			<div class="g-recaptcha"<?php do_action( 'yz_recaptcha_attributes' ); ?> data-sitekey="<?php echo $captcha_key; ?>"></div>
+			<div class="g-recaptcha"<?php do_action( 'yz_recaptcha_attributes' ); ?> data-sitekey="<?php echo yz_option( 'logy_recaptcha_site_key' ); ?>"></div>
 		</div>
 
 		<?php
@@ -158,20 +149,20 @@ class Logy_Register {
 
 		$attrs = $this->messages_attributes();
 
-		// Add Form Type & Action to generate form class later.
-		$attrs['form_type']   = 'signup';
-		$attrs['form_action'] = 'signup';
+		// // Add Form Type & Action to generate form class later.
+		// $attrs['form_type']   = 'signup';
+		// $attrs['form_action'] = 'signup';
 
-		// Get Login Box Classes.
-		$attrs['action_class'] = $this->get_actions_class();
-		$attrs['form_class'] = $this->logy->form->get_form_class( $attrs );
+		// // Get Login Box Classes.
+		// $attrs['action_class'] = $this->get_actions_class();
+		// $attrs['form_class'] = $this->logy->form->get_form_class( $attrs );
 
-		// Form Elements Visibilty Settings.
-		$attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
-		$attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
+		// // Form Elements Visibilty Settings.
+		// $attrs['use_labels'] = ( false !== strpos( $attrs['form_class'], 'logy-with-labels' ) ) ? true : false;
+		// $attrs['use_icons']	 = ( false !== strpos( $attrs['form_class'], 'logy-fields-icon' ) ) ? true : false;
 
-		// Form Actions Elements Visibilty Settings.
-		$attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
+		// // Form Actions Elements Visibilty Settings.
+		// $attrs['actions_icons']	= ( false !== strpos( $attrs['action_class'], 'logy-buttons-icons' ) ) ? true : false;
 
 		return $attrs;
 	}
@@ -190,7 +181,7 @@ class Logy_Register {
 		}
 
 		// Retrieve recaptcha key
-		$attributes['recaptcha_site_key'] = $this->is_captcha_active() ? logy_options( 'logy_recaptcha_site_key' ) : null;
+		$attributes['recaptcha_site_key'] = $this->is_captcha_active() ? yz_option( 'logy_recaptcha_site_key' ) : null;
 
 		return $attributes;
 	}
@@ -198,55 +189,14 @@ class Logy_Register {
 	/**
 	 * Form Actions Class
 	 */
-	function get_actions_class() {
+	// function get_actions_class() {
 
-		// Create New Array();
-		$actions_class = array();
+	// 	// Create New Array();
+	// 	$actions_class = array();
 
-		// Add Form Actions Main Class
-		$actions_class[] = 'logy-form-actions';
-
-		// Get Actions Layout
-		$actions_layout = logy_options( 'logy_signup_actions_layout' );
-
-		// Get Form Options Data
-
-		$one_button = array( 'logy-regactions-v5', 'logy-regactions-v6' );
-
-		$use_icons	= array( 'logy-regactions-v3', 'logy-regactions-v4', 'logy-regactions-v6' );
-
-		$full_witdh	= array( 'logy-regactions-v1', 'logy-regactions-v3', 'logy-regactions-v5', 'logy-regactions-v6' );
-
-		$half_witdh	= array( 'logy-regactions-v2', 'logy-regactions-v4' );
-
-		// Get One Button Class.
-		$actions_class[] = in_array( $actions_layout, $one_button ) ? 'logy-one-button' : null;
-
-		// Get Buttons icons Class.
-		$actions_class[] = in_array( $actions_layout, $use_icons ) ? 'logy-buttons-icons' : null;
-
-		// Get full Width Class.
-		$actions_class[] = in_array( $actions_layout, $full_witdh ) ? 'logy-fullwidth-button' : null;
-
-		// Get Half Width Class.
-		$actions_class[] = in_array( $actions_layout, $half_witdh ) ? 'logy-halfwidth-button' : null;
-
-		// Get Button Border Style.
-		$actions_class[] = logy_options( 'logy_signup_btn_format' );
-
-		// If Buddypress
-		if ( logy_is_page( 'register' ) && logy_is_bp_registration_completed() ){
-			$actions_class[] = 'logy-bp-registration-completed';
-		}
-
-		// Get Button Icons Position.
-		if ( in_array( $actions_layout, $use_icons ) ) {
-			$actions_class[] = logy_options( 'logy_signup_btn_icons_position' );
-		}
-
-		// Return Action Area Classes
-		return logy_generate_class( $actions_class );
-	}
+	// 	// Return Action Area Classes
+	// 	return logy_generate_class( $actions_class );
+	// }
 
     /**
      * If the signup form is being processed, Redirect to the page where the signup form is
@@ -352,7 +302,7 @@ class Logy_Register {
 		$redirect_url = ! empty( $redirect_to ) ? $redirect_to : logy_page_url( 'register' );
 				
 		// Get Message.
-		$messages[] = logy_get_message( $this->logy->form->get_error_message( $code ), $type );
+		$messages[] = logy_get_message( __( 'The CAPTCHA check failed. Try again!', 'youzer' ), $type );
 
 		// Get Messages.
 		logy_add_message( $messages, $type );

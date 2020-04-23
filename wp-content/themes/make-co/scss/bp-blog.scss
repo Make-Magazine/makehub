@@ -1,3 +1,5 @@
+.blog_posts-template-default #buddypress { padding-bottom: 20px; }
+
 #my-posts i {
 	background: #4fc8ff
 }
@@ -156,6 +158,7 @@ a[data-activity-type=new_blog_posts] {
 			font-size: 16px;
 		}
 	}
+	.mce-last { display: none; }
 }
 
 // Individual blog pages

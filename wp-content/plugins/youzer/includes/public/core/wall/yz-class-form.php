@@ -7,6 +7,9 @@ class Youzer_Wall_Form {
 	
 	function __construct() {
 
+		// Add Action Tools.
+		add_action( 'yz_activity_form_post_types', array( $this, 'post_types_buttons' ) );
+
 		// Handle Save Form Post - Normal Request.
 		add_action( 'bp_actions', array( $this, 'action_post_update' ) );
 
@@ -25,6 +28,99 @@ class Youzer_Wall_Form {
 		// Moderate Comment Content.
 		add_action( 'bp_activity_before_save', array( $this, 'moderate_post' ), 10 );
 
+	}
+
+	/**
+	 * Wall Form Post Types Options. 
+	 */
+	function post_types_buttons() {
+
+		// Init Array().
+		$checked = true;
+		
+		$post_types = apply_filters( 'yz_wall_form_post_types_buttons',
+			array(
+				'activity_status' => array(
+					'uploader' => 'off',
+					'icon' 	=> 'fas fa-comment-dots',
+					'name'  => __( 'status', 'youzer' ),
+				),
+				'activity_photo' => array(
+					'icon' 	=> 'fas fa-camera-retro',
+					'uploader' => 'on',
+					'name'  => __( 'photo', 'youzer' ),
+				),
+				'activity_slideshow' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-film',
+					'name'  => __( 'slideshow', 'youzer' ),
+				),
+				'activity_quote' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-quote-right',
+					'name'  => __( 'quote', 'youzer' ),
+				),
+				'activity_giphy' => array(
+					'uploader' => 'off',
+					'icon' 	=> 'fas fa-images',
+					'name'  => __( 'Gif', 'youzer' ),
+				),
+				'activity_file' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-cloud-download-alt',
+					'name'  => __( 'file', 'youzer' ),
+				),
+				'activity_video' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-video',
+					'name'  => __( 'video', 'youzer' ),
+				),
+				'activity_audio' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-volume-up',
+					'name'  => __( 'audio', 'youzer' ),
+				),
+				'activity_link' => array(
+					'uploader' => 'on',
+					'icon' 	=> 'fas fa-link',
+					'name'  => __( 'link', 'youzer' ),
+				)
+			)
+		);
+
+		// Get Unallowed Activities.
+		$unallowed_activities = yz_option( 'yz_unallowed_activities' );
+
+		if ( ! empty( $unallowed_activities ) ) {
+			$unallowed_activities = (array) array_flip( $unallowed_activities );
+		}
+
+		$count = count( $post_types );
+
+		foreach ( $post_types as $post_type => $data ) :
+
+			if ( isset( $unallowed_activities[ $post_type ] ) ) {
+				$count--;
+				continue;
+			} ?>
+
+			<div class="yz-wall-opts-item">
+				<input type="radio" value="<?php echo $post_type; ?>" name="post_type" id="yz-wall-add-<?php echo $post_type; ?>" <?php if ( $checked ) echo 'checked'; ?> data-uploader="<?php echo $data['uploader']; ?>">
+				<label class="yz-wall-add-<?php echo $post_type; ?>" for="yz-wall-add-<?php echo $post_type; ?>">
+					<i class="<?php echo $data['icon']; ?>"></i><span><?php echo $data['name']; ?></span>
+				</label>
+			</div>
+
+			<?php $checked = false; ?>
+		
+		<?php endforeach;
+
+		// After Printing Buttons.
+		do_action( 'yz_wall_form_post_types' );
+
+		if ( $count > 5 ) : ?>
+			<div class="yz-wall-opts-item yz-wall-opts-show-all"><label class="yzw-form-show-all"><i class="fas fa-ellipsis-h"></i></label></div>
+		<?php endif;
 
 	}
 
@@ -32,8 +128,6 @@ class Youzer_Wall_Form {
 	 * Post user/group activity update.
 	 */
 	function action_post_update() {
-		
-		global $Youzer;
 
 		// Do not proceed if user is not logged in, not viewing activity, or not posting.
 		if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'post' ) ) {
@@ -291,6 +385,7 @@ class Youzer_Wall_Form {
 		 *
 		 */
 		do_action( 'yz_activity_posted_update', $r['content'], $r['user_id'], $activity_id );
+		do_action( 'bp_activity_posted_update', $r['content'], $r['user_id'], $activity_id );
 
 		return $activity_id;
 	}
@@ -358,6 +453,7 @@ class Youzer_Wall_Form {
 		 * Fires after posting of an Activity status update affiliated with a group.
 		 */
 		do_action( 'yz_groups_posted_update', $content, $user_id, $group_id, $activity_id );
+		do_action( 'bp_groups_posted_update', $content, $user_id, $group_id, $activity_id );
 
 		return $activity_id;
 	}
@@ -462,8 +558,8 @@ class Youzer_Wall_Form {
 			'image' 		=> $data['url_preview_img'],
 			'site'  		=> $data['url_preview_site'],
 			'link'  		=> esc_url( $data['url_preview_link'] ),
-			'description'   => sanitize_textarea_field( $data['url_preview_desc'] ),
-			'title' 		=> sanitize_text_field( $data['url_preview_title'] )
+			'description'   => stripslashes( esc_textarea( $data['url_preview_desc'] ) ),
+			'title' 		=> stripslashes( sanitize_text_field( $data['url_preview_title'] ) )
 		);
 
 		// Serialize.
@@ -481,8 +577,6 @@ class Youzer_Wall_Form {
 	 */
 	function validate( $post, $is_ajax = false ) {
 
-		global $Youzer;
-
 		// Get Vars.
 		$post_type = sanitize_text_field( $post['post_type'] );
 		$post_content = sanitize_text_field( $post['status'] );
@@ -497,7 +591,7 @@ class Youzer_Wall_Form {
 			);
 			
 			if ( ! in_array( $post_type, $allowed_post_types ) ) {
-				yz_display_wall_form_message( 'error', 'invalid_post_type', $is_ajax );
+				$this->show_error( 'invalid_post_type' );
 			}
 
 		}
@@ -509,7 +603,7 @@ class Youzer_Wall_Form {
 			$attachments_post_types = array( 'activity_photo', 'activity_video', 'activity_audio', 'activity_slideshow', 'activity_file' );
 
 			if ( in_array( $post_type, $attachments_post_types ) && empty( $post['attachments_files'] )  ) {
-				yz_display_wall_form_message( 'error', 'no_attachments', $is_ajax );
+				$this->show_error( 'no_attachments' );
 			}
 
 		}
@@ -517,12 +611,12 @@ class Youzer_Wall_Form {
 		// Check if status is empty.
 		if ( 'activity_status' == $post_type || 'activity_comment' == $post_type ) {
 
-			if ( ( empty( $post_content ) || ! strlen( trim( $post_content ) ) ) && 'off' == yz_options( 'yz_enable_wall_url_preview' ) ) {
-				yz_display_wall_form_message( 'error', 'empty_status', $is_ajax );
+			if ( ( empty( $post_content ) || ! strlen( trim( $post_content ) ) ) && 'off' == yz_option( 'yz_enable_wall_url_preview', 'on' ) ) {
+				$this->show_error( 'empty_status' );
 			}		
 
-			if ( ( empty( $post_content ) || ! strlen( trim( $post_content ) ) ) && 'on' == yz_options( 'yz_enable_wall_url_preview' ) && empty( $_POST['url_preview_link'] ) ) {
-				yz_display_wall_form_message( 'error', 'empty_status', $is_ajax );
+			if ( ( empty( $post_content ) || ! strlen( trim( $post_content ) ) ) && 'on' == yz_option( 'yz_enable_wall_url_preview', 'on' ) && empty( $_POST['url_preview_link'] ) ) {
+				$this->show_error( 'empty_status' );
 			}
 
 		}
@@ -530,7 +624,7 @@ class Youzer_Wall_Form {
 		if ( apply_filters( 'yz_validate_wall_form_slideshow', true ) ) {
 			// Check Slideshow Post.
 			if ( 'activity_slideshow' == $post_type && count( $post['attachments_files'] ) < 2 ) {
-				yz_display_wall_form_message( 'error', 'slideshow_need_images', $is_ajax );
+				$this->show_error( 'slideshow_need_images' );
 			}
 		}
 		
@@ -543,12 +637,12 @@ class Youzer_Wall_Form {
 
 			// Validate Quote Owner.
 			if ( empty( $quote_owner ) ) {
-				yz_display_wall_form_message( 'error', 'empty_quote_owner', $is_ajax );
+				$this->show_error( 'empty_quote_owner' );
 			}
 
 			// Validate Quote text.
 			if ( empty( $quote_text ) ) {
-				yz_display_wall_form_message( 'error', 'empty_quote_text', $is_ajax );
+				$this->show_error( 'empty_quote_text' );
 			}		
 
 		}
@@ -563,22 +657,22 @@ class Youzer_Wall_Form {
 
 			// Validate Link Url.
 			if (  empty( $link_url ) ) {
-				yz_display_wall_form_message( 'error', 'empty_link_url', $is_ajax );
+				$this->show_error( 'empty_link_url' );
 			}			
 
 			// Validate Link Url.
 			if ( filter_var( $link_url, FILTER_VALIDATE_URL ) === false ) {
-				yz_display_wall_form_message( 'error', 'invalid_link_url', $is_ajax );
+				$this->show_error( 'invalid_link_url' );
 			}			
 
 			// Validate Link title.
 			if ( empty( $link_title ) ) {
-				yz_display_wall_form_message( 'error', 'empty_link_title', $is_ajax );
+				$this->show_error( 'empty_link_title' );
 			}		
 
 			// Validate Link Description.
 			if ( empty( $link_desc ) ) {
-				yz_display_wall_form_message( 'error', 'empty_link_desc', $is_ajax );
+				$this->show_error( 'empty_link_desc' );
 			}
 		}
 
@@ -590,7 +684,7 @@ class Youzer_Wall_Form {
 
 			// Check if image is empty.
 			if ( empty( $giphy_image ) ) {
-				yz_display_wall_form_message( 'error', 'select_image', $is_ajax );
+				$this->show_error( 'select_image' );
 			}
 
 			// Get Uploaded File extension
@@ -598,7 +692,7 @@ class Youzer_Wall_Form {
 
 			// Check if image is gif.
 			if ( 'gif' != $ext ) {
-				yz_display_wall_form_message( 'error', 'select_gif_image', $is_ajax );
+				$this->show_error( 'select_gif_image' );
 			}
 
 		}
@@ -629,58 +723,7 @@ class Youzer_Wall_Form {
 		}
 
 		// Define local variable(s).
-		// $_post     = array();
 		$match_out = '';
-
-		/** User Data ************************************************************
-		 */
-
-		// if ( ! empty( $user_id ) ) {
-
-		// 	// Get author data.
-		// 	$user = get_userdata( $user_id );
-
-		// 	// If data exists, map it.
-		// 	if ( ! empty( $user ) ) {
-		// 		$_post['author'] = $user->display_name;
-		// 		$_post['email']  = $user->user_email;
-		// 		$_post['url']    = $user->user_url;
-		// 	}
-		// }
-
-		// // Current user IP and user agent.
-		// $_post['user_ip'] = bp_core_current_user_ip();
-		// $_post['user_ua'] = bp_core_current_user_ua();
-
-		// // Post title and content.
-		// $_post['title']   = $title;
-		// $_post['content'] = $content;
-
-		/** Max Links ************************************************************
-		 */
-
-		// $max_links = get_option( 'comment_max_links' );
-		// if ( ! empty( $max_links ) ) {
-
-		// 	// How many links?
-		// 	$num_links = preg_match_all( '/(http|ftp|https):\/\//i', $content, $match_out );
-
-		// 	// Allow for bumping the max to include the user's URL.
-		// 	if ( ! empty( $_post['url'] ) ) {
-				
-		// 		 // Filters the maximum amount of links allowed to include the user's URL.
-		// 		$num_links = apply_filters( 'comment_max_links_url', $num_links, $_post['url'] );
-		// 	}
-
-		// 	// Das ist zu viele links!
-		// 	if ( $num_links >= $max_links ) {
-		// 		if ( 'bool' === $error_type ) {
-		// 			return false;
-		// 		} else {
-		// 			return new WP_Error( 'yz_moderation_too_many_links', __( 'You have added too many links', 'youzer' ) );
-		// 		}
-		// 	}
-		// }
 		
 		// Check for black list words.
 		if ( $this->check_for_blacklist_words( $activity->content ) ){
@@ -688,7 +731,7 @@ class Youzer_Wall_Form {
 			if ( $activity->type == 'activity_comment' ) {
 				exit( '-1<div id="message" class="error bp-ajax-message"><p>' . __( 'You have used an inappropriate word.', 'youzer' ) . '</p></div>');
 			} else {
-				yz_display_wall_form_message( 'error', 'word_inappropriate', true );
+				$this->show_error( 'word_inappropriate' );
 			}
 
 		}
@@ -705,7 +748,7 @@ class Youzer_Wall_Form {
 		}
 
 		// Get the moderation keys.
-		$blacklist_words = yz_options( 'yz_moderation_keys' );
+		$blacklist_words = yz_option( 'yz_moderation_keys' );
 
 		// Bail if blacklist is empty.
 		if ( ! empty( $blacklist_words ) ) {
@@ -751,4 +794,79 @@ class Youzer_Wall_Form {
 
 	}
 
+	/**
+	 * Display Wall Error.
+	 */
+	function show_error( $code ) {
+
+		if ( wp_doing_ajax() ) {
+			yz_die( $this->msg( $code ) );
+		} else {
+		    // Get Reidrect page.
+		    $redirect_to = ! empty( $redirect_to ) ? $redirect_to : wp_get_referer();
+
+		    // Add Message.
+		    bp_core_add_message( $this->msg( $code ), 'error' );
+
+			// Redirect User.
+	        wp_redirect( $redirect_to );
+	        exit;
+		}
+
+	}
+
+    /**
+     * Get Attachments Error Message.
+     */
+    public function msg( $code ) {
+
+        // Messages
+        switch ( $code ) {
+
+            case 'empty_status':
+                return __( "Please type some text before posting.", 'youzer' );
+                
+            case 'invalid_post_type':
+                return __( "Invalid post type.", 'youzer' );
+
+            case 'invalid_link_url':
+                return __( "Invalid link url.", 'youzer' );
+
+            case 'empty_link_url':
+                return __( "Empty link url.", 'youzer' );
+
+            case 'empty_link_title':
+                return __( "Please fill the link title field.", 'youzer' );
+
+            case 'empty_link_desc':
+                return __( "Please fill the link description field.", 'youzer' );
+
+            case 'empty_quote_owner':
+                return __( "Please fill the quote owner field.", 'youzer' );
+
+            case 'empty_quote_text':
+                return __( "Please fill the quote text field.", 'youzer' );
+
+            case 'word_inappropriate':
+                return __( "You have used an inappropriate word.", 'youzer' );
+
+            case 'no_attachments':
+                return __( "No attachment was uploaded.", 'youzer' );
+
+            case 'slideshow_need_images':
+                return __( "Slideshows need at least 2 images to work.", 'youzer' );
+
+            case 'select_image':
+                return __( 'Please select an image image before posting.', 'youzer' );
+
+            case 'select_gif_image':
+                return __( 'Please select a Gif image.', 'youzer' );
+
+    	    return __( 'An unknown error occurred. Please try again later.', 'youzer' );
+    	}
+	
+	}
+
 }
+
+$form = new Youzer_Wall_Form();

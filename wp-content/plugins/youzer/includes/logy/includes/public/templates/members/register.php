@@ -9,7 +9,7 @@
 
 <?php global $Logy; ?>
 
-<?php $attributes = $Logy->register->attributes(); ?>
+<?php $attributes = $Logy->form->get_attributes( 'register' ); ?>
 
 <div class="logy logy-page-box yz-page">
 	

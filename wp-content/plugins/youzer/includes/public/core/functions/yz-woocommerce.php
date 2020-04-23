@@ -5,25 +5,25 @@
  */
 function yz_load_woocommerce_files() {
     
-    if ( yz_is_woocommerce_active() ) {
+    // if ( yz_is_woocommerce_active() ) {
     	
     	// Init Actions
 		add_action( 'bp_init', 'yz_is_cart_page' );
 		add_action( 'bp_init', 'yz_is_checkout_page' );
 
-        global $Youzer;
-        require_once YZ_PUBLIC_CORE . 'woocommerce/yz-woocommerce.php';
-        require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-activity.php';
-        require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-templates.php';
-        require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-redirects.php';
-        $Youzer->wc = new Youzer_Woocommerce();
+    //     global $Youzer;
+    //     require_once YZ_PUBLIC_CORE . 'woocommerce/yz-woocommerce.php';
+    //     require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-activity.php';
+    //     require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-templates.php';
+    //     require_once YZ_PUBLIC_CORE . 'woocommerce/yz-wc-redirects.php';
+    //     $Youzer->wc = new Youzer_Woocommerce();
 
 
-    }
+    // }
 
 }
 
-add_action( 'plugins_loaded', 'yz_load_woocommerce_files', 999 );
+// add_action( 'plugins_loaded', 'yz_load_woocommerce_files', 999 );
 
 /**
  * Get Woomcommerce Supported Pages
@@ -44,15 +44,8 @@ function yz_supported_wc_pages() {
  * Check if Woocommerce Integration Active.
  */
 function yz_is_woocommerce_active() {
-    
-    if ( ! yz_is_woocommerce_installed() ) {
-        return false;
-    }
 
-    // Get Value.
-    $is_enabled = yz_options( 'yz_enable_woocommerce' );
-
-    if ( 'off' == $is_enabled ) {
+    if ( ! class_exists( 'Woocommerce' ) || 'off' == yz_option( 'yz_enable_woocommerce', 'off' ) ) {
         return false;
     }
 
@@ -80,7 +73,7 @@ function yz_init_woocommerce() {
 		add_filter( 'pre_kses', 'yz_wc_pre_kses_decode', 10, 3 );
 		add_filter( 'woocommerce_formatted_address_replacements', 'yz_wc_formatted_address_replacements' );
 		add_filter( 'yz_is_current_tab_has_children', 'yz_wc_hide_woocommerce_default_subnav', 10, 3 );
-		add_action( 'yz_profile_main_content', 'yz_wc_tab_filter_bar' );
+		add_action( 'yz_profile_main_content', 'yz_wc_tab_filter_bar', 1 );
 		add_filter( 'bp_get_options_nav_checkout', 'yz_wc_hide_empty_checkout_tab', 99 );
 		add_filter( 'woocommerce_my_account_my_orders_query', 'yz_wc_set_account_orders_per_page', 10, 1 );
 
@@ -230,26 +223,6 @@ function yz_wc_is_sub_tab_exist( $tab = null ) {
 
 }
 
-/**
- * Woocommerce Screen.
- **/
-function yz_woocommerce_screen() {
-	
-	do_action( 'yz_woocommerce_screen' );
-    
-    add_action( 'bp_template_content', 'yz_get_user_woocommerce_template' );
-
-    // Load Tab Template
-    bp_core_load_template( 'buddypress/members/single/plugins' );
-
-}
-
-/**
- * Get Woocommerce Tab Content.
- */
-function yz_get_user_woocommerce_template() {
-	bp_get_template_part( 'members/single/woocommerce' );
-}
 
 /**
  * Woocommerce Scripts
@@ -561,9 +534,16 @@ function yz_wc_tab_filter_bar() { ?>
  * Buddypress Set Is "Order Received" Page.
  */
 function yz_is_order_recieved_page( $is_page ) {
+	
 
 	if ( is_user_logged_in() && ( yz_is_woocommerce_tab( 'checkout' ) || yz_is_woocommerce_tab( 'cart' ) ) ) {
-		return true;
+
+		global $wp;
+
+		if (  isset( $wp->query_vars['order-received'] ) ) {
+			return true;
+		}
+	
 	}
 		
 	return $is_page;
@@ -581,7 +561,6 @@ function yz_is_cart_page() {
 	}
 
 }
-
 
 /**
  * Add Payment Method.
@@ -618,13 +597,15 @@ add_filter( 'woocommerce_available_payment_gateways', 'yz_wc_available_payment_g
 /**
  * Buddypress Set Is Checkout Page.
  */
-function yz_is_checkout_page() {
-
-	if ( is_user_logged_in() && ! defined( 'WOOCOMMERCE_CHECKOUT' ) && yz_is_woocommerce_tab( 'checkout' ) &&yz_wc_is_sub_tab_exist( 'checkout' )  ) {
-		define( 'WOOCOMMERCE_CHECKOUT', true );
+function yz_is_checkout_page( $is_checkout ) {
+	if ( bp_is_current_component( yz_woocommerce_tab_slug() ) && bp_current_action() == 'checkout' ) {
+		$is_checkout = true;
 	}
 
+	return $is_checkout;
 }
+
+add_filter( 'woocommerce_is_checkout', 'yz_is_checkout_page' );
 
 /**
  * Get Wooroomcer Activitiy Product Args.
@@ -682,8 +663,6 @@ function yz_get_woocommerce_product( $product = false ) {
 	if ( ! $product ) {
 		return false;
 	}
-
-	global $Youzer;
 
 	ob_start();
 

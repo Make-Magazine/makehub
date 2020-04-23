@@ -720,11 +720,11 @@
     border-color: #1fc36a;
 }
 
-.youzer p.woocommerce-notice.woocommerce-notice--success {
+#youzer p.woocommerce-notice.woocommerce-notice--success {
     border-color: #8BC34A;
 }
 
-.youzer .woocommerce-message:before {
+#youzer .woocommerce-message:before {
     color: #1fc36a;
 }
 
@@ -744,12 +744,12 @@
     color: #898989;
 }
 
-.youzer p.woocommerce-thankyou-order-received {
+#youzer p.woocommerce-thankyou-order-received {
     background-color: #8bc34a;
     color: #fff;
 }
 
-.youzer .woocommerce-info:before {
+#youzer .woocommerce-info:before {
     color: #4fc1e9;
 }
 
@@ -758,7 +758,7 @@
     border-color: #f64d4d;
 }
 
-.youzer .woocommerce-error:before {
+#youzer .woocommerce-error:before {
     color: #f64d4d;
 }
 
@@ -949,6 +949,35 @@
     display: inline-block;
     vertical-align: middle;
     margin: -2px 0 0 .5em;
+}
+
+.youzer .payment_method_stripe img {
+    width: 35px;
+}
+
+/*.youzer .wc_payment_method */
+#youzer .youzer .woocommerce-checkout #payment .wc_payment_method div.form-row {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+#youzer .youzer .woocommerce-checkout #payment .wc_payment_method div.form-row label {
+    margin-bottom: 8px;
+}
+
+.youzer .yzwc-main-content #payment fieldset {
+    background-color: #fff !important;
+    padding: 0;
+    margin-top: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+#youzer .youzer .woocommerce-checkout #payment .wc-stripe-elements-field,
+#youzer .youzer .woocommerce-checkout #payment .wc-stripe-iban-element-field {
+    border: 1px solid #eaeaea;
+    margin: 5px 0;
+    padding: 8px;
+    background-color: #fff;
 }
 
 .youzer #add_payment_method #payment .payment_method_paypal img,

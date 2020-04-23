@@ -41,33 +41,6 @@ function yz_activity_action_wall_posts( $action, $activity ) {
 				__( '%1s Changed their profile cover', 'youzer' ), $user_link );
 			break;
 
-
-		// 	// Get Attachments.
-		// 	$attachments = (array) yz_get_activity_attachments( $activity->id );
-
-		// 	// Get Attchments Number.
-		// 	$photos_nbr = count( $attachments );
-
-		// 	if ( $photos_nbr < 2 ) {
-
-		// 		// Add Group Post Action.
-		// 		if ( yz_wall_is_group_post( $activity ) ) {
-		// 			$action = sprintf( __( '%1s posted', 'youzer' ), $user_link );
-		// 		} else {
-		// 			$action = $user_link;
-		// 		}
-
-		// 	} else {
-
-		// 		// Get Action Label.
-		// 		$action_label = sprintf( _n( 'a new photo', '%s new photos', $photos_nbr, 'youzer' ), $photos_nbr );
-
-		// 		// Get Wall Post Action.
-		// 		$action = sprintf( __( '%1s added <a href="%2s">%3s</a>', 'youzer' ), $user_link, $post_link, $action_label );
-
-		// 	}
-
-		// 	break;
 	};
 
 
@@ -120,147 +93,6 @@ function yz_wall_is_group_post( $activity ) {
 }
 
 /**
- * Wall Show Everything filter.
- */
-function yz_wall_show_everything_filter() {
-
-	// Init Array.
-	$filter_actions = array();
-
-  	// Get Allowed Post Types.
-  	$unallowed_post_types = yz_get_wall_unallowed_post_types();
-  	// Get Context.
-  	$context = bp_activity_get_current_context();
-
-  	// Get Actions By Context
-	foreach ( bp_activity_get_actions() as $component_actions ) {
-		foreach ( $component_actions as $component_action ) {
-			if ( in_array( $context, (array) $component_action['context'], true ) || empty( $component_action['context'] ) ) {
-				$context_actions[] = $component_action;
-			}
-		}
-	}
-
-	// Get Context Actions Keys
-	$context_actions = wp_list_pluck( $context_actions, 'key' );
-
-	foreach ( $context_actions as $action ) {
-		if ( ! in_array( $action, $unallowed_post_types ) ) {
-			$filter_actions[] = $action;
-		}
-	}
-
-	$filter_actions = apply_filters( 'yz_wall_show_everything_filter_actions', $filter_actions );
-
-
-  	// Get Post Allowed Actions.
-  	$actions = implode( ',' , $filter_actions );
-
-  	return $actions;
-
-}
-
-/**
- * Get Wall Post Types Visibility.
- */
-function yz_get_wall_post_types_visibility() {
-
-	// Get Post Types Visibility
-	$post_types = array(
-		'update_avatar' 		=> 'off',
-		'activity_link' 		=> yz_options( 'yz_enable_wall_link' ),
-		'activity_file' 		=> yz_options( 'yz_enable_wall_file' ),
-		'activity_audio' 		=> yz_options( 'yz_enable_wall_audio' ),
-		'activity_photo' 		=> yz_options( 'yz_enable_wall_photo' ),
-		'activity_video' 		=> yz_options( 'yz_enable_wall_video' ),
-		'activity_quote' 		=> yz_options( 'yz_enable_wall_quote' ),
-		'activity_giphy' 		=> yz_options( 'yz_enable_wall_giphy' ),
-		'activity_status' 		=> yz_options( 'yz_enable_wall_status' ),
-		'activity_update' 		=> yz_options( 'yz_enable_wall_status' ),
-		'activity_comment' 		=> yz_options( 'yz_enable_wall_comments' ),
-		'new_cover' 			=> yz_options( 'yz_enable_wall_new_cover' ),
-		'activity_slideshow'	=> yz_options( 'yz_enable_wall_slideshow' ),
-		'new_avatar' 			=> yz_options( 'yz_enable_wall_new_avatar' ),
-		'new_member' 			=> yz_options( 'yz_enable_wall_new_member' ),
-		'joined_group' 			=> yz_options( 'yz_enable_wall_joined_group' ),
-		'new_blog_post' 		=> yz_options( 'yz_enable_wall_new_blog_post' ),
-		'created_group' 		=> yz_options( 'yz_enable_wall_created_group' ),
-		'updated_profile' 		=> yz_options( 'yz_enable_wall_updated_profile' ),
-		'new_blog_comment' 		=> yz_options( 'yz_enable_wall_new_blog_comment' ),
-		'friendship_created' 	=> yz_options( 'yz_enable_wall_friendship_created' ),
-		'friendship_accepted' 	=> yz_options( 'yz_enable_wall_friendship_accepted' ),
-	);
-
-	// Filter Post.
-	$post_types = apply_filters( 'yz_wall_post_types_visibility', $post_types );
-	
-	return $post_types;
-}
-
-/**
- * Get Allowed Post Types.
- */
-function yz_get_wall_unallowed_post_types() {
-
-	// Init Array.
-	$unallowed_types = array();
-
-	// Get Wall Post Types.
-	$post_types = yz_get_wall_post_types_visibility();
-
-	// Get Allowed Post Types.
-	foreach ( $post_types as $type => $visibility ) {
-		if ( 'off' == $visibility ) {
-			$unallowed_types[] = $type;
-		}
-	}
-
-	return $unallowed_types;
-
-}
-
-/*
- * Get File Format Size.
- **/
-function yz_file_format_size( $size ) {
-
-	// Get Sizes.
-	$sizes = array(
-		__( 'Bytes', 'youzer' ),
-		__( 'KB', 'youzer' ),
-		__( 'MB', 'youzer' )
-	);
-
-    if ( 0 == $size ) { 
-      	return( 'n/a' );
-   	} else {
-    	return ( round( $size/pow( 1024, ( $i = floor( log( $size, 1024 ) ) ) ), 2 ) . ' ' . $sizes[ $i ] );
-  	}
-
-}
-
-/**
- * # Get Files Name Excerpt.
- */
-function yz_get_filename_excerpt( $name, $lenght = 25 ) {
-
-    // Get Name Lenght.
-    $text_lenght = strlen( $name );
-
-    // If Name is not too long keep it.
-    if ( $text_lenght < $lenght ) {
-        return $name;
-    }
-
-    // Get Result.
-    $new_name = substr_replace( $name, '...', $lenght / 2, $text_lenght - $lenght );
-
-    // Return The New Name.
-    return $new_name;
-}
-
-
-/**
  * Strip Emoji from Content.
  */
 function yz_remove_emoji( $content ) {
@@ -306,11 +138,8 @@ function yz_copy_image_to_youzer_directory( $bp_path ) {
  * Get List of people who liked a post.
  */
 function yz_get_who_liked_activities( $activity_id ) {
-
-	// Get Transient Option.
-	$transient_id = 'yz_get_who_liked_activities_' . $activity_id;
-
-	$users = get_transient( $transient_id );
+	
+	$users = get_transient( 'yz_get_who_liked_activities_' . $activity_id );
 
 	if ( false === $users ) :
 
@@ -322,20 +151,17 @@ function yz_get_who_liked_activities( $activity_id ) {
 	// Get Result
 	$result = $wpdb->get_results( $sql , ARRAY_A );
 
-	// Get List of user id's.
-	$users = wp_list_pluck( $result, 'user_id' );
-
-	// Remove Duplicated Users.
-	$users = array_unique( $users );
+	// Get List of user id's & Remove Duplicated Users.
+	$users = array_unique( wp_list_pluck( $result, 'user_id' ) );
 
 	// Hide Deleted Users.
-	foreach ( $users as $key => $user_id ) {
-        if ( ! yz_is_user_exist( $user_id ) ) {
-            unset( $users[ $key ] );
-        }
-	}
+	// foreach ( $users as $key => $user_id ) {
+ //        if ( ! yz_is_user_exist( $user_id ) ) {
+ //            unset( $users[ $key ] );
+ //        }
+	// }
 
-    set_transient( $transient_id, $users, 12 * HOUR_IN_SECONDS );
+    set_transient( 'yz_get_who_liked_activities_' . $activity_id, $users, 12 * HOUR_IN_SECONDS );
 	
 	endif;
 	
@@ -590,9 +416,9 @@ add_action( 'bp_activity_add_user_favorite', 'yz_delete_activity_likes_transient
 /**
  * Set Shortcode page as buddypress component.
  */
-function yz_enable_activity_shortcode_mentions( $activate ) {
-	return true;
-}
+// function yz_enable_activity_shortcode_mentions( $activate ) {
+// 	return true;
+// }
 
 /**
  * Limit Wall Posts Images Height.
@@ -612,14 +438,7 @@ function yz_is_wall_posting_form_active() {
  * Enable Posts Effect.
  */
 function yz_enable_wall_posts_effect() {
-
-	if ( 'on' == yz_options( 'yz_enable_wall_activity_effects' ) ) {
-		$effects = true;
-	} else {
-		$effects = false;
-	}
-	
-	return apply_filters( 'yz_enable_wall_posts_effect', $effects );
+	return apply_filters( 'yz_enable_wall_posts_effect', 'on' == yz_option( 'yz_enable_wall_activity_effects', 'on' ) ? true : false );
 }
 
 /**
@@ -666,7 +485,7 @@ function yz_profile_activity_tab_filter_bar() {
         return;
     }
     
-    if ( 'on' == yz_options( 'yz_enable_wall_filter_bar' ) ) :
+    if ( 'on' == yz_option( 'yz_enable_wall_filter_bar', 'on' ) ) :
 
 ?>
 
@@ -775,61 +594,22 @@ function yz_get_activity_time_stamp_meta( $content = '' ) {
 function yz_get_activity_page_class() {
 
     // New Array
-    $activity_class = array();
-
-    // Get Profile Width Type
-    $activity_class[] = 'yz-horizontal-layout yz-global-wall';
+    $activity_class = array( 'yz-horizontal-layout yz-global-wall' );
 
     // Get Tabs List Icons Style
-    $activity_class[] = yz_options( 'yz_tabs_list_icons_style' );
+    $activity_class[] = yz_option( 'yz_tabs_list_icons_style', 'yz-tabs-list-gradient' );
 
     // Get Profile Scheme
-    $activity_class[] = yz_options( 'yz_profile_scheme' );
+    $activity_class[] = yz_option( 'yz_profile_scheme', 'yz-blue-scheme' );
 
     // Get Page Buttons Style
-    $activity_class[] = 'yz-page-btns-border-' . yz_options( 'yz_buttons_border_style' );
+    $activity_class[] = 'yz-page-btns-border-' . yz_option( 'yz_buttons_border_style', 'oval' );
+
+    $activity_class = apply_filters( 'yz_activity_page_class', $activity_class );
 
     return yz_generate_class( $activity_class );
 }
 
-/**
- * Get Activity Attachments.
- */
-function yz_get_activity_attachments( $activity_id = null, $field = 'src' ) {
-
-	if ( empty( $activity_id ) ) {
-		return;
-	}
-
-	global $wpdb, $Yz_media_table;
-
-	// Prepare Sql
-	$sql = $wpdb->prepare( "SELECT $field FROM $Yz_media_table WHERE item_id = %d", $activity_id );
-
-	// Get Result
-	$result = $wpdb->get_results( $sql , ARRAY_A );
-
-	if ( empty( $result ) ) {
-		return false;
-	}
-
-	if ( $field != '*' ) {
-
-		$result = wp_list_pluck( $result, $field );
-		
-		$atts = array();
-
-		foreach ( $result as $src ) {
-			$atts[] = maybe_unserialize( $src );
-		}
-	
-	} else {
-		$atts = $result;
-	}
-
-	return $atts;
-
-}
 
 /**
  * Get Activity Attachments.
@@ -884,280 +664,6 @@ function yz_get_activity_attachments_by_media_id( $media_id = null, $field = 'sr
 function yz_wall_compressed_images_format() {
 	return apply_filters( 'yz_wall_allowed_images_format', array( 'jpeg', 'jpg', 'png' ) );
 }
-
-
-/**
- * Display Wall Error.
- */
-function yz_display_wall_form_message( $type, $code, $ajax = false) {
-
-	global $Youzer;
-
-	if ( $ajax ) {
-		yz_die( $Youzer->wall->msg( $code ) );
-	} else {
-		$Youzer->wall->redirect( $type, $code );
-	}
-
-}
-
-/**
- * Wall Form Post Types Options. 
- */
-function yz_wall_form_post_types_buttons() {
-
-	// Init Array().
-	$checked = true;
-	$post_types = array();
-
-	// Status Data.
-	$post_types[] = array(
-		'uploader' => 'off',
-		'id'	=> 'activity_status',
-		'icon' 	=> 'fas fa-comment-dots',
-		'name'  => __( 'status', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_status' )
-	);
-
-	// Photo Data.
-	$post_types[] = array(
-		'id'	=> 'activity_photo',
-		'icon' 	=> 'fas fa-camera-retro',
-		'uploader' => 'on',
-		'name'  => __( 'photo', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_photo' )
-	);
-
-	// Slideshow Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'icon' 	=> 'fas fa-film',
-		'id'	=> 'activity_slideshow',
-		'name'  => __( 'slideshow', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_slideshow' )
-	);
-
-	// Quote Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'id'	=> 'activity_quote',
-		'icon' 	=> 'fas fa-quote-right',
-		'name'  => __( 'quote', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_quote' )
-	);
-	
-	// Giphy Data.
-	$post_types[] = array(
-		'id'	=> 'activity_giphy',
-		'uploader' => 'off',
-		'icon' 	=> 'fas fa-images',
-		'name'  => __( 'Gif', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_giphy' )
-	);
-	
-	// File Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'id'	=> 'activity_file',
-		'icon' 	=> 'fas fa-cloud-download-alt',
-		'name'  => __( 'file', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_file' )
-	);
-
-	// Video Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'id'	=> 'activity_video',
-		'icon' 	=> 'fas fa-video',
-		'name'  => __( 'video', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_video' )
-	);
-
-	// Audio Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'id'	=> 'activity_audio',
-		'icon' 	=> 'fas fa-volume-up',
-		'name'  => __( 'audio', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_audio' )
-	);
-
-	// Link Data.
-	$post_types[] = array(
-		'uploader' => 'on',
-		'id'	=> 'activity_link',
-		'icon' 	=> 'fas fa-link',
-		'name'  => __( 'link', 'youzer' ),
-		'show'	=> yz_options( 'yz_enable_wall_link' )
-	);
-
-	// Filter
-	$post_types = apply_filters( 'yz_wall_form_post_types_buttons', $post_types );
-
-	// Remove Disabled Post Types.
-	foreach ( $post_types as $key => $post_type ) {
-		if ( 'off' == $post_type['show'] ) {
-			unset( $post_types[ $key] );
-		}
-	}
-
-	// Print Code.
-	foreach ( $post_types as $post_type ) : ?>
-
-		<div class="yz-wall-opts-item">
-			<input type="radio" value="<?php echo $post_type['id']; ?>" name="post_type" id="yz-wall-add-<?php echo $post_type['id']; ?>" <?php if ( $checked ) echo 'checked'; ?> data-uploader="<?php echo $post_type['uploader']; ?>">
-			<label class="yz-wall-add-<?php echo $post_type['id']; ?>" for="yz-wall-add-<?php echo $post_type['id']; ?>">
-				<i class="<?php echo $post_type['icon']; ?>"></i><span><?php echo $post_type['name']; ?></span>
-			</label>
-		</div>
-
-		<?php $checked = false; ?>
-	
-	<?php endforeach;
-
-	// After Printing Buttons.
-	do_action( 'yz_wall_form_post_types' );
-
-	?>
-
-	<?php if ( count( $post_types ) > 5 ) : ?>
-		<div class="yz-wall-opts-item yz-wall-opts-show-all">
-				<label class="yzw-form-show-all">
-					<i class="fas fa-ellipsis-h"></i>
-				</label>
-		</div>
-	<?php endif; ?>
-	
-	<?php
-}
-
-/**
- * Support Wall Embeds Videos Attachments.
- */
-function yz_attachments_embeds_videos() {
-	return apply_filters( 'yz_attachments_embeds_videos', array( 'youtube' => 'youtube.com', 'vimeo' => 'vimeo.com', 'dailymotion' => 'dailymotion.com' ));
-}
-
-/**
- * Get Vimeo Video Url
- */
-function yz_get_embed_video_id( $provider, $url ) {
-
-	// Init Vars
-	$id = '';
-	$match = array();
-
-	switch ( $provider ) {
-
-		case 'youtube':
-
-			if ( preg_match( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) { 
-				if ( isset( $match[1] ) && ! empty( $match[1] ) ) {
-					$id = $match[1];
-				}
-			}
- 						
-			break;
-		
-		case 'vimeo':
-		 	if ( preg_match( '%^https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)(?:[?]?.*)$%im', $url, $match ) ) {
-		    	if ( isset( $match[3] ) && ! empty( $match[3] ) ) {
-		        	$id = $match[3];
-		    	}
-		    }
-
-			break;
-		
-		case 'dailymotion':
-
-		 	if ( preg_match( '!^.+dailymotion\.com/(video|hub)/([^_]+)[^#]*(#video=([^_&]+))?|(dai\.ly/([^_]+))!', $url, $match ) ) {
-		        
-		        if ( isset( $match[6] ) ) {
-		            return $match[6];
-		        }
-
-		        if ( isset( $match[4] ) ) {
-		            return $match[4];
-		        }
-
-		        return $match[2];
-
-		    }
-
-			break;
-		
-	}
-   
-    return apply_filters( 'yz_get_embed_video_id', $id );
-
-}
-
-
-/**
- * Get Video Thumbnail By Provider
- **/
-function yz_get_embed_video_thumbnails( $provider, $id, $size = null ) {
-
-	$data = array();
-
-	switch ( $provider ) {
-
-		case 'youtube':
-
-			$data = array( 'small' => "https://img.youtube.com/vi/$id/mqdefault.jpg", 'medium' => "https://img.youtube.com/vi/$id/sddefault.jpg", 'large' => "https://img.youtube.com/vi/$id/sddefault.jpg" );
-
-		case 'vimeo':
-
-			$get_thumbnail_data = yz_file_get_contents( 'http://vimeo.com/api/v2/video/' . $id . '.php' );
-
-			if ( ! empty( $get_thumbnail_data ) ) {
-
-			$thumbnails = maybe_unserialize( $get_thumbnail_data );
-
-				if ( isset( $thumbnails[0]['thumbnail_small'] ) ) {
-					$data['small'] = $thumbnails[0]['thumbnail_small'];
-				}
-				
-				if ( isset( $thumbnails[0]['thumbnail_medium'] ) ) {
-					$data['medium'] = $thumbnails[0]['thumbnail_medium'];
-				}
-
-				if ( isset( $thumbnails[0]['thumbnail_large'] ) ) {
-					$data['large'] = $thumbnails[0]['thumbnail_large'];
-				}
-
-			}
-
-			break;
-        
-        case 'dailymotion':
-            
-            $thumbnails = json_decode( yz_file_get_contents( "https://api.dailymotion.com/video/$id?fields=thumbnail_medium_url,thumbnail_small_url,thumbnail_large_url" ) );
-
-            if ( isset( $thumbnails->thumbnail_small_url ) ) {
-            	$data['small'] = $thumbnails->thumbnail_small_url;
-            }
-
-            if ( isset( $thumbnails->thumbnail_medium_url ) ) {
-            	$data['medium'] = $thumbnails->thumbnail_medium_url;
-            }
-
-            if ( isset( $thumbnails->thumbnail_large_url ) ) {
-            	$data['large'] = $thumbnails->thumbnail_large_url;
-            }
-
-            break;
-
-	}
-
-	if ( ! empty( $size ) ) {
-		$data = isset( $data[ $size ] ) ? $data[ $size ] : '';
-	}
-
-	return apply_filters( 'yz_get_wall_embed_video_thumbnails', $data );
-
-}
-
 
 /***
  * Feeling / Activity
@@ -1282,4 +788,24 @@ function yz_get_mood_feeling_emojis() {
  */
 function yz_get_mood_emojis_image( $emoji ) {
 	return apply_filters( 'yz_get_mood_emojis_image', YZ_PA . 'images/emojis/' . $emoji . '.png', $emoji );
+}
+
+/**
+ * Check if Sticky Posts are Enabled.
+ */
+function yz_is_sticky_posts_active() {
+	
+	$active = false;
+
+	if ( 'on' == yz_option( 'yz_enable_activity_sticky_posts', 'on' ) || 'on' == yz_option( 'yz_enable_groups_sticky_posts', 'on' ) ) {
+		$active = true;
+	}
+
+	// if ( bp_is_activity_directory() && 'on' == yz_option( 'yz_enable_activity_sticky_posts', 'on' ) ) {
+	// 	$active = true;
+	// } elseif ( bp_is_group_activity() && 'on' == yz_option( 'yz_enable_groups_sticky_posts', 'on' ) ) {
+	// 	$active = true;
+	// }
+
+	return apply_filters( 'yz_is_sticky_posts_active', $active );
 }

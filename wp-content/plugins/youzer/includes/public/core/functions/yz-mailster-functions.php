@@ -5,24 +5,10 @@
  */
 function yz_is_mailster_active() {
 
-    if ( ! function_exists( 'mailster' ) ) {
+    // Check if Mailster Exist & Sync is Enabled.
+    if ( ! function_exists( 'mailster' ) || 'off' == yz_option( 'yz_enable_mailster', 'off' ) ) {
         return false;
     }
-
-    // Check if Mailster Sync is Enabled.
-    $mailster_enabled = yz_options( 'yz_enable_mailster' );
-
-    if ( $mailster_enabled == 'off' ) {
-        return false;
-    }
-
-    // Get Mailster List ID's.
-    $list_ids = yz_options( 'yz_mailster_list_ids' );
-
-    if ( empty( $list_ids ) ) {
-        return false;
-    }
-
 
     return true;
     
@@ -38,15 +24,19 @@ function yz_subscribe_user_to_mailser( $user_id, $key, $user ) {
         return false;
     }
 
+    // Get List IDs.
+    $list_ids = yz_option( 'yz_mailster_list_ids' );
+
+    if ( empty( $list_ids ) ) {
+        return;
+    }
+
     // Get User Infos.
     $user_info = get_userdata( $user_id );
 
     if ( ! is_object( $user_info ) ) {
         return false;
     }
-
-    // Get List IDs.
-    $list_ids = yz_options( 'yz_mailster_list_ids' );
 
     // define to overwrite existing users
     $overwrite = true;

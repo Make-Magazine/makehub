@@ -152,7 +152,7 @@
 }
 
 // if the member is type makerspace
-.member-type-makerspace {
+.member-type_makerspace {
 	.main-content.container {
 		&::before {
 			content: 'Makerspace';
@@ -201,7 +201,6 @@
 		
 	}
 }
-
 // add some kind of explanation to the media page
 .bp-user.media .yz-main-column {
 	.yz-media::before {

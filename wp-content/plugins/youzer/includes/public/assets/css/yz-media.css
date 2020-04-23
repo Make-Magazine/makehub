@@ -198,7 +198,7 @@
 
 .yz-media-item .yz-media-item-img .yz-media-item-tools {
     opacity: 0;
-    z-index: 9999;
+    z-index: 9;
     cursor: pointer;
 }
 
@@ -469,6 +469,7 @@
 .yz-media-box {
     padding-top: 5px;
     background-color: #f4f4f4;
+    display: block !important;
 }
 
 .yz-media-widget-content {

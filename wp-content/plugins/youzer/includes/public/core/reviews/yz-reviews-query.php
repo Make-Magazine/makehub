@@ -83,10 +83,6 @@ class Youzer_Reviews_Query {
 	 */
 	function get_user_reviews_count( $user_id = null ) {
 		
-		if ( yz_is_404_profile() ) {
-			return 404;
-		}
-
 	    // Get User ID.
 	    $user_id = ! empty( $user_id ) ? $user_id : bp_displayed_user_id();
 
@@ -97,7 +93,7 @@ class Youzer_Reviews_Query {
 	    	$reviews_count = $this->update_user_reviews_count( $user_id );
 	    }
 
-		return $reviews_count;
+		return apply_filters( 'yz_user_reviews_count', $reviews_count );
 
 	}
 
@@ -180,7 +176,7 @@ class Youzer_Reviews_Query {
 		global $wpdb, $Yz_reviews_table;
 
 		// Get Current Time.
-		$data['time'] = current_time( 'mysql' );
+		$data['time'] = bp_core_current_time();
 		
 		// Insert Review.
 		$result = $wpdb->insert( $Yz_reviews_table, $data );
@@ -202,7 +198,7 @@ class Youzer_Reviews_Query {
 		global $wpdb, $Yz_reviews_table;
 
 		// Get Current Time.
-		$data['time'] = current_time( 'mysql' );
+		$data['time'] = bp_core_current_time();
 		
 		unset( $data['reviewed'], $data['reviewer'], $data['review_id'] );
 

@@ -7,6 +7,9 @@ class Youzer_Wall_Functions  {
 
 	function __construct( ) {
 		
+		// Edit Wall Filters.
+		add_filter( 'bp_get_activity_show_filters_options', array( $this, 'edit_wall_filter' ) );
+
 		// Get Live Preview Url.
 		add_action( 'wp_ajax_yz_get_url_live_preview', array( $this, 'get_live_url_preview' ) );
 
@@ -34,6 +37,45 @@ class Youzer_Wall_Functions  {
 
 		// Add Embeds Wrapper.
 		add_filter( 'bp_embed_oembed_html',  array( $this, 'embed_videos_container' ), 10, 4 );
+
+		// Allow Comments Without Content That Contains Attachment.
+		add_filter( 'bp_activity_content_before_save',  array( $this, 'allow_comments_without_content' ), 10, 2 );
+
+		// Hide Emoji From Content
+		// add_filter( 'bp_init',  array( $this, 'hide_emojis_from_content' ) );
+
+		// Display "Show Activity Tools Button". 
+		add_action( 'bp_before_activity_entry_header',  array( $this, 'show_activity_tools_icon' ) );
+
+	}
+
+	/**
+	 * Hide Emojis From Content.
+	 */
+	function hide_emojis_from_content() {
+		
+        // Hide Posts Emoji
+        if ( 'off' == yz_option( 'yz_enable_posts_emoji', 'on' ) ) {
+            add_filter( 'bp_get_activity_content_body', 'yz_remove_emoji' );
+        }
+
+        // Hide Comments Emoji
+        if ( 'off' == yz_option( 'yz_enable_comments_emoji', 'on' ) ) {
+            add_filter( 'bp_activity_comment_content', 'yz_remove_emoji' );
+        }
+    
+	}
+	
+	/*
+	 * Allow Comments Without Content That Contains Attachment.
+	 **/
+	function allow_comments_without_content( $content, $activity ) {
+
+		if ( $activity->type == 'activity_comment' ) {
+			$content = str_replace( '{{{yz_comment_attachment}}}', '', $content );
+		}
+
+		return $content;
 	}
 
 	/**
@@ -45,7 +87,6 @@ class Youzer_Wall_Functions  {
 		$providers = array( 'soundcloud.com', 'vimeo.com', 'youtube.com', 'youtu.be', 'dailymotion.com' );
 
 		foreach ( $providers as $provider ) {
-			
 			if ( strpos( $url, $provider ) !== false ) {
 				return '<div class="yz-embed-wrapper">' . $html . '</div>';	
 			}
@@ -58,8 +99,10 @@ class Youzer_Wall_Functions  {
 	 * Add Delete Activity Tool.
 	 */
 	function add_delete_activity_tool( $tools, $post_id ) {
-		
-		if ( ! bp_activity_user_can_delete() ) {
+				
+		$activity = new BP_Activity_Activity( $post_id );
+
+		if ( ! bp_activity_user_can_delete( $activity ) ) {
 			return $tools;
 		}
 
@@ -76,7 +119,6 @@ class Youzer_Wall_Functions  {
 	}
 
 
-
 	/**
 	 * Get Wall Posts Per page
 	 */
@@ -84,11 +126,11 @@ class Youzer_Wall_Functions  {
 		
 		// Get Posts Per Page Number.
 		if ( bp_is_activity_directory() ) {
-			$posts_per_page = yz_options( 'yz_activity_wall_posts_per_page' );
+			$posts_per_page = yz_option( 'yz_activity_wall_posts_per_page', 5 );
 		} elseif( bp_is_user_activity() ) {
-			$posts_per_page = yz_options( 'yz_profile_wall_posts_per_page' );
+			$posts_per_page = yz_option( 'yz_profile_wall_posts_per_page', 5 );
 		} elseif( bp_is_groups_component() ) {
-			$posts_per_page = yz_options( 'yz_groups_wall_posts_per_page' );
+			$posts_per_page = yz_option( 'yz_groups_wall_posts_per_page', 5 );
 		} else {
 			$posts_per_page = '';
 		}
@@ -114,13 +156,8 @@ class Youzer_Wall_Functions  {
 	 */
 	function activity_default_filter( $retval ) { 
 	    
-	    // Youzer Filter Option.
-	    if ( 'off' == yz_options( 'yz_enable_youzer_activity_filter' ) ) {
-	        return $retval;
-	    }
-	    
 	    if ( ! isset( $retval['type'] ) || ( isset( $retval['type'] ) && $retval['type'] == 'null' ) )  {
-		    $show_everything = yz_wall_show_everything_filter();
+		    $show_everything = $this->get_show_everything_filter();
 	        $retval['action'] = $show_everything;    
 	    }
 
@@ -129,42 +166,107 @@ class Youzer_Wall_Functions  {
 	}
 
 	/**
+	 * Wall Show Everything filter.
+	 */
+	function get_show_everything_filter() {
+
+		// Init Array.
+		$filter_actions = array();
+
+	  	// Get Allowed Post Types.
+	  	$unallowed_post_types = $this->get_unallowed_post_types();
+
+	  	// Get Context.
+	  	$context = bp_activity_get_current_context();
+
+	  	// Get Actions By Context
+		foreach ( bp_activity_get_actions() as $component_actions ) {
+			foreach ( $component_actions as $component_action ) {
+				if ( in_array( $context, (array) $component_action['context'], true ) || empty( $component_action['context'] ) ) {
+					$context_actions[] = $component_action;
+				}
+			}
+		}
+
+		// Get Context Actions Keys
+		$context_actions = wp_list_pluck( $context_actions, 'key' );
+
+		foreach ( $context_actions as $action ) {
+			if ( ! in_array( $action, $unallowed_post_types ) ) {
+				$filter_actions[] = $action;
+			}
+		}
+
+		$filter_actions = apply_filters( 'yz_wall_show_everything_filter_actions', $filter_actions );
+
+	  	// Get Post Allowed Actions.
+	  	return implode( ',' , $filter_actions );
+
+	}
+
+	/**
+	 * Wall Filter Bar.
+	 */
+	function edit_wall_filter( $filters ) {
+
+		// Unset Unwanted Filters.
+		foreach ( $this->get_unallowed_post_types() as $filter ) {
+
+			if ( isset( $filters[ $filter ] ) ) {
+				unset( $filters[ $filter ] );
+			}
+
+			if ( $filter == 'friendship_accepted' ) {
+				if ( isset( $filters['friendship_accepted,friendship_created'] ) ) {
+					unset( $filters['friendship_accepted,friendship_created'] );
+				}
+			}
+
+		}
+
+		return $filters;
+	}
+
+	/**
+	 * Get Wall Post Types Visibility.
+	 */
+	function get_unallowed_post_types() {
+
+		$types = yz_option( 'yz_unallowed_activities' );
+
+		if ( empty( $types ) ) {
+			$types = array();
+		}
+
+		foreach ( array( 'group_details_updated', 'update_avatar', 'updated_profile', 'activity_comment' ) as $type ) {
+			$types[] = $type;
+		}
+
+		return apply_filters( 'yz_wall_post_types_visibility', $types );
+	}
+
+	/**
 	 * Enable/Disable Wall Posts Likes
 	 */
 	function set_likes_visibility() {
-
 		// Get Likes Visibility
-		if ( 'on' == yz_options( 'yz_enable_wall_posts_likes' ) ) {
-			return true;
-		}
-
-		return false;
+		return 'on' == yz_option( 'yz_enable_wall_posts_likes', 'on' ) ? true : false;
 	}
 
 	/**
 	 * Enable/Disable Wall Posts Comments
 	 */
 	function set_comments_visibility() {
-
 		// Get Comments Visibility
-		if ( 'on' == yz_options( 'yz_enable_wall_posts_comments' ) ) {
-			return true;
-		}
-
-		return false;
+		return 'on' == yz_option( 'yz_enable_wall_posts_comments', 'on' ) ? true : false;
 	}
 
 	/**
 	 * Enable/Disable Wall Posts Comments Reply
 	 */
 	function set_replies_visibility() {
-
 		// Get Replies Visibility
-		if ( 'on' == yz_options( 'yz_enable_wall_posts_reply' ) ) {
-			return true;
-		}
-
-		return false;
+		return 'on' == yz_option( 'yz_enable_wall_posts_reply', 'on' ) ? true : false;
 	}
 
 	/**
@@ -173,7 +275,7 @@ class Youzer_Wall_Functions  {
 	function set_delete_visibility( $can_delete ) {
 
 		// Get Delete Button Visibility
-		if ( $can_delete && 'on' == yz_options( 'yz_enable_wall_posts_deletion' ) ) {
+		if ( $can_delete && 'on' == yz_option( 'yz_enable_wall_posts_deletion', 'on' ) ) {
 			return true;
 		}
 
@@ -184,20 +286,14 @@ class Youzer_Wall_Functions  {
 	 * Enable Wall Posts Embeds
 	 */
 	function enable_posts_embeds() {
-		if ( 'off' == yz_options( 'yz_enable_wall_posts_embeds' ) ) {
-		    return false;
-		}
-		return true;
+		return 'on' == yz_option( 'yz_enable_wall_posts_embeds', 'on' ) ? true : false;
 	}
 
 	/**
 	 * Enable Wall Comments Embeds
 	 */
 	function enable_comments_embeds() {
-		if ( 'off' == yz_options( 'yz_enable_wall_comments_embeds' ) ) {
-		    return false;
-		}
-		return true;
+		return 'on' == yz_option( 'yz_enable_wall_comments_embeds', 'on' ) ? true : false;
 	}
 		
 	/**
@@ -206,7 +302,7 @@ class Youzer_Wall_Functions  {
 	function hide_private_users_posts( $where ) {
 
 		// If Private Profile Not Allowed Show Default Query or is an admin show all activities.
-	    if ( 'off' == yz_options( 'yz_allow_private_profiles' ) || is_super_admin( bp_loggedin_user_id() ) ) {
+	    if (  is_super_admin( bp_loggedin_user_id() ) || 'off' == yz_option( 'yz_allow_private_profiles', 'off' ) ) {
 			return $where;
 	    }
 
@@ -214,12 +310,10 @@ class Youzer_Wall_Functions  {
 	    $private_users = yz_get_private_user_profiles();
 
 	    // Check if there's no private users.
-	    if ( empty( $private_users ) ) {
-	    	return $where;
+	    if ( ! empty( $private_users ) ) {
+		    // Add Where Statment.
+		    $where['hide_private_users'] = 'a.user_id NOT IN(' . implode( ',', $private_users ) . ')';
 	    }
-
-	    // Add Where Statment.
-	    $where['hide_private_users'] = 'a.user_id NOT IN(' . implode( ',', $private_users ) . ')';
 
 	    return $where;
 	}
@@ -250,4 +344,24 @@ class Youzer_Wall_Functions  {
 		die();
 	}
 
+	/**
+	 * Add Activity 
+	 */
+	function show_activity_tools_icon() {
+
+		if ( ! apply_filters( 'yz_display_activity_tools', is_user_logged_in() ) ) {
+			return;
+		}
+		
+		?>
+
+		<div class="yz-show-item-tools">
+			<?php echo apply_filters( 'yz_activity_tools_icon', '<i class="fas fa-ellipsis-h"></i>' ); ?>
+		</div>
+		
+		<?php
+
+	}
 }
+
+$functions = new Youzer_Wall_Functions();
