@@ -19,7 +19,7 @@ foreach ($user_levels as &$user_level) {
 	}
 }
 
-if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space" || user_can( $uid, 'administrator' )) {
+if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space"  || $member_type == "makers" || user_can( $uid, 'administrator' )) {
 	
 ?>
 
