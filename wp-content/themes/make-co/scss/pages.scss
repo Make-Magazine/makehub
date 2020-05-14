@@ -86,7 +86,7 @@
 		visibility:hidden;
       pointer-events:none;
 	}
-	.auth0-global-message.auth0-global-message-error {
+	.auth0-global-message.auth0-global-message-error, .auth0-global-message.auth0-global-message-success {
 		width: 133px;
 	}
 }

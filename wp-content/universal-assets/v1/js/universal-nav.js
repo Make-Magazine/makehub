@@ -9,11 +9,11 @@
     jQuery(window).bind("load", function () {
         // to keep this nav universal, detect site and do the things universally
         var site = window.location.hostname,
-                firstpath = jQuery(location).attr('pathname'),
-                e = jQuery(".universal-nav"),
-                hamburger = jQuery(".nav-hamburger"),
-                y_pos = jQuery(".nav-level-2").offset().top,
-                nextItemUnderNav = ""; // this varies from site to site
+		firstpath = jQuery(location).attr('pathname'),
+		e = jQuery(".universal-nav"),
+		hamburger = jQuery(".nav-hamburger"),
+		y_pos = jQuery(".nav-level-2").offset().top,
+		nextItemUnderNav = ""; // this varies from site to site
         firstpath.indexOf(1);
         firstpath.toLowerCase();
         firstpath = firstpath.split("/")[1];
@@ -65,12 +65,12 @@
                 toggleMobileSection("make");
                 nextItemUnderNav = jQuery(".page-content");
                 break;
-				case "devmakehub.wpengine.com":
+			case "devmakehub.wpengine.com":
             case "stagemakehub.wpengine.com":
-				case "community.make.co":
-				case "makehub":
-				case "makehub.local":
-				    universalNavActive("make");
+			case "community.make.co":
+			case "makehub":
+			case "makehub.local":
+				universalNavActive("make");
                 toggleMobileSection("make");
                 nextItemUnderNav = jQuery(".main-content");
                 break;
