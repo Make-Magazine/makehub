@@ -27,9 +27,7 @@ add_action( 'after_setup_theme', 'make_learn_localization_setup' );
  * @since 1.0.0
  */
 function make_learn_localization_setup() {
-
 	load_child_theme_textdomain( 'make-learn', get_stylesheet_directory() . '/languages' );
-
 }
 
 // Adds helper functions.
@@ -77,17 +75,15 @@ add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles' );
  */
 function make_learn_enqueue_scripts_styles() {
 	$my_theme = wp_get_theme();
-   $my_version = $my_theme->get('Version');
+    $my_version = $my_theme->get('Version');
 	
-   wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
-	wp_enqueue_style('font-awesome-css', 'https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css', '', 'all' );
+    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
 	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
 	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-	wp_enqueue_style( 'learn-ionicons', '//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css', array() );
 	
 	### GENESIS STYLES #####
 	$parent_style = 'genesis-style'; 
-   wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
+    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
 	
 	### UNIVERSAL STYLES ###
 	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
@@ -95,14 +91,6 @@ function make_learn_enqueue_scripts_styles() {
 	### SUBTHEME STYLES ###
 	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
 
-	wp_enqueue_style(
-		'make-learn-fonts',
-		'//fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,700',
-		array(),
-		$my_version
-	);
-
-	wp_enqueue_style( 'dashicons' );
 
 	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_enqueue_script(
@@ -119,20 +107,17 @@ function make_learn_enqueue_scripts_styles() {
 		make_learn_responsive_menu_settings()
 	);
 	
-	
 	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
+	// font awesome load script
+	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
+	// universal scripts
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
+	// our custom scripts
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-	wp_enqueue_script(
-		'make-learn',
-		get_stylesheet_directory_uri() . '/js/make-learn.js',
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
+	// gutenberg script
+	wp_enqueue_script('make-learn', get_stylesheet_directory_uri() . '/js/make-learn.js', array( 'jquery' ), $my_version, true);
 	
 	wp_localize_script('make-learn', 'ajax_object',
 	  array(
@@ -229,10 +214,8 @@ add_action( 'genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes' );
  * @param string $_genesis_admin_settings The admin screen to remove meta boxes from.
  */
 function make_learn_remove_metaboxes( $_genesis_admin_settings ) {
-
 	remove_meta_box( 'genesis-theme-settings-header', $_genesis_admin_settings, 'main' );
 	remove_meta_box( 'genesis-theme-settings-nav', $_genesis_admin_settings, 'main' );
-
 }
 
 add_filter( 'genesis_customizer_theme_settings_config', 'make_learn_remove_customizer_settings' );
@@ -245,11 +228,9 @@ add_filter( 'genesis_customizer_theme_settings_config', 'make_learn_remove_custo
  * @return array Filtered Customizer items.
  */
 function make_learn_remove_customizer_settings( $config ) {
-
 	unset( $config['genesis']['sections']['genesis_header'] );
 	unset( $config['genesis']['sections']['genesis_breadcrumbs']['controls']['breadcrumb_front_page'] );
 	return $config;
-
 }
 
 // Displays custom logo.
@@ -273,14 +254,11 @@ add_filter( 'wp_nav_menu_args', 'make_learn_secondary_menu_args' );
  * @return array Menu options with depth set to 1.
  */
 function make_learn_secondary_menu_args( $args ) {
-
 	if ( 'secondary' !== $args['theme_location'] ) {
 		return $args;
 	}
-
 	$args['depth'] = 1;
 	return $args;
-
 }
 
 add_filter( 'genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar' );
@@ -293,9 +271,7 @@ add_filter( 'genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar'
  * @return int Modified icon size.
  */
 function make_learn_author_box_gravatar( $size ) {
-
 	return 90;
-
 }
 
 add_filter( 'genesis_comment_list_args', 'make_learn_comments_gravatar' );
@@ -308,8 +284,6 @@ add_filter( 'genesis_comment_list_args', 'make_learn_comments_gravatar' );
  * @return array Gravatar settings with modified size.
  */
 function make_learn_comments_gravatar( $args ) {
-
 	$args['avatar_size'] = 60;
 	return $args;
-
 }
