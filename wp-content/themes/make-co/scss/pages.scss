@@ -148,3 +148,20 @@
 		.entry-content { padding: 15px; }
 	}
 }
+.cropControls i {
+	text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+}
+.cropControls i.cropControlCrop {
+	opacity: 1;
+    &::before {
+		content: "\f00c";
+		color: #a3e05c;
+	}
+}
+.cropControls i.cropControlReset {
+	opacity: 1;
+    &::before {
+		content: "\f00d";
+		color: #eb002a;
+	}
+}
