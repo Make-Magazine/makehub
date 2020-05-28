@@ -8,7 +8,7 @@
 		max-width: 100%;
 		.yz-directory-filter { 
 			width: 230px;
-			max-height: 400px;
+			max-height: 450px;
 			.item-list-tabs li {
 				&#yz-directory-search-box { 
 					margin-left: 0px;
@@ -77,6 +77,9 @@
 							padding: 0px 25px;
 							visibility: visible;
 							background: #3fafed;
+							line-height: 50px;
+							height: 50px;
+							display: block;
 						}
 						&.yz-profile-settings { 
 							visibility: visible;

@@ -20,15 +20,15 @@ function spaces_map_loop() {
          <div class="col-md-12">
             <h1>Makerspace Directory</h1>
             <div class="admin-buttons">
-                <a class="btn universal-btn" href="/register">Add yours <i class="fa fa-plus"></i></a>
-		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="fa fa-pencil-square-o"></i></a>
+                <a class="btn universal-btn" href="/register">Add yours <i class="fas fa-plus"></i></a>
+		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="fas fa-pencil-square-o"></i></a>
             </div>
             <p><?php //echo the_content(); ?></p>
          </div>
       </div>
       <div class="message-container">
-         <div class="loading-indicator" ref="loadingIndicator">Loading... <i class="fa fa-spinner"></i></div>
-         <div class="error-indicator hidden text-danger" ref="errorIndicator">Sorry! We couldn't load the map... please try again later. <i class="fa fa-exclamation-triangle"></i></div>
+         <div class="loading-indicator" ref="loadingIndicator">Loading... <i class="fas fa-spinner"></i></div>
+         <div class="error-indicator hidden text-danger" ref="errorIndicator">Sorry! We couldn't load the map... please try again later. <i class="fas fa-exclamation-triangle"></i></div>
       </div>
       <div class="map-table-hidden" ref="mapTableWrapper" >
 
