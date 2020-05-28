@@ -21,7 +21,7 @@ function spaces_map_loop() {
             <h1>Makerspace Directory</h1>
             <div class="admin-buttons">
                 <a class="btn universal-btn" href="/register">Add yours <i class="fas fa-plus"></i></a>
-		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="fas fa-pencil-square-o"></i></a>
+		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="far fa-edit"></i></a>
             </div>
             <p><?php //echo the_content(); ?></p>
          </div>
