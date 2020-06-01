@@ -43,7 +43,7 @@ if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_t
 				$profile_name = bp_core_get_username($user->ID);
 			   if($user->ID == bp_displayed_user_id()){
 					echo('<div class="edit-btn-wrap">');
-						echo('<a id="edit-cover-btn" class="btn universal-btn" href="/members/'.$profile_name.'/profile/change-cover-image/">Change Profile Cover</a>');
+						echo('<a id="edit-cover-btn" class="btn universal-btn" href="/members/'.$profile_name.'/profile/change-cover-image/">Change Profile Background</a>');
 						echo('<a id="edit-photo-btn" class="btn universal-btn" href="/members/'.$profile_name.'/profile/change-avatar">Change Profile Photo</a>');
 					echo('</div>');
 				}

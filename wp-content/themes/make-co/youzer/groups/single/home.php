@@ -16,7 +16,7 @@
 			   $user = wp_get_current_user();
 			   if(groups_is_user_admin( $user->ID, bp_get_group_id() )){
 					echo('<div class="edit-btn-wrap">');
-						echo('<a id="edit-cover-btn" class="btn universal-btn" href="/groups/'.bp_get_current_group_slug().'/admin/group-cover-image/">Change Group Cover</a>');
+						echo('<a id="edit-cover-btn" class="btn universal-btn" href="/groups/'.bp_get_current_group_slug().'/admin/group-cover-image/">Change Group Background</a>');
 						echo('<a id="edit-photo-btn" class="btn universal-btn" href="/groups/'.bp_get_current_group_slug().'/admin/group-avatar">Change Group Photo</a>');
 					echo('</div>');
 				}

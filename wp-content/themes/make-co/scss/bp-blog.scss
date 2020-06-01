@@ -26,6 +26,11 @@ a[data-activity-type=new_blog_posts] {
 	display: none;
 }
 
+.pagination ul.page-numbers {
+	display: flex !important;
+	a.page-numbers { display: block; }
+}
+
 .type-blog_posts {
 	background: #fff;
 	margin-bottom: 30px;
