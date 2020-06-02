@@ -194,11 +194,9 @@
 		i.fa-edit { display: none; }
 		#yz-profile-navmenu .yz-social-buttons, #yz-profile-navmenu .yz-settings-area .yz-quick-buttons, .yz-navbar-view-more { display: none; }
 	}
-	// hide parts of profile settings menu related to editing their profile
-	#yz-profile-navmenu .yz-settings-menu a {
-		&:nth-of-type(1) {
-			display: none !important;
-		}
+	// hide profile settings menu
+	#yz-nav-settings {
+		display: none !important;
 	}
 	.yz-settings-sidebar {
 		.yz-account-settings-menu { display: none; }
@@ -220,6 +218,12 @@
 			.yz-nav-view-more-menu .yz-navbar-item:nth-last-of-type(2), .yz-navbar-item.friends {
 				display: block;
 			}
+		}
+	}
+	.yz-settings-form {
+		input, textarea {
+			background-color: #f1f1f1 !important;
+			pointer-events: none;
 		}
 	}
 	// This is all just for rewriting the section titles for makerspace users on the profile and settings page
