@@ -175,7 +175,7 @@
 }
 
 // if the member is type makerspace
-.member-type_makerspace {
+.member-type-maker_space {
 	.main-content.container {
 		&::before {
 			content: 'Makerspace';
@@ -221,18 +221,47 @@
 				display: block;
 			}
 		}
-		
 	}
+	// This is all just for rewriting the section titles for makerspace users on the profile and settings page
+	.yz-widget.yz-custom_infos .yz-widget-title, .yz-account-menus.yz-show-account-menus li.yz-edit-group-1 a, .yz-account-menus.yz-show-account-menus li.yz-edit-group-4 a, body[class*="edit-group-1"] .options-section-title h2, body[class*="edit-group-4"] .options-section-title h2 {
+		visibility: hidden;
+		i { 
+			visibility: visible;
+			float: left;
+			margin-top: -6px;
+		}
+		&::after {
+			content: "Makerspace Info";
+			visibility: visible;
+			float: left;
+		}
+	}
+	.yz-widget.yz-custom_infos:last-of-type .yz-widget-title, .yz-account-menus.yz-show-account-menus li.yz-edit-group-4 a, body[class*="edit-group-4"] h2 {
+		&::after {
+			content: "Makerspace Focuses";
+			visibility: visible;
+			float: left;
+		}
+	}
+	body[class*="edit-group-1"] .options-section-title h2, body[class*="edit-group-4"] .options-section-title h2 {
+		i { margin-top: 20px; }
+	}
+	
 }
-// add some kind of explanation to the media page
-.bp-user.media .yz-main-column {
-	.yz-media::before {
-		content: "A List of all Media uploaded via widgets and social activity for this user";
-		margin-bottom: 30px;
-		display: block;
-		padding: 15px 25px;
-		background: #fff;
-		border-radius: 3px;
-		color: #898989;
+
+
+
+// Profile Edit / Settings Page
+.settings-main-content {
+	.yz-settings-form {
+		@media screen and (min-width: 768px) {
+			.field_city, .field_state-province, .field_country, .field_zip {
+				width: 50%;
+				float: left;
+				.current-visibility-level {
+					min-width: 85px;
+				}
+			}
+		}
 	}
 }
