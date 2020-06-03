@@ -22,11 +22,6 @@
 			}
 		}
 	}
-	.yz-settings-menu {
-		a[href*="change-password"] {
-			display: none !important;
-		}
-	}
 	#messages-inbox-personal-li #inbox i, #messages-notices-personal-li #notices i{
 		background: #3fafed;
 	}
@@ -47,12 +42,6 @@
 	.yz-navbar-view-more { display: none; }
 	.yz-settings-menu {
 		width: 240px !important;
-		a { 
-			display: none;
-			&:nth-of-type(1) {
-				display: block;
-			}
-		}
 	}
 }
 .yz-account-page {

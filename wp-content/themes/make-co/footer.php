@@ -37,7 +37,7 @@ genesis_markup(
   <div class="clearfix"></div>
 </div>
 
-<a href="mailto:feedback@make.co" class="btn feedback-btn">feedback</a>
+<a href="mailto:feedback@make.co" class="btn feedback-btn">FEEDBACK</a>
 
 </body>
 </html>

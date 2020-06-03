@@ -222,12 +222,20 @@ class Youzer_Profile {
 		?>
 
 		<div class="yz-settings-menu">
-			<?php foreach ( $links as $link ) : ?>
+			<a href="/members/rio/profile/edit/group/1">
+				<div class="yz-icon"><i class="fas fa-user" aria-hidden="true"></i></div>
+				<span class="yzb-button-title">Settings</span>
+			</a>
+			<a href="/members/rio/ihc/?ihc_ap_menu=profile">
+				<div class="yz-icon"><i class="fas fa-lock" aria-hidden="true"></i></div>
+				<span class="yzb-button-title">Directory Visibility</span>
+			</a>
+			<?php /* foreach ( $links as $link ) : ?>
 				<a href="<?php echo esc_url( $link['href'] ); ?>">
 					<div class="yz-icon"><i class="<?php echo $link['icon'];?>"></i></div>
 					<span class="yzb-button-title"><?php echo $link['title']; ?></span>
 				</a>
-			<?php endforeach; ?>
+			<?php endforeach; */ ?>
 		</div>
 
 		<?php
