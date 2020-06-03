@@ -16,4 +16,9 @@ jQuery("document").ready(function(){
 		jQuery("#search-members-form").attr('role', 'search');
 		jQuery("#search-members-form #members_search").attr("name", "s");
 	}
+	
+	// remove the email editting field from the ump account page while we wait to hear from their support
+	if(jQuery("#ihc_account_page_wrapp")) {
+		jQuery("#ihc_account_page_wrapp .iump-form-line-register.iump-form-text").remove();
+	}
 });

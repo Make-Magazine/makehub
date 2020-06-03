@@ -42,6 +42,7 @@ if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_t
 			   $user = wp_get_current_user();
 				$profile_name = bp_core_get_username($user->ID);
 			   if($user->ID == bp_displayed_user_id()){
+				   echo('<div class="edit-btn-wrap optout"><a class="btn universal-btn" href="/members/'.$profile_name.'/ihc/?ihc_ap_menu=profile">Change Directory Visibility</a></div>');
 					echo('<div class="edit-btn-wrap">');
 						echo('<a id="edit-cover-btn" class="btn universal-btn" href="/members/'.$profile_name.'/profile/change-cover-image/">Change Profile Background</a>');
 						echo('<a id="edit-photo-btn" class="btn universal-btn" href="/members/'.$profile_name.'/profile/change-avatar">Change Profile Photo</a>');
