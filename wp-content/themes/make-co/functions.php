@@ -97,11 +97,7 @@ function make_co_enqueue_scripts() {
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
 
-	// get all the bp legacy scripts loaded
-	wp_enqueue_script('jquery-cookie', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-cookie.min.js', array(), $my_version, true);
-	wp_enqueue_script('jquery-scrollto', content_url() . '/plugins/buddypress/bp-core/js/vendor/jquery-scroll-to.min.js', array(), $my_version, true);
-	wp_enqueue_script('buddypress-query', content_url() . '/plugins/buddypress/bp-core/js/jquery-query.min.js', array(), $my_version, true);
-	wp_enqueue_script('buddypress', content_url() . '/plugins/buddypress/bp-templates/bp-legacy/js/buddypress.min.js', array(), $my_version, true);
+
 	
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
