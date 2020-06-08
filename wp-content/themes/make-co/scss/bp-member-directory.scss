@@ -3,11 +3,15 @@
 		min-width: 95% !important;
 		padding-top: 50px;
 	}
+	.filter-sidebar {
+		display: flex;
+		flex-direction: column;
+	}
 	#yz-members-directory {
 		display: flex;
 		max-width: 100%;
 		.yz-directory-filter { 
-			width: 230px;
+			width: 250px;
 			max-height: 450px;
 			.item-list-tabs li {
 				&#yz-directory-search-box { 
@@ -16,21 +20,22 @@
 			}
 		}
 		#members-directory-form {
-			width: calc(100% - 480px);
+			width: calc(100% - 250px);
 			#yz-members-list {
-				li { height: 375px; }
+				li { height: 315px; }
 				.yzm-user-cover {
 					height: 100px;
 					cursor: pointer;
 				}
 				.yzm-user-data {
-					min-height: 350px;
+					min-height: 280px;
 					display: flex;
 					flex-direction: column;
 					.item {
 						flex-grow: 1;
 						cursor: pointer;
 						color: #818181;
+						margin-top: 15px;
 						.item-meta { cursor: pointer; }
 					}
 				}
@@ -59,7 +64,13 @@
 			}
 		}
 		.yz-card-show-avatar-border .yz-item-avatar {
-			margin-bottom: 5px;
+			margin: 0px;
+			position: absolute;
+			left: 0;
+			right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			text-align: center;
 		}
 		
 		.yzm-user-data {
@@ -69,23 +80,7 @@
 				padding: 15px 0px;
 				margin-top: 15px;
 				a { 
-					@media screen and (min-width: 1040px) {
-						min-width: 70px;
-						max-width: 70px;
-						visibility: hidden;
-						&::before {
-							padding: 0px 25px;
-							visibility: visible;
-							background: #3fafed;
-							line-height: 50px;
-							height: 50px;
-							display: block;
-						}
-						&.yz-profile-settings { 
-							visibility: visible;
-							min-width: 90%;
-						}
-					}
+					min-width: 125px;
 					&.yz-send-message::before {
 						background: transparent;
 					}
@@ -107,7 +102,8 @@
 					background: #005e9a;
 					padding-top: 0px;
 					position: relative;
-					top: 15px;
+					z-index: 99;
+					top: -10px;
 					border-radius: 5px;
 					padding: 3px 10px;
 					font-weight: bold;
@@ -143,6 +139,7 @@
 						border-top: 1px solid rgba(245, 20, 0, .2);
 						padding-top: 0px;
 						padding-bottom: 0px;
+						overflow: hidden;
 					}
 				}
 			}
@@ -217,17 +214,18 @@
 		// styling for the filter sidebar
 		.yz-sidebar-column {
 			width: 250px;
+			margin-left: 17.5px;
 			.yz-column-content {
-				padding-left: 17.5px;
 				.widget-content {
 					padding: 15px;
-					margin-bottom: 25px;
+					margin-bottom: 35px;
 					.widget-title {
 						font-size: 20px;
-						font-weight: 600;
+						font-weight: 100;
 						padding: 0px;
 						color: #666;
 						border: 0px;
+						text-transform: uppercase;
 						@media screen and ( max-width: 1024px ) {
 							cursor: pointer;
 							&::after {
@@ -380,13 +378,13 @@
 	font-size: 13px;
 	height: initial;
 	min-width: 110px;
-	font-weight: 600;
+	font-weight: 300;
 	padding: 12px 20px;
 	text-align: center;
 	line-height: 24px !important;
 	display: inline-block;
 	vertical-align: middle;
-	text-transform: capitalize;
+	text-transform: uppercase;
 	&::before {
 		font-family: "Font Awesome 5 Free" !important;
 		content: '\f2b5';
