@@ -222,11 +222,11 @@ class Youzer_Profile {
 		?>
 
 		<div class="yz-settings-menu">
-			<a href="/members/rio/profile/edit/group/1">
+			<a href="<?php echo(bp_core_get_user_domain( $user_id ) . bp_get_settings_slug()); ?>">
 				<div class="yz-icon"><i class="fas fa-user" aria-hidden="true"></i></div>
 				<span class="yzb-button-title">Settings</span>
 			</a>
-			<a href="/members/rio/ihc/?ihc_ap_menu=profile">
+			<a href="<?php echo(bp_core_get_user_domain( $user_id )); ?>ihc/?ihc_ap_menu=profile">
 				<div class="yz-icon"><i class="fas fa-lock" aria-hidden="true"></i></div>
 				<span class="yzb-button-title">Directory Visibility</span>
 			</a>
