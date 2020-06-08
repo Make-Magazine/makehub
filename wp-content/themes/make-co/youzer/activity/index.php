@@ -40,156 +40,122 @@ do_action( 'bp_before_directory_activity' ); ?>
 				<div class="yz-mobile-nav-item yz-show-activity-filter"><div class="yz-mobile-nav-container"><i class="fas fa-sliders-h"></i><a><?php _e( 'Filter', 'youzer' ); ?></a></div></div>
 			</div>
 			
-			<div id="yz-wall-nav">
-				<h4 class="filter-title">Filters</h4>
-				<div class="item-list-tabs activity-type-tabs" aria-label="<?php esc_attr_e( 'Sitewide activities navigation', 'youzer' ); ?>" role="navigation">
-					<ul>
-						<?php
-
-						/**
-						 * Fires before the listing of activity type tabs.
-						 *
-						 * @since 1.2.0
-						 */
-						do_action( 'bp_before_activity_type_tab_all' ); ?>
-
-						<li id="activity-all" class="selected"><a href="<?php bp_activity_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'youzer' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
-
-						<?php if ( is_user_logged_in() ) : ?>
-
+			<div class="yz-sidebar-column yz-group-sidebar youzer-sidebar">
+				<div id="yz-wall-nav">
+					<h4 class="filter-title">Filters</h4>
+					<div class="item-list-tabs activity-type-tabs" aria-label="<?php esc_attr_e( 'Sitewide activities navigation', 'youzer' ); ?>" role="navigation">
+						<ul>
 							<?php
 
 							/**
-							 * Fires before the listing of friends activity type tab.
+							 * Fires before the listing of activity type tabs.
 							 *
 							 * @since 1.2.0
 							 */
-							do_action( 'bp_before_activity_type_tab_friends' ); ?>
+							do_action( 'bp_before_activity_type_tab_all' ); ?>
 
-							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<li id="activity-all" class="selected"><a href="<?php bp_activity_directory_permalink(); ?>"><?php printf( __( 'All Members %s', 'youzer' ), '<span>' . bp_get_total_member_count() . '</span>' ); ?></a></li>
 
-								<?php if ( bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
-
-									<li id="activity-friends"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/'; ?>"><?php printf( __( 'My Friends %s', 'youzer' ), '<span>' . bp_get_total_friend_count( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
-
-								<?php endif; ?>
-
-							<?php endif; ?>
-
-							<?php
-
-							/**
-							 * Fires before the listing of groups activity type tab.
-							 *
-							 * @since 1.2.0
-							 */
-							do_action( 'bp_before_activity_type_tab_groups' ); ?>
-
-							<?php /* if ( bp_is_active( 'groups' ) ) : ?>
-
-								<?php if ( bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) : ?>
-
-									<li id="activity-groups"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/'; ?>"><?php printf( __( 'My Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
-
-								<?php endif; ?>
-
-							<?php endif; */ ?>
-
-							<?php
-
-							/**
-							 * Fires before the listing of favorites activity type tab.
-							 *
-							 * @since 1.2.0
-							 */
-							do_action( 'bp_before_activity_type_tab_favorites' ); ?>
-
-							<?php if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) : ?>
-
-								<li id="activity-favorites"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/'; ?>"><?php printf( __( 'My Favorites %s', 'youzer' ), '<span>' . bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
-
-							<?php endif; ?>
-
-							<?php if ( bp_activity_do_mentions() ) : ?>
+							<?php if ( is_user_logged_in() ) : ?>
 
 								<?php
 
 								/**
-								 * Fires before the listing of mentions activity type tab.
+								 * Fires before the listing of friends activity type tab.
 								 *
 								 * @since 1.2.0
 								 */
-								do_action( 'bp_before_activity_type_tab_mentions' ); ?>
+								do_action( 'bp_before_activity_type_tab_friends' ); ?>
 
-								<li id="activity-mentions"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/'; ?>"><?php _e( 'Mentions', 'youzer' ); ?><?php if ( bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ) : ?> <strong><span><?php printf( _nx( '%s new', '%s new', bp_get_total_mention_count_for_user( bp_loggedin_user_id() ), 'Number of new activity mentions', 'youzer' ), bp_get_total_mention_count_for_user( bp_loggedin_user_id() ) ); ?></span></strong><?php endif; ?></a></li>
+								<?php if ( bp_is_active( 'friends' ) ) : ?>
+
+									<?php if ( bp_get_total_friend_count( bp_loggedin_user_id() ) ) : ?>
+
+										<li id="activity-friends"><a href="<?php echo bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/'; ?>"><?php printf( __( 'My Friends %s', 'youzer' ), '<span>' . bp_get_total_friend_count( bp_loggedin_user_id() ) . '</span>' ); ?></a></li>
+
+									<?php endif; ?>
+
+								<?php endif; ?>
+
+								<?php
+
+								/**
+								 * Fires before the listing of groups activity type tab.
+								 *
+								 * @since 1.2.0
+								 */
+								do_action( 'bp_before_activity_type_tab_groups' ); ?>
+
 
 							<?php endif; ?>
 
-						<?php endif; ?>
+							<?php
 
-						<?php
-
-						/**
-						 * Fires after the listing of activity type tabs.
-						 *
-						 * @since 1.2.0
-						 */
-						do_action( 'bp_activity_type_tabs' ); ?>
-					</ul>
-				</div><!-- .item-list-tabs -->
-				<div class="item-list-tabs">
-					<div id="groups-link">
-						<a href="/groups"><?php printf( __( 'Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
+							/**
+							 * Fires after the listing of activity type tabs.
+							 *
+							 * @since 1.2.0
+							 */
+							do_action( 'bp_activity_type_tabs' ); ?>
+						</ul>
+					</div><!-- .item-list-tabs -->
+					<div class="item-list-tabs">
+						<div id="groups-link">
+							<a href="/groups"><?php printf( __( 'Groups %s', 'youzer' ), '<span>' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></a>
+						</div>
 					</div>
-				</div>
 
-				<div class="item-list-tabs activity-type-tabs-subnav no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Activity secondary navigation', 'youzer' ); ?>" role="navigation">
-					<ul>
-						<?php
+					<div class="item-list-tabs activity-type-tabs-subnav no-ajax" id="subnav" aria-label="<?php esc_attr_e( 'Activity secondary navigation', 'youzer' ); ?>" role="navigation">
+						<ul>
+							<?php
 
-						/**
-						 * Fires before the display of the activity syndication options.
-						 *
-						 * @since 1.2.0
-						 */
-						do_action( 'bp_activity_syndication_options' ); ?>
+							/**
+							 * Fires before the display of the activity syndication options.
+							 *
+							 * @since 1.2.0
+							 */
+							do_action( 'bp_activity_syndication_options' ); ?>
 
-						<li id="activity-filter-select" class="last">
-							<div class="yz-activity-show-filter"><i class="fas fa-sliders-h"></i></div>
-							<div class="yz-dropdown-area">
-							<label for="activity-filter-by"><?php _e( 'Filter Activities By :', 'youzer' ); ?></label>
-							<select id="activity-filter-by" class="yz-bar-select">
-								<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
+							<li id="activity-filter-select" class="last">
+								<div class="yz-activity-show-filter"><i class="fas fa-sliders-h"></i></div>
+								<div class="yz-dropdown-area">
+								<label for="activity-filter-by"><?php _e( 'Filter Activities By :', 'youzer' ); ?></label>
+								<select id="activity-filter-by" class="yz-bar-select">
+									<option value="-1"><?php _e( '&mdash; Everything &mdash;', 'youzer' ); ?></option>
 
-								<?php bp_activity_show_filters(); ?>
+									<?php bp_activity_show_filters(); ?>
 
-								<?php
+									<?php
 
-								/**
-								 * Fires inside the select input for activity filter by options.
-								 *
-								 * @since 1.2.0
-								 */
-								do_action( 'bp_activity_filter_options' ); ?>
+									/**
+									 * Fires inside the select input for activity filter by options.
+									 *
+									 * @since 1.2.0
+									 */
+									do_action( 'bp_activity_filter_options' ); ?>
 
-							</select>
-							</div>
-						</li>
-						<li class="yz-activity-show-search">
-
-							<div class="yz-activity-show-search-form"><i class="fas fa-search"></i></div>
-							<div class="yz-dropdown-area">
-								<div class="yz-activity-search">
-									<form action="<?php echo bp_get_activity_directory_permalink(); ?>">
-									<input type="text" name="s" placeholder="<?php _e( 'Search Activities ...', 'youzer' ); ?>">
-									<button><i class="fas fa-search"></i></button>
-									</form>
+								</select>
 								</div>
-							</div>
-						</li>
-					</ul>
-				</div><!-- .item-list-tabs -->
+							</li>
+							<li class="yz-activity-show-search">
 
+								<div class="yz-activity-show-search-form"><i class="fas fa-search"></i></div>
+								<div class="yz-dropdown-area">
+									<div class="yz-activity-search">
+										<form action="<?php echo bp_get_activity_directory_permalink(); ?>">
+										<input type="text" name="s" placeholder="<?php _e( 'Search Activities ...', 'youzer' ); ?>">
+										<button><i class="fas fa-search"></i></button>
+										</form>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div><!-- .item-list-tabs -->
+
+			</div>
+			<div class="yz-column-content">
+				<?php do_action( 'yz_global_wall_sidebar' );?>
+			</div>
 		</div>
 
 		<?php endif; ?><!-- Enable/Disable Global Activity Filter bar. -->
@@ -249,17 +215,6 @@ do_action( 'bp_before_directory_activity' ); ?>
 			</div>
 		</div>
 
-		<div class="yz-sidebar-column yz-group-sidebar youzer-sidebar">
-			<div class="yz-column-content">
-				<?php do_action( 'yz_global_wall_sidebar' );?>
-			</div>
-			<a id="groups-link" class="yz-link-item yz-link-groups" href="/groups"><i class="fas fa-group"></i><div class="yz-link-title"><?php printf( __( 'Groups %s', 'youzer' ), '<span class="yz-link-count">' . bp_get_total_group_count_for_user( bp_loggedin_user_id() ) . '</span>' ); ?></div></a>
-		</div>
-		<script type="text/javascript">
-			jQuery(document).ready(function(){
-				jQuery(".yz-link-inbox").after(jQuery("#groups-link.yz-link-item.yz-link-groups"));
-			});
-		</script>
 
 	<?php
 

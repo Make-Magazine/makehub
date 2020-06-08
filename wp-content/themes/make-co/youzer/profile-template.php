@@ -106,11 +106,11 @@ if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_t
 		<div id="yz-bp" class="youzer noLightbox yz-page yz-profile yz-horizontal-layout yz-wild-content yz-tabs-list-gradient yz-wg-border-radius yz-page-btns-border-flat  yz-404-profile">
 			<div class="yz-content">
 				<header id="yz-profile-header" class="yz-profile-header yz-hdr-v1 yz-hdr-v8 yz-header-overlay yz-header-pattern yz_effect" data-effect="fadeIn">
-					<div class="yz-header-cover" style="background-image:url( http://makehub.local/wp-content/plugins/youzer/includes/public/assets/images/geopattern.png ); background-size: auto;">
+					<div class="yz-header-cover" style="background-image:url( https://commumity.make.co/wp-content/plugins/youzer/includes/public/assets/images/geopattern.png ); background-size: auto;">
 						<div class="yz-cover-content">
 							<div class="yz-inner-content">
 								<div class="yz-profile-photo yz-photo-circle yz-photo-border yz-profile-photo-effect">
-									<div class="yz-profile-img"><img src="http://makehub.local/wp-content/themes/make-co/images/default-avatars/custom-avatar0.jpg" alt="User Avatar"></div>
+									<div class="yz-profile-img"><img src="https://commumity.make.co/wp-content/themes/make-co/images/default-avatars/custom-avatar0.jpg" alt="User Avatar"></div>
 								</div>					
 								<div class="yz-head-content">
 									<div class="yz-name">
