@@ -177,10 +177,10 @@
 		.ihc-ap-wrap {
 			.iump-user-page-wrapper .ihc-register-3 {
 				min-width: 100%;
-				margin-ledft: 0px;
+				margin-left: 0px;
 			}
 			h3 { display: none; }
-			.ihc-account-page-top-extra-mess { display: none; }
+			
 		}
 	}
 	form.ihc-form-create-edit {
@@ -208,6 +208,7 @@
 		.ihc-middle-side {
 			margin-left: 0px;
 			.ihc-account-page-top-mess {
+				display: none;
 				float: left;
 			}
 		}
