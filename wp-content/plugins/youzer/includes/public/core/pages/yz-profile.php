@@ -222,7 +222,7 @@ class Youzer_Profile {
 		?>
 
 		<div class="yz-settings-menu">
-			<a href="<?php echo(bp_core_get_user_domain( $user_id ) . bp_get_settings_slug()); ?>">
+			<a href="<?php echo(bp_core_get_user_domain( $user_id )); ?>profile/edit/group/1/">
 				<div class="yz-icon"><i class="fas fa-user" aria-hidden="true"></i></div>
 				<span class="yzb-button-title">Settings</span>
 			</a>

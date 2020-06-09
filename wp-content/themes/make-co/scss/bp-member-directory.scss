@@ -71,6 +71,9 @@
 			margin-left: auto;
 			margin-right: auto;
 			text-align: center;
+			@media screen and (-ms-high-contrast: active), screen and (-ms-high-contrast: none) { 
+				margin-top: -100px;	
+			}
 		}
 		
 		.yzm-user-data {
