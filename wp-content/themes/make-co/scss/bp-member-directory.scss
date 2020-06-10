@@ -361,6 +361,29 @@
 			}
 		}
 	}
+	&.page-members-type-makers {
+		#yz-members-directory {
+			.yz-directory-filter {
+				.item-list-tabs, .item-list-tabs:not(#subnav) {
+					li.selected {
+						background: transparent;
+						border: 0px;
+						a {
+							color: rgb(150, 150, 150);
+						}
+					}
+					li#members-makers {
+						background: rgba(63, 175, 237, .2);
+						border-radius: 5px;
+						a {
+							font-weight: bold;
+							color: #333;
+						}
+					}
+				}
+			}
+		}
+	}
 }
 #yz-groups-directory {
 	#yz-groups-list {

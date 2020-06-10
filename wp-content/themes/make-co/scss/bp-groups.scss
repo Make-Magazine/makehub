@@ -11,10 +11,12 @@
 		justify-content: center;
 		a {
 			color: #fff;
-			background: rgba(63, 175, 237, .5);
+			background: rgba(63, 175, 237, .65);
 			padding: 7px 20px 10px;
 			border-radius: 50px;
 			line-height: 1.2em;
+			font-size: .85em;
+			margin: 0px 10px;	
 			text-shadow: 
 				-1px -1px 0 #000,
 				 0   -1px 0 #000,
@@ -28,6 +30,12 @@
 	}
 	.item-avatar {
 		margin-bottom: 0px;
+	}
+	.action {
+		margin-top: 15px;
+		a  {
+		 margin: 10px;
+		}
 	}
 	@media screen and ( min-width: 982px ) {
 		.yz-directory-filter {
@@ -46,6 +54,11 @@
 			width: 76.5%;
 			float: right;
 		}
+	}
+	.yz-directory-filter #directory-show-search a::before { background: #3fafed; }
+	.yz-tabs-list-gradient #directory-show-filter a::before { background: #f51400; }
+	.item-list-tabs ul li {
+		display: flex;
 	}
 }
 
