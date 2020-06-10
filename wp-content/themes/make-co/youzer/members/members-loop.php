@@ -58,12 +58,6 @@ do_action( 'bp_before_members_loop' ); ?>
 				</div>
 
 				<div class="item-meta">
-					<?php if ( bp_current_action( 'my-friends' ) ) { ?>
-						<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
-
-					<?php } else { ?>
-						<span class="yz-name"><?php echo yz_get_md_user_meta( bp_get_member_user_id() ); ?></span>
-					<?php } ?>
 
 					<?php
 

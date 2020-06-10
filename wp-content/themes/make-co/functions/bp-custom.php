@@ -79,13 +79,20 @@ add_action('bp_after_directory_members', 'yzc_members_directory_sidebar');
  * If there is certain text in Youzer that isn't descriptive enough, we can change it here
  */
 function yz_translate_youzer_text($translated_text) {
+	
     switch ($translated_text) {
         case 'Widgets Settings' :
         case 'widgets settings' :
-            $translated_text = __('Advanced Profile settings', 'youzer');
+            $translated_text = __('Profile Customization', 'youzer');
             break;
         case 'Profile Widgets Settings' :
-            $translated_text = __('Add widgets, media and more!', 'youzer');
+            $translated_text = __('Add media, videos and more!', 'youzer');
+            break;
+		case 'profile Settings' :
+            $translated_text = __('Settings', 'buddypress');
+            break;
+		case 'Email, Password, Notifications ...' :
+			$translated_text = __('Notifications, Data, Privacy', 'youzer');
             break;
         case 'Filter' :
             $translated_text = __('Order', 'youzer');
@@ -109,6 +116,7 @@ function yz_translate_youzer_text($translated_text) {
             $translated_text = __('Order:', 'buddypress');
             break;
     }
+
     return $translated_text;
 }
 

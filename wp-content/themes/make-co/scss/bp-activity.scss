@@ -1,7 +1,4 @@
 .directory.activity #yz-bp.youzer { // formerly #buddypress.youzer
-	.yz-column-content {
-		margin-right: 5px;
-	}
 	#yz-wall-nav, #yz-wall-form, .yz-my-account-widget, .activity-list > li {
 		margin-bottom: 20px;
 	}
@@ -13,6 +10,15 @@
 			.wp-embedded-content { 
 				max-width: 100%;
 			}
+		}
+	}
+	.yz-sidebar-column, .yz-main-column {
+		width: 100%;
+	}
+	.yz-column-content {
+		margin-left: 0px;
+		.widget_bp_groups_widget, .widget_shopify_widget {
+			display: none;
 		}
 	}
 	@media screen and (min-width:1200px) {
@@ -29,32 +35,43 @@
 		}
 	}
 	@media screen and (min-width:982px) {
-		#yz-wall-nav {
-			width: 22%;
+		.yz-sidebar-column {
+			width: 25%;
+		}
+		.yz-main-column { 
+			width: 72%;
+		}
+	}
+	@media screen and (min-width:768px) {
+		.yz-sidebar-column {
+			width: 30%;
 			float: left;
 			margin-right: 30px;
 			position: relative;
-			div.item-list-tabs:not(#subnav) li, div.item-list-tabs a{
-				width: 100%;
+			#yz-wall-nav {
+				position: relative;
+				div.item-list-tabs:not(#subnav) li, div.item-list-tabs a{
+					width: 100%;
+				}
+				div.item-list-tabs li .yz-dropdown-area {
+					left: 0;
+					top: auto;
+					width: 100%;
+					bottom: -130px;
+				}
+				div.item-list-tabs li.yz-activity-show-search .yz-dropdown-area {
+					bottom: -75px;
+				}
 			}
-			div.item-list-tabs li .yz-dropdown-area {
-				left: 0;
-				top: auto;
-				bottom: -130px;
-				width: 100%;
+			.widget_bp_groups_widget, .widget_shopify_widget {
+				display: block;
 			}
-			div.item-list-tabs li.yz-activity-show-search .yz-dropdown-area {
-				bottom: -75px;
+			.yz-link-widgets-settings {
+				display: none;
 			}
 		}
 		.yz-main-column {
-			width: 47%;
-		}
-		.yz-sidebar-column {
-			width: 27.8%;
-			.yz-column-content {
-				margin-left: 10px;
-			}
+			width: 66%;
 		}
 	}
 }
@@ -146,48 +163,7 @@
 }
 
 //Overwrite Youzer update - maybe delete these after the next youzer update
-#buddypress div.item-list-tabs .yz-activity-search {
-	border: 1px solid #f1f1f1;
-	background-color: #fff;
-	border-radius: 50px;
-	overflow: hidden;
-	input {
-		border: none;
-		padding: 10px 0 10px 25px;
-		float: left;
-		width: calc( 100% - 55px );
-		height: 45px;
-		margin: 0;
-		font-size: 13px;
-		color: #898989;
-		font-weight: 600;
-		&::placeholder, ::-webkit-input-placeholder, ::-moz-placeholder, ::-ms-input-placeholder {
-			font-weight: 600;
-    		color: #898989;
-		}
-	}
-	button {
-		float: right;
-		border: none;
-		background: transparent;
-		display: inline-block;
-		padding: 0;
-		margin: 0;
-		box-shadow: none;
-	}
-	i {
-		 display: inline-block;
-		 float: right;
-		 height: 45px;
-		 width: 50px;
-		 text-align: center;
-		 border-radius: 100%;
-		 line-height: 45px;
-		 background: #fff;
-		 cursor: pointer;
-		 color: #969696;
-	}
-}
+
 #buddypress .activity-meta a {
     padding: 0;
     border: none;

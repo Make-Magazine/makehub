@@ -165,3 +165,52 @@
 		color: #eb002a;
 	}
 }
+
+//// MY ACCOUNT PAGE ////
+.my-account {
+	#ihc_account_page_wrapp .ihc-user-page-content-wrapper {
+		.ihc-ap-menu {
+			div:nth-last-of-type(2) {
+				display: none;
+			}
+		}
+		.ihc-ap-wrap {
+			.iump-user-page-wrapper .ihc-register-3 {
+				min-width: 100%;
+				margin-left: 0px;
+			}
+			h3 { display: none; }
+			
+		}
+	}
+	form.ihc-form-create-edit {
+		.iump-form-line-register.iump-form-text {
+			display: none;
+			visibility: hidden;
+			pointer-events: none;
+			height: 0px;
+			width: 0px;
+			overflow: hidden;
+		}
+		.iump-labels-register {
+			font-family: Roboto;
+			margin-bottom: 15px;
+		}
+		.iump-form-checkbox-wrapper {
+			padding-left: 0px;
+			font-size: 16px;
+			input { margin-right: 20px; }
+		} 
+	}
+	.ihc-user-page-top-ap-wrapper {
+		padding-top: 0px !important;
+		padding-bottom: 15px;
+		.ihc-middle-side {
+			margin-left: 0px;
+			.ihc-account-page-top-mess {
+				display: none;
+				float: left;
+			}
+		}
+	}
+}

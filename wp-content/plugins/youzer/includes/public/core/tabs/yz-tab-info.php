@@ -47,7 +47,7 @@ class YZ_Info_Tab {
 										 <div class="yz-widget-main-content">
 											<a href="'.bp_loggedin_user_domain().'widgets" class="yz-widget-head">
 											  <h2 class="yz-widget-title">
-												  <i class="fas fa-id-card"></i>Add Profile Widgets
+												  <i class="fas fa-id-card"></i>Profile Customization
 											  </h2>
 											  <i class="far fa-edit yz-edit-widget"></i>
 											</a>

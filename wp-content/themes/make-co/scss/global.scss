@@ -63,6 +63,26 @@ button, input[type="submit"] {
 	}
 }
 
+.feedback-btn {
+	position: fixed;
+	z-index: 9999;
+    bottom: 40px;
+    background: #eb002a;
+	color: #fff;
+	border: solid 1px #eb002a;
+    width: 120px;
+    left: -15px;
+	transition: 0.3s;
+	&:hover {
+		background: #fff;
+		color: #eb002a;
+		bottom: 38px;
+		left: -5px;
+		padding: 5px;
+		font-size: 18px;
+	}
+}
+
 .top15 { 
   margin-top:15px!important;
 }

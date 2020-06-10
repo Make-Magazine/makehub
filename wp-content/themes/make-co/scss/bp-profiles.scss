@@ -22,11 +22,6 @@
 			}
 		}
 	}
-	.yz-settings-menu {
-		a[href*="change-password"] {
-			display: none !important;
-		}
-	}
 	#messages-inbox-personal-li #inbox i, #messages-notices-personal-li #notices i{
 		background: #3fafed;
 	}
@@ -43,8 +38,11 @@
 		background: #333;
 	}
 }
-#yz-profile-navmenu .yz-settings-menu {
-	width: 240px !important;
+.yz-profile-content #yz-profile-navmenu {
+	.yz-navbar-view-more { display: none; }
+	.yz-settings-menu {
+		width: 240px !important;
+	}
 }
 .yz-account-page {
 	.yz-head-buttons-inner {
@@ -76,9 +74,24 @@
 	.yz-save-options {
 		background: #3fafed;
 	}
+	.yz-account-menus {
+		.yz-general {
+			display: none;
+			visibility: hidden;
+			pointer-events: none;
+		}
+	}
+	
 }
-// 
-.youzer-section-content > .uk-option-item {
+
+.bp-user .youzer .editfield .field-visibility-settings-toggle .visibility-toggle-link {
+    background-color: #3fafed;
+    background-image: url(../images/dotted-bg.png),linear-gradient(to left, #3fafed 0,#3fafed 100%);
+    background-image: url(../images/dotted-bg.png),linear-gradient(to left, #3fafed 0,#3fafed 100%);
+}
+
+// condense notification section
+#yz-notifications-settings .youzer-section-content > .uk-option-item {
 	padding: 15px 45px;
 	display: flex;
 	justify-content: center;
@@ -152,7 +165,7 @@
 }
 
 // if the member is type makerspace
-.member-type_makerspace {
+.member-type-maker_space {
 	.main-content.container {
 		&::before {
 			content: 'Makerspace';
@@ -171,11 +184,9 @@
 		i.fa-edit { display: none; }
 		#yz-profile-navmenu .yz-social-buttons, #yz-profile-navmenu .yz-settings-area .yz-quick-buttons, .yz-navbar-view-more { display: none; }
 	}
-	// hide parts of profile settings menu related to editing their profile
-	#yz-profile-navmenu .yz-settings-menu a {
-		&:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(5) {
-			display: none;
-		}
+	// hide profile settings menu
+	.yz-nav-settings {
+		display: none !important;
 	}
 	.yz-settings-sidebar {
 		.yz-account-settings-menu { display: none; }
@@ -198,18 +209,53 @@
 				display: block;
 			}
 		}
-		
 	}
+	form#yz-profile-picture.yz-settings-form {
+		input, textarea {
+			background-color: #f1f1f1 !important;
+			pointer-events: none;
+		}
+	}
+	// This is all just for rewriting the section titles for makerspace users on the profile and settings page
+	.yz-widget.yz-custom_infos .yz-widget-title, .yz-account-menus.yz-show-account-menus li.yz-edit-group-1 a, .yz-account-menus.yz-show-account-menus li.yz-edit-group-4 a, body[class*="edit-group-1"] .options-section-title h2, body[class*="edit-group-4"] .options-section-title h2 {
+		visibility: hidden;
+		i { 
+			visibility: visible;
+			float: left;
+			margin-top: -6px;
+		}
+		&::after {
+			content: "Makerspace Info";
+			visibility: visible;
+			float: left;
+		}
+	}
+	.yz-widget.yz-custom_infos:last-of-type .yz-widget-title, .yz-account-menus.yz-show-account-menus li.yz-edit-group-4 a, body[class*="edit-group-4"] h2 {
+		&::after {
+			content: "Makerspace Focuses";
+			visibility: visible;
+			float: left;
+		}
+	}
+	body[class*="edit-group-1"] .options-section-title h2, body[class*="edit-group-4"] .options-section-title h2 {
+		i { margin-top: 20px; }
+	}
+	
 }
-// add some kind of explanation to the media page
-.bp-user.media .yz-main-column {
-	.yz-media::before {
-		content: "A List of all Media uploaded via widgets and social activity for this user";
-		margin-bottom: 30px;
-		display: block;
-		padding: 15px 25px;
-		background: #fff;
-		border-radius: 3px;
-		color: #898989;
+
+
+
+// Profile Edit / Settings Page
+.settings-main-content {
+	.yz-settings-form {
+		@media screen and (min-width: 768px) {
+			.field_city, .field_state-province, .field_country, .field_zip {
+				width: 50%;
+				float: left;
+				.current-visibility-level {
+					min-width: 85px;
+				}
+			}
+		}
 	}
 }
