@@ -17,7 +17,7 @@ $form_type  = (isset($_GET['type']) ? $_GET['type']: 'Exhibit');
 
 $url = "https://makerfaire.com/wp-json/gf/v2/forms/".$form."/entries?paging[page_size]=".$page_size."&page=".$page.'&paging[offset]='.$offest;
 echo 'pulling from '.$url.'<br/>';
-$formurl = "https://makerfaire.com/wp-json/gf/v2/forms/".form; //?paging[page_size]=900
+$formurl = "https://makerfaire.com/wp-json/gf/v2/forms/".$form; //?paging[page_size]=900
 $categoryURL = "https://makerfaire.com/wp-json/wp/v2/makerfaire_category?per_page=100";
 
 $consumer_key = 'ck_af51f732cf514468cb8e3d02c217a716038f8308';
