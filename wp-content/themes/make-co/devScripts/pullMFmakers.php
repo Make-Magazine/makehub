@@ -575,8 +575,8 @@ function maker_to_community($maker, $form,$entry ) {
     $bpmeta = array(1 => $maker['first_name'] . ' ' . $maker['last_name'],
         2   => $maker['website'], 259 => $maker['bio'], 202 => $maker['city'],
         391 => $maker['state'], 392 => $maker['country'], 393 => $maker['zipcode'],
-        636 => $maker['age_range'], 637 => $maker['gender'], 207 => $maker['phone'],
-        201 => $maker['address'], 203 => $maker['address2'], 642 => $faireData);
+        207 => $maker['phone'], 201 => $maker['address'], 203 => $maker['address2'], 
+        636 => $faireData, 637 => $maker['age_range'], 638 => $maker['gender']);
     
     if (isset($bpmeta)) {
         //Added an entry in user_meta table for current user meta key is last_activity
