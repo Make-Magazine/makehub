@@ -164,7 +164,7 @@
 					a::before {
 						font-family: "FontAwesome";
 						content: "\f0c0";
-						background: #2C4956;
+						background: #333;
 					}
 				}
 				li#members-all {
@@ -175,11 +175,14 @@
 				li#members-personal {
 					display: none;
 				}
-				li#members-maker_space a i {
-					background: #005e9a !important;
+				li#members-maker a i {
+					background: #3fafed !important;
 				}
 				li#members-member a i {
-					background: #3fafed !important;
+					background: #005e9a !important;
+				}
+				li#members-maker_space a i {
+					background: #2C4956 !important;
 				}
 				li a {
 					margin-right: 5px;
@@ -372,7 +375,7 @@
 							color: rgb(150, 150, 150);
 						}
 					}
-					li#members-makers {
+					li#members-maker {
 						background: rgba(63, 175, 237, .2);
 						border-radius: 5px;
 						a {
