@@ -224,7 +224,7 @@ function add_featured_ms_class_directory($classes) {
     global $members_template;
     $uid = $members_template->member->ID;
     $user_meta = get_user_meta($uid);
-    $user_level = $user_meta['ihc_user_levels'][0];
+    $user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
     $time_data = ihc_get_start_expire_date_for_user_level($uid, $user_level);
     if (!empty($user_meta['ihc_user_levels']) && strtotime($time_data['expire_time']) > time()) {
         if ($user_level == 7) {
@@ -239,7 +239,7 @@ add_filter('bp_get_member_class', 'add_featured_ms_class_directory');
 function add_featured_ms_class_profile($classes) {
     $uid = bp_displayed_user_id();
     $user_meta = get_user_meta($uid);
-    $user_level = $user_meta['ihc_user_levels'][0];
+    $user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
     $time_data = ihc_get_start_expire_date_for_user_level($uid, $user_level);
     if (!empty($user_meta['ihc_user_levels']) && strtotime($time_data['expire_time']) > time()) {
         if ($user_level == 7) {

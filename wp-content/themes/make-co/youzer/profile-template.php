@@ -5,7 +5,7 @@
 
 $uid = bp_displayed_user_id();
 $user_meta = get_user_meta($uid);
-$user_levels = explode(",",$user_meta['ihc_user_levels'][0]);
+$user_levels = (isset($user_meta['ihc_user_levels'][0])?explode(",",$user_meta['ihc_user_levels'][0]):array());
 $member_type = bp_get_member_type($uid);
 $expired_user = false;
 
@@ -19,7 +19,7 @@ foreach ($user_levels as &$user_level) {
 	}
 }
 
-if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space"  || $member_type == "makers" || user_can( $uid, 'administrator' )) {
+if ( !empty($user_meta['ihc_user_levels']) && $expired_user != true || $member_type == "maker_space"  || $member_type == "maker" || user_can( $uid, 'administrator' )) {
 	
 ?>
 

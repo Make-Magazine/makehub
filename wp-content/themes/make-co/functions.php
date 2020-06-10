@@ -58,6 +58,11 @@ foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
 
+// Include all classes files in the makerfaire/classes directory:
+foreach (glob(get_stylesheet_directory() . '/classes/*.php') as $file) {
+    include_once $file;
+}
+
 add_action('after_setup_theme', 'genesis_child_gutenberg_support');
 
 /**
