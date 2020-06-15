@@ -74,6 +74,9 @@
 			width: 66%;
 		}
 	}
+	@media screen and (max-width:768px) {
+		.yz-my-account-widget { display: none; }
+	}
 }
 
 // Recent Blog posts widget

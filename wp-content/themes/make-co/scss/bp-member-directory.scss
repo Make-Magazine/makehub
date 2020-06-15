@@ -2,6 +2,9 @@
 	.yz-page-main-content { 
 		min-width: 95% !important;
 		padding-top: 50px;
+		@media screen and ( max-width: 767px ) {
+			padding-top: 150px;
+		}
 	}
 	.filter-sidebar {
 		display: flex;
@@ -12,7 +15,6 @@
 		max-width: 100%;
 		.yz-directory-filter { 
 			width: 250px;
-			max-height: 450px;
 			.item-list-tabs li {
 				&#yz-directory-search-box { 
 					margin-left: 0px;
@@ -175,7 +177,7 @@
 				li#members-personal {
 					display: none;
 				}
-				li#members-maker a i {
+				li#members-makers a i {
 					background: #3fafed !important;
 				}
 				li#members-member a i {
@@ -184,6 +186,34 @@
 				li#members-maker_space a i {
 					background: #2C4956 !important;
 				}
+				@media screen and ( min-width: 1040px ) {
+					li#yz-directory-search-box {
+						margin-left: 5px;
+						display: flex;
+						align-items: center;
+						&::before {
+							font-family: "FontAwesome";
+							border-radius: 100%;
+							content: "\f002";
+							background: #005e9a;
+							padding: 5px;
+							color: #fff;
+							float: left;
+							height: 30px;
+							width: 30px;
+							margin-right: 10px;
+							display: flex;
+							justify-content: center;
+							align-items: center;
+						}
+					}
+				}
+				li#yz-directory-search-box #search-members-form {
+					label { float: left; }
+					@media screen and ( max-width: 767px ) {
+						margin-left: 15px;
+					}
+				} 
 				li a {
 					margin-right: 5px;
 					i, &::before {

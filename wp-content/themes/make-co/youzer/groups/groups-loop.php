@@ -34,7 +34,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 		<li <?php bp_group_class(); ?>>
 
 			<div class="yz-group-data">
-				<h3 class="item-title"><?php bp_group_link(); ?></h3>
+				
 				<?php if ( bp_is_groups_directory() ) yz_get_group_tools( bp_get_group_id() ) ?>
 				
 				<?php yz_groups_directory_group_cover( bp_get_group_id() ); ?>
@@ -54,6 +54,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 					<?php endif; ?>
 
 				<div class="item">
+					<div class="item-title"><?php bp_group_link(); ?></div>
 					<?php do_action( 'bp_directory_groups_after_group_name' ); ?>
 					<div class="item-meta">
 						<?php if ( bp_is_groups_directory() ) : ?>
@@ -78,7 +79,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 
 				<?php 
 					if ( bp_is_groups_directory() ) {
-						// yz_get_group_statistics_data( bp_get_group_id() );
+						yz_get_group_statistics_data( bp_get_group_id() );
 					}
 				?>
 

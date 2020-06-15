@@ -2,34 +2,9 @@
 	max-width: 100%;
 }
 .yz-groups-directory-page {
-	h3.item-title {
-		position: absolute;
-		left: 0;
-		right: 0;
-		top: 15px;
-		display: flex;
-		justify-content: center;
-		a {
-			color: #fff;
-			background: rgba(63, 175, 237, .65);
-			padding: 7px 20px 10px;
-			border-radius: 50px;
-			line-height: 1.2em;
-			font-size: .85em;
-			margin: 0px 10px;	
-			text-shadow: 
-				-1px -1px 0 #000,
-				 0   -1px 0 #000,
-				 1px -1px 0 #000,
-				 1px  0   0 #000,
-				 1px  1px 0 #000,
-				 0    1px 0 #000,
-				-1px  1px 0 #000,
-				-1px  0   0 #000;
-		}
-	}
+
 	.item-avatar {
-		margin-bottom: 0px;
+		margin-top: -85px;
 	}
 	.action {
 		margin-top: 15px;

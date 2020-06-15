@@ -37,7 +37,7 @@ do_action( 'bp_before_directory_activity' ); ?>
 			<div class="yz-mobile-nav">
 				<div class="yz-mobile-nav-item yz-show-activity-menu"><div class="yz-mobile-nav-container"><i class="fas fa-bars"></i><a><?php _e( 'Menu', 'youzer' ); ?></a></div></div>
 				<div class="yz-mobile-nav-item yz-show-activity-search"><div class="yz-mobile-nav-container"><i class="fas fa-search"></i><a><?php _e( 'Search', 'youzer' ); ?></a></div></div>
-				<div class="yz-mobile-nav-item yz-show-activity-filter"><div class="yz-mobile-nav-container"><i class="fas fa-sliders-h"></i><a><?php _e( 'Filter', 'youzer' ); ?></a></div></div>
+				<div class="yz-mobile-nav-item yz-show-activity-filter"><div class="yz-mobile-nav-container"><i class="fas fa-sliders-h"></i><a><?php _e( 'Filters', 'youzer' ); ?></a></div></div>
 			</div>
 			
 			<div class="yz-sidebar-column yz-group-sidebar youzer-sidebar">
