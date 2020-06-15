@@ -387,6 +387,9 @@
 			}
 		}
 	}
+	.yz-members-directory-sidebar {
+		#bps_widget-3 { display: none; } // hide the makerspace filters until we know they're on the makerspace directory
+	}
 }
 #yz-groups-directory {
 	#yz-groups-list {

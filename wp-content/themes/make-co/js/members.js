@@ -33,4 +33,15 @@ jQuery(document).ready(function(){
 	if(window.location.pathname.replace(/\/$/, "").includes("/members/" + ajax_object.wp_user_nicename )){
 		jQuery(".yz-profile-img").attr("href", "/members/" + ajax_object.wp_user_nicename + "/profile/change-avatar");
 	}
+	// Hide Makerspace directory filters for non-makerspaces
+	if(jQuery("body").hasClass("page-members-type-maker_space")) {
+		jQuery(".yz-members-directory-sidebar #bps_widget-3").css("display","block");
+	}
+	jQuery(".yzmt-directory-tab").on("click", function(){
+		if(jQuery(this).is("#members-maker_space")) {
+			jQuery(".yz-members-directory-sidebar #bps_widget-3").css("display","block");
+		} else {
+			jQuery(".yz-members-directory-sidebar #bps_widget-3").css("display","none");
+		}
+	});
 });
