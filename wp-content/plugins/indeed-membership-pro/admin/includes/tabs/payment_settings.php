@@ -10,6 +10,17 @@
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='pagseguro') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=pagseguro';?>"><?php _e('Pagseguro', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='paypal_express_checkout') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=paypal_express_checkout';?>"><?php _e('PayPal Express Checkout', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='bank_transfer') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=bank_transfer';?>"><?php _e('Bank transfer', 'ihc');?></a>
+
+	<?php
+		$otherPayments = apply_filters( 'ihc_filter_admin_payments_list_menu', [] );
+		// @description Run on check if payment gateway is available. @param bool ( true if available )
+	?>
+	<?php if ( $otherPayments ):?>
+			<?php foreach ( $otherPayments as $slug => $label ):?>
+					<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='bank_transfer') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=' . $slug;?>"><?php echo $label;?></a>
+			<?php endforeach;?>
+	<?php endif;?>
+
 	<a class="ihc-subtab-menu-item" href="<?php echo $url.'&tab=general&subtab=pay_settings';?>"><?php _e('Payment Settings', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
@@ -145,6 +156,11 @@ if (empty($_GET['subtab'])){
 		   </a>
 		</div>
 
+		<?php
+				do_action( 'ihc_admin_list_payments_after_boxes' );
+				// @description
+		?>
+
 
 		<div class="ihc-clear"></div>
 	</div>
@@ -152,13 +168,18 @@ if (empty($_GET['subtab'])){
 } else {
 	switch ($_GET['subtab']){
 		case 'paypal':
-			ihc_save_update_metas('payment_paypal');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_paypal');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_paypal');//getting metas
 			$pages = ihc_get_all_pages();//getting pages
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
 			do_action( "ihc_admin_dashboard_after_top_menu" );
+
+			$siteUrl = site_url();
+			$siteUrl = trailingslashit($siteUrl);
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -166,18 +187,24 @@ if (empty($_GET['subtab'])){
 				</span>
 			</div>
 			<form action="" method="post">
+					<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 					<div class="ihc-stuffbox">
-						<h3><?php _e('PayPal Activation:', 'ihc');?></h3>
+						<h3><?php _e('PayPal Standard Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e('Once everything is properly set up, activate the payment gateway for further use.', 'ihc');?> </h4>
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<h4><?php _e('Enable PayPal Standard', 'ihc');?> </h4>
+								<p><?php _e('Once everything is properly set up, activate the payment gateway for further use.', 'ihc');?> </p>
+                                <p><?php _e("PayPal Standard redirects customers to PayPal to enter their payment information", 'ihc');?></p>
+                                <label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_paypal_status']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_paypal_status');" <?php echo $checked;?> />
 								<div class="switch" style="display:inline-block;"></div>
 							</label>
 							<input type="hidden" value="<?php echo $meta_arr['ihc_paypal_status'];?>" name="ihc_paypal_status" id="ihc_paypal_status" />
 							</div>
+                            <div class="iump-form-line">
+
+                            </div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
@@ -188,27 +215,39 @@ if (empty($_GET['subtab'])){
 						<h3><?php _e('PayPal Settings:', 'ihc');?></h3>
 
 						<div class="inside">
-							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('E-mail Address:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_paypal_email'];?>" name="ihc_paypal_email" style="width: 300px;" />
+                         <div class="row" style="margin-left: 0px;">
+                  			<div class="col-xs-6">
+							<div class="iump-form-line input-group">
+								<span class="input-group-addon" ><?php _e('PayPal Merchant Email:', 'ihc');?></span>
+                                <input type="text" value="<?php echo $meta_arr['ihc_paypal_email'];?>" name="ihc_paypal_email" class="form-control"/>
 							</div>
+                            <div class="iump-form-line">
+                            <p><?php _e("Please enter your PayPal Email address. This is required in order to take payments via PayPal.", 'ihc');?></p>
+                            </div>
 
-							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Merchant account ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_paypal_merchant_account_id'];?>" name="ihc_paypal_merchant_account_id" style="width: 300px;" />
-								<p><?php _e("Used only for 'Cancel' and 'Delete' Subscriptions.", 'ihc');?></p>
-								<p><?php _e("You can find your 'Merchant account ID' here:", 'ihc');?></p>
-								<a href="https://www.sandbox.paypal.com/businessprofile/settings/" target="_blank" >Sandbox mode</a> or
-								<a href="https://www.paypal.com/businessprofile/settings/" target="_blank" >Live mode</a>
+							<div class="iump-form-line input-group">
+								<span class="input-group-addon" ><?php _e('Merchant account ID:', 'ihc');?></span>
+                                <input type="text" value="<?php echo $meta_arr['ihc_paypal_merchant_account_id'];?>" name="ihc_paypal_merchant_account_id"  class="form-control" />
+
 							</div>
-
+                            <div class="iump-form-line input-group">
+                            	<p><?php _e("Used especially for 'Cancel' and 'Delete' Subscriptions.", 'ihc');?></p>
+								<p><?php _e("You can find your <strong>'Merchant account ID'</strong> on Account Settings -> Business information section", 'ihc');?></p>
+							</div>
 							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Enable Sandbox', 'ihc');?></label> <input type="checkbox" onClick="checkAndH(this, '#enable_sandbox');" <?php if($meta_arr['ihc_paypal_sandbox']) echo 'checked';?> />
+                           		<input type="checkbox" onClick="checkAndH(this, '#enable_sandbox');" <?php if($meta_arr['ihc_paypal_sandbox']) echo 'checked';?> />
+								<label class="iump-labels"><?php _e(' Enable PayPal Sandbox', 'ihc');?></label>
 								<input type="hidden" name="ihc_paypal_sandbox" value="<?php echo $meta_arr['ihc_paypal_sandbox'];?>" id="enable_sandbox" />
 							</div>
+                            <div class="iump-form-line">
+                            <p><?php _e("PayPal sandbox mode can be used to testing purpose. A Sandbox merchant account and additional Sandbox buyer account is required. Sign up as a ", 'ihc');?><a target="_blank" href="https://developer.paypal.com/"><?php _e("developer account", 'ihc');?></a></p>
+                            </div>
+
 
 
 														<div class="iump-form-line">
-															<label class="iump-labels"><?php _e('Checkout language:', 'ihc');?></label>
-															<select name="ihc_paypapl_locale_code">
+															<h4><?php _e('Checkout Page language:', 'ihc');?></h4>
+															<select name="ihc_paypapl_locale_code"  class="form-control">
 																	<?php
 																			$locale = array(
 																												'en_US' => 'English - US',
@@ -243,10 +282,13 @@ if (empty($_GET['subtab'])){
 																	<?php endforeach;?>
 															</select>
 														</div>
-
+							</div>
+                 		 </div>
 							<div class="iump-form-line iump-special-line">
+                            <div class="row" style="margin-left: 0px;">
+                  			<div class="col-xs-4">
 								<label class="iump-labels-special"><?php _e('Redirect Page after Payment:', 'ihc');?></label>
-								<select name="ihc_paypal_return_page">
+								<select name="ihc_paypal_return_page" class="form-control">
 									<option value="-1" <?php if($meta_arr['ihc_paypal_return_page']==-1)echo 'selected';?> >...</option>
 									<?php
 										if($pages){
@@ -258,8 +300,15 @@ if (empty($_GET['subtab'])){
 										}
 									?>
 								</select>
+                             </div>
+                             </div>
 							</div>
-
+							<div class="iump-form-line">
+                            <h4><?php _e("How to Setup", 'ihc');?></h4>
+                            <p>1. <?php _e("Login with your credentials and go to 'Account Settings' (top-right of page)", 'ihc');?></p>
+							<p>2. <?php _e("After that go to 'Notifications' and next Update the 'Instant payment notifications' ", 'ihc');?></p>
+							<p>3. <?php _e('Setup your IPN in order to receive Payment confirmations as: ', 'ihc');?><a target="_blank" href="<?php echo $siteUrl . '?ihc_action=paypal';?>"><?php echo $siteUrl . '?ihc_action=paypal';?></a></p>
+                            </div>
 
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -270,20 +319,24 @@ if (empty($_GET['subtab'])){
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Multi-Payment Selection:', 'ihc');?></h3>
 						<div class="inside">
-							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Label:', 'ihc');?></label>
-								<input type="text" name="ihc_paypal_label" value="<?php echo $meta_arr['ihc_paypal_label'];?>" />
+                        <div class="row" style="margin-left: 0px;">
+                  			<div class="col-xs-4">
+							<div class="iump-form-line iump-no-border input-group">
+								<span class="input-group-addon"><?php _e('Label:', 'ihc');?></span>
+								<input type="text" name="ihc_paypal_label" value="<?php echo $meta_arr['ihc_paypal_label'];?>"  class="form-control"/>
 							</div>
 
-							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Order:', 'ihc');?></label>
-								<input type="number" min="1" name="ihc_paypal_select_order" value="<?php echo $meta_arr['ihc_paypal_select_order'];?>" />
+							<div class="iump-form-line iump-no-border input-group">
+								<span class="input-group-addon"><?php _e('Order:', 'ihc');?></span>
+								<input type="number" min="1" name="ihc_paypal_select_order" value="<?php echo $meta_arr['ihc_paypal_select_order'];?>"  class="form-control"/>
 							</div>
 
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
+                        </div>
+                        </div>
 					</div>
 
 			</form>
@@ -291,7 +344,9 @@ if (empty($_GET['subtab'])){
 		break;
 
 		case 'stripe':
-			ihc_save_update_metas('payment_stripe');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_stripe');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_stripe');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -304,18 +359,21 @@ if (empty($_GET['subtab'])){
 				</span>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 			<div class="ihc-stuffbox">
 						<h3><?php _e('Stripe Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </h4>
+                            	<h4><?php _e('Enable Stripe Standard', 'ihc');?> </h4>
+								<p><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </p>
 								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_stripe_status']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_stripe_status');" <?php echo $checked;?> />
 								<div class="switch" style="display:inline-block;"></div>
 							</label>
 							<input type="hidden" value="<?php echo $meta_arr['ihc_stripe_status'];?>" name="ihc_stripe_status" id="ihc_stripe_status" />
-							</div>
+							<div class="ihc-alert-warning"><?php echo __('We recommend to use', 'ihc'); ?> <a href="<?php echo $url.'&tab='.$tab.'&subtab=stripe_checkout';?>"><strong>Stripe Checkout</strong></a> <?php echo __('gateway instead being more stable and customizable. Stripe Standard will become deprecated soon.', 'ihc');?></div>
+                            </div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
@@ -324,15 +382,18 @@ if (empty($_GET['subtab'])){
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Stripe Settings:', 'ihc');?></h3>
 					<div class="inside">
-						<div class="iump-form-line">
-							<label class="iump-labels"><?php _e('Secret Key:', 'ihc');?></label>
-							<input type="text" value="<?php echo $meta_arr['ihc_stripe_secret_key'];?>" name="ihc_stripe_secret_key" style="width: 300px;" />
+                    	 <div class="row" style="margin-left: 0px;">
+                  <div class="col-xs-6">
+						<div class="iump-form-line input-group">
+							<span class="input-group-addon"><?php _e('Publishable Key:', 'ihc');?></span>
+							<input type="text" value="<?php echo $meta_arr['ihc_stripe_publishable_key'];?>" name="ihc_stripe_publishable_key" class="form-control"/>
 						</div>
-						<div class="iump-form-line">
-							<label class="iump-labels"><?php _e('Publishable Key:', 'ihc');?></label>
-							<input type="text" value="<?php echo $meta_arr['ihc_stripe_publishable_key'];?>" name="ihc_stripe_publishable_key" style="width: 300px;" />
+						<div class="iump-form-line input-group">
+							<span class="input-group-addon"><?php _e('Secret Key:', 'ihc');?></span>
+							<input type="text" value="<?php echo $meta_arr['ihc_stripe_secret_key'];?>" name="ihc_stripe_secret_key" class="form-control" />
 						</div>
-
+					</div>
+                    </div>
 						<div class="iump-form-line">
 							<?php
 								$site_url = site_url();
@@ -343,15 +404,18 @@ if (empty($_GET['subtab'])){
 							?>
 						</div>
 
-						<div style="font-size: 11px; color: #333; padding-left: 10px;">
+						<div style="font-size: 11px;  padding-left: 10px; line-height:25px;">
 							<ul class="ihc-info-list">
 								<li><?php _e('1. Go to', 'ihc');?> <a href="http://stripe.com" target="_blank">http://stripe.com</a> <?php _e('and login with username and password.', 'ihc');?></li>
-								<li><?php _e('2. After that click on "Dashboard", and then select "Your account" - "Account settings".', 'ihc');?></li>
-								<li><?php _e('3. A popup will appear and you must go to API Keys, here you will find the "Secret Key" and	"Publishable Key".', 'ihc');?></li>
-								<li><?php echo __("4. Set your Web Hook URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong>';?></li>
+                                <li><?php _e('2. Complete your Account setup with all required information on ', 'ihc');?><a href="https://dashboard.stripe.com/settings/account" target="_blank">https://dashboard.stripe.com/settings/account</a></li>
+								<li><?php _e('3. After that click on "Developers", and then select "API Keys".', 'ihc');?></li>
+								<li><?php _e('4. You will find the "Publishable Key" and "Secret Key". If not, create them.', 'ihc');?></li>
+								<li><?php _e('5. Go to "Webhooks" and press "Add endpoint".', 'ihc');?></li>
+								<li><?php echo __("6. Set your Endpoint URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong> and choose "receive all events"';?></li>
 							</ul>
 						</div>
 						<div class="iump-form-line">
+                         <h2><?php _e('Test Credentials', 'ihc');?></h2>
                         	<p><?php _e('For Test/Sandbox mode use the next credentials available:', 'ihc');?></p>
                         	<a href="https://stripe.com/docs/testing" target="_blank">https://stripe.com/docs/testing</a>
                             <p><?php _e('Example:', 'ihc');?></p>
@@ -365,11 +429,13 @@ if (empty($_GET['subtab'])){
 				</div>
 
 								<div class="ihc-stuffbox">
-									<h3><?php _e('PopUp Settings:', 'ihc');?></h3>
+									<h3><?php _e('Additional Settings:', 'ihc');?></h3>
 									<div class="inside">
+                                    	<div class="row" style="margin-left: 0px;">
+                                     	<div class="col-xs-4">
 										<div class="iump-form-line iump-no-border">
-											<label class="iump-labels"><?php _e('Language:', 'ihc');?></label>
-											<select name="ihc_stripe_locale_code">
+											<h4><?php _e('Stripe popup Language:', 'ihc');?></h4>
+											<select name="ihc_stripe_locale_code" class="form-control">
 													<?php
 															$locales = array(
 																		'zh' => 'Simplified Chinese',
@@ -392,38 +458,44 @@ if (empty($_GET['subtab'])){
 											</select>
 										</div>
 
-										<div class="iump-form-line iump-no-border">
-											<label class="iump-labels"><?php _e('Logo:', 'ihc');?></label>
-											<input type="text" onClick="openMediaUp(this);" name="ihc_stripe_popup_image" value="<?php echo $meta_arr['ihc_stripe_popup_image'];?>" />
+										<div class="iump-form-line iump-no-border  input-group">
+											<span class="input-group-addon"><?php _e('Stripe popup Logo image:', 'ihc');?></span>
+											<input type="text" onClick="openMediaUp(this);" name="ihc_stripe_popup_image" value="<?php echo $meta_arr['ihc_stripe_popup_image'];?>"  class="form-control"/>
 										</div>
 
-										<div class="iump-form-line iump-no-border">
-												<label class="iump-labels"><?php _e('Button Label:', 'ihc');?></label>
-												<input type="text" name="ihc_stripe_bttn_value" value="<?php echo $meta_arr['ihc_stripe_bttn_value'];?>" />
+										<div class="iump-form-line iump-no-border input-group">
+												<span class="input-group-addon"><?php _e('Stripe popup Button label:', 'ihc');?></span>
+												<input type="text" name="ihc_stripe_bttn_value" value="<?php echo $meta_arr['ihc_stripe_bttn_value'];?>"  class="form-control"/>
 										</div>
 
 										<div class="ihc-wrapp-submit-bttn iump-submit-form">
 											<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 										</div>
 									</div>
+                                    </div>
+                                    </div>
 								</div>
 
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Multi-Payment Selection:', 'ihc');?></h3>
 					<div class="inside">
-						<div class="iump-form-line iump-no-border">
-							<label class="iump-labels"><?php _e('Label:', 'ihc');?></label>
-							<input type="text" name="ihc_stripe_label" value="<?php echo $meta_arr['ihc_stripe_label'];?>" />
+                    	<div class="row" style="margin-left: 0px;">
+                                     	<div class="col-xs-4">
+						<div class="iump-form-line iump-no-border input-group">
+							<span class="input-group-addon"><?php _e('Label:', 'ihc');?></span>
+							<input type="text" name="ihc_stripe_label" value="<?php echo $meta_arr['ihc_stripe_label'];?>" class="form-control"/>
 						</div>
 
-						<div class="iump-form-line iump-no-border">
-							<label class="iump-labels"><?php _e('Order:', 'ihc');?></label>
-							<input type="number" min="1" name="ihc_stripe_select_order" value="<?php echo $meta_arr['ihc_stripe_select_order'];?>" />
+						<div class="iump-form-line iump-no-border input-group">
+							<span class="input-group-addon"><?php _e('Order:', 'ihc');?></span>
+							<input type="number" min="1" name="ihc_stripe_select_order" value="<?php echo $meta_arr['ihc_stripe_select_order'];?>" class="form-control"/>
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn iump-submit-form">
 							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
+                        </div>
+                        </div>
 					</div>
 				</div>
 
@@ -432,7 +504,9 @@ if (empty($_GET['subtab'])){
 		break;
 
 		case 'stripe_checkout':
-		ihc_save_update_metas('payment_stripe_checkout_v2');//save update metas
+		if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+				ihc_save_update_metas('payment_stripe_checkout_v2');//save update metas
+		}
 		$meta_arr = ihc_return_meta_arr('payment_stripe_checkout_v2');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -445,11 +519,13 @@ if (empty($_GET['subtab'])){
 			</span>
 		</div>
 		<form action="" method="post">
+			<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 		<div class="ihc-stuffbox">
 					<h3><?php _e('Stripe Checkout Activation', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
-							<h4><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </h4>
+                            <h4><?php _e('Enable Stripe Checkout', 'ihc');?> </h4>
+							<p><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </p>
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 							<?php $checked = ($meta_arr['ihc_stripe_checkout_v2_status']) ? 'checked' : '';?>
 							<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_stripe_checkout_v2_status');" <?php echo $checked;?> />
@@ -468,13 +544,15 @@ if (empty($_GET['subtab'])){
                 <div class="row" style="margin-left: 0px;">
                   <div class="col-xs-6">
 					<div class="iump-form-line input-group">
-						<span class="input-group-addon" ><?php _e('Secret Key:', 'ihc');?></span>
-						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_secret_key'];?>" name="ihc_stripe_checkout_v2_secret_key"  class="form-control" />
-					</div>
-					<div class="iump-form-line input-group">
 						<span class="input-group-addon" ><?php _e('Publishable Key:', 'ihc');?></span>
 						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_publishable_key'];?>" name="ihc_stripe_checkout_v2_publishable_key" class="form-control"/>
 					</div>
+
+                    <div class="iump-form-line input-group">
+						<span class="input-group-addon" ><?php _e('Secret Key:', 'ihc');?></span>
+						<input type="text" value="<?php echo $meta_arr['ihc_stripe_checkout_v2_secret_key'];?>" name="ihc_stripe_checkout_v2_secret_key"  class="form-control" />
+					</div>
+
 				  </div>
                   </div>
 
@@ -491,11 +569,13 @@ if (empty($_GET['subtab'])){
 					<div style="font-size: 13px; padding-left: 10px; line-height:25px;">
 						<ul class="ihc-info-list">
 							<li><?php _e('1. Go to', 'ihc');?> <a href="http://stripe.com" target="_blank">http://stripe.com</a> <?php _e('and login with username and password.', 'ihc');?></li>
-							<li><?php _e('2. After that click on "Dashboard", and then select "Your account" - "Account settings".', 'ihc');?></li>
-							<li><?php _e('3. A popup will appear and you must go to API Keys, here you will find the "Secret Key" and	"Publishable Key".', 'ihc');?></li>
-							<li><?php echo __("4. Set your Web Hook URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong>';?> <?php _e('choosing to trigger for "All Events".', 'ihc');?></li>
-                            <li><?php echo __("5. Enable Email notifications from  <strong>Manage payments that require 3D Secure</strong> on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/billing/automatic" target="_blank">https://dashboard.stripe.com/account/billing/automatic</a>';?></li>
-                            <li><?php echo __("6. Customize Stripe Checkout page and Emails on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/branding" target="_blank">https://dashboard.stripe.com/account/branding</a>';?></li>
+                            <li><?php _e('2. Complete your Account setup with all required information on ', 'ihc');?><a href="https://dashboard.stripe.com/settings/account" target="_blank">https://dashboard.stripe.com/settings/account</a></li>
+							<li><?php _e('3. After that click on "Developers", and then select "API Keys".', 'ihc');?></li>
+							<li><?php _e('4. You will find the "Publishable Key" and "Secret Key". If not, create them.', 'ihc');?></li>
+							<li><?php _e('5. Go to "Webhooks" and press "Add endpoint".', 'ihc');?></li>
+							<li><?php echo __("6. Set your Endpoint URL to: ", 'ihc') . '<strong>' . $notify_url . '</strong>';?> <?php _e('choosing "receive all events".', 'ihc');?></li>
+                            <li><?php echo __("7. Enable Email notifications from  <strong>Manage payments that require 3D Secure</strong> on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/billing/automatic" target="_blank">https://dashboard.stripe.com/account/billing/automatic</a>';?></li>
+                            <li><?php echo __("8. Customize Stripe Checkout page and Emails on ", 'ihc') . '<a href="https://dashboard.stripe.com/account/branding" target="_blank">https://dashboard.stripe.com/account/branding</a>';?></li>
 						</ul>
 					</div>
 					<div class="iump-form-line">
@@ -643,7 +723,9 @@ $pages = ihc_get_all_pages();
 			break;
 
 		case 'authorize':
-			ihc_save_update_metas('payment_authorize');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_authorize');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_authorize');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -656,6 +738,7 @@ $pages = ihc_get_all_pages();
 				</span>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 			<div class="ihc-stuffbox">
 						<h3><?php _e('Authorize.net Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -746,7 +829,9 @@ $pages = ihc_get_all_pages();
 		break;
 
 		case 'twocheckout':
-			ihc_save_update_metas('payment_twocheckout');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_twocheckout');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_twocheckout');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -759,6 +844,7 @@ $pages = ihc_get_all_pages();
 				</span>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('2Checkout Activation:', 'ihc');?></h3>
 					<div class="inside">
@@ -867,7 +953,9 @@ $pages = ihc_get_all_pages();
 			<?php
 			break;
 		case 'braintree':
-			ihc_save_update_metas('payment_braintree');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_braintree');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_braintree');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -880,6 +968,7 @@ $pages = ihc_get_all_pages();
 					</span>
 				</div>
 				<form action="" method="post">
+					<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Braintree Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -989,7 +1078,9 @@ $pages = ihc_get_all_pages();
 				<?php
 			break;
 		case 'bank_transfer':
-			ihc_save_update_metas('payment_bank_transfer');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_bank_transfer');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_bank_transfer');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -998,15 +1089,18 @@ $pages = ihc_get_all_pages();
 			?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
-						<?php _e('Bank Transfer Services', 'ihc');?>
+						<?php _e('Payment Services', 'ihc');?>
 					</span>
 				</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Bank Transfer Activation:', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
-							<h4><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </h4>
+							<h4><?php _e('Enable Bank Transfer', 'ihc');?> </h4>
+                            <p><?php _e('Once all Settings are properly done, Activate the Payment Getway for further use.', 'ihc');?> </p>
+                            <p><?php _e('Take payments in person via bank/wire transer', 'ihc');?> </p>
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_bank_transfer_status']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_bank_transfer_status');" <?php echo $checked;?> />
@@ -1020,8 +1114,12 @@ $pages = ihc_get_all_pages();
 					</div>
 				</div>
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Bank Transfer Message:', 'ihc');?></h3>
+					<h3><?php _e('Bank Transfer Instructions Message:', 'ihc');?></h3>
+
 					<div class="inside">
+                    	<div class="iump-form-line">
+                    		<p><?php _e('Instructions will be provided to buyer via trank you page. Use available {constants} for a dynamic and complete description', 'ihc');?></p>
+                        </div>
 							<div style="padding-left: 5px; width: 70%;display:inline-block;">
 								<?php wp_editor( stripslashes($meta_arr['ihc_bank_transfer_message']), 'ihc_bank_transfer_message', array('textarea_name'=>'ihc_bank_transfer_message', 'quicktags'=>TRUE) );?>
 							</div>
@@ -1043,22 +1141,26 @@ $pages = ihc_get_all_pages();
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Bank Transfer Settings:', 'ihc');?></h3>
+					<h3><?php _e('Multi-Payment Selection', 'ihc');?></h3>
 					<div class="inside">
-						<div class="iump-form-line iump-no-border">
-							<label class="iump-labels"><?php _e('Label:', 'ihc');?></label>
-							<input type="text" name="ihc_bank_transfer_label" value="<?php echo $meta_arr['ihc_bank_transfer_label'];?>" />
+                    <div class="row" style="margin-left: 0px;">
+                  		<div class="col-xs-4">
+						<div class="iump-form-line iump-no-border input-group">
+							<span class="input-group-addon" ><?php _e('Label:', 'ihc');?></span>
+							<input type="text" name="ihc_bank_transfer_label" value="<?php echo $meta_arr['ihc_bank_transfer_label'];?>"  class="form-control"/>
 						</div>
 
-						<div class="iump-form-line iump-no-border">
-							<label class="iump-labels"><?php _e('Order:', 'ihc');?></label>
-							<input type="number" min="1" name="ihc_bank_transfer_select_order" value="<?php echo $meta_arr['ihc_bank_transfer_select_order'];?>" />
+						<div class="iump-form-line iump-no-border input-group">
+							<span class="input-group-addon" ><?php _e('Order:', 'ihc');?></span>
+							<input type="number" min="1" name="ihc_bank_transfer_select_order" value="<?php echo $meta_arr['ihc_bank_transfer_select_order'];?>"  class="form-control"/>
 						</div>
 
 						<div class="ihc-wrapp-submit-bttn iump-submit-form">
 							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
 					</div>
+                    </div>
+                    </div>
 				</div>
 
 			</form>
@@ -1066,7 +1168,9 @@ $pages = ihc_get_all_pages();
 			<?php
 			break;
 		case 'payza':
-			ihc_save_update_metas('payment_payza');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_payza');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_payza');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -1079,6 +1183,7 @@ $pages = ihc_get_all_pages();
 					</span>
 				</div>
 				<form action="" method="post">
+					<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Payza Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -1152,7 +1257,9 @@ $pages = ihc_get_all_pages();
 			<?php
 			break;
 		case 'mollie':
-		ihc_save_update_metas('payment_mollie');//save update metas
+		if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+				ihc_save_update_metas('payment_mollie');//save update metas
+		}
 		$meta_arr = ihc_return_meta_arr('payment_mollie');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -1165,6 +1272,7 @@ $pages = ihc_get_all_pages();
 				</span>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Mollie Activation:', 'ihc');?></h3>
 					<div class="inside">
@@ -1177,9 +1285,15 @@ $pages = ihc_get_all_pages();
 							</label>
 							<input type="hidden" value="<?php echo $meta_arr['ihc_mollie_status'];?>" name="ihc_mollie_status" id="ihc_mollie_status" />
 						</div>
-                        <div class="ihc-error-global-dashboard-message">
-                                <?php _e('Trial option and Coupon discount for first charge of are Recurring plan are not available for Mollie payment gateway.', 'ihc'); ?>
-                                </div>
+                <div class="ihc-error-global-dashboard-message">
+										<p><?php _e( '1. Be sure you set into your Mollie dashboard Payment Methods at:  <strong>Credit Card, Paypal, SEPA Direct Debit.</strong><br/>
+										We recommend CreditCard as main Payment Method.
+										In order to manage Payment Methods into your Mollie account please access:
+										Settings -> Website Profiles -> Payment Methods.', 'ihc');?></p>
+										<p><?php _e('2. If no Payment Method is set into your mollie dashboard, the system will not work properly.', 'ihc');?> </p>
+										<p><?php _e('3. Trial option works only with "Trial Period Price" set with a minimum 0.01 value.', 'ihc');?> </p>
+										<p><?php _e('4. Coupons with 100% discounts are not accepted.', 'ihc');?> </p>
+								</div>
 						<div class="ihc-wrapp-submit-bttn iump-submit-form">
 							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
@@ -1193,15 +1307,19 @@ $pages = ihc_get_all_pages();
 								<label class="iump-labels"><?php _e('API key:', 'ihc');?></label>
 								<input type="text" name="ihc_mollie_api_key" value="<?php echo $meta_arr['ihc_mollie_api_key'];?>" />
 							</div>
-							<div class="ihc-error-global-dashboard-message">
-                                <?php _e('Mollie accept only "Direct Debit" Payment method via their API v2 library', 'ihc'); ?>
-                                </div>
                                 <h4><?php _e('How to setup?', 'ihc'); ?></h4>
-							<div style="font-size: 11px; color: #333; padding-left: 10px;">
+							<div style="font-size: 13px; padding-left: 10px; line-height:25px;">
 									<ul class="ihc-info-list">
 											<li>1. <?php _e('This payment service requires PHP > 5.6 and up-to-date OpenSSL (or other SSL/TLS toolkit). ', 'ihc');?></li>
 											<li>2. <?php _e('Register at: ', 'ihc');?> <a href="https://www.mollie.com" target="_blank">https://www.mollie.com</a></li>
-											<li>3. <?php _e('After you login with your username and password you will find your API key.', 'ihc');?> <a href="https://www.mollie.com/dashboard/payments" target="_blank">https://www.mollie.com/dashboard/payments</a></li>
+                                             <li>3. <?php _e('After you login with your username and password go to: .', 'ihc');?> <a href="https://www.mollie.com/dashboard/payments" target="_blank">https://www.mollie.com/dashboard/payments</a></li>
+                                            <li>4. <?php _e('Go to <strong>Settings->Website profiles</strong> section and click on "Create a new website profile" ', 'ihc');?> </li>
+											<li>5. <?php _e('Complete all required details for your current website. ', 'ihc');?> </li>
+                                            <li>6. <?php _e('Go to <strong>Settings->Website profiles</strong> and click on "Payment methods" on your website section', 'ihc');?> </li>
+                                            <li>7. <?php _e('Activte and setup at least one of accepted Payment nethods for recurring charges: <strong>Credit Card, PayPal, SEPA Direct Debit</strong> ', 'ihc');?> </li>
+                                            <li>8. <?php _e('<strong>Note:</strong> if no payment method is activated or an imcompatible one payments can not be taken.', 'ihc');?> </li>
+                                           <li>9. <?php _e('Go to <strong>Developers->API keys</strong> and copy the "Test API" or "Live API" key and paste it here.', 'ihc');?> </li>
+                                           
 									</ul>
 								</div>
 
@@ -1234,13 +1352,17 @@ $pages = ihc_get_all_pages();
 			<?php
 			break;
 		case 'paypal_express_checkout':
-			ihc_save_update_metas('payment_paypal_express_checkout');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_paypal_express_checkout');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_paypal_express_checkout');//getting metas
 			$pages = ihc_get_all_pages();//getting pages
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
 			echo ihc_is_curl_enable();
 			do_action( "ihc_admin_dashboard_after_top_menu" );
+			$siteUrl = site_url();
+			$siteUrl = trailingslashit($siteUrl);
 			?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
@@ -1248,11 +1370,13 @@ $pages = ihc_get_all_pages();
 				</span>
 			</div>
 			<form action="" method="post">
+					<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 					<div class="ihc-stuffbox">
-						<h3><?php _e('PayPal Payflow Activation:', 'ihc');?></h3>
+						<h3><?php _e('PayPal Express Checkout Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e('Once everything is properly set up, activate the payment gateway for further use.', 'ihc');?> </h4>
+                            	<h4><?php _e('Enable PayPal Express Checkout', 'ihc');?> </h4>
+								<p><?php _e('Once everything is properly set up, activate the payment gateway for further use.', 'ihc');?> </p>
 								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_paypal_express_checkout_status']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_paypal_express_checkout_status');" <?php echo $checked;?> />
@@ -1260,17 +1384,7 @@ $pages = ihc_get_all_pages();
 							</label>
 							<input type="hidden" value="<?php echo $meta_arr['ihc_paypal_express_checkout_status'];?>" name="ihc_paypal_express_checkout_status" id="ihc_paypal_express_checkout_status" />
 							</div>
-							<?php
-									$siteUrl = site_url();
-					        $siteUrl = trailingslashit($siteUrl);
-							?>
-							<p>1. <?php _e('In order to use PayPal Express Checkout you must set your IPN. First go to: ', 'ihc');?><a href="https://www.paypal.com/signin" target="_blank">https://www.paypal.com/signin</a><?php _e(' or: ', 'ihc');?>
-									<a href="https://www.sandbox.paypal.com/signin" target="_blank">https://www.sandbox.paypal.com/signin</a>
-									<?php _e(' if you are using sandbox', 'ihc');?>
-							</p>
-							<p>2. <?php _e("Login with your credentials and go to 'Profile and settings' (top-right of page)", 'ihc');?></p>
-							<p>3. <?php _e("After that go to 'My selling tools' and next Update the 'Instant payment notifications' ", 'ihc');?></p>
-							<p>4. <?php _e('Set your IPN at: ', 'ihc');?><a href="<?php echo $siteUrl . '?ihc_action=paypal_express_checkout_ipn';?>"><?php echo $siteUrl . '?ihc_action=paypal_express_checkout_ipn';?></a></p>
+
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
@@ -1281,22 +1395,27 @@ $pages = ihc_get_all_pages();
 						<h3><?php _e('PayPal Express Checkout Settings:', 'ihc');?></h3>
 
 						<div class="inside">
-							<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('API Username:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_user'];?>" name="ihc_paypal_express_checkout_user" style="width: 300px;" />
+                        <div class="row" style="margin-left: 0px;">
+                  			<div class="col-xs-6">
+							<div class="iump-form-line input-group">
+									<span class="input-group-addon"><?php _e('API Username:', 'ihc');?></span>
+                                    <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_user'];?>" name="ihc_paypal_express_checkout_user" class="form-control" />
 							</div>
 
-							<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('API Password:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_password'];?>" name="ihc_paypal_express_checkout_password" style="width: 300px;" />
+							<div class="iump-form-line input-group">
+									<span class="input-group-addon"><?php _e('API Password:', 'ihc');?></span>
+                                    <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_password'];?>" name="ihc_paypal_express_checkout_password"  class="form-control"/>
 							</div>
 
-							<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('API Signature:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_signature'];?>" name="ihc_paypal_express_checkout_signature" style="width: 300px;" />
+							<div class="iump-form-line input-group">
+									<span class="input-group-addon"><?php _e('API Signature:', 'ihc');?></span>
+                                    <input type="text" value="<?php echo $meta_arr['ihc_paypal_express_checkout_signature'];?>" name="ihc_paypal_express_checkout_signature"  class="form-control"/>
 							</div>
-
-							<div>
-								<p>1. <?php _e( 'Access the "My Selling tools" section', 'ihc' );?></p>
+							<h4><?php _e( 'How to get required credentials', 'ihc' );?> </h4>
+							<div class="iump-form-line iump-no-border">
+								<p>1. <?php _e( 'Access the "Account Settings" section', 'ihc' );?></p>
 								<p>2. <?php _e( 'Go to PayPal "My Profile" (top-right settings icon)', 'ihc' );?></p>
-								<p>3. <?php _e( 'Find "API access" option and click on "Update".', 'ihc' );?></p>
+								<p>3. <?php _e( 'Find "API access" option into "Website Payments" section and click on "Update".', 'ihc' );?></p>
 								<p>4. <?php _e( 'If you do not have one, create with "Request API signature" option', 'ihc' );?></p>
 								<p>5. <?php _e( 'Copy credentials received on the next page (API Username, API Password, Signature)', 'ihc' );?></p>
 								<p><?php _e( 'for sandbox', 'ihc' );?> <a target="_blank" href="https://www.sandbox.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature">https://www.sandbox.paypal.com/businessprofile/mytools/apiaccess/firstparty/signature</a></p>
@@ -1304,40 +1423,61 @@ $pages = ihc_get_all_pages();
 							</div>
 
 							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Enable Sandbox', 'ihc');?></label> <input type="checkbox" onClick="checkAndH(this, '#enable_sandbox');" <?php if($meta_arr['ihc_paypal_express_checkout_sandbox']) echo 'checked';?> />
+								<input type="checkbox" onClick="checkAndH(this, '#enable_sandbox');" <?php if($meta_arr['ihc_paypal_express_checkout_sandbox']) echo 'checked';?> />
 								<input type="hidden" name="ihc_paypal_express_checkout_sandbox" value="<?php echo $meta_arr['ihc_paypal_express_checkout_sandbox'];?>" id="enable_sandbox" />
+                                <label class="iump-labels"><?php _e('Enable PayPal Sandbox', 'ihc');?></label>
 							</div>
-
+                            <div class="iump-form-line">
+                            <p><?php _e('PayPal sandbox mode can be used to testing purpose. A Sandbox merchant account and additional Sandbox buyer account is required.', 'ihc');?></p>
+                            </div>
+                            <h4><?php _e( 'How to setup IPN', 'ihc' );?> </h4>
+							<div class="iump-form-line iump-no-border">
+                            	<p><?php _e('In order to use PayPal Express Checkout you must set your IPN. First go to: ', 'ihc');?><a href="https://www.paypal.com/signin" target="_blank">https://www.paypal.com/signin</a><?php _e(' or: ', 'ihc');?>
+									<a href="https://www.sandbox.paypal.com/signin" target="_blank">https://www.sandbox.paypal.com/signin</a>
+									<?php _e(' if you are using sandbox', 'ihc');?>
+							</p>
+							<p><?php _e("Login with your credentials and go to 'Account Settings' (top-right of page)", 'ihc');?></p>
+							<p><?php _e("After that go to 'Notifications' and next Update the 'Instant payment notifications' ", 'ihc');?></p>
+							<p><?php _e('Set your IPN at: ', 'ihc');?><a href="<?php echo $siteUrl . '?ihc_action=paypal_express_checkout_ipn';?>"><?php echo $siteUrl . '?ihc_action=paypal_express_checkout_ipn';?></a></p>
+                            </div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
+                        </div>
+                        </div>
 					</div>
 
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Multi-Payment Selection:', 'ihc');?></h3>
 						<div class="inside">
-							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Label:', 'ihc');?></label>
-								<input type="text" name="ihc_paypal_express_checkout_label" value="<?php echo $meta_arr['ihc_paypal_express_checkout_label'];?>" />
+                        	<div class="row" style="margin-left: 0px;">
+                  			<div class="col-xs-4">
+							<div class="iump-form-line iump-no-border input-group">
+								<span class="input-group-addon"><?php _e('Label:', 'ihc');?></span>
+								<input type="text" name="ihc_paypal_express_checkout_label" value="<?php echo $meta_arr['ihc_paypal_express_checkout_label'];?>"  class="form-control"/>
 							</div>
 
-							<div class="iump-form-line iump-no-border">
-								<label class="iump-labels"><?php _e('Order:', 'ihc');?></label>
-								<input type="number" min="1" name="ihc_paypal_express_checkout_select_order" value="<?php echo $meta_arr['ihc_paypal_express_checkout_select_order'];?>" />
+							<div class="iump-form-line iump-no-border input-group">
+								<span class="input-group-addon"><?php _e('Order:', 'ihc');?></span>
+								<input type="number" min="1" name="ihc_paypal_express_checkout_select_order" value="<?php echo $meta_arr['ihc_paypal_express_checkout_select_order'];?>"  class="form-control"/>
 							</div>
 
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
+                        </div>
+                        </div>
 					</div>
 
 			</form>
 			<?php
 			break;
 		case 'pagseguro':
-			ihc_save_update_metas('payment_pagseguro');//save update metas
+			if (isset($_POST['ihc_save']) && !empty($_POST['ihc-payment-settings-nonce']) && wp_verify_nonce( $_POST['ihc-payment-settings-nonce'], 'ihc-payment-settings-nonce' ) ){
+					ihc_save_update_metas('payment_pagseguro');//save update metas
+			}
 			$meta_arr = ihc_return_meta_arr('payment_pagseguro');//getting metas
 			$pages = ihc_get_all_pages();//getting pages
 			echo ihc_check_default_pages_set();//set default pages message
@@ -1351,6 +1491,7 @@ $pages = ihc_get_all_pages();
 				</span>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc-payment-settings-nonce" value="<?php echo wp_create_nonce( 'ihc-payment-settings-nonce' );?>" />
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Pagseguro Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -1391,7 +1532,9 @@ $pages = ihc_get_all_pages();
 									<label class="iump-labels"><?php _e('Enable Sandbox', 'ihc');?></label> <input type="checkbox" onClick="checkAndH(this, '#ihc_pagseguro_sandbox');" <?php if($meta_arr['ihc_pagseguro_sandbox']) echo 'checked';?> />
 									<input type="hidden" name="ihc_pagseguro_sandbox" value="<?php echo $meta_arr['ihc_pagseguro_sandbox'];?>" id="ihc_pagseguro_sandbox" />
 							</div>
-
+							<div class="iump-form-line iump-no-border">
+                            <p><?php _e('If is necessary set the Notification URL as: ', 'ihc');?><a href="<?php echo $siteUrl . '?ihc_action=pagseguro';?>"><?php echo $siteUrl . '?ihc_action=pagseguro';?></a></p>
+                            </div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
@@ -1419,6 +1562,12 @@ $pages = ihc_get_all_pages();
 
 			</form>
 			<?php
+			break;
+		default:
+
+			do_action( 'ihc_payment_gateway_settings_action', $_GET['subtab'] );
+			// @description action on admin - dashboard , payment settings. @param type of payment
+
 			break;
 	}
 

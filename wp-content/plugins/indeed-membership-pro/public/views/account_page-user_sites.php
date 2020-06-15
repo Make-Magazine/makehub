@@ -77,7 +77,7 @@
 		}
 	}
 	if (empty($level_can_do)){
-		_e('Comming Soon.');
+		echo '<div class="ihc-additional-message">'.__('This service is not yet available. Please stay in touch.').'</div>';
 	} else {
 		echo __('You have no level for creating a site. In order to do that please get one of the following levels: ', 'ihc') . implode($level_can_do, ',');
 	}

@@ -12,7 +12,7 @@ class Elementor_Ihc_Locker_Widget extends \Elementor\Widget_Base
 
   public function get_title()
   {
-      return __( 'UMP - Locker', 'ihc' );
+      return __( 'UMP - Inside Locker', 'ihc' );
   }
 
   public function get_icon()

@@ -11,7 +11,8 @@ class Ihc_Gifts{
 		 if ($lid!='' && $uid){
 		 	 $gifts_available = Ihc_Db::gift_get_all_items($lid);
 			 if ($gifts_available){
-			 	$user_meta_value = get_user_meta($uid, 'ihc_gifts', TRUE);
+			 	$user_meta_value = array();
+			 	$user_meta_value[] = get_user_meta($uid, 'ihc_gifts', TRUE);
 
 			 	if (ihc_is_level_reccuring($lid) && $user_meta_value){
 			 		/// extra check

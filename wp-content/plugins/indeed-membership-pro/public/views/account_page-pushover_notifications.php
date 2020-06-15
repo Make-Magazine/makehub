@@ -6,6 +6,7 @@
 		<p><?php echo do_shortcode($data['content']);?></p>
 	<?php endif;?>
 	<form method="post" action="">
+		<input type="hidden" name="ihc_pushover_nonce" value="<?php echo wp_create_nonce( 'ihc_pushover_nonce' );?>" />
 		<div class="ihc-form-line-register ihc-form-text">
 			<label class="ihc-labels-register ihc-content-bold"><?php _e('User Token', 'ihc');?></label>
 			<input type="text" name="ihc_pushover_token" value="<?php echo $data['ihc_pushover_token'];?>"/>

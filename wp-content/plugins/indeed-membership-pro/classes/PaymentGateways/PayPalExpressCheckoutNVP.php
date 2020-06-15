@@ -17,7 +17,7 @@ class PayPalExpressCheckoutNVP
     private $endpoint                     = '';
     private $siteUrl                      = '';
     private $currency                     = '';
-    private $standardDescription          = 'buy level';
+    private $standardDescription          = 'SignUp Subscription';
 
     public function __construct()
     {

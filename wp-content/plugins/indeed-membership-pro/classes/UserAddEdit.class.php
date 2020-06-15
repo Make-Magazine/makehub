@@ -342,6 +342,10 @@ class UserAddEdit
 										'user_id' => $this->user_id, 'sublabel' => $v['sublabel'], 'class' => $v['class'], 'form_type' => $this->type,
 										'is_public' => $this->is_public, 'ihc_form_type' => $this->type, 'label' => $labelInside ));
 								$str .= '</div>';
+								if (!empty($v['req'])){
+									$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
+								}
+								//$this->required_fields[] = array('name' => $v['name'], 'type'=>$v['type']);
 							break;
 						default:
 							if ($this->is_public) {
@@ -355,6 +359,12 @@ class UserAddEdit
 								if ( $this->type=='edit' && $v['name']=='user_login'){
 									$disabled = 'disabled';
 								}
+
+								$notAvailableForAdminSection = [ 'ihc_social_media', 'payment_select', 'confirm_email', 'pass2' ];
+								if( in_array( $v['name'], $notAvailableForAdminSection ) ){
+										break;//continue;
+								}
+
 								//FORM FIELD
 								$parent_id = 'ihc_reg_' . $v['type'] . '_' . rand(1,10000);
 								$temp_type_class = 'iump-form-' . $v['type'];
@@ -389,7 +399,7 @@ class UserAddEdit
 								}
 
 								if (empty($v['class'])){
-									$v['class'] = '';
+									$v['class'] = 'ihc-form-element-'.$v['type'];
 								}
 
 								$str .= indeed_create_form_element(array( 'type' => $v['type'], 'name' => $v['name'], 'value' => $val,
@@ -414,7 +424,7 @@ class UserAddEdit
 				}
 				/*******************************PUBLIC****************************/
 				//SPECIAL PAYMENTS (authorize, stripe)
-				if (isset($this->current_level) && $level_data['payment_type']=='payment'){
+				if (isset($this->current_level) && $level_data!==false && $level_data['payment_type']=='payment'){
 						if ( ($this->payment_gateway == 'authorize' || !empty($include_authorize)) && ihc_check_payment_available('authorize') && isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
 							//AUTHORIZE RECCURING
 							if (!class_exists('ihcAuthorizeNet')){
@@ -474,7 +484,7 @@ class UserAddEdit
 				}
 			} else if (!$this->disabled_submit_form && !$this->is_public){
 				/******************************** ADMIN ****************************/
-				$str .= $this->print_wp_role();//select wp role
+
 				$str .= $this->select_level();//select levels
 				$str .= $this->print_level_expire_time_edit();///level expire time
 
@@ -482,7 +492,12 @@ class UserAddEdit
 					$str .= indeed_create_form_element(array('type'=>'hidden', 'name'=>'user_id', 'value' => $this->user_id ));
 
 				}
+				$str .= '<div class="ihc-admin-edit-user-additional-settings-wrapper">';
+					$str .= '<h2>'.__('Additional Settings','ihc').'</h2>';
+					$str .= '<p>'.__('Extra settings available for Administration purpose','ihc').'</p>';
+				$str .= $this->print_wp_role();//select wp role
 				$str .= $this->print_overview_post_select();
+				$str .= '</div>';
 			}
 
 
@@ -537,6 +552,7 @@ class UserAddEdit
 			} else {
 				$form_detail = ' name="createuser" id="createuser" class="ihc-form-create-edit" enctype="multipart/form-data" ';
 			}
+			$str .= $this->printNonce();
 			$str = indeed_form_start( $this->action, 'post', $form_detail) . $str . indeed_form_end();
 
 			//SOCIAL LOGGER
@@ -658,6 +674,20 @@ class UserAddEdit
 			}
 		}
 
+		/**
+		 * @param none
+		 * @return string
+		 */
+		protected function printNonce()
+		{
+				if ( $this->is_public ){
+						$nonce = wp_create_nonce( 'ihc_user_add_edit_nonce' );
+				} else {
+						$nonce = wp_create_nonce( 'ihc_admin_user_add_edit_nonce' );
+				}
+				return "<input type='hidden' name='ihc_user_add_edit_nonce' value='$nonce' />";
+		}
+
 		private function print_wp_role()
 		{
 				$view = new \Indeed\Ihc\IndeedView();
@@ -675,7 +705,7 @@ class UserAddEdit
 			}
 			$level_select_options[-1] = '...';
 			foreach ($levels as $k=>$v){
-					$level_select_options[$k] = $v['name'];
+					$level_select_options[$k] = $v['label'];
 			}
 			$data = array(
 					'args'							=> array(
@@ -703,7 +733,8 @@ class UserAddEdit
 				}
 			} else {
 				//contain value
-				if (strpos($value, $field_data['conditional_logic_corresp_field_value'])!==FALSE){
+				if ( is_string( $value ) && is_string( $field_data['conditional_logic_corresp_field_value'] )
+							&& strpos($value, $field_data['conditional_logic_corresp_field_value'])!==FALSE){
 					return 1;
 				}
 			}
@@ -1177,9 +1208,11 @@ class UserAddEdit
 				$arr[$v->ID] = $v->post_title;
 			}
 			$str .= '<div class="iump-form-line">';
-			$str .= '<label class="iump-labels">' . __('Select Post For Account Page Overview:', 'ihc') . ' </label>';
+			$str .= '<h4>' . __('Custom Dashboard message', 'ihc') . ' </h4>';
+			$str .= '<p>' . __('The Dashboard section from the Account Page can display general content or specific content for each user. You may choose a specific post content for this user or leave the default setup.', 'ihc') . ' </p>';
 			$args['type'] = 'select';
 			$args['multiple_values'] = $arr;
+			$args['class'] = 'ihc-form-element ihc-form-element-select ihc-form-select ' ;
 			$value = get_user_meta($this->user_id, 'ihc_overview_post', true);
 			$args['value'] = ($value!==FALSE) ? $value : '';
 			$args['name'] = 'ihc_overview_post';
@@ -1196,21 +1229,28 @@ class UserAddEdit
 			 */
 			if (!$this->is_public && $this->type=='edit'){
 				if (isset($_POST['expire_levels']) && is_array($_POST['expire_levels'])){
-					foreach ($_POST['expire_levels'] as $l_id=>$expire){
+					foreach ($_POST['expire_levels'] as $l_id => $expire ){
+						if ( $expire == '' ){
+								$expire = '0000-00-00 00:00:00';
+						}
 						$temp_data = Ihc_Db::get_user_level_data($this->user_id, $l_id);
 						$start = (isset($_POST['start_time_levels'][$l_id])) ? $_POST['start_time_levels'][$l_id] : '';
 						if ($temp_data){
 							/// UPDATE
 							if ($temp_data['start_time']!=$start || $temp_data['expire_time']!=$expire){
-								ihc_set_time_for_user_level($this->user_id, $l_id, $start, $expire);
-								if (strtotime($temp_data['expire_time'])<time()){
-									/// activate level
-									do_action('ihc_action_after_subscription_activated', $this->user_id, $l_id);
-								}
+									ihc_set_time_for_user_level($this->user_id, $l_id, $start, $expire);
+									if (strtotime($temp_data['expire_time'])<indeed_get_unixtimestamp_with_timezone()){
+											/// activate level
+											do_action( 'ihc_action_after_subscription_activated', $this->user_id, $l_id );
+											// do_action('ihc_action_after_subscription_activated', $u_id, $l_id, $first_time);
+											// @description Action that run after a subscription(level) is activated. @param user id (integer), level id (integer), flag if it's first time activated (boolean).
+											// \Ihc_Db::userLevelUpdateStatus( $this->user_id, $l_id, 1 );
+									}
 							}
 						} else {
 							//// INSERT
 							ihc_set_time_for_user_level($this->user_id, $l_id, $start, $expire);
+
 						}
 					}
 				}
@@ -1230,6 +1270,10 @@ class UserAddEdit
 
 			// set the meta register array, values selected in dashboard, register tab
 			$this->register_metas = array_merge(ihc_return_meta_arr('register'), ihc_return_meta_arr('register-msg'), ihc_return_meta_arr('register-custom-fields'));
+
+			if ( !$this->checkNonce() ){
+					return false;
+			}
 
 			//register fields, function available in utilities.php,
 			//return something $arr[] = array($this->display_type=>'', 'name'=>'', 'label'=>'', 'type'=>'', 'order'=>'', 'native_wp' => '', 'req' => '' );
@@ -1349,8 +1393,8 @@ class UserAddEdit
 									$ihc_pay_error['wrong_expiration'] = __('Please enter the expiration date in the MMYY format', 'ihc');
 									$pay_errors = 1;
 								}
-								$current_year_a = date('y', time());
-								$current_month_a = date('m', time());
+								$current_year_a = date('y', indeed_get_unixtimestamp_with_timezone());
+								$current_month_a = date('m', indeed_get_unixtimestamp_with_timezone());
 								$temp_string = (string)$_POST['ihcpay_card_expire'];
 								$post_month = $temp_string[0] . $temp_string[1];
 								$post_month = (int)$post_month;
@@ -1475,8 +1519,8 @@ class UserAddEdit
 									$this->errors[] = $this->register_metas['ihc_register_err_req_fields'];
 									$ihc_pay_error['braintree']['wrong_expiration'] = __('Please enter the expiration date in the MMYY format', 'ihc');
 								}
-								$current_year_a = date('y', time());
-								$current_month_a = date('m', time());
+								$current_year_a = date('y', indeed_get_unixtimestamp_with_timezone());
+								$current_month_a = date('m', indeed_get_unixtimestamp_with_timezone());
 								$post_month = (int)$_POST['ihc_braintree_card_expire_month'];
 								$post_year = (int)$_POST['ihc_braintree_card_expire_year'];
 								if ($post_month>12){
@@ -1540,6 +1584,8 @@ class UserAddEdit
 				$this->user_id = wp_insert_user($this->fields);
 
 				do_action('ump_on_register_action', $this->user_id);
+				// @description run on register action. @param user id (integer)
+
 				///Wp Admin Dashboard Notification
 				//Ihc_Db::increment_dashboard_notification('users');
 			} else {
@@ -1548,6 +1594,7 @@ class UserAddEdit
 				$this->fields['ID'] = $this->user_id;
 				wp_update_user($this->fields);
 				do_action('ump_on_update_action', $this->user_id);
+				// @description run on user update his profile. @param user id (integer)
 			}
 
 			//PAY SAVE only authorize && stripe
@@ -1564,8 +1611,10 @@ class UserAddEdit
 			if ($custom_meta_user){
 				foreach ($custom_meta_user as $k=>$v){
 						do_action( 'ihc_before_user_save_custom_field', $this->user_id, $k, $v );
+						// @description run before save user custom information (user meta). @param user id(integer), custom information name (string), custom information (mixed)
 						update_user_meta($this->user_id, $k, $v);
 						do_action('ihc_user_save_custom_field', $this->user_id, $k, $v);
+						// @description run after save user custom information (user meta). @param user id(integer), custom information name (string), custom information (mixed)
 				}
 			}
 
@@ -1608,6 +1657,24 @@ class UserAddEdit
 			if ($this->is_public){
 				$this->succes_message();//this will redirect
 			}
+		}
+
+		/**
+		 * @param none
+		 * @return none
+		 */
+		public function checkNonce()
+		{
+				if ( $this->is_public ){
+						if ( empty( $_POST['ihc_user_add_edit_nonce'] ) || !wp_verify_nonce( $_POST['ihc_user_add_edit_nonce'], 'ihc_user_add_edit_nonce' ) ){
+								return false;
+						}
+				} else {
+						if ( empty( $_POST['ihc_user_add_edit_nonce'] ) || !wp_verify_nonce( $_POST['ihc_user_add_edit_nonce'], 'ihc_admin_user_add_edit_nonce' ) ){
+								return false;
+						}
+				}
+				return true;
 		}
 
 		private function sanitizeValue( $value=null, $type='' )
@@ -1723,6 +1790,13 @@ class UserAddEdit
 					$this->errors['user_email'] = $this->register_metas['ihc_register_email_is_taken_msg'];
 				}
 			}
+
+			$errors = empty( $this->errors['user_email'] ) ? false : $this->errors['user_email'];
+			$errors = apply_filters( 'ump_filter_public_check_email_message', $errors, $_POST['user_email'] );
+			if ( $errors !== false ){
+					$this->errors['user_email'] = $errors;
+			}
+
 		}
 
 		//check username
@@ -1809,7 +1883,7 @@ class UserAddEdit
 		private function check_captcha(){
 			if ($this->type=='create' && $this->captcha){
 				$key = ihc_array_value_exists($this->register_fields, 'recaptcha', 'name');
-				if ($key!==FALSE && isset($this->register_fields[$key]) && isset($this->register_fields[$key]['target_levels'])){
+				if ($key!==FALSE && isset($this->register_fields[$key]) && isset($this->register_fields[$key]['target_levels'])  && $this->register_fields[$key]['target_levels']!=''){
 					///not available for current level
 					$target_levels = explode(',', $this->register_fields[$key]['target_levels']);
 					if (!in_array($this->current_level, $target_levels)){
@@ -1958,6 +2032,8 @@ class UserAddEdit
 						//========================
 
 						switch ($this->payment_gateway){
+							/*
+							// Deprecated. Used in version <8.3.3
 							case 'paypal':
 								$this->handle_levels_assign($lid);
 								update_user_meta($this->user_id, 'ihc_user_levels', $user_levels);
@@ -1987,6 +2063,7 @@ class UserAddEdit
 								}
 
 								break;
+							*/
 							case 'authorize':
 								//redirect to payment
 								if (isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
@@ -2254,6 +2331,8 @@ class UserAddEdit
 
 					if ($level_data['payment_type']=='payment'){
 						switch ($this->payment_gateway){
+							/*
+							// Deprecated. Used in version <8.3.3
 							case 'paypal':
 								if ( ihc_check_payment_available('paypal') ){
 									/// SAVE THE ORDER
@@ -2276,6 +2355,7 @@ class UserAddEdit
 									exit();
 								}
 								break;
+							*/
 							case 'authorize':
 								if (isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
 								} else {
@@ -2367,7 +2447,6 @@ class UserAddEdit
 								}
 								break;
 							default:
-
 								$options = array(
 										'uid'										=> $this->user_id,
 										'lid'										=> esc_sql($_POST['lid']),
@@ -2502,7 +2581,7 @@ class UserAddEdit
 
 							//we got a new level to assign
 							$level_data = ihc_get_level_by_id($lid);//getting details about current level
-							$current_time = time();
+							$current_time = indeed_get_unixtimestamp_with_timezone();
 
 							///USER LOGS
 							Ihc_User_Logs::set_user_id($this->user_id);
@@ -2535,7 +2614,7 @@ class UserAddEdit
 							if ($this->is_public &&	$level_data['payment_type']!='free'){
 								//end time will be expired, updated when payment
 								$end_time = Ihc_Db::user_get_expire_time_for_level($this->user_id, $lid);
-								if ($end_time===FALSE || strtotime($end_time)<time()){
+								if ($end_time===FALSE || strtotime($end_time)<indeed_get_unixtimestamp_with_timezone()){
 									$end_time = '0000-00-00 00:00:00';
 								}
 							} else {
@@ -2562,7 +2641,7 @@ class UserAddEdit
 										}
 									break;
 								}
-								$end_time = date('Y-m-d H:i:s', $end_time);
+								$end_time = indeed_timestamp_to_date_without_timezone( $end_time );
 
 								/// user logs
 								Ihc_User_Logs::set_user_id($this->user_id);
@@ -2571,10 +2650,11 @@ class UserAddEdit
 								$level_name = Ihc_Db::get_level_name_by_lid($lid);
 								Ihc_User_Logs::write_log($level_name . __(' become active for ', 'ihc') . $username, 'user_logs');
 								do_action('ihc_action_after_subscription_activated', $this->user_id, $lid);
+								// @description Action that run after a subscription(level) is activated. @param user id (integer), level id (integer).
 							}
 
-							$update_time = date('Y-m-d H:i:s', $current_time);
-							$start_time = date('Y-m-d H:i:s', $start_time);
+							$update_time = indeed_timestamp_to_date_without_timezone( $current_time );
+							$start_time = indeed_timestamp_to_date_without_timezone( $start_time );
 
 							global $wpdb;
 							$table = $wpdb->prefix . 'ihc_user_levels';
@@ -2599,6 +2679,7 @@ class UserAddEdit
 							}
 							$wpdb->query($q);
 							do_action('ihc_new_subscription_action', $this->user_id, $lid);
+							// @description Action that run after a subscription(level) is activated. @param user id (integer), level id (integer).
 						}
 					}
 				}
@@ -2682,7 +2763,7 @@ class UserAddEdit
 			}
 
 			$redirect = get_option('ihc_general_register_redirect');
-
+			$redirect = apply_filters( 'ump_public_filter_redirect_page_after_register', $redirect );
 
 			if ($redirect && $redirect!=-1 && $this->type=='create'){
 				//custom redirect
@@ -2900,6 +2981,7 @@ class UserAddEdit
 		{
 				if ($this->is_public && $this->type=='create'){
 						do_action('ump_before_insert_user');
+						// @description run before insert user. @param none
 				}
 		}
 

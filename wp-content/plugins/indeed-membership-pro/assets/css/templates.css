@@ -5,7 +5,7 @@
  *	Subscription Plan Templates
  *	Account Page Templates
  */
-/* 
+/*
  * -------------------------- */
 @import url(https://fonts.googleapis.com/css?family=Oswald:300,400,700);
 .iump-clear{
@@ -54,7 +54,7 @@
 	float:right;
 }
 .ihc-login-template-1 .impu-form-input-remember{
-	float:right;  
+	float:right;
 	margin-top: 1px;
 }
 .ihc-login-template-1 .impu-form-label-remember:after{
@@ -63,7 +63,7 @@
 }
 .ihc-login-template-1 .impu-form-links{
 	margin-top:5px;
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 	clear:both;
 }
@@ -124,7 +124,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;    
+  transition: all 0.3s linear 0s;
   margin: 0px !important;
 }
 .ihc-login-template-2 .impu-form-line-fr input[type=text]:hover, .ihc-login-template-2 .impu-form-line-fr input[type=password]:hover,
@@ -143,7 +143,7 @@
 .ihc-login-template-2 .impu-form-line-fr .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .ihc-login-template-2 .impu-form-input-remember{
@@ -155,7 +155,7 @@
 }
 .ihc-login-template-2 .impu-form-links{
 	margin-top:5px;
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 	clear:both;
 }
@@ -282,13 +282,13 @@
 	text-align:left;
 	line-height:42px;
 	padding-left:15px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS' !important; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS' !important;
 	font-weight:200;
 }
 .ihc-login-template-3 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -350,11 +350,11 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	
-  
+  transition: all 0.3s linear 0s;
+
     padding: 10px 30px 11px;
 }
-.ihc-login-template-3 .impu-form-submit input:hover{	
+.ihc-login-template-3 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #1a9bcb !important;
 }
 
@@ -376,7 +376,7 @@
 
 .ihc-login-template-4 .ihc-sm-wrapp-fe{
 	text-align:center;
-	margin:20px 0; 
+	margin:20px 0;
 }
 .ihc-login-template-4 .impu-form-line-fr{
 	box-sizing:content-box;
@@ -440,7 +440,7 @@
 .ihc-login-template-4 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -504,9 +504,9 @@
     padding: 10px 30px 11px;
   border-radius: 3px;
   color: #b3eecc !important;
-  border-bottom: 4px solid #1e8449 !important;	
+  border-bottom: 4px solid #1e8449 !important;
 }
-.ihc-login-template-4 .impu-form-submit input:hover{	
+.ihc-login-template-4 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #43be77 !important;
 }
 .ihc-login-template-4 .ihc-login-notice{
@@ -569,7 +569,7 @@
 .ihc-login-template-5 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .ihc-login-template-5 .impu-form-input-remember{
@@ -618,7 +618,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.ihc-login-template-5 .impu-form-submit input:hover{	
+.ihc-login-template-5 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #e05d5d !important;
 }
 /*PASS*/
@@ -682,7 +682,7 @@
 	left:-20px;
     margin: 0 -40px 0 0px;
 	background-color:#f2f2f2;
-	padding:10px 20px;	
+	padding:10px 20px;
 	}
 .ihc-login-template-6 .impu-temp6-row:after{
 	content:"";
@@ -700,7 +700,7 @@
 	display:inline-block !important;
 	font-weight:400;
 	font-size:12px;
-	font-weight:bold;	
+	font-weight:bold;
 	text-transform:inherit;
 }
 .ihc-login-template-6 .impu-form-input-remember{
@@ -757,7 +757,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.ihc-login-template-6 .impu-form-submit input:hover{	
+.ihc-login-template-6 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #e05d5d !important;
 }
 /*PASS*/
@@ -827,7 +827,7 @@
 .ihc-login-template-7 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .ihc-login-template-7 .impu-form-input-remember{
@@ -878,7 +878,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.ihc-login-template-7 .impu-form-submit input:hover{	
+.ihc-login-template-7 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #94a1b2 !important;
 }
 /*PASS*/
@@ -967,7 +967,7 @@
 .ihc-login-template-8 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -1068,9 +1068,9 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 }
-.ihc-login-template-8 .impu-form-submit input:hover{	
+.ihc-login-template-8 .impu-form-submit input:hover{
       background: none repeat scroll 0 0 #d3365e !important;
 }
 
@@ -1093,7 +1093,7 @@
 	width:460px;
     max-width: 100%;
 	font-size:15px;
-	
+
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 }
 .ihc-login-template-9 .ihc_login_form{
@@ -1183,7 +1183,7 @@
 .ihc-login-template-9 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1272,7 +1272,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .ihc-login-template-9 .impu-form-submit input{
 	color: #fff !important;
     width: 60%;
@@ -1300,14 +1300,14 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 	    -webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.ihc-login-template-9 .impu-form-submit input:hover{	
+.ihc-login-template-9 .impu-form-submit input:hover{
 	width: 65%;
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: rgb(241, 95, 121);
@@ -1396,7 +1396,7 @@
     border-bottom-right-radius: 0;
     border-right: 1px solid #ccc;
     min-width: 45px;
-    text-align: center;	
+    text-align: center;
 }
 .ihc-login-template-10 .impu-form-line-fr .impu-form-label-fr{
 	min-width:350px;
@@ -1420,7 +1420,7 @@
 	border-radius: 4px !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
-    -o-border-radius: 4px !important; 
+    -o-border-radius: 4px !important;
 	height: auto !important;
     margin-bottom: 0px !important;
     line-height: 1 !important;
@@ -1436,7 +1436,7 @@
 .ihc-login-template-10 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1526,7 +1526,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .ihc-login-template-10 .impu-form-submit input{
 	color: #fff !important;
     width: 100%;
@@ -1551,14 +1551,14 @@
     -moz-border-radius: 2px;
     -o-border-radius: 2px;
     min-height: 45px;
-    font-size: 18px;	
+    font-size: 18px;
 	-webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.ihc-login-template-10 .impu-form-submit input:hover{	
+.ihc-login-template-10 .impu-form-submit input:hover{
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #65aed3;
     -moz-transition: all 0.3s linear 0s;
@@ -1585,7 +1585,7 @@
 	width:460px;
     max-width: 100%;
 	font-size:15px;
-	
+
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 }
 .ihc-login-template-11 .ihc_login_form{
@@ -1675,7 +1675,7 @@
 .ihc-login-template-11 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1764,7 +1764,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .ihc-login-template-11 .impu-form-submit input{
     width: 80%;
     font-family: Helvetica, sans-serif, 'Trebuchet MS';
@@ -1791,14 +1791,14 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 	    -webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.ihc-login-template-11 .impu-form-submit input:hover{	
+.ihc-login-template-11 .impu-form-submit input:hover{
 	width: 85%;
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #2bb7e3;
@@ -1889,7 +1889,7 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     min-width: 45px;
-    text-align: center;	
+    text-align: center;
 }
 .ihc-login-template-12 .impu-form-line-fr .impu-form-label-fr{
 	min-width:350px;
@@ -1913,7 +1913,7 @@
 	border-radius: 4px !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
-    -o-border-radius: 4px !important; 
+    -o-border-radius: 4px !important;
 	height: auto !important;
     margin-bottom: 0px !important;
     line-height: 1 !important;
@@ -1929,7 +1929,7 @@
 .ihc-login-template-12 .impu-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#6164c1;
@@ -2019,7 +2019,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .ihc-login-template-12 .impu-form-submit input{
 	color: #fff !important;
     width: 100%;
@@ -2045,14 +2045,14 @@
     -o-border-radius: 4px;
     min-height: 45px;
     font-size: 18px;
-	font-weight:bold;	
+	font-weight:bold;
 	-webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.ihc-login-template-12 .impu-form-submit input:hover{	
+.ihc-login-template-12 .impu-form-submit input:hover{
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #8d7fd7;
     -moz-transition: all 0.3s linear 0s;
@@ -2125,7 +2125,7 @@
 	float:right;
 	width:48%;
 	margin-top:20px;
-	}	
+	}
 .ihc-login-template-13 .impu-remember-wrapper{
 	clear:both;
 	text-align:left;
@@ -2136,7 +2136,7 @@
 	font-weight:400;
 	font-size:15px;
 	line-height:24px;
-	color:#888888;	
+	color:#888888;
 	text-transform:inherit;
 	margin-left:5px;
     vertical-align: middle;
@@ -2221,10 +2221,10 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;    
+  transition: all 0.3s linear 0s;
   display: block;
     width: 100%;
-	font-size:15px;    
+	font-size:15px;
 	-webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
@@ -2235,7 +2235,7 @@
 	cursor:pointer;
 	    border-bottom: 2px solid rgba(0,0,0,.1)!important;
 }
-.ihc-login-template-13 .impu-form-submit input:hover{	
+.ihc-login-template-13 .impu-form-submit input:hover{
   background:none repeat scroll 0 0 #44b0ec;
 }
  .ihc-login-template-13 .ihc-register-link{
@@ -2382,8 +2382,10 @@
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
+  padding:16px 22px;
+  box-sizing:border-box;
 }
-.ihc-register-2 .iump-submit-form input:hover{	
+.ihc-register-2 .iump-submit-form input:hover{
 	color:#fff !important;
   background:none repeat scroll 0 0 #08d1b2 !important;
   border-radius: 50px;
@@ -2415,7 +2417,7 @@
     border-color: #dd3559!important;
 }
 
- 
+
 /*Register Template 3*/
 .ihc-register-3{
 	margin: 10px;
@@ -2433,7 +2435,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';    font-family: 'Oswald', arial, sans-serif !important;
     font-size: 14px;
 	color:#7f7f97;
-	
+
 }
 .ihc-register-3 .ihc-sm-wrapp-fe{
 	text-align:left;
@@ -2457,7 +2459,7 @@
 }
 .ihc-register-3 .iump-form-line-register input[type=text], .ihc-register-3 .iump-form-line-register input[type=password], .ihc-register-3 .iump-form-line-register input[type=number],
  .ihc-register-3 .iump-form-line-register textarea, .ihc-register-3 .iump-form-line-register select, .ihc-register-3 .iump-form-line-register .select2-selection{
-	
+
 	border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     color: #7f7f97;
@@ -2515,7 +2517,7 @@
 	padding-left:30px;
   	border-top: 1px solid #ddd;
   	border-bottom: 1px solid #ddd;
-	
+
 }
  .ihc-register-3 .ihc-wrapp-file-field{
 	 box-sizing:border-box;
@@ -2535,7 +2537,7 @@
 	box-shadow:none !important;
 	border-radius:3px;
 	text-transform:capitalize;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS';    
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 	font-family: 'Oswald', arial, sans-serif !important;
 	font-size: 16px;
     font-weight: 400;
@@ -2545,10 +2547,10 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 }
-.ihc-register-3 .iump-submit-form input:hover{	
+.ihc-register-3 .iump-submit-form input:hover{
   background:none repeat scroll 0 0 #1a9bcb !important;
 }
 .ihc-register-3 .ihc-register-notice, .ihc-register-3 #ihc_coupon_code_check_div_msg{
@@ -2562,7 +2564,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -2608,12 +2610,12 @@
 	border-radius:3px;
 	  min-width: 310px;
     max-width: 450px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 }
 .ihc-register-4 .ihc-sm-wrapp-fe{
 	text-align:center;
-	margin:20px 0; 
+	margin:20px 0;
 }
 .ihc-register-4 .iump-labels-register{
 	font-size:13px;
@@ -2687,7 +2689,7 @@
 }
 .ihc-register-4 .ihc-tos-wrap{
 	text-align:left;
-	
+
 }
 .ihc-register-4 .iump-submit-form{
 	text-align:center;
@@ -2713,7 +2715,7 @@
     padding: 10px 30px 11px;
   border-radius: 3px;
   color: #b3eecc !important;
-  border-bottom: 4px solid #1e8449 !important;	
+  border-bottom: 4px solid #1e8449 !important;
 }
 .ihc-register-4 .iump-submit-form input:hover{
   background:none repeat scroll 0 0 #43be77 !important;
@@ -2748,7 +2750,7 @@
 .ihc-register-5{
 	min-width:300px;
     max-width: 100%;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	display:block;
 }
@@ -2763,8 +2765,8 @@
 .ihc-register-5 .iump-form-line-register{
 	border-bottom:none;
 }
-.ihc-register-5 .iump-form-line-register input[type=text], .ihc-register-5 .iump-form-line-register input[type=password], 
-.ihc-register-5 .iump-form-line-register input[type=number], .ihc-register-5 .iump-form-line-register textarea, 
+.ihc-register-5 .iump-form-line-register input[type=text], .ihc-register-5 .iump-form-line-register input[type=password],
+.ihc-register-5 .iump-form-line-register input[type=number], .ihc-register-5 .iump-form-line-register textarea,
 .ihc-register-5 .iump-form-line-register select, .ihc-register-5 .iump-form-line-register .select2-selection{
 	border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
@@ -2795,6 +2797,13 @@
 	background:none repeat scroll 0 0 #e05d5d  !important;
 	border-color:#e05d5d  !important;
 	box-shadow:none !important;
+	padding:16px 22px;
+  box-sizing:border-box;
+  border-radius: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	font-weight: 700;
+    line-height: 1.2;
+	border:none;
 }
 .ihc-register-5 .ihc-register-notice{
 	-webkit-transition: all 0.6s linear 0s;
@@ -2813,7 +2822,7 @@
 /*Register Template 6*/
 .ihc-register-6{
 	min-width:620px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 }
 
@@ -2840,7 +2849,7 @@
 }
 .ihc-register-6 .iump-form-line-register input[type=text], .ihc-register-6 .iump-form-line-register input[type=password], .ihc-register-6 .iump-form-line-register input[type=number]
 , .ihc-register-6 .iump-form-line-register textarea, .ihc-register-6 .iump-form-line-register select, .ihc-register-6 .iump-form-line-register .select2-selection{
-	
+
 	border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     color: #2b2b2b;
@@ -2862,6 +2871,13 @@
 	border-color:#e05d5d  !important;
 	box-shadow:none !important;
 	min-width:200px;
+	padding:16px 22px;
+  box-sizing:border-box;
+  border-radius: 5px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+	font-weight: 700;
+    line-height: 1.2;
+	border:none;
 }
 
 .ihc-register-6 .iump-form-checkbox,.ihc-register-6  .iump-form-radiobox, .ihc-register-6  .iump-form-paybox{
@@ -2885,7 +2901,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -2915,23 +2931,23 @@
 .ihc-register-6 .ihc-input-notice {
     border-color: #dd3559!important;
 }
-.ihc-register-6 .ihc-tos-wrap{ 
-	position:relative; 
+.ihc-register-6 .ihc-tos-wrap{
+	position:relative;
 }
 
 /*Register Template 7*/
 .ihc-register-7{
 	width:400px;
-    max-width: 100%;	
+    max-width: 100%;
 	margin: 10px;
 	padding:20px;
-	padding-bottom:0px;	
+	padding-bottom:0px;
 	border-radius:3px;
   -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.15);
   background-color:#f6f9fc;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 }
 .ihc-register-7 .impu-temp7-row{
@@ -2939,7 +2955,7 @@
 	left:-20px;
     margin: 15px -40px 0 0px;
 	background-color:#aab7c4;
-	padding:15px 20px;	
+	padding:15px 20px;
 }
 .ihc-register-7 .iump-labels-register{
 	font-size:13px;
@@ -2980,7 +2996,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3030,7 +3046,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3069,7 +3085,7 @@
 	box-sizing:border-box;
 	display:block;
   	min-width:300px;
-    max-width: 600px;
+    max-width: 600px !important;
 }
 .ihc-register-8 .iump-form-line-register{
 	margin-bottom:20px;
@@ -3100,7 +3116,7 @@
 }
 .ihc-register-8 .iump-form-line-register input[type=text], .ihc-register-8 .iump-form-line-register input[type=password], .ihc-register-8 .iump-form-line-register input[type=number],
  .ihc-register-8 .iump-form-line-register textarea, .ihc-register-8 .iump-form-line-register select, .ihc-register-8 .iump-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3112,7 +3128,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left; 
+	text-align: left;
 }
  .ihc-register-8 .iump-form-line-register textarea{
 	 min-height:60px;
@@ -3140,7 +3156,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .ihc-register-8 .iump-submit-form{
 	text-align:center;
@@ -3163,7 +3179,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3171,9 +3187,9 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 }
-.ihc-register-8 .iump-submit-form input:hover{	
+.ihc-register-8 .iump-submit-form input:hover{
   background:none repeat scroll 0 0 #d3365e !important;
 }
 .ihc-register-8 .ihc-register-notice{
@@ -3204,7 +3220,7 @@
 	box-sizing:border-box;
 	display:block;
   	min-width:300px;
-    max-width: 600px;
+    max-width: 600px !important;
 }
 .ihc-register-9 .iump-form-line-register{
 	margin-bottom:20px;
@@ -3237,7 +3253,7 @@
 }
 .ihc-register-9 .iump-form-line-register input[type=text], .ihc-register-9 .iump-form-line-register input[type=password], .ihc-register-9 .iump-form-line-register input[type=number],
  .ihc-register-9 .iump-form-line-register textarea, .ihc-register-9 .iump-form-line-register select, .ihc-register-9 .iump-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3249,7 +3265,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left;     
+	text-align: left;
 	border-radius: 45px !important;
     -webkit-border-radius: 45px !important;
     -moz-border-radius: 45px !important;
@@ -3313,7 +3329,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .ihc-register-9 .iump-submit-form{
 	text-align:center;
@@ -3337,7 +3353,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3345,11 +3361,11 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 	    background-color: rgb(241, 95, 121);
     background-image: linear-gradient(to left, rgb(178, 69, 146), rgb(241, 95, 121));
 }
-.ihc-register-9 .iump-submit-form input:hover{	
+.ihc-register-9 .iump-submit-form input:hover{
 	width:67%;
 }
 .ihc-register-9 .ihc-register-notice, .ihc-register-9 #ihc_coupon_code_check_div_msg{
@@ -3363,7 +3379,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3397,6 +3413,10 @@
 .ihc-register-9 .ihc-input-notice {
     border-color: #dd3559!important;
 }
+.ihc-register-9 .ihc-strength-wrapper {
+    width: auto !important;
+    margin-right: 15px;
+}
 
 
 
@@ -3407,7 +3427,7 @@
     font-size: 14px;
 	box-sizing:border-box;
 	display:block;
-	max-width:500px;   
+	max-width:500px !important;
 	/*font-family: 'Oswald', arial, sans-serif !important;*/
     font-size: 14px;
 	color:#7f7f97;
@@ -3491,7 +3511,7 @@
 	border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 	border-right: 0;
-	display: table-cell;	
+	display: table-cell;
 	min-width: inherit;
 }
 .ihc-register-10 .iump-form-text input[type=text],
@@ -3499,7 +3519,7 @@
 .ihc-register-10 .iump-form-password input[type=password],
 .ihc-register-10 .iump-form-unique_value_text input[type=text],
 .ihc-register-10 .iump-form-date input[type=text]
-{   
+{
     border-radius: 4px;
     height: 34px;
     padding: 6px 12px;
@@ -3521,7 +3541,7 @@
     margin-top: 0 !important;
     display: table-cell;
     border-top-left-radius: 0;
-    border-bottom-left-radius: 0; 
+    border-bottom-left-radius: 0;
 }
 .ihc-register-10 .iump-form-text .iump-form-sublabel,
 .ihc-register-10 .iump-form-password .iump-form-sublabel,
@@ -3555,7 +3575,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3608,7 +3628,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.ihc-register-10 .iump-submit-form input:hover{	
+.ihc-register-10 .iump-submit-form input:hover{
 	color:#fff !important;
   /*background:none repeat scroll 0 0 #41b7ed !important;*/
   border-radius: 50px;
@@ -3644,6 +3664,7 @@
 	box-sizing:border-box;
 	display:block;
 	text-align:left;
+	max-width: 820px !important;
 }
 .ihc-register-11 .iump-form-line-register{
 	margin-bottom:20px;
@@ -3674,7 +3695,7 @@
 }
 .ihc-register-11 .iump-form-line-register input[type=text], .ihc-register-11 .iump-form-line-register input[type=password], .ihc-register-11 .iump-form-line-register input[type=number],
  .ihc-register-11 .iump-form-line-register textarea, .ihc-register-11 .iump-form-line-register select, .ihc-register-11 .iump-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3686,7 +3707,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left; 
+	text-align: left;
 }
  .ihc-register-11 .iump-form-line-register textarea{
 	 min-height:60px;
@@ -3714,7 +3735,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .ihc-register-11 .iump-submit-form{
 	text-align:center;
@@ -3737,7 +3758,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3745,9 +3766,9 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 }
-.ihc-register-11 .iump-submit-form input:hover{	
+.ihc-register-11 .iump-submit-form input:hover{
   background:none repeat scroll 0 0 #d3365e !important;
 }
 .ihc-register-11 .ihc-register-notice{
@@ -3777,6 +3798,7 @@
 	box-sizing:border-box;
 	display:block;
 	text-align:left;
+	max-width: 820px !important;
 }
 .ihc-register-12 .iump-form-line-register{
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
@@ -3808,7 +3830,7 @@
 }
 .ihc-register-12 .iump-form-line-register input[type=text], .ihc-register-12 .iump-form-line-register input[type=password], .ihc-register-12 .iump-form-line-register input[type=number],
  .ihc-register-12 .iump-form-line-register textarea, .ihc-register-12 .iump-form-line-register select, .ihc-register-12 .iump-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3820,7 +3842,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left;     
+	text-align: left;
 	border-radius: 45px !important;
     -webkit-border-radius: 45px !important;
     -moz-border-radius: 45px !important;
@@ -3852,7 +3874,7 @@
 
 }
  .ihc-register-12 .iump-form-line-register textarea{
-	 min-height:60px;     
+	 min-height:60px;
 	border-radius: 10px !important;
     -webkit-border-radius: 10px !important;
     -moz-border-radius: 10px !important;
@@ -3885,7 +3907,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .ihc-register-12 .iump-submit-form{
 	text-align:center;
@@ -3909,7 +3931,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3917,11 +3939,11 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 	    background-color: rgb(241, 95, 121);
     background-image: linear-gradient(to left, rgb(178, 69, 146), rgb(241, 95, 121));
 }
-.ihc-register-12 .iump-submit-form input:hover{	
+.ihc-register-12 .iump-submit-form input:hover{
 	width:57%;
 }
 .ihc-register-12 .ihc-register-notice, .ihc-register-12 #ihc_coupon_code_check_div_msg{
@@ -3935,7 +3957,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3977,10 +3999,11 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	box-sizing:border-box;
-	display:block;  
+	display:block;
 	/*font-family: 'Oswald', arial, sans-serif !important;*/
     font-size: 14px;
 	color:#7f7f97;
+	max-width: 820px !important;
 }
 .ihc-register-13 .iump-labels-register{
 	font-size:14px;
@@ -4060,7 +4083,7 @@
 	border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 	border-right: 0;
-	display: table-cell;	
+	display: table-cell;
 	min-width: inherit;
 }
 .ihc-register-13 .iump-form-text input[type=text],
@@ -4068,7 +4091,7 @@
 .ihc-register-13 .iump-form-password input[type=password],
 .ihc-register-13 .iump-form-unique_value_text input[type=text],
 .ihc-register-13 .iump-form-date input[type=text]
-{   
+{
     border-radius: 4px;
     height: 34px;
     padding: 6px 12px;
@@ -4090,7 +4113,7 @@
     margin-top: 0 !important;
     display: table-cell;
     border-top-left-radius: 0;
-    border-bottom-left-radius: 0; 
+    border-bottom-left-radius: 0;
 }
 .ihc-register-13 .iump-form-text .iump-form-sublabel,
 .ihc-register-13 .iump-form-password .iump-form-sublabel,
@@ -4124,7 +4147,7 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
+    font-size: 12px;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -4177,7 +4200,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.ihc-register-13 .iump-submit-form input:hover{	
+.ihc-register-13 .iump-submit-form input:hover{
 	color:#fff !important;
   /*background:none repeat scroll 0 0 #41b7ed !important;*/
   border-radius: 50px;
@@ -4209,8 +4232,8 @@
 /*Register Template 14*/
 .ihc-register-14{
 	min-width:300px;
-    max-width: 500px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+    max-width: 500px !important;
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	display:block;
 	margin:10px auto;
@@ -4234,8 +4257,8 @@
 	border-bottom:none;
 	    padding: 9px 5px;
 }
-.ihc-register-14 .iump-form-line-register input[type=text], .ihc-register-14 .iump-form-line-register input[type=password], 
-.ihc-register-14 .iump-form-line-register input[type=number], .ihc-register-14 .iump-form-line-register textarea, 
+.ihc-register-14 .iump-form-line-register input[type=text], .ihc-register-14 .iump-form-line-register input[type=password],
+.ihc-register-14 .iump-form-line-register input[type=number], .ihc-register-14 .iump-form-line-register textarea,
 .ihc-register-14 .iump-form-line-register select, .ihc-register-14 .iump-form-line-register .select2-selection{
 	border: 2px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -4244,7 +4267,7 @@
 	display:block;
 	width:100%;
 	min-height: 37px;
-	
+
 }
  .ihc-register-14 .iump-form-line-register .select2-selection{
 	 min-height:40px;
@@ -4321,12 +4344,12 @@
 .ihc-register-14 .iump-register-row-left{
     float: left;
     width: 48%;
-    margin-top: 20px;	
+    margin-top: 20px;
 }
 .ihc-register-14 .iump-register-row-right{
     float: right;
     width: 48%;
-    margin-top: 20px;	
+    margin-top: 20px;
 }
 
 
@@ -4365,7 +4388,7 @@
 	float:right;
 }
 .ihc-locker-wrap .ihc-login-form-wrap .impu-form-input-remember{
-	float:right;  
+	float:right;
 	margin-top: 1px;
 }
 .ihc-locker-wrap .ihc-login-form-wrap .impu-form-label-remember:after{
@@ -4373,7 +4396,7 @@
 	clear:both;
 }
 .ihc-locker-wrap .impu-form-links{
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 }
 .ihc-locker-wrap .impu-form-links div{
@@ -4409,12 +4432,12 @@
 	min-height: 120px;
 	padding:25px;
 	border-radius: 9px;
-	max-width:500px; 
-	margin:10px auto; 
+	max-width:500px;
+	margin:10px auto;
 }
 .ihc_locker_2 .lock_content{
 	min-height:30px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:13px;
 	font-family:Arial, Helvetica, sans-serif;
 }
@@ -4453,7 +4476,7 @@
 	min-height: 140px;
 	padding:25px 15px;
 	position:relative;
-	max-width:600px; 
+	max-width:600px;
 	margin:10px auto;
 }
 .ihc_locker_3 .lk_wrapper{
@@ -4466,7 +4489,7 @@
 }
 .ihc_locker_3 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	padding-top:10px;
@@ -4480,7 +4503,7 @@
 	color:#719fd6;
 }
 .ihc_locker_3 .lock_content h1,.ihc_locker_3 .lock_content h2,.ihc_locker_3 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .ihc_locker_3 .lock_content p{
 	padding:0px;
@@ -4514,7 +4537,7 @@
 	min-height: 140px;
 	padding:25px;
 	position:relative;
-	max-width:620px; 
+	max-width:620px;
 	margin:10px auto;
 }
 .ihc_locker_4 .lk_wrapper{
@@ -4544,7 +4567,7 @@
 }
 .ihc_locker_4 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	margin-left:160px;
@@ -4560,7 +4583,7 @@
 	line-height:16px;
 }
 .ihc_locker_4 .lock_content h1,.ihc_locker_4 .lock_content h2,.ihc_locker_4 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .ihc_locker_4 .lock_content p{
 	padding:0px;
@@ -4580,8 +4603,8 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:610px; 
-	margin:10px auto; 
+	max-width:610px;
+	margin:10px auto;
 }
 .ihc_locker_5 .lk_top_side{
 	background: url("../images/lockers/lock_5.png") center center no-repeat;
@@ -4606,7 +4629,7 @@
 	line-height:16px;
 }
 .ihc_locker_5 .lock_content h1,.ihc_locker_5 .lock_content h2,.ihc_locker_5 .lock_content h3{
-	color:#0082a2;	
+	color:#0082a2;
 }
 .ihc_locker_5 .lock_content p{
 	padding:0px;
@@ -4633,9 +4656,9 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:620px; 
+	max-width:620px;
 	margin:10px auto;
-	margin-top:50px; 
+	margin-top:50px;
 }
 .ihc_locker_6 .lk_top_side{
 	border-radius: 50%;
@@ -4653,7 +4676,7 @@
 	-moz-box-shadow: inset 0 0 14px rgba(0,0,0,.22),0 1px 1px rgba(255,255,255,.7);
 	box-shadow: inset 0 0 14px rgba(0,0,0,.22),0 1px 1px rgba(255,255,255,.7);
 	background: #0082a2 url("../images/lockers/lock_4.png") center center no-repeat;
-	background-size: 46px auto;	
+	background-size: 46px auto;
 }
 .ihc_locker_6 .lock_content{
 	min-height: 80px;
@@ -4672,7 +4695,7 @@
 	line-height:16px;
 }
 .ihc_locker_6 .lock_content h1,.ihc_locker_6 .lock_content h2,.ihc_locker_6 .lock_content h3{
-	color:#0082a2;	
+	color:#0082a2;
 }
 .ihc_locker_6 .lock_content p{
 	padding:0px;
@@ -4682,7 +4705,7 @@
 	margin-top:20px;
 }
 .ihc_locker_6 .ihc-login-template-6{
-	background-color:#fff;	
+	background-color:#fff;
 }
 /*Template 7*/
 .ihc_locker_7{
@@ -4695,8 +4718,8 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:630px; 
-	margin:10px auto; 
+	max-width:630px;
+	margin:10px auto;
 }
 .ihc_locker_7 .lk_wrapper{
 	position:absolute;
@@ -4729,7 +4752,7 @@
 	line-height:16px;
 }
 .ihc_locker_7 .lock_content h1,.ihc_locker_7 .lock_content h2,.ihc_locker_7 .lock_content h3{
-	color:#fff;	
+	color:#fff;
 }
 .ihc_locker_7 .lock_content p{
 	padding:0px;
@@ -4750,19 +4773,19 @@
 	border: 1px solid rgba(0,0,0,0.08);
 	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	-moz-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
-	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);	
+	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	z-index: 99999;
 	position: relative;
 }
 .ihc_locker_7 .ihc_timeout_line{
 	background-color: rgba(231,231,231,.7);
-	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);		
-	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
+	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
 }
 .ihc_locker_7 .ihc-login-template-2 .impu-form-links a {
-	color:#fff !important;	
+	color:#fff !important;
 }
 
 /*Template 8*/
@@ -4780,7 +4803,7 @@
 	padding:20px 15px;
 	padding-bottom:25px;
 	position:relative;
-	max-width:600px; 
+	max-width:600px;
 	margin:10px auto;
 }
 .ihc_locker_8 .lk_top_side{
@@ -4788,7 +4811,7 @@
 	margin:0 auto;
 	height:36px;
 	width:100px;
-	background-size: 26px auto;	
+	background-size: 26px auto;
 }
 .ihc_locker_8 .lk_wrapper_top{
 	position:absolute;
@@ -4814,7 +4837,7 @@
 }
 .ihc_locker_8 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	padding-top:10px;
@@ -4828,7 +4851,7 @@
 	color:#ededed;
 }
 .ihc_locker_8 .lock_content h1,.ihc_locker_8 .lock_content h2,.ihc_locker_8 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .ihc_locker_8 .lock_content p{
 	padding:0px;
@@ -4845,14 +4868,14 @@
 	border-right:none;
 	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	-moz-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
-	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);	
+	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 }
 .ihc_locker_8 .ihc_timeout_line{
 	background-color: rgba(231,231,231,.7);
-	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);		
-	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
+	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
 }
 .ihc_locker_8 .ihc-login-template-4{
 	background-color:transparent !important;
@@ -4987,7 +5010,7 @@ margin:0 auto;
 	font-family: 'Oswald', arial, sans-serif !important;
   font-size: 19px !important;
   border: none !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   padding: 4px;
   line-height:40px;
 }
@@ -5021,9 +5044,9 @@ margin:0 auto;
 	width: 100%;
   position: relative;
   box-sizing: border-box;
-	background: rgba(39, 190, 190,0.8) !important;  
+	background: rgba(39, 190, 190,0.8) !important;
 	font-size: 45px !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   text-align: center;
   line-height: 65px;
   padding: 10px 0;
@@ -5093,7 +5116,7 @@ margin:0 auto;
 .ihc_level_template_3 .ihc-level-item-title{
 	font-family: 'Oswald', arial, sans-serif !important;
   font-size: 19px !important;
-  border: none !important; 
+  border: none !important;
   padding: 10px 4px;
   line-height:40px;
 }
@@ -5129,7 +5152,7 @@ margin:0 auto;
   background: -ms-linear-gradient(top,#4f97cd,#3b8bc7);
   background: linear-gradient(top,#4f97cd,#3b8bc7);
 	font-size: 35px !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   text-align: center;
   line-height: 75px;
   padding: 10px 0;
@@ -5138,7 +5161,7 @@ margin:0 auto;
 .ihc_level_template_3 .ihc-level-item-link{
 	text-align:center;
 	box-sizing:border-box;
-	
+
   	margin: 10px auto;
 	color: #fff !important;
   	width: 100px;
@@ -5169,7 +5192,7 @@ margin:0 auto;
 .ihc_level_template_3 .ihc-level-item-link a{
 	color:#fff;
 	text-decoration:none;
-} 
+}
 
 /*Template 4*/
 .ihc_level_template_4{
@@ -5234,7 +5257,7 @@ margin:0 auto;
 	font-weight:200;
 	font-size:14px;
 	height:100%;
-	
+
 }
 .ihc_level_template_4 .ihc-level-item-link-wrap{
 
@@ -5332,7 +5355,7 @@ margin:0 auto;
 	font-family: 'Oswald', arial, sans-serif !important;
 	color:#fff;
   font-size: 22px !important;
-  border: none !important; 
+  border: none !important;
   padding: 17px 6px;
   line-height:40px;
   min-height:60px;
@@ -5364,7 +5387,7 @@ box-sizing:border-box;
   box-sizing: border-box;
 	  background-color:#f6f9fc;
 	font-size: 31px !important;
-  color: #A2A8B1 !important;  
+  color: #A2A8B1 !important;
   text-align: center;
   line-height: 75px;
   padding: 10px 0;
@@ -5373,7 +5396,7 @@ box-sizing:border-box;
 .ihc_level_template_5 .ihc-level-item-link{
 	text-align:center;
 	box-sizing:border-box;
-	
+
   	margin: 10px auto;
   	width: 60%;
   	border: none;
@@ -5403,7 +5426,7 @@ box-sizing:border-box;
 .ihc_level_template_5 .ihc-purchased-level{
 	 background-color: #f47e7e!important;
 }
- 
+
 /*Template 6*/
 .ihc_level_template_6{
 margin:0 auto;
@@ -5467,7 +5490,7 @@ margin:0 auto;
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 	color:#6c7a8d;
   	font-size: 32px !important;
-  	border: none !important; 
+  	border: none !important;
     padding: 2px 6px;
     line-height: 40px;
     min-height: 40px;
@@ -5496,7 +5519,7 @@ margin:0 auto;
   	position: relative;
   	box-sizing: border-box;
 	font-size: 65px !important;
-  	color: #f35863;  
+  	color: #f35863;
   	text-align: center;
   	line-height: 75px;
     padding: 30px 15px;
@@ -5510,7 +5533,7 @@ margin:0 auto;
 .ihc_level_template_6 .ihc-level-item-link{
 	text-align:center;
 	box-sizing:border-box;
-	
+
   	margin: 10px auto;
   	width: 70%;
   	border: none;
@@ -5543,7 +5566,7 @@ margin:0 auto;
 }
 .ihc_level_template_6 .ihc-purchased-level{
 	 background-color: #f47e7e!important;
-} 
+}
 
 /*Template 7*/
 .ihc_level_template_7{
@@ -5582,7 +5605,7 @@ margin:0 auto;
 	font-family: 'Oswald', arial, sans-serif !important;
 	color:#fff;
   font-size: 28px !important;
-  border: none !important; 
+  border: none !important;
   padding: 17px 6px;
   line-height:40px;
   min-height:60px;
@@ -5623,7 +5646,7 @@ margin:0 auto;
 .ihc_level_template_7 .ihc-level-item-link{
 	text-align:center;
 	box-sizing:border-box;
-	
+
   	margin: 10px auto;
   	width: 60%;
   	border: none;
@@ -5712,7 +5735,7 @@ margin:0 auto;
 	color: #565656;
 	font-size: 24px;
 	line-height: 26px;
-	border: none !important; 
+	border: none !important;
 	padding: 20px 0;
 }
 .ihc_level_template_8 .ihc-level-item-content{
@@ -5744,7 +5767,7 @@ margin:0 auto;
 	position: relative;
 	box-sizing: border-box;
 	background: #f4f4f4;
-	color: #565656;	
+	color: #565656;
 	text-align: center;
 	line-height: 75px;
 	padding: 0px 0 15px 0;
@@ -5797,7 +5820,7 @@ margin:0 auto;
 .ihc_level_template_8 .ihc-purchased-level:hover{
 	 color:#fff !important;
 }
- 
+
 /*Template 9*/
 .ihc_level_template_9{
 	margin:0 auto;
@@ -5856,7 +5879,7 @@ margin:0 auto;
 	color: #363f48;
 	font-size: 28px;
 	line-height: 26px;
-	border: none !important; 
+	border: none !important;
 	padding: 40px 15px 15px;
 }
 .ihc_level_template_9 .ihc-level-item-content{
@@ -5895,7 +5918,7 @@ margin:0 auto;
 	font-weight: 600;
 	color: #363f48;
 	font-size: 90px;
-	line-height: 64px;    
+	line-height: 64px;
 	line-height: 1 !important;
 }
 .ihc_level_template_9 .ihc-level-item-link{
@@ -5920,7 +5943,7 @@ margin:0 auto;
 	-o-transition: all 0.3s linear 0s;
 	transition: all 0.3s linear 0s;
 	font-family: 'Open Sans',sans-serif;
-	font-size: 14px;    
+	font-size: 14px;
 	ont-weight: 600;
 	line-height: 16px;
 	border-radius: 3px;
@@ -5935,7 +5958,7 @@ margin:0 auto;
 }
 .ihc_level_template_9 .ihc-purchased-level:hover{
 	 color:#fff !important;
-} 
+}
 
 /*==================SUBSCRIPTION======================*/
 /*==================USER PAGE======================*/
@@ -5949,11 +5972,11 @@ margin:0 auto;
 	min-height:100px;
 }
 .iump-user-page-mess-special{
-	font-size:19px;  
+	font-size:19px;
 	font-family: 'Oswald', Arial, Helvetica, sans-serif;
   	font-weight: 400;
 	color:#999;
-	
+
 	font-family: Open Sans, sans-serif, 'Trebuchet MS';
 	color:#333;
 	font-size:16px;
@@ -5983,7 +6006,7 @@ margin:0 auto;
 	font-size: 18px;
   	line-height: 40px;
   	color: #555;
-	text-transform: uppercase;  
+	text-transform: uppercase;
 	font-family: 'Oswald', Arial, Helvetica, sans-serif;
   	font-weight: 400;
 	margin-bottom:30px;
@@ -6163,12 +6186,11 @@ margin:0 auto;
 	padding-left:0;
 	padding-right:0;
 	cursor:pointer;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+  font-family: 'Oswald', Arial, Helvetica, sans-serif;
 	font-weight:300;
-	
 	font-size: 14px;
 	font-family: "Source Sans Pro", Helvetica, sans-serif;
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .ihc-ap-menu .ihc-ap-menu-item:hover{
@@ -6177,24 +6199,29 @@ margin:0 auto;
 .ihc-ap-menu .ihc-ap-menu-item-selected{
 	background-color:#777;
 }
+/**/
+
+/**/
 .ihc-ap-theme-1 .ihc-ap-menu .ihc-ap-menu-item .fa-ihc{
 	font-size: 19px;
-    line-height: 40px;
-    padding-right: 8px;
-    vertical-align: middle;
-    color: #fff;
+  line-height: 40px;
+  padding-right: 8px;
+  vertical-align: middle;
+  color: #fff;
 }
 .ihc-ap-theme-1 .ihc-ap-menu .ihc-ap-menu-item a{
 	text-decoration: none;
-    border: none;
+  border: none;
 	color: #fff;
 	vertical-align:bottom;
-    line-height: 40px;
-    padding-left: 17px;
-    padding-right: 19px;
-    display: inline-block;
+  line-height: 45px;
+  padding-left: 17px;
+  padding-right: 19px;
+  display: inline-block;
 	box-shadow: none;
+
 }
+
 .ihc-ap-theme-1 .ihc-ap-menu .ihc-ap-menu-item a:hover{
 	color: #fff;
 }
@@ -6393,7 +6420,7 @@ margin:0 auto;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
     font-weight: 400;
     margin-bottom: 30px;
-	
+
 	font-family: Open Sans, sans-serif, 'Trebuchet MS' !important;
     font-weight: 600;
     font-size: 28px;
@@ -6430,7 +6457,7 @@ margin:0 auto;
     font-weight: 400;
 	color:#21759b;
 	font-size:14px;
-	
+
 	font-size: 15px;
     font-family: Open Sans, sans-serif, 'Trebuchet MS';
     font-weight: 600;
@@ -6555,7 +6582,7 @@ margin:0 auto;
 	background: #0091cd;
     background-color: transparent;
     border-color: transparent;
-	min-width:560px;    
+	min-width:560px;
 	padding: 10px 0;
     border-bottom: 1px solid #e6e6e6;
 }
@@ -6568,7 +6595,7 @@ margin:0 auto;
 	cursor:pointer;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
 	font-weight:300;
-	
+
 	font-size: 14px;
 	font-family: "Source Sans Pro", Helvetica, sans-serif;
     font-weight: 500;
@@ -6648,8 +6675,8 @@ margin:0 auto;
 .ihc-ap-theme-3 .ihc-account-subscr-list thead{
 	    color: #555;
     text-transform: uppercase;
-    font-family: 'Oswald', Arial, Helvetica, sans-serif;
-    font-weight: 400;
+    font-weight: 500;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     margin-bottom: 30px;
     border-bottom: 4px solid #33b5e5;
 	font-size: 14px;
@@ -6692,7 +6719,7 @@ margin:0 auto;
     margin: 25px 0px 15px 0px;
     border: 1px solid #eee;
     font-family: Lato;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: 400;
     line-height: 24px;
     color: #888;
@@ -6710,6 +6737,7 @@ margin:0 auto;
 .ihc-ap-theme-3 .ihc-account-tranz-list td{
 	text-align:center;
 	font-size:13px;
+	border: 1px solid #eeeeee;
 }
 .ihc-ap-theme-3 .ihc-account-tranz-list td .ihc-level-name {
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
@@ -6720,7 +6748,8 @@ margin:0 auto;
     font-weight: 600;
 }
 .ihc-ap-theme-3 .ihc_account_level_status{
-	font-family: Oswald, arial, sans-serif !important;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight:600;
 	color:#222;
 }
 .ihc-ap-theme-3 .ihc-ap-wrap{
@@ -6736,7 +6765,7 @@ margin:0 auto;
 	font-size: 22px;
     font-weight: 700;
     margin-bottom: 15px;
-	color:#777;	
+	color:#777;
 }
 
 .ihc-ap-theme-3 .ihc-ap-wrap .iump-pagination-wrapper{
@@ -6815,7 +6844,7 @@ margin:0 auto;
 	cursor:pointer;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
 	font-weight:300;
-	
+
 	font-size: 14px;
 	font-family: "Source Sans Pro", Helvetica, sans-serif;
     font-weight: 500;
@@ -7081,7 +7110,7 @@ margin:0 auto;
 	background-image: -ms-linear-gradient(top, #f4f4f4, #e7e8ea);
 	background-image: -o-linear-gradient(top, #f4f4f4, #e7e8ea);
 	background-image: linear-gradient(top, #f4f4f4, #e7e8ea);
-	
+
 	-webkit-transform: scaleY(1);
 	transform: scaleY(1);
 	-webkit-transform-origin: 50%;
@@ -7160,7 +7189,7 @@ margin:0 auto;
 	-moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.24);
 	box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.24);
 	margin:7px;
-	
+
 }
 .ihc-sm-template-5 .ihc-sm-item-label{
 	padding-right:6px;
@@ -7200,40 +7229,40 @@ margin:0 auto;
 	color: #4099FF;
 }
 .ihc-sm-template-5 .ihc-in .fa-ihc-sm, .ihc-sm-template-5 .ihc-in .ihc-sm-item-label{
-	color: #0074a2;	
+	color: #0074a2;
 }
 .ihc-sm-template-5 .ihc-goo .fa-ihc-sm, .ihc-sm-template-5 .ihc-goo .ihc-sm-item-label{
-    color: rgb(217, 82, 50);	
+    color: rgb(217, 82, 50);
 }
 .ihc-sm-template-5 .ihc-vk .fa-ihc-sm, .ihc-sm-template-5 .ihc-vk .ihc-sm-item-label{
-    color: #5d83aa;	
+    color: #5d83aa;
 }
 .ihc-sm-template-5 .ihc-ig .fa-ihc-sm, .ihc-sm-template-5 .ihc-ig .ihc-sm-item-label{
-	color: #125688;	
+	color: #125688;
 }
 .ihc-sm-template-5 .ihc-tbr .fa-ihc-sm, .ihc-sm-template-5 .ihc-tbr .ihc-sm-item-label{
-	color: #2c4762;	
+	color: #2c4762;
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-fb:hover{
-	background: rgb(59, 89, 152);	
+	background: rgb(59, 89, 152);
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-tw:hover{
 	background: #4099FF;
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-in:hover{
-	background: #0074a2;	
+	background: #0074a2;
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-goo:hover{
-    background: rgb(217, 82, 50);	
+    background: rgb(217, 82, 50);
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-vk:hover{
-    background: #5d83aa;	
+    background: #5d83aa;
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-ig:hover{
-	background: #125688;	
+	background: #125688;
 }
 .ihc-sm-template-5 .ihc-sm-item.ihc-tbr:hover{
-	background: #2c4762;	
+	background: #2c4762;
 }
 /*==============LOGIN BUTTONS===============*/
 .ihc-public-wrapp-visitor-user .iump-user-page-avatar{
@@ -7308,7 +7337,7 @@ margin:0 auto;
 	height: 200%;
     left: 0;
     right: 0;
-    top: -100%;	
+    top: -100%;
 	z-index: -10;
 	background-size: cover;
     background-position: 50% 50%;
@@ -7336,6 +7365,7 @@ margin:0 auto;
 	margin-top:5px;
 	display: block;
 	padding-left: 20px;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .ihc-user-page-top-ap-wrapper .ihc-top-level-box{
 	background-color: #1fb5ac;
@@ -7422,15 +7452,19 @@ margin:0 auto;
 	    color: #454545;
 		    font-size: 24px;
 }
+.ihc-ap-top-theme-1 .ihc-user-page-avatar img{
+	min-width:150px;
+}
+
 
 .ihc-ap-top-theme-2{
-	padding-top:270px;	
+	padding-top:270px;
 
 }
 .ihc-ap-top-theme-2 .ihc-user-page-top-ap-background{
 	height: 250px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_2.png);
+    background-image: url(../images/top_ump_bk_4.png);
 }
 .ihc-ap-top-theme-2  #js_ihc_edit_top_ap_banner{
 	height:250px;
@@ -7458,14 +7492,14 @@ margin:0 auto;
 }
 
 .ihc-ap-top-theme-3{
-	padding-top:320px;	
+	padding-top:320px;
 	padding-bottom:20px;
 
 }
 .ihc-ap-top-theme-3 .ihc-user-page-top-ap-background{
 	height: 300px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_3.png);
+    background-image: url(../images/top_ump_bk_4.png);
 }
 .ihc-ap-top-theme-3 .ihc-left-side{
 	    margin-bottom: -75px;
@@ -7532,7 +7566,7 @@ margin:0 auto;
 .ihc-ap-top-theme-4 .ihc-middle-side{
 	float:none;
 	max-width:inherit;
-    margin-top: -15px;    
+    margin-top: -15px;
 	z-index: 1;
 	margin-left:260px;
 }
@@ -7582,9 +7616,9 @@ margin:0 auto;
     background-color: rgba(0,0,0,0.35);
 }
 .ihc-ap-top-theme-4 .ihc-top-levels{
-	margin-left:0px;    
+	margin-left:0px;
 	margin-top: 10px;
-	
+
     padding-left: 20px;
 }
 .ihc-ap-top-theme-4 .iump-user-page-name{
@@ -7653,13 +7687,16 @@ margin:0 auto;
 }
 
 .ihc-ap-top-theme-2{
-	padding-top:270px;	
+	padding-top:270px;
 
 }
 .ihc-ap-top-theme-2 .ihc-user-page-top-ap-background{
 	height: 250px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_2.png);
+    background-image: url(../images/top_ump_bk_4.png);
+}
+.ihc-ap-top-theme-2 .ihc-user-page-avatar img{
+	min-width:180px;	
 }
 .ihc-ap-top-theme-2 .ihc-left-side{
 	    margin-bottom: -75px;
@@ -7684,14 +7721,14 @@ margin:0 auto;
 }
 
 .ihc-ap-top-theme-3{
-	padding-top:320px;	
+	padding-top:320px;
 	padding-bottom:0px;
 
 }
 .ihc-ap-top-theme-3 .ihc-user-page-top-ap-background{
 	height: 300px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_3.png);
+    background-image: url(../images/top_ump_bk_4.png);
 }
 .ihc-ap-top-theme-3 .ihc-left-side{
 	    margin-bottom: -75px;
@@ -7769,7 +7806,7 @@ margin:0 auto;
 }
 
 
-.iump-view-user-wrapp-temp1{	
+.iump-view-user-wrapp-temp1{
 	font-family:Arial, Helvetica, sans-serif;
 }
 .iump-view-user-wrapp-temp1 .ihc-user-page-top-ap-wrapper {
@@ -7868,7 +7905,7 @@ margin:0 auto;
     z-index: -10;
     background-size: cover;
     background-position: 50% 50%;
-    background-blend-mode: overlay;    
+    background-blend-mode: overlay;
 	height: 250px;
     top: 0;
     background-image: url(../images/top_aff_bk_2.png);
@@ -7920,6 +7957,7 @@ margin:0 auto;
 }
 .iump-view-user-wrapp-temp1 .iump-user-field .iump-value{
 	float:left;
+	white-space: pre-wrap;
 }
 .iump-view-user-wrapp-temp1 .iump-additional-content{
 	padding:30px 20px 20px 20px;
@@ -7929,7 +7967,7 @@ margin:0 auto;
 }
 
 
-.iump-view-user-wrapp-temp2{	
+.iump-view-user-wrapp-temp2{
 	font-family:Arial, Helvetica, sans-serif;
 }
 .iump-view-user-wrapp-temp2 .ihc-user-page-top-ap-wrapper {
@@ -8038,7 +8076,7 @@ margin:0 auto;
     z-index: -10;
     background-size: cover;
     background-position: 50% 50%;
-    background-blend-mode: overlay;    
+    background-blend-mode: overlay;
 	height: 180px;
     top: 0;
     background-image: url(../images/top_aff_bk_2.png);
@@ -8082,7 +8120,7 @@ margin:0 auto;
 	color:#333;
 	font-weight:bold;
 	padding-left:7%;
-    box-sizing: border-box;	
+    box-sizing: border-box;
 	border-bottom:1px solid #eee;
 }
 .iump-view-user-wrapp-temp2 .iump-user-field .iump-value{
@@ -8120,19 +8158,19 @@ margin:0 auto;
 		margin-left:0px;
 		margin-top:10px;
 	}
-	
+
 	.ihc-user-page-name{
     	font-size: 1.3em;
 	}
 	.ihc-user-page-mess{
 		font-size: 0.9em;
-	}	
+	}
 	.ihc-ap-top-theme-3 .ihc-user-page-details{
 		background-color: transparent;
 	}
 	.ihc-user-page-top-ap-wrapper .ihc-stats-content{
 		font-size: 1.3em;
-	}	
+	}
 	.ihc-ap-top-theme-3 .ihc-middle-side{
 		display:inline-block;
 	}
@@ -8152,10 +8190,10 @@ margin:0 auto;
 	}
 	.ihc-user-page-mess{
 		font-size: 0.9em;
-	}	
+	}
 	.ihc-user-page-top-ap-wrapper .ihc-stats-content{
 		font-size: 1.3em;
-	}	
+	}
 	.ihc-ap-top-theme-3 .ihc-user-page-details, .ihc-ap-top-theme-2 .ihc-user-page-details{
 		background-color: transparent;
 	}
@@ -8180,7 +8218,7 @@ margin:0 auto;
 	.ihc-ap-top-theme-4 .ihc-middle-side{
 		margin-left:0px;
 		    margin-top: 5px;
-		text-align:center;	
+		text-align:center;
 	}
 	.ihc-ap-top-theme-4 .ihc-account-page-top-extra-mess{
 		display:none;
@@ -8224,7 +8262,7 @@ margin:0 auto;
     font-weight: 700;
     float: left;
 	}
-	
+
 	.ihc-account-subscr-list thead, .ihc-account-subscr-list tfoot {
     display: none;
 	}
@@ -8253,7 +8291,7 @@ margin:0 auto;
 		    font-size: 14px;
 	}
 	.ihc-account-subscr-list .ihc-level-end-time-wrapp, .ihc-account-subscr-list .ihc-level-start-time-wrapp{
-		    display: inline-flex;	
+		    display: inline-flex;
 	}
 	.ihc-account-subscr-list .ihc-level-end-time-wrapp:before{
 		content:" - ";
@@ -8263,7 +8301,7 @@ margin:0 auto;
 		padding-top:10px !important;
 	}
 	.ihc-account-subscr-list .ihc-subscription-table-actions{
-		padding-top:10px !important;	
+		padding-top:10px !important;
 	}
 	.ihc-account-subscr-list .iump-subscription-table-button{
 		margin-right:0px;
@@ -8275,7 +8313,7 @@ margin:0 auto;
 	.ihc-ap-top-theme-4 .iump-user-page-name {
     margin-bottom: 10px !important;
 }
-	
+
 }
 /*--RESPONSIVE TABLE---*/
 @media (max-width: 620px) {

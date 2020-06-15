@@ -24,11 +24,15 @@ namespace Ump{
 				$level_name = \Ihc_Db::get_level_name_by_lid($data['lid']);
 				\Ihc_User_Logs::write_log($username . __(' has ordered Level ', 'ihc') . $level_name, 'user_logs');
 
-				$q = $wpdb->prepare("INSERT INTO $table VALUES (null, %d, %d, %s, %s, %d, %s, NOW());",
-											$data['uid'], $data['lid'], $data['amount_type'], $data['amount'], $automated_payment, $data['status']);
+				/// since version 8.6, before we used NOW() function in mysql
+				$currentDate = indeed_get_current_time_with_timezone();
+
+				$q = $wpdb->prepare( "INSERT INTO $table VALUES (null, %d, %d, %s, %s, %d, %s, %s );",
+											$data['uid'], $data['lid'], $data['amount_type'], $data['amount'], $automated_payment, $data['status'], $currentDate );
 				$wpdb->query($q);
 				$id = $wpdb->insert_id;
 				do_action('ump_payment_check', $id, 'insert');
+
 
 				/// SAVE METAS
 				if (isset($data['txn_id'])){
@@ -79,6 +83,7 @@ namespace Ump{
 				\Ihc_Db::increment_dashboard_notification('orders');
 
 				do_action('ihc_action_after_order_placed', @$data['uid'], @$data['lid']);
+				// @description after order was created. @param user id (integer), level id (integer)
 
 				return $id;
 			}
@@ -167,7 +172,7 @@ namespace Ump{
 				if ($data && !empty($data->orders)){
 					@$ids = unserialize($data->orders);
 				}
-				if ( in_array( $id, $ids ) ){
+				if ( isset( $ids ) && in_array( $id, $ids ) ){
 						return;
 				}
 				$id = esc_sql($id);

@@ -86,7 +86,6 @@ class Ihc_Pushover{
 		return (array)$data;
 	}
 
-
 }
 
 endif;

@@ -17,6 +17,7 @@ function ihc_init(){
 		setcookie("ihc_register", "", time()-3600, COOKIEPATH, COOKIE_DOMAIN, false);//delete the cookie
 	}
 
+	$restrictionOn = true;
 	$postid = -1;
 	$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; /// $_SERVER['SERVER_NAME']
 	$current_user = false;
@@ -43,6 +44,7 @@ function ihc_init(){
 
 		/// REDIRECT / REPLACE CONTENT
 		$postid = url_to_postid( $url );//getting post id
+		$restrictionOn = true;
 
 		if ($postid==0){
 			$cpt_arr = ihc_get_all_post_types();
@@ -68,8 +70,22 @@ function ihc_init(){
 				if($url==get_permalink($homepage)) $postid = $homepage;
 			}
 		}
+
+		$restrictionOn = apply_filters( 'ihc_filter_restriction', $restrictionOn, $postid );
+		if ( !$restrictionOn ){
+				return;
+		}
+
+
 		ihc_if_register_url($url);//test if is register page
 		ihc_block_page_content($postid, $url);//block page
+
+	}
+
+	$restrictionOn = apply_filters( 'ihc_filter_restriction', $restrictionOn, $postid );
+
+	if ( !$restrictionOn ){
+			return;
 	}
 
 	//// BLOCK INDIVIDUAL PAGE
@@ -84,4 +100,5 @@ function ihc_init(){
 	/// Hide ADMIN BAR
 	ihc_do_show_hide_admin_bar_on_public();
 
+	//echo $postid,'<br/>';
 }

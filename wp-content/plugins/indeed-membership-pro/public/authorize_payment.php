@@ -20,13 +20,13 @@
 		$url = 'https://secure.authorize.net/gateway/transact.dll';
 		Ihc_User_Logs::write_log( __('Authorize Payment: set Live mode', 'ihc'), 'payments');
 	}
-	
+
 	//$relay_url = str_replace('public/', 'authorize_response.php', plugin_dir_url(__FILE__));
-	
+
 	$site_url = site_url();
 	$site_url = trailingslashit($site_url);
 	$relay_url = add_query_arg('ihc_action', 'authorize', $site_url);
-	
+
 	$err = false;
 	//LEVEL
 	if (isset($levels[$_GET['lid']])){
@@ -101,14 +101,14 @@
 		// a sequence number is randomly generated
 		$sequence	= rand(1, 1000);
 		// a timestamp is generated
-		$timeStamp	= time();
+		$timeStamp	= indeed_get_unixtimestamp_with_timezone();
 		$testMode		= "false";
 
 		if( phpversion() >= '5.1.2' )
 			{ $fingerprint = hash_hmac("md5", $loginID . "^" . $sequence . "^" . $timeStamp . "^" . $amount . "^" . $currency, $transactionKey); }
 		else
 			{ $fingerprint = bin2hex(mhash(MHASH_MD5, $loginID . "^" . $sequence . "^" . $timeStamp . "^" . $amount . "^". $currency, $transactionKey)); }
-		
+
 		Ihc_User_Logs::write_log( __('Authorize Payment: amount set @ ', 'ihc') . $amount . $currency, 'payments');
 		Ihc_User_Logs::write_log( __('Authorize Payment: Request submited.', 'ihc'), 'payments');
 		/// <input type="hidden" name="x_relay_response" value="FALSE" />

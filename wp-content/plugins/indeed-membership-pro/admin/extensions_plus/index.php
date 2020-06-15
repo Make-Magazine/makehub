@@ -1,4 +1,2 @@
 <?php
-
-
-require_once plugin_dir_path(__FILE__) . 'inc/init.php';
+require_once IHC_PATH . 'admin/extensions_plus/inc/init.php';

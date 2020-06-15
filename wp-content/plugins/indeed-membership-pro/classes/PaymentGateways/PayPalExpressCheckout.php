@@ -22,6 +22,17 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $levelData = $levels[$this->attributes['lid']];
 
         $amount = $levelData['price'];
+
+        /*************************** DYNAMIC PRICE ***************************/
+        if (ihc_is_magic_feat_active('level_dynamic_price') && isset($this->attributes['ihc_dynamic_price'])){
+            $temp_amount = $this->attributes['ihc_dynamic_price'];
+            if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
+                $amount = $temp_amount;
+                \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
+            }
+        }
+        /**************************** DYNAMIC PRICE ***************************/
+        
         $reccurrence = FALSE;
         if (isset($levelData['access_type']) && $levelData['access_type']=='regular_period'){
           $reccurrence = TRUE;
@@ -39,7 +50,8 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         if ($reccurrence){
 
-            /// RECCURING
+            /// RECURRING PAYMENT STARTS
+
             if ($couponData){
               if (!empty($couponData['reccuring'])){
                 //everytime the price will be reduced
@@ -49,15 +61,19 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 }
               } else {
                 //only one time
-                if (!empty($levelData['access_trial_price'])){
+				 if (isset($levelData['access_trial_price']) && $levelData['access_trial_price']!==''){
                   $levelData['access_trial_price'] = ihc_coupon_return_price_after_decrease($levelData['access_trial_price'], $couponData, TRUE, $uid, $this->attributes['lid']);
                 } else {
                   $levelData['access_trial_price'] = ihc_coupon_return_price_after_decrease($levelData['price'], $couponData, TRUE, $uid, $this->attributes['lid']);
                   $levelData['access_trial_type'] = 2;
                 }
-                if (empty($levelData['access_trial_type'])){
-                  $levelData['access_trial_type'] = 2;
-                }
+					//WHEN IS NO TRIAL AND COUPON "JUST ONCE" CREATE ONE.
+					  if (empty($levelData['access_trial_type'])){
+						$levelData['access_trial_type'] = 2;
+					  }
+					   if (empty($levelData['access_trial_couple_cycles'])){
+						 $levelData['access_trial_couple_cycles']  = 1;
+					  }
               }
             }
 
@@ -70,10 +86,10 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               if ($taxesPrice && !empty($taxesPrice['total'])){
                 $levelData['access_trial_price'] += $taxesPrice['total'];
               }
+
+
               if ($levelData['access_trial_type']==1){
                 //certain period
-                //$trialTimeType = $levelData['access_trial_time_type'];//type of time
-                //$trialTimeValue .= $levelData['access_trial_time_value'];// time value
                 \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment: Trial time value set @ ', 'ihc') . $levelData['access_trial_time_value'] . ' ' .$levelData['access_trial_time_type'] , 'payments');
               } else {
                 //one subscription
@@ -121,17 +137,8 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             }
             \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment: recurrence number: ', 'ihc') . $recurringLimit, 'payments');
 
-            /*************************** DYNAMIC PRICE ***************************/
-            if (ihc_is_magic_feat_active('level_dynamic_price') && isset($this->attributes['ihc_dynamic_price'])){
-                $temp_amount = $this->attributes['ihc_dynamic_price'];
-                if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
-                    $amount = $temp_amount;
-                    \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
-                }
-            }
-            /**************************** DYNAMIC PRICE ***************************/
-
             $amount = number_format((float)$amount, 2, '.', '');
+
             $object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
             $redirect = $object->setRecurringPayment($levelData['label'])->getAuthorizeURL();
             if ($redirect){
@@ -172,12 +179,20 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 }
             } else if ( !empty( $levelData['access_trial_couple_cycles'] ) && isset($levelData['access_trial_type']) && $levelData['access_trial_type'] == 2 ){ /// && isset($extraPaymentData['access_trial_type']) && $extraPaymentData['access_trial_type'] == 2
                 /// couple of cycles
+				if (isset($levelData['access_trial_price'])){
+                    $extraPaymentData['access_trial_price'] = $levelData['access_trial_price'];
+                }
                 $extraPaymentData['access_trial_type'] = $intervalType;
                 $extraPaymentData['access_trial_time_value'] = $levelData['access_regular_time_value'];
                 $extraPaymentData['access_trial_couple_cycles'] = $levelData['access_trial_couple_cycles'];
             }
+
+			/// RECURRING PAYMENT ENDS
+
         } else {
-            /// SINGLE payment_type
+
+            /// SINGLE PAYMENT STARTS
+
             if ($couponData){
               $amount = ihc_coupon_return_price_after_decrease($amount, $couponData, TRUE, $this->attributes['uid'], $this->attributes['lid']);
             }
@@ -186,6 +201,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $levelData['price'] = $this->addTaxes($levelData['price']);
 
             /*************************** DYNAMIC PRICE ***************************/
+            /*
             if (ihc_is_magic_feat_active('level_dynamic_price') && isset($this->attributes['ihc_dynamic_price'])){
               $temp_amount = $this->attributes['ihc_dynamic_price'];
               if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
@@ -193,6 +209,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
               }
             }
+            */
             /**************************** DYNAMIC PRICE ***************************/
 
             $amount = number_format((float)$amount, 2, '.', '');
@@ -202,10 +219,13 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 $this->redirectUrl = $redirect;
             }
             $token = $object->getToken();
+
+			  /// SINGLE PAYMENT ENDS
         }
 
         if (empty($token)){
-            return $this;
+            //STOP THE PROCESS
+			return $this;
         }
 
         $transactionData = array(
@@ -222,8 +242,6 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $transactionData = $transactionData + $extraPaymentData;
         }
 
-        // dd($transactionData);
-
         ihc_insert_update_transaction($this->attributes['uid'], $token, $transactionData, true); /// will save the order too
         /// update indeed_members_payments table, add order id
         \Ihc_Db::updateTransactionAddOrderId($token, @$this->attributes['orderId']);
@@ -231,7 +249,11 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     }
 
-    public function redirect()
+    /**
+     * @param string
+     * @return none
+     */
+    public function redirect( $transactionId='' )
     {
         if (empty($this->redirectUrl)){
             $this->redirectUrl = get_site_url();
@@ -241,9 +263,23 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         exit();
     }
 
-    public function cancelSubscription()
+    /**
+     * @param string
+     * @return none
+     */
+    public function cancelSubscription( $transactionId='' )
     {
-
+        $sandbox = get_option('ihc_paypal_express_checkout_sandbox');
+        if ($merchant_id){
+          $alias = $merchant_id;
+        }
+        if ($sandbox){
+          $url = "https://www.sandbox.paypal.com/";
+        } else {
+          $url = "https://www.paypal.com/";
+        }
+        wp_redirect($url);
+        exit();
     }
 
     public function webhook()
@@ -311,6 +347,8 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                   ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
                   ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                   do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
+                  // @description run on payment complete. @param user id (integer), level id (integer)
+
                   ihc_switch_role_for_user($data['uid']);
                   exit();
 
@@ -333,7 +371,9 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       					ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
       					ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
-      					ihc_switch_role_for_user($data['uid']);
+                // @description run on payment complete. @param user id (integer), level id (integer)
+
+                ihc_switch_role_for_user($data['uid']);
           			exit();
         				break;
       				case 'Pending':
@@ -346,6 +386,8 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       				case 'Refunded':
     						ihc_delete_user_level_relation($data['lid'], $data['uid']);
     						do_action('ump_paypal_user_do_refund', $data['uid'], $data['lid'], $transactionId);
+                // @description run on payment refund. @param user id (integer), level id (integer), transaction id (integer)
+
           			exit();
         				break;
       			}
@@ -357,6 +399,8 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
                 ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
+                // @description run on payment complete. @param user id (integer), level id (integer)
+
                 ihc_switch_role_for_user($data['uid']);
                 $orderId = \Ihc_Db::getLastOrderIdForTransaction( $transactionId );
                 if ( $orderId ){

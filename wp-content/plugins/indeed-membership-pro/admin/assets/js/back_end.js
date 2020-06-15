@@ -485,6 +485,21 @@ function ihcFirstConfirm(m){
  });
 
 }
+function ihcFirstConfirmBeforeSubmitForm(m){
+		swal({
+				title: m,
+				text: "",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonClass: "btn-danger",
+				confirmButtonText: "OK",
+				closeOnConfirm: true
+			},
+			function(){
+				jQuery("form[name='ihc-users']").submit();
+				//return true;
+	 	});
+}
 
 function indeedConfirmAndRedirect(url){
 		swal({
@@ -1306,7 +1321,7 @@ function ihcMakeExportFile(){
 	        	if (response!=0){
 	        		jQuery('.ihc-hidden-download-link a').attr('href', response);
 	        		jQuery('.ihc-hidden-download-link').fadeIn(200);
-					jQuery('#ihc_loading_gif .spinner').css('visibility', 'hidden');
+							jQuery('#ihc_loading_gif .spinner').css('visibility', 'hidden');
 	        	}
 	        }
 	   });
@@ -1513,8 +1528,15 @@ jQuery( document ).ready(function(){
 		});
 
 });
+
+
 jQuery(document).ready(function(){
 	jQuery('.ihc-admin-mobile-bttn').on('click', function(){
 		jQuery('.ihc-dashboard-menu-items').toggle();
 	});
+});
+
+jQuery(document).ready( function() {
+    var nonce = jQuery('meta[name="ump-admin-token"]').attr('content');
+    jQuery.ajaxSetup( { headers: {'X-CSRF-UMP-ADMIN-TOKEN': nonce }});
 });

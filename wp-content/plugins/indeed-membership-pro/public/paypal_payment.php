@@ -1,4 +1,8 @@
 <?php
+/*
+ * Deprecated
+ * Used in version <8.3.3
+ */
 	require '../../../../wp-load.php';
 
 	Ihc_User_Logs::set_user_id(@$_GET['uid']);

@@ -25,6 +25,7 @@ class RegisterElementorWidgets
       require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Visitor_Inside_User_Page_Widget.php';
       require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Login_Popup_Widget.php';
       require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Register_Popup_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Locker_Widget.php';
 	}
 
 	public function register_widgets()
@@ -39,6 +40,7 @@ class RegisterElementorWidgets
 		  \Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Ihc_Visitor_Inside_User_Page_Widget() );
 		  \Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Ihc_Login_Popup_Widget() );
       \Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Ihc_Register_Popup_Widget() );
+      	  \Elementor\Plugin::instance()->widgets_manager->register_widget_type( new \Elementor_Ihc_Locker_Widget() );
 	}
 
 	public function __construct()

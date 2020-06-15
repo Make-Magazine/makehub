@@ -8,7 +8,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 	if (isset($post_data['name']) && $post_data['name']!=''){
 		$option_name = 'ihc_levels';
 		$data = get_option($option_name);
-		if (count($data)>=3 && (!defined('IHCACTIVATEDMODE') || !IHCACTIVATEDMODE)){
+		if ( !empty($data) && is_array( $data ) && count($data)>=3 && (!defined('IHCACTIVATEDMODE') || !IHCACTIVATEDMODE)){
 			if (!$install){
 				echo '<div class="ihc-admin-err-level">' . __("You cannot add more than one level on Trial Version!", 'ihc') . '</div>';
 			}
@@ -47,6 +47,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 		);
 
 		$arr = apply_filters('ihc_save_level_meta_names_filter', $arr);
+		// @description filter fired when save level. @param array with level data
 
 		foreach ($arr as $k=>$v){
 			$arr[$k] = (isset($post_data[$k])) ? $post_data[$k] : '';

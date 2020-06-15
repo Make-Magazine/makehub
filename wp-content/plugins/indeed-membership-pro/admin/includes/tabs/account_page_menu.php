@@ -15,6 +15,9 @@ if (!empty($_POST['ihc_account_page_menu_add_new-the_slug']) && !empty($_POST['i
 $menu_items = Ihc_Db::account_page_get_menu();
 $standard_tabs = Ihc_Db::account_page_get_menu(TRUE);
 
+$standard_tabs = apply_filters( 'ihc_admin_account_page_menu_standard_tabs', $standard_tabs );
+// @description filter for listing the account page menu standard tabs items on admin section. @param array
+
 ?>
 <style>
 	<?php foreach ($menu_items as $slug => $item):?>

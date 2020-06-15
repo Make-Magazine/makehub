@@ -297,11 +297,10 @@ function ihc_head(){
 	wp_enqueue_style( 'ihc_admin_style', IHC_URL . 'admin/assets/css/style.css' );
 	wp_enqueue_style( 'ihc_public_style', IHC_URL . 'assets/css/style.css' );
 	wp_enqueue_style( 'ihc-font-awesome', IHC_URL . 'assets/css/font-awesome.css' );
-	wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.css' );
-	wp_enqueue_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
 	wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css' );
 	wp_enqueue_media();
-	wp_register_script( 'ihc-back_end', IHC_URL . 'admin/assets/js/back_end.js', array(), null );
+	//wp_register_script( 'ihc-back_end', IHC_URL . 'admin/assets/js/back_end.js', array(), 1.2 );
+	wp_register_script( 'ihc-back_end', IHC_URL . 'admin/assets/js/back_end.min.js', array(), 1.3 );
 	wp_localize_script( 'ihc-back_end', 'ihc_site_url', get_site_url() );
 	//wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.css' );
 
@@ -318,18 +317,23 @@ function ihc_head(){
 		if (!empty($_GET['tab']) && $_GET['tab']!='orders'){
 			wp_enqueue_style( 'ihc_bootstrap', IHC_URL . 'admin/assets/css/bootstrap.css' );
 		}
-		wp_enqueue_style( 'ihc_bootstrap-res[', IHC_URL . 'admin/assets/css/bootstrap-responsive.min.css' );
+		wp_enqueue_style( 'ihc_bootstrap-res', IHC_URL . 'admin/assets/css/bootstrap-responsive.min.css' );
+
+		wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.css' );
+		wp_enqueue_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
+
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script('jquery-ui-autocomplete');
+		wp_enqueue_script( 'jquery-ui-autocomplete' );
 		wp_enqueue_script( 'ihc-flot', IHC_URL . 'admin/assets/js/jquery.flot.js' );
 		wp_enqueue_script( 'ihc-flot-pie', IHC_URL . 'admin/assets/js/jquery.flot.pie.js' );
 		wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js' );
-		wp_enqueue_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
-		wp_enqueue_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null );
-		wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), null );
-		wp_enqueue_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), null );
-		wp_enqueue_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
+		//wp_enqueue_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
+		//wp_enqueue_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null );
+		//wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), null );
+		wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.min.js', array(), null );
+		//wp_enqueue_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), null );
+		//wp_enqueue_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
 	}
 	if ( $pagenow == 'plugins.php' ){
 			wp_localize_script( 'ihc-back_end', 'ihcKeepData', get_option('ihc_keep_data_after_delete') );
@@ -337,7 +341,11 @@ function ihc_head(){
 			wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css' );
 	}
 	wp_enqueue_script( 'ihc-back_end' );
-
+	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
+	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), null );
+	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null );
+	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
+	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
 }
 
 ///CUSTOM NAV MENU
@@ -345,61 +353,113 @@ require_once IHC_PATH . 'admin/includes/custom-nav-menu.php';
 
 //AJAX CALL FOR POPUP
 add_action( 'wp_ajax_ihc_ajax_admin_popup', 'ihc_ajax_admin_popup' );
-function ihc_ajax_admin_popup(){
+function ihc_ajax_admin_popup()
+{
+	if ( !indeedIsAdmin() ){
+			echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+			echo 0;
+			die;
+	}
 	include_once IHC_PATH . 'admin/includes/popup-locker.php';
-	die();
+	die;
 }
 
-
+/**
+ * @param none
+ * @return none
+ */
 add_action('wp_ajax_ihc_get_font_awesome_popup', 'ihc_get_font_awesome_popup');
-function ihc_get_font_awesome_popup(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	ob_start();
+function ihc_get_font_awesome_popup()
+{
+	if ( !indeedIsAdmin() ){
+		  echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+		 echo 0;
+		 die;
+ 	}
 	require_once IHC_PATH . 'admin/includes/font_awesome_popup.php';
 	$output = ob_get_contents();
 	ob_end_clean();
 	echo $output;
-	die();
+	die;
 }
 
 //AJAX CALL FOR DELETE USER
 add_action( 'wp_ajax_ihc_delete_user_via_ajax', 'ihc_delete_user_via_ajax' );
-function ihc_delete_user_via_ajax(){
-	if ($_REQUEST['id']){
-		require_once IHC_PATH . 'admin/includes/functions.php';
-		ihc_delete_users(esc_sql($_REQUEST['id']));
-	}
-	die();
+function ihc_delete_user_via_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+			 echo 0;
+			 die;
+		}
+		if ($_REQUEST['id']){
+			require_once IHC_PATH . 'admin/includes/functions.php';
+			ihc_delete_users(esc_sql($_REQUEST['id']));
+		}
+		die;
 }
 
 
 //ajax call for popup forms
 add_action( 'wp_ajax_ihc_ajax_admin_popup_the_forms', 'ihc_ajax_admin_popup_the_forms');
-function ihc_ajax_admin_popup_the_forms(){
-	include_once IHC_PATH . 'admin/includes/popup-forms.php';
-	die();
+function ihc_ajax_admin_popup_the_forms()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+			 echo 0;
+			 die;
+		}
+		include_once IHC_PATH . 'admin/includes/popup-forms.php';
+		die;
 }
 
 //AJAX CALL PREVIEW TEMPLATE IN POPUP
 add_action( 'wp_ajax_ihc_ajax_template_popup_preview', 'ihc_ajax_template_popup_preview' );
-function ihc_ajax_template_popup_preview(){
-	if (isset($_REQUEST['template']) && $_REQUEST['template']!=''){
-		//get id
-		$arr = explode('_', esc_sql($_REQUEST['template']));
-		if(isset($arr[1]) && $arr[1]!=''){
-			include IHC_PATH . 'public/locker-layouts.php';
-			echo ihc_print_locker_template($arr[1]);
+function ihc_ajax_template_popup_preview()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
 		}
-	}
-	die();
+		if ( !ihcAdminVerifyNonce() ){
+			 echo 0;
+			 die;
+		}
+		if (isset($_REQUEST['template']) && $_REQUEST['template']!=''){
+			//get id
+			$arr = explode('_', esc_sql($_REQUEST['template']));
+			if(isset($arr[1]) && $arr[1]!=''){
+				include IHC_PATH . 'public/locker-layouts.php';
+				echo ihc_print_locker_template($arr[1]);
+			}
+		}
+		die;
 }
 
 //AJAX CALL PREVIEW LOGIN FORM
 add_action( 'wp_ajax_ihc_login_form_preview', 'ihc_login_form_preview' );
-function ihc_login_form_preview(){
+function ihc_login_form_preview()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
 		$meta_arr['ihc_login_remember_me'] = esc_sql($_REQUEST['remember']);
 		$meta_arr['ihc_login_register'] = esc_sql($_REQUEST['register']);
 		$meta_arr['ihc_login_pass_lost'] = esc_sql($_REQUEST['pass_lost']);
@@ -412,157 +472,229 @@ function ihc_login_form_preview(){
 				$meta_arr['ihc_login_show_recaptcha'] = 0;
 		}
 		echo ihc_print_form_login($meta_arr);
-	die();
+	  die;
 }
 
 //ajax preview locker
 add_action( 'wp_ajax_ihc_locker_preview_ajax', 'ihc_locker_preview_ajax' );
-function ihc_locker_preview_ajax(){
-	include IHC_PATH . 'public/locker-layouts.php';
-	if (isset($_REQUEST['locker_id'])){
-		//ihc_print_locker_template(template id, meta array, preview)
-		if (isset($_REQUEST['popup_display']) && $_REQUEST['popup_display']){
-			//preview in a popup
-			$str = '
-					<div class="ihc-popup-wrapp" id="popup_box">
-						<div class="ihc-the-popup">
-						<div class="ihc-popup-top">
-							<div class="title">Preview Locker</div>
-							<div class="close-bttn" onclick="ihcClosePopup();"></div>
-							<div class="clear"></div>
-						</div>
-							<div class="ihc-popup-content" style="text-align: center;">
-								<div style="margin: 0 auto;">
-									'.ihc_print_locker_template(esc_sql($_REQUEST['locker_id']), false, true).'
+function ihc_locker_preview_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+			  echo 0;
+			  die;
+		}
+		include IHC_PATH . 'public/locker-layouts.php';
+		if (isset($_REQUEST['locker_id'])){
+			//ihc_print_locker_template(template id, meta array, preview)
+			if (isset($_REQUEST['popup_display']) && $_REQUEST['popup_display']){
+				//preview in a popup
+				$str = '
+						<div class="ihc-popup-wrapp" id="popup_box">
+							<div class="ihc-the-popup">
+							<div class="ihc-popup-top">
+								<div class="title">Preview Locker</div>
+								<div class="close-bttn" onclick="ihcClosePopup();"></div>
+								<div class="clear"></div>
+							</div>
+								<div class="ihc-popup-content" style="text-align: center;">
+									<div style="margin: 0 auto;">
+										'.ihc_print_locker_template(esc_sql($_REQUEST['locker_id']), false, true).'
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-			';
+				';
+			} else {
+				// html
+				$str = ihc_print_locker_template(esc_sql($_REQUEST['locker_id']), false, true);
+			}
+
+			echo $str;
+
 		} else {
-			// html
-			$str = ihc_print_locker_template(esc_sql($_REQUEST['locker_id']), false, true);
+			$meta_arr = $_REQUEST;
+			echo ihc_print_locker_template(false, $meta_arr, true);
 		}
 
-		echo $str;
-
-	} else {
-		$meta_arr = $_REQUEST;
-		echo ihc_print_locker_template(false, $meta_arr, true);
-	}
-
-	die();
+		die;
 }
 
 //ajax preview locker
 add_action( 'wp_ajax_ihc_register_preview_ajax', 'ihc_register_preview_ajax' );
-function ihc_register_preview_ajax(){
-	if (!class_exists('UserAddEdit')){
-		include_once IHC_PATH . 'classes/UserAddEdit.class.php';
-	}
-	$args = array(
-			'user_id' => false,
-			'type' => 'create',
-			'tos' => true,
-			'captcha' => true,
-			'action' => '',
-			'is_public' => true,
-			'disabled_submit_form' => 'disabled',
-			'register_template' => esc_sql($_REQUEST['template']),
-			'preview' => TRUE,
-	);
-	$captchaType = get_option( 'ihc_recaptcha_version' );
-	if ( $captchaType !== false && $captchaType == 'v3' ){
-			$args['captcha'] = 0;
-	}
-	$obj_form = new UserAddEdit();
-	$obj_form->setVariable($args);//setting the object variables
-	$str = '';
-	$str .= '<style>' . $_REQUEST['custom_css'] . '</style>';
-	$str .= '<div class="iump-register-form  '.$_REQUEST['template'].'">' . $obj_form->form() . '</div>';
-	echo $str;
-	die();
+function ihc_register_preview_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (!class_exists('UserAddEdit')){
+			include_once IHC_PATH . 'classes/UserAddEdit.class.php';
+		}
+		$args = array(
+				'user_id' => false,
+				'type' => 'create',
+				'tos' => true,
+				'captcha' => true,
+				'action' => '',
+				'is_public' => true,
+				'disabled_submit_form' => 'disabled',
+				'register_template' => esc_sql($_REQUEST['template']),
+				'preview' => TRUE,
+		);
+		$captchaType = get_option( 'ihc_recaptcha_version' );
+		if ( $captchaType !== false && $captchaType == 'v3' ){
+				$args['captcha'] = 0;
+		}
+		$obj_form = new UserAddEdit();
+		$obj_form->setVariable($args);//setting the object variables
+		$str = '';
+		$str .= '<style>' . $_REQUEST['custom_css'] . '</style>';
+		$str .= '<div class="iump-register-form  '.$_REQUEST['template'].'">' . $obj_form->form() . '</div>';
+		echo $str;
+		die;
 }
 
 //ajax approve user
+/**
+ * @param none
+ * @return none
+ */
 add_action( 'wp_ajax_ihc_approve_new_user', 'ihc_approve_new_user' );
-function ihc_approve_new_user(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	if (isset($_REQUEST['uid']) && $_REQUEST['uid']){
-		$uid = esc_sql($_REQUEST['uid']);
-		$success = ihc_do_user_approve($uid);
-		if ($success){
-			echo get_option('default_role');
+function ihc_approve_new_user()
+{
+		if ( !indeedIsAdmin() ){
+		  	echo 0;
+				die;
 		}
-	}
-	die();
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (isset($_REQUEST['uid']) && $_REQUEST['uid']){
+			$uid = esc_sql($_REQUEST['uid']);
+			$success = ihc_do_user_approve($uid);
+			if ($success){
+				 echo get_option('default_role');
+			}
+		}
+		die;
 }
 
 //ajax approve email address
 add_action( 'wp_ajax_ihc_approve_user_email', 'ihc_approve_user_email' );
-function ihc_approve_user_email(){
-	if (isset($_REQUEST['uid']) && $_REQUEST['uid']){
-		/// user log
-		Ihc_User_Logs::set_user_id(esc_sql($_REQUEST['uid']));
-		$username = Ihc_Db::get_username_by_wpuid(esc_sql($_REQUEST['uid']));
-		Ihc_User_Logs::write_log(__('E-mail address has become active for ', 'ihc') . $username, 'user_logs');
+function ihc_approve_user_email()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (isset($_REQUEST['uid']) && $_REQUEST['uid']){
+			/// user log
+			Ihc_User_Logs::set_user_id(esc_sql($_REQUEST['uid']));
+			$username = Ihc_Db::get_username_by_wpuid(esc_sql($_REQUEST['uid']));
+			Ihc_User_Logs::write_log(__('E-mail address has become active for ', 'ihc') . $username, 'user_logs');
 
-		update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_verification_status', 1);
-		ihc_send_user_notifications(esc_sql($_REQUEST['uid']), 'email_check_success');//approve_account
-		echo 1;
-	}
-	die();
+			update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_verification_status', 1);
+			ihc_send_user_notifications(esc_sql($_REQUEST['uid']), 'email_check_success');//approve_account
+			echo 1;
+		}
+		die;
 }
 
 //ajax reorder levels
 add_action( 'wp_ajax_ihc_reorder_levels', 'ihc_reorder_levels' );
-function ihc_reorder_levels(){
-	$json = stripslashes($_REQUEST['json_data']);
-	$json_arr = json_decode($json);
-	$i = 0;
-	$data = get_option('ihc_levels');
-	foreach ($json_arr as $k){
-		$data[$k]['order'] = $i;
-		$i++;
-	}
-	update_option('ihc_levels', $data);
-	die();
+function ihc_reorder_levels()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		$json = stripslashes($_REQUEST['json_data']);
+		$json_arr = json_decode($json);
+		$i = 0;
+		$data = get_option('ihc_levels');
+		foreach ($json_arr as $k){
+			$data[$k]['order'] = $i;
+			$i++;
+		}
+		update_option('ihc_levels', $data);
+		die;
 }
 
 //ajax reorder levels
 add_action( 'wp_ajax_ihc_preview_select_level', 'ihc_preview_select_level' );
-function ihc_preview_select_level(){
-	include IHC_PATH . 'public/shortcodes.php';
-	$attr = array(
-					'template' 							=> esc_sql($_REQUEST['template']),
-					'css' 									=> stripslashes_deep($_REQUEST['custom_css']),
-					'is_admin_preview'			=> 1,
-	);
-	echo ihc_user_select_level($attr);
-	die();
+function ihc_preview_select_level()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		include IHC_PATH . 'public/shortcodes.php';
+		$attr = array(
+						'template' 							=> esc_sql($_REQUEST['template']),
+						'css' 									=> stripslashes_deep($_REQUEST['custom_css']),
+						'is_admin_preview'			=> 1,
+		);
+		echo ihc_user_select_level($attr);
+		die;
 }
 
 //////////////aweber
 add_action( 'wp_ajax_ihc_update_aweber', 'ihc_update_aweber' );
-function ihc_update_aweber(){
-	include_once IHC_PATH .'classes/email_services/aweber/aweber_api.php';
-	list($consumer_key, $consumer_secret, $access_key, $access_secret) = AWeberAPI::getDataFromAweberID( esc_sql($_REQUEST['auth_code']) );
-	update_option( 'ihc_aweber_consumer_key', $consumer_key );
-	update_option( 'ihc_aweber_consumer_secret', $consumer_secret );
-	update_option( 'ihc_aweber_acces_key', $access_key );
-	update_option( 'ihc_aweber_acces_secret', $access_secret );
-	echo 1;
-	die();
+function ihc_update_aweber()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		include_once IHC_PATH .'classes/email_services/aweber/aweber_api.php';
+		list($consumer_key, $consumer_secret, $access_key, $access_secret) = AWeberAPI::getDataFromAweberID( esc_sql($_REQUEST['auth_code']) );
+		update_option( 'ihc_aweber_consumer_key', $consumer_key );
+		update_option( 'ihc_aweber_consumer_secret', $consumer_secret );
+		update_option( 'ihc_aweber_acces_key', $access_key );
+		update_option( 'ihc_aweber_acces_secret', $access_secret );
+		echo 1;
+		die;
 }
 
 add_action('wp_ajax_ihc_get_cc_list', 'ihc_get_cc_list');
 add_action('wp_ajax_nopriv_ihc_get_cc_list', 'ihc_get_cc_list');
-function ihc_get_cc_list(){
-	echo json_encode(ihc_return_cc_list($_REQUEST['ihc_cc_user'],$_REQUEST['ihc_cc_pass']));
-	die();
+function ihc_get_cc_list()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		echo json_encode(ihc_return_cc_list($_REQUEST['ihc_cc_user'],$_REQUEST['ihc_cc_pass']));
+		die;
 }
 
 ///////VC SECTION
@@ -576,7 +708,16 @@ function ihc_check_vc(){
 
 //ajax call for popup forms
 add_action( 'wp_ajax_ihc_return_csv_link', 'ihc_return_csv_link');
-function ihc_return_csv_link(){
+function ihc_return_csv_link()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
 		if ( isset($_POST['getAttributes']) ){
 				$attributes = json_decode( stripslashes( $_POST['getAttributes'] ), true );
 				//file_put_contents( IHC_PATH . 'log.log', serialize( $attributes ) );
@@ -584,35 +725,54 @@ function ihc_return_csv_link(){
 				$attributes = array();
 		}
 		echo ihc_make_csv_user_list( $attributes );
-		die();
+		die;
 }
 
 //ajax call for delete coupon
 add_action( 'wp_ajax_ihc_delete_coupon_ajax', 'ihc_delete_coupon_ajax');
-function ihc_delete_coupon_ajax(){
-	ihc_delete_coupon(esc_sql($_REQUEST['id']));
-	echo 1;
-	die();
+function ihc_delete_coupon_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		ihc_delete_coupon(esc_sql($_REQUEST['id']));
+		echo 1;
+		die;
 }
 
 //ajax notification templates
+/**
+ * @param [string]
+ * @return array
+ */
 add_action( 'wp_ajax_ihc_notification_templates_ajax', 'ihc_notification_templates_ajax');
-function ihc_notification_templates_ajax(){
-	/*
-	 * @param [string]
-	 * @return array
-	 */
-	if (!empty($_REQUEST['type'])){
-		echo json_encode(ihc_return_notification_pattern(esc_sql($_REQUEST['type'])));
-	}
-	die();
+function ihc_notification_templates_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				 echo 0;
+				 die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (!empty($_REQUEST['type'])){
+			echo json_encode(ihc_return_notification_pattern(esc_sql($_REQUEST['type'])));
+		}
+		die;
 }
 
-function ihc_return_notification_pattern($type=''){
-	/*
-	 * @param string
-	 * @return array
-	 */
+/**
+ * @param string
+ * @return array
+ */
+function ihc_return_notification_pattern($type='')
+{
 	 $template = array('subject'=>'', 'content'=>'');
 		switch ($type){
 			case 'register':
@@ -946,17 +1106,19 @@ Bank NAME';
 					</body></html>';
 				break;
 		}
-	return $template;
+		$template = apply_filters( 'ihc_admin_filter_notification_template', $template, $type );
+		return $template;
 }
 
 /////////////////////////// DASHBOARD LIST POST/PAGES/CUSTOM POST TYPE ULTIMATE MEMBERSHIP PRO COLUMN WIHT DEFAULT PAGES/RESTRINCTED AND DRIP CONTENT
 
+/**
+ * @param string
+ * @return none, print a string if its case
+ */
 add_filter( 'display_post_states', 'ihc_custom_column_dashboard_print', 999, 2 );
-function ihc_custom_column_dashboard_print($states, $post){
-	/*
-	 * @param string
-	 * @return none, print a string if its case
-	 */
+function ihc_custom_column_dashboard_print($states, $post)
+{
 	if (isset($post->ID) ){
 			$str = '';
 			//////////// DEFAULT PAGES
@@ -1023,46 +1185,66 @@ function ihc_custom_column_dashboard_print($states, $post){
 
 add_action('wp_ajax_ihc_delete_currency_code_ajax', 'ihc_delete_currency_code_ajax');
 add_action('wp_ajax_nopriv_ihc_delete_currency_code_ajax', 'ihc_delete_currency_code_ajax');
-function ihc_delete_currency_code_ajax(){
-	if (isset($_REQUEST['code'])){
-		$code = esc_sql($_REQUEST['code']);
-		$data = get_option('ihc_currencies_list');
-		if (!empty($data[$code])){
-			unset($data[$code]);
-			echo 1;
+function ihc_delete_currency_code_ajax()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
 		}
-		update_option('ihc_currencies_list', $data);
-	}
-	die();
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (isset($_REQUEST['code'])){
+				$code = esc_sql($_REQUEST['code']);
+				$data = get_option('ihc_currencies_list');
+				if (!empty($data[$code])){
+						unset($data[$code]);
+						echo 1;
+				}
+				update_option('ihc_currencies_list', $data);
+		}
+		die;
 }
 
 add_action('wp_ajax_ihc_preview_user_listing', 'ihc_preview_user_listing');
 add_action('wp_ajax_nopriv_ihc_preview_user_listing', 'ihc_preview_user_listing');
-function ihc_preview_user_listing(){
-	if (!empty($_REQUEST['shortcode'])){
-		define('IS_PREVIEW', TRUE);
-		$shortcode = stripslashes($_REQUEST['shortcode']);
-		require_once IHC_PATH . 'public/shortcodes.php';
-		echo do_shortcode($shortcode);
-	}
-	die();
+function ihc_preview_user_listing()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (!empty($_REQUEST['shortcode'])){
+				define('IS_PREVIEW', TRUE);
+				$shortcode = stripslashes($_REQUEST['shortcode']);
+				require_once IHC_PATH . 'public/shortcodes.php';
+				echo do_shortcode($shortcode);
+		}
+		die;
 }
 
+/**
+ * @param string, string
+ * @return none
+ */
 add_action( 'update_option_permalink_structure' , 'ihc_update_permalink_structure_action', 99, 2 );
-function ihc_update_permalink_structure_action( $old_value, $new_value ) {
-	/*
-	 * @param string, string
-	 * @return none
-	 */
-	update_option('indeed_do_rewrite_update', TRUE);
+function ihc_update_permalink_structure_action( $old_value, $new_value )
+{
+		update_option('indeed_do_rewrite_update', TRUE);
 }
 
+/**
+ * @param none
+ * @return none
+ */
 add_action('init', 'ihc_do_rewrite_update', 1);
-function ihc_do_rewrite_update(){
-	/*
-	 * @param none
-	 * @return none
-	 */
+function ihc_do_rewrite_update()
+{
 	if (get_option('indeed_do_rewrite_update')){
 		$page_id = get_option('ihc_general_register_view_user');
 		ihc_save_rewrite_rule_for_register_view_page($page_id);
@@ -1070,73 +1252,99 @@ function ihc_do_rewrite_update(){
 	}
 }
 
+/**
+ * @param none
+ * @return none
+ */
 add_action('wp_ajax_ihc_delete_user_level_relationship', 'ihc_delete_user_level_relationship');
-function ihc_delete_user_level_relationship(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	if (isset($_REQUEST['lid']) && isset($_REQUEST['uid'])){
-		$levels_str = get_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', true);
-		$levels_arr = explode(',', $levels_str);
-		if (!is_array($_REQUEST['lid'])){
-			$lid_arr[] = esc_sql($_REQUEST['lid']);
+function ihc_delete_user_level_relationship()
+{
+		if ( !indeedIsAdmin() ){
+				 echo 0;
+				 die;
 		}
-		$levels_arr = array_diff($levels_arr, $lid_arr);
-		$levels_str = implode(',', $levels_arr);
-		update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', $levels_str);
-		global $wpdb;
-		$table_name = $wpdb->prefix . "ihc_user_levels";
-		$uid = esc_sql($_REQUEST['uid']);
-		$lid = esc_sql($_REQUEST['lid']);
-		//$wpdb->query('DELETE FROM ' . $table_name . ' WHERE user_id="' . $uid . '" AND level_id="' . $lid . '";');
-		$q = $wpdb->prepare("DELETE FROM $table_name WHERE user_id=%d AND level_id=%d ", $uid, $lid);
-		$wpdb->query($q);
-		do_action('ihc_action_after_subscription_delete', $uid, $lid);
-		echo 1;
-	}
-	die();
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		if (isset($_REQUEST['lid']) && isset($_REQUEST['uid'])){
+			$levels_str = get_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', true);
+			$levels_arr = explode(',', $levels_str);
+			if (!is_array($_REQUEST['lid'])){
+				$lid_arr[] = esc_sql($_REQUEST['lid']);
+			}
+			$levels_arr = array_diff($levels_arr, $lid_arr);
+			$levels_str = implode(',', $levels_arr);
+			update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', $levels_str);
+			global $wpdb;
+			$table_name = $wpdb->prefix . "ihc_user_levels";
+			$uid = esc_sql($_REQUEST['uid']);
+			$lid = esc_sql($_REQUEST['lid']);
+			//$wpdb->query('DELETE FROM ' . $table_name . ' WHERE user_id="' . $uid . '" AND level_id="' . $lid . '";');
+			$q = $wpdb->prepare("DELETE FROM $table_name WHERE user_id=%d AND level_id=%d ", $uid, $lid);
+			$wpdb->query($q);
+			do_action('ihc_action_after_subscription_delete', $uid, $lid);
+			echo 1;
+		}
+		die;
 }
 
 
 add_action('wp_ajax_ihc_make_user_affiliate', 'ihc_make_user_affiliate');
 add_action('wp_ajax_nopriv_ihc_make_user_affiliate', 'ihc_make_user_affiliate');
-function ihc_make_user_affiliate(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	if (isset($_REQUEST['uid']) && isset($_REQUEST['act']) && defined('UAP_PATH')){
-		if (!class_exists('Uap_Db')){
-			require_once UAP_PATH . 'classes/Uap_Db.class.php';
-			$indeed_db = new Uap_Db;
-		} else {
-			global $indeed_db;
+/**
+ * @param none
+ * @return none
+ */
+function ihc_make_user_affiliate()
+{
+	  if ( !indeedIsAdmin() ){
+			  echo 0;
+			  die;
+	  }
+	  if ( !ihcAdminVerifyNonce() ){
+			  echo 0;
+			  die;
+	  }
+		if (isset($_REQUEST['uid']) && isset($_REQUEST['act']) && defined('UAP_PATH')){
+				if (!class_exists('Uap_Db')){
+						require_once UAP_PATH . 'classes/Uap_Db.class.php';
+						$indeed_db = new Uap_Db;
+				} else {
+						global $indeed_db;
+				}
+				if ($_REQUEST['act']==0){
+					  // remove from affiliates
+					  $indeed_db->remove_user_from_affiliate(esc_sql($_REQUEST['uid']));
+				} else {
+					  /// add to affiliates
+					  $inserted = $indeed_db->save_affiliate(esc_sql($_REQUEST['uid']));
+					  if ($inserted){
+								/// put default rank on this new affiliate
+								$default_rank = get_option('uap_register_new_user_rank');
+								$indeed_db->update_affiliate_rank_by_uid(esc_sql($_REQUEST['uid']), $default_rank);
+								echo $inserted;
+					  }
+				}
 		}
-		if ($_REQUEST['act']==0){
-			// remove from affiliates
-			$indeed_db->remove_user_from_affiliate(esc_sql($_REQUEST['uid']));
-		} else {
-			/// add to affiliates
-			$inserted = $indeed_db->save_affiliate(esc_sql($_REQUEST['uid']));
-			if ($inserted){
-				/// put default rank on this new affiliate
-				$default_rank = get_option('uap_register_new_user_rank');
-				$indeed_db->update_affiliate_rank_by_uid(esc_sql($_REQUEST['uid']), $default_rank);
-				echo $inserted;
-			}
-		}
-	}
-
-	die();
+	  die;
 }
 
 add_action('wp_ajax_ihc_check_mail_server', 'ihc_check_mail_server');
-function ihc_check_mail_server(){
-	/*
-	 * @param none
-	 * @return int
-	 */
+/**
+ * @param none
+ * @return int
+ */
+function ihc_check_mail_server()
+{
+	 if ( !indeedIsAdmin() ){
+			 echo 0;
+			 die;
+	 }
+	 if ( !ihcAdminVerifyNonce() ){
+			 echo 0;
+			 die;
+	 }
 	 $from_email = '';
 	 $from_name = '';
 	 $from_email = get_option('ihc_notification_email_from');
@@ -1160,11 +1368,12 @@ function ihc_check_mail_server(){
 
 
 add_action('init', 'ihc_do_rewrite_rule', 10, 0);
-function ihc_do_rewrite_rule(){
-	/*
-	 * @param none
-	 * @return none
-	 */
+/**
+ * @param none
+ * @return none
+ */
+function ihc_do_rewrite_rule()
+{
 	$inside_page = get_option('ihc_general_register_view_user');
 	if ($inside_page && !defined('DOING_AJAX')){
 		$page_slug = Ihc_Db::get_page_slug($inside_page);
@@ -1175,51 +1384,82 @@ function ihc_do_rewrite_rule(){
 
 
 add_action('wp_ajax_ihc_do_generate_individual_pages', 'ihc_do_generate_individual_pages');
-function ihc_do_generate_individual_pages(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	$users = Ihc_Db::get_users_with_no_individual_page();
-	if ($users){
-		if (!class_exists('IndividualPage')){
-			include_once IHC_PATH . 'classes/IndividualPage.class.php';
+/**
+ * @param none
+ * @return none
+ */
+function ihc_do_generate_individual_pages()
+{
+		if ( !indeedIsAdmin() ){
+				echo 0;
+		    die;
 		}
-		$object = new IndividualPage();
-		$object->generate_pages_for_users($users);
-	}
-	die();
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		$users = Ihc_Db::get_users_with_no_individual_page();
+		if ($users){
+			if (!class_exists('IndividualPage')){
+				include_once IHC_PATH . 'classes/IndividualPage.class.php';
+			}
+			$object = new IndividualPage();
+			$object->generate_pages_for_users($users);
+		}
+		die;
 }
 
 
 add_action('wp_ajax_ihc_preview_invoice_via_ajax', 'ihc_preview_invoice_via_ajax');
-function ihc_preview_invoice_via_ajax(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	$temp = $_REQUEST['m'];
-	foreach ($temp as $k=>$array){
-		$metas[$array['name']] = $array['value'];
-	}
-	require IHC_PATH . 'classes/Ihc_Invoice.class.php';
-	$object = new Ihc_Invoice(1, 0, $metas);
-	echo $object->output();
-	die();
+/**
+ * @param none
+ * @return none
+ */
+function ihc_preview_invoice_via_ajax()
+{
+		if ( !indeedIsAdmin() ){
+			  echo 0;
+			  die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				echo 0;
+				die;
+		}
+		$temp = $_REQUEST['m'];
+		foreach ($temp as $k=>$array){
+			$metas[$array['name']] = $array['value'];
+		}
+		require IHC_PATH . 'classes/Ihc_Invoice.class.php';
+		$object = new Ihc_Invoice(1, 0, $metas);
+		echo $object->output();
+		die;
 }
 
 add_action('wp_ajax_ihc_make_export_file', 'ihc_make_export_file');
-function ihc_make_export_file(){
-	/*
-	 * @param none
-	 * @return none
-	 */
+/**
+ * @param none
+ * @return none
+ */
+function ihc_make_export_file()
+{
 	////////////////// EXPORT
 	global $wpdb;
+
+	if ( !indeedIsAdmin() ){
+			echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+			echo 0;
+			die;
+	}
+
 	require_once IHC_PATH . 'classes/Indeed_Import_Export/IndeedExport.class.php';
 	$export = new IndeedExport();
-	$export->setFile(IHC_PATH . 'export.xml');
-	if (!empty($_REQUEST['import_users'])){
+	$hash = bin2hex( random_bytes( 20 ) );
+	$filename = $hash . '.xml';
+	$export->setFile( IHC_PATH . 'temporary_files/' . $filename );
+	if (!empty($_POST['import_users'])){
 		////////// USERS
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'users', 'table_name' => 'users') );
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'usermeta', 'table_name' => 'usermeta') );
@@ -1230,7 +1470,7 @@ function ihc_make_export_file(){
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'ihc_user_logs', 'table_name' => 'ihc_user_logs') );
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'indeed_members_payments', 'table_name' => 'indeed_members_payments') );
 	}
-	if (!empty($_REQUEST['import_settings'])){
+	if (!empty($_POST['import_settings'])){
 		///////// SETTINGS
 		$values = Ihc_Db::get_all_ump_wp_options();
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'options', 'table_name' => 'options', 'values' => $values) );
@@ -1241,40 +1481,58 @@ function ihc_make_export_file(){
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'ihc_gift_templates', 'table_name' => 'ihc_gift_templates') );
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'ihc_taxes', 'table_name' => 'ihc_taxes') );
 	}
-	if (!empty($_REQUEST['import_postmeta'])){
+	if (!empty($_POST['import_postmeta'])){
 		//////// POST META
 		$post_meta_keys = Ihc_Db::get_post_meta_keys_used_in_ump();
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'postmeta', 'table_name' => 'postmeta', 'keys_to_select' => $post_meta_keys) );
 	}
 	if ($export->run()){
 		/// print link to file
-		echo IHC_URL . 'export.xml';
+		echo IHC_URL . 'temporary_files/' . $filename;
 	} else {
 		/// no entity
 		echo 0;
 	}
-	die();
+	die;
 }
 
 add_action('wp_ajax_ihc_do_delete_woo_ihc_relation', 'ihc_do_delete_woo_ihc_relation');
-function ihc_do_delete_woo_ihc_relation(){
+function ihc_do_delete_woo_ihc_relation()
+{
+	if ( !indeedIsAdmin() ){
+			echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+			echo 0;
+			die;
+	}
 	if (!empty($_REQUEST['id'])){
 		$id = esc_sql($_REQUEST['id']);
 		Ihc_Db::ihc_woo_product_custom_price_delete_item($id);
 		Ihc_Db::ihc_woo_product_custom_price_lid_product_delete($id);
 		echo 1;
 	}
-	die();
+	die;
 }
 
 add_action('wp_ajax_ihc_run_custom_process', 'ihc_run_custom_process');
-function ihc_run_custom_process(){
+function ihc_run_custom_process()
+{
+	if ( !indeedIsAdmin() ){
+			echo 0;
+			die;
+	}
+	if ( !ihcAdminVerifyNonce() ){
+			echo 0;
+			die;
+	}
 	///if (!empty($_REQUEST['type'])){}
 	/// for now used only for sending drip content notifications
 	require_once IHC_PATH . 'classes/DripContentNotifications.class.php';
 	$object = new DripContentNotifications();
 	$object->setStartBy('admin');
-	die();
+	die;
 }
 
 add_action( 'admin_head-nav-menus.php', 'ihc_nav_menu_hook', 99 );
@@ -1294,4 +1552,145 @@ function ihc_check_allow_fopen()
 		if (!$allow ){
 				echo '<div class="ihc-not-set"><strong>' . __("'allow_url_fopen' directive is disabled. In order for Ultimate Membership Pro to work properly this directive has to be set 'on'. Contact your hosting provider for more details.", 'ihc') . ' </strong></div>';
 		}
+
+				// crons
+				$wp_cron = ( defined('DISABLE_WP_CRON') && DISABLE_WP_CRON ) ? FALSE : TRUE;
+				if (!$wp_cron ){
+						echo '<div class="ihc-not-set">' . __('Crons are disabled on your WordPress Website. Some functionality and processes may not work properly.', 'ihc') . '</div>';
+				}
+
+				// crop image
+				$cropFunctions = [
+													'getimagesize',
+													'imagecreatefrompng',
+													'imagecreatefromjpeg',
+													'imagecreatefromgif',
+													'imagecreatetruecolor',
+													'imagecopyresampled',
+													'imagerotate',
+													'imagesx',
+													'imagesy',
+													'imagecolortransparent',
+													'imagecolorallocate',
+													'imagejpeg',
+				];
+				foreach ( $cropFunctions as $cropFunction ){
+						if ( !function_exists( $cropFunction ) ){
+								$functionsErrors[] = $cropFunction .'()';
+						}
+				}
+				if ( !empty($functionsErrors) ){
+						echo '<div class="ihc-not-set">' . __('Following functions: ', 'ihc') . implode( ', ', $functionsErrors )
+						. __( ' are disabled on your Website environment. Avatar feature may not work properly. Please contract your Hosting provider.', 'ihc')
+						. '</div>';
+				}
+
+}
+
+add_action( 'ump_admin_after_top_menu_add_ons', 'ihc_after_header_for_addons' );
+function ihc_after_header_for_addons()
+{
+		echo ihc_check_default_pages_set();//set default pages message
+		echo ihc_check_payment_gateways();
+		echo ihc_is_curl_enable();
+
+		do_action( "ihc_admin_dashboard_after_top_menu" );
+}
+
+add_action( 'ump_print_admin_page', 'ihc_listen_hooks_on_admin', 1, 1 );
+function ihc_listen_hooks_on_admin( $tab='' )
+{
+		if ( $tab != 'hooks' ){
+				return;
+		}
+		$object = new \Indeed\Ihc\SearchFiltersAndHooks();
+		$object->setPluginName( 'indeed-membership-pro' )->setNameShouldContain( [ 'ihc', 'ump' ] )->SearchFiles( IHC_PATH );
+		$data = $object->getResults();
+		$view = new \Indeed\Ihc\IndeedView();
+		echo $view->setTemplate( IHC_PATH . 'admin/includes/tabs/hooks.php' )
+							->setContentData( $data )
+							->getOutput();
+}
+
+add_action('wp_ajax_ihc_admin_delete_level', 'ihc_admin_delete_level');
+function ihc_admin_delete_level()
+{
+		if ( !indeedIsAdmin() ){
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				die;
+		}
+		if ( empty( $_POST['lid'] ) ){
+				die;
+		}
+		include_once IHC_PATH . 'admin/includes/functions/levels.php';
+		ihc_delete_level( $_POST['lid'] );//delete
+		die;
+}
+
+add_action('wp_ajax_ihc_admin_delete_order', 'ihc_admin_delete_order');
+function ihc_admin_delete_order()
+{
+		if ( !indeedIsAdmin() ){
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				die;
+		}
+		if ( empty( $_POST['id'] ) ){
+				die;
+		}
+		\Ihc_Db::delete_order( $_POST['id'] );
+		die;
+}
+
+add_action('wp_ajax_ihc_admin_delete_locker', 'ihc_admin_delete_locker');
+function ihc_admin_delete_locker()
+{
+		if ( !indeedIsAdmin() ){
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				die;
+		}
+		if ( !isset( $_POST['id'] ) ){
+				die;
+		}
+		\Ihc_Db::deleteLocker( $_POST['id'] );
+		die;
+}
+
+add_action('wp_ajax_ihc_admin_delete_register_field', 'ihc_admin_delete_register_field');
+function ihc_admin_delete_register_field()
+{
+		if ( !indeedIsAdmin() ){
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				die;
+		}
+		if ( !isset( $_POST['id'] ) ){
+				die;
+		}
+		require_once IHC_PATH . 'admin/includes/functions/register.php';
+		ihc_delete_user_field( $_POST['id'] );//delete user custom fields
+		die;
+}
+
+add_action('wp_ajax_ihc_admin_delete_payment_transaction', 'ihc_admin_delete_payment_transaction');
+function ihc_admin_delete_payment_transaction()
+{
+		if ( !indeedIsAdmin() ){
+				die;
+		}
+		if ( !ihcAdminVerifyNonce() ){
+				die;
+		}
+		if ( !isset( $_POST['id'] ) ){
+				die;
+		}
+		require_once IHC_PATH . 'admin/includes/functions.php';
+		ihc_delete_payment_entry( $_POST['id'] );
+		die;
 }

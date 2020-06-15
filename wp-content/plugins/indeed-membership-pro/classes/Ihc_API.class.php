@@ -1,18 +1,18 @@
 <?php
 if (!class_exists('Ihc_API')):
-	
+
 class Ihc_API{
 	/*
 	 * @var string
 	 */
 	private $hash;
-	
+
 	/*
 	 * @var array
 	 */
 	private $settings;
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return none
@@ -20,8 +20,8 @@ class Ihc_API{
 	public function __construct(){
 		$this->settings = ihc_return_meta_arr('api');
 	}
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return int (0 or 1)
@@ -29,8 +29,8 @@ class Ihc_API{
 	public function is_enabled(){
 		return $this->settings['ihc_api_enabled'];
 	}
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return bool
@@ -44,8 +44,8 @@ class Ihc_API{
 		}
 		return FALSE;
 	}
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return string
@@ -56,7 +56,7 @@ class Ihc_API{
 			$action = $this->secure_input_var($_GET['action']);
 			if (!empty($action)){
 				if (empty($this->settings['ihc_api_actions'][$action])){
-					$response = 'Access Denied';			
+					$response = 'Access Denied';
 				} else {
 					switch ($action){
 						///// USER
@@ -109,18 +109,18 @@ class Ihc_API{
 							break;
 						case 'order_get_data':
 							$response = $this->order_get_data();
-							break;						
+							break;
 						default:
 							$response = 'Unknown Action';
 							break;
-					}					
+					}
 				}
 			}
 		}
-		echo json_encode( array( 'response' => $response ) );  
+		echo json_encode( array( 'response' => $response ) );
 	}
-	
-	
+
+
 	/*
 	 * @param string, bool
 	 * @return stirng
@@ -128,12 +128,12 @@ class Ihc_API{
 	 private function secure_input_var($string='', $remove_special_chars=FALSE){
 			$string = preg_replace('/\s+/', '', $string);/// remove all white spaces
 			if ($remove_special_chars){
-				$string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.				
+				$string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
 			}
 			return $string;
 	 }
-	 
-	 
+
+
 	 /*
 	  * Check if user has the provided level and it's active.
 	  * @param none
@@ -147,23 +147,24 @@ class Ihc_API{
 				if (Ihc_Db::user_has_level($uid, $lid) && Ihc_Db::is_user_level_active($uid, $lid)){
 					$return_value = 1;
 				}
-			}	
-			return $return_value;	
+			}
+			return $return_value;
 	  }
-	  
-	  
+
+
 	  /*
 	   * @param none
 	   * @return bool
 	   */
 	   private function user_do_approve(){
 	   		$uid = $this->secure_input_var($_GET['uid'], TRUE);
-			if ($uid){
-				return ihc_do_user_approve($uid);
-			}	
+				if ($uid){
+					return ihc_do_user_approve($uid);
+				}
+				return false;
 	   }
-	   
-	   
+
+
 	   /*
 	    * @param none
 	    * @return bool
@@ -176,8 +177,8 @@ class Ihc_API{
 			}
 			return FALSE;
 	    }
-		
-		
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -190,8 +191,8 @@ class Ihc_API{
 			}
 			return array();
 		}
-		 
-		
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -203,11 +204,11 @@ class Ihc_API{
 				$level_data = ihc_get_level_by_id($lid);
 				ihc_update_user_level_expire($level_data, $lid, $uid);
 				return TRUE;
-			}			
+			}
 			return FALSE;
 		}
-		
-		
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -226,8 +227,8 @@ class Ihc_API{
 			}
 			return $array;
 		}
-		 
-		
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -238,7 +239,7 @@ class Ihc_API{
 			$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			if (empty($limit)){
 				$limit = 999;
-			}	
+			}
 			$data = Ihc_Db::get_all_order($limit, 0, $uid);
 			if ($data){
 				foreach ($data as $temp){
@@ -251,13 +252,13 @@ class Ihc_API{
 					$temp_array['amount'] = @$temp['amount_value'] . ' ' . @$temp['amount_type'];
 					$temp_array['status'] = @$temp['status'];
 					$array[] = $temp_array;
-					unset($temp_array);					
+					unset($temp_array);
 				}
-			}	
+			}
 			return $array;
 		}
-		 
-				
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -272,8 +273,8 @@ class Ihc_API{
 			}
 			return 'Unknown';
 		}
-		 
-				
+
+
 		/*
 		 * @param none
 		 * @return array
@@ -285,9 +286,9 @@ class Ihc_API{
 				$array = Ihc_Db::get_order_data_by_id($order_id);
 			}
 			return $array;
-		}	
-		 
-				
+		}
+
+
 		/*
 		 * @param none
 		 * @return string
@@ -305,31 +306,31 @@ class Ihc_API{
 				}
 			}
 			return $output;
-		}	
+		}
 
 
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function user_get_levels(){
 		 	$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			if (isset($_GET['only_active'])){
-				$only_active = $this->secure_input_var($_GET['only_active'], TRUE);				
+				$only_active = $this->secure_input_var($_GET['only_active'], TRUE);
 			} else {
 				$only_active = FALSE;
 			}
 			if ($uid){
-			 	$data = Ihc_Db::get_user_levels($uid, $only_active);				
+			 	$data = Ihc_Db::get_user_levels($uid, $only_active);
 			}
 			return $data;
 		}
-		 
+
 
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function user_get_level_details(){
 		 	$data = array();
 		 	$uid = $this->secure_input_var($_GET['uid'], TRUE);
@@ -338,13 +339,13 @@ class Ihc_API{
 				$data = Ihc_Db::user_get_level_details($uid, $lid);
 			}
 			return $data;
-		}		 
-		 
-		
+		}
+
+
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function user_get_posts(){
 		 	$data = array();
 		 	$uid = $this->secure_input_var($_GET['uid'], TRUE);
@@ -353,7 +354,7 @@ class Ihc_API{
 				 $levels = Ihc_Db::get_user_levels($uid, TRUE);
 				 $levels = array_keys($levels);
 				 $metas = ihc_return_meta_arr('list_access_posts');
-				 
+
 				 if (isset($_GET['limit'])){
 				 	$metas['ihc_list_access_posts_order_limit'] = $this->secure_input_var($_GET['limit'], TRUE);
 				 }
@@ -367,31 +368,38 @@ class Ihc_API{
 				 if (empty($metas['ihc_list_access_posts_order_by']) && !empty($attr['order_by'])){
 				 	$metas['ihc_list_access_posts_order_by'] = $attr['order_by'];
 				 }
-				 
+
 				 if (isset($_GET['order'])){
 				 	$metas['ihc_list_access_posts_order_type'] = $this->secure_input_var($_GET['order'], TRUE);
-				 }				 
+				 }
 				 if (empty($metas['ihc_list_access_posts_order_type']) &&!empty($attr['order'])){
 				 	$metas['ihc_list_access_posts_order_type'] = $attr['order'];
 				 }
 
 				 if (isset($_GET['post_types'])){
 				 	$metas['ihc_list_access_posts_order_post_type'] = $this->secure_input_var($_GET['post_types'], FALSE);
-				 }					 
+				 }
 				 if (empty($metas['ihc_list_access_posts_order_post_type']) && !empty($attr['post_types'])){
 				 	$metas['ihc_list_access_posts_order_post_type'] = $attr['post_types'];
 				 }
+			 	   if (!empty($metas['ihc_list_access_posts_order_exclude_levels'])){
+					 $exclude = explode(',', $metas['ihc_list_access_posts_order_exclude_levels']);
+						 if ($exclude){
+				 			$levels = array_diff($levels, $exclude);
+						 }
+				 }
+				 $metas['ihc_list_access_posts_per_page_value'] = $metas['ihc_list_access_posts_order_limit'];
 			 	 $object = new ListOfAccessPosts($levels, $metas);
 				 $data = $object->get_id_list();
 			}
 			return $data;
 		}
-	
+
 
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function search_user(){
 		 	$data = array();
 		 	$term_name = $this->secure_input_var($_GET['term_name'], FALSE);
@@ -400,13 +408,13 @@ class Ihc_API{
 				$data = Ihc_Db::search_user_by_term_name_term_value($term_name, $term_value);
 			}
 			return $data;
-		}	
+		}
 
 
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function get_level_users(){
 			$data = array();
 		 	$lid = $this->secure_input_var($_GET['lid'], TRUE);
@@ -420,7 +428,7 @@ class Ihc_API{
 		/*
 		 * @param none
 		 * @return array
-		 */	 
+		 */
 		private function get_level_details(){
 			$data = array();
 		 	$lid = $this->secure_input_var($_GET['lid'], TRUE);
@@ -432,6 +440,6 @@ class Ihc_API{
 			}
 			return array();
 		}
-		
-}	
+
+}
 endif;

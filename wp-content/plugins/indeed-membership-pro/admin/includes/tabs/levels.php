@@ -17,7 +17,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 <?php
 include_once IHC_PATH . 'admin/includes/functions/levels.php';
 
-if (isset($_POST['ihc_save_level'])){
+if (isset($_POST['ihc_save_level']) && isset( $_POST['save_level'] ) && wp_verify_nonce( $_POST['save_level'], 'ihc_save_level' ) ){
 	$lid = ihc_save_level($_POST);//save
 	if ($lid){
 		/// MAGIC FEAT SETTINGS
@@ -45,6 +45,7 @@ if (isset($_POST['ihc_save_level'])){
 				update_option('ihc_level_subscription_plan_settings_condt', $conditions);
 			}
 		}
+		do_action( 'ihc_admin_edit_save_level_after_submit_form', $lid, $_POST );
 	}
 
 	if ( !empty( $_POST['new_woo_product'] ) ){
@@ -52,8 +53,6 @@ if (isset($_POST['ihc_save_level'])){
 		update_post_meta($_POST['new_woo_product'], 'iump_woo_product_level_relation', $lid);/// update
 	}
 
-} else if (isset($_REQUEST['ihc_level_delete-id']) && $_REQUEST['ihc_level_delete-id']!=''){
-	ihc_delete_level($_REQUEST['ihc_level_delete-id']);//delete
 }
 
 	if(isset($_REQUEST['edit_level']) || isset($_REQUEST['new_level'])){
@@ -75,7 +74,7 @@ if (isset($_POST['ihc_save_level'])){
 				<?php
 				if(isset($_REQUEST['edit_level'])){
 					$level_data = ihc_return_meta('ihc_levels', $_REQUEST['edit_level']);
-					$label = __('Edit Level:', 'ihc');
+					$label = __('Edit Subscription', 'ihc');
 				}else{
 					$order = 0;
 					$level_arr = get_option('ihc_levels');
@@ -108,7 +107,7 @@ if (isset($_POST['ihc_save_level'])){
 										 'access_trial_couple_cycles' => 1,
 										 'access_trial_type' => 1,
 										);
-					$label = __('Add New Level:', 'ihc');
+					$label = __('Add New Subscription', 'ihc');
 				}
 
 				/////////for old versions of indeed membership pro
@@ -148,25 +147,44 @@ if (isset($_POST['ihc_save_level'])){
 				</h3>
 
 				<div class="inside">
-					<div class="iump-form-line iump-no-border">
-						<label for="tag-name" class="iump-labels"><?php _e('Level Slug', 'ihc');?></label>
-						<input name="name" type="text" value="<?php echo $level_data['name'];?>" id="level_slug_id" onBlur="ihcUpdateLevelSlugSpan();"  />
-						<input type="hidden" name="order" value="<?php echo $level_data['order'];?>" />
-					</div>
-					<div class="iump-form-line iump-no-border">
-						<label for="tag-name" class="iump-labels"><?php _e('Level Label', 'ihc');?></label>
-						<input name="label" type="text" value="<?php echo $level_data['label'];?>">
-					</div>
-					<div class="iump-special-line">
-					<h2><?php _e('Level Access', 'ihc');?></h2>
-
+                 <div class="iump-form-line iump-no-border">
+                 <h2><?php _e('Main Subscription details', 'ihc');?></h2>
+                 <p><?php _e('Customize subscription with a public name and a unique slug', 'ihc');?></p>
+                 </div>
+                 <div class="iump-form-line iump-no-border">
+                <div class="row" style="margin-left:0px;">
+                	<div class="col-xs-4">
+                             <div class="input-group">
+                                <span class="input-group-addon"><?php _e('Level Name', 'ihc');?></span>
+                                <input name="label" class="form-control" type="text" value="<?php echo $level_data['label'];?>" placeholder="<?php _e('suggestive Subscription Name', 'ihc');?>"/>
+                             </div>
+                     </div>
+                 </div>
+                 </div>
+                 
+                 <div class="iump-form-line iump-no-border">
+                <div class="row" style="margin-left:0px;">
+                	<div class="col-xs-4">             
+                             <div class="input-group">
+                                <span class="input-group-addon"><?php _e('Level Slug', 'ihc');?></span>
+                                <input name="name" class="form-control" type="text" value="<?php echo $level_data['name'];?>" id="level_slug_id" onBlur="ihcUpdateLevelSlugSpan();"   placeholder="<?php _e('ex: unique_plan_slug', 'ihc');?>"/>
+                                <input type="hidden" name="order" value="<?php echo $level_data['order'];?>" />
+                            </div>
+                            <p><?php _e('Slug must be uinque and based only on lowercase characters without extra spaces or symbols. Slug will not be visible for customers or on front-end side.', 'ihc');?></p>
+                    </div>
+                   
+                </div>    
+                </div>    
+					<div class="iump-special-line ihc-level-access-section">
+					<h2><?php _e('Subscription Access', 'ihc');?></h2>
+					<p><?php _e('If you wish to have Recurring steps choose "Regular Period" type. All others have OneTime step.', 'ihc');?></p>
 						<div class="iump-form-line iump-no-border form-required">
 							<label for="tag-name" class="iump-labels"><?php _e('Access Type', 'ihc');?></label>
 
-								<select name="access_type" onChange="ihcAccessPaymentType(this.value);">
+								<select name="access_type" onChange="ihcAccessPaymentType(this.value);" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select" style="max-width:400px;">
 									<?php
 										$v_arr = array( 'unlimited' => 'LifeTime',
-														'limited' => 'Limited',
+														'limited' => 'Limited Time',
 														'date_interval' => 'Date Range',
 														'regular_period' => 'Regular Period',
 													);
@@ -183,9 +201,9 @@ if (isset($_POST['ihc_save_level'])){
 
 						<div id="limited_access_metas" style="margin-top: 10px; display: <?php if ($level_data['access_type']=='limited') echo 'block'; else echo 'none';?>">
 							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('Duration', 'ihc');?></label>
-								<input type="number" value="<?php echo $level_data['access_limited_time_value'];?>" name="access_limited_time_value" min="1" max="31" style="vertical-align:middle; margin-right:5px;"/>
-								<select name="access_limited_time_type">
+								<label for="tag-name" class="iump-labels"><?php _e('Only for:', 'ihc');?></label>
+								<input type="number" value="<?php echo $level_data['access_limited_time_value'];?>" name="access_limited_time_value" min="1" max="31" style="vertical-align:middle; margin-right:5px; width:97px;"/>
+								<select name="access_limited_time_type" style="min-width:150px;">
 									<?php
 										$time_types = array('D'=>'Days', 'W'=>'Weeks', 'M'=>'Months', 'Y'=>'Years',);
 										foreach ($time_types as $k=>$v){
@@ -204,21 +222,21 @@ if (isset($_POST['ihc_save_level'])){
 						</div>
 
 						<div id="date_interval_access_metas" style="margin-top: 10px; display: <?php if ($level_data['access_type']=='date_interval') echo 'block'; else echo 'none';?>">
-							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('Start Date', 'ihc');?></label>
+							<div style="margin-bottom:10px;">
+								<label for="tag-name" class="iump-labels"><?php _e('Starts on:', 'ihc');?></label>
 								<input type="text" value="<?php echo $level_data['access_interval_start'];?>" name="access_interval_start" id="access_interval_start" />
 							</div>
 							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('End Date', 'ihc');?></label>
+								<label for="tag-name" class="iump-labels"><?php _e('Expires on:', 'ihc');?></label>
 								<input type="text" value="<?php echo $level_data['access_interval_end'];?>" name="access_interval_end" id="access_interval_end"/>
 							</div>
 						</div>
 
 						<div id="regular_period_access_metas" style="margin-top: 10px; display: <?php if ($level_data['access_type']=='regular_period') echo 'block'; else echo 'none';?>">
 							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('Period', 'ihc');?></label>
-								<input type="number" value="<?php echo $level_data['access_regular_time_value'];?>" name="access_regular_time_value" min="1" max="31" style="vertical-align:middle; margin-right:5px;"/>
-								<select name="access_regular_time_type">
+								<label for="tag-name" class="iump-labels"><?php _e('Recurring Period:', 'ihc');?></label>
+								<input type="number" value="<?php echo $level_data['access_regular_time_value'];?>" name="access_regular_time_value" min="1"  style="vertical-align:middle; margin-right:5px;  width:97px;"/>
+								<select name="access_regular_time_type" style="min-width:150px;">
 									<?php
 										$time_types = array('D'=>'Days', 'W'=>'Weeks', 'M'=>'Months', 'Y'=>'Years',);
 										foreach ($time_types as $k=>$v){
@@ -229,23 +247,27 @@ if (isset($_POST['ihc_save_level'])){
 										}
 									?>
 								</select>
-								<div style="font-size: 11px;display: inline-block; margin-left: 10px;"><?php
-									_e('(Only months for Braintree. Minimum 7 days for Authorize)', 'ihc');
-								?></div>
 							</div>
 							<?php
 								$pay_stat = ihc_check_payment_status('braintree');
 								$display = ($pay_stat['active']=='braintree-active' && $pay_stat['settings']=='Completed') ? 'block' : 'none';
 							?>
-							<div style="<?php echo 'display: ' . $display; ?>">
-								<?php echo __('You need to create a Plan in Your Braintree Account Page with Plan ID set as : ', 'ihc') . '<span class="plan-slug-name"></span>';?>
+							<div style=" margin: 5px 0 0 180px; max-width: 700px; <?php echo 'display: ' . $display; ?> ">
+								<?php echo __('<strong>Braintree</strong> gateway supports only "Months" period time and you have to create a Plan in Your Braintree Account Page with Plan ID set as  ', 'ihc') . '<strong><span class="plan-slug-name"></span></strong>';?>
 							</div>
 							<?php
 								$pay_stat = ihc_check_payment_status('authorize');
 								$display = ($pay_stat['active']=='authorize-active' && $pay_stat['settings']=='Completed') ? 'block' : 'none';
 							?>
-							<div style="<?php echo 'display: ' . $display; ?>">
-								<?php echo __('For Authorize.net payment the minimum time value for recurring payments is 7 days.', 'ihc');?>
+							<div style=" margin: 5px 0 0 180px; <?php echo 'display: ' . $display; ?>">
+								<?php echo __('<strong>Authorize.net</strong> gateway requires the minimum time value for recurring payments at least 7 days.', 'ihc');?>
+							</div>
+                            <?php
+								$pay_stat = ihc_check_payment_status('paypal');
+								$display = ($pay_stat['active']=='paypal-active' && $pay_stat['settings']=='Completed') ? 'block' : 'none';
+							?>
+							<div style=" margin: 5px 0 0 180px; <?php echo 'display: ' . $display; ?>">
+								<?php echo __('<strong>PayPal</strong> gateway allows recurring periods no more than 12 months.', 'ihc');?>
 							</div>
 						</div>
 						<div class="iump-form-line iump-no-border form-required" id="set_expired_level" style="margin-top: 30px; display: <?php if (isset($level_data['access_type']) && $level_data['access_type']!='unlimited') echo 'block'; else echo 'none';?>">
@@ -274,11 +296,16 @@ if (isset($_POST['ihc_save_level'])){
 							</div>
 						</div>
 					 </div>
-					<div class="inside">
-						<h2>Additional Access Settings</h2>
+					<div class="inside" style="margin-bottom:30px;">
+                     <div class="iump-form-line iump-no-border">
+						<h2><?php _e('Additional Access Settings', 'ihc');?></h2>
+                        <p><?php _e('Optional setttings that may be necessary to customize subscription workflow.', 'ihc');?></p>
+                    </div>    
 						<div class="iump-form-line iump-no-border">
-							<label for="tag-name" class="iump-labels"><?php _e('Custom WP Role', 'ihc');?></label>
-							<select name="custom_role_level">
+							<h4><?php _e('Custom WordPress Role', 'ihc');?></h4>
+                            <div style="font-style:italic; color:#999;"><?php _e('Available only during the registration step for new Registered users.', 'ihc');?></div>
+                            <div>
+							<select name="custom_role_level"  class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select" >
 								<option value="-1"><?php _e('...Default Register option', 'ihc');?></option>
 								<?php
 									$roles = ihc_get_wp_roles_list();
@@ -292,11 +319,12 @@ if (isset($_POST['ihc_save_level'])){
 									}
 								?>
 							</select>
-							<div style="font-style:italic; color:#999;"><?php _e('Available only during the registration step for new users.', 'ihc');?></div>
+                            </div>
+							
 						</div>
 
 						<div class="iump-form-line iump-no-border" style="display: none;">
-							<label for="tag-name" class="iump-labels"><?php _e('Show Only Content created Starting with the Assigned Date', 'ihc');?></label>
+							<h4><?php _e('Show Only Content created Starting with the Assigned Date', 'ihc');?></h4>
 							<div style="margin-top:10px;">
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($level_data['start_date_content'] == 1) ? 'checked' : '';?>
@@ -308,10 +336,12 @@ if (isset($_POST['ihc_save_level'])){
 							<div style="font-style:italic; color:#999; margin-top:4px;"><?php _e('Available only for Pages and Posts', 'ihc');?></div>
 						</div>
 
-						<div class="" style="margin-top:10px;">
+						<div class="iump-form-line iump-no-border" style="margin-top:10px;">
 
-							<label for="tag-name" class="iump-labels"><?php _e('Special Week Days Level Work', 'ihc');?></label>
-							<select name="special_weekdays">
+							<h4><?php _e('Special Week days Subscription is running', 'ihc');?></h4>
+                            <div style="font-style:italic; color:#999;"><?php _e('Based on Server/Website Time', 'ihc');?></div>
+                            <div>
+							<select name="special_weekdays"  class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select" >
 								<?php
 									$day_type = array(
 														 '' => __('Entire Week', 'ihc'),
@@ -325,18 +355,19 @@ if (isset($_POST['ihc_save_level'])){
 									}
 								?>
 							</select>
-							<div style="font-style:italic; color:#999;"><?php _e('Based on Server/Website Time', 'ihc');?></div>
-							<div style="color:#999; font-weight:bold"><?php _e('Ex: Level Test01 has the Special Week Days Level Work set to WeekDays. Test01 is restricted from viewing certain content on the website. During the WeekEnd Test01 will not be restricted. ', 'ihc');?></div>
+                            </div>
+							
+							<div style="color:#999;"><?php _e('Ex: Level Test01 has the Special Week Days Level Work set to WeekDays. Test01 is restricted from viewing certain content on the website. During the WeekEnd Test01 will not be restricted. ', 'ihc');?></div>
 						</div>
 					</div>
 
 
-					<div class="iump-special-line">
-						<h2><?php _e('Billing Options', 'ihc');?></h2>
+					<div class="iump-special-line ihc-level-billing-section">
+						<h2><?php _e('Subscription Billing', 'ihc');?></h2>
 
 						<div class="iump-form-line iump-no-border form-required">
 							<label for="tag-name" class="iump-labels"><?php _e('Payment Type', 'ihc');?></label>
-							<select name="payment_type" onChange="ihcSelectShDiv(this, '#payment_options', 'payment');">
+							<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select" name="payment_type" onChange="ihcSelectShDiv(this, '#payment_options', 'payment');" style="max-width:400px;">
 								<?php
 									$price_type = array(
 														 'free' => __('Free', 'ihc'),
@@ -354,16 +385,22 @@ if (isset($_POST['ihc_save_level'])){
 					<div id="payment_options"  style="<?php if ($level_data['payment_type']=='free') echo 'display: none;'; else echo 'display: block;' ?>" >
 						<div class="iump-form-line iump-no-border" id="level_price_wd" style="" >
 							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('Level Price', 'ihc');?></label>
-								<input type="number" min="0.01" value="<?php echo $level_data['price'];?>" name="price" step="0.01"/>
-								<?php
-									$currency = get_option('ihc_currency');
-									if ($currency==FALSE){
-										$currency = 'USD';
-									}
-									echo $currency;
-								?>
-								<div style="font-size: 11px;display: inline-block; margin-left: 20px;"><?php _e("(Minimum 0.50 for Stripe)")?></div>
+								<label for="tag-name" class="iump-labels"><?php _e('Subscription Price', 'ihc');?></label>
+                                <div style="display:inline-block;     max-width: 400px; vertical-align: middle;">
+                                	<div class="input-group">
+                                        <input type="number" min="0.01" value="<?php echo $level_data['price'];?>" name="price" step="0.01" class="form-control"/>
+                                        <div class="input-group-addon">
+                                        <?php
+                                            $currency = get_option('ihc_currency');
+                                            if ($currency==FALSE){
+                                                $currency = 'USD';
+                                            }
+                                            echo $currency;
+                                        ?>
+                                        </div>
+                                     </div>   
+                                </div>
+								<div style="font-size: 11px; margin-left: 185px;"><?php _e("<strong>Stripe Standard</strong> gateway requires at least 0.50".$currency." subscription price")?></div>
 							</div>
 						</div>
 
@@ -385,7 +422,7 @@ if (isset($_POST['ihc_save_level'])){
 							}
 						?>
 						<div class="iump-form-line iump-no-border" id="regular_period_billing" style="display: <?php echo $display;?>;">
-							<label for="tag-name" class="iump-labels"><?php _e('Limit', 'ihc');?></label>
+							<label for="tag-name" class="iump-labels"><?php _e('Max no of Periods', 'ihc');?></label>
 							<input type="number" min="2" value="<?php if (!empty($level_data['billing_limit_num'])) echo $level_data['billing_limit_num'];?>" max="52" name="billing_limit_num"  />
 						</div>
 
@@ -396,17 +433,28 @@ if (isset($_POST['ihc_save_level'])){
 							}
 						?>
 						<div class="iump-no-border" id="trial_period_billing" style=" margin: 10px 0; display: <?php echo $display;?>;">
-							<div>
-								<label for="tag-name" class="iump-labels"><?php _e('Trial Period Price', 'ihc');?></label>
-								<input type="number" value="<?php echo $level_data['access_trial_price'];?>" name="access_trial_price" min="0" step="0.01" style="vertical-align:middle; margin-right:5px;"/>
-								<?php
-									echo $currency;
-								?>
-								<div style="font-size: 11px;display: inline-block; margin-left: 20px;">(<?php
-									_e('0 for Stripe and Braintree', 'ihc');
-								?>)</div>
+                        <h2><?php _e('Trial/Initial Payment Settings', 'ihc');?></h2>
+                        <p><?php _e('Setup trial or initial payment details only if you wish your Subscription to have one. Otherwise leave next fields <strong>empty</strong>', 'ihc');?></p>
+							<div class="iump-form-line iump-no-border" >
+								<label for="tag-name" class="iump-labels" style="letter-spacing: -0.3px;"><?php _e('Trial/Initial Payment Price', 'ihc');?></label>
+                                <div style="display:inline-block;     max-width: 400px; vertical-align: middle;">
+                                          <div class="input-group">
+                                                  <input type="number" value="<?php echo $level_data['access_trial_price'];?>" name="access_trial_price" min="0" step="0.01" style="vertical-align:middle; margin-right:5px;"  class="form-control"/>
+                                                  <div class="input-group-addon">
+                                                  <?php
+                                                      echo $currency;
+                                                  ?>
+                                                  </div>
+                                      </div>
+                                </div>
+                                <div style="font-size: 12px;margin-left: 185px;   font-weight: bold; color: #cf414a; margin-bottom:5px;"><?php
+									_e('If you wish to setup Trial/Initial Payment as free you must set the price to 0'. $currency.'', 'ihc');
+								?></div>
+								<div style="font-size: 11px;margin-left: 185px;   font-weight: bold;"><?php
+									_e('Stripe Standard and Braintree supports only 0'. $currency.' Trial/Initial Payment price ', 'ihc');
+								?></div>
 							</div>
-							<div>
+							<div class="iump-form-line iump-no-border">
 								<label for="tag-name" class="iump-labels"><?php _e('Trial Period Type', 'ihc');?></label>
 								<select name="access_trial_type" onChange="ihcChangeTrialType(this.value);">
 									<?php
@@ -420,10 +468,10 @@ if (isset($_POST['ihc_save_level'])){
 									?>
 								</select>
 							</div>
-							<div id="trial_certain_period" style="display: <?php if ($level_data['access_trial_type']==1) echo 'block'; else echo 'none';?>;">
+							<div class=""  id="trial_certain_period" style="display: <?php if ($level_data['access_trial_type']==1) echo 'block'; else echo 'none';?>;">
 								<label for="tag-name" class="iump-labels"><?php _e('Trial Certain Period', 'ihc');?></label>
-								<input type="number" value="<?php echo $level_data['access_trial_time_value'];?>" name="access_trial_time_value" min="1" max="31" style="vertical-align:middle; margin-right:5px;"/>
-									<select name="access_trial_time_type">
+								<input type="number" value="<?php echo $level_data['access_trial_time_value'];?>" name="access_trial_time_value" min="1" max="31" style="vertical-align:middle; margin-right:5px; width:97px;"/>
+									<select name="access_trial_time_type" style="min-width:200px;">
 										<?php
 											$access_time_types = array('D'=>'Days', 'W'=>'Weeks', 'M'=>'Months', 'Y'=>'Years',);
 											foreach ($access_time_types as $k=>$v){
@@ -434,23 +482,31 @@ if (isset($_POST['ihc_save_level'])){
 											}
 										?>
 									</select>
-								<div style="font-size: 11px;display: inline-block; margin-left: 10px;"><?php
-									_e('Not available for Authorize and 2Checkout.', 'ihc');
+								<div style="font-size: 11px;margin-left: 185px; font-weight: bold;"><?php
+									_e('Certain Period workflow is not supported by Authorize.net and 2Checkout gateways.', 'ihc');
 								?></div>
 							</div>
-							<div id="trial_couple_cycles" style="display: <?php if ($level_data['access_trial_type']==2) echo 'block'; else echo 'none';?>;">
+							<div class="iump-form-line iump-no-border"  id="trial_couple_cycles" style="display: <?php if ($level_data['access_trial_type']==2) echo 'block'; else echo 'none';?>;">
 								<label for="tag-name" class="iump-labels"><?php _e('Trial Couple Cycles:', 'ihc');?></label>
 								<input type="number" value="<?php echo $level_data['access_trial_couple_cycles'];?>" name="access_trial_couple_cycles" min="1" style="vertical-align:middle; margin-right:5px;"/>
-								<div style="font-size: 11px;display: inline-block; margin-left: 10px;" ><?php
-									_e('Not more than 1 cycle for Paypal and 2Checkout.', 'ihc');
+                                <?php
+								$pay_stat = ihc_check_payment_status('twocheckout');
+								$display = ($pay_stat['active']=='twocheckout-active' && $pay_stat['settings']=='Completed') ? 'block' : 'none';
+									?>
+								<div style="font-size: 11px; margin-left: 185px;  font-weight: bold;  <?php echo 'display: ' . $display; ?>" ><?php
+									_e('Not more than 1 cycle for 2Checkout gateways.', 'ihc');
 								?></div>
 								<div class="ihc-clear"></div>
-								<div style="font-size: 11px;display: inline-block; margin-left: 10px;" ><?php
+                                <?php
+								$pay_stat = ihc_check_payment_status('braintree');
+								$display = ($pay_stat['active']=='braintree-active' && $pay_stat['settings']=='Completed') ? 'block' : 'none';
+									?>
+								<div style="font-size: 11px;margin-left: 185px; <?php echo 'display: ' . $display; ?>" ><?php
 									_e('If You use Braintree the trial period must be set into Plan Details too.', 'ihc');
 								?></div>
 							</div>
-                            <div style="margin:10px 0;">
-                            	<div class="ihc-error-global-dashboard-message">
+                            <div style="margin:10px 0; margin-left: 185px; max-width:430px;">
+                            	<div class="ihc-error-global-dashboard-message" style="padding: 5px 12px;">
                                 <?php _e('Trial option is not available for Mollie payment gateway.', 'ihc'); ?>
                                 </div>
                             </div>
@@ -460,10 +516,13 @@ if (isset($_POST['ihc_save_level'])){
 
 
 					</div>
-					<div class="form-field" style="margin-bottom:25px;">
-					<h2>"Subscription Plan" Page details</h2>
-						<label for="tag-showup" style="font-weight:bold; margin:15px 0; display:block;"><?php _e('Show up in Subscription Plan', 'ihc');?></label>
-						<div>
+					<div class="form-field inside" style="margin-bottom:25px;">
+                     	<div class="iump-form-line iump-no-border">
+							<h2>"Subscription Plan" Page details</h2>
+                    	</div>
+						<div class="iump-form-line iump-no-border">
+						<h4><?php _e('Show/Hide in Subscription Plan', 'ihc');?></h4>
+                        <p><?php _e('If you choose to hide the subscription on front-end showcase, it will still be active but users will not find it into default Subscription plan showcase to Sign Up on their own choice', 'ihc');?></p>
 						<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($level_data['show_on'] == 1) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#show_on');" <?php echo $checked;?> />
@@ -471,7 +530,10 @@ if (isset($_POST['ihc_save_level'])){
 							</label>
 							<input type="hidden" value="<?php echo $level_data['show_on'];?>" name="show_on" id="show_on" />
 						</div>
-						<label for="tag-description" style="font-weight:bold; margin:15px 0; display:block;"><?php _e('Level Description:', 'ihc');?></label>
+                        <div  class="iump-form-line iump-no-border">
+						<h4><?php _e('Subscription Description', 'ihc');?></h4>
+                        <p><?php _e('How subscription is described on Subscription Plan showcase may attract customers to Sign Up', 'ihc');?></p>
+                        <div style="max-width:900px;">
 						<?php
 							$settings = array(
 												'media_buttons' => true,
@@ -483,14 +545,18 @@ if (isset($_POST['ihc_save_level'])){
 											);
 							wp_editor(ihc_correct_text($level_data['description']), 'tag-description', $settings);
 						?>
-
-						<label for="tag-name"  style="font-weight:bold; margin:15px 0 5px 0; display:block;"><?php _e('Price Text', 'ihc');?></label>
+						</div>
+						<h4><?php _e('Subscription Price details', 'ihc');?></h4>
 						<input name="price_text" type="text" value="<?php echo $level_data['price_text'];?>" style="max-width:200px;">
-						<span class="iump-info-message"><?php _e('Displayed on the Level Front-end List.', 'ihc');?></span>
-
+						<div style="font-size: 11px;" ><?php
+									_e('It will not change the Subscription price but just describes the costs.', 'ihc');
+								?>
+                       </div>
+					  </div>	
 					</div>
 					<div class="ihc-stuffbox-submit-wrap iump-submit-form">
-						<input type="submit" value="<?php _e('Save Level', 'ihc');?>" name="ihc_save_level" class="button button-primary button-large" />
+						<input type="hidden" name="save_level" value="<?php echo wp_create_nonce( 'ihc_save_level' );?>" />
+						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" id="ihc_submit_bttn" name="ihc_save_level" class="button button-primary button-large" />
 					</div>
 
 					<?php
@@ -678,7 +744,7 @@ $levels = get_option('ihc_levels');
 	<!-- END WooCommerce Payment Inttegration -->
 
 	<!-- HOOK some extra html here --->
-			<?php do_action('ihc_level_admin_html', $level_data);?>
+			<?php do_action('ihc_level_admin_html', $level_data, $lid );?>
 	<!-- /HOOK some extra html here --->
 
 	<!-- BADGES -->
@@ -732,11 +798,11 @@ $levels = get_option('ihc_levels');
 							</div>
 							<div id="ihc-reorder-msg" style="display: none;"> << <?php _e('Now You can reorder level list.', 'ihc');?></div>
 
-							<div class="ihc-sortable-table-wrapp">
+							<div class="iump-rsp-table ihc-sortable-table-wrapp">
 								<table class="wp-list-table widefat fixed tags ihc-admin-tables" id='ihc-levels-table'>
 									  <thead>
 										<tr>
-											  <th class="manage-column"  style="width:30px;">
+											  <th class="manage-column"  style="width:40px;">
 												  <span>
 													<?php _e('Show', 'ihc');?>
 												  </span>
@@ -852,13 +918,13 @@ $levels = get_option('ihc_levels');
 												  </td>
 											      <td class="column">
 													<?php echo $v['name'];?>
-													<div style="visibility: hidden;" id="level_tr_<?php echo $k;?>">
-														<a href="<?php echo $url.'&tab=levels&edit_level='.$k;?>"><?php _e('Edit', 'ihc');?></a>
-														|
-														<a onClick="ihcFirstConfirmThenRedirect('<?php echo $url.'&tab=levels&ihc_level_delete-id='.$k;?>');" style="color: red; cursor: pointer;"><?php _e('Delete', 'ihc');?></a>
+													<div class="ihc-buttons-rsp" style="visibility:hidden;" id="level_tr_<?php echo $k;?>">
+														<a class="iump-btns" href="<?php echo $url.'&tab=levels&edit_level='.$k;?>"><?php _e('Edit', 'ihc');?></a>
+
+														<div class="iump-btns ihc-js-delete-level" data-id="<?php echo $k;?>"  style="color: red; cursor: pointer;"><?php _e('Delete', 'ihc');?></div>
 													</div>
 											      </td>
-											      <td class="column" style="color: #21759b; font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;font-size: 13px;font-weight: 400;">
+											      <td class="column" style="color: #21759b; font-weight:bold;ffont-size: 14px;font-weight: 700;">
 													<?php echo $v['label'];?>
 											      </td>
 												  <?php if ($woo_payment):?>
@@ -888,13 +954,13 @@ $levels = get_option('ihc_levels');
 												  		}
 												  	?></span>
 											      </td>
-											      <td class="column" style="color: #222; font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;font-size: 13px;font-weight: 400; text-transform:capitalize;">
+											      <td class="column" style="color: #222; font-weight:bold;font-size: 13px; text-transform:capitalize;">
 												  	<?php
 														//Billing Type
 												  		echo $v['payment_type'];
 												  	?>
 											      </td>
-												   <td class="column" style="color: #888; font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;font-size: 13px;font-weight: 400; text-transform:capitalize;">
+												   <td class="column" style="color: #888; font-size: 13px;font-weight: 600; text-transform:capitalize;">
 												  	<?php
 												  		//Recurrences
 												  		$r = array('bl_onetime'=>'One Time', 'bl_ongoing'=>'On Going', 'bl_limited'=>'Limited');
@@ -937,6 +1003,35 @@ $levels = get_option('ihc_levels');
 		<a href="<?php echo $url.'&tab=levels&new_level=true';?>" class="indeed-add-new-like-wp" style="display: inline-block; margin-top: 20px;">
 			<i class="fa-ihc fa-add-ihc"></i><?php _e('Add New Level', 'ihc');?>
 		</a>
+
+		<script>
+		jQuery( '.ihc-js-delete-level' ).on( 'click', function(){
+				var levelId = jQuery( this ).attr( 'data-id' );
+				swal({
+					title: "<?php _e( 'Are you sure that you want to delete this level?', 'ihc' );?>",
+					text: "",
+					type: "warning",
+					showCancelButton: true,
+					confirmButtonClass: "btn-danger",
+					confirmButtonText: "OK",
+					closeOnConfirm: true
+				},
+				function(){
+						jQuery.ajax({
+								type : 'post',
+								url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+								data : {
+													 action: 'ihc_admin_delete_level',
+													 lid:			levelId,
+											 },
+								success: function (response) {
+										location.reload();
+								}
+					 });
+			 });
+		});
+		</script>
+
 
 		<?php
 		}

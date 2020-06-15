@@ -4,20 +4,20 @@ class IndeedExport{
 	/*
 	 * @var array
 	 */
-	protected $entities = array();	
+	protected $entities = array();
 	/*
 	 * @var string
 	 */
 	protected $file = '';
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return none
 	 */
 	public function __construct(){}
-	
-	
+
+
 	/*
 	 * @param array
 	 * @return none
@@ -30,8 +30,8 @@ class IndeedExport{
 			}
 		}
 	}
-	
-	
+
+
 	/*
 	 * @param string
 	 * @return none
@@ -39,13 +39,26 @@ class IndeedExport{
 	public function setFile($filename=''){
 		$this->file = $filename;
 	}
-	
-	
+
+
 	/*
 	 * @param none
 	 * @return boolean
 	 */
 	public function run(){
+		// remove old files
+		$directory = IHC_PATH . 'temporary_files/';
+		$files = scandir( $directory );
+		foreach ( $files as $file ){
+				$fileFullPath = $directory . $file;
+				if ( file_exists( $fileFullPath ) && filetype( $fileFullPath ) == 'file' ){
+						$extension = pathinfo( $fileFullPath, PATHINFO_EXTENSION );
+						if ( $extension == 'xml' ){
+								unlink( $fileFullPath );
+						}
+				}
+		}
+
 		if ($this->entities){
 			$xml_data = new SimpleXMLElement('<?xml version="1.0"?><data></data>');
 			///write info
@@ -60,7 +73,7 @@ class IndeedExport{
 			if (!empty($temp_entity['usermeta'])){
 				$temp_entity['indeed_wp_capabilities'] = '';
 			}
-			$this->array_to_xml(array('import_info'=>$temp_entity), $xml_data);		
+			$this->array_to_xml(array('import_info'=>$temp_entity), $xml_data);
 
 			foreach ($this->entities as $table => $options){
 				switch ($table){
@@ -81,13 +94,13 @@ class IndeedExport{
 						$cap = $wpdb->get_blog_prefix() . 'capabilities';
 						$options['where_clause'] = " AND meta_key NOT LIKE '$cap' ";
 						$db_data = $this->get_db_data_for_entity($table, $options);
-						
+
 						/// write capabilities like a table
 						$options['where_clause'] = " AND meta_key LIKE '$cap' ";
 						$options['selected_cols'] = " user_id, meta_value ";
 						$capabilities = $this->get_db_data_for_entity($table, $options);
 						if ($capabilities){
-							$this->array_to_xml(array('indeed_wp_capabilities'=>$capabilities), $xml_data);						
+							$this->array_to_xml(array('indeed_wp_capabilities'=>$capabilities), $xml_data);
 						}
 						break;
 					case 'users':
@@ -95,7 +108,7 @@ class IndeedExport{
 						$db_data = $this->get_db_data_for_entity($table, $options);
 					break;
 				}
-				
+
 				if ($db_data){
 					$this->array_to_xml(array($table=>$db_data), $xml_data);
 					unset($db_data);
@@ -106,8 +119,8 @@ class IndeedExport{
 		}
 		return FALSE;
 	}
-	
-	
+
+
 	/*
 	 * @param array, object
 	 * @return none
@@ -124,11 +137,11 @@ class IndeedExport{
 				} else {
 					$xml_data->addChild("$key", htmlspecialchars("$value")); ///htmlspecialchars("$value")
 				}
-			}			
+			}
 		}
 	}
-	
-	
+
+
 	/*
 	 * @param string (name of table)
 	 * @param array (options for query)
@@ -149,8 +162,8 @@ class IndeedExport{
 				$options['limit'] = '';
 			}
 			$table_name = $options['full_table_name'];
-			$q = "SELECT {$options['selected_cols']} 
-						FROM $table_name 
+			$q = "SELECT {$options['selected_cols']}
+						FROM $table_name
 						WHERE 1=1
 						{$options['where_clause']}
 						{$options['limit']}
@@ -167,8 +180,8 @@ class IndeedExport{
 		}
 		return $array;
 	}
-	
-	
+
+
 	/*
 	 * @param array
 	 * @return array
@@ -176,11 +189,11 @@ class IndeedExport{
 	protected function get_db_data_postmeta($keys_to_select=array()){
 		$array = array();
 		foreach ($keys_to_select as $key){
-			$array[$key] = Ihc_Db::get_all_post_meta_data_for_meta_key($key);	
+			$array[$key] = Ihc_Db::get_all_post_meta_data_for_meta_key($key);
 		}
-		return $array;		
-	}	
+		return $array;
+	}
 
-	
+
 }
 endif;

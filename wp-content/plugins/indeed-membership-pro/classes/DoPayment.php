@@ -53,11 +53,19 @@ class DoPayment
         }
         break;
       default:
-        $this->doRedirectBack();
+        $paymentGatewayObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $this->paymentGateway );
+        // @description
+
+        if ( !$paymentGatewayObject ){
+            $this->doRedirectBack();
+        }
         break;
 		}
     if (!empty($paymentGatewayObject)){
-        $paymentGatewayObject->setAttributes($this->attributes)->doPayment()->redirect();
+        $paymentGatewayObject->setAttributes($this->attributes) /// attributes for payment ( lid, uid, coupon, etc)
+                             ->initDoPayment() // logs, check if level is not free
+                             ->doPayment() // processing payment data
+                             ->redirect(); // redirect to payment service
     }
 	}
 

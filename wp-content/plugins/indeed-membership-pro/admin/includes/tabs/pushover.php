@@ -1,4 +1,11 @@
 <?php
+if ( !empty( $_POST['ihc_save'] ) && isset( $_POST['ihc_pushover_enabled'] ) ){
+		if ( empty( $_POST['ihc_pushover_enabled'] ) ){
+				\Ihc_Db::deactivateApTab( 'pushover' );
+		} else {
+				\Ihc_Db::activateApTab( 'pushover' );
+		}
+}
 ihc_save_update_metas('pushover');//save update metas
 $data['metas'] = ihc_return_meta_arr('pushover');//getting metas
 echo ihc_check_default_pages_set();//set default pages message

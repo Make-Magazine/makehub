@@ -16,24 +16,39 @@ add_filter('the_content', 'ihc_print_message', 99);
 //STYLE AND SCRIPTS
 add_action('wp_enqueue_scripts', 'ihc_public_head');
 function ihc_public_head(){
-	wp_enqueue_style( 'ihc_font_style', IHC_URL . 'assets/css/font-awesome.css' );
+	//wp_enqueue_style( 'ihc_font_style', IHC_URL . 'assets/css/font-awesome.css' );
+	//wp_enqueue_style( 'ihc_font_style', IHC_URL . 'assets/css/font-awesome.min.css' );
+
 	wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.css' );
-	wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.css' );
-	wp_enqueue_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
-	wp_enqueue_style( 'ihc_iziModal', IHC_URL . 'assets/css/iziModal.min.css' );
-	wp_enqueue_script('jquery');
-	wp_enqueue_script('jquery-ui-datepicker');
-	wp_enqueue_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), null );
+	//wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.min.css', array(), 1.1 );
+
+	//wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.css' );
+	wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css', array(), 1.1 );
+
+	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'ihc-jquery-ui', IHC_URL . 'assets/js/jquery-ui.min.js', array(), null );
-	wp_enqueue_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
-	wp_enqueue_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null );
-	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), null );
+	//wp_enqueue_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
+	//wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.js', array(), 1.1 );
+	wp_enqueue_script( 'ihc-front_end_js', IHC_URL . 'assets/js/functions.min.js', array(), 1.3 );
+
 	wp_localize_script( 'ihc-front_end_js', 'ihc_site_url', get_site_url());
 	wp_localize_script( 'ihc-front_end_js', 'ihc_ajax_url', get_site_url() . '/wp-admin/admin-ajax.php' );
 	wp_localize_script( 'ihc-front_end_js', 'ihc_translated_labels', json_encode( ihcJavascriptLabels() ) );
-	wp_enqueue_script('ihc-jquery_upload_file-footer', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null, TRUE);
-	wp_enqueue_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
-	wp_enqueue_script( 'ihc_iziModal_js', IHC_URL . 'assets/js/iziModal.min.js', array(), null );
+	wp_localize_script( 'ihc-front_end_js', 'ihcStripeMultiply', "" . ihcStripeMultiplyForCurrency( get_option( 'ihc_currency' ) ) . "" );
+
+	//wp_enqueue_script( 'ihc-jquery_upload_file-footer', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null, TRUE );
+	//wp_enqueue_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
+	//wp_enqueue_style( 'ihc_iziModal', IHC_URL . 'assets/css/iziModal.min.css' );
+	//wp_enqueue_script( 'ihc_iziModal_js', IHC_URL . 'assets/js/iziModal.min.js', array(), null );
+	//wp_enqueue_script('jquery-ui-datepicker');
+
+	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
+	wp_register_script( 'ihc-select2', IHC_URL . 'assets/js/select2.min.js', array(), null );
+	wp_register_style( 'ihc_iziModal', IHC_URL . 'assets/css/iziModal.min.css' );
+	wp_register_script( 'ihc_iziModal_js', IHC_URL . 'assets/js/iziModal.min.js', array(), null );
+	wp_register_script( 'ihc-jquery_upload_file', IHC_URL . 'assets/js/jquery.uploadfile.min.js', array(), null );
+	wp_register_script( 'ihc-print-this', IHC_URL . 'assets/js/printThis.js', array(), null );
+	wp_register_script( 'ihc-jquery_form_module', IHC_URL . 'assets/js/jquery.form.js', array(), null );
 }
 
 function ihcJavascriptLabels()

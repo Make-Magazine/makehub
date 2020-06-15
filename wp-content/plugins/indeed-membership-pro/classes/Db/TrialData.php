@@ -4,18 +4,18 @@ if (!defined('ABSPATH')) exit();
 class TrialData
 {
 	/// input
-	private $lid = 0;
-	private $country = '';
-	private $state = '';
+	private $lid 								= 0;
+	private $country 						= '';
+	private $state 							= '';
 	/// output
-	private $trialPrice = 0;
-	private $initalTrialPrice = 0;
-	private $taxes = 0;
-	private $durationType = '';
-	private $durationValue = '';
-	private $trialActive = false;
-	private $currency = '';
-	private $durationTimeType = '';
+	private $trialPrice 				= 0;
+	private $initalTrialPrice 	= 0;
+	private $taxes 							= 0;
+	private $durationType 			= '';
+	private $durationValue 			= '';
+	private $trialActive 				= false;
+	private $currency 					= '';
+	private $durationTimeType 	= '';
 
 	public function __construct(){}
 

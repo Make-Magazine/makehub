@@ -8,6 +8,13 @@ function ihc_login($url){
 			ihc_do_check_login_recaptcha($url);
 		}
 
+		// check nonce
+		if ( empty($_POST['ihc_login_nonce'] ) || !wp_verify_nonce( $_POST['ihc_login_nonce'], 'ihc_login_nonce' ) ){
+				$url = add_query_arg( array('ihc_login_fail'=>'true'), $url );
+				wp_redirect( $url );
+				exit();
+		}
+
 		if (ihc_is_magic_feat_active('login_security')){
 			require_once IHC_PATH . 'classes/Ihc_Security_Login.class.php';
 			$security_object = new Ihc_Security_Login($_REQUEST['log'], $_REQUEST['pwd']);
@@ -42,6 +49,7 @@ function ihc_login($url){
 			} else {
 				//================== LOGIN SUCCESS
 				do_action('ihc_do_action_on_login', @$user->ID);
+				// @description On user login. @param user id (integer)
 				$url = add_query_arg( array( 'ihc_success_login' => 'true' ), $url );
 
 				//LOCKER REDIRECT
@@ -146,6 +154,8 @@ function ihc_login_social($login_data){
 			}
 		} else if (isset($login_data['url'])){
 			do_action('ihc_do_action_on_login', @$uid);
+			// @description On user login. @param user id (integer)
+
 			$url = $login_data['url'];
 			$url = add_query_arg( array( 'ihc_success_login' => 'true' ), $url );
 		}
@@ -206,7 +216,7 @@ function ihc_do_check_login_recaptcha($url=''){
 			}
 			$recaptcha = new ReCaptcha($secret);
 			*/
-			
+
 			require_once IHC_PATH . 'classes/services/ReCaptcha/autoload.php';
 			$recaptcha = new \ReCaptcha\ReCaptcha( $secret, new \ReCaptcha\RequestMethod\CurlPost() );
 			$resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
@@ -232,7 +242,7 @@ function ihc_get_login_redirect_post_id($uid=0){
 	 */
 	 $id = get_option('ihc_general_login_redirect');
 	 if (ihc_is_magic_feat_active('login_level_redirect')){
-		 $user_levels = Ihc_Db::get_user_levels($uid);
+		 $user_levels = \Ihc_Db::get_user_levels( $uid, true ); // Ihc_Db::get_user_levels($uid);
 	 	 $custom = get_option('ihc_login_level_redirect_rules');
 		 if ($custom && $user_levels){
 		 	$priority = get_option('ihc_login_level_redirect_priority');
@@ -244,5 +254,6 @@ function ihc_get_login_redirect_post_id($uid=0){
 		 	}
 		 }
 	 }
+	 $id = apply_filters( 'ump_public_filter_post_id_on_redirect_after_login', $id );
 	 return $id;
 }

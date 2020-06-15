@@ -35,7 +35,10 @@
 	if (isset($_REQUEST['subtab'])) $subtab = $_REQUEST['subtab'];
 
 	if ($subtab=='design'){
-		ihc_save_update_metas('login');
+		if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_login_settings_nonce']) && wp_verify_nonce( $_POST['ihc_admin_login_settings_nonce'], 'ihc_admin_login_settings_nonce' ) ){
+				ihc_save_update_metas('login');
+		}
+
 		$meta_arr = ihc_return_meta_arr('login');
 		?>
 		<div class="iump-page-title">Ultimate Membership Pro -
@@ -49,6 +52,7 @@
 				</div>
 			</div>
 			<form action="" method="post" >
+				<input type="hidden" name="ihc_admin_login_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_login_settings_nonce' );?>" />
 				<div style="display: inline-block; width: 50%;">
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Showcase Display', 'ihc');?></h3>
@@ -121,10 +125,13 @@
 			</form>
 		<?php
 	} else {
-		ihc_save_update_metas('login-messages');
+		if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_login_settings_nonce']) && wp_verify_nonce( $_POST['ihc_admin_login_settings_nonce'], 'ihc_admin_login_settings_nonce' ) ){
+				ihc_save_update_metas('login-messages');
+		}
 		$meta_arr = ihc_return_meta_arr('login-messages');
 		?>
 			<form action="" method="post" >
+				<input type="hidden" name="ihc_admin_login_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_login_settings_nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Messages:', 'ihc');?></h3>
 					<div class="inside">

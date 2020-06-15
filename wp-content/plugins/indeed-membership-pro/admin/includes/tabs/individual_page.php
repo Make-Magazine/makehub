@@ -1,5 +1,7 @@
 <?php
-ihc_save_update_metas('individual_page');//save update metas
+if (isset($_POST['ihc_save']) && !empty( $_POST['ihc_admin_inside_page_nonce'] ) && wp_verify_nonce( $_POST['ihc_admin_inside_page_nonce'], 'ihc_admin_inside_page_nonce' ) ){
+		ihc_save_update_metas('individual_page');//save update metas
+}
 $data['metas'] = ihc_return_meta_arr('individual_page');//getting metas
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
@@ -8,6 +10,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 $pages = ihc_get_all_pages();//getting pages
 ?>
 <form action="" method="post" id="individual_page_form">
+	<input type="hidden" name="ihc_admin_inside_page_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_inside_page_nonce' );?>" />
 	<div class="ihc-stuffbox">
 		<h3><?php _e('Individual Page', 'ihc');?></h3>
 		<div class="inside">

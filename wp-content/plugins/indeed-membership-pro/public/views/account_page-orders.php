@@ -1,3 +1,4 @@
+<?php wp_enqueue_script( 'ihc-print-this' );?>
 <div class="ihc-ap-wrap">
 	<?php if (!empty($data['title'])):?>
 		<h3><?php echo do_shortcode($data['title']);?></h3>
@@ -162,9 +163,8 @@
 	} else {
 	?>
     <div class="ihc-additional-message">
-    <?php
-		_e("You have no Orders yet!", 'ihc');
-	?>
+    <?php _e("No Orders have been made yet. Look for available ", 'ihc'); ?>
+    <a href="<?php echo $data['subscription_link'];?>"><?php _e("Subscriptions", 'ihc'); ?></a>
     </div>
 	<?php
 	}

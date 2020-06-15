@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once("../../../../wp-load.php");
 
 
@@ -28,5 +28,4 @@ if (!empty($_REQUEST['ihc_coupon']) && !empty($_REQUEST['l_id'])){
 	}
 	die();
 }
-echo 0;
 die();

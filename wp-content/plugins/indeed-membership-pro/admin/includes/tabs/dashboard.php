@@ -1,7 +1,7 @@
 <?php
 $currency = get_option('ihc_currency');
 echo ihc_inside_dashboard_error_license();
-	do_action( "ihc_admin_dashboard_after_top_menu" );
+do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <div style="width: 97%">
 	<div class="ihc-dashboard-title">
@@ -64,7 +64,7 @@ echo ihc_inside_dashboard_error_license();
 					<h4>
 						<strong>
 							<?php
-								echo ihc_get_total_amount() . ' ' . $currency;
+									echo ihc_get_total_amount() . ' ' . $currency;
 							?>
 						</strong>
 					</h4>
@@ -79,7 +79,7 @@ echo ihc_inside_dashboard_error_license();
 		$levels_arr =  ihc_get_level_user_counts();
 		$levels_by_transactions = ihc_get_levels_top_by_transactions();
 	?>
-	<div class="row-fluid" style="height: 380px;">
+	<div class="row-fluid" style="height: 430px;">
 
 				<div class="span8">
 					<div class="ihc-box-content-dashboard">
@@ -160,6 +160,7 @@ echo ihc_inside_dashboard_error_license();
 			</div>
 		</div>
 		<?php
+
 			$approved_users = ihc_get_users_counts(3);
 			$pending_users = ihc_get_users_counts(2);
 				?>
@@ -176,6 +177,7 @@ echo ihc_inside_dashboard_error_license();
 									<ul>
 									<?php
 									if ($approved_users || $pending_users){
+
 										$last_five = ihc_get_last_five_transactions();
 										if ($last_five){
 											foreach ($last_five as $obj){
@@ -207,6 +209,7 @@ echo ihc_inside_dashboard_error_license();
 											}
 										} else { echo '<div><h3>' . __('Not enough data available.', 'ihc') . '</h3></div>'; }
 									}else { echo '<div><h3>' . __('Not enough data available.', 'ihc') . '</h3></div>'; }
+
 									?>
 									</ul>
 							</div>
@@ -217,11 +220,9 @@ echo ihc_inside_dashboard_error_license();
 	</div>
 
 </div>
-
 <script>
 
 <?php
-
 
 	if ($levels_arr){
 		?>
@@ -231,6 +232,9 @@ echo ihc_inside_dashboard_error_license();
 		<?php
 		$i = 0;
 		foreach ($levels_arr as $k=>$v){
+			if(strlen($k) >= 11) {
+				$k = substr($k, 0, 11);
+			}
 			echo 'ihc_ticks['.$i.']=['.$i.', "'.$k.'"];';
 			echo 'ihc_chart_stats['.$i.']={0:'.$i.',1:'.$v.'};';
 			$i++;
@@ -292,7 +296,7 @@ echo ihc_inside_dashboard_error_license();
 			$i++;
 		}
 		?>
-			console.log(d);
+			//console.log(d);
 			jQuery.plot(jQuery("#ihc-pie-1"), d, {
 				series: {
 			        pie: {
@@ -304,6 +308,5 @@ echo ihc_inside_dashboard_error_license();
 		<?php
 	}
 ?>
-
 </script>
 <?php

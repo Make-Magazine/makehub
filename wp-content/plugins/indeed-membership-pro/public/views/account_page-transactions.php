@@ -11,37 +11,41 @@
 		?>
 				<table class="wp-list-table ihc-account-tranz-list">
 						<thead>
-							<tr>											  
+							<tr>
 								<th class="ihc-content-left">
 									<span>
 										<?php _e('Level', 'ihc');?>
-									</span>									  
+									</span>
 								</th>
 								<th>
 									<span>
 										<?php _e('Amount', 'ihc');?>
-									</span>									  
+									</span>
 								</th>
 								<th>
 									<span>
 										<?php _e('Payment Type', 'ihc');?>
 									</span>
-								</th>										
+								</th>
 								<th>
 									<span>
 										<?php _e('Status', 'ihc');?>
 									</span>
-								</th>												  								  
+								</th>
 								<th class="manage-column ihc-content-right">
 									<span>
 										<?php _e('Date', 'ihc');?>
 									</span>
-								</th>											  										  								  								  
+								</th>
 							</tr>
 						</thead>
 				<?php
 				foreach ($data['items'] as $k=>$v){
-					$data_payment = json_decode($v->payment_data);
+					if ( isset( $v->payment_data ) ){
+							$data_payment = json_decode($v->payment_data);
+					} else {
+							$data_payment = [];
+					}
 					?>
 					<tr>
 						<td class="manage-column ihc-content-left"  data-title="<?php _e('Level', 'ihc');?>">
@@ -56,7 +60,7 @@
 								} elseif (isset($data_payment->x_description)){
 									echo $data_payment->x_description;
 								} else {
-									echo '--';	
+									echo '--';
 								}
 							?>
 							</div>
@@ -88,6 +92,9 @@
 							} else {
 								$payment_type = get_option('ihc_payment_selected');
 							}
+							if ( isset( $data['payment_types'][ $payment_type ] ) ){
+									$payment_type = $data['payment_types'][ $payment_type ];
+							}
 						?>
 						<td class="ihc-content-capitalize"  data-title="<?php _e('Payment Type', 'ihc');?>"><?php echo $payment_type;?></td>
 						<td class="manage-column ihc-content-oswald" data-title="<?php _e('Status', 'ihc');?>">
@@ -101,50 +108,50 @@
 								} else if(isset($data_payment->message) && $data_payment->message=='success'){
 									echo __("Confirmed", "ihc");
 								}  else {
-									echo '--';	
+									echo '--';
 								}
 							?>
 						</td>
 						<td class="manage-column ihc-content-right" data-title="<?php _e('Date', 'ihc');?>">
 							<span>
-								<?php echo date("F j, Y, g:i a", strtotime($v->paydate));?>
+								<?php echo indeed_timestamp_to_date_without_timezone( strtotime($v->paydate), "F j, Y, g:i a" );?>
 							</span>
-						</td>		
-					</tr>	
+						</td>
+					</tr>
 				<?php
 				}///end of foreach
 				?>
 						<tfoot>
-							<tr>											  
+							<tr>
 								<th class="ihc-content-left">
-									<span><?php echo __('Level', 'ihc');?></span>									  
+									<span><?php echo __('Level', 'ihc');?></span>
 								</th>
 								<th>
-									<span><?php echo __('Amount', 'ihc');?></span>									  
-								</th>	
+									<span><?php echo __('Amount', 'ihc');?></span>
+								</th>
 								<th>
 									<span><?php echo __('Payment Type', 'ihc');?></span>
-								</th>													
+								</th>
 								<th>
 									<span><?php echo __('Status', 'ihc');?></span>
-								</th>									  								  
+								</th>
 								<th class="manage-column ihc-content-right">
 									<span><?php echo __('Date', 'ihc');?></span>
-								</th>											  										  								  								  
+								</th>
 							</tr>
 						</tfoot>
 			</table>
-			
+
 			<?php if (!empty($data['pagination'])):?>
 				<?php echo $data['pagination'];?>
-			<?php endif;?>			
-			
-	<?php			
+			<?php endif;?>
+
+	<?php
 	} else {
 	?>
     <div class="ihc-additional-message">
     <?php
-		_e("You have no Transactions yet!", 'ihc');
+		_e("No Transactions have been made yet", 'ihc');
 	?>
     </div>
 	<?php

@@ -47,14 +47,18 @@ $notification_arr = array(
 		'drip_content-user' => __('When Post become available', 'ihc'),
 );
 
-
 if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 	//add/edit
 
 	$notification_id = (isset($_GET['edit_notification'])) ? @$_GET['edit_notification'] : FALSE;
 	$meta_arr = ihc_get_notification_metas($notification_id);
+
+	//$meta_arr['message'] = stripslashes( htmlspecialchars_decode( ihc_format_str_like_wp( $meta_arr['message'] ) ) );
+$meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message'] )  );
 	?>
 	<form method="post" action="<?php echo $url.'&tab=notifications';?>">
+
+		<input type="hidden" value="<?php echo wp_create_nonce( 'ihc_admin_notifications_nonce' );?>" name="ihc_admin_notifications_nonce" />
 		<?php
 			if ($notification_id){
 				?>
@@ -75,7 +79,7 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 			<div class="inside">
 				<div class="iump-form-line">
 					<label class="iump-labels-special"><?php _e('Action:', 'ihc');?></label>
-					<select name="notification_type" id="notification_type" onChange="ihcChangeNotificationTemplate();ihcNotificationLevelOnlyFor();">
+					<select name="notification_type" id="notification_type" class="ump-js-change-notification-type">
 						<?php
 							foreach ($notification_arr as $k=>$v){
 								//Manually set optGroups
@@ -131,6 +135,7 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 										break;
 								}
 							}
+							do_action( 'ihc_admin_notification_type_select_field', $meta_arr['notification_type'] );
 						?>
 					</select>
 				</div>
@@ -138,7 +143,7 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 					<label class="iump-labels-special"><?php _e('Level:', 'ihc');?></label>
 
 					<select name="level_id">
-						<option value="-1" <?php if ($meta_arr['level_id']==-1) echo 'selected';?>>All</option>
+						<option value="-1" <?php if ($meta_arr['level_id']==-1) echo 'selected';?>><?php _e( 'All', 'ihc' );?></option>
 						<?php
 						$levels = get_option('ihc_levels');
 						if ($levels && count($levels)){
@@ -176,43 +181,15 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 					<?php wp_editor( $meta_arr['message'], 'ihc_message', array('textarea_name'=>'message', 'quicktags'=>TRUE) );?>
 				</div>
 				<div style="width: 25%; display: inline-block; vertical-align: top;margin-left: 10px; color: color: rgba(125,138,157,1.0);">
-					<?php
-						$constants = array(
-											'{username}'=>'',
-											'{user_email}'=>'',
-											'{first_name}'=>'',
-											'{last_name}'=>'',
-											'{account_page}'=>'',
-											'{login_page}'=>'',
-											'{current_level}'=>'',
-											'{current_level_expire_date}'=>'',
-											'{level_list}'=>'',
-											'{blogname}'=>'',
-											'{blogurl}'=>'',
-											//'{verify_email_address_link}'=>'',
-											//'{NEW_PASSWORD}'=>'',
-											'{currency}'=>'',
-											'{amount}'=>'',
-											'{level_name}'=>'',
-											//'{password_reset_link}' => '',
-											'{current_date}' => '',
-											//'{POST_LINK}' => '',
-						);
-						$extra_constants = ihc_get_custom_constant_fields();
-						foreach ($constants as $k=>$v){
-							?>
-							<div><?php echo $k;?></div>
-							<?php
-						}
-						?>
-						<h4><?php _e('Password Reset:', 'ihc');?></h4>
-						<div>{NEW_PASSWORD}</div>
-						<div>{password_reset_link}</div>
-						<h4><?php _e('Double E-mail Verification:', 'ihc');?></h4>
-						<div>{verify_email_address_link}</div>
-						<h4><?php _e('Drip Content Notification:', 'ihc');?></h4>
-						<div>{POST_LINK}</div>
+						<?php	$constants = ihcNotificationConstants( $meta_arr['notification_type'] );?>
+						<div class="ump-js-list-constants">
+						<?php foreach ($constants as $k=>$v):?>
+								<div><?php echo $k;?></div>
+						<?php endforeach;?>
+						</div>
+
 						<?php
+						$extra_constants = ihc_get_custom_constant_fields();
 						echo "<h4>".__('Custom Fields constants', 'ihc')."</h4>";
 						foreach ($extra_constants as $k=>$v){
 							?>
@@ -261,17 +238,39 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 
 
 	</form>
-	<?php
+
+<script>
+		jQuery( '.ump-js-change-notification-type' ).on( 'change', function( e ){
+			ihcChangeNotificationTemplate();
+			ihcNotificationLevelOnlyFor();
+			jQuery( '.ump-js-list-constants' ).html('');
+			jQuery.ajax({
+					type : "post",
+					url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+					data : {
+										 action: "ihc_update_list_notification_constants",
+										 notificationType: jQuery(e.target).val(),
+								 },
+					success: function (data) {
+							jQuery( '.ump-js-list-constants' ).html( data );
+					}
+		 });
+
+		});
+</script>
+<?php
 } else {
 	//listing
-	if (isset($_POST['ihc_save'])){
+	$notification_arr = apply_filters( 'ihc_admin_list_notifications_types', $notification_arr );
+	if (isset($_POST['ihc_save']) && !empty($_POST['ihc_admin_notifications_nonce']) && wp_verify_nonce( $_POST['ihc_admin_notifications_nonce'], 'ihc_admin_notifications_nonce' ) ){
 		ihc_save_notification_metas($_POST);
-	} else if (isset($_POST['delete_notification_by_id'])){
+	} else if (isset($_POST['delete_notification_by_id']) && !empty($_POST['ihc_admin_notifications_nonce']) && wp_verify_nonce( $_POST['ihc_admin_notifications_nonce'], 'ihc_admin_notifications_nonce' ) ){
 		ihc_delete_notification($_POST['delete_notification_by_id']);
 	}
 	$data = ihc_get_all_notification_available();
+	$exclude = apply_filters( 'ihc_admin_remove_notification_from_listing_by_type', [] );
 		?>
-		<div class="iump-wrapper">
+		<div id="col-right" style="vertical-align:top;width: 100%;">
 		<div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
 								<?php _e('Notifications', 'ihc');?>
@@ -279,12 +278,16 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 						</div>
 			<a href="<?php echo $url.'&tab=notifications&add_notification=true';?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php _e('Add New Notification', 'ihc');?></a>
 			<span class="ihc-top-message"><?php _e('...create your notification Templates!', 'ihc');?></span>
-			<a href="javascript:void(0)" class="button button-primary button-large" style="display:inline-block; float:right;" onClick="ihcCheckEmailServer();"><?php _e('Check Mail Server', 'ihc');?></a>
+			<a href="javascript:void(0)" title="<?php _e('Let you know if your website is able to send emails independently of UMP settings. A test email should be received on Admin email address.', 'ihc');?>" class="button button-primary button-large ihc-remove-group-button" style="display:inline-block; float:right;margin-right:20px;" onClick="ihcCheckEmailServer();"><?php _e('Check SMTP Mail Server', 'ihc');?></a>
 			<div class="ihc-clear"></div>
 			<?php
 			if ($data){
 			?>
-				<form id="delete_notification" method="post" action=""><input type="hidden" value="" id="delete_notification_by_id" name="delete_notification_by_id"/></form>
+				<form id="delete_notification" method="post" action="">
+						<input type="hidden" value="<?php echo wp_create_nonce( 'ihc_admin_notifications_nonce' );?>" name="ihc_admin_notifications_nonce" />
+						<input type="hidden" value="" id="delete_notification_by_id" name="delete_notification_by_id"/>
+				</form>
+				<div class="iump-rsp-table">
 				<div class="ihc-sortable-table-wrapp" style="margin: 20px 20px 20px 0px;" >
 					<table class="wp-list-table widefat fixed tags ihc-admin-tables" id="ihc-levels-table">
 						<thead>
@@ -327,6 +330,7 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 														'ihc_new_subscription_assign_notification-admin',
 								);
 								foreach ($data as $item){
+									if ( $exclude && in_array( $item->notification_type, $exclude ) ) { continue; }
 								?>
 								<tr onmouseover="ihcDhSelector('#notify_tr_<?php echo $item->id;?>', 1);" onmouseout="ihcDhSelector('#notify_tr_<?php echo $item->id;?>', 0);">
 									<td><?php
@@ -337,13 +341,13 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 										}
 
 										?>
-										<div style="visibility: hidden;" id="notify_tr_<?php echo $item->id;?>">
-											<a href="<?php echo $url.'&tab=notifications&edit_notification='.$item->id;?>"><?php _e('Edit', 'ihc');?></a> |
-											<span onClick="jQuery('#delete_notification_by_id').val(<?php echo $item->id;?>); jQuery('#delete_notification').submit();" style="color: red;cursor: pointer;"><?php _e('Delete', 'ihc');?></span>
+										<div class ="ihc-buttons-rsp" style="visibility: hidden;" id="notify_tr_<?php echo $item->id;?>">
+											<a class ="iump-btns" href="<?php echo $url.'&tab=notifications&edit_notification='.$item->id;?>"><?php _e('Edit', 'ihc');?></a> |
+											<span class ="iump-btns" onClick="jQuery('#delete_notification_by_id').val(<?php echo $item->id;?>); jQuery('#delete_notification').submit();" style="color: red;cursor: pointer;"><?php _e('Delete', 'ihc');?></span>
 										</div>
 									</td>
-									<td style="color: #21759b; font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;"><?php
-										echo $notification_arr[$item->notification_type];
+									<td class="ihc-highlighted-label"><?php
+										echo isset( $notification_arr[$item->notification_type] ) ? $notification_arr[$item->notification_type] : '';
 									?></td>
 									<td><?php
 										if (in_array($item->notification_type, $admin_actions)){
@@ -374,6 +378,7 @@ if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 						</tbody>
 					</table>
 				</div>
+			</div>
 				<?php
 				}
 				?>

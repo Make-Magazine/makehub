@@ -23,7 +23,7 @@ $tabs_arr = array(
 					'block_url' => __('Lock Rules', 'ihc'),
 					'orders' => __('Payment History', 'ihc'),
 					'notifications' => __('Notifications', 'ihc'),
-					'magic_feat' => __('Magic Features', 'ihc'),
+					'magic_feat' => __( 'Extensions', 'ihc'),
 					'general' => __('General Options', 'ihc'),
 				  );
 ?>
@@ -332,6 +332,9 @@ $tabs_arr = array(
 			case 'reason_for_cancel':
 				require_once IHC_PATH . 'admin/includes/tabs/reason_for_cancel.php';
 				break;
+			default :
+				do_action( 'ump_print_admin_page', $tab );
+				break;
 		}
 
 	?>
@@ -343,6 +346,7 @@ $tabs_arr = array(
 	<a href="https://codecanyon.net/item/ultimate-membership-pro-wordpress-plugin/12159253?ref=azzaroco" target="_blank" title="Support us with 5-stars Rating for further development" class="button float_right ihc-black-button" style="margin-right: 5px;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 5-stars Rating </a>
 	<a href="http://help.wpindeed.com/ultimate-membership-pro/" target="_blank" title="Knowledge Base" class="button float_right ihc-green-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Knowledge Base</a>
     <a href="https://www.youtube.com/playlist?list=PLmOiaKgLhsFlhpkMb_fHKV45u4qZ1IZHd" target="_blank" title="Video Tutorials" class="button float_right ihc-red-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Video Tutorials</a>
+    <a href="https://store.wpindeed.com/addon/category/ultimate-membership-pro/" target="_blank" title="Video Tutorials" class="button float_right ihc-blue-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Extra AddOns</a>
 	<a href="http://codecanyon.net/downloads/" target="_blank" title="Download Item" class="button float_right" style="margin-right: 5px;"><i class="fa fa-download"></i> Download</a>
 	</div>
 </div>

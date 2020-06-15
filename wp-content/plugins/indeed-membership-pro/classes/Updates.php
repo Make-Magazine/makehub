@@ -31,6 +31,11 @@ class Updates
             update_option( $this->optionName, $currentVersion );
         }
 
+        if ( version_compare( '8.7', $versionValueInDatabase )==1 ){
+            $this->removeCsvOldFiles();
+            $this->removeOldExportFiles();
+        }
+
     }
 
     public function updateRegisterFields()
@@ -169,6 +174,44 @@ class Updates
             }
         }
         $wpdb->query( "CREATE INDEX idx_ihc_orders_meta_order_id ON {$wpdb->prefix}ihc_orders_meta(order_id)" );
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    private function removeCsvOldFiles()
+    {
+        $directory = IHC_PATH;
+        $files = scandir( $directory );
+        foreach ( $files as $file ){
+            $fileFullPath = $directory . $file;
+            if ( file_exists( $fileFullPath ) && filetype( $fileFullPath ) == 'file' ){
+                $extension = pathinfo( $fileFullPath, PATHINFO_EXTENSION );
+        				if ( $extension == 'csv' && $file == 'users.csv' ){
+                    unlink( $fileFullPath );
+                }
+            }
+        }
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    private function removeOldExportFiles()
+    {
+        $directory = IHC_PATH;
+        $files = scandir( $directory );
+        foreach ( $files as $file ){
+            $fileFullPath = $directory . $file;
+            if ( file_exists( $fileFullPath ) && filetype( $fileFullPath ) == 'file' ){
+                $extension = pathinfo( $fileFullPath, PATHINFO_EXTENSION );
+                if ( $extension == 'xml' && $file == 'export.xml' ){
+                    unlink( $fileFullPath );
+                }
+            }
+        }
     }
 
 }

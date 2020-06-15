@@ -1,8 +1,10 @@
 <form action="<?php echo admin_url('admin.php?page=ihc_manage&tab=orders');?>" method="post">
+
+	<input type="hidden" name="ihc_admin_add_new_order_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_add_new_order_nonce' );?>" />
+
 	<div class="ihc-stuffbox">
 		<h3><?php _e('Add New Order', 'ihc');?></h3>
 		<div class="inside">
-
 
       <div class="row" style="margin-left:0px;">
       		<div class="col-xs-5">
@@ -94,7 +96,6 @@
 					</div>
 				</div>
 			</div>
-
 
 			<div style="margin-top: 15px;" class="ihc-wrapp-submit-bttn">
 				<input type="submit" value="<?php _e('Add Order', 'ihc');?>" name="save_order" class="button button-primary button-large" />

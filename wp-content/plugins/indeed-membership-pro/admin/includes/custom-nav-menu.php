@@ -291,7 +291,7 @@ class IndeedWalkerMenu_IHC extends Walker_Nav_Menu{
 									admin_url( 'nav-menus.php' )
 								),
 								'delete-menu_item_' . $item_id
-							); ?>"><?php _e( 'Remove' ); ?></a> <span class="meta-sep hide-if-no-js"> | </span> <a class="item-cancel submitcancel hide-if-no-js" id="cancel-<?php echo $item_id; ?>" href="<?php echo esc_url( add_query_arg( array( 'edit-menu-item' => $item_id, 'cancel' => time() ), admin_url( 'nav-menus.php' ) ) );
+							); ?>"><?php _e( 'Remove' ); ?></a> <span class="meta-sep hide-if-no-js"> | </span> <a class="item-cancel submitcancel hide-if-no-js" id="cancel-<?php echo $item_id; ?>" href="<?php echo esc_url( add_query_arg( array( 'edit-menu-item' => $item_id, 'cancel' => indeed_get_unixtimestamp_with_timezone() ), admin_url( 'nav-menus.php' ) ) );
 								?>#menu-item-settings-<?php echo $item_id; ?>"><?php _e('Cancel'); ?></a>
 						</div>
 

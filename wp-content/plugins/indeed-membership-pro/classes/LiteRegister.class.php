@@ -49,6 +49,7 @@ class LiteRegister extends UserAddEdit{
 		$data['email_fields'] = $this->print_fields($this->register_fields[$key]);
 		$data['submit_button'] = indeed_create_form_element(array('type'=>'submit', 'name'=>'Submit', 'value' => __('Register', 'ihc'), 'class' => 'button button-primary button-large',));
 		$data['hidden_fields'][] = indeed_create_form_element(array('type'=>'hidden', 'name'=>'ihcaction', 'value' => 'register_lite' ));
+		$data['hidden_fields'][] = $this->printNonce();
 		$data['css'] = stripslashes($this->lite_register_metas['ihc_register_lite_custom_css']);
 		$data['js'] = '';
 		$data['template'] = $this->lite_register_metas['ihc_register_lite_template'];
@@ -71,6 +72,11 @@ class LiteRegister extends UserAddEdit{
 		 */
 		 $this->register_metas = array_merge(ihc_return_meta_arr('register'), ihc_return_meta_arr('register-msg'), ihc_return_meta_arr('register-custom-fields'));
 		 $this->set_register_fields();
+
+		 if ( !$this->checkNonce() ){
+				 return false;
+		 }
+
 		 $this->check_email();
 		 $this->errors = apply_filters('ump_before_printing_errors', $this->errors);
 		 if ($this->errors){
@@ -87,7 +93,11 @@ class LiteRegister extends UserAddEdit{
 		 $this->set_roles();
 		 $this->user_id = wp_insert_user($this->fields);
 		 do_action('ump_on_register_action', $this->user_id);
+		 // @description Run on register user. @param user id (integer)
+
 		 do_action('ump_on_register_lite_action', $this->user_id);
+		 // @description Run on register user with lite register form. @param user id (integer)
+
 		 //Ihc_Db::increment_dashboard_notification('users');
 		 $this->do_individual_page();
 		 $this->notify_user_send_password();
@@ -179,8 +189,10 @@ class LiteRegister extends UserAddEdit{
 			$q_arg = 'update_message';
 		}
 		$redirect = get_option('ihc_register_lite_redirect');
+		$redirect = apply_filters( 'ump_public_filter_redirect_page_after_register', $redirect );
 		if (empty($redirect) || $redirect==-1){
 			$redirect = get_option('ihc_general_register_redirect');
+			$redirect = apply_filters( 'ump_public_filter_redirect_page_after_register', $redirect );
 		}
 		if ($redirect && $redirect!=-1 && $this->type=='create'){
 			//custom redirect

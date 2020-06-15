@@ -594,7 +594,7 @@ jQuery(document).ready(function(){
 	break;
 	case 'settings':
 		//SETTINGS
-		if (!empty($_POST['ihc_save'])){
+		if (!empty($_POST['ihc_save']) && !empty( $_POST['ihc_admin_listing_users_nonce'] ) && wp_verify_nonce( $_POST['ihc_admin_listing_users_nonce'], 'ihc_admin_listing_users_nonce' ) ){
 			///save
 			ihc_save_update_metas('listing_users');
 		}
@@ -604,6 +604,7 @@ jQuery(document).ready(function(){
 		<div class="iump-page-title">Ultimate Membership Pro - <span class="second-text"><?php _e('Members List', 'ihc');?></span>
 	</div>
 		<form action="" method="post">
+			<input type="hidden" name="ihc_admin_listing_users_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_listing_users_nonce' );?>" />
 			<div class="ihc-stuffbox">
 				<h3><?php _e('Responsive Settings', 'ihc');?></h3>
 				<div class="inside">
@@ -695,7 +696,7 @@ jQuery(document).ready(function(){
 		break;
 	case 'inside_page':
 		//SETTINGS
-		if (!empty($_POST['ihc_save'])){
+		if (!empty($_POST['ihc_save'])  && !empty( $_POST['ihc_admin_listing_users_nonce'] ) && wp_verify_nonce( $_POST['ihc_admin_listing_users_nonce'], 'ihc_admin_listing_users_nonce' ) ){
 			///save
 			ihc_save_update_metas('listing_users_inside_page');
 		}
@@ -705,6 +706,7 @@ jQuery(document).ready(function(){
 			<div class="iump-page-title">Ultimate Membership Pro - <span class="second-text"><?php _e('Members List Public Individual Page', 'ihc');?></span>
 		</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc_admin_listing_users_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_listing_users_nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Content', 'ihc');?></h3>
 					<div class="inside">

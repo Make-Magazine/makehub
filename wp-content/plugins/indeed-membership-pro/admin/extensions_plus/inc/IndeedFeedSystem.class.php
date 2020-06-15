@@ -1,7 +1,7 @@
-<?php 
+<?php
 if (!class_exists('IndeedFeedSystem')){
 	class IndeedFeedSystem{
-		
+
 		private static $notification = FALSE;
 		private static $current_notification = array();
 		private static $installed_items_run = FALSE;
@@ -20,7 +20,7 @@ if (!class_exists('IndeedFeedSystem')){
 		private static $created_menu_parent_slug_arr=array();
 		private $option_name_data = 'indeed_feed_data'; /// settings, notifications and cats
 		private $option_name_items = 'indeed_feed_data-items'; /// extensions
-		
+
 		public function __construct($menu_parent_slug=''){
 			/*
 			 * @param string
@@ -32,8 +32,8 @@ if (!class_exists('IndeedFeedSystem')){
 					return;
 				} else {
 					self::$created_menu_parent_slug_arr[] = $menu_parent_slug;
-				}				
-				
+				}
+
 				if (empty($menu_parent_slug)){
 					//no submenu, create menu parent
 					if (self::$global_menu){
@@ -44,43 +44,43 @@ if (!class_exists('IndeedFeedSystem')){
 					$this->admin_url = admin_url('admin.php?page=indeed_extensions_plus');
 					add_action('admin_notices', array($this, 'print_global_style'));
 				} else {
-					$this->menu_parent = $menu_parent_slug;	
+					$this->menu_parent = $menu_parent_slug;
 					add_action('admin_menu', array($this, 'add_submenu'), 99);
 					$this->admin_url = admin_url('admin.php?page=addons-' . $this->menu_parent);
 				}
 				$this->dir_path =  plugin_dir_path(__FILE__);
 				$this->dir_url = plugin_dir_url(__FILE__);
-				
-				
+
+
 				add_action('wp_ajax_indeed_update_notify_date_show', array($this, 'update_notify_date_show'));//close notify
-				
+
 				//set the installed items
 				if (!self::$installed_items_run){
 					self::$installed_items_run = TRUE;
 					$this->set_installed_items();
 					$this->set_global_settings();
 				}
-				
+
 				//Notifications
-				if (!self::$notification && (empty($_GET['page']) || (strpos($_GET['page'], 'addons-')!==0) && $_GET['page']!='indeed_extensions_plus' ) ){///this module must run only once				
+				if (!self::$notification && (empty($_GET['page']) || (strpos($_GET['page'], 'addons-')!==0) && $_GET['page']!='indeed_extensions_plus' ) ){///this module must run only once
 					self::$notification = TRUE;
 					if ($this->check_notify_date_show()){
 						$this->check_notifications();
-						//add_action('admin_notices', array($this, 'do_notification'));						
+						//add_action('admin_notices', array($this, 'do_notification'));
 					}
 				}
 			}
 		}
-		
+
 		public function add_menu(){
 			/*
 			 * MAIN MENU
 			 * @param none
 			 * @return none
-			 */	
+			 */
 			add_menu_page('Extensions Plus', '<span style=" ' . $this->main_menu_style . ' ">Extensions Plus</span>', 'manage_options',	'indeed_extensions_plus', array($this, 'output') , 'dashicons-cart');
 		}
-		
+
 		public function add_submenu(){
 			/*
 			 * SUBMENU TO PLUGIN/THEME
@@ -89,7 +89,7 @@ if (!class_exists('IndeedFeedSystem')){
 			 */
 			add_submenu_page( $this->menu_parent, 'AddOns', '<span style=" ' . $this->menu_style . ' ">Extensions Plus</span>', 'manage_options', 'addons-' . $this->menu_parent, array($this, 'output') );
 		}
-		
+
 		public function output(){
 			/*
 			 * @param none
@@ -101,25 +101,25 @@ if (!class_exists('IndeedFeedSystem')){
 			} else {
 				$data = $this->get_data();
 			}
-			
-			$items = $this->get_items();		
-			
+
+			$items = $this->get_items();
+
 			if (!empty($data) && is_array($data) && !empty($items) && !empty($data['settings']) && !empty($data['cats'])){
 				$items = $this->do_reorder($items);
 				$items = $this->remove_inactive($items);
-				$cats = $this->do_reorder($data['cats']);				
+				$cats = $this->do_reorder($data['cats']);
 				$cats = $this->remove_inactive($cats);
-				$settings = array_merge($this->return_default_array_key('settings'), $data['settings']);	
+				$settings = array_merge($this->return_default_array_key('settings'), $data['settings']);
 				include_once $this->dir_path . 'output.php';
 			}
 			include_once $this->dir_path . 'output.php';
 		}
-		
+
 		private function get_data(){
 			/*
 			 * @param none
 			 * @return string
-			 */	
+			 */
 			////UPDATE
 			$last_update = get_option($this->option_name_update_time);
 			if (empty($last_update)){
@@ -127,16 +127,16 @@ if (!class_exists('IndeedFeedSystem')){
 			} else if (time()>$last_update+$this->update_time_interval){
 				return $this->do_update();
 			}
-			
-			//// GET FROM CACHE 
+
+			//// GET FROM CACHE
 			$cache = get_option($this->option_name_data);
 			if (empty($cache)){
 				return $this->do_update();//NO CACHE AVAILABLE
 			} else {
 				return $cache;
-			}			
+			}
 		}
-		
+
 		private function get_items(){
 			/*
 			 * @param none
@@ -145,7 +145,7 @@ if (!class_exists('IndeedFeedSystem')){
 			$items = get_option($this->option_name_items);
 			return $items;
 		}
-		
+
 		private function do_update(){
 			/*
 			 * @param none
@@ -153,11 +153,11 @@ if (!class_exists('IndeedFeedSystem')){
 			 */
 			@$response = wp_remote_get( $this->url );
 			if (wp_remote_retrieve_response_code($response)==200 && !is_wp_error($response) && is_array($response) && !empty($response['body'])){
-				@$data = json_decode(@$response['body'], TRUE);				
+				@$data = json_decode(@$response['body'], TRUE);
 				if (!empty($data) && is_array($data) && !empty($data['items']) ){
 					/*
-					 * 	&& !empty($data['cats']) && !empty($data['settings']) && !empty($data['notifications']) 
-					 */	
+					 * 	&& !empty($data['cats']) && !empty($data['settings']) && !empty($data['notifications'])
+					 */
 					// STORE THE RESULT
 					update_option($this->option_name_items, $data['items']);
 					unset($data['items']);
@@ -174,14 +174,14 @@ if (!class_exists('IndeedFeedSystem')){
 				return '';//nothing to return
 			}
 		}
-		
+
 		private function set_global_settings(){
 			/*
 			 * @param none
 			 * @return none
 			 */
 			$data = get_option($this->option_name_data);
-			
+
 			if ($data!==FALSE && is_array($data) && isset($data['settings'])){
 				$this->main_data = $data;
 				$data['settings'] = array_merge($this->return_default_array_key('settings'), $data['settings']);
@@ -193,7 +193,7 @@ if (!class_exists('IndeedFeedSystem')){
 				}
 			}
 		}
-		
+
 		private function return_default_array_key($type=''){
 			/*
 			 * @param string
@@ -246,11 +246,11 @@ if (!class_exists('IndeedFeedSystem')){
 									'pause_time' => 172800,//forty eight hours
 						);
 						break;
-				}				
+				}
 			}
 			return $arr;
 		}
-		
+
 		private function do_reorder($arr=array()){
 			/*
 			 * @param array
@@ -281,7 +281,7 @@ if (!class_exists('IndeedFeedSystem')){
 			}
 			return $arr;
 		}
-		
+
 		private function remove_inactive($arr=array()){
 			/*
 			 * @param array
@@ -294,12 +294,12 @@ if (!class_exists('IndeedFeedSystem')){
 					}
 				}
 				if (!empty($return_array)){
-					return $return_array;					
+					return $return_array;
 				}
 			}
 			return $arr;
 		}
-		
+
 		private function check_notifications(){
 			/*
 			 * Run Only Once
@@ -309,7 +309,7 @@ if (!class_exists('IndeedFeedSystem')){
 			if (!empty($this->main_data)){
 				$data = $this->main_data;
 			} else {
-				$data = get_option($this->option_name_data);				
+				$data = get_option($this->option_name_data);
 			}
 			if (!empty($data['notifications']) && is_array($data['notifications'])){
 				//run notifications
@@ -320,13 +320,13 @@ if (!class_exists('IndeedFeedSystem')){
 				$arr = $data['notifications'];
 				if (isset($arr[$last_notification])) unset($arr[$last_notification]);
 				end($arr);
-				$last_key = key($arr);				
+				$last_key = key($arr);
 				$i = $last_notification + 1;
 				while ($arr){
 					if ($i>$last_key){
 						$i = 0;
 					}
-					if ( isset($arr[$i]) && isset($arr[$i]['item_name']) && !in_array($arr[$i]['item_name'], self::$installed_items)){						
+					if ( isset($arr[$i]) && isset($arr[$i]['item_name']) && !in_array($arr[$i]['item_name'], self::$installed_items)){
 						self::$current_notification['index'] = $i;
 						self::$current_notification['message'] = $data['notifications'][$i]['message'];
 						return;
@@ -335,14 +335,14 @@ if (!class_exists('IndeedFeedSystem')){
 					$i++;
 				}
 
-				if (isset($data['notifications'][$last_notification]) && isset($data['notifications'][$last_notification]['item_name']) 
+				if (isset($data['notifications'][$last_notification]) && isset($data['notifications'][$last_notification]['item_name'])
 					&& !in_array($data['notifications'][$last_notification]['item_name'], self::$installed_items)){
 						self::$current_notification['index'] = $last_notification;
 						self::$current_notification['message'] = $data['notifications'][$last_notification]['message'];
 				}
 			}
 		}
-		
+
 		public function do_notification(){
 			/*
 			 * NOTIFICATION ACTION
@@ -351,7 +351,7 @@ if (!class_exists('IndeedFeedSystem')){
 			 */
 			if (!empty(self::$current_notification) && !empty(self::$current_notification['message']) && isset(self::$current_notification['index'])){
 				update_option('indeed_last_notification_key_used', self::$current_notification['index']);
-				
+
 				$output = '';
 				$output .= '<link rel="stylesheet" href="' . $this->dir_url . 'files/font-awesome.css" type="text/css" media="all" />';
 				$output .= '<script>';
@@ -371,11 +371,11 @@ if (!class_exists('IndeedFeedSystem')){
 				$output .= '<div class="button" style="float:right;    margin-top: -5px; vertical-align: top;text-align:right;cursor: pointer;margin-left: 10px;" onClick="indeed_close_notf_div();"><i class="fa-ifs ifs-close"></i> Dismiss this message</div>';
 				$output .= '<a class="button button-primary" style="float:right;    margin-right: 5px;    margin-top: -5px;" href="' . $this->admin_url  . '"><i class="fa-ifs ifs-busket-small"></i>Check all Externsion Plus Items</a>';
 				$output .= '</div>';
-				echo $output;				
+				echo $output;
 			}
 			return '';
-		}		
-		
+		}
+
 		private function set_installed_items(){
 			/*
 			 * Run Only Once
@@ -389,14 +389,14 @@ if (!class_exists('IndeedFeedSystem')){
 			foreach ($plugins as $k=>$arr){
 				self::$installed_items[] = $arr['Name'];
 			}
-			
+
 			$themes = wp_get_themes();
 			foreach ($themes as $name=>$theme){
-				self::$installed_items[] = $name;				
+				self::$installed_items[] = $name;
 			}
 		}
-		
-		
+
+
 		private function check_notify_date_show(){
 			/*
 			 * @param none
@@ -412,18 +412,26 @@ if (!class_exists('IndeedFeedSystem')){
 			}
 			return TRUE;
 		}
-		
+
 		public function update_notify_date_show(){
 			/*
 			 * @param none
 			 * @return none
 			 */
+			 if ( !indeedIsAdmin() ){
+					 echo 0;
+					 die;
+			 }
+			 if ( !ihcAdminVerifyNonce() ){
+					 echo 0;
+					 die;
+			 }
 			update_option('indeed_notf_last_print', time());
 			echo 1;
 			die();
 		}
-		
-		
+
+
 		public function print_global_style(){
 			/*
 			 * @param none
@@ -434,12 +442,11 @@ if (!class_exists('IndeedFeedSystem')){
 			$output .= '#toplevel_page_indeed_extensions_plus .dashicons-cart{padding: 3px 0px;}';
 			$output .= '#toplevel_page_indeed_extensions_plus,#toplevel_page_indeed_extensions_plus a.menu-top{background: #d54e21 !important;}';
 			$output .= '#toplevel_page_indeed_extensions_plus:hover{color: #FFF !important; background-color: #d54e21 !important;}';
-			$output .= '#toplevel_page_indeed_extensions_plus:hover wp-menu-image:before{color: #FFF !important;}'; 
-			$output .= '#toplevel_page_indeed_extensions_plus div.wp-menu-image:before{color: #FFF !important;}'; 			
+			$output .= '#toplevel_page_indeed_extensions_plus:hover wp-menu-image:before{color: #FFF !important;}';
+			$output .= '#toplevel_page_indeed_extensions_plus div.wp-menu-image:before{color: #FFF !important;}';
 			$output .= '</style>';
 			echo $output;
 		}
-		
+
 	}//end of class
 }//end of class exists
-

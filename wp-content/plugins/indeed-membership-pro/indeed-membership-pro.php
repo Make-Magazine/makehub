@@ -3,10 +3,17 @@
 Plugin Name: Indeed Ultimate Membership Pro
 Plugin URI: https://www.wpindeed.com/
 Description: The most complete and easy to use Membership Plugin, ready to allow or restrict your content, Page for certain Users.
-Version: 8.3.2
-Author: indeed
+Version: 8.9
+Author: WPIndeed Development
 Author URI: https://www.wpindeed.com
+Text Domain: ihc
+Domain Path: /languages
+
+@package        Indeed Ultimate Membership Pro
+@author           WPIndeed Development
 */
+
+
 ///setting the paths
 if (!defined('IHC_PATH')){
 	define('IHC_PATH', plugin_dir_path(__FILE__));
@@ -40,7 +47,6 @@ if (is_admin()){
 }
 require_once IHC_PATH  . 'public/functions/ihc_countries.php';
 
-
 /************************ MODULES *************************/
 
 /// WooCommerce
@@ -73,6 +79,7 @@ if (get_option('ihc_register_redirects_by_level_enable')){
 		$Ihc_Register_Redirects = new Ihc_Register_Redirects();
 }
 
+
 require_once IHC_PATH . 'classes/Ihc_Actions_On_Events.php';
 $Ihc_Actions_On_Events = new Ihc_Actions_On_Events();
 
@@ -104,8 +111,9 @@ $ihcWpLoginCustomCss = new \Indeed\Ihc\WpLogin();
 
 $IhcJsAlerts = new \Indeed\Ihc\JsAlerts();
 
-/******************** END MODULES **************************/
+$ihcElCheck = new \Indeed\Ihc\Services\ElCheck();
 
+/******************** END MODULES **************************/
 
 //on activating the plugin
 function ihc_initiate_plugin(){
@@ -305,6 +313,7 @@ function ihc_send_notification_before_after_expire(){
 					$sent = ihc_send_user_notifications($u_data->user_id, 'admin_user_expire_level', $u_data->level_id);/// SEND NOTIFICATION TO ADMIN
 				}
 				do_action('ihc_action_level_has_expired', $u_data->user_id, $u_data->level_id);
+				// @description run when level has expired. @param user id (integer), level id (integer)
 				if ($sent){
 					$wpdb->query("UPDATE `".$wpdb->prefix."ihc_user_levels` SET notification='2' WHERE id=" . $u_data->id . "; ");
 				}
@@ -333,7 +342,7 @@ function ihc_check_if_level_expire_downgrade(){
 		foreach ($u_ids as $u_data){
 			if ($grace_period){
 				$expire_time_after_grace = strtotime($u_data->expire_time) + $grace_period * 24 * 60 * 60;
-				if ($expire_time_after_grace>time()){
+				if ($expire_time_after_grace>indeed_get_unixtimestamp_with_timezone()){
 					continue;
 				}
 			}
@@ -373,7 +382,7 @@ function ihc_run_check_verify_email_status(){
 							WHERE ID='" . $v->user_id . "';");
 					if (!empty($time_data->user_registered)){
 						$time_to_delete = strtotime($time_data->user_registered)+$time_limit;
-						if ( $time_to_delete < time() ){
+						if ( $time_to_delete < indeed_get_unixtimestamp_with_timezone() ){
 							//delete user
 							wp_delete_user( $v->user_id );
 							$wpdb->query("DELETE FROM " . $wpdb->prefix . "ihc_user_levels WHERE user_id='" . $v->user_id . "';");
@@ -400,7 +409,11 @@ function twocheckout_ins_ihc(){
 //delete attachment ajax
 add_action('wp_ajax_nopriv_ihc_delete_attachment_ajax_action', 'ihc_delete_attachment_ajax_action');
 add_action('wp_ajax_ihc_delete_attachment_ajax_action', 'ihc_delete_attachment_ajax_action');
-function ihc_delete_attachment_ajax_action(){
+function ihc_delete_attachment_ajax_action()
+{
+		if ( !ihcPublicVerifyNonce() ){
+				die;
+		}
 		$uid = isset($_POST['user_id']) ? esc_sql($_POST['user_id']) : 0;
 		$field_name = isset($_POST['field_name']) ? esc_sql($_POST['field_name']) : '';
 		$attachment_id = isset($_POST['attachemnt_id']) ? esc_sql($_POST['attachemnt_id']) : 0;
@@ -447,6 +460,9 @@ function ihc_check_coupon_code_via_ajax(){
 	 * @param none
 	 * @return array or int 0
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+ 			die;
+ 	}
 	if (!empty($_REQUEST['code']) && !empty($_REQUEST['lid'])){
 		$coupon_data = ihc_check_coupon(esc_sql($_REQUEST['code']), esc_sql($_REQUEST['lid']));
 		if ($coupon_data){
@@ -469,7 +485,6 @@ function ihc_check_coupon_code_via_ajax(){
 			}
 		}
 	}
-	echo 0;
 	die();
 }
 
@@ -492,7 +507,12 @@ function ihc_update_passowrd_filter($return, $user_data){
 
 add_action("wp_ajax_nopriv_ihc_check_reg_field_ajax", "ihc_check_reg_field_ajax");
 add_action('wp_ajax_ihc_check_reg_field_ajax', 'ihc_check_reg_field_ajax');
-function ihc_check_reg_field_ajax(){
+function ihc_check_reg_field_ajax()
+{
+	if ( !ihcPublicVerifyNonce() ){
+			// echo 0;
+			die;
+	}
 	$register_msg = ihc_return_meta_arr('register-msg');
 	if (isset($_REQUEST['type']) && isset($_REQUEST['value'])){
 		echo ihc_check_value_field(esc_sql($_REQUEST['type']), esc_sql($_REQUEST['value']), esc_sql($_REQUEST['second_value']), $register_msg);
@@ -525,34 +545,35 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 		switch ($type){
 			case 'user_login':
 				if (!validate_username($value)){
-					$return = $register_msg['ihc_register_error_username_msg'];
+					$return = stripslashes( $register_msg['ihc_register_error_username_msg'] );
 				}
 				if (username_exists($value)) {
-					$return = $register_msg['ihc_register_username_taken_msg'];
+					$return = stripslashes( $register_msg['ihc_register_username_taken_msg'] );
 				}
 				break;
 			case 'user_email':
 				if (!is_email($value)) {
-					$return = $register_msg['ihc_register_invalid_email_msg'];
+					$return = stripslashes( $register_msg['ihc_register_invalid_email_msg'] );
 				}
 				if (email_exists($value)){
-					$return = $register_msg['ihc_register_email_is_taken_msg'];
+					$return = stripslashes( $register_msg['ihc_register_email_is_taken_msg'] );//ihc_correct_text(  );
 				}
 				$blacklist = get_option('ihc_email_blacklist');
 				if(isset($blacklist)){
 					$blacklist = explode(',',preg_replace('/\s+/', '', $blacklist));
 
 					if( count($blacklist) > 0 && in_array($value,$blacklist)){
-						$return = $register_msg['ihc_register_email_is_taken_msg'];
+						$return = stripslashes( $register_msg['ihc_register_email_is_taken_msg'] );
 					}
 				}
+				$return = apply_filters( 'ump_filter_public_check_email_message', $return, $value );
 
 				break;
 			case 'confirm_email':
 				if ($value==$val2){
 					$return = 1;
 				} else {
-					$return = $register_msg['ihc_register_emails_not_match_msg'];
+					$return = stripslashes( $register_msg['ihc_register_emails_not_match_msg'] );
 				}
 				break;
 			case 'pass1':
@@ -560,27 +581,28 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 				if ($register_metas['ihc_register_pass_options']==2){
 					//characters and digits
 					if (!preg_match('/[a-z]/', $value)){
-						$return = $register_msg['ihc_register_pass_letter_digits_msg'];
+						$return = stripslashes( $register_msg['ihc_register_pass_letter_digits_msg'] );
 					}
 					if (!preg_match('/[0-9]/', $value)){
-						$return = $register_msg['ihc_register_pass_letter_digits_msg'];
+						$return = stripslashes( $register_msg['ihc_register_pass_letter_digits_msg'] );
 					}
 				} else if ($register_metas['ihc_register_pass_options']==3){
 					//characters, digits and one Uppercase letter
 					if (!preg_match('/[a-z]/', $value)){
-						$return = $register_msg['ihc_register_pass_let_dig_up_let_msg'];
+						$return = stripslashes( $register_msg['ihc_register_pass_let_dig_up_let_msg'] );
 					}
 					if (!preg_match('/[0-9]/', $value)){
-						$return = $register_msg['ihc_register_pass_let_dig_up_let_msg'];
+						$return = stripslashes( $register_msg['ihc_register_pass_let_dig_up_let_msg'] );
 					}
 					if (!preg_match('/[A-Z]/', $value)){
-						$return = $register_msg['ihc_register_pass_let_dig_up_let_msg'];
+						$return = stripslashes( $register_msg['ihc_register_pass_let_dig_up_let_msg'] );
 					}
 				}
 				//check the length of password
 				if($register_metas['ihc_register_pass_min_length']!=0){
 					if (strlen($value)<$register_metas['ihc_register_pass_min_length']){
 						$return = str_replace( '{X}', $register_metas['ihc_register_pass_min_length'], $register_msg['ihc_register_pass_min_char_msg'] );
+						$return = stripslashes( $return );
 					}
 				}
 				break;
@@ -588,14 +610,14 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 				if ($value==$val2){
 					$return = 1;
 				} else {
-					$return = $register_msg['ihc_register_pass_not_match_msg'];
+					$return = stripslashes( $register_msg['ihc_register_pass_not_match_msg'] );
 				}
 				break;
 			case 'tos':
 				if ($value==1){
 					$return = 1;
 				} else {
-					$return = $register_msg['ihc_register_err_tos'];
+					$return = stripslashes( $register_msg['ihc_register_err_tos'] );
 				}
 				break;
 
@@ -618,7 +640,7 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 		if ($check){
 			return $check;
 		} else {
-			return $register_msg['ihc_register_err_req_fields'];
+			return stripslashes( $register_msg['ihc_register_err_req_fields'] );
 		}
 	}
 }
@@ -627,7 +649,11 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 
 add_action("wp_ajax_nopriv_ihc_ap_reset_custom_banner", "ihc_ap_reset_custom_banner");
 add_action('wp_ajax_ihc_ap_reset_custom_banner', 'ihc_ap_reset_custom_banner');
-function ihc_ap_reset_custom_banner(){
+function ihc_ap_reset_custom_banner()
+{
+		if ( !ihcPublicVerifyNonce() ){
+				die;
+		}
 		global $current_user;
 		$uid = isset($current_user->ID) ? $current_user->ID : 0;
 		if (empty($uid)){
@@ -643,11 +669,15 @@ function ihc_ap_reset_custom_banner(){
 
 add_action("wp_ajax_nopriv_ihc_check_logic_condition_value", "ihc_check_logic_condition_value");
 add_action('wp_ajax_ihc_check_logic_condition_value', 'ihc_check_logic_condition_value');
-function ihc_check_logic_condition_value(){
+function ihc_check_logic_condition_value()
+{
 	/*
 	 * @param none
 	 * @return none (print 1 the test was passed, 0 otherwise)
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+  		die;
+  }
 	if (isset($_REQUEST['val']) && isset($_REQUEST['field'])){
 		$fields_meta = ihc_get_user_reg_fields();
 		$field = esc_sql($_REQUEST['field']);
@@ -675,9 +705,15 @@ function ihc_check_logic_condition_value(){
 	die();
 }
 
+
 add_action("wp_ajax_nopriv_ihc_check_lid_price", "ihc_check_lid_price");
 add_action('wp_ajax_ihc_check_lid_price', 'ihc_check_lid_price');
-function ihc_check_lid_price(){
+function ihc_check_lid_price()
+{
+	if ( !ihcPublicVerifyNonce() ){
+			echo 0;
+			die;
+	}
 	if (isset($_REQUEST['level_id'])){
 		$lid = esc_sql($_REQUEST['level_id']);
 		$lid = (int)$lid;
@@ -693,11 +729,16 @@ function ihc_check_lid_price(){
 
 add_action("wp_ajax_nopriv_ihc_check_unique_value_field_register", "ihc_check_unique_value_field_register");
 add_action('wp_ajax_ihc_check_unique_value_field_register', 'ihc_check_unique_value_field_register');
-function ihc_check_unique_value_field_register(){
+function ihc_check_unique_value_field_register()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	 if ( !ihcPublicVerifyNonce() ){
+  			echo 0;
+  			die;
+  	}
 	$meta_key = (empty($_REQUEST['meta_key'])) ? '' : esc_sql($_REQUEST['meta_key']);
 	$meta_value = (empty($_REQUEST['meta_value'])) ? '' : esc_sql($_REQUEST['meta_value']);
 	if (ihc_meta_value_exists($meta_key, $meta_value)){
@@ -714,11 +755,15 @@ function ihc_check_unique_value_field_register(){
 
 add_action("wp_ajax_nopriv_ihc_check_invitation_code_via_ajax", "ihc_check_invitation_code_via_ajax");
 add_action('wp_ajax_ihc_check_invitation_code_via_ajax', 'ihc_check_invitation_code_via_ajax');
-function ihc_check_invitation_code_via_ajax(){
+function ihc_check_invitation_code_via_ajax()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	 if ( !ihcPublicVerifyNonce() ){
+				 die;
+		 }
 	$code = esc_sql(@$_REQUEST['c']);
 	if (empty($code) || !Ihc_Db::invitation_code_check($code)){
 		$err_msg = get_option('ihc_invitation_code_err_msg');
@@ -735,11 +780,16 @@ function ihc_check_invitation_code_via_ajax(){
 
 add_action("wp_ajax_nopriv_ihc_get_amount_plus_taxes", "ihc_get_amount_plus_taxes");
 add_action('wp_ajax_ihc_get_amount_plus_taxes', 'ihc_get_amount_plus_taxes');
-function ihc_get_amount_plus_taxes(){
+function ihc_get_amount_plus_taxes()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	 if ( !ihcPublicVerifyNonce() ){
+				 echo 0;
+				 die;
+		}
 	if (!empty($_REQUEST['price'])){
 		$price = esc_sql($_REQUEST['price']);
 		$state = (isset($_REQUEST['state'])) ? esc_sql($_REQUEST['state']) : '';
@@ -758,11 +808,15 @@ function ihc_get_amount_plus_taxes(){
 
 add_action("wp_ajax_nopriv_ihc_get_amount_plus_taxes_by_uid", "ihc_get_amount_plus_taxes_by_uid");
 add_action('wp_ajax_ihc_get_amount_plus_taxes_by_uid', 'ihc_get_amount_plus_taxes_by_uid');
-function ihc_get_amount_plus_taxes_by_uid(){
+function ihc_get_amount_plus_taxes_by_uid()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	 if ( !ihcPublicVerifyNonce() ){
+				 die;
+	 }
 	 if (!empty($_REQUEST['uid']) && !empty($_REQUEST['price'])){
 	 	$price = esc_sql($_REQUEST['price']);
 		$uid = esc_sql($_REQUEST['uid']);
@@ -782,11 +836,15 @@ function ihc_get_amount_plus_taxes_by_uid(){
 
 add_action("wp_ajax_nopriv_ihc_get_cart_via_ajax", "ihc_get_cart_via_ajax");
 add_action('wp_ajax_ihc_get_cart_via_ajax', 'ihc_get_cart_via_ajax');
-function ihc_get_cart_via_ajax(){
+function ihc_get_cart_via_ajax()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+  		die;
+  }
 	$currency = get_option("ihc_currency");
  	$data['template'] = '';
 	$lid = esc_sql(@$_REQUEST['lid']);
@@ -827,14 +885,12 @@ function ihc_get_cart_via_ajax(){
 		if ($coupon_data){
 			if ($coupon_data['reccuring']==0 && $paymentGateway=='stripe'){
 				$finalPrice = ihc_coupon_return_price_after_decrease($data['final_price'], $coupon_data, FALSE);
-				if ( (int)$finalPrice==0 ){
-						$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
+				$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
+				$data['discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['discount_value']);
+				if ( (int)$finalPrice==0  && ihc_is_level_reccuring( $lid )){
 						//$data['final_price'] = $finalPrice;
-						$data['discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['discount_value']);
 				} else if ( !ihc_is_level_reccuring( $lid ) ){
-						$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
 						$data['final_price'] = $finalPrice;
-						$data['discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['discount_value']);
 				}
 			} else {
 					$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
@@ -960,7 +1016,7 @@ function ihc_add_custom_top_menu_dashboard(){
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_pages', 'title'=>__('Membership Pages', 'ihc'), 'href'=>'#', 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_showcases', 'title'=>__('Showcases', 'ihc'), 'href'=>'#', 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_payment_gateways', 'title'=>__('Payment Gateways', 'ihc'), 'href'=>'#', 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'magic_feat', 'title'=>__('Magic Features', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=magic_feat'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'magic_feat', 'title'=>__('Extensions', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=magic_feat'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_levels', 'title'=>__('Levels', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=levels'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_notifications', 'title'=>__('Notifications', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=notifications'), 'meta'=>array()));
 	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_shortcodes', 'title'=>__('Shortcodes', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=user_shortcodes'), 'meta'=>array()));
@@ -1152,7 +1208,9 @@ function ihc_payment_gate_check(){
 	 	$no_load = TRUE;
 	 	switch ($ihc_action){
 			case 'paypal':
-				require_once IHC_PATH . 'paypal_ipn.php';
+				$object = new \Indeed\Ihc\PaymentGateways\PayPalStandard();
+				$object->webhook();
+				// require_once IHC_PATH . 'paypal_ipn.php';
 				break;
 			case 'stripe':
 				require_once IHC_PATH . 'stripe_webhook.php';
@@ -1209,8 +1267,16 @@ function ihc_payment_gate_check(){
 				$object->webhook();
 				break;
 			default:
-				$home = get_home_url();
-				wp_safe_redirect($home);
+				$paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $ihc_action );
+				// @description
+
+				if ( $paymentObject ){
+						$paymentObject->webhook();
+				} else {
+						$home = get_home_url();
+						wp_safe_redirect($home);
+				}
+
 				exit;
 				break;
 	 	}
@@ -1220,11 +1286,15 @@ function ihc_payment_gate_check(){
 
 add_action("wp_ajax_nopriv_ihc_check_coupon_status_via_ajax", "ihc_check_coupon_status_via_ajax");
 add_action('wp_ajax_ihc_check_coupon_status_via_ajax', 'ihc_check_coupon_status_via_ajax');
-function ihc_check_coupon_status_via_ajax(){
+function ihc_check_coupon_status_via_ajax()
+{
 	/*
 	 * @param none
 	 * @return none
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+			die;
+	}
 	$data['is_active'] = 0;
 	$data['success_msg'] = __('Coupon applied successfully.', 'ihc');
 	$data['err_msg'] = __('Coupon code is not valid.', 'ihc');
@@ -1243,36 +1313,45 @@ function ihc_check_coupon_status_via_ajax(){
 
 add_action("wp_ajax_nopriv_ihc_get_ihc_state_field", "ihc_get_ihc_state_field");
 add_action('wp_ajax_ihc_get_ihc_state_field', 'ihc_get_ihc_state_field');
-function ihc_get_ihc_state_field(){
+function ihc_get_ihc_state_field()
+{
 	/*
 	 * @param none
 	 * @return string
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+  		die;
+  }
 	if (isset($_REQUEST['country'])){
 		echo ihc_get_state_field_str(esc_sql($_REQUEST['country']));
 	}
-	die();
+	die;
 }
 
 add_action("wp_ajax_nopriv_ihc_remove_sm_from_user", "ihc_remove_sm_from_user");
 add_action('wp_ajax_ihc_remove_sm_from_user', 'ihc_remove_sm_from_user');
-function ihc_remove_sm_from_user(){
+function ihc_remove_sm_from_user()
+{
 	/*
 	 * @param none
 	 * @return string
 	 */
+	if ( !ihcPublicVerifyNonce() ){
+  		die;
+  }
 	if (isset($_REQUEST['type'])){
 		global $current_user;
 		if (isset($current_user->ID)){
 			delete_user_meta($current_user->ID, 'ihc_' . esc_sql($_REQUEST['type']) );
 		}
 	}
-	die();
+	die;
 }
 
 add_action("wp_ajax_nopriv_ihc_generate_invoice", "ihc_generate_invoice");
 add_action('wp_ajax_ihc_generate_invoice', 'ihc_generate_invoice');
-function ihc_generate_invoice(){
+function ihc_generate_invoice()
+{
 	/*
 	 * @param none
 	 * @return string
@@ -1282,9 +1361,15 @@ function ihc_generate_invoice(){
 		$order_id = (int)$order_id;
 		if (current_user_can('administrator')){
 			/// is secure so get the uid from order table
+			if ( !ihcAdminVerifyNonce() ){
+					die;
+			}
 			$uid = Ihc_Db::get_uid_by_order_id($order_id);
 			$check = TRUE;
 		} else {
+			if ( !ihcPublicVerifyNonce() ){
+					 die;
+			 }
 			global $current_user;
 			$uid = (isset($current_user->ID)) ? $current_user->ID : 0;
 			$check = Ihc_Db::is_order_id_for_uid($uid, $order_id);	/// Security check
@@ -1296,7 +1381,7 @@ function ihc_generate_invoice(){
 			echo $object->output(TRUE);
 		}
 	}
-	die();
+	die;
 }
 
 add_action('user_register', 'ihc_increment_dashboard_user_notification', 1, 1);
@@ -1316,7 +1401,7 @@ function ihc_do_clean_security_table(){
 	 */
 	global $wpdb;
 	$table = $wpdb->prefix . 'ihc_security_login';
-	$current_time = time();
+	$current_time = indeed_get_unixtimestamp_with_timezone();
 	$expire_hours = get_option('ihc_login_security_extended_lockout_time');
 	if ($expire_hours===FALSE){
 		$expire_hours = 24;
@@ -1369,3 +1454,19 @@ $ihcAjaxObject = new \Indeed\Ihc\Ajax();
 $ihcRestrictUlp = new \Indeed\Ihc\UmpRestrictUlp();
 $ihcRewriteAvatar = new \Indeed\Ihc\RewriteDefaultWpAvatar();
 $ihcLoadTemplate = new \Indeed\Ihc\LoadTemplates();
+
+// nonce
+// nonce to admin pages
+add_action( 'admin_head', 'ihcAdminNonce' );
+function ihcAdminNonce()
+{
+    $nonce = wp_create_nonce( 'umpAdminNonce' );
+    echo "<meta name='ump-admin-token' content='$nonce'>";
+}
+// Nonce to front-end pages
+add_action( 'wp_head', 'ihcPublicNonce' );
+function ihcPublicNonce()
+{
+    $nonce = wp_create_nonce( 'umpPublicNonce' );
+    echo "<meta name='ump-token' content='$nonce'>";
+}

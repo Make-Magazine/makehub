@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (empty($no_load)){
 	require_once ABSPATH . 'wp-load.php';
 }
@@ -22,13 +22,13 @@ if (isset($_POST['message_type'])){
 		$hashOrder = $_POST['sale_id'];
 		$hashInvoice = $_POST['invoice_id'];
 		$StringToHash = strtoupper(md5($hashOrder . $hashSid . $hashInvoice . $secretWord));
-	
+
 		if ($StringToHash == $_POST['md5_hash']) {
 			$data = json_decode(stripslashes($_POST['li_0_description']), TRUE);
-			
-			Ihc_User_Logs::set_user_id($data['u_id']);	
-			Ihc_User_Logs::set_level_id($data['l_id']);	
-			
+
+			Ihc_User_Logs::set_user_id($data['u_id']);
+			Ihc_User_Logs::set_level_id($data['l_id']);
+
 			switch ($_POST['message_type']) {
 				case 'ORDER_CREATED':
 				case 'RECURRING_INSTALLMENT_SUCCESS':
@@ -53,11 +53,11 @@ if (isset($_POST['message_type'])){
 						//delete user - level relationship
 						ihc_delete_user_level_relation($data['l_id'], $data['u_id']);
 						Ihc_User_Logs::write_log( __("2Checkout Payment INS: Delete user level.", 'ihc'), 'payments');
-					}					
+					}
 					break;
-			}			
+			}
 		}
-	}	
+	}
 } else if (isset($_POST['key'])){
 	$hashSecretWord = get_option('ihc_twocheckout_secret_word'); # Input your secret word
 	$hashSid = get_option('ihc_twocheckout_account_number'); #Input your seller ID (2Checkout account number)
@@ -67,14 +67,14 @@ if (isset($_POST['message_type'])){
 		$hashOrder = 1;
 	} else {
 		$hashOrder = $_POST['order_number'];
-	}		
-	
+	}
+
 	$StringToHash = strtoupper(md5($hashSecretWord . $hashSid . $hashOrder . $hashTotal));
 	if ($StringToHash == $_POST['key']) {
 		$data = json_decode(stripslashes($_POST['li_0_description']), TRUE);
-		Ihc_User_Logs::set_user_id($data['u_id']);	
-		Ihc_User_Logs::set_level_id($data['l_id']);	
-			
+		Ihc_User_Logs::set_user_id($data['u_id']);
+		Ihc_User_Logs::set_level_id($data['l_id']);
+
 		if (isset($data['u_id']) && isset($data['l_id'])){
 			$_POST['level'] = $data['l_id'];
 			$_POST['message'] = 'success';
@@ -86,8 +86,6 @@ if (isset($_POST['message_type'])){
 		}
 	}
 }
-//debug
-//file_put_contents( "twocheckout_log.log", json_encode($_POST), FILE_APPEND | LOCK_EX );
 
 wp_redirect(get_home_url());
 exit();

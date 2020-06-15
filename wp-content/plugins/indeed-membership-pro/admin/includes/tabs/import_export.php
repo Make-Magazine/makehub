@@ -1,5 +1,5 @@
 <?php
-if (!empty($_POST['import']) && !empty($_FILES['import_file'])){
+if (!empty($_POST['import']) && !empty($_FILES['import_file']) && !empty( $_POST['ihc_import_users_nonce'] ) && wp_verify_nonce( $_POST['ihc_import_users_nonce'], 'ihc_import_users_nonce' ) ){
 	////////////////// IMPORT
 	$filename = IHC_PATH . 'import.xml';
 	move_uploaded_file($_FILES['import_file']['tmp_name'], $filename);
@@ -38,7 +38,7 @@ if (!empty($_POST['import']) && !empty($_FILES['import_file'])){
 					<div class="switch" style="display:inline-block;"></div>
 				</label>
 				<input type="hidden" name="import_postmeta" value=0 id="import_postmeta"/>
-			</div>												
+			</div>
 		</div>
 
 		<div class="ihc-hidden-download-link" style="display: none;"><a href="" target="_blank" download>export.xml</a></div>
@@ -51,6 +51,9 @@ if (!empty($_POST['import']) && !empty($_FILES['import_file'])){
 </div>
 
 <form action="" method="post" enctype="multipart/form-data">
+
+	<input type="hidden" name="ihc_import_users_nonce" value="<?php echo wp_create_nonce( 'ihc_import_users_nonce' );?>" />
+
 	<div class="ihc-stuffbox">
 		<h3><?php _e('Import', 'ihc');?></h3>
 		<div class="inside">

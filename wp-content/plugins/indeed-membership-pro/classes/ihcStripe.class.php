@@ -16,6 +16,9 @@ if(!class_exists('ihcStripe')){
 			//load stripe libs
 			require_once IHC_PATH . 'classes/stripe/init.php';
 			\Stripe\Stripe::setApiKey($this->secret_key);
+
+			//multiply
+			$this->multiply = ihcStripeMultiplyForCurrency( $this->currency );
 		}
 
 		public function payment_fields($level_id, $bind=TRUE){
@@ -45,8 +48,8 @@ if(!class_exists('ihcStripe')){
 						$bttn = '';
 				}
 
-				$amount = $this->level_data[$level_id]['price']*100;
-				if ($amount>0 && $amount<50){
+				$amount = $this->level_data[$level_id]['price'] * $this->multiply;
+				if ( $this->multiply == 100 && $amount>0 && $amount<50){
 					$amount = 50;
 				}
 
@@ -72,13 +75,14 @@ if(!class_exists('ihcStripe')){
 					$str .= '
 								jQuery(document).ready(function(){
 									jQuery("#ihc_submit_bttn").bind("click", function(e){
+										var multiply = ' . $this->multiply . ';
 										e.preventDefault();
 										if (jQuery("#stripeToken").val() && jQuery("#stripeEmail").val()){
 											jQuery(".ihc-form-create-edit").submit();
 											return true;
 										}
 										var p = jQuery("#iumpfinalglobalp").val();
-										p = p * 100;
+										p = p * multiply;
 										';
 					if($this->level_data[$level_id]['access_type'] != 'regular_period'){
 						$str .='
@@ -89,7 +93,7 @@ if(!class_exists('ihcStripe')){
 								';
 					}
 					$str .='
-										if (p>0 && p<50){
+										if ( multiply == 100 && p>0 && p<50){
  											p = 50;
 										}
 
@@ -152,7 +156,6 @@ if(!class_exists('ihcStripe')){
 																		TRUE,
 																		$post_data['uid'],
 																		$post_data['lid']);
-
 						Ihc_User_Logs::write_log( __('Stripe Payment: the user used the following coupon: ', 'ihc') . $post_data['ihc_coupon'], 'payments');
 					}
 
@@ -160,8 +163,8 @@ if(!class_exists('ihcStripe')){
 
 				$amount = $this->level_data[$post_data['lid']]['price'];
 
-				$amount = $amount * 100;
-				if ($amount> 0 && $amount<50){
+				$amount = $amount * $this->multiply;
+				if ( $this->multiply == 100 && $amount> 0 && $amount<50){
 					$amount = 50;// 0.50 cents minimum amount for stripe transactions
 				}
 
@@ -350,7 +353,7 @@ if(!class_exists('ihcStripe')){
 					*/
 				}
 
-				$amount = $amount/100;
+				$amount = $amount / $this->multiply;
 				$response_return = array(
 						'amount' => urlencode($amount),
 						'currency' => $this->currency,

@@ -1,12 +1,12 @@
 <div class="ihc-subtab-menu">
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='defaults' || !isset($_REQUEST['subtab'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=defaults';?>"><?php _e('Defaults Settings', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='captcha') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=captcha';?>"><?php _e('Captcha', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='msg') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=msg';?>"><?php _e('Messages', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='menus') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=menus';?>"><?php _e('Menus', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='pay_settings') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=pay_settings';?>"><?php _e('Payments', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='notifications') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=notifications';?>"><?php _e('Notifications', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='double_email_verification') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=double_email_verification';?>"><?php _e('E-mail Verification', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='access') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=access';?>"><?php _e('Access', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='captcha') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=captcha';?>"><?php _e('reCaptcha Setup', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='msg') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=msg';?>"><?php _e('Custom Messages', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='menus') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=menus';?>"><?php _e('Restrict WP Menu', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='pay_settings') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=pay_settings';?>"><?php _e('Payment Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='notifications') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=notifications';?>"><?php _e('Notifications Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='double_email_verification') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=double_email_verification';?>"><?php _e('Double Email Verification', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='access') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=access';?>"><?php _e('WP Dashboard Access', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='extra_settings') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=extra_settings';?>"><?php _e('Uploads Settings', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='admin_workflow') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=admin_workflow';?>"><?php _e('Admin Workflow', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='public_workflow') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=public_workflow';?>"><?php _e('Public Workflow', 'ihc');?></a>
@@ -22,9 +22,9 @@ if (isset($_REQUEST['subtab'])) $subtab = $_REQUEST['subtab'];
 switch ($subtab){
 	case 'defaults':
 		//ihc_save_update_metas('general-defaults');//save update metas
-		if (!empty($_POST['ihc_save'])){
-			//save
-			ihc_save_update_metas_general_defaults($_POST);
+		if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				//save
+				ihc_save_update_metas_general_defaults($_POST);
 		}
 		$meta_arr = ihc_return_meta_arr('general-defaults');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
@@ -33,13 +33,16 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 			<form action="" method="post">
+
+				<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Default Pages:', 'ihc');?></h3>
+					<h3><?php _e('Default Ultimate Membership Pro Pages', 'ihc');?></h3>
 					<div class="inside">
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Register:', 'ihc');?></span>
-							<select name="ihc_general_register_default_page">
+							<h4><?php _e('Register Page', 'ihc');?></h4>
+							<select name="ihc_general_register_default_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_register_default_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -55,8 +58,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Subscription Plan:', 'ihc');?></span>
-							<select name="ihc_subscription_plan_page">
+							<h4><?php _e('Subscription Plan Page', 'ihc');?></h4>
+							<select name="ihc_subscription_plan_page"  class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_subscription_plan_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -72,8 +75,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Login Page:', 'ihc');?></span>
-							<select name="ihc_general_login_default_page">
+							<h4><?php _e('Login Page', 'ihc');?></h4>
+							<select name="ihc_general_login_default_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_login_default_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -89,8 +92,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Logout Page:', 'ihc');?></span>
-							<select name="ihc_general_logout_page">
+							<h4><?php _e('Logout Page', 'ihc');?></h4>
+							<select name="ihc_general_logout_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_logout_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -106,8 +109,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('User Account Page:', 'ihc');?></span>
-							<select name="ihc_general_user_page">
+							<h4><?php _e('User Account Page', 'ihc');?></h4>
+							<select name="ihc_general_user_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_user_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -123,8 +126,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('TOS Page:', 'ihc');?></span>
-							<select name="ihc_general_tos_page">
+							<h4><?php _e('TOS Page', 'ihc');?></h4>
+							<select name="ihc_general_tos_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_tos_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -140,8 +143,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Lost Password:', 'ihc');?></span>
-							<select name="ihc_general_lost_pass_page">
+							<h4><?php _e('Lost Password Page', 'ihc');?></h4>
+							<select name="ihc_general_lost_pass_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_lost_pass_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -157,8 +160,8 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Visitor Inside User Page:', 'ihc');?></span>
-							<select name="ihc_general_register_view_user">
+							<h4><?php _e('Public Individual user Page', 'ihc');?></h4>
+							<select name="ihc_general_register_view_user" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_register_view_user']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -185,7 +188,7 @@ switch ($subtab){
 					<div class="inside">
 						<div class="iump-form-line">
 							<span class="iump-labels-special"><?php _e('Default Redirect Page:', 'ihc');?></span>
-							<select name="ihc_general_redirect_default_page">
+							<select name="ihc_general_redirect_default_page" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if ($meta_arr['ihc_general_redirect_default_page']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages_arr){
@@ -202,7 +205,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<span class="iump-labels-special"><?php _e('After LogOut:', 'ihc');?></span>
-							<select name="ihc_general_logout_redirect">
+							<select name="ihc_general_logout_redirect" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_logout_redirect']==-1)echo 'selected';?> ><?php _e('Do Not Redirect', 'ihc');?></option>
 								<?php
 									if ($pages_arr){
@@ -219,7 +222,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<span class="iump-labels-special"><?php _e('After Registration:', 'ihc');?></span>
-							<select name="ihc_general_register_redirect">
+							<select name="ihc_general_register_redirect" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_register_redirect']==-1)echo 'selected';?> ><?php _e('Do Not Redirect', 'ihc');?></option>
 								<?php
 									if ($pages_arr){
@@ -237,7 +240,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<span class="iump-labels-special"><?php _e('After Login:', 'ihc');?></span>
-							<select name="ihc_general_login_redirect">
+							<select name="ihc_general_login_redirect" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_login_redirect']==-1)echo 'selected';?> ><?php _e('Do Not Redirect', 'ihc');?></option>
 								<?php
 									if ($pages_arr){
@@ -254,7 +257,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<span class="iump-labels-special"><?php _e('After Password Reset:', 'ihc');?></span>
-							<select name="ihc_general_password_redirect">
+							<select name="ihc_general_password_redirect" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select">
 								<option value="-1" <?php if($meta_arr['ihc_general_password_redirect']==-1)echo 'selected';?> ><?php _e('-', 'ihc');?></option>
 								<?php
 									if ($pages_arr){
@@ -278,7 +281,10 @@ switch ($subtab){
 		<?php
 	break;
 	case 'captcha':
-		ihc_save_update_metas('general-captcha');//save update metas
+		if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('general-captcha');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('general-captcha');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -289,12 +295,15 @@ switch ($subtab){
 		}
 		?>
 					<form action="" method="post">
+
+						<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 						<div class="ihc-stuffbox">
 							<h3>ReCaptcha</h3>
 							<div class="inside">
 								<div>
 									<?php _e('Recaptcha version:', 'ihc');?>
-									<select name="ihc_recaptcha_version" class="js-ihc-change-recaptcha-version" >
+									<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_recaptcha_version" class="js-ihc-change-recaptcha-version" >
 												<option value="v2" <?php if ( $meta_arr['ihc_recaptcha_version'] == 'v2' ) echo 'selected';?> ><?php _e( 'reCAPTCHA v2', 'ihc');?></option>
 												<option value="v3" <?php if ( $meta_arr['ihc_recaptcha_version'] == 'v3' ) echo 'selected';?> ><?php _e( 'reCAPTCHA v3', 'ihc');?></option>
 									</select>
@@ -304,44 +313,44 @@ switch ($subtab){
                                 	<div class="iump-form-line">
 										<h4><?php _e( 'reCAPTCHA v2', 'ihc');?></h4>
 										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
-											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span> 
+											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span>
                                             <input type="text" name="ihc_recaptcha_public" value="<?php echo $meta_arr['ihc_recaptcha_public'];?>" class="form-control ihc-deashboard-middle-text-input" style="" />
 										</div>
 										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
-											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>  
+											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>
                                             <input type="text" name="ihc_recaptcha_private" value="<?php echo $meta_arr['ihc_recaptcha_private'];?>" class="form-control ihc-deashboard-middle-text-input" style="" />
 										</div>
 										<div class="">
 											<p><strong><?php _e('How to setup:', 'ihc');?></strong></p>
-                                            <p>	<?php _e('1. Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.</p>  
-                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>  
+                                            <p>	<?php _e('1. Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.</p>
+                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>
                                             <p>	<?php _e('3. Choose "reCAPTCHA v2" with "Im not a robot" Checkbox.', 'ihc');?></p>
-                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p> 
-                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p> 
+                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p>
+                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p>
 										</div>
-                                     </div>   
+                                     </div>
 								</div>
 
 								<div class="js-ihc-recaptcha-v3-wrapp" style="<?php if ( $meta_arr['ihc_recaptcha_version'] == 'v2' ) echo 'display: none;';?> ">
                                 <div class="iump-form-line">
 										<h4><?php _e( 'reCAPTCHA v3', 'ihc');?></h4>
 										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
-											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span>  
+											<span class="input-group-addon"><?php _e('SITE KEY:', 'ihc');?></span>
                                             <input type="text" name="ihc_recaptcha_public_v3" value="<?php echo $meta_arr['ihc_recaptcha_public_v3'];?>" class="form-control ihc-deashboard-middle-text-input"/>
 										</div>
 										<div class="input-group" style="margin:0px 0 15px 0; width: 50%;">
-											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>  
+											<span class="input-group-addon"><?php _e('SECRET KEY:', 'ihc');?></span>
                                             <input type="text" name="ihc_recaptcha_private_v3" value="<?php echo $meta_arr['ihc_recaptcha_private_v3'];?>" class="form-control ihc-deashboard-middle-text-input" />
 										</div>
 										<div class="">
                                         	<p><strong><?php _e('How to setup:', 'ihc');?></strong></p>
 											<p> <?php _e('1. Get Public and Private Keys from', 'ihc');?> <a href="https://www.google.com/recaptcha/admin#list" target="_blank"><?php _e('here', 'ihc');?></a>.</p>
-                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>  
+                                            <p>	<?php _e('2. Click on "Create" button.', 'ihc');?></p>
                                             <p>	<?php _e('3. Choose "reCAPTCHA v3".', 'ihc');?></p>
-                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p> 
-                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p> 
+                                            <p>	<?php _e('4. Add curent WP website main domain', 'ihc');?></p>
+                                            <p> <?php _e('5. Accept terms and conditions and Submit', 'ihc');?></p>
 										</div>
-                                  </div>      
+                                  </div>
 								</div>
 
 								<div style="margin-top: 15px;">
@@ -364,7 +373,10 @@ switch ($subtab){
 				<?php
 	break;
 	case 'msg':
-		ihc_save_update_metas('general-msg');//save update metas
+		if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('general-msg');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('general-msg');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -372,6 +384,9 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 					<form action="" method="post">
+
+						<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 						<div class="ihc-stuffbox">
 							<h3><?php _e('Custom Messages', 'ihc');?></h3>
 							<div class="inside">
@@ -392,10 +407,13 @@ switch ($subtab){
 		$nav_menus = wp_get_nav_menus();
 		?>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Customize Your Menu', 'ihc');?></h3>
+				<h3><?php _e('Restrict WP Menu links', 'ihc');?></h3>
 				<div class="inside">
-					<select name="menu_id" onChange="window.location = '<?php echo $url.'&tab='.$tab.'&subtab=menus&menu_id=';?>'+this.value;" style="min-width: 400px;margin-bottom: 20px;">
+					<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="menu_id" onChange="window.location = '<?php echo $url.'&tab='.$tab.'&subtab=menus&menu_id=';?>'+this.value;" style="min-width: 400px;margin-bottom: 20px;">
 						<option value="0"><?php _e('Select a Menu', 'ihc');?></option>
 						<?php foreach ( $nav_menus as $menu ){ ?>
 							<?php $selected = (!empty($_GET['menu_id']) && $_GET['menu_id']==$menu->term_id) ? 'selected' : ''; ?>
@@ -408,11 +426,11 @@ switch ($subtab){
 						<?php
 							if (!empty($_GET['menu_id'])){
 								///update
-								if (!empty($_REQUEST['ihc_save'])){
-									foreach ($_REQUEST['db_menu_id'] as $v){
-										if (isset($_REQUEST['ihc_mb_who_menu_type-'.$v]) && isset($_REQUEST['ihc_menu_mb_type-'.$v])){
-											update_post_meta( $v, 'ihc_mb_who_menu_type', $_REQUEST['ihc_mb_who_menu_type-'.$v]);
-											update_post_meta( $v, 'ihc_menu_mb_type', $_REQUEST['ihc_menu_mb_type-'.$v]);
+								if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+									foreach ($_POST['db_menu_id'] as $v){
+										if (isset($_POST['ihc_mb_who_menu_type-'.$v]) && isset($_POST['ihc_menu_mb_type-'.$v])){
+											update_post_meta( $v, 'ihc_mb_who_menu_type', $_POST['ihc_mb_who_menu_type-'.$v]);
+											update_post_meta( $v, 'ihc_menu_mb_type', $_POST['ihc_menu_mb_type-'.$v]);
 										}
 									}
 								}
@@ -496,9 +514,10 @@ switch ($subtab){
 	break;
 
 	case 'extra_settings':
-		if (isset($_POST['ihc_save'])){
-			ihc_save_update_metas('extra_settings');//save update metas
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('extra_settings');//save update metas
 		}
+
 		$meta_arr = ihc_return_meta_arr('extra_settings');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -506,6 +525,8 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 			<form action="" method="post">
+
+				<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
 					<h3> <?php _e("Upload File Accepted Extensions:", 'ihc');?></h3>
@@ -542,7 +563,10 @@ switch ($subtab){
 		<?php
 	break;
 	case 'notifications':
-		ihc_save_update_metas('notifications');//save update metas
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('notifications');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('notifications');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -550,6 +574,9 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
 				<h3><?php _e('Notifications Settings', 'ihc');?></h3>
 				<div class="inside">
@@ -587,7 +614,10 @@ switch ($subtab){
 		<?php
 	break;
 	case 'pay_settings':
-		ihc_save_update_metas('payment');//save update metas
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('payment');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('payment');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -595,11 +625,14 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Currency Settings:', 'ihc');?></h3>
+				<h3><?php _e('Currency Settings', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<select name="ihc_currency">
+						<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_currency">
 							<?php
 								$currency_arr = ihc_get_currencies_list('all');
 								$custom_currencies = ihc_get_currencies_list('custom');
@@ -623,7 +656,7 @@ switch ($subtab){
 			</div>
 
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Currency Custom Code:', 'ihc');?></h3>
+				<h3><?php _e('Currency Custom Code', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
 						<input type="text" name="ihc_custom_currency_code" value="<?php echo $meta_arr['ihc_custom_currency_code'];?>" />
@@ -635,10 +668,10 @@ switch ($subtab){
 			</div>
 
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Currency Position:', 'ihc');?></h3>
+				<h3><?php _e('Currency Position', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<select name="ihc_currency_position">
+						<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_currency_position">
 							<?php
 								$position = array('left' => __('Left', 'ihc'), 'right' => __('Right', 'ihc'));
 								foreach ($position as $k=>$v){
@@ -659,10 +692,32 @@ switch ($subtab){
 			</div>
 
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Default Payment Gateway:', 'ihc');?></h3>
+					<h3><?php _e('Separators', 'ihc');?></h3>
+					<div class="inside">
+							<div class="iump-form-line">
+									<label><?php _e( 'Thousands Separator', 'ihc' );?></label>
+									<input type="text" name="ihc_thousands_separator" value="<?php echo $meta_arr['ihc_thousands_separator'];?>" />
+							</div>
+							<div class="iump-form-line">
+									<label><?php _e( 'Decimals Separator', 'ihc' );?></label>
+									<input type="text" name="ihc_decimals_separator" value="<?php echo $meta_arr['ihc_decimals_separator'];?>" />
+							</div>
+							<div class="iump-form-line">
+									<label><?php _e( 'Number of Decimals', 'ihc' );?></label>
+									<input type="text" name="ihc_num_of_decimals" value="<?php echo $meta_arr['ihc_num_of_decimals'];?>" />
+							</div>
+							<div class="ihc-wrapp-submit-bttn iump-submit-form">
+									<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+							</div>
+					</div>
+			</div>
+
+
+			<div class="ihc-stuffbox">
+				<h3><?php _e('Default Payment Gateway', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<select name="ihc_payment_selected">
+						<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_payment_selected">
 							<?php
 								$payment_arr = ihc_list_all_payments();
 								foreach($payment_arr as $k=>$v){
@@ -687,12 +742,12 @@ switch ($subtab){
 			<?php
 				if (!empty($_GET['do_cleanup_logs']) && !empty($_GET['older_then'])){
 					$older_then = $_GET['older_then'] * 24 * 60 * 60;
-					$older_then = time() - $older_then;
+					$older_then = indeed_get_unixtimestamp_with_timezone() - $older_then;
 					Ihc_User_Logs::delete_logs('payments', $older_then);
 				}
 			?>
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Payment Logs:', 'ihc');?></h3>
+				<h3><?php _e('Payment Logs', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
 						<?php $checked = ($meta_arr['ihc_payment_logs_on']) ? 'checked' : '';?>
@@ -707,7 +762,7 @@ switch ($subtab){
 					<?php if ($we_have_logs):?>
 						<div class="iump-form-line">
 							<?php _e('Clean Up Payment logs older then:', 'ihc');?>
-							<select id="older_then_select">
+							<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " id="older_then_select">
 								<option value="">...</option>
 								<option value="1"><?php _e('One Day', 'ihc');?></option>
 								<option value="7"><?php _e('One Week', 'ihc');?></option>
@@ -730,7 +785,10 @@ switch ($subtab){
 	break;
 
 		case 'double_email_verification':
-			ihc_save_update_metas('double_email_verification');//save update metas
+			if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+					ihc_save_update_metas('double_email_verification');//save update metas
+			}
+
 			$meta_arr = ihc_return_meta_arr('double_email_verification');//getting metas
 			echo ihc_check_default_pages_set();//set default pages message
 			echo ihc_check_payment_gateways();
@@ -739,12 +797,15 @@ switch ($subtab){
 			$pages = $pages + ihc_get_redirect_links_as_arr_for_select();
 			?>
 			<form action="" method="post">
+
+				<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Double E-mail Verification', 'ihc');?></h3>
+					<h3><?php _e('Double Email Verification', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
 							<label class="iump-labels-special"><?php _e('Activation Link Expire Time:', 'ihc');?></label>
-							<select name="ihc_double_email_expire_time">
+							<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_double_email_expire_time">
 								<?php
 									$arr = array(
 															'-1' => 'Never',
@@ -766,7 +827,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<label class="iump-labels-special"><?php _e('Success Redirect:', 'ihc');?></label>
-							<select name="ihc_double_email_redirect_success">
+							<select  class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_double_email_redirect_success">
 								<option value="-1" <?php if($meta_arr['ihc_double_email_redirect_success']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -782,7 +843,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<label class="iump-labels-special"><?php _e('Error Redirect:', 'ihc');?></label>
-							<select name="ihc_double_email_redirect_error">
+							<select  class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_double_email_redirect_error">
 								<option value="-1" <?php if($meta_arr['ihc_double_email_redirect_error']==-1)echo 'selected';?> >...</option>
 								<?php
 									if ($pages){
@@ -798,7 +859,7 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 							<label class="iump-labels-special"><?php _e('Delete User if is not verified:', 'ihc');?></label>
-							<select name="ihc_double_email_delete_user_not_verified">
+							<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_double_email_delete_user_not_verified">
 								<?php
 									$arr = array(
 															'-1' => 'Never',
@@ -827,9 +888,10 @@ switch ($subtab){
 			<?php
 			break;
 	case 'access':
-		if (!empty($_POST['ihc_save'])){
-			update_option('ihc_dashboard_allowed_roles', $_POST['ihc_dashboard_allowed_roles']);
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				update_option('ihc_dashboard_allowed_roles', $_POST['ihc_dashboard_allowed_roles']);
 		}
+
 		$meta_value = get_option('ihc_dashboard_allowed_roles');
 		$meta_values = (empty($meta_value)) ? array() : explode(',', $meta_value);
 		?>
@@ -839,8 +901,11 @@ switch ($subtab){
 			</span>
 		</div>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Roles allowed to enter into WordPress Admin Dashboard:', 'ihc');?></h3>
+				<h3><?php _e('Enable access for specific WP Roles', 'ihc');?></h3>
 				<div class="inside">
 					<div style="width: 49%; vertical-align: top; display: inline-block;">
 						<div class="iump-form-line" style="opacity: 0.7;">
@@ -892,7 +957,9 @@ switch ($subtab){
 		<?php
 		break;
 	case 'admin_workflow':
-		ihc_save_update_metas('admin_workflow');//save update metas
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('admin_workflow');//save update metas
+		}
 		$meta_arr = ihc_return_meta_arr('admin_workflow');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -900,19 +967,22 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
-				<h3><?php _e('Show Dashboard Notifications:', 'ihc');?></h3>
+				<h3><?php _e('Show WP Admin bar Notifications', 'ihc');?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
 						<div class="iump-form-line">
-							<span style="font-weight:bold; display:inline-block; width: 25%;"><?php _e('New Users & Orders', 'ihc');?></span>
+							
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_admin_workflow_dashboard_notifications']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_admin_workflow_dashboard_notifications');" <?php echo $checked;?> />
 								<div class="switch" style="display:inline-block;"></div>
 							</label>
 							<input type="hidden" name="ihc_admin_workflow_dashboard_notifications" value="<?php echo $meta_arr['ihc_admin_workflow_dashboard_notifications'];?>" id="ihc_admin_workflow_dashboard_notifications" />
-
+							<span style="font-weight:bold; display:inline-block; width: 25%;"><?php _e('New Users & Orders', 'ihc');?></span>
 						</div>
 					</div>
 					<div class="ihc-wrapp-submit-bttn iump-submit-form">
@@ -935,7 +1005,7 @@ switch ($subtab){
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Orders Settings:', 'ihc');?></h3>
+					<h3><?php _e('Orders Settings', 'ihc');?></h3>
 					<div class="inside">
 
 						<div class="iump-form-line">
@@ -951,16 +1021,17 @@ switch ($subtab){
 
 
 				<div class="ihc-stuffbox">
-						<h3><?php _e('Unistall Settings:', 'ihc');?></h3>
+						<h3><?php _e('Unistall Settings', 'ihc');?></h3>
 						<div class="inside">
 								<div class="iump-form-line">
-										<span style="font-weight:bold; display:inline-block; width: 25%;"><?php _e('Keep data after delete plugin:', 'ihc');?></span>
+										
 										<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 											<?php $checked = ($meta_arr['ihc_keep_data_after_delete']) ? 'checked' : '';?>
 											<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_keep_data_after_delete');" <?php echo $checked;?> />
 											<div class="switch" style="display:inline-block;"></div>
 										</label>
 										<input type="hidden" name="ihc_keep_data_after_delete" value="<?php echo $meta_arr['ihc_keep_data_after_delete'];?>" id="ihc_keep_data_after_delete" />
+                                        <span style="font-weight:bold; display:inline-block; width: 25%;"><?php _e('Keep data after delete plugin:', 'ihc');?></span>
 								</div>
 								<div style="margin-top: 15px;">
 										<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -969,10 +1040,10 @@ switch ($subtab){
 				</div>
 
 				<div class="ihc-stuffbox">
-						<h3><?php _e('Custom wp-login styling', 'ihc');?></h3>
+						<h3><?php _e('Custom WP Login page styling', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<span class="iump-labels-special"><?php _e('Enable:', 'ihc');?></span>
+								<span class="iump-labels-special"><?php _e('Enable UMP style', 'ihc');?></span>
 									<?php $checked = ($meta_arr['ihc_wp_login_custom_css']) ? 'checked' : '';?>
 									<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 										<input type="checkbox" class="iump-switch" onclick="iumpCheckAndH(this, '#ihc_wp_login_custom_css');" <?php echo $checked;?> />
@@ -997,7 +1068,10 @@ switch ($subtab){
 		<?php
 		break;
 	case 'public_workflow':
-		ihc_save_update_metas('public_workflow');//save update metas
+		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
+				ihc_save_update_metas('public_workflow');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('public_workflow');//getting metas
 		echo ihc_check_default_pages_set();//set default pages message
 		echo ihc_check_payment_gateways();
@@ -1005,6 +1079,8 @@ switch ($subtab){
 		do_action( "ihc_admin_dashboard_after_top_menu" );
 		?>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Listing Pages/Posts', 'ihc');?></h3>
@@ -1028,9 +1104,9 @@ switch ($subtab){
 
 
 				<div class="ihc-stuffbox">
-					<h3> <?php _e("Grace Period:", 'ihc');?></h3>
+					<h3> <?php _e("Grace Subscription Period", 'ihc');?></h3>
 					<div class="inside">
-						<select name="ihc_grace_period"><?php
+						<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_grace_period"><?php
 							for ($i=0;$i<32;$i++){
 								$selected = ($meta_arr['ihc_grace_period']==$i) ? 'selected' : '';
 								?>
@@ -1045,7 +1121,7 @@ switch ($subtab){
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3> <?php _e("Avatar:", 'ihc');?></h3>
+					<h3> <?php _e("Avatar Settings", 'ihc');?></h3>
 					<div class="inside">
 
 						<div class="iump-form-line">
@@ -1082,6 +1158,37 @@ switch ($subtab){
 					<div class="inside">
                     	<p><?php _e("Will prevent visitors to Register with specified email address. All items must be separated by comma", 'ihc');?></p>
 						<textarea name="ihc_email_blacklist" style="width: 50%; height: 100px;"><?php echo stripslashes($meta_arr['ihc_email_blacklist']);?></textarea>
+						<div style="margin-top: 15px;">
+							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+						</div>
+					</div>
+				</div>
+
+				<div class="ihc-stuffbox">
+					<h3><?php _e('Default Country', 'ihc');?></h3>
+					<div class="inside">
+						<div class="iump-form-line">
+								<?php
+										wp_enqueue_style( 'ihc_select2_style' );
+										wp_enqueue_script( 'ihc-select2' );
+								?>
+
+								<select name="ihc_default_country" >
+										<?php $countries = ihc_get_countries();?>
+										<?php foreach ( $countries as $key => $value ):?>
+												<option value="<?php echo $key;?>" <?php if ( $meta_arr['ihc_default_country'] == $key ) echo 'selected';?> ><?php echo $value;?></option>
+										<?php endforeach;?>
+								</select>
+								<ul id="ihc_countries_list_ul" style="display: none;"></ul>
+								<script>
+										jQuery(document).ready(function(){
+											jQuery("[name=ihc_default_country]").select2({
+												placeholder: "Select Your Country",
+												allowClear: true
+											});
+										});
+								</script>
+						</div>
 						<div style="margin-top: 15px;">
 							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>

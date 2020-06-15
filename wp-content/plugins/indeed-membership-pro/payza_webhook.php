@@ -54,12 +54,14 @@ if (!empty($_POST['token'])){
 						ihc_send_user_notifications($custom_data['user_id'], 'payment', $custom_data['level_id']);//send notification to user
 						ihc_send_user_notifications($custom_data['user_id'], 'admin_user_payment', $custom_data['level_id']);//send notification to admin
 						do_action( 'ihc_payment_completed', $custom_data['user_id'], $custom_data['level_id'] );
+						// @description run on payment complete. @param user id (integer), level id (integer)
 						ihc_switch_role_for_user($custom_data['user_id']);
 					} else {
 						ihc_update_user_level_expire($level_data, $custom_data['level_id'], $custom_data['user_id']);
 						ihc_send_user_notifications($custom_data['user_id'], 'payment', $custom_data['level_id']);//send notification to user
 						ihc_send_user_notifications($custom_data['user_id'], 'admin_user_payment', $custom_data['level_id']);//send notification to admin
 						do_action( 'ihc_payment_completed', $custom_data['user_id'], $custom_data['level_id'] );
+						// @description run on payment complete. @param user id (integer), level id (integer)
 						ihc_switch_role_for_user($custom_data['user_id']);
 						Ihc_User_Logs::write_log( __("Payza Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
 					}
@@ -89,7 +91,6 @@ if (!empty($_POST['token'])){
 			$ipn_data['currency'] = $ipn_data['ap_currency'];
 			ihc_insert_update_transaction($ipn_data['uid'], $ipn_data['ap_referencenumber'], $ipn_data);
 
-			/// file_put_contents(IHC_PATH . 'log.log', serialize($ipn_data), FILE_APPEND);
 		}
 	} else {
 		Ihc_User_Logs::write_log( __('Payza Payment Webhook: Invalid response. Error', 'ihc'), 'payments');

@@ -79,20 +79,6 @@ $data['wrapp_id'] = rand(1,1000) . 'ihccard';
 		</div>
 	</div>
 	<?php } ?>
-	<script>
-		var printhisopt = {
-			importCSS: true,
-            importStyle: true,
-            loadCSS: "<?php echo IHC_URL . 'assets/css/style.css';?>",
-         	debug: false,
-        	printContainer: true,
-        	pageTitle: "",
-        	removeInline: true,
-        	printDelay: 333,
-        	header: null,
-        	formValues: false,
-        };
-	</script>
-	<div class="ihc-print-icon" id="<?php echo $data['icon_prin_id'];?>"><i class="fa-ihc fa-print-ihc" onClick="ihcHidePrint('<?php echo '#' . $data['icon_prin_id'];?>');jQuery('<?php echo '#' . $data['wrapp_id'];?>').printThis(printhisopt);"></i></div>
+	<div class="ihc-print-icon" id="<?php echo $data['icon_prin_id'];?>"><i class="fa-ihc fa-print-ihc" onClick="ihcHidePrint('<?php echo '#' . $data['icon_prin_id'];?>');" data-id-to-print="<?php echo $data['wrapp_id'];?>" ></i></div>
 
 </div>

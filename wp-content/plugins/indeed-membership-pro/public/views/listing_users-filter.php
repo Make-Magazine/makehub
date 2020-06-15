@@ -186,6 +186,7 @@
 				endif;
 				break;
 			case 'date':
+				wp_enqueue_script('jquery-ui-datepicker');
 				$min_value = '';
 				$max_value = '';
 				global $ihc_jquery_ui_min_css;

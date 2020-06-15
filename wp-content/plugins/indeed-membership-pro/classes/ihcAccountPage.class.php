@@ -111,7 +111,14 @@ if (!class_exists('ihcAccountPage')){
 						$str .= $this->print_user_sites_add_new();
 						break;
 					default:
-						$str .= $this->print_custom_tab();
+						$customTabContent = '';
+						$customTabContent = apply_filters( 'ihc_account_page_custom_tab_content', $customTabContent, $this->tab );
+						// @description run on account page, print the content for custom tab. @paramn custom tab content (string), slug of the tab
+						if ( $customTabContent ){
+								$str .= $customTabContent;
+						} else {
+								$str .= $this->print_custom_tab();
+						}
 						break;
 				}
 			}
@@ -155,6 +162,9 @@ if (!class_exists('ihcAccountPage')){
 			if (!empty($this->settings['ihc_ap_edit_show_level'])){
 				$data['levels'] = array();
 				$level_list_data = get_user_meta($this->current_user->ID, 'ihc_user_levels', true);
+				$level_list_data = apply_filters( 'ihc_public_get_user_levels', $level_list_data, $this->current_user->ID );
+				// @description
+
 				if (isset($level_list_data) && $level_list_data!=''){
 					$level_list_data = explode(',', $level_list_data);
 					if ($level_list_data){
@@ -287,6 +297,12 @@ if (!class_exists('ihcAccountPage')){
 			}
 
 			$custom_tabs = Ihc_Db::account_page_menu_get_custom_items();
+
+			$custom_tabs = apply_filters( 'ihc_public_account_page_menu_custom_tabs', $custom_tabs );
+			// @description used to filter the custom menu tabs in public account page. @param list of custom tabs ( array )
+
+			$data['menu'] = apply_filters( 'ihc_public_account_page_menu_standard_tabs', $data['menu'] );
+			// @description used to filter the standard menu tabs in public account page. @param list of standard tabs ( array )
 
 			$fullPath = IHC_PATH . 'public/views/account_page-tabs.php';
 			$searchFilename = 'account_page-tabs.php';
@@ -424,6 +440,7 @@ if (!class_exists('ihcAccountPage')){
 			$data['content'] = $this->clean_text($data['content']);
 			$data['title'] = $this->clean_text($data['title']);
 			$data['total_items'] = Ihc_Db::transactions_get_total_for_user($this->current_user->ID);
+			$data['payment_types'] = ihc_list_all_payments();
 
 			if ($data['total_items']){
 				$url = $this->base_url;
@@ -604,7 +621,7 @@ if (!class_exists('ihcAccountPage')){
 		private function print_pushover_notifications(){
 			global $current_user;
 			$uid = empty($current_user->ID) ? 0 : $current_user->ID;
-			if (!empty($_POST['ihc_pushover_token'])){
+			if (!empty($_POST['ihc_pushover_token']) && !empty( $_POST['ihc_pushover_nonce'] ) && wp_verify_nonce( @$_POST['ihc_pushover_nonce'], 'ihc_pushover_nonce' ) ){
 				$_POST['ihc_pushover_token'] = sanitize_text_field( $_POST['ihc_pushover_token'] );
 				update_user_meta($uid, 'ihc_pushover_token', $_POST['ihc_pushover_token']);
 			}
@@ -633,14 +650,17 @@ if (!class_exists('ihcAccountPage')){
 			$output = '';
 			if ($this->current_user && isset($this->current_user->ID)){
 				$payment_gateways = array(
-									'paypal' 					=> 'PayPal',
-						      'authorize' 			=> 'Authorize',
-							   	'stripe' 					=> 'Stripe',
-							   	'twocheckout' 		=> '2Checkout',
-							   	'bank_transfer' 	=> 'Bank Transfer',
-							   	'braintree' 			=> 'Braintree',
-							   	'payza' 					=> 'Payza',
-									'mollie'					=> 'Mollie',
+									'paypal' 										=> 'PayPal',
+						      'authorize' 								=> 'Authorize',
+							   	'stripe' 										=> 'Stripe',
+							   	'twocheckout' 							=> '2Checkout',
+							   	'bank_transfer' 						=> 'Bank Transfer',
+							   	'braintree' 								=> 'Braintree',
+							   	'payza' 										=> 'Payza',
+									'mollie'										=> 'Mollie',
+									'stripe_checkout_v2'				=> 'Stripe Checkout',
+									'pagseguro'									=> 'Pagseguro',
+									'paypal_express_checkout'		=> 'PayPal Express Checkout',
 				);
 
 				$data['total_items'] = Ihc_Db::get_count_orders($this->current_user->ID);
@@ -669,12 +689,17 @@ if (!class_exists('ihcAccountPage')){
 					$data['orders'] = Ihc_Db::get_all_order($limit, $offset, $this->current_user->ID);
 				}
 
+				if ( empty( $url ) ){
+					$url = $this->base_url;
+				}
+
 				$data['content'] = (isset($this->settings['ihc_ap_orders_msg'])) ? ihc_replace_constants($this->settings['ihc_ap_orders_msg'], $this->current_user->ID) : '';
 				$data['title'] = (isset($this->settings['ihc_ap_orders_title'])) ? ihc_replace_constants($this->settings['ihc_ap_orders_title'], $this->current_user->ID) : '';
 				$data['content'] = $this->clean_text($data['content']);
 				$data['title'] = $this->clean_text($data['title']);
 				$data['show_invoices'] = (ihc_is_magic_feat_active('invoices')) ? TRUE : FALSE;
 				$data['show_only_completed_invoices'] = get_option('ihc_invoices_only_completed_payments');
+				$data['subscription_link'] =  add_query_arg('ihc_ap_menu', 'subscription', $url);
 
 				$fullPath = IHC_PATH . 'public/views/account_page-orders.php';
 				$searchFilename = 'account_page-orders.php';
@@ -757,7 +782,7 @@ if (!class_exists('ihcAccountPage')){
 			$data['uid_levels'] = Ihc_Db::get_user_levels($current_user->ID, FALSE);
 			$data['levels_can_do'] = get_option('ihc_user_sites_levels');
 
-			if (!empty($_POST['add_new_site']) && isset($_POST['lid'])){
+			if (!empty($_POST['add_new_site']) && isset($_POST['lid']) && isset($_POST['ihc_multi_site_add_edit_nonce']) && wp_verify_nonce( $_POST['ihc_multi_site_add_edit_nonce'], 'ihc_multi_site_add_edit_nonce' ) ) {
 				$lid = $_POST['lid'];
 				if (isset($data['uid_levels'][$lid]) && !empty($data['levels_can_do'][$lid])){
 					if (Ihc_Db::get_user_site_for_uid_lid($current_user->ID, $lid)==0){

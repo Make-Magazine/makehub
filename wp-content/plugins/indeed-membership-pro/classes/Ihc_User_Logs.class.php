@@ -73,7 +73,7 @@ class Ihc_User_Logs{
 		if ($message){
 			$uid = self::$user_id;
 			$lid = self::$lid;
-			$now = time();
+			$now = indeed_get_unixtimestamp_with_timezone();
 			$q = $wpdb->prepare("INSERT INTO $table VALUES(null, %d, %d, %s, %s, %s);", $uid, $lid, $type, $message, $now);
 			$wpdb->query($q);
 			$inserted = $wpdb->insert_id;

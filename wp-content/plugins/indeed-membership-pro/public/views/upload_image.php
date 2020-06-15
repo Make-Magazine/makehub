@@ -33,7 +33,7 @@ jQuery( document ).ready( function(){
     })
 })
 </script>
-<div class="">
+<div class="ihc-upload-image-wrapper">
 
     <div class="ihc-upload-image-wrapp" >
         <?php if ( !empty($data['imageUrl']) ):?>

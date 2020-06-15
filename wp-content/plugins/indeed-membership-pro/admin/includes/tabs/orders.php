@@ -1,7 +1,7 @@
 <?php
-
+wp_enqueue_script( 'ihc-print-this' );
 ////////////// create order manually
-if (isset($_POST['save_order'])){
+if (isset($_POST['save_order']) && !empty( $_POST['ihc_admin_add_new_order_nonce'] ) && wp_verify_nonce( $_POST['ihc_admin_add_new_order_nonce'], 'ihc_admin_add_new_order_nonce' ) ){
 		require_once IHC_PATH . 'admin/classes/Ihc_Create_Orders_Manually.php';
 		$Ihc_Create_Orders_Manually = new Ihc_Create_Orders_Manually($_POST);
 		$Ihc_Create_Orders_Manually->process();
@@ -12,20 +12,15 @@ if (isset($_POST['save_order'])){
 		}
 }
 
-
-
-if (!empty($_GET['delete'])){
-	Ihc_Db::delete_order($_GET['delete']);
-}
-
 if (!empty($_POST['submit_new_payment'])){
 	unset($_POST['submit_new_payment']);
 	$array = $_POST;
 	if (empty($array['txn_id'])){
 		/// set txn_id
-		$array['txn_id'] = $_POST['uid'] . '_' . $_POST['order_id'] . '_' . time();
+		$array['txn_id'] = $_POST['uid'] . '_' . $_POST['order_id'] . '_' . indeed_get_unixtimestamp_with_timezone();
 	}
 	$array['message'] = 'success';
+
 
 	/// THIS PIECe OF CODE ACT AS AN IPN SERVICE.
 	$level_data = ihc_get_level_by_id($_POST['level']);
@@ -90,6 +85,7 @@ $uid = (isset($_GET['uid'])) ? $_GET['uid'] : 0;
 						'paypal_express_checkout'			=> 'PayPal Express Checkout',
 						'stripe_checkout_v2'					=> 'Stripe Checkout',
 	);
+	$payment_gateways = apply_filters( 'ihc_filter_return_payment_gateways_list', $payment_gateways );
 
 	$show_invoices = (ihc_is_magic_feat_active('invoices')) ? TRUE : FALSE;
 	require_once IHC_PATH . 'classes/Orders.class.php';
@@ -120,45 +116,46 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 <?php if (!empty($data['orders'])):?>
 	<?php echo $data['pagination'];?>
+		<div class="iump-rsp-table">
 <table class="wp-list-table widefat fixed tags ihc-admin-tables" style="margin-top:20px;">
 	<thead>
-		<tr style="height: 45px; background-color: #666;    background: #f64268;">
-			<th class="manage-column" style="color:#fff;">
+		<tr>
+			<th class="manage-column" style="width:60px;">
 				<span><?php _e('ID', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Code', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Customer', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Items', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Total Amount', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
-				<span><?php _e('Payment Type', 'ihc');?></span>
+			<th class="manage-column">
+				<span><?php _e('Payment method', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Date', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Coupon', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Transaction', 'ihc');?></span>
 			</th>
 			<?php if ($show_invoices):?>
-				<th class="manage-column" style="color:#fff;">
+				<th class="manage-column">
 					<span><?php _e('Invoices', 'ihc');?></span>
 				</th>
 			<?php endif;?>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Status', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column" style="width:60px;">
 				<span><?php _e('Actions', 'ihc');?></span>
 			</th>
 		</tr>
@@ -181,19 +178,19 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<span><?php _e('Total Amount', 'ihc');?></span>
 			</th>
 			<th class="manage-column">
-				<span><?php _e('Payment Type', 'ihc');?></span>
+				<span><?php _e('Payment method', 'ihc');?></span>
 			</th>
 			<th class="manage-column">
 				<span><?php _e('Date', 'ihc');?></span>
 			</th>
-			<th class="manage-column" style="color:#fff;">
+			<th class="manage-column">
 				<span><?php _e('Coupon', 'ihc');?></span>
 			</th>
 			<th class="manage-column">
 				<span><?php _e('Transaction', 'ihc');?></span>
 			</th>
 			<?php if ($show_invoices):?>
-				<th class="manage-column" style="color:#fff;">
+				<th class="manage-column">
 					<span><?php _e('Invoice', 'ihc');?></span>
 				</th>
 			<?php endif;?>
@@ -231,7 +228,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 					}
 				endif;
 			?></td>
-			<td><?php echo $array['create_date'];?></td>
+			<td><?php echo ihc_convert_date_time_to_us_format($array['create_date']);?></td>
 			<td><?php
 					$coupon = $Orders->get_meta_by_order_and_name($array['id'], 'coupon_used');
 					if ($coupon) echo $coupon;
@@ -251,7 +248,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			<?php if ($show_invoices):?>
 				<td><i class="fa-ihc fa-invoice-preview-ihc iump-pointer" onClick="iumpGenerateInvoice(<?php echo $array['id'];?>);"></i></td>
 			<?php endif;?>
-			<td style="font-family: 'Oswald', arial, sans-serif !important; font-weight:400;">
+			<td style="font-weight:700;">
 				<?php
 					//echo ucfirst($array['status']);
 					switch ($array['status']){
@@ -274,8 +271,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 					}
 				?>
 			</td>
-			<td class="column" style="width:80px; text-align:center;">
-					<span class="ihc-pointer" onClick="indeedConfirmAndRedirect('<?php echo admin_url('admin.php?page=ihc_manage&tab=orders&delete=') . $array['id'];?>');">
+			<td class="column" style="width:60px; text-align:center;">
+					<span class="ihc-pointer ihc-js-delete-order" data-id="<?php echo $array['id'];?>">
 							<i class="fa-ihc ihc-icon-remove-e"></i>
 					</span>
 			</td>
@@ -285,9 +282,37 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 	 endforeach;?>
 
 </table>
-
+</div>
 <?php endif;?>
 </div>
+
+<script>
+jQuery( '.ihc-js-delete-order' ).on( 'click', function(){
+		var orderId = jQuery( this ).attr( 'data-id' );
+		swal({
+			title: "<?php _e( 'Are you sure that you want to delete this order?', 'ihc' );?>",
+			text: "",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "OK",
+			closeOnConfirm: true
+		},
+		function(){
+				jQuery.ajax({
+						type : 'post',
+						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+						data : {
+											 action: 'ihc_admin_delete_order',
+											 id:			orderId,
+									 },
+						success: function (response) {
+								location.reload();
+						}
+			 });
+	 });
+});
+</script>
 
 <style>
 .btn-default {

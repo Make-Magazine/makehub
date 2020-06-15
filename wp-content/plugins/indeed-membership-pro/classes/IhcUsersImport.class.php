@@ -114,13 +114,17 @@ class IhcUsersImport{
 				if (!empty($user_data['level_slug'])){
 					$lid = Ihc_Db::get_lid_by_level_slug($user_data['level_slug']);
 					if ($lid>-1 && (!Ihc_Db::user_has_level($uid, $lid) || $this->doRewrite==1) ){
-						if (!isset($user_data['start_time'])){
-							$user_data['start_time'] = 0;
+						if (!isset($user_data['start_time']) || $user_data['start_time']=='0000-00-00 00:00:00' ){
+								$user_data['start_time'] = 0;
+						} else {
+								$user_data['start_time'] = strtotime( $user_data['start_time'] );
 						}
-						if (!isset($user_data['expire_time'])){
-							$user_data['expire_time'] = 0;
+						if (!isset($user_data['expire_time']) || $user_data['expire_time']=='0000-00-00 00:00:00' ){
+								$user_data['expire_time'] = 0;
+						} else {
+								$user_data['expire_time'] = strtotime( $user_data['expire_time'] );
 						}
-						ihc_do_complete_level_assign_from_ap($uid, $lid, $user_data['start_time'], $user_data['expire_time']);
+						ihc_do_complete_level_assign_from_ap($uid, $lid, $user_data['start_time'], $user_data['expire_time'] );
 						if ( in_array( $uid, $this->updatedUsers ) ){
 								$this->updatedUsers[] = $uid;
 						}

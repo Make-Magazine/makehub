@@ -55,12 +55,12 @@ class IndeedMembersPayments
 
         if ( !empty( $oldData->history ) ){
             $history = unserialize( $oldData->history );
-            $history[time()] = $this->history;
+            $history[indeed_get_unixtimestamp_with_timezone()] = $this->history;
             $this->history = $history;
         } else {
             $history = $this->history;
             unset($this->history);
-            $this->history[time()] = $history;
+            $this->history[indeed_get_unixtimestamp_with_timezone()] = $history;
         }
         $this->history = serialize( $this->history );
         // file_put_contents( IHC_PATH . 'log.log', $this->history, FILE_APPEND );
@@ -83,7 +83,12 @@ class IndeedMembersPayments
             return $wpdb->query( $query );
         } else {
             // insert
-            $query = $wpdb->prepare( "INSERT INTO $table VALUES( NULL, %s, %d, %s, %s, %s, NOW() );",  $this->txnId, $this->uid, $this->paymentData, $this->history, $this->orders );
+
+            /// since version 8.6, before we used NOW() function in mysql
+            $currentDate = indeed_get_current_time_with_timezone();
+
+            $query = $wpdb->prepare( "INSERT INTO $table VALUES( NULL, %s, %d, %s, %s, %s, %s );",
+                                          $this->txnId, $this->uid, $this->paymentData, $this->history, $this->orders, $currentDate );
             return $wpdb->query( $query );
         }
     }
