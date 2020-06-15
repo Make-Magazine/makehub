@@ -79,7 +79,7 @@ do_action( 'bp_before_groups_loop' ); ?>
 
 				<?php 
 					if ( bp_is_groups_directory() ) {
-						yz_get_group_statistics_data( bp_get_group_id() );
+						//yz_get_group_statistics_data( bp_get_group_id() );
 					}
 				?>
 
