@@ -113,7 +113,7 @@ function yz_translate_youzer_text($translated_text) {
             $translated_text = __('All %s', 'buddypress');
             break;
         case 'Order By:' :
-            $translated_text = __('Filter:', 'buddypress');
+            $translated_text = __('Order:', 'buddypress');
             break;
     }
 

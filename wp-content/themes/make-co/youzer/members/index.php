@@ -75,7 +75,7 @@ do_action( 'bp_before_directory_members_page' ); ?>
 
 
 					<div id="directory-show-search"><a><?php _e( 'Search', 'youzer' ); ?></a></div>
-					<div id="directory-show-filter"><a><?php _e( 'Filter', 'youzer' ); ?></a></div>
+					<div id="directory-show-filter"><a><?php _e( 'Order By', 'youzer' ); ?></a></div>
 
 					<div class="item-list-tabs" id="subnav" aria-label="<?php esc_attr_e( 'Members directory secondary navigation', 'youzer' ); ?>" role="navigation">
 						<ul>
