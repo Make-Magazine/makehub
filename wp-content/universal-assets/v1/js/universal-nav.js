@@ -6,7 +6,8 @@
         jQuery("#community-login").remove();
     }
     // keep these from happening before any angular or login scripts
-    jQuery(window).bind("load", function () {
+    jQuery(window).on("load", function () {
+		console.log("tst");
         // to keep this nav universal, detect site and do the things universally
         var site = window.location.hostname,
 		firstpath = jQuery(location).attr('pathname'),
@@ -128,6 +129,7 @@
         }
 
         jQuery('#hamburger-click-event, .nav-flyout-underlay').click(function () {
+			console.log("what the dillio");
             jQuery('.stagingMsg').toggleClass('gone');
             jQuery('#hamburger-icon').toggleClass('open');
             jQuery('#hamburger-text').animate({opacity: 'toggle'});
