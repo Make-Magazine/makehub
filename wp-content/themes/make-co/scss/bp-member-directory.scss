@@ -2,9 +2,6 @@
 	.yz-page-main-content { 
 		min-width: 95% !important;
 		padding-top: 50px;
-		@media screen and ( max-width: 767px ) {
-			padding-top: 85px;
-		}
 	}
 	.filter-sidebar {
 		display: flex;

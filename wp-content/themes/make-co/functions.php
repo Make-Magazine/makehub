@@ -105,10 +105,6 @@ function make_co_enqueue_scripts() {
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-	
-	// wp_enqueue_script('built-lib-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
-	// wp_enqueue_script('built-angular-libs-js', get_stylesheet_directory_uri() . '/js/min/built-angular-libs.min.js', array('jquery'), $my_version, true);
-	// wp_enqueue_script('angular-reporting-js', get_stylesheet_directory_uri() . '/js/min/built-angular-reporting.min.js', array('jquery'), $my_version, true);
 
 	wp_enqueue_script(
 		'make-co',
@@ -176,8 +172,6 @@ function make_co_enqueue_styles() {
 
     ### SUBTHEME STYLES ###
     wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
-	
-	wp_enqueue_style('angular-reporting-style', get_stylesheet_directory_uri() . '/css/angular-reporting.min.css', array());
 
     wp_enqueue_style(
             'make-co-fonts',
