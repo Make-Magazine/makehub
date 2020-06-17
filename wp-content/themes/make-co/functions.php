@@ -192,6 +192,7 @@ function remove_admin_bar(){
     if (current_user_can('administrator')) {
         return true;
     }
+    
     return false;
 }
 
