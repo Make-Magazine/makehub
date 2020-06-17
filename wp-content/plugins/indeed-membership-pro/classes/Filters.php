@@ -18,13 +18,13 @@ class Filters
         }
         foreach ($items as $itemData){
             if (stripos( $itemData->url, '?ihc-modal=login' )){
-                $itemData->url = '';
+                $itemData->url = ''; // #
                 $itemData->classes[] = 'ihc-modal-trigger-login';
                 add_action( 'get_footer', array($this, 'ihc_insert_modal_login'), 999, 1 );
                 continue;
             }
             if (stripos( $itemData->url, '?ihc-modal=register' )){
-                $itemData->url = '';
+                $itemData->url = '';// #createuser
                 $itemData->classes[] = 'ihc-modal-trigger-register';
                 add_action( 'get_footer', array($this, 'ihc_insert_modal_register'), 999, 1 );
                 continue;

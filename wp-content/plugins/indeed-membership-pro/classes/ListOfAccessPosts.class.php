@@ -82,8 +82,10 @@ class ListOfAccessPosts{
 		$postmeta = $wpdb->prefix . 'postmeta';
 
 		$limit = '';
+		$max = 100;
 		if (!empty($this->metas['ihc_list_access_posts_order_limit'])){
 			$limit = ' LIMIT ' . esc_sql($this->metas['ihc_list_access_posts_order_limit']);
+			$max = esc_sql($this->metas['ihc_list_access_posts_order_limit']);
 		}
 		$this->set_post_types();
 		$q = "
@@ -109,7 +111,11 @@ class ListOfAccessPosts{
 		";
 		$data = $wpdb->get_row($q);
 		if ($data && isset($data->count_value)){
-			return $data->count_value;
+			if($data->count_value > $max){
+				return $max;
+			}else{
+				return $data->count_value;
+			}
 		}
 		return 0;
 	}
@@ -144,6 +150,9 @@ class ListOfAccessPosts{
 			if (in_array('post_author', $select_array)){
 				$select_fields .= ', b.post_author as post_author';
 			}
+			if ( in_array( 'post_content', $select_array ) ){
+					$select_fields .= ', b.post_content as post_content';
+			}
 		}
 
 		$q = "
@@ -167,8 +176,10 @@ class ListOfAccessPosts{
 			( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
 			GROUP BY id
 			ORDER BY b.$order_by $order_type
-			LIMIT $limit OFFSET $offset
 		";
+		if ( $limit > -1 ){
+				$q .= "	LIMIT $limit OFFSET $offset ";
+		}
 		$db_result = $wpdb->get_results($q);
 
 		foreach ($db_result as $db_object){
@@ -185,7 +196,7 @@ class ListOfAccessPosts{
 				$temp_user = get_userdata($temp['post_author']);
 				if (!empty($temp_user->first_name) && !empty($temp_user->last_name)){
 					$temp['post_author'] = $temp_user->first_name . ' ' . $temp_user->last_name;
-				} else if ($temp_user->user_nicename){
+				} else if ( !empty( $temp_user->user_nicename ) ){
 					$temp['post_author'] = $temp_user->user_nicename;
 				} else {
 					$temp['post_author'] = '';
@@ -280,12 +291,18 @@ class ListOfAccessPosts{
 	 * @return array
 	 */
 	public function get_id_list(){
-		if (!empty($this->metas['ihc_list_access_posts_per_page_value'])){
+		if ( !empty($this->metas['ihc_list_access_posts_per_page_value']) || $this->metas['ihc_list_access_posts_per_page_value'] == -1 ){
 			$limit = $this->metas['ihc_list_access_posts_per_page_value'];
 		} else {
 			$limit = 25;
 		}
-		$this->levels_conditions = " 1=1 ";
+		//$this->levels_conditions = " 1=1 ";
+		
+		$this->set_level_conditions();
+
+		$this->set_drip_content();
+ 
+		
 		$data = $this->get_data($limit, 0);
 		return $data;
 	}

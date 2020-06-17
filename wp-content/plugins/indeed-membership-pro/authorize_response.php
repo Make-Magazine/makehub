@@ -3,7 +3,6 @@ if (empty($no_load)){
 	require_once '../../../wp-load.php';
 	require_once 'utilities.php';
 }
-file_put_contents( IHC_PATH . "authorize_log.log", json_encode($_POST), FILE_APPEND | LOCK_EX );//debug
 
 //Ihc_User_Logs::write_log( __('Authorize Payment Response: Start process', 'ihc'), 'payments');
 

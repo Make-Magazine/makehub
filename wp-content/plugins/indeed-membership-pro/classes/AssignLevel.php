@@ -20,7 +20,7 @@ class AssignLevel
     {
         $this->uid          = $uid;
         $this->lid          = $lid;
-        $this->currentTime  = time();
+        $this->currentTime  = indeed_get_unixtimestamp_with_timezone();
     }
 
     public function setStartTime($startTime='')
@@ -55,10 +55,10 @@ class AssignLevel
 
       $this->setLevelData();
       $startTime  = $this->getStartTime();
+      $startTime  = indeed_get_current_time_with_timezone( $startTime );
       $endTime    = $this->getEndTime();
-      $startTime  = date('Y-m-d H:i:s', $startTime);
-      $endTime    = date('Y-m-d H:i:s', $endTime);
-      $updateTime = date('Y-m-d H:i:s', $this->currentTime);
+      $endTime    = indeed_get_current_time_with_timezone($endTime);
+      $updateTime = indeed_get_current_time_with_timezone();
 
       if ($this->userGotLevel()){
           $query = $wpdb->prepare("INSERT INTO {$wpdb->prefix}ihc_user_levels VALUES(null, {$this->uid}, {$this->lid}, '$startTime', '$endTime', 0, 1);");

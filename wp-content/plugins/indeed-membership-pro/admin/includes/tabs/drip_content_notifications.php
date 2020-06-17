@@ -1,6 +1,6 @@
 <?php
 if (!empty($_GET['do_cleanup_logs'])){
-	$older_then = time() - $_GET['older_then'] * 24 * 60 * 60;
+	$older_then = indeed_get_unixtimestamp_with_timezone() - $_GET['older_then'] * 24 * 60 * 60;
 	Ihc_Db::delete_logs('drip_content_notifications', $older_then);
 }
 ihc_save_update_metas('drip_content_notifications');//save update metas

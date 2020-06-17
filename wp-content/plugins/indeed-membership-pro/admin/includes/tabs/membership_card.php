@@ -1,4 +1,11 @@
 <?php
+if ( !empty( $_POST['ihc_save'] ) && isset( $_POST['ihc_membership_card_enable'] ) ){
+		if ( empty( $_POST['ihc_membership_card_enable'] ) ){
+				\Ihc_Db::deactivateApTab( 'membership_cards' );
+		} else {
+				\Ihc_Db::activateApTab( 'membership_cards' );
+		}
+}
 ihc_save_update_metas('ihc_membership_card');//save update metas
 $data['metas'] = ihc_return_meta_arr('ihc_membership_card');//getting metas
 echo ihc_check_default_pages_set();//set default pages message

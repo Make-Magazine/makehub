@@ -16,7 +16,7 @@
 
 	if ($_GET['subtab']=='manage'){
 		/// save
-		if (isset($_POST['ihc_bttn'])){
+		if (isset($_POST['ihc_bttn'])  && !empty($_POST['ihc_admin_coupons_nonce']) && wp_verify_nonce( $_POST['ihc_admin_coupons_nonce'], 'ihc_admin_coupons_nonce' ) ){
 			if (empty($_POST['id'])){
 				//create
 				ihc_create_coupon($_POST);
@@ -56,6 +56,9 @@
 		</script>
 			<div class="iump-page-title"><?php  _e("Coupons", 'ihc');?></div>
 			<form method="post" action="<?php echo $url.'&tab='.$tab.'&subtab=manage';?>">
+
+				<input type="hidden" name="ihc_admin_coupons_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_coupons_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<?php if (!empty($_GET['id'])){?>
 					<h3><?php _e("Edit", 'ihc');?></h3>

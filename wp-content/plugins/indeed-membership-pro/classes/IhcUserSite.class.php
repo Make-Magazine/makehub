@@ -53,7 +53,7 @@ class IhcUserSite{
 		require_once ABSPATH . 'wp-includes/ms-functions.php';
 		global $current_site;
 		if (!is_multisite()){
-			$this->error = __('Multisite is not installer.', 'ihc');
+			$this->error = __('Multisite is not installed.', 'ihc');
 			return 0;
 		}
 		$post_meta['domain'] = sanitize_text_field( $post_meta['domain'] );

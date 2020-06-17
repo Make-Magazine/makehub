@@ -37,7 +37,7 @@ class Ihc_Create_Orders_Manually{
         }
 
         ihc_handle_levels_assign($uid, $this->_post_data['lid']);
-
+        
         $order_id = ihc_insert_update_order($uid,
                                             $this->_post_data['lid'],
                                             $this->_post_data['amount_value'],

@@ -47,7 +47,7 @@ if ($is_uap_active):
 					$search_term = $_REQUEST['search_user'];
 
 					global $wpdb;
-					$current_time = time();
+					$current_time = indeed_get_unixtimestamp_with_timezone();
 					if ($search_term != ''){
 						function ihc_pre_user_query($user_query){
 							$user_query->query_fields = 'DISTINCT ' . $user_query->query_fields;

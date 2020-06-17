@@ -34,7 +34,9 @@ class ReasonsForCancelDeleteLevels
         if ( empty($attr['uid']) || empty($attr['lid']) || $attr['action_type']=='' || $attr['reason']=='' ){
             return false;
         }
-        $query = $wpdb->prepare( "INSERT INTO {$this->tableName} VALUES(null, %d, %d, %s, %s, %d);", $attr['uid'], $attr['lid'], $attr['reason'], $attr['action_type'], time() );
+        $currentDate = indeed_get_unixtimestamp_with_timezone();
+
+        $query = $wpdb->prepare( "INSERT INTO {$this->tableName} VALUES(null, %d, %d, %s, %s, %d);", $attr['uid'], $attr['lid'], $attr['reason'], $attr['action_type'], $currentDate );
         return $wpdb->query( $query );
     }
 

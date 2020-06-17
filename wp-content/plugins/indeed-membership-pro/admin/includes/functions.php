@@ -13,6 +13,8 @@ function ihc_return_all_cpt( $excluded=array() ){
 
 function ihc_meta_box_settings_html(){
 	require_once IHC_PATH . 'admin/includes/meta_boxes/page_post_settings.php';
+	do_action( 'ihc_meta_box_post_settings_html' );
+	// @description run on add/edit post, print some extra html on settings box. @param none
 }
 
 function ihc_meta_box_replace_content_html(){
@@ -94,15 +96,15 @@ function ihc_save_update_metas_general_defaults($post_data=array()){
 
 function ihc_check_default_pages_set($meta_box=false){
 	$arr = array(
-					'ihc_general_redirect_default_page' => __('Default Redirect', 'ihc'),
-					'ihc_general_login_default_page' => __('Login', 'ihc'),
-					'ihc_general_register_default_page' => __('Register', 'ihc'),
-					'ihc_general_lost_pass_page' => __('Lost Password', 'ihc'),
-					'ihc_general_logout_page' => __('LogOut', 'ihc'),
-					'ihc_general_user_page' => __('Account User', 'ihc'),
-					'ihc_general_tos_page' => __('TOS', 'ihc'),
-					'ihc_subscription_plan_page' => __('Subscription Plan', 'ihc'),
-					'ihc_general_register_view_user' => __('Visitor Inside User', 'ihc')
+					'ihc_general_redirect_default_page' 			=> __('Default Redirect', 'ihc'),
+					'ihc_general_login_default_page' 					=> __('Login', 'ihc'),
+					'ihc_general_register_default_page' 			=> __('Register', 'ihc'),
+					'ihc_general_lost_pass_page' 							=> __('Lost Password', 'ihc'),
+					'ihc_general_logout_page' 								=> __('LogOut', 'ihc'),
+					'ihc_general_user_page' 									=> __('Account User', 'ihc'),
+					'ihc_general_tos_page' 										=> __('TOS', 'ihc'),
+					'ihc_subscription_plan_page' 							=> __('Subscription Plan', 'ihc'),
+					'ihc_general_register_view_user' 					=> __('Visitor Inside User', 'ihc')
 				);
 	$str = '';
 
@@ -407,14 +409,19 @@ function ihc_get_level_user_counts(){
 	global $wpdb;
 	$levels_data = get_option('ihc_levels');
 	$level_arr = array();
+
 	if ($levels_data){
+
 		$table = $wpdb->prefix . 'ihc_user_levels';
 		$table_u = $wpdb->base_prefix . 'users';
+
 		foreach ($levels_data as $lid=>$level_data){
 			$data = $wpdb->get_row("SELECT COUNT(a.id) as num FROM $table a INNER JOIN $table_u u ON a.user_id=u.ID WHERE a.level_id=$lid;");
-			$level_arr[$level_data['name']] = isset($data->num) ? $data->num : 0;
+			$level_arr[$level_data['label']] = isset($data->num) ? $data->num : 0;
+
 		}
 	}
+
 	return $level_arr;
 }
 
@@ -448,7 +455,9 @@ function ihc_get_total_amount(){
 							if (isset($arr['ihc_payment_type']) && !empty($arr['ihc_payment_type']) && $arr['ihc_payment_type']=='stripe' && (empty($arr['type']) || $arr['type']!='charge.succeeded') ){
 								$amount = 0;//stripe first row entry
 							} else {
-								$amount = (float)$arr['amount'];
+								if ( is_string( $arr['amount'] ) || is_int( $arr['amount'] ) || is_float( $arr['amount'] ) ){
+										$amount = (float)$arr['amount'];
+								}
 							}
 						} else if (isset($arr['mc_gross'])){
 							$amount = (float)$arr['mc_gross'];
@@ -501,7 +510,7 @@ function ihc_get_levels_top_by_transactions(){
 		if ($data){
 			foreach ($data as $object){
 				if (isset($levels_data[$object->lid]['name'])){ /// does level exists
-					$arr[$levels_data[$object->lid]['name']] = $object->c;
+					$arr[$levels_data[$object->lid]['label']] = $object->c;
 				}
 			}
 		}
@@ -695,6 +704,9 @@ function ihc_check_payment_status($p_type=''){
 			}
 			break;
 	}
+	$return = apply_filters( 'ihc_filter_check_payment_status', $return, $p_type );
+	// @description
+
 	return $return;
 }
 
@@ -812,7 +824,7 @@ function ihc_get_redirect_links_as_arr_for_select(){
 		}
 	}
 	if (ihc_is_magic_feat_active('individual_page')){
-		$return['#individual_page#'] = __('Individual Page (from Magic Features)', 'ihc');
+		$return['#individual_page#'] = __('Individual Page (from Extensions)', 'ihc');
 	}
 	return $return;
 }

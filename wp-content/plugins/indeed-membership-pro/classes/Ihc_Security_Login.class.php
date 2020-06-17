@@ -177,7 +177,7 @@ class Ihc_Security_Login{
 		 if (!empty($this->current_ip['locked']) && $this->current_ip['locked']>=$this->metas['ihc_login_security_max_lockouts']){
 		 	 //check time
 		 	 $lock_time = $this->current_ip['log_time'] + $this->metas['ihc_login_security_extended_lockout_time'] * 60 * 60;
-			 if ($lock_time>time()){
+			 if ($lock_time>indeed_get_unixtimestamp_with_timezone()){
 			 	 return TRUE;
 			 } else {
 			 	 $this->reset_locked();
@@ -195,7 +195,7 @@ class Ihc_Security_Login{
 		 if (!empty($this->current_ip['locked']) && $this->metas['ihc_login_security_allowed_retries']<=$this->current_ip['attempts_count']){
 		 	 /// check time
 		 	 $end_lock_time = $this->current_ip['log_time'] + $this->metas['ihc_login_security_lockout_time'] * 60;
-			 if ($end_lock_time>time()){
+			 if ($end_lock_time>indeed_get_unixtimestamp_with_timezone()){
 			 	 return TRUE;
 			 } else {
 			 	$this->reset_attempts();
@@ -246,7 +246,7 @@ class Ihc_Security_Login{
 		 * @return none
 		 */
 		 global $wpdb;
-		 $time = time();
+		 $time = indeed_get_unixtimestamp_with_timezone();
 		 $this->current_ip['attempts_count']++;
 		 if ($this->current_ip['attempts_count'] && $this->current_ip['attempts_count']>=$this->metas['ihc_login_security_allowed_retries']){
 		 	$end_lock_time = $this->current_ip['log_time'] + $this->metas['ihc_login_security_lockout_time'] * 60;
@@ -260,7 +260,7 @@ class Ihc_Security_Login{
 			}
 		 }
 		 $table = $wpdb->prefix . 'ihc_security_login';
-		 $time = time();
+		 $time = indeed_get_unixtimestamp_with_timezone();
 		 $q = "UPDATE $table SET attempts_count='{$this->current_ip['attempts_count']}',
 		 						 locked='{$this->current_ip['locked']}',
 		 						 username='{$this->username}',
@@ -276,7 +276,7 @@ class Ihc_Security_Login{
 		 */
 		 global $wpdb;
 		 $table = $wpdb->prefix . 'ihc_security_login';
-		 $time = time();
+		 $time = indeed_get_unixtimestamp_with_timezone();
 		 $wpdb->query("INSERT INTO $table VALUES(null, '{$this->username}', '{$this->ip}', '$time', 1, 0);");
 	}
 

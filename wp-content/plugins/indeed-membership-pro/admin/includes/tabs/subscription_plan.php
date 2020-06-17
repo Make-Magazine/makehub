@@ -19,11 +19,16 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			</div>
 <div class="metabox-holder indeed">
 <?php
-		ihc_save_update_metas('general-subscription');//save update metas
+		if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_subscription_plan_nonce']) && wp_verify_nonce( $_POST['ihc_admin_subscription_plan_nonce'], 'ihc_admin_subscription_plan_nonce' ) ){
+				ihc_save_update_metas('general-subscription');//save update metas
+		}
 		$meta_arr = ihc_return_meta_arr('general-subscription');//getting metas
 
 		?>
 					<form action="" method="post">
+
+						<input type="hidden" name="ihc_admin_subscription_plan_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_subscription_plan_nonce' );?>" />
+
 						<div class="ihc-stuffbox">
 							<h3> <?php _e("'Select Subscription' Showcase:", 'ihc');?></h3>
 							<div class="inside">

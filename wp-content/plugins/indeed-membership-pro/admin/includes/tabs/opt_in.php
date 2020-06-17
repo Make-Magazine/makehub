@@ -185,7 +185,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 					        </tr>
 					        <tr>
 					          <td>
-					            GetResponse <?php _e('Campaign Token', 'ihc');?>
+					            GetResponse <?php _e('List token', 'ihc');?>
 					          </td>
 					          <td>
 					            <input type="text" value="<?php echo $meta_arr['ihc_getResponse_token'];?>" name="ihc_getResponse_token" style="min-width: 240px;">
@@ -196,7 +196,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 					          </td>
 					          <td>
 					            <a href="https://app.getresponse.com/campaign_list.html " target="_blank" class="ihc-info-link">
-					              <?php _e('Where can I find Campaign Token?', 'ihc');?>
+					              <?php _e('Where can I find List token?', 'ihc');?>
 					            </a>
 					          </td>
 					        </tr>

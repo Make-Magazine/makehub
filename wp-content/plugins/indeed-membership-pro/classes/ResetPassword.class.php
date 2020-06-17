@@ -29,7 +29,7 @@ namespace IHC{
 
 			if (!empty($email_addr) && !empty($uid)){
 				$hash = ihc_random_str(10);
-				$time = time();
+				$time = indeed_get_unixtimestamp_with_timezone();
 				update_user_meta($uid, 'ihc_reset_password_temp_data', array('code' => $hash, 'time' => $time ));
 				/// $link = IHC_URL . 'arrive.php?do_reset_pass=true&c=' . $hash . '&uid=' . $uid;
 				$link = site_url();
@@ -54,7 +54,7 @@ namespace IHC{
 			 * @return none
 			 */
 			 if ($uid && $code){
-			 	$time = time();
+			 	$time = indeed_get_unixtimestamp_with_timezone();
 				$data = get_user_meta($uid, 'ihc_reset_password_temp_data', TRUE);
 				if ($data){
 					if ($data['code']==$code && $data['time']+$this->expire_interval>$time){

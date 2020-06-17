@@ -331,7 +331,7 @@ if (!class_exists('ListingUsers')){
 				///$q .= " AND b.start_time<NOW()";
 				//$q .= " AND b.expire_time>NOW()";
 				//$now = time(); /// <ver 6.2
-				$now = date('Y-m-d H:i:s', time());
+				$now = indeed_get_current_time_with_timezone();
 				$q .= " AND b.expire_time>'$now' ";
 			}
 

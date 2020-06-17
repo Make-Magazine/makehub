@@ -52,7 +52,7 @@ class Ihc_Workflow_Restrictions{
 		 	 global $current_user;
 			 $uid = (isset($current_user->ID)) ? $current_user->ID : 0;
 			 if ($uid && !current_user_can('administrator')){
-			 	 $since = time() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
+			 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 			 	 $count_posts = Ihc_Db::user_get_inserted_posts_count($uid, $since);
 				 $limit = $this->get_limit_count_for_user($uid, 'add_posts');
 				 if ($limit!==FALSE && $data['post_status']!='auto-draft'){
@@ -73,7 +73,7 @@ class Ihc_Workflow_Restrictions{
 		 global $current_user;
 		 $uid = (isset($current_user->ID)) ? $current_user->ID : 0;
 		 if ($uid && !current_user_can('administrator')){
-		 	 $since = time() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
+		 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 		 	 $count_comments = Ihc_Db::user_get_inserted_comments_count($uid, $since);
 		 	 $limit = $this->get_limit_count_for_user($uid, 'comments');
 		     if ($limit!==FALSE){
@@ -168,7 +168,7 @@ class Ihc_Workflow_Restrictions{
 			 if (!in_array($post_id, $array)){
 			 	 $array[] = $post_id;
 			 }
-			 $cookie_time = time() + ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
+			 $cookie_time = indeed_get_unixtimestamp_with_timezone() + ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 		 	 setcookie($cookie_name, serialize($array), $cookie_time, '/');
 		 }
 	}

@@ -1,29 +1,11 @@
 <?php
 
-/* !
- * HybridAuth
- * http://hybridauth.sourceforge.net | http://github.com/hybridauth/hybridauth
- * (c) 2009-2015, HybridAuth authors | http://hybridauth.sourceforge.net/licenses.html
- */
-
-/**
- * Hybrid_Providers_LinkedIn provider adapter based on OAuth1 protocol
- *
- * Hybrid_Providers_LinkedIn use linkedinPHP library created by fiftyMission Inc.
- *
- * http://hybridauth.sourceforge.net/userguide/IDProvider_info_LinkedIn.html
- */
 class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 
-	/**
-	 * Provider API Wrapper
-	 * @var LinkedIn
-	 */
+
 	public $api;
 
-	/**
-	 * {@inheritdoc}
-	 */
+
 	function initialize() {
 		if (!$this->config["keys"]["key"] || !$this->config["keys"]["secret"]) {
 			throw new Exception("Your application key and secret are required in order to connect to {$this->providerId}.", 4);
@@ -56,9 +38,7 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		}
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
+
 	function loginBegin() {
 		// send a request for a LinkedIn access token
 		$response = $this->api->retrieveTokenRequest();
@@ -74,9 +54,6 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		}
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
 	function loginFinish() {
         // in case we get oauth_problem=user_refused
         if (isset($_REQUEST['oauth_problem']) && $_REQUEST['oauth_problem'] == "user_refused") {
@@ -107,9 +84,7 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		}
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
+
 	function getUserProfile() {
 		try {
 			// https://developer.linkedin.com/docs/fields
@@ -177,9 +152,7 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		}
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
+
 	function getUserContacts() {
 		try {
 			$response = $this->api->profile('~/connections:(id,first-name,last-name,picture-url,public-profile-url,summary)');
@@ -210,9 +183,7 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		return $contacts;
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
+
 	function setUserStatus($status) {
 		$parameters = array();
 		$private = true; // share with your connections only
@@ -246,12 +217,6 @@ class Hybrid_Providers_LinkedIn extends Hybrid_Provider_Model {
 		return $response;
 	}
 
-	/**
-	 * load the user latest activity
-	 *    - timeline : all the stream
-	 *    - me       : the user activity only
-	 * {@inheritdoc}
-	 */
 	function getUserActivity($stream) {
 		try {
 			if ($stream == "me") {

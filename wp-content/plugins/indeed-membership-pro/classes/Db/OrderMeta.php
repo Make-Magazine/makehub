@@ -34,4 +34,14 @@ class OrderMeta
         return $wpdb->get_var( $query );
     }
 
+    public function getIdFromMetaNameMetaValue( $metaKey='', $metaValue='' )
+    {
+        global $wpdb;
+        if ( !$metaKey || !$metaValue ){
+            return;
+        }
+        $query = $wpdb->prepare( "SELECT order_id FROM {$wpdb->prefix}ihc_orders_meta WHERE meta_key=%s AND meta_value=%s;", $metaKey, $metaValue );
+        return $wpdb->get_var( $query );
+    }
+
 }

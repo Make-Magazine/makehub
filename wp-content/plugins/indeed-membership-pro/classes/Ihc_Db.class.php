@@ -384,6 +384,13 @@ class Ihc_Db{
 						 $wpdb->prefix . 'ihc_cheat_off',
 						 $wpdb->prefix . 'ihc_invitation_codes',
 						 $wpdb->prefix . 'ihc_gift_templates',
+						 $wpdb->prefix . 'hc_security_login',
+						 $wpdb->prefix . 'ihc_user_logs',
+						 $wpdb->prefix . 'ihc_woo_products',
+						 $wpdb->prefix . 'ihc_woo_product_level_relations',
+						 $wpdb->prefix . 'ihc_user_sites',
+						 $wpdb->prefix . 'ihc_download_monitor_limit',
+						 $wpdb->prefix . 'ihc_reason_for_cancel_delete_levels',
 		);
 		foreach ($tables as $table){
 			$wpdb->query("DROP TABLE IF EXISTS $table;");
@@ -459,35 +466,35 @@ class Ihc_Db{
 			 */
 		$insert_array = array(
 						'ihc_general_user_page' => array(
-											'title' => __('IUMP - Account Page', 'ihc'),
+											'title' => __('My Account', 'ihc'),
 											'content' => '[ihc-user-page]',
 						),
 						'ihc_general_login_default_page' => array(
-											'title' => __('IUMP - Login', 'ihc'),
+											'title' => __('Member Login', 'ihc'),
 											'content' => '[ihc-login-form]',
 						),
 						'ihc_general_logout_page' => array(
-											'title' => __('IUMP - LogOut', 'ihc'),
+											'title' => __('Member LogOut', 'ihc'),
 											'content' => '[ihc-logout-link]',
 						),
 						'ihc_general_register_default_page' => array(
-											'title' => __('IUMP - Register', 'ihc'),
+											'title' => __('Register', 'ihc'),
 											'content' => '[ihc-register]',
 						),
 						'ihc_general_lost_pass_page' => array(
-											'title' => __('IUMP - Reset Password', 'ihc'),
+											'title' => __('Lost Password', 'ihc'),
 											'content' => '[ihc-pass-reset]',
 						),
 						'ihc_subscription_plan_page' => array(
-											'title' => __('IUMP - Subscription Plan', 'ihc'),
+											'title' => __('Subscription Plan', 'ihc'),
 											'content' => '[ihc-select-level]',
 						),
 						'ihc_general_tos_page' => array(
-											'title' => __('IUMP - TOS Page', 'ihc'),
+											'title' => __('Member TOS Page', 'ihc'),
 											'content' => 'Terms of Services',
 						),
 						'ihc_general_register_view_user' => array(
-											'title' => __('IUMP - Visitor Inside User Page', 'ihc'),
+											'title' => __('Public Individual Page', 'ihc'),
 											'content' => '[ihc-visitor-inside-user-page]',
 						),
 		);
@@ -517,7 +524,7 @@ class Ihc_Db{
 		if (!$exists){
 			$arr = array(
 							'post_content' => 'Redirected',
-							'post_title' => 'IUMP - Default Redirect Page',
+							'post_title' => 'Default Redirect Page',
 							'post_type' => 'page',
 							'post_status' => 'publish',
 			);
@@ -816,45 +823,82 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 * @return array
 		 */
 		return array(
-						'payment',
-		 				'payment_paypal',
-		 				'payment_stripe',
-		 				'payment_authorize',
-						'payment_twocheckout',
-						'payment_bank_transfer',
-						'payment_braintree',
-						'payment_payza',
-						'login',
-						'login-messages',
-						'general-defaults',
-						'general-captcha',
-						'general-subscription',
-						'general-msg',
-						'register',
-						'register-msg',
-						'register-custom-fields',
-						'opt_in',
-						'notifications',
-						'extra_settings',
-						'account_page',
-						'fb',
-						'tw',
-						'in',
-						'tbr',
-						'ig',
-						'vk',
-						'goo',
-						'social_media',
-						'double_email_verification',
-						'licensing',
-						'ihc_woo',
-						'ihc_bp',
-						'admin_workflow',
-						'public_workflow',
-						'affiliate_options',
-						'listing_users_inside_page',
-						'listing_users',
-						'ihc_taxes_settings',
+								 'payment',
+						 		 'payment_paypal',
+						 		 'payment_stripe',
+						 		 'payment_authorize',
+						 		 'payment_twocheckout',
+						 		 'payment_bank_transfer',
+						 		 'payment_braintree',
+						 		 'payment_payza',
+						 		 'payment_mollie',
+						 		 'payment_paypal_express_checkout',
+						 		 'payment_pagseguro',
+						 		 'payment_stripe_checkout_v2',
+						 		 'login',
+						 		 'login-messages',
+						 		 'general-defaults',
+						 		 'general-captcha',
+						 		 'general-subscription',
+						 		 'general-msg',
+						 		 'register',
+						 		 'register-msg',
+						 		 'register-custom-fields',
+						 		 'opt_in',
+						 		 'notifications',
+						 		 'extra_settings',
+						 		 'account_page',
+						 		 'fb',
+						 		 'tw',
+						 		 'in',
+						 		 'tbr',
+						 		 'ig',
+						 		 'vk',
+						 		 'goo',
+						 		 'social_media',
+						 		 'double_email_verification',
+						 		 'licensing',
+						 		 'listing_users',
+						 		 'listing_users_inside_page',
+						 		 'affiliate_options',
+						 		 'ihc_taxes_settings',
+						 		 'admin_workflow',
+						 		 'public_workflow',
+						 		 'ihc_woo',
+						 		 'ihc_bp',
+						 		 'ihc_membership_card',
+						 		 'ihc_cheat_off',
+						 		 'ihc_invitation_code',
+						 		 'download_monitor_integration',
+						 		 'register_lite',
+						 		 'individual_page',
+						 		 'level_restrict_payment',
+						 		 'level_subscription_plan_settings',
+						 		 'gifts',
+						 		 'login_level_redirect',
+						 		 'register_redirects_by_level',
+						 		 'wp_social_login',
+						 		 'list_access_posts',
+						 		 'invoices',
+						 		 'woo_payment',
+						 		 'badges',
+						 		 'login_security',
+						 		 'workflow_restrictions',
+						 		 'subscription_delay',
+						 		 'level_dynamic_price',
+						 		 'user_reports',
+						 		 'pushover',
+						 		 'account_page_menu',
+						 		 'mycred',
+						 		 'api',
+						 		 'woo_product_custom_prices',
+						 		 'drip_content_notifications',
+						 		 'user_sites',
+						 		 'zapier',
+						 		 'infusionSoft',
+						 		 'kissmetrics',
+						 		 'direct_login',
+						 		 'reason_for_cancel',
 		);
 	}
 
@@ -902,6 +946,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 */
 		 if ($order_id){
 			 do_action('ihc_action_before_delete_order', $order_id);
+			 // @description run before an order will be deleted. @param order id (integer)
+
 		 	 global $wpdb;
 			 $table = $wpdb->prefix . 'ihc_orders';
 			 $q = $wpdb->prepare("DELETE FROM $table WHERE id=%d ", $order_id);
@@ -1391,6 +1437,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			 $country = get_user_meta($uid, 'ihc_country', TRUE);
  			 $state = get_user_meta($uid, 'ihc_state', TRUE);
 			 $taxes = self::get_taxes_by_country($country, $state);
+			 $return = array();
 			 if ($taxes){
 			 	/// taxes by country & state
 			 	foreach ($taxes as $array){
@@ -1418,6 +1465,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		$q = $wpdb->prepare("UPDATE $table SET value=value+1 WHERE type=%s;", $type);
 		$wpdb->query($q);
 		do_action('ihc_dashboard_notification_action', $type);
+		// @description run when a new dashboard notification was been added. @param type of notification (string)
 	}
 
 	public static function reset_dashboard_notification($type=''){
@@ -1535,7 +1583,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		$grace_period = get_option('ihc_grace_period');
 		$q = $wpdb->prepare("SELECT expire_time, start_time FROM {$wpdb->prefix}ihc_user_levels WHERE user_id=%d AND level_id=%d;", $uid, $lid);
 		$data = $wpdb->get_row($q);
-		$current_time = time();
+		$current_time = indeed_get_unixtimestamp_with_timezone();
+
 		if (!empty($data->start_time)){
 			$start_time = strtotime($data->start_time);
 			if ($current_time<$start_time){
@@ -2050,11 +2099,14 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 if ($uid){
 		 	 $gifts = get_user_meta($uid, 'ihc_gifts', TRUE);
 			 if ($gifts){
-			 	 foreach ($gifts as $arr){
-					 $temp = ihc_get_coupon_by_code($arr['code']);
-					 $temp['is_active'] = self::is_gift_stil_active($arr['code']);
-					 $array[] = $temp;
-			 	 }
+				 	 foreach ($gifts as $arr){
+						 	if ( !$arr || !isset( $arr['code'] ) ){
+									continue;
+							}
+							$temp = ihc_get_coupon_by_code($arr['code']);
+							$temp['is_active'] = self::is_gift_stil_active($arr['code']);
+							$array[] = $temp;
+				 	 }
 			 }
 		 }
 		 return $array;
@@ -2440,7 +2492,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			 $q = "SELECT COUNT(ID) as c FROM $table WHERE post_author=%d AND post_status!='auto-draft' AND post_status!='trash' ";
 			 $q = $wpdb->prepare($q, $uid);
 			 if ($since){
-			 	$since = date('Y-m-d H:i:s', $since);
+			 	$since = indeed_timestamp_to_date_without_timezone( $since );
 			 	$q .= " AND post_date>'$since' ";
 			 }
 		 	 $data = $wpdb->get_row($q);
@@ -2449,6 +2501,35 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			 }
 		 }
 		 return 0;
+	}
+
+	public static function getPostCreateTime( $postId=0 )
+	{
+			global $wpdb;
+			if ( !$postId ){
+					return false;
+			}
+			$query = $wpdb->prepare( "SELECT post_date FROM {$wpdb->posts} WHERE ID=%d;", $postId );
+			return $wpdb->get_var( $query );
+	}
+
+	public static function getDefaultUmpPages()
+	{
+			$keys = [
+								'ihc_general_login_default_page' 				=> '',
+								'ihc_general_register_default_page'			=> '',
+								'ihc_general_lost_pass_page' 						=> '',
+								'ihc_general_logout_page' 							=> '',
+								'ihc_general_user_page' 								=> '',
+								'ihc_general_tos_page' 									=> '',
+								'ihc_subscription_plan_page' 						=> '',
+								'ihc_general_register_view_user' 				=> '',
+			];
+			$array = [];
+			foreach ( $keys as $key => $value ){
+					$array[ $key ] = get_option( $key );
+			}
+			return $array;
 	}
 
 	public static function user_get_inserted_comments_count($uid=0, $since=''){
@@ -2461,7 +2542,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 	 $table = $wpdb->prefix . 'comments';
 			 $q = $wpdb->prepare("SELECT COUNT(comment_ID) as c FROM $table WHERE user_id=%d ", $uid);
 			 if ($since){
-			 	$since = date('Y-m-d H:i:s', $since);
+			 	$since = indeed_timestamp_to_date_without_timezone( $since );
 			 	$q .= " AND comment_date>'$since' ";
 			 }
 		 	 $data = $wpdb->get_row($q);
@@ -2559,6 +2640,25 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 				 	return;
 			 }
 
+			 $exclude = [
+									 'overview',
+									 'profile',
+									 'subscription',
+									 'social',
+									 'orders',
+									 'transactions',
+									 'membeship_gifts',
+									 'membership_cards',
+									 'pushover_notifications',
+									 'user_sites',
+									 'help',
+									 'affiliate',
+									 'logout',
+			 ];
+			 if ( in_array( $slug, $exclude ) ){
+				 	return false;
+			 }
+
 			 if ($data && isset($data[$slug])){
 				 	return false; /// slug already exists
 			 } else {
@@ -2579,17 +2679,19 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	 * @param none
 	 * @return array
 	 */
-	 public static function account_page_menu_get_custom_items(){
-		$data = get_option('ihc_account_page_custom_menu_items');
-		if ($data){
-			foreach ($data as $slug => $array){
-				$tempkey = 'ihc_ap_' . $slug . '_icon_code';
-				$data[$slug]['icon'] = get_option($tempkey);
-				$tempkey = 'ihc_ap_' . $slug . '_icon_class';
-				$data[$slug]['class'] = get_option($tempkey);
-			}
-		}
-		return $data;
+	 public static function account_page_menu_get_custom_items()
+	 {
+				$data = get_option('ihc_account_page_custom_menu_items');
+				if ($data){
+					foreach ($data as $slug => $array){
+						$tempkey = 'ihc_ap_' . $slug . '_icon_code';
+						$data[$slug]['icon'] = get_option($tempkey);
+						$tempkey = 'ihc_ap_' . $slug . '_icon_class';
+						$data[$slug]['class'] = get_option($tempkey);
+					}
+				}
+				$data = apply_filters( 'ihc_filter_custom_menu_items', $data );
+				return $data;
 	 }
 
 
@@ -2614,7 +2716,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	   */
 	   public static function account_page_get_menu($only_standard=FALSE){
 			$available_tabs = array(
-									'overview'=> array('label' => __('Overview', 'ihc'), 'icon' => 'f015', 'icon_class' => ''),
+									'overview'=> array('label' => __('Dashboard', 'ihc'), 'icon' => 'f015', 'icon_class' => ''),
 									'profile'=> array('label' => __('Profile', 'ihc'), 'icon' => 'f007', 'icon_class' => ''),
 									'subscription'=> array('label' => __('Subscriptions', 'ihc'), 'icon' => 'f0a1', 'icon_class' => ''),
 									'social' => array('label' => __('Social Plus', 'ihc'), 'icon' => 'f0e6', 'icon_class' => ''),
@@ -2623,7 +2725,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 									'membeship_gifts' => array('label' => __('Membership Gifts', 'ihc'), 'icon' => 'f06b', 'icon_class' => '', 'check_magic_feat' => 'gifts'),
 									'membership_cards' => array('label' => __('Membership Cards', 'ihc'), 'icon' => 'f022', 'icon_class' => '', 'check_magic_feat' => 'pushover'),
 									'pushover_notifications' => array('label' => __('Pushover Notifications', 'ihc'), 'icon' => 'f0f3', 'icon_class' => '', 'check_magic_feat' => 'user_sites'),
-									'user_sites' => array('label' => __('User Sites', 'ihc'), 'icon' => 'f084', 'icon_class' => '', 'check_magic_feat' => TRUE),
+									'user_sites' => array('label' => __('Your Sites', 'ihc'), 'icon' => 'f084', 'icon_class' => '', 'check_magic_feat' => TRUE),
 									'help' => array('label' => __('Help', 'ihc'), 'icon' => 'f059', 'icon_class' => ''),
 									'affiliate' => array('label' => __('Affiliate', 'ihc'), 'icon' => 'f0e8', 'icon_class' => ''),
 									'logout' => array('label' => 'LogOut', 'icon' => 'f08b', 'icon_class' => ''),
@@ -3269,6 +3371,16 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			}
 		}
 		return $data;
+	 }
+
+	 public static function getUserIdFromUserMetaValue( $value='' )
+	 {
+		 	global $wpdb;
+		 	if ( empty( $value ) ){
+					return false;
+			}
+			$query = $wpdb->prepare( "SELECT user_id FROM {$wpdb->usermeta} WHERE meta_value=%s; ", $value );
+			return $wpdb->get_var( $query );
 	 }
 
 
@@ -4365,7 +4477,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			if ( !$expireTime ){
 				 return false;
 			}
-			if ( $expireTime>time() ){
+			$currentTime = indeed_get_unixtimestamp_with_timezone();
+			if ( $expireTime > $currentTime ){
 					return true;
 			}
 			return false;
@@ -4538,6 +4651,106 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 					return false;
 			}
 			return true;
+	}
+
+	/**
+	 * @param int
+	 * @return int
+	 */
+	public static function getLidByOrder( $id=0 )
+	{
+			global $wpdb;
+			if ( !$id ){
+					return 0;
+			}
+			$queryString = $wpdb->prepare( "SELECT lid FROM {$wpdb->prefix}ihc_orders WHERE id=%d;", $id );
+			return $wpdb->get_var( $queryString );
+	}
+
+	/**
+	 * @param int
+	 * @return bool
+	 */
+	public static function deleteLocker( $id=0 )
+	{
+			if ( !$id ){
+					return false;
+			}
+			$data = get_option( 'ihc_lockers' );
+			if ( $data===false || !isset( $data[$id] ) ){
+					return false;
+			}
+			unset($data[$id]);
+			return update_option( 'ihc_lockers', $data );
+	}
+
+	/**
+	 * @param string
+	 * @return bool
+	 */
+	public static function deactivateApTab( $slug='' )
+	{
+			if ( !$slug ){
+					return false;
+			}
+			$data = get_option( 'ihc_ap_tabs' );
+			if ( !$data ){
+					return false;
+			}
+			$array = explode( ',', $data );
+			if ( !$array ){
+					return false;
+			}
+			foreach ( $array as $key=>$value ){
+					if ( $value == $slug ){
+							unset($array[$key]);
+							break;
+					}
+			}
+			$data = implode( ',', $array );
+			return update_option( 'ihc_ap_tabs', $data );
+	}
+
+	/**
+	 * @param string
+	 * @return bool
+	 */
+	public static function activateApTab( $slug='' )
+	{
+			if ( !$slug ){
+					return false;
+			}
+			$data = get_option( 'ihc_ap_tabs' );
+			if ( !$data ){
+					return false;
+			}
+			$array = explode( ',', $data );
+			if ( !$array ){
+					return false;
+			}
+			if ( in_array( $slug, $array ) ){
+					return false;
+			}
+			$array[] = $slug;
+			$data = implode( ',', $array );
+			return update_option( 'ihc_ap_tabs', $data );
+	}
+
+	/**
+	 * @param int
+	 * @param int
+	 * @param int
+	 * @return bool
+	 */
+	public static function userLevelUpdateStatus( $uid=0, $lid=0, $newStatus=0 )
+	{
+			global $wpdb;
+			if ( !$uid || $lid<0 ){
+					return false;
+			}
+			$queryString = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_user_levels SET status=%d
+																				WHERE user_id=%d AND level_id=%d;", $newStatus, $uid, $lid );
+			return $wpdb->query( $queryString );
 	}
 
 

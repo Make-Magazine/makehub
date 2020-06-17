@@ -1,4 +1,5 @@
 <div class="ihc-subtab-menu">
+
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='orders') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=orders';?>"><?php _e('Orders', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='payments') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=payments';?>"><?php _e('Transactions', 'ihc');?></a>
 	<div class="ihc-clear"></div>
@@ -10,22 +11,7 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
-if (isset($_REQUEST['delete'])){
-	ihc_delete_payment_entry($_REQUEST['delete']);
-}
-
-$payment_gateways = array(
-					'paypal' 									=> 'PayPal',
-					'authorize' 							=> 'Authorize',
-					'stripe' 									=> 'Stripe',
-					'twocheckout' 						=> '2Checkout',
-					'bank_transfer' 					=> 'Bank Transfer',
-					'braintree' 							=> 'Braintree',
-					'payza' 									=> 'Payza',
-					'woocommerce' 						=> 'WooCommerce',
-					'mollie'									=> 'Mollie',
-					'stripe_checkout_v2'			=> 'Stripe Checkout',
-);
+$payment_gateways = ihc_list_all_payments();
 
 global $wpdb;
 $table_name = $wpdb->prefix . 'indeed_members_payments';
@@ -105,7 +91,7 @@ if (isset($_REQUEST['details_id'])){
 <div class="iump-wrapper">
 <div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
-								<?php _e('Transations List', 'ihc');?>
+								<?php _e('Transactions List', 'ihc');?>
 							</span>
 						</div>
 <?php
@@ -140,7 +126,7 @@ $data_db = $wpdb->get_results($q);
 
 	if ($data_db && count($data_db)){
 		?>
-		<?php echo $pagination_str;?>
+	<div class="iump-rsp-table">	<?php echo $pagination_str;?></div>
 							<table class="wp-list-table widefat fixed tags ihc-admin-tables">
 								  <thead>
 									<tr>
@@ -191,7 +177,7 @@ $data_db = $wpdb->get_results($q);
 										  </th>
 										  <th class="manage-column" style="width:80px; text-align:center;">
 											  <span>
-												<?php _e('Delete', 'ihc');?>
+												<?php _e('Remove', 'ihc');?>
 											  </span>
 										  </th>
 								    </tr>
@@ -246,7 +232,7 @@ $data_db = $wpdb->get_results($q);
 										  </th>
 										  <th class="manage-column" style="width:80px; text-align:center;">
 											  <span>
-													<?php _e('Delete', 'ihc');?>
+													<?php _e('Remove', 'ihc');?>
 											  </span>
 										  </th>
 								    </tr>
@@ -254,7 +240,9 @@ $data_db = $wpdb->get_results($q);
 								  <tbody>
 										<?php
 										foreach ($data_db as $arr){
-											$data = json_decode($arr->payment_data);
+											if ( !empty($arr->payment_data)){
+													$data = json_decode(stripslashes($arr->payment_data));
+											}
 
 											$user_info = get_userdata($arr->u_id);
 											?>
@@ -351,7 +339,7 @@ $data_db = $wpdb->get_results($q);
 													  			echo $payment_gateways[$gateway_key];
 													  		}
 													  ?></td>
-													  <td class="manage-column" style="font-family: 'Oswald', arial, sans-serif !important; font-weight:400;">
+													  <td class="manage-column" style="font-weight:700;">
 													  	<?php
 													  		if (!empty($data->payment_status)){
 													  			$pay_sts = $data->payment_status;
@@ -379,11 +367,11 @@ $data_db = $wpdb->get_results($q);
 													  </td>
 													  <td class="manage-column">
 														  <span>
-															<?php echo $arr->paydate;?>
+															<?php echo ihc_convert_date_time_to_us_format($arr->paydate);?>
 														  </span>
 													  </td>
 												      <td class="column" style="width:80px; text-align:center;">
-																	<span class="ihc-pointer" onClick="indeedConfirmAndRedirect('<?php echo $url.'&tab=payments&delete='.$arr->id;?>');">
+																	<span class="ihc-pointer ihc-js-delete-payment-transaction" data-id="<?php echo $arr->id;?>" >
 																			<i class="fa-ihc ihc-icon-remove-e"></i>
 																	</span>
 												      </td>
@@ -393,6 +381,33 @@ $data_db = $wpdb->get_results($q);
 										?>
 								  </tbody>
 						</table>
+						<script>
+						jQuery( '.ihc-js-delete-payment-transaction' ).on( 'click', function(){
+								var transactionId = jQuery( this ).attr( 'data-id' );
+								swal({
+									title: "<?php _e( 'Are you sure that you want to delete this transaction?', 'ihc' );?>",
+									text: "",
+									type: "warning",
+									showCancelButton: true,
+									confirmButtonClass: "btn-danger",
+									confirmButtonText: "OK",
+									closeOnConfirm: true
+								},
+								function(){
+										jQuery.ajax({
+												type : 'post',
+												url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+												data : {
+																	 action: 'ihc_admin_delete_payment_transaction',
+																	 id:			transactionId,
+															 },
+												success: function (response) {
+														location.reload();
+												}
+									 });
+							 });
+						});
+						</script>
 		<?php
 	} else {
 		?>

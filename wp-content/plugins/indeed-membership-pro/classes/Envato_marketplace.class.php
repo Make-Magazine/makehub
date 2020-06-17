@@ -6,7 +6,7 @@
  * @author Jeffrey Way <jeffrey@envato.com>
  * @created January, 2012
  * @license Do-whateva-ya-want-with-it
-*/ 
+*/
 
 if (!class_exists('Envato_marketplaces')){
 
@@ -16,16 +16,16 @@ class Envato_marketplaces {
    public $cache_expires = 24;
    protected $public_url = 'https://marketplace.envato.com/api/edge/set.json';
 
-   
+
    function __construct($api_key = null) {
      if ( isset($api_key) ) $this->api_key = $api_key; // allow the user to pass the API key upon instantiation
    }
 
-   
+
   /**
-   * Attach your API key. 
+   * Attach your API key.
    *
-   * @param string $api_key Can be accessed on the marketplaces via My Account 
+   * @param string $api_key Can be accessed on the marketplaces via My Account
    * -> My Settings -> API Key
    */
    public function set_api_key($api_key)
@@ -46,15 +46,15 @@ class Envato_marketplaces {
 
 
   /**
-   * Sets the cache directory for all API calls. 
+   * Sets the cache directory for all API calls.
    *
-   * @param string $cache_dir 
+   * @param string $cache_dir
    */
    public function set_cache_dir($cache_dir)
    {
       $this->cache_dir = $cache_dir;
    }
-   
+
 
   /**
    * Retrieve the value of your cache directory, if needed.
@@ -64,13 +64,13 @@ class Envato_marketplaces {
    public function get_cache_dir()
    {
       return $this->cache_dir;
-   }   
+   }
 
 
    /**
     * Available sets => 'vitals', 'earnings-and-sales-by-month', 'statement', 'recent-sales', 'account', 'verify-purchase', 'download-purchase'
-    * 
-    */ 
+    *
+    */
    public function private_user_data($user_name, $set, $purchase_code = null)
    {
       if ( ! isset($this->api_key) ) exit('You have not set an api key yet. $class->set_api_key(key)');
@@ -92,13 +92,13 @@ class Envato_marketplaces {
    * Can be used to verify if a person did in fact purchase your item.
    *
    * @param $user_name Author's username.
-   * @param $purchase_code - The buyer's purchase code. See Downloads page for 
+   * @param $purchase_code - The buyer's purchase code. See Downloads page for
    * receipt.
    * @return object|bool If purchased, returns an object containing the details.
-   */ 
+   */
    public function verify_purchase($user_name, $purchase_code)
    {
-	   
+
 	$code= trim($purchase_code); // have we got a valid purchase code?
 	$url = "https://api.envato.com/v3/market/author/sale?code=".$code;
 	$curl = curl_init($url);
@@ -116,17 +116,19 @@ class Envato_marketplaces {
 	$boughtdate = new DateTime($envatoRes->sold_at);
 	$bresult = $boughtdate->format('Y-m-d H:i:s');
 	$sresult = $date->format('Y-m-d H:i:s');
-	/*echo "<pre>";
+  /*
+	echo "<pre>";
 	print_r($envatoRes);
-	die('STOP');*/
-		if (isset($envatoRes->item->name)) {   
-				 return $envatoRes;	
+	die('STOP');
+  */
+		if (isset($envatoRes->item->name)) {
+				 return $envatoRes;
 				 //return " - Verification Success:  ({$envatoRes->item->name})  -  (Bought Date: {$bresult} )  - (Support Till: {$sresult})";
-		} else {  
+		} else {
 				return FALSE;
-		} 
-	   
-	   
+		}
+
+
       $validity = $this->private_user_data($user_name, 'verify-purchase', $purchase_code);
       return isset($validity->buyer) ? $validity : false;
    }
@@ -135,10 +137,10 @@ class Envato_marketplaces {
    * Can be used to retrieve the download URL for a purchased item.
    *
    * @param $user_name Purchaser's username.
-   * @param $purchase_code - The item purchase code. See Downloads page for 
+   * @param $purchase_code - The item purchase code. See Downloads page for
    * receipt.
    * @return string If purchased, returns a string containing the download URL.
-   */ 
+   */
    public function download_purchase($user_name, $purchase_code)
    {
       $download_url = $this->private_user_data($user_name, 'download-purchase', $purchase_code);
@@ -209,8 +211,8 @@ class Envato_marketplaces {
   /**
    * Returns the featured item, author, and free file for a given marketplace.
    *
-   * @param string $marketplace_name The desired marketplace name. 
-   * @return array The featured file, free file, and featured author for the 
+   * @param string $marketplace_name The desired marketplace name.
+   * @return array The featured file, free file, and featured author for the
    * given site.
    */
    public function featured($marketplace_name = 'themeforest')
@@ -222,7 +224,7 @@ class Envato_marketplaces {
   /**
    * Retrieve the details for a specific marketplace item.
    *
-   * @param string $item_id The id of the item you need information for. 
+   * @param string $item_id The id of the item you need information for.
    * @return object Details for the given item.
    */
    public function item_details($item_id)
@@ -265,27 +267,27 @@ class Envato_marketplaces {
 
       return $this->apply_limit( $this->fetch($url, 'new-files-from-user'), $limit );
    }
-   
+
   /**
-   * Helper function which automatically echos out a list of thumbnails 
+   * Helper function which automatically echos out a list of thumbnails
    * + links. Use new_files_from_user for more control.
    *
-   * @param string $user_name The username of the account you want to display 
+   * @param string $user_name The username of the account you want to display
    * thumbnails from.
    * @param string $marketplace_name The desired marketplace name.
    * @param int $limit The number of thumbnails to display.
-   * @return string Helper function immediately echos out thumbnails. 
+   * @return string Helper function immediately echos out thumbnails.
    * Careful...
    */
    public function display_thumbs($user_name, $marketplace_name, $limit = null)
    {
-      $results = $this->new_files_from_user($user_name, $marketplace_name, $limit); 
+      $results = $this->new_files_from_user($user_name, $marketplace_name, $limit);
 
       echo "<ul class='envato-marketplace-thumbs'> \n";
       foreach($results as $item) : ?>
       <?php if ( is_null($item) ) break; ?>
       <li>
-          <a href="<?php echo $item->url . "?ref=$user_name"; ?>" title="<?php echo $item->item;?>">   
+          <a href="<?php echo $item->url . "?ref=$user_name"; ?>" title="<?php echo $item->item;?>">
              <img src="<?php echo $item->thumbnail; ?>" alt="<?php echo $item->item?>">
           </a>
       </li>
@@ -298,7 +300,7 @@ class Envato_marketplaces {
    *
    * @param string $marketplace_name Desired marketplace name.
    * @param int $limit The number of items to return [optional].
-   * @return array A list of the most sold items in the given marketplace last 
+   * @return array A list of the most sold items in the given marketplace last
    * week.
    */
    public function most_popular($marketplace_name = 'themeforest')
@@ -321,12 +323,12 @@ class Envato_marketplaces {
       return $this->apply_limit($random, $limit);
    }
   /**
-   * Perform search queries on all of the marketplaces, or a specific one. 
+   * Perform search queries on all of the marketplaces, or a specific one.
    *
    * @param string $search_expression What are you searching for?
-   * @param string $marketplace_name The name of the marketplace you want to 
-   * search. [optional] 
-   * @param string $type The item type (category). See search options on 
+   * @param string $marketplace_name The name of the marketplace you want to
+   * search. [optional]
+   * @param string $type The item type (category). See search options on
    * marketplace for list. [optional]
    * @param integer $limit The number of items to return [optional]
    * @return array A list of the search results.
@@ -334,7 +336,7 @@ class Envato_marketplaces {
    public function search($search_expression, $marketplace_name = '', $type = '', $limit = null)
    {
       if ( empty($search_expression) ) return false;
-      # Can't use spaces. Need to replace them with pipes. 
+      # Can't use spaces. Need to replace them with pipes.
       else $search_expression = preg_replace('/\s/', '|', $search_expression);
 
       $url = preg_replace('/set/i', 'search:' . $marketplace_name . ',' . $type . ',' . $search_expression, $this->public_url );
@@ -357,7 +359,7 @@ class Envato_marketplaces {
   /**
    * Retrieve an array of all the items in a particular collection.
    *
-   * @param string $collection_id The id of the requested collection. See url 
+   * @param string $collection_id The id of the requested collection. See url
    * of collection page for id.
    * @return array A list of all the items in the collection.
    */
@@ -372,26 +374,26 @@ class Envato_marketplaces {
    * Either fetches the desired data from the API and caches it, or fetches the cached version
    *
    * @param string $url The url to the API call
-   * @param string $set (optional) The name of the set to retrieve. 
+   * @param string $set (optional) The name of the set to retrieve.
    */
-   protected function fetch($url, $set = null) 
+   protected function fetch($url, $set = null)
    {
-      // Use the API url to generate the cache file name. 
+      // Use the API url to generate the cache file name.
       // So: http://marketplace.envato.com/api/edge/collection:739793.json
       // Becomes: collection-739793.json
       $cache_path = $this->cache_dir . '/' . str_replace(':', '-', substr(strrchr($url, '/'), 1));
       $cache_has_expire = TRUE;//$cache_has_expire = $this->has_expired($cache_path);
-      
+
       if ( $cache_has_expire ) {
          // get fresh copy
          $data = $this->curl($url);
-         
+
          if ($data) {
             $data = isset($set) ? $data->{$set} : $data; // if a set is needed, update
          } else {
          	return FALSE; // modify by azzaroco
          }
-         
+
          $this->cache_it($cache_path, $data);
 
          return $data;
@@ -412,7 +414,7 @@ class Envato_marketplaces {
    {
       if ( !is_int($limit) ) return $orig_arr;
 
-      // Make sure that there are enough items to filter through... 
+      // Make sure that there are enough items to filter through...
       if ( $limit > count($orig_arr) ) $limit = count($orig_arr);
 
       $new_arr = array();
@@ -459,12 +461,12 @@ class Envato_marketplaces {
 
 
    /*
-   * Determines whether the provided file has expired yet 
+   * Determines whether the provided file has expired yet
    *
    * @param string $cache_path The path to the cached file
    * @param string $expires - In hours, how long the file should cache for.
    */
-   protected function has_expired($cache_path, $expires = null) 
+   protected function has_expired($cache_path, $expires = null)
    {
       if ( !isset($expires) ) $expires = $this->cache_expires;
 
@@ -492,7 +494,7 @@ class Envato_marketplaces {
    {
       echo "<pre>";
       print_r($data);
-      echo "</pre>"; 
+      echo "</pre>";
    }
 }
 

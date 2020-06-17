@@ -128,7 +128,10 @@ if ($_GET['subtab']=='settings'){
 	} else {
 		switch ($_GET['item']){
 			case 'fb':
-				ihc_save_update_metas('fb');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('fb');
+				}
+
 				$meta_arr = ihc_return_meta_arr('fb');
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
@@ -137,6 +140,9 @@ if ($_GET['subtab']=='settings'){
 					</span>
 				</div>
 				<form action="" method="post">
+
+					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Facebook Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -166,23 +172,21 @@ if ($_GET['subtab']=='settings'){
 							<div style="font-size: 11px; color: #333; padding-left: 10px;">
 								<div style="font-size: 14px;"><h4><?php _e("How to create a Facebook App")?></h4></div>
 
+								<!-- developerr -->
 								<ul class="ihc-info-list">
 								<li><?php _e("Go to :", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
-								<li><?php _e('Select "Add a New App" from the "My Apps" menu at the top.', 'ihc');?></li>
-								<li><?php _e('Select "Site Web", fill out display name and click "Create New Facebook App ID".', 'ihc');?></li>
-								<li><?php _e('Select a category from the popup that shows up and then click "Create App ID".', 'ihc');?></li>
-								<li><?php _e('Fill out display name, choose a category and click "Create App".', 'ihc');?></li>
-								<li><?php
-									_e('After that in the "Tell us about your website" section you must add site URL : ', 'ihc');echo "<b>".site_url()."</b>";
-									_e(' click "Next".', 'ihc');
-								?></li>
-								<li><?php _e('The application was created but it is not active.', 'ihc');?></li>
-								<li><?php _e('To activate it, go to top menu "My Apps" and select the name of your app.', 'ihc');?></li>
-								<li><?php _e('In the left menu go to "Settings"->"Basic" and fill out "Contact Email" and save.', 'ihc');?></li>
-								<li><?php _e('Next you must go to left menu at "Status & Review" and make your app public.', 'ihc');?></li>
-								<li><?php _e('You will find the "App ID" and "App Secret" in the "Dashboard" section.', 'ihc')?></li>
-                                <li><?php _e("Set Valid OAuth Redirect URIs with: "); echo '<strong>'.IHC_URL.'classes/hybrid_auth/hybridauth/?hauth_done=Facebook'.'</strong>'; ?></li>
+								<li><?php _e('Look after \'My Apps\' and \'Create app\'.', 'ihc');?></li>
+								<li><?php _e('After complete the name of the app (make sure not to put facebook or fb in app name) click \'Create App ID\'.', 'ihc');?></li>
+								<li><?php _e('In left side area look after \'Settings > Basic\' and fill App Domains with ' . '<b>'.site_url().'</b>', 'ihc');?></li>
+								<li><?php _e('Create a Privacy Policy page in your website and paste URL in \'Privacy Policy URL\'.', 'ihc');?></li>
+								<li><?php _e('In \'Category\' you may choose a category of your app.', 'ihc');?></li>
+								<li><?php _e('Look after \'Business Use\' and select one of the 2 options and \'Save Changes\'.', 'ihc');?></li>
+								<li><?php _e('In \'Settings > Basic\' in top of the page you will find \'App Id\' and \'App Secret\'.', 'ihc');?></li>
+								<li><?php _e('Look after \'Products\' in left side of the menu page and \'Set Up\' Facebook Login and press \'Settings\' from the \'Facebook Login\' app.', 'ihc');?></li>
+								<li><?php _e('In \'Valid OAuth Redirect URIs\' set ' . '<b>'.IHC_URL.'classes/hybrid_auth/hybridauth/?hauth_done=Facebook'.'</b>', 'ihc');?></li>
+								<li><?php _e('In \'Settings > Basic\' in top of the page you will see that app is \'In Development\'. Switch to live mode.', 'ihc');?></li>
 								</ul>
+								<!-- developer -->
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -194,7 +198,10 @@ if ($_GET['subtab']=='settings'){
 				break;
 
 			case 'tw':
-				ihc_save_update_metas('tw');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('tw');
+				}
+
 				$meta_arr = ihc_return_meta_arr('tw');
 				?>
 								<div class="iump-page-title">Ultimate Membership Pro -
@@ -203,6 +210,9 @@ if ($_GET['subtab']=='settings'){
 									</span>
 								</div>
 								<form action="" method="post">
+
+									<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 									<div class="ihc-stuffbox">
 										<h3><?php _e('Twitter Activation:', 'ihc');?></h3>
 										<div class="inside">
@@ -248,7 +258,10 @@ if ($_GET['subtab']=='settings'){
 				break;
 
 			case 'in':
-				ihc_save_update_metas('in');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('in');
+				}
+
 				$meta_arr = ihc_return_meta_arr('in');
 				?>
 							<div class="iump-page-title">Ultimate Membership Pro -
@@ -257,6 +270,9 @@ if ($_GET['subtab']=='settings'){
 								</span>
 							</div>
 							<form action="" method="post">
+
+								<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 								<div class="ihc-stuffbox">
 									<h3><?php _e('LinkedIn Activation:', 'ihc');?></h3>
 									<div class="inside">
@@ -278,10 +294,10 @@ if ($_GET['subtab']=='settings'){
 									<h3><?php _e('LinkedIn Settings:', 'ihc');?></h3>
 									<div class="inside">
 										<div class="iump-form-line">
-											<label class="iump-labels"><?php _e('Application Key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_key'];?>" name="ihc_in_app_key" style="width: 300px;" />
+											<label class="iump-labels"><?php _e('Client ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_key'];?>" name="ihc_in_app_key" style="width: 300px;" />
 										</div>
 										<div class="iump-form-line">
-											<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_secret'];?>" name="ihc_in_app_secret" style="width: 300px;" />
+											<label class="iump-labels"><?php _e('Client Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_secret'];?>" name="ihc_in_app_secret" style="width: 300px;" />
 										</div>
 
 										<div style="font-size: 11px; color: #333; padding-left: 10px;">
@@ -289,9 +305,11 @@ if ($_GET['subtab']=='settings'){
 											<ul class="ihc-info-list">
 											<li><?php _e("Go to :", "ihc");?><a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a></li>
 											<li><?php _e('Click "Create Application".', 'ihc');?></li>
-											<li><?php _e('Fill the required fields and submit.', 'ihc');?></li>
-											<li><?php _e('After you create the app, in the left menu go to "Settings" and change "Application Status" to "Live".', 'ihc');?></li>
-											<li><?php _e('You will find the "App Key" and "App Secret" in the "Authentication" section.', 'ihc');?></li>
+											<li><?php _e('Fill the required fields and submit. "Sign In with LinkedIn" must be available.', 'ihc');?></li>
+                      <li><?php _e('Be sure that Company is Verified.', 'ihc');?></li>
+											<li><?php echo __( 'At Redirect URL write the following value: ', 'ihc' ) . IHC_URL . 'classes/hybridAuth-2.9/?hauth.done=LinkedIn';?></li>
+											<li><?php _e('After you verify the Company association, you will find available Permissions added into "Auth" section.', 'ihc');?></li>
+											<li><?php _e('You will find the "Client ID" and "Client Secret" in the "Auth" section.', 'ihc');?></li>
 											</ul>
 										</div>
 
@@ -305,7 +323,10 @@ if ($_GET['subtab']=='settings'){
 				break;
 
 			case 'tbr':
-					ihc_save_update_metas('tbr');
+					if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+							ihc_save_update_metas('tbr');
+					}
+
 					$meta_arr = ihc_return_meta_arr('tbr');
 					?>
 					<div class="iump-page-title">Ultimate Membership Pro -
@@ -314,6 +335,9 @@ if ($_GET['subtab']=='settings'){
 						</span>
 					</div>
 					<form action="" method="post">
+
+						<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 						<div class="ihc-stuffbox">
 							<h3><?php _e('Tumblr Activation:', 'ihc');?></h3>
 							<div class="inside">
@@ -361,7 +385,10 @@ if ($_GET['subtab']=='settings'){
 					<?php
 				break;
 			case 'ig':
-				ihc_save_update_metas('ig');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('ig');
+				}
+
 				$meta_arr = ihc_return_meta_arr('ig');
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
@@ -370,6 +397,9 @@ if ($_GET['subtab']=='settings'){
 					</span>
 				</div>
 				<form action="" method="post">
+
+					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Instagram Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -415,7 +445,10 @@ if ($_GET['subtab']=='settings'){
 					<?php
 				break;
 			case 'vk':
-				ihc_save_update_metas('vk');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('vk');
+				}
+
 				$meta_arr = ihc_return_meta_arr('vk');
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
@@ -424,6 +457,9 @@ if ($_GET['subtab']=='settings'){
 					</span>
 				</div>
 				<form action="" method="post">
+
+					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Vkontakte Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -472,7 +508,10 @@ if ($_GET['subtab']=='settings'){
 			break;
 
 			case 'goo':
-				ihc_save_update_metas('goo');
+				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+						ihc_save_update_metas('goo');
+				}
+
 				$meta_arr = ihc_return_meta_arr('goo');
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
@@ -481,6 +520,9 @@ if ($_GET['subtab']=='settings'){
 					</span>
 				</div>
 				<form action="" method="post">
+
+					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 					<div class="ihc-stuffbox">
 						<h3><?php _e('Google Activation:', 'ihc');?></h3>
 						<div class="inside">
@@ -531,7 +573,10 @@ if ($_GET['subtab']=='settings'){
 	}
 } else {
 	//===================== DESIGN
-	ihc_save_update_metas('social_media');//save update metas
+	if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
+			ihc_save_update_metas('social_media');//save update metas
+	}
+
 	$meta_arr = ihc_return_meta_arr('social_media');//getting metas
 	?>
 	<div class="iump-page-title">Ultimate Membership Pro -
@@ -540,6 +585,9 @@ if ($_GET['subtab']=='settings'){
 		</span>
 	</div>
 		<form action="" method="post">
+
+			<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
+
 			<div class="ihc-stuffbox">
 				<h3><?php _e("Settings", "ihc");?></h3>
 				<div class="inside">

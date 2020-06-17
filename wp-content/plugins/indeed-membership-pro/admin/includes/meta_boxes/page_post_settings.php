@@ -2,14 +2,15 @@
 //return html meta boxes for admin section
 global $post;
 $meta_arr = ihc_post_metas($post->ID);
-
 ?>
+
 <div class="ihc-class ihc-padding">
 	<select class="ihc-fullwidth ihc-select" name="ihc_mb_type" id="ihc_mb_type" onChange="ihcShowHideDrip();">
 		<option value="show" <?php if($meta_arr['ihc_mb_type']=='show') echo 'selected';?> ><?php _e('Show Page Only', 'ihc');?></option>
 		<option value="block" <?php if($meta_arr['ihc_mb_type']=='block') echo 'selected';?> ><?php _e('Block Page Only', 'ihc');?></option>
 	</select>
 </div>
+
 
 <div style="margin:4px 0;">
 	<div  class="ihc-padding"  style="text-align:right; margin-bottom:10px;">
@@ -24,7 +25,7 @@ $meta_arr = ihc_post_metas($post->ID);
 			$levels = get_option('ihc_levels');
 			if ($levels){
 				foreach ($levels as $id=>$level){
-					$posible_values[$id] = $level['name'];
+					$posible_values[$id] = $level['label'];
 				}
 			}
 			?>

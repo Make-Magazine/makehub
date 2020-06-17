@@ -141,7 +141,7 @@ class Ihc_Invoice{
 
 			$data['order_details']['code'] = 'qwerty_123';
 
-			$data['order_details']['create_date'] = date(time());
+			$data['order_details']['create_date'] = indeed_get_current_time_with_timezone();
 
 		}
 

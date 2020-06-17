@@ -31,6 +31,9 @@
 							</span>
 </div>
 <form method="post" action="" id="block_url_form">
+
+	<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
+
 	<?php
 		$subtab = isset($_REQUEST['subtab']) ? $_REQUEST['subtab'] : 'post_types';
 		switch ($subtab):
@@ -333,17 +336,20 @@
 			break;
 		case 'post_types':
 
-			if (isset($_POST['delete_block']) && $_POST['delete_block']!=''){
+			if (isset($_POST['delete_block']) && $_POST['delete_block']!='' && !empty($_POST['ihc_admin_block_url_nonce']) && wp_verify_nonce( $_POST['ihc_admin_block_url_nonce'], 'ihc_admin_block_url_nonce' ) ){
 				/// ======================== DELETE
 				ihc_delete_block_group('ihc_block_posts_by_type', $_POST['delete_block']);
 			}
-			if (!empty($_POST['ihc_save'])){
+			if ( !empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_block_url_nonce']) && wp_verify_nonce( $_POST['ihc_admin_block_url_nonce'], 'ihc_admin_block_url_nonce' ) ){
 				/// ========================= ADD NEW
 				unset($_POST['ihc_save']);
 				ihc_save_block_group('ihc_block_posts_by_type', $_POST, $_POST['post_type']);
 			}
 			?>
 			<form method="post" action="">
+
+				<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Block All Posts By Type', 'ihc');?></h3>
 					<div class="inside">
@@ -438,6 +444,7 @@
 				if ($data && count($data)){
 					?>
 						<form method="post" action="" id="delete_block_form">
+							<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
 							<input type="hidden" value="" name="delete_block" id="delete_block" />
 						</form>
 						<div class="ihc-dashboard-form-wrap">
@@ -523,17 +530,20 @@
 		<?php }
 		break;
 	case 'cats':
-			if (isset($_POST['delete_block']) && $_POST['delete_block']!=''){
+			if (isset($_POST['delete_block']) && $_POST['delete_block']!='' && !empty($_POST['ihc_admin_block_url_nonce']) && wp_verify_nonce( $_POST['ihc_admin_block_url_nonce'], 'ihc_admin_block_url_nonce' ) ){
 				/// ======================== DELETE
 				ihc_delete_block_group('ihc_block_cats_by_name', $_POST['delete_block']);
 			}
-			if (!empty($_POST['ihc_save'])){
+			if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_block_url_nonce']) && wp_verify_nonce( $_POST['ihc_admin_block_url_nonce'], 'ihc_admin_block_url_nonce' ) ){
 				/// ========================= ADD NEW
 				unset($_POST['ihc_save']);
 				ihc_save_block_group('ihc_block_cats_by_name', $_POST, $_POST['cat_id']);
 			}
 			?>
 			<form method="post" action="">
+
+				<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Block All Posts By Category Name', 'ihc');?></h3>
 					<div class="inside">
@@ -618,6 +628,7 @@
 				if ($data && count($data)){
 					?>
 						<form method="post" action="" id="delete_block_form">
+							<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
 							<input type="hidden" value="" name="delete_block" id="delete_block" />
 						</form>
 						<div class="ihc-dashboard-form-wrap">
@@ -706,14 +717,14 @@
 						</table>
 						</div>
 		<?php }
-		
+
 		break;
 	case 'files':
 			if (isset($_POST['delete_block']) && $_POST['delete_block']!=''){
 				/// ======================== DELETE
 				ihc_delete_block_group('ihc_block_files_by_url', $_POST['delete_block']);
 			}
-			if (!empty($_POST['ihc_save'])){
+			if (!empty($_POST['ihc_save']) && !empty($_POST['ihc_admin_block_url_nonce']) && wp_verify_nonce( $_POST['ihc_admin_block_url_nonce'], 'ihc_admin_block_url_nonce' ) ){
 				/// ========================= ADD NEW
 				unset($_POST['ihc_save']);
 				ihc_save_block_group('ihc_block_files_by_url', $_POST, $_POST['file_url']);
@@ -721,6 +732,9 @@
 			}
 			?>
 			<form method="post" action="">
+
+				<input type="hidden" name="ihc_admin_block_url_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_block_url_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Block Files By URL', 'ihc');?></h3>
 					<div class="inside">

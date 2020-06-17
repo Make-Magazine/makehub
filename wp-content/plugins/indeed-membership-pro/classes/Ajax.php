@@ -3,7 +3,10 @@ namespace Indeed\Ihc;
 
 class Ajax
 {
-
+    /**
+     * @param none
+     * @return none
+     */
     public function __construct()
     {
         add_action('wp_ajax_ihc_admin_send_email_popup', array($this, 'ihc_admin_send_email_popup') );
@@ -16,11 +19,23 @@ class Ajax
         add_action( 'wp_ajax_ihc_close_admin_notice', array( $this, 'ihc_close_admin_notice' ) );
         add_action( 'wp_ajax_ihc_remove_media_post', array( $this, 'ihc_remove_media_post' ) );
         add_action( 'wp_ajax_nopriv_ihc_remove_media_post', array( $this, 'ihc_remove_media_post' ) );
+        add_action( 'wp_ajax_nopriv_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
+        add_action( 'wp_ajax_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
+        add_action( 'wp_ajax_ihc_admin_list_users_total_spent_values', array( $this, 'usersTotalSpentValues') );
     }
 
-
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_admin_send_email_popup()
     {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
         $uid = empty($_POST['uid']) ? 0 : esc_sql($_POST['uid']);
         if (empty($uid)){
             die;
@@ -46,8 +61,18 @@ class Ajax
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_admin_do_send_email()
     {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
         $to = empty($_POST['to']) ? '' : esc_sql($_POST['to']);
         $from = empty($_POST['from']) ? '' : esc_sql($_POST['from']);
         $subject = empty($_POST['subject']) ? '' : esc_sql($_POST['subject']);
@@ -71,8 +96,18 @@ class Ajax
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_generate_direct_link()
     {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
         if ( empty( $_POST['username'] ) ){
             echo 'Error';
             die;
@@ -92,8 +127,18 @@ class Ajax
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_generate_direct_link_by_uid()
     {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
         if ( empty( $_POST['uid'] ) ){
             echo 'Error';
             die;
@@ -103,8 +148,20 @@ class Ajax
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_direct_login_delete_item()
     {
+        if ( !indeedIsAdmin() ){
+            echo 0;
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            echo 0;
+            die;
+        }
         if ( empty( $_POST['uid'] ) ){
             die;
         }
@@ -115,15 +172,20 @@ class Ajax
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_save_reason_for_cancel_delete_level()
     {
         if ( empty($_POST['lid']) || empty($_POST['reason']) || empty($_POST['action_type']) ){
-           echo 0;
            die;
+        }
+        if ( !ihcPublicVerifyNonce() ){
+            die;
         }
         $uid = ihc_get_current_user();
         if ( !$uid ){
-            echo 0;
             die;
         }
         $reasonDbObject = new \Indeed\Ihc\Db\ReasonsForCancelDeleteLevels();
@@ -137,23 +199,93 @@ class Ajax
             echo 1;
             die;
         }
-        echo 0;
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_close_admin_notice()
     {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
         update_option( 'ihc_hide_admin_license_notice', 1 );
         echo 1;
         die;
     }
 
+    /**
+     * @param none
+     * @return none
+     */
     public function ihc_remove_media_post()
     {
         if ( empty( $_POST['postId'] ) ){
             return;
         }
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
         wp_delete_attachment( esc_sql( $_POST['postId'] ), true );
+        die;
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    public function ihc_update_list_notification_constants()
+    {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
+        if ( empty( $_POST['notificationType'] ) ){
+            die;
+        }
+        $data = ihcNotificationConstants( esc_sql( $_POST['notificationType'] ) );
+        if ( !$data ){
+            die;
+        }
+        foreach ( $data as $constant => $value ){
+            echo '<div>' . $constant . '</div>';
+        }
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function usersTotalSpentValues()
+    {
+        global $wpdb;
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
+        if ( empty( $_POST['users'] ) ){
+            die;
+        }
+        $ids = esc_sql( $_POST['users'] );
+        $queryString = $wpdb->prepare( "SELECT SUM(amount_value) AS sum, uid FROM {$wpdb->prefix}ihc_orders WHERE uid IN ($ids) GROUP BY uid" );
+        $data = $wpdb->get_results( $queryString );
+        if ( !$data ){
+            die;
+        }
+        foreach ( $data as $object ){
+            $array[$object->uid] = $object->sum;
+        }
+        echo json_encode( $array );
         die;
     }
 

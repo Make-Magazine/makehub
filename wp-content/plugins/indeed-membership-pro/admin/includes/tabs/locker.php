@@ -1,6 +1,6 @@
 <?php
 ihc_delete_template();//DELETE
-if (isset($_POST['ihc_bttn'])){
+if (isset($_POST['ihc_bttn']) && !empty( $_POST['ihc_admin_locker_nonce'] ) && wp_verify_nonce( $_POST['ihc_admin_locker_nonce'], 'ihc_admin_locker_nonce' )){
 	Ihc_Db::save_update_locker_template($_POST);//SAVE, UPDATE
 }
 ?>
@@ -41,6 +41,8 @@ if (isset($_POST['ihc_bttn'])){
 						echo '<input type="hidden" value="'.$_REQUEST['ihc_edit_id'].'" name="template_id" />';//for update
 					}
 				?>
+
+				<input type="hidden" name="ihc_admin_locker_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_locker_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Locker Name', 'ihc');?></h3>
@@ -195,7 +197,7 @@ if (isset($_POST['ihc_bttn'])){
 									<th class="manage-column"><?php _e('Theme', 'ihc');?></th>
 									<th class="manage-column"><?php _e('Edit', 'ihc');?></th>
 									<th class="manage-column"><?php _e('Preview', 'ihc');?></th>
-									<th class="manage-column"><?php _e('Delete', 'ihc');?></th>
+									<th class="manage-column"><?php _e('Remove', 'ihc');?></th>
 								</tr>
 							</thead>
 						    <tfoot>
@@ -205,7 +207,7 @@ if (isset($_POST['ihc_bttn'])){
 									<th class="manage-column"><?php _e('Theme', 'ihc');?></th>
 									<th class="manage-column"><?php _e('Edit', 'ihc');?></th>
 									<th class="manage-column"><?php _e('Preview', 'ihc');?></th>
-									<th class="manage-column"><?php _e('Delete', 'ihc');?></th>
+									<th class="manage-column"><?php _e('Rremove', 'ihc');?></th>
 						        </tr>
 						    </tfoot>
 						<?php
@@ -214,7 +216,7 @@ if (isset($_POST['ihc_bttn'])){
 							?>
 							<tr class="<?php if($i%2==0) echo 'alternate';?>">
 								<td><?php echo $k;?></td>
-								<td style="color: #21759b; font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;">
+								<td class="ihc-highlighted-label">
 									<?php
 										echo $v['ihc_locker_name'];
 									?>
@@ -238,7 +240,7 @@ if (isset($_POST['ihc_bttn'])){
 									</a>
 								</td>
 								<td>
-									<a href="<?php echo $url.'&tab=locker&subtab=lockers_list&i_delete_id='.$k;?>">
+									<div style="cursor:pointer;display:inline-block;" class="ihc-js-admin-delete-locker" data-id="<?php echo $k;?>" >
 										<i class="fa-ihc ihc-icon-remove-e"></i>
 									</a>
 								</td>
@@ -259,6 +261,33 @@ if (isset($_POST['ihc_bttn'])){
 		}
 	}
 ?>
+<script>
+jQuery( '.ihc-js-admin-delete-locker' ).on( 'click', function(){
+		var lockerId = jQuery( this ).attr( 'data-id' );
+		swal({
+			title: "<?php _e( 'Are you sure that you want to delete this item?', 'ihc' );?>",
+			text: "",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "OK",
+			closeOnConfirm: true
+		},
+		function(){
+				jQuery.ajax({
+						type : 'post',
+						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+						data : {
+											 action: 'ihc_admin_delete_locker',
+											 id:			lockerId,
+									 },
+						success: function (response) {
+								location.reload();
+						}
+			 });
+	 });
+});
+</script>
 
 </div>
 </div>

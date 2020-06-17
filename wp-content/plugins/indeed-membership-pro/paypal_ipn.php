@@ -1,4 +1,9 @@
 <?php
+/*
+ * Deprecated
+ * Used in version <8.3.3
+ */
+
 if (empty($no_load)){
 	require_once '../../../wp-load.php';
 	require_once 'utilities.php';
@@ -130,6 +135,7 @@ if ( ( isset($_POST['payment_status']) || isset($_POST['txn_type']) ) && isset($
 					ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
 					ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
 					do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
+					// @description run on payment complete. @param user id (integer), level id (integer)
 					ihc_switch_role_for_user($data['user_id']);
 
 				break;
@@ -153,6 +159,7 @@ if ( ( isset($_POST['payment_status']) || isset($_POST['txn_type']) ) && isset($
 				case 'Refunded':
 						ihc_delete_user_level_relation($data['level_id'], $data['user_id']);
 						do_action('ump_paypal_user_do_refund', $data['user_id'], $data['level_id'], @$_POST['txn_id']);
+						// @description run on payment refund. @param user id (integer), level id (integer), transaction id (integer)
 				break;
 			}
 			if (isset($_POST['txn_id'])){
@@ -166,18 +173,20 @@ if ( ( isset($_POST['payment_status']) || isset($_POST['txn_type']) ) && isset($
 			exit();
 		} else if (isset($_POST['txn_type']) && $_POST['txn_type']=='subscr_signup'){
 			$insert_data = $_POST;
-			$insert_data['txn_id'] = "txn_" . time() . "_{$data['user_id']}_{$data['level_id']}";
+			$insert_data['txn_id'] = "txn_" . indeed_get_unixtimestamp_with_timezone() . "_{$data['user_id']}_{$data['level_id']}";
 			$insert_data['payment_status'] = 'Completed';
 			$insert_data['ihc_payment_type'] = 'paypal';
 			if (!empty($_POST['period1'])){
 				/// its trial
-				if (isset($_POST['mc_amount1']) && (int)$_POST['mc_amount1']==0){
+				if (isset($_POST['mc_amount1']) && (float)$_POST['mc_amount1']==0){
 				  ihc_set_level_trial_time_for_no_pay($data['level_id'], $data['user_id']);
 				  Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time (Trial).", 'ihc'), 'payments');
 				  ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
 				  ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
 					do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
-				  ihc_switch_role_for_user($data['user_id']);
+					// @description run on payment complete. @param user id (integer), level id (integer)
+
+					ihc_switch_role_for_user($data['user_id']);
 				  ihc_insert_update_transaction($data['user_id'], $insert_data['txn_id'], $insert_data);
 				}else{
 					//Wait to receive the new response via 	payment_status = Completed
@@ -189,10 +198,12 @@ if ( ( isset($_POST['payment_status']) || isset($_POST['txn_type']) ) && isset($
 				ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
 				ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
 				do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
+				// @description run on payment complete. @param user id (integer), level id (integer)
+
 				ihc_switch_role_for_user($data['user_id']);
 				ihc_insert_update_transaction($data['user_id'], $insert_data['txn_id'], $insert_data);
 			}
-			//header('HTTP/1.0 200 OK');
+			header('HTTP/1.0 200 OK');
 			exit();
 		}
 

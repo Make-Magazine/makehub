@@ -1,14 +1,19 @@
 <?php
 if (!$is_public){
     unset($args['name']);
+	$args['class'] = 'ihc-form-element ihc-form-element-select ihc-form-select ' ;
     $args['other_args'] = 'onChange="ihcWriteTagValue(this, \'#indeed-user-level-free-select\', \'#ihc-select-level-view-values\', \'ihc-level-select-v-\');"';
 }
 ?>
-<div class="iump-form-line iump-special-line">
-    <label class="iump-labels"><?php _e('Select Level:', 'ihc');?></label>
+<div class="ihc-admin-select-level-wrapper">
+<h2><?php _e('Subscriptions management', 'ihc');?></h2>
+<p><?php _e('Assign new level or manually change when subscription starts and expires for current user ', 'ihc');?></p>
+<div class="iump-form-line">
+    <h4><?php _e('Assign new Subscription', 'ihc');?></h4>
+    <p><?php _e('Manually assign a specific Level which will become automatically Active (including paid levels)', 'ihc');?></p>
     <?php echo indeed_create_form_element($args);?>
     <?php if (!$is_public):?>
-      <?php echo indeed_create_form_element(array('type'=>'hidden', 'name'=>'ihc_user_levels', 'id' => 'indeed-user-level-free-select', 'value' => $user_levels ));?>
+      <?php echo indeed_create_form_element(array('type'=>'hidden', 'name'=>'ihc_user_levels', 'id' => 'indeed-user-level-free-select', 'value' => $user_levels));?>
       <div id="ihc-select-level-view-values">
           <?php if ($userLevelsArray):?>
               <?php foreach ($userLevelsArray as $lid):?>
@@ -19,7 +24,7 @@ if (!$is_public){
                     continue;
                 }
                 ?>
-                <div id="<?php echo 'ihc-level-select-v-' . $lid;?>" class="ihc-tag-item"><?php echo $levelData['name'];?>
+                <div id="<?php echo 'ihc-level-select-v-' . $lid;?>" class="ihc-tag-item"><?php echo $levelData['label'];?>
                     <div class="ihc-remove-tag" onclick="ihcremoveTag(<?php echo $lid;?>, '#ihc-level-select-v-', '#indeed-user-level-free-select');ihcAdminDeleteUserLevelRelationship(<?php echo $lid;?>, <?php echo $uid;?>);" title="<?php _e('Removing tag', 'ihc');?>">
                         x
                     </div>
@@ -29,4 +34,5 @@ if (!$is_public){
       </div>
       <div class="clear"></div>
     <?php endif;?>
+</div>
 </div>

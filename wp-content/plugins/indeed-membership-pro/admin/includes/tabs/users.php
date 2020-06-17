@@ -1,6 +1,8 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item  <?php echo ($_REQUEST['ihc-new-user'] =='true') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&ihc-new-user=true';?>"><?php _e('Add New User', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item  <?php echo (!isset($_REQUEST['ihc-new-user'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab;?>"><?php _e('Manage Users', 'ihc');?></a>
+	<?php ?>
+	<a class="ihc-subtab-menu-item  <?php echo ( @$_REQUEST['ihc-new-user']  == 'true') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=users&ihc-new-user=true';?>"><?php _e('Add New User', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item  <?php echo ( !isset($_REQUEST['ihc-new-user'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab;?>"><?php _e('Manage Users', 'ihc');?></a>
+
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -10,8 +12,8 @@ wp_enqueue_script( 'ihcSearchUsers', IHC_URL . 'admin/assets/js/search_users.js'
 echo ihc_inside_dashboard_error_license();
 $is_uap_active = ihc_is_uap_active();
 
-//delete
-if (isset($_POST['delete_users'])){
+//
+if (isset($_POST['delete_users']) && !empty( $_POST['ihc_du'] ) && wp_verify_nonce( $_POST['ihc_du'], 'ihc_delete_users' ) ){
 	ihc_delete_users(0, $_POST['delete_users']);
 }
 
@@ -94,7 +96,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 			<script>
 				jQuery(document).ready(function() {
-				    jQuery('.expire_input_text, .start_input_text').datepicker({
+				    jQuery('.start_input_text').datepicker({
 				        dateFormat : 'yy-mm-dd',
 				        onSelect: function(datetext){
 				            var d = new Date();
@@ -102,16 +104,41 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				            jQuery(this).val(datetext);
 				        }
 				    });
+						jQuery('.expire_input_text').datepicker({
+								dateFormat : 'yy-mm-dd',
+								onSelect: function(datetext){
+										if ( datetext == '' || datetext == null ){
+											jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( '<?php _e('Hold');?>').attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Expired');
+										}
+										var d = new Date();
+										datetext = datetext+" "+d.getHours()+":"+ihcAddZero(d.getMinutes())+":"+ihcAddZero(d.getSeconds());
+										jQuery(this).val(datetext);
+										var currentTimestamp = ( new Date().getTime()/1000 );
+										var selectedTimestamp = (new Date(datetext).getTime() / 1000 );
+										if ( currentTimestamp > selectedTimestamp ){
+												jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( '<?php _e( 'Expired', 'ihc' );?>').attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Expired');
+										} else {
+												jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( '<?php _e( 'Active', 'ihc');?>' ).attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Active');
+										}
+
+								}
+						});
 				});
 			</script>
 			<?php
 		}
 		?>
 			<div class="ihc-stuffbox" style="margin-top: 20px;">
-				<h3><?php _e('Add/Edit User', 'ihc');?></h3>
+				<h3><?php _e('Add/Update Membership User', 'ihc');?></h3>
 				<div class="inside">
-					<?php echo $form;?>
-				</div>
+                	<div class="ihc-admin-edit-user">
+                     <div class="ihc-admin-user-form-wrapper">
+                   			 <h2><?php _e('User Profile details', 'ihc');?></h2>
+					 		<p><?php _e('Manage what fields are available for Admin setup from "Showcases->Register Form->Custom Fields" section ', 'ihc');?></p>
+                    </div>
+						<?php echo $form;?>
+					</div>
+                </div>
 			</div>
 		<?php
 	} else {
@@ -120,21 +147,22 @@ $individual_page = get_option( 'ihc_individual_page_enabled' );
 ?>
 <div class="iump-wrapper">
 	<div id="col-right" style="vertical-align:top; width: 100%;">
-
 		<div class="iump-page-title">Ultimate Membership Pro -
 			<span class="second-text">
-				<?php _e('MemberShip Users', 'ihc');?>
+				<?php _e('Membership Users', 'ihc');?>
 			</span>
 		</div>
 		<a href="<?php echo $url.'&tab=users&ihc-new-user=true';?>" class="indeed-add-new-like-wp">
 			<i class="fa-ihc fa-add-ihc"></i><?php _e('Add New User', 'ihc');?>
 		</a>
+
 		<div class="ihc-special-buttons-users">
 			<div class="ihc-special-button" onclick="ihcShowHide('.ihc-filters-wrapper');"><i class="fa-ihc fa-export-csv"></i>Add Filters</div>
 			<div class="ihc-special-button" style="background-color:#38cbcb;" id="ihc_make_user_csv_file" data-get_variables='<?php echo json_encode( $_GET );?>' onClick="ihcMakeUserCsv();"><i class="fa-ihc fa-export-csv"></i>Export CSV</div>
 			<div class="ihc-hidden-download-link" style="display: none;float: right; padding: 20px 20px 0px 0px;"><a href="" target="_blank"><?php _e("Click on this if download doesn't start automatically in 20 seconds!");?></a></div>
 			<div class="ihc-clear"></div>
 		</div>
+
 
 		<?php
 		$hidded = 'style="display:none;"';
@@ -324,12 +352,16 @@ $individual_page = get_option( 'ihc_individual_page_enabled' );
 			</div>
 			</form>
 		</div>
-		<form method="post" action="" style="margin-top:20px;">
+		<form method="post" action="" style="margin-top:20px;" name="ihc-users">
 			<?php
-				$limit = (isset($_GET['ihc_limit'])) ? $_GET['ihc_limit'] : 25;
+				$currency = get_option( 'ihc_currency' );
+				$limit = (isset($_GET['ihc_limit'])) ? (int)$_GET['ihc_limit'] : 25;
 				$start = 0;
 				if(isset($_GET['ihcdu_page'])){
-					$pg = $_GET['ihcdu_page'] - 1;
+					$pg = (int)$_GET['ihcdu_page'] - 1;
+					if ( $pg < 0){
+						$pg = 0;
+					}
 					$start = (int)$pg * $limit;
 				}
 				$search_query = isset($_GET['search_user']) ? $_GET['search_user'] : '';
@@ -360,7 +392,7 @@ $individual_page = get_option( 'ihc_individual_page_enabled' );
 				<?php
 					//SEARCH FILTER BY USER LEVELS
 					if ($start==0) $current_page = 1;
-					else $current_page = $_GET['ihcdu_page'];
+					else $current_page = (int)$_GET['ihcdu_page'];
 
 					require_once IHC_PATH . 'classes/Ihc_Pagination.class.php';
 
@@ -391,7 +423,7 @@ $individual_page = get_option( 'ihc_individual_page_enabled' );
 						?>
 							<div style="margin: 10px 0px;">
 								<div style="display: inline-block;float: left;" >
-									<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" onClick="ihcFirstConfirm('<?php _e('Are You Sure You want to delete selected Users?');?>');" class="button button-primary button-large"/>
+									<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" onClick="event.preventDefault();ihcFirstConfirmBeforeSubmitForm('<?php _e('Are You Sure You want to delete selected Users?');?>');" class="button button-primary button-large ihc-remove-group-button"/>
 								</div>
 <?php
 $url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -399,7 +431,7 @@ $url = remove_query_arg('ihc_limit', $url);
 $url = remove_query_arg('ihcdu_page', $url);
 ?>
 								<div style="display: inline-block;float: right;margin-right:10px;">
-									<strong><?php _e('Number of Users to Display:', 'ihc');?></strong>
+									<strong><?php _e('Number of Users per Page:', 'ihc');?></strong>
 									<select name="ihc_limit" class="js-ihc-search-users-limit" onChange="window.location = '<?php echo $url;?>&ihc_limit='+this.value;">
 										<?php
 											foreach(array(5,25,50,100,200,500) as $v){
@@ -410,12 +442,12 @@ $url = remove_query_arg('ihcdu_page', $url);
 										?>
 									</select>
 								</div>
-									<?php //////////////////PAGINATION
+								<?php //////////////////PAGINATION
 											echo $pagination;
 									?>
 								<div class="clear"></div>
 							</div>
-
+							<div class="iump-rsp-table">
 						   <table class="wp-list-table widefat fixed tags ihc-admin-tables">
 							  <thead>
 								<tr>
@@ -423,30 +455,32 @@ $url = remove_query_arg('ihcdu_page', $url);
 									  	<input type="checkbox" onClick="ihcSelectAllCheckboxes( this, '.ihc-delete-user' );" />
 									  </th>
 									  <th class="manage-column">
+											<?php _e('Full Name', 'ihc');?>
+									  </th>
+									  <th class="manage-column">
 											<?php _e('Username', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Name', 'ihc');?>
-									  </th>
-									  <th class="manage-column">
-											<?php _e('E-mail', 'ihc');?>
+											<?php _e('Email Address', 'ihc');?>
 									  </th>
 									  <th class="manage-column" style="width:250px;">
-											<?php _e('Level', 'ihc');?>
+											<?php _e('Subscriptions', 'ihc');?>
 									  </th>
+										<th  style="width:130px;"><?php _e( 'Total Spend', 'ihc' );?></th>
+										<?php do_action( 'ump_action_admin_list_user_column_name_after_total_spend' );?>
 									  <?php if (!empty($magic_feat_user_sites)):?>
 									  <th class="manage-column">
 									  		<?php _e('Sites', 'ihc');?>
 									  </th>
 									  <?php endif;?>
 									  <th class="manage-column" style="width:100px;">
-											<?php _e('WP User Role', 'ihc');?>
+											<?php _e('WP User role', 'ihc');?>
 									  </th>
 									  <th class="manage-column" style="width:100px;">
-											<?php _e('E-mail Status', 'ihc');?>
+											<?php _e('Email Status', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Join Date', 'ihc');?>
+											<?php _e('Sign Up date', 'ihc');?>
 									  </th>
 									  <th class="manage-column" style="width:200px;">
 											<?php _e('Details', 'ihc');?>
@@ -459,30 +493,32 @@ $url = remove_query_arg('ihcdu_page', $url);
 									  	<input type="checkbox" onClick="ihcSelectAllCheckboxes( this, '.ihc-delete-user' );" />
 									  </th>
 									  <th class="manage-column">
+											<?php _e('Full Name', 'ihc');?>
+									  </th>
+									  <th class="manage-column">
 											<?php _e('Username', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Name', 'ihc');?>
-									  </th>
-									  <th class="manage-column">
-											<?php _e('E-mail', 'ihc');?>
+											<?php _e('Email Address', 'ihc');?>
 									  </th>
 									  <th class="manage-column" style="width:250px;">
-											<?php _e('Level', 'ihc');?>
+											<?php _e('Subscriptions', 'ihc');?>
 									  </th>
+										<th><?php _e( 'Total Spend', 'ihc' );?></th>
+										<?php do_action( 'ump_action_admin_list_user_column_name_after_total_spend' );?>
 									  <?php if (!empty($magic_feat_user_sites)):?>
 									  <th class="manage-column">
 									  		<?php _e('Sites', 'ihc');?>
 									  </th>
 									  <?php endif;?>
 									  <th class="manage-column">
-											<?php _e('WP User Role', 'ihc');?>
+											<?php _e('WP User role', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('E-mail Status', 'ihc');?>
+											<?php _e('Email Status', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Join Date', 'ihc');?>
+											<?php _e('Sign up date', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
 											<?php _e('Details', 'ihc');?>
@@ -494,6 +530,7 @@ $url = remove_query_arg('ihcdu_page', $url);
 							  		$available_roles = ihc_get_wp_roles_list();
 
 							  		foreach ($users as $user){
+											$userIds[] = $user->ID;
 							  			$verified_email =  get_user_meta($user->ID, 'ihc_verification_status', TRUE);
 											$roles = isset($user->roles) ? array_keys(unserialize($user->roles)) : $user->roles;
 							  			?>
@@ -502,7 +539,16 @@ $url = remove_query_arg('ihcdu_page', $url);
 									  					<input type="checkbox" class="ihc-delete-user" name="delete_users[]" value="<?php echo $user->ID;?>" />
 									 				</th>
 			    						   			<td>
-														<?php echo $user->user_login;?>
+                                                    <?php
+																	$firstName = isset( $user->first_name ) ? $user->first_name : '';
+																	$lastName = isset( $user->last_name ) ? $user->last_name : '';
+			    						   					if ( !empty( $firstName ) || !empty( $lastName ) ){
+			    						   						echo $firstName . ' ' . $lastName;
+			    						   					} else {
+			    						   						echo $user->user_nicename;
+			    						   					}
+			    						   				?>
+
 														<?php
 															if ($is_uap_active && !empty($indeed_db)){
 																$is_affiliate = $indeed_db->is_user_affiliate_by_uid($user->ID);
@@ -513,39 +559,33 @@ $url = remove_query_arg('ihcdu_page', $url);
 																}
 															}
 														?>
-														<div style="visibility: hidden;" id="user_tr_<?php echo $user->ID;?>">
-															<a href="<?php echo $url.'&tab=users&ihc-edit-user='.$user->ID;?>"><?php _e('Edit', 'ihc');?></a>
-															|
-															<a onClick="ihcDeleteUserPrompot(<?php echo $user->ID;?>);" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'ihc');?></a>
+
+														<div class="ihc-buttons-rsp" style="visibility:hidden;" id="user_tr_<?php echo $user->ID;?>">
+															<a class="iump-btns" href="<?php echo $url.'&tab=users&ihc-edit-user='.$user->ID;?>"><?php _e('Edit', 'ihc');?></a>
+
+															<a class="iump-btns" onClick="ihcDeleteUserPrompot(<?php echo $user->ID;?>);" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'ihc');?></a>
 															<?php
 																///get role !!!!
 																if (isset($roles) && $roles[0]=='pending_user'){
 																	?>
 																	<span id="approveUserLNK<?php echo $user->ID;?>" onClick="ihcApproveUser(<?php echo $user->ID;?>);">
-																	| <span style="cursor:pointer; color: #0074a2;"><?php _e('Approve', 'ihc');?></span>
+																	 <span class="iump-btns" style="cursor:pointer; color: #0074a2;"><?php _e('Approve', 'ihc');?></span>
 																	</span>
 																	<?php
 																}
 																if ($verified_email==-1){
 																	?>
 																	<span id="approve_email_<?php echo $user->ID;?>" onClick="ihcApproveEmail(<?php echo $user->ID;?>, '<?php _e("Verified", "ihc");?>');">
-																	| <span style="cursor:pointer; color: #0074a2;"><?php _e('Approve E-mail', 'ihc');?></span>
+																	 <span class="iump-btns" style="cursor:pointer; color: #0074a2;"><?php _e('Approve E-mail', 'ihc');?></span>
 																	</span>
 																	<?php
 																}
 															?>
 														</div>
+
 			    						   			</td>
 			    						   			<td class="ihc-users-list-name">
-			    						   				<?php
-																	$firstName = isset( $user->first_name ) ? $user->first_name : '';
-																	$lastName = isset( $user->last_name ) ? $user->last_name : '';
-			    						   					if ( !empty( $firstName ) || !empty( $lastName ) ){
-			    						   						echo $firstName . ' ' . $lastName;
-			    						   					} else {
-			    						   						echo $user->user_nicename;
-			    						   					}
-			    						   				?>
+			    						   				<?php echo $user->user_login;?>
 			    						   			</td>
 			    						   			<td>
 			    						   				<a href="<?php echo 'mailto:' . $user->user_email;?>" target="_blank"><?php echo $user->user_email;?></a>
@@ -615,7 +655,11 @@ $url = remove_query_arg('ihcdu_page', $url);
 															}
 			    						   				?>
 			    						   			</td>
-			    						   			<?php if (!empty($magic_feat_user_sites)):?>
+															<td class="ihc-users-list-joindate"><?php
+																	echo ihc_format_price_and_currency_with_price_wrapp($currency, 0, " id='ihc_js_total_spent_for_{$user->ID}' ");
+															?></td>
+															<?php do_action( 'ump_action_admin_list_user_row_after_total_spend', $user->ID );?>
+															<?php if (!empty($magic_feat_user_sites)):?>
 			    						   				<?php
 															$sites = array();
 															$temp = array();
@@ -728,8 +772,9 @@ $url = remove_query_arg('ihcdu_page', $url);
 							  		}
 							  ?>
 						   </table>
+						 </div>
 						   <div style="margin-top: 10px;">
-						   		<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" onClick="ihcFirstConfirm('<?php _e('Are You Sure You want to delete selected Users?');?>');" class="button button-primary button-large"/>
+						   		<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" onClick="event.preventDefault();ihcFirstConfirmBeforeSubmitForm('<?php _e('Are You Sure You want to delete selected Users?');?>');" class="button button-primary button-large ihc-remove-group-button"/>
 						   </div>
 						<?php
 					}else{ ?>
@@ -737,6 +782,7 @@ $url = remove_query_arg('ihcdu_page', $url);
 					<?php }
 				?>
 			</div>
+			<input type="hidden" name="ihc_du" value="<?php echo wp_create_nonce( 'ihc_delete_users' );?>" />
 		</form>
 	</div>
 </div>
@@ -747,5 +793,28 @@ $url = remove_query_arg('ihcdu_page', $url);
     width: 800px;
 }
 </style>
+<?php if ( !empty( $userIds ) ):?>
+<script>
+window.addEventListener( 'load', function(){
+	jQuery.ajax({
+			type : "post",
+			url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+			data : {
+								 action			: "ihc_admin_list_users_total_spent_values",
+								 users   		: '<?php echo implode(',', $userIds);?>',
+						 },
+			success: function (data) {
+					if ( !data || data == '' ){
+							return false;
+					}
+					var jsonObject = JSON.parse( data );
+					Object.keys( jsonObject ).forEach( function (key){
+							document.getElementById('ihc_js_total_spent_for_'+key).innerHTML = jsonObject[key];
+					});
+			}
+ });
+});
+</script>
+<?php endif;?>
 <?php
 }

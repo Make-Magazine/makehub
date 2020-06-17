@@ -56,8 +56,8 @@ class DirectLogin
 
     public function generateToken( $uid=0, $timeout=0 )
     {
-        $until = time() + $timeout;
-        $token = 'ump' . $uid . hash( 'sha256', time() ) . $uid;
+        $until = indeed_get_unixtimestamp_with_timezone() + $timeout;
+        $token = 'ump' . $uid . hash( 'sha256', indeed_get_unixtimestamp_with_timezone() ) . $uid; 
         $token = hash( 'haval160,4', $token );
         update_user_meta( $uid, $this->userMetaNameToken, $token );
         update_user_meta( $uid, $this->userMetaNameTokenTimeout, $until );

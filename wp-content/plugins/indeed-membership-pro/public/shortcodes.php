@@ -59,7 +59,7 @@ function ihc_login_form($attr=array()){
 		} else {
 			//already logged in
 			if ($user_type=='admin'){
-				$str .= '<div class="ihc-wrapp-the-errors"><div class="ihc-register-error">' . __('<strong>Admin Info</strong>: Login Form is not showing up when you\'re logged.', 'ihc') . '</div></div>';
+				$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Login Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
 			}
 		}
 	} else {
@@ -199,10 +199,13 @@ function ihc_lost_pass_form(){
 		if ($ihc_reset_pass){
 			if ($ihc_reset_pass==1){
 				//reset ok
-				return '<span class="ihc-reset-pass-success-msg">' . get_option('ihc_reset_msg_pass_ok') . '</span>';
+				$message = get_option('ihc_reset_msg_pass_ok');
+				$message = stripslashes( $message );
+				return '<span class="ihc-reset-pass-success-msg">' . $message . '</span>';
 			} else {
 				//reset error
 				$err_msg = get_option('ihc_reset_msg_pass_err');
+				$err_msg = stripslashes( $err_msg );
 				if ($err_msg){
 					$str .= '<div class="ihc-wrapp-the-errors">' . $err_msg . '</div>';
 				}
@@ -211,7 +214,8 @@ function ihc_lost_pass_form(){
 	} else {
 		$user_type = ihc_get_user_type();
 		if ($user_type=='admin'){
-			$str .= '<div class="ihc-wrapp-the-errors"><div class="ihc-register-error">' . __('<strong>Admin Info</strong>: Lost Password Form is not showing up when you\'re logged.', 'ihc') . '</div></div>';
+			$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Lost Password Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
+
 		}
 	}
 	return $str;
@@ -262,6 +266,12 @@ function ihc_register_form($attr=array()){
 				$template = get_option('ihc_register_template');
 			}
 
+			$showForm = true;
+			$showForm = apply_filters( 'ump_show_register_form', $showForm );
+			if ( !$showForm ){
+					return '';
+			}
+
 			/// DOUBLE EMAIL VERIFICATION
 			$shortcodes_attr['double_email'] = (isset($attr['double_email'])) ? $attr['double_email'] : FALSE;
 			/// ROLE
@@ -299,7 +309,7 @@ function ihc_register_form($attr=array()){
 	} else {
 		//already logged in
 		if ($user_type=='admin'){
-			$str .= '<div class="ihc-wrapp-the-errors"><div class="ihc-register-error">' . __('<strong>Admin Info</strong>: Register Form is not showing up when you\'re logged.', 'ihc') . '</div></div>';
+			$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Register Form  is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
 		}
 	}
 	return $str;
@@ -337,6 +347,10 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		$levels = ihc_reorder_arr($levels);
 		$levels = ihc_check_show($levels); /// SHOW/HIDE
 		$levels = ihc_check_level_restricted_conditions($levels); /// MAGIC FEAT.
+
+		$levels = apply_filters( 'ihc_public_subscription_plan_list_levels', $levels );
+		// @description used in public section - subcription plan. @param list of levels to display ( array )
+
 		if ( !empty( $attr['id'] ) ){
 				$onlyIds = strpos( $attr['id'], ',' ) === false ? array($attr['id']) : explode( ',', $attr['id'] );
 				foreach ( $levels as $id => $levelData ){
@@ -672,7 +686,9 @@ function ihc_public_visitor_inside_user_page(){
 				if (!empty($customBanner)){
 						$data['banner'] = $customBanner;
 				}
-
+				$data['ihc_badges_on'] = get_option( 'ihc_badges_on' );
+				$data['ihc_badge_custom_css'] = get_option('ihc_badge_custom_css');
+				
 				/// output
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_template'])){
 					switch ($shortcode_attr['ihc_listing_users_inside_page_template']){
@@ -749,6 +765,27 @@ function ihc_membership_card($attr=array()){
 			$fullPath = IHC_PATH . 'public/views/membership_card.php';
 			$searchFilename = 'membership_card.php';
 			$template = apply_filters('ihc_filter_on_load_template', $fullPath, $searchFilename );
+			wp_enqueue_script( 'ihc-print-this' );
+			$output .= '	<script>
+					var printhisopt = {
+						importCSS: true,
+			            importStyle: true,
+			            loadCSS:"'.IHC_URL.'assets/css/style.css",
+			         	debug: false,
+			        	printContainer: true,
+			        	pageTitle: "",
+			        	removeInline: true,
+			        	printDelay: 333,
+			        	header: null,
+			        	formValues: false,
+			        };
+							jQuery(document).ready(function(){
+									jQuery(".fa-print-ihc").on("click", function(e){
+											var idToPrint = jQuery( e.target ).attr( "data-id-to-print" );
+											jQuery( "#" + idToPrint ).printThis(printhisopt);
+									});
+							});
+				</script>';
 		 	foreach ($data['levels'] as $lid => $level_data){
 		 		if (in_array($lid, $exclude_levels)){
 		 			continue;
@@ -758,6 +795,8 @@ function ihc_membership_card($attr=array()){
 				$output .= ob_get_contents();
 				ob_end_clean();
 		 	}
+		 }else{
+			$output = '<div class="ihc-additional-message">'. __("No Membership Cards available based on your Subscriptions. SignUp on new Subscriptions or renew the existent one.", 'ihc').'</div>';
 		 }
 	 }
 	 return $output;
@@ -813,7 +852,7 @@ function ihc_do_lite_register(){
 	} else {
 		//already logged in
 		if ($user_type=='admin'){
-			$output .= '<div class="ihc-wrapp-the-errors"><div class="ihc-register-error">' . __('<strong>Admin Info</strong>: Register Lite Form is not showing up when you\'re logged.', 'ihc') . '</div></div>';
+			$output .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Register Lite Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
 		}
 	}
 	return $output;
@@ -863,6 +902,8 @@ function ihc_do_list_gifts(){
 			include $template;
 			$output .= ob_get_contents();
 			ob_end_clean();
+		}else{
+			$output = '<div class="ihc-additional-message">'. __("No Membership Gifts have been received yet", 'ihc').'</div>';
 		}
 	}
 	return $output;
@@ -1018,7 +1059,7 @@ function ihc_register_form_for_modal($attr=array()){
 		} else {
 			//already logged in
 			if ($user_type=='admin'){
-				$str .= '<div class="ihc-wrapp-the-errors"><div class="ihc-register-error">' . __('<strong>Admin Info</strong>: Register Form is not showing up when you\'re logged.', 'ihc') . '</div></div>';
+				$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>:  Register Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
 			}
 		}
 		return $str;
@@ -1050,12 +1091,28 @@ endif;
 if ( !function_exists('ihc_login_popup') ):
 function ihc_login_popup( $attr=array(), $content='' )
 {
+		// don't show on register page
+		global $post, $current_user;
+		$isLoginPage = false;
+		$loginPostId = get_option('ihc_general_login_default_page');
+		if ( isset( $post->ID ) && $loginPostId == $post->ID ){
+				$isLoginPage = true;
+		}
+		if ( !$isLoginPage && isset( $post->ID ) ){
+				$pageContent = get_post_field('post_content', $post->ID );
+				if ( strpos( $pageContent, '[ihc-login-form]' ) !== false ){
+						$isLoginPage = true;
+				}
+		}
+
 		$fullPath = IHC_PATH . 'public/views/login_popup.php';
 		$searchFilename = 'login_popup.php';
 		$template = apply_filters('ihc_filter_on_load_template', $fullPath, $searchFilename );
 		$data = array(
 				'content'							=> $content,
 				'trigger'							=> empty($attr['trigger']) ? false : $attr['trigger'],
+				'isLoginPage'					=> $isLoginPage,
+				'uid'								  => isset( $current_user->ID ) ? $current_user->ID : 0,
 		);
 
 		$view = new \Indeed\Ihc\IndeedView();
@@ -1066,12 +1123,28 @@ endif;
 if ( !function_exists('ihc_register_popup') ):
 function ihc_register_popup( $attr=array(), $content='' )
 {
+		// don't show on register page
+		global $post, $current_user;
+		$isRegisterPage = false;
+		$registerPostId = get_option('ihc_general_register_default_page');
+		if ( isset( $post->ID ) && $registerPostId == $post->ID ){
+				$isRegisterPage = true;
+		}
+		if ( !$isRegisterPage && isset( $post->ID ) ){
+				$pageContent = get_post_field('post_content', $post->ID );
+				if ( strpos( $pageContent, '[ihc-register]' ) !== false || strpos( $pageContent, '[ihc-register-lite]' ) !== false ){
+						$isRegisterPage = true;
+				}
+		}
+
 		$fullPath = IHC_PATH . 'public/views/register_popup.php';
 		$searchFilename = 'register_popup.php';
 		$template = apply_filters('ihc_filter_on_load_template', $fullPath, $searchFilename );
 		$data = array(
 				'content'							=> $content,
 				'trigger'							=> empty($attr['trigger']) ? false : $attr['trigger'],
+				'isRegisterPage'			=> $isRegisterPage,
+				'uid'									=> isset( $current_user->ID ) ? $current_user->ID : 0,
 		);
 
 		$view = new \Indeed\Ihc\IndeedView();

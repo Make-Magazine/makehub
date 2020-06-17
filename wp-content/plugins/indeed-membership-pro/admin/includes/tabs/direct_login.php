@@ -87,7 +87,7 @@ if ( substr( $url, -1 ) != '/' ){
             <tr class="<?php if($i%2==0) echo 'alternate';?>">
                 <td style="color: #21759b; font-weight:bold; width:120px;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;"><?php echo $itemData->user_login;?></td>
                 <td><?php echo add_query_arg( array('ihc_action' => 'dl', 'token' => $itemData->token), $url );?></td>
-                <td <?php if (time()>$itemData->timeout) echo "style='color: red'";?>><?php echo date( 'Y-m-d h:i:s', $itemData->timeout );?></td>
+                <td <?php if (indeed_get_unixtimestamp_with_timezone()>$itemData->timeout) echo "style='color: red'";?>><?php echo date( 'Y-m-d h:i:s', $itemData->timeout );?></td>
                 <td><i class="fa-ihc ihc-icon-remove-e ihc-pointer ihc-direct-login-remove-item" data-uid="<?php echo $itemData->ID;?>"></i></td>
             </tr>
         <?php $i++;

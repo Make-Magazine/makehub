@@ -36,7 +36,7 @@
 
 				foreach ($levels_arr as $level_id){
 					$time_data = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $level_id);
-					if (strtotime($time_data['expire_time'])>time()){
+					if (strtotime($time_data['expire_time'])>indeed_get_unixtimestamp_with_timezone()){
 						$expire = $time_data['expire_time'];
 					} else if (strtotime($time_data['expire_time'])<0) {
 						$expire = __('--', 'ihc');//not active yet
@@ -253,7 +253,9 @@
 					$i++;
 				}
 				$default_payment = get_option('ihc_payment_selected');
-				?></table>
+				?>
+			<?php do_action( 'ump_public_account_page_subscription_table-row', $this->current_user->ID );?>
+			</table>
 					<form id="ihc_form_ap_subscription_page" name="ihc_ap_subscription_page" method="post" data-modal="<?php echo $needReasons;?>" >
 						<input type="hidden" name="ihc_delete_level" value="" id="ihc_delete_level" />
 						<input type="hidden" name="ihc_cancel_level" value="" id="ihc_cancel_level" />
@@ -299,4 +301,8 @@
 <?php endif;?>
 
 <!-- Trigger to open Modal -->
-<?php wp_enqueue_script( 'IhcRemoveCancelLevels', IHC_URL . 'assets/js/IhcRemoveCancelLevels.js', array(), null );?>
+<?php
+wp_enqueue_style( 'ihc_iziModal' );
+wp_enqueue_script( 'ihc_iziModal_js' );
+wp_enqueue_script( 'IhcRemoveCancelLevels', IHC_URL . 'assets/js/IhcRemoveCancelLevels.js', array(), null );
+?>

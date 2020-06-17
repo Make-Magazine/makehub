@@ -9,8 +9,8 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     protected $paymentTypeLabel = 'Stripe Checkout V2 Payment';
     protected $currency         = '';
     protected $options          = [];
-    private   $sessionId        = '';
-    private   $levelData        = [];
+    protected $sessionId        = '';
+    protected $levelData        = [];
     private   $paymentIntent    = '';
     private   $amount           = 0;
     private   $successUrl       = '';
@@ -23,6 +23,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $this->currency = get_option('ihc_currency');
         $this->options = ihc_return_meta_arr('payment_stripe_checkout_v2');//getting metas
         $this->siteUrl = get_option( 'siteurl' );
+        $this->multiply = ihcStripeMultiplyForCurrency( $this->currency );
     }
 
     private function setLocale()
@@ -39,21 +40,23 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     private function setSuccessUrl()
     {
-        if ( empty ( $this->options['ihc_stripe_checkout_v2_success_page'] ) || $this->options['ihc_stripe_checkout_v2_success_page'] == -1 ){
-            $this->successUrl = '';
-        } else {
+        if ( !empty ( $this->options['ihc_stripe_checkout_v2_success_page'] ) && $this->options['ihc_stripe_checkout_v2_success_page'] > -1 ){
             $this->successUrl = $this->options['ihc_stripe_checkout_v2_success_page'];
             $this->successUrl = get_permalink( $this->successUrl );
+        }
+        if ( empty( $this->successUrl ) ){
+            $this->successUrl = $this->siteUrl;
         }
     }
 
     private function setCancelUrl()
     {
-        if ( empty ( $this->options['ihc_stripe_checkout_v2_cancel_page'] ) || $this->options['ihc_stripe_checkout_v2_cancel_page'] == -1 ){
-            $this->cancelUrl = '';
-        } else {
+        if ( !empty ( $this->options['ihc_stripe_checkout_v2_cancel_page'] ) && $this->options['ihc_stripe_checkout_v2_cancel_page'] > -1 ){
             $this->cancelUrl = $this->options['ihc_stripe_checkout_v2_cancel_page'];
             $this->cancelUrl = get_permalink( $this->cancelUrl );
+        }
+        if ( empty( $this->cancelUrl ) ){
+            $this->cancelUrl = $this->siteUrl;
         }
     }
 
@@ -113,12 +116,13 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( $couponData ){
           $this->amount = ihc_coupon_return_price_after_decrease( $this->amount, $couponData, true, $this->attributes['uid'], $this->attributes['lid'] );
         }
+
         /// TAXES
         $this->amount = $this->addTaxes( $this->amount );
         /// dynamic price
         $this->amount = $this->applyDynamicPrice( $this->amount );
-        $amount = $this->amount * 100;
-        if ( $amount> 0 && $amount<50){
+        $amount = $this->amount * $this->multiply;
+        if ( $this->multiply==100 && $amount> 0 && $amount<50){
             $amount = 50;// 0.50 cents minimum amount for stripe transactions
         }
 
@@ -152,11 +156,13 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     private function getSessionIdForRecurringPayment()
     {
         $couponData = $this->getCouponData();
-        $this->amount = $this->levelData['price'];
-        /// TAXES
-        $this->amount = $this->addTaxes( $this->levelData['price'] );
 
-        /// dynamic price
+	    $this->amount = $this->levelData['price'];
+
+		 /// TAXES
+        //$this->amount = $this->addTaxes( $this->amount );
+
+        /// DYNAMIC PRICE
         $this->amount = $this->applyDynamicPrice( $this->amount );
 
         \Ihc_User_Logs::write_log( __('Stripe Checkout Payment: Recurrence payment set.', 'ihc'), 'payments');
@@ -175,46 +181,97 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             break;
         }
 
-        ///trial
+        ///CHECK IF TRIAL/INITIAL PAYMENT IS SETUP
         $trial_period_days = $this->setTrialDaysPeriod();
 
-        /// coupons
-        if ( $trial_period_days == 0 ){
-            if ( !empty( $couponData ) ){
-                $discountedValue = ihc_get_discount_value( $this->amount, $couponData );
+        if ( $trial_period_days == 0 && !empty( $couponData ) ){
+            // COUPONS WITHOUT TRIAL
+            $discountedValue = ihc_get_discount_value( $this->amount, $couponData );
+            if ( $couponData['reccuring'] == 1 ){
+                 //COUPON APPLIED FOREVER
+                $this->amount = $this->amount - $discountedValue;
+            } else {
+                 //COUPON JUST ONCE - will become a Trial period
+                if ( $discountedValue ){
+                    $trialAmount = $this->amount - $discountedValue;
+                }
+                $trial_period_days = $this->setTimeForSingleTimeCoupon();
+            }
+            \Ihc_User_Logs::write_log( __('Stripe Checkout Payment: the user used the following coupon: ', 'ihc') . $this->attributes['ihc_coupon'], 'payments');
+
+        } else if ( $trial_period_days > 0 && !empty( $couponData ) ) {
+            // COUPONS WITH TRIAL
+            if ( isset( $this->levelData['access_trial_price'] ) && $this->levelData['access_trial_price'] != ''
+                    && ( !empty($this->levelData['access_trial_time_value']) || !empty($this->levelData['access_trial_couple_cycles']) ) ){
+                $trialAmount = $this->levelData['access_trial_price'];
+            }
+
+			 if ( $couponData['reccuring'] == 1 ){
+				 //COUPON APPLIED FOREVER
+				 //FIRST TRIAL
+				  if ( $trialAmount ){
+					   $discountedValueTrial = ihc_get_discount_value( $trialAmount, $couponData );
+					    if ( $discountedValueTrial ){
+								$trialAmount = $trialAmount - $discountedValueTrial;
+                   	 	}
+				  }
+				  //THEN REGULAR AMOUNT
+				  $discountedValue = ihc_get_discount_value( $this->amount , $couponData );
+					    if ( $discountedValue ){
+								$this->amount = $this->amount  - $discountedValue;
+                    }
+			 }else{
+				 //COUPON JUST ONCE
+				  if ( $trialAmount ){
+						  $discountedValue = ihc_get_discount_value( $trialAmount, $couponData );
+						   if ( $discountedValue ){
+								$trialAmount = $trialAmount - $discountedValue;
+							}
+				  }
+			 }
+			\Ihc_User_Logs::write_log( __('Stripe Checkout Payment: User apply following Coupon: ', 'ihc') . $this->attributes['ihc_coupon'], 'payments');
+
+			/*
+            if ( $trialAmount ){
+                $discountedValue = ihc_get_discount_value( $trialAmount, $couponData );
                 if ( $couponData['reccuring'] == 1 ){
                     /// forever discount
-                    $this->amount = $this->amount - $discountedValue;
+                    $amount = $trialAmount - $discountedValue;
+                    $amount= $this->addTaxes( $amount );
                 } else {
+                    // only once
                     if ( $discountedValue ){
-                        $trialAmount = $this->amount - $discountedValue;
-                    }
-                    switch ($this->levelData['access_regular_time_type']){
-                        case 'day':
-                          $trial_period_days = $this->levelData['access_regular_time_value'];
-                          break;
-                        case 'week':
-                          $trial_period_days = $this->levelData['access_regular_time_value']  * 7;
-                          break;
-                        case 'month':
-                          $trial_period_days = $this->levelData['access_regular_time_value'] * 31;
-                          break;
-                        case 'year':
-                          $trial_period_days = $this->levelData['access_regular_time_value']  * 365;
-                          break;
+                        $trialAmount = $trialAmount - $discountedValue;
+                        $trialAmount = $this->addTaxes( $trialAmount );
+                        $trialAmount = round( $trialAmount, 2 );
                     }
                 }
 
+
+
                 \Ihc_User_Logs::write_log( __('Stripe Checkout Payment: the user used the following coupon: ', 'ihc') . $this->attributes['ihc_coupon'], 'payments');
+            }*/
+
+        } else if ( $trial_period_days > 0 ){
+            // TRIAL WITHOUT COUPONS
+            if ( empty( $trialAmount ) ){
+                if ( isset( $this->levelData['access_trial_price'] ) && $this->levelData['access_trial_price'] != ''
+                      && ( !empty($this->levelData['access_trial_time_value']) || !empty($this->levelData['access_trial_couple_cycles']) ) ){
+                    $trialAmount = $this->levelData['access_trial_price'];
+                }
             }
         }
 
-        $amount = $this->amount * 100;
-        if ( $amount> 0 && $amount<50){
+		 /// TAXES
+        $this->amount = $this->addTaxes( $this->amount );
+		$this->amount = round( $this->amount, 2 );
+
+        $amount = $this->amount * $this->multiply;
+        if ( $this->multiply==100 && $amount> 0 && $amount<50){
             $amount = 50;// 0.50 cents minimum amount for stripe transactions
         }
 
-        $ihcPlanCode = $this->attributes['uid'] . '_' . $this->attributes['lid'] . '_' . time();
+        $ihcPlanCode = $this->attributes['uid'] . '_' . $this->attributes['lid'] . '_' . indeed_get_unixtimestamp_with_timezone();
         $plan = array(
             "amount"          => $amount,
             "interval_count"  => $this->levelData['access_regular_time_value'],
@@ -248,17 +305,17 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             'locale'                    => $this->locale,
         ];
 
-        if ( empty( $trialAmount ) ){
-            if ( isset( $this->levelData['access_trial_price'] ) && $this->levelData['access_trial_price'] != ''
-                  && ( !empty($this->levelData['access_trial_time_value']) || !empty($this->levelData['access_trial_couple_cycles']) ) ){
-                $trialAmount = $this->levelData['access_trial_price'];
-            }
-        }
+
         if ( !empty( $trialAmount ) ){
+
+			//taxes INCLUDING FOR TRIAL
+            $trialAmount = $this->addTaxes( $trialAmount );
+            $trialAmount = round( $trialAmount, 2 );
+
             $sessionAttributes['line_items'][] = [
                     "name"        => __('Initial payment', 'ihc'),
                     "description" => __('Initial payment', 'ihc'),
-                    "amount"      => ($trialAmount * 100),
+                    "amount"      => ($trialAmount * $this->multiply),
                     "currency"    => $this->currency,
                     "quantity"    => 1
             ];
@@ -278,6 +335,25 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $this->paymentIntent = $this->attributes['orderId'];
 
         return isset( $session->id ) ? $session->id : 0;
+    }
+
+    private function setTimeForSingleTimeCoupon()
+    {
+        switch ( $this->levelData['access_regular_time_type'] ) {
+            case 'day':
+              $days = $this->levelData['access_regular_time_value'];
+              break;
+            case 'week':
+              $days = $this->levelData['access_regular_time_value'] * 7;
+              break;
+            case 'month':
+              $days = $this->levelData['access_regular_time_value'] * 31;
+              break;
+            case 'year':
+              $days = $this->levelData['access_regular_time_value'] * 365;
+              break;
+        }
+        return $days;
     }
 
     private function setTrialDaysPeriod()
@@ -349,7 +425,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     public function webhook()
     {
-        $timestamp = time();
+        $timestamp = indeed_get_unixtimestamp_with_timezone();
         $response = @file_get_contents( 'php://input' );
 
         \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Start process.", 'ihc'), 'payments');
@@ -408,7 +484,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         $levels = get_option('ihc_levels');
         $levelData = $levels[$data['lid']];
-        $currentTransactionAmount = $transactionDetails['data']['object']['amount']/100;
+        $currentTransactionAmount = $transactionDetails['data']['object']['amount']/$this->multiply;
         //unset($transactionDetails['data']);
         //sleep(10);
 
@@ -453,6 +529,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);
         ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
         do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
+        // @description run on payment complete. @param user id (integer), level id (integer)
 
         http_response_code(200);
         exit();
@@ -470,6 +547,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         $charge = false;
         $chargeId = isset( $transactionDetails['data']['object']['charge'] ) ? $transactionDetails['data']['object']['charge'] : '';
+        $customerId = isset( $transactionDetails['data']['object']['customer'] ) ? $transactionDetails['data']['object']['customer'] : '';
         if ( $chargeId ){
             $charge = \Stripe\Charge::retrieve( $chargeId );
         }
@@ -498,7 +576,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( empty($charge) || empty($charge->status) || $charge->status != 'succeeded' ){
             $doExit = true;
             $subscription = \Stripe\Subscription::retrieve( $transactionDetails['data']['object']['subscription'] );
-            if ( $subscription->status == 'trialing' && $subscription->trial_end > time() && $subscription->trial_start < time() ){
+            if ( $subscription->status == 'trialing' && $subscription->trial_end > indeed_get_unixtimestamp_with_timezone() && $subscription->trial_start < indeed_get_unixtimestamp_with_timezone() ){
                 $doExit = false;
                 $isTrial = true;
             }
@@ -526,7 +604,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         $levels = get_option('ihc_levels');
         $levelData = $levels[$data['lid']];
-        $currentTransactionAmount = $transactionDetails['data']['object']['amount'] / 100;
+        $currentTransactionAmount = $transactionDetails['data']['object']['amount'] / $this->multiply;
 
         if ( $isTrial ){
             \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Set Trial Time.", 'ihc'), 'payments');
@@ -551,7 +629,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             /// insert new order
             $orderObject = new \Indeed\Ihc\Db\Orders();
             $currentOrderId = $orderObject->setData( [
-                                                'amount_value'      => $transactionDetails['data']['object']['amount_paid'] / 100,
+                                                'amount_value'      => $transactionDetails['data']['object']['amount_paid'] / $this->multiply,
                                                 'amount_type'       => $transactionDetails['data']['object']['currency'],
                                                 'uid'               => $metaData['uid'],
                                                 'lid'               => $metaData['lid'],
@@ -568,6 +646,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $orderMeta->save( $currentOrderId, 'txn_id', $transactionId );
         /// save charge_id
         $orderMeta->save( $currentOrderId, 'charge_id', $chargeId );
+        $orderMeta->save( $currentOrderId, 'customer_id', $customerId );
 
         $paymentData = [
                           "uid"               => $metaData['uid'],
@@ -592,11 +671,11 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);
         ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
         do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
+        // @description run on payment complete. @param user id (integer), level id (integer)
 
         http_response_code(200);
         exit();
     }
-
 
     public function refund( $transactionDetails=[] )
     {
@@ -628,45 +707,76 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     }
 
-
-
     public function cancelSubscription( $transactionId='' )
     {
         if ( !$transactionId ){
-            return;
+            return false;
         }
         if ( empty( $this->options['ihc_stripe_checkout_v2_secret_key'] ) ){
-            return;
+            return false;
         }
-
-        // file_put_contents( IHC_PATH . 'log.log', $transactionId );
-        // return;
 
         $orderId = \Ihc_Db::getLastOrderByTxnId( $transactionId );
         $orderMetas = new \Indeed\Ihc\Db\OrderMeta();
         $chargeId = $orderMetas->get( $orderId, 'charge_id' );
+        $lid = \Ihc_Db::getLidByOrder( $orderId );
 
         \Stripe\Stripe::setApiKey( $this->options['ihc_stripe_checkout_v2_secret_key'] );
-        $chargeObject = \Stripe\Charge::retrieve( $chargeId );
-        $customerId = $chargeObject->customer;
-        $invoiceObject = \Stripe\Invoice::retrieve( $chargeObject->invoice );
 
-        $subscriptionId = isset( $invoiceObject->lines->data[0]->id ) ? $invoiceObject->lines->data[0]->id : false;
+        if ( $chargeId === null || $chargeId == '' ){
+            /// get from customer_id - lid . this is for the case when recurring is with trial without any payment made
+            $customerId = $orderMetas->get( $orderId, 'customer_id' );
+            if ( !$customerId ){
+                return false;
+            }
+            $customer = \Stripe\Customer::retrieve( $customerId );
+            if ( !$customer ){
+                return false;
+            }
 
-        $i = 1;
-        while ( stripos( $subscriptionId, 'sub' ) !== 0 ){
-            $subscriptionId = isset( $invoiceObject->lines->data[$i]->id ) ? $invoiceObject->lines->data[$i]->id : false;
+
+            foreach ( $customer->subscriptions as $subscription ){
+            		if ( isset( $subscription['metadata']->lid ) && $subscription['metadata']->lid == $lid ){ /// add extra condition here
+            				$subscriptionId = $subscription->id;
+                    break;
+            		}
+            }
+
+        } else {
+            $chargeObject = \Stripe\Charge::retrieve( $chargeId );
+            $customerId = $chargeObject->customer;
+            $invoiceObject = \Stripe\Invoice::retrieve( $chargeObject->invoice );
+
+            if ( isset( $invoiceObject->lines->data[0]->id ) && strpos( $invoiceObject->lines->data[0]->id, 'sub' ) === 0 ){
+                $subscriptionId = $invoiceObject->lines->data[0]->id;
+            } else if ( isset( $invoiceObject->lines->data[0]->subscription ) && strpos( $invoiceObject->lines->data[0]->subscription, 'sub' ) === 0 ){
+                $subscriptionId = $invoiceObject->lines->data[0]->subscription;
+            }
+
+            if ( empty( $subscriptionId ) ){
+                for ( $i=1; $i<count($invoiceObject->lines->data); $i++ ){
+                    if ( isset( $invoiceObject->lines->data[$i]->id ) && strpos( $invoiceObject->lines->data[$i]->id, 'sub' ) === 0 ){
+                        $subscriptionId = $invoiceObject->lines->data[$i]->id;
+                    } else if ( isset( $invoiceObject->lines->data[$i]->subscription ) && strpos( $invoiceObject->lines->data[$i]->subscription, 'sub' ) === 0 ){
+                        $subscriptionId = $invoiceObject->lines->data[$i]->subscription;
+                    }
+                }
+            }
+
         }
+
+
         if ( !$subscriptionId ){
-            return;
+            return false;
         }
 
         $customer = \Stripe\Customer::retrieve( $customerId );
+
         if ( !$customer ){
-            return;
+            return false;
         }
         if ( !isset($customer->subscriptions) || empty($customer->subscriptions->data)){
-            return;
+            return false;
         }
 
         $exists = false;
@@ -677,17 +787,19 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             }
         }
         if ( !$exists ){
-            return;
+            return false;
         }
 
         @$subscription = $customer->subscriptions->retrieve( $subscriptionId );
 
         if ( empty($subscription) ){
-            return;
+            return false;
         }
         try {
             @$value = $subscription->cancel();
-        } catch (Stripe\Error\InvalidRequest $e){}
+        } catch (Stripe\Error\InvalidRequest $e){
+            $value = false;
+        }
         return $value;
     }
 

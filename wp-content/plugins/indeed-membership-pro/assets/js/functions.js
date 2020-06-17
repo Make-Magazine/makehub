@@ -164,6 +164,9 @@ function ihcGetCheckboxRadioValue(type, selector){
 			return arr.join(',');
 		}
 	}
+  if ( jQuery('[name="' + selector + '"]').is(':checked') ){
+      return 1;
+  }
 	return '';
 }
 
@@ -310,8 +313,9 @@ function ihcPaymentGatewayUpdate(v, is_r){
 					jQuery(".ihc-form-create-edit").submit();
 					return true;
 				}
-				p = p * 100;
-				if (p<50){
+        window.ihcStripeMultiply = parseInt( window.ihcStripeMultiply );
+				p = p * window.ihcStripeMultiply;
+				if ( window.ihcStripeMultiply== 100 && p<50 ){
 					p = 50;
 				}
 				iump_stripe.open({
@@ -335,8 +339,9 @@ function ihcPaymentGatewayUpdate(v, is_r){
 
 function iumpStripePrice(){
 	var p = jQuery("#iumpfinalglobalp").val();
-	p = p * 100;
-	if (p<50){
+  window.ihcStripeMultiply = parseInt( window.ihcStripeMultiply );
+	p = p * window.ihcStripeMultiply;
+	if ( window.ihcStripeMultiply == 100 && p<50 ){
 		p = 50;
 	}
 	return p;
@@ -365,7 +370,12 @@ function ihcBuyNewLevelFromAp(l_name, l_amount, lid, url){
 		//
 	} else {
 		var c = jQuery('#ihc_coupon').val();
-		if (typeof v!='undefined'){
+    /*
+    if ( c!='' ){
+      url = url +'&ihc_coupon=' + c;
+    }
+    */
+    if (typeof v!='undefined'){
 			url = url +'&ihc_payment_gateway='+v;
 		}
 		ihcBuyNewLevel(url);
@@ -661,8 +671,8 @@ function iumpGenerateInvoice(i){
 		type : "post",
 	    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 	    data : {
-	             action: "ihc_generate_invoice",
-				 order_id: i
+	            action: "ihc_generate_invoice",
+				      order_id: i
 	    },
 	    success: function (r) {
 	    	if (r){
@@ -710,3 +720,8 @@ function ihcDoUsersiteModuleDelete(i){
 		});
 	}
 }
+
+jQuery(document).ready( function() {
+    var nonce = jQuery('meta[name="ump-token"]').attr('content');
+    jQuery.ajaxSetup( { headers: {'X-CSRF-UMP-TOKEN': nonce }});
+});

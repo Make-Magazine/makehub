@@ -1,5 +1,7 @@
 <?php
 include_once IHC_PATH . 'admin/includes/functions/register.php';
+wp_enqueue_style( 'ihc_select2_style' );
+wp_enqueue_script( 'ihc-select2' );
 ?>
 <?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css' );?>
 <?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
@@ -26,7 +28,10 @@ if (isset($_REQUEST['subtab'])) {
 
 switch ($subtab){
 	case 'settings':
-		ihc_save_update_metas('register');//save update metas
+		if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_register_settings_nonce']) && wp_verify_nonce( $_POST['ihc_admin_register_settings_nonce'], 'ihc_admin_register_settings_nonce' ) ){
+				ihc_save_update_metas('register');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('register');//getting metas
 		?>
 		<div class="iump-page-title">Ultimate Membership Pro -
@@ -40,6 +45,8 @@ switch ($subtab){
 				</div>
 			</div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc_admin_register_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_settings_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Design', 'ihc');?></h3>
 					<div class="inside">
@@ -214,6 +221,7 @@ switch ($subtab){
                                                                     'mymail' => 'Mailster (MyMail)',
                                                                     'wysija' => 'Wysija',
                                                                  );
+																					$subscribe_types = apply_filters( 'ump_filter_optin_types', $subscribe_types );
                                         foreach ($subscribe_types as $k=>$v){
                                             $selected = ($meta_arr['ihc_register_opt-in-type']==$k) ? 'selected' : '';
                                             ?>
@@ -304,10 +312,15 @@ switch ($subtab){
 		<?php
 	break;
 	case 'msg':
-		ihc_save_update_metas('register-msg');//save update metas
+		if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_register_messages_nonce']) && wp_verify_nonce( $_POST['ihc_admin_register_messages_nonce'], 'ihc_admin_register_messages_nonce' ) ){
+				ihc_save_update_metas('register-msg');//save update metas
+		}
+
 		$meta_arr = ihc_return_meta_arr('register-msg');//getting metas
 		?>
 			<form method="post" action="">
+				<input type="hidden" name="ihc_admin_register_messages_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_messages_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Custom Messages', 'ihc');?></h3>
 					<div class="inside">
@@ -405,16 +418,14 @@ switch ($subtab){
 	break;
 	case 'custom_fields':
 		//SAVE/UPDATE
-		if (isset($_GET['delete_field_id']) && $_GET['delete_field_id']!=''){
-			ihc_delete_user_field($_GET['delete_field_id']);//delete user custom fields
-		}
-		if (isset($_POST['ihc_add_edit_cf'])){
+
+		if ( isset( $_POST['ihc_add_edit_cf'] ) && !empty($_POST['ihc_admin_register_form_fields_nonce']) && wp_verify_nonce( $_POST['ihc_admin_register_form_fields_nonce'], 'ihc_admin_register_form_fields_nonce' ) ){
 			ihc_save_user_field($_POST);//save update user custom fields
 		}
-		if (isset($_POST['ihc_save_custom_field']) ){
+		if (isset($_POST['ihc_save_custom_field']) && !empty($_POST['ihc_admin_register_form_fields_nonce']) && wp_verify_nonce( $_POST['ihc_admin_register_form_fields_nonce'], 'ihc_admin_register_form_fields_nonce' ) ){
 			ihc_update_reg_fields($_POST);//update register fields
 		}
-		if (isset($_POST['ihc_update_register_fields']) && isset($_POST['id'])){
+		if (isset($_POST['ihc_update_register_fields']) && isset($_POST['id']) && !empty($_POST['ihc_admin_register_form_fields_nonce']) && wp_verify_nonce( $_POST['ihc_admin_register_form_fields_nonce'], 'ihc_admin_register_form_fields_nonce' ) ){
 			ihc_update_register_fields($_POST);//update the name, labels
 		}
 
@@ -450,6 +461,8 @@ switch ($subtab){
 			?></a>
 			<div class="clear"></div>
 			<form action="" method="post">
+				<input type="hidden" name="ihc_admin_register_form_fields_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_form_fields_nonce' );?>" />
+
 				<div class="ihc-stuffbox">
 					<h3><?php _e('Registration form fields', 'ihc');?></h3>
 					<div class="inside">
@@ -535,7 +548,19 @@ switch ($subtab){
 											<td><?php echo $v['type'];?></td>
 											<td>
 												<?php
-													if($v['name']=='ihc_social_media' || $v['name']=='payment_select' || $v['name']=='ihc_invitation_code_field' || $v['name']=='ihc_dynamic_price'){
+
+													$notAvailableForAdminSection = [
+																														'ihc_social_media',
+																														'payment_select',
+																														'ihc_invitation_code_field',
+																														'ihc_dynamic_price',
+																														'confirm_email',
+																														'ihc_coupon',
+																														'recaptcha',
+																														'tos',
+																														'pass2'
+													];
+													if( in_array( $v['name'], $notAvailableForAdminSection ) ){
 														echo '-';
 													} else if ($v['display_admin']==2){
 														_e('Always', 'ihc');
@@ -678,9 +703,7 @@ switch ($subtab){
 														echo '-';
 													} else {
 														?>
-															<a href="<?php echo $url.'&tab=register&subtab=custom_fields&delete_field_id='.$k;?>">
-																<i class="fa-ihc ihc-icon-remove-e"></i>
-															</a>
+														<div class="ihc-js-delete-register-field" data-id="<?php echo $k;?>" style="display:inline-block;cursor:pointer;" ><i class="fa-ihc ihc-icon-remove-e"></i></div>
 														<?php
 													}
 												?>
@@ -698,6 +721,35 @@ switch ($subtab){
 					</div>
 				</div>
 			</form>
+
+			<script>
+			jQuery( '.ihc-js-delete-register-field' ).on( 'click', function(){
+					var fieldId = jQuery( this ).attr( 'data-id' );
+					swal({
+						title: "<?php _e( 'Are you sure that you want to delete this field?', 'ihc' );?>",
+						text: "",
+						type: "warning",
+						showCancelButton: true,
+						confirmButtonClass: "btn-danger",
+						confirmButtonText: "OK",
+						closeOnConfirm: true
+					},
+					function(){
+							jQuery.ajax({
+									type : 'post',
+									url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+									data : {
+														 action: 'ihc_admin_delete_register_field',
+														 id:			fieldId,
+												 },
+									success: function (response) {
+											location.reload();
+									}
+						 });
+				 });
+			});
+			</script>
+
 		<?php
 	break;
 	case 'add_edit_cf':
@@ -743,6 +795,7 @@ switch ($subtab){
 		*/
 		?>
 			<form method="post" action="<?php echo $url.'&tab=register&subtab=custom_fields';?>">
+				<input type="hidden" name="ihc_admin_register_form_fields_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_form_fields_nonce' );?>" />
 				<div class="ihc-stuffbox">
 					<h3><?php _e('User Custom Fields', 'ihc');?></h3>
 					<div class="inside">

@@ -1,4 +1,4 @@
-<?php 
+<?php
 //////////////LOGOUT
 function ihc_do_logout($current_url=''){
 	/*
@@ -20,6 +20,7 @@ function ihc_do_logout($current_url=''){
 		$link = remove_query_arg( 'ihcdologout', $current_url);//remove_query_arg( 'ihcaction', $current_url);
 	}
 	do_action('ihc_logout_action');
+	// @param on logout. @param none
 	wp_clear_auth_cookie();
 	do_action( 'wp_logout' );
 	nocache_headers();

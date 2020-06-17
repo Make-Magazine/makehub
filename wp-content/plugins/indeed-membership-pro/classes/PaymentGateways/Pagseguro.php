@@ -75,7 +75,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
           		$preApprovalFinalDate = date( 'Y-m-d H:i:s', strtotime( "+$recurringLimit week", time() ) );
               break;
           }
-			
+
 		if($intervalType == "Monthly"){
 			switch($levelData['access_regular_time_value']){
 				case 2:
@@ -86,10 +86,10 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 					break;
 				case 6:
 					$intervalType = 'SEMIANNUALLY';
-					break;					 				
+					break;
 			}
 		}
-			
+
           if ($couponData){
               if (!empty($couponData['reccuring'])){
                   //everytime the price will be reduced
@@ -185,7 +185,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               $levelData['access_trial_price'] = number_format( (float)$levelData['access_trial_price'], 2, '.', '' );
               $requestData['preApprovalMembershipFee'] = $levelData['access_trial_price'];
           }
-          
+
           if (isset($trialTimeValue)){
               $requestData['preApprovalTrialPeriodDuration'] = $trialTimeValue;
           }
@@ -277,7 +277,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
           					/// description
           					xmlwriter_start_element( $xml, 'description' );
           						xmlwriter_start_cdata( $xml );
-          								xmlwriter_text( $xml, $levelData['description'] );
+          								xmlwriter_text( $xml, $levelData['name'] );
           						xmlwriter_end_cdata( $xml );
           					xmlwriter_end_element( $xml );
           					/// amount
@@ -333,7 +333,6 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
           );
 
           $response = wp_safe_remote_post( $url, $params );
-
           $domObject = new \DOMDocument();
           $responseData = $domObject->loadXML( $response['body'] );
           $finalResponse = simplexml_import_dom( $domObject );
@@ -477,6 +476,8 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                   ihc_send_user_notifications( $paymentData['uid'], 'payment', $paymentData['lid'] );//send notification to user
                   ihc_send_user_notifications( $paymentData['uid'], 'admin_user_payment', $paymentData['lid'] );//send notification to admin
                   do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
+                  // @description run on payment complete. @param user id (integer), level id (integer)
+
                   ihc_switch_role_for_user( $paymentData['uid'] );
                   ihc_insert_update_transaction( $paymentData['uid'], $transactionCode, $paymentData, true );
                   \Ihc_Db::updateOrderStatus( $lastOrderId, 'Completed' );
@@ -492,6 +493,8 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               ihc_send_user_notifications($paymentData['uid'], 'payment', $paymentData['lid']);
               ihc_send_user_notifications($paymentData['uid'], 'admin_user_payment', $paymentData['lid']);//send notification to admin
               do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
+              // @description run on payment complete. @param user id (integer), level id (integer)
+
               break;
             case 5:
               /// on hold

@@ -4,6 +4,13 @@
 	<div class="ihc-clear"></div>
 </div>
 <?php
+if ( !empty( $_POST['ihc_save'] ) && isset( $_POST['ihc_gifts_enabled'] ) ){
+		if ( empty( $_POST['ihc_gifts_enabled'] ) ){
+				\Ihc_Db::deactivateApTab( 'membeship_gifts' );
+		} else {
+				\Ihc_Db::activateApTab( 'membeship_gifts' );
+		}
+}
 ihc_save_update_metas('gifts');//save update metas
 $data = ihc_return_meta_arr('gifts');
 echo ihc_check_default_pages_set();//set default pages message

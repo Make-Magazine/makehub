@@ -1,6 +1,6 @@
 /*!
  *  Sweet Alert Popup
- *  
+ *
  */
 
 @keyframes showSweetAlert {
@@ -688,5 +688,14 @@ body.stop-scrolling {
     margin-right: 0;
     left: 15px;
     right: 15px;
+  }
+}
+
+@media (max-width: 414px) {
+  .sweet-alert {
+    left:0px;
+      max-width: 90%;
+      margin: 20px;
+
   }
 }

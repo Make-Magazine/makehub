@@ -63,10 +63,14 @@ class Orders
             return $writeData['id'];
         } else {
             /// insert
+
+            /// since version 8.6, before we used NOW() function in mysql
+            $currentDate = indeed_get_current_time_with_timezone();
+
             $query = $wpdb->prepare( "INSERT INTO {$wpdb->prefix}ihc_orders
-                                          VALUES( NULL, %d, %d, %s, %s, %d, %s, NOW() );",
+                                          VALUES( NULL, %d, %d, %s, %s, %d, %s, %s );",
             $this->data['uid'], $this->data['lid'], $this->data['amount_type'], $this->data['amount_value'], $this->data['automated_payment'],
-            $this->data['status'] );
+            $this->data['status'], $currentDate );
             $wpdb->query( $query );
             return $wpdb->insert_id;
         }
@@ -76,5 +80,16 @@ class Orders
     public function getStatus()
     {
         return isset( $this->data->status ) ? $this->data->status : false;
+    }
+
+    public function update( $colName='', $value='' )
+    {
+        global $wpdb;
+        if ( !$colName || !$value || empty($this->id) ){
+            return false;
+        }
+        $colName = esc_sql( $colName );
+        $queryString = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_orders SET $colName=%s WHERE id=%d;", $value, $this->id );
+        return $wpdb->query( $queryString );
     }
 }

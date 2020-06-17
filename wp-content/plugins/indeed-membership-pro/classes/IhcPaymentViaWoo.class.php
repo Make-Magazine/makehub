@@ -81,8 +81,13 @@ class IhcPaymentViaWoo{
 		 * @param int
 		 * @return none
 		 */
-		 if ($post_id && isset($_POST['iump_woo_product_level_relation']) && $_POST['iump_woo_product_level_relation']!=-1){
-		 	update_post_meta($post_id, 'iump_woo_product_level_relation', $_POST['iump_woo_product_level_relation']);
+		 if ($post_id && isset($_POST['iump_woo_product_level_relation']) ){
+			 	if ( $_POST['iump_woo_product_level_relation'] == -1 ){
+						$value = '';
+				} else {
+						$value = $_POST['iump_woo_product_level_relation'];
+				}
+		 		update_post_meta($post_id, 'iump_woo_product_level_relation', $value );
 		 }
 	}
 
@@ -154,6 +159,8 @@ class IhcPaymentViaWoo{
 						ihc_send_user_notifications($uid, 'payment', $lid);//send notification to user
 						ihc_send_user_notifications($uid, 'admin_user_payment', $lid);//send notification to admin
 						do_action( 'ihc_payment_completed', $uid, $lid );
+						// @description run on payment complete. @param user id (integer), level id (integer)
+
 						ihc_switch_role_for_user($uid);
 						$txn_id = 'woocommerce_order_' . $order_id . '_' . $lid;
 						$ihc_order_id = Ihc_Db::get_order_id_by_meta_value_and_meta_type('txn_id', $txn_id);

@@ -1,5 +1,9 @@
-<?php 
+<?php
 //first of all remove ihcaction, to prevent instatiate userAddEdit class
+/*
+Updated since UMP version 8.4.
+linkedin use the new version of HybridAuth  ( v 2.9 )
+*/
 if (isset($_POST['ihcaction'])){
 	unset($_POST['ihcaction']);
 }
@@ -33,10 +37,10 @@ if (!empty($_POST['sm_register'])){
 	foreach ($_POST as $k=>$v){
 		$_SESSION['ihc_register'][$k] = $v;
 	}
-	$_SESSION['sm_action'] = 'register';	
+	$_SESSION['sm_action'] = 'register';
 } else if (!empty($_GET['sm_login'])){
 	//================================LOGIN
-	$_SESSION['sm_type'] = $_GET['sm_login'];	
+	$_SESSION['sm_type'] = $_GET['sm_login'];
 	$_SESSION['ihc_current_url'] = $_GET['ihc_current_url'];
 	$_SESSION['sm_action'] = 'login';
 	if (!empty($_GET['is_locker'])){
@@ -68,28 +72,37 @@ switch ($_SESSION['sm_type']){
 												   "enabled" => TRUE,
 												   "keys" => array(
 												   		"id" => $sm_options['ihc_fb_app_id'],
-												   		"secret" => $sm_options['ihc_fb_app_secret'],		
+												   		"secret" => $sm_options['ihc_fb_app_secret'],
 												   ),
 		);
 		break;
 	case 'tw':
+		//require_once IHC_PATH . "/classes/hybridAuth-2.9/vendor/autoload.php";
+		//require_once IHC_PATH . "/classes/hybridAuth-2.9/hybridauth/Hybrid/Auth.php";
+		$config['base_url'] = IHC_URL . "classes/hybridAuth-2.9/?hauth.done=Twitter";
 		$config['providers']['Twitter'] = array(
 													"enabled" => TRUE,
 												    "keys" => array(
 												   		"key" => $sm_options['ihc_tw_app_key'],
-												   		"secret" => $sm_options['ihc_tw_app_secret'],	
+												   		"secret" => $sm_options['ihc_tw_app_secret'],
 												    ),
-													"includeEmail" => FALSE													
-		);		
+													"includeEmail" => FALSE
+		);
+		// $config[ "debug_mode" ] = true;
 		break;
 	case 'in':
+		/// hybrid 2.9
+		require_once IHC_PATH . "/classes/hybridAuth-2.9/vendor/autoload.php";
+		require_once IHC_PATH . "/classes/hybridAuth-2.9/hybridauth/Hybrid/Auth.php";
+		$config['base_url'] = IHC_URL . "classes/hybridAuth-2.9/?hauth.done=LinkedIn";
 		$config['providers']['LinkedIn'] = array(
 				"enabled" => TRUE,
 				"keys" => array(
-								"key" => $sm_options['ihc_in_app_key'],
-								"secret" => $sm_options['ihc_in_app_secret'],
-				)
-		);		
+								"id" 					=> $sm_options['ihc_in_app_key'],
+								"secret" 			=> $sm_options['ihc_in_app_secret'],
+				),
+				"scope"   => array("r_liteprofile", "r_emailaddress", "w_member_social"), // optional
+		);
 		break;
 	case 'tbr':
 			$config['providers']['Tumblr'] = array(
@@ -99,7 +112,7 @@ switch ($_SESSION['sm_type']){
 					"secret" => $sm_options['ihc_tbr_app_secret'],
 				)
 			);
-		break;		
+		break;
 	case 'ig':
 		$config['providers']['Instagram'] = array(
 			"enabled" => TRUE,
@@ -108,7 +121,7 @@ switch ($_SESSION['sm_type']){
 					"secret" => $sm_options['ihc_ig_app_secret'],
 				)
 			);
-		break;	
+		break;
 	case 'vk':
 		$config['providers']['Vkontakte'] = array(
 				"enabled" => TRUE,
@@ -116,7 +129,7 @@ switch ($_SESSION['sm_type']){
 						"id" => $sm_options['ihc_vk_app_id'],
 						"secret" => $sm_options['ihc_vk_app_secret'],
 				)
-		);		
+		);
 		break;
 	case 'goo':
 		$config['providers']['Google'] = array(
@@ -125,13 +138,13 @@ switch ($_SESSION['sm_type']){
 						"id" => $sm_options['ihc_goo_app_id'],
 						"secret" => $sm_options['ihc_goo_app_secret'],
 				)
-		);		
-		break;		
+		);
+		break;
 }
 
 if (!class_exists('Hybrid_Auth')){
-	require_once IHC_PATH . "/classes/hybrid_auth/hybridauth/vendor/autoload.php";
-	require_once IHC_PATH . "/classes/hybrid_auth/hybridauth/Hybrid/Auth.php";	
+	  require_once IHC_PATH . "/classes/hybrid_auth/hybridauth/vendor/autoload.php";
+	  require_once IHC_PATH . "/classes/hybrid_auth/hybridauth/Hybrid/Auth.php";
 }
 
 try {
@@ -151,14 +164,14 @@ try {
 			break;
 		case 'ig':
 			$provider = "Instagram";
-			break;		
+			break;
 		case 'vk':
 			$provider = "Vkontakte";
 			break;
 		case 'goo':
 			$provider = "Google";
-			break;			
-	}	
+			break;
+	}
 
 	$hybridauth = new Hybrid_Auth( $config );
 	$data = Hybrid_Auth::authenticate( $provider, $config );
@@ -167,7 +180,7 @@ try {
 	if ($_SESSION['sm_type']=='tbr'){
 		$user_profile->identifier = md5($user_profile->identifier);//identifier for tumblr is the profile url, so we made the md5 of it
 	}
-	
+
 	if ($_SESSION['sm_action']=='register'){
 		//==================================== REGISTER
 		//SET COOKIE
@@ -228,7 +241,7 @@ try {
 			$url = add_query_arg(array('lid'=>$_SESSION['lid']), $url);
 		}
 		wp_redirect($url);
-		exit;		
+		exit;
 	} else if ($_SESSION['sm_action']=='login'){
 		//=========================================== LOGIN
 		if (!function_exists('ihc_login_social')){
@@ -239,7 +252,7 @@ try {
 		$arr['url'] = $_SESSION['ihc_current_url'];
 		if (!empty($_SESSION['is_locker'])){
 			$arr['is_locker'] = 1;
-		}		
+		}
 		ihc_login_social($arr);
 	} else if ($_SESSION['sm_action']=='update_user'){
 		//=========================================== UPDATE USER
@@ -250,9 +263,9 @@ try {
 			$url = urldecode($_SESSION['ihc_current_url']);
 		} else {
 			$url = home_url();
-		} 
+		}
 		wp_redirect($url);
-		exit;			
+		exit;
 	}
 } catch ( Exception $e ){
 

@@ -44,10 +44,6 @@ jQuery( document ).ready( function(){
                    <div class="ihc-account-page-top-extra-mess">
 					<?php if (!empty($data['welcome_message'])):?>
 						<?php echo do_shortcode($data['welcome_message']);?>
-					<?php else:?>
-						<div class="iump-user-page-mess"><?php echo __('Welcome', 'ihc');?>,</div>
-						<div class="iump-user-page-mess"><?php echo $first_name . ' ' . $last_name;?></div>
-						<div class="iump-user-page-email"><?php echo $this->current_user->user_email;?></div>
 					<?php endif;?>
                     </div>
 				</div>
@@ -57,7 +53,13 @@ jQuery( document ).ready( function(){
 							<?php
 				    			$time_arr = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $lid);
 						    	$is_expired_class = '';
-								if (isset($time_arr['expire_time']) && time()>strtotime( $time_arr['expire_time'] ) ){
+									if ( !isset( $time_arr['expire_time'] ) ){
+											$time_arr['expire_time'] = '';
+									}
+									$time_arr['expire_time'] = apply_filters( 'ump_public_account_page_level_expire_time', $time_arr['expire_time'], $this->current_user->ID, $lid );
+									// @description
+
+								if (isset($time_arr['expire_time']) && indeed_get_unixtimestamp_with_timezone()>strtotime( $time_arr['expire_time'] ) ){
 						    		$is_expired_class = 'ihc-expired-level';
 						    	}
 							?>
