@@ -1,77 +1,12 @@
 <?php
 
-add_action ('wp', 'bps_set_request');
-function bps_set_request ()
-{
-	bps_set_directory ();
-
-	if (isset ($_REQUEST['bps_debug']))
-	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
-		setcookie ($cookie, 1, 0, COOKIEPATH);
-	}
-
-	if (isset ($_REQUEST['bp_profile_search']) && !isset ($_REQUEST[BPS_FORM]))
-		$_REQUEST[BPS_FORM] = $_REQUEST['bp_profile_search'];
-	unset ($_REQUEST['bp_profile_search']);
-
-	$persistent = bps_get_option ('persistent', '1');
-	$new_search = isset ($_REQUEST[bp_core_get_component_search_query_arg ('members')]);
-
-	if ($new_search || !$persistent)
-		if (!isset ($_REQUEST[BPS_FORM]))  $_REQUEST[BPS_FORM] = 'clear';
-
-	if (isset ($_REQUEST[BPS_FORM]))
-	{
-		$cookie = apply_filters ('bps_cookie_name', 'bps_request');
-		if ($_REQUEST[BPS_FORM] != 'clear')
-		{
-			bps_clean_request ();
-			$_REQUEST['bps_directory'] = bps_current_page ();
-			setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
-			bps_redirect_on_error ($_REQUEST);
-		}
-		else
-		{
-			setcookie ($cookie, '', 0, COOKIEPATH);
-		}
-	}
-}
-
-function bps_clean_request ()
-{
-	$form = $_REQUEST[BPS_FORM];
-	$keys = bps_allowed_keys ($form);
-
-	foreach ($_REQUEST as $key => $value)
-		if (!in_array ($key, $keys))  unset ($_REQUEST[$key]);
-}
-
-function bps_allowed_keys ($form)
-{
-	$keys = array (BPS_FORM);
-
-	$meta = bps_meta ($form);
-	foreach ($meta['field_code'] as $k => $code)
-	{
-		$mode = $meta['field_mode'][$k];
-		$keys[] = ($mode == '')? $code: $code. '_'. $mode;
-		if ($mode == 'range' || $mode == 'age_range')
-		{
-			$keys[] = $code. '_'. $mode. '_min';
-			$keys[] = $code. '_'. $mode. '_max';
-		}
-		$keys[] = $code. '_label';
-	}
-
-	$keys = apply_filters ('bps_allowed_keys', $keys);
-	return $keys;
-}
-
 function bps_get_request ($type, $form=0)		// published interface, 20190324
 {
+	if ($type == 'form')  return bps_get_request2 ($type, $form);
+
 	$current = bps_current_page ();
 	$hidden_filters = bps_get_hidden_filters ();
+	$showing_errors = isset ($_REQUEST['bps_errors']);
 
 	$cookie = apply_filters ('bps_cookie_name', 'bps_request');
 	$request = isset ($_REQUEST[BPS_FORM])? $_REQUEST: array ();
@@ -86,11 +21,13 @@ function bps_get_request ($type, $form=0)		// published interface, 20190324
 
 	case 'filters':
 		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
+		if ($showing_errors)  $request = array ();
 		foreach ($hidden_filters as $key => $value)  unset ($request[$key]);
 		break;
 
 	case 'search':
 		if (isset ($request['bps_directory']) && $request['bps_directory'] != $current)  $request = array ();
+		if ($showing_errors)  $request = array ();
 		foreach ($hidden_filters as $key => $value)  $request[$key] = $value;
 		break;
 	}
@@ -107,21 +44,10 @@ function bps_current_page ()
 	return apply_filters ('bps_current_page', $current);		// published interface, 20190324
 }
 
-function bps_redirect_on_error ($request)
-{
-	$parsed = bps_parse_request ($request);
-	foreach ($parsed as $f)  if (!empty ($f->error_message))
-	{
-		$redirect = parse_url ($_SERVER['HTTP_REFERER'], PHP_URL_PATH);
-		wp_safe_redirect ($redirect);
-		exit;
-	}
-}
-
 add_filter ('bp_ajax_querystring', 'bps_filter_members', 99, 2);
 function bps_filter_members ($qs, $object)
 {
-	if (!in_array ($object, array ('members', 'group_members')))  return $qs;
+	if ($object != 'members')  return $qs;
 
 	$request = bps_get_request ('search');
 	if (empty ($request))  return $qs;
@@ -186,20 +112,13 @@ function bps_search ($request, $users=null)		// published interface, 20190324
 	return $results;
 }
 
-function bps_debug ()
-{
-	$cookie = apply_filters ('bps_cookie_name', 'bps_debug');
-	return isset ($_REQUEST['bps_debug'])? true: isset ($_COOKIE[$cookie]);
-}
-
 add_action ('bps_field_before_query', 'bps_field_before_query', 99, 1);
 function bps_field_before_query ($f)
 {
 	if (bps_debug ())
 	{
 		echo "<!--\n";
-		echo "query ";
-		print_r ($f);
+		echo "query "; print_r ($f);
 		echo "-->\n";
 	}
 }

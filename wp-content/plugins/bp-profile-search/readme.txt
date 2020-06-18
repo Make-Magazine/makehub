@@ -1,10 +1,9 @@
 === BP Profile Search ===
 Contributors: dontdream
-Tags: buddypress, directory, members, users, profile, search, filter
+Tags: buddypress, directory, members, users, search, filter
 Requires at least: 4.8
-Tested up to: 5.3
-Requires PHP: 5.6
-Stable tag: 5.2.4
+Tested up to: 5.4
+Stable tag: 5.3.3
 
 Member search and member directories for BuddyPress.
 
@@ -100,7 +99,7 @@ You can enter the shortcode in an empty page to build a new member directory, or
 	<li><a href="https://dontdream.it/bp-profile-search/form-templates/">Form Templates</a></li>
 </ul>
 
-Tested up to BuddyPress 5.1.0
+Tested up to BuddyPress 5.1.2
 
 In the screenshots below, the <em>City</em> field is provided by the free companion plugin <a href="https://wordpress.org/plugins/bp-distance-search/">BP Distance Search</a>.
 
@@ -118,6 +117,21 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.3.3 =
+* Fixed: removed incorrect call to get_the_content()
+* Breaking change: custom form templates must enqueue the scripts they need
+* See [BP Profile Search 5.3.3](https://dontdream.it/bp-profile-search-5-3-3/) for details
+= 5.3.2 =
+* Fixed: fields duplication in search form
+= 5.3.1 =
+* Fixed: do not search if search form has errors
+* Fixed: autocomplete in location search field
+= 5.3 =
+* Removed support for old form templates
+* Added required fields, default field values, and custom field validation
+* Fixed pagination of search results in member directories not using AJAX
+* Fixed conflict with the group members template, introduced in 5.2
+* See [BP Profile Search 5.3](https://dontdream.it/bp-profile-search-5-3/) for details
 = 5.2.4 =
 * Last version to support old form templates, see [New form template structure](https://dontdream.it/new-form-template-structure/)
 * Fixed bug with quotes in *users* and *usermeta* searches
@@ -195,7 +209,6 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Added a new form template compatible with BP Nouveau
 * Revised the plugin's contextual help
 * The shortcode [bps_directory] still doesn't work with BP Nouveau
-* See [BP Profile Search 4.8.3](https://dontdream.it/bp-profile-search-4-8-3/) for details
 = 4.8.2 =
 * Fixed issue when calling a template inside a template
 = 4.8.1 =
@@ -331,67 +344,57 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 * Fixed a pagination bug introduced in 3.5.1
 = 3.5.1 =
 * Fixed a few conflicts with other plugins and themes
-= 3.5 =
+= 3.5 09/04/2013 =
 * Added the *Add to Directory* option
 * Fixed a couple of bugs with multisite installations
 * Ready for localization
 * Requires BuddyPress 1.8 or higher
-= 3.4.1 =
+= 3.4.1 07/03/2013 =
 * Added *selectbox* profile fields as candidates for the *Value Range Search*
-= 3.4 =
+= 3.4 06/30/2013 =
 * Added the *Value Range Search* option - thanks to Florian Shießl
-= 3.3 =
+= 3.3 05/12/2013 =
 * Added pagination for search results
 * Added searching in the *My Friends* tab of the Members directory
 * Removed the *Filtered Members List* option in the *Advanced Options* tab
 * Requires BuddyPress 1.7 or higher
-= 3.2 =
+= 3.2 11/27/2012 =
 * Updated for BuddyPress 1.6
 * Requires BuddyPress 1.6 or higher
-= 3.1 =
+= 3.1 06/10/2012 =
 * Fixed the search when field options contain trailing spaces
 * Fixed the search when field type is changed after creation
-= 3.0 =
+= 3.0 04/19/2012 =
 * Added the *Profile Search* widget
 * Added the [bp_profile_search_form] shortcode
-= 2.8 =
+= 2.8 03/12/2012 =
 * Fixed the *Age Range Search*
 * Fixed the search form for required fields
 * Removed field descriptions from the search form
 * Requires BuddyPress 1.5 or higher
-= 2.7 =
+= 2.7 09/23/2011 =
 * Updated for BuddyPress 1.5 multisite
 * Requires BuddyPress 1.2.8 or higher
-= 2.6 =
+= 2.6 09/22/2011 =
 * Updated for BuddyPress 1.5
-= 2.5 =
+= 2.5 03/14/2011 =
 * Updated for BuddyPress 1.2.8 multisite installations
-= 2.4 =
+= 2.4 02/14/2011 =
 * Added the *Filtered Members List* option in the *Advanced Options* tab
-= 2.3 =
+= 2.3 01/24/2011 =
 * Added the choice between *Partial match* and *Exact match* for text searches
-= 2.2 =
+= 2.2 01/03/2011 =
 * Added the *Age Range Search* option
-= 2.1 =
+= 2.1 12/13/2010 =
 * Added the *Toggle Form* option to show/hide the search form
 * Fixed a bug where no results were found in some installations
-= 2.0 =
+= 2.0 11/14/2010 =
 * Added support for *multiselectbox* and *checkbox* profile fields
 * Added support for % and _ wildcard characters in text searches
-= 1.0 =
+= 1.0 06/29/2010 =
 * First version released to the WordPress Plugin Directory
 
 == Upgrade Notice ==
 
 = 4.6 =
 Security release, please update immediately!
-
-= 4.3 =
-Note: If you, or your theme, are using a modified 4.2.x template, you have to edit and update it to the current template structure before upgrading. If you haven't modified the built-in templates instead, you can upgrade safely.
-
-= 4.1 =
-Note: If you are upgrading from version 4.0.x, you have to update your existing forms adding your directory page selection. Go to *Users -> Profile Search*, *Edit* each form, select its *Form Action (Results Directory)* and *Update*.
-
-= 4.0 =
-Note: BP Profile Search version 4 is not compatible with version 3. When you first upgrade to version 4, you have to reconfigure your BP Profile Search forms and widgets, and modify any BP Profile Search shortcodes and *do_action* codes you are using.
-In a multisite installation, the BP Profile Search settings page is in the individual Site Admin(s), and no longer in the Network Admin.

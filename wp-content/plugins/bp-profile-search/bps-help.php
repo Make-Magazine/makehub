@@ -11,7 +11,6 @@ function bps_help ()
 <li>'. sprintf (__('In its target directory, using the option %s', 'bp-profile-search'), '<em>'. __('Add Form to Directory', 'bp-profile-search'). '</em>'). '</li>
 <li>'. sprintf (__('In a sidebar or widget area, using the widget %s', 'bp-profile-search'), '<em>'. __('Profile Search', 'bp-profile-search'). '</em>'). '</li>
 <li>'. sprintf (__('In a post or page, using the shortcode: %s (*)', 'bp-profile-search'), "<br><strong>[bps_form id=form_id]</strong>"). '</li>
-<li>'. sprintf (__('Anywhere in your theme, using the PHP code: %s (*)', 'bp-profile-search'), "<br><strong>&lt;?php do_action ('bps_display_form', form_id); ?&gt;</strong>"). '</li>
 </ul>
 <p>'. sprintf (__('(*) Replace %s with the actual ID of your form.', 'bp-profile-search'), "<em>form_id</em>"). '</p>';
 
@@ -44,7 +43,7 @@ __('Select the member directory that will be filtered using this search form. Yo
 <li>'. __('The BuddyPress Members directory', 'bp-profile-search'). '</li>
 <li>'. __('One of the member directories built with this plugin', 'bp-profile-search'). '</li>
 </ul>
-<p>'. sprintf (__('You can create a member directory using the shortcode %1$s. To learn more, see the %2$s page.', 'bp-profile-search'), '<strong>[bps_directory]</strong>', '<a href="http://dontdream.it/bp-profile-search/custom-directories/" target="_blank">Custom Directories</a>'). '</p>
+<p>'. sprintf (__('You can create a member directory using the shortcode %1$s. To learn more, see the %2$s page.', 'bp-profile-search'), '<strong>[bps_directory]</strong>', '<a href="https://dontdream.it/bp-profile-search/custom-directories/" target="_blank">Custom Directories</a>'). '</p>
 <p>
 <strong>'. __('Add Form to Directory', 'bp-profile-search'). '</strong><br>'.
 __('Choose whether to display this form in its target directory.', 'bp-profile-search'). '
@@ -74,11 +73,11 @@ __('Select your form’s <em>method</em> attribute.', 'bp-profile-search'). '
 
 	$sidebar = '
 <p><strong>'. __('For more information:', 'bp-profile-search'). '</strong></p>
-<p><a href="http://dontdream.it/bp-profile-search/" target="_blank">'. __('Documentation', 'bp-profile-search'). '</a></p>
-<p><a href="http://dontdream.it/bp-profile-search/search-modes/" target="_blank">'. __('Search Modes', 'bp-profile-search'). '</a></p>
-<p><a href="http://dontdream.it/bp-profile-search/troubleshooting/" target="_blank">'. __('Troubleshooting', 'bp-profile-search'). '</a></p>
-<p><a href="http://dontdream.it/bp-profile-search/incompatible-plugins/" target="_blank">'. __('Incompatible plugins', 'bp-profile-search'). '</a></p>
-<p><a href="http://dontdream.it/support/forum/bp-profile-search-forum/" target="_blank">'. __('Support Forum', 'bp-profile-search'). '</a></p>
+<p><a href="https://dontdream.it/bp-profile-search/" target="_blank">'. __('Documentation', 'bp-profile-search'). '</a></p>
+<p><a href="https://dontdream.it/bp-profile-search/search-modes/" target="_blank">'. __('Search Modes', 'bp-profile-search'). '</a></p>
+<p><a href="https://dontdream.it/bp-profile-search/troubleshooting/" target="_blank">'. __('Troubleshooting', 'bp-profile-search'). '</a></p>
+<p><a href="https://dontdream.it/bp-profile-search/incompatible-plugins/" target="_blank">'. __('Incompatible plugins', 'bp-profile-search'). '</a></p>
+<p><a href="https://dontdream.it/support/forum/bp-profile-search-forum/" target="_blank">'. __('Support Forum', 'bp-profile-search'). '</a></p>
 <br><br>';
 
 	$screen->add_help_tab (array ('id' => 'bps_05', 'title' => $title_05, 'content' => $content_05));

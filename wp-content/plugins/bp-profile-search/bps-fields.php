@@ -48,7 +48,7 @@ class bps_Fields
 		'text'			=> array ('contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 		'integer'		=> array ('' => 'integer', 'range' => 'integer-range'),
 		'decimal'		=> array ('' => 'textbox', 'range' => 'range'),
-		'date'			=> array ('' => 'date', 'range' => 'date-range', 'age_range' => 'range'),
+		'date'			=> array ('' => 'date', 'range' => 'date-range', 'age_range' => 'integer-range'),
 		'location'		=> array ('distance' => 'distance', 'contains' => 'textbox', '' => 'textbox', 'like' => 'textbox'),
 
 		'text/e'		=> array ('' => array ('selectbox', 'radio'), 'one_of' => array ('checkbox', 'multiselectbox')),
@@ -99,26 +99,37 @@ class bps_Fields
 		return $labels[$filter];
 	}
 
-	// whether the value of this field is the same for all the search results
-	public static function same_value ($f)
+	// whether to show the field value in the member details area
+	public static function show_details ($f)
 	{
-		if (!isset ($f->filter))  return true;
+		$show_details = false;
 
-		switch ($f->filter)
+		if (isset ($f->filter))  switch ($f->filter)
 		{
 		case '':
-			return !bps_is_expression ($f->value);
+			$show_details = bps_is_expression ($f->value);
+			break;
 
 		case 'range':
 		case 'age_range':
-			return (isset ($f->value['min']) && isset ($f->value['max']) && $f->value['min'] == $f->value['max']);
+			$show_details = !(isset ($f->value['min']) && isset ($f->value['max']) && $f->value['min'] == $f->value['max']);
+			break;
 
 		case 'one_of':
-			return (count ($f->value) == 1);
+			$show_details = (count ($f->value) > 1);
+			break;
 
-		default:
-			return false;
+		case 'contains':
+		case 'like':
+		case 'distance':
+		case 'match_any':
+		case 'match_all':
+			$show_details = true;
+			break;
 		}
+
+		$show_details = apply_filters ('bps_show_details', $show_details, $f);
+		return $show_details;
 	}
 
 	public static function set_filters ($f)
@@ -143,6 +154,83 @@ class bps_Fields
 	public static function valid_filter ($f, $filter)
 	{
 		return in_array ($filter, $f->filters)? $filter: $f->filters[0];
+	}
+
+	public static function get_empty_value ($filter)
+	{
+		$value = false;
+
+		switch ($filter)
+		{
+		case 'contains':
+		case '':
+		case 'like':
+			$value = '';
+			break;
+
+		case 'range':
+		case 'age_range':
+			$value = array ('min' => '', 'max' => '');
+			break;
+
+		case 'distance':
+			$value = array ('distance' => '', 'units' => '', 'location' => '', 'lat' => '', 'lng' => '');
+			break;
+
+		case 'one_of':
+		case 'match_any':
+		case 'match_all':
+			$value = array ();
+			break;
+		}
+
+		$value = apply_filters ('bps_get_empty_value', $value, $filter);
+		return $value;
+	}
+
+	public static function is_empty_value ($value, $filter)
+	{
+		$empty = false;
+
+		switch ($filter)
+		{
+		case 'contains':
+		case '':
+		case 'like':
+			if ($value === '')  $empty = true;
+			break;
+
+		case 'range':
+		case 'age_range':
+			if ($value['min'] === '' && $value['max'] === '')  $empty = true;
+			break;
+
+		case 'distance':
+			if ($value['distance'] === '' && $value['location'] === '')  $empty = true;
+			break;
+
+		case 'one_of':
+		case 'match_any':
+		case 'match_all':
+			break;
+		}
+
+		$empty = apply_filters ('bps_is_empty_value', $empty, $value, $filter);
+		return $empty;
+	}
+
+	public static function get_display ($f, $filter)
+	{
+		$format = isset ($f->format)? $f->format: 'none';
+		$enum = (isset ($f->options) && is_array ($f->options))? count ($f->options): 0;
+		$selector = $format. ($enum? '/e': '');
+		$display = apply_filters ('bps_field_config', self::$display, $f);
+		$display = isset ($display[$selector][$filter])? $display[$selector][$filter]: false;
+
+		if (is_array ($display))
+			$display = (isset ($f->type) && in_array ($f->type, $display))? $f->type: $display[0];
+
+		return $display;
 	}
 
 	public static function set_display ($f, $filter)
@@ -261,8 +349,6 @@ function bps_match_key ($key, $fields)
 
 function bps_is_filter ($filter, $f)
 {
-	if ($filter == 'range_min' || $filter == 'range_max')  $filter = 'range';
-	if ($filter == 'age_range_min' || $filter == 'age_range_max')  $filter = 'age_range';
 	if ($filter == 'label')  return true;
 
 	return bps_Fields::is_filter ($f, $filter);

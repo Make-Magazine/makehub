@@ -191,30 +191,11 @@ function bps_template_options ($form, $template)
 	$response = include $located;
 	$output = ob_get_clean ();
 
-	if (strpos ($response, 'end_of_options') === 0)
+	if ($response == 'end_of_options 4.9')
 	{
 		echo $output;
 		$located = str_replace (WP_CONTENT_DIR, '', $located);
 		echo "<!-- by $located -->";
-	}
-	else
-	{
-		if (!isset ($options['header']))  $options['header'] = __('<h4>Advanced Search</h4>', 'bp-profile-search');
-		if (!isset ($options['toggle']))  $options['toggle'] = 'Enabled';
-		if (!isset ($options['button']))  $options['button'] = __('Hide/Show Form', 'bp-profile-search');
-?>
-		<p><strong><?php _e('Form Header', 'bp-profile-search'); ?></strong></p>
-		<textarea name="options[header]" id="header" class="large-text code" rows="4"><?php echo $options['header']; ?></textarea>
-
-		<p><strong><?php _e('Toggle Form', 'bp-profile-search'); ?></strong></p>
-		<select name="options[toggle]" id="toggle">
-			<option value='Enabled' <?php selected ($options['toggle'], 'Enabled'); ?>><?php _e('Enabled', 'bp-profile-search'); ?></option>
-			<option value='Disabled' <?php selected ($options['toggle'], 'Disabled'); ?>><?php _e('Disabled', 'bp-profile-search'); ?></option>
-		</select>
-
-		<p><strong><?php _e('Toggle Form Button', 'bp-profile-search'); ?></strong></p>
-		<input type="text" name="options[button]" id="button" value="<?php echo esc_attr ($options['button']); ?>" />
-<?php
 	}
 
 	return true;
@@ -231,8 +212,8 @@ function bps_persistent ($post)
 <?php
 }
 
-add_action ('save_post', 'bps_update_meta', 10, 2);
-function bps_update_meta ($form, $post)
+add_action ('save_post', 'bps_update_meta', 10, 3);
+function bps_update_meta ($form, $post, $update)
 {
 	if ($post->post_type != 'bps_form' || $post->post_status != 'publish')  return false;
 	if (empty ($_POST['options']) && empty ($_POST['bps_options']))  return false;
@@ -275,9 +256,6 @@ function bps_update_meta ($form, $post)
 		$template_options = stripslashes_deep ($_POST['options']);
 		$meta['template_options'] = $old_meta['template_options'];
 		$meta['template_options'][$meta['template']] = $template_options;
-
-		if (isset ($template_options['header']))  bps_set_wpml ($form, '-', 'header', $template_options['header']);
-		if (isset ($template_options['button']))  bps_set_wpml ($form, '-', 'toggle form', $template_options['button']);
 	}
 
 	bps_set_wpml ($form, '-', 'title', $post->post_title);

@@ -268,6 +268,15 @@ function bps_usermeta_search ($f)
 		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("meta_value <= %d", $value['max']);
 		break;
 
+	case 'decimal_is':
+		$sql['where'][$filter] = bps_sql_expression ("meta_value = %f", $value);
+		break;
+
+	case 'decimal_range':
+		if (isset ($value['min']))  $sql['where']['min'] = $wpdb->prepare ("meta_value >= %f", $value['min']);
+		if (isset ($value['max']))  $sql['where']['max'] = $wpdb->prepare ("meta_value <= %f", $value['max']);
+		break;
+
 	case 'date_is':
 		$sql['where'][$filter] = bps_sql_expression ("DATE(meta_value) = %s", $value);
 		break;
@@ -292,6 +301,17 @@ function bps_usermeta_search ($f)
 			$ymax = $year - $value['min'];
 			$sql['where']['age_max'] = $wpdb->prepare ("DATE(meta_value) <= %s", "$ymax-$month-$day");
 		}
+		break;
+
+	case 'text_one_of':
+		$values = (array)$value;
+		$parts = array ();
+		foreach ($values as $value)
+		{
+			$value = stripslashes ($value);
+			$parts[] = $wpdb->prepare ("meta_value = %s", $value);
+		}
+		$sql['where'][$filter] = '('. implode (' OR ', $parts). ')';
 		break;
 
 	case 'set_match_any':

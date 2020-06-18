@@ -8,6 +8,7 @@ include 'bps-external.php';
 include 'bps-fields.php';
 include 'bps-form.php';
 include 'bps-help.php';
+include 'bps-request.php';
 include 'bps-search.php';
 include 'bps-template.php';
 include 'bps-templates47.php';
@@ -38,29 +39,10 @@ function bps_upgrade ()
 		$form = $post->ID;
 		$meta = bps_meta ($form);
 
-		if ($installed < 471)
-		{
-			if (!isset ($meta['action']))
-				$meta['action'] = 0;
-
-			if (!isset ($meta['template']))
-				$meta['template'] = bps_default_template ();
-
-			if (!isset ($meta['field_code']))
-				foreach ($meta['field_name'] as $k => $id)
-					$meta['field_code'][$k] = 'field_'. $id;
-
-			if (!isset ($meta['field_mode']))
-				foreach ($meta['field_range'] as $k => $range)
-					$meta['field_mode'][$k] = isset ($range)? 'range': '';
-		}
-
-		if ($installed < 485)
-		{
-			$meta['template_options'][$meta['template']]['header'] = $meta['header'];
-			$meta['template_options'][$meta['template']]['toggle'] = $meta['toggle'];
-			$meta['template_options'][$meta['template']]['button'] = $meta['button'];
-		}
+//		if ($installed < nnn)
+//		{
+//			...
+//		}
 
 		update_post_meta ($form, 'bps_options', $meta);
 	}
@@ -311,5 +293,4 @@ function bps_admin_head ()
 function _bps_admin_js ()
 {
 	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable'), BPS_VERSION);
-//	wp_enqueue_script ('bps-admin', plugins_url ('bps-admin.js', __FILE__), array ('jquery-ui-sortable', 'react', 'react-dom'), BPS_VERSION);
 }

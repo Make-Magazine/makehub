@@ -9,7 +9,7 @@ function bps_template_stack ($stack)
 
 function bps_templates ()
 {
-	$templates = array ('members/bps-form-default', 'members/bps-form-nouveau', 'members/bps-form-legacy', 'members/bps-form-sample-1', 'members/bps-form-sample-2');
+	$templates = array ('members/bps-form-default');
 	return apply_filters ('bps_templates', $templates);
 }
 
@@ -32,27 +32,16 @@ function bps_valid_template ($template)
 
 function bps_template_info ($template)
 {
-	$retired = array ('members/bps-form-nouveau', 'members/bps-form-legacy', 'members/bps-form-sample-1', 'members/bps-form-sample-2');
-
 	$located = bp_locate_template ($template. '.php');
 	if ($located === false)
 	{
-		if (in_array ($template, $retired))
-			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('this template has been retired, please switch to bps-form-default', 'bp-profile-search');
-		else
-			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('template not found', 'bp-profile-search');
+		echo '<strong style="color:red;">'. $template. '</strong><br>'. __('template not found', 'bp-profile-search');
 		return false;
 	}
 
 	if (dirname ($located) == dirname (__FILE__). '/templates/members')
 	{
-		if (in_array ($template, $retired))
-		{
-			echo '<strong style="color:red;">'. $template. '</strong><br>'. __('outdated template, please consider switching to bps-form-default', 'bp-profile-search');
-			echo '<br><a href="https://dontdream.it/new-form-template-structure/">'. __('more information...', 'bp-profile-search'). '</a>';
-		}
-		else
-			echo '<strong style="color:green;">'. $template. '</strong><br>'. __('built-in template', 'bp-profile-search');
+		echo '<strong style="color:green;">'. $template. '</strong><br>'. __('built-in template', 'bp-profile-search');
 		return $located;
 	}
 
@@ -67,10 +56,45 @@ function bps_template_info ($template)
 		echo '<strong style="color:blue;">'. $template. '</strong><br>'. sprintf (__('custom template located in: %1$s', 'bp-profile-search'), $path);
 	else
 	{
-		echo '<strong style="color:red;">'. $template. '</strong><br>'. sprintf (__('outdated custom template located in: %1$s', 'bp-profile-search'), $path);
-		echo '<br><a href="https://dontdream.it/new-form-template-structure/">'. __('more information...', 'bp-profile-search'). '</a>';
+		echo '<strong style="color:red;">'. $template. '</strong><br>'. sprintf (__('unsupported template located in: %1$s', 'bp-profile-search'), $path);
+		echo '<br><a href="https://dontdream.it/bp-profile-search-5-3/">'. __('more information...', 'bp-profile-search'). '</a>';
 	}
 	return $located;
+}
+
+function bps_check_enqueued_scripts ($form, $located)
+{
+	$done = array ('distance' => false, 'radio' => false);
+	list ($fields, ) = bps_get_form_fields ($form);
+
+	foreach ($fields as $f)
+	{
+		switch ($f->display)
+		{
+		case 'distance':
+
+			if ($done['distance'])  break;
+			$done['distance'] = true;
+
+			if (!wp_script_is ($f->script_handle, 'enqueued'))
+				wp_enqueue_script ($f->script_handle);
+
+			if (!wp_script_is ('bps-template', 'enqueued'))
+				wp_enqueue_script ('bps-template', plugins_url ('bp-profile-search/bps-template.js'), array (), BPS_VERSION);
+
+			break;
+
+		case 'radio':
+
+			if ($done['radio'])  break;
+			$done['radio'] = true;
+
+			if (!wp_script_is ('bps-template', 'enqueued'))
+				wp_enqueue_script ('bps-template', plugins_url ('bp-profile-search/bps-template.js'), array (), BPS_VERSION);
+
+			break;
+		}
+	}
 }
 
 function bps_call_template ($template, $args = array ())
@@ -79,6 +103,8 @@ function bps_call_template ($template, $args = array ())
 
 	if ($located === false)
 		return bps_error ('template_not_found', $template);
+
+	$GLOBALS['bps_template_args'][] = $args;
 
 	echo "\n<!-- BP Profile Search ". BPS_VERSION. " $template -->\n";
 	if (bps_debug ())
@@ -90,24 +116,29 @@ function bps_call_template ($template, $args = array ())
 		echo "-->\n";
 	}
 
-	$GLOBALS['bps_template_args'][] = $args;
 	include $located;
-	array_pop ($GLOBALS['bps_template_args']);
 
 	echo "\n<!-- BP Profile Search end $template -->\n";
+	array_pop ($GLOBALS['bps_template_args']);
+
 	return true;
 }
 
-function bps_call_form_template ($template, $args)
+function bps_call_form_template ($form, $location)
 {
-	$template = bps_valid_template ($template);
+	$meta = bps_meta ($form);
+
+	if (empty ($meta['field_code']))
+		return bps_error ('form_empty_or_nonexistent', $form);
+
+	$args = array ($form, $location);
+	$template = bps_valid_template ($meta['template']);
 	$located = bp_locate_template ($template. '.php');
 
 	if ($located === false)
 		return bps_error ('template_not_found', $template);
 
-	$form = $args[0];
-	$meta = bps_meta ($form);
+	$GLOBALS['bps_template_args'][] = $args;
 	$options = isset ($meta['template_options'][$template])? $meta['template_options'][$template]: array ();
 
 	echo "\n<!-- BP Profile Search ". BPS_VERSION. " $template -->\n";
@@ -121,11 +152,12 @@ function bps_call_form_template ($template, $args)
 		echo "-->\n";
 	}
 
-	$GLOBALS['bps_template_args'][] = $args;
 	include $located;
-	array_pop ($GLOBALS['bps_template_args']);
+	bps_check_enqueued_scripts ($form, $located);
 
 	echo "\n<!-- BP Profile Search end $template -->\n";
+	array_pop ($GLOBALS['bps_template_args']);
+
 	return true;
 }
 
@@ -170,7 +202,6 @@ function bps_jquery_ui_themes ()
 
 function bps_escaped_form_data ($version = '')
 {
-	if ($version == '')	return bps_escaped_form_data47 ();
 	if ($version == '4.9')	return bps_escaped_form_data49 ();
 
 	return false;
@@ -179,7 +210,6 @@ function bps_escaped_form_data ($version = '')
 function bps_escaped_filters_data ($version = '')
 {
 	if ($version == '')	return bps_escaped_filters_data47 ();
-	if ($version == '4.9')	return bps_escaped_filters_data49 ();
 
 	return false;
 }
@@ -188,15 +218,18 @@ function bps_set_hidden_field ($name, $value)
 {
 	$new = new stdClass;
 	$new->display = 'hidden';
-	$new->code = $name;		// to be removed
 	$new->html_name = $name;
 	$new->value = $value;
-	$new->unique_id = bps_unique_id ($name);
 
 	return $new;
 }
 
-function bps_sort_fields ($a, $b)
+function bps_unique_id ($id)
 {
-	return ($a->order <= $b->order)? -1: 1;
+	static $k = array ();
+
+	$k[$id] = isset ($k[$id])? $k[$id] + 1: 0;
+	$unique = $k[$id]? $id. '_'. $k[$id]: $id;
+	
+	return apply_filters ('bps_unique_id', $unique, $id);
 }

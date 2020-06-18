@@ -17,6 +17,17 @@ function bps_set_directory ()
 	}
 }
 
+function bps_is_directory ()
+{
+	$dirs = bps_directories ();
+	$current = bps_current_page ();
+
+	foreach ($dirs as $dir)
+		if ($dir->path == $current)  return $dir;
+
+	return false;
+}
+
 function bps_directories ()		// published interface, 20190324
 {
 	static $dirs = array ();
@@ -31,7 +42,6 @@ function bps_directories ()		// published interface, 20190324
 		$dirs[$members] = new stdClass;
 		$dirs[$members]->id = $members;
 		$dirs[$members]->title = get_the_title ($members);
-		$dirs[$members]->content = get_the_content ($members);
 		$dirs[$members]->path = parse_url (get_page_link ($members), PHP_URL_PATH);
 	}
 
@@ -50,7 +60,7 @@ function bps_directories ()		// published interface, 20190324
 	return $dirs;
 }
 
-add_shortcode ('bps_directory', '');
+add_shortcode ('bps_directory', function() {return '';});
 function bps_set_directory_data ($attr, $content)
 {
 	global $bps_directory_data;
@@ -165,7 +175,7 @@ function bps_before_directory ()
 	$fields = bps_parsed_fields ();
 	foreach ($fields as $f)
 	{
-		if (bps_Fields::same_value ($f))  continue;
+		if (!bps_Fields::show_details ($f))  continue;
 		if (empty ($f->id) || $f->id != 1)  bps_set_sort_options ($f->code);
 	}
 
@@ -234,6 +244,23 @@ function bps_display_sort_options ()
 	echo "\n<!-- BP Profile Search end -->\n";
 }
 
+add_action ('bp_before_members_loop', 'bps_before_loop');
+function bps_before_loop ()
+{
+	$fields = bps_parsed_fields ();
+	foreach ($fields as $f)
+	{
+		if (!bps_Fields::show_details ($f))  continue;
+		if (empty ($f->id) || $f->id != 1)  bps_set_details ($f->code);
+	}
+
+	$data = bps_get_directory_data ();
+	if (isset ($data['show']))  bps_set_details ($data['show']);
+
+	add_filter ('bp_user_query_uid_clauses', 'bps_uid_clauses', 99, 2);
+	add_action ('bp_directory_members_item', 'bps_display_details');
+}
+
 function bps_uid_clauses ($sql, $object)
 {
 	$code = $object->query_vars['type']; 
@@ -252,23 +279,6 @@ function bps_uid_clauses ($sql, $object)
 	}
 
 	return $sql;
-}
-
-add_action ('bp_before_members_loop', 'bps_before_loop');
-function bps_before_loop ()
-{
-	$fields = bps_parsed_fields ();
-	foreach ($fields as $f)
-	{
-		if (bps_Fields::same_value ($f))  continue;
-		if (empty ($f->id) || $f->id != 1)  bps_set_details ($f->code);
-	}
-
-	$data = bps_get_directory_data ();
-	if (isset ($data['show']))  bps_set_details ($data['show']);
-
-	add_filter ('bp_user_query_uid_clauses', 'bps_uid_clauses', 99, 2);
-	add_action ('bp_directory_members_item', 'bps_display_details');
 }
 
 function bps_set_details ($codes)
@@ -298,17 +308,6 @@ function bps_display_details ()
 	$details = bps_get_details ();
 	if (!empty ($details))
 		bps_call_template ('members/bps-details');
-}
-
-function bps_is_directory ()
-{
-	$dirs = bps_directories ();
-	$current = bps_current_page ();
-
-	foreach ($dirs as $dir)
-		if ($dir->path == $current)  return $dir;
-
-	return false;
 }
 
 add_filter ('bp_core_get_directory_page_ids', 'bps_custom_directory');

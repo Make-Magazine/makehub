@@ -27,22 +27,25 @@ if (is_admin ())
 	<?php } ?>
 	</select>
 
-	<div id="ui_collapsible" <?php if ($options['theme'] == '') echo 'style="display: none;"'; ?>>
-		<p><strong><?php _e('Collapsible Form', 'bp-profile-search'); ?></strong></p>
-		<select name="options[collapsible]">
-			<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
-			<option value='No' <?php selected ($options['collapsible'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
-		</select>
-	</div>
+	<p><strong><?php _e('Collapsible Form', 'bp-profile-search'); ?></strong></p>
+	<select id="ui_collapsible" name="options[collapsible]">
+		<option value='Yes' <?php selected ($options['collapsible'], 'Yes'); ?>><?php _e('Yes', 'bp-profile-search'); ?></option>
+		<option value='No' <?php selected ($options['collapsible'], 'No'); ?>><?php _e('No', 'bp-profile-search'); ?></option>
+	</select>
 
 	<script>
 		jQuery(function ($) {
-			$('#ui_theme').change(function () {
-				if (this.value == '')
-					$('#ui_collapsible').hide('slow');
-				else
-					$('#ui_collapsible').show('slow');
-			});
+			var update_collapsible = function () {
+				if ($('#ui_theme').val() == '') {
+					$('#ui_collapsible').val('No');
+					$('#ui_collapsible').attr('disabled', true);
+				}
+				else {
+					$('#ui_collapsible').attr('disabled', false);
+				}
+			};
+			update_collapsible();
+			$('#ui_theme').change(update_collapsible);
 		});
 	</script>
 <?php
@@ -52,6 +55,7 @@ if (is_admin ())
 // 3rd section: display the search form
 
 $F = bps_escaped_form_data ($version = '4.9');
+wp_register_script ('bps-template', plugins_url ('bp-profile-search/bps-template.js'), array (), BPS_VERSION);
 ?>
 
 <style>
@@ -182,6 +186,9 @@ foreach ($F->fields as $f)
 	break;
 	case 'distance':
 
+		wp_enqueue_script ($f->script_handle);
+		wp_enqueue_script ('bps-template');
+
 		$of = __('of', 'bp-profile-search');
 		$km = __('km', 'bp-profile-search');
 		$miles = __('miles', 'bp-profile-search');
@@ -231,6 +238,8 @@ foreach ($F->fields as $f)
 <?php
 	break;
 	case 'radio':
+
+		wp_enqueue_script ('bps-template');
 ?>
 			<?php foreach ($f->options as $key => $label) { ?>
 				<label><input type="radio" <?php if ($key == $value) echo 'checked="checked"'; ?>

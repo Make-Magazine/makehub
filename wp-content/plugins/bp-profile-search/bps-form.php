@@ -13,7 +13,6 @@ function bps_add_form ()
 	}
 
 	$page = bps_wpml_id ($page, 'default');
-	if (bp_get_current_member_type ())  $page = bp_get_current_member_type ();
 	$len = strlen ((string)$page);
 
 	$args = array (
@@ -48,12 +47,7 @@ function bps_add_form ()
 add_action ('bps_display_form', 'bps_display_form', 10, 2);
 function bps_display_form ($form, $location='')
 {
-	$meta = bps_meta ($form);
-
-	if (empty ($meta['field_code']))
-		return bps_error ('form_empty_or_nonexistent', $form);
-
-	bps_call_form_template ($meta['template'], array ($form, $location));
+	bps_call_form_template ($form, $location);
 }
 
 add_shortcode ('bps_form', 'bps_show_form');
@@ -63,17 +57,6 @@ function bps_show_form ($attr, $content)
 
 	if (isset ($attr['id']))
 		bps_display_form ($attr['id'], 'shortcode');
-
-	return ob_get_clean ();
-}
-
-add_shortcode ('bps_display', 'bps_show_form0');
-function bps_show_form0 ($attr, $content)
-{
-	ob_start ();
-
-	if (isset ($attr['form']))
-		bps_display_form ($attr['form'], 'shortcode');
 
 	return ob_get_clean ();
 }
@@ -122,10 +105,6 @@ function bps_wpml ($form, $code, $key, $value)
 		case 'option':
 			$option = bpml_sanitize_string_name ($value, 30);
 			return apply_filters ('wpml_translate_single_string', $value, 'Buddypress Multilingual', "profile field {$code} - option '{$option}' name");
-		case 'header':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - header");
-		case 'toggle form':
-			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - toggle form");
 		case 'title':
 			return apply_filters ('wpml_translate_single_string', $value, 'Profile Search', "form {$form} - title");
 		}
