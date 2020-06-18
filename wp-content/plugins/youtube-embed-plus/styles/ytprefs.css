@@ -81,15 +81,6 @@ iframe.__youtube_prefs__
 
 }
 
-.epyt-gallery-playhover-textonly {
-    position: absolute;
-    top: -10px;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-}
-
 .epyt-gallery-playhover {
     opacity: 0;
     position: absolute;

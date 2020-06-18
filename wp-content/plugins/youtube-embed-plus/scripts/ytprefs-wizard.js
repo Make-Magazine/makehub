@@ -100,6 +100,7 @@ window._EPYTWIZ_ = window._EPYTWIZ_ || {};
         });
 
         $('.playlist-tabs').tabs();
+        $('.livestream-tabs').tabs();
 
         if (window._EPYTWIZ_.acc_expand)
         {

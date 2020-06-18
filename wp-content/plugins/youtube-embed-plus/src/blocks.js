@@ -10,4 +10,4 @@
  */
 
 import './block/block.js';
-import './viblock/block.js';
+//import './viblock/block.js';

@@ -259,3 +259,19 @@ iframe#gdpr_consent_message_ifr {
 .ytprefs-ob-success:after {
     content: url('../images/adstxt-valid.png');
 }
+
+input[type="checkbox"] + label .check-note {
+    display: none;
+}
+
+input[type="checkbox"]:checked + label .check-note {
+    display: inline;
+}
+
+#not_live_on ~ #wp-not_live_content-wrap {
+    opacity: .3;
+}
+
+#not_live_on:checked ~ #wp-not_live_content-wrap {
+    opacity: 1;
+}

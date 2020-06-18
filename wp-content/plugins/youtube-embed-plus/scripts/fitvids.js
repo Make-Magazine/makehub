@@ -1,7 +1,8 @@
 var epdofitvids = epdofitvids || function ($)
 {
 
-    $.fn.fitVidsEP = function (options) {
+    $.fn.fitVidsEP = function (options)
+    {
         if (_EPYT_.epresponsiveselector.constructor !== Array)
         {
             _EPYT_.epresponsiveselector = JSON.parse(_EPYT_.epresponsiveselector);
@@ -10,7 +11,8 @@ var epdofitvids = epdofitvids || function ($)
             customSelector: null
         };
 
-        if (!document.getElementById('fit-vids-style')) {
+        if (!document.getElementById('fit-vids-style'))
+        {
 
             var div = document.createElement('div'),
                     ref = document.getElementsByTagName('base')[0] || document.getElementsByTagName('script')[0],
@@ -25,27 +27,35 @@ var epdofitvids = epdofitvids || function ($)
 
         }
 
-        if (options) {
+        if (options)
+        {
             $.extend(settings, options);
         }
 
-        return this.each(function () {
+        return this.each(function ()
+        {
 //            var selectors = [
 //            "iframe[src*='youtube.com']",
 //            "iframe[src*='youtube-nocookie.com']"
 //            ];
             var selectors = _EPYT_.epresponsiveselector;
 
-            if (settings.customSelector) {
+            if (settings.customSelector)
+            {
                 selectors.push(settings.customSelector);
             }
 
             var $allVideos = $(this).find(selectors.join(','));
             $allVideos = $allVideos.not("object object"); // SwfObj conflict patch
 
-            $allVideos.each(function () {
+            $allVideos.each(function ()
+            {
                 var $this = $(this);
-                if (this.tagName.toLowerCase() === 'embed' && $this.parent('object').length || $this.parent('.fluid-width-video-wrapper').length) {
+                if (this.tagName.toLowerCase() === 'embed' && $this.parent('object').length
+                        || $this.parent('.fluid-width-video-wrapper').length
+                        || $this.css('position') === 'absolute'
+                        )
+                {
                     return;
                 }
                 if ($this.is('[data-origwidth]:not([width])'))
@@ -55,30 +65,72 @@ var epdofitvids = epdofitvids || function ($)
                 if ($this.is('[data-origheight]:not([height])'))
                 {
                     $this.attr('height', $this.data('origheight'));
-                }                
+                }
                 var height = (this.tagName.toLowerCase() === 'object' || ($this.attr('height') && !isNaN(parseInt($this.attr('height'), 10)))) ? parseInt($this.attr('height'), 10) : $this.height(),
                         width = !isNaN(parseInt($this.attr('width'), 10)) ? parseInt($this.attr('width'), 10) : $this.width(),
                         aspectRatio = height / width;
-                if (!$this.attr('id')) {
+                if (!$this.attr('id'))
+                {
                     var videoID = 'fitvid' + Math.floor(Math.random() * 999999);
                     $this.attr('id', videoID);
                 }
-                var fwvwrap = document.createElement('div');
-                fwvwrap.className = 'fluid-width-video-wrapper';
-                try {
-                    $this.wrap(fwvwrap).parent('.fluid-width-video-wrapper').attr('style', 'padding-top: ' + (aspectRatio * 100) + "% !important;");
-                    $this.removeAttr('height').removeAttr('width');
+
+                var attrWidth = $this.attr('width');
+                var attrHeight = $this.attr('height');
+                if ($this.parent().hasClass('epyt-video-wrapper'))
+                {
+                    try
+                    {
+                        $this.parent().addClass('fluid-width-video-wrapper').attr('style', 'padding-top: ' + (aspectRatio * 100) + "% !important;");
+                        $this.removeAttr('height').removeAttr('width');
+
+                        setTimeout(function ()
+                        {
+                            if (parseInt($this.parent().css('padding-top'), 10) > $this.height() + 20)
+                            {
+                                $this.parent().removeClass('fluid-width-video-wrapper').css('padding-top', '');
+                                $this.attr('width', attrWidth);
+                                $this.attr('height', attrHeight);
+                            }
+                        }, 100);
+                    }
+                    catch (wraperr)
+                    {
+                    }
                 }
-                catch (wraperr) {
+                else
+                {
+                    var fwvwrap = document.createElement('div');
+                    fwvwrap.className = 'fluid-width-video-wrapper';
+                    try
+                    {
+                        $this.wrap(fwvwrap).parent('.fluid-width-video-wrapper').attr('style', 'padding-top: ' + (aspectRatio * 100) + "% !important;");
+                        $this.removeAttr('height').removeAttr('width');
+
+                        setTimeout(function ()
+                        {
+                            if (parseInt($this.parent().css('padding-top'), 10) > $this.height() + 20)
+                            {
+                                $this.parent().removeClass('fluid-width-video-wrapper').css('padding-top', '');
+                                $this.attr('width', attrWidth);
+                                $this.attr('height', attrHeight);
+                            }
+                        }, 100);
+                    }
+                    catch (wraperr)
+                    {
+                    }
                 }
             });
         });
     };
 
-    $(document).ready(function () {
+    $(document).ready(function ()
+    {
         $("body").fitVidsEP();
 
-        $(document).ajaxSuccess(function (e, xhr, settings) {
+        $(document).ajaxSuccess(function (e, xhr, settings)
+        {
             if (xhr && xhr.responseText && xhr.responseText.indexOf('<iframe ') !== -1)
             {
                 $("body").fitVidsEP();
@@ -88,9 +140,12 @@ var epdofitvids = epdofitvids || function ($)
     return true;
 };
 
-try {
+try
+{
     epdofitvids(window.jQuery);
-} catch (err) {
+}
+catch (err)
+{
 }
 
 
