@@ -19,11 +19,11 @@ namespace Tribe\Events\Views\V2;
 
 use Tribe\Events\Views\V2\Query\Abstract_Query_Controller;
 use Tribe\Events\Views\V2\Query\Event_Query_Controller;
-use Tribe\Events\Views\V2\Repository\Caching_Set_Decorator;
 use Tribe\Events\Views\V2\Repository\Event_Period;
 use Tribe\Events\Views\V2\Template\Title;
 use Tribe__Events__Main as TEC;
-use Tribe__Rewrite as Rewrite;
+use Tribe__Rewrite as TEC_Rewrite;
+use Tribe__Utils__Array as Arr;
 
 /**
  * Class Hooks
@@ -58,6 +58,8 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_action( 'wp_enqueue_scripts', [ $this, 'action_disable_assets_v1' ], 0 );
 		add_action( 'tribe_events_pro_shortcode_tribe_events_after_assets', [ $this, 'action_disable_shortcode_assets_v1' ] );
 		add_action( 'updated_option', [ $this, 'action_save_wplang' ], 10, 3 );
+		add_action( 'the_post', [ $this, 'manage_sensitive_info' ] );
+		add_action( 'get_header', [ $this, 'print_single_json_ld' ] );
 	}
 
 	/**
@@ -66,8 +68,8 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 * @since 4.9.2
 	 */
 	protected function add_filters() {
-		add_filter( 'wp_redirect', [ $this, 'filter_prevent_canonical_embed_redirect' ] );
-		add_filter( 'redirect_canonical', [ $this, 'filter_prevent_canonical_embed_redirect' ] );
+		add_filter( 'wp_redirect', [ $this, 'filter_redirect_canonical' ], 10, 2 );
+		add_filter( 'redirect_canonical', [ $this, 'filter_redirect_canonical' ], 10, 2 );
 		add_action( 'tribe_events_parse_query', [ $this, 'parse_query' ] );
 		add_filter( 'template_include', [ $this, 'filter_template_include' ], 50 );
 		add_filter( 'embed_template', [ $this, 'filter_template_include' ], 50 );
@@ -84,11 +86,26 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_filter( 'tribe_events_event_repository_map', [ $this, 'add_period_repository' ], 10, 3 );
 
 		add_filter( 'tribe_general_settings_tab_fields', [ $this, 'filter_general_settings_tab_live_update' ], 20 );
+		add_filter( 'tribe_events_rewrite_i18n_slugs_raw', [ $this, 'filter_rewrite_i18n_slugs_raw' ], 50, 2 );
+		add_filter( 'tribe_get_event_after', [ $this, 'filter_events_properties' ] );
+		add_filter( 'tribe_template_file', [ $this, 'filter_template_file' ], 10, 3 );
+		add_filter( 'tribe_get_option', [ $this, 'filter_get_stylesheet_option' ], 10, 2 );
+		add_filter( 'option_liveFiltersUpdate', [ $this, 'filter_live_filters_option_value' ], 10, 2 );
+		add_filter( 'tribe_get_option', [ $this, 'filter_live_filters_option_value' ], 10, 2 );
+		add_filter( 'tribe_field_value', [ $this, 'filter_live_filters_option_value' ], 10, 2 );
 
 		if ( tribe_context()->doing_php_initial_state() ) {
 			add_filter( 'wp_title', [ $this, 'filter_wp_title' ], 10, 2 );
 			add_filter( 'document_title_parts', [ $this, 'filter_document_title_parts' ] );
+			add_filter( 'pre_get_document_title', [ $this, 'pre_get_document_title' ], 20 );
 		}
+
+		// Replace the `pubDate` in event feeds.
+		if ( ! has_filter( 'get_post_time', [ 'Tribe__Events__Templates', 'event_date_to_pubDate' ], 10 ) ) {
+			add_filter( 'get_post_time', [ 'Tribe__Events__Templates', 'event_date_to_pubDate' ], 10, 3 );
+		}
+
+		add_filter( 'tribe_customizer_inline_stylesheets', [ $this, 'customizer_inline_stylesheets' ], 12, 2 );
 	}
 
 	/**
@@ -159,7 +176,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @param  \Tribe__Events__Rewrite  $rewrite  An instance of the Tribe rewrite abstraction.
 	 */
-	public function on_tribe_events_pre_rewrite( Rewrite $rewrite ) {
+	public function on_tribe_events_pre_rewrite( TEC_Rewrite $rewrite ) {
 		$this->container->make( Kitchen_Sink::class )->generate_rules( $rewrite );
 	}
 
@@ -297,11 +314,31 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 * @return string The modified page title, if required.
 	 */
 	public function filter_wp_title( $title, $sep = null ) {
-		if ( ! $this->container->make( Template_Bootstrap::class )->should_load() ) {
+		$bootstrap = $this->container->make( Template_Bootstrap::class );
+		if ( ! $bootstrap->should_load() || $bootstrap->is_single_event() ) {
 			return $title;
 		}
 
 		return $this->container->make( Title::class )->filter_wp_title( $title, $sep );
+	}
+
+	/**
+	 * Filters the `pre_get_document_title` to prevent conflicts when other plugins
+	 * modify this initial value on our pages.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string $title The current title value.
+	 *
+	 * @return string The current title or empty string.
+	 */
+	public function pre_get_document_title( $title ) {
+		$bootstrap = $this->container->make( Template_Bootstrap::class );
+		if ( ! $bootstrap->should_load() || $bootstrap->is_single_event() ) {
+			return $title;
+		}
+
+		return '';
 	}
 
 	/**
@@ -316,9 +353,11 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 * @return string The modified page title, if required.
 	 */
 	public function filter_document_title_parts( $title ) {
-		if ( ! $this->container->make( Template_Bootstrap::class )->should_load() ) {
+		$bootstrap = $this->container->make( Template_Bootstrap::class );
+		if ( ! $bootstrap->should_load() || $bootstrap->is_single_event() ) {
 			return $title;
 		}
+
 
 		return $this->container->make( Title::class )->filter_document_title_parts( $title );
 	}
@@ -360,7 +399,13 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 */
 	public function filter_admin_post_thumbnail_html( $html ) {
 
-		if ( TEC::POSTTYPE !== get_current_screen()->post_type ) {
+		$screen = get_current_screen();
+
+		if ( ! $screen instanceof \WP_Screen ) {
+			return $html;
+		}
+
+		if ( TEC::POSTTYPE !== $screen->post_type ) {
 			return $html;
 		}
 
@@ -376,15 +421,45 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @return string A redirection URL, or `false` to prevent redirection.
 	 */
-	public function filter_prevent_canonical_embed_redirect( $redirect_url = null ) {
-		$context = tribe_context();
-
-		// Any other URL we bail with the URL return.
-		if ( 'embed' !== $context->get( 'view' ) ) {
+	public function filter_redirect_canonical( $redirect_url = null, $original_url = null ) {
+		if ( trailingslashit( $original_url ) === trailingslashit( $redirect_url ) ) {
 			return $redirect_url;
 		}
 
-		return false;
+		$context = tribe_context();
+
+		// Bail with the original redirect if we are not dealing with a CPT from TEC.
+		if ( ! $context->is( 'tec_post_type' ) ) {
+			return $redirect_url;
+		}
+
+		$view = $context->get( 'view_request', null );
+
+		if ( 'embed' === $view ) {
+			// Do not redirect embedded Views.
+			return false;
+		}
+
+		if ( empty( $view ) || 'single-event' === $view ) {
+			// Let the redirection go on.
+			return $redirect_url;
+		}
+
+		$parsed = \Tribe__Events__Rewrite::instance()->parse_request( $redirect_url );
+
+		if (
+			empty( $parsed['tribe_redirected'] )
+			&& $view !== Arr::get( (array) $parsed, 'eventDisplay' )
+		) {
+
+			/*
+			 * If we're here we know we should be looking at a View URL.
+			 * If the proposed URL does not resolve to a View, do not redirect.
+			 */
+			return false;
+		}
+
+		return $redirect_url;
 	}
 
 	/**
@@ -398,11 +473,6 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 */
 	public function filter_general_settings_tab_live_update( $fields ) {
 		if ( empty( $fields['liveFiltersUpdate'] ) ) {
-			return $fields;
-		}
-
-		$disable_bar = tribe_is_truthy( tribe_get_option( 'tribeDisableTribeBar', false ) );
-		if ( $disable_bar ) {
 			return $fields;
 		}
 
@@ -484,5 +554,193 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		// Deleting `rewrite_rules` given that this is being executed after `init`
 		// And `flush_rewrite_rules()` doesn't take effect.
 		delete_option( 'rewrite_rules' );
+	}
+
+	/**
+	 * Filters rewrite rules to modify and update them for Views V2.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param array  $bases  An array of rewrite bases that have been generated.
+	 * @param string $method The method that's being used to generate the bases; defaults to `regex`.
+	 *
+	 * @return array<string,array> An array of rewrite rules. Modified, if required, to support Views V2.
+	 */
+	public function filter_rewrite_i18n_slugs_raw( $bases, $method ) {
+		if ( ! is_array( $bases ) ) {
+			return $bases;
+		}
+
+		return $this->container->make( Rewrite::class )->filter_raw_i18n_slugs( $bases, $method );
+	}
+
+	/**
+	 * Fires to manage sensitive information on password protected posts.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param \WP_Post|int $post The event post ID or object currently being decorated.
+	 */
+	public function manage_sensitive_info( $post ) {
+		if ( $this->container->make( Template_Bootstrap::class )->is_single_event() ) {
+			$this->container->make( Template\Event::class )->manage_sensitive_info( $post );
+		}
+	}
+
+	/**
+	 * Updates and modifies the properties added to the event post object by the `tribe_get_event` function to
+	 * hide some sensitive information, if required.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param \WP_Post $event The event post object, decorated w/ properties added by the `tribe_get_event` function.
+	 *
+	 * @return \WP_Post The event post object, decorated w/ properties added by the `tribe_get_event` function, some of
+	 *                  them updated to hide sensitive information, if required.
+	 */
+	public function filter_events_properties( $event ) {
+		if ( ! $event instanceof \WP_Post ) {
+			return $event;
+		}
+
+		return $this->container->make( Template\Event::class )->filter_event_properties( $event );
+	}
+
+	/**
+	 * Filter the template file in case we're in single event
+	 * and we need to use the theme overrides.
+	 *
+	 * @see   tribe_template_file
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string $file      Complete path to include the PHP File
+	 * @param array  $name      Template name
+	 * @param object $template  Instance of the Tribe__Template
+	 *
+	 * @return string
+	 */
+	public function filter_template_file( $file, $name, $template ) {
+		return $this->container->make( Template_Bootstrap::class )->filter_template_file( $file, $name, $template );
+	}
+
+	/**
+	 * Filter the stylesheet option to do some switching for V2
+	 *
+	 * @since  5.0.2
+	 *
+	 * @param  string $value The option value.
+	 * @param  string $key   The option key.
+	 *
+	 * @return string Which value we are converting to.
+	 */
+	public function filter_get_stylesheet_option( $value, $key ) {
+		// Remove this filter so we don't loop infinitely.
+		remove_filter( 'tribe_get_option', [ $this, 'filter_get_stylesheet_option' ], 10 );
+
+		$default = 'tribe';
+
+		if ( 'stylesheet_mode' === $key && empty( $value ) ) {
+			$value = tribe_get_option( 'stylesheetOption', $default );
+			if ( 'full' === $value ) {
+				$value = $default;
+			}
+		}
+
+		if ( 'stylesheetOption' === $key ) {
+			$value = tribe_get_option( 'stylesheet_mode', $default );
+		}
+
+		// Add the filter back
+		add_filter( 'tribe_get_option', [ $this, 'filter_get_stylesheet_option' ], 10, 2 );
+
+		return $value;
+	}
+
+	/**
+	 * Filter the liveFiltersUpdate option to do some switching for V2.
+	 * Note: this triggers on option_liveFiltersUpdate, tribe_get_option, AND tribe_field_value. We
+	 * don't have to add/remove filters because we don't need to get the value - it's already provided.
+	 *
+	 * @since 5.0.3
+	 *
+	 * @param  string $value  The option value.
+	 * @param  string $key    The option key.
+	 *
+	 * @return string Converted value of the Live Filters string.
+	 */
+	public function filter_live_filters_option_value( $value, $key ) {
+		if ( 'liveFiltersUpdate' !== $key ) {
+			return $value;
+		}
+
+		return $this->live_filters_maybe_convert( $value );
+	}
+
+	/**
+	 * Converts old (boolean) values to the new string values.
+	 *
+	 * @since 5.0.3
+	 *
+	 * @param  mixed  $value The value to maybe convert.
+	 *
+	 * @return string Modified value of Live filters Update.
+	 */
+	public function live_filters_maybe_convert( $value ) {
+		$return_value = 'automatic';
+
+		if ( empty( $value ) || 'manual' === $value ) {
+			$return_value = 'manual';
+		}
+
+		/**
+		 * Allow filtering of the new value for Live Filters.
+		 *
+		 * @since 5.0.3
+		 *
+		 * @param string $return_value Which value we are going to return as the conversion.
+		 * @param string $value        Which value was previously used.
+		 */
+		$return_value = apply_filters( 'tribe_events_option_convert_live_filters', $return_value, $value );
+
+		return $return_value;
+	}
+
+	/**
+	 * Print Single Event JSON-LD.
+	 *
+	 * @since 5.0.3
+	 */
+	public function print_single_json_ld() {
+
+		$this->container->make( Template\JSON_LD::class )->print_single_json_ld();
+	}
+
+	/**
+	 * Add views stylesheets to customizer styles array to check.
+	 * Remove unused legacy stylesheets.
+	 *
+	 * @since 5.1.1
+	 *
+	 * @param array<string> $sheets Array of sheets to search for.
+	 * @param string        $css_template String containing the inline css to add.
+	 *
+	 * @return array Modified array of sheets to search for.
+	 */
+	public function customizer_inline_stylesheets( $sheets, $css_template ) {
+		$v2_sheets = [
+			'tribe-events-views-v2-skeleton',
+			'tribe-events-views-v2-full',
+		];
+
+		// Unenqueue legacy sheets.
+		$keys = array_keys( $sheets, 'tribe-events-calendar-style' );
+		if ( ! empty( $keys ) ) {
+			foreach ( $keys as $key ) {
+				unset( $sheets[ $key ] );
+			}
+		}
+
+		return array_merge( $sheets, $v2_sheets );
 	}
 }
