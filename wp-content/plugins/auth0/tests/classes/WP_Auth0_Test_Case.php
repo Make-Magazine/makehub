@@ -38,20 +38,13 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	public static $home_url;
 
 	/**
-	 * Existing site_url value before tests.
-	 *
-	 * @var string
-	 */
-	public static $site_url;
-
-	/**
 	 * Runs before test suite starts.
 	 */
 	public static function setUpBeforeClass() {
 		parent::setUpBeforeClass();
 		self::$opts      = WP_Auth0_Options::Instance();
 		self::$error_log = new WP_Auth0_ErrorLog();
-		self::$site_url  = site_url();
+		self::$home_url  = home_url();
 	}
 
 	/**
@@ -76,11 +69,8 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 	public function tearDown() {
 		parent::tearDown();
 
-		$_COOKIE = [];
-
 		update_option( 'users_can_register', false );
-		update_option( 'home', self::$home_url );
-		update_option( 'siteurl', self::$site_url );
+		update_option( 'home_url', self::$home_url );
 
 		delete_transient( WPA0_JWKS_CACHE_TRANSIENT_NAME );
 
@@ -108,10 +98,17 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 			$this->stopWpDieHalting();
 		}
 
+		if ( method_exists( $this, 'setGlobalUser' ) ) {
+			$this->setGlobalUser( 1 );
+		}
+
 		global $wpdb;
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_id' );
 		delete_user_meta( 1, $wpdb->prefix . 'auth0_obj' );
 		delete_user_meta( 1, $wpdb->prefix . 'last_update' );
+
+		delete_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY );
+		delete_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY );
 	}
 
 	/**
@@ -124,5 +121,15 @@ abstract class WP_Auth0_Test_Case extends \PHPUnit\Framework\TestCase {
 		self::$opts->set( 'domain', $value );
 		self::$opts->set( 'client_id', $value );
 		self::$opts->set( 'client_secret', $value );
+	}
+
+	/**
+	 * Set or delete the stored API token.
+	 *
+	 * @param string $scope - Scope string to use.
+	 */
+	public static function setApiToken( $scope ) {
+		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, '__test_access_token__', 9999 );
+		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, $scope, 9999 );
 	}
 }
