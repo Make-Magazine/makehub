@@ -26,6 +26,7 @@
 	}
 }
 
+
 .make-subnav span {
     display: block !important;
 }
@@ -104,6 +105,9 @@
 			}
 			&.menu-item-has-children {
 				a span:first-of-type { width: 140px; }
+				&.open a {
+					background: transparent !important;
+				}
 			}
 		}
 	}
