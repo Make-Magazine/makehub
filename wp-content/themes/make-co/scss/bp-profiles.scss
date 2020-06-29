@@ -44,6 +44,11 @@
 		width: 240px !important;
 	}
 }
+.member-type-maker_space.member-level-makerspace {
+	.yz-profile-content #yz-profile-navmenu {
+		.yz-navbar-view-more { display: block; } // to show events
+	}
+}
 .yz-account-page {
 	.yz-head-buttons-inner {
 		display: flex;

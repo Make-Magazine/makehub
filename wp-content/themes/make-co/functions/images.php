@@ -40,7 +40,7 @@ function set_default_cover_image( $settings = array() ) {
    $settings['default_cover'] = $cover_dir . "default-cover-image" . rand( 0 , 0 ).'.jpg';
    return $settings;
 }
-add_filter( 'bp_before_xprofile_cover_image_settings_parse_args', 'set_default_cover_image', 10, 1 );
+add_filter( 'bp_before_members_cover_image_settings_parse_args', 'set_default_cover_image', 10, 1 );
 
 /**
  * Returns the URL to an image resized and cropped or fitted to the given dimensions.
