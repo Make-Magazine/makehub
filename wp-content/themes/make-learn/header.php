@@ -51,15 +51,19 @@ do_action( 'genesis_meta' );
  var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
 </script>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-40"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-51157-40');
-</script>
-
+<?php
+    // Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
+	if(!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes" ) {
+?>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-40"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'UA-51157-40');
+	</script>
+<?php } // end cookie law if ?>
 	
 <?php
 

@@ -1872,4 +1872,3 @@ Remember to always make a backup of your database and files before updating!
 = 3.x and previous =
 
 For release notes from the 3.x and older lifecycles, see our [full historical release notes](https://theeventscalendar.com/category/products/release-notes/).
-

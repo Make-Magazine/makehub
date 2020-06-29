@@ -7,7 +7,6 @@
     }
     // keep these from happening before any angular or login scripts
     jQuery(window).on("load", function () {
-		console.log("tst");
         // to keep this nav universal, detect site and do the things universally
         var site = window.location.hostname,
 		firstpath = jQuery(location).attr('pathname'),
