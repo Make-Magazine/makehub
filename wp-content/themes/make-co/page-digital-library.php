@@ -55,3 +55,14 @@ jQuery(document).ready(function(){
 	});
 });
 </script>
+
+<?php
+genesis_structural_wrap( 'site-inner', 'close' );
+genesis_markup(
+	array(
+		'close'   => '</div>',
+		'context' => 'site-inner',
+	)
+);
+wp_footer();
+?>

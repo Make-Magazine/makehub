@@ -53,6 +53,9 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.p
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
 
+// FIX CONFLICT BETWEEN TRIBE EVENTS PLUGIN AND FRONT END IMAGE UPLOADER FOR BLOG POSTS
+require_once(ABSPATH . 'wp-admin/includes/screen.php');
+
 // Include all function files in the makerfaire/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
