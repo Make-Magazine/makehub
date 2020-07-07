@@ -38,7 +38,7 @@
         @media screen and (max-width: 576px) {
             width: 100px;
         }
-        h2 {
+        strong {
             font-family: 'Roboto', serif;
             font-size: 12.9px;
             font-weight: 300;
@@ -48,6 +48,7 @@
             margin-top: 0;
             margin-bottom: 0;
             text-align: center;
+			display: block;
             @media screen and (max-width: 576px) {
                 display: none;
             }
@@ -84,7 +85,7 @@
             margin-top: 15px;
             margin-bottom: 15px;
             line-height: .8em;
-            h3 {
+            strong {
                 color: #333;
                 padding-bottom: 2px;
                 margin-top: 0;
