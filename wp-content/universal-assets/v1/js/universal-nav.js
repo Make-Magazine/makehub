@@ -9,15 +9,10 @@
     jQuery(window).on("load", function () {
         // to keep this nav universal, detect site and do the things universally
         var site = window.location.hostname,
-		firstpath = jQuery(location).attr('pathname'),
 		e = jQuery(".universal-nav"),
 		hamburger = jQuery(".nav-hamburger"),
 		y_pos = jQuery(".nav-level-2").offset().top,
 		nextItemUnderNav = ""; // this varies from site to site
-        firstpath.indexOf(1);
-        firstpath.toLowerCase();
-        firstpath = firstpath.split("/")[1];
-        var shareSection = site + "/" + firstpath;
 
         function universalNavActive(site) {
             jQuery(".nav-" + site).addClass("active-site");
@@ -29,6 +24,7 @@
                 jQuery(".nav-" + section + " .expanding-underline").next('.nav-flyout-ul').slideToggle();
             }
         }
+		mp_utm(site); // load a utm source to the makeprojects nav
         // each one has to apply to a number of environments
         switch (site) {
             case "make-zine":
@@ -111,20 +107,6 @@
             default:// the default is pretty much makermedia right now
                 nextItemUnderNav = jQuery("#page-content");
                 break;
-        }
-        switch (shareSection) {
-            case "makershare/":
-            case "makeshare.wpengine.com/":
-            case "makershare.staging.wpengine.com/":
-            case "makershare.com/":
-                universalNavActive("share-p");
-                toggleMobileSection("share");
-                nextItemUnderNav = jQuery(".main-container");
-                break;
-            default:
-                break;
-                // as sites get more universal on the hub, the above switch case will become necessary for less things
-                nextItemUnderNav = jQuery(".main-content");
         }
 
         jQuery('#hamburger-click-event, .nav-flyout-underlay').click(function () {
@@ -211,3 +193,13 @@
 
     });
 })(jQuery);
+
+function mp_utm(source) {
+	source = source.substr(0, source.indexOf('.')); 
+	var _href = jQuery(".nav-share a").attr("href");
+	if (_href.indexOf('?') != -1) {
+		jQuery(".nav-share a").attr("href", _href + '&utm_source=' + source + "_nav");	
+	} else {
+		jQuery(".nav-share a").attr("href", _href + '?utm_source=' + source + "_nav");	
+	}
+}
