@@ -97,7 +97,7 @@
 
 
 /////////// JOIN PAGE //////////////////
-.page-join {
+div[class^='page-join'] {
 	.main-content.container {
 		width: 90%; 
 	}
