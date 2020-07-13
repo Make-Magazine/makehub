@@ -2,7 +2,7 @@
 
 //Page Slug Body Class
 function add_slug_body_class($classes) {
-    $urlPath = trim(str_replace("/", "-", $_SERVER['REQUEST_URI']), '-');
+    $urlPath = trim(str_replace("/", "-", strtok($_SERVER["REQUEST_URI"], '?')), '-');
     if ($urlPath) {
         $classes[] = "page-" . $urlPath;
     }
