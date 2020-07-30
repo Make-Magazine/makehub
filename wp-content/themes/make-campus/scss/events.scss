@@ -1,0 +1,64 @@
+.buddypress, .youzer {
+	#events-event-lists-personal-li a i { background: #3fafed; }
+	#events-add-event-personal-li a i { background: #f51400; }
+	.bp-events {
+		margin-bottom: 30px;
+		#mceu_30 { display: none; } // hide that damn vimeography wysiwyg item
+		.events-community-post-title input[name="post_title"] {
+			height: 40px;
+			border: solid 2px #ccc;
+			border-radius: 3px;
+			padding-left: 5px;
+		}
+		.tribe_sectionheader {
+			padding-top: 10px;
+			h4 { font-weight: bold; }
+		}
+		.events-community-post-content {
+			padding-bottom: 30px;
+		}
+		.my-events-display-options { 
+			background: #fff;
+			display: flex;
+		   width: 150px;
+			align-items: center;
+			justify-content: center;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+			height: 30px;
+			&:hover {
+				background: #ccc;
+			}
+		}
+		.buddypress-events-calendar-details {
+			table {
+				thead tr, tfoot tr {
+					text-align: center;
+					background: #fff;
+					color: rgb(124, 131, 138);
+					label {
+						font-weight: 100;
+					}
+				}
+				tfoot tr {
+					text-align: left;
+					padding-left: 15px;
+				}
+				tbody tr {
+					text-align: left;
+					td {
+						padding-left: 30px;
+					}
+					.tribe_sectionheader {
+						text-align: center;
+						padding-left: 0px;
+					}
+				}
+			}
+			#s2id_event-group {
+				display: none;
+			}
+			&#event_group { display: none; }
+		}
+	}
+}
