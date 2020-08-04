@@ -1,0 +1,20 @@
+.gform_advancedpostcreation_date_field, .gform_advancedpostcreation_date_custom {
+	display: none;
+	margin: 10px 0;
+}
+
+.gform_advancedpostcreation_date_field select {
+	margin-right: 5px;
+}
+
+#postSettings .select2-container {
+	width: 50% !important;
+}
+
+#postSettings .gform_advancedpostcreation_date_field .select2-container {
+	width: 24% !important;
+}
+
+#postDateFieldDate ~ .select2-container {
+	margin-right: 2%;
+}

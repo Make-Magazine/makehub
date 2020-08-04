@@ -23,7 +23,6 @@ $event_id = get_the_ID();
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single">
-
 	<p class="tribe-events-back">
 		<a href="<?php echo esc_url( tribe_get_events_link() ); ?>"> <?php printf( '&laquo; ' . esc_html_x( 'All %s', '%s Events plural label', 'the-events-calendar' ), $events_label_plural ); ?></a>
 	</p>
@@ -39,7 +38,6 @@ $event_id = get_the_ID();
 			<span class="tribe-events-cost"><?php echo tribe_get_cost( null, true ) ?></span>
 		<?php endif; ?>
 	</div>
-
 	<!-- Event header -->
 	<div id="tribe-events-header" <?php tribe_events_the_header_attributes() ?>>
 		<!-- Navigation -->
@@ -54,22 +52,28 @@ $event_id = get_the_ID();
 	<!-- #tribe-events-header -->
 
 	<?php while ( have_posts() ) :  the_post(); ?>
-		<div id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<!-- Event featured image, but exclude link -->
-			<?php echo tribe_event_featured_image( $event_id, 'full', false ); ?>
+		<div id="post-<?php the_ID(); ?>" <?php post_class(); ?> class="container">
+			<div class="row">
+				<!-- Event featured image, but exclude link -->
+				<?php echo tribe_event_featured_image( $event_id, 'full', false ); ?>
 
-			<!-- Event content -->
-			<?php do_action( 'tribe_events_single_event_before_the_content' ) ?>
-			<div class="tribe-events-single-event-description tribe-events-content">
-				<?php the_content(); ?>
+				<!-- Event content -->
+				<?php do_action( 'tribe_events_single_event_before_the_content' ) ?>
+				<div class="tribe-events-single-event-description tribe-events-content">
+					<?php the_content(); ?>
+				</div>
+
+				<div class="about">About the author: <?php echo get_field('about'); ?></div>
+				<?php echo do_shortcode('[gallery id="'.$event_id.'" exclude="'.get_post_thumbnail_id().'" link="none" size="medium"] '); ?>
+
+				<!-- .tribe-events-single-event-description -->
+				<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
+
+				<!-- Event meta -->
+				<?php do_action( 'tribe_events_single_event_before_the_meta' ) ?>
+				<?php tribe_get_template_part( 'modules/meta' ); ?>
+				<?php do_action( 'tribe_events_single_event_after_the_meta' ) ?>
 			</div>
-			<!-- .tribe-events-single-event-description -->
-			<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
-
-			<!-- Event meta -->
-			<?php do_action( 'tribe_events_single_event_before_the_meta' ) ?>
-			<?php tribe_get_template_part( 'modules/meta' ); ?>
-			<?php do_action( 'tribe_events_single_event_after_the_meta' ) ?>
 		</div> <!-- #post-x -->
 		<?php if ( get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option( 'showComments', false ) ) comments_template() ?>
 	<?php endwhile; ?>

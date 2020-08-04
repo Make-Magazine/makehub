@@ -49,6 +49,8 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.p
 // Adds the Genesis Connect WooCommerce notice.
 require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
 
+
+
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
 
@@ -331,12 +333,53 @@ add_action('login_footer', function() {
 });
 
 
-add_filter( 'gform_webhooks_request_args', function ( $request_args, $feed ) {
-    $request_url = rgars( $feed, 'meta/requestURL' );
-    if ( strpos( $request_url, get_site_url().'/wp-json/' ) === 0 || strpos( $request_url, rest_url() ) === 0 ) {
-        $request_args['cookies']               = $_COOKIE;
-        $request_args['headers']['X-WP-Nonce'] = wp_create_nonce( 'wp_rest' );
+require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
+
+// All Event fields that aren't standard have to be mapped manually
+add_action( 'gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4 );
+function update_event_information( $post_id, $feed, $entry, $form ){
+    //update the All Day setting
+    $all_day = $entry['3.1'];
+    if ( $all_day == 'All Day' ){
+        update_post_meta( $post_id, '_EventAllDay', 'yes');
     }
-    //error_log(print_r($request_args, TRUE));
-    return $request_args;
-}, 10, 2 );
+    $start_date = $entry['4'];
+    if ( $start_date ){
+        update_post_meta( $post_id, '_EventStartDate', $start_date );
+    }
+	$start_time = $entry['5'];
+    if ( $start_time ){
+        update_post_meta( $post_id, '_EventStartTime', $start_time );
+    }
+	$end_date = $entry['6'];
+    if ( $end_date ){
+        update_post_meta( $post_id, '_EventEndDate', $end_date );
+    }
+	$end_time = $entry['7'];
+    if ( $end_time ){
+        update_post_meta( $post_id, '_EventEndTime', $end_time );
+    }
+	// create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
+	$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
+	$ticket = new Tribe__Tickets__Ticket_Object();
+	$ticket->name = $entry['40'];
+	$ticket->description = $entry['42'];;
+	$ticket->price = $entry['37'];
+	$ticket->capacity = $entry['43'];
+	$ticket->start_date = $entry['45'];
+	$ticket->start_time = $entry['46'];
+	$ticket->end_date = $entry['47'];
+	$ticket->end_time = $entry['48'];
+
+	// Save the ticket
+	$ticket->ID = $api->save_ticket($post_id, $ticket, array(
+		'ticket_name' => $ticket->name,
+		'ticket_price' => $ticket->price,
+		'ticket_description' => $ticket->description,
+		'capacity' => $ticket->capcity,
+		'start_date' => $start_date,
+		'start_time' => $start_time,
+		'end_date' => $end_date,
+		'end_time' => $end_time,
+	));
+}
