@@ -376,7 +376,7 @@ function update_event_information( $post_id, $feed, $entry, $form ){
 		'ticket_name' => $ticket->name,
 		'ticket_price' => $ticket->price,
 		'ticket_description' => $ticket->description,
-		'capacity' => $ticket->capcity,
+		'capacity' => $ticket->capacity,
 		'start_date' => $start_date,
 		'start_time' => $start_time,
 		'end_date' => $end_date,
