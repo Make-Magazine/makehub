@@ -141,7 +141,7 @@ do_action( 'genesis_before_header' );
 <header class="universal-nav">
 
    <?php // Nav Level 1 and Hamburger
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-topnav.html');
+      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-topnav.html', FALSE, STREAM_CONTEXT);
    ?>
 
   <div class="nav-level-2">
@@ -165,7 +165,7 @@ do_action( 'genesis_before_header' );
 
   <div id="nav-flyout">
    <?php
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html');
+      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html', FALSE, STREAM_CONTEXT);
    ?>
   </div>
 

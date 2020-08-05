@@ -78,6 +78,26 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
     require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
+function set_universal_constants() {
+    // Assume that we're in prod; only change if we are definitively in another
+    $context = stream_context_create(array());
+	$host = $_SERVER['HTTP_HOST'];
+    // legacy staging environments
+    if (strpos($host, '.stagemakehub.wpengine.com') > -1 || strpos($host, '.devmakehub.wpengine.com') > -1) {
+        $context = stream_context_create(array(
+                    'ssl' => array(
+                        'verify_peer'      => false,
+                        'verify_peer_name' => false,
+                        ), 
+                    )
+                );
+    }
+    // Set the important bits as CONSTANTS that can easily be used elsewhere
+    define('STREAM_CONTEXT', $context);
+}
+
+set_universal_constants();
+
 add_action('wp_enqueue_scripts', 'make_campus_enqueue_scripts', 0);
 
 /**

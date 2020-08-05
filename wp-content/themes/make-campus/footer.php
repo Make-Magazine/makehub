@@ -8,7 +8,7 @@ genesis_markup(
 		'context' => 'site-inner',
 	)
 );
-   echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-footer.html');
+   echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-footer.html', FALSE, STREAM_CONTEXT);
 ?>
 
 <div id="nav-overlay"></div>
