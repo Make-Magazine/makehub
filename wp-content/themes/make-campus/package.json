@@ -16,7 +16,8 @@
       "js:fe:uglify": "uglifyjs js/site/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
       "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/bootstrap-dialog/dist/js/bootstrap-dialog.min.js node_modules/jquery.cookie/jquery.cookie.js node_modules/fancybox/dist/js/jquery.fancybox.pack.js node_modules/hammerjs/hammer.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
       "onchange:scss:fe": "onchange 'scss/*.scss' -- npm run scss:fe:compile",
-      "onchange:js:fe": "onchange 'js/*.js' -- npm run js:fe:uglify",
+      "onchange:js:fe": "onchange 'js/site/*.js' -- npm run js:fe:uglify",
+	  "onchange:js:libs": "onchange 'js/lib-src/*.js' -- npm run js:fe:uglify",
       "build": "npm-run-all js:**:uglify scss:**:compile",
       "build:cachebust": "npm-run-all cachebust:update js:**:uglify scss:**:compile",
       "dev": "npm-run-all build -p onchange:js:** onchange:scss:**"

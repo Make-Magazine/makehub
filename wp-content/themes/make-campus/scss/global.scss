@@ -1,12 +1,3 @@
-html {
-	body { 
-		.site-container { 
-			overflow-y: hidden;
-			overflow-x: hidden;
-		}
-		&.media { overflow: auto; } // overwrite bootstrap
-	}
-}
 .genesis-skip-link { display: none; }
 .content-sidebar-wrap {
 	margin-top: 20px !important; // has to override, sumome. sorry not sorry

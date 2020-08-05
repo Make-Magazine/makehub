@@ -111,7 +111,7 @@ function make_campus_enqueue_scripts() {
 	$suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 	wp_enqueue_script(
 		'make-campus-responsive-menu',
-		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
+		get_stylesheet_directory_uri() . "/js/site/responsive-menus{$suffix}.js",
 		array('jquery'),
 		$my_version,
 		true
@@ -130,13 +130,6 @@ function make_campus_enqueue_scripts() {
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
-	wp_enqueue_script(
-		'make-campus',
-		get_stylesheet_directory_uri() . '/js/make-campus.js',
-		array('jquery'),
-		$my_version,
-		true
-	);
 
     wp_localize_script('make-campus', 'ajax_object',
             array(
