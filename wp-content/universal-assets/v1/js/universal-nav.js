@@ -100,6 +100,12 @@
             case "learn.makehub.local":
             case "learn.makehub.wpengine.com":
             case "learn.makehub.staging.wpengine.com":
+			case "experiences.makehub.local":
+			case "experiences.make.co":
+			case "experiences.makehub.wpengine.com":
+            case "experiences.makehub.staging.wpengine.com":
+			case "experiences.stagemakehub.wpengine.com":
+			case "experiences.devmakehub.wpengine.com":
                 universalNavActive("learn");
                 toggleMobileSection("learn");
                 nextItemUnderNav = jQuery(".main-content");

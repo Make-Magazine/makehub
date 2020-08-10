@@ -389,10 +389,10 @@ function update_event_information( $post_id, $feed, $entry, $form ){
 		'ticket_name' => $ticket->name,
 		'ticket_price' => $ticket->price,
 		'ticket_description' => $ticket->description,
-		'capacity' => $ticket->capacity,
 		'start_date' => $start_date,
 		'start_time' => $start_time,
 		'end_date' => $end_date,
 		'end_time' => $end_time,
 	));
+	update_post_meta( $ticket->ID, '_stock', $ticket->capacity );
 }
