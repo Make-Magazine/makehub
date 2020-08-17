@@ -64,19 +64,26 @@
 		.image_uploads ul {
 			display: flex;
 			flex-wrap: wrap;
-			justify-content: space-evenly;
-			li {
+			justify-content: space-between;
+			.image-wrapper {
 				padding: 16px;
 				border: solid 1px #ccc;
-				width: 45%;
+				width: 49%;
 				border-radius: 5px;
-				&:first-of-type {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin-bottom: 10px;
+				&#featured_image_wrap{
 					flex: 0 0 100%;
-					display: flex;
+				}
+				@media screen and (max-width: 982px) {
 					flex-direction: column;
-					align-items: center;
 				}
 				@media screen and (max-width: 641px) {
+					width: 100%;
+				}
+				input.medium {
 					width: 100%;
 				}
 			}
@@ -112,12 +119,24 @@
 			}
 		}
 		.gform_ajax_spinner {
-			position: absolute;
+			position: fixed;
 			top: 45%;
 			right: 50%;
 			left: 50%;
-			height: 50px;
-			width: 50px;
+			height: 150px;
+			width: 145px;
+			animation-name: spin;
+			animation-duration: 2000ms;
+			animation-iteration-count: infinite;
+			animation-timing-function: linear;
+			
+			@keyframes spin { 
+				from { 
+					transform: rotate(0deg); 
+				} to { 
+					transform: rotate(360deg); 
+				}
+			}
 		}
 		.event_type, .category_tag {
 			text-align: center;

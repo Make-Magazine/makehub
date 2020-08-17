@@ -348,8 +348,8 @@ add_action('login_footer', function() {
 
 require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 
-// All Event fields that aren't standard have to be mapped manually
-add_action( 'gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4 );
+// All Event fields that aren't standard have to be mapped manually (1 is the form id)
+add_action( 'gform_advancedpostcreation_post_after_creation_1', 'update_event_information', 10, 4 );
 function update_event_information( $post_id, $feed, $entry, $form ){
     //update the All Day setting
     $all_day = $entry['3.1'];
@@ -372,6 +372,23 @@ function update_event_information( $post_id, $feed, $entry, $form ){
     if ( $end_time ){
         update_post_meta( $post_id, '_EventEndTime', $end_time );
     }
+	
+	// Update Audience Checkbox
+    $field = GFAPI::get_field( $form, 73 );
+    if ( $field->type == 'checkbox' ) {
+        // Get a comma separated list of checkboxes checked
+        $checked = $field->get_value_export( $entry );
+        // Convert to array.
+        $values = explode( ', ', $checked );
+        // Serialize the data.
+        $value = maybe_serialize( $values );
+    }
+	//error_log(print_r($checked, TRUE));
+	//error_log(print_r($value, TRUE));
+	// NEITHER OF THESE WORK WHY OH WHY
+	update_post_meta( $post_id, 'field_5f35a5f833a04', $value );
+	update_field('field_5f35a5f833a04', array($checked), $post_id);
+
 	// create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
 	$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
 	$ticket = new Tribe__Tickets__Ticket_Object();
@@ -383,16 +400,71 @@ function update_event_information( $post_id, $feed, $entry, $form ){
 	$ticket->start_time = $entry['46'];
 	$ticket->end_date = $entry['47'];
 	$ticket->end_time = $entry['48'];
-
+    
 	// Save the ticket
 	$ticket->ID = $api->save_ticket($post_id, $ticket, array(
 		'ticket_name' => $ticket->name,
 		'ticket_price' => $ticket->price,
 		'ticket_description' => $ticket->description,
-		'start_date' => $start_date,
-		'start_time' => $start_time,
-		'end_date' => $end_date,
-		'end_time' => $end_time,
+		'start_date' => $ticket->start_date,
+		'start_time' => $ticket->start_time,
+		'end_date' => $ticket->end_date,
+		'end_time' => $ticket->end_time,
+		'capacity' => $ticket->capacity,
 	));
-	update_post_meta( $ticket->ID, '_stock', $ticket->capacity );
+	/*
+	$tickets_handler = tribe( 'tickets.handler' );
+	$event_stock = new Tribe__Tickets__Global_Stock( $post_id );
+	$tickets_handler->remove_hooks();
+	// We need to update event post meta - if we've set a global stock
+	$event_stock->enable();
+	$event_stock->set_stock_level( $ticket->capacity, true );
+	update_post_meta( $post_id, $tickets_handler->key_capacity, $ticket->capacity );
+	update_post_meta( $post_id, $event_stock::GLOBAL_STOCK_ENABLED, 1 );
+	$tickets_handler->add_hooks();
+	error_log(print_r($data, TRUE));
+	error_log(print_r($ticket, TRUE));
+	error_log(print_r($tickets_handler, TRUE));
+	error_log(print_r($event_stock, TRUE));
+	*/
+
+}
+
+// After the gravity view is updated, we want to update the created post associated with it. 
+// SO FAR, THIS IS ONLY UPDATING THE TITLE AND "CONTENT" OF THE EVENT
+add_action( 'gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4 );
+function gravityview_event_update( $form, $entry_id, $entry_object ) {
+	$post_obj = gform_get_meta($entry_id, "gravityformsadvancedpostcreation_post_id");
+	$post_id = $post_obj[0]["post_id"];
+	$post_data = array(
+		  'ID'           => $post_id,
+		  'post_title'   => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Event Title"),
+		  'post_content' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Describe What You Do"),
+	);
+	wp_update_post($post_data);
+}
+// rather than use potentially changing field ids, look up by label
+function gf_get_value_by_label( $form, $entry, $label ) {
+	foreach ( $form['fields'] as $field ) {
+		$lead_key = $field->label;
+		if ( strToLower( $lead_key ) == strToLower( $label ) ) {
+			return $entry[ $field->id ];
+		}
+	}
+	return false;
+}
+
+
+add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {
+	// Value should be an array, not a string
+	if (is_string($value)) {
+		$value = get_post_meta($post_id, $field['name'], false);
+	}
+	return $value;
+}, 10, 3);
+
+
+add_filter( 'gform_ajax_spinner_url', 'spinner_url', 10, 2 );
+function spinner_url( $image_src, $form ) {
+    return get_stylesheet_directory_uri() . "/images/makey.png";
 }
