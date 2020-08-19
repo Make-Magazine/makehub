@@ -2,8 +2,8 @@
 <body>
 
 <form id="blueToadForm" action="https://www.mydigitalpublication.com/publication/logincheck.php" method="post">
-  <input name="reader_login" value="webmaster@makermedia.com" type="hidden">
-  <input name="reader_password" value="webmaster@makermedia.com" type="hidden">
+  <input name="reader_login" value="none@none.com" type="hidden">
+  <input name="reader_password" value="none@none.com" type="hidden">
   <input name="pub_id" value="13033" type="hidden">
   <input name="m" value="38377" type="hidden">
   <input name="l" value="1" type="hidden">
