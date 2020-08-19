@@ -348,8 +348,8 @@ add_action('login_footer', function() {
 
 require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 
-// All Event fields that aren't standard have to be mapped manually (1 is the form id)
-add_action( 'gform_advancedpostcreation_post_after_creation_1', 'update_event_information', 10, 4 );
+// All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
+add_action( 'gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4 );
 function update_event_information( $post_id, $feed, $entry, $form ){
     //update the All Day setting
     $all_day = $entry['3.1'];
