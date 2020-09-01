@@ -42,7 +42,7 @@ $event_id = get_the_ID();
 	<!-- Notices -->
 	<?php tribe_the_notices() ?>
 
-	<?php echo do_shortcode('[gallery id="'.$event_id.'" exclude="'.get_post_thumbnail_id().'" link="none" size="full"]'); ?>
+	
 
 	
 	<!-- Event header -->
@@ -60,8 +60,8 @@ $event_id = get_the_ID();
 
 	<?php while ( have_posts() ) :  the_post(); ?>
 		<div id="post-<?php the_ID(); ?>" <?php post_class(); ?> class="container">
-			<div class="row">
-				<div class="col-md-8 col-sm-12 tribe-events-description">
+			<div class="row event-description">
+				<div class="col-xs-12">
 					<!-- Event content -->
 					<?php do_action( 'tribe_events_single_event_before_the_content' ) ?>
 					<div class="tribe-events-single-event-description tribe-events-content">
@@ -72,6 +72,11 @@ $event_id = get_the_ID();
 
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8 col-sm-12 tribe-events-gallery">
+					<?php echo do_shortcode('[gallery id="'.$event_id.'" exclude="'.get_post_thumbnail_id().'" link="none" size="full"]'); ?>
 				</div>
 				<div class="col-md-4 col-sm-12">
 					<!-- Event meta -->

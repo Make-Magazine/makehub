@@ -1,5 +1,3 @@
-
-
 // Gravity Form
 .gform_wrapper.event_form_wrapper {
 	margin: 0px;
@@ -120,16 +118,15 @@
 		}
 		.gform_ajax_spinner {
 			position: fixed;
-			top: 45%;
+			top: 50%;
 			right: 50%;
 			left: 50%;
-			height: 150px;
-			width: 145px;
+			height: 100px;
+			width: 100px;
 			animation-name: spin;
 			animation-duration: 2000ms;
 			animation-iteration-count: infinite;
 			animation-timing-function: linear;
-			
 			@keyframes spin { 
 				from { 
 					transform: rotate(0deg); 
@@ -142,14 +139,16 @@
 			text-align: center;
 			.ginput_container_radio ul, .ginput_container_checkbox ul { 
 				display: flex;
-				justify-content: space-evenly;
 				flex-wrap: wrap;
+			}
+			.ginput_container_radio ul { 
+				justify-content: space-evenly;
 				li {
 					flex: 1 0 21%;
 					@media screen and (max-width: 1200px) {
 						flex: 1 0 46%;
 					}
-					input[type="radio"], input[type="checkbox"] {
+					input[type="radio"] {
 						opacity: 0;
 						position: fixed;
 						width: 0;
@@ -181,9 +180,45 @@
 			}
 			.ginput_container_checkbox ul {
 				li {
-					max-width: 180px;
-					margin-bottom: 20px;
-					label { min-width: 180px; }
+					margin-bottom: 15px;
+					input[type="checkbox"] {
+						opacity: 0;
+						position: fixed;
+						width: 0;
+						&:checked + label {
+							background-color: rgba(0, 94, 154, .2);
+							border: solid 2px #005e9a;
+							color: #005e9a;
+						}
+						&[disabled="disabled"] + label {
+							color: #ccc;
+							background-color: rgba(0, 94, 154, .9);
+							&:hover {
+								color: #ccc;
+								background-color: rgba(0, 94, 154, .9);
+							}
+						}
+					}
+					label {
+						background-color: #005e9a;
+						color: #fff;
+						font-family: sans-serif, Arial;
+						font-size: 16px;
+						border: 1px solid #005e9a;
+						border-radius: 20px;
+						min-height: 40px;
+						display: flex;
+						white-space: nowrap;
+						justify-content: center;
+						align-items: center;
+						padding: 0px 30px;
+						margin: 0 10px;
+						min-width: calc(100% - 10px);
+					}
+					label:hover {
+						background-color: #fff;
+						color: #005e9a;
+					}
 				}
 			}
 		}
@@ -254,7 +289,7 @@
 				top: 25px;
 			}
 		}
-		.tribe-events-description {
+		.tribe-events-gallery {
 			padding-top: 30px;
 			display: flex;
 			flex-direction: column;
