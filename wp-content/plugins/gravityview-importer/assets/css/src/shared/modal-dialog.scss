@@ -1,0 +1,10 @@
+.modal-dialog {
+	.modal-card-body {
+		border-top-left-radius: 6px;
+		border-top-right-radius: 6px;
+	}
+}
+
+.modal {
+	z-index: 100000 !important;
+}

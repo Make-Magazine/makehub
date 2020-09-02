@@ -15,6 +15,7 @@ wp-config.php
 .htaccess
 last-mod
 _wpeprivate
+wp-content/advanced-cache.php
 wp-content/object-cache.php
 wp-content/mu-plugins/*
 wp-content/mysql.sql
@@ -85,6 +86,7 @@ Thumbs.db
 *.ogg
 *.mp3
 *.bin
+*.cache
 
 # ignore wp-content/uploads
 wp-content/uploads

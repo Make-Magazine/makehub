@@ -410,3 +410,13 @@ add_action('bp_init', 'buddypress_add_last_activity' );
 // just in case, prevent a billion activation emails from being sent
 add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
 */
+
+
+//admin
+/** Removes Events from WP Admin Bar  */
+define('TRIBE_DISABLE_TOOLBAR_ITEMS', true);
+function remove_comments(){
+        global $wp_admin_bar;
+        $wp_admin_bar->remove_menu('comments');
+}
+add_action( 'wp_before_admin_bar_render', 'remove_comments' );

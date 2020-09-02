@@ -1,0 +1,17 @@
+.configure-options {
+	.process-feeds {
+		.column {
+			.is-divider:nth-of-type(1) {
+				margin-top: 0;
+			}
+
+			.is-divider::after {
+				font-size: $size-5;
+				font-weight: $weight-bold;
+				padding-top: 0;
+			}
+		}
+	}
+}
+
+@import "./partials/conditional-import";
