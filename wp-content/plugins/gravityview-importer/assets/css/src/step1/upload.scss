@@ -1,0 +1,30 @@
+.upload {
+	.column {
+		display: flex;
+		flex-direction: column;
+
+		.box {
+			border: 5px dotted $grey-light;
+			box-shadow: none;
+			min-height: 200px;
+			background-color: inherit;
+			justify-content: center;
+			align-items: center;
+			display: flex;
+			flex-direction: column;
+
+			&.active {
+				background-color: $grey-lighter;
+			}
+		}
+
+		.upload-progress {
+			max-width: 100px;
+			max-height: 100px;
+			min-width: 100px;
+			max-hwidth: 100px;
+			margin: 1.5rem auto;
+		}
+	}
+
+}
