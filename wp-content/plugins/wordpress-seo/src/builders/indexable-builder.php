@@ -142,7 +142,9 @@ class Indexable_Builder {
 	 */
 	public function build_for_id_and_type( $object_id, $object_type, $indexable = false ) {
 		$indexable        = $this->ensure_indexable( $indexable );
-		$indexable_before = $indexable;
+		$indexable_before = $this->indexable_repository
+			->query()
+			->create( $indexable->as_array() );
 
 		switch ( $object_type ) {
 			case 'post':
@@ -180,11 +182,11 @@ class Indexable_Builder {
 			);
 		}
 
-		$this->save_indexable( $indexable, $indexable_before );
-
 		if ( \in_array( $object_type, [ 'post', 'term' ], true ) && $indexable->post_status !== 'unindexed' ) {
 			$this->hierarchy_builder->build( $indexable );
 		}
+
+		$this->save_indexable( $indexable, $indexable_before );
 
 		return $indexable;
 	}
