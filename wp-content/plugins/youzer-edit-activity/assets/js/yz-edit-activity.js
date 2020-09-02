@@ -3,7 +3,7 @@
 	'use strict';
 
 	$( document ).ready( function() {
-
+		
 		var current_edit_button;
 
 		/**
@@ -12,7 +12,7 @@
 		$( document ).on( 'click', '.yz-edit-activity, .yz-edit-post', function( e ) {
 
 			e.preventDefault();
-
+			
 			// Check if there's no other edit button is clicked on the same time.
 			if ( $( '.yz-edit-activity.loading,.yz-edit-post.loading' )[0] ) {
 				return;
@@ -21,7 +21,7 @@
 			// Init Vars.
 			var $link = $( this ), $form, $form_wrapper,
 			activity_id = $link.parents( 'li' ).attr('id').split('-')[1],
-			activity_type = $link.attr( 'data-activity-type' ), show_form = true;
+			activity_type = $link.attr( 'data-activity-type' );
 
 			if ( $link.hasClass( 'loading' ) ) {
 				return;
@@ -34,7 +34,7 @@
 			current_edit_button = $link;
 
 			// Get Form Wrapper.
-			$form_wrapper = $( '#youzer-edit-activity-wrapper' );
+			$form_wrapper = $( '#youzer-edit-activity-wrapper');
 
 			// Get Form Data.
 			var data = {
@@ -44,9 +44,23 @@
 				'activity_type': activity_type,
 			};
 
+// 			$.ajax({
+//   url:ajaxurl,
+//   type:"POST",
+//   data:data,
+//   contentType:"application/json; charset=utf-8",
+//   dataType:"json",
+//   success: function(response){
+  							
+// 				// Get Response.
+// 				response = $.parseJSON( response );
+// 				console.log( response );
+
+//   }
+// });
 			// Process Verification.
 			$.post( Youzer.ajax_url, data, function( response ) {
-
+						
 				// Get Response.
 				response = $.parseJSON( response );
 
@@ -57,12 +71,14 @@
 	    			return;
 				}
 
-				// Get Form.
+				// Mark Button As laoded.
+				$link.attr( 'data-loaded', 'true' );
+
+	    		// Remove Loading Class.
+	    		$link.removeClass( 'loading' );
+
 	    		var $form = $( response.form );
-
-	    		// Append form but Hide it.
-	    		$( 'body' ).append( $form.hide() );
-
+	    		
 	    		// Set Privacy.
 				if ( response.privacy ) {
 					$form.find( 'select.yz-activity-privacy option[value="' + response.privacy + '"]' ).attr( 'selected', true );
@@ -70,6 +86,7 @@
 
 				// Set Tagged Friends.
 				if ( response.tagged_friends ) {
+					console.log ( response.tagged_friends );
 					$form.find( '.yz-tagged-users' ).append( response.tagged_friends );
 					if ( $form.find( '.yz-tagged-user' ).length != 0 ) {
 						$form.find( '.yz-tagged-users' ).fadeIn();
@@ -93,6 +110,9 @@
 				if ( jQuery.isFunction( $.fn.niceSelect ) ) {
 	    			$form.find( 'select:not([multiple="multiple"])' ).niceSelect();
 	    		}
+				
+				// Append Content.
+				$( 'body' ).append( $form );
 
 	    		// Remove Action Attribute.
 	    		$form.find( 'form' ).attr( 'action' , '' );
@@ -100,16 +120,10 @@
 	    		// Set Form Activity Type.
 				if ( ! $form.find( 'input[name="post_type"]' )[0] ) {
 					$form.find( '.yz-wall-options' ).append( '<input type="hidden" value="' + activity_type + '" name="post_type" />');
-
 				}
 
 	    		// Display Current Post Type Fields.
 				$form.find( 'input:radio[name="post_type"]' ).first().trigger( 'change' );
-
-				if ( activity_type == 'activity_comment' && response.comment_attachments == 'on' ) {
-					$form.find( '.yz-upload-attachments' ).removeAttr( 'accept' );
-					$form.find( '.yz-wall-upload-btn' ).fadeIn();
-				}
 
 				// Remove Unsed Elements
 				$form.find( '#whats-new-post-in-box' ).remove();
@@ -132,21 +146,19 @@
 
 				// Set Main Textarea Content.
 				$form.find( 'textarea[name="status"]' ).val( response.content );
-
+				
 			    // Activate Emojis in Posts.
 			    // if ( response.posts_emojis == 'on' || response.comments_emojis == 'on' ) {
-				if (
-				   	( activity_type == 'activity_comment' && response.comments_emojis == 'on' )
+				    if (  
+				    	 ( activity_type == 'activity_comment' && response.comments_emojis == 'on' )
 				    	||
-				    ( activity_type != 'activity_comment' && response.posts_emojis == 'on' )
-				    ) {
-
-				    show_form = true;
-				    // show_form = false;
+				    	( activity_type != 'activity_comment' && response.posts_emojis == 'on' ) 
+				    	) {
 
     				if ( ! jQuery().emojioneArea ) {
 				        $( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/emojionearea.min.js' } ).appendTo( 'head' );
 				        $( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/emojionearea.min.css' } ).appendTo( 'head' );
+				        // }
 					} else {
 						$form.find( '.yz-wall-textarea' ).emojioneArea( {
 			                pickerPosition: 'bottom',
@@ -173,13 +185,28 @@
 			                      cache: true,
 			                      index: 1
 			                   }]);
-			                }
+			                }     
 			              }
             			} );
+						// $.yz_init_wall_textarea_emojionearea( $form.find( '.yz-wall-textarea' ) );
+						// $form.find( '.emojionearea-editor' ).html( response.content );
 					}
 			    } else {
 			    	$form.find( '.yz-load-emojis' ).remove();
 			    }
+
+			  //   // Activate Emojis in Posts.
+			  //   if ( typeof Yz_Emoji !== 'undefined' ) {
+
+				 //    if (  
+				 //    	 ( activity_type == 'activity_comment' && Yz_Emoji.comments_visibility == 'on' )
+				 //    	||
+				 //    	( activity_type != 'activity_comment' && Yz_Emoji.posts_visibility == 'on' ) 
+				 //    	) {
+					// 	$.yz_init_wall_textarea_emojionearea( $form.find( '.yz-wall-textarea' ) );
+					// 	$form.find( '.emojionearea-editor' ).html( response.content );
+					// }
+			  //   }
 
 				// Update Form Submit Button.
 				$form.find( '.yz-wall-post' ).attr( {
@@ -190,7 +217,7 @@
 
 				// Set Field Values.
 				$.each( response.meta, function( field_name, field_value ) {
-					// Set Input Textarea Fields.
+					// Set Input Textarea Fields.					
 					$form.find( '.yz-wall-cf-input[name="' + field_name + '"]' ).val( field_value );
 				});
 
@@ -198,38 +225,24 @@
 				if ( response.attachments == 'hide' ) {
 					$form.find( '.yz-wall-upload-btn' ).remove();
 				} else {
-
-					if ( ! yz_load_attachments ) {
-						$( '<script/>', { rel: 'text/javascript', src: Youzer.assets + 'js/yz-attachments.min.js' } ).appendTo( 'head' );
-						$( '<link/>', { rel: 'stylesheet', href: Youzer.assets + 'css/yz-attachments.min.css' } ).appendTo( 'head' );
-						yz_load_attachments = true;
-					}
-
 					$form.find( '.yz-form-attachments' ).html( response.attachments );
-
 				}
 
-				if ( response.url_preview ) {
+				if ( response.url_preview ) { 
 					var url_preview = $form.find( '.yz-lp-prepost' );
 					url_preview.attr( 'data-loaded', true );
 					$.yz_set_live_preview_form( url_preview, response.url_preview );
 				}
 
-				var setIntervalID = setInterval(function() {
-			      if ( show_form == true || ( show_form == false && $form.find( '.emojionearea' ).get( 0 ) ) ) {
-					clearInterval( setIntervalID );
 
-					// Mark Button As laoded.
-					$link.attr( 'data-loaded', 'true' );
+	    		$form.css( { 'position': 'absolute', 'top': $( document ).scrollTop() + 100 } );
+	    		
+	    		if ( ! $( '.yz-modal-overlay')[0] ) {	
+	    			$( 'body' ).append( '<div class="yz-modal-overlay"></div>' );
+	    		} else {
+	    			$( '.yz-modal-overlay' ).fadeIn();
+	    		}
 
-		    		// Remove Loading Class.
-		    		$link.removeClass( 'loading' );
-
-					// Show Form.
-					$.yz_show_modal( $form );
-
-			      };
-			    }, 100 );
 
 			}).fail( function( xhr, textStatus, errorThrown ) {
 
@@ -250,7 +263,7 @@
 		 * Save Edit Form.
 		 **/
 		$( document ).on( 'click', '.yz-update-post', function( e ) {
-
+			
 			e.preventDefault();
 
 			var activity_type = $( this ).attr( 'data-activity-type' );
@@ -266,34 +279,36 @@
 			}
 
 			// Add Loading Class.
-			button.addClass( 'loading' );
+			button.addClass( 'loading' ); 
 			button.html( '<i class="fas fa-spinner fa-spin"></i>' );
 
 
-			jQuery.each( $form.serializeArray(), function( key, input ) {
-				// Only include public extra data
-				if ( '_' !== input.name.substr( 0, 1 ) && 'whats-new' !== input.name.substr( 0, 9 ) ) {
-					//attachments_files[]
-					if ( ! inputs[ input.name ] ) {
-						inputs[ input.name ] = input.value;
-					} else {
-						// Checkboxes/dropdown list can have multiple selected value
-						if ( ! jQuery.isArray( inputs[ input.name ] ) ) {
-							inputs[ input.name ] = new Array( inputs[ input.name ], input.value );
+				// $form = $( this ).parent( '#yz-wall-form' );
+
+				jQuery.each( $form.serializeArray(), function( key, input ) {
+					// Only include public extra data
+					if ( '_' !== input.name.substr( 0, 1 ) && 'whats-new' !== input.name.substr( 0, 9 ) ) {
+						//attachments_files[]
+						if ( ! inputs[ input.name ] ) {
+							inputs[ input.name ] = input.value;
 						} else {
-							inputs[ input.name ].push( input.value );
+							// Checkboxes/dropdown list can have multiple selected value
+							if ( ! jQuery.isArray( inputs[ input.name ] ) ) {
+								inputs[ input.name ] = new Array( inputs[ input.name ], input.value );
+							} else {
+								inputs[ input.name ].push( input.value );
+							}
 						}
 					}
-				}
-			});
-
-			var data = $.extend( {
-				'action': 'yz_save_activity_edit_form',
-				'yz_edit_activity_nonce': $form.find( 'input[name="yz_edit_activity_nonce"]' ).val(),
-				'activity_id': $( this ).data( 'activity-id' ),
-				'content': $form.find( '.yz-wall-textarea' ).val(),
-				'target': target
-				}, inputs );
+				} );
+			
+				var data = $.extend( {
+					'action': 'yz_save_activity_edit_form',
+					'yz_edit_activity_nonce': $form.find('input[name="yz_edit_activity_nonce"]').val(),
+					'activity_id': $( this ).data( 'activity-id' ),
+					'content': $form.find( '.yz-wall-textarea' ).val(),
+					'target': target
+					}, inputs );
 
 
 			$.ajax({
@@ -309,9 +324,9 @@
 			            if ( res.error ) {
 
 							// Add Loading Class.
-							button.removeClass( 'loading' );
+							button.removeClass( 'loading' ); 
 							button.text( button_title );
-
+							
 							if ( res.remove_modal ) {
 								// Remove Modal.
 				    			$.yzea_hide_modal( button );
@@ -323,20 +338,21 @@
 
 							return;
 						}
-
+				
 					}
 
+				// console.log ( res );
 	    			// Update Comment.
 					if ( target == 'comment' && res.content ) {
 						// Display Live Edit.
 						$( 'li#acomment-' + data.activity_id ).find( '.acomment-content' ).first().html( '<p>' + res.content + '</p>' ).show();
-					}
+					} 
 
 	    			// Update Post.
 					if ( target == 'activity' ) {
 
 						$( 'li#activity-' + data.activity_id ).replaceWith( response );
-
+						
 						// Init Slideshow.
 						if ( $( 'li#activity-' + data.activity_id ).hasClass( 'activity_slideshow' ) ) {
 							$.youzer_sliders_init();
@@ -367,7 +383,11 @@
 		 * Remove Modal
 		 */
 		$.yzea_hide_modal = function( button ) {
-    		button.closest( '#yz-modal' ).find( '.yz-modal-close-icon' ).trigger( 'click' );
+			$( '.yz-modal-overlay' ).fadeOut( 300, function( ) {
+	    		button.closest( '.yz-modal' ).fadeOut( 300, function() {
+	    			$( this ).remove();
+	    		});
+			});
 		}
 
 	});
