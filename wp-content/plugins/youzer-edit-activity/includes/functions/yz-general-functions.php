@@ -6,7 +6,7 @@ function yzea_is_user_can_edit_attachments() {
 	
 	$can = false;
 
-	if ( yzea_is_moderator() || 'on' == yz_options( 'yzea_attachments_edition' ) ) {
+	if ( yzea_is_moderator() || 'on' == yz_option( 'yzea_attachments_edition', 'off' ) ) {
 		$can = true;
 	}
 	
@@ -76,6 +76,7 @@ function yzea_default_options( $options ) {
     // Options.
     $new_options = array(
         'yzea_attachments_edition' => 'off',
+        'yzea_comment_attachments_edition' => 'off',
         'yzea_disable_edit_by_minutes' => 0,
     	'yzea_edit_activity_comment' => 'off',
         'yzea_groups_posts_edition' => 'off',
@@ -123,7 +124,7 @@ function yzea_is_activity_editable( $activity = null ) {
 			if ( $activity->type == 'activity_comment' ) {
 
 				// Normal Comments Visibility.
-				if ( 'on' == yz_options( 'yzea_edit_activity_comment' ) ) {
+				if ( 'on' == yz_option( 'yzea_edit_activity_comment', 'off' ) ) {
 					$editable = true;
 				} else {
 					$editable = false;
@@ -131,7 +132,7 @@ function yzea_is_activity_editable( $activity = null ) {
 				
 				// Groups Comments Visibility.
 				if ( $component == 'groups' ) {
-					if ( yz_options( 'yzea_groups_comments_edition' ) == 'off' ) {
+					if ( yz_option( 'yzea_groups_comments_edition', 'off' ) == 'off' ) {
 						$editable = false;
 					} else {
 						$editable = true;
@@ -141,7 +142,7 @@ function yzea_is_activity_editable( $activity = null ) {
 			} else {
 				
 				// Check if the current activity type is editable.
-				if ( 'on' == yz_options( 'yzea_edit_' . $activity->type ) ) {
+				if ( 'on' == yz_option( 'yzea_edit_' . $activity->type, 'off' ) ) {
 					$editable = true;
 				} else {
 					$editable = false;
@@ -151,7 +152,7 @@ function yzea_is_activity_editable( $activity = null ) {
 
 			if ( $editable === true ) {
 
-				if ( $component == 'groups' && $activity->type != 'activity_comment' &&  yz_options( 'yzea_groups_posts_edition' ) == 'off' ) {
+				if ( $component == 'groups' && $activity->type != 'activity_comment' &&  yz_option( 'yzea_groups_posts_edition', 'off' ) == 'off' ) {
 					$editable = false;
 				}
 
@@ -161,7 +162,7 @@ function yzea_is_activity_editable( $activity = null ) {
 				if ( $editable == true ) {
 
 					// Get Timeout
-					$timeout = yz_options( 'yzea_disable_edit_by_minutes' );
+					$timeout = yz_option( 'yzea_disable_edit_by_minutes', 0 );
 
 					if ( $timeout > 0 ) {
 

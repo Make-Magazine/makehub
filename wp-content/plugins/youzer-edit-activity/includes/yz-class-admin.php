@@ -1,12 +1,12 @@
 <?php
 
 if ( ! class_exists( 'Youzer_Edit_Activity_Admin' ) ):
-	
+
 /**
  * Youzer Edit Activity Admin.
  */
 class Youzer_Edit_Activity_Admin {
-	
+
 	public $field_name;
 
 	/**
@@ -17,47 +17,28 @@ class Youzer_Edit_Activity_Admin {
 		// Set Licence Field Name
 		$this->field_name = 'yz_edit_activity_license_key';
 
+        $this->setup();
+
         add_filter( 'plugin_action_links_' . YZEA_BASENAME,  array( $this, 'plugin_action_links' ) );
         add_filter( 'network_admin_plugin_action_links_' . YZEA_BASENAME, array( $this, 'plugin_action_links' ) );
 
-		// Add Plugin Updater.
-		add_action( 'after_plugin_row_' . YZEA_BASENAME, array( &$this, 'activate_license_notice' ), 10, 3 );
+        add_action( 'admin_init', array( $this, 'check_for_updates' ) );
 
 	}
 
-	/**
-	 * Admin Instance.
-	 */
-	public static function instance(){
-
-		static $instance = null;
-
-		if ( null === $instance ) {
-			$instance = new Youzer_Edit_Activity_Admin();
-			$instance->setup();
-			$instance->check_for_updates();
-		}
-
-		return $instance;
-	}
-	
 	/**
 	 * Setup Admin Class
 	 */
 	public function setup() {
 
-		if ( ( ! is_admin() && ! is_network_admin() ) || ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
 		// Add Settings Tab.
-		add_filter( 'yz_panel_general_settings_menus', array( &$this, 'settings_menu' ) );
+		add_filter( 'yz_extensions_settings_menu', array( &$this, 'settings_menu' ) );
 
 		// Add Settings Tab.
 		add_filter( 'yzea_get_panel_activity_action', array( &$this, 'filter_activity_actions' ) );
 
 	}
-	
+
 	/**
 	 * # Add Settings Tab
 	 */
@@ -69,7 +50,7 @@ class Youzer_Edit_Activity_Admin {
        	    'function' => array( $this, 'settings' ),
        	    'title' => __( 'Edit Activity settings', 'youzer-edit-activity' ),
         );
-        
+
         return $tabs;
 
 	}
@@ -78,6 +59,16 @@ class Youzer_Edit_Activity_Admin {
 	 * Settings
 	 */
 	function settings() {
+
+		global $Youzer_Admin;
+
+		// Get License.
+		$license = get_option( $this->field_name );
+
+		if ( ! empty( $license ) ) {
+
+        // Get License Status.
+        $Youzer_Admin->get_license_status( array( 'license' => $license, 'option_id' => $this->field_name, 'product_id' => 22081, 'position' => 'top' )  );
 
 	    global $Yz_Settings;
 
@@ -90,8 +81,8 @@ class Youzer_Edit_Activity_Admin {
 
 	    $Yz_Settings->get_field(
 	        array(
-	            'title'  => __( 'Comments & replies edition', 'youzer-edit-activity' ),
-	            'desc'  => __( 'allow users to edit posts comments and replies.', 'youzer-edit-activity' ),
+	            'title'  => __( 'Comments & Replies Edition', 'youzer-edit-activity' ),
+	            'desc'  => __( 'Allow users to edit posts comments and replies.', 'youzer-edit-activity' ),
 	            'id'    => 'yzea_edit_activity_comment',
 	            'type'  => 'checkbox',
 
@@ -100,24 +91,41 @@ class Youzer_Edit_Activity_Admin {
 
 	    $Yz_Settings->get_field(
 	        array(
-	            'title'  => __( 'Attachments edition', 'youzer-edit-activity' ),
-	            'desc'  => __( 'allow users to edit posts attachments.', 'youzer-edit-activity' ),
-	            'id'    => 'yzea_attachments_edition',
-	            'type'  => 'checkbox',
-
-	        )
-	    );
-
-	    $Yz_Settings->get_field(
-	        array(
-	            'title'  => __( 'set editing timeout by minutes', 'youzer-edit-activity' ),
+	            'title'  => __( 'Set Editing Timeout by Minutes', 'youzer-edit-activity' ),
 	            'desc'  => __( 'Leave it empty to set no time limit.', 'youzer-edit-activity' ),
 	            'id'    => 'yzea_disable_edit_by_minutes',
 	            'type'  => 'number',
 
 	        )
 	    );
-	    
+
+	    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
+
+	    $Yz_Settings->get_field(
+	        array(
+	            'title' => __( 'Attachments Settings', 'youzer-edit-activity' ),
+	            'type'  => 'openBox'
+	        )
+	    );
+
+	    $Yz_Settings->get_field(
+	        array(
+	            'title'  => __( 'Activity Attachments Edition', 'youzer-edit-activity' ),
+	            'desc'  => __( 'Allow users to edit posts attachments.', 'youzer-edit-activity' ),
+	            'id'    => 'yzea_attachments_edition',
+	            'type'  => 'checkbox',
+
+	        )
+	    );
+	    $Yz_Settings->get_field(
+	        array(
+	            'title'  => __( 'Comment Attachments Edition', 'youzer-edit-activity' ),
+	            'desc'  => __( 'Allow users to edit comments attachments.', 'youzer-edit-activity' ),
+	            'id'    => 'yzea_comment_attachments_edition',
+	            'type'  => 'checkbox',
+	        )
+	    );
+
 	    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
 	    $Yz_Settings->get_field(
@@ -129,19 +137,18 @@ class Youzer_Edit_Activity_Admin {
 
 	    $Yz_Settings->get_field(
 	        array(
-	            'title'  => __( 'Enable posts edition', 'youzer-edit-activity' ),
-	            'desc'  => __( 'allow users to edit groups posts.', 'youzer-edit-activity' ),
+	            'title'  => __( 'Enable Posts Edition', 'youzer-edit-activity' ),
+	            'desc'  => __( 'Allow users to edit groups posts.', 'youzer-edit-activity' ),
 	            'id'    => 'yzea_groups_posts_edition',
 	            'type'  => 'checkbox',
 
 	        )
 	    );
 
-
 	    $Yz_Settings->get_field(
 	        array(
-	            'title'  => __( 'Enable comments edition', 'youzer-edit-activity' ),
-	            'desc'  => __( 'allow users to edit groups comments.', 'youzer-edit-activity' ),
+	            'title'  => __( 'Enable Comments Edition', 'youzer-edit-activity' ),
+	            'desc'  => __( 'Allow users to edit groups comments.', 'youzer-edit-activity' ),
 	            'id'    => 'yzea_groups_comments_edition',
 	            'type'  => 'checkbox',
 
@@ -167,8 +174,8 @@ class Youzer_Edit_Activity_Admin {
 	    $post_types = array();
 
 		foreach ( bp_activity_get_actions() as $component_actions ) {
-			
-			foreach ( $component_actions as $component_action ) {	
+
+			foreach ( $component_actions as $component_action ) {
 				if ( in_array( $component_action['key'], $forbidden_actions ) ) {
 					continue;
 				}
@@ -181,7 +188,7 @@ class Youzer_Edit_Activity_Admin {
 		foreach ( $post_types as $post_type ) {
 
 			$post_type = apply_filters( 'yzea_get_panel_activity_action', $post_type );
-		    
+
 		    $Yz_Settings->get_field(
 		        array(
 		            'title'  => ! empty( $post_type['label'] ) ? $post_type['label'] : $post_type['value'],
@@ -232,8 +239,13 @@ class Youzer_Edit_Activity_Admin {
 
 	    $Yz_Settings->get_field( array( 'type' => 'closeBox' ) );
 
+		}
+
+        // Get License Status.
+        $Youzer_Admin->get_license_settings( array( 'license' => $license, 'option_id' => $this->field_name, 'product_id' => 22081 )  );
+
 	}
-	
+
 	/**
 	 * Filter Actions
 	 */
@@ -242,19 +254,19 @@ class Youzer_Edit_Activity_Admin {
 		switch ( $args['key'] ) {
 
 			case 'bbp_reply_create':
-				$args['label'] = __( 'Forum reply', 'youzer-edit-activity' );
+				$args['label'] = __( 'Forum Reply', 'youzer-edit-activity' );
 				break;
-			
+
 			case 'bbp_topic_create':
-				$args['label'] = __( 'Forum topic', 'youzer-edit-activity' );
+				$args['label'] = __( 'Forum Topic', 'youzer-edit-activity' );
 				break;
 
 			case 'friendship_accepted':
-				$args['label'] = __( 'Friendship accepted', 'youzer-edit-activity' );
+				$args['label'] = __( 'Friendship Accepted', 'youzer-edit-activity' );
 				break;
 
 			case 'friendship_created':
-				$args['label'] = __( 'Friendship created', 'youzer-edit-activity' );
+				$args['label'] = __( 'Friendship Created', 'youzer-edit-activity' );
 				break;
 
 			case 'new_avatar':
@@ -262,11 +274,11 @@ class Youzer_Edit_Activity_Admin {
 				break;
 
 			case 'new_blog_post':
-				$args['label'] = __( 'Blog post', 'youzer-edit-activity' );
+				$args['label'] = __( 'Blog Post', 'youzer-edit-activity' );
 				break;
 
 			case 'new_blog_comment':
-				$args['label'] = __( 'Blog comment', 'youzer-edit-activity' );
+				$args['label'] = __( 'Blog Comment', 'youzer-edit-activity' );
 				break;
 		}
 
@@ -278,8 +290,8 @@ class Youzer_Edit_Activity_Admin {
 	 */
 	public function plugin_action_links( $links ) {
 
- 		// Get Plugin Pages. 
-        $panel_url = add_query_arg( array( 'page' => 'youzer-panel&tab=edit-activity' ), admin_url( 'admin.php' ) );
+ 		// Get Plugin Pages.
+        $panel_url = add_query_arg( array( 'page' => 'yz-extensions-settings&tab=edit-activity' ), admin_url( 'admin.php' ) );
         $plugin_url = "https://www.kainelabs.com/downloads/buddypress-edit-activity/";
         $documentation_url = 'https://kainelabs.ticksy.com/article/14846/';
 
@@ -308,32 +320,18 @@ class Youzer_Edit_Activity_Admin {
 		// setup the updater
 		$edd_updater = new EDD_SL_Plugin_Updater( EDD_KAINELABS_STORE_URL, YZEA_FILE,
 			array(
-				'version' => YZEA_VERSION,                   
+				'version' => YZEA_VERSION,
 				'license' => $license,
 				'item_id' => '22081',
-				'author'  => 'Youssef Kaine', 
+				'author'  => 'Youssef Kaine',
 				'beta'    => false,
 			)
 		);
 
 	}
 
-	/**
-	 * Activate License Notice.
-	 */
-	function activate_license_notice( $plugin_file, $plugin_data, $status ) {
-
-		if ( ! empty( get_option( $this->field_name ) ) ) {
-			return;
-		}
-		
-		global $Youzer_Admin;
-
-		// Display Activation Notice.
-		$Youzer_Admin->extension_validate_license_notice( array( 'field_name' => $this->field_name, 'product_name' => 'Buddypress Edit Activity' ) );
-
-	}
-
 }
+
+$admin = new Youzer_Edit_Activity_Admin();
 
 endif;

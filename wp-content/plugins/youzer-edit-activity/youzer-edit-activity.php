@@ -4,12 +4,11 @@
  * Plugin URI:  https://www.kainelabs.com/buddypress-edit-activity
  * Description: Allow members to edit activity posts, comments with real time modifications. Set editable activities by type & moderators & limit edition by user role.
  * Author:      Youssef Kaine
- * Author URI:  https://www.kainelabs.com/ 
+ * Author URI:  https://www.kainelabs.com/
  * Text Domain: youzer-edit-activity
  * Domain Path: /languages/
- * Version:     1.0.4
+ * Version:     1.0.8
  */
-
 if ( ! defined( 'ABSPATH' ) ) {
   exit;
 }
@@ -48,7 +47,7 @@ class Youzer_Edit_Activity {
 
 		return $instance;
 
-    }  
+    }
 
 	/**
 	 * Constants.
@@ -68,7 +67,7 @@ class Youzer_Edit_Activity {
 		define( 'YZEA_URL', plugin_dir_url( __FILE__ ) );
 
 		// Plugin Version.
-		define( 'YZEA_VERSION', '1.0.4' );
+		define( 'YZEA_VERSION', '1.0.8' );
 
 	}
 
@@ -78,20 +77,20 @@ class Youzer_Edit_Activity {
 	private function includes() {
 		include_once YZEA_PATH . 'includes/functions/yz-general-functions.php';
 	}
-	
+
 	/**
 	 * Setup Actions.
 	 */
 	private function setup_actions() {
 
 		// Admin
-		add_action( 'admin_init', array( $this, 'load_admin' ) );
-		
+		add_action( 'init', array( $this, 'load_admin' ) );
+
 		// Hook into Youzer init
 		add_action( 'bp_init', array( $this, 'load' ) );
 
 	}
-	
+
 	/**
 	 * Include Admin Files.
 	 */
@@ -99,11 +98,10 @@ class Youzer_Edit_Activity {
 
 		if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
 			require_once( YZEA_PATH . 'includes/yz-class-admin.php' );
-			$this->admin = Youzer_Edit_Activity_Admin::instance();
 		}
 
 	}
-	
+
 	/**
 	 * Load plugin text domain.
 	 */
@@ -111,17 +109,17 @@ class Youzer_Edit_Activity {
 
 		// Get Plugin Domain.
 		$domain = 'youzer-edit-activity';
-		
+
 		$locale = apply_filters( 'plugin_locale', get_locale(), $domain );
-		
+
 		// Load Translation from the wordprss Languages Directory First.
 		load_textdomain( $domain, WP_LANG_DIR . '/plugins/' . $domain . '-' . $locale . '.mo' );
-		
+
 		// Load The Current Plugin Translation.
 		load_plugin_textdomain( $domain, false, 'youzer-edit-activity/languages' );
 
 	}
-	
+
 	/**
 	 * Load Main Files.
 	 */
@@ -140,7 +138,7 @@ class Youzer_Edit_Activity {
     public function have_required_plugins() {
 
         // Get Required Fields.
-        $required_plugins = array( 'youzer' => 'youzer'  ); 
+        $required_plugins = array( 'youzer' => 'youzer'  );
 
         // Get Active Plugins List.
         $active_plugins = (array) get_option( 'active_plugins', array() );
@@ -152,9 +150,9 @@ class Youzer_Edit_Activity {
 
         // Check if plugin exist.
         foreach ( $required_plugins as $key => $required ) {
-            
+
             $required = ( ! is_numeric( $key ) ) ? "{$key}/{$required}.php" : "{$required}/{$required}.php";
-            
+
             if ( ! in_array( $required, $active_plugins ) && ! array_key_exists( $required, $active_plugins ) ) {
                 // Show Notice.
                 add_action( 'admin_notices', array( $this, 'activation_notice' ) );
@@ -162,9 +160,9 @@ class Youzer_Edit_Activity {
             }
 
         }
-     
+
         return true;
-    
+
     }
 
     /**
@@ -178,7 +176,7 @@ class Youzer_Edit_Activity {
         </div>
         <?php
     }
-    
+
 }
 
 // Init.
