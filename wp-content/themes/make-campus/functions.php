@@ -374,6 +374,7 @@ function update_event_information( $post_id, $feed, $entry, $form ){
     }
 	
 	// Update Audience Checkbox
+        /*
     $field = GFAPI::get_field( $form, 73 );
     if ( $field->type == 'checkbox' ) {
         // Get a comma separated list of checkboxes checked
@@ -387,7 +388,7 @@ function update_event_information( $post_id, $feed, $entry, $form ){
 	//error_log(print_r($value, TRUE));
 	// NEITHER OF THESE WORK WHY OH WHY
 	update_post_meta( $post_id, 'field_5f35a5f833a04', $value );
-	update_field('field_5f35a5f833a04', array($checked), $post_id);
+	update_field('field_5f35a5f833a04', array($checked), $post_id);*/
 
 	// create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
 	$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
