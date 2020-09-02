@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed and YouTube Gallery WordPress Plugin. Embed a responsive video, YouTube channel, playlist gallery, or live stream
-  Version: 13.4
+  Version: 13.4.1.1
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
  */
@@ -34,7 +34,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '13.4';
+    public static $version = '13.4.1.1';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -135,6 +135,7 @@ class YouTubePrefs
         'shortcode_unautop',
         'prepend_attachment',
         'wp_make_content_images_responsive',
+        'wp_filter_content_tags',
         'do_shortcode',
         'convert_smilies'
     );
@@ -2893,7 +2894,7 @@ class YouTubePrefs
 
         for ($i = 0; $i < count(self::$the_content_filters); $i++)
         {
-            if (function_exists(self::$the_content_filters[$i]))
+            if (function_exists(self::$the_content_filters[$i]) && !(self::wp_above_version('5.5') && self::$the_content_filters[$i] === 'wp_make_content_images_responsive'))
             {
                 $content = call_user_func(self::$the_content_filters[$i], $content);
             }
@@ -3176,7 +3177,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update provides better compatibility with themes that use the Gutenberg block editor (see the Compatibility tab) and responsive sizing for both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>. <br><br> Do you use a pagebuilder? see the bottom of the Wizard tab for tips. <br><br> Pro users can also now turn on or off the channel subscribe button per embed, within the customization wizard.";
+        $new_pointer_content .= "This update removes deprecated notices for both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
