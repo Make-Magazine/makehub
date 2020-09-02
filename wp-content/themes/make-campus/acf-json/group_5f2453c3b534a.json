@@ -218,10 +218,10 @@
             },
             "choices": {
                 "adults": "Adults",
-                "high-school": "High School",
-                "middle-school": "Middle School",
-                "late-elementary": "Late Elementary",
-                "early-elementary": "Early Elementary"
+                "highschool": "High School",
+                "middleschool": "Middle School",
+                "lateelementary": "Late Elementary",
+                "earlyelementary": "Early Elementary"
             },
             "allow_custom": 0,
             "default_value": [],
@@ -248,5 +248,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "",
-    "modified": 1597351512
+    "modified": 1599077668
 }
