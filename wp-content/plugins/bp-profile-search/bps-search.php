@@ -58,7 +58,7 @@ function bps_filter_members ($qs, $object)
 		$args = wp_parse_args ($qs);
 		$users = $results['users'];
 
-		if (isset ($args['include']))
+		if (isset ($args['include']) && $args['include'] !== '')
 		{
 			$included = explode (',', $args['include']);
 			$users = array_intersect ($users, $included);

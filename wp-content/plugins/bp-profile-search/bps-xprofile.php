@@ -207,7 +207,7 @@ function bps_xprofile_get_value ($f)
 	else
 	{
 		$f->d_format = $f->format;
-		$f->d_value = $value;
+		$f->d_value = isset ($f->options[$value])? $f->options[$value]: $value;
 	}
 }
 
@@ -225,6 +225,7 @@ function bps_xprofile_format ($type, $field_id)
 		'multiselectbox'	=> array ('set'),
 		'checkbox'			=> array ('set'),
 		'datebox'			=> array ('date'),
+		'gender'			=> array ('text'),
 	);
 
 	if (!isset ($formats[$type]))  return 'custom';
@@ -243,9 +244,22 @@ function bps_xprofile_options ($field)
 	if ($field->type_obj->supports_options == false)  return $options;
 
 	$rows = $field->get_children ();
-	if (is_array ($rows))
-		foreach ($rows as $row)
+	if (is_array ($rows))  foreach ($rows as $row)
+	{
+		if ($field->type == 'gender')
+		{
+			if ($row->option_order == 1)
+				$options['his_'. stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
+			elseif ($row->option_order == 2)
+				$options['her_'. stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
+			else
+				$options['their_'. stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
+		}
+		else
+		{
 			$options[stripslashes (trim ($row->name))] = stripslashes (trim ($row->name));
+		}
+	}
 
 	return $options;
 }

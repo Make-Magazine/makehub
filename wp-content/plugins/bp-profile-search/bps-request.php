@@ -136,6 +136,7 @@ function bps_get_form_fields ($form)
 	list (, $fields) = bps_get_fields ();
 	$request = bps_get_request ('form', $form);
 
+	$form_fields[$form] = array ();
 	$errors[$form] = 0;
 	$meta = bps_meta ($form);
 	foreach ($meta['field_code'] as $k => $code)
