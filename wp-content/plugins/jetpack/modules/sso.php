@@ -475,7 +475,7 @@ class Jetpack_SSO {
 				 * @since 8.6.0
 				 */
 				do_action( 'jetpack_sso_login_form_above_wpcom' );
-				
+
 				if ( $display_name && $gravatar ) : ?>
 				<div id="jetpack-sso-wrap__user">
 					<img width="72" height="72" src="<?php echo esc_html( $gravatar ); ?>" />
@@ -523,7 +523,7 @@ class Jetpack_SSO {
 				 * @since 8.6.0
 				 */
 				do_action( 'jetpack_sso_login_form_below_wpcom' );
-				
+
 				if ( ! Jetpack_SSO_Helpers::should_hide_login_form() ) : ?>
 					<div class="jetpack-sso-or">
 						<span><?php esc_html_e( 'Or', 'jetpack' ); ?></span>
@@ -642,9 +642,7 @@ class Jetpack_SSO {
 			: false;
 
 		if ( ! $nonce ) {
-			$xml = new Jetpack_IXR_Client( array(
-				'user_id' => get_current_user_id(),
-			) );
+			$xml = new Jetpack_IXR_Client();
 			$xml->query( 'jetpack.sso.requestNonce' );
 
 			if ( $xml->isError() ) {
@@ -673,9 +671,7 @@ class Jetpack_SSO {
 		$wpcom_nonce   = sanitize_key( $_GET['sso_nonce'] );
 		$wpcom_user_id = (int) $_GET['user_id'];
 
-		$xml = new Jetpack_IXR_Client( array(
-			'user_id' => get_current_user_id(),
-		) );
+		$xml = new Jetpack_IXR_Client();
 		$xml->query( 'jetpack.sso.validateResult', $wpcom_nonce, $wpcom_user_id );
 
 		$user_data = $xml->isError() ? false : $xml->getResponse();
@@ -790,8 +786,8 @@ class Jetpack_SSO {
 		 *
 		 * @since 2.6.0
 		 *
-		 * @param array  $user      Local User information.
-		 * @param object $user_data WordPress.com User Login information.
+		 * @param WP_User|false|null $user      Local User information.
+		 * @param object             $user_data WordPress.com User Login information.
 		 */
 		do_action( 'jetpack_sso_handle_login', $user, $user_data );
 
