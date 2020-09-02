@@ -12,16 +12,17 @@
 
 namespace BPXProfileCFTR\Field_Types;
 
-// No direct access.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 0 );
-}
+// Do not allow direct access over web.
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Tos field.
  */
 class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 
+	/**
+	 * Constructor.
+	 */
 	public function __construct() {
 
 		parent::__construct();
@@ -59,10 +60,10 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 			$required = false;
 		}
 		?>
-        <legend id="<?php bp_the_profile_field_input_name(); ?>-1">
+		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
 			<?php bp_the_profile_field_name(); ?>
 			<?php bp_the_profile_field_required_label(); ?>
-        </legend>
+		</legend>
 
 		<?php do_action( bp_get_the_profile_field_errors_action() ); ?>
 
@@ -102,8 +103,7 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 	 * Admin new field screen.
 	 *
 	 * @param \BP_XProfile_Field $current_field profile field object.
-	 *
-	 * @param string $control_type type.
+	 * @param string             $control_type type.
 	 */
 	public function admin_new_field_html( \BP_XProfile_Field $current_field, $control_type = '' ) {
 
@@ -148,8 +148,8 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 
 		$atts = array(
 			'type'  => 'checkbox',
-			'name'  => 'check_acc_' . bp_get_the_profile_field_input_name(),
-			'id'    => 'check_acc_' . bp_get_the_profile_field_input_name(),
+			'name'  => bp_get_the_profile_field_input_name(),
+			'id'    => bp_get_the_profile_field_input_name(),
 			'value' => 1,
 			'class' => 'bpxcftr-tos-checkbox',
 		);
@@ -163,13 +163,12 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 		$html .= wp_kses_post( self::get_content( $field ) );
 		echo apply_filters( 'bp_get_the_profile_field_checkbox_acceptance', $html, $args['type'], $this->field_obj->id, $checkbox_acceptance );
 		?>
-        <input type="hidden" name="<?php echo bp_get_the_profile_field_input_name(); ?>" id="<?php echo bp_get_the_profile_field_input_name(); ?>" class="bpxcftr-tos-checkbox-hidden" value="<?php echo esc_attr( $checkbox_acceptance ) ?>"/>
-		<?php
+    	<?php
 	}
 
 	/**
-     * Check if field is valid?
-     *
+	 * Check if field is valid?
+	 *
 	 * @param string|int $values value.
 	 *
 	 * @return bool
@@ -186,8 +185,8 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 	/**
 	 * Modify the appearance of value.
 	 *
-	 * @param  string $field_value Original value of field
-	 * @param  int $field_id Id of field.
+	 * @param string $field_value Original value of field.
+	 * @param int    $field_id field id.
 	 *
 	 * @return string   Value formatted
 	 */
@@ -217,4 +216,3 @@ class Field_Type_Checkbox_Acceptance extends \BP_XProfile_Field_Type {
 		return bp_xprofile_get_meta( $field_id, 'field', 'tos_content', true );
 	}
 }
-

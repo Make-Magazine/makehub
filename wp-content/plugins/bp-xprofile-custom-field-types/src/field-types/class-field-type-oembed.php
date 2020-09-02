@@ -1,6 +1,6 @@
 <?php
 /**
- * oEmbed Type Field.
+ * oEmbed Type Field
  *
  * @package    BuddyPress Xprofile Custom Field Types
  * @subpackage Field_Types
@@ -10,13 +10,11 @@
 
 namespace BPXProfileCFTR\Field_Types;
 
-// No direct access.
-if ( ! defined( 'ABSPATH' ) ) {
-	exit( 0 );
-}
+// Do not allow direct access over web.
+defined( 'ABSPATH' ) || exit;
 
 /**
- * Web Type
+ * Oembed field Type
  */
 class Field_Type_Oembed extends \BP_XProfile_Field_Type_URL {
 
@@ -35,7 +33,7 @@ class Field_Type_Oembed extends \BP_XProfile_Field_Type_URL {
 	 * @param string     $field_value The URL value, as saved in the database.
 	 * @param string|int $field_id Optional. ID of the field.
 	 *
-	 * @return string URL converted to a link.
+	 * @return string URL converted to  oembed content.
 	 */
 	public static function display_filter( $field_value, $field_id = '' ) {
 		// can not cache oEmbed response currently. We will need either data id or user id to allow us caching.
