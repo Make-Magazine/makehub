@@ -415,3 +415,8 @@ add_filter( 'bp_core_signup_send_activation_key', create_function('','return fal
 //admin
 /** Removes Events from WP Admin Bar  */
 define('TRIBE_DISABLE_TOOLBAR_ITEMS', true);
+function remove_comments(){
+        global $wp_admin_bar;
+        $wp_admin_bar->remove_menu('comments');
+}
+add_action( 'wp_before_admin_bar_render', 'remove_comments' );
