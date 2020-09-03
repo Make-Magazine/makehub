@@ -411,8 +411,7 @@ add_action('bp_init', 'buddypress_add_last_activity' );
 add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
 */
 
-
-//admin
+//admin notification bar
 /** Removes Events from WP Admin Bar  */
 define('TRIBE_DISABLE_TOOLBAR_ITEMS', true);
 function remove_comments(){
