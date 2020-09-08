@@ -1231,7 +1231,7 @@ class Tribe__Tickets__Commerce__PayPal__Main extends Tribe__Tickets__Tickets {
 
 		update_post_meta( $ticket->ID, '_price', $ticket->price );
 
-		$ticket_data = Tribe__Utils__Array::get( $raw_data, 'tribe-ticket', array() );
+		$ticket_data = Tribe__Utils__Array::get( $raw_data, 'tribe-ticket', array() );                
 		$this->update_capacity( $ticket, $ticket_data, $save_type );
 
 		foreach ( array( 'start_date', 'start_time', 'end_date', 'end_time' ) as $time_key ) {
