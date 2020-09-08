@@ -11,7 +11,7 @@
 /**
  * Event Tickets - RSVP Stylesheet.
  *
- * @since TBD
+ * @since5.0.0
  */
 
 /* -----------------------------------------------------------------------------
@@ -673,13 +673,13 @@
 /**
  * Event Tickets RSVP Stylesheet
  *
- * @since TBD
+ * @since5.0.0
  */
 
 /**
  * Event Tickets - RSVP Structure
  *
- * @since TBD
+ * @since5.0.0
  *
  */
 
@@ -757,7 +757,7 @@
 /**
  * Event Tickets - RSVP Structure
  *
- * @since TBD
+ * @since5.0.0
  */
 
 .event-tickets .tribe-tickets__rsvp-actions-wrapper {
@@ -832,6 +832,7 @@
 
 .event-tickets .tribe-tickets__rsvp-actions-success-going-text {
 		margin-left: 8px;
+		text-transform: capitalize;
 	}
 
 .event-tickets .tribe-tickets__rsvp-actions-success-going-toggle {
@@ -868,6 +869,11 @@
 		padding: 20px 16px;
 	}
 
+.event-tickets .tribe-tickets__rsvp-message--error,
+		.event-tickets .tribe-tickets__rsvp-message--error.tribe-tickets__rsvp-message {
+			background-color: rgba(218,57,77, 0.08);
+		}
+
 .event-tickets .tribe-tickets__rsvp-message--success-icon {
 		display: inline-block;
 		width: 16px;
@@ -879,21 +885,22 @@
 			stroke: #141827;
 		}
 
-.event-tickets .tribe-tickets__rsvp-message--must-login-icon {
+.event-tickets .tribe-tickets__rsvp-message--must-login-icon,
+	.event-tickets .tribe-tickets__rsvp-message--error-icon {
 		display: inline-block;
 		margin-right: 12px;
 	}
 
-.event-tickets .tribe-tickets__rsvp-message--must-login-icon circle {
+.event-tickets .tribe-tickets__rsvp-message--must-login-icon circle, .event-tickets .tribe-tickets__rsvp-message--error-icon circle {
 			stroke: #141827;
 		}
 
-.event-tickets .tribe-tickets__rsvp-message--must-login-icon circle#dot {
+.event-tickets .tribe-tickets__rsvp-message--must-login-icon circle#dot, .event-tickets .tribe-tickets__rsvp-message--error-icon circle#dot {
 			stroke: transparent;
 			fill: #141827;
 		}
 
-.event-tickets .tribe-tickets__rsvp-message--must-login-icon path {
+.event-tickets .tribe-tickets__rsvp-message--must-login-icon path, .event-tickets .tribe-tickets__rsvp-message--error-icon path {
 			stroke: #141827;
 		}
 
@@ -904,7 +911,7 @@
 /**
  * Event Tickets - RSVP form.
  *
- * @since TBD
+ * @since5.0.0
  */
 
 .event-tickets .tribe-common-c-btn:disabled {
@@ -954,10 +961,15 @@
 			color: #141827;
 		}
 
+.event-tickets .tribe-tickets__rsvp-form-button--submit {
+		padding-left: 28px;
+		padding-right: 28px;
+	}
+
 /**
  * Event Tickets - RSVP Attendee Registration
  *
- * @since TBD
+ * @since5.0.0
  */
 
 .event-tickets .tribe-tickets__rsvp-ar {
@@ -1013,6 +1025,7 @@
 		background-color: transparent;
 		border: 1px solid #D5D5D5;
 		border-radius: 50%;
+		flex: none;
 		height: 28px;
 		padding: 0;
 		position: relative;
@@ -1024,9 +1037,10 @@
 			background-color: #141827;
 			content: '';
 			height: 2px;
+			left: 9px;
+			top: 12px; /* Fix for IE11 */
 			position: absolute;
 			width: 8px;
-			left: 9px;
 		}
 
 .event-tickets .tribe-tickets__rsvp-ar-quantity-input-number:hover,
@@ -1058,8 +1072,12 @@
 		color: #727272;
 	}
 
-.event-tickets .tribe-tickets__rsvp-ar-guest-icon,
-	.event-tickets .tribe-tickets__rsvp-ar-guest-icon--inactive {
+.event-tickets .tribe-tickets__rsvp-ar-guest-list-item-button--inactive .tribe-tickets__rsvp-ar-guest-icon path {
+				fill: #D5D5D5;
+				stroke: #D5D5D5;
+			}
+
+.event-tickets .tribe-tickets__rsvp-ar-guest-icon {
 		display: inline-block;
 		height: 17px;
 		margin-right: 24px;
@@ -1070,11 +1088,6 @@
 .event-tickets .tribe-tickets__rsvp-ar-guest-icon path {
 			fill: #141827;
 			stroke: #141827;
-		}
-
-.event-tickets .tribe-tickets__rsvp-ar-guest-icon--inactive path {
-			fill: #D5D5D5;
-			stroke: #D5D5D5;
 		}
 
 .event-tickets .tribe-tickets__rsvp-ar-form-wrapper {
@@ -1151,7 +1164,8 @@
 
 .event-tickets .tribe-tickets__rsvp-actions {
 			border-top: 0;
-			margin-top: 0
+			margin-top: 0;
+			padding: 0
 	}
 
 .event-tickets .tribe-tickets__rsvp-actions-rsvp-not-going {
@@ -1233,8 +1247,7 @@
 			position: static
 	}
 
-.event-tickets .tribe-tickets__rsvp-ar-guest-icon,
-	.event-tickets .tribe-tickets__rsvp-ar-guest-icon--inactive {
+.event-tickets .tribe-tickets__rsvp-ar-guest-icon {
 			height: 14px;
 			margin-right: 4px;
 			width: 11px

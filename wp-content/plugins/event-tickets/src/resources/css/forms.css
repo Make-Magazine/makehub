@@ -11,7 +11,7 @@
 /**
  * Event Tickets - Form styles for Event Tickets.
  *
- * @since TBD
+ * @since5.0.0
  */
 
  /* -----------------------------------------------------------------------------
@@ -353,7 +353,7 @@
  .event-tickets .tribe-tickets__form .tribe-tickets__form-field {
 		display: block;
 		width: 100%;
-		margin-bottom: 12px;
+		padding-bottom: 12px;
 	}
 
  .event-tickets .tribe-tickets__form .tribe-tickets__form-field--required header:first-child::after,
@@ -362,7 +362,7 @@
 		}
 
  .event-tickets .tribe-tickets__form .tribe-required {
-		color: red;
+		color: #DA394D;
 		margin-left: 4px;
 	}
 
@@ -407,8 +407,12 @@
 			border-color: rgba(20,24,39, 0.8);
 		}
 
- .event-tickets .tribe-tickets__form input[type="text"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="email"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="url"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="password"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="search"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="number"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="tel"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="range"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="date"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="month"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="week"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="time"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="datetime"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="datetime-local"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form input[type="color"].tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form select.tribe-tickets__form-field-input--error, .event-tickets .tribe-tickets__form textarea.tribe-tickets__form-field-input--error {
-			border-color: #DA394D ! important;
+ .event-tickets .tribe-tickets__form input[type="text"]:invalid, .event-tickets .tribe-tickets__form input[type="email"]:invalid, .event-tickets .tribe-tickets__form input[type="url"]:invalid, .event-tickets .tribe-tickets__form input[type="password"]:invalid, .event-tickets .tribe-tickets__form input[type="search"]:invalid, .event-tickets .tribe-tickets__form input[type="number"]:invalid, .event-tickets .tribe-tickets__form input[type="tel"]:invalid, .event-tickets .tribe-tickets__form input[type="range"]:invalid, .event-tickets .tribe-tickets__form input[type="date"]:invalid, .event-tickets .tribe-tickets__form input[type="month"]:invalid, .event-tickets .tribe-tickets__form input[type="week"]:invalid, .event-tickets .tribe-tickets__form input[type="time"]:invalid, .event-tickets .tribe-tickets__form input[type="datetime"]:invalid, .event-tickets .tribe-tickets__form input[type="datetime-local"]:invalid, .event-tickets .tribe-tickets__form input[type="color"]:invalid, .event-tickets .tribe-tickets__form input[type="checkbox"]:invalid, .event-tickets .tribe-tickets__form input[type="radio"]:invalid, .event-tickets .tribe-tickets__form select:invalid, .event-tickets .tribe-tickets__form textarea:invalid {
+			box-shadow: none;
+		}
+
+ .event-tickets .tribe-tickets__form input[type="text"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="email"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="url"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="password"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="search"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="number"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="tel"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="range"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="date"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="month"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="week"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="time"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="datetime"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="datetime-local"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="color"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="checkbox"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form input[type="radio"].tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form select.tribe-tickets__form-field-input--error:invalid, .event-tickets .tribe-tickets__form textarea.tribe-tickets__form-field-input--error:invalid {
+			border-color: #DA394D;
 		}
 
  .event-tickets .tribe-tickets__form input[type="text"]::-moz-placeholder, .event-tickets .tribe-tickets__form input[type="search"]::-moz-placeholder, .event-tickets .tribe-tickets__form input[type="url"]::-moz-placeholder, .event-tickets .tribe-tickets__form input[type="tel"]::-moz-placeholder, .event-tickets .tribe-tickets__form input[type="email"]::-moz-placeholder, .event-tickets .tribe-tickets__form input[type="password"]::-moz-placeholder {
@@ -457,14 +461,23 @@
 
  .event-tickets .tribe-tickets__form .tribe-common-form-control-checkbox-radio-group label,
 		.event-tickets .tribe-tickets__form .tribe-common-form-control-checkbox-radio-group .tribe-tickets__form-field-label {
+			display: inherit;
 			margin-bottom: 0;
-			display: inline-block;
 			margin-left: 0;
 		}
 
  .event-tickets .tribe-tickets__form .tribe-common-form-control-text__input {
 		padding: 8px 16px;
 	}
+
+ /* Date of birth field */
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-field--birth select {
+			min-width: 80px;
+			width: 100%;
+			margin: 0 0 8px 0;
+			display: inline-block;
+		}
 
  .event-tickets .tribe-tickets__form .tribe-tickets__button--next {
 		align-items: center;
@@ -479,6 +492,37 @@
 
  .event-tickets .tribe-tickets__form .tribe-tickets__button--next:hover {
 			color: #FFFFFF;
+		}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message {
+		display: flex;
+		align-items: flex-start;
+		background-color: rgba(51,74,255, 0.07);
+		border-radius: 4px;
+		padding: 20px 16px;
+		margin-bottom: 20px;
+	}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message--error {
+		background-color: rgba(218,57,77, 0.08);
+	}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message--error-icon {
+		display: inline-block;
+		margin-right: 12px;
+	}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message--error-icon circle {
+			stroke: #141827;
+		}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message--error-icon circle#dot {
+			stroke: transparent;
+			fill: #141827;
+		}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message--error-icon path {
+			stroke: #141827;
 		}
 
  @media(min-width: 768px) {
@@ -504,5 +548,14 @@
 	.event-tickets .tribe-tickets__form select,
 	.event-tickets .tribe-tickets__form textarea {
 			max-width: 600px
+	}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-field--birth select {
+				width: calc(33.33333% - 12px); /* 4px = safety margin */
+				margin-right: 8px
+		}
+
+ .event-tickets .tribe-tickets__form .tribe-tickets__form-message {
+			padding: 16px
 	}
 	}

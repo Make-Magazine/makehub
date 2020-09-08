@@ -1425,7 +1425,7 @@
 			.entry .entry-content .tribe-common .tribe-tickets__item__attendee__fields .tribe-common-form-control-checkbox-radio-group label,
 			.entry .entry-content .tribe-common .tribe-tickets__item__attendee__fields .tribe-common-form-control-checkbox-radio-group .tribe-tickets-meta-label {
 				margin-bottom: 0;
-				display: inline-block;
+				display: inherit;
 				margin-left: 0;
 			}
 

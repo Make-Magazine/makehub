@@ -4775,7 +4775,7 @@ var helpers_extends = __webpack_require__(9);
 var extends_default = /*#__PURE__*/__webpack_require__.n(helpers_extends);
 
 // EXTERNAL MODULE: ./node_modules/babel-runtime/helpers/objectWithoutProperties.js
-var objectWithoutProperties = __webpack_require__(39);
+var objectWithoutProperties = __webpack_require__(38);
 var objectWithoutProperties_default = /*#__PURE__*/__webpack_require__.n(objectWithoutProperties);
 
 // EXTERNAL MODULE: external "React"
@@ -5019,6 +5019,8 @@ var attendees_registration_style = __webpack_require__(480);
 
 
 
+
+
 /**
  * External dependencies
  */
@@ -5064,8 +5066,8 @@ var element_AttendeesRegistration = function (_PureComponent) {
 			    onClick = _props.onClick,
 			    onClose = _props.onClose,
 			    onIframeLoad = _props.onIframeLoad,
-			    showHelperText = _props.showHelperText;
-
+			    showHelperText = _props.showHelperText,
+			    restProps = objectWithoutProperties_default()(_props, ['helperText', 'iframeURL', 'isDisabled', 'isModalOpen', 'label', 'linkText', 'modalTitle', 'onClick', 'onClose', 'onIframeLoad', 'showHelperText']);
 
 			var modalContent = wp.element.createElement(
 				'div',
@@ -5088,7 +5090,7 @@ var element_AttendeesRegistration = function (_PureComponent) {
 			return wp.element.createElement(
 				'div',
 				{ className: 'tribe-editor__attendee-registration' },
-				wp.element.createElement(external_tribe_common_elements_["LabelWithModal"], {
+				wp.element.createElement(external_tribe_common_elements_["LabelWithModal"], extends_default()({
 					className: 'tribe-editor__attendee-registration__label-with-modal',
 					isOpen: isModalOpen,
 					label: label,
@@ -5099,7 +5101,7 @@ var element_AttendeesRegistration = function (_PureComponent) {
 					modalTitle: modalTitle,
 					onClick: onClick,
 					onClose: onClose
-				}),
+				}, restProps)),
 				showHelperText && wp.element.createElement(
 					'span',
 					{ className: 'tribe-editor__attendee-registration__helper-text' },
@@ -5878,8 +5880,7 @@ $exports.store = store;
 
 
 /***/ }),
-/* 38 */,
-/* 39 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5900,6 +5901,7 @@ exports.default = function (obj, keys) {
 };
 
 /***/ }),
+/* 39 */,
 /* 40 */,
 /* 41 */
 /***/ (function(module, exports) {
