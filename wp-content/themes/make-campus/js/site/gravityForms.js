@@ -4,10 +4,12 @@ jQuery(document).ready(function ($) {
     });
 
     function readURL(input) {
+        var inputID = jQuery(input).attr('id');
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            reader.onload = function (e) {                
-                jQuery(this).parent().append('<img src="' + e.target.result + '" style="width:150px;"');
+            reader.onload = function (e) {            
+                jQuery(input).after('<div id="preview_'+inputID+'"><img src="" style="width:250px;"></div>');
+                jQuery('#preview_'+inputID+'>img' ).attr( 'src', e.target.result );
             }
             reader.readAsDataURL(input.files[0]);
         }
