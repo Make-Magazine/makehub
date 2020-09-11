@@ -63,7 +63,7 @@
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: space-between;
-			.image-wrapper {
+			.preview-image {
 				padding: 16px;
 				border: solid 1px #ccc;
 				width: 49%;
@@ -72,7 +72,8 @@
 				align-items: center;
 				justify-content: center;
 				margin-bottom: 10px;
-				&#featured_image_wrap{
+				flex-direction: column;
+				&:first-of-type{
 					flex: 0 0 100%;
 				}
 				@media screen and (max-width: 982px) {
@@ -100,7 +101,7 @@
 				align-items: center;
 				flex-direction: column;
 				border-radius: 2px;
-				-webkit-border-radius: 2px;
+				margin: 0 16px 0 0;
 				text-transform: uppercase;
 				font-size: 16px;
 				font-weight: 300;
@@ -123,31 +124,67 @@
 			left: 50%;
 			height: 100px;
 			width: 100px;
-			animation-name: spin;
-			animation-duration: 2000ms;
-			animation-iteration-count: infinite;
-			animation-timing-function: linear;
-			@keyframes spin { 
-				from { 
-					transform: rotate(0deg); 
-				} to { 
-					transform: rotate(360deg); 
-				}
-			}
 		}
-		.event_type, .category_tag {
+		.blue_select_btns {
 			text-align: center;
+			padding-right: 0px;
 			.ginput_container_radio ul, .ginput_container_checkbox ul { 
 				display: flex;
 				flex-wrap: wrap;
+				li {
+					margin-bottom: 15px;
+					input[type="checkbox"] {
+						opacity: 0;
+						position: fixed;
+						width: 0;
+						&:checked + label {
+							background-color: #005e9a;
+							color: #fff;
+						}
+						&[disabled="disabled"] + label {
+							color: #ccc;
+							background-color: #f1f1f1;
+							border-color: #ccc;
+							&:hover {
+								color: #ccc;
+								background-color: #f1f1f1;
+								border-color: #ccc;
+							}
+						}
+					}
+					label {
+						background-color: #fff;
+						color: #005e9a;
+						font-family: sans-serif, Arial;
+						font-size: 16px;
+						border: 1px solid #005e9a;
+						border-radius: 20px;
+						min-height: 40px;
+						display: flex;
+						white-space: nowrap;
+						justify-content: center;
+						align-items: center;
+						padding: 0px 30px;
+						margin: 0 10px;
+						min-width: calc(100% - 10px);
+					}
+					label:hover {
+						background-color: rgba(0,94,154,0.2);
+						color: #005e9a;
+					}
+				}
 			}
-			.ginput_container_radio ul { 
+		}
+		.big_select_btns {
+			text-align: center;
+			padding-right: 0px;
+			.ginput_container_radio ul, .ginput_container_checkbox ul { 
+				display: flex;
+				flex-wrap: wrap;
 				justify-content: space-evenly;
 				li {
-					flex: 1 0 21%;
-					@media screen and (max-width: 1200px) {
-						flex: 1 0 46%;
-					}
+					flex: 1 0 33%;
+					margin-bottom: 20px;
 					input[type="radio"] {
 						opacity: 0;
 						position: fixed;
@@ -169,55 +206,23 @@
 						border-radius: 4px;
 						min-height: 140px;
 						display: flex;
-						min-width: 200px;
+						min-width: calc(100% - 20px);
 						justify-content: center;
 						align-items: center;
+						padding: 20px;
 					}
 					label:hover {
 						border-color: #111;
 					}
-				}
-			}
-			.ginput_container_checkbox ul {
-				li {
-					margin-bottom: 15px;
-					input[type="checkbox"] {
-						opacity: 0;
-						position: fixed;
-						width: 0;
-						&:checked + label {
-							background-color: rgba(0, 94, 154, .2);
-							border: solid 2px #005e9a;
-							color: #005e9a;
+					@media screen and (max-width: 600px) {
+						flex: 1 0 50%;
+						&:nth-of-type(odd) {
+							padding-right: 5px !important;
 						}
-						&[disabled="disabled"] + label {
-							color: #ccc;
-							background-color: rgba(0, 94, 154, .9);
-							&:hover {
-								color: #ccc;
-								background-color: rgba(0, 94, 154, .9);
-							}
+						&:nth-of-type(even) {
+							padding-left: 5px !important;
 						}
-					}
-					label {
-						background-color: #005e9a;
-						color: #fff;
-						font-family: sans-serif, Arial;
-						font-size: 16px;
-						border: 1px solid #005e9a;
-						border-radius: 20px;
-						min-height: 40px;
-						display: flex;
-						white-space: nowrap;
-						justify-content: center;
-						align-items: center;
-						padding: 0px 30px;
-						margin: 0 10px;
-						min-width: calc(100% - 10px);
-					}
-					label:hover {
-						background-color: #fff;
-						color: #005e9a;
+						label { min-width: calc(100% - 5px); }
 					}
 				}
 			}
