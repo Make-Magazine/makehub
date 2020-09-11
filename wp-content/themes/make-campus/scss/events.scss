@@ -247,62 +247,78 @@
 
 // Post type
 .single-tribe_events {
-	.content-sidebar-wrap {
-		margin-top: 0px !important;
-		.entry-content {
-			padding-top: 0px;
-		}
-	}
 	#tribe-events-content {
 		position: inherit;
-		.tribe-events-hero {
-			width: 100vw;
-			height: 300px;
-			position: relative;
-			left: 50%;
-			right: 50%;
-			margin-left: -50vw;
-			margin-right: -50vw;
-			display: flex;
-			align-items: center;
-			background-repeat: no-repeat !important;
-			background-size: cover !important;
-			.container { text-align: center; }
-			.tribe-events-hero-info { 
-				padding: 25px;
-				background: rgba(255, 255, 255, .4);
-				border-radius: 10px;
-				display: inline-block;
-				text-shadow:
-					   -1px -1px 0 #fff,  
-						1px -1px 0 #fff,
-						-1px 1px 0 #fff,
-						 1px 1px 0 #fff;
-				h1 {
-					color: #fff;
-					font-weight: 700;
-					font-size: 2.5em;
-					text-shadow:
-					   -1px -1px 0 #000,  
-						1px -1px 0 #000,
-						-1px 1px 0 #000,
-						 1px 1px 0 #000;
-					margin-bottom: 10px;
-				}
-				h2 { display: inline; }
-				.tribe-events-cost { font-size: 2em; }
+		.tribe-events-header {
+			text-align: center;
+			margin-top: 20px;
+			h1 {
+				color: #000;
+				font-weight: 700;
+				font-size: 2.5em;
+				margin-bottom: 10px;
 			}
+			h2 { display: inline; }
+			.tribe-events-cost { font-size: 2em; }
 			.tribe-events-back {
-				position: absolute;
-				top: 25px;
+				position: fixed;
+				z-index: 99;
+				top: 200px;
+				left: -5px;
 			}
 		}
-		.tribe-events-gallery {
+		
+		.tribe-events-image-gallery {
 			padding-top: 30px;
 			display: flex;
 			flex-direction: column;
-			.tribe-events-cal-links {
-				margin-top: auto;
+			.psgal {
+				display: flex;
+				justify-content: center;
+				.msnry_item {
+					width: 26%;
+					height: 400px;
+					display: none;
+					a {
+						border-radius: 10px;
+						overflow: hidden;
+						img {
+							object-fit: cover;
+							height: -webkit-fill-available;
+						}
+					}
+					&:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4) { display: inline-block; }
+					&:nth-of-type(3), &:nth-of-type(4) {
+						width: 12%;
+						height: 200px;
+					}
+					&:nth-of-type(4) {
+						margin-top: 200px;
+						margin-left: -12%;
+					}
+				}
+			}
+		}
+		.tribe_events {
+			margin-top:30px;
+			.tribe-events-event-meta { margin: 0px; }
+			.event-info {
+				display: flex;
+				flex-direction: column;
+				div:nth-last-of-type(2) {
+					flex-grow: 1;
+				}
+			}
+			.tribe-events-button {
+				color: #fff;
+				background: #005e9a;
+				border: solid 1px #005e9a;
+				padding: 15px;
+				border-radius: 5px;
+				&:hover {
+					color: #005e9a;
+					background: #fff;
+				}
 			}
 		}
 		#tribe-events-footer {
@@ -312,28 +328,6 @@
 				align-items: center;
 				a { color: #fff; }
 				&:hover a { color: #005e9a; }
-			}
-		}
-	}
-	.gallery {
-		-moz-column-count: 3;
-		-webkit-column-count: 3;
-		column-count: 3;
-		-moz-column-gap: 10px;
-		-webkit-column-gap: 10px;
-		column-gap: 10px;
-		br {
-			display: none !important;
-		}
-		.gallery-item {
-			// The margin and padding should be equal to your column gap minus 1px. The margin should be set as a negative value.
-			margin: -9px 0 !important;
-			padding: 9px 0 !important;
-			float: none !important;
-			width: 100% !important;
-			img {
-				width: 100%;
-				height: auto;
 			}
 		}
 	}
