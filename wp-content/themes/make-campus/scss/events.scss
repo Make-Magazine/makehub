@@ -87,6 +87,7 @@
 					width: 100%;
 				}
 			}
+			.gfield_html { flex: 0 0 100%; }
 		}
 		.gform_page_footer {
 			display: flex;
@@ -132,6 +133,7 @@
 			.ginput_container_radio ul, .ginput_container_checkbox ul { 
 				display: flex;
 				flex-wrap: wrap;
+				justify-content: center;
 				li {
 					margin-bottom: 15px;
 					input[type="radio"], input[type="checkbox"] {
