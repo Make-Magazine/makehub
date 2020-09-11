@@ -11,11 +11,12 @@ li.gform_validation_container, li.gform_hidden {
 /* Error & Validation Messages */
 
 .validation_error, .gform_validation_error li.gfield_error {
-    background: #bf0421; /* Maroon */
+    background: #bf0421 !important; /* Maroon */
     color: white;
     padding: 0 1em 1em 1em;
     margin: 1em 0;
     border-radius: 3px;
+	input { color: #000; }
 }
 .validation_error {padding-top:1em;}
 
@@ -43,7 +44,7 @@ li.gform_validation_container, li.gform_hidden {
 
 .gfield_error .ginput_container_select:after {display:none;}
 
-.gfield_error .warningTextareaInfo {color:white;}
+.gfield_error .warningTextareaInfo { color:white; }
 .gfield_error .ginput_container_fileupload {
     color: black;
 }
