@@ -12,7 +12,7 @@
 				display: flex;
 				flex-direction: column;
 				border: none;
-				background: #d1d1d1;
+				background: #005e9a;
 				margin-bottom: 0px;
 			}
 			.gform_body {
@@ -30,6 +30,12 @@
 		.gf_step {
 			width: auto;
 			float: left;
+			color: #fff;
+			opacity: .7;
+			a { 
+				color: #fff; 
+				&:hover { color: #ccc; }
+			}
 			span.gf_step_number {
 				float: right;
 				display: block;
@@ -44,6 +50,12 @@
 			}
 			span.gf_step_label {
 				float: right;
+			}
+			&.gpmpn-step-current {
+				color: #EB002A;
+				font-size: 16px;
+				font-family: "Roboto Bold";
+				text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
 			}
 			&.gf_step_completed {
 				opacity: 1;
@@ -117,7 +129,9 @@
 				&:last-of-type {
 					margin-right: 0px;
 				}
+				&.gform_last_page_button { display: none; }
 			}
+			
 		}
 		.gform_ajax_spinner {
 			position: fixed;
