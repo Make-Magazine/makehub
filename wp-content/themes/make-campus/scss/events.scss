@@ -55,7 +55,9 @@
 				color: #EB002A;
 				font-size: 16px;
 				font-family: "Roboto Bold";
+				opacity: .9;
 				text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+				padding-right: 3px;
 			}
 			&.gf_step_completed {
 				opacity: 1;
@@ -70,6 +72,7 @@
 			label {
 				font-size: 1.2em;
 			}
+			.gfield_description { font-style: italic; }
 		} 
 		.image_uploads ul {
 			display: flex;
@@ -140,6 +143,11 @@
 			left: 50%;
 			height: 100px;
 			width: 100px;
+		}
+		.header-title {
+			.gfield_label {
+				font-size: 1.5em;
+			}
 		}
 		.blue_select_btns {
 			text-align: center;
