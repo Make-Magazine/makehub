@@ -1,5 +1,6 @@
 // Gravity Form
 .gform_wrapper.event_form_wrapper {
+	border-bottom: solid #fff 10px;
 	margin: 0px;
 	.event_form {
 		padding: 0px 15px;
@@ -22,6 +23,14 @@
 			}
 			.validation_error {
 				display: none;
+			}
+		}
+		.gform_page {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			.gform_page_fields {
+				flex-grow: 1;
 			}
 		}
 		.gf_page_steps {
@@ -192,7 +201,7 @@
 						min-width: calc(100% - 10px);
 					}
 					label:hover {
-						background-color: rgba(0,94,154,0.2);
+						background-color: #ccdfeb;
 						color: #005e9a;
 					}
 				}
