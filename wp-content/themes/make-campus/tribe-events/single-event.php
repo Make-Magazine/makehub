@@ -20,7 +20,6 @@ $events_label_plural   = tribe_get_event_label_plural();
 
 $event_id = get_the_ID();
 $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
-console
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single">
@@ -44,27 +43,38 @@ console
 	<!-- Notices -->
 	<?php tribe_the_notices() ?>
 
-
 	<?php while ( have_posts() ) :  the_post(); ?>
 		<div id="post-<?php the_ID(); ?>" <?php post_class(); ?> class="container">
 			<div class="row">
 				<div class="col-md-8 col-sm-12 col-xs-12 event-info">
 					<!-- Event content -->
 					<?php do_action( 'tribe_events_single_event_before_the_content' ) ?>
+					<div class="event-cat">
+						<?php echo tribe_get_event_categories($event_id); ?>
+					</div>
+					<div class="event-author">
+						<h3>About the Author:</h3> 
+						<?php echo get_field('about'); ?>
+					</div>
 					<div class="tribe-events-single-event-description tribe-events-content">
+						<h3>What You'll Do:</h3> 
 						<?php the_content(); ?>
 					</div>
-
-					<div class="about"><b>About the author:</b> <?php echo get_field('about'); ?></div>
+					<div class="tribe-events-single-event-description tribe-events-content">
+						<h3>What You'll Need:</h3> 
+						<?php echo get_field('materials'); ?>
+					</div>
 
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
 				<div class="col-md-4 col-sm-12 col-xs-12 event-meta">
-					<!-- Event meta -->
-					<?php do_action( 'tribe_events_single_event_before_the_meta' ) ?>
-					<?php tribe_get_template_part( 'modules/meta' ); ?>
-					<?php do_action( 'tribe_events_single_event_after_the_meta' ) ?>
+					<div class="event-meta-sticky">
+						<!-- Event meta -->
+						<?php do_action( 'tribe_events_single_event_before_the_meta' ) ?>
+						<?php tribe_get_template_part( 'modules/meta' ); ?>
+						<?php do_action( 'tribe_events_single_event_after_the_meta' ) ?>
+					</div>
 				</div>
 			</div>
 		</div> <!-- #post-x -->
