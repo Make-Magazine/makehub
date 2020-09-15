@@ -127,7 +127,7 @@
 			}
 			input.medium {
 				width: 100%;
-				height: 100vh;
+				height: 100%;
 				position: absolute;
 			}
 			&> div {
@@ -424,7 +424,8 @@
 			}
         }
         .tribe_events {
-            margin-top:30px;
+            margin-top: 30px;
+			margin-bottom: 15px;
             .tribe-events-event-meta, .tribe-tickets {  // the sidebar
 				margin: 0px; 
 				box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
@@ -432,6 +433,7 @@
 				background: #fff;
 				border-radius: 5px;
 				font-size: 16px;
+				margin-bottom: 15px;
 				h2 { font-size: 22px; }
 				.tribe-events-meta-group {
 					width: 100%;
@@ -443,17 +445,20 @@
 					.tribe-event-tags, .tribe-events-event-categories {
 						clear: both;
 						visibility: hidden;
+						display: flex;
+						flex-wrap: wrap;
+						justify-content: center;
 						a {
 							background-color: #fff;
 							color: #005e9a;
 							font-size: 14px;
 							border: 1px solid #005e9a;
 							border-radius: 20px;
-							padding: 5px 10px;
-							position: relative;
-							top: 5px;
-							bottom: 5px;
+							padding: 0px 10px;
+							display: block;
+							margin: 5px 0;
 							visibility: visible;
+							line-height: 25px;
 							&:hover {
 								background-color: #005e9a;
 								color: #fff;
