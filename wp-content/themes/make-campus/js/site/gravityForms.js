@@ -12,7 +12,7 @@ jQuery(document).ready(function ($) {
             var reader = new FileReader();
             reader.onload = function (e) {         
                 jQuery("#preview_"+inputID).remove();
-                jQuery(input).after('<div id="preview_'+inputID+'"><img src="" style="width:250px;"></div>');
+                jQuery(input).after('<div class="image-wrapper”><div id="preview_'+inputID+'"><img src="" style="width:250px;"></div></div>');
                 jQuery('#preview_'+inputID+'>img' ).attr( 'src', e.target.result );
             }
             reader.readAsDataURL(input.files[0]);
