@@ -351,6 +351,8 @@ add_action('gform_advancedpostcreation_post_after_creation', 'update_event_infor
 
 function update_event_information($post_id, $feed, $entry, $form) {    
     //field mapping
+    //0 indicie = gravity form field id
+    //1 indicie = acf field name/event meta fields
     $field_mapping = array(
         array(4,'_EventStartDate'),
         array(5,'_EventStartTime'),
@@ -359,11 +361,36 @@ function update_event_information($post_id, $feed, $entry, $form) {
         array(4, 'preferred_start_date'),
         array(5, 'preferred_start_time'),
         array(6, 'preferred_end_date'),
-        array(7, 'preferred_end_date'),
+        array(7, 'preferred_end_time'),
         array(96, 'alternative_start_date'),
         array(97, 'alternative_end_date'),
         array(98, 'alternative_start_time'),
-        array(99, 'alternative_end_time')
+        array(99, 'alternative_end_time'),        
+        array(19, 'about'),
+        array(73, 'audience'),
+        array(31, 'image_1'),
+        array(32, 'image_2'),
+        array(33, 'image_3'),
+        array(54, 'image_4'),
+        array(55, 'image_5'),
+        array(56, 'image_6'),
+        array(57, 'location'),
+        array(72, 'materials'),
+        array(78, 'kit_required'),
+        array(79, 'kit_price_included'),
+        array(80, 'kit_supplier'),
+        array(111, 'other_kit_supplier'),
+        array(82, 'kit_url'),
+        array(83, 'amazon_url'),
+        array(87, 'prior_hosted_event'),
+        array(88, 'hosted_live_stream'),
+        array(89, 'video_conferencing'),
+        array(90, 'other_video_conferencing'),
+        array(91, 'prev_session_links'),
+        array(92, 'comfort_level'),
+        array(93, 'technical_setup'),
+        array(108, 'basic_skills'),
+        array(109, 'skills_taught'),
     );
     
     //update the acf fields with the submitted values from the form
@@ -371,7 +398,7 @@ function update_event_information($post_id, $feed, $entry, $form) {
         $fieldID    = $field[0];
         $meta_field = $field[1];
         if(isset($entry[$fieldID])){
-            error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+            //error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
             update_post_meta($post_id, $meta_field, $entry[$fieldID]);
         }
     }
