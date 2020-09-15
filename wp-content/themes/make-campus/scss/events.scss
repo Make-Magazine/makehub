@@ -63,8 +63,11 @@
             &.gpmpn-step-current {
                 font-size: 1.2em;
                 font-family: "Roboto Bold";
-                padding-right: 3px;
+                padding-right: 6px;
                 opacity: 1;
+				span.gf_step_number {
+					margin-top: -3px;
+				}
             }
             &.gf_step_completed {
                 opacity: 1;
@@ -105,47 +108,56 @@
                 @media screen and (max-width: 641px) {
                     width: 100%;
                 }
-                input.medium {
-                    width: 100%;
-                }
             }
             .gfield_html { flex: 0 0 100%; }
         }
+		
         /* File Upload */
         .ginput_container_fileupload {
             padding: .75em;
             border-radius: 3px;
-        }
-        .ginput_container_fileupload .screen-reader-text {
-            display:inline;
+			position: relative;
+    		width: 100%;
+			.screen-reader-text {
+				display:inline;
+			}
+			span.gform_drop_instructions {
+				display: block;
+				margin: 0 0 1em 0;
+			}
+			input.medium {
+				width: 100%;
+				height: 100vh;
+				position: absolute;
+			}
+			&> div {
+				&:first-of-type {
+					text-align: center;
+					padding: 2em 0;
+					border: 3px dashed #ddd;
+					margin-top: 30px;
+				}
+				&+ span.screen-reader-text {
+					display: block;
+					text-align: center;
+					margin: 1em 0 0 0;
+				}
+				span.screen-reader-text + div li {
+					padding: .25em 0 0 0;
+				}
+			}
+			@media (max-width:767px) {
+				.screen-reader-text {
+					display: block;
+					font-size: .7em;
+					padding: 1em .75em;
+				}
+				span.gform_drop_instructions {display:none;}
+			}
         }
 
-        .ginput_container_fileupload > div:first-of-type {
-            text-align: center;
-            padding: 2em 0;
-            border: 3px dashed #ddd;
-        }
-        span.gform_drop_instructions {
-            display: block;
-            margin: 0 0 1em 0;
-        }
-        .ginput_container_fileupload > div + span.screen-reader-text {
-            display: block;
-            text-align: center;
-            margin: 1em 0 0 0;
-        }
-        .ginput_container_fileupload span.screen-reader-text + div li {
-            padding: .25em 0 0 0;
-        }
 
-        @media (max-width:767px) {
-            .ginput_container_fileupload .screen-reader-text {
-                display: block;
-                font-size: .7em;
-                padding: 1em .75em;
-            }
-            span.gform_drop_instructions {display:none;}
-        }
+       
         .gform_page_footer {
             display: flex;
             input[type="button"] {
