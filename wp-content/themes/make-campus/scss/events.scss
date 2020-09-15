@@ -203,6 +203,10 @@
                 font-size: 1.5em;
             }
         }
+		.gfield_radio li input[type=radio]+input[type=text] {
+			border-radius: 20px;
+			padding: 8px !important;
+		}
         .blue_select_btns {
             text-align: center;
             padding-right: 0px;
@@ -348,11 +352,12 @@
             padding-top: 30px;
             display: flex;
             flex-direction: column;
+			position: relative;
             .psgal {
                 display: flex;
                 justify-content: center;
                 .msnry_item {
-                    width: 26%;
+                    width: 28%;
                     height: 400px;
                     display: none;
                     a {
@@ -367,21 +372,96 @@
                             min-height: fill-available;
                         }
                     }
-                    &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4) { display: inline-block; }
-                    &:nth-of-type(3), &:nth-of-type(4) {
-                        width: 12%;
+                    &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4), &:nth-of-type(5) { display: inline-block; }
+                    &:nth-of-type(2), &:nth-of-type(3) {
+                        width: 16%;
                         height: 200px;
                     }
-                    &:nth-of-type(4) {
+                    &:nth-of-type(3) {
                         margin-top: 200px;
-                        margin-left: -12%;
+                        margin-left: -16%;
                     }
+					@media screen and (max-width: 992px) {
+						height: 350px;
+						width: 40%;
+						&:nth-of-type(2), &:nth-of-type(3) {
+							height: 175px;
+							width: 20%;
+						}
+						&:nth-of-type(3) {
+							margin-top: 175px;
+							margin-left: -20%;
+						}
+						&:nth-of-type(5) { display: none; }
+					}
+					@media screen and (max-width: 768px) {
+						height: 300px;
+						width: 60%;
+						&:nth-of-type(2), &:nth-of-type(3) {
+							height: 150px;
+							width: 30%;
+						}
+						&:nth-of-type(3) {
+							margin-top: 150px;
+							margin-left: -30%;
+						}
+						&:nth-of-type(4) { display: none; }
+					}
+					@media screen and (max-width: 480px) {
+						height: 200px;
+						width: 100%;
+						&:nth-of-type(2), &:nth-of-type(3) {
+							displayy: none;
+						}
+					}
                 }
+				
             }
+			#showAllGallery {
+				position: absolute;
+				bottom: 20px;
+				right: 20px;
+			}
         }
         .tribe_events {
             margin-top:30px;
-            .tribe-events-event-meta { margin: 0px; }
+            .tribe-events-event-meta, .tribe-tickets {  // the sidebar
+				margin: 0px; 
+				box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+				border: 1px solid #005e9a;
+				background: #fff;
+				border-radius: 5px;
+				font-size: 16px;
+				h2 { font-size: 22px; }
+				.tribe-events-meta-group {
+					width: 100%;
+					dt { 
+						float: left;
+						line-height: 1.5;
+						margin-right: 5px
+					}
+					.tribe-event-tags, .tribe-events-event-categories {
+						clear: both;
+						visibility: hidden;
+						a {
+							background-color: #fff;
+							color: #005e9a;
+							font-size: 14px;
+							border: 1px solid #005e9a;
+							border-radius: 20px;
+							padding: 5px 10px;
+							position: relative;
+							top: 5px;
+							bottom: 5px;
+							visibility: visible;
+							&:hover {
+								background-color: #005e9a;
+								color: #fff;
+							}
+						}
+					}
+				}
+			}
             .event-info {
                 display: flex;
                 flex-direction: column;
@@ -408,6 +488,7 @@
                 align-items: center;
                 a { color: #fff; }
                 &:hover a { color: #005e9a; }
+				&:empty { display: none; }
             }
         }
     }
