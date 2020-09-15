@@ -426,42 +426,47 @@
         .tribe_events {
             margin-top: 30px;
 			margin-bottom: 15px;
-            .tribe-events-event-meta, .tribe-tickets {  // the sidebar
-				margin: 0px; 
-				box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
-				border: 1px solid #005e9a;
-				background: #fff;
-				border-radius: 5px;
-				font-size: 16px;
-				margin-bottom: 15px;
-				h2 { font-size: 22px; }
-				.tribe-events-meta-group {
-					width: 100%;
-					dt { 
-						float: left;
-						line-height: 1.5;
-						margin-right: 5px
-					}
-					.tribe-event-tags, .tribe-events-event-categories {
-						clear: both;
-						visibility: hidden;
-						display: flex;
-						flex-wrap: wrap;
-						justify-content: center;
-						a {
-							background-color: #fff;
-							color: #005e9a;
-							font-size: 14px;
-							border: 1px solid #005e9a;
-							border-radius: 20px;
-							padding: 0px 10px;
-							display: block;
-							margin: 5px 0;
-							visibility: visible;
-							line-height: 25px;
-							&:hover {
-								background-color: #005e9a;
-								color: #fff;
+			.event-meta-sticky {
+				position: sticky;
+				top: 0;
+				.tribe-events-event-meta, .tribe-tickets {  // the sidebar
+					margin: 0px; 
+					box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+					border: 1px solid #005e9a;
+					background: #fff;
+					border-radius: 5px;
+					font-size: 16px;
+					margin-bottom: 30px;
+					h2 { font-size: 22px; }
+					.tribe-events-meta-group {
+						width: 100%;
+						dt { 
+							float: left;
+							line-height: 1.5;
+							margin-right: 5px;
+							font-family: "Roboto Bold";
+						}
+						.tribe-event-tags, .tribe-events-event-categories {
+							clear: both;
+							visibility: hidden;
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: center;
+							a {
+								background-color: #fff;
+								color: #005e9a;
+								font-size: 14px;
+								border: 1px solid #005e9a;
+								border-radius: 20px;
+								padding: 0px 10px;
+								display: block;
+								margin: 5px 0;
+								visibility: visible;
+								line-height: 25px;
+								&:hover {
+									background-color: #005e9a;
+									color: #fff;
+								}
 							}
 						}
 					}
@@ -470,9 +475,42 @@
             .event-info {
                 display: flex;
                 flex-direction: column;
-                div:nth-last-of-type(2) {
-                    flex-grow: 1;
-                }
+				&> div {
+					border-bottom: solid 1px #ccc;
+					margin-bottom: 30px;
+					padding-bottom: 15px;
+					&:nth-last-of-type(2) {
+						flex-grow: 1;
+					}
+					&:last-of-type {
+						border-bottom: none;
+					}
+					h3 { 
+						font-family: "Roboto Bold";
+						font-size: 20px !important;
+					}
+				}
+				.event-cat {
+					div { display: none; }
+					ul {
+						padding: 0px;
+						li { list-style: none; }
+					}
+					a{
+						color: #333;
+						text-transform: uppercase;
+    					font-family: "Roboto Bold";
+						&::before {
+							font-family: "FontAwesome";
+							content: "\f0ac";
+							margin-right: 5px;
+						}
+						&[href*="online"]::before {
+							content: "\f26c";
+						}
+					}
+					
+				}
             }
             .tribe-events-button {
                 color: #fff;
