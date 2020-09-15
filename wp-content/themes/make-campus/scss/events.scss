@@ -396,14 +396,14 @@
 					}
 					@media screen and (max-width: 768px) {
 						height: 300px;
-						width: 60%;
+						width: 65%;
 						&:nth-of-type(2), &:nth-of-type(3) {
 							height: 150px;
-							width: 30%;
+							width: 35%;
 						}
 						&:nth-of-type(3) {
 							margin-top: 150px;
-							margin-left: -30%;
+							margin-left: -35%;
 						}
 						&:nth-of-type(4) { display: none; }
 					}
@@ -411,7 +411,7 @@
 						height: 200px;
 						width: 100%;
 						&:nth-of-type(2), &:nth-of-type(3) {
-							displayy: none;
+							display: none;
 						}
 					}
                 }
