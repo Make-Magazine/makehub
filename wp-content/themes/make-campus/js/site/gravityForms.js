@@ -10,7 +10,8 @@ jQuery(document).ready(function ($) {
 			console.log(input);
 			console.log(input.files);
             var reader = new FileReader();
-            reader.onload = function (e) {            
+            reader.onload = function (e) {         
+                jQuery("[id^=preview_"+inputID+"]").remove();
                 jQuery(input).after('<div id="preview_'+inputID+'"><img src="" style="width:250px;"></div>');
                 jQuery('#preview_'+inputID+'>img' ).attr( 'src', e.target.result );
             }
