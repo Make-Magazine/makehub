@@ -349,29 +349,33 @@ require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php'
 // All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
 add_action('gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4);
 
-function update_event_information($post_id, $feed, $entry, $form) {
-    //update the All Day setting
-    $all_day = $entry['3.1'];
-    if ($all_day == 'All Day') {
-        update_post_meta($post_id, '_EventAllDay', 'yes');
+function update_event_information($post_id, $feed, $entry, $form) {    
+    //field mapping
+    $field_mapping = array(
+        array(4,'_EventStartDate'),
+        array(5,'_EventStartTime'),
+        array(6,'_EventEndDate'),
+        array(7,'_EventEndTime'),
+        array(4, 'preferred_start_date'),
+        array(5, 'preferred_start_time'),
+        array(6, 'preferred_end_date'),
+        array(7, 'preferred_end_date'),
+        array(96, 'alternative_start_date'),
+        array(97, 'alternative_end_date'),
+        array(98, 'alternative_start_time'),
+        array(99, 'alternative_end_time')
+    );
+    
+    //update the acf fields with the submitted values from the form
+    foreach($field_mapping as $field){
+        $fieldID    = $field[0];
+        $meta_field = $field[1];
+        if(isset($entry[$fieldID])){
+            error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+            update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+        }
     }
-    $start_date = $entry['4'];
-    if ($start_date) {
-        update_post_meta($post_id, '_EventStartDate', $start_date);
-    }
-    $start_time = $entry['5'];
-    if ($start_time) {
-        update_post_meta($post_id, '_EventStartTime', $start_time);
-    }
-    $end_date = $entry['6'];
-    if ($end_date) {
-        update_post_meta($post_id, '_EventEndDate', $end_date);
-    }
-    $end_time = $entry['7'];
-    if ($end_time) {
-        update_post_meta($post_id, '_EventEndTime', $end_time);
-    }
-
+        
     // Update Audience Checkbox
     $field = GFAPI::get_field($form, 73);
     if ($field->type == 'checkbox') {
@@ -386,15 +390,15 @@ function update_event_information($post_id, $feed, $entry, $form) {
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
     $api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
-    $ticket->name = $entry['40'];
-    $ticket->description = $entry['42'];
-    ;
-    $ticket->price = $entry['37'];
-    $ticket->capacity = $entry['43'];
-    $ticket->start_date = $entry['45'];
-    $ticket->start_time = $entry['46'];
-    $ticket->end_date = $entry['47'];
-    $ticket->end_time = $entry['48'];
+    $ticket->name = (isset($entry['40'])?$entry['40']:'');
+    $ticket->description = (isset($entry['42'])?$entry['42']:'');
+    
+    $ticket->price = (isset($entry['37'])?$entry['37']:'');
+    $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
+    $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
+    $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
+    $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
+    $ticket->end_time = (isset($entry['48'])?$entry['48']:'');
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
