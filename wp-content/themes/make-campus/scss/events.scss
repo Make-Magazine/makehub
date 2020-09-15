@@ -429,6 +429,7 @@
 			.event-meta-sticky {
 				position: sticky;
 				top: 0;
+				margin-bottom: 40px;
 				.tribe-events-event-meta, .tribe-tickets {  // the sidebar
 					margin: 0px; 
 					box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
@@ -437,6 +438,7 @@
 					border-radius: 5px;
 					font-size: 16px;
 					margin-bottom: 30px;
+					min-width: 100%;
 					h2 { font-size: 22px; }
 					.tribe-events-meta-group {
 						width: 100%;
@@ -445,6 +447,7 @@
 							line-height: 1.5;
 							margin-right: 5px;
 							font-family: "Roboto Bold";
+							font-weight: 100;
 						}
 						.tribe-event-tags, .tribe-events-event-categories {
 							clear: both;
@@ -477,7 +480,6 @@
                 flex-direction: column;
 				&> div {
 					border-bottom: solid 1px #ccc;
-					margin-bottom: 30px;
 					padding-bottom: 15px;
 					&:nth-last-of-type(2) {
 						flex-grow: 1;
