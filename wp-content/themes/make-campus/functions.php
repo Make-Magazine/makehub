@@ -350,7 +350,7 @@ require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php'
 add_action('gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4);
 
 function update_event_information($post_id, $feed, $entry, $form) {    
-    //field mapping
+    //field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
     $field_mapping = array(
@@ -368,12 +368,6 @@ function update_event_information($post_id, $feed, $entry, $form) {
         array(99, 'alternative_end_time'),        
         array(19, 'about'),
         array(73, 'audience'),
-        array(31, 'image_1'),
-        array(32, 'image_2'),
-        array(33, 'image_3'),
-        array(54, 'image_4'),
-        array(55, 'image_5'),
-        array(56, 'image_6'),
         array(57, 'location'),
         array(72, 'materials'),
         array(78, 'kit_required'),
@@ -403,6 +397,12 @@ function update_event_information($post_id, $feed, $entry, $form) {
         }
     }
         
+    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e
+    $checked = $entry['89'];
+    $values = explode(', ', $checked);    
+    update_post_meta($post_id, 'video_conferencing', $values);
+    
+    //field 73 - 'audience' 'field_5f35a5f833a04'
     // Update Audience Checkbox
     $field = GFAPI::get_field($form, 73);
     if ($field->type == 'checkbox') {
