@@ -396,11 +396,16 @@ function update_event_information($post_id, $feed, $entry, $form) {
         }
     }
         
-    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e
-    $checked = $entry['89'];
-    $values = explode(', ', $checked);    
+    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
+    $field = GFAPI::get_field($form, 89);
+    if ($field->type == 'checkbox') {
+        // Get a comma separated list of checkboxes checked
+        $checked = $field->get_value_export($entry);
+        // Convert to array.
+        $values = explode(', ', $checked);    
+    }
     update_field('field_5f60f9bfa1d1e', $values, $post_id); 
-        
+    
     //field 73 - 'audience' 'field_5f35a5f833a04'
     // Update Audience Checkbox
     $field = GFAPI::get_field($form, 73);
