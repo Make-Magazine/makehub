@@ -354,37 +354,36 @@ function update_event_information($post_id, $feed, $entry, $form) {
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
     $field_mapping = array(
-        array(4,'_EventStartDate'),
-        array(5,'_EventStartTime'),
-        array(6,'_EventEndDate'),
-        array(7,'_EventEndTime'),
-        array(4, 'preferred_start_date'),
-        array(5, 'preferred_start_time'),
-        array(6, 'preferred_end_date'),
-        array(7, 'preferred_end_time'),
-        array(96, 'alternative_start_date'),
-        array(97, 'alternative_start_time'),
-        array(98, 'alternative_end_time'),
-        array(99, 'alternative_end_date'),        
-        array(19, 'about'),
-        array(73, 'audience'),
-        array(57, 'location'),
-        array(72, 'materials'),
-        array(78, 'kit_required'),
-        array(79, 'kit_price_included'),
-        array(80, 'kit_supplier'),
-        array(111, 'other_kit_supplier'),
-        array(82, 'kit_url'),
-        array(83, 'amazon_url'),
-        array(87, 'prior_hosted_event'),
-        array(88, 'hosted_live_stream'),
-        array(89, 'video_conferencing'),
-        array(90, 'other_video_conferencing'),
-        array(91, 'prev_session_links'),
-        array(92, 'comfort_level'),
-        array(93, 'technical_setup'),
-        array(108, 'basic_skills'),
-        array(109, 'skills_taught'),
+        array('4','_EventStartDate'),
+        array('5','_EventStartTime'),
+        array('6','_EventEndDate'),
+        array('7','_EventEndTime'),
+        array('4', 'preferred_start_date'),
+        array('5', 'preferred_start_time'),
+        array('6', 'preferred_end_date'),
+        array('7', 'preferred_end_time'),
+        array('96', 'alternative_start_date'),
+        array('97', 'alternative_start_time'),
+        array('98', 'alternative_end_time'),
+        array('99', 'alternative_end_date'),        
+        array('19', 'about'),
+        array('73', 'audience'),
+        array('57', 'location'),
+        array('72', 'materials'),
+        array('78', 'kit_required'),
+        array('79', 'kit_price_included'),
+        array('80', 'kit_supplier'),
+        array('111', 'other_kit_supplier'),
+        array('82', 'kit_url'),
+        array('83', 'amazon_url'),
+        array('87', 'prior_hosted_event'),
+        array('88', 'hosted_live_stream'),        
+        array('90', 'other_video_conferencing'),
+        array('91', 'prev_session_links'),
+        array('92', 'comfort_level'),
+        array('93', 'technical_setup'),
+        array('108', 'basic_skills'),
+        array('109', 'skills_taught'),
     );
     
     //update the acf fields with the submitted values from the form
@@ -400,8 +399,8 @@ function update_event_information($post_id, $feed, $entry, $form) {
     //field 89 - 'video_conferencing' field_5f60f9bfa1d1e
     $checked = $entry['89'];
     $values = explode(', ', $checked);    
-    update_post_meta($post_id, 'video_conferencing', $values);
-    
+    update_field('field_5f60f9bfa1d1e', $values, $post_id); 
+        
     //field 73 - 'audience' 'field_5f35a5f833a04'
     // Update Audience Checkbox
     $field = GFAPI::get_field($form, 73);
