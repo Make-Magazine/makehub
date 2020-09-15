@@ -500,13 +500,4 @@ add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
-}
-
-
-add_action('gform_enqueue_scripts', 'enqueue_gform_img_preview_script', 10, 2);
-
-function enqueue_gform_img_preview_script($form, $is_ajax) {
-    $my_theme = wp_get_theme();
-    $my_version = $my_theme->get('Version');
-    wp_enqueue_script('make-gform_img_preview_script', get_stylesheet_directory_uri() . '/js/site/gravityForms.js', array('jquery'), $my_version);
-}
+} 
