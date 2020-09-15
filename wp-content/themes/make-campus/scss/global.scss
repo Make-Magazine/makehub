@@ -348,3 +348,11 @@ hr.double-line-hr {
 .fancybox-overlay {
   background: rgba(255, 255, 255, 0.5) !important;
 }
+
+
+// Safari only
+.safari-mac {
+	.row:before, .row:after {
+		display: none;
+	}
+}

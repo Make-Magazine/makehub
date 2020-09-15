@@ -38,6 +38,7 @@ console
 
  	<div class="tribe-events-image-gallery">
 		<?php echo do_shortcode('[gallery id="'.$event_id.'"]'); ?>
+		<a id="showAllGallery" class="universal-btn" href="javascript:jQuery('.psgal .msnry_item:first-of-type a').click();">Show All Images</a>
 	</div>
 	
 	<!-- Notices -->
@@ -47,7 +48,7 @@ console
 	<?php while ( have_posts() ) :  the_post(); ?>
 		<div id="post-<?php the_ID(); ?>" <?php post_class(); ?> class="container">
 			<div class="row">
-				<div class="col-md-8 col-sm-12 event-info">
+				<div class="col-md-8 col-sm-12 col-xs-12 event-info">
 					<!-- Event content -->
 					<?php do_action( 'tribe_events_single_event_before_the_content' ) ?>
 					<div class="tribe-events-single-event-description tribe-events-content">
@@ -59,7 +60,7 @@ console
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
-				<div class="col-md-4 col-sm-12 event-meta">
+				<div class="col-md-4 col-sm-12 col-xs-12 event-meta">
 					<!-- Event meta -->
 					<?php do_action( 'tribe_events_single_event_before_the_meta' ) ?>
 					<?php tribe_get_template_part( 'modules/meta' ); ?>
