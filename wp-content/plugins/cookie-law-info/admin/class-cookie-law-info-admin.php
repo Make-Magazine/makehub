@@ -48,7 +48,8 @@ class Cookie_Law_Info_Admin {
 	 */
 	private $modules=array(
 		'cli-policy-generator',
-		'ccpa'
+		'ccpa',
+		'uninstall-feedback',
 	);
 
 	public static $existing_modules=array();

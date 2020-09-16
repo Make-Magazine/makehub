@@ -237,6 +237,7 @@ class Cookie_Law_Info_Public
 		$ccpa_type = (isset($the_options['consent_type']) ? $the_options['consent_type'] : 'gdpr');
 		$js_blocking_enabled = Cookie_Law_Info::wt_cli_is_js_blocking_active();
 		$enable_custom_integration = apply_filters('wt_cli_enable_plugin_integration',false);
+		$trigger_dom_reload = apply_filters('wt_cli_script_blocker_trigger_dom_refresh',false);
 		if ($the_options['is_on'] == true) {
 			$non_necessary_cookie_ids = Cookie_Law_Info::get_non_necessary_cookie_ids();
 			$cli_cookie_datas = array(
@@ -247,7 +248,8 @@ class Cookie_Law_Info_Public
 				'ccpaBarEnabled' => $ccpa_enable_bar,
 				'ccpaType' => $ccpa_type,
 				'js_blocking' => $js_blocking_enabled,
-				'custom_integration' => $enable_custom_integration
+				'custom_integration' => $enable_custom_integration,
+				'triggerDomRefresh' => $trigger_dom_reload,
 			);
 
 			wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/cookie-law-info-public.js', array('jquery'), $this->version, false);

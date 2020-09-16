@@ -4,7 +4,7 @@ Donate link: https://www.webtoffee.com/plugins/
 Tags: eu cookie law, GDPR, CCPA, cookie law, cookie consent, eu privacy directive, privacy directive, cookies, privacy, compliance
 Requires at least: 3.3.1
 Tested up to: 5.5
-Stable tag: 1.9.0
+Stable tag: 1.9.1
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -154,6 +154,10 @@ See http://cookielawinfo.com for more information on what is required.
 4. Header (with custom styles)
 
 == Changelog ==
+
+= 1.9.1 =
+
+* Fix - Conflict with the Divi page builder
 
 = 1.9.0 =
 
@@ -435,9 +439,6 @@ See http://cookielawinfo.com for more information on what is required.
 
 == Upgrade Notice ==
 
-= 1.9.0 =
+= 1.9.1 =
 
-* Fix - Javascript error on IE after 1.8.9 update
-* Fix - Conflict with the theme customizer
-* Tested ok with Wordpress version 5.5
-* Updated translation files for Finnish
+* Fix - Conflict with the Divi page builder

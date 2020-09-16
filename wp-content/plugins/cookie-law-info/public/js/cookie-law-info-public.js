@@ -68,6 +68,14 @@ var CLI=
 	        console.log("CookieLawInfo requires JSON.parse but your browser doesn't support it");
 	        return;
 		}
+		if(typeof args.settings!=='object')
+	    {
+	    	this.settings = JSON.parse(args.settings);
+		} 
+		else
+	    {
+	    	this.settings = args.settings;
+	    }
 		this.js_blocking_enabled = Boolean( Cli_Data.js_blocking );
 	    this.settings = args.settings;
 	    this.bar_elm = jQuery(this.settings.notify_div_id);
@@ -270,7 +278,7 @@ var CLI=
 	{	
 		var el= jQuery('.cli-privacy-content .cli-privacy-content-text');
 		if( el.length > 0 ) {
-			clone= el.clone(),
+			var clone= el.clone(),
 			originalHtml= clone.html(),
 			originalHeight= el.outerHeight(),
 			Trunc = {
@@ -1012,11 +1020,14 @@ var cliBlocker =
 			// trigger DOMContentLoaded
 			scriptsDone:function() 
 			{	
-				
-				var DOMContentLoadedEvent = document.createEvent('Event')
-				DOMContentLoadedEvent.initEvent('DOMContentLoaded', true, true)
-				window.document.dispatchEvent(DOMContentLoadedEvent)
-				
+				if (typeof Cli_Data.triggerDomRefresh !== 'undefined') {
+					if( Boolean( Cli_Data.triggerDomRefresh ) === true ) 
+					{	
+						var DOMContentLoadedEvent = document.createEvent('Event')
+						DOMContentLoadedEvent.initEvent('DOMContentLoaded', true, true)
+						window.document.dispatchEvent(DOMContentLoadedEvent);
+					}
+				}
 			},
 			seq :function(arr, callback, index) {
 				// first call, without an index
