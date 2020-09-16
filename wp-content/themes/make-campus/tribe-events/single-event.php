@@ -60,11 +60,42 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 						<h3>What You'll Do:</h3> 
 						<?php the_content(); ?>
 					</div>
-					<div class="tribe-events-single-event-description tribe-events-content">
+					<?php if(get_field('basic_skills')) { ?>
+						<div class="tribe-events-single-skill-level tribe-events-content">
+							<h3>Skill Level for this program:</h3> 
+							<?php echo get_field('basic_skills') ?>
+						</div>
+					<?php } ?>
+					<?php if(get_field('skills_taught')) { ?>
+						<div class="tribe-events-single-skills-taugh tribe-events-content">
+							<h3>Skills you will learn in this program:</h3> 
+							<?php echo get_field('skills_taught') ?>
+						</div>
+					<?php } ?>
+					<div class="tribe-events-single-event-materials tribe-events-content">
 						<h3>What You'll Need:</h3> 
-						<?php echo get_field('materials'); ?>
+						<div class="materials-list"><?php echo wpautop(get_field('materials')); ?></div>
+						<?php 
+							if(get_field('kit_required') == "Yes") {
+								echo "<b>A kit is required for this program</b>";
+								if(get_field('kit_price_included') == "yes") {
+									echo " and is included in the ticket price";
+								}
+								echo " and will be supplied by ";
+								if(get_field("kit_supplier") == other) {
+									echo get_field("other_kit_supplier");
+								} else {
+									echo get_field("kit_supplier");
+								}
+								if(get_field('kit_price_included') == "Yes") {
+									echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
+								}
+							}
+							if(get_field('amazon_url')) {
+								echo "<p><a class='btn btn-blue-universal' href='" . get_field('amazon_url') . "'>Materials available here</a>";
+							}
+						?>
 					</div>
-
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
