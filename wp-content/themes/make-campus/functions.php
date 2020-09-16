@@ -354,10 +354,6 @@ function update_event_information($post_id, $feed, $entry, $form) {
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
     $field_mapping = array(
-        array('4','_EventStartDate'),
-        array('5','_EventStartTime'),
-        array('6','_EventEndDate'),
-        array('7','_EventEndTime'),
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
         array('6', 'preferred_end_date'),
@@ -414,10 +410,26 @@ function update_event_information($post_id, $feed, $entry, $form) {
         $checked = $field->get_value_export($entry);
         // Convert to array.
         $values = explode(', ', $checked);    
-    }
-            
+    }            
     update_field('field_5f35a5f833a04', $values, $post_id); 
-
+        
+    //event start date
+    $event_st_dt = $entry['4'];
+    $event_st_time = $entry['5'];
+            
+    $date=date_create($event_st_dt.' ' . $event_st_time);
+    $start_dt = date_format($date,"Y-m-d H:i:s");    
+    update_post_meta($post_id, '_EventStartDate', $start_dt);
+    
+    //Event End date
+    $event_end_dt = $entry['6'];
+    $event_end_time = $entry['7'];
+    
+    $date=date_create($event_end_dt.' ' . $event_end_time);
+    $end_dt = date_format($date,"Y-m-d H:i:s");
+    update_post_meta($post_id, '_EventEndDate', $end_dt);
+    
+    
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
     $api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
