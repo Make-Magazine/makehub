@@ -13,33 +13,27 @@
 	color: #333;
 }
 
-.nav-level-2 #menu-secondary_universal_menu{
-	.dropdown {
-		&:focus { background: #333; }
-		a.dropdown-toggle {
-			span { 
-				padding: 0px;
-				padding-right: 5px;
-			}
-			span.caret {
-				padding-right: 0px;
-				width: 5px;
-				height: 5px;
-				margin-right: 20px;
-				margin-left: -25px;
-			}
-		}
-		.dropdown-menu {
-			background: #333;
-			min-width: 125px;
-			li { 
-				border: 0px;
-				&:hover {
-					background: #666;
-				}
-			}
-		}
-		.dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover { background-color: #666; }
+// modal gallery
+.pswp__counter{
+	font-size: 16px;
+	font-weight: bold;
+	&::before {
+		content: "Viewing Image: ";
+	}
+}
+
+.gform_wrapper .gfield_description.validation_message {
+	top: -2em;
+	padding-bottom: 16px;
+	padding-top: 16px;
+}
+.gform_wrapper .gfield_error {
+	padding-right: 15px;
+	.gfield_label {
+		color: #fff;
+	}
+	select {
+		color: #000 !important;
 	}
 }
 

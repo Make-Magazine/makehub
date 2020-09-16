@@ -428,7 +428,7 @@
 			margin-bottom: 15px;
 			.event-meta-sticky {
 				position: sticky;
-				top: 0;
+				top: 55px;
 				margin-bottom: 40px;
 				.tribe-events-event-meta, .tribe-tickets {  // the sidebar
 					margin: 0px; 
@@ -490,6 +490,8 @@
 					h3 { 
 						font-family: "Roboto Bold";
 						font-size: 20px !important;
+						margin-top: 20px;
+    					margin-bottom: 10px;
 					}
 				}
 				.event-cat {
@@ -510,8 +512,18 @@
 						&[href*="online"]::before {
 							content: "\f26c";
 						}
+						&[href*="demonstration"]::before {
+							content: "\f51c";
+						}
 					}
-					
+				}
+				.tribe-events-single-event-materials {
+					.materials-list {
+						font-weight: bold;
+					}
+					.btn {
+						margin-top: 10px;
+					}
 				}
             }
             .tribe-events-button {
