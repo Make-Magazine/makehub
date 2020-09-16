@@ -100,7 +100,7 @@
                 flex-direction: column;
                 flex: 0 0 100%;
                 &~ .preview_image{ //override all but the first
-                                   flex: inherit;
+                     flex: inherit;
                 }
                 @media screen and (max-width: 982px) {
                     flex-direction: column;
@@ -370,6 +370,7 @@
                             min-height: -moz-available;
                             min-height: -webkit-fill-available; 
                             min-height: fill-available;
+							width: 100%;
                         }
                     }
                     &:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4), &:nth-of-type(5) { display: inline-block; }
@@ -549,4 +550,26 @@
             }
         }
     }
+}
+
+// Events page
+
+.tribe-events-view {
+	.tribe-events-pro-photo__event-featured-image-wrapper {
+		max-height: 300px;
+		border-radius: 10px;
+		display: flex;
+		overflow: hidden;
+		a {
+			max-height: 100%;
+			img {
+				object-fit: cover;
+				height: 100%;
+				min-height: -moz-available;
+				min-height: -webkit-fill-available; 
+				min-height: fill-available;
+				width: 100%;
+			}
+		}
+	}
 }

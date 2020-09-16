@@ -37,7 +37,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 
  	<div class="tribe-events-image-gallery">
 		<?php echo do_shortcode('[gallery id="'.$event_id.'"]'); ?>
-		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">Show All Images</a>
+		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
 	</div>
 	
 	<!-- Notices -->
