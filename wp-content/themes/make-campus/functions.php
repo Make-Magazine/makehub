@@ -49,6 +49,11 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.p
 // Adds the Genesis Connect WooCommerce notice.
 require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
 
+function make_campus_add_woocommerce_support() {
+	add_theme_support( 'woocommerce' );
+}
+add_action( 'after_setup_theme', 'make_campus_add_woocommerce_support' );
+
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
 
@@ -431,17 +436,19 @@ function update_event_information($post_id, $feed, $entry, $form) {
     
     
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
-    $api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
+    //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
+	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
     $ticket->name = (isset($entry['40'])?$entry['40']:'');
     $ticket->description = (isset($entry['42'])?$entry['42']:'');
-    
     $ticket->price = (isset($entry['37'])?$entry['37']:'');
     $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
     $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
     $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
     $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
     $ticket->end_time = (isset($entry['48'])?$entry['48']:'');
+	
+	//error_log($ticket);
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
@@ -452,8 +459,17 @@ function update_event_information($post_id, $feed, $entry, $form) {
         'start_time' => $ticket->start_time,
         'end_date' => $ticket->end_date,
         'end_time' => $ticket->end_time,
-        'capacity' => $ticket->capacity,
+		// none of these work
+		'event_capacity' => $ticket->capacity,
+		'capacity' => $ticket->capacity,
+		'stock' => $ticket->capacity,
+        'tribe_ticket' => [
+			'mode'           => 'global',
+			'event_capacity' => $ticket->capacity,
+			'capacity'       => $ticket->capacity
+		],
     ));
+	
     /*
       $tickets_handler = tribe( 'tickets.handler' );
       $event_stock = new Tribe__Tickets__Global_Stock( $post_id );
@@ -469,6 +485,11 @@ function update_event_information($post_id, $feed, $entry, $form) {
       error_log(print_r($tickets_handler, TRUE));
       error_log(print_r($event_stock, TRUE));
      */
+}
+
+function get_event_attendees($event_id) {
+	$attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
+	return $attendee_list;
 }
 
 // After the gravity view is updated, we want to update the created post associated with it. 
@@ -540,7 +561,21 @@ add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {
 
 
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
-
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
 } 
+
+
+function smartTruncate($string, $limit, $break=".", $pad="...")
+{
+  // return with no change if string is shorter than $limit
+  if(strlen($string) <= $limit) return $string;
+  // is $break present between $limit and the end of the string?
+  if(false !== ($breakpoint = strpos($string, $break, $limit))) {
+    if($breakpoint < strlen($string) - 1) {
+      $string = substr($string, 0, $breakpoint) . $pad;
+    }
+  }
+
+  return $string;
+}

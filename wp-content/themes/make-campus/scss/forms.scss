@@ -55,4 +55,8 @@
 			background: #fff;
 		}
 	}
+	label[for=payment_method_stripe] {
+		width: 100%;
+		img { max-width: 40px; }
+	}
 }

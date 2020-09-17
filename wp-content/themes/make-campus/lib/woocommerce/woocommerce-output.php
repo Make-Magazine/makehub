@@ -20,18 +20,19 @@ add_filter( 'woocommerce_enqueue_styles', 'make_campus_woocommerce_styles' );
  * @return array Modified WooCommerce styles to enqueue.
  */
 function make_campus_woocommerce_styles( $enqueue_styles ) {
+	$my_theme = wp_get_theme();
+    $my_version = $my_theme->get('Version');
 
 	$enqueue_styles['make-campus-woocommerce-styles'] = array(
 		'src'     => get_stylesheet_directory_uri() . '/lib/woocommerce/make-campus-woocommerce.css',
 		'deps'    => '',
-		'version' => CHILD_THEME_VERSION,
+		'version' => $my_version,
 		'media'   => 'screen',
 	);
 
 	return $enqueue_styles;
 
 }
-
 add_action( 'wp_enqueue_scripts', 'make_campus_woocommerce_css' );
 /**
  * Adds the themes's custom CSS to the WooCommerce stylesheet.

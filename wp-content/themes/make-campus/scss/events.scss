@@ -562,6 +562,7 @@
 		overflow: hidden;
 		a {
 			max-height: 100%;
+			position: relative;
 			img {
 				object-fit: cover;
 				height: 100%;
@@ -569,6 +570,19 @@
 				min-height: -webkit-fill-available; 
 				min-height: fill-available;
 				width: 100%;
+			}
+			.tribe-events-pro-photo__event-desc {
+				position: absolute;
+				background: rgba(255,255,255,.9);
+				border-radius: 10px;
+				width: 90%;
+				padding: 10px;
+				margin: 5%;
+			}
+			&:hover {
+				.tribe-events-pro-photo__event-desc {
+					bottom: 0%;
+				}
 			}
 		}
 	}

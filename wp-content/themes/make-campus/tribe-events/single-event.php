@@ -52,6 +52,12 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 					<div class="event-cat">
 						<?php echo tribe_get_event_categories($event_id); ?>
 					</div>
+					<?php if( tribe_get_event_categories($event_id) == "In-Person" && get_field('location') )  { ?>
+						<div class="tribe-events-single-skill-level tribe-events-content">
+							<h3>Location:</h3> 
+							<?php echo get_field('location') ?>
+						</div>
+					<?php } ?>
 					<div class="event-author">
 						<h3>About the Author:</h3> 
 						<?php echo get_field('about'); ?>
