@@ -555,6 +555,27 @@
 // Events page
 
 .tribe-events-view {
+	.tribe-events-pro-photo__event-datetime { margin-top: 3px; }
+	.tribe-events-pro-photo__event-date-tag-month, .tribe-events-pro-photo__event-datetime time { 
+		font-size: 16px;
+	}
+	h3.tribe-common-h6 { font-size: 18px; }
+	.tribe-events-pro-photo__event-cost {
+		.tribe-events-c-small-cta__price b { font-family: "Roboto Bold"; }
+		a.universal-btn {
+			width: 100%;
+			background-color: #005e9a;
+			color: #fff;
+			padding: 0px 15px;
+			border-radius: 5px;
+			border: solid 1px #005e9a;
+			margin-bottom: 10px;
+			&:hover {
+				color: #005e9a;
+				background: #fff;
+			}
+		}
+	}
 	.tribe-events-pro-photo__event-featured-image-wrapper {
 		height: 300px;
 		border-radius: 10px;

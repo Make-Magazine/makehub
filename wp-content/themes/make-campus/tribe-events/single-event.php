@@ -93,7 +93,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 								} else {
 									echo get_field("kit_supplier");
 								}
-								if(get_field('kit_price_included') == "Yes") {
+								if(get_field('kit_price_included') == "No") {
 									echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
 								}
 							}
