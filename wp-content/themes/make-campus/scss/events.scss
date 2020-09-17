@@ -556,12 +556,11 @@
 
 .tribe-events-view {
 	.tribe-events-pro-photo__event-featured-image-wrapper {
-		max-height: 300px;
+		height: 300px;
 		border-radius: 10px;
 		display: flex;
 		overflow: hidden;
 		a {
-			max-height: 100%;
 			position: relative;
 			img {
 				object-fit: cover;
