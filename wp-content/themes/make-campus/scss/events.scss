@@ -450,6 +450,13 @@
 							font-family: "Roboto Bold";
 							font-weight: 100;
 						}
+						dd {
+							span.age-item {
+								border: solid 1px #ccc;
+								border-radius: 15px;
+								padding: 3px 5px;
+							}
+						}
 						.tribe-event-tags, .tribe-events-event-categories {
 							clear: both;
 							visibility: hidden;
@@ -561,6 +568,7 @@
 	}
 	h3.tribe-common-h6 { font-size: 18px; }
 	.tribe-events-pro-photo__event-cost {
+		text-align: center;
 		.tribe-events-c-small-cta__price b { font-family: "Roboto Bold"; }
 		a.universal-btn {
 			width: 100%;
