@@ -140,8 +140,8 @@ do_action( 'genesis_before_header' );
 <!-- End Google Tag Manager (noscript) -->
 <header class="universal-nav">
 
-   <?php // Nav Level 1 and Hamburger
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-topnav.html', FALSE, STREAM_CONTEXT);
+   <?php // Nav Level 1 and Hamburger      
+      require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
    ?>
 
   <div class="nav-level-2">

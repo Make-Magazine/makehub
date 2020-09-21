@@ -8,7 +8,7 @@ genesis_markup(
 		'context' => 'site-inner',
 	)
 );
-   echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-footer.html', FALSE, STREAM_CONTEXT);
+   require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer.html');
 ?>
 
 <div id="nav-overlay"></div>
