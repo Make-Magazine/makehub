@@ -452,7 +452,7 @@ function update_event_information($post_id, $feed, $entry, $form) {
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
-        'ticket_name' => $ticket->name,
+        'ticket_name' => 'Ticket',
         'ticket_price' => $ticket->price,
         'ticket_description' => $ticket->description,
         'start_date' => $ticket->start_date,
