@@ -129,7 +129,7 @@ do_action('genesis_before_header');
 
 <?php
 // Nav Level 1 and Hamburger      
-include WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html';
+require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
 ?>
 
     <div class="nav-level-2">
