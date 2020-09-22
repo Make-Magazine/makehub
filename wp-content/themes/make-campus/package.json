@@ -1,6 +1,6 @@
 {
    "name": "make-campus",
-   "version": "1.0.139",
+   "version": "1.0.140",
    "author": "Make: Community",
    "license": "UNLICENSED",
    "private": true,
@@ -13,6 +13,7 @@
       "postcachebust:update": "npm run replace:version",
       "replace:version": "replace-in-file '/Version\\: [0-9]\\.{0,1}[0-9]*\\.{0,1}[0-9]*/' 'Version: '\"$npm_package_version\" style.css --isRegex",
       "scss:fe:compile": "node-sass scss/style.scss css/style.min.css --output-style compressed --source-map true",
+      "scss:admin-style:compile": "node-sass scss/admin-style.scss css/admin-style.min.css --output-style compressed --source-map true",
       "js:fe:uglify": "uglifyjs js/site/*.js -o js/min/scripts.min.js -c -m --source-map \"root='../../', url='scripts.min.js.map'\"",
       "js:libs:uglify": "uglifyjs node_modules/bootstrap/dist/js/bootstrap.min.js node_modules/bootstrap-dialog/dist/js/bootstrap-dialog.min.js node_modules/jquery.cookie/jquery.cookie.js node_modules/fancybox/dist/js/jquery.fancybox.pack.js node_modules/hammerjs/hammer.min.js js/libs-src/*.js -o js/min/built-libs.min.js -c -m --source-map \"root='../', url='built-libs.min.js.map'\"",
       "onchange:scss:fe": "onchange 'scss/*.scss' -- npm run scss:fe:compile",
