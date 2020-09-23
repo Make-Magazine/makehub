@@ -1037,14 +1037,14 @@ function getSliderPanel() {
     foreach ($slides as $slide) {
         $imageObj = $slide['image'];
         if (empty($slide['slide_button_text']) && !empty($slide['slide_link'])) {
-            $return .= '<a href="' . $slide['slide_link'] . '">';
+            $return .= get_sub_field("column_number")  . '<a href="' . $slide['slide_link'] . '">';
         }
         $return .= '     <div class="item slide">
         		                   <div class="slide-image-section" style="background-image:url(' . $imageObj['url'] . ');">';
-        if (!empty($slide['slide_title']) && get_sub_field("column_number") > 1) {
+        if (!empty($slide['slide_title']) && $column_number > 1) {
             $return .= '     <p class="slide-title">' . $slide['slide_title'] . '</p>';
         }
-        if (!empty($slide['slide_button_text']) && get_sub_field("column_number") > 1) {
+        if (!empty($slide['slide_button_text']) && $column_number > 1) {
             if (!empty($slide['slide_link'])) {
                 $return .= '      <a href="' . $slide['slide_link'] . '">';
             }
@@ -1054,7 +1054,7 @@ function getSliderPanel() {
             }
         }
         // This section is only for one column slideshows that have description text
-        if (get_sub_field("column_number") == 1) {
+        if ($column_number == 1) {
             $return .= '    </div>
 			                <div class="slide-info-section">';
             if (!empty($slide['slide_title'])) {

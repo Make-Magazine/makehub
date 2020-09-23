@@ -28,7 +28,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 		<?php the_title( '<h1 class="tribe-events-single-event-title">', '</h1>' ); ?>
 		<?php echo tribe_events_event_schedule_details( $event_id, '<h2>', '</h2>' ); ?>
 		<?php if ( tribe_get_cost() ) : ?>
-			<span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo tribe_get_cost( null, true ) ?></span>
+			<span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo("$" . number_format(tribe_get_cost(null, false)) ); ?></span>
 		<?php endif; ?>
 		<p class="tribe-events-back">
 			<a href="<?php echo esc_url( tribe_get_events_link() ); ?>" class="btn universal-btn-reversed"> <?php printf( '&laquo; ' . esc_html_x( 'All %s', '%s Events plural label', 'the-events-calendar' ), $events_label_plural ); ?></a>
@@ -36,7 +36,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 	</div>
 
  	<div class="tribe-events-image-gallery">
-		<?php echo do_shortcode('[gallery id="'.$event_id.'"]'); ?>
+		<?php echo do_shortcode('[gallery id="'.$event_id.'" size="full" order="DESC" orderby="ID"]'); ?>
 		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
 	</div>
 	
