@@ -34,9 +34,8 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 			<a href="<?php echo esc_url( tribe_get_events_link() ); ?>" class="btn universal-btn-reversed"> <?php printf( '&laquo; ' . esc_html_x( 'All %s', '%s Events plural label', 'the-events-calendar' ), $events_label_plural ); ?></a>
 		</p>
 	</div>
-
  	<div class="tribe-events-image-gallery">
-		<?php echo do_shortcode('[gallery id="'.$event_id.'" size="full" order="DESC" orderby="ID"]'); ?>
+		<?php echo do_shortcode('[gallery id="'.$event_id.'" size="large" order="DESC" orderby="ID"]'); ?>
 		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
 	</div>
 	
