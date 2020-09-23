@@ -147,6 +147,14 @@ function make_campus_enqueue_scripts() {
 
 add_action('wp_enqueue_scripts', 'make_campus_enqueue_styles');
 
+function make_campus_admin_scripts() {
+	$my_theme = wp_get_theme();
+    $my_version = $my_theme->get('Version');
+    $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
+    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+}
+add_action( 'admin_enqueue_scripts', 'make_campus_admin_scripts' );
+
 /**
  * Enqueues styles.
  *
