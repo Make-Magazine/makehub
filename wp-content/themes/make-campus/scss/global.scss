@@ -13,46 +13,12 @@
 	color: #333;
 }
 
-// modal gallery
-.pswp__counter{
-	font-size: 16px;
-	font-weight: bold;
-	&::before {
-		content: "Viewing Image: ";
-	}
+figure {
+	margin: 0px;
 }
 
 
-button, input[type="submit"] {
-	color: #1987C7;
-	border: thin solid #1987C7;
-	padding: 10px 30px;
-	background-color: #fff;
-	&:hover, &:active, &:focus {
-		background-color: #1987C7;
-		color: #fff;
-	}
-}
 
-.feedback-btn {
-	position: fixed;
-	z-index: 9999;
-    bottom: 40px;
-    background: #eb002a;
-	color: #fff;
-	border: solid 1px #eb002a;
-    width: 120px;
-    left: -15px;
-	transition: 0.3s;
-	&:hover {
-		background: #fff;
-		color: #eb002a;
-		bottom: 38px;
-		left: -5px;
-		padding: 5px;
-		font-size: 18px;
-	}
-}
 
 .top15 { 
   margin-top:15px!important;
@@ -88,35 +54,6 @@ button, input[type="submit"] {
   float: left;
 }
 
-/* 7 Column grid fix */
-.seven-cols .col-md-1,
-.seven-cols .col-sm-1,
-.seven-cols .col-lg-1 {
-  width: 14.285714285714285714285714285714%;
-  *width: 14.285714285714285714285714285714%;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-}
-.row > [class*=‘col-’] {
-  display: flex;
-  flex-direction: column;
-}
-
-//Youtube Fancybox modal shortcode [youtube-modal]
-.fancytube {
-  position: relative;
-  display: block;
-  i {
-    color: #fff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-}
 
 body.admin-bar {
   .navbar.navbar-fixed-top {
@@ -128,6 +65,37 @@ body.admin-bar {
   // &.slide-active {
   //   margin-top: 32px;
   // }
+}
+
+button, input[type="submit"] {
+	color: #1987C7;
+	border: thin solid #1987C7;
+	padding: 10px 30px;
+	background-color: #fff;
+	&:hover, &:active, &:focus {
+		background-color: #1987C7;
+		color: #fff;
+	}
+}
+
+.feedback-btn {
+	position: fixed;
+	z-index: 9999;
+    bottom: 40px;
+    background: #eb002a;
+	color: #fff;
+	border: solid 1px #eb002a;
+    width: 120px;
+    left: -15px;
+	transition: 0.3s;
+	&:hover {
+		background: #fff;
+		color: #eb002a;
+		bottom: 38px;
+		left: -5px;
+		padding: 5px;
+		font-size: 18px;
+	}
 }
 
 // Primary Call to Action button
@@ -306,6 +274,19 @@ hr.double-line-hr {
   position: absolute;
 }
 
+//Youtube Fancybox modal shortcode [youtube-modal]
+.fancytube {
+  position: relative;
+  display: block;
+  i {
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 //Fancybox modal overrides
 .fancybox-close {
   background-image: none !important;
@@ -329,6 +310,14 @@ hr.double-line-hr {
   background: rgba(255, 255, 255, 0.5) !important;
 }
 
+// modal gallery
+.pswp__counter{
+	font-size: 16px;
+	font-weight: bold;
+	&::before {
+		content: "Viewing Image: ";
+	}
+}
 
 // Safari only
 .safari-mac {
