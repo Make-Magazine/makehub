@@ -1799,6 +1799,7 @@
 	margin: 10px;
 	overflow: hidden;
 	border-radius: 15px;
+	border: solid 1px transparent;
 	position: relative;
 	.img-btn-block-bg {
 		position: relative;
@@ -1825,15 +1826,19 @@
 			font-size: 18px;
 		}
 	}
-
 	&:hover {
-		color: #333;
 		.img-btn-block-bg {
 			transform: scale(1.1);  
 		}
 		.inner-wrap {
 			background: rgba(255, 255, 255, .7);
 		}
-
+	}
+	&.clicked {
+		border-color: #333;
+		.inner-wrap p {
+			font-weight: bolder;
+			font-size: 20px;
+		}
 	}
 }

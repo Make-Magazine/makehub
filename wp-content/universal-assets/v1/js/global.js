@@ -162,6 +162,8 @@ jQuery('a[href*="#"]')
   .not('[href="#0"]')
   .click(function(event) {
     // On-page links
+	jQuery('a[href*="#"]').removeClass("clicked");
+	jQuery(this).addClass("clicked");
     if (
       location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
       && 
