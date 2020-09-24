@@ -34,9 +34,11 @@ function makegblocks_enqueue_styles() {
 
 // Plugin styles, add bootstrap and panels.less for easy previewing
 function wpdocs_enqueue_custom_admin_styles() {
+	$my_theme = wp_get_theme();
+    $my_version = $my_theme->get('Version');
     wp_enqueue_style('bootstrap-css', '//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css', array(), null, 'all');
     // in the package json, we've compiled the css necessary for the panels/blocks here
-    wp_enqueue_style('admin-style-css', get_stylesheet_directory_uri() . '/css/admin-style.min.css', array(), null, 'all');
+    wp_enqueue_style('admin-style-css', get_stylesheet_directory_uri() . '/css/admin-style.min.css', array(), $my_version, 'all');
     wp_enqueue_style('admin-preview-css', plugins_url('css/admin-preview.css', __FILE__), array(), null, 'all');
 }
 

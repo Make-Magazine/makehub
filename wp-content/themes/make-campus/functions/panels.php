@@ -87,6 +87,9 @@ function dispLayout($row_layout) {
             case 'image_slider': // this is gonna end up pretty similar to the image carousel, but we're going to have it as a panel
                 $return = getSliderPanel();
                 break;
+			case 'image_button': // just a cute little image button block to be put anywhere
+                $return = getImageButton();
+                break;
         }
     }
     return $return;
@@ -1607,4 +1610,23 @@ function getMakeyBanner() {
     $content .= '</div>';
 
     return $content;
+}
+
+
+/* * *************************************************** */
+/*      Function to return an image button block         */
+/* * *************************************************** */
+
+function getImageButton() {
+    $return = '';
+    $image = get_field('background_image');
+    $link = get_field('link');
+    $height = get_field('height');
+    $return .= '<a class="img-btn-block" style="height:'. $height .'" href="'. $link .'">';
+    if (get_field('text')) {
+        $return .= '<div class="img-btn-block-bg" style="background:url('. $image['url'] .') top center/cover no-repeat;"></div>
+		            <div class="inner-wrap"><p class="image-btn-block-text">' . get_field('text') . '</p></div>';
+    }
+    $return .= '</a>';
+    return $return;
 }

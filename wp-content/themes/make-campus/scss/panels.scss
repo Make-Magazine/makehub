@@ -1793,3 +1793,46 @@
 		.carousel { max-width: 100%; }
 	}
 }
+
+.img-btn-block {
+	display: block;
+	margin: 10px;
+	overflow: hidden;
+	border-radius: 15px;
+	.img-btn-block-bg {
+		position: relative;
+		height: 100%;
+		width: 100%;
+		transition: all .5s;
+		background-size: cover;
+		z-index: -1;
+	}
+	.inner-wrap {
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		height: 100%;
+		width: 100%;
+		background: rgba(255, 255, 255, .8);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		p {
+			color: #333;
+			font-size: 18px;
+		}
+	}
+
+	&:hover {
+		color: #333;
+		.img-btn-block-bg {
+			transform: scale(1.1);  
+		}
+		.inner-wrap {
+			background: rgba(255, 255, 255, .7);
+		}
+
+	}
+}

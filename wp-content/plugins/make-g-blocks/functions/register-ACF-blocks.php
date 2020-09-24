@@ -279,6 +279,15 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('maker', 'faire', 'panel'),
         ));
+		acf_register_block_type(array(
+            'name' => 'image_button',
+            'title' => __('Image Button'),
+            'render_callback' => 'call_ACF_block_panels',
+            'category' => 'make-panels',
+            'icon' => 'admin-comments',
+            'mode' => 'auto',
+            'keywords' => array('image', 'button', 'panel'),
+        ));
 
 
         //end               
