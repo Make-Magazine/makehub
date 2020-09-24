@@ -73,11 +73,11 @@ a { // don't let genesis molest our links
 	font-weight: 300;      
 	height: 50px;
 	padding: 0px 15px;
+	border: solid 1px #005e9a;
 	&:visited, &:active { color: #fff; }
 	&:hover {
-		background: #fff;
-      color: #005e9a;
-      border: solid 1px #005e9a;
+	    background: #fff;
+        color: #005e9a;
 	}
 }
 .universal-btn-red {

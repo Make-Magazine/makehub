@@ -50,8 +50,10 @@
 		color: #333;
 	}
 	input[type=checkbox], input[type=radio] {
-		margin: 0px -1px -1px 0px;
 		transform: scale(1.5);
+		&:checked::before {
+			margin: -.3rem 0 0 -.3rem;
+		}
 	}
 	.editor-styles-wrapper .wp-block {
 		max-width: 100%;

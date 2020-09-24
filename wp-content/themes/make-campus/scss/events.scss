@@ -562,6 +562,17 @@
 // Events page
 
 .tribe-events-view {
+	.tribe-events-header {
+		.tribe-events-header__events-bar {
+			display: flex;
+			align-items: center;
+			.tribe-events-c-events-bar__views { display: none; }
+		}
+		.universal-btn {
+			margin: 0px 15px;
+		}
+	}
+
 	.tribe-events-pro-photo__event-datetime { margin-top: 3px; }
 	.tribe-events-pro-photo__event-date-tag-month, .tribe-events-pro-photo__event-datetime time { 
 		font-size: 16px;
