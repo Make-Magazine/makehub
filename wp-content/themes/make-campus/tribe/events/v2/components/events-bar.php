@@ -55,6 +55,6 @@ if ( empty( $disable_event_search ) ) {
 	<?php endif; ?>
 
 	<?php $this->template( 'components/events-bar/views' ); ?>
-	<a href="/facilitators-page" class="btn universal-btn">Submit an Event</a>
+	<a href="/facilitator-info" class="btn universal-btn">Submit an Event</a>
 
 </div>
