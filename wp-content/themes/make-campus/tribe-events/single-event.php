@@ -85,14 +85,14 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 								echo "<b>A kit is required for this program</b>";
 								if(get_field('kit_price_included') == "yes") {
 									echo " and is included in the ticket price";
+									echo " and will be supplied by ";
+									if(get_field("kit_supplier") == other) {
+										echo get_field("other_kit_supplier");
+									} else {
+										echo get_field("kit_supplier");
+									}
 								}
-								echo " and will be supplied by ";
-								if(get_field("kit_supplier") == other) {
-									echo get_field("other_kit_supplier");
-								} else {
-									echo get_field("kit_supplier");
-								}
-								if(get_field('kit_price_included') == "No") {
+								if(get_field('kit_price_included') == "no") {
 									echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
 								}
 							}
