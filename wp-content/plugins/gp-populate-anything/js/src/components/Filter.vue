@@ -4,7 +4,7 @@
 				v-if="!Object.keys(properties).length || (Object.keys(properties).length === 1 && 'primary-property' in properties)">
 			<option value="" disabled selected="selected">{{ i18nStrings.loadingEllipsis }}</option>
 		</select>
-		<select v-else class="gppa-filter-property" v-model="filter.property">
+		<select v-else class="gppa-filter-property" v-model="filter.property" @change="resetFilter">
 			<option v-for="option in ungroupedProperties" v-bind:value="option.value">
 				{{ truncateStringMiddle(option.label) }}
 			</option>
@@ -102,13 +102,18 @@
 		watch: {
 			'filter.property': function (val, oldVal) {
 				this.getPropertyValues(val);
-
-				this.filter.value = '';
-				this.filter.operator = this.defaultOperator;
 			}
 		},
 		methods: {
 			truncateStringMiddle: truncateStringMiddle,
+			/**
+			 * resetFilter's contents were originally extracted from the 'filter.property' watcher to prevent the
+			 * filter value from needlessly resetting to having no value when the field itself changes.
+			 */
+			resetFilter: function() {
+				this.filter.value = '';
+				this.filter.operator = this.defaultOperator;
+			}
 		},
 		computed: {
 			specialValues: function () {
@@ -185,18 +190,7 @@
 					}
 				}
 
-				return [
-					'is',
-					'isnot',
-					'>',
-					'>=',
-					'<',
-					'<=',
-					'contains',
-					'starts_with',
-					'ends_with',
-					'like',
-				];
+				return window.GPPA_ADMIN.defaultOperators;
 
 			}
 		},

@@ -26,9 +26,7 @@ class Tribe__Tickets_Plus__Admin__Notices {
 	 * @since 4.11.0.1
 	 */
 	public function maybe_display_ar_modal_options_notice() {
-		global $wpdb;
-
-		// Bail on the unexpected
+		// Bail on the unexpected.
 		if (
 			! class_exists( 'Tribe__Admin__Notices' )
 			|| ! function_exists( 'tribe_installed_before' )
@@ -40,29 +38,39 @@ class Tribe__Tickets_Plus__Admin__Notices {
 		/** @var Tribe__Settings $settings */
 		$settings = tribe( 'settings' );
 
-		// Bail if user cannot change settings
+		// Bail if user cannot change settings.
 		if ( ! current_user_can( $settings->requiredCap ) ) {
 			return;
 		}
 
-		// Bail if previously dismissed this notice
+		// Bail if previously dismissed this notice.
 		if ( Tribe__Admin__Notices::instance()->has_user_dimissed( __FUNCTION__ ) ) {
 			return;
 		}
 
-		// Bail if already at wp-admin > Events > Settings > Tickets tab to avoid redundancy/confusion by linking to itself
-		if (
-			'tribe-common' === tribe_get_request_var( 'page' )
-			&& 'event-tickets' === tribe_get_request_var( 'tab' )
+		// Bail if the plugin wasn't installed before 4.11, version in which we introduced the changes described on this notice.
+		if ( ! tribe_installed_before( tribe( 'tickets-plus.main' ), '4.11' ) ) {
+			return;
+		}
+
+		// Bail if it's not a tribe settings page.
+		if ( 'tribe-common' !== tribe_get_request_var( 'page' ) ) {
+			return;
+		}
+
+		// Bail if it's Events > Settings > Tickets tab to avoid redundancy/confusion by linking to itself.
+		if ( 'event-tickets' === tribe_get_request_var( 'tab' )
 		) {
 			return;
 		}
 
-		// Get link to Tickets Tab
-		$url = $settings->get_url( [
-			'page' => 'tribe-common',
-			'tab'  => 'event-tickets',
-		] );
+		// Get link to Tickets Tab.
+		$url = $settings->get_url(
+			[
+				'page' => 'tribe-common',
+				'tab'  => 'event-tickets',
+			]
+		);
 
 		$link = sprintf(
 			'<a href="%1$s">%2$s</a>',
@@ -70,7 +78,7 @@ class Tribe__Tickets_Plus__Admin__Notices {
 			esc_html_x( 'Attendee Registration Settings', __FUNCTION__, 'event-tickets-plus' )
 		);
 
-		// Do notice
+		// Do notice.
 		$message = sprintf(
 			// translators: placeholders are html tags (and one link, translated above).
 			__( '%1$sEvent Tickets Plus%2$s%3$sWith this new version, we\'ve made front-end style updates. If you have customized the %7$s section or the Attendee Registration page, this update will likely impact your customizations.%4$s We\'ve also introduced a new Attendee Registration Information flow for %8$s purchasers! If you use Attendee Registration, please select which user flow you prefer for your website in the %5$s.%6$s ', 'event-tickets-plus' ),

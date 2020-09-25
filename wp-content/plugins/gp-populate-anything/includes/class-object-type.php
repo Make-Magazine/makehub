@@ -52,7 +52,7 @@ abstract class GPPA_Object_Type {
 		return apply_filters( 'gppa_object_type_restricted_' . $this->id, $this->_restricted );
 	}
 
-	public function __construct($id) {
+	public function __construct( $id ) {
 		$this->id = $id;
 
 		add_filter( 'gppa_replace_filter_value_variables_' . $this->id, array( $this, 'replace_gf_field_value' ), 10, 2 );
@@ -100,9 +100,9 @@ abstract class GPPA_Object_Type {
 		if ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $value, $field_matches ) ) {
 			if ( count( $field_matches ) && ! empty( $field_matches[0] ) ) {
 				foreach ( $field_matches[0] as $index => $match ) {
-					$field_id = $field_matches[1][$index];
+					$field_id       = $field_matches[1][ $index ];
 					$replaced_value = $this->replace_gf_field_value( "gf_field:{$field_id}", $field_values );
-					$value = str_replace( $match, $replaced_value, $value );
+					$value          = str_replace( $match, $replaced_value, $value );
 				}
 
 				return $value;
@@ -165,7 +165,7 @@ abstract class GPPA_Object_Type {
 	public function clean_numbers( $value ) {
 
 		// @todo Consider cleaning numbers inside the array?
-		if( is_array( $value ) ) {
+		if ( is_array( $value ) ) {
 			return $value;
 		}
 
@@ -183,7 +183,7 @@ abstract class GPPA_Object_Type {
 
 	public function get_object_prop_value( $object, $prop ) {
 
-		if ( ! isset ( $object->{$prop} ) ) {
+		if ( ! isset( $object->{$prop} ) ) {
 			return null;
 		}
 
@@ -197,8 +197,21 @@ abstract class GPPA_Object_Type {
 
 		global $wpdb;
 
+		/**
+		 * Filter the query used to pull property values into the dropdowns displayed under the GP Populate Anything
+		 * field settings in the Form Editor.
+		 *
+		 * @since 1.0-beta-1.9
+		 *
+		 * @param string $sql SQL query that will be ran to fetch the property values.
+		 * @param string $col Column that property values are being fetched from.
+		 * @param array $table Table that property values are being fetched from.
+		 * @param \GPPA_Object_Type $this The current object type.
+		 *
+		 * @example https://github.com/gravitywiz/snippet-library/blob/master/gp-populate-anything/gppa-postmeta-property-value-limit.php
+		 */
 		$query = apply_filters( 'gppa_object_type_col_rows_query', "SELECT DISTINCT $col FROM $table {$where} LIMIT 1000", $col, $table, $this );
-		if( isset( $_cache[ $query ] ) ) {
+		if ( isset( $_cache[ $query ] ) ) {
 			return $_cache[ $query ];
 		}
 
@@ -243,9 +256,8 @@ abstract class GPPA_Object_Type {
 			foreach ( $filter_group as $filter ) {
 				$filter_value = gp_populate_anything()->extract_custom_value( $filter['value'] );
 				$filter_value = GFCommon::replace_variables_prepopulate( $filter_value, false, false, true );
-				$filter_value = apply_filters( 'gppa_replace_filter_value_variables_' . $this->id, $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field );
 
-				if ( ! $filter['value']  || ! $filter['property'] ) {
+				if ( ! $filter['value'] || ! $filter['property'] ) {
 					continue;
 				}
 
@@ -255,6 +267,7 @@ abstract class GPPA_Object_Type {
 					continue;
 				}
 
+				$filter_value   = apply_filters( 'gppa_replace_filter_value_variables_' . $this->id, $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property );
 				$wp_filter_name = 'gppa_object_type_' . $this->id . '_filter_' . $filter['property'];
 
 				if ( ! has_filter( $wp_filter_name ) && $group = rgar( $property, 'group' ) ) {
@@ -265,16 +278,20 @@ abstract class GPPA_Object_Type {
 					$wp_filter_name = 'gppa_object_type_' . $this->id . '_filter';
 				}
 
-				$processed_filter_groups = apply_filters( $wp_filter_name, $processed_filter_groups, array(
-					'filter_value'           => $filter_value,
-					'filter'                 => $filter,
-					'field'                  => $field,
-					'filter_group'           => $filter_group,
-					'filter_group_index'     => $filter_group_index,
-					'primary_property_value' => $primary_property_value,
-					'property'               => $property,
-					'property_id'            => $filter['property'],
-				) );
+				$processed_filter_groups = apply_filters(
+					$wp_filter_name,
+					$processed_filter_groups,
+					array(
+						'filter_value'           => $filter_value,
+						'filter'                 => $filter,
+						'field'                  => $field,
+						'filter_group'           => $filter_group,
+						'filter_group_index'     => $filter_group_index,
+						'primary_property_value' => $primary_property_value,
+						'property'               => $property,
+						'property_id'            => $filter['property'],
+					)
+				);
 			}
 		}
 
@@ -343,25 +360,27 @@ abstract class GPPA_Object_Type {
 		}
 
 		$query_limit = gp_populate_anything()->get_query_limit( $this, $field );
-		$query[] = $wpdb->prepare( 'LIMIT %d', $query_limit );
+		$query[]     = $wpdb->prepare( 'LIMIT %d', $query_limit );
 
 		return implode( "\n", $query );
 
 	}
 
-	public function get_value_specification( $value, $operator ) {
+	public function get_value_specification( $value, $operator, $sql_operator ) {
 
 		$specification = '%s';
 
 		/* Cast numeric strings to the appropriate type for operators such as > and < */
-		if ( is_numeric($value) ) {
-			$value = ($value == (int) $value) ? (int) $value : (float) $value;
+		if ( is_numeric( $value ) ) {
+			$value = ( $value == (int) $value ) ? (int) $value : (float) $value;
 		}
 
-		if ( is_int($value) && $operator !== 'contains' ) {
-			$specification = '%d';
-		} else if ( is_float($value) ) {
-			$specification = '%f';
+		if ( $sql_operator !== 'LIKE' ) {
+			if ( is_int( $value ) ) {
+				$specification = '%d';
+			} elseif ( is_float( $value ) ) {
+				$specification = '%f';
+			}
 		}
 
 		return $specification;
@@ -416,8 +435,8 @@ abstract class GPPA_Object_Type {
 
 		global $wpdb;
 
-		$specification = $this->get_value_specification( $value, $operator );
 		$sql_operator  = $this->get_sql_operator( $operator );
+		$specification = $this->get_value_specification( $value, $operator, $sql_operator );
 		$value         = $this->get_sql_value( $operator, $value );
 
 		$ident = self::esc_property_to_ident( "{$table}.{$column}" );
@@ -431,12 +450,21 @@ abstract class GPPA_Object_Type {
 	 * array_filter - Remove falsey values
 	 * array_unique - Ran to make sequential for json_encode
 	 */
-	public function filter_values ( $values ) {
+	public function filter_values( $values ) {
 
-		$values = array_values( array_unique( array_filter( array_filter( $values, array(
-			__class__,
-			'is_not_serialized'
-		) ) ) ) );
+		$values = array_values(
+			array_unique(
+				array_filter(
+					array_filter(
+						$values,
+						array(
+							__class__,
+							'is_not_serialized',
+						)
+					)
+				)
+			)
+		);
 
 		natcasesort( $values );
 
@@ -450,6 +478,11 @@ abstract class GPPA_Object_Type {
 	}
 
 	public static function esc_property_to_ident( $property ) {
+		/* If whitespace exists in the property, this may not be a column that needs to be escaped. */
+		if ( preg_match( '/\s/', $property ) ) {
+			return $property;
+		}
+
 		return implode( '.', self::esc_sql_ident( explode( '.', $property ) ) );
 	}
 
@@ -462,7 +495,7 @@ abstract class GPPA_Object_Type {
 	}
 
 	public static function esc_sql_ident_cb( $ident ) {
-		if ($ident === '*') {
+		if ( $ident === '*' ) {
 			return $ident;
 		}
 

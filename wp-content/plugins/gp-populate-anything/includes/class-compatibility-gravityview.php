@@ -1,6 +1,6 @@
 <?php
 
-class GPPA_Compatibiliity_GravityView {
+class GPPA_Compatibility_GravityView {
 
 	private static $instance = null;
 
@@ -20,7 +20,6 @@ class GPPA_Compatibiliity_GravityView {
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'localize_for_search' ), 10, 4 );
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'add_gravityview_id_filter' ), 10, 4 );
 
-		add_action( 'gravityview/edit-entry/render/after', array( $this, 'edit_entry_view_entry_id_filter' ) );
 		add_filter( 'gravityview-inline-edit/wrapper-attributes', array( $this, 'gravityview_inline_edit_choices' ), 15, 6 );
 
 		add_filter( 'gppa_field_filter_values', array( $this, 'field_filter_values_replace_filter_prefix' ), 10, 6 );
@@ -34,7 +33,7 @@ class GPPA_Compatibiliity_GravityView {
 	 */
 	public function hydrate_initial_load_entry_id( $entry_id, $form, $ajax, $field_values ) {
 
-		if ( ! class_exists('GravityView_frontend') ) {
+		if ( ! class_exists( 'GravityView_frontend' ) ) {
 			return $entry_id;
 		}
 
@@ -46,43 +45,9 @@ class GPPA_Compatibiliity_GravityView {
 
 	}
 
-	/**
-	 * Adds a JavaScript filter for gppa_batch_field_html_entry_id to set the entry ID that's sent to the
-	 * 'gppa_get_batch_field_html' AJAX action.
-	 *
-	 * @param $instance
-	 */
-	public function edit_entry_view_entry_id_filter( $instance ) {
-
-		if ( ! is_callable( array( 'GravityView_frontend', 'is_single_entry' ) ) ) {
-			return;
-		}
-
-		$entry_id = GravityView_frontend::is_single_entry();
-
-		if ( ! $entry_id ) {
-			return;
-		}
-
-		$form_id = $instance->form['id'];
-
-		?>
-		<script type="text/javascript">
-			window.gform.addFilter('gppa_batch_field_html_entry_id', function (entryId, formId) {
-				if (formId !== '<?php echo $form_id; ?>') {
-					return entryId;
-				}
-
-				return '<?php echo $entry_id; ?>';
-			});
-		</script>
-		<?php
-
-	}
-
 	public function hydrate_gravityview_search_filters( $search_fields, $self, $widget_args, $context ) {
 		$form_id = rgar( $widget_args, 'form_id' );
-		$form = GFAPI::get_form( $form_id );
+		$form    = GFAPI::get_form( $form_id );
 
 		foreach ( $search_fields as $search_field_index => $search_field ) {
 			$field = GFFormsModel::get_field( $form, $search_field['key'] );
@@ -131,10 +96,10 @@ class GPPA_Compatibiliity_GravityView {
 
 	public function localize_for_search( $search_fields, $self, $widget_args, $context ) {
 		$form_id = rgar( $widget_args, 'form_id' );
-		$form = GFAPI::get_form( $form_id );
+		$form    = GFAPI::get_form( $form_id );
 
-		gp_populate_anything()->field_value_js($form);
-		gp_populate_anything()->field_value_object_js($form);
+		gp_populate_anything()->field_value_js( $form );
+		gp_populate_anything()->field_value_object_js( $form );
 
 		return $search_fields;
 	}
@@ -156,9 +121,13 @@ class GPPA_Compatibiliity_GravityView {
 			return $search_fields;
 		}
 
-		wp_localize_script( 'gp-populate-anything', 'GPPA_GRAVITYVIEW_META_' . $form_id, array(
-			'search_fields' => $dynamic_search_fields,
-		) );
+		wp_localize_script(
+			'gp-populate-anything',
+			'GPPA_GRAVITYVIEW_META_' . $form_id,
+			array(
+				'search_fields' => $dynamic_search_fields,
+			)
+		);
 
 		return $search_fields;
 	}
@@ -204,7 +173,7 @@ class GPPA_Compatibiliity_GravityView {
 			'input'   => 'select',
 			'value'   => '',
 			'type'    => 'select',
-			'choices' => array()
+			'choices' => array(),
 		);
 
 		if ( $choices = rgars( $hydrated_field, 'field/choices' ) ) {
@@ -229,5 +198,5 @@ class GPPA_Compatibiliity_GravityView {
 
 
 function gppa_compatibility_gravityview() {
-	return GPPA_Compatibiliity_GravityView::get_instance();
+	return GPPA_Compatibility_GravityView::get_instance();
 }

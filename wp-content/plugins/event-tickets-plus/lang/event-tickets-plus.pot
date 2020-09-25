@@ -2,18 +2,18 @@
 # This file is distributed under the same license as the Event Tickets Plus package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Event Tickets Plus 5.0.0\n"
+"Project-Id-Version: Event Tickets Plus 5.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/event-tickets-"
 "plus\n"
-"POT-Creation-Date: 2020-08-24 01:22:23+00:00\n"
+"POT-Creation-Date: 2020-09-17 04:59:08+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2020-08-24 01:22\n"
+"PO-Revision-Date: 2020-09-17 04:59\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 
-#. #-#-#-#-#  event-tickets-plus.pot (Event Tickets Plus 5.0.0)  #-#-#-#-#
+#. #-#-#-#-#  event-tickets-plus.pot (Event Tickets Plus 5.0.1)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: event-tickets-plus.php:57 src/Tribe/Main.php:402
 msgid "Event Tickets Plus"
@@ -78,7 +78,7 @@ msgid "Stock"
 msgstr ""
 
 #. translators: placeholders are html tags (and one link, translated above).
-#: src/Tribe/Admin/Notices.php:76
+#: src/Tribe/Admin/Notices.php:84
 msgid ""
 "%1$sEvent Tickets Plus%2$s%3$sWith this new version, we've made front-end "
 "style updates. If you have customized the %7$s section or the Attendee "
@@ -234,7 +234,7 @@ msgid "Print Ticket"
 msgstr ""
 
 #: src/Tribe/Commerce/EDD/Main.php:2362
-#: src/Tribe/Commerce/WooCommerce/Main.php:3481
+#: src/Tribe/Commerce/WooCommerce/Main.php:3478
 msgid "Edit attendee info"
 msgstr ""
 
@@ -439,7 +439,7 @@ msgid ""
 "in order to proceed to Checkout."
 msgstr ""
 
-#: src/Tribe/Commerce/WooCommerce/Main.php:3473
+#: src/Tribe/Commerce/WooCommerce/Main.php:3467
 msgid "Return to cart"
 msgstr ""
 
@@ -1096,11 +1096,12 @@ msgid ""
 "The name and contact info of the person acquiring %s is collected by default."
 msgstr ""
 
-#: src/admin-views/meta.php:65
+#. Translators: %s: Tickets (plural) text.
+#: src/admin-views/meta.php:67
 msgid "Save this fieldset for use on other %s?"
 msgstr ""
 
-#: src/admin-views/meta.php:72
+#: src/admin-views/meta.php:75
 msgid "Name this fieldset:"
 msgstr ""
 

@@ -656,7 +656,7 @@
 
 				return {
 					property: '',
-					operator: '',
+					operator: 'is',
 					value: '',
 					uuid: date.getTime(),
 				};

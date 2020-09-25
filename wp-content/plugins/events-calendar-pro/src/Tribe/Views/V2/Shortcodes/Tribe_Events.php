@@ -61,7 +61,7 @@ class Tribe_Events extends Shortcode_Abstract implements Shortcode_Interface {
 		'tribe-bar'         => true,
 		'category'          => null,
 		'cat'               => null,
-		'featured'          => false,
+		'featured'          => null,
 		'main-calendar'     => false,
 	];
 
@@ -71,7 +71,7 @@ class Tribe_Events extends Shortcode_Abstract implements Shortcode_Interface {
 	protected $validate_arguments_map = [
 		'should_manage_url' => 'tribe_is_truthy',
 		'tribe-bar'         => 'tribe_is_truthy',
-		'featured'          => 'tribe_is_truthy',
+		'featured'          => [ self::class, 'validate_null_or_truthy' ],
 		'main-calendar'     => 'tribe_is_truthy',
 	];
 
@@ -126,7 +126,7 @@ class Tribe_Events extends Shortcode_Abstract implements Shortcode_Interface {
 		 *
 		 * @since  4.7.5
 		 *
-		 * @param  mixed  $disallowed_locations Which filters we dont allow URL management.
+		 * @param  mixed  $disallowed_locations Which filters we don't allow URL management.
 		 * @param  static $instance             Which instance of shortcode we are dealing with.
 		 */
 		$disallowed_locations = apply_filters( 'tribe_events_pro_shortcode_tribe_events_manage_url_disallowed_locations', $disallowed_locations, $this );
@@ -324,19 +324,19 @@ class Tribe_Events extends Shortcode_Abstract implements Shortcode_Interface {
 		// Setup wether this view should manage url or not.
 		$view->get_template()->set( 'should_manage_url', $this->should_manage_url() );
 
-		$theme_compatiblity = tribe( Theme_Compatibility::class );
+		$theme_compatibility = tribe( Theme_Compatibility::class );
 
 		$html = '';
 
-		if ( $theme_compatiblity->is_compatibility_required() ) {
-			$classes = $theme_compatiblity->get_body_classes();
+		if ( $theme_compatibility->is_compatibility_required() ) {
+			$classes         = $theme_compatibility->get_body_classes();
 			$element_classes = new Element_Classes( $classes );
 			$html .= '<div ' . $element_classes->get_attribute() . '>';
 		}
 
 		$html .= $view->get_html();
 
-		if ( $theme_compatiblity->is_compatibility_required() ) {
+		if ( $theme_compatibility->is_compatibility_required() ) {
 			$html .= '</div>';
 		}
 
@@ -558,6 +558,10 @@ class Tribe_Events extends Shortcode_Abstract implements Shortcode_Interface {
 	 * @return array<string,string> The filtered data attributes.
 	 */
 	public function filter_view_data( $data, $slug, $view ) {
+		if ( ! $view instanceof View_Interface ) {
+			return $data;
+		}
+
 		$context = $view->get_context();
 
 		if ( ! $context instanceof Context ) {

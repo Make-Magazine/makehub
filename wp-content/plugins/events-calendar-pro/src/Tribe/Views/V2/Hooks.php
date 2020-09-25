@@ -18,6 +18,7 @@
 namespace Tribe\Events\Pro\Views\V2;
 
 use Tribe\Events\Pro\Views\V2\Assets as Pro_Assets;
+use Tribe\Events\Pro\Views\V2\Template\Featured_Title;
 use Tribe\Events\Pro\Views\V2\Template\Title;
 use Tribe\Events\Pro\Views\V2\Views\All_View;
 use Tribe\Events\Pro\Views\V2\Views\Map_View;
@@ -99,6 +100,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_filter( 'tribe_events_views_v2_view_repository_args', [ $this, 'filter_events_views_v2_view_repository_args' ], 10, 2 );
 		add_filter( 'tribe_events_views_v2_view_template_vars', [ $this, 'filter_events_views_v2_view_template_vars' ], 10, 2 );
 		add_filter( 'tribe_events_v2_view_title', [ $this, 'filter_tribe_events_v2_view_title' ], 10, 4 );
+		add_filter( 'tribe_events_pro_filter_views_v2_wp_title_plural_events_label', [ $this, 'filter_views_v2_wp_title_plural_events_label' ], 10, 4 );
 		add_filter( 'tribe_events_views_v2_view_url', [ $this, 'filter_tribe_events_views_v2_view_url' ], 10, 3 );
 		add_filter( 'tribe_events_views_v2_messages_map', [ $this, 'filter_tribe_events_views_v2_messages_map' ] );
 		add_filter( 'tribe_events_views_v2_messages_need_events_label_keys', [ $this, 'filter_tribe_events_views_v2_messages_need_events_label_keys' ] );
@@ -417,6 +419,21 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	}
 
 	/**
+	 * Filter the plural events label for Featured V2 PRO Views.
+	 *
+	 * @since 5.1.4
+	 *
+	 * @param string  $label   The plural events label as it's been generated thus far.
+	 * @param Context $context The context used to build the title, it could be the global one, or one externally
+	 *                         set.
+	 *
+	 * @return string the original label or updated label for virtual archives.
+	 */
+	public function filter_views_v2_wp_title_plural_events_label( $label, Context $context ) {
+		return $this->container->make( Featured_Title::class )->filter_views_v2_wp_title_plural_events_label( $label, $context );
+	}
+
+	/**
 	 * Filters the View URL to add, or remove, URL query arguments managed by PRO.
 	 *
 	 * @since 4.7.9
@@ -536,18 +553,20 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @since 4.7.9
 	 *
-	 * @param array $rules The geocode based rewrite rules.
+	 * @param array<string,string> $rules         The geocode based rewrite rules.
+	 * @param array<string,string> $bases         The geocode rewrite bases.
+	 * @param array<string,string> $rewrite_slugs The geocode slugs.
 	 *
-	 * @return array The filtered geocode based rewrite rules.
+	 * @return array<string,string> The filtered geocode based rewrite rules.
 	 *
 	 * @see \Tribe__Events__Pro__Geo_Loc::add_routes() for where this code is applying.
 	 */
-	public function filter_geocode_rewrite_rules( $rules ) {
-		if ( empty( $rules ) ) {
+	public function filter_geocode_rewrite_rules( $rules, $bases, $rewrite_slugs ) {
+		if ( empty( $rules ) || empty( $bases ) || empty( $rewrite_slugs ) ) {
 			return $rules;
 		}
 
-		return $this->container->make( Rewrite::class )->add_map_pagination_rules( $rules );
+		return $this->container->make( Rewrite::class )->add_map_pagination_rules( $rules, $bases, $rewrite_slugs );
 	}
 
 	/**

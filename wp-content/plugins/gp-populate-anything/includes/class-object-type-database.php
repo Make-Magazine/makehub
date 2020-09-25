@@ -8,14 +8,14 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	private static $blacklisted_columns = array( 'password', 'user_pass', 'user_activation_key' );
 
-	public function __construct($id) {
-		parent::__construct($id);
+	public function __construct( $id ) {
+		parent::__construct( $id );
 
 		add_action( 'gppa_pre_object_type_query_database', array( $this, 'add_filter_hooks' ) );
 	}
 
 	public function add_filter_hooks() {
-		add_filter('gppa_object_type_database_filter', array( $this, 'process_filter_default'), 10, 4 );
+		add_filter( 'gppa_object_type_database_filter', array( $this, 'process_filter_default' ), 10, 4 );
 	}
 
 	/**
@@ -64,7 +64,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	public function get_properties( $table = null ) {
 
-		if ( !$table ) {
+		if ( ! $table ) {
 			return array();
 		}
 
@@ -105,8 +105,8 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 		foreach ( $results as $column ) {
 			$columns[] = array(
-				'value'   => $column[0],
-				'label'   => $column[0],
+				'value' => $column[0],
+				'label' => $column[0],
 			);
 		}
 
@@ -117,7 +117,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 		$table = self::esc_sql_ident( $table );
 		$col   = self::esc_sql_ident( $col );
 
-		$query = apply_filters( 'gppa_object_type_database_column_value_query', "SELECT DISTINCT $col FROM $table", $table, $col, $this );
+		$query  = apply_filters( 'gppa_object_type_database_column_value_query', "SELECT DISTINCT $col FROM $table", $table, $col, $this );
 		$result = $this->get_db()->get_results( $query, ARRAY_N );
 
 		return $this->filter_values( wp_list_pluck( $result, 0 ) );
@@ -134,7 +134,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $primary_property_value, $property_id, $filter['operator'], $filter_value );
 
@@ -159,7 +159,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 		$order   = rgar( $ordering, 'order', 'ASC' );
 
 		return array(
-			'select'   => "*",
+			'select'   => '*',
 			'from'     => $primary_property_value,
 			'where'    => array(),
 			'order_by' => $orderby,
@@ -192,7 +192,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 			return null;
 		}
 
-		if ( ! isset ( $object->{$prop} ) ) {
+		if ( ! isset( $object->{$prop} ) ) {
 			return null;
 		}
 

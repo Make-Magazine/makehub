@@ -1,5 +1,5 @@
 <?php
-class GPPA_Compatibiliity_GravityFlow {
+class GPPA_Compatibility_GravityFlow {
 
 	private static $instance = null;
 
@@ -24,5 +24,5 @@ class GPPA_Compatibiliity_GravityFlow {
 }
 
 function gppa_compatibility_gravityflow() {
-	return GPPA_Compatibiliity_GravityFlow::get_instance();
+	return GPPA_Compatibility_GravityFlow::get_instance();
 }

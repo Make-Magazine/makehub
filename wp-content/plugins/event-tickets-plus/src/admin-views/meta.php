@@ -61,10 +61,13 @@
 						<label>
 							<input type="checkbox" name="tribe-tickets-save-fieldset" id="save_attendee_fieldset" value="on" class="ticket_field save_attendee_fieldset" data-tribe-toggle="tribe-tickets-attendee-saved-fieldset-name">
 							<?php
-							esc_html( sprintf(
-								__( 'Save this fieldset for use on other %s?', 'event-tickets-plus' ),
-								tribe_get_ticket_label_plural_lowercase( 'fieldset' )
-							) );
+							echo esc_html(
+								sprintf(
+									// Translators: %s: Tickets (plural) text.
+									__( 'Save this fieldset for use on other %s?', 'event-tickets-plus' ),
+									tribe_get_ticket_label_plural_lowercase( 'fieldset' )
+								)
+							);
 							?>
 						</label>
 					</div>

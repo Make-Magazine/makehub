@@ -3449,14 +3449,8 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets_Pl
 	 * @since 4.11.0
 	 */
 	public function add_checkout_links() {
-		/** @var \Tribe__Tickets_Plus__Commerce__WooCommerce__Cart $cart_tickets */
-		$cart_tickets = tribe( 'tickets-plus.commerce.woo.cart')->get_tickets_in_cart();
-
-		/** @var \Tribe__Tickets_Plus__Commerce__WooCommerce__Cart $cart */
+		/** @var \Tribe__Tickets_Plus__Commerce__WooCommerce__Cart $cart*/
 		$cart = tribe( 'tickets-plus.commerce.woo.cart' );
-
-		/** @var Tribe__Tickets__Attendee_Registration__Main $attendee_registration */
-		$attendee_registration = tribe( 'tickets.attendee_registration' );
 
 		$tickets_in_cart = $cart->get_tickets_in_cart();
 
@@ -3469,12 +3463,15 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Main extends Tribe__Tickets_Pl
 
 		echo sprintf(
 			'<a class="tribe-checkout-backlink" href="%1$s">%2$s</a>',
-			esc_url( add_query_arg( 'provider', $this->attendee_object, $this->get_cart_url() ) ),
+			esc_url( $cart->get_cart_url() ),
 			esc_html__( 'Return to cart', 'event-tickets-plus' )
 		);
 
-		// only show the AR link if we have ARI
+		// Only show the AR link if we have ARI.
 		if ( ! empty( $cart_has_meta ) ) {
+			/** @var Tribe__Tickets__Attendee_Registration__Main $attendee_registration */
+			$attendee_registration = tribe( 'tickets.attendee_registration' );
+
 			echo sprintf(
 				'<a class="tribe-checkout-backlink" href="%1$s">%2$s</a>',
 				esc_url( add_query_arg( 'provider', $this->attendee_object, $attendee_registration->get_url() ) ),

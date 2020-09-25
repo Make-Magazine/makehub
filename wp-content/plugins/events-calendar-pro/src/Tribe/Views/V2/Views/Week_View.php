@@ -238,10 +238,10 @@ class Week_View extends By_Day_View {
 				continue;
 			}
 
-			/** @var \DateTimeImmutable $start */
+			/** @var \Tribe\Utils\Date_I18n_Immutable $start */
 			$start = $use_site_timezone ? $event->dates->start->setTimezone( $site_timezone ) : $event->dates->start;
+			$time  = $start->setTime( (int) $start->format( 'G' ), 0, 0 )->format_i18n( $time_format );
 
-			$time = date_i18n( $time_format, $start->getTimestamp() );
 			// ISO 8601 format, e.g. `2019-01-01T00:00:00+00:00`.
 			$datetime = $start->format( 'c' );
 
@@ -280,7 +280,7 @@ class Week_View extends By_Day_View {
 
 			$grid_days[ $date_string ] = [
 				'datetime'     => $date_string,
-				'weekday'      => date_i18n( 'D', $day_date->getTimestamp() ),
+				'weekday'      => $day_date->format_i18n( 'D' ),
 				'daynum'       => $day_date->format( 'j' ),
 				'found_events' => count( $event_ids ),
 			];
@@ -450,7 +450,7 @@ class Week_View extends By_Day_View {
 			$grid[ $day_y_m_d ] = [
 				'full_date'    => $day->format( tribe_get_option( 'date_with_year', Dates::DATEONLYFORMAT ) ),
 				'datetime'     => $day_y_m_d,
-				'weekday'      => date_i18n( 'D', $day->getTimestamp() + $day->getOffset() ),
+				'weekday'      => $day->format_i18n( 'D' ),
 				'daynum'       => $day->format( 'j' ),
 				'day_url'      => $day_url,
 				'found_events' => count( $events[ $day_y_m_d ] ) + count( $stack[ $day_y_m_d ]['events'] ),

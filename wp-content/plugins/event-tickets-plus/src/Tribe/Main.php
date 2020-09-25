@@ -12,7 +12,7 @@ if ( ! class_exists( 'Tribe__Tickets_Plus__Main' ) ) {
 		/**
 		 * Current version of this plugin
 		 */
-		const VERSION = '5.0.0';
+		const VERSION = '5.0.1';
 
 		/**
 		 * Used to store the version history.

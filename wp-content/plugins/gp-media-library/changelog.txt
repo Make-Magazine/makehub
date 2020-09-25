@@ -1,6 +1,18 @@
 
 # Changelog
 
+## 1.2.15
+
+	- Fixed an issue where image size names containing a dash were not recognized in merge tags.
+
+## 1.2.14
+
+	- Fixed potential PHP notice when GF Media Library is used on a form that's also using Live Merge Tags from GF Populate Anything.
+
+## 1.2.13
+
+	- Added GP_Media_Library::acf_update_field() and refactored to use this method where possible.
+
 ## 1.2.12
 
 	- Added [gpml_supported_field_types](https://gravitywiz.com/documentation/gpml_supported_field_types) filter.

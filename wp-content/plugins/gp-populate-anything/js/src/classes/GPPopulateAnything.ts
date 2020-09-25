@@ -102,7 +102,7 @@ export default class GPPopulateAnything {
 		$form.off( '.gppa' );
 		this.clearHandlers();
 
-		$form.on('keyup.gppa change.gppa DOMAutoComplete.gppa', '[name^="' + inputPrefix + '"]', (event) => {
+		$form.on('keyup.gppa change.gppa DOMAutoComplete.gppa paste.gppa', '[name^="' + inputPrefix + '"]', (event) => {
 
 			const $el = $(event.target);
 

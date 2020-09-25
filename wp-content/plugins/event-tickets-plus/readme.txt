@@ -3,8 +3,8 @@
 Contributors: ModernTribe, brianjessee, camwynsp, paulkim, sc0ttkclark, aguseo, barry.hughes, bordoni, borkweb, cliffpaulick, courane01, faction23, GeoffBel, geoffgraham, ggwicz, jbrinley, jentheo, leahkoerper, lucatume, mastromktg, MZAWeb, neillmcshea, nicosantos, patriciahillebrandt, peterchester, reid.peifer, roblagatta, ryancurban, shane.pearlman, tribecari, vicskf, zbtirrell
 Tags: events, WooCommerce, WooTickets, add-on, ticket sales, tickets, calendar, community, registration, api, dates, date, posts, workshop, conference, meeting, seminar, concert, summit, The Events Calendar, Events Calendar PRO, ticket integration, event ticketing, RSVP, EDD, Easy Digital Downloads
 Requires at least: 4.9.14
-Tested up to: 5.5
-Stable tag: 5.0.0
+Tested up to: 5.5.1
+Stable tag: 5.0.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -134,6 +134,13 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [5.0.1] 2020-09-21 =
+
+* Fix - Remove 'provider' query parameter from WooCommerce Cart and Checkout links to avoid conflicts with some payment gateways. It still gets added to the Attendee Registration page's URL. [ETP-322]
+* Fix - Display Attendee Registration notice only to sites that have upgraded, and on the tribe settings page. [ETP-430]
+* Fix - Save fieldset checkbox label when adding Attendee Registration Information. [ETP-323]
+* Language - 0 new strings added, 6 updated, 0 fuzzied, and 0 obsoleted
 
 = [5.0.0] 2020-08-26 =
 

@@ -3,7 +3,7 @@
 Plugin Name: Event Tickets Plus
 Plugin URI:  http://m.tri.be/1acc
 Description: Event Tickets Plus lets you sell tickets to events, collect custom attendee information, and more! Includes advanced options like shared capacity between tickets, ticket QR codes, and integrations with your favorite ecommerce provider.
-Version: 5.0.0
+Version: 5.0.1
 Author: Modern Tribe, Inc.
 Author URI: http://m.tri.be/28
 License: GPLv2 or later

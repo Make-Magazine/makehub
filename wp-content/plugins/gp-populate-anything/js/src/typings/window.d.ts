@@ -27,6 +27,7 @@ declare global {
 			strings: {
 				[key: string]: string
 			}
+			defaultOperators: string[]
 			objectTypes: { [objectTypeId: string]: GPPAObjectType }
 			nonce: string
 		}

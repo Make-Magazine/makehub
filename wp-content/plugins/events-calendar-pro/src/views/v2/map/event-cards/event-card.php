@@ -32,19 +32,16 @@ if ( empty( $map_provider->is_premium ) ) {
 	$wrapper_classes['tribe-events-pro-map__event-card-wrapper--active'] = 0 === $index;
 
 	if ( $event->venues->count() ) {
-		$venue = $event->venues->first();
-		if ( is_numeric( $venue->geolocation->latitude ) && is_numeric( $venue->geolocation->longitude ) ) {
-			/*
-			 * We have to make sure the Venue has a valid latitude and longitude or its address will never resolve.
-			 * Latitude and longitude 0,0 are valid coordinates, so we look for empty string.
-			 */
-			$iframe_url = add_query_arg( [
+		$venue      = $event->venues->first();
+		$iframe_url = add_query_arg(
+			[
 				'key' => $map_provider->api_key,
 				'q'   => urlencode( $venue->geolocation->address ),
-			], $map_provider->iframe_url );
+			],
+			$map_provider->iframe_url
+		);
 
-			$data_src_attr = 'data-src="' . esc_url( $iframe_url ) . '"';
-		}
+		$data_src_attr = 'data-src="' . esc_url( $iframe_url ) . '"';
 	}
 }
 

@@ -69,7 +69,10 @@ class Assets extends \tad_DI52_ServiceProvider {
 			$plugin,
 			'tribe-events-pro-views-v2-full',
 			'views-full.css',
-			[ 'tribe-events-views-v2-full' ],
+			[
+				'tribe-events-pro-views-v2-skeleton',
+				'tribe-events-views-v2-full',
+			],
 			'wp_enqueue_scripts',
 			[
 				'priority'     => 10,

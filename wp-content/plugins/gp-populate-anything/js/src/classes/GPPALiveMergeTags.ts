@@ -300,7 +300,9 @@ export default class GPPALiveMergeTags {
 						attrVal = $el.html();
 					}
 					break;
-
+				case 'value':
+					attrVal = $el.val();
+					break;
 				default:
 					attrVal = $el.attr(attr);
 
@@ -343,7 +345,9 @@ export default class GPPALiveMergeTags {
 					}
 
 					break;
-
+				case 'value':
+					attrVal = $el.val(value);
+					break;
 				default:
 					$el.attr(attr,  value);
 					break;

@@ -1294,9 +1294,10 @@ class Tribe__Events__Pro__Geo_Loc {
 
 		if ( is_wp_error( $data ) || ! isset( $data['body'] ) ) {
 			tribe( 'logger' )->log_warning( sprintf(
-				_x( 'Geocode request failed ($1%s - $2%s)', 'debug geodata', 'tribe-events-calendar-pro' ),
+				/* translators: 1: Error response text, 2: URL */
+				_x( 'Geocode request failed (%1$s - %2$s)', 'debug geodata', 'tribe-events-calendar-pro' ),
 				is_wp_error( $data ) ? $data->get_error_code() : _x( 'empty response', 'debug geodata' ),
-				$api_url
+				esc_url( $api_url )
 			),
 				__METHOD__
 			);

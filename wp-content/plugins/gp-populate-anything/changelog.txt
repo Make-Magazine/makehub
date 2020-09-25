@@ -1,5 +1,49 @@
 # Changelog
 
+## 1.0-beta-4.97
+
+	- Fixed issue where the Gravity Forms Entry object type would add a where clause for any unrecognized operator. This fix will make it possible for snippets/plugins to add additional operators to the GF Entry object type.
+
+## 1.0-beta-4.96
+
+	- Fixed a compatibility issue with Gravity View's edit entry screens.
+
+## 1.0-beta-4.95
+
+	- Fixed an issue where pasting text wouldn't trigger the populate event until field loses focus.
+
+## 1.0-beta-4.94
+
+	- Fixed issue where Gravity Form's {user} merge tag would be parsed prior to GP Populate Anything's {user} object type merge tag in custom choice/value templates.
+	- Fixed an issue where `starts_with` and similar operators may not work with numeric values.
+	- Fixed a compatibility issue with conditional LMTs and WordPress 5.5.
+
+## 1.0-beta-4.93
+
+	- Fixed issue where Filter Values would be reset when switching between fields in the Form Editor in some situations.
+
+## 1.0-beta-4.92
+
+	- Added support for replacing Gravity Forms merge tags in templates when using the Gravity Forms Entry object type.
+
+## 1.0-beta-4.91
+
+	- Added new 'gppa_default_operators' filter for extending the default operators for all propertiesl (Note: this will impact the UI only, additional logic will be required when adding new operators)
+
+## 1.0-beta-4.90
+
+	- Added support for The Events Calendar in GPPA posts filtering.
+
+## 1.0-beta-4.89
+
+	- Fixed an issue where some filter query strings may be parsed as dates incorrectly.
+	- Fixed an issue where some filter query strings may be parsed as dates incorrectly.
+	- Added `gppa_process_value_as_date` filter.
+
+## 1.0-beta-4.88
+
+	- Added sort for ordering by meta properties with the Post object type.
+
 ## 1.0-beta-4.87
 
 	- Fixed an issue where filtering GF entries by today's date may fail.

@@ -4,14 +4,49 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 	private $meta_query_counter = 0;
 
-	public function __construct($id) {
-		parent::__construct($id);
+	public function __construct( $id ) {
+		parent::__construct( $id );
 
 		add_action( 'gppa_pre_object_type_query_post', array( $this, 'add_filter_hooks' ) );
+
+		add_filter( 'gppa_replace_filter_value_variables_post', array( $this, 'parse_date_in_filter_value' ), 10, 7 );
+
+		/**
+		 * Parse the following property's filter values as dates for The Events Calendar
+		 *
+		 * https://wordpress.org/plugins/the-events-calendar/
+		 */
+		add_filter( 'gppa_parse_post_filter_value_as_date_meta__EventStartDate', '__return_true' );
+		add_filter( 'gppa_parse_post_filter_value_as_date_meta__EventStartDateUTC', '__return_true' );
+		add_filter( 'gppa_parse_post_filter_value_as_date_meta__EventEndDate', '__return_true' );
+		add_filter( 'gppa_parse_post_filter_value_as_date_meta__EventEndDateUTC', '__return_true' );
 
 		/* Label Transforms */
 		add_filter( 'gppa_property_label_post_post_author', array( $this, 'label_transform_author' ) );
 		add_filter( 'gppa_property_label_post_post_type', array( $this, 'label_transform_post_type' ) );
+	}
+
+	public function parse_date_in_filter_value( $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property ) {
+		$property_id = ! empty( $property['group'] ) ? $property['group'] . '_' . $property['value'] : $property['value'];
+
+		if ( ! gf_apply_filters(
+			array(
+				'gppa_parse_post_filter_value_as_date',
+				$property_id,
+			),
+			false,
+			$filter_value,
+			$filter,
+			$field,
+			$property
+		) ) {
+			return $filter_value;
+		}
+
+		$date_time    = strtotime( $filter_value );
+		$filter_value = date( 'Y-m-d', $date_time );
+
+		return $filter_value;
 	}
 
 	/**
@@ -53,17 +88,17 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 				),
 			),
 			'meta'       => array(
-				'label'     => esc_html__( 'Post Meta', 'gp-populate-anything' ),
+				'label' => esc_html__( 'Post Meta', 'gp-populate-anything' ),
 			),
 		);
 	}
 
 	public function add_filter_hooks() {
-		add_filter('gppa_object_type_post_filter', array( $this, 'process_filter_default'), 10, 4 );
-		add_filter('gppa_object_type_post_filter_post_date', array( $this, 'process_filter_post_date'), 10, 4 );
-		add_filter('gppa_object_type_post_filter_group_meta', array( $this, 'process_filter_meta'), 10, 4 );
-		add_filter('gppa_object_type_post_filter_group_taxonomies', array( $this, 'process_filter_taxonomy'), 10, 4 );
-		add_filter('gppa_object_type_query_post', array( $this, 'maybe_add_post_status_where'), 10, 2 );
+		add_filter( 'gppa_object_type_post_filter', array( $this, 'process_filter_default' ), 10, 4 );
+		add_filter( 'gppa_object_type_post_filter_post_date', array( $this, 'process_filter_post_date' ), 10, 4 );
+		add_filter( 'gppa_object_type_post_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 4 );
+		add_filter( 'gppa_object_type_post_filter_group_taxonomies', array( $this, 'process_filter_taxonomy' ), 10, 4 );
+		add_filter( 'gppa_object_type_query_post', array( $this, 'maybe_add_post_status_where' ), 10, 2 );
 	}
 
 	public function process_filter_default( $query_builder_args, $args ) {
@@ -78,7 +113,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
 
@@ -101,12 +136,12 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
 		if ( $filter['operator'] === '>=' || $filter['operator'] === '>' ) {
-			$filter_value = date( "Y-m-d 00:00:00", strtotime( $filter_value ) );
+			$filter_value = date( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
 		} elseif ( $filter['operator'] === '<=' || $filter['operator'] === '<' ) {
-			$filter_value = date( "Y-m-d 23:59:59", strtotime( $filter_value ) );
+			$filter_value = date( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
 		}
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );
@@ -127,17 +162,17 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
-		$meta_specification = $this->get_value_specification( $filter_value, $filter['operator'] );
 		$meta_operator      = $this->get_sql_operator( $filter['operator'] );
+		$meta_specification = $this->get_value_specification( $filter_value, $filter['operator'], $meta_operator );
 		$meta_value         = $this->get_sql_value( $filter['operator'], $filter_value );
 
 		$this->meta_query_counter++;
 		$as_table = 'mq' . $this->meta_query_counter;
 
 		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )", rgar( $property, 'value' ), $meta_value );
-		$query_builder_args['joins'][$as_table] = "LEFT JOIN {$wpdb->postmeta} AS {$as_table} ON ( {$wpdb->posts}.ID = {$as_table}.post_id )";
+		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$wpdb->postmeta} AS {$as_table} ON ( {$wpdb->posts}.ID = {$as_table}.post_id )";
 
 		return $query_builder_args;
 
@@ -185,7 +220,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		}
 
 		$taxonomy = str_replace( 'taxonomy_', '', $property_id );
-		$term = null;
+		$term     = null;
 
 		/**
 		 * Add special logic when searching for terms in an array. This is useful when searching for posts that are
@@ -193,20 +228,23 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 */
 		if ( is_array( $filter_value ) && in_array( $filter['operator'], array( 'is_in', 'is_not_in' ) ) ) {
 
-			$escaped_filter_value = array_map( function ( $v ) {
-				return "'" . esc_sql( $v ) . "'";
-			}, $filter_value );
+			$escaped_filter_value = array_map(
+				function ( $v ) {
+					return "'" . esc_sql( $v ) . "'";
+				},
+				$filter_value
+			);
 
 			$where = "(
 	SELECT COUNT(1)
 	FROM {$wpdb->term_relationships}
-	WHERE {$wpdb->term_relationships}.term_taxonomy_id IN (" . implode(',', $escaped_filter_value) . ")
+	WHERE {$wpdb->term_relationships}.term_taxonomy_id IN (" . implode( ',', $escaped_filter_value ) . ")
 	AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 ) $operator 1";
 
-		/**
-		 * Traditional single taxonomy term lookup.
-		 */
+			/**
+			 * Traditional single taxonomy term lookup.
+			 */
 		} else {
 			/* First, look for term by ID if the filter value is a number */
 			if ( is_numeric( $filter_value ) ) {
@@ -225,12 +263,15 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 			$filter_value = $term ? $term->term_taxonomy_id : - 1;
 
-			$where = $wpdb->prepare( "(
+			$where = $wpdb->prepare(
+				"(
 	SELECT COUNT(1)
 	FROM {$wpdb->term_relationships}
 	WHERE {$wpdb->term_relationships}.term_taxonomy_id = %d
 	AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
-) $operator 1", $filter_value );
+) $operator 1",
+				$filter_value
+			);
 		}
 
 		$query_builder_args['where'][ $filter_group_index ][] = $where;
@@ -264,10 +305,9 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 			/* Add post_status = 'publish' by default if there isn't a post status conditional in this group */
 			if ( ! $has_post_status ) {
-				$post_status_where = $this->build_where_clause( $wpdb->posts, 'post_status', 'is', 'publish' );
-				$query_builder_args['where'][$filter_group_index][] = $post_status_where;
+				$post_status_where                                    = $this->build_where_clause( $wpdb->posts, 'post_status', 'is', 'publish' );
+				$query_builder_args['where'][ $filter_group_index ][] = $post_status_where;
 			}
-
 		}
 
 		return $query_builder_args;
@@ -298,68 +338,72 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		return array_merge( array(
-			'post_author' => array(
-				'label'    => esc_html__( 'Author', 'gp-populate-anything' ),
-				'value'    => 'post_author',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'post_author' ),
-				'orderby'  => true,
+		return array_merge(
+			array(
+				'post_author'  => array(
+					'label'    => esc_html__( 'Author', 'gp-populate-anything' ),
+					'value'    => 'post_author',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_author' ),
+					'orderby'  => true,
+				),
+				'post_status'  => array(
+					'label'    => esc_html__( 'Post Status', 'gp-populate-anything' ),
+					'value'    => 'post_status',
+					'callable' => 'get_post_statuses',
+					'orderby'  => true,
+				),
+				'post_title'   => array(
+					'label'    => esc_html__( 'Post Title', 'gp-populate-anything' ),
+					'value'    => 'post_title',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_title' ),
+					'orderby'  => true,
+				),
+				'post_content' => array(
+					'label'    => esc_html__( 'Post Content', 'gp-populate-anything' ),
+					'value'    => 'post_content',
+					'callable' => '__return_empty_array',
+					'orderby'  => true,
+				),
+				'post_name'    => array(
+					'label'    => esc_html__( 'Post Name (Slug)', 'gp-populate-anything' ),
+					'value'    => 'post_name',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_name' ),
+					'orderby'  => true,
+				),
+				'ID'           => array(
+					'label'    => esc_html__( 'Post ID', 'gp-populate-anything' ),
+					'value'    => 'ID',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'ID' ),
+					'orderby'  => true,
+				),
+				'post_type'    => array(
+					'label'    => esc_html__( 'Post Type', 'gp-populate-anything' ),
+					'value'    => 'post_type',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_type' ),
+					'orderby'  => true,
+				),
+				'post_date'    => array(
+					'label'    => esc_html__( 'Post Date', 'gp-populate-anything' ),
+					'value'    => 'post_date',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_date' ),
+					'orderby'  => true,
+				),
+				'post_parent'  => array(
+					'label'    => esc_html__( 'Parent Post', 'gp-populate-anything' ),
+					'value'    => 'post_parent',
+					'callable' => array( $this, 'get_posts' ),
+					'orderby'  => true,
+				),
 			),
-			'post_status' => array(
-				'label'    => esc_html__( 'Post Status', 'gp-populate-anything' ),
-				'value'    => 'post_status',
-				'callable' => 'get_post_statuses',
-				'orderby'  => true,
-			),
-			'post_title'  => array(
-				'label'    => esc_html__( 'Post Title', 'gp-populate-anything' ),
-				'value'    => 'post_title',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'post_title' ),
-				'orderby'  => true,
-			),
-			'post_content'  => array(
-				'label'    => esc_html__( 'Post Content', 'gp-populate-anything' ),
-				'value'    => 'post_content',
-				'callable' => '__return_empty_array',
-				'orderby'  => true,
-			),
-			'post_name'  => array(
-				'label'    => esc_html__( 'Post Name (Slug)', 'gp-populate-anything' ),
-				'value'    => 'post_name',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'post_name' ),
-				'orderby'  => true,
-			),
-			'ID'          => array(
-				'label'    => esc_html__( 'Post ID', 'gp-populate-anything' ),
-				'value'    => 'ID',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'ID' ),
-				'orderby'  => true,
-			),
-			'post_type'   => array(
-				'label'    => esc_html__( 'Post Type', 'gp-populate-anything' ),
-				'value'    => 'post_type',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'post_type' ),
-				'orderby'  => true,
-			),
-			'post_date'   => array(
-				'label'    => esc_html__( 'Post Date', 'gp-populate-anything' ),
-				'value'    => 'post_date',
-				'callable' => array( $this, 'get_col_rows' ),
-				'args'     => array( $wpdb->posts, 'post_date' ),
-				'orderby'  => true,
-			),
-			'post_parent' => array(
-				'label'    => esc_html__( 'Parent Post', 'gp-populate-anything' ),
-				'value'    => 'post_parent',
-				'callable' => array( $this, 'get_posts' ),
-				'orderby'  => true,
-			),
-		), $this->get_post_taxonomies_properties(), $this->get_post_meta_properties() );
+			$this->get_post_taxonomies_properties(),
+			$this->get_post_meta_properties()
+		);
 
 	}
 
@@ -378,7 +422,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		/* Meta and all other props */
 		$prop = preg_replace( '/^meta_/', '', $prop );
 
-		if ( ! isset ( $object->{$prop} ) ) {
+		if ( ! isset( $object->{$prop} ) ) {
 			return null;
 		}
 
@@ -409,6 +453,7 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 				'callable' => array( $this, 'get_meta_values' ),
 				'args'     => array( $post_meta_key, $wpdb->postmeta ),
 				'group'    => 'meta',
+				'orderby'  => true,
 			);
 		}
 
@@ -438,17 +483,22 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		$taxonomy = rgar( $_POST, 'property' );
 		$taxonomy = preg_replace( '/^taxonomy_/', '', $taxonomy );
 
-		$terms = get_terms( array(
-			'taxonomy'   => $taxonomy,
-			'hide_empty' => false
-		) );
+		$terms = get_terms(
+			array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+			)
+		);
 
-		return array_map( function ( $term ) {
-			return array( $term->term_id, $term->name );
-		}, $terms );
+		return array_map(
+			function ( $term ) {
+				return array( $term->term_id, $term->name );
+			},
+			$terms
+		);
 	}
 
-	public function default_query_args ( $args ) {
+	public function default_query_args( $args ) {
 
 		global $wpdb;
 
@@ -462,9 +512,9 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		extract( $args );
 
 		$orderby = rgar( $ordering, 'orderby' );
-		$order = rgar( $ordering, 'order', 'ASC' );
+		$order   = rgar( $ordering, 'order', 'ASC' );
 
-		return array(
+		$query_args = array(
 			'select'   => "{$wpdb->posts}.*",
 			'from'     => $wpdb->posts,
 			'where'    => array(),
@@ -473,6 +523,37 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 			'order_by' => $orderby ? "{$wpdb->posts}.{$orderby}" : null,
 			'order'    => $order,
 		);
+
+		/**
+		 * Support ordering by post meta.
+		 *
+		 * Credit: Kurt Zenisek <digital@amperagemarketing.com>
+		 */
+		if ( strpos( $orderby, 'meta_' ) === 0 ) { // Ordering by value of a meta key (custom field)
+			$meta_key = str_replace( 'meta_', '', $orderby );
+
+			/**
+			 * This order_by setup is required to get both numeric meta and alphanumeric meta to sort is a some-what
+			 * natural order.
+			 *
+			 * Natural sorting with MySQL is way harder than it should be!
+			 */
+			$query_args['order_by'] = "
+					(
+						SELECT ({$wpdb->postmeta}.meta_value + 0)
+							FROM {$wpdb->postmeta}
+							WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id
+							AND {$wpdb->postmeta}.meta_key = '{$meta_key}'
+					) {$order},
+					(
+						SELECT ({$wpdb->postmeta}.meta_value)
+							FROM {$wpdb->postmeta}
+							WHERE {$wpdb->posts}.ID = {$wpdb->postmeta}.post_id
+							AND {$wpdb->postmeta}.meta_key = '{$meta_key}'
+					)";
+		}
+
+		return $query_args;
 
 	}
 

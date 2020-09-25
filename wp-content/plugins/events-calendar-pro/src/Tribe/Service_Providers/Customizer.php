@@ -224,7 +224,7 @@ class Customizer extends \tad_DI52_ServiceProvider {
 	 * @return string $template The resulting CSS template.
 	 */
 	public function filter_text_color_css( $template ) {
-		_deprecated_function( __METHOD__, 'TBD' );
+		_deprecated_function( __METHOD__, '5.1.4' );
 
 		$customizer   = Tribe__Customizer::instance();
 		$text_section = tribe( 'tec.customizer.text' );

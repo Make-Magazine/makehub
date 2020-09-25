@@ -55,7 +55,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				'version' => '2.3-rc-1',
 			),
 			'wordpress'    => array(
-				'version' => '4.8'
+				'version' => '4.8',
 			),
 			'plugins'      => array(
 				'gravityperks/gravityperks.php' => 'Gravity Perks',
@@ -101,12 +101,12 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gform_form_update_meta', array( $this, 'check_gppa_settings_for_user' ), 10, 3 );
 
 		/* Template Replacement */
-		add_filter( 'gppa_process_template', array( $this, 'maybe_convert_array_value_to_text'), 9, 8 );
-		add_filter( 'gppa_process_template', array( $this, 'replace_template_gf_merge_tags'), 10, 1 );
-		add_filter( 'gppa_process_template', array( $this, 'replace_template_object_merge_tags'), 10, 6 );
-		add_filter( 'gppa_process_template', array( $this, 'replace_template_count_merge_tags'), 10, 7 );
+		add_filter( 'gppa_process_template', array( $this, 'maybe_convert_array_value_to_text' ), 9, 8 );
+		add_filter( 'gppa_process_template', array( $this, 'replace_template_generic_gf_merge_tags' ), 15, 1 );
+		add_filter( 'gppa_process_template', array( $this, 'replace_template_object_merge_tags' ), 10, 6 );
+		add_filter( 'gppa_process_template', array( $this, 'replace_template_count_merge_tags' ), 10, 7 );
 
-		add_filter( 'gppa_array_value_to_text', array( $this, 'use_commas_for_arrays'), 10, 6 );
+		add_filter( 'gppa_array_value_to_text', array( $this, 'use_commas_for_arrays' ), 10, 6 );
 		add_filter( 'gppa_array_value_to_text', array( $this, 'prepare_gf_field_array_value_to_text' ), 10, 7 );
 
 		/* Form Submission */
@@ -120,7 +120,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gppa_field_html_empty_field_value_radio', array( $this, 'radio_field_html_empty_field_value' ) );
 
 		/* Exporting */
-		add_filter( 'gform_export_field_value', array( $this, 'hydrate_export_value'), 10, 4 );
+		add_filter( 'gform_export_field_value', array( $this, 'hydrate_export_value' ), 10, 4 );
 
 		/**
 		 * Hydrate form before updating an entry. This is particularly helpful when the form contains a Checkbox field
@@ -170,11 +170,14 @@ class GP_Populate_Anything extends GP_Plugin {
 	 *
 	 * @return array
 	 */
-	public static function get_interpreted_multi_input_field_types () {
-		return apply_filters('gppa_interpreted_multi_input_field_types', array(
-			'time',
-			'date',
-		));
+	public static function get_interpreted_multi_input_field_types() {
+		return apply_filters(
+			'gppa_interpreted_multi_input_field_types',
+			array(
+				'time',
+				'date',
+			)
+		);
 	}
 
 	/**
@@ -185,11 +188,14 @@ class GP_Populate_Anything extends GP_Plugin {
 	 *
 	 * @return array
 	 */
-	public static function get_multi_selectable_choice_field_types () {
-		return apply_filters('gppa_multi_selectable_choice_field_types', array(
-			'multiselect',
-			'checkbox',
-		));
+	public static function get_multi_selectable_choice_field_types() {
+		return apply_filters(
+			'gppa_multi_selectable_choice_field_types',
+			array(
+				'multiselect',
+				'checkbox',
+			)
+		);
 	}
 
 	public function init_admin() {
@@ -227,7 +233,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$scripts = array(
 			array(
 				'handle'    => 'gp-populate-anything-admin',
-				'src'       => $this->get_base_url() . "/js/built/gp-populate-anything-admin.js",
+				'src'       => $this->get_base_url() . '/js/built/gp-populate-anything-admin.js',
 				'version'   => $this->_version,
 				'deps'      => array( 'jquery' ),
 				'in_footer' => true,
@@ -238,14 +244,14 @@ class GP_Populate_Anything extends GP_Plugin {
 			),
 			array(
 				'handle'    => 'gp-populate-anything',
-				'src'       => $this->get_base_url() . "/js/built/gp-populate-anything.js",
+				'src'       => $this->get_base_url() . '/js/built/gp-populate-anything.js',
 				'version'   => $this->_version,
 				'deps'      => array( 'gform_gravityforms', 'jquery' ),
 				'in_footer' => true,
 				'enqueue'   => array(
 					array( $this, 'should_enqueue_frontend_scripts' ),
 				),
-				'callback'  => array( $this, 'localize_frontend_scripts' )
+				'callback'  => array( $this, 'localize_frontend_scripts' ),
 			),
 		);
 
@@ -254,7 +260,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function should_enqueue_frontend_scripts( $form ) {
-		return (! is_admin() || GFCommon::is_entry_detail_edit()) && ! empty( $form['fields'] );
+		return ( ! is_admin() || GFCommon::is_entry_detail_edit() ) && ! empty( $form['fields'] );
 	}
 
 	public function styles() {
@@ -268,13 +274,13 @@ class GP_Populate_Anything extends GP_Plugin {
 				'version' => $this->_version,
 				'enqueue' => array(
 					array( 'admin_page' => array( 'form_editor' ) ),
-				)
+				),
 			),
 			array(
 				'handle'  => 'gp-populate-anything',
 				'src'     => $this->get_base_url() . "/styles/gp-populate-anything{$min}.css",
 				'version' => $this->_version,
-				'enqueue'   => array(
+				'enqueue' => array(
 					array( $this, 'should_enqueue_frontend_scripts' ),
 				),
 			),
@@ -284,7 +290,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
-	public function is_localized($item) {
+	public function is_localized( $item ) {
 		return in_array( $item, $this->_localized );
 	}
 
@@ -300,18 +306,51 @@ class GP_Populate_Anything extends GP_Plugin {
 			$gppa_object_types[ $object_type_id ] = $object_type_instance->to_simple_array();
 		}
 
-		wp_localize_script( 'gp-populate-anything-admin', 'GPPA_ADMIN', array(
-			'objectTypes'                     => $gppa_object_types,
-			'strings'                         => $this->get_js_strings(),
-			'interpretedMultiInputFieldTypes' => self::get_interpreted_multi_input_field_types(),
-			'multiSelectableChoiceFieldTypes' => self::get_multi_selectable_choice_field_types(),
-			'gfBaseUrl'                       => GFCommon::get_base_url(),
-            'nonce'                           => wp_create_nonce( 'gppa' ),
-            'isSuperAdmin'                    => is_super_admin(),
-		) );
+		wp_localize_script(
+			'gp-populate-anything-admin',
+			'GPPA_ADMIN',
+			array(
+				'objectTypes'                     => $gppa_object_types,
+				'strings'                         => $this->get_js_strings(),
+				'defaultOperators'                => $this->get_default_operators(),
+				'interpretedMultiInputFieldTypes' => self::get_interpreted_multi_input_field_types(),
+				'multiSelectableChoiceFieldTypes' => self::get_multi_selectable_choice_field_types(),
+				'gfBaseUrl'                       => GFCommon::get_base_url(),
+				'nonce'                           => wp_create_nonce( 'gppa' ),
+				'isSuperAdmin'                    => is_super_admin(),
+			)
+		);
 
 		$this->_localized[] = 'admin-scripts';
 
+	}
+
+	public function get_default_operators() {
+		/**
+		 * Filter the default operators for ALL properties.
+		 *
+		 * Note: this will impact the UI only, additional logic will be required when adding new operators such as
+		 * extending Object Types to know how to query using the added operator.
+		 *
+		 * @since 1.0-beta-4.91
+		 *
+		 * @param string[] $operators The default operators for ALL properties.
+		 */
+		return apply_filters(
+			'gppa_default_operators',
+			array(
+				'is',
+				'isnot',
+				'>',
+				'>=',
+				'<',
+				'<=',
+				'contains',
+				'starts_with',
+				'ends_with',
+				'like',
+			)
+		);
 	}
 
 	public function localize_frontend_scripts() {
@@ -335,54 +374,57 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function get_js_strings() {
 
-		return apply_filters( 'gppa_strings', array(
-			'populateChoices' => esc_html__( 'Populate choices dynamically', 'gp-populate-anything' ),
-			'populateValues'  => esc_html__( 'Populate value dynamically', 'gp-populate-anything' ),
-			'addFilter'       => esc_html__( 'Add Filter', 'gp-populate-anything' ),
-			'label'           => esc_html__( 'Label', 'gp-populate-anything' ),
-			'value'           => esc_html__( 'Value', 'gp-populate-anything' ),
-			'price'           => esc_html__( 'Price', 'gp-populate-anything' ),
-			'loadingEllipsis' => esc_html__( 'Loading...', 'gp-populate-anything' ),
-			/**
-			 * Using HTML entity (&#9998;) does not work with esc_html__ so the pencil has been pasted in directly.
-			 */
-			'addCustomValue'  => esc_html__( '✎ Custom Value', 'gp-populate-anything' ),
-			'standardValues'  => esc_html__( 'Standard Values', 'gp-populate-anything' ),
-			'formFieldValues' => esc_html__( 'Form Field Values', 'gp-populate-anything' ),
-			'specialValues'   => esc_html__( 'Special Values', 'gp-populate-anything' ),
-			'valueBoolTrue'   => esc_html__( '(boolean) true', 'gp-populate-anything' ),
-			'valueBoolFalse'  => esc_html__( '(boolean) false', 'gp-populate-anything' ),
-			'valueNull'       => esc_html__( '(null) NULL', 'gp-populate-anything' ),
-			'selectAnItem'    => esc_html__( 'Select a %s', 'gp-populate-anything' ),
-			'unique'          => esc_html__( 'Only Show Unique Results', 'gp-populate-anything' ),
-			'reset'           => esc_html__( 'Reset', 'gp-populate-anything' ),
-			'type'            => esc_html__( 'Type', 'gp-populate-anything' ),
-			'objectType'      => esc_html__( 'Object Type', 'gp-populate-anything' ),
-			'filters'         => esc_html__( 'Filters', 'gp-populate-anything' ),
-			'ordering'        => esc_html__( 'Ordering', 'gp-populate-anything' ),
-			'ascending'       => esc_html__( 'Ascending', 'gp-populate-anything' ),
-			'descending'      => esc_html__( 'Descending', 'gp-populate-anything' ),
-			'choiceTemplate'  => esc_html__( 'Choice Template', 'gp-populate-anything' ),
-			'valueTemplates'  => esc_html__( 'Value Templates', 'gp-populate-anything' ),
-			'operators' => array(
-				'is'          => __( 'is', 'gp-populate-anything' ),
-				'isnot'       => __( 'is not', 'gp-populate-anything' ),
-				'>'           => __( '>', 'gp-populate-anything' ),
-				'>='          => __( '>=', 'gp-populate-anything' ),
-				'<'           => __( '<', 'gp-populate-anything' ),
-				'<='          => __( '<=', 'gp-populate-anything' ),
-				'contains'    => __( 'contains', 'gp-populate-anything' ),
-				'starts_with' => __( 'starts with', 'gp-populate-anything' ),
-				'ends_with'   => __( 'ends with', 'gp-populate-anything' ),
-				'like'        => __( 'is LIKE', 'gp-populate-anything' ),
-				'is_in'       => __( 'is in', 'gp-populate-anything' ),
-				'is_not_in'   => __( 'is not in', 'gp-populate-anything' ),
-			),
-			'chosen_no_results' => esc_attr( gf_apply_filters( array( 'gform_dropdown_no_results_text', 0 ), __( 'No results matched', 'gp-populate-anything' ), 0 ) ),
-            'restrictedObjectTypeNonPrivileged' => esc_html__( 'This field is configured to an object type for which you do not have permission to edit.', 'gp-populate-anything' ),
-            'restrictedObjectTypePrivileged' => esc_html__( 'The selected Object Type is restricted. Non-super admins will not be able to edit this field\'s GPPA settings.', 'gp-populate-anything' ),
-			'tooManyPropertyValues' => esc_html__( 'Too many values to display.', 'gp-populate-anything' ),
-		) );
+		return apply_filters(
+			'gppa_strings',
+			array(
+				'populateChoices'                   => esc_html__( 'Populate choices dynamically', 'gp-populate-anything' ),
+				'populateValues'                    => esc_html__( 'Populate value dynamically', 'gp-populate-anything' ),
+				'addFilter'                         => esc_html__( 'Add Filter', 'gp-populate-anything' ),
+				'label'                             => esc_html__( 'Label', 'gp-populate-anything' ),
+				'value'                             => esc_html__( 'Value', 'gp-populate-anything' ),
+				'price'                             => esc_html__( 'Price', 'gp-populate-anything' ),
+				'loadingEllipsis'                   => esc_html__( 'Loading...', 'gp-populate-anything' ),
+				/**
+				 * Using HTML entity (&#9998;) does not work with esc_html__ so the pencil has been pasted in directly.
+				 */
+				'addCustomValue'                    => esc_html__( '✎ Custom Value', 'gp-populate-anything' ),
+				'standardValues'                    => esc_html__( 'Standard Values', 'gp-populate-anything' ),
+				'formFieldValues'                   => esc_html__( 'Form Field Values', 'gp-populate-anything' ),
+				'specialValues'                     => esc_html__( 'Special Values', 'gp-populate-anything' ),
+				'valueBoolTrue'                     => esc_html__( '(boolean) true', 'gp-populate-anything' ),
+				'valueBoolFalse'                    => esc_html__( '(boolean) false', 'gp-populate-anything' ),
+				'valueNull'                         => esc_html__( '(null) NULL', 'gp-populate-anything' ),
+				'selectAnItem'                      => esc_html__( 'Select a %s', 'gp-populate-anything' ),
+				'unique'                            => esc_html__( 'Only Show Unique Results', 'gp-populate-anything' ),
+				'reset'                             => esc_html__( 'Reset', 'gp-populate-anything' ),
+				'type'                              => esc_html__( 'Type', 'gp-populate-anything' ),
+				'objectType'                        => esc_html__( 'Object Type', 'gp-populate-anything' ),
+				'filters'                           => esc_html__( 'Filters', 'gp-populate-anything' ),
+				'ordering'                          => esc_html__( 'Ordering', 'gp-populate-anything' ),
+				'ascending'                         => esc_html__( 'Ascending', 'gp-populate-anything' ),
+				'descending'                        => esc_html__( 'Descending', 'gp-populate-anything' ),
+				'choiceTemplate'                    => esc_html__( 'Choice Template', 'gp-populate-anything' ),
+				'valueTemplates'                    => esc_html__( 'Value Templates', 'gp-populate-anything' ),
+				'operators'                         => array(
+					'is'          => __( 'is', 'gp-populate-anything' ),
+					'isnot'       => __( 'is not', 'gp-populate-anything' ),
+					'>'           => __( '>', 'gp-populate-anything' ),
+					'>='          => __( '>=', 'gp-populate-anything' ),
+					'<'           => __( '<', 'gp-populate-anything' ),
+					'<='          => __( '<=', 'gp-populate-anything' ),
+					'contains'    => __( 'contains', 'gp-populate-anything' ),
+					'starts_with' => __( 'starts with', 'gp-populate-anything' ),
+					'ends_with'   => __( 'ends with', 'gp-populate-anything' ),
+					'like'        => __( 'is LIKE', 'gp-populate-anything' ),
+					'is_in'       => __( 'is in', 'gp-populate-anything' ),
+					'is_not_in'   => __( 'is not in', 'gp-populate-anything' ),
+				),
+				'chosen_no_results'                 => esc_attr( gf_apply_filters( array( 'gform_dropdown_no_results_text', 0 ), __( 'No results matched', 'gp-populate-anything' ), 0 ) ),
+				'restrictedObjectTypeNonPrivileged' => esc_html__( 'This field is configured to an object type for which you do not have permission to edit.', 'gp-populate-anything' ),
+				'restrictedObjectTypePrivileged'    => esc_html__( 'The selected Object Type is restricted. Non-super admins will not be able to edit this field\'s GPPA settings.', 'gp-populate-anything' ),
+				'tooManyPropertyValues'             => esc_html__( 'Too many values to display.', 'gp-populate-anything' ),
+			)
+		);
 
 	}
 
@@ -446,11 +488,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			foreach ( $filter_groups as $filter_group ) {
 				foreach ( $filter_group as $filter ) {
 					$filter_value_exploded = explode( ':', $filter['value'] );
-					$dependent_fields = array();
+					$dependent_fields      = array();
 
 					if ( $filter_value_exploded[0] === 'gf_field' ) {
 						$dependent_fields[] = $filter_value_exploded[1];
-					} else if ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $filter['value'], $field_matches ) ) {
+					} elseif ( preg_match_all( '/{\w+:gf_field_(\d+)}/', $filter['value'], $field_matches ) ) {
 						if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
 							$dependent_fields = $field_matches[1];
 						}
@@ -563,10 +605,10 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function get_field_objects( $field, $field_values, $populate ) {
 
-		$gppa_prefix = 'gppa-' . $populate . '-';
-		$templates = rgar( $field, $gppa_prefix . 'templates' );
-		$object_type = rgar( $field, $gppa_prefix . 'object-type' );
-		$unique = rgar( $field, $gppa_prefix . 'unique-results' );
+		$gppa_prefix          = 'gppa-' . $populate . '-';
+		$templates            = rgar( $field, $gppa_prefix . 'templates' );
+		$object_type          = rgar( $field, $gppa_prefix . 'object-type' );
+		$unique               = rgar( $field, $gppa_prefix . 'unique-results' );
 		$object_type_instance = rgar( $this->_object_types, $object_type );
 
 		if ( $unique === null || $unique === '' ) {
@@ -587,7 +629,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			'primary_property_value' => rgar( $field, $gppa_prefix . 'primary-property' ),
 			'field_values'           => $field_values,
 			'field'                  => $field,
-            'unique'                 => $unique,
+			'unique'                 => $unique,
 		);
 
 		$query_cache_hash = $object_type_instance->query_cache_hash( $args );
@@ -635,22 +677,24 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function process_template( $field, $template_name, $object, $populate, $objects ) {
 
-	    static $_cache;
+		static $_cache;
 
 		$object_type      = $this->get_object_type( rgar( $field, 'gppa-' . $populate . '-object-type' ), $field );
 		$templates        = rgar( $field, 'gppa-' . $populate . '-templates', array() );
 		$primary_property = rgar( $field, 'gppa-' . $populate . '-primary-property', null );
 		$template         = rgar( $templates, $template_name );
 
-		$cache_key = serialize( array(
-			$template,
-			$object_type->get_object_id( $object, $primary_property ),
-			rgar( $field, 'id' )
-		) );
+		$cache_key = serialize(
+			array(
+				$template,
+				$object_type->get_object_id( $object, $primary_property ),
+				rgar( $field, 'id' ),
+			)
+		);
 
-		if (isset($_cache[$cache_key])) {
-		    return $_cache[$cache_key];
-        }
+		if ( isset( $_cache[ $cache_key ] ) ) {
+			return $_cache[ $cache_key ];
+		}
 
 		if ( strpos( $template, 'gf_custom' ) === 0 ) {
 
@@ -660,12 +704,22 @@ class GP_Populate_Anything extends GP_Plugin {
 				return null;
 			}
 
-			$_cache[$cache_key] = gf_apply_filters( array(
-				'gppa_process_template',
-				$template_name
-			), $template_value, $field, $template_name, $populate, $object, $object_type, $objects, $template );
+			$_cache[ $cache_key ] = gf_apply_filters(
+				array(
+					'gppa_process_template',
+					$template_name,
+				),
+				$template_value,
+				$field,
+				$template_name,
+				$populate,
+				$object,
+				$object_type,
+				$objects,
+				$template
+			);
 
-			return $_cache[$cache_key];
+			return $_cache[ $cache_key ];
 		}
 
 		if ( ! $template ) {
@@ -675,12 +729,22 @@ class GP_Populate_Anything extends GP_Plugin {
 		$value = $object_type->get_object_prop_value( $object, $template );
 
 		try {
-			$_cache[$cache_key] = gf_apply_filters( array(
-				'gppa_process_template',
-				$template_name
-			), $value, $field, $template_name, $populate, $object, $object_type, $objects, $template );
+			$_cache[ $cache_key ] = gf_apply_filters(
+				array(
+					'gppa_process_template',
+					$template_name,
+				),
+				$value,
+				$field,
+				$template_name,
+				$populate,
+				$object,
+				$object_type,
+				$objects,
+				$template
+			);
 
-			return $_cache[$cache_key];
+			return $_cache[ $cache_key ];
 		} catch ( Exception $e ) {
 			return null;
 		}
@@ -744,16 +808,16 @@ class GP_Populate_Anything extends GP_Plugin {
 		$value_export = $field ? $field->get_value_export( $array_value ) : '';
 
 		if ( $value_export ) {
-		    $text_value = $value_export;
-        }
+			$text_value = $value_export;
+		}
 
 		return apply_filters( 'gppa_prepare_gf_field_array_value_to_text', $text_value, $array_value, $field, $object, $object_type, $template );
 
-    }
+	}
 
 	public function replace_template_object_merge_tags( $template_value, $field, $template, $populate, $object, $object_type ) {
 
-		if( ! is_string( $template_value ) ) {
+		if ( ! is_string( $template_value ) ) {
 			return $template_value;
 		}
 
@@ -773,22 +837,28 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		return $template_value;
 
-
 	}
 
-	public function replace_template_gf_merge_tags( $template_value ) {
+	/**
+	 * Replace generic merge tags from Gravity Forms that don't require an entry
+	 *
+	 * @param $template_value
+	 *
+	 * @return mixed|void
+	 */
+	public function replace_template_generic_gf_merge_tags( $template_value ) {
 
-		if( ! is_string( $template_value ) ) {
+		if ( ! is_string( $template_value ) ) {
 			return $template_value;
 		}
 
-	    if ( isset( $this->gf_merge_tags_cache[ $template_value] ) ) {
-		    return $this->gf_merge_tags_cache[ $template_value];
-        }
+		if ( isset( $this->gf_merge_tags_cache[ $template_value ] ) ) {
+			return $this->gf_merge_tags_cache[ $template_value ];
+		}
 
-	    $result = GFCommon::replace_variables_prepopulate( $template_value, false, false, true );
+		$result = GFCommon::replace_variables_prepopulate( $template_value, false, false, true );
 
-		$this->gf_merge_tags_cache[ $template_value] = $result;
+		$this->gf_merge_tags_cache[ $template_value ] = $result;
 
 		return $result;
 
@@ -815,7 +885,7 @@ class GP_Populate_Anything extends GP_Plugin {
 					if ( count( $field_matches ) && ! empty( $field_matches[1] ) ) {
 						$dependent_fields[ $filter_group_index ] = array_merge( $dependent_fields[ $filter_group_index ], $field_matches[1] );
 					}
-				} else if ( strpos( $filter_value, 'gf_field:' ) === 0 ) {
+				} elseif ( strpos( $filter_value, 'gf_field:' ) === 0 ) {
 					$dependent_fields[ $filter_group_index ][] = str_replace( 'gf_field:', '', $filter_value );
 				}
 			}
@@ -832,11 +902,11 @@ class GP_Populate_Anything extends GP_Plugin {
 	public function has_empty_field_value( $field, $populate, $entry = false ) {
 
 		$form = GFAPI::get_form( $field->formId );
-		if( ! $form ) {
+		if ( ! $form ) {
 			return false;
 		}
 
-		$field_values = $entry ? $entry : $this->get_posted_field_values( $form );
+		$field_values              = $entry ? $entry : $this->get_posted_field_values( $form );
 		$dependent_fields_by_group = $this->get_dependent_fields_by_filter_group( $field, $populate );
 
 		if ( count( $dependent_fields_by_group ) === 0 ) {
@@ -854,7 +924,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				}
 			}
 
-			if ($group_requirements_met) {
+			if ( $group_requirements_met ) {
 				return false;
 			}
 		}
@@ -881,34 +951,32 @@ class GP_Populate_Anything extends GP_Plugin {
 	public function get_field_value_from_field_values( $field_id, $field_values ) {
 
 		$is_input_specific = (int) $field_id != $field_id;
-		$value = '';
+		$value             = '';
 
 		// Return input-specific values without any fanfare (e.g. 1.2).
-		if( $is_input_specific ) {
+		if ( $is_input_specific ) {
 			return rgar( $field_values, $field_id, null );
 		}
 
 		// If the target field ID is for a multi-input field (e.g. Checkbox), we want to get all input values for this field.
-		foreach( $field_values as $input_id => $field_value ) {
+		foreach ( $field_values as $input_id => $field_value ) {
 
 			$input_field_id = (int) $input_id;
 
-			if( $input_field_id == $field_id ) {
+			if ( $input_field_id == $field_id ) {
 				// If input field ID does not match the input ID, we know that the current value is for a specific-input.
 				// Let's collect all input values as an array.
-				if( $input_field_id != $input_id ) {
-					if( ! is_array( $value ) ) {
+				if ( $input_field_id != $input_id ) {
+					if ( ! is_array( $value ) ) {
 						$value = array();
 					}
 					$value[] = $field_value;
-				}
 				// Otherwise, we are targeting a single-input field's value. There should only be one field value so we can break the loop.
-				else {
+				} else {
 					$value = $field_value;
 					break;
 				}
 			}
-
 		}
 
 		return $value;
@@ -933,7 +1001,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$templates = rgar( $field, 'gppa-choices-templates', array() );
 
-		$cache_key = $field['formId'] . '-' . $field['id'] . serialize($field_values);
+		$cache_key = $field['formId'] . '-' . $field['id'] . serialize( $field_values );
 
 		if ( isset( $this->_field_choices_cache[ $cache_key ] ) ) {
 			return $this->_field_choices_cache[ $cache_key ];
@@ -954,17 +1022,17 @@ class GP_Populate_Anything extends GP_Plugin {
 			return array(
 				array(
 					// Unchecked checkboxes need to have a non-empty value otherwise they will automatically be checked by GF.
-					'value' => apply_filters( 'gppa_missing_filter_value', $field->get_input_type() === 'checkbox', $field ),
-					'text'  => apply_filters( 'gppa_missing_filter_text', '&ndash; ' . esc_html__( 'Fill Out Other Fields', 'gp-populate-anything' ) . ' &ndash;', $field ),
+					'value'           => apply_filters( 'gppa_missing_filter_value', $field->get_input_type() === 'checkbox', $field ),
+					'text'            => apply_filters( 'gppa_missing_filter_text', '&ndash; ' . esc_html__( 'Fill Out Other Fields', 'gp-populate-anything' ) . ' &ndash;', $field ),
 					/*
 					 * We only want our instructive text to be selected for Drop Downs. This bit below is necessary because
 					 * Product Drop Downs do not have an empty value so the first option is not selected automatically.
 					 * This also overrides placeholders for any Drop Down field.
 					 */
-					'isSelected' => $field->inputType == 'select',
+					'isSelected'      => $field->inputType == 'select',
 					'gppaErrorChoice' => 'missing_filter',
-					'object' => null
-				)
+					'object'          => null,
+				),
 			);
 		}
 
@@ -974,11 +1042,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			return array(
 				array(
 					// Unchecked checkboxes need to have a non-empty value otherwise they will automatically be checked by GF.
-					'value' => apply_filters( 'gppa_no_choices_value', $field->get_input_type() === 'checkbox', $field ),
-					'text'  => apply_filters( 'gppa_no_choices_text', '&ndash; ' . esc_html__( 'No Results', 'gp-populate-anything' ) . ' &ndash;', $field ),
-					'isSelected' => false,
+					'value'           => apply_filters( 'gppa_no_choices_value', $field->get_input_type() === 'checkbox', $field ),
+					'text'            => apply_filters( 'gppa_no_choices_text', '&ndash; ' . esc_html__( 'No Results', 'gp-populate-anything' ) . ' &ndash;', $field ),
+					'isSelected'      => false,
 					'gppaErrorChoice' => 'no_choices',
-					'object' => null
+					'object'          => null,
 				),
 			);
 		}
@@ -1091,7 +1159,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			foreach ( $field_value_object_choices as $field_value_object_choice ) {
 				if ( $field_value_object_choice['value'] == rgar( $field_values, $field_value_object_field_id ) ) {
-					$objects = array($field_value_object_choice['object']);
+					$objects = array( $field_value_object_choice['object'] );
 					break;
 				}
 			}
@@ -1104,10 +1172,10 @@ class GP_Populate_Anything extends GP_Plugin {
 		foreach ( $objects as $object ) {
 			$object_processed = $this->process_template( $field, 'value', $object, 'values', $objects );
 
-			if( ! is_array( $object_processed ) ) {
+			if ( ! is_array( $object_processed ) ) {
 				// This will be an array when the top-level field is selected but it will be a string when a specific input is selected.
 				$decoded = GFAddOn::maybe_decode_json( $object_processed );
-				if( $decoded !== null ) {
+				if ( $decoded !== null ) {
 					$object_processed = $decoded;
 				}
 
@@ -1117,23 +1185,21 @@ class GP_Populate_Anything extends GP_Plugin {
 				if ( strpos( $templates['value'], 'meta_' ) === 0 && strpos( $object_processed, ',' ) ) {
 					$object_processed = array_map( 'trim', explode( ',', $object_processed ) );
 				}
-
 			}
 
-			if( is_array( $object_processed ) ) {
+			if ( is_array( $object_processed ) ) {
 				$values_to_select = array_unique( array_merge( $object_processed, $values_to_select ) );
 			} else {
 				$values_to_select[] = $object_processed;
 			}
-
 		}
 
 		if ( $field->type === 'checkbox' ) {
 
 			$values_to_select_by_input = array();
-			$choice_number = 0;
+			$choice_number             = 0;
 
-			foreach ( $field->choices as $choice  ) {
+			foreach ( $field->choices as $choice ) {
 				$choice_number++;
 
 				// Hack to skip numbers ending in 0, so that 5.1 doesn't conflict with 5.10. From class-gf-field-checkbox.php
@@ -1170,19 +1236,19 @@ class GP_Populate_Anything extends GP_Plugin {
 		$template_rows  = rgar( $_POST, 'templateRows' );
 		$populate       = rgar( $_POST, 'gppaPopulate' );
 
-		$gppa_prefix = 'gppa-' . $populate . '-';
-		$object_type = rgar( $field_settings, $gppa_prefix . 'object-type' );
+		$gppa_prefix          = 'gppa-' . $populate . '-';
+		$object_type          = rgar( $field_settings, $gppa_prefix . 'object-type' );
 		$object_type_instance = rgar( $this->_object_types, $object_type );
 
 		if ( $object_type_instance->isRestricted() && ! is_super_admin() ) {
 			wp_die( -1 );
 		}
 
-		$objects         = $this->get_field_objects( $field_settings, null, $populate );
+		$objects = $this->get_field_objects( $field_settings, null, $populate );
 
 		$preview_results = array(
 			'results' => array(),
-			'limit' => gp_populate_anything()->get_query_limit( $object_type_instance, $field_settings ),
+			'limit'   => gp_populate_anything()->get_query_limit( $object_type_instance, $field_settings ),
 		);
 
 		foreach ( $objects as $object_index => $object ) {
@@ -1190,9 +1256,9 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			foreach ( $template_rows as $template_row ) {
 				$template_label = rgar( $template_row, 'label', '(Unknown Property)' );
-				$template = rgar( $template_row, 'id' );
+				$template       = rgar( $template_row, 'id' );
 
-				if ( !$template ) {
+				if ( ! $template ) {
 					continue;
 				}
 
@@ -1277,7 +1343,7 @@ class GP_Populate_Anything extends GP_Plugin {
 						$objects_in_value = array();
 					}
 
-					$add_input_value = function() use ($values, $field_value_object_choice, $field, $template, $objects) {
+					$add_input_value = function() use ( $values, $field_value_object_choice, $field, $template, $objects ) {
 						$values[] = $this->process_template(
 							$field,
 							$template,
@@ -1296,16 +1362,16 @@ class GP_Populate_Anything extends GP_Plugin {
 					if ( is_scalar( $input_value ) ) {
 						if ( $field_value_object_choice['value'] == $input_value ) {
 							$objects_in_value[] = $field_value_object_choice['object'];
-							$values = $add_input_value();
+							$values             = $add_input_value();
 						}
-					/**
-					 * Loops values that are arrays like the values from Multi Select fields
-					 */
-					} else if ( is_array( $input_value ) ) {
+						/**
+						 * Loops values that are arrays like the values from Multi Select fields
+						 */
+					} elseif ( is_array( $input_value ) ) {
 						foreach ( $input_value as $value ) {
 							if ( $field_value_object_choice['value'] == $value ) {
 								$objects_in_value[] = $field_value_object_choice['object'];
-								$values = $add_input_value();
+								$values             = $add_input_value();
 							}
 						}
 					}
@@ -1339,8 +1405,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$values = $this->process_template( $field, $template, $objects[0], 'values', $objects );
 
-		return gf_apply_filters( array( 'gppa_get_input_values', $field->formId, $field->id ), $values, $field,
-			$template, $objects );
+		return gf_apply_filters(
+			array( 'gppa_get_input_values', $field->formId, $field->id ),
+			$values,
+			$field,
+			$template,
+			$objects
+		);
 
 	}
 
@@ -1365,21 +1436,21 @@ class GP_Populate_Anything extends GP_Plugin {
 			$field->choices = $this->get_input_choices( $field, $field_values );
 			$field->choices = $this->maybe_select_choices( $field, $field_values );
 
-			$field->gppaDisable = ! empty ( $field->choices[0]['gppaErrorChoice'] );
+			$field->gppaDisable = ! empty( $field->choices[0]['gppaErrorChoice'] );
 
-			if( $field->get_input_type() == 'checkbox' ) {
+			if ( $field->get_input_type() == 'checkbox' ) {
 				$inputs = array();
-				$index = 1;
+				$index  = 1;
 
-				foreach( $field->choices as $choice ) {
+				foreach ( $field->choices as $choice ) {
 
 					if ( $index % 10 == 0 ) {
 						$index++;
 					}
 
 					$inputs[] = array(
-						'id' => sprintf( '%d.%d', $field->id, $index ),
-						'label' => $choice['text']
+						'id'    => sprintf( '%d.%d', $field->id, $index ),
+						'label' => $choice['text'],
 					);
 
 					$index++;
@@ -1392,7 +1463,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			if ( $field->get_input_type() === 'select' && count( $field->choices ) && ! empty( $field->choices[0]['value'] ) && ! $field->placeholder ) {
 				$first_choice_value = $field->choices[0]['value'];
 			}
-
 		}
 
 		/**
@@ -1402,7 +1472,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			$field_value = rgar( $field_values, $field->id );
 
-		} else if ( $field->inputs && ! in_array( $field->type, self::get_interpreted_multi_input_field_types() ) ) {
+		} elseif ( $field->inputs && ! in_array( $field->type, self::get_interpreted_multi_input_field_types() ) ) {
 
 			$field_value = array();
 
@@ -1411,7 +1481,6 @@ class GP_Populate_Anything extends GP_Plugin {
 					$field_value[ $input['id'] ] = $value;
 				}
 			}
-
 		} else {
 
 			$field_value = $this->get_input_values( $field, 'value', $field_values, $lead, $form );
@@ -1421,7 +1490,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			if ( has_filter( $filter_name ) ) {
 				$field_value = apply_filters( $filter_name, $field_value, $field, $field_values );
 			}
-
 		}
 
 		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types() ) ) {
@@ -1441,11 +1509,11 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * because GF-dyn-pop Quantity is not fetched correctly by the get_value_default_if_empty() below.
 		 */
 		if ( rgblank( $field_value ) ) {
-		    if ( rgar( $field, 'gppa-values-enabled' ) || rgar( $field, 'gppa-choices-enabled' ) ) {
-			    $field_value = GFFormsModel::get_field_value( $field, $field_values );
-            } else {
+			if ( rgar( $field, 'gppa-values-enabled' ) || rgar( $field, 'gppa-choices-enabled' ) ) {
+				$field_value = GFFormsModel::get_field_value( $field, $field_values );
+			} else {
 				$field_value = rgar( $field_values, $field->id );
-            }
+			}
 		}
 
 		if ( rgar( $_REQUEST, 'gravityview-meta' ) && isset( $field_values[ $field->id ] ) ) {
@@ -1455,15 +1523,15 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field_value = $field->get_value_default_if_empty( $field_value );
 
 		// Can't always rely on Gravity Forms default value.
-		switch( $field->get_input_type() ) {
+		switch ( $field->get_input_type() ) {
 			case 'singleproduct':
 			case 'hiddenproduct':
-				if( rgblank( $field_value[ "{$field->id}.1" ] ) ) {
+				if ( rgblank( $field_value[ "{$field->id}.1" ] ) ) {
 					$field_value[ "{$field->id}.1" ] = $field->label;
 				}
-				if( rgblank( $field_value[ "{$field->id}.3" ] ) ) {
+				if ( rgblank( $field_value[ "{$field->id}.3" ] ) ) {
 					$quantity_field = GFCommon::get_product_fields_by_type( $form, array( 'quantity' ), $field->id );
-					if( ! count( $quantity_field ) ) {
+					if ( ! count( $quantity_field ) ) {
 						// GF-populated Single Product Quantity input values are not correctly fetched via get_value_default_if_empty()
 						// above. Let's get them from our $field_values array.
 						$field_value[ "{$field->id}.3" ] = rgar( $field_values, "{$field->id}.3", $field->disableQuantity );
@@ -1471,22 +1539,22 @@ class GP_Populate_Anything extends GP_Plugin {
 				}
 				break;
 			case 'calculation':
-				if( rgblank( $field_value[ "{$field->id}.1" ] ) ) {
+				if ( rgblank( $field_value[ "{$field->id}.1" ] ) ) {
 					$field_value[ "{$field->id}.1" ] = $field->label;
 				}
-				if( rgblank( $field_value[ "{$field->id}.3" ] ) && $field->disableQuantity ) {
+				if ( rgblank( $field_value[ "{$field->id}.3" ] ) && $field->disableQuantity ) {
 					$quantity_field = GFCommon::get_product_fields_by_type( $form, array( 'quantity' ), $field->id );
-					if( ! count( $quantity_field ) ) {
+					if ( ! count( $quantity_field ) ) {
 						// GF-populated Single Product Quantity input values are not correctly fetched via get_value_default_if_empty()
 						// above. Let's get them from our $field_values array.
 						$field_value[ "{$field->id}.3" ] = rgar( $field_values, "{$field->id}.3", $field->disableQuantity );
 					}
 				}
 				// Attempt to calculate the original calculation so it can be rendered in LMTs on load. Not 100% confident in this...
-				$fake_entry = $field_values;
-				$fake_entry['currency'] = GFCommon::get_currency();
-				$fake_entry['id'] = null;
-				$fake_entry['form_id'] = $form['id'];
+				$fake_entry                      = $field_values;
+				$fake_entry['currency']          = GFCommon::get_currency();
+				$fake_entry['id']                = null;
+				$fake_entry['form_id']           = $form['id'];
 				$field_value[ "{$field->id}.2" ] = GFCommon::calculate( $field, $form, $fake_entry );
 				break;
 		}
@@ -1496,8 +1564,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		$request_val = rgar( rgar( $_REQUEST, 'current-merge-tag-values' ), $field->get_value_default() );
 
-		$field_value = str_replace("\r\n", "\n", $field_value);
-		$request_val = str_replace("\r\n", "\n", $request_val);
+		$field_value = str_replace( "\r\n", "\n", $field_value );
+		$request_val = str_replace( "\r\n", "\n", $request_val );
 
 		if ( $field_value == $request_val ) {
 			$field_value = $field->get_value_default();
@@ -1515,7 +1583,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		/**
 		 * gppa_hydrate_field_html is used as a filter to receive many of the Live Merge Tag filters like the form does
-         * on initial load.
+		 * on initial load.
 		 */
 		if ( $include_html ) {
 			$result['html'] = apply_filters( 'gppa_hydrate_field_html', GFCommon::get_field_input( $field, $field_value, $lead_id, $form_id, $form ), $form, $result, $field );
@@ -1545,14 +1613,14 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $form;
 		}
 
-		foreach( $form['fields'] as &$field ) {
+		foreach ( $form['fields'] as &$field ) {
 
-			if( ! rgar( $field, 'gppa-choices-enabled' ) ) {
+			if ( ! rgar( $field, 'gppa-choices-enabled' ) ) {
 				continue;
 			}
 
 			$_field = $this->hydrate_field( $field, $form, $this->get_posted_field_values( $form ) );
-			$field = $_field['field'];
+			$field  = $_field['field'];
 
 		}
 
@@ -1560,8 +1628,8 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	/**
-     * Run exported values through helper method to ensure that the choice label is used instead of the value.
-     *
+	 * Run exported values through helper method to ensure that the choice label is used instead of the value.
+	 *
 	 * @param $value
 	 * @param $form_id
 	 * @param $field_id
@@ -1570,7 +1638,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * @return mixed|string|null
 	 */
 	public function hydrate_export_value( $value, $form_id, $field_id, $entry ) {
-	    $field = GFAPI::get_field( $form_id, $field_id );
+		$field = GFAPI::get_field( $form_id, $field_id );
 
 		return $this->get_submitted_choice_label( $value, $field, $entry['id'] );
 	}
@@ -1582,7 +1650,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		if ( isset( $GLOBALS['gppa-field-values'][ $form['id'] ] ) ) {
 			$field_values = array_replace( $field_values, rgar( $GLOBALS['gppa-field-values'], $form['id'], array() ) );
-		} else if ( isset( $_REQUEST['field-values'] ) ) {
+		} elseif ( isset( $_REQUEST['field-values'] ) ) {
 			$field_values = array_replace( $field_values, $this->get_field_values_from_request() );
 		}
 
@@ -1596,18 +1664,18 @@ class GP_Populate_Anything extends GP_Plugin {
 				if ( rgpost( "input_{$field->id}" ) ) {
 					$field_value = rgpost( "input_{$field->id}" );
 
-				/**
-				 * Value is cached in runtime variable
-				 */
-				} elseif ( isset ( $field_values[ $field->id ] ) ) {
+					/**
+					 * Value is cached in runtime variable
+					 */
+				} elseif ( isset( $field_values[ $field->id ] ) ) {
 					$field_value = $field_values[ $field->id ];
 
-				/**
-				 * Check for individually posted inputs for entire field
-				 */
+					/**
+					 * Check for individually posted inputs for entire field
+					 */
 				} else {
 					foreach ( $_POST as $posted_meta_key => $posted_meta ) {
-						if ( strpos($posted_meta_key, "input_{$field->id}_") !== 0 ) {
+						if ( strpos( $posted_meta_key, "input_{$field->id}_" ) !== 0 ) {
 							continue;
 						}
 
@@ -1617,22 +1685,22 @@ class GP_Populate_Anything extends GP_Plugin {
 							$field_value = array();
 						}
 
-						$field_value[ $field->id . '.' . $input_id ] = $posted_meta;
+						$field_value[ $field->id . '.' . $input_id ]  = $posted_meta;
 						$field_values[ $field->id . '.' . $input_id ] = $posted_meta;
 					}
 
-					if ($field_value) {
-					    continue;
-                    }
+					if ( $field_value ) {
+						continue;
+					}
 				}
 
 				/**
 				 * Ideally we'd like to use $field->get_value_submission() but it requires the submit $_POST value to be
-                 * present. Setting that will likely cause unintended side-effects.
+				 * present. Setting that will likely cause unintended side-effects.
 				 */
 				if ( $field_value == 'gf_other_choice' ) {
-					$other = $field->id . '_other';
-					$field_value = isset ( $field_values[ $other ] ) ? $field_values[ $other ] : rgpost( 'input_' . $other );
+					$other       = $field->id . '_other';
+					$field_value = isset( $field_values[ $other ] ) ? $field_values[ $other ] : rgpost( 'input_' . $other );
 				}
 
 				if ( $field_value ) {
@@ -1641,7 +1709,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		return count($field_values) ? $field_values : array();
+		return count( $field_values ) ? $field_values : array();
 	}
 
 	public function get_prepopulate_values( $form, $field_values = array() ) {
@@ -1672,7 +1740,6 @@ class GP_Populate_Anything extends GP_Plugin {
 					$prepopulate_values[ $field->id ] = RGFormsModel::get_parameter_value( $field->inputName, $field_values, $field );
 				}
 			}
-
 		}
 
 		return array_replace( $field_values, array_filter( $prepopulate_values ) );
@@ -1687,10 +1754,16 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$field_values = $this->get_field_values_from_request();
 
-		$field_html_empty_field_value = gf_apply_filters( array(
-			'gppa_field_html_empty_field_value',
-			$field->type
-		), '', $field, $form_id, $field_values );
+		$field_html_empty_field_value = gf_apply_filters(
+			array(
+				'gppa_field_html_empty_field_value',
+				$field->type,
+			),
+			'',
+			$field,
+			$form_id,
+			$field_values
+		);
 
 		if ( ( $this->has_empty_field_value( $field, 'choices' ) || $this->has_empty_field_value( $field, 'values' ) ) && $field_html_empty_field_value ) {
 			return '<div class="ginput_container">' . $field_html_empty_field_value . '</div>';
@@ -1706,10 +1779,10 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $field_content;
 		}
 
-		if ( ! isset ( $field->gppaDisable ) || $field->gppaDisable === false ) {
+		if ( ! isset( $field->gppaDisable ) || $field->gppaDisable === false ) {
 			return $field_content;
 		}
-		$field_content = preg_replace( '/ value=([\'"])/', " disabled=\"true\" selected value=$1", $field_content );
+		$field_content = preg_replace( '/ value=([\'"])/', ' disabled="true" selected value=$1', $field_content );
 		$field_content = str_replace( '<select ', '<select disabled="true" ', $field_content );
 		$field_content = str_replace( '<textarea ', '<textarea disabled="true" ', $field_content );
 
@@ -1723,10 +1796,10 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	/**
 	 * Since the choices for a field do not exist on the field object after submission, we use the gppa_choices meta
-     * that's included during entry submission.
-     *
-     * This is favorable over always filtering gform_form_meta since always filtering gform_form_meta can caused
-     * unintended consequences.
+	 * that's included during entry submission.
+	 *
+	 * This is favorable over always filtering gform_form_meta since always filtering gform_form_meta can caused
+	 * unintended consequences.
 	 *
 	 * @param $value
 	 * @param $field
@@ -1791,7 +1864,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			return $form;
 		}
 
-		if( GFCommon::is_entry_detail() ) {
+		if ( GFCommon::is_entry_detail() ) {
 			// @todo Ugh, this is super messy. Not sure that an $entry should be passed as $field_values. Let's revisit.
 			$field_values = $this->get_current_entry();
 		} else {
@@ -1804,40 +1877,40 @@ class GP_Populate_Anything extends GP_Plugin {
 				continue;
 			}
 
-			$field->choices = $this->get_input_choices( $field, $field_values );
-			$field->gppaDisable = ! empty ( $field->choices[0]['gppaErrorChoice'] );
+			$field->choices     = $this->get_input_choices( $field, $field_values );
+			$field->gppaDisable = ! empty( $field->choices[0]['gppaErrorChoice'] );
 
 			/* Append selected choice during submission if missing from choices fetched above */
-            if ( $entry = $this->get_current_entry() ) {
-	            $field_value = rgar( $field_values, $field->id );
-	            $choices = wp_list_pluck( $field->choices, 'text', 'value' );
+			if ( $entry = $this->get_current_entry() ) {
+				$field_value = rgar( $field_values, $field->id );
+				$choices     = wp_list_pluck( $field->choices, 'text', 'value' );
 
-	            $gppa_choices = gform_get_meta( $entry['id'], 'gppa_choices' );
-                $label = rgar( rgar( $gppa_choices, $field->id ), $field_value );
+				$gppa_choices = gform_get_meta( $entry['id'], 'gppa_choices' );
+				$label        = rgar( rgar( $gppa_choices, $field->id ), $field_value );
 
-	            if ( $field_value && ! isset( $choices[ $field_value ] ) && $label ) {
-		            $field->choices[] = array(
-			            'value' => $field_value,
-			            'text'  => $label,
-			            'isSelected' => true,
-		            );
-	            }
-            }
+				if ( $field_value && ! isset( $choices[ $field_value ] ) && $label ) {
+					$field->choices[] = array(
+						'value'      => $field_value,
+						'text'       => $label,
+						'isSelected' => true,
+					);
+				}
+			}
 
-			if( $field->get_input_type() == 'checkbox' ) {
+			if ( $field->get_input_type() == 'checkbox' ) {
 
 				$inputs = array();
-				$index = 1;
+				$index  = 1;
 
-				foreach( $field->choices as $choice ) {
+				foreach ( $field->choices as $choice ) {
 
 					if ( $index % 10 == 0 ) {
 						$index++;
 					}
 
 					$inputs[] = array(
-						'id' => sprintf( '%d.%d', $field->id, $index ),
-						'label' => $choice['text']
+						'id'    => sprintf( '%d.%d', $field->id, $index ),
+						'label' => $choice['text'],
 					);
 
 					$index++;
@@ -1847,7 +1920,6 @@ class GP_Populate_Anything extends GP_Plugin {
 				$field->inputs = $inputs;
 
 			}
-
 		}
 
 		return $form;
@@ -1862,7 +1934,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		// Avoid infinite loops...
 		$this->_getting_current_entry = true;
-		$entry = GFEntryDetail::get_current_entry();
+		$entry                        = GFEntryDetail::get_current_entry();
 		$this->_getting_current_entry = false;
 		return $entry;
 	}
@@ -1942,26 +2014,32 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function hydrate_initial_load( $form, $ajax = false, $field_values = array(), $entry_id = 0, $hydrate_values = true ) {
 
-		if( ! isset( $form['fields'] ) ) {
+		if ( ! isset( $form['fields'] ) ) {
 			return $form;
 		}
 
-		if ( !isset($GLOBALS['gppa-field-values'][ $form['id'] ]) ) {
+		if ( ! isset( $GLOBALS['gppa-field-values'][ $form['id'] ] ) ) {
 			$GLOBALS['gppa-field-values'][ $form['id'] ] = array();
 		}
 
 		if ( ! empty( $field_values ) ) {
 			$this->_prepopulate_fields_values[ $form['id'] ] = $field_values;
-			$GLOBALS['gppa-field-values'][ $form['id'] ] = $field_values;
+			$GLOBALS['gppa-field-values'][ $form['id'] ]     = $field_values;
 		}
 
-		$field_values = $this->get_posted_field_values( $form );
+		$field_values             = $this->get_posted_field_values( $form );
 		$save_and_continue_values = $this->get_save_and_continue_values( rgar( $_REQUEST, 'gf_token' ) );
 
-		$entry_id = gf_apply_filters( array(
-			'gppa_hydrate_initial_load_entry_id',
-			$form['id']
-		), $entry_id, $form, $ajax, $field_values );
+		$entry_id = gf_apply_filters(
+			array(
+				'gppa_hydrate_initial_load_entry_id',
+				$form['id'],
+			),
+			$entry_id,
+			$form,
+			$ajax,
+			$field_values
+		);
 
 		foreach ( $form['fields'] as &$field ) {
 			// Ensure dateFormat is set if it's not specified (breaks LMT)
@@ -1989,21 +2067,21 @@ class GP_Populate_Anything extends GP_Plugin {
 					} else {
 						$field->defaultValue = $hydrated_value;
 					}
-                }
+				}
 			}
 
 			/**
 			 * If hydrated value is an array of input, add individual fields to gppa-field-values instead
 			 */
-			if ( $this->is_field_value_array_of_input_value($hydrated_value, $field) ) {
+			if ( $this->is_field_value_array_of_input_value( $hydrated_value, $field ) ) {
 				foreach ( $hydrated_value as $input_id => $input_value ) {
 					$GLOBALS['gppa-field-values'][ $field->formId ][ $input_id ] = $input_value;
 				}
-            } else {
+			} else {
 				$GLOBALS['gppa-field-values'][ $field->formId ][ $field->id ] = $hydrated_value;
 			}
 
-			$field_values[ $field->id ]                                   = $hydrated_value;
+			$field_values[ $field->id ] = $hydrated_value;
 		}
 
 		return $form;
@@ -2034,13 +2112,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
-	public function modify_admin_field_values( $form, $ajax = false , $field_values = array() ) {
+	public function modify_admin_field_values( $form, $ajax = false, $field_values = array() ) {
 
 		if ( GFCommon::is_form_editor() || $this->_getting_current_entry || ! is_array( $form ) ) {
 			return $form;
 		}
 
-		if( GFCommon::is_entry_detail() ) {
+		if ( GFCommon::is_entry_detail() ) {
 			// @todo Ugh, this is super messy. Not sure that an $entry should be passed as $field_values. Let's revisit.
 			$field_values = $this->get_current_entry();
 		} else {
@@ -2052,7 +2130,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				if ( $value = $this->get_input_values( $field, 'value', $field_values ) ) {
 					$filter_name = 'gppa_modify_field_values_' . $field->type;
 
-					if ( has_filter($filter_name ) ) {
+					if ( has_filter( $filter_name ) ) {
 						$field = apply_filters( $filter_name, $field, $value, $field_values );
 					} else {
 						$field->defaultValue = $value;
@@ -2064,7 +2142,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			foreach ( $field->inputs as &$input ) {
 				if ( $value = $this->get_input_values( $field, $input['id'], $field_values ) ) {
-					if( $field->get_input_type() == 'checkbox' ) {
+					if ( $field->get_input_type() == 'checkbox' ) {
 						$field = $this->select_choice( $field, $value );
 					} else {
 						$input['defaultValue'] = $value;
@@ -2078,8 +2156,8 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function select_choice( $field, $value ) {
-		foreach( $field->choices as &$choice ) {
-			if( $choice['value'] == $value ) {
+		foreach ( $field->choices as &$choice ) {
+			if ( $choice['value'] == $value ) {
 				$choice['isSelected'] = true;
 			}
 		}
@@ -2116,23 +2194,29 @@ class GP_Populate_Anything extends GP_Plugin {
 				continue;
 			}
 
-			$output[ rgar( $property, 'group', 'ungrouped' ) ][] = array_merge( $property, array(
-				'value' => $property_id,
-			) );
+			$output[ rgar( $property, 'group', 'ungrouped' ) ][] = array_merge(
+				$property,
+				array(
+					'value' => $property_id,
+				)
+			);
 		}
 
 		foreach ( $output as $group_id => $group_items ) {
-			usort( $output[ $group_id ], function ( $a, $b ) {
-				if ( is_array( $a ) ) {
-					$a = $a['label'];
-				}
+			usort(
+				$output[ $group_id ],
+				function ( $a, $b ) {
+					if ( is_array( $a ) ) {
+						$a = $a['label'];
+					}
 
-				if ( is_array( $b ) ) {
-					$b = $b['label'];
-				}
+					if ( is_array( $b ) ) {
+						$b = $b['label'];
+					}
 
-				return strnatcmp( $a, $b );
-			} );
+					return strnatcmp( $a, $b );
+				}
+			);
 		}
 
 		wp_send_json( $output );
@@ -2242,7 +2326,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		$fields       = rgar( $_REQUEST, 'field-ids', array() );
 		$field_values = $this->get_field_values_from_request();
 		$lead_id      = rgar( $_REQUEST, 'lead-id', 0 );
-		$using_lead   = !!$lead_id;
+		$using_lead   = ! ! $lead_id;
 		$fake_lead    = array();
 		$response     = array(
 			'fields'           => array(),
@@ -2274,7 +2358,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			} else {
 				$fake_lead[ $input ] = $field->get_value_save_entry( $value, $form, $input, null, null );
 			}
-
 		}
 
 		/**
@@ -2296,7 +2379,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		foreach ( $fields as $field_id ) {
 
-			$field          = GFFormsModel::get_field( $form, $field_id );
+			$field = GFFormsModel::get_field( $form, $field_id );
 
 			/**
 			 * Use force  usefield values if a lead is loaded in to ensure that Live Merge Tags are populated
@@ -2308,23 +2391,28 @@ class GP_Populate_Anything extends GP_Plugin {
 
 			/* Add hydrated field value to field values object */
 			$GLOBALS['gppa-field-values'][ $form['id'] ][ $field_id ] = rgar( $hydrated_field, 'field_value' );
-			$fake_lead[ $field_id ] = $GLOBALS['gppa-field-values'][ $form['id'] ][ $field_id ];
+			$fake_lead[ $field_id ]                                   = $GLOBALS['gppa-field-values'][ $form['id'] ][ $field_id ];
 
 		}
 
-    $live_merge_tags = rgar( $_REQUEST, 'merge-tags', array() );
+		$live_merge_tags = rgar( $_REQUEST, 'merge-tags', array() );
 
-    foreach ( $live_merge_tags as $live_merge_tag ) {
-      $live_merge_tag = stripslashes( $live_merge_tag );
+		foreach ( $live_merge_tags as $live_merge_tag ) {
+			$live_merge_tag = stripslashes( $live_merge_tag );
 
-      $live_merge_tag_value = $this->live_merge_tags->get_live_merge_tag_value( $live_merge_tag, $form, $fake_lead );
-      $response['merge_tag_values'][ $live_merge_tag ] = gf_apply_filters( array(
-          'gppa_ajax_merge_tag_value',
-          $live_merge_tag,
-        ), $live_merge_tag_value, $live_merge_tag, $live_merge_tags );
-    }
+			$live_merge_tag_value                            = $this->live_merge_tags->get_live_merge_tag_value( $live_merge_tag, $form, $fake_lead );
+			$response['merge_tag_values'][ $live_merge_tag ] = gf_apply_filters(
+				array(
+					'gppa_ajax_merge_tag_value',
+					$live_merge_tag,
+				),
+				$live_merge_tag_value,
+				$live_merge_tag,
+				$live_merge_tags
+			);
+		}
 
-    wp_send_json( apply_filters( 'gppa_get_batch_field_html_response', $response ) );
+		wp_send_json( apply_filters( 'gppa_get_batch_field_html_response', $response ) );
 
 	}
 
@@ -2424,7 +2512,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		return false;
 
-    }
+	}
 
 	public function field_standard_settings() {
 		?>
@@ -2459,10 +2547,10 @@ class GP_Populate_Anything extends GP_Plugin {
 	 */
 	public function override_validation_for_populated_product_fields( $form ) {
 
-		foreach( $form['fields'] as &$field ) {
-			if( $this->is_field_dynamically_populated( $field ) && GFCommon::is_product_field( $field->type ) ) {
+		foreach ( $form['fields'] as &$field ) {
+			if ( $this->is_field_dynamically_populated( $field ) && GFCommon::is_product_field( $field->type ) ) {
 				$field->allowsPrepopulate = true;
-			} else if ( $field->type === 'consent' && $this->live_merge_tags->has_live_merge_tag( $field->checkboxLabel . $field->description ) ) {
+			} elseif ( $field->type === 'consent' && $this->live_merge_tags->has_live_merge_tag( $field->checkboxLabel . $field->description ) ) {
 				$field->allowsPrepopulate = true;
 			}
 		}

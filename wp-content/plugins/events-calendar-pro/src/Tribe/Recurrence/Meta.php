@@ -227,7 +227,7 @@ class Tribe__Events__Pro__Recurrence__Meta {
 				// set the end too to stick with new format
 				$exclusion['end'] = $formatted;
 			} else {
-				if ( isset( $exlcusion['end'] ) ) {
+				if ( isset( $exclusion['end'] ) ) {
 					$exclusion['end'] = date( $datepicker_format, strtotime( $exclusion['end'] ) );
 				}
 			}

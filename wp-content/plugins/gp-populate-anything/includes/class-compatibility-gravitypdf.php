@@ -1,6 +1,6 @@
 <?php
 
-class GPPA_Compatibiliity_GravityPDF {
+class GPPA_Compatibility_GravityPDF {
 
 	private static $instance = null;
 
@@ -62,5 +62,5 @@ class GPPA_Compatibiliity_GravityPDF {
 }
 
 function gppa_compatibility_gravitypdf() {
-	return GPPA_Compatibiliity_GravityPDF::get_instance();
+	return GPPA_Compatibility_GravityPDF::get_instance();
 }

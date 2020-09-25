@@ -15,6 +15,7 @@ class ACUI_Exporter{
 
 		add_action( 'wp_ajax_acui_export_users_csv', array( $this, 'export_users_csv' ) );
 		add_filter( 'acui_export_get_key_user_data', array( $this, 'filter_key_user_id' ) );
+		add_filter( 'acui_export_non_date_keys', array( $this, 'get_non_date_keys' ), 1, 1 );
 	}
 
 	public static function admin_gui(){
@@ -89,13 +90,17 @@ class ACUI_Exporter{
 	<?php
 	}
 
-	function is_valid_timestamp( $timestamp ){
+	static function is_valid_timestamp( $timestamp ){
 		return ( (string) (int) $timestamp === $timestamp ) && ( $timestamp <= PHP_INT_MAX ) && ( $timestamp >= ~PHP_INT_MAX );
 	}
 
-	function prepare( $key, $value, $datetime_format ){
+	function get_non_date_keys( $non_date_keys ){
+		return array_merge( $non_date_keys, $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys );
+	}
+
+	public static function prepare( $key, $value, $datetime_format ){
 		$timestamp_keys = apply_filters( 'acui_export_timestamp_keys', array( 'wc_last_active' ) );
-		$non_date_keys = apply_filters( 'acui_export_non_date_keys', array_merge( $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys ) );
+		$non_date_keys = apply_filters( 'acui_export_non_date_keys', array() );
 
 		if( is_array( $value ) ){
 			return serialize( $value );
@@ -106,7 +111,7 @@ class ACUI_Exporter{
 		elseif( strtotime( $value ) ){ // dates in datetime format
 			return date( $datetime_format, strtotime( $value ) );
 		}
-		elseif( ( $this->is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ){ // dates in timestamp format
+		elseif( ( self::is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ){ // dates in timestamp format
 			return date( $datetime_format, $value );
 		}
 		else{
@@ -164,9 +169,7 @@ class ACUI_Exporter{
 			$row[] = $key;
 		}
 
-		foreach ( $this->get_buddypress_fields() as $key ) {
-			$row[] = $key;
-		}
+		$row = apply_filters( 'acui_export_columns', $row );
 
 		$data[] = $row;
 		$row = array();
@@ -178,18 +181,16 @@ class ACUI_Exporter{
 
 			foreach ( $this->user_data as $key ) {
 				$key = apply_filters( 'acui_export_get_key_user_data', $key );
-				$row[] = $this->prepare( $key, $userdata->data->{$key}, $datetime_format );
+				$row[] = self::prepare( $key, $userdata->data->{$key}, $datetime_format );
 			}
 
 			$row[] = $this->get_role( $user );
 
 			foreach ( $this->get_user_meta_keys() as $key ) {
-				$row[] = $this->prepare( $key, get_user_meta( $user, $key, true ), $datetime_format );
+				$row[] = self::prepare( $key, get_user_meta( $user, $key, true ), $datetime_format );
 			}
 
-			foreach ( $this->get_buddypress_fields() as $key ) {
-				$row[] = $this->prepare( $key, xprofile_get_field_data( $key, $user, 'comma' ), $datetime_format );
-			}
+			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format );
 
 			$data[] = $row;
 			$row = array();
@@ -238,31 +239,6 @@ class ACUI_Exporter{
 	  		$meta_keys[] = $value["meta_key"];
 	  	}
 	    return apply_filters( 'acui_export_get_user_meta_keys', $meta_keys );
-	}
-
-	function get_buddypress_fields(){
-		if( !is_plugin_active( 'buddypress/bp-loader.php' ) ){
-			return array();
-		}
-
-		if( !class_exists( "BP_XProfile_Group" ) ){
-			require_once( WP_PLUGIN_DIR . "/buddypress/bp-xprofile/classes/class-bp-xprofile-group.php" );
-		}
-
-		$buddypress_fields = array();
-		$profile_groups = BP_XProfile_Group::get( array( 'fetch_fields' => true	) );
-
-		if ( !empty( $profile_groups ) ) {
-			 foreach ( $profile_groups as $profile_group ) {
-				if ( !empty( $profile_group->fields ) ) {				
-					foreach ( $profile_group->fields as $field ) {
-						$buddypress_fields[] = $field->name;
-					}
-				}
-			}
-		}
-
-		return $buddypress_fields;
 	}
 
 	function get_user_id_list( $role, $from, $to ){

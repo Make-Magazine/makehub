@@ -6,16 +6,17 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		'list',
 	);
 
-	public function __construct($id) {
-		parent::__construct($id);
+	public function __construct( $id ) {
+		parent::__construct( $id );
 
 		add_action( 'gppa_pre_object_type_query_gf_entry', array( $this, 'add_filter_hooks' ) );
 
-		add_filter( 'gppa_process_template', array( $this, 'maybe_combine_multi_input_entry_template'), 5, 7 );
+		add_filter( 'gppa_process_template', array( $this, 'replace_gf_merge_tags_for_entry' ), 15, 6 );
+		add_filter( 'gppa_process_template', array( $this, 'maybe_combine_multi_input_entry_template' ), 5, 7 );
 	}
 
 	public function add_filter_hooks() {
-		add_filter('gppa_object_type_gf_entry_filter', array( $this, 'process_filter_default'), 10, 4 );
+		add_filter( 'gppa_object_type_gf_entry_filter', array( $this, 'process_filter_default' ), 10, 4 );
 	}
 
 	/**
@@ -39,9 +40,9 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			'fields' => array(
 				'label' => esc_html__( 'Fields', 'gp-populate-anything' ),
 			),
-			'meta' => array(
+			'meta'   => array(
 				'label' => esc_html__( 'Entry Meta', 'gp-populate-anything' ),
-			)
+			),
 		);
 	}
 
@@ -55,19 +56,19 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 	public function get_properties( $form_id = null ) {
 
-		if ( !$form_id ) {
+		if ( ! $form_id ) {
 			return array();
 		}
 
 		$properties = array(
-			'id' => array(
+			'id'           => array(
 				'label'    => 'Entry ID',
 				'value'    => 'id',
 				'callable' => array( $this, 'get_col_rows' ),
 				'args'     => array( GFFormsModel::get_entry_table_name(), 'id' ),
 				'orderby'  => true,
 			),
-			'created_by' => array(
+			'created_by'   => array(
 				'label'    => 'Created by (User ID)',
 				'value'    => 'created_by',
 				'callable' => '__return_empty_array',
@@ -117,7 +118,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$prop = preg_replace( '/^gf_field_/', '', $prop );
 
-		if ( ! isset ( $object->{$prop} ) ) {
+		if ( ! isset( $object->{$prop} ) ) {
 			return null;
 		}
 
@@ -125,21 +126,21 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 	}
 
-	public function date_to_time ($date, $format = 'mdy') {
+	public function date_to_time( $date, $format = 'mdy' ) {
 
 		$delimiter = '/';
 
 		if ( strpos( $date, '-' ) !== false ) {
 			$delimiter = '-';
-		} else if ( strpos( $date, '.' ) !== false ) {
+		} elseif ( strpos( $date, '.' ) !== false ) {
 			$delimiter = '.';
 		}
 
 		if ( strpos( $format, 'ymd' ) === 0 ) {
 			list( $year, $month, $day ) = explode( $delimiter, $date );
-		} else if ( strpos( $format, 'dmy' ) === 0 ) {
+		} elseif ( strpos( $format, 'dmy' ) === 0 ) {
 			list( $day, $month, $year ) = explode( $delimiter, $date );
-		} else if ( strpos( $format, 'mdy' ) === 0 ) {
+		} elseif ( strpos( $format, 'mdy' ) === 0 ) {
 			list( $month, $day, $year ) = explode( $delimiter, $date );
 		}
 
@@ -158,37 +159,37 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
 		if ( ! isset( $gf_query_where[ $filter_group_index ] ) ) {
 			$gf_query_where[ $filter_group_index ] = array();
 		}
 
 		switch ( strtoupper( $filter['operator'] ) ) {
-			case 'CONTAINS' :
+			case 'CONTAINS':
 				$operator     = GF_Query_Condition::LIKE;
 				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
 				break;
-			case 'STARTS_WITH' :
+			case 'STARTS_WITH':
 				$operator     = GF_Query_Condition::LIKE;
 				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
 				break;
-			case 'ENDS_WITH' :
+			case 'ENDS_WITH':
 				$operator     = GF_Query_Condition::LIKE;
 				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
 				break;
-			case 'IS NOT' :
-			case 'ISNOT' :
-			case '<>' :
+			case 'IS NOT':
+			case 'ISNOT':
+			case '<>':
 				$operator = GF_Query_Condition::NEQ;
 				break;
-			case 'LIKE' :
+			case 'LIKE':
 				$operator = GF_Query_Condition::LIKE;
 				break;
-			case 'NOT IN' :
+			case 'NOT IN':
 				$operator = GF_Query_Condition::NIN;
 				break;
-			case 'IN' :
+			case 'IN':
 				$operator = GF_Query_Condition::IN;
 				break;
 			case '>=':
@@ -203,15 +204,16 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			case '>':
 				$operator = GF_Query_Condition::GT;
 				break;
-			case 'IS' :
-			case '=' :
-			default:
+			case 'IS':
+			case '=':
 				$operator = GF_Query_Condition::EQ;
 				// Implemented to support Checkbox fields as a Form Field Value filters.
-				if( is_array( $filter_value ) ) {
+				if ( is_array( $filter_value ) ) {
 					$operator = GF_Query_Condition::IN;
 				}
 				break;
+			default:
+				return $gf_query_where;
 		}
 
 		if ( is_numeric( $filter_value ) ) {
@@ -219,7 +221,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		}
 
 		if ( is_array( $filter_value ) ) {
-			foreach( $filter_value as &$_filter_value ) {
+			foreach ( $filter_value as &$_filter_value ) {
 				$_filter_value = new GF_Query_Literal( $_filter_value );
 			}
 			unset( $_filter_value );
@@ -232,23 +234,38 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			 * ourselves into a time based on the format from the actual date field saved in the form that we're
 			 * pulling entries from.
 			 */
-			$form_id  = $primary_property_value;
-			$field_id = str_replace( 'gf_field_', '', rgar( $args, 'property_id' ) );
-			$date_field  = GFAPI::get_field( $form_id, absint( $field_id ) );
-			$time = null;
+			$form_id    = $primary_property_value;
+			$field_id   = str_replace( 'gf_field_', '', rgar( $args, 'property_id' ) );
+			$date_field = GFAPI::get_field( $form_id, absint( $field_id ) );
+			$time       = null;
 
-			if ( $date_format = rgar( $date_field, 'dateFormat' ) ) {
-				$time = $this->date_to_time( $filter_value, $date_format );
-			}
-
-			if ( ! is_numeric( $filter_value ) && 
-						           ( $time || (strlen( $filter_value ) > 1 && strtotime( $filter_value )) )
-					) {
-				if ( !$time) {
-					$time = strtotime( $filter_value );
+			/**
+			 * Force a value to be parsed as a date to enable date comparison using operators such as >, <, <=, etc.
+			 *
+			 * By default, values from date fields will be treated as dates. Using this filter, non-date fields can have
+			 * their values parsed as dates.
+			 *
+			 * @since 1.0-beta-4.89
+			 *
+			 * @param boolean $value Whether or not to parse the value as a date.
+			 * @param \GF_Field $field The field that is having its value parsed.
+			 */
+			// Ensure we're querying a date field before attempting to parse the filter as such
+			if ( $date_field->type == 'date' || gf_apply_filters( array( 'gppa_process_value_as_date', $form_id, $date_field->id ), false, $date_field ) ) {
+				if ( $date_format = rgar( $date_field, 'dateFormat' ) ) {
+					$time = $this->date_to_time( $filter_value, $date_format );
 				}
 
-				$filter_value = date( 'Y-m-d', $time );
+				if (
+					! is_numeric( $filter_value )
+					&& ( $time || ( strlen( $filter_value ) > 1 && strtotime( $filter_value ) ) )
+				) {
+					if ( ! $time ) {
+						$time = strtotime( $filter_value );
+					}
+
+					$filter_value = date( 'Y-m-d', $time );
+				}
 			}
 
 			$filter_value = new GF_Query_Literal( $filter_value );
@@ -264,7 +281,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 	}
 
-	public function exclude_trashed_entries ( $where_filter_groups ) {
+	public function exclude_trashed_entries( $where_filter_groups ) {
 
 		$where_not_trashed = new GF_Query_Condition(
 			new GF_Query_Column( 'status' ),
@@ -287,27 +304,32 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 */
 		extract( $args );
 
-		if ( !$primary_property_value ) {
+		if ( ! $primary_property_value ) {
 			return array();
 		}
 
 		$query_limit = gp_populate_anything()->get_query_limit( $this, $field );
 
-		$gf_query = new GF_Query( $primary_property_value, null, array(
-			'direction' => rgar( $ordering, 'order', 'ASC' ),
-			'key' => str_replace('gf_field_', '', rgar( $ordering, 'orderby' ) ),
-		), array(
-			'page_size' => $query_limit,
-		) );
+		$gf_query = new GF_Query(
+			$primary_property_value,
+			null,
+			array(
+				'direction' => rgar( $ordering, 'order', 'ASC' ),
+				'key'       => str_replace( 'gf_field_', '', rgar( $ordering, 'orderby' ) ),
+			),
+			array(
+				'page_size' => $query_limit,
+			)
+		);
 
 		$gf_query_where_groups = $this->process_filter_groups( $args, array() );
 
 		foreach ( $gf_query_where_groups as $gf_query_where_index => $gf_query_where_group ) {
-			$gf_query_where_groups[$gf_query_where_index] = call_user_func_array( array( 'GF_Query_Condition', '_and' ), $gf_query_where_group );
+			$gf_query_where_groups[ $gf_query_where_index ] = call_user_func_array( array( 'GF_Query_Condition', '_and' ), $gf_query_where_group );
 		}
 
 		$where_filter_groups = call_user_func_array( array( 'GF_Query_Condition', '_or' ), $gf_query_where_groups );
-		$where = $this->exclude_trashed_entries( $where_filter_groups );
+		$where               = $this->exclude_trashed_entries( $where_filter_groups );
 
 		$gf_query->where( $where );
 
@@ -346,7 +368,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		$output = array();
 
 		foreach ( $form['fields'] as $field ) {
-			if (array_search($field['type'], self::$excluded_fields) !== false) {
+			if ( array_search( $field['type'], self::$excluded_fields ) !== false ) {
 				continue;
 			}
 
@@ -357,7 +379,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 					'value' => $field['id'],
 					'label' => GFCommon::get_label( $field ),
 				);
-			} else if ( is_array( $field['inputs'] ) ) {
+			} elseif ( is_array( $field['inputs'] ) ) {
 				$output[] = array(
 					'value' => $field['id'],
 					'label' => GFCommon::get_label( $field ),
@@ -427,7 +449,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 		 *
 		 * Coerce field ID string to an integer using "+ 0". This trick works well with is_float as well.
 		 */
-		if ( (isset( $object->{$field_id} ) && is_scalar( $object->{$field_id} )) || ! is_int( $field_id + 0 ) ) {
+		if ( ( isset( $object->{$field_id} ) && is_scalar( $object->{$field_id} ) ) || ! is_int( $field_id + 0 ) ) {
 			return $template_value;
 		}
 
@@ -438,12 +460,27 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			if ( absint( $key ) === absint( $field_id ) ) {
 				$output[ $key ] = $value;
 			}
-
 		}
 
 		$output = array_unique( array_filter( $output ) );
 
 		return json_encode( $output );
+
+	}
+
+	public function replace_gf_merge_tags_for_entry( $template_value, $field, $template, $populate, $object, $object_type ) {
+
+		if ( $object_type->id !== $this->id ) {
+			return $template_value;
+		}
+
+		if ( empty( $object->form_id ) || ! $form = GFAPI::get_form( $object->form_id ) ) {
+			return $template_value;
+		}
+
+		$entry = (array) $object;
+
+		return GFCommon::replace_variables( $template_value, $form, $entry, false, false, false, 'text' );
 
 	}
 

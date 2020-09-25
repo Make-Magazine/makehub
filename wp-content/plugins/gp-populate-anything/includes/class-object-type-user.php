@@ -6,8 +6,8 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	private $meta_query_counter = 0;
 
-	public function __construct($id) {
-		parent::__construct($id);
+	public function __construct( $id ) {
+		parent::__construct( $id );
 
 		add_action( 'gppa_pre_object_type_query_user', array( $this, 'add_filter_hooks' ) );
 	}
@@ -30,7 +30,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	public function get_groups() {
 		return array(
-			'meta' => array(
+			'meta'        => array(
 				'label' => esc_html__( 'User Meta', 'gp-populate-anything' ),
 			),
 			'bp_xprofile' => array(
@@ -47,12 +47,12 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 	}
 
 	public function add_filter_hooks() {
-		add_filter('gppa_object_type_user_filter', array( $this, 'process_filter_default'), 10, 4 );
-		add_filter('gppa_object_type_user_filter_roles', array( $this, 'process_filter_roles'), 10, 4 );
-		add_filter('gppa_object_type_user_filter_group_meta', array( $this, 'process_filter_meta'), 10, 4 );
-		add_filter('gppa_object_type_user_filter_group_bp_xprofile', array( $this, 'process_filter_bp_xprofile'), 10, 4 );
+		add_filter( 'gppa_object_type_user_filter', array( $this, 'process_filter_default' ), 10, 4 );
+		add_filter( 'gppa_object_type_user_filter_roles', array( $this, 'process_filter_roles' ), 10, 4 );
+		add_filter( 'gppa_object_type_user_filter_group_meta', array( $this, 'process_filter_meta' ), 10, 4 );
+		add_filter( 'gppa_object_type_user_filter_group_bp_xprofile', array( $this, 'process_filter_bp_xprofile' ), 10, 4 );
 
-		add_filter('gppa_object_type_query_user', array( $this, 'maybe_add_primary_blog_where'), 10, 2 );
+		add_filter( 'gppa_object_type_query_user', array( $this, 'maybe_add_primary_blog_where' ), 10, 2 );
 	}
 
 	public function process_filter_default( $query_builder_args, $args ) {
@@ -67,7 +67,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->users, rgar( $property, 'value' ), $filter['operator'], $filter_value );
 
@@ -87,11 +87,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
-		$meta_value = $this->get_sql_value( 'contains', '"'.$filter_value.'"' );
+		$meta_value = $this->get_sql_value( 'contains', '"' . $filter_value . '"' );
 
-		$blog_id = get_current_blog_id();
+		$blog_id  = get_current_blog_id();
 		$operator = rgar( $filter, 'operator' ) === 'isnot' ? 'NOT LIKE' : 'LIKE';
 
 		$where = $wpdb->prepare( "( {$wpdb->usermeta}.meta_key = %s AND {$wpdb->usermeta}.meta_value {$operator} %s )", $wpdb->get_blog_prefix( $blog_id ) . 'capabilities', $meta_value );
@@ -100,9 +100,12 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		// Experimental! Set this join as the first join to improve performance on for large user meta tables.
 		// See: https://secure.helpscout.net/conversation/1080344220/15842?folderId=14965
-		$query_builder_args['joins'] = array_merge( array(
- 			'usermeta' => "LEFT JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )"
-		), $query_builder_args['joins'] );
+		$query_builder_args['joins'] = array_merge(
+			array(
+				'usermeta' => "LEFT JOIN {$wpdb->usermeta} ON ( {$wpdb->users}.ID = {$wpdb->usermeta}.user_id )",
+			),
+			$query_builder_args['joins']
+		);
 
 		return $query_builder_args;
 
@@ -120,17 +123,17 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 * @var $property
 		 * @var $property_id
 		 */
-		extract($args);
+		extract( $args );
 
-		$meta_specification = $this->get_value_specification( $filter_value, $filter['operator'] );
 		$meta_operator      = $this->get_sql_operator( $filter['operator'] );
+		$meta_specification = $this->get_value_specification( $filter_value, $filter['operator'], $meta_operator );
 		$meta_value         = $this->get_sql_value( $filter['operator'], $filter_value );
 
 		$this->meta_query_counter++;
 		$as_table = 'mq' . $this->meta_query_counter;
 
 		$query_builder_args['where'][ $filter_group_index ][] = $wpdb->prepare( "( {$as_table}.meta_key = %s AND {$as_table}.meta_value {$meta_operator} {$meta_specification} )", rgar( $property, 'value' ), $meta_value );
-		$query_builder_args['joins'][$as_table] = "LEFT JOIN {$wpdb->usermeta} AS {$as_table} ON ( {$wpdb->users}.ID = {$as_table}.user_id )";
+		$query_builder_args['joins'][ $as_table ]             = "LEFT JOIN {$wpdb->usermeta} AS {$as_table} ON ( {$wpdb->users}.ID = {$as_table}.user_id )";
 
 		return $query_builder_args;
 
@@ -150,8 +153,8 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		 */
 		extract( $args );
 
-		$data_specification = $this->get_value_specification( $filter_value, $filter['operator'] );
 		$data_operator      = $this->get_sql_operator( $filter['operator'] );
+		$data_specification = $this->get_value_specification( $filter_value, $filter['operator'], $data_operator );
 		$data_value         = $this->get_sql_value( $filter['operator'], $filter_value );
 
 		$bp_prefix     = bp_core_get_table_prefix();
@@ -170,52 +173,56 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		return array_merge( array(
-			'display_name' => array(
-				'label'      => esc_html__( 'Display Name', 'gp-populate-anything' ),
-				'value'    => 'display_name',
-				'callable' => array( $this, 'get_user_col_rows' ),
-				'args'     => array( $wpdb->users, 'display_name' ),
-				'orderby'  => true,
-			),
-			'ID'           => array(
-				'label'      => esc_html__( 'User ID', 'gp-populate-anything' ),
-				'value'    => 'ID',
-				'callable' => array( $this, 'get_user_col_rows' ),
-				'args'     => array( $wpdb->users, 'ID' ),
-				'orderby'  => true,
-			),
-			'user_login'   => array(
-				'label'      => esc_html__( 'Username', 'gp-populate-anything' ),
-				'value'    => 'user_login',
-				'callable' => array( $this, 'get_user_col_rows' ),
-				'args'     => array( $wpdb->users, 'user_login' ),
-				'orderby'  => true,
-			),
-			'user_email'   => array(
-				'label'      => esc_html__( 'User Email', 'gp-populate-anything' ),
-				'value'    => 'user_email',
-				'callable' => array( $this, 'get_user_col_rows' ),
-				'args'     => array( $wpdb->users, 'user_email' ),
-				'orderby'  => true,
-			),
-			'user_url'     => array(
-				'label'      => esc_html__( 'User URL', 'gp-populate-anything' ),
-				'value'    => 'user_url',
-				'callable' => array( $this, 'get_user_col_rows' ),
-				'args'     => array( $wpdb->users, 'user_url' ),
-				'orderby'  => true,
-			),
-			'roles'         => array(
-				'label'    => esc_html__( 'Role', 'gp-populate-anything' ),
-				'value'    => 'roles',
-				'callable' => array( $this, 'get_user_roles' ),
-				'operators' => array(
-					'is',
-					'isnot',
+		return array_merge(
+			array(
+				'display_name' => array(
+					'label'    => esc_html__( 'Display Name', 'gp-populate-anything' ),
+					'value'    => 'display_name',
+					'callable' => array( $this, 'get_user_col_rows' ),
+					'args'     => array( $wpdb->users, 'display_name' ),
+					'orderby'  => true,
+				),
+				'ID'           => array(
+					'label'    => esc_html__( 'User ID', 'gp-populate-anything' ),
+					'value'    => 'ID',
+					'callable' => array( $this, 'get_user_col_rows' ),
+					'args'     => array( $wpdb->users, 'ID' ),
+					'orderby'  => true,
+				),
+				'user_login'   => array(
+					'label'    => esc_html__( 'Username', 'gp-populate-anything' ),
+					'value'    => 'user_login',
+					'callable' => array( $this, 'get_user_col_rows' ),
+					'args'     => array( $wpdb->users, 'user_login' ),
+					'orderby'  => true,
+				),
+				'user_email'   => array(
+					'label'    => esc_html__( 'User Email', 'gp-populate-anything' ),
+					'value'    => 'user_email',
+					'callable' => array( $this, 'get_user_col_rows' ),
+					'args'     => array( $wpdb->users, 'user_email' ),
+					'orderby'  => true,
+				),
+				'user_url'     => array(
+					'label'    => esc_html__( 'User URL', 'gp-populate-anything' ),
+					'value'    => 'user_url',
+					'callable' => array( $this, 'get_user_col_rows' ),
+					'args'     => array( $wpdb->users, 'user_url' ),
+					'orderby'  => true,
+				),
+				'roles'        => array(
+					'label'     => esc_html__( 'Role', 'gp-populate-anything' ),
+					'value'     => 'roles',
+					'callable'  => array( $this, 'get_user_roles' ),
+					'operators' => array(
+						'is',
+						'isnot',
+					),
 				),
 			),
-		), $this->get_buddypress_xprofile_properties(), $this->get_user_meta_properties() );
+			$this->get_buddypress_xprofile_properties(),
+			$this->get_user_meta_properties()
+		);
 
 	}
 
@@ -229,19 +236,19 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		if ( strpos( $prop, 'bp_xprofile_' ) === 0 ) {
 
 			$xprofile_field = preg_replace( '/^bp_xprofile_/', '', $prop );
-			$args = array(
+			$args           = array(
 				'user_id' => $object->id,
-				'field' => $xprofile_field,
+				'field'   => $xprofile_field,
 			);
 
-			return bp_get_profile_field_data($args);
+			return bp_get_profile_field_data( $args );
 
 		}
 
 		$prop  = preg_replace( '/^meta_/', '', $prop );
 		$value = $object->{$prop};
 
-		switch( $prop ) {
+		switch ( $prop ) {
 			case 'roles':
 				$value = implode( ', ', $value );
 				break;
@@ -251,19 +258,21 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	}
 
-	public function get_current_blog_user_ids () {
+	public function get_current_blog_user_ids() {
 		global $wpdb;
 
-		return $wpdb->get_col( $wpdb->prepare(
-			"SELECT DISTINCT {$wpdb->users}.ID
+		return $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT {$wpdb->users}.ID
 						FROM {$wpdb->users}
 						LEFT JOIN {$wpdb->usermeta} AS um ON ( {$wpdb->users}.ID = um.user_id )
 						WHERE um.meta_key = 'primary_blog' AND um.meta_value = %d",
-			get_current_blog_id()
-		) );
+				get_current_blog_id()
+			)
+		);
 	}
 
-	public function get_current_blog_user_ids_where_clause ($table = null, $column = 'ID') {
+	public function get_current_blog_user_ids_where_clause( $table = null, $column = 'ID' ) {
 		global $wpdb;
 
 		if ( ! is_multisite() || ! apply_filters( 'gppa_object_type_user_limit_to_current_site', true ) ) {
@@ -290,7 +299,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		global $wpdb;
 
 		$user_meta_properties = array();
-		$meta_rows = $this->get_col_rows( $wpdb->usermeta, 'meta_key', $this->get_current_blog_user_ids_where_clause($wpdb->usermeta, 'user_id') );
+		$meta_rows            = $this->get_col_rows( $wpdb->usermeta, 'meta_key', $this->get_current_blog_user_ids_where_clause( $wpdb->usermeta, 'user_id' ) );
 
 		foreach ( $meta_rows as $user_meta_key ) {
 			$user_meta_properties[ 'meta_' . $user_meta_key ] = array(
@@ -348,7 +357,6 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		return is_array( $result ) ? $this->filter_values( $result ) : array();
 
-
 	}
 
 	public function get_user_roles() {
@@ -363,7 +371,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 	}
 
-	public function default_query_args ( $args ) {
+	public function default_query_args( $args ) {
 
 		global $wpdb;
 
@@ -377,7 +385,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		extract( $args );
 
 		$orderby = rgar( $ordering, 'orderby' );
-		$order = rgar( $ordering, 'order', 'ASC' );
+		$order   = rgar( $ordering, 'order', 'ASC' );
 
 		$query_args = array(
 			'select'   => "{$wpdb->users}.*",
@@ -385,7 +393,7 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 			'where'    => array(),
 			'joins'    => array(),
 			'group_by' => "{$wpdb->users}.ID",
-			'order_by' => $orderby ? "{$wpdb->users}.{$orderby}" : "",
+			'order_by' => $orderby ? "{$wpdb->users}.{$orderby}" : '',
 			'order'    => $order,
 		);
 
@@ -397,8 +405,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 
 		global $wpdb;
 
-		$where = $wpdb->prepare( "( um_primary_blog.meta_key = %s AND um_primary_blog.meta_value = %d )",
-			'primary_blog', get_current_blog_id() );
+		$where = $wpdb->prepare(
+			'( um_primary_blog.meta_key = %s AND um_primary_blog.meta_value = %d )',
+			'primary_blog',
+			get_current_blog_id()
+		);
 
 		$query_builder_args['where'][ $index ]['primary_blog'] = $where;
 		$query_builder_args['joins']['primary_blog']           = "LEFT JOIN {$wpdb->usermeta} um_primary_blog ON ( {$wpdb->users}.ID = um_primary_blog.user_id )";
@@ -447,11 +458,11 @@ class GPPA_Object_Type_User extends GPPA_Object_Type {
 		/* Reset meta query counter */
 		$this->meta_query_counter = 0;
 
-		if( isset( $_cache[ $query ] ) ) {
+		if ( isset( $_cache[ $query ] ) ) {
 			return $_cache[ $query ];
 		}
 
-		$users = $wpdb->get_results($query);
+		$users = $wpdb->get_results( $query );
 
 		foreach ( $users as $key => $user ) {
 			$users[ $key ] = new WP_User( $user );

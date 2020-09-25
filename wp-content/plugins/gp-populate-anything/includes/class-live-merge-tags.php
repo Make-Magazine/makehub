@@ -7,19 +7,19 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 	private static $instance = null;
 
-	private $_live_attrs_on_page = array();
-	private $_escapes = array();
+	private $_live_attrs_on_page            = array();
+	private $_escapes                       = array();
 	private $_current_live_merge_tag_values = array();
-	private $_lmt_whitelist = array();
+	private $_lmt_whitelist                 = array();
 
 	public $live_merge_tag_regex_option_placeholder = '/(<option.*?class=\'gf_placeholder\'>)(.*?@({.*?:?.+?}).*?)<\/option>/';
-	public $live_merge_tag_regex_option_choice = '/(<option.*>)(.*?@({.*?:?.+?}).*?)<\/option>/';
-	public $live_merge_tag_regex_textarea = '/(<textarea.*>)([\S\s]*?@({.*?:?.+?})[\S\s]*?)<\/textarea>/';
-	public $live_merge_tag_regex = '/@({((.*?):?(.+?))})/';
-	public $merge_tag_regex = '/{((.*?):?([0-9]+?)?(:(.+?))?)}/';
-	public $live_merge_tag_regex_attr = '/([a-zA-Z-]+)=([\'"]([^\'"]*@{.*?:?.+?}[^\'"]*)(?<!\\\)[\'"])/';
-	public $value_attr = '/value=\'/';
-	public $script_regex = '/<script[\s\S]*?<\/script>/';
+	public $live_merge_tag_regex_option_choice      = '/(<option.*>)(.*?@({.*?:?.+?}).*?)<\/option>/';
+	public $live_merge_tag_regex_textarea           = '/(<textarea.*>)([\S\s]*?@({.*?:?.+?})[\S\s]*?)<\/textarea>/';
+	public $live_merge_tag_regex                    = '/@({((.*?):?(.+?))})/';
+	public $merge_tag_regex                         = '/{((.*?):?([0-9]+?)?(:(.+?))?)}/';
+	public $live_merge_tag_regex_attr               = '/([a-zA-Z-]+)=([\'"]([^\'"]*@{.*?:?.+?}[^\'"]*)(?<!\\\)[\'"])/';
+	public $value_attr                              = '/value=\'/';
+	public $script_regex                            = '/<script[\s\S]*?<\/script>/';
 
 	public static function get_instance() {
 		if ( null == self::$instance ) {
@@ -57,7 +57,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		add_filter( 'gppa_hydrate_field_html', array( $this, 'restore_escapes' ), 100, 2 );
 
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 10, 7 );
-		add_filter( 'gform_admin_pre_render',   array( $this, 'replace_field_label_live_merge_tags_static' ) );
+		add_filter( 'gform_admin_pre_render', array( $this, 'replace_field_label_live_merge_tags_static' ) );
 
 		/**
 		 * Prevent replacement of Live Merge Tags in Preview Submission.
@@ -111,7 +111,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 */
 	public function populate_lmt_whitelist( $form ) {
 
-		if( ! is_array( $form ) ) {
+		if ( ! is_array( $form ) ) {
 			return $form;
 		}
 
@@ -124,8 +124,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		);
 
 		foreach ( $iterator as $key => $value ) {
-			preg_match_all( $this->live_merge_tag_regex, $value, $merge_tag_matches,
-				PREG_SET_ORDER );
+			preg_match_all(
+				$this->live_merge_tag_regex,
+				$value,
+				$merge_tag_matches,
+				PREG_SET_ORDER
+			);
 
 			foreach ( $merge_tag_matches as $match ) {
 				$merge_tag = preg_replace( '/^@/', '', $match[0] );
@@ -134,7 +138,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 					continue;
 				}
 
-				$nonce_action = 'gppa-lmt-' . $form['id'] . '-' . $merge_tag;
+				$nonce_action                                      = 'gppa-lmt-' . $form['id'] . '-' . $merge_tag;
 				$this->_lmt_whitelist[ $form['id'] ][ $merge_tag ] = wp_create_nonce( $nonce_action );
 			}
 		}
@@ -218,7 +222,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			 *
 			 * Without this, it can get a bit aggressive and replace the LMT in other locations.
 			 */
-			$search = $match[0];
+			$search  = $match[0];
 			$replace = str_replace( $match[1], $placeholder, $search );
 
 			$this->_escapes[ $placeholder ] = $match[1];
@@ -293,7 +297,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			$full_match = $match[0];
 
-			$output = $this->get_live_merge_tag_value( $match[2], $form );
+			$output    = $this->get_live_merge_tag_value( $match[2], $form );
 			$data_attr = 'data-gppa-live-merge-tag-innerHtml="' . esc_attr( $this->escape_live_merge_tags( $match[2] ) ) . '"';
 
 			$class_string = "class='gf_placeholder'";
@@ -335,7 +339,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			$full_match = $match[0];
 
-			$output = $this->get_live_merge_tag_value( $match[2], $form );
+			$output    = $this->get_live_merge_tag_value( $match[2], $form );
 			$data_attr = 'data-gppa-live-merge-tag="' . esc_attr( $this->escape_live_merge_tags( $match[2] ) ) . '"';
 
 			$full_match_replacement = str_replace( $match[2], $output, $full_match );
@@ -382,7 +386,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $content;
 		}
 
-		$merge_tag_value = $this->get_live_merge_tag_value($field->defaultValue, GFAPI::get_form( $field->formId ) );
+		$merge_tag_value = $this->get_live_merge_tag_value( $field->defaultValue, GFAPI::get_form( $field->formId ) );
 
 		$this->register_lmt_on_page( $field->formId, 'data-gppa-live-merge-tag-value' );
 
@@ -462,7 +466,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $content;
 		}
 
-		$default_values = ! empty( $field->inputs ) ? $this->pluck( $field->inputs, 'defaultValue', 'id' ) : array();
+		$default_values               = ! empty( $field->inputs ) ? $this->pluck( $field->inputs, 'defaultValue', 'id' ) : array();
 		$default_values[ $field->id ] = $field->defaultValue;
 
 		$has_lmt = false;
@@ -474,12 +478,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 		}
 
-		if ( !$has_lmt ) {
+		if ( ! $has_lmt ) {
 			return $content;
 		}
 
 		foreach ( $matches as $match ) {
-			$input_id = $match[1];
+			$input_id      = $match[1];
 			$default_value = $default_values[ $input_id ];
 
 			/**
@@ -561,7 +565,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 			$full_match = $match[0];
 
-			$output = $this->get_live_merge_tag_value( $match[2], $form );
+			$output    = $this->get_live_merge_tag_value( $match[2], $form );
 			$data_attr = 'data-gppa-live-merge-tag-innerHtml="' . esc_attr( $this->escape_live_merge_tags( $match[2] ) ) . '"';
 
 			$full_match_replacement = str_replace( $match[2], $output, $full_match );
@@ -615,11 +619,11 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	public function add_localization_attr_variable( $form_string, $form ) {
-		if ( ! empty ( $this->_live_attrs_on_page[ $form['id'] ] ) ) {
+		if ( ! empty( $this->_live_attrs_on_page[ $form['id'] ] ) ) {
 			wp_localize_script( 'gp-populate-anything', "GPPA_LIVE_ATTRS_FORM_{$form['id']}", array_values( array_unique( $this->_live_attrs_on_page[ $form['id'] ] ) ) );
 		}
 
-		if ( ! empty ( $this->_current_live_merge_tag_values[ $form['id'] ] ) ) {
+		if ( ! empty( $this->_current_live_merge_tag_values[ $form['id'] ] ) ) {
 			/**
 			 * We explicitly add this to the form string to add support for Live Merge Tags when editing nested entries
 			 * with GP Nested Forms.
@@ -665,7 +669,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * JSON is used here due to issues with modifiers causing merge tags to be truncated in $_REQUEST and $_POST
 		 */
 		if ( rgar( $_REQUEST, 'lmt-nonces' ) ) {
-			$lmt_nonces = GFCommon::json_decode( stripslashes(rgar( $_REQUEST, 'lmt-nonces' )), true );
+			$lmt_nonces = GFCommon::json_decode( stripslashes( rgar( $_REQUEST, 'lmt-nonces' ) ), true );
 		}
 
 		if ( ! $entry_values ) {
@@ -676,7 +680,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Change Live Merge Tags to regular merge tags.
 		 */
 		$merge_tag = preg_replace( $this->live_merge_tag_regex, '$1', $merge_tag );
-		$output = $merge_tag;
+		$output    = $merge_tag;
 
 		/**
 		 * Sometimes one Live Merge Tag can contain multiple Merge Tags.
@@ -701,7 +705,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				/**
 				 * Verify that LMT was supplied by trusted source and not injected.
 				 */
-				$nonce_action = 'gppa-lmt-' . $form['id'] . '-'. $merge_tag;
+				$nonce_action = 'gppa-lmt-' . $form['id'] . '-' . $merge_tag;
 
 				$lmt_whitelist = $this->get_lmt_whitelist( $form );
 
@@ -723,7 +727,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			// We probably should create a proper GF entry but for now, we'll add the currency property to prevent a
 			// series of notices generated by passing the $entry_values to GFCommon::replace_variables() below when
 			// {all_fields} or {pricing_fields} are used on the form.
-			if( ! isset( $entry_values['currency'] ) ) {
+			if ( ! isset( $entry_values['currency'] ) ) {
 				$entry_values['currency'] = GFCommon::get_currency();
 			}
 
@@ -818,15 +822,15 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	public function replace_field_label_live_merge_tags_static( $form ) {
 
 		$entry = false;
-		if( in_array( GFForms::get_page(), array( 'entry_detail', 'entry_detail_edit' ) ) ) {
+		if ( in_array( GFForms::get_page(), array( 'entry_detail', 'entry_detail_edit' ) ) ) {
 			$entry = GFAPI::get_entry( rgget( 'lid' ) );
 		}
 
-		if( ! $entry || is_wp_error( $entry ) ) {
+		if ( ! $entry || is_wp_error( $entry ) ) {
 			return $form;
 		}
 
-		foreach( $form['fields'] as $field ) {
+		foreach ( $form['fields'] as $field ) {
 			$field->label = $this->replace_live_merge_tags_static( $field->label, $form, $entry );
 		}
 

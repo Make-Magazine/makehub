@@ -306,14 +306,18 @@ class Map_View extends View {
 			foreach ( $event->venues as $venue ) {
 				if ( empty( $template_vars['events_by_venue'][ $venue->ID ] ) ) {
 					$geolocation = $venue->geolocation;
-
 					if (
-						! isset( $geolocation->latitude, $geolocation->longitude )
-						|| ( '' === $geolocation->latitude || '' === $geolocation->longitude )
+						! empty( $template_vars['map_provider']->is_premium )
+						&& (
+							! isset( $geolocation->latitude, $geolocation->longitude )
+							|| ( '' === $geolocation->latitude || '' === $geolocation->longitude )
+						)
 					) {
-						// If the venue is missing the geolocation information, then it's not mappable.
+						// If we're using a custom api key and the venue is missing the geolocation information,
+						// then it's not mappable.
 						continue;
 					}
+
 
 					// WP_Post instances will be suppressed by the data filter, so we convert it to an object.
 					$template_vars['events_by_venue'][ $venue->ID ]            = (object) [

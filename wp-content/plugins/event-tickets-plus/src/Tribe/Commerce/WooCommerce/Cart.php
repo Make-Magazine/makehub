@@ -109,9 +109,6 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 			add_filter( 'woocommerce_get_checkout_url', [ $this, 'maybe_filter_checkout_url_to_attendee_registration' ], 50 );
 		}
 
-		/** @var \Tribe__Tickets_Plus__Commerce__WooCommerce__Main $woo */
-		$woo = tribe( 'tickets-plus.commerce.woo' );
-
 		return $checkout_url;
 	}
 
@@ -191,23 +188,28 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 	 * Adds a 'provider' query argument set to the ticket type to the passed URL (e.g. cart or checkout), if a ticket
 	 * with Attendee Information is in the cart, to assist with keeping tickets from different providers separate.
 	 *
-	 * @since 4.10.4
+	 * @see        \Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_cart_url()
 	 *
-	 * @see   \Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_cart_url()
+	 * @deprecated 5.0.1 The Provider query arg is now only needed for the Attendee Registration page.
+	 *
+	 * @since      4.10.4
+	 * @since      5.0.1 Do not add Provider query arg if there aren't any tickets in the Cart.
 	 *
 	 * @param string $url Cart or Checkout URL.
 	 *
 	 * @return string The URL after potentially being modified.
 	 */
 	public function add_provider_to_cart_url( $url = '' ) {
+		_deprecated_function( __METHOD__, 'TBD', '' );
+
 		if ( empty( $url ) ) {
 			return $url;
 		}
 
-		$cart_tickets = $this->get_tickets_in_cart();
-
-		/** @var \Tribe__Tickets_Plus__Meta $tickets_meta */
-		$tickets_meta  = tribe( 'tickets-plus.main' )->meta();
+		// Do not add Provider query arg if there aren't any tickets in the Cart.
+		if ( empty( $this->get_tickets_in_cart() ) ) {
+			return $url;
+		}
 
 		/** @var \Tribe__Tickets_Plus__Commerce__WooCommerce__Main $woo */
 		$woo = tribe( 'tickets-plus.commerce.woo' );
@@ -504,13 +506,11 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 	 * Get WooCommerce Cart URL.
 	 *
 	 * @since 4.11.0
+	 * @since 5.0.1 Remove adding Provider query arg.
 	 *
 	 * @return string WooCommerce Cart URL.
 	 */
 	public function get_cart_url() {
-		$cart_url = wc_get_cart_url();
-		$cart_url = $this->add_provider_to_cart_url( $cart_url );
-
 		/**
 		 * Allow filtering of the WooCommerce Cart URL.
 		 *
@@ -518,7 +518,7 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 		 *
 		 * @param string $cart_url WooCommerce Cart URL.
 		 */
-		return apply_filters( 'tribe_tickets_woo_cart_url', $cart_url );
+		return apply_filters( 'tribe_tickets_woo_cart_url', wc_get_cart_url() );
 	}
 
 	/**
@@ -530,8 +530,6 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 	 * @return string WooCommerce Checkout URL.
 	 */
 	public function get_checkout_url() {
-		$checkout_url = wc_get_checkout_url();
-
 		/**
 		 * Allow filtering of the WooCommerce Checkout URL.
 		 *
@@ -539,8 +537,6 @@ class Tribe__Tickets_Plus__Commerce__WooCommerce__Cart extends Tribe__Tickets_Pl
 		 *
 		 * @param string $checkout_url WooCommerce Checkout URL.
 		 */
-		$checkout_url = apply_filters( 'tribe_tickets_plus_woo_checkout_url', $checkout_url );
-
-		return $checkout_url;
+		return apply_filters( 'tribe_tickets_plus_woo_checkout_url', wc_get_checkout_url() );
 	}
 }
