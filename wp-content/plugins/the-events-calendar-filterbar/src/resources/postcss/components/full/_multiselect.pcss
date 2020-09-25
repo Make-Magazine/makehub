@@ -1,0 +1,92 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Multiselect
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-events {
+
+	.tribe-filter-bar-c-multiselect {
+
+		.select2-selection {
+			border: none;
+			cursor: default;
+		}
+
+		.select2-selection__rendered {
+			border: none;
+		}
+
+		.select2-search__field {
+			@mixin desktop-body-2;
+
+			background: 12px center no-repeat;
+			background-image: svg-inline(search);
+			background-size: 14px;
+			border: 1px solid var(--color-border-default);
+			border-radius: var(--border-radius-default);
+
+			&::placeholder {
+				color: var(--color-text-secondary);
+			}
+		}
+
+		.select2-selection__clear {
+			font-weight: 600;
+			font-size: 16px;
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+
+		.select2-selection__choice {
+			@mixin desktop-body-3-bold;
+
+			background-color: var(--color-accent-secondary-hover);
+			border: none;
+			border-radius: 14px;
+			color: var(--color-background);
+			transition: var(--transition-background-color);
+
+			&:hover {
+				background-color: var(--color-accent-secondary);
+			}
+		}
+
+		.select2-selection__choice__remove {
+			color: var(--color-background);
+			font-weight: 600;
+			font-size: 16px;
+
+			&:hover {
+				color: var(--color-background);
+				opacity: 0.8;
+			}
+		}
+
+		.select2-results__option {
+			@mixin desktop-body-2;
+		}
+
+		.select2-results__option--highlighted {
+			background-color: transparent;
+			opacity: 0.8;
+			transition: var(--transition-opacity);
+		}
+	}
+
+	/* -------------------------------------------------------------------------
+	 * Theme Overrides - Twenty Seventeen
+	 * ------------------------------------------------------------------------- */
+
+	.tribe-theme-twentyseventeen & {
+
+		.tribe-filter-bar-c-multiselect {
+
+			.select2-search__field {
+				border-radius: var(--border-radius-default);
+			}
+		}
+	}
+}

@@ -1,0 +1,61 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Pill
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-events {
+
+	.tribe-filter-bar-c-pill--has-selections {
+		font-weight: var(--font-weight-bold);
+	}
+
+	.tribe-filter-bar-c-pill__pill {
+		background-color: var(--color-background);
+		border: 1px solid var(--color-icon-primary);
+		border-radius: 18px;
+	}
+
+	.tribe-filter-bar-c-pill--button .tribe-filter-bar-c-pill__pill {
+
+		&:hover,
+		&:focus {
+			background-color: var(--color-background-secondary);
+		}
+
+		&:active {
+			background-color: var(--color-background);
+		}
+	}
+
+	.tribe-filter-bar-c-pill--has-selections .tribe-filter-bar-c-pill__pill {
+		background-color: var(--color-background-secondary);
+	}
+
+	.tribe-filter-bar-c-pill--has-selections.tribe-filter-bar-c-pill--button .tribe-filter-bar-c-pill__pill {
+
+		&:hover,
+		&:focus {
+			background-color: var(--color-background-secondary-hover);
+		}
+
+		&:active {
+			background-color: var(--color-background);
+		}
+	}
+
+	.tribe-filter-bar-c-pill__remove-button {
+
+		path {
+			transition: var(--transition-opacity);
+		}
+
+		&:hover,
+		&:focus {
+
+			path {
+				opacity: 0.8;
+			}
+		}
+	}
+}
