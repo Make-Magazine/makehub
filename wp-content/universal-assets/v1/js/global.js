@@ -119,39 +119,47 @@ jQuery(document).ready(function(){
 
 // for newsletter thank you popups
 jQuery(document).ready(function(jQuery){
-  // Thank you modal with more newsletter options
-  jQuery(".fancybox-thx").fancybox({
-    autoSize : false,
-    width  : 400,
-    autoHeight : true,
-    padding : 0,
-    afterLoad   : function() {
-      this.content = this.content.html();
-    }
-  });
-  // reCAPTCHA error message
-  jQuery(".nl-modal-error").fancybox({
-    autoSize : false,
-    width  : 250,
-    autoHeight : true,
-    padding : 0,
-    afterLoad   : function() {
-      this.content = this.content.html();
-    }
-  });
-  // YOUTUBE PLAYER FOR FANCYBOX MODALS
-  jQuery(".fancytube").fancybox({
-    maxWidth  : 800,
-    maxHeight : 600,
-    fitToView : false,
-    width   : '70%',
-    height    : '70%',
-    autoSize  : false,
-    closeClick  : false,
-    openEffect  : 'none',
-    closeEffect : 'none',
-    padding : 0
-  });
+	// Thank you modal with more newsletter options
+	jQuery(".fancybox-thx").fancybox({
+		autoSize : false,
+		width  : 400,
+		autoHeight : true,
+		padding : 0,
+		afterLoad   : function() {
+			this.content = this.content.html();
+		}
+	});
+	// reCAPTCHA error message
+	jQuery(".nl-modal-error").fancybox({
+		autoSize : false,
+		width  : 250,
+		autoHeight : true,
+		padding : 0,
+		afterLoad   : function() {
+		this.content = this.content.html();
+	}
+	});
+	// YOUTUBE PLAYER FOR FANCYBOX MODALS
+	jQuery(".fancytube").fancybox({
+		maxWidth  : 800,
+		maxHeight : 600,
+		fitToView : false,
+		width   : '70%',
+		height    : '70%',
+		autoSize  : false,
+		closeClick  : false,
+		openEffect  : 'none',
+		closeEffect : 'none',
+		padding : 0
+	});
+	// just a standard info box
+	jQuery(".info-modal").fancybox({
+		fitToView : false,
+		autoSize : false,
+		maxWidth   : '70%',
+		autoHeight : true,
+		padding : 0
+	});
 });
 
 

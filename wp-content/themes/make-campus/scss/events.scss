@@ -4,27 +4,6 @@
     margin: 0px;
     .event_form {
         padding: 0px 15px;
-        @media screen and (min-width: 768px) {
-            display: flex;
-            .gf_page_steps {
-                width: 40%;
-                margin-left: -20%;
-                float: left;
-                display: flex;
-                flex-direction: column;
-                border: none;
-                background: #005e9a;
-                margin-bottom: 0px;
-            }
-            .gform_body {
-                width: 80%;
-                float: left;
-                padding: 0px 20px;
-            }
-            .validation_error {
-                display: none;
-            }
-        }
         .gform_page {
             display: flex;
             flex-direction: column;
@@ -39,10 +18,10 @@
         .gf_step {
             width: auto;
             float: left;
-            color: #fff;
+            color: #333;
             opacity: .7;
             a { 
-                color: #fff; 
+                color: #333; 
                 &:hover { color: #ccc; }
             }
             span.gf_step_number {
@@ -84,6 +63,31 @@
             }
             .gfield_description { font-style: italic; }
         } 
+		@media screen and (min-width: 768px) {
+            display: flex;
+            .gf_page_steps {
+                width: 40%;
+                margin-left: -20%;
+                float: left;
+                display: flex;
+                flex-direction: column;
+                border: none;
+                background: #005e9a;
+                margin-bottom: 0px;
+				.gf_step {
+					color: #fff;
+					a { color: #fff; }
+				}
+            }
+            .gform_body {
+                width: 80%;
+                float: left;
+                padding: 0px 20px;
+            }
+            .validation_error {
+                display: none;
+            }
+        }
         .image_uploads ul {
             display: flex;
             flex-wrap: wrap;
@@ -311,6 +315,17 @@
             }
         }
     }
+	.info-btn {
+		position: absolute;
+		top: 25px;
+		right: 0px;
+		@media screen and (max-width: 768px) {
+			position: relative;
+			top: 0px;
+			display: block;
+			text-align: center;
+		}
+	}
 }
 
 .gform_confirmation_message {
