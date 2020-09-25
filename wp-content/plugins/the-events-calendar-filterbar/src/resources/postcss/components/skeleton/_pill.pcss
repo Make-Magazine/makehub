@@ -1,0 +1,52 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Pill
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-events {
+
+	.tribe-filter-bar-c-pill {
+		display: inline-block;
+		position: relative;
+	}
+
+	.tribe-filter-bar-c-pill__pill {
+		padding: 9px 15px;
+	}
+
+	.tribe-filter-bar-c-pill--has-selections .tribe-filter-bar-c-pill__pill {
+		padding-right: 35px;
+	}
+
+	.tribe-filter-bar-c-pill__pill-label-colon {
+		display: none;
+	}
+
+	.tribe-filter-bar-c-pill--has-selections .tribe-filter-bar-c-pill__pill-label-colon {
+		display: inline;
+	}
+
+	.tribe-filter-bar-c-pill__remove-button {
+		display: none;
+		line-height: 0;
+		padding: 4px;
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.tribe-filter-bar-c-pill--has-selections .tribe-filter-bar-c-pill__remove-button {
+		display: inline-block;
+	}
+
+	.tribe-filter-bar-c-pill__remove-button-icon {
+		height: 8px;
+		width: 8px;
+
+		path {
+			stroke: var(--color-icon-active);
+		}
+	}
+}

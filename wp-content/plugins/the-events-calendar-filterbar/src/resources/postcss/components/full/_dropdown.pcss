@@ -1,0 +1,70 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Dropdown
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-events {
+
+	.tribe-filter-bar-c-dropdown {
+
+		.select2-selection {
+			background-color: var(--color-accent-secondary-hover);
+			border: none;
+			border-radius: 14px;
+			color: var(--color-background);
+			display: inline-block;
+			margin-bottom: var(--spacer-1);
+			transition: var(--transition-background-color);
+
+			&:hover {
+				background-color: var(--color-accent-secondary);
+			}
+		}
+
+		.select2-container--open .select2-selection {
+			border-radius: 14px;
+		}
+
+		.select2-selection__rendered {
+			@mixin desktop-body-3-bold;
+
+			align-items: center;
+			display: flex;
+			flex-wrap: nowrap;
+			padding: 5px 11px 7px 12px;
+		}
+
+		.select2-selection__clear {
+			color: var(--color-background);
+			font-weight: 600;
+			font-size: 16px;
+			line-height: 8px;
+			margin-left: var(--spacer-0);
+			order: 1;
+			padding: 3px;
+
+			&:hover {
+				opacity: 0.8;
+			}
+		}
+
+		.select2-selection__choice__text {
+			color: var(--color-background);
+		}
+
+		.select2-selection__arrow {
+			@mixin hidden;
+		}
+
+		.select2-results__option {
+			@mixin desktop-body-2;
+		}
+
+		.select2-results__option--highlighted {
+			background-color: transparent;
+			opacity: 0.8;
+			transition: var(--transition-opacity);
+		}
+	}
+}

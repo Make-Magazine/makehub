@@ -1,0 +1,109 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Filter
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-events {
+
+	.tribe-filter-bar-c-filter--pill {
+		position: relative;
+
+		.tribe-filter-bar-c-filter__container {
+			background-color: var(--color-background);
+			bottom: calc(var(--spacer-2) * -1);
+			left: 0;
+			max-width: 242px;
+			padding: var(--spacer-2) var(--spacer-3) var(--spacer-4);
+			position: absolute;
+			transform: translateY(100%);
+			z-index: var(--z-index-multiday-event);
+		}
+
+		.tribe-filter-bar-c-filter__filters-legend {
+			margin-bottom: var(--spacer-2);
+			padding-right: var(--spacer-4);
+			width: 100%;
+		}
+
+		.tribe-filter-bar-c-filter__filters-close {
+			height: 20px;
+			position: absolute;
+			right: var(--spacer-2);
+			top: var(--spacer-3);
+			width: 20px;
+
+			&:hover,
+			&:focus {
+
+				.tribe-filter-bar-c-filter__filters-close-icon path {
+					stroke: var(--color-icon-active);
+				}
+			}
+		}
+
+		.tribe-filter-bar-c-filter__filters-close-icon {
+			height: 12px;
+			width: 12px;
+
+			path {
+				stroke: var(--color-icon-primary);
+			}
+		}
+	}
+
+	.tribe-filter-bar-c-filter--accordion {
+
+		.tribe-filter-bar-c-filter__toggle {
+			display: flex;
+			padding: var(--spacer-3) 0 var(--spacer-4);
+			width: 100%;
+		}
+
+		.tribe-filter-bar-c-filter__toggle-selections {
+			margin-left: var(--spacer-0);
+		}
+
+		.tribe-filter-bar-c-filter__toggle-icon {
+			margin-left: auto;
+		}
+
+		.tribe-filter-bar-c-filter__toggle-icon--minus,
+		&.tribe-filter-bar-c-filter--open .tribe-filter-bar-c-filter__toggle-icon--plus {
+			display: none;
+		}
+
+		&.tribe-filter-bar-c-filter--open .tribe-filter-bar-c-filter__toggle-icon--minus {
+			display: block;
+		}
+
+		.tribe-filter-bar-c-filter__toggle-minus-icon,
+		.tribe-filter-bar-c-filter__toggle-plus-icon {
+			height: 10px;
+			width: 10px;
+
+			path {
+				stroke: var(--color-icon-primary);
+			}
+		}
+
+		.tribe-filter-bar-c-filter__container {
+			margin-top: calc(var(--spacer-0) * -1);
+			padding-bottom: var(--spacer-0);
+		}
+
+		.tribe-filter-bar-c-filter__filters-close {
+			@mixin hidden;
+		}
+	}
+
+	.tribe-filter-bar-c-filter__container {
+		display: none;
+		visibility: hidden;
+	}
+
+	.tribe-filter-bar-c-filter--open .tribe-filter-bar-c-filter__container {
+		display: block;
+		visibility: visible;
+	}
+}
