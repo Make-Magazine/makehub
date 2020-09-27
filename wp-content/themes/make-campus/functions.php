@@ -446,7 +446,7 @@ function update_event_information($post_id, $feed, $entry, $form) {
     //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
 	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
-    $ticket->name = (isset($entry['40'])?$entry['40']:'');
+    $ticket->name = "Ticket";
     $ticket->description = (isset($entry['42'])?$entry['42']:'');
     $ticket->price = (isset($entry['37'])?$entry['37']:'');
     $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
@@ -459,13 +459,13 @@ function update_event_information($post_id, $feed, $entry, $form) {
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
-        'ticket_name' => 'Ticket',
+        'ticket_name' => $ticket->name,
         'ticket_price' => $ticket->price,
         'ticket_description' => $ticket->description,
-        'start_date' => $ticket->start_date,
+        /*'start_date' => $ticket->start_date,
         'start_time' => $ticket->start_time,
         'end_date' => $ticket->end_date,
-        'end_time' => $ticket->end_time,
+        'end_time' => $ticket->end_time,*/
 		// none of these work
 		'event_capacity' => $ticket->capacity,
 		'capacity' => $ticket->capacity,
@@ -492,6 +492,36 @@ function update_event_information($post_id, $feed, $entry, $form) {
       error_log(print_r($tickets_handler, TRUE));
       error_log(print_r($event_stock, TRUE));
      */
+	
+	// create the organizer
+	$organizer = [
+		'Organizer'	=> $entry['116.3'] . " " . $entry['116.6'],
+		'Email'		=> $entry['115'],
+		'Website'	=> "TEST", // seems these need to be provided, using dummy text for now
+		'Phone'		=> "TEST",
+    ];
+	$savedOrganizer = get_page_by_title($organizer['Organizer'], 'OBJECT', 'tribe_organizer');
+	if(!$savedOrganizer) {
+		$organizerID = tribe_create_organizer($organizer);
+		$organizerObj = getOrganizerObject($organizerID);
+		// hoping to somehow assign the organizer to the post id with this object; 
+	} else {
+		tribe_update_organizer($post_id, $organizer);
+		$organizerObj = getOrganizerObject($organizerID);
+		//Tribe__Events__Main::add_new_organizer($organizerObj, $post_id); // this is just another way to create an organizer
+	}
+	
+}
+
+function getOrganizerObject($organizerID) {
+	$organizerArray = tribe_get_organizers();
+	$organizerObj = new stdClass();
+	foreach($organizerArray as $organizerKey){
+		if($organizerKey->ID == $organizerID){
+			$organizerObj = $organizerKey;
+		}
+	}
+	return $organizerObj;
 }
 
 function get_event_attendees($event_id) {
