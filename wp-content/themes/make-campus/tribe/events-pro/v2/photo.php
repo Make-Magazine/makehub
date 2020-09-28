@@ -29,8 +29,11 @@ $header_classes = [ 'tribe-events-header' ];
 if ( empty( $disable_event_search ) ) {
 	$header_classes[] = 'tribe-events-header--has-event-search';
 }
-echo 'place header image here';
 ?>
+
+<section class="slider-panel container-fluid white-bg position-top full-width-div" style="background-image:url(https://experiencestage.make.co/wp-content/uploads/sites/4/2020/09/makeco3.png);height:200px;color:#fff;display:flex;justify-content:center;align-items:center;background-position: center center;background-size: cover;background-repeat: no-repeat;">  
+	<div class="wp-block-uagb-advanced-heading uagb-block-15ff4217"><h2 class="uagb-heading-text">Maker Campus</h2><div class="uagb-separator-wrap"><div class="uagb-separator"></div></div><p class="uagb-desc-text">Learn, Teach, Make</p></div>
+</section>
 
 <div
 	<?php tribe_classes( $container_classes ); ?>
