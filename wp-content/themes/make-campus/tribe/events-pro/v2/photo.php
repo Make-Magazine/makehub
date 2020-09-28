@@ -31,10 +31,6 @@ if ( empty( $disable_event_search ) ) {
 }
 ?>
 
-<section class="slider-panel container-fluid white-bg position-top full-width-div" style="background-image:url(https://experiencestage.make.co/wp-content/uploads/sites/4/2020/09/makeco3.png);height:200px;color:#fff;display:flex;justify-content:center;align-items:center;background-position: center center;background-size: cover;background-repeat: no-repeat;">  
-	<div class="wp-block-uagb-advanced-heading uagb-block-15ff4217"><h2 class="uagb-heading-text">Maker Campus</h2><div class="uagb-separator-wrap"><div class="uagb-separator"></div></div><p class="uagb-desc-text">Learn, Teach, Make</p></div>
-</section>
-
 <div
 	<?php tribe_classes( $container_classes ); ?>
 	data-js="tribe-events-view"
@@ -58,6 +54,13 @@ if ( empty( $disable_event_search ) ) {
 		<?php $this->template( 'components/before' ); ?>
 
 		<header <?php tribe_classes( $header_classes ); ?>>
+			<section class="container-fluid full-width-div home-hero">  
+				<div class="hero-wrapper">
+					<h1>Maker Campus</h1>
+					<div class="separator"></div>
+					<h2>Learn, Teach, Make</h2>
+				</div>
+			</section>
 			<?php $this->template( 'components/messages' ); ?>
 
 			<?php $this->template( 'components/breadcrumbs' ); ?>

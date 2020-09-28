@@ -356,10 +356,10 @@
             h2 { display: inline; }
             .tribe-events-cost { font-size: 2em; }
             .tribe-events-back {
-                position: fixed;
+                position: absolute;
                 z-index: 99;
-                top: 200px;
-                left: -5px;
+                top: 50px;
+                left: 0px;
             }
         }
 
@@ -578,12 +578,12 @@
 
 // padding on main area
 .tribe-common--breakpoint-medium.tribe-events .tribe-events-l-container {
-	margin-top: 40px;
+	padding-top: 0px;
 }
-
 
 .tribe-events-view {
 	.tribe-events-header {
+		flex-direction: column !important;
 		.tribe-events-header__events-bar {
 			display: flex;
 			align-items: center;
@@ -646,4 +646,60 @@
 			}
 		}
 	}
+}
+
+// Filters 
+#tribe_events_filters_wrapper {
+	background: #fff !important;
+	border: solid 1px #005e9a;
+	border-radius: 5px;
+	* {
+		background: transparent;
+		color: #005e9a;
+		border: 0px;
+		font-size: 16px !important;
+		&:focus { outline: none !important; }
+		&:hover {
+			color: #005e9a;
+		}
+	}
+	&:focus { outline: none; }
+	&:hover {
+		background: #f1f1f1 !important;
+	}
+	.tribe_events_filters_show_filters { width: 100%; }
+	.tribe-events-filter-group { 
+		background: #fff !important;
+		.ui-slider {
+			background: #ccc;
+			.ui-slider-handle:first-of-type {
+				background: #666;
+				top: -.2em;
+			}
+		}
+	}
+}
+@media screen and (max-width: 768px) {
+	.tribe-events .tribe-events-l-container {
+		padding-top: 0px;
+	}
+	#tribe_events_filters_wrapper.tribe-events-filters-horizontal {
+		margin-top: 15px !important;
+		.tribe_events_filters_show_filters {
+			border: solid 1px #005e9a;
+			border-radius: 5px;
+		}
+	}
+	.tribe-filters-open #tribe_events_filters_wrapper.tribe-events-filters-horizontal {
+		padding-bottom: 5px;
+		border-bottom: solid 1px #ccc;
+		box-shadow: 5px 5px 5px #ccc;
+		border-radius: 0px;
+	}
+	.tribe-common .tribe-events-c-top-bar__datepicker {
+		margin-top: 10px;
+	}
+}
+.tribe-events .tribe-events-view-loader {
+	top: 200px;
 }

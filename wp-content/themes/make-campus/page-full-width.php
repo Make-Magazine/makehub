@@ -4,7 +4,7 @@ Template name: Full Width
 */
 get_header(); ?>
 
-<div class="container-fluid main-content">
+<div class="container-fluid">
 	<div class="row">
 		<div class="content col-xs-12">
 			<?php if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>

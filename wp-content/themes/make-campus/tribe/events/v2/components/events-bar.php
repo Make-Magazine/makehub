@@ -28,6 +28,7 @@ if ( empty( $disable_event_search ) ) {
 	$classes[] = 'tribe-events-c-events-bar--border';
 }
 ?>
+
 <div
 	<?php tribe_classes( $classes ); ?>
 	data-js="tribe-events-events-bar"
