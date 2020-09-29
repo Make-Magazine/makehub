@@ -584,6 +584,18 @@
 			height: 30px;
 		}
 	}
+	.tribe-events-c-top-bar__datepicker-button {
+		&::before {
+			content: "\f073";
+			font-family: FontAwesome;
+			color: #005e9a;
+		}
+		.tribe-events-c-top-bar__datepicker-desktop, .tribe-events-c-top-bar__datepicker-mobile { 
+			visibility: hidden !important;
+			width: 10px; 
+		}
+	}
+	
 }
 
 .tribe-events-view {
