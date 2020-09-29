@@ -140,6 +140,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_filter( 'tribe_events_rewrite_rules_custom', [ $this, 'filter_events_rewrite_rules_custom' ], 20 );
 
 		add_filter( 'tribe_events_filter_bar_views_v2_should_display_filters', [ $this, 'filter_hide_filter_bar_organizer_venue' ], 10, 2 );
+		add_filter( 'tribe_events_filter_bar_views_v2_1_should_display_filters', [ $this, 'filter_hide_filter_bar_organizer_venue' ], 10, 2 );
 
 		add_filter( 'tribe_events_views_v2_manager_view_label_domain', [ $this, 'filter_view_label_domain'], 10, 3 );
 		add_filter( 'tribe_customizer_inline_stylesheets', [ $this, 'customizer_inline_stylesheets' ], 12, 2 );

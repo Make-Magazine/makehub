@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro
 Donate link: http://m.tri.be/29
 Requires at least: 4.9.14
-Tested up to: 5.4.2
-Stable tag: 5.1.4
+Tested up to: 5.5.1
+Stable tag: 5.1.5
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,13 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [5.1.5] 2020-09-28 =
+
+* Fix - Translation domain for the recurrence realtime queue processor so translators can change the text. [ECP-458]
+* Tweak - Fix spacing on week view to properly fit in horizontal filter bar. [FBAR-132]
+* Tweak - Add filters to properly remove filter bar on v2 views when on shortcode. [FBAR-187]
+* Language - 0 new strings added, 0 updated, 0 fuzzied, and 0 obsoleted
 
 = [5.1.4] 2020-07-27 =
 

@@ -100,9 +100,19 @@ class Week_View extends By_Day_View {
 
 		// Set up the messages using the union of stack events and non-stack events: both apply.
 		$non_stack_events = $events;
-		$stack_events     = array_map( static function ( $day_events ) {
-			return wp_list_pluck( $day_events, 'ID' );
-		}, array_column( $list_ready_stack, 0 ) );
+		$stack_events     = array_map(
+			static function ( $day_events ) {
+				$valid_day_events = array_filter(
+					(array) $day_events,
+					static function ( $day_event ) {
+						return isset( $day_event->ID );
+					}
+				);
+
+				return wp_list_pluck( $valid_day_events, 'ID' );
+			},
+			array_column( $list_ready_stack, 0 )
+		);
 		$msg_events       = array_merge_recursive( $non_stack_events, $stack_events );
 		$this->setup_messages( $msg_events );
 
@@ -797,9 +807,10 @@ class Week_View extends By_Day_View {
 				return;
 			}
 
+			$message_key = $this->upcoming_events_count() ? 'week_no_results_found' : 'no_upcoming_events';
 			$this->messages->insert(
 				Messages::TYPE_NOTICE,
-				Messages::for_key( 'week_no_results_found' )
+				Messages::for_key( $message_key )
 			);
 		}
 	}
