@@ -199,6 +199,21 @@ function make_campus_admin_scripts() {
 }
 add_action( 'admin_enqueue_scripts', 'make_campus_admin_scripts' );
 
+// Remove Yoast columns
+add_filter( 'manage_edit-tribe_events_columns', 'yoast_seo_admin_remove_columns' );
+add_filter( 'manage_edit-post_columns', 'yoast_seo_admin_remove_columns' );
+add_filter( 'manage_edit-page_columns', 'yoast_seo_admin_remove_columns' );
+
+function yoast_seo_admin_remove_columns( $columns ) {
+  unset($columns['wpseo-score']);
+  unset($columns['wpseo-score-readability']);
+  unset($columns['wpseo-title']);
+  unset($columns['wpseo-metadesc']);
+  unset($columns['wpseo-focuskw']);
+  unset($columns['wpseo-links']);
+  unset($columns['wpseo-linked']);
+  return $columns;
+}
 
 /**
  * Defines responsive menu settings.

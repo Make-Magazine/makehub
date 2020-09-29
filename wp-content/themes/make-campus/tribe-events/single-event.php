@@ -74,12 +74,17 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 							<?php echo get_field('skills_taught') ?>
 						</div>
 					<?php } ?>
-					<div class="tribe-events-single-event-materials tribe-events-content">
-						<h3>What You'll Need:</h3> 
-						<div class="materials-list"><?php echo wpautop(get_field('materials')); ?></div>
-						<?php 
-							if(get_field('kit_required') == "Yes") {
-								echo "<b>A kit is required for this program</b>";
+					<?php if(get_field('amazon_url')) { ?>
+						<div class="tribe-events-single-event-materials tribe-events-content">
+							<h3>What You'll Need:</h3> 
+							<div class="materials-list"><?php echo wpautop(get_field('materials')); ?></div>
+							<p><a class="btn btn-blue-universal" href="<?php echo get_field('amazon_url'); ?>">Program Shopping List</a></p>
+						</div>
+					<?php } ?>
+					<?php if(get_field('kit_required') == "Yes") { ?>
+							<div class="tribe-events-single-skill-level tribe-events-content">
+							<h3>A kit is required for this program:</h3> 
+	 				<?php
 								if(get_field('kit_price_included') == "yes") {
 									echo " and is included in the ticket price";
 									echo " and will be supplied by ";
@@ -93,11 +98,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 									echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
 								}
 							}
-							if(get_field('amazon_url')) {
-								echo "<p><a class='btn btn-blue-universal' href='" . get_field('amazon_url') . "'>Materials available here</a>";
-							}
-						?>
-					</div>
+					?>
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
