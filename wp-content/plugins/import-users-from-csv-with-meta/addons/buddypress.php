@@ -2,7 +2,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
-if( !is_plugin_active( 'buddypress/bp-loader.php' ) ){
+if( !is_plugin_active( 'buddypress/bp-loader.php' ) && !function_exists( 'bp_is_active' ) ){
 	return;
 }
 
@@ -73,7 +73,7 @@ class ACUI_Buddypress{
 	}
 
 	function get_fields(){
-		if( !is_plugin_active( 'buddypress/bp-loader.php' ) ){
+		if( !is_plugin_active( 'buddypress/bp-loader.php' ) && !function_exists( 'bp_is_active' ) ){
 			return array();
 		}
 

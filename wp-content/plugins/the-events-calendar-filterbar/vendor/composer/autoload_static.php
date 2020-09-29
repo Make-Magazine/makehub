@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5
+class ComposerStaticInitd22d336499f2364ba11aef8c2674ba30
 {
     public static $prefixLengthsPsr4 = array (
         'T' => 
@@ -23,6 +23,8 @@ class ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5
     public static $classMap = array (
         'Tribe\\Events\\Filterbar\\Service_Providers\\Context' => __DIR__ . '/../..' . '/src/Tribe/Service_Providers/Context.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Assets' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Assets.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2\\Body_Classes' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Body_Classes.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2\\Doing_Filterbar' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Doing_Filterbar.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Additional_Field' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters/Additional_Field.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Category' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters/Category.php',
@@ -44,14 +46,23 @@ class ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5
         'Tribe\\Events\\Filterbar\\Views\\V2\\Hooks' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Hooks.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Service_Provider' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Service_Provider.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Template' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Template.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Assets' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Assets.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Configuration' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Configuration.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Customizer' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Customizer.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Filters.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters\\Data' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Filters/Data.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters\\Factory' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Filters/Factory.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Hooks' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Hooks.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Service_Provider' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Service_Provider.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2_1\\Template' => __DIR__ . '/../..' . '/src/Tribe/Views/V2_1/Template.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc6491ae48524c3a58e22b1782adc98f5::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$classMap;
 
         }, null, ClassLoader::class);
     }

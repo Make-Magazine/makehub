@@ -13,175 +13,175 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../class-gp-populate-anything.php:380
+#: ../class-gp-populate-anything.php:399
 msgid "Populate choices dynamically"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:381
+#: ../class-gp-populate-anything.php:400
 msgid "Populate value dynamically"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:382
+#: ../class-gp-populate-anything.php:401
 msgid "Add Filter"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:383
+#: ../class-gp-populate-anything.php:402
 msgid "Label"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:384
+#: ../class-gp-populate-anything.php:403
 msgid "Value"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:385
+#: ../class-gp-populate-anything.php:404
 msgid "Price"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:386
+#: ../class-gp-populate-anything.php:405
 msgid "Loading..."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:390
+#: ../class-gp-populate-anything.php:409
 msgid "✎ Custom Value"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:391
+#: ../class-gp-populate-anything.php:410
 msgid "Standard Values"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:392
+#: ../class-gp-populate-anything.php:411
 msgid "Form Field Values"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:393
+#: ../class-gp-populate-anything.php:412
 msgid "Special Values"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:394
+#: ../class-gp-populate-anything.php:413
 msgid "(boolean) true"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:395
+#: ../class-gp-populate-anything.php:414
 msgid "(boolean) false"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:396
+#: ../class-gp-populate-anything.php:415
 msgid "(null) NULL"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:397
+#: ../class-gp-populate-anything.php:416
 msgid "Select a %s"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:398
+#: ../class-gp-populate-anything.php:417
 msgid "Only Show Unique Results"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:399
+#: ../class-gp-populate-anything.php:418
 msgid "Reset"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:400
+#: ../class-gp-populate-anything.php:419
 msgid "Type"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:401
+#: ../class-gp-populate-anything.php:420
 msgid "Object Type"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:402
+#: ../class-gp-populate-anything.php:421
 msgid "Filters"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:403
+#: ../class-gp-populate-anything.php:422
 msgid "Ordering"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:404
+#: ../class-gp-populate-anything.php:423
 msgid "Ascending"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:405
+#: ../class-gp-populate-anything.php:424
 msgid "Descending"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:406
+#: ../class-gp-populate-anything.php:425
 msgid "Choice Template"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:407
+#: ../class-gp-populate-anything.php:426
 msgid "Value Templates"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:409
+#: ../class-gp-populate-anything.php:428
 msgid "is"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:410
+#: ../class-gp-populate-anything.php:429
 msgid "is not"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:411
+#: ../class-gp-populate-anything.php:430
 msgid ">"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:412
+#: ../class-gp-populate-anything.php:431
 msgid ">="
 msgstr ""
 
-#: ../class-gp-populate-anything.php:413
+#: ../class-gp-populate-anything.php:432
 msgid "<"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:414
+#: ../class-gp-populate-anything.php:433
 msgid "<="
 msgstr ""
 
-#: ../class-gp-populate-anything.php:415
+#: ../class-gp-populate-anything.php:434
 msgid "contains"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:416
+#: ../class-gp-populate-anything.php:435
 msgid "starts with"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:417
+#: ../class-gp-populate-anything.php:436
 msgid "ends with"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:418
+#: ../class-gp-populate-anything.php:437
 msgid "is LIKE"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:419
+#: ../class-gp-populate-anything.php:438
 msgid "is in"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:420
+#: ../class-gp-populate-anything.php:439
 msgid "is not in"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:422
+#: ../class-gp-populate-anything.php:441
 msgid "No results matched"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:423
+#: ../class-gp-populate-anything.php:442
 msgid "This field is configured to an object type for which you do not have permission to edit."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:424
+#: ../class-gp-populate-anything.php:443
 msgid "The selected Object Type is restricted. Non-super admins will not be able to edit this field's GPPA settings."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:425
+#: ../class-gp-populate-anything.php:444
 msgid "Too many values to display."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:1026
+#: ../class-gp-populate-anything.php:1045
 msgid "Fill Out Other Fields"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:1046
+#: ../class-gp-populate-anything.php:1065
 msgid "No Results"
 msgstr ""
 

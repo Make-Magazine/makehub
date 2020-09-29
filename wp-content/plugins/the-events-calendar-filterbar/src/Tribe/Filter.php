@@ -174,11 +174,15 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 		 * @return string The new WHERE clause.
 		 */
 		public function addQueryWhere( $posts_where, $query ) {
-			// Make sure it's an events query or a repository (ORM) query.
 			if (
-				$query->tribe_is_event
-				|| $query->tribe_is_event_category
-				|| doing_action( 'tribe_repository_events_query' )
+				// We did not add this filter WHERE clause already.
+				false === strpos( $posts_where, $this->whereClause )
+				&& (
+					// Make sure it's an events query or a repository (ORM) query.
+					$query->tribe_is_event
+					|| $query->tribe_is_event_category
+					|| doing_action( 'tribe_repository_events_query' )
+				)
 			) {
 				$posts_where .= $this->whereClause;
 			}
@@ -195,11 +199,15 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 		 * @return string The new JOIN clause.
 		 */
 		public function addQueryJoin( $posts_join, $query ) {
-			// Make sure it's an events query or a repository (ORM) query.
 			if (
-				$query->tribe_is_event
-				|| $query->tribe_is_event_category
-				|| doing_action( 'tribe_repository_events_query' )
+				// We did not add this filter JOIN clause already.
+				false === strpos( $posts_join, $this->joinClause )
+				&& (
+					// Make sure it's an events query or a repository (ORM) query.
+					$query->tribe_is_event
+					|| $query->tribe_is_event_category
+					|| doing_action( 'tribe_repository_events_query' )
+				)
 			) {
 				$posts_join .= $this->joinClause;
 			}
@@ -274,7 +282,7 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 			}
 
 			foreach ( $select_filters as $value ) {
-				$value = str_replace( ',', '-', $value );
+				$value = $this->stringify_value( $value );
 
 				if ( ! empty( $plucked_key_to_key_group_map[ $value ] ) ) {
 					$value = $plucked_key_to_key_group_map[ $value ];
@@ -699,10 +707,21 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 			$this->type = $this->get_type();
 		}
 
-		protected function get_title() {
+		/**
+		 * Returns the filter display title.
+		 *
+		 * @since 1.0.0
+		 * @since 5.0.0 Changes the method visibility from `protected` to `public`.
+		 *
+		 * @return string The filter display title.
+		 */
+		public function get_title() {
 			$current_active_filters = Tribe__Events__Filterbar__View::instance()->get_filter_settings();
-			$title = isset( $current_active_filters[ $this->slug ]['title'] ) ? $current_active_filters[ $this->slug ]['title'] : $this->name;
-			return apply_filters( 'tribe_events_filter_title', $title, $this->slug );
+			$title = isset( $current_active_filters[ $this->slug ]['title'] )
+				? $current_active_filters[ $this->slug ]['title']
+				: $this->name;
+
+			return (string) apply_filters( 'tribe_events_filter_title', $title, $this->slug );
 		}
 
 		protected function get_type() {
@@ -733,6 +752,15 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 			return apply_filters( 'tribe_events_filter_is_active', $active, $this->slug );
 		}
 
+		/**
+		 * Set Available Fields to values property.
+		 *
+		 * @since 5.0.0
+		 */
+		public function set_values() {
+			$this->values = $this->get_values();
+		}
+
 		protected function get_values() {
 			// template method
 			return array();
@@ -756,6 +784,356 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 
 		protected function setup_where_clause() {
 			// template method.
+		}
+
+		/**
+		 * Get the name field.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return string The name of the field.
+		 */
+		public function get_name_field() {
+
+			$name = 'tribe_' . $this->get_filter_option_key( get_class( $this ), $this->slug );
+
+			// Add an trailing `[]` to the field name if the type requires it.
+			$types_req_brackets = [ 'checkbox', 'dropdown', 'select', 'multiselect' ];
+			if (
+				in_array( $this->type, $types_req_brackets, true )
+				&& ! preg_match( '#\\[]$#', $name )
+			) {
+				$name .= '[]';
+			}
+
+			return $name;
+		}
+
+		/**
+		 * Get the Data for the Fields Attribute by Type.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return array<string,array> An array of values for the fields attribute.
+		 */
+		public function get_fields_data_by_type() {
+			if ( empty( $this->type ) ) {
+				return [];
+			}
+
+			if ( empty( $this->values ) ) {
+				return [];
+			}
+
+			$formatted_values = [];
+			switch ( $this->type ) {
+				case 'checkbox':
+					foreach ( $this->values as $value ) {
+						$formatted_values[] = $this->get_checkbox_format( $value );
+					}
+					break;
+				case 'radio':
+					foreach ( $this->values as $value ) {
+						$formatted_values[] = $this->get_radio_format( $value );
+					}
+					break;
+				case 'dropdown':
+				case 'select':
+				case 'multiselect':
+					$formatted_values[] = $this->get_dropdown_format();
+					break;
+				case 'range':
+					$formatted_values[] = $this->get_range_format();
+					break;
+			}
+
+			return $formatted_values;
+		}
+
+		/**
+		 * Get the Value Formatted for a Checkbox Template.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @param array $value An array of information to format for the template.
+		 *
+		 * @return array<string,mixed>|null An array of formatted information for the template or null if missing data.
+		 */
+		public function get_checkbox_format( $value ) {
+			$name  = Arr::get( $value, 'name', '' );
+			$value = Arr::get( $value, 'value', '' );
+
+			if ( empty( $name ) || empty( $value ) ) {
+				return null;
+			}
+
+			return [
+				'type'    => $this->type,
+				'label'   => $name,
+				'value'   => $value,
+				'id'      => $this->get_formatted_id_from_name( $name ),
+				'name'    => $this->get_name_field(),
+				'checked' => $this->get_is_checked( $value ),
+			];
+		}
+
+		/**
+		 * Get the Value Formatted for a Radio Template.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @param array $value An array of information to format for the template.
+		 *
+		 * @return array<string,array> An array of formatted information for the template.
+		 */
+		public function get_radio_format( $value ) {
+			$name  = Arr::get( $value, 'name', '' );
+			$value = Arr::get( $value, 'value', '' );
+
+			if ( empty( $name ) || empty( $value ) ) {
+				return null;
+			}
+
+			return [
+				'type'    => $this->type,
+				'label'   => $name,
+				'value'   => $value,
+				'id'      => $this->get_formatted_id_from_name( $name ),
+				'name'    => $this->get_name_field(),
+				'checked' => $this->get_is_checked( $value ),
+			];
+
+		}
+
+		/**
+		 * Get the Value Formatted for a Dropdown|Select|MultiSelect Template.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return array<string,mixed> An array of formatted information for the template.
+		 */
+		public function get_dropdown_format() {
+			$options = [];
+
+			foreach ( $this->values as $value ) {
+				$name  = Arr::get( $value, 'name', '' );
+				$value = Arr::get( $value, 'value', '' );
+
+				if ( empty( $name ) || empty( $value ) ) {
+					continue;
+				}
+
+				$options[] = [
+					'text'  => $name,
+					'id'    => (string) $value,
+					// Value is not type cast as typically it is a integer, but additional fields are strings.
+					'value' => $value,
+				];
+			}
+
+			return [
+				'type'    => 'select' === $this->type ? 'dropdown' : $this->type,
+				'value'   => is_array( $this->currentValue ) ? implode( ',', $this->currentValue ) : $this->currentValue,
+				'id'      => $this->get_formatted_id_from_name( $this->slug ),
+				'name'    => $this->get_name_field(),
+				'options' => $options,
+			];
+		}
+
+		/**
+		 * Get the Value Formatted for a Range Template.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return array<string,mixed>|null An array of formatted information for the template or `null` if the filter
+		 *                                  values are not set correctly.
+		 */
+		public function get_range_format() {
+			if ( ! $this->check_range_pre_conditions() ) {
+				return null;
+			}
+
+			$selected = is_array( $this->currentValue ) ? current( $this->currentValue ) : '';
+			$min      = isset( $selected['min'] ) ? $selected['min'] : false;
+			$max      = isset( $selected['max'] ) ? $selected['max'] : false;
+
+			// Setup a default min and max with no formatting.
+			if ( ! $min && ! $max ) {
+				$min = $this->values['min'];
+				$max = $this->values['max'];
+			}
+			$label = $min . ' - ' . $max;
+
+			/**
+			 * Filter the display of the range field label.
+			 *
+			 * @since 5.0.0
+			 *
+			 * @param string $label The default range label.
+			 * @param int    $min   The minimum value for the range.
+			 * @param int    $min   The maximum value for the range.
+			 */
+			$label = apply_filters( "tribe_events_filter_bar_views_v2_1_range_label_{$this->slug}", $label, $min, $max );
+
+			// Setup selected for the range field.
+			$selected = is_array( $selected ) ? implode( '-', $selected ) : $selected;
+
+			return [
+				'type'  => $this->type,
+				'label' => $label,
+				'value' => $selected,
+				'id'    => $this->get_formatted_id_from_name( $this->slug ),
+				'name'  => $this->get_name_field(),
+				'min'   => $this->values['min'],
+				'max'   => $this->values['max'],
+				'free'  => $this->free,
+			];
+		}
+
+		/**
+		 * Get the ID of a field from the name.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @param string $name The name to use to form the id.
+		 *
+		 * @return string The formatted id from the provided name.
+		 */
+		public function get_formatted_id_from_name( $name ) {
+			return str_replace( ' ', '-', stripslashes( strtolower( $name ) ) );
+		}
+
+		/**
+		 * Get if a value is checked by finding it in the current values.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @param array|int $value An array of integer of the selected value(s).
+		 *
+		 * @return bool Whether the value is found or matches the current value.
+		 */
+		public function get_is_checked( $value ) {
+
+			/**
+			 * Filter the is_checked conditional for the V2_1 filter values per filter to handle special cases.
+			 *
+			 * @since 5.0.0
+			 *
+			 * @param boolean                   $special_is_checked Whether a special is checked condition has been met.
+			 * @param array<string,integer>|int $value              An array or integer of the current fields value.
+			 * @param array<string,integer>     $current_value      An array of the selected value(s).
+			 * @param string                    $type               The type of field the filter displays as.
+			 */
+			$special_is_checked = apply_filters( "tribe_events_filter_bar_views_v2_1_is_checked_{$this->slug}", false, $value, (array) $this->currentValue, $this->type );
+
+			if ( $special_is_checked ) {
+				return true;
+			}
+
+			if ( $this->currentValue ) {
+				if ( in_array( $value, (array) $this->currentValue ) ) {
+					return true;
+				}
+
+				return false;
+			}
+
+			if ( $value === $this->currentValue ) {
+				return true;
+			}
+
+			return false;
+		}
+
+		/**
+		 * Get the first value of the selected values.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return string|null The name of the selected values.
+		 */
+		public function get_current_value_for_display() {
+			$select_filters = array_filter(
+				array_map(
+					function ( $value ) {
+						return $this->stringify_value( $value );
+					},
+					(array) $this->currentValue
+				)
+			);
+			if ( empty( $select_filters ) ) {
+				return '';
+			}
+
+			$plucked = [];
+
+			if (
+				'checkbox' === $this->type
+				|| 'multiselect' === $this->type
+			) {
+				$plucked = wp_list_pluck( $this->values, 'name', 'value' );
+			} elseif (
+				'radio' === $this->type
+				|| 'select' === $this->type
+				|| 'dropdown' === $this->type
+			) {
+				$display_current = wp_list_pluck( $this->values, 'name', 'value' );
+
+				$selected = current( $select_filters );
+
+				return ! empty( $display_current[ $selected ] ) ? $display_current[ $selected ] : '';
+			} elseif ( 'range' === $this->type ) {
+				return is_array( $this->currentValue ) ? implode( '-', current( $this->currentValue ) ) : $this->currentValue;
+			}
+
+			// Since values can be comma-delimited IDs, we need to build a map of single IDs to their comma-delimited counterparts.
+			$plucked_key_to_key_group_map = [];
+			foreach ( $plucked as $key_group => $value ) {
+				$key_ids = explode( ',', $key_group );
+				foreach ( $key_ids as $key_id ) {
+					$plucked_key_to_key_group_map[ (string) $key_id ] = $key_group;
+				}
+			}
+
+			$selected_vals = [];
+			if ( ! is_array( $select_filters ) ) {
+				$select_filters = explode( ',', $select_filters );
+			}
+
+			foreach ( $select_filters as $value ) {
+				$value = str_replace( ',', '-', $value );
+
+				if ( ! empty( $plucked_key_to_key_group_map[ $value ] ) ) {
+					$value                   = $plucked_key_to_key_group_map[ $value ];
+					$selected_vals[ $value ] = $plucked[ $value ];
+				}
+			}
+
+			return current( $selected_vals );
+		}
+
+		/**
+		 * Converts a value, whatever its input format, to its string representation.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @param mixed $value The input value.
+		 *
+		 * @return string The value in string format.
+		 */
+		protected function stringify_value( $value ) {
+			return str_replace( ',', '-', Arr::to_list( array_values( (array) $value ) ) );
+		}
+
+		/**
+		 * Checks all pre-conditions for a range type of filter are met.
+		 *
+		 * @since 5.0.0
+		 *
+		 * @return bool Whether all pre-conditions for a range type of filter are met.
+		 */
+		protected function check_range_pre_conditions() {
+			return isset( $this->values['min'] ) || empty( $this->values['max'] );
 		}
 	}
 }

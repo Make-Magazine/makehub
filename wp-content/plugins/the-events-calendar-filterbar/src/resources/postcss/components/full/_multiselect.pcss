@@ -4,7 +4,7 @@
  *
  * ----------------------------------------------------------------------------- */
 
-.tribe-events {
+.tribe-filter-bar {
 
 	.tribe-filter-bar-c-multiselect {
 
@@ -18,7 +18,7 @@
 		}
 
 		.select2-search__field {
-			@mixin desktop-body-2;
+			@mixin desktop-body-1;
 
 			background: 12px center no-repeat;
 			background-image: svg-inline(search);
@@ -32,46 +32,50 @@
 		}
 
 		.select2-selection__clear {
-			font-weight: 600;
 			font-size: 16px;
+			font-weight: 600;
 
 			&:hover {
-				opacity: 0.8;
+				opacity: var(--opacity-icon-hover);
 			}
 		}
 
 		.select2-selection__choice {
 			@mixin desktop-body-3-bold;
 
-			background-color: var(--color-accent-secondary-hover);
+			background-color: var(--color-accent-secondary);
 			border: none;
 			border-radius: 14px;
 			color: var(--color-background);
 			transition: var(--transition-background-color);
 
 			&:hover {
-				background-color: var(--color-accent-secondary);
+				background-color: var(--color-accent-secondary-hover);
 			}
 		}
 
 		.select2-selection__choice__remove {
 			color: var(--color-background);
-			font-weight: 600;
 			font-size: 16px;
+			font-weight: 600;
 
 			&:hover {
 				color: var(--color-background);
-				opacity: 0.8;
+				opacity: var(--opacity-icon-hover);
 			}
 		}
 
 		.select2-results__option {
 			@mixin desktop-body-2;
+
+			&:focus {
+				outline: none;
+			}
 		}
 
 		.select2-results__option--highlighted {
 			background-color: transparent;
-			opacity: 0.8;
+			opacity: var(--opacity-icon-hover);
 			transition: var(--transition-opacity);
 		}
 	}

@@ -86,6 +86,13 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				'callable' => '__return_empty_array',
 				'orderby'  => true,
 			),
+			'status'       => array(
+				'label'    => 'Status',
+				'value'    => 'status',
+				'callable' => array( $this, 'get_col_rows' ),
+				'args'     => array( GFFormsModel::get_entry_table_name(), 'status' ),
+				'orderby'  => true,
+			),
 		);
 
 		foreach ( $this->get_form_fields( $form_id ) as $form_field ) {
@@ -251,7 +258,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			 * @param \GF_Field $field The field that is having its value parsed.
 			 */
 			// Ensure we're querying a date field before attempting to parse the filter as such
-			if ( $date_field->type == 'date' || gf_apply_filters( array( 'gppa_process_value_as_date', $form_id, $date_field->id ), false, $date_field ) ) {
+			if ( $date_field && ( $date_field->type === 'date' || gf_apply_filters( array( 'gppa_process_value_as_date', $form_id, $date_field->id ), false, $date_field ) ) ) {
 				if ( $date_format = rgar( $date_field, 'dateFormat' ) ) {
 					$time = $this->date_to_time( $filter_value, $date_format );
 				}
@@ -281,15 +288,15 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 	}
 
-	public function exclude_trashed_entries( $where_filter_groups ) {
+	public function include_active_entries( $where_filter_groups ) {
 
-		$where_not_trashed = new GF_Query_Condition(
+		$where_active = new GF_Query_Condition(
 			new GF_Query_Column( 'status' ),
-			GF_Query_Condition::NEQ,
-			new GF_Query_Literal( 'trash' )
+			GF_Query_Condition::EQ,
+			new GF_Query_Literal( 'active' )
 		);
 
-		return call_user_func_array( array( 'GF_Query_Condition', '_and' ), array( $where_filter_groups, $where_not_trashed ) );
+		return call_user_func_array( array( 'GF_Query_Condition', '_and' ), array( $where_filter_groups, $where_active ) );
 
 	}
 
@@ -310,12 +317,13 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$query_limit = gp_populate_anything()->get_query_limit( $this, $field );
 
-		$gf_query = new GF_Query(
+		$order_key = str_replace( 'gf_field_', '', rgar( $ordering, 'orderby' ) );
+		$gf_query  = new GF_Query(
 			$primary_property_value,
 			null,
 			array(
 				'direction' => rgar( $ordering, 'order', 'ASC' ),
-				'key'       => str_replace( 'gf_field_', '', rgar( $ordering, 'orderby' ) ),
+				'key'       => $order_key,
 			),
 			array(
 				'page_size' => $query_limit,
@@ -324,16 +332,41 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$gf_query_where_groups = $this->process_filter_groups( $args, array() );
 
+		$has_status_filter = false;
 		foreach ( $gf_query_where_groups as $gf_query_where_index => $gf_query_where_group ) {
+			if ( $gf_query_where_group[0]->get_columns()[0]->field_id === 'status' ) {
+				$has_status_filter = true;
+			}
 			$gf_query_where_groups[ $gf_query_where_index ] = call_user_func_array( array( 'GF_Query_Condition', '_and' ), $gf_query_where_group );
 		}
 
 		$where_filter_groups = call_user_func_array( array( 'GF_Query_Condition', '_or' ), $gf_query_where_groups );
-		$where               = $this->exclude_trashed_entries( $where_filter_groups );
+		// Exclude all non-active entries unless "Status" is one of the conditionals
+		$where = ( ! $has_status_filter ) ? $this->include_active_entries( $where_filter_groups ) : $where_filter_groups;
 
 		$gf_query->where( $where );
 
+		// Check source field type we're populating from and adjust SQL if needed
+		if ( strlen( $field['gppa-choices-ordering-property'] ) > 0 ) {
+			$source_field = GFAPI::get_field( $field['gppa-choices-primary-property'], $order_key );
+			// 12-hour Time fields need to be parsed since "01:00 pm" < "11:00 am" to MySQL's ORDER BY
+			if ( $source_field['type'] === 'time' && $source_field['timeFormat'] === '12' ) {
+				$mask = '%h:%i %p'; // MySQL's STR_TO_DATE mask
+				// @param array $sql An array with all the SQL fragments: select, from, join, where, order, paginate.
+				$gform_gf_query_sql_func = function ( $sql ) use ( $mask ) {
+					// Regex: meta_value with a look behind to capture (`...`.`meta_value`)
+					$sql['order'] = preg_replace( '((<?`[^`]*`.`)meta_value`)', sprintf( "STR_TO_DATE($0, '%s')", $mask ), $sql['order'] );
+					return $sql;
+				};
+				add_filter( 'gform_gf_query_sql', $gform_gf_query_sql_func );
+			}
+		}
+
 		$entries = $gf_query->get();
+
+		if ( $gform_gf_query_sql_func ) {
+			remove_filter( 'gform_gf_query_sql', $gform_gf_query_sql_func );
+		}
 
 		foreach ( $entries as $entry_index => $entry ) {
 			$entry_object = new StdClass();

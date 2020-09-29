@@ -1,4 +1,5 @@
 /* global tribe, tribe_dropdowns */
+/* eslint-disable no-var, strict */
 
 /**
  * Makes sure we have all the required levels on the Tribe Object
@@ -63,7 +64,7 @@ tribe.events.views.filterBar = {};
 		filterLive: '.tribe-filter-live',
 		visualHide: '.tribe-common-a11y-visual-hide',
 		searchForm: '.tribe-events-c-events-bar__search-form',
-		selectWoo:  '.select2-container--open.tribe-dropdown'
+		selectWoo: '.select2-container--open.tribe-dropdown',
 	};
 
 	/**
@@ -161,13 +162,11 @@ tribe.events.views.filterBar = {};
 				var type = filter.type;
 				var tag = filter.tagName.toLowerCase();
 
-				if ( type == 'text' || type == 'password' || tag == 'textarea' ) {
+				if ( type === 'text' || type === 'password' || tag === 'textarea' ) {
 					this.value = '';
-				}
-				else if ( type == 'checkbox' || type == 'radio' ) {
+				} else if ( type === 'checkbox' || type === 'radio' ) {
 					this.checked = false;
-				}
-				else if ( tag == 'select' ) {
+				} else if ( tag === 'select' ) {
 					this.selectedIndex = 0;
 				}
 			} );
@@ -193,7 +192,7 @@ tribe.events.views.filterBar = {};
 
 				$slider.slider( 'values', 0, settings.min );
 				$slider.slider( 'values', 1, settings.max );
-				$display.text( settings.min + " - " + settings.max );
+				$display.text( settings.min + ' - ' + settings.max );
 				$input.val( '' );
 			} );
 	};
@@ -250,7 +249,7 @@ tribe.events.views.filterBar = {};
 		var data = {
 			url: window.location.href,
 			view_data: formData,
-			_wpnonce: nonce
+			_wpnonce: nonce,
 		};
 
 		tribe.events.views.manager.request( data, $container );
@@ -401,7 +400,7 @@ tribe.events.views.filterBar = {};
 			.find( obj.selectors.filterItem )
 			.each( function( index, filterItem ) {
 				var eventObj = { data: { target: $( filterItem ) } };
-				obj.closeFilterGroup( eventObj )
+				obj.closeFilterGroup( eventObj );
 			} );
 	};
 
@@ -425,7 +424,7 @@ tribe.events.views.filterBar = {};
 				.not( $filterItem )
 				.each( function( index, filterItem ) {
 					var eventObj = { data: { target: $( filterItem ) } };
-					obj.closeFilterGroup( eventObj )
+					obj.closeFilterGroup( eventObj );
 				} );
 		}
 
@@ -450,9 +449,9 @@ tribe.events.views.filterBar = {};
 		var $target = $( event.target );
 
 		if (
-			$target.is( obj.selectors.filterGroup )
-			|| $target.closest( obj.selectors.filterGroup ).length
-			|| $( obj.selectors.selectWoo ).length
+			$target.is( obj.selectors.filterGroup ) ||
+				$target.closest( obj.selectors.filterGroup ).length ||
+				$( obj.selectors.selectWoo ).length
 		) {
 			return;
 		}
@@ -509,7 +508,7 @@ tribe.events.views.filterBar = {};
 
 		$container
 			.find( obj.selectors.filterItem )
-			.each( function( index, filter ) {
+			.each( function( filterItemIndex, filter ) {
 				var $filter = $( filter );
 
 				// adjust field name to have same form as search form
@@ -562,7 +561,7 @@ tribe.events.views.filterBar = {};
 		$form
 			.find( obj.selectors.filterItem )
 			.reverse()
-			.each( function( index, filter ) {
+			.each( function( filterItemIndex, filter ) {
 				var $filter = $( filter );
 
 				// adjust field name back to original
@@ -601,7 +600,7 @@ tribe.events.views.filterBar = {};
 	 * @return {void}
 	 */
 	obj.handleFormSubmit = function( event ) {
-		event.preventDefault()
+		event.preventDefault();
 		obj.submitForm( event.data.form );
 	};
 
@@ -660,14 +659,18 @@ tribe.events.views.filterBar = {};
 		var $uiSlider = $filterBar.find( obj.selectors.uiSlider );
 		var $inputSelect = $filterBar.find( 'input, select' );
 
-		$document.on( 'click', { filterBar: $filterBar }, obj.handleDocumentClick )
+		$document.on( 'click', { filterBar: $filterBar }, obj.handleDocumentClick );
 		$container
 			.on( 'resize.tribeEvents', { container: $container }, obj.handleResize )
 			.on( 'beforeOnSubmit.tribeEvents', obj.handleBeforeOnSubmit )
 			.on( 'afterOnSubmit.tribeEvents', obj.handleAfterOnSubmit );
 		$filterGroupHeading.each( function( index, groupHeading ) {
 			var $groupHeading = $( groupHeading );
-			$groupHeading.on( 'click', { target: $groupHeading, filterBar: $filterBar }, obj.toggleFilterGroup );
+			$groupHeading.on(
+				'click',
+				{ target: $groupHeading, filterBar: $filterBar },
+				obj.toggleFilterGroup,
+			);
 		} );
 		$filtersToggle.on( 'click', obj.toggleFilters );
 		$filtersReset.on( 'click', { filterBar: $filterBar }, obj.resetFilters );
@@ -693,7 +696,9 @@ tribe.events.views.filterBar = {};
 	 */
 	obj.initFilters = function( $container ) {
 		var $filterBar = $container.find( obj.selectors.filterBar );
-		var $dropdowns = $filterBar.find( tribe_dropdowns.selector.dropdown ).not( tribe_dropdowns.selector.created );
+		var $dropdowns = $filterBar
+			.find( tribe_dropdowns.selector.dropdown )
+			.not( tribe_dropdowns.selector.created );
 
 		var eventObj = { data: { filterBar: $filterBar } };
 		obj.closeAllFilterGroups( eventObj );
@@ -730,7 +735,7 @@ tribe.events.views.filterBar = {};
 
 		var $dropdowns = $container.find( tribe_dropdowns.selector.dropdown );
 
-		$dropdowns.each( function ( index, dropdown ) {
+		$dropdowns.each( function( index, dropdown ) {
 			var $dropdown = $( dropdown );
 			if ( ! $dropdown.is( 'input, select' ) ) {
 				return;
@@ -739,7 +744,7 @@ tribe.events.views.filterBar = {};
 			$dropdown.data( 'select2' ).destroy();
 		} );
 
-		$container.off( 'beforeAjaxSuccess.tribeEvents', obj.deinit )
+		$container.off( 'beforeAjaxSuccess.tribeEvents', obj.deinit );
 	};
 
 	/**
@@ -776,7 +781,11 @@ tribe.events.views.filterBar = {};
 	 */
 	obj.ready = function() {
 		$body = $( 'body' );
-		$document.on( 'afterSetup.tribeEvents', tribe.events.views.manager.selectors.container, obj.init );
+		$document.on(
+			'afterSetup.tribeEvents',
+			tribe.events.views.manager.selectors.container,
+			obj.init,
+		);
 	};
 
 	// Configure on document ready

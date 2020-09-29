@@ -127,7 +127,7 @@ class ACUI_Exporter{
 	function export_users_csv(){
 		check_ajax_referer( 'codection-security', 'security' );
 
-		if( !current_user_can( 'create_users' ) )
+		if( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
 			wp_die( __( 'Only users who are able to create users can export them.', 'import-users-from-csv-with-meta' ) );
 
 		$role = sanitize_text_field( $_POST['role'] );
@@ -205,7 +205,7 @@ class ACUI_Exporter{
 
 		fclose( $file );
 
-		$fsize = filesize( $this->path_csv );
+		$fsize = filesize( $this->path_csv ) + 3;
 		$path_parts = pathinfo( $this->path_csv );
 		header( "Content-type: text/csv;charset=utf-8" );
 		header( "Content-Disposition: attachment; filename=\"".$path_parts["basename"]."\"" );

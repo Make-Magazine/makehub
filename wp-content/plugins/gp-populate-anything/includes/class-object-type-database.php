@@ -72,12 +72,26 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 		foreach ( $this->get_columns( $table ) as $column ) {
 			$properties[ $column['value'] ] = array(
-				'group'    => 'columns',
-				'label'    => $column['label'],
-				'value'    => $column['value'],
-				'orderby'  => true,
-				'callable' => array( $this, 'get_column_values' ),
-				'args'     => array( $table, $column['value'] ),
+				'group'     => 'columns',
+				'label'     => $column['label'],
+				'value'     => $column['value'],
+				'orderby'   => true,
+				'callable'  => array( $this, 'get_column_values' ),
+				'args'      => array( $table, $column['value'] ),
+				'operators' => array(
+					'is',
+					'isnot',
+					'>',
+					'>=',
+					'<',
+					'<=',
+					'contains',
+					'starts_with',
+					'ends_with',
+					'like',
+					'is_in',
+					'is_not_in',
+				),
 			);
 		}
 

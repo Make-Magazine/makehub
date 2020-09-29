@@ -4,8 +4,8 @@ Contributors: ModernTribe, barry.hughes, bordoni, borkweb, brianjessee, brook-tr
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, modern tribe, tribe, widget, pro, filters, categories, sort, tags, taxonomy, find, search
 Donate link: http://m.tri.be/29
 Requires at least: 4.9
-Tested up to: 5.5
-Stable tag: 4.10.2
+Tested up to: 5.5.1
+Stable tag: 5.0.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -195,6 +195,14 @@ Our Premium Plugins:
 
 == Changelog ==
 
+= [5.0.0] 2020-09-28 =
+
+* Fix - Prevent Filter bar from adding body classes where inappropriate. [FBAR-107]
+* Feature - Disable new Filter Bar design by defining this constant: `define( 'TRIBE_EVENTS_FILTERBAR_V1_VIEWS', TRUE );` in your site's wp-config.php. [FBAR-148]
+* Feature - Add customizer framework for Filter Bar styling. [FBAR-118]
+* Feature - Add filters to determine if filters individually and as a group should be open or closed. [FBAR-117]
+* Language - 8 new strings added, 32 updated, 0 fuzzied, and 2 obsoleted
+
 = [4.10.2] 2020-08-24 =
 
 * Tweak - Add a link to the Filter Bar settings on the plugin admin listing. [FBAR-114]
@@ -213,7 +221,7 @@ Our Premium Plugins:
 * Tweak - Load plugin text domain on the new `tribe_load_text_domains` action hook, which fires on `init` instead of on the `plugins_loaded` hook. [FBAR-94]
 * Fix - Prevent PHP errors from happening during bulk activation or deactivation of the plugin [TCMN-53]
 * Fix - Update events, venues, and organizers to use dynamic labels. [FBAR-82]
-* Fix - Additional Fields filter so that it only shows the individual values and not a combination of values choosen. [FBAR-88]
+* Fix - Additional Fields filter so that it only shows the individual values and not a combination of values chosen. [FBAR-88]
 * Language - 2 new strings added, 34 updated, 3 fuzzied, and 6 obsoleted
 
 = [4.9.3] 2020-03-23 =
@@ -346,7 +354,7 @@ Our Premium Plugins:
 
 * Feature - added class to checkbox items to better show parent, child, and grandparent relationship [70060]
 * Feature - display active filters selected in the Filter Bar [38131,70061]
-* Feature - autocheck categories under parent when checked and in dropdown display all events under a parent category [70059]
+* Feature - automatically check categories under parent when checked and in dropdown display all events under a parent category [70059]
 * Feature - added an upgrade script to change from autocomplete to Multi-Select [82651]
 * Fix - issue where only the first event would show when using State/Province, City, or Country filters in checkbox mode [82927]
 * Tweak - Select2 to replace Chosen script for dropdowns and autocomplete [75546]

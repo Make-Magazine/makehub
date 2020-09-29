@@ -30,6 +30,7 @@ trait Context_Filter {
 	 * @var string
 	 */
 	protected $context_hash;
+
 	/**
 	 * The Context instance this filter is attached to, if any.
 	 *
@@ -49,6 +50,24 @@ trait Context_Filter {
 	 * @var \WP_Query
 	 */
 	protected $query;
+
+	/**
+	 * A callback that will be called, if defined, on the filter data.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @var callable
+	 */
+	protected $data_visitor;
+
+	/**
+	 * A callback that will be called on each filter display value, if set.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @var callable
+	 */
+	protected $display_value_visitor;
 
 	/**
 	 * Builds and returns an instance of this filter (the one using this trait) specifically for the specified Context.
@@ -83,7 +102,7 @@ trait Context_Filter {
 
 		$instance->currentValue = method_exists( $instance, 'parse_value' )
 			? $instance->parse_value( $context->get( $context_key ) )
-			: $context->get( $context_key );
+			: $context->get( $context_key, $context->get( 'tribe_' . $context_key, null ) );
 
 		return $instance;
 	}
@@ -114,7 +133,10 @@ trait Context_Filter {
 			return;
 		}
 
-		if ( $this->currentValue === null ) {
+		if (
+			$this->currentValue === null
+			|| ( is_array( $this->currentValue ) && count( $this->currentValue ) === 0 )
+		) {
 			// Bail from the filtering entirely if the values are not set.
 			return;
 		}
@@ -201,7 +223,7 @@ trait Context_Filter {
 		/**
 		 * Allows filtering the option key map, so other plugins can add their own filters.
 		 *
-		 * @since TBD
+		 * @since 5.0.0
 		 *
 		 * @param array<string,string> $map The map of classes to option keys.
 		 */
@@ -240,7 +262,7 @@ trait Context_Filter {
 		/**
 		 * Allows filtering the default names map, so other plugins can add their own filters.
 		 *
-		 * @since TBD
+		 * @since 5.0.0
 		 *
 		 * @param array<string,string> $map The map of classes to filter names.
 		 */
@@ -347,5 +369,92 @@ trait Context_Filter {
 		return array_filter( array_keys( $active_filters ), static function ( $key ) {
 			return 0 === strpos( $key, '_ecp_custom_' );
 		} );
+	}
+
+	/**
+	 * Sets the Filter data visitor that will be used to modify the filter data.
+	 *
+	 * The visitor callback should have signature `function( array &$field_data ) : void`; the data should be modified
+	 * by reference.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param callable $data_visitor The Filter field data visitor.
+	 */
+	public function set_data_visitor(callable $data_visitor  ) {
+		$this->data_visitor = $data_visitor;
+	}
+
+	/**
+	 * Sets the display value visitor that will be used to modify the filter display value.
+	 *
+	 * The visitor callback should have signature `function( string $display_value, Filter $filter ) : string`.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param callable $display_value_visitor The Filter display value visitor.
+	 */
+	public function set_display_value_visitor( callable $display_value_visitor ) {
+		$this->display_value_visitor = $display_value_visitor;
+	}
+
+	/**
+	 * Overrides the base method to apply a series of modification to adapt the field definition format.
+	 *
+	 * If a data visitor is set, then the method will call it on each entry of the filter data, else the data
+	 * will be left untouched.
+	 *
+	 * The visitor callback should have signature `function( array &$field_data ) : void`; the data should be modified
+	 * by reference.
+	 * The reason we're not using the Filter API for this is that we need the data to conform before filtering it and
+	 * want to avoid the possible issues w/ filters (the WordPress ones).
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return array<string,array> The filter fields by data type, modified if required.
+	 */
+	public function get_fields_data_by_type() {
+		$fields_data = parent::get_fields_data_by_type();
+
+		if ( is_callable( $this->data_visitor ) ) {
+			array_walk( $fields_data, $this->data_visitor );
+		}
+
+		return $fields_data;
+	}
+
+	/**
+	 * Overrides the base method to modify the display value by means of a display value visitor callback if set.
+	 *
+	 * The visitor callback should have signature `function( string $display_value, Filter $filter ) : string`.
+	 * The reason we're not using the Filter API for this is that we need the data to conform before filtering it and
+	 * want to avoid the possible issues w/ filters (the WordPress ones).
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return string|null The updated display value.
+	 */
+	public function get_current_value_for_display() {
+		$display_value = parent::get_current_value_for_display();
+
+		if ( is_callable( $this->display_value_visitor ) ) {
+			$display_value = call_user_func( $this->display_value_visitor, $display_value, $this );
+		}
+
+		return $display_value;
+	}
+
+	/**
+	 * Checks all pre-conditions for a range type of filter are met.
+	 *
+	 * This method is an override of the base one to update the check to the logic used by Filter Bar in Views v2
+	 * context.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @return bool Whether all pre-conditions for a range type of filter are met.
+	 */
+	protected function check_range_pre_conditions() {
+		return isset( $this->values['min'], $this->values['max'] );
 	}
 }

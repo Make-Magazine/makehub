@@ -1,0 +1,37 @@
+/* -----------------------------------------------------------------------------
+ *
+ * Filters Slider
+ *
+ * ----------------------------------------------------------------------------- */
+
+.tribe-filter-bar {
+
+	.tribe-filter-bar__filters-slider-nav {
+
+		&:before,
+		&:after {
+			height: 100%;
+			position: absolute;
+			top: 0;
+			width: 60px;
+		}
+	}
+
+	.tribe-filter-bar__filters-slider-nav--overflow-start {
+
+		&:before {
+			content: '';
+			background: linear-gradient(-90deg, rgba(var(--color-background), 0) 15%, var(--color-background) 70%);
+			left: 0;
+		}
+	}
+
+	.tribe-filter-bar__filters-slider-nav--overflow-end {
+
+		&:after {
+			background: linear-gradient(90deg, rgba(var(--color-background), 0) 15%, var(--color-background) 70%);
+			content: '';
+			right: 0;
+		}
+	}
+}

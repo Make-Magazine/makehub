@@ -8,6 +8,8 @@ $baseDir = dirname($vendorDir);
 return array(
     'Tribe\\Events\\Filterbar\\Service_Providers\\Context' => $baseDir . '/src/Tribe/Service_Providers/Context.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Assets' => $baseDir . '/src/Tribe/Views/V2/Assets.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2\\Body_Classes' => $baseDir . '/src/Tribe/Views/V2/Body_Classes.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2\\Doing_Filterbar' => $baseDir . '/src/Tribe/Views/V2/Doing_Filterbar.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters' => $baseDir . '/src/Tribe/Views/V2/Filters.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Additional_Field' => $baseDir . '/src/Tribe/Views/V2/Filters/Additional_Field.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Category' => $baseDir . '/src/Tribe/Views/V2/Filters/Category.php',
@@ -29,4 +31,13 @@ return array(
     'Tribe\\Events\\Filterbar\\Views\\V2\\Hooks' => $baseDir . '/src/Tribe/Views/V2/Hooks.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Service_Provider' => $baseDir . '/src/Tribe/Views/V2/Service_Provider.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Template' => $baseDir . '/src/Tribe/Views/V2/Template.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Assets' => $baseDir . '/src/Tribe/Views/V2_1/Assets.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Configuration' => $baseDir . '/src/Tribe/Views/V2_1/Configuration.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Customizer' => $baseDir . '/src/Tribe/Views/V2_1/Customizer.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters' => $baseDir . '/src/Tribe/Views/V2_1/Filters.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters\\Data' => $baseDir . '/src/Tribe/Views/V2_1/Filters/Data.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Filters\\Factory' => $baseDir . '/src/Tribe/Views/V2_1/Filters/Factory.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Hooks' => $baseDir . '/src/Tribe/Views/V2_1/Hooks.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Service_Provider' => $baseDir . '/src/Tribe/Views/V2_1/Service_Provider.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2_1\\Template' => $baseDir . '/src/Tribe/Views/V2_1/Template.php',
 );

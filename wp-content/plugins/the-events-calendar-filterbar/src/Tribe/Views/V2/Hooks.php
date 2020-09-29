@@ -19,7 +19,6 @@ namespace Tribe\Events\Filterbar\Views\V2;
 
 use Tribe\Events\Views\V2\View_Interface;
 use Tribe__Context as Context;
-use Tribe__Events__Filterbar__View as Main;
 
 /**
  * Class Hooks.
@@ -29,6 +28,8 @@ use Tribe__Events__Filterbar__View as Main;
  * @package Tribe\Events\Filterbar\Views\V2
  */
 class Hooks extends \tad_DI52_ServiceProvider {
+	use Doing_Filterbar;
+
 	/**
 	 * Whether filters should render at all or not.
 	 *
@@ -37,11 +38,28 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	protected $should_display_filters = true;
 
 	/**
+	 * Holds the allowed body classes for this object.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @var array<string>
+	 */
+	protected $body_classes = [
+		'tribe-filters-closed',
+		'tribe-filters-live-update',
+		'tribe-filters-open',
+	];
+
+	/**
 	 * Binds and sets up implementations.
 	 *
 	 * @since 4.9.0
 	 */
 	public function register() {
+		$this->container->singleton( Customizer::class, Customizer::class );
+		$this->container->singleton( Body_Classes::class, Body_Classes::class );
+		tribe( Body_Classes::class )->register();
+
 		$this->add_actions();
 		$this->add_filters();
 	}
@@ -55,13 +73,6 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_action( 'tribe_template_after_include:events/v2/components/filter-bar', [ $this, 'action_include_filter_bar' ], 10, 3 );
 		add_action( 'tribe_events_filter_view_do_display_filters', [ $this, 'display_filters' ] );
 		add_action( 'tribe_events_pro_shortcode_tribe_events_before_assets', [ $this, 'action_include_assets' ] );
-
-		/**
-		 * @todo Remove this once the facelift goes live.
-		 */
-		if ( ! tribe_events_filterbar_views_v2_is_enabled() ) {
-			return;
-		}
 	}
 
 	/**
@@ -78,17 +89,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 		add_filter( 'tribe_events_views_v2_view_repository_args', [ $this, 'filter_view_repository_args' ], 5, 2 );
 		add_filter( 'tribe_events_views_v2_url_query_args', [ $this, 'filter_view_url_query_args' ], 10, 2 );
 		add_filter( 'tribe_events_views_v2_rest_params', [ $this, 'filter_view_rest_params' ], 10, 2 );
-		add_filter( 'body_class', [ $this, 'filter_body_class' ] );
 		add_filter( 'tribe_events_views_v2_cache_html_expiration', [ $this, 'filter_cache_html_expiration' ] );
-		add_filter( 'tribe_template_origin_namespace_map', [ $this, 'filter_add_template_origin_namespace' ], 15 );
-		add_filter( 'tribe_template_path_list', [ $this, 'filter_template_path_list' ], 15, 2 );
-
-		/**
-		 * @todo Remove this once the facelift goes live.
-		 */
-		if ( ! tribe_events_filterbar_views_v2_is_enabled() ) {
-			return;
-		}
 	}
 
 	/**
@@ -96,9 +97,9 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @since 4.9.0
 	 *
-	 * @param string $file     Complete path to include the PHP File.
-	 * @param array  $name     Template name.
-	 * @param self   $template Current instance of the Tribe__Template.
+	 * @param string          $file     Complete path to include the PHP File.
+	 * @param array           $name     Template name.
+	 * @param Tribe__Template $template Current instance of the Tribe__Template.
 	 *
 	 * @return string          HTML for template.
 	 */
@@ -111,9 +112,9 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @since 4.9.0
 	 *
-	 * @param string $file     Complete path to include the PHP File.
-	 * @param array  $name     Template name.
-	 * @param self   $template Current instance of the Tribe__Template.
+	 * @param string          $file     Complete path to include the PHP File.
+	 * @param array           $name     Template name.
+	 * @param Tribe__Template $template Current instance of the Tribe__Template.
 	 *
 	 * @return string          HTML template.
 	 */
@@ -135,9 +136,9 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 *
 	 * @since 4.9.0
 	 *
-	 * @param string $file     Complete path to include the PHP File.
-	 * @param array  $name     Template name.
-	 * @param self   $template Current instance of the Tribe__Template.
+	 * @param string          $file     Complete path to include the PHP File.
+	 * @param array           $name     Template name.
+	 * @param Tribe__Template $template Current instance of the Tribe__Template.
 	 *
 	 * @return string          HTML template.
 	 */
@@ -168,7 +169,12 @@ class Hooks extends \tad_DI52_ServiceProvider {
 			return;
 		}
 
-		return $this->container->make( Template::class )->template( 'filter-bar', $template->get_values() );
+		$values = $template->get_values();
+
+		// Include Filter Bar HTML making sure Latest Past Events View will NOT filter it out.
+		return $this->doing_filterbar( function () use ( $values ) {
+			return $this->container->make( Template::class )->template( 'filter-bar', $values );
+		} );
 	}
 
 	/**
@@ -232,12 +238,14 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 * Filters the body classes to add theme compatibility ones.
 	 *
 	 * @since 4.9.0
+	 * @deprecated 5.0.0
 	 *
 	 * @param  array $classes Classes that are been passed to the body.
 	 *
 	 * @return array $classes
 	 */
 	public function filter_body_class( $classes ) {
+		_deprecated_function( __FUNCTION__, '5.0.0', 'Body_Classes::add_body_classes' );
 		$layout       = tribe( Filters::class )->get_layout_setting();
 		$live_refresh = tribe_get_option( 'liveFiltersUpdate', 'automatic' );
 
@@ -251,7 +259,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 			 *
 			 * @since 4.9.3
 			 *
-			 * @param bool $init_closed Boolean on whether to initially display vertical filters closed or not.
+			 * @param bool $init_closed Boolean on whether to initially display vertical filter block closed or not.
 			 */
 			$init_closed = apply_filters( 'tribe_events_filter_bar_views_v2_vertical_init_closed', true );
 
@@ -296,53 +304,5 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 */
 	public function filter_cache_html_expiration() {
 		return HOUR_IN_SECONDS * 11;
-	}
-
-	/**
-	 * Includes Filter Bar into the path namespace mapping, allowing for a better namespacing when loading files.
-	 *
-	 * @since TBD
-	 *
-	 * @param array<string,string> $namespace_map Indexed array containing the namespace as the key and path to `strpos`.
-	 *
-	 * @return array<string,string>  Namespace map after adding Pro to the list.
-	 */
-	public function filter_add_template_origin_namespace( $namespace_map ) {
-		$main                                       = Main::instance();
-		$namespace_map[ $main->template_namespace ] = $main->pluginPath;
-
-		return $namespace_map;
-	}
-
-	/**
-	 * Filters the list of folders TEC will look up to find templates to add the ones defined by Filter Bar.
-	 *
-	 * @since TBD
-	 *
-	 * @param array            $folders  The current list of folders that will be searched template files.
-	 * @param \Tribe__Template $template Which template instance we are dealing with.
-	 *
-	 * @return array<string,array> The filtered list of folders that will be searched for the templates.
-	 */
-	public function filter_template_path_list( array $folders = [], \Tribe__Template $template ) {
-		$main = Main::instance();
-
-		$path = (array) rtrim( $main->pluginPath, '/' );
-
-		// Pick up if the folder needs to be added to the public template path.
-		$folder = $template->get_template_folder();
-
-		if ( ! empty( $folder ) ) {
-			$path = array_merge( $path, $folder );
-		}
-
-		$folders['events-filterbar'] = [
-			'id'        => 'events-filterbar',
-			'namespace' => $main->template_namespace,
-			'priority'  => 25,
-			'path'      => implode( DIRECTORY_SEPARATOR, $path ),
-		];
-
-		return $folders;
 	}
 }

@@ -1,5 +1,37 @@
 # Changelog
 
+## 1.0-beta-4.104
+
+	- Added [`gppa_autoloaded_object_types`](https://gravitywiz.com/documentation/gppa_autoloaded_object_types/) filter to customize available object types.
+
+## 1.0-beta-4.103
+
+	- Fixed an issue with tables names that contained spaces.
+
+## 1.0-beta-4.102
+
+	- Fixed an issue where GPPA may generate notices when using LMTs.
+
+## 1.0-beta-4.101
+
+	- Added `is in` and `is not in` operators globally.
+
+## 1.0-beta-4.100
+
+	- Fixed an issue where populated entries may show out of order if they are ordered by a 12-Hour Time field.
+
+## 1.0-beta-4.99
+
+	- Fixed an issue where GPPA may return some non-active entries. Defaults to explicitly `active` entries now.
+
+## 1.0-beta-4.98
+
+	- Fixed an issue where GPPA may generate PHP notices when filtering using certain metadata.
+	- Added inline hook documentation for [gppa_object_type_col_rows_query](https://gravitywiz.com/documentation/gppa_object_type_col_rows_query/).
+	- Added inline hook documentation for [gppa_default_operators](https://gravitywiz.com/documentation/gppa_default_operators/).
+	- Added inline hook documentation for [gppa_process_value_as_date](https://gravitywiz.com/documentation/gppa_process_value_as_date/).
+	- Fixed typos (extra i in compatibility) in the following classnames: GPPA_Compatibility_GravityFlow, GPPA_Compatibility_GravityPDF, and GPPA_Compatibility_GravityView
+
 ## 1.0-beta-4.97
 
 	- Fixed issue where the Gravity Forms Entry object type would add a where clause for any unrecognized operator. This fix will make it possible for snippets/plugins to add additional operators to the GF Entry object type.

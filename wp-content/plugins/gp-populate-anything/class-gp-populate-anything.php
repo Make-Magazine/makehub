@@ -21,8 +21,8 @@ class GP_Populate_Anything extends GP_Plugin {
 
 
 	/**
-	 * Marks which scripts/styles have been localized to avoid localizing multiple times with
-	 * Gravity Forms' scripts 'callback' property.
+	 * Marks which scripts/styles have been localized to avoid localizing multiple times with Gravity Forms' scripts
+	 * 'callback' property.
 	 *
 	 * @var array
 	 */
@@ -137,11 +137,30 @@ class GP_Populate_Anything extends GP_Plugin {
 		$this->live_merge_tags = new GP_Populate_Anything_Live_Merge_Tags();
 
 		/* Add default object types */
-		$this->register_object_type( 'post', 'GPPA_Object_Type_Post' );
-		$this->register_object_type( 'term', 'GPPA_Object_Type_Term' );
-		$this->register_object_type( 'user', 'GPPA_Object_Type_User' );
-		$this->register_object_type( 'gf_entry', 'GPPA_Object_Type_GF_Entry' );
-		$this->register_object_type( 'database', 'GPPA_Object_Type_Database' );
+		$object_types = array(
+			'post'     => 'GPPA_Object_Type_Post',
+			'term'     => 'GPPA_Object_Type_Term',
+			'user'     => 'GPPA_Object_Type_User',
+			'gf_entry' => 'GPPA_Object_Type_GF_Entry',
+			'database' => 'GPPA_Object_Type_Database',
+		);
+
+		/**
+		 * Filter object types GPPA will populate from.
+		 *
+		 * @since 1.0-beta-4.104
+		 *
+		 * @param $object_types Array of GPPA object types indexed by type name.
+		 *  default value: array( 'post'     => 'GPPA_Object_Type_Post',
+		 *                        'term'     => 'GPPA_Object_Type_Term',
+		 *                        'user'     => 'GPPA_Object_Type_User',
+		 *                        'gf_entry' => 'GPPA_Object_Type_GF_Entry',
+		 *                        'database' => 'GPPA_Object_Type_Database');
+		 */
+		$object_types = apply_filters( 'gppa_autoloaded_object_types', $object_types );
+		foreach ( $object_types as $type => $class_name ) {
+			$this->register_object_type( $type, $class_name );
+		}
 
 		$this->perk_compatibility();
 
@@ -971,7 +990,7 @@ class GP_Populate_Anything extends GP_Plugin {
 						$value = array();
 					}
 					$value[] = $field_value;
-				// Otherwise, we are targeting a single-input field's value. There should only be one field value so we can break the loop.
+					// Otherwise, we are targeting a single-input field's value. There should only be one field value so we can break the loop.
 				} else {
 					$value = $field_value;
 					break;
@@ -1562,7 +1581,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		/**
 		 * current-merge-tag-values is used to see if the field is stilled coupled to the live merge tags.
 		 */
-		$request_val = rgar( rgar( $_REQUEST, 'current-merge-tag-values' ), $field->get_value_default() );
+		$request_val = rgar( rgar( $_REQUEST, 'current-merge-tag-values', array() ), $field->get_value_default() );
 
 		$field_value = str_replace( "\r\n", "\n", $field_value );
 		$request_val = str_replace( "\r\n", "\n", $request_val );

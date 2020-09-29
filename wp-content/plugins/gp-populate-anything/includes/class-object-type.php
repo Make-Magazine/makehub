@@ -383,6 +383,14 @@ abstract class GPPA_Object_Type {
 			}
 		}
 
+		if ( in_array( $sql_operator, array( 'IN', 'NOT IN' ), true ) ) {
+			$specification_array = array_map( function ( $v ) {
+				return '%s';
+			}, $value );
+
+			$specification = '(' . join( ',', $specification_array ) . ')';
+		}
+
 		return $specification;
 
 	}
@@ -400,6 +408,11 @@ abstract class GPPA_Object_Type {
 
 			case 'contains':
 				return '%' . $wpdb->esc_like( $value ) . '%';
+
+			case 'is_in':
+			case 'is_not_in':
+				$value = is_array( $value ) ? $value : explode( ',', $value );
+				return array_map( $wpdb->esc_like, $value );
 
 			default:
 				return $value;
@@ -425,6 +438,12 @@ abstract class GPPA_Object_Type {
 			case 'isnot':
 				return '!=';
 
+			case 'is_in':
+				return 'IN';
+
+			case 'is_not_in':
+				return 'NOT IN';
+
 			default:
 				return $operator;
 		}
@@ -436,8 +455,8 @@ abstract class GPPA_Object_Type {
 		global $wpdb;
 
 		$sql_operator  = $this->get_sql_operator( $operator );
-		$specification = $this->get_value_specification( $value, $operator, $sql_operator );
 		$value         = $this->get_sql_value( $operator, $value );
+		$specification = $this->get_value_specification( $value, $operator, $sql_operator );
 
 		$ident = self::esc_property_to_ident( "{$table}.{$column}" );
 
@@ -478,11 +497,6 @@ abstract class GPPA_Object_Type {
 	}
 
 	public static function esc_property_to_ident( $property ) {
-		/* If whitespace exists in the property, this may not be a column that needs to be escaped. */
-		if ( preg_match( '/\s/', $property ) ) {
-			return $property;
-		}
-
 		return implode( '.', self::esc_sql_ident( explode( '.', $property ) ) );
 	}
 

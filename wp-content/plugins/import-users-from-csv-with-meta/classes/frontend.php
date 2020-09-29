@@ -247,7 +247,7 @@ class ACUI_Frontend{
 
 		ob_start();
 		
-		if( !current_user_can( 'create_users' ) )
+		if( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
 			wp_die( __( 'Only users who are able to create users can manage this form.', 'import-users-from-csv-with-meta' ) );
 
 		if ( $_FILES && !empty( $_POST ) ):

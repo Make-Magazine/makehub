@@ -190,7 +190,7 @@ class Tribe__Events__Filterbar__Settings {
 	/**
 	 * Add Filter Bar settings link the the plugin admin list.
 	 *
-	 * @since TBD
+	 * @since 5.0.0
 	 *
 	 * @param array $actions An array of links to add to the plugin admin list.
 	 *

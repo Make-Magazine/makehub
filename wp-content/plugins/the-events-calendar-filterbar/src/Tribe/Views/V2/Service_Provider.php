@@ -1,8 +1,6 @@
 <?php
 namespace Tribe\Events\Filterbar\Views\V2;
 
-use \Tribe__Events__Filterbar__View;
-
 /**
  * The main service provider for Filterbar support and additions to the Views V2 functions.
  *
@@ -17,8 +15,6 @@ class Service_Provider extends \tad_DI52_ServiceProvider {
 	 * @since 4.9.0
 	 */
 	public function register() {
-		require_once Tribe__Events__Filterbar__View::plugin_path( 'src/functions/views/provider.php' );
-
 		if ( ! tribe_events_views_v2_is_enabled() ) {
 			return;
 		}
@@ -43,15 +39,6 @@ class Service_Provider extends \tad_DI52_ServiceProvider {
 		$assets->register();
 
 		$this->container->singleton( Assets::class, $assets );
-
-		/**
-		 * @todo Remove this once the facelift goes live.
-		 */
-		if ( ! tribe_events_filterbar_views_v2_is_enabled() ) {
-			return;
-		}
-
-		// register filterbar facelift stuff here.
 	}
 
 	/**
@@ -66,15 +53,6 @@ class Service_Provider extends \tad_DI52_ServiceProvider {
 		// Allow Hooks to be removed, by having the them registered to the container
 		$this->container->singleton( Hooks::class, $hooks );
 		$this->container->singleton( 'filterbar.views.v2.hooks', $hooks );
-
-		/**
-		 * @todo Remove this once the facelift goes live.
-		 */
-		if ( ! tribe_events_filterbar_views_v2_is_enabled() ) {
-			return;
-		}
-
-		// register filterbar facelift stuff here.
 	}
 
 }

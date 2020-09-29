@@ -4,9 +4,13 @@
  *
  * ----------------------------------------------------------------------------- */
 
-.tribe-events {
+.tribe-filter-bar {
 
 	.tribe-filter-bar-c-multiselect {
+
+		.select2-selection {
+			position: relative;
+		}
 
 		.select2-selection__rendered {
 			display: flex;
@@ -18,30 +22,25 @@
 
 		.select2-search {
 			flex: none;
-			margin-bottom: var(--spacer-3);
-			order: -1;
+			margin: var(--spacer-1) 0 var(--spacer-2);
 			padding: 0 var(--spacer-0);
 			width: 100%;
-
-			&:only-child {
-				margin-bottom: 0;
-			}
 		}
 
 		.select2-search__field {
-			height: 34px;
+			height: 40px;
 			margin: 0;
 			min-width: 100%;
 			padding: 0 20px 0 34px;
 		}
 
 		.select2-selection__clear {
+			bottom: 24px;
 			line-height: 10px;
 			margin: 0;
 			padding: 3px;
 			position: absolute;
 			right: 10px;
-			top: 9px;
 		}
 
 		.select2-selection__choice {
@@ -60,7 +59,7 @@
 
 		.select2-selection__choice__remove {
 			line-height: 8px;
-			margin: 0 0 0 var(--spacer-0);
+			margin: 0 0 2px var(--spacer-0);
 			order: 1;
 			padding: 3px;
 		}

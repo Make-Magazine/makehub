@@ -6,7 +6,7 @@ class ACUI_Homepage{
 	public static function admin_gui(){
 		$last_roles_used = empty( get_option( 'acui_last_roles_used' ) ) ? array( 'subscriber' ) : get_option( 'acui_last_roles_used' );
 		
-		acui_check_options();
+		self::check_options();
 ?>
 	<div class="wrap acui">	
 
@@ -311,5 +311,13 @@ class ACUI_Homepage{
 		    </div>
 		</div>
 		<?php endif;
+	}
+
+	public static function check_options(){
+		if( get_option( "acui_mail_body" ) == "" )
+			update_option( "acui_mail_body", __( 'Welcome,', 'import-users-from-csv-with-meta' ) . '<br/>' . __( 'Your data to login in this site is:', 'import-users-from-csv-with-meta' ) . '<br/><ul><li>' . __( 'URL to login', 'import-users-from-csv-with-meta' ) . ': **loginurl**</li><li>' . __( 'Username', 'import-users-from-csv-with-meta' ) . ' = **username**</li><li>' . __( 'Password', 'import-users-from-csv-with-meta' ) . ' = **password**</li></ul>' );
+	
+		if( get_option( "acui_mail_subject" ) == "" )
+			update_option( "acui_mail_subject", __('Welcome to','import-users-from-csv-with-meta') . ' ' . get_bloginfo("name") );
 	}
 }
