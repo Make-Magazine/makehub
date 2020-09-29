@@ -590,12 +590,14 @@
 			font-family: FontAwesome;
 			color: #005e9a;
 		}
-		.tribe-events-c-top-bar__datepicker-desktop, .tribe-events-c-top-bar__datepicker-mobile { 
-			visibility: hidden !important;
-			width: 10px; 
+		.tribe-events-c-top-bar__datepicker-time {
+			max-width: 10px;
+			.tribe-events-c-top-bar__datepicker-desktop, .tribe-events-c-top-bar__datepicker-mobile { 
+				visibility: hidden !important;
+				width: 10px; 
+			}
 		}
 	}
-	
 }
 
 .tribe-events-view {
@@ -710,11 +712,14 @@
 	}
 }
 @media screen and (max-width: 981px) {
-	.tribe-common .tribe-events-c-top-bar__datepicker {
-		margin: 10px 0px;
-		display: flex;
-		justify-content: center;
+	.tribe-common .tribe-events-header__events-bar {
+		margin-bottom: 10px;
 	}
+	.tribe-common .tribe-events-c-top-bar__datepicker {
+		float: left;
+		margin-top: -18px;
+	}
+	
 }
 @media screen and (max-width: 768px) {
 	.tribe-events .tribe-events-l-container {

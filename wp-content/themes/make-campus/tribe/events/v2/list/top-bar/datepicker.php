@@ -89,6 +89,6 @@
 	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container"></div>
 </div>
 <div class="tribe-events-views">
-	<a href="/events/photo/" class="btn universal-btn">Photo</a>
+	<a href="/events/photo/" class="btn universal-btn">Grid</a>
 	<a href="/events/month/" class="btn universal-btn">Calendar</a>
 </div>

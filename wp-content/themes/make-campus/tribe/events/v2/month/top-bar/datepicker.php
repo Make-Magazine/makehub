@@ -66,6 +66,6 @@ $datepicker_date     = Dates::build_date_object( $selected_date_value )->format(
 	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container"></div>
 </div>
 <div class="tribe-events-views">
-	<a href="/events/photo/" class="btn universal-btn">Photo</a>
+	<a href="/events/photo/" class="btn universal-btn">Grid</a>
 	<a href="/events/list/" class="btn universal-btn">List</a>
 </div>
