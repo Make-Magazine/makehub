@@ -49,6 +49,8 @@ if ( empty( $disable_event_search ) ) {
 			<?php $this->template( 'components/events-bar/tabs' ); ?>
 
 			<?php $this->template( 'components/events-bar/search' ); ?>
+			
+			<?php $this->template( 'components/filter-bar' ); ?>
 
 			<?php $this->template( 'components/events-bar/filters' ); ?>
 			
@@ -56,6 +58,5 @@ if ( empty( $disable_event_search ) ) {
 	<?php endif; ?>
 
 	<?php $this->template( 'components/events-bar/views' ); ?>
-	<a href="/facilitator-info" class="btn universal-btn">Submit an Event</a>
 
 </div>

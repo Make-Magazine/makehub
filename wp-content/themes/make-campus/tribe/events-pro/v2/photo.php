@@ -70,7 +70,6 @@ if ( empty( $disable_event_search ) ) {
 			<?php $this->template( 'photo/top-bar' ); ?>
 		</header>
 
-		<?php $this->template( 'components/filter-bar' ); ?>
 
 		<div class="tribe-events-pro-photo">
 
