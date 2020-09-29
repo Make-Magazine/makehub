@@ -3,11 +3,11 @@
  * View: Top Bar - Date Picker
  *
  * Override this template in your own theme by creating a file at:
- * [your-theme]/tribe/events-pro/v2/photo/top-bar/datepicker.php
+ * [your-theme]/tribe/events/v2/list/top-bar/datepicker.php
  *
  * See more documentation about our views templating system.
  *
- * @link    {INSERT_ARTCILE_LINK_HERE}
+ * @link    http://m.tri.be/1aiy
  *
  * @version 5.0.1
  *
@@ -31,8 +31,8 @@
 		class="tribe-common-h3 tribe-common-h--alt tribe-events-c-top-bar__datepicker-button"
 		data-js="tribe-events-top-bar-datepicker-button"
 		type="button"
-		aria-label="<?php esc_attr_e( 'Click to toggle datepicker', 'tribe-events-calendar-pro' ); ?>"
-		title="<?php esc_attr_e( 'Click to toggle datepicker', 'tribe-events-calendar-pro' ); ?>"
+		aria-label="<?php esc_attr_e( 'Click to toggle datepicker', 'the-events-calendar' ); ?>"
+		title="<?php esc_attr_e( 'Click to toggle datepicker', 'the-events-calendar' ); ?>"
 	>
 		<time
 			datetime="<?php echo esc_attr( $selected_start_datetime ); ?>"
@@ -73,7 +73,7 @@
 		class="tribe-events-c-top-bar__datepicker-label tribe-common-a11y-visual-hide"
 		for="tribe-events-top-bar-date"
 	>
-		<?php esc_html_e( 'Select date.', 'tribe-events-calendar-pro' ); ?>
+		<?php esc_html_e( 'Select date.', 'the-events-calendar' ); ?>
 	</label>
 	<input
 		type="text"
@@ -89,6 +89,6 @@
 	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container"></div>
 </div>
 <div class="tribe-events-views">
-	<a href="/events/list/" class="btn universal-btn">List</a>
+	<a href="/events/photo/" class="btn universal-btn">Photo</a>
 	<a href="/events/month/" class="btn universal-btn">Calendar</a>
 </div>
