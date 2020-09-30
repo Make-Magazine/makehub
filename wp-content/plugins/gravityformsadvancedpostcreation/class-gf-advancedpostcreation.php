@@ -317,7 +317,9 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 			array(
 				'handle'  => 'gform_advancedpostcreation_taxonomy_map',
 				'deps'    => array( 'gform_advancedpostcreation_select2' ),
-				'src'     => $this->get_base_url() . "/js/taxonomy_map{$min}.js",
+				'src'     => $this->is_gravityforms_supported( '2.5-beta-1' )
+					? $this->get_base_url() . "/js/taxonomy_map{$min}.js"
+					: $this->get_base_url() . "/legacy/js/taxonomy_map_pre_gf25{$min}.js",
 				'version' => $this->_version,
 			),
 			array(
@@ -900,14 +902,14 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 	/**
 	 * Renders and initializes a taxonomy map field based on the $field array
 	 *
-	 * @since 1.0
+	 * @since  1.0
 	 * @access public
 	 *
-	 * @param array $field - Field array containing the configuration options of this field.
-	 * @param bool  $echo  - True to echo the output to the screen, false to simply return the contents as a string.
-	 *
-	 * @uses GFAddOn::get_field_attributes()
-	 * @uses GFAddOn::get_setting()
+	 * @param array|object $field - Field array or object containing the configuration options of this field.
+	 * @param bool         $echo  - True to echo the output to the screen, false to simply return the contents as a
+	 *                            string.
+	 * @uses   GFAddOn::get_setting()
+	 * @uses   GFAddOn::get_field_attributes()
 	 *
 	 * @return string The HTML for the field
 	 */
@@ -917,7 +919,13 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 		$html = '';
 
 		// Initialize field objects for child fields.
-		$value_field = $key_field = $custom_value_field = $field;
+		if ( is_object( $field ) ) {
+			$key_field          = clone $field;
+			$value_field        = clone $field;
+			$custom_value_field = clone $field;
+		} else {
+			$value_field = $key_field = $custom_value_field = $field;
+		}
 
 		// Define custom placeholder.
 		$custom_placeholder = 'gf_custom';
@@ -981,7 +989,7 @@ class GF_Advanced_Post_Creation extends GFFeedAddOn {
 
 		// Display map table.
 		$html .= '
-            <table class="settings-field-map-table" cellspacing="0" cellpadding="0">
+            <table class="settings-field-map-table" cellspacing="10px" cellpadding="0">
                 <tbody class="repeater">
 	                <tr>
 	                    <th>' . $this->settings_select( $key_field, false ) . '</th>

@@ -18,3 +18,23 @@
 #postDateFieldDate ~ .select2-container {
 	margin-right: 2%;
 }
+
+#tab_gravityformsadvancedpostcreation .repeater th,
+#tab_gravityformsadvancedpostcreation .repeater td {
+	font-weight: 400;
+	text-align: left;
+}
+
+#tab_gravityformsadvancedpostcreation .gform-settings-field .select2-selection--single,
+#tab_gravityformsadvancedpostcreation .gform-settings-field .select2-selection--multiple {
+	border: 0 none;
+	height: auto;
+}
+
+#tab_gravityformsadvancedpostcreation .gform-settings-field .select2-selection--single b {
+	display: none;
+}
+
+#tab_gravityformsadvancedpostcreation .select2-container--below input.select2-search__field[placeholder] {
+	padding-left: inherit;
+}

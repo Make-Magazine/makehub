@@ -4,7 +4,7 @@ var GFTaxonomyMap = function( options ) {
 	var self = this;
 
 	self.options = options;
-	self.UI = jQuery( '#gform_setting_' + self.options.fieldName );
+	self.UI = jQuery( '#gaddon-setting-row-' + self.options.fieldName );
 
 	self.init = function() {
 		self.options.formFields = JSON.parse( self.options.formFields );
@@ -16,12 +16,12 @@ var GFTaxonomyMap = function( options ) {
 	};
 
 	self.bindEvents = function() {
-		self.UI.on( 'change', 'select[name="_gform_setting_' + self.options.keyFieldName + '"]', function() {
-			self.setupRow( jQuery( this ).closest( 'tr' ), {} );
+		self.UI.on( 'change', 'select[name="_gaddon_setting_' + self.options.keyFieldName + '"]', function() {
+			self.setupRow( jQuery( this ).parent().parent(), {} );
 		} );
 
 		self.UI.closest( 'form' ).on( 'submit', function( event ) {
-			jQuery( '[name^="_gform_setting_' + self.options.fieldName + '_"]' ).each( function( i ) {
+			jQuery( '[name^="_gaddon_setting_' + self.options.fieldName + '_"]' ).each( function( i ) {
 				jQuery( this ).removeAttr( 'name' );
 			} );
 		} );
@@ -41,10 +41,11 @@ var GFTaxonomyMap = function( options ) {
 	};
 
 	self.setupRow = function( $rootElm, item ) {
+
 		// Get fields.
-		var $key         = $rootElm.find( 'select[name="_gform_setting_' + self.options.keyFieldName + '"]' ),
-			$value       = $rootElm.find( 'select[name="_gform_setting_' + self.options.valueFieldName + '"]' ),
-			$customValue = $value.closest( 'tr' ).find( '.custom-value-container' );
+		var $key = $rootElm.find( 'select[name="_gaddon_setting_' + self.options.keyFieldName + '"]' ),
+			$value = $rootElm.find( 'select[name="_gaddon_setting_' + self.options.valueFieldName + '"]' ),
+			$customValue = $value.siblings( '.custom-value-container' );
 
 		// Enable Select2 for key field.
 		$key.select2( { minimumResultsForSearch: Infinity } );
@@ -53,7 +54,7 @@ var GFTaxonomyMap = function( options ) {
 		var $keyElm = $key.siblings( '.select2-container' );
 
 		// Set value element.
-		var $valueElm = $value.data( 'select2' ) ? $value.siblings( '.select2-container' ) : $value;
+		var $valueElm = $value.data( 'select2' ) ? $value.siblings( '.select2-container' ):$value;
 
 		// If key is set to a custom value, hide value select.
 		if ( 'gf_custom' === $key.val() || 'gf_custom' === item.value ) {
@@ -70,6 +71,7 @@ var GFTaxonomyMap = function( options ) {
 
 			// Remove existing options.
 			$value.find( 'option' ).each( function() {
+
 				if ( this.value.length == 0 ) {
 					return;
 				}
@@ -117,11 +119,11 @@ var GFTaxonomyMap = function( options ) {
 					$value.removeAttr( 'disabled' );
 
 					// If the current item exists, preload the selected item.
-					if ( self.options.preloadedTerms[ item.value ] ) {
+					if ( self.options.preloadedTerms[item.value] ) {
 						// Add option to select.
 						$value.append( jQuery( '<option>', {
 							value: item.value,
-							text: self.options.preloadedTerms[ item.value ],
+							text: self.options.preloadedTerms[item.value],
 						} ) );
 
 						// Set select value to item.
@@ -161,6 +163,7 @@ var GFTaxonomyMap = function( options ) {
 							self.options.preloadedTerms[ selectedTerm.id ] = selectedTerm.text;
 						}
 					} );
+
 					break;
 
 				default:

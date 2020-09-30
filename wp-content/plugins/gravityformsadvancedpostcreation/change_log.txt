@@ -1,9 +1,14 @@
-### 1.0-beta-4.2
-- Fixed an issue where pending and draft posts created via the add-on do not have the correct post creation date when the date mappings are used in the post creation feed.
+### 1.0-beta-7 | 2020-09-28
+- Fixed an issue with the feed settings.
 
+### 1.0-beta-6 | 2020-09-24
+- Added support for Gravity Forms 2.5
 
-### 1.0-beta-4.1
+### 1.0-beta-5 | 2020-08-05
+- Added support for WordPress 5.5.
 - Updated Post Format labels to be translatable.
+- Fixed a JavaScript error with WordPress 5.5 which prevents the taxonomy settings rendering correctly.
+- Fixed an issue where pending and draft posts created via the add-on do not have the correct post creation date when the date mappings are used in the post creation feed.
 - Fixed an issue where merge tags used in the custom value inputs of the categories and tags feed settings are not processed.
 
 
