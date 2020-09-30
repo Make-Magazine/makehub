@@ -1812,8 +1812,8 @@
 		justify-content: center;
 		align-items: center;
 		p {
-			color: #333;
-			font-size: 18px;
+			color: #005e9a;
+			font-size: 36px;
 			text-align: center;
 			padding: 0px 30px;
 		}
@@ -1823,14 +1823,23 @@
 			transform: scale(1.1);  
 		}
 		.inner-wrap {
-			background: rgba(255, 255, 255, .7);
+			background: rgba(255, 255, 255, 1);
+			p { 
+				color: #fff; 
+				text-shadow:
+				   1px 1px 0 #000,
+				 -1px -1px 0 #000,  
+				  1px -1px 0 #000,
+				  -1px 1px 0 #000,
+				   1px 1px 0 #000;
+			}
 		}
 	}
 	&.clicked {
 		border-color: #333;
 		.inner-wrap p {
 			font-weight: bolder;
-			font-size: 20px;
+			font-size: 40px;
 		}
 	}
 }
