@@ -82,7 +82,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 						</div>
 					<?php } ?>
 					<?php if(get_field('kit_required') == "Yes") { ?>
-							<div class="tribe-events-single-skill-level tribe-events-content">
+						<div class="tribe-events-single-skill-level tribe-events-content">
 							<h3>A kit is required for this program:</h3> 
 	 				<?php
 								if(get_field('kit_price_included') == "yes") {
@@ -96,9 +96,9 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 								}
 								if(get_field('kit_price_included') == "no") {
 									echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
-								}
-							}
-					?>
+								} ?>
+						</div>
+					<?php } ?>
 					<!-- .tribe-events-single-event-description -->
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
