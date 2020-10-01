@@ -377,8 +377,7 @@ require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php'
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {   
 	$tags = GFAPI::get_field($form, 50);
-	error_log("ENTRY");
-	error_log(print_r($entry, TRUE));
+
 	$tagArray = array();
     if ($tags->type == 'checkbox') {
         // Get a comma separated list of checkboxes checked
@@ -435,13 +434,14 @@ function create_event($entry, $form) {
 		$recurrence_meta->updateRecurrenceMeta( $post_id, $recurrence_data );
 	}
 	
+	// Upload featured image to Organizer page
+	set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118'])); 
+	
 	// Set the taxonomies
 	wp_set_object_terms( $post_id, $entry['12'], 'tribe_events_cat' );
-	error_log(print_r($tagArray, TRUE));
-	wp_set_object_terms( $post_id, $tagArray, 'post_tag' ); // why is this not working
+	wp_set_object_terms( $post_id, $tagArray, 'post_tag' );
+	
 	// Set the featured Image
-	error_log(print_r($entry['9'], true));
-	error_log("Featured Image attachment id is: " . get_attachment_id_from_url($entry['9']));
 	set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
 	
 	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
