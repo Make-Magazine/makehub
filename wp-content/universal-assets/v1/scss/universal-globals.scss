@@ -58,6 +58,13 @@ a { // don't let genesis molest our links
 	}
 }
 
+.wp-block-button__link {
+	border-radius: 5px;
+	&:hover {
+		color: #fff;
+	}
+}
+
 .universal-btn {
 	background-color: #005e9a;
 	color: #fff;

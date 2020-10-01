@@ -379,26 +379,26 @@ function create_event($entry, $form) {
 	$tags = GFAPI::get_field($form, 50);
 	error_log("ENTRY");
 	error_log(print_r($entry, TRUE));
+	$tagArray = array();
     if ($tags->type == 'checkbox') {
         // Get a comma separated list of checkboxes checked
         $checked = $tags->get_value_export($entry);
-		error_log(print_r($checked, TRUE));
         // Convert to array.
         $tagArray = explode(', ', $checked);    
     }
 	$start_date = date_create($entry['4'] .' ' . $entry['5']);
 	$end_date = date_create($entry['6'] .' ' . $entry['7']);
+
+	$organizerData = array(
+		'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
+		'Email' => $entry['115']
+	);
 	$event_args = array(
 		'post_title' => $entry['1'],
 		'post_content' => $entry['2'],
 		'post_status' => 'pending',
+		'post_type' => 'tribe_events',
 		'post_author' => 1,
-		'tax_input' => array(
-			[tribe_events_cat] => array(
-				[0] => $entry['12']
-			),
-		),
-		'tags_input' => $tagArray,
 		'EventStartDate' => $entry['4'],
 		'EventEndDate' => $entry['6'],
 		'EventStartHour' => $start_date->format('h'),
@@ -407,21 +407,9 @@ function create_event($entry, $form) {
 		'EventEndHour' => $end_date->format('h'),
 		'EventEndMinute' => $end_date->format('i'),
 		'EventEndMeridian' => $end_date->format('A'),
-		/*'Venue' => array(
-			'Venue' => 'test',
-			'Country' => 'US',
-			'Address' => '1 W. Washington Ave.',
-			'City' => 'Madison',
-			'State' => 'WI'
-		),*/
-		'Organizer' => array(
-			'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
-			'Email' => $entry['115']
-		)
+		'Organizer' => $organizerData
 	);
-	error_log(print_r($event_args, TRUE));
 	$post_id = tribe_create_event( $event_args );
-	error_log("Post ID: " . $post_id);
 	
 	// Set the arguments for the recurring event.
 	if($entry['100'] == "no") {
@@ -446,8 +434,15 @@ function create_event($entry, $form) {
 		$recurrence_meta  = new \Tribe__Events__Pro__Recurrence__Meta();
 		$recurrence_meta->updateRecurrenceMeta( $post_id, $recurrence_data );
 	}
+	
+	// Set the taxonomies
+	wp_set_object_terms( $post_id, $entry['12'], 'tribe_events_cat' );
+	error_log(print_r($tagArray, TRUE));
+	wp_set_object_terms( $post_id, $tagArray, 'post_tag' ); // why is this not working
 	// Set the featured Image
-	set_post_thumbnail($post_id, get_attachment_id_from_src($entry['9']));
+	error_log(print_r($entry['9'], true));
+	error_log("Featured Image attachment id is: " . get_attachment_id_from_url($entry['9']));
+	set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
 	
 	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
@@ -492,8 +487,13 @@ function create_event($entry, $form) {
         $fieldID    = $field[0];
         $meta_field = $field[1];
         if(isset($entry[$fieldID])){
-            error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-            update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+            // error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+			if(strpos($meta_field, 'image') !== false) {
+				update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
+			} else {
+				//error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+            	update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+			}
         }
     }
         
@@ -551,13 +551,6 @@ function create_event($entry, $form) {
 		],
     ));
 	
-}
-
-function get_attachment_id_from_src($image_src) {
-	global $wpdb;
-	$query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
-	$id = $wpdb->get_var($query);
-	return $id;
 }
 
 /* All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
@@ -700,6 +693,25 @@ function update_event_information($post_id, $feed, $entry, $form) {
 	}
 	
 } */
+
+// error_log(get_attachment_id_from_url('http://experiences.makehub.local/wp-content/uploads/sites/4/2020/10/LB-Logo-Purple.png'));
+
+function get_attachment_id_from_url( $attachment_url ) {
+	global $wpdb;
+	$attachment_id = false;
+	// Get the upload directory paths
+	$upload_dir_paths = wp_upload_dir();
+	// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
+	if ( false !== strpos( $attachment_url, $upload_dir_paths['baseurl'] ) ) {
+		// If this is the URL of an auto-generated thumbnail, get the URL of the original image
+		$attachment_url = preg_replace( '/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url );
+		// Remove the upload path base directory from the attachment URL
+		$attachment_url = str_replace( $upload_dir_paths['baseurl'] . '/', '', $attachment_url );
+		// Finally, run a custom database query to get the attachment ID from the modified attachment URL
+		$attachment_id = $wpdb->get_var( $wpdb->prepare( "SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url ) );
+	}
+	return $attachment_id;
+}
 
 function getOrganizerObject($organizerID) {
 	$organizerArray = tribe_get_organizers();
