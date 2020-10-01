@@ -370,10 +370,197 @@ add_action('login_footer', function() {
     get_footer();
 });
 
-
 require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 
-// All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
+// Trying with tribe_create_event
+
+add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
+function create_event($entry, $form) {   
+	$tags = GFAPI::get_field($form, 50);
+	error_log("ENTRY");
+	error_log(print_r($entry, TRUE));
+    if ($tags->type == 'checkbox') {
+        // Get a comma separated list of checkboxes checked
+        $checked = $tags->get_value_export($entry);
+		error_log(print_r($checked, TRUE));
+        // Convert to array.
+        $tagArray = explode(', ', $checked);    
+    }
+	$start_date = date_create($entry['4'] .' ' . $entry['5']);
+	$end_date = date_create($entry['6'] .' ' . $entry['7']);
+	$event_args = array(
+		'post_title' => $entry['1'],
+		'post_content' => $entry['2'],
+		'post_status' => 'pending',
+		'post_author' => 1,
+		'tax_input' => array(
+			[tribe_events_cat] => array(
+				[0] => $entry['12']
+			),
+		),
+		'tags_input' => $tagArray,
+		'EventStartDate' => $entry['4'],
+		'EventEndDate' => $entry['6'],
+		'EventStartHour' => $start_date->format('h'),
+		'EventStartMinute' => $start_date->format('i'),
+		'EventStartMeridian' => $start_date->format('A'),
+		'EventEndHour' => $end_date->format('h'),
+		'EventEndMinute' => $end_date->format('i'),
+		'EventEndMeridian' => $end_date->format('A'),
+		/*'Venue' => array(
+			'Venue' => 'test',
+			'Country' => 'US',
+			'Address' => '1 W. Washington Ave.',
+			'City' => 'Madison',
+			'State' => 'WI'
+		),*/
+		'Organizer' => array(
+			'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
+			'Email' => $entry['115']
+		)
+	);
+	error_log(print_r($event_args, TRUE));
+	$post_id = tribe_create_event( $event_args );
+	error_log("Post ID: " . $post_id);
+	
+	// Set the arguments for the recurring event.
+	if($entry['100'] == "no") {
+		$recurrence_data = array(
+			'recurrence' => array(
+				'rules' => array(
+					array(
+						'type'                  => 'Every Year',
+						'end-type'              => 'Never',
+						'end'                   => '',
+						'end-count'             => '',
+						'EventStartDate'        => $start_date,
+						'EventEndDate'          => $end_date,
+						'custom'                => array(),
+						'occurrence-count-text' => 'events',
+					),
+				),
+			),
+		);
+
+		// Instantiate and set it in motion.
+		$recurrence_meta  = new \Tribe__Events__Pro__Recurrence__Meta();
+		$recurrence_meta->updateRecurrenceMeta( $post_id, $recurrence_data );
+	}
+	// Set the featured Image
+	set_post_thumbnail($post_id, get_attachment_id_from_src($entry['9']));
+	
+	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
+    //0 indicie = gravity form field id
+    //1 indicie = acf field name/event meta fields
+    $field_mapping = array(
+        array('4', 'preferred_start_date'),
+        array('5', 'preferred_start_time'),
+        array('6', 'preferred_end_date'),
+        array('7', 'preferred_end_time'),
+        array('96', 'alternative_start_date'),
+        array('97', 'alternative_start_time'),
+        array('98', 'alternative_end_time'),
+        array('99', 'alternative_end_date'),   
+		array('31', 'image_1'),
+		array('32', 'image_2'),
+		array('33', 'image_3'),
+		array('54', 'image_4'),
+		array('55', 'image_5'),
+		array('56', 'image_6'),
+        array('19', 'about'),
+        array('73', 'audience'),
+        array('57', 'location'),
+        array('72', 'materials'),
+        array('78', 'kit_required'),
+        array('79', 'kit_price_included'),
+        array('80', 'kit_supplier'),
+        array('111', 'other_kit_supplier'),
+        array('82', 'kit_url'),
+        array('83', 'amazon_url'),
+        array('87', 'prior_hosted_event'),
+        array('88', 'hosted_live_stream'),        
+        array('90', 'other_video_conferencing'),
+        array('91', 'prev_session_links'),
+        array('92', 'comfort_level'),
+        array('93', 'technical_setup'),
+        array('108', 'basic_skills'),
+        array('109', 'skills_taught'),
+    );
+    
+    //update the acf fields with the submitted values from the form
+    foreach($field_mapping as $field){
+        $fieldID    = $field[0];
+        $meta_field = $field[1];
+        if(isset($entry[$fieldID])){
+            error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+            update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+        }
+    }
+        
+    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
+    $field = GFAPI::get_field($form, 89);
+    if ($field->type == 'checkbox') {
+        // Get a comma separated list of checkboxes checked
+        $checked = $field->get_value_export($entry);
+        // Convert to array.
+        $values = explode(', ', $checked);    
+    }
+    update_field('field_5f60f9bfa1d1e', $values, $post_id); 
+    
+    //field 73 - 'audience' 'field_5f35a5f833a04'
+    // Update Audience Checkbox
+    $field = GFAPI::get_field($form, 73);
+    if ($field->type == 'checkbox') {
+        // Get a comma separated list of checkboxes checked
+        $checked = $field->get_value_export($entry);
+        // Convert to array.
+        $values = explode(', ', $checked);    
+    }            
+    update_field('field_5f35a5f833a04', $values, $post_id); 
+    
+    // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
+    //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
+	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
+    $ticket = new Tribe__Tickets__Ticket_Object();
+    $ticket->name = "Ticket";
+    $ticket->description = (isset($entry['42'])?$entry['42']:'');
+    $ticket->price = (isset($entry['37'])?$entry['37']:'');
+    $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
+    $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
+    $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
+    $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
+    $ticket->end_time = (isset($entry['48'])?$entry['48']:'');
+
+    // Save the ticket
+    $ticket->ID = $api->save_ticket($post_id, $ticket, array(
+        'ticket_name' => $ticket->name,
+        'ticket_price' => $ticket->price,
+        'ticket_description' => $ticket->description,
+        //'start_date' => $ticket->start_date,
+        //'start_time' => $ticket->start_time,
+        //'end_date' => $ticket->end_date,
+        //'end_time' => $ticket->end_time,
+		// none of these work
+		'event_capacity' => $ticket->capacity,
+		'capacity' => $ticket->capacity,
+		'stock' => $ticket->capacity,
+        'tribe_ticket' => [
+			'mode'           => 'global',
+			'event_capacity' => $ticket->capacity,
+			'capacity'       => $ticket->capacity
+		],
+    ));
+	
+}
+
+function get_attachment_id_from_src($image_src) {
+	global $wpdb;
+	$query = "SELECT ID FROM {$wpdb->posts} WHERE guid='$image_src'";
+	$id = $wpdb->get_var($query);
+	return $id;
+}
+
+/* All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
 add_action('gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4);
 
 function update_event_information($post_id, $feed, $entry, $form) {    
@@ -477,10 +664,10 @@ function update_event_information($post_id, $feed, $entry, $form) {
         'ticket_name' => $ticket->name,
         'ticket_price' => $ticket->price,
         'ticket_description' => $ticket->description,
-        /*'start_date' => $ticket->start_date,
-        'start_time' => $ticket->start_time,
-        'end_date' => $ticket->end_date,
-        'end_time' => $ticket->end_time,*/
+        //'start_date' => $ticket->start_date,
+        //'start_time' => $ticket->start_time,
+        //'end_date' => $ticket->end_date,
+        //'end_time' => $ticket->end_time,
 		// none of these work
 		'event_capacity' => $ticket->capacity,
 		'capacity' => $ticket->capacity,
@@ -492,21 +679,7 @@ function update_event_information($post_id, $feed, $entry, $form) {
 		],
     ));
 	
-    /*
-      $tickets_handler = tribe( 'tickets.handler' );
-      $event_stock = new Tribe__Tickets__Global_Stock( $post_id );
-      $tickets_handler->remove_hooks();
-      // We need to update event post meta - if we've set a global stock
-      $event_stock->enable();
-      $event_stock->set_stock_level( $ticket->capacity, true );
-      update_post_meta( $post_id, $tickets_handler->key_capacity, $ticket->capacity );
-      update_post_meta( $post_id, $event_stock::GLOBAL_STOCK_ENABLED, 1 );
-      $tickets_handler->add_hooks();
-      error_log(print_r($data, TRUE));
-      error_log(print_r($ticket, TRUE));
-      error_log(print_r($tickets_handler, TRUE));
-      error_log(print_r($event_stock, TRUE));
-     */
+
 	
 	// create the organizer
 	$organizer = [
@@ -526,7 +699,7 @@ function update_event_information($post_id, $feed, $entry, $form) {
 		//Tribe__Events__Main::add_new_organizer($organizerObj, $post_id); // this is just another way to create an organizer
 	}
 	
-}
+} */
 
 function getOrganizerObject($organizerID) {
 	$organizerArray = tribe_get_organizers();
