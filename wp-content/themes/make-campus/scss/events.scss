@@ -4,6 +4,7 @@
     margin: 0px;
     .event_form {
         padding: 0px 15px;
+		font-size: 18px;
         .gform_page {
             display: flex;
             flex-direction: column;
@@ -277,7 +278,8 @@
                         position: fixed;
                         width: 0;
                         &:checked + label {
-                            background-color: #ddd;
+                            background-color: #005e9a;
+							color: #fff;
                             border-color: #111;
                         }
                         &[disabled="disabled"] + label {
@@ -286,7 +288,8 @@
                         }
                     }
                     label {
-                        background-color: #f1f1f1;
+                        background-color: #fff;
+						color: #005e9a;;
                         font-family: sans-serif, Arial;
                         font-size: 16px;
                         border: 1px solid #ccc;
@@ -316,15 +319,7 @@
         }
     }
 	.info-btn {
-		position: absolute;
-		top: 25px;
-		right: 0px;
-		@media screen and (max-width: 768px) {
-			position: relative;
-			top: 0px;
-			display: block;
-			text-align: center;
-		}
+		float: right;
 	}
 }
 
@@ -715,7 +710,10 @@
 
 // The Organizer Page
 .tribe_organizer-template-default {
-	.home-hero { display: none; }
+	.home-hero { 
+		visibility: hidden;
+		height: 20px;
+	}
 	.tribe-organizer-photo {
 		height: 150px;
 		width: 150px;
