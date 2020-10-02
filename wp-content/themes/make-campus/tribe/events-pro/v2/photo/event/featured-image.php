@@ -18,6 +18,7 @@
  */
 $image_url = $event->thumbnail->exists ? $event->thumbnail->full->url : $placeholder_url;
 
+
 ?>
 <div class="tribe-events-pro-photo__event-featured-image-wrapper">
 	<a
@@ -40,7 +41,7 @@ $image_url = $event->thumbnail->exists ? $event->thumbnail->full->url : $placeho
 			class="tribe-events-pro-photo__event-featured-image"
 		/>
 		<div class="tribe-events-pro-photo__event-desc">
-			<?php echo smartTruncate($event->post_content, 100, " "); ?>
+			<?php echo get_field('short_description'); //smartTruncate($event->post_content, 100, " "); ?>
 		</div>
 	</a>
 </div>

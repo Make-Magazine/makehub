@@ -154,6 +154,25 @@
             "new_lines": ""
         },
         {
+            "key": "field_5f7785a0734ad",
+            "label": "Short Description",
+            "name": "short_description",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": 100,
+            "rows": "",
+            "new_lines": ""
+        },
+        {
             "key": "field_5f28948df1c17",
             "label": "Image 1",
             "name": "image_1",
@@ -702,5 +721,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1600464278
+    "modified": 1601668562
 }

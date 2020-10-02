@@ -89,6 +89,15 @@
                 display: none;
             }
         }
+		.gfgeo-address-locator-wrapper {
+			input { padding-left: 30px !important; }
+			div.gfgeo-locator-button-wrapper.infield {
+				display: flex;
+				align-items: center;
+				padding-lefT: 5px;
+				img { height: 18px; }
+			}
+		}
         .image_uploads ul {
             display: flex;
             flex-wrap: wrap;
@@ -113,6 +122,12 @@
                 @media screen and (max-width: 641px) {
                     width: 100%;
                 }
+				div[id^=preview_input] {
+					position: relative;
+					display: flex;
+					justify-content: center;
+
+				}
             }
             .gfield_html { flex: 0 0 100%; }
         }
