@@ -58,6 +58,13 @@ a { // don't let genesis molest our links
 	}
 }
 
+.wp-block-button__link {
+	border-radius: 5px;
+	&:hover {
+		color: #fff;
+	}
+}
+
 .universal-btn {
 	background-color: #005e9a;
 	color: #fff;
@@ -200,14 +207,15 @@ a { // don't let genesis molest our links
 }
 .info-btn {
 	border: solid 1px #005e9a;
-	padding: 10px 20px;
+	padding: 0px 9px;
 	border-radius: 40px;
-	font-size: 20px;
+	font-size: 18px;
+	font-weight: bold;
 	color: #005e9a;
 	&:hover {
 		color: #fff;
 		background: #005e9a;
-			text-decoration: none;
+		text-decoration: none;
 	}
 }
 .info-modal {
