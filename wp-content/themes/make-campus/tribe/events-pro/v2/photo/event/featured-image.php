@@ -18,7 +18,6 @@
  */
 $image_url = $event->thumbnail->exists ? $event->thumbnail->full->url : $placeholder_url;
 
-
 ?>
 <div class="tribe-events-pro-photo__event-featured-image-wrapper">
 	<a

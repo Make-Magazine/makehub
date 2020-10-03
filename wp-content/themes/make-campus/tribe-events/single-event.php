@@ -19,7 +19,16 @@ $events_label_singular = tribe_get_event_label_singular();
 $events_label_plural   = tribe_get_event_label_plural();
 
 $event_id = get_the_ID();
-$featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
+
+// For some reason, images are no longer associated with post to get pulled into the gallery shortcode automatically, so manually build an array
+$post_image_ids = array();
+array_push($post_image_ids, get_post_thumbnail_id());
+for ($x = 1; $x < 6; $x++) {
+	if(get_field("image_" . $x)) {
+		array_push($post_image_ids, get_field("image_" . $x)["ID"]);
+	}
+}  
+$post_image_ids = implode(', ', $post_image_ids); 
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single">
@@ -32,7 +41,10 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 		<?php endif; ?>
 	</div>
  	<div class="tribe-events-image-gallery">
-		<?php echo do_shortcode('[gallery id="'.$event_id.'" size="large" order="DESC" orderby="ID"]'); ?>
+		<?php 
+
+		?>
+		<?php echo do_shortcode('[gallery ids="'.$post_image_ids.'" size="large" order="DESC" orderby="ID"]'); ?>
 		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
 	</div>
 	
@@ -88,7 +100,7 @@ $featured_image = tribe_event_featured_image( $event_id, 'full', false, false );
 								if(get_field('kit_price_included') == "yes") {
 									echo " and is included in the ticket price";
 									echo " and will be supplied by ";
-									if(get_field("kit_supplier") == other) {
+									if(get_field("kit_supplier") == "other") {
 										echo get_field("other_kit_supplier");
 									} else {
 										echo get_field("kit_supplier");
