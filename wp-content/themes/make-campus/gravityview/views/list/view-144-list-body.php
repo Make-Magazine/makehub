@@ -156,27 +156,11 @@ if (!$gravityview->entries->count()) {
             //var_dump($entry);
             //accordion for attendees report
             ?>
-            <div class="accordion" id="attendeeAccordion">
-                <div class="card">
-                    <div class="card-header" id="attendees_report">
-                        <h5 class="mb-0">
-                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseAttendee" aria-expanded="true" aria-controls="collapseAttendee">
-                                Attendees Report
-                            </button>
-                        </h5>
-                    </div>
+            <button data-toggle="collapse" data-target="#collapseAttendee<?php echo $entry['post_id'];?>">Attendees Report</button>
+            <div id="collapseAttendee<?php echo $entry['post_id'];?>" class="collapse">
+                <?php echo do_shortcode('[tribe_community_tickets view="attendees_report" id="' . $entry['post_id'] . '"]');?>
+            </div>            
 
-                    <div id="collapseAttendee" class="collapse show" aria-labelledby="attendees_report" data-parent="#attendeeAccordion">
-                        <div class="card-body">
-                             <?php
-                        echo 'post id is ' . $entry['post_id'];
-                        echo do_shortcode('[tribe_community_tickets view="attendees_report" id="' . $entry['post_id'] . '"]');
-                        ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <?php
             // Is the footer configured?
             if ($has_footer_left || $has_footer_right) {
