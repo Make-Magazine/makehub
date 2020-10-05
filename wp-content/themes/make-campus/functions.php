@@ -372,8 +372,7 @@ add_action('login_footer', function() {
 
 require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 
-// Trying with tribe_create_event
-
+// Create event with ticket
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {   
 	$tags = GFAPI::get_field($form, 50);
@@ -447,6 +446,7 @@ function create_event($entry, $form) {
 	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
+	//1 indicie (optional) = acf field key or subfield key (for repeaters)
     $field_mapping = array(
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
@@ -464,9 +464,9 @@ function create_event($entry, $form) {
 		array('56', 'image_6'),
         array('19', 'about'),
 		array('119', 'short_description'),
-        array('73', 'audience'),
+        array('73', 'audience', 'field_5f35a5f833a04'),
         array('57', 'location'),
-        array('72', 'materials'),
+        array('72', 'materials', 'field_5f7b4abb07cab'),
         array('78', 'kit_required'),
         array('79', 'kit_price_included'),
         array('80', 'kit_supplier'),
@@ -475,6 +475,7 @@ function create_event($entry, $form) {
         array('83', 'amazon_url'),
         array('87', 'prior_hosted_event'),
         array('88', 'hosted_live_stream'),        
+        array('89', 'video_conferencing', 'field_5f60f9bfa1d1e'),        
         array('90', 'other_video_conferencing'),
         array('91', 'prev_session_links'),
         array('92', 'comfort_level'),
@@ -487,18 +488,35 @@ function create_event($entry, $form) {
     foreach($field_mapping as $field){
         $fieldID    = $field[0];
         $meta_field = $field[1];
+		$field_key = $field[2];
+		$fieldData = GFAPI::get_field($form, $fieldID);
+		// error_log(print_r($fieldData, true));
         if(isset($entry[$fieldID])){
-            // error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-			if(strpos($meta_field, 'image') !== false) {
-				update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
+			if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
+				$listArray = explode(', ', $fieldData->get_value_export($entry));
+				$num = 1;
+				$repeater = [];
+				foreach ($listArray as $value) {
+					$repeater[] = array($field_key => $value);
+					$num++;
+				}
+				update_field($meta_field, $repeater, $post_id);
+			} else if ($fieldData->type == 'checkbox'){ //for some reason, even when fieldData->type == checkbox, this is never triggered
+				error_log("test"); // the funny thing about this is it never happens
+				$checked = $fieldData->get_value_export($entry);
+				$values = explode(', ', $checked);   
+				error_log(print_r($values, true));
+				update_field($field_key, $values, $post_id); 
+			} else if(strpos($meta_field, 'image') !== false) {
+				 update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
 			} else {
-				//error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-            	update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+				 //error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+				 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
 			}
         }
     }
-        
-    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
+	
+	/* //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
     $field = GFAPI::get_field($form, 89);
     if ($field->type == 'checkbox') {
         // Get a comma separated list of checkboxes checked
@@ -518,7 +536,9 @@ function create_event($entry, $form) {
         $values = explode(', ', $checked);    
     }            
     update_field('field_5f35a5f833a04', $values, $post_id); 
-    
+	*/
+
+
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
     //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
 	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
