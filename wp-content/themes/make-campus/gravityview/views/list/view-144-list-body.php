@@ -156,8 +156,8 @@ if (!$gravityview->entries->count()) {
             //var_dump($entry);
             //accordion for attendees report
             ?>
-            <button data-toggle="collapse" data-target="#collapseAttendee">Attendees Report</button>
-            <div id="collapseAttendee" class="collapse">
+            <button data-toggle="collapse" data-target="#collapseAttendee<?php echo $entry['post_id'];?>">Attendees Report</button>
+            <div id="collapseAttendee<?php echo $entry['post_id'];?>" class="collapse">
                 <?php echo do_shortcode('[tribe_community_tickets view="attendees_report" id="' . $entry['post_id'] . '"]');?>
             </div>            
 
