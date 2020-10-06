@@ -490,7 +490,6 @@ function create_event($entry, $form) {
         $meta_field = $field[1];
 		$field_key = $field[2];
 		$fieldData = GFAPI::get_field($form, $fieldID);
-		// error_log(print_r($fieldData, true));
         if(isset($entry[$fieldID])){
 			if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
 				$listArray = explode(', ', $fieldData->get_value_export($entry));
@@ -501,12 +500,6 @@ function create_event($entry, $form) {
 					$num++;
 				}
 				update_field($meta_field, $repeater, $post_id);
-			} else if ($fieldData->type == 'checkbox'){ //for some reason, even when fieldData->type == checkbox, this is never triggered
-				error_log("test"); // the funny thing about this is it never happens
-				$checked = $fieldData->get_value_export($entry);
-				$values = explode(', ', $checked);   
-				error_log(print_r($values, true));
-				update_field($field_key, $values, $post_id); 
 			} else if(strpos($meta_field, 'image') !== false) {
 				 update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
 			} else {
@@ -514,30 +507,13 @@ function create_event($entry, $form) {
 				 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
 			}
         }
+		// entry field id is not set in time for checkboxes, apparently
+		if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox' || $fieldData->type == 'checkbox') { 
+			$checked = $fieldData->get_value_export($entry);
+			$values = explode(', ', $checked);   
+			update_field($field_key, $values, $post_id); 
+		}
     }
-	
-	/* //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
-    $field = GFAPI::get_field($form, 89);
-    if ($field->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $field->get_value_export($entry);
-        // Convert to array.
-        $values = explode(', ', $checked);    
-    }
-    update_field('field_5f60f9bfa1d1e', $values, $post_id); 
-    
-    //field 73 - 'audience' 'field_5f35a5f833a04'
-    // Update Audience Checkbox
-    $field = GFAPI::get_field($form, 73);
-    if ($field->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $field->get_value_export($entry);
-        // Convert to array.
-        $values = explode(', ', $checked);    
-    }            
-    update_field('field_5f35a5f833a04', $values, $post_id); 
-	*/
-
 
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
     //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
@@ -574,148 +550,7 @@ function create_event($entry, $form) {
 	
 }
 
-/* All Event fields that aren't standard have to be mapped manually (_1 is the form id) had to remove it from the end of the action because the form name was different on stage :(
-add_action('gform_advancedpostcreation_post_after_creation', 'update_event_information', 10, 4);
 
-function update_event_information($post_id, $feed, $entry, $form) {    
-    //field mapping - ** note - upload fields don't work here. use post creation feed for that **
-    //0 indicie = gravity form field id
-    //1 indicie = acf field name/event meta fields
-    $field_mapping = array(
-        array('4', 'preferred_start_date'),
-        array('5', 'preferred_start_time'),
-        array('6', 'preferred_end_date'),
-        array('7', 'preferred_end_time'),
-        array('96', 'alternative_start_date'),
-        array('97', 'alternative_start_time'),
-        array('98', 'alternative_end_time'),
-        array('99', 'alternative_end_date'),        
-        array('19', 'about'),
-        array('73', 'audience'),
-        array('57', 'location'),
-        array('72', 'materials'),
-        array('78', 'kit_required'),
-        array('79', 'kit_price_included'),
-        array('80', 'kit_supplier'),
-        array('111', 'other_kit_supplier'),
-        array('82', 'kit_url'),
-        array('83', 'amazon_url'),
-        array('87', 'prior_hosted_event'),
-        array('88', 'hosted_live_stream'),        
-        array('90', 'other_video_conferencing'),
-        array('91', 'prev_session_links'),
-        array('92', 'comfort_level'),
-        array('93', 'technical_setup'),
-        array('108', 'basic_skills'),
-        array('109', 'skills_taught'),
-    );
-    
-    //update the acf fields with the submitted values from the form
-    foreach($field_mapping as $field){
-        $fieldID    = $field[0];
-        $meta_field = $field[1];
-        if(isset($entry[$fieldID])){
-            //error_log('updating ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-            update_post_meta($post_id, $meta_field, $entry[$fieldID]);
-        }
-    }
-        
-    //field 89 - 'video_conferencing' field_5f60f9bfa1d1e   
-    $field = GFAPI::get_field($form, 89);
-    if ($field->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $field->get_value_export($entry);
-        // Convert to array.
-        $values = explode(', ', $checked);    
-    }
-    update_field('field_5f60f9bfa1d1e', $values, $post_id); 
-    
-    //field 73 - 'audience' 'field_5f35a5f833a04'
-    // Update Audience Checkbox
-    $field = GFAPI::get_field($form, 73);
-    if ($field->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $field->get_value_export($entry);
-        // Convert to array.
-        $values = explode(', ', $checked);    
-    }            
-    update_field('field_5f35a5f833a04', $values, $post_id); 
-        
-    //event start date
-    $event_st_dt = $entry['4'];
-    $event_st_time = $entry['5'];
-            
-    $date=date_create($event_st_dt.' ' . $event_st_time);
-    $start_dt = date_format($date,"Y-m-d H:i:s");    
-    update_post_meta($post_id, '_EventStartDate', $start_dt);
-    
-    //Event End date
-    $event_end_dt = $entry['6'];
-    $event_end_time = $entry['7'];
-    
-    $date=date_create($event_end_dt.' ' . $event_end_time);
-    $end_dt = date_format($date,"Y-m-d H:i:s");
-    update_post_meta($post_id, '_EventEndDate', $end_dt);
-    
-    
-    // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
-    //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
-	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
-    $ticket = new Tribe__Tickets__Ticket_Object();
-    $ticket->name = "Ticket";
-    $ticket->description = (isset($entry['42'])?$entry['42']:'');
-    $ticket->price = (isset($entry['37'])?$entry['37']:'');
-    $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
-    $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
-    $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
-    $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
-    $ticket->end_time = (isset($entry['48'])?$entry['48']:'');
-	
-	//error_log($ticket);
-
-    // Save the ticket
-    $ticket->ID = $api->save_ticket($post_id, $ticket, array(
-        'ticket_name' => $ticket->name,
-        'ticket_price' => $ticket->price,
-        'ticket_description' => $ticket->description,
-        //'start_date' => $ticket->start_date,
-        //'start_time' => $ticket->start_time,
-        //'end_date' => $ticket->end_date,
-        //'end_time' => $ticket->end_time,
-		// none of these work
-		'event_capacity' => $ticket->capacity,
-		'capacity' => $ticket->capacity,
-		'stock' => $ticket->capacity,
-        'tribe_ticket' => [
-			'mode'           => 'global',
-			'event_capacity' => $ticket->capacity,
-			'capacity'       => $ticket->capacity
-		],
-    ));
-	
-
-	
-	// create the organizer
-	$organizer = [
-		'Organizer'	=> $entry['116.3'] . " " . $entry['116.6'],
-		'Email'		=> $entry['115'],
-		'Website'	=> "TEST", // seems these need to be provided, using dummy text for now
-		'Phone'		=> "TEST",
-    ];
-	$savedOrganizer = get_page_by_title($organizer['Organizer'], 'OBJECT', 'tribe_organizer');
-	if(!$savedOrganizer) {
-		$organizerID = tribe_create_organizer($organizer);
-		$organizerObj = getOrganizerObject($organizerID);
-		// hoping to somehow assign the organizer to the post id with this object; 
-	} else {
-		tribe_update_organizer($post_id, $organizer);
-		$organizerObj = getOrganizerObject($organizerID);
-		//Tribe__Events__Main::add_new_organizer($organizerObj, $post_id); // this is just another way to create an organizer
-	}
-	
-} */
-
-// error_log(get_attachment_id_from_url('http://experiences.makehub.local/wp-content/uploads/sites/4/2020/10/LB-Logo-Purple.png'));
 
 function get_attachment_id_from_url( $attachment_url ) {
 	global $wpdb;
