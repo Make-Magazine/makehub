@@ -7,7 +7,9 @@
     left: auto;
 }
 .gform_wrapper li.gfield.gfield_error.gfield_contains_required  {
-	padding-right: 15px;
+	div.ginput_container {
+		padding-right: 15px;
+	}
 	.gfield_label {
 		color: #fff !important;
 	}
