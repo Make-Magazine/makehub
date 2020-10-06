@@ -1580,14 +1580,16 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		/**
 		 * current-merge-tag-values is used to see if the field is stilled coupled to the live merge tags.
+		 * @todo Add suppport for fields that return an array for their default value.
 		 */
-		$request_val = rgar( rgar( $_REQUEST, 'current-merge-tag-values', array() ), $field->get_value_default() );
+		$default_value = $field->get_value_default();
+		$request_val   = rgar( rgar( $_REQUEST, 'current-merge-tag-values', array() ), ! is_array( $default_value ) ? $default_value : '' );
 
 		$field_value = str_replace( "\r\n", "\n", $field_value );
 		$request_val = str_replace( "\r\n", "\n", $request_val );
 
 		if ( $field_value == $request_val ) {
-			$field_value = $field->get_value_default();
+			$field_value = $default_value;
 		}
 
 		$form_id = rgar( $form, 'id' );

@@ -63,6 +63,10 @@
                 font-size: 1.2em;
             }
             .gfield_description { font-style: italic; }
+			.gfield_html { 
+				p { margin-top: 10px; }
+				b { font-weight: 700; }
+			}
         } 
 		@media screen and (min-width: 768px) {
             display: flex;
@@ -126,7 +130,16 @@
 					position: relative;
 					display: flex;
 					justify-content: center;
-
+				}
+				&:first-of-type {
+					.preview-image-wrapper {
+						height: 250px;
+						width: 250px;
+						display: flex;
+						img {
+							object-fit: cover;
+						}
+					}
 				}
             }
             .gfield_html { flex: 0 0 100%; }
@@ -559,6 +572,9 @@
 					.btn {
 						margin-top: 10px;
 					}
+				}
+				ul li {
+					margin-bottom: 5px;
 				}
             }
             .tribe-events-button {

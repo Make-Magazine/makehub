@@ -364,7 +364,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		$entries = $gf_query->get();
 
-		if ( $gform_gf_query_sql_func ) {
+		if ( isset( $gform_gf_query_sql_func ) ) {
 			remove_filter( 'gform_gf_query_sql', $gform_gf_query_sql_func );
 		}
 
