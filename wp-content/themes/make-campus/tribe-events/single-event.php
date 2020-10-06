@@ -74,6 +74,19 @@ $post_image_ids = implode(', ', $post_image_ids);
 						<h3>What You'll Do:</h3> 
 						<?php the_content(); ?>
 					</div>
+					<?php if(get_field('promo_videos')) { ?>
+						<div class="tribe-events-promo-vidos tribe-events-content">
+							<h3>Promo Videos: </h3>
+							    <ul>
+								<?php 
+									$wishlistArray = array();
+									foreach(get_field('promo_videos') as $video) {
+										echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+									}
+								?>
+								</ul>
+						</div>
+					<?php } ?>
 					<?php if(get_field('basic_skills')) { ?>
 						<div class="tribe-events-single-skill-level tribe-events-content">
 							<h3>Skill Level for this program:</h3> 
@@ -90,18 +103,24 @@ $post_image_ids = implode(', ', $post_image_ids);
 						<div class="tribe-events-single-event-materials tribe-events-content">
 							<h3>What You'll Need:</h3> 
 							<div class="materials-list">
+								<ul>
 								<?php 
-									$materialsArray = array();
 									foreach(get_field('materials') as $material) {
-										$materialArray[] = $material['item'];
+										echo '<li>' . $material['item'] . '</li>';
 									}
-									echo '<ul>';
-									echo '<li>' . implode( '</li><li>', $materialArray) . '</li>';
-									echo '</ul>';
 								?>
+								</ul>
 							</div>
-							<?php if(get_field('amazon_url')) { ?>
-								<p><a class="btn btn-blue-universal" href="<?php echo get_field('amazon_url'); ?>">Program Shopping List</a></p>
+							<?php if(get_field('wish_list_urls')) { ?>
+								<h3>Wishlist Links: </h3>
+							    <ul>
+								<?php 
+									$wishlistArray = array();
+									foreach(get_field('wish_list_urls') as $wishlist) {
+										echo '<li><a href="' . $wishlist['wishlist'] . '">' . $wishlist['wishlist'] . '</a></li>';
+									}
+								?>
+								</ul>
 							<?php } ?>
 						</div>
 					<?php } ?>

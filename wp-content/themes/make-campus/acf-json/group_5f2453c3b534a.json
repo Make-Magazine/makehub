@@ -317,6 +317,46 @@
             "mime_types": ""
         },
         {
+            "key": "field_5f7cd1e3dd069",
+            "label": "Promo Videos",
+            "name": "promo_videos",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_5f7cd1ffdd06a",
+                    "label": "Video",
+                    "name": "video",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
             "key": "field_5f2c6b573bb5a",
             "label": "Location",
             "name": "location",
@@ -532,9 +572,9 @@
         },
         {
             "key": "field_5f60f94ca1d1b",
-            "label": "Amazon wish list URL to purchase supplies",
-            "name": "amazon_url",
-            "type": "url",
+            "label": "Wish list URLs to purchase supplies",
+            "name": "wish_list_urls",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -543,8 +583,32 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "placeholder": ""
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_5f7cc93ab762c",
+                    "label": "Wish LIst",
+                    "name": "wish_list",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
         },
         {
             "key": "field_5f60f966a1d1c",
@@ -761,5 +825,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1602007768
+    "modified": 1602015779
 }
