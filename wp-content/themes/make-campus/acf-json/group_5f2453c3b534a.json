@@ -477,6 +477,25 @@
             "save_other_choice": 0
         },
         {
+            "key": "field_5f7cb241c5263",
+            "label": "How long will shipping take?",
+            "name": "kit_shipping_time",
+            "type": "text",
+            "instructions": "If facilitator is providing the kit, how long will shipping take?",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
             "key": "field_5f60fbaf26b79",
             "label": "Other kit supplier",
             "name": "other_kit_supplier",
@@ -742,5 +761,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1601920986
+    "modified": 1602007768
 }

@@ -446,7 +446,7 @@ function create_event($entry, $form) {
 	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
-	//1 indicie (optional) = acf field key or subfield key (for repeaters)
+	//2 indicie (optional) = acf field key or subfield key (for repeaters)
     $field_mapping = array(
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
@@ -471,6 +471,7 @@ function create_event($entry, $form) {
         array('79', 'kit_price_included'),
         array('80', 'kit_supplier'),
         array('111', 'other_kit_supplier'),
+		array('120', 'kit_shipping_time'),
         array('82', 'kit_url'),
         array('83', 'amazon_url'),
         array('87', 'prior_hosted_event'),
@@ -547,10 +548,7 @@ function create_event($entry, $form) {
 			'capacity'       => $ticket->capacity
 		],
     ));
-	
 }
-
-
 
 function get_attachment_id_from_url( $attachment_url ) {
 	global $wpdb;
@@ -659,8 +657,7 @@ function spinner_url($image_src, $form) {
 } 
 
 
-function smartTruncate($string, $limit, $break=".", $pad="...")
-{
+function smartTruncate($string, $limit, $break=".", $pad="...") {
   // return with no change if string is shorter than $limit
   if(strlen($string) <= $limit) return $string;
   // is $break present between $limit and the end of the string?
