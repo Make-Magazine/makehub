@@ -50,9 +50,10 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.p
 require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
 
 function make_campus_add_woocommerce_support() {
-	add_theme_support( 'woocommerce' );
+    add_theme_support('woocommerce');
 }
-add_action( 'after_setup_theme', 'make_campus_add_woocommerce_support' );
+
+add_action('after_setup_theme', 'make_campus_add_woocommerce_support');
 
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
@@ -191,28 +192,30 @@ function remove_admin_bar() {
     }
     return false;
 }
+
 function make_campus_admin_scripts() {
-	$my_theme = wp_get_theme();
+    $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
     wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/owl.carousel.js', array(), $my_version, true);
 }
-add_action( 'admin_enqueue_scripts', 'make_campus_admin_scripts' );
+
+add_action('admin_enqueue_scripts', 'make_campus_admin_scripts');
 
 // Remove Yoast columns
-add_filter( 'manage_edit-tribe_events_columns', 'yoast_seo_admin_remove_columns' );
-add_filter( 'manage_edit-post_columns', 'yoast_seo_admin_remove_columns' );
-add_filter( 'manage_edit-page_columns', 'yoast_seo_admin_remove_columns' );
+add_filter('manage_edit-tribe_events_columns', 'yoast_seo_admin_remove_columns');
+add_filter('manage_edit-post_columns', 'yoast_seo_admin_remove_columns');
+add_filter('manage_edit-page_columns', 'yoast_seo_admin_remove_columns');
 
-function yoast_seo_admin_remove_columns( $columns ) {
-  unset($columns['wpseo-score']);
-  unset($columns['wpseo-score-readability']);
-  unset($columns['wpseo-title']);
-  unset($columns['wpseo-metadesc']);
-  unset($columns['wpseo-focuskw']);
-  unset($columns['wpseo-links']);
-  unset($columns['wpseo-linked']);
-  return $columns;
+function yoast_seo_admin_remove_columns($columns) {
+    unset($columns['wpseo-score']);
+    unset($columns['wpseo-score-readability']);
+    unset($columns['wpseo-title']);
+    unset($columns['wpseo-metadesc']);
+    unset($columns['wpseo-focuskw']);
+    unset($columns['wpseo-links']);
+    unset($columns['wpseo-linked']);
+    return $columns;
 }
 
 /**
@@ -372,81 +375,91 @@ add_action('login_footer', function() {
 
 require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 
-// Create event with ticket
-add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
-function create_event($entry, $form) {   
-	$tags = GFAPI::get_field($form, 50);
+//disable the default post creation
+add_filter( 'gform_disable_post_creation_7', 'disable_post_creation', 10, 3 );
+function disable_post_creation( $is_disabled, $form, $entry ) {
+    return true;
+}
 
-	$tagArray = array();
+// Create event with ticket
+add_action('gform_after_submission_7', 'create_event', 10, 2);
+
+function create_event($entry, $form) {
+    $tags = GFAPI::get_field($form, 50);
+
+    $tagArray = array();
     if ($tags->type == 'checkbox') {
         // Get a comma separated list of checkboxes checked
         $checked = $tags->get_value_export($entry);
         // Convert to array.
-        $tagArray = explode(', ', $checked);    
+        $tagArray = explode(', ', $checked);
     }
-	$start_date = date_create($entry['4'] .' ' . $entry['5']);
-	$end_date = date_create($entry['6'] .' ' . $entry['7']);
+    $start_date = date_create($entry['4'] . ' ' . $entry['5']);
+    $end_date   = date_create($entry['4'] . ' ' . $entry['7']);
 
-	$organizerData = array(
-		'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
-		'Email' => $entry['115']
-	);
-	$event_args = array(
-		'post_title' => $entry['1'],
-		'post_content' => $entry['2'],
-		'post_status' => 'pending',
-		'post_type' => 'tribe_events',
-		'post_author' => 1,
-		'EventStartDate' => $entry['4'],
-		'EventEndDate' => $entry['4'],
-		'EventStartHour' => $start_date->format('h'),
-		'EventStartMinute' => $start_date->format('i'),
-		'EventStartMeridian' => $start_date->format('A'),
-		'EventEndHour' => $end_date->format('h'),
-		'EventEndMinute' => $end_date->format('i'),
-		'EventEndMeridian' => $end_date->format('A'),
-		'Organizer' => $organizerData
-	);
-	$post_id = tribe_create_event( $event_args );
-	
-	// Set the arguments for the recurring event.
-	if($entry['100'] == "no") {
-		$recurrence_data = array(
-			'recurrence' => array(
-				'rules' => array(
-					array(
-						'type'                  => 'Every Year',
-						'end-type'              => 'Never',
-						'end'                   => '',
-						'end-count'             => '',
-						'EventStartDate'        => $start_date,
-						'EventEndDate'          => $end_date,
-						'custom'                => array(),
-						'occurrence-count-text' => 'events',
-					),
-				),
-			),
-		);
+    $organizerData = array(
+        'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
+        'Email' => $entry['115']
+    );
+    $user = get_current_user_id();
+    
+    $event_args = array(
+        'post_author' => $user,
+        'post_title' => $entry['1'],
+        'post_content' => $entry['2'],
+        'post_status' => 'pending',
+        'post_type' => 'tribe_events',
+        'EventStartDate' => $entry['4'],
+        'EventEndDate' => $entry['4'],
+        'EventStartHour' => $start_date->format('h'),
+        'EventStartMinute' => $start_date->format('i'),
+        'EventStartMeridian' => $start_date->format('A'),
+        'EventEndHour' => $end_date->format('h'),
+        'EventEndMinute' => $end_date->format('i'),
+        'EventEndMeridian' => $end_date->format('A'),
+        'Organizer' => $organizerData
+    );
+    
+    $post_id = tribe_create_event($event_args);
 
-		// Instantiate and set it in motion.
-		$recurrence_meta  = new \Tribe__Events__Pro__Recurrence__Meta();
-		$recurrence_meta->updateRecurrenceMeta( $post_id, $recurrence_data );
-	}
-	
-	// Upload featured image to Organizer page
-	set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118'])); 
-	
-	// Set the taxonomies
-	wp_set_object_terms( $post_id, $entry['12'], 'tribe_events_cat' );
-	wp_set_object_terms( $post_id, $tagArray, 'post_tag' );
-	
-	// Set the featured Image
-	set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
-	
-	//field mapping - ** note - upload fields don't work here. use post creation feed for that **
+    // Set the arguments for the recurring event.
+    if ($entry['100'] == "no") {
+        $recurrence_data = array(
+            'recurrence' => array(
+                'rules' => array(
+                    array(
+                        'type' => 'Every Year',
+                        'end-type' => 'Never',
+                        'end' => '',
+                        'end-count' => '',
+                        'EventStartDate' => $start_date,
+                        'EventEndDate' => $end_date,
+                        'custom' => array(),
+                        'occurrence-count-text' => 'events',
+                    ),
+                ),
+            ),
+        );
+
+        // Instantiate and set it in motion.
+        $recurrence_meta = new \Tribe__Events__Pro__Recurrence__Meta();
+        $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
+    }
+
+    // Upload featured image to Organizer page
+    set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
+
+    // Set the taxonomies
+    wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat');
+    wp_set_object_terms($post_id, $tagArray, 'post_tag');
+
+    // Set the featured Image
+    set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
+
+    //field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
     //1 indicie = acf field name/event meta fields
-	//1 indicie (optional) = acf field key or subfield key (for repeaters)
+    //1 indicie (optional) = acf field key or subfield key (for repeaters)
     $field_mapping = array(
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
@@ -455,15 +468,15 @@ function create_event($entry, $form) {
         array('96', 'alternative_start_date'),
         array('97', 'alternative_start_time'),
         array('96', 'alternative_end_time'),
-        array('99', 'alternative_end_date'),   
-		array('31', 'image_1'),
-		array('32', 'image_2'),
-		array('33', 'image_3'),
-		array('54', 'image_4'),
-		array('55', 'image_5'),
-		array('56', 'image_6'),
+        array('99', 'alternative_end_date'),
+        array('31', 'image_1'),
+        array('32', 'image_2'),
+        array('33', 'image_3'),
+        array('54', 'image_4'),
+        array('55', 'image_5'),
+        array('56', 'image_6'),
         array('19', 'about'),
-		array('119', 'short_description'),
+        array('119', 'short_description'),
         array('73', 'audience', 'field_5f35a5f833a04'),
         array('57', 'location'),
         array('72', 'materials', 'field_5f7b4abb07cab'),
@@ -474,8 +487,8 @@ function create_event($entry, $form) {
         array('82', 'kit_url'),
         array('83', 'amazon_url'),
         array('87', 'prior_hosted_event'),
-        array('88', 'hosted_live_stream'),        
-        array('89', 'video_conferencing', 'field_5f60f9bfa1d1e'),        
+        array('88', 'hosted_live_stream'),
+        array('89', 'video_conferencing', 'field_5f60f9bfa1d1e'),
         array('90', 'other_video_conferencing'),
         array('91', 'prev_session_links'),
         array('92', 'comfort_level'),
@@ -483,50 +496,50 @@ function create_event($entry, $form) {
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
     );
-    
+
     //update the acf fields with the submitted values from the form
-    foreach($field_mapping as $field){
-        $fieldID    = $field[0];
-        $meta_field = $field[1];
-		$field_key = $field[2];
-		$fieldData = GFAPI::get_field($form, $fieldID);
-        if(isset($entry[$fieldID])){
-			if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
-				$listArray = explode(', ', $fieldData->get_value_export($entry));
-				$num = 1;
-				$repeater = [];
-				foreach ($listArray as $value) {
-					$repeater[] = array($field_key => $value);
-					$num++;
-				}
-				update_field($meta_field, $repeater, $post_id);
-			} else if(strpos($meta_field, 'image') !== false) {
-				 update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
-			} else {
-				 //error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-				 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
-			}
+    foreach ($field_mapping as $field) {
+        $fieldID = $field[0];
+        $meta_field = $field[1];        
+        $field_key = (isset($field[2])?$field[2]:'');
+        $fieldData = GFAPI::get_field($form, $fieldID);
+        if (isset($entry[$fieldID])) {
+            if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {                
+                $listArray = explode(', ', $fieldData->get_value_export($entry));
+                $num = 1;
+                $repeater = [];
+                foreach ($listArray as $value) {
+                    $repeater[] = array($field_key => $value);
+                    $num++;
+                }
+                update_field($meta_field, $repeater, $post_id);
+            } else if (strpos($meta_field, 'image') !== false) {
+                update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
+            } else {
+                //error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+                update_post_meta($post_id, $meta_field, $entry[$fieldID]);
+            }
         }
-		// entry field id is not set in time for checkboxes, apparently
-		if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox' || $fieldData->type == 'checkbox') { 
-			$checked = $fieldData->get_value_export($entry);
-			$values = explode(', ', $checked);   
-			update_field($field_key, $values, $post_id); 
-		}
+        // entry field id is not set in time for checkboxes, apparently
+        if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox' || $fieldData->type == 'checkbox') {            
+            $checked = $fieldData->get_value_export($entry);
+            $values = explode(', ', $checked);
+            update_field($field_key, $values, $post_id);
+        }
     }
 
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
     //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
-	$api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
+    $api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
     $ticket->name = "Ticket";
-    $ticket->description = (isset($entry['42'])?$entry['42']:'');
-    $ticket->price = (isset($entry['37'])?$entry['37']:'');
-    $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
-    $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
-    $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
-    $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
-    $ticket->end_time = (isset($entry['48'])?$entry['48']:'');
+    $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
+    $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
+    $ticket->capacity = (isset($entry['43']) ? $entry['43'] : '');
+    $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
+    $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
+    $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
+    $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
@@ -537,52 +550,53 @@ function create_event($entry, $form) {
         //'start_time' => $ticket->start_time,
         //'end_date' => $ticket->end_date,
         //'end_time' => $ticket->end_time,
-		// none of these work
-		'event_capacity' => $ticket->capacity,
-		'capacity' => $ticket->capacity,
-		'stock' => $ticket->capacity,
+        // none of these work
+        'event_capacity' => $ticket->capacity,
+        'capacity' => $ticket->capacity,
+        'stock' => $ticket->capacity,
         'tribe_ticket' => [
-			'mode'           => 'global',
-			'event_capacity' => $ticket->capacity,
-			'capacity'       => $ticket->capacity
-		],
+            'mode' => 'global',
+            'event_capacity' => $ticket->capacity,
+            'capacity' => $ticket->capacity
+        ],
     ));
-	
+    
+    //update the entry with the event post id     
+    global $wpdb;
+    $wpdb->update( $wpdb->prefix.'gf_entry', array( 'post_id' => $post_id),array('ID'=>$entry['id']));    
 }
 
-
-
-function get_attachment_id_from_url( $attachment_url ) {
-	global $wpdb;
-	$attachment_id = false;
-	// Get the upload directory paths
-	$upload_dir_paths = wp_upload_dir();
-	// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
-	if ( false !== strpos( $attachment_url, $upload_dir_paths['baseurl'] ) ) {
-		// If this is the URL of an auto-generated thumbnail, get the URL of the original image
-		$attachment_url = preg_replace( '/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url );
-		// Remove the upload path base directory from the attachment URL
-		$attachment_url = str_replace( $upload_dir_paths['baseurl'] . '/', '', $attachment_url );
-		// Finally, run a custom database query to get the attachment ID from the modified attachment URL
-		$attachment_id = $wpdb->get_var( $wpdb->prepare( "SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url ) );
-	}
-	return $attachment_id;
+function get_attachment_id_from_url($attachment_url) {
+    global $wpdb;
+    $attachment_id = false;
+    // Get the upload directory paths
+    $upload_dir_paths = wp_upload_dir();
+    // Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
+    if (false !== strpos($attachment_url, $upload_dir_paths['baseurl'])) {
+        // If this is the URL of an auto-generated thumbnail, get the URL of the original image
+        $attachment_url = preg_replace('/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url);
+        // Remove the upload path base directory from the attachment URL
+        $attachment_url = str_replace($upload_dir_paths['baseurl'] . '/', '', $attachment_url);
+        // Finally, run a custom database query to get the attachment ID from the modified attachment URL
+        $attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url));
+    }
+    return $attachment_id;
 }
 
 function getOrganizerObject($organizerID) {
-	$organizerArray = tribe_get_organizers();
-	$organizerObj = new stdClass();
-	foreach($organizerArray as $organizerKey){
-		if($organizerKey->ID == $organizerID){
-			$organizerObj = $organizerKey;
-		}
-	}
-	return $organizerObj;
+    $organizerArray = tribe_get_organizers();
+    $organizerObj = new stdClass();
+    foreach ($organizerArray as $organizerKey) {
+        if ($organizerKey->ID == $organizerID) {
+            $organizerObj = $organizerKey;
+        }
+    }
+    return $organizerObj;
 }
 
 function get_event_attendees($event_id) {
-	$attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
-	return $attendee_list;
+    $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
+    return $attendee_list;
 }
 
 // After the gravity view is updated, we want to update the created post associated with it. 
@@ -654,21 +668,21 @@ add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {
 
 
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
+
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
-} 
+}
 
-
-function smartTruncate($string, $limit, $break=".", $pad="...")
-{
-  // return with no change if string is shorter than $limit
-  if(strlen($string) <= $limit) return $string;
-  // is $break present between $limit and the end of the string?
-  if(false !== ($breakpoint = strpos($string, $break, $limit))) {
-    if($breakpoint < strlen($string) - 1) {
-      $string = substr($string, 0, $breakpoint) . $pad;
+function smartTruncate($string, $limit, $break = ".", $pad = "...") {
+    // return with no change if string is shorter than $limit
+    if (strlen($string) <= $limit)
+        return $string;
+    // is $break present between $limit and the end of the string?
+    if (false !== ($breakpoint = strpos($string, $break, $limit))) {
+        if ($breakpoint < strlen($string) - 1) {
+            $string = substr($string, 0, $breakpoint) . $pad;
+        }
     }
-  }
 
-  return $string;
+    return $string;
 }
