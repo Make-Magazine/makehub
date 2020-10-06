@@ -389,7 +389,7 @@ function create_event($entry, $form) {
 
 	$organizerData = array(
 		'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
-		'Email' => $entry['115']
+		'Email' => wp_get_current_user()->user_email
 	);
 	$event_args = array(
 		'post_title' => $entry['1'],
