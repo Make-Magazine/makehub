@@ -86,11 +86,23 @@ $post_image_ids = implode(', ', $post_image_ids);
 							<?php echo get_field('skills_taught') ?>
 						</div>
 					<?php } ?>
-					<?php if(get_field('amazon_url')) { ?>
+					<?php if(get_field('materials')) { ?>
 						<div class="tribe-events-single-event-materials tribe-events-content">
 							<h3>What You'll Need:</h3> 
-							<div class="materials-list"><?php echo wpautop(get_field('materials')); ?></div>
-							<p><a class="btn btn-blue-universal" href="<?php echo get_field('amazon_url'); ?>">Program Shopping List</a></p>
+							<div class="materials-list">
+								<?php 
+									$materialsArray = array();
+									foreach(get_field('materials') as $material) {
+										$materialArray[] = $material['item'];
+									}
+									echo '<ul>';
+									echo '<li>' . implode( '</li><li>', $materialArray) . '</li>';
+									echo '</ul>';
+								?>
+							</div>
+							<?php if(get_field('amazon_url')) { ?>
+								<p><a class="btn btn-blue-universal" href="<?php echo get_field('amazon_url'); ?>">Program Shopping List</a></p>
+							<?php } ?>
 						</div>
 					<?php } ?>
 					<?php if(get_field('kit_required') == "Yes") { ?>

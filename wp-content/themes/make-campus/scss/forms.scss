@@ -1,9 +1,12 @@
 .gform_wrapper .gfield_description.validation_message {
 	top: -2em;
-	padding-bottom: 16px;
-	padding-top: 16px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    width: auto;
+    right: -15px;
+    left: auto;
 }
-.gform_wrapper .gfield_error {
+.gform_wrapper li.gfield.gfield_error.gfield_contains_required  {
 	padding-right: 15px;
 	.gfield_label {
 		color: #fff !important;
