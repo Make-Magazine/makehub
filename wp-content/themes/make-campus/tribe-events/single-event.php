@@ -79,7 +79,6 @@ $post_image_ids = implode(', ', $post_image_ids);
 							<h3>Promo Videos: </h3>
 							    <ul>
 								<?php 
-									$wishlistArray = array();
 									foreach(get_field('promo_videos') as $video) {
 										echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
 									}
@@ -115,9 +114,8 @@ $post_image_ids = implode(', ', $post_image_ids);
 								<h3>Wishlist Links: </h3>
 							    <ul>
 								<?php 
-									$wishlistArray = array();
 									foreach(get_field('wish_list_urls') as $wishlist) {
-										echo '<li><a href="' . $wishlist['wishlist'] . '">' . $wishlist['wishlist'] . '</a></li>';
+										echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
 									}
 								?>
 								</ul>

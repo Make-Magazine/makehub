@@ -10,7 +10,7 @@ jQuery(document).ready(function ($) {
             reader.onload = function (e) {         
                 jQuery("#preview_"+inputID).remove();
                 jQuery(input).after('<div id="preview_'+inputID+'"><div class="preview_img-wrapper"><img src="" style="width:250px;"></div></div>');
-                jQuery('#preview_'+inputID+'>img' ).attr( 'src', e.target.result );
+                jQuery('#preview_'+inputID+' .preview_img-wrapper>img' ).attr( 'src', e.target.result );
             }
             reader.readAsDataURL(input.files[0]);
         }

@@ -133,6 +133,17 @@ export default class GPPALiveMergeTags {
 
 	}
 
+	/**
+	 * Check if merge tag references a specific field ID
+	 *
+	 * @param value string Merge tag to check
+	 * @param fieldId number Field ID to look for
+	 */
+	checkMergeTagForFieldId(value: string, fieldId : fieldID): RegExpMatchArray | null {
+		return value.match(new RegExp(`:${fieldId}(\\.\\d+)?[}:]`, 'g')) ||
+			value.match(new RegExp(`:id=${fieldId}(\\.\\d+)?[}:]`, 'g')) // @{score:id=xx}
+	}
+
 	getDependentInputs (fieldId: number) : JQuery {
 
 		let dependentInputs : JQuery = jQuery();
@@ -142,8 +153,7 @@ export default class GPPALiveMergeTags {
 
 			for ( const liveAttr of this.liveAttrsOnPage ) {
 				const liveAttrValue = $el.attr(liveAttr);
-
-				if (liveAttrValue && liveAttrValue.match(new RegExp(`:${fieldId}(\\.\\d+)?[}:]`, 'g'))) {
+				if (liveAttrValue && this.checkMergeTagForFieldId(liveAttrValue, fieldId)) {
 					dependentInputs = dependentInputs.add(el);
 				}
 			}
@@ -165,7 +175,7 @@ export default class GPPALiveMergeTags {
 				const $el = $(el);
 				const liveAttrValue = $el.attr(liveAttr);
 
-				if (liveAttrValue && liveAttrValue.match(new RegExp(`:${fieldId}(\\.\\d+)?[}:]`, 'g'))) {
+				if (liveAttrValue && this.checkMergeTagForFieldId(liveAttrValue, fieldId)) {
 					return true;
 				}
 			}
@@ -186,7 +196,7 @@ export default class GPPALiveMergeTags {
 			const $lmt = $(lmt);
 			const lmtValue = $lmt.attr('data-gppa-live-merge-tag');
 
-			if (lmtValue && lmtValue.match(new RegExp(`:${fieldId}(\\.\\d+)?[}:]`, 'g'))) {
+			if (lmtValue && this.checkMergeTagForFieldId(lmtValue, fieldId)) {
 				return true;
 			}
 		}

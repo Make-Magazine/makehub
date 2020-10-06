@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0-beta-4.106
+
+	- Fixed parsing and population of Score fields' LMTs.
+
+## 1.0-beta-4.105
+
+	- Fixed notice caused by checking for variable that is only conditionally set.
+	- Fixed notices generated when fetching current merge tag values for field types that return an array for their default value.
+
 ## 1.0-beta-4.104
 
 	- Added [`gppa_autoloaded_object_types`](https://gravitywiz.com/documentation/gppa_autoloaded_object_types/) filter to customize available object types.
