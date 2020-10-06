@@ -106,7 +106,7 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            &> .preview_image {
+            .preview_image {
                 padding: 16px;
                 border: solid 1px #ccc;
                 width: 49%;
@@ -117,8 +117,23 @@
                 margin-bottom: 10px;
                 flex-direction: column;
                 flex: 0 0 100%;
+				div[id^=preview_input] {
+					position: relative;
+					display: flex;
+					justify-content: center;
+					.preview_img-wrapper {
+						height: 250px;
+						width: 250px;
+						background-size: cover;
+					}
+				}
                 &~ .preview_image{ //override all but the first
-                     flex: inherit;
+                	flex: inherit;
+					div[id^=preview_input] {
+						.preview_img-wrapper {
+							background-size: contain;
+						}
+					}
                 }
                 @media screen and (max-width: 982px) {
                     flex-direction: column;
@@ -126,21 +141,7 @@
                 @media screen and (max-width: 641px) {
                     width: 100%;
                 }
-				div[id^=preview_input] {
-					position: relative;
-					display: flex;
-					justify-content: center;
-				}
-				&:first-of-type {
-					.preview-image-wrapper {
-						height: 250px;
-						width: 250px;
-						display: flex;
-						img {
-							object-fit: cover;
-						}
-					}
-				}
+				
             }
             .gfield_html { flex: 0 0 100%; }
         }
