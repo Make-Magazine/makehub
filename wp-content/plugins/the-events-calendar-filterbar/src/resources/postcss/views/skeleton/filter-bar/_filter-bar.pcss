@@ -21,13 +21,13 @@
 
 		.tribe-filter-bar--open {
 
-			& + .tribe-events-calendar-day,
-			& + .tribe-events-calendar-list,
-			& + .tribe-events-calendar-month,
-			& + .tribe-events-calendar-latest-past,
-			& + .tribe-events-pro-photo,
+			& ~ .tribe-events-calendar-day,
+			& ~ .tribe-events-calendar-list,
+			& ~ .tribe-events-calendar-month,
+			& ~ .tribe-events-calendar-latest-past,
+			& ~ .tribe-events-pro-photo,
 			& ~ .tribe-events-pro-week-grid,
-			& + .tribe-events-pro-map {
+			& ~ .tribe-events-pro-map {
 				width: calc(100% - 266px);
 			}
 		}

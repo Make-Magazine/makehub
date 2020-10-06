@@ -1,5 +1,57 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Filters Add Filter Bar Data Should set filter bar state to 0 if filter bar is not open, is mobile, and is filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_request": 1,
+  "tribe_filter_bar_state": 0,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 0 if filter bar is not open, is mobile, and is not filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_state": 0,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 0 if filter bar is not open, is not mobile, and is filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_request": 1,
+  "tribe_filter_bar_state": 0,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 0 if filter bar is not open, is not mobile, and is not filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_state": 0,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 0 if filter bar is open, is mobile, and is not filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_state": 0,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 1 if filter bar is open, is mobile, and is filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_request": 1,
+  "tribe_filter_bar_state": 1,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 1 if filter bar is open, is not mobile, and is filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_request": 1,
+  "tribe_filter_bar_state": 1,
+}
+`;
+
+exports[`Filters Add Filter Bar Data Should set filter bar state to 1 if filter bar is open, is not mobile, and is not filter bar request 1`] = `
+Object {
+  "tribe_filter_bar_state": 1,
+}
+`;
+
 exports[`Filters Add key value from query Should add key value pair to blank query 1`] = `
 Object {
   "hash": "",
@@ -247,23 +299,17 @@ Array [
 
 exports[`Filters Selectors Should match snapshot 1`] = `"{\\"filter\\":\\".tribe-filter-bar-c-filter\\",\\"filterOpen\\":\\".tribe-filter-bar-c-filter--open\\",\\"filterBar\\":\\"[data-js~=\\\\\\"tribe-filter-bar\\\\\\"]\\",\\"filterBarOpen\\":\\".tribe-filter-bar--open\\",\\"filterBarVertical\\":\\".tribe-events--filter-bar-vertical\\"}"`;
 
-exports[`Filters Submit request Should submit request with filter state 1`] = `
+exports[`Filters Set Tribe Filter Bar Request Should set tribe filter bar request flag 1`] = `
 Object {
-  "_wpnonce": undefined,
-  "prev_url": "https://test.tri.be/events/month/?hello=world",
-  "should_manage_url": true,
-  "tribe_filter_bar_state": 1,
-  "tribe_filters_state": 5,
-  "url": "https://test.tri.be/events/month/",
+  "tribe_filter_bar_request": 1,
 }
 `;
 
-exports[`Filters Submit request Should submit request without filter state 1`] = `
+exports[`Filters Submit request Should submit request 1`] = `
 Object {
   "_wpnonce": undefined,
   "prev_url": "https://test.tri.be/events/month/?hello=world",
   "should_manage_url": true,
-  "tribe_filter_bar_state": 1,
   "url": "https://test.tri.be/events/month/",
 }
 `;

@@ -9,13 +9,14 @@
  *
  * @link http://m.tri.be/1aiy
  *
- * @var string       $layout             Layout of the filter bar, `vertical` or `horizontal`.
- * @var string       $filterbar_state    Current state of the entire Filter Bar, `open` or `closed`.
- * @var array<array> $selected_filters   Filters that have been selected.
- * @var array<array> $filters            Filters available for filter bar.
- * @var string       $breakpoint_pointer String we use as pointer to the current view we are setting up with breakpoints.
+ * @var string       $layout                       Layout of the filter bar, `vertical` or `horizontal`.
+ * @var string       $filterbar_state              Current state of the entire Filter Bar, `open` or `closed`.
+ * @var array<array> $selected_filters             Filters that have been selected.
+ * @var array<array> $filters                      Filters available for filter bar.
+ * @var string       $breakpoint_pointer           String we use as pointer to the current view we are setting up with breakpoints.
+ * @var boolean      $mobile_initial_state_control Control the mobile initial state via JS if `true`, do not control if `false`.
  *
- * @version 5.0.0
+ * @version 5.0.0.1
  */
 
 $classes = [ 'tribe-filter-bar', "tribe-filter-bar--$layout" ];
@@ -27,12 +28,11 @@ if ( 'closed' === $filterbar_state ) {
 	$aria_hidden = 'false';
 }
 
-$classes[] = 'tribe-filter-bar--mobile-closed';
-
 if ( ! empty( $selected_filters ) ) {
 	$classes[] = 'tribe-filter-bar--has-selected-filters';
 }
 
+$mobile_control = empty( $mobile_initial_state_control ) ? 'false' : 'true';
 $heading_id     = "tribe-filter-bar__form-heading--$breakpoint_pointer";
 $description_id = "tribe-filter-bar__form-description--$breakpoint_pointer";
 ?>
@@ -40,6 +40,7 @@ $description_id = "tribe-filter-bar__form-description--$breakpoint_pointer";
 	<?php tribe_classes( $classes ); ?>
 	id="tribe-filter-bar--<?php echo esc_attr( $breakpoint_pointer ); ?>"
 	data-js="tribe-filter-bar"
+	data-mobile-initial-state-control="<?php echo esc_attr( $mobile_control ); ?>"
 	aria-hidden="<?php echo esc_attr( $aria_hidden ); ?>"
 >
 	<form
@@ -51,7 +52,7 @@ $description_id = "tribe-filter-bar__form-description--$breakpoint_pointer";
 	>
 
 		<h2
-			class="tribe-filter-bar__form-heading tribe-common-h6 tribe-common-h--alt tribe-common-a11y-visual-hide"
+			class="tribe-filter-bar__form-heading tribe-common-h5 tribe-common-h--alt tribe-common-a11y-visual-hide"
 			id="<?php echo esc_attr( $heading_id ); ?>"
 		>
 			<?php esc_html_e( 'Filters', 'tribe-events-filter-view' ); ?>
@@ -74,3 +75,5 @@ $description_id = "tribe-filter-bar__form-description--$breakpoint_pointer";
 
 	</form>
 </div>
+
+<?php $this->template( 'filter-bar/breakpoints' );

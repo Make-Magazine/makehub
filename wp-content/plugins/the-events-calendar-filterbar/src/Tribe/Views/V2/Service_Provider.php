@@ -20,6 +20,7 @@ class Service_Provider extends \tad_DI52_ServiceProvider {
 		}
 
 		$this->container->singleton( Filters::class, Filters::class );
+		$this->container->singleton( Filters_Stack::class, Filters_Stack::class );
 
 		$this->register_hooks();
 		$this->register_assets();

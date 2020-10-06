@@ -28,6 +28,7 @@ return array(
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Time_Of_Day' => $baseDir . '/src/Tribe/Views/V2/Filters/Time_Of_Day.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Url' => $baseDir . '/src/Tribe/Views/V2/Filters/Url.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Venue' => $baseDir . '/src/Tribe/Views/V2/Filters/Venue.php',
+    'Tribe\\Events\\Filterbar\\Views\\V2\\Filters_Stack' => $baseDir . '/src/Tribe/Views/V2/Filters_Stack.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Hooks' => $baseDir . '/src/Tribe/Views/V2/Hooks.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Service_Provider' => $baseDir . '/src/Tribe/Views/V2/Service_Provider.php',
     'Tribe\\Events\\Filterbar\\Views\\V2\\Template' => $baseDir . '/src/Tribe/Views/V2/Template.php',

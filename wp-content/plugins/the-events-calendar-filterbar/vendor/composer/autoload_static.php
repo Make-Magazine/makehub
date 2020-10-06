@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd22d336499f2364ba11aef8c2674ba30
+class ComposerStaticInitad48317b7e6e64427c5bb984a9bbdacf
 {
     public static $prefixLengthsPsr4 = array (
         'T' => 
@@ -43,6 +43,7 @@ class ComposerStaticInitd22d336499f2364ba11aef8c2674ba30
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Time_Of_Day' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters/Time_Of_Day.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Url' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters/Url.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Filters\\Venue' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters/Venue.php',
+        'Tribe\\Events\\Filterbar\\Views\\V2\\Filters_Stack' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Filters_Stack.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Hooks' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Hooks.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Service_Provider' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Service_Provider.php',
         'Tribe\\Events\\Filterbar\\Views\\V2\\Template' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Template.php',
@@ -60,9 +61,9 @@ class ComposerStaticInitd22d336499f2364ba11aef8c2674ba30
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitd22d336499f2364ba11aef8c2674ba30::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitad48317b7e6e64427c5bb984a9bbdacf::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitad48317b7e6e64427c5bb984a9bbdacf::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitad48317b7e6e64427c5bb984a9bbdacf::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -35,7 +35,6 @@ if ( ! empty( $value ) ) {
 		data-options="<?php echo esc_attr( wp_json_encode( $options ) ); ?>"
 		data-attach-container
 		multiple
-		placeholder="<?php esc_attr_e( 'Search', 'tribe-events-filter-view' ); ?>"
 		style="width: 100%;" <?php /* This is required for selectWoo styling to prevent select box overflow */ ?>
 	/>
 </div>

@@ -338,6 +338,28 @@ tribe.filterBar.filters = {};
 	};
 
 	/**
+	 * Set flag for filter bar request.
+	 *
+	 * @since  TBD
+	 *
+	 * @param  {jQuery} $container jQuery object of view container.
+	 *
+	 * @return {void}
+	 */
+	obj.setTribeFilterBarRequest = function( $container ) {
+		var requestData = $container.data( 'tribeRequestData' );
+		var data = {
+			tribe_filter_bar_request: 1,
+		};
+
+		if ( $.isPlainObject( requestData ) ) {
+			data = $.extend( requestData, data );
+		}
+
+		$container.data( 'tribeRequestData', data );
+	};
+
+	/**
 	 * Submit request using manager JS.
 	 *
 	 * @since  5.0.0
@@ -361,15 +383,7 @@ tribe.filterBar.filters = {};
 			_wpnonce: nonce,
 		};
 
-		var filtersState = obj.getFiltersState( $container );
-
-		// Add filter state to data if filterState is not false.
-		if ( false !== filtersState ) {
-			data.tribe_filters_state = filtersState;
-		}
-
-		// Keep filter bar open when making a filter bar request.
-		data.tribe_filter_bar_state = 1;
+		obj.setTribeFilterBarRequest( $container );
 
 		tribe.events.views.manager.request( data, $container );
 
@@ -387,19 +401,28 @@ tribe.filterBar.filters = {};
 	 */
 	obj.addFilterBarData = function( event ) {
 		var $container = event.data.container;
+		var containerState = $container.data( 'tribeEventsState' );
 		var $filterBar = $container.find( obj.selectors.filterBar );
 		var filtersState = obj.getFiltersState( $container );
+		var requestData = $container.data( 'tribeRequestData' );
+		var data = {};
 
-		var data = {
-			tribe_filter_bar_state: $filterBar.is( obj.selectors.filterBarOpen ) ? 1 : 0,
-		};
+		// Filter bar is open if making a filter bar request on mobile with filter bar open or on desktop and filter bar is open.
+		var isFilterBarOpen = $filterBar.is( obj.selectors.filterBarOpen ) && (
+			(
+				containerState.isMobile &&
+					$.isPlainObject( requestData ) &&
+					requestData.tribe_filter_bar_request
+			) ||
+			! containerState.isMobile
+		);
+
+		data.tribe_filter_bar_state = isFilterBarOpen ? 1 : 0;
 
 		// Add filter state to data if filterState is not false.
 		if ( false !== filtersState ) {
 			data.tribe_filters_state = filtersState;
 		}
-
-		var requestData = $container.data( 'tribeRequestData' );
 
 		if ( $.isPlainObject( requestData ) ) {
 			data = $.extend( requestData, data );

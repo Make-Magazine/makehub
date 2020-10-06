@@ -29,10 +29,11 @@ class Filters {
 			return $template_vars;
 		}
 
-		$template_vars['layout']           = $this->get_layout_setting();
-		$template_vars['filterbar_state']  = $this->get_open_closed_state( $context );
-		$template_vars['filters']          = $this->get_filters( $context, $template_vars['breakpoint_pointer'] );
-		$template_vars['selected_filters'] = $this->get_selected_filters( $template_vars['filters'], $context, $template_vars['breakpoint_pointer'] );
+		$template_vars['layout']                       = $this->get_layout_setting();
+		$template_vars['filterbar_state']              = $this->get_open_closed_state( $context );
+		$template_vars['filters']                      = $this->get_filters( $context, $template_vars['breakpoint_pointer'] );
+		$template_vars['selected_filters']             = $this->get_selected_filters( $template_vars['filters'], $context, $template_vars['breakpoint_pointer'] );
+		$template_vars['mobile_initial_state_control'] = $this->get_mobile_initial_state_control( $template_vars['layout'], $context );
 
 		return $template_vars;
 	}
@@ -130,6 +131,38 @@ class Filters {
 		 * @param Context             $context          The View current context.
 		 */
 		return apply_filters( 'tribe_events_filter_bar_views_v2_1_template_vars_selected_filters', [], $filters, $context );
+	}
+
+	/**
+	 * Get whether mobile initial state should be controlled by JS or not.
+	 *
+	 * @since 5.0.0.1
+	 *
+	 * @param string  $layout  The display of the filter bar as either vertical or horizontal.
+	 * @param Context $context The View current context.
+	 *
+	 * @return bool Whether mobile initial state should be controlled by JS or not.
+	 */
+	public function get_mobile_initial_state_control( $layout, $context ) {
+		/**
+		 * Allows filtering of whether to control mobile initial state or not.
+		 *
+		 * @since 5.0.0.1
+		 *
+		 * @param bool    $mobile_initial_state_control Boolean on whether to control mobile initial state or not.
+		 * @param Context $context                      The View current context.
+		 */
+		$mobile_initial_state_control = apply_filters( 'tribe_events_filter_bar_views_v2_1_mobile_initial_state_control', true, $context );
+
+		/**
+		 * Allows filtering of whether to control mobile initial state or not for a specific filter bar layout.
+		 *
+		 * @since 5.0.0.1
+		 *
+		 * @param bool    $mobile_initial_state_control Boolean on whether to control mobile initial state or not.
+		 * @param Context $context                      The View current context.
+		 */
+		return apply_filters( "tribe_events_filter_bar_views_v2_1_{$layout}_mobile_initial_state_control", $mobile_initial_state_control, $context );
 	}
 
 	/**

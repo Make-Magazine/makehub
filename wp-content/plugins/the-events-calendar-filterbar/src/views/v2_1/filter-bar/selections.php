@@ -23,7 +23,7 @@ if ( empty( $selected_filters ) ) {
 <div class="tribe-filter-bar__selected-filters">
 
 	<header class="tribe-filter-bar__selected-filters-header">
-		<span class="tribe-filter-bar__selected-filters-label tribe-common-h7 tribe-common-h--alt">
+		<span class="tribe-filter-bar__selected-filters-label tribe-common-h7">
 			<?php esc_html_e( 'Your selections', 'tribe-events-filter-view' ); ?>
 		</span>
 		<?php $this->template( 'components/clear-button', [ 'classes' => [ 'tribe-filter-bar__selected-filters-clear-button' ] ] ); ?>
