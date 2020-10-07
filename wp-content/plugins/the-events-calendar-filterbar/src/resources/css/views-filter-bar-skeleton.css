@@ -469,6 +469,10 @@
 			padding: 0 20px 0 34px;
 		}
 
+.tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection--single {
+			height: auto;
+		}
+
 .tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection__clear {
 			line-height: 8px;
 			margin: 0 0 2px 4px;
@@ -496,6 +500,10 @@
 
 .tribe-filter-bar .tribe-filter-bar-c-filter__toggle-text {
 		padding-right: 8px;
+	}
+
+.tribe-filter-bar .tribe-filter-bar-c-filter__toggle-label {
+		font-weight: 700;
 	}
 
 .tribe-filter-bar .tribe-filter-bar-c-filter__toggle-label-colon {
@@ -539,6 +547,26 @@
 		margin-top: -4px;
 		padding-bottom: 20px;
 		visibility: hidden;
+	}
+
+.tribe-filter-bar .tribe-filter-bar-c-filter--dropdown .tribe-filter-bar-c-filter__container,
+	.tribe-filter-bar .tribe-filter-bar-c-filter--multiselect .tribe-filter-bar-c-filter__container {
+		margin-top: -8px;
+	}
+
+.tribe-filter-bar .tribe-filter-bar-c-filter--checkbox .tribe-filter-bar-c-filter__container,
+	.tribe-filter-bar .tribe-filter-bar-c-filter--radio .tribe-filter-bar-c-filter__container {
+		margin-top: -2px;
+	}
+
+.tribe-filter-bar .tribe-filter-bar-c-checkbox.tribe-common-form-control-checkbox .tribe-common-form-control-checkbox__input,
+	.tribe-filter-bar .tribe-filter-bar-c-radio.tribe-common-form-control-radio .tribe-common-form-control-radio__input {
+		margin-right: 0;
+	}
+
+.tribe-filter-bar .tribe-filter-bar-c-checkbox.tribe-common-form-control-checkbox .tribe-common-form-control-checkbox__label,
+	.tribe-filter-bar .tribe-filter-bar-c-radio.tribe-common-form-control-radio .tribe-common-form-control-radio__label {
+		margin-left: 12px;
 	}
 
 .tribe-filter-bar .tribe-filter-bar-c-filter--open .tribe-filter-bar-c-filter__container {
@@ -593,7 +621,7 @@
 			background-color: #fff;
 			bottom: -12px;
 			left: 0;
-			padding: 12px 16px 20px;
+			padding: 16px 20px 24px;
 			position: absolute;
 			transform: translateY(100%);
 			width: 248px;
@@ -993,13 +1021,13 @@
 			width: 100%;
 		}
 
-.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-calendar-day,
-			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-calendar-list,
-			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-calendar-month,
-			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-calendar-latest-past,
-			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-pro-photo,
+.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-calendar-day,
+			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-calendar-list,
+			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-calendar-month,
+			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-calendar-latest-past,
+			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-pro-photo,
 			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-pro-week-grid,
-			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open + .tribe-events-pro-map {
+			.tribe-events--filter-bar-vertical.tribe-common--breakpoint-medium .tribe-events-l-container .tribe-filter-bar--open ~ .tribe-events-pro-map {
 				width: calc(100% - 266px);
 			}
 

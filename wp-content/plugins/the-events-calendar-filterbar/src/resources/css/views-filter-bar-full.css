@@ -401,9 +401,13 @@
  *
  * ----------------------------------------------------------------------------- */
 
-/* .tribe-filter-bar {
+/* -------------------------------------------------------------------------
+	 * Theme Overrides - Twenty Twenty
+	 * ------------------------------------------------------------------------- */
 
-} */
+.tribe-theme-twentytwenty .tribe-filter-bar .tribe-common-form-control-checkbox__input {
+			top: 0;
+		}
 
 /* -----------------------------------------------------------------------------
  *
@@ -497,8 +501,8 @@
 
 .tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection__clear {
 			color: #fff;
-			font-weight: 600;
 			font-size: 16px;
+			font-weight: 600;
 		}
 
 .tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection__clear:hover {
@@ -507,6 +511,7 @@
 
 .tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection__choice__text {
 			color: #fff;
+			white-space: normal;
 		}
 
 .tribe-filter-bar .tribe-filter-bar-c-dropdown .select2-selection__arrow {
@@ -663,13 +668,8 @@
 			}
 
 .tribe-filter-bar .tribe-filter-bar-c-multiselect .select2-selection__clear {
-			font-size: 16px;
-			font-weight: 600;
+			display: none;
 		}
-
-.tribe-filter-bar .tribe-filter-bar-c-multiselect .select2-selection__clear:hover {
-				opacity: 0.8;
-			}
 
 .tribe-filter-bar .tribe-filter-bar-c-multiselect .select2-selection__choice {
 			color: #141827;
@@ -845,6 +845,16 @@
 			.tribe-filter-bar .tribe-filter-bar-c-range__slider .ui-slider-handle:after {
 				content: none;
 			}
+
+/* -----------------------------------------------------------------------------
+ *
+ * Checkbox
+ *
+ * ----------------------------------------------------------------------------- */
+
+/* .tribe-filter-bar {
+
+} */
 
 /* -----------------------------------------------------------------------------
  *

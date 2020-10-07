@@ -370,8 +370,21 @@ add_action('login_footer', function() {
     get_footer();
 });
 
-require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
+//disable the default post creation
+add_filter( 'gform_disable_post_creation_7', 'disable_post_creation', 10, 3 );
+function disable_post_creation( $is_disabled, $form, $entry ) {
+    return true;
+}
 
+//duplicate entry
+add_action('gravityview/duplicate-entry/duplicated', 'duplicate_entry', 10, 2);
+function duplicate_entry($duplicated_entry, $entry){
+    error_log('duplicate_entry with form id '.$duplicated_entry['form_id']);
+    $form = GFAPI::get_form($duplicated_entry['form_id']);
+    create_event($duplicated_entry, $form);
+}
+
+//require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 // Create event with ticket
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {   
@@ -595,65 +608,6 @@ function get_attachment_id_from_url( $attachment_url ) {
 function get_event_attendees($event_id) {
 	$attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
 	return $attendee_list;
-}
-
-// After the gravity view is updated, we want to update the created post associated with it. 
-// SO FAR, THIS IS UPDATING THE TITLE, CONTENT, FEATURED IMAGE, AND TEXT ACF FIELDS... needs work for taxonomies
-add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
-
-function gravityview_event_update($form, $entry_id, $entry_object) {
-    $post_obj = gform_get_meta($entry_id, "gravityformsadvancedpostcreation_post_id");
-    $post_id = $post_obj[0]["post_id"];
-    $post_data = array(
-        'ID' => $post_id,
-        'post_title' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Event Title"),
-        'post_content' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Describe What You Do"),
-        'post_category' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Experience Type"),
-            //'tags_input' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Category Tags")
-    );
-    wp_update_post($post_data);
-    //error_log(print_r(gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Experience Type"), TRUE));
-    //error_log(print_r(gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Category Tags"), TRUE));
-    //error_log("Featured Image: " . print_r(gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Featured Image")), TRUE);
-    require_once(ABSPATH . 'wp-admin/includes/media.php');
-    require_once(ABSPATH . 'wp-admin/includes/file.php');
-    require_once(ABSPATH . 'wp-admin/includes/image.php');
-    $media = media_sideload_image(gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Featured Image"), $post_id);
-    if (!empty($media) && !is_wp_error($media)) {
-        $args = array(
-            'post_type' => 'attachment',
-            'posts_per_page' => -1,
-            'post_status' => 'any',
-            'post_parent' => $post_id
-        );
-        $attachments = get_posts($args);
-        if (isset($attachments) && is_array($attachments)) {
-            foreach ($attachments as $attachment) {
-                $image = wp_get_attachment_image_src($attachment->ID, 'full');
-                // determine if in the $media image we created, the string of the URL exists
-                if (strpos($media, $image[0]) !== false) {
-                    // if so, we found our image. set it as thumbnail
-                    set_post_thumbnail($post_id, $attachment->ID);
-                    break;
-                }
-            }
-        }
-    }
-    // Not sure how else to update all the fields but to mention the by name
-    update_field("about", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "About You"), $post_id);
-    update_field("location", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Location"), $post_id);
-    update_field("materials", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Experience Materials"), $post_id);
-}
-
-// rather than use potentially changing field ids, look up by label
-function gf_get_value_by_label($form, $entry, $label) {
-    foreach ($form['fields'] as $field) {
-        $lead_key = $field->label;
-        if (strToLower($lead_key) == strToLower($label)) {
-            return $entry[$field->id];
-        }
-    }
-    return false;
 }
 
 add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {

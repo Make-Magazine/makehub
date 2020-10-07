@@ -444,14 +444,23 @@ describe( 'Filters', () => {
 		} );
 	} );
 
-	describe( 'Submit request', () => {
-		let windowHold;
-		let $container;
-		let url;
-		let getFiltersStateHold;
+	describe( 'Set Tribe Filter Bar Request', () => {
+		test( 'Should set tribe filter bar request flag', () => {
+			// Setup test.
+			const $container = $( '<div></div>' );
 
-		beforeEach( () => {
-			windowHold = global.window;
+			// Test.
+			tribe.filterBar.filters.setTribeFilterBarRequest( $container );
+
+			// Confirm final state.
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+	} );
+
+	describe( 'Submit request', () => {
+		test( 'Should submit request', () => {
+			// Setup test.
+			const windowHold = global.window;
 			delete global.window.location;
 			global.window = Object.create( window );
 			// url = 'https://test.tri.be/events/month/?hello=world'
@@ -466,50 +475,197 @@ describe( 'Filters', () => {
 					},
 				},
 			};
-			$container = $( '<div></div>' );
+			const $container = $( '<div></div>' );
 			$container.trigger = jest.fn();
 			$container.data = jest.fn();
-			url = 'https://test.tri.be/events/month/';
+			const url = 'https://test.tri.be/events/month/';
+			const setTribeFilterBarRequestHold = tribe.filterBar.filters.setTribeFilterBarRequest;
+			tribe.filterBar.filters.setTribeFilterBarRequest = jest.fn();
+
+			// Test.
+			tribe.filterBar.filters.submitRequest( $container, url );
+
+			// Confirm final states.
+			expect( $container.trigger.mock.calls.length ).toBe( 2 );
+			expect( tribe.events.views.manager.shouldManageUrl.mock.calls.length ).toBe( 1 );
+			expect( tribe.filterBar.filters.setTribeFilterBarRequest.mock.calls.length ).toBe( 1 );
+			expect( tribe.events.views.manager.request.mock.calls.length ).toBe( 1 );
+			expect( tribe.events.views.manager.request.mock.calls[ 0 ][ 0 ] ).toMatchSnapshot();
+
+			// Cleanup test.
+			global.window = windowHold;
+			delete global.tribe.events;
+			tribe.filterBar.filters.setTribeFilterBarRequest = setTribeFilterBarRequestHold;
+		} );
+	} );
+
+	describe( 'Add Filter Bar Data', () => {
+		let $container;
+		let $filterBar;
+		let getFiltersStateHold;
+
+		beforeEach( () => {
+			$container = $( '<div></div>' );
+			$filterBar = $( '<div></div>' );
+			$container.find = () => $filterBar;
+			getFiltersStateHold = tribe.filterBar.filters.getFiltersState;
+			tribe.filterBar.filters.getFiltersState = jest.fn().mockImplementation( () => false );
 		} );
 
 		afterEach( () => {
-			global.window = windowHold;
-			delete global.tribe.events;
-			global.tribe.filterBar.filters.getFiltersState = getFiltersStateHold;
+			tribe.filterBar.filters.getFiltersState = getFiltersStateHold;
 		} );
 
-		test( 'Should submit request without filter state', () => {
+		test( 'Should set filter bar state to 0 if filter bar is not open, is mobile, and is not filter bar request', () => {
 			// Setup test.
-			getFiltersStateHold = tribe.filterBar.filters.getFiltersState;
-			tribe.filterBar.filters.getFiltersState = jest.fn().mockImplementation( () => false );
+			$container.data( 'tribeEventsState', { isMobile: true } );
+			$container.data( 'tribeRequestData', {} );
+			$filterBar.is = () => false;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
 
 			// Test.
-			tribe.filterBar.filters.submitRequest( $container, url );
+			tribe.filterBar.filters.addFilterBarData( event );
 
 			// Confirm final states.
-			expect( $container.trigger.mock.calls.length ).toBe( 2 );
-			expect( $container.data.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.shouldManageUrl.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.request.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.request.mock.calls[ 0 ][ 0 ] ).toMatchSnapshot();
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
 		} );
 
-		test( 'Should submit request with filter state', () => {
+		test( 'Should set filter bar state to 0 if filter bar is not open, is mobile, and is filter bar request', () => {
 			// Setup test.
-			getFiltersStateHold = tribe.filterBar.filters.getFiltersState;
-			tribe.filterBar.filters.getFiltersState = jest.fn().mockImplementation( () => 5 );
+			$container.data( 'tribeEventsState', { isMobile: true } );
+			$container.data( 'tribeRequestData', { tribe_filter_bar_request: 1 } );
+			$filterBar.is = () => false;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
 
 			// Test.
-			tribe.filterBar.filters.submitRequest( $container, url );
+			tribe.filterBar.filters.addFilterBarData( event );
 
 			// Confirm final states.
-			expect( $container.trigger.mock.calls.length ).toBe( 2 );
-			expect( $container.data.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.shouldManageUrl.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.request.mock.calls.length ).toBe( 1 );
-			expect( global.tribe.events.views.manager.request.mock.calls[ 0 ][ 0 ] ).toMatchSnapshot();
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 0 if filter bar is not open, is not mobile, and is not filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: false } );
+			$container.data( 'tribeRequestData', {} );
+			$filterBar.is = () => false;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 0 if filter bar is not open, is not mobile, and is filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: false } );
+			$container.data( 'tribeRequestData', { tribe_filter_bar_request: 1 } );
+			$filterBar.is = () => false;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 0 if filter bar is open, is mobile, and is not filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: true } );
+			$container.data( 'tribeRequestData', {} );
+			$filterBar.is = () => true;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 1 if filter bar is open, is mobile, and is filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: true } );
+			$container.data( 'tribeRequestData', { tribe_filter_bar_request: 1 } );
+			$filterBar.is = () => true;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 1 if filter bar is open, is not mobile, and is not filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: false } );
+			$container.data( 'tribeRequestData', {} );
+			$filterBar.is = () => true;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
+		} );
+
+		test( 'Should set filter bar state to 1 if filter bar is open, is not mobile, and is filter bar request', () => {
+			// Setup test.
+			$container.data( 'tribeEventsState', { isMobile: false } );
+			$container.data( 'tribeRequestData', { tribe_filter_bar_request: 1 } );
+			$filterBar.is = () => true;
+			const event = {
+				data: {
+					container: $container,
+				},
+			};
+
+			// Test.
+			tribe.filterBar.filters.addFilterBarData( event );
+
+			// Confirm final states.
+			expect( tribe.filterBar.filters.getFiltersState.mock.calls.length ).toBe( 1 );
+			expect( $container.data( 'tribeRequestData' ) ).toMatchSnapshot();
 		} );
 	} );
 } );

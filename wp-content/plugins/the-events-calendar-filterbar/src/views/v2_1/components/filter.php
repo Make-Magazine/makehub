@@ -45,6 +45,12 @@ if ( $is_pill_style ) {
 	$classes[] = 'tribe-filter-bar-c-filter--pill';
 } elseif ( $is_accordion_style ) {
 	$classes[] = 'tribe-filter-bar-c-filter--accordion';
+
+
+	if ( ! empty($fields[0]['type']) ) {
+		$classes[] = 'tribe-filter-bar-c-filter--' . $fields[0]['type'];
+	}
+
 }
 ?>
 <div <?php tribe_classes( $classes ); ?>>

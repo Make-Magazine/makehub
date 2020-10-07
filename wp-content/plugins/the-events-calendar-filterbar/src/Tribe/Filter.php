@@ -77,7 +77,14 @@ if ( ! class_exists( 'Tribe__Events__Filterbar__Filter' ) ) {
 			tribe( 'filterbar.integrations' );
 		}
 
-		protected function get_submitted_value() {
+		/**
+		 * Returns the Filter currently submitted value, as read from the request arguments.
+		 *
+		 * @since 5.0.0.1 Changed the method visibility to `public`.
+		 *
+		 * @return array<mixed>|mixed|null The submitted value for the Filter, `null` if not submitted.
+		 */
+		public function get_submitted_value() {
 			if ( isset( $_REQUEST[ 'tribe_' . $this->slug ] ) ) {
 				$value = $_REQUEST[ 'tribe_' . $this->slug ];
 
