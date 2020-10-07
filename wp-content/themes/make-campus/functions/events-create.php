@@ -9,8 +9,9 @@ function disable_post_creation( $is_disabled, $form, $entry ) {
 // Create event with ticket
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {
+	global $wpdb;
+	
 	$tags = GFAPI::get_field($form, 50);
-
 	$tagArray = array();
     if ($tags->type == 'checkbox') {
         // Get a comma separated list of checkboxes checked
@@ -26,7 +27,7 @@ function create_event($entry, $form) {
 		'Email' => wp_get_current_user()->user_email,
 		'Website' => $entry['128']
 	);
-	global $wpdb;
+	
 	// pull the id of the last organizer with the submitter's email address so we don't create a duplicate
 	$existingOrganizer = $wpdb->get_var('
 	SELECT post_id 
@@ -207,4 +208,7 @@ function create_event($entry, $form) {
 			'capacity'       => $ticket->capacity
 		],
     ));
+	
+	//set the post id
+    $wpdb->update($wpdb->prefix.'gf_entry',array('post_id'=>$post_id),array('id'=>$entry['id']));
 }
