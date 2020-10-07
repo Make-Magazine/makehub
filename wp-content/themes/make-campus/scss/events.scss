@@ -193,17 +193,32 @@
 				span.gform_drop_instructions {display:none;}
 			}
         }
-
-
-       
+		.confirmation_box {
+			.gfield_label { display: none; }
+			ul li {
+				display: flex;
+				label { 
+					font-size: .9em;
+					margin-left: 10px;
+				}
+			}
+		}
+		
         .gform_page_footer {
             display: flex;
-            input[type="button"] {
+			input[type="button"] {
+				background-color: #005e9a;
+				color: #fff;
+				&:visited, &:active { color: #fff; }
+                &:hover {
+                    background: #fff;
+                    color: #005e9a;
+                }
+			}
+            input[type="button"], input[type="submit"]  {
                 flex-grow: 1;
                 padding: 10px;
-                background-color: #005e9a;
                 border: solid 1px #005e9a;
-                color: #fff;
                 display: inline-flex;
                 justify-content: center;
                 align-content: center;
@@ -215,12 +230,6 @@
                 font-size: 16px;
                 font-weight: 300;
                 height: 50px;
-                &:visited, &:active { color: #fff; }
-                &:hover {
-                    background: #fff;
-                    color: #005e9a;
-                    border: solid 1px #005e9a;
-                }
                 &:last-of-type {
                     margin-right: 0px;
                 }
