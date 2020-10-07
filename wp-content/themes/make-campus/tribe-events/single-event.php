@@ -74,7 +74,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 						<h3>What You'll Do:</h3> 
 						<?php the_content(); ?>
 					</div>
-					<?php if(get_field('promo_videos')) { ?>
+					<?php if(get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
 						<div class="tribe-events-promo-vidos tribe-events-content">
 							<h3>Promo Videos: </h3>
 							    <ul>
@@ -98,7 +98,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 							<?php echo get_field('skills_taught') ?>
 						</div>
 					<?php } ?>
-					<?php if(get_field('materials')) { ?>
+					<?php if(get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
 						<div class="tribe-events-single-event-materials tribe-events-content">
 							<h3>What You'll Need:</h3> 
 							<div class="materials-list">
@@ -110,7 +110,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 								?>
 								</ul>
 							</div>
-							<?php if(get_field('wish_list_urls')) { ?>
+							<?php if(get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
 								<h3>Wishlist Links: </h3>
 							    <ul>
 								<?php 

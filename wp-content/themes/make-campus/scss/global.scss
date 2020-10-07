@@ -41,6 +41,41 @@ figure {
 	margin-right: -50vw !important;
 }
 
+.social-links {
+	a {
+		visibility: hidden;
+		font-size: 24px;
+		&::before {
+			font-family: FontAwesome;
+			visibility: visible;
+		}
+		&[href*="facebook"]::before {
+			content: "\f09a";
+			color: #3b5998;
+		}
+		&[href*="twitter"]::before {
+			content: "\f099";
+			color: #1da1f2;
+		}
+		&[href*="instagram"]::before {
+			content: "\f16d";
+			color: #e1306c;
+		}
+		&[href*="youtube"]::before {
+			content: "\f167";
+			color: #ff0000;
+		}
+		&[href*="linkedin"]::before {
+			content: "\f08c";
+			color: #0077b5;
+		}
+		&[href*="snapchat"]::before {
+			content: "\f2ab";
+			color: #fffc00''
+		}
+	}
+}
+
 
 body.admin-bar {
   .navbar.navbar-fixed-top {

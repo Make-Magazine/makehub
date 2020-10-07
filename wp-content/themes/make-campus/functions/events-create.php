@@ -34,7 +34,7 @@ function create_event($entry, $form) {
 	FROM '.$wpdb->prefix.'postmeta 
 	WHERE meta_key = "_OrganizerEmail" and meta_value = "'.$organizerData['Email'].'" 
 	order by post_id DESC limit 1');
-	if($existingOrganizer && $existingOrganizer != "") {
+	if($existingOrganizer) {
 		$organizerData['ID'] = $existingOrganizer;
 	}
 	
@@ -183,7 +183,7 @@ function create_event($entry, $form) {
     $ticket->name = "Ticket - " . $post_id;
     $ticket->description = (isset($entry['42'])?$entry['42']:'');
     $ticket->price = (isset($entry['37'])?$entry['37']:'');
-    $ticket->capacity = (isset($entry['43'])?$entry['43']:'');
+    $ticket->capacity = (isset($entry['106'])?$entry['106']:'999');
     $ticket->start_date = (isset($entry['45'])?$entry['45']:'');
     $ticket->start_time = (isset($entry['46'])?$entry['46']:'');
     $ticket->end_date = (isset($entry['47'])?$entry['47']:'');
@@ -198,16 +198,8 @@ function create_event($entry, $form) {
         //'start_time' => $ticket->start_time,
         //'end_date' => $ticket->end_date,
         //'end_time' => $ticket->end_time,
-		// none of these work
-		'event_capacity' => $ticket->capacity,
-		'capacity' => $ticket->capacity,
-		'stock' => $ticket->capacity,
-        'tribe_ticket' => [
-			'mode'           => 'global',
-			'event_capacity' => $ticket->capacity,
-			'capacity'       => $ticket->capacity
-		],
     ));
+	tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
 	
 	//set the post id
     $wpdb->update($wpdb->prefix.'gf_entry',array('post_id'=>$post_id),array('id'=>$entry['id']));
