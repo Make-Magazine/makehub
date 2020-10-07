@@ -370,8 +370,21 @@ add_action('login_footer', function() {
     get_footer();
 });
 
-require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
+//disable the default post creation
+add_filter( 'gform_disable_post_creation_7', 'disable_post_creation', 10, 3 );
+function disable_post_creation( $is_disabled, $form, $entry ) {
+    return true;
+}
 
+//duplicate entry
+add_action('gravityview/duplicate-entry/duplicated', 'duplicate_entry', 10, 2);
+function duplicate_entry($duplicated_entry, $entry){
+    error_log('duplicate_entry with form id '.$duplicated_entry['form_id']);
+    $form = GFAPI::get_form($duplicated_entry['form_id']);
+    create_event($duplicated_entry, $form);
+}
+
+//require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 // Create event with ticket
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {   
@@ -590,8 +603,21 @@ function get_event_attendees($event_id) {
 add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
 
 function gravityview_event_update($form, $entry_id, $entry_object) {
-    $post_obj = gform_get_meta($entry_id, "gravityformsadvancedpostcreation_post_id");
-    $post_id = $post_obj[0]["post_id"];
+    error_log('gravityview_event_update');
+    $entry = $gv_entry_obj->entry;
+    error_log(print_r($entry, TRUE));
+    $post_id = $entry["post_id"];
+    //update event
+    $post_data = array(
+        'ID' => $post_id,
+        'post_title' => $entry['1'],
+        'post_content' => $entry['2'],        
+    );
+    wp_update_post($post_data);
+    
+    //update acf
+    
+   /*
     $post_data = array(
         'ID' => $post_id,
         'post_title' => gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Event Title"),
@@ -631,6 +657,8 @@ function gravityview_event_update($form, $entry_id, $entry_object) {
     update_field("about", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "About You"), $post_id);
     update_field("location", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Location"), $post_id);
     update_field("materials", gf_get_value_by_label($form, GFAPI::get_entry($entry_id), "Experience Materials"), $post_id);
+    * 
+    */
 }
 
 // rather than use potentially changing field ids, look up by label
