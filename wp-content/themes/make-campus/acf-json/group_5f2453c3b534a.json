@@ -154,6 +154,46 @@
             "new_lines": ""
         },
         {
+            "key": "field_5f7df403e99e6",
+            "label": "Social Media Links",
+            "name": "social_media_links",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_5f7df413e99e7",
+                    "label": "Social Media Link",
+                    "name": "social_media_link",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
             "key": "field_5f7785a0734ad",
             "label": "Short Description",
             "name": "short_description",
@@ -844,5 +884,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1602029362
+    "modified": 1602090100
 }
