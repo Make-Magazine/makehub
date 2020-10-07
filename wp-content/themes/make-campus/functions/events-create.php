@@ -6,7 +6,6 @@ function disable_post_creation( $is_disabled, $form, $entry ) {
     return true;
 }
 
-//require_once( ABSPATH . 'wp-content/plugins/event-tickets/src/Tribe/Tickets.php');
 // Create event with ticket
 add_action( 'gform_after_submission_7', 'create_event', 10, 2 );
 function create_event($entry, $form) {
