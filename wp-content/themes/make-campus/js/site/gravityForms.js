@@ -9,8 +9,8 @@ jQuery(document).ready(function ($) {
             var reader = new FileReader();
             reader.onload = function (e) {         
                 jQuery("#preview_"+inputID).remove();
-                jQuery(input).after('<div id="preview_'+inputID+'"><div class="preview_img-wrapper"><img src="" style="width:250px;"></div></div>');
-                jQuery('#preview_'+inputID+' .preview_img-wrapper>img' ).attr( 'src', e.target.result );
+                jQuery(input).after('<div id="preview_'+inputID+'"><div class="preview_img-wrapper"></div></div>');
+                jQuery('#preview_'+inputID+' .preview_img-wrapper').css( 'background-image', 'url(' + e.target.result + ')' );
             }
             reader.readAsDataURL(input.files[0]);
         }

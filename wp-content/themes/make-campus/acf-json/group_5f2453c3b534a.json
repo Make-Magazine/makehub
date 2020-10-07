@@ -806,6 +806,25 @@
             "maxlength": "",
             "rows": "",
             "new_lines": ""
+        },
+        {
+            "key": "field_5f7d0702ea2bf",
+            "label": "Please tell us about any exclusions to the schedule",
+            "name": "schedule_exclusions",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
         }
     ],
     "location": [
@@ -825,5 +844,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1602015779
+    "modified": 1602029362
 }
