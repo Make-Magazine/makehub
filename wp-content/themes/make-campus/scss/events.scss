@@ -67,6 +67,9 @@
 				p { margin-top: 10px; }
 				b { font-weight: 700; }
 			}
+			li.gfield select {
+				padding: 7px;
+			}
         } 
 		@media screen and (min-width: 768px) {
             display: flex;
@@ -106,45 +109,46 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            .preview_image {
-                padding: 16px;
-                border: solid 1px #ccc;
-                width: 49%;
-                border-radius: 5px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                margin-bottom: 10px;
-                flex-direction: column;
-                flex: 0 0 100%;
-				div[id^=preview_input] {
-					position: relative;
-					display: flex;
-					justify-content: center;
-					.preview_img-wrapper {
-						height: 250px;
-						width: 250px;
-						background-size: cover;
-					}
-				}
-                &~ .preview_image{ //override all but the first
-                	flex: inherit;
-					div[id^=preview_input] {
-						.preview_img-wrapper {
-							background-size: contain;
-						}
-					}
-                }
-                @media screen and (max-width: 982px) {
-                    flex-direction: column;
-                }
-                @media screen and (max-width: 641px) {
-                    width: 100%;
-                }
-				
-            }
             .gfield_html { flex: 0 0 100%; }
         }
+		.preview_image {
+			padding: 16px;
+			border: solid 1px #ccc;
+			width: 49%;
+			border-radius: 5px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 10px;
+			flex-direction: column;
+			flex: 0 0 100%;
+			div[id^=preview_input] {
+				position: relative;
+				display: flex;
+				justify-content: center;
+				.preview_img-wrapper {
+					height: 250px;
+					width: 250px;
+					background-size: cover;
+					background-position: center;
+					background-repeat: no-repeat;
+				}
+			}
+			&~ .preview_image{ //override all but the first
+				flex: inherit;
+				div[id^=preview_input] {
+					.preview_img-wrapper {
+						background-size: contain;
+					}
+				}
+			}
+			@media screen and (max-width: 982px) {
+				flex-direction: column;
+			}
+			@media screen and (max-width: 641px) {
+				width: 100%;
+			}
+		}
 		
         /* File Upload */
         .ginput_container_fileupload {

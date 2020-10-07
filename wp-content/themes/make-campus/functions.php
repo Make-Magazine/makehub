@@ -456,6 +456,7 @@ function create_event($entry, $form) {
         array('97', 'alternative_start_time'),
         array('96', 'alternative_end_time'),
         array('99', 'alternative_end_date'),   
+        array('124', 'schedule_exclusions'),   
 		array('31', 'image_1'),
 		array('32', 'image_2'),
 		array('33', 'image_3'),
