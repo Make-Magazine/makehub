@@ -4,8 +4,7 @@
 // SO FAR, THIS IS UPDATING THE TITLE, CONTENT, FEATURED IMAGE, AND TEXT ACF FIELDS... needs work for taxonomies
 add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
 
-function gravityview_event_update($form, $entry_id, $entry_object) {
-    global $field_mapping;
+function gravityview_event_update($form, $entry_id, $entry_object) {    
     error_log('gravityview_event_update');
     $entry = $entry_object->entry;
 
@@ -54,39 +53,6 @@ function gravityview_event_update($form, $entry_id, $entry_object) {
     // Set the featured Image
     set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
 
-    
-    //update the acf fields with the submitted values from the form
-    foreach ($field_mapping as $field) {
-        $fieldID = $field[0];
-        $meta_field = $field[1];
-        $field_key = (isset($field[2]) ? $field[2] : '');
-        $fieldData = GFAPI::get_field($form, $fieldID);
-      
-        if (isset($entry[$fieldID])) {
-            if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
-                $listArray = explode(', ', $fieldData->get_value_export($entry));
-                $num = 1;
-                $repeater = [];
-                foreach ($listArray as $value) {
-                    $repeater[] = array($field_key => $value);
-                    $num++;
-                }
-                update_field($meta_field, $repeater, $post_id);
-            } else if (strpos($meta_field, 'image') !== false) {
-                update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
-            } else {
-                //error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
-                update_post_meta($post_id, $meta_field, $entry[$fieldID]);
-            }
-        }
-        // entry field id is not set in time for checkboxes, apparently
-        if (isset($fieldData->type)) {
-            if ($fieldData->type == 'checkbox' || ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox')) {
-                error_log('passed checkbox check');
-                $checked = $fieldData->get_value_export($entry);
-                $values = explode(', ', $checked);
-                update_field($field_key, $values, $post_id);
-            }
-        }
-    }
+    update_event_acf($entry, $form, $post_id);
+
 }
