@@ -27,6 +27,13 @@ if ( ! $has_details ) {
 
 	<?php $this->template( 'organizer/meta/details/website', [ 'organizer' => $organizer ] ); ?>
 	
-	
+
+	<?php if(get_field('social_links')) { ?>
+			<div class="social-links">
+				<?php foreach(get_field('social_links') as $link) { ?>
+				<a href="<?php echo($link['social_link']); ?>">*</a>
+				<?php } ?>
+			</div>
+	<?php } ?>
 
 </div>
