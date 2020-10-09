@@ -4,7 +4,8 @@
 // SO FAR, THIS IS UPDATING THE TITLE, CONTENT, FEATURED IMAGE, AND TEXT ACF FIELDS... needs work for taxonomies
 add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
 
-function gravityview_event_update($form, $entry_id, $entry_object) {    
+function gravityview_event_update($form, $entry_id, $entry_object='') { 
+    if($entry_object=='')   return;
     error_log('gravityview_event_update');
     $entry = $entry_object->entry;
 
