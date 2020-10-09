@@ -37,6 +37,16 @@ function create_event($entry, $form) {
     );
     $post_id = tribe_create_event($event_args);
 	
+	/* Leaving this for now
+	$startingTZ = get_post_meta( $post_id, '_EventTimezone', true );
+	error_log(print_r($startingTZ, TRUE)); // outputs America/Los_Angeles
+	$startingDateTime = get_post_meta( $post_id, '_EventStartDateUTC', true );
+	error_log(print_r($startingDateTime, TRUE)); // output format 2020-10-31 16:00:00
+	
+	update_post_meta( $event->ID, '_EventTimezone', 'America/New_York');
+    update_post_meta( $event->ID, '_EventTimezoneAbbr', 'EDT');
+	*/
+	
     update_organizer_data($entry, $form, $organizerData, $post_id);
 	// update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
@@ -47,14 +57,15 @@ function create_event($entry, $form) {
             'recurrence' => array(
                 'rules' => array(
                     array(
-                        'type' => 'Every Year',
-                        'end-type' => 'Never',
-                        'end' => '',
-                        'end-count' => '',
+                        'type' => 'Every Week',
+                        'end-type' => 'On',
+                        //'end' => '',
+                        //'end-count' => '',
                         'EventStartDate' => $start_date,
                         'EventEndDate' => $end_date,
                         'custom' => array(),
                         'occurrence-count-text' => 'events',
+						'description' => 'Reocurring Event Series'
                     ),
                 ),
             ),
