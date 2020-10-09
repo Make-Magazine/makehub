@@ -15,7 +15,7 @@ function create_event($entry, $form) {
     
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
-    $end_date = date_create($entry['4'] . ' ' . $entry['7']);
+    $end_date = date_create($entry['129'] . ' ' . $entry['5']);
     
     // set organizer information
     $organizerData = event_organizer($entry);
