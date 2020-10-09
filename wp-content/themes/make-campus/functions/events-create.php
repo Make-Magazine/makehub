@@ -58,14 +58,13 @@ function create_event($entry, $form) {
                 'rules' => array(
                     array(
                         'type' => 'Every Week',
-                        'end-type' => 'On',
-                        //'end' => '',
+                        'end-type' => 'on',
+                        'end' => '',
                         //'end-count' => '',
                         'EventStartDate' => $start_date,
                         'EventEndDate' => $end_date,
                         'custom' => array(),
                         'occurrence-count-text' => 'events',
-						'description' => 'Reocurring Event Series'
                     ),
                 ),
             ),
