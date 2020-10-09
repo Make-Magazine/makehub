@@ -1,6 +1,15 @@
 <?php
 
-/* 
+//duplicate entry
+add_action('gravityview/duplicate-entry/duplicated', 'duplicate_entry', 10, 2);
+
+function duplicate_entry($duplicated_entry, $entry) {
+    error_log('duplicate_entry with form id ' . $duplicated_entry['form_id']);
+    $form = GFAPI::get_form($duplicated_entry['form_id']);
+    create_event($duplicated_entry, $form);
+}
+
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -50,7 +59,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
     );
-        //update the acf fields with the submitted values from the form
+    //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
         $fieldID = $field[0];
         $meta_field = $field[1];
@@ -78,8 +87,88 @@ function update_event_acf($entry, $form, $post_id) {
             if ($fieldData->type == 'checkbox' || ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox')) {
                 $checked = $fieldData->get_value_export($entry);
                 $values = explode(', ', $checked);
-                update_field($field_key, $values, $post_id);             
+                update_field($field_key, $values, $post_id);
             }
         }
     }
+}
+
+function event_organizer($entry) {
+    global $wpdb;
+
+    $organizerData = array(
+        'Organizer' => $entry['116.3'] . " " . $entry['116.6'],
+        'Email' => wp_get_current_user()->user_email,
+        'Website' => $entry['128']
+    );
+
+    // pull the id of the last organizer with the submitter's email address so we don't create a duplicate
+    $existingOrganizer = $wpdb->get_var('
+	SELECT post_id 
+	FROM ' . $wpdb->prefix . 'postmeta 
+	WHERE meta_key = "_OrganizerEmail" and meta_value = "' . $organizerData['Email'] . '" 
+	order by post_id DESC limit 1');
+    if ($existingOrganizer) {
+        $organizerData['ID'] = $existingOrganizer;
+    }
+            
+    return organizerData;
+}
+
+function update_organizer_data($entry, $organizerData, $post_id) {
+    // Upload featured image to Organizer page
+    set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
+    
+    // update social media fields for the event organizer
+    $organizer_id = tribe_get_organizer_id($post_id);
+    $socialField = GFAPI::get_field($form, 127);
+    $socialLinks = explode(', ', $socialField->get_value_export($entry));
+    $num = 1;
+    $repeater = [];
+    foreach ($socialLinks as $value) {
+        $repeater[] = array("field_5f7e086a4a5a3" => $value);
+        $num++;
+    }
+    update_field("social_links", $repeater, $organizer_id);
+    
+    //tbd update organizer name & website if changed
+}
+
+function event_post_meta($entry, $form, $post_id) {
+    $tags = GFAPI::get_field($form, 50);
+    $tagArray = array();
+    if ($tags->type == 'checkbox') {
+        // Get a comma separated list of checkboxes checked
+        $checked = $tags->get_value_export($entry);
+        // Convert to array.
+        $tagArray = explode(', ', $checked);
+    }
+    // Set the taxonomies    
+    wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
+    wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
+            
+    // Set the featured Image
+    set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
+}
+
+function get_attachment_id_from_url($attachment_url) {
+    global $wpdb;
+    $attachment_id = false;
+    // Get the upload directory paths
+    $upload_dir_paths = wp_upload_dir();
+    // Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
+    if (false !== strpos($attachment_url, $upload_dir_paths['baseurl'])) {
+        // If this is the URL of an auto-generated thumbnail, get the URL of the original image
+        $attachment_url = preg_replace('/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url);
+        // Remove the upload path base directory from the attachment URL
+        $attachment_url = str_replace($upload_dir_paths['baseurl'] . '/', '', $attachment_url);
+        // Finally, run a custom database query to get the attachment ID from the modified attachment URL
+        $attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url));
+    }
+    return $attachment_id;
+}
+
+function get_event_attendees($event_id) {
+    $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
+    return $attendee_list;
 }

@@ -50,9 +50,10 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.p
 require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
 
 function make_campus_add_woocommerce_support() {
-	add_theme_support( 'woocommerce' );
+    add_theme_support('woocommerce');
 }
-add_action( 'after_setup_theme', 'make_campus_add_woocommerce_support' );
+
+add_action('after_setup_theme', 'make_campus_add_woocommerce_support');
 
 // Add that navwalker for the custom menus
 require_once('lib/wp_bootstrap_navwalker.php');
@@ -191,28 +192,30 @@ function remove_admin_bar() {
     }
     return false;
 }
+
 function make_campus_admin_scripts() {
-	$my_theme = wp_get_theme();
+    $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     $suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
     wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/owl.carousel.js', array(), $my_version, true);
 }
-add_action( 'admin_enqueue_scripts', 'make_campus_admin_scripts' );
+
+add_action('admin_enqueue_scripts', 'make_campus_admin_scripts');
 
 // Remove Yoast columns
-add_filter( 'manage_edit-tribe_events_columns', 'yoast_seo_admin_remove_columns' );
-add_filter( 'manage_edit-post_columns', 'yoast_seo_admin_remove_columns' );
-add_filter( 'manage_edit-page_columns', 'yoast_seo_admin_remove_columns' );
+add_filter('manage_edit-tribe_events_columns', 'yoast_seo_admin_remove_columns');
+add_filter('manage_edit-post_columns', 'yoast_seo_admin_remove_columns');
+add_filter('manage_edit-page_columns', 'yoast_seo_admin_remove_columns');
 
-function yoast_seo_admin_remove_columns( $columns ) {
-  unset($columns['wpseo-score']);
-  unset($columns['wpseo-score-readability']);
-  unset($columns['wpseo-title']);
-  unset($columns['wpseo-metadesc']);
-  unset($columns['wpseo-focuskw']);
-  unset($columns['wpseo-links']);
-  unset($columns['wpseo-linked']);
-  return $columns;
+function yoast_seo_admin_remove_columns($columns) {
+    unset($columns['wpseo-score']);
+    unset($columns['wpseo-score-readability']);
+    unset($columns['wpseo-title']);
+    unset($columns['wpseo-metadesc']);
+    unset($columns['wpseo-focuskw']);
+    unset($columns['wpseo-links']);
+    unset($columns['wpseo-linked']);
+    return $columns;
 }
 
 /**
@@ -371,37 +374,6 @@ add_action('login_footer', function() {
 });
 
 
-//duplicate entry
-add_action('gravityview/duplicate-entry/duplicated', 'duplicate_entry', 10, 2);
-function duplicate_entry($duplicated_entry, $entry){
-    error_log('duplicate_entry with form id '.$duplicated_entry['form_id']);
-    $form = GFAPI::get_form($duplicated_entry['form_id']);
-    create_event($duplicated_entry, $form);
-}
-
-
-function get_attachment_id_from_url( $attachment_url ) {
-	global $wpdb;
-	$attachment_id = false;
-	// Get the upload directory paths
-	$upload_dir_paths = wp_upload_dir();
-	// Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
-	if ( false !== strpos( $attachment_url, $upload_dir_paths['baseurl'] ) ) {
-		// If this is the URL of an auto-generated thumbnail, get the URL of the original image
-		$attachment_url = preg_replace( '/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url );
-		// Remove the upload path base directory from the attachment URL
-		$attachment_url = str_replace( $upload_dir_paths['baseurl'] . '/', '', $attachment_url );
-		// Finally, run a custom database query to get the attachment ID from the modified attachment URL
-		$attachment_id = $wpdb->get_var( $wpdb->prepare( "SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url ) );
-	}
-	return $attachment_id;
-}
-
-function get_event_attendees($event_id) {
-	$attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
-	return $attendee_list;
-}
-
 add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {
     // Value should be an array, not a string
     if (is_string($value)) {
@@ -412,20 +384,21 @@ add_filter('acf/load_value/type=checkbox', function($value, $post_id, $field) {
 
 
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
+
 function spinner_url($image_src, $form) {
     return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
-} 
+}
 
-
-function smartTruncate($string, $limit, $break=".", $pad="...") {
-  // return with no change if string is shorter than $limit
-  if(strlen($string) <= $limit) return $string;
-  // is $break present between $limit and the end of the string?
-  if(false !== ($breakpoint = strpos($string, $break, $limit))) {
-    if($breakpoint < strlen($string) - 1) {
-      $string = substr($string, 0, $breakpoint) . $pad;
+function smartTruncate($string, $limit, $break = ".", $pad = "...") {
+    // return with no change if string is shorter than $limit
+    if (strlen($string) <= $limit)
+        return $string;
+    // is $break present between $limit and the end of the string?
+    if (false !== ($breakpoint = strpos($string, $break, $limit))) {
+        if ($breakpoint < strlen($string) - 1) {
+            $string = substr($string, 0, $breakpoint) . $pad;
+        }
     }
-  }
 
-  return $string;
+    return $string;
 }
