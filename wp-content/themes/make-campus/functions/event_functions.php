@@ -9,12 +9,6 @@ function duplicate_entry($duplicated_entry, $entry) {
     create_event($duplicated_entry, $form);
 }
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 function update_event_acf($entry, $form, $post_id) {
     //field mapping - ** note - upload fields don't work here. use post creation feed for that **
     //0 indicie = gravity form field id
@@ -104,18 +98,18 @@ function event_organizer($entry) {
 
     // pull the id of the last organizer with the submitter's email address so we don't create a duplicate
     $existingOrganizer = $wpdb->get_var('
-	SELECT post_id 
-	FROM ' . $wpdb->prefix . 'postmeta 
-	WHERE meta_key = "_OrganizerEmail" and meta_value = "' . $organizerData['Email'] . '" 
-	order by post_id DESC limit 1');
+		SELECT post_id 
+		FROM ' . $wpdb->prefix . 'postmeta 
+		WHERE meta_key = "_OrganizerEmail" and meta_value = "' . $organizerData['Email'] . '" 
+		order by post_id DESC limit 1');
     if ($existingOrganizer) {
         $organizerData['ID'] = $existingOrganizer;
     }
             
-    return organizerData;
+    return $organizerData;
 }
 
-function update_organizer_data($entry, $organizerData, $post_id) {
+function update_organizer_data($entry, $form, $organizerData, $post_id) {
     // Upload featured image to Organizer page
     set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
     

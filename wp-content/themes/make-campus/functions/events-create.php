@@ -17,7 +17,7 @@ function create_event($entry, $form) {
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
     $end_date = date_create($entry['4'] . ' ' . $entry['7']);
     
-    //set organizer information
+    // set organizer information
     $organizerData = event_organizer($entry);
 
     $event_args = array(
@@ -36,8 +36,9 @@ function create_event($entry, $form) {
         'Organizer' => $organizerData
     );
     $post_id = tribe_create_event($event_args);
-    update_organizer_data($entry, $organizerData, $post_id);
-    
+	
+    update_organizer_data($entry, $form, $organizerData, $post_id);
+	// update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
 
     // Set the arguments for the recurring event.
@@ -59,11 +60,10 @@ function create_event($entry, $form) {
             ),
         );
 
-        // Instantiate and set it in motion.
         $recurrence_meta = new \Tribe__Events__Pro__Recurrence__Meta();
         $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
     }
-
+	
     update_event_acf($entry, $form, $post_id);
 
     // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
@@ -90,6 +90,7 @@ function create_event($entry, $form) {
             //'end_time' => $ticket->end_time,
     ));
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
+	update_post_meta( $ticket->ID, '_stock', $ticket->capacity ); 
 
     //set the post id
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $post_id), array('id' => $entry['id']));
