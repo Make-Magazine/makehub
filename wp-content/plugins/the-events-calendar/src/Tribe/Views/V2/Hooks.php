@@ -73,7 +73,7 @@ class Hooks extends \tad_DI52_ServiceProvider {
 	 * @since 4.9.2
 	 */
 	protected function add_filters() {
-		add_filter( 'wp_redirect', [ $this, 'filter_redirect_canonical' ], 10, 2 );
+		// add_filter( 'wp_redirect', [ $this, 'filter_redirect_canonical' ], 10, 2 );
 		add_filter( 'redirect_canonical', [ $this, 'filter_redirect_canonical' ], 10, 2 );
 		add_action( 'tribe_events_parse_query', [ $this, 'parse_query' ] );
 		add_filter( 'template_include', [ $this, 'filter_template_include' ], 50 );
