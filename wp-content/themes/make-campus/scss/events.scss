@@ -799,9 +799,29 @@
 		width: 100%;
 		font-size: 20px;
 	}
-	.tribe-report-page {
+	.wrap.tribe-report-page {
 		h1, .tablenav.bottom {
 			display: none;
+		}
+		.welcom-panel {
+			margin-top: 15px;
+			.welcome-panel-column li, .wp-list-table {
+				font-size: 16px;
+			}
+		}
+		#topics-filter {
+			input.print, a.button.action {
+				padding: 10px;
+				background: #005e9a;
+				color: #fff;
+				border: solid 1px #005e9a;
+				border-radius: 3px;
+				margin-bottom: 10px;
+				&:hover {
+					background: #fff;
+					color: #005e9a;
+				}
+			}
 		}
 	}
 }
