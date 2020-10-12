@@ -773,3 +773,34 @@
 		}
 	}
 }
+
+// Edit Event
+.gv-grid {
+	.gv-list-view-title {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		h3 { margin: 0px; }
+	}
+	.gv-list-view-content {
+		.gv-list-view-content-image {
+			padding: 0px;
+		}
+		.gv-list-view-content-description {
+			.gv-field-label {
+				font-size: 20px;
+				font-weight: bold;
+				margin-bottom: 15px;
+			}
+		}
+	}
+	button { 
+		width: 100%;
+		font-size: 20px;
+	}
+	.tribe-report-page {
+		h1, .tablenav.bottom {
+			display: none;
+		}
+	}
+}
