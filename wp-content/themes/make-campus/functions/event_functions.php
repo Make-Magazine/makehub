@@ -103,7 +103,8 @@ function event_organizer($entry) {
 		WHERE meta_key = "_OrganizerEmail" and meta_value = "' . $organizerData['Email'] . '" 
 		order by post_id DESC limit 1');
     if ($existingOrganizer) {
-        $organizerData['ID'] = $existingOrganizer;
+		$organizerData = array();
+        $organizerData['OrganizerID'] = $existingOrganizer;
     }
             
     return $organizerData;

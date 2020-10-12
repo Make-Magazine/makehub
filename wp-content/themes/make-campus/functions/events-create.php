@@ -15,7 +15,7 @@ function create_event($entry, $form) {
     
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
-    $end_date = date_create($entry['129'] . ' ' . $entry['5']);
+    $end_date = date_create($entry['129'] . ' ' . $entry['7']);
     
     // set organizer information
     $organizerData = event_organizer($entry);
@@ -69,7 +69,7 @@ function create_event($entry, $form) {
                 ),
             ),
         );
-
+		//error_log(print_r($recurrence_data, TRUE));
         $recurrence_meta = new \Tribe__Events__Pro__Recurrence__Meta();
         $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
     }
