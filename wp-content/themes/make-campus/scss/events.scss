@@ -388,7 +388,8 @@
         position: inherit;
         .tribe-events-header {
             text-align: center;
-            margin-top: 20px;
+            margin-top: -20px;
+			margin-bottom: 20px;
             h1 {
                 color: #000;
                 font-weight: 700;
