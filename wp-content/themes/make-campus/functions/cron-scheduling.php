@@ -12,7 +12,7 @@ function gf_notif() {
          // time() - the first time of an event to run ( UNIX timestamp format )
          // 'hourly' - recurrence ('hourly', 'twicedaily', 'daily' ) 
          // 'my_event' - the name of an action hook to execute. 
-         wp_schedule_event( time(), 'hourly', 'trigger_gf_notification' );
+         wp_schedule_event( strtotime('00:00:00'), 'daily', 'trigger_gf_notification' );
     }
 }
 
