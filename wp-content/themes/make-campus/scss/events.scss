@@ -804,11 +804,14 @@
 		h1, .tablenav.bottom {
 			display: none;
 		}
-		.welcom-panel {
+		.welcome-panel {
 			margin-top: 15px;
 			.welcome-panel-column li, .wp-list-table {
 				font-size: 16px;
 			}
+		}
+		.wp-list-table {
+			font-size: 16px;
 		}
 		#topics-filter {
 			input.print, a.button.action {
@@ -824,5 +827,20 @@
 				}
 			}
 		}
+	}
+}
+.gv-edit-entry-wrapper {
+	#field_7_104 { // hide the preview submitted info field
+		display: none;
+	}
+}
+.gv-button-cancel {
+	color: #fff;
+	border: thin solid #1987C7;
+	padding: 10px 30px;
+	background-color: #1987C7;;
+	&:hover, &:active, &:focus {
+		background-color: #fff;
+		color: #1987C7;;
 	}
 }
