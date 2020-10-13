@@ -15,7 +15,7 @@ function create_event($entry, $form) {
     
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
-    $end_date = date_create($entry['129'] . ' ' . $entry['5']);
+    $end_date = date_create($entry['129'] . ' ' . $entry['7']);
     
     // set organizer information
     $organizerData = event_organizer($entry);
@@ -37,17 +37,10 @@ function create_event($entry, $form) {
     );
     $post_id = tribe_create_event($event_args);
 	
-	/* Leaving this for now
-	$startingTZ = get_post_meta( $post_id, '_EventTimezone', true );
-	error_log(print_r($startingTZ, TRUE)); // outputs America/Los_Angeles
-	$startingDateTime = get_post_meta( $post_id, '_EventStartDateUTC', true );
-	error_log(print_r($startingDateTime, TRUE)); // output format 2020-10-31 16:00:00
-	
-	update_post_meta( $event->ID, '_EventTimezone', 'America/New_York');
-    update_post_meta( $event->ID, '_EventTimezoneAbbr', 'EDT');
-	*/
-	
+	update_post_meta( $post_id, '_EventTimezone', $entry['131']);
+
     update_organizer_data($entry, $form, $organizerData, $post_id);
+	
 	// update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
 
@@ -57,20 +50,19 @@ function create_event($entry, $form) {
             'recurrence' => array(
                 'rules' => array(
                     array(
-                        'type' => 'Every Week',
-                        'end-type' => 'On',
-                        //'end' => '',
+                        'type' => $entry['130'],
+                        'end-type' => 'on',
+                        'end' => $entry['129'] . ' ' . $entry['7'],
                         //'end-count' => '',
                         'EventStartDate' => $start_date,
-                        'EventEndDate' => $end_date,
+                        'EventEndDate' =>  date_create($entry['4'] . ' ' . $entry['7']), // this is just for the end of the first occurence of the event
                         'custom' => array(),
                         'occurrence-count-text' => 'events',
-						'description' => 'Reocurring Event Series'
                     ),
                 ),
             ),
         );
-
+		//error_log(print_r($recurrence_data, TRUE));
         $recurrence_meta = new \Tribe__Events__Pro__Recurrence__Meta();
         $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
     }
