@@ -72,18 +72,6 @@ $post_image_ids = implode(', ', $post_image_ids);
 						<h3>What You'll Do:</h3> 
 						<?php the_content(); ?>
 					</div>
-					<?php if(get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
-						<div class="tribe-events-promo-vidos tribe-events-content">
-							<h3>Promo Videos: </h3>
-							    <ul>
-								<?php 
-									foreach(get_field('promo_videos') as $video) {
-										echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
-									}
-								?>
-								</ul>
-						</div>
-					<?php } ?>
 					<?php if(get_field('basic_skills')) { ?>
 						<div class="tribe-events-single-skill-level tribe-events-content">
 							<h3>Skill Level for this program:</h3> 
@@ -96,30 +84,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 							<?php echo get_field('skills_taught') ?>
 						</div>
 					<?php } ?>
-					<?php if(get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
-						<div class="tribe-events-single-event-materials tribe-events-content">
-							<h3>What You'll Need:</h3> 
-							<div class="materials-list">
-								<ul>
-								<?php 
-									foreach(get_field('materials') as $material) {
-										echo '<li>' . $material['item'] . '</li>';
-									}
-								?>
-								</ul>
-							</div>
-							<?php if(get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
-								<h3>Wishlist Links: </h3>
-							    <ul>
-								<?php 
-									foreach(get_field('wish_list_urls') as $wishlist) {
-										echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
-									}
-								?>
-								</ul>
-							<?php } ?>
-						</div>
-					<?php } ?>
+					
 					<?php if(get_field('kit_required') == "Yes") { ?>
 						<div class="tribe-events-single-skill-level tribe-events-content">
 							<h3>A kit is required for this program:</h3> 
@@ -139,6 +104,53 @@ $post_image_ids = implode(', ', $post_image_ids);
 						</div>
 					<?php } ?>
 					<!-- .tribe-events-single-event-description -->
+					<?php // ATTENDEES Section
+						$userList = get_event_attendees($event_id);
+						if(array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) { ?>
+					        <hr />
+					        <h3>Attendee Resources:</h3> 
+					        <div class="tribe-events-single-skill-level tribe-events-content">
+								<h3>Event Conference Link:</h3> 
+								<a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
+					        </div>
+							<?php if(get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
+								<div class="tribe-events-single-event-materials tribe-events-content">
+									<h3>What You'll Need:</h3> 
+									<div class="materials-list">
+										<ul>
+										<?php 
+											foreach(get_field('materials') as $material) {
+												echo '<li>' . $material['item'] . '</li>';
+											}
+										?>
+										</ul>
+									</div>
+									<?php if(get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+										<h3>Wishlist Links: </h3>
+										<ul>
+										<?php 
+											foreach(get_field('wish_list_urls') as $wishlist) {
+												echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
+											}
+										?>
+										</ul>
+									<?php } ?>
+								</div>
+							<?php } 
+							if(get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
+								<div class="tribe-events-promo-vidos tribe-events-content">
+									<h3>Promo Videos: </h3>
+										<ul>
+										<?php 
+											foreach(get_field('promo_videos') as $video) {
+												echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+											}
+										?>
+										</ul>
+								</div>
+							<?php } 
+						}
+					?>
 					<?php do_action( 'tribe_events_single_event_after_the_content' ) ?>
 				</div>
 				<div class="col-md-4 col-sm-12 col-xs-12 event-meta">
@@ -151,6 +163,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 				</div>
 			</div>
 		</div> <!-- #post-x -->
+	   
 		<?php if ( get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option( 'showComments', false ) ) comments_template() ?>
 	<?php endwhile; ?>
 
