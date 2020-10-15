@@ -4,14 +4,17 @@ add_filter('gform_notification_events', 'custom_notification_event');
 
 function custom_notification_event($events) {
     $events['accepted_event_occur_48_hours'] = __('Event Occuring Within 48 Hours');
-    //$events['event_rejected'] = __( 'Event Entry Rejected' );
+	$events['after_event'] = __('After Event');
+    $events['send_manually'] = __( 'Send Manually' );
     return $events;
 }
 
 //cron job triggers this check for any accepted entries where the event is occuring in the next 48 hours. 
-function trigger_48_hour_notificatons() {
+function trigger_notificatons() {
     global $wpdb;
-    //find all accepted entries where start date is 2 days from now
+    ///////////////////////////////////////////////
+	/*           48 HOURS BEFORE EVENT           */
+	///////////////////////////////////////////////
     $sql = 'SELECT post_id '
             . 'FROM  ' . $wpdb->prefix . 'postmeta '
             . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
@@ -27,15 +30,63 @@ function trigger_48_hour_notificatons() {
 
             //trigger notificaton
             // error_log('sending 48 hour notification for entry '.$entry_id);
-			$attendeeEmailList = get_event_attendee_emails($event->post_id);
             $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
-			if(empty($attendeeEmailList) == FALSE) {
-				foreach ($notifications_to_send as $notification) {
-					foreach($attendeeEmailList as $attendee) {
-						if ($notification['isActive']) {
-							$notification['to'] = $attendee;
-							GFCommon::send_notification($notification, $form, $entry);
-						}
+			$attendeeEmailList = array();
+			
+			foreach ($notifications_to_send as $notification) {
+				$email_array = explode(",", $notification['to'], 2);
+				foreach($email_array as $item) {
+					$item = trim($item);
+					if($item == "{attendee_list}") {
+						$attendeeEmailList = array_merge(get_event_attendee_emails($event->post_id), $attendeeEmailList);
+					} else {
+						array_push($attendeeEmailList, $item);
+					}
+				}
+				foreach($attendeeEmailList as $attendee) {
+					if ($notification['isActive']) {
+						$notification['to'] = $attendee;
+						GFCommon::send_notification($notification, $form, $entry);
+					}
+				}
+			}
+        }
+	}
+	///////////////////////////////////////////////
+	/*                AFTER EVENT                */
+	///////////////////////////////////////////////
+    $sql = 'SELECT post_id '
+            . 'FROM  ' . $wpdb->prefix . 'postmeta '
+            . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
+            . 'WHERE  meta_key LIKE "_EventEndDate" AND '
+			. '       meta_value like CONCAT("%",CURDATE() + INTERVAL 1 DAY,"%") and post_status = "publish"';
+    $events = $wpdb->get_results($sql);
+    foreach ($events as $event) {
+        //find associated entry    
+        $entry_id = $wpdb->get_var('select id from ' . $wpdb->prefix . 'gf_entry where post_id = ' . $event->post_id);
+        if ($entry_id != '') {            
+            $entry = GFAPI::get_entry($entry_id);            
+            $form = GFAPI::get_form($entry['form_id']);
+
+            //trigger notificaton
+            // error_log('sending 48 hour notification for entry '.$entry_id);
+            $notifications_to_send = GFCommon::get_notifications_to_send('after_event', $form, $entry);
+			$attendeeEmailList = array();
+			
+			foreach ($notifications_to_send as $notification) {
+				$email_array = explode(",", $notification['to'], 2);
+				foreach($email_array as $item) {
+					$item = trim($item);
+					if($item == "{attendee_list}") {
+						$attendeeEmailList = array_merge(get_event_attendee_emails($event->post_id), $attendeeEmailList);
+					} else {
+						array_push($attendeeEmailList, $item);
+					}
+				}
+				foreach($attendeeEmailList as $attendee) {
+					if ($notification['isActive']) {
+						$notification['to'] = $attendee;
+						GFCommon::send_notification($notification, $form, $entry);
 					}
 				}
 			}
