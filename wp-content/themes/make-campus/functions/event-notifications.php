@@ -31,24 +31,12 @@ function trigger_notificatons() {
             //trigger notificaton
             // error_log('sending 48 hour notification for entry '.$entry_id);
             $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
-			$attendeeEmailList = array();
-			
 			foreach ($notifications_to_send as $notification) {
-				$email_array = explode(",", $notification['to'], 2);
-				foreach($email_array as $item) {
-					$item = trim($item);
-					if($item == "{attendee_list}") {
-						$attendeeEmailList = array_merge(get_event_attendee_emails($event->post_id), $attendeeEmailList);
-					} else {
-						array_push($attendeeEmailList, $item);
-					}
+				if(strpos($notification['to'], "{{attendee_list}}") !== false){
+					$attendeeEmailList = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+					$notification['to'] = $attendeeEmailList;
 				}
-				foreach($attendeeEmailList as $attendee) {
-					if ($notification['isActive']) {
-						$notification['to'] = $attendee;
-						GFCommon::send_notification($notification, $form, $entry);
-					}
-				}
+				GFCommon::send_notification($notification, $form, $entry);
 			}
         }
 	}
@@ -70,25 +58,13 @@ function trigger_notificatons() {
 
             //trigger notificaton
             // error_log('sending 48 hour notification for entry '.$entry_id);
-            $notifications_to_send = GFCommon::get_notifications_to_send('after_event', $form, $entry);
-			$attendeeEmailList = array();
-			
+            $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
 			foreach ($notifications_to_send as $notification) {
-				$email_array = explode(",", $notification['to'], 2);
-				foreach($email_array as $item) {
-					$item = trim($item);
-					if($item == "{attendee_list}") {
-						$attendeeEmailList = array_merge(get_event_attendee_emails($event->post_id), $attendeeEmailList);
-					} else {
-						array_push($attendeeEmailList, $item);
-					}
+				if(strpos($notification['to'], "{{attendee_list}}") !== false){
+					$attendeeEmailList = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+					$notification['to'] = $attendeeEmailList;
 				}
-				foreach($attendeeEmailList as $attendee) {
-					if ($notification['isActive']) {
-						$notification['to'] = $attendee;
-						GFCommon::send_notification($notification, $form, $entry);
-					}
-				}
+				GFCommon::send_notification($notification, $form, $entry);
 			}
         }
     }
