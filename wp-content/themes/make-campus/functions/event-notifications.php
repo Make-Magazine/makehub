@@ -19,20 +19,26 @@ function trigger_48_hour_notificatons() {
             . '       meta_value like CONCAT("%",CURDATE() + INTERVAL 2 DAY,"%") and post_status = "publish"';
     $events = $wpdb->get_results($sql);
     foreach ($events as $event) {
-        //find associated entry            
+        //find associated entry    
         $entry_id = $wpdb->get_var('select id from ' . $wpdb->prefix . 'gf_entry where post_id = ' . $event->post_id);
         if ($entry_id != '') {            
             $entry = GFAPI::get_entry($entry_id);            
             $form = GFAPI::get_form($entry['form_id']);
 
             //trigger notificaton
-            error_log('sending 48 hour notification for entry '.$entry_id);
+            // error_log('sending 48 hour notification for entry '.$entry_id);
+			$attendeeEmailList = get_event_attendee_emails($event->post_id);
             $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
-            foreach ($notifications_to_send as $notification) {
-                if ($notification['isActive']) {
-                    GFCommon::send_notification($notification, $form, $entry);
-                }
-            }
+			if(empty($attendeeEmailList) == FALSE) {
+				foreach ($notifications_to_send as $notification) {
+					foreach($attendeeEmailList as $attendee) {
+						if ($notification['isActive']) {
+							$notification['to'] = $attendee;
+							GFCommon::send_notification($notification, $form, $entry);
+						}
+					}
+				}
+			}
         }
     }
 }

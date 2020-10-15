@@ -167,3 +167,11 @@ function get_event_attendees($event_id) {
     $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
     return $attendee_list;
 }
+function get_event_attendee_emails($event_id) {
+	$attendees_data = get_event_attendees($event_id);
+	$attendees_emails = array();
+	foreach($attendees_data as $data) {
+		$attendees_emails[] = $data['purchaser_email'];
+	}
+	return $attendees_emails;
+}
