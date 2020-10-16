@@ -33,8 +33,7 @@ function trigger_notificatons() {
             $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
 			foreach ($notifications_to_send as $notification) {
 				if(strpos($notification['to'], "{{attendee_list}}") !== false){
-					$attendeeEmailList = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
-					$notification['to'] = $attendeeEmailList;
+					$notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
 				}
 				GFCommon::send_notification($notification, $form, $entry);
 			}
@@ -61,8 +60,7 @@ function trigger_notificatons() {
             $notifications_to_send = GFCommon::get_notifications_to_send('accepted_event_occur_48_hours', $form, $entry);
 			foreach ($notifications_to_send as $notification) {
 				if(strpos($notification['to'], "{{attendee_list}}") !== false){
-					$attendeeEmailList = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
-					$notification['to'] = $attendeeEmailList;
+					$notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
 				}
 				GFCommon::send_notification($notification, $form, $entry);
 			}
