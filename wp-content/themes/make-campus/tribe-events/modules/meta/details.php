@@ -155,11 +155,12 @@ $website = tribe_get_event_website_link();
 		// Age ranges
 		$audience_obj = get_field_object('audience');
 		$audience_age = get_field('audience');
-		if ( $audience_age ) {
-			$age_list = []; ?>
+		if ( $audience_age && $audience_obj ) {
+			$age_list = array(); ?>
 			<dt class="tribe-events-event-age-label"> <?php esc_html_e( 'Age Range:', 'the-events-calendar' ); ?> </dt>
 			<dd class="tribe-events-event-age">
-		<?php foreach ( $audience_age as $age ) {
+		<?php 
+			foreach ( $audience_age as $age ) {
 				$age_list[] = "<span class='age-item'>" . $audience_obj['choices'][ $age ] . "</span>";
 			}
 			echo implode( " ", $age_list ) . '</dd>';

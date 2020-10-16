@@ -16,7 +16,7 @@ function gf_notif() {
     }
 }
 
-add_action( 'trigger_gf_notification', 'trigger_48_hour_notificatons' );
+add_action( 'trigger_gf_notification', 'trigger_notificatons' );
 
 // register deactivation hook 
 register_deactivation_hook(__FILE__, 'gf_notif_deactivation');
