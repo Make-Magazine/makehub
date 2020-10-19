@@ -40,6 +40,7 @@ function create_event($entry, $form) {
 	
 	update_post_meta( $post_id, '_EventTimezone', $entry['131']);
 
+	// this will update the organizer name and website as well, but never the email
     update_organizer_data($entry, $form, $organizerData, $post_id);
 	
 	// update taxonomies, featured image, etc
@@ -47,6 +48,12 @@ function create_event($entry, $form) {
 
     // Set the arguments for the recurring event.
     if ($entry['100'] == "no") {
+		$recurrence_type = $entry['130'];
+		$difference = $end_recurring->diff($start_date);
+		$end_count = $difference->days;
+		if($recurrence_type == "Every Week") {
+			$end_count = floor($end_count / 7) + 1;
+		}
         $recurrence_data = array(
             'recurrence' => array(
                 'rules' => array(
@@ -54,7 +61,7 @@ function create_event($entry, $form) {
                         'type' => $entry['130'],
                         'end-type' => 'on',
                         'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the recurrance should end on
-                        'end-count' => '3', // THIS IS WHAT WORKS... need to find how many days/weeks/months between start and end and use this
+                        'end-count' => $end_count,
                         'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
                         'EventEndDate' =>  $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the even
                     ),
@@ -68,41 +75,13 @@ function create_event($entry, $form) {
 		$recurrence_saver = new Tribe__Events__Pro__Recurrence__Events_Saver($post_id, $updated);
 		$recurrence_saver->save_events();
 		
-		/* $meta_builder = new Tribe__Events__Pro__Recurrence__Meta_Builder($post_id, $recurrence_data);
-		 $recurrence_meta = $meta_builder->build_meta();
-		 $updated = update_post_meta($post_id, '_EventRecurrence', $recurrence_meta);
-		 $events_saver = new Tribe__Events__Pro__Recurrence__Events_Saver($post_id, $updated);
-		 $events_saver->save_events();
-		 */
     }
 	
+	// Set the ACF data
     update_event_acf($entry, $form, $post_id);
 
-    // create ticket for event // CHANGE TO WOOCOMMERCE AFTER PURCHASING EVENTS PLUS PLUGIN
-    //$api = Tribe__Tickets__Commerce__PayPal__Main::get_instance();
-    $api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
-    $ticket = new Tribe__Tickets__Ticket_Object();
-    $ticket->name = "Ticket - " . $post_id;
-    $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
-    $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
-    $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '999');
-    $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
-    $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
-    $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
-    $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
-
-    // Save the ticket
-    $ticket->ID = $api->save_ticket($post_id, $ticket, array(
-        'ticket_name' => $ticket->name,
-        'ticket_price' => $ticket->price,
-        'ticket_description' => $ticket->description,
-            //'start_date' => $ticket->start_date,
-            //'start_time' => $ticket->start_time,
-            //'end_date' => $ticket->end_date,
-            //'end_time' => $ticket->end_time,
-    ));
-    tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
-	update_post_meta( $ticket->ID, '_stock', $ticket->capacity ); 
+	// Create/update the tickets for the event
+    update_ticket_data($entry, $post_id);
 
     //set the post id
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $post_id), array('id' => $entry['id']));

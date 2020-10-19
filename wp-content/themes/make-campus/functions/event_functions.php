@@ -125,8 +125,36 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
         $num++;
     }
     update_field("social_links", $repeater, $organizer_id);
-    
-    //tbd update organizer name & website if changed
+	
+	$organizerArgs = array("Organizer"=>$entry['116.3'] . " " . $entry['116.6'], "Website"=>$entry['128']);
+	tribe_update_organizer($organizer_id, $organizerArgs);
+							   
+}
+
+function update_ticket_data($entry, $post_id) {
+    $api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
+    $ticket = new Tribe__Tickets__Ticket_Object();
+    $ticket->name = "Ticket - " . $post_id;
+    $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
+    $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
+    $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '999');
+    $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
+    $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
+    $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
+    $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
+
+    // Save the ticket
+    $ticket->ID = $api->save_ticket($post_id, $ticket, array(
+        'ticket_name' => $ticket->name,
+        'ticket_price' => $ticket->price,
+        'ticket_description' => $ticket->description,
+            //'start_date' => $ticket->start_date,
+            //'start_time' => $ticket->start_time,
+            //'end_date' => $ticket->end_date,
+            //'end_time' => $ticket->end_time,
+    ));
+    tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
+	update_post_meta( $ticket->ID, '_stock', $ticket->capacity ); 
 }
 
 function event_post_meta($entry, $form, $post_id) {
