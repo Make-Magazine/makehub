@@ -35,7 +35,7 @@ function gravityview_event_update($form, $entry_id, $entry_object='') {
     wp_update_post($post_data);
 
     event_post_meta($entry, $form, $post_id);
-    update_organizer_data($entry, $organizerData, $post_id);
+    update_organizer_data($entry, $form, $organizerData, $post_id);
     
     //update reoccuring event TBD
     //update ticketing TBD          
