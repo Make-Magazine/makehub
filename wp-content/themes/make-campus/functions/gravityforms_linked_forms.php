@@ -5,7 +5,7 @@
  * one used on the entry. if it all passes, then they can move to the next step
  * otherwise it returns errors
  */
-add_filter('gform_validation', 'custom_validation');
+//add_filter('gform_validation', 'custom_validation');
 
 function custom_validation($validation_result) {
   $form = $validation_result['form'];
@@ -58,10 +58,10 @@ function custom_validation($validation_result) {
   return $validation_result;
 }
 
-add_filter( 'gform_pre_render', 'populate_fields' ); //all forms
-add_filter( 'gform_pre_validation', 'populate_fields' );
-add_filter( 'gform_admin_pre_render', 'populate_fields' );
-add_filter( 'gform_pre_submission_filter', 'populate_fields' );
+//add_filter( 'gform_pre_render', 'populate_fields' ); //all forms
+//add_filter( 'gform_pre_validation', 'populate_fields' );
+//add_filter( 'gform_admin_pre_render', 'populate_fields' );
+//add_filter( 'gform_pre_submission_filter', 'populate_fields' );
 
 /*
  * this logic is for page 2 of 'linked forms'
