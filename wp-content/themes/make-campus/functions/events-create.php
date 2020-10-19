@@ -16,6 +16,7 @@ function create_event($entry, $form) {
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
     $end_date = date_create($entry['4'] . ' ' . $entry['7']);
+	$end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
     
     // set organizer information
     $organizerData = event_organizer($entry);
@@ -52,18 +53,27 @@ function create_event($entry, $form) {
                     array(
                         'type' => $entry['130'],
                         'end-type' => 'on',
-                        'end' => $entry['129'], // this is the date the recurrance should end on
-                        //'end-count' => '',
-                        'EventStartDate' => $start_date,
-                        'EventEndDate' =>  $end_date, // this is just for the end of the first occurence of the event
-                        'custom' => array(),
-                        'occurrence-count-text' => 'events',
+                        'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the recurrance should end on
+                        'end-count' => '3', // THIS IS WHAT WORKS... need to find how many days/weeks/months between start and end and use this
+                        'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
+                        'EventEndDate' =>  $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the even
                     ),
                 ),
             ),
         );
-        $recurrence_meta = new \Tribe__Events__Pro__Recurrence__Meta();
-        $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
+		error_log(print_r($recurrence_data, TRUE));
+        
+		$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
+        $updated = $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
+		$recurrence_saver = new Tribe__Events__Pro__Recurrence__Events_Saver($post_id, $updated);
+		$recurrence_saver->save_events();
+		
+		/* $meta_builder = new Tribe__Events__Pro__Recurrence__Meta_Builder($post_id, $recurrence_data);
+		 $recurrence_meta = $meta_builder->build_meta();
+		 $updated = update_post_meta($post_id, '_EventRecurrence', $recurrence_meta);
+		 $events_saver = new Tribe__Events__Pro__Recurrence__Events_Saver($post_id, $updated);
+		 $events_saver->save_events();
+		 */
     }
 	
     update_event_acf($entry, $form, $post_id);
