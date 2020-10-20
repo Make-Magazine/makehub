@@ -127,8 +127,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     update_field("social_links", $repeater, $organizer_id);
 	
 	$organizerArgs = array("Organizer"=>$entry['116.3'] . " " . $entry['116.6'], "Website"=>$entry['128']);
-	tribe_update_organizer($organizer_id, $organizerArgs);
-							   
+	tribe_update_organizer($organizer_id, $organizerArgs);					   
 }
 
 function update_ticket_data($entry, $post_id) {
@@ -172,6 +171,33 @@ function event_post_meta($entry, $form, $post_id) {
             
     // Set the featured Image
     set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
+}
+
+function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
+	$recurrence_type = $entry['130'];
+	$end_count = $end_recurring->diff($start_date)->days;
+	if ($recurrence_type == "Every Week") {
+		$end_count = floor($end_count / 7) + 1;
+	} else if ($recurrence_type == "Every Month") {
+		$end_count = countMonths($entry['4'], $entry['129']);
+	}
+	$recurrence_data = array(
+		'recurrence' => array(
+			'rules' => array(
+				array(
+					'type' => $entry['130'],
+					'end-type' => 'on',
+					'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
+					'end-count' => $end_count, // this is what is actually ending the series
+					'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
+					'EventEndDate' =>  $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
+				),
+			),
+		),
+	);
+	error_log(print_r($recurrence_data, TRUE));
+	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
+	$recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }
 
 function get_attachment_id_from_url($attachment_url) {

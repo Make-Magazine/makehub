@@ -46,35 +46,9 @@ function create_event($entry, $form) {
 	// update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
 
-    // Set the arguments for the recurring event.
+    // If they want a recurring event, we can do that
     if ($entry['100'] == "no") {
-		$recurrence_type = $entry['130'];
-		$end_count = $end_recurring->diff($start_date)->days;
-		if ($recurrence_type == "Every Week") {
-			$end_count = floor($end_count / 7) + 1;
-		} else if ($recurrence_type == "Every Month") {
-			$end_count = countMonths($entry['4'], $entry['129']);
-		}
-        $recurrence_data = array(
-            'recurrence' => array(
-                'rules' => array(
-                    array(
-                        'type' => $entry['130'],
-                        'end-type' => 'on',
-                        'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the recurrance should end on
-                        'end-count' => $end_count,
-                        'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
-                        'EventEndDate' =>  $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the even
-                    ),
-                ),
-            ),
-        );
-        
-		$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
-        $updated = $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
-		$recurrence_saver = new Tribe__Events__Pro__Recurrence__Events_Saver($post_id, $updated);
-		$recurrence_saver->save_events();
-		
+		event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
     }
 	
 	// Set the ACF data
