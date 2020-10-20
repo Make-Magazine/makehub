@@ -49,10 +49,11 @@ function create_event($entry, $form) {
     // Set the arguments for the recurring event.
     if ($entry['100'] == "no") {
 		$recurrence_type = $entry['130'];
-		$difference = $end_recurring->diff($start_date);
-		$end_count = $difference->days;
-		if($recurrence_type == "Every Week") {
+		$end_count = $end_recurring->diff($start_date)->days;
+		if ($recurrence_type == "Every Week") {
 			$end_count = floor($end_count / 7) + 1;
+		} else if ($recurrence_type == "Every Month") {
+			$end_count = countMonths($entry['4'], $entry['129']);
 		}
         $recurrence_data = array(
             'recurrence' => array(
@@ -68,7 +69,6 @@ function create_event($entry, $form) {
                 ),
             ),
         );
-		error_log(print_r($recurrence_data, TRUE));
         
 		$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
         $updated = $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);

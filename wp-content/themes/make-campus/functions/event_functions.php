@@ -203,3 +203,16 @@ function get_event_attendee_emails($event_id) {
 	}
 	return $attendees_emails;
 }
+
+function countMonths($date1, $date2){
+    $begin = new DateTime( $date1 );
+    $end = new DateTime( $date2 );
+    $end = $end->modify( '+1 month' );
+
+    $interval = DateInterval::createFromDateString('1 month');
+
+    $period = new DatePeriod($begin, $interval, $end);
+    $counter = iterator_count($period);
+
+    return $counter;
+}
