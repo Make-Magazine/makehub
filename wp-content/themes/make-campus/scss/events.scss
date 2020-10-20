@@ -369,6 +369,7 @@
 
 .gform_confirmation_message {
     display: flex;
+	flex-direction: column;
     justify-content: center;
     padding: 100px;
     margin: 50px;
