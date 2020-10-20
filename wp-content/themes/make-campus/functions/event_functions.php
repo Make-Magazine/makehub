@@ -133,7 +133,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
 function update_ticket_data($entry, $post_id) {
     $api = Tribe__Tickets_Plus__Commerce__WooCommerce__Main::get_instance();
     $ticket = new Tribe__Tickets__Ticket_Object();
-    $ticket->name = "Ticket - " . $post_id;
+    $ticket->name = "Ticket - " . $entry['1'];
     $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
     $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
     $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '999');
@@ -195,7 +195,6 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
 			),
 		),
 	);
-	error_log(print_r($recurrence_data, TRUE));
 	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
 	$recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }
