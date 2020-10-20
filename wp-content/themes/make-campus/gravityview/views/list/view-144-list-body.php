@@ -69,9 +69,10 @@ if (!$gravityview->entries->count()) {
                     }
 
                     if ($has_subtitle) {
+                        
                         ?><div class="gv-list-view-subtitle"><?php
-                        $did_main = 0;
-                        foreach ($subtitle->all() as $i => $field) {
+                        $did_main = 0;                        
+                        foreach ($subtitle->all() as $i => $field) {                            
                             // The first field in the subtitle zone is the main
                             if ($did_main == 0) {
                                 $did_main = 1;
@@ -81,7 +82,10 @@ if (!$gravityview->entries->count()) {
                             $extras['zone_id'] = 'directory_list-subtitle';
                             echo $gravityview->template->the_field($field, $entry, $extras);
                         }
-                        ?></div><?php
+                        ?>
+                        <!-- add link to preview Event -->
+                        <a target="_blank" href="<?php echo get_preview_post_link($entry['post_id']);?>">See Preview of Your Event</a>
+                        </div><?php
                     }
                     ?>
                 </div>
@@ -153,9 +157,9 @@ if (!$gravityview->entries->count()) {
              * @var \GV\Field_Collection $footer_right
              */
             extract($template->extract_zone_vars(array('footer-left', 'footer-right')));
-            //var_dump($entry);
-            //accordion for attendees report
-            ?>
+            
+            //accordion for attendees report            
+            ?>            
             <button data-toggle="collapse" data-target="#collapseAttendee<?php echo $entry['post_id'];?>">Attendees Report</button>
             <div id="collapseAttendee<?php echo $entry['post_id'];?>" class="collapse">
                 <?php echo do_shortcode('[tribe_community_tickets view="attendees_report" id="' . $entry['post_id'] . '"]');?>
