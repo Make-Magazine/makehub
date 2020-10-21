@@ -90,7 +90,7 @@
 		h1 {
 			display: none;
 		}
-		.table.shop_table, table.shop_table td {
+		table.shop_table, table.shop_table td {
 			border-color: #005e9a;
 			padding: 10px;
 			font-size: 18px;
@@ -99,11 +99,10 @@
 			text-align: center;
 			font-size: 1.5rem;
 		}
-		addresss { 
-			background: #fff;
-			border: solid 1px #005e9a;
-			font-size: 18px;
-			padding: 15px;
+		.woocommerce-customer-details address { 
+			border: solid 1px #005e9a !important;
+			font-size: 18px !important;
+			padding: 15px !important;
 		}
 	}
 }
