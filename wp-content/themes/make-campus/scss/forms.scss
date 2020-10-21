@@ -18,7 +18,7 @@
 	}
 }
 
-.woocommerce-checkout, .woocommerce-cart { background: #f1f1f1; }
+.woocommerce-cart { background: #f1f1f1; }
 .woocommerce {
 	form {
 		.woocommerce-billing-fields {
@@ -53,7 +53,7 @@
 		background: #fff;
 	}
 	a.button.alt, button.button.alt, input.button.alt {
-		border: solid 1px #005e9a;;
+		border: solid 1px #005e9a;
 		background: #005e9a;
 		&:hover {
 			color: #005e9a;
@@ -70,22 +70,40 @@
 
 .woocommerce-order-received {
 	.woocommerce {
+		margin-top: 30px;
 		ul.order_details {
 			background: #fff;
 			padding: 20px 20px 15px;
+			margin-top: 15px;
 			border-radius: 10px;
+			display: flex;
+			border: solid 1px #005e9a;
+			justify-content: center;
+			flex-wrap: wrap;
+			li { 
+				font-size: 1em;
+				padding-left: 1em;
+				margin: 10px 0;
+				border-right: 0px;
+			}
 		}
 		h1 {
 			display: none;
+		}
+		.table.shop_table, table.shop_table td {
+			border-color: #005e9a;
+			padding: 10px;
+			font-size: 18px;
 		}
 		.woocommerce-notice--success {
 			text-align: center;
 			font-size: 1.5rem;
 		}
-		.woocommerce-customer-details {
-			addresss { 
-				background: #fff;
-			}
+		addresss { 
+			background: #fff;
+			border: solid 1px #005e9a;
+			font-size: 18px;
+			padding: 15px;
 		}
 	}
 }
