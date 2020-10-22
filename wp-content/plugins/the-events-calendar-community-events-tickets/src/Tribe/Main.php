@@ -12,7 +12,7 @@ class Tribe__Events__Community__Tickets__Main {
 	/**
 	 * The current version of Community Events Tickets.
 	 */
-	const VERSION = '4.7.5';
+	const VERSION = '4.7.6';
 
 	/**
 	 * The event form.

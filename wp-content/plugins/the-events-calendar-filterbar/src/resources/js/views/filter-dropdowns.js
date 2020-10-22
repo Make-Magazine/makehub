@@ -45,20 +45,6 @@ tribe.filterBar.filterDropdowns = {};
 	};
 
 	/**
-	 * Handle dropdown closing event.
-	 *
-	 * @since  5.0.0
-	 *
-	 * @param  {Event} event event object of closing event.
-	 *
-	 * @return {void}
-	 */
-	obj.handleDropdownClosing = function( event ) {
-		// Prevent closing of dropdown.
-		event.preventDefault();
-	};
-
-	/**
 	 * Handle dropdown change event.
 	 *
 	 * @since  5.0.0
@@ -119,7 +105,8 @@ tribe.filterBar.filterDropdowns = {};
 		} );
 		$dropdownInput
 			.on( 'change', { target: $dropdownInput, container: $container }, obj.handleDropdownChange )
-			.select2( 'open' );
+			.data( 'select2' ).$container.addClass( 'select2-container--open' );
+		$dropdownInput.data( 'select2' ).trigger( 'query', {} );
 	};
 
 	/**

@@ -18,7 +18,7 @@
 
 $button_classes = [ 'tribe-events-c-events-bar__filter-button' ];
 
-if ( 'closed' === $filterbar_state ) {
+if ( empty( $filterbar_state ) || 'closed' === $filterbar_state ) {
 	$button_text   = __( 'Show filters', 'tribe-events-filter-view' );
 	$aria_expanded = 'false';
 } else {

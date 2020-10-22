@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 4.9.14
 Tested up to: 5.5.1
-Stable tag: 5.1.5
+Stable tag: 5.1.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -204,6 +204,11 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [5.1.6] 2020-10-22 =
+
+* Fix - Correct countdown widget so it show absolute time until event, irrespective of timezones. [ECP-146]
+* Language - 0 new strings added, 1 updated, 0 fuzzied, and 0 obsoleted
 
 = [5.1.5] 2020-09-28 =
 

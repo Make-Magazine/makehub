@@ -194,6 +194,11 @@ class Tribe__Events__Community__Tickets__Fee_Handler {
 
 		$product_id = $product->get_id();
 
+		// Return original price if the product is not a ticket.
+		if ( ! tribe_events_product_is_ticket( $product_id ) ) {
+			return $price;
+		}
+
 		if ( isset( $this->products[ $product_id ] ) ) {
 			return $this->products[ $product_id ]['total'];
 		}

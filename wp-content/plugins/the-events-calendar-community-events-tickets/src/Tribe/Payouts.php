@@ -632,7 +632,7 @@ class Payouts {
 		/**
 		 * Filter the changes to make for payouts on an order.
 		 *
-		 * @since 4.7.0
+		 * @since 4.7.6
 		 *
 		 * @param array     $changes     List of changes to make.
 		 * @param int       $order_id    Order ID.
@@ -640,7 +640,7 @@ class Payouts {
 		 * @param string    $status_to   Status being changed to.
 		 * @param \WC_Order $order       Order object.
 		 */
-		$changes = apply_filters( 'tribe_community_tickets_payouts_record_processor_interval', $changes, $order_id, $status_from, $status_to, $order );
+		$changes = apply_filters( 'tribe_community_tickets_payouts_record_changes_on_status_change', $changes, $order_id, $status_from, $status_to, $order );
 
 		if ( empty( $changes['new_status'] ) ) {
 			return;

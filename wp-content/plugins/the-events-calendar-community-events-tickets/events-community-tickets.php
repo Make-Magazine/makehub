@@ -3,7 +3,7 @@
 Plugin Name: The Events Calendar: Community Events Tickets
 Plugin URI:  http://m.tri.be/1ace
 Description: Community Events Tickets is an add-on providing additional a way for community organizers to offer paid tickets for community events.
-Version: 4.7.5
+Version: 4.7.6
 Author: Modern Tribe, Inc.
 Author URI: http://m.tri.be/21
 Text Domain: tribe-events-community-tickets

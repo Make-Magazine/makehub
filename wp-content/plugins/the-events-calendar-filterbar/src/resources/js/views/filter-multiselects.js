@@ -46,20 +46,6 @@ tribe.filterBar.filterMultiselects = {};
 	};
 
 	/**
-	 * Handle multiselect closing event.
-	 *
-	 * @since  5.0.0
-	 *
-	 * @param  {Event} event event object of closing event.
-	 *
-	 * @return {void}
-	 */
-	obj.handleMultiselectClosing = function( event ) {
-		// Prevent closing of multiselect.
-		event.preventDefault();
-	};
-
-	/**
 	 * Handle multiselect change event.
 	 *
 	 * @since  5.0.0
@@ -135,7 +121,8 @@ tribe.filterBar.filterMultiselects = {};
 		} );
 		$multiselectInput
 			.on( 'change', { target: $multiselectInput, container: $container }, obj.debouncedHandleMultiselectChange )
-			.select2( 'open' );
+			.data( 'select2' ).$container.addClass( 'select2-container--open' );
+		$multiselectInput.data( 'select2' ).trigger( 'query', {} );
 	};
 
 	/**
@@ -171,6 +158,51 @@ tribe.filterBar.filterMultiselects = {};
 	};
 
 	/**
+	 * Handler for `keydown` event. Prevent `keydown` event from bubbling up.
+	 *
+	 * @todo: @paulmskim this will be removed once a more permanent solution can be put in place.
+	 *
+	 * @since  TBD
+	 *
+	 * @param  {Event} event event object for 'keydown' event.
+	 *
+	 * @return {void}
+	 */
+	obj.handleKeyDown = function( event ) {
+		event.stopPropagation();
+	};
+
+	/**
+	 * Handler for `focusin` event.
+	 *
+	 * @todo: @paulmskim this will be removed once a more permanent solution can be put in place.
+	 *
+	 * @since  TBD
+	 *
+	 * @param  {Event} event event object for 'focusin' event.
+	 *
+	 * @return {void}
+	 */
+	obj.handleFocusIn = function( event ) {
+		$( event.target ).on( 'keydown', obj.handleKeyDown );
+	};
+
+	/**
+	 * Handler for `focusout` event.
+	 *
+	 * @todo: @paulmskim this will be removed once a more permanent solution can be put in place.
+	 *
+	 * @since  TBD
+	 *
+	 * @param  {Event} event event object for 'focusout' event.
+	 *
+	 * @return {void}
+	 */
+	obj.handleFocusOut = function( event ) {
+		$( event.target ).off( 'keydown', obj.handleKeyDown );
+	};
+
+	/**
 	 * Deinitialize filter multiselects JS.
 	 *
 	 * @since  5.0.0
@@ -199,6 +231,14 @@ tribe.filterBar.filterMultiselects = {};
 	obj.init = function( event, index, $container ) {
 		obj.initMultiselects( $container );
 		$container.on( 'beforeAjaxSuccess.tribeEvents', { container: $container }, obj.deinit );
+
+		/**
+		 * @todo: @paulmskim this will be removed once a more permanent solution can be put in place.
+		 */
+		$container
+			.find( '.tribe-events-c-search__input' )
+			.on( 'focusin', { container: $container }, obj.handleFocusIn )
+			.on( 'focusout', { container: $container }, obj.handleFocusOut );
 	};
 
 	/**

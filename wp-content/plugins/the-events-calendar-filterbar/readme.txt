@@ -5,7 +5,7 @@ Tags: events, calendar, event, venue, organizer, dates, date, google maps, confe
 Donate link: http://m.tri.be/29
 Requires at least: 4.9
 Tested up to: 5.5.1
-Stable tag: 5.0.0.1
+Stable tag: 5.0.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -194,6 +194,12 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/18h9" target="_blank">The Events Calendar: iCal Importer</a>
 
 == Changelog ==
+
+= [5.0.1] 2020-10-22 =
+
+* Fix - Prevent page from scrolling down to open dropdown/multiselect filters after ajax request. [FBAR-193]
+* Fix - Prevent tribe-events shortcode pagination from triggering a Notice on the filter-button due to a missing param. [ECP-492]
+* Language - 0 new strings added, 32 updated, 0 fuzzied, and 1 obsoleted
 
 = [5.0.0.1] 2020-10-05 =
 

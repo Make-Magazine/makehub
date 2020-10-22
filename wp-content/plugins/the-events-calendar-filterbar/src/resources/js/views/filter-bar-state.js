@@ -31,7 +31,6 @@ tribe.filterBar.filterBarState = {};
  */
 ( function( $, obj ) {
 	'use strict';
-	var $document = $( document );
 
 	/**
 	 * Selectors used for configuration and setup.

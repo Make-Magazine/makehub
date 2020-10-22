@@ -3,7 +3,7 @@
 Contributors: ModernTribe, brianjessee, camwynsp, paulkim, sc0ttkclark, aguseo, barry.hughes, bordoni, borkweb, brianjessee, cliffpaulick, courane01, faction23, GeoffBel, geoffgraham, ggwicz, jbrinley, jentheo, leahkoerper, lucatume, mastromktg, MZAWeb, neillmcshea, nicosantos, patriciahillebrandt, peterchester, reid.peifer, roblagatta, ryancurban, sc0ttkclark, shane.pearlman, tribecari, vicskf, zbtirrell
 Tags: widget, events, simple, tooltips, grid, month, list, calendar, event, venue, community, registration, api, dates, date, plugin, posts, sidebar, template, theme, time, google maps, google, maps, conference, workshop, concert, meeting, seminar, summit, forum, shortcode, The Events Calendar, The Events Calendar PRO, Community Events, tickets, RSVP, registration
 Requires at least: 4.7
-Stable tag: 4.7.5
+Stable tag: 4.7.6
 Requires PHP: 5.6.1
 Tested up to: 5.5
 License: GPLv2 or later
@@ -161,6 +161,12 @@ Our Premium Plugins:
 * <a href="http://m.tri.be/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [4.7.6] 2020-10-19 =
+
+* Fix - Avoid overriding sale price for regular WooCommerce products. [CT-32]
+* Fix - Use a unique filter name when allowing filtering of the order status changes used for Payouts which prevents accidental conflicts. [CT-33]
+* Language - 0 new strings added, 0 updated, 0 fuzzied, and 0 obsoleted
 
 = [4.7.5] 2020-09-21 =
 

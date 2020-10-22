@@ -33,21 +33,6 @@ describe( 'Filter Dropdowns', () => {
 		} );
 	} );
 
-	describe( 'Handle dropdown closing', () => {
-		test( 'Should prevent dropdown from closing', () => {
-			// Setup test.
-			const event = {
-				preventDefault: jest.fn(),
-			};
-
-			// Test.
-			tribe.filterBar.filterDropdowns.handleDropdownClosing( event );
-
-			// Confirm final state.
-			expect( event.preventDefault.mock.calls.length ).toBe( 1 );
-		} );
-	} );
-
 	describe( 'Handle dropdown change', () => {
 		beforeEach( () => {
 			global.tribe.events = {
@@ -171,7 +156,14 @@ describe( 'Filter Dropdowns', () => {
 			const $dropdownInput = $( '<input />' );
 			const $container = $( '<div></div>' );
 			$dropdownInput.on = jest.fn().mockImplementation( () => $dropdownInput );
-			$dropdownInput.select2 = jest.fn();
+			const addClass = jest.fn();
+			const trigger = jest.fn();
+			$dropdownInput.data = () => ( {
+				$container: {
+					addClass: addClass,
+				},
+				trigger: trigger,
+			} );
 
 			// Test.
 			tribe.filterBar.filterDropdowns.initDropdown( $dropdownInput, $container );
@@ -179,7 +171,8 @@ describe( 'Filter Dropdowns', () => {
 			// Confirm final states.
 			expect( global.tribe_dropdowns.dropdown.mock.calls.length ).toBe( 1 );
 			expect( $dropdownInput.on.mock.calls.length ).toBe( 1 );
-			expect( $dropdownInput.select2.mock.calls.length ).toBe( 1 );
+			expect( addClass.mock.calls.length ).toBe( 1 );
+			expect( trigger.mock.calls.length ).toBe( 1 );
 			expect( $dropdownInput.on.mock.calls[ 0 ][ 0 ] ).toBe( 'change' );
 		} );
 	} );
