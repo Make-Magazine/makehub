@@ -402,3 +402,7 @@ function smartTruncate($string, $limit, $break = ".", $pad = "...") {
 
     return $string;
 }
+
+
+$gv_fe = GravityView_frontend::getInstance();
+remove_filter( 'parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
