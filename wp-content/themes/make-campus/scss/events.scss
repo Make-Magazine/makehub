@@ -2,6 +2,7 @@
 .gform_wrapper.event_form_wrapper {
     border-bottom: solid #fff 10px;
     margin: 0px;
+	.gfield { width: 100%; } // as the baseline
     .event_form {
         padding: 0px 15px;
 		font-size: 18px;
@@ -99,7 +100,9 @@
 	}
 
 	.gfgeo-address-locator-wrapper {
-		input { padding-left: 30px !important; }
+		input.gfgeo-address-field[data-locator_enabled="1"] {
+    		padding-left: 30px !important;
+		}
 		div.gfgeo-locator-button-wrapper.infield {
 			display: flex;
 			align-items: center;
@@ -143,6 +146,9 @@
 					background-size: contain;
 				}
 			}
+		}
+		&:first-of-type {
+			width: 100%;
 		}
 		@media screen and (max-width: 982px) {
 			flex-direction: column;

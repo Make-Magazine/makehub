@@ -46,7 +46,6 @@ function update_event_acf($entry, $form, $post_id) {
         array('87', 'prior_hosted_event'),
         array('88', 'hosted_live_stream'),
         array('89', 'video_conferencing', 'field_5f60f9bfa1d1e'),
-        array('90', 'other_video_conferencing'),
         array('91', 'prev_session_links'),
         array('92', 'comfort_level'),
         array('93', 'technical_setup'),

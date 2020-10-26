@@ -59,7 +59,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 						<?php echo tribe_get_event_categories($event_id); ?>
 					</div>
 					<?php if( tribe_get_event_categories($event_id) == "In-Person" && get_field('location') )  { ?>
-						<div class="tribe-events-single-skill-level tribe-events-content">
+						<div class="tribe-events-single-location tribe-events-content">
 							<h3>Location:</h3> 
 							<?php echo get_field('location') ?>
 						</div>
@@ -79,14 +79,14 @@ $post_image_ids = implode(', ', $post_image_ids);
 						</div>
 					<?php } ?>
 					<?php if(get_field('skills_taught')) { ?>
-						<div class="tribe-events-single-skills-taugh tribe-events-content">
+						<div class="tribe-events-single-skills-taught tribe-events-content">
 							<h3>Skills you will learn in this program:</h3> 
 							<?php echo get_field('skills_taught') ?>
 						</div>
 					<?php } ?>
 					
 					<?php if(get_field('kit_required') == "Yes") { ?>
-						<div class="tribe-events-single-skill-level tribe-events-content">
+						<div class="tribe-events-single-kit tribe-events-content">
 							<h3>A kit is required for this program:</h3> 
 	 				<?php
 								if(get_field('kit_price_included') == "yes") {
@@ -109,7 +109,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 						if(array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) { ?>
 					        <hr />
 					        <h3>Attendee Resources:</h3> 
-					        <div class="tribe-events-single-skill-level tribe-events-content">
+					        <div class="tribe-events-single-conference-link tribe-events-content">
 								<h3>Event Conference Link:</h3> 
 								<a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
 					        </div>
@@ -138,7 +138,7 @@ $post_image_ids = implode(', ', $post_image_ids);
 								</div>
 							<?php } 
 							if(get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
-								<div class="tribe-events-promo-vidos tribe-events-content">
+								<div class="tribe-events-single-promo-videos tribe-events-content">
 									<h3>Promo Videos: </h3>
 										<ul>
 										<?php 
