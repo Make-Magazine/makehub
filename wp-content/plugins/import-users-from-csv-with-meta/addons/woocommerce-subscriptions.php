@@ -1,5 +1,4 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
 if( !is_plugin_active( 'woocommerce-subscriptions/woocommerce-subscriptions.php' ) ){
@@ -255,6 +254,10 @@ class ACUI_WooCommerceSubscritpions{
 		if ( empty( $result['error'] ) ) {
 			try {
 				$wpdb->query( 'START TRANSACTION' );
+
+				if( !function_exists( 'wcs_create_subscription' ) ){
+					require_once( WP_PLUGIN_DIR . '/woocommerce-subscriptions/wcs-functions.php' );
+				}
 
 				$subscription = wcs_create_subscription( array(
 						'customer_id'      => $user_id,

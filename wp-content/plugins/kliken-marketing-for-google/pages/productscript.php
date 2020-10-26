@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 		sw.track('ViewContent',
 			{
 				content_type: 'product',
-				content_ids: "<?php echo esc_attr( $product['sku'] ); ?>",
+				content_ids: "<?php echo esc_attr( $product['id'] ); ?>",
 				content_name: "<?php echo esc_attr( $product['name'] ); ?>",
 				content_category: "<?php echo esc_attr( implode( ',', $product['category'] ) ); ?>"
 			}
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 			{
 				items: [
 					{
-						"id": "<?php echo esc_attr( $product['sku'] ); ?>",
+						"id": "<?php echo esc_attr( $product['id'] ); ?>",
 						"name": "<?php echo esc_attr( $product['name'] ); ?>",
 						"category": "<?php echo esc_attr( implode( ',', $product['category'] ) ); ?>",
 						"google_business_vertical": "retail"
@@ -35,13 +35,13 @@ defined( 'ABSPATH' ) || exit;
 
 		sw.gEvent('page_view',
 			{
-				"ecomm_prodid": "<?php echo esc_attr( $product['sku'] ); ?>"
+				"ecomm_prodid": "<?php echo esc_attr( $product['id'] ); ?>"
 			}
 		);
 
 		sw.register_product_view(
 			{
-				"id": "<?php echo esc_attr( $product['sku'] ); ?>",
+				"id": "<?php echo esc_attr( $product['id'] ); ?>",
 				"category": "<?php echo esc_attr( implode( ',', $product['category'] ) ); ?>"
 			}
 		);

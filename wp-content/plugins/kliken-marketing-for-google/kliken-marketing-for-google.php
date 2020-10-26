@@ -1,9 +1,9 @@
 <?php
 /**
-Plugin Name: Google Ads for WooCommerce
+Plugin Name: Google Ads & Marketing by Kliken
 Plugin URI: https://woo.kliken.com/
 Description: The automated Google Shopping solution to get your products found on Google, and grow your WooCommerce Store!
-Version: 1.0.4
+Version: 1.0.6
 Author: Kliken
 Author URI: http://kliken.com/
 Developer: Kliken

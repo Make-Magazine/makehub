@@ -35,7 +35,7 @@ class ACUI_Multisite{
 		if( $pos === FALSE )
 			return;
 
-		if( is_array( $role) )
+		if( is_array( $role ) )
 			$role = reset( $role );
 
 		// blogs that appears in the CSV

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 			sw.track("AddToCart",
 				{
 					content_type: "product",
-					content_ids: "<?php echo esc_attr( $product->get_sku() ); ?>",
+					content_ids: "<?php echo esc_attr( $product->get_id() ); ?>",
 					content_name: "<?php echo esc_attr( $product->get_name() ); ?>",
 					value: "<?php echo esc_attr( $product->get_price() ); ?>",
 					currency: sw.config.currency
@@ -27,7 +27,7 @@ defined( 'ABSPATH' ) || exit;
 
 			itemsForGTAG.push(
 				{
-					"id": "<?php echo esc_attr( $product->get_sku() ); ?>",
+					"id": "<?php echo esc_attr( $product->get_id() ); ?>",
 					"name": "<?php echo esc_attr( $product->get_name() ); ?>",
 					"price": "<?php echo esc_attr( $product->get_price() ); ?>",
 					"quantity": "<?php echo esc_attr( $value['quantity'] ); ?>",
@@ -37,7 +37,7 @@ defined( 'ABSPATH' ) || exit;
 
 			swCart.push(
 				{
-					"id": "<?php echo esc_attr( $product->get_sku() ); ?>",
+					"id": "<?php echo esc_attr( $product->get_id() ); ?>",
 					"name": "<?php echo esc_attr( $product->get_name() ); ?>",
 					"price": "<?php echo esc_attr( $product->get_price() ); ?>",
 					"quantity": "<?php echo esc_attr( $value['quantity'] ); ?>",

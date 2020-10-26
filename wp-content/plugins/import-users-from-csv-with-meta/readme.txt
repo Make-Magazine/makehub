@@ -4,7 +4,7 @@ Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
 Tested up to: 5.5.1
-Stable tag: 1.16
+Stable tag: 1.16.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,26 +16,26 @@ Clean and easy-to-use Import users plugin. It includes custom user meta to be in
 
 *	Import CSV file with users directly to your WordPress or customers into WooCommerce
 *	Import thousends of users or customers in only some seconds
-*   Export users or customers to a CSV file
-*	You can also import meta-data like data from WooCommerce customers using the correct meta_keys
+*   Export users or customers to a CSV file, filtering by role or registered date
+*	You can also import meta-data like data from WooCommerce customers
 *	You can assign roles while importing
-*	Send a mail to every new user, this mails can be saved as templates and are fully customizable
+*	Send a mail to every new user, this mails can be saved as templates and are fully customizable, before sending you can test it
 *	Use your own 
-*	You can also update data of each user
-*	Assing a role
+*	You can also update users if the user is already in your WordPress
 *	Create a cron task to import users periodically
 *	Edit the metadata (you will be able to edit the metadata imported using metakeys directly in the profile of each user)
-*	Read our documentation
 *	Extend the plugin using the hooks we provide
-*	Ask anything in support forum, we try to give the best support
 
-Moreover this plugin is compatible with:
+Moreover this plugin is compatible with many other plugins to be able to import and include them data, subscriptions, memberships, etc. Take a look:
 
 *	WooCommerce: to import the customer data
 *	WooCommerce Memberships: to import memberships
+*	WooCommerce Subscriptions: to create subscriptions associated with users while they are being imported
 *	BuddyPress: to import custom BuddyPress fields, groups and roles
+*   Advanced Custom Fields: to import data to the fields you define there
 *	Paid Membership Pro: to import memberships
 *	Indeed Ultimate Membership Pro: to import memberships
+*   Paid Member Subscriptions: to import memberships
 *	Allow Multiple Accounts: plugin will allow the same rules importing than this plugin
 *	Groups: to assign users to groups while importing
 *	New User Approve: you can import users and approbe/wait for approve them
@@ -44,7 +44,11 @@ Moreover this plugin is compatible with:
 *	WP Members: to import memberships
 *	WP Users Group: to assign users to groups while importing
 *	WooCommerce Membership by RightPress: to create memberships while users are being imported
-*	WooCommerce Subscritpions: to create subscriptions associated with users while they are being imported
+
+If you have some problem or doubt:
+
+*	Read our documentation
+*	Ask anything in support forum, we try to give the best support
 
 In Codection we have more plugins, please take a look to them.
 
@@ -99,8 +103,37 @@ Plugin will automatically detect:
 
 == Changelog ==
 
+= 1.16.3 =
+*   Now you can use HTML emails
+*	Code improvements
+
+= 1.16.2 =
+*	Email sending function created
+*   Test email button included
+
+= 1.16.1.5 =
+*	Fixed problem importing ACF textarea and other type fields
+
+= 1.16.1.4 =
+*	Fixed problem importing ACF text fields
+
+= 1.16.1.3 =
+*	BuddyPress member type is now included in the export
+
+= 1.16.1.2 =
+*	Usability improve when using delete users not present in CSV (change role options is disabled because they can't run)
+*   Performance optimization, if user is deleted, it cannot be tried to change role
+
+= 1.16.1.1 =
+*	New wildcards included in emails for WooCommerce: woocommercelostpasswordurl, woocommercepasswordreseturl and woocommercepasswordreseturllink
+
+= 1.16.1 =
+*	Multisite check and fix issues
+*   Addon to include compatibility included Paid Member Subscriptions by Cozmoslabs thanks to Marian Lowe
+
 = 1.16 =
 *	Code is being rewritten to make it easy to update
+*   New filter added to override the necessary capatibily to use the plugin
 
 = 1.15.9.2 =
 *	We try to make the plugin compatible with BuddyPress related themes and plugins that uses their functions but they are not BuddyPress really

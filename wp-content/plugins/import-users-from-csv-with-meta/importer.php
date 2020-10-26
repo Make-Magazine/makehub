@@ -606,61 +606,9 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 					}
 						
 					// send mail
-					if( isset( $mail_for_this_user ) && $mail_for_this_user ):
-						$key = get_password_reset_key( $user_object );
-						$user_login= $user_object->user_login;
-						
-						$body = get_option( "acui_mail_body" );
-						$subject = get_option( "acui_mail_subject" );
-												
-						$body = str_replace( "**loginurl**", wp_login_url(), $body );
-						$body = str_replace( "**username**", $user_login, $body );
-						$body = str_replace( "**lostpasswordurl**", wp_lostpassword_url(), $body );
-                        $subject = str_replace( "**username**", $user_login, $subject );
-
-                        if( !is_wp_error( $key ) ){
-							$passwordreseturl = apply_filters( 'acui_email_passwordreseturl', network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $user_login ), 'login' ) );
-							$body = str_replace( "**passwordreseturl**", $passwordreseturl, $body );
-						
-							$passwordreseturllink = wp_sprintf( '<a href="%s">%s</a>', $passwordreseturl, __( 'Password reset link', 'import-users-from-csv-with-meta' ) );
-							$body = str_replace( "**passwordreseturllink**", $passwordreseturllink, $body );
-						}
-						
-						if( empty( $password ) && !$created ){
-							$password = __( 'Password has not been changed', 'import-users-from-csv-with-meta' );
-						}
-
-						$body = str_replace( "**password**", $password, $body );
-						$body = str_replace( "**email**", $email, $body );
-
-						foreach ( $wp_users_fields as $wp_users_field ) {								
-							if( $positions[ $wp_users_field ] != false && $wp_users_field != "password" ){
-								$body = str_replace( "**" . $wp_users_field .  "**", $data[ $positions[ $wp_users_field ] ] , $body );
-                                $subject = str_replace( "**" . $wp_users_field .  "**", $data[ $positions[ $wp_users_field ] ] , $subject );
-                            }
-						}
-
-						for( $i = 0 ; $i < count( $headers ); $i++ ) {
-							$data[ $i ] = ( is_array( $data[ $i ] ) ) ? implode( "-", $data[ $i ] ) : $data[ $i ];
-							$body = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $body );
-                            $subject = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $subject );
-                        }
-
-						$body = wpautop( $body );
-						
-						$attachments = array();
-						$attachment_id = get_option( 'acui_mail_attachment_id' );
-						if( !empty( $attachment_id ) )
-							$attachments[] = get_attached_file( $attachment_id );
-
-						$email_to = apply_filters( 'acui_import_email_to', $email, $headers, $data, $created );
-						$subject = apply_filters( 'acui_import_email_subject', $subject, $headers, $data, $created );
-						$body = apply_filters( 'acui_import_email_body', $body, $headers, $data, $created );
-						$headers_mail = apply_filters( 'acui_import_email_headers', array( 'Content-Type: text/html; charset=UTF-8' ), $headers, $data );
-						$attachments = apply_filters( 'acui_import_email_attachments', $attachments, $headers, $data, $created );
-
-						wp_mail( $email_to, $subject, $body, $headers_mail, $attachments );
-					endif;
+					if( isset( $mail_for_this_user ) && $mail_for_this_user ){
+						ACUI_Email_Options::send_email( $user_object, $positions, $headers, $data, $created, $password );
+					}
 
 				endif;
 
@@ -740,7 +688,7 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 				}
 			endif;
 
-			if( $change_role_not_present ):
+			if( $change_role_not_present && !$delete_users_flag ):
 				require_once( ABSPATH . 'wp-admin/includes/user.php');	
 
 				$all_users = get_users( array( 
@@ -802,8 +750,8 @@ function acui_options(){
       			acui_manage_extra_profile_fields( $_POST );
       		break;
 
-      		case 'mail-options':
-      			acui_save_mail_template( $_POST );
+			case 'mail-options':
+				do_action( 'acui_mail_options_save_settings', $_POST );
       		break;
 
       		case 'cron':
@@ -1026,43 +974,6 @@ function acui_manage_extra_profile_fields( $form_data ){
 
 	if( isset( $form_data['reset-profile-fields-action'] ) && $form_data['reset-profile-fields-action'] == 'reset' )
 		update_option( "acui_columns", array() );
-}
-
-function acui_save_mail_template( $form_data ){
-	if ( !isset( $form_data['security'] ) || !wp_verify_nonce( $form_data['security'], 'codection-security' ) ) {
-		wp_die( __( 'Nonce check failed', 'import-users-from-csv-with-meta' ) ); 
-	}
-
-	$automatic_wordpress_email = sanitize_text_field( $form_data["automatic_wordpress_email"] );
-	$automatic_created_edited_wordpress_email = sanitize_text_field( $form_data["automatic_created_edited_wordpress_email"] );
-	$subject_mail = sanitize_text_field( stripslashes_deep( $form_data["subject_mail"] ) );
-	$body_mail = wp_kses_post( stripslashes( $form_data["body_mail"] ) );
-	$template_id = intval( $form_data["template_id"] );
-	$email_template_attachment_id = intval( $form_data["email_template_attachment_id"] );
-
-	update_option( "acui_automatic_wordpress_email", $automatic_wordpress_email );
-	update_option( "acui_automatic_created_edited_wordpress_email", $automatic_created_edited_wordpress_email );
-	update_option( "acui_mail_subject", $subject_mail );
-	update_option( "acui_mail_body", $body_mail );
-	update_option( "acui_mail_template_id", $template_id );
-	update_option( "acui_mail_attachment_id", $email_template_attachment_id );
-
-	$template_id = absint( $form_data["template_id"] );
-
-	if( !empty( $template_id  ) ){
-		wp_update_post( array(
-			'ID'           => $template_id,
-			'post_title'   => $subject_mail,
-			'post_content' => $body_mail,
-		) );
-
-		update_post_meta( $template_id, 'email_template_attachment_id', $email_template_attachment_id );
-	}
-	?>
-	<div class="updated">
-       <p><?php _e( 'Mail template and options updated correctly', 'import-users-from-csv-with-meta' )?></p>
-    </div>
-    <?php
 }
 
 // wp-access-areas functions

@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.16
+Version:		1.16.3
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -27,6 +27,7 @@ class ImportExportUsersCustomers{
 			'acui_mail_template_id' => 0,
 			'acui_mail_attachment_id' => 0,
 			'acui_enable_email_templates' => false,
+			'acui_mail_disable_wp_editor' => false,
 			// cron
 			'acui_cron_activated' => false,
 			'acui_cron_send_mail' => false,
@@ -64,7 +65,7 @@ class ImportExportUsersCustomers{
 		);
 	}
 
-	public function on_loaded(){
+	public function on_init(){
 		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 		if( is_plugin_active( 'buddypress/bp-loader.php' ) || function_exists( 'bp_is_active' ) ){
@@ -267,7 +268,7 @@ class ImportExportUsersCustomers{
 
 function acui_start(){
 	$import_export_users_customers = new ImportExportUsersCustomers();
-	add_action( 'wp_loaded', array( $import_export_users_customers, 'on_loaded' ) );
+	add_action( 'init', array( $import_export_users_customers, 'on_init' ) );
 }
 add_action( 'plugins_loaded', 'acui_start', 8);
 

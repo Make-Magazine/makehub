@@ -144,7 +144,7 @@ class ACUI_Frontend{
 					<th scope="row"><label for="delete-users-frontend"><?php _e( 'Delete users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="delete-users-frontend" value="yes" <?php if( $delete_users_frontend == true ) echo "checked='checked'"; ?>/>
+							<input type="checkbox" name="delete-users-frontend" id="delete-users-frontend" value="yes" <?php if( $delete_users_frontend == true ) echo "checked='checked'"; ?>/>
 						</div>
 						<div style="margin-left:25px;">
 							<select id="delete-users-assign-posts-frontend" name="delete-users-assign-posts-frontend">
@@ -173,10 +173,10 @@ class ACUI_Frontend{
 					<th scope="row"><label for="change-role-not-present-frontend"><?php _e( 'Change role of users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" id="change-role-not-present-frontend" name="change-role-not-present-frontend" value="yes" <?php checked( $change_role_not_present_frontend ); ?> />
+							<input type="checkbox" name="change-role-not-present-frontend" id="change-role-not-present-frontend" value="yes" <?php checked( $change_role_not_present_frontend ); ?> />
 						</div>
 						<div style="margin-left:25px;">
-							<select id="change-role-not-present-role-frontend" name="change-role-not-present-role-frontend">
+							<select name="change-role-not-present-role-frontend" id="change-role-not-present-role-frontend">
 								<?php
 									$list_roles = acui_get_editable_roles();						
 									foreach ($list_roles as $key => $value):
@@ -197,6 +197,12 @@ class ACUI_Frontend{
 
 		<script>
 		jQuery( document ).ready( function( $ ){
+			check_delete_users_checked();
+
+			$( '#delete-users-frontend' ).on( 'click', function() {
+				check_delete_users_checked();
+			});
+
 			$( '#copy_to_clipboard' ).click( function(){
 				var $temp = $("<input>");
 				$("body").append($temp);
@@ -204,6 +210,16 @@ class ACUI_Frontend{
 				document.execCommand("copy");
 				$temp.remove();
 			} );
+
+			function check_delete_users_checked(){
+				if( $('#delete-users-frontend').is(':checked') ){
+					$( '#change-role-not-present-role-frontend' ).prop( 'disabled', true );
+					$( '#change-role-not-present-frontend' ).prop( 'disabled', true );				
+				} else {
+					$( '#change-role-not-present-role-frontend' ).prop( 'disabled', false );
+					$( '#change-role-not-present-frontend' ).prop( 'disabled', false );
+				}
+			}
 		});
 		</script>
 		<?php

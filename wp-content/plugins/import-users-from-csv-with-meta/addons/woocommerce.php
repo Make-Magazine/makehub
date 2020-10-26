@@ -1,5 +1,4 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
 if( !is_plugin_active( 'woocommerce/woocommerce.php' ) ){
@@ -14,6 +13,8 @@ class ACUI_WooCommerce{
 		add_action( 'acui_documentation_after_plugins_activated', array( $this, 'documentation' ) );
 		add_action( 'post_acui_import_single_user', array( $this, 'sync_wc_customer' ), 10, 4 );
 		add_action( 'after_acui_import_users', array( $this, 'clear_transients' ) );
+		add_filter( 'acui_import_email_body_before_wpautop', array( $this, 'include_overrides_email' ), 10, 5 );
+		add_action( 'acui_email_wildcards_list_elements', array( $this, 'new_wildcards_email' ) );
 	}
 
 	function fields(){
@@ -93,6 +94,29 @@ class ACUI_WooCommerce{
 		wc_delete_product_transients();
 		wc_delete_shop_order_transients();
 		delete_transient( 'wc_count_comments' );
+	}
+
+	function include_overrides_email( $body, $headers, $data, $created, $user_id ){
+		$user_data = get_user_by( 'ID', $user_id );
+		$reset_key = get_password_reset_key( $user_data );
+
+		$body = str_replace( "**woocommercelostpasswordurl**", wc_lostpassword_url(), $body );
+
+		$woocommerce_password_reset_url = esc_url( add_query_arg( array( 'key' => $reset_key, 'id' => $user_id ), wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) ) ) );
+		$body = str_replace( "**woocommercepasswordreseturl**", $woocommerce_password_reset_url, $body );
+	
+		$woocommerce_password_reset_url_link = wp_sprintf( '<a href="%s">%s</a>', $woocommerce_password_reset_url, __( 'Password reset link', 'import-users-from-csv-with-meta' ) );
+		$body = str_replace( "**woocommercepasswordreseturllink**", $woocommerce_password_reset_url_link, $body );
+
+		return $body;
+	}
+
+	function new_wildcards_email(){
+		?>
+		<li>**woocommercelostpasswordurl** = <?php _e( 'WooCommerce lost password url', 'import-users-from-csv-with-meta' ); ?></li>
+		<li>**woocommercepasswordreseturl** = <?php _e( 'WooCommerce password reset url', 'import-users-from-csv-with-meta' ); ?>
+		<li>**woocommercepasswordreseturllink** = <?php _e( 'WooCommerce password reset url with HTML link', 'import-users-from-csv-with-meta' ); ?>
+		<?php
 	}
 }
 

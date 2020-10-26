@@ -1,16 +1,17 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
 class ACUI_Homepage{
+	function __construct(){
+		add_action( 'acui_homepage_start', array( $this, 'maybe_remove_old_csv' ) );
+	}
+
 	public static function admin_gui(){
 		$last_roles_used = empty( get_option( 'acui_last_roles_used' ) ) ? array( 'subscriber' ) : get_option( 'acui_last_roles_used' );
-		
-		self::check_options();
 ?>
 	<div class="wrap acui">	
 
-		<?php self::maybe_remove_old_csv(); ?>
+		<?php do_action( 'acui_homepage_start' ); ?>
 
 		<div id='message' class='updated'><?php _e( 'File must contain at least <strong>2 columns: username and email</strong>. These should be the first two columns and it should be placed <strong>in this order: username and email</strong>. If there are more columns, this plugin will manage it automatically.', 'import-users-from-csv-with-meta' ); ?></div>
 		<div id='message-password' class='error'><?php _e( 'Please, read carefully how <strong>passwords are managed</strong> and also take note about capitalization, this plugin is <strong>case sensitive</strong>.', 'import-users-from-csv-with-meta' ); ?></div>
@@ -131,7 +132,7 @@ class ACUI_Homepage{
 					<th scope="row"><label for="delete_users"><?php _e( 'Delete users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="delete_users" value="yes"/>
+							<input type="checkbox" name="delete_users" id="delete_users" value="yes"/>
 						</div>
 						<div style="margin-left:25px;">
 							<select id="delete_users_assign_posts" name="delete_users_assign_posts">
@@ -153,7 +154,7 @@ class ACUI_Homepage{
 					<th scope="row"><label for="change_role_not_present"><?php _e( 'Change role of users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="change_role_not_present" value="yes"/>
+							<input type="checkbox" name="change_role_not_present" id="change_role_not_present" value="yes"/>
 						</div>
 						<div style="margin-left:25px;">
 							<select id="change_role_not_present_role" name="change_role_not_present_role">
@@ -183,7 +184,7 @@ class ACUI_Homepage{
 
 		<div class="sidebar">
 			<div class="sidebar_section become_patreon">
-		    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/bePatron?c=1741454" role="button">
+		    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/carazo" role="button">
 		    		<div><span><?php _e( 'Become a patron', 'import-users-from-csv-with-meta'); ?></span></div>
 		    	</a>
 		    </div>
@@ -224,6 +225,12 @@ class ACUI_Homepage{
 	}
 
 	jQuery( document ).ready( function( $ ){
+		check_delete_users_checked();
+
+		$( '#delete_users' ).on( 'click', function() {
+			check_delete_users_checked();
+		});
+
 		$( ".delete_attachment" ).click( function(){
 			var answer = confirm( "<?php _e( 'Are you sure to delete this file?', 'import-users-from-csv-with-meta' ); ?>" );
 			if( answer ){
@@ -274,12 +281,21 @@ class ACUI_Homepage{
 			win.focus();
 		});
 
+		function check_delete_users_checked(){
+			if( $('#delete_users').is(':checked') ){
+				$( '#change_role_not_present' ).prop( 'disabled', true );
+				$( '#change_role_not_present_role' ).prop( 'disabled', true );				
+			} else {
+				$( '#change_role_not_present' ).prop( 'disabled', false );
+				$( '#change_role_not_present_role' ).prop( 'disabled', false );
+			}
+		}
 	} );
 	</script>
 	<?php 
 	}
 
-	public static function maybe_remove_old_csv(){
+	function maybe_remove_old_csv(){
 		$args_old_csv = array( 'post_type'=> 'attachment', 'post_mime_type' => 'text/csv', 'post_status' => 'inherit', 'posts_per_page' => -1 );
 		$old_csv_files = new WP_Query( $args_old_csv );
 
@@ -311,13 +327,5 @@ class ACUI_Homepage{
 		    </div>
 		</div>
 		<?php endif;
-	}
-
-	public static function check_options(){
-		if( get_option( "acui_mail_body" ) == "" )
-			update_option( "acui_mail_body", __( 'Welcome,', 'import-users-from-csv-with-meta' ) . '<br/>' . __( 'Your data to login in this site is:', 'import-users-from-csv-with-meta' ) . '<br/><ul><li>' . __( 'URL to login', 'import-users-from-csv-with-meta' ) . ': **loginurl**</li><li>' . __( 'Username', 'import-users-from-csv-with-meta' ) . ' = **username**</li><li>' . __( 'Password', 'import-users-from-csv-with-meta' ) . ' = **password**</li></ul>' );
-	
-		if( get_option( "acui_mail_subject" ) == "" )
-			update_option( "acui_mail_subject", __('Welcome to','import-users-from-csv-with-meta') . ' ' . get_bloginfo("name") );
 	}
 }

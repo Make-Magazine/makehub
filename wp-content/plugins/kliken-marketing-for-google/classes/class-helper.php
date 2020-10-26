@@ -310,7 +310,7 @@ class Helper {
 
 			array_push(
 				$transaction['items'], [
-					'sku'      => $product->get_sku(),
+					'id'      => $product->get_id(),
 					'name'     => $product->get_name(),
 					'category' => $category_name,
 					'price'    => $product->get_price(),
@@ -335,7 +335,7 @@ class Helper {
 		}
 
 		$product_info = [
-			'sku'      => $product->get_sku(),
+			'id'      => $product->get_id(),
 			'name'     => $product->get_name(),
 			'price'    => $product->get_price(),
 			'category' => $product->get_category_ids()

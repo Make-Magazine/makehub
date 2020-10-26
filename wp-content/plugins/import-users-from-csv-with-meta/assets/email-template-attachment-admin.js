@@ -59,20 +59,4 @@
 			$( '#save_mail_template_options' ).click();
 		});
 	} );
-
-	$( '#acui_email_option_remove_upload_button' ).click( function(){
-		var data = {
-			'action': 'acui_mail_options_remove_attachment',
-			'security': email_template_attachment_admin.nonce,
-		};
-
-		$.post( ajaxurl, data, function( response ) {
-			location.reload();
-		});
-	} );
-
-	$( '#acui_email_template_remove_upload_button' ).click( function(){
-		$( '#email_template_attachment_file' ).val( '' );
-		$( '#email_template_attachment_id' ).val( '' );	
-	} );
 });

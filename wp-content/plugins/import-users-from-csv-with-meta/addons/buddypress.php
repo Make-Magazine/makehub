@@ -102,12 +102,17 @@ class ACUI_Buddypress{
 		return implode( ",", $groups['groups'] );
 	}
 
+	function get_member_type( $user_id ){
+		return implode( ",", bp_get_member_type( $user_id, false ) );
+	}
+
 	function export_columns( $row ){
 		foreach ( $this->get_fields() as $key ) {
 			$row[] = $key;
 		}
 
 		$row[] = 'bp_group';
+		$row[] = 'bp_member_type';
 
 		return $row;
 	}
@@ -118,6 +123,7 @@ class ACUI_Buddypress{
 		}
 
 		$row[] = $this->get_groups( $user );
+		$row[] = $this->get_member_type( $user );
 
 		return $row;
 	}

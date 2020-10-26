@@ -43,6 +43,7 @@ class ACUI_ACF{
 	function import( $headers, $row, $user_id ){
 		$fields_positions = array();
 		$types = $this->get_user_fields_types();
+		$types_multiple = array( 'select', 'checkbox', 'radio', 'button_group' );
 
 		foreach ( $types as $key => $type ) {
 			$pos = array_search( $key, $headers );
@@ -54,20 +55,26 @@ class ACUI_ACF{
 		}
 
 		foreach ( $fields_positions as $pos => $key ) {
-			$data = explode( ',', $row[ $pos ] );
-			$data = array_filter( $data, function( $value ){ return $value !== ''; } );
+			/*$preexisting_values = get_field( $key, "user_" . $user_id );
+			if( !empty( $preexisting_values ) ){
+				$data = array_unique( array_merge( $preexisting_values, $data ) );
+				$data = array_filter( $data, function( $value ) { return !is_null( $value ) && $value !== '' && $value != 0; } );
+			}*/
 
 			// slugs in relationship
 			if( $types[ $key ] == 'relationship' && (string)(int)$data[0] != $data[0] ){
+				$data = explode( ',', $row[ $pos ] );
+
 				foreach ( $data as $it => $slug ) {
 					$data[ $it ] = $this->get_post_id_by_slug( $slug );
 				}
 			}
-
-			$preexisting_values = get_field( $key, "user_" . $user_id );
-			if( !empty( $preexisting_values ) ){
-				$data = array_unique( array_merge( $preexisting_values, $data ) );
-				$data = array_filter( $data, function( $value ) { return !is_null( $value ) && $value !== '' && $value != 0; } );
+			elseif( in_array( $types[ $key ], $types_multiple ) ){
+				$data = explode( ',', $row[ $pos ] );
+				array_filter( $data, function( $value ){ return $value !== ''; } );
+			}
+			else{
+				$data = $row[ $pos ];
 			}
 			
 			update_field( $key, $data, "user_" . $user_id );

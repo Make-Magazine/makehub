@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php foreach ( $trans['items'] as $index => $item ) : ?>
 			trans.add_item(
-				"<?php echo esc_attr( $item['sku'] ); ?>",
+				"<?php echo esc_attr( $item['id'] ); ?>",
 				"<?php echo esc_attr( $item['name'] ); ?>",
 				"<?php echo esc_attr( $item['category'] ); ?>",
 				"<?php echo esc_attr( $item['price'] ); ?>",
