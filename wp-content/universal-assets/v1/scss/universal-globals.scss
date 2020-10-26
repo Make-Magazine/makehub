@@ -113,6 +113,9 @@ a { // don't let genesis molest our links
 		background-color: #005e9a;
 	}
 }
+.btn.full-width, .btn.full-width a {
+	width: 95%;
+}
 
 // GDPR Cookie Modal
 #cookie-law-info-bar {

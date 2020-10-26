@@ -1,6 +1,12 @@
 // Heros
+header.hero {
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .header-hero {
-	background-image: url(https://experiencestage.make.co/wp-content/uploads/sites/4/2020/09/makeco3.png);
+	background-image: url('/wp-content/themes/make-campus/images/home-hero2.jpg');
 	height: 200px;
 	color: #fff;
 	display: flex !important;
@@ -22,6 +28,7 @@
 	}
 	h2 { font-size: 1.5em; }
 }
+
 
 .post-type-archive-tribe_events {
 	h3 {

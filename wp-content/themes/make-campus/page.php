@@ -1,6 +1,21 @@
 <?php get_header(); ?>
 
 <div class="clear"></div>
+<?php if( get_field('hero_image') ) { ?>
+	<header class="hero">
+		<section class="container-fluid full-width-div header-hero" style="background-image:url('<?php echo get_field('hero_image')['url'] ?>');">  
+			<div class="hero-wrapper">
+				<h1><?php the_title(); ?></h1>
+				<div class="separator"></div>
+				<?php if( get_field('subheader') ) { ?>
+					<h2><?php echo get_field('subheader'); ?></h2>
+				<?php } ?>
+			</div>
+		</section>
+	</header>
+<?php } else { ?>
+	<h1><?php the_title(); ?></h1>
+<?php } ?>
 
 <div class="container-fluid">
 	<div class="row">

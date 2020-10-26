@@ -58,7 +58,7 @@ if ( empty( $disable_event_search ) ) {
 				<div class="hero-wrapper">
 					<h1>Maker Campus</h1>
 					<div class="separator"></div>
-					<h2>The one-stop hub for sharing the skills and expertise of makers.</h2>
+					<h2>The One-Stop Hub for Sharing the Skills and Expertise of Makers</h2>
 				</div>
 			</section>
 			<?php $this->template( 'components/messages' ); ?>
