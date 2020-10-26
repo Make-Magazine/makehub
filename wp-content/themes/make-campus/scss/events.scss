@@ -224,8 +224,7 @@
 				color: #005e9a;
 			}
 		}
-		input[type="button"], input[type="submit"]  {
-			flex-grow: 1;
+		input[type="button"], input[type="submit"], a.gform_save_link {
 			padding: 10px;
 			border: solid 1px #005e9a;
 			display: inline-flex;
@@ -239,11 +238,15 @@
 			font-size: 16px;
 			font-weight: 300;
 			height: 50px;
-			&:last-of-type {
-				margin-right: 0px;
-			}
+			flex-grow: 1;
+			order: 2;
+    		flex-basis: 0;
 			&.gform_last_page_button { display: none; }
 		}
+		input:last-of-type {
+			margin-right: 0px;
+		}
+		a.gform_save_link { order: 0; }
 
 	}
 	.gform_ajax_spinner {
