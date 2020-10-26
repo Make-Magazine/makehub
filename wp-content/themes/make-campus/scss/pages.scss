@@ -1,5 +1,5 @@
-// HOMEPAGE
-.home-hero {
+// Heros
+.header-hero {
 	background-image: url(https://experiencestage.make.co/wp-content/uploads/sites/4/2020/09/makeco3.png);
 	height: 200px;
 	color: #fff;
@@ -21,4 +21,13 @@
 		font-size: 2.5em;
 	}
 	h2 { font-size: 1.5em; }
+}
+
+.post-type-archive-tribe_events {
+	h3 {
+		text-align: center;
+		font-size: 16px;
+		font-weight: bold;
+		margin-bottom: 15px;
+	}
 }

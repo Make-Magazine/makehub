@@ -49,11 +49,11 @@ if ( empty( $disable_event_search ) ) {
 		<?php $this->template( 'components/before' ); ?>
 
 		<header <?php tribe_classes( $header_classes ); ?>>
-			<section class="container-fluid full-width-div home-hero">  
+			<section class="container-fluid full-width-div header-hero">  
 				<div class="hero-wrapper">
 					<h1>Maker Campus</h1>
 					<div class="separator"></div>
-					<h2>Learn, Teach, Make</h2>
+					<h2>The one-stop hub for sharing the skills and expertise of makers.</h2>
 				</div>
 			</section>
 			<?php $this->template( 'components/messages' ); ?>

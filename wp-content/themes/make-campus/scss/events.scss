@@ -1,3 +1,5 @@
+.tribe-events-c-ical { display: none; }
+
 // Gravity Form / Gravity View
 .gform_wrapper.event_form_wrapper {
     border-bottom: solid #fff 10px;
@@ -808,7 +810,7 @@
 
 // The Organizer Page
 .tribe_organizer-template-default {
-	.home-hero { 
+	.header-hero { 
 		visibility: hidden;
 		height: 20px;
 	}
