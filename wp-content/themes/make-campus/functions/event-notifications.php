@@ -7,6 +7,7 @@ function custom_notification_event($events) {
     $events['accepted_event_occur_seven_days'] = __('Event Occuring In 7 days');
     $events['after_event'] = __('After Event');
     $events['send_manually'] = __('Send Manually');
+    $events['maker_updated_exhibit'] = __('Maker Updated Entry', 'gravityforms');
     return $events;
 }
 
@@ -35,7 +36,7 @@ function trigger_notificatons() {
             . '       meta_value like CONCAT("%",CURDATE() + INTERVAL 7 DAY,"%") and post_status = "publish"';
     //trigger notificaton
     build_send_notifications('accepted_event_occur_48_hours', $sql);
-    
+
     ///////////////////////////////////////////////
     /*                AFTER EVENT                */
     ///////////////////////////////////////////////
@@ -57,14 +58,29 @@ function build_send_notifications($event, $sql) {
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
 
-            //trigger notificaton            
-            $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
-            foreach ($notifications_to_send as $notification) {
-                if (strpos($notification['to'], "{{attendee_list}}") !== false) {
-                    $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
-                }
-                GFCommon::send_notification($notification, $form, $entry);
-            }
+            //trigger notificaton  
+            gf_trigger_notifications($event, $form, $entry);            
         }
+    }
+}
+
+//trigger after edit entry email
+add_action('gravityview/edit_entry/after_update', 'gravityview_trigger_after_entry_notification', 10, 3);
+
+function gravityview_trigger_after_entry_notification($form, $entry_id, $object) {
+    $entry = GFAPI::get_entry($entry_id);
+    $event = (object) array();
+    $event->post_id = $entry['post_id'];
+    gf_trigger_notifications($event, $form, $entry);
+}
+
+function gf_trigger_notifications($event, $form, $entry) {    
+    //trigger notificaton            
+    $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
+    foreach ($notifications_to_send as $notification) {
+        if (strpos($notification['to'], "{{attendee_list}}") !== false) {
+            $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+        }
+        GFCommon::send_notification($notification, $form, $entry);
     }
 }
