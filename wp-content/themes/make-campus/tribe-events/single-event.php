@@ -64,7 +64,7 @@ $post_image_ids = implode(', ', $post_image_ids);
                         </div>
                     <?php } ?>
                     <div class="event-author">
-                        <h3>About the Author:</h3> 
+                        <h3>About the Facilitator:</h3> 
                         <?php echo get_field('about'); ?>
                     </div>
                     <div class="tribe-events-single-event-description tribe-events-content">
@@ -83,7 +83,6 @@ $post_image_ids = implode(', ', $post_image_ids);
                             <?php echo get_field('skills_taught') ?>
                         </div>
                     <?php } ?>
-
                     <?php if (get_field('kit_required') == "Yes") { ?>
                         <div class="tribe-events-single-kit tribe-events-content">
                             <h3>A kit is required for this program:</h3> 
@@ -103,19 +102,7 @@ $post_image_ids = implode(', ', $post_image_ids);
                             ?>
                         </div>
                     <?php } ?>
-                    <!-- .tribe-events-single-event-description -->
-                    <?php
-                    // ATTENDEES Section
-                    $userList = get_event_attendees($event_id);
-                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
-                        ?>
-                        <hr />
-                        <h3>Attendee Resources:</h3> 
-                        <div class="tribe-events-single-conference-link tribe-events-content">
-                            <h3>Event Conference Link:</h3> 
-                            <a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
-                        </div>
-        <?php if (get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
+					<?php if (get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
                             <div class="tribe-events-single-event-materials tribe-events-content">
                                 <h3>What You'll Need:</h3> 
                                 <div class="materials-list">
@@ -127,7 +114,7 @@ $post_image_ids = implode(', ', $post_image_ids);
                                         ?>
                                     </ul>
                                 </div>
-                                    <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+                                <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
                                     <h3>Wishlist Links: </h3>
                                     <ul>
                                         <?php
@@ -136,11 +123,24 @@ $post_image_ids = implode(', ', $post_image_ids);
                                         }
                                         ?>
                                     </ul>
-                            <?php } ?>
+                            	<?php } ?>
                             </div>
-        <?php }
-        if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
-            ?>
+        			<?php } ?>
+                    <!-- .tribe-events-single-event-description -->
+					
+                    <?php
+                    // ATTENDEES Section
+                    $userList = get_event_attendees($event_id);
+                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
+                        ?>
+                        <hr />
+                        <h3>Attendee Resources:</h3> 
+                        <div class="tribe-events-single-conference-link tribe-events-content">
+                            <h3>Event Conference Link:</h3> 
+                            <a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
+                        </div>
+        				
+					<?php if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
                             <div class="tribe-events-single-promo-videos tribe-events-content">
                                 <h3>Promo Videos: </h3>
                                 <ul>
