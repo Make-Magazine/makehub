@@ -14,7 +14,7 @@
 		</section>
 	</header>
 <?php } else { ?>
-	<h1><?php the_title(); ?></h1>
+	<header class="blank-hero full-width-div"><h1><?php the_title(); ?></h1></header>
 <?php } ?>
 
 <div class="container-fluid">
