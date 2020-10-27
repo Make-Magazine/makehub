@@ -105,6 +105,9 @@ function gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $
    $updates = array();
 
    foreach ($form['fields'] as $field) {
+       //skip if an admin only field
+      if($field->adminOnly)
+          continue;
       //send notification after entry is updated in maker admin
       $input_id = $field->id;
 
