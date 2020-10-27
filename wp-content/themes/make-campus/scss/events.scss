@@ -426,7 +426,7 @@
 }
 
 .tribe-tickets__item__content__title, .tribe-events-header__breadcrumbs {
-	display: none !important; // where ever the ticket title or breadcrumb appears, we don't want to show it
+	// display: none !important; // where ever the ticket title or breadcrumb appears, we don't want to show it
 }
 
 // Post type
@@ -733,6 +733,17 @@
 	}
 	
 	// the loop
+	// don't display the child of recurring events in a series
+	.tribe_events.tribe-recurring-event.tribe-recurring-event-child {
+		display: none !important;
+	}
+	
+	// the list loop specifically
+	.tribe-events-calendar-list__event {
+		flex-direction: row !important;
+	}
+	
+	// the photo loop specifically
 	.tribe-events-pro-photo__event {
 		display: flex;
 		flex-direction: column;
