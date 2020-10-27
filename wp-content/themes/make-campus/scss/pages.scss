@@ -42,7 +42,10 @@ header.blank-hero {
 }
 
 .main-content .content {
-	.btn { padding: 0px; }
+	.wp-block-button.btn { 
+		padding: 0px; 
+		border-radius: 15px;
+	}
 	.wp-block-uagb-columns {
 		padding: 0px;
 		margin-top: 15px;
@@ -54,6 +57,9 @@ header.blank-hero {
 				.uagb-column__inner-wrap {
 					padding: 0px;
 				}
+			}
+			&.uagb-columns__columns-1 {
+				.uagb-column__wrap { width: 100%; }
 			}
 		}
 	}
