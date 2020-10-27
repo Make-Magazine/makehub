@@ -109,10 +109,7 @@ function event_organizer($entry) {
     return $organizerData;
 }
 
-function update_organizer_data($entry, $form, $organizerData, $post_id) {
-    // Upload featured image to Organizer page
-    set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
-
+function update_organizer_data($entry, $form, $organizerData, $post_id) {    
     // update social media fields for the event organizer
     $organizer_id = tribe_get_organizer_id($post_id);
     $socialField = GFAPI::get_field($form, 127);
@@ -125,8 +122,11 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     }
     update_field("social_links", $repeater, $organizer_id);
 
-    $organizerArgs = array("Organizer" => $entry['116.3'] . " " . $entry['116.6'], "Website" => $entry['128']);
-    tribe_update_organizer($organizer_id, $organizerArgs);
+    $organizerArgs = array("Website" => $entry['128']);
+    tribe_update_organizer($organizer_id, $organizerArgs);   
+   
+    // Upload featured image to Organizer page
+    set_post_thumbnail(get_post($organizer_id, 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
 }
 
 function update_ticket_data($entry, $post_id) {

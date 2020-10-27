@@ -12,7 +12,7 @@ add_action('gform_after_submission_7', 'create_event', 10, 2);
 
 function create_event($entry, $form) {
     global $wpdb;
-
+    //error_log('create_event');
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
     $end_date = date_create($entry['4'] . ' ' . $entry['7']);
