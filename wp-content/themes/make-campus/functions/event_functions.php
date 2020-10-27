@@ -102,17 +102,17 @@ function event_organizer($entry) {
 		WHERE meta_key = "_OrganizerEmail" and meta_value = "' . $organizerData['Email'] . '" 
 		order by post_id DESC limit 1');
     if ($existingOrganizer) {
-		$organizerData = array();
+        $organizerData = array();
         $organizerData['OrganizerID'] = $existingOrganizer;
     }
-            
+
     return $organizerData;
 }
 
 function update_organizer_data($entry, $form, $organizerData, $post_id) {
     // Upload featured image to Organizer page
     set_post_thumbnail(get_page_by_title($organizerData['Organizer'], 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
-    
+
     // update social media fields for the event organizer
     $organizer_id = tribe_get_organizer_id($post_id);
     $socialField = GFAPI::get_field($form, 127);
@@ -124,9 +124,9 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
         $num++;
     }
     update_field("social_links", $repeater, $organizer_id);
-	
-	$organizerArgs = array("Organizer"=>$entry['116.3'] . " " . $entry['116.6'], "Website"=>$entry['128']);
-	tribe_update_organizer($organizer_id, $organizerArgs);					   
+
+    $organizerArgs = array("Organizer" => $entry['116.3'] . " " . $entry['116.6'], "Website" => $entry['128']);
+    tribe_update_organizer($organizer_id, $organizerArgs);
 }
 
 function update_ticket_data($entry, $post_id) {
@@ -136,7 +136,7 @@ function update_ticket_data($entry, $post_id) {
     $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
     $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
     $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '999');
-	// these would be used if we wanted to limit the time tickets were on sale
+    // these would be used if we wanted to limit the time tickets were on sale
     $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
     $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
     $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
@@ -153,8 +153,8 @@ function update_ticket_data($entry, $post_id) {
             //'end_time' => $ticket->end_time,
     ));
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
-	update_post_meta( $ticket->ID, '_stock', $ticket->capacity ); 
-	update_post_meta( $ticket->ID, '_stock_status', "instock" ); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
+    update_post_meta($ticket->ID, '_stock', $ticket->capacity);
+    update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
 }
 
 function event_post_meta($entry, $form, $post_id) {
@@ -169,35 +169,34 @@ function event_post_meta($entry, $form, $post_id) {
     // Set the taxonomies    
     wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
     wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
-            
     // Set the featured Image
     set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
 }
 
 function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
-	$recurrence_type = $entry['130'];
-	$end_count = $end_recurring->diff($start_date)->days;
-	if ($recurrence_type == "Every Week") {
-		$end_count = floor($end_count / 7) + 1;
-	} else if ($recurrence_type == "Every Month") {
-		$end_count = countMonths($entry['4'], $entry['129']);
-	}
-	$recurrence_data = array(
-		'recurrence' => array(
-			'rules' => array(
-				array(
-					'type' => $entry['130'],
-					'end-type' => 'on',
-					'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
-					'end-count' => $end_count, // this is what is actually ending the series
-					'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
-					'EventEndDate' =>  $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
-				),
-			),
-		),
-	);
-	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
-	$recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
+    $recurrence_type = $entry['130'];
+    $end_count = $end_recurring->diff($start_date)->days;
+    if ($recurrence_type == "Every Week") {
+        $end_count = floor($end_count / 7) + 1;
+    } else if ($recurrence_type == "Every Month") {
+        $end_count = countMonths($entry['4'], $entry['129']);
+    }
+    $recurrence_data = array(
+        'recurrence' => array(
+            'rules' => array(
+                array(
+                    'type' => $entry['130'],
+                    'end-type' => 'on',
+                    'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
+                    'end-count' => $end_count, // this is what is actually ending the series
+                    'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
+                    'EventEndDate' => $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
+                ),
+            ),
+        ),
+    );
+    $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
+    $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }
 
 function get_attachment_id_from_url($attachment_url) {
@@ -221,19 +220,20 @@ function get_event_attendees($event_id) {
     $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
     return $attendee_list;
 }
+
 function get_event_attendee_emails($event_id) {
-	$attendees_data = get_event_attendees($event_id);
-	$attendees_emails = array();
-	foreach($attendees_data as $data) {
-		$attendees_emails[] = $data['purchaser_email'];
-	}
-	return $attendees_emails;
+    $attendees_data = get_event_attendees($event_id);
+    $attendees_emails = array();
+    foreach ($attendees_data as $data) {
+        $attendees_emails[] = $data['purchaser_email'];
+    }
+    return $attendees_emails;
 }
 
-function countMonths($date1, $date2){
-    $begin = new DateTime( $date1 );
-    $end = new DateTime( $date2 );
-    $end = $end->modify( '+1 month' );
+function countMonths($date1, $date2) {
+    $begin = new DateTime($date1);
+    $end = new DateTime($date2);
+    $end = $end->modify('+1 month');
 
     $interval = DateInterval::createFromDateString('1 month');
 
@@ -241,4 +241,12 @@ function countMonths($date1, $date2){
     $counter = iterator_count($period);
 
     return $counter;
+}
+
+
+//open organizer in a new tab
+add_filter( 'tribe_get_event_organizer_link_target', 'set_callback_blank', 10, 3 );
+
+function set_callback_blank($target,$url, $post_id) {
+    return '_blank';
 }

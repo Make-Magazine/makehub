@@ -1,5 +1,5 @@
 <?php
-    
+
 //disable the default post creation
 add_filter('gform_disable_post_creation_7', 'disable_post_creation', 10, 3);
 
@@ -12,12 +12,12 @@ add_action('gform_after_submission_7', 'create_event', 10, 2);
 
 function create_event($entry, $form) {
     global $wpdb;
-    
+
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
     $end_date = date_create($entry['4'] . ' ' . $entry['7']);
-	$end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
-    
+    $end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
+
     // set organizer information
     $organizerData = event_organizer($entry);
 
@@ -37,24 +37,24 @@ function create_event($entry, $form) {
         'Organizer' => $organizerData
     );
     $post_id = tribe_create_event($event_args);
-	
-	update_post_meta( $post_id, '_EventTimezone', $entry['131']);
 
-	// this will update the organizer name and website as well, but never the email
+    update_post_meta($post_id, '_EventTimezone', $entry['131']);
+
+    // this will update the organizer name and website as well, but never the email
     update_organizer_data($entry, $form, $organizerData, $post_id);
-	
-	// update taxonomies, featured image, etc
+
+    // update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
 
     // If they want a recurring event, we can do that
     if ($entry['100'] == "no") {
-		event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
+        event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
     }
-	
-	// Set the ACF data
+
+    // Set the ACF data
     update_event_acf($entry, $form, $post_id);
 
-	// Create/update the tickets for the event
+    // Create/update the tickets for the event
     update_ticket_data($entry, $post_id);
 
     //set the post id
