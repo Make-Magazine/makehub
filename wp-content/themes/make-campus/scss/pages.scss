@@ -4,6 +4,18 @@ header.hero {
     flex-direction: column;
     align-items: center;
 }
+header.blank-hero {
+	background-color: #005E9A;
+	height: 150px;
+	margin-bottom: 15px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	h1 { 
+		margin: 0px;
+		color: #fff; 
+	}
+}
 
 .header-hero {
 	background-image: url('/wp-content/themes/make-campus/images/make-campus-home-hero.jpg');
@@ -29,6 +41,26 @@ header.hero {
 	h2 { font-size: 1.5em; }
 }
 
+.main-content .content {
+	.btn { padding: 0px; }
+	.wp-block-uagb-columns {
+		padding: 0px;
+		margin-top: 15px;
+		.uagb-columns__inner-wrap {
+			justify-content: space-between;
+			.uagb-column__wrap {
+				width: 49.3%;
+				justify-content: space-between;
+				.uagb-column__inner-wrap {
+					padding: 0px;
+				}
+			}
+		}
+	}
+	.uagb-faq-item {
+		border-radius: 15px;
+	}
+}
 
 .post-type-archive-tribe_events {
 	h3 {
