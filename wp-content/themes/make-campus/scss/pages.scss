@@ -38,3 +38,14 @@ header.hero {
 		margin-bottom: 15px;
 	}
 }
+
+#scrollToTop {
+	position: fixed;
+	bottom: 25px;
+	z-index: 999;
+	right: 40px;
+	border-radius: 50px;
+    padding: 0px 15px;
+    font-size: 36px;
+	outline: 0px;
+}

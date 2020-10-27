@@ -44,6 +44,25 @@
             "prepend": "",
             "append": "",
             "maxlength": ""
+        },
+        {
+            "key": "field_5f986366e3332",
+            "label": "Scroll to Title Button",
+            "name": "scroll_to_title_button",
+            "type": "true_false",
+            "instructions": "A floating button will appear to scroll to the title of the page, if this is selected",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -63,5 +82,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1603749868
+    "modified": 1603822537
 }

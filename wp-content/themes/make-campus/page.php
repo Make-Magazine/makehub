@@ -32,4 +32,8 @@
 	</div>
 </div><!--Container-->
 
+<?php if( get_field('scroll_to_title_button') == TRUE ) { ?>
+	<button id="scrollToTop"><i class="fas fa-caret-up"></i></button>
+<?php } ?>
+
 <?php get_footer(); ?>
