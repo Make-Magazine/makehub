@@ -135,12 +135,13 @@ function update_ticket_data($entry, $post_id) {
     $ticket->name = "Ticket - " . $entry['1'];
     $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
     $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
-    $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '999');
+    $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '');
     // these would be used if we wanted to limit the time tickets were on sale
     $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
     $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
     $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
     $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
+	
 
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
@@ -152,8 +153,12 @@ function update_ticket_data($entry, $post_id) {
             //'end_date' => $ticket->end_date,
             //'end_time' => $ticket->end_time,
     ));
+	if($ticket->capacity == 0 || $ticket->capacity == '') { 
+		$ticket->capacity = -1; 
+		$woo_stock = 99999;
+	}
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
-    update_post_meta($ticket->ID, '_stock', $ticket->capacity);
+    update_post_meta($ticket->ID, '_stock', $woo_stock);
     update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
 }
 
