@@ -425,8 +425,12 @@
 	}
 }
 
-.tribe-tickets__item__content__title, .tribe-events-header__breadcrumbs {
-	// display: none !important; // where ever the ticket title or breadcrumb appears, we don't want to show it
+.tribe-common .tribe-tickets__item__content__title, .tribe-common .tribe-events-header__breadcrumbs {
+	display: none; // where ever the ticket title or breadcrumb appears, we don't want to show it
+}
+.tribe-common .tribe-tickets__item__details__content {
+	margin-top: -40px !important;
+	display: block;
 }
 
 // Post type
