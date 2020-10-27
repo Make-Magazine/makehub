@@ -58,29 +58,119 @@ function build_send_notifications($event, $sql) {
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
 
-            //trigger notificaton  
-            gf_trigger_notifications($event, $form, $entry);            
+            //trigger notificaton            
+            $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
+            foreach ($notifications_to_send as $notification) {
+                if ($notification['isActive']) {
+                    if (strpos($notification['to'], "{{attendee_list}}") !== false) {
+                        $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+                    }
+                    GFCommon::send_notification($notification, $form, $entry);
+                }
+            }
         }
     }
 }
 
-//trigger after edit entry email
-add_action('gravityview/edit_entry/after_update', 'gravityview_trigger_after_entry_notification', 10, 3);
 
-function gravityview_trigger_after_entry_notification($form, $entry_id, $object) {
-    $entry = GFAPI::get_entry($entry_id);
-    $event = (object) array();
-    $event->post_id = $entry['post_id'];
-    gf_trigger_notifications($event, $form, $entry);
-}
+// trigger an email to admin when an entry is updated via gravity view
+add_action('gform_after_update_entry', 'update_entry', 10, 3);
 
-function gf_trigger_notifications($event, $form, $entry) {    
-    //trigger notificaton            
-    $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
+function update_entry($form, $entry_id, $orig_entry = array()) {
+    //log update in error log
+    /*$current_user = wp_get_current_user();
+    $message = 'Entry ' . $entry_id . ' updated by ' . $current_user->user_email;
+    error_log($message);*/
+        
+    //get updated entry
+    $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
+
+    //check for updates and trigger maker update notification    
+    $notifications_to_send = GFCommon::get_notifications_to_send('maker_updated_exhibit', $form, $updatedEntry);
     foreach ($notifications_to_send as $notification) {
-        if (strpos($notification['to'], "{{attendee_list}}") !== false) {
-            $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+        if ($notification['isActive']) {
+            $text = $notification['message'];
+            $notification['message'] = gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form);
+            //error_log($notification['message'] );
+            GFCommon::send_notification($notification, $form, $updatedEntry);
         }
-        GFCommon::send_notification($notification, $form, $entry);
     }
 }
+
+function gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form) {
+  $entry_id = (isset($lead['id'])?$lead['id']:'');
+
+  //Entry Changed Fields
+  if (strpos($text, '{entry_changed_fields}') !== false) {        
+   $updates = array();
+
+   foreach ($form['fields'] as $field) {
+      //send notification after entry is updated in maker admin
+      $input_id = $field->id;
+
+      //if field type is checkbox we need to compare each of the inputs for changes
+      $inputs = $field->get_entry_inputs();
+
+      if (is_array($inputs)) {
+         foreach ($inputs as $input) {
+            $input_id = $input['id'];
+            $origField = (isset($orig_entry[$input_id]) ? $orig_entry[$input_id] : '');
+            $updatedField = (isset($updatedEntry[$input_id]) ? $updatedEntry[$input_id] : '');
+            $fieldLabel = ($field['adminLabel'] != '' ? $field['adminLabel'] : $field['label']);
+            if ($origField != $updatedField) {
+               //update field id
+               $updates[] = array(
+                   'field_id' => $input_id,
+                   'field_before' => $origField,
+                   'field_after' => $updatedField,
+                   'fieldLabel' => $fieldLabel);
+            }
+         }
+      } else {
+         $origField = (isset($orig_entry[$input_id]) ? $orig_entry[$input_id] : '');
+         $updatedField = (isset($updatedEntry[$input_id]) ? $updatedEntry[$input_id] : '');
+         $fieldLabel = ($field['adminLabel'] != '' ? $field['adminLabel'] : $field['label']);
+         if ($origField != $updatedField) {
+            //update field id
+            $updates[] = array('field_id' => $input_id,
+                'field_before' => $origField,
+                'field_after' => $updatedField,
+                'fieldLabel' => $fieldLabel);
+         }
+      }
+   }
+
+   //if there are changes to the record, send them to the admin
+   if (!empty($updates)) {
+      $current_user = wp_get_current_user();
+      $message  = '';
+      $message .= 'The following changes were made:<br><br>';
+
+      // Build  table of changed items
+      $message .= '<table width="100%">'
+               . ' <thead>'
+               . ' <tr>'
+               . '    <td width="20%">&nbsp;</td>'
+               . '    <td width="40%"><strong>Before</strong></td>'
+               . '    <td width="40%"><strong>After</strong></td>'
+               . ' </tr></thead>';
+      
+      $message .= '<tbody>';
+      //process updates
+      foreach ($updates as $update) {
+         $message .= '<tr>'
+                 . '<td><b>' . $update['fieldLabel'] . '<br>Field ID: '. $update['field_id'] .'</b></td>'
+                 . '<td style="border: thin solid grey; background-color: beige; padding: 10px;">' . $update['field_before'] . '</td>'
+                 . '<td style="border: thin solid grey; background-color: #C3FBB2; padding: 10px;">' . $update['field_after'] . '</td></tr>';
+      }
+      $message .= '</tbody>';
+      $message .= '</table>';
+      
+
+      $text = str_replace('{entry_changed_fields}', $message, $text);
+   }
+   
+     //end update entry changed fields
+  }
+  return $text;
+}  
