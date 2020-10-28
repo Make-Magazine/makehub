@@ -52,7 +52,6 @@ header.blank-hero {
 		.uagb-columns__inner-wrap {
 			justify-content: space-between;
 			.uagb-column__wrap {
-				width: 49.3%;
 				justify-content: space-between;
 				.uagb-column__inner-wrap {
 					padding: 0px;
@@ -61,6 +60,16 @@ header.blank-hero {
 			&.uagb-columns__columns-1 {
 				.uagb-column__wrap { width: 100%; }
 			}
+			&.uagb-columns__columns-2 {
+				.uagb-column__wrap { width: 49.3%; }
+			}
+			&.uagb-columns__columns-3 {
+				.uagb-column__wrap { width: 32%; }
+			}
+			&.uagb-columns__columns-4 {
+				.uagb-column__wrap { width: 23.8%; }
+			}
+			
 		}
 	}
 	.uagb-faq-item {
