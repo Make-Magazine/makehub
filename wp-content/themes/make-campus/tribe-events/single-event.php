@@ -125,7 +125,19 @@ $post_image_ids = implode(', ', $post_image_ids);
                                     </ul>
                             	<?php } ?>
                             </div>
-        			<?php } ?>
+        			<?php } 
+						if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
+                            <div class="tribe-events-single-promo-videos tribe-events-content">
+                                <h3>Videos: </h3>
+                                <ul>
+                                    <?php
+                                    foreach (get_field('promo_videos') as $video) {
+                                        echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                        <?php } ?>
                     <!-- .tribe-events-single-event-description -->
 					
                     <?php
@@ -140,29 +152,15 @@ $post_image_ids = implode(', ', $post_image_ids);
                             <a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
                         </div>
         				
-					<?php if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
-                            <div class="tribe-events-single-promo-videos tribe-events-content">
-                                <h3>Promo Videos: </h3>
-                                <ul>
-                                    <?php
-                                    foreach (get_field('promo_videos') as $video) {
-                                        echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
-                                    }
-                                    ?>
-                                </ul>
-                            </div>
-                        <?php
-                        }
-                    }
-                    ?>
-                        <?php do_action('tribe_events_single_event_after_the_content') ?>
+					<?php  } ?>
+                    <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12 event-meta">
                     <div class="event-meta-sticky">
                         <!-- Event meta -->
-    <?php do_action('tribe_events_single_event_before_the_meta') ?>
-    <?php tribe_get_template_part('modules/meta'); ?>
-    <?php do_action('tribe_events_single_event_after_the_meta') ?>
+						<?php do_action('tribe_events_single_event_before_the_meta') ?>
+						<?php tribe_get_template_part('modules/meta'); ?>
+						<?php do_action('tribe_events_single_event_after_the_meta') ?>
                     </div>
                 </div>
             </div>
