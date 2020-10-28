@@ -251,7 +251,18 @@ function countMonths($date1, $date2) {
 
 //open organizer in a new tab
 add_filter( 'tribe_get_event_organizer_link_target', 'set_callback_blank', 10, 3 );
-
 function set_callback_blank($target,$url, $post_id) {
     return '_blank';
 }
+
+/*
+ * Prevents Next/Prev pages from being loaded via Ajax if photo view is the homepage
+ */
+function tribe_prevent_ajax_paging() {
+	echo "<script>
+			jQuery(document).ready(function(){
+				jQuery( '.blog .tribe-events-c-top-bar__nav-link--prev, .blog .tribe-events-c-top-bar__nav-link--next' ).unbind();
+			});
+		  </script>";
+}
+add_action( 'wp_footer', 'tribe_prevent_ajax_paging', 99 );
