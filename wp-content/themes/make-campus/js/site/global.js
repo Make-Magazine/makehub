@@ -4,6 +4,17 @@ function isValidEmailAddress(emailAddress) {
 }
 
 jQuery("#scrollToTop").click(function() {
-	console.log("Test");
 	jQuery('html, body').animate({scrollTop:0}, 300);
+});
+
+// if there's an faq accordion after an anchor tag, open that sucker
+jQuery('a[href*="#"]')
+	// Ignore links that don't actually link to anything
+	.not('[href="#"]')
+	.not('[href="#0"]')
+	.click(function(event) {
+		var accordion = jQuery('[name='+jQuery(this).attr('href').substring(1)+']').nextUntil('.wp-block-uagb-faq').next();
+		if(accordion) {
+			jQuery(accordion).find( '.uagb-faq-questions-button:first' ).click();
+		}
 });
