@@ -15,43 +15,47 @@ function gravityview_event_update($form, $entry_id, $entry_object = '') {
     //calculate start and end date 
     $start_date = date_create($entry['4'] . ' ' . $entry['5']);
     $end_date = date_create($entry['4'] . ' ' . $entry['7']);
+    $end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
 
     $organizerData = event_organizer($entry);
- 
+
     //update event
     $post_data = array(
         'ID' => $post_id,
         'post_title' => $entry['1'],
-        'post_content' => $entry['2'],
-        'EventStartDate' => $entry['4'],
-        'EventEndDate' => $entry['4'],
-        'EventStartHour' => $start_date->format('h'),
-        'EventStartMinute' => $start_date->format('i'),
-        'EventStartMeridian' => $start_date->format('A'),
-        'EventEndHour' => $end_date->format('h'),
-        'EventEndMinute' => $end_date->format('i'),
-        'EventEndMeridian' => $end_date->format('A'),
+        'post_content' => $entry['2'],        
         'Organizer' => $organizerData
     );
+    //error_log(print_r($post_data, TRUE));
     wp_update_post($post_data);
+    
+    //update start and end dates
+    update_post_meta($post_id, '_EventStartDate',$start_date->format('Y-m-d H:i:s'));
+    update_post_meta($post_id, '_EventEndDate',$end_date->format('Y-m-d H:i:s'));
 
+    //update timezone    
+    update_post_meta($post_id, '_EventTimezone', $entry['131']);
+
+    // update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
+
+    //update organizer (not email or name)
     update_organizer_data($entry, $form, $organizerData, $post_id);
 
     // If they want a recurring event, we can do that
     if ($entry['100'] == "no") {
-		$start_date = date_create($entry['4'] . ' ' . $entry['5']);
-    	$end_date = date_create($entry['4'] . ' ' . $entry['7']);
-		$end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
         event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
     }
-    //update ticketing TBD          
-
+        
+    // Set the ACF data
     update_event_acf($entry, $form, $post_id);
+    
+    // Create/update the tickets for the event
+    update_ticket_data($entry, $post_id);
     
     //get updated entry
     $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
-    
+
     //check for updates and trigger maker update notification    
     $notifications_to_send = GFCommon::get_notifications_to_send('maker_updated_exhibit', $form, $updatedEntry);
     foreach ($notifications_to_send as $notification) {
@@ -64,12 +68,12 @@ function gravityview_event_update($form, $entry_id, $entry_object = '') {
     }
 }
 
-function gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form) {        
+function gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form) {
     //Entry Changed Fields
     if (strpos($text, '{entry_changed_fields}') !== false) {
         $updates = array();
 
-        foreach ($form['fields'] as $field) {                        
+        foreach ($form['fields'] as $field) {
             //send notification after entry is updated in maker admin
             $input_id = $field->id;
 
