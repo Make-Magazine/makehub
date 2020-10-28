@@ -261,8 +261,8 @@ function set_callback_blank($target,$url, $post_id) {
 function tribe_prevent_ajax_paging() {
 	echo "<script>
 			jQuery(document).ready(function(){
-				jQuery( '.blog .tribe-events-c-top-bar__nav-link--prev, .blog .tribe-events-c-top-bar__nav-link--next' ).unbind();
-				jQuery( '.archive .tribe-events-c-top-bar__nav-link--prev, .archive .tribe-events-c-top-bar__nav-link--next' ).unbind();
+				jQuery( '.blog .tribe-events-c-top-bar__nav-link--prev, .blog .tribe-events-c-top-bar__nav-link--next', .blog .tribe-events-c-nav__next, .blog .tribe-events-c-nav__prev ).unbind();
+				jQuery( '.archive .tribe-events-c-top-bar__nav-link--prev, .archive .tribe-events-c-top-bar__nav-link--next', .archive .tribe-events-c-nav__next, .archive .tribe-events-c-nav__prev ).unbind();
 			});
 		  </script>";
 }
