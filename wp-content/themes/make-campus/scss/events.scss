@@ -668,6 +668,7 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
+				border-radius: 15px;
                 a { color: #fff; }
                 &:hover a { color: #005e9a; }
 				&:empty { display: none; }
