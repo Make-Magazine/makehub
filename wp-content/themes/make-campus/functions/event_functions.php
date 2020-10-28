@@ -35,7 +35,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('119', 'short_description'),
         array('73', 'audience', 'field_5f35a5f833a04'),
         array('57', 'location'),
-        array('72', 'materials', 'field_5f7b4abb07cab'),
+        array('139', 'materials', 'field_5f7b4abb07cab'),
         array('78', 'kit_required'),
         array('79', 'kit_price_included'),
         array('80', 'kit_supplier'),
