@@ -199,7 +199,7 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
             ),
         ),
     );
-	update_field("number_of_sessions", $end_count, $post_id);
+	update_field("number_of_sessions", $end_count . " / " . strtolower($recurrence_type), $post_id);
     $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
     $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }

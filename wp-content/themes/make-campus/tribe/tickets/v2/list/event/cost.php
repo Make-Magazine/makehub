@@ -36,9 +36,11 @@ if ( empty( $event->cost ) ) {
 			<?php echo esc_html( $event->tickets->stock->sold_out ); ?>
 		</span>
 	<?php endif; ?>
-	<span class="tribe-events-c-small-cta__price">
-		<?php echo esc_html( $event->cost ); ?>
-	</span>
+	<?php if ( !$event->tickets->sold_out() ) : ?>
+		<span class="tribe-events-c-small-cta__price">
+			<?php echo esc_html( $event->cost ); ?>
+		</span>
+	<?php endif; ?>
 	<?php if ( get_field("number_of_sessions") ) { ?>
 		    <span class="tribe-events-series-count"> (series of <?php echo get_field("number_of_sessions"); ?>)</span>
 	<?php } ?>
