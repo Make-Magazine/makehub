@@ -827,6 +827,22 @@
             "min": "",
             "max": "",
             "step": ""
+        },
+        {
+            "key": "field_5f99c3ff562c0",
+            "label": "Webinar Link",
+            "name": "webinar_link",
+            "type": "url",
+            "instructions": "Once a BBB room is set up for the session, enter it here",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": ""
         }
     ],
     "location": [
@@ -846,5 +862,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1603905641
+    "modified": 1603912767
 }

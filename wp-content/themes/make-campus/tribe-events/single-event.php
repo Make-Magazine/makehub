@@ -150,11 +150,14 @@ $post_image_ids = implode(', ', $post_image_ids);
                         ?>
                         <hr />
                         <h3>Attendee Resources:</h3> 
-                        <div class="tribe-events-single-conference-link tribe-events-content">
-                            <h3>Event Conference Link:</h3> 
-                            <a href="#" class="btn universal-btn">BBB // Zoom Link Goes Here</a>
-                        </div>
-        				
+						<div class="tribe-events-single-conference-link tribe-events-content">
+							<h3>Program Conference Link:</h3> 
+					 		<?php if ( get_field('webinar_link') ) { ?>
+								<a href="<?php echo get_field('webinar_link'); ?>" class="btn universal-btn">Program Stream</a>
+        					<?php  } else { ?>
+							    COMING SOON
+							<?php  } ?>
+						</div>
 					<?php  } ?>
                     <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
