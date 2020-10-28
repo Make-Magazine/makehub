@@ -808,11 +808,11 @@
             "new_lines": ""
         },
         {
-            "key": "field_5f7d0702ea2bf",
-            "label": "Please tell us about any exclusions to the schedule",
-            "name": "schedule_exclusions",
-            "type": "textarea",
-            "instructions": "",
+            "key": "field_5f99a79d95d53",
+            "label": "Number of Sessions",
+            "name": "number_of_sessions",
+            "type": "number",
+            "instructions": "Don't Edit, this will be set automatically",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -822,9 +822,11 @@
             },
             "default_value": "",
             "placeholder": "",
-            "maxlength": "",
-            "rows": "",
-            "new_lines": ""
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
         }
     ],
     "location": [
@@ -844,5 +846,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1602100149
+    "modified": 1603905641
 }

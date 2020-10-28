@@ -429,7 +429,7 @@
 	display: none; // where ever the ticket title or breadcrumb appears, we don't want to show it
 }
 .tribe-common .tribe-tickets__item__details__content {
-	margin-top: -40px !important;
+	margin-top: -10px !important;
 	display: block;
 }
 
@@ -448,7 +448,8 @@
                 margin-bottom: 10px;
             }
             h2 { display: inline; }
-            .tribe-events-cost { font-size: 2em; }
+            .tribe-events-cost, .tribe-events-series-count { font-size: 2em; }
+			.recurringinfo { display: none; }
         }
 
         .tribe-events-image-gallery {

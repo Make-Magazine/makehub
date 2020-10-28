@@ -39,6 +39,9 @@ if ( empty( $event->cost ) ) {
 	<span class="tribe-events-c-small-cta__price">
 		<b><?php echo esc_html( $event->cost ) ?></b>
 	</span>
+	<?php if ( get_field("number_of_sessions") ) { ?>
+		    <span class="tribe-events-series-count"> (series of <?php echo get_field("number_of_sessions"); ?>)</span>
+	<?php } ?>
 	<?php if ( ! empty( $event->tickets->stock->available ) && $event->tickets->in_date_range() ) : ?>
 		<span class="tribe-events-c-small-cta__stock">
 			<?php echo esc_html( $event->tickets->stock->available ); ?>

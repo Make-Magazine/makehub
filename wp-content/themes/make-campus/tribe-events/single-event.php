@@ -40,9 +40,12 @@ $post_image_ids = implode(', ', $post_image_ids);
     <div class="tribe-events-header tribe-clearfix">
         <?php the_title('<h1 class="tribe-events-single-event-title">', '</h1>'); ?>
         <?php echo tribe_events_event_schedule_details($event_id, '<h2>', '</h2>'); ?>
-        <?php if (tribe_get_cost()) : ?>
+        <?php if ( tribe_get_cost() && tribe_events_has_tickets() ) { ?>
             <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo("$" . number_format(tribe_get_cost(null, false)) ); ?></span>
-        <?php endif; ?>
+        <?php } ?>
+		<?php if ( get_field("number_of_sessions") ) { ?>
+		    <span class="tribe-events-series-count"> (for a series of <?php echo get_field("number_of_sessions"); ?>)</span>
+		<?php } ?>
     </div>
 
     <!-- Notices -->

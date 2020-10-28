@@ -142,7 +142,6 @@ function update_ticket_data($entry, $post_id) {
     $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
     $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
 	
-
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
         'ticket_name' => $ticket->name,
@@ -200,6 +199,7 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
             ),
         ),
     );
+	update_field("number_of_sessions", $end_count, $post_id);
     $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
     $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }

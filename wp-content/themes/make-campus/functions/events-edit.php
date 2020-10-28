@@ -38,7 +38,13 @@ function gravityview_event_update($form, $entry_id, $entry_object = '') {
     event_post_meta($entry, $form, $post_id);
     update_organizer_data($entry, $form, $organizerData, $post_id);
 
-    //update reoccuring event TBD
+    // If they want a recurring event, we can do that
+    if ($entry['100'] == "no") {
+		$start_date = date_create($entry['4'] . ' ' . $entry['5']);
+    	$end_date = date_create($entry['4'] . ' ' . $entry['7']);
+		$end_recurring = date_create($entry['129'] . ' ' . $entry['7']);
+        event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
+    }
     //update ticketing TBD          
 
     update_event_acf($entry, $form, $post_id);
