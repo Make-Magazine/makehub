@@ -262,6 +262,7 @@ function tribe_prevent_ajax_paging() {
 	echo "<script>
 			jQuery(document).ready(function(){
 				jQuery( '.blog .tribe-events-c-top-bar__nav-link--prev, .blog .tribe-events-c-top-bar__nav-link--next' ).unbind();
+				jQuery( '.archive .tribe-events-c-top-bar__nav-link--prev, .archive .tribe-events-c-top-bar__nav-link--next' ).unbind();
 			});
 		  </script>";
 }
