@@ -74,71 +74,16 @@ function make_add_acf_blocks() {
             'keywords' => array('call', 'action', 'panel'),
         ));
        
-        //Featured section 
-        acf_register_block_type(array(
-            'name' => 'featured_makers_panel',
-            'title' => __('Featured Makers (Square images)'),
+        acf_register_block(array(
+            'name' => 'panel_rollover_items',
+            'title' => __('Rollover Items'),
             'render_callback' => 'call_ACF_block_panels',
             'category' => 'make-panels',
             'icon' => 'admin-comments',
             'mode' => 'auto',
             'keywords' => array('featured', 'makers', 'square', 'panel'),
         ));
-        acf_register_block_type(array(
-            'name' => 'featured_makers_panel_dynamic',
-            'title' => __('Featured Makers (Square images) - Dynamic panel'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'makers', 'square', 'dynamic', 'panel'),
-        ));
-        acf_register_block_type(array(
-            'name' => 'featured_makers_panel_circle',
-            'title' => __('Featured Makers (Circle images)'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'makers', 'circle', 'panel'),
-        ));
-        acf_register_block_type(array(
-            'name' => 'featured_makers_panel_circle_dynamic',
-            'title' => __('Featured Makers (Circle images) - Dynamic Panel'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'makers', 'circle', 'dynamic', 'panel'),
-        ));
-        acf_register_block_type(array(
-            'name' => 'featured_events',
-            'title' => __('Featured Events'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'events', 'panel'),
-        ));
-        acf_register_block_type(array(
-            'name' => 'featured_events_dynamic',
-            'title' => __('Featured Events - Dynamic Panel'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'events', 'dynamic', 'panel'),
-        ));
-        //featured faires panel
-        acf_register_block_type(array(
-            'name' => 'featured_faires_panel',
-            'title' => __('Featured Faires - Dynamic'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('featured', 'faires', 'panel'),
-        ));
+		
         //Flag Banner Separator Panel
         acf_register_block_type(array(
             'name' => 'flag_banner_panel',

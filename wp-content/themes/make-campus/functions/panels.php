@@ -14,10 +14,6 @@ function dispLayout($row_layout) {
             case 'buy_tickets_float': //floating buy tickets banner
                 $return = getBuyTixPanel($row_layout);
                 break;
-            case 'featured_makers_panel':                // FEATURED MAKERS (SQUARE)
-            case 'featured_makers_panel_dynamic':        // FEATURED MAKERS (SQUARE) - dynamic
-                $return = getFeatMkPanel($row_layout);
-                break;
             case 'three_column':
             case '3_column': // 3 COLUMN LAYOUT
                 $return = get3ColLayout();
@@ -55,6 +51,9 @@ function dispLayout($row_layout) {
             case 'square_image_carousel': // IMAGE CAROUSEL (SQUARE)
                 $return = getImgCarouselSquare();
                 break;
+			case 'panel_rollover_items': // FEATURED Items
+				$return = rolloverItems($row_layout);            
+				break;
 			case 'what_is_maker_faire': // WHAT IS MAKER FAIRE PANEL    
 				$return = getWhatisMF();
 				break;
@@ -96,107 +95,91 @@ function dispLayout($row_layout) {
 }
 
 /* * *********************************************** */
-/*   Function to build the featured maker panel   */
+/*   Function to build the rollover items panel   */
 /* * *********************************************** */
 
-function getFeatMkPanel($row_layout) {
-    GLOBAL $acf_blocks;
+function rolloverItems($row_layout) {
     $return = '';
 
-    $dynamic = ($row_layout == 'featured_makers_panel_dynamic' ? true : false);
-
-    $makers_to_show = ($acf_blocks ? get_field('makers_to_show') : get_sub_field('makers_to_show'));
-    $more_makers_button = ($acf_blocks ? get_field('more_makers_button') : get_sub_field('more_makers_button'));
+    GLOBAL $acf_blocks;
     $background_color = ($acf_blocks ? get_field('background_color') : get_sub_field('background_color'));
-    $title = ($acf_blocks ? get_field('title') : (get_sub_field('title') ? get_sub_field('title') : ''));
+    $title = ($acf_blocks ? get_field('panel_title') : get_sub_field('panel_title'));
+    $cta_url = ($acf_blocks ? get_field('cta_url') : get_sub_field('cta_url'));
+    $cta_text = ($acf_blocks ? get_field('cta_text') : get_sub_field('cta_text'));
+    $size = ($acf_blocks ? get_field('size') : get_sub_field('size'));
 
-    //var_dump($background_color);
+
     // Check if the background color selected was white
-    $return .= '<section class="featured-maker-panel ' . $background_color . '"> ';
+    $return .= '<section class="featured-item-panel ' . $background_color . '"> ';
 
-    $return .= '  <div class="panel-title title-w-border-y ' . ($background_color === "white-bg" ? ' yellow-underline' : '') . '">
-                   <h2>' . $title . '</h2>
-                 </div>';
+    if ($title) {
+        $return .= '  <div class="panel-title title-w-border-y ' . ($background_color === "white-bg" ? ' navy-underline' : '') . '">
+							 <h2>' . $title . '</h2>
+						  </div>';
+    }
 
     //build makers array
-    $makerArr = array();
-    if ($dynamic) {
-        $formid = (int) ($acf_blocks ? get_field('enter_formid_here') : get_sub_field('enter_formid_here'));
-
-        $search_criteria['status'] = 'active';
-        $search_criteria['field_filters'][] = array('key' => '303', 'value' => 'Accepted');
-        $search_criteria['field_filters'][] = array('key' => '304', 'value' => 'Featured Maker');
-
-        $entries = GFAPI::get_entries($formid, $search_criteria, null, array('offset' => 0, 'page_size' => 999));
-
-        //randomly order entries
-        shuffle($entries);
-        foreach ($entries as $entry) {
-            $url = $entry['22'];
-
-            $overrideImg = findOverride($entry['id'], 'makerPanel');
-            if ($overrideImg != '')
-                $url = $overrideImg;
-            $makerArr[] = array('image' => $url,
-                'name' => $entry['151'],
-                'desc' => $entry['16'],
-                'maker_url' => '/maker/entry/' . $entry['id']
-            );
-        }
-    } else {
-        // check if the nested repeater field has rows of data
-        if (have_rows('featured_makers')) {
-            // loop through the rows of data
-            while (have_rows('featured_makers')) {
+    $itemArr = array();
+    // check if the nested repeater field has rows of data
+    if (have_rows('featured_items')) {
+        // loop through the rows of data
+        while (have_rows('featured_items')) {
+            the_row();
+            unset($buttonsArr); // keep this clear for each
+            while (have_rows('buttons')) {
                 the_row();
-                $url = get_sub_field('maker_image')['url'];
-                $makerArr[] = array('image' => $url,
-                    'name' => get_sub_field('maker_name'),
-                    'desc' => get_sub_field('maker_short_description'),
-                    'maker_url' => get_sub_field('more_info_url')
+                $buttonsArr[] = array(
+                    'button_text' => get_sub_field('button_text'),
+                    'button_link' => get_sub_field('button_link')
                 );
             }
+            $url = get_sub_field('item_image')['url'];
+            $itemArr[] = array('image' => $url,
+                'name' => get_sub_field('item_name'),
+                'desc' => get_sub_field('item_short_description'),
+                'buttons' => $buttonsArr
+            );
         }
     }
 
-    //limit the number returned to $makers_to_show
-    $makerArr = array_slice($makerArr, 0, $makers_to_show);
 
-    $return .= '<div id="performers" class="featured-image-grid">';
+    $return .= '<div class="featured-image-grid">';
 
-    //loop thru maker data and build the table
-    foreach ($makerArr as $maker) {
-        // var_dump($maker);
-        // echo '<br />';
-        $return .= '<div class="grid-item lazyload" data-bg="' . $maker['image'] . '">';
+    //loop thru item data and build the table
+    foreach ($itemArr as $item) {
 
-        if (!empty($maker['desc'])) {
-            $markup = !empty($maker['maker_url']) ? 'a' : 'div';
-            $href = !empty($maker['maker_url']) ? 'href="' . $maker['maker_url'] . '"' : '';
-            $return .= '<' . $markup . ' ' . $href . ' class="grid-item-desc">
-                     <div class="desc-body"><h4>' . $maker['name'] . '</h4>
-                     <p class="desc">' . $maker['desc'] . '</p></div>';
-            if (!empty($maker['maker_url'])) {
-                $return .= '  <p class="btn btn-blue read-more-link">Learn More</p>'; //<a href="' . $maker['maker_url'] . '"></a>
+        $return .= '<div class="grid-item ' . $size . '" style="background-image:url(' . $item['image'] . ');">';
+
+        if (!empty($item['desc'])) {
+            $newTab = ($newTab == true ? "target='_blank'" : "target='_self'");
+            $href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" target="_blank"' : '';
+            $return .= '<div class="grid-item-desc">
+							 <div class="desc-body"><h4>' . $item['name'] . '</h4>
+							 <p class="desc">' . $item['desc'] . '</p></div>';
+            if (!empty($item['buttons'])) {
+                $return .= '<div class="grid-item-buttons">';
+                foreach ($item['buttons'] as $button) {
+                    $return .= '<a class="btn btn-blue grid-item-button" href="' . $button['button_link'] . '" ' . $newTab . '>' . $button['button_text'] . '</a>';
+                    $button = "";
+                }
+                $return .= '</div>';
             }
-            $return .= ' </' . $markup . '>';
+            $return .= ' </div>';
         }
-        // the caption section
-        $return .= '  <div class="grid-item-title-block hidden-sm hidden-xs">
-		                 <h3>' . $maker['name'] . '</h3>
-                    </div>';
         $return .= '</div>'; //close .grid-item
     }
     $return .= '</div>';  //close #performers
     //check if we should display a more maker button
-    $cta_url = get_sub_field('cta_url');
+
     if ($cta_url) {
-        $cta_text = (get_sub_field('cta_text') !== '' ? get_sub_field('cta_text') : 'More Makers');
+        if (empty($cta_text)) {
+            $cta_text = 'More Items';
+        }
         $return .= '<div class="row">
-            <div class="col-xs-12 text-center">
-              <a class="btn btn-outlined more-makers-link" href="' . $cta_url . '">' . $cta_text . '</a>
-            </div>
-          </div>';
+		<div class="col-xs-12 text-center">
+		<a class="btn universal-btn-navy more-makers-link" href="' . $cta_url . '">' . $cta_text . '</a>
+		</div>
+		</div>';
     }
     $return .= '</section>';
     $return .= '<script type="text/javascript">
@@ -204,17 +187,10 @@ function getFeatMkPanel($row_layout) {
 							jQuery(".grid-item").each(function() {
 							    var availableHeight = jQuery(this).innerHeight() - 30;
 								 if(jQuery(this).find(".read-more-link").length > 0){
-									 availableHeight = availableHeight - jQuery(this).find(".read-more-link").innerHeight() - 30;
+									 availableHeight = availableHeight - jQuery(this).find(".read-more-link").innerHeight() - 20;
 								 }
 
 								 jQuery(jQuery(this).find(".desc-body")).css("mask-image", "-webkit-linear-gradient(top, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)");
-								 
-								 if( 561 > jQuery(window).width() ) {
-								   jQuery(jQuery(this).find(".desc-body")).css("mask-image", "none");
-									jQuery(jQuery(this).find(".desc-body")).css("height", "auto");
-								 } else { 
-								 	jQuery(jQuery(this).find(".desc-body")).css("height", availableHeight);
-								 }
 							 });
 						}
 	                jQuery(document).ready(function(){
@@ -224,146 +200,6 @@ function getFeatMkPanel($row_layout) {
 						 	 fitTextToBox();
 						 });
 					</script>';
-    return $return;
-}
-
-/* * *********************************************** */
-/*   Function to build the featured event panel      */
-/* * *********************************************** */
-
-function getFeatEvPanel($row_layout) {
-    global $wpdb;
-    $return = '';
-    $dynamic = ($row_layout == 'featured_events_dynamic' ? true : false);
-    $return .= '<section class="featured-events-panel">
-          <div class="container">';
-    if (get_sub_field('title')) {
-        $return .= '<div class="row padtop text-center">
-            <div class="title-w-border-r">
-              <h2>' . get_sub_field('title') . '</h2>
-            </div>
-          </div>';
-    }
-
-    //gutenburg blocks use get_field, ACF panels use get_sub_field
-    GLOBAL $acf_blocks;
-    $title = ($acf_blocks ? get_field('title') : get_sub_field('title'));
-
-    if ($title) {
-        $return .= '<div class="row padtop text-center">
-            <div class="title-w-border-r">
-              <h2>' . $title . '</h2>
-            </div>
-          </div>';
-    }
-
-    $return .= '<div class="row padbottom">';
-
-    //build event array
-    $eventArr = array();
-    if ($dynamic) {
-        $formid = ($acf_blocks ? get_field('enter_formid_here') : get_sub_field('enter_formid_here'));
-        $query = "SELECT schedule.entry_id, schedule.start_dt as time_start, schedule.end_dt as time_end, schedule.type,
-                       lead_detail.value as entry_status, DAYNAME(schedule.start_dt) as day,location.location,
-                       (SELECT value FROM {$wpdb->prefix}rg_lead_detail WHERE lead_id = schedule.entry_id AND field_number like '304.3' 
-                           AND value like 'Featured Maker')  as flag,
-                       (SELECT value FROM {$wpdb->prefix}rg_lead_detail WHERE lead_id = schedule.entry_id AND field_number like '22')  as photo,
-                       (SELECT value FROM {$wpdb->prefix}rg_lead_detail WHERE lead_id = schedule.entry_id AND field_number like '151') as name,
-                       (SELECT value FROM {$wpdb->prefix}rg_lead_detail WHERE lead_id = schedule.entry_id AND field_number like '16')  as short_desc
-                  FROM {$wpdb->prefix}mf_schedule as schedule
-                       left outer join {$wpdb->prefix}mf_location as location on location_id = location.id
-                       left outer join {$wpdb->prefix}rg_lead as lead on schedule.entry_id = lead.id
-                       left outer join {$wpdb->prefix}rg_lead_detail as lead_detail on
-                       schedule.entry_id = lead_detail.lead_id AND field_number = 303
-                 WHERE lead.status = 'active' AND lead_detail.value='Accepted'";
-
-        foreach ($wpdb->get_results($query) as $row) {
-            //only write schedule for featured events
-            if ($row->flag != NULL) {
-                $startDate = date_create($row->time_start);
-                $startDate = date_format($startDate, 'g:i a');
-
-                $endDate = date_create($row->time_end);
-                $endDate = date_format($endDate, 'g:i a');
-
-                $projPhoto = $row->photo;
-                $args = array(
-                    'resize' => '300,300',
-                    'quality' => '80',
-                    'strip' => 'all',
-                );
-                $photon = jetpack_photon_url($projPhoto, $args);
-                $eventArr[] = array(
-                    'image' => $photon,
-                    'event' => $row->name,
-                    'description' => $row->short_desc,
-                    'day' => $row->day,
-                    'time' => $startDate . ' - ' . $endDate,
-                    'location' => $row->location,
-                    'maker_url' => '/maker/entry/' . $row->entry_id
-                );
-            }
-        }
-    } else {
-        // check if the nested repeater field has rows of data
-        if (have_rows('featured_events')) {
-            // loop through the rows of data
-            while (have_rows('featured_events')) {
-                the_row();
-                $url = get_sub_field('event_image');
-                $args = array(
-                    'resize' => '300,300',
-                    'quality' => '80',
-                    'strip' => 'all',
-                );
-                $photon = jetpack_photon_url($url['url'], $args);
-                $eventArr[] = array(
-                    'image' => $photon,
-                    'event' => get_sub_field('event_name'),
-                    'description' => get_sub_field('event_short_description'),
-                    'day' => get_sub_field('day'),
-                    'time' => get_sub_field('time'),
-                    'location' => get_sub_field('location'),
-                    'maker_url' => ''
-                );
-            }
-        }
-    }
-
-    //build event display
-    foreach ($eventArr as $event) {
-        $return .= '<div class="featured-event col-xs-6">' .
-                ($event['maker_url'] != '' ? '<a href="' . $event['maker_url'] . '">' : '') .
-                '<div class="col-xs-12 col-sm-4 nopad">
-              <div class="event-img lazyload" data-bg="' . $event['image'] . '"></div>
-            </div>
-            <div class="col-xs-12 col-sm-8">
-              <div class="event-description">
-                <h4>' . $event['event'] . '</h4>
-                <p class="event-desc">' . $event['description'] . '</p>
-              </div>
-              <div class="event-details">
-                <p class="event-day">' . $event['day'] . ' ' . $event['time'] . '</p>
-                <p class="event-location">' . $event['location'] . '</p>
-              </div>
-            </div>' .
-                ($event['maker_url'] != '' ? '</a>' : '') .
-                '</div>';
-    }
-
-    $return .= '</div>'; //end div.row    
-
-    $all_events_button = ($acf_blocks ? get_field('all_events_button') : get_sub_field('all_events_button'));
-    if ($all_events_button) {
-        $return .= '<div class="row padbottom">
-            <div class="col-xs-12 padbottom text-center">
-              <a class="btn btn-b-ghost" href="' . $all_events_button . '">All Events</a>
-            </div>
-          </div>';
-    }
-
-    $return .= '</div>'; //end div.container
-    $return .= '</section>';
     return $return;
 }
 
@@ -707,7 +543,7 @@ function getImagePanel() {
 
         if ($imageRowNum % 2 != 0) {
             $return .= '<div class="row ' . $image['background_color'] . '">';
-            $return .= '  <div class="col-sm-4 col-xs-12">
+            $return .= '  <div class="col-sm-6 col-xs-12">
                             <h4>' . $image['image_title'] . '</h4>
                             <p>' . $image['image_text'] . '</p>';
             if ($image['image_links']) {
@@ -716,12 +552,12 @@ function getImagePanel() {
                 }
             }
             $return .= '  </div>';
-            $return .= '  <div class="col-sm-8 col-xs-12">
+            $return .= '  <div class="col-sm-6 col-xs-12">
 			                 <div class="image-display">';
             if (isset($image['image_overlay']['image_overlay_link'])) {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
-            $return .= '			 <img class="img-responsive lazyload" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
+            $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
             if (isset($image['image_overlay']['image_overlay_text'])) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
             }
@@ -733,12 +569,12 @@ function getImagePanel() {
             $return .= '</div>';
         } else {
             $return .= '<div class="row ' . $image['background_color'] . '">';
-            $return .= '  <div class="col-sm-8 col-xs-12">
+            $return .= '  <div class="col-sm-6 col-xs-12">
 			                 <div class="image-display">';
             if (isset($image['image_overlay']['image_overlay_link'])) {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
-            $return .= '			 <img class="img-responsive lazyload" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
+            $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
             if (isset($image['image_overlay']['image_overlay_text'])) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
                 ;
