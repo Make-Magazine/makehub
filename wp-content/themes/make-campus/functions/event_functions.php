@@ -58,7 +58,7 @@ function update_event_acf($entry, $form, $post_id) {
         $meta_field = $field[1];
         $field_key = (isset($field[2]) ? $field[2] : '');
         $fieldData = GFAPI::get_field($form, $fieldID);
-        
+
         if (isset($entry[$fieldID])) {
             if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
                 $listArray = explode(', ', $fieldData->get_value_export($entry));
@@ -71,7 +71,7 @@ function update_event_acf($entry, $form, $post_id) {
                 update_field($meta_field, $repeater, $post_id);
             } else if (strpos($meta_field, 'image') !== false) {
                 update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id                
-            } else {                                
+            } else {
                 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
             }
         }
@@ -109,7 +109,7 @@ function event_organizer($entry) {
     return $organizerData;
 }
 
-function update_organizer_data($entry, $form, $organizerData, $post_id) {    
+function update_organizer_data($entry, $form, $organizerData, $post_id) {
     // update social media fields for the event organizer
     $organizer_id = tribe_get_organizer_id($post_id);
     $socialField = GFAPI::get_field($form, 127);
@@ -123,8 +123,8 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     update_field("social_links", $repeater, $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
-    tribe_update_organizer($organizer_id, $organizerArgs);   
-   
+    tribe_update_organizer($organizer_id, $organizerArgs);
+
     // Upload featured image to Organizer page
     set_post_thumbnail(get_post($organizer_id, 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
 }
@@ -141,7 +141,7 @@ function update_ticket_data($entry, $post_id) {
     $ticket->start_time = (isset($entry['46']) ? $entry['46'] : '');
     $ticket->end_date = (isset($entry['47']) ? $entry['47'] : '');
     $ticket->end_time = (isset($entry['48']) ? $entry['48'] : '');
-	
+
     // Save the ticket
     $ticket->ID = $api->save_ticket($post_id, $ticket, array(
         'ticket_name' => $ticket->name,
@@ -152,11 +152,16 @@ function update_ticket_data($entry, $post_id) {
             //'end_date' => $ticket->end_date,
             //'end_time' => $ticket->end_time,
     ));
-	if($ticket->capacity == 0 || $ticket->capacity == '') { 
-		$ticket->capacity = -1; 
-		$woo_stock = 99999;
-	}
+
+    if ($ticket->capacity == 0 || $ticket->capacity == '') {
+        $ticket->capacity = -1;
+        $woo_stock = 99999;
+    } else {
+        $woo_stock = $ticket->capacity;
+    }
+    
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
+
     update_post_meta($ticket->ID, '_stock', $woo_stock);
     update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
 }
@@ -199,7 +204,7 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
             ),
         ),
     );
-	update_field("number_of_sessions", $end_count . " / " . strtolower($recurrence_type), $post_id);
+    update_field("number_of_sessions", $end_count . " / " . strtolower($recurrence_type), $post_id);
     $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
     $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
 }
@@ -248,22 +253,23 @@ function countMonths($date1, $date2) {
     return $counter;
 }
 
-
 //open organizer in a new tab
-add_filter( 'tribe_get_event_organizer_link_target', 'set_callback_blank', 10, 3 );
-function set_callback_blank($target,$url, $post_id) {
+add_filter('tribe_get_event_organizer_link_target', 'set_callback_blank', 10, 3);
+
+function set_callback_blank($target, $url, $post_id) {
     return '_blank';
 }
 
 // Prevents Next/Prev pages from being loaded via Ajax if photo view is the homepage
 function tribe_prevent_ajax_paging() {
-	if ( is_front_page() || is_home() ) {
-		echo "<script>
+    if (is_front_page() || is_home()) {
+        echo "<script>
 				jQuery(document).ready(function(){
 					jQuery( '.blog .tribe-events-c-top-bar__nav-link--prev, .blog .tribe-events-c-top-bar__nav-link--next, .blog .tribe-events-c-nav__next, .blog .tribe-events-c-nav__prev' ).unbind();
 					jQuery( '.archive .tribe-events-c-top-bar__nav-link--prev, .archive .tribe-events-c-top-bar__nav-link--next, .archive .tribe-events-c-nav__next, .archive .tribe-events-c-nav__prev' ).unbind();
 				});
 			  </script>";
-	}
+    }
 }
-add_action( 'wp_footer', 'tribe_prevent_ajax_paging', 99 );
+
+add_action('wp_footer', 'tribe_prevent_ajax_paging', 99);

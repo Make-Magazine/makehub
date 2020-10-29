@@ -31,9 +31,9 @@ $post_image_ids = implode(', ', $post_image_ids);
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single">
-    <div class="universal-btn">
-        <a href="<?php echo esc_url(tribe_get_events_link()); ?>"> <?php printf('&laquo; ' . esc_html_x('All %s', '%s Events plural label', 'the-events-calendar'), $events_label_plural); ?></a>
-    </div>
+    <p class="tribe-events-back">
+        <a class="universal-btn" href="<?php echo esc_url(tribe_get_events_link()); ?>"> <?php printf('&laquo; ' . esc_html_x('All %s', '%s Events plural label', 'the-events-calendar'), $events_label_plural); ?></a>
+    </p>
     <div class="tribe-events-image-gallery">
         <?php echo do_shortcode('[gallery ids="' . $post_image_ids . '" size="large" order="DESC" orderby="ID"]'); ?>
         <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
