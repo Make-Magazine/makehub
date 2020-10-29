@@ -1,3 +1,9 @@
+// A couple of vars for these styles
+
+$feat_img_touch_lg_breakpoint: 960px;
+$feat_img_touch_sm_breakpoint: 768px;
+$feat_img_mobile_breakpoint: 560px;
+
 .scrolled .customPanels {
    .floatBuyTix {
       position: fixed;
@@ -362,179 +368,7 @@
       }
    }
 
-   // Featured Makers Panel
 
-   .featured-maker-panel {
-		padding-bottom: 30px;
-      .panel-title {
-         margin-top: 15px;
-			display: table;
-			margin: 0 auto;
-			padding-top: 10px;
-      }
-      .title-w-border-y {
-         margin-bottom: 15px;
-      }
-		
-		// we're borrowing a lot from featured-presenter-grid.less, this is where it's different
-		.featured-image-grid {
-			max-width: 1170px;
-			margin: 0 auto 30px;
-			@media screen and (max-width: 992px) {
-				.grid-item-desc {
-					display: flex;
-				}
-				h4 { 
-					display: block;
-					height: auto;
-					overflow: visible;
-				}
-			}
-			@media screen and (max-width: 560px) {
-				.grid-item {
-					background-color: #333;
-					padding-top: 50%;
-				}
-			}
-			.grid-item-desc {
-				height: 100%;
-			}
-			.grid-item {
-				background-position: top;
-				background-size: cover;
-			}
-		}
-
-   }
-   .featured-panel {
-      .more-makers-link {
-         color: #fff;
-         border: thin solid white;
-         padding: 10px 30px;
-         margin-top: 40px;
-         &:hover {
-            color: #00597E;
-            background-color: #fff; 
-         }
-      }
-		.cta-btn {
-			margin-top: 30px;
-			&:visited { color: #1987C7; }
-			&:hover { color: #fff; }
-		}
-   }
-
-   .featured-events-panel {
-      padding-top: 5px;
-      .featured-event {
-         margin-bottom: 50px;
-         .event-img {
-            width: 100%;
-            height: 185px;
-            @media (min-width:992px) and (max-width:1199px) {
-               height: 150px;
-               width: 150px;
-            }
-            @media (min-width:768px) and (max-width:991px) {
-               height: 115px;
-               width: 115px;
-            }
-            @media (max-width:767px) {
-               height: 40vw;
-               width: 40vw;
-               margin-left: 0;
-            }
-            margin-right: auto;
-            margin-left: auto;
-            background-size: cover;
-            background-position: center center;
-            border: 2px solid #999;
-         }
-         .event-description {
-            max-height: 145px;
-            overflow: hidden;
-            @media (min-width:992px) and (max-width:1199px) {
-               max-height: 120px;
-            }
-            .event-day {
-               font-size: 12px;
-               font-weight: 500;
-               margin-bottom: 1px;
-            }
-            h4 {
-               margin-top: 0;
-               margin-bottom: 4px;
-               font-size: 20px;
-               color: #00AEEF;
-               font-family: Roboto;
-               //Below lines will limit text to one line with ...
-               white-space: nowrap;
-               overflow: hidden;
-               text-overflow: ellipsis;
-               @media (max-width:991px) {
-                  max-height: 63px;
-                  display: -webkit-box;
-                  -webkit-line-clamp: 3;
-                  -webkit-box-orient: vertical;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: normal;
-                  line-height: 1.05em;
-               }
-               @media (max-width:767px) {
-                  max-height: 43px;
-                  -webkit-line-clamp: 2;
-               }
-            }
-            .event-desc {
-               font-size: 14px;
-               line-height: 1.4em;
-               margin-bottom: 0;
-               //Below lines will limit text lines with ...
-               max-height: 95px;
-               display: -webkit-box;
-               -webkit-line-clamp: 5;
-               -webkit-box-orient: vertical;
-               overflow: hidden;
-               text-overflow: ellipsis;
-               @media (min-width:992px) and (max-width:1199px) {
-                  max-height: 71px;
-                  -webkit-line-clamp: 4;
-                  line-height: 1.3em;
-               }
-               @media (max-width:991px) {
-                  display: none;
-               }
-            }
-         }
-         .col-sm-8 {
-            position: relative;
-            height: 185px;
-            @media (min-width:992px) and (max-width:1199px) {
-               height: 150px;
-            }
-            @media (min-width:768px) and (max-width:991px) {
-               height: 115px;
-            }
-            @media (max-width:767px) {
-               height: 100px;
-               padding-left: 0;
-               padding-right: 0;
-            }
-         }
-         .event-details {
-            position: absolute;
-            bottom: 0;
-            p {
-               font-size: 12px;
-               line-height: 1.4em;
-               margin-bottom: 0;
-               text-transform: uppercase;
-               color: #666;
-            }
-         }
-      }
-   }
 
    .ribbon-separator-panel {
       position: relative;
@@ -978,81 +812,6 @@
       }
    }
 	
-	// Ye olde video panels
-	.video-panel, .image-panel {
-		background: #333;
-		color: #fff;
-		font-size: 16px;
-		padding-bottom: 15px;
-		.row {
-			padding: 30px 15px 0px;
-		}
-		h4 {
-			font-size: 26px;
-			font-family: "Roboto Bold";
-			text-transform: uppercase;
-		}
-		p { padding: 15px 0; }
-		a { 
-			text-decoration: underline;
-			display: block;
-			margin-bottom: 15px;
-			&:hover, &:active, &:focus {
-				text-decoration: none;
-			}
-			&:visited {
-				opacity: .8;
-			}
-		}
-		@media screen and (max-width: 982px) {
-			font-size: 16px;
-			h4 { font-size: 20px; }
-		}
-		@media screen and (max-width: 768px) {
-			font-size: 16px;
-			h4 { font-size: 16px; }
-			.row:nth-child(even){
-				transform: scaleY(-1);
-				padding-bottom: 30px;
-				.col-xs-12{ transform: scaleY(-1); }
-			}
-			.embed-youtube {
-				margin-top: 20px;
-			}
-		}
-	}
-	.image-panel {
-		padding-bottom: 0px;
-		.row {
-
-			.image-display {
-				margin-bottom: 30px;
-				position: relative;
-				.image-overlay-text {
-					padding: 10px 30px;
-					font-size: 18px;
-					color: #333;
-					background: rgba(255, 255, 255, 0.6);
-					position: absolute;
-					bottom: 0px;
-					text-decoration: none;
-					@media screen and (max-width: 768px) {
-						padding-left: 15px;
-						font-size: 16px;
-						width: 100%;
-					}
-				}
-				a {
-					position: relative;
-					&:hover {
-						.image-overlay-text {
-							text-decoration: underline;
-						}
-					}
-				}
-			}
-		}
-	}
 
    // Common elements
 	.content-panel.three-column {
@@ -1842,4 +1601,349 @@
 			font-size: 40px;
 		}
 	}
+}
+
+
+// Ye olde video panels
+.video-panel, .image-panel {
+	background: #333;
+	color: #fff;
+	font-size: 16px;
+	padding-bottom: 15px;
+	.row {
+		padding: 30px 15px 0px;
+	}
+	h4 {
+		font-size: 26px;
+		font-family: "Roboto Bold";
+		text-transform: uppercase;
+	}
+	p { padding: 15px 0; }
+	a { 
+		text-decoration: underline;
+		display: block;
+		margin-bottom: 15px;
+		&:hover, &:active, &:focus {
+			text-decoration: none;
+		}
+		&:visited {
+			opacity: .8;
+		}
+	}
+	@media screen and (max-width: 982px) {
+		font-size: 16px;
+		h4 { font-size: 20px; }
+	}
+	@media screen and (max-width: 768px) {
+		font-size: 16px;
+		h4 { font-size: 16px; }
+		.row:nth-child(even){
+			transform: scaleY(-1);
+			padding-bottom: 30px;
+			.col-xs-12{ transform: scaleY(-1); }
+		}
+		.embed-youtube {
+			margin-top: 20px;
+		}
+	}
+}
+.image-panel {
+	padding-bottom: 0px;
+	.row {
+
+		.image-display {
+			margin-bottom: 30px;
+			position: relative;
+			.image-overlay-text {
+				padding: 10px 30px;
+				font-size: 18px;
+				color: #333;
+				background: rgba(255, 255, 255, 0.6);
+				position: absolute;
+				bottom: 0px;
+				text-decoration: none;
+				@media screen and (max-width: 768px) {
+					padding-left: 15px;
+					font-size: 16px;
+					width: 100%;
+				}
+			}
+			a {
+				position: relative;
+				&:hover {
+					.image-overlay-text {
+						text-decoration: underline;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+// Featured Items Panel
+
+.featured-item-panel {
+	padding-bottom: 30px;
+	.panel-title {
+		margin-top: 15px;
+		display: table;
+		margin: 0 auto;
+		padding-top: 10px;
+		h2 { 
+			font-size: inherit;
+			text-align: center;
+			@media screen and (max-width: 992px) {
+				font-size: 48px;
+			}
+		}
+	}
+	.title-w-border-y {
+		margin-bottom: 15px;
+	}
+	
+
+	.featured-image-grid {
+	   display: grid;
+	   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+	   grid-column-gap: 24px;
+	   grid-row-gap: 24px;
+	   margin-bottom: 24px;
+	   @media screen and (max-width: $feat_img_touch_lg_breakpoint) {
+		  display: block;
+	   }
+	   .grid-item {
+		  background-repeat: no-repeat;
+		  background-position: center;
+		  background-size: cover;
+		  // Responsive Height
+		  height: 150px;
+		  padding-top: 50%;
+		  box-sizing: content-box;
+
+		  display: flex;
+		  flex-direction: column;
+		  justify-content: flex-end;
+		  position: relative;
+		  overflow: hidden;
+
+		  &:hover {
+			 &> .grid-item-desc {
+				transform: translateX(0);
+				transition: transform 0.25s ease-in-out;
+			 }
+		  }
+		  @media screen and (max-width: $feat_img_touch_lg_breakpoint) {
+			 width: 50%;
+			 overflow: visible;
+			 margin-bottom: 24px;
+			 height: 300px;
+			 padding-top: 0;
+			 &:hover {
+				&> .grid-item-desc {
+				   transform: translateX(100%);
+				   transition: transform 0.25s ease-in-out;
+				}
+			 }
+		  }
+
+		  @media screen and (max-width: $feat_img_mobile_breakpoint) {
+			 width: auto;
+			 padding-top: 75%;
+			 height: auto;
+			 background-size: 100%;
+			 background-position: top;
+			 &:hover {
+				transform: none;
+				transition: none;
+				&> .grid-item-desc {
+				   transform: none;
+				   transition: none;
+				}
+			 }
+			 &> .grid-item-title-block {
+				transform: translateX(0);
+				//transition: transform 0.25s ease-in-out;
+			 }
+			 &> .grid-item-desc {
+				height: auto;
+				transform: translateX(0);
+				//transition: transform 0.25s ease-in-out;
+			 }
+			 .grid-item-title-block h3 {
+				margin-bottom: 12px;
+			 }
+		  }
+	   }
+	   .grid-item-title-block {
+		  background-color: #151733;
+		  background-color: rgba(0,0,0,.6);
+		  color: #dedede;
+		  padding: 1em;
+			max-height: 90px;
+			overflow-y: visible;
+
+		  h3, p {
+			 margin: 0;
+			 padding: 0;
+			 margin-bottom: 6px;
+		  }
+		  h3 {
+			 font-size: 20px;
+		  }
+
+		  @media screen and (max-width: $feat_img_touch_lg_breakpoint) {
+			 position: absolute;
+			 bottom: 0;
+			 width: 100%;
+		  }
+
+		  @media screen and (max-width: $feat_img_touch_sm_breakpoint) {
+			 background-color: #333;
+			 position: relative;
+			 bottom: auto;
+			 transform: translateX(100%);
+
+			 h3 {
+				font-size: 20px;
+			 }
+
+			 p {
+				font-size: 16px;
+			 }
+		  }
+
+	   }
+	   .grid-item-desc {
+		  position: absolute;
+		  display: flex;
+		  flex-direction: column;
+		  align-items: flex-start;
+		  justify-content: space-between;
+		  padding: 1em;
+		  background-color: #333;
+		  background-color: rgba(21,23,51,0.8);
+		  color: #f3f3f3;
+		  width: 100%;
+		  height: 100%;
+		  //height: calc(100% + 1px);
+		  transform: translateX(110%);
+		  transition: transform 0.25s ease-in-out;
+		  overflow: hidden;
+		  text-decoration: none;
+		  @media screen and (max-width: $feat_img_touch_lg_breakpoint) {
+			 position: absolute;
+			 transform: translateX(100%);
+			 overflow: visible;
+			 display: block;
+		  }
+		  h4 {
+			 margin: 0;
+		  }
+		  @media screen and (max-width: $feat_img_touch_sm_breakpoint) {
+			 position: relative;
+			 display: flex;
+			 background-color: #333;
+			 h4 {
+				display: none;
+				height: 0;
+				overflow: hidden;
+			 }
+			 .desc-body {
+				height: 0;
+				overflow: hidden;
+			 }
+		  }
+			@media screen and (max-width: $feat_img_touch_sm_breakpoint) and (min-width: $feat_img_mobile_breakpoint) {
+				height: 71%;
+			}
+		  @media screen and (max-width: $feat_img_mobile_breakpoint) {
+			 .desc-body {
+				height: auto;
+				overflow: visible;
+			 }
+		  }
+		  .read-more-link {
+			 bottom: 0;
+			 border: 1px solid #fff;
+			 background-color: #151733;
+			 width: 100%;
+			 padding: 0.7em 0;
+			 justify-self: flex-end;
+			 align-self: flex-end;
+				z-index: 999;
+			 &:hover {
+				background-color: #fff;
+			 }
+			 @media screen and (max-width: $feat_img_touch_sm_breakpoint) {
+				align-self: flex-end;
+			 }
+		  }
+
+	   }
+
+	   // IE 10+ media query - see https://philipnewcomer.net/2014/04/target-internet-explorer-10-11-css/
+	   @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+		  /* IE10+ CSS styles go here */
+		  color: red!important;
+		  box-sizing: border-box;
+		  display: flex;
+		  flex-wrap: wrap;
+		  .grid-item {
+			 //width: calc(100% / 3); /* calc() method */
+			 width: 30%; /* percentage method */
+			 margin-right: 24px;
+			 margin-bottom: 24px;
+			 padding-top: 18%;
+		  }
+		  .grid-item-desc {
+			 top: 0;
+			 width: 100%;
+			 .desc-body {
+				width: 100%;
+			 }
+		  }
+	   }
+	   @media all and (max-width: 1200px) and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+		  .grid-item {
+			 width: 45%;
+		  }
+	   }
+
+	}
+
+	
+	
+	
+
+	// we're borrowing a lot from featured-presenter-grid.less, this is where it's different
+	.featured-image-grid {
+		max-width: 1170px;
+		margin: 0 auto 30px;
+		@media screen and (max-width: 992px) {
+			.grid-item-desc {
+				display: flex;
+			}
+			h4 { 
+				display: block;
+				height: auto;
+				overflow: visible;
+			}
+		}
+		@media screen and (max-width: 560px) {
+			.grid-item {
+				background-color: #333;
+				padding-top: 50%;
+			}
+		}
+		.grid-item-desc {
+			height: 100%;
+		}
+		.grid-item {
+			background-position: top;
+			background-size: cover;
+		}
+	}
+
 }
