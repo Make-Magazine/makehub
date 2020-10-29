@@ -31,7 +31,9 @@ $post_image_ids = implode(', ', $post_image_ids);
 ?>
 
 <div id="tribe-events-content" class="tribe-events-single">
-
+    <div class="universal-btn">
+        <a href="<?php echo esc_url(tribe_get_events_link()); ?>"> <?php printf('&laquo; ' . esc_html_x('All %s', '%s Events plural label', 'the-events-calendar'), $events_label_plural); ?></a>
+    </div>
     <div class="tribe-events-image-gallery">
         <?php echo do_shortcode('[gallery ids="' . $post_image_ids . '" size="large" order="DESC" orderby="ID"]'); ?>
         <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
@@ -40,12 +42,12 @@ $post_image_ids = implode(', ', $post_image_ids);
     <div class="tribe-events-header tribe-clearfix">
         <?php the_title('<h1 class="tribe-events-single-event-title">', '</h1>'); ?>
         <?php echo tribe_events_event_schedule_details($event_id, '<h2>', '</h2>'); ?>
-        <?php if ( tribe_get_cost() && tribe_events_has_tickets() ) { ?>
+        <?php if (tribe_get_cost() && tribe_events_has_tickets()) { ?>
             <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo("$" . number_format(tribe_get_cost(null, false)) ); ?></span>
         <?php } ?>
-		<?php if ( get_field("number_of_sessions") ) { ?>
-		    <span class="tribe-events-series-count"> (for a series of <?php echo get_field("number_of_sessions"); ?>)</span>
-		<?php } ?>
+        <?php if (get_field("number_of_sessions")) { ?>
+            <span class="tribe-events-series-count"> (for a series of <?php echo get_field("number_of_sessions"); ?>)</span>
+        <?php } ?>
     </div>
 
     <!-- Notices -->
@@ -105,44 +107,45 @@ $post_image_ids = implode(', ', $post_image_ids);
                             ?>
                         </div>
                     <?php } ?>
-					<?php if (get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
-                            <div class="tribe-events-single-event-materials tribe-events-content">
-                                <h3>What You'll Need:</h3> 
-                                <div class="materials-list">
-                                    <ul>
-                                        <?php
-                                        foreach (get_field('materials') as $material) {
-                                            echo '<li>' . $material['item'] . '</li>';
-                                        }
-                                        ?>
-                                    </ul>
-                                </div>
-                                <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
-                                    <h3>Wishlist Links: </h3>
-                                    <ul>
-                                        <?php
-                                        foreach (get_field('wish_list_urls') as $wishlist) {
-                                            echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
-                                        }
-                                        ?>
-                                    </ul>
-                            	<?php } ?>
-                            </div>
-        			<?php } 
-						if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') { ?>
-                            <div class="tribe-events-single-promo-videos tribe-events-content">
-                                <h3>Videos: </h3>
+                    <?php if (get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
+                        <div class="tribe-events-single-event-materials tribe-events-content">
+                            <h3>What You'll Need:</h3> 
+                            <div class="materials-list">
                                 <ul>
                                     <?php
-                                    foreach (get_field('promo_videos') as $video) {
-                                        echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+                                    foreach (get_field('materials') as $material) {
+                                        echo '<li>' . $material['item'] . '</li>';
                                     }
                                     ?>
                                 </ul>
                             </div>
-                        <?php } ?>
+                            <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+                                <h3>Wishlist Links: </h3>
+                                <ul>
+                                    <?php
+                                    foreach (get_field('wish_list_urls') as $wishlist) {
+                                        echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
+                                    }
+                                    ?>
+                                </ul>
+                            <?php } ?>
+                        </div>
+                    <?php }
+                    if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
+                        ?>
+                        <div class="tribe-events-single-promo-videos tribe-events-content">
+                            <h3>Videos: </h3>
+                            <ul>
+                                <?php
+                                foreach (get_field('promo_videos') as $video) {
+                                    echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+                                }
+                                ?>
+                            </ul>
+                        </div>
+    <?php } ?>
                     <!-- .tribe-events-single-event-description -->
-					
+
                     <?php
                     // ATTENDEES Section
                     $userList = get_event_attendees($event_id);
@@ -150,29 +153,29 @@ $post_image_ids = implode(', ', $post_image_ids);
                         ?>
                         <hr />
                         <h3>Attendee Resources:</h3> 
-						<div class="tribe-events-single-conference-link tribe-events-content">
-							<h3>Program Conference Link:</h3> 
-					 		<?php if ( get_field('webinar_link') ) { ?>
-								<a href="<?php echo get_field('webinar_link'); ?>" class="btn universal-btn">Program Stream</a>
-        					<?php  } else { ?>
-							    COMING SOON
-							<?php  } ?>
-						</div>
-					<?php  } ?>
-                    <?php do_action('tribe_events_single_event_after_the_content') ?>
+                        <div class="tribe-events-single-conference-link tribe-events-content">
+                            <h3>Program Conference Link:</h3> 
+                            <?php if (get_field('webinar_link')) { ?>
+                                <a href="<?php echo get_field('webinar_link'); ?>" class="btn universal-btn">Program Stream</a>
+                            <?php } else { ?>
+                                COMING SOON
+                        <?php } ?>
+                        </div>
+                    <?php } ?>
+    <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12 event-meta">
                     <div class="event-meta-sticky">
                         <!-- Event meta -->
-						<?php do_action('tribe_events_single_event_before_the_meta') ?>
-						<?php tribe_get_template_part('modules/meta'); ?>
-						<?php do_action('tribe_events_single_event_after_the_meta') ?>
+                        <?php do_action('tribe_events_single_event_before_the_meta') ?>
+                        <?php tribe_get_template_part('modules/meta'); ?>
+    <?php do_action('tribe_events_single_event_after_the_meta') ?>
                     </div>
                 </div>
             </div>
         </div> <!-- #post-x -->
 
-    <?php if (get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option('showComments', false)) comments_template() ?>
+        <?php if (get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option('showComments', false)) comments_template() ?>
 <?php endwhile; ?>
 
     <!-- Event footer -->
