@@ -60,7 +60,6 @@
 
 		body {
 			background  : #ffffff;
-			min-height  : 1000px;
 			font-family : sans-serif;
 			font-size   : 14px;
 		}
@@ -396,8 +395,8 @@
 										</table>
 										<table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
 											<tr>
-												<td valign="top" align="left" width="100%" height="30" style="height:30px; background:#f7f7f7; padding: 0 !important; margin:0 !important;">
-													<div style="margin:0; height:30px;"></div>
+												<td valign="top" align="left" width="100%" height="30" style="height:15px; background:#f7f7f7; padding: 0 !important; margin:0 !important;">
+													<div style="margin:0; height:15px;"></div>
 												</td>
 											</tr>
 										</table>
@@ -430,8 +429,8 @@
 										</table>
 										<table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
 											<tr>
-												<td valign="top" align="left" width="100%" height="30" style="height:30px; background:#f7f7f7; padding: 0 !important; margin:0 !important;">
-													<div style="margin:0; height:30px;"></div>
+												<td valign="top" align="left" width="100%" height="20" style="height:20px; background:#f7f7f7; padding: 0 !important; margin:0 !important;">
+													<div style="margin:0; height:20px;"></div>
 												</td>
 											</tr>
 										</table>
@@ -486,7 +485,7 @@
 													if ( ! empty( $organizers ) ) {
 														?>
 														<td class="ticket-organizer" valign="top" align="left" width="140" style="padding: 0 !important; width:140px; margin:0 !important;">
-															<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;"><?php echo tribe_get_organizer_label( count( $organizers ) < 2 ); ?></h6>
+															<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;"><?php echo tribe_get_organizer_label( count( $organizers ) < 2 ); ?></h6>
 															<?php foreach ( $organizers as $organizer_id ) { ?>
 																<span
 																	style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer( $organizer_id ); ?></span>
@@ -500,21 +499,14 @@
 											<?php
 										}//end if
 										?>
-										<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
-											<tr>
-												<td class="ticket-footer" valign="top" align="left" width="100%" style="padding: 0 !important; width:100%; margin:0 !important;">
-													<a href="<?php echo esc_url( home_url() ); ?>" style="color:#006caa !important; display:block; margin-top:20px; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:13px; text-decoration:underline;"><?php echo home_url(); ?></a>
-												</td>
-											</tr>
-										</table>
 									</td>
 								</tr>
 							</table>
 							<?php do_action( 'tribe_tickets_ticket_email_ticket_bottom', $ticket ); ?>
 							<table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
 								<tr>
-									<td valign="top" align="left" width="100%" height="100" style="height:100px; background:#ffffff; padding: 0 !important; margin:0 !important;">
-										<div style="margin:0; height:100px;"></div>
+									<td valign="top" align="left" width="100%" height="30" style="height:30px; background:#ffffff; padding: 0 !important; margin:0 !important;">
+										<div style="margin:0; height:30px;"></div>
 									</td>
 								</tr>
 							</table>
