@@ -1251,18 +1251,62 @@ $feat_img_mobile_breakpoint: 560px;
    flex-wrap: wrap;
 }
 
-// Adjustments for the custom panels that are required by the page-wide-left-nav template
-.page-leftnav.customPanels {
-	&.container-fluid {
-		padding: 0px;
+// background colors - used for multiple panels
+.white-bg {
+	background: #fff;
+	color: #333;
+	a { color: #0D3900; }
+	a.grid-item-desc { color: #fff; }
+	.btn-outlined { 
+		background: #fff;
+		color: #005e9a;
+		border-color: #005e9a;
+		&:hover {
+			color: #fff;
+			background: #005e9a;
+		}
 	}
-	.container { width: 100%; }
-	.row { margin: 0px; }
-	.content-panel.six-column .image-grid-row, .container, .container-fluid { padding: 0px; }
-	.featured-maker-panel #performers .thumbnail { width: auto; } // I think this won't be necessary once the featured maker panel is a grid rather than bootstrap
-	.slider-panel { padding-bottom: 50px; }
-	.content { padding: 0px; }
-	.six-column { padding: 0px 15px; }
+	.panel-title, .title-w-border-y {
+	 color: #333;
+  }
+}
+.blue-bg {
+	background: #005e9a;
+	&.btn:hover {
+		color: #005e9a;
+		border: 1px solid #005e9a;
+		background: #fff;
+	}
+}
+.darkblue-bg {
+	background: #2C4956;
+	&.btn:hover {
+		color: #2C4956;
+		border: 1px solid #2C4956;
+		background: #fff;
+	}
+}
+.grey-bg {
+	background: #4A4A4A;
+	&.btn:hover {
+		color: #4A4A4A;
+		border: 1px solid #4A4A4A;
+		background: #fff;
+	}
+}
+.darkgrey-bg {
+	background: #333;
+	&.btn:hover {
+		color: #333;
+		border: 1px solid #333;
+		background: #fff;
+	}
+}
+.blue-bg, .darkblue-bg, .grey-bg, .darkgrey-bg {
+	.panel-title, .title-w-border-y, a, .owl-item {
+		color: #fff;
+	}
+	&.btn { color: #fff; }
 }
 
 .blue-box {
