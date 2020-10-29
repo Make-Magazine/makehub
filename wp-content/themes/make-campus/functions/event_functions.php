@@ -58,6 +58,7 @@ function update_event_acf($entry, $form, $post_id) {
         $meta_field = $field[1];
         $field_key = (isset($field[2]) ? $field[2] : '');
         $fieldData = GFAPI::get_field($form, $fieldID);
+        
         if (isset($entry[$fieldID])) {
             if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
                 $listArray = explode(', ', $fieldData->get_value_export($entry));
@@ -69,9 +70,8 @@ function update_event_acf($entry, $form, $post_id) {
                 }
                 update_field($meta_field, $repeater, $post_id);
             } else if (strpos($meta_field, 'image') !== false) {
-                update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id
-            } else {
-                //error_log('updating image ACF field '.$meta_field. ' with GF field '.$fieldID . ' with value '.$entry[$fieldID]);
+                update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id                
+            } else {                                
                 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
             }
         }
