@@ -68,7 +68,7 @@
                     "key": "field_5d926d82787fe",
                     "label": "Image Text",
                     "name": "image_text",
-                    "type": "textarea",
+                    "type": "wysiwyg",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -78,10 +78,10 @@
                         "id": ""
                     },
                     "default_value": "",
-                    "placeholder": "",
-                    "maxlength": "",
-                    "rows": "",
-                    "new_lines": ""
+                    "tabs": "all",
+                    "toolbar": "full",
+                    "media_upload": 1,
+                    "delay": 0
                 },
                 {
                     "key": "field_5d926d97787ff",
@@ -275,5 +275,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1604012271
+    "modified": 1604012592
 }
