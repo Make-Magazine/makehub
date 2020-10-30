@@ -71,6 +71,13 @@ $post_image_ids = implode(', ', $post_image_ids);
                     <div class="event-author">
                         <h3>About the Facilitator:</h3> 
                         <?php echo get_field('about'); ?>
+						<br /><br />
+						<?php // Include organizer meta if appropriate
+						if ( tribe_has_organizer() ) {
+							tribe_get_template_part( 'modules/meta/organizer' );
+						}
+						?>
+						
                     </div>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
