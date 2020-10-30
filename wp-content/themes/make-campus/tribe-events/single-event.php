@@ -130,30 +130,18 @@ $post_image_ids = implode(', ', $post_image_ids);
                                 </ul>
                             <?php } ?>
                         </div>
-                    <?php
-                    }
-                    if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
+                    <?php }
+                    if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {                    
                         ?>
                         <div class="tribe-events-single-promo-videos tribe-events-content">
                             <h3>Videos: </h3>
-
-                            <?php
-                            foreach (get_field('promo_videos') as $video) {
-                                $project_video = $video['video'];
-                                $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
-                                //youtube has two type of url formats we need to look for and change
-                                $videoID = parse_yturl($dispVideo);
-                                if ($videoID != false) {
-                                    $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+                            <ul>
+                                <?php
+                                foreach (get_field('promo_videos') as $video) {
+                                    echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
                                 }
-                                $video = '<div class="entry-video">
-              <div class="embed-youtube">
-                <iframe class="lazyload" src="' . $dispVideo . '" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-              </div>
-            </div>';
-                            }
-                            ?>
-
+                                ?>
+                            </ul>
                         </div>
     <?php } ?>
                     <!-- .tribe-events-single-event-description -->
