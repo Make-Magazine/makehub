@@ -63,9 +63,11 @@ $datepicker_date     = Dates::build_date_object( $selected_date_value )->format(
 		autocomplete="off"
 		readonly="readonly"
 	/>
-	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container"></div>
+	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container">
+		<?php echo Dates::build_date_object( $selected_date_value )->format('F Y'); ?>
+	</div>
 </div>
 <div class="tribe-events-views">
-	<a href="/events/photo/" class="btn universal-btn">Photo</a>
+	<a href="/events/photo/" class="btn universal-btn">Photo View</a>
 	<a href="/events/list/" class="btn universal-btn">List</a>
 </div>

@@ -664,15 +664,24 @@
             }
         }
         #tribe-events-footer {
-            li {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-				border-radius: 15px;
-                a { color: #fff; }
-                &:hover a { color: #005e9a; }
-				&:empty { display: none; }
-            }
+			.tribe-events-sub-nav {
+				li {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					text-align: center;
+					border-radius: 15px;
+					a { 
+						color: #fff; 
+						background: transparent;
+						display: flex;
+						align-items: center;
+						i { padding: 10px; }
+					}
+					&:hover a { color: #005e9a; }
+					&:empty { display: none; }
+				}
+			}
         }
     }
 }
