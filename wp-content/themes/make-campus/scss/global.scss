@@ -267,6 +267,9 @@ hr.double-line-hr {
 
 // Safari only
 .safari-mac {
+	.row {
+		display: flex;
+	}
 	.row:before, .row:after {
 		display: none;
 	}
