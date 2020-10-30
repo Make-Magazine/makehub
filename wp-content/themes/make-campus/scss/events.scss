@@ -163,9 +163,12 @@
 							.tribe-organizer {
 								display: flex;
 								align-items: center;
-								.tribe-organizer-photo img{
-									width: 100px;
-									height: auto;
+								.tribe-organizer-photo {
+									margin-right: 15px;
+									img{
+										width: 100px;
+										height: auto;
+									}
 								}
 							}
 						}

@@ -44,6 +44,7 @@ $website = tribe_get_organizer_website_link();
 			<?php
 		}
 		if(get_field('social_links', $organizer)) { ?>
+		    <b>Follow them at: </b>
 			<div class="social-links">
 				<?php foreach(get_field('social_links', $organizer) as $link) { ?>
 				<a href="<?php echo($link['social_link']); ?>">*</a>
