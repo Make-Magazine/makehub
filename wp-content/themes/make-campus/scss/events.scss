@@ -745,14 +745,17 @@
 				}
 			}
 		}
-		.tribe-events-c-top-bar__datepicker-container.month {
-			position: relative;
+		.tribe-events-c-top-bar__datepicker.month {
 			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 24px;
-			width: 100%;
-			font-weight: bold;
+			.tribe-events-c-top-bar__datepicker-container {
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 24px;
+				width: 100%;
+				font-weight: bold;
+			}
 		}
 	}
 	
