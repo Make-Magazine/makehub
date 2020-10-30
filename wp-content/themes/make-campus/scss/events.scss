@@ -159,6 +159,16 @@
 								}
 							}
 						}
+						&.tribe-events-meta-group-organizer {
+							.tribe-organizer {
+								display: flex;
+								align-items: center;
+								.tribe-organizer-photo img{
+									width: 100px;
+									height: auto;
+								}
+							}
+						}
 					}
 					.tribe-tickets__buy { 
 						margin-left: 10px; 

@@ -50,6 +50,7 @@ if ( tribe_get_venue_id() ) {
 if ( tribe_has_organizer() ) {
 	tribe_get_template_part( 'modules/meta/organizer' );
 }
+echo '<div class="tribe-events-meta-group help-line">Have questions or comments? <br /> Email us at <a href="mailto:makecampus@make.co">makecampus@make.co</a></div>';
 
 do_action( 'tribe_events_single_event_meta_primary_section_end' );
 ?>

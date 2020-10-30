@@ -12,9 +12,11 @@
 $organizer_ids = tribe_get_organizer_ids();
 $multiple = count( $organizer_ids ) > 1;
 
+$name = tribe_get_organizer();
 $phone = tribe_get_organizer_phone();
 $email = tribe_get_organizer_email();
 $website = tribe_get_organizer_website_link();
+
 ?>
 
 <div class="tribe-events-meta-group tribe-events-meta-group-organizer">
@@ -32,10 +34,22 @@ $website = tribe_get_organizer_website_link();
 			?>
 			<dt style="display:none;"><?php // This element is just to make sure we have a valid HTML ?></dt>
 			<dd class="tribe-organizer">
-				<?php echo tribe_get_organizer_link( $organizer ) ?>
+				<?php if ( has_post_thumbnail($organizer) ) { ?>
+					<div class="tribe-organizer-photo">
+						<?php the_post_thumbnail( $organizer ); ?>
+					</div>
+				<?php } ?>
+				<?php echo $name ?>
 			</dd>
 			<?php
 		}
+		if(get_field('social_links', $organizer)) { ?>
+			<div class="social-links">
+				<?php foreach(get_field('social_links', $organizer) as $link) { ?>
+				<a href="<?php echo($link['social_link']); ?>">*</a>
+				<?php } ?>
+			</div>
+		<?php } 
 
 		if ( ! $multiple ) { // only show organizer details if there is one
 			if ( ! empty( $phone ) ) {
