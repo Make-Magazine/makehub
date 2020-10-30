@@ -23,7 +23,7 @@ if ( ! $has_details ) {
 
 	<?php // $this->template( 'organizer/meta/details/phone', [ 'organizer' => $organizer ] ); ?>
 
-	<?php $this->template( 'organizer/meta/details/email', [ 'organizer' => $organizer ] ); ?>
+	<?php //$this->template( 'organizer/meta/details/email', [ 'organizer' => $organizer ] ); ?>
 
 	<?php $this->template( 'organizer/meta/details/website', [ 'organizer' => $organizer ] ); ?>
 	
