@@ -406,3 +406,9 @@ function smartTruncate($string, $limit, $break = ".", $pad = "...") {
 
 $gv_fe = GravityView_frontend::getInstance();
 remove_filter( 'parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
+
+function parse_yturl($url){
+    $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
+    preg_match($pattern, $url, $matches);
+    return (isset($matches[1])) ? $matches[1] : false;
+}

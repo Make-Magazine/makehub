@@ -130,20 +130,35 @@ $post_image_ids = implode(', ', $post_image_ids);
                                 </ul>
                             <?php } ?>
                         </div>
-                    <?php }
-                    if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {                    
+                    <?php
+                    }
+                    if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
                         ?>
                         <div class="tribe-events-single-promo-videos tribe-events-content">
                             <h3>Videos: </h3>
-                            <ul>
+                            
                                 <?php
                                 foreach (get_field('promo_videos') as $video) {
-                                    echo '<li><a href="' . $video['video'] . '">' . $video['video'] . '</a></li>';
+                                    
+                                    $project_video = $video['video'];
+
+                                    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
+
+                                    //youtube has two type of url formats we need to look for and change
+                                    $videoID = parse_yturl($dispVideo);
+                                    if ($videoID != false) {
+                                        $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+                                    }
+                                    $video = '<div class="entry-video">
+                                                <div class="embed-youtube">
+                                                    <iframe class="lazyload" src="' . $dispVideo . '" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                                </div>
+                                            </div>';
                                 }
                                 ?>
-                            </ul>
+                            
                         </div>
-    <?php } ?>
+                    <?php } ?>
                     <!-- .tribe-events-single-event-description -->
 
                     <?php
@@ -159,24 +174,24 @@ $post_image_ids = implode(', ', $post_image_ids);
                                 <a href="<?php echo get_field('webinar_link'); ?>" class="btn universal-btn">Program Stream</a>
                             <?php } else { ?>
                                 COMING SOON
-                        <?php } ?>
+                            <?php } ?>
                         </div>
                     <?php } ?>
-    <?php do_action('tribe_events_single_event_after_the_content') ?>
+                    <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12 event-meta">
                     <div class="event-meta-sticky">
                         <!-- Event meta -->
                         <?php do_action('tribe_events_single_event_before_the_meta') ?>
                         <?php tribe_get_template_part('modules/meta'); ?>
-    <?php do_action('tribe_events_single_event_after_the_meta') ?>
+                        <?php do_action('tribe_events_single_event_after_the_meta') ?>
                     </div>
                 </div>
             </div>
         </div> <!-- #post-x -->
 
         <?php if (get_post_type() == Tribe__Events__Main::POSTTYPE && tribe_get_option('showComments', false)) comments_template() ?>
-<?php endwhile; ?>
+    <?php endwhile; ?>
 
     <!-- Event footer -->
     <div id="tribe-events-footer">
