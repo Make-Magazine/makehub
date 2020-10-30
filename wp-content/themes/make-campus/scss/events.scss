@@ -745,6 +745,15 @@
 				}
 			}
 		}
+		.tribe-events-c-top-bar__datepicker-container.month {
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 24px;
+			width: 100%;
+			font-weight: bold;
+		}
 	}
 	
 	// the loop

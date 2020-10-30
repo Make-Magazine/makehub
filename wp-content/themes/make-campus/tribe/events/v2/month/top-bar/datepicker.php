@@ -63,7 +63,7 @@ $datepicker_date     = Dates::build_date_object( $selected_date_value )->format(
 		autocomplete="off"
 		readonly="readonly"
 	/>
-	<div class="tribe-events-c-top-bar__datepicker-container" data-js="tribe-events-top-bar-datepicker-container">
+	<div class="tribe-events-c-top-bar__datepicker-container month" data-js="tribe-events-top-bar-datepicker-container">
 		<?php echo Dates::build_date_object( $selected_date_value )->format('F Y'); ?>
 	</div>
 </div>
