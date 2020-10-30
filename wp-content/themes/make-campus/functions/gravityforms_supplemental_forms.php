@@ -69,12 +69,14 @@ add_filter( 'gform_pre_submission_filter', 'populate_fields' );
  *    to pull in various data from the original form submission
  */
 
-function populate_fields($form) {
+function populate_fields($form) {    
     if (!class_exists('GFFormDisplay')) {
         return $form;
     }
     $jqueryVal = '';
-    if (isset($form['form_type']) && $form['form_type'] == 'Other') {
+    $form_type = get_value_by_label('supplemental_form', $form, array());
+    
+    if (isset($form_type['id']) && $form_type['id'] != '') {        
         //this is a 2-page form with the data from page one being displayed in an html field on following pages
         $current_page = GFFormDisplay::get_current_page($form['id']);
 
@@ -100,7 +102,7 @@ function populate_fields($form) {
                         case 'address':
                             foreach ($field->inputs as $key => $input) {
                                 if ($input['name'] != '') {
-                                    $parmName = $input['name'];
+                                    $parmName = $input['name'];                                    
                                     $pos = strpos($parmName, 'field-');
                                     if ($pos !== false) { //populate by field ID?
                                         $field_id = str_replace("field-", "", $input['name']);
@@ -114,7 +116,7 @@ function populate_fields($form) {
 
                     if (isset($field->inputName) && $field->inputName != '') {
                         $parmName = $field->inputName;
-
+                        
                         //check for 'field-' to see if the value should be populated by original entry field data
                         $pos = strpos($parmName, 'field-');
 
@@ -123,7 +125,7 @@ function populate_fields($form) {
                             //strip the 'field-' from the parameter name to get the field number
                             $field_id = str_replace("field-", "", $parmName);
                             $fieldType = $field->type;
-
+                            
                             switch ($fieldType) {
                                 case 'name':
                                     foreach ($field->inputs as &$input) {  //loop thru name inputs
@@ -212,7 +214,6 @@ function populate_fields($form) {
 }
 
 /* Used to update linked fields back to original entry */
-
 function updLinked_fields($form, $origEntryID) {
     //Loop thru form fields and look for parameter names of 'field-*'
     //  These are set to update original entry fields
@@ -281,7 +282,6 @@ function update_linked_data_pre($form, $entry_id, $orig_entry = array()) {
 }
 
 add_action('gform_after_submission', 'update_linked_data', 10, 2); //$entry, $form
-
 function update_linked_data($entry, $form) {
     // update meta
     $updateEntryID = get_value_by_label('entry-id', $form, $entry);
