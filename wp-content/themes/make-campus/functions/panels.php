@@ -582,7 +582,7 @@ function getImagePanel() {
             }
             $return .= '  </div>';
             $return .= '</div>';
-            $return .= '  <div class="col-sm-4 col-xs-12">
+            $return .= '  <div class="col-sm-6 col-xs-12">
 								 <h4>' . $image['image_title'] . '</h4>' . $image['image_text'];
             if (isset($image['image_links'])) {
                 foreach ($image['image_links'] as $image_link) {
