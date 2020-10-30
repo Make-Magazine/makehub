@@ -140,21 +140,23 @@ $post_image_ids = implode(', ', $post_image_ids);
                             <?php
                             foreach (get_field('promo_videos') as $video) {
                                 $project_video = $video['video'];
-
-                                $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
-
-                                //youtube has two type of url formats we need to look for and change
-                                $videoID = parse_yturl($dispVideo);
-                                if ($videoID != false) {
-                                    $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
-                                }
-                                ?>
-                                <div class="entry-video">
-                                    <div class="embed-youtube">
-                                        <iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-                                    </div>
-                                </div>
+								if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0) {
+									$dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
+									//youtube has two type of url formats we need to look for and change
+									$videoID = parse_yturl($dispVideo);
+									if ($videoID != false) {
+										$dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+									}
+									?>
+									<div class="entry-video">
+										<div class="embed-youtube">
+											<iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+										</div>
+									</div>
                                 <?php
+								} else {
+									echo "<p><a href='" . $video['video'] . "'>" . $video['video'] . "</a></p>";
+								}
                             }
                             ?>
 

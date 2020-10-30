@@ -18,3 +18,22 @@ jQuery('a[href*="#"]')
 			jQuery(accordion).find( '.uagb-faq-questions-button:first' ).click();
 		}
 });
+
+
+// should this be universal?
+// stick the secondary nav at the top of the hamburglar
+jQuery(document).ready(function () {
+	if (jQuery(window).width() < 767) {
+		jQuery("#menu-secondary_universal_menu").clone().insertBefore(jQuery(".nav-flyout-columns"));
+	}
+	jQuery(window).on('resize', function(){
+		if (jQuery("#nav-flyout #menu-secondary_universal_menu").length == 0 ) {
+			if (jQuery(window).width() < 767) {
+				jQuery("#menu-secondary_universal_menu").clone().insertBefore(jQuery(".nav-flyout-columns"));
+			}
+		}
+		if (jQuery(window).width() > 767) {
+			jQuery("#nav-flyout #menu-secondary_universal_menu").remove();
+		}
+	});
+});

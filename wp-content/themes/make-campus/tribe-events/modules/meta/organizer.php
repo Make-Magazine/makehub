@@ -49,17 +49,6 @@ $website = tribe_get_organizer_website_link();
 				<?php
 			}//end if
 
-			if ( ! empty( $email ) ) {
-				?>
-				<dt class="tribe-organizer-email-label">
-					<?php esc_html_e( 'Email:', 'the-events-calendar' ) ?>
-				</dt>
-				<dd class="tribe-organizer-email">
-					<?php echo esc_html( $email ); ?>
-				</dd>
-				<?php
-			}//end if
-
 			if ( ! empty( $website ) ) {
 				?>
 				<dt class="tribe-organizer-url-label">
