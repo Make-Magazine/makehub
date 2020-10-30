@@ -544,8 +544,7 @@ function getImagePanel() {
         if ($imageRowNum % 2 != 0) {
             $return .= '<div class="row ' . $image['background_color'] . '">';
             $return .= '  <div class="col-sm-6 col-xs-12">
-                            <h4>' . $image['image_title'] . '</h4>
-                            <p>' . $image['image_text'] . '</p>';
+                            <h4>' . $image['image_title'] . '</h4>' . $image['image_text'];
             if ($image['image_links']) {
                 foreach ($image['image_links'] as $image_link) {
                     $return .= '  	    <a href="' . $image_link['image_link_url'] . '">' . $image_link['image_link_text'] . '</a>';
@@ -558,7 +557,7 @@ function getImagePanel() {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
             $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
-            if (isset($image['image_overlay']['image_overlay_text'])) {
+            if ($image['image_overlay']['image_overlay_text']) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
             }
             if (isset($image['image_overlay']['image_overlay_link'])) {
@@ -575,9 +574,8 @@ function getImagePanel() {
                 $return .= ' 		  <a href="' . $image['image_overlay']['image_overlay_link'] . '">';
             }
             $return .= '			 <img class="img-responsive" src="' . $imageObj['url'] . '" alt="' . $imageObj['alt'] . '" />';
-            if (isset($image['image_overlay']['image_overlay_text'])) {
+            if ($image['image_overlay']['image_overlay_text']) {
                 $return .= '  <div class="image-overlay-text">' . $image['image_overlay']['image_overlay_text'] . '</div>';
-                ;
             }
             if (isset($image['image_overlay']['image_overlay_link'])) {
                 $return .= '        </a>';
@@ -585,8 +583,7 @@ function getImagePanel() {
             $return .= '  </div>';
             $return .= '</div>';
             $return .= '  <div class="col-sm-4 col-xs-12">
-								 <h4>' . $image['image_title'] . '</h4>
-								 <p>' . $image['image_text'] . '</p>';
+								 <h4>' . $image['image_title'] . '</h4>' . $image['image_text'];
             if (isset($image['image_links'])) {
                 foreach ($image['image_links'] as $image_link) {
                     $return .= '  	    <a href="' . $image_link['image_link_url'] . '">' . $image_link['image_link_text'] . '</a>';
