@@ -19,12 +19,17 @@ $events_label_plural = tribe_get_event_label_plural();
 
 $event_id = get_the_ID();
 
-// For some reason, images are no longer associated with post to get pulled into the gallery shortcode automatically, so manually build an array
+// Build an array of all images associated with the post to create a gallery out of
 $post_image_ids = array();
 array_push($post_image_ids, get_post_thumbnail_id());
-for ($x = 1; $x < 6; $x++) {
+for ($x = 1; $x < 7; $x++) {
     if (get_field("image_" . $x)) {
-        array_push($post_image_ids, get_field("image_" . $x)["ID"]);
+		// if fresh from the form, this comes in as an array, but for some reason once edited it comes in as a number
+		if (is_array( get_field("image_" . $x) )) {
+        	array_push($post_image_ids, get_field("image_" . $x)["ID"]);
+		} else {
+			array_push($post_image_ids, get_field("image_" . $x));
+		}
     }
 }
 $post_image_ids_string = implode(', ', $post_image_ids);
@@ -223,4 +228,3 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
     <!-- #tribe-events-footer -->
 
 </div><!-- #tribe-events-content -->
-

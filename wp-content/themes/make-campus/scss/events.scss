@@ -307,9 +307,16 @@
 	}
 }
 
+// THE EVENTS PAGE
 .tribe-events-view {
 	.tribe-events-header {
 		flex-direction: column !important;
+		h4 {
+			text-align: center;
+			margin-bottom: 20px;
+			margin-top: -10px;
+			font-size: 20px;
+		}
 		.tribe-events-header__events-bar {
 			display: flex;
 			align-items: center;

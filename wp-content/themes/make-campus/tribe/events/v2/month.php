@@ -55,6 +55,9 @@ if ( empty( $disable_event_search ) ) {
 					<h2>The One-Stop Hub for Sharing the Skills and Expertise of Makers</h2>
 				</div>
 			</section>
+			
+			<h4>Maker Campus is an alternative learning platform that organizes classes from independent makers, makerspace and partners. We believe that anyone and at any age should be able to start their maker journey, or take it to new places, no matter where they live.</h4>
+			
 			<?php $this->template( 'components/messages' ); ?>
 
 			<?php $this->template( 'components/breadcrumbs' ); ?>
