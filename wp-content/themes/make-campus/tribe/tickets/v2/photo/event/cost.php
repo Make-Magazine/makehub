@@ -21,6 +21,7 @@ if ( empty( $event->cost ) ) {
 	return;
 }
 ?>
+
 <div class="tribe-events-pro-photo__event-cost">
 	<?php if ( $event->tickets->exist() && $event->tickets->in_date_range() && ! $event->tickets->sold_out() ) : ?>
 		<a
@@ -47,12 +48,3 @@ if ( empty( $event->cost ) ) {
 		</span>
 	<?php endif; ?>
 </div>
-
-<?php 
-// Recurrence Info
-if (get_field("number_of_sessions")) { ?>
-	<div class="tribe-events-pro-photo__event-recurring">
-		<?php echo get_field("number_of_sessions"); ?> occurring <?php echo get_field("recurrence_type"); ?> 
-		<?php if ( get_field("exclusion_text") ) { echo " " . get_field("exclusion_text"); } ?>								  
-	</div>	
-<?php } ?>

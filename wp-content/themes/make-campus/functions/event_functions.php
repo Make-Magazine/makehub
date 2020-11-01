@@ -185,9 +185,10 @@ function event_post_meta($entry, $form, $post_id) {
 function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
     $recurrence_type = $entry['130'];
     $end_count = $end_recurring->diff($start_date)->days;
+	$days = array('Monday', 'Tuesday', 'Wednesday','Thursday','Friday', 'Saturday', 'Sunday');
     if ($recurrence_type == "Every Week") {
         $end_count = floor($end_count / 7) + 1;
-		$recurrence_type = $recurrence_type . " on a " . date('w', strtotime($start_date));
+		$recurrence_type = $recurrence_type . " on a " . ucfirst(days(date('w', strtotime($start_date))));
     } else if ($recurrence_type == "Every Month") {
         $end_count = countMonths($entry['4'], $entry['129']);
     }
