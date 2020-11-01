@@ -126,6 +126,16 @@ $website = tribe_get_event_website_link();
 			</dd>
 
 		<?php endif ?>
+		
+		<?php 
+	    // Recurrence Info
+		if (get_field("number_of_sessions")) { ?>
+			<dt class="tribe-events-event-recurring-label"> <?php esc_html_e( 'Series Details:', 'the-events-calendar' ); ?> </dt>
+            <dd class="tribe-events-event-recurring"> 
+				<?php echo get_field("number_of_sessions"); ?> occurring <?php echo get_field("recurrence_type"); ?> 
+				<?php if ( get_field("exclusion_text") ) { echo " " . get_field("exclusion_text"); } ?>								  
+		</dd>
+        <?php } ?>
 
 		<?php
 		// Event Cost
@@ -134,7 +144,7 @@ $website = tribe_get_event_website_link();
 			<dt class="tribe-events-event-cost-label"> <?php esc_html_e( 'Cost:', 'the-events-calendar' ); ?> </dt>
 			<dd class="tribe-events-event-cost"> <?php echo esc_html( $cost ); ?> </dd>
 		<?php endif ?>
-
+		
 		<?php
 		/* echo tribe_get_event_categories(
 			get_the_id(), array(
@@ -153,19 +163,20 @@ $website = tribe_get_event_website_link();
 		
 		<?php 
 		// Age ranges
-		$audience_obj = get_field_object('audience');
-		$audience_age = get_field('audience');
-		if ( $audience_age && $audience_obj ) {
-			$age_list = array(); ?>
-			<dt class="tribe-events-event-age-label"> <?php esc_html_e( 'Age Range:', 'the-events-calendar' ); ?> </dt>
-			<dd class="tribe-events-event-age">
-		<?php 
-			foreach ( $audience_age as $age ) {
-				$age_list[] = "<span class='age-item'>" . $audience_obj['choices'][ $age ] . "</span>";
+		if ( ! empty( $audience_obj ) ) { 
+			$audience_obj = get_field_object('audience');
+			$audience_age = get_field('audience');
+			if ( $audience_age && $audience_obj ) {
+				$age_list = array(); ?>
+				<dt class="tribe-events-event-age-label"> <?php esc_html_e( 'Age Range:', 'the-events-calendar' ); ?> </dt>
+				<dd class="tribe-events-event-age">
+			<?php 
+				foreach ( $audience_age as $age ) {
+					$age_list[] = "<span class='age-item'>" . $audience_obj['choices'][ $age ] . "</span>";
+				}
+				echo implode( " ", $age_list ) . '</dd>';
 			}
-			echo implode( " ", $age_list ) . '</dd>';
-		}
-		?>
+		} ?>
 		
 		<?php
 		/* Translators: %s: Event (singular) */

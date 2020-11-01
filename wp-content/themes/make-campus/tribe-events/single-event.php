@@ -56,9 +56,6 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
         <?php if (tribe_get_cost() && tribe_events_has_tickets()) { ?>
             <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo($formatter->formatCurrency(tribe_get_cost(null, false), 'USD') ); ?></span>
         <?php } ?>
-        <?php if (get_field("number_of_sessions")) { ?>
-            <span class="tribe-events-series-count"> (for a series of <?php echo get_field("number_of_sessions"); ?>)</span>
-        <?php } ?>
     </div>
 
     <!-- Notices -->

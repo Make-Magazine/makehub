@@ -829,6 +829,44 @@
             "step": ""
         },
         {
+            "key": "field_5f9e45063ea6d",
+            "label": "Recurrence Type",
+            "name": "recurrence_type",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_5f9e452c3ea6e",
+            "label": "Exclusion Text",
+            "name": "exclusion_text",
+            "type": "text",
+            "instructions": "Brief text outlining an exception to the recurrence schedule (e.g. \"except for Easter\")",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
             "key": "field_5f99c3ff562c0",
             "label": "Webinar Link",
             "name": "webinar_link",
@@ -862,5 +900,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1603912767
+    "modified": 1604208022
 }

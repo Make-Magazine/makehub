@@ -42,7 +42,7 @@ function gravityview_event_update($form, $entry_id, $entry_object = '') {
     //update organizer (not email or name)
     update_organizer_data($entry, $form, $organizerData, $post_id);
 
-    // If they want a recurring event, we can do that
+    // If they want a recurring event, we'll fake that
     if ($entry['100'] == "no") {
         event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
     }
