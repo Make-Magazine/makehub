@@ -129,11 +129,14 @@ $website = tribe_get_event_website_link();
 		
 		<?php 
 	    // Recurrence Info
-		if (get_field("number_of_sessions")) { ?>
+	 	$num_sessions = get_field("number_of_sessions");
+		$recurrence_info = get_field("recurrence_type");
+		$exclusion_txt = get_field("exclusion_text");
+		if ($num_sessions) { ?>
 			<dt class="tribe-events-event-recurring-label"> <?php esc_html_e( 'Series Details:', 'the-events-calendar' ); ?> </dt>
             <dd class="tribe-events-event-recurring"> 
-				<?php echo get_field("number_of_sessions"); ?> occurring <?php echo get_field("recurrence_type"); ?> 
-				<?php if ( get_field("exclusion_text") ) { echo " " . get_field("exclusion_text"); } ?>								  
+				<?php echo $num_sessions; ?> occurring <?php echo $recurrence_info; ?> 
+				<?php if ( $exclusion_txt && $exclusion_txt != '' ) { echo " " . get_field("exclusion_text"); } ?>								  
 		</dd>
         <?php } ?>
 

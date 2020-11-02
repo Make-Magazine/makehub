@@ -34,10 +34,13 @@ if ( ! empty( $event->featured ) ) {
 		</div>
 	</div>
 	<?php // Recurrence Info
-	if (get_field("number_of_sessions", $event->ID)) { ?>
+	$num_sessions = get_field("number_of_sessions", $event->ID);
+	$recurrence_info = get_field("recurrence_type", $event->ID);
+	$exclusion_txt = get_field("exclusion_text", $event->ID);
+	if ( $num_sessions ) { ?>
 		<div class="tribe-events-pro-photo__event-recurring">
-			<?php echo get_field("number_of_sessions", $event->ID); ?> times occurring <?php echo get_field("recurrence_type", $event->ID); ?> 
-			<?php if ( get_field("exclusion_text", $event->ID) ) { echo " " . get_field("exclusion_text", $event->ID); } ?>								  
+			<?php echo $num_sessions; ?> times occurring <?php echo $recurrence_info; ?> 
+			<?php if ( $exclusion_txt && $exclusion_txt != '' ) { echo " " . $exclusion_txt; } ?>								  
 		</div>	
 	<?php } ?>
 	<div class="tribe-events-pro-photo__event-cost-wrapper"><?php $this->template( 'photo/event/cost', [ 'event' => $event ] ); ?></div>
