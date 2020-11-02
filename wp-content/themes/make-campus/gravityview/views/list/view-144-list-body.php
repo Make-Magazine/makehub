@@ -83,8 +83,12 @@ if (!$gravityview->entries->count()) {
                             echo $gravityview->template->the_field($field, $entry, $extras);
                         }
                         ?>
+                            
                         <!-- add link to preview Event -->
-                        <a target="_blank" href="<?php echo get_preview_post_link($entry['post_id']);?>">See Preview of Your Event</a>
+                        <p><a target="_blank" href="<?php echo get_preview_post_link($entry['post_id']);?>">See Preview of Your Event</a></p>
+                        
+                        <!-- add link to Supplemental form -->
+                        <p><a target="_blank" href="/material-list/?contact-email=<?php echo $entry[132];?>&entry-id=<?php echo $entry['id'];?>">Update Information to your Attendees</a></p>
                         </div><?php
                     }
                     ?>
