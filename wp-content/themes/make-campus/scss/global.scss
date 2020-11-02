@@ -39,6 +39,12 @@ figure {
 	right: 50%;
 	margin-left: -50vw !important;
 	margin-right: -50vw !important;
+	&.elementor-section.elementor-section-boxed > .elementor-container {
+		max-width: 100%;
+		.elementor-row > .elementor-column > .elementor-column-wrap {
+			padding: 0px;
+		}
+	}
 }
 
 .social-links {
