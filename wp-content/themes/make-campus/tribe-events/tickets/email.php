@@ -492,8 +492,8 @@
 															<?php 
 																	 $public_email = get_field('public_email', $organizer_id);		
 																	 echo("ID" . $organizer_id);
-																	 echo("Public Email Value" . $public_email);
-																	 if($public_email && $public_email == 'yes') { ?>
+																	 echo("Public Email Value" . $public_email[0]);
+																	 if($public_email[0] && $public_email[0] == 'yes') { ?>
 																		<span>Contact <a href="mailto:<?php echo tribe_get_organizer_email( $organizer_id ); ?>"></a></span>
 															<?php    }
 																   } ?>
