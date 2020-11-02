@@ -46,7 +46,7 @@ function create_event($entry, $form) {
     // update taxonomies, featured image, etc
     event_post_meta($entry, $form, $post_id);
 
-    // If they want a recurring event, we can do that
+    // If they want a recurring event, we'll fake that
     if ($entry['100'] == "no") {
         event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
     }

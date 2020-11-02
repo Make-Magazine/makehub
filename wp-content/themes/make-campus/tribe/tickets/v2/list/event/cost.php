@@ -41,12 +41,18 @@ if ( empty( $event->cost ) ) {
 			<?php echo esc_html( $event->cost ); ?>
 		</span>
 	<?php endif; ?>
-	<?php if ( get_field("number_of_sessions") ) { ?>
-		    <span class="tribe-events-series-count"> (series of <?php echo get_field("number_of_sessions"); ?>)</span>
-	<?php } ?>
 	<?php if ( ! empty( $event->tickets->stock->available ) && $event->tickets->in_date_range() ) : ?>
 		<span class="tribe-events-c-small-cta__stock">
 			<?php echo esc_html( $event->tickets->stock->available ); ?>
 		</span>
 	<?php endif; ?>
 </div>
+
+<?php 
+// Recurrence Info
+if (get_field("number_of_sessions")) { ?>
+	<div class="tribe-events-c-small-cta tribe-common-b3 tribe-events-calendar-list__event-cost">
+		<?php echo get_field("number_of_sessions"); ?> occurring <?php echo get_field("recurrence_type"); ?> 
+		<?php if ( get_field("exclusion_text") ) { echo " " . get_field("exclusion_text"); } ?>								  
+	</div>	
+<?php } ?>

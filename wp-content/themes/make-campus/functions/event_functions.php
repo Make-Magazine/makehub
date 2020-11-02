@@ -185,12 +185,15 @@ function event_post_meta($entry, $form, $post_id) {
 function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
     $recurrence_type = $entry['130'];
     $end_count = $end_recurring->diff($start_date)->days;
+	$days = array('Monday', 'Tuesday', 'Wednesday','Thursday','Friday', 'Saturday', 'Sunday');
     if ($recurrence_type == "Every Week") {
         $end_count = floor($end_count / 7) + 1;
+		$recurrence_type = $recurrence_type . " on a " . ucfirst(days[date('w', strtotime($start_date))]);
     } else if ($recurrence_type == "Every Month") {
         $end_count = countMonths($entry['4'], $entry['129']);
     }
-    $recurrence_data = array(
+    /* This is code that would create a recurring event, but we'll fake that instead
+	$recurrence_data = array(
         'recurrence' => array(
             'rules' => array(
                 array(
@@ -204,9 +207,12 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
             ),
         ),
     );
-    update_field("number_of_sessions", $end_count . " / " . strtolower($recurrence_type), $post_id);
-    $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
-    $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);
+	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
+    $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);*/
+	
+    update_field("number_of_sessions", $end_count, $post_id);
+	update_field("recurrence_type", strtolower($recurrence_type), $post_id);
+    
 }
 
 function get_attachment_id_from_url($attachment_url) {

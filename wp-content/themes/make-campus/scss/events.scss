@@ -23,7 +23,7 @@
                 margin-bottom: 10px;
             }
             h2 { display: inline; }
-            .tribe-events-cost, .tribe-events-series-count { font-size: 2em; }
+            .tribe-events-cost { font-size: 2em; }
 			.recurringinfo { display: none; }
         }
 
@@ -106,6 +106,20 @@
         .tribe_events {
             margin-top: 30px;
 			margin-bottom: 15px;
+			.tribe-events-meta-group-organizer {
+				line-height: 20px;
+				.tribe-organizer {
+					display: flex;
+					align-items: center;
+					.tribe-organizer-photo {
+						margin-right: 15px;
+						img{
+							width: 100px;
+							height: auto;
+						}
+					}
+				}
+			}
 			.event-meta-sticky {
 				position: sticky;
 				top: 55px;
@@ -156,19 +170,6 @@
 								&:hover {
 									background-color: #005e9a;
 									color: #fff;
-								}
-							}
-						}
-						&.tribe-events-meta-group-organizer {
-							.tribe-organizer {
-								display: flex;
-								align-items: center;
-								.tribe-organizer-photo {
-									margin-right: 15px;
-									img{
-										width: 100px;
-										height: auto;
-									}
 								}
 							}
 						}
@@ -306,9 +307,16 @@
 	}
 }
 
+// THE EVENTS PAGE
 .tribe-events-view {
 	.tribe-events-header {
 		flex-direction: column !important;
+		h4 {
+			text-align: center;
+			margin-bottom: 20px;
+			margin-top: -10px;
+			font-size: 20px;
+		}
 		.tribe-events-header__events-bar {
 			display: flex;
 			align-items: center;

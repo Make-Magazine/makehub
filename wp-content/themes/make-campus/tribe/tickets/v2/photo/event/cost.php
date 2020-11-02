@@ -21,6 +21,7 @@ if ( empty( $event->cost ) ) {
 	return;
 }
 ?>
+
 <div class="tribe-events-pro-photo__event-cost">
 	<?php if ( $event->tickets->exist() && $event->tickets->in_date_range() && ! $event->tickets->sold_out() ) : ?>
 		<a
@@ -41,9 +42,6 @@ if ( empty( $event->cost ) ) {
 			<?php echo esc_html( $event->cost ); ?>
 		</span>
 	<?php endif; ?>
-	<?php if ( get_field("number_of_sessions") ) { ?>
-		    <span class="tribe-events-series-count"> (series of <?php echo get_field("number_of_sessions"); ?>)</span>
-	<?php } ?>
 	<?php if ( ! empty( $event->tickets->stock->available ) && $event->tickets->in_date_range() ) : ?>
 		<span class="tribe-events-c-small-cta__stock">
 			<?php echo esc_html( $event->tickets->stock->available ); ?>
