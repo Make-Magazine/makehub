@@ -50,9 +50,12 @@ if ( empty( $event->cost ) ) {
 
 <?php 
 // Recurrence Info
-if (get_field("number_of_sessions")) { ?>
+$num_sessions = get_field("number_of_sessions", $event->ID);
+$recurrence_info = get_field("recurrence_type", $event->ID);
+$exclusion_txt = get_field("exclusion_text", $event->ID);
+if ($num_sessions)) { ?>
 	<div class="tribe-events-c-small-cta tribe-common-b3 tribe-events-calendar-list__event-cost">
-		<?php echo get_field("number_of_sessions"); ?> occurring <?php echo get_field("recurrence_type"); ?> 
-		<?php if ( get_field("exclusion_text") ) { echo " " . get_field("exclusion_text"); } ?>								  
+		<?php echo $num_sessions; ?> occurring <?php echo $recurrence_info; ?> 
+		<?php if ( $exclusion_txt && $exclusion_txt != '' ) ) { echo " " . $exclusion_txt; } ?>								  
 	</div>	
 <?php } ?>
