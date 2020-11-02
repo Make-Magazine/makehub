@@ -59,7 +59,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
             $cost = tribe_get_cost();
             if ($cost != 0 && $cost != 'Free') {
                 ?>
-                <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo($formatter->formatCurrency(tribe_get_cost(null, false), 'USD') ); ?></span>
+                <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo($formatter->formatCurrency($cost, 'USD') ); ?></span>
                 <?php
             }
         }
