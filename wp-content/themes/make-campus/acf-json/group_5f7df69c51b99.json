@@ -56,13 +56,10 @@
                 "id": ""
             },
             "choices": {
-                "yes": "Yes",
-                "no": "No"
+                "yes": "Yes"
             },
             "allow_custom": 0,
-            "default_value": [
-                "no"
-            ],
+            "default_value": [],
             "layout": "vertical",
             "toggle": 0,
             "return_format": "value",
@@ -86,5 +83,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1604353709
+    "modified": 1604355376
 }
