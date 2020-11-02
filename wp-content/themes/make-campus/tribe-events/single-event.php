@@ -24,12 +24,12 @@ $post_image_ids = array();
 array_push($post_image_ids, get_post_thumbnail_id());
 for ($x = 1; $x < 7; $x++) {
     if (get_field("image_" . $x)) {
-		// if fresh from the form, this comes in as an array, but for some reason once edited it comes in as a number
-		if (is_array( get_field("image_" . $x) )) {
-        	array_push($post_image_ids, get_field("image_" . $x)["ID"]);
-		} else {
-			array_push($post_image_ids, get_field("image_" . $x));
-		}
+        // if fresh from the form, this comes in as an array, but for some reason once edited it comes in as a number
+        if (is_array(get_field("image_" . $x))) {
+            array_push($post_image_ids, get_field("image_" . $x)["ID"]);
+        } else {
+            array_push($post_image_ids, get_field("image_" . $x));
+        }
     }
 }
 $post_image_ids_string = implode(', ', $post_image_ids);
@@ -42,20 +42,28 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
         <a class="universal-btn" href="<?php echo esc_url(tribe_get_events_link()); ?>"> <?php printf('&laquo; ' . esc_html_x('All %s', '%s Events plural label', 'the-events-calendar'), $events_label_plural); ?></a>
     </p>
     <div class="tribe-events-image-gallery">
-        <?php 
-			echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="large" order="DESC" orderby="ID"]'); 
-			if (count($post_image_ids) != 1) {
-		?>
-        		<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
-		<?php } ?>
+        <?php
+        echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="large" order="DESC" orderby="ID"]');
+        if (count($post_image_ids) != 1) {
+            ?>
+            <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
+        <?php } ?>
     </div>
 
     <div class="tribe-events-header tribe-clearfix">
-        <?php the_title('<h1 class="tribe-events-single-event-title">', '</h1>'); ?>
-        <?php echo tribe_events_event_schedule_details($event_id, '<h2>', '</h2>'); ?>
-        <?php if (tribe_get_cost() && tribe_events_has_tickets()) { ?>
-            <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo($formatter->formatCurrency(tribe_get_cost(null, false), 'USD') ); ?></span>
-        <?php } ?>
+        <?php
+        the_title('<h1 class="tribe-events-single-event-title">', '</h1>');
+        echo tribe_events_event_schedule_details($event_id, '<h2>', '</h2>');
+
+        if (tribe_events_has_tickets()) {
+            $cost = tribe_get_cost();
+            if ($cost != 0 && $cost != 'Free') {
+                ?>
+                <span class="tribe-events-cost">&nbsp;-&nbsp;<?php echo($formatter->formatCurrency(tribe_get_cost(null, false), 'USD') ); ?></span>
+                <?php
+            }
+        }
+        ?>
     </div>
 
     <!-- Notices -->
@@ -79,13 +87,14 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                     <div class="event-author">
                         <h3>About the Facilitator:</h3> 
                         <?php echo get_field('about'); ?>
-						<br /><br />
-						<?php // Include organizer meta if appropriate
-						if ( tribe_has_organizer() ) {
-							tribe_get_template_part( 'modules/meta/organizer' );
-						}
-						?>
-						
+                        <br /><br />
+                        <?php
+                        // Include organizer meta if appropriate
+                        if (tribe_has_organizer()) {
+                            tribe_get_template_part('modules/meta/organizer');
+                        }
+                        ?>
+
                     </div>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
@@ -155,23 +164,23 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <?php
                             foreach (get_field('promo_videos') as $video) {
                                 $project_video = $video['video'];
-								if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0) {
-									$dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
-									//youtube has two type of url formats we need to look for and change
-									$videoID = parse_yturl($dispVideo);
-									if ($videoID != false) {
-										$dispVideo = 'https://www.youtube.com/embed/' . $videoID;
-									}
-									?>
-									<div class="entry-video">
-										<div class="embed-youtube">
-											<iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-										</div>
-									</div>
-                                <?php
-								} else {
-									echo "<p><a href='" . $video['video'] . "'>" . $video['video'] . "</a></p>";
-								}
+                                if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0) {
+                                    $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
+                                    //youtube has two type of url formats we need to look for and change
+                                    $videoID = parse_yturl($dispVideo);
+                                    if ($videoID != false) {
+                                        $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+                                    }
+                                    ?>
+                                    <div class="entry-video">
+                                        <div class="embed-youtube">
+                                            <iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                    <?php
+                                } else {
+                                    echo "<p><a href='" . $video['video'] . "'>" . $video['video'] . "</a></p>";
+                                }
                             }
                             ?>
 
