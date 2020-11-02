@@ -121,6 +121,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
         $num++;
     }
     update_field("social_links", $repeater, $organizer_id);
+	update_field("public_email", GFAPI::get_field($form, 148), $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
     tribe_update_organizer($organizer_id, $organizerArgs);
