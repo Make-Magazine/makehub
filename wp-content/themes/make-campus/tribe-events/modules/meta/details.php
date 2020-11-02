@@ -112,7 +112,7 @@ else :
 
             <dt class="tribe-events-start-date-label"> <?php esc_html_e('Date:', 'the-events-calendar'); ?> </dt>
             <dd>
-                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_date); ?> </abbr>
+                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_date); ?> - <?php echo esc_html($end_date); ?></abbr>
             </dd>
 
             <dt class="tribe-events-start-time-label"> <?php echo esc_html($time_title); ?> </dt>
@@ -136,7 +136,7 @@ else :
             ?>
             <dt class="tribe-events-event-recurring-label"> <?php esc_html_e('Series Details:', 'the-events-calendar'); ?> </dt>
             <dd class="tribe-events-event-recurring"> 
-                <?php echo $num_sessions; ?> occurring <?php echo $recurrence_info; ?> 
+                <?php echo $num_sessions; ?> <?php echo $recurrence_info; ?> sessions starting on <?php echo esc_html($start_date); ?>
                 <?php if ($exclusion_txt && $exclusion_txt != '') {
                     echo " " . get_field("exclusion_text");
                 } ?>								  
