@@ -490,7 +490,9 @@
 																<span
 																	style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer( $organizer_id ); ?></span>
 															<?php 
-																	 $public_email = get_field('public_email', $event);						
+																	 $public_email = get_field('public_email', $organizer_id);		
+																	 echo("ID" . $organizer_id);
+																	 echo("Public Email Value" . $public_email);
 																	 if($public_email && $public_email == 'yes') { ?>
 																		<span>Contact <a href="mailto:<?php echo tribe_get_organizer_email( $organizer_id ); ?>"></a></span>
 															<?php    }

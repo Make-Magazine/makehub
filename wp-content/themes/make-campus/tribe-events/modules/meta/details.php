@@ -26,7 +26,7 @@ $end_date = tribe_get_display_end_date(null, false);
 $end_time = tribe_get_end_date(null, false, $time_format);
 $end_ts = tribe_get_end_date(null, false, Tribe__Date_Utils::DBDATEFORMAT);
 
-$series_end = get_field("preferred_end_date");
+$series_end = end(tribe_get_recurrence_start_dates());
 
 $time_formatted = null;
 if ($start_time == $end_time) {
@@ -114,7 +114,7 @@ else :
 
             <dt class="tribe-events-start-date-label"> <?php esc_html_e('Date:', 'the-events-calendar'); ?> </dt>
             <dd>
-                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_date); ?> - <?php echo date_format(new DateTime($series_end), "F j"); ?></abbr>
+                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_date); ?> - <?php echo date_format(new DateTime($series_end), "F j, Y"); ?></abbr>
             </dd>
 
             <dt class="tribe-events-start-time-label"> <?php echo esc_html($time_title); ?> </dt>
