@@ -18,7 +18,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
         array('6', 'preferred_end_date'),
-        array('7', 'preferred_end_time'),
+        array('129', 'preferred_end_time'),
         array('96', 'alternative_start_date'),
         array('97', 'alternative_start_time'),
         array('96', 'alternative_end_time'),

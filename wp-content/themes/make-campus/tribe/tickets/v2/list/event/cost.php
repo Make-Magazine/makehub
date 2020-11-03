@@ -50,6 +50,7 @@ if ( empty( $event->cost ) ) {
 
 <?php 
 // Recurrence Info
+$start_date = tribe_get_start_date(null, false);
 $num_sessions = get_field("number_of_sessions", $event->ID);
 $recurrence_info = get_field("recurrence_type", $event->ID);
 $exclusion_txt = get_field("exclusion_text", $event->ID);
