@@ -411,14 +411,12 @@
 			}
 			strong { display: block; }
 		}
+		br { display: none; }
 	}
 	p { 
 		margin-top: 15px;
 		font-size: .9em;
 		line-height: 1.3em;
-		br:last-of-type {
-			display: none;
-		}
 	}
 }
 
