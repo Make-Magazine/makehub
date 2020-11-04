@@ -164,7 +164,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <?php
                             foreach (get_field('promo_videos') as $video) {
                                 $project_video = $video['video'];
-                                if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0) {
+                                if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0 || strpos($project_video, "youtu.be") > 0) {
                                     $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
                                     //youtube has two type of url formats we need to look for and change
                                     $videoID = parse_yturl($dispVideo);

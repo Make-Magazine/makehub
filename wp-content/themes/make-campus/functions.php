@@ -403,12 +403,22 @@ function smartTruncate($string, $limit, $break = ".", $pad = "...") {
     return $string;
 }
 
-
 $gv_fe = GravityView_frontend::getInstance();
-remove_filter( 'parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
+remove_filter('parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
 
-function parse_yturl($url){
+function parse_yturl($url) {
     $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
     preg_match($pattern, $url, $matches);
     return (isset($matches[1])) ? $matches[1] : false;
 }
+
+// block wp-admin access for 
+function wpabsolute_block_users_backend() {
+    $user = wp_get_current_user();
+    if (is_admin() && !wp_doing_ajax() & in_array('event_facilitator', (array) $user->roles)) {
+        wp_redirect(home_url());
+        exit;
+    }
+}
+
+add_action('init', 'wpabsolute_block_users_backend');
