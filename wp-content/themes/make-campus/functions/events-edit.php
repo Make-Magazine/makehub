@@ -35,9 +35,7 @@ function gravityview_event_update($form, $entry_id, $entry_object = '') {
     
     //update event cost and capacity
     $event_cost = (isset($entry['37']) ? $entry['37'] : 0);
-    update_post_meta($post_id, '_EventCost',$event_cost);
-    $ticket_capacity = (isset($entry['106']) ? $entry['106'] : '');
-    update_post_meta($post_id, '_tribe_ticket_capacity', $ticket_capacity);
+    update_post_meta($post_id, '_EventCost',$event_cost);    
 
     //update timezone    
     update_post_meta($post_id, '_EventTimezone', $entry['131']);

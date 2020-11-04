@@ -135,7 +135,7 @@ function update_ticket_data($entry, $post_id) {
     $ticket = new Tribe__Tickets__Ticket_Object();
     $ticket->name = "Ticket - " . $entry['1'];
     $ticket->description = (isset($entry['42']) ? $entry['42'] : '');
-    $ticket->price = (isset($entry['37']) ? $entry['37'] : '');
+    $ticket->price = (isset($entry['37']) ? $entry['37'] : 0);
     $ticket->capacity = (isset($entry['106']) ? $entry['106'] : '');
     // these would be used if we wanted to limit the time tickets were on sale
     $ticket->start_date = (isset($entry['45']) ? $entry['45'] : '');
@@ -162,7 +162,8 @@ function update_ticket_data($entry, $post_id) {
     }
     
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
-
+    update_post_meta($post_id, '_tribe_ticket_capacity', $ticket->capacity);
+    
     update_post_meta($ticket->ID, '_stock', $woo_stock);
     update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
 }
