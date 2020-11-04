@@ -53,3 +53,36 @@ li.gform_validation_container, li.gform_hidden {
     background-color: white;
     border-radius: 50%;
 }
+
+// Gravity Datepicker
+#ui-datepicker-div {
+	border: 1px solid #005e9a;
+	width: auto;
+	border-radius: 10px;
+	overflow: hidden;
+	.ui-datepicker-header {
+		background: #005e9a;
+		.ui-datepicker-title {
+			select {
+				color: #333;
+			}
+		}
+	}
+	table.ui-datepicker-calendar {
+		thead { background: #fff; }
+		tbody {
+			td {
+				border-top: 1px solid #005e9a;
+				border-right: 1px solid #005e9a;
+				&:last-of-type { border-right: 0px; }
+				&.ui-datepicker-unselectable.ui-state-disabled {
+					background: #7faecc; // half transparent blue without being transparent
+				}
+			}
+			a.ui-state-default {
+				background: #fff;
+				box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+			}
+		}
+	}
+}
