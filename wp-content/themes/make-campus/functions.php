@@ -422,3 +422,6 @@ function wpabsolute_block_users_backend() {
 }
 
 add_action('init', 'wpabsolute_block_users_backend');
+
+//remove edit entry event links from 'atendees report' in facilitator report
+add_action('tribe_tickets_attendees_event_action_links', function() {return '';});

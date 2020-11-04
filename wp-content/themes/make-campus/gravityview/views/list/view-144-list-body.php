@@ -85,7 +85,7 @@ if (!$gravityview->entries->count()) {
                         ?>
                             
                         <!-- add link to preview Event -->
-                        <p><a target="_blank" href="<?php echo get_preview_post_link($entry['post_id']);?>">See Preview of Your Event</a></p>
+                        <p><a target="_blank" href="<?php echo get_preview_post_link($entry['post_id']);?>"><?php echo ($entry['is_approved']==1?'View Event': 'View Preview of Event');?></a></p>
                         
                         <!-- add link to Supplemental form -->
                         <p><a target="_blank" href="/material-list/?contact-email=<?php echo $entry[132];?>&entry-id=<?php echo $entry['id'];?>">Update Information to your Attendees</a></p>
