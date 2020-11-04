@@ -34,6 +34,7 @@ function create_event($entry, $form) {
         'EventEndHour' => $end_date->format('h'),
         'EventEndMinute' => $end_date->format('i'),
         'EventEndMeridian' => $end_date->format('A'),
+        'EventCost' =>(isset($entry['37']) ? $entry['37'] : 0),        
         'Organizer' => $organizerData
     );
     $post_id = tribe_create_event($event_args);
