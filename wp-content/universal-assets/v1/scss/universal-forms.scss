@@ -71,7 +71,18 @@ li.gform_validation_container, li.gform_hidden {
 	table.ui-datepicker-calendar {
 		thead { background: #fff; }
 		tbody {
-			
+			td {
+				border-top: 1px solid #005e9a;
+				border-right: 1px solid #005e9a;
+				&:last-of-type { border-right: 0px; }
+				&.ui-datepicker-unselectable.ui-state-disabled {
+					background: #7faecc; // half transparent blue without being transparent
+				}
+			}
+			a.ui-state-default {
+				background: #fff;
+				box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+			}
 		}
 	}
 }
