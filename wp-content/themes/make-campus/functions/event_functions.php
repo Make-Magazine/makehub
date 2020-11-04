@@ -17,7 +17,7 @@ function update_event_acf($entry, $form, $post_id) {
     $field_mapping = array(
         array('4', 'preferred_start_date'),
         array('5', 'preferred_start_time'),
-        array('4', 'preferred_end_date'),
+        array('129', 'preferred_end_date'),
         array('7', 'preferred_end_time'),
         array('96', 'alternative_start_date'),
         array('97', 'alternative_start_time'),
@@ -121,6 +121,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
         $num++;
     }
     update_field("social_links", $repeater, $organizer_id);
+	update_field("public_email", GFAPI::get_field($form, 148), $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
     tribe_update_organizer($organizer_id, $organizerArgs);
@@ -188,10 +189,13 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
 	$days = array('Monday', 'Tuesday', 'Wednesday','Thursday','Friday', 'Saturday', 'Sunday');
     if ($recurrence_type == "Every Week") {
         $end_count = floor($end_count / 7) + 1;
-		$recurrence_type = $recurrence_type . " on a " . $days[date('w', strtotime($start_date))];
+		$recurrence_type = "weekly";
     } else if ($recurrence_type == "Every Month") {
         $end_count = countMonths($entry['4'], $entry['129']);
-    }
+		$recurrence_type = "monthly";
+    } else {
+		$recurrence_type = "daily";
+	}
     /* This is code that would create a recurring event, but we'll fake that instead
 	$recurrence_data = array(
         'recurrence' => array(

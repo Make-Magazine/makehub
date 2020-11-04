@@ -26,6 +26,12 @@ $end_date = tribe_get_display_end_date(null, false);
 $end_time = tribe_get_end_date(null, false, $time_format);
 $end_ts = tribe_get_end_date(null, false, Tribe__Date_Utils::DBDATEFORMAT);
 
+// Recurrence Info
+$num_sessions = get_field("number_of_sessions");
+$recurrence_info = get_field("recurrence_type");
+$exclusion_txt = get_field("exclusion_text");
+$series_end = get_field('preferred_end_date');
+
 $time_formatted = null;
 if ($start_time == $end_time) {
     $time_formatted = esc_html($start_time);
@@ -112,7 +118,10 @@ else :
 
             <dt class="tribe-events-start-date-label"> <?php esc_html_e('Date:', 'the-events-calendar'); ?> </dt>
             <dd>
-                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_date); ?> </abbr>
+                <abbr class="tribe-events-abbr tribe-events-start-date published dtstart" title="<?php echo esc_attr($start_ts); ?>"> 
+					<?php echo esc_html($start_date); 
+					if($num_sessions && $num_sessions != '') {  echo " - " . date_format(new DateTime($series_end), "F j, Y"); } ?>
+				</abbr>
             </dd>
 
             <dt class="tribe-events-start-time-label"> <?php echo esc_html($time_title); ?> </dt>
@@ -128,15 +137,12 @@ else :
 <?php endif ?>
 
         <?php
-        // Recurrence Info
-        $num_sessions = get_field("number_of_sessions");
-        $recurrence_info = get_field("recurrence_type");
-        $exclusion_txt = get_field("exclusion_text");
+        
         if ($num_sessions) {
             ?>
             <dt class="tribe-events-event-recurring-label"> <?php esc_html_e('Series Details:', 'the-events-calendar'); ?> </dt>
             <dd class="tribe-events-event-recurring"> 
-                <?php echo $num_sessions; ?> occurring <?php echo $recurrence_info; ?> 
+                <?php echo $num_sessions; ?> <?php echo $recurrence_info; ?> sessions starting on <?php echo esc_html($start_date); ?>
                 <?php if ($exclusion_txt && $exclusion_txt != '') {
                     echo " " . get_field("exclusion_text");
                 } ?>								  
