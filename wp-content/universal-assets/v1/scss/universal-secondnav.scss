@@ -112,3 +112,13 @@
 		}
 	}
 }
+
+// for when the secondary nav is in the dropdown
+#nav-flyout #menu-secondary_universal_menu {
+	display: flex;
+	li a { color: #333; }
+	@media screen and (max-width: 577px) {
+		flex-direction: column;
+    	margin-top: 15px;
+	}
+}

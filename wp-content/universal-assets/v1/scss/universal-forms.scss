@@ -1,0 +1,88 @@
+/* Hidden & Validation Forms */
+
+li.gform_validation_container, li.gform_hidden {
+    position: absolute;
+    left: -999em;
+	visibility: hidden;
+}
+.hidden_label > label {position:absolute; left:-999em;}
+
+
+/* Error & Validation Messages */
+
+.validation_error, .gform_validation_error li.gfield_error {
+    background: #bf0421 !important; /* Maroon */
+    color: white;
+    padding: 0 1em 1em 1em;
+    margin: 1em 0;
+    border-radius: 3px;
+	input, textarea { color: #000; }
+}
+.validation_error {padding-top:1em;}
+
+.gform_wrapper .gfield_description.validation_message {
+    position: absolute;
+    top: -1.25em;
+    left: 1em;
+    background: black;
+    border-radius: 3px;
+    padding: .25em .5em;
+	color: #fff;
+	font-weight: 900;
+	padding-bottom: 5px;
+	font-size: 1em;
+}
+
+.gfield_description.validation_message:before {content:""; width:0; height:0; position:absolute;
+	border-left:5px solid transparent; border-right:5px solid transparent; bottom:-5px; left:1em;
+	border-top:5px solid black;}
+	
+.gform_wrapper li.gfield_error {
+    position: relative;
+    margin-top: 3em;
+}
+
+.gfield_error .ginput_container_select:after {display:none;}
+
+.gfield_error .warningTextareaInfo { color:white; }
+.gfield_error .ginput_container_fileupload {
+    color: black;
+}
+
+.gfield_error img.add_list_item {
+    background-color: white;
+    border-radius: 50%;
+}
+
+// Gravity Datepicker
+#ui-datepicker-div {
+	border: 1px solid #005e9a;
+	width: auto;
+	border-radius: 10px;
+	overflow: hidden;
+	.ui-datepicker-header {
+		background: #005e9a;
+		.ui-datepicker-title {
+			select {
+				color: #333;
+			}
+		}
+	}
+	table.ui-datepicker-calendar {
+		thead { background: #fff; }
+		tbody {
+			td {
+				border-top: 1px solid #005e9a;
+				border-right: 1px solid #005e9a;
+				&:last-of-type { border-right: 0px; }
+				&.ui-datepicker-unselectable.ui-state-disabled {
+					background: #7faecc; // half transparent blue without being transparent
+				}
+			}
+			a.ui-state-default {
+				background: #fff;
+				box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+			}
+		}
+	}
+}

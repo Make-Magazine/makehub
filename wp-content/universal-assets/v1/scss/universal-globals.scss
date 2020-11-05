@@ -58,13 +58,20 @@ a { // don't let genesis molest our links
 	}
 }
 
+.wp-block-button__link {
+	border-radius: 15px;
+	&:hover {
+		color: #fff;
+	}
+}
+
 .universal-btn {
 	background-color: #005e9a;
 	color: #fff;
 	display: inline-flex;
-   justify-content: center;
-   align-content: center;
-   flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
 	border-radius: 0;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
@@ -73,11 +80,11 @@ a { // don't let genesis molest our links
 	font-weight: 300;      
 	height: 50px;
 	padding: 0px 15px;
+	border: solid 1px #005e9a;
 	&:visited, &:active { color: #fff; }
 	&:hover {
-		background: #fff;
-      color: #005e9a;
-      border: solid 1px #005e9a;
+	    background: #fff;
+        color: #005e9a;
 	}
 }
 .universal-btn-red {
@@ -105,6 +112,9 @@ a { // don't let genesis molest our links
 		color: #FFF !important;
 		background-color: #005e9a;
 	}
+}
+.btn.full-width, .btn.full-width a {
+	width: 100%;
 }
 
 // GDPR Cookie Modal
@@ -197,6 +207,24 @@ a { // don't let genesis molest our links
 		top: 0px;
 		left: 0px;
 	}
+}
+.info-btn {
+	border: solid 1px #005e9a;
+	padding: 0px 9px;
+	border-radius: 40px;
+	font-size: 18px;
+	font-weight: bold;
+	color: #005e9a;
+	font-style: normal;
+	&:hover {
+		color: #fff;
+		background: #005e9a;
+		text-decoration: none;
+	}
+}
+.info-modal {
+	display: none;
+	padding: 30px 20px 20px;
 }
 
 // This checkbox code is so good, we got to make it universal

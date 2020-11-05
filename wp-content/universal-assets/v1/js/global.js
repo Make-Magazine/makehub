@@ -119,37 +119,85 @@ jQuery(document).ready(function(){
 
 // for newsletter thank you popups
 jQuery(document).ready(function(jQuery){
-  // Thank you modal with more newsletter options
-  jQuery(".fancybox-thx").fancybox({
-    autoSize : false,
-    width  : 400,
-    autoHeight : true,
-    padding : 0,
-    afterLoad   : function() {
-      this.content = this.content.html();
-    }
-  });
-  // reCAPTCHA error message
-  jQuery(".nl-modal-error").fancybox({
-    autoSize : false,
-    width  : 250,
-    autoHeight : true,
-    padding : 0,
-    afterLoad   : function() {
-      this.content = this.content.html();
-    }
-  });
-  // YOUTUBE PLAYER FOR FANCYBOX MODALS
-  jQuery(".fancytube").fancybox({
-    maxWidth  : 800,
-    maxHeight : 600,
-    fitToView : false,
-    width   : '70%',
-    height    : '70%',
-    autoSize  : false,
-    closeClick  : false,
-    openEffect  : 'none',
-    closeEffect : 'none',
-    padding : 0
-  });
+	// Thank you modal with more newsletter options
+	jQuery(".fancybox-thx").fancybox({
+		autoSize : false,
+		width  : 400,
+		autoHeight : true,
+		padding : 0,
+		afterLoad   : function() {
+			this.content = this.content.html();
+		}
+	});
+	// reCAPTCHA error message
+	jQuery(".nl-modal-error").fancybox({
+		autoSize : false,
+		width  : 250,
+		autoHeight : true,
+		padding : 0,
+		afterLoad   : function() {
+		this.content = this.content.html();
+	}
+	});
+	// YOUTUBE PLAYER FOR FANCYBOX MODALS
+	jQuery(".fancytube").fancybox({
+		maxWidth  : 800,
+		maxHeight : 600,
+		fitToView : false,
+		width   : '70%',
+		height    : '70%',
+		autoSize  : false,
+		closeClick  : false,
+		openEffect  : 'none',
+		closeEffect : 'none',
+		padding : 0
+	});
+	// just a standard info box
+	jQuery(".info-modal").fancybox({
+		fitToView : false,
+		autoSize : false,
+		maxWidth   : '70%',
+		autoHeight : true,
+		padding : 0
+	});
 });
+
+
+// Smooth scroll all the anchor tags
+jQuery('a[href*="#"]')
+  // Remove links that don't actually link to anything
+  .not('[href="#"]')
+  .not('[href="#0"]')
+  .click(function(event) {
+    // On-page links
+	jQuery('a[href*="#"]').removeClass("clicked");
+	jQuery(this).addClass("clicked");
+    if (
+      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+      && 
+      location.hostname == this.hostname
+    ) {
+      // Figure out element to scroll to
+      var target = jQuery(this.hash);
+      target = target.length ? target : jQuery('[name=' + this.hash.slice(1) + ']');
+      // Does a scroll target exist?
+      if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+        jQuery('html, body').animate({
+          scrollTop: target.offset().top - 50
+        }, 1000, function() {
+          // Callback after animation
+          // Must change focus!
+          var $target = jQuery(target);
+          $target.focus();
+          if ($target.is(":focus")) { // Checking if the target was focused
+            return false;
+          } else {
+            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+            $target.focus(); // Set focus again
+          };
+        });
+      }
+    }
+  });

@@ -12,7 +12,7 @@ class ACUI_REST_API{
 			'methods' => 'GET',  
 			'callback' => array( $this, 'fire_cron' ),
 			'permission_callback' => function () {
-				return current_user_can( 'create_users' );
+				return current_user_can( apply_filters( 'acui_capability', 'create_users' ) );
 			}
 		) );
 	}

@@ -280,7 +280,7 @@ class ACUI_Cron{
 					<th scope="row"><label for="cron-delete-users"><?php _e( 'Delete users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="cron-delete-users" value="yes" <?php if( $cron_delete_users == true ) echo "checked='checked'"; ?>/>
+							<input type="checkbox" name="cron-delete-users" id="cron-delete-users" value="yes" <?php if( $cron_delete_users == true ) echo "checked='checked'"; ?>/>
 						</div>
 						<div style="margin-left:25px;">
 							<select id="cron-delete-users-assign-posts" name="cron-delete-users-assign-posts">
@@ -309,10 +309,10 @@ class ACUI_Cron{
 					<th scope="row"><label for="cron-change-role-not-present"><?php _e( 'Change role of users that are not present in the CSV?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<div style="float:left; margin-top: 10px;">
-							<input type="checkbox" name="cron-change-role-not-present" value="yes" <?php checked( $cron_change_role_not_present ); ?> />
+							<input type="checkbox" name="cron-change-role-not-present" id="cron-change-role-not-present" value="yes" <?php checked( $cron_change_role_not_present ); ?> />
 						</div>
 						<div style="margin-left:25px;">
-							<select id="cron-change-role-not-present-role" name="cron-change-role-not-present-role">
+							<select name="cron-change-role-not-present-role" id="cron-change-role-not-present-role">
 								<?php
 									$list_roles = acui_get_editable_roles();						
 									foreach ($list_roles as $key => $value):
@@ -362,6 +362,22 @@ class ACUI_Cron{
 
 		<script>
 		jQuery( document ).ready( function( $ ){
+			check_delete_users_checked();
+
+			$( '#cron-delete-users' ).on( 'click', function() {
+				check_delete_users_checked();
+			});
+
+			function check_delete_users_checked(){
+				if( $('#cron-delete-users').is(':checked') ){
+					$( '#cron-change-role-not-present-role' ).prop( 'disabled', true );
+					$( '#cron-change-role-not-present' ).prop( 'disabled', true );				
+				} else {
+					$( '#cron-change-role-not-present-role' ).prop( 'disabled', false );
+					$( '#cron-change-role-not-present' ).prop( 'disabled', false );
+				}
+			}
+
 			$( "[name='cron-delete-users']" ).change(function() {
 		        if( $(this).is( ":checked" ) ) {
 		            var returnVal = confirm("<?php _e( 'Are you sure to delete all users that are not present in the CSV? This action cannot be undone.', 'import-users-from-csv-with-meta' ); ?>");

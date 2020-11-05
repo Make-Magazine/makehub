@@ -26,7 +26,7 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 
 			$buddypress_fields = array();
 
-			if( is_plugin_active( 'buddypress/bp-loader.php' ) ){
+			if( is_plugin_active( 'buddypress/bp-loader.php' ) || class_exists( 'BP_XProfile_Group' ) ){
 				$profile_groups = BP_XProfile_Group::get( array( 'fetch_fields' => true	) );
 
 				if ( !empty( $profile_groups ) ) {
@@ -606,61 +606,9 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 					}
 						
 					// send mail
-					if( isset( $mail_for_this_user ) && $mail_for_this_user ):
-						$key = get_password_reset_key( $user_object );
-						$user_login= $user_object->user_login;
-						
-						$body = get_option( "acui_mail_body" );
-						$subject = get_option( "acui_mail_subject" );
-												
-						$body = str_replace( "**loginurl**", wp_login_url(), $body );
-						$body = str_replace( "**username**", $user_login, $body );
-						$body = str_replace( "**lostpasswordurl**", wp_lostpassword_url(), $body );
-                        $subject = str_replace( "**username**", $user_login, $subject );
-
-                        if( !is_wp_error( $key ) ){
-							$passwordreseturl = apply_filters( 'acui_email_passwordreseturl', network_site_url( 'wp-login.php?action=rp&key=' . $key . '&login=' . rawurlencode( $user_login ), 'login' ) );
-							$body = str_replace( "**passwordreseturl**", $passwordreseturl, $body );
-						
-							$passwordreseturllink = wp_sprintf( '<a href="%s">%s</a>', $passwordreseturl, __( 'Password reset link', 'import-users-from-csv-with-meta' ) );
-							$body = str_replace( "**passwordreseturllink**", $passwordreseturllink, $body );
-						}
-						
-						if( empty( $password ) && !$created ){
-							$password = __( 'Password has not been changed', 'import-users-from-csv-with-meta' );
-						}
-
-						$body = str_replace( "**password**", $password, $body );
-						$body = str_replace( "**email**", $email, $body );
-
-						foreach ( $wp_users_fields as $wp_users_field ) {								
-							if( $positions[ $wp_users_field ] != false && $wp_users_field != "password" ){
-								$body = str_replace( "**" . $wp_users_field .  "**", $data[ $positions[ $wp_users_field ] ] , $body );
-                                $subject = str_replace( "**" . $wp_users_field .  "**", $data[ $positions[ $wp_users_field ] ] , $subject );
-                            }
-						}
-
-						for( $i = 0 ; $i < count( $headers ); $i++ ) {
-							$data[ $i ] = ( is_array( $data[ $i ] ) ) ? implode( "-", $data[ $i ] ) : $data[ $i ];
-							$body = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $body );
-                            $subject = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $subject );
-                        }
-
-						$body = wpautop( $body );
-						
-						$attachments = array();
-						$attachment_id = get_option( 'acui_mail_attachment_id' );
-						if( !empty( $attachment_id ) )
-							$attachments[] = get_attached_file( $attachment_id );
-
-						$email_to = apply_filters( 'acui_import_email_to', $email, $headers, $data, $created );
-						$subject = apply_filters( 'acui_import_email_subject', $subject, $headers, $data, $created );
-						$body = apply_filters( 'acui_import_email_body', $body, $headers, $data, $created );
-						$headers_mail = apply_filters( 'acui_import_email_headers', array( 'Content-Type: text/html; charset=UTF-8' ), $headers, $data );
-						$attachments = apply_filters( 'acui_import_email_attachments', $attachments, $headers, $data, $created );
-
-						wp_mail( $email_to, $subject, $body, $headers_mail, $attachments );
-					endif;
+					if( isset( $mail_for_this_user ) && $mail_for_this_user ){
+						ACUI_Email_Options::send_email( $user_object, $positions, $headers, $data, $created, $password );
+					}
 
 				endif;
 
@@ -740,7 +688,7 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 				}
 			endif;
 
-			if( $change_role_not_present ):
+			if( $change_role_not_present && !$delete_users_flag ):
 				require_once( ABSPATH . 'wp-admin/includes/user.php');	
 
 				$all_users = get_users( array( 
@@ -773,7 +721,7 @@ function acui_import_users( $file, $form_data, $attach_id = 0, $is_cron = false,
 }
 
 function acui_options(){
-	if ( !current_user_can( 'create_users' ) ) {
+	if ( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) ) {
 		wp_die( __( 'You are not allowed to see this content.', 'import-users-from-csv-with-meta' ));
 	}
 
@@ -802,8 +750,8 @@ function acui_options(){
       			acui_manage_extra_profile_fields( $_POST );
       		break;
 
-      		case 'mail-options':
-      			acui_save_mail_template( $_POST );
+			case 'mail-options':
+				do_action( 'acui_mail_options_save_settings', $_POST );
       		break;
 
       		case 'cron':
@@ -866,4 +814,223 @@ function acui_options(){
 			do_action( 'acui_tab_action_' . $tab );
 		break;
 	}
+}
+
+function acui_get_wp_users_fields(){
+	return array( "id", "user_email", "user_nicename", "user_url", "display_name", "nickname", "first_name", "last_name", "description", "jabber", "aim", "yim", "user_registered", "password", "user_pass", "locale", "show_admin_bar_front", "user_login" );
+}
+
+function acui_get_restricted_fields(){
+	$wp_users_fields = acui_get_wp_users_fields();
+	$wp_min_fields = array( "Username", "Email", "bp_group", "bp_group_role", "role"  );
+	$acui_restricted_fields = array_merge( $wp_users_fields, $wp_min_fields );
+	
+	return apply_filters( 'acui_restricted_fields', $acui_restricted_fields );
+}
+
+function acui_get_not_meta_fields(){
+	return apply_filters( 'acui_not_meta_fields', array() );
+}
+
+function acui_detect_delimiter( $file ) {
+    $delimiters = array(
+        ';' => 0,
+        ',' => 0,
+        "\t" => 0,
+        "|" => 0
+    );
+
+    $handle = @fopen($file, "r");
+    $firstLine = fgets($handle);
+    fclose($handle); 
+    foreach ($delimiters as $delimiter => &$count) {
+        $count = count(str_getcsv($firstLine, $delimiter));
+    }
+
+    return array_search(max($delimiters), $delimiters);
+}
+
+function acui_string_conversion( $string ){
+	if(!preg_match('%(?:
+    [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
+    |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
+    |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
+    |\xED[\x80-\x9F][\x80-\xBF]               # excluding surrogates
+    |\xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
+    |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
+    |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
+    )+%xs', $string)){
+		return utf8_encode($string);
+    }
+	else
+		return $string;
+}
+
+function acui_user_id_exists( $user_id ){
+	if ( get_userdata( $user_id ) === false )
+	    return false;
+	else
+	    return true;
+}
+
+function acui_get_roles( $user_id ){
+	$roles = array();
+	$user = new WP_User( $user_id );
+
+	if ( !empty( $user->roles ) && is_array( $user->roles ) ) {
+		foreach ( $user->roles as $role )
+			$roles[] = $role;
+	}
+
+	return $roles;
+}
+
+function acui_get_editable_roles() {
+    global $wp_roles;
+
+    $all_roles = $wp_roles->roles;
+    $editable_roles = apply_filters('editable_roles', $all_roles);
+    $list_editable_roles = array();
+
+    foreach ($editable_roles as $key => $editable_role)
+		$list_editable_roles[$key] = $editable_role["name"];
+	
+    return $list_editable_roles;
+}
+
+function acui_admin_tabs( $current = 'homepage' ) {
+    $tabs = array( 
+    		'homepage' => __( 'Import', 'import-users-from-csv-with-meta' ),
+    		'export' => __( 'Export', 'import-users-from-csv-with-meta' ),
+    		'frontend' => __( 'Frontend', 'import-users-from-csv-with-meta' ), 
+    		'cron' => __( 'Cron import', 'import-users-from-csv-with-meta' ), 
+    		'columns' => __( 'Extra profile fields', 'import-users-from-csv-with-meta' ), 
+    		'meta-keys' => __( 'Meta keys', 'import-users-from-csv-with-meta' ), 
+    		'mail-options' => __( 'Mail options', 'import-users-from-csv-with-meta' ), 
+    		'doc' => __( 'Documentation', 'import-users-from-csv-with-meta' ), 
+    		'donate' => __( 'Donate/Patreon', 'import-users-from-csv-with-meta' ), 
+    		'shop' => __( 'Shop', 'import-users-from-csv-with-meta' ), 
+    		'help' => __( 'Hire an expert', 'import-users-from-csv-with-meta' ),
+    		'new_features' => __( 'New features', 'import-users-from-csv-with-meta' )
+    );
+
+    $tabs = apply_filters( 'acui_tabs', $tabs );
+
+    echo '<div id="icon-themes" class="icon32"><br></div>';
+    echo '<h2 class="nav-tab-wrapper">';
+    foreach( $tabs as $tab => $name ){
+       	$class = ( $tab == $current ) ? ' nav-tab-active' : '';
+
+        if( $tab == "shop"  ){
+			$href = "https://codection.com/tienda/";	
+			$target = "_blank";
+        }
+		else{
+			$href = "?page=acui&tab=$tab";
+			$target = "_self";
+		}
+
+		echo "<a class='nav-tab$class' href='$href' target='$target'>$name</a>";
+
+    }
+    echo '</h2>';
+}
+
+function acui_fileupload_process( $form_data, $is_cron = false, $is_frontend  = false ) {
+	if ( !defined( 'DOING_CRON' ) && ( !isset( $form_data['security'] ) || !wp_verify_nonce( $form_data['security'], 'codection-security' ) ) ){
+		wp_die( __( 'Nonce check failed', 'import-users-from-csv-with-meta' ) ); 
+	}
+
+	if( empty( $_FILES['uploadfile']['name'] ) || $is_frontend ):
+  		$path_to_file = wp_normalize_path( $form_data["path_to_file"] );
+  		
+		if( validate_file( $path_to_file ) !== 0 ){
+			wp_die( __( 'Error, path to file is not well written', 'import-users-from-csv-with-meta' ) . ": $path_to_file" );
+		} 
+
+		if( !file_exists ( $path_to_file ) ){
+			wp_die( __( 'Error, we cannot find the file', 'import-users-from-csv-with-meta' ) . ": $path_to_file" );
+		}
+
+		acui_import_users( $path_to_file, $form_data, 0, $is_cron, $is_frontend );
+	else:
+  		$uploadfile = wp_handle_upload( $_FILES['uploadfile'], array( 'test_form' => false, 'mimes' => array('csv' => 'text/csv') ) );
+
+		if ( !$uploadfile || isset( $uploadfile['error'] ) ) {
+			wp_die( __( 'Problem uploading file to import. Error details: ' . var_export( $uploadfile['error'], true ), 'import-users-from-csv-with-meta' ));
+		} else {
+			acui_import_users( $uploadfile['file'], $form_data, acui_get_attachment_id_by_url( $uploadfile['url'] ), $is_cron, $is_frontend );
+		}
+	endif;
+}
+
+function acui_manage_extra_profile_fields( $form_data ){
+	if ( !isset( $form_data['security'] ) || !wp_verify_nonce( $form_data['security'], 'codection-security' ) ) {
+		wp_die( __( 'Nonce check failed', 'import-users-from-csv-with-meta' ) ); 
+	}
+
+	if( isset( $form_data['show-profile-fields-action'] ) && $form_data['show-profile-fields-action'] == 'update' )
+		update_option( "acui_show_profile_fields", isset( $form_data["show-profile-fields"] ) && $form_data["show-profile-fields"] == "yes" );
+
+	if( isset( $form_data['reset-profile-fields-action'] ) && $form_data['reset-profile-fields-action'] == 'reset' )
+		update_option( "acui_columns", array() );
+}
+
+// wp-access-areas functions
+ function acui_set_cap_for_user( $capability , &$user , $add ) {
+	$has_cap = $user->has_cap( $capability );
+	$is_change = ($add && ! $has_cap) || (!$add && $has_cap);
+	if ( $is_change ) {
+		if ( $add ) {
+			$user->add_cap( $capability , true );
+			do_action( 'wpaa_grant_access' , $user , $capability );
+			do_action( "wpaa_grant_{$capability}" , $user );
+		} else if ( ! $add ) {
+			$user->remove_cap( $capability );
+			do_action( 'wpaa_revoke_access' , $user , $capability );
+			do_action( "wpaa_revoke_{$capability}" , $user );
+		}
+	}
+}
+
+// misc
+function acui_get_attachment_id_by_url( $url ) {
+	$wp_upload_dir = wp_upload_dir();
+	// Strip out protocols, so it doesn't fail because searching for http: in https: dir.
+	$dir = set_url_scheme( trailingslashit( $wp_upload_dir['baseurl'] ), 'relative' );
+
+	// Is URL in uploads directory?
+	if ( false !== strpos( $url, $dir ) ) {
+
+		$file = basename( $url );
+
+		$query_args = array(
+			'post_type'   => 'attachment',
+			'post_status' => 'inherit',
+			'fields'      => 'ids',
+			'meta_query'  => array(
+				array(
+					'key'     => '_wp_attachment_metadata',
+					'compare' => 'LIKE',
+					'value'   => $file,
+				),
+			),
+		);
+
+		$query = new WP_Query( $query_args );
+
+		if ( $query->have_posts() ) {
+			foreach ( $query->posts as $attachment_id ) {
+				$meta          = wp_get_attachment_metadata( $attachment_id );
+				$original_file = basename( $meta['file'] );
+				$cropped_files = wp_list_pluck( $meta['sizes'], 'file' );
+
+				if ( $original_file === $file || in_array( $file, $cropped_files ) ) {
+					return (int) $attachment_id;
+				}
+			}
+		}
+	}
+
+	return false;
 }

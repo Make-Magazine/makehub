@@ -98,7 +98,7 @@ class Cookie_Law_Info_Shortcode {
         {
             if($_COOKIE["viewed_cookie_policy"]=='yes')
             {
-                $html.=' '.__('Consent Accepted.','cookie-law-info');
+                $html.=' '.__('Consent accepted.','cookie-law-info');
             }else
             {
                 $html.=' '.__('Consent rejected.','cookie-law-info');

@@ -17,9 +17,10 @@ class GravityView_Admin_Metaboxes {
 	 */
 	function __construct() {
 
-		if( !GravityView_Compatibility::is_valid() ) { return; }
+		if ( ! GravityView_Compatibility::is_valid() ) {
+			return; }
 
-        self::$metaboxes_dir = GRAVITYVIEW_DIR . 'includes/admin/metaboxes/';
+		self::$metaboxes_dir = GRAVITYVIEW_DIR . 'includes/admin/metaboxes/';
 
 		include_once self::$metaboxes_dir . 'class-gravityview-metabox-tab.php';
 
@@ -35,9 +36,9 @@ class GravityView_Admin_Metaboxes {
 	 */
 	function initialize() {
 
-		add_action( 'add_meta_boxes', array( $this, 'register_metaboxes' ));
+		add_action( 'add_meta_boxes', array( $this, 'register_metaboxes' ) );
 
-		add_action( 'add_meta_boxes_gravityview' , array( $this, 'update_priority' ) );
+		add_action( 'add_meta_boxes_gravityview', array( $this, 'update_priority' ) );
 
 		// information box
 		add_action( 'post_submitbox_misc_actions', array( $this, 'render_shortcode_hint' ) );
@@ -51,11 +52,11 @@ class GravityView_Admin_Metaboxes {
 	function update_priority() {
 		global $wp_meta_boxes;
 
-		if( ! empty( $wp_meta_boxes['gravityview'] ) ) {
-			foreach( array( 'high', 'core', 'low' ) as $position ) {
-				if( isset( $wp_meta_boxes['gravityview']['normal'][ $position ] ) ) {
-					foreach( $wp_meta_boxes['gravityview']['normal'][ $position ] as $key => $meta_box ) {
-						if( ! preg_match( '/^gravityview_/ism', $key ) ) {
+		if ( ! empty( $wp_meta_boxes['gravityview'] ) ) {
+			foreach ( array( 'high', 'core', 'low' ) as $position ) {
+				if ( isset( $wp_meta_boxes['gravityview']['normal'][ $position ] ) ) {
+					foreach ( $wp_meta_boxes['gravityview']['normal'][ $position ] as $key => $meta_box ) {
+						if ( ! preg_match( '/^gravityview_/ism', $key ) ) {
 							$wp_meta_boxes['gravityview']['advanced'][ $position ][ $key ] = $meta_box;
 							unset( $wp_meta_boxes['gravityview']['normal'][ $position ][ $key ] );
 						}
@@ -69,7 +70,7 @@ class GravityView_Admin_Metaboxes {
 		global $post;
 
 		// On Comment Edit, for example, $post isn't set.
-		if( empty( $post ) || !is_object( $post ) || !isset( $post->ID ) ) {
+		if ( empty( $post ) || ! is_object( $post ) || ! isset( $post->ID ) ) {
 			return;
 		}
 
@@ -97,6 +98,8 @@ class GravityView_Admin_Metaboxes {
 	function settings_metabox_render( $post ) {
 
 		/**
+		 * @action `gravityview/metaboxes/before_render` Before rendering GravityView metaboxes
+		 * @since 1.8
 		 * @param WP_Post $post
 		 */
 		do_action( 'gravityview/metaboxes/before_render', $post );
@@ -107,6 +110,8 @@ class GravityView_Admin_Metaboxes {
 		include self::$metaboxes_dir . 'views/gravityview-content.php';
 
 		/**
+		 * @action `gravityview/metaboxes/after_render` After rendering GravityView metaboxes
+		 * @since 1.8
 		 * @param WP_Post $post
 		 */
 		do_action( 'gravityview/metaboxes/after_render', $post );
@@ -128,6 +133,14 @@ class GravityView_Admin_Metaboxes {
 				'callback_args' => '',
 			),
 			array(
+				'id' => 'multiple_entries',
+				'title' => __( 'Multiple Entries', 'gravityview' ),
+				'file' => 'multiple-entries.php',
+				'icon-class' => 'dashicons-admin-page',
+				'callback' => '',
+				'callback_args' => '',
+			),
+			array(
 				'id' => 'single_entry', // Use the same ID as View Settings for backward compatibility
 				'title' => __( 'Single Entry', 'gravityview' ),
 				'file' => 'single-entry.php',
@@ -136,10 +149,34 @@ class GravityView_Admin_Metaboxes {
 				'callback_args' => '',
 			),
 			array(
+				'id' => 'edit_entry', // Use the same ID as View Settings for backward compatibility
+				'title' => __( 'Edit Entry', 'gravityview' ),
+				'file' => 'edit-entry.php',
+				'icon-class' => 'dashicons-welcome-write-blog',
+				'callback' => '',
+				'callback_args' => '',
+			),
+			array(
+				'id' => 'delete_entry',
+				'title' => __( 'Delete Entry', 'gravityview' ),
+				'file' => 'delete-entry.php',
+				'icon-class' => 'dashicons-trash',
+				'callback' => '',
+				'callback_args' => '',
+			),
+			array(
 				'id' => 'sort_filter',
 				'title' => __( 'Filter &amp; Sort', 'gravityview' ),
 				'file' => 'sort-filter.php',
 				'icon-class' => 'dashicons-sort',
+				'callback' => '',
+				'callback_args' => '',
+			),
+			array(
+				'id' => 'permissions', // Use the same ID as View Settings for backward compatibility
+				'title' => __( 'Permissions', 'gravityview' ),
+				'file' => 'permissions.php',
+				'icon-class' => 'dashicons-lock',
 				'callback' => '',
 				'callback_args' => '',
 			),
@@ -152,7 +189,7 @@ class GravityView_Admin_Metaboxes {
 		 */
 		$metaboxes = apply_filters( 'gravityview/metaboxes/default', $metaboxes );
 
-		foreach( $metaboxes as $m ) {
+		foreach ( $metaboxes as $m ) {
 
 			$tab = new GravityView_Metabox_Tab( $m['id'], $m['title'], $m['file'], $m['icon-class'], $m['callback'], $m['callback_args'] );
 
@@ -180,8 +217,8 @@ class GravityView_Admin_Metaboxes {
 
 		$links = GravityView_Admin_Views::get_connected_form_links( $current_form, false );
 
-		if( !empty( $links ) ) {
-			$links = '<span class="alignright gv-form-links">'. $links .'</span>';
+		if ( ! empty( $links ) ) {
+			$links = '<span class="alignright gv-form-links">' . $links . '</span>';
 		}
 
 		return __( 'Data Source', 'gravityview' ) . $links;
@@ -218,25 +255,25 @@ class GravityView_Admin_Metaboxes {
 	 */
 	public static function render_merge_tags_scripts( $curr_form ) {
 
-		if( empty( $curr_form )) {
-			return NULL;
+		if ( empty( $curr_form ) ) {
+			return null;
 		}
 
 		$form = gravityview_get_form( $curr_form );
 
-		$get_id_backup = isset($_GET['id']) ? $_GET['id'] : NULL;
+		$get_id_backup = isset( $_GET['id'] ) ? $_GET['id'] : null;
 
-		if( isset( $form['id'] ) ) {
-		    $form_script = 'var form = ' . GFCommon::json_encode($form) . ';';
+		if ( isset( $form['id'] ) ) {
+			$form_script = 'var form = ' . GFCommon::json_encode( $form ) . ';';
 
-		    // The `gf_vars()` method needs a $_GET[id] variable set with the form ID.
-		    $_GET['id'] = $form['id'];
+			// The `gf_vars()` method needs a $_GET[id] variable set with the form ID.
+			$_GET['id'] = $form['id'];
 
 		} else {
-		    $form_script = 'var form = new Form();';
+			$form_script = 'var form = new Form();';
 		}
 
-		$output = '<script type="text/javascript" data-gv-merge-tags="1">' . $form_script . "\n" . GFCommon::gf_vars(false) . '</script>';
+		$output = '<script type="text/javascript" data-gv-merge-tags="1">' . $form_script . "\n" . GFCommon::gf_vars( false ) . '</script>';
 
 		// Restore previous $_GET setting
 		$_GET['id'] = $get_id_backup;
@@ -247,7 +284,6 @@ class GravityView_Admin_Metaboxes {
 	/**
 	 * Render html for 'View Configuration' metabox
 	 *
-	 * @access public
 	 * @param mixed $post
 	 * @return void
 	 */
@@ -272,7 +308,6 @@ class GravityView_Admin_Metaboxes {
 	/**
 	 * Render html View General Settings
 	 *
-	 * @access public
 	 * @param object $post
 	 * @return void
 	 */
@@ -290,19 +325,18 @@ class GravityView_Admin_Metaboxes {
 	/**
 	 * Render shortcode hint in the Publish metabox
 	 *
-	 * @access public
 	 * @return void
 	 */
 	function render_shortcode_hint() {
 		global $post;
 
 		// Only show this on GravityView post types.
-		if( false === gravityview()->request->is_admin( '', null ) ) {
+		if ( false === gravityview()->request->is_admin( '', null ) ) {
 			return;
 		}
 
 		// If the View hasn't been configured yet, don't show embed shortcode
-		if( ! gravityview_get_directory_fields( $post->ID ) && ! gravityview_get_directory_widgets( $post->ID ) ) {
+		if ( ! gravityview_get_directory_fields( $post->ID ) && ! gravityview_get_directory_widgets( $post->ID ) ) {
 			return;
 		}
 
@@ -311,4 +345,4 @@ class GravityView_Admin_Metaboxes {
 
 }
 
-new GravityView_Admin_Metaboxes;
+new GravityView_Admin_Metaboxes();

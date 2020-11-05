@@ -1,5 +1,4 @@
 <?php
-
 if ( ! defined( 'ABSPATH' ) ) exit; 
 
 class ACUI_Donate{
@@ -24,7 +23,7 @@ class ACUI_Donate{
     <h3 class="hndle"><span>&nbsp;<?php _e( 'Or if you prefer, you can also help us becoming a Patreon:', 'import-users-from-csv-with-meta' ); ?></span></h3>
 
     <div class="inside acui" style="display: block;">
-    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/bePatron?c=1741454" role="button">
+    	<a class="patreon" color="primary" type="button" name="become-a-patron" data-tag="become-patron-button" href="https://www.patreon.com/carazo" role="button">
     		<div class="oosjif-1 jFPfxp"><span>Become a patron</span></div>
     	</a>
     </div>

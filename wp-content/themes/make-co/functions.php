@@ -90,7 +90,6 @@ function make_co_enqueue_scripts() {
 	$suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
 	wp_localize_script(
-		'make-co-responsive-menu',
 		'genesis_responsive_menu',
 		make_co_responsive_menu_settings()
 	);
@@ -396,12 +395,18 @@ add_action('bp_init', 'buddypress_add_last_activity' );
 add_filter( 'bp_core_signup_send_activation_key', create_function('','return false;') );
 */
 
-
-//admin
+//admin notification bar
 /** Removes Events from WP Admin Bar  */
 define('TRIBE_DISABLE_TOOLBAR_ITEMS', true);
 function remove_comments(){
-        global $wp_admin_bar;
+        global $wp_admin_bar;        
         $wp_admin_bar->remove_menu('comments');
+        $wp_admin_bar->remove_menu('wpseo-menu');        
+        $wp_admin_bar->remove_menu('uap_dashboard_menu');        
 }
 add_action( 'wp_before_admin_bar_render', 'remove_comments' );
+
+add_action( 'admin_bar_menu', 'remove_wp_logo', 999 );
+function remove_wp_logo( $wp_admin_bar ) {
+    $wp_admin_bar->remove_node( 'wp-logo' );
+}
