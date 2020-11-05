@@ -89,11 +89,6 @@ function make_co_enqueue_scripts() {
 	$my_version = $my_theme->get('Version');
 	$suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
 
-	wp_localize_script(
-		'genesis_responsive_menu',
-		make_co_responsive_menu_settings()
-	);
-
 	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
 	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
 
