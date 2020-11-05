@@ -133,11 +133,6 @@ a { // don't let genesis molest our links
 		font-size: 16px;
 		margin-top: 30px !important;
 	}
-	&::before {
-		content: url("https://makerfaire.com/wp-content/themes/makerfaire/img/make_logo.png");
-		display: block;
-		padding-bottom: 20px;
-	}
 }
 
 
