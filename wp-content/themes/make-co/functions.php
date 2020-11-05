@@ -88,16 +88,8 @@ function make_co_enqueue_scripts() {
 	$my_theme = wp_get_theme();
 	$my_version = $my_theme->get('Version');
 	$suffix = ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'make-co-responsive-menu',
-		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
-		array('jquery'),
-		$my_version,
-		true
-	);
 
 	wp_localize_script(
-		'make-co-responsive-menu',
 		'genesis_responsive_menu',
 		make_co_responsive_menu_settings()
 	);
@@ -108,14 +100,6 @@ function make_co_enqueue_scripts() {
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-
-	wp_enqueue_script(
-		'make-co',
-		get_stylesheet_directory_uri() . '/js/make-co.js',
-		array('jquery'),
-		$my_version,
-		true
-	);
 
     wp_localize_script('make-co', 'ajax_object',
             array(
