@@ -103,6 +103,7 @@
 			case "experiences.makehub.local":
 			case "experiences.make.co":
 			case "experiencestage.make.co":
+			case "campus.make.co":
 			case "experiences.makehub.wpengine.com":
             case "experiences.makehub.staging.wpengine.com":
 			case "experiences.stagemakehub.wpengine.com":
