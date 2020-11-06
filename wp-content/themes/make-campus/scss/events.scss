@@ -496,6 +496,11 @@
 		width: 100%;
 		font-size: 20px;
 	}
+	input#doaction {
+		padding: 10px 15px;
+		border-radius: 5px;
+	}
+	#tribe-community-tickets-shortcode { visibility: visible !important; }
 	.wrap.tribe-report-page {
 		h1, .tablenav.bottom {
 			display: none;
