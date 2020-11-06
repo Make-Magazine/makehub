@@ -31,7 +31,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('144', 'image_5'),
         array('145', 'image_6'),
         array('123', 'promo_videos', 'field_5f7cd1ffdd06a'),
-        array('19', 'about'),
+        array('150', 'about'),
         array('119', 'short_description'),
         array('73', 'audience', 'field_5f35a5f833a04'),
         array('57', 'location'),
