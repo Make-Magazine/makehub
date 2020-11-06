@@ -56,7 +56,8 @@
                 "id": ""
             },
             "choices": {
-                "yes": "Yes"
+                "Yes": "Yes",
+                "No": "No"
             },
             "allow_custom": 0,
             "default_value": [],
@@ -83,5 +84,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1604355376
+    "modified": 1604687393
 }
