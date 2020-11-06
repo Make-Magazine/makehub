@@ -494,7 +494,7 @@
 																	 $public_email = get_field('public_email', $organizer_id);		
 																	 if($public_email[0] && $public_email[0] == 'yes') { ?>
 																		<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
-																		<span><a href="mailto:<?php echo $email; ?>"><?php echo $email; ?>"></a></span>
+																		<span><?php echo $email; ?></span>
 															<?php    }
 																   } ?>
 														</td>
