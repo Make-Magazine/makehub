@@ -131,6 +131,7 @@ window.addEventListener('load', function() {
 				'auth0_access_token'  : access_token,
 				'auth0_id_token'      : id_token
 			};
+			console.log(data);
 			jQuery.ajax({
 				type: 'POST',
 				url: ajax_object.ajax_url,
