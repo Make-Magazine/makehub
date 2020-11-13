@@ -108,7 +108,7 @@ window.addEventListener('load', function() {
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
-				if(wpLoginRequired) {
+				if(wpLoginRequired && !jQuery("body").hasClass(".logged-in")) {
 					WPlogin();
 				}
 			}
@@ -131,7 +131,6 @@ window.addEventListener('load', function() {
 				'auth0_access_token'  : access_token,
 				'auth0_id_token'      : id_token
 			};
-			console.log(data);
 			jQuery.ajax({
 				type: 'POST',
 				url: ajax_object.ajax_url,
@@ -140,21 +139,16 @@ window.addEventListener('load', function() {
 				success: function(data){
 				},
 			}).done(function() {
+				// if user is already logged in 
 				var data = {
 					action: 'is_user_logged_in'
 				};
 				jQuery.post(ajaxurl, data, function(response) {
 					if(response == 'yes') {
-						alert("user logged in");
-						jQuery('body').load(location.href + ' body');
-					} else {
-						alert("user not logged in");
-					}
+						alert("It looks like you're already logged in, let me pull up your info.");
+						jQuery('body').load(location.href + ' body>*','');
+					} 
 				});
-				if(!jQuery(".logged-in")) {
-					alert("Pulling your info now");
-					jQuery('body').load(location.href + ' body');
-				}
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );
