@@ -138,11 +138,23 @@ window.addEventListener('load', function() {
 				data: data,
 				timeout: 10000,
 				success: function(data){
-					if(!jQuery(".logged-in")) {
-						alert("Pulling your info now");
-						location.href = location.href;
-					}
 				},
+			}).done(function() {
+				var data = {
+					action: 'is_user_logged_in'
+				};
+				jQuery.post(ajaxurl, data, function(response) {
+					if(response == 'yes') {
+						alert("user logged in");
+						jQuery('body').load(location.href + ' body');
+					} else {
+						alert("user not logged in");
+					}
+				});
+				if(!jQuery(".logged-in")) {
+					alert("Pulling your info now");
+					jQuery('body').load(location.href + ' body');
+				}
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );

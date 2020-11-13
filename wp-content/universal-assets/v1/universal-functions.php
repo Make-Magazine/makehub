@@ -11,6 +11,12 @@ function universal_scripts() {
 }
 add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
 
+function ajax_check_user_logged_in() {
+    echo is_user_logged_in()?'yes':'no';
+    die();
+}
+add_action('wp_ajax_is_user_logged_in', 'ajax_check_user_logged_in');
+add_action('wp_ajax_nopriv_is_user_logged_in', 'ajax_check_user_logged_in');
 
 /** Set up the Ajax WP Logout */
 add_action('wp_ajax_mm_wplogout', 'MM_wordpress_logout');
