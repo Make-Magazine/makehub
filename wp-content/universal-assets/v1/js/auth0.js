@@ -23,6 +23,17 @@ window.addEventListener('load', function() {
 			leeway: 60
 		});
 	
+	var loggedin = false;
+	var loggedin_data = {
+		action: 'is_user_logged_in'
+	};
+	jQuery.post(ajaxurl, data, function(response) {
+		if(response == 'yes') {
+			loggedin = true;
+			console.log("already logged in");
+		} 
+	});
+	
 	//check if logged in another place
 	webAuth.checkSession({},
 		function(err, result) {
@@ -108,7 +119,7 @@ window.addEventListener('load', function() {
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
-				if(wpLoginRequired && !jQuery("body").hasClass(".logged-in")) {
+				if(wpLoginRequired && loggedin == true) {
 					WPlogin();
 				}
 			}
@@ -139,16 +150,10 @@ window.addEventListener('load', function() {
 				success: function(data){
 				},
 			}).done(function() {
-				// if user is already logged in 
-				var data = {
-					action: 'is_user_logged_in'
-				};
-				jQuery.post(ajaxurl, data, function(response) {
-					if(response == 'yes') {
-						alert("It looks like you're already logged in, let me pull up your info.");
-						jQuery('body').load(location.href + ' body>*','');
-					} 
-				});
+				if(loggedin == true) {
+					alert("It looks like you're already logged in. Let me pull up your info.");
+					location.href = location.href;
+				}
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );
