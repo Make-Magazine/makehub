@@ -27,7 +27,7 @@ window.addEventListener('load', function() {
 	var loggedin_data = {
 		action: 'is_user_logged_in'
 	};
-	jQuery.post(ajaxurl, loggedin_data, function(response) {
+	jQuery.post(ajax_object.ajax_url, loggedin_data, function(response) {
 		if(response == 'yes') {
 			loggedin = true;
 			console.log("already logged in");
