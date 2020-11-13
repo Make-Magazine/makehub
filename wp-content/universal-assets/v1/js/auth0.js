@@ -119,7 +119,7 @@ window.addEventListener('load', function() {
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
-				if(wpLoginRequired && loggedin == true) {
+				if(wpLoginRequired && loggedin == false) {
 					WPlogin();
 				}
 			}
