@@ -132,24 +132,22 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 	 * Test that wordpress_login_enabled is validated properly on save.
 	 */
 	public function testThatWleIsValiatedOnSave() {
-		$admin = new WP_Auth0_Admin( self::$opts, new WP_Auth0_Routes( self::$opts ) );
-
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => 'link' ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => 'link' ] );
 		$this->assertEquals( 'link', $validated['wordpress_login_enabled'] );
 
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => 'isset' ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => 'isset' ] );
 		$this->assertEquals( 'isset', $validated['wordpress_login_enabled'] );
 
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => 'code' ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => 'code' ] );
 		$this->assertEquals( 'code', $validated['wordpress_login_enabled'] );
 
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => 'no' ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => 'no' ] );
 		$this->assertEquals( 'no', $validated['wordpress_login_enabled'] );
 
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => uniqid() ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => uniqid() ] );
 		$this->assertEquals( 'link', $validated['wordpress_login_enabled'] );
 
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => false ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => false ] );
 		$this->assertEquals( 'link', $validated['wordpress_login_enabled'] );
 	}
 
@@ -157,19 +155,17 @@ class TestOptionWle extends WP_Auth0_Test_Case {
 	 * Test that wle_code is validated properly on save.
 	 */
 	public function testThatWleCodeIsKeptIfSavedGeneratedIfEmpty() {
-		$admin = new WP_Auth0_Admin( self::$opts, new WP_Auth0_Routes( self::$opts ) );
-
 		$wle_code = uniqid();
 		self::$opts->set( 'wle_code', $wle_code );
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => uniqid() ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => uniqid() ] );
 		$this->assertEquals( $wle_code, $validated['wle_code'] );
 
 		self::$opts->set( 'wle_code', null );
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => uniqid() ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => uniqid() ] );
 		$this->assertGreaterThan( 24, strlen( $validated['wle_code'] ) );
 
 		self::$opts->set( 'wle_code', '' );
-		$validated = $admin->input_validator( [ 'wordpress_login_enabled' => uniqid() ] );
+		$validated = self::$admin->wle_validation( [], [ 'wordpress_login_enabled' => uniqid() ] );
 		$this->assertGreaterThan( 24, strlen( $validated['wle_code'] ) );
 	}
 }

@@ -19,6 +19,38 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 	use RedirectHelpers;
 
 	/**
+	 * Test that an invalid state is redirected to the right place.
+	 */
+	public function testThatInvalidStateRedirectsProperly() {
+		$this->startRedirectHalting();
+
+		$setup_consent = new WP_Auth0_InitialSetup_Consent( self::$opts );
+		$test_domain   = 'test-wp.auth0.com';
+		$test_token    = implode( '.', [ uniqid(), uniqid(), uniqid() ] );
+
+		$caught_redirect = [];
+		try {
+			$setup_consent->callback_with_token( $test_domain, $test_token, 'invalid_state' );
+		} catch ( Exception $e ) {
+			$caught_redirect = unserialize( $e->getMessage() );
+		}
+
+		$this->assertNotEmpty( $caught_redirect );
+		$this->assertEquals( 302, $caught_redirect['status'] );
+
+		$redirect_url = parse_url( $caught_redirect['location'] );
+
+		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
+		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
+		$this->assertContains( 'error=invalid_state', $redirect_url['query'] );
+
+		$this->assertEquals( $test_domain, self::$opts->get( 'domain' ) );
+		$this->assertNull( self::$opts->get( 'auth0_app_token' ) );
+
+		$this->assertEmpty( self::$error_log->get() );
+	}
+
+	/**
 	 * Test that the create client call is made.
 	 */
 	public function testThatClientCreationIsAttempted() {
@@ -29,7 +61,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_http = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
 		} catch ( Exception $e ) {
 			$caught_http = unserialize( $e->getMessage() );
 		}
@@ -57,7 +89,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->http_request_type = 'wp_error';
 		$caught_redirect         = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -68,7 +100,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$redirect_url = parse_url( $caught_redirect['location'] );
 
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
-		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
+		$this->assertContains( 'page=wpa0', $redirect_url['query'] );
 		$this->assertContains( 'error=cant_create_client', $redirect_url['query'] );
 
 		$this->assertCount( 1, self::$error_log->get() );
@@ -98,7 +130,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -111,9 +143,12 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
 		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'step=2', $redirect_url['query'] );
+		$this->assertContains( 'profile=social', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
+		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
+		$this->assertEquals( 'TEST_CONN_ID', self::$opts->get( 'db_connection_id' ) );
 
 		$this->assertEmpty( self::$error_log->get() );
 	}
@@ -134,15 +169,19 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->http_request_type = [
 			// Successful client creation.
 			'success_create_client',
-			// Get an existing connection enabled for this client.
+			// Get en existing connection enabled for this client.
 			'success_get_connections',
+			// Connection updated successfully.
+			'success_update_connection',
+			// Connection created successfully.
+			'success_create_connection',
 			// Client grant failed.
 			'wp_error',
 		];
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -153,11 +192,14 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$redirect_url = parse_url( $caught_redirect['location'] );
 
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
-		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
+		$this->assertContains( 'page=wpa0', $redirect_url['query'] );
 		$this->assertContains( 'error=cant_create_client_grant', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
+		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
+		$this->assertEquals( 'TEST_CREATED_CONN_ID', self::$opts->get( 'db_connection_id' ) );
+		$this->assertGreaterThan( 64, strlen( self::$opts->get( 'migration_token' ) ) );
 		$this->assertEquals( 'DB-' . get_auth0_curatedBlogName(), self::$opts->get( 'db_connection_name' ) );
 
 		$this->assertCount( 1, self::$error_log->get() );
@@ -182,6 +224,8 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 			'success_create_client',
 			// Get en existing connection enabled for this client.
 			'success_get_connections',
+			// Connection updated successfully.
+			'success_update_connection',
 			// Connection created successfully.
 			'success_create_connection',
 			// Client grant created successfully.
@@ -190,7 +234,7 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token );
+			$setup_consent->callback_with_token( 'test-wp.auth0.com', $test_token, 'social' );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -203,9 +247,12 @@ class TestInitialSetupConsent extends WP_Auth0_Test_Case {
 		$this->assertEquals( '/wp-admin/admin.php', $redirect_url['path'] );
 		$this->assertContains( 'page=wpa0-setup', $redirect_url['query'] );
 		$this->assertContains( 'step=2', $redirect_url['query'] );
+		$this->assertContains( 'profile=social', $redirect_url['query'] );
 
 		$this->assertEquals( 'TEST_CLIENT_ID', self::$opts->get( 'client_id' ) );
 		$this->assertEquals( 'TEST_CLIENT_SECRET', self::$opts->get( 'client_secret' ) );
+		$this->assertEquals( 1, self::$opts->get( 'db_connection_enabled' ) );
+		$this->assertEquals( 'TEST_CREATED_CONN_ID', self::$opts->get( 'db_connection_id' ) );
 		$this->assertEquals( 'TEST_MIGRATION_TOKEN', self::$opts->get( 'migration_token' ) );
 		$this->assertEquals( 'DB-' . get_auth0_curatedBlogName(), self::$opts->get( 'db_connection_name' ) );
 

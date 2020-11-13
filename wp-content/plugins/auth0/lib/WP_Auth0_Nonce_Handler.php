@@ -64,9 +64,7 @@ class WP_Auth0_Nonce_Handler {
 		// If a NONCE_COOKIE_NAME is not defined then we don't need to persist the nonce value.
 		if ( defined( static::NONCE_COOKIE_NAME ) && isset( $_COOKIE[ static::get_storage_cookie_name() ] ) ) {
 			// Have a cookie, don't want to generate a new one.
-			// TODO: validate whether we need to persist this value and sanitize if so.
-			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput
-			$this->unique = $_COOKIE[ static::get_storage_cookie_name() ];
+			$this->unique = $_COOKIE[ static::get_storage_cookie_name()  ];
 		} else {
 			// No cookie, need to create one.
 			$this->unique = $this->generate_unique();
@@ -132,20 +130,6 @@ class WP_Auth0_Nonce_Handler {
 	}
 
 	/**
-	 * Get and delete the stored value.
-	 *
-	 * @return string|null
-	 */
-	public function get_once() {
-		$cookie_name = static::get_storage_cookie_name();
-		// Null coalescing validates the input variable.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-		$value = $_COOKIE[ $cookie_name ] ?? null;
-		$this->reset();
-		return $value;
-	}
-
-	/**
 	 * Reset/delete a cookie.
 	 *
 	 * @return bool
@@ -155,7 +139,8 @@ class WP_Auth0_Nonce_Handler {
 	}
 
 	/**
-	 * Generate a cryptographically secure unique value to use.
+	 * Generate a unique value to use.
+	 * If using on PHP 7, it will be cryptographically secure.
 	 *
 	 * @see https://secure.php.net/manual/en/function.random-bytes.php
 	 *
@@ -164,7 +149,11 @@ class WP_Auth0_Nonce_Handler {
 	 * @return string
 	 */
 	public function generate_unique( $bytes = 32 ) {
-		return bin2hex( random_bytes( $bytes ) );
+		$nonce_bytes = function_exists( 'random_bytes' )
+			// phpcs:ignore
+			? random_bytes( $bytes )
+			: openssl_random_pseudo_bytes( $bytes );
+		return bin2hex( $nonce_bytes );
 	}
 
 	/**
@@ -179,11 +168,11 @@ class WP_Auth0_Nonce_Handler {
 	protected function handle_cookie( $cookie_name, $cookie_value, $cookie_exp ) {
 		if ( $cookie_exp <= time() ) {
 			unset( $_COOKIE[ $cookie_name ] );
-			return setcookie( $cookie_name, $cookie_value, 0, '/' );
+			$cookie_exp = 0;
 		} else {
 			$_COOKIE[ $cookie_name ] = $cookie_value;
-			return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/', '', false, true );
 		}
+		return setcookie( $cookie_name, $cookie_value, $cookie_exp, '/' );
 	}
 
 	/**

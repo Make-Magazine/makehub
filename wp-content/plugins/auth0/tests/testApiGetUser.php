@@ -48,7 +48,9 @@ class TestApiGetUser extends WP_Auth0_Test_Case {
 	 */
 	public function testThatApiRequestIsCorrect() {
 		$this->startHttpHalting();
-		$this->setApiToken( 'read:users' );
+
+		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, '__test_access_token__', 9999 );
+		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, 'read:users', 9990 );
 
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		$get_user_api = new WP_Auth0_Api_Get_User( self::$opts, self::$api_client_creds );
@@ -75,7 +77,9 @@ class TestApiGetUser extends WP_Auth0_Test_Case {
 	public function testThatNetworkErrorIsHandled() {
 		$this->startHttpMocking();
 		$this->http_request_type = 'wp_error';
-		$this->setApiToken( 'read:users' );
+
+		set_transient( WP_Auth0_Api_Client_Credentials::TOKEN_TRANSIENT_KEY, '__test_access_token__', 9999 );
+		set_transient( WP_Auth0_Api_Client_Credentials::SCOPE_TRANSIENT_KEY, 'read:users', 9990 );
 
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		$get_user_api = new WP_Auth0_Api_Get_User( self::$opts, self::$api_client_creds );

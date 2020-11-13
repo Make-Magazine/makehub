@@ -94,6 +94,20 @@ function mobileCheck(){
    return check;
 };
 
+// TRUNCATE A STRING TO THE MAXLENGTH GIVEN
+function maxLength(maxLen){
+	return function truncateToNearestSpace(idx, text){
+		// this may chop in the middle of a word
+		var truncated = text.substr(0, maxLen);
+		// but if it does, we can fix it
+		if (/[^\s]$/.test(truncated)) {
+			return truncated.replace(/\s[^\s]+$/, "...");
+		}else{
+			return truncated.trim() + "...";
+		}
+	}
+}
+
 // Copy element value to clipboard
 function copyInput(elementId) {
   var copyText = document.getElementById(elementId);
@@ -200,4 +214,38 @@ jQuery('a[href*="#"]')
         });
       }
     }
-  });
+});
+
+var matched, browser;
+jQuery.uaMatch = function( ua ) {
+    ua = ua.toLowerCase();
+
+    var match = /(chrome)[ \/]([\w.]+)/.exec( ua ) ||
+        /(webkit)[ \/]([\w.]+)/.exec( ua ) ||
+        /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) ||
+        /(msie) ([\w.]+)/.exec( ua ) ||
+        ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) ||
+        [];
+
+    return {
+        browser: match[ 1 ] || "",
+        version: match[ 2 ] || "0"
+    };
+};
+
+matched = jQuery.uaMatch( navigator.userAgent );
+browser = {};
+
+if ( matched.browser ) {
+    browser[ matched.browser ] = true;
+    browser.version = matched.version;
+}
+
+// Chrome is Webkit, but Webkit is also Safari.
+if ( browser.chrome ) {
+    browser.webkit = true;
+} else if ( browser.webkit ) {
+    browser.safari = true;
+}
+
+jQuery.browser = browser;

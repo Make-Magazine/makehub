@@ -23,7 +23,6 @@
 
     <rule ref="Generic.CodeAnalysis">
         <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
-        <exclude name="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClass"/>
     </rule>
     <rule ref="Generic.Commenting.Todo"/>
     <rule ref="WordPress-Docs"/>

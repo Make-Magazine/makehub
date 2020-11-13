@@ -41,31 +41,30 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 	 */
 	public function testThatHooksAreLoaded() {
 		$expect_hooked = [
-			'wp_auth0_profile_change_email' => [
+			'update_email' => [
 				'priority'      => 100,
 				'accepted_args' => 2,
 			],
 		];
-		$this->assertHookedFunction( 'profile_update', $expect_hooked );
+		$this->assertHookedClass( 'profile_update', 'WP_Auth0_Profile_Change_Email', $expect_hooked );
 	}
 
 	/**
 	 * Test that an email update works.
 	 */
 	public function testSuccessfulEmailUpdate() {
-		$this->startHttpMocking();
-		$this->setApiToken( 'update:users' );
-		$this->http_request_type = 'success_empty_body';
-
 		$user                       = $this->createUser( [], false );
 		$new_email                  = $user->data->user_email;
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $new_email;
 
+		// API call mocked to succeed.
+		$change_email = $this->getStub( true );
+
 		// Store userinfo for a DB strategy user.
 		$this->storeAuth0Data( $user->ID, 'auth0' );
 
-		$this->assertTrue( wp_auth0_profile_change_email( $user->ID, $old_user ) );
+		$this->assertTrue( $change_email->update_email( $user->ID, $old_user ) );
 		$this->assertEquals( $new_email, get_user_by( 'id', $user->ID )->data->user_email );
 		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
 	}
@@ -78,7 +77,10 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
-		$this->assertFalse( wp_auth0_profile_change_email( $user->ID, $old_user ) );
+		// API call mocked to succeed.
+		$change_email = $this->getStub( true );
+
+		$this->assertFalse( $change_email->update_email( $user->ID, $old_user ) );
 	}
 
 	/**
@@ -89,10 +91,13 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$old_user                   = clone $user;
 		$old_user->data->user_email = 'OLD-' . $old_user->data->user_email;
 
+		// API call mocked to succeed.
+		$change_email = $this->getStub( true );
+
 		// Store userinfo for a DB strategy user.
 		$this->storeAuth0Data( $user->ID, 'not-auth0' );
 
-		$this->assertFalse( wp_auth0_profile_change_email( $user->ID, $old_user ) );
+		$this->assertFalse( $change_email->update_email( $user->ID, $old_user ) );
 	}
 
 	/**
@@ -102,10 +107,13 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$user     = $this->createUser( [], false );
 		$old_user = clone $user;
 
+		// API call mocked to succeed.
+		$change_email = $this->getStub( true );
+
 		// Store userinfo for a DB strategy user.
 		$this->storeAuth0Data( $user->ID, 'not-auth0' );
 
-		$this->assertFalse( wp_auth0_profile_change_email( $user->ID, $old_user ) );
+		$this->assertFalse( $change_email->update_email( $user->ID, $old_user ) );
 	}
 
 	/**
@@ -122,10 +130,14 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		// Store the usermeta value set for email verification.
 		update_user_meta( $user->ID, '_new_email', $user->data->user_email );
 
+		// API call mocked to fail.
+		$change_email = $this->getStub( false );
+
 		// Need to remove existing filters and re-init with filters from the test class.
 		remove_all_filters( 'profile_update' );
+		$change_email->init();
 
-		$this->assertFalse( wp_auth0_profile_change_email( $user->ID, $old_user ) );
+		$this->assertFalse( $change_email->update_email( $user->ID, $old_user ) );
 		$this->assertEquals( $old_user->data->user_email, get_user_by( 'id', $user->ID )->data->user_email );
 		$this->assertEmpty( get_user_meta( $user->ID, '_new_email', true ) );
 		$this->assertEmpty( WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
@@ -144,8 +156,12 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		// Store userinfo for a DB strategy user.
 		$this->storeAuth0Data( $user->ID, 'auth0' );
 
+		// API call mocked to fail.
+		$change_email = $this->getStub( false );
+
 		// Need to remove existing filters and re-init with filters from the test class.
 		remove_all_filters( 'profile_update' );
+		$change_email->init();
 
 		// Set current page to the user profile.
 		global $pagenow;
@@ -153,7 +169,7 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			wp_auth0_profile_change_email( $user->ID, $old_user );
+			$change_email->update_email( $user->ID, $old_user );
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -177,12 +193,32 @@ class TestProfileChangeEmail extends WP_Auth0_Test_Case {
 		$old_user->data->user_email = 'OLD-' . $new_email;
 		$this->storeAuth0Data( $user->ID, 'auth0' );
 
+		$api_change_email = new WP_Auth0_Api_Change_Email( self::$opts, self::$api_client_creds );
+		$change_email     = new WP_Auth0_Profile_Change_Email( $api_change_email );
+
 		try {
-			wp_auth0_profile_change_email( $user->ID, $old_user );
+			$change_email->update_email( $user->ID, $old_user );
 		} catch ( Exception $e ) {
 			// Just need to stop the API call.
 		}
 
 		$this->assertEquals( $new_email, WP_Auth0_UsersRepo::get_meta( $user->ID, 'auth0_transient_email_update' ) );
+	}
+
+	/**
+	 * Get an API stub set to pass or fail.
+	 *
+	 * @param boolean $success - True for the API call to succeed, false for it to fail.
+	 *
+	 * @return WP_Auth0_Profile_Change_Email
+	 */
+	public function getStub( $success ) {
+		$mock_api_test_email = $this
+			->getMockBuilder( WP_Auth0_Api_Change_Email::class )
+			->setMethods( [ 'call' ] )
+			->setConstructorArgs( [ self::$opts, self::$api_client_creds ] )
+			->getMock();
+		$mock_api_test_email->method( 'call' )->willReturn( $success );
+		return new WP_Auth0_Profile_Change_Email( $mock_api_test_email );
 	}
 }
