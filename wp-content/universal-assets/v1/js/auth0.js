@@ -131,14 +131,16 @@ window.addEventListener('load', function() {
 				'auth0_access_token'  : access_token,
 				'auth0_id_token'      : id_token
 			};
-  			console.log(ajax_object.ajax_url);
 			jQuery.ajax({
 				type: 'POST',
 				url: ajax_object.ajax_url,
 				data: data,
 				timeout: 10000,
 				success: function(data){
-					console.log(data);
+					if(!jQuery(".logged-in")) {
+						alert("Pulling your info now");
+						location.href = location.href;
+					}
 				},
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {

