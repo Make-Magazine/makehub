@@ -11,7 +11,6 @@ window.addEventListener('load', function() {
 	}
 
 	var userProfile;
-	
 	var webAuth = new auth0.WebAuth({
 			domain: AUTH0_DOMAIN,
 			clientID: AUTH0_CLIENT_ID,
@@ -22,17 +21,6 @@ window.addEventListener('load', function() {
 			//scope of data pulled by auth0
 			leeway: 60
 		});
-	
-	var loggedin = false;
-	var loggedin_data = {
-		action: 'is_user_logged_in'
-	};
-	jQuery.post(ajax_object.ajax_url, loggedin_data, function(response) {
-		if(response == 'yes') {
-			loggedin = true;
-			console.log("already logged in");
-		} 
-	});
 	
 	//check if logged in another place
 	webAuth.checkSession({},
@@ -64,6 +52,15 @@ window.addEventListener('load', function() {
 			//redirect to auth0 logout page
 			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		});
+	} else {
+		// otherwise we need a fool proof system to detect if the user is logged in
+		var loggedin = false;
+		var loggedin_data = { action: 'is_user_logged_in' };
+		jQuery.post(ajax_object.ajax_url, loggedin_data, function(response) {
+			if(response == 'yes') {
+				loggedin = true;
+			} 
+		});
 	}
 
 	function clearLocalStorage() {
@@ -91,7 +88,9 @@ window.addEventListener('load', function() {
 			getProfile();
 		} else {
 			jQuery("#profile-view").css('display', 'none');
-			WPlogout();
+			if(wpLoginRequired == true) {
+				WPlogout();
+			}
 		}
 	}
 
@@ -108,7 +107,7 @@ window.addEventListener('load', function() {
 				userProfile = profile;
 				// make sure that there isn't a wordpress acount with a different user logged in
 				if(ajax_object.wp_user_email && ajax_object.wp_user_email != userProfile.email) {
-					WPlogout("wp_only");
+					WPlogout();
 				}
 				// display the avatar
 				document.querySelector('.dropdown-toggle img').src = userProfile.picture;
@@ -150,8 +149,11 @@ window.addEventListener('load', function() {
 				success: function(data){
 				},
 			}).done(function() {
-				if(loggedin == true) {
+				if(loggedin == false) {
 					alert("It looks like you're already logged in. Let me pull up your info.");
+					// wouldn't it be nice if we could reload content rather than the page?
+					//jQuery(".main-content").load(document.URL +  " .main-content");
+					//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
 					location.href = location.href;
 				}
 			}).fail(function(xhr, status, error) {
@@ -175,14 +177,11 @@ window.addEventListener('load', function() {
 		}
 		var data = { 'action': 'mm_wplogout' };
 		jQuery.post(ajax_object.ajax_url, data, function(response) {
-			if(wp_only != "wp_only"){
-				window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
-			}else{
-				// In cases where there is already a different wp user, log back in with  new user
-				if(wpLoginRequired) {
-					WPlogin();
-				}
-			}
+			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
+		}).done(function(){
+			//jQuery(".main-content").load(document.URL +  " .main-content");
+			//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
+			location.href = location.href;
 		});
 	}
 
