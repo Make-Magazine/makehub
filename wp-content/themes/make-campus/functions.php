@@ -82,7 +82,7 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
     require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
-require_once(content_url() . '/universal-assets/v1/universal-functions.php');
+require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
 
 add_action('wp_enqueue_scripts', 'make_campus_enqueue_scripts', 0);
 
