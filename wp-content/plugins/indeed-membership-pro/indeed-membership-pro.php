@@ -541,6 +541,7 @@ function ihc_check_reg_field_ajax()
 }
 
 function ihc_check_value_field($type='', $value='', $val2='', $register_msg=array()){
+    $return = '';
 	if (isset($value) && $value!=''){
 		switch ($type){
 			case 'user_login':
