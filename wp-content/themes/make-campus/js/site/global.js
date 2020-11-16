@@ -7,17 +7,14 @@ jQuery("#scrollToTop").click(function() {
 	jQuery('html, body').animate({scrollTop:0}, 300);
 });
 
-// if there's an faq accordion after an anchor tag, open that sucker
-jQuery('a[href*="#"]')
-	// Ignore links that don't actually link to anything
-	.not('[href="#"]')
-	.not('[href="#0"]')
-	.click(function(event) {
-		var accordion = jQuery('[name='+jQuery(this).attr('href').substring(1)+']').nextUntil('.wp-block-uagb-faq').next();
-		if(accordion) {
-			jQuery(accordion).find( '.uagb-faq-questions-button:first' ).click();
-		}
-});
+// Default all accordions to closed
+jQuery(document).ready(function($) { 
+	if( $(".elementor-widget-accordion")[0] ){
+		var delay = 100; setTimeout(function() { 
+		$('.elementor-tab-title').removeClass('elementor-active');
+		$('.elementor-tab-content').css('display', 'none'); }, delay); 
+	}
+}); 
 
 
 // should this be universal?
