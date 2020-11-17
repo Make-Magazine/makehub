@@ -11,6 +11,7 @@ function universal_scripts() {
 }
 add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
 
+// check if user is logged in
 function ajax_check_user_logged_in() {
     echo is_user_logged_in()?'yes':'no';
     die();
@@ -56,4 +57,14 @@ function MM_WPlogin() {
         error_log(print_r($userinput, TRUE));
         wp_send_json_error();
     }
+}
+
+// Making error logs for ajax to call
+add_action('wp_ajax_make_error_log', 'make_error_log');
+add_action('wp_ajax_nopriv_make_error_log', 'make_error_log');
+
+// Write to the php error log by request
+function make_error_log() {
+    $error = filter_input(INPUT_POST, 'make_error', FILTER_SANITIZE_STRING);
+    error_log(print_r($error, TRUE));
 }

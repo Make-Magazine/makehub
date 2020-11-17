@@ -115,6 +115,7 @@ window.addEventListener('load', function() {
 				document.querySelector('.dropdown-toggle img').style.display = "block";
 				document.querySelector('#LoginBtn').style.display = "none";
 				document.querySelector('.profile-email').innerHTML = userProfile.email; 
+				// do we need http://makershare.com/last_name / first_name anymore 
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
@@ -149,13 +150,11 @@ window.addEventListener('load', function() {
 				success: function(data){
 				},
 			}).done(function() {
-				if(loggedin == false) {
-					alert("It looks like you're already logged in. Let me pull up your info.");
-					// wouldn't it be nice if we could reload content rather than the page?
-					//jQuery(".main-content").load(document.URL +  " .main-content");
-					//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
-					location.href = location.href;
-				}
+				alert("It looks like you're already logged in. Let me pull up your info.");
+				// wouldn't it be nice if we could reload content rather than the page?
+				jQuery(".wysiwyg").load(document.URL +  " .wysiwyg");
+				//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
+				//location.href = location.href;
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );
