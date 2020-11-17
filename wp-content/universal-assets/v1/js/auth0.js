@@ -84,10 +84,10 @@ window.addEventListener('load', function() {
 	}
 	function displayButtons() {
 		if (localStorage.getItem('expires_at')) {
-			jQuery("#profile-view").css('display', 'flex');
+			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			getProfile();
 		} else {
-			jQuery("#profile-view").css('display', 'none');
+			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			if(wpLoginRequired == true) {
 				WPlogout();
 			}
@@ -151,12 +151,15 @@ window.addEventListener('load', function() {
 				},
 			}).done(function() {
 				if(loggedin == false) {
-					alert("It looks like you're already logged in. Let me pull up your info.");
-					// wouldn't it be nice if we could reload content rather than the page?
-					jQuery("#menu-secondary_universal_menu").load(document.URL +  " #menu-secondary_universal_menu > *");
-					jQuery(".main-content").load(document.URL +  " .main-content > *");
-					//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
-					//location.href = location.href;
+					alert("We need to refresh your page to pull in your information.");
+					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
+					if ( jQuery('.main-content').length ) {
+						jQuery('.main-content').load(document.URL +  " .main-content > *");
+					}
+					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
+					if ( jQuery('.page-content').length ) { 
+						jQuery('.page-content').load(document.URL +  " .page-content > *");
+					}
 				}
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
@@ -181,9 +184,14 @@ window.addEventListener('load', function() {
 		jQuery.post(ajax_object.ajax_url, data, function(response) {
 			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		}).done(function(){
-			//jQuery(".main-content").load(document.URL +  " .main-content");
-			//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
-			location.href = location.href;
+			jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
+			if ( jQuery('.main-content').length ) {
+				jQuery('.main-content').load(document.URL +  " .main-content > *");
+			}
+			// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
+			if ( jQuery('.page-content').length ) { 
+				jQuery('.page-content').load(document.URL +  " .page-content > *");
+			}
 		});
 	}
 
