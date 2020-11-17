@@ -150,11 +150,14 @@ window.addEventListener('load', function() {
 				success: function(data){
 				},
 			}).done(function() {
-				alert("It looks like you're already logged in. Let me pull up your info.");
-				// wouldn't it be nice if we could reload content rather than the page?
-				jQuery(".wysiwyg").load(document.URL +  " .wysiwyg");
-				//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
-				//location.href = location.href;
+				if(loggedin == false) {
+					alert("It looks like you're already logged in. Let me pull up your info.");
+					// wouldn't it be nice if we could reload content rather than the page?
+					jQuery("#menu-secondary_universal_menu").load(document.URL +  " #menu-secondary_universal_menu > *");
+					jQuery(".main-content").load(document.URL +  " .main-content > *");
+					//jQuery("#makerfaire div").load(document.URL +  " #makerfaire div");
+					//location.href = location.href;
+				}
 			}).fail(function(xhr, status, error) {
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );
