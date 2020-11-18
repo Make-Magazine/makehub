@@ -131,11 +131,17 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             ?>
                         </div>
                     <?php } ?>
-                    <?php if (get_field('materials') ) { ?>
+                    <?php if (get_field('materials') && get_field('materials')[0]['item'] != '') { ?>
                         <div class="tribe-events-single-event-materials tribe-events-content">
                             <h3>What You'll Need:</h3> 
                             <div class="materials-list">
-								<?php echo get_field('materials'); ?>
+                                <ul>
+                                    <?php
+                                    foreach (get_field('materials') as $material) {
+                                        echo '<li>' . $material['item'] . '</li>';
+                                    }
+                                    ?>
+                                </ul>
                             </div>
                             <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
                                 <h3>Wishlist Links: </h3>
