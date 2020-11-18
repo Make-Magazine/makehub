@@ -121,6 +121,9 @@ window.addEventListener('load', function() {
 				}
 				if(wpLoginRequired && loggedin == false) {
 					WPlogin();
+					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+					setTimeout(function() { jQuery('.universal-loading-spinner').remove(); }, 4000);
 				}
 			}
 			if (err) {
@@ -151,7 +154,6 @@ window.addEventListener('load', function() {
 				},
 			}).done(function() {
 				if(loggedin == false) {
-					alert("We need to refresh your page to pull in your information.");
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
 					if ( jQuery('.main-content').length ) {
 						jQuery('.main-content').load(document.URL +  " .main-content > *");
@@ -175,6 +177,7 @@ window.addEventListener('load', function() {
 	}
 	
 	function WPlogout(wp_only){
+		console.log("we're logging you out!");
 		if ( jQuery( '#wpadminbar' ).length ) {
 			jQuery( 'body' ).removeClass( 'adminBar' ).removeClass( 'logged-in' );
 			jQuery( '#wpadminbar' ).remove();
@@ -184,14 +187,8 @@ window.addEventListener('load', function() {
 		jQuery.post(ajax_object.ajax_url, data, function(response) {
 			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		}).done(function(){
-			jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
-			if ( jQuery('.main-content').length ) {
-				jQuery('.main-content').load(document.URL +  " .main-content > *");
-			}
-			// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
-			if ( jQuery('.page-content').length ) { 
-				jQuery('.page-content').load(document.URL +  " .page-content > *");
-			}
+			console.log("you got logged out!");
+			location.href = location.href;
 		});
 	}
 
