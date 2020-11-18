@@ -35,7 +35,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('119', 'short_description'),
         array('73', 'audience', 'field_5f35a5f833a04'),
         array('57', 'location'),
-        array('139', 'materials', 'field_5f7b4abb07cab'),
+        array('153', 'materials'),
         array('78', 'kit_required'),
         array('79', 'kit_price_included'),
         array('80', 'kit_supplier'),
@@ -122,6 +122,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     }
     update_field("social_links", $repeater, $organizer_id);
 	update_field("public_email", $entry['148'], $organizer_id);
+	update_field("attendee_communication_email", $entry['152'], $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
     tribe_update_organizer($organizer_id, $organizerArgs);
