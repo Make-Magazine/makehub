@@ -1,7 +1,7 @@
 window.addEventListener('load', function() {
 	
 	var url = new URL(location.href).hostname;
-	var wplogin_domains = ["makerfaire", "campus", "makerspaces", "community", "makehub"];
+	var wplogin_domains = ["makerfaire", "campus", "makerspaces", "community", "makehub", "experiencestage"];
 	var wpLoginRequired = false;
 	for (var i = 0, ln = wplogin_domains.length; i < ln; i++) {
 	  if (url.indexOf(wplogin_domains[i]) !== -1) {

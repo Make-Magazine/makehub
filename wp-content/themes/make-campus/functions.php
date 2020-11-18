@@ -117,7 +117,12 @@ function make_campus_enqueue_scripts() {
     wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
 
-    wp_localize_script('make-campus', 'ajax_object',
+    wp_localize_script('theme-js', 'ajax_object',
+            array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+            )
+    );
+	wp_localize_script('universal', 'ajax_object',
             array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'home_url' => get_home_url(),
