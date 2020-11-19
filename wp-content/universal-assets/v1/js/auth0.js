@@ -25,7 +25,6 @@ window.addEventListener('load', function() {
 	//check if logged in another place
 	webAuth.checkSession({},
 		function(err, result) {
-			console.log(result);
 			if (err) {
 				clearLocalStorage();
 				if(err.error!=='login_required'){
@@ -120,7 +119,6 @@ window.addEventListener('load', function() {
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
-				console.log(loggedin);
 				if(wpLoginRequired && loggedin == false && !jQuery( '.logged-in' ).length ) {
 					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
@@ -156,7 +154,8 @@ window.addEventListener('load', function() {
 			}).done(function() {
 				if(loggedin == false) {
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
-					if ( jQuery('.main-content').length ) {
+					if ( jQuery('.main-content:not(.tribe-theme-child-make-campus)').length ) {
+						alert("hello");
 						jQuery('.main-content').load(document.URL +  " .main-content > *");
 					}
 					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
