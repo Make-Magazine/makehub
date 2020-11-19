@@ -120,10 +120,11 @@ window.addEventListener('load', function() {
 				if(userProfile['http://makershare.com/first_name'] != undefined && userProfile['http://makershare.com/last_name'] != undefined) {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
-				if(wpLoginRequired && loggedin == false) {
-					WPlogin();
+				console.log(loggedin);
+				if(wpLoginRequired && loggedin == false && !jQuery( '.logged-in' ).length ) {
 					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
 					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+					WPlogin();
 				}
 			}
 			if (err) {
@@ -175,11 +176,11 @@ window.addEventListener('load', function() {
 					 errorMsg(userProfile.email + " had an issue logging in at the WP Login phase. That error is: " + JSON.stringify(xhr));
 				}
 			});
-		}
+		// this is if we're just logging in to begin with rather than visiting from another site
+		} else { jQuery('.universal-loading-spinner').remove(); }
 	}
 	
 	function WPlogout(wp_only){
-		console.log("we're logging you out!");
 		if ( jQuery( '#wpadminbar' ).length ) {
 			jQuery( 'body' ).removeClass( 'adminBar' ).removeClass( 'logged-in' );
 			jQuery( '#wpadminbar' ).remove();
@@ -189,7 +190,6 @@ window.addEventListener('load', function() {
 		jQuery.post(ajax_object.ajax_url, data, function(response) {
 			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		}).done(function(){
-			console.log("you got logged out!");
 			location.href = location.href;
 		});
 	}
