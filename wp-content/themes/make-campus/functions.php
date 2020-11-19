@@ -403,8 +403,12 @@ function smartTruncate($string, $limit, $break = ".", $pad = "...") {
     return $string;
 }
 
-$gv_fe = GravityView_frontend::getInstance();
-remove_filter('parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
+//check if gravity view plugin is active
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+if ( is_plugin_active('gravityview/gravityview.php') ) {    
+    $gv_fe = GravityView_frontend::getInstance();
+    remove_filter('parse_query', array($gv_fe, 'parse_query_fix_frontpage'));
+}
 
 function parse_yturl($url) {
     $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
