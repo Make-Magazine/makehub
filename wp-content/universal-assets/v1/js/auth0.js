@@ -120,10 +120,9 @@ window.addEventListener('load', function() {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
 				if(wpLoginRequired && loggedin == false) {
+					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 					WPlogin();
 					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
-					setTimeout(function() { jQuery('.universal-loading-spinner').remove(); }, 4000);
 				}
 			}
 			if (err) {
@@ -162,8 +161,10 @@ window.addEventListener('load', function() {
 					if ( jQuery('.page-content').length ) { 
 						jQuery('.page-content').load(document.URL +  " .page-content > *");
 					}
+					jQuery('.universal-loading-spinner').remove();
 				}
 			}).fail(function(xhr, status, error) {
+				jQuery('.universal-loading-spinner').remove();
 				if(status === 'timeout') {
 					 alert( "Your login has timed out. Please try the login again." );
 					 errorMsg(userProfile.email + " ran over the timeout limit of 10 seconds. Error was: " + JSON.stringify(error));
