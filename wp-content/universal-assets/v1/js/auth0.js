@@ -24,12 +24,12 @@ window.addEventListener('load', function() {
 	
 	//check if logged in another place
 	webAuth.checkSession({},
-		function(err, result) {
+		function(err, result) {	
 			if (err) {
-				clearLocalStorage();
 				if(err.error!=='login_required'){
 					errorMsg(userProfile.email + " had an issue logging in at the checkSession phase. That error was: " + JSON.stringify(err));
 				}
+				clearLocalStorage();
 			} else {
 				setSession(result);
 			}
@@ -154,8 +154,7 @@ window.addEventListener('load', function() {
 			}).done(function() {
 				if(loggedin == false) {
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
-					if ( jQuery('.main-content:not(.tribe-theme-child-make-campus)').length ) {
-						alert("hello");
+					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus') ) {
 						jQuery('.main-content').load(document.URL +  " .main-content > *");
 					}
 					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
