@@ -25,6 +25,7 @@ window.addEventListener('load', function() {
 	//check if logged in another place
 	webAuth.checkSession({},
 		function(err, result) {
+			console.log(result);
 			if (err) {
 				clearLocalStorage();
 				if(err.error!=='login_required'){
@@ -120,9 +121,9 @@ window.addEventListener('load', function() {
 				document.querySelector('.profile-info .profile-name').innerHTML = userProfile['http://makershare.com/first_name'] + " " + userProfile['http://makershare.com/last_name'];
 				}
 				if(wpLoginRequired && loggedin == false) {
-					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 					WPlogin();
 					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
+					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 				}
 			}
 			if (err) {
