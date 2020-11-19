@@ -16,6 +16,16 @@ header.blank-hero {
 		color: #fff; 
 	}
 }
+.logo-hero {
+	@media screen and (min-width: 1200px) {
+		#header-image { 
+		   right: -160px; 
+		}
+		.hero .elementor-heading-title {
+			margin-right: -120px;
+		}
+	}
+}
 
 .header-hero {
 	background-image: url('/wp-content/themes/make-campus/images/make-campus-home-hero.jpg');

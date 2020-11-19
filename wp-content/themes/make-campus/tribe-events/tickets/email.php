@@ -491,7 +491,7 @@
 																	style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer( $organizer_id ); ?></span>
 															<?php 
 																	 $public_email = get_field('public_email', $organizer_id);	
-																	 $email = tribe_get_organizer_email( $organizer_id );
+																	 $email = get_field('attendee_communication_email', $organizer_id);	
 																	 if($public_email[0] && $public_email[0] == 'yes') { ?>
 																		<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
 																		<span><?php echo $email; ?></span>

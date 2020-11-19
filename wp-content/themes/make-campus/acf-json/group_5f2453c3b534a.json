@@ -379,7 +379,7 @@
             "key": "field_5f35a5a333a03",
             "label": "Materials",
             "name": "materials",
-            "type": "repeater",
+            "type": "textarea",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -388,32 +388,11 @@
                 "class": "",
                 "id": ""
             },
-            "collapsed": "",
-            "min": 0,
-            "max": 0,
-            "layout": "table",
-            "button_label": "",
-            "sub_fields": [
-                {
-                    "key": "field_5f7b4abb07cab",
-                    "label": "Material",
-                    "name": "item",
-                    "type": "text",
-                    "instructions": "",
-                    "required": 0,
-                    "conditional_logic": 0,
-                    "wrapper": {
-                        "width": "",
-                        "class": "",
-                        "id": ""
-                    },
-                    "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
-                }
-            ]
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
         },
         {
             "key": "field_5f35a5f833a04",
@@ -900,5 +879,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1604208022
+    "modified": 1605657127
 }
