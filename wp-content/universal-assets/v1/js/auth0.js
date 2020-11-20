@@ -154,7 +154,7 @@ window.addEventListener('load', function() {
 			}).done(function() {
 				if(loggedin == false) {
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
-					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length ) {
+					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.page-template-page-makerspaces-map-php').length ) {
 						jQuery('.main-content').load(document.URL +  " .main-content > *");
 					}
 					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
