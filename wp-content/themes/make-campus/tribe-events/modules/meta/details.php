@@ -174,8 +174,8 @@ else :
 
         <?php
         // Age ranges
-        if (!empty($audience_obj)) {
-            $audience_obj = get_field_object('audience');
+        $audience_obj = get_field_object('audience');
+        if (!empty($audience_obj)) {            
             $audience_age = get_field('audience');
             if ($audience_age && $audience_obj) {
                 $age_list = array();
@@ -198,12 +198,12 @@ else :
 
 <?php
 // Event Website
-if (!empty($website)) :
+if (!empty($website)) {
     ?>
 
             <dt class="tribe-events-event-url-label"> <?php esc_html_e('Website:', 'the-events-calendar'); ?> </dt>
             <dd class="tribe-events-event-url"> <?php echo $website; ?> </dd>
-<?php endif ?>
+<?php } ?>
 
 <?php do_action('tribe_events_single_meta_details_section_end'); ?>
     </dl>
