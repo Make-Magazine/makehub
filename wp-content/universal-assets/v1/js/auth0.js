@@ -154,7 +154,7 @@ window.addEventListener('load', function() {
 			}).done(function() {
 				if(loggedin == false) {
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
-					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus') ) {
+					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length ) {
 						jQuery('.main-content').load(document.URL +  " .main-content > *");
 					}
 					// this is for mf. maybe we could make mf use .main-content as it's default page wrapper in the future
@@ -170,7 +170,7 @@ window.addEventListener('load', function() {
 					 errorMsg(userProfile.email + " ran over the timeout limit of 10 seconds. Error was: " + JSON.stringify(error));
 					 location.href = location.href; // reload in the hopes it was just a temp server blip
 				} else {
-					 alert( "I'm sorry. We had an issue logging you into our system. Please try the login again." );
+					 alert( "I'm sorry. We had an issue logging you into our system. Error Code: 0599.\nPlease contact our support at community@make.co with this error code for assistance." );
 					 errorMsg(userProfile.email + " had an issue logging in at the WP Login phase. That error is: " + JSON.stringify(xhr));
 				}
 			});
