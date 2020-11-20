@@ -51,6 +51,11 @@ function MM_WPlogin() {
     $id_token = filter_input(INPUT_POST, 'auth0_id_token', FILTER_SANITIZE_STRING);
 
     if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
+		$blog_id = get_current_blog_id();
+		$user_id = username_exists( sanitize_text_field( $userinfo->name ) );
+		if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
+			add_user_to_blog( $blog_id, $user_id, "subscriber" );
+		} 
         wp_send_json_success();
     } else {
         error_log('Failed login');
@@ -67,4 +72,9 @@ add_action('wp_ajax_nopriv_make_error_log', 'make_error_log');
 function make_error_log() {
     $error = filter_input(INPUT_POST, 'make_error', FILTER_SANITIZE_STRING);
     error_log(print_r($error, TRUE));
+}
+
+function randomString() {
+	$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    return substr(str_shuffle($permitted_chars), 0, 10);
 }
