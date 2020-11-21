@@ -35,6 +35,7 @@ add_action('wp_ajax_nopriv_mm_wplogin', 'MM_WPlogin');
 
 /** Set up the Ajax WP Login */
 function MM_WPlogin() {
+	error_log("login started");
     //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
     global $wpdb; // access to the database
     //use auth0 plugin to log people into wp
@@ -53,6 +54,8 @@ function MM_WPlogin() {
     if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
 		$blog_id = get_current_blog_id();
 		$user_id = username_exists( sanitize_text_field( $userinfo->name ) );
+		error_log("User ID: " . $user_id);
+		error_log("Blog ID: " . $blog_id);
 		if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
 			add_user_to_blog( $blog_id, $user_id, "subscriber" );
 		} 
