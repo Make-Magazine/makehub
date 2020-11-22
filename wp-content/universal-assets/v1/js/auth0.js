@@ -132,7 +132,6 @@ window.addEventListener('load', function() {
 	}
 	
 	function WPlogin(){
-		errorMsg(userProfile.email + " is logging in");
 		if (typeof userProfile !== 'undefined') {
 			var user_id      = userProfile.sub;
 			var access_token = localStorage.getItem('access_token');
