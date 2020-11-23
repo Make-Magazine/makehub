@@ -56,6 +56,9 @@ foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
    include_once $file;
 }
 
+// Universal functions like auth0
+require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+
 add_action( 'after_setup_theme', 'genesis_child_gutenberg_support' );
 /**
  * Adds Gutenberg opt-in features and styling.

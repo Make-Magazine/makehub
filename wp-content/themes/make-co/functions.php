@@ -77,6 +77,10 @@ function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingCon
     require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
 }
 
+// Universal functions like auth0
+require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+
+
 add_action('wp_enqueue_scripts', 'make_co_enqueue_scripts', 0);
 
 /**
