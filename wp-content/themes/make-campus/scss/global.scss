@@ -124,7 +124,7 @@ button, input[type="submit"] {
 	}
 }
 
-.tribe-common {
+.tribe-common { // tribe was overwriting our universal btn styles!
 	.universal-btn {
 		background-color: #005e9a;
 		color: #fff;
@@ -205,6 +205,31 @@ hr.double-line-hr {
   border-bottom: 3px solid #67bde1;
 }
 
+#makey-sign {
+	position: fixed;
+	bottom: 0;
+	-ms-transform: rotate(20deg);
+	transform: rotate(20deg);
+	margin-bottom: -70px;
+	margin-left: -40px;
+	width: 12%;
+	z-index: 9999;
+	transition: 0.3s;
+	&:hover {
+		width: 15%;
+		margin-bottom: -45px;
+		margin-left: -30px;
+	}
+	@media screen and (max-width: 1200px) {
+		width: 150px;
+		&:hover {
+			width: 180px;
+		}
+	}
+	@media screen and (max-width: 600px) {
+		display: none;
+	}
+}
 
 // Youtube responsiveness for Jetpack shortcode
 .embed-youtube,
