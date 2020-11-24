@@ -12,7 +12,7 @@ genesis_markup(
 ?>
 
 <a href="/submit-event" id="makey-sign" target="blank">
-	<img src="/wp-content/themes/make-campus/images/submit-project-makey.png" alt />
+	<img src="/wp-content/themes/make-campus/images/submit-program-makey.png" alt />
 </a>
 
 <div id="nav-overlay"></div>
