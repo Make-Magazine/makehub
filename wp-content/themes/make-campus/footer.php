@@ -11,6 +11,10 @@ genesis_markup(
    require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer.html');
 ?>
 
+<a href="/submit-event" id="makey-sign" target="blank">
+	<img src="/wp-content/themes/make-campus/images/submit-program-makey.png" alt />
+</a>
+
 <div id="nav-overlay"></div>
 <?php wp_footer(); ?>
 
