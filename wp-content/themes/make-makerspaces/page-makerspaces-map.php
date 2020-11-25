@@ -19,10 +19,11 @@ function spaces_map_loop() {
       <div class="row map-header">
          <div class="col-md-12">
             <h1>Makerspace Directory</h1>
+            <!--
             <div class="admin-buttons">
                 <a class="btn universal-btn" href="/register">Add yours <i class="fas fa-plus"></i></a>
 		<a class="btn universal-btn" href="/edit-your-makerspace">Manage <i class="far fa-edit"></i></a>
-            </div>
+            </div>-->
             <p><?php //echo the_content(); ?></p>
          </div>
       </div>
