@@ -3,6 +3,7 @@
 // ALL gravity forms
 .gform_wrapper {
 	.gform_body  {
+		.gfield { width: 100%; } // as the baseline
 		.gform_page_footer {
 			display: flex;
 			input[type="button"] {
@@ -244,7 +245,6 @@
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     border-bottom: solid #fff 10px;
     margin: 0px;
-	.gfield { width: 100%; } // as the baseline
     .event_form {
         padding: 0px 15px;
 		font-size: 18px;

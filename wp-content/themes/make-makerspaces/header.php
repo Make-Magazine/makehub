@@ -127,10 +127,10 @@ do_action('genesis_before_header');
 	<header class="universal-nav">
 <?php } // end cookie law if ?>
 
-<?php
-// Nav Level 1 and Hamburger      
-require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
-?>
+	<?php
+		// Nav Level 1 and Hamburger      
+		require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
+	?>
 
     <div class="nav-level-2">
         <div class="container">
@@ -151,9 +151,9 @@ require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav
     </div><!-- .nav-level-2 -->
 
     <div id="nav-flyout">
-<?php
-echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html');
-?>
+		<?php
+		require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-megamenu.html');
+		?>
     </div>
 
 </header>

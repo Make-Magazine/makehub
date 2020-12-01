@@ -20,7 +20,7 @@ function format_comment($comment, $args, $depth) {
 	}
  
 	
-   $GLOBALS['comment'] = $comment;
+    $GLOBALS['comment'] = $comment;
 	$GLOBALS['comment_depth'] = $comment_depth;
 	
 	$comment_author = get_user_by('email', $comment->comment_author_email);
