@@ -165,7 +165,7 @@ do_action( 'genesis_before_header' );
 
   <div id="nav-flyout">
    <?php
-      echo file_get_contents(content_url() . '/universal-assets/v1/page-elements/universal-megamenu.html');
+      require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-megamenu.html');
    ?>
   </div>
 
