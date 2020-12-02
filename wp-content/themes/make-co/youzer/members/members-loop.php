@@ -70,6 +70,7 @@ do_action( 'bp_before_members_loop' ); ?>
 					
 					<?php 
 					if(bp_get_member_type(bp_get_member_user_id()) == 'maker_space') {
+						$hidden_fields = bp_xprofile_get_hidden_fields_for_user(bp_get_member_user_id());
 						if(xprofile_get_field_data('city', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('city'), $hidden_fields)) { ?>
 							<span class="yz-name"><i class="fas fa-city"></i><?php echo xprofile_get_field_data('city', bp_get_member_user_id()); 
 							if(xprofile_get_field_data('state / province', bp_get_member_user_id()) && !in_array(xprofile_get_field_id_from_name('state / province'), $hidden_fields)) { ?>
