@@ -163,7 +163,12 @@ function update_ticket_data($entry, $post_id) {
     }
     
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
+    $global_stock = new Tribe__Tickets__Global_Stock($post_id);
+    $global_stock->disable();
+    $global_stock->set_stock_level(0);
     update_post_meta($post_id, '_tribe_ticket_capacity', $ticket->capacity);
+    update_post_meta($post_id, '_tribe_ticket_use_global_stock', 0);
+    update_post_meta($post_id, '_tribe_ticket_global_stock_level', $woo_stock);
     
     update_post_meta($ticket->ID, '_stock', $woo_stock);
     update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
