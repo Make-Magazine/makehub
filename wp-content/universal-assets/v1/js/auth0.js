@@ -155,7 +155,6 @@ window.addEventListener('load', function() {
 				if(loggedin == false) {
 					jQuery('#menu-secondary_universal_menu').load(document.URL +  " #menu-secondary_universal_menu > *");
 					if ( jQuery('.main-content').length && jQuery('.join-box').length ) {
-						alert("test");
 						window.location.replace("/digital-library/");
 					}
 					if ( jQuery('.main-content').length && !jQuery('.blog.tribe-theme-child-make-campus').length && !jQuery('.page-template-page-makerspaces-map-php').length ) {
