@@ -29,6 +29,5 @@ $time_zone_label = Tribe__Events__Timezones::get_event_timezone_abbr( $event_id 
 	<time class="tribe-events-calendar-list__event-datetime" datetime="<?php echo esc_attr( $event_date_attr ); ?>">
 		<?php echo $event->schedule_details->value(); ?>
 	</time>
-	<span><?php echo $time_zone_label; ?></span>
 	<?php $this->template( 'list/event/date/meta', [ 'event' => $event ] ); ?>
 </div>
