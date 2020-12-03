@@ -57,6 +57,6 @@ $exclusion_txt = get_field("exclusion_text", $event->ID);
 if ($num_sessions) { ?>
 	<div class="tribe-events-c-small-cta tribe-common-b3 tribe-events-calendar-list__event-cost">
 		<?php echo $num_sessions; ?> <?php echo $recurrence_info; ?> sessions starting on <?php echo esc_html($start_date); ?>
-		<?php if ( $exclusion_txt && $exclusion_txt != '' ) ) { echo " " . $exclusion_txt; } ?>								  
+		<?php if ( $exclusion_txt && $exclusion_txt != '' ) { echo " " . $exclusion_txt; } ?>								  
 	</div>	
 <?php } ?>
