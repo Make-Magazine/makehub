@@ -117,6 +117,26 @@ a { // don't let genesis molest our links
 	width: 100%;
 }
 
+.fancybox-overlay { z-index: 999999; }
+.fancybox-opened { 
+	z-index: 9999999;
+	@media screen and (max-width: 768px) {
+		left: 0px !important; 
+	}
+}
+#pinterest-offer a {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+	text-align: center;
+	b {
+		font-size: 20px;
+		color: #333;
+	}
+}
+
 // GDPR Cookie Modal
 #cookie-law-info-bar {
 	padding: 25px !important;
