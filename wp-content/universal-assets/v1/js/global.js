@@ -211,7 +211,7 @@ jQuery(document).ready(function(jQuery){
 	if (document.referrer) {
 		url = document.referrer; 
 		refDomain = (new URL(document.referrer)).hostname;
-		if(refDomain == "pinterest.com") {
+		if(refDomain == "pinterest.com" || refDomain == "www.pinterest.com") {
 			jQuery(".pinterest-fancybox").fancybox({
 				fitToView : false,
 				autoSize : false,
