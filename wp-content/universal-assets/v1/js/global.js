@@ -17,7 +17,6 @@ jQuery(window).bind("load", function() {
 			})
 			*/
 	});
-
 	// init Bootstrap Tooltips by data attr
 	jQuery(function () {
 		jQuery('[data-toggle="tooltip"]').tooltip();
@@ -165,7 +164,7 @@ jQuery(document).ready(function(){
 
 
 
-// for newsletter thank you popups
+// FANCYBOX POPUPS
 jQuery(document).ready(function(jQuery){
 	// Thank you modal with more newsletter options
 	jQuery(".fancybox-thx").fancybox({
@@ -208,6 +207,21 @@ jQuery(document).ready(function(jQuery){
 		autoHeight : true,
 		padding : 0
 	});
+	// Pinterest Offer
+	if (document.referrer) {
+		url = document.referrer; 
+		refDomain = (new URL(document.referrer)).hostname;
+		if(refDomain == "pinterest.com") {
+			jQuery(".pinterest-fancybox").fancybox({
+				fitToView : false,
+				autoSize : false,
+				maxWidth: 400,
+				autoWidth : true,
+				autoHeight : true,
+				padding : 15,
+			}).click();
+		}
+	}
 });
 
 
