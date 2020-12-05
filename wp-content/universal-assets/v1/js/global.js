@@ -209,9 +209,7 @@ jQuery(document).ready(function(jQuery){
 	});
 	// Pinterest Offer
 	if (document.referrer) {
-		console.log(document.refferer);
 		refDomain = (new URL(document.referrer)).hostname;
-		console.log("referrer domain: " + refDomain);
 		if(refDomain == "pinterest.com" || refDomain == "www.pinterest.com") {
 			jQuery(".pinterest-fancybox").fancybox({
 				fitToView : false,
