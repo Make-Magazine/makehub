@@ -177,6 +177,15 @@
 							}
 						}
 					}
+					.tribe-tickets__item__details__summary {
+						@media screen and (max-width: 768px) {
+							margin-top: 15px;
+							.tribe-tickets__item__details__summary--more {
+								display: none;
+							}
+						}
+					}
+					
 					.tribe-tickets__buy { 
 						margin-left: 10px; 
 						text-transform: none;
