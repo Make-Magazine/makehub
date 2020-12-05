@@ -122,6 +122,10 @@ a { // don't let genesis molest our links
 	z-index: 9999999;
 	@media screen and (max-width: 768px) {
 		left: 0px !important; 
+		width: 100vw !important;
+		.fancybox-inner {
+			width: auto !important;
+		}
 	}
 }
 #pinterest-offer a {
