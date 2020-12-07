@@ -3,9 +3,9 @@
 function determine_staging() {
    // Display a message if on staging or development
     $homeurl = get_home_url();    
-    if($homeurl === "http://campus.makehub.test" || $homeurl === "http://experiences.makehub.local"){
+    if(strpos($homeurl, '.test') || strpos($homeurl, '.local')){    
         echo '<div class="stagingMsg" style="display: block; text-align: center; background: red; font-size: large;color: white; position: fixed; right 0px; z-index: 9999;">Local Site</div>';
-    }elseif($homeurl === "https://experiencestage.make.co/" || $homeurl === "https://campusdev.make.co/"){
+    }elseif(strpos($homeurl, 'experiencestage.make.co') || strpos($homeurl, 'campusdev.make.co')){            
         echo '<div class="stagingMsg" style="display: block; text-align: center; background: red; font-size: large;color: white; position: fixed; right 0px; z-index: 9999;">Testing Environment</div>';
     }    
 }
@@ -21,7 +21,7 @@ add_filter('gform_notification', 'change_email_to', 10, 3);
 function change_email_to($notification, $form, $entry) {
    $homeurl = get_home_url();
    // Check for our stage and dev sites
-   if ($homeurl === "https://experiencestage.make.co/" || $homeurl === "https://campusdev.make.co/") {
+   if(strpos($homeurl, 'experiencestage.make.co') || strpos($homeurl, 'campusdev.make.co')){
       $notification['subject'] .= 'Email from Campus Testing - '.$notification['subject'];
       $notification['toType'] = 'email';
       $notification['to'] = 'webmaster@make.co,siana@make.co';
