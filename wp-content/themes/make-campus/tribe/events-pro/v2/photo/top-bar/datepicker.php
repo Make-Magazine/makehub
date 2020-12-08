@@ -92,3 +92,4 @@
 	<a href="/events/list/" class="btn universal-btn">List</a>
 	<a href="/events/month/" class="btn universal-btn">Calendar</a>
 </div>
+<div class="events-bar-tz">All times below listed in Pacific timezone</div>

@@ -44,8 +44,8 @@ $site_timezone = timezone_abbr_from_name(get_option('timezone_string'));
 			<time datetime="<?php echo esc_attr( $event->dates->end_display->format( 'H:i' ) ); ?>">
 				<?php echo esc_html( $event->dates->end_display->format( $time_format ) ) ?>
 			</time>
-	        <span><?php echo $site_timezone ?></span>
 		<?php endif; ?>
+		<span><?php echo $site_timezone ?></span>
 	<?php endif; ?>
 	<?php $this->template( 'photo/event/date-time/recurring', [ 'event' => $event ] ); ?>
 </div>

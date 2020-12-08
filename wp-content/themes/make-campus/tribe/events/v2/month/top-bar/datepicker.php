@@ -71,3 +71,4 @@ $datepicker_date     = Dates::build_date_object( $selected_date_value )->format(
 	<a href="/events/photo/" class="btn universal-btn">Photo View</a>
 	<a href="/events/list/" class="btn universal-btn">List</a>
 </div>
+<div class="events-bar-tz">All times below listed in Pacific timezone</div>
