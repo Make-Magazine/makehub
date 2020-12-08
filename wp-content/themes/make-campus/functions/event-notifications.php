@@ -30,7 +30,7 @@ function trigger_notificatons() {
                 . 'FROM  ' . $wpdb->prefix . 'postmeta '
                 . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
                 . 'WHERE  meta_key LIKE "_EventStartDate" AND '
-                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL '+$days+' DAY,"%") and post_status = "publish"';
+                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL '.$days.' DAY,"%") and post_status = "publish"';
         //trigger notificaton
         build_send_notifications($notification, $sql);
     }
