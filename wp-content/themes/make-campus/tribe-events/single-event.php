@@ -86,7 +86,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                     <?php } ?>
                     <div class="event-author">
                         <h3>About the Facilitator:</h3> 
-                        <?php echo get_field('about'); ?>
+                        <?php echo nl2br(get_field('about')); ?>
                         <br /><br />
                         <?php
                         // Include organizer meta if appropriate
