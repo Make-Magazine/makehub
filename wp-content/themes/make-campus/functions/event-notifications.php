@@ -5,6 +5,8 @@ add_filter('gform_notification_events', 'custom_notification_event');
 function custom_notification_event($events) {
     $events['accepted_event_occur_48_hours'] = __('Event Occuring In 2 days');
     $events['accepted_event_occur_seven_days'] = __('Event Occuring In 7 days');
+    $events['accepted_event_occur_fourteen_days'] = __('Event Occuring In 14 days');
+    $events['accepted_event_occur_twenty_days'] = __('Event Occuring In 20 days');
     $events['after_event'] = __('After Event');
     $events['send_manually'] = __('Send Manually');
     $events['maker_updated_exhibit'] = __('Maker Updated Entry', 'gravityforms');
@@ -14,29 +16,25 @@ function custom_notification_event($events) {
 //cron job triggers this check for any accepted entries where the event is occuring in the next 48 hours. 
 function trigger_notificatons() {
     global $wpdb;
-    ///////////////////////////////////////////////
-    /*           48 HOURS BEFORE EVENT           */
-    ///////////////////////////////////////////////
-    $sql = 'SELECT post_id '
-            . 'FROM  ' . $wpdb->prefix . 'postmeta '
-            . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
-            . 'WHERE  meta_key LIKE "_EventStartDate" AND '
-            . '       meta_value like CONCAT("%",CURDATE() + INTERVAL 2 DAY,"%") and post_status = "publish"';
-    //trigger notificaton
-    build_send_notifications('accepted_event_occur_48_hours', $sql);
-
-
-    ///////////////////////////////////////////////
-    /*           7 days BEFORE EVENT             */
-    ///////////////////////////////////////////////
-    $sql = 'SELECT post_id '
-            . 'FROM  ' . $wpdb->prefix . 'postmeta '
-            . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
-            . 'WHERE  meta_key LIKE "_EventStartDate" AND '
-            . '       meta_value like CONCAT("%",CURDATE() + INTERVAL 7 DAY,"%") and post_status = "publish"';
-    //trigger notificaton
-    build_send_notifications('accepted_event_occur_48_hours', $sql);
-
+    $interval_arr = array(
+                        array('2','accepted_event_occur_48_hours'),
+                        array('7','accepted_event_occur_seven_days'),
+                        array('14','accepted_event_occur_fourteen_days'),
+                        array('20','accepted_event_occur_twenty_days')
+                    );
+    //loop through intervals and trigger notifications
+    foreach($interval_arr as $interval){
+        $days = $interval[0];
+        $notification = $interval[1];
+        $sql = 'SELECT post_id '
+                . 'FROM  ' . $wpdb->prefix . 'postmeta '
+                . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
+                . 'WHERE  meta_key LIKE "_EventStartDate" AND '
+                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL '+$days+' DAY,"%") and post_status = "publish"';
+        //trigger notificaton
+        build_send_notifications($notification, $sql);
+    }
+    
     ///////////////////////////////////////////////
     /*                AFTER EVENT                */
     ///////////////////////////////////////////////
