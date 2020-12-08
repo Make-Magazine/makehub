@@ -24,6 +24,8 @@ $time_format = tribe_get_time_format();
 $display_end_date = $event->dates->start_display->format( 'H:i' ) !== $event->dates->end_display->format( 'H:i' );
 $event_id = Tribe__Main::post_id_helper();
 $time_zone_label = Tribe__Events__Timezones::get_event_timezone_abbr( $event_id );
+$site_timezone = timezone_abbr_from_name(get_option('timezone_string'));
+
 ?>
 <div class="tribe-events-pro-photo__event-datetime tribe-common-b2">
 	<?php $this->template( 'photo/event/date-time/featured' ); ?>
@@ -42,7 +44,7 @@ $time_zone_label = Tribe__Events__Timezones::get_event_timezone_abbr( $event_id 
 			<time datetime="<?php echo esc_attr( $event->dates->end_display->format( 'H:i' ) ); ?>">
 				<?php echo esc_html( $event->dates->end_display->format( $time_format ) ) ?>
 			</time>
-	        <span><?php echo $time_zone_label; ?></span>
+	        <span><?php echo $site_timezone ?></span>
 		<?php endif; ?>
 	<?php endif; ?>
 	<?php $this->template( 'photo/event/date-time/recurring', [ 'event' => $event ] ); ?>
