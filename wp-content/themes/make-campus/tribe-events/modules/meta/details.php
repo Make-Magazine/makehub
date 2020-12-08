@@ -16,6 +16,8 @@ $time_range_separator = tribe_get_option('timeRangeSeparator', ' - ');
 $show_time_zone = tribe_get_option('tribe_events_timezones_show_zone', true);
 $time_zone_label = Tribe__Events__Timezones::get_event_timezone_abbr($event_id);
 
+$site_timezone = timezone_abbr_from_name(get_option('timezone_string'));
+
 $start_datetime = tribe_get_start_date();
 $start_date = tribe_get_start_date(null, false);
 $start_time = tribe_get_start_date(null, false, $time_format);
@@ -99,7 +101,7 @@ elseif (tribe_event_is_multiday()) :
             <dd>
                 <abbr class="tribe-events-abbr tribe-events-start-datetime updated published dtstart" title="<?php echo esc_attr($start_ts); ?>"> <?php echo esc_html($start_datetime); ?> </abbr>
     <?php if ($show_time_zone) : ?>
-                    <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($time_zone_label); ?></span>
+                    <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($site_timezone); ?></span>
                 <?php endif; ?>
             </dd>
 
@@ -107,7 +109,7 @@ elseif (tribe_event_is_multiday()) :
             <dd>
                 <abbr class="tribe-events-abbr tribe-events-end-datetime dtend" title="<?php echo esc_attr($end_ts); ?>"> <?php echo esc_html($end_datetime); ?> </abbr>
     <?php if ($show_time_zone) : ?>
-                    <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($time_zone_label); ?></span>
+                    <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($site_timezone); ?></span>
                 <?php endif; ?>
             </dd>
 
@@ -129,7 +131,7 @@ else :
                 <div class="tribe-events-abbr tribe-events-start-time published dtstart" title="<?php echo esc_attr($end_ts); ?>">
     <?php echo $time_formatted; ?>
                     <?php if ($show_time_zone) : ?>
-                        <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($time_zone_label); ?></span>
+                        <span class="tribe-events-abbr tribe-events-time-zone published "><?php echo esc_html($site_timezone); ?></span>
                     <?php endif; ?>
                 </div>
             </dd>

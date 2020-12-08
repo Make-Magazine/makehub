@@ -97,3 +97,9 @@ function blockusers_init() {
 		exit;
 	}
 }
+
+function timezone_abbr_from_name($timezone_name){
+    $dateTime = new DateTime(); 
+    $dateTime->setTimeZone(new DateTimeZone($timezone_name)); 
+    return $dateTime->format('T'); 
+}
