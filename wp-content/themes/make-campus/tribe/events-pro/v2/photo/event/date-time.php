@@ -31,7 +31,7 @@ $site_timezone = timezone_abbr_from_name(get_option('timezone_string'));
 	<?php $this->template( 'photo/event/date-time/featured' ); ?>
 	<?php if ( $event->all_day ) : ?>
 		<time datetime="<?php echo esc_attr( $event->dates->start_display->format( 'Y-m-d' ) ) ?>">
-			<?php esc_attr_e( 'All day', 'tribe-events-calendar-pro' ); ?>
+			<?php esc_attr_e( 'Check Times', 'tribe-events-calendar-pro' ); ?>
 		</time>
 	<?php elseif ( $event->multiday ) : ?>
 		<?php echo $event->schedule_details->value(); ?>
