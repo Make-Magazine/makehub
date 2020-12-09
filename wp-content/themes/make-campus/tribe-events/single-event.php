@@ -89,6 +89,8 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         <?php echo nl2br(get_field('about')); ?>
                         <br /><br />
                         <?php
+						$organizer = tribe_get_organizer_ids($post->ID);
+						echo nl2br(get_field('facilitator_info', $organizer[0]));
                         // Include organizer meta if appropriate
                         if (tribe_has_organizer()) {
                             tribe_get_template_part('modules/meta/organizer');

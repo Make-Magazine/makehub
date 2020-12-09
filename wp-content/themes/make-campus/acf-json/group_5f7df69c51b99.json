@@ -56,8 +56,7 @@
                 "id": ""
             },
             "choices": {
-                "Yes": "Yes",
-                "No": "No"
+                "yes": "Yes"
             },
             "allow_custom": 0,
             "default_value": [],
@@ -67,10 +66,10 @@
             "save_custom": 0
         },
         {
-            "key": "field_5fb46059beb60",
-            "label": "Attendee Communication Email",
-            "name": "attendee_communication_email",
-            "type": "text",
+            "key": "field_5fd008b3491f9",
+            "label": "Facilitator Info",
+            "name": "facilitator_info",
+            "type": "textarea",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -80,10 +79,10 @@
                 "id": ""
             },
             "default_value": "",
+            "new_lines": "",
+            "maxlength": "",
             "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "rows": ""
         }
     ],
     "location": [
@@ -103,5 +102,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1605656684
+    "modified": 1607469305
 }

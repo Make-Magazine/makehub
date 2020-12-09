@@ -483,19 +483,36 @@
 
 // The Organizer Page
 .tribe_organizer-template-default {
-	.header-hero { 
-		visibility: hidden;
-		height: 20px;
-	}
-	.tribe-organizer-photo {
-		height: 150px;
-		width: 150px;
-		float: left;
-		margin-right: 30px;
-		img {
+	.tribe-events-pro-organizer__meta {
+		margin-top: 30px;
+		.tribe-organizer-photo {
 			height: 150px;
 			width: 150px;
-			object-fit: cover;
+			float: left;
+			margin-right: 30px;
+			img {
+				height: 150px;
+				width: 150px;
+				object-fit: cover;
+			}
+		}
+		.tribe-events-pro-organizer__meta-row {
+			flex-direction: row;
+			.tribe-organizer-bio {
+				padding: 0 24px;
+				line-height: 16px;
+				ol { list-style: decimal; }
+				ul { list-style: disc; }
+				ol, ul { 
+					padding-top: 15px;
+					padding-left: 30px; 
+					br { display: none; }
+				}
+				a { 
+					color: #337ab7;
+					&:hover { color: #23527c; }
+				}
+			}
 		}
 	}
 }

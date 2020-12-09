@@ -39,7 +39,9 @@ $has_details = ! empty( $url ) || ! empty( $email ) || ! empty( $phone );
 
 			<?php $this->template( 'organizer/meta/details', [ 'organizer' => $organizer, 'has_details' => $has_details ] ); ?>
 
-			<?php $this->template( 'organizer/meta/content', [ 'organizer' => $organizer ] ); ?>
+			<div class="tribe-organizer-bio">
+				<?php echo nl2br(get_field('facilitator_info', $organizer->ID )); ?>
+			</div>
 
 		</div>
 
