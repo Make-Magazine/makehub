@@ -133,7 +133,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                                 }
                             }
                             if (get_field('kit_price_included') == "no") {
-                                echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'>Get Kit Here</a>";
+                                echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
                             }
                             ?>
                         </div>
@@ -149,7 +149,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                                 <ul>
                                     <?php
                                     foreach (get_field('wish_list_urls') as $wishlist) {
-                                        echo '<li><a href="' . $wishlist['wish_list'] . '">' . $wishlist['wish_list'] . '</a></li>';
+                                        echo '<li><a href="' . $wishlist['wish_list'] . '" target="_blank">' . $wishlist['wish_list'] . '</a></li>';
                                     }
                                     ?>
                                 </ul>
@@ -180,7 +180,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                                     </div>
                                     <?php
                                 } else {
-                                    echo "<p><a href='" . $video['video'] . "'>" . $video['video'] . "</a></p>";
+                                    echo "<p><a href='" . $video['video'] . "' target='_blank'>" . $video['video'] . "</a></p>";
                                 }
                             }
                             ?>
@@ -199,7 +199,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         <div class="tribe-events-single-conference-link tribe-events-content">
                             <h3>Program Conference Link:</h3> 
                             <?php if (get_field('webinar_link')) { ?>
-                                <a href="<?php echo get_field('webinar_link'); ?>" class="btn universal-btn">Program Stream</a>
+                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Program Stream</a>
                             <?php } else { ?>
                                 COMING SOON
                             <?php } ?>

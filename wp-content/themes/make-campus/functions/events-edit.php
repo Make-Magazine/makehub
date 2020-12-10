@@ -44,9 +44,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     update_organizer_data($entry, $form, $organizerData, $post_id);
 
     // If they want a recurring event, we'll fake that
-    if ($entry['100'] == "no") {
-        event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
-    }
+    event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
         
     // Set the ACF data
     update_event_acf($entry, $form, $post_id);        

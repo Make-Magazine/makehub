@@ -220,10 +220,17 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
     );
 	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
     $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);*/
-	
-    update_field("number_of_sessions", $end_count, $post_id);
-	update_field("recurrence_type", strtolower($recurrence_type), $post_id);
-    
+	if ($entry['100'] == "no") {
+		update_field("number_of_sessions", $end_count, $post_id);
+		update_field("recurrence_type", strtolower($recurrence_type), $post_id);
+	} else { // if this gets edited later to not be a recurring event, we're going to want to clear those fields
+		if (get_field('number_of_sessions', $post_id)) {
+			update_field("number_of_sessions", "", $post_id);
+		}
+		if (get_field('recurrence_type', $post_id)) {
+			update_field("recurrence_type", "", $post_id);
+		}
+	}
 }
 
 function get_attachment_id_from_url($attachment_url) {
