@@ -14,6 +14,11 @@ jQuery(document).ready(function($) {
 		$('.elementor-tab-title').removeClass('elementor-active');
 		$('.elementor-tab-content').css('display', 'none'); }, delay); 
 	}
+	if($(".event-info")[0]) {
+		$(".event-info").find('a').each(function() {
+			$(this).attr("target", "_blank");
+		});
+	}
 }); 
 
 
