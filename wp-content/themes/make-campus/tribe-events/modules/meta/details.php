@@ -41,6 +41,8 @@ if ($start_time == $end_time) {
     $time_formatted = esc_html($start_time . $time_range_separator . $end_time);
 }
 
+$additional_fields = tribe_get_custom_fields();
+
 /**
  * Returns a formatted time for a single event
  *
@@ -176,27 +178,19 @@ else :
 
         <?php
         // Age ranges
-        $audience_obj = get_field_object('audience');
-        if (!empty($audience_obj)) {            
-            $audience_age = get_field('audience');
-            if ($audience_age && $audience_obj) {
-                $age_list = array();
-                ?>
-                <dt class="tribe-events-event-age-label"> <?php esc_html_e('Age Range:', 'the-events-calendar'); ?> </dt>
-                <dd class="tribe-events-event-age">
-                    <?php
-                    foreach ($audience_age as $age) {
-                        $age_list[] = "<span class='age-item'>" . $audience_obj['choices'][$age] . "</span>";
-                    }
-                    echo implode(" ", $age_list) . '</dd>';
-                }
-            }
-            ?>
+		$age_array = explode(", ", $additional_fields['Age']);
+        if (!empty($age_array)) {            
+			?>
+			<dt class="tribe-events-event-age-label"> <?php esc_html_e('Age Range:', 'the-events-calendar'); ?> </dt>
+			<dd class="tribe-events-event-age">
+				<?php foreach ($age_array as $age) { echo "<span class='age-item'>" . $age . "</span>"; } ?>
+			</dd>
+		<?php } ?>
 
-            <?php
-            /* Translators: %s: Event (singular) */
-            tribe_meta_event_tags(sprintf(esc_html__('%s Tags:', 'the-events-calendar'), tribe_get_event_label_singular()), ', ', true);
-            ?>
+		<?php
+		/* Translators: %s: Event (singular) */
+		tribe_meta_event_tags(sprintf(esc_html__('%s Tags:', 'the-events-calendar'), tribe_get_event_label_singular()), ', ', true);
+		?>
 
 <?php
 // Event Website
