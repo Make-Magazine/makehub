@@ -50,7 +50,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     // Set the ACF data
     update_event_acf($entry, $form, $post_id);    
 	// Set event custom fields for filtering
-	update_event_custom_fields($entry, $form, $post_id);
+	update_event_additional_fields($entry, $form, $post_id);
 }
 
 // trigger an email to when an entry is updated via gravity view

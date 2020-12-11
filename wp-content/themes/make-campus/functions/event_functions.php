@@ -86,16 +86,25 @@ function update_event_acf($entry, $form, $post_id) {
 }
 
 // for fields we want to use as filters, map them to an event custom field rather than an acf
-function update_event_custom_fields($entry, $form, $post_id) {
-	$ageData = GFAPI::get_field($form, 73);
-	// checkboxes are set with a decimal point for each selection so theisset in entry doesn't work
-	if (isset($ageData->type)) {
-		if ($ageData->type == 'checkbox' || ($ageData->type == 'post_custom_field' && $ageData->inputType == 'checkbox')) {
-			$checked = str_replace(", ", "|", $ageData->get_value_export($entry, $post_id, true));
-			//having to use these damn custom names stops this from being very extendable/dynamic
-			update_post_meta($post_id, "_ecp_custom_2", $checked);
-		}
-	}
+function update_event_additional_fields($entry, $form, $post_id) {
+    //field mapping
+    //0 indicie = gravity form field id
+    //1 indicie = event custom field name
+	$field_mapping = array(
+		array('73', 'Age'),
+	);
+	//update the acf fields with the submitted values from the form
+    foreach ($field_mapping as $field) {
+        $fieldData = GFAPI::get_field($form, $field[0]);
+		$field = TribeEventsCustomMeta::get_custom_field_by_label($field[1]);
+        // checkboxes are set with a decimal point for each selection so theisset in entry doesn't work
+        if (isset($fieldData->type)) {
+            if ($fieldData->type == 'checkbox' || ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'checkbox')) {
+                $checked = str_replace(", ", "|", $fieldData->get_value_export($entry, $post_id, true));
+                update_post_meta($post_id, $field, $checked);
+            }
+        }
+    }
 }
 
 function event_organizer($entry) {
