@@ -372,6 +372,20 @@
 					color: #fff;
 				}
 			}
+			// stupid hack to make under 6 be the first item in the age dropdown
+			div[id^='_ecp_custom_2-container'] {
+				.tribe-filter-bar-c-filter__filter-fields {
+					display: flex;
+					flex-direction: column;
+					.tribe-filter-bar-c-checkbox {
+						order: 1
+					}
+					.tribe-filter-bar-c-checkbox:last-child {
+						order: 0;
+						margin-bottom: 25px;
+					}
+				}
+			}
 		}
 		.tribe-events-c-top-bar__datepicker.month {
 			display: flex;
@@ -525,9 +539,15 @@
 .gv-list-container {
 	.gv-list-view-title {
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		justify-content: space-between;
-		h3 { margin: 0px; }
+		h3 { 
+			margin: 0px; 
+			width: 100%;
+			font-size: 36px;
+		}
+		div { flex: 1; }
 	}
 	.gv-list-view-content {
 		.gv-list-view-content-image {
