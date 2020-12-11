@@ -546,12 +546,27 @@
 			margin: 0px; 
 			width: 100%;
 			font-size: 36px;
+			margin-bottom: 15px;
+			border-bottom: solid 1px #ccc;
+			padding-bottom: 10px;
 		}
 		div { flex: 1; }
+		.gv-field-label, .gv-field-7-is_approved {
+			font-weight: bold;
+			font-size: 18px;
+		}
+		.gv-field-7-is_approved { font-size: 24px; }
+		.gv-field-7-date_created, .gv-field-7-duplicate_link {
+			padding-bottom: 20px;
+		}
+		.gv-list-view-subtitle {
+			text-align: right;
+		}
 	}
 	.gv-list-view-content {
 		.gv-list-view-content-image {
 			padding: 0px;
+			padding-right: 15px;
 		}
 		.gv-list-view-content-description {
 			.gv-field-label {
