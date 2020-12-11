@@ -628,3 +628,8 @@
 		color: #1987C7;;
 	}
 }
+
+.entry .entry-content .tribe-common .tribe-common-form-control-checkbox__input.tribe-common-form-control-checkbox__input:checked, .entry .entry-content .tribe-common .tribe-common-form-control-radio__input.tribe-common-form-control-radio__input:checked, .tribe-common .tribe-common-form-control-checkbox__input.tribe-common-form-control-checkbox__input:checked, .tribe-common .tribe-common-form-control-radio__input.tribe-common-form-control-radio__input:checked {
+	background-color: #005e9a;
+	border-color: #005e9a;
+}
