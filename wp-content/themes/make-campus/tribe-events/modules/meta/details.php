@@ -33,6 +33,7 @@ $num_sessions = get_field("number_of_sessions");
 $recurrence_info = get_field("recurrence_type");
 $exclusion_txt = get_field("exclusion_text");
 $series_end = get_field('preferred_end_date');
+$custom_details = get_field('custom_schedule_details');
 
 $time_formatted = null;
 if ($start_time == $end_time) {
@@ -142,14 +143,19 @@ else :
 
         <?php
         
-        if ($num_sessions) {
+        if ($num_sessions || $custom_details) {
             ?>
             <dt class="tribe-events-event-recurring-label"> <?php esc_html_e('Series Details:', 'the-events-calendar'); ?> </dt>
             <dd class="tribe-events-event-recurring"> 
-                <?php echo $num_sessions; ?> <?php echo $recurrence_info; ?> sessions starting on <?php echo esc_html($start_date); ?>
-                <?php if ($exclusion_txt && $exclusion_txt != '') {
-                    echo " " . get_field("exclusion_text");
-                } ?>								  
+				<?php if($custom_details) { 
+					echo $custom_details;
+				} else {
+                	echo $num_sessions . " " . $recurrence_info . " sessions starting on " . esc_html($start_date);
+					if ($exclusion_txt && $exclusion_txt != '') {
+						echo " " . get_field("exclusion_text");
+					} 
+				}
+				?>								  
             </dd>
         <?php } ?>
 

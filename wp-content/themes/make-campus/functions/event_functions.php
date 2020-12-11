@@ -24,6 +24,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('96', 'alternative_end_time'),
         array('99', 'alternative_end_date'),
         array('124', 'schedule_exclusions'),
+		array('154', 'custom_schedule_details'),
         array('140', 'image_1'),
         array('141', 'image_2'),
         array('142', 'image_3'),

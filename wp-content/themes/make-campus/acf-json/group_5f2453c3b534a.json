@@ -379,7 +379,7 @@
             "key": "field_5f35a5a333a03",
             "label": "Materials",
             "name": "materials",
-            "type": "textarea",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -388,11 +388,32 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "placeholder": "",
-            "maxlength": "",
-            "rows": "",
-            "new_lines": ""
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_5f7b4abb07cab",
+                    "label": "Material",
+                    "name": "item",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
         },
         {
             "key": "field_5f35a5f833a04",
@@ -860,6 +881,25 @@
             },
             "default_value": "",
             "placeholder": ""
+        },
+        {
+            "key": "field_5fd3fd39b67ee",
+            "label": "Custom Schedule Details",
+            "name": "custom_schedule_details",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
         }
     ],
     "location": [
@@ -879,5 +919,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1605657127
+    "modified": 1607728472
 }
