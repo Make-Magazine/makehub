@@ -21,7 +21,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
         'ID' => $post_id,
         'post_title' => $entry['1'],
         'post_content' => $entry['2'],        
-        'Organizer' => $organizerData
+        'Organizer' => $organizerData,
     );
     //error_log(print_r($post_data, TRUE));
     wp_update_post($post_data);
@@ -29,6 +29,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     //update start and end dates    
     update_post_meta($post_id, '_EventStartDate',$start_date->format('Y-m-d H:i:s'));
     update_post_meta($post_id, '_EventEndDate',$end_date->format('Y-m-d H:i:s'));
+	
     
     //update event cost and capacity
     $event_cost = (isset($entry['37']) ? $entry['37'] : 0);
@@ -47,7 +48,9 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring);
         
     // Set the ACF data
-    update_event_acf($entry, $form, $post_id);        
+    update_event_acf($entry, $form, $post_id);    
+	// Set event custom fields for filtering
+	update_event_custom_fields($entry, $form, $post_id);
 }
 
 // trigger an email to when an entry is updated via gravity view
