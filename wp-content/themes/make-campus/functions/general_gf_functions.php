@@ -5,6 +5,14 @@
 //=============================================
 function get_value_by_label($key, $form, $entry = array()) {
    $return = array();
+   if(!isset($form['fields'])){
+       error_log('error in get_value_by_label in wp-content/themes/make-campus/functions/general_gf_functions.php');
+       error_log('$key='.$key);
+       error_log('Entry');
+       error_log(print_r($entry,true));
+       error_log('Form');
+       error_log(print_r($form,true));
+   }
    foreach ($form['fields'] as &$field) {
       $lead_key = $field['inputName'];
       if ($lead_key == $key) {

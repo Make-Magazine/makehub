@@ -60,6 +60,8 @@ function build_send_notifications($event, $sql) {
             //trigger notificaton            
             $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
             foreach ($notifications_to_send as $notification) {
+                error_log('Sending notifications for entry - '.$entry_id);
+                error_log(print_r($notification,true));
                 if ($notification['isActive']) {
                     if (strpos($notification['to'], "{{attendee_list}}") !== false) {
                         $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
