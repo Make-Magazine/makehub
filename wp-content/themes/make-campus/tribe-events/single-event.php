@@ -43,7 +43,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
     </p>
     <div class="tribe-events-image-gallery">
         <?php
-        echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="large" order="DESC" orderby="ID"]');
+        echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="small" order="DESC" orderby="ID"]');
         if (count($post_image_ids) != 1) {
             ?>
             <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())">View All Images</a>
@@ -87,7 +87,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                     <div class="event-author">
                         <h3>About the Facilitator:</h3> 
                         <?php 
-							$organizer = tribe_get_organizer_ids($post->ID);
+							$organizer = tribe_get_organizer_ids($event_id);
 							if(get_field('facilitator_info', $organizer[0])) {
 								echo nl2br(get_field('facilitator_info', $organizer[0]));
 							} else { // until all the fields can be manually copied over, default to the old field

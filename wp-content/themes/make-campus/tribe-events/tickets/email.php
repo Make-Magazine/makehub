@@ -490,11 +490,14 @@
 																<span
 																	style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer( $organizer_id ); ?></span>
 															<?php 
-																	 $public_email = get_field('public_email', $event->ID);
-																	 $email = get_field('attendee_communication_email', $event->ID);	
-																	 if($public_email[0] && $public_email[0] == 'yes') { ?>
-																		<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
-																		<span><?php echo $email; ?></span>
+																 $public_email = get_field('public_email', $event->ID);
+																 $email = get_field('attendee_communication_email', $event->ID);	
+																 echo( "Event ID: " . $event->ID . "<br />");
+																 echo( "Public Email: " . $public_email  . "<br />");
+																 echo( "Email: " . $email );
+																 if($public_email[0] && $public_email[0] == 'Yes') { ?>
+																	<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
+																	<span><?php echo $email; ?></span>
 															<?php    }
 																   } ?>
 														</td>
