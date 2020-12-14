@@ -485,17 +485,14 @@
 													if ( ! empty( $organizers ) ) {
 														?>
 														<td class="ticket-organizer" valign="top" align="left" width="140" style="padding: 0 !important; width:140px; margin:0 !important;">
-															<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;"><?php echo tribe_get_organizer_label( count( $organizers ) < 2 ); ?></h6>
+															<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Facilitator</h6>
 															<?php foreach ( $organizers as $organizer_id ) { ?>
 																<span
 																	style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer( $organizer_id ); ?></span>
 															<?php 
 																 $public_email = get_field('public_email', $event->ID);
-																 $email = get_field('attendee_communication_email', $event->ID);	
-																 echo( "Event ID: " . $event->ID . "<br />");
-																 echo( "Public Email: " . $public_email  . "<br />");
-																 echo( "Email: " . $email );
-																 if($public_email[0] && $public_email[0] == 'Yes') { ?>
+																 $email = get_field('attendee_communication_email', $event->ID);							
+																 if($public_email == 'Yes') { ?>
 																	<h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
 																	<span><?php echo $email; ?></span>
 															<?php    }
