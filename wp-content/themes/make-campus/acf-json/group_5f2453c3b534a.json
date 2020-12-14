@@ -879,6 +879,48 @@
             "maxlength": "",
             "rows": "",
             "new_lines": ""
+        },
+        {
+            "key": "field_5fd7ce8833998",
+            "label": "Public Email",
+            "name": "public_email",
+            "type": "checkbox",
+            "instructions": "Whether or not the organizer's email will be made public for attendees",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "Yes": "Yes"
+            },
+            "allow_custom": 0,
+            "default_value": [],
+            "layout": "vertical",
+            "toggle": 0,
+            "return_format": "value",
+            "save_custom": 0
+        },
+        {
+            "key": "field_5fd7ceb133999",
+            "label": "Attendee Communication Email",
+            "name": "attendee_communication_email",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
         }
     ],
     "location": [
@@ -898,5 +940,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1607974203
+    "modified": 1607979300
 }

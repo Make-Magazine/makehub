@@ -51,6 +51,8 @@ function update_event_acf($entry, $form, $post_id) {
         array('93', 'technical_setup'),
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
+		array('148', 'public_email'),
+		array('152', 'attendee_communication_email')
     );
     //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
@@ -136,8 +138,6 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     }
     update_field("social_links", $repeater, $organizer_id);
 	update_field("facilitator_info", $entry['150'], $organizer_id);
-	update_field("public_email", $entry['148'], $organizer_id);
-	update_field("attendee_communication_email", $entry['152'], $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
     tribe_update_organizer($organizer_id, $organizerArgs);
