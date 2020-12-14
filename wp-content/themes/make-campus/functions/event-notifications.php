@@ -34,17 +34,6 @@ function trigger_notificatons() {
         //trigger notificaton
         build_send_notifications($notification, $sql);
     }
-    
-    ///////////////////////////////////////////////
-    /*                AFTER EVENT                */
-    ///////////////////////////////////////////////
-    $sql = 'SELECT post_id '
-            . 'FROM  ' . $wpdb->prefix . 'postmeta '
-            . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
-            . 'WHERE  meta_key LIKE "_EventEndDate" AND '
-            . '       meta_value like CONCAT("%",CURDATE() + INTERVAL 1 DAY,"%") and post_status = "publish"';
-    //trigger notificaton
-    build_send_notifications('accepted_event_occur_48_hours', $sql);
 }
 
 function build_send_notifications($event, $sql) {
@@ -53,14 +42,14 @@ function build_send_notifications($event, $sql) {
     foreach ($events as $event) {
         //find associated entry    
         $entry_id = $wpdb->get_var('select id from ' . $wpdb->prefix . 'gf_entry where post_id = ' . $event->post_id);
+        error_log('Sending notifications for event '.$event->post_id.' and entry - '.$entry_id);
         if ($entry_id != '') {
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
 
             //trigger notificaton            
             $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
-            foreach ($notifications_to_send as $notification) {
-                error_log('Sending notifications for entry - '.$entry_id);
+            foreach ($notifications_to_send as $notification) {                
                 error_log(print_r($notification,true));
                 if ($notification['isActive']) {
                     if (strpos($notification['to'], "{{attendee_list}}") !== false) {
