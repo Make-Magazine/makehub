@@ -42,11 +42,13 @@ function build_send_notifications($event, $sql) {
     foreach ($events as $event) {
         //find associated entry    
         $entry_id = $wpdb->get_var('select id from ' . $wpdb->prefix . 'gf_entry where post_id = ' . $event->post_id);
-        error_log('Sending notifications for event '.$event->post_id.' and entry - '.$entry_id);
+        error_log('Sending '.$event.' notifications for event '.$event->post_id.' and entry - '.$entry_id);
         if ($entry_id != '') {
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
-
+            error_log('$entry');
+            error_log(print_r($entry,true));
+            error_log('form_id is '.$entry['form_id']);
             //trigger notificaton            
             $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
             foreach ($notifications_to_send as $notification) {                
