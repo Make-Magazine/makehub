@@ -16,7 +16,7 @@
  *
  * @see tribe_get_event() For the format of the event object.
  */
-$image_url = $event->thumbnail->exists ? $event->thumbnail->full->url : $placeholder_url;
+$image_url = $event->thumbnail->exists ? $event->thumbnail->small->url : $placeholder_url;
 
 ?>
 <div class="tribe-events-pro-photo__event-featured-image-wrapper">
