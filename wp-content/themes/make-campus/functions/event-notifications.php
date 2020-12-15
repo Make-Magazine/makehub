@@ -17,42 +17,42 @@ function custom_notification_event($events) {
 function trigger_notificatons() {
     global $wpdb;
     $interval_arr = array(
-                        array(1,'accepted_event_occur_48_hours'),
-                        array(6,'accepted_event_occur_seven_days'),
-                        array(13,'accepted_event_occur_fourteen_days'),
-                        array(19,'accepted_event_occur_twenty_days')
-                    );
+        array(1, 'accepted_event_occur_48_hours'),
+        array(6, 'accepted_event_occur_seven_days'),
+        array(13, 'accepted_event_occur_fourteen_days'),
+        array(19, 'accepted_event_occur_twenty_days')
+    );
     //loop through intervals and trigger notifications
-    foreach($interval_arr as $interval){
+    foreach ($interval_arr as $interval) {
         $days = $interval[0];
         $notification = $interval[1];
         $sql = 'SELECT post_id '
                 . 'FROM  ' . $wpdb->prefix . 'postmeta '
                 . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
                 . 'WHERE  meta_key LIKE "_EventStartDate" AND '
-                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL '.$days.' DAY,"%") and post_status = "publish"';
+                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL ' . $days . ' DAY,"%") and post_status = "publish"';
         //trigger notificaton
         build_send_notifications($notification, $sql);
     }
 }
 
-function build_send_notifications($event, $sql) {
+function build_send_notifications($notification, $sql) {
     global $wpdb;
     $events = $wpdb->get_results($sql);
     foreach ($events as $event) {
-        //find associated entry    
+        //find associated entry            
         $entry_id = $wpdb->get_var('select id from ' . $wpdb->prefix . 'gf_entry where post_id = ' . $event->post_id);
-        error_log('Sending '.$event.' notifications for event '.$event->post_id.' and entry - '.$entry_id);
+        $post_id = $event->post_id;
+        error_log('Sending ' . $notification . ' notifications for event ' . $post_id . ' and entry - ' . $entry_id);
         if ($entry_id != '') {
+            error_log('Entry ID not blank');
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
-            error_log('$entry');
-            error_log(print_r($entry,true));
-            error_log('form_id is '.$entry['form_id']);
+
             //trigger notificaton            
-            $notifications_to_send = GFCommon::get_notifications_to_send($event, $form, $entry);
-            foreach ($notifications_to_send as $notification) {                
-                error_log(print_r($notification,true));
+            $notifications_to_send = GFCommon::get_notifications_to_send($notification, $form, $entry);
+
+            foreach ($notifications_to_send as $notification) {
                 if ($notification['isActive']) {
                     if (strpos($notification['to'], "{{attendee_list}}") !== false) {
                         $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
@@ -60,6 +60,8 @@ function build_send_notifications($event, $sql) {
                     GFCommon::send_notification($notification, $form, $entry);
                 }
             }
+        } else {
+            error_log('Couldn\'t find Entry for ' . $event->post_id . ' to send ' . $event);
         }
     }
 }
