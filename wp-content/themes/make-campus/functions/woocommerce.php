@@ -50,22 +50,19 @@ function custom_checkout_field_display_admin_order_meta( $order ){
 /**
  * Add custom fields (in an order) to the emails
  */
-add_filter( 'woocommerce_email_order_meta_fields', 'custom_woocommerce_email_order_meta_fields', 10, 3 );
-
+add_filter( 'woocommerce_email_customer_details_fields', 'custom_woocommerce_email_order_meta_fields', 10, 3 );
 function custom_woocommerce_email_order_meta_fields( $fields, $sent_to_admin, $order ) {
     $fields['additional-info-field'] = array(
         'label' => __( 'Is there anything you would like us to know?' ),
         'value' => get_post_meta( $order->id, 'additional-info-field', true ),
     );
-    return $fields;
-	$fields['additional-info-field'] = array(
-        'label' => __( 'Is there anything you would like us to know?' ),
-        'value' => get_post_meta( $order->id, 'additional-info-field', true ),
+	$fields['how-did-you-hear-field'] = array(
+        'label' => __( 'How did you hear about this program?' ),
+        'value' => get_post_meta( $order->id, 'how-did-you-hear-field', true ),
     );
-    return $fields;
-	$fields['additional-info-field'] = array(
-        'label' => __( 'Is there anything you would like us to know?' ),
-        'value' => get_post_meta( $order->id, 'additional-info-field', true ),
+	$fields['other-classes-field'] = array(
+        'label' => __( 'What other classes would you be interested in?' ),
+        'value' => get_post_meta( $order->id, 'other-classes-field', true ),
     );
     return $fields;
 }
