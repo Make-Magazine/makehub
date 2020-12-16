@@ -84,6 +84,22 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <?php echo get_field('location') ?>
                         </div>
                     <?php } ?>
+					<?php
+                    // ATTENDEES Section
+                    $userList = get_event_attendees($event_id);
+                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
+                        ?>
+                        <hr />
+                        <h3>Attendee Resources:</h3> 
+                        <div class="tribe-events-single-conference-link tribe-events-content">
+                            <h3>Program Conference Link:</h3> 
+                            <?php if (get_field('webinar_link')) { ?>
+                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Program Stream</a>
+                            <?php } else { ?>
+                                COMING SOON
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
                         <?php the_content(); ?>
@@ -188,23 +204,6 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         ?>
 
                     </div>
-
-                    <?php
-                    // ATTENDEES Section
-                    $userList = get_event_attendees($event_id);
-                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
-                        ?>
-                        <hr />
-                        <h3>Attendee Resources:</h3> 
-                        <div class="tribe-events-single-conference-link tribe-events-content">
-                            <h3>Program Conference Link:</h3> 
-                            <?php if (get_field('webinar_link')) { ?>
-                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Program Stream</a>
-                            <?php } else { ?>
-                                COMING SOON
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
                     <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12 event-meta">
