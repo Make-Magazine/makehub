@@ -84,38 +84,19 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <?php echo get_field('location') ?>
                         </div>
                     <?php } ?>
-                    <div class="event-author">
-                        <h3>About the Facilitator:</h3> 
-                        <?php 
-							$organizer = tribe_get_organizer_ids($event_id);
-							if(get_field('facilitator_info', $organizer[0])) {
-								echo nl2br(get_field('facilitator_info', $organizer[0]));
-							} else { // until all the fields can be manually copied over, default to the old field
-								echo nl2br(get_field('about')); 
-							}
-						?>
-                        <br /><br />
-                        <?php
-                        // Include organizer meta if appropriate
-                        if (tribe_has_organizer()) {
-                            tribe_get_template_part('modules/meta/organizer');
-                        }
-                        ?>
-
-                    </div>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
                         <?php the_content(); ?>
                     </div>
                     <?php if (get_field('basic_skills')) { ?>
                         <div class="tribe-events-single-skill-level tribe-events-content">
-                            <h3>Skill Level for this program:</h3> 
+                            <h3>Skill Level:</h3> 
                             <?php echo get_field('basic_skills') ?>
                         </div>
                     <?php } ?>
                     <?php if (get_field('skills_taught')) { ?>
                         <div class="tribe-events-single-skills-taught tribe-events-content">
-                            <h3>Skills you will learn in this program:</h3> 
+                            <h3>Skills you will learn:</h3> 
                             <?php echo get_field('skills_taught') ?>
                         </div>
                     <?php } ?>
@@ -188,6 +169,25 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         </div>
                     <?php } ?>
                     <!-- .tribe-events-single-event-description -->
+					<div class="event-author">
+                        <h3>About the Facilitator:</h3> 
+                        <?php 
+							$organizer = tribe_get_organizer_ids($event_id);
+							if(get_field('facilitator_info', $organizer[0])) {
+								echo nl2br(get_field('facilitator_info', $organizer[0]));
+							} else { // until all the fields can be manually copied over, default to the old field
+								echo nl2br(get_field('about')); 
+							}
+						?>
+                        <br /><br />
+                        <?php
+                        // Include organizer meta if appropriate
+                        if (tribe_has_organizer()) {
+                            tribe_get_template_part('modules/meta/organizer');
+                        }
+                        ?>
+
+                    </div>
 
                     <?php
                     // ATTENDEES Section
