@@ -29,11 +29,6 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     //update start and end dates    
     update_post_meta($post_id, '_EventStartDate',$start_date->format('Y-m-d H:i:s'));
     update_post_meta($post_id, '_EventEndDate',$end_date->format('Y-m-d H:i:s'));
-	
-    
-    //update event cost and capacity
-    $event_cost = (isset($entry['37']) ? $entry['37'] : 0);
-    update_post_meta($post_id, '_EventCost',$event_cost);    
 
     //update timezone    
     update_post_meta($post_id, '_EventTimezone', $entry['131']);
