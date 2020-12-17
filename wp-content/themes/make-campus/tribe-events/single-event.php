@@ -92,9 +92,8 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         <hr />
                         <h3>Attendee Resources:</h3> 
                         <div class="tribe-events-single-conference-link tribe-events-content">
-                            <h3>Program Conference Link:</h3> 
                             <?php if (get_field('webinar_link')) { ?>
-                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Program Stream</a>
+                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
                             <?php } else { ?>
                                 COMING SOON
                             <?php } ?>
