@@ -52,7 +52,8 @@ function update_event_acf($entry, $form, $post_id) {
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
 		array('148', 'public_email'),
-		array('152', 'attendee_communication_email')
+		array('152', 'attendee_communication_email'),
+		array('135', 'webinar_link')
     );
     //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
