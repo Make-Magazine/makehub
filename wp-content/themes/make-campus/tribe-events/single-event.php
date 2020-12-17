@@ -90,7 +90,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                     if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
                         ?>
                         <hr />
-                        <h3>Attendee Resources:</h3> 
+                        <h3 style="margin-top:0px;">Attendee Resources:</h3> 
                         <div class="tribe-events-single-conference-link tribe-events-content">
                             <?php if (get_field('webinar_link')) { ?>
                                 <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
