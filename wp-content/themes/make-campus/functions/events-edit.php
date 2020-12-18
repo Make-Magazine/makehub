@@ -4,7 +4,7 @@
 //add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
 add_action('gform_after_update_entry', 'gravityview_event_update', 9, 3);
 //function gravityview_event_update($form, $entry_id, $entry_object = '') {
-function gravityview_event_update($form, $entry_id, $orig_entry=array()) {    
+function gravityview_event_update($form, $entry_id, $orig_entry=array()) {        
     $entry = GFAPI::get_entry($entry_id);
                 
     $post_id = $entry["post_id"];
@@ -147,3 +147,20 @@ function gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $
     
     return $text;
 }
+add_filter( 'gform_entry_field_value', function ( $value, $field, $entry, $form ) {
+    $classes = array(
+        'GF_Field_Checkbox',
+        'GF_Field_MultiSelect',
+        'GF_Field_Radio',
+        'GF_Field_Select',
+    );
+ 
+    foreach ( $classes as $class ) {
+        if ( $field instanceof $class ) {
+            $value = $field->get_value_entry_detail( RGFormsModel::get_lead_field_value( $entry, $field ), $currency = '', $use_text = true, $format = 'html' );
+            break;
+        }
+    }
+ 
+    return $value;
+}, 10, 4 );
