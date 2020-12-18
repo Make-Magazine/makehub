@@ -191,14 +191,12 @@ function update_ticket_data($entry, $post_id) {
 }
 
 function event_post_meta($entry, $form, $post_id) {
-    $tags = GFAPI::get_field($form, 50);
-    $tagArray = array();
-    if ($tags->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $tags->get_value_export($entry);
-        // Convert to array.
-        $tagArray = explode(', ', $checked);
-    }
+	$tagArray = array();
+	foreach( $entry as $key => $value ) {
+		if( strpos($key, "50.") === 0 ) {
+			$tagArray[] = $value;
+		}
+	}
     // Set the taxonomies    
     wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
     wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
