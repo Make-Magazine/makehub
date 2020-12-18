@@ -91,13 +91,26 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         ?>
                         <hr />
                         <h3 style="margin-top:0px;">Attendee Resources:</h3> 
-                        <div class="tribe-events-single-conference-link tribe-events-content">
+                        <div class="tribe-events-single-conference-link tribe-events-content" style="border-bottom: 0px;">
                             <?php if (get_field('webinar_link')) { ?>
                                 <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
                             <?php } else { ?>
                                 COMING SOON
                             <?php } ?>
                         </div>
+						<div class="tribe-link-view-attendee">
+							<?php 
+								$view = Tribe__Tickets__Tickets_View::instance();
+								$link = $view->get_tickets_page_url( $event_id, $is_event_page );
+							?>
+							<a href="<?php echo esc_url( $link ); ?>">
+								<?php
+								// Translators: %s: The name(s) of the type(s) of ticket(s) the specified user (optional) has for the specified event.
+								echo sprintf( esc_html__( 'View your Ticket(s)', 'event-tickets' ), $view->get_description_rsvp_ticket( $event_id, wp_get_current_user()->user_email ) );
+								?>
+							</a>
+						</div>
+
                     <?php } ?>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
