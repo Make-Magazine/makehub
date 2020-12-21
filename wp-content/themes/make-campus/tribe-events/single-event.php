@@ -84,38 +84,47 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <?php echo get_field('location') ?>
                         </div>
                     <?php } ?>
-                    <div class="event-author">
-                        <h3>About the Facilitator:</h3> 
-                        <?php 
-							$organizer = tribe_get_organizer_ids($event_id);
-							if(get_field('facilitator_info', $organizer[0])) {
-								echo nl2br(get_field('facilitator_info', $organizer[0]));
-							} else { // until all the fields can be manually copied over, default to the old field
-								echo nl2br(get_field('about')); 
-							}
-						?>
-                        <br /><br />
-                        <?php
-                        // Include organizer meta if appropriate
-                        if (tribe_has_organizer()) {
-                            tribe_get_template_part('modules/meta/organizer');
-                        }
+					<?php
+                    // ATTENDEES Section
+                    $userList = get_event_attendees($event_id);
+                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
                         ?>
+                        <hr />
+                        <h3 style="margin-top:0px;">Attendee Resources:</h3> 
+                        <div class="tribe-events-single-conference-link tribe-events-content" style="border-bottom: 0px;">
+                            <?php if (get_field('webinar_link')) { ?>
+                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
+                            <?php } else { ?>
+                                COMING SOON
+                            <?php } ?>
+                        </div>
+						<div class="tribe-link-view-attendee">
+							<?php 
+								$view = Tribe__Tickets__Tickets_View::instance();
+								$link = $view->get_tickets_page_url( $event_id, $is_event_page );
+							?>
+							<a href="<?php echo esc_url( $link ); ?>">
+								<?php
+								// Translators: %s: The name(s) of the type(s) of ticket(s) the specified user (optional) has for the specified event.
+								echo sprintf( esc_html__( 'View your Ticket(s)', 'event-tickets' ), $view->get_description_rsvp_ticket( $event_id, wp_get_current_user()->user_email ) );
+								?>
+							</a>
+						</div>
 
-                    </div>
+                    <?php } ?>
                     <div class="tribe-events-single-event-description tribe-events-content">
                         <h3>What You'll Do:</h3> 
                         <?php the_content(); ?>
                     </div>
                     <?php if (get_field('basic_skills')) { ?>
                         <div class="tribe-events-single-skill-level tribe-events-content">
-                            <h3>Skill Level for this program:</h3> 
+                            <h3>Skill Level:</h3> 
                             <?php echo get_field('basic_skills') ?>
                         </div>
                     <?php } ?>
                     <?php if (get_field('skills_taught')) { ?>
                         <div class="tribe-events-single-skills-taught tribe-events-content">
-                            <h3>Skills you will learn in this program:</h3> 
+                            <h3>Skills you will learn:</h3> 
                             <?php echo get_field('skills_taught') ?>
                         </div>
                     <?php } ?>
@@ -188,23 +197,25 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                         </div>
                     <?php } ?>
                     <!-- .tribe-events-single-event-description -->
-
-                    <?php
-                    // ATTENDEES Section
-                    $userList = get_event_attendees($event_id);
-                    if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
+					<div class="event-author">
+                        <h3>About the Facilitator:</h3> 
+                        <?php 
+							$organizer = tribe_get_organizer_ids($event_id);
+							if(get_field('facilitator_info', $organizer[0])) {
+								echo nl2br(get_field('facilitator_info', $organizer[0]));
+							} else { // until all the fields can be manually copied over, default to the old field
+								echo nl2br(get_field('about')); 
+							}
+						?>
+                        <br /><br />
+                        <?php
+                        // Include organizer meta if appropriate
+                        if (tribe_has_organizer()) {
+                            tribe_get_template_part('modules/meta/organizer');
+                        }
                         ?>
-                        <hr />
-                        <h3>Attendee Resources:</h3> 
-                        <div class="tribe-events-single-conference-link tribe-events-content">
-                            <h3>Program Conference Link:</h3> 
-                            <?php if (get_field('webinar_link')) { ?>
-                                <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Program Stream</a>
-                            <?php } else { ?>
-                                COMING SOON
-                            <?php } ?>
-                        </div>
-                    <?php } ?>
+
+                    </div>
                     <?php do_action('tribe_events_single_event_after_the_content') ?>
                 </div>
                 <div class="col-md-4 col-sm-12 col-xs-12 event-meta">

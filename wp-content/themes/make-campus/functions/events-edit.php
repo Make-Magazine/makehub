@@ -2,7 +2,7 @@
 // After the gravity view is updated, we want to update the created post associated with it. 
 // SO FAR, THIS IS UPDATING THE TITLE, CONTENT, FEATURED IMAGE, AND TEXT ACF FIELDS... needs work for taxonomies
 //add_action('gravityview/edit_entry/after_update', 'gravityview_event_update', 10, 4);
-add_action('gform_after_update_entry', 'gravityview_event_update', 9, 3);
+add_action('gform_after_update_entry', 'gravityview_event_update', 998, 3);
 //function gravityview_event_update($form, $entry_id, $entry_object = '') {
 function gravityview_event_update($form, $entry_id, $orig_entry=array()) {        
     $entry = GFAPI::get_entry($entry_id);
@@ -29,11 +29,6 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
     //update start and end dates    
     update_post_meta($post_id, '_EventStartDate',$start_date->format('Y-m-d H:i:s'));
     update_post_meta($post_id, '_EventEndDate',$end_date->format('Y-m-d H:i:s'));
-	
-    
-    //update event cost and capacity
-    $event_cost = (isset($entry['37']) ? $entry['37'] : 0);
-    update_post_meta($post_id, '_EventCost',$event_cost);    
 
     //update timezone    
     update_post_meta($post_id, '_EventTimezone', $entry['131']);
@@ -54,7 +49,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry=array()) {
 }
 
 // trigger an email to when an entry is updated via gravity view
-add_action('gform_after_update_entry', 'send_update_entry_notification', 10, 3);
+add_action('gform_after_update_entry', 'send_update_entry_notification', 999, 3);
 function send_update_entry_notification($form, $entry_id, $orig_entry=array()) {    
     //get updated entry
     $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));

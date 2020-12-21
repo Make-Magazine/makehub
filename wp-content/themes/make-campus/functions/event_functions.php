@@ -52,7 +52,8 @@ function update_event_acf($entry, $form, $post_id) {
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
 		array('148', 'public_email'),
-		array('152', 'attendee_communication_email')
+		array('152', 'attendee_communication_email'),
+		array('135', 'webinar_link')
     );
     //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
@@ -72,7 +73,7 @@ function update_event_acf($entry, $form, $post_id) {
                 }
                 update_field($meta_field, $repeater, $post_id);
             } else if (strpos($meta_field, 'image') !== false) {
-                update_post_meta($post_id, $meta_field, get_attachment_id_from_url($entry[$fieldID])); // this should hopefully use the attachment id                
+                update_post_meta($post_id, $meta_field, attachment_url_to_postid($entry[$fieldID])); // this should hopefully use the attachment id                
             } else {
                 update_post_meta($post_id, $meta_field, $entry[$fieldID]);
             }
@@ -143,7 +144,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
     tribe_update_organizer($organizer_id, $organizerArgs);
 
     // Upload featured image to Organizer page
-    set_post_thumbnail(get_post($organizer_id, 'OBJECT', 'tribe_organizer'), get_attachment_id_from_url($entry['118']));
+    set_post_thumbnail(get_post($organizer_id, 'OBJECT', 'tribe_organizer'), attachment_url_to_postid($entry['118']));
 }
 
 function update_ticket_data($entry, $post_id) {
@@ -190,19 +191,17 @@ function update_ticket_data($entry, $post_id) {
 }
 
 function event_post_meta($entry, $form, $post_id) {
-    $tags = GFAPI::get_field($form, 50);
-    $tagArray = array();
-    if ($tags->type == 'checkbox') {
-        // Get a comma separated list of checkboxes checked
-        $checked = $tags->get_value_export($entry);
-        // Convert to array.
-        $tagArray = explode(', ', $checked);
-    }
+	$tagArray = array();
+	foreach( $entry as $key => $value ) {
+		if( strpos($key, "50.") === 0 ) {
+			$tagArray[] = $value;
+		}
+	}
     // Set the taxonomies    
     wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
     wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
     // Set the featured Image
-    set_post_thumbnail($post_id, get_attachment_id_from_url($entry['9']));
+    set_post_thumbnail($post_id, attachment_url_to_postid($entry['9']));
 }
 
 function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
@@ -248,22 +247,6 @@ function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_
 	}
 }
 
-function get_attachment_id_from_url($attachment_url) {
-    global $wpdb;
-    $attachment_id = false;
-    // Get the upload directory paths
-    $upload_dir_paths = wp_upload_dir();
-    // Make sure the upload path base directory exists in the attachment URL, to verify that we're working with a media library image
-    if (false !== strpos($attachment_url, $upload_dir_paths['baseurl'])) {
-        // If this is the URL of an auto-generated thumbnail, get the URL of the original image
-        $attachment_url = preg_replace('/-\d+x\d+(?=\.(jpg|jpeg|png|gif)$)/i', '', $attachment_url);
-        // Remove the upload path base directory from the attachment URL
-        $attachment_url = str_replace($upload_dir_paths['baseurl'] . '/', '', $attachment_url);
-        // Finally, run a custom database query to get the attachment ID from the modified attachment URL
-        $attachment_id = $wpdb->get_var($wpdb->prepare("SELECT wposts.ID FROM $wpdb->posts wposts, $wpdb->postmeta wpostmeta WHERE wposts.ID = wpostmeta.post_id AND wpostmeta.meta_key = '_wp_attached_file' AND wpostmeta.meta_value = '%s' AND wposts.post_type = 'attachment'", $attachment_url));
-    }
-    return $attachment_id;
-}
 
 function get_event_attendees($event_id) {
     $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);
