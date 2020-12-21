@@ -45,7 +45,6 @@ function build_send_notifications($notification, $sql) {
         $post_id = $event->post_id;
         error_log('Sending ' . $notification . ' notifications for event ' . $post_id . ' and entry - ' . $entry_id);
         if ($entry_id != '') {
-            error_log('Entry ID not blank');
             $entry = GFAPI::get_entry($entry_id);
             $form = GFAPI::get_form($entry['form_id']);
 
@@ -57,6 +56,7 @@ function build_send_notifications($notification, $sql) {
                     if (strpos($notification['to'], "{{attendee_list}}") !== false) {
                         $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
                     }
+                    error_log(print_r($notification,true));
                     GFCommon::send_notification($notification, $form, $entry);
                 }
             }
