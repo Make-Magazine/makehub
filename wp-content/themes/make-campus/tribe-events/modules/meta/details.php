@@ -184,8 +184,8 @@ else :
 
         <?php
         // Age ranges
-		$age_array = explode(", ", $additional_fields['Age']);
-        if (!empty($age_array)) {            
+	    if($additional_fields['Age']) {
+			$age_array = explode(", ", $additional_fields['Age']);        
 			?>
 			<dt class="tribe-events-event-age-label"> <?php esc_html_e('Age Range:', 'the-events-calendar'); ?> </dt>
 			<dd class="tribe-events-event-age">
