@@ -13,15 +13,6 @@ if ( !function_exists( 'add_action' ) ) {
 	echo 'Hi there!  I\'m just a plugin, not much I can do when called directly.';
 	exit;
 }
-add_action( 'wp_enqueue_scripts', 'enqueue_mmap_scripts' );
-function enqueue_mmap_scripts(){
-  //pull in necessary scripts
-  wp_enqueue_script( 'angularjs', plugins_url( 'js/bower_components/angular/angular.min.js', __FILE__ ));
-  wp_enqueue_script( 'angular-utils-pagination', plugins_url( 'js/bower_components/angularUtils-pagination/dirPagination.js', __FILE__ ),array('angularjs'));
-  wp_enqueue_script( 'ordinal-filter', plugins_url( 'js/bower_components/angularjs-ordinal-filter/ordinal-browser.js', __FILE__ ),array('angularjs'));
-  wp_enqueue_script( 'faires-global-map-scripts', plugins_url( 'js/makerspaces-map-app.js', __FILE__ ),array('angularjs', 'ordinal-filter', 'angular-utils-pagination'));
-  //wp_enqueue_style( 'mmap-style', plugins_url( 'css/map-angular.css', __FILE__ ));
-}
 
 // [makemap form="123"]
 function makemap_func( $atts ) {
