@@ -17,10 +17,10 @@ function custom_notification_event($events) {
 function trigger_notificatons() {
     global $wpdb;
     $interval_arr = array(
-        array(1, 'accepted_event_occur_48_hours'),
-        array(6, 'accepted_event_occur_seven_days'),
-        array(13, 'accepted_event_occur_fourteen_days'),
-        array(19, 'accepted_event_occur_twenty_days')
+        array(2, 'accepted_event_occur_48_hours'),
+        array(7, 'accepted_event_occur_seven_days'),
+        array(14, 'accepted_event_occur_fourteen_days'),
+        array(20, 'accepted_event_occur_twenty_days')
     );
     //loop through intervals and trigger notifications
     foreach ($interval_arr as $interval) {
