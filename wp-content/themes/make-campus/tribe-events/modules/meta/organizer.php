@@ -83,9 +83,10 @@ $website = tribe_get_organizer_website_link();
                 </dd>
                 <?php
             }//end if
-        }//end if
-
-        do_action('tribe_events_single_meta_organizer_section_end');
+        }//end if ?>
+		<br />
+		<a class="btn universal-btn" href="<?php echo get_permalink($organizer); ?>">See More Events from <?php echo $name ?></a>
+        <?php do_action('tribe_events_single_meta_organizer_section_end');
         ?>
     </dl>
 </div>
