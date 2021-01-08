@@ -50,15 +50,15 @@ if ( empty( $disable_event_search ) ) {
 
 		<header <?php tribe_classes( $header_classes ); ?>>
 			<?php if( is_archive() && tribe_get_organizer_ids()) { ?>
-				<section class="container-fluid full-width-div header-hero">  
+				<section class="container-fluid full-width-div header-hero" title="Maker Campus is an alternative learning platform that organizes classes from independent makers, makerspace and partners. We believe that anyone and at any age should be able to start their maker journey, or take it to new places, no matter where they live.">  
 					<div class="hero-wrapper">
 						<h1>Maker Campus</h1>
 						<div class="separator"></div>
 						<h2>The One-Stop Hub for Sharing the Skills and Expertise of Makers</h2>
 					</div>
 				</section>
-			
-				<h4>Maker Campus is an alternative learning platform that organizes classes from independent makers, makerspace and partners. We believe that anyone and at any age should be able to start their maker journey, or take it to new places, no matter where they live.</h4>
+
+				<h4 class="hidden-xs">Maker Campus is an alternative learning platform that organizes classes from independent makers, makerspace and partners. We believe that anyone and at any age should be able to start their maker journey, or take it to new places, no matter where they live.</h4>
 			<?php } ?>
 			
 			<?php $this->template( 'components/messages' ); ?>

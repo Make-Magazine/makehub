@@ -35,7 +35,7 @@ $website = tribe_get_organizer_website_link();
                         <?php echo get_the_post_thumbnail($organizer); ?>
                     </div>
                 <?php } ?>
-                <?php echo $name ?>
+                <?php echo tribe_get_organizer_link( $organizer ) ?>
             </dd>
             <?php
         }

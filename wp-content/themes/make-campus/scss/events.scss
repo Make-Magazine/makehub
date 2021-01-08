@@ -123,6 +123,9 @@
 					}
 				}
 			}
+			.tribe-events-meta-group-organizer-link {
+				.btn { margin-left: 78px; }
+			}
 			.event-meta-sticky {
 				position: sticky;
 				top: 55px;
@@ -589,10 +592,14 @@
 		h1, .tablenav.bottom {
 			display: none;
 		}
+		.column-ticket { // hide delete tickets and multiplying checkins
+			.row-actions { display: none; }
+		}
 		.welcome-panel {
 			margin-top: 15px;
 			.welcome-panel-column li, .wp-list-table {
 				font-size: 16px;
+				
 			}
 		}
 		.wp-list-table {

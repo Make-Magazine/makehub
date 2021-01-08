@@ -45,6 +45,11 @@ if ( tribe_get_venue_id() ) {
 		$set_venue_apart = true;
 	}
 }
+		
+// Include organizer meta if appropriate
+if ( tribe_has_organizer() ) {
+	tribe_get_template_part( 'modules/meta/organizer-link' );
+}
 
 
 echo '<div class="tribe-events-meta-group help-line">Have questions or comments? <br /> Email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a></div>';
