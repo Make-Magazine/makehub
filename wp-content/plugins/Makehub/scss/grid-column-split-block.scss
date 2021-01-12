@@ -6,11 +6,11 @@
 		margin-bottom: 0px;
 	}
 	&.scrolling {
-	   animation: left-to-right 20s linear infinite;
+	    animation: left-to-right 19s linear infinite;
 		background-position: 0px 0px;
 		background-repeat: repeat;
 		box-shadow: 0 0 0 #000;
-	   transform: translate3d(0,0,0);
+		background-size: 145%;
 	}
 	.wysiwyg, .grid-column{
 		padding: 0px;
@@ -89,6 +89,6 @@
 	
 }
 @keyframes left-to-right {
-	to { background-position: 1366px 0; }
+	to { background-position: 2057px 0; }
 	100% { transform: translate3d(0, 0, 0); }
 }
