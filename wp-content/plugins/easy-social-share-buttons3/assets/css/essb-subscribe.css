@@ -1,4 +1,5 @@
 
+
 .essb-subscribe-form-overlay {
 	background-color: rgba(255, 255, 255, 0.9);
 	position: fixed;
@@ -2163,6 +2164,10 @@ font-weight: 400;
 	font-size: 13px;
 }
 
+.essb-subscribe-form-content .essb-subscribe-confirm .confirmation-link-after {
+	margin-left: 5px;
+}
+
 /** Adding Userbased Core Styles */
 .essb-userform .essb-subscribe-form-result-message { display: none; }
 .essb-userform .essb-subscribe-form-content-footer { font-size: 0.8em; }
@@ -2288,4 +2293,14 @@ font-weight: 400;
 		display: block;
 	}
 
+}
+
+.essb-subscribe-poweredby {
+	font-size: 12px; text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+	.essb-subscribe-mobile-hidden {
+		display: none !important;
+	}
 }

@@ -7,6 +7,9 @@ class ESSBSocialFollowersCounter {
 	private $essb3_expire_name = 'essbfcounter_expire';
 	private $updater_instance;
 	
+	private $should_update = false;
+	private $force_update_method = false;
+	
 	function __construct() {
 
 		// include updater class
@@ -25,6 +28,8 @@ class ESSBSocialFollowersCounter {
 		
 		add_action( 'wp_enqueue_scripts' , array ( $this , 'register_front_assets' ), 1);
 		
+		add_action( 'wp_footer', array($this, 'push_instagram_update_action'));
+		
 		if (essb_option_bool_value('fanscounter_sidebar')) {
 			add_action( 'wp_footer', array ($this, 'draw_followers_sidebar'), 99);
 		}
@@ -33,6 +38,79 @@ class ESSBSocialFollowersCounter {
 			add_filter( 'the_content', array ($this, 'draw_followers_postbar'), 99);
 		}
 		
+		add_action( 'wp_ajax_essb-instagram-followers-request-cache', array( $this, 'ajax_load_cache_js') );
+		add_action( 'wp_ajax_nopriv_essb-instagram-followers-request-cache', array( $this, 'ajax_load_cache_js') );
+		
+		/**
+		 * 
+		 * @var ESSBSocialFollowersCounter $should_update
+		 */
+		$this->should_update = $this->should_update_followers();
+		if (ESSBSocialFollowersCounterHelper::get_option('instgram_force_update') == 'yes') {
+		    $this->force_update_method = true;
+		}		
+	}
+	
+	public function ajax_load_cache_js() {
+	    $nonce_key = 'essb-instagram-followers';
+	    check_ajax_referer( $nonce_key, 'security' );
+	    
+	    $data = isset($_REQUEST['data']) ? $_REQUEST['data'] : array();
+	    
+	    $ig_followers = isset($_REQUEST['data']) ? $_REQUEST['data'] : 0;
+	    // @security: prevent saving any value - only valid integers
+	    $ig_followers = intval($ig_followers);
+	    
+	    $counters = get_option($this->essb3_cache_option_name);
+	    if (!isset($counters) || !is_array($counters)) {
+	        $counters = array();
+	    }
+	    
+	    $prev_value = isset($counters['instgram']) ? $counters['instgram'] : 0;
+	    if (isset($counters['instagram'])) {
+	        $prev_value = isset($counters['instagram']) ? $counters['instagram'] : 0;
+	    }
+	    
+	    if ($prev_value < $ig_followers) {	    
+    	    $counters['instgram'] = $ig_followers;
+    	    $counters['instagram'] = $ig_followers;
+	    }
+	    else {
+	        $ig_followers = $prev_value;
+	    }
+	    
+	    
+	    update_option ( $this->essb3_cache_option_name, $counters );
+	    
+	    echo ESSBSocialFollowersCounterDraw::followers_number($ig_followers);
+	    die();
+	}
+	
+	public function push_instagram_update_action() {
+	    
+	    $should_add = false;
+	    
+	    if (ESSB_Runtime_Cache::is('followers_counter_update')) {
+	        $should_add = true;
+	    }
+	    else if ($this->should_update && $this->force_update_method) {
+	        $should_add = true;
+	    }
+	    
+	    if ($should_add) {
+	        $options = array('nonce' => esc_js( wp_create_nonce( 'essb-instagram-followers' ) ),
+	            'ajaxurl' => esc_url(admin_url('admin-ajax.php'))
+	        );
+	        
+	        if ($this->force_update_method) {
+	            $options['forced_update'] = 'true';
+	            $options['instagram_user'] = ESSBSocialFollowersCounterHelper::get_option('instgram_username');
+	        }
+	        
+	        echo '<script> var essbInstagramFollowersUpdater = '.json_encode($options).';</script>';
+	        essb_resource_builder ()->add_static_resource_footer ( ESSB3_PLUGIN_URL . '/lib/modules/social-followers-counter/assets/essb-social-followers-counter.js', 'essb-instagram-social-followers', 'js' );
+	        
+	    }
 	}
 		
 	public function register_front_assets() {
@@ -54,7 +132,6 @@ class ESSBSocialFollowersCounter {
 			return $content;
 		}
 		
-		
 		if (!is_singular()) {
 			return $content;
 		}
@@ -74,11 +151,9 @@ class ESSBSocialFollowersCounter {
 	}
 	
 	public function register_plugin_shortcodes($attrs) {
-		$default_options = ESSBSocialFollowersCounterHelper::default_instance_settings();
-		
+		$default_options = ESSBSocialFollowersCounterHelper::default_instance_settings();	
 		
 		$attrs = shortcode_atts( $default_options , $attrs );
-		//print_r($attrs);
 		
 		ob_start();
 		ESSBSocialFollowersCounterDraw::draw_followers($attrs, true);
@@ -93,7 +168,6 @@ class ESSBSocialFollowersCounter {
 		
 		
 		$attrs = shortcode_atts( $default_options , $attrs );
-		//print_r($attrs);
 		
 		ob_start();
 		ESSBSocialFollowersCounterDraw::draw_followers($attrs, false, true);
@@ -125,7 +199,6 @@ class ESSBSocialFollowersCounter {
 		return ESSBSocialFollowersCounterDraw::followers_number($total);
 	}
 	
-	// -- social counters updater
 	/**
 	 * require_counter_update
 	 * 
@@ -145,6 +218,36 @@ class ESSBSocialFollowersCounter {
 		}
 		
 		return true;
+	}
+	
+	public function should_update_followers() {
+	    $request_update = $this->require_counter_update();
+	    
+	    $counters = array();
+	    
+	    // if it is not required we load the counters from cache
+	    if (!$request_update) {
+	        $counters = get_option ( $this->essb3_cache_option_name );
+	        
+	        // does not exist cached counters - initiate full counter update
+	        if (!isset($counters)) {
+	            $request_update = true;
+	        }
+	        else {
+	            if (!is_array($counters)) {
+	                $request_update = true;
+	            }
+	        }
+	    }
+	    
+	    /**
+	     * Manually cal update of social followers via the query option
+	     */
+	    if (!$request_update && isset($_GET['update_followers'])) {
+	        $request_update = true;
+	    }
+	    
+	    return $request_update;
 	}
 	
 	/**
@@ -176,12 +279,17 @@ class ESSBSocialFollowersCounter {
 			}
 		}
 		
+		/**
+		 * Manually cal update of social followers via the query option
+		 */
 		if (!$request_update && isset($_GET['update_followers'])) {
 			$request_update = true;
 		}
 		
 		if ($request_update) {
 			$counters = $this->update_all_followers();
+			
+			ESSB_Runtime_Cache::set('followers_counter_update', true);
 		}
 		
 		return $counters;
@@ -338,6 +446,13 @@ class ESSBSocialFollowersCounter {
 				case 'snapchat':
 				case 'telegram':
 				case 'subscribe':
+				case 'xing':
+				case 'medium':
+				case 'tiktok':
+				case 'mixer':
+				case 'patreon':
+				case 'ok':
+				case 'subscribe_form':
 					$count = $this->update_manual_value($social);
 					break;
 				default :
@@ -432,7 +547,10 @@ class ESSBSocialFollowersCounter {
 	private function is_properly_configured($social) {
 	
 		switch ($social) {
-				
+			case 'instagram':
+			case 'instgram':
+				return ESSBSocialFollowersCounterHelper::get_option ( $social . '_username' );
+				break;
 			case 'mailchimp' :
 				return ESSBSocialFollowersCounterHelper::get_option ( $social . '_list_id' );
 				break;
@@ -454,6 +572,7 @@ class ESSBSocialFollowersCounter {
 			case 'wp_comments' :
 			case 'wp_users' :
 			case 'love':
+			case 'subscribe_form':
 				return true;
 				break;
 				
@@ -465,6 +584,12 @@ class ESSBSocialFollowersCounter {
 			case 'snapchat':
 			case 'telegram':
 			case 'subscribe':
+			case 'xing':
+			case 'medium':
+			case 'tiktok':
+			case 'mixer':
+			case 'patreon':
+			case 'ok':
 				return ESSBSocialFollowersCounterHelper::get_option ( $social . '_url' );
 				break;
 			default :
@@ -646,16 +771,25 @@ class ESSBSocialFollowersCounter {
 			case 'mailerlite':
 				return ESSBSocialFollowersCounterHelper::get_option ( $social . '_id' );
 				break;
-				case 'itunes':
-				case 'deviantart':
-				case 'paypal':
-				case 'whatsapp':
-				case 'tripadvisor':
-				case 'snapchat':
-				case 'telegram':
-				case 'subscribe':
-					return ESSBSocialFollowersCounterHelper::get_option ( $social . '_url' );
-					break;				
+			case 'subscribe_form':
+			    return ESSBSocialFollowersCounterHelper::get_option ( $social . '_design' );
+			    break;
+			case 'itunes':
+			case 'deviantart':
+			case 'paypal':
+			case 'whatsapp':
+			case 'tripadvisor':
+			case 'snapchat':
+			case 'telegram':
+			case 'subscribe':
+			case 'xing':
+			case 'medium':
+			case 'tiktok':
+			case 'mixer':
+			case 'patreon':
+			case 'ok':
+				return ESSBSocialFollowersCounterHelper::get_option ( $social . '_url' );
+				break;				
 		}
 		
 		if (has_filter("essb4_followers_{$social}_url")) {
@@ -664,6 +798,7 @@ class ESSBSocialFollowersCounter {
 	}
 	
 	public function draw_followers_sidebar() {
+		
 		$options = array('position' => '', 'template' => '', 'animation' => '', 'nospace' => '', 'width' => '');
 		
 		$sidebar_template = ESSBSocialFollowersCounterHelper::get_option('sidebar_template');
@@ -672,6 +807,8 @@ class ESSBSocialFollowersCounter {
 		$sidebar_position = ESSBSocialFollowersCounterHelper::get_option('sidebar_position');
 		$sidebar_width = ESSBSocialFollowersCounterHelper::get_option('sidebar_width');
 		$sidebar_orientation = ESSBSocialFollowersCounterHelper::get_option('sidebar_orientation');
+		$sidebar_total = ESSBSocialFollowersCounterHelper::get_option('sidebar_total');
+		
 		if ($sidebar_orientation == '') { $sidebar_orientation = 'h'; }
 		
 		if ($sidebar_template != '') {
@@ -686,6 +823,8 @@ class ESSBSocialFollowersCounter {
 		$options['position'] = ($sidebar_position != '') ? $sidebar_position: 'left';
 		$options['width'] = $sidebar_width;
 		$options['button'] = $sidebar_orientation;
+		
+		$options['total'] = ($sidebar_total == 'true') ? 1 : 0;
 		
 		ESSBSocialFollowersCounterDraw::draw_followers_sidebar($options);
 	}

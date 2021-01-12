@@ -1,10 +1,10 @@
 <?php
 
-/*
+/**
 * Plugin Name: Easy Social Share Buttons for WordPress
-* Description: Easy Social Share Buttons automatically adds beautiful share buttons to all your content with support of Facebook, Twitter, Google+, LinkedIn, Pinterest, Digg, StumbleUpon, VKontakte, Tumblr, Reddit, Print, E-mail and more than 40 other social networks and mobile messengers. Easy show on 27+ automatic display locations or use powerful shortcodes. Compatible with most popular e-commerce plugins, social plugins and affiliate plugins
+* Description: The first true all in one social media plugin for WordPress, including social share buttons, social followers counter, social profile links, click to tweet, Pinnable images, after share events, subscribe forms, Instagram feed, social proof notifications and much more.
 * Plugin URI: https://codecanyon.net/item/easy-social-share-buttons-for-wordpress/6394476?ref=appscreo
-* Version: 6.2.1
+* Version: 7.5
 * Author: CreoApps
 * Author URI: https://codecanyon.net/user/appscreo/portfolio?ref=appscreo
 */
@@ -13,7 +13,14 @@
 if (! defined ( 'WPINC' ))
 	die ();
 
-define ( 'ESSB3_VERSION', '6.2.1' );
+if (defined('ESSB3_VERSION')) {
+    /**
+	* Exit if the Easy Social Share Buttons for WordPress is running - prevent multiple extensions
+	*/
+    return;
+}
+
+define ( 'ESSB3_VERSION', '7.5' );
 define ( 'ESSB3_PLUGIN_ROOT', dirname ( __FILE__ ) . '/' );
 define ( 'ESSB3_PLUGIN_URL', plugins_url () . '/' . basename ( dirname ( __FILE__ ) ) );
 define ( 'ESSB3_PLUGIN_BASE_NAME', plugin_basename ( __FILE__ ) );
@@ -29,8 +36,10 @@ define ( 'ESSB3_MAIL_SALT', 'easy-social-share-buttons-mailsecurity');
 define ( 'ESSB3_DEMO_MODE', true);
 define ( 'ESSB3_ADDONS_ACTIVE', true);
 define ( 'ESSB3_ACTIVATION', true);
-define ( 'ESSB3_CUSTOMIZER_CAN_RUN', true);
 define ( 'ESSB3_SETTING5', true);
+
+define ( 'ESSB3_LIB_PATH', ESSB3_PLUGIN_ROOT . 'lib/');
+define ( 'ESSB3_HELPERS_PATH', ESSB3_LIB_PATH . 'helpers/');
 
 
 /**
@@ -91,8 +100,11 @@ class ESSB_Manager {
 	private static $_instance;
 
 	private function __construct() {
-		// include the helper factory to get access to main plugin component
-		include_once (ESSB3_PLUGIN_ROOT . 'lib/core/essb-helpers-factory.php');
+	    // Early loading functions of plugin
+	    include_once (ESSB3_HELPERS_PATH . 'helpers-priority-load.php');
+	    
+	    // include the helper factory to get access to main plugin component
+	    include_once (ESSB3_HELPERS_PATH . 'helpers-core.php');
 
 		// default plugin options
 		include_once (ESSB3_PLUGIN_ROOT . 'lib/core/options/essb-options-defaults.php');
@@ -103,15 +115,15 @@ class ESSB_Manager {
 		register_deactivation_hook ( __FILE__, array ('ESSB_Manager', 'deactivate' ) );
 
 		// initialize plugin
+		add_action( 'plugins_loaded', array( &$this, 'load_widgets' ), 9);		
 		add_action( 'init', array( &$this, 'init' ), 9);
-		add_action( 'plugins_loaded', array( &$this, 'load_widgets' ), 9);
 
 		if (is_admin()) {
 			if (!defined('ESSB3_AVOID_WELCOME') && !$this->isInTheme()) {
 				function essb_page_welcome_redirect() {
 					$redirect = get_transient( '_essb_page_welcome_redirect' );
 					delete_transient( '_essb_page_welcome_redirect' );
-					$redirect && wp_redirect( admin_url( 'admin.php?page=essb_redirect_about' ) );
+					$redirect && wp_redirect( esc_url(admin_url( 'admin.php?page=essb_redirect_about' )) );
 				}
 				add_action( 'init', 'essb_page_welcome_redirect' );
 			}
@@ -123,7 +135,7 @@ class ESSB_Manager {
 	 *
 	 * @return ESSB_Manager
 	 */
-	public static function getInstance() {
+	public static function instance() {
 		if ( ! ( self::$_instance instanceof self ) ) {
 			self::$_instance = new self();
 		}
@@ -163,37 +175,47 @@ class ESSB_Manager {
 		$this->resourceBuilder();
 		$this->essb();
 
-		// Social share optimization
-		if (defined('ESSB3_SSO_ACTIVE')) {
-			if (class_exists('ESSB_OpenGraph')) {
-				$this->factoryOnlyActivate('sso_og', 'ESSB_OpenGraph');
-			}
-			if (class_exists('ESSB_WooCommerceOpenGraph')) {
-				$this->factoryOnlyActivate('sso_og_woo', 'ESSB_WooCommerceOpenGraph');
-			}
-			if (class_exists('ESSB_TwitterCards')) {
-				$this->factoryOnlyActivate('sso_tc', 'ESSB_TwitterCards');
-			}
+		// Share Optimization Tags
+		if (ESSB_Runtime_Cache::running('sso-running')) {
+		    if (class_exists('ESSB_OpenGraph')) {
+		        ESSB_Factory_Loader::activate('sso-opengraph', 'ESSB_OpenGraph');
+		    }
+		    
+		    if (class_exists('ESSB_WooCommerceOpenGraph')) {
+		        ESSB_Factory_Loader::activate('sso-opengraph-woo', 'ESSB_WooCommerceOpenGraph');
+		    }
+		    if (class_exists('ESSB_TwitterCards')) {
+		        ESSB_Factory_Loader::activate('sso-twitter-cards', 'ESSB_TwitterCards');
+		    }
+		    
+		    if (class_exists('ESSB_TaxonomyOptimizations')) {
+		        ESSB_Factory_Loader::activate('sso-taxonomy', 'ESSB_TaxonomyOptimizations');
+		    }
+		}		
 
-			if (class_exists('ESSB_TaxonomyOptimizations')) {
-				$this->factoryOnlyActivate('sso_taxonomy', 'ESSB_TaxonomyOptimizations');
-			}
-		}
-
-		// Social Share Analytics
-		if (defined('ESSB3_SSA_ACTIVE')) {
-			$tracker = ESSBSocialShareAnalytics::get_instance();
-			$this->resourceBuilder()->add_js($this->socialShareAnalytics()->generate_tracker_code(), true, 'essb-stats-tracker');
+		// Share Analytics
+		if (ESSB_Runtime_Cache::running('stats-running')) {
+		    ESSB_Factory_Loader::activate_instance('internal-stats', 'ESSBSocialShareAnalytics');
+		    $this->resourceBuilder()->add_js(ESSB_Factory_Loader::get('internal-stats')->generate_tracker_code(), true, 'essb-stats-tracker');
 		}
 
 		// After Share Actions
-		if (defined('ESSB3_AFTERSHARE_ACTIVE')) {
-			$this->factoryOnlyActivate('asc', 'ESSBAfterCloseShare3');
+		if (ESSB_Runtime_Cache::running('after-share-running')) {
+		    ESSB_Factory_Loader::activate('after-share', 'ESSBAfterCloseShare3');
+		    
+		    /**
+		     * Pinterest javascript API check - if it is used automatically 
+		     * switching to the legacy share method. Required to prevent visual 
+		     * glitches in the Pin button.
+		     */
+		    if (ESSB_Factory_Loader::get('after-share')->pinterest_api_loaded()) {
+		        ESSB_Plugin_Options::set('pinterest_using_api', 'true');
+		    }
 		}
 
 		// On Media Sharing
-		if (defined('ESSB3_IMAGESHARE_ACTIVE')) {
-			$this->factoryOnlyActivate('essbis', 'ESSBSocialImageShare');
+		if (ESSB_Runtime_Cache::running('onmedia-running')) {
+			ESSB_Factory_Loader::activate('onmedia', 'ESSBSocialImageShare');
 			essb_depend_load_function('essb_rs_css_build_imageshare_customizer', 'lib/core/resource-snippets/essb_rs_css_build_imageshare_customizer.php');
 
 		}
@@ -201,14 +223,21 @@ class ESSB_Manager {
 		// Social Profiles
 		if (!defined('ESSB3_LIGHTMODE')) {
 			if (defined('ESSB3_SOCIALPROFILES_ACTIVE')) {
-				$this->factoryOnlyActivate('essbsp', 'ESSBSocialProfiles');
+				ESSB_Factory_Loader::activate('essbsp', 'ESSBSocialProfiles');
 			}
 		}
 
 		// Followers Counter
 		if (defined('ESSB3_SOCIALFANS_ACTIVE')) {
-			$this->factoryActivate('essbfc', 'ESSBSocialFollowersCounter');
-			essb_depend_load_function('essb_rs_css_build_followerscounter_customizer', 'lib/core/resource-snippets/essb_rs_css_build_followerscounter_customizer.php');
+			ESSB_Factory_Loader::activate('essbfc', 'ESSBSocialFollowersCounter');
+		}
+		
+		if (!essb_option_bool_value('deactivate_module_instagram') && class_exists('ESSBInstagramFeed')) {
+		    ESSB_Factory_Loader::activate_instance('instagram', 'ESSBInstagramFeed');
+		}
+		
+		if (!essb_option_bool_value('deactivate_module_proofnotifications') && class_exists('ESSBSocialProofNotificationsLite')) {
+		    ESSB_Factory_Loader::activate('spn-lite', 'ESSBSocialProofNotificationsLite');
 		}
 
 		if (!defined('ESSB3_LIGHTMODE')) {
@@ -234,12 +263,10 @@ class ESSB_Manager {
 		}
 
 		// @since 4.2 Live Customizer Initialization
-		if (ESSB3_CUSTOMIZER_CAN_RUN) {
-			if (essb_live_customizer_can_run()) {
-				include_once (ESSB3_PLUGIN_ROOT . 'lib/modules/live-customizer/essb-live-customizer.php');
-				$this->factoryOnlyActivate('essb_live_customizer', 'ESSBLiveCustomizer');
-			}
-		}
+		if (essb_live_customizer_can_run()) {
+            include_once (ESSB3_PLUGIN_ROOT . 'lib/modules/live-customizer/essb-live-customizer.php');
+            ESSB_Factory_Loader::activate('essb_live_customizer', 'ESSBLiveCustomizer');
+        }
 
 		if (is_admin()) {
 			$this->asAdmin();
@@ -260,25 +287,26 @@ class ESSB_Manager {
 
 		if (is_admin()) {
 
-			global $essb_options;
-			$exist_user_purchase_code = isset($essb_options['purchase_code']) ? $essb_options['purchase_code'] : '';
-
+			$exist_user_purchase_code = essb_sanitize_option_value('purchase_code');
 			$deactivate_updates = essb_option_bool_value('deactivate_updates');
 
-			//if (!empty($exist_user_purchase_code) && !$this->isInTheme()) {
 			if (ESSBActivationManager::isActivated() && !$this->isInTheme() && !$deactivate_updates) {
 
 				include (ESSB3_PLUGIN_ROOT . 'lib/external/autoupdate/plugin-update-checker.php');
+				
+				$update_url = 'https://update.creoworx.com/easy-social-share-buttons3/?action=get_metadata&slug=easy-social-share-buttons3';
+				
 				// @since 1.3.3
 				// autoupdate
 				// activating autoupdate option
-				$essb_autoupdate = PucFactory::buildUpdateChecker ( 'http://update.creoworx.com/essb3/', __FILE__, 'easy-social-share-buttons3' );
+				$essb_autoupdate = Puc_v4_Factory::buildUpdateChecker ( $update_url, __FILE__, 'easy-social-share-buttons3' );
 				// @since 1.3.7.2 - update to avoid issues with other plugins that uses same
 				// method
 				function addSecretKeyESSB3($query) {
 					global $exist_user_purchase_code;
 					$query ['license'] = ESSBActivationManager::getActivationCode();
 					$query ['purchase_code'] = ESSBActivationManager::getPurchaseCode();
+					$query ['domain'] = ESSBActivationManager::domain();
 					return $query;
 				}
 				$essb_autoupdate->addQueryArgFilter ( 'addSecretKeyESSB3' );
@@ -305,36 +333,28 @@ class ESSB_Manager {
 		$this->disable_updater = true;
 	}
 
-	public function resourceBuilder() {
-		if (!isset($this->factory['resource_builder'])) {
-			$this->factory['resource_builder'] = new ESSBResourceBuilder();
-		}
-
-		return $this->factory['resource_builder'];
+	/**
+	 * @return NULL|mixed
+	 */
+	public function resourceBuilder() {		
+	    if (!ESSB_Factory_Loader::running('resource-builder')) {
+	        ESSB_Factory_Loader::activate('resource-builder', 'ESSB_Plugin_Assets');
+	        
+	        /**
+	         * Deprecating the old resource builder
+	         * ESSB_Factory_Loader::activate('resource-builder', 'ESSBResourceBuilder');
+	         */	        
+	    }
+	    
+	    return ESSB_Factory_Loader::get('resource-builder');
 	}
 
-	public function essb() {
-		if (!isset($this->factory['essb'])) {
-			$this->factory['essb'] = new ESSBCore();
-		}
-
-		return $this->factory['essb'];
-	}
-
-	public function socialShareAnalytics() {
-		if (!isset($this->factory['ssa'])) {
-			$this->factory['ssa'] = new ESSBSocialShareAnalytics;
-		}
-
-		return $this->factory['ssa'];
-	}
-
-	public function afterShareActions() {
-		if (!isset($this->factory['asc'])) {
-			$this->factory['asc'] = new ESSBAfterCloseShare3;
-		}
-
-		return $this->factory['asc'];
+	public function essb() {	    
+	    if (!ESSB_Factory_Loader::running('essb-core')) {
+	        ESSB_Factory_Loader::activate('essb-core', 'ESSBCore');
+	    }
+	    
+	    return ESSB_Factory_Loader::get('essb-core');
 	}
 
 	public function privacyNativeButtons() {
@@ -346,12 +366,12 @@ class ESSB_Manager {
 	}
 
 	public function socialFollowersCounter() {
-		if (!isset($this->factory['essbfc'])) {
-			$this->factory['essbfc'] = new ESSBSocialFollowersCounter;
-		}
-
-		return $this->factory['essbfc'];
-	}
+	    if (!ESSB_Factory_Loader::running('essbfc')) {
+	        ESSB_Factory_Loader::activate('essbfc', 'ESSBSocialFollowersCounter');
+	    }
+	    
+	    return ESSB_Factory_Loader::get('essbfc');	    
+	}	
 
 	public function deactiveExecution() {
 		$this->essb()->temporary_deactivate_content_filters();
@@ -369,16 +389,6 @@ class ESSB_Manager {
 		return $this->settings;
 	}
 
-	public function optionsBoolValue($param) {
-		$value = isset ( $this->settings [$param] ) ? $this->settings [$param]  : 'false';
-
-		if ($value == 'true') {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
 
 	/**
 	 * isMobile
@@ -390,6 +400,11 @@ class ESSB_Manager {
 	 */
 	public function isMobile() {
 		if (!$this->mobile_checked) {
+			
+			if (!class_exists('ESSB_Mobile_Detect')) {
+				include_once (ESSB3_PLUGIN_ROOT . 'lib/external/mobile-detect/mobile-detect.php');
+			}
+			
 			$this->mobile_checked = true;
 			$mobile_detect = new ESSB_Mobile_Detect();
 
@@ -410,6 +425,9 @@ class ESSB_Manager {
 
 	public function isTablet() {
 		if (!$this->mobile_checked) {
+			if (!class_exists('ESSB_Mobile_Detect')) {
+				include_once (ESSB3_PLUGIN_ROOT . 'lib/external/mobile-detect/mobile-detect.php');
+			}
 			$this->mobile_checked = true;
 			$mobile_detect = new ESSB_Mobile_Detect();
 
@@ -432,10 +450,8 @@ class ESSB_Manager {
 	 * @since 3.4
 	 */
 	protected function asAdmin() {
-
 		include_once (ESSB3_PLUGIN_ROOT . 'lib/admin/essb-admin-includes.php');
-		$this->factoryOnlyActivate('essb_admin', 'ESSBAdminControler');
-
+		ESSB_Factory_Loader::activate('essb-admin', 'ESSBAdminControler');
 	}
 
 	/**
@@ -453,26 +469,11 @@ class ESSB_Manager {
 		}
 	}
 
-	/**
-	 * Activate secondary class inside factory loader but without store in memory
-	 *
-	 * @param string $module
-	 * @param string $class_name
-	 * @since 4.2
-	 */
-	public function factoryOnlyActivate($module = '', $class_name) {
-		if (!empty($module) && !isset($this->factory[$module])) {
-			$this->factory[$module] = true;
-			new $class_name;
-		}
-	}
-
 	/*
 	 * Static activation/deactivation hooks
 	 */
 
 	public static function activate() {
-
 		include_once(ESSB3_PLUGIN_ROOT . 'activate.php');
 		essb_active_oninstall();
 
@@ -482,6 +483,10 @@ class ESSB_Manager {
 		}
 	}
 
+	/**
+	 * @param unknown $options
+	 * @return mixed|NULL
+	 */
 	public static function convert_ready_made_option($options) {
 		$options = base64_decode ( $options );
 
@@ -508,8 +513,4 @@ class ESSB_Manager {
  *
  * @since 3.4
  */
-
-global $essb_manager;
-if (!$essb_manager) {
-	$essb_manager = ESSB_Manager::getInstance();
-}
+ESSB_Manager::instance();

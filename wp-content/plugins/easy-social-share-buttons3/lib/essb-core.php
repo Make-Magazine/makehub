@@ -21,7 +21,6 @@ class ESSBCore {
 	private $temporary_decativated_locations = array();
 	
 	private $advanced_visual_on_post_off = false;
-	private $initialize_mail = false;
 	
 	private static $instance = null;
 	
@@ -139,7 +138,6 @@ class ESSBCore {
 					else {
 						if ($param_name == 'modified_locations') {
 							if ($single_callback_option ['value']) {
-								//$this->deactivate_stored_filters_and_actions_by_group('button_position');
 								$this->deactivate_stored_filter_and_actions('button_position');
 								$this->activate_button_position_filters($this->general_options['button_position'], $this->general_options['content_position']);
 							}
@@ -181,6 +179,12 @@ class ESSBCore {
 		$use_minifed_js = (ESSBGlobalSettings::$use_minified_js) ? '.min' : '';
 
 		$template_url = ESSB3_PLUGIN_URL.'/assets/css/easy-social-share-buttons'.$use_minifed_css.'.css';
+		
+		// loading slim version of the stylesheet
+		if (essb_sanitize_option_value('css_mode') == 'slim') {
+			$template_url = ESSB3_PLUGIN_URL.'/assets/css/easy-social-share-buttons-slim'.$use_minifed_css.'.css';
+		}
+		
 		essb_resource_builder()->add_static_resource($template_url, 'easy-social-share-buttons', 'css');
 		
 		// activating core form styles if option is set
@@ -227,7 +231,6 @@ class ESSBCore {
 		// @since 3.5 - load styles from single file
 		$display_locations_style = false;
 		if (in_array('sidebar', $this->general_options['button_position']) || in_array('postfloat', $this->general_options['button_position'])) {
-			$display_locations_style = true;
 			essb_resource_builder()->activate_resource('sidebar');
 			
 			if (essb_option_value('sidebar_entry_ani') != '') {
@@ -238,6 +241,7 @@ class ESSBCore {
 				
 				essb_resource_builder()->activate_resource('postfloat');
 				$display_locations_script = true;
+				$display_locations_style = true;
 			}
 		}
 
@@ -264,10 +268,6 @@ class ESSBCore {
 		// @since 3.5
 		// changed in 3.6 to add share point
 		if (in_array('postbar', $this->general_options['button_position']) || in_array('point', $this->general_options['button_position'])) {
-			if (!essb_resource_builder()->is_activated('postbar') && in_array('postbar', $this->general_options['button_position'])) {
-				essb_depend_load_function('essb_rs_css_build_postbar_customizations', 'lib/core/resource-snippets/essb_rs_css_build_postbar_customizations.php');
-			}
-				
 			$display_locations_style = true;
 			essb_resource_builder()->activate_resource('postbar');
 			$display_locations_script = true;			
@@ -302,9 +302,14 @@ class ESSBCore {
 	}
 	
 	public function load() {
-		global $essb_networks;
+		$all_networks = essb_available_social_networks(true);
+		
 		$this->general_options['mobile_exclude_tablet'] = essb_option_bool_value('mobile_exclude_tablet');
 		$this->general_options['mobile_css_activate'] = essb_option_bool_value('mobile_css_activate');
+		
+		if (!essb_option_bool_value('mobile_positions') && essb_sanitize_option_value('functions_mode_mobile') != 'auto') {
+			$this->general_options['mobile_css_activate'] = false;
+		}
 		
 		// loading static resources based on current options
 		$this->design_options['template'] = essb_object_value($this->options, 'style', '0');
@@ -335,7 +340,8 @@ class ESSBCore {
 		$this->network_options['more_button_func'] = essb_option_value('more_button_func');
 
 		$this->network_options['default_names'] = array();
-		foreach ($essb_networks as $key => $object) {
+
+		foreach ($all_networks as $key => $object) {
 			$search_for = 'user_network_name_'.$key;
 			$user_network_name = essb_object_value($this->options, $search_for, $object['name']);
 			$this->network_options['default_names'][$key] = $user_network_name;
@@ -511,7 +517,7 @@ class ESSBCore {
 		$this->advanced_visual_on_post_off = essb_option_bool_value('turnoff_essb_advanced_box');
 		
 		// @since 3.4 - in light mode advanced_visual_on_post_off is true by default
-		if (defined('ESSB3_LIGHTMODE')) {
+		if (defined('ESSB3_LIGHTMODE') || ESSB_Runtime_Cache::is('adaptive-styles')) {
 			$this->advanced_visual_on_post_off = true;
 		}
 		
@@ -527,6 +533,7 @@ class ESSBCore {
 		else {
 			add_action($hook, array($this, $function), $priority);
 		}
+		
 		$this->list_of_activated_locations[] = array('type' => $type, 'hook' => $hook, 'function' => $function, 'priority' => $priority, 'position' => $position);
 	}
 	
@@ -542,58 +549,67 @@ class ESSBCore {
 		}
 		
 		// @since version 3.1 CSS hide of mobile buttons
-		$mobile_css_activate = essb_option_bool_value('mobile_css_activate');
-		if ($mobile_css_activate) {
-			essb_depend_load_function('essb_rs_css_build_mobile_compatibility', 'lib/core/resource-snippets/essb_rs_css_build_mobile_compatibility.php');
+		if (essb_option_bool_value('mobile_css_activate')) {
+			essb_depend_load_function('essb_css_build_mobile_responsive', 'lib/helpers/assets/builder-share-reponsive.php');
 		}
 		
 		$this->list_of_activated_locations = array();
 		
 		$current_post_content_locations = $this->general_options['content_position'];
-		$current_post_button_position = $this->general_options['button_position'];
-		
+		$current_post_button_position = $this->general_options['button_position'];		
 		
 		// different button placement by post type is only avaiable in full interface
-		if (!defined('ESSB3_LIGHTMODE')) {
-			$positions_by_pt = essb_option_bool_value('positions_by_pt');
-			if ($positions_by_pt && isset($post)) {
-				$current_post_type = $post->post_type;
+		if (!defined('ESSB3_LIGHTMODE') && !ESSB_Runtime_Cache::is('adaptive-styles') && essb_option_bool_value('positions_by_pt')) {
+		    $content_position_by_pt = '';
+		    $button_position_by_pt = '';
+		    
+		    if (isset($post)) {
+                $content_position_by_pt = essb_option_value('content_position_'.$post->post_type);
+                $button_position_by_pt = essb_option_value('button_position_'.$post->post_type);	
+		    }
+		    
+			/**
+			 * Homepage
+			 */
+		    if (is_front_page()) {
+		        $content_position_by_pt = essb_option_value('content_position_homepage');
+		        $button_position_by_pt = essb_option_value('button_position_homepage');
+		    }
+			
 				
-				$content_position_by_pt = essb_option_value('content_position_'.$current_post_type);
-				$button_position_by_pt = essb_option_value('button_position_'.$current_post_type);
-							
-				if (!empty($content_position_by_pt)) {
-					$current_post_content_locations = $content_position_by_pt;
-					$this->general_options['content_position'] = $content_position_by_pt;
+			if (!empty($content_position_by_pt)) {
+				$current_post_content_locations = $content_position_by_pt;
+				$this->general_options['content_position'] = $content_position_by_pt;
+			}
+			
+			if (!empty($button_position_by_pt) && is_array($button_position_by_pt)) {
+				if (essb_exist_in_array($this->general_options['button_position'], 'sharebottom')) {
+					$button_position_by_pt[] = 'sharebottom';
+				}
+				if (essb_exist_in_array($this->general_options['button_position'], 'sharebar')) {
+					$button_position_by_pt[] = 'sharebar';
+				}
+				if (essb_exist_in_array($this->general_options['button_position'], 'sharepoint')) {
+					$button_position_by_pt[] = 'sharepoint';
 				}
 				
-				if (is_array($button_position_by_pt)) {
-					if (count($button_position_by_pt) > 0) {
-						
-						if (is_array($this->general_options['button_position'])) {
-							if (in_array('sharebottom', $this->general_options['button_position'])) {
-								$button_position_by_pt[] = 'sharebottom';
-							}
-							if (in_array('sharebar', $this->general_options['button_position'])) {
-								$button_position_by_pt[] = 'sharebar';
-							}
-							if (in_array('sharepoint', $this->general_options['button_position'])) {
-								$button_position_by_pt[] = 'sharepoint';
-							}
-						}
-						
-						$current_post_button_position = $button_position_by_pt;
-						$this->general_options['button_position'] = $button_position_by_pt;
-					}	
-				}
+				$current_post_button_position = $button_position_by_pt;
+				$this->general_options['button_position'] = $button_position_by_pt;
 			}
 		}
 		
-		if ($current_post_content_locations != '' && $current_post_content_locations != 'content_manual') {
-			$this->activate('filter', 'the_content', 'display_inline', $this->general_options['priority_of_buttons'], 'content_position');
-			
+		if ($current_post_content_locations != '' && $current_post_content_locations != 'content_manual') {			
 			if (essb_option_bool_value('using_elementor_events')) {
 				$this->activate('action', 'elementor/frontend/the_content', 'display_inline', $this->general_options['priority_of_buttons'], 'content_position');
+				
+				// Fixing elementor loading duplicated content https://support.creoworx.com/forums/topic/elementor-issue/
+				$elementor_page = get_post_meta( get_the_ID(), '_elementor_edit_mode', true );
+				if (!$elementor_page) {
+					$this->activate('filter', 'the_content', 'display_inline', $this->general_options['priority_of_buttons'], 'content_position');
+				}
+			}
+			else {
+				$this->activate('filter', 'the_content', 'display_inline', $this->general_options['priority_of_buttons'], 'content_position');				
 			}
 		}
 		
@@ -796,7 +812,7 @@ class ESSBCore {
 	}
 	
 	function activate_button_position_filters($current_post_button_position, $current_post_content_position = '') {
-		//$current_post_button_position = $this->general_options['button_position'];
+		
 		if (is_array($current_post_button_position)) {
 			foreach ($current_post_button_position as $position) {
 				if (method_exists($this, 'display_'.$position)) {
@@ -812,12 +828,10 @@ class ESSBCore {
 					else if ($position == 'onmedia') {
 						$this->activate('filter', 'the_content', 'display_onmedia', '9999', 'button_position');
 					}
-					else {
-				
+					else {				
 						if ($position == 'popup' && essb_option_bool_value('popup_display_purchase')) {
 							//woocommerce_thankyou
-							$this->activate('action', 'woocommerce_thankyou', 'display_popup', '', 'button_position');
-								
+							$this->activate('action', 'woocommerce_thankyou', 'display_popup', '', 'button_position');							
 						}
 						
 						if ($position == 'postbar') {
@@ -931,12 +945,33 @@ class ESSBCore {
 				return false;
 			}
 		}
+		
+		/**
+		 * Hide from preview pages when the option is enabled
+		 */
+		if (essb_option_bool_value('hide_preview_share')) {
+			if (is_preview()) {
+				return false;
+			}
+		}
 
 		$is_all_lists = in_array('all_lists', $post_types);
 		$is_set_list = count($post_types) > 0 ?  true: false;
 		
+		/**
+		 * Homepage 
+		 */
+		$is_homepage = in_array('homepage', $post_types);
+		unset($post_types['homepage']);
+		
 		unset($post_types['all_lists']);
-		$is_lists_authorized = (is_archive() || is_front_page() || is_search() || is_tag() || is_post_type_archive() || is_home()) && $is_all_lists ? true : false;
+		$is_lists_authorized = (is_archive() || is_search() || is_tag() || is_post_type_archive() || is_home()) && $is_all_lists ? true : false;
+		
+		/**
+		 * Homepage
+		 */
+		if (is_front_page() && $is_homepage) { $is_lists_authorized = true; }
+		
 		$is_singular = is_singular($post_types);
 		if ($is_singular && !$is_set_list) {
 			$is_singular = false;
@@ -978,6 +1013,10 @@ class ESSBCore {
 			if ($exist_tribe_cal !== false) {
 				$is_singular = false; $is_lists_authorized = false;
 			}
+			
+			if (essb_option_bool_value('hide_buttons_elementor_edit') && strpos($request_uri, '?elementor-preview') !== false) {
+				$is_singular = false; $is_lists_authorized = false;
+			}
 		}
 		
 		// check post meta for turned off
@@ -996,6 +1035,10 @@ class ESSBCore {
 		//** Extra filter so developers can force activation
 		if (has_filter('essb_check_applicability')) {
 			$is_singular = apply_filters('essb_check_applicability', $is_singular);
+		}
+		
+		if (has_filter('essb_check_applicability_archive')) {
+			$is_lists_authorized = apply_filters('essb_check_applicability_archive', $is_lists_authorized);
 		}
 		
 		// check current location settings
@@ -1023,7 +1066,6 @@ class ESSBCore {
 	}
 	
 	function trigger_bottom_mark($content) {
-		$deactivate_trigger = false;
 		$deactivate_trigger = essb_option_bool_value('deactivate_bottom_mark');
 		
 		$deactivate_trigger = apply_filters('essb5_remove_bottom_mark', $deactivate_trigger);
@@ -1100,10 +1142,8 @@ class ESSBCore {
 		$output = '';
 		
 		if ($is_valid) {
-			$share_buttons = $this->generate_share_buttons('followme');
-			
+			$share_buttons = $this->generate_share_buttons('followme_bottom');
 			essb_depend_load_function('essb5_generate_followme_bar', 'lib/core/display-methods/essb-display-method-followme.php');
-			
 			$output .= essb5_generate_followme_bar($share_buttons);
 		}
 		
@@ -1132,20 +1172,13 @@ class ESSBCore {
 			$is_valid = $this->check_applicability($post_types, 'point');
 		
 			// post share bar cannot work on list of posts
-			if (!is_single () && !is_page ()) {
+			if (!is_single () && !is_page () && !essb_option_bool_value('point_allowall')) {
 				$is_valid = false;
-				
-				if (essb_option_bool_value('point_allowall')) {
-					$is_valid = true;
-				}
 			}
 		}
-		
-		
+				
 		$output = '';
-		
 		if ($is_valid) {
-		
 			if (!class_exists('ESSBDisplayMethodPoint')) {
 				include_once (ESSB3_PLUGIN_ROOT . 'lib/core/display-methods/essb-display-method-point.php');
 			}
@@ -1515,6 +1548,8 @@ class ESSBCore {
 		$output = '';
 				
 		if ($is_valid) {
+			essb_depend_load_function('essb_sidebar_extender', 'lib/core/display-methods/essb-display-method-sidebar.php');
+				
 			if (!$is_shortcode) {
 				$output .= $this->generate_share_buttons('sidebar');
 			}
@@ -1704,7 +1739,7 @@ class ESSBCore {
 		//
 		$links_before = '';
 		$links_after = '';
-		
+
 		$display_key = 'postfloat';
 		$float_onsingle_only = essb_option_bool_value('float_onsingle_only');
 		if ($float_onsingle_only) {
@@ -1715,6 +1750,7 @@ class ESSBCore {
 		
 		$post_types = $this->general_options['display_in_types'];
 		if ($this->check_applicability($post_types, $display_key)) {
+			essb_depend_load_function('essb_postfloat_extender', 'lib/core/display-methods/essb-display-method-postfloat.php');			
 			$links_before = $this->generate_share_buttons($display_key);
 		}
 		
@@ -1726,8 +1762,6 @@ class ESSBCore {
 		
 		$links_before = '';
 		$links_after = '';
-		
-		//print "is possible on excerpt: ".$this->check_applicability($post_types, 'excerpt');
 		
 		if ($this->check_applicability_excerpt($post_types, 'excerpt')) {
 			
@@ -1747,6 +1781,41 @@ class ESSBCore {
 	}
 	
 	function display_inline($content) {
+		/**
+		 * Include additiong inline share buttons display to prevent appearance of non-associated
+		 * parts of content
+		 */
+		global $wp_current_filter;
+		
+		if( ! empty( $wp_current_filter ) && is_array( $wp_current_filter ) ) {
+			foreach( $wp_current_filter as $filter ) {
+				if( $filter == 'wp_head' ) {
+					return $content;
+				}
+			}
+		}
+		
+		if( ! is_main_query() ) {
+			return $content;
+		}
+		
+		if (essb_option_bool_value('hide_content_archive')) {
+			if (is_archive() || is_search() || is_tag() || is_post_type_archive()) {
+				return $content;
+			}
+		}
+
+		if (essb_option_bool_value('hide_content_home')) {
+			if (is_home() || is_front_page()) {
+				return $content;
+			}
+		}
+		
+		
+		/**
+		 * Start generation of share buttons if OK
+		 */
+		
 		$links_before = '';
 		$links_after = '';
 				
@@ -1774,6 +1843,7 @@ class ESSBCore {
 			}
 			
 			if ($this->check_applicability($post_types, $display_key)) {
+				essb_depend_load_function('essb_float_extender', 'lib/core/display-methods/essb-display-method-float.php');				
 				$links_before = $this->generate_share_buttons($display_key);
 			}
 		}
@@ -1886,7 +1956,6 @@ class ESSBCore {
 		// apply shortcode options
 		if ($is_shortcode) {
 			essb_depend_load_function('essb_shortcode_map_shareoptions', 'lib/core/extenders/essb-core-extender-shortcode.php');
-						
 			$post_share_details = essb_shortcode_map_shareoptions($post_share_details, $shortcode_options);
 		}
 		else {
@@ -1949,7 +2018,7 @@ class ESSBCore {
 		if ($this->general_options['shorturl_activate'] && $post_share_details['full_url'] != 'http://socialsharingplugin.com') {
 			$global_provider = $this->general_options ['shorturl_type'];			
 			
-			essb_depend_load_function('essb_short_url', 'lib/core/essb-shorturl-helper.php');
+			essb_helper_maybe_load_feature('short-url');
 			$post_share_details = essb_apply_shorturl($post_share_details, $this->network_options ['twitter_shareshort'], $post_share_details ['url'], $global_provider, get_the_ID (), $this->general_options ['shorturl_bitlyuser'], $this->general_options ['shorturl_bitlyapi']);
 		}
 		else {
@@ -1961,13 +2030,14 @@ class ESSBCore {
 		//-- end: short url code block
 		
 		// -- main button design
-		$button_style = $this->get_buttons_visual_options($position);
+		$button_style = $this->get_buttons_visual_options($position == 'followme_bottom' ? 'followme' : $position);
 		// @since 3.6 AMP support
 		$button_style['amp'] = $amp_sharing;
 				
 		$social_networks = $this->network_options['networks'];
 		$social_networks_order = $this->network_options['networks_order'];
 		$social_networks_names = $this->network_options['default_names'];
+		
 				
 		// apply settings based on position when active
 		$check_position_settings_key = $position;
@@ -1976,9 +2046,12 @@ class ESSBCore {
 			$check_position_settings_key = 'mobile';
 		}
 		
-		if (essb_is_mobile()) {
+		if (essb_is_mobile() && !essb_option_bool_value('user_fixed_networks')) {
 			if (ESSBGlobalSettings::$mobile_networks_active) {
-				$social_networks = ESSBGlobalSettings::$mobile_networks;				
+				$social_networks = ESSBGlobalSettings::$mobile_networks;		
+				// 6.2.2
+				// Fixes a problem where network names of global mobile are not applied
+				$social_networks_names = essb_apply_position_network_names('mobile', $social_networks_names);
 			}
 			if (ESSBGlobalSettings::$mobile_networks_order_active) {
 				$social_networks_order = ESSBGlobalSettings::$mobile_networks_order;
@@ -1986,7 +2059,7 @@ class ESSBCore {
 		}
 		
 		// read AMP share networks
-		if ($amp_sharing) {
+		if ($amp_sharing && !essb_option_bool_value('user_fixed_networks')) {
 			$amp_networks = essb_options_value('amp_networks');
 			if (!is_array($amp_networks)) {
 				$amp_networks = array();
@@ -2003,7 +2076,7 @@ class ESSBCore {
 		if ($check_position_settings_key != 'sharebar' && $check_position_settings_key != 'sharepoint' && $check_position_settings_key != 'sharebottom') {
 			// first check for post type settins - if there are such that will be the settings key. If nothing is active switch to button position
 			// settings
-			if (!defined('ESSB3_LIGHTMODE')) {
+			if (!defined('ESSB3_LIGHTMODE') && !ESSB_Runtime_Cache::is('adaptive-styles')) {
 				if (!empty($post_type)) {
 					if (essb_active_position_settings(sprintf('post-type-%1$s', $post_type))) {
 						$check_position_settings_key = sprintf('post-type-%1$s', $post_type);
@@ -2021,31 +2094,39 @@ class ESSBCore {
 				$button_style = essb_apply_point_position_style_settings('point', $button_style);
 			}
 			
+			if ($position == 'followme_bottom') {
+				$button_style = essb_apply_followme_bottom_position_styles('followme', $button_style);
+			}
+			
 			
 			if (essb_active_position_settings($check_position_settings_key)) {
 				$button_style = essb_apply_position_style_settings($check_position_settings_key, $button_style);
 				
 				
-				if ($check_position_settings_key != 'mobile') {
-					$personalized_networks = essb_get_active_social_networks_by_position($check_position_settings_key);
-					$personalized_network_order = essb_get_order_of_social_networks_by_position($check_position_settings_key);
-					
-					if (is_array($personalized_networks) && count($personalized_networks) > 0) {
-						$social_networks = $personalized_networks;
+				if (!essb_option_bool_value('user_fixed_networks')) {
+					if ($check_position_settings_key != 'mobile') {
+						$personalized_networks = essb_get_active_social_networks_by_position($check_position_settings_key);
+						$personalized_network_order = essb_get_order_of_social_networks_by_position($check_position_settings_key);
+						
+						if (is_array($personalized_networks) && count($personalized_networks) > 0) {
+							$social_networks = $personalized_networks;
+						}
+						
+						if (is_array($personalized_network_order) && count($personalized_network_order) > 0) {
+							$social_networks_order = $personalized_network_order;
+						}
 					}
 					
-					if (is_array($personalized_network_order) && count($personalized_network_order) > 0) {
-						$social_networks_order = $personalized_network_order;
-					}
+					$social_networks_names = essb_apply_position_network_names($check_position_settings_key, $social_networks_names);
 				}
-				
-				$social_networks_names = essb_apply_position_network_names($check_position_settings_key, $social_networks_names);
 				
 			}
 			else {
-				if (defined('ESSB3_LIGHTMODE')) {
-					if (ESSBLightModeHelper::position_with_predefined_options($position)) {
-						$button_style = ESSBLightModeHelper::apply_position_predefined_settings($position, $button_style);
+				if (defined('ESSB3_LIGHTMODE') || ESSB_Runtime_Cache::is('adaptive-styles')) {
+					essb_helper_maybe_load_feature('litemode-helper');
+					
+					if (ESSB_LightMode_Helper::position_with_predefined_options($position)) {
+					    $button_style = ESSB_LightMode_Helper::apply_position_predefined_settings($position, $button_style);
 					}
 				}
 			}
@@ -2066,70 +2147,36 @@ class ESSBCore {
 				$personalized_networks = essb_get_active_social_networks_by_position($position);
 				$personalized_network_order = essb_get_order_of_social_networks_by_position($position);
 				
-				if (is_array($personalized_networks) && count($personalized_networks) > 0) {					
-					$social_networks = $personalized_networks;
+				if (!essb_option_bool_value('user_fixed_networks')) {
+					if (is_array($personalized_networks) && count($personalized_networks) > 0) {					
+						$social_networks = $personalized_networks;
+					}
+					
+					if (is_array($personalized_network_order) && count($personalized_network_order) > 0) {
+						$social_networks_order = $personalized_network_order;
+					}
+					
+					$social_networks_names = essb_apply_position_network_names($position, $social_networks_names);
 				}
-				
-				if (is_array($personalized_network_order) && count($personalized_network_order) > 0) {
-					$social_networks_order = $personalized_network_order;
-				}
-				
-				$social_networks_names = essb_apply_position_network_names($position, $social_networks_names);
 			}
 			
 			// apply sharebar and sharepoint default styles
 			if ($position == 'sharebar' || $position == 'sharepoint') {
+				// for those display methods the more buttons is not needed				
+				$social_networks = essb_remove_network_from_list($social_networks, 'more');
 				
-				// for those display methods the more buttons is not needed
-				if (in_array('more', $social_networks)) {
-					if(($key = array_search('more', $social_networks)) !== false) {
-						unset($social_networks[$key]);
-					}
-				}
 				
 				$button_style = essb_apply_required_mobile_style_settings($position, $button_style);
-				
-				
 			}
 			
 			if ($position == 'sharebottom') {
-				if (in_array('more', $social_networks)) {
-					if(($key = array_search('more', $social_networks)) !== false) {
-						unset($social_networks[$key]);
-					}
-				}
+				// for those display methods the more buttons is not needed				
+				$social_networks = essb_remove_network_from_list($social_networks, 'more');
 
-				$button_style['button_style'] = 'icon';
-				$button_style['show_counter'] = false;
-				$button_style['nospace'] = true;
-				$button_style['button_width'] = 'column';
+				$button_style = essb_apply_required_mobile_style_settings($position, $button_style);				
 				
-				// @since 3.6
-				// allow total counter to appear
-				$button_count_correction_when_total = 0;
-				if (essb_option_bool_value('mobile_sharebuttonsbar_total')) {
-					$button_style['show_counter'] = true;
-					$button_style['total_counter_pos'] = 'leftbig';
-					$button_style['counter_pos'] = 'hidden';
-					$button_count_correction_when_total = 1;
-				}
-				
-				if (essb_option_bool_value('mobile_sharebuttonsbar_counter')) {
-					$button_style['show_counter'] = true;
-					$button_style['counter_pos'] = 'inside';
-					$button_style['button_style'] = 'button';
-					
-					if (!essb_option_bool_value('mobile_sharebuttonsbar_total')) {
-						$button_style['total_counter_pos'] = 'hidden';
-					}
-				}
-				
-				$available_networks_count = essb_option_value('mobile_sharebuttonsbar_count');
-				$mobile_sharebuttonsbar_names = essb_option_bool_value( 'mobile_sharebuttonsbar_names');
-				if ($mobile_sharebuttonsbar_names) {
-					$button_style['button_style'] = 'button';
-				}
-				
+				$available_networks_count = essb_option_value('mobile_sharebuttonsbar_count');				
+				$button_count_correction_when_total = isset($button_style['button_count_correction_when_total']) ? $button_style['button_count_correction_when_total'] : 0;
 				if (intval($available_networks_count) == 0) {
 					$available_networks_count = 4;
 				}
@@ -2140,15 +2187,11 @@ class ESSBCore {
 					$share_bottom_networks = (array_slice($social_networks, intval($available_networks_count) - 1 - $button_count_correction_when_total));
 					array_splice($social_networks, intval($available_networks_count) - 1 - $button_count_correction_when_total);
 					$social_networks[] = 'more';
-					$social_networks_order = $social_networks;
-					//$button_style['more_button_icon'] = "dots";
-					
+					$social_networks_order = $social_networks;					
 				}
 				
 				$button_style['button_width_columns'] = intval($available_networks_count);
-				
 			}
-						
 		}
 		
 		if (!is_array($social_networks)) { $social_networks = array(); }
@@ -2158,8 +2201,6 @@ class ESSBCore {
 
 		// apply shortcode customizations
 		if ($is_shortcode) {
-			
-			
 			essb_depend_load_function('essb_shortcode_map_visualoptions', 'lib/core/extenders/essb-core-extender-shortcode.php');
 			
 			$button_style = essb_shortcode_map_visualoptions($button_style, $shortcode_options);
@@ -2190,17 +2231,9 @@ class ESSBCore {
 					}
 				}
 			
-				$button_style['button_style'] = 'icon';
-				$button_style['show_counter'] = false;
-				$button_style['nospace'] = true;
-				$button_style['button_width'] = 'column';
-			
+				$button_style = essb_shortcode_map_visualoptions($button_style, $shortcode_options);
 			
 				$available_networks_count = essb_option_value('mobile_sharebuttonsbar_count');
-				$mobile_sharebuttonsbar_names = essb_option_bool_value( 'mobile_sharebuttonsbar_names');
-				if ($mobile_sharebuttonsbar_names) {
-					$button_style['button_style'] = 'button';
-				}
 			
 				if (intval($available_networks_count) == 0) {
 					$available_networks_count = 4;
@@ -2210,7 +2243,6 @@ class ESSBCore {
 					array_splice($social_networks, intval($available_networks_count) - 1);
 					$social_networks[] = 'more';
 					$social_networks_order[] = 'more';
-					//$button_style['more_button_icon'] = "dots";
 				}
 			
 				$button_style['button_width_columns'] = intval($available_networks_count);
@@ -2219,9 +2251,9 @@ class ESSBCore {
 			
 		}
 		
-		
 		// generate unique instance key
 		$salt = mt_rand();
+		
 		// attache compliled mail message data
 		if (in_array('mail', $social_networks)) {
 			if (!function_exists('essb_sharing_prepare_mail')) {
@@ -2230,14 +2262,12 @@ class ESSBCore {
 			
 			$post_share_details = essb_sharing_prepare_mail($post_share_details);
 			
-			
-			
 			// activating mail generation of code from here;
 			essb_resource_builder()->activate_resource('mail');
 		}
 		
 		if (in_array('love', $social_networks)) {
-			essb_depend_load_function('essb_love_generate_js_code', 'lib/networks/essb-loveyou.php');
+			essb_depend_load_function('essb_love_generate_js_code', 'lib/core/helpers/helpers-loveyou-jscode.php');
 		}
 		
 		$button_style['included_button_count'] = count($social_networks);
@@ -2252,7 +2282,6 @@ class ESSBCore {
 		
 		$intance_morebutton_func = $this->network_options['more_button_func'];
 		if ($position == 'sidebar' || $position == 'postfloat') {
-			//$intance_morebutton_func = "2";
 			if ($button_style['more_button_func'] == '1') {
 				$button_style['more_button_func'] = '2';
 			}
@@ -2262,12 +2291,9 @@ class ESSBCore {
 			}
 		}
 		if ($position == 'sharebottom') {
-			//$intance_morebutton_func = "3";
 			$button_style['more_button_func'] = '3';
 			$button_style['share_button_func'] = '3';
 		}
-		
-		//$button_style['more_button_func'] = $intance_morebutton_func;
 		
 		// sidebar close button option if activated into settings
 		if ($this->design_options['sidebar_leftright_close'] && $position == 'sidebar') {
@@ -2306,12 +2332,10 @@ class ESSBCore {
 			$button_style['button_width_full_button'] = '95';
 		}
 		
-		
 		$ssbuttons = essb_draw_share_buttons($post_share_details, $button_style, 
 				$social_networks, $social_networks_order, $social_networks_names, $position, $salt, $likeshare, $post_native_details);
 		
 		
-		//print_r($post_native_details);
 		if (!defined('ESSB3_LIGHTMODE')) {
 			if ($post_native_details['active']) {
 				if (!$post_native_details['sameline']) {
@@ -2331,13 +2355,11 @@ class ESSBCore {
 		
 		if ($button_style['button_width'] == 'fixed') {
 			$fixedwidth_key = $button_style['button_width_fixed_value'] . '-' . $button_style['button_width_fixed_align'];
-			essb_depend_load_function('essb_rs_css_build_fixedwidth_button', 'lib/core/resource-snippets/essb_rs_css_build_fixedwidth_button.php');
+			essb_depend_load_function('essb_rs_css_build_fixedwidth_button', 'lib/helpers/assets/builder-share-fixedwidth.php');
 			essb_resource_builder()->add_css(essb_rs_css_build_fixedwidth_button($salt, $button_style['button_width_fixed_value'], $button_style['button_width_fixed_align']), 'essb-fixed-width-'.$fixedwidth_key, 'footer');
 					
 		}
 		if ($button_style['button_width'] == 'full') {
-			//print_r($button_style);
-			//print "fixed button code adding";
 			$count_of_social_networks = count($social_networks);
 			if ($button_style['show_counter']) {
 				if (isset($button_style['total_counter_pos'])) {
@@ -2351,12 +2373,12 @@ class ESSBCore {
 			$single_button_width = intval($container_width) / $count_of_social_networks;
 			$single_button_width = floor($single_button_width);
 			
-			essb_depend_load_function('essb_rs_css_build_fullwidth_buttons', 'lib/core/resource-snippets/essb_rs_css_build_fullwidth_buttons.php');
+			essb_depend_load_function('essb_rs_css_build_fullwidth_buttons', 'lib/helpers/assets/builder-share-fullwidth.php');
 			essb_resource_builder()->add_css(essb_rs_css_build_fullwidth_buttons($count_of_social_networks, $button_style['button_width_full_container'], $button_style['button_width_full_button'], $button_style['button_width_full_first'], $button_style['button_width_full_second']), 'essb-full-width-'.$single_button_width.'-'.$button_style['button_width_full_button'].'-'.$button_style['button_width_full_container'], 'footer');
 		}
 		
 		if ($button_style['button_width'] == 'flex' && ($button_style['flex_width_value'] != '' || $button_style['flex_button_value'] != '')) {
-			essb_depend_load_function('essb_rs_css_build_flexwidth_buttons', 'lib/core/resource-snippets/essb_rs_css_build_flexwidth_buttons.php');
+			essb_depend_load_function('essb_rs_css_build_flexwidth_buttons', 'lib/helpers/assets/builder-share-flexwidth.php');
 			essb_resource_builder()->add_css(essb_rs_css_build_flexwidth_buttons($button_style['flex_width_value'], $button_style['flex_button_value']), 'essb_flex_'.$button_style['flex_width_value'].'_'.$button_style['flex_button_value'], 'footer');				
 		}
 		
@@ -2366,7 +2388,6 @@ class ESSBCore {
 			$share_button_exist = in_array('share', $social_networks) ? true : false;
 			
 			essb_depend_load_function('essb_generate_morebutton_code', 'lib/core/extenders/essb-core-extender-morebutton.php');
-			//print_r($share_bottom_networks);
 			if ($position == 'sharebottom') {
 				$ssbuttons .= essb_generate_morebutton_code($button_style, $share_bottom_networks, $share_bottom_networks, $salt, $position, $post_share_details, $social_networks_names, $share_button_exist);
 			}
@@ -2404,8 +2425,6 @@ class ESSBCore {
 		if (!empty($cache_key_runtime) && ESSBGlobalSettings::$cache_runtime) {
 			wp_cache_set( $cache_key_runtime, $ssbuttons );
 		}
-		
-		//print "generated share in ".timer_stop(0, 5);
 		
 		return $ssbuttons;
 	}
@@ -2448,7 +2467,6 @@ class ESSBCore {
 		if (intval($style['button_width_full_container']) == 0) {
 			$style['button_width_full_container'] = '100';
 		}
-
 		
 		if (essb_is_mobile()) {
 			if ($style['button_width_full_button_mobile'] != '') {
@@ -2496,16 +2514,6 @@ class ESSBCore {
 		else {
 			return essb_is_mobile();
 		}
-	}
-}
-
-if (!function_exists ('str_replace_first')) {
-	function str_replace_first($search, $replace, $subject) {
-		$pos = strpos($subject, $search);
-		if ($pos !== false) {
-			$subject = substr_replace($subject, $replace, $pos, strlen($search));
-		}
-		return $subject;
 	}
 }
 ?>
