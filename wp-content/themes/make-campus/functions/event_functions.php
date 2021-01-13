@@ -97,7 +97,7 @@ function update_event_additional_fields($entry, $form, $post_id) {
 		if ($ageData->type == 'checkbox' || ($ageData->type == 'post_custom_field' && $ageData->inputType == 'checkbox')) {
 			$checked = str_replace(", ", "|", $ageData->get_value_export($entry, $post_id, true));
 			//having to use these damn custom names stops this from being very extendable/dynamic
-			update_post_meta($post_id, "_ecp_custom_2", $checked);
+			update_post_meta($post_id, "_ecp_custom_3", $checked);
 		}
 	}
 }
