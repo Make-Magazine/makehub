@@ -511,26 +511,27 @@
                                                 </table>
                                                 <?php
                                             }//end if
+                                            //add online event link and contact information                                           
+                                            ?>
+                                            <div style="padding:10px 0">                                    
+                                                <?php
+                                                $event_link = get_post_meta($event->ID, 'webinar_link', true);
+                                                if ($event_link == '') {
+                                                    echo 'More information and your online event link is coming soon.<br/>';
+                                                } else {
+                                                    echo 'Your event will take place here: <a href="' . $event_link . '">' . $event_link . '</a><br/>';
+                                                }
+                                                ?>                                                
+                                                Check the <a href="<?php echo esc_url($event_link); ?>">event listing</a> for your material list and other information.<br/><br/>                                    
+                                            </div>
                                             ?>
                                         </td>
                                     </tr>
                                 </table>
-                                <?php
-                                //add online event link and contact information                                           
-                                ?>
+
                                 <div style="padding:10px 0">                                    
-                                    <?php
-                                    $event_link = get_post_meta($event->ID, 'webinar_link', true);
-                                    if ($event_link == '') {
-                                        echo 'More information and your online event link is coming soon.<br/>';
-                                    } else {
-                                        echo 'Your event will take place here: <a href="' . $event_link . '">' . $event_link . '</a><br/>';
-                                    }
-                                    ?>                                                
-                                    Check the <a href="<?php echo esc_url($event_link); ?>">event listing</a> for your material list and other information.<br/><br/>
                                     Please email <a href="mailto:makercampus@make.co">makercampus@make.co</a> with any questions.
                                 </div>
-
                                 <?php do_action('tribe_tickets_ticket_email_ticket_bottom', $ticket); ?>
                                 <table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
