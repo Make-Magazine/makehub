@@ -186,7 +186,6 @@ class ESSBPrecompiledResources {
 				unlink ( $file );
 			}
 		}
-		//rmdir ( $directory );
 	}
 	
 	public static function get_asset_relative_path( $base_url, $item_url ) {
@@ -256,6 +255,12 @@ class ESSBPrecompiledResources {
 	
 	
 	
+	/**
+	 * Generate an unique string with a number of symbols
+	 * 
+	 * @param number $strength
+	 * @return string
+	 */
 	public static function generate_string($strength = 16) {
 		$input = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 		$input_length = strlen($input);

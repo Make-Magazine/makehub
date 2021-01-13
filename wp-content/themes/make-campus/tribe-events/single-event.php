@@ -74,7 +74,12 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
             <div class="row">
                 <div class="col-md-8 col-sm-12 col-xs-12 event-info">
                     <!-- Event content -->
-                    <?php do_action('tribe_events_single_event_before_the_content') ?>
+                    <?php do_action('tribe_events_single_event_before_the_content');
+					if(class_exists('ESSB_Plugin_Options')){ 
+						$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+						echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $event_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
+					}
+					?>
                     <div class="event-cat">
                         <?php echo tribe_get_event_categories($event_id); ?>
                     </div>
@@ -83,8 +88,7 @@ $formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
                             <h3>Location:</h3> 
                             <?php echo get_field('location') ?>
                         </div>
-                    <?php } ?>
-					<?php
+                    <?php } 
                     // ATTENDEES Section
                     $userList = get_event_attendees($event_id);
                     if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {

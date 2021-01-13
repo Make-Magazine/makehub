@@ -20,7 +20,6 @@ $multiple = count($organizer_ids) > 1;
         do_action('tribe_events_single_meta_organizer_section_start');
 
         foreach ($organizer_ids as $organizer) {
-			error_log($organizer);
             if (!$organizer) {
                 continue;
             }

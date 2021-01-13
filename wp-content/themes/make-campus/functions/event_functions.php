@@ -24,7 +24,7 @@ function update_event_acf($entry, $form, $post_id) {
         array('96', 'alternative_end_time'),
         array('99', 'alternative_end_date'),
         array('124', 'schedule_exclusions'),
-        array('154', 'custom_schedule_details'),
+		array('154', 'custom_schedule_details'),
         array('140', 'image_1'),
         array('141', 'image_2'),
         array('142', 'image_3'),
@@ -51,9 +51,9 @@ function update_event_acf($entry, $form, $post_id) {
         array('93', 'technical_setup'),
         array('108', 'basic_skills'),
         array('109', 'skills_taught'),
-        array('148', 'public_email'),
-        array('152', 'attendee_communication_email'),
-        array('135', 'webinar_link')
+		array('148', 'public_email'),
+		array('152', 'attendee_communication_email'),
+		array('135', 'webinar_link')
     );
     //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
@@ -91,16 +91,17 @@ function update_event_acf($entry, $form, $post_id) {
 
 // for fields we want to use as filters, map them to an event custom field rather than an acf
 function update_event_additional_fields($entry, $form, $post_id) {
-    $ageData = GFAPI::get_field($form, 73);
-    // checkboxes are set with a decimal point for each selection so theisset in entry doesn't work
-    if (isset($ageData->type)) {
-        if ($ageData->type == 'checkbox' || ($ageData->type == 'post_custom_field' && $ageData->inputType == 'checkbox')) {
-            $checked = str_replace(", ", "|", $ageData->get_value_export($entry, $post_id, true));
-            //having to use these damn custom names stops this from being very extendable/dynamic
-            update_post_meta($post_id, "_ecp_custom_2", $checked);
-        }
-    }
+	$ageData = GFAPI::get_field($form, 73);
+	// checkboxes are set with a decimal point for each selection so theisset in entry doesn't work
+	if (isset($ageData->type)) {
+		if ($ageData->type == 'checkbox' || ($ageData->type == 'post_custom_field' && $ageData->inputType == 'checkbox')) {
+			$checked = str_replace(", ", "|", $ageData->get_value_export($entry, $post_id, true));
+			//having to use these damn custom names stops this from being very extendable/dynamic
+			update_post_meta($post_id, "_ecp_custom_3", $checked);
+		}
+	}
 }
+
 
 function event_organizer($entry) {
     global $wpdb;
@@ -137,7 +138,7 @@ function update_organizer_data($entry, $form, $organizerData, $post_id) {
         $num++;
     }
     update_field("social_links", $repeater, $organizer_id);
-    update_field("facilitator_info", $entry['150'], $organizer_id);
+	update_field("facilitator_info", $entry['150'], $organizer_id);
 
     $organizerArgs = array("Website" => $entry['128']);
     tribe_update_organizer($organizer_id, $organizerArgs);
@@ -176,7 +177,7 @@ function update_ticket_data($entry, $post_id) {
     } else {
         $woo_stock = $ticket->capacity;
     }
-
+    
     tribe_tickets_update_capacity($ticket->ID, $ticket->capacity);
     $global_stock = new Tribe__Tickets__Global_Stock($post_id);
     $global_stock->disable();
@@ -184,18 +185,18 @@ function update_ticket_data($entry, $post_id) {
     update_post_meta($post_id, '_tribe_ticket_capacity', $ticket->capacity);
     update_post_meta($post_id, '_tribe_ticket_use_global_stock', 0);
     update_post_meta($post_id, '_tribe_ticket_global_stock_level', $woo_stock);
-
+    
     update_post_meta($ticket->ID, '_stock', $woo_stock);
     update_post_meta($ticket->ID, '_stock_status', "instock"); //because tickets were showing up with stock, but still the outofstock flag in woocommerce
 }
 
 function event_post_meta($entry, $form, $post_id) {
-    $tagArray = array();
-    foreach ($entry as $key => $value) {
-        if (strpos($key, "50.") === 0) {
-            $tagArray[] = $value;
-        }
-    }
+	$tagArray = array();
+	foreach( $entry as $key => $value ) {
+		if( strpos($key, "50.") === 0 ) {
+			$tagArray[] = $value;
+		}
+	}
     // Set the taxonomies    
     wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
     wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
@@ -206,45 +207,46 @@ function event_post_meta($entry, $form, $post_id) {
 function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
     $recurrence_type = $entry['130'];
     $end_count = $end_recurring->diff($start_date)->days;
-    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+	$days = array('Monday', 'Tuesday', 'Wednesday','Thursday','Friday', 'Saturday', 'Sunday');
     if ($recurrence_type == "Every Week") {
         $end_count = floor($end_count / 7) + 1;
-        $recurrence_type = "weekly";
+		$recurrence_type = "weekly";
     } else if ($recurrence_type == "Every Month") {
         $end_count = countMonths($entry['4'], $entry['129']);
-        $recurrence_type = "monthly";
+		$recurrence_type = "monthly";
     } else {
-        $recurrence_type = "daily";
-    }
+		$recurrence_type = "daily";
+	}
     /* This is code that would create a recurring event, but we'll fake that instead
-      $recurrence_data = array(
-      'recurrence' => array(
-      'rules' => array(
-      array(
-      'type' => $entry['130'],
-      'end-type' => 'on',
-      'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
-      'end-count' => $end_count, // this is what is actually ending the series
-      'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
-      'EventEndDate' => $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
-      ),
-      ),
-      ),
-      );
-      $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
-      $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data); */
-    if ($entry['100'] == "no") {
-        update_field("number_of_sessions", $end_count, $post_id);
-        update_field("recurrence_type", strtolower($recurrence_type), $post_id);
-    } else { // if this gets edited later to not be a recurring event, we're going to want to clear those fields
-        if (get_field('number_of_sessions', $post_id)) {
-            update_field("number_of_sessions", "", $post_id);
-        }
-        if (get_field('recurrence_type', $post_id)) {
-            update_field("recurrence_type", "", $post_id);
-        }
-    }
+	$recurrence_data = array(
+        'recurrence' => array(
+            'rules' => array(
+                array(
+                    'type' => $entry['130'],
+                    'end-type' => 'on',
+                    'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
+                    'end-count' => $end_count, // this is what is actually ending the series
+                    'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
+                    'EventEndDate' => $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
+                ),
+            ),
+        ),
+    );
+	$recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
+    $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data);*/
+	if ($entry['100'] == "no") {
+		update_field("number_of_sessions", $end_count, $post_id);
+		update_field("recurrence_type", strtolower($recurrence_type), $post_id);
+	} else { // if this gets edited later to not be a recurring event, we're going to want to clear those fields
+		if (get_field('number_of_sessions', $post_id)) {
+			update_field("number_of_sessions", "", $post_id);
+		}
+		if (get_field('recurrence_type', $post_id)) {
+			update_field("recurrence_type", "", $post_id);
+		}
+	}
 }
+
 
 function get_event_attendees($event_id) {
     $attendee_list = Tribe__Tickets__Tickets::get_event_attendees($event_id);

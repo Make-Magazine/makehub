@@ -641,3 +641,10 @@
 	background-color: #005e9a;
 	border-color: #005e9a;
 }
+
+.essb_links.essb_displayed_shortcode {
+	margin-top: 0px;
+	.essb_links_list li {
+		width: 14.25%;
+	}
+}

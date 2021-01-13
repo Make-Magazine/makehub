@@ -1,4 +1,15 @@
 <?php
+/**
+ * Custom Subscribe Design Builder
+ * 
+ * Generate a custom code for the subscribe user form design. The function is called and used only if the
+ * subscribe module is active and user design is called on site
+ * 
+ * @package EasySocialShareButtons
+ * @since 6.0
+ * @author appscreo <http://codecanyon.net/user/appscreo/portfolio>
+ */
+
 if (!function_exists('essb_user_subscribe_form_design')) {
 
 	/**
@@ -15,14 +26,14 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$output = '';
 
 		$default_texts = array(
-				"title" => __('Join our list', 'essb'),
-				"text" => __('Subscribe to our mailing list and get interesting stuff and updates to your email inbox.', 'essb'),
-				"email" => __('Enter your email here', 'essb'),
-				"name" => __('Enter your name here', 'essb'),
-				"button" => __('Join Now', 'essb'),
-				"footer" => __('We respect your privacy and take protecting it seriously', 'essb'),
-				"success" => __('Thank you for subscribing.', 'essb'),
-				"error" => __('Something went wrong.', 'essb')
+				"title" => esc_html__('Join our list', 'essb'),
+				"text" => esc_html__('Subscribe to our mailing list and get interesting stuff and updates to your email inbox.', 'essb'),
+				"email" => esc_html__('Enter your email here', 'essb'),
+				"name" => esc_html__('Enter your name here', 'essb'),
+				"button" => esc_html__('Join Now', 'essb'),
+				"footer" => esc_html__('We respect your privacy and take protecting it seriously', 'essb'),
+				"success" => esc_html__('Thank you for subscribing.', 'essb'),
+				"error" => esc_html__('Something went wrong.', 'essb')
 		);
 
 		/**
@@ -102,7 +113,7 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$output .= '<div class="essb-subscribe-form-content essb-userform '.esc_attr($form_classes).'" data-position="'.esc_attr($position).'" data-design="'.esc_attr($design).'">';
 
 		if ($has_image && ($form_image_location == 'top' || $form_image_location == 'left')) {
-			$output .= '<div class="essb-userform-imagearea"><img src="'.esc_url($form_image).'"/></div>';
+		    $output .= '<div class="essb-userform-imagearea">'.essb_user_subscribe_form_image_html($form_image, $form_title, $subscribe_design).'</div>';			
 		}
 
 
@@ -113,15 +124,15 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$output .= '<div class="essb-subscribe-form-content-top">';
 
 		if ($form_title != '') {
-			$output .= '<div class="essb-subscribe-form-content-title">'.$form_title.'</div>';
+		    $output .= '<div class="essb-subscribe-form-content-title">'.ESSBNetworks_Subscribe::sanitize_html($form_title).'</div>';
 		}
 
 		if ($has_image && $form_image_location == 'below_heading') {
-			$output .= '<div class="essb-userform-imagearea"><img src="'.esc_url($form_image).'"/></div>';
+		    $output .= '<div class="essb-userform-imagearea">'.essb_user_subscribe_form_image_html($form_image, $form_title, $subscribe_design).'</div>';
 		}
 
 		if ($form_text != '') {
-			$output .= '<p class="essb-subscribe-form-content-text">'.$form_text.'</p>';
+		    $output .= '<p class="essb-subscribe-form-content-text">'.ESSBNetworks_Subscribe::sanitize_html($form_text).'</p>';
 		}
 
 		$output .= '</div>';
@@ -155,9 +166,9 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		</svg>
 		</div>';
 
-		$output .= '<p class="essb-subscribe-form-content-success essb-subscribe-form-result-message" style="display: none;">'.$form_ok_message.'</p>';
-		$output .= '<p class="essb-subscribe-form-content-error essb-subscribe-form-result-message"  style="display: none;">'.$form_error_message.'</p>';
-		$output .= '<p class="essb-subscribe-form-content-footer">'.$form_footer.'</p>';
+		$output .= '<p class="essb-subscribe-form-content-success essb-subscribe-form-result-message" style="display: none;">'.ESSBNetworks_Subscribe::sanitize_html($form_ok_message).'</p>';
+		$output .= '<p class="essb-subscribe-form-content-error essb-subscribe-form-result-message"  style="display: none;">'.ESSBNetworks_Subscribe::sanitize_html($form_error_message).'</p>';
+		$output .= '<p class="essb-subscribe-form-content-footer">'.ESSBNetworks_Subscribe::sanitize_html($form_footer).'</p>';
 
 		$output .= '<div class="clear"></div>';
 
@@ -168,12 +179,102 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		}
 
 		if ($has_image && $form_image_location == 'right') {
-			$output .= '<div class="essb-userform-imagearea"><img src="'.esc_url($form_image).'"/></div>';
+		    $output .= '<div class="essb-userform-imagearea">'.essb_user_subscribe_form_image_html($form_image, $form_title, $subscribe_design).'</div>';
 		}
 
 		$output .= '</div>';
 
 		return $output;
+	}
+	
+	/**
+	 * Generate responsive image HTML code
+	 * 
+	 * @since 7.3.2
+	 * 
+	 * @param string $image_url
+	 * @param string $title
+	 * @param array $options
+	 * @return void|string
+	 */
+	function essb_user_subscribe_form_image_html($image_url = '', $title = '', $options = array()) {
+	    if ($image_url == '') { return; }
+	    
+	    $form_image_width = stripslashes(essb_array_value('image_width', $options));
+	    $form_image_height = stripslashes(essb_array_value('image_height', $options));
+	    
+	    if ($form_image_height != '') {
+	        $form_image_height = str_replace('px', '', $form_image_height);
+	        $form_image_height = str_replace('%', '', $form_image_height);
+	        $form_image_height = trim($form_image_height);
+	    }
+	    
+	    if ($form_image_width != '') {
+	        $form_image_width = str_replace('px', '', $form_image_width);
+	        $form_image_width = str_replace('%', '', $form_image_width);
+	        $form_image_width = trim($form_image_width);
+	    }
+	    
+	    $show_image_w = '';
+	    $show_image_h = '';
+	    
+	    $image_id = attachment_url_to_postid($image_url);
+	    $image_set_alt = $title;
+	    
+	    $image_set_srcset=  '';
+	    if ($image_id != '' && $image_id != 0) {
+	        $image_has_alt = get_post_meta( $image_id, '_wp_attachment_image_alt', true);
+	        if ($image_has_alt != '') {
+	            $image_set_alt = $image_has_alt;
+	        }
+	        
+	        $image_set_srcset = wp_get_attachment_image_srcset($image_id, $form_image_height != '' && $form_image_width != '' ? array($form_image_width, $form_image_height) : 'full');
+	        
+	        $thumb = wp_get_attachment_image_src( $image_id, 'full' );
+	        if ( ! empty( $thumb[1] ) ) {
+	            $show_image_w = $thumb[1];
+	        }
+
+	        if ( ! empty( $thumb[2] ) ) {
+	            $show_image_h = $thumb[2];
+	        }
+	    }
+	    
+	    if ($form_image_height != '' && intval($form_image_height) != 0) {
+	        $show_image_h = $form_image_height;
+	    }
+
+	    if ($form_image_width != '' && intval($form_image_width) != 0) {
+	        $show_image_w = $form_image_width;
+	    }
+	    
+	    /**
+	     * Clear image title from shortcodes or HTML content
+	     */
+	    $image_set_alt = preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $image_set_alt);
+	    $image_set_alt = trim(strip_shortcodes(addslashes($image_set_alt)));
+	    
+	    
+	    $image_props = array();
+	    $image_props[] = 'src="' . esc_url($image_url) . '"';
+	    
+	    if ($image_set_alt != '') {
+	        $image_props[] = 'alt="' . esc_attr($image_set_alt) . '"';
+	    }
+	    
+	    if ($image_set_srcset != '') {
+	        $image_props[] = 'srcset="' . $image_set_srcset . '"';
+	    }
+	    
+	    if ($show_image_h != '') {
+	        $image_props[] = 'height="' . $show_image_h . '"';
+	    }
+	    
+	    if ($show_image_w != '') {
+	        $image_props[] = 'width="' . $show_image_w . '"';
+	    }
+	    
+	    return '<img '.implode(' ', $image_props). '/>';
 	}
 
 	function essb_user_subscribe_form_custom_css($salt = '', $design = '', $design_class = '', $options = '') {
@@ -211,31 +312,31 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		}
 
 		if ($padding != '') {
-			$core_form_styles .= 'padding:'.$padding.'!important;';
+			$core_form_styles .= 'padding:'.esc_attr($padding).'!important;';
 		}
 
 
 		if ($textcolor != '') {
-			$core_form_styles .= 'color:'.$textcolor.'!important;';
+			$core_form_styles .= 'color:'.esc_attr($textcolor).'!important;';
 		}
 
 		if ($border_color != '' && $border_width != '') {
-			$core_form_styles .= 'border: '.$border_width.' solid '.$border_color.'!important;';
+			$core_form_styles .= 'border: '.esc_attr($border_width).' solid '.esc_attr($border_color).'!important;';
 		}
 
 		if ($image != '' && $image_location == 'background') {
-			$core_form_styles = 'background: url('.$image.')!important;background-size: cover; background-position: center; background-repeat: no-repeat;';
+			$core_form_styles = 'background: url('.esc_url($image).')!important;background-size: cover; background-position: center; background-repeat: no-repeat;';
 		}
 
 		$glow_color = stripslashes(essb_array_value('glow_color', $options));
 		$glow_size = stripslashes(essb_array_value('glow_size', $options));
 
 		if ($glow_color != '' && $glow_size != '') {
-			$core_form_styles .= 'box-shadow: 0 0 '.$glow_size.'px 0 '.$glow_color;
+			$core_form_styles .= 'box-shadow: 0 0 '.esc_attr($glow_size).'px 0 '.esc_attr($glow_color);
 		}
 
 		if ($border_radius != '') {
-			$core_form_styles .= 'border-radius:'.$border_radius.';-webkit-border-radius:'.$border_radius.';';
+			$core_form_styles .= 'border-radius:'.esc_attr($border_radius).';-webkit-border-radius:'.esc_attr($border_radius).';';
 		}
 
 		// adding core form styles
@@ -250,12 +351,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		if ($heading_fontsize != '' || $heading_fontweight != '' || $headingcolor != '') {
 			$heading_styles = '.'.$design_class.' .essb-subscribe-form-content-title {';
 
-			if ($heading_fontsize != '') { $heading_styles .= 'font-size:'.$heading_fontsize.';'; }
+			if ($heading_fontsize != '') { $heading_styles .= 'font-size:'.esc_attr($heading_fontsize).';'; }
 			if ($heading_fontweight != '') {
-				$heading_styles .= 'font-weight:'.$heading_fontweight.'!important;';
+				$heading_styles .= 'font-weight:'.esc_attr($heading_fontweight).'!important;';
 			}
 			if ($headingcolor != '') {
-				$heading_styles .= 'color:'.$headingcolor.'!important;';
+				$heading_styles .= 'color:'.esc_attr($headingcolor).'!important;';
 			}
 
 			$heading_styles .= '}';
@@ -271,20 +372,20 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 			$text_styles = '.'.$design_class.' .essb-subscribe-form-content-text {';
 
 			if ($text_fontsize != '') {
-				$text_styles .= 'font-size:'.$text_fontsize.'!important;';
+				$text_styles .= 'font-size:'.esc_attr($text_fontsize).'!important;';
 			}
 			if ($text_fontweight != '') {
-				$text_styles .= 'font-weight:'.$text_fontweight.'!important;';
+				$text_styles .= 'font-weight:'.esc_attr($text_fontweight).'!important;';
 			}
 			if ($textcolor != '') {
-				$text_styles .= 'color:'.$textcolor.'!important;';
+				$text_styles .= 'color:'.esc_attr($textcolor).'!important;';
 			}
 
 			$text_styles .= '}';
 
 			if ($textcolor != '') {
-				$text_styles .= '.'.$design_class.' .essb-subscribe-form-result-message {color:'.$textcolor.'!important;}';
-				$text_styles .= '.'.$design_class.' .essb-subscribe-loader svg path, .'.$design_class.' .essb-subscribe-loader svg rect {fill:'.$textcolor.'!important;}';
+				$text_styles .= '.'.$design_class.' .essb-subscribe-form-result-message {color:'.esc_attr($textcolor).'!important;}';
+				$text_styles .= '.'.$design_class.' .essb-subscribe-loader svg path, .'.esc_attr($design_class).' .essb-subscribe-loader svg rect {fill:'.$textcolor.'!important;}';
 			}
 
 			$output .= $text_styles;
@@ -298,13 +399,13 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 			$footer_styles = '.'.$design_class.' .essb-subscribe-form-content-footer {';
 
 			if ($footer_fontsize != '') {
-				$footer_styles .= 'font-size:'.$footer_fontsize.'!important;';
+				$footer_styles .= 'font-size:'.esc_attr($footer_fontsize).'!important;';
 			}
 			if ($footer_fontweight != '') {
-				$footer_styles .= 'font-weight:'.$footer_fontweight.'!important;';
+				$footer_styles .= 'font-weight:'.esc_attr($footer_fontweight).'!important;';
 			}
 			if ($footercolor != '') {
-				$footer_styles .= 'color:'.$footercolor.'!important;';
+				$footer_styles .= 'color:'.esc_attr($footercolor).'!important;';
 			}
 
 			$footer_styles .= '}';
@@ -315,17 +416,17 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		// alignment code
 		$align = stripslashes(essb_array_value('align', $options));
 		if ($align != '') {
-			$output .= '.'.$design_class.' .essb-subscribe-form-content-footer, .'.$design_class.' .essb-subscribe-form-content-text, .'.$design_class.' .essb-subscribe-form-content-title { text-align: '.$align.'!important; }';
+			$output .= '.'.esc_attr($design_class).' .essb-subscribe-form-content-footer, .'.esc_attr($design_class).' .essb-subscribe-form-content-text, .'.esc_attr($design_class).' .essb-subscribe-form-content-title { text-align: '.esc_attr($align).'!important; }';
 		}
 
 		// input styles
 		$fields_bg = stripslashes(essb_array_value('fields_bg', $options));
 		$fields_text = stripslashes(essb_array_value('fields_text', $options));
 		if ($fields_bg != '' || $fields_text != '') {
-			$output .= '.'.$design_class.' .essb-userform-field { ';
-			if ($fields_bg != '') { $output .= 'background:'.$fields_bg.'!important;'; }
+			$output .= '.'.esc_attr($design_class).' .essb-userform-field { ';
+			if ($fields_bg != '') { $output .= 'background:'.esc_attr($fields_bg).'!important;'; }
 			if ($fields_text != '') {
-				$output .= 'color:'.$fields_text.'!important;';
+				$output .= 'color:'.esc_attr($fields_text).'!important;';
 			}
 			$output .= '}';
 		}
@@ -333,12 +434,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$input_fontsize = stripslashes(essb_array_value('input_fontsize', $options));
 		$input_fontweight = stripslashes(essb_array_value('input_fontweight', $options));
 		if ($input_fontsize != '' || $input_fontweight != '') {
-			$output .= '.'.$design_class.' .essb-userform-field { ';
+			$output .= '.'.esc_attr($design_class).' .essb-userform-field { ';
 			if ($input_fontsize != '') {
-				$output .= 'font-size:'.$input_fontsize.'!important;';
+				$output .= 'font-size:'.esc_attr($input_fontsize).'!important;';
 			}
 			if ($input_fontweight != '') {
-				$output .= 'font-weight:'.$input_fontweight.'!important;';
+				$output .= 'font-weight:'.esc_attr($input_fontweight).'!important;';
 			}
 			$output .= '}';
 		}
@@ -347,12 +448,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$button_fontsize = stripslashes(essb_array_value('button_fontsize', $options));
 		$button_fontweight = stripslashes(essb_array_value('button_fontweight', $options));
 		if ($button_fontsize != '' || $button_fontweight != '') {
-			$output .= '.'.$design_class.' .essb-userform-button { ';
+			$output .= '.'.esc_attr($design_class).' .essb-userform-button { ';
 			if ($button_fontsize != '') {
-				$output .= 'font-size:'.$button_fontsize.'!important;';
+				$output .= 'font-size:'.esc_attr($button_fontsize).'!important;';
 			}
 			if ($button_fontweight != '') {
-				$output .= 'font-weight:'.$button_fontweight.'!important;';
+				$output .= 'font-weight:'.esc_attr($button_fontweight).'!important;';
 			}
 			$output .= '}';
 		}
@@ -362,12 +463,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$button_bg = stripslashes(essb_array_value('button_bg', $options));
 		$button_text = stripslashes(essb_array_value('button_text', $options));
 		if ($button_bg != '' || $button_text != '') {
-			$output .= '.'.$design_class.' .essb-userform-button { ';
+			$output .= '.'.esc_attr($design_class).' .essb-userform-button { ';
 			if ($button_bg != '') {
-				$output .= 'background:'.$button_bg.'!important;';
+				$output .= 'background:'.esc_attr($button_bg).'!important;';
 			}
 			if ($button_text != '') {
-				$output .= 'color:'.$button_text.'!important;';
+				$output .= 'color:'.esc_attr($button_text).'!important;';
 			}
 			$output .= '}';
 		}
@@ -376,12 +477,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$image_padding = stripslashes(essb_array_value('image_padding', $options));
 		$image_bgcolor = stripslashes(essb_array_value('image_bgcolor', $options));
 		if ($image_padding != '' || $image_bgcolor != '') {
-			$output .= '.'.$design_class.' .essb-userform-imagearea { ';
+			$output .= '.'.esc_attr($design_class).' .essb-userform-imagearea { ';
 			if ($image_padding != '') {
-				$output .= 'padding:'.$image_padding.'!important;';
+				$output .= 'padding:'.esc_attr($image_padding).'!important;';
 			}
 			if ($image_bgcolor != '') {
-				$output .= 'background:'.$image_bgcolor.'!important;';
+				$output .= 'background:'.esc_attr($image_bgcolor).'!important;';
 			}
 			$output .= '}';
 		}
@@ -389,12 +490,12 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 		$form_image_width = stripslashes(essb_array_value('image_width', $options));
 		$form_image_height = stripslashes(essb_array_value('image_height', $options));
 		if ($form_image_width != '' || $form_image_height != '') {
-			$output .= '.'.$design_class.' .essb-userform-imagearea img { ';
+			$output .= '.'.esc_attr($design_class).' .essb-userform-imagearea img { ';
 			if ($form_image_width != '') {
-				$output .= 'width:'.$form_image_width.'!important;';
+				$output .= 'width:'.esc_attr($form_image_width).'!important;';
 			}
 			if ($form_image_height != '') {
-				$output .= 'height:'.$form_image_height.'!important;';
+				$output .= 'height:'.esc_attr($form_image_height).'!important;';
 			}
 
 			$output .= 'display: inline-block; padding: 0; margin: 0 auto;';
@@ -404,6 +505,9 @@ if (!function_exists('essb_user_subscribe_form_design')) {
 
 
 		if ($output != '') {
+			/**
+			 * Adding the custom form styles based on the user optimization settings
+			 */
 			$output = '<style type="text/css">'.$output.'</style>';
 		}
 

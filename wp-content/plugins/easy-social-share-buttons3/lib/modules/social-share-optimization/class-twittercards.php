@@ -68,7 +68,7 @@ class ESSB_TwitterCards {
 		$metatag_key = apply_filters( 'essb_twitter_metatag_key', 'name' );
 	
 		// Output meta.
-		echo '<meta ', esc_attr( $metatag_key ), '="twitter:', esc_attr( $name ), '" content="', $value, '" />', "\n";
+		echo '<meta ', esc_attr( $metatag_key ), '="twitter:', esc_attr( $name ), '" content="', esc_attr($value), '" />', "\n";
 	}
 	
 	public function card() {
@@ -94,32 +94,27 @@ class ESSB_TwitterCards {
 	
 	public function details() {
 		if (is_single() || is_page()) {
-			$twitter_description =  get_post_meta(get_the_ID(),'essb_post_twitter_desc',true);
-			$twitter_title =  get_post_meta(get_the_ID(),'essb_post_twitter_title',true);
-			$twitter_image =  get_post_meta(get_the_ID(),'essb_post_twitter_image',true);
-
-			
-			if (empty($twitter_description)) {
-				$twitter_description = $this->meta_details->description();
-			}
-			if (empty($twitter_title)) {
-				$twitter_title = $this->meta_details->title();
-			}
-			if (empty($twitter_image)) {
-				$twitter_image = $this->meta_details->image();
-			}
+		    $post_details = ESSB_Runtime_Cache::get_post_sharing_data(get_the_ID());
+		    
+		    $twitter_description = $post_details->twittercard_value('description');
+		    $twitter_title = $post_details->twittercard_value('title');
+		    $twitter_image = $post_details->twittercard_value('image');
+		    $twitter_url = $post_details->twittercard_value('url');
+		    
 			
 			if (!empty($twitter_title)) {
+			    $twitter_title = esc_html( wp_strip_all_tags( stripslashes( $twitter_title ), true ) );
 				$this->output_metatag('title', $twitter_title);
 				
 			}
 			if (!empty($twitter_description)) {
-				$this->output_metatag('description', $twitter_description);				
+				$this->output_metatag('description', esc_attr($twitter_description));				
 			}
-			$this->output_metatag('url', $this->meta_details->url());
+			
+			$this->output_metatag('url', $twitter_url);
 			
 			if (!empty($twitter_image) && is_string($twitter_image) && $this->image_card) {
-				$this->output_metatag('image:src', $twitter_image);
+				$this->output_metatag('image:src', esc_url($twitter_image));
 			}
 		}
 	}

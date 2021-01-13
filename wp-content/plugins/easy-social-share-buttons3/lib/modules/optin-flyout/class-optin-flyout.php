@@ -96,7 +96,7 @@ class ESSBOptinFlyout {
 	
 	public function load_assets() {
 		if (function_exists ( 'essb_resource_builder' )) {
-			essb_resource_builder ()->add_static_resource_footer ( ESSB3_OFOF_PLUGIN_URL . '/assets/essb-optin-flyout.min.js', 'essb-optin-flyout', 'js' );
+			essb_resource_builder ()->add_static_resource_footer ( ESSB3_OFOF_PLUGIN_URL . 'assets/essb-optin-flyout.min.js', 'essb-optin-flyout', 'js' );
 		}
 	}
 	
@@ -170,7 +170,7 @@ class ESSBOptinFlyout {
 			$of_time_bgcolor = $this->option_value ( 'of_time_bgcolor' );
 			
 			if ($ofof_time_delay != '') {
-				$callback = ' data-delay="' . $ofof_time_delay . '" data-single="' . $ofof_single . '"';
+				$callback = ' data-delay="' . esc_attr($ofof_time_delay) . '" data-single="' . esc_attr($ofof_single) . '"';
 				$this->draw_form_code ( 'time', $of_time_design, $of_time_bgcolor, $callback, $ofof_creditlink );
 			}
 		}
@@ -181,7 +181,7 @@ class ESSBOptinFlyout {
 			$of_scroll_bgcolor = $this->option_value ( 'of_scroll_bgcolor' );
 			
 			if ($ofof_scroll_percent != '') {
-				$callback = ' data-scroll="' . $ofof_scroll_percent . '" data-single="' . $ofof_single . '"';
+				$callback = ' data-scroll="' . esc_attr($ofof_scroll_percent) . '" data-single="' . esc_attr($ofof_single) . '"';
 				$this->draw_form_code ( 'scroll', $of_scroll_design, $of_scroll_bgcolor, $callback, $ofof_creditlink );
 			}
 		}
@@ -189,7 +189,7 @@ class ESSBOptinFlyout {
 		if ($this->option_bool_value ( 'ofof_exit' )) {
 			$of_exit_design = $this->option_value ( 'of_exit_design' );
 			$of_exit_bgcolor = $this->option_value ( 'of_exit_bgcolor' );
-			$callback = ' data-exit="1" data-single="' . $ofof_single . '"';
+			$callback = ' data-exit="1" data-single="' . esc_attr($ofof_single) . '"';
 			$this->draw_form_code ( 'exit', $of_exit_design, $of_exit_bgcolor, $callback, $ofof_creditlink );
 		
 		}
@@ -198,11 +198,14 @@ class ESSBOptinFlyout {
 	public function draw_form_code($event = '', $design = '', $overlay_color = '', $event_fire = '', $credit_link = false) {
 		$output = '';
 		
-		$affiliate_user = $this->option_value ( 'ofof_creditlink_user' );
-		if ($affiliate_user == '') {
-			$affiliate_user = 'appscreo';
+		/**
+		 * @since 7.3.1
+		 */
+		$ofof_deactivate_mobile = $this->option_bool_value('ofof_deactivate_mobile');
+		if (!$ofof_deactivate_mobile && essb_option_bool_value('subscribe_css_deactivate_mobile')) {
+		    $ofof_deactivate_mobile = true;
 		}
-		
+				
 		$close_type = $this->option_value ( 'of_' . $event . '_close' );
 		$close_color = $this->option_value ( 'of_' . $event . '_closecolor' );
 		$close_text = $this->option_value ( 'of_' . $event . '_closetext' );
@@ -211,7 +214,7 @@ class ESSBOptinFlyout {
 		
 		$css_color = '';
 		if ($close_color != '') {
-			$css_color = ' style="color:' . $close_color . '!important;"';
+			$css_color = ' style="color:' . esc_attr($close_color) . '!important;"';
 		}
 		
 		if ($close_type == '') {
@@ -219,13 +222,13 @@ class ESSBOptinFlyout {
 		}
 		
 		if ($close_text == '') {
-			$close_text = __ ( "No thanks. I don't want.", 'easy-optin-flyout' );
+			$close_text = esc_html__( "No thanks. I don't want.", 'easy-optin-flyout' );
 		}
 		
-		$output .= '<div class="essb-optinflyout essb-optinflyout-' . esc_attr($position) . ' essb-optinflyout-' . esc_attr($event) . '" ' . $event_fire . ' ' . ($overlay_color != '' ? ' style="background-color:' . esc_attr($overlay_color) . '!important;"' : '') . '>';
+		$output .= '<div class="essb-optinflyout essb-optinflyout-' . esc_attr($position) . ' essb-optinflyout-' . esc_attr($event) . ($ofof_deactivate_mobile ? ' essb-subscribe-mobile-hidden' : '') . '" ' . $event_fire . ' ' . ($overlay_color != '' ? ' style="background-color:' . esc_attr($overlay_color) . '!important;"' : '') . '>';
 		
 		if ($close_type == 'icon') {
-			$output .= '<div class="essb-optinflyout-close essb-optinflyout-closeicon" ' . esc_attr($css_color) . '><i class="essb_icon_close"></i></div>';
+			$output .= '<div class="essb-optinflyout-close essb-optinflyout-closeicon" ' . $css_color . '><i class="essb_icon_close" ' . $css_color . '></i></div>';
 		}
 		
 		$output .= do_shortcode ( '[easy-subscribe design="' . $design . '" mode="mailchimp" conversion="flyout-'.$event.'"]' );
@@ -233,7 +236,7 @@ class ESSBOptinFlyout {
 			$output .= '<div class="essb-optinflyout-close essb-optinflyout-closetext" ' . esc_attr($css_color) . '>' . $close_text . '</div>';
 		}
 		if ($credit_link) {
-			$output .= '<div class="promo">Powered by <a href="http://codecanyon.net/item/easy-social-share-buttons-for-wordpress/6394476?ref=' . $affiliate_user . '" target="_blank">Best Social Sharing Plugin for WordPress</a> Easy Social Share Buttons</div>';
+			$output .= '<div class="promo">Powered by <a href="http://go.appscreo.com/essb" target="_blank">Best Social Sharing Plugin for WordPress</a> Easy Social Share Buttons</div>';
 		}
 		
 		$output .= '</div>';

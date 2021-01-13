@@ -93,17 +93,13 @@ class ESSBAsyncShareCounters {
 						}
 						$this->counters ['total'] += intval ( isset ( $this->counters [$k] ) ? $this->counters [$k] : 0 );
 					}
-					//else {
-					//	$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
-					//}
+
 					break;
 				case 'pinterest' :
 					$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
 					break;
 				case 'google' :
-					//$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
 					if (essb_option_value('google_counter_type') == 'no') {
-						//$this->counters[$k] = $this->get_google_count_api($url);
 					}
 					else {
 						if (! $recover_mode) {
@@ -138,7 +134,10 @@ class ESSBAsyncShareCounters {
 					$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
 					break;
 				case 'mwp' :
-					$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
+				    /**
+				     * ManageWP is closed
+				     */
+					$this->counters [$k] = 0;
 					break;
 				case 'xing' :
 					$RollingCurlX->addRequest ( $this->prepare_request_url ( $k, $url ), $post_data, array ($this, 'get_counts' ), array ($k ), $headers );
@@ -179,11 +178,15 @@ class ESSBAsyncShareCounters {
 				$callback_url = 'https://graph.facebook.com/?id='.$url.'&fields=og_object{engagement}';
 				
 				$facebook_token = essb_option_value ( 'facebook_counter_token' );
+				$sharedcount_token = essb_option_value('sharedcount_token');
 				if ($facebook_token != '') {
 					$callback_url = 'https://graph.facebook.com/?id=' . $url . '&access_token=' . sanitize_text_field ( $facebook_token );
 				}
 				if (essb_option_value('facebook_counter_api') == 'api2' && $facebook_token != '') {
-					$callback_url = 'https://graph.facebook.com/v3.0/?fields=engagement&id='.$url.'&access_token='.sanitize_text_field($facebook_token);
+					$callback_url = 'https://graph.facebook.com/?fields=engagement&id='.$url.'&access_token='.sanitize_text_field($facebook_token);
+				}
+				if (essb_option_value('facebook_counter_api') == 'sharedcount' && $sharedcount_token != '') {
+					$callback_url = 'https://api.sharedcount.com/v1.0/?apikey=' . sanitize_text_field( $sharedcount_token ) . '&url='.$url;
 				}
 				break;
 			case 'twitter' :
@@ -266,7 +269,6 @@ class ESSBAsyncShareCounters {
 	$options = array(
 			CURLOPT_RETURNTRANSFER	=> true, 	// return web page
 			CURLOPT_HEADER 			=> false, 	// don't return headers
-			//CURLOPT_FOLLOWLOCATION	=> true, 	// follow redirects
 			CURLOPT_ENCODING	 	=> "", 		// handle all encodings
 			CURLOPT_USERAGENT	 	=> isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : 'essb', 	// who am i
 			CURLOPT_AUTOREFERER 	=> true, 	// set referer on redirect
@@ -299,7 +301,6 @@ class ESSBAsyncShareCounters {
 	curl_setopt_array($ch, $options);
 	// force ip v4 - uncomment this
 	try {
-		//print 'curl state = '.$counter_curl_fix;
 		if ($counter_curl_fix != 'true') {
 			curl_setopt( $ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
 		}
@@ -364,6 +365,13 @@ class ESSBAsyncShareCounters {
 					
 						$result = $likes + $comments + $shares + $comments_plugin;						
 					}
+					else if (essb_option_value('facebook_counter_api') == 'sharedcount') {
+						if ( isset( $data_parsers->Facebook )) {
+							if ( isset( $data_parsers->Facebook->total_count ) ) {
+								$result = intval( $data_parsers->Facebook->total_count );
+							}
+						}
+					}
 					else {
 						$result = isset( $data_parsers['og_object']['engagement']['count']) ? intval ( $data_parsers['og_object']['engagement']['count'] ) : 0;
 					}
@@ -412,14 +420,12 @@ class ESSBAsyncShareCounters {
 					$content = $data;
 					if($content) {
 						if($format == 'json') {
-							//print "result ".$content;
 							$json = json_decode($content,true);
 					
 							if (isset($json['data']) && isset($json['data']['children'])) {
 								foreach($json['data']['children'] as $child) { // we want all children for this example
 									$ups+= (int) $child['data']['ups'];
 									$downs+= (int) $child['data']['downs'];
-									//$score+= (int) $child['data']['score']; //if you just want to grab the score directly
 								}
 								$score = $ups - $downs;
 							}
@@ -438,7 +444,11 @@ class ESSBAsyncShareCounters {
 				case 'ok':
 					$shares = array();
 					try {
-						preg_match( '/^ODKL\.updateCount\(\'odklcnt0\',\'(\d+)\'\);$/i', $data, $shares );
+					    /**
+					     * Updating the API callback from
+					     * preg_match( '/^ODKL\.updateCount\(\'odklcnt0\',\'(\d+)\'\);$/i', $data, $shares );
+					     */
+					    preg_match( '/^ODKL\.updateCount\(\'\',\'(\d+)\'\);$/i', $data, $shares );					    
 					
 						$result = (int)$shares[ 1 ];
 					}
@@ -447,25 +457,7 @@ class ESSBAsyncShareCounters {
 					}
 					break;
 				case 'mwp':
-					$shares = array();
-					
-					$count = 0;
-					preg_match( '/<form(.*?)<\/form>/s', $data, $shares );
-					
-					if (count($shares) > 0) {
-						$current_result = $shares[1];
-					
-						$second_parse = array();
-						preg_match( '/<div>(.*?)<\/div>/s', $current_result, $second_parse );
-					
-						$value = $second_parse[1];
-						$value = str_replace("<span>", "", $value);
-						$value = str_replace("</span>", "", $value);
-					
-						$count = $value;
-					}
-					
-					$result = $count;
+					$result = 0;
 					break;
 				case 'xing':
 					$shares = array();
