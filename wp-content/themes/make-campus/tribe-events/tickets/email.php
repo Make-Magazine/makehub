@@ -522,9 +522,8 @@
                                                     echo 'Your event will take place here: <a href="' . $event_link . '">' . $event_link . '</a><br/>';
                                                 }
                                                 ?>                                                
-                                                Check the <a href="<?php echo esc_url($event_link); ?>">event listing</a> for your material list and other information.<br/><br/>                                    
-                                            </div>
-                                            ?>
+                                                Check the <a href="<?php echo esc_url($event_link); ?>">event listing</a> for your material list and other information.                                    
+                                            </div>                                            
                                         </td>
                                     </tr>
                                 </table>
