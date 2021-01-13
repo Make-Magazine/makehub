@@ -445,21 +445,6 @@
                                              */
                                             do_action('tribe_tickets_ticket_email_after_details', $ticket, $event);
 
-                                            //add online event link and contact information                                           
-                                            ?>
-                                            <div>
-                                                See the material list in the <a href="<?php echo esc_url($event_link); ?>">event listing</a>.<br/>
-                                                <?php
-                                                 $event_link = get_post_meta($event->ID, 'webinar_link', true);
-                                                 if($event_link==''){
-                                                     echo 'More information and your online event link is coming soon.<br/>';
-                                                 }else{
-                                                     echo 'Your event will take place here: <a href="'.$event_link.'">'.$event_link.'</a><br/>';
-                                                 }
-                                                ?>                                                
-                                                Please email <a href="mailto:makercampus@make.co">makercampus@make.co</a> with any questions.
-                                            </div>
-                                            <?php
                                             if ($venue_name || !empty($organizers)) {
                                                 ?>
                                                 <table class="ticket-venue" border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
@@ -492,7 +477,7 @@
                                                                             <span style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:13px; display:block; margin-bottom:5px;"><?php echo $venue_phone; ?></span>
                                                                             <?php if (!empty($venue_web)): ?>
                                                                                 <a href="<?php echo esc_url($venue_web) ?>" style="color:#006caa !important; display:block; margin:0; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:13px; text-decoration:underline;"><?php echo $venue_web; ?></a>
-            <?php endif ?>
+                                                                            <?php endif ?>
                                                                         </td>
                                                                     </tr>
                                                                 </table>
@@ -504,7 +489,7 @@
                                                             ?>
                                                             <td class="ticket-organizer" valign="top" align="left" width="140" style="padding: 0 !important; width:140px; margin:0 !important;">
                                                                 <h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Facilitator</h6>
-                                                                    <?php foreach ($organizers as $organizer_id) { ?>
+                                                                <?php foreach ($organizers as $organizer_id) { ?>
                                                                     <span
                                                                         style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px; display:block; padding-bottom:5px;"><?php echo tribe_get_organizer_link($organizer_id); ?></span>
                                                                         <?php
@@ -514,23 +499,39 @@
                                                                             ?>
                                                                         <h6 style="color:#909090 !important; margin:0 0 4px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;width:100px;float:left;">Contact</h6>
                                                                         <span><?php echo $email; ?></span>
-                                                                    <?php
+                                                                        <?php
                                                                     }
                                                                 }
                                                                 ?>
                                                             </td>
-            <?php
-        }//end if
-        ?>
+                                                            <?php
+                                                        }//end if
+                                                        ?>
                                                     </tr>
                                                 </table>
-        <?php
-    }//end if
-    ?>
+                                                <?php
+                                            }//end if
+                                            ?>
                                         </td>
                                     </tr>
                                 </table>
-    <?php do_action('tribe_tickets_ticket_email_ticket_bottom', $ticket); ?>
+                                <?php
+                                //add online event link and contact information                                           
+                                ?>
+                                <div style="padding:10px 0">                                    
+                                    <?php
+                                    $event_link = get_post_meta($event->ID, 'webinar_link', true);
+                                    if ($event_link == '') {
+                                        echo 'More information and your online event link is coming soon.<br/>';
+                                    } else {
+                                        echo 'Your event will take place here: <a href="' . $event_link . '">' . $event_link . '</a><br/>';
+                                    }
+                                    ?>                                                
+                                    Check the <a href="<?php echo esc_url($event_link); ?>">event listing</a> for your material list and other information.<br/><br/>
+                                    Please email <a href="mailto:makercampus@make.co">makercampus@make.co</a> with any questions.
+                                </div>
+
+                                <?php do_action('tribe_tickets_ticket_email_ticket_bottom', $ticket); ?>
                                 <table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
                                         <td valign="top" align="left" width="100%" height="30" style="height:30px; background:#ffffff; padding: 0 !important; margin:0 !important;">
