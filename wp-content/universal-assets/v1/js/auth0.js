@@ -12,7 +12,7 @@ window.addEventListener('load', function() {
 
 	var userProfile;
 	var webAuth = new auth0.WebAuth({
-			domain: AUTH0_DOMAIN,
+			domain: AUTH0_CUSTOM_DOMAIN,
 			clientID: AUTH0_CLIENT_ID,
 			redirectUri: AUTH0_CALLBACK_URL,
 			audience: 'https://' + AUTH0_DOMAIN + '/userinfo',
