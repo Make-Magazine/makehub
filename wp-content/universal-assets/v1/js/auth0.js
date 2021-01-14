@@ -50,7 +50,7 @@ window.addEventListener('load', function() {
 			e.preventDefault();
 			clearLocalStorage()
 			//redirect to auth0 logout page
-			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
+			window.location.href = 'https://login.make.co/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		});
 	} else {
 		// otherwise we need a fool proof system to detect if the user is logged in
@@ -189,7 +189,7 @@ window.addEventListener('load', function() {
 		}
 		var data = { 'action': 'mm_wplogout' };
 		jQuery.post(ajax_object.ajax_url, data, function(response) {
-			window.location.href = 'https://makermedia.auth0.com/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
+			window.location.href = 'https://login.make.co/v2/logout?returnTo='+templateUrl+ '&client_id='+AUTH0_CLIENT_ID;
 		}).done(function(){
 			location.href = location.href;
 		});
