@@ -31,6 +31,7 @@ function trigger_notificatons() {
                 . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
                 . 'WHERE  meta_key LIKE "_EventStartDate" AND '
                 . '       meta_value like CONCAT("%",CURDATE() + INTERVAL ' . $days . ' DAY,"%") and post_status = "publish"';
+        //potential change to sql  AND date_format(meta_value,"%m/%d/%Y")=date_format((curdate()+ INTERVAL 7 DAY),"%m/%d/%Y") 
         //trigger notificaton
         build_send_notifications($notification, $sql);
     }
@@ -53,9 +54,13 @@ function build_send_notifications($notification, $sql) {
 
             foreach ($notifications_to_send as $notification) {
                 if ($notification['isActive']) {
-                    if (strpos($notification['to'], "{{attendee_list}}") !== false) {
-                        $notification['to'] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification['to']);
+                    //this allows for the use of {{attendee_list}} in the to, cc and bcc fields
+                    foreach($notification as $key=>$value){
+                        if (strpos($notification[$key], "{{attendee_list}}") !== false) {
+                            $notification[$key] = str_replace('{{attendee_list}}', implode(',', get_event_attendee_emails($event->post_id)), $notification[$key]);
+                        }
                     }
+                                     
                     error_log(print_r($notification,true));
                     GFCommon::send_notification($notification, $form, $entry);
                 }
