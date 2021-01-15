@@ -381,8 +381,8 @@
                                             <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
                                                 <tr>
                                                     <td valign="top" align="center" width="100%" style="padding: 0 !important; margin:0 !important;">
-                                                        <h2 style="color:#0a0a0e; margin:0 0 10px 0 !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-style:normal; font-weight:700; font-size:28px; letter-spacing:normal; text-align:left;line-height: 100%;">
-                                                            <a style="color:#0a0a0e !important" href="<?php echo esc_url($event_link); ?>"><?php echo $event->post_title; ?></a>
+                                                        <h2 style="color:#005e9a; margin:0 0 10px 0 !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-style:normal; font-weight:700; font-size:28px; letter-spacing:normal; text-align:left;line-height: 100%;">
+                                                            <a style="color:#005e9a !important" href="<?php echo esc_url($event_link); ?>"><?php echo $event->post_title; ?></a>
                                                         </h2>
                                                         <?php if (!empty($event_date)) : ?>
                                                             <h4 style="color:#0a0a0e; margin:0 !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-style:normal; font-weight:700; font-size:15px; letter-spacing:normal; text-align:left;line-height: 100%;">
@@ -401,11 +401,11 @@
                                             </table>
                                             <table class="ticket-details" border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
                                                 <tr>
-                                                    <td class="ticket-details" valign="top" align="left" width="100" style="padding: 0; width:100px; margin:0 !important;">
+                                                     <?php /*<td class="ticket-details" valign="top" align="left" width="100" style="padding: 0; width:100px; margin:0 !important;">
                                                         <h6 style="color:#909090 !important; margin:0 0 10px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;"><?php esc_html_e('Ticket #', 'event-tickets'); ?></h6>
                                                         <span style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px;"><?php echo $ticket['ticket_id']; ?></span>
-                                                    </td>
-                                                    <td class="ticket-details" valign="top" align="left" width="120" style="padding: 0; width:120px; margin:0 !important;">
+                                                    </td> IF YOU NEED TO ADD BACK IN, REDUCE WIDTH OF OTHER TWO TDs BY 100 EACH*/ ?>
+                                                    <td class="ticket-details" valign="top" align="left" width="120" style="padding: 0; width:220px; margin:0 !important;">
                                                         <h6 style="color:#909090 !important; margin:0 0 10px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;"><?php
                                                             echo esc_html(
                                                                     sprintf(
@@ -417,14 +417,14 @@
                                                         </h6>
                                                         <span style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px;"><?php echo $ticket['ticket_name']; ?></span>
                                                     </td>
-                                                    <td class="ticket-details" valign="top" align="left" width="120" style="padding: 0 !important; width:120px; margin:0 !important;">
+                                                    <td class="ticket-details" valign="top" align="left" width="220" style="padding: 0 !important; width:120px; margin:0 !important;">
                                                         <h6 style="color:#909090 !important; margin:0 0 10px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;"><?php esc_html_e('Purchaser', 'event-tickets'); ?></h6>
                                                         <span style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px;"><?php echo $ticket['holder_name']; ?></span>
                                                     </td>
-                                                    <td class="ticket-details new-row new-left-row" valign="top" align="left" width="120" style="padding: 0; width:120px; margin:0 !important;">
+                                                    <?php /*<td class="ticket-details new-row new-left-row" valign="top" align="left" width="120" style="padding: 0; width:120px; margin:0 !important;">
                                                         <h6 style="color:#909090 !important; margin:0 0 10px 0; font-family: 'Helvetica Neue', Helvetica, sans-serif; text-transform:uppercase; font-size:13px; font-weight:700 !important;"><?php esc_html_e('Security Code', 'event-tickets'); ?></h6>
                                                         <span style="color:#0a0a0e !important; font-family: 'Helvetica Neue', Helvetica, sans-serif; font-size:15px;"><?php echo $ticket['security_code']; ?></span>
-                                                    </td>
+                                                    </td> */ ?>
                                                 </tr>
                                             </table>
                                             <table class="whiteSpace" border="0" cellpadding="0" cellspacing="0" width="100%">
