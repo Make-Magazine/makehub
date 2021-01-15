@@ -196,6 +196,17 @@
 					.tribe-tickets__buy { 
 						margin-left: 10px; 
 						text-transform: none;
+						&:disabled {
+							position: relative;
+							margin-bottom: 30px;
+							&::after {
+								content: "Select a ticket quantity > 0.";
+								position: absolute;
+								bottom: -35px;
+								color: #000;
+								right: 0px;
+							}
+						}
 					}
 					.tribe-events-abbr.tribe-events-start-time {
 						display: flex;
