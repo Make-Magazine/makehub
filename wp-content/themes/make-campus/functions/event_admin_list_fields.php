@@ -26,7 +26,7 @@ function make_events_column($column, $post_id) {
 // populate min attendees with _tribe_ticket_capacity field from post
     if ('min_attendees' === $column) {
         
-        $min_attendees = get_post_meta($post_id, '_tribe_ticket_capacity', true);
+        $min_attendees = get_post_meta($post_id, 'min_participants', true);
 
         if (!$min_attendees) {
             _e('');

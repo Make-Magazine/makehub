@@ -921,6 +921,25 @@
             "prepend": "",
             "append": "",
             "maxlength": ""
+        },
+        {
+            "key": "field_60021ad73a9d5",
+            "label": "Min Participants",
+            "name": "min_participants",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
         }
     ],
     "location": [
@@ -940,5 +959,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1607979300
+    "modified": 1610750693
 }
