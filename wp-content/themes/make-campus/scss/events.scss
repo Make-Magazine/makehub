@@ -521,6 +521,10 @@
 			width: 150px;
 			float: left;
 			margin-right: 30px;
+			@media screen  and (max-width: 768px) {
+				float: none;
+				margin: 0px auto 10px;
+			}
 			img {
 				height: 150px;
 				width: 150px;
