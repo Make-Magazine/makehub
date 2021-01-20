@@ -9,6 +9,9 @@ function gv_duplicate_details( $save_this_meta, $row, $entry){
         if($data["meta_key"]==1){
             $save_this_meta[$key]["meta_value"] = 'Duplicate of '. $data["meta_value"];
         }
+        if($data["meta_key"]==135){
+            $save_this_meta[$key]["meta_value"] = '';
+        }
     }
         
     return $save_this_meta;
