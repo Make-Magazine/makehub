@@ -14,6 +14,9 @@ function make_events_posts_columns($columns) {
         if ($key == 'tickets') {
             $new_columns['min_attendees'] = __('Min Attendees');
         }
+        if ($key == 'tickets') {
+            $new_columns['max_attendees'] = __('Max Attendees');
+        }        
         $new_columns[$key] = $value;
     }
     return $new_columns;
@@ -23,7 +26,7 @@ function make_events_posts_columns($columns) {
 add_action('manage_tribe_events_posts_custom_column', 'make_events_column', 10, 2);
 
 function make_events_column($column, $post_id) {
-// populate min attendees with _tribe_ticket_capacity field from post
+    // populate min attendees with _tribe_ticket_capacity field from post
     if ('min_attendees' === $column) {
         
         $min_attendees = get_post_meta($post_id, 'min_participants', true);
@@ -32,6 +35,16 @@ function make_events_column($column, $post_id) {
             _e('');
         } else {
             echo $min_attendees;
+        }
+    }
+    if ('max_attendees' === $column) {
+        
+        $max_attendees = get_post_meta($post_id, '_tribe_ticket_capacity', true);
+        
+        if (!$max_attendees) {
+            _e('');
+        } else {
+            echo $max_attendees;
         }
     }
 }
