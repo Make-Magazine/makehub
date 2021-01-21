@@ -1,33 +1,36 @@
 <?php
 
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+if (!defined('ABSPATH'))
+    define('ABSPATH', dirname(__FILE__) . '/');
 require_once(ABSPATH . 'wp-load.php');
 
 // Can we load the universal scripts this way
 function universal_scripts() {
-      //auth0
-      wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
+    //auth0
+    wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true);
 }
+
 add_action('wp_enqueue_scripts', 'universal_scripts', 10, 2);
 
 // check if user is logged in
 function ajax_check_user_logged_in() {
-    echo is_user_logged_in()?'yes':'no';
+    echo is_user_logged_in() ? 'yes' : 'no';
     die();
 }
+
 add_action('wp_ajax_is_user_logged_in', 'ajax_check_user_logged_in');
 add_action('wp_ajax_nopriv_is_user_logged_in', 'ajax_check_user_logged_in');
 
 // check if user is a user, but isn't a user of the current blog, and add them if they aren't
-function create_user_on_blog( $user_object ) {
-	$user_id = $user_object->ID;
-	$blog_id = get_current_blog_id();
-	if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
-		add_user_to_blog( $blog_id, $user_id, "subscriber" );
-	} 
+function create_user_on_blog($user_object) {
+    $user_id = $user_object->ID;
+    $blog_id = get_current_blog_id();
+    if ($user_id && !is_user_member_of_blog($user_id, $blog_id)) {
+        add_user_to_blog($blog_id, $user_id, "subscriber");
+    }
 }
-add_action( 'auth0_before_login', 'create_user_on_blog', 10, 6 );
+
+add_action('auth0_before_login', 'create_user_on_blog', 10, 6);
 
 /** Set up the Ajax WP Logout */
 add_action('wp_ajax_mm_wplogout', 'MM_wordpress_logout');
@@ -48,7 +51,7 @@ function MM_WPlogin() {
     //check_ajax_referer( 'ajax-login-nonce', 'ajaxsecurity' );
     global $wpdb; // access to the database
     //use auth0 plugin to log people into wp
-    $a0_plugin =  new WP_Auth0_InitialSetup( WP_Auth0_Options::Instance() );
+    $a0_plugin = new WP_Auth0_InitialSetup(WP_Auth0_Options::Instance());
     $a0_options = WP_Auth0_Options::Instance();
     $users_repo = new WP_Auth0_UsersRepo($a0_options);
     $login_manager = new WP_Auth0_LoginManager($users_repo, $a0_options);
@@ -61,11 +64,11 @@ function MM_WPlogin() {
     $id_token = filter_input(INPUT_POST, 'auth0_id_token', FILTER_SANITIZE_STRING);
 
     if ($login_manager->login_user($userinfo, $id_token, $access_token)) {
-		/*$blog_id = get_current_blog_id(); // this only triggered for a user logged into another site to begin with
-		$user_id = username_exists( sanitize_text_field( $userinfo->nickname ) );
-		if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
-			add_user_to_blog( $blog_id, $user_id, "subscriber" );
-		} */
+        /* $blog_id = get_current_blog_id(); // this only triggered for a user logged into another site to begin with
+          $user_id = username_exists( sanitize_text_field( $userinfo->nickname ) );
+          if ( $user_id && ! is_user_member_of_blog( $user_id, $blog_id ) ) {
+          add_user_to_blog( $blog_id, $user_id, "subscriber" );
+          } */
         wp_send_json_success();
     } else {
         error_log('Failed login');
@@ -85,36 +88,36 @@ function make_error_log() {
 }
 
 function randomString() {
-	$permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
+    $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyz';
     return substr(str_shuffle($permitted_chars), 0, 10);
 }
 
 // prevent non admin users from seeing the admin dashboard
-add_action( 'init', 'blockusers_init' );
+add_action('init', 'blockusers_init');
+
 function blockusers_init() {
-	if ( is_admin() && ! current_user_can( 'administrator' ) && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-		wp_redirect( home_url() );
-		exit;
-	}
+    if (is_admin() && !current_user_can('administrator') && !( defined('DOING_AJAX') && DOING_AJAX )) {
+        wp_redirect(home_url());
+        exit;
+    }
 }
 
-function timezone_abbr_from_name($timezone_name){
-    $dateTime = new DateTime(); 
-    $dateTime->setTimeZone(new DateTimeZone($timezone_name)); 
-    return $dateTime->format('T'); 
+function timezone_abbr_from_name($timezone_name) {
+    $dateTime = new DateTime();
+    $dateTime->setTimeZone(new DateTimeZone($timezone_name));
+    return $dateTime->format('T');
 }
 
 add_action('admin_bar_menu', 'toolbar_link_to_mypage', 999);
 
 function toolbar_link_to_mypage($wp_admin_bar) {
-    
-$args = [
-				'id'    => 'wp-rest-cache-clear',
-				'title' => '<span class="ab-icon"></span>' . 'Report a Bug',
-    'meta'=> array('target' => '_blank'),
-				'href'  => 'https://form.asana.com/?hash=936d55d2283dea9fe2382a75e80722675681f3881416d93f7f75e8a4941c6d47&id=1149238253861292',
-			];
 
-			$wp_admin_bar->add_menu( $args );
-                        
+    $args = [
+        'id' => 'wp-rest-cache-clear',
+        'title' => '<span class="ab-icon"></span>' . 'Report a Bug',
+        'meta' => array('target' => '_blank'),
+        'href' => 'https://form.asana.com/?hash=936d55d2283dea9fe2382a75e80722675681f3881416d93f7f75e8a4941c6d47&id=1149238253861292',
+    ];
+
+    $wp_admin_bar->add_menu($args);
 }
