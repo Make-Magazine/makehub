@@ -103,3 +103,18 @@ function timezone_abbr_from_name($timezone_name){
     $dateTime->setTimeZone(new DateTimeZone($timezone_name)); 
     return $dateTime->format('T'); 
 }
+
+add_action('admin_bar_menu', 'toolbar_link_to_mypage', 999);
+
+function toolbar_link_to_mypage($wp_admin_bar) {
+    
+$args = [
+				'id'    => 'wp-rest-cache-clear',
+				'title' => '<span class="ab-icon"></span>' . 'Report a Bug',
+    'meta'=> array('target' => '_blank'),
+				'href'  => 'https://form.asana.com/?hash=936d55d2283dea9fe2382a75e80722675681f3881416d93f7f75e8a4941c6d47&id=1149238253861292',
+			];
+
+			$wp_admin_bar->add_menu( $args );
+                        
+}
