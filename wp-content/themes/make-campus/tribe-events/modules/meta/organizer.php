@@ -85,7 +85,7 @@ $website = tribe_get_organizer_website_link();
             }//end if
         }//end if ?>
 		<br />
-		<a class="btn universal-btn" href="<?php echo get_permalink($organizer); ?>">See More Events from <?php echo $name ?></a>
+		<a class="btn universal-btn" href="<?php echo get_permalink($organizer); ?>">See More Events from Maker</a>
         <?php do_action('tribe_events_single_meta_organizer_section_end');
         ?>
     </dl>
