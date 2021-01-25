@@ -277,3 +277,46 @@
 	}
 }
 
+#cookie-footer {
+	display: none;
+	position: fixed;
+	z-index: 99;
+	bottom: 0px;
+	width:100%;
+	padding: 15px;
+	background: #fff;
+	.cookie-footer-innerwrap {
+		width: 90%;
+		margin: 0 auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-evenly;
+		flex-wrap: wrap;
+		text-align: center;
+		.cookie-text {
+			width: 100%;
+			margin-bottom: 15px;
+			font-size: 16px;
+		}
+		button {
+			width: 300px;
+		}
+	}
+}
+#cookie-dialog {
+	display: none;
+}
+div[aria-describedby="cookie-dialog"] {
+	text-align: center;
+	background: #fff;
+	.ui-dialog-title {
+		display: none;
+	}
+	.cookie-toggle {
+		display: flex;
+		justify-content: center;
+		span {
+			margin-right: 10px;
+		}
+	}
+}

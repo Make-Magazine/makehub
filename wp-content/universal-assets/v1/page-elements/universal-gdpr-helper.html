@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Helper</title>
+	<script type="text/javascript" src="../js/min/cross-client-hub.js"></script>
+	<script>
+		// Limit requests to any client running on .localhost:300x
+		CrossStorageHub.init([
+		  {origin: /\.makehub.local$/,            allow: ['get', 'getKeys']},
+		  {origin: /:\/\/(www\.)?makehub.local$/, allow: ['get', 'set', 'del', 'getKeys']}
+		]);
+	</script>
+</head>
+<body></body>
+</html>
+
+
