@@ -15,6 +15,16 @@ $name = tribe_get_organizer();
 $phone = tribe_get_organizer_phone();
 $email = tribe_get_organizer_email();
 $website = tribe_get_organizer_website_link();
+
+$args = array(
+    'author'        =>  wp_get_current_user()->ID,
+    'orderby'       =>  'post_date',
+	'post_type'   => 'tribe_events',
+    'order'         =>  'ASC',
+	'start_date' => 'now',
+	'post__not_in' => array( get_the_ID() ),
+);
+$posts = tribe_get_events( $args );
 ?>
 
 <div class="tribe-events-meta-group tribe-events-meta-group-organizer">
@@ -85,8 +95,13 @@ $website = tribe_get_organizer_website_link();
             }//end if
         }//end if ?>
 		<br />
-		<a class="btn universal-btn" href="<?php echo get_permalink($organizer); ?>">See More Events from Maker</a>
-        <?php do_action('tribe_events_single_meta_organizer_section_end');
+		<?php 
+			if(count($posts) > 0) { // if user actually has more events to show
+		?>
+			<a class="btn universal-btn" href="<?php echo get_permalink($organizer); ?>">See More Events from this Maker</a>
+        <?php 
+			}
+			do_action('tribe_events_single_meta_organizer_section_end');
         ?>
     </dl>
 </div>
