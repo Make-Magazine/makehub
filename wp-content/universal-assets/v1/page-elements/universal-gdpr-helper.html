@@ -5,10 +5,22 @@
 	<title>Helper</title>
 	<script type="text/javascript" src="../js/min/cross-client-hub.js"></script>
 	<script>
-		// Limit requests to any client running on .localhost:300x
+		// Set permissions for all the sites that will share gdpr privacy settings
 		CrossStorageHub.init([
-		  {origin: /\.makehub.local$/,            allow: ['get', 'getKeys']},
-		  {origin: /:\/\/(www\.)?makehub.local$/, allow: ['get', 'set', 'del', 'getKeys']}
+		  {origin: /\.makehub.local$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\makeco.local$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\makerfaire.local$/,			allow: ['get', 'set', 'getKeys']},
+		  {origin: /\makercamp.local$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\makezine.test$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\.make.co$/,					allow: ['get', 'set', 'getKeys']},
+		  {origin: /\.makerfaire.com$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\.makezine.com$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /\.makercamp.com$/,				allow: ['get', 'set', 'getKeys']},
+		  {origin: /:\/\/(www\.)?make.co$/,			allow: ['get', 'set', 'getKeys']},
+		  {origin: /:\/\/(www\.)?makerfaire.com$/,	allow: ['get', 'set', 'getKeys']},
+		  {origin: /:\/\/(www\.)?makezine.com$/,	allow: ['get', 'set', 'getKeys']},
+		  {origin: /:\/\/(www\.)?makercamp.com$/,	allow: ['get', 'set', 'getKeys']},
+		  {origin: /:\/\/(www\.)?makehub.local$/, 	allow: ['get', 'set', 'del', 'getKeys']},
 		]);
 	</script>
 </head>

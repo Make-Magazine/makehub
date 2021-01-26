@@ -237,6 +237,7 @@ input.cmn-toggle-round:checked + label:after {
 .ui-widget-shadow {
 	opacity: .8;
 	color: #fff;
+	background: #000;
 }
 .ui-dialog {
 	position: relative;
@@ -283,6 +284,14 @@ input.cmn-toggle-round:checked + label:after {
 		top: 0px;
 		left: 0px;
 	}
+}
+.ui-widget-overlay {
+	z-index: 998;
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	background: rgba(0,0,0, .5);
+	top: 0px;
 }
 .info-btn {
 	border: solid 1px #005e9a;

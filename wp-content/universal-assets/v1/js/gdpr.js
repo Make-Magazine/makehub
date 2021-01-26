@@ -6,39 +6,57 @@ window.addEventListener('load', function() {
 	  frameId: 'storageFrame'
 	});
 	
+	var gdpr_state = null;
+	
+	jQuery("#cookie-dialog").dialog({
+		modal: true,
+		title: null,
+		autoOpen: false
+	});
 	
 	storage.onConnect().then(function(result) {
-		return storage.get('cookie-law');
+		return storage.get('cookies-allowed');
 	}).then(function(res){
+		gdpr_state = res;
 		if( res == null ) {
-			jQuery("#cookie-footer").css("display", "block");
-		} else if(res == 'no') {
+			jQuery("#cookie-footer").show();
+		} else if(res == 'yes') {
+			jQuery("#cookie-settings-btn").show();
 			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
-		} 
+		} else {
+			jQuery("#cookie-settings-btn").show();
+			setCookie('cookielawinfo-checkbox-non-necessary', 'no', 365);
+			jQuery("#nonNeccessaryCookies").removeAttr('checked');
+		}
+	});
+	
+	jQuery("#cookie-settings-btn").click(function(){
+		jQuery("#cookie-settings-btn").hide();
+		jQuery("#cookie-dialog").dialog("open");
 	});
 							 
 	jQuery("#cookie-configure").click(function(){
-		jQuery("#cookie-dialog").dialog({
-			draggable: false,
-			resizable: false,
-			title: null,
-		});
+		jQuery("#cookie-footer").hide();
+		jQuery("#cookie-dialog").dialog("open");
 	});
 	
 	jQuery("#cookie-accept").click(function(){
-		jQuery("#cookie-dialog").dialog({
-			draggable: false,
-			resizable: false,
-			title: null,
-		});
+		jQuery("#cookie-footer").hide();
+		jQuery("#cookie-settings-btn").show();
+		if( !localStorage.getItem('cookie-law') ) {
+			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
+			return storage.set('cookies-allowed', 'yes');
+		}
 	});
 	
 	jQuery('div#cookie-dialog').on('dialogclose', function(event) {
-		jQuery("#cookie-footer").hide();
-		if(jQuery("#nonNeccessaryCookies").is(':checked') && localStorage.getItem('cookie-law') ) {
-			return storage.set('cookie-law', 'no');
+		jQuery("#cookie-settings-btn").show();
+		if(jQuery("#nonNeccessaryCookies").is(':checked') ) {
+			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
+			return storage.set('cookies-allowed', 'yes');
 		} else {
-			return storage.set('cookie-law', 'yes');
+			setCookie('cookielawinfo-checkbox-non-necessary', 'no', 365);
+			return storage.set('cookies-allowed', 'no');
 		}
 	});
 
