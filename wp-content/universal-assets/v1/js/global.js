@@ -12,7 +12,7 @@ jQuery(window).bind("load", function() {
 				
 				jQuery(".ui-tooltip").hover(
 				    function(){clearTimeout (fixed);},
-				    function(){$("[title]").tooltip("close");}
+				    function(){jQuery("[title]").tooltip("close");}
 				);
 			})
 			*/

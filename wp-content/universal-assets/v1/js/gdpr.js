@@ -11,6 +11,8 @@ window.addEventListener('load', function() {
 	jQuery("#cookie-dialog").dialog({
 		modal: true,
 		title: null,
+		resizable: false,
+		draggable: false,
 		autoOpen: false
 	});
 	

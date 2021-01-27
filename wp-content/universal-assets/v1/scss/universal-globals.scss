@@ -262,6 +262,8 @@ input.cmn-toggle-round:checked + label:after {
 			border: none;
 			background: #fff;
 			outline: 0;
+			width: 100%;
+			overflow: visible;
 			&::after {
 				font-family: 'Linearicons-Free';
 				content: "\e870";
