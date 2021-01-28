@@ -8,3 +8,8 @@ Make sure to respect the media queries! Otherwise you may
 accidentally add desktop styles to the mobile layout.
 https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 --------------------------------------------------------------*/
+
+.nav-hamburger {
+	right: auto;
+	left: 80px;
+}
