@@ -8,6 +8,8 @@
 
 /****************************** THEME SETUP ******************************/
 
+require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
+
 /**
  * Sets up theme for translation
  *
@@ -51,11 +53,20 @@ function buddyboss_theme_child_scripts_styles()
   wp_enqueue_style( 'buddyboss-child-css', get_stylesheet_directory_uri().'/assets/css/custom.css', '', '1.0.0' );
 	
   // Javascript
-  wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
   wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true);
   wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true);
   wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', '', '1.0.0' );
   wp_enqueue_script( 'buddyboss-child-js', get_stylesheet_directory_uri().'/assets/js/custom.js', '', '1.0.0' );
+	
+  wp_localize_script('universal', 'ajax_object',
+	array(
+		'ajax_url' => admin_url('admin-ajax.php'),
+		'home_url' => get_home_url(),
+		'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+		'wp_user_email' => wp_get_current_user()->user_email,
+		'wp_user_nicename' => wp_get_current_user()->user_nicename
+	)
+  );
 }
 add_action( 'wp_enqueue_scripts', 'buddyboss_theme_child_scripts_styles', 9999 );
 

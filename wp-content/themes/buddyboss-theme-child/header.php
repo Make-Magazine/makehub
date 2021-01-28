@@ -18,7 +18,6 @@
 	</head>
 
 	<body <?php body_class(); ?>>
-		
 
         <?php wp_body_open(); ?>
 
@@ -27,19 +26,6 @@
 			do_action( THEME_HOOK_PREFIX . 'before_page' ); 
 	
 		endif; ?>
-		<header class="universal-nav">
-
-		   <?php // Nav Level 1 and Hamburger      
-			  require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
-		   ?>
-
-		  <div id="nav-flyout">
-		   <?php
-			  require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-megamenu.html');
-		   ?>
-		  </div>
-
-		</header>
 
 		<div id="page" class="site">
 
