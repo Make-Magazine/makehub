@@ -1,4 +1,4 @@
-var AUTH0_CLIENT_ID	    = 'ZIX3RQReetRyVxYUkRJlJJ6LnbND4lq1';
+var AUTH0_CLIENT_ID	    = 'NDw7r6YLomyGceVgG7PIt2wIhIgLNqxG';
 var AUTH0_CUSTOM_DOMAIN = 'login.make.co';
 var AUTH0_DOMAIN		= 'makermedia.auth0.com';
 
