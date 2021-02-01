@@ -207,15 +207,12 @@ app-header .nav-level-1-auth #profile-view .dropdown-menu {
 }
 
 a#LoginBtn {
-    display: block;
+    display: none;
 }
 a#LogoutBtn {
     display: none;
 }
 .logged-in {
-    a#LoginBtn {
-        display: none;
-    }
     a#LogoutBtn {
         display: block;
     }

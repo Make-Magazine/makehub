@@ -82,11 +82,13 @@ window.addEventListener('load', function() {
 			clearLocalStorage();
 		}
 	}
+	
 	function displayButtons() {
 		if (localStorage.getItem('expires_at')) {
 			jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 			getProfile();
 		} else {
+			jQuery("#LoginBtn").css("display", "block");
 			jQuery("#profile-view, #LogoutBtn").css('display', 'none');
 			if(wpLoginRequired == true) {
 				WPlogout();
