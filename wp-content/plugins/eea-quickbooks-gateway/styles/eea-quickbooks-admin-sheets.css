@@ -1,0 +1,17 @@
+
+#eea_quickbooks_oauth_x_dv .eea-qb-oauth-btn:hover, #eea_quickbooks_oauth_ok_dv .eea-qb-reconnect:hover, #eea_quickbooks_oauth_ok_dv .eea-qb-disconnect:hover {
+	cursor: pointer;
+}
+
+#eea_quickbooks_oauth_ok_dv .eea-qb-reconnect, #eea_quickbooks_oauth_ok_dv .eea-qb-disconnect {
+	margin-right: 30px;
+}
+
+#eea_quickbooks_oauth_ok_dv .eea-qb-connected-controls {
+	margin: 10px 20px 0 0;
+	display: inline-block;
+}
+
+#eea_quickbooks_oauth_ok_dv .eea-qb-connected-txt {
+	color: #008000;
+}
