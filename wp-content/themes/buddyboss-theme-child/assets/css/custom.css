@@ -18,7 +18,7 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 	color: #fff;
 }
 
-//make pages 95% width
+/* make pages 95% width */
 .bb-sfwd-aside .site-content .container {
     width: 95%;
 }
