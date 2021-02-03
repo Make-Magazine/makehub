@@ -20,6 +20,6 @@ if ( empty( (string) $event->excerpt ) ) {
 	return;
 }
 ?>
-<div class="tribe-events-calendar-month__calendar-event-tooltip-description tribe-common-b3">TEST
+<div class="tribe-events-calendar-month__calendar-event-tooltip-description tribe-common-b3">
 	<?php echo (string) get_field('short_description'); ?>
 </div>
