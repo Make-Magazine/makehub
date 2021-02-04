@@ -1,0 +1,97 @@
+#titlediv-people-addon .title-prompt-text {
+	color     : #BBB;
+	position  : absolute;
+	font-size : 1.7em;
+	padding   : 11px 10px;
+}
+
+#title-wrap-people-addon .title-prompt-text {
+	font-size : 1.3em;
+	padding   : 5px 8px;
+}
+
+#titlediv-people-addon .smaller-text-field, #titlediv-people-addon .main-text-field {
+	padding     : 3px 8px;
+	font-size   : 1.7em;
+	line-height : 100%;
+	height      : 1.7em;
+	width       : 49.2%;
+	outline     : none;
+	margin      : 10px 6px 1px 0;
+	float       : left;
+}
+
+#titlediv-people-addon .main-text-field {
+	width : 100%;
+	float : none;
+}
+
+.espresso-question-group-wrap table th {
+	width     : inherit;
+	min-width : 200px;
+}
+
+#person_details_address label.espresso-form-input-lbl {
+	display : block;
+}
+
+#person_details_address input.all-options {
+	width : 100%;
+}
+
+#person_details_address #PER_zip {
+	width     : 10%;
+	min-width : 150px;
+}
+
+#person_contact_info input {
+	width: 99%;
+}
+
+/** person to cpt details metabox **/
+.person-to-cpt-details-table {
+	width: 100%;
+	border-spacing: 0px;
+}
+
+.person-to-cpt-details-table th {
+	text-align: left;
+	padding: 5px;
+}
+
+.person-to-cpt-details-table thead {
+	background-color: #eee;
+}
+
+.person-to-cpt-details-table td:first-child, .person-to-cpt-details-table th:first-child {
+	max-width: 20px;
+	width: 2%;
+	font-size: 18px;
+}
+
+.person-to-cpt-details-table td:nth-child(2), .person-to-cpt-details-table th:nth-child(2) {
+	width: 50%;
+}
+
+.person-to-cpt-details-table td:last-child, .person-to-cpt-details-table th:last-child {
+	width: 48%;
+}
+
+.person-to-cpt-people-type-list {
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
+.person-to-cpt-people-type-list li {
+	display: inline-block;
+	margin-right: 3px;
+	background-color: #666;
+	color: #fff;
+	padding: 2px 5px;
+	font-size: .8em;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-ms-border-radius: 5px;
+	-o-border-radius: 5px;
+	border-radius: 5px;
+}
