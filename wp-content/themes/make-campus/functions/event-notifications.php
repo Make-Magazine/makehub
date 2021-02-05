@@ -26,12 +26,15 @@ function trigger_notificatons() {
     foreach ($interval_arr as $interval) {
         $days = $interval[0];
         $notification = $interval[1];
+        //our servers are UTC time, so to get the correct current date I have to first convert it to PST and then check for so many days out.
+        //date_format(curDate()- interval 8 hour + interval 2 day, '%Y-%m-%d')
         $sql = 'SELECT post_id '
                 . 'FROM  ' . $wpdb->prefix . 'postmeta '
                 . 'left outer join ' . $wpdb->prefix . 'posts posts on (posts.id = post_id) '
                 . 'WHERE  meta_key LIKE "_EventStartDate" AND '
-                . '       meta_value like CONCAT("%",CURDATE() + INTERVAL ' . $days . ' DAY,"%") and post_status = "publish"';
-        //potential change to sql  AND date_format(meta_value,"%m/%d/%Y")=date_format((curdate()+ INTERVAL 7 DAY),"%m/%d/%Y") 
+                . '       meta_value like CONCAT("%",date_format(curDate()- interval 8 hour + interval ' . $days . ' day, "%Y-%m-%d"),"%") AND '
+                . '       post_status = "publish"';
+        
         //trigger notificaton
         build_send_notifications($notification, $sql);
     }
