@@ -22,3 +22,7 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 .bb-sfwd-aside .site-content .container {
     width: 95%;
 }
+/* make header 100% of the page */
+#masthead .container {
+    width: 100% !important;
+}
