@@ -79,5 +79,18 @@ add_action( 'wp_enqueue_scripts', 'buddyboss_theme_child_scripts_styles', 9999 )
 // Add your own custom functions here
 remove_filter( 'wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class' );
 
+//clean up the top black nav bar in admin
+
+function experiences_remove_toolbar_node($wp_admin_bar) {        
+    $wp_admin_bar->remove_node('wp-logo');
+    $wp_admin_bar->remove_node('new-content');
+    $wp_admin_bar->remove_node('updates');
+    $wp_admin_bar->remove_node('customize');
+    $wp_admin_bar->remove_node('comments');
+    $wp_admin_bar->remove_node('bp-notifications');
+    $wp_admin_bar->remove_node('uap_dashboard_menu');
+}
+
+add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
 ?>
