@@ -26,3 +26,15 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 #masthead .container {
     width: 100% !important;
 }
+
+/* makerspace information */
+.ms_info .fieldLabel {
+    font-weight:bold;
+
+}
+.ms_info .fieldData {
+    padding: 10px;
+}
+.ms_info .fieldInfo {
+    margin: 10px;
+}

@@ -94,4 +94,8 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
 
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
+// Include all function files in the makerfaire/functions directory:
+foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
+    include_once $file;
+}
 ?>
