@@ -162,10 +162,10 @@ function wc_create_new_customer_username( $email, $new_user_args = array(), $suf
 	}
 
 	/**
-	 * WordPress 4.4 - filters the list of blacklisted usernames.
+	 * WordPress 4.4 - filters the list of blocked usernames.
 	 *
 	 * @since 3.7.0
-	 * @param array $usernames Array of blacklisted usernames.
+	 * @param array $usernames Array of blocked usernames.
 	 */
 	$illegal_logins = (array) apply_filters( 'illegal_user_logins', array() );
 
@@ -272,6 +272,7 @@ function wc_update_new_customer_past_orders( $customer_id ) {
 		update_user_meta( $customer_id, 'paying_customer', 1 );
 		update_user_meta( $customer_id, '_order_count', '' );
 		update_user_meta( $customer_id, '_money_spent', '' );
+		delete_user_meta( $customer_id, '_last_order' );
 	}
 
 	return $linked;
@@ -897,7 +898,7 @@ function wc_update_user_last_active( $user_id ) {
 	if ( ! $user_id ) {
 		return;
 	}
-	update_user_meta( $user_id, 'wc_last_active', (string) strtotime( date( 'Y-m-d', time() ) ) );
+	update_user_meta( $user_id, 'wc_last_active', (string) strtotime( gmdate( 'Y-m-d', time() ) ) );
 }
 
 /**

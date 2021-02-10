@@ -3,7 +3,7 @@
  * The update helper for WooCommerce.com plugins.
  *
  * @class WC_Helper_Updater
- * @package WooCommerce\Admin.
+ * @package WooCommerce\Admin\Helper
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -56,6 +56,10 @@ class WC_Helper_Updater {
 				'package'        => $data['package'],
 				'upgrade_notice' => $data['upgrade_notice'],
 			);
+
+			if ( isset( $data['requires_php'] ) ) {
+				$item['requires_php'] = $data['requires_php'];
+			}
 
 			// We don't want to deliver a valid upgrade package when their subscription has expired.
 			// To avoid the generic "no_package" error that empty strings give, we will store an

@@ -33,7 +33,7 @@ const Content = () => {
  */
 const Label = ( props ) => {
 	const { PaymentMethodLabel } = props.components;
-	return <PaymentMethodLabel icon="checkPayment" text={ label } />;
+	return <PaymentMethodLabel text={ label } />;
 };
 
 /**
@@ -44,9 +44,8 @@ const offlineChequePaymentMethod = {
 	label: <Label />,
 	content: <Content />,
 	edit: <Content />,
-	icons: null,
 	canMakePayment: () => true,
 	ariaLabel: label,
 };
 
-registerPaymentMethod( ( Config ) => new Config( offlineChequePaymentMethod ) );
+registerPaymentMethod( offlineChequePaymentMethod );

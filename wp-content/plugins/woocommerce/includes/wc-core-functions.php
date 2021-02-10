@@ -9,6 +9,7 @@
  */
 
 use Automattic\Jetpack\Constants;
+use Automattic\WooCommerce\Utilities\NumberUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -387,16 +388,32 @@ function wc_locate_template( $template_name, $template_path = '', $default_path 
 	}
 
 	// Look within passed path within the theme - this is priority.
-	$template = locate_template(
-		array(
-			trailingslashit( $template_path ) . $template_name,
-			$template_name,
-		)
-	);
+	if ( false !== strpos( $template_name, 'product_cat' ) || false !== strpos( $template_name, 'product_tag' ) ) {
+		$cs_template = str_replace( '_', '-', $template_name );
+		$template = locate_template(
+			array(
+				trailingslashit( $template_path ) . $cs_template,
+				$cs_template,
+			)
+		);
+	}
+
+	if ( empty( $template ) ) {
+		$template = locate_template(
+			array(
+				trailingslashit( $template_path ) . $template_name,
+				$template_name,
+			)
+		);
+	}
 
 	// Get default template/.
 	if ( ! $template || WC_TEMPLATE_DEBUG_MODE ) {
-		$template = $default_path . $template_name;
+		if ( empty( $cs_template ) ) {
+			$template = $default_path . $template_name;
+		} else {
+			$template = $default_path . $cs_template;
+		}
 	}
 
 	// Return what we found.
@@ -961,13 +978,13 @@ function wc_get_image_size( $image_size ) {
 			} elseif ( 'custom' === $cropping ) {
 				$width          = max( 1, get_option( 'woocommerce_thumbnail_cropping_custom_width', '4' ) );
 				$height         = max( 1, get_option( 'woocommerce_thumbnail_cropping_custom_height', '3' ) );
-				$size['height'] = absint( round( ( $size['width'] / $width ) * $height ) );
+				$size['height'] = absint( NumberUtil::round( ( $size['width'] / $width ) * $height ) );
 				$size['crop']   = 1;
 			} else {
 				$cropping_split = explode( ':', $cropping );
 				$width          = max( 1, current( $cropping_split ) );
 				$height         = max( 1, end( $cropping_split ) );
-				$size['height'] = absint( round( ( $size['width'] / $width ) * $height ) );
+				$size['height'] = absint( NumberUtil::round( ( $size['width'] / $width ) * $height ) );
 				$size['crop']   = 1;
 			}
 		}
@@ -1754,13 +1771,58 @@ function wc_uasort_comparison( $a, $b ) {
  * @return int
  */
 function wc_ascii_uasort_comparison( $a, $b ) {
+	// 'setlocale' is required for compatibility with PHP 8.
+	// Without it, 'iconv' will return '?'s instead of transliterated characters.
+	$prev_locale = setlocale( LC_CTYPE, 0 );
+	setlocale( LC_ALL, 'C.UTF-8' );
+
 	// phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 	if ( function_exists( 'iconv' ) && defined( 'ICONV_IMPL' ) && @strcasecmp( ICONV_IMPL, 'unknown' ) !== 0 ) {
 		$a = @iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $a );
 		$b = @iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $b );
 	}
 	// phpcs:enable WordPress.PHP.NoSilencedErrors.Discouraged
+
+	setlocale( LC_ALL, $prev_locale );
 	return strcmp( $a, $b );
+}
+
+/**
+ * Sort array according to current locale rules and maintaining index association.
+ * By default tries to use Collator from PHP Internationalization Functions if available.
+ * If PHP Collator class doesn't exists it fallback to removing accepts from a array
+ * and by sorting with `uasort( $data, 'strcmp' )` giving support for ASCII values.
+ *
+ * @since 4.6.0
+ * @param array  $data   List of values to sort.
+ * @param string $locale Locale.
+ * @return array
+ */
+function wc_asort_by_locale( &$data, $locale = '' ) {
+	// Use Collator if PHP Internationalization Functions (php-intl) is available.
+	if ( class_exists( 'Collator' ) ) {
+		$locale   = $locale ? $locale : get_locale();
+		$collator = new Collator( $locale );
+		$collator->asort( $data, Collator::SORT_STRING );
+		return $data;
+	}
+
+	$raw_data = $data;
+
+	array_walk(
+		$data,
+		function ( &$value ) {
+			$value = remove_accents( html_entity_decode( $value ) );
+		}
+	);
+
+	uasort( $data, 'strcmp' );
+
+	foreach ( $data as $key => $val ) {
+		$data[ $key ] = $raw_data[ $key ];
+	}
+
+	return $data;
 }
 
 /**
@@ -1805,7 +1867,7 @@ function wc_get_rounding_precision() {
 function wc_add_number_precision( $value, $round = true ) {
 	$cent_precision = pow( 10, wc_get_price_decimals() );
 	$value          = $value * $cent_precision;
-	return $round ? round( $value, wc_get_rounding_precision() - wc_get_price_decimals() ) : $value;
+	return $round ? NumberUtil::round( $value, wc_get_rounding_precision() - wc_get_price_decimals() ) : $value;
 }
 
 /**
@@ -1920,8 +1982,8 @@ add_action( 'woocommerce_cleanup_logs', 'wc_cleanup_logs' );
 /**
  * Prints human-readable information about a variable.
  *
- * Some server environments blacklist some debugging functions. This function provides a safe way to
- * turn an expression into a printable, readable form without calling blacklisted functions.
+ * Some server environments block some debugging functions. This function provides a safe way to
+ * turn an expression into a printable, readable form without calling blocked functions.
  *
  * @since 3.0
  *
@@ -2280,6 +2342,7 @@ function wc_is_active_theme( $theme ) {
 function wc_is_wp_default_theme_active() {
 	return wc_is_active_theme(
 		array(
+			'twentytwentyone',
 			'twentytwenty',
 			'twentynineteen',
 			'twentyseventeen',
@@ -2357,14 +2420,14 @@ function wc_decimal_to_fraction( $decimal ) {
  */
 function wc_round_discount( $value, $precision ) {
 	if ( version_compare( PHP_VERSION, '5.3.0', '>=' ) ) {
-		return round( $value, $precision, WC_DISCOUNT_ROUNDING_MODE ); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.round_modeFound
+		return NumberUtil::round( $value, $precision, WC_DISCOUNT_ROUNDING_MODE ); // phpcs:ignore PHPCompatibility.FunctionUse.NewFunctionParameters.round_modeFound
 	}
 
 	if ( 2 === WC_DISCOUNT_ROUNDING_MODE ) {
 		return wc_legacy_round_half_down( $value, $precision );
 	}
 
-	return round( $value, $precision );
+	return NumberUtil::round( $value, $precision );
 }
 
 /**
@@ -2444,4 +2507,24 @@ function wc_load_cart() {
 function wc_is_running_from_async_action_scheduler() {
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	return isset( $_REQUEST['action'] ) && 'as_async_request_queue_runner' === $_REQUEST['action'];
+}
+
+/**
+ * Polyfill for wp_cache_get_multiple for WP versions before 5.5.
+ *
+ * @param array  $keys   Array of keys to get from group.
+ * @param string $group  Optional. Where the cache contents are grouped. Default empty.
+ * @param bool   $force  Optional. Whether to force an update of the local cache from the persistent
+ *                            cache. Default false.
+ * @return array|bool Array of values.
+ */
+function wc_cache_get_multiple( $keys, $group = '', $force = false ) {
+	if ( function_exists( 'wp_cache_get_multiple' ) ) {
+		return wp_cache_get_multiple( $keys, $group, $force );
+	}
+	$values = array();
+	foreach ( $keys as $key ) {
+		$values[ $key ] = wp_cache_get( $key, $group, $force );
+	}
+	return $values;
 }

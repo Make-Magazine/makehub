@@ -18,6 +18,7 @@ import {
 	DISPLAY_CART_PRICES_INCLUDING_TAX,
 } from '@woocommerce/block-settings';
 import { getCurrencyFromPriceResponse } from '@woocommerce/base-utils';
+import { CartExpressPayment } from '@woocommerce/base-components/payment-methods';
 import {
 	useStoreCartCoupons,
 	useStoreCart,
@@ -33,6 +34,7 @@ import Title from '@woocommerce/base-components/title';
 import { getSetting } from '@woocommerce/settings';
 import { useEffect } from '@wordpress/element';
 import { decodeEntities } from '@wordpress/html-entities';
+import { CartProvider } from '@woocommerce/base-context';
 
 /**
  * Internal dependencies
@@ -43,11 +45,22 @@ import CartLineItemsTable from './cart-line-items-table';
 
 import './style.scss';
 
+const Block = ( props ) => {
+	return (
+		<CartProvider>
+			<Cart { ...props } />
+		</CartProvider>
+	);
+};
+
 /**
  * Component that renders the Cart block when user has something in cart aka "full".
+ *
+ * @param {Object} props Incoming props for the component.
+ * @param {Object} props.attributes Incoming attributes for block.
  */
 const Cart = ( { attributes } ) => {
-	const { isShippingCalculatorEnabled, isShippingCostHidden } = attributes;
+	const { isShippingCalculatorEnabled, hasDarkControls } = attributes;
 
 	const {
 		cartItems,
@@ -55,6 +68,7 @@ const Cart = ( { attributes } ) => {
 		cartIsLoading,
 		cartItemsCount,
 		cartItemErrors,
+		cartNeedsPayment,
 		cartNeedsShipping,
 	} = useStoreCart();
 
@@ -76,12 +90,13 @@ const Cart = ( { attributes } ) => {
 				id: error.code,
 			} );
 		} );
-	}, [ cartItemErrors ] );
+	}, [ addErrorNotice, cartItemErrors ] );
 
 	const totalsCurrency = getCurrencyFromPriceResponse( cartTotals );
 
 	const cartClassName = classnames( 'wc-block-cart', {
 		'wc-block-cart--is-loading': cartIsLoading,
+		'has-dark-controls': hasDarkControls,
 	} );
 
 	return (
@@ -115,7 +130,7 @@ const Cart = ( { attributes } ) => {
 				{ cartNeedsShipping && (
 					<TotalsShippingItem
 						showCalculator={ isShippingCalculatorEnabled }
-						showRatesWithoutAddress={ ! isShippingCostHidden }
+						showRateSelector={ true }
 						values={ cartTotals }
 						currency={ totalsCurrency }
 					/>
@@ -136,12 +151,15 @@ const Cart = ( { attributes } ) => {
 					currency={ totalsCurrency }
 					values={ cartTotals }
 				/>
-				<CheckoutButton
-					link={ getSetting(
-						'page-' + attributes?.checkoutPageId,
-						false
-					) }
-				/>
+				<div className="wc-block-cart__payment-options">
+					{ cartNeedsPayment && <CartExpressPayment /> }
+					<CheckoutButton
+						link={ getSetting(
+							'page-' + attributes?.checkoutPageId,
+							false
+						) }
+					/>
+				</div>
 			</Sidebar>
 		</SidebarLayout>
 	);
@@ -151,4 +169,4 @@ Cart.propTypes = {
 	attributes: PropTypes.object.isRequired,
 };
 
-export default Cart;
+export default Block;
