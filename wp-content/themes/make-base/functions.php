@@ -290,3 +290,14 @@ function make_base_comments_gravatar( $args ) {
 	$args['avatar_size'] = 60;
 	return $args;
 }
+
+//remove items from admin black navigation bar
+function shapeSpace_remove_toolbar_node($wp_admin_bar) {
+    // replace 'updraft_admin_node' with your node id
+    $wp_admin_bar->remove_node('wp-logo');
+    $wp_admin_bar->remove_node('customize');
+    $wp_admin_bar->remove_node('updates');
+    $wp_admin_bar->remove_node('comments');    
+}
+
+add_action('admin_bar_menu', 'shapeSpace_remove_toolbar_node', 999);
