@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or exit;
 
 use SkyVerge\WooCommerce\Facebook\Products;
 use SkyVerge\WooCommerce\Facebook\Products\Sync;
-use SkyVerge\WooCommerce\PluginFramework\v5_5_4 as Framework;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0 as Framework;
 
 /**
  * The background sync handler.
@@ -217,11 +217,13 @@ class Background extends Framework\SV_WP_Background_Job_Handler {
 			// extract the retailer_id
 			$retailer_id = $product_data['retailer_id'];
 
+			//NB: Changing this to get items_batch to work
 			// retailer_id cannot be included in the data object
 			unset( $product_data['retailer_id'] );
+			$product_data['id'] = $retailer_id;
 
 			$request = [
-				'retailer_id' => $retailer_id,
+				// 'retailer_id' => $retailer_id,
 				'method'      => Sync::ACTION_UPDATE,
 				'data'        => $product_data,
 			];
@@ -261,21 +263,22 @@ class Background extends Framework\SV_WP_Background_Job_Handler {
 		$fb_parent_product = new \WC_Facebook_Product( $parent_product->get_id() );
 		$fb_product        = new \WC_Facebook_Product( $product->get_id(), $fb_parent_product );
 
-		$data = $fb_product->prepare_product();
+		$data = $fb_product->prepare_product( null, \WC_Facebook_Product::PRODUCT_PREP_TYPE_ITEMS_BATCH );
 
 		// product variations use the parent product's retailer ID as the retailer product group ID
-		$data['retailer_product_group_id'] = \WC_Facebookcommerce_Utils::get_fb_retailer_id( $parent_product );
+		// $data['retailer_product_group_id'] = \WC_Facebookcommerce_Utils::get_fb_retailer_id( $parent_product );
+		$data['item_group_id'] = \WC_Facebookcommerce_Utils::get_fb_retailer_id( $parent_product );
 
 		return $this->normalize_product_data( $data );
 	}
 
-
 	/**
-	 * Normalizes product data to be included in a sync request.
+	 * Normalizes product data to be included in a sync request. /items_batch
+	 * rather than /batch this time.
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param \WC_Product $product product object
+	 * @param array $data product data
 	 * @return array
 	 */
 	private function normalize_product_data( $data ) {
@@ -283,18 +286,21 @@ class Background extends Framework\SV_WP_Background_Job_Handler {
 		// allowed values are 'refurbished', 'used', and 'new', but the plugin has always used the latter
 		$data['condition'] = 'new';
 
-		$data['product_type'] = $data['category'];
-
 		// attributes other than size, color, pattern, or gender need to be included in the additional_variant_attributes field
 		if ( isset( $data['custom_data'] ) && is_array( $data['custom_data'] ) ) {
 
-			$data['additional_variant_attributes'] = $data['custom_data'];
+			$attributes = [];
+
+			foreach ($data['custom_data'] as $key => $val) {
+				$attributes[] = $key . ':' . $val;
+			}
+
+			$data['additional_variant_attribute'] = implode(',', $attributes);
 			unset( $data['custom_data'] );
 		}
 
 		return $data;
 	}
-
 
 	/**
 	 * Prepares the product data to be included in a sync request.
@@ -308,10 +314,10 @@ class Background extends Framework\SV_WP_Background_Job_Handler {
 
 		$fb_product = new \WC_Facebook_Product( $product->get_id() );
 
-		$data = $fb_product->prepare_product();
+		$data = $fb_product->prepare_product( null, \WC_Facebook_Product::PRODUCT_PREP_TYPE_ITEMS_BATCH );
 
 		// products that are not variations use their retailer retailer ID as the retailer product group ID
-		$data['retailer_product_group_id'] = $data['retailer_id'];
+		$data['item_group_id'] = $data['retailer_id'];
 
 		return $this->normalize_product_data( $data );
 	}
@@ -327,8 +333,8 @@ class Background extends Framework\SV_WP_Background_Job_Handler {
 	private function process_item_delete( $retailer_id ) {
 
 		$request = [
-			'retailer_id' => $retailer_id,
-			'method'      => Sync::ACTION_DELETE,
+			'data'   => array( 'id' => $retailer_id ),
+			'method' => Sync::ACTION_DELETE,
 		];
 
 		/**

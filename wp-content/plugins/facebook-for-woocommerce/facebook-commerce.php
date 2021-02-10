@@ -9,10 +9,11 @@
  */
 
 use SkyVerge\WooCommerce\Facebook\Admin;
-use SkyVerge\WooCommerce\PluginFramework\v5_5_4 as Framework;
+use SkyVerge\WooCommerce\Facebook\Events\AAMSettings;
+use SkyVerge\WooCommerce\Facebook\Handlers\Connection;
 use SkyVerge\WooCommerce\Facebook\Products;
 use SkyVerge\WooCommerce\Facebook\Products\Feed;
-use SkyVerge\WooCommerce\Facebook\Events\AAMSettings;
+use SkyVerge\WooCommerce\PluginFramework\v5_10_0 as Framework;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -25,7 +26,10 @@ require_once 'facebook-commerce-pixel-event.php';
 class WC_Facebookcommerce_Integration extends WC_Integration {
 
 
-	/** @var string the WordPress option name where the page access token is stored */
+	/**
+	 * @var string the WordPress option name where the page access token is stored
+	 * @deprecated 2.1.0
+	 */
 	const OPTION_PAGE_ACCESS_TOKEN = 'wc_facebook_page_access_token';
 
 	/** @var string the WordPress option name where the product catalog ID is stored */
@@ -100,9 +104,6 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/** @var string the hook for the recurreing action that syncs products */
 	const ACTION_HOOK_SCHEDULED_RESYNC = 'sync_all_fb_products_using_feed';
 
-
-	/** @var string|null the configured page access token */
-	private $page_access_token;
 
 	/** @var string|null the configured product catalog ID */
 	public $product_catalog_id;
@@ -935,6 +936,8 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 
 		if ( $sync_enabled ) {
 
+			Admin\Products::save_commerce_fields( $product );
+
 			switch ( $product->get_type() ) {
 
 				case 'simple':
@@ -1398,6 +1401,8 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 
 	/**
 	 * Update existing product group (variant data only)
+	 *
+	 * @param \WC_Facebook_Product $woo_product
 	 **/
 	function update_product_group( $woo_product ) {
 		$fb_product_group_id = $this->get_product_fbid(
@@ -1425,9 +1430,24 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 			return;
 		}
 
-		$product_group_data = array(
+		// figure out the matching default variation
+		$default_product_fbid  = null;
+		$woo_default_variation = $this->get_product_group_default_variation( $woo_product );
+
+		if ( $woo_default_variation ) {
+			$default_product_fbid = $this->get_product_fbid(
+				self::FB_PRODUCT_ITEM_ID,
+				$woo_default_variation['variation_id']
+			);
+		}
+
+		$product_group_data = [
 			'variants' => $variants,
-		);
+		];
+
+		if ( $default_product_fbid ) {
+			$product_group_data['default_product_id'] = $default_product_fbid;
+		}
 
 		$result = $this->check_api_result(
 			$this->fbgraph->update_product_group(
@@ -1446,6 +1466,63 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 		}
 		*/
 	}
+
+
+	/**
+	 * Determines if there is a matching variation for the default attributes.
+	 *
+	 * @since 2.1.2
+	 *
+	 * @param \WC_Facebook_Product $woo_product
+	 * @return array|null
+	 */
+	private function get_product_group_default_variation( $woo_product ) {
+
+		$default_attributes = $woo_product->woo_product->get_default_attributes( 'edit' );
+
+		if ( empty( $default_attributes ) ) {
+			return null;
+		}
+
+		$default_variation  = null;
+		$product_variations = $woo_product->woo_product->get_available_variations();
+
+		foreach ( $product_variations as $variation ) {
+
+			$variation_attributes = $this->get_product_variation_attributes( $variation );
+
+			$matching_attributes = array_intersect_assoc( $default_attributes, $variation_attributes );
+
+			if ( count( $matching_attributes ) === count( $variation_attributes ) ) {
+				$default_variation = $variation;
+				break;
+			}
+		}
+
+		return $default_variation;
+	}
+
+
+	/**
+	 * Parses given product variation for it's attributes
+	 *
+	 * @since 2.1.2
+	 *
+	 * @param array $variation
+	 * @return array
+	 */
+	private function get_product_variation_attributes( $variation ) {
+
+		$final_attributes     = [];
+		$variation_attributes = $variation['attributes'];
+
+		foreach ( $variation_attributes as $attribute_name => $attribute_value ) {
+			$final_attributes[ str_replace( 'attribute_', '', $attribute_name ) ] = $attribute_value;
+		}
+
+		return $final_attributes;
+	}
+
 
 	/**
 	 * Update existing product
@@ -2352,28 +2429,29 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/**
 	 * Gets the page access token.
 	 *
+	 * TODO: remove this method by version 3.0.0 or by 2021-08-21 {WV 2020-08-21}
+	 *
 	 * @since 1.10.0
+	 * @deprecated 2.1.0
 	 *
 	 * @return string
 	 */
 	public function get_page_access_token() {
 
-		if ( ! is_string( $this->page_access_token ) ) {
+		wc_deprecated_function( __METHOD__, '2.1.0', Connection::class . '::get_page_access_token()' );
 
-			$value = get_option( self::OPTION_PAGE_ACCESS_TOKEN, '' );
-
-			$this->page_access_token = is_string( $value ) ? $value : '';
-		}
+		$access_token = facebook_for_woocommerce()->get_connection_handler()->get_page_access_token();
 
 		/**
 		 * Filters the Facebook page access token.
 		 *
 		 * @since 1.10.0
+		 * @deprecated 2.1.0
 		 *
 		 * @param string $page_access_token Facebook page access token
 		 * @param \WC_Facebookcommerce_Integration $integration the integration instance
 		 */
-		return (string) apply_filters( 'wc_facebook_page_access_token', ! $this->is_feed_migrated() ? $this->page_access_token : '', $this );
+		return (string) apply_filters( 'wc_facebook_page_access_token', ! $this->is_feed_migrated() ? $access_token : '', $this );
 	}
 
 
@@ -2793,15 +2871,18 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/**
 	 * Updates the Facebook page access token.
 	 *
+	 * TODO: remove this method by version 3.0.0 or by 2021-08-21 {WV 2020-08-21}
+	 *
 	 * @since 1.10.0
+	 * @deprecated 2.1.0
 	 *
 	 * @param string $value page access token value
 	 */
 	public function update_page_access_token( $value ) {
 
-		$this->page_access_token = $this->sanitize_facebook_credential( $value );
+		wc_deprecated_function( __METHOD__, '2.1.0', Connection::class . '::update_page_access_token()' );
 
-		update_option( self::OPTION_PAGE_ACCESS_TOKEN, $this->page_access_token );
+		facebook_for_woocommerce()->get_connection_handler()->update_page_access_token( $value );
 	}
 
 
@@ -3627,7 +3708,6 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 			$this->schedule_resync( $resync_offset );
 		}
 	}
-
 
 	/**
 	 * Handles the schedule feed generation action, triggered by the REST API.
