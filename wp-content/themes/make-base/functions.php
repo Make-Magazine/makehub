@@ -297,7 +297,8 @@ function shapeSpace_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('wp-logo');
     $wp_admin_bar->remove_node('customize');
     $wp_admin_bar->remove_node('updates');
-    $wp_admin_bar->remove_node('comments');    
+    $wp_admin_bar->remove_node('comments');
+    $wp_admin_bar->remove_node('new-content');
 }
 
 add_action('admin_bar_menu', 'shapeSpace_remove_toolbar_node', 999);
