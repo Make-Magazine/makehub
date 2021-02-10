@@ -51,7 +51,7 @@ class ACUI_Homepage{
 					<th scope="row"><label for="role"><?php _e( 'Default role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 					<?php 
-						$list_roles = acui_get_editable_roles();
+						$list_roles = ACUI_Helper::get_editable_roles();
 						
 						foreach ($list_roles as $key => $value) {
 							if( in_array( $key, $last_roles_used ) )
@@ -110,6 +110,18 @@ class ACUI_Homepage{
 					</td>
 				</tr>
 
+				<tr id="acui_update_emails_existing_users_wrapper" class="form-field form-required">
+					<th scope="row"><label for="update_emails_existing_users"><?php _e( 'Update emails?', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td>
+						<select name="update_emails_existing_users">
+							<option value="yes"><?php _e( 'Yes', 'import-users-from-csv-with-meta' ); ?></option>
+							<option value="create"><?php _e( 'No, but create a new user with a prefix in the username', 'import-users-from-csv-with-meta' ); ?></option>
+							<option value="no"><?php _e( 'No, skip this user', 'import-users-from-csv-with-meta' ); ?></option>
+						</select>
+						<p class="description"><?php _e( 'What the plugin should do if the plugin find an user, identified by their username, with a different email', 'import-users-from-csv-with-meta' ); ?></p>
+					</td>
+				</tr>
+
 				<tr id="acui_update_roles_existing_users_wrapper" class="form-field form-required">
 					<th scope="row"><label for="update_roles_existing_users"><?php _e( 'Update roles for existing users?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
@@ -117,6 +129,16 @@ class ACUI_Homepage{
 							<option value="no"><?php _e( 'No', 'import-users-from-csv-with-meta' ); ?></option>
 							<option value="yes"><?php _e( 'Yes, update and override existing roles', 'import-users-from-csv-with-meta' ); ?></option>
 							<option value="yes_no_override"><?php _e( 'Yes, add new roles and not override existing ones', 'import-users-from-csv-with-meta' ); ?></option>
+						</select>
+					</td>
+				</tr>
+
+				<tr id="acui_update_allow_update_passwords_wrapper" class="form-field form-required">
+					<th scope="row"><label for="update_allow_update_passwords"><?php _e( 'Never update passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td>
+						<select name="update_allow_update_passwords">
+							<option value="yes"><?php _e( 'Update passwords as it is described in documentation', 'import-users-from-csv-with-meta' ); ?></option>
+							<option value="no"><?php _e( 'Never update passwords when updating a user', 'import-users-from-csv-with-meta' ); ?></option>
 						</select>
 					</td>
 				</tr>
@@ -159,7 +181,7 @@ class ACUI_Homepage{
 						<div style="margin-left:25px;">
 							<select id="change_role_not_present_role" name="change_role_not_present_role">
 								<?php
-									$list_roles = acui_get_editable_roles(); 
+									$list_roles = ACUI_Helper::get_editable_roles();
 						
 									foreach ($list_roles as $key => $value) {
 										echo "<option value='$key'>$value</option>";

@@ -4,7 +4,7 @@
 	$( '#acui_email_option_remove_upload_button' ).click( function(){
 		var data = {
 			'action': 'acui_mail_options_remove_attachment',
-			'security': email_options.nonce,
+			'security': email_options.security,
 		};
 
 		$.post( ajaxurl, data, function( response ) {

@@ -13,7 +13,7 @@ class ACUI_WP_Importer_GUI{
 	}
 
 	function importer(){
-		wp_safe_redirect( admin_url( 'tools.php?page=acui' ) );
+		echo "<script>document.location.href='" . admin_url( 'tools.php?page=acui' ) . "'</script>";
 	}
 
 	function exporter(){

@@ -12,7 +12,7 @@ class ACUI_Doc{
 				<th scope="row"><?php _e( 'Columns position', 'import-users-from-csv-with-meta' ); ?></th>
 				<td><small><em><?php _e( '(Documents should look like the one presented into screenshot. Remember you should fill the first two columns with the next values)', 'import-users-from-csv-with-meta' ); ?></em></small>
 					<ol>
-						<li><?php _e( 'Username', 'import-users-from-csv-with-meta' ); ?></li>
+						<li><?php _e( 'Username: you can leave it empty and the username will be generated randomly', 'import-users-from-csv-with-meta' ); ?> </li>
 						<li><?php _e( 'Email', 'import-users-from-csv-with-meta' ); ?></li>
 					</ol>						
 					<small><em><?php _e( '(The next columns are totally customizable and you can use whatever you want. All rows must contains same columns)', 'import-users-from-csv-with-meta' ); ?></em></small>

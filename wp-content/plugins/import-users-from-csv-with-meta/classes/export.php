@@ -16,10 +16,12 @@ class ACUI_Exporter{
 		add_action( 'wp_ajax_acui_export_users_csv', array( $this, 'export_users_csv' ) );
 		add_filter( 'acui_export_get_key_user_data', array( $this, 'filter_key_user_id' ) );
 		add_filter( 'acui_export_non_date_keys', array( $this, 'get_non_date_keys' ), 1, 1 );
+		add_filter( 'acui_export_columns', array( $this, 'maybe_order_columns_alphabetacally' ), PHP_INT_MAX, 2 );
+		add_filter( 'acui_export_data', array( $this, 'maybe_order_row_alphabetically' ), PHP_INT_MAX, 5 );
 	}
 
 	public static function admin_gui(){
-		$roles = acui_get_editable_roles();
+		$roles = ACUI_Helper::get_editable_roles();
 	?>
 	<h3 id="acui_export_users_header"><?php _e( 'Export users', 'import-users-from-csv-with-meta' ); ?></h3>
 	<form id="acui_export_users_wrapper" method="POST" target="_blank" enctype="multipart/form-data" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
@@ -68,6 +70,13 @@ class ACUI_Exporter{
 						<span class="description"><a href="https://www.php.net/manual/en/datetime.formats.php"><?php _e( 'accepted formats', 'import-users-from-csv-with-meta' ); ?></a></span>
 					</td>
 				</tr>
+				<tr id="acui_order_fields_alphabetically_wrapper" valign="top">
+					<th scope="row"><?php _e( 'Order fields alphabetically', 'import-users-from-csv-with-meta' ); ?></th>
+					<td>
+						<input type="checkbox" name="order_fields_alphabetically" value="1">
+						<span class="description"><?php _e( "Order all columns alphabetically to check easier your data. First two columns won't be affected", 'import-users-from-csv-with-meta' ); ?></span>
+					</td>
+				</tr>
 				<tr id="acui_download_csv_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Download CSV file with users', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
@@ -98,15 +107,49 @@ class ACUI_Exporter{
 		return array_merge( $non_date_keys, $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys );
 	}
 
-	public static function prepare( $key, $value, $datetime_format ){
+	function maybe_order_columns_alphabetacally( $row, $order_fields_alphabetically ){
+		if( !$order_fields_alphabetically)
+			return $row;
+		
+		$first_two_columns = array_slice( $row, 0, 2 );
+		$to_order_columns = array_slice( $row, 2 );
+		sort( $to_order_columns );
+
+		return array_merge( $first_two_columns, $to_order_columns );
+	}
+
+	function maybe_order_row_alphabetically( $row, $user, $datetime_format, $columns, $order_fields_alphabetically ){
+		if( !$order_fields_alphabetically )
+			return $row;
+
+		return array_merge( array_flip( $columns ), $row );
+	}
+
+	public static function clean_bad_characters_formulas( $value ){
+		if( strlen( $value ) == 0 )
+			return $value;
+
+		$bad_characters = array( '+', '-', '=', '@' );
+		$first_character = substr( $value, 0, 1 );
+		if( in_array( $first_character, $bad_characters ) )
+			$value = "\\" . $first_character . substr( $value, 1 );
+
+		return $value;
+	}
+
+	public static function prepare( $key, $value, $datetime_format, $user = 0 ){
 		$timestamp_keys = apply_filters( 'acui_export_timestamp_keys', array( 'wc_last_active' ) );
 		$non_date_keys = apply_filters( 'acui_export_non_date_keys', array() );
+		$original_value = $value;
 
-		if( is_array( $value ) ){
+		if( $key == 'role' ){
+			return self::get_role( $user );
+		}
+		if( is_array( $value ) || is_object( $value ) ){
 			return serialize( $value );
 		}
 		elseif( in_array( $key, $non_date_keys ) || empty( $datetime_format ) ){
-			return $value;
+			return self::clean_bad_characters_formulas( $value );
 		}
 		elseif( strtotime( $value ) ){ // dates in datetime format
 			return date( $datetime_format, strtotime( $value ) );
@@ -115,11 +158,11 @@ class ACUI_Exporter{
 			return date( $datetime_format, $value );
 		}
 		else{
-			return $value;
+			return apply_filters( 'acui_export_prepare', self::clean_bad_characters_formulas( $value ), $original_value );
 		}
 	}
 
-	function get_role( $user_id ){
+	static function get_role( $user_id ){
 		$user = get_user_by( 'id', $user_id );
 		return implode( ',', $user->roles );
 	}
@@ -136,6 +179,7 @@ class ACUI_Exporter{
 		$delimiter = sanitize_text_field( $_POST['delimiter'] );
 		$convert_timestamp = isset( $_POST['convert_timestamp'] ) && !empty( $_POST['convert_timestamp'] );
 		$datetime_format = ( $convert_timestamp ) ? sanitize_text_field( $_POST['datetime_format'] ) : '';
+		$order_fields_alphabetically = isset( $_POST['order_fields_alphabetically'] ) && !empty( $_POST['order_fields_alphabetically'] );
 
 		switch ( $delimiter ) {
 			case 'COMMA':
@@ -169,8 +213,8 @@ class ACUI_Exporter{
 			$row[] = $key;
 		}
 
-		$row = apply_filters( 'acui_export_columns', $row );
-
+		$row = apply_filters( 'acui_export_columns', $row, $order_fields_alphabetically );
+		$columns = $row;
 		$data[] = $row;
 		$row = array();
 
@@ -181,18 +225,20 @@ class ACUI_Exporter{
 
 			foreach ( $this->user_data as $key ) {
 				$key = apply_filters( 'acui_export_get_key_user_data', $key );
-				$row[] = self::prepare( $key, $userdata->data->{$key}, $datetime_format );
+				$row[ $key ] = self::prepare( $key, $userdata->data->{$key}, $datetime_format, $user );
 			}
 
 			$row[] = $this->get_role( $user );
 
 			foreach ( $this->get_user_meta_keys() as $key ) {
-				$row[] = self::prepare( $key, get_user_meta( $user, $key, true ), $datetime_format );
+				$row[ $key ] = self::prepare( $key, get_user_meta( $user, $key, true ), $datetime_format, $user );
 			}
 
-			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format );
+			$row = $this->maybe_fill_empty_data( $row, $user );
 
-			$data[] = $row;
+			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format, $columns, $order_fields_alphabetically );
+
+			$data[] = array_values( $row );
 			$row = array();
 		}
 
@@ -210,7 +256,7 @@ class ACUI_Exporter{
 		header( "Content-type: text/csv;charset=utf-8" );
 		header( "Content-Disposition: attachment; filename=\"".$path_parts["basename"]."\"" );
 		header( "Content-length: $fsize" );
-		header( "Cache-control: private" );
+		header( "Cache-control: privfilefleate" );
 		header( "Content-Description: File Transfer" );
     	header( "Content-Transfer-Encoding: binary" );
     	header( "Expires: 0" );
@@ -236,8 +282,12 @@ class ACUI_Exporter{
 	    $usermeta = $wpdb->get_results( $select, ARRAY_A );
 	  
 	  	foreach ($usermeta as $key => $value) {
-	  		$meta_keys[] = $value["meta_key"];
-	  	}
+			if( $value["meta_key"] == 'role' )
+				continue;
+
+			$meta_keys[] = $value["meta_key"];
+		}
+
 	    return apply_filters( 'acui_export_get_user_meta_keys', $meta_keys );
 	}
 
@@ -272,6 +322,20 @@ class ACUI_Exporter{
 
 	function filter_key_user_id( $key ){
 		return ( $key == 'source_user_id' ) ? 'ID' : $key;
+	}
+
+	function maybe_fill_empty_data( $row, $user_id ){
+		if( empty( $row['user_login'] ) || empty( $row['user_email'] ) ){
+			$user = new WP_User( $user_id );
+
+			if( $user->ID == 0 )
+				return $row;
+
+			$row['user_login'] = $user->user_login;
+			$row['user_email'] = $user->user_email;
+		}
+		
+		return $row;
 	}
 }
 

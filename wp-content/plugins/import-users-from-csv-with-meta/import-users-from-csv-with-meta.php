@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.16.3
+Version:		1.17.3.1
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -11,10 +11,13 @@ License URI: 	https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: import-users-from-csv-with-meta
 Domain Path: /languages
 */
+
 if ( ! defined( 'ABSPATH' ) ) 
 	exit;
 
 class ImportExportUsersCustomers{
+	var $file;
+
 	function __construct(){
 	}
 
@@ -83,7 +86,8 @@ class ImportExportUsersCustomers{
 	
 	public function loader(){
 		add_action( "admin_menu", array( $this, 'menu' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10, 1 );
+		add_filter( 'plugin_action_links', array( $this, 'action_links' ), 10, 2 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 		add_action( 'wp_ajax_acui_delete_attachment', array( $this, 'delete_attachment' ) );
 		add_action( 'wp_ajax_acui_bulk_delete_attachment', array( $this, 'bulk_delete_attachment' ) );
@@ -91,13 +95,6 @@ class ImportExportUsersCustomers{
 	
 		if( is_plugin_active( 'buddypress/bp-loader.php' ) && file_exists( plugin_dir_path( __DIR__ ) . 'buddypress/bp-xprofile/classes/class-bp-xprofile-group.php' ) ){
 			require_once( plugin_dir_path( __DIR__ ) . 'buddypress/bp-xprofile/classes/class-bp-xprofile-group.php' );	
-		}
-	
-		if( get_option( 'acui_show_profile_fields' ) == true ){
-			add_action( "show_user_profile", array( $this, "extra_user_profile_fields" ) );
-			add_action( "edit_user_profile", array( $this, "extra_user_profile_fields" ) );
-			add_action( "personal_options_update", array( $this, "save_extra_user_profile_fields" ) );
-			add_action( "edit_user_profile_update", array( $this, "save_extra_user_profile_fields" ) );
 		}
 	
 		// classes
@@ -114,8 +111,6 @@ class ImportExportUsersCustomers{
 		foreach ( glob( plugin_dir_path( __FILE__ ) . "addons/*.php" ) as $file ) {
 			include_once( $file );
 		}
-		
-		require_once( "importer.php" );
 	}
 	
 	public static function activate(){
@@ -131,11 +126,27 @@ class ImportExportUsersCustomers{
 	}
 
 	function menu() {
-		add_submenu_page( 'tools.php', __( 'Import and export users and customers', 'import-users-from-csv-with-meta' ), __( 'Import and export users and customers', 'import-users-from-csv-with-meta' ), apply_filters( 'acui_capability', 'create_users' ), 'acui', 'acui_options' );
+		$acui_import = new ACUI_Import();
+		add_submenu_page( 'tools.php', __( 'Import and export users and customers', 'import-users-from-csv-with-meta' ), __( 'Import and export users and customers', 'import-users-from-csv-with-meta' ), apply_filters( 'acui_capability', 'create_users' ), 'acui', array( $acui_import, 'show' ) );
 	}
 	
-	function admin_enqueue_scripts() {
+	function admin_enqueue_scripts( $hook ) {
+		if( 'tools_page_acui' != $hook )
+			return;
+		
 		wp_enqueue_style( 'acui_css', plugins_url( 'assets/style.css', __FILE__ ), false, '1.0.0' );
+		wp_enqueue_style( 'datatable', '//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css' );
+		wp_enqueue_script( 'datatable', '//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js' );
+	}
+
+	function action_links( $links, $file ) {
+		if ($file == 'import-users-from-csv-with-meta/import-users-from-csv-with-meta.php') {
+			$links[] = sprintf( __( '<a href="%s">Export</a>', 'import-users-from-csv-with-meta' ), get_admin_url( null, 'tools.php?page=acui&tab=export' ) );
+			$links[] = sprintf( __( '<a href="%s">Import</a>', 'import-users-from-csv-with-meta' ), get_admin_url( null, 'tools.php?page=acui&tab=homepage' ) );
+			return array_reverse( $links );		
+		}
+		
+		return $links; 
 	}
 
 	function plugin_row_meta( $links, $file ){
@@ -221,49 +232,7 @@ class ImportExportUsersCustomers{
 			}
 		}
 		return $values;
-	}
-
-	function extra_user_profile_fields( $user ) {
-		$acui_restricted_fields = acui_get_restricted_fields();
-		$headers = get_option("acui_columns");
-	
-		if( is_array( $headers ) && !empty( $headers ) ):
-	?>
-		<h3>Extra profile information</h3>
-		
-		<table class="form-table"><?php
-		foreach ( $headers as $column ):
-			if( in_array( $column, $acui_restricted_fields ) )
-				continue;
-		?>
-			<tr>
-				<th><label for="<?php echo $column; ?>"><?php echo $column; ?></label></th>
-				<td><input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>" value="<?php echo esc_attr(get_the_author_meta($column, $user->ID )); ?>" class="regular-text" /></td>
-			</tr>
-			<?php
-		endforeach;
-		?>
-		</table><?php
-		endif;
-	}
-
-	function save_extra_user_profile_fields( $user_id ){
-		$headers = get_option("acui_columns");
-		$acui_restricted_fields = acui_get_restricted_fields();
-	
-		$post_filtered = filter_input_array( INPUT_POST );
-	
-		if( is_array( $headers ) && count( $headers ) > 0 ):
-			foreach ( $headers as $column ){
-				if( in_array( $column, $acui_restricted_fields ) )
-					continue;
-	
-				$column_sanitized = str_replace(" ", "_", $column);
-				update_user_meta( $user_id, $column, $post_filtered[$column_sanitized] );
-			}
-		endif;
-	}
-	
+	}	
 }
 
 function acui_start(){
