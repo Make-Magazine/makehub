@@ -1,9 +1,9 @@
 === BP Profile Search ===
 Contributors: dontdream
 Tags: buddypress, directory, members, users, search, filter
-Requires at least: 4.8
-Tested up to: 5.5
-Stable tag: 5.3.4
+Requires at least: 4.9
+Tested up to: 5.6
+Stable tag: 5.3.5
 
 Member search and member directories for BuddyPress.
 
@@ -24,7 +24,7 @@ Each search form has a <em>target directory</em>. When you run a search, the for
 With the form builder you can:
 
 <ul>
-	<li>Add, remove, and reorder the search fields</li>
+	<li>Add, edit, reorder, and remove the search fields</li>
 
 	<li>Use as search fields the BuddyPress profile fields, the <em>users</em> and <em>usermeta</em> data (including roles), the BuddyPress user groups, and the user taxonomies (including BuddyPress member types)</li>
 
@@ -103,7 +103,7 @@ In the screenshots below, the <em>City</em> field is provided by the free compan
 
 == Installation ==
 
-See the standard installation procedure, in [Managing Plugins](https://codex.wordpress.org/Managing_Plugins).
+See the standard installation procedure, in [Managing Plugins](https://wordpress.org/support/article/managing-plugins/#installing-plugins).
 
 == Screenshots ==
 
@@ -115,6 +115,8 @@ See the standard installation procedure, in [Managing Plugins](https://codex.wor
 
 == Changelog ==
 
+= 5.3.5 =
+* Fixed: member-type specific fields are no longer incorrectly hidden
 = 5.3.4 =
 * Added: support for the BuddyBoss *Gender* profile field type
 = 5.3.3 =

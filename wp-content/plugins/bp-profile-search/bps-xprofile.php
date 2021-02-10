@@ -7,7 +7,7 @@ function bps_xprofile_setup ($fields)
 
 	if (!bp_is_active ('xprofile'))  return $fields;
 
-	$args = array ('hide_empty_fields' => false, 'member_type' => bp_get_member_types ());
+	$args = array ('hide_empty_fields' => false, 'member_type' => bp_get_member_types (), 'user_id' => false);
 	if (bp_has_profile ($args))
 	{
 		while (bp_profile_groups ())
