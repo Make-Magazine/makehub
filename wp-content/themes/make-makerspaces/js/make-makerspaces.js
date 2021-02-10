@@ -2,7 +2,7 @@
  * Make - Makerspaces entry point.
  *
  * @package MakeMakerspaces\JS
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
  */
 

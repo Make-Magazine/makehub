@@ -1,7 +1,7 @@
 <?php
 /*
    Plugin Name: Make Map
-   Plugin URI: makermedia.com
+   Plugin URI: make.co
    Description: a plugin to pull map information from gravity forms and display on an agular map
    Version: 1.0
    Author: Alicia Williams

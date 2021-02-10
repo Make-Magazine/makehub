@@ -5,9 +5,9 @@
  * This file adds the Customizer additions to the Make - Makerspaces Theme.
  *
  * @package Make - Makerspaces
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_action( 'customize_register', 'make_makerspaces_customizer_register' );

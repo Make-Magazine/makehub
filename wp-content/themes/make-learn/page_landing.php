@@ -7,9 +7,9 @@
  * Template Name: Landing
  *
  * @package Make - Learn
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_filter( 'body_class', 'make_learn_add_body_class' );

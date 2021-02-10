@@ -28,7 +28,7 @@ get_header(); ?>
             $results =  $vendor->addSubscriber($email, 301840);  
           
           $vendor = new PdfVendor();
-          $email = 'webmaster@makermedia.com';
+          $email = 'webmaster@make.co';
           $results = $vendor->showListOfPdfs($email); */
 				
           ?>

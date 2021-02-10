@@ -2,7 +2,7 @@
 /**
  * Make - Learn child theme.
  *
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
  * @link    https://github.com/Make-Magazine/makehub
  */

@@ -5,9 +5,9 @@
  * This file adds the Genesis Connect for WooCommerce notice to the Make - Makerspaces Theme.
  *
  * @package Make - Makerspaces
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_action( 'admin_print_styles', 'make_learn_remove_woocommerce_notice' );

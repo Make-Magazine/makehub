@@ -5,9 +5,9 @@
  * This file adds the required helper functions used in the Make - Community Theme.
  *
  * @package Make - Co
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 /**

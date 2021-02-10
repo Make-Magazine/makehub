@@ -5,9 +5,9 @@
  * This file adds functions to the Make - Learn Theme.
  *
  * @package Make - Learn
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 // Starts the engine.
@@ -15,7 +15,7 @@ require_once get_template_directory() . '/lib/init.php';
 
 // Defines the child theme (do not remove).
 define( 'CHILD_THEME_NAME', 'Make - Learn' );
-define( 'CHILD_THEME_URL', 'https://makermedia.com' );
+define( 'CHILD_THEME_URL', 'https://make.co' );
 
 // Sets up the Theme.
 require_once get_stylesheet_directory() . '/lib/theme-defaults.php';

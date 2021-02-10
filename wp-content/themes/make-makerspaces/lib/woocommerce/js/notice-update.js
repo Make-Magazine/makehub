@@ -3,7 +3,7 @@
  *
  * @version 2.3.0
  *
- * @author Maker Media
+ * @author Make Community
  * @license GPL-2.0-or-later
  * @package MakeLearn
  */

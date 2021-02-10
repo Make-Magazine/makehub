@@ -2,7 +2,7 @@
  * Make - Community entry point.
  *
  * @package MakeCo\JS
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
  */
 

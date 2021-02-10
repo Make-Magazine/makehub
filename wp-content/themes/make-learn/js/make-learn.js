@@ -2,7 +2,7 @@
  * Make - Learn entry point.
  *
  * @package MakeLearn\JS
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
  */
 

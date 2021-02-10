@@ -5,9 +5,9 @@
  * This file adds the required CSS to the front end to the Make - Makerspaces Theme.
  *
  * @package Make - Makerspaces
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_action( 'wp_enqueue_scripts', 'make_makerspaces_css' );

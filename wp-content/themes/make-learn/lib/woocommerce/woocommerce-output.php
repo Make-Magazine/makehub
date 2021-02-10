@@ -5,9 +5,9 @@
  * This file adds the WooCommerce styles and the Customizer additions for WooCommerce to the Make - Learn Theme.
  *
  * @package Make - Learn
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_filter( 'woocommerce_enqueue_styles', 'make_learn_woocommerce_styles' );

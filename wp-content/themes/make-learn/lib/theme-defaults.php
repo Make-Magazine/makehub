@@ -5,9 +5,9 @@
  * This file adds the default theme settings to the Make - Learn Theme.
  *
  * @package Make - Learn
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 add_filter( 'genesis_theme_settings_defaults', 'make_learn_theme_defaults' );

@@ -6,9 +6,9 @@
  * This file adds functions to the Make - Community Theme.
  *
  * @package Make - Community
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 // Starts the engine.
 require_once get_template_directory() . '/lib/init.php';

@@ -5,9 +5,9 @@
  * This file adds the required helper functions used in the Make - Makerspaces Theme.
  *
  * @package Make - Makerspaces
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 
 /**

@@ -8,9 +8,9 @@
  * Template Name: Landing
  *
  * @package Make - Co
- * @author  Maker Media
+ * @author  Make Community
  * @license GPL-2.0-or-later
- * @link    https://makermedia.com/
+ * @link    https://make.co/
  */
 function custom_home_page_setup() {
     // Remove posts.
