@@ -11,6 +11,7 @@
 
 use Activecampaign_For_Woocommerce_Admin as Admin;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The public-facing functionality of the plugin.
@@ -50,20 +51,35 @@ class Activecampaign_For_Woocommerce_Public {
 	 * @access private
 	 */
 	private $admin;
+	/**
+	 * The custom ActiveCampaign logger
+	 *
+	 * @var Activecampaign_For_Woocommerce_Logger
+	 */
+	private $logger;
 
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since 1.0.0
+	 * @param string $plugin_name   The name of the plugin.
+	 * @param string $version       The version of this plugin.
+	 * @param Admin  $admin         An instantiated admin class to optionally use.
+	 * @param Logger $logger        The ActiveCampaign WooCommerce logger.
 	 *
-	 * @param string $plugin_name The name of the plugin.
-	 * @param string $version     The version of this plugin.
-	 * @param Admin  $admin       An instantiated admin class to optionally use.
+	 * @since 1.0.0
 	 */
-	public function __construct( $plugin_name, $version, Admin $admin ) {
+	public function __construct( $plugin_name, $version, Admin $admin, Logger $logger = null ) {
 		$this->plugin_name = $plugin_name;
 		$this->version     = $version;
 		$this->admin       = $admin;
+		$this->logger      = $logger;
+	}
+
+	/**
+	 * Initialize injections that are still null
+	 */
+	public function init() {
+		$this->logger = $this->logger ?: new Logger();
 	}
 
 	/**
@@ -114,8 +130,9 @@ class Activecampaign_For_Woocommerce_Public {
 	 * owner of the site is able to customize on which hook this method should be called.
 	 */
 	public function handle_woocommerce_checkout_form() {
-		if ( isset( $this->admin->get_options()['checkbox_display_option'] ) ) {
-			$setting = $this->admin->get_options()['checkbox_display_option'];
+		$options = $this->admin->get_options();
+		if ( isset( $options['checkbox_display_option'] ) ) {
+			$setting = $options['checkbox_display_option'];
 
 			/**
 			 * There are three settings available, but only this one results in not displaying the checkbox at all.
@@ -123,9 +140,17 @@ class Activecampaign_For_Woocommerce_Public {
 			if ( 'not_visible' === $setting ) {
 				return;
 			}
+		} else {
+			$this->logger->error( 'checkbox_display_option not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
 		}
 
-		require_once __DIR__ . '/partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php';
+		if ( file_exists( __DIR__ . '/partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php' ) ) {
+			require_once __DIR__ . '/partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php';
+		} elseif ( file_exists( 'partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php' ) ) {
+			require_once 'partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php';
+		} else {
+			$this->logger->error( 'Cannot find the activecampaign-for-woocommerce-accepts-marketing-checkbox template. May be a file permissions issue. Cannot display the marketing opt-in checkbox' );
+		}
 	}
 
 	/**
@@ -142,14 +167,16 @@ class Activecampaign_For_Woocommerce_Public {
 		}
 
 		$checked = true;
-
-		if ( isset( $this->admin->get_options()['checkbox_display_option'] ) ) {
-			$setting = $this->admin->get_options()['checkbox_display_option'];
+		$options = $this->admin->get_options();
+		if ( isset( $options['checkbox_display_option'] ) ) {
+			$setting = $options['checkbox_display_option'];
 
 			/**
 			 * There are three settings, but only this one results in a checked box by default.
 			 */
 			$checked = 'visible_checked_by_default' === $setting;
+		} else {
+			$this->logger->error( 'checkbox_display_option not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
 		}
 
 		return $checked;
@@ -177,11 +204,14 @@ class Activecampaign_For_Woocommerce_Public {
 	 * @return string
 	 */
 	public function label_for_accepts_marketing_checkbox() {
-		return isset( $this->admin->get_options()['optin_checkbox_text'] ) ?
-			$this->admin->get_options()['optin_checkbox_text'] :
-			esc_attr__(
+		$options = $this->admin->get_options();
+		if ( isset( $options['optin_checkbox_text'] ) ) {
+			return $options['optin_checkbox_text'];
+		} else {
+			return esc_attr__(
 				'Keep me up to date on news and exclusive offers.',
 				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
 			);
+		}
 	}
 }

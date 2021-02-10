@@ -224,12 +224,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 			return false;
 		}
 
-		/**
-		 * If $find_or_create_ac_order === 2,
-		 * it's a newly created order so return true
-		 * since this is the final step.
-		 */
-
 		return true;
 	}
 	// phpcs:enable
@@ -238,13 +232,26 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * Generate the externalcheckoutid hash which
 	 * is used to tie together pending and complete
 	 * orders in Hosted (so we don't create duplicate orders).
+	 * This has been modified to accurately work with woo commerce not independently
+	 * tracking cart session vs order session
 	 *
 	 * @param string $wc_session_hash The unique WooCommerce cart session ID.
 	 * @param string $billing_email The guest customer's email address.
+	 *
 	 * @return string The hash used as the externalcheckoutid value
 	 */
 	public static function generate_externalcheckoutid( $wc_session_hash, $billing_email ) {
-		return md5( $wc_session_hash . $billing_email );
+		// Get the custom session if it exists
+		$order_external_uuid = wc()->session->get( 'activecampaignfwc_order_external_uuid' );
+
+		// If custom session is not set, create one on the cart
+		if ( ! $order_external_uuid || '' === $order_external_uuid ) {
+			$order_external_uuid = uniqid( '', true );
+			wc()->session->set( 'activecampaignfwc_order_external_uuid', $order_external_uuid );
+		}
+
+		// Generate the hash we'll use
+		return md5( $wc_session_hash . $billing_email . $order_external_uuid );
 	}
 
 	/**

@@ -301,6 +301,19 @@ class Activecampaign_For_Woocommerce {
 			$this->cart_emptied_event,
 			'trigger'
 		);
+
+		$this->loader->add_action(
+			'woocommerce_order_status_processing',
+			$this->cart_updated_event,
+			'processing_trigger'
+		);
+
+		$this->loader->add_action(
+			'woocommerce_order_status_on-hold',
+			$this->cart_updated_event,
+			'processing_trigger'
+		);
+
 	}
 
 	/**
@@ -466,10 +479,12 @@ class Activecampaign_For_Woocommerce {
 			'enqueue_scripts'
 		);
 
+		// This adds the checkbox
 		$this->loader->add_action(
 			'woocommerce_after_checkout_billing_form',
 			$this->public,
-			'handle_woocommerce_checkout_form'
+			'handle_woocommerce_checkout_form',
+			5
 		);
 
 		$this->loader->add_action(

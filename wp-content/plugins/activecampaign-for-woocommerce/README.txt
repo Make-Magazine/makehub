@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.5.1
-Stable tag: 1.2.13
+Tested up to: 5.6
+Stable tag: 1.2.15
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -20,6 +20,10 @@ ActiveCampaign for WooCommerce gives you the power to:
 - Provide an opt-in checkbox on your checkout form for customers to opt-in to marketing
 - Configure what the opt-in checkbox says and if it's checked by default
 - Trigger automations when a customer abandons a cart
+
+ActiveCampaign's category-defining customer experience automation (CXA) platform helps over 130,000 businesses in 170 countries meaningfully engage with their customers. The platform gives businesses of all sizes access to hundreds of pre-built automations that combine email marketing, marketing automation, CRM, and machine learning for powerful segmentation and personalization across social, email, messaging, chat, and text.
+
+By removing the silos that typically exist between email marketing, marketing automation, CRM, and account management solutions, businesses can automate truly personalized experiences that feel authentic. Over 70% of ActiveCampaign's customers use its 300+ integrations including WooCommerce, Square, Facebook, Eventbrite, Wordpress and Salesforce.
 
 == Installation ==
 
@@ -40,6 +44,16 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.2.15 =
+* Updated description copy
+* Updated WooCommerce compatibility version tested
+
+= 1.2.14 =
+* Bugfix for repeat guest orders not syncing to ActiveCampaign
+* Fix for abandoned carts not being sent to ActiveCampaign due to checkout ID conflicts
+* Adds error logging for marketing checkbox issues
+* Updating compatibility reference for Wordpress 5.6 and WooCommerce 4.8
 
 = 1.2.13 =
 * Resolving errors resulting from files missing in the package

@@ -10,10 +10,10 @@
  */
 
 use Activecampaign_For_Woocommerce_Admin as Admin;
-
 use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
+use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
 
 /**
  * Ecom Order Factory
@@ -53,8 +53,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 	/**
 	 * Create an Ecom Order from the given WC Cart and WC Customer
 	 *
-	 * @param WC_Cart     $cart The WC Cart.
-	 * @param WC_Customer $customer The WC Customer.
+	 * @param     WC_Cart     $cart     The WC Cart.
+	 * @param     WC_Customer $customer     The WC Customer.
 	 *
 	 * @return Ecom_Order
 	 */
@@ -65,12 +65,18 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 
 		$order->set_id( $this->get_ac_id() );
 
-		$external_id = $this->get_external_id();
+		// TODO: Use generate instead of external checkout
+		// $external_id = $this->get_external_id();
+		//
+		// if ( ! $external_id ) {
+		// $external_id = wc()->session->get_customer_id();
+		// }
+		$external_id = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
+			wc()->session->get_customer_id(),
+			$customer->get_email()
+		);
 
-		if ( ! $external_id ) {
-			$external_id = wc()->session->get_customer_id();
-		}
-
+		// TODO: Find a value that is unique for the cart order that changes once an order is placed.
 		$order->set_externalcheckoutid( $external_id );
 		$order->set_source( '1' );
 		$order->set_email( $customer->get_email() );

@@ -116,13 +116,9 @@ return array(
 	},
 
 	AC_Public::class                                  => function ( Admin $admin ) {
-		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
-			'1.0.0';
+		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ? ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION : '1.0.0';
 
-		$plugin_name = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB' ) ?
-			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB :
-			'activecampaign-for-woocommerce';
+		$plugin_name = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB' ) ? ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB : 'activecampaign-for-woocommerce';
 
 		return new AC_Public( $plugin_name, $version, $admin );
 	},
