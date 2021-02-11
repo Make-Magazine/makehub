@@ -162,7 +162,7 @@ if (empty($course)) {
                             
                             <script type="text/javascript">
                                 jQuery(document).ready(function () {
-                                    jQuery(".lms-topic-item a.bb-title").click(function (event) {
+                                    jQuery(".lms-lesson-item.current .lms-lesson-content .lms-topic-item a.bb-title").click(function (event) {
                                         event.preventDefault();
                                         jQuery("#pleasewait").show(); //show the spinner
                                         jQuery("#topic-section").html(""); //empty out the div
