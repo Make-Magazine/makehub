@@ -40,7 +40,7 @@
                 ?>
                 <!-- hide the universal nav -->
                 <style>
-                    .nav-level-1, .nav-hamburger {display:none;}
+                    .nav-level-1, .nav-hamburger, #masthead > a {display:none;}
                 </style>
             <?php do_action(THEME_HOOK_PREFIX . 'header'); ?>
             </header>
