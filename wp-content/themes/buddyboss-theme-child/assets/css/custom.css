@@ -20,9 +20,13 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 
 /* make pages 95% width */
 .bb-sfwd-aside .site-content .container {
-    width: 95%;
+    width: 100%;
 }
 /* make header 100% of the page */
 #masthead .container {
     width: 100% !important;
+}
+
+.bb-footer, .site-content, .site-header {
+    padding: 0px;
 }

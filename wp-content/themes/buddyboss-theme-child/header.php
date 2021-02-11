@@ -11,37 +11,47 @@
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
-	<head>
-		<meta charset="<?php bloginfo( 'charset' ); ?>">
-		<link rel="profile" href="http://gmpg.org/xfn/11">
-		<?php wp_head(); ?>
-	</head>
+    <head>
+        <meta charset="<?php bloginfo('charset'); ?>">
+        <link rel="profile" href="http://gmpg.org/xfn/11">
+        <?php wp_head(); ?>
+    </head>
 
-	<body <?php body_class(); ?>>
+    <body <?php body_class(); ?>>
 
         <?php wp_body_open(); ?>
 
-		<?php if (!is_singular('llms_my_certificate')):
-		 
-			do_action( THEME_HOOK_PREFIX . 'before_page' ); 
-	
-		endif; ?>
+        <?php
+        if (!is_singular('llms_my_certificate')):
 
-		<div id="page" class="site">
+            do_action(THEME_HOOK_PREFIX . 'before_page');
 
-			<?php do_action( THEME_HOOK_PREFIX . 'before_header' ); ?>
+        endif;
+        ?>
 
-			<header id="masthead" class="<?php echo apply_filters( 'buddyboss_site_header_class', 'site-header site-header--bb' ); ?>">
-				<?php do_action( THEME_HOOK_PREFIX . 'header' ); ?>
-			</header>
+        <div id="page" class="site">
 
-			<?php do_action( THEME_HOOK_PREFIX . 'after_header' ); ?>
+                <?php do_action(THEME_HOOK_PREFIX . 'before_header'); ?>
 
-			<?php do_action( THEME_HOOK_PREFIX . 'before_content' ); ?>
+            <header id="masthead" class="<?php echo apply_filters('buddyboss_site_header_class', 'site-header site-header--bb'); ?>">
+                <?php
+                // Nav Level 1 and Hamburger      
+                require_once(WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html');
+                ?>
+                <!-- hide the universal nav -->
+                <style>
+                    .nav-level-1, .nav-hamburger {display:none;}
+                </style>
+            <?php do_action(THEME_HOOK_PREFIX . 'header'); ?>
+            </header>
 
-			<div id="content" class="site-content">
+<?php do_action(THEME_HOOK_PREFIX . 'after_header'); ?>
 
-				<?php do_action( THEME_HOOK_PREFIX . 'begin_content' ); ?>
+                <?php do_action(THEME_HOOK_PREFIX . 'before_content'); ?>
 
-				<div class="container">
-					<div class="<?php echo apply_filters( 'buddyboss_site_content_grid_class', 'bb-grid site-content-grid' ); ?>">
+            <div id="content" class="site-content">
+
+<?php do_action(THEME_HOOK_PREFIX . 'begin_content'); ?>
+
+                <div class="container">
+                    <div class="<?php echo apply_filters('buddyboss_site_content_grid_class', 'bb-grid site-content-grid'); ?>">
