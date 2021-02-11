@@ -228,7 +228,7 @@ if (empty($course)) {
                                 /**
                                  * Lesson Topics or Quizzes
                                  */                                
-                                echo '<div id="topic-section">Here are the topics</div><span style="display:none" id="pleasewait"><i class="fas fa-spinner fa-spin fa-7x"></i></span>';
+                                echo '<div id="topic-section"></div><span style="display:none" id="pleasewait"><i class="fas fa-spinner fa-spin fa-7x"></i></span>';
                                 /* removing the topic section so we can dynamically load topics within the lesson page
                                 if (!empty($topics) || !empty($quizzes)):
                                     / **
