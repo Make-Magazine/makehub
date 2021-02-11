@@ -166,7 +166,7 @@ $topics = learndash_get_topic_list( $lesson_id, $course_id );
                             ), true );
                             ?>
                         </div>
-                        here is the content
+
                     <div class="learndash_content_wrap">
 
                         <?php

@@ -30,3 +30,20 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 .bb-footer, .site-content, .site-header {
     padding: 0px;
 }
+
+/* Hide topic list on non mobile sites only */
+@media screen and (min-width: 768px) {
+    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
+    .topic-page .bb-ld-info-bar, 
+    .topic-page .bb-position,
+    .topic-page .sfwd-course-nav,
+    .topic-page .ld-progress, .topic-page .ld-content-actions {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .learndash-page-content {
+        padding: 30px 30px 0;
+    }
+}
