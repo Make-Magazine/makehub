@@ -159,7 +159,7 @@ if (empty($course)) {
                         </div>
 
                         <div class="learndash_content_wrap">
-                            i am here
+                            
                             <script type="text/javascript">
                                 jQuery(document).ready(function () {
                                     jQuery(".lms-topic-item a.bb-title").click(function (event) {
