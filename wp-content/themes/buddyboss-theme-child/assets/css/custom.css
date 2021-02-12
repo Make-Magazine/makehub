@@ -39,11 +39,12 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 /* Hide topic list on non mobile sites only */
 @media screen and (min-width: 768px) {
     .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
-    .topic-page .bb-ld-info-bar, 
-    .topic-page .bb-position,
-    .topic-page .sfwd-course-nav,
-    .topic-page .ld-progress, 
-    .topic-page .ld-content-actions, .topic-page .lms-header-instructor {
+    .sfwd-lessons .bb-ld-info-bar, 
+    .sfwd-lessons .bb-position,
+    .sfwd-lessons .sfwd-course-nav,
+    .sfwd-lessons .ld-progress, 
+    .sfwd-lessons .ld-content-actions,
+	.sfwd-lessons .lms-header-instructor {
         display: none;
     }
 }
