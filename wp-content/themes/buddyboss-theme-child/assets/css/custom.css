@@ -10,12 +10,12 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 --------------------------------------------------------------*/
 
 .nav-hamburger {
-	right: auto;
-	left: 80px;
+    right: auto;
+    left: 80px;
 }
 
 .newsletter-footer label {
-	color: #fff;
+    color: #fff;
 }
 
 /* make pages 95% width */
@@ -31,19 +31,19 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
     padding: 0px;
 }
 
+@media screen and (min-width: 768px) {
+    .learndash-page-content {
+        padding: 30px 30px 0;
+    }
+}
 /* Hide topic list on non mobile sites only */
 @media screen and (min-width: 768px) {
     .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
     .topic-page .bb-ld-info-bar, 
     .topic-page .bb-position,
     .topic-page .sfwd-course-nav,
-    .topic-page .ld-progress, .topic-page .ld-content-actions {
+    .topic-page .ld-progress, 
+    .topic-page .ld-content-actions, .topic-page .lms-header-instructor {
         display: none;
-    }
-}
-
-@media screen and (min-width: 768px) {
-    .learndash-page-content {
-        padding: 30px 30px 0;
     }
 }
