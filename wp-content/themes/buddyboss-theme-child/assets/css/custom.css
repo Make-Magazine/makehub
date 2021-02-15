@@ -10,17 +10,17 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 --------------------------------------------------------------*/
 
 .nav-hamburger {
-	right: auto;
-	left: 80px;
+    right: auto;
+    left: 80px;
 }
 
 .newsletter-footer label {
-	color: #fff;
+    color: #fff;
 }
 
 /* make pages 95% width */
 .bb-sfwd-aside .site-content .container {
-    width: 95%;
+    width: 100%;
 }
 /* make header 100% of the page */
 #masthead .container {
@@ -37,4 +37,32 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 }
 .ms_info .fieldInfo {
     margin: 10px;
+
+.bb-footer, .site-content, .site-header {
+    padding: 0px;
+}
+
+@media screen and (min-width: 768px) {
+    .learndash-page-content {
+        padding: 30px 30px 0;
+    }
+}
+
+/* Hide topic list on non mobile sites only */
+@media screen and (min-width: 768px) {
+    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
+    .sfwd-lessons .bb-ld-info-bar, 
+    .topic-page .bb-ld-info-bar, 
+    .sfwd-lessons .bb-position,
+    .topic-page .bb-position,
+    .sfwd-lessons .sfwd-course-nav,
+    .topic-page .sfwd-course-nav,
+    .sfwd-lessons .ld-progress, 
+    .topic-page .ld-progress, 
+    .sfwd-lessons .ld-content-actions,
+    .topic-page .ld-content-actions,
+	.sfwd-lessons .lms-header-instructor, 
+	.topic-page .lms-header-instructor {
+        display: none;
+    }
 }
