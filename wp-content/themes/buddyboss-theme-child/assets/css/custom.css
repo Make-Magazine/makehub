@@ -42,6 +42,7 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
     padding: 0px;
 }
 
+/* remove padding on learndash contetn for non mobile viewing */
 @media screen and (min-width: 768px) {
     .learndash-page-content {
         padding: 30px 30px 0;
