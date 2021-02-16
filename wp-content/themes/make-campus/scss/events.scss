@@ -286,6 +286,10 @@
 				ul li {
 					margin-bottom: 5px;
 				}
+				.event-author { border-bottom: 0px; }
+				.tribe-events-gcal.tribe-events-button, .tribe-events-ical.tribe-events-button {
+    				display: none;
+				}
             }
             .tribe-events-button {
                 color: #fff;
