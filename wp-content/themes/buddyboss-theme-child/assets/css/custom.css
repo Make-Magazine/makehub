@@ -42,6 +42,7 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
     padding: 0px;
 }
 
+/* Learn Dash */
 /* remove padding on learndash contetn for non mobile viewing */
 @media screen and (min-width: 768px) {
     .learndash-page-content {
@@ -66,4 +67,13 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
 	.topic-page .lms-header-instructor {
         display: none;
     }
+}
+
+/* blue toad digital library page */
+.page-template-page-digital-library #page-content.bluetoad iframe {
+    width: 100%;
+    height: 100vh;
+    border: none;
+    margin-bottom: -10px;
+    padding-bottom: 150px;
 }
