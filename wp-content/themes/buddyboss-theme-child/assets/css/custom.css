@@ -18,14 +18,17 @@ https://www.w3schools.com/css/css_rwd_mediaqueries.asp
     color: #fff;
 }
 
-/* make pages 95% width */
-.bb-sfwd-aside .site-content .container {
+/* make pages full width */
+.site-content .container {
     width: 100%;
+    max-width: none;
+    padding: 0;
 }
 /* make header 100% of the page */
 #masthead .container {
     width: 100% !important;
 }
+    
 
 /* makerspace information */
 .ms_info .fieldLabel {
