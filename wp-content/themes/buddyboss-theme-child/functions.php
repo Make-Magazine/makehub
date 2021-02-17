@@ -99,4 +99,8 @@ add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
+
+//* Disable email match check for all users - this error would keep users from registering users already in our system
+add_filter( 'EED_WP_Users_SPCO__verify_user_access__perform_email_user_match_check', '__return_false' );
+
 ?>
