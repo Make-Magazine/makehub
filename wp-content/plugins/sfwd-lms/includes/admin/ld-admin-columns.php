@@ -27,11 +27,11 @@ function remove_columns( $columns ) {
 
 	return $columns;
 }
-add_filter( 'manage_sfwd-courses_posts_columns' , 'LearnDash\Admin\Columns\remove_columns' );
-add_filter( 'manage_sfwd-lessons_posts_columns' , 'LearnDash\Admin\Columns\remove_columns' );
-add_filter( 'manage_sfwd-topic_posts_columns' , 'LearnDash\Admin\Columns\remove_columns' );
-add_filter( 'manage_sfwd-quiz_posts_columns' , 'LearnDash\Admin\Columns\remove_columns' );
-add_filter( 'manage_sfwd-question_posts_columns' , 'LearnDash\Admin\Columns\remove_columns' );
+add_filter( 'manage_sfwd-courses_posts_columns', 'LearnDash\Admin\Columns\remove_columns' );
+add_filter( 'manage_sfwd-lessons_posts_columns', 'LearnDash\Admin\Columns\remove_columns' );
+add_filter( 'manage_sfwd-topic_posts_columns', 'LearnDash\Admin\Columns\remove_columns' );
+add_filter( 'manage_sfwd-quiz_posts_columns', 'LearnDash\Admin\Columns\remove_columns' );
+add_filter( 'manage_sfwd-question_posts_columns', 'LearnDash\Admin\Columns\remove_columns' );
 
 /**
  * Disables the category filters for post listings.
@@ -75,8 +75,8 @@ function disable_tags_filters( $taxonomies, $post_type ) {
 		'sfwd-question',
 	);
 
-	if ( in_array( $post_type, $post_types ) &&
-		( $key = array_search( 'post_tag', $taxonomies ) ) !== false ) {
+	$key = array_search( 'post_tag', $taxonomies, true );
+	if ( in_array( $post_type, $post_types, true ) && ( false !== $key ) ) {
 		unset( $taxonomies[ $key ] );
 	}
 

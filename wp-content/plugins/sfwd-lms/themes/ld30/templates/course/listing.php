@@ -28,7 +28,7 @@
  * @since 3.0
  *
  * @package LearnDash\Course
- */ 
+ */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

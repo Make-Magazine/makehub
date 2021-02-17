@@ -11,7 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					 *
 					 * @param int $course_id Course ID.
 					 */
-					do_action( 'learndash-focus-template-end', $course_id ); ?>
+					do_action( 'learndash-focus-template-end', $course_id );
+?>
 				</div> <!--/.ld-focus-->
 			</div> <!--/.ld-learndash-wrapper-->
 

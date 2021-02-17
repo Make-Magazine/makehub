@@ -7,19 +7,15 @@
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	 exit;
+	exit;
 }
 
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/abstract-ldlms-model.php' );
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/abstract-ldlms-model-post.php' );
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-model-course.php' );
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-model-lesson.php' );
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-course-steps.php' );
-require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-quiz-questions.php' );
-
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . '/includes/classes/class-ldlms-topic-model.php' );
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . '/includes/classes/class-ldlms-quiz-model.php' );
-
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/abstract-ldlms-model.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/abstract-ldlms-model-post.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-model-course.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-model-lesson.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-course-steps.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-quiz-questions.php';
 
 if ( ! class_exists( 'LDLMS_Factory_Post' ) ) {
 	/**
@@ -96,8 +92,9 @@ if ( ! class_exists( 'LDLMS_Factory_Post' ) ) {
 				}
 
 				if ( ! empty( $course_id ) ) {
-					if ( ! isset( self::$instances[ $model ] ) )
+					if ( ! isset( self::$instances[ $model ] ) ) {
 						self::$instances[ $model ] = array();
+					}
 
 					if ( ( isset( self::$instances[ $model ][ $course_id ] ) ) && ( false === $bypass ) ) {
 						return self::$instances[ $model ][ $course_id ];

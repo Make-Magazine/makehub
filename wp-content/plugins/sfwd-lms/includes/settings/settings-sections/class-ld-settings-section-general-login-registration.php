@@ -62,13 +62,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'name'              => 'login_logo',
 					'type'              => 'media-upload',
 					'label'             => esc_html__( 'Login Logo', 'learndash' ),
-					/*
-					'help_text' => sprintf(
-						// translators: placeholder: Default per page number.
-						esc_html_x( 'Default per page controls all shortcodes and widget. Default is %d. Set to zero for no pagination.', 'placeholder: Default per page', 'learndash' ),
-						LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE
-					),
-					*/
 					'value'             => $this->setting_option_values['login_logo'],
 					'validate_callback' => array( $this, 'validate_section_field_media_upload' ),
 					'validate_args'     => array(

@@ -4,8 +4,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_course_content' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_course_content extends LearnDash_Shortcodes_Section {
 
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
@@ -28,6 +37,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'course_id' => array(
@@ -40,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholders: Course.
+						// translators: placeholder: Course.
 						esc_html_x( 'Enter single %s ID', 'placeholders: Course', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
@@ -53,8 +65,8 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'name'      => 'num',
 					'type'      => 'number',
 					'label'     => sprintf(
-						// translators: placeholders: lessons.
-						esc_html_x( '%s Per Page', 'placeholders: lessons', 'learndash' ),
+						// translators: placeholder: Lessons.
+						esc_html_x( '%s Per Page', 'placeholder: Lessons', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'lessons' )
 					),
 					'help_text' => sprintf(

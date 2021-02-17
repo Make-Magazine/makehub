@@ -54,8 +54,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wpdb, $wp_version, $wp_rewrite;
 			global $sfwd_lms;
 
-			$ABSPATH_tmp = str_replace( '\\', '/', ABSPATH );
-
 			/************************************************************************************************
 			 * Learndash Database Tables
 			 */
@@ -83,13 +81,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['desc'] = '<p>' . esc_html__( 'When the LearnDash plugin or related add-ons are activated they will create the following tables. If the tables are not present try reactivating the plugin. If the table still do not show check the DB_USER defined in your wp-config.php and ensure it has the proper permissions to create tables. Check with your host for help.', 'learndash' ) . '</p>';
 
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( isset( $_GET['ld_debug'] ) ) {
 					$grants = learndash_get_db_user_grants();
 					if ( ! is_array( $grants ) ) {
 						$grants = array();
 					}
 
-					if ( ( array_search( 'ALL PRIVILEGES', $grants ) === false ) && ( array_search( 'CREATE', $grants ) === false ) ) {
+					if ( ( array_search( 'ALL PRIVILEGES', $grants, true ) === false ) && ( array_search( 'CREATE', $grants, true ) === false ) ) {
 						$this->settings_set['desc'] .= '<p style="color: red">' . esc_html__( 'The DB_USER defined in your wp-config.php does not have CREATE permission.', 'learndash' ) . '</p>';
 					}
 				}
@@ -104,7 +103,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				 */
 				$this->db_tables = apply_filters( 'learndash_support_db_tables', $this->db_tables );
 				if ( ! empty( $this->db_tables ) ) {
-					//ksort( $this->db_tables );
 					$this->db_tables = array_unique( $this->db_tables );
 
 					foreach ( $this->db_tables as $db_key => $db_table ) {
@@ -119,23 +117,23 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 							if ( isset( $table_status_info['rows_count'] ) ) {
 								if ( ! empty( $rows_str ) ) {
-									$rows_str      .= ' ';
+									$rows_str .= ' ';
 								}
-								$rows_str      .= 'rows(' . absint( $table_status_info['rows_count'] ) . ')';
+								$rows_str .= 'rows(' . absint( $table_status_info['rows_count'] ) . ')';
 							}
 
 							if ( isset( $table_status_info['engine'] ) ) {
 								if ( ! empty( $rows_str ) ) {
-									$rows_str      .= ' ';
+									$rows_str .= ' ';
 								}
-								$rows_str      .= esc_attr( $table_status_info['engine'] );
+								$rows_str .= esc_attr( $table_status_info['engine'] );
 							}
 
 							if ( isset( $table_status_info['collation'] ) ) {
 								if ( ! empty( $rows_str ) ) {
-									$rows_str      .= ' ';
+									$rows_str .= ' ';
 								}
-								$rows_str      .= esc_attr( $table_status_info['collation'] );
+								$rows_str .= esc_attr( $table_status_info['collation'] );
 							}
 
 							if ( ! empty( $rows_str ) ) {
@@ -157,7 +155,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								if ( ! empty( $this->settings_set['settings'][ $db_table ]['value'] ) ) {
 									$this->settings_set['settings'][ $db_table ]['value'] .= ' ';
 								}
-								$this->settings_set['settings'][ $db_table ]['value'] .= 'AUTO_INCREMENT missing' . ' - (X)';
+								$this->settings_set['settings'][ $db_table ]['value'] .= 'AUTO_INCREMENT missing - (X)';
 
 								if ( ! empty( $this->settings_set['settings'][ $db_table ]['value_html'] ) ) {
 									$this->settings_set['settings'][ $db_table ]['value_html'] .= ' ';
@@ -165,7 +163,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								$this->settings_set['settings'][ $db_table ]['value_html'] .= '<span style="color: red">' . esc_html__( 'AUTO_INCREMENT missing', 'learndash' ) . '</span>';
 							}
 						} else {
-							$this->settings_set['settings'][ $db_table ]['value']      = 'No' . ' - (X)';
+							$this->settings_set['settings'][ $db_table ]['value']      = 'No - (X)';
 							$this->settings_set['settings'][ $db_table ]['value_html'] = '<span style="color: red">' . esc_html__( 'No', 'learndash' ) . '</span>';
 						}
 					}
@@ -205,10 +203,16 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			static $notices_shown = array();
 
 			if ( ( isset( $this->admin_notice_tables ) ) && ( ! empty( $this->admin_notice_tables ) ) ) {
-				?><div class="notice notice-error notice-alt is-dismissible ld-support-database-notice"><?php
-					echo wpautop( wp_kses_post( 'IMPORTANT: The following database tables are missing AUTO_INCREMENT on the primary index. This means data cannot be written to these tables. Please try reactivating LearnDash ASAP.<br />' . implode( ', ', $this->admin_notice_tables )
-					) );
-				?></div><?php
+				?><div class="notice notice-error notice-alt is-dismissible ld-support-database-notice">
+				<?php
+					echo wp_kses_post(
+						wpautop(
+							'IMPORTANT: The following database tables are missing AUTO_INCREMENT on the primary index. This means data cannot be written to these tables. Please try reactivating LearnDash ASAP.<br />' . implode( ', ', $this->admin_notice_tables )
+						)
+					);
+				?>
+				</div>
+				<?php
 			}
 		}
 

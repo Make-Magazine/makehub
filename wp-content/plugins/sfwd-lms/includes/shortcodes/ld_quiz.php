@@ -106,7 +106,7 @@ function learndash_quiz_shortcode( $atts, $content = '', $show_materials = false
 			}
 		}
 
-		if ( $repeats !== '' ) {
+		if ( '' !== $repeats ) {
 
 			if ( $user_id ) {
 				$usermeta = get_user_meta( $user_id, '_sfwd-quizzes', true );
@@ -153,7 +153,7 @@ function learndash_quiz_shortcode( $atts, $content = '', $show_materials = false
 			}
 		}
 
-		$attempts_left = ( ( $repeats === '' ) || ( absint( $repeats ) >= absint( $attempts_count ) ) );
+		$attempts_left = ( ( '' === $repeats ) || ( absint( $repeats ) >= absint( $attempts_count ) ) );
 
 		$bypass_course_limits_admin_users = learndash_can_user_bypass( $user_id, 'learndash_course_lesson_access_from', $course_id, $quiz_post );
 

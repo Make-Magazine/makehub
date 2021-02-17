@@ -25,7 +25,7 @@ const {
 const {
     InnerBlocks,
     InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
      PanelBody,
@@ -67,7 +67,7 @@ registerBlockType(
             const { attributes: { course_id, user_id, autop }, className, setAttributes } = props;
 
             const inspectorControls = (
-                <InspectorControls>
+                <InspectorControls key="controls">
                     <PanelBody
                         title={ __( 'Settings', 'learndash' ) }
                     >
@@ -111,8 +111,8 @@ registerBlockType(
             }
 
             const outputBlock = (
-                <div className={className}>
-                    <span class="learndash-inner-header">{block_title}</span>
+                <div className={className} key='learndash/ld-course-complete'>
+                    <span className="learndash-inner-header">{block_title}</span>
                     <div className="learndash-block-inner">
                         {ld_block_error_message}
                         <InnerBlocks />

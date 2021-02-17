@@ -306,7 +306,7 @@ if ( ! empty( $header['logo'] ) ) {
 							rel="<?php echo esc_attr( $item['xfn'] ); ?>"
 						<?php } ?> <?php if ( ! empty( $item['attr_title'] ) ) { ?>
 							title="<?php echo esc_attr( $item['attr_title'] ); ?>"
-						<?php } ?> href="<?php echo esc_url( $item['url'] ); ?>"><?php echo apply_filters( 'the_title',  $item['label'], 0 ); ?></a>
+						<?php } ?> href="<?php echo esc_url( $item['url'] ); ?>"><?php echo apply_filters( 'the_title', $item['label'], 0 ); ?></a>
 						<?php
 					endforeach;
 				endif;

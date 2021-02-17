@@ -63,23 +63,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 * If the user needs to complete the previous lesson AND topic display an alert
 	 *
 	 */
-	if ( $lesson_progression_enabled && ( ! $previous_topic_completed || ! $previous_lesson_completed ) ) :
 
+		$sub_context = '';
+	if ( $lesson_progression_enabled ) {
 		$previous_item = learndash_get_previous( $post );
+		if ( ( ! $previous_topic_completed ) || ( empty( $previous_item ) ) ) {
+			if ( 'on' === learndash_get_setting( $lesson_post->ID, 'lesson_video_enabled' ) ) {
+				if ( ! empty( learndash_get_setting( $lesson_post->ID, 'lesson_video_url' ) ) ) {
+					if ( 'BEFORE' === learndash_get_setting( $lesson_post->ID, 'lesson_video_shown' ) ) {
+						if ( ! learndash_video_complete_for_step( $lesson_post->ID, $course_id, $user_id ) ) {
+							$sub_context = 'video_progression';
+						}
+					}
+				}
+			}
+		}
+	}
 
-		if ( empty( $previous_item ) ) {
-			$previous_item = learndash_get_previous( $lesson_post );
+	if ( ( $lesson_progression_enabled ) && ( ! empty( $sub_context ) || ! $previous_topic_completed || ! $previous_lesson_completed ) ) :
+
+		if ( 'video_progression' === $sub_context ) {
+			$previous_item = $lesson_post;
+		} else {
+			$previous_item = learndash_get_previous( $post );
+
+			if ( empty( $previous_item ) ) {
+				$previous_item = learndash_get_previous( $lesson_post );
+			}
 		}
 
-		learndash_get_template_part(
-			'modules/messages/lesson-progression.php',
-			array(
-				'previous_item' => $previous_item,
-				'course_id'     => $course_id,
-				'context'       => 'topic',
-			),
-			true
-		);
+		if ( ! empty( $previous_item ) ) {
+			learndash_get_template_part(
+				'modules/messages/lesson-progression.php',
+				array(
+					'previous_item' => $previous_item,
+					'course_id'     => $course_id,
+					'context'       => 'topic',
+					'sub_context'   => $sub_context,
+				),
+				true
+			);
+		}
 
 	endif;
 
@@ -158,6 +182,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param int $post_id   Current Post ID.
 	 * @param int $course_id Course ID.
 	 * @param int $user_id   User ID.
 	 */

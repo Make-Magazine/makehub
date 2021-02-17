@@ -77,7 +77,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'col'                     => array(
 					'type' => 'string',
 				),
-				'example_show' => array(
+				'example_show'            => array(
 					'type' => 'boolean',
 				),
 			);
@@ -157,7 +157,6 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				if ( ( isset( $attributes['categoryselector'] ) ) && ( true === $attributes['categoryselector'] ) ) {
 					$attributes['categoryselector'] = 'true';
 				}
-
 
 				/**
 				 * Not the best place to make this call this but we need to load the

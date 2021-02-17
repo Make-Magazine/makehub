@@ -2,12 +2,12 @@
 
 /**
  * Enqueues block editor styles and scripts.
- * 
+ *
  * Fires on `enqueue_block_editor_assets` hook.
  */
 function learndash_editor_scripts() {
 	// Make paths variables so we don't write em twice ;).
-	$learndash_block_path        = '../assets/js/editor.blocks.js';
+	$learndash_block_path        = '../assets/js/index.js';
 	$learndash_editor_style_path = '../assets/css/blocks.editor.css';
 
 	// Enqueue the bundled block JS file.
@@ -42,7 +42,7 @@ function learndash_editor_scripts() {
 	$ldlms_settings['settings']['lessons_taxonomies'] = LearnDash_Settings_Lessons_Taxonomies::get_section_settings_all();
 	$ldlms_settings['settings']['topics_taxonomies']  = LearnDash_Settings_Topics_Taxonomies::get_section_settings_all();
 	$ldlms_settings['settings']['quizzes_taxonomies'] = LearnDash_Settings_Quizzes_Taxonomies::get_section_settings_all();
-	$ldlms_settings['settings']['groups_taxonomies'] = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
+	$ldlms_settings['settings']['groups_taxonomies']  = LearnDash_Settings_Groups_Taxonomies::get_section_settings_all();
 
 	$ldlms_settings['plugins']['learndash-course-grid']                = array();
 	$ldlms_settings['plugins']['learndash-course-grid']['enabled']     = learndash_enqueue_course_grid_scripts();

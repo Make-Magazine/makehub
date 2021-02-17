@@ -66,6 +66,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				),
 			);
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( is_admin() ) && ( isset( $_GET['page'] ) ) && ( 'questions-options' === $_GET['page'] ) ) {
 				$template_mapper    = new WpProQuiz_Model_TemplateMapper();
 				$question_templates = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUESTION, false );

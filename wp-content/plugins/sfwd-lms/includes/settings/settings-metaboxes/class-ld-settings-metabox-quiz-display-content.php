@@ -18,10 +18,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 		/**
 		 * Variable to hold the number of questions.
+		 *
 		 * @var integer $questions_count
 		 */
-		var $questions_count = 0;
-		
+		protected $questions_count = 0;
+
 		/**
 		 * Public constructor for class
 		 */
@@ -68,6 +69,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'quizModus_single_back_button'        => 'quizModus_single_back_button',
 				'quizModus_single_feedback'           => 'quizModus_single_feedback',
 				'titleHidden'                         => 'titleHidden',
+				'custom_question_elements'            => 'custom_question_elements',
 			);
 
 			parent::__construct();
@@ -79,7 +81,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0
 		 * @param object $pro_quiz_edit WpProQuiz_Controller_Quiz instance (not used).
-		 * @param array $settings_values Array of settings fields.
+		 * @param array  $settings_values Array of settings fields.
 		 */
 		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {
 			$_POST['autostart']                    = $settings_values['autostart'];
@@ -108,17 +110,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$this->quiz_edit = $this->init_quiz_edit( $this->_post );
-
-			$this->ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( $this->_post->ID );
-
 			if ( true === $this->settings_values_loaded ) {
-
-				$questionMapper = new WpProQuiz_Model_QuestionMapper();
-				$questions = $questionMapper->fetchAll( $this->quiz_edit['quiz'] );
-				if ( ( is_array( $questions ) ) && ( ! empty( $questions ) ) ) {
-					$this->questions_count = count( $questions );
-				}
+				$this->quiz_edit                = $this->init_quiz_edit( $this->_post );
+				$this->ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( $this->_post->ID );
 
 				if ( ! isset( $this->setting_option_values['quiz_materials'] ) ) {
 					$this->setting_option_values['quiz_materials'] = '';
@@ -129,7 +123,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['quiz_materials_enabled'] = '';
 				}
 
-				if ( $this->quiz_edit['quiz'] ) {
+				if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( ! empty( $this->quiz_edit['quiz'] ) ) ) {
+
+					$question_mapper = new WpProQuiz_Model_QuestionMapper();
+					$questions       = $question_mapper->fetchAll( $this->quiz_edit['quiz'] );
+					if ( ( is_array( $questions ) ) && ( ! empty( $questions ) ) ) {
+						$this->questions_count = count( $questions );
+					}
 
 					$this->setting_option_values['autostart'] = $this->quiz_edit['quiz']->isAutostart();
 					if ( true === $this->setting_option_values['autostart'] ) {
@@ -284,6 +284,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
+			// Ensure all settings fields are present.
 			foreach ( $this->settings_fields_map as $_internal => $_external ) {
 				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
 					$this->setting_option_values[ $_internal ] = '';
@@ -296,8 +297,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 */
 		public function load_settings_fields() {
 			global $sfwd_lms;
-
-			//apply_filters( $this->settings_screen_id . '_display_settings', $this->settings_fields_legacy, $this->settings_screen_id, $this->settings_values_legacy );
 
 			$this->setting_option_fields = array(
 				'quizModus_single_back_button' => array(
@@ -414,6 +413,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['quiz_materials_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials_enabled',
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'quiz_materials'               => array(
 					'name'           => 'quiz_materials',
@@ -422,11 +432,34 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'          => $this->setting_option_values['quiz_materials'],
 					'default'        => '',
 					'placeholder'    => esc_html__( 'Add a list of needed documents or URLs. This field supports HTML.', 'learndash' ),
-					'editor_args' => array(
+					'editor_args'    => array(
 						'textarea_name' => $this->settings_metabox_key . '[quiz_materials]',
 						'textarea_rows' => 3,
 					),
-
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials',
+								'description' => esc_html__( 'Materials', 'learndash' ),
+								'type'        => 'string',
+								'default'     => '',
+								'properties'  => array(
+									'raw'      => array(
+										'description' => 'Content for the object, as it exists in the database.',
+										'type'        => 'string',
+										'context'     => array( 'edit' ),
+									),
+									'rendered' => array(
+										'description' => 'HTML content for the object, transformed for display.',
+										'type'        => 'string',
+										'context'     => array( 'view', 'edit' ),
+										'readonly'    => true,
+									),
+								),
+							),
+						),
+					),
 				),
 				'autostart'                    => array(
 					'name'    => 'autostart',
@@ -439,6 +472,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							// translators: placeholder: Quiz.
 							esc_html_x( 'Start automatically, without the "Start %s" button', 'placeholder: Quiz', 'learndash' ),
 							learndash_get_custom_label( 'quiz' )
+						),
+					),
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'auto_start',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
 						),
 					),
 				),
@@ -476,7 +519,20 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							),
 							'inner_section_state' => ( 'multiple' === $this->setting_option_values['quizModus'] ) ? 'open' : 'closed',
 						),
-
+					),
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'quiz_modus',
+								'type'      => 'string',
+								'default'   => 'open',
+								'enum'      => array(
+									'single',
+									'multiple',
+								),
+							),
+						),
 					),
 				),
 				'showReviewQuestion'           => array(
@@ -498,6 +554,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['showReviewQuestion'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'review_table_enabled',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'quizSummaryHide'              => array(
 					'name'           => 'quizSummaryHide',
@@ -514,6 +580,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => esc_html__( 'Display a summary table before submission', 'learndash' ),
 					),
 					'parent_setting' => 'showReviewQuestion',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'summary_hide',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'skipQuestionDisabled'         => array(
 					'name'           => 'skipQuestionDisabled',
@@ -529,6 +605,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'showReviewQuestion',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'skip_question_disabled',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'custom_sorting'               => array(
@@ -545,6 +631,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['custom_sorting'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'boolean',
+								'default' => false,
+							),
+						),
+					),
 				),
 				'sortCategories'               => array(
 					'name'           => 'sortCategories',
@@ -556,6 +651,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_sorting',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'sort_categories',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'questionRandom'               => array(
 					'name'                => 'questionRandom',
@@ -568,6 +673,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					),
 					'parent_setting'      => 'custom_sorting',
 					'child_section_state' => ( 'on' === $this->setting_option_values['questionRandom'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'question_random',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'showMaxQuestion'              => array(
@@ -598,6 +713,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'parent_setting' => 'questionRandom',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'show_max_question',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'custom_question_elements'     => array(
 					'name'                => 'custom_question_elements',
@@ -630,6 +755,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'show_points',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'showCategory'                 => array(
 					'name'           => 'showCategory',
@@ -645,6 +780,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'show_category',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'hideQuestionPositionOverview' => array(
 					'name'           => 'hideQuestionPositionOverview',
@@ -660,6 +805,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'hide_question_position_overview',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'hideQuestionNumbering'        => array(
@@ -676,6 +831,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'hide_question_numbering',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'numberedAnswer'               => array(
 					'name'           => 'numberedAnswer',
@@ -687,6 +852,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'numbered_answer',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'answerRandom'                 => array(
 					'name'           => 'answerRandom',
@@ -703,6 +878,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'parent_setting' => 'custom_question_elements',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'answer_random',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'titleHidden'                  => array(
@@ -736,6 +921,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							learndash_get_custom_label_lower( 'quiz' )
 						),
 					),
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'title_hidden',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 			);
 
@@ -748,7 +943,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Filter settings values for metabox before save to database.
 		 *
-		 * @param array $settings_values Array of settings values.
+		 * @param array  $settings_values Array of settings values.
 		 * @param string $settings_metabox_key Metabox key.
 		 * @param string $settings_screen_id Screen ID.
 		 * @return array $settings_values.
@@ -817,12 +1012,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				} else {
 					$settings_values['showMaxQuestion'] = '';
 				}
-
-				//if ( ( isset( $settings_values['answerRandom'] ) ) && ( 'on' === $settings_values['answerRandom'] ) ) {
-				//	$settings_values['answerRandom'] = true;
-				//} else {
-				//	$settings_values['answerRandom'] = false;
-				//}
 
 				if ( ( isset( $settings_values['showPoints'] ) ) && ( 'on' === $settings_values['showPoints'] ) ) {
 					$settings_values['showPoints'] = true;

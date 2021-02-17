@@ -51,15 +51,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wpdb, $wp_version, $wp_rewrite;
 			global $sfwd_lms;
 
-			$ABSPATH_tmp = str_replace( '\\', '/', ABSPATH );
-
-
 			/************************************************************************************************
 			 * WordPress Active Plugins.
 			 ************************************************************************************************/
 			if ( ! isset( $support_sections[ $this->setting_option_key ] ) ) {
-				$this->settings_set           = array();
-				
+				$this->settings_set = array();
+
 				$this->settings_set['header'] = array(
 					'html' => $this->settings_section_label,
 					'text' => $this->settings_section_label,

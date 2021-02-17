@@ -10,7 +10,7 @@ jQuery( function($) {
 		};
 
 		var init = function() {
-			$('.wpProQuiz_prview').click(function(e) {
+			$('.wpProQuiz_prview').on( 'click', function(e) {
 				methods.openPreview(this);
 				e.preventDefault();
 			});
@@ -63,7 +63,7 @@ jQuery( function($) {
 		};
 
 		var init = function() {
-			$('.wpProQuiz_delete').click(function(e) {
+			$('.wpProQuiz_delete').on( 'click', function(e) {
 				var b = confirm(wpProQuizLocalize.delete_msg);
 
 				if(!b) {
@@ -74,7 +74,7 @@ jQuery( function($) {
 				return true;
 			});
 
-			$('.wpProQuiz_import').click(function(e) {
+			$('.wpProQuiz_import').on( 'click', function(e) {
 				e.preventDefault();
 				$('.wpProQuiz_importList').toggle('fast');
 
@@ -83,7 +83,7 @@ jQuery( function($) {
 
 			});
 
-			$('.wpProQuiz_export').click(function(e) {
+			$('.wpProQuiz_export').on( 'click', function(e) {
 				e.preventDefault();
 
 				$('.wpProQuiz_exportList').toggle('fast');
@@ -91,11 +91,11 @@ jQuery( function($) {
 				$('.wpProQuiz_importList').hide();
 			});
 
-			$('input[name="exportItems"]').change(function() {
+			$('input[name="exportItems"]').on( 'change', function() {
 				methods.changeExport(this);
 			});
 
-			$('input[name="exportItemsAll"]').change(function() {
+			$('input[name="exportItemsAll"]').on( 'change', function() {
 				var $input = $('input[name="exportItems"]');
 				if(this.checked)
 					$input.attr('checked', true);
@@ -105,7 +105,7 @@ jQuery( function($) {
 				$input.change();
 			});
 
-			$('#exportStart').click(function(e) {
+			$('#exportStart').on( 'click', function(e) {
 
 				if(!methods.startExport())
 					e.preventDefault();
@@ -201,7 +201,7 @@ jQuery( function($) {
 		var init = function() {
 			$('.wp-list-table tbody').sortable({ handle: '.wpProQuiz_move', update: methode.sortUpdate });
 
-			$('.wpProQuiz_delete').click(function(e) {
+			$('.wpProQuiz_delete').on( 'click', function(e) {
 				var b = confirm(wpProQuizLocalize.delete_msg);
 
 				if(!b) {
@@ -212,12 +212,12 @@ jQuery( function($) {
 				return true;
 			});
 
-			$('#wpProQuiz_saveSort').click(function(e) {
+			$('#wpProQuiz_saveSort').on( 'click', function(e) {
 				e.preventDefault();
 				methode.saveSort();
 			});
 
-			$('#wpProQuiz_questionCopy').click(function(e) {
+			$('#wpProQuiz_questionCopy').on( 'click', function(e) {
 				var $this = $('.wpProQuiz_questionCopy');
 
 				if($this.is(':visible')) {
@@ -398,7 +398,7 @@ jQuery( function($) {
 		};
 
 		var init = function() {
-			$('#statistics_on').change(function() {
+			$('#statistics_on').on( 'change', function() {
 				if(this.checked) {
 					$('#statistics_ip_lock_tr').show();
 					$('#statistics_show_profile_tr').show();
@@ -409,11 +409,11 @@ jQuery( function($) {
 				}
 			});
 
-			$('.addResult').click(function() {
+			$('.addResult').on( 'click', function() {
 				methode.addResult();
 			});
 
-			$('.deleteResult').click(function (e) {
+			$('.deleteResult').on( 'click', function (e) {
 				methode.deleteResult(this);
 			});
 
@@ -425,7 +425,7 @@ jQuery( function($) {
 				}
 			});
 
-			$('#wpProQuiz_resultGradeEnabled').change(function() {
+			$('#wpProQuiz_resultGradeEnabled').on( 'change', function() {
 				if(this.checked) {
 					$('#resultGrade').show();
 					$('#resultNormal').hide();
@@ -437,7 +437,7 @@ jQuery( function($) {
 
 			// Classic editor
 			if ( window.postL10n ) {
-				$('#wpProQuiz_save,input[name=save]').click(function(e) {
+				$('#wpProQuiz_save,input[name=save]').on( 'click', function(e) {
 				/*	if(!methode.validInput())
 						e.preventDefault();
 					else
@@ -446,8 +446,8 @@ jQuery( function($) {
 					$('select[name="prerequisiteList[]"] option').attr('selected', 'selected');
 				});
 
-				//$('#wpProQuiz_save,input[name=save]').click(function (e) {
-				$('#publish').click(function () {
+				//$('#wpProQuiz_save,input[name=save]').on( 'click', function (e) {
+				$('#publish').on( 'click', function () {
 				/*	if(!methode.validInput())
 						e.preventDefault();
 					else
@@ -456,7 +456,7 @@ jQuery( function($) {
 					$('select[name="prerequisiteList[]"] option').attr('selected', 'selected');
 				});
 
-				$('#save-post').click(function () {
+				$('#save-post').on( 'click', function () {
 				/*	if(!methode.validInput())
 						e.preventDefault();
 					else
@@ -475,7 +475,7 @@ jQuery( function($) {
 				});
 			}
 
-			$('input[name="template"]').click(function(e) {
+			$('input[name="template"]').on( 'click', function(e) {
 				if($('select[name="templateSaveList"]').val() == '0') {
 					if(isEmpty($('input[name="templateName"]').val())) {
 						alert(wpProQuizLocalize.temploate_no_name);
@@ -489,7 +489,7 @@ jQuery( function($) {
 				$('select[name="prerequisiteList[]"] option').attr('selected', 'selected');
 			});
 
-			$('select[name="templateSaveList"]').change(function() {
+			$('select[name="templateSaveList"]').on( 'change', function() {
 				var $templateName = $('input[name="templateName"]');
 
 				if($(this).val() == '0') {
@@ -499,7 +499,7 @@ jQuery( function($) {
 				}
 			}).change();
 
-			$('input[name="quizRunOnce"]').change(function(e) {
+			$('input[name="quizRunOnce"]').on( 'change', function(e) {
 				if(this.checked) {
 					$('#wpProQuiz_quiz_run_once_type').show();
 					$('input[name="quizRunOnceType"]:checked').change();
@@ -508,7 +508,7 @@ jQuery( function($) {
 				}
 			});
 
-			$('input[name="quizRunOnceType"]').change(function(e) {
+			$('input[name="quizRunOnceType"]').on( 'change', function(e) {
 				if(this.checked && (this.value == "1" || this.value == "3")) {
 					$('#wpProQuiz_quiz_run_once_cookie').show();
 				} else {
@@ -516,7 +516,7 @@ jQuery( function($) {
 				}
 			});
 
-			$('input[name="resetQuizLock"]').click(function(e) {
+			$('input[name="resetQuizLock"]').on( 'click', function(e) {
 				methode.resetLock();
 
 				return false;
@@ -536,11 +536,11 @@ jQuery( function($) {
 
 			}).mouseout(function() {
 				$(this).next().hide();
-			}).click(function() {
+			}).on( 'click', function() {
 				return false;
 			});
 
-			$('input[name="showMaxQuestion"]').change(function() {
+			$('input[name="showMaxQuestion"]').on( 'change', function() {
 				if(this.checked) {
 //					$('input[name="statisticsOn"]').removeAttr('checked').attr('disabled', 'disabled').change();
 					$('#wpProQuiz_showMaxBox').show();
@@ -550,15 +550,15 @@ jQuery( function($) {
 				}
 			});
 
-			$('#btnPrerequisiteAdd').click(function() {
+			$('#btnPrerequisiteAdd').on( 'click', function() {
 				$('select[name="quizList"] option:selected').removeAttr('selected').appendTo('select[name="prerequisiteList[]"]');
 			});
 
-			$('#btnPrerequisiteDelete').click(function() {
+			$('#btnPrerequisiteDelete').on( 'click', function() {
 				$('select[name="prerequisiteList[]"] option:selected').removeAttr('selected').appendTo('select[name="quizList"]');
 			});
 
-			$('input[name="prerequisite"]').change(function() {
+			$('input[name="prerequisite"]').on( 'change', function() {
 				if(this.checked)
 					$('#prerequisiteBox').show();
 				else
@@ -567,7 +567,7 @@ jQuery( function($) {
 
 			}).change();
 
-			$('input[name="toplistDataAddMultiple"]').change(function() {
+			$('input[name="toplistDataAddMultiple"]').on( 'change', function() {
 				if(this.checked)
 					$('#toplistDataAddBlockBox').show();
 				else
@@ -575,7 +575,7 @@ jQuery( function($) {
 
 			}).change();
 
-			$('input[name="toplistActivated"]').change(function() {
+			$('input[name="toplistActivated"]').on( 'change', function() {
 				if(this.checked)
 					$('#toplistBox > tr:gt(0)').show();
 				else
@@ -583,7 +583,7 @@ jQuery( function($) {
 
 			}).change();
 
-			$('input[name="showReviewQuestion"]').change(function() {
+			$('input[name="showReviewQuestion"]').on( 'change', function() {
 				if(this.checked) {
 					$('.wpProQuiz_reviewQuestionOptions').show();
 				} else {
@@ -597,12 +597,12 @@ jQuery( function($) {
 			$('input[name="quizRunOnceType"]:checked').change();
 			$('input[name="showMaxQuestion"]').change();
 
-			$('#form_add').click(function() {
+			$('#form_add').on( 'click', function() {
 				$('#form_table tbody > tr:eq(0)').clone(true).appendTo('#form_table tbody').show();
 				$('#form_table tbody tr:last input[type="text"]').focus();
 			});
 
-			$('input[name="form_delete"]').click(function() {
+			$('input[name="form_delete"]').on( 'click', function() {
 				var con = $(this).parents('tr');
 
 				if(con.find('input[name="form[][form_id]"]').val() != "0") {
@@ -614,11 +614,11 @@ jQuery( function($) {
 			});
 
 			$('#form_table tbody').sortable({ handle: '.form_move', update: methode.sortUpdate });
-			$('.form_move').click(function() {
+			$('.form_move').on( 'click', function() {
 				return false;
 			});
 
-			$('select[name="form[][type]"]').change(function() {
+			$('select[name="form[][type]"]').on( 'change', function() {
 				switch (Number($(this).val())) {
 				case 7:
 				case 8:
@@ -631,7 +631,7 @@ jQuery( function($) {
 
 			}).change();
 
-			$('.editDropDown').click(function() {
+			$('.editDropDown').on( 'click', function() {
 				$('.dropDownEditBox').not(
 						$(this).siblings('.dropDownEditBox').toggle())
 					.hide();
@@ -639,7 +639,7 @@ jQuery( function($) {
 				return false;
 			});
 
-			$('.dropDownEditBox input').click(function() {
+			$('.dropDownEditBox input').on( 'click', function() {
 				$(this).parent().hide();
 			});
 		};
@@ -740,7 +740,7 @@ jQuery( function($) {
 						$.each(json.items, function(i, v) {
 							var d = item.clone();
 
-							d.find('a').text(v.userName).data('userId', v.userId).click(function() {
+							d.find('a').text(v.userName).data('userId', v.userId).on( 'click', function() {
 								$('#userSelect').val($(this).data('userId'));
 
 								$('#wpProQuiz_typeRegisteredUser').click();
@@ -827,7 +827,7 @@ jQuery( function($) {
 		};
 
 		var init = function() {
-			$('.wpProQuiz_tab').click(function(e) {
+			$('.wpProQuiz_tab').on( 'click', function(e) {
 				var $this = $(this);
 
 				if($this.hasClass('button-primary')) {
@@ -848,17 +848,17 @@ jQuery( function($) {
 				return false;
 			});
 
-			$('#userSelect').change(function() {
+			$('#userSelect').on( 'change', function() {
 				methode.changeTab('wpProQuiz_typeRegisteredUser');
 			});
 
-			$('.wpProQuiz_update').click(function() {
+			$('.wpProQuiz_update').on( 'click', function() {
 				methode.changeTab(currectTab);
 
 				return false;
 			});
 
-			$('#wpProQuiz_reset').click(function() {
+			$('#wpProQuiz_reset').on( 'click', function() {
 
 				var c =confirm(wpProQuizLocalize.reset_statistics_msg);
 
@@ -870,7 +870,7 @@ jQuery( function($) {
 				return false;
 			});
 
-			$('.wpProQuiz_resetComplete').click(function() {
+			$('.wpProQuiz_resetComplete').on( 'click', function() {
 
 				var c =confirm(wpProQuizLocalize.reset_statistics_msg);
 
@@ -881,7 +881,7 @@ jQuery( function($) {
 				return false;
 			});
 
-			$('#wpProQuiz_pageLimit, #wpProQuiz_onlyCompleted').change(function() {
+			$('#wpProQuiz_pageLimit, #wpProQuiz_onlyCompleted').on( 'change', function() {
 				$('#wpProQuiz_currentPage').val(0);
 				changePageNav = true;
 				methode.changeTab(currectTab);
@@ -889,7 +889,7 @@ jQuery( function($) {
 				return false;
 			});
 
-			$('#wpProQuiz_currentPage').change(function() {
+			$('#wpProQuiz_currentPage').on( 'change', function() {
 				$('#wpProQuiz_pageLeft, #wpProQuiz_pageRight').hide();
 
 				if($('#wpProQuiz_currentPage option').length == 1) {
@@ -905,14 +905,14 @@ jQuery( function($) {
 				methode.changeTab(currectTab);
 			});
 
-			$('#wpProQuiz_pageRight').click(function() {
+			$('#wpProQuiz_pageRight').on( 'click', function() {
 				$('#wpProQuiz_currentPage option:selected').next().attr('selected', 'selected');
 				$('#wpProQuiz_currentPage').change();
 
 				return false;
 			});
 
-			$('#wpProQuiz_pageLeft').click(function() {
+			$('#wpProQuiz_pageLeft').on( 'click', function() {
 				$('#wpProQuiz_currentPage option:selected').prev().attr('selected', 'selected');
 				$('#wpProQuiz_currentPage').change();
 
@@ -1016,7 +1016,7 @@ jQuery( function($) {
 						.appendTo(elements.dataBody);
 				}
 
-				$('.wpProQuiz_delete').click(function() {
+				$('.wpProQuiz_delete').on( 'click', function() {
 					if(confirm(wpProQuizLocalize.confirm_delete_entry)) {
 						var id = new Array($(this).closest('tr').find('input[name="checkedData[]"]').val());
 
@@ -1026,7 +1026,7 @@ jQuery( function($) {
 					return false;
 				});
 
-				$('.wpProQuiz_edit').click(function() {
+				$('.wpProQuiz_edit').on( 'click', function() {
 					var $contain = $(this).closest('tr');
 
 					$contain.find('.row-actions').hide();
@@ -1038,7 +1038,7 @@ jQuery( function($) {
 					return false;
 				});
 
-				$('.inline_editSave').click(function() {
+				$('.inline_editSave').on( 'click', function() {
 					var $contain = $(this).closest('tr');
 					var username = $contain.find('.inline_editUsername').val();
 					var email = $contain.find('.inline_editEmail').val();
@@ -1059,7 +1059,7 @@ jQuery( function($) {
 					return false;
 				});
 
-				$('.inline_editCancel').click(function() {
+				$('.inline_editCancel').on( 'click', function() {
 					var $contain = $(this).closest('tr');
 
 					$contain.find('.row-actions').show();
@@ -1099,36 +1099,36 @@ jQuery( function($) {
 		};
 
 		var init = function() {
-			elements.sort.change(function() {
+			elements.sort.on( 'change', function() {
 				methods.loadData();
 			});
 
-			elements.pageLimit.change(function() {
+			elements.pageLimit.on( 'change', function() {
 				methods.loadData({nav: 1});
 			});
 
-			elements.currentPage.change(function() {
+			elements.currentPage.on( 'change', function() {
 				methods.checkNav();
 				methods.loadData();
 			});
 
-			elements.pageLeft.click(function() {
+			elements.pageLeft.on( 'click', function() {
 				elements.currentPage.val(Number(elements.currentPage.val()) - 1);
 				methods.checkNav();
 				methods.loadData();
 			});
 
-			elements.pageRight.click(function() {
+			elements.pageRight.on( 'click', function() {
 				elements.currentPage.val(Number(elements.currentPage.val()) + 1);
 				methods.checkNav();
 				methods.loadData();
 			});
 
-			$('#wpProQuiz_deleteAll').click(function() {
+			$('#wpProQuiz_deleteAll').on( 'click', function() {
 				methods.loadData({a: 'deleteAll'});
 			});
 
-			$('#wpProQuiz_action').click(function() {
+			$('#wpProQuiz_action').on( 'click', function() {
 				var name = $('#wpProQuiz_actionName').val();
 
 				if(name != '0') {
@@ -1141,7 +1141,7 @@ jQuery( function($) {
 				}
 			});
 
-			$('#wpProQuiz_checkedAll').change(function() {
+			$('#wpProQuiz_checkedAll').on( 'change', function() {
 				if(this.checked)
 					$('input[name="checkedData[]"]').attr('checked', 'checked');
 				else
@@ -1234,7 +1234,7 @@ jQuery( function($) {
 		};
 
 		var tabWrapper = function() {
-			$('.wpProQuiz_tab_wrapper a').click(function() {
+			$('.wpProQuiz_tab_wrapper a').on( 'click', function() {
 				var $this = $(this);
 				var tabId = $this.data('tab');
 				var currentTab = $this.siblings('.button-primary').removeClass('button-primary').addClass('button-secondary');
@@ -1413,7 +1413,7 @@ jQuery( function($) {
 				};
 
 				var init = function() {
-//					$('.wpProQuiz_tab').click(function() {
+//					$('.wpProQuiz_tab').on( 'click', function() {
 //						var $this = $(this);
 //
 //						$('.wpProQuiz_tab').removeClass('button-primary').addClass('button-secondary');
@@ -1432,7 +1432,7 @@ jQuery( function($) {
 					/*******************************************
 					 * Category
 					 ******************************************/
-					$('select[name="category"]').change(function() {
+					$('select[name="category"]').on( 'change', function() {
 						//$('input[name="categoryEditText"]').val($(this).find(':selected').text());
 
 						if ($(this).val() != '') {
@@ -1442,14 +1442,14 @@ jQuery( function($) {
 						}
 					});
 
-					$('input[name="categoryDelete"]').click(function() {
+					$('input[name="categoryDelete"]').on( 'click', function() {
 						var category_id = $('select[name="category"] option:selected').val();
 						if (category_id != '') {
 							methode.categoryDelete(category_id);
 						}
 					});
 
-					$('input[name="categoryEdit"]').click(function() {
+					$('input[name="categoryEdit"]').on( 'click', function() {
 						var category_id = $('select[name="category"] option:selected').val();
 						if (category_id != '') {
 							var category_text = $('input[name="categoryEditText"]').val();
@@ -1460,7 +1460,7 @@ jQuery( function($) {
 					/*******************************************
 					 * templateQuiz
 					 ******************************************/
-					$('select[name="templateQuiz"]').change(function() {
+					$('select[name="templateQuiz"]').on( 'change', function() {
 						//$('input[name="templateQuizEditText"]').val($(this).find(':selected').text());
 						if ($(this).val() != '') {
 							$('input[name="templateQuizEditText"]').val($('option:selected', this).text());
@@ -1468,7 +1468,7 @@ jQuery( function($) {
 							$('input[name="templateQuizEditText"]').val('');
 						}
 					});
-					$('input[name="templateQuizEdit"]').click(function() {
+					$('input[name="templateQuizEdit"]').on( 'click', function() {
 						var template_id = $('select[name="templateQuiz"] option:selected').val();
 						if (template_id != '') {
 							var text = $('input[name="templateQuizEditText"]').val();
@@ -1476,7 +1476,7 @@ jQuery( function($) {
 							methode.templateEdit(template_id, text, 0);
 						}
 					});
-					$('input[name="templateQuizDelete"]').click(function() {
+					$('input[name="templateQuizDelete"]').on( 'click', function() {
 						var template_id = $('select[name="templateQuiz"] option:selected').val();
 						if (template_id != '') {
 							methode.templateDelete(template_id, 0);
@@ -1487,7 +1487,7 @@ jQuery( function($) {
 					/*******************************************
 					 * templateQuestion
 					 ******************************************/
-					$('select[name="templateQuestion"]').change(function() {
+					$('select[name="templateQuestion"]').on( 'change', function() {
 						//$('input[name="templateQuestionEditText"]').val($(this).find(':selected').text());
 						if ($(this).val() != '') {
 							$('input[name="templateQuestionEditText"]').val($('option:selected', this).text());
@@ -1497,7 +1497,7 @@ jQuery( function($) {
 
 					});
 
-					$('input[name="templateQuestionEdit"]').click(function() {
+					$('input[name="templateQuestionEdit"]').on( 'click', function() {
 						var template_id = $('select[name="templateQuestion"] option:selected').val();
 						if (template_id != '') {
 							var text = $('input[name="templateQuestionEditText"]').val();
@@ -1506,7 +1506,7 @@ jQuery( function($) {
 						}
 					});
 
-					$('input[name="templateQuestionDelete"]').click(function() {
+					$('input[name="templateQuestionDelete"]').on( 'click', function() {
 						var template_id = $('select[name="templateQuestion"] option:selected').val();
 						if (template_id != '') {
 							methode.templateDelete(template_id, 1);
@@ -1517,7 +1517,7 @@ jQuery( function($) {
 					 ******************************************/
 
 
-					$('#statistic_time_format_select').change(function() {
+					$('#statistic_time_format_select').on( 'change', function() {
 						methode.changeTimeFormat('statisticTimeFormat', $(this));
 					});
 
@@ -1533,7 +1533,7 @@ jQuery( function($) {
 						}
 					});
 					/*
-					$('input[name="email[html]"]').change(function() {
+					$('input[name="email[html]"]').on( 'change', function() {
 						if(switchEditors == undefined)
 							return false;
 
@@ -1546,7 +1546,7 @@ jQuery( function($) {
 					}).change();
 					*/
 					/*
-					$('input[name="userEmail[html]"]').change(function() {
+					$('input[name="userEmail[html]"]').on( 'change', function() {
 						if(switchEditors == undefined)
 							return false;
 
@@ -1874,17 +1874,17 @@ jQuery( function($) {
 				};
 
 				var formListener = function() {
-					$('#wpProQuiz_tip').change(function() {
+					$('#wpProQuiz_tip').on( 'change', function() {
 						global.displayChecked(this, $('#wpProQuiz_tipBox'));
 					}).change();
 
-					$('#wpProQuiz_correctSameText').change(function() {
+					$('#wpProQuiz_correctSameText').on( 'change', function() {
 						global.displayChecked(this, $('#wpProQuiz_incorrectMassageBox'), true);
 						global.displayChecked(this, $('#learndash_question_message_incorrect_answer'), true);
 
 					});
 
-					$('input[name="answerType"]').click(function() {
+					$('input[name="answerType"]').on( 'click', function() {
 						elements.answerChildren.hide();
 						var v = this.value;
 
@@ -1923,7 +1923,7 @@ jQuery( function($) {
 							$('input[name="points"]').attr('disabled', false);
 
 							$('#wpProQuiz_answerPointsActivated').hide();
-							
+
 							//$('#wpProQuiz_correctMessageBox').hide();
 							//$('#learndash_question_message_correct_answer').hide();
 							$('input[name="correctSameText"]').attr('checked', true);
@@ -1941,7 +1941,7 @@ jQuery( function($) {
 
 						} else {
 							$('#wpProQuiz_answerPointsActivated').show();
-							
+
 							$('#wpProQuiz_correctMessageBox').show();
 							$('#learndash_question_message_correct_answer').show();
 							$('#learndash_question_message_correct_answer .learndash-same-answer-text').show();
@@ -1960,12 +1960,12 @@ jQuery( function($) {
 						$('input[name="answerType"]:checked').click();
 					}, 500);
 
-					
+
 					$('#wpProQuiz_correctSameText').change();
 
-					$('.deleteAnswer').click(methode.answerRemove);
+					$('.deleteAnswer').on( 'click', methode.answerRemove );
 
-					$('.addAnswer').click(function() {
+					$('.addAnswer').on( 'click', function() {
 						var default_value = $(this).attr('data-default-value');
 						if (default_value == undefined) default_value = 0;
 
@@ -1975,8 +1975,8 @@ jQuery( function($) {
 						clone.find('.wpProQuiz_checkbox').removeAttr('checked');
 						clone.find('.wpProQuiz_text').val('');
 						clone.find('.wpProQuiz_points').val(default_value);
-						clone.find('.deleteAnswer').click(methode.answerRemove);
-						clone.find('.addMedia').click(methode.addMediaClick);
+						clone.find('.deleteAnswer').on( 'click', methode.answerRemove);
+						clone.find('.addMedia').on( 'click', methode.addMediaClick);
 
 						clone.appendTo(ul);
 
@@ -1987,7 +1987,7 @@ jQuery( function($) {
 						handle: '.wpProQuiz_move'
 					});
 
-					$('#saveQuestion').click(function() {
+					$('#saveQuestion').on( 'click', function() {
 						if(!methode.globalValidate()) {
 							return false;
 						}
@@ -1996,7 +1996,7 @@ jQuery( function($) {
 
 						return true;
 					});
-					$('#publish').click(function () {
+					$('#publish').on( 'click', function () {
 						if (!methode.globalValidate()) {
 							return false;
 						}
@@ -2005,7 +2005,7 @@ jQuery( function($) {
 
 						return true;
 					});
-					$('#save-post').click(function () {
+					$('#save-post').on( 'click', function () {
 						if (!methode.globalValidate()) {
 							return false;
 						}
@@ -2015,7 +2015,7 @@ jQuery( function($) {
 						return true;
 					});
 
-					$(elements.pointsModus).change(function() {
+					$(elements.pointsModus).on( 'change', function() {
 						global.displayChecked(this, $('.wpProQuiz_answerPoints'));
 						global.displayChecked(this, $('#wpProQuiz_showPointsBox'));
 						global.displayChecked(this, elements.gPoints, false, true);
@@ -2030,7 +2030,7 @@ jQuery( function($) {
 						}
 					}).change();
 
-					$('select[name="category"]').change(function() {
+					$('select[name="category"]').on( 'change', function() {
 						var $this = $(this);
 						var box = $('#categoryAddBox').hide();
 
@@ -2041,13 +2041,13 @@ jQuery( function($) {
 
 					}).change();
 
-					$('#categoryAddBtn').click(function() {
+					$('#categoryAddBtn').on( 'click', function() {
 						methode.addCategory();
 					});
 
-					$('.addMedia').click(methode.addMediaClick);
+					$('.addMedia').on( 'click', methode.addMediaClick);
 
-					$('input[name="answerPointsDiffModusActivated"]').change(function() {
+					$('input[name="answerPointsDiffModusActivated"]').on( 'change', function() {
 						global.displayChecked(this, $('input[name="disableCorrect"]'), true, true);
 
 						if(this.checked)
@@ -2056,17 +2056,17 @@ jQuery( function($) {
 							$('.classic_answer .wpProQuiz_classCorrect').parent().parent().show();
 					}).change();
 
-					$('input[name="disableCorrect"]').change(function() {
+					$('input[name="disableCorrect"]').on( 'change', function() {
 						global.displayChecked(this, $('.classic_answer .wpProQuiz_classCorrect').parent().parent(), true);
 					}).change();
 
-					$('#clickPointDia').click(function() {
+					$('#clickPointDia').on( 'click', function() {
 						$('.pointDia').toggle('fast');
 
 						return false;
 					});
 
-					$('input[name="template"]').click(function(e) {
+					$('input[name="template"]').on( 'click', function(e) {
 						if($('select[name="templateSaveList"]').val() == '0') {
 							if(global.isEmpty($('input[name="templateName"]').val())) {
 								alert(wpProQuizLocalize.temploate_no_name);
@@ -2079,7 +2079,7 @@ jQuery( function($) {
 						methode.generateArrayIndex();
 					});
 
-					$('select[name="templateSaveList"]').change(function() {
+					$('select[name="templateSaveList"]').on( 'change', function() {
 						var $templateName = $('input[name="templateName"]');
 
 						if($(this).val() == '0') {
@@ -2301,7 +2301,7 @@ jQuery( function($) {
 
 								methode.setStatisticData(clone, this);
 
-								clone.find('a').text(this.userName).data('userId', this.userId).click(function() {
+								clone.find('a').text(this.userName).data('userId', this.userId).on( 'click', function() {
 									$('#userSelect').val($(this).data('userId'));
 
 									$('#wpProQuiz_typeUser').click();
@@ -2384,7 +2384,7 @@ jQuery( function($) {
 
 								methode.setStatisticData(clone, this);
 
-								clone.find('a').text(this.userName).data('userId', this.userId).data('testId', this.testId).click(function() {
+								clone.find('a').text(this.userName).data('userId', this.userId).data('testId', this.testId).on( 'click', function() {
 									methode.switchTabOnLoad('users');
 									methode.loadUsersStatistic_($(this).data('userId'), $(this).data('testId'));
 
@@ -2458,27 +2458,27 @@ jQuery( function($) {
 
 				var init = function() {
 
-					$('#userSelect, #testSelect').change(function() {
+					$('#userSelect, #testSelect').on( 'change', function() {
 						methode.loadUsersStatistic();
 					});
 
-					$('.wpProQuiz_update').click(function() {
+					$('.wpProQuiz_update').on( 'click', function() {
 						methode.refresh();
 					});
 
-					$('#wpProQuiz_reset').click(function() {
+					$('#wpProQuiz_reset').on( 'click', function() {
 						methode.reset(0);
 					});
 
-					$('#wpProQuiz_resetUser').click(function() {
+					$('#wpProQuiz_resetUser').on( 'click', function() {
 						methode.reset(1);
 					});
 
-					$('.wpProQuiz_resetComplete').click(function() {
+					$('.wpProQuiz_resetComplete').on( 'click', function() {
 						methode.reset(2);
 					});
 
-					$('.wpProQuiz_tab').click(function() {
+					$('.wpProQuiz_tab').on( 'click', function() {
 						var $this = $(this);
 
 						$('.wpProQuiz_tab').removeClass('button-primary').addClass('button-secondary');
@@ -2502,51 +2502,51 @@ jQuery( function($) {
 						return false;
 					});
 
-					$('#wpProQuiz_onlyCompleted').change(function() {
+					$('#wpProQuiz_onlyCompleted').on( 'change', function() {
 						elements.currentPage.val(1);
 						methode.loadStatisticOverview(true);
 					});
 
-					$('#wpProQuiz_pageLimit').change(function() {
+					$('#wpProQuiz_pageLimit').on( 'change', function() {
 						elements.currentPage.val(1);
 						methode.loadStatisticOverview(true);
 					});
 
-					elements.pageLeft.click(function() {
+					elements.pageLeft.on( 'click', function() {
 						elements.currentPage.val(Number(elements.currentPage.val()) - 1);
 						methode.loadStatisticOverview(false);
 						methode.checkNavBar();
 					});
 
-					elements.pageRight.click(function() {
+					elements.pageRight.on( 'click', function() {
 						elements.currentPage.val(Number(elements.currentPage.val()) + 1);
 						methode.loadStatisticOverview(false);
 						methode.checkNavBar();
 					});
 
-					elements.currentPage.change(function() {
+					elements.currentPage.on( 'change', function() {
 						methode.loadStatisticOverview(false);
 						methode.checkNavBar();
 					});
 
-					$('#wpProQuiz_formUser, #wpProQuiz_fromPageLimit').change(function() {
+					$('#wpProQuiz_formUser, #wpProQuiz_fromPageLimit').on( 'change', function() {
 						$('#wpProQuiz_formCurrentPage').val(1);
 						methode.loadFormsOverview(true);
 					});
 
-					$('#wpProQuiz_formPageLeft').click(function() {
+					$('#wpProQuiz_formPageLeft').on( 'click', function() {
 						$('#wpProQuiz_formCurrentPage').val(Number(elements.currentPage.val()) - 1);
 						methode.loadFormsOverview(false);
 						methode.checkFormNavBar();
 					});
 
-					$('#wpProQuiz_formPageRight').click(function() {
+					$('#wpProQuiz_formPageRight').on( 'click', function() {
 						$('#wpProQuiz_formCurrentPage').val(Number(elements.currentPage.val()) + 1);
 						methode.loadFormsOverview(false);
 						methode.checkFormNavBar();
 					});
 
-					$('#wpProQuiz_formCurrentPage').change(function() {
+					$('#wpProQuiz_formCurrentPage').on( 'change', function() {
 						methode.loadFormsOverview(false);
 						methode.checkFormNavBar();
 					});
@@ -2672,13 +2672,13 @@ jQuery( function($) {
 
 							historyFilter.data.generateNav = 0;
 
-							content.find('.user_statistic').click(function() {
+							content.find('.user_statistic').on( 'click', function() {
 								methode.loadUserAjax(0, $(this).data('ref_id'), false);
 
 								return false;
 							});
 
-							content.find('.wpProQuiz_delete').click(function() {
+							content.find('.wpProQuiz_delete').on( 'click', function() {
 								deleteMethode.deleteUserStatistic($(this).parents('tr').find('.user_statistic').data('ref_id'), 0);
 
 								return false;
@@ -2704,17 +2704,17 @@ jQuery( function($) {
 						global.ajaxPost('statisticLoadUser', data, function(json) {
 							content.html(json.html);
 
-							content.find('.wpProQuiz_update').click(function() {
+							content.find('.wpProQuiz_update').on( 'click', function() {
 								methode.loadUserAjax(userId, refId, avg);
 
 								return false;
 							});
 
-							content.find('#wpProQuiz_resetUserStatistic').click(function() {
+							content.find('#wpProQuiz_resetUserStatistic').on( 'click', function() {
 								deleteMethode.deleteUserStatistic(refId, userId);
 							});
 
-							content.find('.statistic_data').click(function() {
+							content.find('.statistic_data').on( 'click', function() {
 								$(this).parents('tr').next().toggle('fast');
 
 								return false;
@@ -2753,13 +2753,13 @@ jQuery( function($) {
 
 							overviewFilter.data.generateNav = 0;
 
-							content.find('.user_statistic').click(function() {
+							content.find('.user_statistic').on( 'click', function() {
 								methode.loadUserAjax($(this).data('user_id'), 0, true);
 
 								return false;
 							});
 
-							content.find('.wpProQuiz_delete').click(function() {
+							content.find('.wpProQuiz_delete').on( 'click', function() {
 								deleteMethode.deleteUserStatistic(0, $(this).parents('tr').find('.user_statistic').data('user_id'));
 
 								return false;
@@ -2828,36 +2828,36 @@ jQuery( function($) {
 						});
 					}
 
-					$('#filter').click(function() {
+					$('#filter').on( 'click', function() {
 						historyFilter.changeFilter();
 						methode.loadHistoryAjax();
 					});
 
-					$('#wpProQuiz_overlay_close').click(function() {
+					$('#wpProQuiz_overlay_close').on( 'click', function() {
 						$('#wpProQuiz_user_overlay').hide();
 					});
 
-					$('#wpProQuiz_tabHistory .wpProQuiz_update').click(function() {
+					$('#wpProQuiz_tabHistory .wpProQuiz_update').on( 'click', function() {
 						historyFilter.changeFilter();
 						methode.loadHistoryAjax();
 
 						return false;
 					});
 
-					$('#wpProQuiz_tabOverview .wpProQuiz_update').click(function() {
+					$('#wpProQuiz_tabOverview .wpProQuiz_update').on( 'click', function() {
 						overviewFilter.changeFilter();
 						methode.loadOverviewAjax();
 
 						return false;
 					});
 
-					$('.wpProQuiz_resetComplete').click(function() {
+					$('.wpProQuiz_resetComplete').on( 'click', function() {
 						deleteMethode.deleteAll();
 
 						return false;
 					});
 
-					$('#overviewFilter').click(function() {
+					$('#overviewFilter').on( 'click', function() {
 						overviewFilter.changeFilter();
 						methode.loadOverviewAjax();
 					});
@@ -2903,7 +2903,7 @@ jQuery( function($) {
 
 			}).mouseout(function() {
 				$(this).next().hide();
-			}).click(function() {
+			}).on( 'click', function() {
 				return false;
 			});
 		};
@@ -2949,7 +2949,7 @@ jQuery( function($) {
 
 			$.extend(defaultOption, option);
 
-			elements.pageLeft.click(function() {
+			elements.pageLeft.on( 'click', function() {
 				elements.currentPage.val(Number(elements.currentPage.val()) - 1);
 				checkNavBar();
 
@@ -2957,7 +2957,7 @@ jQuery( function($) {
 					defaultOption.onChange(elements.currentPage.val());
 			});
 
-			elements.pageRight.click(function() {
+			elements.pageRight.on( 'click', function() {
 				elements.currentPage.val(Number(elements.currentPage.val()) + 1);
 				checkNavBar();
 
@@ -2965,7 +2965,7 @@ jQuery( function($) {
 					defaultOption.onChange(elements.currentPage.val());
 			});
 
-			elements.currentPage.change(function() {
+			elements.currentPage.on( 'change', function() {
 				checkNavBar();
 
 				if(defaultOption.onChange)

@@ -146,7 +146,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 		public function show_upgrade_notification( $current_plugin_metadata, $new_plugin_metadata ) {
 			$upgrade_notice = $this->get_plugin_upgrade_notice();
 			if ( ! empty( $upgrade_notice ) ) {
-				echo '</p><p class="ld-plugin-update-notice">' . str_replace( array( '<p>', '</p>' ), array( '', '<br />' ), $upgrade_notice );
+				echo '</p><p class="ld-plugin-update-notice">' . str_replace( array( '<p>', '</p>' ), array( '', '<br />' ), $upgrade_notice ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			}
 		}
 
@@ -230,8 +230,8 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 
 					if ( learndash_get_license_show_notice() ) {
 						?>
-						<div class="<?php echo learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ?>" <?php echo learndash_get_license_data_attrs(); ?>>
-							<p><?php echo learndash_get_license_message( 2 ); ?></p>
+						<div class="<?php echo esc_attr( learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ); ?>" <?php echo learndash_get_license_data_attrs(); ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded, escaped in function. ?>
+							<p><?php echo wp_kses_post( learndash_get_license_message( 2 ) ); ?></p>
 						</div>
 						<?php
 					}
@@ -257,7 +257,7 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 						$notice_shown_upgrade_notice = true;
 						?>
 						<div class="notice notice-error notice-alt is-dismissible ld-plugin-update-notice">
-							<?php echo $upgrade_notice; ?>
+							<?php echo wp_kses_post( $upgrade_notice ); ?>
 						</div>
 						<?php
 					}
@@ -664,10 +664,10 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 					} else {
 						if ( learndash_get_license_show_notice() ) {
 							?>
-							<div class="<?php echo learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ?>" <?php echo learndash_get_license_data_attrs(); ?>>
+							<div class="<?php echo esc_attr( learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ); ?>" <?php echo learndash_get_license_data_attrs(); ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded, escaped in function ?>
 								<p>
 								<?php
-								echo learndash_get_license_message();
+								echo learndash_get_license_message(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Hardcoded, escaped in function.
 								?>
 								</p>
 							</div>
@@ -677,16 +677,16 @@ if ( ! class_exists( 'nss_plugin_updater_sfwd_lms' ) ) {
 					?>
 					<p><label for="nss_plugin_license_email_<?php echo esc_attr( $code ); ?>"><?php esc_html_e( 'Email:', 'learndash' ); ?></label><br />
 
-					<input id="nss_plugin_license_email_<?php echo esc_attr( $code ); ?>" name="nss_plugin_license_email_<?php echo esc_attr( $code ); ?>" style="min-width:30%" value="<?php
-						/** This filter is documented in https://developer.wordpress.org/reference/hooks/format_to_edit/ */
-						esc_html_e( apply_filters( 'format_to_edit', $email ), 'learndash' ); 
-						?>" /></p>
+					<input id="nss_plugin_license_email_<?php echo esc_attr( $code ); ?>" name="nss_plugin_license_email_<?php echo esc_attr( $code ); ?>" style="min-width:30%" value="<?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+					/** This filter is documented in https://developer.wordpress.org/reference/hooks/format_to_edit/ */
+					esc_html_e( apply_filters( 'format_to_edit', $email ), 'learndash' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
+					?>" /></p> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterEnd ?>
 
 					<p><label ><?php esc_html_e( 'License Key:', 'learndash' ); ?></label><br />
-					<input id="nss_plugin_license_<?php echo esc_attr( $code ); ?>" name="nss_plugin_license_<?php echo esc_attr( $code ); ?>" style="min-width:30%" value="<?php
-						/** This filter is documented in https://developer.wordpress.org/reference/hooks/format_to_edit/ */
-						esc_html_e( apply_filters( 'format_to_edit', $license ), 'learndash' ); 
-						?>" /></p>
+					<input id="nss_plugin_license_<?php echo esc_attr( $code ); ?>" name="nss_plugin_license_<?php echo esc_attr( $code ); ?>" style="min-width:30%" value="<?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+					/** This filter is documented in https://developer.wordpress.org/reference/hooks/format_to_edit/ */
+					esc_html_e( apply_filters( 'format_to_edit', $license ), 'learndash' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
+					?>" /></p> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentAfterEnd ?>
 
 					<div class="submit">
 						<input type="submit" name="update_nss_plugin_license_<?php echo esc_attr( $code ); ?>" value="<?php esc_html_e( 'Update License', 'learndash' ); ?>" class="button button-primary"/>
@@ -823,8 +823,8 @@ function learndash_get_license_message( $mode = 1 ) {
 			return sprintf(
 				// translators: placeholders: Plugin name. Plugin update link.
 				esc_html_x( 'License of your plugin %1$s is invalid or incomplete. Please click %2$s and update your license.', 'placeholders: Plugin name. Plugin update link.', 'learndash' ),
-				'<strong>' . $updater_sfwd_lms->get_plugin_data()->Name . '</strong>',
-				'<a href="' . get_admin_url( null, 'admin.php?page=nss_plugin_license-sfwd_lms-settings' ) . '">' . __( 'here', 'learndash' ) . '</a>'
+				'<strong>' . esc_html( $updater_sfwd_lms->get_plugin_data()->Name ) . '</strong>',
+				'<a href="' . get_admin_url( null, 'admin.php?page=nss_plugin_license-sfwd_lms-settings' ) . '">' . esc_html__( 'here', 'learndash' ) . '</a>'
 			);
 		} elseif ( 1 === $mode ) {
 			return sprintf(
@@ -864,7 +864,7 @@ function learndash_get_license_class( $class = '' ) {
  */
 function learndash_get_license_data_attrs() {
 	if ( ! learndash_updates_enabled() ) {
-		echo ' data-notice-dismiss-nonce="' . wp_create_nonce( 'notice-dismiss-nonce-' . get_current_user_id() ) . '" ';
+		echo ' data-notice-dismiss-nonce="' . esc_attr( wp_create_nonce( 'notice-dismiss-nonce-' . get_current_user_id() ) ) . '" ';
 	}
 }
 

@@ -22,19 +22,22 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	InspectorControls,
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	ToggleControl,
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-course-expire-status',
-    {
+	'learndash/ld-course-expire-status',
+	{
 		// translators: placeholder: Course.
 		title: sprintf(_x('LearnDash %s Expire Status', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
 		// translators: placeholder: Course.
@@ -49,15 +52,15 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
-            course_id: {
+		attributes: {
+			course_id: {
 				type: 'string',
 				default: ''
-            },
-            user_id: {
+			},
+			user_id: {
 				type: 'string',
 				default: ''
-            },
+			},
 			label_before: {
 				type: 'string',
 				default: '',
@@ -90,13 +93,13 @@ registerBlockType(
 				type: 'object',
 			}
 		},
-        edit: function( props ) {
+		edit: function( props ) {
 			let { attributes: { course_id }, className } = props;
 			const { attributes: { user_id, label_before, label_after, autop, preview_course_id, preview_user_id, preview_show, example_show },
-            	setAttributes } = props;
+				setAttributes } = props;
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					<PanelBody
 						title={ __( 'Settings', 'learndash' ) }
 					>
@@ -171,6 +174,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-course-expire-status"
 						attributes={attributes}
+						key="learndash/ld-course-expire-status"
 					/>
 				} else {
 					return __( '[ld_course_expire_status] shortcode output shown here', 'learndash' );
@@ -181,9 +185,9 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render( props.attributes )
 			];
-        },
+		},
 
-        save: props => {
+		save: props => {
 			// Delete meta from props to prevent it being saved.
 			delete (props.attributes.meta);
 

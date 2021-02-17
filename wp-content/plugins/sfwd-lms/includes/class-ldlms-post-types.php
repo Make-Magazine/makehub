@@ -99,7 +99,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 				 * Filters the list of custom post types.
 				 *
 				 * @since 2.6.0
-				 * 
+				 *
 				 * @param array $post_types An array of Post type list.
 				 */
 				self::$post_types = apply_filters( 'learndash_custom_post_types', self::$post_types );
@@ -127,7 +127,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 
 			if ( is_array( $post_type_section ) ) {
 				$post_type_section = array_map( 'trim', $post_type_section );
-				$return_slugs = array();
+				$return_slugs      = array();
 				foreach ( $post_type_section as $key ) {
 					if ( isset( self::$post_type_sections[ $key ] ) ) {
 
@@ -185,7 +185,7 @@ if ( ! class_exists( 'LDLMS_Post_Types' ) ) {
 
 				if ( is_array( $post_type_key ) ) {
 					$post_type_key = array_map( 'trim', $post_type_key );
-					$return_slugs = array();
+					$return_slugs  = array();
 					foreach ( $post_type_key as $key ) {
 						if ( isset( self::$post_types[ $key ] ) ) {
 							$return_slugs[] = self::$post_types[ $key ];

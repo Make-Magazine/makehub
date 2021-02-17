@@ -604,11 +604,11 @@ function learndash_get_lesson_content_count( $lesson, $course_id ) {
 	$quizzes       = learndash_get_lesson_quiz_list( $lesson['post']->ID, get_current_user_id(), $course_id );
 	$lesson_topics = learndash_topic_dots( $lesson['post']->ID, false, 'array', null, $course_id );
 
-	if ( $quizzes & ! empty( $quizzes ) ) {
+	if ( ! empty( $quizzes ) ) {
 		$count['quizzes'] += count( $quizzes );
 	}
 
-	if ( $lesson_topics && ! empty( $lesson_topics ) ) {
+	if ( ! empty( $lesson_topics ) ) {
 
 		foreach ( $lesson_topics as $topic ) {
 
@@ -1270,22 +1270,22 @@ function learndash_30_template_assets() {
 	/**
 	 * @TODO : These assets really should be moved to the /templates directory since they are part of the theme.
 	 */
-	wp_register_style( 'learndash-front', $theme_template_url . '/assets/css/learndash' . leardash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
+	wp_register_style( 'learndash-front', $theme_template_url . '/assets/css/learndash' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 	wp_register_script( 'learndash-front', $theme_template_url . '/assets/js/learndash.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
 
-	wp_register_style( 'learndash-quiz-front', $theme_template_url . '/assets/css/learndash.quiz.front' . leardash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
+	wp_register_style( 'learndash-quiz-front', $theme_template_url . '/assets/css/learndash.quiz.front' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 
 	wp_enqueue_style( 'learndash-front' );
 	wp_style_add_data( 'learndash-front', 'rtl', 'replace' );
 	wp_enqueue_script( 'learndash-front' );
 
-	wp_localize_script( 'learndash-front', 'ajaxurl', admin_url( 'admin-ajax.php' ) );
 	wp_localize_script(
 		'learndash-front',
 		'ldVars',
 		array(
 			'postID'      => get_the_ID(),
 			'videoReqMsg' => esc_html__( 'You must watch the video before accessing this content', 'learndash' ),
+			'ajaxurl'     => admin_url( 'admin-ajax.php' ),
 		)
 	);
 
@@ -1313,9 +1313,9 @@ add_action( 'enqueue_block_editor_assets', 'learndash_30_editor_scripts' );
  */
 function learndash_30_editor_scripts() {
 
-	wp_enqueue_style( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/css/learndash' . leardash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
+	wp_enqueue_style( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/css/learndash' . learndash_min_asset() . '.css', array(), LEARNDASH_SCRIPT_VERSION_TOKEN );
 	wp_style_add_data( 'learndash-front', 'rtl', 'replace' );
-	wp_enqueue_script( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/js/learndash' . leardash_min_asset() . '.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
+	wp_enqueue_script( 'learndash-front', LEARNDASH_LMS_PLUGIN_URL . 'themes/ld30/assets/js/learndash' . learndash_min_asset() . '.js', array( 'jquery' ), LEARNDASH_SCRIPT_VERSION_TOKEN, true );
 
 }
 
@@ -1328,7 +1328,7 @@ class LearnDash_User_Status_Widget extends WP_Widget {
 		$widget_ops  = array(
 			'classname'   => 'widget_lduserstatus',
 			'description' => sprintf(
-				// translators: placeholder: Courses
+				// translators: placeholder: Courses.
 				esc_html_x( 'LearnDash - Registered %s and progress information of users. Visible only to users logged in.', 'placeholders: courses', 'learndash' ),
 				LearnDash_Custom_Label::get_label( 'courses' )
 			),
@@ -1686,7 +1686,7 @@ function learndash_30_custom_colors() {
 		.learndash-wrapper .ld-primary-background,
 		.learndash-wrapper .btn-join,
 		.learndash-wrapper #btn-join,
-		.learndash-wrapper .ld-button:not(.ld-js-register-account):not(.learndash-link-previous-incomplete):not(.ld-button-transparent),
+		.learndash-wrapper .ld-button:not(.ld-button-reverse):not(.learndash-link-previous-incomplete):not(.ld-button-transparent),
 		.learndash-wrapper .ld-expand-button,
 		.learndash-wrapper .wpProQuiz_content .wpProQuiz_button:not(.wpProQuiz_button_reShowQuestion):not(.wpProQuiz_button_restartQuiz),
 		.learndash-wrapper .wpProQuiz_content .wpProQuiz_button2,
@@ -1953,7 +1953,7 @@ function learndash_30_ajax_pager() {
 	$lesson_id = ( isset( $_GET['lesson_id'] ) ? absint( $_GET['lesson_id'] ) : false );
 	$group_id  = ( isset( $_GET['group_id'] ) ? absint( $_GET['group_id'] ) : false );
 
-	$context   = ( isset( $_GET['context'] ) ? esc_attr( $_GET['context'] ) : false );
+	$context = ( isset( $_GET['context'] ) ? esc_attr( $_GET['context'] ) : false );
 
 	$widget_instance = ( isset( $_GET['widget_instance'] ) ? $_GET['widget_instance'] : array() );
 
@@ -2968,8 +2968,8 @@ function learndash_30_get_currency_symbol() {
 	$currency         = '';
 	$stripe_settings  = get_option( 'learndash_stripe_settings' );
 
-	if ( !function_exists('is_plugin_active') ) {		
-		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 	if ( is_plugin_active( 'learndash-stripe/learndash-stripe.php' ) && ! empty( $stripe_settings ) && ! empty( $stripe_settings['currency'] ) ) {
 		$currency = $stripe_settings['currency'];

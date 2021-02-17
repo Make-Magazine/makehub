@@ -35,7 +35,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			?>
 			<tr id="learndash-data-upgrades-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-container">
 				<td class="learndash-data-upgrades-button-container">
-					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
+					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 						esc_html_e( 'Upgrade', 'learndash' );
 					?>
@@ -47,8 +47,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					printf(
 						// translators: placeholder: Quiz.
 						esc_html_x( 'Upgrade User %s Data', 'placeholder: Quiz', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'quiz' )
-					); 
+						LearnDash_Custom_Label::get_label( 'quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					);
 					?>
 					</span>
 					<p>
@@ -56,59 +56,59 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					printf(
 						// translators: placeholder: quiz.
 						esc_html_x( 'This upgrade will sync your existing user data for %s into a new database table for better reporting. (Required)', 'placeholder: quiz', 'learndash' ),
-						learndash_get_custom_label_lower( 'quiz' )
+						esc_html( learndash_get_custom_label_lower( 'quiz' ) )
 					);
 					?>
 					</p>
-					<p class="description"><?php echo $this->get_last_run_info(); ?></p>
+					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
-						$show_progess = false;
-						$this->transient_key = $this->data_slug;
+						$show_progess         = false;
+						$this->transient_key  = $this->data_slug;
 						$this->transient_data = $this->get_transient( $this->transient_key );
-						if ( ! empty( $this->transient_data ) ) {
-							if ( isset( $this->transient_data['result_count'] ) ) {
-								$this->transient_data['result_count'] = intval( $this->transient_data['result_count'] );
-							} else {
-								$this->transient_data['result_count'] = 0;
-							}
-
-							if ( isset( $this->transient_data['total_count'] ) ) {
-								$this->transient_data['total_count'] = intval( $this->transient_data['total_count'] );
-							} else {
-								$this->transient_data['total_count'] = 0;
-							}
-
-							if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
-
-								$show_progess = true;
-								?>
-								<p id="learndash-data-upgrades-continue-<?php echo $this->data_slug; ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
-								<?php
-							}
+					if ( ! empty( $this->transient_data ) ) {
+						if ( isset( $this->transient_data['result_count'] ) ) {
+							$this->transient_data['result_count'] = intval( $this->transient_data['result_count'] );
+						} else {
+							$this->transient_data['result_count'] = 0;
 						}
+
+						if ( isset( $this->transient_data['total_count'] ) ) {
+							$this->transient_data['total_count'] = intval( $this->transient_data['total_count'] );
+						} else {
+							$this->transient_data['total_count'] = 0;
+						}
+
+						if ( ( ! empty( $this->transient_data['result_count'] ) ) && ( ! empty( $this->transient_data['total_count'] ) ) && ( $this->transient_data['result_count'] != $this->transient_data['total_count'] ) ) {
+
+							$show_progess = true;
+							?>
+								<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
+								<?php
+						}
+					}
 
 						$progress_style       = 'display:none;';
 						$progress_meter_style = '';
 						$progress_label       = '';
 						$progress_slug        = '';
 
-						if ( true === $show_progess ) {
-							$progress_style = '';
-							$data = $this->transient_data;
-							$data = $this->build_progress_output( $data );
-							if ( ( isset( $data['progress_percent'] ) ) && ( ! empty( $data['progress_percent'] ) ) ) {
-								$progress_meter_style = 'width: ' . $data['progress_percent'] . '%';
-							}
-
-							if ( ( isset( $data['progress_label'] ) ) && ( ! empty( $data['progress_label'] ) ) ) {
-								$progress_label = $data['progress_label'];
-							}
-
-							if ( ( isset( $data['progress_slug'] ) ) && ( ! empty( $data['progress_slug'] ) ) ) {
-								$progress_slug = 'progress-label-' . $data['progress_slug'];
-							}
+					if ( true === $show_progess ) {
+						$progress_style = '';
+						$data           = $this->transient_data;
+						$data           = $this->build_progress_output( $data );
+						if ( ( isset( $data['progress_percent'] ) ) && ( ! empty( $data['progress_percent'] ) ) ) {
+							$progress_meter_style = 'width: ' . $data['progress_percent'] . '%';
 						}
+
+						if ( ( isset( $data['progress_label'] ) ) && ( ! empty( $data['progress_label'] ) ) ) {
+							$progress_label = $data['progress_label'];
+						}
+
+						if ( ( isset( $data['progress_slug'] ) ) && ( ! empty( $data['progress_slug'] ) ) ) {
+							$progress_slug = 'progress-label-' . $data['progress_slug'];
+						}
+					}
 					?>
 					<div style="<?php echo esc_attr( $progress_style ); ?>" class="meter learndash-data-upgrades-status">
 						<div class="progress-meter">
@@ -176,7 +176,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								$user_id = intval( $user_id );
 								if ( ( ! isset( $this->transient_data['current_user']['user_id'] ) ) || ( $this->transient_data['current_user']['user_id'] !== $user_id ) ) {
 									$this->transient_data['current_user'] = array(
-										'user_id' => $user_id,
+										'user_id'  => $user_id,
 										'item_idx' => 0,
 									);
 								}
@@ -231,14 +231,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 			$this->transient_data['query_args'] = array(
 				'fields' => 'ID',
-				'paged' => $this->transient_data['paged'],
+				'paged'  => $this->transient_data['paged'],
 				'number' => LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
 			);
 			/** This filter is documented in includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list-convert.php */
 			$this->transient_data['query_args'] = apply_filters( 'learndash_data_upgrade_query', $this->transient_data['query_args'], $this->data_slug );
-			$user_query = new WP_User_Query( $this->transient_data['query_args'] );
+			$user_query                         = new WP_User_Query( $this->transient_data['query_args'] );
 			if ( is_a( $user_query, 'WP_User_Query' ) ) {
-				$this->transient_data['total_count'] = $user_query->get_total();
+				$this->transient_data['total_count']   = $user_query->get_total();
 				$this->transient_data['process_users'] = $user_query->get_results();
 			}
 		}
@@ -271,21 +271,24 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			}
 
 			if ( 100 == $data['progress_percent'] ) {
-					$progress_status = __( 'Complete', 'learndash' );
+					$progress_status       = __( 'Complete', 'learndash' );
 					$data['progress_slug'] = 'complete';
 			} else {
 				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-					$progress_status = __( 'In Progress', 'learndash' );
+					$progress_status       = __( 'In Progress', 'learndash' );
 					$data['progress_slug'] = 'in-progress';
 				} else {
-					$progress_status = __( 'Incomplete', 'learndash' );
+					$progress_status       = __( 'Incomplete', 'learndash' );
 					$data['progress_slug'] = 'in-complete';
 				}
 			}
 
 			$data['progress_label'] = sprintf(
 				// translators: placeholders: result count, total count.
-				esc_html_x( '%1$s: %2$d of %3$d Users', 'placeholders: progress status, result count, total count', 'learndash' ), $progress_status, $data['result_count'], $data['total_count']
+				esc_html_x( '%1$s: %2$d of %3$d Users', 'placeholders: progress status, result count, total count', 'learndash' ),
+				$progress_status,
+				$data['result_count'],
+				$data['total_count']
 			);
 
 			return $data;
@@ -337,9 +340,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					}
 
 					if ( ! isset( $quiz_data['course'] ) ) {
-						$quiz_data['course'] = learndash_get_course_id( intval( $quiz_data['quiz'] ) );
+						$quiz_data['course']                          = learndash_get_course_id( intval( $quiz_data['quiz'] ) );
 						$user_meta_quizzes_progress[ $idx ]['course'] = $quiz_data['course'];
-						$user_meta_quizzes_progress_changed = true;
+						$user_meta_quizzes_progress_changed           = true;
 					}
 
 					// LEARNDASH-2744 : Not sure why these lines are here. We shoul be use the original started/completed dates
@@ -383,7 +386,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						unset( $quiz_data_meta['topic'] );
 					}
 
-
 					if ( '-' == $quiz_data_meta['rank'] ) {
 						unset( $quiz_data_meta['rank'] );
 					}
@@ -418,6 +420,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 	}
 }
 
-add_action( 'learndash_data_upgrades_init', function() {
-	Learndash_Admin_Data_Upgrades_User_Meta_Quizzes::add_instance();
-} );
+add_action(
+	'learndash_data_upgrades_init',
+	function() {
+		Learndash_Admin_Data_Upgrades_User_Meta_Quizzes::add_instance();
+	}
+);

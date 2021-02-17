@@ -15,10 +15,9 @@ const {
 
 const {
 	InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	Tooltip,
 	PanelBody,
 	PanelRow,
@@ -28,6 +27,10 @@ const {
 	ToggleControl,
 	TextControl
 } = wp.components;
+
+const {
+	serverSideRender: ServerSideRender
+} = wp;
 
 registerBlockType(
 	'learndash/ld-usermeta',
@@ -142,7 +145,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key='controls'>
 					<PanelBody
 						title={__('Settings', 'learndash')}
 					>
@@ -158,6 +161,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-usermeta"
 						attributes={attributes}
+						key="learndash/ld-usermeta"
 					/>
 				} else {
 					return __('[usermeta] shortcode output shown here', 'learndash');

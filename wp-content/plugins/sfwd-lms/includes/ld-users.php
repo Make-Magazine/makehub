@@ -268,7 +268,9 @@ function learndash_get_user_courses_from_meta( $user_id = 0 ) {
 	if ( ! empty( $user_id ) ) {
 		$user_course_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT REPLACE( REPLACE(meta_key, 'course_', ''), '_access_from', '' ) FROM " . $wpdb->usermeta . ' as usermeta WHERE user_id=%d AND meta_key LIKE %s ', $user_id, 'course_%_access_from'
+				"SELECT REPLACE( REPLACE(meta_key, 'course_', ''), '_access_from', '' ) FROM " . $wpdb->usermeta . ' as usermeta WHERE user_id=%d AND meta_key LIKE %s ',
+				$user_id,
+				'course_%_access_from'
 			)
 		);
 		if ( ! empty( $user_course_ids ) ) {
@@ -398,27 +400,42 @@ function learndash_save_user_course_complete( $user_id = 0 ) {
 								// For Quiz if the admin marks a qiz complete we don't attempt to update an existing attempt for the user quiz.
 								// Instead we add a new entry. LD doesn't care as it will take the complete one for calculations where needed.
 								if ( (bool) true === (bool) $quiz_new_status ) {
-									if ( (bool) true !== ( bool) $quiz_old_status ) {
+									if ( (bool) true !== (bool) $quiz_old_status ) {
+
+										if ( isset( $quiz_meta['sfwd-quiz_lesson'] ) ) {
+											$lesson_id = absint( $quiz_meta['sfwd-quiz_lesson'] );
+										} else {
+											$lesson_id = 0;
+										}
+
+										if ( isset( $quiz_meta['sfwd-quiz_topic'] ) ) {
+											$topic_id = absint( $quiz_meta['sfwd-quiz_topic'] );
+										} else {
+											$topic_id = 0;
+										}
 
 										// If the admin is marking the quiz complete AND the quiz is NOT already complete...
 										// Then we add the minimal quiz data to the user profile.
 										$quizdata = array(
-											'quiz'         => $quiz_id,
-											'score'        => 0,
-											'count'        => 0,
-											'pass'         => true,
-											'rank'         => '-',
-											'time'         => time(),
-											'pro_quizid'   => $quiz_meta['sfwd-quiz_quiz_pro'],
-											'course'       => $course_id,
-											'points'       => 0,
-											'total_points' => 0,
-											'percentage'   => 0,
-											'timespent'    => 0,
-											'has_graded'   => false,
-											'statistic_ref_id' => 0,
-											'm_edit_by'    => get_current_user_id(),  // Manual Edit By ID.
-											'm_edit_time'  => time(),          // Manual Edit timestamp.
+											'quiz'                => $quiz_id,
+											'score'               => 0,
+											'count'               => 0,
+											'question_show_count' => 0,
+											'pass'                => true,
+											'rank'                => '-',
+											'time'                => time(),
+											'pro_quizid'          => absint( $quiz_meta['sfwd-quiz_quiz_pro'] ),
+											'course'              => $course_id,
+											'lesson'              => $lesson_id,
+											'topic'               => $topic_id,
+											'points'              => 0,
+											'total_points'        => 0,
+											'percentage'          => 0,
+											'timespent'           => 0,
+											'has_graded'          => false,
+											'statistic_ref_id'    => 0,
+											'm_edit_by'           => get_current_user_id(), // Manual Edit By ID.
+											'm_edit_time'         => time(), // Manual Edit timestamp.
 										);
 
 										$quizz_progress[] = $quizdata;
@@ -445,6 +462,18 @@ function learndash_save_user_course_complete( $user_id = 0 ) {
 										);
 
 										$_QUIZ_CHANGED = true;
+
+										if ( ( isset( $quizdata['course'] ) ) && ( ! empty( $quizdata['course'] ) ) ) {
+											$quizdata['course'] = get_post( $quizdata['course'] );
+										}
+
+										if ( ( isset( $quizdata['lesson'] ) ) && ( ! empty( $quizdata['lesson'] ) ) ) {
+											$quizdata['lesson'] = get_post( $quizdata['lesson'] );
+										}
+
+										if ( ( isset( $quizdata['topic'] ) ) && ( ! empty( $quizdata['topic'] ) ) ) {
+											$quizdata['topic'] = get_post( $quizdata['topic'] );
+										}
 
 										/**
 										 * Fires after the quiz is marked as complete.
@@ -756,7 +785,7 @@ function learndash_get_user_course_access_list( $user_id = 0 ) {
 	if ( ! empty( $user_id ) ) {
 		if ( true === learndash_use_legacy_course_access_list() ) {
 			$data_settings_courses = learndash_data_upgrades_setting( 'course-access-lists' );
-			if ( ( isset( $data_settings_courses['version'] ) ) && ( version_compare( $data_settings_courses['version'], LEARNDASH_SETTINGS_TRIGGER_UPGRADE_VERSION, '>=') ) ) {
+			if ( ( isset( $data_settings_courses['version'] ) ) && ( version_compare( $data_settings_courses['version'], LEARNDASH_SETTINGS_TRIGGER_UPGRADE_VERSION, '>=' ) ) ) {
 
 				$is_like = " postmeta.meta_value = '" . $user_id . "'
 					OR postmeta.meta_value REGEXP '^" . $user_id . ",' 
@@ -1030,4 +1059,98 @@ function learndash_get_usermeta_shortcode_available_fields( $attr = array() ) {
 		),
 		$attr
 	);
+}
+
+/**
+ * Utility function to return the admin user Courses capabilities.
+ *
+ * @since 3.2.3.5
+ *
+ * @return array of role capabilities.
+ */
+function learndash_get_admin_courses_capabilities() {
+	$course_capabilities = array(
+		'read_post'              => 'read_course',
+		'publish_posts'          => 'publish_courses',
+		'edit_posts'             => 'edit_courses',
+		'edit_others_posts'      => 'edit_others_courses',
+		'delete_posts'           => 'delete_courses',
+		'delete_others_posts'    => 'delete_others_courses',
+		'read_private_posts'     => 'read_private_courses',
+		'edit_private_posts'     => 'edit_private_courses',
+		'delete_private_posts'   => 'delete_private_courses',
+		'delete_post'            => 'delete_course',
+		'edit_published_posts'   => 'edit_published_courses',
+		'delete_published_posts' => 'delete_published_courses',
+	);
+
+	return $course_capabilities;
+}
+
+/**
+ * Initialize the admin user Courses capabilities.
+ *
+ * @since 3.2.3.5
+ */
+function learndash_init_admin_courses_capabilities() {
+	$caps = learndash_get_admin_courses_capabilities();
+	if ( ! empty( $caps ) ) {
+		$admin_role = get_role( 'administrator' );
+		if ( ( $admin_role ) && ( $admin_role instanceof WP_Role ) ) {
+			// Not sure why this is here.
+			if ( ! $admin_role->has_cap( 'enroll_users' ) ) {
+				$admin_role->add_cap( 'enroll_users' );
+			}
+
+			foreach ( $caps as $key => $cap ) {
+				if ( ! $admin_role->has_cap( $cap ) ) {
+					$admin_role->add_cap( $cap );
+				}
+			}
+		}
+	}
+}
+
+/**
+ * Utility function to return the admin user Groups capabilities.
+ *
+ * @since 3.2.3.5
+ *
+ * @return array of role capabilities.
+ */
+function learndash_get_admin_groups_capabilities() {
+	$group_capabilities = array(
+		'read_post'              => 'read_group',
+		'publish_posts'          => 'publish_groups',
+		'edit_posts'             => 'edit_groups',
+		'edit_post'              => 'edit_group',
+		'edit_others_posts'      => 'edit_others_groups',
+		'delete_posts'           => 'delete_groups',
+		'delete_others_posts'    => 'delete_others_groups',
+		'read_private_posts'     => 'read_private_groups',
+		'delete_post'            => 'delete_group',
+		'edit_published_posts'   => 'edit_published_groups',
+		'delete_published_posts' => 'delete_published_groups',
+	);
+
+	return $group_capabilities;
+}
+
+/**
+ * Initialize the admin user Groups capabilities.
+ *
+ * @since 3.2.3.5
+ */
+function learndash_init_admin_groups_capabilities() {
+	$caps = learndash_get_admin_groups_capabilities();
+	if ( ! empty( $caps ) ) {
+		$admin_role = get_role( 'administrator' );
+		if ( ( $admin_role ) && ( $admin_role instanceof WP_Role ) ) {
+			foreach ( $caps as $key => $cap ) {
+				if ( ! $admin_role->has_cap( $cap ) ) {
+					$admin_role->add_cap( $cap );
+				}
+			}
+		}
+	}
 }

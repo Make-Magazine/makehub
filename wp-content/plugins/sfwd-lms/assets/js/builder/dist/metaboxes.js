@@ -117,7 +117,7 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"6cPf":[function(require,module,exports) {
+})({"cPfg":[function(require,module,exports) {
 if ('block' === window.learndash_builder_metaboxes.editor) {
   // If Gutenberg is used, make sure some metaboxes can't be toggled off
   wp.data.subscribe(function () {
@@ -143,7 +143,7 @@ if ('block' === window.learndash_builder_metaboxes.editor) {
   // Metaboxes IDs
   var alwaysOn = ['learndash-course-access-settings', 'learndash-course-display-content-settings', 'learndash-course-navigation-settings', 'learndash_course_builder', 'learndash_course_groups', 'learndash_quiz_builder', 'sfwd-course-lessons', 'sfwd-course-quizzes', 'sfwd-course-topics', 'sfwd-quiz']; // We need to follow the core postbox.js to bind the events
 
-  jQuery('.hide-postbox-tog').bind('click.postboxes', function (e) {
+  jQuery('.hide-postbox-tog').on('click.postboxes', function (e) {
     var $el = jQuery(this),
         boxId = $el.val(),
         $postbox = jQuery('#' + boxId); // Check if the metabox is in "always on"
@@ -158,4 +158,4 @@ if ('block' === window.learndash_builder_metaboxes.editor) {
     }
   });
 }
-},{}]},{},["6cPf"], null)
+},{}]},{},["cPfg"], null)

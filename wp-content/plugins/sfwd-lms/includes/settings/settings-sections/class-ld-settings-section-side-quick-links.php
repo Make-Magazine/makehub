@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Settings Page Quizzes Options.
+ * LearnDash Settings Section Side Quick Links Metabox.
  *
  * @package LearnDash
  * @subpackage Settings
@@ -79,7 +79,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							foreach ( $meta_box_order_items as $meta_box_order_item ) {
 								$meta_box_order_item = trim( $meta_box_order_item );
 								if ( isset( $q_links[ $meta_box_order_item ] ) ) {
-									echo '<li><a href="#' . $meta_box_order_item . '" >' . $q_links[ $meta_box_order_item ] . '</a></li>';
+									echo '<li><a href="#' . esc_attr( $meta_box_order_item ) . '" >' . esc_html( $q_links[ $meta_box_order_item ] ) . '</a></li>';
 									unset( $q_links[ $meta_box_order_item ] );
 								}
 							}
@@ -87,7 +87,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 						if ( ! empty( $q_links ) ) {
 							foreach ( $q_links as $link_id => $link_title ) {
-								echo '<li><a href="#' . $link_id . '" >' . $link_title . '</a></li>';
+								echo '<li><a href="#' . esc_attr( $link_id ) . '" >' . esc_html( $link_title ) . '</a></li>';
 							}
 						}
 						echo '</ul>';

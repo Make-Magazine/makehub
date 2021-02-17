@@ -36,19 +36,9 @@ require_once __DIR__ . '/class-ld-settings-section-quizzes-email-settings.php';
 require_once __DIR__ . '/class-ld-settings-section-quizzes-taxonomies.php';
 require_once __DIR__ . '/class-ld-settings-section-quizzes-cpt.php';
 
-//require_once __DIR__ . '/_class-ld-settings-section-quizzes-builder.php';
-//require_once __DIR__ . '/class-ld-settings-section-quizzes-admin-email.php';
-//require_once __DIR__ . '/_class-ld-settings-section-quizzes-user-email.php';
-//require_once __DIR__ . '/class-ld-settings-section-quizzes-time-formats.php';
-//require_once __DIR__ . '/class-ld-settings-section-quizzes-template-management.php';
-
 // Question Options.
 require_once __DIR__ . '/class-ld-settings-section-questions-taxonomies.php';
 require_once __DIR__ . '/class-ld-settings-section-questions-management-display.php';
-
-//require_once( __DIR__ . '/class-ld-settings-section-questions-cpt.php' );
-//require_once __DIR__ . '/class-ld-settings-section-questions-template-management.php';
-//require_once __DIR__ . '/class-ld-settings-section-questions-category-management.php';
 
 // Certificate Options.
 require_once __DIR__ . '/class-ld-settings-section-certificates-cpt.php';
@@ -101,15 +91,6 @@ if ( ( defined( 'LEARNDASH_TRANSLATIONS' ) ) && ( LEARNDASH_TRANSLATIONS === tru
 
 // Assignments
 require_once __DIR__ . '/class-ld-settings-section-assignments-cpt.php';
-
-
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-page-license.php' );
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-license.php' );
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-license-submit.php' );
-
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-taxonomies.php' );
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-general-one.php' );
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-settings-section-general-two.php' );
 
 // Shows settings section on the WP Settings > Permalinks page.
 require_once __DIR__ . '/class-ld-settings-section-permalinks.php';

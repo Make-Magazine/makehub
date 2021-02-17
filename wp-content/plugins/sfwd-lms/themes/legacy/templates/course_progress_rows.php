@@ -26,7 +26,13 @@ foreach ( $course_progress as $course_id => $coursep ) {
 	}
 	?> <?php _e('Status:', 'learndash') ?> <span class="leardash-course-status leardash-course-status-<?php echo sanitize_title_with_dashes($course_status) ?>"><?php echo $course_status ?></span><?php
 
-	$course_steps_count = learndash_get_course_steps_count( $course_id ); 
+	/** This filter is documented in includes/course/ld-course-progress.php */
+	if ( apply_filters( 'learndash_course_status_recalc_total_steps', true, $coursep, $user_id, $course_id ) ) {
+		$course_steps_count = learndash_get_course_steps_count( $course_id );
+	} else {
+		$coursep['completed'] = $course_steps_count;
+	}
+	
 	$course_steps_completed = learndash_course_get_completed_steps( $user_id, $course_id, $coursep );
 	
 	$completed_on = get_user_meta( $user_id, 'course_completed_' . $course_id, true );

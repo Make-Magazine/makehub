@@ -96,6 +96,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				)
 			);
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( is_admin() ) && ( isset( $_GET['page'] ) ) && ( 'questions-options' === $_GET['page'] ) ) {
 				$category_mapper     = new WpProQuiz_Model_CategoryMapper();
 				$question_categories = $category_mapper->fetchAll();
@@ -119,70 +120,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_fields() {
 
 			$this->setting_option_fields = array(
-				/*
-				'ld_question_category' => array(
-					'name' => 'ld_question_category',
-					'type' => 'checkbox',
-					'label' => sprintf(
-						// translators: placeholder: Question.
-                        esc_html_x( 'LearnDash %s Categories', 'placeholder: Question', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'question' )
-					),
-					'help_text' => sprintf(
-						// translators: placeholder: Question.
-						esc_html_x( 'Enable the builtin LearnDash %s Categories', 'placeholder: Question', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'question' )
-					),
-					'value' => $this->setting_option_values['ld_question_category'],
-					'options' => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
-				),
-				*/
-				/*
-				'ld_question_tag' => array(
-					'name' => 'ld_question_tag',
-					'type' => 'checkbox',
-					'label' => sprintf(
-						// translators: placeholder: Question.
-						esc_html_x( 'LearnDash %s Tags', 'placeholder: Question', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'question' )
-					),
-					'help_text' => sprintf(
-						// translators: placeholder: Quiz.
-						esc_html_x( 'Enable the builtin LearnDash %s Tags', 'placeholder: Question', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'question' )
-					),
-					'value' => $this->setting_option_values['ld_question_tag'],
-					'options' => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
-				),
-				*/
-				/*
-				'wp_post_category' => array(
-					'name' => 'wp_post_category',
-					'type' => 'checkbox',
-					'label' => esc_html__( 'WordPress Post Categories', 'learndash' ),
-					'help_text' => esc_html__( 'Enable the builtin WordPress Post Categories', 'learndash' ),
-					'value' => $this->setting_option_values['wp_post_category'],
-					'options' => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
-				),
-				*/
-				/*
-				'wp_post_tag' => array(
-					'name' => 'wp_post_tag',
-					'type' => 'checkbox',
-					'label' => esc_html__( 'WordPress Post Tags', 'learndash' ),
-					'help_text' => esc_html__( 'Enable the builtin WordPress Post Tags', 'learndash' ),
-					'value' => $this->setting_option_values['wp_post_tag'],
-					'options' => array(
-						'yes' => esc_html__( 'Yes', 'learndash' ),
-					),
-				),
-				*/
 				'proquiz_question_category' => array(
 					'name'                => 'proquiz_question_category',
 					'type'                => 'checkbox-switch',

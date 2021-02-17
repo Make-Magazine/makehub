@@ -128,12 +128,12 @@ do_action( 'learndash-assignment-uploads-before', $course_step_post->ID, $course
 		 * @param int $course_id           Course ID.
 		 * @param int $user_id             User ID.
 		 */
-		do_action( 'learndash-assignment-uploads-form', $course_step_post->ID, $course_id, $user_id ); 
+		do_action( 'learndash-assignment-uploads-form', $course_step_post->ID, $course_id, $user_id );
 		?>
 
-		<input class="ld-button" type="submit" value="<?php esc_html_e( 'Upload', 'learndash' ); ?>" name="submit" id="uploadfile_btn" onClick="this.form.submit(); this.disabled=true;;" disabled="true">
+		<input class="ld-button" type="submit" value="<?php esc_html_e( 'Upload', 'learndash' ); ?>" id="uploadfile_btn" disabled="true">
 
-		<input type="hidden" name="MAX_FILE_SIZE" value="'. learndash_return_bytes_from_shorthand( $php_max_upload ) .'" />
+		<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo learndash_return_bytes_from_shorthand( $php_max_upload ); ?>" />
 		<input type="hidden" value="<?php echo esc_attr( $course_step_post->ID ); ?>" name="post"/>
 		<input type="hidden" value="<?php echo esc_attr( learndash_get_course_id( $course_step_post->ID ) ); ?>" name="course_id"/>
 		<input type="hidden" name="uploadfile" value="<?php echo esc_attr( wp_create_nonce( 'uploadfile_' . get_current_user_id() . '_' . $course_step_post->ID ) ); ?>"  />

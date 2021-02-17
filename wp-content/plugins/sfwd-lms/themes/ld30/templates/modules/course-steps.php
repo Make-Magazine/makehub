@@ -68,7 +68,6 @@ if ( ( isset( $course_settings['course_disable_lesson_progression'] ) ) && ( 'on
 			$current_complete = true;
 		}
 	}
-
 }
 
 /**
@@ -130,9 +129,9 @@ $learndash_next_step_id = apply_filters( 'learndash_next_step_id', $learndash_ne
  */
 $parent_lesson_id = 0;
 if ( $course_step_post->post_type == 'sfwd-lessons' ) {
-	$parent_lesson_id = $course_step_post->ID; 
-} else if ( $course_step_post->post_type == 'sfwd-topic' || $course_step_post->post_type == 'sfwd-quiz' ) {
-	if ( LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+	$parent_lesson_id = $course_step_post->ID;
+} elseif ( $course_step_post->post_type == 'sfwd-topic' || $course_step_post->post_type == 'sfwd-quiz' ) {
+	if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
 		$parent_lesson_id = learndash_course_get_single_parent_step( $course_id, $course_step_post->ID );
 	} else {
 		$parent_lesson_id = learndash_get_setting( $course_step_post, 'lesson' );
@@ -140,11 +139,11 @@ if ( $course_step_post->post_type == 'sfwd-lessons' ) {
 }
 if ( ! empty( $parent_lesson_id ) ) {
 	$lesson_access_from = ld_lesson_access_from( $parent_lesson_id, $user_id, $course_id );
-	if ( ( empty( $lesson_access_from ) ) || ( $bypass_course_limits_admin_users ) ) {
+	if ( ( empty( $lesson_access_from ) ) || ( ! empty( $bypass_course_limits_admin_users ) ) ) {
 		$complete_button = learndash_mark_complete( $course_step_post );
 	} else {
 		$complete_button = '';
-		
+
 	}
 } else {
 	$complete_button = learndash_mark_complete( $course_step_post );
@@ -202,20 +201,29 @@ if ( ! empty( $parent_lesson_id ) ) {
 	//$parent_id = ( get_post_type() == 'sfwd-lessons' ? $course_id : learndash_course_get_single_parent_step( $course_id, get_the_ID() ) );
 
 	if ( $parent_id && 'focus' !== $context ) :
-		if ( $learndash_maybe_show_next_step_link ) : ?>
+		if ( $learndash_maybe_show_next_step_link ) :
+			?>
 			<div class="ld-content-action">
 			<?php
 			if ( isset( $can_complete ) && $can_complete && ! empty( $complete_button ) ) :
-				echo learndash_mark_complete( $course_step_post );?>
+				echo learndash_mark_complete( $course_step_post );
+				?>
 
 			<?php endif; ?>
-			<a href="<?php echo esc_url( learndash_get_step_permalink( $parent_id, $course_id ) ); ?>" class="ld-primary-color ld-course-step-back"><?php
-				echo learndash_get_label_course_step_back( get_post_type( $parent_id ) ); ?>
+			<a href="<?php echo esc_url( learndash_get_step_permalink( $parent_id, $course_id ) ); ?>" class="ld-primary-color ld-course-step-back">
+								<?php
+								echo learndash_get_label_course_step_back( get_post_type( $parent_id ) );
+								?>
 			</a>
 			</div>
-			<div class="ld-content-action<?php if ( ( ! $learndash_next_step_id ) ) : ?> ld-empty<?php endif; ?>">
+			<div class="ld-content-action
 			<?php
-			if ( $learndash_next_step_id ) : ?>
+			if ( ( ! $learndash_next_step_id ) ) :
+				?>
+				 ld-empty<?php endif; ?>">
+			<?php
+			if ( $learndash_next_step_id ) :
+				?>
 				<a class="<?php echo esc_attr( $button_class ); ?>" href="<?php echo esc_url( learndash_get_step_permalink( $learndash_next_step_id, $course_id ) ); ?>">
 					<span class="ld-text"><?php echo learndash_get_label_course_step_next( get_post_type( $learndash_next_step_id ) ); ?></span>
 					<?php if ( is_rtl() ) { ?>
@@ -229,14 +237,21 @@ if ( ! empty( $parent_lesson_id ) ) {
 			<?php
 		else :
 			?>
-			<a href="<?php echo esc_attr( learndash_get_step_permalink( $parent_id, $course_id ) ); ?>" class="ld-primary-color"><?php
-			echo learndash_get_label_course_step_back( get_post_type( $parent_id ) );
-			?></a>
-			<div class="ld-content-action<?php if ( ( ! $can_complete ) && ( ! $learndash_next_step_id ) ) : ?> ld-empty<?php endif; ?>">
+			<a href="<?php echo esc_attr( learndash_get_step_permalink( $parent_id, $course_id ) ); ?>" class="ld-primary-color">
+								<?php
+								echo learndash_get_label_course_step_back( get_post_type( $parent_id ) );
+								?>
+			</a>
+			<div class="ld-content-action
+			<?php
+			if ( ( ! $can_complete ) && ( ! $learndash_next_step_id ) ) :
+				?>
+				 ld-empty<?php endif; ?>">
 			<?php
 			if ( isset( $can_complete ) && $can_complete && ! empty( $complete_button ) ) :
 				echo learndash_mark_complete( $course_step_post );
-			elseif ( $learndash_next_step_id ) : ?>
+			elseif ( $learndash_next_step_id ) :
+				?>
 				<a class="<?php echo esc_attr( $button_class ); ?>" href="<?php echo esc_attr( learndash_get_step_permalink( $learndash_next_step_id, $course_id ) ); ?>">
 					<span class="ld-text"><?php echo learndash_get_label_course_step_next( get_post_type( $learndash_next_step_id ) ); ?></span>
 					<?php if ( is_rtl() ) { ?>
@@ -249,11 +264,16 @@ if ( ! empty( $parent_lesson_id ) ) {
 			</div>
 		<?php endif; ?>
 	<?php elseif ( $parent_id && 'focus' === $context ) : ?>
-	<div class="ld-content-action<?php if ( ( ! $can_complete ) && ( ! $learndash_next_step_id ) ) : ?> ld-empty<?php endif; ?>">
+	<div class="ld-content-action
+		<?php
+		if ( ( ! $can_complete ) && ( ! $learndash_next_step_id ) ) :
+			?>
+		 ld-empty<?php endif; ?>">
 		<?php
 		if ( isset( $can_complete ) && $can_complete && ! empty( $complete_button ) ) :
 			echo learndash_mark_complete( $course_step_post );
-		elseif ( $learndash_next_step_id ) : ?>
+		elseif ( $learndash_next_step_id ) :
+			?>
 			<a class="<?php echo esc_attr( $button_class ); ?>" href="<?php echo esc_attr( learndash_get_step_permalink( $learndash_next_step_id, $course_id ) ); ?>">
 				<span class="ld-text"><?php echo learndash_get_label_course_step_next( get_post_type( $learndash_next_step_id ) ); ?></span>
 				<?php if ( is_rtl() ) { ?>

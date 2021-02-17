@@ -41,7 +41,7 @@ if ( isset( $_GET['widget_instance']['widget_instance']['current_lesson_id'] ) )
 
 $is_current_lesson = ( absint( $current_lesson_id ) === absint( $lesson['post']->ID ) ? true : false );
 
-$lesson_class  = 'ld-lesson-item ' . ( $is_current_lesson ? 'ld-is-current-lesson' : 'ld-is-not-current-lesson' );
+$lesson_class = 'ld-lesson-item ' . ( $is_current_lesson ? 'ld-is-current-lesson' : 'ld-is-not-current-lesson' );
 
 $bypass_course_limits_admin_users = learndash_can_user_bypass( $user_id, 'learndash_course_lesson_access_from', $lesson['post']->ID, $course_id );
 if ( true !== $bypass_course_limits_admin_users ) {
@@ -88,7 +88,8 @@ endif; ?>
 
 			<div class="ld-lesson-title">
 				<?php
-				echo wp_kses_post( $lesson['post']->post_title );
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				echo wp_kses_post( apply_filters( 'the_title', $lesson['post']->post_title, $lesson['post']->ID ) );
 				if ( ! empty( $attributes ) ) :
 					foreach ( $attributes as $attribute ) :
 						?>

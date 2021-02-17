@@ -45,7 +45,8 @@ foreach ( $quizzes as $k => $v ) :
 		$passstatus = isset( $v['pass'] ) ? ( ( 1 == $v['pass'] ) ? 'green' : 'red' ) : '';
 	}
 
-	$quiz_title = ! empty( $quiz->post_title ) ? $quiz->post_title : @$v['quiz_title'];
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+	$quiz_title = ! empty( $quiz->post_title ) ? apply_filters( 'the_title', $quiz->post_title, $quiz->ID ) : @$v['quiz_title'];
 
 	$quiz_course_id = 0;
 	if ( isset( $v['course'] ) ) {

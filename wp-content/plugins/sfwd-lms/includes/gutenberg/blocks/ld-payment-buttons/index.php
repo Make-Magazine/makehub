@@ -18,23 +18,23 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function __construct() {
 
-			$this->shortcode_slug = 'learndash_payment_buttons';
-			$this->block_slug = 'ld-payment-buttons';
+			$this->shortcode_slug   = 'learndash_payment_buttons';
+			$this->block_slug       = 'ld-payment-buttons';
 			$this->block_attributes = array(
-				'course_id' => array(
+				'course_id'         => array(
 					'type' => 'string',
 				),
-				'preview_show' => array(
+				'preview_show'      => array(
 					'type' => 'boolean',
 				),
 				'preview_course_id' => array(
 					'type' => 'string',
 				),
-				'meta' => array(
+				'meta'              => array(
 					'type' => 'object',
 				),
 			);
-			$this->self_closing = true;
+			$this->self_closing     = true;
 
 			$this->init();
 		}
@@ -72,10 +72,14 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 			if ( ( ! isset( $attributes['course_id'] ) ) || ( empty( $attributes['course_id'] ) ) ) {
 				if ( ( ! isset( $attributes_meta['course_id'] ) ) || ( empty( $attributes_meta['course_id'] ) ) ) {
-					return $this->render_block_wrap( '<span class="learndash-block-error-message">' . sprintf(
+					return $this->render_block_wrap(
+						'<span class="learndash-block-error-message">' . sprintf(
 						// translators: placeholder: Course, Course.
-						_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'course' )
-					) . '</span>' );
+							_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'course' ),
+							LearnDash_Custom_Label::get_label( 'course' )
+						) . '</span>'
+					);
 				} else {
 					$attributes['course_id'] = (int) $attributes_meta['course_id'];
 				}
@@ -83,10 +87,13 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 			$course_post = get_post( (int) $attributes['course_id'] );
 			if ( ( ! is_a( $course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $course_post->post_type ) ) {
-				return $this->render_block_wrap( '<span class="learndash-block-error-message">' . sprintf(
+				return $this->render_block_wrap(
+					'<span class="learndash-block-error-message">' . sprintf(
 					// translators: placeholder: Course.
-					_x( 'Invalid %1$s ID.', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' )
-				) . '</span>' );
+						_x( 'Invalid %1$s ID.', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					) . '</span>'
+				);
 			}
 
 			$course_price_type = learndash_get_setting( $course_post, 'course_price_type' );
@@ -100,10 +107,13 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 				return $this->render_block_wrap( $shortcode_out );
 			} else {
-				return $this->render_block_wrap( '<span class="learndash-block-error-message">' . sprintf(
+				return $this->render_block_wrap(
+					'<span class="learndash-block-error-message">' . sprintf(
 					// translators: placeholder: Course.
-					esc_html_x( '%s Price Type must be Free, PayNow or Subscribe.', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' )
-				) . '</span>' );
+						esc_html_x( '%s Price Type must be Free, PayNow or Subscribe.', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' )
+					) . '</span>'
+				);
 			}
 			wp_die();
 		}

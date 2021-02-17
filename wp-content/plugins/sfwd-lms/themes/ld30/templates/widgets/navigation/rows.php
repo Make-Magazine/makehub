@@ -22,8 +22,8 @@ if ( ! empty( $lessons ) ) :
 
 		if ( ( isset( $widget_instance['current_lesson_id'] ) ) && absint( $widget_instance['current_lesson_id'] ) === absint( $course_lesson['post']->ID ) ) {
 			$is_current_lesson = true;
-		} elseif ( get_the_ID() ===  absint( $is_current_lesson ) ) {
-			// Not sure how this is ever reached. 
+		} elseif ( get_the_ID() === absint( $is_current_lesson ) ) {
+			// Not sure how this is ever reached.
 			$is_current_lesson = true;
 		}
 

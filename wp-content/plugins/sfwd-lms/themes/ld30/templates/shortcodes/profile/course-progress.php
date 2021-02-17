@@ -27,8 +27,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="ld-progress-steps">
 			<?php
 			echo sprintf(
-				// translators: placeholder: completed steps, total steps.
-				esc_html_x( '%1$d/%2$d Steps', 'placeholder: completed steps, total steps', 'learndash' ),
+				// translators: placeholders: completed steps, total steps.
+				esc_html_x( '%1$d/%2$d Steps', 'placeholders: completed steps, total steps', 'learndash' ),
 				esc_html( $progress['completed'] ),
 				esc_html( $progress['total'] )
 			);

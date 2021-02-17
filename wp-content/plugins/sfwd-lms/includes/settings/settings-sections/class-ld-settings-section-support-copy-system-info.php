@@ -53,13 +53,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$support_page_instance = LearnDash_Settings_Page::get_page_instance( 'LearnDash_Settings_Page_Support' );
 				if ( $support_page_instance ) {
 					?>
-					<textarea id="ld-system-info-text" style="width: 100%; min-height: 80px; font-family: monospace"><?php
-						foreach ( $support_page_instance->get_support_sections() as $_key => $_section ) {
-							$support_page_instance->show_support_section( $_key, 'text' );
-						}
-					?></textarea><br />
+					<textarea id="ld-system-info-text" style="width: 100%; min-height: 80px; font-family: monospace">
+					<?php
+					foreach ( $support_page_instance->get_support_sections() as $_key => $_section ) {
+						$support_page_instance->show_support_section( $_key, 'text' );
+					}
+					?>
+					</textarea><br />
 					<p>
-					<a class="button" href="<?php echo esc_url( add_query_arg( 'ld_download_system_info_nonce', wp_create_nonce( 'ld_download_system_info_'. get_current_user_id() ) ) ); ?>"><?php esc_html_e( 'Download', 'learndash' ); ?></a>
+					<a class="button" href="<?php echo esc_url( add_query_arg( 'ld_download_system_info_nonce', wp_create_nonce( 'ld_download_system_info_' . get_current_user_id() ) ) ); ?>"><?php esc_html_e( 'Download', 'learndash' ); ?></a>
 					<button class="button" id="ld-system-info-copy-button"><?php esc_html_e( 'Copy', 'learndash' ); ?></button><br /><span style="display:none" id="ld-copy-status-success"><?php esc_html_e( 'Copy Success', 'learndash' ); ?></span><span style="display:none" id="ld-copy-status-failed"><?php esc_html_e( 'Copy Failed', 'learndash' ); ?></span></p>
 					<script>
 						var copyBtn = document.querySelector('#ld-system-info-copy-button');

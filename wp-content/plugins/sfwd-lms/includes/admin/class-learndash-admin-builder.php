@@ -107,7 +107,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 
 			wp_enqueue_style(
 				'learndash-new-builder-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/builder' . leardash_min_builder_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/builder' . learndash_min_builder_asset() . '.css',
 				array( 'wp-editor' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -115,7 +115,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 
 			wp_enqueue_script(
 				'learndash-new-builder-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/builder' . leardash_min_builder_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/builder' . learndash_min_builder_asset() . '.js',
 				array( 'wp-i18n', 'learndash-new-header-script', 'wp-data' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -124,7 +124,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 			// Make sure some metaboxes can't be toggled off
 			wp_enqueue_script(
 				'learndash-force-metaboxes',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/metaboxes' . leardash_min_builder_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/builder/dist/metaboxes' . learndash_min_builder_asset() . '.js',
 				array( 'wp-data', 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -176,7 +176,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 				</div>
 				<div class="learndash_builder_items">
 					<?php $this->show_builder_headers(); ?>
-					<?php echo $this->build_course_steps_html(); ?>
+					<?php echo $this->build_course_steps_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML ?>
 				</div>
 				<br style="clear:both;"/>
 			</div>
@@ -191,7 +191,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 		public function show_builder_header_left() {
 			?>
 			<div class="learndash-header-left">
-				<?php echo $this->get_build_items_count(); ?>
+				<?php echo $this->get_build_items_count(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML ?>
 			</div>
 			<?php
 		}
@@ -251,31 +251,31 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 					if ( ! empty( $post_type_query_args ) ) {
 						$post_type_query          = new WP_Query( $post_type_query_args );
 						$selector_post_type_steps = $this->get_selector_selected_steps( $selector_post_type );
-						$selector_post_type_steps = htmlspecialchars( json_encode( $selector_post_type_steps ) );
+						$selector_post_type_steps = htmlspecialchars( wp_json_encode( $selector_post_type_steps ) );
 						?>
 						<div class="learndash-selector-container learndash-selector-container-<?php echo esc_attr( $selector_post_type ); ?>" data-ld-type="<?php echo esc_attr( $selector_post_type ); ?>" data-ld-selected="<?php echo esc_attr( $selector_post_type_steps ); ?>">
-							<h3 class="learndash-selector-header"><span class="learndash-selector-title"><?php echo learndash_get_custom_label( $this->get_label_for_post_type( $selector_post_type, false ) ); ?></span><span class="ld-course-builder-action ld-course-builder-action-show-hide ld-course-builder-action-show dashicons" title="<?php esc_html_e( 'Expand/Collape Section', 'learndash' ); ?>"></span><span class="ld-course-builder-action ld-course-builder-action-add dashicons" title="<?php esc_html_e( 'New', 'learndash' ); ?>"><img src="<?php echo admin_url( 'images/wpspin_light-2x.gif' ); ?>" alt="" /></span></h3>
+							<h3 class="learndash-selector-header"><span class="learndash-selector-title"><?php echo learndash_get_custom_label( $this->get_label_for_post_type( $selector_post_type, false ) ); ?></span><span class="ld-course-builder-action ld-course-builder-action-show-hide ld-course-builder-action-show dashicons" title="<?php esc_html_e( 'Expand/Collape Section', 'learndash' ); ?>"></span><span class="ld-course-builder-action ld-course-builder-action-add dashicons" title="<?php esc_html_e( 'New', 'learndash' ); ?>"><img src="<?php echo esc_url( admin_url( 'images/wpspin_light-2x.gif' ) ); ?>" alt="" /></span></h3> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
 							<div class="learndash-selector-post-listing">
 								<?php
 									$row_single = $this->build_selector_row_single( null, $selector_post_type );
 								if ( ! empty( $row_single ) ) {
 									?>
-										<ul class="learndash-row-placeholder" style="display:none"><?php echo $row_single; ?></ul>
+										<ul class="learndash-row-placeholder" style="display:none"><?php echo $row_single; ?></ul> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML ?>
 										<?php
 								}
 								?>
 								<div class="learndash-selector-pager">
 									<p class="pager-info">
-										<?php echo $this->build_selector_pages_buttons( $post_type_query ); ?>
+										<?php echo $this->build_selector_pages_buttons( $post_type_query ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML ?>
 									</p>
 								</div>
 								<div class="learndash-selector-search"><input type="text" placeholder="<?php esc_html_e( 'Search...', 'learndash' ); ?>" /></div>
-								<ul id="learndash-selector-post-listing-<?php echo $selector_post_type; ?>" class="learndash-selector-post-listing dropfalse">
-																					<?php
-																					if ( $post_type_query->have_posts() ) {
-																						echo $this->build_selector_rows( $post_type_query );
-																					}
-								?>
+								<ul id="learndash-selector-post-listing-<?php echo esc_attr( $selector_post_type ); ?>" class="learndash-selector-post-listing dropfalse">
+									<?php
+									if ( $post_type_query->have_posts() ) {
+										echo $this->build_selector_rows( $post_type_query ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
+									}
+									?>
 								</ul>
 							</div>
 						</div>
@@ -407,7 +407,7 @@ add_action(
 			$builder_instance->builder_init( $builder_data['builder_post_id'] );
 			$builder_instance->learndash_builder_selector_pager( $builder_query_args );
 		}
-		echo json_encode( array() );
+		echo wp_json_encode( array() );
 		wp_die();
 	}
 );
@@ -441,29 +441,8 @@ add_action(
 			$builder_instance->builder_init( $builder_data['builder_post_id'] );
 			$builder_instance->learndash_builder_selector_search( $builder_query_args );
 		}
-		echo json_encode( array() );
+		echo wp_json_encode( array() );
 		wp_die();
-
-		/*
-		if ( ( isset( $_POST['builder_data'] ) ) && ( ! empty( $_POST['builder_data'] ) ) ) {
-			if ( ( isset( $_POST['builder_data']['builder_class'] ) ) && ( ! empty( $_POST['builder_data']['builder_class'] ) ) ) {
-				$builder_class    = esc_attr( $_POST['builder_data']['builder_class'] );
-				$builder_instance = $builder_class::add_instance();
-				if ( is_a( $builder_instance, $builder_class ) ) {
-					if ( ( isset( $_POST['builder_data']['builder_post_id'] ) ) && ( ! empty( $_POST['builder_data']['builder_post_id'] ) ) ) {
-						$builder_instance->builder_init( $_POST['builder_data']['builder_post_id'] );
-
-						if ( ( isset( $_POST['builder_query_args'] ) ) && ( ! empty( $_POST['builder_query_args'] ) ) ) {
-							$builder_instance->learndash_builder_selector_search( $_POST['builder_query_args'] );
-						}
-					}
-				}
-			}
-		}
-		echo json_encode( array() );
-
-		wp_die();
-		*/
 	}
 );
 
@@ -497,29 +476,8 @@ add_action(
 			$builder_instance->builder_init( $builder_data['builder_post_id'] );
 			$builder_instance->learndash_builder_selector_step_trash( $builder_query_args );
 		}
-		echo json_encode( array() );
+		echo wp_json_encode( array() );
 		wp_die();
-
-		/*
-		if ( ( isset( $_POST['builder_data'] ) ) && ( ! empty( $_POST['builder_data'] ) ) ) {
-			if ( ( isset( $_POST['builder_data']['builder_class'] ) ) && ( ! empty( $_POST['builder_data']['builder_class'] ) ) ) {
-				$builder_class    = esc_attr( $_POST['builder_data']['builder_class'] );
-				$builder_instance = $builder_class::add_instance();
-				if ( is_a( $builder_instance, $builder_class ) ) {
-					if ( ( isset( $_POST['builder_data']['builder_post_id'] ) ) && ( ! empty( $_POST['builder_data']['builder_post_id'] ) ) ) {
-						$builder_instance->builder_init( $_POST['builder_data']['builder_post_id'] );
-
-						if ( ( isset( $_POST['builder_query_args'] ) ) && ( ! empty( $_POST['builder_query_args'] ) ) ) {
-							$builder_instance->learndash_builder_selector_step_trash( $_POST['builder_query_args'] );
-						}
-					}
-				}
-			}
-		}
-		echo json_encode( array() );
-
-		wp_die();
-		*/
 	}
 );
 
@@ -553,33 +511,14 @@ add_action(
 			$builder_instance->builder_init( $builder_data['builder_post_id'] );
 			$builder_instance->learndash_builder_selector_step_new( $builder_query_args );
 		}
-		echo json_encode( array() );
+		echo wp_json_encode( array() );
 		wp_die();
-
-		/*
-		if ( ( isset( $_POST['builder_data'] ) ) && ( ! empty( $_POST['builder_data'] ) ) ) {
-			if ( ( isset( $_POST['builder_data']['builder_class'] ) ) && ( ! empty( $_POST['builder_data']['builder_class'] ) ) ) {
-				$builder_class    = esc_attr( $_POST['builder_data']['builder_class'] );
-				$builder_instance = $builder_class::add_instance();
-				if ( is_a( $builder_instance, $builder_class ) ) {
-					if ( ( isset( $_POST['builder_data']['builder_post_id'] ) ) && ( ! empty( $_POST['builder_data']['builder_post_id'] ) ) ) {
-						$builder_instance->builder_init( $_POST['builder_data']['builder_post_id'] );
-
-						if ( ( isset( $_POST['builder_query_args'] ) ) && ( ! empty( $_POST['builder_query_args'] ) ) ) {
-							$builder_instance->learndash_builder_selector_step_new( $_POST['builder_query_args'] );
-						}
-					}
-				}
-			}
-		}
-		echo json_encode( array() );
-
-		wp_die();
-		*/
 	}
 );
 
-add_action( 'wp_ajax_learndash_builder_selector_step_title', function() {
+add_action(
+	'wp_ajax_learndash_builder_selector_step_title',
+	function() {
 		if ( ! current_user_can( 'edit_courses' ) ) {
 			echo wp_json_encode( array() );
 			wp_die();
@@ -587,14 +526,14 @@ add_action( 'wp_ajax_learndash_builder_selector_step_title', function() {
 
 		// @codingStandardsIgnoreStart
 		if ( ( ! isset( $_POST['builder_data'] ) ) || ( empty( $_POST['builder_data'] ) ) ) {
-			echo wp_json_encode( array() );
-			wp_die();
+		echo wp_json_encode( array() );
+		wp_die();
 		}
 		$builder_data = $_POST['builder_data'];
 
 		if ( ( ! isset( $_POST['builder_query_args'] ) ) || ( empty( $_POST['builder_query_args'] ) ) ) {
-			echo wp_json_encode( array() );
-			wp_die();
+		echo wp_json_encode( array() );
+		wp_die();
 		}
 		$builder_query_args = $_POST['builder_query_args'];
 		// @codingStandardsIgnoreEnd
@@ -606,30 +545,9 @@ add_action( 'wp_ajax_learndash_builder_selector_step_title', function() {
 			$builder_instance->builder_init( $builder_data['builder_post_id'] );
 			$builder_instance->learndash_builder_selector_step_title( $builder_query_args );
 		}
-		echo json_encode( array() );
+		echo wp_json_encode( array() );
 
 		wp_die();
-
-		/*
-		if ( ( isset( $_POST['builder_data'] ) ) && ( ! empty( $_POST['builder_data'] ) ) ) {
-			if ( ( isset( $_POST['builder_data']['builder_class'] ) ) && ( ! empty( $_POST['builder_data']['builder_class'] ) ) ) {
-				$builder_class = esc_attr( $_POST['builder_data']['builder_class'] );
-				$builder_instance = $builder_class::add_instance();
-				if ( is_a( $builder_instance, $builder_class ) ) {
-					if ( ( isset( $_POST['builder_data']['builder_post_id'] ) ) && ( ! empty( $_POST['builder_data']['builder_post_id'] ) ) ) {
-						$builder_instance->builder_init( $_POST['builder_data']['builder_post_id'] );
-
-						if ( ( isset( $_POST['builder_query_args'] ) ) && ( ! empty( $_POST['builder_query_args'] ) ) ) {
-							$builder_instance->learndash_builder_selector_step_title( $_POST['builder_query_args'] );
-						}
-					}
-				}
-			}
-		}
-		echo json_encode( array() );
-
-		wp_die();
-		*/
 	}
 );
 

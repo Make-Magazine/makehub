@@ -60,14 +60,14 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 				return;
 			}
 
-			echo $before_widget;
+			echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
+				echo $before_title . $title . $after_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			}
 
-			echo $courseinfo;
-			echo $after_widget;
+			echo $courseinfo; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
+			echo $after_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			$learndash_shortcode_used = true;
 		}
@@ -83,10 +83,10 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 		 */
 		public function update( $new_instance, $old_instance ) {
 			$instance          = $old_instance;
-			$instance['title'] = strip_tags( $new_instance['title'] );
+			$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 
 			$instance['registered_show_thumbnail'] = esc_attr( $new_instance['registered_show_thumbnail'] );
-			if ( $new_instance['registered_num'] != '' ) {
+			if ( '' != $new_instance['registered_num'] ) {
 				$instance['registered_num'] = intval( $new_instance['registered_num'] );
 			} else {
 				$instance['registered_num'] = false;
@@ -95,7 +95,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 			$instance['registered_orderby'] = esc_attr( $new_instance['registered_orderby'] );
 			$instance['registered_order']   = esc_attr( $new_instance['registered_order'] );
 
-			if ( $new_instance['progress_num'] != '' ) {
+			if ( '' != $new_instance['progress_num'] ) {
 				$instance['progress_num'] = intval( $new_instance['progress_num'] );
 			} else {
 				$instance['progress_num'] = false;
@@ -104,7 +104,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 			$instance['progress_orderby'] = esc_attr( $new_instance['progress_orderby'] );
 			$instance['progress_order']   = esc_attr( $new_instance['progress_order'] );
 
-			if ( $new_instance['quiz_num'] != '' ) {
+			if ( '' != $new_instance['quiz_num'] ) {
 				$instance['quiz_num'] = intval( $new_instance['quiz_num'] );
 			} else {
 				$instance['quiz_num'] = false;
@@ -143,11 +143,11 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 				)
 			);
 
-			$title = strip_tags( $instance['title'] );
+			$title = wp_strip_all_tags( $instance['title'] );
 
 			$registered_show_thumbnail = esc_attr( $instance['registered_show_thumbnail'] );
 
-			if ( $instance['registered_num'] != '' ) {
+			if ( '' != $instance['registered_num'] ) {
 				$registered_num = abs( intval( $instance['registered_num'] ) );
 			} else {
 				$registered_num = '';
@@ -156,7 +156,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 			$registered_orderby = esc_attr( $instance['registered_orderby'] );
 			$registered_order   = esc_attr( $instance['registered_order'] );
 
-			if ( $instance['registered_num'] != '' ) {
+			if ( '' != $instance['registered_num'] ) {
 				$progress_num = abs( intval( $instance['progress_num'] ) );
 			} else {
 				$progress_num = '';
@@ -165,7 +165,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 			$progress_orderby = esc_attr( $instance['progress_orderby'] );
 			$progress_order   = esc_attr( $instance['progress_order'] );
 
-			if ( $instance['quiz_num'] != '' ) {
+			if ( '' != $instance['quiz_num'] ) {
 				$quiz_num = abs( intval( $instance['quiz_num'] ) );
 			} else {
 				$quiz_num = '';
@@ -176,7 +176,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html__( 'Title:', 'learndash' ); ?></label>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo apply_filters( 'the_title', $title, 0 ); ?>" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo apply_filters( 'the_title', $title, 0 ); ?>" /> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound,WordPress.Security.EscapeOutput.OutputNotEscaped -- WP Core Hook ?>
 			</p>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'registered_show_thumbnail' ) ); ?>"><?php echo esc_html__( 'Registered show thumbnail:', 'learndash' ); ?></label>
@@ -193,7 +193,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 				printf(
 					// translators: placeholder: default per page.
 					esc_html_x( 'Default is %d. Set to zero for no pagination.', 'placeholder: default per page', 'learndash' ),
-					LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' )
+					esc_html( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' ) )
 				);
 				?>
 				</span>
@@ -220,7 +220,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 					echo sprintf(
 						// translators: placeholder: Course.
 						esc_html_x( '%s progress per page:', 'placeholder: Course', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'course' )
+						LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 				?>
 				</label>
@@ -230,7 +230,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 				printf(
 					// translators: placeholder: default per page.
 					esc_html_x( 'Default is %d. Set to zero for no pagination.', 'placeholder: default per page', 'learndash' ),
-					LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'progress_num' )
+					esc_html( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'progress_num' ) )
 				);
 				?>
 				</span>
@@ -258,7 +258,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 					echo sprintf(
 						// translators: placeholder: Quizzes.
 						esc_html_x( '%s per page:', 'placeholder: Quizzes', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'Quizzes' )
+						LearnDash_Custom_Label::get_label( 'Quizzes' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</label>
@@ -268,7 +268,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 					printf(
 						// translators: placeholder: default per page.
 						esc_html_x( 'Default is %d. Set to zero for no pagination.', 'placeholder: default per page', 'learndash' ),
-						LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'quiz_num' )
+						esc_html( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'quiz_num' ) )
 					);
 					?>
 					</span>
@@ -279,7 +279,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 					echo sprintf(
 						// translators: placeholder: Quizzes.
 						esc_html_x( '%s order by:', 'placeholder: Quizzes', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'Quizzes' )
+						LearnDash_Custom_Label::get_label( 'Quizzes' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</label>
@@ -297,7 +297,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Info_Widget' ) ) && ( class_exists( 'WP
 					echo sprintf(
 						// translators: placeholder: Quizzes.
 						esc_html_x( '%s order:', 'placeholder: Quizzes', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'Quizzes' )
+						LearnDash_Custom_Label::get_label( 'Quizzes' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</label>

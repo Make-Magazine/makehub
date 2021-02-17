@@ -62,16 +62,18 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 */
 		public function settings_page_after_title( $settings_screen_id = '' ) {
 			if ( $this->settings_screen_id == $settings_screen_id ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( isset( $_GET['quiz_id'] ) ) && ( ! empty( $_GET['quiz_id'] ) ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$quiz_id   = intval( $_GET['quiz_id'] );
 					$quiz_post = get_post( $quiz_id );
 					if ( ( $quiz_post ) && ( is_a( $quiz_post, 'WP_Post' ) ) && ( learndash_get_post_type_slug( 'quiz' ) === $quiz_post->post_type ) ) {
 						?>
 						<div id="course-builder-title-box">
-							<h2 class="course-title"><?php echo $quiz_post->post_title; ?></h2>
+							<h2 class="course-title"><?php echo wp_kses_post( $quiz_post->post_title ); ?></h2>
 							<p class="course-links">
-								<strong><?php esc_html_e( 'Permalink:', 'learndash' ); ?></strong> <a href="<?php echo get_permalink( $quiz_id ); ?>"><?php echo get_permalink( $quiz_id ); ?></a><br />
-								<strong><?php esc_html_e( 'Edit:', 'learndash' ); ?></strong> <a href="<?php echo get_edit_post_link( $quiz_id ); ?>"><?php echo get_edit_post_link( $quiz_id ); ?></a>
+								<strong><?php esc_html_e( 'Permalink:', 'learndash' ); ?></strong> <a href="<?php echo esc_url( get_permalink( $quiz_id ) ); ?>"><?php echo esc_url( get_permalink( $quiz_id ) ); ?></a><br />
+								<strong><?php esc_html_e( 'Edit:', 'learndash' ); ?></strong> <a href="<?php echo esc_url( get_edit_post_link( $quiz_id ) ); ?>"><?php echo esc_url( get_edit_post_link( $quiz_id ) ); ?></a>
 							</p>
 						</div>
 						<?php
@@ -110,6 +112,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				$current_screen = get_current_screen();
 				if ( 'sfwd-quiz_page_quizzes-builder' === $current_screen->id ) {
 					// ...but the 'course_id' query parameters is not found...
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					if ( ( ! isset( $_GET['quiz_id'] ) ) || ( empty( $_GET['quiz_id'] ) ) ) {
 						// ...then redirect back to the courses listin screen.
 						$quizzes_list_url = add_query_arg( 'post_type', 'sfwd-quiz', admin_url( 'edit.php' ) );
@@ -127,7 +130,9 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 * Called when metabox is being saved.
 		 */
 		public function save_cb_metabox() {
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET['quiz_id'] ) ) && ( ! empty( $_GET['quiz_id'] ) ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$quiz_id = intval( $_GET['quiz_id'] );
 
 				$quiz_post = get_post( $quiz_id );
@@ -143,7 +148,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		public function admin_notice() {
 			if ( true === $this->update_success ) {
 				?>
-				<div class="notice notice-success is-dismissible"> 
+				<div class="notice notice-success is-dismissible">
 					<p><strong><?php esc_html_e( 'Settings saved.', 'learndash' ); ?></strong></p>
 					<button type="button" class="notice-dismiss">
 						<span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'learndash' ); ?></span>
@@ -208,6 +213,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		public function admin_tab_sets( $admin_menu_set = array(), $admin_menu_key = '' ) {
 
 			if ( 'edit.php?post_type=' . learndash_get_post_type_slug( 'quiz' ) === $admin_menu_key ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( ! isset( $_GET['quiz_id'] ) ) || ( empty( $_GET['quiz_id'] ) ) ) {
 					// If we don't have the 'course_id' URL parameter then we remove the tab.
 					foreach ( $admin_menu_set as $menu_idx => $menu_item ) {
@@ -220,7 +226,11 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					// Else of we do have the 'quiz_id' URL parameter we include this in the tab URL.
 					foreach ( $admin_menu_set as $menu_idx => &$menu_item ) {
 						if ( 'sfwd-quiz_page_quizzes-builder' === $menu_item['id'] ) {
-							$menu_item['link'] = add_query_arg( 'quiz_id', intval( $_GET['quiz_id'] ), $menu_item['link'] );
+							$menu_item['link'] = add_query_arg(
+								'quiz_id',
+								intval( $_GET['quiz_id'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+								$menu_item['link']
+							);
 							break;
 						}
 					}

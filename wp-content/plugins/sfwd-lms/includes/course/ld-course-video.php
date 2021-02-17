@@ -105,7 +105,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 * @param array  $settings Current setting values for Post.
 		 * @return string $content.
 		 */
-		public function add_video_to_content( $content = '', $post, $settings = array() ) {
+		public function add_video_to_content( $content, $post, $settings = array() ) {
 			if ( is_user_logged_in() ) {
 				$this->user_id = (int) get_current_user_id();
 			} else {
@@ -116,7 +116,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 			$this->course_id     = (int) learndash_get_course_id( $post->ID );
 			$this->step_settings = $settings;
 
-			$this->video_data['step_id'] = $this->step_id;
+			$this->video_data['step_id']   = $this->step_id;
 			$this->video_data['course_id'] = $this->course_id;
 
 			$this->video_data['video_cookie_key'] = $this->build_video_cookie_key();
@@ -267,15 +267,15 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 							$this->video_data['videos_found_provider'] = 'wistia';
 						} elseif ( strpos( $this->step_settings['lesson_video_url'], 'amazonaws.com' ) !== false ) {
 							$this->video_data['videos_found_provider'] = 'local';
-						} elseif ( ( strpos( $this->step_settings['lesson_video_url'], 'vooplayer' ) !== false ) || ( strpos( $this->step_settings['lesson_video_url'], 'spotlightr.com' ) !== false ) ) { 
+						} elseif ( ( strpos( $this->step_settings['lesson_video_url'], 'vooplayer' ) !== false ) || ( strpos( $this->step_settings['lesson_video_url'], 'spotlightr.com' ) !== false ) ) {
 							$this->video_data['videos_found_provider'] = 'vooplayer';
 						} elseif ( strpos( $this->step_settings['lesson_video_url'], trailingslashit( get_home_url() ) ) !== false ) {
 							$this->video_data['videos_found_provider'] = 'local';
 						}
 
 						if ( empty( $this->video_data['videos_found_provider'] ) ) {
-							$home_url_domain  = parse_url( get_home_url(), PHP_URL_HOST );
-							$video_url_domain = parse_url( $this->step_settings['lesson_video_url'], PHP_URL_HOST );
+							$home_url_domain  = wp_parse_url( get_home_url(), PHP_URL_HOST );
+							$video_url_domain = wp_parse_url( $this->step_settings['lesson_video_url'], PHP_URL_HOST );
 
 							if ( strtolower( $home_url_domain ) === strtolower( $video_url_domain ) ) {
 								$this->video_data['videos_found_provider'] = 'local';
@@ -297,15 +297,15 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 						if ( ( substr( $this->step_settings['lesson_video_url'], 0, strlen( 'http://' ) ) == 'http://' ) || ( substr( $this->step_settings['lesson_video_url'], 0, strlen( 'https://' ) ) == 'https://' ) ) {
 							if ( 'local' === $this->video_data['videos_found_provider'] ) {
-								$this->video_data['videos_found_type'] = 'video_shortcode';
-								$this->step_settings['lesson_video_url']          = '[video src="' . $this->step_settings['lesson_video_url'] . '"][/video]';
+								$this->video_data['videos_found_type']   = 'video_shortcode';
+								$this->step_settings['lesson_video_url'] = '[video src="' . $this->step_settings['lesson_video_url'] . '"][/video]';
 
 							} elseif ( ( 'youtube' === $this->video_data['videos_found_provider'] ) || ( 'vimeo' === $this->video_data['videos_found_provider'] ) ) {
-								$this->video_data['videos_found_type'] = 'embed_shortcode';
-								$this->step_settings['lesson_video_url']          = '[embed]' . $this->step_settings['lesson_video_url'] . '[/embed]';
+								$this->video_data['videos_found_type']   = 'embed_shortcode';
+								$this->step_settings['lesson_video_url'] = '[embed]' . $this->step_settings['lesson_video_url'] . '[/embed]';
 							} elseif ( 'wistia' === $this->video_data['videos_found_provider'] ) {
-								$this->video_data['videos_found_type'] = 'embed_shortcode';
-								$this->step_settings['lesson_video_url']          = '[embed]' . $this->step_settings['lesson_video_url'] . '[/embed]';
+								$this->video_data['videos_found_type']   = 'embed_shortcode';
+								$this->step_settings['lesson_video_url'] = '[embed]' . $this->step_settings['lesson_video_url'] . '[/embed]';
 							}
 						} elseif ( substr( $this->step_settings['lesson_video_url'], 0, strlen( '[embed' ) ) == '[embed' ) {
 							$this->video_data['videos_found_type'] = 'embed_shortcode';
@@ -616,7 +616,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 				wp_enqueue_script(
 					'learndash_cookie_script_js',
-					LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor/js-cookie/js.cookie' . leardash_min_asset() . '.js',
+					LEARNDASH_LMS_PLUGIN_URL . 'assets/vendor/js-cookie/js.cookie' . learndash_min_asset() . '.js',
 					array(),
 					LEARNDASH_SCRIPT_VERSION_TOKEN,
 					true
@@ -625,7 +625,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 				wp_enqueue_script(
 					'learndash_video_script_js',
-					LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash_video_script' . leardash_min_asset() . '.js',
+					LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash_video_script' . learndash_min_asset() . '.js',
 					array( 'jquery' ),
 					LEARNDASH_SCRIPT_VERSION_TOKEN,
 					true
@@ -649,7 +649,7 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 		 * @param Object $post         WP_Post object beiing marked complete.
 		 * @param Object $current_user The User perforning the action.
 		 */
-		public function process_mark_complete( $process_complete = true, $post, $current_user ) {
+		public function process_mark_complete( $process_complete, $post, $current_user ) {
 			if ( ( isset( $_GET['quiz_redirect'] ) ) && ( ! empty( $_GET['quiz_redirect'] ) ) && ( isset( $_GET['quiz_type'] ) ) && ( 'lesson' === $_GET['quiz_type'] ) ) {
 				$lesson_id = 0;
 				$quiz_id   = 0;

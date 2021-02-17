@@ -2,26 +2,26 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
-	protected $_id = 0;
-	protected $_questionPostId = 0;
-	protected $_quizId = 0;
-	protected $_sort = 0;
-	protected $_title = '';
-	protected $_question = '';
-	protected $_correctMsg = '';
-	protected $_incorrectMsg = '';
-	protected $_answerType = 'single';
+	protected $_id              = 0;
+	protected $_questionPostId  = 0;
+	protected $_quizId          = 0;
+	protected $_sort            = 0;
+	protected $_title           = '';
+	protected $_question        = '';
+	protected $_correctMsg      = '';
+	protected $_incorrectMsg    = '';
+	protected $_answerType      = 'single';
 	protected $_correctSameText = false;
-	protected $_tipEnabled = false;
-	protected $_tipMsg = '';
-	protected $_points = LEARNDASH_LMS_DEFAULT_QUESTION_POINTS;
+	protected $_tipEnabled      = false;
+	protected $_tipMsg          = '';
+	protected $_points          = LEARNDASH_LMS_DEFAULT_QUESTION_POINTS;
 	protected $_showPointsInBox = false;
 
 	//0.19
 	protected $_answerPointsActivated = false;
-	protected $_answerData = null;
+	protected $_answerData            = null;
 
 	//0.23
 	protected $_categoryId = 0;
@@ -31,7 +31,7 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 
 	//0.25
 	protected $_answerPointsDiffModusActivated = false;
-	protected $_disableCorrect = false;
+	protected $_disableCorrect                 = false;
 
 	//0.27
 	protected $_matrixSortAnswerCriteriaWidth = 20;
@@ -111,10 +111,11 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 	}
 
 	public function getIncorrectMsg() {
-	    if ( $this->_correctSameText == true )
-            return $this->_correctMsg;
-	    else
-	        return $this->_incorrectMsg;
+		if ( true == $this->_correctSameText ) {
+			return $this->_correctMsg;
+		} else {
+			return $this->_incorrectMsg;
+		}
 	}
 
 	public function setAnswerType( $_answerType ) {
@@ -195,7 +196,7 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 
 	public function getAnswerData( $serialize = false ) {
 		global $wpdb;
-		
+
 		if ( ! is_null( $this->_answerData ) ) {
 			if ( ! is_array( $this->_answerData ) ) {
 				$answerData = @maybe_unserialize( $this->_answerData );
@@ -220,7 +221,7 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 								continue;
 							}
 
-							$changes = true;
+							$changes              = true;
 							$answerData[ $a_idx ] = $answer_model;
 						}
 					}
@@ -322,33 +323,33 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 	public function get_object_as_array() {
 
 		$object_vars = array(
-			'_id'								=> $this->getId(),
-			'_quizId'							=> $this->getQuizId(),
-			'_sort' 							=> $this->getSort(),
-			'_title' 							=> $this->getTitle(),
-			'_question' 						=> $this->getQuestion(),
-			'_correctMsg' 						=> $this->getCorrectMsg(),
-			'_incorrectMsg' 					=> $this->getIncorrectMsg(),
-			'_correctSameText' 					=> $this->isCorrectSameText(),
-			'_tipEnabled' 						=> $this->isTipEnabled(),
-			'_tipMsg' 							=> $this->getTipMsg(),
-			'_points' 							=> $this->getPoints(),
-			'_showPointsInBox' 					=> $this->isShowPointsInBox(),
-			'_answerPointsActivated' 			=> $this->isAnswerPointsActivated(),
-			'_answerType' 						=> $this->getAnswerType(),
-			'_answerData'						=> $this->getAnswerData(),
-			'_answerPointsDiffModusActivated' 	=> $this->isAnswerPointsDiffModusActivatedfalse(),
-			'_disableCorrect' 					=> $this->isDisableCorrect(),
-			'_matrixSortAnswerCriteriaWidth' 	=> $this->getMatrixSortAnswerCriteriaWidth(),
+			'_id'                             => $this->getId(),
+			'_quizId'                         => $this->getQuizId(),
+			'_sort'                           => $this->getSort(),
+			'_title'                          => $this->getTitle(),
+			'_question'                       => $this->getQuestion(),
+			'_correctMsg'                     => $this->getCorrectMsg(),
+			'_incorrectMsg'                   => $this->getIncorrectMsg(),
+			'_correctSameText'                => $this->isCorrectSameText(),
+			'_tipEnabled'                     => $this->isTipEnabled(),
+			'_tipMsg'                         => $this->getTipMsg(),
+			'_points'                         => $this->getPoints(),
+			'_showPointsInBox'                => $this->isShowPointsInBox(),
+			'_answerPointsActivated'          => $this->isAnswerPointsActivated(),
+			'_answerType'                     => $this->getAnswerType(),
+			'_answerData'                     => $this->getAnswerData(),
+			'_answerPointsDiffModusActivated' => $this->isAnswerPointsDiffModusActivatedfalse(),
+			'_disableCorrect'                 => $this->isDisableCorrect(),
+			'_matrixSortAnswerCriteriaWidth'  => $this->getMatrixSortAnswerCriteriaWidth(),
 		);
 
 		return $object_vars;
 	}
-	
+
 	public function set_array_to_object( $array_vars = array() ) {
 
-		foreach( $array_vars as $key => $value ) {
-			switch( $key ) {
+		foreach ( $array_vars as $key => $value ) {
+			switch ( $key ) {
 				case '_id':
 					$this->setId( $value );
 					break;
@@ -356,11 +357,11 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 				case '_quizId':
 					$this->setQuizId( $value );
 					break;
-				
+
 				case '_sort':
 					$this->setSort( $value );
 					break;
-						
+
 				case '_title':
 					$this->setTitle( $value );
 					break;
@@ -368,11 +369,11 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 				case '_question':
 					$this->setQuestion( $value );
 					break;
-				
+
 				case '_correctMsg':
 					$this->setCorrectMsg( $value );
 					break;
-					
+
 				case '_incorrectMsg':
 					$this->setIncorrectMsg( $value );
 					break;
@@ -380,20 +381,20 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 				case '_answerType':
 					$this->setAnswerType( $value );
 					break;
-					
+
 				case '_answerData':
 					if ( is_array( $value ) ) {
 						$answer_import_array = array();
-						foreach( $value as $answer_item ) {
+						foreach ( $value as $answer_item ) {
 							if ( is_array( $answer_item ) ) {
 								$answer_import = new WpProQuiz_Model_AnswerTypes();
 								$answer_import->set_array_to_object( $answer_item );
 								$answer_import_array[] = $answer_import;
-							} else if ( is_a($answer_item, 'WpProQuiz_Model_AnswerTypes' ) ) {
+							} elseif ( is_a( $answer_item, 'WpProQuiz_Model_AnswerTypes' ) ) {
 								$answer_import_array[] = $answer_item;
 							}
 						}
-						
+
 						//if ( !empty( $answer_import_array ) ) {
 							$this->setAnswerData( $answer_import_array );
 						//}
@@ -443,7 +444,7 @@ class WpProQuiz_Model_Question extends WpProQuiz_Model_Model {
 				case '_matrixSortAnswerCriteriaWidth':
 					$this->setMatrixSortAnswerCriteriaWidth( $value );
 					break;
-				
+
 				default:
 					break;
 			}

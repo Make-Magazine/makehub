@@ -108,7 +108,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-			break;
 
 		case 'course_url':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
@@ -120,7 +119,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-			break;
 
 		case 'course_price_type':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
@@ -132,7 +130,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-			break;
 
 		case 'course_price':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
@@ -144,7 +141,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-			break;
 
 		case 'course_users_count':
 			$shortcode_atts[ $shortcode_atts['show'] ] = 0;
@@ -159,7 +155,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-			break;
 
 		case 'user_course_time':
 			$shortcode_atts[ $shortcode_atts['show'] ] = 0;
@@ -362,7 +357,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', learndash_adjust_date_time_display( $completed_on, $shortcode_atts['format'] ), $shortcode_atts );
-			break;
 
 		case 'enrolled_on':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
@@ -382,7 +376,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', learndash_adjust_date_time_display( $enrolled_on, $shortcode_atts['format'] ), $shortcode_atts );
-			break;
 
 		case 'course_points':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
@@ -394,8 +387,6 @@ function learndash_courseinfo( $attr ) {
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $course_points, $shortcode_atts );
 
-			break;
-
 		case 'user_course_points':
 			$shortcode_atts[ $shortcode_atts['show'] ] = '';
 
@@ -405,8 +396,6 @@ function learndash_courseinfo( $attr ) {
 
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */
 			return apply_filters( 'learndash_courseinfo', $user_course_points, $shortcode_atts );
-
-			break;
 
 		default:
 			/** This filter is documented in includes/quiz/ld-quiz-info-shortcode.php */

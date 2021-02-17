@@ -80,7 +80,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					}
 				}
 
-				$html .= ' <label for="' . $field_args['id'] . '" >';
+				$html .= ' <label for="' . esc_attr( $field_args['id'] ) . '" >';
 				$html .= '<div class="ld-switch-wrapper">';
 				$html .= '<span class="ld-switch';
 				if ( isset( $field_args['attrs']['disabled'] ) ) {
@@ -103,7 +103,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 				foreach ( $field_args['options'] as $option_key => $option_label ) {
 					if ( ! empty( $option_key ) ) {
-						$html .= ' value="' . $option_key . '" ';
+						$html .= ' value="' . esc_attr( $option_key ) . '" ';
 						break;
 					}
 				}
@@ -115,14 +115,14 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				$html_sub_fields = '';
 				if ( ( isset( $field_args['inline_fields'] ) ) && ( ! empty( $field_args['inline_fields'] ) ) ) {
 					foreach ( $field_args['inline_fields'] as $sub_field_key => $sub_fields ) {
-						$html .= ' data-settings-inner-trigger="ld-settings-inner-' . $sub_field_key . '" ';
+						$html .= ' data-settings-inner-trigger="ld-settings-inner-' . esc_attr( $sub_field_key ) . '" ';
 
 						if ( ( isset( $field_args['inner_section_state'] ) ) && ( 'open' === $field_args['inner_section_state'] ) ) {
 							$inner_section_state = 'open';
 						} else {
 							$inner_section_state = 'closed';
 						}
-						$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . $sub_field_key . ' ld-settings-inner-state-' . $inner_section_state . '">';
+						$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . esc_attr( $sub_field_key ) . ' ld-settings-inner-state-' . esc_attr( $inner_section_state ) . '">';
 
 						$level = ob_get_level();
 						ob_start();
@@ -133,7 +133,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 						$html_sub_fields .= '</div>';
 					}
 				} else {
-					$html .= ' data-settings-sub-trigger="ld-settings-sub-' . $field_args['name'] . '" ';
+					$html .= ' data-settings-sub-trigger="ld-settings-sub-' . esc_attr( $field_args['name'] ) . '" ';
 				}
 				$html .= ' />';
 
@@ -143,7 +143,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 				foreach ( $field_args['options'] as $option_key => $option_label ) {
 					if ( ( ! empty( $option_key ) ) && ( isset( $option_label['tooltip'] ) ) && ( ! empty( $option_label['tooltip'] ) ) ) {
-						$html .= '<span class="tooltiptext">' . $option_label['tooltip'] . '</span>';
+						$html .= '<span class="tooltiptext">' . wp_kses_post( $option_label['tooltip'] ) . '</span>';
 						break;
 					}
 				}
@@ -163,9 +163,9 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 							$label_display_state = ' style="display:none;" ';
 						}
 						if ( is_string( $option_label ) ) {
-							$html .= '<span class="ld-label-text ld-label-text-' . $option_key . '"' . $label_display_state . '>' . $option_label . '</span>';
+							$html .= '<span class="ld-label-text ld-label-text-' . esc_attr( $option_key ) . '"' . $label_display_state . '>' . wp_kses_post( $option_label ) . '</span>';
 						} elseif ( ( is_array( $option_label ) ) && ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<span class="ld-label-text ld-label-text-' . $option_key . '"' . $label_display_state . '>' . $option_label['label'] . '</span>';
+							$html .= '<span class="ld-label-text ld-label-text-' . esc_attr( $option_key ) . '"' . $label_display_state . '>' . wp_kses_post( $option_label['label'] ) . '</span>';
 						}
 					}
 				} else {
@@ -190,7 +190,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			 */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**
@@ -215,6 +215,46 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 
+			return $val;
+		}
+
+		/**
+		 * Convert Settings Field value to REST value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 * @param object $request    Request object.
+		 */
+		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
+			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
+				if ( in_array( $val, array( 'on', 'yes' ), true ) ) {
+					$val = true;
+				} else {
+					$val = false;
+				}
+			}
+			return $val;
+		}
+
+		/**
+		 * Convert REST submit value to internal Settings Field acceptable value.
+		 *
+		 * @since 3.2
+		 * @param mixed  $val         Value from REST to be converted to internal value.
+		 * @param string $key         Key field for value.
+		 * @param array  $fields_args Array of field args.
+		 */
+		public function rest_value_to_field_value( $val = '', $key = '', $field_args = array() ) {
+			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
+				if ( true === $val ) {
+					$val = 'on';
+				} else {
+					$val = '';
+				}
+			}
 			return $val;
 		}
 	}

@@ -47,28 +47,28 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 		public static function ipn_process() {
 			// Create our initial Transaction.
 			self::ipn_init_transaction();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_init_post_data();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_init_settings();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_init_listener();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_validate_post_data();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_process_post_data();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_process_user_data();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_complete_transaction();
-			self::ipn_debug( "---" );
+			self::ipn_debug( '---' );
 
 			self::ipn_debug( 'IPN Processing Completed Successfully.' );
 			self::ipn_exit();
@@ -275,8 +275,8 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 				$post_settings    = learndash_get_setting( self::$ipn_transaction_data['post_id'] );
 				$post_type_prefix = self::$ipn_transaction_data['post_type_prefix'];
 
-				if ( ( ! isset( $post_settings[ $post_type_prefix . '_price_type' ] ) ) || ( 'paynow' !== $post_settings[ $post_type_prefix . '_price_type' ] ) ) {
-					self::ipn_debug( 'ERROR: ' . ucfirst( self::$ipn_transaction_data['post_type_prefix'] ) . " Price Type setting not set to 'paynow' or empty. Aborting" );
+				if ( ( ! isset( $post_settings[ $post_type_prefix . '_price_type' ] ) ) || ( ! in_array( $post_settings[ $post_type_prefix . '_price_type' ], [ 'paynow', 'subscribe' ], true ) ) ) {
+					self::ipn_debug( 'ERROR: ' . ucfirst( self::$ipn_transaction_data['post_type_prefix'] ) . " Price Type setting not set to 'paynow', 'subscribe' or empty. Aborting" );
 					self::ipn_exit();
 				}
 
@@ -360,9 +360,9 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 					// Handle all three versions of WP wp_new_user_notification
 					global $wp_version;
 					if ( version_compare( $wp_version, '4.3.0', '<' ) ) {
-						wp_new_user_notification( self::$ipn_transaction_data['user_id'], $user_pass );
+						wp_new_user_notification( self::$ipn_transaction_data['user_id'], $user_pass ); // phpcs:ignore WordPress.WP.DeprecatedParameters.Wp_new_user_notificationParam2Found -- Wrapped in version_compare
 					} elseif ( version_compare( $wp_version, '4.3.0', '==' ) ) {
-						wp_new_user_notification( self::$ipn_transaction_data['user_id'], 'both' );
+						wp_new_user_notification( self::$ipn_transaction_data['user_id'], 'both' ); // phpcs:ignore WordPress.WP.DeprecatedParameters.Wp_new_user_notificationParam2Found -- Wrapped in version_compare
 					} elseif ( version_compare( $wp_version, '4.3.1', '>=' ) ) {
 						wp_new_user_notification( self::$ipn_transaction_data['user_id'], null, 'both' );
 					}
@@ -394,12 +394,11 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 			if ( ! empty( $msg ) ) {
 				if ( '---' === $msg ) {
 					$dattime = '';
-					$msg = "\r\n" . $msg;
+					$msg     = "\r\n" . $msg;
 				} else {
-					$dattime                    = learndash_adjust_date_time_display( time(), 'Y-m-d H:i:s' );
+					$dattime = learndash_adjust_date_time_display( time(), 'Y-m-d H:i:s' );
 				}
 				self::$ipn_transaction_log .= $dattime . ' ' . $msg . "\r\n";
-				error_log( $dattime . ' ' . $msg . "\r\n", 3, ABSPATH . '/ld_debug.log' );
 			}
 		}
 
@@ -408,7 +407,16 @@ if ( ! class_exists( 'LearnDash_PayPal_IPN' ) ) {
 			if ( ! empty( self::$ipn_transaction_log ) ) {
 				$transaction_post_id = self::ipn_init_transaction();
 				if ( ! empty( $transaction_post_id ) ) {
-					update_post_meta( $transaction_post_id, 'processing_log', self::$ipn_transaction_log );
+					/**
+					 * Filters if we save the PayPal processing log to transaction.
+					 *
+					 * @since 3.3.0
+					 *
+					 * @param boolean $save_log True to save processing log.
+					 */
+					if ( apply_filters( 'learndash_paypal_save_processing_log', true ) ) {
+						update_post_meta( $transaction_post_id, 'processing_log', self::$ipn_transaction_log );
+					}
 				}
 			}
 			exit();

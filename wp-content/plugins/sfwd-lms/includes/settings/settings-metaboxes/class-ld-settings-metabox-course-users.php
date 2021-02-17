@@ -36,21 +36,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::__construct();
 		}
 
-
-		/**
-		 * Initialize the metabox settings values.
-		 */
-		public function load_settings_values() {
-			parent::load_settings_values();
-		}
-
-		/**
-		 * Initialize the metabox settings fields.
-		 */
-		public function load_settings_fields() {
-			parent::load_settings_fields();
-		}
-
 		protected function show_settings_metabox_fields( $metabox = null ) {
 			if ( ( is_object( $metabox ) ) && ( is_a( $metabox, 'LearnDash_Settings_Metabox' ) ) && ( $metabox->settings_metabox_key === $this->settings_metabox_key ) ) {
 				if ( ( isset( $metabox->post ) ) && ( is_a( $metabox->post, 'WP_Post ' ) ) ) {
@@ -97,7 +82,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						<div id="learndash_course_users_page_box" class="learndash_course_users_page_box">
 						<?php
 						if ( ! empty( $metabox_description ) ) {
-							echo wpautop( wp_kses_post( $metabox_description ) );
+							echo wp_kses_post( wpautop( $metabox_description ) );
 						}
 						$ld_binary_selector_course_users = new Learndash_Binary_Selector_Course_Users( $course_users_binary_args );
 						$ld_binary_selector_course_users->show();
@@ -111,7 +96,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						printf(
 							// translators: placeholder: Course.
 							esc_html_x( 'The %s price type is set to "open". This means ALL are automatically enrolled.', 'placeholder: Course', 'learndash' ),
-							learndash_get_custom_label( 'course' )
+							learndash_get_custom_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 						);
 						?>
 						</p>

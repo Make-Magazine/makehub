@@ -88,7 +88,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->transition_deprecated_settings();
 				}
 
-				if ( true === is_data_upgrade_quiz_questions_updated() ) {
+				if ( true === learndash_is_data_upgrade_quiz_questions_updated() ) {
 					$this->setting_option_values['quiz_builder_enabled'] = 'yes';
 				} else {
 					$this->setting_option_values['quiz_builder_enabled']          = '';
@@ -121,7 +121,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['force_shared_questions'] = '';
 			}
 
-			if ( true !== is_data_upgrade_quiz_questions_updated() ) {
+			if ( true !== learndash_is_data_upgrade_quiz_questions_updated() ) {
 				$this->setting_option_values['quiz_builder_enabled']          = '';
 				$this->setting_option_values['quiz_builder_shared_questions'] = '';
 				$this->setting_option_values['force_quiz_builder']            = '';
@@ -160,7 +160,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( ( defined( 'LEARNDASH_QUIZ_BUILDER' ) ) && ( LEARNDASH_QUIZ_BUILDER === true ) ) {
 
 				$desc_before_enabled = '';
-				if ( true !== is_data_upgrade_quiz_questions_updated() ) {
+				if ( true !== learndash_is_data_upgrade_quiz_questions_updated() ) {
 					// Used to show the section description above the fields. Can be empty.
 					$desc_before_enabled = '<span class="error">' . sprintf(
 						// translators: placeholder: Link to Data Upgrade page.
@@ -259,7 +259,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					)
 				);
 
-				if ( true !== is_data_upgrade_quiz_questions_updated() ) {
+				if ( true !== learndash_is_data_upgrade_quiz_questions_updated() ) {
 					$this->setting_option_fields['quiz_builder_enabled']['attrs'] = array(
 						'disabled' => 'disabled',
 					);
@@ -339,7 +339,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'Y/m/d g:i A',
 						'Y/m/d \a\t g:i A',
 						'Y/m/d \a\t g:ia',
-						__( 'M j, Y @ G:i' ),
+						__( 'M j, Y @ G:i', 'learndash' ),
 					)
 				)
 			);
@@ -358,7 +358,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="statistics_time_format_custom" id="statistics_time_format_custom" value="' . $this->setting_option_values['statistics_time_format'] . '">';
 
-			if ( ! in_array( $this->setting_option_values['statistics_time_format'], $date_time_formats ) ) {
+			if ( ! in_array( $this->setting_option_values['statistics_time_format'], $date_time_formats, true ) ) {
 				$this->setting_option_values['statistics_time_format'] = 'custom';
 			}
 
@@ -375,7 +375,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			$options['custom'] = '<span class="date-time-text format-i18n">' . esc_html__( 'Custom', 'learndash' ) . '</span><input type="text" class="-small" name="toplist_date_format_custom" id="toplist_time_format_custom" value="' . $this->setting_option_values['toplist_time_format'] . '">';
 
-			if ( ! in_array( $this->setting_option_values['toplist_time_format'], $date_time_formats ) ) {
+			if ( ! in_array( $this->setting_option_values['toplist_time_format'], $date_time_formats, true ) ) {
 				$this->setting_option_values['toplist_time_format'] = 'custom';
 			}
 
@@ -443,19 +443,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			if ( $option === $this->setting_option_key ) {
 				$current_values = parent::section_pre_update_option( $current_values, $old_values, $option );
 				if ( $current_values !== $old_values ) {
-					// if ( ( isset( $current_values['force_quiz_builder'] ) ) && ( 'yes' === $current_values['force_quiz_builder'] ) ) {
-					// $current_values['quiz_builder_enabled'] = 'yes';
-					// }
-					// if ( ( isset( $current_values['force_shared_questions'] ) ) && ( 'yes' === $current_values['force_shared_questions'] ) ) {
-					// $current_values['quiz_builder_shared_questions'] = 'yes';
-					// }
-
-					// if ( ( isset( $current_values['shared_questions'] ) ) && ( 'yes' === $current_values['shared_questions'] ) ) {
-					// if ( ( ! isset( $current_values['quiz_builder_enabled'] ) ) || ( 'yes' !== $current_values['quiz_builder_enabled'] ) ) {
-					// $current_values['quiz_builder_shared_questions'] = 'no';
-					// }
-					// }
-
 					if ( ( isset( $current_values['quiz_builder_enabled'] ) ) && ( 'yes' === $current_values['quiz_builder_enabled'] ) ) {
 						$current_values['quiz_builder_per_page'] = absint( $current_values['quiz_builder_per_page'] );
 					} else {
@@ -469,7 +456,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 					if ( ( isset( $current_values['quiz_builder_time_formats'] ) ) && ( 'yes' === $current_values['quiz_builder_time_formats'] ) ) {
 						if ( ( isset( $current_values['statistics_time_format'] ) ) && ( 'custom' === $current_values['statistics_time_format'] ) ) {
+							// POST nonce verification take place in parent::verify_metabox_nonce_field()
+							// phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ( isset( $_POST['statistics_time_format_custom'] ) ) && ( ! empty( $_POST['statistics_time_format_custom'] ) ) ) {
+								// phpcs:ignore WordPress.Security.NonceVerification.Missing
 								$current_values['statistics_time_format'] = esc_attr( $_POST['statistics_time_format_custom'] );
 							} else {
 								$current_values['statistics_time_format'] = '';
@@ -481,7 +471,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						}
 
 						if ( ( isset( $current_values['toplist_time_format'] ) ) && ( 'custom' === $current_values['toplist_time_format'] ) ) {
+							// phpcs:ignore WordPress.Security.NonceVerification.Missing
 							if ( ( isset( $_POST['toplist_date_format_custom'] ) ) && ( ! empty( $_POST['toplist_date_format_custom'] ) ) ) {
+								// phpcs:ignore WordPress.Security.NonceVerification.Missing
 								$current_values['toplist_time_format'] = esc_attr( $_POST['toplist_date_format_custom'] );
 							} else {
 								$current_values['toplist_time_format'] = '';

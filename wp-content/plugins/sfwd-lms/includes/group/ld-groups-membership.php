@@ -71,7 +71,6 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 			add_action( 'load-post.php', array( $this, 'on_load' ) );
 			add_action( 'load-post-new.php', array( $this, 'on_load' ) );
 			add_filter( 'the_content', array( $this, 'the_content_filter' ), 99 );
-
 			add_action( 'load-edit.php', array( $this, 'on_load_edit' ) );
 		}
 
@@ -112,7 +111,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				if ( ! isset( $learndash_assets_loaded['styles']['learndash-admin-settings-bulk-edit'] ) ) {
 					wp_enqueue_style(
 						'learndash-admin-settings-page',
-						LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-settings-bulk-edit' . leardash_min_asset() . '.css',
+						LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-settings-bulk-edit' . learndash_min_asset() . '.css',
 						array(),
 						LEARNDASH_SCRIPT_VERSION_TOKEN
 					);
@@ -123,7 +122,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				if ( ! isset( $learndash_assets_loaded['scripts']['learndash-admin-settings-bulk-edit'] ) ) {
 					wp_enqueue_script(
 						'learndash-admin-settings-bulk-edit',
-						LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-bulk-edit' . leardash_min_asset() . '.js',
+						LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-bulk-edit' . learndash_min_asset() . '.js',
 						array( 'jquery' ),
 						LEARNDASH_SCRIPT_VERSION_TOKEN,
 						true
@@ -177,19 +176,21 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 					echo sprintf(
 						// translators: placeholder: Groups Compare, Groups Listing link.
 						esc_html_x( '%1$s of %2$s', 'placeholder: Groups Compare Type, Groups Listing link', 'learndash' ),
-						$settings['groups_membership_compare'],
-						'<a href="' . add_query_arg(
-							array(
-								'post_type' => learndash_get_post_type_slug( 'group' ), 
-								'ld-group-membership-post-id' => $post_id,
-							),
-							admin_url( 'edit.php' )
+						esc_html( $settings['groups_membership_compare'] ),
+						'<a href="' . esc_url(
+							add_query_arg(
+								array(
+									'post_type' => learndash_get_post_type_slug( 'group' ),
+									'ld-group-membership-post-id' => $post_id,
+								),
+								admin_url( 'edit.php' )
+							)
 						) . '">' . sprintf(
 							// translators: placeholder: Count of Groups, Groups.
 							esc_html_x( '%1$s %2$s', 'placeholder: Count of Groups, Groups', 'learndash' ),
 							count( $settings['groups_membership_groups'] ),
-							( 1 === count( $settings['groups_membership_groups'] ) ? LearnDash_Custom_Label::get_label( 'group' ) : LearnDash_Custom_Label::get_label( 'groups' ) )
-						)  . '</a>'
+							( 1 === count( $settings['groups_membership_groups'] ) ? LearnDash_Custom_Label::get_label( 'group' ) : LearnDash_Custom_Label::get_label( 'groups' ) ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						) . '</a>'
 					);
 				}
 			}
@@ -203,7 +204,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 			if ( ( 'ld_groups_membership' === $column_name ) && ( in_array( $post_type, $this->get_global_included_post_types(), true ) ) ) {
 				if ( $print_nonce ) {
 					$print_nonce = false;
-					?><input type="hidden" name="learndash_groups_membership[nonce]" value="<?php echo wp_create_nonce( 'learndash_groups_membership_' . $post_type ); ?>" />
+					?><input type="hidden" name="learndash_groups_membership[nonce]" value="<?php echo esc_attr( wp_create_nonce( 'learndash_groups_membership_' . $post_type ) ); ?>" />
 					<?php
 				}
 
@@ -240,7 +241,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 								echo sprintf(
 									// translators: placeholder: Group.
 									esc_html_x( 'LearnDash %s Content Protection', 'placeholder: Group', 'learndash' ),
-									LearnDash_Custom_Label::get_label( 'group' )
+									LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 								);
 							?>
 								</legend>
@@ -327,32 +328,36 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 							</div>
 						</fieldset>
 						<fieldset class="inline-edit-col-right inline-edit-col-<?php echo esc_attr( $column_name ); ?> inline-edit-col-<?php echo esc_attr( $column_name ); ?>-groups">
-							<div class="inline-edit-col ld-inline-edit-col ld-inline-edit-col-right ld-inline-edit-col-groups 
+							<div class="inline-edit-col ld-inline-edit-col ld-inline-edit-col-right ld-inline-edit-col-groups
 							<?php
 							if ( is_post_type_hierarchical( $post_type ) ) {
 								echo ' ld-inline-edit-col-groups-hierarchical'; }
 							?>
 							">
 								<label class="ld-group-membership-inline-edit-groups">
-									<span class="title"><?php
-										echo sprintf(
-											// translators: placeholder: Groups.
-											esc_html_x( '%s', 'placeholder: Groups', 'learndash' ),
-											learndash_get_custom_label( 'groups' )
-										);
-									?></span>
-									<select multiple="" autocomplete="off" name="learndash_groups_membership[groups][]" id="learndash_groups_membership_groups" class="learndash-section-field learndash-section-field-multiselect select2-hidden-accessible" 
-									placeholder="<?php echo sprintf(
+									<span class="title">
+									<?php
+										echo learndash_get_custom_label( 'groups' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+									?>
+									</span>
+									<select multiple="" autocomplete="off" name="learndash_groups_membership[groups][]" id="learndash_groups_membership_groups" class="learndash-section-field learndash-section-field-multiselect select2-hidden-accessible"
+									placeholder="
+									<?php
+									echo sprintf(
 										// translators: placeholder: Group.
 										esc_html_x( 'Search or select a %s…', 'placeholder: Group', 'learndash' ),
 										esc_attr( learndash_get_custom_label( 'group' ) )
-									); ?>" data-ld-select2="1" data-select2-id="learndash_groups_membership_groups"><?php
-										foreach ( $select_groups_options as $group_id => $group_title ) {
-											?>
-											<option value="<?php echo absint( $group_id ); ?>"><?php echo apply_filters( 'the_title', $group_title, $group_id ); ?></option>
+									);
+									?>
+									" data-ld-select2="1" data-select2-id="learndash_groups_membership_groups">
+									<?php
+									foreach ( $select_groups_options as $group_id => $group_title ) {
+										?>
+											<option value="<?php echo absint( $group_id ); ?>"><?php echo wp_kses_post( apply_filters( 'the_title', $group_title, $group_id ) ); ?></option> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook ?>
 											<?php
-										}
-									?></select>
+									}
+									?>
+									</select>
 								</label>
 							</div>
 						</fieldset>
@@ -398,7 +403,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				if ( ( is_post_type_hierarchical( $typenow ) ) && ( isset( $_GET['learndash_groups_membership']['children'] ) ) && ( ! empty( $_GET['learndash_groups_membership']['children'] ) ) ) {
 					if ( 'yes' === strtolower( $_GET['learndash_groups_membership']['children'] ) ) {
 						$post_group_settings['groups_membership_children'] = 'on';
-					} elseif ( 'no' === strtolower(  $_GET['learndash_groups_membership']['children'] ) ) {
+					} elseif ( 'no' === strtolower( $_GET['learndash_groups_membership']['children'] ) ) {
 						$post_group_settings['groups_membership_children'] = '';
 					}
 				}
@@ -570,7 +575,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 					if ( true === apply_filters( 'learndash_group_membership_access_denied_show_ld30_alert', true, $this->vars['post_id'], $this->vars['user_id'] ) ) {
 						// Save for next release to load if needed.
 						// $theme_template_dir = LearnDash_Theme_Register::get_active_theme_base_dir();
-						// $css_front_file = $theme_template_dir . '/assets/css/learndash' . leardash_min_asset() . '.css';
+						// $css_front_file = $theme_template_dir . '/assets/css/learndash' . learndash_min_asset() . '.css';
 						// $css_front_file_content = file_get_contents( $css_front_file );
 						// if ( ! empty( $css_front_file_content ) ) {
 

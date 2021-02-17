@@ -77,9 +77,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			$question_id      = get_post_meta( $essay->ID, 'question_id', true );
 
 			if ( ! empty( $quiz_id ) ) {
-				$questionMapper = new WpProQuiz_Model_QuestionMapper();
-				$question       = $questionMapper->fetchById( intval( $question_id ), null );
-
+				$question_mapper = new WpProQuiz_Model_QuestionMapper();
+				$question        = $question_mapper->fetchById( intval( $question_id ), null );
 			}
 
 			if ( $question && is_a( $question, 'WpProQuiz_Model_Question' ) ) {
@@ -110,11 +109,11 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						<div class="misc-pub-section">
 							<?php if ( $question && is_a( $question, 'WpProQuiz_Model_Question' ) ) : ?>
 								<p>
-									<strong><?php esc_html_e( 'Essay Question', 'learndash' ); ?>:</strong> <?php echo $question->getQuestion(); ?>
+									<strong><?php esc_html_e( 'Essay Question', 'learndash' ); ?>:</strong> <?php echo wp_kses_post( $question->getQuestion() ); ?>
 									<?php
 										$test_url          = admin_url( 'admin.php' );
 										$question_edit_url = '';
-									if ( ( true === is_data_upgrade_quiz_questions_updated() ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) ) {
+									if ( ( true === learndash_is_data_upgrade_quiz_questions_updated() ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) ) {
 										$question_post_id = learndash_get_question_post_by_pro_id( $question->getId() );
 										if ( ! empty( $question_post_id ) ) {
 											$question_edit_url = get_edit_post_link( $question_post_id );
@@ -136,14 +135,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 									?>
 									<span>(<a href="<?php echo esc_url( $question_edit_url ); ?>"><?php esc_html_e( 'Edit', 'learndash' ); ?></a>)</span>
 								</p>
-								<p><strong><?php esc_html_e( 'Points available', 'learndash' ); ?>:</strong> <?php echo $question->getPoints(); ?></p>
+								<p><strong><?php esc_html_e( 'Points available', 'learndash' ); ?>:</strong> <?php echo esc_html( $question->getPoints() ); ?></p>
 								<p>
 									<strong><?php esc_html_e( 'Points awarded', 'learndash' ); ?>:</strong>
-									<input name="points_awarded" type="number" min="0" max="<?php echo $question->getPoints(); ?>" value="<?php echo $submitted_essay_data['points_awarded']; ?>">
-									<input name="original_points_awarded" type="hidden" value="<?php echo $submitted_essay_data['points_awarded']; ?>">
+									<input name="points_awarded" type="number" min="0" max="<?php echo esc_attr( $question->getPoints() ); ?>" value="<?php echo esc_attr( $submitted_essay_data['points_awarded'] ); ?>">
+									<input name="original_points_awarded" type="hidden" value="<?php echo esc_attr( $submitted_essay_data['points_awarded'] ); ?>">
 								</p>
-								<input name="quiz_id" type="hidden" value="<?php echo $quiz_id; ?>">
-								<input name="question_id" type="hidden" value="<?php echo $question->getId(); ?>">
+								<input name="quiz_id" type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>">
+								<input name="question_id" type="hidden" value="<?php echo esc_attr( $question->getId() ); ?>">
 							<?php else : ?>
 								<p><?php esc_html_e( 'We could not find the essay question for this response', 'learndash' ); ?></p>
 							<?php endif; ?>
@@ -172,20 +171,20 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 										<strong>
 										<?php
 										// translators: placeholder: Quiz.
-										echo sprintf( esc_html_x( 'Essay %s', 'placeholder: Quiz.', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) );
+										echo sprintf( esc_html_x( 'Essay %s', 'placeholder: Quiz.', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 										?>
 										:</strong>
 										<select name="essay_quiz_post_id">
-											<option value="">
-											<?php
-											// translators: placeholder: Quiz.
-											echo sprintf( esc_html_x( 'No %s', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) );
-											?>
+											<option value=""><?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+												// translators: placeholder: Quiz.
+												esc_html_x( 'No %s', 'placeholder: Quiz', 'learndash' ),
+												LearnDash_Custom_Label::get_label( 'quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+											); ?> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 											</option>
 											<?php
 											foreach ( $essay_quiz_query->posts as $quiz_post_id ) {
 												?>
-												<option value="<?php echo $quiz_post_id; ?>"><?php echo get_the_title( $quiz_post_id ); ?></option>
+												<option value="<?php echo esc_attr( $quiz_post_id ); ?>"><?php echo wp_kses_post( get_the_title( $quiz_post_id ) ); ?></option>
 												<?php
 											}
 											?>
@@ -201,19 +200,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							if ( ! empty( $essay_quiz_post_id ) ) {
 								$essay_quiz_edit_link = get_edit_post_link( $essay_quiz_post_id );
 								?>
-									<p>
-									<strong>
-									<?php
-									// translators: placeholder: Quiz.
-									echo sprintf( esc_html_x( 'Essay %s', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) );
-									?>
-									:</strong> <?php echo get_the_title( $essay_quiz_post_id ); ?> <?php
-									if ( ! empty( $essay_quiz_edit_link ) ) {
-										?>
+									<p><strong><?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+										// translators: placeholder: Quiz.
+										esc_html_x( 'Essay %s', 'placeholder: Quiz', 'learndash' ),
+										LearnDash_Custom_Label::get_label( 'quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+									); ?>: </strong><?php echo wp_kses_post( get_the_title( $essay_quiz_post_id ) ); // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+									<?php if ( ! empty( $essay_quiz_edit_link ) ) { ?>
 											<span>(<a href="<?php echo esc_url( $essay_quiz_edit_link ); ?>"><?php esc_html_e( 'edit', 'learndash' ); ?></a>)</span>
-										<?php
-									}
-									?>
+									<?php } ?>
 									</p>
 								<?php
 
@@ -221,19 +215,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								if ( ! empty( $essay_quiz_course_id ) ) {
 									$course_quiz_edit_link = get_edit_post_link( $essay_quiz_course_id );
 									?>
-										<p>
-										<strong>
-										<?php
-										// translators: placeholder: Course.
-										echo sprintf( esc_html_x( 'Essay %s', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
-										?>
-										:</strong> <?php echo get_the_title( $essay_quiz_course_id ); ?> <?php
-										if ( ! empty( $course_quiz_edit_link ) ) {
-											?>
+										<p><strong><?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+											// translators: placeholder: Course.
+											esc_html_x( 'Essay %s', 'placeholder: Course', 'learndash' ),
+											LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+										); ?>: </strong><?php echo wp_kses_post( get_the_title( $essay_quiz_course_id ) ); // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+										<?php if ( ! empty( $course_quiz_edit_link ) ) { ?>
 												<span>(<a href="<?php echo esc_url( $course_quiz_edit_link ); ?>"><?php esc_html_e( 'edit', 'learndash' ); ?></a>)</span>
-											<?php
-										}
-										?>
+										<?php } ?>
 										</p>
 									<?php
 
@@ -241,19 +230,14 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 									if ( ! empty( $essay_quiz_lesson_id ) ) {
 										$lesson_quiz_edit_link = get_edit_post_link( $essay_quiz_lesson_id );
 										?>
-											<p>
-											<strong>
-											<?php
-											// translators: placeholder: Lesson.
-											echo sprintf( esc_html_x( 'Essay %s', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) );
-											?>
-											:</strong> <?php echo get_the_title( $essay_quiz_lesson_id ); ?> <?php
-											if ( ! empty( $lesson_quiz_edit_link ) ) {
-												?>
+											<p><strong><?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+												// translators: placeholder: Lesson.
+												esc_html_x( 'Essay %s', 'placeholder: Lesson', 'learndash' ),
+												LearnDash_Custom_Label::get_label( 'lesson' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+											); ?>: </strong><?php echo wp_kses_post( get_the_title( $essay_quiz_lesson_id ) ); // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+											<?php if ( ! empty( $lesson_quiz_edit_link ) ) { ?>
 													<span>(<a href="<?php echo esc_url( $lesson_quiz_edit_link ); ?>"><?php esc_html_e( 'edit', 'learndash' ); ?></a>)</span>
-												<?php
-											}
-											?>
+											<?php } ?>
 											</p>
 										<?php
 									}
@@ -261,35 +245,35 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							}
 							?>
 						</div>
-
-
 						<?php
-						/* translators: Publish box date format, see http://php.net/date */
-						$datef = esc_html__( 'M j, Y @ H:i', 'default' );
-						if ( 0 != $essay->ID ) :
-							$stamp = wp_kses_post( __( 'Submitted on: <b>%1$s</b>', 'learndash' ) );
-							$date  = date_i18n( $datef, strtotime( $essay->post_date ) );
-						endif;
+						// translators: Publish box date format, see https://secure.php.net/date
+						$datef = esc_html__( 'M j, Y @ H:i', 'learndash' );
+						if ( 0 != $essay->ID ) {
+							$date = date_i18n( $datef, strtotime( $essay->post_date ) );
+						}
 
 						if ( $can_publish ) : // Contributors don't get to choose the date of publish
 							?>
 							<div class="misc-pub-section curtime misc-pub-curtime">
-							<span id="timestamp"><?php printf( $stamp, $date ); ?></span>
+								<span id="timestamp"><?php echo sprintf( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+									// translators: placeholder: Essay submit date.
+									wp_kses_post( 'Submitted on: <b>%s</b>', 'placeholder: Essay submit date', 'learndash' ),
+									esc_html( $date )
+								); ?> </span> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 							</div>
 						<?php endif; ?>
 
 						<?php
 						/** This action is documented in https://developer.wordpress.org/reference/hooks/post_submitbox_misc_actions/ */
-						do_action( 'post_submitbox_misc_actions' );
+							do_action( 'post_submitbox_misc_actions' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
 						?>
 					</div>
 					<div class="clear"></div>
 				</div>
-
 				<div id="major-publishing-actions">
 					<?php
 					/** This action is documented in https://developer.wordpress.org/reference/hooks/post_submitbox_start/ */
-					do_action( 'post_submitbox_start' );
+					do_action( 'post_submitbox_start' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
 					?>
 					<div id="delete-action">
 						<?php
@@ -300,12 +284,11 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								$delete_text = esc_html__( 'Move to Trash', 'learndash' );
 							endif;
 							?>
-							<a class="submitdelete deletion" href="<?php echo get_delete_post_link( $essay->ID ); ?>"><?php echo $delete_text; ?></a>
+							<a class="submitdelete deletion" href="<?php echo get_delete_post_link( $essay->ID ); ?>"><?php echo esc_html( $delete_text ); ?></a>
 							<?php
 						endif;
 						?>
 					</div>
-
 					<div id="publishing-action">
 						<span class="spinner"></span>
 						<?php if ( $can_publish ) : ?>

@@ -496,13 +496,15 @@ function learndash_payment_buttons( $post ) {
 				$button .= '</div>';
 
 				global $dropdown_button;
-				$dropdown_button .= '<div id="jq-dropdown-' . $post->ID . '" class="jq-dropdown jq-dropdown-tip checkout-dropdown-button">';
+				// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+				$dropdown_button .= '<div id="jq-dropdown-' . esc_attr( $post->ID ) . '" class="jq-dropdown jq-dropdown-tip checkout-dropdown-button">';
 				$dropdown_button .= '<ul class="jq-dropdown-menu">';
 				$dropdown_button .= '<li>';
 				$dropdown_button .= str_replace( $button_text, esc_html__( 'Use Paypal', 'learndash' ), $payment_buttons );
 				$dropdown_button .= '</li>';
 				$dropdown_button .= '</ul>';
 				$dropdown_button .= '</div>';
+				// phpcs:enable
 
 				/**
 				 * Filters Dropdown payment button markup.
@@ -523,8 +525,8 @@ function learndash_payment_buttons( $post ) {
 						</form></div>';
 
 		$payment_params = array(
-			'price'             => '0',
-			'post'              => $post,
+			'price'                            => '0',
+			'post'                             => $post,
 			$post_label_prefix . '_price_type' => $post_price_type,
 		);
 
@@ -535,7 +537,7 @@ function learndash_payment_buttons( $post ) {
 }
 
 // Yes, global var here. This var is set within the payment button processing. The var will contain HTML for a fancy dropdown
-$dropdown_button = '';
+$dropdown_button = ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 add_action( 'wp_footer', 'ld_footer_payment_buttons' );
 /**
  * Prints the dropdown button to the footer.
@@ -548,7 +550,7 @@ function ld_footer_payment_buttons() {
 	global $dropdown_button;
 
 	if ( ! empty( $dropdown_button ) ) {
-		echo $dropdown_button;
+		echo $dropdown_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 	}
 }
 
@@ -947,7 +949,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 
 	// extract hours
 	$hour_seconds = $input_seconds % $seconds_day;
-	$hours = floor( $hour_seconds / $seconds_hour );
+	$hours        = floor( $hour_seconds / $seconds_hour );
 	if ( ! empty( $hours ) ) {
 		if ( ! empty( $return ) ) {
 			$return .= ' ';
@@ -958,7 +960,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 
 	// extract minutes
 	$minute_seconds = $input_seconds % $seconds_hour;
-	$minutes = floor( $minute_seconds / $seconds_minute );
+	$minutes        = floor( $minute_seconds / $seconds_minute );
 	if ( ! empty( $minutes ) ) {
 		if ( ! empty( $return ) ) {
 			$return .= ' ';
@@ -970,7 +972,7 @@ function learndash_seconds_to_time( $input_seconds = 0 ) {
 
 	// extract the remaining seconds
 	$remaining_seconds = $input_seconds % $seconds_minute;
-	$seconds = ceil( $remaining_seconds );
+	$seconds           = ceil( $remaining_seconds );
 	if ( ! empty( $seconds ) ) {
 		if ( ! empty( $return ) ) {
 			$return .= ' ';
@@ -1143,9 +1145,9 @@ function learndash_format_course_points( $points, $decimals = 1 ) {
 function learndash_template_url_from_path( $filepath = '' ) {
 	if ( ! empty( $filepath ) ) {
 		// Ensure we are handling Windows separators.
-		$WP_CONTENT_DIR_tmp = str_replace( '\\', '/', WP_CONTENT_DIR );
+		$wp_content_dir_tmp = str_replace( '\\', '/', WP_CONTENT_DIR );
 		$filepath           = str_replace( '\\', '/', $filepath );
-		$filepath           = str_replace( $WP_CONTENT_DIR_tmp, WP_CONTENT_URL, $filepath );
+		$filepath           = str_replace( $wp_content_dir_tmp, WP_CONTENT_URL, $filepath );
 		$filepath           = str_replace( array( 'https://', 'http://' ), array( '//', '//' ), $filepath );
 	}
 
@@ -1264,7 +1266,7 @@ function learndash_get_db_user_grants() {
 		ob_start();
 
 		$wpdb->suppress_errors( true );
-		$grants_results = $wpdb->query( $wpdb->prepare( "SHOW GRANTS FOR %s@%s;", DB_USER, DB_HOST ) );
+		$grants_results = $wpdb->query( $wpdb->prepare( 'SHOW GRANTS FOR %s@%s;', DB_USER, DB_HOST ) );
 		if ( ! empty( $grants_results ) ) {
 			foreach ( $wpdb->last_result as $result_object ) {
 				foreach ( $result_object as $result_key => $result_string ) {
@@ -1443,7 +1445,7 @@ function learndash_get_allowed_upload_mime_extensions_for_post( $post_id = 0 ) {
 	}
 
 	if ( ! empty( $post_id ) ) {
-		if ( in_array( get_post_type( $post_id ), array( learndash_get_post_type_slug( 'lesson' ), learndash_get_post_type_slug( 'assignment' ) ), true ) ) {
+		if ( in_array( get_post_type( $post_id ), array( learndash_get_post_type_slug( 'lesson' ), learndash_get_post_type_slug( 'topic' ), learndash_get_post_type_slug( 'assignment' ) ), true ) ) {
 			$assignment_upload_limit_extensions = learndash_get_setting( $post_id, 'assignment_upload_limit_extensions' );
 			if ( ! empty( $assignment_upload_limit_extensions ) ) {
 				$assignment_upload_limit_extensions = learndash_validate_extensions( $assignment_upload_limit_extensions );
@@ -1641,26 +1643,26 @@ function learndash_post_updated_messages( $post_messages = array() ) {
 			$preview_post_link_html = sprintf(
 				' <a target="_blank" href="%1$s">%2$s</a>',
 				esc_url( $preview_url ),
-				esc_html__( 'Preview' )
+				esc_html__( 'Preview', 'learndash' )
 			);
 
 			// Scheduled post preview link.
 			$scheduled_post_link_html = sprintf(
 				' <a target="_blank" href="%1$s">%2$s</a>',
 				esc_url( $permalink ),
-				esc_html__( 'Preview' )
+				esc_html__( 'Preview', 'learndash' )
 			);
 
 			// View post link.
 			$view_post_link_html = sprintf(
 				' <a href="%1$s">%2$s</a>',
 				esc_url( $permalink ),
-				esc_html__( 'View' )
+				esc_html__( 'View', 'learndash' )
 			);
 		}
 
-		/* translators: Publish box date format, see https://secure.php.net/date */
-		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'default' ), strtotime( $post->post_date ) );
+		// translators: Publish box date format, see https://secure.php.net/date
+		$scheduled_date = date_i18n( __( 'M j, Y @ H:i', 'learndash' ), strtotime( $post->post_date ) );
 
 		$post_messages[ $post_type ] = array(
 			0  => '', // Unused. Messages start at index 1.
@@ -1836,11 +1838,12 @@ function learndash_update_posts_comment_status( $post_type = '', $comment_status
  * Utility function to load minified version of CSS/JS assets.
  *
  * @since 3.0.3
+ * @since 3.3.0 Renamed
  *
  * @return string Returns .min if the LEARNDASH_SCRIPT_DEBUG constant is false
  *                otherwise empty string.
  */
-function leardash_min_asset() {
+function learndash_min_asset() {
 		return ( ( defined( 'LEARNDASH_SCRIPT_DEBUG' ) && ( LEARNDASH_SCRIPT_DEBUG === true ) ) ? '' : '.min' );
 }
 
@@ -1848,11 +1851,12 @@ function leardash_min_asset() {
  * Utility function to load minified version of CSS/JS builder assets.
  *
  * @since 3.0.3
+ * @since 3.3.0 Renamed
  *
  * @return string Returns .min if the LEARNDASH_SCRIPT_DEBUG constant is false
  *                otherwise empty string.
  */
-function leardash_min_builder_asset() {
+function learndash_min_builder_asset() {
 		return ( ( defined( 'LEARNDASH_BUILDER_DEBUG' ) && ( LEARNDASH_BUILDER_DEBUG === true ) ) ? '' : '.min' );
 }
 
@@ -2093,7 +2097,7 @@ function learndash_load_login_modal_html() {
 						function() {
 							global $learndash_login_model_html;
 							if ( ( isset( $learndash_login_model_html ) ) && ( ! empty( $learndash_login_model_html ) ) ) {
-								echo '<div class="learndash-wrapper learndash-wrapper-login-modal ld-modal-closed">' . $learndash_login_model_html . '</div>';
+								echo '<div class="learndash-wrapper learndash-wrapper-login-modal ld-modal-closed">' . $learndash_login_model_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 							}
 						}
 					);
@@ -2134,13 +2138,13 @@ function learndash_body_classes( $classes = array() ) {
 
 				$parent_step_ids = learndash_course_get_all_parent_step_ids( $course_id, get_the_ID() );
 				if ( ! empty( $parent_step_ids ) ) {
-					foreach( $parent_step_ids as $parent_step_id ) {
+					foreach ( $parent_step_ids as $parent_step_id ) {
 						$custom_classes[] = 'learndash-cpt-' . get_post_type( $parent_step_id ) . '-' . $parent_step_id . '-parent';
 					}
 				}
 			}
 		}
-		
+
 		/**
 		 * Filters whether to make videos responsive or not.
 		 *
@@ -2323,7 +2327,22 @@ function learndash_safe_redirect( $location = '', $status = null, $exit = true, 
 				nocache_headers();
 			}
 
-			$redirect_status = wp_safe_redirect( $location, $status );
+			/**
+			 * Filters to override using the WordPress function wp_safe_redirect().
+			 *
+			 * @since 3.3.0.2
+			 *
+			 * @param bool   true      True to call wp_safe_redirect().
+			 * @param string $location The URL to redirect the user to.
+			 * @param int    $status   The HTTP Status to set. Default 302.
+			 * @param string $context  Unique string provided by the caller to help filter conditions.
+			 */
+			if ( apply_filters( 'learndash_use_wp_safe_redirect', LEARNDASH_USE_WP_SAFE_REDIRECT, $location, $status, $context ) ) {
+				$redirect_status = wp_safe_redirect( $location, $status );
+			} else {
+				$redirect_status = wp_redirect( $location, $status );
+			}
+
 			if ( $redirect_status ) {
 				if ( $exit ) {
 					exit;

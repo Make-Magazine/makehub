@@ -75,10 +75,10 @@ function learndash_group_user_list( $group_id = 0 ) {
 					$name = isset( $user->display_name ) ? $user->display_name : $user->user_nicename;
 					?>
 					<tr>
-						<td><?php echo $sn++; ?></td>
-						<td><?php echo $name; ?></td>
-						<td><?php echo $user->user_login; ?></td>
-						<td><?php echo $user->user_email; ?></td>
+						<td><?php echo esc_html( $sn++ ); ?></td>
+						<td><?php echo esc_html( $name ); ?></td>
+						<td><?php echo esc_html( $user->user_login ); ?></td>
+						<td><?php echo esc_html( $user->user_email ); ?></td>
 						<td><a href="<?php echo esc_url( admin_url( 'edit.php?post_type=sfwd-courses&page=group_admin_page&group_id=' . $group_id . '&user_id=' . $user->ID ) ); ?>"><?php esc_html_e( 'Report', 'learndash' ); ?></a></td>
 					</tr>
 					<?php

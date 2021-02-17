@@ -129,22 +129,22 @@ function ld_course_list( $attr ) {
 	);
 
 	$post_type_slug  = 'course';
-	$post_type_Class = 'LearnDash_Settings_Courses_Taxonomies';
+	$post_type_class = 'LearnDash_Settings_Courses_Taxonomies';
 
 	if ( ( isset( $attr['post_type'] ) ) && ( ! empty( $attr['post_type'] ) ) ) {
 
-		if ( $attr['post_type'] == learndash_get_post_type_slug( 'lesson' ) ) {
+		if ( learndash_get_post_type_slug( 'lesson' ) == $attr['post_type'] ) {
 			$post_type_slug  = 'lesson';
-			$post_type_Class = 'LearnDash_Settings_Lessons_Taxonomies';
-		} elseif ( $attr['post_type'] == learndash_get_post_type_slug( 'topic' ) ) {
+			$post_type_class = 'LearnDash_Settings_Lessons_Taxonomies';
+		} elseif ( learndash_get_post_type_slug( 'topic' ) == $attr['post_type'] ) {
 			$post_type_slug  = 'topic';
-			$post_type_Class = 'LearnDash_Settings_Topics_Taxonomies';
-		} elseif ( $attr['post_type'] == learndash_get_post_type_slug( 'quiz' ) ) {
+			$post_type_class = 'LearnDash_Settings_Topics_Taxonomies';
+		} elseif ( learndash_get_post_type_slug( 'quiz' ) == $attr['post_type'] ) {
 			$post_type_slug  = 'quiz';
-			$post_type_Class = 'LearnDash_Settings_Quizzes_Taxonomies';
-		} elseif ( $attr['post_type'] == learndash_get_post_type_slug( 'group' ) ) {
+			$post_type_class = 'LearnDash_Settings_Quizzes_Taxonomies';
+		} elseif ( learndash_get_post_type_slug( 'group' ) == $attr['post_type'] ) {
 			$post_type_slug  = 'group';
-			$post_type_Class = 'LearnDash_Settings_Groups_Taxonomies';
+			$post_type_class = 'LearnDash_Settings_Groups_Taxonomies';
 		}
 	}
 
@@ -172,14 +172,14 @@ function ld_course_list( $attr ) {
 
 	$atts = shortcode_atts( $attr_defaults, $attr );
 
-	if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ) ) ) {
-		if ( ( $atts['mycourses'] == 'true' ) || ( $atts['mycourses'] == 'enrolled' ) ) {
+	if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ), true ) ) {
+		if ( ( 'true' == $atts['mycourses'] ) || ( 'enrolled' == $atts['mycourses'] ) ) {
 			if ( is_user_logged_in() ) {
 				$atts['mycourses'] = 'enrolled';
 			} else {
 				return '';
 			}
-		} elseif ( $atts['mycourses'] == 'not-enrolled' ) {
+		} elseif ( 'not-enrolled' == $atts['mycourses'] ) {
 			if ( is_user_logged_in() ) {
 				$atts['mycourses'] = 'not-enrolled';
 			} else {
@@ -211,8 +211,8 @@ function ld_course_list( $attr ) {
 		} else {
 			$atts['course_status'] = null;
 		}
-		unset( $atts['status'] );
-	} elseif ( $atts['post_type'] === learndash_get_post_type_slug( 'group' ) ) {
+		//unset( $atts['status'] );
+	} elseif ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) {
 		if ( ( 'true' === $atts['mygroups'] ) || ( 'enrolled' === $atts['mygroups'] ) ) {
 			if ( is_user_logged_in() ) {
 				$atts['mygroups'] = 'enrolled';
@@ -253,26 +253,26 @@ function ld_course_list( $attr ) {
 		unset( $atts['status'] );
 	}
 
-	if ( $atts['post__in'] === '' ) {
+	if ( '' === $atts['post__in'] ) {
 		$atts['post__in'] = null;
 	}
 
 	// if ( isset( $atts['num'] ) )
 	// $atts['num'] = intval( $atts['num'] );
 
-	if ( $atts['num'] === false ) {
+	if ( false === $atts['num'] ) {
 		if ( ( isset( $atts['course_id'] ) ) && ( ! empty( $atts['course_id'] ) ) ) {
 			$atts['num'] = learndash_get_course_lessons_per_page( intval( $atts['course_id'] ) );
 		} else {
 			$atts['num'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
 		}
-	} elseif ( $atts['num'] == '-1' ) {
+	} elseif ( '-1' == $atts['num'] ) {
 		$atts['num'] = 0;
 	} else {
 		$atts['num'] = intval( $atts['num'] );
 	}
 
-	if ( $atts['num'] == 0 ) {
+	if ( 0 == $atts['num'] ) {
 		$atts['num'] = -1;
 	}
 
@@ -286,9 +286,9 @@ function ld_course_list( $attr ) {
 
 	if ( is_user_logged_in() ) {
 
-		if ( ( isset( $atts['user_id'] ) ) && ( $atts['user_id'] === false ) ) {
+		if ( ( isset( $atts['user_id'] ) ) && ( false === $atts['user_id'] ) ) {
 			$atts['user_id'] = get_current_user_id();
-		} elseif ( ( isset( $atts['user_id'] ) ) && ( $atts['user_id'] !== false ) ) {
+		} elseif ( ( isset( $atts['user_id'] ) ) && ( false !== $atts['user_id'] ) ) {
 			if ( learndash_is_admin_user() ) {
 				// Good leave the user_id in place.
 			} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
@@ -396,7 +396,7 @@ function ld_course_list( $attr ) {
 		$filter['post__in'] = $post__in;
 	}
 
-	if ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'wp_post_category' ) == 'yes' ) {
+	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_category' ) == 'yes' ) {
 
 		if ( ! empty( $cat ) ) {
 			// $filter['cat'] = $cat;
@@ -478,7 +478,7 @@ function ld_course_list( $attr ) {
 		}
 	}
 
-	if ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'wp_post_tag' ) == 'yes' ) {
+	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_tag' ) == 'yes' ) {
 
 		if ( ! empty( $tag ) ) {
 			// $filter['tag'] = $tag;
@@ -597,7 +597,7 @@ function ld_course_list( $attr ) {
 		}
 	}
 
-	if ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) {
+	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) {
 
 		// course_cat="123"
 		if ( ( isset( $atts[ $post_type_slug . '_cat' ] ) ) && ( ! empty( $atts[ $post_type_slug . '_cat' ] ) ) ) {
@@ -683,7 +683,7 @@ function ld_course_list( $attr ) {
 		}
 	}
 
-	if ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'ld_' . $post_type_slug . '_tag' ) == 'yes' ) {
+	if ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_tag' ) == 'yes' ) {
 
 		// course_tag (string) - use tag slug.
 		if ( ( isset( $atts[ $post_type_slug . '_tag' ] ) ) && ( ! empty( $atts[ $post_type_slug . '_tag' ] ) ) ) {
@@ -814,8 +814,8 @@ function ld_course_list( $attr ) {
 
 	$shortcode_course_id = null;
 	if ( is_null( $post__in ) ) {
-		if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ) ) ) {
-			if ( $mycourses == 'enrolled' ) {
+		if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ), true ) ) {
+			if ( 'enrolled' == $mycourses ) {
 				$filter['post__in'] = learndash_user_get_enrolled_courses( $atts['user_id'] );
 				if ( empty( $filter['post__in'] ) ) {
 					return;
@@ -839,11 +839,11 @@ function ld_course_list( $attr ) {
 						$filter['post__in'] = wp_list_pluck( $user_courses_reports['results'], 'post_id' );
 						$filter['post__in'] = array_map( 'absint', $filter['post__in'] );
 					} else {
-						$filter['post__in'] = array(0);
+						$filter['post__in'] = array( 0 );
 					}
 				}
-			} elseif ( $mycourses == 'not-enrolled' ) {
-				if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ) ) ) {
+			} elseif ( 'not-enrolled' == $mycourses ) {
+				if ( in_array( $atts['post_type'], learndash_get_post_types( 'course' ), true ) ) {
 					$filter['post__not_in'] = learndash_user_get_enrolled_courses( $atts['user_id'] );
 				}
 
@@ -851,8 +851,8 @@ function ld_course_list( $attr ) {
 					unset( $filter['post__not_in'] );
 				}
 			}
-		} elseif ( $atts['post_type'] === learndash_get_post_type_slug( 'group' ) ) {
-			if ( $mygroups == 'enrolled' ) {
+		} elseif ( learndash_get_post_type_slug( 'group' ) === $atts['post_type'] ) {
+			if ( 'enrolled' == $mygroups ) {
 				$user_group_ids = learndash_get_users_group_ids( $atts['user_id'] );
 				if ( empty( $user_group_ids ) ) {
 					return;
@@ -871,7 +871,7 @@ function ld_course_list( $attr ) {
 				} else {
 					$filter['post__in'] = $user_group_ids;
 				}
-			} elseif ( $mygroups == 'not-enrolled' ) {
+			} elseif ( 'not-enrolled' == $mygroups ) {
 				$filter['post__not_in'] = learndash_get_users_group_ids( $atts['user_id'] );
 				if ( empty( $filter['post__not_in'] ) ) {
 					unset( $filter['post__not_in'] );
@@ -888,7 +888,7 @@ function ld_course_list( $attr ) {
 	 */
 	$filter = apply_filters( 'learndash_ld_course_list_query_args', $filter, $atts );
 
-	if ( $array == 'true' ) {
+	if ( 'true' == $array ) {
 		return get_posts( $filter );
 	}
 
@@ -912,7 +912,7 @@ function ld_course_list( $attr ) {
 
 	// if ( $include_outer_wrapper == 'true' ) {
 
-	if ( ( trim( $categoryselector ) == 'true' ) && ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'wp_post_category' ) == 'yes' ) ) {
+	if ( ( trim( $categoryselector ) == 'true' ) && ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'wp_post_category' ) == 'yes' ) ) {
 		$cats = array();
 
 		if ( ( isset( $_GET['catid'] ) ) && ( ! empty( $_GET['catid'] ) ) ) {
@@ -997,7 +997,7 @@ function ld_course_list( $attr ) {
 
 		// We can only support one of the other category OR course_category selectors
 	if ( ( trim( $atts[ $post_type_slug . '_categoryselector' ] ) == 'true' ) && ( empty( $categoryselector ) )
-		  && ( LearnDash_Settings_Section::get_section_setting( $post_type_Class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) ) {
+		&& ( LearnDash_Settings_Section::get_section_setting( $post_type_class, 'ld_' . $post_type_slug . '_category' ) == 'yes' ) ) {
 		$ld_cats = array();
 
 		if ( ( isset( $_GET[ $post_type_slug . '_catid' ] ) ) && ( ! empty( $_GET[ $post_type_slug . '_catid' ] ) ) ) {
@@ -1084,7 +1084,7 @@ function ld_course_list( $attr ) {
 	$level = ob_get_level();
 	ob_start();
 
-	if ( $include_outer_wrapper == 'true' ) {
+	if ( 'true' == $include_outer_wrapper ) {
 		if ( ! empty( $categories ) ) {
 
 			$categorydropdown  = '<div id="ld_categorydropdown">';
@@ -1113,23 +1113,27 @@ function ld_course_list( $attr ) {
 			 * @param  array   $atts             Combined and filtered attribute list.
 			 * @param  array   $filter            Query arguments.
 			 */
-			echo apply_filters( 'ld_categorydropdown', $categorydropdown, $atts, $filter );
+			echo apply_filters( 'ld_categorydropdown', $categorydropdown, $atts, $filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 		}
 
 		if ( ! empty( $ld_categories ) ) {
 
-			$ld_categorydropdown  = '<div id="ld_' . $post_type_slug . '_categorydropdown">';
+			$ld_categorydropdown  = '<div id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown">';
 			$ld_categorydropdown .= '<form method="get">
-					<label for="ld_' . $post_type_slug . '_categorydropdown_select">' . $tax_object->labels->name . '</label>
-					<select id="ld_' . $post_type_slug . '_categorydropdown_select" name="' . $post_type_slug . '_catid" onChange="jQuery(\'#ld_' . $post_type_slug . '_categorydropdown form\').submit()">';
-			$ld_categorydropdown .= '<option value="">' . sprintf( esc_html_x( 'Select %s', 'placeholder: LD Category label', 'learndash' ), $tax_object->labels->name ) . '</option>';
+					<label for="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select">' . esc_html( $tax_object->labels->name ) . '</label>
+					<select id="ld_' . esc_attr( $post_type_slug ) . '_categorydropdown_select" name="' . esc_attr( $post_type_slug ) . '_catid" onChange="jQuery(\'#ld_' . esc_attr( $post_type_slug ) . '_categorydropdown form\').submit()">';
+			$ld_categorydropdown .= '<option value="">' . sprintf(
+				// translators: placeholder: LD Category label
+				esc_html_x( 'Select %s', 'placeholder: LD Category label', 'learndash' ),
+				esc_attr( $tax_object->labels->name )
+			) . '</option>';
 
 			foreach ( $ld_categories as $ld_category ) {
 
 				if ( isset( $ld_cats[ $ld_category->term_id ] ) ) {
 					$ld_cat               = $ld_cats[ $ld_category->term_id ];
 					$selected             = ( empty( $_GET[ $post_type_slug . '_catid' ] ) || $_GET[ $post_type_slug . '_catid' ] != $ld_category->term_id ) ? '' : 'selected="selected"';
-					$ld_categorydropdown .= "<option value='" . $ld_category->term_id . "' " . $selected . '>' . $ld_cat['name'] . ' (' . $ld_cat['count'] . ')</option>';
+					$ld_categorydropdown .= "<option value='" . esc_attr( $ld_category->term_id ) . "' " . $selected . '>' . esc_html( $ld_cat['name'] ) . ' (' . esc_html( $ld_cat['count'] ) . ')</option>';
 				}
 			}
 
@@ -1146,15 +1150,15 @@ function ld_course_list( $attr ) {
 			 * @param array  $atts             Combined and filtered attribute list.
 			 * @param array  $filter            Query arguments.
 			 */
-			echo apply_filters( 'ld_' . $post_type_slug . '_categorydropdown', $ld_categorydropdown, $atts, $filter );
+			echo apply_filters( 'ld_' . $post_type_slug . '_categorydropdown', $ld_categorydropdown, $atts, $filter ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 		}
 	}
 
-	$filter_json = htmlspecialchars( json_encode( $atts ) );
+	$filter_json = htmlspecialchars( wp_json_encode( $atts ) );
 	$filter_md5  = md5( $filter_json );
 
-	if ( $include_outer_wrapper == 'true' ) {
-		?><div id="ld-course-list-content-<?php echo $filter_md5; ?>" class="ld-course-list-content" data-shortcode-atts="<?php echo $filter_json; ?>">
+	if ( 'true' == $include_outer_wrapper ) {
+		?><div id="ld-course-list-content-<?php echo esc_attr( $filter_md5 ); ?>" class="ld-course-list-content" data-shortcode-atts="<?php echo $filter_json; ?>">
 		<?php
 	}
 	?>
@@ -1182,7 +1186,7 @@ function ld_course_list( $attr ) {
 			$course_id = $atts['course_id'];
 		}
 
-		echo SFWD_LMS::get_template(
+		echo SFWD_LMS::get_template( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			'course_list_template',
 			array(
 				'shortcode_atts' => $atts,
@@ -1206,7 +1210,7 @@ function ld_course_list( $attr ) {
 		$course_list_pager['total_items'] = intval( $loop->found_posts );
 		$course_list_pager['total_pages'] = intval( $loop->max_num_pages );
 
-		echo SFWD_LMS::get_template(
+		echo SFWD_LMS::get_template( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			'learndash_pager.php',
 			array(
 				'pager_results' => $course_list_pager,
@@ -1215,7 +1219,7 @@ function ld_course_list( $attr ) {
 		);
 	}
 
-	if ( $include_outer_wrapper == 'true' ) {
+	if ( 'true' == $include_outer_wrapper ) {
 		?>
 		</div>
 		<?php
@@ -1277,7 +1281,7 @@ function ld_course_list_shortcode_pager() {
 		$reply_data['content'] = ld_course_list( $shortcode_atts );
 	}
 
-	echo json_encode( $reply_data );
+	echo wp_json_encode( $reply_data );
 	die();
 
 }
@@ -1302,7 +1306,7 @@ function learndash_course_status_content_shortcode( $atts, $content, $status ) {
 	$atts['user_id']   = empty( $atts['user_id'] ) ? get_current_user_id() : intval( $atts['user_id'] );
 	$atts['course_id'] = empty( $atts['course_id'] ) ? learndash_get_course_id() : learndash_get_course_id( intval( $atts['course_id'] ) );
 
-	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( $atts['user_id'] == get_current_user_id() ) ) {
+	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( get_current_user_id() == $atts['user_id'] ) ) {
 		if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
 			if ( learndash_course_status( $atts['course_id'], $atts['user_id'] ) == $status ) {
 				return do_shortcode( $content );

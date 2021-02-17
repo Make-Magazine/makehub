@@ -69,20 +69,11 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 
-			/*
-			$html .= '<div class="ld-settings-info-banner ld-settings-info-banner-success">' . wpautop(
-				sprintf(
-				// translators: placeholders: Quiz.
-					esc_html_x( 'Loading a template into this %s will replace ALL existing settings.', 'placeholders: Quiz.', 'learndash' ),
-					learndash_get_custom_label( 'quiz' )
-				)
-			) . '</div>';
-			*/
 			$html .= '<div class="ld-settings-info-banner ld-settings-info-banner-alert">' . wpautop(
 				sprintf(
-				// translators: placeholders: Quiz.
+					// translators: placeholders: Quiz.
 					esc_html_x( 'Loading a template into this %s will replace ALL existing settings.', 'placeholders: Quiz.', 'learndash' ),
-					learndash_get_custom_label( 'quiz' )
+					learndash_get_custom_label( 'quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				)
 			) . '</div>';
 
@@ -109,13 +100,15 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			$html .= ' >';
 
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET['post'] ) ) && ( ! empty( $_GET['post'] ) ) && ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
 				$template_url = remove_query_arg( 'templateLoadId' );
 				$template_url = add_query_arg( 'currentTab', learndash_get_post_type_slug( 'quiz' ) . '-settings', $template_url );
 				$html        .= '<option value="' . esc_url( $template_url ) . '">' . sprintf(
 					// translators: Quiz Title.
 					esc_html_x( 'Revert: %s', 'placeholder: Quiz Title', 'learndash' ),
-					get_the_title( $_GET['post'] )
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+					get_the_title( intval( $_GET['post'] ) )
 				) . '</option>';
 			} else {
 				/** This filter is documented in includes/class-ld-lms.php */
@@ -139,7 +132,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 						$selected = ' selected="selected" ';
 					}
 
-					$html .= '<option ' . $selected . ' value="' . esc_url( $template_url ) . '">' . $template_name . '</option>';
+					$html .= '<option ' . $selected . ' value="' . esc_url( $template_url ) . '">' . esc_html( $template_name ) . '</option>';
 				}
 			}
 
@@ -156,19 +149,12 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				) . '</label></p>';
 			}
 
-			/*
-			$html .= '<p><label for="templateload-option-replace-questions"><input type="checkbox" id="templateload-option-replace-questions" name="templateLoadReplaceQuestions" />' . sprintf(
-				// translators: placeholders: Questions.
-				esc_html_x( 'Replace %s with values from template.', 'placeholders: Questions.', 'learndash' ),
-				learndash_get_custom_label( 'questions' )
-			) . '</label></p>';
-			*/	
 			$html .= '<input type="submit" name="templateLoad" value="' . esc_html__( 'load template', 'learndash' ) . '" class="button-primary"></p>';
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**

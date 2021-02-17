@@ -228,7 +228,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 									 * @param string $shortcode_slug     The slug of shortcode.
 									 * @param string $block_slug         The slug of gutenberg block.
 									 */
-									$content           = apply_filters( 'learndash_convert_block_markers_to_shortcode_content', $content, $pattern_atts_array, $shortcode_slug, $block_slug );
+									$content = apply_filters( 'learndash_convert_block_markers_to_shortcode_content', $content, $pattern_atts_array, $shortcode_slug, $block_slug );
 								}
 							}
 						}
@@ -446,7 +446,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 			$user_id = 0;
 			/**
 			 * Filters gutenberg block example ID.
-			 * 
+			 *
 			 * @param int    $id         The ID of the resource.
 			 * @param string $context    The context of the resource.
 			 * @param string $post_type  The post type slug of the resource.

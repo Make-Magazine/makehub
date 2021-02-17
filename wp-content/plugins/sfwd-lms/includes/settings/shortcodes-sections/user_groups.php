@@ -4,9 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_user_groups' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_user_groups extends LearnDash_Shortcodes_Section {
 
-		function __construct( $fields_args = array() ) {
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
+		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
 			$this->shortcodes_section_key   = 'user_groups';
@@ -25,6 +34,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'user_id' => array(

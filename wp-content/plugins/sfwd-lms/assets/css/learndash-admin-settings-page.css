@@ -464,6 +464,21 @@ span.learndash-description {
   width: 100%;
 }
 
+.sfwd_options span.learndash_settings_field_text_prefix.-medium {
+  width: 75%;
+  display: inline-block;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  color: rgba(51,51,51,.5);
+}
+
+.sfwd_options span.learndash_settings_field_text_prefix input[type="text"] {
+  width: max-content;
+  border: 0px;
+  padding-left: 0px;
+  padding-bottom: 8px;
+}
+
 /* Select CSS */
 
 .sfwd_options .ld-select {

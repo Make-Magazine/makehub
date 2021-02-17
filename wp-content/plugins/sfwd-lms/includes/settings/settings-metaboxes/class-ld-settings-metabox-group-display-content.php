@@ -100,6 +100,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_courses_orderby'] = '';
 				}
 			}
+
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
 		}
 
 		/**
@@ -157,6 +164,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['group_materials_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials_enabled',
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'group_materials'                => array(
 					'name'           => 'group_materials',
@@ -168,6 +186,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'editor_args'    => array(
 						'textarea_name' => $this->settings_metabox_key . '[group_materials]',
 						'textarea_rows' => 3,
+					),
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials',
+								'description' => esc_html__( 'Materials', 'learndash' ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
 					),
 				),
 				'certificate'                    => array(
@@ -181,6 +210,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default' => '',
 					'value'   => $this->setting_option_values['certificate'],
 					'options' => $select_cert_options,
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
+					),
 				),
 				'group_disable_content_table'    => array(
 					'name'      => 'group_disable_content_table',
@@ -201,6 +239,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => esc_html__( 'Only visible to enrollees', 'learndash' ),
 					),
 					'value'     => $this->setting_option_values['group_disable_content_table'],
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'disable_content_table',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'group_courses_per_page_enabled' => array(
@@ -227,11 +275,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'           => 'group_courses_per_page_custom',
 					'type'           => 'number',
 					'class'          => 'small-text',
-					'label'          => sprintf(
-						// translators: placeholder: Courses per page.
-						esc_html_x( '%s', 'placeholder: Courses per page', 'learndash' ),
-						learndash_get_custom_label( 'courses' )
-					),
+					'label'          => learndash_get_custom_label( 'courses' ),
 					'input_label'    => esc_html__( 'per page', 'learndash' ),
 					'value'          => $this->setting_option_values['group_courses_per_page_custom'],
 					'default'        => '',
@@ -240,6 +284,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'min'  => 0,
 					),
 					'parent_setting' => 'group_courses_per_page_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'courses_per_page_custom',
+								// translators: placeholder: Courses per page.
+								'description' => sprintf( esc_html_x( '%s per page', 'placeholder: Courses per page', 'learndash' ), learndash_get_custom_label( 'courses' ) ),
+								'type'        => 'integer',
+								'default'     => '',
+							),
+						),
+					),
 				),
 
 				'group_courses_order_enabled'    => array(
@@ -285,6 +341,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['group_courses_orderby'],
 					'parent_setting' => 'group_courses_order_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'courses_orderby',
+								'type'      => 'string',
+								'default'   => '',
+							),
+						),
+					),
 				),
 				'group_courses_order'            => array(
 					'name'           => 'group_courses_order',
@@ -298,6 +364,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['group_courses_order'],
 					'parent_setting' => 'group_courses_order_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'courses_order',
+								'type'      => 'string',
+								'default'   => '',
+							),
+						),
+					),
 				),
 			);
 

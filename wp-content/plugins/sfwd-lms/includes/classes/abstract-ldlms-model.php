@@ -1,10 +1,11 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 class LDLMS_Exception_NotFound extends Exception {}
 
 abstract class LDLMS_Model {
-	public function __construct( ) {
+	public function __construct() {
 	}
 }
 

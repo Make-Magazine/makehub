@@ -1,9 +1,9 @@
 <?php
-if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
+if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
 		public function __construct( $post_type = '' ) {
-			$this->post_type = 'sfwd-courses';
+			$this->post_type  = 'sfwd-courses';
 			$this->taxonomies = array();
 
 			parent::__construct( $this->post_type );
@@ -11,14 +11,14 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 			$this->rest_base = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Permalinks', 'courses' );
 		}
 
-	    public function register_routes() {
+		public function register_routes() {
 			$this->register_fields();
 
 			$collection_params = $this->get_collection_params();
-			$schema = $this->get_item_schema();
+			$schema            = $this->get_item_schema();
 
 			$get_item_args = array(
-				'context'  => $this->get_context_param( array( 'default' => 'view' ) ),
+				'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 			);
 			if ( isset( $schema['properties']['password'] ) ) {
 				$get_item_args['password'] = array(
@@ -27,15 +27,15 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 				);
 			}
 
-			register_rest_route( 
-				$this->namespace, 
-				'/' . $this->rest_base . '/(?P<id>[\d]+)/steps', 
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base . '/(?P<id>[\d]+)/steps',
 				array(
 					'args' => array(
 						'id' => array(
 							'description' => esc_html__( 'Course ID to enroll user into.', 'learndash' ),
-							'required' => true,
-							'type' => 'integer',
+							'required'    => true,
+							'type'        => 'integer',
 						),
 					),
 					array(
@@ -53,13 +53,13 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 			);
 		}
 
-		function get_course_enrollment_permissions_check( $request ) {
+		public function get_course_enrollment_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
 			}
 		}
 
-		function get_course_enrollment( $request ) {
+		public function get_course_enrollment( $request ) {
 			$current_user_id = get_current_user_id();
 			if ( empty( $current_user_id ) ) {
 				return new WP_Error( 'rest_not_logged_in', esc_html__( 'You are not currently logged in.', 'learndash' ), array( 'status' => 401 ) );
@@ -74,7 +74,7 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 			$ld_course_steps_object = LDLMS_Factory_Post::course_steps( intval( $course->ID ) );
 			$ld_course_steps_object->load_steps();
 			$course_steps = $ld_course_steps_object->get_steps( 'h' );
-			$data = $course_steps;
+			$data         = $course_steps;
 
 			// Create the response object.
 			$response = rest_ensure_response( $data );
@@ -85,13 +85,13 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 			return $response;
 		}
 
-		function update_course_enrollment_permissions_check( $request ) {
+		public function update_course_enrollment_permissions_check( $request ) {
 			if ( learndash_is_admin_user() ) {
 				return true;
 			}
 		}
 
-		function update_course_enrollment( $request ) {
+		public function update_course_enrollment( $request ) {
 			$current_user_id = get_current_user_id();
 			if ( empty( $current_user_id ) ) {
 				return new WP_Error( 'rest_not_logged_in', esc_html__( 'You are not currently logged in.', 'learndash' ), array( 'status' => 401 ) );
@@ -106,28 +106,28 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 			$ld_course_steps_object = LDLMS_Factory_Post::course_steps( intval( $course->ID ) );
 
 			$body = $request->get_body();
-			if ( !empty( $body ) ) {
+			if ( ! empty( $body ) ) {
 				$body = json_decode( $body, true );
 				if ( ( $body ) && ( json_last_error() == JSON_ERROR_NONE ) ) {
 					$steps = array();
 
 					$steps['sfwd-lessons'] = array();
-					$steps['sfwd-quiz'] = array();
+					$steps['sfwd-quiz']    = array();
 
 					if ( ( isset( $body['sfwd-lessons'] ) ) && ( ! empty( $body['sfwd-lessons'] ) ) ) {
 						foreach ( $body['sfwd-lessons'] as $lesson_id => $lesson_set ) {
-							$steps['sfwd-lessons'][ $lesson_id ] = array();
+							$steps['sfwd-lessons'][ $lesson_id ]               = array();
 							$steps['sfwd-lessons'][ $lesson_id ]['sfwd-topic'] = array();
-							$steps['sfwd-lessons'][ $lesson_id ]['sfwd-quiz'] = array();
+							$steps['sfwd-lessons'][ $lesson_id ]['sfwd-quiz']  = array();
 
 							if ( ( isset( $lesson_set['sfwd-topic'] ) ) && ( ! empty( $lesson_set['sfwd-topic'] ) ) ) {
 
-								foreach( $lesson_set['sfwd-topic'] as $topic_id => $topic_set ) {
-									$steps['sfwd-lessons'][ $lesson_id ]['sfwd-topic'][ $topic_id ] = array();
+								foreach ( $lesson_set['sfwd-topic'] as $topic_id => $topic_set ) {
+									$steps['sfwd-lessons'][ $lesson_id ]['sfwd-topic'][ $topic_id ]              = array();
 									$steps['sfwd-lessons'][ $lesson_id ]['sfwd-topic'][ $topic_id ]['sfwd-quiz'] = array();
 
 									if ( ( isset( $topic_set['sfwd-quiz'] ) ) && ( ! empty( $topic_set['sfwd-quiz'] ) ) ) {
-										foreach( $topic_set['sfwd-quiz'] as $quiz_id => $quiz_set ) {
+										foreach ( $topic_set['sfwd-quiz'] as $quiz_id => $quiz_set ) {
 											$steps['sfwd-lessons'][ $lesson_id ]['sfwd-topic'][ $topic_id ]['sfwd-quiz'][ $quiz_id ] = array();
 										}
 									}
@@ -152,7 +152,7 @@ if ( ( !class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exist
 
 			$ld_course_steps_object->load_steps();
 			$course_steps = $ld_course_steps_object->get_steps( 'h' );
-			$data = $course_steps;
+			$data         = $course_steps;
 
 			// Create the response object.
 			$response = rest_ensure_response( $data );

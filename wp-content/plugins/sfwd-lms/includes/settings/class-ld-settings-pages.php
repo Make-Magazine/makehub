@@ -21,7 +21,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 		 *
 		 * @var array $_instances
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Match the parent menu below LearnDash main menu. This will be the URL as in
@@ -249,7 +249,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 
 			wp_enqueue_style(
 				'learndash_style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -258,7 +258,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 
 			wp_enqueue_style(
 				'sfwd-module-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -267,7 +267,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 
 			wp_enqueue_script(
 				'sfwd-module-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -278,7 +278,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 
 			learndash_admin_settings_page_assets();
 
-			if ( isset( $_GET['ld_reset_metaboxes'] ) ) {
+			if ( isset( $_GET['ld_reset_metaboxes'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				delete_user_meta( get_current_user_id(), 'closedpostboxes_' . $this->settings_screen_id );
 				delete_user_meta( get_current_user_id(), 'metaboxhidden_' . $this->settings_screen_id );
 				delete_user_meta( get_current_user_id(), 'meta-box-order_' . $this->settings_screen_id );
@@ -339,7 +339,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 					$('.if-js-closed').removeClass('if-js-closed').addClass('closed');
 					postboxes.add_postbox_toggles( '<?php echo esc_attr( $this->settings_screen_id ); ?>' );
 					// display spinner
-					$('#fx-smb-form').submit( function() {
+					$('#fx-smb-form').on( 'submit', function() {
 						$('#publishing-action .spinner').css('display','inline');
 					});
 					// confirm before reset
@@ -388,7 +388,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 					 */
 					do_action( 'learndash_settings_page_before_title', $this->settings_screen_id, $this->settings_page_id );
 					?>
-					<?php echo $this->get_admin_page_title(); ?>
+					<?php echo wp_kses_post( $this->get_admin_page_title() ); ?>
 					<?php
 					/**
 					 * Fires after the settings page title.
@@ -408,7 +408,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 					 */
 					do_action( 'learndash_settings_page_before_form', $this->settings_screen_id, $this->settings_page_id );
 					?>
-					<?php echo $this->get_admin_page_form( true ); ?>
+					<?php echo $this->get_admin_page_form( true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. ?>
 					<?php
 					/**
 					 * Fires inside settings page form in the top.
@@ -462,7 +462,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 					 */
 					do_action( 'learndash_settings_page_inside_form_bottom', $this->settings_screen_id, $this->settings_page_id );
 					?>
-					<?php echo $this->get_admin_page_form( false ); ?>
+					<?php echo $this->get_admin_page_form( false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. ?>
 					<?php
 					/**
 					 * Fires after the settings page form.
@@ -480,9 +480,9 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 				<div class="wrap learndash-settings-page-wrap">
 					<?php settings_errors(); ?>
 
-					<?php echo $this->get_admin_page_title(); ?>
+					<?php echo wp_kses_post( $this->get_admin_page_title() ); ?>
 
-					<?php echo $this->get_admin_page_form( true ); ?>
+					<?php echo $this->get_admin_page_form( true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. ?>
 					<?php
 						// This prints out all hidden setting fields.
 						settings_fields( $this->settings_page_id );
@@ -490,7 +490,7 @@ if ( ! class_exists( 'LearnDash_Settings_Page' ) ) {
 						do_settings_sections( $this->settings_page_id );
 					?>
 					<?php submit_button( esc_html__( 'Save Changes', 'learndash' ) ); ?>
-					<?php echo $this->get_admin_page_form( false ); ?>
+					<?php echo $this->get_admin_page_form( false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. ?>
 				</div>
 				<?php
 			}
@@ -564,7 +564,6 @@ function learndash_admin_settings_page_assets() {
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
-			// wp_style_add_data( 'learndash-select2-jquery-style', 'rtl', 'replace' );
 			$learndash_assets_loaded['styles']['learndash-select2-jquery-style'] = __FUNCTION__;
 		}
 
@@ -583,7 +582,7 @@ function learndash_admin_settings_page_assets() {
 	if ( ! isset( $learndash_assets_loaded['styles']['learndash-admin-settings-page'] ) ) {
 		wp_enqueue_style(
 			'learndash-admin-settings-page',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-settings-page' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-settings-page' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
@@ -594,7 +593,7 @@ function learndash_admin_settings_page_assets() {
 	if ( ! isset( $learndash_assets_loaded['scripts']['learndash-admin-settings-page'] ) ) {
 		wp_enqueue_script(
 			'learndash-admin-settings-page',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-page' . leardash_min_asset() . '.js',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-page' . learndash_min_asset() . '.js',
 			array( 'jquery', 'wp-color-picker' ),
 			LEARNDASH_SCRIPT_VERSION_TOKEN,
 			true
@@ -602,7 +601,7 @@ function learndash_admin_settings_page_assets() {
 		$learndash_assets_loaded['scripts']['learndash-admin-settings-page'] = __FUNCTION__;
 
 		$script_data = array();
-		
+
 		if ( ! isset( $script_data['ajaxurl'] ) ) {
 			$script_data['ajaxurl'] = admin_url( 'admin-ajax.php' );
 		}
@@ -620,6 +619,19 @@ function learndash_admin_settings_page_assets() {
 			);
 		}
 
+		if ( ! isset( $script_data['settings_fields_errors'] ) ) {
+			$script_data['settings_fields_errors'] = array(
+				'number' => array(
+					'invalid'  => esc_html__( 'Entered value is invalid.', 'learndash' ),
+					'empty'    => esc_html__( 'Value cannot be empty.', 'learndash' ),
+					'negative' => esc_html__( 'Entered value cannot be negative.', 'learndash' ),
+					'decimal'  => esc_html__( 'Entered value cannot contain decimal.', 'learndash' ),
+					'minimum'  => esc_html__( 'Entered value less than minimum.', 'learndash' ),
+					'maximum'  => esc_html__( 'Entered value greater than maximum.', 'learndash' ),
+				),
+			);
+		}
+
 		/**
 		 * Filters admin settings script data.
 		 *
@@ -630,7 +642,7 @@ function learndash_admin_settings_page_assets() {
 			$script_data = array();
 		}
 
-		$script_data = array( 'json' => json_encode( $script_data ) );
+		$script_data = array( 'json' => wp_json_encode( $script_data ) );
 		wp_localize_script( 'learndash-admin-settings-page', 'learndash_admin_settings_data', $script_data );
 	}
 }

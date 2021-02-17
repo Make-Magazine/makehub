@@ -99,7 +99,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 				if ( $post && ! $this->check_update_permission( $post ) ) {
 					return new WP_Error(
 						'rest_forbidden_context',
-						__( 'Sorry, you are not allowed to edit this post.' ),
+						__( 'Sorry, you are not allowed to edit this post.', 'learndash' ),
 						array( 'status' => rest_authorization_required_code() )
 					);
 				}
@@ -109,7 +109,7 @@ if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 					if ( ! hash_equals( $post->post_password, $request['password'] ) ) {
 						return new WP_Error(
 							'rest_post_incorrect_password',
-							__( 'Incorrect post password.' ),
+							__( 'Incorrect post password.', 'learndash' ),
 							array( 'status' => 403 )
 						);
 					}

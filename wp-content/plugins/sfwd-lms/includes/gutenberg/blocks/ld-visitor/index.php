@@ -18,14 +18,14 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function __construct() {
 			$this->shortcode_slug = 'visitor';
-			$this->block_slug = 'ld-visitor';
-			$this->self_closing = false;
+			$this->block_slug     = 'ld-visitor';
+			$this->self_closing   = false;
 
 			$this->block_attributes = array(
 				'course_id' => array(
 					'type' => 'string',
 				),
-				'autop' => array(
+				'autop'     => array(
 					'type' => 'boolean',
 				),
 			);

@@ -89,7 +89,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			}
 
 			if ( ! isset( $this->setting_option_values['supports'] ) ) {
-				$this->setting_option_values['supports'] = array( 'thumbnail','revisions' );
+				$this->setting_option_values['supports'] = array( 'thumbnail', 'revisions' );
 			}
 		}
 
@@ -145,7 +145,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'           => 'checkbox-switch',
 					'label'          => esc_html__( 'RSS/Atom Feed', 'learndash' ),
 					'help_text'      => sprintf(
-						// translators: placeholder: course
+						// translators: placeholder: course.
 						esc_html_x( 'Enables an RSS feed for all %1$s posts.', 'placeholder: course', 'learndash' ),
 						learndash_get_custom_label_lower( 'course' )
 					),
@@ -213,12 +213,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					if ( ( ! isset( $old_values['has_archive'] ) ) || ( $new_values['has_archive'] !== $old_values['has_archive'] ) ) {
 						learndash_setup_rewrite_flush();
 					}
-
-					//if ( in_array( 'comments', $new_values['supports'] ) ) {
-					//	learndash_update_posts_comment_status( 'sfwd-courses', 'open' );
-					//} else {
-					//	learndash_update_posts_comment_status( 'sfwd-courses', 'closed' );
-					//}
 				}
 			}
 

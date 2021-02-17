@@ -11,7 +11,7 @@
  * @package LearnDash\PDF
  */
 
- if ( ! defined( 'ABSPATH' ) ) {
+if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
@@ -41,16 +41,16 @@ if ( ! function_exists( 'learndash_get_thumb_path' ) ) {
 					 * @param string $type         Default 'path' will user local server path. 'url' will use image URL.
 					 * @param int    $post_id      Post ID of certificate to be shown.
 					 * @param int    $thumbnail_id Image thumbnail ID.
-					 * 
+					 *
 					 */
 					$image_type = apply_filters( 'ld_certificate_image_type', 'path', $post_id, $thumbnail_id );
 					if ( 'url' === $image_type ) {
 						$img_full_path = get_the_post_thumbnail_url( get_post( $post_id ), 'full' );
 					} else {
-						$img_path      = get_post_meta( $thumbnail_id, '_wp_attached_file', true );
-						$upload_url    = wp_upload_dir();
+						$img_path              = get_post_meta( $thumbnail_id, '_wp_attached_file', true );
+						$upload_url            = wp_upload_dir();
 						$upload_url['basedir'] = str_replace( '\\', '/', $upload_url['basedir'] );
-						$img_full_path = $upload_url['basedir'] . '/' . $img_path;
+						$img_full_path         = $upload_url['basedir'] . '/' . $img_path;
 					}
 					return $img_full_path;
 				}
@@ -115,22 +115,22 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 	 * @param array $cert_args Optional. Array of arguments passed in for processing. Default empty array.
 	 */
 	function learndash_certificate_post_shortcode( $cert_args = array() ) {
-		
+
 		$cert_args_defaults = array(
-			'cert_id' => 0,	    // The certificate Post ID.
-			'post_id' => 0,     // The Course/Quiz Post ID.
-			'user_id' => 0,	    // The User ID for the Certificate.
-			'lang'    => 'eng', // The default language. 
+			'cert_id'       => 0,     // The certificate Post ID.
+			'post_id'       => 0,     // The Course/Quiz Post ID.
+			'user_id'       => 0,     // The User ID for the Certificate.
+			'lang'          => 'eng', // The default language.
 
 			'filename'      => '',
-			'filename_url' => '',
+			'filename_url'  => '',
 			'filename_type' => 'title',
 
-			'pdf_title' => '',
-			'ratio' => 1.25,
+			'pdf_title'     => '',
+			'ratio'         => 1.25,
 
 			/*
-			I: send the file inline to the browser (default). 
+			I: send the file inline to the browser (default).
 			D: send to the browser and force a file download with the name given by name.
 			F: save to a local server file with the name given by name.
 			S: return the document as a string (name is ignored).
@@ -140,7 +140,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			*/
 		);
 		$cert_args = shortcode_atts( $cert_args_defaults, $cert_args );
-	
+
 		// Just to ensure we have valid IDs.
 		$cert_args['cert_id'] = absint( $cert_args['cert_id'] );
 		$cert_args['post_id'] = absint( $cert_args['post_id'] );
@@ -157,11 +157,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		if ( empty( $cert_args['user_id'] ) ) {
 			if ( isset( $_GET['user'] ) ) {
 				$cert_args['user_id'] = absint( $_GET['user'] );
-			} else if ( isset( $_GET['user_id'] ) ) {
+			} elseif ( isset( $_GET['user_id'] ) ) {
 				$cert_args['user_id'] = absint( $_GET['user_id'] );
 			}
 		}
-		
+
 		$cert_args['cert_post'] = get_post( $cert_args['cert_id'] );
 		if ( ( ! $cert_args['cert_post'] ) || ( ! is_a( $cert_args['cert_post'], 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'certificate' ) !== $cert_args['cert_post']->post_type ) ) {
 			wp_die( esc_html__( 'Certificate Post does not exist.', 'learndash' ) );
@@ -176,7 +176,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		if ( ( ! $cert_args['user'] ) || ( ! is_a( $cert_args['user'], 'WP_User' ) ) ) {
 			wp_die( esc_html__( 'User does not exist.', 'learndash' ) );
 		}
-		
+
 		// Start config override section.
 
 		// Language codes in TCPDF are 3 character eng, fra, ger, etc.
@@ -187,13 +187,13 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$config_lang_tmp = '';
 		if ( ( isset( $_GET['cert_lang'] ) ) && ( ! empty( $_GET['cert_lang'] ) ) ) {
 			$config_lang_tmp = substr( esc_attr( $_GET['cert_lang'] ), 0, 3 );
-		} else if ( ( isset( $_GET['lang'] ) ) && ( ! empty( $_GET['lang'] ) ) ) {
+		} elseif ( ( isset( $_GET['lang'] ) ) && ( ! empty( $_GET['lang'] ) ) ) {
 			$config_lang_tmp = substr( esc_attr( $_GET['lang'] ), 0, 3 );
 		}
 
 		if ( ( ! empty( $config_lang_tmp ) ) && ( strlen( $config_lang_tmp ) == 3 ) ) {
 			$ld_cert_lang_dir = LEARNDASH_LMS_LIBRARY_DIR . '/tcpdf/config/lang';
-			$lang_files = array_diff( scandir( $ld_cert_lang_dir ), array( '..', '.' ) );
+			$lang_files       = array_diff( scandir( $ld_cert_lang_dir ), array( '..', '.' ) );
 			if ( ( ! empty( $lang_files ) ) && ( is_array( $lang_files ) ) && ( in_array( $config_lang_tmp, $lang_files, true ) ) && ( file_exists( $ld_cert_lang_dir . '/' . $config_lang_tmp . '.php' ) ) ) {
 				$cert_args['lang'] = $config_lang_tmp;
 			}
@@ -203,15 +203,14 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$cert_args['filename_type'] = 'title';
 
 		$logo_file = $logo_enable = $subsetting_enable = $filters = $header_enable = $footer_enable = $monospaced_font = $font = $font_size = '';
-	
-				
+
 		ob_start();
 
 		$cert_args['cert_title'] = $cert_args['cert_post']->post_title;
-		$cert_args['cert_title'] = strip_tags( $cert_args['cert_title'] );
+		$cert_args['cert_title'] = wp_strip_all_tags( $cert_args['cert_title'] );
 
 		/** This filter is documented in https://developer.wordpress.org/reference/hooks/document_title_separator/ */
-		$sep = apply_filters( 'document_title_separator', '-' );
+		$sep = apply_filters( 'document_title_separator', '-' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
 
 		/**
 		 * Filters username of the user to be used in creating certificate PDF.
@@ -229,7 +228,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		}
 
 		$cert_for_post_title = get_the_title( $cert_args['post_id'] );
-		strip_tags( $cert_for_post_title );
+		wp_strip_all_tags( $cert_for_post_title );
 		if ( ! empty( $cert_for_post_title ) ) {
 			if ( ! empty( $cert_args['pdf_title'] ) ) {
 				$cert_args['pdf_title'] .= " $sep ";
@@ -241,18 +240,18 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$cert_args['pdf_title'] .= " $sep ";
 		}
 		$cert_args['pdf_title'] .= $cert_args['cert_title'];
-		
+
 		if ( ! empty( $cert_args['pdf_title'] ) ) {
 			$cert_args['pdf_title'] .= " $sep ";
 		}
 		$cert_args['pdf_title'] .= get_bloginfo( 'name', 'display' );
 
-		$cert_args['cert_permalink'] = get_permalink( $cert_args['cert_post']->ID );
+		$cert_args['cert_permalink']  = get_permalink( $cert_args['cert_post']->ID );
 		$cert_args['pdf_author_name'] = $cert_args['user']->display_name;
 
-		$tags_array = array();
+		$tags_array                = array();
 		$cert_args['pdf_keywords'] = '';
-		$tags_data = wp_get_post_tags( $cert_args['cert_post']->ID );
+		$tags_data                 = wp_get_post_tags( $cert_args['cert_post']->ID );
 
 		if ( $tags_data ) {
 			foreach ( $tags_data as $val ) {
@@ -260,13 +259,13 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			}
 			$cert_args['pdf_keywords'] = implode( ' ', $tags_array );
 		}
-	
+
 		if ( ! empty( $_GET['file'] ) ) {
 			$cert_args['filename_type'] = $_GET['file'];
 		}
 
-		if ( $cert_args['filename_type'] == 'title' && $target_post_id == 0 ) {
-			$filename = sanitize_file_name( str_replace(" $sep ", "$sep", $cert_args['pdf_title'] ) );
+		if ( 'title' == $cert_args['filename_type'] && 0 == $target_post_id ) {
+			$filename = sanitize_file_name( str_replace( " $sep ", "$sep", $cert_args['pdf_title'] ) );
 			/**
 			 * Filters the file name of the certificate pdf.
 			 *
@@ -296,11 +295,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$font_size = intval( $_GET['fontsize'] );
 		}
 
-		if ( ! empty( $_GET['subsetting'] ) && ( $_GET['subsetting'] == 1 || $_GET['subsetting'] == 0 ) ) {
+		if ( ! empty( $_GET['subsetting'] ) && ( 1 == $_GET['subsetting'] || 0 == $_GET['subsetting'] ) ) {
 			$subsetting_enable = $_GET['subsetting'];
 		}
 
-		if ( $subsetting_enable == 1 ) {
+		if ( 1 == $subsetting_enable ) {
 			$subsetting = 'true';
 		} else {
 			$subsetting = 'false';
@@ -337,7 +336,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 				$destination = 'I';
 			}
 		} else {
-			if ( $target_post_id != 0 ) {
+			if ( 0 != $target_post_id ) {
 				$destination = 'F';
 			} else {
 				$destination = 'I';
@@ -353,7 +352,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 					$destination_type = 'U';
 				}
 			}
-		} 
+		}
 
 		if ( 'F' === $destination ) {
 			if ( ( defined( 'LEARNDASH_UPLOADS_BASE_URL' ) ) && ( ! empty( LEARNDASH_UPLOADS_BASE_URL ) ) ) {
@@ -365,7 +364,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 				if ( ! file_exists( $ld_upload_certificates_dir ) ) {
 					if ( wp_mkdir_p( $ld_upload_certificates_dir ) !== false ) {
 						// To prevent security browsing add an index.php file.
-						file_put_contents( trailingslashit( $ld_upload_certificates_dir ) .'index.php', '// nothing to see here');
+						file_put_contents( trailingslashit( $ld_upload_certificates_dir ) . 'index.php', '// nothing to see here' );
 					}
 				}
 				$filename = trailingslashit( $ld_upload_certificates_dir ) . $filename;
@@ -397,15 +396,15 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		if ( ( ! defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) || ( true !== LEARNDASH_TCPDF_LEGACY_LD322 ) ) {
 			$cert_content = wpautop( $cert_content );
 		}
-		
+
 		// For other sourcecode
 		$cert_content = preg_replace( '/<pre[^>]*?><code[^>]*?>(.*?)<\/code><\/pre>/is', '<pre style="word-wrap:break-word; color: #406040; background-color: #F1F1F1; border: 1px solid #9F9F9F;">$1</pre>', $cert_content );
 
 		// For blockquote
 		$cert_content = preg_replace( '/<blockquote[^>]*?>(.*?)<\/blockquote>/is', '<blockquote style="color: #406040;">$1</blockquote>', $cert_content );
-		
+
 		$cert_content = '<br/><br/>' . $cert_content;
-		
+
 		/**
 		 * If the $font variable is not empty we use it to replace all font
 		 * definitions. This only affects inline styles within the structure
@@ -429,7 +428,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$certificate_styles = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Certificates_Styles', 'styles' );
 			$certificate_styles = preg_replace( '/<style[^>]*?>(.*?)<\/style>/is', '$1', $certificate_styles );
 			if ( ! empty( $certificate_styles ) ) {
-				$cert_content = '<style>' . $certificate_styles . '</style>'. $cert_content;
+				$cert_content = '<style>' . $certificate_styles . '</style>' . $cert_content;
 			}
 		}
 
@@ -548,7 +547,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		 * @param TCPDF  $pdf         `TCPDF` class instance.
 		 * @param int    $cert_id     Certificate post ID.
 		 */
-		$pdf->SetSubject( apply_filters( 'learndash_pdf_subject', strip_tags( get_the_category_list( ',', '', $cert_args['cert_id'] ) ), $pdf, $cert_args['cert_id'] ) );
+		$pdf->SetSubject( apply_filters( 'learndash_pdf_subject', wp_strip_all_tags( get_the_category_list( ',', '', $cert_args['cert_id'] ) ), $pdf, $cert_args['cert_id'] ) );
 
 		/**
 		 * Filters the pdf keywords.
@@ -566,8 +565,8 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$header_title = mb_substr( $cert_args['cert_title'], 0, 42, 'UTF-8' ) . '...';
 		}
 
-		if ( $header_enable == 1 ) {
-			if ( $logo_enable == 1 && $logo_file ) {
+		if ( 1 == $header_enable ) {
+			if ( 1 == $logo_enable && $logo_file ) {
 				$pdf->SetHeaderData( $logo_file, $logo_width, $header_title, 'by ' . $cert_args['pdf_author_name'] . ' - ' . $cert_args['cert_permalink'] );
 			} else {
 				$pdf->SetHeaderData( '', 0, $header_title, 'by ' . $cert_args['pdf_author_name'] . ' - ' . $cert_args['cert_permalink'] );
@@ -575,20 +574,20 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		}
 
 		// Set header and footer fonts
-		if ( $header_enable == 1 ) {
+		if ( 1 == $header_enable ) {
 			$pdf->setHeaderFont( array( $font, '', PDF_FONT_SIZE_MAIN ) );
 		}
 
-		if ( $footer_enable == 1 ) {
+		if ( 1 == $footer_enable ) {
 			$pdf->setFooterFont( array( $font, '', PDF_FONT_SIZE_DATA ) );
 		}
 
 		// Remove header/footer
-		if ( $header_enable == 0 ) {
+		if ( 0 == $header_enable ) {
 			$pdf->setPrintHeader( false );
 		}
 
-		if ( $header_enable == 0 ) {
+		if ( 0 == $header_enable ) {
 			$pdf->setPrintFooter( false );
 		}
 
@@ -598,11 +597,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		// Set margins
 		$pdf->SetMargins( $tcpdf_params['margins']['left'], $tcpdf_params['margins']['top'], $tcpdf_params['margins']['right'] );
 
-		if ( $header_enable == 1 ) {
+		if ( 1 == $header_enable ) {
 			$pdf->SetHeaderMargin( PDF_MARGIN_HEADER );
 		}
 
-		if ( $footer_enable == 1 ) {
+		if ( 1 == $footer_enable ) {
 			$pdf->SetFooterMargin( PDF_MARGIN_FOOTER );
 		}
 
@@ -645,13 +644,23 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$img_file = learndash_get_thumb_path( $cert_args['cert_id'] );
 
 		//Only print image if it exists
-		if ( $img_file != '' ) {
+		if ( '' != $img_file ) {
+			/**
+			 * Fires when thumbnail image processing starts.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $img_file  Thumbnail image file.
+			 * @param array  $cert_args Array of Certificate args.
+			 * @param TCPDF  $pdf       `TCPDF` class instance.
+			 */
+			do_action( 'learndash_certification_thumbnail_processing_start', $img_file, $cert_args, $pdf );
 
 			//Print BG image
 			$pdf->setPrintHeader( false );
 
 			// get the current page break margin
-			$bMargin = $pdf->getBreakMargin();
+			$b_margin = $pdf->getBreakMargin();
 
 			// get current auto-page-break mode
 			$auto_page_break = $pdf->getAutoPageBreak();
@@ -660,23 +669,112 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 			$pdf->SetAutoPageBreak( false, 0 );
 
 			// Get width and height of page for dynamic adjustments
-			$pageH = $pdf->getPageHeight();
-			$pageW = $pdf->getPageWidth();
+			$page_h = $pdf->getPageHeight();
+			$page_w = $pdf->getPageWidth();
+
+			/**
+			 * Fires before the thumbnail image is added to the PDF.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $img_file  Thumbnail image file.
+			 * @param array  $cert_args Array of Certificate args.
+			 * @param TCPDF  $pdf       `TCPDF` class instance.
+			 */
+			do_action( 'learndash_certification_thumbnail_before', $img_file, $cert_args, $pdf );
 
 			//Print the Background
-			$pdf->Image( $img_file, '0', '0', $pageW, $pageH, '', '', '', false, 300, '', false, false, 0, false, false, false, false, array() );
+			$pdf->Image( $img_file, '0', '0', $page_w, $page_h, '', '', '', false, 300, '', false, false, 0, false, false, false, false, array() );
+
+			/**
+			 * Fires after the thumbnail image is added to the PDF.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $img_file  Thumbnail image file.
+			 * @param array  $cert_args Array of Certificate args.
+			 * @param TCPDF  $pdf       `TCPDF` class instance.
+			 */
+			do_action( 'learndash_certification_thumbnail_after', $img_file, $cert_args, $pdf );
 
 			// restore auto-page-break status
-			$pdf->SetAutoPageBreak( $auto_page_break, $bMargin );
+			$pdf->SetAutoPageBreak( $auto_page_break, $b_margin );
 
 			// set the starting point for the page content
 			$pdf->setPageMark();
+
+			/**
+			 * Fires when thumbnail image processing starts.
+			 *
+			 * @since 3.3.0
+			 *
+			 * @param string $img_file  Thumbnail image file.
+			 * @param array  $cert_args Array of Certificate args.
+			 * @param TCPDF  $pdf       `TCPDF` class instance.
+			 */
+			do_action( 'learndash_certification_thumbnail_processing_end', $img_file, $cert_args, $pdf );
 		}
 
-		//file_put_contents( ABSPATH . '/ld_cert_new.txt', $cert_content );
+		/**
+		 * Fires before the certificate content is added to the PDF.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param TCPDF  $pdf       `TCPDF` class instance.
+		 * @param array  $cert_args Array of certificate args.
+		 */
+		do_action( 'learndash_certification_content_write_cell_before', $pdf, $cert_args );
+
+		$pdf_cell_args = array(
+			'w'           => 0,
+			'h'           => 0,
+			'x'           => '',
+			'y'           => '',
+			'content'     => $cert_content,
+			'border'      => 0,
+			'ln'          => 1,
+			'fill'        => 0,
+			'reseth'      => true,
+			'align'       => '',
+			'autopadding' => true,
+		);
+
+		/**
+		 * Filters the parameters passed to the TCPDF writeHTMLCell() function.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param string $pdf_cell_args See TCPDF function writeHTMLCell() parameters
+		 * @param array  $cert_args     Array of certificate args.
+		 * @param array  $tcpdf_params  An array of tcpdf parameters.
+		 * @param TCPDF  $pdf           `TCPDF` class instance.
+		 */
+		$pdf_cell_args = apply_filters( 'learndash_certification_content_write_cell_args', $pdf_cell_args, $cert_args, $tcpdf_params, $pdf );
 
 		// Print post
-		$pdf->writeHTMLCell( 0, 0, '', '', $cert_content, 0, 1, 0, true, '', true );
+		$pdf->writeHTMLCell(
+			$pdf_cell_args['w'],
+			$pdf_cell_args['h'],
+			$pdf_cell_args['x'],
+			$pdf_cell_args['y'],
+			$pdf_cell_args['content'],
+			$pdf_cell_args['border'],
+			$pdf_cell_args['ln'],
+			$pdf_cell_args['fill'],
+			$pdf_cell_args['reseth'],
+			$pdf_cell_args['align'],
+			$pdf_cell_args['autopadding']
+		);
+
+		/**
+		 * Fires after the certificate content is added to the PDF.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param TCPDF  $pdf       `TCPDF` class instance.
+		 * @param array  $cert_args Array of certificate args.
+		 */
+		do_action( 'learndash_certification_content_write_cell_after', $pdf, $cert_args );
 
 		// Set background
 		$pdf->SetFillColor( 255, 255, 127 );
@@ -688,11 +786,11 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		// Output pdf document
 		$pdf->Output( $filename . '.pdf', $destination );
 
-		if ( "F" === $destination ) {
+		if ( 'F' === $destination ) {
 			if ( 'F' === $destination_type ) {
-				echo $filename;
+				echo $filename; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			} else {
-				echo $cert_args['filename_url'];
+				echo $cert_args['filename_url']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			}
 		}
 	}

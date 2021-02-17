@@ -1,5 +1,4 @@
 jQuery( function( $ ) {
-
 	var hash = window.location.hash;
 
 	learndashFocusModeSidebarAutoScroll();
@@ -10,7 +9,6 @@ jQuery( function( $ ) {
 	}
 
 	if ( 'undefined' !== typeof ldGetUrlVars().login ) {
-
 		var loginStatus = ldGetUrlVars().login;
 
 		if ( 'failed' == loginStatus ) {
@@ -18,39 +16,36 @@ jQuery( function( $ ) {
 		}
 	}
 
-	if ( 'undefined' !== typeof ldGetUrlVars()['ld-topic-page']) {
-
+	if ( 'undefined' !== typeof ldGetUrlVars()['ld-topic-page'] ) {
 		var topicPage = ldGetUrlVars()['ld-topic-page'];
-		var topicIds  = topicPage.split( '-' );
-		var topicId   = Object.values( topicIds )[0];
+		var topicIds = topicPage.split( '-' );
+		var topicId = Object.values( topicIds )[0];
 
 		var lesson = $( '#ld-expand-' + topicId );
 		var button = $( lesson ).find( '.ld-expand-button' );
 
 		ld_expand_element( button );
 
-		$( 'html, body' ).animate({
-			scrollTop: ( $( lesson ).offset().top )
+		$( 'html, body' ).animate( {
+			scrollTop: ( $( lesson ).offset().top ),
 		}, 500 );
-
 	}
 
 	$( 'body' ).on( 'click', 'a[href="#login"]', function( e ) {
 		e.preventDefault();
 		openLoginModal();
-	});
-
+	} );
 
 	$( 'body' ).on( 'click', '.ld-modal-closer', function( e ) {
 		e.preventDefault();
 		closeLoginModal();
-	});
+	} );
 
 	$( 'body' ).on( 'click', '#ld-comments-post-button', function( e ) {
 		$( this ).addClass( 'ld-open' );
 		$( '#ld-comments-form' ).removeClass( 'ld-collapsed' );
 		$( 'textarea#comment' ).focus();
-	});
+	} );
 
 	// Close modal if clicking away
 	/*
@@ -64,11 +59,11 @@ jQuery( function( $ ) {
 	*/
 
 	// Close modal on Esc key
-	$( document ).keyup( function( e ) {
+	$( document ).on( 'keyup', function( e ) {
 		if ( 27 === e.keyCode ) {
 			closeLoginModal();
 		}
-	});
+	} );
 
 	$( '.learndash-wrapper' ).on( 'click', 'a.user_statistic', learndash_ld30_show_user_statistic );
 
@@ -80,7 +75,7 @@ jQuery( function( $ ) {
 		} else {
 			closeFocusSidebar();
 		}
-	});
+	} );
 
 	$( 'body' ).on( 'click', '.ld-mobile-nav a', function( e ) {
 		e.preventDefault();
@@ -89,27 +84,23 @@ jQuery( function( $ ) {
 		} else {
 			closeFocusSidebar();
 		}
+	} );
 
-	});
-
-	$( '.ld-js-register-account' ).click( function( e ) {
-
+	$( '.ld-js-register-account' ).on( 'click', function( e ) {
 		e.preventDefault();
 
 		$( '.ld-login-modal-register .ld-modal-text' ).slideUp( 'slow' );
 		$( '.ld-login-modal-register .ld-alert' ).slideUp( 'slow' );
 		$( this ).slideUp( 'slow', function() {
-
 			$( '#ld-user-register' ).slideDown( 'slow' );
-		});
-
-	});
+		} );
+	} );
 
 	var windowWidth = $( window ).width();
 
 	$( window ).on( 'orientationchange', function() {
 		windowWidth = $( window ).width();
-	});
+	} );
 
 	$( window ).on( 'resize', function() {
 		if ( $( this ).width() !== windowWidth ) {
@@ -117,7 +108,7 @@ jQuery( function( $ ) {
 				focusMobileResizeCheck();
 			}, 50 );
 		}
-	});
+	} );
 
 	if ( $( '.ld-course-status-content' ).length ) {
 		var tallest = 0;
@@ -126,10 +117,9 @@ jQuery( function( $ ) {
 			if ( $( this ).height() > tallest ) {
 				tallest = $( this ).height();
 			}
-		});
+		} );
 
 		$( '.ld-course-status-content' ).height( tallest );
-
 	}
 
 	function focusMobileCheck() {
@@ -166,7 +156,7 @@ jQuery( function( $ ) {
 		} else if ( $( '.ld-focus-sidebar-trigger .ld-icon' ).hasClass( 'ld-icon-arrow-right' ) ) {
 			$( '.ld-focus-sidebar-trigger .ld-icon' ).removeClass( 'ld-icon-arrow-right' );
 			$( '.ld-focus-sidebar-trigger .ld-icon' ).addClass( 'ld-icon-arrow-left' );
-		};
+		}
 
 		positionTooltips();
 	}
@@ -181,7 +171,7 @@ jQuery( function( $ ) {
 		} else if ( $( '.ld-focus-sidebar-trigger .ld-icon' ).hasClass( 'ld-icon-arrow-right' ) ) {
 			$( '.ld-focus-sidebar-trigger .ld-icon' ).removeClass( 'ld-icon-arrow-right' );
 			$( '.ld-focus-sidebar-trigger .ld-icon' ).addClass( 'ld-icon-arrow-left' );
-		};
+		}
 
 		positionTooltips();
 	}
@@ -192,7 +182,6 @@ jQuery( function( $ ) {
 			labelVal = $label.html();
 
 		$input.on( 'change', function( e ) {
-
 			var fileName = '';
 			if ( this.files && 1 < this.files.length ) {
 				fileName = ( this.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', this.files.length );
@@ -208,38 +197,35 @@ jQuery( function( $ ) {
 				$label.removeClass( 'ld-file-selected' );
 				$( '#uploadfile_btn' ).attr( 'disabled', true );
 			}
-		});
+		} );
+
+		$( '#uploadfile_btn' ).submit();
 
 		// Firefox bug fix
 		$input
-		.on( 'focus', function() {
-			$input.addClass( 'has-focus' );
-		})
-		.on( 'blur', function() {
-			$input.removeClass( 'has-focus' );
-		});
-	});
-
+			.on( 'focus', function() {
+				$input.addClass( 'has-focus' );
+			} )
+			.on( 'blur', function() {
+				$input.removeClass( 'has-focus' );
+			} );
+	} );
 
 	$( 'body' ).on( 'click', '.ld-expand-button', function( e ) {
-
 		e.preventDefault();
 
 		ld_expand_element( $( this ) );
 
 		positionTooltips();
-
-	});
+	} );
 
 	$( 'body' ).on( 'click', '.ld-search-prompt', function( e ) {
-
 		e.preventDefault();
 
 		$( '#course_name_field' ).focus();
 
 		ld_expand_element( $( this ) );
-
-	});
+	} );
 
 	function ld_expand_button_state( state, elm ) {
 		var $expandText = ( $( elm )[0].hasAttribute( 'data-ld-expand-text' ) ) ? $( elm ).attr( 'data-ld-expand-text' ) : 'Expand';
@@ -259,7 +245,6 @@ jQuery( function( $ ) {
 	}
 
 	function ld_expand_element( elm, collapse ) {
-
 		if ( collapse === undefined ) {
 			collapse = false;
 		}
@@ -267,10 +252,8 @@ jQuery( function( $ ) {
 		// Get the button's state
 		var $expanded = $( elm ).hasClass( 'ld-expanded' );
 
-
 		// Get the element to expand
 		if ( $( elm )[0] && $( elm )[0].hasAttribute( 'data-ld-expands' ) ) {
-
 			var $expands 		= $( elm ).attr( 'data-ld-expands' );
 			var $expandElm 		= $( '#' + $expands );
 			var $expandsChild 	= $( '#' + $expands ).find( '.ld-item-list-item-expanded' );
@@ -283,71 +266,63 @@ jQuery( function( $ ) {
 
 			$expandElm.find( '> *' ).each( function() {
 				totalHeight += $( this ).outerHeight();
-			});
+			} );
 
 			$expandElm.attr( 'data-height', '' + ( totalHeight + 50 ) + '' );
 
 			// If the element expands a list
 
 			if ( $( '#' + $expands )[0].hasAttribute( 'data-ld-expand-list' ) ) {
-
 				var $container = $( '#' + $expands );
 				var innerButtons = $container.find( '.ld-expand-button' );
 				if ( $expanded ) {
 					ld_expand_button_state( 'collapse', elm );
 					innerButtons.each( function() {
 						ld_expand_element( $( this ), true );
-					});
+					} );
 				} else {
 					ld_expand_button_state( 'expand', elm );
 					innerButtons.each( function() {
 						ld_expand_element( $( this ) );
-					});
-
+					} );
 				}
 
-			// If the element expands an item
-
+				// If the element expands an item
 			} else if ( $( '#' + $expands ).length ) {
-
 				if ( $expanded || true == collapse ) {
 					ld_expand_singular_item( elm, $( '#' + $expands ), $expandElm );
 				} else {
 					ld_collapse_singular_item( elm, $( '#' + $expands ), $expandElm );
 				}
-
 			} else {
 				console.log( 'LearnDash: No expandable content was found' );
 			}
 			positionTooltips();
 		}
-
 	}
 
 	function ld_expand_singular_item( elm, $containerElm, $expandElm ) {
-
 		$containerElm.removeClass( 'ld-expanded' );
 		ld_expand_button_state( 'collapse', elm );
 
-		$expandElm.css({
-			'max-height': 0
-		});
+		$expandElm.css( {
+			'max-height': 0,
+		} );
 	}
 
 	function ld_collapse_singular_item( elm, $containerElm, $expandElm ) {
+		$containerElm.addClass( 'ld-expanded' );
 
-			$containerElm.addClass( 'ld-expanded' );
+		ld_expand_button_state( 'expand', elm );
 
-			ld_expand_button_state( 'expand', elm );
-
-			$expandElm.css({
-				'max-height': $expandElm.data( 'height' )
-			});
+		$expandElm.css( {
+			'max-height': $expandElm.data( 'height' ),
+		} );
 	}
 
 	$( 'body' ).on( 'click', '.ld-closer', function( e ) {
 		ld_expand_element( $( '.ld-search-prompt' ), true );
-	});
+	} );
 
 	$( 'body' ).on( 'click', '.ld-tabs-navigation .ld-tab', function() {
 		var $tab = $( '#' + $( this ).attr( 'data-ld-tab' ) );
@@ -358,16 +333,14 @@ jQuery( function( $ ) {
 			$tab.addClass( 'ld-visible' );
 		}
 		positionTooltips();
-	});
+	} );
 
 	var $tooltips = $( '*[data-ld-tooltip]' );
 
 	initTooltips();
 
 	function initTooltips() {
-
 		// Clear out old tooltips
-
 
 		if ( $( '#learndash-tooltips' ).length ) {
 			$( '#learndash-tooltips' ).remove();
@@ -384,7 +357,7 @@ jQuery( function( $ ) {
 				}
 				var elementOffsets = {
 					top: anchor.offset().top,
-					left: anchor.offset().left + ( anchor.outerWidth() / 2 )
+					left: anchor.offset().left + ( anchor.outerWidth() / 2 ),
 				};
 				var $content = $( this ).attr( 'data-ld-tooltip' );
 				var $rel_id = Math.floor( ( Math.random() * 99999 ) );
@@ -395,30 +368,25 @@ jQuery( function( $ ) {
 				$( '#learndash-tooltips' ).append( $tooltip );
 				$ctr++;
 				var $tooltip = $( '#ld-tooltip-' + $rel_id );
-				$( this ).hover(
-					function() {
-						$tooltip.addClass( 'ld-visible' );
-					},
-					function() {
-						$tooltip.removeClass( 'ld-visible' );
-					}
-				);
-			});
+				$( this ).on( 'mouseenter', function() {
+					$tooltip.addClass( 'ld-visible' );
+				} ).on( 'mouseleave', function() {
+					$tooltip.removeClass( 'ld-visible' );
+				} );
+			} );
 
 			$( window ).on( 'resize', function() {
-
 				// Reposition tooltips after resizing
 				positionTooltips();
-			});
+			} );
 
 			$( window ).add( '.ld-focus-sidebar-wrapper' ).on( 'scroll', function() {
-
 				// Hide tooltips so they don't persist while scrolling
 				$( '.ld-visible.ld-tooltip' ).removeClass( 'ld-visible' );
 
 				// Reposition tooltips after scrolling
 				positionTooltips();
-			});
+			} );
 
 			positionTooltips();
 		}
@@ -427,7 +395,6 @@ jQuery( function( $ ) {
 	function initLoginModal() {
 		var modal_wrapper = $( '.learndash-wrapper-login-modal' );
 		if ( ( 'undefined' !== typeof modal_wrapper ) && ( modal_wrapper.length ) ) {
-
 			// Move the model to be first element of the body. See LEARNDASH-3503
 			$( modal_wrapper ).prependTo( 'body' );
 		}
@@ -440,8 +407,8 @@ jQuery( function( $ ) {
 			$( modal_wrapper ).removeClass( 'ld-modal-closed' );
 
 			// Removed LEARNDASH-3867 #4
-			$( 'html, body' ).animate({
-				scrollTop: $( '.ld-modal', modal_wrapper ).offset().top
+			$( 'html, body' ).animate( {
+				scrollTop: $( '.ld-modal', modal_wrapper ).offset().top,
 			}, 50 );
 		}
 	}
@@ -455,17 +422,14 @@ jQuery( function( $ ) {
 	}
 
 	function positionTooltips() {
-
 		if ( 'undefined' !== typeof $tooltips ) {
 			setTimeout( function() {
-
 				$tooltips.each( function() {
 					var anchor = $( this );
 					var $rel_id = anchor.attr( 'data-ld-tooltip-id' );
 					$tooltip = $( '#ld-tooltip-' + $rel_id );
 
 					if ( anchor.hasClass( 'ld-item-list-item' ) ) {
-
 						//anchor = anchor.find('.ld-item-title');
 						anchor = anchor.find( '.ld-status-icon' );
 					}
@@ -491,60 +455,53 @@ jQuery( function( $ ) {
 						anchorLeft = left_post;
 					}
 
-					$tooltip.css({
-						'top': anchorTop,
+					$tooltip.css( {
+						top: anchorTop,
 
 						//'left' : anchor.offset().left + (anchor.outerWidth() / 2),
 						//'left': left_post, //anchor.offset().left + (anchor.outerWidth() +10),
-						'left': anchorLeft, //anchor.offset().left + (anchor.outerWidth() +10),
-						'margin-left' : 0,
-						'margin-right' : 0
-					}).removeClass('ld-shifted-left ld-shifted-right');
-					if ($tooltip.offset().left <= 0) {
-						$tooltip.css({ 'margin-left' : Math.abs($tooltip.offset().left) }).addClass('ld-shifted-left');
+						left: anchorLeft, //anchor.offset().left + (anchor.outerWidth() +10),
+						'margin-left': 0,
+						'margin-right': 0,
+					} ).removeClass( 'ld-shifted-left ld-shifted-right' );
+					if ( $tooltip.offset().left <= 0 ) {
+						$tooltip.css( { 'margin-left': Math.abs( $tooltip.offset().left ) } ).addClass( 'ld-shifted-left' );
 					}
 					var $tooltipRight = $( window ).width() - ( $tooltip.offset().left + $tooltip.outerWidth() );
 					if ( 0 >= $tooltipRight ) {
-						$tooltip.css({ 'margin-right': Math.abs( $tooltipRight ) }).addClass( 'ld-shifted-right' );
+						$tooltip.css( { 'margin-right': Math.abs( $tooltipRight ) } ).addClass( 'ld-shifted-right' );
 					}
-
-				});
+				} );
 			}, 500 );
 		}
 	}
 
-
 	$( 'body' ).on( 'click', '#ld-profile .ld-reset-button', function( e ) {
-
 		e.preventDefault();
 
 		var searchVars = {
-			shortcode_instance: $( '#ld-profile' ).data( 'shortcode_instance' )
+			shortcode_instance: $( '#ld-profile' ).data( 'shortcode_instance' ),
 		};
 
 		$( '#ld-profile #ld-main-course-list' ).addClass( 'ld-loading' );
 
-		$.ajax({
+		$.ajax( {
 			type: 'GET',
-			url: ajaxurl + '?action=ld30_ajax_profile_search',
+			url: ldVars.ajaxurl + '?action=ld30_ajax_profile_search',
 			data: searchVars,
 			success: function( response ) {
-
 				if ( 'undefined' !== typeof response.data.markup ) {
 					$( '#ld-profile' ).html( response.data.markup );
 				}
-
-			}
-		});
-
-	});
+			},
+		} );
+	} );
 
 	$( 'body' ).on( 'submit', '.ld-item-search-fields', function( e ) {
-
 		e.preventDefault();
 
 		var searchVars = {
-			shortcode_instance: $( '#ld-profile' ).data( 'shortcode_instance' )
+			shortcode_instance: $( '#ld-profile' ).data( 'shortcode_instance' ),
 		};
 
 		searchVars['ld-profile-search'] = $( this ).parents( '.ld-item-search-wrapper' ).find( '#course_name_field' ).val();
@@ -552,23 +509,19 @@ jQuery( function( $ ) {
 
 		$( '#ld-profile #ld-main-course-list' ).addClass( 'ld-loading' );
 
-		$.ajax({
+		$.ajax( {
 			type: 'GET',
-			url: ajaxurl + '?action=ld30_ajax_profile_search',
+			url: ldVars.ajaxurl + '?action=ld30_ajax_profile_search',
 			data: searchVars,
 			success: function( response ) {
-
 				if ( 'undefined' !== typeof response.data.markup ) {
 					$( '#ld-profile' ).html( response.data.markup );
 				}
-
-			}
-		});
-
-	});
+			},
+		} );
+	} );
 
 	$( 'body' ).on( 'click', '.ld-pagination a', function( e ) {
-
 		e.preventDefault();
 
 		var linkVars = {};
@@ -576,19 +529,18 @@ jQuery( function( $ ) {
 
 		$( this ).attr( 'href' ).replace( /[?&]+([^=&]+)=([^&]*)/gi, function( m, key, value ) {
 			linkVars[key] = value;
-		});
+		} );
 
 		linkVars.pager_nonce = $( this ).parents( '.ld-pagination' ).data( 'pager-nonce' );
 
 		linkVars.pager_results = $( this ).parents( '.ld-pagination' ).data( 'pager-results' );
 
-		linkVars.context   = $( this ).data( 'context' );
+		linkVars.context = $( this ).data( 'context' );
 		console.log( 'linkVars[%o]', linkVars );
 
 		parentVars.currentTarget = e.currentTarget;
 
 		if ( 'profile' != linkVars.context ) {
-
 			linkVars.lesson_id = $( this ).data( 'lesson_id' );
 			linkVars.course_id = $( this ).data( 'course_id' );
 
@@ -638,7 +590,6 @@ jQuery( function( $ ) {
 			if ( ( 'undefined' !== typeof parentVars.parent_container ) && ( parentVars.parent_container.length ) ) {
 				$( parentVars.parent_container ).addClass( 'ld-loading' );
 			} else {
-
 				// Fallback solution.
 				$( '#ld-item-list-' + linkVars.course_id ).addClass( 'ld-loading' );
 				$( '#ld-lesson-list-' + linkVars.course_id ).addClass( 'ld-loading' );
@@ -666,30 +617,26 @@ jQuery( function( $ ) {
 			}
 		}
 
-		$.ajax({
+		$.ajax( {
 			type: 'GET',
-			url: ajaxurl + '?action=ld30_ajax_pager',
+			url: ldVars.ajaxurl + '?action=ld30_ajax_pager',
 			data: linkVars,
 			success: function( response ) {
-
 				// If we have a course listing, update
 
 				if ( 'course_topics' == linkVars.context ) {
-
 					if ( $( '#ld-topic-list-' + linkVars.lesson_id ).length ) {
-
 						if ( 'undefined' !== typeof response.data.topics ) {
 							$( '#ld-topic-list-' + linkVars.lesson_id ).html( response.data.topics );
 						}
 
 						if ( 'undefined' !== typeof response.data.pager ) {
-							$( '#ld-expand-'  + linkVars.lesson_id ).find( '.ld-table-list-footer' ).html( response.data.pager );
+							$( '#ld-expand-' + linkVars.lesson_id ).find( '.ld-table-list-footer' ).html( response.data.pager );
 						}
 
 						learndashSetMaxHeight( $( '.ld-lesson-item-' + linkVars.lesson_id ).find( '.ld-item-list-item-expanded' ) );
 
 						$( '#ld-topic-list-' + linkVars.lesson_id ).removeClass( 'ld-loading' );
-
 					}
 
 					if ( $( '#ld-nav-content-list-' + linkVars.lesson_id ).length ) {
@@ -723,10 +670,8 @@ jQuery( function( $ ) {
 							if ( 'undefined' !== typeof response.data.nav_lessons ) {
 								$( parentVars.parent_container ).html( response.data.nav_lessons ).removeClass( 'ld-loading' );
 							}
-						} else {
-							if ( 'undefined' !== typeof response.data.lessons ) {
-								$( parentVars.parent_container ).html( response.data.lessons ).removeClass( 'ld-loading' );
-							}
+						} else if ( 'undefined' !== typeof response.data.lessons ) {
+							$( parentVars.parent_container ).html( response.data.lessons ).removeClass( 'ld-loading' );
 						}
 					} else {
 						if ( $( '#ld-item-list-' + linkVars.course_id ).length ) {
@@ -736,7 +681,6 @@ jQuery( function( $ ) {
 						}
 
 						if ( $( '#ld-lesson-list-' + linkVars.course_id ).length ) {
-
 							if ( 'undefined' !== typeof response.data.nav_lessons ) {
 								$( '#ld-lesson-list-' + linkVars.course_id ).html( response.data.nav_lessons ).removeClass( 'ld-loading' );
 							}
@@ -752,34 +696,26 @@ jQuery( function( $ ) {
 					}
 				}
 
-
 				if ( 'profile' == linkVars.context ) {
-
 					if ( 'undefined' !== typeof response.data.markup ) {
 						$( '#ld-profile' ).html( response.data.markup );
 					}
-
 				}
 
 				if ( 'course_info_courses' == linkVars.context ) {
-
 					if ( 'undefined' !== typeof response.data.markup ) {
 						$( '.ld-user-status' ).replaceWith( response.data.markup );
 					}
-
 				}
 
 				$( 'body' ).trigger( 'ld_has_paginated' );
 
 				initTooltips();
-
-			}
-		});
-
-	});
+			},
+		} );
+	} );
 
 	if ( $( '#learndash_timer' ).length ) {
-
 		var timer_el 		= jQuery( '#learndash_timer' );
 		var timer_seconds 	= timer_el.attr( 'data-timer-seconds' );
 		var timer_button_el = jQuery( timer_el.attr( 'data-button' ) );
@@ -804,18 +740,15 @@ jQuery( function( $ ) {
 
 		$( timer_button_el ).on( 'learndash-time-finished', function() {
 			$( timer_el ).hide();
-		});
-
+		} );
 	}
 
 	$( document ).on( 'learndash_video_disable_assets', function( event, status ) {
-
-		if ( 'undefined' == typeof learndash_video_data ) {
+		if ( 'undefined' === typeof learndash_video_data ) {
 			return false;
 		}
 
 		if ( 'BEFORE' == learndash_video_data.videos_shown ) {
-
 			if ( true == status ) {
 				$( '.ld-lesson-topic-list' ).hide();
 				$( '.ld-lesson-navigation' ).find( '#ld-nav-content-list-' + ldVars.postID ).addClass( 'user_has_no_access' );
@@ -826,14 +759,12 @@ jQuery( function( $ ) {
 				$( '.ld-lesson-navigation' ).find( '#ld-nav-content-list-' + ldVars.postID ).removeClass( 'user_has_no_access' );
 			}
 		}
-	});
+	} );
 
 	$( '.learndash-wrapper' ).on( 'click', '.wpProQuiz_questionListItem input[type="radio"]', function( e ) {
-
 		$( this ).parents( '.wpProQuiz_questionList' ).find( 'label' ).removeClass( 'is-selected' );
 		$( this ).parents( 'label' ).addClass( 'is-selected' );
-
-	});
+	} );
 
 	$( '.learndash-wrapper' ).on( 'click', '.wpProQuiz_questionListItem input[type="checkbox"]', function( e ) {
 		if ( jQuery( e.currentTarget ).is( ':checked' ) ) {
@@ -841,10 +772,9 @@ jQuery( function( $ ) {
 		} else {
 			$( this ).parents( 'label' ).removeClass( 'is-selected' );
 		}
-	});
+	} );
 
 	function learndash_ld30_show_user_statistic( e ) {
-
 		e.preventDefault();
 
 		var refId 				= 	jQuery( this ).data( 'ref-id' );
@@ -852,15 +782,15 @@ jQuery( function( $ ) {
 		var userId 				= 	jQuery( this ).data( 'user-id' );
 		var statistic_nonce 	= 	jQuery( this ).data( 'statistic-nonce' );
 		var post_data = {
-			'action': 'wp_pro_quiz_admin_ajax_statistic_load_user',
-			'func': 'statisticLoadUser',
-			'data': {
-				'quizId': quizId,
-				'userId': userId,
-				'refId': refId,
-				'statistic_nonce': statistic_nonce,
-				'avg': 0
-			}
+			action: 'wp_pro_quiz_admin_ajax_statistic_load_user',
+			func: 'statisticLoadUser',
+			data: {
+				quizId: quizId,
+				userId: userId,
+				refId: refId,
+				statistic_nonce: statistic_nonce,
+				avg: 0,
+			},
 		};
 
 		jQuery( '#wpProQuiz_user_overlay, #wpProQuiz_loadUserData' ).show();
@@ -868,18 +798,16 @@ jQuery( function( $ ) {
 
 		//console.log('- learndash.js');
 
-		jQuery.ajax({
+		jQuery.ajax( {
 			type: 'POST',
-			url: ajaxurl,
+			url: ldVars.ajaxurl,
 			dataType: 'json',
 			cache: false,
 			data: post_data,
 			error: function( jqXHR, textStatus, errorThrown ) {
 			},
 			success: function( reply_data ) {
-
 				if ( 'undefined' !== typeof reply_data.html ) {
-
 					content.html( reply_data.html );
 					jQuery( '#wpProQuiz_user_content' ).show();
 
@@ -888,33 +816,32 @@ jQuery( function( $ ) {
 
 					jQuery( '#wpProQuiz_loadUserData' ).hide();
 
-					content.find( '.statistic_data' ).click( function() {
+					content.find( '.statistic_data' ).on( 'click', function() {
 						jQuery( this ).parents( 'tr' ).next().toggle( 'fast' );
 
 						return false;
-					});
+					} );
 				}
-			}
-		});
+			},
+		} );
 
-		jQuery( '#wpProQuiz_overlay_close' ).click( function() {
+		jQuery( '#wpProQuiz_overlay_close' ).on( 'click', function() {
 			jQuery( '#wpProQuiz_user_overlay' ).hide();
-		});
+		} );
 	}
 
 	function learndashSetMaxHeight( elm ) {
-
 		var totalHeight = 0;
 
 		elm.find( '> *' ).each( function() {
 			totalHeight += $( this ).outerHeight();
-		});
+		} );
 
 		elm.attr( 'data-height', '' + ( totalHeight + 50 ) + '' );
 
-		elm.css({
-			'max-height': totalHeight + 50
-		});
+		elm.css( {
+			'max-height': totalHeight + 50,
+		} );
 	}
 
 	/**
@@ -925,7 +852,7 @@ jQuery( function( $ ) {
 		if ( jQuery( '.learndash-wrapper .ld-focus' ).length ) {
 			var sidebar_wrapper = jQuery( '.learndash-wrapper .ld-focus .ld-focus-sidebar-wrapper' );
 
-			var sidebar_curent_topic  = jQuery( '.learndash-wrapper .ld-focus .ld-focus-sidebar-wrapper .ld-is-current-item' );
+			var sidebar_curent_topic = jQuery( '.learndash-wrapper .ld-focus .ld-focus-sidebar-wrapper .ld-is-current-item' );
 			if ( ( 'undefined' !== typeof sidebar_curent_topic ) && ( sidebar_curent_topic.length ) ) {
 				var sidebar_scrollTo = sidebar_curent_topic;
 			} else {
@@ -953,21 +880,19 @@ jQuery( function( $ ) {
 				var current_item_height = jQuery( sidebar_scrollTo ).height();
 				offset_top -= current_item_height;
 
-				sidebar_wrapper.animate({
-					scrollTop: sidebar_scrollTo.offset().top - offset_top
+				sidebar_wrapper.animate( {
+					scrollTop: sidebar_scrollTo.offset().top - offset_top,
 				}, 1000 );
 			}
 		}
 	}
-});
+} );
 
 function ldGetUrlVars() {
-
 	var vars = {};
 	var parts = window.location.href.replace( /[?&]+([^=&]+)=([^&]*)/gi, function( m, key, value ) {
 		vars[key] = value;
-	});
+	} );
 
 	return vars;
-
 }

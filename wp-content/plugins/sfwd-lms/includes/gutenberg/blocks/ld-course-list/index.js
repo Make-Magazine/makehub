@@ -22,11 +22,10 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	InspectorControls,
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -34,9 +33,13 @@ const {
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-course-list',
-    {
+	'learndash/ld-course-list',
+	{
 		// translators: placeholder: Course.
 		title: sprintf(_x('LearnDash %s List', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')),
 		// translators: placeholder: Courses.
@@ -51,7 +54,7 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
+		attributes: {
 			orderby: {
 				type: 'string',
 				default: 'ID'
@@ -128,8 +131,8 @@ registerBlockType(
 				default: false
 			},
 			col: {
-				type: 'string',
-				default: (ldlms_settings['plugins']['learndash-course-grid']['enabled']['col_default'] || 3),
+				type: 'integer',
+				default: (ldlms_settings['plugins']['learndash-course-grid']['col_default'] || 3),
 			},
 			preview_show: {
 				type: 'boolean',
@@ -140,9 +143,9 @@ registerBlockType(
 				default: 0
 			},
 		},
-        edit: function( props ) {
+		edit: function( props ) {
 			const { attributes: { orderby, order, per_page, mycourses, status, show_content, show_thumbnail, course_category_name, course_cat, course_categoryselector, course_tag, course_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, progress_bar, col, preview_user_id, preview_show, example_show },
-            	setAttributes } = props;
+				setAttributes } = props;
 
 			let field_show_content = '';
 			let field_show_thumbnail = '';
@@ -175,9 +178,9 @@ registerBlockType(
 						/>
 						<RangeControl
 							label={__('Columns', 'learndash')}
-							value={col || ldlms_settings['plugins']['learndash-course-grid']['enabled']['col_default']}
+							value={col || ldlms_settings['plugins']['learndash-course-grid']['col_default']}
 							min={1}
-							max={ldlms_settings['plugins']['learndash-course-grid']['enabled']['col_max']}
+							max={ldlms_settings['plugins']['learndash-course-grid']['col_max']}
 							step={1}
 							onChange={col => setAttributes({ col })}
 						/>
@@ -309,7 +312,7 @@ registerBlockType(
 					{field_show_thumbnail}
 				</PanelBody>
 			);
-			
+
 			let panel_course_category_section = '';
 			if ( ldlms_settings['settings']['courses_taxonomies']['ld_course_category'] === 'yes' ) {
 				let panel_course_category_section_open = false;
@@ -472,7 +475,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					{ panelbody_header }
 					{ panel_course_grid_section}
 					{ panel_course_category_section }
@@ -488,6 +491,7 @@ registerBlockType(
 					return <ServerSideRender
 					block="learndash/ld-course-list"
 					attributes={ attributes }
+					key="learndash/ld-course-list"
 					/>
 				} else {
 					return __( '[ld_course_list] shortcode output shown here', 'learndash' );
@@ -498,9 +502,9 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render( props.attributes )
 			];
-        },
+		},
 
-        save: props => {
+		save: props => {
 		}
 	},
 );

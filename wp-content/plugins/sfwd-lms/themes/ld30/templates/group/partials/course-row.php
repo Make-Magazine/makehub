@@ -24,7 +24,7 @@ $progress = learndash_course_progress(
 );
 
 $has_group_access = false;
-$status = '';
+$status           = '';
 
 if ( $has_access ) {
 	if ( learndash_is_user_in_group( $user_id, $group_id ) ) {

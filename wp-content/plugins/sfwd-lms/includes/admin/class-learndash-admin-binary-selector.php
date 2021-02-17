@@ -173,11 +173,11 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 			}
 
 			?>
-			<div id="<?php echo esc_attr( $this->args['html_id'] ); ?>" data-nonce="<?php echo wp_create_nonce( 'learndash-binary-selector-' . get_current_user_id() ); ?>" class="<?php echo esc_attr( $this->args['html_class'] ); ?> learndash-binary-selector" data="<?php echo htmlspecialchars( wp_json_encode( $element_data ) ); ?>">
+			<div id="<?php echo esc_attr( $this->args['html_id'] ); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-binary-selector-' . get_current_user_id() ) ); ?>" class="<?php echo esc_attr( $this->args['html_class'] ); ?> learndash-binary-selector" data="<?php echo htmlspecialchars( wp_json_encode( $element_data ) ); ?>">
 				<input type="hidden" class="learndash-binary-selector-form-element" name="<?php echo esc_attr( $this->args['html_name'] ); ?>" value="<?php echo htmlspecialchars( wp_json_encode( $this->args['selected_ids'], JSON_FORCE_OBJECT ) ); ?>"/>
-				<input type="hidden" name="<?php echo esc_attr( $this->args['html_id'] ); ?>-nonce" value="<?php echo wp_create_nonce( $this->args['html_id'] ); ?>" />
+				<input type="hidden" name="<?php echo esc_attr( $this->args['html_id'] ); ?>-nonce" value="<?php echo esc_attr( wp_create_nonce( $this->args['html_id'] ) ); ?>" />
 				<input type="hidden" name="<?php echo esc_attr( $this->args['html_id'] ); ?>-changed" class="learndash-binary-selector-form-changed" value="" />
-				
+
 				<?php $this->show_selections_title(); ?>
 				<table class="learndash-binary-selector-table">
 				<tr>
@@ -247,7 +247,7 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 					<img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . 'assets/images/arrow_right.png' ); ?>" />
 				<?php } else { ?>
 					<img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . 'assets/images/arrow_left.png' ); ?>" />
-				<?php } ?>				
+				<?php } ?>
 				</a>
 			</td>
 			<?php
@@ -286,7 +286,7 @@ if ( ! class_exists( 'Learndash_Binary_Selector' ) ) {
 		 */
 		protected function show_selections_section_items( $position = '' ) {
 			if ( $this->is_valid_position( $position ) ) {
-				echo $this->build_options_html( $position );
+				echo $this->build_options_html( $position ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 			}
 		}
 
@@ -564,7 +564,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 						 */
 						$user_name = apply_filters( 'learndash_binary_selector_item', $user->display_name . ' (' . $user->user_login . ')', $user, $position, $this->selector_class );
 						if ( ! empty( $user_name ) ) {
-							$user_name = strip_tags( $user_name );
+							$user_name = wp_strip_all_tags( $user_name );
 						} else {
 							$user_name = $user->display_name . ' (' . $user->user_login . ')';
 						}
@@ -573,7 +573,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 						$disabled_state = '';
 
 						if ( ( is_array( $this->args['selected_ids'] ) ) && ( ! empty( $this->args['selected_ids'] ) ) ) {
-							if ( in_array( $user->ID, $this->args['selected_ids'] ) ) {
+							if ( in_array( $user->ID, $this->args['selected_ids'], true ) ) {
 								$disabled_class = 'learndash-binary-selector-item-disabled';
 								if ( 'left' === $position ) {
 									$disabled_state = ' disabled="disabled" ';
@@ -636,7 +636,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Users' ) ) && ( class_exists( 
 				 * @param string $selector_class Class for Binary selector.
 				 */
 				if ( apply_filters( 'learndash_exclude_user_no_role', true, $this->args, $position, $this->selector_class ) ) {
-					$blog_prefix = $wpdb->get_blog_prefix( $wpdb->blogid );
+					$blog_prefix              = $wpdb->get_blog_prefix( $wpdb->blogid );
 					$this->args['meta_query'] = array(
 						'relation' => 'OR',
 						array(
@@ -1004,7 +1004,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 						/** This filter is documented in includes/admin/class-learndash-admin-binary-selector.php */
 						$item_title = apply_filters( 'learndash_binary_selector_item', $post->post_title, $post, $position, $this->selector_class );
 						if ( ! empty( $item_title ) ) {
-							$item_title = strip_tags( $item_title );
+							$item_title = wp_strip_all_tags( $item_title );
 						} else {
 							$item_title = $post->post_title;
 						}
@@ -1017,7 +1017,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 						}
 
 						if ( ( is_array( $this->args['selected_ids'] ) ) && ( ! empty( $this->args['selected_ids'] ) ) ) {
-							if ( in_array( $post->ID, $this->args['selected_ids'] ) ) {
+							if ( in_array( $post->ID, $this->args['selected_ids'], true ) ) {
 								$disabled_class = 'learndash-binary-selector-item-disabled';
 								if ( 'left' == $position ) {
 									$disabled_state = ' disabled="disabled" ';
@@ -1065,7 +1065,7 @@ if ( ( ! class_exists( 'Learndash_Binary_Selector_Posts' ) ) && ( class_exists( 
 		 * @param string   $search Search pattern.
 		 * @param WP_Query $wp_query WP_Query object.
 		 */
-		public function search_filter_by_title( $search = '', WP_Query $wp_query ) {
+		public function search_filter_by_title( $search, WP_Query $wp_query ) {
 			if ( ! empty( $search ) && ! empty( $wp_query->query_vars['search_terms'] ) ) {
 				global $wpdb;
 
@@ -1438,7 +1438,7 @@ function learndash_binary_selector_pager_ajax() {
 	}
 
 	if ( ! empty( $reply_data ) ) {
-		echo json_encode( $reply_data );
+		echo wp_json_encode( $reply_data );
 	}
 
 	wp_die(); // this is required to terminate immediately and return a proper response.

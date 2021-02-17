@@ -2,35 +2,35 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Helper_Export {
-	
+
 	const WPPROQUIZ_EXPORT_VERSION = 4;
-	
+
 	public function export( $ids ) {
 		$export = array();
 
-		$export['version'] = WPPROQUIZ_VERSION;
-		$export['exportVersion'] = WpProQuiz_Helper_Export::WPPROQUIZ_EXPORT_VERSION;
-		$export['ld_version'] = LEARNDASH_VERSION;
+		$export['version']                       = WPPROQUIZ_VERSION;
+		$export['exportVersion']                 = self::WPPROQUIZ_EXPORT_VERSION;
+		$export['ld_version']                    = LEARNDASH_VERSION;
 		$export['LEARNDASH_SETTINGS_DB_VERSION'] = LEARNDASH_SETTINGS_DB_VERSION;
-		$export['date'] = time();
+		$export['date']                          = time();
 
-		$v = str_pad( WPPROQUIZ_VERSION, 5, '0', STR_PAD_LEFT );
-		$v .= str_pad( WpProQuiz_Helper_Export::WPPROQUIZ_EXPORT_VERSION, 5, '0', STR_PAD_LEFT );
+		$v    = str_pad( WPPROQUIZ_VERSION, 5, '0', STR_PAD_LEFT );
+		$v   .= str_pad( self::WPPROQUIZ_EXPORT_VERSION, 5, '0', STR_PAD_LEFT );
 		$code = 'WPQ' . $v;
 
 		$export['master'] = $this->getQuizMaster( $ids );
 
-		foreach ($export['master'] as $master ) {
-			$export['question'][ $master->getId() ] = $this->getQuestion( $master );
-			$export['forms'][ $master->getId() ] = $this->getForms( $master->getId() );
-			$export['post'][ $master->getId() ] = $this->getPostContent( $master );
+		foreach ( $export['master'] as $master ) {
+			$export['question'][ $master->getId() ]  = $this->getQuestion( $master );
+			$export['forms'][ $master->getId() ]     = $this->getForms( $master->getId() );
+			$export['post'][ $master->getId() ]      = $this->getPostContent( $master );
 			$export['post_meta'][ $master->getId() ] = $this->getPostMeta( $master );
 		}
 
 		if ( ( defined( 'LEARNDASH_QUIZ_EXPORT_LEGACY' ) ) && ( true === LEARNDASH_QUIZ_EXPORT_LEGACY ) ) {
-			return $code.base64_encode( serialize( $export ) );
+			return $code . base64_encode( serialize( $export ) );
 		} else {
 			if ( ( isset( $export['master'] ) ) && ( ! empty( $export['master'] ) ) ) {
 				foreach ( $export['master'] as $q_idx => $quiz ) {
@@ -72,7 +72,7 @@ class WpProQuiz_Helper_Export {
 				}
 			}
 
-			return $code.base64_encode( wp_json_encode( $export ) );
+			return $code . base64_encode( wp_json_encode( $export ) );
 		}
 	}
 
@@ -104,7 +104,7 @@ class WpProQuiz_Helper_Export {
 			return $m->fetchAll( $quiz_pro );
 		}
 	}
-	
+
 	public function getPostContent( $quiz_pro ) {
 		if ( ( ! empty( $quiz_pro ) ) && ( is_a( $quiz_pro, 'WpProQuiz_Model_Quiz' ) ) ) {
 			$quiz_post_id = $quiz_pro->getPostId();
@@ -119,9 +119,9 @@ class WpProQuiz_Helper_Export {
 				 */
 				$post_export_keys = apply_filters( 'learndash_quiz_export_post_keys', $post_export_keys, $quiz_post_id );
 				if ( ! empty( $post_export_keys ) ) {
-					$quiz_post = get_post( $quiz_post_id, ARRAY_A );
+					$quiz_post      = get_post( $quiz_post_id, ARRAY_A );
 					$quiz_post_keys = array();
-					foreach( $post_export_keys as $export_key ) {
+					foreach ( $post_export_keys as $export_key ) {
 						if ( isset( $quiz_post[ $export_key ] ) ) {
 							$quiz_post_keys[ $export_key ] = $quiz_post[ $export_key ];
 						}
@@ -131,7 +131,7 @@ class WpProQuiz_Helper_Export {
 			}
 		}
 	}
-	
+
 	public function getPostMeta( $quiz_pro ) {
 		if ( ( ! empty( $quiz_pro ) ) && ( is_a( $quiz_pro, 'WpProQuiz_Model_Quiz' ) ) ) {
 			$quiz_post_id = $quiz_pro->getPostId();
@@ -153,8 +153,8 @@ class WpProQuiz_Helper_Export {
 							unset( $all_post_meta[ $_key ] );
 						} else {
 							if ( is_array( $_data ) ) {
-								foreach( $_data as $_idx => $_d ) {
-									$all_post_meta[ $_key ][$_idx] = maybe_unserialize( $_d );
+								foreach ( $_data as $_idx => $_d ) {
+									$all_post_meta[ $_key ][ $_idx ] = maybe_unserialize( $_d );
 								}
 							} else {
 								$all_post_meta[ $_key ] = maybe_unserialize( $_data );
@@ -167,9 +167,9 @@ class WpProQuiz_Helper_Export {
 		}
 	}
 
-	private function getForms($quizId) {
+	private function getForms( $quizId ) {
 		$formMapper = new WpProQuiz_Model_FormMapper();
 
-		return $formMapper->fetch($quizId);
+		return $formMapper->fetch( $quizId );
 	}
 }

@@ -67,9 +67,10 @@ $group_course_row_class = 'ld-item-list-item ld-expandable ld-item-lesson-item l
 			learndash_status_icon( $course_status, get_post_type(), null, true );
 			?>
 			<div class="ld-item-title">
-				<?php
-				echo wp_kses_post( $course->post_title );
-				?>
+			<?php
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				echo wp_kses_post( apply_filters( 'the_title', $course->post_title, $course->ID ) );
+			?>
 			</div> <!--/.ld-item-title-->
 		</a>
 
@@ -87,17 +88,14 @@ $group_course_row_class = 'ld-item-list-item ld-expandable ld-item-lesson-item l
 		?>
 
 		<div class="ld-item-details">
-			<?php
-
-			?>
-		</div> <!--/.ld-item-details-->
+					</div> <!--/.ld-item-details-->
 
 		<?php
 		/**
 		 * Action to add custom content after the attribute bubbles
 		 *
 		 * @since 3.2.0
-		 * 
+		 *
 		 * @param int $course_id Course ID.
 		 * @param int $group_id  Group ID.
 		 * @param int $user_id   User ID.

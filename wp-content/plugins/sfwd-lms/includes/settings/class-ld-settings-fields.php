@@ -21,7 +21,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 *
 		 * @var array
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Define the field type 'text', 'select', etc. This is unique.
@@ -122,7 +122,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				foreach ( $section_fields as $field_id => $field ) {
 					if ( ( isset( $field['args']['parent_setting'] ) ) && ( ! empty( $field['args']['parent_setting'] ) ) ) {
 						// if we have a 'parent_setting'. Then try and figure out if it was the same as the last one.
-						if ( ( empty( $parents_settings ) ) || ( ! in_array( $field['args']['parent_setting'], $parents_settings ) ) ) {
+						if ( ( empty( $parents_settings ) ) || ( ! in_array( $field['args']['parent_setting'], $parents_settings, true ) ) ) {
 							$parent_setting_slug = $field['args']['parent_setting'];
 							if ( ( isset( $section_fields[ $parent_setting_slug ]['args']['child_section_state'] ) ) && ( 'open' === $section_fields[ $parent_setting_slug ]['args']['child_section_state'] ) ) {
 								$child_setting_state = 'open';
@@ -131,11 +131,11 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 							}
 							$parents_settings[] = $field['args']['parent_setting'];
 
-							echo '<div class="ld-settings-sub ld-settings-sub-level-' . count( $parents_settings ) . ' ld-settings-sub-' . $field['args']['parent_setting'] . ' ld-settings-sub-state-' . $child_setting_state . '" data-parent-field="' . $field['args']['setting_option_key'] . '_' . $field['args']['parent_setting'] . '_field">';
+							echo '<div class="ld-settings-sub ld-settings-sub-level-' . count( $parents_settings ) . ' ld-settings-sub-' . esc_attr( $field['args']['parent_setting'] ) . ' ld-settings-sub-state-' . esc_attr( $child_setting_state ) . '" data-parent-field="' . esc_attr( $field['args']['setting_option_key'] ) . '_' . esc_attr( $field['args']['parent_setting'] ) . '_field">';
 						} else {
-							if ( $parents_settings[ count( $parents_settings ) - 1 ] === $field['args']['parent_setting'] ) {
+							if ( $parents_settings[ count( $parents_settings ) - 1 ] === $field['args']['parent_setting'] ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 
-							} elseif ( in_array( $field['args']['parent_setting'], $parents_settings ) ) {
+							} elseif ( in_array( $field['args']['parent_setting'], $parents_settings, true ) ) {
 								while ( ! empty( $parents_settings ) ) {
 									$p_set = $parents_settings[ count( $parents_settings ) - 1 ];
 									if ( $p_set !== $field['args']['parent_setting'] ) {
@@ -210,7 +210,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 			}
 
 			if ( ( isset( $field['args']['desc_before'] ) ) && ( ! empty( $field['args']['desc_before'] ) ) ) {
-				echo wptexturize( $field['args']['desc_before'] );
+				echo wp_kses_post( wptexturize( $field['args']['desc_before'] ) );
 			}
 			if ( ( isset( $field['args']['row_disabled'] ) ) && ( true === $field['args']['row_disabled'] ) ) {
 				$field_class .= ' learndash-row-disabled';
@@ -225,10 +225,10 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				 */
 				$output = apply_filters( 'learndash_settings_row_outside_before', '', $field['args'] );
 				if ( ! empty( $output ) ) {
-					echo $output;
+					echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 				}
 				?>
-				<div id="<?php echo $field['args']['id']; ?>_field" class="sfwd_input <?php echo $field_class; ?> <?php echo $field_error_class; ?>">
+				<div id="<?php echo esc_attr( $field['args']['id'] ); ?>_field" class="sfwd_input <?php echo esc_attr( $field_class ); ?> <?php echo esc_attr( $field_error_class ); ?>">
 					<?php
 						/**
 						 * Filters the HTML content to be echoed before inside row settings.
@@ -238,7 +238,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						 */
 						$output = apply_filters( 'learndash_settings_row_inside_before', '', $field['args'] );
 					if ( ! empty( $output ) ) {
-						echo $output;
+						echo $output;// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 					};
 					?>
 					<?php
@@ -256,7 +256,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						 */
 						$output = apply_filters( 'learndash_settings_row_label_outside_before', '', $field['args'] );
 						if ( ! empty( $output ) ) {
-							echo $output;
+							echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						}
 						?>
 						<span class="sfwd_option_label
@@ -264,7 +264,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						if ( ( isset( $field['args']['label_full'] ) ) && ( true === $field['args']['label_full'] ) ) {
 							echo ' sfwd_option_label_full';
 						}
-							?>
+						?>
 							">
 							<?php
 							/**
@@ -275,37 +275,37 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 							 */
 								$output = apply_filters( 'learndash_settings_row_label_inside_before', '', $field['args'] );
 							if ( ! empty( $output ) ) {
-								echo $output;
+								echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 							};
 							?>
-							<a class="sfwd_help_text_link" 
+							<a class="sfwd_help_text_link"
 								<?php if ( ( isset( $field['args']['help_text'] ) ) && ( ! empty( $field['args']['help_text'] ) ) ) { ?>
 									style="cursor:pointer;" title="<?php esc_html_e( 'Click for Help!', 'learndash' ); ?>"
-									onclick="toggleVisibility('<?php echo $field['args']['id']; ?>_tip');"
+									onclick="toggleVisibility('<?php echo esc_attr( $field['args']['id'] ); ?>_tip');"
 								<?php } ?>
 								>
-								<?php if ( ( isset( $field['args']['help_text'] ) ) && ( ! empty( $field['args']['help_text'] ) ) ) { ?>	
+								<?php if ( ( isset( $field['args']['help_text'] ) ) && ( ! empty( $field['args']['help_text'] ) ) ) { ?>
 									<img alt="" src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL ); ?>assets/images/question.png" />
-								<?php } ?> 
-								
+								<?php } ?>
+
 								<label for="<?php echo esc_attr( $field['args']['label_for'] ); ?>" class="sfwd_label">
-														<?php
-														if ( ( isset( $field['args']['label'] ) ) && ( ! empty( $field['args']['label'] ) ) ) {
-															echo $field['args']['label'];
-														}
-														if ( isset( $field['args']['required'] ) ) {
-															?>
-															<span class="learndash_required_field"><abbr title="<?php esc_html_e( 'Required', 'learndash' ); ?>">*</abbr></span>
+								<?php
+								if ( ( isset( $field['args']['label'] ) ) && ( ! empty( $field['args']['label'] ) ) ) {
+									echo esc_html( $field['args']['label'] );
+								}
+								if ( isset( $field['args']['required'] ) ) {
+									?>
+									<span class="learndash_required_field"><abbr title="<?php esc_html_e( 'Required', 'learndash' ); ?>">*</abbr></span>
 									<?php
-														}
+								}
 								?>
 								</label>
 							</a>
 							<?php
 							if ( ( isset( $field['args']['label_description'] ) ) && ( ! empty( $field['args']['label_description'] ) ) ) {
-									?>
-								 <span class="descripton"><?php echo $field['args']['label_description']; ?></span>
-									<?php
+								?>
+								<span class="descripton"><?php echo wp_kses_post( $field['args']['label_description'] ); ?></span>
+								<?php
 							}
 
 							if ( ( isset( $field['args']['help_text'] ) ) && ( ! empty( $field['args']['help_text'] ) ) ) {
@@ -315,8 +315,8 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 									$help_style = ' style="display: none;" ';
 								}
 								?>
-								<div id="<?php echo $field['args']['id']; ?>_tip" class="sfwd_help_text_div" <?php echo $help_style; ?>>
-									<label class="sfwd_help_text"><?php echo $field['args']['help_text']; ?></label>
+								<div id="<?php echo esc_attr( $field['args']['id'] ); ?>_tip" class="sfwd_help_text_div" <?php echo $help_style; ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $help_style hardcoded above. ?>
+									<label class="sfwd_help_text"><?php echo wp_kses_post( $field['args']['help_text'] ); ?></label>
 								</div>
 								<?php
 							}
@@ -330,7 +330,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 								 */
 								$output = apply_filters( 'learndash_settings_row_label_inside_after', '', $field['args'] );
 							if ( ! empty( $output ) ) {
-								echo $output;
+								echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 							};
 							?>
 						</span>
@@ -343,7 +343,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 								 */
 								$output = apply_filters( 'learndash_settings_row_label_outside_after', '', $field['args'] );
 							if ( ! empty( $output ) ) {
-								echo $output;
+								echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 							};
 							?>
 					<?php } ?>
@@ -356,7 +356,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						 */
 						$output = apply_filters( 'learndash_settings_row_input_outside_before', '', $field['args'] );
 					if ( ! empty( $output ) ) {
-						echo $output;
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 					};
 					?>
 					<span class="sfwd_option_input
@@ -364,7 +364,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 					if ( ( isset( $field['args']['input_full'] ) ) && ( true === $field['args']['input_full'] ) ) {
 						echo ' sfwd_option_input_full';
 					}
-						?>
+					?>
 						">
 						<?php
 							/**
@@ -375,7 +375,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 							 */
 							$output = apply_filters( 'learndash_settings_row_input_inside_before', '', $field['args'] );
 						if ( ! empty( $output ) ) {
-							echo $output;
+							echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						}
 
 						if ( ( ! isset( $field['args']['input_show'] ) ) || ( true === $field['args']['input_show'] ) ) {
@@ -393,7 +393,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						 */
 						$output = apply_filters( 'learndash_settings_row_input_inside_after', '', $field['args'] );
 						if ( ! empty( $output ) ) {
-							echo $output;
+							echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						};
 						?>
 					</span>
@@ -406,7 +406,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						 */
 						$output = apply_filters( 'learndash_settings_row_input_outside_after', '<p class="ld-clear"></p>', $field['args'] );
 					if ( ! empty( $output ) ) {
-						echo $output;
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 					};
 					?>
 					<?php
@@ -414,7 +414,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 						echo '<span class="sfwd_row_description sfwd_row_description_after">' . esc_html( $field['args']['row_description_after'] ) . '</span>';
 					}
 					?>
-					
+
 					<?php
 					/**
 					 * Filters the HTML content to be echoed after inside row settings.
@@ -424,7 +424,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 					 */
 					$output = apply_filters( 'learndash_settings_row_inside_after', '', $field['args'] );
 					if ( ! empty( $output ) ) {
-						echo $output;
+						echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 					}
 					?>
 				</div>
@@ -437,7 +437,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				 */
 				$output = apply_filters( 'learndash_settings_row_outside_after', '', $field['args'] );
 				if ( ! empty( $output ) ) {
-					echo $output;
+					echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 				}
 			} else {
 				if ( ( isset( $field['callback'] ) ) && ( ! empty( $field['callback'] ) ) && ( is_callable( $field['callback'] ) ) ) {
@@ -445,7 +445,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 				}
 			}
 			if ( ( isset( $field['args']['desc_after'] ) ) && ( ! empty( $field['args']['desc_after'] ) ) ) {
-				echo wptexturize( $field['args']['desc_after'] );
+				echo wp_kses_post( wptexturize( $field['args']['desc_after'] ) );
 			}
 		}
 
@@ -457,7 +457,6 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @param array $field_args main field args array.
 		 */
 		public function create_section_field( $field_args = array() ) {
-			return;
 		}
 
 		/**
@@ -497,6 +496,44 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 
 			if ( isset( $field_args['required'] ) ) {
 				$field_attribute .= ' required="' . $field_args['required'] . '" ';
+			}
+
+			return $field_attribute;
+		}
+
+		/**
+		 * Create the HTML output from the field args 'input_label_before' attribute.
+		 *
+		 * @since 3.2
+		 *
+		 * @param array $field_args main field args array. should contain element for 'attrs'.
+		 *
+		 * @return string of HTML representation of the attrs array attributes.
+		 */
+		public function get_field_attribute_label_before( $field_args = array() ) {
+			$field_attribute = '';
+
+			if ( ( isset( $field_args['input_label_before'] ) ) && ( ! empty( $field_args['input_label_before'] ) ) ) {
+				$field_attribute .= $field_args['input_label_before'];
+			}
+
+			return $field_attribute;
+		}
+
+		/**
+		 * Create the HTML output from the field args 'input_mask_before' attribute.
+		 *
+		 * @since 3.2
+		 *
+		 * @param array $field_args main field args array.
+		 *
+		 * @return string of HTML representation of the attrs array attributes.
+		 */
+		public function get_field_attribute_mask_before( $field_args = array() ) {
+			$field_attribute = '';
+
+			if ( ( isset( $field_args['input_mask_before'] ) ) && ( ! empty( $field_args['input_mask_before'] ) ) ) {
+				$field_attribute .= ' value-input-mask-before="' . $field_args['input_mask_before'] . '" ';
 			}
 
 			return $field_attribute;
@@ -751,54 +788,7 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 */
 		public function validate_section_field( $val, $key, $args = array() ) {
 			if ( ! empty( $val ) ) {
-				//if ( isset( $args['field']['type'] ) ) {
-				//	switch ( $args['field']['type'] ) {
-					//	case 'wpeditor':
-					//	case 'html':
-					//		//$val = wp_filter_post_kses( $val );
-					//		$val = wp_check_invalid_utf8( $val );
-					//		if ( ! empty( $val ) ) {
-					//			//$val = sanitize_post_field( $args['setting_option_key'] . '_' . $key, $val, 0, 'db' );
-					//			$val = sanitize_post_field( 'post_content', $val, 0, 'db' );
-					//		}
-					//		break;
-					//
-					//	case 'number':
-					//		$val = intval( $val );
-					//		break;
-					//
-					//  case 'checkbox-switch':
-					//	case 'radio':
-					//		if ( ( isset( $args['field']['options'] ) ) && ( ! empty( $args['field']['options'] ) ) ) {
-					//			if ( ! isset( $args['field']['options'][ $val ] ) ) {
-					//				$val = '';
-					//			}
-					//		}
-					//		break;
-					//
-					//	case 'multiselect':
-					//		if ( ( is_array( $val ) ) && ( ! empty( $val ) ) ) {
-					//			$val = array_map( $args['field']['value_type'], $val );
-					//		} else if ( ! empty( $val ) ) {
-					//			$val = call_user_func( $args['field']['value_type'], $val );
-					//		} else {
-					//			$val = '';
-					//		}
-					//		break;
-					//
-					//	default:
-					//		//$val = sanitize_text_field( $val );
-					//		if ( ! empty( $val ) ) {
-					//			$val = call_user_func( $args['field']['value_type'], $val );
-					//		}
-					//		break;
-					//}
-				//} else {
-					//$val = sanitize_text_field( $val );
-				//	if ( ! empty( $val ) ) {
 						$val = call_user_func( $args['field']['value_type'], $val );
-				//	}
-				//}
 			}
 
 			return $val;
@@ -816,6 +806,32 @@ if ( ! class_exists( 'LearnDash_Settings_Fields' ) ) {
 		 * @return mixed $val validated value.
 		 */
 		public function value_section_field( $val = '', $key = '', $args = array(), $post_args = array() ) {
+			return $val;
+		}
+
+		/**
+		 * Convert Settings Field value to REST value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 * @param object $request    Request object.
+		 */
+		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
+			return $val;
+		}
+
+		/**
+		 * Convert REST submit value to internal Settings Field acceptable value.
+		 *
+		 * @since 3.2
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 */
+		public function rest_value_to_field_value( $val = '', $key = '', $field_args = array() ) {
 			return $val;
 		}
 	}

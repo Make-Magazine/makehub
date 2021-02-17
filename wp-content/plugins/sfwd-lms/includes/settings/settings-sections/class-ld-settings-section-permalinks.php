@@ -128,58 +128,38 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wp_rewrite;
 			if ( $wp_rewrite->using_permalinks() ) {
 				$this->setting_option_fields = array(
-					'courses'     => array(
+					'courses' => array(
 						'name'  => 'courses',
 						'type'  => 'text',
-						'label' => sprintf(
-							// translators: placeholder: Courses.
-							esc_html_x( '%s', 'placeholder: Courses', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'courses' )
-						),
+						'label' => LearnDash_Custom_Label::get_label( 'courses' ),
 						'value' => $this->setting_option_values['courses'],
 						'class' => 'regular-text',
 					),
-					'lessons'     => array(
+					'lessons' => array(
 						'name'  => 'lessons',
 						'type'  => 'text',
-						'label' => sprintf(
-							// translators: placeholder: Lessons.
-							esc_html_x( '%s', 'placeholder: Lessons', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'lessons' )
-						),
+						'label' => LearnDash_Custom_Label::get_label( 'lessons' ),
 						'value' => $this->setting_option_values['lessons'],
 						'class' => 'regular-text',
 					),
-					'topics'      => array(
+					'topics'  => array(
 						'name'  => 'topics',
 						'type'  => 'text',
-						'label' => sprintf(
-							// translators: placeholder: Topics.
-							esc_html_x( '%s', 'placeholder: Topics', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'topics' )
-						),
+						'label' => LearnDash_Custom_Label::get_label( 'topics' ),
 						'value' => $this->setting_option_values['topics'],
 						'class' => 'regular-text',
 					),
-					'quizzes'     => array(
+					'quizzes' => array(
 						'name'  => 'quizzes',
 						'type'  => 'text',
-						'label' => sprintf(
-							// translators: placeholder: Quizzes.
-							esc_html_x( '%s', 'placeholder: Quizzes', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'quizzes' )
-						),
+						'label' => LearnDash_Custom_Label::get_label( 'quizzes' ),
 						'value' => $this->setting_option_values['quizzes'],
 						'class' => 'regular-text',
 					),
-					'groups'     => array(
+					'groups'  => array(
 						'name'  => 'groups',
 						'type'  => 'text',
-						'label' => sprintf(
-							// translators: placeholder: Groups.
-							esc_html_x( '%s', 'placeholder: Groups', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'groups' )
-						),
+						'label' => LearnDash_Custom_Label::get_label( 'groups' ),
 						'value' => $this->setting_option_values['groups'],
 						'class' => 'regular-text',
 					),
@@ -188,12 +168,12 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			if ( $wp_rewrite->using_permalinks() ) {
 				$example_regular_topic_url = get_option( 'home' ) . '/' . $this->setting_option_values['topics'] . '/topic-slug';
-				$example_nested_topic_url = get_option( 'home' ) . '/' . $this->setting_option_values['courses'] . '/course-slug/' . $this->setting_option_values['lessons'] . '/lesson-slug/' . $this->setting_option_values['topics'] . '/topic-slug';
+				$example_nested_topic_url  = get_option( 'home' ) . '/' . $this->setting_option_values['courses'] . '/course-slug/' . $this->setting_option_values['lessons'] . '/lesson-slug/' . $this->setting_option_values['topics'] . '/topic-slug';
 			} else {
 				$example_regular_topic_url = add_query_arg( learndash_get_post_type_slug( 'topic' ), 'topic-slug', get_option( 'home' ) );
 
 				$example_nested_topic_url = get_option( 'home' );
-				$example_nested_topic_url = add_query_arg( learndash_get_post_type_slug( 'course'), 'course-slug', $example_nested_topic_url );
+				$example_nested_topic_url = add_query_arg( learndash_get_post_type_slug( 'course' ), 'course-slug', $example_nested_topic_url );
 				$example_nested_topic_url = add_query_arg( learndash_get_post_type_slug( 'lesson' ), 'lesson-slug', $example_nested_topic_url );
 				$example_nested_topic_url = add_query_arg( learndash_get_post_type_slug( 'topic' ), 'topic-slug', $example_nested_topic_url );
 			}

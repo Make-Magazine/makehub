@@ -65,40 +65,39 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					$html .= '<input autocomplete="off" ';
 
 					$html .= $this->get_field_attribute_type( $field_args );
-					$html .= ' id="' . $this->get_field_attribute_id( $field_args, false ) . '-' . $option_key . '"';
+					$html .= ' id="' . esc_attr( $this->get_field_attribute_id( $field_args, false ) ) . '-' . esc_attr( $option_key ) . '"';
 
-					$html .= ' name="' . $this->get_field_attribute_name( $field_args, false ) . $checkbox_multiple . '"';
+					$html .= ' name="' . esc_attr( $this->get_field_attribute_name( $field_args, false ) ) . $checkbox_multiple . '"';
 					$html .= $this->get_field_attribute_class( $field_args );
 					$html .= $this->get_field_attribute_misc( $field_args );
 					$html .= $this->get_field_attribute_required( $field_args );
 
-					$html .= ' value="' . $option_key . '" ';
+					$html .= ' value="' . esc_attr( $option_key ) . '" ';
 
-					if ( ( is_array( $field_args['value'] ) ) && ( in_array( $option_key, $field_args['value'] ) ) ) {
+					if ( ( is_array( $field_args['value'] ) ) && ( in_array( $option_key, $field_args['value'], true ) ) ) {
 						$html .= ' ' . checked( $option_key, $option_key, false ) . ' ';
-					} else if ( is_string( $field_args['value'] ) ) {
+					} elseif ( is_string( $field_args['value'] ) ) {
 						$html .= ' ' . checked( $option_key, $field_args['value'], false ) . ' ';
 					}
 
 					$html .= ' />';
 
-					$html .= '<label class="ld-checkbox-input__label" for="' . $field_args['id'] . '-' . $option_key . '" >';
+					$html .= '<label class="ld-checkbox-input__label" for="' . esc_attr( $field_args['id'] ) . '-' . esc_attr( $option_key ) . '" >';
 					if ( is_string( $option_label ) ) {
-						$html .= '<span>' . $option_label . '</span></label></p>';
+						$html .= '<span>' . wp_kses_post( $option_label ) . '</span></label></p>';
 					} elseif ( ( is_array( $option_label ) ) && ( ! empty( $option_label ) ) ) {
 						if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<span>' . $option_label['label'] . '</span></label>';
+							$html .= '<span>' . wp_kses_post( $option_label['label'] ) . '</span></label>';
 						}
 						$html .= '</p>';
 						if ( ( isset( $option_label['description'] ) ) && ( ! empty( $option_label['description'] ) ) ) {
-							$html .= '<p class="ld-checkbox-description">' . $option_label['description'] . '</p>';
+							$html .= '<p class="ld-checkbox-description">' . wp_kses_post( $option_label['description'] ) . '</p>';
 						}
 					} else {
 						$html .= '</p>';
 					}
 				}
 
-				//$html .= $this->get_field_attribute_input_label( $field_args );
 				$html .= '</fieldset>';
 
 			}
@@ -106,7 +105,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**
@@ -121,7 +120,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 * @return integer value.
 		 */
 		public function validate_section_field( $val, $key, $args = array() ) {
-			if ( ( isset( $args['field']['type'] ) ) && ( $this->field_type === $args['field']['type'] ) ) {	
+			if ( ( isset( $args['field']['type'] ) ) && ( $this->field_type === $args['field']['type'] ) ) {
 				if ( is_array( $val ) ) {
 					foreach ( $val as $val_idx => $val_val ) {
 						if ( ! isset( $args['field']['options'][ $val_val ] ) ) {
@@ -129,7 +128,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 						}
 					}
 					return $val;
-				} else if ( is_string( $val ) ) {
+				} elseif ( is_string( $val ) ) {
 					if ( ( '' === $val ) || ( isset( $args['field']['options'][ $val ] ) ) ) {
 						return $val;
 					} elseif ( isset( $args['field']['default'] ) ) {

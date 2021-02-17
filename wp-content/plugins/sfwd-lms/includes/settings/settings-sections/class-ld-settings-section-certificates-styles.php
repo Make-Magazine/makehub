@@ -37,18 +37,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_key = 'styles';
 
 			// Section label/header.
-			$this->settings_section_label = sprintf(
-				// translators: placeholder: Certificate.
-				esc_html_x( '%s Custom Styles', 'placeholder: Certificate', 'learndash' ),
-				'Certificate'
-			);
+			$this->settings_section_label = esc_html__( 'Certificate Custom Styles', 'learndash' );
 
 			// Used to show the section description above the fields. Can be empty.
-			$this->settings_section_description = sprintf(
-				// translators: placeholder: Certificates.
-				esc_html_x( 'Add Custom Styles (CSS) to be used on all %s', 'placeholder: Certificates', 'learndash' ),
-				'Certificates'
-			);
+			$this->settings_section_description = esc_html__( 'Add Custom Styles (CSS) to be used on all Certificates', 'learndash' );
 
 			parent::__construct();
 		}
@@ -80,15 +72,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_fields() {
 
 			$this->setting_option_fields = array(
-				'styles'          => array(
+				'styles' => array(
 					'name'      => 'styles',
 					'type'      => 'textarea',
 					'label'     => esc_html__( 'Custom Styles (CSS)', 'learndash' ),
 					'help_text' => esc_html__( 'Add custom styles (CSS) to be used.', 'learndash' ),
 					'value'     => $this->setting_option_values['styles'],
-					'attrs'          => array(
+					'attrs'     => array(
 						'rows' => '8',
-						
+
 					),
 				),
 			);

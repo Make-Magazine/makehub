@@ -34,7 +34,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			?>
 			<tr id="learndash-data-upgrades-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-container">
 				<td class="learndash-data-upgrades-button-container">
-					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
+					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 						esc_html_e( 'Upgrade', 'learndash' );
 					?>
@@ -46,8 +46,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					printf(
 						// translators: placeholders: Quiz, Questions.
 						esc_html_x( 'Upgrade %1$s %2$s', 'placeholders: Quiz, Questions', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'quiz' ),
-						LearnDash_Custom_Label::get_label( 'questions' )
+						LearnDash_Custom_Label::get_label( 'quiz' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						LearnDash_Custom_Label::get_label( 'questions' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</span>
@@ -55,14 +55,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<?php
 					printf(
 						// translators: placeholders: Quiz questions, Quiz.
-						_x( 'This upgrade will convert the %1$s %2$s to WordPress custom post type. <strong>This is required before enabling %3$s Builder.</strong> (Optional)', 'placeholders: Quiz questions, Quiz', 'learndash' ),
-						learndash_get_custom_label_lower( 'Quiz' ),
-						learndash_get_custom_label_lower( 'questions' ),
-						LearnDash_Custom_Label::get_label( 'Quiz' )
+						esc_html_x( 'This upgrade will convert the %1$s %2$s to WordPress custom post type. <strong>This is required before enabling %3$s Builder.</strong> (Optional)', 'placeholders: Quiz questions, Quiz', 'learndash' ),
+						esc_html( learndash_get_custom_label_lower( 'Quiz' ) ),
+						esc_html( learndash_get_custom_label_lower( 'questions' ) ),
+						LearnDash_Custom_Label::get_label( 'Quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</p>
-					<p class="description"><?php echo $this->get_last_run_info(); ?></p>
+					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 
 					<?php
 						$show_progess         = false;
@@ -98,7 +98,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 					if ( ( true === $show_progess ) && ( ! isset( $_GET['quiz_id'] ) ) ) {
 						?>
-						<p id="learndash-data-upgrades-continue-<?php echo $this->data_slug; ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
+						<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
 							<?php
 
 							$progress_style = '';
@@ -128,9 +128,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 										printf(
 											// translators: placeholder: Quiz.
 											esc_html_x( 'Invalid %s ID', 'placeholders: Quiz', 'learndash' ),
-											LearnDash_Custom_Label::get_label( 'Quiz' )
+											LearnDash_Custom_Label::get_label( 'Quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 										)
-										?>
+									?>
 										</p>
 										<?php
 								}
@@ -145,27 +145,27 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 							if ( ! empty( $process_quiz_id ) ) {
 								?>
 								<p id="learndash-data-upgrades-quiz-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-quiz">
-																				<?php
-																				printf(
-																					// translators: placeholders: Questions, Quiz, Quiz Title.
-																					esc_html_x( 'Reprocess %1$s for %2$s: "%3$s"', 'placeholders: Questions, Quiz, Quiz Title', 'learndash' ),
-																					LearnDash_Custom_Label::get_label( 'Questions' ),
-																					LearnDash_Custom_Label::get_label( 'Quiz' ),
-																					get_the_title( $_GET['quiz_id'] )
-																				)
-									?>
+								<?php
+								printf(
+									// translators: placeholders: Questions, Quiz, Quiz Title.
+									esc_html_x( 'Reprocess %1$s for %2$s: "%3$s"', 'placeholders: Questions, Quiz, Quiz Title', 'learndash' ),
+									LearnDash_Custom_Label::get_label( 'Questions' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+									LearnDash_Custom_Label::get_label( 'Quiz' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+									wp_kses_post( get_the_title( $_GET['quiz_id'] ) )
+								)
+								?>
 									<input type="hidden" name="learndash-data-upgrades-quiz" value="<?php echo absint( $_GET['quiz_id'] ); ?>" />
 									</p>
 									<?php
 							} else {
 								?>
-								<p id="learndash-data-upgrades-mismatched-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-mismatched"><input type="checkbox" name="learndash-data-upgrades-mismatched" value="1" checked="checked" /> 
-																							<?php
-																							printf(
-																								// translators: placeholders: Questions.
-																								esc_html_x( 'Process Mismatched %s only?', 'placeholders: Questions', 'learndash' ),
-																								LearnDash_Custom_Label::get_label( 'Questions' )
-																							);
+								<p id="learndash-data-upgrades-mismatched-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-mismatched"><input type="checkbox" name="learndash-data-upgrades-mismatched" value="1" checked="checked" />
+									<?php
+									printf(
+										// translators: placeholders: Questions.
+										esc_html_x( 'Process Mismatched %s only?', 'placeholders: Questions', 'learndash' ),
+										LearnDash_Custom_Label::get_label( 'Questions' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+									);
 									?>
 									</p>
 									<?php
@@ -269,7 +269,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								}
 
 								$question_convert_complete = $this->convert_proquiz_question( intval( $user_id ) );
-								//$question_convert_complete = true;
 								if ( true === $question_convert_complete ) {
 									$this->transient_data['current_user'] = array();
 									unset( $this->transient_data['process_users'][ $user_idx ] );
@@ -364,7 +363,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					}
 
 					$sql_count_rows = $wpdb->prepare( 'SELECT id FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' WHERE online = %d ORDER BY quiz_id ASC, id ASC LIMIT %d OFFSET %d', '1', LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, $this->transient_data['paged'] * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE );
-					$rows = $wpdb->get_col( $sql_count_rows );
+					$rows           = $wpdb->get_col( $sql_count_rows );
 					if ( ! empty( $rows ) ) {
 						$this->transient_data['process_users'] = array_merge( $this->transient_data['process_users'], $rows );
 					}
@@ -464,10 +463,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			$data['progress_label'] = sprintf(
 				// translators: placeholders: result count, total count, Questions label.
 				esc_html_x( '%1$s: %2$d of %3$d %4$s', 'placeholders: progress status, result count, total count, Questions label', 'learndash' ),
-				$progress_status,
-				$data['result_count'],
-				$data['total_count'],
-				( $data['total_count'] > 1 ) ? LearnDash_Custom_Label::get_label( 'questions' ) : LearnDash_Custom_Label::get_label( 'question' )
+				esc_html( $progress_status ),
+				esc_html( $data['result_count'] ),
+				esc_html( $data['total_count'] ),
+				( $data['total_count'] > 1 ) ? LearnDash_Custom_Label::get_label( 'questions' ) : LearnDash_Custom_Label::get_label( 'question' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 
 			if ( ( isset( $data['progress_percent'] ) ) && ( 100 == $data['progress_percent'] ) ) {
@@ -503,10 +502,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		protected function convert_proquiz_question( $question_pro_id = 0 ) {
 			global $wpdb;
 
-			//$quiz_builder_option = LearnDash_Settings_Quizzes_Builder::get_settings_all();
-			$quiz_builder_option = LearnDash_Settings_Section::get_section_settings_all('LearnDash_Settings_Quizzes_Builder');
+			$quiz_builder_option = LearnDash_Settings_Section::get_section_settings_all( 'LearnDash_Settings_Quizzes_Builder' );
+			$question_pro_id     = absint( $question_pro_id );
 
-			$question_pro_id = absint( $question_pro_id );
 			if ( ( empty( $question_pro_id ) ) || ( ! isset( $this->transient_data['current_user']['user_id'] ) ) || ( $question_pro_id !== $this->transient_data['current_user']['user_id'] ) ) {
 				$this->transient_data['skipped'][ $question_pro_id ] = sprintf(
 					// translators: placeholder: ProQuiz Question ID.
@@ -559,17 +557,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$quiz_post_ids = array();
 			}
 
-			//if ( ( isset( $quiz_builder_option['shared_questions'] ) ) && ( 'yes' !== $quiz_builder_option['shared_questions'] ) ) {
-			//	if ( empty( $quiz_post_ids ) ) {
-			//		$this->transient_data['skipped'][ $question_pro_id ] = sprintf(
-			//			// translators: placeholder: ProQuiz Question ID, ProQuiz Quiz ID.
-			//			esc_html_x( 'ProQuestion ID [%1$d] ProQuiz ID [%2$d] not associated with Quiz Post(s).', 'placeholder: ProQuiz Question ID, ProQuiz Quiz ID', 'learndash' ),
-			//			$question_pro_id, $quiz_pro_id
-			//		);
-			//		return true;
-			//	}
-			//}
-
 			$question_insert_post_id = learndash_get_question_post_by_pro_id( $question_pro_id );
 			if ( empty( $question_insert_post_id ) ) {
 				$question_insert_post                 = array();
@@ -618,7 +605,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 			if ( ( $question_insert_post_id ) && ( ! is_wp_error( $question_insert_post_id ) ) ) {
 				learndash_proquiz_sync_question_fields( $question_insert_post_id, $question_pro );
-				//learndash_proquiz_sync_question_category( $question_insert_post_id, $question_pro );
 
 				if ( ( $question_pro ) && ( is_a( $question_pro, 'WpProQuiz_Model_Question' ) ) ) {
 					// Create the association between the question post and the quiz post(s).
@@ -632,10 +618,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 								if ( empty( $quiz_primary_post_id ) ) {
 									update_post_meta( $quiz_post_id, 'quiz_pro_primary_' . $quiz_pro_id, $quiz_pro_id );
 								}
-
-								//if ( ( isset( $quiz_builder_option['shared_questions'] ) ) && ( 'yes' !== $quiz_builder_option['shared_questions'] ) ) {
-								//	break;
-								//}
 							}
 							add_post_meta( $question_insert_post_id, 'ld_quiz_' . absint( $quiz_post_id ), absint( $quiz_post_id ), true );
 						}

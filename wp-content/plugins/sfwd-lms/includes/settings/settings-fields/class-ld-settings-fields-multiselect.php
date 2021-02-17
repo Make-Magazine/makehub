@@ -41,12 +41,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
-		
 			$html .= '<span class="ld-select ld-select-multiple">';
 			$html .= '<select multiple autocomplete="off" ';
-			//$html .= $this->get_field_attribute_type( $field_args );
 			$html .= $this->get_field_attribute_name( $field_args );
 			$html .= $this->get_field_attribute_id( $field_args );
 			$html .= $this->get_field_attribute_class( $field_args );
@@ -72,12 +70,12 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					if ( is_string( $field_args['value'] ) ) {
 						$selected_item = selected( $option_key, $field_args['value'], false );
 					} elseif ( is_array( $field_args['value'] ) ) {
-						if ( in_array( $option_key, $field_args['value'] ) ) {
+						if ( in_array( $option_key, $field_args['value'], true ) ) {
 							$selected_item = ' selected="" ';
 						}
 					}
 
-					$html .= '<option value="' . $option_key . '" ' . $selected_item . '>' . $option_label . '</option>';
+					$html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $option_label ) . '</option>';
 				}
 			}
 
@@ -87,7 +85,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**
@@ -115,6 +113,23 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				return $val;
 			}
 			return false;
+		}
+
+		/**
+		 * Convert Settings Field value to REST value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 * @param object $request    Request object.
+		 */
+		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
+			if ( ! is_array( $val ) ) {
+				$val = array( $val );
+			}
+			return $val;
 		}
 
 		// end of functions.

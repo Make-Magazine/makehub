@@ -30,7 +30,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 */
 		public function listing_init() {
 			$this->selectors = array(
-				'user_id'      => array(
+				'user_id'   => array(
 					'type'                     => 'user',
 					'show_all_value'           => '',
 					'show_all_label'           => esc_html__( 'All Users', 'learndash' ),
@@ -91,7 +91,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			// Filter the Groups listing for the Group Membership for the Post.
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			if ( ( isset( $_GET['ld-group-membership-post-id'] ) ) && ( ! empty( $_GET['ld-group-membership-post-id'] ) ) ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				$group_membership_settings = learndash_get_post_group_membership_settings( absint( $_GET['ld-group-membership-post-id'] ) );
 				if ( ! empty( $group_membership_settings['groups_membership_groups'] ) ) {
 					$q_vars['post__in'] = $group_membership_settings['groups_membership_groups'];
@@ -133,7 +135,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			echo sprintf(
 				// translators: placeholder: Goup Courses Count.
 				esc_html_x( '%1$s: %2$d', 'placeholders: Courses, Group Courses Count', 'learndash' ),
-				esc_html( learndash_get_custom_label( 'courses' ) ),
+				learndash_get_custom_label( 'courses' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				count( $group_courses )
 			);
 			echo '<br />';

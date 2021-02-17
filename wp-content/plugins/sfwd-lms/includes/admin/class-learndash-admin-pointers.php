@@ -40,7 +40,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 			// Make sure some metaboxes can't be toggled off
 			wp_enqueue_script(
 				'learndash-admin-pointer-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-pointers' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-pointers' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -75,7 +75,7 @@ if ( ! class_exists( 'Learndash_Admin_Pointers' ) ) {
 			 * @param array  $pointers  An array of screen pointer data.
 			 * @param string $screen_id Current Screen id.
 			 */
-			$pointers        = apply_filters( 'learndash_screen_pointers', array(), $this->screen_id );
+			$pointers = apply_filters( 'learndash_screen_pointers', array(), $this->screen_id );
 			if ( ( ! empty( $pointers ) ) && ( is_array( $pointers ) ) ) {
 				$screen_pointers = array();
 				foreach ( $pointers as $ptr ) {

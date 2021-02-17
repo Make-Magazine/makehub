@@ -65,8 +65,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wpdb, $wp_version, $wp_rewrite;
 			global $sfwd_lms;
 
-			$ABSPATH_tmp = str_replace( '\\', '/', ABSPATH );
-
 			/************************************************************************************************
 			 * Server Settings.
 			 ************************************************************************************************/
@@ -93,21 +91,22 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings'] = array();
 
-				$php_version                            = phpversion();
+				$php_version                                  = phpversion();
 				$this->settings_set['settings']['phpversion'] = array(
 					'label'      => 'PHP Version',
 					'label_html' => esc_html__( 'PHP Version', 'learndash' ),
 					'value'      => $php_version,
 				);
 
-				$version_compare = version_compare( '7.0', $php_version, '>' );
+				$version_compare = version_compare( LEARNDASH_MIN_PHP_VERSION, $php_version, '>' );
 				$color           = 'green';
 				if ( -1 == $version_compare ) {
 					$color = 'red';
 				}
 				$this->settings_set['settings']['phpversion']['value_html'] = '<span style="color: ' . $color . '">' . $php_version . '</span>';
 				if ( -1 == $version_compare ) {
-					$this->settings_set['settings']['phpversion']['value_html'] .= ' - <a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress Minimum Requirements', 'learndash' ) . '</a>';
+					$this->settings_set['settings']['phpversion']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
+					$this->settings_set['settings']['phpversion']['value'] .= ' - (X)';
 				}
 
 				if ( defined( 'PHP_OS' ) ) {
@@ -122,13 +121,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->settings_set['settings']['PHP_OS_FAMILY'] = array(
 						'label'      => 'PHP OS Family',
 						'label_html' => esc_html__( 'PHP OS Family', 'learndash' ),
-						'value'      => PHP_OS_FAMILY,
+						'value'      => PHP_OS_FAMILY, // phpcs:ignore PHPCompatibility.Constants.NewConstants.php_os_familyFound -- Only executed if available
 					);
 				}
 
 				if ( true == $wpdb->is_mysql ) {
-					global $required_mysql_version;
-
 					$mysql_version = $wpdb->db_version();
 
 					$this->settings_set['settings']['mysql_version'] = array(
@@ -137,7 +134,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'value'      => $mysql_version,
 					);
 
-					$version_compare = version_compare( $required_mysql_version, $mysql_version, '>' );
+					$version_compare = version_compare( LEARNDASH_MIN_MYSQL_VERSION, $mysql_version, '>' );
 					$color           = 'green';
 					if ( -1 == $version_compare ) {
 						$color = 'red';
@@ -145,7 +142,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 					$this->settings_set['settings']['mysql_version']['value_html'] = '<span style="color: ' . $color . '">' . $mysql_version . '</span>';
 					if ( -1 == $version_compare ) {
-						$this->settings_set['settings']['mysql_version']['value_html'] .= ' - <a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress Minimum Requirements', 'learndash' ) . '</a>';
+						$this->settings_set['settings']['mysql_version']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
+						$this->settings_set['settings']['mysql_version']['value'] .= ' - (X)';
 					}
 				}
 
@@ -192,6 +190,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						$this->settings_set['settings']['curl']['value']      .= 'Protocols: ' . join( ', ', $version['protocols'] ) . '<br />';
 						$this->settings_set['settings']['curl']['value_html'] .= esc_html__( 'Protocols', 'learndash' ) . ': ' . join( ', ', $version['protocols'] ) . '<br />';
 
+						// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						if ( isset( $_GET['ld_debug'] ) ) {
 							$paypal_email         = get_option( 'learndash_settings_paypal' );
 							$ca_certificates_path = ini_get( 'curl.cainfo' );

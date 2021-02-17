@@ -7,10 +7,6 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 	class LearnDash_Shortcodes_TinyMCE {
 
-		// protected $post_types = array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-question', 'sfwd-certificates', 'page', 'post' );
-
-		// protected $pages = array( 'widgets.php' );
-
 		protected $learndash_admin_shortcodes_assets = array();
 
 		public function __construct() {
@@ -83,7 +79,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 		}
 
 		public function add_tinymce_plugin( $plugin_array ) {
-			$plugin_array['learndash_shortcodes_tinymce'] = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-shortcodes-tinymce' . leardash_min_asset() . '.js';
+			$plugin_array['learndash_shortcodes_tinymce'] = LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-shortcodes-tinymce' . learndash_min_asset() . '.js';
 
 			return $plugin_array;
 		}
@@ -99,7 +95,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			wp_enqueue_style(
 				'sfwd-module-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -107,7 +103,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			wp_enqueue_script(
 				'sfwd-module-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -124,7 +120,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			wp_enqueue_style(
 				'learndash_admin_shortcodes_style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-shortcodes' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-shortcodes' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -135,7 +131,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 
 			wp_enqueue_script(
 				'learndash_admin_shortcodes_script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-shortcodes' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-shortcodes' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -159,6 +155,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 				'pagenow' => '',
 				'nonce'   => '',
 			);
+
+			// The wp_verify_nonce() call is just a few lines below.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$fields_args = shortcode_atts( $fields_args, $_POST['atts'] );
 
 			if ( ( empty( $fields_args['nonce'] ) ) || ( empty( $fields_args['pagenow'] ) ) ) {
@@ -173,11 +172,9 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 				die();
 			}
 
-			// if ( ( ! empty( $fields_args['post_type'] ) ) && ( in_array( $fields_args['post_type'], apply_filters( 'learndash_shortcodes_tinymce_post_types', $this->post_types, $fields_args['post_type'] ) ) ) ) {
+			$shortcode_sections = array();
 
-				$shortcode_sections = array();
-
-				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-shortcodes-sections.php';
+			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/class-ld-shortcodes-sections.php';
 
 			if ( 'sfwd-certificates' !== $fields_args['typenow'] ) {
 
@@ -282,15 +279,15 @@ if ( ! class_exists( 'LearnDash_Shortcodes_TinyMCE' ) ) {
 					<div id="learndash_shortcodes_tabs">
 						<ul>
 							<?php foreach ( $shortcode_sections as $section ) { ?>
-							<li><a data-nav="<?php echo $section->get_shortcodes_section_key(); ?>" href="#"><?php echo $section->get_shortcodes_section_title(); ?></a></li>
+							<li><a data-nav="<?php echo esc_attr( $section->get_shortcodes_section_key() ); ?>" href="#"><?php echo wp_kses_post( $section->get_shortcodes_section_title() ); ?></a></li>
 							<?php } ?>
 						</ul>
 					</div>
 
 					<div id="learndash_shortcodes_sections">
 						<?php foreach ( $shortcode_sections as $section ) { ?>
-							<div id="tabs-<?php echo $section->get_shortcodes_section_key(); ?>" class="hidable wrap" style="display: none;">
-								<?php echo $section->show_section_fields(); ?>
+							<div id="tabs-<?php echo esc_attr( $section->get_shortcodes_section_key() ); ?>" class="hidable wrap" style="display: none;">
+								<?php echo $section->show_section_fields(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML. ?>
 							</div>
 						<?php } ?>
 					</div>

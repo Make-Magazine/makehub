@@ -234,8 +234,8 @@ function learndash_add_group_admin_role() {
 	$group_leader_user_caps = get_option( 'learndash_groups_group_leader_user', array() );
 
 	$role_caps = array(
-		'read'         => true,
-		'group_leader' => true,
+		'read'                      => true,
+		'group_leader'              => true,
 		'wpProQuiz_show_statistics' => true,
 	);
 
@@ -2617,7 +2617,7 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 				/**
 				 * During the save post cycle the args[2] is empty. So we can't check if the GL can edit a specific
 				 * Group ID. But if we find the 'action' and 'post_ID' POST vars we can check indirectly.
-				 */ 
+				 */
 				if ( ! isset( $args[2] ) ) {
 					if ( ( isset( $_POST['action'] ) ) && ( 'editpost' === $_POST['action'] ) ) {
 						if ( isset( $_POST['post_ID'] ) ) {
@@ -2638,8 +2638,7 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 				}
 			}
 		}
-	}
-
+	} // phpcs:ignore Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace -- Explanatory comment follows
 	// Check if Group Leader can edit Course or Steps within their Groups.
 	elseif ( ( ( in_array( 'edit_others_courses', $cap, true ) ) ) && ( isset( $allcaps['edit_others_courses'] ) ) && ( true !== $allcaps['edit_others_courses'] ) ) {
 		if ( 'basic' === learndash_get_group_leader_manage_courses() ) {
@@ -2697,9 +2696,13 @@ function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
 
 	return $allcaps;
 }
-add_action( 'init', function () {
-	if ( learndash_is_group_leader_user() ) {
-		add_filter( 'user_has_cap', 'learndash_group_leader_has_cap_filter', 10, 4 );
-	}
-}, 10 );
+add_action(
+	'init',
+	function () {
+		if ( learndash_is_group_leader_user() ) {
+			add_filter( 'user_has_cap', 'learndash_group_leader_has_cap_filter', 10, 4 );
+		}
+	},
+	10
+);
 

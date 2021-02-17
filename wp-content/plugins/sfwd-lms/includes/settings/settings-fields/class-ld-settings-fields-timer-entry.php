@@ -41,7 +41,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
 			if ( ( isset( $field_args['value'] ) ) && ( ! empty( $field_args['value'] ) ) ) {
 				$field_args['value'] = learndash_convert_lesson_time_time( $field_args['value'] );
@@ -66,7 +66,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			$html .= '<div class="ld_timer_selector">' . sprintf(
 				// translators: placeholders: Hour, Minute, Second.
-				esc_html__( '%1$s:%2$s:%3$s' ),
+				esc_html__( '%1$s:%2$s:%3$s', 'learndash' ),
 				$hour_field,
 				$minute_field,
 				$second_field
@@ -75,7 +75,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**

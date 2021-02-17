@@ -1,6 +1,6 @@
 <?php
 /**
- * LearnDash Settings Page Quizzes Options.
+ * LearnDash Settings Side Submit Metabox.
  *
  * @package LearnDash
  * @subpackage Settings

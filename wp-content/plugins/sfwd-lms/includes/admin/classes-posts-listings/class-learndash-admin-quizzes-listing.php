@@ -233,7 +233,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$pro_quiz_id = learndash_get_setting( $post, 'quiz_pro', true );
 				if ( ! empty( $pro_quiz_id ) ) {
 					if ( ( ! isset( $row_actions['questions'] ) ) || ( empty( $row_actions['questions'] ) ) ) {
-						if ( ( true === is_data_upgrade_quiz_questions_updated() ) && ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) ) ) {
+						if ( ( true === learndash_is_data_upgrade_quiz_questions_updated() ) && ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) ) ) {
 							$link = add_query_arg(
 								array(
 									'post_type' => learndash_get_post_type_slug( 'question' ),

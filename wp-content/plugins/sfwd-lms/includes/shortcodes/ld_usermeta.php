@@ -56,7 +56,7 @@ function learndash_usermeta_shortcode( $attr, $content = '' ) {
 
 	if ( ( ! empty( $attr['user_id'] ) ) && ( ! empty( $attr['field'] ) ) ) {
 
-		if ( ( learndash_is_admin_user() ) || ( $attr['user_id'] == get_current_user_id() ) ) {
+		if ( ( learndash_is_admin_user() ) || ( get_current_user_id() == $attr['user_id'] ) ) {
 			$usermeta_available_fields = array( $attr['field'] => $attr['field'] );
 		} else {
 			$usermeta_available_fields = learndash_get_usermeta_shortcode_available_fields( $attr );

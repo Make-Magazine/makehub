@@ -59,12 +59,12 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 			$lesson_query_args       = array();
 			$course_lessons_per_page = learndash_get_course_lessons_per_page( $course_id );
 			if ( $course_lessons_per_page > 0 ) {
-				if ( in_array( $post->post_type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ) ) ) {
+				if ( in_array( $post->post_type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
 
 					$instance['current_step_id'] = $post->ID;
 					if ( 'sfwd-lessons' === $post->post_type ) {
 						$instance['current_lesson_id'] = $post->ID;
-					} elseif ( in_array( $post->post_type, array( 'sfwd-topic', 'sfwd-quiz' ) ) ) {
+					} elseif ( in_array( $post->post_type, array( 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
 						$instance['current_lesson_id'] = learndash_course_get_single_parent_step( $course_id, $post->ID, 'sfwd-lessons' );
 					}
 
@@ -85,7 +85,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 								$lesson_query_args['paged']      = $lessons_paged;
 							}
 						}
-					} elseif ( in_array( $post->post_type, array( 'sfwd-quiz' ) ) ) {
+					} elseif ( in_array( $post->post_type, array( 'sfwd-quiz' ), true ) ) {
 						// If here we have a global Quiz. So we set the pager to the max number
 						$course_lesson_ids = learndash_course_get_steps_by_type( $course_id, 'sfwd-lessons' );
 						if ( ! empty( $course_lesson_ids ) ) {
@@ -95,12 +95,12 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 					}
 				}
 			} else {
-				if ( in_array( $post->post_type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ) ) ) {
+				if ( in_array( $post->post_type, array( 'sfwd-lessons', 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
 
 					$instance['current_step_id'] = $post->ID;
 					if ( 'sfwd-lessons' === $post->post_type ) {
 						$instance['current_lesson_id'] = $post->ID;
-					} elseif ( in_array( $post->post_type, array( 'sfwd-topic', 'sfwd-quiz' ) ) ) {
+					} elseif ( in_array( $post->post_type, array( 'sfwd-topic', 'sfwd-quiz' ), true ) ) {
 						$instance['current_lesson_id'] = learndash_course_get_single_parent_step( $course_id, $post->ID, 'sfwd-lessons' );
 					}
 				}
@@ -111,15 +111,15 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 			/** This filter is documented in https://developer.wordpress.org/reference/hooks/widget_title/ */
 			$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance );
 
-			echo $before_widget;
+			echo $before_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			if ( ! empty( $title ) ) {
-				echo $before_title . $title . $after_title;
+				echo $before_title . $title . $after_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			}
 
 			learndash_course_navigation( $course_id, $instance, $lesson_query_args );
 
-			echo $after_widget;
+			echo $after_widget; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			$learndash_shortcode_used = true;
 		}
@@ -136,7 +136,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		public function update( $new_instance, $old_instance ) {
 			$instance = $old_instance;
 
-			$instance['title'] = strip_tags( $new_instance['title'] );
+			$instance['title'] = wp_strip_all_tags( $new_instance['title'] );
 
 			$instance['show_lesson_quizzes'] = isset( $new_instance['show_lesson_quizzes'] ) ? (bool) $new_instance['show_lesson_quizzes'] : false;
 			$instance['show_topic_quizzes']  = isset( $new_instance['show_topic_quizzes'] ) ? (bool) $new_instance['show_topic_quizzes'] : false;
@@ -154,40 +154,40 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		 */
 		public function form( $instance ) {
 			$instance            = wp_parse_args( (array) $instance, array( 'title' => '' ) );
-			$title               = strip_tags( $instance['title'] );
+			$title               = wp_strip_all_tags( $instance['title'] );
 			$show_lesson_quizzes = isset( $instance['show_lesson_quizzes'] ) ? (bool) $instance['show_lesson_quizzes'] : false;
 			$show_topic_quizzes  = isset( $instance['show_topic_quizzes'] ) ? (bool) $instance['show_topic_quizzes'] : false;
 			$show_course_quizzes = isset( $instance['show_course_quizzes'] ) ? (bool) $instance['show_course_quizzes'] : false;
 
 			?>
 				<p>
-					<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
-					<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+					<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
+					<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 				</p>
 				<p>
-					<input class="checkbox" type="checkbox" <?php checked( $show_course_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_course_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_course_quizzes' ); ?>" />
-					<label for="<?php echo $this->get_field_id( 'show_course_quizzes' ); ?>">
+					<input class="checkbox" type="checkbox" <?php checked( $show_course_quizzes ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_course_quizzes' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_course_quizzes' ) ); ?>" />
+					<label for="<?php echo esc_attr( $this->get_field_id( 'show_course_quizzes' ) ); ?>">
 					<?php
 					// translators: placeholders: Course, Quizzes.
-					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Course, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'quizzes' ) );
+					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Course, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'quizzes' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					?>
 					</label>
 				</p>
 				<p>
-					<input class="checkbox" type="checkbox" <?php checked( $show_lesson_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_lesson_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_lesson_quizzes' ); ?>" />
-					<label for="<?php echo $this->get_field_id( 'show_lesson_quizzes' ); ?>">
+					<input class="checkbox" type="checkbox" <?php checked( $show_lesson_quizzes ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_lesson_quizzes' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_lesson_quizzes' ) ); ?>" />
+					<label for="<?php echo esc_attr( $this->get_field_id( 'show_lesson_quizzes' ) ); ?>">
 					<?php
 					// translators: placeholders: Lesson, Quizzes.
-					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Lesson, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'quizzes' ) );
+					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Lesson, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'quizzes' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					?>
 					</label>
 				</p>
 				<p>
-					<input class="checkbox" type="checkbox" <?php checked( $show_topic_quizzes ); ?> id="<?php echo $this->get_field_id( 'show_topic_quizzes' ); ?>" name="<?php echo $this->get_field_name( 'show_topic_quizzes' ); ?>" />
-					<label for="<?php echo $this->get_field_id( 'show_topic_quizzes' ); ?>">
+					<input class="checkbox" type="checkbox" <?php checked( $show_topic_quizzes ); ?> id="<?php echo esc_attr( $this->get_field_id( 'show_topic_quizzes' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show_topic_quizzes' ) ); ?>" />
+					<label for="<?php echo esc_attr( $this->get_field_id( 'show_topic_quizzes' ) ); ?>">
 					<?php
 					// translators: placeholders: Topic, Quizzes.
-					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Topic, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'quizzes' ) );
+					echo sprintf( esc_html_x( 'Show %1$s %2$s?', 'placeholders: Topic, Quizzes', 'learndash' ), LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'quizzes' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					?>
 					</label>
 				</p>

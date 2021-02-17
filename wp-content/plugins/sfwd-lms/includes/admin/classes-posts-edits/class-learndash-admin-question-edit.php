@@ -65,20 +65,20 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				if ( ! empty( $quiz_id ) ) {
 					$quizzes_url = add_query_arg( 'post_type', learndash_get_post_type_slug( 'quiz' ), admin_url( 'edit.php' ) );
 
-					$new_title = '<a href="' . $quizzes_url . '">' . LearnDash_Custom_Label::get_label( 'quizzes' ) . '</a> &gt; <a href="' . get_edit_post_link( $quiz_id ) . '">' . get_the_title( $quiz_id ) . '</a> ';
+					$new_title     = '<a href="' . $quizzes_url . '">' . LearnDash_Custom_Label::get_label( 'quizzes' ) . '</a> &gt; <a href="' . get_edit_post_link( $quiz_id ) . '">' . get_the_title( $quiz_id ) . '</a> ';
 					$post_new_file = add_query_arg(
 						array(
 							'post_type' => $post_type,
-							'quiz_id' => $quiz_id,
+							'quiz_id'   => $quiz_id,
 						),
 						'post-new.php'
 					);
-					$add_new_url = admin_url( $post_new_file );
+					$add_new_url   = admin_url( $post_new_file );
 					?>
 					<script>
 						jQuery( function() {
-							jQuery('h1.wp-heading-inline').html('<?php echo $new_title; ?>');
-							jQuery('a.page-title-action').attr( 'href', '<?php echo $add_new_url; ?>' );
+							jQuery('h1.wp-heading-inline').html('<?php echo wp_kses_post( $new_title ); ?>');
+							jQuery('a.page-title-action').attr( 'href', '<?php echo esc_url( $add_new_url ); ?>' );
 						});
 					</script>
 					<?php
@@ -117,7 +117,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			if ( 'post-new.php' === $pagenow ) {
 				if ( ( isset( $_GET['quiz_id'] ) ) && ( ! empty( $_GET['quiz_id'] ) ) ) {
-					$quiz_id = absint( $_GET['quiz_id'] );
+					$quiz_id                               = absint( $_GET['quiz_id'] );
 					$options[ $this->post_type . '_quiz' ] = $quiz_id;
 				}
 			}
@@ -154,7 +154,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			global $pagenow;
 
 			if ( 'post-new.php' === $pagenow ) {
-				add_filter( $this->post_type .'_display_options', array( $this, 'display_options' ) );
+				add_filter( $this->post_type . '_display_options', array( $this, 'display_options' ) );
 			}
 
 			if ( is_null( $this->pro_question_edit ) ) {
@@ -165,7 +165,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					$this->pro_question_edit = $question_mapper->fetch( $question_pro_id );
 
 					if ( ( $this->pro_question_edit ) && is_a( $this->pro_question_edit, 'WpProQuiz_Model_Question' ) ) {
-						$post->post_title = $this->pro_question_edit->getTitle();
+						$post->post_title   = $this->pro_question_edit->getTitle();
 						$post->post_content = $this->pro_question_edit->getQuestion();
 					}
 				} else {
@@ -174,16 +174,16 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
 					$template_mapper = new WpProQuiz_Model_TemplateMapper();
-					$template = $template_mapper->fetchById( absint( $_GET['templateLoadId'] ) );
+					$template        = $template_mapper->fetchById( absint( $_GET['templateLoadId'] ) );
 					if ( ( $template ) && ( is_a( $template, 'WpProQuiz_Model_Template' ) ) ) {
 						$data = $template->getData();
-						if ( $data !== null ) {
+						if ( null !== $data ) {
 							$data['question']->setId( $this->pro_question_edit->getId() );
 							$data['question']->setQuizId( $this->pro_question_edit->getQuizId() );
 
 							$this->pro_question_edit = $data['question'];
-							$post->post_title = $this->pro_question_edit->getTitle();
-							$post->post_content = $this->pro_question_edit->getQuestion();
+							$post->post_title        = $this->pro_question_edit->getTitle();
+							$post->post_content      = $this->pro_question_edit->getQuestion();
 						}
 					}
 				}
@@ -388,7 +388,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						update_user_meta( get_current_user_id(), 'closedpostboxes_' . $this->post_type, $all_postboxes );
 					}
 				}
-
 			}
 		}
 
@@ -413,8 +412,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				<?php
 				foreach ( $learndash_question_types as $q_type => $q_label ) {
 					?>
-					<li><input id="learndash-question-type-<?php echo $q_type; ?>" type="radio" name="answerType" value="<?php echo $q_type; ?>" <?php checked( $q_type, $question_type ); ?> />
-					<label for="learndash-question-type-<?php echo $q_type; ?>" ><?php echo esc_attr( $q_label ); ?></label></li>
+					<li><input id="learndash-question-type-<?php echo esc_attr( $q_type ); ?>" type="radio" name="answerType" value="<?php echo esc_attr( $q_type ); ?>" <?php checked( $q_type, $question_type ); ?> />
+					<label for="learndash-question-type-<?php echo esc_attr( $q_type ); ?>" ><?php echo esc_attr( $q_label ); ?></label></li>
 					<?php
 				}
 				?>
@@ -436,10 +435,10 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				$question_category_id = 0;
 			}
 
-			$categoryMapper = new WpProQuiz_Model_CategoryMapper();
-			$allCategories  = $categoryMapper->fetchAll();
+			$category_mapper = new WpProQuiz_Model_CategoryMapper();
+			$all_categories  = $category_mapper->fetchAll();
 			?>
-			<div id="wpProQuiz_nonce" data-nonce="<?php echo wp_create_nonce( 'wpProQuiz_nonce' ); ?>" style="display:none;"></div>
+			<div id="wpProQuiz_nonce" data-nonce="<?php echo esc_attr( wp_create_nonce( 'wpProQuiz_nonce' ) ); ?>" style="display:none;"></div>
 			<p class="description">
 				<?php esc_html_e( 'You can assign classify category for a question. Categories are e.g. visible in statistics function.', 'learndash' ); ?>
 			</p>
@@ -451,16 +450,16 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					<option value="-1">--- <?php esc_html_e( 'Create new category', 'learndash' ); ?> ----</option>
 					<option value="0" <?php echo $this->pro_question_edit->getCategoryId() == 0 ? 'selected="selected"' : ''; ?>>--- <?php esc_html_e( 'No category', 'learndash' ); ?> ---</option>
 					<?php
-						foreach( $allCategories as $cat ) {
-							echo '<option ' . selected( $question_category_id, $cat->getCategoryId(), false ) . ' value="' . $cat->getCategoryId(). '">' . stripslashes( $cat->getCategoryName() ) . '</option>';
-						}
+					foreach ( $all_categories as $cat ) {
+						echo '<option ' . selected( $question_category_id, $cat->getCategoryId(), false ) . ' value="' . esc_attr( $cat->getCategoryId() ) . '">' . esc_html( stripslashes( $cat->getCategoryName() ) ) . '</option>';
+					}
 					?>
 				</select>
 			</div>
 			<div style="display: none;" id="categoryAddBox">
-				<h4><?php esc_html_e('Create new category', 'learndash'); ?></h4>
+				<h4><?php esc_html_e( 'Create new category', 'learndash' ); ?></h4>
 				<input type="text" name="categoryAdd" value="">
-				<input type="button" class="button-secondary" name="" id="categoryAddBtn" value="<?php esc_html_e('Create', 'learndash'); ?>">
+				<input type="button" class="button-secondary" name="" id="categoryAddBtn" value="<?php esc_html_e( 'Create', 'learndash' ); ?>">
 			</div>
 			<div id="categoryMsgBox" style="display:none; padding: 5px; border: 1px solid rgb(160, 160, 160); background-color: rgb(255, 255, 168); font-weight: bold; margin: 5px; ">
 				Kategorie gespeichert
@@ -521,10 +520,10 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			if ( ( $this->pro_question_edit ) && is_a( $this->pro_question_edit, 'WpProQuiz_Model_Question' ) ) {
 				$question_correct_same_text = checked( '1', $this->pro_question_edit->isCorrectSameText(), false );
-				$question_correct_message = $this->pro_question_edit->getCorrectMsg();
+				$question_correct_message   = $this->pro_question_edit->getCorrectMsg();
 			} else {
 				$question_correct_same_text = '';
-				$question_correct_message = '';
+				$question_correct_message   = '';
 			}
 
 			?>
@@ -534,7 +533,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			<div class="learndash-same-answer-text" style="padding-top: 10px; padding-bottom: 10px;">
 				<label for="wpProQuiz_correctSameText">
 					<?php esc_html_e( 'Same text for correct- and incorrect-message?', 'learndash' ); ?>
-					<input type="checkbox" name="correctSameText" id="wpProQuiz_correctSameText" value="1" <?php echo $question_correct_same_text; ?>>
+					<input type="checkbox" name="correctSameText" id="wpProQuiz_correctSameText" value="1" <?php echo esc_html( $question_correct_same_text ); ?>>
 				</label>
 			</div>
 			<?php
@@ -586,7 +585,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			<div style="padding-top: 10px; padding-bottom: 10px;">
 				<label for="wpProQuiz_tip">
 					<?php esc_html_e( 'Activate hint for this question?', 'learndash' ); ?>
-					<input type="checkbox" name="tipEnabled" id="wpProQuiz_tip" value="1" <?php echo $question_hint_enabled; ?>>
+					<input type="checkbox" name="tipEnabled" id="wpProQuiz_tip" value="1" <?php echo esc_html( $question_hint_enabled ); ?>>
 				</label>
 			</div>
 			<div id="wpProQuiz_tipBox">
@@ -655,13 +654,13 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					<ul class="answerList">
 						<?php $this->view->sortingChoice( $pro_question_data['sort_answer'] ); ?>
 					</ul>
-					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo LEARNDASH_LMS_DEFAULT_ANSWER_POINTS; ?>" value="<?php esc_html_e( 'Add new answer', 'learndash' ); ?>">
+					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo esc_attr( LEARNDASH_LMS_DEFAULT_ANSWER_POINTS ); ?>" value="<?php esc_html_e( 'Add new answer', 'learndash' ); ?>">
 				</div>
 				<div class="classic_answer">
 					<ul class="answerList">
-						<?php $this->view->singleMultiCoice( $pro_question_data['classic_answer']); ?>
+						<?php $this->view->singleMultiCoice( $pro_question_data['classic_answer'] ); ?>
 					</ul>
-					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo LEARNDASH_LMS_DEFAULT_ANSWER_POINTS ?>" value="<?php esc_html_e('Add new answer', 'learndash' ); ?>">
+					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo esc_attr( LEARNDASH_LMS_DEFAULT_ANSWER_POINTS ); ?>" value="<?php esc_html_e( 'Add new answer', 'learndash' ); ?>">
 				</div>
 				<div class="matrix_sort_answer">
 					<p class="description">
@@ -673,8 +672,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					<br>
 					<label>
 						<?php esc_html_e( 'Percentage width of criteria table column:', 'learndash' ); ?>
-						<?php $msacwValue = $this->pro_question_edit->getMatrixSortAnswerCriteriaWidth() > 0 ? $this->pro_question_edit->getMatrixSortAnswerCriteriaWidth() : 20; ?>
-						<input type="number" min="1" max="99" step="1" name="matrixSortAnswerCriteriaWidth" value="<?php echo $msacwValue; ?>">%
+						<?php $msacw_value = $this->pro_question_edit->getMatrixSortAnswerCriteriaWidth() > 0 ? $this->pro_question_edit->getMatrixSortAnswerCriteriaWidth() : 20; ?>
+						<input type="number" min="1" max="99" step="1" name="matrixSortAnswerCriteriaWidth" value="<?php echo esc_attr( $msacw_value ); ?>">%
 					</label>
 					<p class="description">
 						<?php esc_html_e( 'Allows adjustment of the left column\'s width, and the right column will auto-fill the rest of the available space. Increase this to allow accommodate longer criterion text. Defaults to 20%.', 'learndash' ); ?>
@@ -683,7 +682,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					<ul class="answerList">
 						<?php $this->view->matrixSortingChoice( $pro_question_data['matrix_sort_answer'] ); ?>
 					</ul>
-					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo LEARNDASH_LMS_DEFAULT_ANSWER_POINTS ?>" value="<?php esc_html_e('Add new answer', 'learndash' ); ?>">
+					<input type="button" class="button-primary addAnswer" data-default-value="<?php echo esc_attr( LEARNDASH_LMS_DEFAULT_ANSWER_POINTS ); ?>" value="<?php esc_html_e( 'Add new answer', 'learndash' ); ?>">
 				</div>
 				<div class="cloze_answer">
 					<?php $this->view->clozeChoice( $pro_question_data['cloze_answer'] ); ?>
@@ -707,7 +706,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		public function question_template_page_box( $post ) {
 
 			$template_mapper = new WpProQuiz_Model_TemplateMapper();
-			$templates = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUESTION, false );
+			$templates       = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUESTION, false );
 
 			$template_loaded_id = '';
 			if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
@@ -729,7 +728,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 										echo '<option value="' . esc_url( $template_url ) . '">' . sprintf(
 											// translators: Question Title.
 											esc_html_x( 'Revert: %s', 'placeholder: Question Title', 'learndash' ),
-											get_the_title( $_GET['post'] )
+											wp_kses_post( get_the_title( $_GET['post'] ) )
 										) . '</option>';
 									} else {
 										echo '<option value="">' . esc_html__( 'Select a Template to load', 'learndash' ) . '</option>';
@@ -758,10 +757,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 									?>
 								</select><br />
 								<input type="text" placeholder="<?php esc_html_e( 'new template name', 'learndash' ); ?>" class="regular-text" name="templateName">
-								<?php /*?>
+								<?php
+								/*?>
 								<br />
 								<input type="submit" name="template" class="button-primary" id="wpProQuiz_saveTemplate" value="<?php esc_html_e( 'Save as template', 'learndash' ); ?>">
-								<?php */ ?>
+								<?php */
+								?>
 							</td>
 						</tr>
 					</tbody>
@@ -795,33 +796,40 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			<tr>
 				<td>
 				<?php
-				echo nl2br('Question - Single Choice - 3 Answers - Diff points mode
+				echo nl2br(
+					'Question - Single Choice - 3 Answers - Diff points mode
 
 				A=3 Points [correct]
 				B=2 Points [incorrect]
 				C=1 Point [incorrect]
 
 				= 6 Points
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 				<td>
 				<?php
-				echo nl2br( 'Question - Single Choice - 3 Answers - Modus 2
+				echo nl2br(
+					'Question - Single Choice - 3 Answers - Modus 2
 
 				A=3 Points [correct]
 				B=2 Points [incorrect]
 				C=1 Point [incorrect]
 
 				= 3 Points
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 1: ~~~
+				echo nl2br(
+					'~~~ User 1: ~~~
 
 				A=checked
 				B=unchecked
@@ -833,12 +841,15 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				C=incorrect and unchecked (correct) = 1 Points
 
 				= 6 / 6 Points 100%
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 1: ~~~
+				echo nl2br(
+					'~~~ User 1: ~~~
 
 				A=checked
 				B=unchecked
@@ -849,14 +860,17 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				B=unchecked = 0 Points
 				C=unchecked = 0 Points
 
-				= 3 / 3 Points 100%', 'learndash' );
+				= 3 / 3 Points 100%',
+					'learndash'
+				);
 				?>
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 2: ~~~
+				echo nl2br(
+					'~~~ User 2: ~~~
 
 				A=unchecked
 				B=checked
@@ -868,12 +882,15 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				C=incorrect and uncecked (correct) = 1 Points
 
 				= 1 / 6 Points 16.67%
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 2: ~~~
+				echo nl2br(
+					'~~~ User 2: ~~~
 
 				A=unchecked
 				B=checked
@@ -884,14 +901,17 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				B=checked = 2 Points
 				C=uncecked = 0 Points
 
-				= 2 / 3 Points 66,67%', 'learndash' );
+				= 2 / 3 Points 66,67%',
+					'learndash'
+				);
 				?>
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 3: ~~~
+				echo nl2br(
+					'~~~ User 3: ~~~
 
 				A=unchecked
 				B=unchecked
@@ -903,12 +923,15 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				C=incorrect and checked (incorrect) = 0 Points
 
 				= 2 / 6 Points 33.33%
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 3: ~~~
+				echo nl2br(
+					'~~~ User 3: ~~~
 
 				A=unchecked
 				B=unchecked
@@ -919,14 +942,17 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				B=unchecked = 0 Points
 				C=checked = 1 Points
 
-				= 1 / 3 Points 33,33%', 'learndash' );
+				= 1 / 3 Points 33,33%',
+					'learndash'
+				);
 				?>
 				</td>
 			</tr>
 			<tr>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 4: ~~~
+				echo nl2br(
+					'~~~ User 4: ~~~
 
 				A=unchecked
 				B=unchecked
@@ -938,12 +964,15 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				C=incorrect and unchecked (correct) = 1 Points
 
 				= 3 / 6 Points 50%
-				', 'learndash' );
+				',
+					'learndash'
+				);
 				?>
 				</td>
 				<td>
 				<?php
-				echo nl2br( '~~~ User 4: ~~~
+				echo nl2br(
+					'~~~ User 4: ~~~
 
 				A=unchecked
 				B=unchecked
@@ -954,7 +983,9 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				B=unchecked = 0 Points
 				C=unchecked = 0 Points
 
-				= 0 / 3 Points 0%', 'learndash' );
+				= 0 / 3 Points 0%',
+					'learndash'
+				);
 				?>
 				</td>
 			</tr>

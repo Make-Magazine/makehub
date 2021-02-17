@@ -30,8 +30,7 @@ if ( ( ! class_exists( 'Certificates_Widget' ) ) && ( class_exists( 'WP_Widget' 
 			$args = array();
 
 			if ( empty( $args['description'] ) ) {
-				// translators: placeholder: Certificates.
-				$args['description'] = sprintf( esc_html_x( 'Displays a list of %s', 'placeholder: Certificates', 'learndash' ), $this->post_name );
+				$args['description'] = esc_html__( 'Displays a list of Certificates', 'learndash' );
 			}
 
 			if ( empty( $this->post_args ) ) {
@@ -88,7 +87,7 @@ if ( ( ! class_exists( 'Certificates_Widget' ) ) && ( class_exists( 'WP_Widget' 
 			/* After Widget content */
 			$buf .= '</ul>' . $after_widget;
 
-			echo $buf;
+			echo $buf; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			$learndash_shortcode_used = true;
 		}
@@ -126,7 +125,7 @@ if ( ( ! class_exists( 'Certificates_Widget' ) ) && ( class_exists( 'WP_Widget' 
 			?>
 			<p>
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo apply_filters( 'the_title', $title, 0 ); ?>" />
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo apply_filters( 'the_title', $title, 0 ); ?>" /> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound,WordPress.Security.EscapeOutput.OutputNotEscaped -- WP Core Hook ?>
 			</p>
 			<?php
 		}

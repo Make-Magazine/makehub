@@ -42,14 +42,15 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					<div class='postbox ' id='sfwd-certificates_metabox'>
 						<div class='inside'  style='padding: 0 12px 12px;'>
 						<?php
-							echo wpautop(
+							echo wpautop( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Elements escaped within.
 								sprintf(
-									esc_html_x( 'The documentation for Certificate Shortcodes has moved online. %s.', 'learndash' ),
+									// translators: placeholder: URL to online documentation.
+									esc_html_x( 'The documentation for Certificate Shortcodes has moved online (only available in English). %s', 'placeholder: URL to online documentation', 'learndash' ),
 									'<a href="https://www.learndash.com/support/docs/core/certificates/certificate-shortcodes/" target="_blank" rel="noopener noreferrer" aria-label="' . esc_html__( 'External link to Certificate online documentation', 'learndash' )
 								) . '">' . esc_html__( 'Click here', 'learndash' ) . sprintf(
 									'<span class="screen-reader-text">%s</span><span aria-hidden="true" style="text-decodarion: none !important;" class="dashicons dashicons-external"></span>',
 									/* translators: Accessibility text. */
-									__( '(opens in a new tab)' )
+									esc_html__( '(opens in a new tab)', 'learndash' )
 								) . '</a>'
 							);
 						?>

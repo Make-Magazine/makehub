@@ -483,6 +483,10 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 									 * @param int  $user_id                 User ID.
 									 */
 									$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $post ), $post->ID, $user_id );
+
+									if ( learndash_is_sample( $post ) ) {
+										$previous_lesson_completed = true;
+									}
 								}
 								$show_content = $previous_lesson_completed;
 
@@ -612,6 +616,11 @@ if ( ! class_exists( 'SFWD_CPT_Instance' ) ) {
 									$previous_topic_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $post ), $post->ID, $user_id );
 									/** This filter is documented in includes/class-ld-cpt-instance.php */
 									$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $lesson_post ), $lesson_post->ID, $user_id );
+
+									if ( learndash_is_sample( $lesson_post ) ) {
+										$previous_lesson_completed = true;
+										$previous_topic_completed  = true;
+									}
 								}
 								$show_content = ( $previous_topic_completed && $previous_lesson_completed );
 

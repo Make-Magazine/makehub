@@ -17,62 +17,62 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 * Object constructor
 		 */
 		public function __construct() {
-			$this->shortcode_slug = 'ld_course_info';
-			$this->block_slug = 'ld-course-info';
+			$this->shortcode_slug   = 'ld_course_info';
+			$this->block_slug       = 'ld-course-info';
 			$this->block_attributes = array(
-				'user_id' => array(
+				'user_id'                   => array(
 					'type' => 'string',
 				),
-				'registered_show' => array(
+				'registered_show'           => array(
 					'type' => 'boolean',
 				),
 				'registered_show_thumbnail' => array(
 					'type' => 'boolean',
 				),
-				'registered_num' => array(
+				'registered_num'            => array(
 					'type' => 'string',
 				),
-				'registered_order' => array(
+				'registered_order'          => array(
 					'type' => 'string',
 				),
-				'registered_orderby' => array(
+				'registered_orderby'        => array(
 					'type' => 'string',
 				),
-				'progress_show' => array(
+				'progress_show'             => array(
 					'type' => 'boolean',
 				),
-				'progress_num' => array(
+				'progress_num'              => array(
 					'type' => 'string',
 				),
-				'progress_order' => array(
+				'progress_order'            => array(
 					'type' => 'string',
 				),
-				'progress_orderby' => array(
+				'progress_orderby'          => array(
 					'type' => 'string',
 				),
-				'quiz_show' => array(
+				'quiz_show'                 => array(
 					'type' => 'boolean',
 				),
-				'quiz_num' => array(
+				'quiz_num'                  => array(
 					'type' => 'string',
 				),
-				'quiz_order' => array(
+				'quiz_order'                => array(
 					'type' => 'string',
 				),
-				'quiz_orderby' => array(
+				'quiz_orderby'              => array(
 					'type' => 'string',
 				),
-				'preview_show' => array(
+				'preview_show'              => array(
 					'type' => 'boolean',
 				),
-				'preview_user_id' => array(
+				'preview_user_id'           => array(
 					'type' => 'string',
 				),
-				'example_show' => array(
+				'example_show'              => array(
 					'type' => 'boolean',
 				),
 			);
-			$this->self_closing = true;
+			$this->self_closing     = true;
 
 			$this->init();
 		}
@@ -103,12 +103,12 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 				if ( ( isset( $attributes['example_show'] ) ) && ( ! empty( $attributes['example_show'] ) ) ) {
 					$attributes['preview_user_id'] = $this->get_example_user_id();
-					$attributes['preview_show'] = 1;
+					$attributes['preview_show']    = 1;
 					unset( $attributes['example_show'] );
 				}
 
 				$shortcode_params_str = '';
-				$types = array();
+				$types                = array();
 				if ( isset( $attributes['registered_show'] ) ) {
 					if ( true === $attributes['registered_show'] ) {
 						$types[] = 'registered';
@@ -142,7 +142,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 					}
 					$shortcode_params_str .= 'type="' . implode( ',', $types ) . '"';
 
-					foreach( $attributes as $key => $val ) {
+					foreach ( $attributes as $key => $val ) {
 						if ( ( empty( $key ) ) || ( is_null( $val ) ) ) {
 							continue;
 						}
@@ -151,7 +151,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 							if ( ( ! isset( $attributes['user_id'] ) ) && ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
 								if ( learndash_is_admin_user( get_current_user_id() ) ) {
 									// If admin user they can preview any user_id.
-								} else if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+								} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
 									// If group leader user we ensure the preview user_id is within their group(s).
 									if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
 										continue;
@@ -172,7 +172,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 					}
 
 					$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-					$shortcode_out = do_shortcode( $shortcode_params_str );
+					$shortcode_out        = do_shortcode( $shortcode_params_str );
 					if ( empty( $shortcode_out ) ) {
 						$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
 					}
@@ -187,7 +187,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		}
 
 		/**
-		 * Called from the LD function learndash_convert_block_markers_shortcode() when parsing the block content. 
+		 * Called from the LD function learndash_convert_block_markers_shortcode() when parsing the block content.
 		 *
 		 * @since 2.5.9
 		 *

@@ -24,18 +24,21 @@ const {
 
 const {
 	InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	ToggleControl,
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-course-content',
-    {
+	'learndash/ld-course-content',
+	{
 		// translators: placeholder: Course.
 		title: sprintf(_x('LearnDash %s Content', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')),
 		// translators: placeholder: Course.
@@ -50,12 +53,12 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
-            course_id: {
+		attributes: {
+			course_id: {
 				type: 'string',
 				default: '',
-            },
-            per_page: {
+			},
+			per_page: {
 				type: 'string',
 				default: '',
 			},
@@ -74,13 +77,13 @@ registerBlockType(
 			meta: {
 				type: 'object',
 			}
-        },
-        edit: props => {
+		},
+		edit: props => {
 			const { attributes: { course_id, per_page, preview_show, preview_course_id, example_show },
-            	className, setAttributes } = props;
+			className, setAttributes } = props;
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					<PanelBody
 						title={ __( 'Settings', 'learndash' ) }
 					>
@@ -132,6 +135,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-course-content"
 						attributes={attributes}
+						key="learndash/ld-course-content"
 					/>
 
 				} else {
@@ -145,7 +149,7 @@ registerBlockType(
 			];
 		},
 
-        save: props => {
+		save: props => {
 			// Delete meta from props to prevent it being saved.
 			delete (props.attributes.meta);
 		},

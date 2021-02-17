@@ -82,6 +82,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['lesson'] = '';
 				}
 			}
+
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
 		}
 
 		/**
@@ -115,7 +122,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$select_course_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
-								'post_type'      => 'sfwd-courses',
+								'post_type' => 'sfwd-courses',
 							),
 							'settings_element' => array(
 								'settings_parent_class' => get_parent_class( __CLASS__ ),
@@ -136,7 +143,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'course' )
 					),
 				);
-				$select_course_options = $sfwd_lms->select_a_course();
+				$select_course_options         = $sfwd_lms->select_a_course();
 				if ( ( is_array( $select_course_options ) ) && ( ! empty( $select_course_options ) ) ) {
 					$select_course_options = $select_course_options_default + $select_course_options;
 				} else {
@@ -187,52 +194,70 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			$this->setting_option_fields = array(
 				'course' => array(
-					'name'      => 'course',
-					'label'     => sprintf(
-						// translators: placeholders: course.
+					'name'        => 'course',
+					'label'       => sprintf(
+						// translators: placeholder: course.
 						esc_html_x( 'Associated %s', 'Associated Course Label', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
-					'type'      => 'select',
-					'lazy_load' => true,
-					'help_text' => sprintf(
+					'type'        => 'select',
+					'lazy_load'   => true,
+					'help_text'   => sprintf(
 						// translators: placeholders: Topic, Course.
 						esc_html_x( 'Associate this %1$s with a %2$s.', 'placeholder: Topic, Course.', 'learndash' ),
 						learndash_get_custom_label( 'topic' ),
 						learndash_get_custom_label( 'course' )
 					),
-					'default'   => '',
-					'value'     => $this->setting_option_values['course'],
-					'options'   => $select_course_options,
+					'default'     => '',
+					'value'       => $this->setting_option_values['course'],
+					'options'     => $select_course_options,
 					'placeholder' => $select_course_options_default,
-					'attrs'     => array(
+					'attrs'       => array(
 						'data-ld_selector_nonce'   => wp_create_nonce( 'sfwd-courses' ),
 						'data-ld_selector_default' => '1',
 						'data-select2-query-data'  => $select_course_query_data_json,
 					),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
+					),
 				),
 				'lesson' => array(
-					'name'      => 'lesson',
-					'label'     => sprintf(
+					'name'        => 'lesson',
+					'label'       => sprintf(
 						// translators: placeholder: Lesson.
 						esc_html_x( 'Associated %s', 'placeholder: Lesson', 'learndash' ),
 						learndash_get_custom_label( 'lesson' )
 					),
-					'type'      => 'select',
-					'lazy_load' => true,
-					'help_text' => sprintf(
+					'type'        => 'select',
+					'lazy_load'   => true,
+					'help_text'   => sprintf(
 						// translators: placeholders: Lesson, Course.
 						esc_html_x( 'Associate this %1$s with a %2$s.', 'placeholders: Lesson, Course', 'learndash' ),
 						learndash_get_custom_label( 'lesson' ),
 						learndash_get_custom_label( 'course' )
 					),
-					'default'   => '',
-					'value'     => $this->setting_option_values['lesson'],
-					'options'   => $select_lesson_options,
+					'default'     => '',
+					'value'       => $this->setting_option_values['lesson'],
+					'options'     => $select_lesson_options,
 					'placeholder' => $select_lesson_options_default,
-					'attrs'     => array(
+					'attrs'       => array(
 						'data-ld_selector_nonce'   => wp_create_nonce( 'sfwd-lessons' ),
 						'data-ld_selector_default' => '1',
+					),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
 					),
 				),
 			);
@@ -246,7 +271,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Filter settings values for metabox before save to database.
 		 *
-		 * @param array $settings_values Array of settings values.
+		 * @param array  $settings_values Array of settings values.
 		 * @param string $settings_metabox_key Metabox key.
 		 * @param string $settings_screen_id Screen ID.
 		 * @return array $settings_values.

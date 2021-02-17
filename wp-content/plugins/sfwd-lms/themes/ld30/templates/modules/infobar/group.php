@@ -34,9 +34,9 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 		learndash_get_template_part(
 			'modules/progress-group.php',
 			array(
-				'context'   => 'group',
-				'user_id'   => $user_id,
-				'group_id'  => $group_id,
+				'context'  => 'group',
+				'user_id'  => $user_id,
+				'group_id' => $group_id,
 			),
 			true
 		);

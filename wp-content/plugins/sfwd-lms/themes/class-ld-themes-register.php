@@ -152,7 +152,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @param string $section_ket Key for Settincs Section.
 		 * @param object $section_instance Instance of settings section.
 		 */
-		final public static function register_theme_settings_section( $theme_key = '', $section_key = '', $section_instance ) {
+		final public static function register_theme_settings_section( $theme_key, $section_key, $section_instance ) {
 			if ( ( ! empty( $theme_key ) ) && ( isset( self::$_instances[ $theme_key ] ) ) ) {
 				if ( ( ! empty( $section_key ) ) && ( ! isset( self::$_instances[ $theme_key ]->theme_settings_sections[ $section_key ] ) ) ) {
 					self::$_instances[ $theme_key ]->theme_settings_sections[ $section_key ] = $section_instance;

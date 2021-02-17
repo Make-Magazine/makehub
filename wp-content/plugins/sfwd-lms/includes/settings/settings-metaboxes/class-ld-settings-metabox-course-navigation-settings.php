@@ -53,6 +53,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
 		}
 
 		/**
@@ -75,7 +81,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'description' => sprintf(
 								// translators: placeholder: Course.
 								esc_html_x( 'Requires the user to progress through the %s in the designated step sequence', 'placeholder: Course', 'learndash' ),
-								learndash_get_custom_label_lower( 'course' )
+								esc_html( learndash_get_custom_label_lower( 'course' ) )
 							),
 						),
 						'on' => array(
@@ -83,12 +89,24 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'description' => sprintf(
 								// translators: placeholder: Course.
 								esc_html_x( 'Allows the user to move freely through the %s without following the designated step sequence', 'placeholder: Course', 'learndash' ),
-								learndash_get_custom_label_lower( 'course' )
+								esc_html( learndash_get_custom_label_lower( 'course' ) )
 							),
 						),
 					),
 					'value'   => $this->setting_option_values['course_disable_lesson_progression'],
 					'default' => '',
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'progression_disabled',
+								// translators: placeholder: Course.
+								'description' => sprintf( esc_html_x( '%s Progression Disabled', 'placeholder: Course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 			);
 
@@ -98,7 +116,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::load_settings_fields();
 		}
 
-				/**
+		/**
 		 * Filter settings values for metabox before save to database.
 		 *
 		 * @param array $settings_values Array of settings values.

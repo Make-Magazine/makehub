@@ -466,7 +466,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 * @param  string $code    post type
 		 * @return string            shortcode output
 		 */
-		public function shortcode( $atts, $content = null, $code ) {
+		public function shortcode( $atts, $content = null, $code = '' ) {
 			global $learndash_shortcode_used;
 
 			extract(
@@ -555,7 +555,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 					<ul class='post-meta'>
 						<?php
 						foreach ( $meta as $m ) {
-							echo "<li><span class='post-meta-key'>{$m['name']}</span> {$m['value']}</li>\n";
+							echo "<li><span class='post-meta-key'>" . esc_html( $m['name'] ) . '</span> ' . esc_html( $m['value'] ) . "</li>\n";
 						}
 						?>
 					</ul>

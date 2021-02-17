@@ -36,12 +36,12 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function create_section_field( $field_args = array() ) {
 			global $wp_locale;
-			
+
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
 			$date_value = '';
 			if ( isset( $field_args['value'] ) ) {
@@ -50,6 +50,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 						$date_value = learndash_get_timestamp_from_date_string( $value );
 					} else {
 						// If we have a timestamp we assume it is GMT. So we need to convert it to local.
+						// phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 						$value_ymd  = get_date_from_gmt( date( 'Y-m-d H:i:s', $field_args['value'] ), 'Y-m-d H:i:s' );
 						$date_value = strtotime( $value_ymd );
 					}
@@ -75,12 +76,12 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_id    = $this->get_field_attribute_id( $field_args, false );
 
 			$month_field = '<span class="screen-reader-text">' . esc_html__( 'Month', 'learndash' ) . '</span><select class="ld_date_mm ' . $field_class . '" name="' . $field_name . '[mm]" ><option value="">' . esc_html__( 'MM', 'learndash' ) . '</option>';
-			for ( $i = 1; $i < 13; $i = $i + 1 ) {
+			for ( $i = 1; $i < 13; $i++ ) {
 				$monthnum     = zeroise( $i, 2 );
 				$monthtext    = $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) );
-				$month_field .= "\t\t\t" . '<option value="' . $monthnum . '" data-text="' . $monthtext . '" ' . selected( $monthnum, $value_mm, false ) . '>';
+				$month_field .= "\t\t\t" . '<option value="' . esc_attr( $monthnum ) . '" data-text="' . esc_attr( $monthtext ) . '" ' . selected( $monthnum, $value_mm, false ) . '>';
 				// translators: placeholder: month number, month text.
-				$month_field .= sprintf( esc_html_x( '%1$s-%2$s', 'placeholder: month number, month text', 'learndash' ), $monthnum, $monthtext ) . "</option>\n";
+				$month_field .= sprintf( esc_html_x( '%1$s-%2$s', 'placeholder: month number, month text', 'learndash' ), esc_html( $monthnum ), esc_html( $monthtext ) ) . "</option>\n";
 			}
 				$month_field .= '</select>';
 
@@ -90,8 +91,8 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$minute_field = '<span class="screen-reader-text">' . esc_html__( 'Minute', 'learndash' ) . '</span><input type="number" min="0" max="59" placeholder="MN" class="ld_date_mn ' . $field_class . '" name="' . $field_name . '[mn]" value="' . $value_mn . '" size="2" maxlength="2" autocomplete="off" />';
 
 			$html .= '<div class="ld_date_selector">' . sprintf(
-				// Translators: placeholders Month, Day, Year, Hour, Minute
-				esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s' ),
+				// translators: placeholders: Month Name, Day number, Year number, Hour number, Minute number.
+				esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s', 'learndash' ),
 				$month_field,
 				$day_field,
 				$year_field,
@@ -102,7 +103,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**

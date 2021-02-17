@@ -4,9 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_ld_certificate' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_ld_certificate extends LearnDash_Shortcodes_Section {
 
-		function __construct( $fields_args = array() ) {
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
+		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
 			$this->shortcodes_section_key         = 'ld_certificate';
@@ -17,9 +26,12 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
-		function init_shortcodes_section_fields() {
+		/**
+		 * Initialize the shortcode fields.
+		 */
+		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
-				'course_id'  => array(
+				'course_id' => array(
 					'id'        => $this->shortcodes_section_key . '_course_id',
 					'name'      => 'course_id',
 					'type'      => 'number',
@@ -35,10 +47,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'value'     => '',
-					//'required'  => 'required',
 					'class'     => 'small-text',
 				),
-				'quiz_id'  => array(
+				'quiz_id'   => array(
 					'id'        => $this->shortcodes_section_key . '_quiz_id',
 					'name'      => 'quiz_id',
 					'type'      => 'number',
@@ -56,7 +67,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'value'     => '',
 					'class'     => 'small-text',
 				),
-				'user_id'  => array(
+				'user_id'   => array(
 					'id'        => $this->shortcodes_section_key . '_user_id',
 					'name'      => 'user_id',
 					'type'      => 'number',
@@ -65,7 +76,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'value'     => '',
 					'class'     => 'small-text',
 				),
-				'label'   => array(
+				'label'     => array(
 					'id'        => $this->shortcodes_section_key . '_label',
 					'name'      => 'label',
 					'type'      => 'text',
@@ -73,7 +84,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => esc_html__( 'Label for link shown to user', 'learndash' ),
 					'value'     => '',
 				),
-				'class'   => array(
+				'class'     => array(
 					'id'        => $this->shortcodes_section_key . '_class',
 					'name'      => 'class',
 					'type'      => 'text',
@@ -89,14 +100,14 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => esc_html__( 'User defined value to be passed into shortcode handler', 'learndash' ),
 					'value'     => '',
 				),
-				'callback'   => array(
+				'callback'  => array(
 					'id'        => $this->shortcodes_section_key . '_callback',
 					'name'      => 'callback',
 					'type'      => 'text',
 					'label'     => esc_html__( 'Callback', 'learndash' ),
 					'help_text' => esc_html__( 'Custom callback function to be used instead of default output', 'learndash' ),
 					'value'     => '',
-				),				
+				),
 			);
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */

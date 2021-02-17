@@ -86,26 +86,30 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					'exclude_tree'     => $post->ID,
 					'selected'         => $post->post_parent,
 					'name'             => 'group_parent_id',
-					'show_option_none' => __( '(no parent)', 'learndash' ),
+					'show_option_none' => esc_html__( '(no parent)', 'learndash' ),
 					'sort_column'      => 'menu_order, post_title',
 					'echo'             => 0,
 				);
 
-				$groups         = wp_dropdown_pages( $dropdown_args );
+				$groups = wp_dropdown_pages( $dropdown_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- See list of args above
 				if ( ! empty( $groups ) ) {
 					?>
-					<p class="post-attributes-label-wrapper group-parent-id-label-wrapper"><label class="post-attributes-label" for="group_parent_id"><?php echo sprintf(
+					<p class="post-attributes-label-wrapper group-parent-id-label-wrapper"><label class="post-attributes-label" for="group_parent_id">
+					<?php
+					echo sprintf(
 						// translators: placeholder: Group.
 						esc_html_x( '%s Parent', 'placeholder: Group', 'learndash' ),
-						learndash_get_custom_label( 'group' )
-					); ?></label></p>
+						learndash_get_custom_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					);
+					?>
+					</label></p>
 					<?php echo $groups; ?>
 					<?php
 				}
 			}
 
 			?>
-			<p class="post-attributes-label-wrapper group-menu-order-label-wrapper"><label class="post-attributes-label" for="group_menu_order"><?php _e( 'Order' ); ?></label></p>
+			<p class="post-attributes-label-wrapper group-menu-order-label-wrapper"><label class="post-attributes-label" for="group_menu_order"><?php esc_html_e( 'Order', 'learndash' ); ?></label></p>
 			<input name="group_menu_order" type="text" size="4" id="group_menu_order" value="<?php echo esc_attr( $post->menu_order ); ?>" />
 			<?php
 		}
@@ -142,12 +146,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			$updated_post = false;
 			if ( isset( $_POST['group_parent_id'] ) ) {
-				$updated_post = true;
+				$updated_post             = true;
 				$edit_post['post_parent'] = absint( $_POST['group_parent_id'] );
 			}
 
 			if ( isset( $_POST['group_menu_order'] ) ) {
-				$updated_post = true;
+				$updated_post            = true;
 				$edit_post['menu_order'] = absint( $_POST['group_menu_order'] );
 			}
 
@@ -168,7 +172,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			 * @param array   $group_users   An array of group users.
 			 * @param array   $group_courses An array of group courses.
 			 */
-			do_action_deprecated( 'ld_group_postdata_updated', [$post_id, $group_leaders, $group_users, $group_courses], '3.1.7' );
+			do_action_deprecated( 'ld_group_postdata_updated', [ $post_id, $group_leaders, $group_users, $group_courses ], '3.1.7' );
 		}
 
 		// End of functions.

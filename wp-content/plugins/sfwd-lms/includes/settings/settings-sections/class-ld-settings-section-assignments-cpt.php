@@ -51,9 +51,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$_INITIALIZE = false;
 			if ( false === $this->setting_option_values ) {
-				$_INITIALIZE                 = true;
 				$this->setting_option_values = array(
 					'exclude_from_search' => 'yes',
 					'publicly_queryable'  => 'yes',

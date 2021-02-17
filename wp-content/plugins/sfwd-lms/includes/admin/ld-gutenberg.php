@@ -28,10 +28,11 @@ function disable_on_cpts( $is_enabled, $post_type ) {
 	$disabled_cpts = array(
 		'sfwd-question',
 		'sfwd-certificates',
+		'sfwd-essays',
 		//'groups',
 	);
 
-	if ( in_array( $post_type, $disabled_cpts ) ) {
+	if ( in_array( $post_type, $disabled_cpts, true ) ) {
 		return false;
 	}
 

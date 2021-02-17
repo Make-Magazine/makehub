@@ -105,7 +105,7 @@ function learndash_course_content_shortcode( $atts ) {
 	// Prevent the shortcoce page from showing when used on a course (sfwd-courses) single page
 	// as it will conflict with pager from the templates/course.php output.
 	$queried_object = get_queried_object();
-	if ( ( is_a( $queried_object, 'WP_Post' ) ) && ( $queried_object->post_type == 'sfwd-courses' ) ) {
+	if ( ( is_a( $queried_object, 'WP_Post' ) ) && ( 'sfwd-courses' === $queried_object->post_type ) ) {
 		global $course_pager_results;
 		$course_pager_results = null;
 	}

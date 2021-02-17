@@ -9,7 +9,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
- 
+
 if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'Learndash_Admin_Data_Upgrades_User_Activity_DB_Table' ) ) ) {
 	/**
 	 * Class to create the Data Upgrade for Database Tables.
@@ -34,7 +34,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 * @since 2.3
 		 */
 		public function upgrade_data_settings() {
-			if  (is_admin() ) {
+			if ( is_admin() ) {
 				$db_version = $this->get_data_settings( 'db_version' );
 				if ( ( defined( 'LEARNDASH_ACTIVATED' ) ) || ( ( defined( 'LEARNDASH_SETTINGS_DB_VERSION' ) ) && ( LEARNDASH_SETTINGS_DB_VERSION != '' ) && ( $this->data_settings['db_version'] < LEARNDASH_SETTINGS_DB_VERSION ) ) ) {
 					$this->upgrade_db_tables( $this->data_settings['db_version'] );
@@ -54,7 +54,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ! function_exists( 'dbDelta' ) ) {
-				require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 			}
 
 			$charset_collate = '';
@@ -65,8 +65,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				$charset_collate .= " COLLATE $wpdb->collate";
 			}
 
-			$learndash_user_activity_db_table = LDLMS_DB::get_table_name( 'user_activity' );
-			$learndash_user_activity_db_table_create_query = "CREATE TABLE " . $learndash_user_activity_db_table . " (
+			$learndash_user_activity_db_table              = LDLMS_DB::get_table_name( 'user_activity' );
+			$learndash_user_activity_db_table_create_query = 'CREATE TABLE ' . $learndash_user_activity_db_table . " (
 				activity_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				user_id bigint(20) unsigned NOT NULL DEFAULT '0',
 			  	post_id bigint(20) unsigned NOT NULL DEFAULT '0',
@@ -85,11 +85,11 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			  	KEY activity_started (activity_started),
 			  	KEY activity_completed (activity_completed),
 			  	KEY activity_updated (activity_updated)
-				) " . $charset_collate . ";";
+				) " . $charset_collate . ';';
 			dbDelta( $learndash_user_activity_db_table_create_query );
 
-			$learndash_user_activity_meta_db_table = LDLMS_DB::get_table_name( 'user_activity_meta' );
-			$learndash_user_activity_meta_db_table_create_query = "CREATE TABLE " . $learndash_user_activity_meta_db_table . " (
+			$learndash_user_activity_meta_db_table              = LDLMS_DB::get_table_name( 'user_activity_meta' );
+			$learndash_user_activity_meta_db_table_create_query = 'CREATE TABLE ' . $learndash_user_activity_meta_db_table . " (
 				activity_meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 				activity_id bigint(20) unsigned NOT NULL DEFAULT '0',
 				activity_meta_key varchar(255) DEFAULT NULL,
@@ -97,7 +97,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				PRIMARY KEY  (activity_meta_id),
 				KEY activity_id (activity_id),
 				KEY activity_meta_key (activity_meta_key(191))
-			) " . $charset_collate . ";";
+			) " . $charset_collate . ';';
 			dbDelta( $learndash_user_activity_meta_db_table_create_query );
 
 			/**
@@ -127,6 +127,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 	}
 }
 
-add_action( 'learndash_data_upgrades_init', function() {
-	Learndash_Admin_Data_Upgrades_User_Activity_DB_Table::add_instance();
-} );
+add_action(
+	'learndash_data_upgrades_init',
+	function() {
+		Learndash_Admin_Data_Upgrades_User_Activity_DB_Table::add_instance();
+	}
+);

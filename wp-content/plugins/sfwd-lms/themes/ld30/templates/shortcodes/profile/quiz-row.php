@@ -13,26 +13,19 @@ $stats           = '--';
  * Set the quiz status and certificate link (if applicable)
  * @var [type]
  */
-if ( isset( $quiz_attempt['has_graded'] ) && true === (bool) $quiz_attempt['has_graded'] && true === (bool) LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) {
-	$status = 'pending';
+if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
+	$certificateLink = $quiz_attempt['certificate']['certificateLink'];
 } else {
-	if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
-		$certificateLink = $quiz_attempt['certificate']['certificateLink'];
-	} else {
-		$certificateLink = '';
-	}
-	$status = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
+	$certificateLink = '';
 }
+
+$status = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
 
 /**
  * Populate the score variables
  * @var [type]
  */
-if ( isset( $quiz_attempt['has_graded'] ) && true === (bool) $quiz_attempt['has_graded'] && true === (bool) LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) :
-	$score = esc_html_x( 'Pending', 'Pending Certificate Status Label', 'learndash' );
-else :
-	$score = round( $quiz_attempt['percentage'], 2 ) . '%';
-endif;
+$score = round( $quiz_attempt['percentage'], 2 ) . '%';
 
 /**
  * Populate the stats variable
@@ -54,7 +47,10 @@ if ( get_current_user_id() === absint( $user_id ) || learndash_is_admin_user() |
 endif;
 
 // Quiz title and link...
-$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : @$quiz_attempt['quiz_title'];
+// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? apply_filters( 'the_title', $quiz_attempt['post']->post_title, $quiz_attempt['post']->post_titleID ) : @$quiz_attempt['quiz_title'];
+
+				
 $quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalink( intval( $quiz_attempt['post']->ID ), $course_id ) : '#'; ?>
 
 <div class="ld-table-list-item <?php echo esc_attr( $status ); ?>">
@@ -65,7 +61,7 @@ $quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalin
 			<?php
 			echo wp_kses_post( learndash_status_icon( $status, 'sfwd-quiz' ) );
 			?>
-			<span><?php echo esc_html( $quiz_title ); ?></span>
+			<span><?php echo wp_kses_post( $quiz_title ); ?></span>
 			</a>
 		</div> <!--/.ld-table-list-title-->
 

@@ -262,11 +262,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'course_pagination_lessons' => array(
 						'name'           => 'course_pagination_lessons',
 						'type'           => 'number',
-						'label'          => sprintf(
-							// translators: placeholder: Lessons.
-							esc_html_x( '%s', 'placeholder: Lessons', 'learndash' ),
-							learndash_get_custom_label( 'lessons' )
-						),
+						'label'          => learndash_get_custom_label( 'lessons' ),
 						'value'          => $this->setting_option_values['course_pagination_lessons'],
 						'class'          => 'small-text',
 						'input_label'    => esc_html__( 'per page', 'learndash' ),
@@ -279,11 +275,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'course_pagination_topics'  => array(
 						'name'           => 'course_pagination_topics',
 						'type'           => 'number',
-						'label'          => sprintf(
-							// translators: placeholder: Topics.
-							esc_html_x( '%s', 'placeholder: Topics', 'learndash' ),
-							learndash_get_custom_label( 'topics' )
-						),
+						'label'          => learndash_get_custom_label( 'topics' ),
 						'value'          => $this->setting_option_values['course_pagination_topics'],
 						'class'          => 'small-text',
 						'input_label'    => esc_html__( 'per page', 'learndash' ),
@@ -390,7 +382,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					// Manage Course Builder, Per Page, and Share Steps.
 					if ( ( isset( $current_values['course_builder_enabled'] ) ) && ( 'yes' === $current_values['course_builder_enabled'] ) ) {
 						$current_values['course_builder_per_page'] = absint( $current_values['course_builder_per_page'] );
-						
+
 					} else {
 						$current_values['course_builder_shared_steps'] = '';
 						$current_values['course_builder_per_page']     = LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE;

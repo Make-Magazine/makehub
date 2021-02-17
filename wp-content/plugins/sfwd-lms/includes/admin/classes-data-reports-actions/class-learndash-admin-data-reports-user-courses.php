@@ -47,12 +47,13 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 			?>
 			<tr id="learndash-data-reports-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-reports-container">
 				<td class="learndash-data-reports-button-container" style="width:20%">
-					<button class="learndash-data-reports-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-reports-' . $this->data_slug . '-' . get_current_user_id() ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>"><?php
-						printf(
-							// translators: Export User Course Data Label.
-							esc_html_x( 'Export User %s Data', 'Export User Course Data Label', 'learndash' ),
-							esc_attr( LearnDash_Custom_Label::get_label( 'course' ) )
-						);
+					<button class="learndash-data-reports-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-reports-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
+					<?php
+					printf(
+					// translators: Export User Course Data Label.
+						esc_html_x( 'Export User %s Data', 'Export User Course Data Label', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					);
 					?>
 					</button></td>
 				<td class="learndash-data-reports-status-container" style="width: 80%">
@@ -133,7 +134,13 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 							$this->transient_data['activity_status'] = array( 'NOT_STARTED', 'IN_PROGRESS', 'COMPLETED' );
 						}
 
+						// if ( count( $this->transient_data['users_ids'] ) > 1000 ) {
+						// $this->transient_data['users_ids'] = array_slice( $this->transient_data['users_ids'], 0, 1000, true );
+						// }
+
 						$this->transient_data['total_users'] = count( $this->transient_data['users_ids'] );
+
+						$this->transient_data['course_step_totals'] = array();
 
 						$this->set_report_filenames( $data );
 						$this->report_filename = $this->transient_data['report_filename'];
@@ -272,6 +279,8 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 									break;
 								}
 							}
+
+							$this->set_option_cache( $this->transient_key, $this->transient_data );
 
 							if ( ! empty( $course_progress_data ) ) {
 								$this->csv_parse->file            = $this->report_filename;
@@ -419,7 +428,25 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 			);
 		}
 
-		public function report_column( $column_value = '', $column_key, $report_item, $report_user ) {
+		/**
+		 * Handles display formatting of report column value.
+		 *
+		 * @since 2.4.7
+		 *
+		 * @param int|string $column_value Report column value.
+		 * @param string     $column_key   Column key.
+		 * @param object     $report_item  Report Item.
+		 * @param WP_User    $report_user  WP_User object.
+		 *
+		 * @return mixed $column_value;
+		 */
+		public function report_column( $column_value, $column_key, $report_item, $report_user ) {
+
+			if ( ( property_exists( $report_item, 'post_id' ) ) && ( ! empty( $report_item->post_id ) ) ) {
+				$course_id = absint( $report_item->post_id );
+			} else {
+				$course_id = 0;
+			}
 
 			switch ( $column_key ) {
 				case 'user_id':
@@ -443,9 +470,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 					break;
 
 				case 'course_id':
-					if ( property_exists( $report_item, 'post_id' ) ) {
-						$column_value = $report_item->post_id;
-					}
+					$column_value = $course_id;
 					break;
 
 				case 'course_title':
@@ -458,35 +483,65 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 				case 'course_steps_total':
 					$column_value = '0';
 
-					if ( ( property_exists( $report_item, 'post_id' ) ) && ( ! empty( $report_item->post_id ) ) ) {
-						$column_value = learndash_get_course_steps_count( $report_item->post_id );
+					if ( ! empty( $course_id ) ) {
+						if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
+							// error_log( 'found course_id[' . $course_id . ']' );
+							$column_value = $this->transient_data['course_step_totals'][ $course_id ];
+						} else {
+							$column_value = learndash_get_course_steps_count( $course_id );
+							$this->transient_data['course_step_totals'][ $course_id ] = absint( $column_value );
+						}
 					}
 					break;
 
 				case 'course_steps_completed':
 					$column_value = '0';
 
-					if ( ( property_exists( $report_item, 'post_id' ) ) && ( ! empty( $report_item->post_id ) ) ) {
-
+					if ( ! empty( $course_id ) ) {
 						// First check if the user previously completed the course
 						$user_completed_course = false;
-						$completed_on          = get_user_meta( $report_item->user_id, 'course_completed_' . $report_item->post_id, true );
+						$completed_on          = get_user_meta( $report_item->user_id, 'course_completed_' . $course_id, true );
 						if ( ! empty( $completed_on ) ) {
 							$user_completed_course = true;
-						} elseif ( ( property_exists( $report_item, 'activity_status' ) ) && ( true === (bool) $report_item->activity_status ) ) {
-							$user_completed_course = true;
+						} elseif ( property_exists( $report_item, 'activity_status' ) ) {
+							if ( $report_item->activity_status == true ) {
+								$user_completed_course = true;
+							} 	
 						}
-
-						if ( true === (bool) $user_completed_course ) {
-							// IF the user completed the course we set the user's completed steps to the number of steps in the course.
-							$column_value = learndash_get_course_steps_count( $report_item->post_id );
+					
+						if ( $user_completed_course == true ) {
+							// IF the user completed the course we set the user's completed steps to the number of steps in the course. 
+							// $column_value = learndash_get_course_steps_count( $report_item->post_id );
+							if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
+								// error_log( 'found course_id[' . $course_id . ']' );
+								$column_value = $this->transient_data['course_step_totals'][ $course_id ];
+							} else {
+								$column_value = learndash_get_course_steps_count( $course_id );
+								$this->transient_data['course_step_totals'][ $course_id ] = absint( $column_value );
+							}
 						} elseif ( ( property_exists( $report_item, 'activity_meta' ) ) && ( ! empty( $report_item->activity_meta ) ) ) {
 							if ( ( isset( $report_item->activity_meta['steps_completed'] ) ) && ( ! empty( $report_item->activity_meta['steps_completed'] ) ) ) {
 								$column_value = $report_item->activity_meta['steps_completed'];
-
-								$course_steps_count = learndash_get_course_steps_count( $report_item->post_id );
+							
+								// $course_steps_count = learndash_get_course_steps_count( $report_item->post_id );
+								
+								if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
+									// error_log( 'found course_id[' . $course_id . ']' );
+									$course_steps_count = $this->transient_data['course_step_totals'][ $course_id ];
+								} else {
+									$course_steps_count                                       = learndash_get_course_steps_count( $course_id );
+									$this->transient_data['course_step_totals'][ $course_id ] = absint( $course_steps_count );
+								}
 								if ( $column_value > $course_steps_count ) {
 									$column_value = $course_steps_count;
+								}
+							}
+						} else {
+							$user_course_meta = get_user_meta( $report_item->user_id, '_sfwd-course_progress', true );
+							$course_id        = absint( $report_item->post_id );
+							if ( isset( $user_course_meta[ $course_id ] ) ) {
+								if ( isset( $user_course_meta[ $course_id ]['total'] ) ) {
+									$column_value = absint( $user_course_meta[ $course_id ]['total'] );
 								}
 							}
 						}
@@ -496,8 +551,8 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 				case 'course_completed':
 					$column_value = esc_html_x( 'NO', 'Course Complete Report label: NO', 'learndash' );
 
-					if ( ( property_exists( $report_item, 'post_id' ) ) && ( ! empty( $report_item->post_id ) ) ) {
-						$completed_on = get_user_meta( $report_item->user_id, 'course_completed_' . $report_item->post_id, true );
+					if ( ! empty( $course_id ) ) {
+						$completed_on = get_user_meta( $report_item->user_id, 'course_completed_' . $course_id, true );
 						if ( ! empty( $completed_on ) ) {
 							$column_value = esc_html_x( 'YES', 'Course Complete Report label: YES', 'learndash' );
 						} elseif ( property_exists( $report_item, 'activity_status' ) ) {
@@ -509,8 +564,8 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 					break;
 
 				case 'course_completed_on':
-					if ( ( property_exists( $report_item, 'post_id' ) ) && ( ! empty( $report_item->post_id ) ) ) {
-						$completed_on = get_user_meta( $report_item->user_id, 'course_completed_' . $report_item->post_id, true );
+					if ( ! empty( $course_id ) ) {
+						$completed_on = get_user_meta( $report_item->user_id, 'course_completed_' . $course_id, true );
 						if ( ! empty( $completed_on ) ) {
 							return learndash_adjust_date_time_display( $completed_on, 'Y-m-d' );
 						} elseif ( property_exists( $report_item, 'activity_status' ) ) {

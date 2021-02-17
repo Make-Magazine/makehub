@@ -89,7 +89,7 @@ if ( ( ! class_exists( 'Lesson_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 			/* After Widget content */
 			$buf .= '</ul>' . $after_widget;
 
-			echo $buf;
+			echo $buf; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 
 			$learndash_shortcode_used = true;
 
@@ -171,8 +171,8 @@ if ( ( ! class_exists( 'Lesson_Widget' ) ) && ( class_exists( 'WP_Widget' ) ) ) 
 
 			?>
 			<p>
-				<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
-				<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" />
+				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'learndash' ); ?></label>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 			</p>
 			<?php
 		}

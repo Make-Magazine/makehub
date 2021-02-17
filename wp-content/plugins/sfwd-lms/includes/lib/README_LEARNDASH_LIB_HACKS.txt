@@ -8,13 +8,13 @@ Description of changes: Added condition wrapper around line 16436 to prevent rep
 
 Original:
 	$html = preg_replace('/'.$this->re_space['p'].'+/'.$this->re_space['m'], chr(32), $html); // replace multiple spaces with a single space
-	
+
 Changed:
 	if ( ( ! defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) || ( true !== LEARNDASH_TCPDF_LEGACY_LD322 ) ) {
 		$html = preg_replace('/'.$this->re_space['p'].'+/'.$this->re_space['m'], chr(32), $html); // replace multiple spaces with a single space
 	}
 
-	
+
 ---
 
 LearnDash 3.2.2 2020-07-07
@@ -27,7 +27,7 @@ Original:
 		error_log( 'this->k[' . $this->k . ']' );
 		$retval *= $this->k;
 	}
-	
+
 Changed:
 	if ( ( ! defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) || ( true !== LEARNDASH_TCPDF_LEGACY_LD322 ) ) {
 		if ($points) {
@@ -35,7 +35,7 @@ Changed:
 			$retval *= $this->k;
 		}
 	}
-	
+
 ---
 
 LearnDash 3.2.2 2020-07-07
@@ -55,20 +55,20 @@ Changed:
 
 File: tcpdf/tcpdf.php
 Function: getHtmlDomArray()
-Description of changes: Changed line 16362 to remove invalid tags '<marker/><br/><hr/>' from call to strip_tags() function. 
+Description of changes: Changed line 16362 to remove invalid tags '<marker/><br/><hr/>' from call to wp_strip_all_tags() function.
 
 Original:
-	$html = strip_tags($html, '<marker/><a><b><blockquote><body><br><br/><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr/><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
+	$html = wp_strip_all_tags($html, '<marker/><a><b><blockquote><body><br><br/><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr/><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
 
 Changed:
-	$html = strip_tags($html, '<marker><a><b><blockquote><body><br><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
+	$html = wp_strip_all_tags($html, '<marker><a><b><blockquote><body><br><dd><del><div><dl><dt><em><font><form><h1><h2><h3><h4><h5><h6><hr><hr><i><img><input><label><li><ol><option><p><pre><s><select><small><span><strike><strong><sub><sup><table><tablehead><tcpdf><td><textarea><th><thead><tr><tt><u><ul>');
 
 ---
 
 File: tcpdf/include/barcodes/pdf417.php
 Description of changes: PHP 7.4 scan found curly brace syntax for accessing array.
 
-Errors: 
+Errors:
  881 | WARNING | [x] Curly brace syntax for accessing array elements and string offsets has been deprecated in PHP 7.4. Found: $code{$i}
  891 | WARNING | [x] Curly brace syntax for accessing array elements and string offsets has been deprecated in PHP 7.4. Found: $code{($i + 1)}
  955 | WARNING | [x] Curly brace syntax for accessing array elements and string offsets has been deprecated in PHP 7.4. Found: $code{$i}

@@ -2204,16 +2204,22 @@ function learndash_get_course_steps( $course_id = 0, $include_post_types = array
  * @return int The count of the course steps.
  */
 function learndash_get_course_steps_count( $course_id = 0 ) {
+	static $courses_steps = array();
+	
+	$course_id = absint( $course_id );
 
-	$course_steps_count = 0;
-	$course_steps = learndash_get_course_steps( $course_id );
-	if ( !empty( $course_steps ) )
-		$course_steps_count = count( $course_steps );
+	if ( ! isset( $courses_steps[ $course_id ] ) ) {
+		$courses_steps[ $course_id ] = 0;
+		$course_steps = learndash_get_course_steps( $course_id );
+		if ( !empty( $course_steps ) )
+			$courses_steps[ $course_id ] = count( $course_steps );
 
-	if ( has_global_quizzes( $course_id ) )
-		$course_steps_count += 1;	
-		
-	return $course_steps_count;
+		if ( has_global_quizzes( $course_id ) ) {
+			$courses_steps[ $course_id ] += 1;
+		}
+	}
+
+	return $courses_steps[ $course_id ];
 }
 
 // Get total completed steps for a given course_progress array structure. 

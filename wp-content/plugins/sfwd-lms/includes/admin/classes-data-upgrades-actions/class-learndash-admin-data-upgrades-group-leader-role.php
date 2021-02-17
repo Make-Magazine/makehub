@@ -50,6 +50,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 	}
 }
 
-add_action( 'learndash_data_upgrades_init', function() {
-	Learndash_Admin_Data_Upgrades_Group_Leader_Role::add_instance();
-} );
+add_action(
+	'learndash_data_upgrades_init',
+	function() {
+		Learndash_Admin_Data_Upgrades_Group_Leader_Role::add_instance();
+	}
+);

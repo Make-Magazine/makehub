@@ -22,20 +22,23 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	InspectorControls,
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	SelectControl,
 	ToggleControl,
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-profile',
-    {
+	'learndash/ld-profile',
+	{
 		title: __( 'LearnDash Profile', 'learndash' ),
 		// translators: placeholders: Courses, Course, Quiz.
 		description: sprintf(_x("Displays user's enrolled %1$s, %2$s progress, %3$s scores, and achieved certificates.", 'placeholders: Courses, Course, Quiz', 'learndash'), ldlms_get_custom_label('courses'), ldlms_get_custom_label('course'), ldlms_get_custom_label('quiz') ),
@@ -49,28 +52,28 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
-            per_page: {
+		attributes: {
+			per_page: {
 				type: 'string',
 				default: '',
-            },
-            orderby: {
+			},
+			orderby: {
 				type: 'string',
 				default: 'ID'
-            },
-            order: {
+			},
+			order: {
 				type: 'string',
 				default: 'DESC'
-            },
-            course_points_user: {
+			},
+			course_points_user: {
 				type: 'boolean',
 				default: 1
-            },
-            expand_all: {
+			},
+			expand_all: {
 				type: 'boolean',
 				default: 0
-            },
-            profile_link: {
+			},
+			profile_link: {
 				type: 'boolean',
 				default: 1
 			},
@@ -99,12 +102,12 @@ registerBlockType(
 				default: 0
 			},
 		},
-        edit: function( props ) {
+		edit: function( props ) {
 			const { attributes: { per_page, orderby, order, course_points_user, expand_all, profile_link, show_header, show_search, show_quizzes, preview_user_id, preview_show, example_show },
-            	setAttributes } = props;
+				setAttributes } = props;
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					<PanelBody
 						title={ __( 'Settings', 'learndash' ) }
 					>
@@ -217,6 +220,7 @@ registerBlockType(
 					return <ServerSideRender
 					block="learndash/ld-profile"
 					attributes={ attributes }
+					key="learndash/ld-profile"
 					/>
 				} else {
 					return __( '[ld_profile] shortcode output shown here', 'learndash' );
@@ -227,9 +231,9 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render( props.attributes )
 			];
-        },
+		},
 
-        save: props => {
+		save: props => {
 			// Delete preview_user_id from props to prevent it being saved.
 			delete (props.attributes.preview_user_id);
 		}

@@ -117,7 +117,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				/** This filter is documented in includes/settings/class-ld-settings-pages.php */
 				do_action( 'learndash_settings_page_before_title', $this->settings_screen_id );
 				?>
-				<?php echo $this->get_admin_page_title(); ?>
+				<?php echo wp_kses_post( $this->get_admin_page_title() ); ?>
 				<?php
 				/** This filter is documented in includes/settings/class-ld-settings-pages.php */
 				do_action( 'learndash_settings_page_after_title', $this->settings_screen_id );

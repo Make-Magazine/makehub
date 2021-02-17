@@ -17,52 +17,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 
 		private $controllers = array();
 
-		function __construct() {
-			$this->controllers = array(
-				// v1 controllers.
-				'LD_REST_Echo_Controller_V1'          => array(
-					'register_routes' => true,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-echo-controller.php',
-				),
-				'LD_REST_Courses_Controller_V1'       => array(
-					'register_routes' => false,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-courses-controller.php',
-				),
-				'LD_REST_Lessons_Controller_V1'       => array(
-					'register_routes' => false,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-lessons-controller.php',
-				),
-				'LD_REST_Topics_Controller_V1'        => array(
-					'register_routes' => false,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-topics-controller.php',
-				),
-				'LD_REST_Quizzes_Controller_V1'       => array(
-					'register_routes' => false,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-quizzes-controller.php',
-				),
-				'LD_REST_Groups_Controller_V1'        => array(
-					'register_routes' => false,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-groups-controller.php',
-				),
-
-				'LD_REST_Users_Groups_Controller_V1'  => array(
-					'register_routes' => true,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-users-groups-controller.php',
-				),
-				'LD_REST_Users_Courses_Controller_V1' => array(
-					'register_routes' => true,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-users-courses-controller.php',
-				),
-				'LD_REST_Questions_Controller_V1'     => array(
-					'register_routes' => true,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-questions-controller.php',
-				),
-				'LD_REST_Sections_Controller_V1'      => array(
-					'register_routes' => true,
-					'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-sections-controller.php',
-				),
-			);
-
+		public function __construct() {
 			add_action( 'rest_api_init', array( $this, 'rest_api_init' ), 10 );
 		}
 
@@ -70,8 +25,126 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		 * Init function to all the LearnDash REST API namespace and endpoints.
 		 */
 		public function rest_api_init() {
-
 			if ( self::enabled() ) {
+				include_once dirname( __FILE__ ) . '/v1/class-ld-rest-posts-controller.php';
+				include_once dirname( __FILE__ ) . '/v1/class-ld-rest-users-controller.php';
+
+				// v1 controllers.
+				$controllers_v1 = array(
+					'LD_REST_Echo_Controller_V1'          => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-echo-controller.php',
+					),
+					'LD_REST_Courses_Controller_V1'       => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-courses-controller.php',
+					),
+					'LD_REST_Lessons_Controller_V1'       => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-lessons-controller.php',
+					),
+					'LD_REST_Topics_Controller_V1'        => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-topics-controller.php',
+					),
+					'LD_REST_Quizzes_Controller_V1'       => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-quizzes-controller.php',
+					),
+					'LD_REST_Groups_Controller_V1'        => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-groups-controller.php',
+					),
+					'LD_REST_Users_Groups_Controller_V1'  => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-users-groups-controller.php',
+					),
+					'LD_REST_Users_Courses_Controller_V1' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-users-courses-controller.php',
+					),
+					'LD_REST_Questions_Controller_V1'     => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-questions-controller.php',
+					),
+					'LD_REST_Sections_Controller_V1'      => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v1/class-ld-rest-sections-controller.php',
+					),
+				);
+
+				include_once dirname( __FILE__ ) . '/v2/class-ld-rest-posts-controller.php';
+				include_once dirname( __FILE__ ) . '/v2/class-ld-rest-users-controller.php';
+
+				$controllers_v2 = array(
+					'LD_REST_Courses_Controller_V2'        => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-courses-controller.php',
+					),
+					'LD_REST_Lessons_Controller_V2'        => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-lessons-controller.php',
+					),
+					'LD_REST_Topics_Controller_V2'         => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-topics-controller.php',
+					),
+					'LD_REST_Quizzes_Controller_V2'        => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quizzes-controller.php',
+					),
+					'LD_REST_Essays_Controller_V2'         => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-essays-controller.php',
+					),
+					'LD_REST_Questions_Controller_V2'      => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-questions-controller.php',
+					),
+					'LD_REST_Assignments_Controller_V2'    => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-assignments-controller.php',
+					),
+					'LD_REST_Groups_Controller_V2'         => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-groups-controller.php',
+					),
+					'LD_REST_Users_Courses_Controller_V2'  => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-users-courses-controller.php',
+					),
+					'LD_REST_Users_Groups_Controller_V2'   => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-users-groups-controller.php',
+					),
+					'LD_REST_Users_Course_Progress_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-users-course-progress-controller.php',
+					),
+					'LD_REST_Users_Quiz_Progress_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-users-quiz-progress-controller.php',
+					),
+					'LD_REST_Echo_Controller_V2'           => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-echo-controller.php',
+					),
+					'LD_REST_Price_Types_Controller_V2'    => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-price-types-controller.php',
+					),
+					'LD_REST_Question_Types_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-question-types-controller.php',
+					),
+					'LD_REST_Quiz_Statistics_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quiz-statistics-controller.php',
+					),
+				);
+
+				$this->controllers = array_merge( $controllers_v1, $controllers_v2 );
+
 				/**
 				 * Filters the list of REST API controllers.
 				 *
@@ -79,17 +152,12 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 				 */
 				$this->controllers = apply_filters( 'learndash-rest-api-controllers', $this->controllers );
 				if ( ! empty( $this->controllers ) ) {
-					include_once dirname( __FILE__ ) . '/v1/class-ld-rest-posts-controller.php';
-					include_once dirname( __FILE__ ) . '/v1/class-ld-rest-users-controller.php';
-
-					//include_once( dirname( __FILE__ ) . '/v1/class-ld-rest-terms-controller.php' );
-
 					foreach ( $this->controllers as $controller_class => $set ) {
 
 						if ( ( isset( $set['file'] ) ) && ( ! empty( $set['file'] ) ) && ( file_exists( $set['file'] ) ) ) {
 							include_once $set['file'];
 
-							if ( ( isset( $set['register_routes'] ) ) && ( $set['register_routes'] === true ) ) {
+							if ( ( isset( $set['register_routes'] ) ) && ( true === $set['register_routes'] ) ) {
 								$this->$controller_class = new $controller_class();
 								$this->$controller_class->register_routes();
 							}
@@ -113,15 +181,23 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 		}
 
 		/**
-		* Override class function for 'this'.
-		* This function handles out Singleton logic.
-		* @return reference to current instance
-		*/
-		static function this() {
+		 * Override class function for 'this'.
+		 * This function handles out Singleton logic.
+		 *
+		 * @return reference to current instance
+		 */
+		public static function this() {
 			return self::$instance;
 		}
 
-		static function enabled( $post_type = '' ) {
+		/**
+		 * Check if REST is enabled for post type.
+		 *
+		 * @param string $post_type Post Type slug to check.
+		 *
+		 * @return bool true is enable. Otherwise false.
+		 */
+		public static function enabled( $post_type = '' ) {
 			$return = false;
 
 			if ( ( defined( 'LEARNDASH_REST_API_ENABLED' ) ) && ( true === LEARNDASH_REST_API_ENABLED ) ) {
@@ -139,7 +215,14 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 			return apply_filters( 'learndash_rest_api_enabled', $return, $post_type );
 		}
 
-		static function gutenberg_enabled( $post_type = '' ) {
+		/**
+		 * Check if Gutenberg editor is enabled for post type.
+		 *
+		 * @param string $post_type Post Type slug to check.
+		 *
+		 * @return bool true is enable. Otherwise false.
+		 */
+		public static function gutenberg_enabled( $post_type = '' ) {
 			$return = false;
 
 			if ( ( defined( 'LEARNDASH_GUTENBERG' ) ) && ( LEARNDASH_GUTENBERG === true ) ) {
@@ -155,12 +238,19 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 			return apply_filters( 'learndash_gutenberg_enabled', $return, $post_type );
 		}
 
-		static function get_controller( $post_type = '' ) {
+		/**
+		 * get REST controller for post type.
+		 *
+		 * @param string $post_type Post Type slug to check.
+		 *
+		 * @return string Class name.
+		 */
+		public static function get_controller( $post_type = '' ) {
 			$rest_controller = '';
 
 			if ( ! empty( $post_type ) ) {
 				switch ( $post_type ) {
-					case 'sfwd-courses':
+					case learndash_get_post_type_slug( 'course' ):
 						if ( self::enabled( $post_type ) ) {
 							$rest_controller = 'LD_REST_Courses_Controller_V1';
 						} elseif ( self::gutenberg_enabled( $post_type ) ) {
@@ -168,7 +258,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						}
 						break;
 
-					case 'sfwd-lessons':
+					case learndash_get_post_type_slug( 'lesson' ):
 						if ( self::enabled( $post_type ) ) {
 							$rest_controller = 'LD_REST_Lessons_Controller_V1';
 						} elseif ( self::gutenberg_enabled( $post_type ) ) {
@@ -176,7 +266,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						}
 						break;
 
-					case 'sfwd-topic':
+					case learndash_get_post_type_slug( 'topic' ):
 						if ( self::enabled( $post_type ) ) {
 							$rest_controller = 'LD_REST_Topics_Controller_V1';
 						} elseif ( self::gutenberg_enabled( $post_type ) ) {
@@ -184,7 +274,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						}
 						break;
 
-					case 'sfwd-quiz':
+					case learndash_get_post_type_slug( 'quiz' ):
 						if ( self::enabled( $post_type ) ) {
 							$rest_controller = 'LD_REST_Quizzes_Controller_V1';
 						} elseif ( self::gutenberg_enabled( $post_type ) ) {
@@ -192,7 +282,7 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						}
 						break;
 
-					case 'groups':
+					case learndash_get_post_type_slug( 'group' ):
 						if ( self::enabled( $post_type ) ) {
 							$rest_controller = 'LD_REST_Groups_Controller_V1';
 						} elseif ( self::gutenberg_enabled( $post_type ) ) {

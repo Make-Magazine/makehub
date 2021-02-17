@@ -191,12 +191,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					$_metaboxes_instance->save_fields_to_post( $this->pro_quiz_edit, $settings_fields );
 				}
 			}
-			$quizId   = absint( learndash_get_setting( $post_id, 'quiz_pro', true ) );
+			$quiz_id  = absint( learndash_get_setting( $post_id, 'quiz_pro', true ) );
 			$pro_quiz = new WpProQuiz_Controller_Quiz();
 			$pro_quiz->route(
 				array(
 					'action'  => 'addUpdateQuiz',
-					'quizId'  => $quizId,
+					'quizId'  => $quiz_id,
 					'post_id' => $post_id,
 				)
 			);
@@ -260,54 +260,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						'high'
 					);
 				}
-
-				/*
-				global $wp_meta_boxes;
-				if ( isset( $wp_meta_boxes[ $this->post_type ]['normal']['high']['learndash_quiz_builder'] ) ) {
-					$quiz_builder_metabox = $wp_meta_boxes[ $this->post_type ]['normal']['high']['learndash_quiz_builder'];
-					unset( $wp_meta_boxes[ $this->post_type ]['normal']['high']['learndash_quiz_builder'] );
-					$wp_meta_boxes[ $this->post_type ]['normal']['high'] = array_merge(
-						array( 'learndash_quiz_builder' => $quiz_builder_metabox ),
-						$wp_meta_boxes[ $this->post_type ]['normal']['high']
-					);
-				}
-				*/
-
-				/**
-				 * Check if the editor is classic or new Gutenberg Block editor and hide non-important metaboxes
-				 */
-				/*
-				if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) ) {
-					$user_closed_postboxes = get_user_meta( get_current_user_id(), 'closedpostboxes_' . $this->post_type, true );
-					if ( ( is_string( $user_closed_postboxes ) ) && ( '' === $user_closed_postboxes ) ) {
-						if ( ( function_exists( 'use_block_editor_for_post' ) ) && ( use_block_editor_for_post( $post ) ) ) {
-							$all_postboxes = array(
-								'sfwd-quiz',
-								'learndash_quiz_advanced',
-								'learndash_quiz_question_settings',
-								'learndash_quiz_result_options',
-								'learndash_quiz_mode_options',
-								'learndash_quiz_result_text_options',
-								'learndash_quiz_templates',
-								'learndash_quiz_leaderboard_options',
-								'learndash_quiz_custom_fields_options',
-							);
-
-						} else {
-							$all_postboxes = array(
-								'learndash_quiz_question_settings',
-								'learndash_quiz_result_options',
-								'learndash_quiz_mode_options',
-								'learndash_quiz_result_text_options',
-								'learndash_quiz_templates',
-								'learndash_quiz_leaderboard_options',
-								'learndash_quiz_custom_fields_options',
-							);
-						}
-						update_user_meta( get_current_user_id(), 'closedpostboxes_' . $this->post_type, $all_postboxes );
-					}
-				}
-				*/
 			}
 		}
 
@@ -513,11 +465,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 		 */
 		public function quiz_templates_page_box( $post ) {
 
-			// $this->init_quiz_edit( $post );
-			// if ( ( $this->pro_quiz_edit ) && is_a( $this->pro_quiz_edit, 'WpProQuiz_View_QuizEdit' ) ) {
-			// $this->pro_quiz_edit->show_templates( $this->_get );
-			// }
-
 			$template_mapper = new WpProQuiz_Model_TemplateMapper();
 			$templates       = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUIZ, false );
 
@@ -541,7 +488,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 										echo '<option value="' . esc_url( $template_url ) . '">' . sprintf(
 											// translators: Quiz Title.
 											esc_html_x( 'Revert: %s', 'placeholder: Quiz Title', 'learndash' ),
-											get_the_title( $_GET['post'] )
+											wp_kses_post( get_the_title( $_GET['post'] ) )
 										) . '</option>';
 									} else {
 										echo '<option value="">' . esc_html__( 'Select a Template to load', 'learndash' ) . '</option>';

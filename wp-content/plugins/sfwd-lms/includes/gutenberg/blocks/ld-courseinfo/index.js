@@ -23,19 +23,22 @@ const {
 
 const {
 	InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	SelectControl,
 	ToggleControl,
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-courseinfo',
-    {
+	'learndash/ld-courseinfo',
+	{
 		// translators: placeholder: Course.
 		title: sprintf( _x( 'LearnDash %s Info [courseinfo]', 'placeholder: Course', 'learndash' ), ldlms_get_custom_label( 'course' ) ),
 		// translators: placeholder: Course.
@@ -45,15 +48,15 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
-            show: {
-                type: 'string',
-            },
-            course_id: {
+		attributes: {
+			show: {
+				type: 'string',
+			},
+			course_id: {
 				type: 'string',
 				default: '',
-            },
-            user_id: {
+			},
+			user_id: {
 				type: 'string',
 				default: '',
 			},
@@ -81,10 +84,10 @@ registerBlockType(
 			meta: {
 				type: 'object',
 			}
-        },
-        edit: props => {
+		},
+		edit: props => {
 			const { attributes: { course_id, show, user_id, format, seconds_format, decimals, preview_show, preview_user_id },
-            	className, setAttributes } = props;
+				className, setAttributes } = props;
 
 			const field_show = (
 				<SelectControl
@@ -196,7 +199,7 @@ registerBlockType(
 					onChange={show => setAttributes({ show })}
 				/>
 			);
-			
+
 			const field_course_id = (
 				<TextControl
 					// translators: placeholder: Course.
@@ -288,7 +291,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					<PanelBody
 						title={ __( 'Settings', 'learndash' ) }
 					>
@@ -311,6 +314,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-courseinfo"
 						attributes={attributes}
+						key="learndash/ld-courseinfo"
 					/>
 				} else {
 					return __('[courseinfo] shortcode output shown here', 'learndash');
@@ -321,7 +325,7 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render(props.attributes)
 			];
-        },
+		},
 		save: function (props) {
 			// Delete meta from props to prevent it being saved.
 			delete(props.attributes.meta);

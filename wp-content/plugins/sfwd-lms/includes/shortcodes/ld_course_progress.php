@@ -92,8 +92,8 @@ function learndash_course_progress( $atts ) {
 	} else {
 		$percentage = 0;
 	}
-	// translators: placeholder: completed steps, total steps.
-	$message = sprintf( esc_html_x( '%1$d out of %2$d steps completed', 'placeholder: completed steps, total steps', 'learndash' ), $completed, $total );
+	// translators: placeholders: completed steps, total steps.
+	$message = sprintf( esc_html_x( '%1$d out of %2$d steps completed', 'placeholders: completed steps, total steps', 'learndash' ), $completed, $total );
 
 	if ( $array ) {
 		return array(

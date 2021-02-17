@@ -59,31 +59,32 @@ function learndash_profile( $atts ) {
 	);
 	$atts     = wp_parse_args( $atts, $defaults );
 
-	if ( ( strtolower( $atts['expand_all'] ) == 'yes' ) || ( $atts['expand_all'] == 'true' ) || ( $atts['expand_all'] == '1' ) ) {
+	$enabled_values = array( 'yes', 'true', 'on', '1' );
+	if ( in_array( strtolower( $atts['expand_all'] ), $enabled_values, true ) ) {
 		$atts['expand_all'] = true;
 	} else {
 		$atts['expand_all'] = false;
 	}
 
-	if ( ( strtolower( $atts['show_header'] ) == 'yes' ) || ( $atts['show_header'] == 'true' ) || ( $atts['show_header'] == '1' ) ) {
+	if ( in_array( strtolower( $atts['show_header'] ), $enabled_values, true ) ) {
 		$atts['show_header'] = 'yes';
 	} else {
 		$atts['show_header'] = false;
 	}
 
-	if ( ( strtolower( $atts['show_search'] ) == 'yes' ) || ( $atts['show_search'] == 'true' ) || ( $atts['show_search'] == '1' ) ) {
+	if ( in_array( strtolower( $atts['show_search'] ), $enabled_values, true ) ) {
 		$atts['show_search'] = 'yes';
 	} else {
 		$atts['show_search'] = false;
 	}
 
-	if ( ( strtolower( $atts['course_points_user'] ) == 'yes' ) || ( $atts['course_points_user'] == 'true' ) || ( $atts['course_points_user'] == '1' ) ) {
+	if ( in_array( strtolower( $atts['course_points_user'] ), $enabled_values, true ) ) {
 		$atts['course_points_user'] = 'yes';
 	} else {
 		$atts['course_points_user'] = false;
 	}
 
-	if ( $atts['per_page'] === false ) {
+	if ( false === $atts['per_page'] ) {
 		$atts['per_page'] = $atts['quiz_num'] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Per_Page', 'per_page' );
 	} else {
 		$atts['per_page'] = intval( $atts['per_page'] );
@@ -96,21 +97,26 @@ function learndash_profile( $atts ) {
 		$atts['nopaging'] = true;
 	}
 
-	if ( ( strtolower( $atts['profile_link'] ) == 'yes' ) || ( $atts['profile_link'] == 'true' ) || ( $atts['profile_link'] == '1' ) ) {
+	if ( in_array( strtolower( $atts['profile_link'] ), $enabled_values, true ) ) {
 		$atts['profile_link'] = true;
 	} else {
 		$atts['profile_link'] = false;
 	}
 
-	if ( ( strtolower( $atts['show_quizzes'] ) == 'yes' ) || ( $atts['show_quizzes'] == 'true' ) || ( $atts['show_quizzes'] == '1' ) ) {
+	if ( in_array( strtolower( $atts['show_quizzes'] ), $enabled_values, true ) ) {
 		$atts['show_quizzes'] = true;
 	} else {
 		$atts['show_quizzes'] = false;
 	}
 
-	if ( ( isset( $_GET['ld-profile-search'] ) ) && ( ! empty( $_GET['ld-profile-search'] ) ) ) {
-		$atts['search'] = esc_attr( $_GET['ld-profile-search'] );
+	if ( 'yes' === $atts['show_search'] ) {
+		if ( ( isset( $_GET['ld-profile-search'] ) ) && ( ! empty( $_GET['ld-profile-search'] ) ) ) {
+			$atts['search'] = esc_attr( $_GET['ld-profile-search'] );
+		}
+	} else {
+		$atts['search'] = '';
 	}
+
 	/**
 	 * Filters profile shortcode attributes.
 	 *
@@ -141,7 +147,7 @@ function learndash_profile( $atts ) {
 			$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
 			$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
 
-			if ( $atts['user_id'] == get_current_user_id() && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
+			if ( get_current_user_id() == $atts['user_id'] && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
 				$quiz_attempt['certificate'] = $c;
 			}
 

@@ -32,7 +32,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_description = sprintf(
 				// translators: placeholder: group.
 				esc_html_x( 'Controls how users will gain access to the %s', 'placeholder: group', 'learndash' ),
-				learndash_get_custom_label_lower( 'group' )
+				esc_html( learndash_get_custom_label_lower( 'group' ) )
 			);
 
 			add_filter( 'learndash_metabox_save_fields_' . $this->settings_metabox_key, array( $this, 'filter_saved_fields' ), 30, 3 );
@@ -41,14 +41,14 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
 				// Legacy fields
-				'group_price_type'                            => 'group_price_type',
-				'group_price_type_paynow_price'               => 'group_price',
-				'group_price_type_subscribe_price'            => 'group_price',
+				'group_price_type'                 => 'group_price_type',
+				'group_price_type_paynow_price'    => 'group_price',
+				'group_price_type_subscribe_price' => 'group_price',
 				'group_price_type_closed_custom_button_label' => 'custom_button_label',
-				'group_price_type_closed_custom_button_url'   => 'custom_button_url',
-				'group_price_type_closed_price'               => 'group_price',
-				'group_price_billing_p3'                      => 'group_price_billing_p3',
-				'group_price_billing_t3'                      => 'group_price_billing_t3',
+				'group_price_type_closed_custom_button_url' => 'custom_button_url',
+				'group_price_type_closed_price'    => 'group_price',
+				'group_price_billing_p3'           => 'group_price_billing_p3',
+				'group_price_billing_t3'           => 'group_price_billing_t3',
 			);
 
 			parent::__construct();
@@ -102,6 +102,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
 				}
 			}
+
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
 		}
 
 		/**
@@ -124,6 +131,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'   => '-medium',
 					'value'   => $this->setting_option_values['group_price_type_paynow_price'],
 					'default' => '',
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'price_type_paynow_price',
+								// translators: placeholder: Group.
+								'description' => sprintf( esc_html_x( 'Pay Now %s Price', 'placeholder: Group', 'learndash' ), LearnDash_Custom_Label::get_label( 'group' ) ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
+					),
 				),
 			);
 			parent::load_settings_fields();
@@ -141,6 +160,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'   => '-medium',
 					'value'   => $this->setting_option_values['group_price_type_subscribe_price'],
 					'default' => '',
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'price_type_subscribe_price',
+								// translators: placeholder: Group.
+								'description' => sprintf( esc_html_x( 'Subscribe %s Price', 'placeholder: Group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
+					),
 				),
 				'group_price_type_subscribe_billing_cycle' => array(
 					'name'  => 'group_price_type_subscribe_billing_cycle',
@@ -164,6 +195,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'   => '-medium',
 					'value'   => $this->setting_option_values['group_price_type_closed_price'],
 					'default' => '',
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'price_type_closed_price',
+								// translators: placeholder: Group.
+								'description' => sprintf( esc_html_x( 'Closed %s Price', 'placeholder: Group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
+					),
 				),
 				'group_price_type_closed_custom_button_url' => array(
 					'name'      => 'group_price_type_closed_custom_button_url',
@@ -177,6 +220,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'button_take_this_group' )
 					),
 					'default'   => '',
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'price_type_closed_custom_button_url',
+								// translators: placeholder: Group.
+								'description' => sprintf( esc_html_x( 'Closed %s Button URL', 'placeholder: Group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
+					),
 				),
 			);
 
@@ -191,22 +246,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'   => $this->setting_option_values['group_price_type'],
 					'default' => LEARNDASH_DEFAULT_GROUP_PRICE_TYPE,
 					'options' => array(
-						/*
-						'open'      => array(
-							'label'       => esc_html__( 'Open', 'learndash' ),
-							'description' => sprintf(
-								// translators: placeholder: group.
-								esc_html_x( 'The %s is not protected. Any user can access its content without the need to be logged-in or enrolled.', 'placeholder: group', 'learndash' ),
-								learndash_get_custom_label_lower( 'course' )
-							),
-						),
-						*/
 						'free'      => array(
 							'label'       => esc_html__( 'Free', 'learndash' ),
 							'description' => sprintf(
 								// translators: placeholder: group.
 								esc_html_x( 'The %s is protected. Registration and enrollment are required in order to access the content.', 'placeholder: group', 'learndash' ),
-								learndash_get_custom_label_lower( 'group' )
+								esc_html( learndash_get_custom_label_lower( 'group' ) )
 							),
 						),
 						'paynow'    => array(
@@ -246,6 +291,24 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								'group_price_type_closed' => $this->settings_sub_option_fields['group_price_type_closed_fields'],
 							),
 							'inner_section_state' => ( 'closed' === $this->setting_option_values['group_price_type'] ) ? 'open' : 'closed',
+						),
+					),
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'price_type',
+								// translators: placeholder: Group.
+								'description' => sprintf( esc_html_x( '%s Price Type', 'placeholder: Group', 'learndash' ), LearnDash_Custom_Label::get_label( 'group' ) ),
+								'type'        => 'string',
+								'default'     => 'open',
+								'enum'        => array(
+									'closed',
+									'free',
+									'buynow',
+									'subscribe',
+								),
+							),
 						),
 					),
 				),
@@ -303,7 +366,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 
 				if ( 'paynow' === $settings_values['group_price_type'] ) {
-					$settings_values['custom_button_url']       = '';
+					$settings_values['custom_button_url']      = '';
 					$settings_values['group_price_billing_p3'] = '';
 					$settings_values['group_price_billing_t3'] = '';
 				} elseif ( 'subscribe' === $settings_values['group_price_type'] ) {
@@ -313,7 +376,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['group_price_billing_t3'] = '';
 				} else {
 					$settings_values['group_price']            = '';
-					$settings_values['custom_button_url']       = '';
+					$settings_values['custom_button_url']      = '';
 					$settings_values['group_price_billing_p3'] = '';
 					$settings_values['group_price_billing_t3'] = '';
 				}

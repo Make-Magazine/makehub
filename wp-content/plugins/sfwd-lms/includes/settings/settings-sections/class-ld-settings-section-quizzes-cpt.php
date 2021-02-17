@@ -187,7 +187,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'           => 'checkbox-switch',
 					'label'          => esc_html__( 'RSS/Atom Feed', 'learndash' ),
 					'help_text'      => sprintf(
-						// translators: placeholder: quiz
+						// translators: placeholder: quiz.
 						esc_html_x( 'Enables an RSS feed for all %1$s posts.', 'placeholder: quiz', 'learndash' ),
 						learndash_get_custom_label_lower( 'quiz' )
 					),

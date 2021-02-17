@@ -24,7 +24,12 @@ if ( is_multisite() ) {
 	$can_register = get_option( 'users_can_register' );
 }
 ?>
-<div class="ld-modal ld-login-modal <?php if ( $can_register ) { echo esc_attr( 'ld-can-register' ); } ?>">
+<div class="ld-modal ld-login-modal 
+<?php
+if ( $can_register ) {
+	echo esc_attr( 'ld-can-register' ); }
+?>
+">
 
 	<span class="ld-modal-closer ld-icon ld-icon-delete"></span>
 

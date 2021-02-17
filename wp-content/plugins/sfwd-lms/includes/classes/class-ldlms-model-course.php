@@ -1,17 +1,19 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_Post' ) ) ) {
 	class LDLMS_Model_Course extends LDLMS_Model_Post {
 
 		private static $post_type = 'sfwd-courses';
-		private $steps_object = null;
+		private $steps_object     = null;
 
-		function __construct( $course_id = 0 ) {
+		public function __construct( $course_id = 0 ) {
 			if ( ! empty( $course_id ) ) {
 				$course_id = absint( $course_id );
-				if ( ! $this->initialize( $course_id ) )
+				if ( ! $this->initialize( $course_id ) ) {
 					throw new LDLMS_Exception_NotFound();
+				}
 			} else {
 				throw new LDLMS_Exception_NotFound();
 			}
@@ -20,8 +22,8 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		private function initialize( $course_id ) {
 			if ( ! empty( $course_id ) ) {
 				$course = get_post( $course_id );
-				if ( ( $course instanceof WP_Post ) && ( $course->post_type === LDLMS_Model_Course::$post_type ) ) {
-					$this->id = $course_id;
+				if ( ( $course instanceof WP_Post ) && ( $course->post_type === self::$post_type ) ) {
+					$this->id   = $course_id;
 					$this->post = $course;
 
 					$this->load_settings();
@@ -33,13 +35,13 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 		}
 
 		public function load_settings() {
-			if ( !empty( $this->post ) ) {
+			if ( ! empty( $this->post ) ) {
 				$settings = learndash_get_setting( $this->post );
 				if ( ! is_array( $settings ) ) {
 					if ( ! empty( $settings ) ) {
-						LDLMS_Model_Course::$settings = array( $settings );
+						self::$settings = array( $settings );
 					} else {
-						LDLMS_Model_Course::$settings = array();
+						self::$settings = array();
 					}
 				}
 
@@ -47,15 +49,15 @@ if ( ( ! class_exists( 'LDLMS_Model_Course' ) ) && ( class_exists( 'LDLMS_Model_
 
 				// We can't do a sinple merge because the keys are different. So hopefuly we can remember to update this with the logic for each mis-matching key.
 				if ( ( isset( $lesson_settings['order'] ) ) && ( ! empty( $lesson_settings['order'] ) ) ) {
-					LDLMS_Model_Course::$settings['course_lesson_order'] = $lesson_settings['order'];
+					self::$settings['course_lesson_order'] = $lesson_settings['order'];
 				}
 
 				if ( ( isset( $lesson_settings['orderby'] ) ) && ( ! empty( $lesson_settings['orderby'] ) ) ) {
-					LDLMS_Model_Course::$settings['course_lesson_orderby'] = $lesson_settings['orderby'];
+					self::$settings['course_lesson_orderby'] = $lesson_settings['orderby'];
 				}
 
 				if ( ( isset( $lesson_settings['posts_per_page'] ) ) && ( ! empty( $lesson_settings['posts_per_page'] ) ) ) {
-					LDLMS_Model_Course::$settings['course_lesson_per_page'] = $lesson_settings['posts_per_page'];
+					self::$settings['course_lesson_per_page'] = $lesson_settings['posts_per_page'];
 				}
 			}
 		}

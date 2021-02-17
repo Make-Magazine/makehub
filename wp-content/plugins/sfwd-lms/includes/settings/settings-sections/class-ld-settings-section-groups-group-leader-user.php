@@ -148,8 +148,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			);
 
 			foreach (
-				array( 
-					learndash_get_post_type_slug( 'group' )  => 'manage_groups_capabilities', 
+				array(
+					learndash_get_post_type_slug( 'group' )  => 'manage_groups_capabilities',
 					learndash_get_post_type_slug( 'course' ) => 'manage_courses_capabilities',
 				) as $post_type => $cap_section ) {
 
@@ -240,17 +240,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
-
-				/*
-				'manage_html_notice' => array(
-					'name' => 'manage_html_notice',
-					'type' => 'html',
-					'label' => '',
-					'value' => 'Activating these options can interfere with customized user roles. If you have customized user roles, please see <link> before proceeding.',
-					'label_full' => true,
-					'input_full'  => true,
-				),
-				*/
 
 				'manage_groups_enabled'       => array(
 					'name'                => 'manage_groups_enabled',
@@ -482,7 +471,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * Add Header and description on email sections.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
-			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'manage_groups_enabled' ) ) ) ) {
+			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'manage_groups_enabled' ), true ) ) ) {
 
 				$content .= '<div class="ld-settings-info-banner ld-settings-info-banner-alert">';
 

@@ -73,7 +73,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				$current_screen = get_current_screen();
 				if ( 'sfwd-courses_page_courses-builder' == $current_screen->id ) {
 					// ...but the 'course_id' query parameters is not found...
-					if ( ( ! isset( $_GET['course_id'] ) ) || ( empty( $_GET['course_id'] ) ) ) {
+					if ( ( ! isset( $_GET['course_id'] ) ) || ( empty( $_GET['course_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						// ...then redirect back to the courses listin screen.
 						$courses_list_url = add_query_arg( 'post_type', 'sfwd-courses', admin_url( 'edit.php' ) );
 						learndash_safe_redirect( $courses_list_url );
@@ -90,8 +90,8 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 * Called when metabox is being saved.
 		 */
 		public function save_cb_metabox() {
-			if ( ( isset( $_GET['course_id'] ) ) && ( ! empty( $_GET['course_id'] ) ) ) {
-				$course_id = intval( $_GET['course_id'] );
+			if ( ( isset( $_GET['course_id'] ) ) && ( ! empty( $_GET['course_id'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+				$course_id = intval( $_GET['course_id'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 				$course_post = get_post( $course_id );
 				if ( ( ! empty( $_POST['action'] ) && 'update' === wp_unslash( $_POST['action'] ) ) &&
@@ -101,8 +101,6 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					$this->update_success = true;
 				}
 			}
-			return;
-
 		}
 
 		/**
@@ -175,6 +173,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		public function admin_tab_sets( $admin_menu_set = array(), $admin_menu_key = '' ) {
 
 			if ( 'edit.php?post_type=sfwd-courses' == $admin_menu_key ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( ! isset( $_GET['course_id'] ) ) || ( empty( $_GET['course_id'] ) ) ) {
 					// If we don't have the 'course_id' URL parameter then we remove the tab.
 					foreach ( $admin_menu_set as $menu_idx => $menu_item ) {
@@ -187,7 +186,11 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					// Else of we do have the 'course_id' URL parameter we include this in the tab URL.
 					foreach ( $admin_menu_set as $menu_idx => &$menu_item ) {
 						if ( 'sfwd-courses_page_courses-builder' === $menu_item['id'] ) {
-							$menu_item['link'] = add_query_arg( 'course_id', intval( $_GET['course_id'] ), $menu_item['link'] );
+							$menu_item['link'] = add_query_arg(
+								'course_id',
+								intval( $_GET['course_id'] ), // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+								$menu_item['link']
+							);
 							break;
 						}
 					}

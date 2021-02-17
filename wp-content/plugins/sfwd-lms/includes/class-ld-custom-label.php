@@ -82,7 +82,7 @@ class LearnDash_Custom_Label {
 
 			case 'button_take_this_group':
 				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Enroll in Group', 'learndash' );
-				break;	
+				break;
 
 			case 'button_mark_complete':
 				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Mark Complete', 'learndash' );
@@ -341,17 +341,9 @@ function learndash_get_label_course_step_back( $step_post_type = 0, $plural = fa
 
 			case learndash_get_post_type_slug( 'certificate' ):
 				if ( true === $plural ) {
-					$step_label = sprintf(
-						// translators: placeholder: Certificates.
-						esc_html_x( 'Back to %s', 'placeholder: Certificates', 'learndash' ),
-						$post_type_object->labels->name
-					);
+					$step_label = esc_html__( 'Back to Certificates', 'learndash' );
 				} else {
-					$step_label = sprintf(
-						// translators: placeholder: Certificate.
-						esc_html_x( 'Back to %s', 'placeholder: Certificate', 'learndash' ),
-						$post_type_object->labels->singular_name
-					);
+					$step_label = esc_html__( 'Back to Certificate', 'learndash' );
 				}
 				break;
 
@@ -475,11 +467,7 @@ function learndash_get_label_course_step_previous( $step_post_type = 0 ) {
 				break;
 
 			case learndash_get_post_type_slug( 'certificate' ):
-				$step_label = sprintf(
-					// translators: placeholder: Certificate.
-					esc_html_x( 'Previous %s', 'placeholder: Certificate', 'learndash' ),
-					$post_type_object->labels->singular_name
-				);
+				$step_label = esc_html__( 'Previous Certificate', 'learndash' );
 				break;
 
 			default:
@@ -593,11 +581,7 @@ function learndash_get_label_course_step_next( $step_post_type = 0 ) {
 				break;
 
 			case learndash_get_post_type_slug( 'certificate' ):
-				$step_label = sprintf(
-					// translators: placeholder: Certificate.
-					esc_html_x( 'Next %s', 'placeholder: Certificate', 'learndash' ),
-					$post_type_object->labels->singular_name
-				);
+				$step_label = esc_html__( 'Next Certificate', 'learndash' );
 				break;
 
 			default:
@@ -713,11 +697,7 @@ function learndash_get_label_course_step_page( $step_post_type = 0 ) {
 				break;
 
 			case learndash_get_post_type_slug( 'certificate' ):
-				$step_label = sprintf(
-					// translators: placeholder: Certificate.
-					esc_html_x( '%s page', 'placeholder: Certificate', 'learndash' ),
-					$post_type_object->labels->singular_name
-				);
+				$step_label = esc_html__( 'Certificate page', 'learndash' );
 				break;
 
 			default:

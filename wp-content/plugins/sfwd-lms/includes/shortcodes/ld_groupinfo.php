@@ -83,7 +83,7 @@ function learndash_groupinfo_shortcode( $attr ) {
 		 * @since 3.2.0
 		 *
 		 * @param mixed $value          Determined return value.
-		 * @param array $shortcode_atts Shortcode attributes.   
+		 * @param array $shortcode_atts Shortcode attributes.
 		 */
 		return apply_filters( 'learndash_groupinfo', '', $shortcode_atts );
 	}
@@ -97,42 +97,35 @@ function learndash_groupinfo_shortcode( $attr ) {
 				$shortcode_atts[ $shortcode_atts['show'] ] = $group_post->post_title;
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			case 'group_url':
 				$shortcode_atts[ $shortcode_atts['show'] ] = get_permalink( $shortcode_atts['group_id'] );
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			case 'group_price_type':
 				$shortcode_atts[ $shortcode_atts['show'] ] = learndash_get_setting( $shortcode_atts['group_id'], 'group_price_type' );
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			case 'group_price':
 				$shortcode_atts[ $shortcode_atts['show'] ] = learndash_get_setting( $shortcode_atts['group_id'], 'group_price' );
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			case 'group_users_count':
 				$shortcode_atts[ $shortcode_atts['show'] ] = count( learndash_get_groups_user_ids( $shortcode_atts['group_id'] ) );
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			case 'group_courses_count':
 				$shortcode_atts[ $shortcode_atts['show'] ] = count( learndash_group_enrolled_courses( $shortcode_atts['group_id'] ) );
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', $shortcode_atts[ $shortcode_atts['show'] ], $shortcode_atts );
-				break;
 
 			default:
 				/** This filter is documented in includes/shortcodes/ld_groupinfo.php */
 				return apply_filters( 'learndash_groupinfo', '', $shortcode_atts );
-				break;
 
 			// The following cases required user_id.
 

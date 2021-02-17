@@ -12,7 +12,7 @@ if ( ! empty( $previous_item ) && $previous_item instanceof WP_Post ) {
 		'button'  => array(
 			'url'           => learndash_get_step_permalink( $previous_item->ID, $course_id ),
 			'class'         => 'learndash-link-previous-incomplete',
-			'label'         => __( 'Back', 'learndash' ),
+			'label'         => esc_html__( 'Back', 'learndash' ),
 			'icon'          => 'arrow-left',
 			'icon-location' => 'left',
 		),

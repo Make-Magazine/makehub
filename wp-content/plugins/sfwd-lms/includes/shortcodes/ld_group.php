@@ -64,10 +64,10 @@ function learndash_ld_group_check_shortcode( $atts, $content = null ) {
 		 */
 		$atts = apply_filters( 'learndash_ld_group_shortcode_atts', $atts, $content );
 
-		if ( ( ! empty( $atts['content'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['group_id'] ) ) && ( $atts['user_id'] == get_current_user_id() ) ) {
+		if ( ( ! empty( $atts['content'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['group_id'] ) ) && ( get_current_user_id() == $atts['user_id'] ) ) {
 			if ( learndash_is_user_in_group( $atts['user_id'], $atts['group_id'] ) ) {
 				$learndash_shortcode_used = true;
-				 $atts['content']         = do_shortcode( $atts['content'] );
+				$atts['content']          = do_shortcode( $atts['content'] );
 				return SFWD_LMS::get_template(
 					'learndash_group_message',
 					array(

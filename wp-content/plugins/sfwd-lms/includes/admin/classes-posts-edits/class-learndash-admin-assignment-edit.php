@@ -104,7 +104,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								if ( ! empty( $query_courses->posts ) ) {
 									foreach ( $query_courses->posts as $p ) {
 										?>
-										<option value="<?php echo $p->ID; ?>"><?php echo $p->post_title; ?></option>
+										<option value="<?php echo esc_attr( $p->ID ); ?>"><?php echo wp_kses_post( $p->post_title ); ?></option>
 										<?php
 									}
 								}
@@ -112,7 +112,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							</select>
 							<?php
 					} else {
-						echo '<p>' . get_the_title( $assignment_course_id ) . ' (<a href="' . get_permalink( $assignment_course_id ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>)' . '</p>';
+						echo '<p>' . wp_kses_post( get_the_title( $assignment_course_id ) ) . ' (<a href="' . esc_url( get_permalink( $assignment_course_id ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>)</p>';
 
 					}
 					?>
@@ -126,7 +126,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			<div class="sfwd sfwd_options sfwd-assignment_settings">
 				<div class="sfwd_input " id="sfwd-assignment_lesson">
-					<span class="sfwd_option_label" style="text-align:right;vertical-align:top;"><a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_html_e( 'Click for Help!', 'learndash' ); ?>" onclick="toggleVisibility('sfwd-assignment_lesson_tip');"><img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . '/assets/images/question.png' ) ?>" /><label class="sfwd_label textinput">
+					<span class="sfwd_option_label" style="text-align:right;vertical-align:top;"><a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_html_e( 'Click for Help!', 'learndash' ); ?>" onclick="toggleVisibility('sfwd-assignment_lesson_tip');"><img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . '/assets/images/question.png' ); ?>" /><label class="sfwd_label textinput">
 					<?php
 					// translators: placeholder: Lesson.
 					echo sprintf( esc_html_x( 'Associated %s', 'placeholder: Lesson', 'learndash' ), esc_attr( LearnDash_Custom_Label::get_label( 'lesson' ) ) );
@@ -149,7 +149,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								if ( ! empty( $course_lessons ) ) {
 									foreach ( $course_lessons as $l_id => $l_label ) {
 										?>
-											<option value="<?php echo $l_id; ?>"><?php echo esc_attr( $l_label ); ?></option>
+											<option value="<?php echo esc_attr( $l_id ); ?>"><?php echo esc_html( $l_label ); ?></option>
 											<?php
 									}
 								}
@@ -158,7 +158,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 							</select>
 							<?php
 					} else {
-						echo '<p>' . get_the_title( $assignment_lesson_id ) . ' (<a href="' . esc_url( get_permalink( $assignment_lesson_id ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>)' . '</p>';
+						echo '<p>' . wp_kses_post( get_the_title( $assignment_lesson_id ) ) . ' (<a href="' . esc_url( get_permalink( $assignment_lesson_id ) ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>)</p>';
 					}
 					?>
 				</div><div class="sfwd_help_text_div" style="display:none" id="sfwd-assignment_lesson_tip"><label class="sfwd_help_text">
@@ -168,23 +168,23 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				?>
 				</label></div></span><p style="clear:left"></p></div>
 			</div>
-				
+
 			<div class="sfwd sfwd_options sfwd-assignment_settings">
 				<div class="sfwd_input " id="sfwd-assignment_status">
-					<span class="sfwd_option_label" style="text-align:right;vertical-align:top;"><a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_html_e( 'Click for Help!', 'learndash' ); ?>" onclick="toggleVisibility('sfwd-assignment_status_tip');"><img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . '/assets/images/question.png' ) ?>" /><label class="sfwd_label textinput"><?php esc_html_e( 'Status', 'learndash' ); ?></label></a></span>
+					<span class="sfwd_option_label" style="text-align:right;vertical-align:top;"><a class="sfwd_help_text_link" style="cursor:pointer;" title="<?php esc_html_e( 'Click for Help!', 'learndash' ); ?>" onclick="toggleVisibility('sfwd-assignment_status_tip');"><img src="<?php echo esc_url( LEARNDASH_LMS_PLUGIN_URL . '/assets/images/question.png' ); ?>" /><label class="sfwd_label textinput"><?php esc_html_e( 'Status', 'learndash' ); ?></label></a></span>
 					<span class="sfwd_option_input"><div class="sfwd_option_div">
 					<?php
 						$approval_status_flag = learndash_is_assignment_approved_by_meta( $post->ID );
-					if ( $approval_status_flag == 1 ) {
+					if ( 1 == $approval_status_flag ) {
 						$approval_status_label = esc_html__( 'Approved', 'learndash' );
-						echo '<p>' . esc_attr( $approval_status_label ) . '</p>';
+						echo '<p>' . esc_html( $approval_status_label ) . '</p>';
 					} else {
 						if ( ( learndash_get_setting( $assignment_lesson_id, 'lesson_assignment_points_enabled' ) === 'on' ) && ( intval( learndash_get_setting( $assignment_lesson_id, 'lesson_assignment_points_amount' ) ) > 0 ) ) {
 							$approval_status_label = esc_html__( 'Not Approved', 'learndash' );
-							echo '<p>' . esc_attr( $approval_status_label ) . '</p>';
+							echo '<p>' . esc_html( $approval_status_label ) . '</p>';
 						} else {
 							$approve_text = esc_html__( 'Approve', 'learndash' );
-							echo '<p><input name="assignment-status" type="submit" class="button button-primary button-large" id="publish" value="' . $approve_text . '"></p>';
+							echo '<p><input name="assignment-status" type="submit" class="button button-primary button-large" id="publish" value="' . esc_attr( $approve_text ) . '"></p>';
 						}
 					}
 					?>

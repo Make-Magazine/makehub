@@ -87,7 +87,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 					'type' => 'boolean',
 				),
 				'col'                     => array(
-					'type' => 'string',
+					'type' => 'integer',
 				),
 				'example_show'            => array(
 					'type' => 'boolean',

@@ -12,8 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_course_complete' ) ) ) {
 	/**
-	 * Class to create the settings page.
+	 * Class for LearnDash Shortcode Section.
 	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_course_complete extends LearnDash_Shortcodes_Section {
 
 		/**
@@ -32,7 +33,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			);
 			$this->shortcodes_section_type        = 2;
 			$this->shortcodes_section_description = sprintf(
-				// translators: placeholders: course.
+				// translators: placeholder: course.
 				esc_html_x( 'This shortcode shows the content if the user has completed the %s. The shortcode can be used on any page or widget area.', 'placeholders: course', 'learndash' ),
 				learndash_get_custom_label_lower( 'course' )
 			);
@@ -98,7 +99,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			if ( ( ! isset( $this->fields_args['post_type'] ) ) || ( ( 'sfwd-courses' !== $this->fields_args['post_type'] ) && ( 'sfwd-lessons' !== $this->fields_args['post_type'] ) && ( 'sfwd-topic' !== $this->fields_args['post_type'] ) ) ) {
 				$this->shortcodes_option_fields['course_id']['required']  = 'required';
 				$this->shortcodes_option_fields['course_id']['help_text'] = sprintf(
-					// translators: placeholders: Course.
+					// translators: placeholder: Course.
 					esc_html_x( 'Enter single %s ID.', 'placeholders: Course', 'learndash' ),
 					LearnDash_Custom_Label::get_label( 'course' )
 				);

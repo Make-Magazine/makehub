@@ -23,16 +23,19 @@ const {
 
 const {
 	InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	RangeControl,
 	SelectControl,
 	ToggleControl,
 	TextControl
 } = wp.components;
+
+const {
+	serverSideRender: ServerSideRender
+} = wp;
 
 registerBlockType(
 	'learndash/ld-topic-list',
@@ -423,7 +426,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key='controls'>
 					{panelbody_header}
 					{panel_topic_grid_section}
 					{panel_topic_category_section}
@@ -439,6 +442,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-topic-list"
 						attributes={attributes}
+						key='learndash/ld-topic-list'
 					/>
 				} else {
 					return __('[ld_topic_list] shortcode output shown here', 'learndash');

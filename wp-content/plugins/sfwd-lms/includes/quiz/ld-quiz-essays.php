@@ -20,29 +20,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.2.0
  */
 function learndash_register_essay_post_type() {
-	
+
 	$labels = array(
-		'name'               => esc_html_x( 'Submitted Essays', 'Post Type General Name', 'learndash' ),
-		'singular_name'      => esc_html_x( 'Submitted Essay', 'Post Type Singular Name', 'learndash' ),
-		'menu_name'          => esc_html__( 'Submitted Essays', 'learndash' ),
-		'name_admin_bar'     => esc_html__( 'Submitted Essays', 'learndash' ),
-		'parent_item_colon'  => esc_html__( 'Parent Submitted Essay:', 'learndash' ),
-		'all_items'          => esc_html__( 'All Submitted Essays', 'learndash' ),
-		'add_new_item'       => esc_html__( 'Add New Submitted Essay', 'learndash' ),
-		'add_new'            => esc_html__( 'Add New', 'learndash' ),
-		'new_item'           => esc_html__( 'New Submitted Essay', 'learndash' ),
-		'edit_item'          => esc_html__( 'Edit Submitted Essay', 'learndash' ),
-		'update_item'        => esc_html__( 'Update Submitted Essay', 'learndash' ),
-		'view_item'          => esc_html__( 'View Submitted Essay', 'learndash' ),
-		'view_items'         => esc_html__( 'View Submitted Essays', 'learndash' ),
-		'search_items'       => esc_html__( 'Search Submitted Essays', 'learndash' ),
-		'not_found'          => esc_html__( 'Submitted Essay Not found', 'learndash' ),
-		'not_found_in_trash' => esc_html__( 'Submitted Essay Not found in Trash', 'learndash' ),
-		'item_published'	 =>	esc_html__( 'Submitted Essay Published', 'learndash' ),
+		'name'                     => esc_html_x( 'Submitted Essays', 'Post Type General Name', 'learndash' ),
+		'singular_name'            => esc_html_x( 'Submitted Essay', 'Post Type Singular Name', 'learndash' ),
+		'menu_name'                => esc_html__( 'Submitted Essays', 'learndash' ),
+		'name_admin_bar'           => esc_html__( 'Submitted Essays', 'learndash' ),
+		'parent_item_colon'        => esc_html__( 'Parent Submitted Essay:', 'learndash' ),
+		'all_items'                => esc_html__( 'All Submitted Essays', 'learndash' ),
+		'add_new_item'             => esc_html__( 'Add New Submitted Essay', 'learndash' ),
+		'add_new'                  => esc_html__( 'Add New', 'learndash' ),
+		'new_item'                 => esc_html__( 'New Submitted Essay', 'learndash' ),
+		'edit_item'                => esc_html__( 'Edit Submitted Essay', 'learndash' ),
+		'update_item'              => esc_html__( 'Update Submitted Essay', 'learndash' ),
+		'view_item'                => esc_html__( 'View Submitted Essay', 'learndash' ),
+		'view_items'               => esc_html__( 'View Submitted Essays', 'learndash' ),
+		'search_items'             => esc_html__( 'Search Submitted Essays', 'learndash' ),
+		'not_found'                => esc_html__( 'Submitted Essay Not found', 'learndash' ),
+		'not_found_in_trash'       => esc_html__( 'Submitted Essay Not found in Trash', 'learndash' ),
+		'item_published'           => esc_html__( 'Submitted Essay Published', 'learndash' ),
 		'item_published_privately' => esc_html__( 'Submitted Essay Published Privately', 'learndash' ),
-		'item_reverted_to_draft' => esc_html__( 'Submitted Essay Reverted to Draft', 'learndash' ),
-		'item_scheduled'	 =>	esc_html__( 'Submitted Essay Scheduled', 'learndash' ),
-		'item_updated'		 =>	esc_html__( 'Submitted Essay Updated', 'learndash' ),
+		'item_reverted_to_draft'   => esc_html__( 'Submitted Essay Reverted to Draft', 'learndash' ),
+		'item_scheduled'           => esc_html__( 'Submitted Essay Scheduled', 'learndash' ),
+		'item_updated'             => esc_html__( 'Submitted Essay Updated', 'learndash' ),
 
 	);
 
@@ -58,30 +58,32 @@ function learndash_register_essay_post_type() {
 
 	if ( learndash_is_admin_user() ) {
 		$show_in_admin_bar = false;
-	} else if ( learndash_is_group_leader_user() ) {
+	} elseif ( learndash_is_group_leader_user() ) {
 		$show_in_admin_bar = false;
 	} else {
 		$show_in_admin_bar = false;
 	}
 
+	$show_in_rest = LearnDash_REST_API::enabled( learndash_get_post_type_slug( 'essay' ) ) || LearnDash_REST_API::gutenberg_enabled( learndash_get_post_type_slug( 'essay' ) );
+
 	$args = array(
 		'label'               => esc_html__( 'sfwd-essays', 'learndash' ),
 		'description'         => esc_html__( 'Submitted essays via a quiz question.', 'learndash' ),
 		'labels'              => $labels,
-		'supports'            => array( 'title', 'editor', 'comments', 'author'),
+		'supports'            => array( 'title', 'editor', 'comments', 'author' ),
 		'hierarchical'        => false,
 		'public'              => true,
 		'show_ui'             => true,
 		'show_in_menu'        => false,
-		'show_in_admin_bar'	  => $show_in_admin_bar,
-		'query_var' 		  => true,
-		'rewrite' 			  => array( 'slug' => 'essay' ), 
+		'show_in_admin_bar'   => $show_in_admin_bar,
+		'query_var'           => true,
+		'rewrite'             => array( 'slug' => 'essay' ),
 		'menu_position'       => 5,
 		'show_in_admin_bar'   => false,
 		'show_in_nav_menus'   => false,
 		'can_export'          => true,
 		'has_archive'         => false,
-		'show_in_rest'        => false,
+		'show_in_rest'        => $show_in_rest,
 		'exclude_from_search' => true,
 		'publicly_queryable'  => true,
 		'capability_type'     => 'essay',
@@ -109,8 +111,8 @@ add_action( 'init', 'learndash_register_essay_post_type' );
 function learndash_add_essay_caps() {
 	$admin_role = get_role( 'administrator' );
 	if ( ( $admin_role ) && ( $admin_role instanceof WP_Role ) ) {
-	
-		$cap  = $admin_role->has_cap( 'delete_others_essays' );
+
+		$cap = $admin_role->has_cap( 'delete_others_essays' );
 		if ( empty( $cap ) ) {
 			$admin_role->add_cap( 'edit_essays' );
 			$admin_role->add_cap( 'edit_others_essays' );
@@ -123,7 +125,7 @@ function learndash_add_essay_caps() {
 			$admin_role->add_cap( 'delete_published_essays' );
 		}
 	}
-	
+
 	$group_leader_role = get_role( 'group_leader' );
 	if ( ( $group_leader_role ) && ( $group_leader_role instanceof WP_Role ) ) {
 		$group_leader_role->add_cap( 'edit_essays' );
@@ -157,17 +159,19 @@ add_action( 'admin_init', 'learndash_add_essay_caps' );
  * @return array An array of user's capabilities.
  */
 function learndash_map_metacap_essays( $caps, $cap, $user_id, $args = array() ) {
-	if ( !is_string( $cap ) ) return $caps;
+	if ( ! is_string( $cap ) ) {
+		return $caps;
+	}
 
 	/* If editing, deleting, or reading a essays, get the post and post type object. */
 	if ( 'edit_essay' == $cap || 'delete_essay' == $cap || 'read_essay' == $cap ) {
-		
+
 		// Ensure $args is valid
-		if ( ( !is_array( $args ) ) || ( !isset( $args[0] ) ) ) {
+		if ( ( ! is_array( $args ) ) || ( ! isset( $args[0] ) ) ) {
 			return $caps;
 		}
-		
-		$post      = get_post( $args[0] );
+
+		$post = get_post( $args[0] );
 		if ( ! is_a( $post, 'WP_Post' ) ) {
 			return $caps;
 		}
@@ -185,16 +189,13 @@ function learndash_map_metacap_essays( $caps, $cap, $user_id, $args = array() ) 
 		} else {
 			$caps[] = $post_type->cap->edit_others_posts;
 		}
-	} /* If deleting a essay, assign the required capability. */
-	elseif ( 'delete_essay' == $cap ) {
+	} elseif ( 'delete_essay' == $cap ) { /* If deleting a essay, assign the required capability. */
 		if ( $user_id == $post->post_author ) {
 			$caps[] = $post_type->cap->delete_posts;
 		} else {
 			$caps[] = $post_type->cap->delete_others_posts;
 		}
-	} /* If reading a private essay, assign the required capability. */
-	elseif ( 'read_essay' == $cap ) {
-
+	} elseif ( 'read_essay' == $cap ) { /* If reading a private essay, assign the required capability. */
 		if ( 'private' != $post->post_status ) {
 			$caps[] = 'read';
 		} elseif ( $user_id == $post->post_author ) {
@@ -221,25 +222,31 @@ add_filter( 'map_meta_cap', 'learndash_map_metacap_essays', 10, 4 );
  * @since 2.2.0
  */
 function learndash_register_essay_post_status() {
-	register_post_status( 'graded', array(
-		'label'                     => esc_html_x( 'Graded', 'Custom Essay post type status: Graded', 'learndash' ),
-		'public'                    => true,
-		'exclude_from_search'       => true,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		// translators: placeholder: Graded Essay count.
-		'label_count'               => _n_noop( 'Graded <span class="count">(%s)</span>', 'Graded <span class="count">(%s)</span>', 'learndash' ),
-	) );
+	register_post_status(
+		'graded',
+		array(
+			'label'                     => esc_html_x( 'Graded', 'Custom Essay post type status: Graded', 'learndash' ),
+			'public'                    => true,
+			'exclude_from_search'       => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			// translators: placeholder: Graded Essay count.
+			'label_count'               => _n_noop( 'Graded <span class="count">(%s)</span>', 'Graded <span class="count">(%s)</span>', 'learndash' ),
+		)
+	);
 
-	register_post_status( 'not_graded', array(
-		'label'                     => esc_html_x( 'Not Graded', 'Custom Essay post type status: Not Graded', 'learndash' ),
-		'public'                    => true,
-		'exclude_from_search'       => true,
-		'show_in_admin_all_list'    => true,
-		'show_in_admin_status_list' => true,
-		// translators: placeholder: Not Graded Essay count.
-		'label_count'               => _n_noop( 'Not Graded <span class="count">(%s)</span>', 'Not Graded <span class="count">(%s)</span>', 'learndash' ),
-	) );
+	register_post_status(
+		'not_graded',
+		array(
+			'label'                     => esc_html_x( 'Not Graded', 'Custom Essay post type status: Not Graded', 'learndash' ),
+			'public'                    => true,
+			'exclude_from_search'       => true,
+			'show_in_admin_all_list'    => true,
+			'show_in_admin_status_list' => true,
+			// translators: placeholder: Not Graded Essay count.
+			'label_count'               => _n_noop( 'Not Graded <span class="count">(%s)</span>', 'Not Graded <span class="count">(%s)</span>', 'learndash' ),
+		)
+	);
 }
 
 add_action( 'init', 'learndash_register_essay_post_status' );
@@ -266,7 +273,7 @@ function learndash_essay_permissions() {
 			if ( ! empty( $user_id ) ) {
 				if ( ( learndash_is_admin_user( $user_id ) ) || ( $post->post_author == $user_id ) ) {
 					$can_view_file = true;
-				} else if ( ( learndash_is_group_leader_user( $user_id ) ) && ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) ) {
+				} elseif ( ( learndash_is_group_leader_user( $user_id ) ) && ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) ) {
 					$can_view_file = true;
 				}
 			}
@@ -320,7 +327,7 @@ add_action( 'wp', 'learndash_essay_permissions' ); //, 0, 3 );
  * @return boolean|int|WP_Error Returns essay ID or `WP_Error` if the essay could not be created.
  */
 function learndash_add_new_essay_response( $response, $this_question, $quiz, $post_data = null ) {
-	if ( ! is_a( $this_question, 'WpProQuiz_Model_Question' ) || ! is_a ( $quiz, 'WpProQuiz_Model_Quiz' ) ) {
+	if ( ! is_a( $this_question, 'WpProQuiz_Model_Question' ) || ! is_a( $quiz, 'WpProQuiz_Model_Quiz' ) ) {
 		return false;
 	}
 
@@ -328,10 +335,10 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 
 	// essay args defaults
 	$essay_args = array(
-		'post_title'   => $this_question->getTitle(),
-		'post_status'  => 'not_graded',
-		'post_type'    => 'sfwd-essays',
-		'post_author'  => $user->ID,
+		'post_title'  => $this_question->getTitle(),
+		'post_status' => 'not_graded',
+		'post_type'   => 'sfwd-essays',
+		'post_author' => $user->ID,
 	);
 
 	$essay_data = $this_question->getAnswerData();
@@ -346,16 +353,16 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 		case 'not-graded-full':
 			$essay_args['post_status'] = 'not_graded';
 			break;
-		case 'graded-full' :
+		case 'graded-full':
 			$essay_args['post_status'] = 'graded';
 			break;
 	}
 
 	// switch on graded type to handle the response
 	// used a switch in case we add more types
-	switch( $essay_data->getGradedType() ) {
-		case 'text' :
-			$essay_args['post_content'] = wp_kses( 
+	switch ( $essay_data->getGradedType() ) {
+		case 'text':
+			$essay_args['post_content'] = wp_kses(
 				$response,
 				/**
 				 * Filters list of allowed html tags in essay content.
@@ -364,10 +371,10 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 				 *
 				 * @param array $allowed_tags An array of allowed HTML tags in essay content.
 				 */
-				apply_filters('learndash_essay_new_allowed_html', wp_kses_allowed_html( 'post' ) ) 
+				apply_filters( 'learndash_essay_new_allowed_html', wp_kses_allowed_html( 'post' ) )
 			);
 			break;
-		case 'upload' :
+		case 'upload':
 			$essay_args['post_content'] = esc_html__( 'See upload below.', 'learndash' );
 	}
 
@@ -377,18 +384,18 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 	 * @param array $essay_args An array of essay arguments.
 	 */
 	$essay_args = apply_filters( 'learndash_new_essay_submission_args', $essay_args );
-	$essay_id = wp_insert_post( $essay_args );
+	$essay_id   = wp_insert_post( $essay_args );
 
 	if ( ! empty( $essay_id ) ) {
 		if ( ( isset( $post_data['quiz_id'] ) ) && ( ! empty( $post_data['quiz_id'] ) ) ) {
 			$quiz_id = absint( $post_data['quiz_id'] );
 		} else {
-			$quiz_id = learndash_get_quiz_id_by_pro_quiz_id(  $this_question->getQuizId() );
+			$quiz_id = learndash_get_quiz_id_by_pro_quiz_id( $this_question->getQuizId() );
 		}
-		
+
 		if ( isset( $post_data['course_id'] ) ) {
 			$course_id = intval( $post_data['course_id'] );
-			if ( !empty( $course_id ) ) {
+			if ( ! empty( $course_id ) ) {
 				$lesson_id = learndash_course_get_single_parent_step( $course_id, $quiz_id );
 			} else {
 				$lesson_id = 0;
@@ -408,7 +415,7 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
 		update_post_meta( $essay_id, 'quiz_post_id', $quiz->getPostId() );
 		update_post_meta( $essay_id, 'question_post_id', $this_question->getQuestionPostId() );
 
-		if ( 'upload' == $essay_data->getGradedType() ){
+		if ( 'upload' == $essay_data->getGradedType() ) {
 			update_post_meta( $essay_id, 'upload', esc_url( $response ) );
 		}
 	}
@@ -437,9 +444,9 @@ function learndash_add_new_essay_response( $response, $this_question, $quiz, $po
  *
  * @return mixed The submitted essay data.
  */
-function learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay  ) {
+function learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay ) {
 	$users_quiz_data = get_user_meta( $essay->post_author, '_sfwd-quizzes', true );
-	if ( ( !empty( $users_quiz_data ) ) && ( is_array( $users_quiz_data ) ) ) {
+	if ( ( ! empty( $users_quiz_data ) ) && ( is_array( $users_quiz_data ) ) ) {
 		if ( ( $essay ) && ( is_a( $essay, 'WP_Post' ) ) ) {
 			$essay_quiz_time = get_post_meta( $essay->ID, 'quiz_time', true );
 		} else {
@@ -447,16 +454,16 @@ function learndash_get_submitted_essay_data( $quiz_id, $question_id, $essay  ) {
 		}
 
 		foreach ( $users_quiz_data as $quiz_data ) {
-			// We check for a match on the quiz time from the essay postmeta first. 
+			// We check for a match on the quiz time from the essay postmeta first.
 			// If the essay_quiz_time is not empty and does NOT match then continue;
 			if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 				continue;
 			}
-			if (empty($quiz_data['pro_quizid']) ||  $quiz_id != $quiz_data['pro_quizid'] || ! isset( $quiz_data['has_graded'] ) || false == $quiz_data['has_graded'] ) {
+			if ( empty( $quiz_data['pro_quizid'] ) || $quiz_id != $quiz_data['pro_quizid'] || ! isset( $quiz_data['has_graded'] ) || false == $quiz_data['has_graded'] ) {
 				continue;
 			}
 
-			if ((isset($quiz_data['graded'])) && (!empty($quiz_data['graded']))) {
+			if ( ( isset( $quiz_data['graded'] ) ) && ( ! empty( $quiz_data['graded'] ) ) ) {
 				foreach ( $quiz_data['graded'] as $key => $graded_question ) {
 					if ( ( $key == $question_id ) && ( $essay->ID == $graded_question['post_id'] ) ) {
 						return $quiz_data['graded'][ $key ];
@@ -491,12 +498,12 @@ function learndash_update_submitted_essay_data( $quiz_id, $question_id, $essay, 
 	$quizdata_changed = array();
 
 	foreach ( $users_quiz_data as $quiz_key => $quiz_data ) {
-		// We check for a match on the quiz time from the essay postmeta first. 
+		// We check for a match on the quiz time from the essay postmeta first.
 		// If the essay_quiz_time is not empty and does NOT match then continue;
 		if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 			continue;
 		}
-		
+
 		if ( $quiz_id != $quiz_data['pro_quizid'] || ! isset( $quiz_data['has_graded'] ) || false == $quiz_data['has_graded'] ) {
 			continue;
 		}
@@ -538,7 +545,7 @@ function learndash_update_submitted_essay_data( $quiz_id, $question_id, $essay, 
  */
 function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $essay ) {
 	$affected_quiz_keys = array();
-	
+
 	$users_quiz_data = get_user_meta( $essay->post_author, '_sfwd-quizzes', true );
 
 	if ( ( $essay ) && ( is_a( $essay, 'WP_Post' ) ) ) {
@@ -546,24 +553,26 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
 	} else {
 		$essay_quiz_time = null;
 	}
-	
-	// We need to find the user meta quiz to matches the essay being scored. 
+
+	// We need to find the user meta quiz to matches the essay being scored.
 	foreach ( $users_quiz_data as $quiz_key => $quiz_data ) {
 
-		// We check for a match on the quiz time from the essay postmeta first. 
+		// We check for a match on the quiz time from the essay postmeta first.
 		// If the essay_quiz_time is not empty and does NOT match then continue;
 		if ( ( absint( $essay_quiz_time ) ) && ( isset( $quiz_data['time'] ) ) && ( absint( $essay_quiz_time ) !== absint( $quiz_data['time'] ) ) ) {
 			continue;
 		}
 
-		if ( ( $quiz_id != $quiz_data['pro_quizid'] ) || ( !isset( $quiz_data['has_graded'] ) ) || ( false == $quiz_data['has_graded'] ) )
+		if ( ( $quiz_id != $quiz_data['pro_quizid'] ) || ( ! isset( $quiz_data['has_graded'] ) ) || ( false == $quiz_data['has_graded'] ) ) {
 			continue;
+		}
 
-		if ( ( !isset( $quiz_data['graded'][$question_id]['post_id'] ) ) || ( $quiz_data['graded'][$question_id]['post_id'] != $essay->ID ) )
+		if ( ( ! isset( $quiz_data['graded'][ $question_id ]['post_id'] ) ) || ( $quiz_data['graded'][ $question_id ]['post_id'] != $essay->ID ) ) {
 			continue;
+		}
 
 		$affected_quiz_keys[] = $quiz_key;
-		
+
 		// update total score
 		$users_quiz_data[ $quiz_key ]['score'] = $users_quiz_data[ $quiz_key ]['score'] + $updated_scoring['score_difference'];
 
@@ -571,12 +580,12 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
 		$users_quiz_data[ $quiz_key ]['points'] = $users_quiz_data[ $quiz_key ]['points'] + $updated_scoring['points_awarded_difference'];
 
 		// update total score percentage
-		$updated_percentage = ( $users_quiz_data[ $quiz_key ]['points'] / $users_quiz_data[ $quiz_key ]['total_points'] ) * 100;
+		$updated_percentage                         = ( $users_quiz_data[ $quiz_key ]['points'] / $users_quiz_data[ $quiz_key ]['total_points'] ) * 100;
 		$users_quiz_data[ $quiz_key ]['percentage'] = round( $updated_percentage, 2 );
 
 		// update passing score
-		$quizmeta = get_post_meta( $quiz_data['quiz'], '_sfwd-quiz', true );
-		$passingpercentage = intVal( $quizmeta['sfwd-quiz_passingpercentage'] );
+		$quizmeta                             = get_post_meta( $quiz_data['quiz'], '_sfwd-quiz', true );
+		$passingpercentage                    = intVal( $quizmeta['sfwd-quiz_passingpercentage'] );
 		$users_quiz_data[ $quiz_key ]['pass'] = ( $users_quiz_data[ $quiz_key ]['percentage'] >= $passingpercentage ) ? 1 : 0;
 
 		learndash_update_quiz_statistics( $quiz_id, $question_id, $updated_scoring, $essay, $users_quiz_data[ $quiz_key ] );
@@ -585,41 +594,31 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
 
 	update_user_meta( $essay->post_author, '_sfwd-quizzes', $users_quiz_data );
 
-	if ( !empty( $affected_quiz_keys ) ) {
-		foreach( $affected_quiz_keys as $quiz_key ) {
+	if ( ! empty( $affected_quiz_keys ) ) {
+		foreach ( $affected_quiz_keys as $quiz_key ) {
 			if ( isset( $users_quiz_data[ $quiz_key ] ) ) {
 				$send_quiz_completed = true;
 
 				if ( ( isset( $users_quiz_data[ $quiz_key ]['has_graded'] ) ) && ( true === $users_quiz_data[ $quiz_key ]['has_graded'] ) ) {
 					if ( ( isset( $users_quiz_data[ $quiz_key ]['graded'] ) ) && ( ! empty( $users_quiz_data[ $quiz_key ]['graded'] ) ) ) {
 						foreach ( $users_quiz_data[ $quiz_key ]['graded'] as $grade_item ) {
-							if ( ( isset( $grade_item['status'] ) ) && ( $grade_item['status'] !== 'graded' ) ) {
+							if ( ( isset( $grade_item['status'] ) ) && ( 'graded' !== $grade_item['status'] ) ) {
 								$send_quiz_completed = false;
 							}
 						}
 					}
-				} 
+				}
 				if ( true === $send_quiz_completed ) {
-					if ( isset( $users_quiz_data[ $quiz_key ]['course'] ) )
+					if ( isset( $users_quiz_data[ $quiz_key ]['course'] ) ) {
 						$course_id = intval( $users_quiz_data[ $quiz_key ]['course'] );
-					else
+					} else {
 						$course_id = learndash_get_course_id( $essay->ID );
+					}
 
 					learndash_process_mark_complete( $essay->post_author, $users_quiz_data[ $quiz_key ]['quiz'], false, $course_id );
 
 					/** This action is documented in includes/ld-users.php */
 					do_action( 'learndash_quiz_completed', $users_quiz_data[ $quiz_key ], get_user_by( 'ID', $essay->post_author ) );
-
-					/*
-					if ( ( isset( $users_quiz_data[ $quiz_key ]['topic'] ) ) && ( ! empty( $users_quiz_data[ $quiz_key ]['topic'] ) ) ) {
-						learndash_process_mark_complete( $essay->post_author, absint( $users_quiz_data[ $quiz_key ]['topic'] ), false, $course_id );
-					}
-					*/
-					/*
-					if ( ( isset( $users_quiz_data[ $quiz_key ]['lesson'] ) ) && ( ! empty( $users_quiz_data[ $quiz_key ]['lesson'] ) ) ) {
-						learndash_process_mark_complete( $essay->post_author, absint( $users_quiz_data[ $quiz_key ]['lesson'] ), false, $course_id );
-					}
-					*/
 				}
 			}
 		}
@@ -643,36 +642,37 @@ function learndash_update_quiz_data( $quiz_id, $question_id, $updated_scoring, $
  * @param array $quiz_data An array of quiz activity data to be updated.
  */
 function learndash_update_quiz_activity( $user_id = 0, $quiz_data = array() ) {
-	if ( ( !empty( $user_id ) ) && ( !empty( $quiz_data ) ) ) {
+	if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_data ) ) ) {
 
 		$quiz_data_meta = $quiz_data;
-		
-		// Remove many fields that we either don't need or are duplicate of the main table columns
-		unset($quiz_data_meta['quiz']);
-		unset($quiz_data_meta['pro_quizid']);
-		unset($quiz_data_meta['time']);
-		unset($quiz_data_meta['completed']);
-		unset($quiz_data_meta['started']);
-		//unset($quiz_data_meta['graded']);
-		
-		if ($quiz_data_meta['rank'] == '-')
-			unset($quiz_data_meta['rank']);
 
-		if ( $quiz_data['pass'] == true )
+		// Remove many fields that we either don't need or are duplicate of the main table columns
+		unset( $quiz_data_meta['quiz'] );
+		unset( $quiz_data_meta['pro_quizid'] );
+		unset( $quiz_data_meta['time'] );
+		unset( $quiz_data_meta['completed'] );
+		unset( $quiz_data_meta['started'] );
+
+		if ( '-' == $quiz_data_meta['rank'] ) {
+			unset( $quiz_data_meta['rank'] );
+		}
+
+		if ( true == $quiz_data['pass'] ) {
 			$quiz_data_pass = true;
-		else	
+		} else {
 			$quiz_data_pass = false;
-		
+		}
+
 		learndash_update_user_activity(
 			array(
-				'course_id'				=>	(isset( $quiz_data['course'] ) ) ? intval( $quiz_data['course'] ) : 0,
-				'post_id'				=>	$quiz_data['quiz'],
-				'user_id'				=>	$user_id,
-				'activity_type'			=>	'quiz',
-				'activity_status'		=>	$quiz_data_pass,
-				'activity_started'		=>	$quiz_data['started'],
-				'activity_completed'	=>	$quiz_data['completed'], 
-				'activity_meta'			=>	$quiz_data_meta,
+				'course_id'          => ( isset( $quiz_data['course'] ) ) ? intval( $quiz_data['course'] ) : 0,
+				'post_id'            => $quiz_data['quiz'],
+				'user_id'            => $user_id,
+				'activity_type'      => 'quiz',
+				'activity_status'    => $quiz_data_pass,
+				'activity_started'   => $quiz_data['started'],
+				'activity_completed' => $quiz_data['completed'],
+				'activity_meta'      => $quiz_data_meta,
 			)
 		);
 	}
@@ -698,23 +698,31 @@ function learndash_update_quiz_statistics( $quiz_id, $question_id, $updated_quiz
 	global $wpdb;
 
 	if ( ( isset( $users_quiz_data['statistic_ref_id'] ) ) && ( ! empty( $users_quiz_data['statistic_ref_id'] ) ) ) {
-		$refId = absint( $users_quiz_data['statistic_ref_id'] );
+		$ref_id = absint( $users_quiz_data['statistic_ref_id'] );
 	} else {
-		$refId = $wpdb->get_var(
-			$wpdb->prepare("
+		$ref_id = $wpdb->get_var(
+			$wpdb->prepare(
+				'
 						SELECT statistic_ref_id
-						FROM ". LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) ." WHERE quiz_id = %d AND user_id = %d
-					", $quiz_id, $essay->post_author)
+						FROM ' . LDLMS_DB::get_table_name( 'quiz_statistic_ref' ) . ' WHERE quiz_id = %d AND user_id = %d
+					',
+				$quiz_id,
+				$essay->post_author
+			)
 		);
 
-		$refId = absint( $refId );
+		$ref_id = absint( $ref_id );
 	}
 
 	$row = $wpdb->get_results(
-		$wpdb->prepare("
+		$wpdb->prepare(
+			'
 					SELECT *
-					FROM ". LDLMS_DB::get_table_name( 'quiz_statistic' ) ." WHERE statistic_ref_id = %d AND question_id = %d
-				", $refId, $question_id)
+					FROM ' . LDLMS_DB::get_table_name( 'quiz_statistic' ) . ' WHERE statistic_ref_id = %d AND question_id = %d
+				',
+			$ref_id,
+			$question_id
+		)
 	);
 
 	if ( empty( $row ) ) {
@@ -722,25 +730,25 @@ function learndash_update_quiz_statistics( $quiz_id, $question_id, $updated_quiz
 	}
 
 	if ( $updated_quiz_data['updated_question_score'] > 0 ) {
-		$correct_count = 1;
+		$correct_count   = 1;
 		$incorrect_count = 0;
 	} else {
-		$correct_count = 0;
+		$correct_count   = 0;
 		$incorrect_count = 1;
 	}
 
-	$update  = $wpdb->update(
+	$update = $wpdb->update(
 		LDLMS_DB::get_table_name( 'quiz_statistic' ),
 		array(
-			'correct_count' => $correct_count,
+			'correct_count'   => $correct_count,
 			'incorrect_count' => $incorrect_count,
-			'points' => $updated_quiz_data['updated_question_score'],
+			'points'          => $updated_quiz_data['updated_question_score'],
 		),
 		array(
-			'statistic_ref_id' => $refId,
-			'question_id' => $question_id,
+			'statistic_ref_id' => $ref_id,
+			'question_id'      => $question_id,
 		),
-		array( '%d', '%d', '%d'	),
+		array( '%d', '%d', '%d' ),
 		array( '%d', '%d' )
 	);
 
@@ -766,7 +774,7 @@ function learndash_upload_essay() {
 		die();
 	}
 
-	$nonce = $_POST['nonce'];
+	$nonce       = $_POST['nonce'];
 	$question_id = intval( $_POST['question_id'] );
 	if ( empty( $question_id ) ) {
 		wp_send_json_error();
@@ -776,19 +784,19 @@ function learndash_upload_essay() {
 	/**
 	 * Changes in v2.5.4 to include the question_id as part of the nonce
 	 */
-	if ( ! wp_verify_nonce( $nonce, 'learndash-upload-essay-'. $question_id ) ) {
+	if ( ! wp_verify_nonce( $nonce, 'learndash-upload-essay-' . $question_id ) ) {
 		wp_send_json_error();
 		die( 'Security check' );
 	} else {
 
-		if ( !is_user_logged_in() ) {
+		if ( ! is_user_logged_in() ) {
 			/**
 			 * Filters whether to allow essay upload or not if the user is not logged in.
 			 *
 			 * @param boolean $allow_upload Whether to allow upload.
 			 * @param int     $question_id  ID of the essay question.
 			 */
-			if ( !apply_filters('learndash_essay_upload_user_check', false, $question_id ) ) {
+			if ( ! apply_filters( 'learndash_essay_upload_user_check', false, $question_id ) ) {
 				wp_send_json_error();
 				die();
 			}
@@ -801,7 +809,7 @@ function learndash_upload_essay() {
 		} else {
 			wp_send_json_error(
 				array(
-					'message' => esc_html__( 'Unknown error.', 'learndash' )
+					'message' => esc_html__( 'Unknown error.', 'learndash' ),
 				)
 			);
 		}
@@ -827,7 +835,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 	if ( is_array( $uploadfiles ) ) {
 
 		// look only for uploded files
-		if ( $uploadfiles['error'] == 0 ) {
+		if ( 0 == $uploadfiles['error'] ) {
 
 			$filetmp = $uploadfiles['tmp_name'];
 
@@ -850,20 +858,19 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			if ( ( empty( $filetype ) ) || ( empty( $filetype['ext'] ) ) || ( empty( $filetype['type'] ) ) || ( ! $limit_file_exts[ $filetype['ext'] ] ) ) {
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Invalid essay uploaded file type.', 'learndash' )
+						'message' => esc_html__( 'Invalid essay uploaded file type.', 'learndash' ),
 					)
 				);
 				die();
 			}
-						
-			//$filetitle = preg_replace( '/\.[^.]+$/', '', basename( $filename ) );
+
 			$filetitle = pathinfo( $filename, PATHINFO_FILENAME );
-			$file_time = microtime(true) * 100;
-			
+			$file_time = microtime( true ) * 100;
+
 			$filename = sprintf( 'question_%d_%d_%s.%s', $question_id, $file_time, $filetitle, $filetype['ext'] );
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
-			$filename = apply_filters( 'learndash_essay_upload_filename', $filename, $question_id, $filetitle, $filetype['ext'] );
-			$upload_dir = wp_upload_dir();
+			$filename        = apply_filters( 'learndash_essay_upload_filename', $filename, $question_id, $filetitle, $filetype['ext'] );
+			$upload_dir      = wp_upload_dir();
 			$upload_dir_base = str_replace( '\\', '/', $upload_dir['basedir'] );
 			$upload_url_base = $upload_dir['baseurl'];
 			/** This filter is documented in includes/import/class-ld-import-quiz-statistics.php */
@@ -877,7 +884,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 				} else {
 					wp_send_json_error(
 						array(
-							'message' => esc_html__( 'Unable to write to UPLOADS directory. Is this directory writable by the server?', 'learndash' )
+							'message' => esc_html__( 'Unable to write to UPLOADS directory. Is this directory writable by the server?', 'learndash' ),
 						)
 					);
 					die();
@@ -886,10 +893,10 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 
 			// Add an index.php file to prevent directory browesing
 			$_index = trailingslashit( $upload_dir_path ) . 'index.php';
-			if ( !file_exists( $_index ) ) {
-				file_put_contents ( $_index , '//LearnDash is THE Best LMS' );
-			}					
-			
+			if ( ! file_exists( $_index ) ) {
+				file_put_contents( $_index, '//LearnDash is THE Best LMS' );
+			}
+
 			$file_title = pathinfo( basename( $filename ), PATHINFO_FILENAME );
 			$file_ext   = pathinfo( basename( $filename ), PATHINFO_EXTENSION );
 
@@ -906,8 +913,8 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 				//$filename = apply_filters( 'learndash_essay_upload_filename_dup', $filename, $question_id, $filetitle, $i, $filetype['ext'] );
 				$filename = $file_title . '_' . $i . '.' . $file_ext;
 			}
-			
-			$filedest = $upload_dir_path . '/' . $filename;
+
+			$filedest    = $upload_dir_path . '/' . $filename;
 			$destination = $upload_url_path . $filename;
 
 			/**
@@ -916,7 +923,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			if ( ! is_writeable( $upload_dir_path ) ) {
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'Unable to write to directory. Is this directory writable by the server?', 'learndash' )
+						'message' => esc_html__( 'Unable to write to directory. Is this directory writable by the server?', 'learndash' ),
 					)
 				);
 				die();
@@ -928,13 +935,13 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			if ( ! @move_uploaded_file( $filetmp, $filedest ) ) {
 				wp_send_json_error(
 					array(
-						'message' => esc_html__( 'The uploaded file could not be move to the destination directory.', 'learndash' )
+						'message' => esc_html__( 'The uploaded file could not be move to the destination directory.', 'learndash' ),
 					)
 				);
 				die();
 			}
 
-			$file_desc = array();
+			$file_desc             = array();
 			$file_desc['filename'] = $filename;
 			$file_desc['filelink'] = $destination;
 			$file_desc['message']  = esc_html__( 'Essay upload success.', 'learndash' );
@@ -955,14 +962,14 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
  * @param int $post_id Post ID.
  */
 function learndash_before_delete_essay( $post_id ) {
-	
-	if ( ( !empty( $post_id ) ) && ( 'sfwd-essays' == get_post_type( $post_id ) ) ) {
+
+	if ( ( ! empty( $post_id ) ) && ( 'sfwd-essays' == get_post_type( $post_id ) ) ) {
 		$file_path = get_post_meta( $post_id, 'upload', true );
-		if ( !empty( $file_path ) ) {
+		if ( ! empty( $file_path ) ) {
 			$file_path = basename( $file_path );
-			
+
 			$url_link_arr = wp_upload_dir();
-			$file_path = trailingslashit( str_replace('\\', '/', $url_link_arr['basedir'] ) ) . 'essays/' . basename( $file_path );
+			$file_path    = trailingslashit( str_replace( '\\', '/', $url_link_arr['basedir'] ) ) . 'essays/' . basename( $file_path );
 			if ( file_exists( $file_path ) ) {
 				unlink( $file_path );
 			}
@@ -983,17 +990,19 @@ add_action( 'before_delete_post', 'learndash_before_delete_essay' );
  * @param array   $quizdata Optional. An array of quiz attempt data. Default empty array.
  * @param WP_User $user     The `WP_User` instance.
  */
-function learndash_quiz_submitted_update_essay( $quizdata = array(), $user ) {
-	if ( ( isset( $quizdata['time'] ) ) && ( ! empty( $quizdata['time'] ) ) ) {
-		if ( ( isset( $quizdata['has_graded'] ) ) && ( true === $quizdata['has_graded'] ) ) {
-			if ( ( isset( $quizdata['graded'] ) ) && ( ! empty( $quizdata['graded'] ) ) ) {
-				foreach( $quizdata['graded'] as $question_id => $graded_data ) {
-					if ( isset( $graded_data['post_id'] ) ) {
-						$essay_post_id = absint( $graded_data['post_id'] );
-						if ( ! empty( $essay_post_id ) ) {
-							$quiz_time = get_post_meta( $essay_post_id, 'quiz_time', true );
-							if ( ! $quiz_time ) {
-								update_post_meta( $essay_post_id, 'quiz_time', $quizdata['time'] );
+function learndash_quiz_submitted_update_essay( $quizdata, $user ) {
+	if ( is_array( $quizdata ) ) {
+		if ( ( isset( $quizdata['time'] ) ) && ( ! empty( $quizdata['time'] ) ) ) {
+			if ( ( isset( $quizdata['has_graded'] ) ) && ( true === $quizdata['has_graded'] ) ) {
+				if ( ( isset( $quizdata['graded'] ) ) && ( ! empty( $quizdata['graded'] ) ) ) {
+					foreach ( $quizdata['graded'] as $question_id => $graded_data ) {
+						if ( isset( $graded_data['post_id'] ) ) {
+							$essay_post_id = absint( $graded_data['post_id'] );
+							if ( ! empty( $essay_post_id ) ) {
+								$quiz_time = get_post_meta( $essay_post_id, 'quiz_time', true );
+								if ( ! $quiz_time ) {
+									update_post_meta( $essay_post_id, 'quiz_time', $quizdata['time'] );
+								}
 							}
 						}
 					}
@@ -1001,7 +1010,7 @@ function learndash_quiz_submitted_update_essay( $quizdata = array(), $user ) {
 			}
 		}
 	}
-} 
+}
 add_action( 'learndash_quiz_submitted', 'learndash_quiz_submitted_update_essay', 1, 2 );
 
 /**
@@ -1020,7 +1029,7 @@ function learndash_get_user_quiz_entry_for_essay( $essay_post_id = 0, $user_id =
 				$user_id = absint( $essay_post->post_author );
 			}
 			$quiz_pro_id = get_post_meta( $essay_post->ID, 'quiz_pro_id', true );
-			$quiz_time = get_post_meta( $essay_post->ID, 'quiz_time', true );
+			$quiz_time   = get_post_meta( $essay_post->ID, 'quiz_time', true );
 			if ( ( ! empty( $user_id ) ) && ( ! empty( $quiz_pro_id ) ) && ( ! empty( $quiz_time ) ) ) {
 				$user_quizzes = get_user_meta( $user_id, '_sfwd-quizzes', true );
 				if ( ! empty( $user_quizzes ) ) {

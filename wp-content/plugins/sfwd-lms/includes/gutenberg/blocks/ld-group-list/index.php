@@ -20,28 +20,28 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 			$this->shortcode_slug   = 'ld_group_list';
 			$this->block_slug       = 'ld-group-list';
 			$this->block_attributes = array(
-				'orderby'                 => array(
+				'orderby'                => array(
 					'type' => 'string',
 				),
-				'order'                   => array(
+				'order'                  => array(
 					'type' => 'string',
 				),
-				'per_page'                => array(
+				'per_page'               => array(
 					'type' => 'string',
 				),
 				'mygroups'               => array(
 					'type' => 'string',
 				),
-				'status'               => array(
-					'type' => 'array',
+				'status'                 => array(
+					'type'  => 'array',
 					'items' => array(
 						'type' => 'string',
 					),
 				),
-				'show_content'            => array(
+				'show_content'           => array(
 					'type' => 'boolean',
 				),
-				'show_thumbnail'          => array(
+				'show_thumbnail'         => array(
 					'type' => 'boolean',
 				),
 				'group_category_name'    => array(
@@ -59,37 +59,37 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				'group_tag_id'           => array(
 					'type' => 'string',
 				),
-				'category_name'           => array(
+				'category_name'          => array(
 					'type' => 'string',
 				),
-				'cat'                     => array(
+				'cat'                    => array(
 					'type' => 'string',
 				),
-				'categoryselector'        => array(
+				'categoryselector'       => array(
 					'type' => 'boolean',
 				),
-				'tag'                     => array(
+				'tag'                    => array(
 					'type' => 'string',
 				),
-				'tag_id'                  => array(
+				'tag_id'                 => array(
 					'type' => 'string',
 				),
-				'preview_show'            => array(
+				'preview_show'           => array(
 					'type' => 'boolean',
 				),
-				'preview_user_id'         => array(
+				'preview_user_id'        => array(
 					'type' => 'string',
 				),
-				'course_grid'             => array(
+				'course_grid'            => array(
 					'type' => 'boolean',
 				),
-				'progress_bar'            => array(
+				'progress_bar'           => array(
 					'type' => 'boolean',
 				),
-				'col'                     => array(
+				'col'                    => array(
 					'type' => 'string',
 				),
-				'example_show' => array(
+				'example_show'           => array(
 					'type' => 'boolean',
 				),
 			);

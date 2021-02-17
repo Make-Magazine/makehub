@@ -26,7 +26,7 @@
 				array(
 					'quiz_post_id' => $quiz->getID(),
 					'context'      => 'quiz_complete_message',
-					// translators: placeholder: Quiz
+					// translators: placeholder: Quiz.
 					'message'      => sprintf( esc_html_x( '%s complete. Results are being recorded.', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ),
 				)
 			)

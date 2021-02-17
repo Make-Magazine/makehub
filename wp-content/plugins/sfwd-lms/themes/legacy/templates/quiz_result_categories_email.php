@@ -12,13 +12,13 @@
  * @package LearnDash\Quiz
  */
 
-$category_output = esc_html__( 'Categories', 'learndash') . ":\n";
+$category_output = esc_html__( 'Categories', 'learndash' ) . ":\n";
 foreach ( $category_scores as $cat_id => $score ) {
 	if ( ! isset( $question_categories[ $cat_id ] ) ) {
 		continue;
 	}
 
-	$category_output .= '* ' . str_pad( $question_categories[ $cat_id ], 35, '.' ) . ( ( float ) $score ) . "%\n";
+	$category_output .= '* ' . str_pad( $question_categories[ $cat_id ], 35, '.' ) . ( (float) $score ) . "%\n";
 }
 
 echo $category_output;

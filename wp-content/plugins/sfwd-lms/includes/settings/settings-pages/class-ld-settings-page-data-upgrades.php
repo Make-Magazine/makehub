@@ -52,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 			wp_enqueue_style(
 				'learndash-admin-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-style' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-style' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -61,7 +61,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 			wp_enqueue_script(
 				'learndash-admin-settings-data-upgrades-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-data-upgrades' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-data-upgrades' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true

@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 3.2.3.5
+ * Version: 3.3.0.3
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -21,10 +21,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * LearnDash Version Constant
  */
-define( 'LEARNDASH_VERSION', '3.2.3.5' );
+define( 'LEARNDASH_VERSION', '3.3.0.3' );
 define( 'LEARNDASH_SETTINGS_DB_VERSION', '2.5' );
 define( 'LEARNDASH_SETTINGS_TRIGGER_UPGRADE_VERSION', '2.5' );
 define( 'LEARNDASH_LMS_TEXT_DOMAIN', 'learndash' );
+
+/**
+ * Define minimum versions for PHP and MySQL
+ *
+ * @since 3.3.0.2
+ */
+define( 'LEARNDASH_MIN_PHP_VERSION', '7.3' );
+define( 'LEARNDASH_MIN_MYSQL_VERSION', '5.6' );
 
 if ( ! defined( 'LEARNDASH_LMS_PLUGIN_DIR' ) ) {
 	define( 'LEARNDASH_LMS_PLUGIN_DIR', trailingslashit( str_replace( '\\', '/', WP_PLUGIN_DIR ) . '/' . basename( dirname( __FILE__ ) ) ) );
@@ -82,7 +90,6 @@ if ( ! defined( 'LEARNDASH_BUILDER_STEPS_UPDATE_POST' ) ) {
 	define( 'LEARNDASH_BUILDER_STEPS_UPDATE_POST', false );
 }
 
-// define( 'LEARNDASH_SCRIPT_VERSION_TOKEN', 'debug' );
 if ( ! defined( 'LEARNDASH_SCRIPT_VERSION_TOKEN' ) ) {
 	if ( defined( 'LEARNDASH_SCRIPT_DEBUG' ) && ( LEARNDASH_SCRIPT_DEBUG === true ) ) {
 		define( 'LEARNDASH_SCRIPT_VERSION_TOKEN', LEARNDASH_VERSION . '-' . time() );
@@ -191,7 +198,7 @@ if ( defined( 'LEARNDASH_REPO_ERROR_THRESHOLD_COUNT' ) ) {
  * @since 3.1.8
  */
 if ( defined( 'LEARNDASH_REPO_ERROR_THRESHOLD_TIME' ) ) {
-	define( 'LEARNDASH_REPO_ERROR_THRESHOLD_TIME', 2*60*60 );
+	define( 'LEARNDASH_REPO_ERROR_THRESHOLD_TIME', 2 * 60 * 60 );
 }
 
 if ( ! defined( 'LEARNDASH_LMS_DEFAULT_QUESTION_POINTS' ) ) {
@@ -265,6 +272,16 @@ if ( ! defined( 'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX' ) ) {
 if ( ! defined( 'LEARNDASH_ADMIN_POPUP_STYLE' ) ) {
 	define( 'LEARNDASH_ADMIN_POPUP_STYLE', 'jQuery-dialog' );
 }
+
+/**
+ * Use the WP function wp_safe_redirect.
+ *
+ * @since 3.4.0
+ */
+if ( ! defined( 'LEARNDASH_USE_WP_SAFE_REDIRECT' ) ) {
+	define( 'LEARNDASH_USE_WP_SAFE_REDIRECT', true );
+}
+
 
 if ( ! defined( 'LEARNDASH_DISABLE_TEMPLATE_CONTENT_OUTSIDE_LOOP' ) ) {
 	define( 'LEARNDASH_DISABLE_TEMPLATE_CONTENT_OUTSIDE_LOOP', true );

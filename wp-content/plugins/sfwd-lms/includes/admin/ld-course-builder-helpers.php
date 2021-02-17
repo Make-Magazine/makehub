@@ -27,7 +27,7 @@ function get_course_data( $data ) {
 	$output_quizzes = array();
 	$sections       = array();
 
-if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) === $typenow ) ) {
+	if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) === $typenow ) ) {
 		$course_id = isset( $_GET['course_id'] ) ? absint( $_GET['course_id'] ) : get_the_ID();
 		if ( ! empty( $course_id ) ) {
 			// Get a list of lessons to loop.
@@ -35,22 +35,22 @@ if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) =
 			$output_lessons = [];
 			$lesson_topics  = [];
 
-			if ( ( is_array( $lessons ) )  && ( ! empty( $lessons ) ) ) {
+			if ( ( is_array( $lessons ) ) && ( ! empty( $lessons ) ) ) {
 				// Loop course's lessons.
 				foreach ( $lessons as $lesson ) {
-					$post          = $lesson['post'];
+					$post = $lesson['post'];
 					// Get lesson's topics.
 					$topics        = learndash_topic_dots( $post->ID, false, 'array', null, $course_id );
 					$output_topics = [];
 
-					if ( ( is_array( $topics ) )  && ( ! empty( $topics ) ) ) {
+					if ( ( is_array( $topics ) ) && ( ! empty( $topics ) ) ) {
 						// Loop Topics.
 						foreach ( $topics as $topic ) {
 							// Get topic's quizzes.
 							$topic_quizzes        = learndash_get_lesson_quiz_list( $topic->ID, null, $course_id );
 							$output_topic_quizzes = [];
 
-							if ( ( is_array( $topic_quizzes ) )  && ( ! empty( $topic_quizzes ) ) ) {
+							if ( ( is_array( $topic_quizzes ) ) && ( ! empty( $topic_quizzes ) ) ) {
 								// Loop Topic's Quizzes.
 								foreach ( $topic_quizzes as $quiz ) {
 									$quiz_post = $quiz['post'];
@@ -82,8 +82,8 @@ if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) =
 					// Get lesson's quizzes.
 					$quizzes        = learndash_get_lesson_quiz_list( $post->ID, null, $course_id );
 					$output_quizzes = [];
-					
-					if ( ( is_array( $quizzes ) )  && ( ! empty( $quizzes ) ) ) {
+
+					if ( ( is_array( $quizzes ) ) && ( ! empty( $quizzes ) ) ) {
 						// Loop lesson's quizzes.
 						foreach ( $quizzes as $quiz ) {
 							$quiz_post = $quiz['post'];
@@ -116,8 +116,8 @@ if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) =
 			// Get a list of quizzes to loop.
 			$quizzes        = learndash_get_course_quiz_list( $course_id );
 			$output_quizzes = [];
-			
-			if ( ( is_array( $quizzes ) )  && ( ! empty( $quizzes ) ) ) {
+
+			if ( ( is_array( $quizzes ) ) && ( ! empty( $quizzes ) ) ) {
 				// Loop course's quizzes.
 				foreach ( $quizzes as $quiz ) {
 					$post = $quiz['post'];
@@ -148,8 +148,8 @@ if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) =
 
 	// Output data.
 	$data['outline'] = [
-		'lessons' => $output_lessons,
-		'quizzes' => $output_quizzes,
+		'lessons'  => $output_lessons,
+		'quizzes'  => $output_quizzes,
 		'sections' => $sections,
 	];
 
@@ -163,8 +163,8 @@ if ( ( 'post.php' === $pagenow ) && ( learndash_get_post_type_slug( 'course' ) =
  * @return boolean Returns true if the assets should be enqueued otherwise false.
  */
 function should_enqueue_assets() {
-	$screen        = get_current_screen();
-	$course_id     = isset( $_GET['course_id'] ) ? absint( $_GET['course_id'] ) : get_the_ID();
+	$screen    = get_current_screen();
+	$course_id = isset( $_GET['course_id'] ) ? absint( $_GET['course_id'] ) : get_the_ID();
 
 	// Enqueue course builder assets only when required.
 	if ( ( 'post' === $screen->base && 'sfwd-courses' === get_post_type( $course_id ) ) ||

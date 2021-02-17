@@ -1,8 +1,17 @@
 <?php
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_ld_group_list' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_ld_group_list extends LearnDash_Shortcodes_Section {
 
-		function __construct( $fields_args = array() ) {
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
+		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
 			$this->shortcodes_section_key = 'ld_group_list';
@@ -15,7 +24,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
-		function init_shortcodes_section_fields() {
+		/**
+		 * Initialize the shortcode fields.
+		 */
+		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'orderby'        => array(
 					'id'        => $this->shortcodes_section_key . '_orderby',
@@ -87,12 +99,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'help_text' => sprintf( esc_html_x( 'filter %s by status.', 'placeholders: groups', 'learndash' ), learndash_get_custom_label_lower( 'groups' ) ),
 					'value'     => array( 'not_started', 'in_progress', 'completed' ),
 					'options'   => array(
-						// ''                =>  esc_html__('All', 'learndash'),
 						'not_started' => esc_html__( 'Not Started', 'learndash' ),
 						'in_progress' => esc_html__( 'In Progress', 'learndash' ),
 						'completed'   => esc_html__( 'Completed', 'learndash' ),
 					),
-					// 'parent_setting' => 'mygroups',
 				),
 				'show_content'   => array(
 					'id'        => $this->shortcodes_section_key . 'show_content',
@@ -267,12 +277,12 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::init_shortcodes_section_fields();
 		}
 
-		function show_shortcodes_section_footer_extra() {
+		public function show_shortcodes_section_footer_extra() {
 			?>
 			<script>
 				jQuery( function() {
 					if ( jQuery( 'form#learndash_shortcodes_form_ld_group_list select#ld_group_list_mygroups' ).length) {
-						jQuery( 'form#learndash_shortcodes_form_ld_group_list select#ld_group_list_mygroups').change( function() {
+						jQuery( 'form#learndash_shortcodes_form_ld_group_list select#ld_group_list_mygroups').on( 'change', function() {
 							var selected = jQuery(this).val();
 							if ( selected == 'enrolled' ) {
 								jQuery( 'form#learndash_shortcodes_form_ld_group_list #ld_group_list_status_field select option').attr('selected', true);

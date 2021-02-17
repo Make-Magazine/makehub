@@ -45,11 +45,11 @@ global $course_pager_results;
 		<?php
 			// translators: Course Status Label.
 			printf( esc_html_x( '%s Status:', 'Course Status Label', 'learndash' ), esc_attr( LearnDash_Custom_Label::get_label( 'course' ) ) );
-			?>
+		?>
 			</b>
 			<?php
 			echo esc_attr( $course_status );
-		?>
+			?>
 		<br />
 	</span>
 	<br />
@@ -192,7 +192,8 @@ global $course_pager_results;
 												'lesson_access_from_int' => $lesson['lesson_access_from'],
 												'lesson_access_from_date' => learndash_adjust_date_time_display( $lesson['lesson_access_from'] ),
 												'context' => 'course',
-											), true
+											),
+											true
 										);
 									?>
 								<?php endif; ?>
@@ -209,15 +210,17 @@ global $course_pager_results;
 								<?php $topics = @$lesson_topics[ $lesson['post']->ID ]; ?>
 
 								<?php if ( ! empty( $topics ) ) : ?>
-									<div id='learndash_topic_dots-<?php echo esc_attr( $lesson['post']->ID ); ?>' class="learndash_topic_dots type-list" <?php
-										if ( $paged_values['lesson'] == $lesson['post']->ID ) {
-											echo ' style="display:block;"';
-										}
-									?>>
+									<div id='learndash_topic_dots-<?php echo esc_attr( $lesson['post']->ID ); ?>' class="learndash_topic_dots type-list" 
+																			 <?php
+																				if ( $paged_values['lesson'] == $lesson['post']->ID ) {
+																					echo ' style="display:block;"';
+																				}
+																				?>
+									>
 										<ul>
 											<?php $odd_class = ''; ?>
 											<?php foreach ( $topics as $key => $topic ) : ?>
-												<?php $odd_class       = empty( $odd_class ) ? 'nth-of-type-odd' : ''; ?>
+												<?php $odd_class = empty( $odd_class ) ? 'nth-of-type-odd' : ''; ?>
 												<?php $completed_class = empty( $topic->completed ) ? 'topic-notcompleted' : 'topic-completed'; ?>
 												<li class='<?php echo esc_attr( $odd_class ); ?>'>
 													<span class="topic_item">
@@ -236,11 +239,11 @@ global $course_pager_results;
 													'pager_results' => $course_pager_results[ $lesson['post']->ID ]['pager'],
 													'pager_context' => 'course_topics',
 													'href_query_arg' => 'ld-topic-page',
-													'href_val_prefix' => $lesson['post']->ID . '-'
+													'href_val_prefix' => $lesson['post']->ID . '-',
 												)
 											);
 										}
-									?>
+										?>
 									</div>
 								<?php endif; ?>
 
@@ -251,32 +254,32 @@ global $course_pager_results;
 				</div>
 			</div>
 			<?php
-				if ( isset( $course_pager_results['pager'] ) ) {
-					echo SFWD_LMS::get_template(
-						'learndash_pager.php',
-						array(
+			if ( isset( $course_pager_results['pager'] ) ) {
+				echo SFWD_LMS::get_template(
+					'learndash_pager.php',
+					array(
 						'pager_results' => $course_pager_results['pager'],
-						'pager_context' => 'course_lessons'
-						)
-					);
-				}
+						'pager_context' => 'course_lessons',
+					)
+				);
+			}
 			?>
 		<?php endif; ?>
 
 		<?php
-			if ( ! empty( $lessons ) ) {
-				if ( ( isset( $course_pager_results['pager'] ) ) && ( !empty( $course_pager_results['pager'] ) ) ) {
-					if ( $course_pager_results['pager']['paged'] == $course_pager_results['pager']['total_pages'] ) {
-						$show_course_quizzes = true;
-					} else {
-						$show_course_quizzes = false;
-					}
-				} else {
+		if ( ! empty( $lessons ) ) {
+			if ( ( isset( $course_pager_results['pager'] ) ) && ( ! empty( $course_pager_results['pager'] ) ) ) {
+				if ( $course_pager_results['pager']['paged'] == $course_pager_results['pager']['total_pages'] ) {
 					$show_course_quizzes = true;
+				} else {
+					$show_course_quizzes = false;
 				}
 			} else {
 				$show_course_quizzes = true;
 			}
+		} else {
+			$show_course_quizzes = true;
+		}
 		?>
 		<?php
 		/**
@@ -284,8 +287,9 @@ global $course_pager_results;
 		 */
 		?>
 		<?php
-			if ( $show_course_quizzes == true ) {
-				if ( ! empty( $quizzes ) ) { ?>
+		if ( $show_course_quizzes == true ) {
+			if ( ! empty( $quizzes ) ) {
+				?>
 					<div id="learndash_quizzes" class="learndash_quizzes">
 						<div id="quiz_heading">
 								<span><?php echo LearnDash_Custom_Label::get_label( 'quizzes' ); ?></span><span class="right"><?php esc_html_e( 'Status', 'learndash' ); ?></span>
@@ -303,8 +307,9 @@ global $course_pager_results;
 
 						</div>
 					</div>
-				<?php }
+				<?php
 			}
+		}
 		?>
 	</div>
 		<?php endif; ?>

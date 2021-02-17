@@ -22,11 +22,10 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	InspectorControls,
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -34,9 +33,13 @@ const {
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-group-list',
-    {
+	'learndash/ld-group-list',
+	{
 		// translators: placeholder: Group.
 		title: sprintf(_x('LearnDash %s List', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group')),
 		// translators: placeholder: Groups.
@@ -51,7 +54,7 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
+		attributes: {
 			orderby: {
 				type: 'string',
 				default: 'ID'
@@ -140,9 +143,9 @@ registerBlockType(
 				default: 0
 			},
 		},
-        edit: function( props ) {
+		edit: function( props ) {
 			const { attributes: { orderby, order, per_page, mygroups, status, show_content, show_thumbnail, group_category_name, group_cat, group_categoryselector, group_tag, group_tag_id, category_name, cat, categoryselector, tag, tag_id, course_grid, progress_bar, col, preview_user_id, preview_show, example_show },
-            	setAttributes } = props;
+				setAttributes } = props;
 
 			let field_show_content = '';
 			let field_show_thumbnail = '';
@@ -309,7 +312,7 @@ registerBlockType(
 					{field_show_thumbnail}
 				</PanelBody>
 			);
-			
+
 			let panel_group_category_section = '';
 			if (ldlms_settings['settings']['groups_taxonomies']['ld_group_category'] === 'yes' ) {
 				let panel_group_category_section_open = false;
@@ -472,7 +475,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					{ panelbody_header }
 					{ panel_course_grid_section}
 					{ panel_group_category_section }
@@ -488,6 +491,7 @@ registerBlockType(
 					return <ServerSideRender
 					block="learndash/ld-group-list"
 					attributes={ attributes }
+					key="learndash/ld-group-list"
 					/>
 				} else {
 					return __( '[ld_group_list] shortcode output shown here', 'learndash' );
@@ -498,9 +502,9 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render( props.attributes )
 			];
-        },
+		},
 
-        save: props => {
+		save: props => {
 		}
 	},
 );

@@ -17,7 +17,7 @@
 	<p>
 		<?php
 		printf(
-			// translators: placeholder: Quiz label
+			// translators: placeholder: Quiz label.
 			esc_html_x( '%s is loading...', 'placeholder: Quiz label', 'learndash' ),
 			LearnDash_Custom_Label::get_label( 'quiz' )
 		);

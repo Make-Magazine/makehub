@@ -34,10 +34,10 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 		$view_user_id = $cert_user_id;
 	}
 
-	$certificateLink = '';
-	$post            = get_post( $post_id );
+	$certificate_link = '';
+	$post             = get_post( $post_id );
 
-	if ( ( $post instanceof WP_Post ) && ( $post->post_type == 'sfwd-quiz' ) ) {
+	if ( ( $post instanceof WP_Post ) && ( 'sfwd-quiz' === $post->post_type ) ) {
 
 		$meta = get_post_meta( $post_id, '_sfwd-quiz', true );
 		if ( is_array( $meta ) && ! empty( $meta ) ) {
@@ -50,9 +50,9 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 
 			if ( ( isset( $meta['sfwd-quiz_certificate'] ) ) && ( ! empty( $meta['sfwd-quiz_certificate'] ) ) ) {
 				$certificate_post = intval( $meta['sfwd-quiz_certificate'] );
-				$certificateLink  = get_permalink( $certificate_post );
+				$certificate_link = get_permalink( $certificate_post );
 
-				if ( ! empty( $certificateLink ) ) {
+				if ( ! empty( $certificate_link ) ) {
 
 					$cert_query_args = array(
 						'quiz' => $post->ID,
@@ -70,7 +70,7 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 					}
 					$cert_query_args['cert-nonce'] = wp_create_nonce( $post->ID . $cert_user_id . $view_user_id );
 
-					$certificateLink = add_query_arg( $cert_query_args, $certificateLink );
+					$certificate_link = add_query_arg( $cert_query_args, $certificate_link );
 				}
 
 				/**
@@ -81,10 +81,10 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 				 * @param int    $post_id         Post ID.
 				 * @param int    $user_id         User ID.
 				 */
-				$certificateLink = apply_filters( 'learndash_certificate_details_link', $certificateLink, $certificate_post, $post->ID, $cert_user_id );
+				$certificate_link = apply_filters( 'learndash_certificate_details_link', $certificate_link, $certificate_post, $post->ID, $cert_user_id );
 
 				$cert_details = array(
-					'certificateLink'       => $certificateLink,
+					'certificateLink'       => $certificate_link,
 					'certificate_threshold' => $certificate_threshold,
 				);
 			}
@@ -473,8 +473,8 @@ function learndash_certificates_post_updated_messages( $messages ) {
 		9  => sprintf(
 			// translators: plaeholder: Post Date.
 			esc_html_x( 'Certificate scheduled for: <strong>%s</strong>.', 'plaeholder: Post Date', 'learndash' ),
-			// translators: Publish box date format, see http://php.net/date
-			date_i18n( __( 'M j, Y @ H:i', 'default' ), strtotime( $post->post_date ) )
+			// translators: Publish box date format, see https://secure.php.net/date
+			date_i18n( __( 'M j, Y @ H:i', 'learndash' ), strtotime( $post->post_date ) )
 		),
 		10 => esc_html__( 'Certificate draft updated.', 'learndash' ),
 	);

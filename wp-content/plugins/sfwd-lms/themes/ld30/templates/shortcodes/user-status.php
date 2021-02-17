@@ -20,7 +20,12 @@ if ( 'profile.php' !== $pagenow && 'user-edit.php' !== $pagenow && $course_info[
 		<div class="<?php echo esc_attr( $class ); ?>" data-shortcode-atts="<?php echo $shortcode_atts_json; ?>">
 			<div class="ld-item-list">
 				<div class="ld-section-heading">
-					<?php echo wp_kses_post( $heading[0] . __( 'Registered Courses', 'learndash' ) . $heading[1] ); ?>
+					<?php
+						// translators: placeholder: Courses.
+						echo wp_kses_post( $heading[0] . sprintf( esc_html_x( 'Registered %s', 'placeholder: Courses', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'courses' )
+						) . $heading[1] );
+					?>
 				</div>
 				<div class="ld-item-list-items">
 					<?php

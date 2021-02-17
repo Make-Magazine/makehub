@@ -195,6 +195,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
+
 			if ( 'on' === $this->setting_option_values['lesson_video_enabled'] ) {
 				$this->setting_option_values['lesson_assignment_upload']   = '';
 				$this->setting_option_values['forced_lesson_time_enabled'] = '';
@@ -258,6 +265,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						esc_html_x( ' Automatically mark the %s as completed once the user has watched the full video.', 'placeholder: topic', 'learndash' ),
 						learndash_get_custom_label_lower( 'topic' )
 					),
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_auto_complete',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Auto-complete', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'lesson_video_auto_complete_delay'  => array(
 					'name'        => 'lesson_video_auto_complete_delay',
@@ -277,6 +296,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label_lower( 'topic' )
 					),
 					'default'     => 0,
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_auto_complete_delay',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Completion Delay (seconds).', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'integer',
+								'default'     => 0,
+							),
+						),
+					),
 				),
 				'lesson_video_show_complete_button' => array(
 					'name'      => 'lesson_video_show_complete_button',
@@ -291,6 +322,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'   => '',
 					'options'   => array(
 						'on' => '',
+					),
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_show_complete_button',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Show Mark Complete Button', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
 					),
 				),
 			);
@@ -311,6 +354,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'min'  => 1,
 					),
 					'help_text'   => esc_html__( 'Specify the maximum number of files a user can upload for this assignment.', 'learndash' ),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Upload Count Limit.', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'integer',
+								'default'     => 0,
+							),
+						),
+					),
 				),
 				'lesson_assignment_deletion_enabled' => array(
 					'name'      => 'lesson_assignment_deletion_enabled',
@@ -323,6 +377,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => '',
 					),
 					'default'   => 0,
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'assignment_deletion_enabled',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Allow File Deletion.', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 			);
 			parent::load_settings_fields();
@@ -354,6 +420,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['topic_materials_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials_enabled',
+								'description' => esc_html__( 'Materials Eabled', 'learndash' ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'topic_materials'                    => array(
 					'name'           => 'topic_materials',
@@ -366,7 +443,30 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'textarea_name' => $this->settings_metabox_key . '[topic_materials]',
 						'textarea_rows' => 3,
 					),
-
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'materials',
+								'description' => esc_html__( 'Materials', 'learndash' ),
+								'type'        => 'string',
+								'default'     => '',
+								'properties'  => array(
+									'raw'      => array(
+										'description' => 'Content for the object, as it exists in the database.',
+										'type'        => 'string',
+										'context'     => array( 'edit' ),
+									),
+									'rendered' => array(
+										'description' => 'HTML content for the object, transformed for display.',
+										'type'        => 'string',
+										'context'     => array( 'view', 'edit' ),
+										'readonly'    => true,
+									),
+								),
+							),
+						),
+					),
 				),
 				'lesson_video_enabled'               => array(
 					'name'                => 'lesson_video_enabled',
@@ -396,6 +496,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['lesson_video_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_enabled',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Progression Eabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'lesson_video_url'                   => array(
 					'name'           => 'lesson_video_url',
@@ -410,6 +522,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'cols' => '57',
 					),
 					'parent_setting' => 'lesson_video_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_url',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Progression URL', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'text',
+								'default'     => '',
+							),
+						),
+					),
 				),
 				'lesson_video_shown'                 => array(
 					'name'           => 'lesson_video_shown',
@@ -441,6 +565,22 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'inner_section_state' => ( 'AFTER' === $this->setting_option_values['lesson_video_shown'] ) ? 'open' : 'closed',
 						),
 					),
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_shown',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Shown before or after sub-steps', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'default'     => 'ANY',
+								'type'        => 'string',
+								'enum'        => array(
+									'BEFORE',
+									'AFTER',
+								),
+							),
+						),
+					),
 				),
 				'lesson_video_auto_start'            => array(
 					'name'           => 'lesson_video_auto_start',
@@ -454,6 +594,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 					'parent_setting' => 'lesson_video_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_auto_start',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Autostart', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'lesson_video_show_controls'         => array(
 					'name'           => 'lesson_video_show_controls',
@@ -467,6 +619,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'on' => esc_html__( 'Users can pause, move backward and forward within the video', 'learndash' ),
 					),
 					'parent_setting' => 'lesson_video_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'video_show_controls',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Video Controls Display. YouTube and local videos only', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'lesson_video_focus_pause'           => array(
 					'name'           => 'lesson_video_focus_pause',
@@ -513,6 +677,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['lesson_assignment_upload'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'assignment_upload_enabled',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Uploads Enabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'assignment_upload_limit_extensions' => array(
 					'name'           => 'assignment_upload_limit_extensions',
@@ -524,6 +700,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['assignment_upload_limit_extensions'],
 					'parent_setting' => 'lesson_assignment_upload',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Allowed file extensions. Comma separated pdf, xls, zip', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'text',
+								'default'     => '',
+							),
+						),
+					),
 				),
 				'assignment_upload_limit_size'       => array(
 					'name'           => 'assignment_upload_limit_size',
@@ -539,6 +726,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['assignment_upload_limit_size'],
 					'parent_setting' => 'lesson_assignment_upload',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%1$s Assignment Upload size limit. Max per server is %2$s ', 'placeholder: Topic, Upload size limit', 'learndash' ), learndash_get_custom_label( 'topic' ), ini_get( 'upload_max_filesize' ) ),
+								'type'        => 'text',
+								'default'     => '',
+							),
+						),
+					),
 				),
 
 				'lesson_assignment_points_enabled'   => array(
@@ -553,6 +751,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					),
 					'parent_setting'      => 'lesson_assignment_upload',
 					'child_section_state' => ( 'on' === $this->setting_option_values['lesson_assignment_points_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'assignment_points_enabled',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Points Enabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'lesson_assignment_points_amount'    => array(
 					'name'           => 'lesson_assignment_points_amount',
@@ -566,6 +776,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'          => $this->setting_option_values['lesson_assignment_points_amount'],
 					'input_label'    => esc_html__( 'available point(s)', 'learndash' ),
 					'parent_setting' => 'lesson_assignment_points_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'assignment_points_amount',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Points Amount', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'integer',
+								'default'     => 0,
+							),
+						),
+					),
 				),
 
 				'auto_approve_assignment'            => array(
@@ -593,6 +815,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'inner_section_state' => ( '' === $this->setting_option_values['auto_approve_assignment'] ) ? 'open' : 'closed',
 						),
 					),
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'assignment_auto_approve',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Assignment Auto-approve Enabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => true,
+							),
+						),
+					),
 				),
 
 				'forced_lesson_time_enabled'         => array(
@@ -618,6 +852,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'child_section_state' => ( 'on' === $this->setting_option_values['forced_lesson_time_enabled'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'forced_timer_enabled',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Time Enabled', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'forced_lesson_time'                 => array(
 					'name'           => 'forced_lesson_time',
@@ -626,6 +872,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['forced_lesson_time'],
 					'parent_setting' => 'forced_lesson_time_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'forced_timer_amount',
+								// translators: placeholder: Topic.
+								'description' => sprintf( esc_html_x( '%s Timer Amount.', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
+								'type'        => 'text',
+								'default'     => '',
+							),
+						),
+					),
 				),
 			);
 

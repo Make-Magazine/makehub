@@ -25,8 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @var [type]
  */
-$topic_id     = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? intval( $_GET['widget_instance']['widget_instance']['current_step_id'] ) : $topic->ID );
-$post_id      = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? $topic->ID : get_the_ID() );
+$topic_id = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? intval( $_GET['widget_instance']['widget_instance']['current_step_id'] ) : $topic->ID );
+$post_id  = ( isset( $_GET['widget_instance']['widget_instance']['current_step_id'] ) ? $topic->ID : get_the_ID() );
 
 /**
  * Filters topic row CSS class. Used while listing a topic row.
@@ -34,7 +34,7 @@ $post_id      = ( isset( $_GET['widget_instance']['widget_instance']['current_st
  * @param string $row_class The list of topic row CSS classes.
  * @param object $topic     The Topic object.
  */
-$topic_class  = apply_filters(
+$topic_class = apply_filters(
 	'learndash-topic-row-class',
 	'ld-table-list-item-preview ld-primary-color-hover ld-topic-row ' .
 								( $topic->completed ? 'learndash-complete' : 'learndash-incomplete' )
@@ -90,7 +90,10 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		 */
 		do_action( 'learndash-topic-row-title-before', $topic->ID, $course_id, $user_id );
 		?>
-		<span class="ld-topic-title"><?php echo wp_kses_post( $topic->post_title ); ?></span>
+		<span class="ld-topic-title"><?php
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) );
+		?></span>
 		<?php
 		/**
 		 * Fires after the topic title.

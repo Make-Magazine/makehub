@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  *
  * @param string $content Login form content.
- * 
+ *
  * @return string Login form hidden field content.
  */
 function learndash_add_login_field_top( $content = '' ) {
@@ -66,13 +66,13 @@ add_filter( 'login_form_top', 'learndash_add_login_field_top' );
 
 /**
  * Updates user course data on user login.
- * 
+ *
  * Fires on `authenticate` hook.
  *
  * @param WP_User $user     WP_User object if success. wp_error is error.
  * @param string  $username Login form entered user login.
  * @param string  $password Login form entered user password.
- * 
+ *
  * @return WP_User|void Returns WP_User if a valid user object is passed.
  */
 function learndash_authenticate( $user, $username, $password ) {
@@ -292,7 +292,7 @@ function learndash_validation_registration_form_course() {
 		if ( ( isset( $_POST['learndash-registration-form-post'] ) ) && ( ! empty( $_POST['learndash-registration-form-post'] ) ) ) {
 			$post_id = absint( $_POST['learndash-registration-form-post'] );
 			if ( ! empty( $post_id ) ) {
-				if ( ! in_array( get_post_type( $post_id ), array( learndash_get_post_type_slug( 'course' ) ), true ) ) {	
+				if ( ! in_array( get_post_type( $post_id ), array( learndash_get_post_type_slug( 'course' ) ), true ) ) {
 					/**
 					 * Filters whether to allow user registration from the course.
 					 *
@@ -357,7 +357,7 @@ $ld_password_reset_user = ''; // phpcs:ignore WordPress.NamingConventions.Prefix
  * Called after the user updates new password.
  *
  * @since 3.1.2
- * 
+ *
  * @global WP_User $ld_password_reset_user Global password reset user.
  *
  * @param WP_User $user     WP_User object.

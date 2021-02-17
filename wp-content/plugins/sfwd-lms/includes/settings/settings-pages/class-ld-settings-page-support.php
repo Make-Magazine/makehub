@@ -14,8 +14,8 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 	/**
 	 * Class to create the settings page.
 	 */
-	class LearnDash_Settings_Page_Support extends LearnDash_Settings_Page {		
-		
+	class LearnDash_Settings_Page_Support extends LearnDash_Settings_Page {
+
 		/**
 		 * Systems Info array.
 		 *
@@ -52,7 +52,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				// download-system-info.
 				if ( ( isset( $_GET['ld_download_system_info_nonce'] ) ) && ( ! empty( $_GET['ld_download_system_info_nonce'] ) ) && ( wp_verify_nonce( $_GET['ld_download_system_info_nonce'], 'ld_download_system_info_' . get_current_user_id() ) ) ) {
 					header( 'Content-type: text/plain' );
-					header( 'Content-Disposition: attachment; filename=ld_system_info-' . date( 'Ymd' ) . '.txt' );
+					header( 'Content-Disposition: attachment; filename=ld_system_info-' . gmdate( 'Ymd' ) . '.txt' );
 					$support_page_instance = LearnDash_Settings_Page::get_page_instance( 'LearnDash_Settings_Page_Support' );
 					if ( $support_page_instance ) {
 						foreach ( $support_page_instance->get_support_sections() as $_key => $_section ) {
@@ -65,7 +65,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				// Load JS/CSS as needed for page.
 				wp_enqueue_style(
 					'learndash-admin-support-page',
-					LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-support-page' . leardash_min_asset() . '.css',
+					LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-support-page' . learndash_min_asset() . '.css',
 					array(),
 					LEARNDASH_SCRIPT_VERSION_TOKEN
 				);
@@ -116,7 +116,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 				switch ( $output_type ) {
 					case 'text':
 						if ( ( isset( $_set['header']['text'] ) ) && ( ! empty( $_set['header']['text'] ) ) ) {
-							echo strtoupper( $_set['header']['text'] ) . "\r\n";
+							echo esc_html( strtoupper( $_set['header']['text'] ) ) . "\r\n";
 						}
 
 						if ( ( isset( $_set['columns'] ) ) && ( ! empty( $_set['columns'] ) ) && ( isset( $_set['settings'] ) ) && ( ! empty( $_set['settings'] ) ) ) {
@@ -124,21 +124,20 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 								if ( 'settings-sub-section-' === substr( $setting_key, 0, strlen( 'settings-sub-section-' ) ) ) {
 									if ( isset( $setting_set['text'] ) ) {
 										echo "\r\n";
-										echo $setting_set['text'];
+										echo esc_html( $setting_set['text'] );
 										echo "\r\n";
 									}
 								} else {
 
-									$_SHOW_FIRST = false;
 									foreach ( $_set['columns'] as $column_key => $column_set ) {
-										$value = strip_tags( str_replace( array( '<br />', '<br>', '<br >' ), "\r\n", $setting_set[ $column_key ] ) );
+										$value = wp_strip_all_tags( str_replace( array( '<br />', '<br>', '<br >' ), "\r\n", $setting_set[ $column_key ] ) );
 
 										// Add some format spacing to make the raw txt version easier to read.
 										$spaces_needed = 50 - strlen( $value );
 										if ( $spaces_needed > 0 ) {
 											$value .= str_repeat( ' ', $spaces_needed );
 										}
-										echo $value;
+										echo esc_html( $value );
 									}
 									echo "\r\n";
 								}
@@ -151,7 +150,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					default:
 						if ( ( isset( $_set['desc'] ) ) & ( ! empty( $_set['desc'] ) ) ) {
 							?>
-							<div class="learndash-support-settings-desc"><?php echo wptexturize( $_set['desc'] ); ?></div>
+							<div class="learndash-support-settings-desc"><?php echo wp_kses_post( wptexturize( $_set['desc'] ) ); ?></div>
 							<?php
 						}
 
@@ -175,12 +174,12 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 										 */
 										$column_class = apply_filters( 'learndash_support_column_class', $column_class, $column_key, $_key );
 										?>
-											<th scope="col" class="<?php echo $column_class; ?>">
+											<th scope="col" class="<?php echo esc_attr( $column_class ); ?>">
 											<?php
 											if ( isset( $column_set['html'] ) ) {
-												echo $column_set['html'];
+												echo wp_kses_post( $column_set['html'] );
 											} elseif ( isset( $column_set['text'] ) ) {
-												echo $column_set['text'];
+												echo esc_html( $column_set['text'] );
 											}
 											?>
 											</th>
@@ -198,7 +197,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 											<th scope="row" class="settings-sub-section" colspan="<?php echo count( $_set['columns'] ); ?>">
 											<?php
 											if ( isset( $setting_set['html'] ) ) {
-												echo $setting_set['html'];
+												echo wp_kses_post( $setting_set['html'] );
 											}
 											?>
 											</th>
@@ -218,9 +217,9 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 												">
 												<?php
 												if ( isset( $setting_set[ $column_key . '_html' ] ) ) {
-														echo $setting_set[ $column_key . '_html' ];
+														echo wp_kses_post( $setting_set[ $column_key . '_html' ] );
 												} elseif ( isset( $setting_set[ $column_key ] ) ) {
-													echo $setting_set[ $column_key ];
+													echo wp_kses_post( $setting_set[ $column_key ] );
 												}
 												?>
 												</td>

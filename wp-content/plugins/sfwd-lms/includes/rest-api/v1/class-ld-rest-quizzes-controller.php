@@ -1,5 +1,5 @@
 <?php
-if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
+if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Quizzes_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
 		public function __construct( $post_type = '' ) {
@@ -10,16 +10,16 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 			$this->rest_base = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_REST_API', $this->post_type );
 		}
 
-	    public function register_routes() {
+		public function register_routes() {
 			$this->register_fields();
 
 			parent::register_routes_wpv2();
 
 			$collection_params = $this->get_collection_params();
 
-			$schema = $this->get_item_schema();
+			$schema        = $this->get_item_schema();
 			$get_item_args = array(
-				'context'  => $this->get_context_param( array( 'default' => 'view' ) ),
+				'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 			);
 
 			if ( isset( $schema['properties']['password'] ) ) {
@@ -54,7 +54,7 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 				$this->namespace,
 				'/' . $this->rest_base . '/(?P<id>[\d]+)',
 				array(
-					'args' => array(
+					'args'   => array(
 						'id' => array(
 							'description' => esc_html__( 'Unique identifier for the Quiz object.', 'learndash' ),
 							'type'        => 'integer',
@@ -102,12 +102,12 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 			return $schema;
 		}
 
-		function rest_collection_params_filter( $query_params, $post_type ) {
+		public function rest_collection_params_filter( $query_params, $post_type ) {
 			$query_params = parent::rest_collection_params_filter( $query_params, $post_type );
 
 			if ( ! isset( $query_params['course'] ) ) {
 				$query_params['course'] = array(
-					'description'	=> sprintf(
+					'description' => sprintf(
 						// translators: placeholder: course.
 						esc_html_x(
 							'Limit results to be within a specific %s. Required for non-admin users.',
@@ -116,12 +116,12 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 						),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
-					'type'			=> 'integer',
+					'type'        => 'integer',
 				);
 			}
 			if ( ! isset( $query_params['lesson'] ) ) {
 				$query_params['lesson'] = array(
-					'description'	=> sprintf( 
+					'description' => sprintf(
 						// translators: placeholder: lesson, course, quizzes.
 						esc_html_x(
 							'Limit results to be within a specific %1$s. Pass zero to show global %2$s %3$s. Must be used with course parameter.',
@@ -130,9 +130,9 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 						),
 						LearnDash_Custom_Label::get_label( 'lesson' ),
 						LearnDash_Custom_Label::get_label( 'course' ),
-						LearnDash_Custom_Label::get_label( 'quizzes' ) 
+						LearnDash_Custom_Label::get_label( 'quizzes' )
 					),
-					'type'			=> 'integer',
+					'type'        => 'integer',
 				);
 			}
 			if ( ! isset( $query_params['topic'] ) ) {
@@ -146,14 +146,14 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 						),
 						LearnDash_Custom_Label::get_label( 'topic' )
 					),
-					'type' => 'integer',
+					'type'        => 'integer',
 				);
 			}
 
 			return $query_params;
 		}
 
-		function get_item_permissions_check( $request ) {
+		public function get_item_permissions_check( $request ) {
 			$return = parent::get_item_permissions_check( $request );
 			if ( ( true === $return ) && ( ! learndash_is_admin_user() ) ) {
 
@@ -175,10 +175,10 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 
 					if ( empty( $user_enrolled_courses ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
-					}	
+					}
 				} else {
-					// But if the course parameter is provided we need to check the user has access and also 
-					// check the step is part of that course. 
+					// But if the course parameter is provided we need to check the user has access and also
+					// check the step is part of that course.
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
 						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
@@ -187,7 +187,7 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
-					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );	
+					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );
 					$this->ld_course_steps_object->load_steps();
 					$lesson_ids = $this->ld_course_steps_object->get_children_steps( $this->course_post->ID, $this->post_type );
 					if ( empty( $lesson_ids ) ) {
@@ -203,11 +203,11 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 			return $return;
 		}
 
-		function get_item( $request ) {
+		public function get_item( $request ) {
 			return parent::get_item( $request );
 		}
 
-		function get_items_permissions_check( $request ) {
+		public function get_items_permissions_check( $request ) {
 			$return = parent::get_items_permissions_check( $request );
 			if ( ( true === $return ) && ( 'view' === $request['context'] ) ) {
 
@@ -235,22 +235,21 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 					}
 				}
 
-
 				if ( ! learndash_is_admin_user() ) {
 					if ( $this->topic_post ) {
 						if ( ! $this->course_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );	
+							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
 						}
 
 						if ( ! $this->lesson_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );	
-						}						 
+							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						}
 					}
 					if ( $this->lesson_post ) {
 						if ( ! $this->course_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );	
+							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
 						}
-					} 
+					}
 
 					if ( ( $this->course_post ) && ( ! sfwd_lms_has_access( $this->course_post->ID ) ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
@@ -261,22 +260,22 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 			return $return;
 		}
 
-		function get_items( $request ) {
+		public function get_items( $request ) {
 			return parent::get_items( $request );
 		}
 
-		function rest_query_filter( $args, $request ) {
+		public function rest_query_filter( $args, $request ) {
 
 			$step_ids = array();
 
 			// The course_post should be set in the local method get_items_permissions_check().
 			if ( ( $this->course_post ) && ( is_a( $this->course_post, 'WP_Post' ) ) && ( 'sfwd-courses' === $this->course_post->post_type ) ) {
 
-				if ( $this->topic_post )  {
+				if ( $this->topic_post ) {
 					$step_ids = learndash_course_get_children_of_step( $this->course_post->ID, $this->topic_post->ID, $this->post_type );
-				} else if ( $this->lesson_post )  {
+				} elseif ( $this->lesson_post ) {
 					$step_ids = learndash_course_get_children_of_step( $this->course_post->ID, $this->lesson_post->ID, $this->post_type );
-				} else if ( $this->course_post ) {
+				} elseif ( $this->course_post ) {
 					//$global_quizzes = $request['global'];
 					//if ( $global_quizzes == "true" ) {
 
@@ -287,41 +286,43 @@ if ( ( !class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD
 					} else {
 						$step_ids = learndash_course_get_steps_by_type( $this->course_post->ID, $this->post_type );
 					}
-				} 
+				}
 
 				if ( ! empty( $step_ids ) ) {
 					$args['post__in'] = $args['post__in'] ? array_intersect( $step_ids, $args['post__in'] ) : $step_ids;
 
 					$course_lessons_args = learndash_get_course_lessons_order( $this->course_post->ID );
-					if ( !isset( $_GET['orderby'] ) ) {
-						if ( isset( $course_lessons_args['orderby'] ) )
+					if ( ! isset( $_GET['orderby'] ) ) {
+						if ( isset( $course_lessons_args['orderby'] ) ) {
 							$args['orderby'] = $course_lessons_args['orderby'];
-						else
+						} else {
 							$args['orderby'] = 'title';
+						}
 					}
 
-					if ( !isset( $_GET['order'] ) ) {
-						if ( isset( $course_lessons_args['order'] ) )
+					if ( ! isset( $_GET['order'] ) ) {
+						if ( isset( $course_lessons_args['order'] ) ) {
 							$args['order'] = $course_lessons_args['order'];
-						else
+						} else {
 							$args['order'] = 'ASC';
+						}
 					}
 				} else {
-					$args['post__in'] = array(0);
+					$args['post__in'] = array( 0 );
 				}
 			} else {
 				if ( get_current_user_id() ) {
 					/**
-					 * If the user is logged in they can see all GLOBAL quizzes or those not 
+					 * If the user is logged in they can see all GLOBAL quizzes or those not
 					 * associated with a course.
 					 */
 					$step_ids = learndash_get_non_course_qizzes();
 				} else {
 					/**
-					 * If the user is NOT logged in they can see all OPEN quizzes or those not 
+					 * If the user is NOT logged in they can see all OPEN quizzes or those not
 					 * associated with a course AND allowed to be viewed by non-logged in users.
 					 */
-					$step_ids = learndash_get_open_quizzes(true);
+					$step_ids = learndash_get_open_quizzes( true );
 				}
 
 				if ( ! empty( $step_ids ) ) {

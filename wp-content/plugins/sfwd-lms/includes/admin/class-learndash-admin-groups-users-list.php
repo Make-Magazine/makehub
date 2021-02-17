@@ -15,13 +15,13 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 	 * Class to create the Admin Groups Users List.
 	 */
 	class Learndash_Admin_Groups_Users_List {
-		var $list_table;
-		var $form_method = 'get';
-		var $title       = '';
+		public $list_table;
+		public $form_method = 'get';
+		public $title       = '';
 
-		var $current_action = '';
-		var $group_id       = 0;
-		var $user_id        = 0;
+		public $current_action = '';
+		public $group_id       = 0;
+		public $user_id        = 0;
 
 		/**
 		 * Public constructor for class
@@ -53,9 +53,9 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 					$menu_parent   = 'learndash-lms';
 
 					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_enabled' ) === 'yes' ) {
-						$position      = 6; // Position to the topfor Group Leader.
+						$position = 6; // Position to the topfor Group Leader.
 					} else {
-						$position      = 0; // Position to the topfor Group Leader.
+						$position = 0; // Position to the topfor Group Leader.
 					}
 				}
 			}
@@ -65,16 +65,8 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 
 				$pagehook = add_submenu_page(
 					$menu_parent,
-					sprintf(
-						// translators: Groups.
-						esc_html_x( '%s', 'placeholder: Groups', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'groups' )
-					),
-					sprintf(
-						// translators: Groups.
-						esc_html_x( '%s', 'placeholder: Groups', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'groups' )
-					),
+					LearnDash_Custom_Label::get_label( 'groups' ),
+					LearnDash_Custom_Label::get_label( 'groups' ),
 					$menu_user_cap,
 					'group_admin_page',
 					array( $this, 'show_page' ),
@@ -83,7 +75,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 				add_action( 'load-' . $pagehook, array( $this, 'on_load' ) );
 
 				if ( ( isset( $submenu['learndash-lms'] ) ) && ( ! empty( $submenu['learndash-lms'] ) ) ) {
-					foreach( $submenu['learndash-lms'] as $menu_idx => &$menu_item ) {
+					foreach ( $submenu['learndash-lms'] as $menu_idx => &$menu_item ) {
 						if ( ( isset( $menu_item['2'] ) ) && ( 'group_admin_page' === $menu_item['2'] ) ) {
 							if ( ! isset( $menu_item['4'] ) ) {
 								$menu_item['4'] = 'submenu-ldlms-groups';
@@ -99,7 +91,6 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 
 			if ( ( isset( $_GET['action'] ) ) && ( ! empty( $_GET['action'] ) ) ) {
 				$this->current_action = esc_attr( $_GET['action'] );
-				//$this->current_action = $this->list_table->current_action();
 			}
 
 			if ( ( isset( $_GET['group_id'] ) ) && ( ! empty( $_GET['group_id'] ) ) ) {
@@ -112,7 +103,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 
 			wp_enqueue_style(
 				'sfwd-module-style',
-				LEARNDASH_LMS_PLUGIN_URL . '/assets/css/sfwd_module' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . '/assets/css/sfwd_module' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -121,7 +112,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 
 			wp_enqueue_script(
 				'sfwd-module-script',
-				LEARNDASH_LMS_PLUGIN_URL . '/assets/js/sfwd_module' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . '/assets/js/sfwd_module' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -134,7 +125,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 				$data['ajaxurl'] = admin_url( 'admin-ajax.php' );
 			}
 
-			$data = array( 'json' => json_encode( $data ) );
+			$data = array( 'json' => wp_json_encode( $data ) );
 			wp_localize_script( 'sfwd-module-script', 'sfwd_data', $data );
 
 			$filepath = SFWD_LMS::get_template( 'learndash_pager.css', null, null, true );
@@ -212,7 +203,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 						return;
 					}
 				}
-			} elseif ( $this->current_action == 'learndash-group-email' ) {
+			} elseif ( 'learndash-group-email' == $this->current_action ) {
 
 				$group_post = get_post( $this->group_id );
 				if ( $group_post ) {
@@ -220,11 +211,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 				}
 			}
 
-			$this->list_table->columns['group_name']    = sprintf(
-				// translators: placeholder: Groups.
-				esc_html_x( '%s', 'placeholder: Groups', 'learndash' ),
-				LearnDash_Custom_Label::get_label( 'groups' )
-			);
+			$this->list_table->columns['group_name']    = LearnDash_Custom_Label::get_label( 'groups' );
 			$this->list_table->columns['group_actions'] = esc_html__( 'Actions', 'learndash' );
 		}
 
@@ -233,7 +220,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 			<div class="wrap wrap-learndash-group-list">
 				<hr class="wp-header-end">
 				<?php if ( ! empty( $this->title ) ) { ?>
-				<h2><?php echo $this->title; ?></h2>
+				<h2><?php echo wp_kses_post( $this->title ); ?></h2>
 				<?php } ?>
 				<?php
 					$current_user = wp_get_current_user();
@@ -242,19 +229,19 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 						sprintf(
 							// translators: placeholder: Group.
 							esc_html_x( 'Please login as a %s Administrator', 'placeholder: Group', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'group' )
-						) 
+							LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						)
 					);
 				}
 				?>
 				<div class="wrap-learndash-view-content">
 					<?php
-					if ( $this->current_action == 'learndash-group-email' ) {
+					if ( 'learndash-group-email' == $this->current_action ) {
 						?>
-						<input id="group_email_ajaxurl" type="hidden" name="group_email_ajaxurl" value="<?php echo admin_url( 'admin-ajax.php' ); ?>" />
-						<input id="group_email_group_id" type="hidden" name="group_email_group_id" value="<?php echo $this->group_id; ?>" />
-						<input id="group_email_nonce" type="hidden" name="group_email_nonce" value="<?php echo wp_create_nonce( 'group_email_nonce_' . $this->group_id . '_' . $current_user->ID ); ?>" />
-						
+						<input id="group_email_ajaxurl" type="hidden" name="group_email_ajaxurl" value="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" />
+						<input id="group_email_group_id" type="hidden" name="group_email_group_id" value="<?php echo esc_attr( $this->group_id ); ?>" />
+						<input id="group_email_nonce" type="hidden" name="group_email_nonce" value="<?php echo esc_attr( wp_create_nonce( 'group_email_nonce_' . $this->group_id . '_' . $current_user->ID ) ); ?>" />
+
 						<!-- Email Group feature below the Group Table (on the Group Leader page) -->
 						<table class="form-table">
 							<tr>
@@ -285,39 +272,42 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 							<span class="sending_status" style="display: none;"><?php esc_html_e( 'Sending...', 'learndash' ); ?></span>
 							<span class="sending_result" style="display: none;"></span>
 						</p>
-					<?php
+						<?php
 					} else {
 
 						$this->list_table->views();
 						?>
-						<form id="learndash-view-form" action="" method="<?php echo $this->form_method; ?>">
+						<form id="learndash-view-form" action="" method="<?php echo esc_attr( $this->form_method ); ?>">
 							<input type="hidden" name="page" value="group_admin_page" />
 							<?php
 							if ( empty( $this->user_id ) ) {
 								?>
-									<input type="hidden" name="user_id" value="<?php echo $this->user_id; ?>" />
+									<input type="hidden" name="user_id" value="<?php echo esc_attr( $this->user_id ); ?>" />
 									<?php
 									$this->list_table->check_table_filters();
 									$this->list_table->prepare_items();
 
 									if ( ! empty( $this->group_id ) ) {
 										?>
-										<input type="hidden" name="group_id" value="<?php echo $this->group_id; ?>" />
+										<input type="hidden" name="group_id" value="<?php echo esc_attr( $this->group_id ); ?>" />
 										<?php
 										$this->list_table->search_box( esc_html__( 'Search Users', 'learndash' ), 'users' );
 									} else {
-										$this->list_table->search_box( sprintf(
+										$this->list_table->search_box(
+											sprintf(
 											// translators: placeholder: Groups.
-											esc_html_x( 'Search %s', 'placeholder: Groups', 'learndash' ),
-											LearnDash_Custom_Label::get_label( 'groups' )
-										), 'groups' );
+												esc_html_x( 'Search %s', 'placeholder: Groups', 'learndash' ),
+												LearnDash_Custom_Label::get_label( 'groups' )
+											),
+											'groups'
+										);
 									}
 									wp_nonce_field( 'ld-group-list-view-nonce-' . get_current_user_id(), 'ld-group-list-view-nonce' );
 									$this->list_table->display();
 							} else {
 								$group_user_ids = learndash_get_groups_user_ids( $this->group_id );
 								if ( ! empty( $group_user_ids ) ) {
-									if ( in_array( $this->user_id, $group_user_ids ) ) {
+									if ( in_array( $this->user_id, $group_user_ids, true ) ) {
 										$atts = array(
 											'user_id'      => $this->user_id,
 											'group_id'     => $this->group_id,
@@ -339,10 +329,10 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 										 */
 										$atts = apply_filters( 'learndash_group_administration_course_info_atts', $atts, get_user_by( 'id', $this->user_id ) );
 
-										echo learndash_course_info_shortcode( $atts );
+										echo learndash_course_info_shortcode( $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 
 										if ( learndash_show_user_course_complete( $this->user_id ) ) {
-											echo submit_button( esc_html__( 'Update User', 'learndash' ) );
+											echo submit_button( esc_html__( 'Update User', 'learndash' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 										}
 									}
 								}
@@ -351,7 +341,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List' ) ) {
 						</form>
 						<?php
 					}
-				?>
+					?>
 				</div>
 			</div>
 			<?php

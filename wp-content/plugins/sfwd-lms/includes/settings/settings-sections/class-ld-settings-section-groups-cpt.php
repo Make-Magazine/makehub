@@ -102,7 +102,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$cpt_rss_url     = add_query_arg( 'post_type', 'sfwd-courses', get_post_type_archive_feed_link( 'post' ) );
 
 			$this->setting_option_fields = array(
-				'public' => array(
+				'public'            => array(
 					'name'      => 'public',
 					'type'      => 'checkbox-switch',
 					'label'     => esc_html__( 'Public', 'learndash' ),

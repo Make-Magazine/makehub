@@ -54,7 +54,7 @@ $assignment_points = learndash_get_points_awarded_array( $assignment->ID ); ?>
 			 *
 			 */
 			if ( ! learndash_is_assignment_approved_by_meta( $assignment->ID ) ) :
-				if ( ( isset( $post_settings['lesson_assignment_deletion_enabled'] ) && 'on' === $post_settings['lesson_assignment_deletion_enabled'] && absint( $assignment->post_author ) === absint( $user_id ) ) || ( learndash_is_admin_user( $user_id ) ) || ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) ) :
+				if ( ( isset( $post_settings['lesson_assignment_deletion_enabled'] ) && 'on' === $post_settings['lesson_assignment_deletion_enabled'] && absint( $assignment->post_author ) === absint( $user_id ) ) || ( learndash_is_admin_user( $user_id ) ) || ( learndash_is_group_leader_of_user( $user_id, $assignment->post_author ) ) ) :
 					?>
 				<a href="<?php echo esc_url( add_query_arg( 'learndash_delete_attachment', $assignment->ID ) ); ?>" title="<?php esc_html_e( 'Delete this uploaded Assignment', 'learndash' ); ?>">
 					<span class="ld-icon ld-icon-delete" aria-label="<?php esc_html_e( 'Delete Assignment', 'learndash' ); ?>"></span>

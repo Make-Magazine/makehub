@@ -4,8 +4,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_course_inprogress' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_course_inprogress extends LearnDash_Shortcodes_Section {
 
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
@@ -14,12 +23,15 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			$this->shortcodes_section_title = sprintf( esc_html_x( '%s In Progress', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
 			$this->shortcodes_section_type  = 2;
 
-			// translators: placeholders: course.
+			// translators: placeholder: course.
 			$this->shortcodes_section_description = sprintf( wp_kses_post( _x( 'This shortcode shows the content if the user has started but not completed the %s. The shortcode can be used on <strong>any</strong> page or widget area.', 'placeholders: course', 'learndash' ) ), learndash_get_custom_label_lower( 'course' ) );
 
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'message'   => array(
@@ -71,7 +83,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 
 				$this->shortcodes_option_fields['course_id']['required'] = 'required';
 
-				// translators: placeholders: Course.
+				// translators: placeholder: Course.
 				$this->shortcodes_option_fields['course_id']['help_text'] = sprintf( esc_html_x( 'Enter single %s ID.', 'placeholders: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
 			}
 

@@ -1,13 +1,13 @@
 <?php
-if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
+if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
 		public function __construct( $post_type = '' ) {
 			$this->post_type = 'sfwd-lessons';
 
 			parent::__construct( $this->post_type );
-			$this->namespace = LEARNDASH_REST_API_NAMESPACE .'/'. $this->version;
-			$this->rest_base = LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Section_General_REST_API', $this->post_type );
+			$this->namespace = LEARNDASH_REST_API_NAMESPACE . '/' . $this->version;
+			$this->rest_base = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_REST_API', $this->post_type );
 		}
 
 		public function register_routes() {
@@ -34,12 +34,12 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 						'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
 					),
 					'schema' => array( $this, 'get_schema' ),
-				) 
+				)
 			);
 
-			$schema = $this->get_item_schema();
+			$schema        = $this->get_item_schema();
 			$get_item_args = array(
-				'context'  => $this->get_context_param( array( 'default' => 'view' ) ),
+				'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 			);
 			if ( isset( $schema['properties']['password'] ) ) {
 				$get_item_args['password'] = array(
@@ -47,11 +47,11 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 					'type'        => 'string',
 				);
 			}
-			register_rest_route( 
-				$this->namespace, 
-				'/' . $this->rest_base . '/(?P<id>[\d]+)', 
+			register_rest_route(
+				$this->namespace,
+				'/' . $this->rest_base . '/(?P<id>[\d]+)',
 				array(
-					'args' => array(
+					'args'   => array(
 						'id' => array(
 							'description' => esc_html__( 'Unique identifier for the object.', 'learndash' ),
 							'type'        => 'integer',
@@ -86,12 +86,12 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 			);
 		}
 
-		function rest_collection_params_filter( $query_params, $post_type ) {
+		public function rest_collection_params_filter( $query_params, $post_type ) {
 			$query_params = parent::rest_collection_params_filter( $query_params, $post_type );
 
 			if ( ! isset( $query_params['course'] ) ) {
 				$query_params['course'] = array(
-					'description'	=> sprintf(
+					'description' => sprintf(
 						// translators: placeholder: course.
 						esc_html_x(
 							'Limit results to be within a specific %s. Required for non-admin users.',
@@ -100,7 +100,7 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 						),
 						LearnDash_Custom_Label::get_label( 'course' )
 					),
-					'type'			=> 'integer',
+					'type'        => 'integer',
 				);
 			}
 
@@ -120,7 +120,7 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 			return $schema;
 		}
 
-		function get_item_permissions_check( $request ) {
+		public function get_item_permissions_check( $request ) {
 			$return = parent::get_item_permissions_check( $request );
 			if ( ( true === $return ) && ( ! learndash_is_admin_user() ) ) {
 
@@ -156,7 +156,7 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}
-					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );	
+					$this->ld_course_steps_object = LDLMS_Factory_Post::course_steps( $this->course_post->ID );
 					$this->ld_course_steps_object->load_steps();
 					$lesson_ids = $this->ld_course_steps_object->get_children_steps( $this->course_post->ID, $this->post_type );
 					if ( empty( $lesson_ids ) ) {
@@ -172,11 +172,11 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 			return $return;
 		}
 
-		function get_item( $request ) {
+		public function get_item( $request ) {
 			return parent::get_item( $request );
 		}
 
-		function get_items_permissions_check( $request ) {
+		public function get_items_permissions_check( $request ) {
 			$return = parent::get_items_permissions_check( $request );
 			if ( ( true === $return ) && ( 'view' === $request['context'] ) ) {
 				$course_id = (int) $request['course'];
@@ -190,43 +190,45 @@ if ( ( !class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD
 				if ( ! learndash_is_admin_user() ) {
 					if ( ! $this->course_post ) {
 						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
-					} else if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
+					} elseif ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
-					} 
+					}
 				}
 			}
 
 			return $return;
 		}
 
-		function get_items( $request ) {
+		public function get_items( $request ) {
 			return parent::get_items( $request );
 		}
 
-		function rest_query_filter( $args, $request ) {
+		public function rest_query_filter( $args, $request ) {
 
 			// The course_post should be set in the local method get_items_permissions_check()
 			if ( ( $this->course_post ) && ( is_a( $this->course_post, 'WP_Post' ) ) && ( 'sfwd-courses' === $this->course_post->post_type ) ) {
 				$step_ids = learndash_course_get_steps_by_type( $this->course_post->ID, $this->post_type );
 				if ( ! empty( $step_ids ) ) {
-					$args['post__in'] = $args[ 'post__in' ] ? array_intersect( $step_ids, $args[ 'post__in' ] ) : $step_ids;
+					$args['post__in'] = $args['post__in'] ? array_intersect( $step_ids, $args['post__in'] ) : $step_ids;
 
 					$course_lessons_args = learndash_get_course_lessons_order( $this->course_post->ID );
-					if ( !isset( $_GET[ 'orderby' ] ) ) {
-						if ( isset( $course_lessons_args[ 'orderby' ] ) )
+					if ( ! isset( $_GET['orderby'] ) ) {
+						if ( isset( $course_lessons_args['orderby'] ) ) {
 							$args['orderby'] = $course_lessons_args['orderby'];
-						else
+						} else {
 							$args['orderby'] = 'title';
+						}
 					}
 
-					if ( !isset( $_GET['order'] ) ) {
-						if ( isset( $course_lessons_args[ 'order' ] ) )
+					if ( ! isset( $_GET['order'] ) ) {
+						if ( isset( $course_lessons_args['order'] ) ) {
 							$args['order'] = $course_lessons_args['order'];
-						else
+						} else {
 							$args['order'] = 'ASC';
+						}
 					}
 				} else {
-					$args['post__in'] = array(0 );
+					$args['post__in'] = array( 0 );
 				}
 			}
 

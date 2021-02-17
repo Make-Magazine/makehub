@@ -72,7 +72,7 @@ if ( 'group' === $context ) {
 							esc_html( $progress['total'] ),
 							LearnDash_Custom_Label::get_label( 'courses' )
 						);
-				?>
+						?>
 					</div>
 				</div> <!--/.ld-progress-stats-->
 			</div>

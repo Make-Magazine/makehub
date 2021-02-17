@@ -78,7 +78,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 												'lesson_access_from_int' => $lesson['lesson_access_from'],
 												'lesson_access_from_date' => learndash_adjust_date_time_display( $lesson['lesson_access_from'] ),
 												'context' => 'course_content_shortcode',
-											), true
+											),
+											true
 										);
 									?>
 								<?php endif; ?>
@@ -90,7 +91,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 										<ul>
 											<?php $odd_class = ''; ?>
 											<?php foreach ( $topics as $key => $topic ) : ?>
-												<?php $odd_class       = empty( $odd_class ) ? 'nth-of-type-odd' : ''; ?>
+												<?php $odd_class = empty( $odd_class ) ? 'nth-of-type-odd' : ''; ?>
 												<?php $completed_class = empty( $topic->completed ) ? 'topic-notcompleted' : 'topic-completed'; ?>
 												<li class='<?php echo $odd_class; ?>'>
 													<span class='topic_item'>
@@ -112,34 +113,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 			<?php
 				global $course_pager_results;
-				if ( isset( $course_pager_results['pager'] ) ) {
-					echo SFWD_LMS::get_template( 
-						'learndash_pager.php', 
-						array(
-						'pager_results' => $course_pager_results['pager'], 
-						'pager_context' => 'course_content'
-						) 
-					);
-				}
+			if ( isset( $course_pager_results['pager'] ) ) {
+				echo SFWD_LMS::get_template(
+					'learndash_pager.php',
+					array(
+						'pager_results' => $course_pager_results['pager'],
+						'pager_context' => 'course_content',
+					)
+				);
+			}
 			?>
 		<?php endif; ?>
 		<?php
-			if ( ( isset( $course_pager_results['pager'] ) ) && ( !empty( $course_pager_results['pager'] ) ) ) {
-				if ( $course_pager_results['pager']['paged'] == $course_pager_results['pager']['total_pages'] ) {
-					$show_course_quizzes = true;
-				} else {
-					$show_course_quizzes = false;
-				}
-			} else {
+		if ( ( isset( $course_pager_results['pager'] ) ) && ( ! empty( $course_pager_results['pager'] ) ) ) {
+			if ( $course_pager_results['pager']['paged'] == $course_pager_results['pager']['total_pages'] ) {
 				$show_course_quizzes = true;
+			} else {
+				$show_course_quizzes = false;
 			}
+		} else {
+			$show_course_quizzes = true;
+		}
 		?>
 
 
 		<?php /* Show Quiz List */ ?>	
-		<?php 
-			if ( $show_course_quizzes == true ) {
-			if ( ! empty( $quizzes ) ) : ?>
+		<?php
+		if ( $show_course_quizzes == true ) {
+			if ( ! empty( $quizzes ) ) :
+				?>
 				<div id='learndash_quizzes'>
 					<div id='quiz_heading'>
 						<span><?php echo LearnDash_Custom_Label::get_label( 'quizzes' ); ?></span><span class='right'><?php esc_html_e( 'Status', 'learndash' ); ?></span>
@@ -153,9 +155,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php endforeach; ?>
 					</div>
 				</div>
-			<?php endif; 
-			}
-		?>	
+				<?php
+			endif;
+		}
+		?>
+			
 
 	</div>
 <?php endif; ?>

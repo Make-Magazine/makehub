@@ -23,14 +23,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 *
 		 * @var array $_instances
 		 */
-		protected static $_instances = array();
-
-		/**
-		 * Match the WP Screen ID
-		 *
-		 * @var string $settings_screen_id Settings Screen ID.
-		 */
-		//protected $settings_screen_id = '';
+		protected static $_instances = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Store for all the fields in this section
@@ -151,8 +144,19 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 */
 		protected $settings_values_legacy = array();
 
-		protected $_post    = null;
-		protected $_metabox = null;
+		/**
+		 * Current Post being edited.
+		 *
+		 * @var object $_post WP_Post object.
+		 */
+		protected $_post = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
+
+		/**
+		 * Current metabox
+		 *
+		 * @var object $_metabox Metabox object.
+		 */
+		protected $_metabox = null; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Public constructor for class
@@ -224,10 +228,13 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 */
 		public function load_settings_values() {
 
-			$screen = get_current_screen();
-			if ( $screen->id !== $this->settings_screen_id ) {
-				return false;
+			if ( ( is_admin() ) && ( function_exists( 'get_current_screen' ) ) ) {
+				$screen = get_current_screen();
+				if ( $screen->id !== $this->settings_screen_id ) {
+					return false;
+				}
 			}
+
 			if ( ( ! $this->_post ) || ( ! is_a( $this->_post, 'WP_Post' ) ) ) {
 				return false;
 			}
@@ -262,13 +269,25 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * Load the section settings fields.
 		 */
 		public function load_settings_fields() {
-			$this->settings_fields_loaded = true;
-
 			if ( ! empty( $this->setting_option_fields ) ) {
 				foreach ( $this->setting_option_fields as $setting_option_key => &$setting_option_field ) {
 					$setting_option_field = $this->load_settings_field( $setting_option_field );
 				}
 			}
+
+			/**
+			 * We only set the $settings_fields_loaded var if we are loading
+			 * on a normal screen.
+			 */
+			if ( ( ! $this->_post ) || ( ! is_a( $this->_post, 'WP_Post' ) ) ) {
+				return false;
+			}
+
+			if ( $this->_post->post_type !== $this->settings_screen_id ) {
+				return false;
+			}
+
+			$this->settings_fields_loaded = true;
 		}
 
 		public function load_settings_field( $setting_option_field = array() ) {
@@ -364,7 +383,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 						$setting_option_field['title'] = $field_val;
 					}
 
-					if ( ! in_array( $field_key, array( 'id', 'name', 'args', 'callback' ) ) ) {
+					if ( ! in_array( $field_key, array( 'id', 'name', 'args', 'callback' ), true ) ) {
 						unset( $setting_option_field[ $field_key ] );
 					}
 				}
@@ -377,7 +396,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 */
 		public function show_settings_section_description() {
 			if ( ! empty( $this->settings_section_description ) ) {
-				echo '<div class="ld-metabox-description">' . wpautop( wp_kses_post( $this->settings_section_description ) ) . '</div>';
+				echo '<div class="ld-metabox-description">' . wp_kses_post( wpautop( $this->settings_section_description ) ) . '</div>';
 			}
 		}
 
@@ -428,15 +447,15 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * @return array $classes.
 		 */
 		public function add_meta_box_classes( $classes ) {
-			if ( ! in_array( 'ld_settings_postbox', $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox', $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox';
 			}
 
-			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id, $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id, $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox_' . $this->settings_screen_id;
 			}
 
-			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->settings_metabox_key, $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->settings_metabox_key, $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->settings_metabox_key;
 			}
 
@@ -495,7 +514,10 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			$settings_field_updates = array();
 
 			if ( ( $saved_post ) && ( is_a( $saved_post, 'WP_Post' ) ) && ( $saved_post->post_type === $this->settings_screen_id ) ) {
+				// nonce verify performed in the parent::verify_metabox_nonce_field() function.
+				// phpcs:ignore WordPress.Security.NonceVerification.Missing
 				if ( ( true === $this->verify_metabox_nonce_field() ) && ( isset( $_POST[ $this->settings_metabox_key ] ) ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Missing
 					$post_values = $_POST[ $this->settings_metabox_key ];
 
 					$this->init( $saved_post );
@@ -642,6 +664,18 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		}
 
 		/**
+		 * Get Settings Section Fields.
+		 *
+		 * @param object $metabox LearnDash_Settings_Metabox instance.
+		 * @return array Array of settings fields.
+		 */
+		public function get_settings_metabox_fields( $metabox = null ) {
+			if ( $metabox ) {
+				return $metabox->setting_option_fields;
+			}
+		}
+
+		/**
 		 * Filter the legacy settings fields when display to remove items
 		 * handled by this metabox,
 		 *
@@ -659,7 +693,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 				foreach ( $settings_fields as $setting_field_key => $setting_field ) {
 					$settings_field_key_name = str_replace( $this->settings_screen_id . '_', '', $setting_field_key );
 
-					$settings_key = array_search( $settings_field_key_name, $this->settings_fields_map );
+					$settings_key = array_search( $settings_field_key_name, $this->settings_fields_map, true );
 					if ( false !== $settings_key ) {
 						$this->settings_fields_legacy[ $settings_field_key_name ] = $setting_field;
 						unset( $settings_fields[ $setting_field_key ] );
@@ -669,7 +703,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 				foreach ( $settings_values as $setting_value_key => $setting_value ) {
 					$settings_value_key_name = str_replace( $this->settings_screen_id . '_', '', $setting_value_key );
 
-					$settings_key = array_search( $settings_value_key_name, $this->settings_fields_map );
+					$settings_key = array_search( $settings_value_key_name, $this->settings_fields_map, true );
 					if ( false !== $settings_key ) {
 						$this->settings_values_legacy[ $settings_value_key_name ] = $setting_value;
 					}
@@ -705,10 +739,9 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			$form_mapper         = new WpProQuiz_Model_FormMapper();
 
 			$pro_quiz_id = absint( learndash_get_setting( $post->ID, 'quiz_pro' ) );
+
 			if ( ! isset( $pro_quiz_edit[ $pro_quiz_id ] ) ) {
-
 				if ( ! empty( $pro_quiz_id ) ) {
-
 					$pro_quiz_edit[ $pro_quiz_id ] = array(
 						'quiz'                 => $quiz_mapper->fetch( $pro_quiz_id ),
 						'prerequisiteQuizList' => $prerequisite_mapper->fetchQuizIds( $pro_quiz_id ),
@@ -724,12 +757,14 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 					);
 				}
 
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( isset( $_GET['templateLoadId'] ) ) && ( ! empty( $_GET['templateLoadId'] ) ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$template_id = absint( $_GET['templateLoadId'] );
 					if ( ! empty( $template_id ) ) {
 						$template_mapper = new WpProQuiz_Model_TemplateMapper();
-						$template = $template_mapper->fetchById( $template_id );
-						$data = $template->getData();
+						$template        = $template_mapper->fetchById( $template_id );
+						$data            = $template->getData();
 						if ( null !== $data ) {
 							if ( ( isset( $data['quiz'] ) ) && ( is_a( $data['quiz'], 'WpProQuiz_Model_Quiz' ) ) ) {
 								$data['quiz']->setId( $pro_quiz_edit[ $pro_quiz_id ]['quiz']->getId() );
@@ -750,6 +785,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 
 							if ( isset( $data[ '_' . learndash_get_post_type_slug( 'quiz' ) ] ) ) {
 								$quiz_postmeta = $data[ '_' . learndash_get_post_type_slug( 'quiz' ) ];
+								// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 								if ( ( ! isset( $_GET['templateLoadReplaceCourse'] ) ) || ( 'on' !== $_GET['templateLoadReplaceCourse'] ) ) {
 									if ( isset( $quiz_postmeta['course'] ) ) {
 										$quiz_postmeta['course'] = absint( learndash_get_setting( $post->ID, 'course' ) );
@@ -758,13 +794,15 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 										$quiz_postmeta['lesson'] = absint( learndash_get_setting( $post->ID, 'lesson' ) );
 									}
 								}
+
+								// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 								if ( ( ! isset( $_GET['templateLoadReplaceQuestions'] ) ) || ( 'on' !== $_GET['templateLoadReplaceQuestions'] ) ) {
 									if ( isset( $quiz_postmeta['quiz_pro'] ) ) {
 										$quiz_postmeta['quiz_pro'] = absint( learndash_get_setting( $post->ID, 'quiz_pro' ) );
 									}
 								}
 								$data[ '_' . learndash_get_post_type_slug( 'quiz' ) ] = $quiz_postmeta;
-								
+
 								foreach ( $this->settings_fields_map as $_internal => $_external ) {
 									if ( isset( $data[ '_' . learndash_get_post_type_slug( 'quiz' ) ][ $_external ] ) ) {
 										$this->setting_option_values[ $_internal ] = $data[ '_' . learndash_get_post_type_slug( 'quiz' ) ][ $_external ];
@@ -792,8 +830,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			if ( ! empty( $legacy_fields ) ) {
 				foreach ( $legacy_fields as $field_key => $field_value ) {
 
-					//if ( isset( $this->settings_fields_map[ $field_key ] ) ) {
-					if ( in_array( $field_key, $this->settings_fields_map ) ) {
+					if ( in_array( $field_key, $this->settings_fields_map, true ) ) {
 						unset( $legacy_fields[ $field_key ] );
 					}
 				}

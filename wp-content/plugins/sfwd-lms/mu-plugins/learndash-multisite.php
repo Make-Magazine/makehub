@@ -217,7 +217,7 @@ if ( ! class_exists( 'LD_Multisite' ) ) {
 					$redirect_to = get_user_meta( $this->activated_user_id, 'redirect_to', true );
 					if ( ! empty( $redirect_to ) ) {
 						$redirect_to = remove_query_arg( 'ld-registered', $redirect_to );
-						$url = esc_url( $redirect_to );
+						$url         = esc_url( $redirect_to );
 					}
 				}
 			}

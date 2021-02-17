@@ -312,8 +312,8 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 
 			$table_info = array(
 				'rows_count' => 0,
-				'engine'    => '',
-				'collation' => '',
+				'engine'     => '',
+				'collation'  => '',
 			);
 
 			$table_name = self::get_table_name( $table_name );
@@ -335,7 +335,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 						 * @param boolean $show_table_rows Whether to show table rows.
 						 */
 						if ( true === apply_filters( 'learndash_support_db_tables_rows', true ) ) {
-							$table_rows         = $wpdb->get_var( $wpdb->prepare( 'SELECT table_rows FROM information_schema.tables WHERE table_schema = %s AND table_name = %s', DB_NAME, $table_name ) );
+							$table_rows               = $wpdb->get_var( $wpdb->prepare( 'SELECT table_rows FROM information_schema.tables WHERE table_schema = %s AND table_name = %s', DB_NAME, $table_name ) );
 							$table_info['rows_count'] = absint( $table_rows );
 						}
 
@@ -354,7 +354,7 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 					}
 				}
 			}
-		
+
 			return $table_info;
 		}
 
@@ -368,23 +368,24 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 * @return boolean true if indexes are valid. False if not.
 		 * Null is returned if no indexes or not a valid table.
 		 */
-	public static function check_table_primary_index( $table_name = '' ) {
-		global $wpdb;
+		public static function check_table_primary_index( $table_name = '' ) {
+			global $wpdb;
 
-		$table_index_set = self::get_table_primary_index_set( $table_name );
-		if ( ! empty( $table_index_set ) ) {
-			$table_name = self::get_table_name( $table_index_set['table_name'] );
-			$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', esc_attr( $table_name ) ) );
-			if ( ( $table === $table_name ) && ( ! empty( $wpdb->last_result ) ) ) {
-				$primary_column = $wpdb->get_var( $wpdb->prepare( "SHOW FIELDS FROM {$table_name} WHERE Field = %s", esc_attr( $table_index_set['primary_column'] ) ) );
-				if ( ( $primary_column === $table_index_set['primary_column'] ) && ( ! empty( $wpdb->last_result ) ) ) {
-					foreach ( $wpdb->last_result as $result_object ) {
-						if ( $result_object->Field === $table_index_set['primary_column'] ) {
-							if ( true === $table_index_set['auto_increment'] ) {
-								if ( 'auto_increment' !== $result_object->Extra ) {
-									return false;
-								} else {
-									return true;
+			$table_index_set = self::get_table_primary_index_set( $table_name );
+			if ( ! empty( $table_index_set ) ) {
+				$table_name = self::get_table_name( $table_index_set['table_name'] );
+				$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', esc_attr( $table_name ) ) );
+				if ( ( $table === $table_name ) && ( ! empty( $wpdb->last_result ) ) ) {
+					$primary_column = $wpdb->get_var( $wpdb->prepare( "SHOW FIELDS FROM {$table_name} WHERE Field = %s", esc_attr( $table_index_set['primary_column'] ) ) );
+					if ( ( $primary_column === $table_index_set['primary_column'] ) && ( ! empty( $wpdb->last_result ) ) ) {
+						foreach ( $wpdb->last_result as $result_object ) {
+							if ( $result_object->Field === $table_index_set['primary_column'] ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DB field name
+								if ( true === $table_index_set['auto_increment'] ) {
+									if ( 'auto_increment' !== $result_object->Extra ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DB field name
+										return false;
+									} else {
+										return true;
+									}
 								}
 							}
 						}
@@ -392,7 +393,6 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 				}
 			}
 		}
-	}
 
 		/**
 		 * Returns the Primary Index set if available.
@@ -401,14 +401,14 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		 * @param string $table_name Name of table to check.
 		 * @return array of table index set..
 		 */
-	private static function get_table_primary_index_set( $table_name = '' ) {
-		if ( ( ! empty( $table_name ) ) && ( isset( self::$tables_primary_indexes[ $table_name ] ) ) ) {
-			return self::$tables_primary_indexes[ $table_name ];
+		private static function get_table_primary_index_set( $table_name = '' ) {
+			if ( ( ! empty( $table_name ) ) && ( isset( self::$tables_primary_indexes[ $table_name ] ) ) ) {
+				return self::$tables_primary_indexes[ $table_name ];
+			}
 		}
-	}
 
 		// End of functions.
-}
+	}
 }
 
 // These are the base table names WITHOUT the $wpdb->prefix.

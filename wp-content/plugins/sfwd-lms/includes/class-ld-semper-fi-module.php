@@ -433,7 +433,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									if ( $this->current_tab != $k ) {
 										echo 'in';}
 									?>
-									active" href="<?php echo esc_url( add_query_arg( 'tab', $k ) ); ?>"><?php echo $v['name']; ?></a>
+									active" href="<?php echo esc_url( add_query_arg( 'tab', $k ) ); ?>"><?php echo esc_html( $v['name'] ); ?></a>
 								<?php
 						}
 						?>
@@ -630,7 +630,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 			wp_enqueue_style(
 				'sfwd-module-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -681,7 +681,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 			wp_enqueue_script(
 				'sfwd-module-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -798,7 +798,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 			$default_options_page = $this->post_type . '-options';
 
-			if ( $this->locations === null ) {
+			if ( null === $this->locations ) {
 				$hookname = add_submenu_page( $parent_slug, $name, $name, LEARNDASH_ADMIN_CAPABILITY_CHECK, $default_options_page, array( $this, 'display_settings_page' ) );
 				add_action( "load-{$hookname}", array( $this, 'add_page_hooks' ) );
 				return true;
@@ -867,7 +867,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									 */
 									$title = apply_filters( 'semperfi_metabox_title', $title, $v['prefix'] . $k );
 									add_meta_box( $v['prefix'] . $k, $title, array( $this, 'display_metabox' ), $posttype, $v['context'], $v['priority'], $v );
-								}
+								} // phpcs:ignore Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace -- DocBlock for filter follows
 								/**
 								 * Filters whether to show legacy metaboxes or not.
 								 *
@@ -1062,9 +1062,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 								} else {
 									$options[ $k . '_visible_after_specific_date' ] = 0;
 								}
-							}
-
-
+							} // phpcs:ignore Squiz.ControlStructures.ControlSignature.SpaceAfterCloseBrace -- Explanatory comment
 							// LEARNDASH-261: We need to reset the reference to the post meta ‘quiz_pro_id’ when the quiz is saved
 							// in case the ‘Associated Settings’ selector is updated.
 							elseif ( ( 'sfwd-quiz' === $k ) && ( isset( $options[ $k . '_quiz_pro' ] ) ) ) {
@@ -1164,7 +1162,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			$buf1 = '';
 			$type = $options['type'];
 
-			if ( ( 'radio' === $type  ) || ( 'checkbox' === $type ) ) {
+			if ( ( 'radio' === $type ) || ( 'checkbox' === $type ) ) {
 				$strings = array(
 					'block'     => "%s\n",
 					'group'     => "\t<b>%s</b><br>\n%s\n",
@@ -1180,7 +1178,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 					if ( ( isset( $args['options']['lazy_load_data'] ) ) && ( ! empty( $args['options']['lazy_load_data'] ) ) ) {
 
 						$args['options']['lazy_load_data']['value'] = $args['value'];
-						$lazy_load_data = ' learndash_lazy_load_data="' . htmlspecialchars( json_encode( $args['options']['lazy_load_data'] ) ) . '" ';
+						$lazy_load_data                             = ' learndash_lazy_load_data="' . htmlspecialchars( wp_json_encode( $args['options']['lazy_load_data'] ) ) . '" ';
 
 						$lazy_load_spinner = '<br /><span style="display:none;" class="learndash_lazy_loading"><img class="learndash_lazy_load_spinner" alt="' . esc_html__( 'loading', 'learndash' ) . '" src="' . admin_url( '/images/wpspin_light.gif' ) . '" /> ' . esc_html__( 'loading', 'learndash' ) . '</span>';
 					}
@@ -1397,7 +1395,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 					}
 					$month_field = '<span class="screen-reader-text">' . esc_html__( 'Month', 'learndash' ) . '</span><select class="ld_date_mm" name="' . $name . '[mm]" ><option value=""></option>';
-					for ( $i = 1; $i < 13; $i = $i + 1 ) {
+					for ( $i = 1; $i < 13; $i++ ) {
 						$monthnum     = zeroise( $i, 2 );
 						$monthtext    = $wp_locale->get_month_abbrev( $wp_locale->get_month( $i ) );
 						$month_field .= "\t\t\t" . '<option value="' . $monthnum . '" data-text="' . $monthtext . '" ' . selected( $monthnum, $value_mm, false ) . '>';
@@ -1412,7 +1410,8 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 					$minute_field = '<span class="screen-reader-text">' . esc_html__( 'Minute', 'learndash' ) . '</span><input type="number" min="0" max="59" placeholder="MM" class="ld_date_mn" name="' . $name . '[mn]" value="' . $value_mn . '" size="2" maxlength="2" autocomplete="off" />';
 
 					$buf .= '<div class="ld_date_selector">' . sprintf(
-						esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s', 'default' ),
+						// translators: placeholders: Month Name, Day number, Year number, Hour number, Minute number.
+						esc_html__( '%1$s %2$s, %3$s @ %4$s:%5$s', 'learndash' ),
 						$month_field,
 						$day_field,
 						$year_field,
@@ -1494,7 +1493,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			global $post_type;
 
 			$label_text = $input_attr = $help_text_2 = $id_attr = '';
-			if ( $opts['label'] == 'top' ) {
+			if ( 'top' == $opts['label'] ) {
 				$align = 'left';
 			} else {
 				$align = 'right';
@@ -1517,7 +1516,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				$input_attr .= 'sfwd_no_label ';
 			}
 
-			if ( $opts['label'] == 'top' ) {
+			if ( 'top' == $opts['label'] ) {
 				$label_text .= self::DISPLAY_TOP_LABEL;
 			}
 
@@ -1653,13 +1652,13 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				);
 
 				if ( ! empty( $opts['nowrap'] ) ) {
-					echo $this->get_option_html( $args );
+					echo $this->get_option_html( $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 				} else {
 					if ( $container ) {
-						echo $container;
+						echo $container; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						$container = '';
 					}
-					echo $this->get_option_row( $name, $opts, $args );
+					echo $this->get_option_row( $name, $opts, $args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 				}
 			}
 
@@ -1738,7 +1737,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @param  bool        $delete     delete options flag
 		 */
 		public function reset_options( $location = null, $delete = false ) {
-			if ( $delete === true ) {
+			if ( true === $delete ) {
 				$this->delete_class_option( $delete );
 				$this->options = array();
 			}
@@ -1767,7 +1766,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				$nonce = $_POST['nonce-sfwd'];
 
 				if ( ! wp_verify_nonce( $nonce, 'sfwd-nonce' ) ) {
-					die( __( 'Security Check - If you receive this in error, log out and back in to WordPress', 'learndash' ) );
+					die( esc_html__( 'Security Check - If you receive this in error, log out and back in to WordPress', 'learndash' ) );
 				}
 
 				if ( isset( $_POST['Submit_Default'] ) || isset( $_POST['Submit_All_Default'] ) ) {
@@ -1844,7 +1843,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 */
 		public function display_settings_page( $location = null ) {
 			return;
-			
+
 			if ( null !== $location ) {
 				$location_info = $this->locations[ $location ];
 			}
@@ -1869,7 +1868,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 			?>
 		<div id="dropmessage" class="updated" style="display:none;"></div>
 			<div id="learndash-settings" class="wrap">
-				<h1><?php echo $name; ?></h1>
+				<h1><?php echo esc_html( $name ); ?></h1>
 
 				<?php
 					/**
@@ -1971,7 +1970,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									$class = " class='{$s['class']}' ";
 								}
 
-								echo $this->get_option_html(
+								echo $this->get_option_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 									array(
 										'name'    => $k,
 										'options' => $s,
@@ -2043,7 +2042,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 * @return array
 		 */
 		public function setting_options( $location = null, $defaults = null ) {
-			if ( $defaults === null ) {
+			if ( null === $defaults ) {
 				$defaults = $this->default_options;
 			}
 
@@ -2217,10 +2216,10 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				$type = $this->locations[ $location ]['type'];
 			}
 
-			if ( $type === 'settings' ) {
+			if ( 'settings' === $type ) {
 				$get_opts = $this->get_class_option();
-			} elseif ( $type == 'metabox' ) {
-				if ( $post == null ) {
+			} elseif ( 'metabox' === $type ) {
+				if ( null == $post ) {
 					global $post;
 				}
 				if ( isset( $post ) ) {
@@ -2231,7 +2230,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 			$defs = $this->default_options( $location, $defaults );
 
-			if ( $get_opts == '' ) {
+			if ( '' == $get_opts ) {
 				$get_opts = $defs;
 			} else {
 				$get_opts = wp_parse_args( $get_opts, $defs );

@@ -95,7 +95,7 @@ function ld_course_resume_shortcode( $atts = array(), $content = '' ) {
 	if ( ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['course_id'] ) ) ) {
 		// We only output for 'in progress' courses.
 		$course_status = learndash_course_status( $atts['course_id'], $atts['user_id'], true );
-		if ( $course_status === 'in-progress' ) {
+		if ( 'in-progress' === $course_status ) {
 			$user_course_last_step_id = learndash_user_course_last_step( $atts['user_id'], $atts['course_id'] );
 			if ( ! empty( $user_course_last_step_id ) ) {
 

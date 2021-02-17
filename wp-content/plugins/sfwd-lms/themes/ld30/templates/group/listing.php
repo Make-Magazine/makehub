@@ -29,7 +29,7 @@ if ( ! empty( $group_courses ) ) :
 	 * @since 3.1.7
 	 * @param string $table_class CSS classes for group courses table.
 	 */
-	$table_class = apply_filters( 'learndash_group_courses_table_class', 'ld-item-list-items ld-group-courses ld-group-courses-'. $group_id );
+	$table_class = apply_filters( 'learndash_group_courses_table_class', 'ld-item-list-items ld-group-courses ld-group-courses-' . $group_id );
 
 	/**
 	 * Display the expand button if lesson has topics

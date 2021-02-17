@@ -13,10 +13,10 @@ $wrapper_class = apply_filters( 'learndash-topic-row-wrapper-class', 'ld-table-l
 $topic_class   = 'ld-table-list-item-preview ld-primary-color-hover ld-topic-row ' . ( get_the_ID() === absint( $topic->ID ) ? 'ld-is-current-item ' : '' );
 
 /** This filter is documented in themes/ld30/templates/topic/partials/row.php */
-$topic_class   = apply_filters( 'learndash-topic-row-class', $topic_class, $topic );
+$topic_class = apply_filters( 'learndash-topic-row-class', $topic_class, $topic );
 
 /** This filter is documented in themes/ld30/templates/topic/partials/row.php */
-$topic_status  = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ) ); ?>
+$topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? 'completed' : 'not-completed' ) ); ?>
 
 <div class="<?php echo esc_attr( $wrapper_class ); ?>">
 	<a class="<?php echo esc_attr( $topic_class ); ?>" href="<?php echo esc_url( learndash_get_step_permalink( $topic->ID, $course_id ) ); ?>">

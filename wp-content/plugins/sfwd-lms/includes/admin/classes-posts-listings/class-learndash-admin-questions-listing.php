@@ -40,8 +40,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				'question_type'         => array(
 					'type'                   => 'early',
 					'display'                => array( $this, 'show_selector_question_type' ),
-					'show_all_value'          => '',
-					'show_all_label'          => sprintf(
+					'show_all_value'         => '',
+					'show_all_label'         => sprintf(
 						// translators: placeholder: Question.
 						esc_html_x( 'All %s Types', 'placeholder: Question', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'question' )
@@ -53,8 +53,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				'question_pro_category' => array(
 					'type'                   => 'early',
 					'display'                => array( $this, 'show_selector_question_pro_category' ),
-					'show_all_value'          => '',
-					'show_all_label'          => sprintf(
+					'show_all_value'         => '',
+					'show_all_label'         => sprintf(
 						// translators: placeholder: Question.
 						esc_html_x( 'All %s Categories', 'placeholder: Question', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'question' )
@@ -156,7 +156,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			global $post_type, $post_type_object;
 
 			if ( $this->post_type_check() ) {
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( isset( $_GET['quiz_id'] ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$quiz_id = absint( $_GET['quiz_id'] );
 					if ( ! empty( $quiz_id ) ) {
 						$quizzes_url = add_query_arg( 'post_type', learndash_get_post_type_slug( 'quiz' ), admin_url( 'edit.php' ) );
@@ -173,8 +175,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						?>
 						<script>
 							jQuery( function() {
-								jQuery( 'h1.wp-heading-inline, .ld-global-header h1' ).html('<?php echo $new_title; ?>' );
-								jQuery( 'a.page-title-action, a.global-new-entity-button' ).attr( 'href', '<?php echo $add_new_url; ?>' );
+								jQuery( 'h1.wp-heading-inline, .ld-global-header h1' ).html('<?php echo wp_kses_post( $new_title ); ?>' );
+								jQuery( 'a.page-title-action, a.global-new-entity-button' ).attr( 'href', '<?php echo esc_url( $add_new_url ); ?>' );
 							});
 						</script>
 						<?php
@@ -194,12 +196,19 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			global $learndash_question_types;
 
 			$question_type_slug = get_post_meta( $post_id, 'question_type', true );
+
+			$question_values = $this->get_question_values( $post_id );
+			if ( ( isset( $question_values['answer_type'] ) ) && ( ! empty( $question_values['answer_type'] ) ) && ( $question_type_slug !== $question_values['answer_type'] ) ) {
+				$question_type_slug = $question_values['answer_type'];
+				update_post_meta( $post_id, 'question_type', $question_type_slug );
+			}
+
 			if ( ( ! empty( $question_type_slug ) ) && ( isset( $learndash_question_types[ $question_type_slug ] ) ) ) {
 				$question_type_label = $learndash_question_types[ $question_type_slug ];
 
 				$row_actions = array();
 
-				$filter_url  = add_query_arg( 'question_type', $question_type_slug, $this->get_clean_filter_url() );
+				$filter_url = add_query_arg( 'question_type', $question_type_slug, $this->get_clean_filter_url() );
 
 				$link_aria_label = sprintf(
 					// translators: placeholder: Question Type.
@@ -209,7 +218,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 				echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $link_aria_label ) . '">' . esc_attr( $question_type_label ) . '</a>';
 				$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $link_aria_label ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-				echo $this->list_table_row_actions( $row_actions );
+				echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 			} else {
 				$question_type_label = '-';
 			}
@@ -247,9 +256,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( ( $cat ) && ( is_a( $cat, 'WpProQuiz_Model_Category' ) ) ) {
 					$row_actions = array();
 					$filter_url  = add_query_arg( 'question_pro_category', $cat->getCategoryId(), $this->get_clean_filter_url() );
-					echo '<a href="' . esc_url( $filter_url ) . '">' . stripslashes( $cat->getCategoryName() ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '">' . esc_html( stripslashes( $cat->getCategoryName() ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
-					echo $this->list_table_row_actions( $row_actions );
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 				}
 			}
 		}
@@ -270,7 +279,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$this->show_selector_start( $selector );
 				$this->show_selector_all_option( $selector );
 
+				// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				if ( ( isset( $_GET['question_type'] ) ) && ( ! empty( $_GET['question_type'] ) ) ) {
+					// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 					$selected_question_type = esc_attr( $_GET['question_type'] );
 				} else {
 					$selected_question_type = '';
@@ -462,7 +473,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( ! isset( $field_values[ $post_id ] ) ) {
 					$question_pro_id = get_post_meta( $post_id, 'question_pro_id', true );
 					if ( ! empty( $question_pro_id ) ) {
-						$field_values[ $post_id ] = leandash_get_question_pro_fields( $question_pro_id, array( 'points', 'answer_type', 'category_id', 'category_name' ) );
+						$field_values[ $post_id ] = learndash_get_question_pro_fields( $question_pro_id, array( 'points', 'answer_type', 'category_id', 'category_name' ) );
 					} else {
 						$field_values[ $post_id ] = array(
 							'points'        => '',

@@ -71,7 +71,7 @@ function learndash_quizinfo( $attr ) {
 			$post_type = get_query_var( 'post_type' );
 		}
 
-		if ( $post_type == 'sfwd-certificates' ) {
+		if ( 'sfwd-certificates' === $post_type ) {
 			if ( ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( ( isset( $_GET['user'] ) ) && ( ! empty( $_GET['user'] ) ) ) ) {
 				$user_id = intval( $_GET['user'] );
 			}
@@ -157,18 +157,18 @@ function learndash_quizinfo( $attr ) {
 		case 'field':
 			if ( ! empty( $field_id ) ) {
 				if ( ( isset( $selected_quizinfo['pro_quizid'] ) ) && ( ! empty( $selected_quizinfo['pro_quizid'] ) ) ) {
-					$formMapper         = new WpProQuiz_Model_FormMapper();
-					$quiz_form_elements = $formMapper->fetch( $selected_quizinfo['pro_quizid'] );
+					$form_mapper        = new WpProQuiz_Model_FormMapper();
+					$quiz_form_elements = $form_mapper->fetch( $selected_quizinfo['pro_quizid'] );
 					if ( ! empty( $quiz_form_elements ) ) {
 						foreach ( $quiz_form_elements as $quiz_form_element ) {
 							if ( absint( $field_id ) == absint( $quiz_form_element->getFormId() ) ) {
 								$selected_quizinfo[ $show ] = '';
 
 								if ( ( isset( $selected_quizinfo['statistic_ref_id'] ) ) && ( ! empty( $selected_quizinfo['statistic_ref_id'] ) ) ) {
-									$statisticRefMapper = new WpProQuiz_Model_StatisticRefMapper();
-									$statisticRefData   = $statisticRefMapper->fetchAllByRef( $selected_quizinfo['statistic_ref_id'] );
-									if ( ( $statisticRefData ) && ( is_a( $statisticRefData, 'WpProQuiz_Model_StatisticRefModel' ) ) ) {
-										$form_data = $statisticRefData->getFormData();
+									$statistic_ref_mapper = new WpProQuiz_Model_StatisticRefMapper();
+									$statistic_ref_data   = $statistic_ref_mapper->fetchAllByRef( $selected_quizinfo['statistic_ref_id'] );
+									if ( ( $statistic_ref_data ) && ( is_a( $statistic_ref_data, 'WpProQuiz_Model_StatisticRefModel' ) ) ) {
+										$form_data = $statistic_ref_data->getFormData();
 										if ( isset( $form_data[ $field_id ] ) ) {
 											$selected_quizinfo[ $show ] = $quiz_form_element->getValue( $form_data[ $field_id ] );
 										}

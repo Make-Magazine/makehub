@@ -1,5 +1,5 @@
 <?php
-if ( ( !class_exists( 'LD_REST_Users_Controller_V1' ) ) && ( class_exists( 'WP_REST_Users_Controller' ) ) ) {
+if ( ( ! class_exists( 'LD_REST_Users_Controller_V1' ) ) && ( class_exists( 'WP_REST_Users_Controller' ) ) ) {
 	class LD_REST_Users_Controller_V1 extends WP_REST_Users_Controller {
 
 		protected $version = 'v1';
@@ -23,10 +23,10 @@ if ( ( !class_exists( 'LD_REST_Users_Controller_V1' ) ) && ( class_exists( 'WP_R
 		public function register_routes() {
 
 			$collection_params = $this->get_collection_params();
-			$schema = $this->get_item_schema();
+			$schema            = $this->get_item_schema();
 
 			$get_item_args = array(
-				'context'  => $this->get_context_param( array( 'default' => 'view' ) ),
+				'context' => $this->get_context_param( array( 'default' => 'view' ) ),
 			);
 		}
 	}

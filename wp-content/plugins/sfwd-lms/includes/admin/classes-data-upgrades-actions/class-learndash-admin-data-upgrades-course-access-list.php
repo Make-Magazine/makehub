@@ -33,9 +33,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 */
 		public function show_upgrade_action() {
 			?>
-			<tr id="learndash-data-upgrades-container-<?php echo $this->data_slug; ?>" class="learndash-data-upgrades-container">
+			<tr id="learndash-data-upgrades-container-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-container">
 				<td class="learndash-data-upgrades-button-container">
-					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ); ?>" data-slug="<?php echo $this->data_slug; ?>">
+					<button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo esc_attr( wp_create_nonce( 'learndash-data-upgrades-' . $this->data_slug . '-' . get_current_user_id() ) ); ?>" data-slug="<?php echo esc_attr( $this->data_slug ); ?>">
 					<?php
 						esc_html_e( 'Upgrade', 'learndash' );
 					?>
@@ -46,7 +46,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<?php
 					printf(
 						// translators: placeholder: Course.
-						esc_html_x( 'Upgrade %s Meta', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' )
+						esc_html_x( 'Upgrade %s Meta', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</span>
@@ -54,15 +55,15 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					<?php
 						printf(
 							// translators: placeholder: course.
-							esc_html_x( 'This upgrade will upgrade the %s meta elements. (Optional)', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' )
+							esc_html_x( 'This upgrade will upgrade the %s meta elements. (Optional)', 'placeholder: course', 'learndash' ),
+							learndash_get_custom_label_lower( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 						);
 					?>
 					</p>
-					<p class="description"><?php echo $this->get_last_run_info(); ?></p>	
-						
+					<p class="description"><?php echo esc_html( $this->get_last_run_info() ); ?></p>
 					<?php
-					$show_progess = false;
-					$this->transient_key = $this->data_slug;
+					$show_progess         = false;
+					$this->transient_key  = $this->data_slug;
 					$this->transient_data = $this->get_transient( $this->transient_key );
 					if ( ! empty( $this->transient_data ) ) {
 						if ( isset( $this->transient_data['result_count'] ) ) {
@@ -80,7 +81,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 							$show_progess = true;
 							?>
-							<p id="learndash-data-upgrades-continue-<?php echo $this->data_slug; ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
+							<p id="learndash-data-upgrades-continue-<?php echo esc_attr( $this->data_slug ); ?>" class="learndash-data-upgrades-continue"><input type="checkbox" name="learndash-data-upgrades-continue" value="1" /> <?php esc_html_e( 'Continue previous upgrade processing?', 'learndash' ); ?></p>
 							<?php
 						}
 					}
@@ -92,8 +93,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 					if ( true === $show_progess ) {
 						$progress_style = '';
-						$data = $this->transient_data;
-						$data = $this->build_progress_output( $data );
+						$data           = $this->transient_data;
+						$data           = $this->build_progress_output( $data );
 						if ( ( isset( $data['progress_percent'] ) ) && ( ! empty( $data['progress_percent'] ) ) ) {
 							$progress_meter_style = 'width: ' . $data['progress_percent'] . '%';
 						}
@@ -233,9 +234,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			);
 			/** This filter is documented in includes/admin/classes-data-upgrades-actions/class-learndash-admin-data-upgrades-course-access-list-convert.php */
 			$this->transient_data['query_args'] = apply_filters( 'learndash_data_upgrade_query', $this->transient_data['query_args'], $this->data_slug );
-			$courses_query = new WP_Query( $this->transient_data['query_args'] );
+			$courses_query                      = new WP_Query( $this->transient_data['query_args'] );
 			if ( is_a( $courses_query, 'WP_Query' ) ) {
-				$this->transient_data['total_count'] = intval( $courses_query->found_posts );
+				$this->transient_data['total_count']     = intval( $courses_query->found_posts );
 				$this->transient_data['process_courses'] = $courses_query->posts;
 			}
 		}
@@ -268,21 +269,24 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			}
 
 			if ( 100 == $data['progress_percent'] ) {
-				$progress_status = __( 'Complete', 'learndash' );
+				$progress_status       = __( 'Complete', 'learndash' );
 				$data['progress_slug'] = 'complete';
 			} else {
 				if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-					$progress_status = __( 'In Progress', 'learndash' );
+					$progress_status       = __( 'In Progress', 'learndash' );
 					$data['progress_slug'] = 'in-progress';
 				} else {
-					$progress_status = __( 'Incomplete', 'learndash' );
+					$progress_status       = __( 'Incomplete', 'learndash' );
 					$data['progress_slug'] = 'in-complete';
 				}
 			}
 
 			$data['progress_label'] = sprintf(
 				// translators: placeholders: result count, total count.
-				esc_html_x( '%1$s: %2$d of %3$d Courses', 'placeholders: progress status, result count, total count', 'learndash' ), $progress_status, $data['result_count'], $data['total_count']
+				esc_html_x( '%1$s: %2$d of %3$d Courses', 'placeholders: progress status, result count, total count', 'learndash' ),
+				$progress_status,
+				$data['result_count'],
+				$data['total_count']
 			);
 
 			return $data;
@@ -308,6 +312,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 	}
 }
 
-add_action( 'learndash_data_upgrades_init', function() {
-	Learndash_Admin_Data_Upgrades_Course_Access_List::add_instance();
-} );
+add_action(
+	'learndash_data_upgrades_init',
+	function() {
+		Learndash_Admin_Data_Upgrades_Course_Access_List::add_instance();
+	}
+);

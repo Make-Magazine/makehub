@@ -25,7 +25,7 @@ function learndash_load_resources() {
 
 	wp_enqueue_style(
 		'learndash_style',
-		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . leardash_min_asset() . '.css',
+		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . learndash_min_asset() . '.css',
 		array(),
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
@@ -34,7 +34,7 @@ function learndash_load_resources() {
 
 	wp_enqueue_style(
 		'sfwd_front_css',
-		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/front' . leardash_min_asset() . '.css',
+		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/front' . learndash_min_asset() . '.css',
 		array(),
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);

@@ -98,8 +98,8 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 			if ( false === $this->init_called ) {
 				$this->init_called = true;
 
-				$quiz_pro_id = learndash_get_setting( $this->quiz_id, 'quiz_pro' );
-				$quiz_pro_id = absint( $quiz_pro_id );
+				$quiz_pro_id       = learndash_get_setting( $this->quiz_id, 'quiz_pro' );
+				$quiz_pro_id       = absint( $quiz_pro_id );
 				$this->quiz_pro_id = $quiz_pro_id;
 
 				$this->quiz_primary_id = learndash_get_quiz_primary_shared( $this->quiz_pro_id, $this->quiz_id );
@@ -179,7 +179,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 					} else {
 						// We clear out the existing questions to force query fresh from question posts.
 						$this->questions['post_ids'] = array();
-						$questions_query_meta_query = array(
+						$questions_query_meta_query  = array(
 							array(
 								'key'     => 'quiz_id',
 								'value'   => $this->quiz_primary_id,
@@ -251,7 +251,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 						$_questions_changed = false;
 						foreach ( $this->questions['post_ids'] as $question_post_id => $question_pro_id ) {
 							$question_post_id = absint( $question_post_id );
-							$question_pro_id = absint( $question_pro_id );
+							$question_pro_id  = absint( $question_pro_id );
 
 							$question_pro_object = $question_mapper->fetchById( $question_pro_id );
 							if ( is_null( $question_pro_object ) ) {
@@ -261,9 +261,9 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 								if ( ( ! empty( $question_pro_id_real ) ) && ( $question_pro_id_real !== $question_pro_id ) ) {
 									$question_pro_object = $question_mapper->fetchById( $question_pro_id_real );
 									if ( is_a( $question_pro_object, 'WpProQuiz_Model_Question' ) ) {
-										$_questions_changed = true;
+										$_questions_changed                               = true;
 										$this->questions['post_ids'][ $question_post_id ] = $question_pro_id_real;
-										$question_pro_id = $question_pro_id_real;
+										$question_pro_id                                  = $question_pro_id_real;
 									}
 								}
 							}
@@ -389,9 +389,9 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 				sort( $quiz_questions_new, SORT_NUMERIC );
 			}
 
-			$sql_str = $wpdb->prepare( "SELECT post_id as post_id FROM ". $wpdb->postmeta ." WHERE meta_key LIKE %s", 'ld_quiz_'. $this->quiz_primary_id );
+			$sql_str            = $wpdb->prepare( 'SELECT post_id as post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key LIKE %s', 'ld_quiz_' . $this->quiz_primary_id );
 			$quiz_questions_old = $wpdb->get_col( $sql_str );
-			if ( !empty( $quiz_questions_old ) ) {
+			if ( ! empty( $quiz_questions_old ) ) {
 				sort( $quiz_questions_old, SORT_NUMERIC );
 			}
 
@@ -399,17 +399,19 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 
 			// Add Questions
 			$quiz_questions_add = array_diff( $quiz_questions_new, $quiz_questions_intersect );
-			if ( !empty( $quiz_questions_add ) ) {
-				$quiz_questions_add_chunks = array_chunk ( $quiz_questions_add, LEARNDASH_LMS_DEFAULT_CB_INSERT_CHUNK_SIZE );
-				foreach( $quiz_questions_add_chunks as $insert_post_ids ) {
-					$insert_sql_str = "";
-					foreach( $insert_post_ids as $post_id ) {
-						if ( !empty( $insert_sql_str ) ) $insert_sql_str .= ',';
+			if ( ! empty( $quiz_questions_add ) ) {
+				$quiz_questions_add_chunks = array_chunk( $quiz_questions_add, LEARNDASH_LMS_DEFAULT_CB_INSERT_CHUNK_SIZE );
+				foreach ( $quiz_questions_add_chunks as $insert_post_ids ) {
+					$insert_sql_str = '';
+					foreach ( $insert_post_ids as $post_id ) {
+						if ( ! empty( $insert_sql_str ) ) {
+							$insert_sql_str .= ',';
+						}
 
-						$insert_sql_str .= "(". $post_id .", 'ld_quiz_" . $this->quiz_primary_id . "', ". $this->quiz_primary_id . ")";
+						$insert_sql_str .= '(' . $post_id . ", 'ld_quiz_" . $this->quiz_primary_id . "', " . $this->quiz_primary_id . ')';
 					}
-					if ( !empty( $insert_sql_str ) ) {
-						$insert_sql_str = "INSERT INTO ". $wpdb->postmeta ." (`post_id`, `meta_key`, `meta_value`) VALUES " . $insert_sql_str;
+					if ( ! empty( $insert_sql_str ) ) {
+						$insert_sql_str = 'INSERT INTO ' . $wpdb->postmeta . ' (`post_id`, `meta_key`, `meta_value`) VALUES ' . $insert_sql_str;
 						$wpdb->query( $insert_sql_str );
 					}
 				}
@@ -418,7 +420,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 			// Remove Steps.
 			$quiz_questions_remove = array_diff( $quiz_questions_old, $quiz_questions_intersect );
 			if ( ! empty( $quiz_questions_remove ) ) {
-				$delete_sql_str = "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key LIKE 'ld_quiz_" . $this->quiz_primary_id . "' AND post_id IN (" . implode(',', $quiz_questions_remove ) . ")";
+				$delete_sql_str = 'DELETE FROM ' . $wpdb->postmeta . " WHERE meta_key LIKE 'ld_quiz_" . $this->quiz_primary_id . "' AND post_id IN (" . implode( ',', $quiz_questions_remove ) . ')';
 				$wpdb->query( $delete_sql_str );
 			}
 
@@ -428,13 +430,16 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 			 * a post_meta reference 'course_id'. Now in v2.5 the course steps are stored into a collection or nodes. But if for example the quiz is
 			 * remove we need to also remove the legacy 'course_id' association.
 			 */
-			$sql_str = $wpdb->prepare( "SELECT posts.ID as post_id FROM " . $wpdb->posts . " as posts 
-				INNER JOIN " . $wpdb->postmeta . " as postmeta 
+			$sql_str = $wpdb->prepare(
+				'SELECT posts.ID as post_id FROM ' . $wpdb->posts . ' as posts 
+				INNER JOIN ' . $wpdb->postmeta . " as postmeta 
 				ON posts.ID = postmeta.post_id 
 				WHERE 1=1
 				AND posts.post_type = '" . learndash_get_post_type_slug( 'question' ) . "'
 				AND postmeta.meta_key = %s 
-				AND postmeta.meta_value = %d", 'quiz_id', $this->quiz_primary_id
+				AND postmeta.meta_value = %d",
+				'quiz_id',
+				$this->quiz_primary_id
 			);
 			//error_log('sql_str['. $sql_str .']');
 
@@ -447,7 +452,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 
 			$quiz_questions_primary_remove = array_diff( $quiz_questions_primary, $quiz_questions_primary_intersect );
 			if ( ! empty( $quiz_questions_primary_remove ) ) {
-				$delete_sql_str = "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key = 'quiz_id' AND post_id IN (". implode(',', $quiz_questions_primary_remove ) . ")";
+				$delete_sql_str = 'DELETE FROM ' . $wpdb->postmeta . " WHERE meta_key = 'quiz_id' AND post_id IN (" . implode( ',', $quiz_questions_primary_remove ) . ')';
 				$wpdb->query( $delete_sql_str );
 			}
 		}
@@ -476,12 +481,12 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 				'post_status'    => 'publish',
 				'fields'         => 'ids',
 				'meta_query'     => array(
-					'relation'   => 'AND',
+					'relation' => 'AND',
 					array(
 						'key'     => 'quiz_id',
 						'value'   => $this->quiz_primary_id,
 						'compare' => '=',
-						'type'    => 'NUMERIC'
+						'type'    => 'NUMERIC',
 					),
 				),
 			);
@@ -524,7 +529,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 			if ( ! empty( $questions ) ) {
 				$sql_str = '';
 
-				$question_order = (int)0;
+				$question_order = (int) 0;
 				foreach ( $questions as $question_post_id => $question_pro_id ) {
 					$question_order++;
 
@@ -549,11 +554,14 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 					}
 
 					if ( ! empty( $this->quiz_pro_id ) ) {
-						$answer_fields = array( 'quiz_id' => $this->quiz_pro_id, 'sort' => $question_order );
-						$answer_types = array( '%d', '%d' );
+						$answer_fields = array(
+							'quiz_id' => $this->quiz_pro_id,
+							'sort'    => $question_order,
+						);
+						$answer_types  = array( '%d', '%d' );
 					} else {
 						$answer_fields = array( 'sort' => $question_order );
-						$answer_types = array( '%d' );
+						$answer_types  = array( '%d' );
 					}
 					$wpdb->update(
 						LDLMS_DB::get_table_name( 'quiz_question' ),
@@ -583,7 +591,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 				return $this->questions['pro_objects'];
 			} elseif ( isset( $this->questions[ $question_type ] ) ) {
 				return $this->questions[ $question_type ];
-			} else if ( 'all' === $question_type ) {
+			} elseif ( 'all' === $question_type ) {
 				return $this->questions;
 			}
 
@@ -604,7 +612,7 @@ if ( ! class_exists( 'LDLMS_Quiz_Questions' ) ) {
 			if ( ! empty( $questions_data ) ) {
 				foreach ( $questions_data as $question_set => $question_dummy ) {
 					list( $question_post_type, $question_post_id ) = explode( ':', $question_set );
-					$question_post_id = absint( $question_post_id );
+					$question_post_id                              = absint( $question_post_id );
 					if ( ( learndash_get_post_type_slug( 'question' ) === $question_post_type ) && ( ! empty( $question_post_id ) ) ) {
 						$question_pro_id = get_post_meta( $question_post_id, 'question_pro_id', true );
 						if ( ! empty( $question_pro_id ) ) {

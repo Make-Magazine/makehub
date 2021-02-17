@@ -1,8 +1,5 @@
 jQuery( function() {
 
-	//console.log('wp[%o]', wp);
-	//console.log('isRtl[%o]', isRtl);
-
 	if ((typeof learndash_admin_settings_data !== 'undefined') && (typeof learndash_admin_settings_data.json !== 'undefined')) {
 		learndash_admin_settings_data = learndash_admin_settings_data.json.replace(/&quot;/g, '"');
 		learndash_admin_settings_data = jQuery.parseJSON(learndash_admin_settings_data);
@@ -112,9 +109,6 @@ jQuery( function() {
 				};
 			},
 			processResults: function (response, params) {
-				//console.log('response[%o]', response);
-				//console.log('params[%o]', params);
-
 				params.page = params.page || 1;
 
 				return {
@@ -203,9 +197,6 @@ jQuery( function() {
 				};
 			},
 			processResults: function (response, params) {
-				//console.log('response[%o]', response);
-				//console.log('params[%o]', params);
-
 				params.page = params.page || 1;
 
 				return {
@@ -234,7 +225,7 @@ jQuery( function() {
 			var item_spinner = jQuery(item).find('.spinner');
 			item_spinner.css( 'float', 'none' );
 
-			jQuery( item ).find( 'select' ).change( function( e ) {
+			jQuery( item ).find( 'select' ).on( 'change', function( e ) {
 
 				var select_val = jQuery( item ).find( 'select' ).val();
 
@@ -253,7 +244,7 @@ jQuery( function() {
 				}
 			});
 
-			jQuery( item ).find( 'input[type="button"]' ).click( function ( e ) {
+			jQuery( item ).find( 'input[type="button"]' ).on( 'click', function ( e ) {
 				var field_action = jQuery( e.currentTarget ).data( 'action' );
 				var field_value = jQuery( item ).find( 'select' ).val();
 				var updated_text = jQuery( item ).find( 'input[type="text"]' ).val();
@@ -307,7 +298,7 @@ jQuery( function() {
 			var media_upload_field = jQuery(item).find('.learndash-section-field-media-upload');
 			var media_preview_field = jQuery(item).find('img.image-preview');
 
-			jQuery(item).find('input[type="button"].image-upload-button').click(function (e) {
+			jQuery(item).find('input[type="button"].image-upload-button').on( 'click', function (e) {
 				e.preventDefault();
 				var file_frame;
 
@@ -341,7 +332,7 @@ jQuery( function() {
 				file_frame.open();
 			});
 
-			jQuery(item).find('input[type="button"].image-remove-button').click(function (e) {
+			jQuery(item).find('input[type="button"].image-remove-button').on( 'click', function (e) {
 				e.preventDefault();
 				jQuery(media_upload_field).val('');
 				var default_image_url = jQuery(media_preview_field).data('default');
@@ -410,7 +401,7 @@ jQuery( function() {
 	if (jQuery('.sfwd_options input.learndash-section-field-checkbox-switch').length) {
 		jQuery('.sfwd_options input.learndash-section-field-checkbox-switch').each(function (idx, item) {
 
-			jQuery(item).click(function (e) {
+			jQuery(item).on( 'click', function (e) {
 				checked_state = 'unchecked';
 				if (jQuery(e.currentTarget).is(':checked') ) {
 					checked_state = 'checked';
@@ -493,7 +484,7 @@ jQuery( function() {
  	*/
 	if (jQuery('.sfwd_options select.learndash-section-field-select').length) {
 		jQuery('.sfwd_options select.learndash-section-field-select').each(function (idx, item) {
-			jQuery(item).change(function (e) {
+			jQuery(item).on( 'change', function (e) {
 
 				var select_val = jQuery(e.currentTarget).val();
 				if ((typeof select_val === 'undefined') || ('-1' == select_val)) {
@@ -615,7 +606,7 @@ jQuery( function() {
   	*/
 	if (jQuery('.sfwd_options input.learndash-section-field-radio').length) {
 		jQuery('.sfwd_options input.learndash-section-field-radio').each(function (idx, item) {
-			jQuery(item).click(function (e) {
+			jQuery(item).on( 'click', function (e) {
 
 				// First we need to close any open items
 				var parent_fieldset = jQuery(e.currentTarget).parents('fieldset')[0];
@@ -692,7 +683,7 @@ jQuery( function() {
 	/*
 	if (jQuery('.sfwd_options .ld-settings-sub-advanced a.ld-settings-sub-advanced-trigger').length) {
 		jQuery('.sfwd_options .ld-settings-sub-advanced a.ld-settings-sub-advanced-trigger').each(function (idx, item) {
-			jQuery(item).click(function (e) {
+			jQuery(item).on( 'click', function (e) {
 				var parent_div = jQuery(e.currentTarget).parent('div.ld-settings-sub-advanced');
 				if (parent_div !== undefined) {
 					var advanced_inner = jQuery('div.ld-settings-sub-advanced-inner', parent_div);
@@ -711,7 +702,7 @@ jQuery( function() {
 	 */
 	if (jQuery('.sfwd_options #resultList li .expand-arrow').length) {
 		jQuery('.sfwd_options #resultList li .expand-arrow').each(function (idx, item) {
-			jQuery(item).click(function (e) {
+			jQuery(item).on( 'click', function (e) {
 				var parent_li = jQuery(e.currentTarget).parents('li');
 				if (parent_li !== undefined) {
 					var div_resultEditor = jQuery('.resultEditor', parent_li);
@@ -797,7 +788,7 @@ jQuery( function() {
 	 * Handle the Lessons selector on the Topic edit screen when the Course selector is changed.
 	 */
 
-	jQuery("body.post-type-sfwd-topic .sfwd_options select#learndash-topic-access-settings_course").change(function () {
+	jQuery("body.post-type-sfwd-topic .sfwd_options select#learndash-topic-access-settings_course").on( 'change', function () {
 		if (window['sfwd_topic_lesson'] == undefined) {
 			window['sfwd_topic_lesson'] = jQuery("body.post-type-sfwd-topic .sfwd_options select#learndash-topic-access-settings_lesson").val();
 		}
@@ -841,7 +832,7 @@ jQuery( function() {
 	/**
 	 * Handle the Lessons selector on the Topic edit screen when the Course selector is changed.
 	 */
-	jQuery("body.post-type-sfwd-quiz .sfwd_options select#learndash-quiz-access-settings_course").change(function () {
+	jQuery("body.post-type-sfwd-quiz .sfwd_options select#learndash-quiz-access-settings_course").on( 'change', function () {
 		if (window['sfwd_quiz_lesson'] == undefined) {
 			window['sfwd_quiz_lesson'] = jQuery("body.post-type-sfwd-quiz .sfwd_options select#learndash-quiz-access-settings_lesson").val();
 		}
@@ -885,7 +876,7 @@ jQuery( function() {
 	 * Handle the Quiz Run Once Cookie Selector.
 	 */
 	if ( jQuery('select#learndash-quiz-progress-settings_quizRunOnceType').length ) {
-		jQuery('select#learndash-quiz-progress-settings_quizRunOnceType').change(function () {
+		jQuery('select#learndash-quiz-progress-settings_quizRunOnceType').on( 'change', function () {
 			var select_val = jQuery(this).val();
 
 			// Always hide this.
@@ -907,7 +898,7 @@ jQuery( function() {
  	*/
 	if (jQuery('.sfwd_options select#learndash_settings_courses_themes_active_theme').length) {
 		jQuery('.sfwd_options select#learndash_settings_courses_themes_active_theme').each(function (idx, item) {
-			jQuery(item).change(function (e) {
+			jQuery(item).on( 'change', function (e) {
 				var select_theme_val = jQuery(e.currentTarget).val();
 
 				jQuery('.sfwd_options .ld-theme-settings-section-state-open').slideUp(500, function () {
@@ -939,7 +930,7 @@ jQuery( function() {
 			}
 		}
 
-		jQuery('.sfwd_options input[name="templateLoad"]').click(function () {
+		jQuery('.sfwd_options input[name="templateLoad"]').on( 'click', function () {
 			if (jQuery('.sfwd_options select[name="templateLoadId"]').length) {
 				var template_load_url = jQuery('.sfwd_options select[name="templateLoadId"]').val();
 				if (( template_load_url != '') && (template_load_url != '-1') ) {
@@ -950,7 +941,6 @@ jQuery( function() {
 								template_load_url = template_load_url + '&templateLoadReplaceCourse=' + template_course;
 							}
 						}
-						console.log('template_load_url[%o]', template_load_url);
 					}
 					window.location.href = template_load_url;
 				}
@@ -1043,25 +1033,39 @@ jQuery( function() {
 
 	var learndash_settings_fields_errors = {};
 
-	function learndash_set_input_error( target, invalid ) {
-		if (jQuery(target).length) {
-			//if (typenow !== 'undefined') {
-			//	console.log('typenow[%o]', typenow);
-			//}
+	function learndash_set_input_error( target, invalid, error_key ) {
+		if ((jQuery(target).length) && ("undefined" !== typeof target.type)) {
 
+			var target_type = target.type;
   			var input_wrapper = jQuery(target).parents(".sfwd_input");
   			if ("undefined" !== typeof input_wrapper) {
 				var input_id = jQuery(input_wrapper).attr('id');
 
+				var error_message = '';
 				if ( invalid === true ) {
+					if ("undefined" !== typeof error_key) {
+						if ("undefined" !== typeof learndash_admin_settings_data['settings_fields_errors']) {
+							if ("undefined" !== typeof learndash_admin_settings_data['settings_fields_errors'][target_type]) {
+								if ("undefined" !== typeof learndash_admin_settings_data['settings_fields_errors'][target_type][error_key]) {
+									error_message = learndash_admin_settings_data['settings_fields_errors'][target_type][error_key];
+								}
+							}
+						}
+					}
+
 					if ( "undefined" === typeof learndash_settings_fields_errors[input_id] ) {
 						var input_label = jQuery('.sfwd_option_label label', input_wrapper).html();
 						if ("undefined" !== typeof input_label) {
+
+							learndash_settings_fields_errors[input_id] = input_label.trim();
+
 							var input_error = jQuery(target).next(".learndash-section-field-error").html();
 							if ("undefined" !== typeof input_error) {
-								learndash_settings_fields_errors[input_id] = input_label.trim() + " - " + input_error;
-							} else {
-								learndash_settings_fields_errors[input_id] = input_label.trim();
+								learndash_settings_fields_errors[input_id] += " - " + input_error;
+							}
+
+							if (error_message ) {
+								learndash_settings_fields_errors[input_id] += " : " + error_message;
 							}
 						}
 					}
@@ -1118,60 +1122,6 @@ jQuery( function() {
 
 	if (jQuery('.sfwd_options input[type="number"]').length) {
 		jQuery('.sfwd_options input[type="number"]').each(function (idx, item) {
-			jQuery(item).on( 'keypress', function (e) {
-				var input_config = learndash_get_input_config(jQuery(e.currentTarget));
-				if ( false === input_config ) {
-					return;
-				}
-				var charCode = e.which ? e.which : e.keyCode;
-				var input_value_new = String.fromCharCode(charCode);
-				var input_value_current = e.currentTarget.valueAsNumber;
-
-				if (input_value_new === '.') {
-					if ("undefined" === typeof input_value_current || isNaN(input_value_current)) {
-						learndash_set_input_error(e.currentTarget, true);
-						e.preventDefault();
-						return false;
-					}
-
-					if ( input_config["can_decimal"] === false ) {
-						e.preventDefault();
-						return false;
-					} else {
-						learndash_set_input_error(e.currentTarget, false);
-						return true;
-					}
-				}
-
-				if ( input_value_new === '-') {
-					if ( ( "undefined" !== typeof input_config['input_min'] ) && ( input_config['input_min'] !== '' ) && ( input_config['input_min'] < 0 ) ) {
-						return true;
-					} else {
-						e.preventDefault();
-						return false;
-					}
-				}
-
-				if ( ( "undefined" !== typeof input_config["input_max"] ) && ( '' !== input_config["input_max"] ) && ( input_value_current > input_config["input_max"] ) ) {
-					learndash_set_input_error(e.currentTarget, true);
-					e.preventDefault();
-					return false;
-				}
-
-				if ( ( "undefined" !== typeof input_config['input_min'] ) && ( '' !== input_config['input_min'] ) && ( input_value_current < input_config['input_min'] ) ) {
-					learndash_set_input_error(e.currentTarget, true);
-					e.preventDefault();
-					return false;
-				}
-
-				if (charCode < 48 || charCode > 57) {
-					e.preventDefault();
-					return false;
-				}
-
-				learndash_set_input_error(e.currentTarget, false);
-				return true;
-			});
 
 			jQuery(item).on("invalid", function(e) {
 		        if (jQuery(e.currentTarget).length) {
@@ -1190,37 +1140,40 @@ jQuery( function() {
 					}
 
 					var input_value_current = e.currentTarget.valueAsNumber;
+
 					if ( "undefined" === typeof input_value_current ) {
-        				learndash_set_input_error(e.currentTarget, true);
+						learndash_set_input_error(e.currentTarget, true, 'invalid');
         				return false;
 					}
 
 					if ( ( input_config['can_empty'] ) && ( isNaN( input_value_current) ) ) {
-						learndash_set_input_error(e.currentTarget, false);
+						learndash_set_input_error(e.currentTarget, false, 'invalid');
             			return true;
 					} else if (isNaN(input_value_current)) {
-						learndash_set_input_error(e.currentTarget, true);
+						learndash_set_input_error(e.currentTarget, true, 'empty');
             			return false;
 					}
 
 					if ( "undefined" !== typeof input_config["input_max"] && "" !== input_config["input_max"] && input_value_current > input_config["input_max"] ) {
-						learndash_set_input_error(e.currentTarget, true);
+						learndash_set_input_error(e.currentTarget, true, 'maximum');
 						return false;
 					}
 
 					if ( ( "undefined" !== typeof input_config['input_min'] ) && ( '' !== input_config['input_min'] ) && ( input_value_current < input_config['input_min'] ) ) {
-						learndash_set_input_error(e.currentTarget, true);
+						learndash_set_input_error(e.currentTarget, true, 'minimum');
               			return false;
 					}
 
-					if ( ( "undefined" !== typeof input_config['can_decimal'] ) && ( false !== input_config['can_decimal'] ) ) {
-						input_value_current_split = input_value_current.toString().split(".");
-						if ( input_value_current_split.length > 1 ) {
-							if ( input_value_current_split[1].length > input_config['can_decimal'] ) {
-								var input_value_current_fixed = input_value_current.toFixed(input_config["can_decimal"]);
-								if (input_value_current_fixed !== input_value_current) {
-									jQuery(e.currentTarget).val(input_value_current_fixed);
-								}
+					input_value_current_split = input_value_current.toString().split(".");
+
+					if ( input_value_current_split.length > 1 ) {
+						if (!input_config['can_decimal']) {
+							learndash_set_input_error(e.currentTarget, true, 'decimal');
+							return false;
+						} else if (input_value_current_split[1].length > input_config['can_decimal']) {
+							var input_value_current_fixed = input_value_current.toFixed(input_config["can_decimal"]);
+							if (input_value_current_fixed !== input_value_current) {
+								jQuery(e.currentTarget).val(input_value_current_fixed);
 							}
 						}
 					}
@@ -1232,7 +1185,7 @@ jQuery( function() {
 	}
 
 
-	jQuery('form#ld_data_remove_form').submit( function( event ) {
+	jQuery('form#ld_data_remove_form').on( 'submit', function( event ) {
 		var ld_data_remove_verify = jQuery('input#ld_data_remove_verify').val();
 		var ld_data_remove_confirm = jQuery('input#ld_data_remove_verify').data('confirm');
 
@@ -1362,7 +1315,7 @@ function learndash_course_edit_page_billing_cycle_javascript() {
 		}
 		output_message();
 
-		selector.change(function (e) {
+		selector.on( 'change', function (e) {
 			billing_cycle = selector.val();
 			jQuery("#learndash_price_billing_cycle_instructions").remove();
 			output_message(billing_cycle);

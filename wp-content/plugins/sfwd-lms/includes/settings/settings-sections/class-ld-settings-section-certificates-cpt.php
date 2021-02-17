@@ -37,18 +37,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_key = 'cpt_options';
 
 			// Section label/header.
-			$this->settings_section_label = sprintf(
-				// translators: placeholder: Certificate.
-				esc_html_x( '%s Custom Post Type Options', 'placeholder: Certificate', 'learndash' ),
-				'Certificate'
-			);
+			$this->settings_section_label = esc_html__( 'Certificate Custom Post Type Options', 'learndash' );
 
 			// Used to show the section description above the fields. Can be empty.
-			$this->settings_section_description = sprintf(
-				// translators: placeholder: Certificates.
-				esc_html_x( 'Control options specific to the %s post type', 'placeholder: Certificates', 'learndash' ),
-				'Certificates'
-			);
+			$this->settings_section_description = esc_html__( 'Control options specific to the Certificates post type', 'learndash' );
 
 			parent::__construct();
 		}
@@ -65,7 +57,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$this->setting_option_values = array(
-					'supports'          => array( 'thumbnail', 'revisions' ),
+					'supports' => array( 'thumbnail', 'revisions' ),
 				);
 			}
 
@@ -80,7 +72,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_fields() {
 
 			$this->setting_option_fields = array(
-				'supports'          => array(
+				'supports' => array(
 					'name'      => 'supports',
 					'type'      => 'checkbox',
 					'label'     => esc_html__( 'Editor Supported Settings', 'learndash' ),

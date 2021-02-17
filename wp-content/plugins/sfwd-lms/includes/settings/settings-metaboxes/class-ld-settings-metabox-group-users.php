@@ -32,21 +32,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::__construct();
 		}
 
-
-		/**
-		 * Initialize the metabox settings values.
-		 */
-		public function load_settings_values() {
-			parent::load_settings_values();
-		}
-
-		/**
-		 * Initialize the metabox settings fields.
-		 */
-		public function load_settings_fields() {
-			parent::load_settings_fields();
-		}
-
 		protected function show_settings_metabox_fields( $metabox = null ) {
 			if ( ( is_object( $metabox ) ) && ( is_a( $metabox, 'LearnDash_Settings_Metabox' ) ) && ( $metabox->settings_metabox_key === $this->settings_metabox_key ) ) {
 				if ( ( isset( $metabox->post ) ) && ( is_a( $metabox->post, 'WP_Post ' ) ) ) {

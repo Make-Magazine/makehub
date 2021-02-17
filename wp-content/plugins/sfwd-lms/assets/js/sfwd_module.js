@@ -13,7 +13,7 @@ jQuery( function() {
 				var quiz_default_label = jQuery( 'form#posts-filter select#quiz_id option[value=""]').text();
 			}
 
-			jQuery( 'form#posts-filter select#course_id' ).change(function(e) {
+			jQuery( 'form#posts-filter select#course_id' ).on( 'change', function(e) {
 				var course_id = this.value;
 
 				if ( jQuery( 'body.wp-admin.post-type-sfwd-topic form#posts-filter' ).length ) {
@@ -97,7 +97,7 @@ jQuery( function() {
 		}
 
 		if ( jQuery( 'body.wp-admin.post-type-sfwd-essays form#posts-filter' ).length ) {
-			jQuery( 'form#posts-filter select#lesson_id' ).change(function(e) {
+			jQuery( 'form#posts-filter select#lesson_id' ).on( 'change', function(e) {
 				var selected_course_id = jQuery( 'form#posts-filter select#course_id' ).val();
 				var lesson_id = this.value;
 				var data = {
@@ -173,7 +173,7 @@ function sfwd_do_condshow_match( index, value ) {
 function sfwd_add_condshow_handlers( index, value ) {
 	if ( typeof value !== 'undefined' ) {
 		jQuery.each(value, function(subopt, setting) {
-			jQuery('[name=' + subopt + ']').change(function() {
+			jQuery('[name=' + subopt + ']').on( 'change', function() {
 				sfwd_do_condshow_match( index, value );
 			});
 		});
@@ -213,7 +213,7 @@ jQuery( function(){
 
 jQuery( function() {
 	var image_field;
-	jQuery('.sfwd_upload_image_button').click(function() {
+	jQuery('.sfwd_upload_image_button').on( 'click', function() {
 		window.send_to_editor = newSendToEditor;
 		image_field = jQuery(this).next();
 		formfield = image_field.attr('name');
@@ -292,7 +292,7 @@ jQuery( function() {
 
         jQuery(".sfwd_tab:not(:first)").hide();
         jQuery(".sfwd_tab:first").show();
-        jQuery(".sfwd_header_tabs a").click(function(){
+        jQuery(".sfwd_header_tabs a").on( 'click', function(){
                 stringref = jQuery(this).attr("href").split('#')[1];
                 jQuery('.sfwd_tab:not(#'+stringref+')').hide();
                 jQuery('.sfwd_tab#' + stringref).show();
@@ -326,7 +326,7 @@ jQuery( function() {
 
 function learndash_lesson_edit_page_javascript() {
 
-	jQuery("input[name='sfwd-lessons_lesson_assignment_upload']").change(function(){
+	jQuery("input[name='sfwd-lessons_lesson_assignment_upload']").on( 'change', function(){
 		checked = jQuery("input[name=sfwd-lessons_lesson_assignment_upload]:checked").length;
 		if(checked) {
 			jQuery("#sfwd-lessons_auto_approve_assignment").slideDown();
@@ -374,7 +374,7 @@ function learndash_lesson_edit_page_javascript() {
 	}
 
 
-	jQuery("[name='sfwd-lessons_lesson_assignment_points_enabled']").change(function(){
+	jQuery("[name='sfwd-lessons_lesson_assignment_points_enabled']").on( 'change', function(){
 		checked = jQuery("[name=sfwd-lessons_lesson_assignment_points_enabled]:checked").length;
 		if(checked) {
 			jQuery("#sfwd-lessons_lesson_assignment_points_amount").slideDown();
@@ -391,7 +391,7 @@ function learndash_lesson_edit_page_javascript() {
 	}
 
 
-	jQuery('[name="sfwd-lessons_auto_approve_assignment"]').change(function(){
+	jQuery('[name="sfwd-lessons_auto_approve_assignment"]').on( 'change', function(){
 		checked = jQuery("[name=sfwd-lessons_lesson_assignment_upload]:checked").length;
 		if ( checked ) {
 			checked = jQuery("[name=sfwd-lessons_auto_approve_assignment]:checked").length;
@@ -420,7 +420,7 @@ function learndash_lesson_edit_page_javascript() {
 	var video_auto_complete_checked = false;
 
 	if ( jQuery("input[name='sfwd-lessons_lesson_video_enabled']").length ) {
-		jQuery("input[name='sfwd-lessons_lesson_video_enabled']").change( function() {
+		jQuery("input[name='sfwd-lessons_lesson_video_enabled']").on( 'change', function() {
 			video_enabled_checked = jQuery("input[name=sfwd-lessons_lesson_video_enabled]:checked").length;
 			if( video_enabled_checked ) {
 				jQuery("#sfwd-lessons_lesson_video_url").slideDown();
@@ -456,7 +456,7 @@ function learndash_lesson_edit_page_javascript() {
 	}
 
 	if ( jQuery("select[name='sfwd-lessons_lesson_video_shown']").length ) {
-		jQuery("select[name='sfwd-lessons_lesson_video_shown']").change( function() {
+		jQuery("select[name='sfwd-lessons_lesson_video_shown']").on( 'change', function() {
 			video_shown_checked = jQuery("input[name=sfwd-lessons_lesson_video_enabled]:checked").length;
 			video_shown_selected = jQuery("select[name='sfwd-lessons_lesson_video_shown']").val();
 
@@ -474,7 +474,7 @@ function learndash_lesson_edit_page_javascript() {
 	}
 
 	if ( jQuery("input[name='sfwd-lessons_lesson_video_auto_complete']").length ) {
-		jQuery("input[name='sfwd-lessons_lesson_video_auto_complete']").change( function() {
+		jQuery("input[name='sfwd-lessons_lesson_video_auto_complete']").on( 'change', function() {
 			video_auto_complete_checked = jQuery("input[name=sfwd-lessons_lesson_video_auto_complete]:checked").length;
 
 			if ( ( video_enabled_checked ) && ( video_shown_selected == 'AFTER') && ( video_auto_complete_checked ) ) {
@@ -511,13 +511,13 @@ function learndash_lesson_edit_page_javascript() {
 
 	if(jQuery("input[name='sfwd-lessons_visible_after']").length) {
 		jQuery("input[name='sfwd-lessons_visible_after']").blur();
-		jQuery("input[name='sfwd-lessons_visible_after']").change(function() {
+		jQuery("input[name='sfwd-lessons_visible_after']").on( 'change', function() {
 			jQuery("input[name='sfwd-lessons_visible_after']").blur();
 		});
 	}
 
 
-	jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector").change(function() {
+	jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector").on( 'change', function() {
 		var visible_specific_mm = jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector select.ld_date_mm").val();
 		if ( typeof visible_specific_mm === 'undefined' ) visible_specific_mm = '';
 
@@ -543,7 +543,7 @@ function learndash_lesson_edit_page_javascript() {
 		jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector").change();
 	}
 
-	jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector select.ld_date_mm").change(function() {
+	jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector select.ld_date_mm").on( 'change', function() {
 		var select_date_mm = jQuery("#sfwd-lessons_visible_after_specific_date .ld_date_selector select.ld_date_mm").val();
 		if ( typeof select_date_mm === 'undefined' ) select_date_mm = '';
 		if ( select_date_mm == '' ) {
@@ -586,7 +586,7 @@ function learndash_lesson_edit_page_javascript() {
 //		}
 //    });
 
-//	jQuery("input[name='sfwd-lessons_visible_after']").click(function() {
+//	jQuery("input[name='sfwd-lessons_visible_after']").on( 'click', function() {
 //		var specific_data = jQuery("input[name='sfwd-lessons_visible_after_specific_date']").val();
 //		if( specific_data != '') {
 //			jQuery("input[name='sfwd-lessons_visible_after']").val('0');
@@ -599,7 +599,7 @@ function learndash_lesson_edit_page_javascript() {
 //}
 
 function learndash_course_edit_page_javascript() {
-	jQuery("select[name=sfwd-courses_course_price_type]").change(function(){
+	jQuery("select[name=sfwd-courses_course_price_type]").on( 'change', function(){
 		var price_type = 	jQuery("select[name=sfwd-courses_course_price_type]").val();
 		if(price_type == "open" || price_type == "free") {
 			jQuery("input[name=sfwd-courses_course_price]").val('');
@@ -625,7 +625,7 @@ function learndash_course_edit_page_javascript() {
 	});
 	jQuery("select[name=sfwd-courses_course_price_type]").change();
 
-	jQuery("input[name=sfwd-courses_expire_access]").change( function() {
+	jQuery("input[name=sfwd-courses_expire_access]").on( 'change', function() {
 		if(jQuery("input[name=sfwd-courses_expire_access]:checked").val() == undefined) {
 			jQuery("#sfwd-courses_expire_access_days").hide();
 			jQuery("#sfwd-courses_expire_access_delete_progress").hide();
@@ -638,7 +638,7 @@ function learndash_course_edit_page_javascript() {
 	} );
 	jQuery("input[name=sfwd-courses_expire_access]").change();
 
-	jQuery("select[name=sfwd-courses_course_lesson_per_page]").change( function() {
+	jQuery("select[name=sfwd-courses_course_lesson_per_page]").on( 'change', function() {
 		if ( jQuery("select[name=sfwd-courses_course_lesson_per_page]").val() == '' ) {
 			jQuery("#sfwd-courses_course_lesson_per_page_custom").hide();
 		} else {
@@ -648,7 +648,7 @@ function learndash_course_edit_page_javascript() {
 	jQuery("select[name=sfwd-courses_course_lesson_per_page]").change();
 
 
-	jQuery("input[name=sfwd-courses_course_prerequisite_enabled]").change( function() {
+	jQuery("input[name=sfwd-courses_course_prerequisite_enabled]").on( 'change', function() {
 		if(jQuery("input[name=sfwd-courses_course_prerequisite_enabled]:checked").val() == undefined) {
 			jQuery("#sfwd-courses_course_prerequisite").hide();
 			jQuery("#sfwd-courses_course_prerequisite_compare").hide();
@@ -662,7 +662,7 @@ function learndash_course_edit_page_javascript() {
 	jQuery("input[name=sfwd-courses_course_prerequisite_enabled]").change();
 
 
-	jQuery("input[name=sfwd-courses_course_points_enabled]").change( function() {
+	jQuery("input[name=sfwd-courses_course_points_enabled]").on( 'change', function() {
 		if(jQuery("input[name=sfwd-courses_course_points_enabled]:checked").val() == undefined) {
 			jQuery("#sfwd-courses_course_points").hide();
 			jQuery("#sfwd-courses_course_points_access").hide();
@@ -678,7 +678,7 @@ function learndash_course_edit_page_javascript() {
 
 }
 function learndash_quiz_edit_page_javascript() {
-		jQuery("select[name=sfwd-quiz_quiz_pro]").change(function() {
+		jQuery("select[name=sfwd-quiz_quiz_pro]").on( 'change', function() {
 			var quiz_pro = jQuery("select[name=sfwd-quiz_quiz_pro]").val();
 			if(window['sfwd-quiz_quiz_pro'] != quiz_pro)
 			{
@@ -709,7 +709,7 @@ function learndash_quiz_edit_page_javascript() {
 		jQuery("form#post").append("<div id='disable_advance_quiz_save'><input type='hidden' name='disable_advance_quiz_save' value='0'/></div>");
 		jQuery("select[name=sfwd-quiz_quiz_pro]").change();
 
-		jQuery("select[name=sfwd-quiz_course]").change(function() {
+		jQuery("select[name=sfwd-quiz_course]").on( 'change', function() {
 				if(window['sfwd_quiz_lesson'] == undefined)
 				window['sfwd_quiz_lesson'] = jQuery("select[name=sfwd-quiz_lesson]").val();
 
@@ -741,7 +741,7 @@ function learndash_quiz_edit_page_javascript() {
 
 // Handle logic for Assignments
 function learndash_assignment_edit_page_javascript() {
-	jQuery("select[name=sfwd-assignment_course]").change(function() {
+	jQuery("select[name=sfwd-assignment_course]").on( 'change', function() {
 
 		if(window['sfwd-assignment_lesson'] == undefined)
 		window['sfwd-assignment_lesson'] = jQuery("select[name=sfwd-assignment_lesson]").val();
@@ -776,7 +776,7 @@ function learndash_assignment_edit_page_javascript() {
 // Handle checkbox combination logic for Lesson Topics
 function learndash_topic_edit_page_javascript() {
 
-	jQuery('[name="sfwd-topic_lesson_assignment_upload"]').change(function(){
+	jQuery('[name="sfwd-topic_lesson_assignment_upload"]').on( 'change', function(){
 		checked = jQuery("[name=sfwd-topic_lesson_assignment_upload]:checked").length;
 		if(checked) {
 			jQuery("#sfwd-topic_auto_approve_assignment").slideDown();
@@ -817,7 +817,7 @@ function learndash_topic_edit_page_javascript() {
 		jQuery("[name='sfwd-topic_lesson_assignment_upload']").change();
 	}
 
-	jQuery('[name="sfwd-topic_lesson_assignment_points_enabled"]').change(function(){
+	jQuery('[name="sfwd-topic_lesson_assignment_points_enabled"]').on( 'change', function(){
 		checked = jQuery("[name=sfwd-topic_lesson_assignment_points_enabled]:checked").length;
 		if(checked) {
 			jQuery("#sfwd-topic_lesson_assignment_points_amount").slideDown();
@@ -835,7 +835,7 @@ function learndash_topic_edit_page_javascript() {
 	}
 
 
-	jQuery('[name="sfwd-topic_auto_approve_assignment"]').change(function(){
+	jQuery('[name="sfwd-topic_auto_approve_assignment"]').on( 'change', function(){
 		checked = jQuery("[name=sfwd-topic_lesson_assignment_upload]:checked").length;
 		if ( checked ) {
 			checked = jQuery("[name=sfwd-topic_auto_approve_assignment]:checked").length;
@@ -862,7 +862,7 @@ function learndash_topic_edit_page_javascript() {
 	var video_auto_complete_checked = false;
 
 	if ( jQuery("input[name='sfwd-topic_lesson_video_enabled']").length ) {
-		jQuery("input[name='sfwd-topic_lesson_video_enabled']").change( function() {
+		jQuery("input[name='sfwd-topic_lesson_video_enabled']").on( 'change', function() {
 			video_enabled_checked = jQuery("input[name=sfwd-topic_lesson_video_enabled]:checked").length;
 			if( video_enabled_checked ) {
 				jQuery("#sfwd-topic_lesson_video_url").slideDown();
@@ -898,7 +898,7 @@ function learndash_topic_edit_page_javascript() {
 	}
 
 	if ( jQuery("select[name='sfwd-topic_lesson_video_shown']").length ) {
-		jQuery("select[name='sfwd-topic_lesson_video_shown']").change( function() {
+		jQuery("select[name='sfwd-topic_lesson_video_shown']").on( 'change', function() {
 			video_shown_checked = jQuery("input[name=sfwd-topic_lesson_video_enabled]:checked").length;
 			video_shown_selected = jQuery("select[name='sfwd-topic_lesson_video_shown']").val();
 
@@ -916,7 +916,7 @@ function learndash_topic_edit_page_javascript() {
 	}
 
 	if ( jQuery("input[name='sfwd-topic_lesson_video_auto_complete']").length ) {
-		jQuery("input[name='sfwd-topic_lesson_video_auto_complete']").change( function() {
+		jQuery("input[name='sfwd-topic_lesson_video_auto_complete']").on( 'change', function() {
 			video_auto_complete_checked = jQuery("input[name=sfwd-topic_lesson_video_auto_complete]:checked").length;
 
 			if ( ( video_enabled_checked ) && ( video_shown_selected == 'AFTER') && ( video_auto_complete_checked ) ) {
@@ -932,7 +932,7 @@ function learndash_topic_edit_page_javascript() {
 
 
 
-	jQuery("select[name=sfwd-topic_course]").change(function() {
+	jQuery("select[name=sfwd-topic_course]").on( 'change', function() {
 		if(window['sfwd_topic_lesson'] == undefined)
 		window['sfwd_topic_lesson'] = jQuery("select[name=sfwd-topic_lesson]").val();
 
@@ -1242,72 +1242,68 @@ var _click_checked = null;
 
 jQuery( function() {
 
-	if (jQuery( '#course_progress_details a.learndash-profile-course-details-link' ).length ) {
-		jQuery( '#course_progress_details' ).on( 'click', 'a.learndash-profile-course-details-link', function() {
-			var clicked_el = jQuery(this);
-			var clicked_div = jQuery(clicked_el).next();
-			jQuery('.widget_course_return', clicked_div).hide();
-			if (jQuery(clicked_div).is(':visible')) {
-				jQuery(clicked_div).slideUp('fast');
+	jQuery( '#course_progress_details' ).on( 'click', 'a.learndash-profile-course-details-link', function() {
+		var clicked_el = jQuery(this);
+		var clicked_div = jQuery(clicked_el).next();
+		jQuery('.widget_course_return', clicked_div).hide();
+		if (jQuery(clicked_div).is(':visible')) {
+			jQuery(clicked_div).slideUp('fast');
+		} else {
+			jQuery(clicked_div).slideDown('slow');
+		}
+		return false;
+	});
+
+	var date_fields = ['select.ld_date_mm', 'input.ld_date_jj', 'input.ld_date_aa', 'input.ld_date_hh', 'input.ld_date_mn', 'input.learndash-user-courses-access-today' ];
+
+	jQuery('#course_progress_details').on('click', 'input.learndash-user-courses-access-changed', function () {
+		var clicked_el = jQuery(this);
+		var clicked_div = jQuery(clicked_el).parent('.learndash-user-courses-access-edit');
+		if (typeof clicked_div !== 'undefined') {
+			if (clicked_el.is(':checked')) {
+				jQuery.each(date_fields, function (index, field_tag) {
+					jQuery(field_tag, clicked_div).prop('disabled', false);
+				});
 			} else {
-				jQuery(clicked_div).slideDown('slow');
+				jQuery.each(date_fields, function (index, field_tag) {
+					var default_val = jQuery(field_tag, clicked_div).data('default');
+					if (typeof default_val !== 'undefined') {
+						jQuery(field_tag, clicked_div).val(default_val);
+					}
+					jQuery(field_tag, clicked_div).prop('disabled', true);
+				});
 			}
-			return false;
-		});
-	}
+		}
+	});
 
-	if (jQuery('#course_progress_details input.learndash-user-courses-access-changed').length) {
-		var date_fields = ['select.ld_date_mm', 'input.ld_date_jj', 'input.ld_date_aa', 'input.ld_date_hh', 'input.ld_date_mn', 'input.learndash-user-courses-access-today' ];
+	/**
+	 * When the 'today' button is clicked we set the fields to the current date/time.
+	 */
+	jQuery('#course_progress_details').on('click', 'input.learndash-user-courses-access-today', function () {
+		var clicked_el = jQuery(this);
+		var clicked_div = jQuery(clicked_el).parent('.learndash-user-courses-access-edit');
+		if (typeof clicked_div !== 'undefined') {
+			// Ensure the edit date checkbox is checked.
+			if (jQuery('input.learndash-user-courses-access-changed', clicked_div).is(':checked')) {
+				var d = new Date();
 
-		jQuery('#course_progress_details').on('click', 'input.learndash-user-courses-access-changed', function () {
-			var clicked_el = jQuery(this);
-			var clicked_div = jQuery(clicked_el).parent('.learndash-user-courses-access-edit');
-			if (typeof clicked_div !== 'undefined') {
-				if (clicked_el.is(':checked')) {
-					jQuery.each(date_fields, function (index, field_tag) {
-						jQuery(field_tag, clicked_div).prop('disabled', false);
-					});
-				} else {
-					jQuery.each(date_fields, function (index, field_tag) {
-						var default_val = jQuery(field_tag, clicked_div).data('default');
-						if (typeof default_val !== 'undefined') {
-							jQuery(field_tag, clicked_div).val(default_val);
-						}
-						jQuery(field_tag, clicked_div).prop('disabled', true);
-					});
-				}
+				var d_aa = d.getFullYear();
+				jQuery('input.ld_date_aa', clicked_div).val(d_aa);
+
+				var d_mm = d.getMonth() + 1;
+				jQuery('select.ld_date_mm', clicked_div).val(d_mm);
+
+				var d_jj = d.getDate();
+				jQuery('input.ld_date_jj', clicked_div).val(d_jj);
+
+				var d_hh = d.getHours();
+				jQuery('input.ld_date_hh', clicked_div).val(d_hh);
+
+				var d_mn = d.getMinutes();
+				jQuery('input.ld_date_mn', clicked_div).val(d_mn);
 			}
-		});
-
-		/**
-		 * When the 'today' button is clicked we set the fields to the current date/time.
-		 */
-		jQuery('#course_progress_details').on('click', 'input.learndash-user-courses-access-today', function () {
-			var clicked_el = jQuery(this);
-			var clicked_div = jQuery(clicked_el).parent('.learndash-user-courses-access-edit');
-			if (typeof clicked_div !== 'undefined') {
-				// Ensure the edit date checkbox is checked.
-				if (jQuery('input.learndash-user-courses-access-changed', clicked_div).is(':checked')) {
-					var d = new Date();
-
-					var d_aa = d.getFullYear();
-					jQuery('input.ld_date_aa', clicked_div).val(d_aa);
-
-					var d_mm = d.getMonth() + 1;
-					jQuery('select.ld_date_mm', clicked_div).val(d_mm);
-
-					var d_jj = d.getDate();
-					jQuery('input.ld_date_jj', clicked_div).val(d_jj);
-
-					var d_hh = d.getHours();
-					jQuery('input.ld_date_hh', clicked_div).val(d_hh);
-
-					var d_mn = d.getMinutes();
-					jQuery('input.ld_date_mn', clicked_div).val(d_mn);
-				}
-			}
-		});
-	}
+		}
+	});
 
 	jQuery('#course_progress_details').on( 'click', 'input.learndash-mark-course-complete', function( event ) {
 		var course_checkbox = jQuery(this);
@@ -1569,43 +1565,87 @@ function learndash_get_checkbox_data( element ) {
 }
 
 
-jQuery( function() {
-	if ( jQuery('form#posts-filter button.assignment_approve_single').length ) {
-		jQuery('form#posts-filter button.assignment_approve_single').click(function(e) {
-			e.preventDefault();
-			var assignment_id = jQuery(this).attr('id').replace('assignment_approve_', '');
-			if ( ( typeof assignment_id !== 'undefined' ) && ( assignment_id != '' ) ) {
-				if (jQuery('form#posts-filter input#cb-select-'+assignment_id).length) {
-					jQuery('form#posts-filter input#cb-select-'+assignment_id).prop('checked', true);
+jQuery(function () {
+	if (jQuery('body.wp-admin.edit-php.post-type-sfwd-assignment form#posts-filter').length) {
+		if (jQuery('form#posts-filter button.assignment_approve_single').length) {
+			jQuery('form#posts-filter button.assignment_approve_single').on( 'click', function (e) {
+				e.preventDefault();
+				var assignment_id = jQuery(this).attr('id').replace('assignment_approve_', '');
+				if ((typeof assignment_id !== 'undefined') && (assignment_id != '')) {
+					if (jQuery('form#posts-filter input#cb-select-' + assignment_id).length) {
+						jQuery('form#posts-filter input#cb-select-' + assignment_id).prop('checked', true);
+					}
+					if (jQuery('form#posts-filter select#bulk-action-selector-top').length) {
+						jQuery('form#posts-filter select#bulk-action-selector-top').val('approve_assignment');
+					}
+					jQuery('form#posts-filter input#doaction').trigger('click');
 				}
-				if (jQuery('form#posts-filter select#bulk-action-selector-top').length) {
-					jQuery('form#posts-filter select#bulk-action-selector-top').val('approve_assignment');
-				}
-				jQuery('form#posts-filter input#doaction').trigger('click');
-			}
+			});
+		}
+
+		// Hook into the points input 'change' event and set a data attribute so we know which fields changed.
+		if (jQuery('form#posts-filter input.learndash-award-points').length) {
+			jQuery('form#posts-filter input.learndash-award-points').on( 'change', function (e) {
+				jQuery(e.currentTarget).attr('data-learndash-input-changed', '1');
+			});
+		}
+
+		// On the "Filter" click we disable all points input fields to prevent loading the GET variables.
+		jQuery('form#posts-filter input#post-query-submit').on( 'click', function (e) {
+			jQuery('form#posts-filter input.learndash-essay-points').attr('disabled', true);
+		});
+
+		jQuery('form#posts-filter input#doaction, form#posts-filter input#doaction2').on( 'submit', function (e) {
+			// On submit disabled all points input fields.
+			jQuery('form#posts-filter input.learndash-award-points').attr('disabled', true);
+
+			// Then just enable the fields changed.
+			jQuery('form#posts-filter input.learndash-award-points[data-learndash-input-changed="1"]').attr('disabled', false);
 		});
 	}
 
-	if ( jQuery('form#posts-filter button.essay_approve_single').length ) {
-		jQuery('form#posts-filter button.essay_approve_single').click(function(e) {
-			e.preventDefault();
-			var essay_id = jQuery(this).attr('id').replace('essay_approve_', '');
-			if ( ( typeof essay_id !== 'undefined' ) && ( essay_id != '' ) ) {
-				if (jQuery('form#posts-filter input#cb-select-'+essay_id).length) {
-					jQuery('form#posts-filter input#cb-select-'+essay_id).prop('checked', true);
+	if (jQuery('body.wp-admin.edit-php.post-type-sfwd-essays form#posts-filter').length) {
+		if (jQuery('form#posts-filter button.essay_approve_single').length) {
+			jQuery('form#posts-filter button.essay_approve_single').on( 'click', function (e) {
+				e.preventDefault();
+				var essay_id = jQuery(this).attr('id').replace('essay_approve_', '');
+				if ((typeof essay_id !== 'undefined') && (essay_id != '')) {
+					if (jQuery('form#posts-filter input#cb-select-' + essay_id).length) {
+						jQuery('form#posts-filter input#cb-select-' + essay_id).prop('checked', true);
+					}
+					if (jQuery('form#posts-filter select#bulk-action-selector-top').length) {
+						jQuery('form#posts-filter select#bulk-action-selector-top').val('approve_essay');
+					}
+					jQuery('form#posts-filter input#doaction').trigger('click');
 				}
-				if (jQuery('form#posts-filter select#bulk-action-selector-top').length) {
-					jQuery('form#posts-filter select#bulk-action-selector-top').val('approve_essay');
-				}
-				jQuery('form#posts-filter input#doaction').trigger('click');
-			}
+			});
+		}
+
+		// Hook into the points input 'change' event and set a data attribute so we know which fields changed.
+		if (jQuery('form#posts-filter input.learndash-award-points').length) {
+			jQuery('form#posts-filter input.learndash-award-points').on( 'change', function (e) {
+				jQuery(e.currentTarget).attr('data-learndash-input-changed', '1');
+			});
+		}
+
+		// On the "Filter" click we disable all points input fields to prevent loading the GET variables.
+		jQuery('form#posts-filter input#post-query-submit').on( 'submit', function (e) {
+			jQuery('form#posts-filter input.learndash-award-points').attr('disabled', true);
+		});
+
+		jQuery('form#posts-filter input#doaction, form#posts-filter input#doaction2').on( 'submit', function (e) {
+			// On submit disabled all points input fields.
+			jQuery('form#posts-filter input.learndash-award-points').attr('disabled', true);
+
+			// Then just enable the fields changed.
+			jQuery('form#posts-filter input.learndash-award-points[data-learndash-input-changed="1"]').attr('disabled', false);
 		});
 	}
 });
 
 
 jQuery( function(){
-	jQuery('.wrap-learndash-group-list table.groups a.learndash-data-group-reports-button').click(function(e) {
+	jQuery('.wrap-learndash-group-list table.groups a.learndash-data-group-reports-button').on( 'click', function(e) {
 
 		e.preventDefault();
 
@@ -1696,7 +1736,7 @@ function learndash_data_group_reports_do_ajax( post_data, updateElement ) {
 
 jQuery(function($) {
 
-	$('#email_group').click(function() {
+	$('#email_group').on( 'click', function() {
 		$('button#email_group').attr( 'disabled', true );
 		$('span.sending_status').show();
 		$('span.sending_result').html('').hide();
@@ -1764,7 +1804,7 @@ jQuery(function($) {
 		}
 	});
 
-	$("#email_reset").click(function() {
+	$("#email_reset").on( 'click', function() {
 		// Clear the subject
 		$('#group_email_sub').val('');
 
@@ -1838,7 +1878,7 @@ jQuery(function($) {
 	}
 
 	if ( jQuery('#learndash_course_navigation_admin_meta select#ld-course-switcher').length ) {
-		jQuery('#learndash_course_navigation_admin_meta select#ld-course-switcher').change(function() {
+		jQuery('#learndash_course_navigation_admin_meta select#ld-course-switcher').on( 'change', function() {
 			if ( this.value ) {
 				window.location.href=this.value;
 			}
@@ -1846,7 +1886,7 @@ jQuery(function($) {
 	}
 
 	if (jQuery('#learndash_admin_quiz_navigation select#ld-quiz-switcher').length) {
-		jQuery('#learndash_admin_quiz_navigation select#ld-quiz-switcher').change(function () {
+		jQuery('#learndash_admin_quiz_navigation select#ld-quiz-switcher').on( 'change', function () {
 			if (this.value) {
 				window.location.href = this.value;
 			}
@@ -1855,7 +1895,7 @@ jQuery(function($) {
 
 	// Handle the Template load button on the Questions edit metabox.
 	if (jQuery('#learndash_question_template input[name="templateLoad"]').length ) {
-		jQuery('#learndash_question_template input[name="templateLoad"]').click( function(){
+		jQuery('#learndash_question_template input[name="templateLoad"]').on( 'click', function(){
 			if ( jQuery('#learndash_question_template select#templateLoadId').length) {
 				var template_load_url = jQuery('#learndash_question_template select#templateLoadId').val();
 				if (template_load_url != '') {
@@ -1867,7 +1907,7 @@ jQuery(function($) {
 		});
 	}
 	if (jQuery('#learndash_quiz_templates input[name="templateLoad"]').length) {
-		jQuery('#learndash_quiz_templates input[name="templateLoad"]').click(function () {
+		jQuery('#learndash_quiz_templates input[name="templateLoad"]').on( 'click', function () {
 			if (jQuery('#learndash_quiz_templates select#templateLoadId').length) {
 				var template_load_url = jQuery('#learndash_quiz_templates select#templateLoadId').val();
 				if (template_load_url != '') {

@@ -279,7 +279,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		 * Add Header and description on email sections.
 		 */
 		public function learndash_settings_row_outside_before( $content = '', $field_args = array() ) {
-			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'admin_mail_from_name', 'user_mail_from_name' ) ) ) ) {
+			if ( ( isset( $field_args['name'] ) ) && ( in_array( $field_args['name'], array( 'admin_mail_from_name', 'user_mail_from_name' ), true ) ) ) {
 				if ( 'admin_mail_from_name' === $field_args['name'] ) {
 					$content .= '<div class="ld-settings-email-header-wrapper">';
 

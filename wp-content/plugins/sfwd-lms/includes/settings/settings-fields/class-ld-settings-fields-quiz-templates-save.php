@@ -64,10 +64,8 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			}
 
 			$html .= '<span class="ld-select">';
-			//$html .= '<select name="templateSaveList" class="learndash-section-field-select" data-ld-select2="1">';
 			$html .= '<select autocomplete="off" ';
 			$html .= $this->get_field_attribute_type( $field_args );
-			//$html .= $this->get_field_attribute_name( $field_args );
 			$html .= ' name="templateSaveList" ';
 			$html .= $this->get_field_attribute_id( $field_args );
 			$html .= $this->get_field_attribute_class( $field_args );
@@ -97,10 +95,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			if ( ! empty( $select_template_options ) ) {
 				foreach ( $select_template_options as $template_id => $template_name ) {
-					$html .= '<option value="' . $template_id . '">' . $template_name . '</option>';
+					$html .= '<option value="' . esc_attr( $template_id ) . '">' . esc_html( $template_name ) . '</option>';
 				}
 			}
-			
+
 			$html .= '</select>';
 			$html .= '</span><br />';
 			$html .= '<input type="text" placeholder="' . esc_html__( 'new template name', 'learndash' ) . '" class="regular-text -medium" name="templateName">';
@@ -108,7 +106,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**

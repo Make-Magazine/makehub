@@ -39,7 +39,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
 			$html .= '<input autocomplete="off" ';
 			$html .= $this->get_field_attribute_type( $field_args );
@@ -51,7 +51,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$html .= $this->get_field_attribute_required( $field_args );
 
 			if ( isset( $field_args['value'] ) ) {
-				$html .= ' value="' . $field_args['value'] . '" ';
+				$html .= ' value="' . esc_attr( $field_args['value'] ) . '" ';
 			} else {
 				$html .= ' value="" ';
 			}
@@ -70,7 +70,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				$html .= ' >';
 
 				foreach ( $field_args['options'] as $option_key => $option_label ) {
-					$html .= '<option value="' . $option_key . '" ' . selected( $option_key, $field_args['value'], false ) . '>' . $option_label . '</option>';
+					$html .= '<option value="' . esc_attr( $option_key ) . '" ' . selected( $option_key, $field_args['value'], false ) . '>' . wp_kses_post( $option_label ) . '</option>';
 				}
 				$html .= '</select>';
 				$html .= '</span>';
@@ -79,7 +79,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 	}
 }

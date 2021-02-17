@@ -46,8 +46,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$ld_auto_enroll_group_courses = get_post_meta( $group_id, 'ld_auto_enroll_group_courses', true );
 					?>
 					<div id="learndash_course_users_page_box" class="learndash_course_users_page_box">
-						<p><input type="checkbox" id="learndash_auto_enroll_group_courses" name="learndash_auto_enroll_group_courses" value="yes" 
-						<?php checked( $ld_auto_enroll_group_courses, 'yes' ); ?> /> 
+						<p><input type="checkbox" id="learndash_auto_enroll_group_courses" name="learndash_auto_enroll_group_courses" value="yes"
+						<?php checked( $ld_auto_enroll_group_courses, 'yes' ); ?> />
 							<?php
 							printf(
 								// translators: placeholder: group, group, course.
@@ -92,9 +92,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_auto_enroll_group_courses_checkbox_handle_change( learndash_auto_enroll_group_courses_checkbox );
 						function learndash_auto_enroll_group_courses_checkbox_handle_change( checkbox ) {
 							if ( checkbox.checked ) {
-								document.getElementById('learndash_group_courses_enroll-<?php echo $group_id; ?>').style.visibility = 'hidden';
+								document.getElementById('learndash_group_courses_enroll-<?php echo esc_attr( $group_id ); ?>').style.visibility = 'hidden';
 							} else {
-								document.getElementById('learndash_group_courses_enroll-<?php echo $group_id; ?>').style.visibility = 'visible';
+								document.getElementById('learndash_group_courses_enroll-<?php echo esc_attr( $group_id ); ?>').style.visibility = 'visible';
 							}
 						}
 					</script>

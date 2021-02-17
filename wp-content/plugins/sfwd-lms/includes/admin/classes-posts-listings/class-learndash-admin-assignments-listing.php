@@ -36,6 +36,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'show_all_label'           => esc_html__( 'All Authors', 'learndash' ),
 					'selector_filter_function' => array( $this, 'selector_filter_for_author' ),
 					'selector_value_function'  => array( $this, 'selector_value_for_author' ),
+					'selector_filters'         => array( 'group_id' ),
 				),
 				'approval_status' => array(
 					'type'                   => 'early',
@@ -135,6 +136,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_assignments' ), 30, 3 );
 		}
 
 		/**
@@ -147,26 +150,91 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				add_action( 'admin_footer', array( $this, 'assignment_bulk_actions' ), 30 );
 				add_filter( 'learndash_listing_table_query_vars_filter', array( $this, 'listing_table_query_vars_filter_assignments' ), 30, 3 );
 
-				//add_filter( 'views_edit-' . learndash_get_post_type_slug( 'assignment' ), array( $this, 'edit_list_table_views' ), 10, 1 );
-
 				$this->assignment_bulk_actions_approve();
 			}
 		}
 
 		/** This function is documented in includes/admin/class-learndash-admin-posts-listing.php */
 		public function listing_table_query_vars_filter_assignments( $q_vars, $post_type, $query ) {
-			if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
-				$gl_user_ids = learndash_get_groups_administrators_users( get_current_user_id() );
-				if ( ! empty( $gl_user_ids ) ) {
-					$q_vars['author__in'] = $gl_user_ids;
+			if ( $post_type === $this->post_type ) {
+
+				$author_selector = $this->get_selector( 'author' );
+				$group_selector  = $this->get_selector( 'group_id' );
+				if ( ( isset( $author_selector['selected'] ) ) && ( ! empty( $author_selector['selected'] ) ) ) {
+					if ( learndash_is_admin_user() ) {
+						$q_vars['author__in'] = array( $author_selector['selected'] );
+					} elseif ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+						if ( learndash_is_group_leader_of_user( get_current_user_id(), $author_selector['selected'] ) ) {
+							$q_vars['author__in'] = array( $author_selector['selected'] );
+						} else {
+							$q_vars['author__in'] = array( 0 );
+						}
+					} else {
+						$q_vars['author__in'] = array( get_current_user_id() );
+					}
+				} elseif ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
+					$user_ids = learndash_get_groups_user_ids( absint( $group_selector['selected'] ) );
+					if ( ! empty( $user_ids ) ) {
+						if ( ! empty( $q_vars['author__in'] ) ) {
+							$user_ids_intersect = array_intersect( $q_vars['author__in'], $user_ids );
+							if ( ! empty( $user_ids_intersect ) ) {
+								$q_vars['author__in'] = $user_ids_intersect;
+							} else {
+								$q_vars['author__in'] = array( 0 );
+							}
+						} else {
+							$q_vars['author__in'] = $user_ids;
+						}
+					} else {
+						$q_vars['author__in'] = array( 0 );
+					}
 				} else {
-					$q_vars['author__in'] = array( 0 );
+					if ( ! learndash_is_admin_user() ) {
+						if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+							$gl_user_ids = learndash_get_groups_administrators_users( get_current_user_id() );
+							if ( ! empty( $gl_user_ids ) ) {
+								$q_vars['author__in'] = $gl_user_ids;
+							} else {
+								$q_vars['author__in'] = array( 0 );
+							}
+						} else {
+							$q_vars['author__in'] = get_current_user_id();
+						}
+					}
 				}
 			}
+
 			return $q_vars;
 		}
 
-				/**
+		/** This function is documented in includes/admin/class-learndash-admin-posts-listing.php */
+		public function learndash_listing_selector_user_query_args_assignments( $q_vars, $selector, $post_type ) {
+			if ( $post_type === $this->post_type ) {
+				$group_selector = $this->get_selector( 'group_id' );
+				if ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
+					$user_ids = learndash_get_groups_user_ids( absint( $group_selector['selected'] ) );
+					if ( ! empty( $user_ids ) ) {
+						if ( ! empty( $q_vars['include'] ) ) {
+							$user_ids_intersect = array_intersect( $q_vars['include'], $user_ids );
+							if ( ! empty( $user_ids_intersect ) ) {
+								$q_vars['include'] = $user_ids_intersect;
+							} else {
+								$q_vars['include'] = array( 0 );
+							}
+						} else {
+							$q_vars['include'] = $user_ids;
+						}
+					} else {
+						$q_vars['include'] = array( 0 );
+					}
+				}
+			}
+
+			return $q_vars;
+		}
+
+
+		/**
 		 * Filter the main query listing by the course_id
 		 *
 		 * @since 3.2.3
@@ -195,13 +263,44 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						),
 					);
 				} else {
-					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+					if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+						$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
+						$gl_course_ids = array_map( 'absint', $gl_course_ids );
+						if ( ! in_array( $selector['selected'], $gl_course_ids, true ) ) {
+							$selector['selected'] = 0;
+						}
 					}
 
+					if ( ! empty( $selector['selected'] ) ) {
+
+						if ( ! isset( $q_vars['meta_query'] ) ) {
+							$q_vars['meta_query'] = array();
+						}
+
+						$q_vars['meta_query'][] = array(
+							'key'   => 'course_id',
+							'value' => absint( $selector['selected'] ),
+						);
+					}
+				}
+			} elseif ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+				$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
+				$gl_course_ids = array_map( 'absint', $gl_course_ids );
+				if ( ! isset( $q_vars['meta_query'] ) ) {
+					$q_vars['meta_query'] = array();
+				}
+
+				if ( ! empty( $gl_course_ids ) ) {
 					$q_vars['meta_query'][] = array(
-						'key'   => 'course_id',
-						'value' => absint( $selector['selected'] ),
+						'key'     => 'course_id',
+						'compare' => 'IN',
+						'value'   => $gl_course_ids,
+					);
+				} else {
+					$q_vars['meta_query'][] = array(
+						'key'     => 'course_id',
+						'compare' => 'IN',
+						'value'   => array( 0 ),
 					);
 				}
 			}
@@ -342,18 +441,19 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 						$current_points = get_post_meta( $post_id, 'points', true );
 						if ( 1 != $approval_status_flag ) {
+							$points_label = '<label class="learndash-listing-row-field-label" for="assignment_points_' . absint( $post_id ) . '">' . esc_html__( 'Points', 'learndash' ) . '</label>';
+							$points_input = '<input id="assignment_points_' . absint( $post_id ) . '" class="small-text learndash-award-points" type="number" value="' . absint( $current_points ) . '" max="' . absint( $max_points ) . '" min="0" step="1" name="assignment_points[' . absint( $post_id ) . ']" />';
 							echo sprintf(
 								// translators: placeholders: Points label, points input, maximum points.
 								esc_html_x( '%1$s: %2$s / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								'<label class="learndash-listing-row-field-label" for="assignment_points_' . absint( $post_id ) . '">' . esc_html__( 'Points', 'learndash' ) . '</label>',
-								'<input id="assignment_points_' . absint( $post_id ) . '" class="small-text" type="number" value="' . absint( $current_points ) . '" max="' . absint( $max_points ) . '" min="0" step="1" name="assignment_points[' . absint( $post_id ) . ']" />',
-								absint( $max_points )
+								$points_label, $points_input, absint( $max_points )
 							);
 						} else {
+							$points_field = '<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>';
 							echo sprintf(
 								// translators: placeholders: Points label, current points, maximum points.
 								esc_html_x( '%1$s: %2$d / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								'<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>',
+								$points_field,
 								absint( $current_points ),
 								absint( $max_points )
 							);

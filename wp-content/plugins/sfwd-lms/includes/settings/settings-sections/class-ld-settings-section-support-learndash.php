@@ -59,7 +59,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wpdb, $wp_version, $wp_rewrite;
 			global $sfwd_lms;
 
-			$ABSPATH_tmp = str_replace( '\\', '/', ABSPATH );
+			$abspath_tmp = str_replace( '\\', '/', ABSPATH );
 
 			/************************************************************************************************
 			 * LearnDash Settings
@@ -88,8 +88,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings'] = array();
 
-				$LEARNDASH_VERSION_value      = '';
-				$LEARNDASH_VERSION_value_html = '';
+				$learndash_version_value      = '';
+				$learndash_version_value_html = '';
 
 				$ld_version_history = learndash_data_upgrades_setting( 'version_history' );
 				if ( ! empty( $ld_version_history ) ) {
@@ -108,25 +108,25 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							$ld_license_info = get_option( 'nss_plugin_info_sfwd_lms' );
 							if ( ( $ld_license_info ) && ( property_exists( $ld_license_info, 'new_version' ) ) && ( ! empty( $ld_license_info->new_version ) ) ) {
 								if ( version_compare( $version, $ld_license_info->new_version, 'ne' ) ) {
-									$LEARNDASH_VERSION_value_html = '<span style="color: red">' . $version . '</span> ' . ': ' . $version_date . ' - ' .
+									$learndash_version_value_html = '<span style="color: red">' . $version . '</span>: ' . $version_date . ' - ' .
 									sprintf(
 										// translators: placeholder: version number.
 										esc_html_x( 'Installed version does not match latest (%s).', 'placeholder: version number', 'learndash' ),
 										$ld_license_info->new_version
-									) . ' <a href="' . admin_url( 'plugins.php?plugin_status=upgrade' ) . '">' . esc_html__( 'Please upgrade.', 'learndash' ) . '</a>' . '<br />';
-									$LEARNDASH_VERSION_value = $version . ': ' . $version_date . ' - (X)' . "\r\n";
+									) . ' <a href="' . admin_url( 'plugins.php?plugin_status=upgrade' ) . '">' . esc_html__( 'Please upgrade.', 'learndash' ) . '</a><br />';
+									$learndash_version_value = $version . ': ' . $version_date . ' - (X)' . "\r\n";
 
 								} else {
-									$LEARNDASH_VERSION_value_html .= '<span style="color: green">' . $version . '</span>' . ': ' . $version_date . '<br />';
-									$LEARNDASH_VERSION_value      .= $version . ': ' . $version_date . "\r\n";
+									$learndash_version_value_html .= '<span style="color: green">' . $version . '</span>: ' . $version_date . '<br />';
+									$learndash_version_value      .= $version . ': ' . $version_date . "\r\n";
 								}
 							} else {
-								$LEARNDASH_VERSION_value      .= $version . ': ' . $version_date . "\r\n";
-								$LEARNDASH_VERSION_value_html .= $version . ': ' . $version_date . '<br />';
+								$learndash_version_value      .= $version . ': ' . $version_date . "\r\n";
+								$learndash_version_value_html .= $version . ': ' . $version_date . '<br />';
 							}
 						} else {
-							$LEARNDASH_VERSION_value      .= $version . ': ' . $version_date . "\r\n";
-							$LEARNDASH_VERSION_value_html .= $version . ': ' . $version_date . '<br />';
+							$learndash_version_value      .= $version . ': ' . $version_date . "\r\n";
+							$learndash_version_value_html .= $version . ': ' . $version_date . '<br />';
 						}
 					}
 				}
@@ -134,8 +134,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->settings_set['settings']['LEARNDASH_VERSION'] = array(
 					'label'      => 'Learndash Version',
 					'label_html' => esc_html__( 'Learndash Version', 'learndash' ),
-					'value'      => $LEARNDASH_VERSION_value,
-					'value_html' => $LEARNDASH_VERSION_value_html,
+					'value'      => $learndash_version_value,
+					'value_html' => $learndash_version_value_html,
 				);
 
 				$ld_license_valid = get_option( 'nss_plugin_remote_license_sfwd_lms' );
@@ -198,7 +198,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings']['Data Upgrade Courses'] = array(
 					'label'      => 'Data Upgrade Courses',
-					'label_html' => esc_html__( 'Data Upgrade Courses', 'learndash' ),
+					'label_html' => sprintf(
+						// translators: placeholder: Courses.
+						esc_html_x( 'Data Upgrade %s', 'placeholder: Courses', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'courses' )
+					),
 					'value'      => $data_upgrade_courses_value,
 					'value_html' => $data_upgrade_courses_value_html,
 				);
@@ -231,7 +235,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings']['Data Upgrade Quizzes'] = array(
 					'label'      => 'Data Upgrade Quizzes',
-					'label_html' => esc_html__( 'Data Upgrade Quizzes', 'learndash' ),
+					'label_html' => sprintf(
+						// translators: placeholder: Quizzes.
+						esc_html_x( 'Data Upgrade %s', 'placeholder: Quizzes', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'quizzes' )
+					),
 					'value'      => $data_upgrade_quizzes_value,
 					'value_html' => $data_upgrade_quizzes_value_html,
 				);
@@ -264,7 +272,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings']['Data ProQuiz Questions'] = array(
 					'label'      => 'Data ProQuiz Questions',
-					'label_html' => esc_html__( 'Data Upgrade ProQuiz Questions', 'learndash' ),
+					'label_html' => sprintf(
+						// translators: placeholder: Questions.
+						esc_html_x( 'Data Upgrade ProQuiz %s', 'placeholder: Questions', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'questions' )
+					),
 					'value'      => $data_pro_quiz_questions_value,
 					'value_html' => $data_pro_quiz_questions_html,
 				);
@@ -297,44 +309,75 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$this->settings_set['settings']['Data Course Access Lists Convert'] = array(
 					'label'      => 'Data Course Access Lists Convert',
-					'label_html' => esc_html__( 'Data Upgrade Course Access Lists Convert', 'learndash' ),
+					'label_html' => sprintf(
+						// translators: placeholder: Course.
+						esc_html_x( 'Data Upgrade %s Access Lists Convert', 'placeholder: Course', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Course' )
+					),
 					'value'      => $data_course_access_lists_value,
 					'value_html' => $data_course_access_lists_html,
 				);
 
-				$courses_count                                   = wp_count_posts( learndash_get_post_type_slug( 'course' ) );
 				$this->settings_set['settings']['courses_count'] = array(
 					'label'      => 'Courses Count',
-					'label_html' => esc_html__( 'Courses Count', 'learndash' ),
-					'value'      => $courses_count->publish,
+					'label_html' => sprintf(
+						// translators: placeholder: Courses.
+						esc_html_x( '%s Count', 'placeholder: Courses', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'Courses' )
+					),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'course' ) ),
 				);
 
-				$lessons_count                                   = wp_count_posts( learndash_get_post_type_slug( 'lesson' ) );
 				$this->settings_set['settings']['lessons_count'] = array(
 					'label'      => 'Lessons Count',
-					'label_html' => esc_html__( 'Lessons Count', 'learndash' ),
-					'value'      => $lessons_count->publish,
+					'label_html' => sprintf(
+						// translators: placeholder: Lessons.
+						esc_html_x( '%s Count', 'placeholder: Lessons', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'lessons' )
+					),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'lesson' ) ),
 				);
 
-				$topics_count                                   = wp_count_posts( learndash_get_post_type_slug( 'topic' ) );
 				$this->settings_set['settings']['topics_count'] = array(
 					'label'      => 'Topics Count',
-					'label_html' => esc_html__( 'Topics Count', 'learndash' ),
-					'value'      => $topics_count->publish,
+					'label_html' => sprintf(
+						// translators: placeholder: Topics.
+						esc_html_x( '%s Count', 'placeholder: Topics', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'topics' )
+					),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'topic' ) ),
 				);
 
-				$quizzes_count                                   = wp_count_posts( learndash_get_post_type_slug( 'quiz' ) );
 				$this->settings_set['settings']['quizzes_count'] = array(
 					'label'      => 'Quizzes Count',
-					'label_html' => esc_html__( 'Quizzes Count', 'learndash' ),
-					'value'      => $quizzes_count->publish,
+					'label_html' => sprintf(
+						// translators: placeholder: Quizzes.
+						esc_html_x( '%s Count', 'placeholder: Quizzes', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'quizzes' )
+					),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'quiz' ) ),
 				);
 
-				$groups_count                                   = wp_count_posts( learndash_get_post_type_slug( 'group' ) );
 				$this->settings_set['settings']['groups_count'] = array(
 					'label'      => 'Groups Count',
-					'label_html' => esc_html__( 'Groups Count', 'learndash' ),
-					'value'      => $groups_count->publish,
+					'label_html' => sprintf(
+						// translators: placeholder: Groups.
+						esc_html_x( '%s Count', 'placeholder: Groups', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'groups' )
+					),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'group' ) ),
+				);
+
+				$this->settings_set['settings']['assignments_count'] = array(
+					'label'      => 'Assignments Count',
+					'label_html' => esc_html__( 'Assignments Count', 'learndash' ),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'assignment' ) ),
+				);
+
+				$this->settings_set['settings']['essays_count'] = array(
+					'label'      => 'Essays Count',
+					'label_html' => esc_html__( 'Essays Count', 'learndash' ),
+					'value'      => $this->get_post_type_counts( learndash_get_post_type_slug( 'essay' ) ),
 				);
 
 				$this->settings_set['settings']['active_theme'] = array(
@@ -344,10 +387,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 
 				$this->settings_set['settings']['settings-sub-section-ld_settings_admin_user_settings'] = array(
-					'html'  => esc_html__( 'Admin User Settings', 'learndash' ),
-					'text'  => 'Admin User Settings',
+					'html' => esc_html__( 'Admin User Settings', 'learndash' ),
+					'text' => 'Admin User Settings',
 				);
-				$this->settings_set['settings']['courses_autoenroll_admin_users']   = array(
+				$this->settings_set['settings']['courses_autoenroll_admin_users']                       = array(
 					'label'      => 'Courses Auto-enroll',
 					'label_html' => sprintf(
 						// translators: placeholder: Course.
@@ -357,7 +400,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'      => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) ? 'Yes' : 'No',
 					'value_html' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) ? esc_html__( 'Yes', 'learndash' ) : esc_html__( 'No', 'learndash' ),
 				);
-				$this->settings_set['settings']['bypass_course_limits_admin_users'] = array(
+				$this->settings_set['settings']['bypass_course_limits_admin_users']                     = array(
 					'label'      => 'Bypass Course limits',
 					'label_html' => sprintf(
 						// translators: placeholder: Course.
@@ -375,12 +418,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value_html' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'reports_include_admin_users' ) === 'yes' ) ? esc_html__( 'Yes', 'learndash' ) : esc_html__( 'No', 'learndash' ),
 				);
 
-
 				$this->settings_set['settings']['settings-sub-section-ld_settings_group-leader_user_settings'] = array(
-					'html'  => esc_html__( 'Group Leader User Settings', 'learndash' ),
-					'text'  => 'Group Leader User Settings',
+					'html' => esc_html__( 'Group Leader User Settings', 'learndash' ),
+					'text' => 'Group Leader User Settings',
 				);
-				$this->settings_set['settings']['courses_autoenroll_group_leader_users']   = array(
+				$this->settings_set['settings']['courses_autoenroll_group_leader_users']                       = array(
 					'label'      => 'Courses Auto-enroll',
 					'label_html' => sprintf(
 						// translators: placeholder: Course.
@@ -390,7 +432,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'      => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'courses_autoenroll' ) === 'yes' ) ? 'Yes' : 'No',
 					'value_html' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'courses_autoenroll' ) === 'yes' ) ? esc_html__( 'Yes', 'learndash' ) : esc_html__( 'No', 'learndash' ),
 				);
-				$this->settings_set['settings']['bypass_course_limits_group_leader_users'] = array(
+				$this->settings_set['settings']['bypass_course_limits_group_leader_users']                     = array(
 					'label'      => 'Bypass Course limits',
 					'label_html' => sprintf(
 						// translators: placeholder: Course.
@@ -410,7 +452,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					),
 				);
 				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_groups_enabled' ) === 'yes' ) {
-					$this->settings_set['settings']['manage_groups_capabilities_group_leader_users']['value']      = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_groups_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
+					$this->settings_set['settings']['manage_groups_capabilities_group_leader_users']['value'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_groups_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
 
 					$this->settings_set['settings']['manage_groups_capabilities_group_leader_users']['value_html'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_groups_capabilities' ) === 'advanced' ) ? esc_html__( 'Advanced', 'learndash' ) : esc_html__( 'Basic', 'learndash' );
 				} else {
@@ -427,7 +469,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					),
 				);
 				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_enabled' ) === 'yes' ) {
-					$this->settings_set['settings']['manage_courses_capabilities_group_leader_users']['value']      = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
+					$this->settings_set['settings']['manage_courses_capabilities_group_leader_users']['value'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
 
 					$this->settings_set['settings']['manage_courses_capabilities_group_leader_users']['value_html'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_courses_capabilities' ) === 'advanced' ) ? esc_html__( 'Advanced', 'learndash' ) : esc_html__( 'Basic', 'learndash' );
 				} else {
@@ -440,7 +482,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'label_html' => esc_html__( 'Manage Users', 'learndash' ),
 				);
 				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_users_enabled' ) === 'yes' ) {
-					$this->settings_set['settings']['manage_users_capabilities_group_leader_users']['value']      = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_users_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
+					$this->settings_set['settings']['manage_users_capabilities_group_leader_users']['value'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_users_capabilities' ) === 'advanced' ) ? 'Advanced' : 'Basic';
 
 					$this->settings_set['settings']['manage_users_capabilities_group_leader_users']['value_html'] = ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Groups_Group_Leader_User', 'manage_users_capabilities' ) === 'advanced' ) ? esc_html__( 'Advanced', 'learndash' ) : esc_html__( 'Basic', 'learndash' );
 				} else {
@@ -448,10 +490,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$this->settings_set['settings']['manage_users_capabilities_group_leader_users']['value_html'] = esc_html__( 'No', 'learndash' );
 				}
 
-
 				$this->settings_set['settings']['settings-sub-section-ld_settings_builders'] = array(
-					'html'  => esc_html__( 'Builders', 'learndash' ),
-					'text'  => 'Builders',
+					'html' => esc_html__( 'Builders', 'learndash' ),
+					'text' => 'Builders',
 				);
 
 				$this->settings_set['settings']['course_builder'] = array(
@@ -500,8 +541,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 
 				$this->settings_set['settings']['settings-sub-section-ld_settings_permalinks'] = array(
-					'html'  => esc_html__( 'Permalinks', 'learndash' ),
-					'text'  => 'Permalinks',
+					'html' => esc_html__( 'Permalinks', 'learndash' ),
+					'text' => 'Permalinks',
 				);
 
 				$this->settings_set['settings']['nested_urls'] = array(
@@ -577,7 +618,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 
 				$courses_taxonomies = $sfwd_lms->get_post_args_section( learndash_get_post_type_slug( 'course' ), 'taxonomies' );
-				if ( ( isset( $courses_taxonomies['ld_course_category'] ) ) && ( $courses_taxonomies['ld_course_category']['public'] == true ) ) {
+				if ( ( isset( $courses_taxonomies['ld_course_category'] ) ) && ( true == $courses_taxonomies['ld_course_category']['public'] ) ) {
 					$this->settings_set['settings']['ld_course_category'] = array(
 						'label'      => 'Courses Category base',
 						'label_html' => sprintf(
@@ -602,7 +643,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$lessons_taxonomies = $sfwd_lms->get_post_args_section( learndash_get_post_type_slug( 'lesson' ), 'taxonomies' );
-				if ( ( isset( $lessons_taxonomies['ld_lesson_category'] ) ) && ( $lessons_taxonomies['ld_lesson_category']['public'] == true ) ) {
+				if ( ( isset( $lessons_taxonomies['ld_lesson_category'] ) ) && ( true == $lessons_taxonomies['ld_lesson_category']['public'] ) ) {
 					$this->settings_set['settings']['ld_lesson_category'] = array(
 						'label'      => 'Lesson Category base',
 						'label_html' => sprintf(
@@ -639,7 +680,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					);
 				}
 
-				if ( ( isset( $topics_taxonomies['ld_topic_tag'] ) ) && ( $topics_taxonomies['ld_topic_tag']['public'] == true ) ) {
+				if ( ( isset( $topics_taxonomies['ld_topic_tag'] ) ) && ( true == $topics_taxonomies['ld_topic_tag']['public'] ) ) {
 					$this->settings_set['settings']['ld_topic_tag'] = array(
 						'label'      => 'Topics Tag',
 						'label_html' => sprintf(
@@ -664,7 +705,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					);
 				}
 
-				if ( ( isset( $quizzes_taxonomies['ld_quiz_tag'] ) ) && ( $quizzes_taxonomies['ld_quiz_tag']['public'] == true ) ) {
+				if ( ( isset( $quizzes_taxonomies['ld_quiz_tag'] ) ) && ( true == $quizzes_taxonomies['ld_quiz_tag']['public'] ) ) {
 					$this->settings_set['settings']['ld_quiz_tag'] = array(
 						'label'      => 'Quizzes Tag',
 						'label_html' => sprintf(
@@ -689,7 +730,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					);
 				}
 
-				if ( ( isset( $groups_taxonomies['ld_group_tag'] ) ) && ( $groups_taxonomies['ld_group_tag']['public'] == true ) ) {
+				if ( ( isset( $groups_taxonomies['ld_group_tag'] ) ) && ( true == $groups_taxonomies['ld_group_tag']['public'] ) ) {
 					$this->settings_set['settings']['ld_group_tag'] = array(
 						'label'      => 'Groups Tag',
 						'label_html' => sprintf(
@@ -702,8 +743,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$this->settings_set['settings']['settings-sub-section-ld_upload_directories'] = array(
-					'html'  => esc_html__( 'Upload Directories', 'learndash' ),
-					'text'  => 'Upload Directories',
+					'html' => esc_html__( 'Upload Directories', 'learndash' ),
+					'text' => 'Upload Directories',
 				);
 
 				// LD Assignment upload path.
@@ -712,7 +753,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$upload_url_base = $upload_dir['baseurl'];
 
 				$assignment_upload_dir_path                              = $upload_dir_base . '/assignments';
-				$assignment_upload_dir_path_r                            = str_replace( $ABSPATH_tmp, '', $assignment_upload_dir_path );
+				$assignment_upload_dir_path_r                            = str_replace( $abspath_tmp, '', $assignment_upload_dir_path );
 				$this->settings_set['settings']['Assignment Upload Dir'] = array(
 					'label'      => 'Assignment Upload Dir',
 					'label_html' => esc_html__( 'Assignment Upload Dir', 'learndash' ),
@@ -740,7 +781,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$essay_upload_dir_path                              = $upload_dir_base . '/essays';
-				$essay_upload_dir_path_r                            = str_replace( $ABSPATH_tmp, '', $essay_upload_dir_path );
+				$essay_upload_dir_path_r                            = str_replace( $abspath_tmp, '', $essay_upload_dir_path );
 				$this->settings_set['settings']['Essay Upload Dir'] = array(
 					'label'      => 'Essay Upload Dir',
 					'label_html' => esc_html__( 'Essay Upload Dir', 'learndash' ),
@@ -768,8 +809,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$this->settings_set['settings']['settings-sub-section-ld_settings_defines'] = array(
-					'html'  => esc_html__( 'Defines', 'learndash' ),
-					'text'  => 'Defines',
+					'html' => esc_html__( 'Defines', 'learndash' ),
+					'text' => 'Defines',
 				);
 				/**
 				 * Filters list of LearnDash constant defines.
@@ -779,7 +820,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				foreach ( apply_filters( 'learndash_support_ld_defines', array( 'LEARNDASH_LMS_PLUGIN_DIR', 'LEARNDASH_LMS_PLUGIN_URL', 'LEARNDASH_SCRIPT_DEBUG', 'LEARNDASH_SCRIPT_VERSION_TOKEN', 'LEARNDASH_GUTENBERG', 'LEARNDASH_ADMIN_CAPABILITY_CHECK', 'LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK', 'LEARNDASH_COURSE_BUILDER', 'LEARNDASH_QUIZ_BUILDER', 'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE', 'LEARNDASH_DEFAULT_GROUP_PRICE_TYPE', 'LEARNDASH_GROUP_ENROLLED_COURSE_FROM_USER_REGISTRATION', 'LEARNDASH_FILTER_SEARCH', 'LEARNDASH_UPDATES_ENABLED', 'LEARNDASH_LESSON_VIDEO', 'LEARNDASH_ADDONS_UPDATER', 'LEARNDASH_QUIZ_PREREQUISITE_ALT', 'LEARNDASH_LMS_DEFAULT_QUESTION_POINTS', 'LEARNDASH_LMS_DEFAULT_ANSWER_POINTS', 'LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE', 'LEARNDASH_REST_API_ENABLED', 'LEARNDASH_TRANSIENTS_DISABLED' ) ) as $defined_item ) {
 					$defined_value = ( defined( $defined_item ) ) ? constant( $defined_item ) : '';
 					if ( 'LEARNDASH_LMS_PLUGIN_DIR' == $defined_item ) {
-						$defined_value = str_replace( $ABSPATH_tmp, '', $defined_value );
+						$defined_value = str_replace( $abspath_tmp, '', $defined_value );
 					}
 
 					$this->settings_set['settings'][ $defined_item ] = array(
@@ -790,8 +831,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				}
 
 				$this->settings_set['settings']['settings-sub-section-ld_settings_translations'] = array(
-					'html'  => esc_html__( 'Translations', 'learndash' ),
-					'text'  => 'Translations',
+					'html' => esc_html__( 'Translations', 'learndash' ),
+					'text' => 'Translations',
 				);
 				global $l10n;
 				$ld_translation_files = '';
@@ -824,6 +865,66 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$support_page_instance->show_support_section( $this->setting_option_key );
 				}
 			}
+		}
+
+		/**
+		 * Determine count of post_type posts by post_status.
+		 *
+		 * @since 3.3
+		 *
+		 * @param string $post_type Post Type to get counts for.
+		 *
+		 * @return string
+		 */
+		public function get_post_type_counts( $post_type = '' ) {
+			$counts_string = '';
+			if ( ! empty( $post_type ) ) {
+				$post_counts = wp_count_posts( $post_type );
+				$post_counts = json_decode( wp_json_encode( $post_counts ), true );
+				if ( is_array( $post_counts ) ) {
+					$counts_total  = 0;
+					$post_statuses = get_post_statuses();
+					foreach ( $post_counts as $count_key => $count_value ) {
+						$count_value = absint( $count_value );
+						if ( ! empty( $count_value ) ) {
+							$counts_total += $count_value;
+
+							if ( ! empty( $counts_string ) ) {
+								$counts_string .= ' | ';
+							}
+
+							if ( isset( $post_statuses[ $count_key ] ) ) {
+								$status_label = $post_statuses[ $count_key ];
+							} else {
+								$status_label = $count_key;
+							}
+
+							$counts_string .= '<a href="' . add_query_arg(
+								array(
+									'post_type'   => $post_type,
+									'post_status' => $count_key,
+								),
+								admin_url( 'edit.php' )
+							) . '">' . $status_label . '</a> (' . $count_value . ')';
+
+						}
+					}
+					if ( ! empty( $counts_total ) ) {
+						$counts_string = '<a href="' . add_query_arg(
+							array(
+								'post_type' => $post_type,
+							),
+							admin_url( 'edit.php' )
+						) . '">' . esc_html__( 'All', 'learndash' ) . '</a> (' . $counts_total . ') | ' . $counts_string;
+					} else {
+						$counts_string .= '0';
+					}
+				} else {
+					$counts_string .= '0';
+				}
+			}
+
+			return $counts_string;
 		}
 
 		// End of functions.

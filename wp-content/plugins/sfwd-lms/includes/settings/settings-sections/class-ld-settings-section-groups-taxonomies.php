@@ -61,8 +61,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values = array(
 					'ld_group_category' => 'yes',
 					'ld_group_tag'      => 'yes',
-					'wp_post_category'   => 'yes',
-					'wp_post_tag'        => 'yes',
+					'wp_post_category'  => 'yes',
+					'wp_post_tag'       => 'yes',
 				);
 			}
 
@@ -71,8 +71,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				array(
 					'ld_group_category' => '',
 					'ld_group_tag'      => '',
-					'wp_post_category'   => '',
-					'wp_post_tag'        => '',
+					'wp_post_category'  => '',
+					'wp_post_tag'       => '',
 				)
 			);
 		}
@@ -119,7 +119,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 				),
-				'wp_post_category'   => array(
+				'wp_post_category'  => array(
 					'name'    => 'wp_post_category',
 					'type'    => 'checkbox-switch',
 					'label'   => esc_html__( 'WP Post Categories', 'learndash' ),
@@ -129,7 +129,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'yes' => esc_html__( 'Manage WP Categories via the Actions dropdown', 'learndash' ),
 					),
 				),
-				'wp_post_tag'        => array(
+				'wp_post_tag'       => array(
 					'name'    => 'wp_post_tag',
 					'type'    => 'checkbox-switch',
 					'label'   => esc_html__( 'WP Post Tags', 'learndash' ),

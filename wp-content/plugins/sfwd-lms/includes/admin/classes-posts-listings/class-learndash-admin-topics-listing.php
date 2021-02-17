@@ -108,7 +108,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( isset( $this->selectors['lesson_id']['show_empty_label'] ) ) {
 					unset( $this->selectors['lesson_id']['show_empty_label'] );
 				}
-
 			}
 
 			// If Group Leader remove the selector empty option.
@@ -131,8 +130,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		public function on_load_listing() {
 			if ( $this->post_type_check() ) {
 				parent::on_load_listing();
-
-				//add_filter( 'learndash_listing_post_type_selector_query_args', array( $this, 'filter_course_lessons_selector' ), 30, 2 );
 			}
 		}
 

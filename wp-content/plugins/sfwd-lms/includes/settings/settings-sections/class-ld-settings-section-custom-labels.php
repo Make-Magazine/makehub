@@ -152,7 +152,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['questions'] ) ? $this->setting_option_values['questions'] : '',
 					'class'     => 'regular-text',
 				),
-				'group'                      => array(
+				'group'                         => array(
 					'name'      => 'group',
 					'type'      => 'text',
 					'label'     => esc_html__( 'Group', 'learndash' ),
@@ -160,7 +160,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['group'] ) ? $this->setting_option_values['group'] : '',
 					'class'     => 'regular-text',
 				),
-				'groups'                     => array(
+				'groups'                        => array(
 					'name'      => 'groups',
 					'type'      => 'text',
 					'label'     => esc_html__( 'Groups', 'learndash' ),
@@ -176,7 +176,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['button_take_this_course'] ) ? $this->setting_option_values['button_take_this_course'] : '',
 					'class'     => 'regular-text',
 				),
-				'button_take_this_group'       => array(
+				'button_take_this_group'        => array(
 					'name'      => 'button_take_this_group',
 					'type'      => 'text',
 					'label'     => esc_html__( 'Join Group (Button)', 'learndash' ),

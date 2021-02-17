@@ -18,26 +18,30 @@ if ( ! class_exists( 'LD_REST_Sections_Controller_V1' ) ) {
 		 * Register the routes for the objects of the controller.
 		 */
 		public function register_routes() {
-			$version = '1';
+			$version   = '1';
 			$namespace = LEARNDASH_REST_API_NAMESPACE . '/v' . $version;
-			$base = 'sections';
+			$base      = 'sections';
 
-			register_rest_route( $namespace, '/' . $base . '/(?P<id>[\d]+)', array(
+			register_rest_route(
+				$namespace,
+				'/' . $base . '/(?P<id>[\d]+)',
 				array(
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'permissions_check' ),
-					'args'                => array(
-						'id' => array(
-							'required'          => true,
-							'validate_callback' => function( $param, $request, $key ) {
-								return is_numeric( $param );
-							},
-							'sanitize_callback' => 'absint',
+					array(
+						'methods'             => WP_REST_Server::EDITABLE,
+						'callback'            => array( $this, 'update_item' ),
+						'permission_callback' => array( $this, 'permissions_check' ),
+						'args'                => array(
+							'id' => array(
+								'required'          => true,
+								'validate_callback' => function( $param, $request, $key ) {
+									return is_numeric( $param );
+								},
+								'sanitize_callback' => 'absint',
+							),
 						),
 					),
-				),
-			) );
+				)
+			);
 		}
 
 		/**
@@ -47,8 +51,8 @@ if ( ! class_exists( 'LD_REST_Sections_Controller_V1' ) ) {
 		 * @return WP_Error|bool
 		 */
 		public function permissions_check( $request ) {
-			$params      = $request->get_params();
-			$course_id   = $params['id'];
+			$params    = $request->get_params();
+			$course_id = $params['id'];
 
 			return current_user_can( 'edit_post', $course_id );
 		}
@@ -60,9 +64,9 @@ if ( ! class_exists( 'LD_REST_Sections_Controller_V1' ) ) {
 		 * @return WP_Error|WP_REST_Request
 		 */
 		public function update_item( $request ) {
-			$params          = $request->get_params();
-			$course_id       = $params['id'];
-			$sections        = isset( $params['sections'] ) ? wp_slash( $params['sections'] ) : '';
+			$params    = $request->get_params();
+			$course_id = $params['id'];
+			$sections  = isset( $params['sections'] ) ? wp_slash( $params['sections'] ) : '';
 
 			update_post_meta( $course_id, 'course_sections', $sections );
 

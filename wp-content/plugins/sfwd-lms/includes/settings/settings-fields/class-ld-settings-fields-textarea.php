@@ -39,7 +39,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
 			$html .= '<textarea ';
 			$html .= $this->get_field_attribute_name( $field_args );
@@ -59,7 +59,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 				/**

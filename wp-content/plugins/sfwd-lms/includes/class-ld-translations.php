@@ -271,7 +271,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 					header( 'Pragma: no-cache' );
 					header( 'Expires: 0' );
 					header( 'Content-Disposition: attachment; filename="' . basename( $pot_filename ) . '"; modification-date="' . date( 'r' ) . '";' );
-					echo $pot_file_contents;
+					echo $pot_file_contents; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					die();
 				}
 
@@ -297,7 +297,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 						header( 'Pragma: no-cache' );
 						header( 'Expires: 0' );
 						header( 'Content-Disposition: attachment; filename="' . basename( $po_filename ) . '"; modification-date="' . date( 'r' ) . '";' );
-						echo $po_file_contents;
+						echo $po_file_contents; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						die();
 					}
 
@@ -497,7 +497,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			$pot_file = self::get_language_directory( $this->project_slug, false ) . '' . $this->project_slug . '.pot';
 			if ( file_exists( $pot_file ) ) {
 				?>
-				<p style="float:right"><?php esc_html_e( 'Download the original strings (POT) File.', 'learndash' ); ?> 
+				<p style="float:right"><?php esc_html_e( 'Download the original strings (POT) File.', 'learndash' ); ?>
 
 				<a id="learndash-translations-pot-file-<?php echo esc_attr( $this->project_slug ); ?>" class="button button-secondary learndash-translations-pot-file" href="<?php echo esc_url( self::get_action_url( 'pot_download', esc_attr( $this->project_slug ) ) ); ?>" title="<?php esc_html_e( 'Download POT File from your server.', 'learndash' ); ?>"><span class="dashicons dashicons-download"></span><?php esc_html_e( 'POT', 'learndash' ); ?></a>
 
@@ -581,7 +581,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 					<td class="column-title">
 					<?php
 					if ( ! is_null( $translation_set ) ) {
-						echo $translation_set['english_name'] . '/' . $translation_set['native_name'];
+						echo esc_html( $translation_set['english_name'] ) . '/' . esc_html( $translation_set['native_name'] );
 					} else {
 						esc_html_e( 'Not from LearnDash', 'learndash' );
 					}
@@ -625,7 +625,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 				$wp_languages = array();
 			}
 
-			if ( ! in_array( 'en_US', $wp_languages ) ) {
+			if ( ! in_array( 'en_US', $wp_languages, true ) ) {
 				$wp_languages = array_merge( array( 'en_US' ), $wp_languages );
 			}
 
@@ -676,7 +676,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 									}
 									foreach ( $available_translations['recommended'] as $translation_set ) {
 										?>
-										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo $translation_set['english_name'] . ' / ' . $translation_set['native_name'] . ' (' . $translation_set['wp_locale'] . ')'; ?></option>
+										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
 										<?php
 									}
 									if ( $show_opt_group ) {
@@ -694,7 +694,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 									}
 									foreach ( $available_translations['available'] as $translation_set ) {
 										?>
-										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo $translation_set['english_name'] . ' / ' . $translation_set['native_name'] . ' (' . $translation_set['wp_locale'] . ')'; ?></option>
+										<option value="<?php echo esc_url( self::get_action_url( 'install', $this->project_slug, $translation_set['wp_locale'] ) ); ?>"><?php echo esc_html( $translation_set['english_name'] ) . ' / ' . esc_html( $translation_set['native_name'] ) . ' (' . esc_html( $translation_set['wp_locale'] ) . ')'; ?></option>
 										<?php
 									}
 									if ( $show_opt_group ) {
@@ -704,7 +704,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 									}
 								}
 								?>
-							</select> 
+							</select>
 							<a id="learndash-translation-install-<?php echo esc_attr( $this->project_slug ); ?>" class="button button-primary learndash-translations-install" href="#"><?php esc_html_e( 'Install', 'learndash' ); ?></a>
 						</div>
 						<?php
@@ -757,7 +757,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 		public static function show_debug_log_output() {
 			if ( ! empty( self::$debug_log_array ) ) {
 				foreach ( self::$debug_log_array as $message ) {
-					echo '<br />' . $message;
+					echo '<br />' . esc_html( $message );
 				}
 			}
 		}

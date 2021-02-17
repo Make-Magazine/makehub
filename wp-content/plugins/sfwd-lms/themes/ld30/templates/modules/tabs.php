@@ -114,7 +114,7 @@ foreach ( $tabs as $tab ) {
 		 * @param int       $user_id   User ID.
 		 */
 		do_action( 'learndash-content-tab-listing-before', get_the_ID(), $context, $course_id, $user_id );
-		
+
 		/**
 		 * Fires before the content tabs for any context.
 		 *
@@ -180,7 +180,7 @@ foreach ( $tabs as $tab ) {
 		 * @param int       $user_id   User ID.
 		 */
 		do_action( 'learndash-content-tab-listing-after', get_the_ID(), $course_id, $user_id );
-		
+
 		/**
 		 * Fires after the content tabs for any context.
 		 *

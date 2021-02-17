@@ -23,16 +23,19 @@ const {
 
 const {
 	InspectorControls,
-} = wp.editor;
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	RangeControl,
 	SelectControl,
 	ToggleControl,
 	TextControl
 } = wp.components;
+
+const {
+	serverSideRender: ServerSideRender
+} = wp;
 
 registerBlockType(
 	'learndash/ld-quiz-list',
@@ -422,7 +425,7 @@ registerBlockType(
 			);
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					{panelbody_header}
 					{panel_quiz_grid_section}
 					{panel_quiz_category_section}
@@ -438,6 +441,7 @@ registerBlockType(
 					return <ServerSideRender
 						block="learndash/ld-quiz-list"
 						attributes={attributes}
+						key="learndash/ld-quiz-list"
 					/>
 				} else {
 					return __('[ld_quiz_list] shortcode output shown here', 'learndash');

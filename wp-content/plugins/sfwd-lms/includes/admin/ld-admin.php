@@ -88,17 +88,17 @@ function learndash_should_load_admin_assets() {
 	}
 
 	$is_ld_page = false;
-	if ( ( isset( $_GET['page'] ) ) && ( in_array( $_GET['page'], $learndash_pages ) ) ) {
+	if ( ( isset( $_GET['page'] ) ) && ( in_array( $_GET['page'], $learndash_pages, true ) ) ) {
 		$is_ld_page = true;
 	}
 
 	$is_ld_post_type = false;
-	if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, $learndash_post_types ) ) ) {
+	if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, $learndash_post_types, true ) ) ) {
 		$is_ld_post_type = true;
 	}
 
 	$is_ld_pagenow = false;
-	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, $learndash_post_types ) ) ) {
+	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) && ( is_a( $post, 'WP_Post' ) ) && ( in_array( $post->post_type, $learndash_post_types, true ) ) ) {
 		$is_ld_pagenow = true;
 	}
 
@@ -134,7 +134,7 @@ function learndash_load_admin_resources() {
 
 	wp_enqueue_style(
 		'learndash-admin-menu-style',
-		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-menu' . leardash_min_asset() . '.css',
+		LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-menu' . learndash_min_asset() . '.css',
 		array(),
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
@@ -143,7 +143,7 @@ function learndash_load_admin_resources() {
 
 	wp_enqueue_script(
 		'learndash-admin-menu-script',
-		LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-menu' . leardash_min_asset() . '.js',
+		LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-menu' . learndash_min_asset() . '.js',
 		array( 'jquery' ),
 		LEARNDASH_SCRIPT_VERSION_TOKEN,
 		true
@@ -164,7 +164,7 @@ function learndash_load_admin_resources() {
 
 		wp_enqueue_style(
 			'learndash_style',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
@@ -173,7 +173,7 @@ function learndash_load_admin_resources() {
 
 		wp_enqueue_style(
 			'learndash-admin-style',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-style' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/learndash-admin-style' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
@@ -182,17 +182,17 @@ function learndash_load_admin_resources() {
 
 		wp_enqueue_style(
 			'sfwd-module-style',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
 		wp_style_add_data( 'sfwd-module-style', 'rtl', 'replace' );
 		$learndash_assets_loaded['styles']['sfwd-module-style'] = __FUNCTION__;
 
-		if ( ( $pagenow == 'edit.php' ) && ( in_array( $typenow, array( 'sfwd-essays', 'sfwd-assignment', 'sfwd-topic', 'sfwd-quiz' ) ) ) ) {
+		if ( ( 'edit.php' === $pagenow ) && ( in_array( $typenow, array( 'sfwd-essays', 'sfwd-assignment', 'sfwd-topic', 'sfwd-quiz' ), true ) ) ) {
 			wp_enqueue_script(
 				'sfwd-module-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/sfwd_module' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -202,10 +202,10 @@ function learndash_load_admin_resources() {
 		}
 	}
 
-	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) ) && ( $post->post_type == 'sfwd-quiz' ) ) {
+	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) && ( 'sfwd-quiz' === $post->post_type ) ) {
 		wp_enqueue_script(
 			'wpProQuiz_admin_javascript',
-			plugins_url( 'js/wpProQuiz_admin' . leardash_min_asset() . '.js', WPPROQUIZ_FILE ),
+			plugins_url( 'js/wpProQuiz_admin' . learndash_min_asset() . '.js', WPPROQUIZ_FILE ),
 			array( 'jquery' ),
 			LEARNDASH_SCRIPT_VERSION_TOKEN,
 			true
@@ -213,10 +213,10 @@ function learndash_load_admin_resources() {
 		$learndash_assets_loaded['scripts']['wpProQuiz_admin_javascript'] = __FUNCTION__;
 	}
 
-	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ) ) ) && ( $post->post_type == 'sfwd-lessons' ) ) {
+	if ( ( in_array( $pagenow, array( 'post.php', 'post-new.php' ), true ) ) && ( 'sfwd-lessons' === $post->post_type ) ) {
 		wp_enqueue_style(
 			'ld-datepicker-ui-css',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/jquery-ui' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/jquery-ui' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
@@ -225,12 +225,12 @@ function learndash_load_admin_resources() {
 	}
 
 	if (
-		( ( $pagenow == 'admin.php' ) && ( isset( $_GET['page'] ) ) && ( $_GET['page'] == 'ldAdvQuiz' ) )
-		&& ( ( isset( $_GET['module'] ) ) && ( $_GET['module'] == 'statistics' ) )
+		( ( 'admin.php' === $pagenow ) && ( isset( $_GET['page'] ) ) && ( 'ldAdvQuiz' === $_GET['page'] ) )
+		&& ( ( isset( $_GET['module'] ) ) && ( 'statistics' === $_GET['module'] ) )
 		) {
 		wp_enqueue_style(
 			'ld-datepicker-ui-css',
-			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/jquery-ui' . leardash_min_asset() . '.css',
+			LEARNDASH_LMS_PLUGIN_URL . 'assets/css/jquery-ui' . learndash_min_asset() . '.css',
 			array(),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);
@@ -253,11 +253,21 @@ function learndash_lms_reports_page() {
 			<div class="sfwd_settings_left">
 				<div class=" " id="sfwd-learndash-reports_metabox">
 					<div class="inside">
-						<a class="button-primary" href="<?php echo admin_url( 'admin.php?page=learndash-lms-reports&action=sfp_update_module&nonce-sfwd=' . wp_create_nonce( 'sfwd-nonce' ) . '&page_options=sfp_home_description&courses_export_submit=Export' ); ?>"><?php
+						<a class="button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=learndash-lms-reports&action=sfp_update_module&nonce-sfwd=' . esc_attr( wp_create_nonce( 'sfwd-nonce' ) ) . '&page_options=sfp_home_description&courses_export_submit=Export' ) ); ?>">
+						<?php
 						// translators: Export User Course Data Label.
-						printf( esc_html_x( 'Export User %s Data', 'Export User Course Data Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
-						?></a>
-						<a class="button-primary" href="<?php echo admin_url( 'admin.php?page=learndash-lms-reports&action=sfp_update_module&nonce-sfwd=' . wp_create_nonce( 'sfwd-nonce' ) . '&page_options=sfp_home_description&quiz_export_submit=Export' ); ?>"><?php printf( esc_html_x( 'Export %s Data', 'Export Quiz Data Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ); ?></a>
+						printf( esc_html_x( 'Export User %s Data', 'Export User Course Data Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						?>
+						</a>
+						<a class="button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=learndash-lms-reports&action=sfp_update_module&nonce-sfwd=' . esc_attr( wp_create_nonce( 'sfwd-nonce' ) ) . '&page_options=sfp_home_description&quiz_export_submit=Export' ) ); ?>">
+						<?php
+						printf(
+						// translators: Export Quiz Data Label.
+							esc_html_x( 'Export %s Data', 'Export Quiz Data Label', 'learndash' ),
+							LearnDash_Custom_Label::get_label( 'quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+						);
+						?>
+						</a>
 						<?php
 							/**
 							 * Fires after report page buttons.
@@ -298,7 +308,7 @@ function learndash_select_menu() {
 			jQuery("body").removeClass("sticky-menu");
 			jQuery("#toplevel_page_learndash-lms, #toplevel_page_learndash-lms > a").removeClass('wp-not-current-submenu' );
 			jQuery("#toplevel_page_learndash-lms").addClass('current wp-has-current-submenu wp-menu-open' );
-			jQuery("#toplevel_page_learndash-lms a[href='<?php echo $learndash_current_page_link; ?>']").parent().addClass("current");
+			jQuery("#toplevel_page_learndash-lms a[href='<?php echo esc_url( $learndash_current_page_link ); ?>']").parent().addClass("current");
 		//});
 		</script>
 		<?php
@@ -335,7 +345,7 @@ function learndash_element_lazy_loader() {
 												} else {
 													$selected = '';
 												}
-												$reply_data['html_options'] .= '<option ' . $selected . ' value="' . $p->ID . '">' . apply_filters( 'the_title', $p->post_title, $p->ID ) . '</option>';
+												$reply_data['html_options'] .= '<option ' . $selected . ' value="' . $p->ID . '">' . apply_filters( 'the_title', $p->post_title, $p->ID ) . '</option>'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WP Core Hook
 											}
 										}
 									}
@@ -355,7 +365,7 @@ function learndash_element_lazy_loader() {
 		}
 	}
 
-	echo json_encode( $reply_data );
+	echo wp_json_encode( $reply_data );
 
 	wp_die(); // this is required to terminate immediately and return a proper response
 }
@@ -374,7 +384,7 @@ add_action( 'wp_ajax_learndash_element_lazy_loader', 'learndash_element_lazy_loa
  * @return array An array of the plugin's metadata.
  */
 function learndash_plugin_row_meta( $plugin_meta, $plugin_file, $plugin_data, $status ) {
-	if ( $plugin_file == LEARNDASH_LMS_PLUGIN_KEY ) {
+	if ( LEARNDASH_LMS_PLUGIN_KEY === $plugin_file ) {
 		if ( ! isset( $plugin_meta['changelog'] ) ) {
 			$plugin_meta['changelog'] = '<a target="_blank" href="https://www.learndash.com/changelog">' . esc_html__( 'Changelog', 'learndash' ) . '</a>';
 		}
@@ -395,7 +405,7 @@ add_filter( 'plugin_row_meta', 'learndash_plugin_row_meta', 10, 4 );
  */
 function learndash_manage_edit_post_tag_columns( $columns = array() ) {
 	if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-		if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ) ) ) {
+		if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
 			if ( isset( $columns['posts'] ) ) {
 				unset( $columns['posts'] );
 			}
@@ -413,16 +423,16 @@ add_filter( 'manage_edit-category_columns', 'learndash_manage_edit_post_tag_colu
  *
  * Fires on `manage_post_tag_custom_column` hook.
  *
- * @param string $column_content Optional. Column content. Default empty.
+ * @param string $column_content Column content. Default empty.
  * @param string $column_name    Name of the column.
  * @param int    $term_id        Term ID.
  *
  * @return string Taxonomy custom column content.
  */
-function learndash_manage_post_tag_custom_column( $column_content = '', $column_name, $term_id ) {
-	if ( $column_name == 'ld_posts' ) {
+function learndash_manage_post_tag_custom_column( $column_content, $column_name, $term_id ) {
+	if ( 'ld_posts' === $column_name ) {
 		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ) ) ) {
+			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
 				$query_args = array(
 					'post_type'   => esc_attr( $_GET['post_type'] ),
 					'post_status' => 'publish',
@@ -462,16 +472,16 @@ add_filter( 'manage_post_tag_custom_column', 'learndash_manage_post_tag_custom_c
  *
  * Fires on `manage_category_custom_column` hook.
  *
- * @param string $column_content Optional. Column content. Default empty.
+ * @param string $column_content Column content. Default empty.
  * @param string $column_name    Name of the column.
  * @param int    $term_id        Term ID.
  *
  * @return string Taxonomy custom column content.
  */
-function learndash_manage_category_custom_column( $column_content = '', $column_name, $term_id ) {
+function learndash_manage_category_custom_column( $column_content, $column_name, $term_id ) {
 	if ( 'ld_posts' === $column_name ) {
 		if ( ( isset( $_GET['post_type'] ) ) && ( ! empty( $_GET['post_type'] ) ) ) {
-			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ) ) ) {
+			if ( in_array( $_GET['post_type'], array( 'sfwd-courses', 'sfwd-lessons', 'sfwd-topic' ), true ) ) {
 				$query_args = array(
 					'post_type'   => esc_attr( $_GET['post_type'] ),
 					'post_status' => 'publish',
@@ -794,13 +804,15 @@ function learndash_admin_notice_other_lms_plugins() {
 	if ( ! empty( $learndash_other_plugins_active_text ) ) {
 		$notice_time = get_user_meta( get_current_user_id(), 'learndash_other_plugins_notice_dismissed_nonce', true );
 		$notice_time = absint( $notice_time );
-		if ( ! empty( $notice_time ) ) {	
+		if ( ! empty( $notice_time ) ) {
 			return;
 		}
 
-		?><div class="notice notice-error notice-alt is-dismissible ld-plugin-other-plugins-notice" data-notice-dismiss-nonce="<?php echo wp_create_nonce( 'notice-dismiss-nonce-' . get_current_user_id() ) ?>"><?php
-			echo wpautop(
-				wp_kses_post(
+		?>
+		<div class="notice notice-error notice-alt is-dismissible ld-plugin-other-plugins-notice" data-notice-dismiss-nonce="<?php echo esc_attr( wp_create_nonce( 'notice-dismiss-nonce-' . get_current_user_id() ) ); ?>">
+		<?php
+			echo wp_kses_post(
+				wpautop(
 					sprintf(
 						// translators: placeholder: list of active LMS plugins.
 						_x( '<strong>LearnDash LMS</strong> has detected other active LMS plugins which may cause conflicts: <strong>%s</strong>', 'placeholder: list of active LMS plugins', 'learndash' ),
@@ -808,7 +820,9 @@ function learndash_admin_notice_other_lms_plugins() {
 					)
 				)
 			);
-		?></div><?php
+		?>
+		</div>
+		<?php
 	}
 }
 add_action( 'admin_notices', 'learndash_admin_notice_other_lms_plugins' );

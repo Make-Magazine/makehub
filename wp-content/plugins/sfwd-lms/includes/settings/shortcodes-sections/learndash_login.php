@@ -4,9 +4,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_learndash_login' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_learndash_login extends LearnDash_Shortcodes_Section {
 
-		function __construct( $fields_args = array() ) {
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
+		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
 			$this->shortcodes_section_key         = 'learndash_login';
@@ -17,7 +26,10 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
-		function init_shortcodes_section_fields() {
+		/**
+		 * Initialize the shortcode fields.
+		 */
+		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'login_description'  => array(
 					'id'         => $this->shortcodes_section_key . '_login_description',
@@ -69,17 +81,6 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 						'link' => esc_html__( 'Link', 'learndash' ),
 					),
 				),
-				/*
-				'login_url_redirect' => array(
-					'id'			=>	$this->shortcodes_section_key . '_login_url_redirect',
-					'name'  		=> 	'login_url_redirect',
-					'type'  		=> 	'text',
-					'label' 		=> 	esc_html__('Login URL Redirect', 'learndash'),
-					'value' 		=> 	'',
-					'help_text'		=>	esc_html__( 'URL to redirect to after login. Default is the current page URL.', 'learndash' ),
-				),
-				*/
-
 				'logout_description' => array(
 					'id'         => $this->shortcodes_section_key . '_logout_description',
 					'name'       => 'logout_description',

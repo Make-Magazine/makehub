@@ -75,32 +75,36 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$this->quiz_edit = $this->init_quiz_edit( $this->_post );
-
 			if ( true === $this->settings_values_loaded ) {
-				if ( ! isset( $this->setting_option_values['course'] ) ) {
-					$this->setting_option_values['course'] = '';
-				}
-				if ( ! isset( $this->setting_option_values['lesson'] ) ) {
-					$this->setting_option_values['lesson'] = '';
-				}
-
 				$this->quiz_edit = $this->init_quiz_edit( $this->_post );
-				if ( $this->quiz_edit['quiz'] ) {
-					$this->setting_option_values['startOnlyRegisteredUser'] = $this->quiz_edit['quiz']->isStartOnlyRegisteredUser();
-					if ( true === $this->setting_option_values['startOnlyRegisteredUser'] ) {
-						$this->setting_option_values['startOnlyRegisteredUser'] = 'on';
-					} else {
-						$this->setting_option_values['startOnlyRegisteredUser'] = '';
+
+				if ( true === $this->settings_values_loaded ) {
+					if ( ! isset( $this->setting_option_values['course'] ) ) {
+						$this->setting_option_values['course'] = '';
+					}
+					if ( ! isset( $this->setting_option_values['lesson'] ) ) {
+						$this->setting_option_values['lesson'] = '';
+					}
+
+					$this->quiz_edit = $this->init_quiz_edit( $this->_post );
+					if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( ! empty( $this->quiz_edit['quiz'] ) ) ) {
+						$this->setting_option_values['startOnlyRegisteredUser'] = $this->quiz_edit['quiz']->isStartOnlyRegisteredUser();
+						if ( true === $this->setting_option_values['startOnlyRegisteredUser'] ) {
+							$this->setting_option_values['startOnlyRegisteredUser'] = 'on';
+						} else {
+							$this->setting_option_values['startOnlyRegisteredUser'] = '';
+						}
+
+						if ( $this->quiz_edit['prerequisiteQuizList'] ) {
+							$this->setting_option_values['prerequisiteList'] = $this->quiz_edit['prerequisiteQuizList'];
+						} else {
+							$this->setting_option_values['prerequisiteList'] = array();
+						}
 					}
 				}
-
-				if ( $this->quiz_edit['prerequisiteQuizList'] ) {
-					$this->setting_option_values['prerequisiteList'] = $this->quiz_edit['prerequisiteQuizList'];
-				} else {
-					$this->setting_option_values['prerequisiteList'] = array();
-				}
 			}
+
+			// Ensure all settings fields are present.
 			foreach ( $this->settings_fields_map as $_internal => $_external ) {
 				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
 					$this->setting_option_values[ $_internal ] = '';
@@ -139,7 +143,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$select_course_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
 							'query_args'       => array(
-								'post_type'      => 'sfwd-courses',
+								'post_type' => 'sfwd-courses',
 							),
 							'settings_element' => array(
 								'settings_parent_class' => get_parent_class( __CLASS__ ),
@@ -188,7 +192,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'topic' )
 					),
 				);
-				$select_lesson_options = $select_lesson_options_default + $select_lesson_options;
+				$select_lesson_options         = $select_lesson_options_default + $select_lesson_options;
 
 			} else {
 				$select_lesson_options_default = array(
@@ -229,12 +233,12 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				);
 			}
 
-			$quiz_mapper                       = new WpProQuiz_Model_QuizMapper();
-			$prerequisite_quizzes              = $quiz_mapper->fetchAllAsArray( array( 'id', 'name' ), array() );
+			$quiz_mapper                      = new WpProQuiz_Model_QuizMapper();
+			$prerequisite_quizzes             = $quiz_mapper->fetchAllAsArray( array( 'id', 'name' ), array() );
 			$select_quiz_prerequisite_options = array();
 			if ( ! empty( $prerequisite_quizzes ) ) {
 				foreach ( $prerequisite_quizzes as $quiz_set ) {
-					if ( absint( $quiz_set['id'] ) !== absint( $this->quiz_edit['quiz']->getId() ) ) {
+					if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( absint( $quiz_set['id'] ) !== absint( $this->quiz_edit['quiz']->getId() ) ) ) {
 						$select_quiz_prerequisite_options[ $quiz_set['id'] ] = $quiz_set['name'];
 					}
 				}
@@ -247,58 +251,88 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			$this->setting_option_fields = array(
 				'course'                  => array(
-					'name'    => 'course',
-					'label'   => sprintf(
+					'name'        => 'course',
+					'label'       => sprintf(
 						// translators: placeholder: Course.
 						esc_html_x( 'Associated %s', 'placeholder: Course', 'learndash' ),
 						learndash_get_custom_label( 'course' )
 					),
-					'type'    => 'select',
-					'default' => '',
-					'value'   => $this->setting_option_values['course'],
-					'options' => $select_course_options,
+					'type'        => 'select',
+					'default'     => '',
+					'value'       => $this->setting_option_values['course'],
+					'options'     => $select_course_options,
 					'placeholder' => $select_course_options_default,
-					'attrs'   => array(
+					'attrs'       => array(
 						'data-ld_selector_nonce'   => wp_create_nonce( 'sfwd-courses' ),
 						'data-ld_selector_default' => '1',
 						'data-select2-query-data'  => $select_course_query_data_json,
 					),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
+					),
 				),
 				'lesson'                  => array(
-					'name'    => 'lesson',
-					'label'   => sprintf(
+					'name'        => 'lesson',
+					'label'       => sprintf(
 						// translators: placeholder: Lesson.
 						esc_html_x( 'Associated %s', 'placeholder: Lesson', 'learndash' ),
 						learndash_get_custom_label( 'lesson' )
 					),
-					'type'    => 'select',
-					'default' => '',
-					'value'   => $this->setting_option_values['lesson'],
-					'options' => $select_lesson_options,
+					'type'        => 'select',
+					'default'     => '',
+					'value'       => $this->setting_option_values['lesson'],
+					'options'     => $select_lesson_options,
 					'placeholder' => $select_lesson_options_default,
-					'attrs'   => array(
+					'attrs'       => array(
 						'data-ld_selector_nonce'   => wp_create_nonce( 'sfwd-lessons' ),
 						'data-ld_selector_default' => '1',
+					),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
 					),
 				),
 
 				'prerequisiteList'        => array(
-					'name'        => 'prerequisiteList',
-					'type'        => 'multiselect',
-					// 'multiple'    => 'true',
-					'label'       => sprintf(
+					'name'      => 'prerequisiteList',
+					'type'      => 'multiselect',
+					'label'     => sprintf(
 						// translators: placeholder: Quiz.
 						esc_html_x( '%s Prerequisites', 'placeholder: Quiz', 'learndash' ),
 						learndash_get_custom_label( 'quiz' )
 					),
-					'help_text'   => sprintf(
+					'help_text' => sprintf(
 						// translators: placeholderss: quizzes, quiz.
 						esc_html_x( 'Select one or more %1$s that must be completed prior to taking this %2$s.', 'placeholderss: Quizzes Quiz', 'learndash' ),
 						learndash_get_custom_label_lower( 'quizzes' ),
 						learndash_get_custom_label_lower( 'quiz' )
 					),
-					'value'       => $this->setting_option_values['prerequisiteList'],
-					'options'     => $select_quiz_prerequisite_options,
+					'value'     => $this->setting_option_values['prerequisiteList'],
+					'options'   => $select_quiz_prerequisite_options,
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'prerequisites',
+								'default'   => array(),
+								'type'      => 'array',
+								'items'     => array(
+									'type' => 'integer',
+								),
+							),
+						),
+					),
 				),
 
 				'startOnlyRegisteredUser' => array(
@@ -319,6 +353,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							// translators: placeholder: quiz.
 							esc_html_x( 'Only registered users can take this quiz', 'placeholder: quiz', 'learndash' ),
 							learndash_get_custom_label( 'quiz' )
+						),
+					),
+					'rest'      => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'registered_users_only',
+								esc_html__( 'Only Logged-in Users', 'learndash' ),
+								'type'      => 'boolean',
+								'default'   => false,
+							),
 						),
 					),
 				),

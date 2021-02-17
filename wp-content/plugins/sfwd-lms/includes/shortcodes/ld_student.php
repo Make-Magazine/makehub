@@ -67,7 +67,7 @@ function learndash_student_check_shortcode( $atts, $content = null ) {
 		 */
 		$atts = apply_filters( 'learndash_student_shortcode_atts', $atts );
 
-		if ( ( ! empty( $atts['content'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['course_id'] ) ) && ( $atts['user_id'] == get_current_user_id() ) ) {
+		if ( ( ! empty( $atts['content'] ) ) && ( ! empty( $atts['user_id'] ) ) && ( ! empty( $atts['course_id'] ) ) && ( get_current_user_id() == $atts['user_id'] ) ) {
 			// The reason we are doing this check is because 'sfwd_lms_has_access' will return true if the course does not exist.
 			// This needs to be changed to return some other value because true signals the calling function that all is well.
 			$course_id = learndash_get_course_id( $atts['course_id'] );

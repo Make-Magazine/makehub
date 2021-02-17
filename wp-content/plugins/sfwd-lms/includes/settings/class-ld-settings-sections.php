@@ -23,7 +23,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @var array $_instances
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Match the WP Screen ID
@@ -156,7 +156,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 *
 		 * @var array $settings_deprecated
 		 */
-		protected static $_settings_deprecated = array();
+		protected static $global_settings_deprecated = array();
 
 		/**
 		 * Public constructor for class
@@ -179,11 +179,11 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 			if ( ! empty( $this->settings_deprecated ) ) {
 				foreach ( $this->settings_deprecated as $old_class => $old_settings ) {
-					if ( ! isset( self::$_settings_deprecated[ $old_class ] ) ) {
+					if ( ! isset( self::$global_settings_deprecated[ $old_class ] ) ) {
 						if ( ! isset( $old_settings['class'] ) ) {
 							$old_settings['class'] = get_called_class();
 						}
-						self::$_settings_deprecated[ $old_class ] = $old_settings;
+						self::$global_settings_deprecated[ $old_class ] = $old_settings;
 					}
 				}
 			}
@@ -247,10 +247,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 			foreach ( $this->setting_option_fields as &$setting_option_field ) {
 				if ( ! isset( $setting_option_field['type'] ) ) {
 					continue;
-					//error_log('setting_option_field[type]['. $setting_option_field['type'] .']');
-					//error_log('setting_option_field<pre>'. print_r($setting_option_field, true) .'</pre>');
 				}
-				
+
 				$field_instance = LearnDash_Settings_Fields::get_field_instance( $setting_option_field['type'] );
 				if ( ( $field_instance ) && ( 'LearnDash_Settings_Fields' === get_parent_class( $field_instance ) ) ) {
 					$setting_option_field['setting_option_key'] = $this->setting_option_key;
@@ -331,7 +329,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 					if ( ! isset( $setting_option_field['name'] ) ) {
 						continue;
 					}
-					
+
 					add_settings_field(
 						$setting_option_field['name'],
 						$setting_option_field['label'],
@@ -356,7 +354,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		public function show_settings_section_description() {
 
 			if ( ! empty( $this->settings_section_description ) ) {
-				echo '<div class="ld-metabox-description">' . wpautop( $this->settings_section_description ) . '</div>';
+				echo '<div class="ld-metabox-description">' . wp_kses_post( wpautop( $this->settings_section_description ) ) . '</div>';
 			}
 		}
 
@@ -402,7 +400,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 				if ( ! defined( 'LEARNDASH_SETTINGS_UPDATING' ) ) {
 					define( 'LEARNDASH_SETTINGS_UPDATING', true );
 				}
-				$this->setting_option_values = $value;
+				$this->setting_option_values  = $value;
 				$this->settings_values_loaded = false;
 				$this->settings_fields_loaded = false;
 				return true;
@@ -463,7 +461,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 						$this->metabox_priority
 					);
 
-					add_filter( 'postbox_classes_' . $this->settings_screen_id . '_' . $this->metabox_key , array( $this, 'add_meta_box_classes' ), 30, 1 );
+					add_filter( 'postbox_classes_' . $this->settings_screen_id . '_' . $this->metabox_key, array( $this, 'add_meta_box_classes' ), 30, 1 );
 				}
 			}
 		}
@@ -478,15 +476,15 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 * @return array $classes.
 		 */
 		public function add_meta_box_classes( $classes ) {
-			if ( ! in_array( 'ld_settings_postbox', $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox', $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox';
 			}
 
-			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id, $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id, $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox_' . $this->settings_screen_id;
 			}
 
-			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->metabox_key, $classes ) ) {
+			if ( ! in_array( 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->metabox_key, $classes, true ) ) {
 				$classes[] = 'ld_settings_postbox_' . $this->settings_screen_id . '_' . $this->metabox_key;
 			}
 
@@ -680,6 +678,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 				if ( isset( self::$_instances[ $section ]->setting_option_fields[ $field_key ] ) ) {
 					$default_return = self::$_instances[ $section ]->setting_option_fields[ $field_key ]['value'];
+				} elseif ( isset( self::$_instances[ $section ]->setting_option_values[ $field_key ] ) ) {
+					$default_return = self::$_instances[ $section ]->setting_option_values[ $field_key ];
 				}
 			}
 
@@ -732,8 +732,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 
 				// If we are dealing with deprecated values we provide the old key/value sets as well so easy the logic on the caller.
 				if ( $section_org !== $section ) {
-					if ( ( isset( self::$_settings_deprecated[ $section_org ]['fields'] ) ) && ( ! empty( self::$_settings_deprecated[ $section_org ]['fields'] ) ) ) {
-						foreach ( self::$_settings_deprecated[ $section_org ]['fields'] as $old_field => $new_field ) {
+					if ( ( isset( self::$global_settings_deprecated[ $section_org ]['fields'] ) ) && ( ! empty( self::$global_settings_deprecated[ $section_org ]['fields'] ) ) ) {
+						foreach ( self::$global_settings_deprecated[ $section_org ]['fields'] as $old_field => $new_field ) {
 							if ( ( ! isset( $fields_values[ $old_field ] ) ) && ( isset( self::$_instances[ $section ]->setting_option_values[ $new_field ][ $field ] ) ) ) {
 								$fields_values[ $old_field ] = self::$_instances[ $section ]->setting_option_fields[ $new_field ][ $field ];
 							} elseif ( ( 'value' === $field ) && ( isset( self::$_instances[ $section ]->setting_option_values[ $new_field ] ) ) ) {
@@ -811,8 +811,8 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 */
 		public static function check_deprecated_class( $section = '' ) {
 			if ( ! empty( $section ) ) {
-				if ( isset( self::$_settings_deprecated[ $section ] ) ) {
-					$section = self::$_settings_deprecated[ $section ]['class'];
+				if ( isset( self::$global_settings_deprecated[ $section ] ) ) {
+					$section = self::$global_settings_deprecated[ $section ]['class'];
 				}
 			}
 
@@ -828,9 +828,9 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 * @return string new field key.
 		 */
 		public static function check_deprecated_field_key( $field_key = '', $old_section = '' ) {
-			if ( ( ! empty( $old_section ) ) && ( isset( self::$_settings_deprecated[ $old_section ] ) ) ) {
-				if ( isset( self::$_settings_deprecated[ $old_section ]['fields'] ) ) {
-					$section_fields = self::$_settings_deprecated[ $old_section ]['fields'];
+			if ( ( ! empty( $old_section ) ) && ( isset( self::$global_settings_deprecated[ $old_section ] ) ) ) {
+				if ( isset( self::$global_settings_deprecated[ $old_section ]['fields'] ) ) {
+					$section_fields = self::$global_settings_deprecated[ $old_section ]['fields'];
 					if ( ! empty( $section_fields ) ) {
 						if ( isset( $section_fields[ $field_key ] ) ) {
 							$field_key = $section_fields[ $field_key ];
@@ -843,40 +843,3 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		}
 	}
 }
-
-if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'LearnDash_Theme_Settings_Section' ) ) ) {
-	/**
-	 * Class to create the settings section.
-	 */
-	abstract class LearnDash_Theme_Settings_Section extends LearnDash_Settings_Section {
-		/**
-		 * Match Theme Key.
-		 * This should match the theme_key set within the LearnDash_Theme_Register instance.
-		 *
-		 * @var string $settings_theme_key Settings Theme ID.
-		 */
-		protected $settings_theme_key = '';
-
-
-		/**
-		 * Protected constructor for class
-		 */
-		protected function __construct() {
-			parent::__construct();
-
-			if ( ! empty( $this->settings_theme_key ) ) {
-				LearnDash_Theme_Register::register_theme_settings_section( $this->settings_theme_key, $this->settings_section_key, $this );
-			}
-			add_filter( 'learndash_show_metabox', array( $this, 'learndash_show_metabox' ), 1, 3 );
-		}
-
-		final public function learndash_show_metabox( $show_metabox = true, $metabox_key = '', $settings_screen_id = '' ) {
-			if ( $metabox_key === $this->metabox_key ) {
-				$show_metabox = false;
-			}
-
-			return $show_metabox;
-		}
-	}
-}
-

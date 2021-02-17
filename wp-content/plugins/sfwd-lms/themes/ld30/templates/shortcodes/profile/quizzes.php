@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 <div class="ld-table-list ld-quiz-list">
 	<div class="ld-table-list-header ld-primary-background">
 		<div class="ld-table-list-title">
-			<?php echo esc_html( LearnDash_Custom_Label::get_label( 'quizzes' ) ); ?>
+			<?php echo LearnDash_Custom_Label::get_label( 'quizzes' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output ?>
 		</div> <!--/.ld-table-list-title-->
 		<div class="ld-table-list-columns">
 		<?php

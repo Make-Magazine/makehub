@@ -27,7 +27,7 @@ $is_sample    = ( isset( $lesson['sample'] ) ? $lesson['sample'] : false );
  *
  * @param string $attribute Quiz row attribute. The value is data-ld-tooltip if a user does not have access to quiz otherwise empty string.
  */
-$atts         = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'learndash' ) . '"' : '' ) );
+$atts = apply_filters( 'learndash_quiz_row_atts', ( isset( $has_access ) && ! $has_access && ! $is_sample ? 'data-ld-tooltip="' . esc_html__( "You don't currently have access to this content", 'learndash' ) . '"' : '' ) );
 
 /**
  * Fires before the quiz row listing.
@@ -67,7 +67,10 @@ do_action( 'learndash-quiz-row-before', $quiz['post']->ID, $course_id, $user_id 
 			do_action( 'learndash-quiz-row-title-before', $quiz['post']->ID, $course_id, $user_id );
 			?>
 
-			<div class="ld-item-title"><?php echo wp_kses_post( $quiz['post']->post_title ); ?></div>
+			<div class="ld-item-title"><?php
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) );
+			?></div>
 
 			<?php
 			/**

@@ -100,7 +100,7 @@ function get_quiz_data( $data ) {
 			}
 		}
 	}
-	
+
 	// Output all the quiz's questions.
 	$data['outline'] = [
 		'questions' => $output_questions,

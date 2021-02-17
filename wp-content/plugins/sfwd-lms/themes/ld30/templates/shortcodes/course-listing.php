@@ -896,7 +896,7 @@ if ( 'true' == $include_outer_wrapper ) {
                 <label for="ld_' . $post_type_slug . '_categorydropdown_select">' . $tax_object->labels->name . '</label>
                 <select id="ld_' . $post_type_slug . '_categorydropdown_select" name="' . $post_type_slug . '_catid" onChange="jQuery(\'#ld_' . $post_type_slug . '_categorydropdown form\').submit()">';
 		$ld_categorydropdown .= '<option value="">' . sprintf(
-			// translators: placeholder Category label
+			// translators: placeholder: LD Category label
 			esc_html_x( 'Select %s', 'placeholder: LD Category label', 'learndash' ),
 			esc_html( $tax_object->labels->name )
 		) . '</option>';

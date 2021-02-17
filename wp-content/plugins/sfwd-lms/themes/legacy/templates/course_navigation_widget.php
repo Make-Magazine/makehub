@@ -12,16 +12,18 @@
  * Filter to allow override of widget instance arguments.
  * @since 2.3.3
  */
-if ( !isset( $widget_instance ) ) $widget_instance = array();
+if ( ! isset( $widget_instance ) ) {
+	$widget_instance = array();
+}
 
 /** This filter is documented in themes/ld30/templates/widgets/course-navigation.php */
 $widget_instance = apply_filters( 'learndash_course_navigation_widget_args', $widget_instance, $course_id );
-$widget_data = array(
-	'course_id' => $course_id,
-	'widget_instance' => $widget_instance
+$widget_data     = array(
+	'course_id'       => $course_id,
+	'widget_instance' => $widget_instance,
 );
 
-$widget_data_json = htmlspecialchars( json_encode( $widget_data ) );
+$widget_data_json = htmlspecialchars( wp_json_encode( $widget_data ) );
 
 if ( $widget_instance['show_widget_wrapper'] != false ) {
 	?>
@@ -41,22 +43,23 @@ if ( ! empty( $template_file ) ) {
 }
 
 
-if ( ( !empty( $widget_instance['current_step_id'] ) ) && ( $widget_instance['current_step_id'] != $course->ID ) ) { ?>
+if ( ( ! empty( $widget_instance['current_step_id'] ) ) && ( $widget_instance['current_step_id'] != $course->ID ) ) {
+	?>
 	<div class="widget_course_return">
 		<?php esc_html_e( 'Return to', 'learndash' ); ?>
-        <a href='<?php echo esc_url( get_permalink( $course_id ) ); ?>'><?php echo $course->post_title; ?></a>
+		<a href='<?php echo esc_url( get_permalink( $course_id ) ); ?>'><?php echo $course->post_title; ?></a>
 	</div>
 	<?php
 }
 
 if ( $widget_instance['show_widget_wrapper'] != false ) {
 	?>
-    </div>
+	</div>
 </div> <!-- Closing <div id='course_navigation'> -->
-<?php
-/** This filter is documented in themes/ld30/templates/course.php */
-if ( apply_filters('learndash_course_steps_expand_all', false, $course_id, 'course_navigation_widget' ) ) {
-	?>
+	<?php
+	/** This filter is documented in themes/ld30/templates/course.php */
+	if ( apply_filters( 'learndash_course_steps_expand_all', false, $course_id, 'course_navigation_widget' ) ) {
+		?>
 	<script>
 		jQuery( function() {
 			setTimeout(function(){
@@ -64,7 +67,7 @@ if ( apply_filters('learndash_course_steps_expand_all', false, $course_id, 'cour
 			}, 1000);
 		});
 	</script>
-	<?php
+		<?php
 	}
 }
 

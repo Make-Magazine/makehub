@@ -22,21 +22,21 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 *
 		 * @var string $shortcodes_section_key
 		 */
-		protected $shortcodes_section_key         = '';
+		protected $shortcodes_section_key = '';
 
 		/**
 		 * Shortcodes Section Title.
 		 *
 		 * @var string $shortcodes_section_title
 		 */
-		protected $shortcodes_section_title       = '';
+		protected $shortcodes_section_title = '';
 
 		/**
 		 * Shortcodes Section Type.
 		 *
 		 * @var integer $shortcodes_section_type
 		 */
-		protected $shortcodes_section_type        = 1;
+		protected $shortcodes_section_type = 1;
 
 		/**
 		 * Shortcodes Section Description.
@@ -142,7 +142,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 */
 		public function show_section_fields() {
 			$this->show_shortcodes_section_header();
-			echo LearnDash_Settings_Fields::show_section_fields( $this->shortcodes_settings_fields );
+			echo LearnDash_Settings_Fields::show_section_fields( $this->shortcodes_settings_fields ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 			$this->show_shortcodes_section_footer();
 		}
 
@@ -150,7 +150,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 * Show Section Header.
 		 */
 		public function show_shortcodes_section_header() {
-			?><form id="learndash_shortcodes_form_<?php echo $this->shortcodes_section_key; ?>" class="learndash_shortcodes_form" shortcode_slug="<?php echo $this->shortcodes_section_key; ?>" shortcode_type="<?php echo $this->shortcodes_section_type; ?>">
+			?><form id="learndash_shortcodes_form_<?php echo esc_attr( $this->shortcodes_section_key ); ?>" class="learndash_shortcodes_form" shortcode_slug="<?php echo esc_attr( $this->shortcodes_section_key ); ?>" shortcode_type="<?php echo esc_attr( $this->shortcodes_section_type ); ?>">
 				<?php $this->show_shortcodes_section_title(); ?>
 				<?php $this->show_shortcodes_section_description(); ?>
 				<div class="sfwd sfwd_options learndash_shortcodes_section" style="clear:left">
@@ -196,7 +196,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		public function show_shortcodes_section_title() {
 			if ( ! empty( $this->shortcodes_section_title ) ) {
 				?>
-				<h2><?php echo $this->shortcodes_section_title; ?> [<?php echo $this->shortcodes_section_key; ?>]</h2>
+				<h2><?php echo wp_kses_post( $this->shortcodes_section_title ); ?> [<?php echo esc_html( $this->shortcodes_section_key ); ?>]</h2>
 				<?php
 			}
 		}
@@ -213,7 +213,7 @@ if ( ! class_exists( 'LearnDash_Shortcodes_Section' ) ) {
 		 */
 		public function show_shortcodes_section_description() {
 			if ( ! empty( $this->shortcodes_section_description ) ) {
-				echo wpautop( $this->shortcodes_section_description );
+				echo wp_kses_post( wpautop( $this->shortcodes_section_description ) );
 			}
 		}
 

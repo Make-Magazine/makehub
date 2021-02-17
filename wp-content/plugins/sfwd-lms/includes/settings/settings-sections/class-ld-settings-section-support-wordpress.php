@@ -51,14 +51,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			global $wpdb, $wp_version, $wp_rewrite;
 			global $sfwd_lms;
 
-			$ABSPATH_tmp = str_replace( '\\', '/', ABSPATH );
+			$abspath_tmp = str_replace( '\\', '/', ABSPATH );
 
 			/************************************************************************************************
 			 * WordPress Settings.
 			 ************************************************************************************************/
 			if ( ! isset( $support_sections[ $this->setting_option_key ] ) ) {
-				$this->settings_set           = array();
-				
+				$this->settings_set = array();
+
 				$this->settings_set['header'] = array(
 					'html' => $this->settings_section_label,
 					'text' => $this->settings_section_label,
@@ -140,7 +140,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$defined_value      = ( defined( $defined_item ) ) ? constant( $defined_item ) : '';
 					$defined_value_html = $defined_value;
 					if ( 'WP_PLUGIN_DIR' == $defined_item ) {
-						$defined_value = str_replace( $ABSPATH_tmp, '', $defined_value );
+						$defined_value = str_replace( $abspath_tmp, '', $defined_value );
 					} elseif ( 'WP_MEMORY_LIMIT' == $defined_item ) {
 						if ( learndash_return_bytes_from_shorthand( $defined_value ) < learndash_return_bytes_from_shorthand( '100M' ) ) {
 							$defined_value     .= ' - (X) Recommended at least 100M memory.';

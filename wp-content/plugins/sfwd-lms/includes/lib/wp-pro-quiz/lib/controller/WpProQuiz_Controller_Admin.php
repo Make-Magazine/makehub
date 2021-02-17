@@ -196,7 +196,7 @@ class WpProQuiz_Controller_Admin {
 
 		learndash_quiz_debug_log_init( $quiz_post_id );
 		learndash_quiz_debug_log_message( '---------------------------------' );
-		learndash_quiz_debug_log_message( 'in ' . __FUNCTION__  );
+		learndash_quiz_debug_log_message( 'in ' . __FUNCTION__ );
 		learndash_quiz_debug_log_message( '_POST<pre>' . print_r( $_POST, true ) . '</pre>' );
 
 		learndash_quiz_debug_log_message( 'user_id ' . $user_id );
@@ -210,7 +210,8 @@ class WpProQuiz_Controller_Admin {
 
 		// First we unpack the $_POST['results'] string
 		if ( ( isset( $_POST['results'] ) ) && ( !empty( $_POST['results'] ) ) && ( is_string( $_POST['results'] ) ) ) {
-			$_POST['results'] = json_decode(stripslashes($_POST['results']), true);
+			$_POST['results'] = json_decode(stripslashes( $_POST['results']), true);
+			learndash_quiz_debug_log_message( '_POST[results]<pre>' . print_r( $_POST['results'], true ) . '</pre>' );
 		}
 		
 		// LD 2.4.3 - Change in logic. Instead of accepting the values for points, correct etc from JS we now pass the 'results' array on the complete quiz
@@ -223,19 +224,18 @@ class WpProQuiz_Controller_Admin {
 			return array('text' => esc_html__('An error has occurred.', 'learndash'), 'clear' => true);
 		}
 		
+		learndash_quiz_debug_log_message( 'Verifying submitted results' );
+
 		// Loop over the 'results' items. We verify and tally the points+correct counts as well as the student response 'data'. When we get to the 'comp' results element
 		// we set the award points and correct as well as determine the total possible points. 
 		// @TODO Need to test how this works with variabel question quizzes. 
 		foreach( $_POST['results'] as $r_idx => $result ) {
+			learndash_quiz_debug_log_message( '[' . $r_idx . '] result<pre>' . print_r( $result, true ) . '</pre>' );
+
 			if ( $r_idx == 'comp' ) {
 				$_POST['results'][$r_idx]['points'] = intval( $total_awarded_points );
 				$_POST['results'][$r_idx]['correctQuestions'] = intval( $total_correct );
 
-				//$quizMapper = new WpProQuiz_Model_QuizMapper();
-				//$total_possible_points = $quizMapper->sumQuestionPoints( $id );
-				//$_POST['results'][$r_idx]['possiblePoints'] = intval( $total_possible_points );
-				//$_POST['results'][$r_idx]['result'] = round( intval( $_POST['results'][$r_idx]['points'] ) / intval( $_POST['results'][$r_idx]['possiblePoints'] ) * 100, 2 );
-				
 				continue;
 			}
 			
@@ -247,9 +247,12 @@ class WpProQuiz_Controller_Admin {
 			if ( $points_array['correct'] === false ) $points_array['correct'] = 0;
 			else if ( $points_array['correct'] === true ) $points_array['correct'] = 1;
 			$points_str = maybe_serialize( $points_array );
+			//learndash_quiz_debug_log_message( 'points_str [' . $points_str . ']' );
 			
-			if ( !wp_verify_nonce( $result['p_nonce'], 'ld_quiz_pnonce'. $user_id .'_'. $id .'_'. $quiz_post_id .'_'. $r_idx .'_'. $points_str ) ) {
-				learndash_quiz_debug_log_message( 'invalid points nonce (p_nonce)' );
+			$points_nonce = 'ld_quiz_pnonce'. $user_id .'_'. $id .'_'. $quiz_post_id .'_'. $r_idx .'_'. $points_str;
+			//learndash_quiz_debug_log_message( 'points_nonce [' . $points_nonce . ']' );
+			if ( !wp_verify_nonce( $result['p_nonce'], $points_nonce ) ) {
+				learndash_quiz_debug_log_message( 'invalid points nonce (p_nonce). Clearing points values.' );
 
 				$_POST['results'][$r_idx]['points'] = 0;
 				$_POST['results'][$r_idx]['correct'] = 0;
@@ -257,10 +260,21 @@ class WpProQuiz_Controller_Admin {
 			}
 			$total_awarded_points += intval( $_POST['results'][$r_idx]['points'] );
 			$total_correct += $_POST['results'][$r_idx]['correct'];
-			$response_str = maybe_serialize( $result['data'] );
+			$response_str = maybe_serialize( 
+				array_map( function ( $array_item ) {
+					if ( is_string( $array_item ) ) {
+						return trim( $array_item );
+					}
+        			return $array_item;
+    			}, $result['data'] )
+			);
 
-			if ( !wp_verify_nonce( $result['a_nonce'], 'ld_quiz_anonce'. $user_id .'_'. $id .'_'. $quiz_post_id .'_'. $r_idx .'_'. $response_str ) ) {
-				learndash_quiz_debug_log_message( 'invalid answer nonce (a_nonce)' );
+			learndash_quiz_debug_log_message( 'response_str [' . $response_str . ']' );
+
+			$repsonse_nonce = 'ld_quiz_anonce'. $user_id .'_'. $id .'_'. $quiz_post_id .'_'. $r_idx .'_'. $response_str;
+			//learndash_quiz_debug_log_message( 'points_nonce [' . $repsonse_nonce . ']' );
+			if ( !wp_verify_nonce( $result['a_nonce'], $repsonse_nonce ) ) {
+				learndash_quiz_debug_log_message( 'invalid answer nonce (a_nonce). Clearing answer/response values.' );
 
 				$_POST['results'][$r_idx]['data'] = array();
 			}
@@ -320,7 +334,7 @@ class WpProQuiz_Controller_Admin {
 		
 		wp_enqueue_script(
 			'wpProQuiz_admin_javascript', 
-			plugins_url('js/wpProQuiz_admin'. leardash_min_asset() .'.js', WPPROQUIZ_FILE),
+			plugins_url('js/wpProQuiz_admin'. learndash_min_asset() .'.js', WPPROQUIZ_FILE),
 			array('jquery', 'jquery-ui-sortable', 'jquery-ui-datepicker'),
 			LEARNDASH_SCRIPT_VERSION_TOKEN
 		);

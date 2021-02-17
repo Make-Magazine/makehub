@@ -22,11 +22,10 @@ const {
 } = wp.blocks;
 
 const {
-    InspectorControls,
-} = wp.editor;
+	InspectorControls,
+} = wp.blockEditor;
 
 const {
-	ServerSideRender,
 	PanelBody,
 	RangeControl,
 	SelectControl,
@@ -34,9 +33,13 @@ const {
 	TextControl
 } = wp.components;
 
+const {
+	serverSideRender: ServerSideRender
+} = wp;
+
 registerBlockType(
-    'learndash/ld-course-info',
-    {
+	'learndash/ld-course-info',
+	{
 		// translators: placeholder: Course.
 		title: sprintf(_x('LearnDash %s Info [ld_course_info]', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')),
 		// translators: placeholder: Courses.
@@ -51,7 +54,7 @@ registerBlockType(
 		supports: {
 			customClassName: false,
 		},
-        attributes: {
+		attributes: {
 			user_id: {
 				type: 'string',
 				default: 0,
@@ -67,15 +70,15 @@ registerBlockType(
 			registered_num: {
 				type: 'string',
 				default: '',
-            },
+			},
 			registered_orderby: {
 				type: 'string',
 				default: 'ID'
-            },
+			},
 			registered_order: {
 				type: 'string',
 				default: 'ASC'
-            },
+			},
 			progress_show: {
 				type: 'boolean',
 				default: true
@@ -124,9 +127,9 @@ registerBlockType(
 				type: 'object',
 			}
 		},
-        edit: function( props ) {
+		edit: function( props ) {
 			const { attributes: { user_id, registered_show, registered_show_thumbnail, registered_num, registered_orderby, registered_order, progress_show, progress_num, progress_orderby, progress_order, quiz_show, quiz_num, quiz_orderby, quiz_order, preview_user_id, preview_show },
-            	setAttributes } = props;
+				setAttributes } = props;
 
 
 			const panelbody_header = (
@@ -353,7 +356,7 @@ registerBlockType(
 			}
 
 			const inspectorControls = (
-				<InspectorControls>
+				<InspectorControls key="controls">
 					{ panelbody_header }
 					{ panelbody_registered }
 					{ panelbody_progress }
@@ -384,6 +387,7 @@ registerBlockType(
 					return <ServerSideRender
 					block="learndash/ld-course-info"
 					attributes={ attributes }
+					key="learndash/ld-course-info"
 					/>
 				} else {
 					return __( '[ld_course_info] shortcode output shown here', 'learndash' );
@@ -394,9 +398,9 @@ registerBlockType(
 				inspectorControls,
 				do_serverside_render( props.attributes )
 			];
-        },
+		},
 
-        save: props => {
+		save: props => {
 			// Delete meta from props to prevent it being saved.
 			delete (props.attributes.meta);
 

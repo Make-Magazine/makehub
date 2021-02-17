@@ -44,7 +44,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->metabox_context  = 'side';
 			$this->metabox_priority = 'high';
 
-
 			add_action( 'learndash-settings-page-load', array( $this, 'on_settings_page_load' ), 10, 2 );
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
 
@@ -53,10 +52,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 		public function on_settings_page_load( $settings_screen_id = '', $settings_page_id = '' ) {
 			global $sfwd_lms;
-			
+
 			if ( $settings_page_id === $this->settings_page_id ) {
 				if ( learndash_is_admin_user() ) {
-					
+
 					if ( ( isset( $_POST['ld_data_remove_nonce'] ) ) && ( ! empty( $_POST['ld_data_remove_nonce'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_nonce'], 'ld_data_remove_' . get_current_user_id() ) ) ) {
 
 						if ( ( isset( $_POST['ld_data_remove_verify'] ) ) && ( ! empty( $_POST['ld_data_remove_verify'] ) ) && ( wp_verify_nonce( $_POST['ld_data_remove_verify'], 'ld_data_remove_' . get_current_user_id() ) ) ) {
@@ -85,21 +84,21 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					$remove_nonce = wp_create_nonce( 'ld_data_remove_' . get_current_user_id() );
 					?>
 					<hr style="margin-top: 30px; border-top: 5px solid red;"/>
-					<div class="learndash-support-settings-desc"><p><?php _e( '<span style="color:red;">Warning: This will remove ALL LearnDash data including any custom database tables.</style></span>', 'learndash' ); ?></p></div>
+					<div class="learndash-support-settings-desc"><p><span style="color:red;"><?php esc_html_e( 'Warning: This will remove ALL LearnDash data including any custom database tables.', 'learndash' ); ?></span></p></div>
 					<hr style="margin-top: 0px; border-top: 5px solid red;"/>
 					<form id="ld_data_remove_form" method="POST">
-						<input type="hidden" name="ld_data_remove_nonce" value="<?php echo $remove_nonce; ?>" />
+						<input type="hidden" name="ld_data_remove_nonce" value="<?php echo esc_attr( $remove_nonce ); ?>" />
 						<p>
-							<label for="ld_data_remove_verify"><?php _e( '<strong>Confirm the data deletion</strong>', 'learndash' ); ?></label><br />
-							<input id="ld_data_remove_verify" name="ld_data_remove_verify" type="text" size="50" style="width: 100%;" value="" data-confirm="<?php esc_html_e( 'Are you sure that you want to remove ALL LearnDash data?', 'learndash' ) ?>" /><br />
+							<label for="ld_data_remove_verify"><strong><?php esc_html_e( 'Confirm the data deletion', 'learndash' ); ?></strong></label><br />
+							<input id="ld_data_remove_verify" name="ld_data_remove_verify" type="text" size="50" style="width: 100%;" value="" data-confirm="<?php esc_html_e( 'Are you sure that you want to remove ALL LearnDash data?', 'learndash' ); ?>" /><br />
 							<span class="description">
 							<?php
 							printf(
 								// translators: placeholder: secret generated code.
-								_x( 'Enter <code>%s</code> in the above field and click the submit button', 'placeholder: secret generated code', 'learndash' ),
-								$remove_nonce
+								esc_html_x( 'Enter %s in the above field and click the submit button', 'placeholder: secret generated code', 'learndash' ),
+								'<code>' . esc_attr( $remove_nonce ) . '</code>'
 							);
-						?>
+							?>
 						</span></p>
 						<p><input class="button" type="submit" value="<?php esc_html_e( 'Submit', 'learndash' ); ?>" /></p>
 					</form>

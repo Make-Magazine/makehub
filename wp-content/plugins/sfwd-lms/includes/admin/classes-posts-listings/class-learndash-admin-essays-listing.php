@@ -36,6 +36,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					'show_all_label'           => esc_html__( 'All Authors', 'learndash' ),
 					'selector_filter_function' => array( $this, 'selector_filter_for_author' ),
 					'selector_value_function'  => array( $this, 'selector_value_for_author' ),
+					'selector_filters'         => array( 'group_id' ),
 				),
 				'group_id'    => array(
 					'type'                     => 'post_type',
@@ -176,6 +177,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_essays' ), 30, 3 );
 		}
 
 		/**
@@ -190,27 +193,90 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				add_filter( 'post_row_actions', array( $this, 'essay_inline_actions' ), 30, 2 );
 				add_filter( 'learndash_listing_table_query_vars_filter', array( $this, 'listing_table_query_vars_filter_essays' ), 30, 3 );
 
-				//add_filter( 'views_edit-' . learndash_get_post_type_slug( 'essay' ), array( $this, 'edit_list_table_views' ), 10, 1 );
-
 				$this->essay_bulk_actions_approve();
 			}
 		}
 
 		/** This function is documented in includes/admin/class-learndash-admin-posts-listing.php */
 		public function listing_table_query_vars_filter_essays( $q_vars, $post_type, $query ) {
-			if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
-				$gl_user_ids = learndash_get_groups_administrators_users( get_current_user_id() );
-				if ( ! empty( $gl_user_ids ) ) {
-					$q_vars['author__in'] = $gl_user_ids;
+			if ( $post_type === $this->post_type ) {
+
+				$author_selector = $this->get_selector( 'author' );
+				$group_selector  = $this->get_selector( 'group_id' );
+				if ( ( isset( $author_selector['selected'] ) ) && ( ! empty( $author_selector['selected'] ) ) ) {
+					if ( learndash_is_admin_user() ) {
+						$q_vars['author__in'] = array( $author_selector['selected'] );
+					} elseif ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+						if ( learndash_is_group_leader_of_user( get_current_user_id(), $author_selector['selected'] ) ) {
+							$q_vars['author__in'] = array( $author_selector['selected'] );
+						} else {
+							$q_vars['author__in'] = array( 0 );
+						}
+					} else {
+						$q_vars['author__in'] = array( get_current_user_id() );
+					}
+				} elseif ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
+					$user_ids = learndash_get_groups_user_ids( absint( $group_selector['selected'] ) );
+					if ( ! empty( $user_ids ) ) {
+						if ( ! empty( $q_vars['author__in'] ) ) {
+							$user_ids_intersect = array_intersect( $q_vars['author__in'], $user_ids );
+							if ( ! empty( $user_ids_intersect ) ) {
+								$q_vars['author__in'] = $user_ids_intersect;
+							} else {
+								$q_vars['author__in'] = array( 0 );
+							}
+						} else {
+							$q_vars['author__in'] = $user_ids;
+						}
+					} else {
+						$q_vars['author__in'] = array( 0 );
+					}
 				} else {
-					$q_vars['author__in'] = array( 0 );
+					if ( ! learndash_is_admin_user() ) {
+						if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+							$gl_user_ids = learndash_get_groups_administrators_users( get_current_user_id() );
+							if ( ! empty( $gl_user_ids ) ) {
+								$q_vars['author__in'] = $gl_user_ids;
+							} else {
+								$q_vars['author__in'] = array( 0 );
+							}
+						} else {
+							$q_vars['author__in'] = get_current_user_id();
+						}
+					}
 				}
 			}
 
 			return $q_vars;
 		}
 
-				/**
+		/** This function is documented in includes/admin/class-learndash-admin-posts-listing.php */
+		public function learndash_listing_selector_user_query_args_essays( $q_vars, $selector, $post_type ) {
+			if ( $post_type === $this->post_type ) {
+				$group_selector = $this->get_selector( 'group_id' );
+				if ( ( isset( $group_selector['selected'] ) ) && ( ! empty( $group_selector['selected'] ) ) ) {
+					$user_ids = learndash_get_groups_user_ids( absint( $group_selector['selected'] ) );
+					if ( ! empty( $user_ids ) ) {
+						if ( ! empty( $q_vars['include'] ) ) {
+							$user_ids_intersect = array_intersect( $q_vars['include'], $user_ids );
+							if ( ! empty( $user_ids_intersect ) ) {
+								$q_vars['include'] = $user_ids_intersect;
+							} else {
+								$q_vars['include'] = array( 0 );
+							}
+						} else {
+							$q_vars['include'] = $user_ids;
+						}
+					} else {
+						$q_vars['include'] = array( 0 );
+					}
+				}
+			}
+
+			return $q_vars;
+		}
+
+		/**
 		 * Filter the main query listing by the course_id
 		 *
 		 * @since 3.2.3
@@ -222,23 +288,16 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 */
 		protected function listing_filter_by_course( $q_vars, $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( ( isset( $selector['show_empty_value'] ) ) && ( $selector['show_empty_value'] === $selector['selected'] ) ) {
-					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
+				if ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+					$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
+					$gl_course_ids = array_map( 'absint', $gl_course_ids );
+					if ( ! in_array( $selector['selected'], $gl_course_ids, true ) ) {
+						$selector['selected'] = 0;
 					}
-					$q_vars['meta_query'][] = array(
-						'relation' => 'OR',
-						array(
-							'key'     => 'course_id',
-							'compare' => 'NOT EXISTS',
-						),
-						array(
-							'key'     => 'course_id',
-							'value'   => '0',
-							'compare' => '=',
-						),
-					);
-				} else {
+				}
+
+				if ( ! empty( $selector['selected'] ) ) {
+
 					if ( ! isset( $q_vars['meta_query'] ) ) {
 						$q_vars['meta_query'] = array();
 					}
@@ -246,6 +305,26 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					$q_vars['meta_query'][] = array(
 						'key'   => 'course_id',
 						'value' => absint( $selector['selected'] ),
+					);
+				}
+			} elseif ( ( learndash_is_group_leader_user( get_current_user_id() ) ) && ( 'advanced' !== learndash_get_group_leader_manage_users() ) ) {
+				$gl_course_ids = learndash_get_groups_administrators_courses( get_current_user_id() );
+				$gl_course_ids = array_map( 'absint', $gl_course_ids );
+				if ( ! isset( $q_vars['meta_query'] ) ) {
+					$q_vars['meta_query'] = array();
+				}
+
+				if ( ! empty( $gl_course_ids ) ) {
+					$q_vars['meta_query'][] = array(
+						'key'     => 'course_id',
+						'compare' => 'IN',
+						'value'   => $gl_course_ids,
+					);
+				} else {
+					$q_vars['meta_query'][] = array(
+						'key'     => 'course_id',
+						'compare' => 'IN',
+						'value'   => array( 0 ),
 					);
 				}
 			}
@@ -441,7 +520,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 					foreach ( $essays as $essay_id ) {
 
-						if ( ( ! isset( $_REQUEST['essay_points'][ $essay_id ] ) ) || ( $_REQUEST['essay_points'][ $essay_id ] == '' ) ) {
+						if ( ( ! isset( $_REQUEST['essay_points'][ $essay_id ] ) ) || ( '' === $_REQUEST['essay_points'][ $essay_id ] ) ) {
 							continue;
 						}
 
@@ -449,7 +528,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						$submitted_essay['points_awarded'] = intval( $_REQUEST['essay_points'][ $essay_id ] );
 
 						$essay_post = get_post( $essay_id );
-						if ( ( ! empty( $essay_post ) ) && ( $essay_post instanceof WP_Post ) && ( $essay_post->post_type === learndash_get_post_type_slug( 'essay' ) ) ) {
+						if ( ( ! empty( $essay_post ) ) && ( $essay_post instanceof WP_Post ) && ( learndash_get_post_type_slug( 'essay' ) === $essay_post->post_type ) ) {
 
 							if ( 'graded' !== $essay_post->post_status ) {
 								$quiz_score_difference = 1;
@@ -546,18 +625,21 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						}
 
 						if ( 'not_graded' === $essay->post_status ) {
+							$points_label = '<label class="learndash-listing-row-field-label" for="essay_points_' . absint( $post_id ) . '">' . esc_html__( 'Points', 'learndash' ) . '</label>';
+
+							$points_input = '<input id="essay_points_' . absint( $post_id ) . '" class="small-text learndash-award-points" type="number" value="' . absint( $current_points ) . '" max="' . absint( $max_points ) . '" min="0" step="1" name="essay_points[' . absint( $post_id ) . ']" />';
+
 							echo sprintf(
 								// translators: placeholders: Points label, points input, maximum points.
 								esc_html_x( '%1$s: %2$s / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								'<label class="learndash-listing-row-field-label" for="essay_points_' . $post_id . '">' . esc_html__( 'Points', 'learndash' ) . '</label>',
-								'<input id="essay_points_' . $post_id . '" class="small-text" type="number" value="' . absint( $current_points ) . '" max="' . $max_points . '" min="0" step="1" name="essay_points[' . $post_id . ']" />',
-								absint( $max_points )
+								$points_label, $points_input, absint( $max_points )
 							);
 						} else {
+							$points_field = '<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>';
 							echo sprintf(
 								// translators: placeholders: Points label, current points, maximum points.
 								esc_html_x( '%1$s: %2$d / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								'<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>',
+								$points_field,
 								absint( $current_points ),
 								absint( $max_points )
 							);
@@ -672,7 +754,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . get_the_title( $quiz_post_id ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-					// $course_id = learndash_get_course_id( $quiz_post_id );
 					$course_id = get_post_meta( $post_id, 'course_id', true );
 					if ( current_user_can( 'edit_post', $quiz_post_id ) ) {
 						$edit_url = get_edit_post_link( $quiz_post_id );

@@ -38,7 +38,7 @@ if ( ! empty( $prerequisite_posts_all ) ) {
 	$message = '<p>';
 
 	$message .= sprintf(
-		// translators: placeholders: %1$s: Course, Lesson or Quiz singular, %2$s: Course singular label
+		// translators: placeholders: Course, Lesson or Quiz sigular. (2) Course or Courses label.
 		esc_html_x(
 			'To take this %1$s, you need to complete the following %2$s first:',
 			'placeholders: (1) will be Course, Lesson or Quiz sigular. (2) Course sigular label',

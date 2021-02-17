@@ -4,8 +4,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_courseinfo' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_courseinfo extends LearnDash_Shortcodes_Section {
 
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
@@ -20,6 +29,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'show'           => array(
@@ -131,7 +143,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					// translators: placeholder: Course.
 					'label'     => sprintf( esc_html_x( '%s ID', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
 
-					// translators: placeholders: Course.
+					// translators: placeholder: Course.
 					'help_text' => sprintf( esc_html_x( 'Enter single %s ID.', 'placeholders: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
 					'value'     => '',
 					'class'     => 'small-text',
@@ -170,7 +182,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			<script>
 				jQuery( function() {
 					if ( jQuery( 'form#learndash_shortcodes_form_courseinfo select#courseinfo_show' ).length) {
-						jQuery( 'form#learndash_shortcodes_form_courseinfo select#courseinfo_show').change( function() {
+						jQuery( 'form#learndash_shortcodes_form_courseinfo select#courseinfo_show').on( 'change', function() {
 							var selected = jQuery(this).val();
 
 							if ( ['completed_on', 'enrolled_on'].includes( selected) ) {

@@ -18,67 +18,75 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 		 * Register the routes for the objects of the controller.
 		 */
 		public function register_routes() {
-			$version = '1';
+			$version   = '1';
 			$namespace = LEARNDASH_REST_API_NAMESPACE . '/v' . $version;
-			$base = 'sfwd-questions';
+			$base      = 'sfwd-questions';
 
-			register_rest_route( $namespace, '/' . $base, array(
+			register_rest_route(
+				$namespace,
+				'/' . $base,
 				array(
-				  'methods'             => WP_REST_Server::READABLE,
-				  'callback'            => array( $this, 'get_items' ),
-				  'permission_callback' => array( $this, 'permissions_check' ),
-				  'args'                => array(),
-				),
-			) );
+					array(
+						'methods'             => WP_REST_Server::READABLE,
+						'callback'            => array( $this, 'get_items' ),
+						'permission_callback' => array( $this, 'permissions_check' ),
+						'args'                => array(),
+					),
+				)
+			);
 
-			register_rest_route( $namespace, '/' . $base . '/(?P<id>[\d]+)', array(
+			register_rest_route(
+				$namespace,
+				'/' . $base . '/(?P<id>[\d]+)',
 				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'permissions_check' ),
-					'args'                => array(
-						'id' => array(
-							'description' => __( 'The question ID', 'learndash' ),
-							'required'          => true,
-							'validate_callback' => function( $param, $request, $key ) {
-								return is_numeric( $param );
-							},
-							'sanitize_callback' => 'absint',
+					array(
+						'methods'             => WP_REST_Server::READABLE,
+						'callback'            => array( $this, 'get_item' ),
+						'permission_callback' => array( $this, 'permissions_check' ),
+						'args'                => array(
+							'id' => array(
+								'description'       => __( 'The question ID', 'learndash' ),
+								'required'          => true,
+								'validate_callback' => function( $param, $request, $key ) {
+									return is_numeric( $param );
+								},
+								'sanitize_callback' => 'absint',
+							),
 						),
 					),
-				),
-				array(
-					'methods'             => WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'permissions_check' ),
-					'args'                => array(
-						'id' => array(
-							'description'       => __( 'The question ID', 'learndash' ),
-							'required'          => true,
-							'validate_callback' => function( $param, $request, $key ) {
-								return is_numeric( $param );
-							},
-							'sanitize_callback' => 'absint',
+					array(
+						'methods'             => WP_REST_Server::EDITABLE,
+						'callback'            => array( $this, 'update_item' ),
+						'permission_callback' => array( $this, 'permissions_check' ),
+						'args'                => array(
+							'id' => array(
+								'description'       => __( 'The question ID', 'learndash' ),
+								'required'          => true,
+								'validate_callback' => function( $param, $request, $key ) {
+									return is_numeric( $param );
+								},
+								'sanitize_callback' => 'absint',
+							),
 						),
 					),
-				),
-				array(
-					'methods'             => WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'permissions_check' ),
-					'args'                => array(
-						'id' => array(
-							'description'       => __( 'The question ID', 'learndash' ),
-							'required'          => true,
-							'validate_callback' => function( $param, $request, $key ) {
-								return is_numeric( $param );
-							},
-							'sanitize_callback' => 'absint',
+					array(
+						'methods'             => WP_REST_Server::DELETABLE,
+						'callback'            => array( $this, 'delete_item' ),
+						'permission_callback' => array( $this, 'permissions_check' ),
+						'args'                => array(
+							'id' => array(
+								'description'       => __( 'The question ID', 'learndash' ),
+								'required'          => true,
+								'validate_callback' => function( $param, $request, $key ) {
+									return is_numeric( $param );
+								},
+								'sanitize_callback' => 'absint',
+							),
 						),
 					),
-				),
-				'schema' => array( $this, 'get_schema' ),
-			) );
+					'schema' => array( $this, 'get_schema' ),
+				)
+			);
 		}
 
 		/**
@@ -136,12 +144,15 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 				return new WP_REST_Response( true, 200 );
 			}
 
-			return new WP_Error( 'cant-delete', sprintf(
+			return new WP_Error(
+				'cant-delete',
+				sprintf(
 				// translators: placeholder: Question label.
-				esc_html_x( 'Could not delete the %s.', 'placeholder: Question label', 'learndash' ),
-				\LearnDash_Custom_Label::get_label( 'question' )
-			),
-			array( 'status' => 500 ) );
+					esc_html_x( 'Could not delete the %s.', 'placeholder: Question label', 'learndash' ),
+					\LearnDash_Custom_Label::get_label( 'question' )
+				),
+				array( 'status' => 500 )
+			);
 		}
 
 		/**
@@ -152,13 +163,13 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 		 */
 		public function update_item( $request ) {
 			global $learndash_question_types;
-			
+
 			$params          = $request->get_params();
 			$question_id     = $params['id'];
 			$question_pro_id = (int) get_post_meta( $question_id, 'question_pro_id', true );
 			$question_mapper = new \WpProQuiz_Model_QuestionMapper();
 
-			$question_model  = $question_mapper->fetch( $question_pro_id );
+			$question_model = $question_mapper->fetch( $question_pro_id );
 
 			// Update answer data if available.
 			if ( isset( $params['_answerData'] ) && is_string( $params['_answerData'] ) ) {
@@ -178,10 +189,12 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 
 			// Update question's post content.
 			if ( isset( $params['_question'] ) ) {
-				wp_update_post( [
-					'ID'           => $question_id,
-					'post_content' => wp_slash( $params['_question'] ),
-				] );
+				wp_update_post(
+					[
+						'ID'           => $question_id,
+						'post_content' => wp_slash( $params['_question'] ),
+					]
+				);
 			}
 
 			// Update the question object with new data.
@@ -190,13 +203,16 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 			// Save the new data to database.
 			$question_mapper->save( $question_model );
 
-			if ( true ) {
-				return new WP_REST_Response( $this->get_question_data( $question_id ), 200 );
-			}
+			// if ( true ) {
+			return new WP_REST_Response( $this->get_question_data( $question_id ), 200 );
+			//}
 
-			return new WP_Error( 'cant-delete', 
-			// translators: placeholder: Question.
-			sprintf( esc_html_x( 'Could not update the %s.', 'placeholder: Question', 'learndash' ), \LearnDash_Custom_Label::get_label( 'question' ) ), array( 'status' => 500 ) );
+			// return new WP_Error(
+			// 	'cant-delete',
+			// 	// translators: placeholder: Question.
+			// 	sprintf( esc_html_x( 'Could not update the %s.', 'placeholder: Question', 'learndash' ), \LearnDash_Custom_Label::get_label( 'question' ) ),
+			// 	array( 'status' => 500 )
+			// );
 		}
 
 		/**
@@ -207,8 +223,8 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 		 */
 		public function get_question_data( $question_id ) {
 			// Get Answers from Question.
-			$question_pro_id     = (int) get_post_meta( $question_id, 'question_pro_id', true );
-			$question_mapper     = new \WpProQuiz_Model_QuestionMapper();
+			$question_pro_id = (int) get_post_meta( $question_id, 'question_pro_id', true );
+			$question_mapper = new \WpProQuiz_Model_QuestionMapper();
 
 			if ( ! empty( $question_pro_id ) ) {
 				$question_model = $question_mapper->fetch( $question_pro_id );
@@ -231,10 +247,13 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 			$question_data['_answerData'] = $answer_data;
 
 			// Generate output object.
-			$data = array_merge( $question_data, [
-				'question_id'            => $question_id,
-				'question_post_title'    => get_the_title( $question_id ),
-			] );
+			$data = array_merge(
+				$question_data,
+				[
+					'question_id'         => $question_id,
+					'question_post_title' => get_the_title( $question_id ),
+				]
+			);
 
 			return $data;
 		}

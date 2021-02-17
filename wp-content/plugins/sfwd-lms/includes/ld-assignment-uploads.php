@@ -85,7 +85,7 @@ function learndash_assignment_process_init() {
 
 				/**
 				 * Filters whether to force delete the assignment or not.
-				 * 
+				 *
 				 * @param boolean $force_delete    Whether to force delete assignment or not.
 				 * @param int     $assignment_id   Assignment ID.
 				 * @param WP_POST $assignment_post Assignment post object.
@@ -551,7 +551,6 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 						wp_mkdir_p( $upload_dir_path );
 					} else {
 						die( esc_html__( 'Unable to write to UPLOADS directory. Is this directory writable by the server?', 'learndash' ) );
-						return;
 					}
 				}
 
@@ -561,8 +560,8 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 					file_put_contents( $_index, '//LearnDash is THE Best LMS' );
 				}
 
-				$file_time = microtime(true) * 100;
-				$filename = sprintf( 'assignment_%d_%d_%s.%s', $post_id, $file_time, $file_title, $file_ext );
+				$file_time = microtime( true ) * 100;
+				$filename  = sprintf( 'assignment_%d_%d_%s.%s', $post_id, $file_time, $file_title, $file_ext );
 
 				/**
 				 * Filters the assignment upload filename.
@@ -599,14 +598,18 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 				 */
 				if ( ! is_writeable( $upload_dir_path ) ) {
 					die( esc_html__( 'Unable to write to directory. Is this directory writable by the server?', 'learndash' ) );
-					return;
 				}
 
 				/**
 				 * Save temporary file to uploads dir
 				 */
 				if ( ! @move_uploaded_file( $filetmp, $filedest ) ) {
-					echo( "Error, the file $filetmp could not moved to : $filedest " );
+					echo sprintf(
+						// translators: placeholder: temporary file, file destination.
+						esc_html__( 'Error, the file %1$s could not be moved to: %2$s', 'learndash' ),
+						esc_html( $filetmp ),
+						esc_html( $filedest )
+					);
 					continue;
 				}
 
@@ -744,8 +747,6 @@ function learndash_assignment_mark_approved( $assignment_id ) {
 	update_post_meta( $assignment_id, 'approval_status', 1 );
 }
 
-
-
 /**
  * Gets assignments approval status.
  *
@@ -758,8 +759,6 @@ function learndash_assignment_mark_approved( $assignment_id ) {
 function learndash_is_assignment_approved_by_meta( $assignment_id ) {
 	return get_post_meta( $assignment_id, 'approval_status', true );
 }
-
-
 
 /**
  * Adds inline actions to assignments on post listing hover in the admin.
@@ -880,6 +879,8 @@ function learndash_register_assignment_upload_type() {
 		$comment_status = false;
 	}
 
+	$show_in_rest = LearnDash_REST_API::enabled( learndash_get_post_type_slug( 'assignment' ) ) || LearnDash_REST_API::gutenberg_enabled( learndash_get_post_type_slug( 'assignment' ) );
+
 	$labels = array(
 		'name'               => esc_html__( 'Assignments', 'learndash' ),
 		'singular_name'      => esc_html__( 'Assignment', 'learndash' ),
@@ -923,7 +924,7 @@ function learndash_register_assignment_upload_type() {
 		'publicly_queryable'  => $publicly_queryable,
 		'exclude_from_search' => $exclude_from_search,
 		'has_archive'         => false,
-		'show_in_rest'        => false,
+		'show_in_rest'        => $show_in_rest,
 		'query_var'           => $publicly_queryable,
 		'rewrite'             => $rewrite,
 		'capability_type'     => 'assignment',
@@ -994,11 +995,9 @@ function learndash_add_assignment_caps() {
 
 add_action( 'admin_init', 'learndash_add_assignment_caps' );
 
-
-
 /**
  * Deletes assignment file when assignment post is deleted.
- * 
+ *
  * Fires on `before_delete_post` hook.
  *
  * @since 2.1.0
@@ -1207,8 +1206,8 @@ function learndash_check_upload( $uploadfiles = array(), $post_id = 0 ) {
 		}
 
 		$limit_file_exts = learndash_get_allowed_upload_mime_extensions_for_post( $post_id );
-		$filetype_mime = wp_check_filetype( $uploadfiles['name'][0], $limit_file_exts );
-		
+		$filetype_mime   = wp_check_filetype( $uploadfiles['name'][0], $limit_file_exts );
+
 		if ( ( empty( $filetype_mime ) ) || ( empty( $filetype_mime['ext'] ) ) || ( empty( $filetype_mime['type'] ) ) || ( ! $limit_file_exts[ strtolower( $filetype_mime['ext'] ) ] ) ) {
 			update_user_meta(
 				get_current_user_id(),

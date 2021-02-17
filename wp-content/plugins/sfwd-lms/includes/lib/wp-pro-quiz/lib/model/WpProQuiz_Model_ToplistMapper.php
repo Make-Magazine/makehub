@@ -2,23 +2,23 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Model_ToplistMapper extends WpProQuiz_Model_Mapper {
-	
-	public function countFree($quizId, $name, $email, $ip, $clearTime = null) {
+
+	public function countFree( $quizId, $name, $email, $ip, $clearTime = null ) {
 		$c = '';
-		
-		if($clearTime !== null) {
-			$c = 'AND date >= '.(time() - $clearTime);
+
+		if ( null !== $clearTime ) {
+			$c = 'AND date >= ' . ( time() - $clearTime );
 		}
-		
+
 		$flooding = time() - 15;
-		
+
 		return $this->_wpdb->get_var(
 			$this->_wpdb->prepare(
-				"SELECT COUNT(*) 
-					FROM {$this->_tableToplist} 
-					WHERE quiz_id = %d AND (name = %s OR email = %s OR (ip = %s AND date >= {$flooding})) ".$c, 
+				"SELECT COUNT(*)
+					FROM {$this->_tableToplist}
+					WHERE quiz_id = %d AND (name = %s OR email = %s OR (ip = %s AND date >= {$flooding})) " . $c,
 				$quizId,
 				$name,
 				$email,
@@ -26,50 +26,54 @@ class WpProQuiz_Model_ToplistMapper extends WpProQuiz_Model_Mapper {
 			)
 		);
 	}
-	
-	public function countUser($quizId, $userId, $clearTime = null) {
+
+	public function countUser( $quizId, $userId, $clearTime = null ) {
 		$c = '';
-		
-		if($clearTime !== null) {
-			$c = 'AND date >= '.(time() - $clearTime); 	
+
+		if ( null !== $clearTime ) {
+			$c = 'AND date >= ' . ( time() - $clearTime );
 		}
 
 		return $this->_wpdb->get_var(
-				$this->_wpdb->prepare(
-						"SELECT	COUNT(*)
+			$this->_wpdb->prepare(
+				"SELECT	COUNT(*)
 							FROM {$this->_tableToplist}
-							WHERE quiz_id = %d AND user_id = %d ".$c,
-						$quizId,
-						$userId
+							WHERE quiz_id = %d AND user_id = %d " . $c,
+				$quizId,
+				$userId
 			)
 		);
 	}
-	
-	public function count($quizId) {
+
+	public function count( $quizId ) {
 		return $this->_wpdb->get_var(
-				$this->_wpdb->prepare(
-						"SELECT	COUNT(*) FROM {$this->_tableToplist} WHERE quiz_id = %d",
-						$quizId
-				)
+			$this->_wpdb->prepare(
+				"SELECT	COUNT(*) FROM {$this->_tableToplist} WHERE quiz_id = %d",
+				$quizId
+			)
 		);
 	}
-	
-	public function save(WpProQuiz_Model_Toplist $toplist) {
-		$result = $this->_wpdb->insert($this->_tableToplist,
-				array(	'quiz_id' => $toplist->getQuizId(),
-						'user_id' => $toplist->getUserId(),
-						'date' => $toplist->getDate(),
-						'name' => $toplist->getName(),
-						'email' => $toplist->getEmail(),
-						'points' => $toplist->getPoints(),
-						'result' => $toplist->getResult(),
-						'ip' => $toplist->getIp()),
-				array('%d', '%d', '%d', '%s', '%s', '%d', '%f', '%s'));
-		
-		$toplist->setToplistId($this->_wpdb->insert_id);
+
+	public function save( WpProQuiz_Model_Toplist $toplist ) {
+		$result = $this->_wpdb->insert(
+			$this->_tableToplist,
+			array(
+				'quiz_id' => $toplist->getQuizId(),
+				'user_id' => $toplist->getUserId(),
+				'date'    => $toplist->getDate(),
+				'name'    => $toplist->getName(),
+				'email'   => $toplist->getEmail(),
+				'points'  => $toplist->getPoints(),
+				'result'  => $toplist->getResult(),
+				'ip'      => $toplist->getIp(),
+			),
+			array( '%d', '%d', '%d', '%s', '%s', '%d', '%f', '%s' )
+		);
+
+		$toplist->setToplistId( $this->_wpdb->insert_id );
 	}
-	
-	public function fetch($quizId, $limit, $sort, $start = 0) {
+
+	public function fetch( $quizId, $limit, $sort, $start = 0 ) {
 		return $this->fetchWithArgs(
 			array(
 				'quizId' => $quizId,
@@ -129,7 +133,9 @@ class WpProQuiz_Model_ToplistMapper extends WpProQuiz_Model_Mapper {
 		$results = $this->_wpdb->get_results(
 			$this->_wpdb->prepare(
 				'SELECT * FROM ' . $this->_tableToplist . ' WHERE quiz_id = %d ' . $where . ' ' . $s . ' LIMIT %d, %d',
-				$args['quizId'], $args['start'], $args['limit']
+				$args['quizId'],
+				$args['start'],
+				$args['limit']
 			),
 			ARRAY_A
 		);
@@ -140,17 +146,17 @@ class WpProQuiz_Model_ToplistMapper extends WpProQuiz_Model_Mapper {
 
 		return $r;
 	}
-	
-	public function delete($quizId, $toplistIds = null) {
-		$quizId = (int)$quizId;
-		
-		if($toplistIds === null) {
-			return $this->_wpdb->delete($this->_tableToplist, array('quiz_id' => $quizId), array('%d'));
+
+	public function delete( $quizId, $toplistIds = null ) {
+		$quizId = (int) $quizId;
+
+		if ( null === $toplistIds ) {
+			return $this->_wpdb->delete( $this->_tableToplist, array( 'quiz_id' => $quizId ), array( '%d' ) );
 		}
-		
-		$ids = array_map('intval', (array)$toplistIds);
-		
-		return $this->_wpdb->query("DELETE FROM {$this->_tableToplist} WHERE quiz_id = {$quizId} AND toplist_id IN(".implode(', ', $ids).")");
+
+		$ids = array_map( 'intval', (array) $toplistIds );
+
+		return $this->_wpdb->query( "DELETE FROM {$this->_tableToplist} WHERE quiz_id = {$quizId} AND toplist_id IN(" . implode( ', ', $ids ) . ')' );
 	}
-	
+
 }

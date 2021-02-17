@@ -219,7 +219,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 						$this->data_settings['prior_version'] = 'new';
 					}
 					$this->data_settings['version_history'][0] = $this->data_settings['prior_version'];
-					$data_settings_changed = true;
+					$data_settings_changed                     = true;
 				}
 
 				if ( ! isset( $this->data_settings['current_version'] ) ) {
@@ -234,19 +234,18 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 						}
 					}
 					// Set the upgrade flag to trigger 'activate' logic.
-					$this->data_settings['is_upgrade']      = true;
+					$this->data_settings['is_upgrade'] = true;
 
-					$this->data_settings['current_version'] = LEARNDASH_VERSION;
+					$this->data_settings['current_version']           = LEARNDASH_VERSION;
 					$this->data_settings['version_history'][ time() ] = LEARNDASH_VERSION;
-					$data_settings_changed = true;
+					$data_settings_changed                            = true;
 				}
 
 				if ( empty( $this->data_settings['version_history'] ) ) {
 					$this->data_settings['version_history'][ time() ] = $this->data_settings['current_version'];
-					$this->data_settings['version_history'][0] = $this->data_settings['prior_version'];
-					$data_settings_changed = true;
+					$this->data_settings['version_history'][0]        = $this->data_settings['prior_version'];
+					$data_settings_changed                            = true;
 				}
-
 
 				if ( true === $data_settings_changed ) {
 					krsort( $this->data_settings['version_history'] );
@@ -322,11 +321,11 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 				$admin_notice_message = sprintf(
 					// translators: placeholder: link to LearnDash Data Upgrade admin page.
 					esc_html_x( 'LearnDash Notice: Please perform a %s. This is a required step to ensure accurate reporting.', 'placeholder: link to LearnDash Data Upgrade admin page', 'learndash' ),
-					'<a href="' . admin_url( 'admin.php?page=learndash_data_upgrades' ) . '">' . esc_html__( 'LearnDash Data Upgrade', 'learndash' ) . '</a>'
+					'<a href="' . esc_url( admin_url( 'admin.php?page=learndash_data_upgrades' ) ) . '">' . esc_html__( 'LearnDash Data Upgrade', 'learndash' ) . '</a>'
 				);
 				?>
 				<div id="ld-data-upgrade-notice-error" class="notice notice-info is-dismissible">
-					<p><?php echo $admin_notice_message; ?></p>
+					<p><?php echo $admin_notice_message; ?></p> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped when defined ?>
 				</div>
 				<?php
 			}
@@ -593,7 +592,7 @@ function learndash_data_upgrades_ajax() {
 				$reply_data['data']     = $ld_admin_data_upgrades->do_data_upgrades( $_POST['data'], $reply_data );
 
 				if ( ! empty( $reply_data ) ) {
-					echo json_encode( $reply_data );
+					echo wp_json_encode( $reply_data );
 				}
 			}
 		}
@@ -608,9 +607,10 @@ add_action( 'wp_ajax_learndash-data-upgrades', 'learndash_data_upgrades_ajax' );
  * Utility function to check if the data upgrade for Quiz Questions has been run.
  *
  * @since 2.6.0
+ * @since 3.3.0 Renamed to learndash_is_data_upgrade_quiz_questions_updated
  * @return boolean true if has been run.
  */
-function is_data_upgrade_quiz_questions_updated() {
+function learndash_is_data_upgrade_quiz_questions_updated() {
 	$data_settings_quiz_questions = learndash_data_upgrades_setting( 'pro-quiz-questions' );
 	if ( ( isset( $data_settings_quiz_questions['last_run'] ) ) && ( ! empty( $data_settings_quiz_questions['last_run'] ) ) ) {
 		return true;

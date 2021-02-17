@@ -110,7 +110,8 @@ endif; ?>
 			?>
 			<div class="ld-item-title">
 				<?php
-				echo wp_kses_post( $lesson['post']->post_title );
+				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+				echo wp_kses_post( apply_filters( 'the_title', $lesson['post']->post_title, $lesson['post']->ID ) );
 
 				/**
 				 * Display content counts if the lesson has topics

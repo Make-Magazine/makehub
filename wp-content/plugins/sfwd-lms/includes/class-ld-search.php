@@ -78,7 +78,7 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 				if ( ! empty( $ld_post_types ) ) {
 
 					if ( is_user_logged_in() ) {
-						$this->user_id = get_current_user_id();
+						$this->user_id          = get_current_user_id();
 						$this->enrolled_courses = learndash_user_get_enrolled_courses( $this->user_id, array(), true );
 						if ( ! empty( $this->enrolled_courses ) ) {
 							foreach ( $ld_post_types as $ld_post_type ) {
@@ -122,7 +122,7 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		 * @param Object  $query WP_Query object.
 		 * @return string $where.
 		 */
-		public function posts_where_request( $where = '', $query ) {
+		public function posts_where_request( $where, $query ) {
 			global $wpdb;
 
 			if ( ( true === $this->is_search_query ) && ( ! empty( $this->searchable_post_types ) ) ) {
@@ -190,7 +190,7 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		 * @param Object  $query WP_Query object.
 		 * @return string $join.
 		 */
-		public function posts_join_request( $join = '', $query ) {
+		public function posts_join_request( $join, $query ) {
 			global $wpdb;
 
 			if ( ( true === $this->is_search_query ) && ( ! empty( $this->searchable_post_types ) ) ) {
@@ -208,7 +208,7 @@ if ( ! class_exists( 'LearnDash_Search' ) ) {
 		 * @param Object  $query WP_Query object.
 		 * @return string $distinct.
 		 */
-		public function posts_distinct_request( $distinct = '', $query ) {
+		public function posts_distinct_request( $distinct, $query ) {
 			if ( ( true === $this->is_search_query ) && ( ! empty( $this->searchable_post_types ) ) ) {
 				if ( empty( $distinct ) ) {
 					$distinct .= ' DISTINCT ';

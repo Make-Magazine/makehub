@@ -96,7 +96,10 @@ $widget_data_json = htmlspecialchars( wp_json_encode( $widget_data ) ); ?>
 					?>
 					<div class="widget_course_return">
 						<?php esc_html_e( 'Return to', 'learndash' ); ?>
-						<a href='<?php echo esc_url( get_permalink( $course_id ) ); ?>'><?php echo esc_html( $course->post_title ); ?></a>
+						<a href='<?php echo esc_url( get_permalink( $course_id ) ); ?>'><?php
+						// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+						echo wp_kses_post( apply_filters( 'the_title', $course->post_title, $course->ID ) );
+						?></a>
 					</div>
 				<?php endif; ?>
 

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'Learndash_Admin_Data_Upgrades_Translations' ) ) ) { 
+if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'Learndash_Admin_Data_Upgrades_Translations' ) ) ) {
 	/**
 	 * Class to create the Data Upgrade for Translations.
 	 */
@@ -50,7 +50,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		 */
 		public function download_translations() {
 			$wp_installed_languages = get_available_languages();
-			if ( ! in_array( 'en_US', $wp_installed_languages ) ) {
+			if ( ! in_array( 'en_US', $wp_installed_languages, true ) ) {
 				$wp_installed_languages = array_merge( array( 'en_US' ), $wp_installed_languages );
 			}
 
@@ -66,6 +66,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 	}
 }
 
-add_action( 'learndash_data_upgrades_init', function() {
-	Learndash_Admin_Data_Upgrades_Translations::add_instance();
-} );
+add_action(
+	'learndash_data_upgrades_init',
+	function() {
+		Learndash_Admin_Data_Upgrades_Translations::add_instance();
+	}
+);

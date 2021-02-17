@@ -40,7 +40,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
 			if ( ( isset( $field_args['options'] ) ) && ( ! empty( $field_args['options'] ) ) ) {
 
@@ -62,15 +62,14 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					$html .= '<input autocomplete="off" ';
 
 					$html .= $this->get_field_attribute_type( $field_args );
-					//$html .= $this->get_field_attribute_id( $field_args );
-					$html .= ' id="' . $this->get_field_attribute_id( $field_args, false ) . '-' . $option_key . '"';
+					$html .= ' id="' . esc_attr( $this->get_field_attribute_id( $field_args, false ) ) . '-' . esc_attr( $option_key ) . '"';
 
 					$html .= $this->get_field_attribute_name( $field_args );
 					$html .= $this->get_field_attribute_class( $field_args );
 					$html .= $this->get_field_attribute_misc( $field_args );
 					$html .= $this->get_field_attribute_required( $field_args );
 
-					$html .= ' value="' . $option_key . '" ';
+					$html .= ' value="' . esc_attr( $option_key ) . '" ';
 
 					$html .= ' ' . checked( $option_key, $field_args['value'], false ) . ' ';
 
@@ -78,14 +77,14 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					if ( ( is_array( $option_label ) ) && ( ! empty( $option_label ) ) ) {
 						if ( ( isset( $option_label['inline_fields'] ) ) && ( ! empty( $option_label['inline_fields'] ) ) ) {
 							foreach ( $option_label['inline_fields'] as $sub_field_key => $sub_fields ) {
-								$html .= ' data-settings-inner-trigger="ld-settings-inner-' . $sub_field_key . '" ';
+								$html .= ' data-settings-inner-trigger="ld-settings-inner-' . esc_attr( $sub_field_key ) . '" ';
 
 								if ( ( isset( $option_label['inner_section_state'] ) ) && ( 'open' === $option_label['inner_section_state'] ) ) {
 									$inner_section_state = 'open';
 								} else {
 									$inner_section_state = 'closed';
 								}
-								$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . $sub_field_key . ' ld-settings-inner-state-' . $inner_section_state . '">';
+								$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . esc_attr( $sub_field_key ) . ' ld-settings-inner-state-' . esc_attr( $inner_section_state ) . '">';
 
 								$level = ob_get_level();
 								ob_start();
@@ -100,17 +99,17 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 					$html .= ' />';
 
-					$html .= '<label class="ld-radio-input__label" for="' . $field_args['id'] . '-' . $option_key . '" >';
+					$html .= '<label class="ld-radio-input__label" for="' . esc_attr( $field_args['id'] ) . '-' . esc_attr( $option_key ) . '" >';
 					if ( is_string( $option_label ) ) {
-						$html .= '<span>' . $option_label . '</span></label><p>';
+						$html .= '<span>' . wp_kses_post( $option_label ) . '</span></label><p>';
 					} elseif ( ( is_array( $option_label ) ) && ( ! empty( $option_label ) ) ) {
 						if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<span>' . $option_label['label'] . '</span></label>';
+							$html .= '<span>' . wp_kses_post( $option_label['label'] ) . '</span></label>';
 						}
 						$html .= '</p>';
 
 						if ( ( isset( $option_label['description'] ) ) && ( ! empty( $option_label['description'] ) ) ) {
-							$html .= '<p class="ld-radio-description">' . $option_label['description'] . '</p>';
+							$html .= '<p class="ld-radio-description">' . wp_kses_post( $option_label['description'] ) . '</p>';
 						}
 					}
 
@@ -123,7 +122,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
 		/**
@@ -144,6 +143,31 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				}
 			}
 			return false;
+		}
+
+		/**
+		 * Convert Settings Field value to REST value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 * @param object $request    Request object.
+		 */
+		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
+			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
+				if ( isset( $field_args['field']['rest']['rest_args']['schema']['type'] ) ) {
+					if ( 'boolean' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {
+						if ( in_array( $val, array( 'on', 'yes' ), true ) ) {
+							$val = true;
+						} else {
+							$val = false;
+						}
+					}
+				}
+			}
+			return $val;
 		}
 
 		// End of functions.

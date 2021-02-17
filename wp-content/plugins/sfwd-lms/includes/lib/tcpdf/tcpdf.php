@@ -1859,7 +1859,7 @@ class TCPDF {
 			mb_internal_encoding('ASCII');
 		}
 		// set file ID for trailer
-		$serformat = (is_array($format) ? json_encode($format) : $format);
+		$serformat = (is_array($format) ? wp_json_encode($format) : $format);
 		$this->file_id = md5(TCPDF_STATIC::getRandomSeed('TCPDF'.$orientation.$unit.$serformat.$encoding));
 		$this->font_obj_ids = array();
 		$this->page_obj_id = array();
@@ -12459,7 +12459,7 @@ class TCPDF {
 			$title = preg_replace($nltags, "\n", $o['t']);
 			$title = preg_replace("/[\r]+/si", '', $title);
 			$title = preg_replace("/[\n]+/si", "\n", $title);
-			$title = strip_tags($title);
+			$title = wp_strip_all_tags($title);
 			$title = $this->stringTrim($title);
 			$out = '<</Title '.$this->_textstring($title, $oid);
 			$out .= ' /Parent '.($n + $o['parent']).' 0 R';
@@ -16349,7 +16349,7 @@ class TCPDF {
 			}
 		}
 		// create a special tag to contain the CSS array (used for table content)
-		$csstagarray = '<cssarray>'.htmlentities(json_encode($css)).'</cssarray>';
+		$csstagarray = '<cssarray>'.htmlentities(wp_json_encode($css)).'</cssarray>';
 		// remove head and style blocks
 		$html = preg_replace('/<head([^\>]*)>(.*?)<\/head>/siU', '', $html);
 		$html = preg_replace('/<style([^\>]*)>([^\<]*)<\/style>/isU', '', $html);
@@ -16696,7 +16696,7 @@ class TCPDF {
 											}
 										}
 									}
-									
+
 								}
 							}
 						}
@@ -17121,7 +17121,7 @@ class TCPDF {
 	 * @public static
 	 */
 	public function serializeTCPDFtagParameters($data) {
-		$encoded = urlencode(json_encode($data));
+		$encoded = urlencode(wp_json_encode($data));
 		return $this->getHashForTCPDFtagParams($encoded).$encoded;
 	}
 
@@ -18911,6 +18911,17 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 							$imgsrc = str_replace(K_PATH_MAIN, K_PATH_URL, $imgsrc);
 						}
 					}
+
+					/**
+					 * 2020-08-27: The following block of code incorrectly decodes theimage 'src'. The
+					 * problem this creates is related to query string params which might be themselves
+					 * a URL that need to be properly encoded/decoded. See LEARNDASH-5234 for more details.
+					 * 
+					 */
+					if ( ( defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) && ( true === LEARNDASH_TCPDF_LEGACY_LD322 ) ) {
+						$imgsrc = htmlspecialchars_decode($imgsrc);
+					}
+
 					// get image type
 					$type = TCPDF_IMAGES::getImageFileType($imgsrc);
 				}

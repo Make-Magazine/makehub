@@ -62,7 +62,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					<div id="learndash_course_users_page_box" class="learndash_course_users_page_box">
 					<?php
 					if ( ! empty( $metabox_description ) ) {
-						echo wpautop( wp_kses_post( $metabox_description ) );
+						echo wp_kses_post( wpautop( $metabox_description ) );
 					}
 
 					$ld_binary_selector_course_groups = new Learndash_Binary_Selector_Course_Groups(

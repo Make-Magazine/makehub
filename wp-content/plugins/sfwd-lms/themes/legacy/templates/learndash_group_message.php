@@ -19,11 +19,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( isset( $shortcode_atts['content'] ) ) && ( ! empty( $shortcode_atts['content'] ) ) ) {
-	?><div class="learndash-group-message"><?php
-		if ( ( isset( $shortcode_atts['autop'] ) ) && ( true === $shortcode_atts['autop'] ) ) {
-			echo wpautop( $shortcode_atts['content'] );
-		} else {
-			echo $shortcode_atts['content'];
-		}
-	?></div><?php
+	?><div class="learndash-group-message">
+	<?php
+	if ( ( isset( $shortcode_atts['autop'] ) ) && ( true === $shortcode_atts['autop'] ) ) {
+		echo wpautop( $shortcode_atts['content'] );
+	} else {
+		echo $shortcode_atts['content'];
+	}
+	?>
+	</div>
+	<?php
 }

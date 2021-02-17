@@ -24,6 +24,7 @@ $learndash_shortcode_data_json = htmlspecialchars( wp_json_encode( $shortcode_at
 
 /**
  * Logic to load assets as needed
+ *
  * @var [type]
  */
 
@@ -56,6 +57,7 @@ endif; ?>
 		<?php
 		/**
 		 * If the user wants to include the summary, they use the shortcode attr summary="true"
+		 *
 		 * @var [type]
 		 */
 		if ( isset( $shortcode_atts['show_header'] ) && 'yes' === $shortcode_atts['show_header'] ) :
@@ -161,7 +163,16 @@ endif; ?>
 				</h3>
 				<div class="ld-item-list-actions">
 					<?php if ( isset( $shortcode_atts['show_search'] ) && 'yes' === $shortcode_atts['show_search'] ) { ?>
-					<div class="ld-search-prompt" data-ld-expands="ld-course-search"><?php echo esc_html__( 'Search', 'learndash' ); ?> <span class="ld-icon-search ld-icon"></span></div> <!--/.ld-search-prompt-->
+					<button class="ld-search-prompt ld-icon-search ld-icon" data-ld-expands="ld-course-search" aria-label="
+						<?php
+						printf(
+							// translators: placeholder: Profile Search Prompt Label.
+							esc_html_x( 'Show %s Search Field', 'placeholder: Profile Search Prompt Label', 'learndash' ),
+							esc_attr( LearnDash_Custom_Label::get_label( 'courses' ) )
+						);
+						?>
+					">
+					</button> <!--/.ld-search-prompt-->
 					<?php } ?>
 					<div class="ld-expand-button" data-ld-expands="ld-main-course-list" data-ld-expand-text="<?php echo esc_attr_e( 'Expand All', 'learndash' ); ?>" data-ld-collapse-text="<?php echo esc_attr_e( 'Collapse All', 'learndash' ); ?>">
 						<span class="ld-icon-arrow-down ld-icon"></span>
@@ -170,14 +181,16 @@ endif; ?>
 				</div> <!--/.ld-course-list-actions-->
 			</div> <!--/.ld-section-heading-->
 			<?php
-			learndash_get_template_part(
-				'shortcodes/profile/search.php',
-				array(
-					'user_id'      => $user_id,
-					'user_courses' => $user_courses,
-				),
-				true
-			);
+			if ( isset( $shortcode_atts['show_search'] ) && 'yes' === $shortcode_atts['show_search'] ) {
+				learndash_get_template_part(
+					'shortcodes/profile/search.php',
+					array(
+						'user_id'      => $user_id,
+						'user_courses' => $user_courses,
+					),
+					true
+				);
+			}
 			?>
 
 			<div class="ld-item-list-items" id="ld-main-course-list" data-ld-expand-list="true">
@@ -203,7 +216,7 @@ endif; ?>
 						$learndash_no_courses_found_alert = array(
 							'icon'    => 'alert',
 							// translators: placeholder: Courses.
-							'message' => sprintf( esc_html_x( 'No %s found', 'placeholder: Courses', 'learndash' ), esc_html( LearnDash_Custom_Label::get_label( 'courses' ) ) ),
+							'message' => sprintf( esc_html_x( 'No %s found', 'placeholder: Courses', 'learndash' ), LearnDash_Custom_Label::get_label( 'courses' ) ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 							'type'    => 'warning',
 						);
 						learndash_get_template_part( 'modules/alert.php', $learndash_no_courses_found_alert, true );

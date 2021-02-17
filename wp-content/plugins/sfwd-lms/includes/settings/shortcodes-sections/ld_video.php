@@ -4,15 +4,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_ld_video' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_ld_video extends LearnDash_Shortcodes_Section {
 
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
-			$this->shortcodes_section_key         = 'ld_video';
-			$this->shortcodes_section_type        = 1;
+			$this->shortcodes_section_key  = 'ld_video';
+			$this->shortcodes_section_type = 1;
 
-			// translators: placeholders: Lessons, Topics
+			// translators: placeholders: Lessons, Topics.
 			$this->shortcodes_section_description = sprintf( esc_html_x( 'This shortcode is used on %1$s and %2$s where Video Progression is enabled. The video player will be added above the content. This shortcode allows positioning the player elsewhere within the content. This shortcode does not take any parameters.', 'placeholders: Lessons, Topics', 'learndash' ), LearnDash_Custom_Label::get_label( 'lessons' ), LearnDash_Custom_Label::get_label( 'topics' ) );
 
 			if ( learndash_get_post_type_slug( 'lesson' ) == $this->fields_args['post_type'] ) {
@@ -26,6 +35,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array();
 

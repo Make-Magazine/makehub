@@ -47,7 +47,7 @@ do_action( 'learndash-topic-list-before', $lesson['post']->ID, $course_id, $user
 			 *
 			 * @param string $table_class Lesson table CSS class list.
 			 */
-			echo esc_attr( apply_filters( 'ld-lesson-table-class', $table_class ) ); 
+			echo esc_attr( apply_filters( 'ld-lesson-table-class', $table_class ) );
 			?>
 			" id="<?php echo esc_attr( 'ld-expand-' . $lesson['post']->ID ); ?>">
 

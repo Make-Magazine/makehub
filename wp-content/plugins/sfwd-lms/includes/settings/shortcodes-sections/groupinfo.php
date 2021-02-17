@@ -4,8 +4,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'LearnDash_Shortcodes_Section_groupinfo' ) ) ) {
+	/**
+	 * Class for LearnDash Shortcode Section.
+	 */
+	//phpcs:ignore PEAR.NamingConventions.ValidClassName.Invalid
 	class LearnDash_Shortcodes_Section_groupinfo extends LearnDash_Shortcodes_Section {
 
+		/**
+		 * Public constructor for class.
+		 *
+		 * @param array $fields_args Field Args.
+		 */
 		public function __construct( $fields_args = array() ) {
 			$this->fields_args = $fields_args;
 
@@ -20,6 +29,9 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			parent::__construct();
 		}
 
+		/**
+		 * Initialize the shortcode fields.
+		 */
 		public function init_shortcodes_section_fields() {
 			$this->shortcodes_option_fields = array(
 				'show'   => array(
@@ -116,7 +128,7 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 			<script>
 				jQuery( function() {
 					if ( jQuery( 'form#learndash_shortcodes_form_groupinfo select#groupinfo_show' ).length) {
-						jQuery( 'form#learndash_shortcodes_form_groupinfo select#groupinfo_show').change( function() {
+						jQuery( 'form#learndash_shortcodes_form_groupinfo select#groupinfo_show').on( 'change', function() {
 							var selected = jQuery(this).val();
 							//console.log('selected[%o]', selected);
 

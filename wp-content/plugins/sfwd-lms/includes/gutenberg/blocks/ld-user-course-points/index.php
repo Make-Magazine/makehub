@@ -17,24 +17,24 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 		 * Object constructor
 		 */
 		public function __construct() {
-			$this->shortcode_slug = 'ld_user_course_points';
-			$this->block_slug = 'ld-user-course-points';
+			$this->shortcode_slug   = 'ld_user_course_points';
+			$this->block_slug       = 'ld-user-course-points';
 			$this->block_attributes = array(
-				'user_id' => array(
+				'user_id'         => array(
 					'type' => 'string',
 				),
-				'preview_show' => array(
+				'preview_show'    => array(
 					'type' => 'boolean',
 				),
 				'preview_user_id' => array(
 					'type' => 'string',
 				),
 			);
-			$this->self_closing = true;
+			$this->self_closing     = true;
 
 			$this->init();
 		}
-		
+
 		/**
 		 * Render Block
 		 *
@@ -69,7 +69,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				}
 
 				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
-				$shortcode_out = do_shortcode( $shortcode_params_str );
+				$shortcode_out        = do_shortcode( $shortcode_params_str );
 				if ( empty( $shortcode_out ) ) {
 					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
 				}

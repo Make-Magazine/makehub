@@ -2,7 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+// phpcs:disable WordPress.NamingConventions.ValidVariableName,WordPress.NamingConventions.ValidFunctionName,WordPress.NamingConventions.ValidHookName,PSR2.Classes.PropertyDeclaration.Underscore
 class WpProQuiz_Helper_Import {
 
 	private $_content = null;
@@ -42,7 +42,7 @@ class WpProQuiz_Helper_Import {
 		$v1 = substr( $code, 3, 5 );
 		$v2 = substr( $code, 8, 5 );
 
-		if ( $c !== 'WPQ' ) {
+		if ( 'WPQ' !== $c ) {
 			$this->setError( __( 'File have wrong format', 'learndash' ) );
 			return false;
 		}
@@ -61,7 +61,7 @@ class WpProQuiz_Helper_Import {
 
 	public function getImportData() {
 
-		if ( $this->_content === null ) {
+		if ( null === $this->_content ) {
 			$this->setError( __( 'File cannot be processed', 'learndash' ) );
 			return false;
 		}
@@ -70,14 +70,14 @@ class WpProQuiz_Helper_Import {
 
 		$b = base64_decode( $data );
 
-		if ( $b === null ) {
+		if ( null === $b ) {
 			$this->setError( __( 'File cannot be processed', 'learndash' ) );
 			return false;
 		}
 
 		$check = $this->saveUnserialize( $b, $o );
 
-		if ( $check === false || ! is_array( $o ) ) {
+		if ( false === $check || ! is_array( $o ) ) {
 			$this->setError( __( 'File cannot be processed', 'learndash' ) );
 			return false;
 		}
@@ -90,7 +90,7 @@ class WpProQuiz_Helper_Import {
 	public function saveImport( $ids = false ) {
 		$data = $this->getImportData();
 
-		if ( $data === false ) {
+		if ( false === $data ) {
 			return false;
 		}
 
@@ -98,7 +98,6 @@ class WpProQuiz_Helper_Import {
 			case '3':
 			case '4':
 				return $this->importData( $data, $ids, $data['exportVersion'] );
-				break;
 		}
 
 		return false;
@@ -118,7 +117,7 @@ class WpProQuiz_Helper_Import {
 
 			$oldId = $master->getId();
 
-			if ( $ids !== false ) {
+			if ( false !== $ids ) {
 				if ( ! in_array( $oldId, $ids ) ) {
 					continue;
 				}
@@ -127,7 +126,7 @@ class WpProQuiz_Helper_Import {
 			$master->setId( 0 );
 			$master->setPostId( 0 );
 
-			if ( $version == 3 ) {
+			if ( 3 == $version ) {
 				if ( $master->isQuestionOnSinglePage() ) {
 					$master->setQuizModus( WpProQuiz_Model_Quiz::QUIZ_MODUS_SINGLE );
 				} elseif ( $master->isCheckAnswer() ) {
@@ -280,7 +279,7 @@ class WpProQuiz_Helper_Import {
 	private function saveUnserialize( $str, &$into ) {
 		if ( ( defined( 'LEARNDASH_QUIZ_EXPORT_LEGACY' ) ) && ( true === LEARNDASH_QUIZ_EXPORT_LEGACY ) ) {
 			$into = @unserialize( $str );
-			return $into !== false || rtrim( $str ) === serialize( false );
+			return false !== $into || rtrim( $str ) === serialize( false );
 		} else {
 			$import = json_decode( $str, true );
 			$import = learndash_array_sanitize_keys_and_values( $import );

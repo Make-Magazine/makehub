@@ -68,7 +68,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 
 				// If this is a new install we want to turn off WP Post Category/Tag.
-				
+
 				$ld_prior_version = learndash_data_upgrades_setting( 'prior_version' );
 				if ( 'new' === $ld_prior_version ) {
 					$this->setting_option_values['wp_post_category'] = '';

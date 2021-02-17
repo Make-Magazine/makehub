@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			echo sprintf(
 				// translators: placeholder: Groups.
 				esc_html_x( 'You don\'t have any %s yet', 'Placeholder: Groups', 'learndash' ),
-				LearnDash_Custom_Label::get_label( 'groups' )
+				LearnDash_Custom_Label::get_label( 'groups' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 			?>
 		</h2>
@@ -28,19 +28,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 			echo sprintf(
 				// translators: Groups, Group, Group.
 				esc_html_x( 'Users can be placed into %1$s and assigned a %2$s Leader who can track the progress and performance of any user in the %3$s.', 'Placeholder: Groups, Group, Groups', 'learndash' ),
-				LearnDash_Custom_Label::get_label( 'groups' ),
-				LearnDash_Custom_Label::get_label( 'group' ),
-				LearnDash_Custom_Label::get_label( 'groups' )
+				LearnDash_Custom_Label::get_label( 'groups' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+				LearnDash_Custom_Label::get_label( 'group' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+				LearnDash_Custom_Label::get_label( 'groups' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			);
 			?>
 		</p>
-		<a href="<?php echo admin_url( 'post-new.php?post_type=' . learndash_get_post_type_slug( 'group' ) ); ?>" class="button button-secondary">
+		<a href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . learndash_get_post_type_slug( 'group' ) ) ); ?>" class="button button-secondary">
 			<span class="dashicons dashicons-plus-alt"></span>
 			<?php
 				echo sprintf(
 					// translators: placeholder: Group.
 					esc_html_x( 'Add your first %s', 'placeholder: Group', 'learndash' ),
-					LearnDash_Custom_Label::get_label( 'group' )
+					LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				);
 				?>
 		</a>
@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					echo sprintf(
 						// translators: placeholder: Group.
 						esc_html_x( 'Creating a %s', 'placeholder: Group', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'group' )
+						LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 				</h3>
@@ -67,8 +67,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php
 					echo sprintf(
 						// translators: placeholder: Groups.
-						esc_html_x( 'Users & %s Documentation', 'placeholder: Group', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'groups' )
+						esc_html_x( 'Users & %s Documentation (only available in English)', 'placeholder: Group', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'groups' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 					?>
 					</a></li>

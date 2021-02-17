@@ -40,20 +40,20 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				'retry_restrictions'       => 'retry_restrictions',
-				'repeats'                  => 'repeats',
-				'quizRunOnce'              => 'quizRunOnce',
-				'quizRunOnceType'          => 'quizRunOnceType',
-				'quizRunOnceCookie'        => 'quizRunOnceCookie',
+				'retry_restrictions'      => 'retry_restrictions',
+				'repeats'                 => 'repeats',
+				'quizRunOnce'             => 'quizRunOnce',
+				'quizRunOnceType'         => 'quizRunOnceType',
+				'quizRunOnceCookie'       => 'quizRunOnceCookie',
 
-				'passingpercentage'        => 'passingpercentage',
+				'passingpercentage'       => 'passingpercentage',
 
-				'certificate'              => 'certificate',
-				'threshold'                => 'threshold',
+				'certificate'             => 'certificate',
+				'threshold'               => 'threshold',
 
-				'quiz_time_limit_enabled'  => 'quiz_time_limit_enabled',
-				'timeLimit'                => 'timeLimit',
-				'forcingQuestionSolve'     => 'forcingQuestionSolve',
+				'quiz_time_limit_enabled' => 'quiz_time_limit_enabled',
+				'timeLimit'               => 'timeLimit',
+				'forcingQuestionSolve'    => 'forcingQuestionSolve',
 			);
 
 			parent::__construct();
@@ -65,7 +65,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 *
 		 * @since 3.0
 		 * @param object $pro_quiz_edit WpProQuiz_Controller_Quiz instance (not used).
-		 * @param array $settings_values Array of settings fields.
+		 * @param array  $settings_values Array of settings fields.
 		 */
 		public function save_fields_to_post( $pro_quiz_edit, $settings_values = array() ) {
 			$_POST['quizRunOnce']       = $settings_values['quizRunOnce'];
@@ -82,9 +82,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$this->quiz_edit = $this->init_quiz_edit( $this->_post );
-			
 			if ( true === $this->settings_values_loaded ) {
+				$this->quiz_edit = $this->init_quiz_edit( $this->_post );
 
 				if ( ( isset( $this->setting_option_values['passingpercentage'] ) ) && ( '' !== $this->setting_option_values['passingpercentage'] ) ) {
 					$this->setting_option_values['passingpercentage'] = floatval( $this->setting_option_values['passingpercentage'] );
@@ -97,7 +96,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['threshold'] = '80';
 				}
 
-				if ( $this->quiz_edit['quiz'] ) {
+				if ( ( isset( $this->quiz_edit['quiz'] ) ) && ( ! empty( $this->quiz_edit['quiz'] ) ) ) {
 					$this->setting_option_values['timeLimit'] = $this->quiz_edit['quiz']->getTimeLimit();
 
 					$this->setting_option_values['forcingQuestionSolve'] = $this->quiz_edit['quiz']->isForcingQuestionSolve();
@@ -114,7 +113,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					} else {
 						$this->setting_option_values['repeats'] = '';
 						if ( $this->quiz_edit['quiz']->isQuizRunOnce() ) {
-							$this->setting_option_values['repeats'] = '0';
+							$this->setting_option_values['repeats']           = '0';
 							$this->setting_option_values['quizRunOnceType']   = $this->quiz_edit['quiz']->getQuizRunOnceType();
 							$this->setting_option_values['quizRunOnceCookie'] = $this->quiz_edit['quiz']->isQuizRunOnceCookie();
 						}
@@ -147,6 +146,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
+			// Ensure all settings fields are present.
 			foreach ( $this->settings_fields_map as $_internal => $_external ) {
 				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
 					$this->setting_option_values[ $_internal ] = '';
@@ -160,7 +160,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_fields() {
 			global $sfwd_lms;
 
-			$select_cert_options = array();
+			$select_cert_options         = array();
 			$select_cert_query_data_json = '';
 
 			/** This filter is documented in includes/class-ld-lms.php */
@@ -180,13 +180,13 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
 					$select_cert_query_data_json = $this->build_settings_select2_lib_ajax_fetch_json(
 						array(
-							'query_args' => array(
+							'query_args'       => array(
 								'post_type' => learndash_get_post_type_slug( 'certificate' ),
 							),
 							'settings_element' => array(
 								'settings_parent_class' => get_parent_class( __CLASS__ ),
-								'settings_class'  => __CLASS__,
-								'settings_field'  => 'certificate',
+								'settings_class'        => __CLASS__,
+								'settings_field'        => 'certificate',
 							),
 						)
 					);
@@ -197,7 +197,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				$select_cert_options_default = array(
 					'' => esc_html__( 'Select Certificate', 'learndash' ),
 				);
-				$select_cert_options = $sfwd_lms->select_a_certificate();
+				$select_cert_options         = $sfwd_lms->select_a_certificate();
 
 				if ( ( is_array( $select_cert_options ) ) && ( ! empty( $select_cert_options ) ) ) {
 					$select_cert_options = $select_cert_options_default + $select_cert_options;
@@ -218,16 +218,26 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'class'       => '-small',
 					'input_label' => '%',
 					'attrs'       => array(
-						'min'  => '0',
-						'max'  => '100',
-						//'step' => '0.01',
+						'min' => '0',
+						'max' => '100',
+					),
+					'rest'        => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'passing_percentage',
+								'description' => esc_html__( 'Passing Score Percentage', 'learndash' ),
+								'type'        => 'float',
+								'default'     => 0.0,
+							),
+						),
 					),
 				),
 				'certificate'             => array(
 					'name'                => 'certificate',
 					'label'               => sprintf(
 						// translators: placeholder: Quiz.
-						esc_html_x( ' %s Certificate', 'placeholder: Quiz', 'learndash' ),
+						esc_html_x( '%s Certificate', 'placeholder: Quiz', 'learndash' ),
 						learndash_get_custom_label( 'quiz' )
 					),
 					'type'                => 'select',
@@ -237,6 +247,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'child_section_state' => ( ( ! empty( $this->setting_option_values['certificate'] ) ) && ( '-1' !== $this->setting_option_values['certificate'] ) ) ? 'open' : 'closed',
 					'attrs'               => array(
 						'data-select2-query-data' => $select_cert_query_data_json,
+					),
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'type'    => 'integer',
+								'default' => 0,
+							),
+						),
 					),
 				),
 				'threshold'               => array(
@@ -249,13 +268,22 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'help_text'      => esc_html__( 'Set the score needed to receive a certificate. This can be different from the "Passing Score".', 'learndash' ),
 					'input_label'    => esc_html__( '% score', 'learndash' ),
 					'attrs'          => array(
-						'min'  => '0',
-						'max'  => '100',
-						//'step' => '0.01',
+						'min' => '0',
+						'max' => '100',
 					),
 					'value'          => $this->setting_option_values['threshold'],
 					'class'          => '-small',
 					'parent_setting' => 'certificate',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'certificate_award_threshold',
+								'type'      => 'float',
+								'default'   => 0.0,
+							),
+						),
+					),
 				),
 
 				'retry_restrictions'      => array(
@@ -272,24 +300,43 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'               => $this->setting_option_values['retry_restrictions'],
 					'default'             => '',
 					'child_section_state' => ( 'on' === $this->setting_option_values['retry_restrictions'] ) ? 'open' : 'closed',
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'retry_restrictions_enabled',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'repeats'                 => array(
-					'name'              => 'repeats',
-					'label'             => esc_html__( 'Number of Retries Allowed', 'learndash' ),
-					'help_text'         => esc_html__( 'You must input a whole number value or leave blank to default to 0.', 'learndash' ),
-					'type'              => 'number',
-					'class'             => '-small',
-					'default'           => '',
-					'value'             => $this->setting_option_values['repeats'],
-					//'value_allow_blank' => true,
-					//'value_abs'         => true,
-					'attrs'       => array(
-						'step' => 1,
-						'min'  => 0,
-						'can_empty' => true,
-						'can_decimal' => false
+					'name'           => 'repeats',
+					'label'          => esc_html__( 'Number of Retries Allowed', 'learndash' ),
+					'help_text'      => esc_html__( 'You must input a whole number value or leave blank to default to 0.', 'learndash' ),
+					'type'           => 'number',
+					'class'          => '-small',
+					'default'        => '',
+					'value'          => $this->setting_option_values['repeats'],
+					'attrs'          => array(
+						'step'        => 1,
+						'min'         => 0,
+						'can_empty'   => true,
+						'can_decimal' => false,
 					),
-					'parent_setting'    => 'retry_restrictions',
+					'parent_setting' => 'retry_restrictions',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'retry_repeats',
+								'description' => esc_html__( 'Number of repeats allowed. blank is unlimited, 0 is 1 repeats, 1 is 2 repeats, etc.', 'learndash' ),
+								'type'        => 'string',
+								'default'     => '',
+							),
+						),
+					),
 				),
 				'quizRunOnceType'         => array(
 					'name'           => 'quizRunOnceType',
@@ -314,7 +361,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'          => $this->setting_option_values['quizRunOnceCookie'],
 					'default'        => 'on',
 					'parent_setting' => 'retry_restrictions',
-					'attrs' => array(
+					'attrs'          => array(
 						'disabled' => 'disabled',
 					),
 				),
@@ -345,6 +392,21 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					),
 					'value'   => $this->setting_option_values['forcingQuestionSolve'],
 					'default' => 'on',
+					'rest'    => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'answer_all_questions_enabled',
+								'description' => sprintf(
+									// translators: placeholder: Questions.
+									esc_html_x( 'All %s required to complete', 'placeholder: Questions', 'learndash' ),
+									learndash_get_custom_label( 'questions' )
+								),
+								'type'        => 'boolean',
+								'default'     => true,
+							),
+						),
+					),
 				),
 				'quiz_time_limit_enabled' => array(
 					'name'                => 'quiz_time_limit_enabled',
@@ -356,7 +418,17 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'value'               => $this->setting_option_values['quiz_time_limit_enabled'],
 					'default'             => '',
 					'child_section_state' => ( 'on' === $this->setting_option_values['quiz_time_limit_enabled'] ) ? 'open' : 'closed',
-
+					'rest'                => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'time_limit_enabled',
+								'description' => esc_html__( 'Time Limit Enabled', 'learndash' ),
+								'type'        => 'boolean',
+								'default'     => false,
+							),
+						),
+					),
 				),
 				'timeLimit'               => array(
 					'name'           => 'timeLimit',
@@ -367,8 +439,18 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'default'        => '',
 					'value'          => $this->setting_option_values['timeLimit'],
 					'parent_setting' => 'quiz_time_limit_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key'   => 'time_limit_time',
+								'description' => esc_html__( 'Automatically Submit After', 'learndash' ),
+								'type'        => 'integer',
+								'default'     => 0,
+							),
+						),
+					),
 				),
-
 			);
 
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
@@ -380,7 +462,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		/**
 		 * Filter settings values for metabox before save to database.
 		 *
-		 * @param array $settings_values Array of settings values.
+		 * @param array  $settings_values Array of settings values.
 		 * @param string $settings_metabox_key Metabox key.
 		 * @param string $settings_screen_id Screen ID.
 		 * @return array $settings_values.
@@ -401,7 +483,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 
 				if ( ! empty( $settings_values['certificate'] ) ) {
-					$settings_values['threshold']   = floatval( $settings_values['threshold'] ) / 100;
+					$settings_values['threshold'] = floatval( $settings_values['threshold'] ) / 100;
 				} else {
 					$settings_values['threshold']   = '';
 					$settings_values['certificate'] = '';
@@ -448,7 +530,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['quizRunOnceType']    = '';
 					$settings_values['quizRunOnceCookie']  = '';
 				} else {
-					$settings_values['quizRunOnce']        = true;
+					$settings_values['quizRunOnce'] = true;
 					if ( ( isset( $settings_values['quizRunOnceCookie'] ) ) && ( 'on' === $settings_values['quizRunOnceCookie'] ) ) {
 						$settings_values['quizRunOnceCookie'] = true;
 					}

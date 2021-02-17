@@ -39,9 +39,8 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			$field_args = apply_filters( 'learndash_settings_field', $field_args );
 
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
-			$html       = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
+			$html = apply_filters( 'learndash_settings_field_html_before', '', $field_args );
 
-			
 			$html .= '<span class="ld-select">';
 			$html .= '<select autocomplete="off" ';
 			$html .= $this->get_field_attribute_type( $field_args );
@@ -57,10 +56,8 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 			$html .= $this->get_field_attribute_misc( $field_args );
 			$html .= $this->get_field_attribute_required( $field_args );
-
 			$html .= $this->get_field_sub_trigger( $field_args );
 			$html .= $this->get_field_inner_trigger( $field_args );
-
 			$html .= ' >';
 
 			$html_sub_fields = '';
@@ -70,7 +67,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 					$selected_item = '';
 
 					if ( is_array( $field_args['value'] ) ) {
-						if ( in_array( $option_key, $field_args['value'] ) ) {
+						if ( in_array( $option_key, $field_args['value'], true ) ) {
 							$selected_item = ' selected="" ';
 						}
 					} else {
@@ -79,19 +76,19 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 
 					if ( is_array( $option_label ) ) {
 						if ( ( isset( $option_label['label'] ) ) && ( ! empty( $option_label['label'] ) ) ) {
-							$html .= '<option value="' . $option_key . '" ' . $selected_item . '>' . $option_label['label'] . '</option>';
+							$html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $option_label['label'] ) . '</option>';
 						}
 
 						if ( ( isset( $option_label['inline_fields'] ) ) && ( ! empty( $option_label['inline_fields'] ) ) ) {
 							foreach ( $option_label['inline_fields'] as $sub_field_key => $sub_fields ) {
-								$html .= ' data-settings-inner-trigger="ld-settings-inner-' . $sub_field_key . '" ';
+								$html .= ' data-settings-inner-trigger="ld-settings-inner-' . esc_attr( $sub_field_key ) . '" ';
 
 								if ( ( isset( $option_label['inner_section_state'] ) ) && ( 'open' === $option_label['inner_section_state'] ) ) {
 									$inner_section_state = 'open';
 								} else {
 									$inner_section_state = 'closed';
 								}
-								$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . $sub_field_key . ' ld-settings-inner-state-' . $inner_section_state . '">';
+								$html_sub_fields .= '<div class="ld-settings-inner ld-settings-inner-' . esc_attr( $sub_field_key ) . ' ld-settings-inner-state-' . esc_attr( $inner_section_state ) . '">';
 
 								$level = ob_get_level();
 								ob_start();
@@ -103,7 +100,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 							}
 						}
 					} elseif ( is_string( $option_label ) ) {
-						$html .= '<option value="' . $option_key . '" ' . $selected_item . '>' . $option_label . '</option>';
+						$html .= '<option value="' . esc_attr( $option_key ) . '" ' . $selected_item . '>' . wp_kses_post( $option_label ) . '</option>';
 					}
 				}
 			}
@@ -117,10 +114,10 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			/** This filter is documented in includes/settings/settings-fields/class-ld-settings-fields-checkbox-switch.php */
 			$html = apply_filters( 'learndash_settings_field_html_after', $html, $field_args );
 
-			echo $html;
+			echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 		}
 
-				/**
+		/**
 		 * Validate field
 		 *
 		 * @since 2.4
@@ -143,6 +140,27 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 			}
 
 			return false;
+		}
+
+		/**
+		 * Convert Settings Field value to REST value.
+		 *
+		 * @since 3.3.0
+		 *
+		 * @param mixed  $val        Value from REST to be converted to internal value.
+		 * @param string $key        Key field for value.
+		 * @param array  $field_args Array of field args.
+		 * @param object $request    Request object.
+		 */
+		public function field_value_to_rest_value( $val , $key, $field_args, WP_REST_Request $request ) {
+			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
+				if ( isset( $field_args['field']['rest']['rest_args']['schema']['type'] ) ) {
+					if ( 'integer' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {
+						$val = absint( $val );
+					}
+				}
+			}
+			return $val;
 		}
 
 		// end of functions.

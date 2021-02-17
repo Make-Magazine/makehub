@@ -53,10 +53,10 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 					<div class='postbox ' id='sfwd-course_metabox'>
 						<div class="inside"  style="padding: 0 12px 12px;">
 						<?php
-							echo wpautop(
+							echo wpautop( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Elements escaped within.
 								sprintf(
 									// translators: placeholder: Course label, URL to online documentation.
-									esc_html_x( 'The documentation for %1$s Shortcodes and Blocks has moved online. %2$s.', 'placeholder: Course label, URL to online documentation', 'learndash' ),
+									esc_html_x( 'The documentation for %1$s Shortcodes and Blocks has moved online (only available in English). %2$s', 'placeholder: Course label, URL to online documentation', 'learndash' ),
 									LearnDash_Custom_Label::get_label( 'course' ),
 									'<a href="https://www.learndash.com/support/docs/core/shortcodes-blocks/" target="_blank" rel="noopener noreferrer"  aria-label="' . esc_attr(
 										sprintf(
@@ -67,7 +67,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 									) . '">' . esc_html__( 'Click here', 'learndash' ) . sprintf(
 										'<span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span>',
 										/* translators: Accessibility text. */
-										__( '(opens in a new tab)' )
+										esc_html__( '(opens in a new tab)', 'learndash' )
 									) . '</a>'
 								)
 							);

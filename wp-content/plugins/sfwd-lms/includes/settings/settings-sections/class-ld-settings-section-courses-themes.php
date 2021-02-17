@@ -89,7 +89,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			parent::load_settings_fields();
 		}
 
-		public function learndash_section_fields_after( $settings_section_key = '', $settings_screen_id ) {
+		public function learndash_section_fields_after( $settings_section_key, $settings_screen_id ) {
 			if ( $settings_section_key === $this->settings_section_key ) {
 
 				$themes = LearnDash_Theme_Register::get_themes();
@@ -109,7 +109,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 									if ( $active_theme_key === $theme_instance->get_theme_key() ) {
 										$theme_state = 'open';
 									}
-									echo '<div id="learndash_theme_settings_section_' . $theme_instance->get_theme_key() . '" class="ld-theme-settings-section ld-theme-settings-section-' . $theme_instance->get_theme_key() . ' ld-theme-settings-section-state-' . $theme_state . '">';
+									echo '<div id="learndash_theme_settings_section_' . esc_attr( $theme_instance->get_theme_key() ) . '" class="ld-theme-settings-section ld-theme-settings-section-' . esc_attr( $theme_instance->get_theme_key() ) . ' ld-theme-settings-section-state-' . esc_attr( $theme_state ) . '">';
 									$this->show_settings_section_fields( $section_instance->settings_page_id, $section_key );
 									echo '</div>';
 								}

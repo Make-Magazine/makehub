@@ -8,23 +8,23 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 
 	public function __construct() {
 		parent::__construct();
-		
+
 		//$this->_table = $this->_prefix."question";
 		$this->_table = $this->_tableQuestion;
 	}
-	
+
 	public function delete($id) {
 		$this->_wpdb->delete($this->_table, array('id' => $id), '%d');
 	}
-	
+
 	public function deleteByQuizId($id) {
 		$this->_wpdb->delete($this->_table, array('quiz_id' => $id), '%d');
 	}
-	
+
 	public function getSort($questionId) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare("SELECT sort FROM {$this->_tableQuestion} WHERE id = %d", $questionId));
 	}
-	
+
 	public function updateSort($id, $sort) {
 		$this->_wpdb->update(
 			$this->_table,
@@ -34,8 +34,8 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 			array('%d'),
 			array('%d')
 		);
-		
-		if ( true === is_data_upgrade_quiz_questions_updated() ) {		
+
+		if ( true === learndash_is_data_upgrade_quiz_questions_updated() ) {
 			$question_post_id = learndash_get_question_post_by_pro_id( $id );
 			if ( ! empty( $question_post_id ) ) {
 				$update_post = array(
@@ -47,26 +47,26 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 			}
 		}
 	}
-	
+
 	public function setOnlineOff($questionId) {
 		return $this->_wpdb->update($this->_tableQuestion, array('online' => 0), array('id' => $questionId), null, array('%d'));
 	}
-	
+
 	public function getQuizId($questionId) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare("SELECT quiz_id FROM {$this->_tableQuestion} WHERE id = %d", $questionId));
 	}
-	
+
 	public function getMaxSort($quizId) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare(
 			"SELECT MAX(sort) AS max_sort FROM {$this->_tableQuestion} WHERE quiz_id = %d AND online = 1", $quizId));
 	}
-	
+
 	public function save(WpProQuiz_Model_Question $question, $auto = false) {
 		$sort = null;
-		
+
 		if($auto && $question->getId()) {
 			$statisticMapper = new WpProQuiz_Model_StatisticMapper();
-			
+
 			if($statisticMapper->isStatisticByQuestionId($question->getId())) {
 				$this->setOnlineOff($question->getId());
 				$question->setQuizId($this->getQuizId($question->getId()));
@@ -74,8 +74,8 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 				$sort = $question->getSort();
 			}
 		}
-		
-		
+
+
 		/**
 		 * Convert emoji to HTML entities to allow saving in DB.
 		 *
@@ -83,13 +83,13 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 		 */
 		$question_title = $question->getTitle();
 		$question_title = wp_encode_emoji( $question_title );
-		
+
 		$question_question = $question->getQuestion();
 		$question_question = wp_encode_emoji( $question_question );
 
 		if($question->getId() != 0) {
 			$this->_wpdb->update(
-					$this->_table, 
+					$this->_table,
 					array(
 						'quiz_id' => $question->getQuizId(),
 						'title' => $question_title,
@@ -136,11 +136,11 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 				),
 				array('%d', '%d', '%d', '%s', '%d', '%s', '%s', '%s', '%d', '%d', '%s', '%s', '%d', '%d', '%s', '%d', '%d', '%d', '%d')
 			);
-			
+
 			$question->setId($this->_wpdb->insert_id);
 		}
-		
-		if ( ( true === is_data_upgrade_quiz_questions_updated() ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) !== 'yes' ) ) {
+
+		if ( ( true === learndash_is_data_upgrade_quiz_questions_updated() ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) !== 'yes' ) ) {
 			$question_post_id = learndash_get_question_post_by_pro_id( $question->getId() );
 			if ( empty( $question_post_id ) ) {
 				// We load fresh from DB. Don't use the $question object as it is not up to date.
@@ -169,9 +169,9 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 
 		return $question;
 	}
-	
+
 	public function fetch($id) {
-		
+
 		$row = $this->_wpdb->get_row(
 			$this->_wpdb->prepare(
 				"SELECT
@@ -183,40 +183,40 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 				$id),
 			ARRAY_A
 		);
-		
+
 		$model = new WpProQuiz_Model_Question($row);
-	
+
 		return $model;
 	}
-	
+
 	public function fetchById($id, $online = 1 ) {
-		
+
 		$ids = array_map('intval', (array)$id);
 		$a = array();
-		
+
 		if(empty($ids))
 			return null;
-		
+
 		$sql_str = 	"SELECT * FROM ". $this->_table. " WHERE id IN(". implode(', ', $ids) .") ";
-		
+
 		if ( ( $online === 1 ) || ( $online === 1 ) ) {
 			$sql_str .= " AND online = ". $online;
 		}
-		
+
 		$results = $this->_wpdb->get_results(
 				$sql_str,
 				ARRAY_A
 		);
-		
+
 		foreach ($results as $row) {
 			$a[] = new WpProQuiz_Model_Question($row);
-			
+
 		}
-		
-		return is_array($id) ? $a : (isset($a[0]) ? $a[0] : null);
+
+		return is_array( $id ) ? $a : ( isset( $a[0] ) ? $a[0] : null );
 	}
-	
-	public function fetchAll( $quizId = 0, $rand = false, $max = 0 ) {
+
+	public function fetchAll( $quizId = 0, $rand = false, $max = 0, $offset = 0, $only_online = true ) {
 		$quiz_post_id = 0;
 		if ( is_a( $quizId, 'WpProQuiz_Model_Quiz' ) ) {
 			$quiz = $quizId;
@@ -233,14 +233,14 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 			}
 		}
 
-		if ( ( ! empty( $quiz_post_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) && ( true === is_data_upgrade_quiz_questions_updated() ) ) {
+		if ( ( ! empty( $quiz_post_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) && ( true === learndash_is_data_upgrade_quiz_questions_updated() ) ) {
 			$ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( intval( $quiz_post_id ) );
 			if ( $ld_quiz_questions_object ) {
 				$pro_questions = $ld_quiz_questions_object->get_questions( 'pro_objects' );
 
 				/**
 				 * Filters pro quiz questions list.
-				 * 
+				 *
 				 * Used in `fetchAll` method of `WpProQuiz_Model_QuestionMapper` class to fetch all pro quiz questions.
 				 *
 				 * @param array   $pro_questions An array of pro quiz question IDs.
@@ -288,38 +288,44 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 			}
 
 			$limit = '';
-			
-			if($max > 0) {
-				$limit = 'LIMIT 0, '.((int)$max);
+
+			if( $max > 0 ) {
+				$limit = 'LIMIT ' . ( (int) $offset ) . ', ' . ( (int) $max );
 			}
-			
+
+			if ( $only_online ) {
+				$where = ' quiz_id = %d AND q.online = 1 ';
+			}else {
+				$where = ' quiz_id = %d ';
+			}
+
 			$a = array();
 			$results = $this->_wpdb->get_results(
 					$this->_wpdb->prepare(
-								'SELECT 
+								'SELECT
 									q.*,
-									c.category_name 
-								FROM 
+									c.category_name
+								FROM
 									'. $this->_table.' AS q
 									LEFT JOIN '.$this->_tableCategory.' AS c
 										ON c.category_id = q.category_id
 								WHERE
-									quiz_id = %d AND q.online = 1
-								'.$orderBy.' 
+									'. $where .'
+								'.$orderBy.'
 								'.$limit
 							, $quizId),
 					ARRAY_A);
-			
+
 			foreach($results as $row) {
 				$model = new WpProQuiz_Model_Question($row);
-				
+
 				$a[] = $model;
 			}
 		}
 
 		return $a;
 	}
-	
+
 	public function fetchAllList($quizId, $list) {
 		$quiz_post_id = 0;
 		if ( is_a( $quizId, 'WpProQuiz_Model_Quiz' ) ) {
@@ -328,7 +334,7 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 			$quiz_post_id = $quiz->getPostId();
 		}
 
-		if ( ( ! empty( $quiz_post_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) && ( true === is_data_upgrade_quiz_questions_updated() ) ) {
+		if ( ( ! empty( $quiz_post_id ) ) && ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_Builder', 'enabled' ) === 'yes' ) && ( true === learndash_is_data_upgrade_quiz_questions_updated() ) ) {
 			$ld_quiz_questions_object = LDLMS_Factory_Post::quiz_questions( intval( $quiz_post_id ) );
 			if ( $ld_quiz_questions_object ) {
 				$questions = $ld_quiz_questions_object->get_questions();
@@ -349,23 +355,93 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 									quiz_id = %d AND online = 1'
 							, $quizId),
 					ARRAY_A);
-			
+
 			return $results;
 		}
 	}
-	
+
+	/**
+	 * Fetch questions based on statistics ID.
+	 *
+	 * @param int $stat_id     Statistics reference ID.
+	 * @param int $question_id Question ID.
+	 * @param int $limit       Limit for the records to fetch.
+	 * @param int $offset      Offset for the records to fetch.
+	 *
+	 * @throws Exception If Id is empty, throws Exception.
+	 *
+	 * @return array Questions list.
+	 */
+	public function fetchByStatId( $stat_id, $question_id, $limit, $offset ) {
+		$questions = array();
+
+		$stat_id     = absint( $stat_id );
+		$question_id = absint( $question_id );
+
+		if ( ! $stat_id ) {
+			throw new Exception( __( 'Statistics ID cannot be empty in order to fetch questions for statistics.', 'learndash' ) );
+		}
+
+		if ( ! empty( $question_id ) ) {
+			$sql = "SELECT qn.* from $this->_tableQuestion as qn INNER JOIN $this->_tableStatistic as stat ON qn.id = stat.question_id
+				WHERE stat.statistic_ref_id = %1d AND stat.question_id = %2d LIMIT %3d, %4d";
+			$results = $this->_wpdb->get_results( $this->_wpdb->prepare( $sql, $stat_id, $question_id, $offset, $limit ), ARRAY_A );
+		} else {
+			$sql = "SELECT qn.* from $this->_tableQuestion as qn INNER JOIN $this->_tableStatistic as stat ON qn.id = stat.question_id
+				WHERE stat.statistic_ref_id=%1d LIMIT %2d, %3d";
+				$results = $this->_wpdb->get_results( $this->_wpdb->prepare( $sql, $stat_id, $offset, $limit ), ARRAY_A );
+		}
+
+		if ( $results ) {
+			foreach ( $results as $result ) {
+				$questions[] = new WpProQuiz_Model_Question( $result );
+			}
+		}
+
+		return $questions;
+	}
+
+	/**
+	 * Fetch questions count based on statistics ID.
+	 *
+	 * @param int $stat_id Statistics reference ID.
+	 * @param int $question_id Question ID.
+	 *
+	 * @throws Exception If Id is empty, throws Exception.
+	 *
+	 * @return int Questions count.
+	 */
+	public function fetchByStatIdCount( $stat_id = 0, $question_id = 0 ) {
+
+		if ( ! $stat_id ) {
+			throw new Exception( __( 'Statistics ID cannot be empty in order to fetch questions for statistics.', 'learndash' ) );
+		}
+
+		if ( ! empty( $question_id ) ) {
+			$sql     = "SELECT count(*) from $this->_tableQuestion as qn INNER JOIN $this->_tableStatistic as stat ON qn.id = stat.question_id
+				WHERE stat.statistic_ref_id=%1d and stat.question_id=%2d";
+			$results = $this->_wpdb->get_var( $this->_wpdb->prepare( $sql, $stat_id, $question_id ) );
+		} else {
+			$sql     = "SELECT count(*) from $this->_tableQuestion as qn INNER JOIN $this->_tableStatistic as stat ON qn.id = stat.question_id
+				WHERE stat.statistic_ref_id=%1d";
+			$results = $this->_wpdb->get_var( $this->_wpdb->prepare( $sql, $stat_id ) );
+		}
+
+		return $results;
+	}
+
 	public function count($quizId) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare("SELECT COUNT(*) FROM {$this->_table} WHERE quiz_id = %d AND online = 1", $quizId));
 	}
-	
+
 	public function exists($id) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare("SELECT COUNT(*) FROM {$this->_table} WHERE id = %d AND online = 1", $id));
 	}
-	
+
 	public function existsAndWritable($id) {
 		return $this->_wpdb->get_var($this->_wpdb->prepare("SELECT COUNT(*) FROM {$this->_table} WHERE id = %d AND online = 1", $id));
 	}
-	
+
 	public function fetchCategoryPoints($quizId) {
 		$results = $this->_wpdb->get_results(
 				$this->_wpdb->prepare(
@@ -373,13 +449,13 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 						FROM '.$this->_tableQuestion.'
 						WHERE quiz_id = %d AND online = 1
 						GROUP BY category_id', $quizId));
-		
+
 		$a = array();
-		
+
 		foreach($results as $result) {
 			$a[$result['category_id']] = $result['sum_points'];
 		}
-		
+
 		return $a;
 	}
 }

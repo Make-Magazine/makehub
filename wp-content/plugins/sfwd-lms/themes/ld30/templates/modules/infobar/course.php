@@ -262,7 +262,6 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 					switch ( $course_pricing['type'] ) {
 						case ( 'open' ):
 						case ( 'free' ):
-
 							/**
 							 * Filters whether to show login modal.
 							 *

@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * @var [type]
  */
-$course       = get_post( $course_id );
-$course_link  = get_permalink( $course_id );
+$course      = get_post( $course_id );
+$course_link = get_permalink( $course_id );
 /**
  * Filters course list shortcode course CSS class. Used to add CSS class to the wrapper of each course item
  *
@@ -54,9 +54,10 @@ do_action( 'learndash-course-row-before', $course_id, $user_id );
 		do_action( 'learndash-course-row-link-before', $course_id, $user_id );
 		?>
 
-		<a href="<?php echo esc_url( $course_link ); ?>">
-			<?php echo wp_kses_post( $course->post_title ); ?>
-		</a>
+		<a href="<?php echo esc_url( $course_link ); ?>"><?php
+			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+			echo wp_kses_post( apply_filters( 'the_title', $course->post_title, $course->ID ) );
+		?></a>
 
 		<?php
 		/**

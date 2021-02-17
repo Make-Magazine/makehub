@@ -152,7 +152,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				),
 			);
 
-			$this->setting_option_fields['group_pagination_enabled'] = array(
+			$this->setting_option_fields['group_pagination_enabled']    = array(
 				'name'                => 'group_pagination_enabled',
 				'type'                => 'checkbox-switch',
 				'label'               => sprintf(
@@ -176,14 +176,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				),
 				'child_section_state' => ( 'yes' === $this->setting_option_values['group_pagination_enabled'] ) ? 'open' : 'closed',
 			);
-			$this->setting_option_fields['group_pagination_courses'] = array(
+			$this->setting_option_fields['group_pagination_courses']    = array(
 				'name'           => 'group_pagination_courses',
 				'type'           => 'number',
-				'label'          => sprintf(
-					// translators: placeholder: Courses.
-					esc_html_x( '%s', 'placeholder: Courses', 'learndash' ),
-					learndash_get_custom_label( 'courses' )
-				),
+				'label'          => learndash_get_custom_label( 'courses' ),
 				'value'          => $this->setting_option_values['group_pagination_courses'],
 				'class'          => 'small-text',
 				'input_label'    => esc_html__( 'per page', 'learndash' ),
@@ -225,7 +221,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				),
 				'child_section_state' => ( 'yes' === $this->setting_option_values['group_courses_order_enabled'] ) ? 'open' : 'closed',
 			);
-			$this->setting_option_fields['group_courses_orderby'] = array(
+			$this->setting_option_fields['group_courses_orderby']       = array(
 				'name'           => 'group_courses_orderby',
 				'type'           => 'select',
 				'label'          => esc_html__( 'Sort By', 'learndash' ),

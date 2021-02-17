@@ -71,7 +71,16 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 								 */
 								do_action( 'learndash_csv_download_after_headers' );
 
-								echo file_get_contents( $report_filename );
+								//echo file_get_contents( $report_filename );
+								//readfile( $report_filename );
+
+								set_time_limit( 0 );
+								$report_fp = @fopen( $report_filename,"rb" );
+								while( ! feof( $report_fp ) ) {
+									print( @fread( $report_fp, 1024*8 ) );
+									ob_flush();
+									flush();
+								}
 							}
 						}
 					}
@@ -132,7 +141,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 			wp_enqueue_style(
 				'learndash_style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/style' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -141,7 +150,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 			wp_enqueue_style(
 				'sfwd-module-style',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . leardash_min_asset() . '.css',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/css/sfwd_module' . learndash_min_asset() . '.css',
 				array(),
 				LEARNDASH_SCRIPT_VERSION_TOKEN
 			);
@@ -150,7 +159,7 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 
 			wp_enqueue_script(
 				'learndash-admin-settings-data-reports-script',
-				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-data-reports' . leardash_min_asset() . '.js',
+				LEARNDASH_LMS_PLUGIN_URL . 'assets/js/learndash-admin-settings-data-reports' . learndash_min_asset() . '.js',
 				array( 'jquery' ),
 				LEARNDASH_SCRIPT_VERSION_TOKEN,
 				true
@@ -295,7 +304,7 @@ function learndash_data_reports_ajax() {
 				$reply_data['data']             = $ld_admin_settings_data_reports->do_data_reports( $_POST['data'], $reply_data );
 
 				if ( ! empty( $reply_data ) ) {
-					echo json_encode( $reply_data );
+					echo wp_json_encode( $reply_data );
 				}
 			}
 		}

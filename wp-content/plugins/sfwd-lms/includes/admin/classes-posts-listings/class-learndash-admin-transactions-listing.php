@@ -222,11 +222,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				echo sprintf(
 					// translators: placeholder: Course.
 					esc_html_x( '%s : ', 'placeholder: Course', 'learndash' ),
-					LearnDash_Custom_Label::get_label( 'course' )
+					LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				);
 
 				$filter_url = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
-				echo '<a href="' . esc_url( $filter_url ) . '">' . get_the_title( $course_id ) . '</a>';
+				echo '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>';
 				$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
 				if ( current_user_can( 'edit_post', $course_id ) ) {
@@ -236,7 +236,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
 					$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 				}
-				echo $this->list_table_row_actions( $row_actions );
+				echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 			} else {
 				$group_id = get_post_meta( $post_id, 'group_id', true );
 				$group_id = absint( $group_id );
@@ -246,11 +246,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					echo sprintf(
 						// translators: placeholder: Group.
 						esc_html_x( '%s : ', 'placeholder: Group', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'group' )
+						LearnDash_Custom_Label::get_label( 'group' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					);
 
 					$filter_url = add_query_arg( 'group_id', $group_id, $this->get_clean_filter_url() );
-					echo '<a href="' . esc_url( $filter_url ) . '">' . get_the_title( $group_id ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $group_id ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
 					if ( current_user_can( 'edit_post', $group_id ) ) {
@@ -261,7 +261,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $group_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 					}
 
-					echo $this->list_table_row_actions( $row_actions );
+					echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 				}
 			}
 		}
@@ -282,7 +282,6 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					$user = get_user_by( 'email', $email );
 				}
 			} elseif ( ! empty( $stripe_nonce ) ) {
-				// echo esc_html__( 'Stripe', 'learndash' );
 				$user_id = get_post_meta( $post_id, 'user_id', true );
 				if ( ! empty( $user_id ) ) {
 					$user = get_user_by( 'ID', $user_id );
@@ -293,12 +292,12 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$display_name = $user->display_name . ' (' . $user->user_email . ')';
 				if ( current_user_can( 'edit_users' ) ) {
 					$edit_url = get_edit_user_link( $user->ID );
-					echo '<a href="' . esc_url( $edit_url ) . '">' . $display_name . '</a>';
+					echo '<a href="' . esc_url( $edit_url ) . '">' . esc_html( $display_name ) . '</a>';
 					$row_actions['edit'] = '<a href="' . esc_url( $edit_url ) . '">' . esc_html__( 'edit', 'learndash' ) . '</a>';
 				} else {
-					echo $display_name;
+					echo esc_html( $display_name );
 				}
-				echo $this->list_table_row_actions( $row_actions );
+				echo $this->list_table_row_actions( $row_actions ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 			}
 		}
 

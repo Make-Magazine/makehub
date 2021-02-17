@@ -62,6 +62,14 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		 */
 		public function load_settings_values() {
 			$this->setting_option_values = learndash_get_post_group_membership_settings( $this->_post->ID );
+
+			// Ensure all settings fields are present.
+			foreach ( $this->settings_fields_map as $_internal => $_external ) {
+				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
+					$this->setting_option_values[ $_internal ] = '';
+				}
+			}
+
 		}
 
 		/**
@@ -145,7 +153,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				'value'   => $this->setting_option_values['groups_membership_compare'],
 				'options' => array(
 					'ANY' => array(
-						'label' => esc_html__( 'Any', 'learndash' ),
+						'label'       => esc_html__( 'Any', 'learndash' ),
 						'description' => sprintf(
 							// translators: placeholder: group.
 							esc_html_x( 'User can be a member of ANY %s to view content.', 'placeholder: group', 'learndash' ),
@@ -153,7 +161,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						),
 					),
 					'ALL' => array(
-						'label' => esc_html__( 'All', 'learndash' ),
+						'label'       => esc_html__( 'All', 'learndash' ),
 						'description' => sprintf(
 							// translators: placeholder: groups.
 							esc_html_x( 'User must be a member of ALL %s to view content.', 'placeholder: groups', 'learndash' ),
@@ -251,21 +259,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 
 				learndash_set_post_group_membership_settings( $post_id, $settings_field_updates );
-
-				/*
-				if ( ( ! empty( $settings_field_updates ) ) && ( is_array( $settings_field_updates ) ) ) {
-					foreach ( $settings_field_updates as $_key => $_val ) {
-						if ( empty( $_val ) ) {
-							delete_post_meta( $post_id, '_ld_' . $_key );
-						} else {
-							update_post_meta( $post_id, '_ld_' . $_key, $_val );
-						}
-					}
-				}
-				*/
 			}
 		}
-
 
 		// End of functions.
 	}

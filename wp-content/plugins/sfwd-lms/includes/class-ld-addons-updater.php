@@ -150,7 +150,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 		 *
 		 * @since 2.5.5
 		 */
-		public function install_plugin_complete_actions( $install_actions = array(), $api, $plugin_file = '' ) {
+		public function install_plugin_complete_actions( $install_actions, $api, $plugin_file = '' ) {
 			if ( ( isset( $_GET['ld-return-addons'] ) ) && ( ! empty( $_GET['ld-return-addons'] ) ) ) {
 				// If we have the 'ld-return-addons' element this means we need to go back there only.
 				$return_url = esc_attr( $_GET['ld-return-addons'] );
@@ -160,12 +160,13 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 
 				if ( ! empty( $plugin_file ) ) {
 					$plugin_slug = dirname( $plugin_file );
-					if ( ( isset( $this->data['plugins'][ $plugin_slug ]['file'] ) ) && ( ! empty( $this->data['plugins'][ $plugin_slug ]['file'] ) ) ) {
-						if ( file_exists( $this->data['plugins'][ $plugin_slug ]['file'] ) ) {
+					if ( ! empty( $plugin_slug ) ) {
+						$plugin_readme_file = $this->bb_api->get_addon_directory() . '/' . $plugin_slug . '_readme.txt';
+						if ( ( ! empty( $plugin_readme_file ) ) && ( file_exists( $plugin_readme_file ) ) ) {
 							// Update the installed plugin readme.txt.
 							$plugin_dir = trailingslashit( WP_PLUGIN_DIR ) . $plugin_slug;
 							if ( ( file_exists( $plugin_dir ) ) && ( is_writable( $plugin_dir ) ) ) {
-								$copy_ret = copy( $this->data['plugins'][ $plugin_slug ]['file'], $plugin_dir . '/readme.txt' );
+								$copy_ret = @copy( $plugin_readme_file, $plugin_dir . '/readme.txt' );
 							}
 						}
 					}
@@ -277,7 +278,7 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 			$this->load_repositories_options();
 
 			if ( isset( $this->data['plugins'][ $args->slug ] ) ) {
-				$data = json_decode( json_encode( $this->data['plugins'][ $args->slug ] ), false );
+				$data = json_decode( wp_json_encode( $this->data['plugins'][ $args->slug ] ), false );
 
 				// We already have the obj but we update the BB download URL just in case.
 				$data->download_link = $this->bb_api->get_bitbucket_repository_download_url( $data->slug );
@@ -725,16 +726,6 @@ if ( ! class_exists( 'LearnDash_Addon_Updater' ) ) {
 						foreach ( $all_plugins as $all_plugin_slug => $all_plugin_data ) {
 							if ( strncasecmp( $plugin_readme['slug'], $all_plugin_slug, strlen( $plugin_readme['slug'] ) ) === 0 ) {
 								$plugin_found = true;
-
-								// Update the installed plugin readme.txt.
-								if ( ( isset( $plugin_readme['file'] ) ) && ( ! empty( $plugin_readme['file'] ) ) ) {
-									if ( file_exists( $plugin_readme['file'] ) ) {
-										$plugin_dir = trailingslashit( WP_PLUGIN_DIR ) . dirname( $all_plugin_slug );
-										if ( file_exists( $plugin_dir ) ) {
-											$copy_ret = copy( $plugin_readme['file'], $plugin_dir . '/readme.txt' );
-										}
-									}
-								}
 
 								$plugin_readme['wp_slug']                  = $all_plugin_slug;
 								$plugin_readme['plugin_status']            = array();

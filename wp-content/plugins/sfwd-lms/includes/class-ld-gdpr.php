@@ -416,10 +416,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 								$course_title = get_the_title( $course_id );
 								if ( ! empty( $course_title ) ) {
 									$assignment_meta_data[] = array(
-										// translators: placeholder: Course.
-										// @codingStandardsIgnoreStart
-										'name'  => sprintf( esc_html_x( '%s', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
-										// @codingStandardsIgnoreEnd
+										'name'  => LearnDash_Custom_Label::get_label( 'course' ),
 										'value' => $course_title,
 									);
 								}
@@ -430,10 +427,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 								$lesson_title = get_the_title( $lesson_id );
 								if ( ! empty( $lesson_title ) ) {
 									$assignment_meta_data[] = array(
-										// translators: placeholder: Lesson.
-										// @codingStandardsIgnoreStart
-										'name'  => sprintf( esc_html_x( '%s', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ),
-										// @codingStandardsIgnoreEnd
+										'name'  => LearnDash_Custom_Label::get_label( 'lesson' ),
 										'value' => $lesson_title,
 									);
 								}
@@ -527,10 +521,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 								$course_title = get_the_title( $course_id );
 								if ( ! empty( $course_title ) ) {
 									$assignment_meta_data[] = array(
-										// translators: placeholder: Course.
-										// @codingStandardsIgnoreStart
-										'name'  => sprintf( esc_html_x( '%s', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
-										// @codingStandardsIgnoreEnd
+										'name'  => LearnDash_Custom_Label::get_label( 'course' ),
 										'value' => $course_title,
 									);
 								}
@@ -541,10 +532,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 								$lesson_title = get_the_title( $lesson_id );
 								if ( ! empty( $lesson_title ) ) {
 									$assignment_meta_data[] = array(
-										// translators: placeholder: Lesson.
-										// @codingStandardsIgnoreStart
-										'name'  => sprintf( esc_html_x( '%s', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ),
-										// @codingStandardsIgnoreEnd
+										'name'  => LearnDash_Custom_Label::get_label( 'lesson' ),
 										'value' => $lesson_title,
 									);
 								}
@@ -827,7 +815,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 		 *
 		 * @return array of meta keys to process
 		 */
-		public function get_meta_keys( $action = '', WP_Post $transaction ) {
+		public function get_meta_keys( $action, WP_Post $transaction ) {
 			$transaction_meta_fields = array();
 
 			$transaction_type = get_post_meta( $transaction->ID, 'action', true );
@@ -869,7 +857,7 @@ if ( ! class_exists( 'LearnDash_GDPR' ) ) {
 		 *
 		 * @return mixed $meta_value
 		 */
-		public function format_value( $meta_value = '', $meta_type, $transaction ) {
+		public function format_value( $meta_value, $meta_type, $transaction ) {
 			if ( ( ! empty( $meta_value ) ) && ( ! empty( $meta_type ) ) ) {
 				switch ( $meta_type ) {
 					case 'money_stripe':
