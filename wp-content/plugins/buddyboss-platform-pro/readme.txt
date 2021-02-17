@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.6
+Tested up to: 5.6.1
 Requires PHP: 5.6.20
-Stable tag: 1.0.9
+Stable tag: 1.1.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,15 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.0 =
+* Groups - Provided 'Member Access Controls' settings to decide which members should have access to create and join Social Groups
+* Activity - Provided 'Member Access Controls' settings to decide which members should have access to create activity posts
+* Media - Provided 'Member Access Controls' settings to decide which members should have access to upload photos and documents
+* Connections - Provided 'Member Access Controls' settings to decide which members should have access to send connection requests to other members
+* Messages - Provided 'Member Access Controls' settings to decide which members should have access to send messages to other members
+* Zoom - Updated 'Zoom Web SDK' library to 1.9.0
+* Zoom - Fixed issue with the Recurring Meeting start time in the email
 
 = 1.0.9 =
 * Zoom - Added support for Zoom Webinar in Gutenberg blocks

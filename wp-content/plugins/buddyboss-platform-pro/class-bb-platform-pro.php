@@ -31,6 +31,14 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		public $integrations = array();
 
 		/**
+		 * Access Control.
+		 *
+		 * @var null Access Control.
+		 * @since 1.1.0
+		 */
+		public $access_control = null;
+
+		/**
 		 * Main BB_Platform_Pro Instance
 		 *
 		 * Ensures only one instance of BB_Platform_Pro is loaded or can be loaded.
@@ -106,7 +114,7 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		 * @since 1.0.0
 		 */
 		private function setup_globals() {
-			$this->version        = '1.0.9';
+			$this->version        = '1.1.0';
 			$this->db_version     = 231;
 			$this->db_version_raw = (int) bp_get_option( '_bbp_pro_db_version' );
 
@@ -119,6 +127,10 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 			$this->root_plugin_dir = $this->plugin_url;
 			$this->integration_dir = $this->plugin_dir . 'includes/integrations';
 			$this->integration_url = $this->plugin_url . 'includes/integrations';
+
+			// Access Control.
+			$this->access_control_dir = $this->plugin_dir . 'includes/access-control';
+			$this->access_control_url = $this->plugin_url . 'includes/access-control';
 		}
 
 		/**
@@ -167,6 +179,7 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 			$paths = array(
 
 				$this->plugin_dir . "/includes/classes/class-{$class}.php",
+				$this->plugin_dir . "/includes/access-control/includes/class-{$class}.php",
 
 			);
 

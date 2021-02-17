@@ -97,7 +97,7 @@ function bp_zoom_enqueue_scripts_and_styles() {
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/redux-thunk.min.js' ),
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/lodash.min.js' ),
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/jquery.min.js' ),
-				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/zoom-meeting-1.8.0.min.js' ),
+				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/zoom-meeting-1.9.0.min.js' ),
 			),
 			'styles'                  => array(
 				bp_zoom_integration_url( '/assets/js/zoom-web-sdk/bootstrap.css' ),
@@ -3680,6 +3680,8 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 		$zoom_meeting_id = $meeting->parent;
 	}
 
+	$occurance_meeting = ( ! empty( $meeting->recurring ) ? bp_zoom_get_next_meeting_occurrence( $meeting->id ) : '' );
+
 	$settings = bp_email_get_appearance_settings();
 
 	ob_start();
@@ -3691,9 +3693,15 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 				<?php echo '<h2 style="margin: 0 0 8px 0;font-size: 18px;">' . esc_html( $meeting->title ) . '</h2>'; ?>
 				<?php echo '<p style="font-size: 13px;margin: 0 0 25px 0;">' . esc_html( $meeting->description ) . '</p>'; ?>
 				<?php
-				$utc_date_time = $meeting->start_date_utc;
-				$time_zone     = $meeting->timezone;
-				$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				if ( ! empty( $meeting->recurring ) && ! empty( $occurance_meeting ) ) {
+					$utc_date_time = $occurance_meeting->start_date_utc;
+					$time_zone     = $occurance_meeting->timezone;
+					$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				} else {
+					$utc_date_time = $meeting->start_date_utc;
+					$time_zone     = $meeting->timezone;
+					$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				}
 
 				?>
 				<table style="margin: 0 !important;">
@@ -3777,7 +3785,7 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 					<tr>
 						<td style="width: 100%;vertical-align: top;" colspan="2">
 							<p style="font-size: 13px;color: #7F868F;letter-spacing: 0.24px;line-height: 19px;margin: 10px 0 15px 0;">
-								<a style="color: #007CFF; text-decoration: none;" target="_blank" href="<?php echo esc_url( bp_get_zoom_meeting_url( $meeting->group_id, $meeting->id ) ); ?>"><?php esc_html_e( 'Meeting Details', 'buddyboss-pro' ); ?></a>
+								<a style="color: #007CFF; text-decoration: none;" target="_blank" href="<?php echo esc_url( bp_get_zoom_meeting_url( $meeting->group_id, ( ( ! empty( $meeting->recurring ) && ! empty( $occurance_meeting ) ) ? $occurance_meeting->id : $meeting->id ) ) ); ?>"><?php esc_html_e( 'Meeting Details', 'buddyboss-pro' ); ?></a>
 							</p>
 						</td>
 					</tr>
@@ -3938,4 +3946,58 @@ function bp_zoom_webinar_email_token_zoom_webinar( $bp_email, $formatted_tokens,
 	$output = str_replace( array( "\r", "\n" ), '', ob_get_clean() );
 
 	return $output;
+}
+
+/**
+ * Get first occurrance of the meeting.
+ *
+ * @since 1.1.0
+ *
+ * @param int $id Zoom meeting ID.
+ *
+ * @return mixed|void
+ */
+function bp_zoom_get_next_meeting_occurrence( $id ) {
+	if ( empty( $id ) ) {
+		return;
+	}
+
+	$meeting = new BP_Zoom_Meeting( $id );
+
+	if ( empty( $meeting ) || empty( $meeting->recurring ) ) {
+		return;
+	}
+
+	$occurrences = bp_zoom_meeting_get(
+		array(
+			'parent' => $meeting->meeting_id,
+			'sort'   => 'ASC',
+		)
+	);
+
+	if (
+		empty( $occurrences ) ||
+		empty( $occurrences['meetings'] ) ||
+		is_wp_error( $occurrences )
+	) {
+		return;
+	}
+
+	$next_occurrence = '';
+	foreach ( $occurrences['meetings'] as $occurrence_key => $occurrence ) {
+		if ( wp_date( 'U', strtotime( 'now' ) ) < strtotime( $occurrence->start_date_utc ) ) {
+			$next_occurrence = $occurrence;
+			break;
+		}
+	}
+
+	/**
+	 * Filters next occurrence meeting.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param string $next_occurrence Next occurrence.
+	 * @param int    $id              Meeting ID in the site.
+	 */
+	return apply_filters( 'bp_zoom_get_next_meeting_occurrence', $next_occurrence, $id );
 }

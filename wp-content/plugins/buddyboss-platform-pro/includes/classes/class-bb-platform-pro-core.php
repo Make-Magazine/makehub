@@ -35,6 +35,10 @@ class BB_Platform_Pro_Core {
 	 */
 	private function bootstrap() {
 
+		// Load Access Control.
+		$this->load_access_control();
+
+		// Load Integrations.
 		$this->load_integrations();
 
 		// if in admin, include buddyboss updater.
@@ -92,6 +96,27 @@ class BB_Platform_Pro_Core {
 		 * @since 1.0.0
 		 */
 		do_action( 'bb_platform_pro_core_integrations_included' );
+	}
+
+	/**
+	 * Load access control files
+	 *
+	 * @since 1.1.0
+	 */
+	private function load_access_control() {
+		$bb_platform_pro = bb_platform_pro();
+
+		$file = "{$bb_platform_pro->access_control_dir}/bb-access-control-loader.php";
+		if ( file_exists( $file ) ) {
+			require $file;
+		}
+
+		/**
+		 * Fires after the loading of individual access control.
+		 *
+		 * @since 1.1.0
+		 */
+		do_action( 'bb_platform_pro_core_access_control_included' );
 	}
 
 	/**

@@ -1611,7 +1611,7 @@ if ( ! class_exists( 'BP_Zoom_Ajax' ) ) {
 				// Remove all occurrences and recordings.
 				if ( $webinar->recurring && empty( $occurrence_id ) ) {
 					bp_zoom_webinar_delete( array( 'parent' => $webinar_id ) );
-					// bp_zoom_recording_delete( array( 'webinar_id' => $webinar_id ) );
+					bp_zoom_webinar_recording_delete( array( 'webinar_id' => $webinar_id ) );
 				}
 
 				// update parent webinar details.

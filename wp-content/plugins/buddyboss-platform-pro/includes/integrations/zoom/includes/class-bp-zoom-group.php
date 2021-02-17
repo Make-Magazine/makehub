@@ -783,8 +783,10 @@ class BP_Zoom_Group {
 										<?php /* translators: %s is options and already having translation another string. */ ?>
 										<p><?php printf( esc_html__( 'Next, click the "Add events" button. In the popup, make sure to check the following options: %s', 'buddyboss-pro' ), '<strong>' . esc_html__( 'Start Meeting, End Meeting, Meeting has been updated, Meeting has been deleted.', 'buddyboss-pro' ) . '</strong>' ); ?></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-events_1.png' ) ); ?>" />
+										<?php /* translators: %s is options and already having translation another string. */ ?>
 										<p><?php printf( esc_html__( 'Make sure to check: %s', 'buddyboss-pro' ), '<strong>' . esc_html__( 'All Recordings have completed.', 'buddyboss-pro' ) . '</strong>' ); ?></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-events_2.png' ) ); ?>" />
+										<?php /* translators: %s is options and already having translation another string. */ ?>
 										<p><?php printf( esc_html__( 'Make sure to check the following options: %s', 'buddyboss-pro' ), '<strong>' . esc_html__( 'Start Webinar, End Webinar, Webinar has been updated, Webinar has been deleted.', 'buddyboss-pro' ) . '</strong>' ); ?></p>
 										<img src="<?php echo esc_url( bp_zoom_integration_url( '/assets/images/wizard-events_3.png' ) ); ?>" />
 										<p><?php esc_html_e( 'Click "Done" to close the popup. In the "Event Subscriptions" box, click "Save".', 'buddyboss-pro' ); ?></p>

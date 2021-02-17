@@ -111,7 +111,7 @@ $webinar_date_unix = $webinar_date_obj->format( 'U' );
 								/* translators: %d number of minutes */
 								echo sprintf( _n( '%d minute before', '%d minutes before', $alert, 'buddyboss-pro' ), $alert ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							} else {
-								esc_html_e( 'Immediately before the webinar' , 'buddyboss-pro' );
+								esc_html_e( 'Immediately before the webinar', 'buddyboss-pro' );
 							}
 							?>
 						</div>

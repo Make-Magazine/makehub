@@ -114,7 +114,7 @@ $meeting_date_unix = $meeting_date_obj->format( 'U' );
 								/* translators: %d number of minutes */
 								echo sprintf( _n( '%d minute before', '%d minutes before', $alert, 'buddyboss-pro' ), $alert ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 							} else {
-								esc_html_e( 'Immediately before the meeting' , 'buddyboss-pro' );
+								esc_html_e( 'Immediately before the meeting', 'buddyboss-pro' );
 							}
 							?>
 						</div>
