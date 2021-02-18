@@ -169,11 +169,12 @@ class UI {
 				'processing_import_data'                       => esc_html__( 'Please wait while your import data is being processed.', 'gravityview-importer' ),
 				'getting_form_fields'                          => esc_html_x( 'Getting form fields', 'Import data processing status', 'gravityview-importer' ),
 				'creating_import_task'                         => esc_html_x( 'Creating import task', 'Import data processing status', 'gravityview-importer' ),
-				'getting_data'                                 => esc_html_x( 'Getting data preview', 'Import data processing status', 'gravityview-importer' ),
+				'getting_data'                                 => esc_html_x( 'Parsing CSV file', 'Import data processing status', 'gravityview-importer' ),
+				'row_x_of_y'                                   => esc_html_x( 'row %s of %s', '%s are replaced with current and tota parsed row count', 'gravityview-importer' ),
 				'failed_to_process_import_data'                => esc_html__( 'We were unable to process your import data.', 'gravityview-importer' ),
-				'map_columns_to_fields'                        => esc_html_x( 'Map CSV columns to %s form fields', '%s is replace with form name', 'gravityview-importer' ),
+				'map_columns_to_fields'                        => esc_html_x( 'Map CSV columns to %s form fields', '%s is replaced with form name', 'gravityview-importer' ),
 				'map_columns_to_fields_desc'                   => esc_html__( 'You can skip columns by selecting "Do Not Import". To create a new form field, select "Add Form Field".', 'gravityview-importer' ),
-				'create_fields_and_map_columns_to_fields'      => esc_html_x( 'Create a form named %s.', '%s is replace with form name', 'gravityview-importer' ),
+				'create_fields_and_map_columns_to_fields'      => esc_html_x( 'Create a form named %s.', '%s is replaced with form name', 'gravityview-importer' ),
 				'create_fields_and_map_columns_to_fields_desc' => esc_html__( 'Choose which CSV columns will be turned into form fields. Set the field type to match the data.', 'gravityview-importer' ),
 				'select_form_field'                            => esc_html__( 'Select Form Field', 'gravityview-importer' ),
 				'import_to'                                    => esc_html__( 'Import to&hellip;', 'gravityview-importer' ),
@@ -202,6 +203,9 @@ class UI {
 				'clear_field'                                  => esc_html__( 'Clear field selection', 'gravityview-importer' ),
 				'field_properties'                             => esc_html__( 'Open field properties', 'gravityview-importer' ),
 				'column_label'                                 => esc_html_x( 'Column', 'Multi-column list column label', 'gravityview-importer' ),
+				'any_choice'                                   => esc_html_x( 'Any Choice', 'Used for a checkbox field to indicate that any choice can be selected', 'gravityview-importer' ),
+				'unmap_all_fields_warning'                     => esc_html__( 'This action cannot be undone and fields will have to be remapped. Do you want to continue?', 'gravityview-importer' ),
+				'unmap_all_fields'                             => esc_html__( 'Unmap All Fields', 'gravityview-importer' ),
 			),
 			'multi_input_fields' => array(
 				'field_contains_multiple_inputs' => esc_html_x( 'The %s field type contains multiple inputs that can be mapped to your import data.', '%s is replaced by GF field type', 'gravityview-importer' ),
@@ -227,13 +231,14 @@ class UI {
 				'column_contains_date'           => esc_html__( 'This column contains a date.', 'gravityview-importer' ),
 				'date_recognized'                => esc_html_x( 'We recognized %s as %s. If this is incorrect, please select one of the available formats or specify your own:', '%s are replaced with column value and default date format, respectively', 'gravityview-importer' ),
 				'date_unrecognized'              => esc_html_x( "We couldn't recognize %s using the default %s format. Please select one of the other possible formats or specify your own:", '%s values are replaced with shortcodes used for date formatting', 'gravityview-importer' ),
-				'custom_format_hint'             => esc_html_x( 'Use %s for day, %s for month, %s for year, %s to skip a single character and %s to skip multiple characters. Day, month, and year are all required by Gravity Forms.', '%s are replaced with day (DD), month (MM) and year (YYYY) abbreviations', 'gravityview-importer' ),
+				'custom_format_hint'             => esc_html_x( 'Use %s for day, %s for month, %s for year, %s for time, %s to skip a single character and %s to skip multiple characters. Day, month, and year are all required by Gravity Forms.', '%s are replaced with day (DD), month (MM) and year (YYYY) abbreviations', 'gravityview-importer' ),
 				'custom_date_format_placeholder' => esc_html__( 'Custom Date Format', 'gravityview-importer' ),
 				'select_date_format'             => esc_html__( 'Select Date Format:', 'gravityview-importer' ),
 				'custom_format'                  => esc_html__( 'Custom Format', 'gravityview-importer' ),
 				'invalid_date'                   => esc_html__( 'Date Not Recognized', 'gravityview-importer' ),
 				'incomplete_date'                => esc_html__( 'Date field must contain day, month and year values. Consider using a Number field type instead.', 'gravityview-importer' ),
 				'date_live_preview'              => esc_html__( 'Live Preview:', 'gravityview-importer' ),
+				'utc_timezone_toggle'            => esc_html__( 'This date is in UTC timezone', 'gravityview-importer' ),
 				'date_live_preview_hint'         => esc_html_x( '%s is recognized as %s', 'Helper text showing how the value will be interpreted', 'gravityview-importer' ),
 				'mm'                             => esc_html_x( 'MM', 'Date format - month', 'gravityview-importer' ),
 				'dd'                             => esc_html_x( 'DD', 'Date format - date', 'gravityview-importer' ),
@@ -353,7 +358,7 @@ class UI {
 				'cannot_continue'   => esc_html__( 'The importer encountered an error that prevents it from continuing:', 'gravityview-importer' ),
 				'help_troubleshoot' => sprintf( esc_html__( 'We&rsquo;re here to help! Share this error with support:', 'gravityview-importer' ), esc_html__( 'Contact Support', 'gravityview-importer' ) ),
 				'contact_support'   => esc_html__( 'Contact Support', 'gravityview-importer' ),
-				'processing_log'    => esc_html__( 'Processing error log&hellip;', 'gravityview-importer' )
+				'processing_log'    => esc_html__( 'Processing error log&hellip;', 'gravityview-importer' ),
 			),
 			'shared'             => array(
 				'save'                         => esc_html__( 'Save', 'gravityview-importer' ),
@@ -364,7 +369,7 @@ class UI {
 				'change_source'                => esc_html_x( 'Change Source', 'Change selected import source (CSV, FTP, Google Sheets, etc.)', 'gravityview-importer' ),
 				'change_field_mapping'         => esc_html_x( 'Change Field Mapping', 'Change form field mapping', 'gravityview-importer' ),
 				'field_label_not_available'    => esc_html__( 'Field Label Not Available', 'gravityview-importer' ),
-			)
+			),
 		);
 	}
 
@@ -417,61 +422,61 @@ class UI {
 				1 => array(
 					'id'        => 1,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'Street Address', 'gravityview-importer' )
+					'label'     => esc_html__( 'Street Address', 'gravityview-importer' ),
 				),
 				2 => array(
 					'id'        => 2,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'Address Line 2', 'gravityview-importer' )
+					'label'     => esc_html__( 'Address Line 2', 'gravityview-importer' ),
 				),
 				3 => array(
 					'id'        => 3,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'City', 'gravityview-importer' )
+					'label'     => esc_html__( 'City', 'gravityview-importer' ),
 				),
 				4 => array(
 					'id'        => 4,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'State / Province / Region', 'gravityview-importer' )
+					'label'     => esc_html__( 'State / Province / Region', 'gravityview-importer' ),
 				),
 				5 => array(
 					'id'        => 5,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'ZIP / Postal Code', 'gravityview-importer' )
+					'label'     => esc_html__( 'ZIP / Postal Code', 'gravityview-importer' ),
 				),
 				6 => array(
 					'id'        => 6,
 					'parent_id' => 'address',
-					'label'     => esc_html__( 'Country', 'gravityview-importer' )
+					'label'     => esc_html__( 'Country', 'gravityview-importer' ),
 				),
 			),
 			'name'    => array(
 				2 => array(
 					'id'        => 2,
 					'parent_id' => 'name',
-					'label'     => esc_html_x( 'Prefix', 'Relates to name prefix (e.g., Mr., Ms.)', 'gravityview-importer' )
+					'label'     => esc_html_x( 'Prefix', 'Relates to name prefix (e.g., Mr., Ms.)', 'gravityview-importer' ),
 				),
 				3 => array(
 					'id'        => 3,
 					'parent_id' => 'name',
-					'label'     => esc_html_x( 'First', 'Relates to name ', 'gravityview-importer' )
+					'label'     => esc_html_x( 'First', 'Relates to name ', 'gravityview-importer' ),
 				),
 				4 => array(
 					'id'        => 4,
 					'parent_id' => 'name',
-					'label'     => esc_html_x( 'Middle', 'Relates to name', 'gravityview-importer' )
+					'label'     => esc_html_x( 'Middle', 'Relates to name', 'gravityview-importer' ),
 				),
 				6 => array(
 					'id'        => 6,
 					'parent_id' => 'name',
-					'label'     => esc_html_x( 'Last', 'Relates to name', 'gravityview-importer' )
+					'label'     => esc_html_x( 'Last', 'Relates to name', 'gravityview-importer' ),
 				),
 				8 => array(
 					'id'        => 8,
 					'parent_id' => 'name',
-					'label'     => esc_html_x( 'Suffix', 'Relates to name', 'gravityview-importer' )
-				)
-			)
+					'label'     => esc_html_x( 'Suffix', 'Relates to name', 'gravityview-importer' ),
+				),
+			),
 		);
 	}
 
@@ -490,7 +495,7 @@ class UI {
 				'5b7172822c7d3a03f89d9f33',
 				array(
 					'text' => esc_html__( 'See all Entry Importer help articles', 'gravityview-importer' ),
-					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer'
+					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer',
 				),
 			),
 			'select_form'       => array(
@@ -498,7 +503,7 @@ class UI {
 				'5d36314804286347867546b9',
 				array(
 					'text' => esc_html__( 'See all Entry Importer help articles', 'gravityview-importer' ),
-					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer'
+					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer',
 				),
 			),
 			'map_fields'        => array(
@@ -506,7 +511,7 @@ class UI {
 				'5d36218e2c7d3a2ec4bf428a',
 				array(
 					'text' => esc_html__( 'See all Entry Importer help articles', 'gravityview-importer' ),
-					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer'
+					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer',
 				),
 			),
 			'configure_options' => array(
@@ -514,16 +519,16 @@ class UI {
 				'5c3e73c304286304a71e4118',
 				array(
 					'text' => esc_html__( 'See all Entry Importer help articles', 'gravityview-importer' ),
-					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer'
+					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer',
 				),
 			),
 			'import_data'       => array(
 				'5c3e73c304286304a71e4118',
 				array(
 					'text' => esc_html__( 'See all Entry Importer help articles', 'gravityview-importer' ),
-					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer'
+					'url'  => 'https://docs.gravityview.co/category/255-gravity-forms-importer',
 				),
-			)
+			),
 		);
 	}
 
@@ -568,7 +573,7 @@ class UI {
 	}
 
 	/**
-	 * Output inline JS code that initialized HS Beacon
+	 * Output inline JS code that initializes HS Beacon
 	 *
 	 * @return string Inline JS
 	 */
@@ -603,7 +608,7 @@ JS;
 				$post_fields[ $field->type ] = array(
 					'id'        => $field->type,
 					'parent_id' => 'post_fields',
-					'label'     => esc_html( sprintf( _x( 'Post %s', 'Generates a label for Post fields based on the type of field', 'gravityview-importer' ), ucwords( $field->get_form_editor_field_title() ) ) )
+					'label'     => esc_html( sprintf( _x( 'Post %s', 'Generates a label for Post fields based on the type of field', 'gravityview-importer' ), ucwords( $field->get_form_editor_field_title() ) ) ),
 				);
 
 				continue;
@@ -613,7 +618,7 @@ JS;
 				$product_fields[ $field->type ] = array(
 					'id'        => $field->type,
 					'parent_id' => 'product_fields',
-					'label'     => $field->type === 'product' ? ucwords( $field->get_form_editor_field_title() ) : esc_html( sprintf( __( 'Product %s', 'gravityview-importer' ), ucwords( $field->get_form_editor_field_title() ) ) )
+					'label'     => $field->type === 'product' ? ucwords( $field->get_form_editor_field_title() ) : esc_html( sprintf( __( 'Product %s', 'gravityview-importer' ), ucwords( $field->get_form_editor_field_title() ) ) ),
 				);
 
 				continue;
@@ -621,7 +626,7 @@ JS;
 
 			$field_types[ $field->type ] = array(
 				'id'    => $field->type,
-				'label' => ucwords( $field->get_form_editor_field_title() )
+				'label' => ucwords( $field->get_form_editor_field_title() ),
 			);
 
 			if ( 'checkbox' === $field->type ) {
@@ -648,6 +653,11 @@ JS;
 				$field_types[ $field->type ]['inputs'] = $GF_multi_input_fields[ $field->type ];
 			}
 		}
+
+		$field_types['fileuppload_multi'] = array(
+			'id'    => 'fileupload_multi',
+			'label' => esc_html__( 'File Upload (Multiple Files)', 'gravityview-importer' ),
+		);
 
 		if ( ! empty( $post_fields ) ) {
 			$field_types['post_fields'] = array(
@@ -693,7 +703,7 @@ JS;
 			'multi'        => true,
 			'virtualGroup' => true,
 			'inputs'       => array(),
-			'order'        => 1001
+			'order'        => 1001,
 		);
 
 		$field_types = array_merge( $field_types, $this->get_virtual_fields() );
@@ -730,15 +740,15 @@ JS;
 				'id'           => 'entry_properties',
 				'virtualGroup' => true,
 				'inputs'       => array(),
-				'order'        => 1000
+				'order'        => 1000,
 			),
 			'non_field_data'   => array(
 				'label'        => esc_html__( 'Non-Field Data', 'gravityview-importer' ),
 				'id'           => 'non_field_data',
 				'inputs'       => array(),
 				'virtualGroup' => true,
-				'order'        => 1001
-			)
+				'order'        => 1001,
+			),
 		);
 
 		$form_fields = array_merge( $form_fields, $this->get_virtual_fields() );
@@ -773,7 +783,7 @@ JS;
 				'id'       => $field->id,
 				'order'    => $order,
 				'required' => $field->isRequired,
-				'default'  => $field->defaultValue !== ''
+				'default'  => $field->defaultValue !== '',
 			);
 
 			if ( 'list' === $field->type && ! empty( $field->choices ) ) {
@@ -788,9 +798,9 @@ JS;
 				$form_fields[ $field->id ]['filter']          = $filter;
 
 				if ( 'timeFormat' === $filter ) {
-					$form_fields[ $field->id ]['filterData'] = ( '12' === $field->timeFormat ) ? 'g:i a' : 'H:i';
+					$form_fields[ $field->id ]['filterData']['format'] = ( '12' === $field->timeFormat ) ? 'g:i a' : 'H:i';
 				} elseif ( 'dateFormat' === $filter ) {
-					$form_fields[ $field->id ]['filterData'] = $this->convertGFDateShortcodeToDateTimeFormat( $field->dateFormat );
+					$form_fields[ $field->id ]['filterData']['format'] = $this->convertGFDateShortcodeToDateTimeFormat( $field->dateFormat );
 				}
 			}
 
@@ -827,7 +837,7 @@ JS;
 
 		return array(
 			'date' => 'dateFormat',
-			'time' => 'timeFormat'
+			'time' => 'timeFormat',
 		);
 	}
 
@@ -843,8 +853,8 @@ JS;
 				'id'      => 'notes',
 				'label'   => esc_html__( 'Entry Notes', 'gravityview-importer' ),
 				'filter'  => 'entryNotes',
-				'is_meta' => true
-			)
+				'is_meta' => true,
+			),
 		);
 	}
 
@@ -882,9 +892,9 @@ JS;
 			),
 			'new'      => array(
 				'poll',
-				'quiz'
+				'quiz',
 			),
-			'existing' => array()
+			'existing' => array(),
 		);
 
 		return ( $form_type ) ?
@@ -916,7 +926,13 @@ JS;
 			return;
 		}
 
-		if ( 'import_entries' !== rgget( 'view' ) ) {
+		if ( version_compare( '2.5-beta', \GFForms::$version, '<' ) ) {
+			$view_parameter = 'subview';
+		} else {
+			$view_parameter = 'view';
+		}
+
+		if ( 'import_entries' !== rgget( $view_parameter ) ) {
 			return;
 		}
 
@@ -925,6 +941,14 @@ JS;
 		if ( $form_id = rgget( 'formId' ) ) {
 			$url .= '#targetForm=' . intval( $_GET['formId'] );
 		}
+
+		// Forces redirect when other plugins (looking at you, The Events Calendar) break WP's redirect logic
+		$force_redirect = function ( $redirect_url ) use ( $url ) {
+
+			return ( ! empty( $redirect_url ) && false !== strpos( $redirect_url, self::PAGE_SLUG ) ) ? $redirect_url : $url;
+		};
+
+		add_filter( 'wp_redirect', $force_redirect, PHP_INT_MAX );
 
 		wp_safe_redirect( $url );
 
@@ -949,7 +973,8 @@ JS;
 
 		$setting_tabs[ $key ] = array(
 			'name'  => 'import_entries',
-			'label' => __( 'Import Entries', 'gravityview-importer' )
+			'label' => __( 'Import Entries', 'gravityview-importer' ),
+			'icon'  => 'dashicons-upload',
 		);
 
 		return $setting_tabs;
@@ -994,9 +1019,9 @@ JS;
 	/**
 	 * Render user interface
 	 *
+	 * @see assets/js/src/app.jsx
 	 * @return string HTML output
 	 *
-	 * @see assets/js/src/app.jsx
 	 */
 	public function render_screen() {
 
@@ -1070,12 +1095,12 @@ JS;
 			'mimes'                    => array(
 				'csv' => 'text/csv',
 				'txt' => 'text/plain',
-				'tsv' => 'text/tab-separated-values'
+				'tsv' => 'text/tab-separated-values',
 			),
 			'unique_filename_callback' => function ( $path, $filename, $ext = '.csv' ) {
 
 				return md5( uniqid( time() . $filename ) ) . $ext;
-			}
+			},
 		);
 
 		/**
@@ -1101,7 +1126,7 @@ JS;
 		} else {
 			wp_send_json_success(
 				array(
-					'file' => wp_normalize_path( $handle_upload['file'] )
+					'file' => wp_normalize_path( $handle_upload['file'] ),
 				)
 			);
 		}
@@ -1201,7 +1226,7 @@ JS;
 				return array(
 					'id'    => "{$field->id}.{$input['id']}",
 					'label' => $input['label'],
-					'name'  => ''
+					'name'  => '',
 				);
 			}, $GF_multi_input_fields[ $field_type ] );
 		}
@@ -1216,14 +1241,14 @@ JS;
 			wp_send_json_success(
 				array(
 					'field_id'    => $new_field_id,
-					'form_fields' => $this->get_form_fields( $form )
+					'form_fields' => $this->get_form_fields( $form ),
 				)
 			);
 		}
 	}
 
 	/**
-	 * Return a DateTime format representation of GF's date shortcode (e..g, mdy => m/d/Y)
+	 * Return a DateTime format representation of GF's date shortcode (e.g, mdy => m/d/Y)
 	 *
 	 * @param string $shortcode
 	 *
@@ -1314,91 +1339,91 @@ JS;
 		return array(
 			array(
 				'id'    => 'id',
-				'label' => esc_html__( 'Entry ID', 'gravityview-importer' )
+				'label' => esc_html__( 'Entry ID', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'status',
-				'label' => esc_html__( 'Entry Status', 'gravityview-importer' )
+				'label' => esc_html__( 'Entry Status', 'gravityview-importer' ),
 			),
 			array(
 				'id'              => 'date_created',
 				'label'           => esc_html__( 'Entry Date', 'gravityview-importer' ),
 				'with_properties' => true,
 				'filter'          => 'dateFormat',
-				'filterData'      => 'Y-m-d G:i'
+				'filterData'      => array( 'format' => 'Y-m-d G:i:s' ),
 			),
 			array(
 				'id'              => 'date_updated',
 				'label'           => esc_html__( 'Entry Updated Date', 'gravityview-importer' ),
 				'with_properties' => true,
 				'filter'          => 'dateFormat',
-				'filterData'      => 'Y-m-d G:i'
+				'filterData'      => array( 'format' => 'Y-m-d G:i:s' ),
 			),
 			array(
 				'id'    => 'is_starred',
-				'label' => esc_html__( 'Entry Is Starred', 'gravityview-importer' )
+				'label' => esc_html__( 'Entry Is Starred', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'is_read',
-				'label' => esc_html__( 'Entry Is Read', 'gravityview-importer' )
+				'label' => esc_html__( 'Entry Is Read', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'source_url',
-				'label' => esc_html__( 'Source URL', 'gravityview-importer' )
+				'label' => esc_html__( 'Source URL', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'created_by',
-				'label' => esc_html__( 'User ID', 'gravityview-importer' )
+				'label' => esc_html__( 'User ID', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'ip',
-				'label' => esc_html__( 'User IP', 'gravityview-importer' )
+				'label' => esc_html__( 'User IP', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'user_agent',
-				'label' => esc_html__( 'User Agent', 'gravityview-importer' )
+				'label' => esc_html__( 'User Agent', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'payment_amount',
-				'label' => esc_html__( 'Payment Amount', 'gravityview-importer' )
+				'label' => esc_html__( 'Payment Amount', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'payment_method',
-				'label' => esc_html__( 'Payment Method', 'gravityview-importer' )
+				'label' => esc_html__( 'Payment Method', 'gravityview-importer' ),
 			),
 			array(
-				'id'     => 'payment_date',
-				'label'  => esc_html__( 'Payment Date', 'gravityview-importer' ),
+				'id'              => 'payment_date',
+				'label'           => esc_html__( 'Payment Date', 'gravityview-importer' ),
 				'with_properties' => true,
 				'filter'          => 'dateFormat',
-				'filterData'      => 'Y-m-d G:i',
+				'filterData'      => array( 'format' => 'Y-m-d G:i:s' ),
 			),
 			array(
 				'id'              => 'last_payment_date',
 				'label'           => esc_html__( 'Last Payment Date', 'gravityview-importer' ),
 				'with_properties' => true,
 				'filter'          => 'dateFormat',
-				'filterData'      => 'Y-m-d G:i',
+				'filterData'      => array( 'format' => 'Y-m-d G:i:s' ),
 			),
 			array(
 				'id'    => 'payment_status',
-				'label' => esc_html__( 'Payment Status', 'gravityview-importer' )
+				'label' => esc_html__( 'Payment Status', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'currency',
-				'label' => esc_html__( 'Currency', 'gravityview-importer' )
+				'label' => esc_html__( 'Currency', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'is_fulfilled',
-				'label' => esc_html__( 'Is Transaction Fulfilled', 'gravityview-importer' )
+				'label' => esc_html__( 'Is Transaction Fulfilled', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'transaction_id',
-				'label' => esc_html__( 'Transaction ID', 'gravityview-importer' )
+				'label' => esc_html__( 'Transaction ID', 'gravityview-importer' ),
 			),
 			array(
 				'id'    => 'transaction_type',
-				'label' => esc_html__( 'Transaction Type', 'gravityview-importer' )
+				'label' => esc_html__( 'Transaction Type', 'gravityview-importer' ),
 			),
 		);
 	}

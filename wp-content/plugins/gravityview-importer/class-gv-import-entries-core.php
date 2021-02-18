@@ -30,9 +30,10 @@ class Core {
 	 * @return void
 	 */
 	public static function bootstrap() {
-		require_once __DIR__ . '/vendor/autoload.php';
 
 		$plugin_dir_path = plugin_dir_path( __FILE__ );
+
+		require_once $plugin_dir_path . 'vendor/autoload.php';
 
 		require_once $plugin_dir_path . 'class-gv-import-entries-plugin-settings.php';
 

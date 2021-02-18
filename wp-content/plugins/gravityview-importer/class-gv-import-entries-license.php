@@ -1,4 +1,5 @@
 <?php
+
 namespace GV\Import_Entries;
 
 /**
@@ -15,6 +16,7 @@ class GravityView_Import_License {
 
 	/**
 	 * Download ID on gravityview.co
+	 *
 	 * @since 1.1.3
 	 */
 	const item_id = 15170;
@@ -39,6 +41,7 @@ class GravityView_Import_License {
 	 * @return GravityView_Import_License
 	 */
 	public static function get_instance( GV_Import_Entries_Addon $GFAddOn ) {
+
 		if ( empty( self::$instance ) ) {
 			self::$instance = new self( $GFAddOn );
 		}
@@ -56,6 +59,7 @@ class GravityView_Import_License {
 	}
 
 	private function add_hooks() {
+
 		add_action( 'wp_ajax_gravityview_importer_license', array( $this, 'license_call' ) );
 
 		// No conflict scripts
@@ -72,7 +76,9 @@ class GravityView_Import_License {
 	 * @return array Whitelist with script added
 	 */
 	public function register_noconflict_scripts( $scripts ) {
+
 		$scripts[] = 'gv-importer-admin-edd-license';
+
 		return $scripts;
 	}
 
@@ -99,7 +105,7 @@ class GravityView_Import_License {
 					array(
 						'name'  => 'beta',
 						'value' => 1,
-						'label' => __('Receive pre-release updates', 'gravityview-importer'),
+						'label' => __( 'Receive pre-release updates', 'gravityview-importer' ),
 					),
 				),
 				'class'         => 'activate code regular-text edd-license-key',
@@ -120,7 +126,7 @@ class GravityView_Import_License {
 			array(
 				'description' => wpautop( sprintf( __( 'For support and how-to articles, please visit the %sPlugin Support site%s.', 'gravityview-importer' ), '<a href="http://docs.gravityview.co/category/255-gravity-forms-importer">', '</a>' ) ),
 				'fields'      => $fields,
-			)
+			),
 		);
 
 		return $sections;
@@ -132,6 +138,7 @@ class GravityView_Import_License {
 	 * @return bool
 	 */
 	public function license_is_valid() {
+
 		return $this->Addon->get_plugin_setting( 'license_key_status' ) === 'valid';
 	}
 
@@ -150,8 +157,33 @@ class GravityView_Import_License {
 		}
 
 		wp_localize_script( 'gv-importer-admin-edd-license', 'GVImporter', array(
-			'license_box' => $this->get_license_message( $response )
+			'license_box' => $this->get_license_message( $response ),
 		) );
+
+		wp_register_style( 'gv-importer-admin-edd-license', false );
+		wp_enqueue_style( 'gv-importer-admin-edd-license' );
+		if ( version_compare( '2.5-beta', \GFForms::$version, '<=' ) ) {
+			$style = <<<CSS
+.gv-edd-button-wrapper {
+	margin: 10px 0 10px 0;
+}
+
+.gv-edd-button-wrapper > input[name*="activate"] {
+	margin-left: 0 !important;
+}
+
+#gv-edd-status {
+	margin-bottom: 10px;
+}
+CSS;
+		} else {
+			$style = <<<CSS
+#gv-edd-status.inline.hide {
+	display: none !important;
+}
+CSS;
+		}
+		wp_add_inline_style( 'gv-importer-admin-edd-license', $style );
 
 		$fields = array(
 			array(
@@ -159,14 +191,14 @@ class GravityView_Import_License {
 				'value'             => __( 'Activate License', 'gravityview-importer' ),
 				'data-pending_text' => __( 'Verifying license&hellip;', 'gravityview-importer' ),
 				'data-edd_action'   => 'activate_license',
-				'class'             => 'button-primary',
+				'class'             => 'button-primary primary',
 			),
 			array(
 				'name'              => 'edd-deactivate',
 				'value'             => __( 'Deactivate License', 'gravityview-importer' ),
 				'data-pending_text' => __( 'Deactivating license&hellip;', 'gravityview-importer' ),
 				'data-edd_action'   => 'deactivate_license',
-				'class'             => ( empty( $status ) ? 'button-primary hide' : 'button-primary' ),
+				'class'             => ( empty( $status ) ? 'button-primary primary hide' : 'button-primary primary' ),
 			),
 			array(
 				'name'              => 'edd-check',
@@ -174,7 +206,7 @@ class GravityView_Import_License {
 				'data-pending_text' => __( 'Verifying license&hellip;', 'gravityview-importer' ),
 				'title'             => 'Check the license before saving it',
 				'data-edd_action'   => 'check_license',
-				'class'             => 'button-secondary',
+				'class'             => 'button-secondary white',
 			),
 		);
 
@@ -183,10 +215,12 @@ class GravityView_Import_License {
 		$class .= ( ! empty( $key ) && $status !== 'valid' ) ? '' : ' hide';
 
 		$submit = '<div class="gv-edd-button-wrapper">';
+
 		foreach ( $fields as $field ) {
 			$field['type']  = 'button';
 			$field['class'] = isset( $field['class'] ) ? $field['class'] . ' ' . $class : $class;
 			$field['style'] = 'margin-left: 10px;';
+
 			$submit .= $this->Addon->settings_submit( $field, $echo );
 		}
 		$submit .= '</div>';
@@ -220,7 +254,7 @@ class GravityView_Import_License {
 	 *
 	 * @since 1.7.4
 	 *
-	 * @param string $action The action to send to edd, such as `check_license`
+	 * @param string $action  The action to send to edd, such as `check_license`
 	 * @param string $license The license key to have passed to EDD
 	 *
 	 * @return array
@@ -237,7 +271,7 @@ class GravityView_Import_License {
 			'item_id'   => self::item_id,
 			'author'    => urlencode( self::author ),
 			'url'       => urlencode( home_url() ),
-			'beta'      => intval( $this->Addon->get_plugin_setting('beta') ),
+			'beta'      => intval( $this->Addon->get_plugin_setting( 'beta' ) ),
 		);
 
 		if ( ! empty( $action ) ) {
@@ -304,7 +338,11 @@ class GravityView_Import_License {
 
 			$renewal_url = ! empty( $license_data->renewal_url ) ? $license_data->renewal_url : 'https://gravityview.co/account/';
 
-			$message = sprintf( '<p><strong>%s: %s</strong></p>', $this->strings( 'status' ), $this->strings( $license_data->license, $renewal_url ) );
+			$message = sprintf( '<strong>%s: %s</strong>', $this->strings( 'status' ), $this->strings( $license_data->license, $renewal_url ) );
+
+			if ( version_compare( '2.5-beta', \GFForms::$version, '>' ) ) {
+				$message = wpautop( $message );
+			}
 		}
 
 		return $this->generate_license_box( $message, $class );
@@ -315,14 +353,31 @@ class GravityView_Import_License {
 	 *
 	 * @since 1.7.4
 	 *
-	 * @param $message
+	 * @param        $message
 	 * @param string $class
 	 *
 	 * @return string
 	 */
 	private function generate_license_box( $message, $class = '' ) {
 
-		$template = '<div id="gv-edd-status" class="gv-edd-message inline %s">%s</div>';
+		$message = ! empty( $message ) ? $message : '<p><strong></strong></p>';
+
+		if ( version_compare( '2.5-beta', \GFForms::$version, '<=' ) ) {
+			switch ( $class ) {
+				case 'valid':
+					$class .= ' success';
+					break;
+				case 'invalid':
+					$class .= ' error';
+					break;
+				default:
+					$class .= ' warning';
+			}
+
+			$template = '<div id="gv-edd-status" class="alert %s">%s</div>';
+		} else {
+			$template = '<div id="gv-edd-status" class="gv-edd-message inline %s">%s</div>';
+		}
 
 		$output = sprintf( $template, esc_attr( $class ), $message );
 
@@ -334,13 +389,13 @@ class GravityView_Import_License {
 	 *
 	 * @since 1.7.4
 	 *
-	 * @param array $array {
+	 * @param array  $array      {
 	 *
-	 * @type string $license The license key
-	 * @type string $edd_action The EDD action to perform, like `check_license`
-	 * @type string $field_id The ID of the field to check
-	 * @type boolean $update Whether to update plugin settings. Prevent updating the data by setting an `update` key to false
-	 * @type string $format If `object`, return the object of the license data. Else, return the JSON-encoded object
+	 * @type string  $license    The license key
+	 * @type string  $edd_action The EDD action to perform, like `check_license`
+	 * @type string  $field_id   The ID of the field to check
+	 * @type boolean $update     Whether to update plugin settings. Prevent updating the data by setting an `update` key to false
+	 * @type string  $format     If `object`, return the object of the license data. Else, return the JSON-encoded object
 	 * }
 	 *
 	 * @return mixed|string|void
@@ -417,12 +472,12 @@ class GravityView_Import_License {
 	/**
 	 * Override the text used in the Redux Framework EDD field extension
 	 *
-	 * @param  array|null $status Status to get. If empty, get all strings.
-	 * @param  string     $renewal_url The URL to renew the current license. GravityView account page if license not set.
+	 * @param array|null $status      Status to get. If empty, get all strings.
+	 * @param string     $renewal_url The URL to renew the current license. GravityView account page if license not set.
 	 *
 	 * @return array          Modified array of content
 	 */
-	public function strings( $status = NULL, $renewal_url = '' ) {
+	public function strings( $status = null, $renewal_url = '' ) {
 
 		$strings = array(
 			'status'              => esc_html__( 'Status', 'gravityview-importer' ),
@@ -430,13 +485,14 @@ class GravityView_Import_License {
 			'failed'              => esc_html__( 'Could not deactivate the license. The license key you attempted to deactivate may not be active or valid.', 'gravityview-importer' ),
 			'site_inactive'       => esc_html__( 'The license key is valid, but it has not been activated for this site.', 'gravityview-importer' ),
 			'inactive'            => esc_html__( 'The license key is valid, but it has not been activated for this site.', 'gravityview-importer' ),
-			'no_activations_left' => esc_html__( 'Invalid: this license has reached its activation limit.', 'gravityview-importer' ),
+			'no_activations_left' => esc_html__( 'Invalid: this license has reached its activation limit.', 'gravityview-importer' ) . ' ' . sprintf( esc_html__( 'You can manage license activations %son your GravityView account page%s.', 'gravityview-importer' ), '<a href="https://gravityview.co/account/#licenses">', '</a>' ),
 			'deactivated'         => esc_html__( 'The license has been deactivated.', 'gravityview-importer' ),
 			'valid'               => esc_html__( 'The license key is valid and active.', 'gravityview-importer' ),
 			'invalid'             => esc_html__( 'The license key entered is invalid.', 'gravityview-importer' ),
-			'missing'             => esc_html__( 'The license key was not defined.', 'gravityview-importer' ),
+			'invalid_item_id'     => esc_html__( 'This license key does not have access to this plugin.', 'gravityview-importer' ),
+			'missing'             => esc_html__( 'The license key entered is invalid.', 'gravityview-importer' ), // Missing is "the license couldn't be found", not "you submitted an empty license"
 			'revoked'             => esc_html__( 'This license key has been revoked.', 'gravityview-importer' ),
-			'expired'             => sprintf( esc_html__( 'This license key has expired. %sRenew your license on the GravityView website%s', 'gravityview-importer' ), '<a href="'. esc_url( $renewal_url ) .'" rel="external">', '</a>' ),
+			'expired'             => sprintf( esc_html__( 'This license key has expired. %sRenew your license on the GravityView website%s', 'gravityview-importer' ), '<a href="' . esc_url( $renewal_url ) . '" rel="external">', '</a>' ),
 			'verifying_license'   => esc_html__( 'Verifying license&hellip;', 'gravityview-importer' ),
 			'activate_license'    => esc_html__( 'Activate License', 'gravityview-importer' ),
 			'deactivate_license'  => esc_html__( 'Deactivate License', 'gravityview-importer' ),
@@ -451,14 +507,14 @@ class GravityView_Import_License {
 			return $strings[ $status ];
 		}
 
-		return NULL;
+		return null;
 	}
 
 	public function validate_license_key( $value, $field ) {
 
 		// No license? No status.
 		if ( empty( $value ) ) {
-			return NULL;
+			return null;
 		}
 
 		$response = $this->license_call( array(
@@ -484,5 +540,4 @@ class GravityView_Import_License {
 
 		return $return;
 	}
-
 }

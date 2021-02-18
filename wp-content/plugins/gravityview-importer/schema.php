@@ -298,6 +298,12 @@ function gv_import_entries_get_batch_json_schema() {
 								'context'     =>  array( 'view', 'edit' ),
 								'readonly'    =>  false,
 							),
+							'date_timezone'   =>  array(
+								'description' => 'Date timezone.',
+								'type'        => 'string',
+								'context'     =>  array( 'view', 'edit' ),
+								'readonly'    =>  false,
+							),
 							'list_rows'       =>  array(
 								'description' => 'For lists columns can be mapped to row items. This is used to designate row columns and their order.',
 								'context'     =>  array( 'view', 'edit' ),
@@ -330,6 +336,11 @@ function gv_import_entries_get_batch_json_schema() {
 							),
 							'weight'          =>  array(
 								'description' => 'This choice quiz answer weight. Used for quiz checkboxes.',
+								'context'     =>  array( 'view', 'edit' ),
+								'readonly'    =>  false,
+							),
+							'multiple_files_upload' =>  array(
+								'description' => 'Used for the "file upload" field to indicate that it can accept multiple files.',
 								'context'     =>  array( 'view', 'edit' ),
 								'readonly'    =>  false,
 							),

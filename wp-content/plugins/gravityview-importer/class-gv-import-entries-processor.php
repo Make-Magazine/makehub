@@ -15,9 +15,14 @@ class Processor {
 	private $args;
 
 	/**
-	 * @var array Default Excel "falsey" values.
+	 * @var array Default Excel false values
 	 */
-	private $default_falsey = array( '0', 'false', 'null', 'no', '' );
+	private $default_false_values = array( '0', 'false', 'null', 'no', '' );
+
+	/**
+	 * @var array Default true values
+	 */
+	private $default_true_values = array( '1', 'true', 'yes' );
 
 	/**
 	 * @var array Array of accepted delimiters
@@ -29,7 +34,7 @@ class Processor {
 	 *                        batch_id   string Only process tasks for this batch.
 	 *                        timeout    int    The maximum number of seconds to process.
 	 *                        memory     int    The maximum number of bytes for memory limit.
-	 *                        count      int    The maxium number of rows to process per run.
+	 *                        count      int    The maximum number of rows to process per run.
 	 *                        breakpoint string A state to break on during run. Broken once.
 	 *
 	 * Any first limit to be reached will trigger processing to be suspended.
@@ -37,8 +42,8 @@ class Processor {
 	public function __construct( $args ) {
 		$args = wp_parse_args( $args, array(
 			'batch_id'   => null,
-			'time'       => 0,
-			'timeout'    => 0,
+			'time'       => time(),
+			'timeout'    => 20,
 			'memory'     => $this->get_memory_limit(),
 			'count'      => 0,
 			'countout'   => 0,
@@ -227,8 +232,9 @@ class Processor {
 			if ( ( memory_get_usage() + ( 8 * MB_IN_BYTES ) ) > $this->args['memory'] ) {
 				return false;
 			}
+		}
 
-		} elseif ( $this->args['timeout'] ) {
+		if ( $this->args['timeout'] ) {
 			/**
 			 * Calculate current time passed.
 			 * A 3 second reserve is provided.
@@ -236,8 +242,9 @@ class Processor {
 			if ( ( time() + 3 ) > ( $this->args['time'] + $this->args['timeout'] ) ) {
 				return false;
 			}
+		}
 
-		} elseif ( $this->args['count'] ) {
+		if ( $this->args['count'] ) {
 			/**
 			 * Calculate current count.
 			 */
@@ -307,6 +314,7 @@ class Processor {
 		}
 
 		$interpreter = $this->get_interpreter_for( $batch );
+
 		$lexer       = $this->get_lexer_for( $batch );
 
 		/**
@@ -762,7 +770,8 @@ class Processor {
 						$columns[ $i ]['_length'] += \GFCommon::safe_strlen( $data );
 					}
 
-					$columns[ $i ]['_options'][ md5( $data ) ] = true;
+					// @TODO determine if this is necessary
+					//$columns[ $i ]['_options'][ md5( $data ) ] = true;
 				}
 			}
 
@@ -837,11 +846,12 @@ class Processor {
 							$columns[ $i ]['field'] = 'time';
 						} elseif ( ! empty( $columns[ $i ]['_is_all_date'] ) ) {
 							$columns[ $i ]['field'] = 'date';
-						} elseif ( ! empty( $columns[ $i ]['_options'] )
+						} /* @TODO determine if this is necessary
+						    elseif ( ! empty( $columns[ $i ]['_options'] )
 							&& ( $options = count( $columns[ $i ]['_options'] ) ) > 1
 							&& ( $options / $batch['meta']['rows'] <= 0.2 ) ) {
 								$columns[ $i ]['field'] = 'radio';
-						} else {
+						} */else {
 							$columns[ $i ]['field'] = 'text';
 						}
 					}
@@ -1318,7 +1328,7 @@ class Processor {
 						 * @param         array     $column The column that is being processed.
 						 * @param         array     $batch  The batch.
 						 */
-						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_falsey, $fields[ $field_key ], $column, $batch );
+						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_false_values, $fields[ $field_key ], $column, $batch );
 
 						foreach ( $choices as $choice ) {
 							if ( ! in_array( Core::strtolower( $choice ), $unchecked, true ) ) {
@@ -1393,6 +1403,11 @@ class Processor {
 							}
 						}
 					}
+				}
+
+				if ( 'fileupload' === $type && ! empty( $column['meta']['multiple_files_upload'] ) ) {
+					$fields[ $field_key ]->multipleFiles = true;
+					$fields[ $field_key ]->maxFiles      = '';
 				}
 
 				if ( $input ) {
@@ -1487,24 +1502,30 @@ class Processor {
 			$form = \GFAPI::get_form( $batch['form_id'] );
 		}
 
-		if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$tables['rows']} SET status = 'processing' WHERE batch_id = %d AND status = 'new' AND LAST_INSERT_ID(id) LIMIT 1", $batch['id'] ) ) ) {
+		$row = $wpdb->get_row($wpdb->prepare( "SELECT * FROM {$tables['rows']} WHERE batch_id = %d AND status = 'processing'", $batch['id']));
 
-			$batch['status'] = 'done';
+		if (!$row) {
 
-			/**
-			 * @action `gravityview/import/process/$status` Callback on batch status updates.
-			 * @param array $batch The batch.
-			 */
-			do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
+			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$tables['rows']} SET status = 'processing' WHERE batch_id = %d AND status = 'new' AND LAST_INSERT_ID(id) LIMIT 1", $batch['id'] ) ) ) {
 
-			if ( in_array( 'remove', $batch['flags'] ) && ! $batch['progress']['error'] && ! $batch['progress']['skipped'] ) {
-				Batch::delete( $batch['id'] ); // Delete the batch if there are no errors or skips
+				$batch['status'] = 'done';
+
+				/**
+				 * @action `gravityview/import/process/$status` Callback on batch status updates.
+				 * @param array $batch The batch.
+				 */
+				do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
+
+				if ( in_array( 'remove', $batch['flags'] ) && ! $batch['progress']['error'] && ! $batch['progress']['skipped'] ) {
+					Batch::delete( $batch['id'] ); // Delete the batch if there are no errors or skips
+				}
+
+				return $batch;
 			}
 
-			return $batch;
+			$row = $wpdb->get_row( "SELECT * FROM {$tables['rows']} WHERE id = LAST_INSERT_ID();" );
 		}
 
-		$row = $wpdb->get_row( "SELECT * FROM {$tables['rows']} WHERE id = LAST_INSERT_ID();" );
 		$row->data = json_decode( $row->data );
 
 		/**
@@ -1824,6 +1845,7 @@ class Processor {
 		$_POST = array(
 			'is_submit_' . $batch['form_id'] => true,
 			'gform_uploaded_files'           => array(),
+			'gform_submit'                   => $batch['form_id'],
 		);
 
 		$update_entry_properties = array();
@@ -1881,6 +1903,11 @@ class Processor {
 						}
 
 						$row->data[ $column['column'] ] = self::transform_datetime( 'date', $row->data[ $column['column'] ], isset( $column['meta']['datetime_format'] ) ? $column['meta']['datetime_format'] : null, 'Y-m-d H:i:s', $partial );
+
+						// Convert entry date properties to UTC timezone since we directly update them in the database and not via the \GF_Query call
+						if ( ! isset( $column['meta']['date_timezone'] ) || 'UTC' !== $column['meta']['date_timezone'] ) {
+							$row->data[ $column['column'] ] = get_gmt_from_date( $row->data[ $column['column'] ] );
+						}
 
 						$datetime_partials[ $column['column'] ] = $row->data[ $column['column'] ];
 					}
@@ -1945,12 +1972,18 @@ class Processor {
 					if ( 'fileupload' === $field->type ) {
 						if ( ! isset( $column['flags'] ) || ! in_array( 'keeplinks', $column['flags'] ) ) {
 							if ( $field->multipleFiles && ! in_array( $field->id, $single_fileupload_fields ) ) {
-								$urls = (array) json_decode( $row->data[ $column['column'] ], true );
+								$urls = @json_decode( $row->data[ $column['column'] ] );
+
+								if ( null === $urls && JSON_ERROR_NONE !== json_last_error() ) {
+									$urls = explode(',', $row->data[ $column['column'] ] );
+								}
+
+								$urls = is_array($urls) ? $urls : array($urls);
 							} else {
 								$urls = array( $row->data[ $column['column'] ] );
 							}
 
-							$urls = array_filter( $urls );
+							$urls = array_filter( array_map( 'trim', $urls ) );
 
 							foreach ( $urls as $url ) {
 								/**
@@ -2152,13 +2185,11 @@ class Processor {
 						 * Documented elsewhere.
 						 */
 						$delimiter = apply_filters( 'gravityview/import/column/multiselect/delimiter', ',', $field, $column, $batch );
-						if ( $data = explode( $delimiter, $row->data[ $column['column'] ] ) ) {
+						if ( $data = array_filter( explode( $delimiter, $row->data[ $column['column'] ] ) ) ) {
 							$_POST[ 'input_' . $column['field'] ] = $data;
 							$has_fields = true;
 						}
 					} elseif ( 'signature' === $field->type ) {
-						$url = $row->data[ $column['column'] ];
-
 						if ( ! class_exists( '\GFSignature' ) ) {
 							$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( 'Gravity Forms Signature Addon is not active.', 'gravityview-importer' ) ), array( 'id' => $row->id ) );
 
@@ -2175,6 +2206,12 @@ class Processor {
 							$_FILES = $files;
 
 							return Batch::update( $batch );
+						}
+
+						$url = $row->data[ $column['column'] ];
+
+						if ( ! $url ) {
+							continue;
 						}
 
 						wp_mkdir_p( $signatures_dir = \GFSignature::get_signatures_folder() );
@@ -2255,24 +2292,46 @@ class Processor {
 						/**
 						 * Documented elsewhere.
 						 */
-						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_falsey, $field, $column, $batch );
+						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_false_values, $field, $column, $batch );
 
-						if ( in_array( Core::strtolower( $row->data[ $column['column'] ] ), $unchecked ) ) {
+						/**
+						 * Search for exact matches first.
+						 */
+						$choices = array();
+
+						$is_single_cell_input = false === strpos( $column['field'], '.' );
+
+						foreach ( $field->inputs as $input ) {
+							if ( $input['id'] == $column['field'] || $is_single_cell_input ) {
+								$choices = array_merge( wp_list_pluck( $field->choices, 'text' ), wp_list_pluck( $field->choices, 'value' ) );
+								$choices = array_unique( array_map( '\GV\Import_Entries\Core::strtolower', $choices ) );
+							}
+						}
+
+						/**
+						 * Blank out as unchecked unless exact falsey match.
+						 */
+						if ( ! in_array( Core::strtolower( $row->data[ $column['column'] ] ), $choices ) && in_array( Core::strtolower( $row->data[ $column['column'] ] ), $unchecked ) ) {
 							$row->data[ $column['column'] ] = '';
 						} else {
 							foreach ( $field->inputs as $input ) {
-								if ( $input['id'] == $column['field'] ) {
+								if ( $input['id'] == $column['field'] || $is_single_cell_input ) {
 									foreach ( $field->choices as $choice ) {
 										if ( $choice['text'] == $input['label'] ) {
+											if ( Core::strtolower( $row->data[ $column['column'] ] ) != Core::strtolower( $choice['value'] ) &&
+												 ! in_array( Core::strtolower( $row->data[ $column['column'] ] ), $this->default_true_values ) ) {
+												continue;
+											}
+
 											$row->data[ $column['column'] ] = $choice['value'];
+
+											$_POST[ 'input_' . str_replace( '.', '_', $input['id'] ) ] = $row->data[ $column['column'] ];
+											$has_fields                                                = true;
 										}
 									}
 								}
 							}
 						}
-
-						$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $row->data[ $column['column'] ];
-						$has_fields = $has_fields || ! empty( $row->data[ $column['column'] ] );
 					} elseif ( 'product' === $field->type ) {
 						if ( $field->inputs ) {
 							list( $field_id, $input_id ) = explode( '.', $column['field'] );
@@ -2356,7 +2415,7 @@ class Processor {
 						/**
 						 * Documented elsewhere.
 						 */
-						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_falsey, $field, $column, $batch );
+						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_false_values, $field, $column, $batch );
 
 						if ( in_array( Core::strtolower( $row->data[ $column['column'] ] ), $unchecked ) ) {
 							$row->data[ $column['column'] ] = '';
@@ -2375,7 +2434,7 @@ class Processor {
 						/**
 						 * Documented elsewhere.
 						 */
-						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_falsey, $field, $column, $batch );
+						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_false_values, $field, $column, $batch );
 
 						$input_type = $field->inputType;
 
@@ -2622,6 +2681,7 @@ class Processor {
 
 			\GFCache::flush();
 			\GFFormsModel::flush_current_forms();
+			\GFFormsModel::flush_current_lead();
 			\GFFormDisplay::$submission = null;
 
 			$_POST['gform_uploaded_files'] = json_encode( $_POST['gform_uploaded_files'] );
@@ -2629,6 +2689,16 @@ class Processor {
 			/**
 			 * @todo make sure anything that's not been submitted in patch-mode stays there
 			 */
+
+			$remove_submit_button_logic = function ( $form ) {
+
+				unset( $form['button']['conditionalLogic'] );
+
+				return $form;
+			};
+
+			add_filter( "gform_form_post_get_meta_{$batch['form_id']}", $remove_submit_button_logic );
+
 			\GFFormDisplay::process_form( $batch['form_id'] ); // @todo try submit_form()
 		} catch ( \Exception $e ) {
 			$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = $e->getMessage() ), array( 'id' => $row->id ) );
@@ -2709,17 +2779,25 @@ class Processor {
 			remove_filter( 'gform_field_validation', $callback );
 		}
 
-		$submission = \GFFormDisplay::$submission[ $batch['form_id'] ];
+		$submission = ! empty( \GFFormDisplay::$submission[ $batch['form_id'] ] ) ? \GFFormDisplay::$submission[ $batch['form_id'] ] : null;
 
-		if ( ! $submission['is_valid'] ) {
-			$validation_error = 'Unknown';
-			foreach ( $submission['form']['fields'] as $field ) {
-				if ( $field->validation_message ) {
-					$validation_error = sprintf( '%s (%s / #%s)', htmlspecialchars_decode( $field->validation_message, ENT_QUOTES ), $field->label ? : ( $field->adminLabel ? : 'Unknown' ), $field->id );
-					break;
+		if ( is_null( $submission ) || ! $submission['is_valid'] ) {
+			if ( ! is_null( $submission ) ) {
+				$validation_error = __( 'Unknown', 'gravityview-importer' );
+
+				foreach ( $submission['form']['fields'] as $field ) {
+					if ( $field->validation_message ) {
+						$validation_error = sprintf( '%s (%s / #%s)', htmlspecialchars_decode( $field->validation_message, ENT_QUOTES ), $field->label ?: ( $field->adminLabel ?: $validation_error ), $field->id );
+						break;
+					}
 				}
+
+				$error = sprintf( esc_html__( sprintf( 'Failed validation: %s', $validation_error ), 'gravityview-importer' ) );
+			} else {
+				$error = __( "Failed to pass one of Gravity Forms' form processing conditions", 'gravityview-importer' );
 			}
-			$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( sprintf( 'Failed validation: %s', $validation_error ), 'gravityview-importer' ) ), array( 'id' => $row->id ) );
+
+			$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error ), array( 'id' => $row->id ) );
 
 			do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
 
@@ -2751,8 +2829,9 @@ class Processor {
 			}
 			$wpdb->delete( \GFFormsModel::get_entry_table_name(), array( 'id' => $entry['id'] ) );
 
-			// @todo Pull update hooks, suppress create hooks.
+			$entry = \GFAPI::get_entry( $update_id );
 
+			// @todo Pull update hooks, suppress create hooks.
 		} else {
 
 			if ( ! $has_user_agent ) {
@@ -3123,6 +3202,11 @@ class Processor {
 
 				$input_date_format = 'd/m/' . ( strlen( (int) $parsed_date['year'] ) === 2 ? 'y' : 'Y' );
 			}
+		}
+
+		// Add missing seconds
+		if ( 'Y-m-d G:i:s' === $input_date_format && 1 === substr_count($input_date, ':') ) {
+			$input_date .= ':00';
 		}
 
 		if ( ! $date = date_create_from_format( $input_date_format, $custom_input ? $custom_input : $input_date ) ) {

@@ -228,6 +228,11 @@ class Batch {
 			return new \WP_Error( 'gravityview/import/errors/invalid_args', sprintf( __( 'Arguments not allowed here: %s', 'gravityview-importer' ), implode( ' ', $not_allowed ) ) );
 		}
 
+		# Batch with only 2 arguments (form_title|form_id and source) is a new batch and requires no further arguments
+		if ( 2 === count( $args ) && ( ! empty( $args['form_title'] ) || ! empty( $args['form_id'] ) ) && ! empty( $args['source'] ) ) {
+			return true;
+		}
+
 		$args = shortcode_atts( $defaults, $args );
 
 		if ( $args['id'] && is_null( Batch::get( $args['id'] ) ) ) {

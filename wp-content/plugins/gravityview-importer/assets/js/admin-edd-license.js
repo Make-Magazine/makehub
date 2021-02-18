@@ -1,6 +1,6 @@
 /*global jQuery, document, ajaxurl */
 (function( $ ) {
-	"use strict";
+	'use strict';
 
 	var GVImportSettings = {
 
@@ -17,7 +17,7 @@
 
 			$( document )
 				.on( 'ready keyup', GVImportSettings.license_field, GVImportSettings.key_change )
-				.on( 'click', ".gv-edd-action", GVImportSettings.clicked )
+				.on( 'click', '.gv-edd-action', GVImportSettings.clicked )
 				.on( 'gv-edd-failed gv-edd-invalid', GVImportSettings.failed )
 				.on( 'gv-edd-valid', GVImportSettings.valid )
 				.on( 'gv-edd-deactivated', GVImportSettings.deactivated )
@@ -71,9 +71,6 @@
 				hidebuttons = $('[data-edd_action*=_license]');
 			}
 
-			console.log( hidebuttons );
-			console.log( showbuttons );
-
 			// On load, no animation. Otherwise, 100ms
 			var speed = ( e.type === 'ready' ) ? 0 : 'fast';
 
@@ -97,8 +94,13 @@
 
 		set_pending_message: function( message ) {
 			$( '#gv-edd-status' )
+				.removeClass('hide')
 				.addClass('pending')
-				.html( '<p>' + message + '</p>');
+				.addClass('info')
+				.removeClass('success')
+				.removeClass('warning')
+				.removeClass('error')
+				.html( $( '#gv-edd-status' ).html().replace( /(<strong>)(.*?)(<\/strong)>/, '$1' + message  ) );
 		},
 
 		clicked: function( e ) {
@@ -153,7 +155,7 @@
 			GVImportSettings.activate_button
 				.fadeOut( 'medium', function () {
 					GVImportSettings.activate_button.removeClass( 'button-disabled' );
-					GVImportSettings.deactivate_button.fadeIn().css( "display", "inline-block" );
+					GVImportSettings.deactivate_button.fadeIn().css( 'display', 'inline-block' );
 				} );
 		},
 
@@ -170,7 +172,7 @@
 				.fadeOut( 'medium', function () {
 					GVImportSettings.deactivate_button.removeClass( 'button-disabled' );
 					GVImportSettings.activate_button.fadeIn(function() {
-						$(this).css( "display", "inline-block" );
+						$(this).css( 'display', 'inline-block' );
 					})
 				} );
 
@@ -181,7 +183,7 @@
 				GVImportSettings.activate_button
 					.removeClass( 'button-disabled' )
 					.fadeIn()
-					.css( "display", "inline-block" );
+					.css( 'display', 'inline-block' );
 			} );
 		}
 	};

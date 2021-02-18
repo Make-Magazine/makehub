@@ -99,6 +99,9 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 			array(
 				'methods'             => \WP_REST_Server::ALLMETHODS,
 				'callback'            => array( $this, 'test' ),
+				'permission_callback' => function() {
+					return defined( 'DOING_TESTS' ) && DOING_TESTS;
+				},
 				'args'                => array(
 				),
 			),
@@ -421,12 +424,17 @@ class REST_Batch_Controller extends \WP_REST_Controller {
 		return rest_ensure_response( $rows );
 	}
 
-	public function validate_batch_args( $args ) {
-		return Batch::validate( $args );
+	public function validate_batch_args( $request ) {
+		$params = $request->get_params();
+
+		$this->clean_params( $params );
+
+		return Batch::validate( $params );
 	}
 
 	private function clean_params( &$params ) {
-		unset( $params['rest_route'] ); // No permalinks enabled
-		unset( $params['wlmdebug'] ); // WishList member debug mode
+		unset( $params[ 'rest_route' ] ); // No permalinks enabled
+		unset( $params[ 'wlmdebug' ] ); // WishList member debug mode
+		unset( $params[ 'q'] ); // Query string added on some hosts
 	}
 }

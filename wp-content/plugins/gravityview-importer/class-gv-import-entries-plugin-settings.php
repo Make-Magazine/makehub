@@ -1,7 +1,10 @@
 <?php
+
 namespace GV\Import_Entries;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
 \GFForms::include_feed_addon_framework();
 
@@ -11,42 +14,52 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 * @var string Version number of the Add-On
 	 */
 	protected $_version = GV_IMPORT_ENTRIES_VERSION;
+
 	/**
 	 * @var string Gravity Forms minimum version requirement
 	 */
 	protected $_min_gravityforms_version = GV_IMPORT_ENTRIES_MIN_GF;
+
 	/**
 	 * @var string URL-friendly identifier used for form settings, add-on settings, text domain localization...
 	 */
 	protected $_slug = 'gravityview-importer';
+
 	/**
 	 * @var string Relative path to the plugin from the plugins folder. Example "gravityforms/gravityforms.php"
 	 */
 	protected $_path = 'gravityview-importer/gravityview-importer.php';
+
 	/**
 	 * @var string Full path the the plugin. Example: __FILE__
 	 */
 	protected $_full_path = GV_IMPORT_ENTRIES_FILE;
+
 	/**
 	 * @var string URL to the Gravity Forms website. Example: 'http://www.gravityforms.com' OR affiliate link.
 	 */
 	protected $_url = 'https://gravityview.co';
+
 	/**
 	 * @var string Title of the plugin to be used on the settings page, form settings and plugins page. Example: 'Gravity Forms MailChimp Add-On'
 	 */
 	protected $_title = 'GravityView Import Entries';
+
 	/**
 	 * @var string Short version of the plugin title to be used on menus and other places where a less verbose string is useful. Example: 'MailChimp'
 	 */
 	protected $_short_title = 'Import Entries';
+
 	/**
 	 * @var array Members plugin integration. List of capabilities to add to roles.
 	 */
 	protected $_capabilities = array( 'manage_options', 'gravityforms_import_entries' );
+
 	/**
-	 * @var string|array A string or an array of capabilities or roles that have access to the settings page
+	 * @var string A string or an array of capabilities or roles that have access to the settings page
 	 */
-	protected $_capabilities_settings_page = array( 'manage_options' );
+	protected $_capabilities_settings_page = 'manage_options';
+
 	/**
 	 * @var string|array A string or an array of capabilities or roles that have access to the form settings page
 	 */
@@ -81,6 +94,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 * @return GV_Import_Entries_Addon
 	 */
 	public static function get_instance() {
+
 		if ( empty( self::$instance ) ) {
 			self::$instance = new self;
 		}
@@ -130,6 +144,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 * @return string
 	 */
 	function plugin_settings_icon() {
+
 		return '<a class="gvi-astronaut-head-icon" href="https://gravityview.co/extensions/gravity-forms-entry-importer/">GravityView</a>';
 	}
 
@@ -139,6 +154,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 * @return string
 	 */
 	public function get_version() {
+
 		return $this->_version;
 	}
 
@@ -146,6 +162,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	 * @return string
 	 */
 	public function get_full_path() {
+
 		return $this->_full_path;
 	}
 
@@ -226,12 +243,16 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 	/**
 	 * Register the settings field for the EDD License field type
 	 *
+	 * @since 2.1.9 Set visibility to public (from protected)
+	 *
+	 * @internal Do not use!
+	 *
 	 * @param array $field
-	 * @param bool $echo Whether to echo the
+	 * @param bool  $echo Whether to echo the output
 	 *
 	 * @return string
 	 */
-	protected function settings_edd_license( $field, $echo = true ) {
+	public function settings_edd_license( $field, $echo = true ) {
 
 		$text = self::settings_text( $field, false );
 
@@ -270,12 +291,12 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 
 		return $button;
 	}
-	
+
 	/***
 	 * Renders the save button for settings pages
 	 *
 	 * @param array $field - Field array containing the configuration options of this field
-	 * @param bool $echo = true - true to echo the output to the screen, false to simply return the contents as a string
+	 * @param bool  $echo  = true - true to echo the output to the screen, false to simply return the contents as a string
 	 *
 	 * @return string The HTML
 	 */
@@ -283,13 +304,13 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 
 		$field['type'] = ( isset( $field['type'] ) && in_array( $field['type'], array(
 				'submit',
-				'reset'
+				'reset',
+				'button',
 			) ) ) ? $field['type'] : 'submit';
 
 		$attributes    = $this->get_field_attributes( $field );
 		$default_value = rgar( $field, 'value' ) ? rgar( $field, 'value' ) : rgar( $field, 'default_value' );
 		$value         = $this->get_setting( $field['name'], $default_value );
-
 
 		$attributes['class'] = isset( $field['class'] ) ? esc_attr( $field['class'] ) : $attributes['class'];
 		$tooltip             = isset( $choice['tooltip'] ) ? gform_tooltip( $choice['tooltip'], rgar( $choice, 'tooltip_class' ), true ) : '';
@@ -309,8 +330,8 @@ class GV_Import_Entries_Addon extends \GFAddOn {
                     type="' . $field['type'] . '"
                     name="' . esc_attr( $field['name'] ) . '"
                     value="' . $value . '" ' .
-		         implode( ' ', $attributes ) .
-		         ' />';
+				 implode( ' ', $attributes ) .
+				 ' />';
 
 		$html .= $tooltip;
 		$html .= $html_after;
@@ -335,9 +356,9 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 		$script_debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
 
 		$scripts[] = array(
-			"handle"  => 'gv_importer',
-			"src"     => $this->get_base_url() . "/assets/js/admin{$script_debug}.js",
-			"version" => $this->_version,
+			'handle'  => 'gv_importer',
+			'src'     => $this->get_base_url() . '/assets/js/admin{$script_debug}.js',
+			'version' => $this->_version,
 			'enqueue' => array(
 				array(
 					'admin_page' => array(
@@ -346,7 +367,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 						'plugin_page',
 						'app_settings',
 					),
-					'query' => 'subview=gravityview-importer',
+					'query'      => 'subview=gravityview-importer',
 				),
 			),
 			'strings' => array(
@@ -364,7 +385,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 				'field_mapping_empty' => esc_html__( 'No fields have been mapped. Please configure the field mapping before starting the import.', 'gravityview-importer' ),
 				'error_message'       => sprintf( esc_html__( 'There was an error on row %s.', 'gravityview-importer' ), '{row}' ),
 				'success_message'     => sprintf( esc_html__( 'Created %s from Row %s', 'gravityview-importer' ), sprintf( esc_html__( 'Entry #%s', 'gravityview-importer' ), '{entry_id}' ), '{row}' ),
-			)
+			),
 		);
 
 		return array_merge( parent::scripts(), $scripts );
@@ -380,9 +401,9 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 		$styles = array();
 
 		$styles[] = array(
-			"handle"  => $this->_slug . '-admin',
-			"src"     => $this->get_base_url() . "/assets/css/admin.css",
-			"version" => $this->_version,
+			'handle'  => $this->_slug . '-admin',
+			'src'     => $this->get_base_url() . '/assets/css/admin.css',
+			'version' => $this->_version,
 			'enqueue' => array(
 				array(
 					'admin_page' => array(
@@ -391,7 +412,7 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 						'plugin_page',
 						'app_settings',
 					),
-					'query' => 'subview=gravityview-importer',
+					'query'      => 'subview=gravityview-importer',
 				),
 			),
 		);
@@ -399,23 +420,24 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 		/**
 		 * Also enqueue on the Gravity Forms Import/Export page.
 		 * Need to do this here because there's no `gf_export` check in Gravity Forms for the Import/Export page
+		 *
 		 * @see \GFAddon::_page_condition_matches
 		 */
 		$styles[] = array(
-			"handle"  => $this->_slug . '-admin',
-			"src"     => $this->get_base_url() . "/assets/css/admin.css",
-			"version" => $this->_version,
+			'handle'  => $this->_slug . '-admin',
+			'src'     => $this->get_base_url() . '/assets/css/admin.css',
+			'version' => $this->_version,
 			'enqueue' => array(
 				array(
-					'query' => 'page=gf_export&view=import_entries'
+					'query' => 'page=gf_export&view=import_entries',
 				),
-			)
+			),
 		);
 
 		$styles[] = array(
-			"handle"  => $this->_slug . '-admin-settings',
-			"src"     => $this->get_base_url() . "/assets/css/admin-settings.css",
-			"version" => $this->_version,
+			'handle'  => $this->_slug . '-admin-settings',
+			'src'     => $this->get_base_url() . '/assets/css/admin-settings.css',
+			'version' => $this->_version,
 			'enqueue' => array(
 				array(
 					'admin_page' => array(
@@ -423,10 +445,21 @@ class GV_Import_Entries_Addon extends \GFAddOn {
 						'app_settings',
 					),
 				),
-			)
+			),
 		);
 
 		return array_merge( parent::styles(), $styles );
+	}
+
+	/**
+	 * Return the plugin's icon for the plugin/form settings menu.
+	 *
+	 * @since 2.5
+	 *
+	 * @return string
+	 */
+	public function get_menu_icon() {
+		return 'dashicons-upload';
 	}
 
 }

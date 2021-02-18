@@ -1,6 +1,6 @@
 === GravityView Importer ===
 Requires at least: 5.0
-Tested up to: 5.3
+Tested up to: 5.6
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 3 or higher
@@ -18,6 +18,60 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravityview.
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.2.1 on January 6, 2021 =
+
+* Fixed: Gravity Forms User Registration feed was not being processed
+
+= 2.2 on December 7, 2020 =
+
+* Import Entries now requires PHP version 5.6 or newer
+* Added: Support for WordPress 5.6
+* Improved: Allow setting UTC timezone (as expected by WordPress) for "Entry Date", "Entry Updated Date" and "Payment Date" entry properties
+* Improved: Gravity Forms 2.5 support
+* Fixed: Importing Multiple Files for the File Upload field
+* Updated: Turkish translation (thanks, Süha!) and Russian translation (thanks, Irina!)
+
+= 2.1.10 on October 5, 2020 =
+
+* Fixed: Fatal error when Gravity Forms is inactive
+* Fixed: PHP warnings in WordPress 5.5
+* Improved: Support for Gravity Forms 2.5
+
+= 2.1.9 on July 28, 2020 =
+
+* Added support for Gravity Forms 2.5
+* Updated: Polish translation (thanks, [Dariusz](https://www.transifex.com/user/profile/dariusz.zielonka/)!)
+
+= 2.1.8 on May 5, 2020 =
+
+* Improved: Reliability when importing large CSVs
+    - Import requests will be automatically re-attempted if they fail
+    - Memory usage is improved, which should help for sites on shared hosting
+* Fixed: Import error message not properly displayed
+* Fixed: When the import was interrupted, the last record would not have its status set to 'processed', so resuming the import would start from the next record.
+
+= 2.1.7 on April 16, 2020 =
+
+* Added: Button to unmap all fields with a single click
+* Improved: Allow importing checkbox field data from a single CSV column
+* Fixed: Import would break if a form had submit button conditional logic enabled
+* Fixed: Date in "YYYY-MM-DD hh:mm:ss" format not being recognized as valid
+* Fixed: Empty Entry Notes objects not being recognized as valid
+
+= 2.1.6 on February 13, 2020 =
+
+* Fixed: When updating entries, they become unapproved (and other entry meta details cleared)
+* Fixed: Empty Signature field values were not properly handled
+* Fixed: Duplicated successful import message
+* Fixed: Fatal error possible when activating a development version of Import Entries
+
+= 2.1.5 on December 11, 2019 =
+
+* Fixed: "Beacon is not defined" error when navigating to Import Entries screen
+* Fixed: Time in "H:MM AM" format was being recognized as valid when it wasn't
+* Fixed: Checkbox/Radio/Drop Down fields with "No" or "Yes" values are now imported properly
+* Fixed: Issue importing empty Multi-Select fields
 
 = 2.1.4 on November 18, 2019 =
 
