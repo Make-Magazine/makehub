@@ -25,7 +25,7 @@ add_action('bp_setup_nav', 'profile_tab_makerfaire_infoname');
 
 function makerfaire_info_screen() {
     // Add title and content here - last is to call the members plugin.php template.
-    add_action('bp_template_title', 'makersfaire_info_title');
+    add_action('bp_template_title', 'makerfaire_info_title');
     add_action('bp_template_content', 'makerfaire_info_content');
     bp_core_load_template('buddypress/members/single/plugins');
 }
@@ -44,9 +44,9 @@ function makerfaire_info_content() {
     $user_info = get_userdata($user_id);
     $user_email = $user_info->user_email;
 
-    //access the makerfaire database.
-    include(get_template_directory() . '/db_connect/mf_config.php');
-    include(get_template_directory() . '/db_connect/db_connect.php');
+    //access the makerfaire database.    
+    include(get_template_directory() . '/db-connect/mf_config.php');
+    include(get_template_directory() . '/db-connect/db_connect.php');
     $sql = "SELECT * FROM `wp_mf_maker`";
     //loop thru entry data
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
