@@ -23,20 +23,20 @@ function profile_tab_makerfaire_infoname() {
 
 add_action('bp_setup_nav', 'profile_tab_makerfaire_infoname');
 
-function makerspace_info_screen() {
+function makerfaire_info_screen() {
     // Add title and content here - last is to call the members plugin.php template.
     add_action('bp_template_title', 'makersfaire_info_title');
     add_action('bp_template_content', 'makerfaire_info_content');
     bp_core_load_template('buddypress/members/single/plugins');
 }
 
-function makerspace_info_title() {
+function makerfaire_info_title() {
     echo 'Maker Faire Information';
 }
 
-function makerspace_info_content() {
+function makerfaire_info_content() {
     global $wpdb;
-    //should not even be here if not a makerspace, but lets check one more time to be safe
+    
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
     
@@ -151,6 +151,3 @@ function makerspace_info_content() {
         
 }
 
-function is_decimal( $val ){
-    return is_numeric( $val ) && floor( $val ) != $val;
-}
