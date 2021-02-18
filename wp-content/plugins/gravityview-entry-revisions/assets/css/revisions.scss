@@ -1,0 +1,138 @@
+/* Revision meta box */
+.post-revisions li img,
+#revisions-meta-restored img {
+	vertical-align: middle;
+}
+
+table.gv-entry-diff {
+	table-layout: fixed;
+	width: 100%;
+	white-space: pre-wrap;
+
+	tbody tr td:nth-child(2) {
+		width: 4%;
+	}
+
+	col.content {
+		width: auto;
+	}
+
+	col.content.diffsplit {
+		width: 48%;
+	}
+
+	col.diffsplit.middle {
+		width: auto;
+	}
+
+	col.ltype {
+		width: 30px;
+	}
+
+	tr {
+		background-color: transparent;
+	}
+
+	td,
+	th {
+		font-family: Consolas, Monaco, monospace;
+		font-size: 14px;
+		line-height: 1.618;
+		padding: .5em;
+		vertical-align: top;
+		word-wrap: break-word;
+	}
+
+	td h1,
+	td h2,
+	td h3,
+	td h4,
+	td h5,
+	td h6 {
+		margin: 0;
+	}
+
+	.diff-deletedline del,
+	.diff-addedline ins {
+		text-decoration: none;
+	}
+
+	.diff-deletedline {
+		background-color: #ffe9e9;
+	}
+
+	.diff-deletedline del {
+		background-color: #faa;
+	}
+
+	.diff-addedline {
+		background-color: #e9ffe9;
+	}
+
+	.diff-addedline ins {
+		background-color: #afa;
+	}
+}
+
+.diff-meta {
+	padding: 5px;
+	clear: both;
+	min-height: 32px;
+}
+
+.diff-title strong {
+	line-height: 32px;
+	min-width: 60px;
+	text-align: right;
+	float: left;
+	margin-right: 5px;
+}
+
+.revisions-controls .author-card .author-info {
+	font-size: 12px;
+	line-height: 16px;
+}
+
+.revisions-controls .author-card .avatar,
+.revisions-controls .author-card .author-info {
+	float: left;
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+.revisions-controls .author-card .byline {
+	display: block;
+	font-size: 12px;
+}
+
+.revisions-controls .author-card .avatar {
+	vertical-align: middle;
+}
+
+.diff-meta input.restore-revision {
+	float: right;
+	margin-left: 6px;
+	margin-right: 6px;
+	margin-top: 4px;
+}
+
+.diff-meta-from {
+	display: none;
+}
+
+.comparing-two-revisions .diff-meta-from {
+	display: block;
+}
+
+@media screen and ( max-width: 782px ) {
+	#diff-next-revision,
+	#diff-previous-revision {
+		margin-top: -1em;
+	}
+
+	table.diff {
+		-ms-word-break: break-all;
+		word-break: break-all;
+		word-wrap: break-word;
+	}
+}

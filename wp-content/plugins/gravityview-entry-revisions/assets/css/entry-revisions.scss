@@ -1,0 +1,5 @@
+/**
+ * Include WordPress revisions styles, since they aren't loaded by the admin.
+ */
+@import "revisions";
+@import "entry-revisions-admin.scss";

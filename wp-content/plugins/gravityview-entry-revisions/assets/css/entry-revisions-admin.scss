@@ -1,0 +1,155 @@
+.gv-entry-revisions,
+table.gv-entry-diff tfoot td,
+table.gv-entry-diff th,
+table.gv-entry-diff caption {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+.forms_page_gf_entries #poststuff #post-body.columns-2 {
+	margin: 0;
+}
+
+table.gv-entry-diff {
+	margin: 1em 0 2em;
+	border-spacing: 10px;
+	border-collapse: separate;
+	white-space: normal;
+
+	input[type="radio"] {
+		margin: 0 .4em 0 0;
+		padding: 0;
+		line-height: 100%;
+	}
+
+	caption {
+		caption-side: top;
+		font-size: 16px;
+		padding: 1em 10%;
+		font-weight: normal;
+		color: #333;
+		line-height: 1.4;
+	}
+
+	.diff-row-details {
+		display: block;
+		font-weight: normal;
+		font-size: 12px;
+	}
+
+	tbody td {
+		vertical-align: top;
+
+		// Make it so double-clicking doesn't select text
+		cursor: pointer;
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+
+		position: relative;
+		overflow: hidden;
+		padding: 0;
+		transition: all 0.1s ease;
+		border-radius: 3px;
+
+		label {
+			padding: .5em;
+			display: table;
+			box-sizing: border-box;
+			width: 100%;
+			height: 100%;
+		}
+	}
+	tbody th {
+		text-align: right;
+		padding: 0 .5em 0 0;
+	}
+	tbody em {
+		color: rgba(0, 0, 0, .3);
+		text-transform: lowercase;
+	}
+
+	.toggle-all-revisions {
+		float: right;
+		margin: .2em 1.25em 0 0;
+	}
+
+	.screen-reader-text {
+		position: absolute;
+		margin: -1px;
+		padding: 0;
+		height: 1px;
+		width: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		border: 0;
+	}
+
+	.diff-date {
+		font-weight: normal;
+	}
+
+	.diff-deletedline {
+		background-color: #fafcff;
+		border: 1px solid #dcdcdc;
+
+		&:hover {
+			background-color: #f5f8ff;
+		}
+
+		&.diff-enabled,
+		&.diff-enabled:hover {
+			background-color: #edf3ff;
+			border-color: #919cb3;
+		}
+
+		input[type=radio] {
+			float: right;
+			margin: 0 0 0 .4em;
+		}
+
+		del {
+			background-color: #b3d9ff;
+		}
+	}
+
+	.diff-addedline {
+		background-color: #fefffe;
+		border: 1px solid #ccc;
+
+		&:hover {
+			background-color: #fafffa;
+		}
+		&.diff-enabled,
+		&.diff-enabled:hover {
+			background-color: #f3fff3;
+			border-color: #a3cca3;
+		}
+	}
+
+	thead,
+	tfoot {
+		position: sticky;
+		top: -10px;
+		background: rgba(255, 255, 255, .9);
+		z-index: 10;
+	}
+
+	thead {
+		th {
+			padding: .5em 0;
+			position: relative;
+		}
+	}
+
+	.admin-bar & thead {
+		top: 22px;
+	}
+
+	tfoot {
+		bottom: -1em;
+
+		td {
+			padding: 1em 0;
+		}
+	}
+}
