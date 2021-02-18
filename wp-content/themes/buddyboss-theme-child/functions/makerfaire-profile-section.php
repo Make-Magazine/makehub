@@ -45,8 +45,8 @@ function makerfaire_info_content() {
     $user_email = $user_info->user_email;
 
     //access the makerfaire database.
-    include '../db_connect/mf_config.php';
-    include '../db_connect/db_connect.php';
+    include(get_template_directory() . '/db_connect/mf_config.php');
+    include(get_template_directory() . '/db_connect/db_connect.php');
     $sql = "SELECT * FROM `wp_mf_maker`";
     //loop thru entry data
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
