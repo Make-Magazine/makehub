@@ -46,7 +46,10 @@ function makerfaire_info_content() {
 
     //access the makerfaire database.    
     include(get_stylesheet_directory() . '/db-connect/mf-config.php');
-    include(get_stylesheet_directory() . '/db-connect/db_connect.php');
+    $mysqli = new mysqli($host,$user,$password, $database);
+    if ($mysqli->connect_errno) {
+      echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
     
     //pull maker information from database.    
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
@@ -61,12 +64,36 @@ function makerfaire_info_content() {
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
     foreach ($entries as $entry) {
-        echo '<h2>'.$entry['faire_name'].' - Entry '.$entry['entity_id'].'</h2>'.                 
-                '<h3><a target="_blank" href="https://makerfaire.com/maker/entry/'.$entry['entity_id'].'/">'.$entry['presentation_title'].'</a></h3>'.
+        echo '<h2>'.html_entity_decode($entry['faire_name']).' - Entry '.$entry['entity_id'].'</h2>'.                 
+                '<h3><a target="_blank" href="https://makerfaire.com/maker/entry/'.$entry['entity_id'].'/">'.html_entity_decode($entry['presentation_title']).'</a></h3>'.
                 '<img style="width:200px;height:auto;padding-right:20px;" src="'.$entry['project_photo'].'" align="left" />'.
-                $entry['desc_short'].
+                html_entity_decode($entry['desc_short']).
                 '<div style="clear:both"></div><br/><br/>';
     }    
-                                                  
+        
+    //pull in global faires now
+    include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
+    $mysqli = new mysqli($host,$user,$password, $database);
+    if ($mysqli->connect_errno) {
+      echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+    //pull maker information from database.    
+    $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
+            . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
+            . '     wp_mf_entity.status, wp_mf_entity.faire as faire_name, wp_mf_entity.project_photo, wp_mf_entity.desc_short '
+         . 'FROM `wp_mf_maker` '
+         . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
+         . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '         
+         . 'where Email like "'.$user_email.'" and wp_mf_entity.status="Accepted"  and maker_type!="contact" '
+         . 'order by entity_id desc';
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
+    $entryData = array();
+    foreach ($entries as $entry) {
+        echo '<h2>'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</h2>'.                 
+                '<h3>'.html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</h3>'.
+                '<img style="width:200px;height:auto;padding-right:20px;" src="'.$entry['project_photo'].'" align="left" />'.
+                html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8').
+                '<div style="clear:both"></div><br/><br/>';
+    }    
 }
 
