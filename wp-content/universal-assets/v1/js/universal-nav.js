@@ -38,7 +38,7 @@
 					  if(jQuery(".mz-story-infinite-view").length) {
 							nextItemUnderNav = jQuery(".mz-story-infinite-view");
 					  }
-					  if(jQuery(".ad-unit").length && jQuery("#home-featured").length === 0) {
+					  if(jQuery(".ad-unit").length && jQuery("#home-featured").length === 0 && jQuery(".fullwidth_layout").length == 0 ) {
 							nextItemUnderNav = jQuery(".ad-unit");
 					  }
 					  if(jQuery(".gift-guide-container").length) {

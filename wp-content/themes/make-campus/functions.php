@@ -403,6 +403,17 @@ function parse_yturl($url) {
     return (isset($matches[1])) ? $matches[1] : false;
 }
 
+function featuredtoRSS($content) {
+	global $post;
+	if ( has_post_thumbnail( $post->ID ) ){
+		$content = '<div>' . get_the_post_thumbnail( $post->ID, 'medium', array( 'style' => 'margin-bottom: 15px;' ) ) . '</div>' . $content;
+	}
+	return $content;
+}
+ 
+add_filter('the_excerpt_rss', 'featuredtoRSS');
+add_filter('the_content_feed', 'featuredtoRSS');
+
 // block wp-admin access for 
 function wpabsolute_block_users_backend() {
     $user = wp_get_current_user();
