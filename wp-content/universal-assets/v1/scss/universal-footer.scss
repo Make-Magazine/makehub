@@ -290,6 +290,9 @@
 	z-index: 9999;
 	cursor: pointer;
 	box-shadow: #161616 2px 2px 5px 2px;
+	&.accepted {
+		display: none !important;
+	}
 }
 	
 #cookie-footer {

@@ -405,8 +405,6 @@ function parse_yturl($url) {
 
 function featuredtoRSS($content) {
 	global $post;
-	$startDate = get_field("preferred_start_date", $post->ID);
-	$startTime = get_field("preferred_start_time", $post->ID);
 	if ( has_post_thumbnail( $post->ID ) ){
 		$content = '<div>' . get_the_post_thumbnail( $post->ID, 'medium', array( 'style' => 'margin-bottom: 15px;' ) ) . '</div>' . $content;
 	}
