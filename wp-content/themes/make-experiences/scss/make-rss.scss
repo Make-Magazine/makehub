@@ -1,12 +1,4 @@
 .makerspace-news {
-    h2 {        
-        img.logo {
-            margin-bottom: 10px;
-            width: 100px;
-        }
-    }    
-}
-.makerspace-news {
     @media screen and (max-width: 767px) {
         margin: 30px 0;
     }
@@ -15,7 +7,7 @@
         margin-top: 10px;
         margin-bottom: 20px;
         img.logo {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             width: 100px;
         }
     }
@@ -100,4 +92,3 @@
 		}
 	}
 }
-

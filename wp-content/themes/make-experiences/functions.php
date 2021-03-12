@@ -41,15 +41,16 @@ add_action( 'after_setup_theme', 'make_experiences_languages' );
  * @since Make Experiences  1.0.0
  */
 function make_experiences_scripts_styles(){
-	error_log("here we come");
-  /**
-   * Scripts and Styles loaded by the parent theme can be unloaded if needed
-   * using wp_deregister_script or wp_deregister_style.
-   *
-   * See the WordPress Codex for more information about those functions:
-   * http://codex.wordpress.org/Function_Reference/wp_deregister_script
-   * http://codex.wordpress.org/Function_Reference/wp_deregister_style
-   **/
+	$my_theme = wp_get_theme();
+	$my_version = $my_theme->get('Version');
+	/**
+	* Scripts and Styles loaded by the parent theme can be unloaded if needed
+	* using wp_deregister_script or wp_deregister_style.
+	*
+	* See the WordPress Codex for more information about those functions:
+	* http://codex.wordpress.org/Function_Reference/wp_deregister_script
+	* http://codex.wordpress.org/Function_Reference/wp_deregister_style
+	**/
 
 	// Styles
 	wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
