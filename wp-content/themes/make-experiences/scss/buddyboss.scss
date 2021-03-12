@@ -1,35 +1,3 @@
-/*--------------------------------------------------------------
-This is your custom stylesheet.
-
-Add your own styles here to make theme updates easier.
-To override any styles from other stylesheets, simply copy them into here and edit away.
-
-Make sure to respect the media queries! Otherwise you may
-accidentally add desktop styles to the mobile layout.
-https://www.w3schools.com/css/css_rwd_mediaqueries.asp
---------------------------------------------------------------*/
-
-.nav-hamburger {
-    right: auto;
-    left: 80px;
-}
-
-.newsletter-footer label {
-    color: #fff;
-}
-
-/* make pages full width */
-.site-content .container {
-    width: 100%;
-    max-width: none;
-    padding: 0;
-}
-/* make header 100% of the page */
-#masthead .container {
-    width: 100% !important;
-}
-    
-
 /* makerspace information */
 .ms_info .fieldLabel {
     font-weight:bold;

@@ -8,6 +8,7 @@
 	.row {
 		min-height: 300px;
 		padding: 0px 15px;
+		display: flex;
 		.media-column {
 			background-repeat: no-repeat;
 			background-position: center;
@@ -28,6 +29,7 @@
 			justify-content: center;
 			h2 {
 				font-family: "Roboto Light";
+				color: #fff;
 			}
 			p {
 				font-size: 16px;
