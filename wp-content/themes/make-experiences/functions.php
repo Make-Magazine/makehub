@@ -65,7 +65,7 @@ function make_experiences_scripts_styles(){
 	// lib src packages up bootstrap, fancybox, jquerycookie etc
 	wp_enqueue_script('lib-src-js', get_stylesheet_directory_uri().'/js/lib-src.min.js', array('jquery'), $my_version, true);
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
-	wp_enqueue_script( 'make_experiences-js', get_stylesheet_directory_uri().'/js/scripts.min.js', array('jquery'), $my_version, true);
+	wp_enqueue_script( 'make_experiences-js', get_stylesheet_directory_uri().'/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
 	wp_localize_script('universal', 'ajax_object',
 		array(
