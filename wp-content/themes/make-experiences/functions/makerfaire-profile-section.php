@@ -97,7 +97,7 @@ function makerfaire_info_content() {
 							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</div>'.                 
 							'<h3>'.html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</h3>
 						</div>
-						<div class="item-image style="background-image:url('.$entry['project_photo'].');>
+						<div class="item-image" style="background-image:url('.$entry['project_photo'].')";>
 							<div class="item-description">'.html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</div>
 						</div>
 					</article>
