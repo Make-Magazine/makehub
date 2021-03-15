@@ -51,6 +51,7 @@
 				}
 				article.item-article .item-image .item-description {
 					display: -webkit-box;
+					right: 0px;
 				}
 			}
 			article.item-article {
@@ -63,6 +64,7 @@
 				transition: all .35s;
 				width: 100%;
 				height: 100%;
+				overflow: hidden;
 				.item-info {
 					padding: 1.3rem 1.3rem 0;
 					height: 35%;
@@ -130,18 +132,22 @@
 					background-size: cover;
 					background-position: 50%;
 					display: flex;
-					justify-content: center;
-					align-items: center;
 					.item-description {
 						display: none;
 						font-weight: bold;
 						color: #000;
-						margin: 10px;
 						padding: 5px 10px;
-						-webkit-line-clamp: 5;
-						-webkit-box-orient: vertical;
 						overflow: hidden;
-						background: rgba(255, 255, 255, .6);
+						background: rgba(255,255,255,0.6);
+						width: 100%;
+						-webkit-line-clamp: 10;
+						-webkit-box-orient: vertical;
+						transition: all 1s;
+						position: relative;
+						z-index: 9999;
+						right: -100%;
+						-webkit-transition: right .35s ease 0s;
+						transition: right .35s ease 0s;
 					}
 				}
 			}
