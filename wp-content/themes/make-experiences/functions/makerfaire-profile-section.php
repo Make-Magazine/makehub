@@ -94,11 +94,10 @@ function makerfaire_info_content() {
 				<a href="https://'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'/entry/maker/'.$entry['entity_id'].'" target="_blank">
 					<article class="item-article">
 						<div class="item-info">
-							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</h2>'.                 
+							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</div>'.                 
 							'<h3>'.html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</h3>
 						</div>
-						<div class="item-image">
-							<img style="width:200px;height:auto;padding-right:20px;" src="'.$entry['project_photo'].'" align="left" />
+						<div class="item-image style="background-image: url("'.$entry['project_photo'].'">
 							<div class="item-description">'.html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</div>
 						</div>
 					</article>
