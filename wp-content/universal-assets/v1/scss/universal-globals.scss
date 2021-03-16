@@ -90,9 +90,9 @@ a { // don't let genesis molest our links
 .universal-btn-red {
 	@extend .universal-btn;
 	background-color: #EA002A;
+	border-color: #EA002A;
 	&:hover {
 		color: #EA002A;
-		border-color: #EA002A;
 	}
 }
 .universal-btn-navy {

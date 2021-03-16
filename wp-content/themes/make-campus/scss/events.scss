@@ -8,6 +8,10 @@
 	display: block;
 }
 
+.tribe-events-gcal.tribe-events-button, .tribe-events-ical.tribe-events-button {
+	display: none;
+}
+
 // Post type
 .single-tribe_events {
     #tribe-events-content {
@@ -286,6 +290,7 @@
 				ul li {
 					margin-bottom: 5px;
 				}
+				.event-author { border-bottom: 0px; }
             }
             .tribe-events-button {
                 color: #fff;

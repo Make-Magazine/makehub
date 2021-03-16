@@ -68,8 +68,10 @@
 					font-size: 36px;
 					font-weight: bold;
 					flex-grow: 1;
+					line-height: 38px;
 					@media screen and (min-width: 768px) and (max-width: 980px) {
 						font-size: 24px;
+						line-height: 26px;
 					}
 				}
 				.btn {
