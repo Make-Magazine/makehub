@@ -353,6 +353,9 @@ div[aria-describedby="cookie-dialog"] {
 		.ui-dialog-title {
 			display: none;
 		}
+		.ui-dialog-titlebar-close {
+			margin: -1px 5px 0 0;
+		}
 	}
 	.ui-widget-content {
 		position: relative;
