@@ -253,17 +253,17 @@ input.cmn-toggle-round:checked + label:after {
 			width: 100%;
 			overflow: visible;
 			&::after {
-				font-family: 'Linearicons-Free';
-				content: "\e870";
+				font-family: 'FontAwesome';
+				content: "\f057";
 				color: #005e9a;
 				background: #fff;
-				border: solid 1px #005e9a;
-				border-radius: 15px;
+				border-radius: 25px;
 				font-size: 24px;
 				position: absolute;
 				right: -25px;
 				top: -10px;
 				visibility: visible;
+				line-height: 25px;
 			}
 		}
 	}
