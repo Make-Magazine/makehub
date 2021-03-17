@@ -1,0 +1,53 @@
+.ee-filter-form{
+	text-align: center;
+}
+#espresso_calendar.calendar_fullsize {
+	max-width: 90%;
+	margin: 0 auto;
+	a.fc-event {
+		background-color: rgba(0, 94, 154, .8) !important;
+		border-radius: 4px;
+		.fc-event-title, .time-display-block {
+			color: #fff;
+		}
+	}
+	.fc-grid {
+		.fc-state-highlight {
+			background: #fff;
+			.fc-day-number {
+				font-weight: $font-bold;
+				color: $color-blue;
+			}
+		}
+	}
+}
+
+.qtip {
+	border: 0px;
+	.qtip-titlebar {
+		background: $color-light-blue;
+		border: 0px
+	}
+	.qtip-content {
+		box-shadow: none;
+		position: relative;
+		background: #fff;
+		border: 0px;
+		border: 0px;
+		.reg-now-btn {
+			background: $color-blue;
+			color: #fff;
+			border: solid 1px $color-blue;
+			border-radius: 3px;
+			margin: 0 auto;
+			display: block;
+			width: 250px;
+			text-align: center;
+			float: none;
+			&:hover {
+				color: $color-blue;
+				background: #fff;
+			}
+		}
+	}
+}

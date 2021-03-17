@@ -1,0 +1,43 @@
+.espresso-grid-revised {
+	display: flex;
+	flex-wrap: wrap;
+	.ee_grid_box_revised {
+		width: 25%;
+		margin-bottom: 48px;
+		padding: 0px 20px;
+		img {
+			width: 100%;
+			border-radius: 15px;
+			margin-bottom: 15px;
+		}
+		.event-info {
+			.event-date {
+				float: left;
+				margin-right: 15px;
+				.event-start-month, .event-start-day {
+					display: block;
+				}
+				.event-start-month {
+					color: #5d5d5d;
+    				text-transform: uppercase;
+				}
+				.event-start-day {
+					font-size: 24px;
+    				line-height: 1.42;
+					font-weight: bold;
+				}
+			}
+			.event-details {
+				.event-title {
+					margin-top: 0px;
+					line-height: .6em;
+					a {
+						color: #333;
+						font-size: 18px;
+					}
+				}
+			}
+		}
+		.event-link .btn { width: 100%; }
+	}
+}
