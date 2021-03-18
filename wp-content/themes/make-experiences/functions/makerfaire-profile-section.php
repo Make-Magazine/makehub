@@ -91,7 +91,7 @@ function makerfaire_info_content() {
 	echo '<div class="item-grid">';
     foreach ($entries as $entry) {
 		echo '<div class="item-wrapper">
-				<a href="https://'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'/entry/maker/'.$entry['entity_id'].'" target="_blank">
+				<a href="https://'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'/maker/entry/'.$entry['entity_id'].'" target="_blank">
 					<article class="item-article">
 						<div class="item-info">
 							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</div>'.                 
