@@ -20,11 +20,7 @@ global $post;
 
 	<?php 
 	if ( ( !is_single() || is_related_posts() ) && function_exists( 'buddyboss_theme_entry_header' ) ) {
-		if( 'espresso_events' == get_post_type() ) {
-			echo '<img src="' . get_the_post_thumbnail_url( $post, 'thumbnail' ) . '" />';
-		} else {
-			buddyboss_theme_entry_header( $post );
-		}
+		echo '<a href="' . get_permalink() . '"><img src="' . get_the_post_thumbnail_url( $post, 'thumbnail' ) . '" /></a>';
 	} 
 	?>
 
