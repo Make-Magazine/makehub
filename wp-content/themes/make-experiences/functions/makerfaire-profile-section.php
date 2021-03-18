@@ -63,13 +63,26 @@ function makerfaire_info_content() {
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
+    echo '<div class="item-grid">';
     foreach ($entries as $entry) {
-        echo '<h2>' . html_entity_decode($entry['faire_name']) . '</h2>' .
-        '<h3><a target="_blank" href="https://makerfaire.com/maker/entry/' . $entry['entity_id'] . '/">' . html_entity_decode($entry['presentation_title']) . '</a></h3>' .
-        '<img style="width:200px;height:auto;padding-right:20px;" src="' . $entry['project_photo'] . '" align="left" />' .
-        html_entity_decode($entry['desc_short']) .
-        '<div style="clear:both"></div><br/><br/>';
+        //new
+        echo '<div class="item-wrapper">
+		<a href="https://' . html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '/maker/entry/' . $entry['entity_id'] . '" target="_blank">
+                    <article class="item-article">
+                        <div class="item-info">
+                            <div clas="top-line">' .
+                                '<h3>' . html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</h3>' .
+                                 html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . 
+                            '</div>' .
+                        '</div>
+			<div class="item-image" style="background-image:url(' . $entry['project_photo'] . ')";>
+                            <div class="item-description">' . html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</div>
+			</div>
+                    </article>
+		</a>
+            </div>';
     }
+    echo '</div>';
 
     //pull in global faires now
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
@@ -92,7 +105,7 @@ function makerfaire_info_content() {
     echo '<div class="item-grid">';
     foreach ($entries as $entry) {
         //get faire name
-        $faire_sql = "SELECT option_value FROM `wp_".$entry['blog_id']."_options` where option_name = 'blogname'";
+        $faire_sql = "SELECT option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname'";
         $result = $mysqli->query($faire_sql);
         $value = $result->fetch_array(MYSQLI_NUM);
         $faire_name = is_array($value) ? $value[0] : html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8');
@@ -100,11 +113,11 @@ function makerfaire_info_content() {
 		<a href="https://' . html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '/maker/entry/' . $entry['entity_id'] . '" target="_blank">
                     <article class="item-article">
                         <div class="item-info">
-                            <div clas="top-line">' . 
-                                '<h3>' . html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</h3>' .
-                                $faire_name . ' ' . $entry['faire_year'] .
-                            '</div>' .
-                        '</div>
+                            <div clas="top-line">' .
+        '<h3>' . html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</h3>' .
+        $faire_name . ' ' . $entry['faire_year'] .
+        '</div>' .
+        '</div>
 			<div class="item-image" style="background-image:url(' . $entry['project_photo'] . ')";>
                             <div class="item-description">' . html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</div>
 			</div>
