@@ -80,7 +80,8 @@ function makerfaire_info_content() {
     //pull maker information from database.    
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
-            . '     wp_mf_entity.status, wp_mf_entity.faire as faire_name, wp_mf_entity.project_photo, wp_mf_entity.desc_short '
+            . '     wp_mf_entity.status, wp_mf_entity.faire as faire_name, wp_mf_entity.project_photo, wp_mf_entity.desc_short,'
+            . '     wp_mf_entity.faire_year '
          . 'FROM `wp_mf_maker` '
          . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
          . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '         
@@ -94,7 +95,7 @@ function makerfaire_info_content() {
 				<a href="https://'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'/maker/entry/'.$entry['entity_id'].'" target="_blank">
 					<article class="item-article">
 						<div class="item-info">
-							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</div>'.                 
+							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' '.$entry['faire_year'].'</div>'.                 
 							'<h3>'.html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</h3>
 						</div>
 						<div class="item-image" style="background-image:url('.$entry['project_photo'].')";>
