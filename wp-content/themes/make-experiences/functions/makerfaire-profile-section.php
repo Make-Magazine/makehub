@@ -93,7 +93,7 @@ function makerfaire_info_content() {
     foreach ($entries as $entry) {
         //get faire name
         $faire_sql = "SELECT option_value FROM `wp_".$entry['blog_id']."_options` where option_name = 'blogname'";
-        $result = $mysqli->query($sql);
+        $result = $mysqli->query($faire_sql);
         $value = $result->fetch_array(MYSQLI_NUM);
         $faire_name = is_array($value) ? $value[0] : html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8');
         echo '<div class="item-wrapper">
