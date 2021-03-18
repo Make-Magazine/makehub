@@ -64,7 +64,7 @@ function makerfaire_info_content() {
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
     foreach ($entries as $entry) {
-        echo '<h2>'.html_entity_decode($entry['faire_name']).' - Entry '.$entry['entity_id'].'</h2>'.                 
+        echo '<h2>'.html_entity_decode($entry['faire_name']).'</h2>'.                 
                 '<h3><a target="_blank" href="https://makerfaire.com/maker/entry/'.$entry['entity_id'].'/">'.html_entity_decode($entry['presentation_title']).'</a></h3>'.
                 '<img style="width:200px;height:auto;padding-right:20px;" src="'.$entry['project_photo'].'" align="left" />'.
                 html_entity_decode($entry['desc_short']).
@@ -94,7 +94,7 @@ function makerfaire_info_content() {
 				<a href="https://'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'/maker/entry/'.$entry['entity_id'].'" target="_blank">
 					<article class="item-article">
 						<div class="item-info">
-							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').' - Entry '.$entry['entity_id'].'</div>'.                 
+							<div clas="top-line">'.html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</div>'.                 
 							'<h3>'.html_entity_decode($entry['presentation_title'], ENT_QUOTES | ENT_XML1, 'UTF-8').'</h3>
 						</div>
 						<div class="item-image" style="background-image:url('.$entry['project_photo'].')";>
