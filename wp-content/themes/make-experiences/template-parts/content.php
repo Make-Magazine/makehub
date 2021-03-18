@@ -10,6 +10,22 @@
 
 <?php 
 global $post;
+
+// Build an array of all images associated with the post to create a gallery out of
+$post_image_ids = array();
+array_push($post_image_ids, get_post_thumbnail_id());
+for ($x = 1; $x < 7; $x++) {
+    if (get_field("image_" . $x)) {
+        // if fresh from the form, this comes in as an array, but for some reason once edited it comes in as a number
+        if (is_array(get_field("image_" . $x))) {
+            array_push($post_image_ids, get_field("image_" . $x)["ID"]);
+        } else {
+            array_push($post_image_ids, get_field("image_" . $x));
+        }
+    }
+}
+$post_image_ids_string = implode(', ', $post_image_ids);
+
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -131,15 +147,17 @@ global $post;
 				<?php get_template_part( 'template-parts/entry-meta' ); ?>
 			<?php endif; ?>
 
-			<?php if ( is_single() && ! is_related_posts() ) { ?>
+			<?php // HERE IS OUR BOY, PUT THE IMAGE GALLERY HERE
+			 	if ( is_single() && ! is_related_posts() ) { ?>
 				<?php if ( has_post_thumbnail() ) { ?>
-					<figure class="entry-media entry-img bb-vw-container1">
-						<?php if ( !empty( $featured_img_style ) && $featured_img_style == "full-fi" ) {
-							the_post_thumbnail( 'large', array( 'sizes' => '(max-width:768px) 768px, (max-width:1024px) 1024px, (max-width:1920px) 1920px, 1024px' ) );
-						} else {
-							the_post_thumbnail( 'large' ); 
-						} ?>
-					</figure>
+					<div class="gallery-wrapper">
+					<?php
+						echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="small" order="DESC" orderby="ID"]');
+						if (count($post_image_ids) != 1) {
+							?>
+							<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
+						<?php } ?>
+					</div>
 				<?php } ?>
 			<?php } ?>
 

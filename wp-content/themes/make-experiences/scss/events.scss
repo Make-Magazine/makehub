@@ -1,0 +1,100 @@
+.single-espresso_events {
+	.gallery-wrapper {
+		padding-top: 30px;
+		display: flex;
+		flex-direction: column;
+		position: relative;
+		.psgal {
+			display: flex;
+			justify-content: center;
+			width: 100% !important;
+			max-height: 400px;
+			.msnry_item {
+				width: 28%;
+				height: 400px;
+				display: none;
+				a {
+					border-radius: 10px;
+					overflow: hidden;
+					height: 100%;
+					img {
+						object-fit: cover;
+						height: 100%;
+						min-height: -moz-available;
+						min-height: -webkit-fill-available; 
+						min-height: fill-available;
+						width: 100%;
+					}
+				}
+				&:nth-of-type(1), &:nth-of-type(2), &:nth-of-type(3), &:nth-of-type(4), &:nth-of-type(5) { display: inline-block; }
+				&:nth-of-type(2), &:nth-of-type(3) {
+					width: 16%;
+					height: 200px;
+				}
+				&:nth-of-type(3) {
+					margin-top: 200px;
+					margin-left: -28%;
+				}
+				&:nth-of-type(4) {
+					top: 0px !important;
+					margin-left: 44%;
+				}
+				&:nth-of-type(5) {
+					top: 0px !important;
+					left: auto !important;
+					right: 0px;
+				}
+				@media screen and (max-width: 992px) {
+					height: 350px;
+					width: 40%;
+					&:nth-of-type(2), &:nth-of-type(3) {
+						height: 175px;
+						width: 20%;
+					}
+					&:nth-of-type(3) {
+						margin-top: 0px;
+						margin-left: 0%;
+					}
+					&:nth-of-type(4) {
+						margin-left: auto;
+						right: 0px;
+					}
+					&:nth-of-type(5) { display: none; }
+				}
+				@media screen and (max-width: 768px) {
+					height: 300px;
+					width: 65%;
+					&:nth-of-type(2), &:nth-of-type(3) {
+						height: 150px;
+						width: 35%;
+						top: 0px !important;
+						right: 0px;
+						left: auto !important;
+					}
+					&:nth-of-type(3) {
+						margin-top: 150px;
+						margin-left: -35%;
+					}
+					&:nth-of-type(4) { display: none; }
+				}
+				@media screen and (max-width: 480px) {
+					height: 200px;
+					width: 100%;
+					&:nth-of-type(2), &:nth-of-type(3) {
+						display: none;
+					}
+				}
+			}
+
+		}
+		#showAllGallery {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+		}
+	}
+	@media screen and (max-width: 1200px) {
+		#secondary { display: none; }
+	}
+}
+
