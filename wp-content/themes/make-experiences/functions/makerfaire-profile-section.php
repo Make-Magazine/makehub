@@ -67,7 +67,7 @@ function makerfaire_info_content() {
     foreach ($entries as $entry) {
         //new
         echo '<div class="item-wrapper">
-		<a href="https://' . html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '/maker/entry/' . $entry['entity_id'] . '" target="_blank">
+		<a href="https://makerfaire.com/maker/entry/' . $entry['entity_id'] . '" target="_blank">
                     <article class="item-article">
                         <div class="item-info">
                             <div clas="top-line">' .
