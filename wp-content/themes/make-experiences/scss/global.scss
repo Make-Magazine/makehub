@@ -119,13 +119,15 @@ body.admin-bar {
 }
 
 button, input[type="submit"] {
-	color: #1987C7;
-	border: thin solid #1987C7;
+	color: #fff;
+	border: thin solid $color-blue;
 	padding: 10px 30px;
-	background-color: #fff;
+	background-color: $color-blue;
+	border-radius: 2px !important;
 	&:hover, &:active, &:focus {
-		background-color: #1987C7;
-		color: #fff;
+		background-color: #fff;
+		color: $color-blue;
+		box-shadow: none;
 	}
 }
 
