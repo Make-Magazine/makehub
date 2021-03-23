@@ -54,7 +54,8 @@ function makerfaire_info_content() {
     //pull maker information from database.    
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
-            . '     wp_mf_entity.status, wp_mf_entity.faire, wp_mf_entity.project_photo, wp_mf_entity.desc_short, wp_mf_faire.faire_name '
+            . '     wp_mf_entity.status, wp_mf_entity.faire, wp_mf_entity.project_photo, wp_mf_entity.desc_short, '
+            . '     wp_mf_faire.faire_name, year(wp_mf_faire.start_dt) as faire_year '
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
@@ -71,8 +72,9 @@ function makerfaire_info_content() {
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
                             'faire_name'    =>  $faire_name, 
-                            'year'          =>  '',
-                            'photo'         =>  $entry['project_photo'], 
+                            'year'          =>  $entry['faire_year'],
+                            'photo'         =>  $entry['project_photo'],
+                            'faire_logo'     =>  "https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg",
                             'desc_short'    =>  $entry['desc_short']);        
     }   
 
@@ -97,34 +99,53 @@ function makerfaire_info_content() {
     
     foreach ($entries as $entry) {
         //get faire name
-        $faire_sql = "SELECT option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname'";
-        $result = $mysqli->query($faire_sql);
-        $value = $result->fetch_array(MYSQLI_NUM);
+        $faire_sql = "SELECT option_name, option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname' OR option_name = 'theme_mods_MiniMakerFaire'";
+        $faire_data = $mysqli->query($faire_sql) or trigger_error($mysqli->error . "[$faire_sql]");    
+        $faire_name = '';
+        $faire_logo = '';
+        foreach($faire_data as $fdata){
+            if($fdata['option_name']=='blogname')
+                $faire_name = $fdata['option_value'];
+            if($fdata['option_name']=='theme_mods_MiniMakerFaire'){
+                $theme_mods_MiniMakerFaire = unserialize($fdata['option_value']);
+                //check if image exists
+                $imgSize = getimagesize($theme_mods_MiniMakerFaire['header_logo']);
+                //if it does, set it as the alternate image, else use the makey pedastal
+                $faire_logo = ($imgSize==FALSE?"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg":$theme_mods_MiniMakerFaire['header_logo']);
+            }
+        }       
         
-        $faire_name = is_array($value) ? $value[0] : html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8');
-        
-        $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
+        $entryData[] = array( 'entry_id'    =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  $entry['faire_name'],
-                            'faire_name'    =>  $faire_name, 
+                            'faire_name'    =>  $faire_name . ' ' .$entry['faire_year'], 
                             'year'          =>  $entry['faire_year'],
                             'photo'         =>  $entry['project_photo'], 
+                            'faire_logo'    =>  $faire_logo,
                             'desc_short'    =>  $entry['desc_short']);        
     }   
     
+    $entryDataUnique = array_unique($entryData, SORT_REGULAR);    
+    //sort entry data by year, newest first
+    usort($entryDataUnique, function($a, $b) {
+        return -($a['year'] <=> $b['year']);
+    });
+    
     //build outpupt
     echo '<div class="item-grid">';
-    foreach($entryData as $entry){
-        $handle = @fopen($entry['photo'], 'r');
-        $photo = ($handle?$entry['photo']:"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg");    
-        $photo = $entry['photo'];
+    
+    
+    foreach($entryDataUnique as $entry){
+        $imgSize = getimagesize($entry['photo']);
+        $photo = ($imgSize==FALSE?$entry['faire_logo']:$entry['photo']);
+        
         echo '<div class="item-wrapper">
 		<a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">
                     <article class="item-article">
                         <div class="item-info">
                             <div clas="top-line">' .
                                 '<h3>' . html_entity_decode($entry['title'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</h3>' .
-                                 html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . (isset($entry['faire_year'])?' - '.$entry['faire_year']:'').
+                                 html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') .
                             '</div>' .
                         '</div>
                          
