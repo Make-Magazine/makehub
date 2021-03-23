@@ -58,14 +58,16 @@ function makerfaire_info_content() {
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
+            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '            
             . 'left outer join wp_mf_faire on wp_mf_entity.faire=wp_mf_faire.faire '
-            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" '
+            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" '
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
 
     foreach ($entries as $entry) {
-        $entryData = array( 'entry_id'      =>  $entry['entity_id'], 
+        $faire_name = ($entry['faire_name']!='NULL'?$entry['faire_name']:($entry['faire']=='NMF16'?'National Maker Faire 2016':''));
+        $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
                             'faire_name'    =>  $entry['faire_name'], 
@@ -80,6 +82,7 @@ function makerfaire_info_content() {
     if ($mysqli->connect_errno) {
         echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }
+    
     //pull maker information from database.    
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
@@ -97,9 +100,10 @@ function makerfaire_info_content() {
         $faire_sql = "SELECT option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname'";
         $result = $mysqli->query($faire_sql);
         $value = $result->fetch_array(MYSQLI_NUM);
+        
         $faire_name = is_array($value) ? $value[0] : html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8');
         
-        $entryData = array( 'entry_id'      =>  $entry['entity_id'], 
+        $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  $entry['faire_name'],
                             'faire_name'    =>  $faire_name, 
@@ -107,10 +111,14 @@ function makerfaire_info_content() {
                             'photo'         =>  $entry['project_photo'], 
                             'desc_short'    =>  $entry['desc_short']);        
     }   
-    
+    error_log(print_r($entryData,TRUE));    
     //build outpupt
     echo '<div class="item-grid">';
     foreach($entryData as $entry){
+        $handle = @fopen($entry['photo'], 'r');
+        $photo = ($handle?$entry['photo']:"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg");
+        error_log(print_r($handle,TRUE));
+        $photo = $entry['photo'];
         echo '<div class="item-wrapper">
 		<a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">
                     <article class="item-article">
@@ -120,11 +128,10 @@ function makerfaire_info_content() {
                                  html_entity_decode($entry['faire_name'], ENT_QUOTES | ENT_XML1, 'UTF-8') . (isset($entry['faire_year'])?' - '.$entry['faire_year']:'').
                             '</div>' .
                         '</div>
-                         <object style="height: 65%; width: auto;" data="https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg" type="image/png">
-                            <div class="item-image" style="background-image:url(' . $entry['photo'] . ')";>
-                                <div class="item-description">' . html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</div>
-                            </div>
-                        </object>
+                         
+                        <div class="item-image" style="background-image:url(' . $photo . ')";>
+                            <div class="item-description">' . html_entity_decode($entry['desc_short'], ENT_QUOTES | ENT_XML1, 'UTF-8') . '</div>
+                        </div>                       
                     </article>
 		</a>
             </div>';
