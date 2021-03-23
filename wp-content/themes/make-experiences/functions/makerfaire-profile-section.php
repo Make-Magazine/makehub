@@ -65,8 +65,8 @@ function makerfaire_info_content() {
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
     $entryData = array();
 
-    foreach ($entries as $entry) {
-        $faire_name = ($entry['faire_name']!='NULL'?$entry['faire_name']:($entry['faire']=='NMF16'?'National Maker Faire 2016':''));
+    foreach ($entries as $entry) {        
+        $faire_name = ($entry['faire']=='NMF16'?'National Maker Faire 2016': $entry['faire_name']);
         $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
@@ -111,13 +111,12 @@ function makerfaire_info_content() {
                             'photo'         =>  $entry['project_photo'], 
                             'desc_short'    =>  $entry['desc_short']);        
     }   
-    error_log(print_r($entryData,TRUE));    
+    
     //build outpupt
     echo '<div class="item-grid">';
     foreach($entryData as $entry){
         $handle = @fopen($entry['photo'], 'r');
-        $photo = ($handle?$entry['photo']:"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg");
-        error_log(print_r($handle,TRUE));
+        $photo = ($handle?$entry['photo']:"https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg");    
         $photo = $entry['photo'];
         echo '<div class="item-wrapper">
 		<a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">
