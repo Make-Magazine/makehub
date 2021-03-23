@@ -60,24 +60,24 @@ function makerspace_info_content() {
             }
         }        
         
-        //id, label, type, other
+        //id, label, type, other fields to pull in as values to display
         $fieldArray = array(                
-                array('15', 'What days is the makerspace open?', 'checkbox',''),
-                array('96', 'Is your space located in a:', 'checkbox','97'),
-                array('98', 'Does it cost money to use this makerspace?',	'yesno','99','100'),
+                array('15', 'What days is the makerspace open?', 'checkbox', ''),
+                array('96', 'Is your space located in a:', 'checkbox', '97'),
+                array('98', 'Does it cost money to use this makerspace?', 'yesno', '99', '100'),
                 array('101', 'What ages are allowed to use the makerspace?', 'checkbox',''),
-                array('102', 'Does the makerspace offer safety and basic use training?', 'radio',''),
+                array('102', 'Does the makerspace offer safety and basic use training?', 'radio', ''),
                 array('103', 'What kind of classes does the makerspace offer?', 'checkbox', '104'),
-                array('105', 'Does the makerspace provide safety equipment (goggles, welding gloves & jackets, ear protection, etc.)?', 'radio',''),
-                array('107', 'Does the makerspace have a kitchen for use by members?', 'radio', ''),
-                array('123', 'Does the makerspace offer:', 'checkbox', '124'),
+                array('105', 'This Makerspace provide safety equipment (goggles, welding gloves & jackets, ear protection, etc.)?', 'radio', ''),
+                array('107', 'Does this Makerspace have a kitchen for use by members?', 'radio', ''),
+                array('123', 'This Makerspace offers:', 'checkbox', '124'),
                 array('125', 'Tools/materials provided for:', 'checkbox', '126'),
-                array('68', 'Woodworking Equipment:', 'yesno','109','110'),
-                array('67', 'Metalworking Equipment:', 'yesno','111','112'),
-                array('113', 'Welding Equipment:', 'yesno','114','115'),
-                array('65', 'Electronic Equipment:', 'yesno','116','117'),
-                array('74', 'Textile Equipment:', 'yesno','118','119'),
-                array('120', 'Welding Equipment:', 'yesno','121','122'),
+                array('68', 'Woodworking Equipment:', 'yesno', '109', '110'),
+                array('67', 'Metalworking Equipment:', 'yesno','111', '112'),
+                array('113', 'Welding Equipment:', 'yesno', '114', '115'),
+                array('65', 'Electronic Equipment:', 'yesno', '116', '117'),
+                array('74', 'Textile Equipment:', 'yesno', '118', '119'),
+                array('120', 'Welding Equipment:', 'yesno', '121', '122'),
             );
         
         echo '<div class="ms_info">';
