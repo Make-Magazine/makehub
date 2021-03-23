@@ -70,7 +70,7 @@ function makerfaire_info_content() {
         $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
-                            'faire_name'    =>  $entry['faire_name'], 
+                            'faire_name'    =>  $faire_name, 
                             'year'          =>  '',
                             'photo'         =>  $entry['project_photo'], 
                             'desc_short'    =>  $entry['desc_short']);        
