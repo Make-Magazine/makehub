@@ -10,16 +10,16 @@
 			width: 25%;
 			height: 360px;
 		}
-		@media (min-width:768px) and (max-width:1160px) {
+		@media (min-width:941px) and (max-width:1159px) {
 			width: 33.33333%;
 			height: 340px;
 		}
-		@media (max-width:767px) {
+		@media (max-width:940px) {
 			width: 50%;
 			height: 360px;
 		}
 		@media (max-width:500px) {
-			width: 50%;
+			width: 100%;
 			height: 360px;
 		}
 		a {
