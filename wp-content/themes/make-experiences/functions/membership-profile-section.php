@@ -47,15 +47,19 @@ function membership_info_content() {
 
 	$customer = \Stripe\Customer::all(["email" => $user_email]);
 	$customerID = $customer->data[0]['id'];
-
-	$session = \Stripe\BillingPortal\Session::create([
-	  'customer' => $customerID,
-	  'return_url' => 'https://makehub.local/account',
-	]);
+	if(isset($customer)) {
+		$session = \Stripe\BillingPortal\Session::create([
+		  'customer' => $customerID,
+		  'return_url' => 'https://makehub.local/account',
+		]);
+	}
 	
 	echo '<div class="membership-tab-wrapper">';
 		echo '<h1>Current Make: Membership</h1>';
-		echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Manage Subscription</a>';
+		// var_dump(Ihc_Db::get_user_levels($user_id, $attr['exclude_expire']));
+		if(isset($customer)) {
+			echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+		}
 		if (!class_exists('ihcAccountPage')){
 			require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
 		}
