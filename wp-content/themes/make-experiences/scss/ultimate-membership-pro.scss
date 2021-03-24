@@ -7,6 +7,19 @@
 		top: 0px;
 		right: 0px;
 	}
+	.iump-wrapp-listing-levels {
+		text-align: center;
+		margin-botton: 15px;
+		.iump-listing-levels-label {
+			background-color : $color-light-blue;
+			padding: 10px 20px;
+			font-size: 18px;
+			cursor: default;
+			&::before {
+				content: "Current Level: ";
+			}
+		}
+	}
 	.ihc-user-page-top-ap-wrapper {
 		display: none;
 		width: 100%;
