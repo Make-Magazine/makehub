@@ -48,7 +48,7 @@ function membership_info_content() {
 	$customerID = $customer->data[0]['id'];
 	
 	echo '<div class="membership-tab-wrapper">';
-		echo '<h1>Current Make: Membership</h1>';	
+		echo '<h1>Make: Membership Details</h1>';	
 		//var_dump(Ihc_Db::get_user_levels($user_id, true));
 		echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");
 		if( !is_null($customerID) ) { // if customer exists in stripe
