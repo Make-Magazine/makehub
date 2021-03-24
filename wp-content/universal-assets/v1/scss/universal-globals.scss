@@ -82,7 +82,7 @@ a { // don't let genesis molest our links
 	padding: 0px 15px;
 	border: solid 1px #005e9a;
 	&:visited, &:active { color: #fff; }
-	&:hover {
+	&:hover, &:focus {
 	    background: #fff;
         color: #005e9a;
 	}
@@ -91,14 +91,14 @@ a { // don't let genesis molest our links
 	@extend .universal-btn;
 	background-color: #EA002A;
 	border-color: #EA002A;
-	&:hover {
+	&:hover, &:focus {
 		color: #EA002A;
 	}
 }
 .universal-btn-navy {
 	@extend .universal-btn;
 	background-color: #151733;
-	&:hover {
+	&:hover, &:focus {
 		color: #151733;
 		border-color: #151733;
 	}
@@ -108,7 +108,7 @@ a { // don't let genesis molest our links
 	background-color: #FFF;
 	border-color: #005e9a;
 	color: #005e9a !important;
-	&:hover {
+	&:hover, &:focus {
 		color: #FFF !important;
 		background-color: #005e9a;
 	}
