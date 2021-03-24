@@ -50,7 +50,7 @@ function membership_info_content() {
 	if(isset($customer)) {
 		$session = \Stripe\BillingPortal\Session::create([
 		  'customer' => $customerID,
-		  'return_url' => 'https://makehub.local/account',
+		  'return_url' => 'https://stagemakehub.wpengine.com/members/' . $user_info->display_name . "/membership",
 		]);
 	}
 	
