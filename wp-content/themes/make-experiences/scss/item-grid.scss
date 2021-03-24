@@ -6,20 +6,20 @@
 		width: 20%;
 		height: 360px;
 		margin-bottom: 1.5em;
-		@media (min-width:1099px) and (max-width:1399px) {
+		@media (min-width:1160px) and (max-width:1399px) {
 			width: 25%;
 			height: 360px;
 		}
-		@media (min-width:768px) and (max-width:1099px) {
+		@media (min-width:941px) and (max-width:1159px) {
 			width: 33.33333%;
 			height: 340px;
 		}
-		@media (max-width:767px) {
+		@media (max-width:940px) {
 			width: 50%;
 			height: 360px;
 		}
 		@media (max-width:500px) {
-			width: 50%;
+			width: 100%;
 			height: 360px;
 		}
 		a {
@@ -96,6 +96,7 @@
 					h3 {
 						$lh: 20px;
 						$max-lines: 4;
+						width: 100%;
 						margin: auto 0 ;
 						overflow: hidden;
 						word-break: break-word;
@@ -105,7 +106,7 @@
 						line-height: $lh;
 						position: relative;
 						padding-right: 15px;
-						max-height: calc($lh * $max-lines);
+						max-height: calc(#{$lh} * #{$max-lines});
 						&::before {
 							content: "...";
 							position: absolute;
@@ -117,7 +118,7 @@
 							content: "";
 							position: absolute;
 							right: 0;
-							width: 1.5rem;
+							width: 1.2rem;
 							height: 2rem;
 							background: white;
 						}
