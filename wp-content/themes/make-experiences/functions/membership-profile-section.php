@@ -44,26 +44,29 @@ function membership_info_content() {
 
 	require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
 	\Stripe\Stripe::setApiKey('sk_test_2p3NPkMLrR81uL09daZDxnMg');
-
 	$customer = \Stripe\Customer::all(["email" => $user_email]);
 	$customerID = $customer->data[0]['id'];
-	if(isset($customer)) {
-		$session = \Stripe\BillingPortal\Session::create([
-		  'customer' => $customerID,
-		  'return_url' => 'https://stagemakehub.wpengine.com/members/' . $user_info->display_name . "/membership",
-		]);
-	}
 	
 	echo '<div class="membership-tab-wrapper">';
-		echo '<h1>Current Make: Membership</h1>';
-		// var_dump(Ihc_Db::get_user_levels($user_id, $attr['exclude_expire']));
-		if(isset($customer)) {
+		echo '<h1>Current Make: Membership</h1>';	
+		//var_dump(Ihc_Db::get_user_levels($user_id, true));
+		echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");
+		if( !is_null($customerID) ) { // if customer exists in stripe
+			$session = \Stripe\BillingPortal\Session::create([
+			  'customer' => $customerID,
+			  'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->display_name . "/membership",
+			]);
 			echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';
+			if (!class_exists('ihcAccountPage')){
+				require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
+			}
+			$obj = new ihcAccountPage($attr);
+			echo $obj->print_page("orders");
+		} else {
+			echo '<p>Upgrade your subscription for digital Make: Magazine access and exclusive videos.</p>';
+			echo '<a href="/join" class="btn universal-btn">Upgrade your Subscription</a>';
 		}
-		if (!class_exists('ihcAccountPage')){
-			require_once IHC_PATH . 'classes/ihcAccountPage.class.php';
-		}
-		$obj = new ihcAccountPage($attr);
-		echo $obj->print_page("orders");
+		
 	echo '</div>';
 }
+
