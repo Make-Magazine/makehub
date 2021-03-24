@@ -1,3 +1,15 @@
+.site-content .bb-grid {
+	margin: 10px;
+	&.site-content-grid {
+		margin-left: -10px;
+		margin-right: -10px;
+	}
+}
+
+.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #primary, body.buddypress.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #page #primary {
+	max-width: none;
+}
+
 /* makerspace information */
 .ms_info .fieldLabel {
     font-weight:bold;
