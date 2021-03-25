@@ -160,7 +160,8 @@ a[data-activity-type=new_blog_posts] {
 			padding: 3px;
 			font-weight: normal;
 			font-size: 16px;
-			
+			float: left;
+			margin-top: 0px;
 		}
 	}
 	// hide the vimeogrpahy button, cuz it doesn't work
@@ -187,9 +188,15 @@ a[data-activity-type=new_blog_posts] {
 	.yz-profile-header {
 		.yz-header-cover {
 			height: 180px;
+			.yz-inner-content {
+				display: flex;
+				align-items: center;
+				height: 180px;
+			}
 			.yz-profile-photo {
 				height: 100px;
 				width: 100px;
+				margin-left: 30px;
 				@media screen and (max-width: 768px) {
 					margin: 0px;
 					margin-left: 15px;
@@ -197,15 +204,21 @@ a[data-activity-type=new_blog_posts] {
 				}
 			}
 			.yz-head-content { 
-				margin-left: 125px;
+				margin-left: 65px;
+				background: rgba(255,255,255,.6);
+				width: 300px;
+				text-align: center;
+				border-radius: 10px;
 				.yz-name h2 {
+					text-transform: capitalize;
+					margin: 10px;
 					.yz-account-verified, .yz-user-status { display: none; }
 					&::after {
 						content: "'s Blog";
 					}
 				}
 			}
-			.yz-user-statistics {
+			.yz-user-statistics, .yz-usermeta {
 				display: none;
 			}
 		}

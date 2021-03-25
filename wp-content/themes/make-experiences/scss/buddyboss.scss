@@ -10,6 +10,15 @@
 	max-width: none;
 }
 
+.bs-styled-radio + .bb-radio-label, .bs-styled-radio + label {
+	display: flex;
+	align-items: center;
+	&::before {
+		left: -20px;
+		margin-right: -10px;
+	}
+}
+
 /* makerspace information */
 .ms_info .fieldLabel {
     font-weight:bold;
