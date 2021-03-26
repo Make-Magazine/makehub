@@ -46,7 +46,7 @@ function dashboard_info_content() {
 	
 	// Maker Shed Orders widget
 	$api_url = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
-	$customer_api =  $api_url . '/admin/customers/search.json?query=email:"' . $user_email /*'ken@nmhu.edu'*/ .'"&fields=id';
+	$customer_api =  $api_url . '/admin/customers/search.json?query=email:"' . /*$user_email*/ 'ken@nmhu.edu' .'"&fields=id';
 	$customer_content = basicCurl($customer_api);
 	if( isset($customer_content) && !empty($customer_content) ) {
 		// Decode the JSON in the file
@@ -55,7 +55,7 @@ function dashboard_info_content() {
 		$orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
 		$orders_content = basicCurl($orders_api);
 		$orderJson = json_decode($orders_content, true);
-		$return .= '<div class="dashboard-box">
+		$return .= '<div class="dashboard-box expando-box">
 					  <h4>Makershed Orders</h4>
 					  <ul>';
 		foreach($orderJson['orders'] as $order) {
