@@ -95,6 +95,9 @@
 						padding: 0px 30px;
 						margin: 0 10px;
 						min-width: calc(100% - 10px);
+						&::before, &::after {
+							display: none;
+						}
 					}
 					label:hover {
 						background-color: #ccdfeb;
@@ -140,6 +143,9 @@
 						justify-content: center;
 						align-items: center;
 						padding: 20px;
+						&::before, &::after {
+							display: none;
+						}
 					}
 					label:hover {
 						border-color: #111;
@@ -243,8 +249,10 @@
 }
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
-    border-bottom: solid #fff 10px;
-    margin: 0px;
+    margin-bottom: -35px;
+	margin-top: -100px;
+	background: #fcfcfc;
+	position: relative;
     .event_form {
         padding: 0px 15px;
 		font-size: 18px;

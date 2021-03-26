@@ -1,4 +1,4 @@
-widget-area:not(.widget-area-secondary) {
+body .site-content-grid .widget-area:not(.widget-area-secondary) {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 350px;
     flex: 0 0 350px;
@@ -9,6 +9,7 @@ widget-area:not(.widget-area-secondary) {
 	h2.widget-title {
 		font-size: 20px;
 		text-transform: capitalize;
+		a { color: $color-grey; }
 	}
 	select {
 		width: 100%;
@@ -235,13 +236,13 @@ widget-area:not(.widget-area-secondary) {
 	.mf-logo {
 		padding: 0 15px;
 	}
-	.nv-block-title {
-		background: #000;
+	.widget-title {
 		text-transform: uppercase;
 		display: flex;
 		flex-direction: column;
 		height: auto;
 		padding-top: 10px;
+		margin-bottom: 15px;
 		font-size: 1.65vw;
 		@media screen and ( min-width: 1660px ) {
 			font-size: 23px;
@@ -256,13 +257,13 @@ widget-area:not(.widget-area-secondary) {
 			margin: 0px;
 			li {
 				list-style: none;
-				padding: 10px 15px;
+				padding: 20px 15px 10px;
 				text-align: left;
+				border-top: solid 1px #ccc;
 				@media screen and ( max-width: 982px ) {
 					text-align: center;
 				}
 				a {
-					color: #fff;
 					font-size: 14px;
 					h4 {
 						font-size: 18px;

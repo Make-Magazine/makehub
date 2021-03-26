@@ -1,0 +1,35 @@
+.dashboard-wrapper {
+	display: flex;
+  	flex-wrap: wrap;
+	.dashboard-box {
+		border: solid 1px $color-light-grey;
+		background: #fff;
+		border-radius: 10px;
+		padding: 10px;
+		max-width: 33%;
+		flex: 33%;
+		@media screen and (max-width: 982px) {
+			max-width: 50%;
+			flex: 50%;
+		}
+		@media screen and (max-width: 600px) {
+			max-width: 100%;
+			flex: 100%;
+		}
+		h4 {
+			font-family: 'Roboto Bold';
+			font-size: 22px;
+			margin: 10px 15px 15px !important;
+			padding-bottom: 15px;
+			border-bottom: solid 2px $color-light-grey;
+		}
+		ul {
+			list-style: none;
+			margin-left: 15px;
+			li {
+				margin-bottom: 10px;
+				p { margin: 0px; }
+			}
+		}
+	}
+}
