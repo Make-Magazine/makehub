@@ -61,10 +61,13 @@ function dashboard_info_content() {
 		$orders_content = basicCurl($orders_api);
 		$orderJson = json_decode($orders_content, true);
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4>Makershed Orders</h4>
+					  <h4><img src="'.get_stylesheet_directory().'/images/makershed-logo.jpg" /> Orders</h4>
 					  <ul>';
 		if( isset($orders_content) && !empty($orders_content) ) {
-			$return .= '<li>Looks like you haven\'t place any orders yet... <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>';
+			$return .= '<li>
+							<p>Looks like you haven\'t place any orders yet...</p>
+							<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
+						</li>';
 		}
 		foreach($orderJson['orders'] as $order) {
 			$return .= '<li><p><b><a href="' . $order['order_status_url'] . '">Order #' . $order['id'] . '</a></b></p>';
@@ -88,6 +91,7 @@ function dashboard_info_content() {
         echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }
 	$entryData = array();
+	$mf_portal = false;
 	
 	//pull maker information from mf database.   
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
@@ -102,7 +106,6 @@ function dashboard_info_content() {
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" '
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
-	
 	foreach ($entries as $entry) {        
         $faire_name = ($entry['faire']=='NMF16'?'National Maker Faire 2016': $entry['faire_name']);
         $entryData[] = array( 'entry_id'    =>  $entry['entity_id'], 
@@ -111,6 +114,7 @@ function dashboard_info_content() {
                             'faire_name'    =>  $faire_name, 
                             'year'          =>  $entry['faire_year']);        
     }   
+	if(!empty($entries)) { $mf_portal = true; }
 
     //pull in global faires now
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
@@ -118,7 +122,6 @@ function dashboard_info_content() {
     if ($mysqli->connect_errno) {
         echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }
-
 	//pull maker information from database.    
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
@@ -129,8 +132,7 @@ function dashboard_info_content() {
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" '
             . 'order by entity_id desc';
-    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");    
-    
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]"); 
     foreach ($entries as $entry) {
         //get faire name
         $faire_sql = "SELECT option_name, option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname' OR option_name = 'theme_mods_MiniMakerFaire'";
@@ -145,15 +147,38 @@ function dashboard_info_content() {
     }   
     
     $entryDataUnique = array_unique($entryData, SORT_REGULAR);
-	
 	if( isset($entryDataUnique) && !empty($entryDataUnique) ) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4>Maker Faire Entries</h4>
+					  <h4><img src="'.get_stylesheet_directory().'/images/makerfaire-logo.jpg" /> Entries</h4>
 					  <ul>';
 		foreach ($entryDataUnique as $entry) {          
 			$return .= '<li><p><b><a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">' . $entry['title'] . '</a></b> - ' . $entry['faire_name'] . '</p>';
 		}   
 		$return .= 	   '<li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">Get More Details</a></li>';
+		if($mf_portal == true) {
+			$return .= '<li><a href="https://makerfaire.com/manage-entries/" class="btn universal-btn">Maker Faire Portal</a></li>';
+		}
+		$return .=   '</ul>
+				   </div>';
+	}
+	
+	////////////////////////////////////////
+	//       Makerspace Card Widget       //
+	////////////////////////////////////////
+	
+	$sql = 'SELECT meta_key, meta_value from wp_3_gf_entry_meta '
+			. ' where entry_id = (select entry_id FROM `wp_3_gf_entry_meta` '
+			. '                    WHERE `meta_key` LIKE "141" and meta_value like "'.$user_email.'")';
+	$ms_results = $wpdb->get_results($sql);
+	//var_dump($ms_results);
+	
+	if(!empty($ms_results)) {
+		$return .= '<div class="dashboard-box expando-box">
+					  <h4><img src="'.get_stylesheet_directory().'/images/makerspaces-logo.jpg" /> Details</h4>
+					  <ul>';       
+		$return .= '<li><p><b>' . $ms_results[0]->meta_value . '</b> - <a href="'.$ms_results[1]->meta_value.'" target="_blank">' . $ms_results[1]->meta_value . '</a></p>';
+		$return .= 	   '<li><a href="/members/' . $user_slug . '/makerspace_info/" class="btn universal-btn">Get More Details</a></li>';
+		$return .= 		'<li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>';
 		$return .=   '</ul>
 				   </div>';
 	}
@@ -164,7 +189,7 @@ function dashboard_info_content() {
 	
 	if(isset($user_meta['ihc_user_levels'][0])) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4>Membership Details</h4>
+					  <h4>img src="'.get_stylesheet_directory().'/images/make-logo.png" /Membership Details</h4>
 					  <ul>';
 		$return .= 		'<li>' . do_shortcode("[ihc-membership-card]") . '</li>';
 		//$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
