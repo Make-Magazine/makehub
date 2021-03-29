@@ -8,7 +8,7 @@ function profile_tab_dashboard_info_name() {
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
-    if ($user_id != 0 && wp_get_current_user()->ID == $user_id ) {
+    if ($user_id != 0 && /*wp_get_current_user()->ID == $user_id*/ ) {
         bp_core_new_nav_item(array(
             'name' => 'Dashboard',
             'slug' => 'dashboard',
@@ -96,9 +96,9 @@ function dashboard_info_content() {
             . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" '
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
-	if(isset($entries)) {
+	if( isset($entries) && !empty($entries) ) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4>Maker Faire Entries/h4>
+					  <h4>Maker Faire Entries</h4>
 					  <ul>';
     	$entryData = array();
 		foreach ($entries as $entry) {        
