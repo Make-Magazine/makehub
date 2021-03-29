@@ -1,11 +1,14 @@
 .dashboard-wrapper {
 	display: flex;
   	flex-wrap: wrap;
+	align-items: flex-start;
+	justify-content: space-between;
 	.dashboard-box {
 		border: solid 1px $color-light-grey;
 		background: #fff;
 		border-radius: 10px;
 		padding: 10px;
+		margin-bottom: 15px;
 		max-width: 33%;
 		flex: 33%;
 		@media screen and (max-width: 982px) {
@@ -16,6 +19,14 @@
 			max-width: 100%;
 			flex: 100%;
 		}
+	}
+}
+
+.ihc-membership-card-wrapp {
+	background: $color-light-blue;
+	width: 90%;
+	label {
+		color: $color-red;
 	}
 }
 
