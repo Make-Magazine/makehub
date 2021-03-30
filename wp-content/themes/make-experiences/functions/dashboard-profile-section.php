@@ -61,11 +61,11 @@ function dashboard_info_content() {
 		$orders_content = basicCurl($orders_api);
 		$orderJson = json_decode($orders_content, true);
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory().'/images/makershed-logo.jpg" /> Orders</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makershed-logo.jpg" /> Orders</h4>
 					  <ul>';
 		if( isset($orders_content) && !empty($orders_content) ) {
 			$return .= '<li>
-							<p>Looks like you haven\'t place any orders yet...</p>
+							<p>Looks like you haven\'t place any orders yet...</p><br />
 							<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
 						</li>';
 		}
@@ -149,7 +149,7 @@ function dashboard_info_content() {
     $entryDataUnique = array_unique($entryData, SORT_REGULAR);
 	if( isset($entryDataUnique) && !empty($entryDataUnique) ) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory().'/images/makerfaire-logo.jpg" /> Entries</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makerfaire-logo.jpg" /> Entries</h4>
 					  <ul>';
 		foreach ($entryDataUnique as $entry) {          
 			$return .= '<li><p><b><a href="https://'.$entry['faire_url'].'/maker/entry/' . $entry['entry_id'] . '" target="_blank">' . $entry['title'] . '</a></b> - ' . $entry['faire_name'] . '</p>';
@@ -174,7 +174,7 @@ function dashboard_info_content() {
 	
 	if(!empty($ms_results)) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory().'/images/makerspaces-logo.jpg" /> Details</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makerspaces-logo.jpg" /> Details</h4>
 					  <ul>';       
 		$return .= '<li><p><b>' . $ms_results[0]->meta_value . '</b> - <a href="'.$ms_results[1]->meta_value.'" target="_blank">' . $ms_results[1]->meta_value . '</a></p>';
 		$return .= 	   '<li><a href="/members/' . $user_slug . '/makerspace_info/" class="btn universal-btn">Get More Details</a></li>';
@@ -189,7 +189,7 @@ function dashboard_info_content() {
 	
 	if(isset($user_meta['ihc_user_levels'][0])) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4>img src="'.get_stylesheet_directory().'/images/make-logo.png" /Membership Details</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/make-logo.png" /Membership Details</h4>
 					  <ul>';
 		$return .= 		'<li>' . do_shortcode("[ihc-membership-card]") . '</li>';
 		//$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
