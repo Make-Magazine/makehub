@@ -41,7 +41,7 @@ function dashboard_info_content() {
     //get the users email
     $user_info = get_userdata($user_id);
     $user_email = $user_info->user_email;
-	$user_slug = $user_info->slug;
+	$user_slug = $user_info->user_nicename;
 	$user_meta = get_user_meta($user_id);
 	
 	$return = '<div class="dashboard-wrapper">';
@@ -138,7 +138,10 @@ function dashboard_info_content() {
         $faire_sql = "SELECT option_name, option_value FROM `wp_" . $entry['blog_id'] . "_options` where option_name = 'blogname' OR option_name = 'theme_mods_MiniMakerFaire'";
         $faire_data = $mysqli->query($faire_sql) or trigger_error($mysqli->error . "[$faire_sql]");    
         $faire_name = '';
-        
+		foreach($faire_data as $fdata){
+			if($fdata['option_name']=='blogname')
+					$faire_name = $fdata['option_value'];
+		}
         $entryData[] = array( 'entry_id'    =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  $entry['faire_name'],
@@ -174,7 +177,7 @@ function dashboard_info_content() {
 	
 	if(!empty($ms_results)) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makerspaces-logo.jpg" /> Details</h4>
+					  <h4>My <img src="'.get_stylesheet_directory_uri().'/images/makerspaces-logo.jpg" /></h4>
 					  <ul>';       
 		$return .= '<li><p><b>' . $ms_results[0]->meta_value . '</b> - <a href="'.$ms_results[1]->meta_value.'" target="_blank">' . $ms_results[1]->meta_value . '</a></p>';
 		$return .= 	   '<li><a href="/members/' . $user_slug . '/makerspace_info/" class="btn universal-btn">Get More Details</a></li>';
@@ -189,7 +192,7 @@ function dashboard_info_content() {
 	
 	if(isset($user_meta['ihc_user_levels'][0])) {
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory_uri().'/images/make-logo.png" /Membership Details</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/make-logo.png" /> Membership Details</h4>
 					  <ul>';
 		$return .= 		'<li>' . do_shortcode("[ihc-membership-card]") . '</li>';
 		//$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
