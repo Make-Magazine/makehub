@@ -1,0 +1,8 @@
+.bb-grid {
+	.ee-spinner {
+		animation: none;
+		&::before {
+			content: url("/wp-content/universal-assets/v1/images/makey-spinner.gif");
+		}
+	}
+}

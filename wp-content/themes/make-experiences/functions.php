@@ -157,4 +157,19 @@ function get_resized_remote_image_url($url, $width, $height, $escape = true){
     }
 }
 
+add_action('rest_api_init', 'register_ee_attendee_id_meta');
+function register_ee_attendee_id_meta() {
+    global $wpdb;
+    $args = array(
+        'type'         => 'integer',
+        'single'       => true, 
+        'show_in_rest' => true
+    );
+    register_meta(
+        'user', 
+        $wpdb->prefix .'EE_Attendee_ID', 
+        $args
+    );
+}
+
 ?>
