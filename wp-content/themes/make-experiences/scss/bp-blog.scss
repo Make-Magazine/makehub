@@ -83,14 +83,12 @@ a[data-activity-type=new_blog_posts] {
 	}
 	input[type=text], input[type=submit] {
 		width: 90%;
-		float: right;
 		color: #333;
 		font-weight: 500;
 		box-shadow: none;
 		padding: 12px 15px;
 		border: 1px solid #eee;
 		background-color: #fff;
-		margin-top: -10px;
 		@media screen and (max-width: 768px) {
 			width: 100%;
 			margin-top: 5px;
@@ -150,17 +148,20 @@ a[data-activity-type=new_blog_posts] {
 		h4 { 
 			float: left;
 			font-size: 16px;
-			margin-right: 15px;
+			margin-right: 15px !important;
+			margin-bottom: 0px !important;
 			font-weight: bold;
 			&::after {
 				content: "?";
 			}
 		}
 		label {
-			width: auto;
+			width: 200px;
 			padding: 3px;
 			font-weight: normal;
 			font-size: 16px;
+			float: left;
+			margin-top: 0px;
 		}
 	}
 	// hide the vimeogrpahy button, cuz it doesn't work
@@ -187,9 +188,15 @@ a[data-activity-type=new_blog_posts] {
 	.yz-profile-header {
 		.yz-header-cover {
 			height: 180px;
+			.yz-inner-content {
+				display: flex;
+				align-items: center;
+				height: 180px;
+			}
 			.yz-profile-photo {
 				height: 100px;
 				width: 100px;
+				margin-left: 30px;
 				@media screen and (max-width: 768px) {
 					margin: 0px;
 					margin-left: 15px;
@@ -197,15 +204,21 @@ a[data-activity-type=new_blog_posts] {
 				}
 			}
 			.yz-head-content { 
-				margin-left: 125px;
+				margin-left: 65px;
+				background: rgba(255,255,255,.6);
+				width: 300px;
+				text-align: center;
+				border-radius: 10px;
 				.yz-name h2 {
+					text-transform: capitalize;
+					margin: 10px;
 					.yz-account-verified, .yz-user-status { display: none; }
 					&::after {
 						content: "'s Blog";
 					}
 				}
 			}
-			.yz-user-statistics {
+			.yz-user-statistics, .yz-usermeta {
 				display: none;
 			}
 		}

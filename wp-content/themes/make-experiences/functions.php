@@ -63,7 +63,7 @@ function make_experiences_scripts_styles(){
 	// Javascript
 	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
 	// lib src packages up bootstrap, fancybox, jquerycookie etc
-	wp_enqueue_script('lib-src-js', get_stylesheet_directory_uri().'/js/lib-src.min.js', array('jquery'), $my_version, true);
+	wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri().'/js/min/built-libs.min.js', array('jquery'), $my_version, true);
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
 	wp_enqueue_script( 'make_experiences-js', get_stylesheet_directory_uri().'/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
@@ -101,12 +101,75 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
 
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
-// Include all function files in the makerfaire/functions directory:
+// Include all function files in the make-experiences/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
+    include_once $file;
+}
+
+// Include all class files in the make-experiences/classes directory:
+foreach ( glob(dirname(__FILE__) . '/classes/*.php' ) as $file) {
+  include_once $file;
+}
+//include any subfolders like 'widgets'
+foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
     include_once $file;
 }
 
 //* Disable email match check for all users - this error would keep users from registering users already in our system
 add_filter( 'EED_WP_Users_SPCO__verify_user_access__perform_email_user_match_check', '__return_false' );
+
+add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
+function spinner_url($image_src, $form) {
+    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+}
+
+function basicCurl($url, $headers = null){
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	if($headers != null) {
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+	}
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	$data = curl_exec($ch);
+	curl_close($ch);
+	return $data;
+}
+
+////////////////////////////////////////////////////////////////////
+// Use Jetpack Photon if it exists, else use original photo
+////////////////////////////////////////////////////////////////////
+
+function get_resized_remote_image_url($url, $width, $height, $escape = true){
+    if (class_exists('Jetpack') && Jetpack::is_module_active('photon')) {
+        $width = (int)$width;
+        $height = (int)$height;
+		// Photon doesn't support redirects, so help it out by doing http://foobar.wordpress.com/files/ to http://foobar.files.wordpress.com/
+        if (function_exists('new_file_urls'))
+            $url = new_file_urls($url);
+
+            $thumburl = jetpack_photon_url($url, array(
+            'resize' => array($width, $height),
+            'strip' => 'all',
+        ));
+        return ($escape) ? esc_url($thumburl) : $thumburl;
+    } else{
+    	return $url;
+    }
+}
+
+add_action('rest_api_init', 'register_ee_attendee_id_meta');
+function register_ee_attendee_id_meta() {
+    global $wpdb;
+    $args = array(
+        'type'         => 'integer',
+        'single'       => true, 
+        'show_in_rest' => true
+    );
+    register_meta(
+        'user', 
+        $wpdb->prefix .'EE_Attendee_ID', 
+        $args
+    );
+}
 
 ?>

@@ -39,3 +39,8 @@ jQuery(document).ready(function () {
 		}
 	});
 });
+
+jQuery(".expando-box h4").click(function(){
+	jQuery(this).toggleClass( "open" ); 
+	jQuery(this).next().toggleClass( "open" ); 
+}); 

@@ -59,8 +59,8 @@ function record_cpt_activity_content( $cpt ) {
 		global $wpdb, $post, $bp;
 		$cpt['content'] = '<a href="'.$cpt['primary_link'].'">'
 			. get_the_post_thumbnail($cpt['secondary_item_id']) . '</a>';
-		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">test ' . get_the_title($cpt['secondary_item_id']) . '</a>';
-		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'" class="btn universal-btn">Read More</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'">' . get_the_title($cpt['secondary_item_id']) . '</a>';
+		$cpt['content'] .= '<a href="'.$cpt['primary_link'].'" class="btn universal-btn">Read More!</a>';
 	}
 
 	return $cpt;
@@ -84,43 +84,6 @@ function use_profile_as_comment_author_url( $url, $id, $comment ) {
 }
 add_filter( 'get_comment_author_url', 'use_profile_as_comment_author_url', 10, 3 );
 
-/**
- * Register the blog post form Might NOT NEED ALL THIS BECAUSE OF BUDDYBLOG
- *
-function blog_post_form() {
-    $settings = array(
-        'post_type'             => 'blog_posts',
-        //which post type
-        'post_author'           =>  bp_loggedin_user_id(),
-        //who will be the author of the submitted post
-        'post_status'           => 'publish',
-        //how the post should be saved, change it to 'publish' if you want to make the post published automatically
-        'current_user_can_post' =>  is_user_logged_in(),
-        //who can post
-		  'allow_upload'=> true,
-        //whether to show categories list or not, make sure to keep it true
-    );
- 
-    $form = bp_new_simple_blog_post_form( 'blog_post', $settings );
-    //create a Form Instance and register it
-}
-if( function_exists('bp_new_simple_blog_post_form' ) ) {
-	add_action( 'bp_init', 'blog_post_form', 4 );//register a form
-}
-
-// short code for the front end forms
-function front_end_form_func($atts) {
-   $name = shortcode_atts(array('name' => ''), $atts);
-	// Load the front end form of the set type
-	$form = bp_get_simple_blog_post_form( $name['name'] );
-	if ( $form ) {//if this is a valid form
-		 $form->show();//it will show the form
-	}
-}
-if( function_exists('bp_new_simple_blog_post_form' ) ) {
-	add_shortcode('front_end_form', 'front_end_form_func');
-}
-*/
 	
 /**
  * Filter the except length to 20 words.
@@ -135,7 +98,7 @@ add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
  */
 function custom_excerpt_more( $more ) {
     if ( ! is_single() ) {
-        $more = '... <a class="yz-read-more" href="'.get_permalink( get_the_ID()).'"><span class="yz-rm-icon"><i class="fas fa-angle-double-right"></i></span>Read More</a>';
+        $more = '... <a class="read-more-btn" href="'.get_permalink( get_the_ID()).'"><i class="fas fa-angle-double-right"></i></span>Read More</a>';
     }
     return $more;
 }

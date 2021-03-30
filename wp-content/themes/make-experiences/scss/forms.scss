@@ -1,5 +1,16 @@
 // Gravity Form / Gravity View
 
+// buddyboss REALLY wants to hide our gravity form file inputs
+.ginput_container_fileupload > input[type="file"], .ginput_container_post_image input[type="file"] {
+	width: auto;
+	height: auto;
+	opacity: 1;
+	overflow: visible;
+	position: relative;
+	z-index: 1;
+	margin-bottom: -20px;
+}
+
 // ALL gravity forms
 .gform_wrapper {
 	.gform_body  {
@@ -13,6 +24,7 @@
 				&:hover {
 					background: #fff;
 					color: #005e9a;
+					box-shadow: none;
 				}
 			}
 			input[type="button"], input[type="submit"], a.gform_save_link {
@@ -33,6 +45,7 @@
 				flex-grow: 1;
 				order: 2;
 				flex-basis: 0;
+				box-shadow: none;
 				&.gform_last_page_button { display: none; }
 			}
 			input:last-of-type {
@@ -68,6 +81,7 @@
 						&:checked + label {
 							background-color: #005e9a;
 							color: #fff;
+							font-weight: bold;
 						}
 						&[disabled="disabled"] + label {
 							color: #ccc;
@@ -95,6 +109,9 @@
 						padding: 0px 30px;
 						margin: 0 10px;
 						min-width: calc(100% - 10px);
+						&::before, &::after {
+							display: none;
+						}
 					}
 					label:hover {
 						background-color: #ccdfeb;
@@ -140,6 +157,9 @@
 						justify-content: center;
 						align-items: center;
 						padding: 20px;
+						&::before, &::after {
+							display: none;
+						}
 					}
 					label:hover {
 						border-color: #111;
@@ -243,8 +263,10 @@
 }
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
-    border-bottom: solid #fff 10px;
-    margin: 0px;
+    margin-bottom: -35px;
+	margin-top: -100px;
+	background: #fcfcfc;
+	position: relative;
     .event_form {
         padding: 0px 15px;
 		font-size: 18px;
@@ -294,7 +316,6 @@
 			}
 			@media screen and (max-width: 767px){
 				display: none;
-				
 				&.gpmpn-step-current {
 					display: block;
 					width: 100%;
@@ -319,6 +340,7 @@
 		} 
 		@media screen and (min-width: 768px) {
 			display: flex;
+			height: 80vh;
 			.gf_page_steps {
 				width: 40%;
 				margin-left: -20%;
