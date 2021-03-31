@@ -37,16 +37,13 @@ $relevants = get_field('events');
 				echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $event_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
 			}
 		?>
-		<div class='event-main-content col-md-8 col-sm-12 col-xs-12'>
+		<div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
 			<?php
-			echo apply_filters(
-				'FHEE__content_espresso_events_details_template__the_content',
-				get_the_content()
-			); ?>
+			echo get_the_content(); ?>
 			<!-- ACF FIELDS GO HERE -->
 		</div>
 		
-		<div class='event-sidebar-content col-md-4 col-sm-12 col-xs-12'>
+		<div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
 			<div class="event-sidebar-item">
 				<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=".$post->ID."]");	?>
 			</div>
