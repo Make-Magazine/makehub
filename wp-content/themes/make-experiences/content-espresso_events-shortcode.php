@@ -13,7 +13,10 @@
 /*************************** IMPORTANT *************************
  * if you are creating a custom template based on this file,
  * and do not wish to use the template display order controls in the admin,
- * then remove the following filter and position the additional template parts
+ * then change the following filter to:
+ * add_filter( 'FHEE__content_espresso_events__template_loaded', '__return_true' );
+ * comment out calls to the_content() and espresso_event_content_or_excerpt()
+ * then UN-comment and position the additional template parts
  * that are loaded via the espresso_get_template_part() function to your liking
  * and/or use any of the template tags functions found in:
  * \wp-content\plugins\event-espresso-core\public\template_tags.php
@@ -36,9 +39,11 @@ $event_class = apply_filters( 'FHEE__content_espresso_events__event_class', $eve
 	</div>
 
 	<div class="espresso-event-wrapper-dv">
+		<?php the_content(); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-tickets' ); ?>
 		<?php espresso_get_template_part( 'content', 'espresso_events-datetimes' ); ?>
 		<?php espresso_get_template_part( 'content', 'espresso_events-details' ); ?>
-		<?php espresso_get_template_part( 'content', 'espresso_events-venues' ); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-venues' ); ?>
 		<footer class="event-meta">
 			<?php do_action( 'AHEE_event_details_footer_top', $post ); ?>
 			<?php do_action( 'AHEE_event_details_footer_bottom', $post ); ?>
@@ -53,10 +58,11 @@ $event_class = apply_filters( 'FHEE__content_espresso_events__event_class', $eve
 	</div>
 
 	<div class="espresso-event-list-wrapper-dv">
-		<?php espresso_get_template_part( 'content', 'espresso_events-tickets' ); ?>
-		<?php espresso_get_template_part( 'content', 'espresso_events-datetimes' ); ?>
-		<?php espresso_get_template_part( 'content', 'espresso_events-details' ); ?>
-		<?php espresso_get_template_part( 'content', 'espresso_events-venues' ); ?>
+		<?php espresso_event_content_or_excerpt(); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-tickets' ); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-datetimes' ); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-details' ); ?>
+		<?php //espresso_get_template_part( 'content', 'espresso_events-venues' ); ?>
 	</div>
 
 <?php endif; ?>

@@ -28,9 +28,6 @@ $relevants = get_field('events');
 <?php
 	if ( apply_filters( 'FHEE__content_espresso_events_details_template__display_the_content', true ) ) {
 		do_action( 'AHEE_event_details_before_the_content', $post ); ?>
-		<div class='event-dates col-sm-12'>
-			<?php echo espresso_list_of_event_dates(); ?>
-		</div>
 		<?php
 			if(class_exists('ESSB_Plugin_Options')){ 
 				$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -39,7 +36,10 @@ $relevants = get_field('events');
 		?>
 		<div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
 			<?php
-			echo get_the_content(); ?>
+			echo apply_filters(
+				'FHEE__content_espresso_events_details_template__the_content',
+				get_the_content()
+			); ?>
 			<!-- ACF FIELDS GO HERE -->
 		</div>
 		

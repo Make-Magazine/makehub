@@ -93,8 +93,8 @@
 			right: 20px;
 		}
 	}
-	.entry-content .event-content {
-		.event-dates {
+	.entry-content {
+		.event-datetimes {
 			text-align: center;
 			.ee-event-datetimes-li {
 				span { 
@@ -108,17 +108,30 @@
 				}
 			}
 		}
-		.event-sidebar-content {
-			.event-sidebar-item {
-				margin: 0px;
-				box-shadow: rgba(0,0,0,0.12) 0px 6px 16px;
-				border: 1px solid #005e9a;
-				background: #fff;
-				border-radius: 5px;
-				font-size: 16px;
-				margin-bottom: 30px;
-				min-width: 100%;
-				padding: 0px 15px;
+		.event-content {
+			.event-sidebar-content {
+				.event-sidebar-item {
+					margin: 0px;
+					box-shadow: rgba(0,0,0,0.12) 0px 6px 16px;
+					border: 1px solid #005e9a;
+					background: #fff;
+					border-radius: 5px;
+					font-size: 16px;
+					margin-bottom: 30px;
+					min-width: 100%;
+					padding: 0px 15px;
+				}
+			}
+		}
+		.event-tickets { display: none; }
+		.eea-people-addon-event-people-list-single {
+			.eea-people-addon-people-list-ul {
+				list-style: none;
+				li {
+					background: #fff;
+					padding: 5px;
+					border: solid 1px $color-light-grey;
+				}
 			}
 		}
 	}
