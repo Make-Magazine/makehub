@@ -53,13 +53,19 @@ add_action( 'acf/init', 'custom_acf_blocks' );
 function grid_block_split_block_render_callback($block){
    if (get_field('activeinactive') == 'show') {
 		$scrolling = get_field('background_image')['scrolling'][0];
+	   	$first_classes = 'col-md-pull-4 col-sm-pull-5';
+	    $second_classes = 'col-md-push-8 col-sm-push-7';
+	   	if(get_field('switch_position')) {
+			$first_classes = '';
+			$second_classes = '';
+		} 
 		$return = '';
 		$return .= '<div class="container-fluid grid-column-split'.($scrolling === "yes" ? ' scrolling' : '').'" style="background-image: url('. get_field('background_image')['image'].');">
 							<div class="row">';
 		if(get_field('header')){
 			$return .=     '<div class="col-xs-12"><h1>'.get_field('header').'</h1></div>';
 		}
-		$first =         '<div class="col-md-8 col-sm-7 col-xs-12 grid-column">';
+		$first =         '<div class="' . $first_classes . ' col-md-8 col-sm-7 col-xs-12 grid-column">';
 		if (have_rows('grid_column_spread')) {
 			$first .= '<div class="container-fluid">
 								<div class="row grid-column-row">';
@@ -92,7 +98,7 @@ function grid_block_split_block_render_callback($block){
 		}
 		$first .= '      </div>';
 		if ( is_user_logged_in() && is_front_page() ) { // if we're on the front page, we can assume the login shortcode was in the wysiwyg and it should have a different display when logged in
-			$second = '	  <div class="col-md-4 col-sm-5 col-xs-12 wysiwyg" style="padding: 35px 30px 0px;">
+			$second = '	  <div class="' . $second_classes . ' col-md-4 col-sm-5 col-xs-12 wysiwyg" style="padding: 35px 30px 0px;">
 								  <h2 style="color:#fff;margin-top:0px;font-weight: 300;">Welcome, '.bp_core_get_user_displayname( bp_loggedin_user_id() ).'</h2>
 								  <p><a href="'.bp_loggedin_user_domain().'" class="btn universal-btn-reversed" style="width:100%;">My Profile</a></p>
 								  <p><a href="/groups" class="btn universal-btn-reversed" style="width:100%;">Browse Groups</a></p>
@@ -107,9 +113,9 @@ function grid_block_split_block_render_callback($block){
 
 		// here we get tricky and allow users to switch the position of the six column spread and the 
 		if(get_field('switch_position')) {
-			$return .= $second . $first;
-		} else {
 			$return .= $first . $second;
+		} else {
+			$return .= $second . $first;
 		}
 		$return .=     '</div>
 						</div>';
