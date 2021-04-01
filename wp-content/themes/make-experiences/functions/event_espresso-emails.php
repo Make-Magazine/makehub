@@ -65,10 +65,10 @@ add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_after_main_body', fu
 	echo '</tr></tbody></table>';
 }, 10, 4 );
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_footer', function( $message_type, $subject, $from, $main_body ) {
-	$footer =  '<table role="presentation" style="margin: 0 auto;max-width: 600px; border-radius: 5px;" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
+	$footer =  '<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
 			<tbody><tr>
 				<td style="padding: 20px 40px; width: 100%; font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height: 19px; text-align: center; color: #7F868F;" class="footer_text_color footer_text_size repsonsive-padding">
-					<span class="footer_text">© 2021 Make.co</span>
+					<span class="footer_text">© ' . date("Y") . 'Make.co</span>
 				</td>
 			</tr>
 			<tr>
