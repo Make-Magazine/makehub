@@ -1,9 +1,15 @@
 .single-espresso_events {
-	h1.entry-title { font-size: 40px; }
+	h1.entry-title { 
+		color: #000;
+		font-weight: 700;
+		font-size: 2.5em;
+		margin-bottom: 10px;
+	}
 	.gallery-wrapper {
 		display: flex;
 		flex-direction: column;
 		position: relative;
+		overflow: hidden;
 		.psgal {
 			display: flex;
 			justify-content: center;
@@ -96,19 +102,76 @@
 	.entry-content {
 		.event-datetimes {
 			text-align: center;
-			.ee-event-datetimes-li {
-				span { 
-					font-size: 20px;
-					&.dashicons {
-						margin-top: -5px;
-					}
-					&.ee-event-datetimes-li-daterange {
-						margin-right: 15px;
+			.ee-event-datetimes-ul {
+				list-style: none;
+				.ee-event-datetimes-li {
+					span { 
+						font-size: 20px;
+						&.dashicons {
+							margin-top: -5px;
+						}
+						&.ee-event-datetimes-li-daterange {
+							margin-right: 15px;
+						}
 					}
 				}
 			}
 		}
 		.event-content {
+			.event-main-content {
+                display: flex;
+                flex-direction: column;
+				&> div {
+					border-bottom: solid 1px #ccc;
+					padding-bottom: 15px;
+					&:nth-last-of-type(2) {
+						flex-grow: 1;
+					}
+					&:last-of-type {
+						border-bottom: none;
+					}
+					h3 { 
+						font-family: "Roboto Bold";
+						font-size: 20px !important;
+						margin-top: 20px;
+    					margin-bottom: 10px;
+					}
+				}
+				.event-cat {
+					div { display: none; }
+					ul {
+						padding: 0px;
+						li { list-style: none; }
+					}
+					a{
+						color: #333;
+						text-transform: uppercase;
+    					font-family: "Roboto Bold";
+						&::before {
+							font-family: "FontAwesome";
+							content: "\f0ac";
+							margin-right: 5px;
+						}
+						&[href*="online"]::before {
+							content: "\f26c";
+						}
+						&[href*="demonstration"]::before {
+							content: "\f51c";
+						}
+					}
+				}
+				.tribe-events-single-event-materials {
+					.materials-list {
+						font-weight: bold;
+					}
+					.btn {
+						margin-top: 10px;
+					}
+				}
+				ul li {
+					margin-bottom: 5px;
+				}
+            }
 			.event-sidebar-content {
 				.event-sidebar-item {
 					margin: 0px;

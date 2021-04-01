@@ -48,51 +48,35 @@ add_filter( 'FHEE__espresso_events_Pricing_Hooks___set_hooks_properties__date_fo
 	}
 }, 10, 4 );*/
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_header', function( $message_type, $subject, $from, $main_body ) {
-	if ( ! $message_type instanceof EE_Registration_message_type ) {
-		return;
-	} else {
-		$header = '<div width="100%" bgcolor="#FAFBFD" style="margin:0;background-color:#FAFBFD;padding-bottom: 100px;">
-					<table role="presentation" style="max-width:600px;margin:0 auto;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-						<tbody><tr>
-							<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: #122B46; font-size: 20px" class="site_title_text_color site_title_text_size">
-								<img src="https://'. $_SERVER['HTTP_HOST'] .'/wp-content/themes/make-experiences/images/makercampus-logo-square.png" alt="Maker Campus" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:180px;" border="0">				
-							</td>
-						</tr></tbody>
-					</table>';
-		echo $header;
-	}
+	$header = '<div width="100%" bgcolor="#FAFBFD" style="margin:0;background-color:#FAFBFD;padding-bottom: 100px;">
+				<table role="presentation" style="max-width:600px;margin:0 auto;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+					<tbody><tr>
+						<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: #122B46; font-size: 20px" class="site_title_text_color site_title_text_size">
+							<img src="https://'. $_SERVER['HTTP_HOST'] .'/wp-content/themes/make-experiences/images/makercampus-logo-square.png" alt="Maker Campus" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:180px;" border="0">				
+						</td>
+					</tr></tbody>
+				</table>';
+	echo $header;
 }, 10, 4 );
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_before_main_body', function( $message_type, $subject, $from, $main_body ) {
-	if ( ! $message_type instanceof EE_Registration_message_type ) {
-		return;
-	} else {
-		echo '<table role="presentation" style="margin:0 auto;border-collapse:separate!important;max-width:600px;border-radius:5px;border:1px solid #e7e9ec" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="center"><tbody><tr>';
-	}
+	echo '<table role="presentation" style="margin:0 auto;border-collapse:separate!important;max-width:600px;border-radius:5px;border:1px solid #e7e9ec" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="center"><tbody><tr>';
 }, 10, 4 );
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_after_main_body', function( $message_type, $subject, $from, $main_body ) {
-	if ( ! $message_type instanceof EE_Registration_message_type ) {
-		return;
-	} else {
-		echo '</tr></tbody></table>';
-	}
+	echo '</tr></tbody></table>';
 }, 10, 4 );
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_footer', function( $message_type, $subject, $from, $main_body ) {
-	if ( ! $message_type instanceof EE_Registration_message_type ) {
-		return;
-	} else {
-		$footer =  '<table role="presentation" style="max-width: 600px; border-radius: 5px;" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
-				<tbody><tr>
-					<td style="padding: 20px 40px; width: 100%; font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height: 19px; text-align: center; color: #7F868F;" class="footer_text_color footer_text_size repsonsive-padding">
-						<span class="footer_text">© 2021 Make.co</span>
-					</td>
-				</tr>
-				<tr>
-					<td style="font-size: 45px; line-height: 45px;" height="45px">&nbsp;</td>
-				</tr>
-			</tbody></table>
-			</div>';
-		echo $footer;
-	}
+	$footer =  '<table role="presentation" style="margin: 0 auto;max-width: 600px; border-radius: 5px;" width="100%" cellspacing="0" cellpadding="0" border="0" align="left">
+			<tbody><tr>
+				<td style="padding: 20px 40px; width: 100%; font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height: 19px; text-align: center; color: #7F868F;" class="footer_text_color footer_text_size repsonsive-padding">
+					<span class="footer_text">© 2021 Make.co</span>
+				</td>
+			</tr>
+			<tr>
+				<td style="font-size: 45px; line-height: 45px;" height="45px">&nbsp;</td>
+			</tr>
+		</tbody></table>
+		</div>';
+	echo $footer;
 }, 10, 4 );
 
 /**

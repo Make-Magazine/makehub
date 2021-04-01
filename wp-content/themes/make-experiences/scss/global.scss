@@ -138,6 +138,24 @@ button, input[type="submit"] {
 	}
 }
 
+.essb_links.essb_fullwidth_14_100_100 {
+	margin-top: 0px;
+	li {
+		width: 14.275% !important;
+		text-align: center;
+		a {
+			min-height: 55px;
+			.essb_icon, .essb_counter_bottom {
+				line-height: .1em;
+			}
+			.essb_network_name {
+				min-height: 5px;
+				margin-top: -5px;
+			}
+		}
+	}		
+}
+
 // Youtube responsiveness for Jetpack shortcode
 .embed-youtube,
 .embed-vimeo,
