@@ -51,11 +51,11 @@ add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_header', function( $
 	if ( ! $message_type instanceof EE_Registration_message_type ) {
 		return;
 	} else {
-		$header = '<div width="100%" bgcolor="#FAFBFD" style="margin:0">
-					<table role="presentation" style="max-width:600px" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+		$header = '<div width="100%" bgcolor="#FAFBFD" style="margin:0;background-color:#FAFBFD;padding-bottom: 100px;">
+					<table role="presentation" style="max-width:600px;margin:0 auto;" width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
 						<tbody><tr>
 							<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: #122B46; font-size: 20px" class="site_title_text_color site_title_text_size">
-								<img src="https://'. $_SERVER['HTTP_HOST'] .'/wp-content/themes/make-experiences/images/cropped-make-community-logo.png" alt="Make: Experiences" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:180px;" border="0">				
+								<img src="https://'. $_SERVER['HTTP_HOST'] .'/wp-content/themes/make-experiences/images/makercampus-logo-square.png" alt="Maker Campus" style="margin:0; padding:0; border:none; display:block; max-height:auto; height:auto; width:180px;" border="0">				
 							</td>
 						</tr></tbody>
 					</table>';
@@ -66,7 +66,7 @@ add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_before_main_body', f
 	if ( ! $message_type instanceof EE_Registration_message_type ) {
 		return;
 	} else {
-		echo '<table role="presentation" style="border-collapse:separate!important;max-width:600px;border-radius:5px;border:1px solid #e7e9ec" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="center"><tbody><tr>';
+		echo '<table role="presentation" style="margin:0 auto;border-collapse:separate!important;max-width:600px;border-radius:5px;border:1px solid #e7e9ec" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#FFFFFF" align="center"><tbody><tr>';
 	}
 }, 10, 4 );
 add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_after_main_body', function( $message_type, $subject, $from, $main_body ) {
@@ -98,7 +98,7 @@ add_action( 'AHEE__EE_Email_Messenger_main_wrapper_template_footer', function( $
 /**
  * Below actions are for the html messenger wrapper template.  Uncomment to test all the actions when sending an email for the
  * EE_Receipt_message_type.  Emails for other message types should NOT show any changes.
- */
+ 
 add_action( 'AHEE__EE_Html_Messenger_main_wrapper_template_head', function( $message_type, $subject, $from, $main_body ) {
 	if ( ! $message_type instanceof EE_Receipt_message_type ) {
 		return;
@@ -134,3 +134,4 @@ add_action( 'AHEE__EE_Html_Messenger_main_wrapper_template_footer', function( $m
 		echo '<footer><p>HEY YO this be the footer!</p></footer>';
 	}
 }, 10, 4 );
+*/
