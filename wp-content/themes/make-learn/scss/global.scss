@@ -15,6 +15,19 @@ main.content {
 	margin-top: 0px !important; // has to override, sumome. sorry not sorry
 }
 
+#page h1.entry-title {
+	margin-top: -30px;
+	background: #005e9a;
+	color: #fff;
+	padding: 20px;
+	width: 100vw;
+	left: 50%;
+	right: 50%;
+	position: relative;
+	margin-left: -50vw !important;
+	margin-right: -50vw !important;
+}
+
 .epyt-gallery iframe { width: 100%; }
 
 .nav-level-2 #menu-secondary_universal_menu li span { width: 160px; }
