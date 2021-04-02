@@ -178,6 +178,22 @@ button, input[type="submit"] {
 	position: absolute;
 }
 
+.nice-table {
+	background: #fff;
+	border-radius: 1em;
+	overflow: hidden;
+	border-collapse: collapse;
+	box-shadow: $color-light-grey 0px 0px 2px 2px;
+	thead td { font-weight: $font-bold	}
+	td, th {
+		padding: 10px 15px !important;
+		vertical-align: middle;
+	}
+	tr:last-of-type td {
+		border-bottom: 0px;
+	}
+}
+
 //Youtube Fancybox modal shortcode [youtube-modal]
 .fancytube {
   position: relative;
