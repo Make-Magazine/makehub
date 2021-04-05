@@ -29,6 +29,10 @@ a {
 	}
 }
 
+h1.entry-title {
+	font-weight: 400;
+	font-size: 32px;
+}
 @media screen and (max-width: 767px) {
 	h1, .entry-title { font-size: 2.6em; margin-top: 45px; } 
 }
@@ -134,6 +138,24 @@ button, input[type="submit"] {
 	}
 }
 
+.essb_links.essb_fullwidth_14_100_100 {
+	margin-top: 0px;
+	li {
+		width: 14.275% !important;
+		text-align: center;
+		a {
+			min-height: 55px;
+			.essb_icon, .essb_counter_bottom {
+				line-height: .1em;
+			}
+			.essb_network_name {
+				min-height: 5px;
+				margin-top: -5px;
+			}
+		}
+	}		
+}
+
 // Youtube responsiveness for Jetpack shortcode
 .embed-youtube,
 .embed-vimeo,
@@ -154,6 +176,22 @@ button, input[type="submit"] {
 	height: 100%;
 	width: 100%;
 	position: absolute;
+}
+
+.nice-table {
+	background: #fff;
+	border-radius: 1em;
+	overflow: hidden;
+	border-collapse: collapse;
+	box-shadow: $color-light-grey 0px 0px 2px 2px;
+	thead td { font-weight: $font-bold	}
+	td, th {
+		padding: 10px 15px !important;
+		vertical-align: middle;
+	}
+	tr:last-of-type td {
+		border-bottom: 0px;
+	}
 }
 
 //Youtube Fancybox modal shortcode [youtube-modal]

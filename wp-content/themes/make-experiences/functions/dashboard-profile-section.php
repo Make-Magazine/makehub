@@ -206,7 +206,10 @@ function dashboard_info_content() {
 	////////////////////////////////////////
 	//       Espresso Events Widget       //
 	////////////////////////////////////////
-	$attendee_info = json_decode(basicCurl("http://makehub.local/wp-json/wp/v2/users/". $user_id ."?_fields=meta"), TRUE);
+	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+	$urlparts = parse_url(home_url());
+	$domain = $urlparts['host'];
+	$attendee_info = json_decode(basicCurl($protocol . $domain . "/wp-json/wp/v2/users/". $user_id ."?_fields=meta"), TRUE);
 	//error_log(print_r($attendee_info, TRUE));
 	$attendee_id = $attendee_info['meta']['wp_EE_Attendee_ID'];
 	if( shortcode_exists( 'ESPRESSO_MY_EVENTS' ) && !empty($attendee_id) ) {
