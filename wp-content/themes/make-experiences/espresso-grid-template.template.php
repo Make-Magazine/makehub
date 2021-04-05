@@ -76,6 +76,9 @@ if ( have_posts() ) :
 		</div>
 		<div class="events-grid-sidebar">
 			<?php echo do_shortcode('[products columns="1" orderby="popularity" class="experiences" category="experience"]'); ?>
+			<a href="/product-category/experience/">
+				<i class="fas fa-angle-double-right"></i> See More Experiences
+			</a>
 		</div>
 	</div>
 	<?php
