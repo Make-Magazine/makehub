@@ -62,7 +62,7 @@ get_header();
 							</div>
 							<?php if (get_field('event_type') == "In-Person" && get_field('location')) { ?>
 								<div class="event-location event-content-item">
-									<h3>Location:</h3> 
+									<h4>Location:</h4> 
 									<?php echo get_field('location') ?>
 								</div>
 							<?php } 
@@ -71,7 +71,7 @@ get_header();
 							if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
 								?>
 								<hr />
-								<h3 style="margin-top:0px;">Attendee Resources:</h3> 
+								<h4 style="margin-top:0px;">Attendee Resources:</h4> 
 								<div class="single-conference-link tribe-events-content" style="border-bottom: 0px;">
 									<?php if (get_field('webinar_link')) { ?>
 										<a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
@@ -94,24 +94,24 @@ get_header();
 
 							<?php } ?>
 							<div class="event-description event-content-item">
-								<h3>What You'll Do:</h3> 
+								<h4>What You'll Do:</h4> 
 								<?php the_content(); ?>
 							</div>
 							<?php if (get_field('basic_skills')) { ?>
 								<div class="event-skill-level event-content-item">
-									<h3>Skill Level:</h3> 
+									<h4>Skill Level:</h4> 
 									<?php echo get_field('basic_skills') ?>
 								</div>
 							<?php } ?>
 							<?php if (get_field('skills_taught')) { ?>
 								<div class="event-skills-taught event-content-item">
-									<h3>Skills you will learn:</h3> 
+									<h4>Skills you will learn:</h4> 
 									<?php echo get_field('skills_taught') ?>
 								</div>
 							<?php } ?>
 							<?php if (get_field('kit_required') == "Yes") { ?>
 								<div class="event-kit event-content-item">
-									<h3>A kit is required for this program:</h3> 
+									<h4>A kit is required for this program:</h4> 
 									<?php
 									if (get_field('kit_price_included') == "yes") {
 										echo " and is included in the ticket price";
@@ -130,12 +130,12 @@ get_header();
 							<?php } ?>
 							<?php if (get_field('materials') ) { ?>
 								<div class="event-materials event-content-item">
-									<h3>What You'll Need:</h3> 
+									<h4>What You'll Need:</h4> 
 									<div class="materials-list">
 										<?php echo get_field('materials'); ?>
 									</div>
 									<?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
-										<h3>Wishlist Links: </h3>
+										<h4>Wishlist Links: </h4>
 										<ul>
 											<?php
 											foreach (get_field('wish_list_urls') as $wishlist) {
@@ -150,7 +150,7 @@ get_header();
 							if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
 								?>
 								<div class="event-promo-videos event-content-item">
-									<h3>Videos: </h3>
+									<h4>Videos: </h4>
 
 									<?php
 									foreach (get_field('promo_videos') as $video) {
@@ -183,10 +183,11 @@ get_header();
 
 						<div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
 							<div class="event-sidebar-item">
+								<h3>Tickets</h3>
 								<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=".$post->ID."]");	?>
 							</div>
 							<div class="event-sidebar-item">
-								<h4>Details</h4>
+								<h3>Details</h3>
 								<?php 
 								// Age ranges
 	    						if($additional_fields['Age']) {

@@ -83,19 +83,21 @@ function set_field_values($value, $field, $name) {
         $userEmail = (string) $current_user->user_email;
 
         $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-        $post_id = $person->ID();
-        $user_website = get_field("website", $post_id);
-        $user_social = get_field("social_links", $post_id);
+		if( !empty($person) ) {
+			$post_id = $person->ID();
+			$user_website = get_field("website", $post_id);
+			$user_social = get_field("social_links", $post_id);
 
-        if ($person) {
-            $values = array(
-                'user-fname' => $person->fname(),
-                'user-lname' => $person->lname(),
-                'user_website' => $user_website,
-                'user_social' => $user_social,
-                'user-bio' => $person->get('PER_bio'),
-            );
-        }
+			if ($person) {
+				$values = array(
+					'user-fname' => $person->fname(),
+					'user-lname' => $person->lname(),
+					'user_website' => $user_website,
+					'user_social' => $user_social,
+					'user-bio' => $person->get('PER_bio'),
+				);
+			}
+		}
     }
 
     return isset($values[$name]) ? $values[$name] : $value;
@@ -110,18 +112,19 @@ function GF_prepopulate_profile_photo($form) {
     $userEmail = (string) $current_user->user_email;
 
     $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-    $person_id = $person->ID();
-    
-    //if they do populate the image field
-    if ($person_id) {
-        foreach ($form["fields"] as &$field) {
-            if ($field["id"] == 118) {
-                $field["defaultValue"] = get_the_post_thumbnail_url($person_id);
-                //echo 'featured image url can be found at ' . get_the_post_thumbnail_url($person_id);
-                //var_dump($field);
-            }
-        }
-    }
+	if( !empty($person) ) {
+		$person_id = $person->ID();
+		//if they do populate the image field
+		if ($person_id) {
+			foreach ($form["fields"] as &$field) {
+				if ($field["id"] == 118) {
+					$field["defaultValue"] = get_the_post_thumbnail_url($person_id);
+					//echo 'featured image url can be found at ' . get_the_post_thumbnail_url($person_id);
+					//var_dump($field);
+				}
+			}
+		}
+	}
     return $form;
 }
 
