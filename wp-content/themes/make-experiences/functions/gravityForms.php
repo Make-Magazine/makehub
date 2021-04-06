@@ -53,18 +53,20 @@ function find_field_by_parameter($form) {
 }
 
 function getFieldByParam($paramName = '', $parameterArray = array(), $entry = array()) {
-    $field = $parameterArray[$paramName];
-    if (isset($field)) {
-        if ($field->type == 'name' || $field->type == 'address' || $field->type == 'checkbox') {
-            foreach ($field->inputs as $choice) {
-                if ($choice['name'] == $paramName) {
-                    $fieldID = $choice['id'];
+    if (isset($parameterArray[$paramName])) {
+        $field = $parameterArray[$paramName];
+        if (isset($field)) {
+            if ($field->type == 'name' || $field->type == 'address' || $field->type == 'checkbox') {
+                foreach ($field->inputs as $choice) {
+                    if ($choice['name'] == $paramName) {
+                        $fieldID = $choice['id'];
+                    }
                 }
+            } else {
+                $fieldID = $field->id;
             }
-        } else {
-            $fieldID = $field->id;
+            return (isset($entry[$fieldID]) ? $entry[$fieldID] : '');
         }
-        return (isset($entry[$fieldID]) ? $entry[$fieldID] : '');
     }
     return '';
 }
@@ -74,23 +76,73 @@ add_filter('gform_field_value', 'set_field_values', 10, 3);
 
 function set_field_values($value, $field, $name) {
     $values = array();
-    if(!empty($name)) {
+    if (!empty($name)) {
         //check if facilitator exists
         global $current_user;
         $current_user = wp_get_current_user();
-        $userEmail = (string) $current_user->user_email;        
+        $userEmail = (string) $current_user->user_email;
+
         $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+        $post_id = $person->ID();
+        $user_website = get_field("website", $post_id);
+        $user_social = get_field("social_links", $post_id);
+
         if ($person) {
-            if($name=='user-fname'){
-                //var_dump($person);
-            }
             $values = array(
                 'user-fname' => $person->fname(),
                 'user-lname' => $person->lname(),
-                    //'user-bio' => $person->bio(),
+                'user_website' => $user_website,
+                'user_social' => $user_social,
+                'user-bio' => $person->get('PER_bio'),
             );
         }
     }
 
     return isset($values[$name]) ? $values[$name] : $value;
+}
+
+add_filter('gform_pre_render_7', 'GF_prepopulate_profile_photo');
+
+function GF_prepopulate_profile_photo($form) {
+    //check if facilitator exists
+    global $current_user;
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;
+
+    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+    $person_id = $person->ID();
+    
+    //if they do populate the image field
+    if ($person_id) {
+        foreach ($form["fields"] as &$field) {
+            if ($field["id"] == 118) {
+                $field["defaultValue"] = get_the_post_thumbnail_url($person_id);
+                //echo 'featured image url can be found at ' . get_the_post_thumbnail_url($person_id);
+                //var_dump($field);
+            }
+        }
+    }
+    return $form;
+}
+
+//update the person record
+function updatePerson($parameter_array, $entry, $person){    
+    $userBio   = getFieldByParam('user-bio', $parameter_array, $entry);    
+    $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
+    $userLname = getFieldByParam('user-lname', $parameter_array, $entry);
+    $userFullName = $userFname.' '.$userLname;    
+    $currBio = $person->get('PER_bio');
+
+    if($userFname != $person->fname())
+        $person->set_fname($userFname);
+    
+    if($userLname != $person->lname())
+        $person->set_lname($userLname);
+        
+    if($userBio != $currBio)
+        $person->set('PER_bio', $userBio);
+    
+    if($userFullName != $person->get('PER_full_name'))
+        $person->set('PER_full_name', $userFname.' '.$userLname);
+    $person->save();
 }

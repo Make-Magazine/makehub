@@ -113,63 +113,24 @@ function event_post_meta($entry, $form, $post_id) {
     // Set the taxonomies    
     wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
     wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
+    
     // Set the featured Image
     set_post_thumbnail($post_id, attachment_url_to_postid($entry['9']));
 }
 
-function event_recurrence_update($entry, $post_id, $start_date, $end_date, $end_recurring) {
-    $recurrence_type = $entry['130'];
-    $end_count = $end_recurring->diff($start_date)->days;
-    $days = array('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
-    if ($recurrence_type == "Every Week") {
-        $end_count = floor($end_count / 7) + 1;
-        $recurrence_type = "weekly";
-    } else if ($recurrence_type == "Every Month") {
-        $end_count = countMonths($entry['4'], $entry['129']);
-        $recurrence_type = "monthly";
-    } else {
-        $recurrence_type = "daily";
+function update_organizer_data($entry, $form, $personID, $parameter_array) {
+    $userSocial         = getFieldByParam('user_social', $parameter_array, $entry); //this is a serialized field
+    $userWebsite        = getFieldByParam('user_website', $parameter_array, $entry);
+    $facilitator_info   = getFieldByParam('user-bio', $parameter_array, $entry);
+    
+    $socialLinks = unserialize($userSocial); //TBD need to find more secure way of doing this to avoid code injection
+    
+    $repeater = array();
+    foreach ($socialLinks as $value) {
+        $repeater[] = array("field_5f7e086a4a5a3" => $value);
     }
-    /* This is code that would create a recurring event, but we'll fake that instead
-      $recurrence_data = array(
-      'recurrence' => array(
-      'rules' => array(
-      array(
-      'type' => $entry['130'],
-      'end-type' => 'on',
-      'end' => $end_recurring->format('Y-m-d H:i:s'), // this is the date the series should end on, but does nothing
-      'end-count' => $end_count, // this is what is actually ending the series
-      'EventStartDate' => $start_date->format('Y-m-d H:i:s'),
-      'EventEndDate' => $end_date->format('Y-m-d H:i:s'), // this is just for the end of the first occurence of the event
-      ),
-      ),
-      ),
-      );
-      $recurrence_meta = new Tribe__Events__Pro__Recurrence__Meta();
-      $recurrence_meta->updateRecurrenceMeta($post_id, $recurrence_data); */
-    if ($entry['100'] == "no") {
-        update_field("number_of_sessions", $end_count, $post_id);
-        update_field("recurrence_type", strtolower($recurrence_type), $post_id);
-    } else { // if this gets edited later to not be a recurring event, we're going to want to clear those fields
-        if (get_field('number_of_sessions', $post_id)) {
-            update_field("number_of_sessions", "", $post_id);
-        }
-        if (get_field('recurrence_type', $post_id)) {
-            update_field("recurrence_type", "", $post_id);
-        }
-    }
-}
-
-
-function countMonths($date1, $date2) {
-    $begin = new DateTime($date1);
-    $end = new DateTime($date2);
-    $end = $end->modify('+1 month');
-
-    $interval = DateInterval::createFromDateString('1 month');
-
-    $period = new DatePeriod($begin, $interval, $end);
-    $counter = iterator_count($period);
-
-    return $counter;
+    // update ACF fields for the event organizer    
+    update_field("social_links", $repeater, $personID);
+    update_field("website", $userWebsite, $personID);
+    update_field("facilitator_info", $facilitator_info, $personID);        
 }

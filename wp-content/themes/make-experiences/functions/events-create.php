@@ -37,6 +37,8 @@ function create_event($entry, $form) {
 
     //pull field by variable name 
     $parameter_array = find_field_by_parameter($form);
+    
+    //TBD check if entry is blank
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
 
     //pull nested form to get submitted schedule/ticket
@@ -74,16 +76,16 @@ function create_event($entry, $form) {
             $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
             $price->save();
             $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
+            
             //Schedule Info
             $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
             $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
 
-            //Note we need to do something more secure here to avoid code injection
+            //TBD - Note we need to do something more secure here to avoid code injection
             $prefSched = unserialize($prefSchedSer);
 
             //create tickets
             foreach ($prefSched as $sched) {
-                //TBD - do we need to convert timezone as events are saved in the timezone of the site - Pacific
                 //Start Date
                 $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);
                 $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
@@ -114,32 +116,40 @@ function create_event($entry, $form) {
     if ($person) {
         $personID = $person->ID();
         //update bio fname and lname if changed
+        updatePerson($parameter_array, $entry, $person);
     } else { //if they do not exist, add user
         $person = EE_Person::new_instance(array(
                     "PER_full_name" => $userFname.' '.$userLname,
-                    "PER_bio" => $userBio,
-                    "PER_fname" => $userFname,
-                    "PER_lname" => $userLname,                    
-                    "PER_email" => $userEmail
+                    "PER_bio"       => $userBio,
+                    "PER_fname"     => $userFname,
+                    "PER_lname"     => $userLname,                    
+                    "PER_email"     => $userEmail
         ));
         $person->save();
         $personID = $person->ID();
     }
     
+    // set person image
+    set_post_thumbnail(get_post($personID), attachment_url_to_postid($entry['118'])); //user image is in field 118 of the submitted entry
+    
     //assign that user to this event
-    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67'));
+    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67'));//67 is the people type of facilitator
     $per_post->save();
 
+    // this will update the organizer social, website, and facilitator info
+    update_organizer_data($entry, $form, $personID, $parameter_array);
+       
+    
     /*
      * Now that the event is created, let's transfer data from the entry to the event
      */
-    /*
+
       // update taxonomies, featured image, etc
       event_post_meta($entry, $form, $event_id);
       // Set the ACF data
       update_event_acf($entry, $form, $event_id);
       // Set event custom fields for filtering
-      update_event_additional_fields($entry, $form, $event_id); */
+      update_event_additional_fields($entry, $form, $event_id); 
 }
 
 /*  This function performs the internal rest requests to Event Espresso */
