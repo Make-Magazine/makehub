@@ -264,9 +264,10 @@
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     margin-bottom: -35px;
-	margin-top: -100px;
-	background: #fcfcfc;
+	margin-top: -90px;
+	background: $bg-color;
 	position: relative;
+	border-bottom: solid $bg-color 10px;
     .event_form {
         padding: 0px 15px;
 		font-size: 18px;
