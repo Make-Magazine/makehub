@@ -183,7 +183,20 @@ get_header();
 							<div class="event-sidebar-item">
 								<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=".$post->ID."]");	?>
 							</div>
-							<?php // ACF FIELDS GO HERE --> 
+							<div class="event-sidebar-item">
+								<h4>Details</h4>
+								<?php 
+								// Age ranges
+	    						if($additional_fields['Age']) {
+									$age_array = explode(", ", $additional_fields['Age']);   
+									foreach ($age_array as $age) { 
+										echo "<span class='age-item'>" . $age . "</span>"; 
+									} 
+								}
+								?>
+								Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+							</div>
+							<?php 
 							if( $relevents && is_singular( array( 'espresso_events') ) ){ ?>
 								<div class="related-events">
 								<h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
@@ -202,6 +215,7 @@ get_header();
 					</div>
 				</div>
 			</div>
+			Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

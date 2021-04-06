@@ -104,7 +104,11 @@
 			text-align: center;
 			.ee-event-datetimes-ul {
 				list-style: none;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center;
 				.ee-event-datetimes-li {
+					flex: 50%;
 					span { 
 						font-size: 20px;
 						&.dashicons {

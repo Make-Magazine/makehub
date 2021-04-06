@@ -60,16 +60,34 @@ li.gform_validation_container, li.gform_hidden {
 	width: auto;
 	border-radius: 10px;
 	overflow: hidden;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+	padding: 0px !important;
 	.ui-datepicker-header {
 		background: #005e9a;
+		border-radius: 0px !important;
 		.ui-datepicker-title {
 			select {
 				color: #333;
+				height: 25px !important;
+				padding: 0px !important;
+				max-width: 60px !important;
+				border: solid 1px #005e9a;
+				border-radius: 2px;
 			}
+		}
+		.ui-state-hover {
+			border: 0px;
+			background: url(../images/arrow.png);
+		}
+		.ui-icon {
+			background-image: none !important;
 		}
 	}
 	table.ui-datepicker-calendar {
-		thead { background: #fff; }
+		thead { 
+			background: #fff;
+			th { line-height: initial; }
+		}
 		tbody {
 			td {
 				border-top: 1px solid #005e9a;
@@ -82,6 +100,11 @@ li.gform_validation_container, li.gform_hidden {
 			a.ui-state-default {
 				background: #fff;
 				box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+				border: 0px;
+				line-height: inherit;
+				&.ui-state-hover {
+					color: #666;
+				}
 			}
 		}
 	}
