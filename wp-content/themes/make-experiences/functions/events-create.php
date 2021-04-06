@@ -10,13 +10,13 @@ function disable_post_creation($is_disabled, $form, $entry) {
 // Create event with ticket
 add_action('gform_after_submission_7', 'create_event', 10, 2);
 
-function create_event($entry, $form) {    
+function create_event($entry, $form) {
     //get current user info 
     global $current_user;
     $current_user = wp_get_current_user();
-    $userID     = $current_user->ID;
-    $userEmail  = (string) $current_user->user_email;
-    
+    $userID = $current_user->ID;
+    $userEmail = (string) $current_user->user_email;
+
     //first create the event
     $currDateTime = date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
     $event = EE_Event::new_instance(
@@ -37,7 +37,7 @@ function create_event($entry, $form) {
 
     //pull field by variable name 
     $parameter_array = find_field_by_parameter($form);
-    
+
     //TBD check if entry is blank
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
 
@@ -58,10 +58,10 @@ function create_event($entry, $form) {
             $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
 
             $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
-            $ticketDesc  = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
-            $ticketMin   = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
-            $ticketMax   = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
-            $schedDesc   = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
+            $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
+            $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
+            $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
+            $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
             //create the ticket instance
             $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
                         'TKT_description' => $ticketDesc,
@@ -76,7 +76,6 @@ function create_event($entry, $form) {
             $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
             $price->save();
             $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-            
             //Schedule Info
             $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
             $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
@@ -105,11 +104,11 @@ function create_event($entry, $form) {
             }
         }
     }
-    
-    $userBio   = getFieldByParam('user-bio', $parameter_array, $entry);
+
+    $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
     $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
     $userLname = getFieldByParam('user-lname', $parameter_array, $entry);
-    
+
     //check if facilitator exists
     $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
 
@@ -119,41 +118,34 @@ function create_event($entry, $form) {
         updatePerson($parameter_array, $entry, $person);
     } else { //if they do not exist, add user
         $person = EE_Person::new_instance(array(
-                    "PER_full_name" => $userFname.' '.$userLname,
-                    "PER_bio"       => $userBio,
-                    "PER_fname"     => $userFname,
-                    "PER_lname"     => $userLname,                    
-                    "PER_email"     => $userEmail
+                    "PER_full_name" => $userFname . ' ' . $userLname,
+                    "PER_bio" => $userBio,
+                    "PER_fname" => $userFname,
+                    "PER_lname" => $userLname,
+                    "PER_email" => $userEmail
         ));
         $person->save();
         $personID = $person->ID();
     }
-    
+
     // set person image
     set_post_thumbnail(get_post($personID), attachment_url_to_postid($entry['118'])); //user image is in field 118 of the submitted entry
-    
     //assign that user to this event
-    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67'));//67 is the people type of facilitator
+    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67')); //67 is the people type of facilitator
     $per_post->save();
 
     // this will update the organizer social, website, and facilitator info
     update_organizer_data($entry, $form, $personID, $parameter_array);
-       
-    
+
     /*
      * Now that the event is created, let's transfer data from the entry to the event
-     */
-
-      // update taxonomies, featured image, etc
-      event_post_meta($entry, $form, $event_id);
-      // Set the ACF data
-      update_event_acf($entry, $form, $event_id);
-      // Set event custom fields for filtering
-      update_event_additional_fields($entry, $form, $event_id); 
+     */    
+    event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
+    update_event_acf($entry, $form, $eventID); // Set the ACF data    
+    update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
 }
 
 /*  This function performs the internal rest requests to Event Espresso */
-
 function int_rest_req($rest_endpoint, $body_params, $type = 'POST') {
     $request = new WP_REST_Request($type, $rest_endpoint);
     $request->set_body_params($body_params);

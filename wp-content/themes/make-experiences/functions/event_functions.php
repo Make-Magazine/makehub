@@ -103,17 +103,14 @@ function update_event_additional_fields($entry, $form, $post_id) {
     }
 }
 
-function event_post_meta($entry, $form, $post_id) {
-    $tagArray = array();
-    foreach ($entry as $key => $value) {
-        if (strpos($key, "50.") === 0) {
-            $tagArray[] = $value;
-        }
-    }
-    // Set the taxonomies    
-    wp_set_object_terms($post_id, $entry['12'], 'tribe_events_cat'); //program type
-    wp_set_object_terms($post_id, $tagArray, 'post_tag');  //program theme
+function event_post_meta($entry, $form, $post_id, $parameter_array) {
+    // Set the taxonomies       
+    $expType   = getFieldByParam('exp-type', $parameter_array, $entry);
+    $expCats   = getFieldByParam('exp-cats', $parameter_array, $entry);
     
+    wp_set_object_terms($post_id, $expType, 'event_types'); //program type    
+    wp_set_object_terms($post_id, $expCats, 'espresso_event_categories');  //event Categories
+                
     // Set the featured Image
     set_post_thumbnail($post_id, attachment_url_to_postid($entry['9']));
 }
