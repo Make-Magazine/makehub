@@ -1,12 +1,12 @@
 <?php
 
 //This filter declaration targets form 10 - field 9 - the last digit is the column in the list field
-add_filter('gform_column_input_content_10_9_1', 'set_date_field_type', 10, 6);
+//add_filter('gform_column_input_content_10_9_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_9_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_9_3', 'set_time_field_type', 10, 6);
 
 //This filter declaration targets form 10 - field 11 - the last digit is the column in the list field
-add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
+//add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
@@ -38,7 +38,7 @@ function find_field_by_parameter($form) {
     if (isset($form['fields'])) {
         foreach ($form['fields'] as $field) {
             //paramater names are stored in a different place
-            if ($field['type'] == 'name' || $field['type'] == 'address' || $field['type'] == 'checkbox') {
+            if ($field['type'] == 'name' || $field['type'] == 'address') {
                 foreach ($field['inputs'] as $choice) {
                     if ($choice['name'] != '')
                         $parameter_array[$choice['name']] = $field;
@@ -56,14 +56,22 @@ function getFieldByParam($paramName = '', $parameterArray = array(), $entry = ar
     if (isset($parameterArray[$paramName])) {
         $field = $parameterArray[$paramName];
         if (isset($field)) {
-            if ($field->type == 'name' || $field->type == 'address' || $field->type == 'checkbox') {
+            $fieldID = $field->id;
+            if ($field->type == 'name' || $field->type == 'address') {                
                 foreach ($field->inputs as $choice) {
                     if ($choice['name'] == $paramName) {
                         $fieldID = $choice['id'];
                     }
                 }
-            } else {
+            } elseif ($field->type == 'checkbox') {
                 $fieldID = $field->id;
+                $cbArray = array();
+                foreach ($entry as $key => $value) {
+                    if (strpos($key, $fieldID . ".") === 0) {
+                        $cbArray[] = $value;
+                    }
+                }
+                return $cbArray;
             }
             return (isset($entry[$fieldID]) ? $entry[$fieldID] : '');
         }
@@ -83,21 +91,19 @@ function set_field_values($value, $field, $name) {
         $userEmail = (string) $current_user->user_email;
 
         $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-		if( !empty($person) ) {
-			$post_id = $person->ID();
-			$user_website = get_field("website", $post_id);
-			$user_social = get_field("social_links", $post_id);
+        if ($person) {
+            $post_id = $person->ID();
+            $user_website = get_field("website", $post_id);
+            $user_social = get_field("social_links", $post_id);
 
-			if ($person) {
-				$values = array(
-					'user-fname' => $person->fname(),
-					'user-lname' => $person->lname(),
-					'user_website' => $user_website,
-					'user_social' => $user_social,
-					'user-bio' => $person->get('PER_bio'),
-				);
-			}
-		}
+            $values = array(
+                'user-fname' => $person->fname(),
+                'user-lname' => $person->lname(),
+                'user_website' => $user_website,
+                'user_social' => $user_social,
+                'user-bio' => $person->get('PER_bio'),
+            );
+        }
     }
 
     return isset($values[$name]) ? $values[$name] : $value;
@@ -105,6 +111,7 @@ function set_field_values($value, $field, $name) {
 
 add_filter('gform_pre_render_7', 'GF_prepopulate_profile_photo');
 
+//TBD this code does not work as defaultValue is not a valid field for photo
 function GF_prepopulate_profile_photo($form) {
     //check if facilitator exists
     global $current_user;
@@ -112,40 +119,37 @@ function GF_prepopulate_profile_photo($form) {
     $userEmail = (string) $current_user->user_email;
 
     $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-	if( !empty($person) ) {
-		$person_id = $person->ID();
-		//if they do populate the image field
-		if ($person_id) {
-			foreach ($form["fields"] as &$field) {
-				if ($field["id"] == 118) {
-					$field["defaultValue"] = get_the_post_thumbnail_url($person_id);
-					//echo 'featured image url can be found at ' . get_the_post_thumbnail_url($person_id);
-					//var_dump($field);
-				}
-			}
-		}
-	}
+    if ($person) {
+        $person_id = $person->ID();
+
+        //populate the image field
+        foreach ($form["fields"] as &$field) {
+            if ($field["id"] == 118) {
+                $field["defaultValue"] = get_the_post_thumbnail_url($person_id);
+            }
+        }
+    }
     return $form;
 }
 
 //update the person record
-function updatePerson($parameter_array, $entry, $person){    
-    $userBio   = getFieldByParam('user-bio', $parameter_array, $entry);    
+function updatePerson($parameter_array, $entry, $person) {
+    $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
     $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
     $userLname = getFieldByParam('user-lname', $parameter_array, $entry);
-    $userFullName = $userFname.' '.$userLname;    
+    $userFullName = $userFname . ' ' . $userLname;
     $currBio = $person->get('PER_bio');
 
-    if($userFname != $person->fname())
+    if ($userFname != $person->fname())
         $person->set_fname($userFname);
-    
-    if($userLname != $person->lname())
+
+    if ($userLname != $person->lname())
         $person->set_lname($userLname);
-        
-    if($userBio != $currBio)
+
+    if ($userBio != $currBio)
         $person->set('PER_bio', $userBio);
-    
-    if($userFullName != $person->get('PER_full_name'))
-        $person->set('PER_full_name', $userFname.' '.$userLname);
+
+    if ($userFullName != $person->get('PER_full_name'))
+        $person->set('PER_full_name', $userFname . ' ' . $userLname);
     $person->save();
 }
