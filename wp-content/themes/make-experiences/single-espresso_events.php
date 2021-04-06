@@ -176,7 +176,9 @@ get_header();
 									?>
 
 								</div>
-							<?php } ?>
+							<?php } 
+							get_template_part( 'template-parts/content-espresso_events-people', 'page' );
+							?>
 						</div>
 
 						<div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
