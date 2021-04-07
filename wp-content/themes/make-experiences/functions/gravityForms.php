@@ -1,12 +1,12 @@
 <?php
 
 //This filter declaration targets form 10 - field 9 - the last digit is the column in the list field
-//add_filter('gform_column_input_content_10_9_1', 'set_date_field_type', 10, 6);
+add_filter('gform_column_input_content_10_9_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_9_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_9_3', 'set_time_field_type', 10, 6);
 
 //This filter declaration targets form 10 - field 11 - the last digit is the column in the list field
-//add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
+add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
@@ -17,7 +17,7 @@ function set_date_field_type($input, $input_info, $field, $text, $value, $form_i
     $input_field_id = 'input_' . $form_id . '_' . $field->id;
     $tabindex = GFCommon::get_tabindex();
 
-    $new_input = '<input name="' . $input_field_name . '" ' . $tabindex . ' id="' . $input_field_id . '" type="text" value="' . $value . '" class="datepicker medium mdy datepicker_no_icon hasDatepicker" tabindex="100002" aria-describedby="input_10_12_date_format">' .
+    $new_input = '<input name="' . $input_field_name . '" id="' . $input_field_name . '" ' . $tabindex . ' type="date" placeholder="mm-dd-yyyy" onKeyDown="numbersAndDashes()" value="' . $value . '" class="datepicker medium mdy datepicker_no_icon hasDatepicker" aria-describedby="input_10_12_date_format">' .
             ' <span id="' . $input_field_id . '_date_format" class="screen-reader-text">Date Format: MM slash DD slash YYYY</span>';
     return $new_input;
 }
@@ -28,7 +28,7 @@ function set_time_field_type($input, $input_info, $field, $text, $value, $form_i
     $input_field_name = 'input_' . $field->id . '[]';
     $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
 	
-    $new_input = '<input type="text" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' class="time ui-timepicker-input" id="' . $input_field_id . '">';    //15 minute increments
+    $new_input = '<input type="text" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' class="time ui-timepicker-input">';
 
     return $new_input;
 }
