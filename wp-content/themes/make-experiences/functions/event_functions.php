@@ -22,6 +22,7 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
         array('143', 'image_4'),
         array('144', 'image_5'),
         array('145', 'image_6'),
+        array('150', 'about'),
         array('', 'promo_videos', 'field_5f7cd1ffdd06a'),
         array('', 'short_description'),
         array('', 'audience', 'field_5f35a5f833a04'),
@@ -46,14 +47,14 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
         array('', 'attendee_communication_email'),
         array('', 'webinar_link')
     );
-   
+
     //update the acf fields with the submitted values from the form
     foreach ($field_mapping as $field) {
         $fieldID = 0;
         if ($field[0] == '') {
             //determine field id by parameter name
             $paramName = $field[1];
-            
+
             if (isset($parameterArray[$paramName])) {
                 $fieldInfo = $parameterArray[$paramName];
                 if (isset($fieldInfo)) {
@@ -63,19 +64,12 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
         } else {
             $fieldID = $field[0];
         }
-        
+
         $meta_field = $field[1];
-        echo '$meta_field='.$meta_field.'<br/>';
-        if($meta_field =='materials'){
-            echo '$fieldID='.$fieldID.'<br/>';
-            echo 'field type = '.$fieldData->type.'<br/>';
-            echo 'materials = '.$entry[$fieldID].'<br/>';
-        }
-        
         $field_key = (isset($field[2]) ? $field[2] : '');
         $fieldData = GFAPI::get_field($form, $fieldID);
 
-        if ($fieldID!=0 && isset($entry[$fieldID])) {
+        if ($fieldID != 0 && isset($entry[$fieldID])) {
             if ($fieldData->type == 'post_custom_field' && $fieldData->inputType == 'list' || $fieldData->type == 'list') {
                 $listArray = explode(', ', $fieldData->get_value_export($entry));
                 $num = 1;
@@ -142,4 +136,19 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
     update_field("social_links", $repeater, $personID);
     update_field("website", $userWebsite, $personID);
     update_field("facilitator_info", $facilitator_info, $personID);
+}
+
+function update_sched_ticket_acf($schedArray, $eventID) {
+    //acf field - tickets_scheduling (repeater)
+    /*
+      ticket_name
+      ticket_price
+      ticket_description
+      minimum_num_tickets
+      maximum_num_of_tickets
+      preferred_schedule
+      alternate_schedule
+     */
+    update_field('field_606e135e03fa2', $schedArray,$eventID);
+    
 }

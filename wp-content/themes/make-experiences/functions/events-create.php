@@ -51,6 +51,7 @@ function create_event($entry, $form) {
         //get the list of entry id's for the nested form
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
         $nstEntryArr = explode(",", $nstEntryIDs);
+        $schedArray = array();
         foreach ($nstEntryArr as $nstEntryID) {
             $nst_entry = GFAPI::get_entry($nstEntryID);
             $nest_parameter_arr = find_field_by_parameter($nstForm); //find all fields with paramater names set in nested form
@@ -63,6 +64,7 @@ function create_event($entry, $form) {
             $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
             $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
             $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
+            
             //create the ticket instance
             $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
                         'TKT_description' => $ticketDesc,
@@ -85,9 +87,10 @@ function create_event($entry, $form) {
             $prefSched = unserialize($prefSchedSer);
 
             //create tickets
+            $preferred_schedule = array();
             foreach ($prefSched as $sched) {
                 //Start Date
-                $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);
+                $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);                
                 $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
 
                 //End Date
@@ -102,8 +105,31 @@ function create_event($entry, $form) {
 
                 $d->save();
                 $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
+                
+                //set the preferred schedule for the ACF
+                $preferred_schedule[] = array('date'=> $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
             }
+            //set alternate schedule
+            $alternate_schedule = array();
+            $altSched = unserialize($altSchedSer);
+            
+            foreach ($altSched as $sched) {
+                //set the preferred schedule for the ACF
+                $alternate_schedule[] = array('date'=> $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+            }
+                        
+            $schedArray[] = array('ticket_name'        => $ticketName,                                                                
+                                  'ticket_price'       => $ticketPrice,
+                                  'ticket_description' => $ticketDesc,
+                                  'min_num_tickets'    => $ticketMin,
+                                  'max_num_tickets'    => $ticketMax,
+                                  'schedule_description'  => $schedDesc,
+                                  'preferred_schedule' => $preferred_schedule,
+                                  'alternate_schedule' => $alternate_schedule );
         }
+                
+        //set ACF schedule and Tickets info
+        update_sched_ticket_acf($schedArray, $eventID);        
     }
 
     $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
