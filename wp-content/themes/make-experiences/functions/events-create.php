@@ -17,15 +17,22 @@ function create_event($entry, $form) {
     $userID = $current_user->ID;
     $userEmail = (string) $current_user->user_email;
 
+    //find all fields set with a parameter name 
+    $parameter_array = find_field_by_parameter($form);
+    
     //first create the event
+    $eventName          = getFieldByParam('event-name', $parameter_array, $entry);//event-name
+    $longDescription    = getFieldByParam('long-description', $parameter_array, $entry);//long-description
+    $shortDescription   = getFieldByParam('short-description', $parameter_array, $entry);//short_description
+    
     $currDateTime = date(DATE_ATOM, mktime(0, 0, 0, 7, 1, 2000));
     $event = EE_Event::new_instance(
-                    array('EVT_name' => $entry[1],
-                        'EVT_desc' => $entry[2],
-                        'EVT_short_desc' => $entry[119],
-                        'EVT_wp_user' => $userID,
-                        'status' => "pending",
-                        'EVT_visible_on' => $currDateTime
+                    array('EVT_name'        => $eventName,
+                        'EVT_desc'          => $longDescription,
+                        'EVT_short_desc'    => $shortDescription,
+                        'EVT_wp_user'       => $userID,
+                        'status'            => "pending",
+                        'EVT_visible_on'    => $currDateTime
     ));
     $event->save();
     $eventID = $event->ID();
@@ -34,16 +41,10 @@ function create_event($entry, $form) {
      *      Ticket and schedule information is set in a nested form
      *      Need to get nested form ID and then loop through the nested form information 
      */
-
-    //pull field by variable name 
-    $parameter_array = find_field_by_parameter($form);
-
-    //TBD check if entry is blank
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
 
     //pull nested form to get submitted schedule/ticket
     if (isset($parameter_array['nested-form'])) {
-
         $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : 10);
         $nstForm = GFAPI::get_form($nstFormID);
 
@@ -78,7 +79,7 @@ function create_event($entry, $form) {
             $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
             //Schedule Info
             $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
-            $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
+            $altSchedSer  = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
 
             //TBD - Note we need to do something more secure here to avoid code injection
             $prefSched = unserialize($prefSchedSer);
@@ -141,8 +142,8 @@ function create_event($entry, $form) {
      * Now that the event is created, let's transfer data from the entry to the event
      */    
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
-    update_event_acf($entry, $form, $eventID); // Set the ACF data    
-    update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
+    update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data    
+    //update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
 }
 
 /*  This function performs the internal rest requests to Event Espresso */
