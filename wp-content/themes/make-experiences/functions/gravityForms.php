@@ -26,9 +26,9 @@ function set_date_field_type($input, $input_info, $field, $text, $value, $form_i
 function set_time_field_type($input, $input_info, $field, $text, $value, $form_id) {
     $tabindex = GFCommon::get_tabindex();
     $input_field_name = 'input_' . $field->id . '[]';
-    $input_field_id = 'input_' . $form_id . '_' . $field->id;
-
-    $new_input = '<input type="time" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' step="900" >';    //15 minute increments
+    $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
+	
+    $new_input = '<input type="text" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' class="time ui-timepicker-input" id="' . $input_field_id . '">';    //15 minute increments
 
     return $new_input;
 }

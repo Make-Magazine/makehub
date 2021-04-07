@@ -261,6 +261,7 @@
 		}
 	}
 }
+
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     margin-bottom: -35px;
@@ -410,6 +411,9 @@
 	.gfield_radio li input[type=radio]+input[type=text] {
 		border-radius: 20px;
 		padding: 8px !important;
+	}
+	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
+		top: 9px;
 	}
 }
 
