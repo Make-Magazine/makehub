@@ -14,14 +14,11 @@ jQuery(document).ready(function ($) {
             }
             reader.readAsDataURL(input.files[0]);
         }
-    }
-	/*jQuery('.datepicker').delegate("click", function () { 
-		$(this).datepicker({showOn:'focus'}).focus(); 
-	});*/
+    }	
+	
 });
 
-
-$(document).on("mouseenter touchstart",".time",function(e){
+jQuery(document).on("mouseenter touchstart",".time",function(e){
 	jQuery(".ui-timepicker-wrapper").remove();
 	jQuery(this).timepicker({ 
 		stopScrollPropagation: false,
@@ -32,23 +29,15 @@ $(document).on("mouseenter touchstart",".time",function(e){
 	} );
 });
 
-/*$(document).on("click",".datepicker",function(e){
-	console.log("this is happening");
-	jQuery(this).datepicker();
-});*/
 
+function numbersAndDashes() {
+    var e = event || window.event;  // get event object
+    var key = e.keyCode || e.which; // get key cross-browser
+	var charCode = (e.which) ? e.which : e.keyCode;
+    if (charCode != 46 && charCode != 45 && charCode > 31  && (charCode < 48 || charCode > 57)) {
+        //Prevent default action, which is inserting character
+        if (e.preventDefault) e.preventDefault(); //normal browsers
+        e.returnValue = false; //IE
+    }
+}
 
-
-/*jQuery(document).on('gform_post_render', function(event, formId, currentPage) {
-	alert("is this on?");
-	jQuery('.time').each(function(i, obj) {
-		jQuery(".ui-timepicker-wrapper").remove();
-		 jQuery(this).timepicker({
-			stopScrollPropagation: false,
-			disableTextInput: true,
-			disableTouchKeyboard: true,
-			orientation: "bl",
-			step: 15
-		} );
-	});
-});*/
