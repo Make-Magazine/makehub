@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Pulls makre information from the makerfaire.com database
+ * Pulls maker information from the makerfaire.com database
  */
 
 function profile_tab_makerfaire_infoname() {
@@ -67,7 +67,7 @@ function makerfaire_info_content() {
     $entryData = array();
 
     foreach ($entries as $entry) {        
-        $faire_name = ($entry['faire']=='NMF16'?'National Maker Faire 2016': $entry['faire_name']);
+        $faire_name = ($entry['faire']=='NMF16' ? 'National Maker Faire 2016': $entry['faire_name']);
         $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
