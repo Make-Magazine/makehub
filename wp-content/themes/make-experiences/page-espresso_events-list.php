@@ -18,18 +18,31 @@ get_header();
 
 			<div class="events-list">
 
-
 				<?php
 				/* Start the Loop */
 				$args = array( 'post_type' => 'espresso_events' );
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
-					/*
-					 * Include the Post-Format-specific template for the content.
-					 * If you want to override this in a child theme, then include a file
-					 * called content-___.php (where ___ is the Post Format name) and that will be used instead.
-					 */
-					get_template_part( 'template-parts/content', apply_filters( 'bb_blog_content', get_post_format() ) );
+
+					global $post;
+				    $date = $post->EE_Event->first_datetime(); 
+				 	$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
+					$startime = date('F j, Y @ g:i a', strtotime($date->start_time()));
+					$endime = date('g:i a', strtotime($date->end_time()));
+					$return = '<a href="' . get_permalink() . '">
+							     <article id="post-' . $post->ID . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
+								   <div class="event-truncated-date">' . $dateFormat . '</div>
+								   <div class="event-image">
+								   	 <img src="' . get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) . '" />
+								   </div>
+								   <div class="event-info">
+								   	 <div class="event-date">'. $startime . ' - ' . $endime . '</div>
+									 <div class="event-title"></div>
+								   </div>';
+									
+					$return .= ' </article>
+							   </a>';
+				    echo $return;
 
 				endwhile;
 				?>
