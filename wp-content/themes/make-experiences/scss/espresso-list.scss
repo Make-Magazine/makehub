@@ -1,8 +1,32 @@
-.post-type-archive-espresso_events {
+.page-template-page-espresso_events-list {
 	article {
-		.post-inner-wrap {
+		background: #fff;
+		padding: 20px 25px;
+		margin-bottom: 15px;
+		border: solid 1px $color-light-grey;
+		border-radius: 4px;
+		display: flex;
+		.event-truncated-date {
 			display: flex;
+			flex-direction: column;
+			margin-right: 20px;
+		}
+		.event-image a {
+			width: 330px;
+			height: 250px;
+			img {
+				object-fit: cover;
+			}
+		}
+		.event-info {
+			margin: 0px 20px;
+			.event-title {
+				a { color: #333; }
+			}
+		}
+		.event-prices {
+			margin-top: 10px;
+			.btn { margin-right: 15px; }
 		}
 	}
-
 }
