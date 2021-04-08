@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Users_Controller_V1' ) ) && ( class_exists( 'WP_REST_Users_Controller' ) ) ) {
 	class LD_REST_Users_Controller_V1 extends WP_REST_Users_Controller {
 

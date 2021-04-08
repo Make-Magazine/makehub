@@ -67,10 +67,7 @@ do_action( 'learndash-quiz-row-before', $quiz['post']->ID, $course_id, $user_id 
 			do_action( 'learndash-quiz-row-title-before', $quiz['post']->ID, $course_id, $user_id );
 			?>
 
-			<div class="ld-item-title"><?php
-				// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-				echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) );
-			?></div>
+			<div class="ld-item-title"><?php echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); ?></div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 
 			<?php
 			/**

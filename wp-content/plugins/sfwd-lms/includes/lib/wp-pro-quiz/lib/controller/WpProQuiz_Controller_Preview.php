@@ -22,9 +22,10 @@ class WpProQuiz_Controller_Preview extends WpProQuiz_Controller_Controller {
 			array(
 				'ajaxurl'            => str_replace( array( 'http:', 'https:' ), array( '', '' ), admin_url( 'admin-ajax.php' ) ),
 				'loadData'           => esc_html__( 'Loading', 'learndash' ),
-				'questionNotSolved'  => esc_html__( 'You must answer this question.', 'learndash' ),
-				// translators: placeholder: quiz.
-				'questionsNotSolved' => sprintf( esc_html_x( 'You must answer all questions before you can complete the %s.', 'placeholder: quiz', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ) ),
+				// translators: placeholder: question
+				'questionNotSolved'  => sprintf( esc_html_x( 'You must answer this %s.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
+				// translators: placeholder: questions, quiz.
+				'questionsNotSolved' => sprintf( esc_html_x( 'You must answer all %1$s before you can complete the %2$s.', 'placeholder: questions, quiz', 'learndash' ), learndash_get_custom_label_lower( 'questions' ), learndash_get_custom_label_lower( 'quiz' ) ),
 				'fieldsNotFilled'    => esc_html__( 'All fields have to be filled.', 'learndash' ),
 			)
 		);

@@ -152,7 +152,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		 * @param array  $field_args Array of field args.
 		 * @param object $request    Request object.
 		 */
-		public function field_value_to_rest_value( $val , $key, $field_args, WP_REST_Request $request ) {
+		public function field_value_to_rest_value( $val, $key, $field_args, WP_REST_Request $request ) {
 			if ( ( isset( $field_args['field']['type'] ) ) && ( $field_args['field']['type'] === $this->field_type ) ) {
 				if ( isset( $field_args['field']['rest']['rest_args']['schema']['type'] ) ) {
 					if ( 'integer' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {

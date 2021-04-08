@@ -13,6 +13,10 @@
  * @package LearnDash\Course
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 switch ( $context ) {
 
 	// ------------- Messages -------------
@@ -21,7 +25,7 @@ switch ( $context ) {
 	// Default Message: "Quiz complete. Results are being recorded."
 	case 'quiz_complete_message':
 		// Add alternate message here
-		//$message = 'Quiz complete. You Rock!';
+		// $message = 'Quiz complete. You Rock!';
 		break;
 
 	// Default Message: "<p><span class="wpProQuiz_correct_answer">0</span> of <span>0</span> questions answered correctly</p>"
@@ -105,7 +109,7 @@ switch ( $context ) {
 	// Notes: This message contains 1 numbers represented by X and wrapped in span HTML
 	case 'quiz_question_list_1_message':
 		// Add alternate message here
-		//$message = '<span>'. $placeholders[0] .'</span> Question XXX';
+		// $message = '<span>'. $placeholders[0] .'</span> Question XXX';
 		break;
 
 	// Default Message: 'Question <span>X</span> of <span>Y</span>'
@@ -191,13 +195,23 @@ switch ( $context ) {
 		// Add alternate message here
 		break;
 
-	// Default Message: 'Answered'
+	// Default Message: 'Review'
+	case 'quiz_quiz_review_message':
+		// Add alternate message here
+		break;
+
+		// Default Message: 'Answered'
 	case 'quiz_quiz_answered_message':
 		// Add alternate message here
 		break;
 
-	// Default Message: 'Review'
-	case 'quiz_quiz_review_message':
+	// Default Message: 'Correct'
+	case 'quiz_quiz_answered_correct_message':
+		// Add alternate message here
+		break;
+
+	// Default Message: 'Incorrect'
+	case 'quiz_quiz_answered_incorrect_message':
 		// Add alternate message here
 		break;
 

@@ -1434,22 +1434,24 @@ function bp_zoom_api_host_show() {
 function bp_zoom_api_check_connection_button() {
 	?>
 	<p>
+		<?php if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) { ?>
+			<a class="button" href="
+				<?php
+				echo esc_url(
+					bp_get_admin_url(
+						add_query_arg(
+							array(
+								'page'    => 'bp-help',
+								'article' => 88334,
+							),
+							'admin.php'
+						)
+					)
+				);
+				?>
+				"><?php esc_html_e( 'View Tutorial', 'buddyboss-pro' ); ?></a>
+		<?php } ?>
 		<a class="button-primary" href="#" id="bp-zoom-check-connection"><?php esc_html_e( 'Check Connection', 'buddyboss-pro' ); ?></a>
-		<a class="button" href="
-		<?php
-		echo esc_url(
-			bp_get_admin_url(
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 88334,
-					),
-					'admin.php'
-				)
-			)
-		);
-		?>
-		"><?php esc_html_e( 'View Tutorial', 'buddyboss-pro' ); ?></a>
 	</p>
 	<?php
 }

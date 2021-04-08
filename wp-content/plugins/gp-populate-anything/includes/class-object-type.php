@@ -349,11 +349,15 @@ abstract class GPPA_Object_Type {
 		}
 
 		if ( ! empty( $query_args['order_by'] ) && ! empty( $query_args['order'] ) ) {
-			$order_by = self::esc_property_to_ident( $query_args['order_by'] );
+			$order_by = self::esc_property_to_ident( $query_args['order_by'], 'order_by' );
 			$order    = $query_args['order'];
 
-			if ( ! in_array( strtoupper( $order ), array( 'ASC', 'DESC' ) ) ) {
+			if ( ! in_array( strtoupper( $order ), array( 'ASC', 'DESC', 'RAND' ), true ) ) {
 				$order = 'DESC';
+			} elseif ( strtoupper( $order ) === 'RAND' ) {
+				// Use MySQL's rand() function if random ordering is requested.
+				$order_by = 'rand()';
+				$order    = '';
 			}
 
 			$query[] = "ORDER BY {$order_by} {$order}";
@@ -370,8 +374,10 @@ abstract class GPPA_Object_Type {
 
 		$specification = '%s';
 
-		/* Cast numeric strings to the appropriate type for operators such as > and < */
-		if ( is_numeric( $value ) ) {
+		// Cast numeric strings to the appropriate type for operators such as > and <.
+		// Regex check ensures that strings mimicing scientific notation like "1e4465" are not cast
+		// to infinity which breaks SQL.
+		if ( is_numeric( $value ) && ! preg_match( '/[a-z]/i', $value ) ) {
 			$value = ( $value == (int) $value ) ? (int) $value : (float) $value;
 		}
 
@@ -496,7 +502,22 @@ abstract class GPPA_Object_Type {
 		return ! is_serialized( $value );
 	}
 
-	public static function esc_property_to_ident( $property ) {
+	/**
+	 * Escapes property for an SQL query
+	 *
+	 * Prepares $property for use in an SQL statement. 'table.name' would be escaped as '`table`.`name`'.
+	 * If 'order_by' is passed in $clause and $property contained spaces, this function will return $property
+	 * without any modifications.
+	 *
+	 * @param string $property String to escape
+	 * @param string $clause Current clause being processed (accepts 'order_by')
+	 *
+	 * @return string
+	 */
+	public static function esc_property_to_ident( $property, $clause = '' ) {
+		if ( preg_match( '/\s/', $property ) && $clause === 'order_by' ) {
+			return $property;
+		}
 		return implode( '.', self::esc_sql_ident( explode( '.', $property ) ) );
 	}
 

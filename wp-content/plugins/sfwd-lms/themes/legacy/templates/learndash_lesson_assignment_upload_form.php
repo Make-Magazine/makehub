@@ -15,6 +15,10 @@
  * @package LearnDash\Lesson
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( isset( $course_step_post ) ) && ( $course_step_post instanceof WP_Post ) ) {
 
 	$post_settings = learndash_get_setting( $course_step_post );

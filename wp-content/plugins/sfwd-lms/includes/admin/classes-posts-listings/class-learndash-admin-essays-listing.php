@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'author'      => array(
 					'type'                     => 'user',
@@ -126,7 +130,11 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			$this->columns = array(
 				'title'           => array(
-					'label' => esc_html__( 'Essay Question Title', 'learndash' ),
+					'label' => sprintf(
+						// translators: placeholder: Essay Question Title
+						esc_html_x( 'Essay %s Title', 'placeholder: Essay Question Title', 'learndash' ),
+						learndash_get_custom_label( 'question' )
+					),
 				),
 				'author'          => array(
 					'label' => esc_html__( 'Submitted By', 'learndash' ),
@@ -177,6 +185,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 
 			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_essays' ), 30, 3 );
 		}
@@ -632,14 +642,16 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							echo sprintf(
 								// translators: placeholders: Points label, points input, maximum points.
 								esc_html_x( '%1$s: %2$s / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								$points_label, $points_input, absint( $max_points )
+								$points_label, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								$points_input, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								absint( $max_points )
 							);
 						} else {
 							$points_field = '<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>';
 							echo sprintf(
 								// translators: placeholders: Points label, current points, maximum points.
 								esc_html_x( '%1$s: %2$d / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								$points_field,
+								$points_field, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								absint( $current_points ),
 								absint( $max_points )
 							);
@@ -672,7 +684,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					$row_actions = array();
 
 					$filter_url = add_query_arg( 'course_id', $course_id, $this->get_clean_filter_url() );
-					echo '<a href="' . esc_url( $filter_url ) . '">' . get_the_title( $course_id ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $course_id ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
 					if ( current_user_can( 'edit_post', $course_id ) ) {
@@ -681,7 +693,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					if ( is_post_type_viewable( get_post_type( $course_id ) ) ) {
 						$row_actions['ld-post-view'] = '<a href="' . esc_url( get_permalink( $course_id ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 					}
-					echo $this->list_table_row_actions( $row_actions );
+					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -701,10 +713,9 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 					$row_actions = array();
 
 					$filter_url = add_query_arg( 'lesson_id', $lesson_id, $this->get_clean_filter_url() );
-					echo '<a href="' . esc_url( $filter_url ) . '">' . get_the_title( $lesson_id ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '">' . wp_kses_post( get_the_title( $lesson_id ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
-					// $course_id = learndash_get_course_id( $lesson_id );
 					$course_id = get_post_meta( $post_id, 'course_id', true );
 					if ( current_user_can( 'edit_post', $lesson_id ) ) {
 						$edit_url = get_edit_post_link( $lesson_id );
@@ -723,7 +734,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						}
 						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 					}
-					echo $this->list_table_row_actions( $row_actions );
+					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -751,7 +762,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( ! empty( $quiz_post_id ) ) {
 					$filter_url = add_query_arg( 'quiz_id', $quiz_post_id, $this->get_clean_filter_url() );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . get_the_title( $quiz_post_id ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $quiz_post_id ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
 					$course_id = get_post_meta( $post_id, 'course_id', true );
@@ -774,7 +785,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 						$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $quiz_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 					}
-					echo $this->list_table_row_actions( $row_actions );
+					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -806,7 +817,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				if ( ! empty( $question_post_id ) ) {
 					$filter_url = add_query_arg( 'question_id', $question_post_id, $this->get_clean_filter_url() );
 
-					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . get_the_title( $question_post_id ) . '</a>';
+					echo '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . wp_kses_post( get_the_title( $question_post_id ) ) . '</a>';
 					$row_actions['ld-post-filter'] = '<a href="' . esc_url( $filter_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'filter' ) ) . '">' . esc_html__( 'filter', 'learndash' ) . '</a>';
 
 					$quiz_id = get_post_meta( $question_post_id, 'quiz_id', true );
@@ -827,7 +838,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							$row_actions['ld-post-view'] = '<a href="' . esc_url( $view_url ) . '" aria-label="' . esc_attr( $this->get_aria_label_for_post( $question_post_id, 'view' ) ) . '">' . esc_html__( 'view', 'learndash' ) . '</a>';
 						}
 					}
-					echo $this->list_table_row_actions( $row_actions );
+					echo wp_kses_post( $this->list_table_row_actions( $row_actions ) );
 				}
 			}
 		}
@@ -1028,7 +1039,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 
 			if ( ! empty( $selector_options ) ) {
 				foreach ( $selector_options as $question_id => $question_title ) {
-					echo '<option value="' . absint( $question_id ) . '" ' . selected( absint( $question_id ), absint( $selector['selected'] ), false ) . '>' . apply_filters( 'the_title', $question_title, $question_id ) . '</option>';
+					echo '<option value="' . absint( $question_id ) . '" ' . selected( absint( $question_id ), absint( $selector['selected'] ), false ) . '>' . wp_kses_post( $question_title ) . '</option>';
 				}
 			}
 

@@ -402,7 +402,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Quizzes' ) ) {
 				$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_dir;
 				return $data;
 			}
-			file_put_contents( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php', '// nothing to see here' );
+			learndash_put_directory_index_file( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php' );
 
 			/** This filter is documented in includes/admin/classes-data-reports-actions/class-learndash-admin-data-reports-user-courses.php */
 			$this->transient_data['report_filename'] = apply_filters( 'learndash_report_filename', $ld_wp_upload_filename, $this->data_slug );

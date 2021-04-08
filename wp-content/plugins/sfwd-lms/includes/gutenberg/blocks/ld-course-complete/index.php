@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Course_Complete' ) ) ) {
 	/**
 	 * Class for handling LearnDash Course Complete Block

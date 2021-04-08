@@ -12,6 +12,10 @@
  * @package LearnDash\Quiz
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $category_output = esc_html__( 'Categories', 'learndash' ) . ":\n";
 foreach ( $category_scores as $cat_id => $score ) {
 	if ( ! isset( $question_categories[ $cat_id ] ) ) {

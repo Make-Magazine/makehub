@@ -129,7 +129,6 @@ function learndash_should_load_admin_assets() {
  */
 function learndash_load_admin_resources() {
 	global $pagenow, $post, $typenow;
-	// global $learndash_post_types, $learndash_pages;
 	global $learndash_assets_loaded;
 
 	wp_enqueue_style(
@@ -608,7 +607,6 @@ function learndash_delete_all_data() {
 	$learndash_db_tables = LDLMS_DB::get_tables();
 	if ( ! empty( $learndash_db_tables ) ) {
 		foreach ( $learndash_db_tables as $table_name ) {
-			// $table_name = $wpdb->prefix . $table_name;
 			if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
 				$wpdb->query( 'DROP TABLE ' . $table_name );
 			}
@@ -797,9 +795,6 @@ function learndash_admin_notice_other_lms_plugins() {
 	global $learndash_other_plugins_active_text;
 
 	$current_screen = get_current_screen();
-	//if ( ! in_array( $current_screen->id, array( 'admin_page_nss_plugin_license-sfwd_lms-settings', 'admin_page_learndash_lms_overview' ), true ) ) {
-	//	return false;
-	//}
 
 	if ( ! empty( $learndash_other_plugins_active_text ) ) {
 		$notice_time = get_user_meta( get_current_user_id(), 'learndash_other_plugins_notice_dismissed_nonce', true );

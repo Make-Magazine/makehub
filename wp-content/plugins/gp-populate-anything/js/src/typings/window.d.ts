@@ -33,15 +33,22 @@ declare global {
 		}
 		gform: any
 		gf_raw_input_change: any
-		GPPA_AJAXURL: string
-		GPPA_NONCE: string
-		GPPA_I18N: { [s: string]: string }
+		GPPA: {
+			AJAXURL: string
+			GF_BASEURL: string
+			NONCE: string
+			I18N: { [s: string]: string }
+		}
 		gf_global: any
-		GPPA_GF_BASEURL: string
 		gformInitChosenFields: any
 		GetSelectedField: any
 		ToggleCalculationOptions: any
 		GetInputType: any
 		SetFieldProperty: any
+		gformInitDatepicker: any
+		gformCalculateTotalPrice: (formId: string | number) => void
+		GPLimitDates: {
+			initDisabledDatepicker: ( $input: JQuery ) => void
+		}
 	}
 }

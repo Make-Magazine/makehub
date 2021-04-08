@@ -7,8 +7,10 @@
  * @package LearnDash\Quiz
  */
 
-?>
-<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 global $pagenow;
 global $typenow;
 global $quiz_navigation_admin_pager;

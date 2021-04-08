@@ -44,10 +44,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			// Used to show the section description above the fields. Can be empty.
 			$this->settings_section_description = sprintf(
-				wp_kses_post(
-					// translators: placeholder: Quizzes.
-					_x( '<p>Control the LearnDash %s Custom Post Type Options.</p>', 'placeholder: Questions', 'learndash' )
-				),
+				// translators: placeholder: Quizzes.
+				esc_html_x( 'Control the LearnDash %s Custom Post Type Options.', 'placeholder: Questions', 'learndash' ),
 				LearnDash_Custom_Label::get_label( 'questions' )
 			);
 

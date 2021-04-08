@@ -23,10 +23,8 @@ if ( isset( $context ) && 'lesson' === $context ) {
 
 			<?php learndash_status_icon( $quiz['status'], 'sfwd-quiz', null, true ); ?>
 
-			<div class="<?php echo esc_attr( $classes['title'] ); ?>"><?php
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) );
-			?></div> <!--/.ld-lesson-title-->
+			<div class="<?php echo esc_attr( $classes['title'] ); ?>"><?php echo wp_kses_post( apply_filters( 'the_title', $quiz['post']->post_title, $quiz['post']->ID ) ); ?> </div> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
+			<!--/.ld-lesson-title-->
 
 		</a> <!--/.ld-lesson-item-preview-heading-->
 	</div> <!--/.ld-lesson-item-preview-->

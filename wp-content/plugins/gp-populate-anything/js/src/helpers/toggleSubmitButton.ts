@@ -14,14 +14,20 @@ const toggleSubmitButton = ($form: JQuery, disabled: boolean) : void => {
 		return;
 	}
 
+	const formClass = 'gppa-navigation-disabled';
+
 	// Disable form submission while XHRs are active
 	if (disabled) {
-		$form.on('submit.gppa', (e) => {
-			e.preventDefault();
-			return false;
-		});
+		$form
+			.addClass( formClass )
+			.on('submit.gppa', (e) => {
+				e.preventDefault();
+				return false;
+			});
 	} else {
-		$form.off('submit.gppa');
+		$form
+			.off('submit.gppa')
+			.removeClass( formClass );
 	}
 
 	getSubmitButton($form).prop('disabled', disabled);

@@ -71,11 +71,8 @@ if ( ! class_exists( 'Learndash_Admin_Settings_Data_Reports' ) ) {
 								 */
 								do_action( 'learndash_csv_download_after_headers' );
 
-								//echo file_get_contents( $report_filename );
-								//readfile( $report_filename );
-
 								set_time_limit( 0 );
-								$report_fp = @fopen( $report_filename,"rb" );
+								$report_fp = @fopen( $report_filename, "rb" );
 								while( ! feof( $report_fp ) ) {
 									print( @fread( $report_fp, 1024*8 ) );
 									ob_flush();

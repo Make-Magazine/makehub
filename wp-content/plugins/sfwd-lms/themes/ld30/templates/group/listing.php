@@ -14,6 +14,10 @@
  * @package LearnDash\Group
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Display group courses if they exist
  *

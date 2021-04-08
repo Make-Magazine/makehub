@@ -17,21 +17,10 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
- } = wp.blocks;
-
- const {
-	InnerBlocks,
-	InspectorControls,
- } = wp.blockEditor;
-
-const {
-	PanelBody,
-	TextControl,
-	ToggleControl
-} = wp.components;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
 const block_title = __('LearnDash Certificate', 'learndash');
 
@@ -39,7 +28,7 @@ registerBlockType(
 	'learndash/ld-certificate',
 	{
 		title: block_title,
-		description: _x('This shortcode shows a Certificate download link.', 'learndash'),
+		description: __('This shortcode shows a Certificate download link.', 'learndash'),
 		icon: 'welcome-learn-more',
 		category: 'learndash-blocks',
 		supports: {

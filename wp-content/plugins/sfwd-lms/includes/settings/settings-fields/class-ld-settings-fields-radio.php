@@ -164,6 +164,16 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 						} else {
 							$val = false;
 						}
+					} elseif ( 'string' === $field_args['field']['rest']['rest_args']['schema']['type'] ) {
+						if ( ( isset( $field_args['field']['rest']['rest_args']['schema']['enum'] ) ) && ( ! empty( $field_args['field']['rest']['rest_args']['schema']['enum'] ) ) ) {
+							if ( ! in_array( $val, $field_args['field']['rest']['rest_args']['schema']['enum'], true ) ) {
+								if ( isset( $field_args['field']['rest']['rest_args']['schema']['default'] ) ) {
+									$val = $field_args['field']['rest']['rest_args']['schema']['default'];
+								} elseif ( isset( $field_args['field']['default'] ) ) {
+									$val = $field_args['field']['default'];
+								}
+							}
+						}
 					}
 				}
 			}

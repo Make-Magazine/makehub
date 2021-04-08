@@ -62,9 +62,18 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 
 		/**
 		 * Flag set when AJAX Fetsh process is running.
+		 *
+		 * @var bool $doing_ajax_fetch.
 		 */
 		protected $doing_ajax_fetch = false;
 
+		/**
+		 * Flag set when Listing init has been run. This is to prevent processing
+		 * the listing init more than once.
+		 *
+		 * @var bool $listing_init.
+		 */
+		protected $listing_init_done = false;
 		/**
 		 * Public constructor for class
 		 */
@@ -73,6 +82,9 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			add_action( 'load-users.php', array( $this, 'on_load_listing' ) );
 
 			add_action( 'wp_ajax_learndash_listing_select2_query', array( $this, 'ajax_listing_select2_query' ), 10 );
+
+			add_filter( 'manage_edit-' . $this->post_type . '_columns', array( $this, 'manage_column_headers' ), 50, 1 );
+			add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'manage_post_column_rows' ), 50, 3 );
 		}
 
 		/**
@@ -105,8 +117,6 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 			if ( $this->post_type_check() ) {
 				$this->listing_init();
 
-				add_filter( 'manage_edit-' . $this->post_type . '_columns', array( $this, 'manage_column_headers' ), 50, 1 );
-				add_action( 'manage_' . $this->post_type . '_posts_custom_column', array( $this, 'manage_post_column_rows' ), 50, 3 );
 				add_filter( 'manage_taxonomies_for_' . $this->post_type . '_columns', array( $this, 'manage_taxonomies_columns' ), 50, 2 );
 				add_filter( 'post_row_actions', array( $this, 'post_row_actions' ), 20, 2 );
 
@@ -246,6 +256,10 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @since 3.2.3
 		 */
 		public function listing_init() {
+			if ( true === $this->listing_init_done ) {
+				return;
+			}
+
 			// Initialize the listing taxonomies.
 			$this->listing_taxonomies_init();
 
@@ -779,13 +793,12 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @param integer $post_id     Post ID of row being displayed.
 		 */
 		public function manage_post_column_rows( $column_name = '', $post_id = 0 ) {
-			if ( $this->post_type_check() ) {
-				if ( ! empty( $this->columns ) ) {
-					foreach ( $this->columns as $column_key => $column ) {
-						if ( $column_key === $column_name ) {
-							if ( ( isset( $column['display'] ) ) && ( ! empty( $column['display'] ) ) && ( is_callable( $column['display'] ) ) ) {
-								call_user_func( $column['display'], $post_id, $column_name );
-							}
+			$this->listing_init();
+			if ( ! empty( $this->columns ) ) {
+				foreach ( $this->columns as $column_key => $column ) {
+					if ( $column_key === $column_name ) {
+						if ( ( isset( $column['display'] ) ) && ( ! empty( $column['display'] ) ) && ( is_callable( $column['display'] ) ) ) {
+							call_user_func( $column['display'], $post_id, $column_name );
 						}
 					}
 				}
@@ -854,23 +867,22 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @return array $colums  Modified array with new columns.
 		 */
 		public function manage_column_headers( $columns = array() ) {
-			if ( $this->post_type_check() ) {
-				if ( ! empty( $this->columns ) ) {
-					foreach ( $this->columns as $column_key => $column ) {
-						if ( ( isset( $column['after'] ) ) && ( ! empty( $column['after'] ) ) ) {
-							$col_pos = array_search( $column['after'], array_keys( $columns ), true );
-							if ( ( false !== $col_pos ) && ( $col_pos <= count( $columns ) ) ) {
-								$columns = array_merge(
-									array_slice( $columns, 0, $col_pos + 1 ),
-									array( $column_key => $column['label'] ),
-									array_slice( $columns, $col_pos )
-								);
-							} else {
-								$columns[ $column_key ] = $column['label'];
-							}
+			$this->listing_init();
+			if ( ! empty( $this->columns ) ) {
+				foreach ( $this->columns as $column_key => $column ) {
+					if ( ( isset( $column['after'] ) ) && ( ! empty( $column['after'] ) ) ) {
+						$col_pos = array_search( $column['after'], array_keys( $columns ), true );
+						if ( ( false !== $col_pos ) && ( $col_pos <= count( $columns ) ) ) {
+							$columns = array_merge(
+								array_slice( $columns, 0, $col_pos + 1 ),
+								array( $column_key => $column['label'] ),
+								array_slice( $columns, $col_pos )
+							);
 						} else {
 							$columns[ $column_key ] = $column['label'];
 						}
+					} else {
+						$columns[ $column_key ] = $column['label'];
 					}
 				}
 			}
@@ -1321,7 +1333,6 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 * @param array $selector Array of attributes used to display the filter selector.
 		 */
 		protected function show_taxonomy_selector( $selector = array() ) {
-
 			if ( ( ! isset( $selector['taxonomy'] ) ) || ( empty( $selector['taxonomy'] ) ) ) {
 				return false;
 			}
@@ -1332,7 +1343,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 				'id'                => $selector['field_id'],
 				'show_option_none'  => get_taxonomy( $selector['taxonomy'] )->labels->all_items,
 				'option_none_value' => '',
-				'hide_empty'        => $selector['selector_hide_empty'],
+				'hide_empty'        => isset( $selector['selector_hide_empty'] ) ? $selector['selector_hide_empty'] : false,
 				'hierarchical'      => get_taxonomy( $selector['taxonomy'] )->hierarchical,
 				'show_count'        => 0,
 				'orderby'           => 'name',
@@ -1360,7 +1371,7 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 						echo '<label class="screen-reader-text" for="' . esc_attr( $selector['field_id'] ) . '">' . esc_attr( $selector['field_label'] ) . '</label>';
 					}
 
-					if ( true === $selector['select2'] ) {
+					if ( ( isset( $selector['select2'] ) ) && ( true === $selector['select2'] ) ) {
 						$dropdown_html = str_replace( '<select ', '<select data-ld-select2="1" ', $dropdown_html );
 					}
 
@@ -2219,24 +2230,25 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 						),
 					);
 				} else {
-					if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
-						$steps_ids = learndash_course_get_steps_by_type( $selector['selected'], $this->post_type );
-						if ( ! empty( $steps_ids ) ) {
-							$q_vars['post__in'] = $steps_ids;
-							$q_vars['orderby']  = 'post__in';
-						} else {
-							$q_vars['post__in'] = array( 0 );
-						}
-					} else {
-						if ( ! isset( $q_vars['meta_query'] ) ) {
-							$q_vars['meta_query'] = array();
-						}
-
-						$q_vars['meta_query'][] = array(
-							'key'   => 'course_id',
-							'value' => absint( $selector['selected'] ),
+					$course_query_args   = array( 'relation' => 'OR' );
+					$course_query_args[] = array(
+						'key'     => 'course_id',
+						'value'   => absint( $selector['selected'] ),
+						'compare' => '=',
+					);
+					
+					if ( learndash_is_course_shared_steps_enabled() ) {
+						$course_query_args[] = array(
+							'key'     => 'ld_course_' . absint( $selector['selected'] ),
+							'value'   => absint( $selector['selected'] ),
+							'compare' => '=',
 						);
 					}
+					
+					if ( ! isset( $q_vars['meta_query'] ) ) {
+						$q_vars['meta_query'] = array();
+					}
+					$q_vars['meta_query'][] = $course_query_args;
 				}
 			}
 
@@ -2272,36 +2284,56 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 						),
 					);
 				} else {
-					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
-					}
 
-					/**
-					 * For Quiz listing if the Lesson selector is used we can't do a simple query based
-					 * on the 'lesson_id' filter. This is because in the post_meta the 'lesson_id' might
-					 * reference a Topic post. So we need to include logic to query not just the 'lesson_id'
-					 * values but also include all related topics.
-					 */
-					if ( in_array( $this->post_type, learndash_get_post_type_slug( array( 'quiz', 'essay', 'assignment' ) ), true ) ) {
-						$lesson_ids      = array( absint( $selector['selected'] ) );
-						$course_selector = $this->get_selector( 'course_id' );
-						if ( ( $course_selector ) && ( isset( $course_selector['selected'] ) ) && ( ! empty( $course_selector['selected'] ) ) ) {
-							$topics = learndash_get_topic_list( $selector['selected'], $course_selector['selected'] );
-							if ( ! empty( $topics ) ) {
-								$lesson_ids = array_merge( $lesson_ids, wp_list_pluck( $topics, 'ID' ) );
+					$course_selector = $this->get_selector( 'course_id' );
+					if ( ( $course_selector ) && ( isset( $course_selector['selected'] ) ) && ( ! empty( $course_selector['selected'] ) ) ) {
+						if ( learndash_is_course_shared_steps_enabled() ) {
+							$steps_ids = learndash_course_get_children_of_step( $course_selector['selected'], $selector['selected'], $this->post_type, 'ids', true );
+							if ( ! empty( $steps_ids ) ) {
+								if ( ( ! isset( $q_vars['post__in'] ) ) || ( empty( $q_vars['post__in'] ) ) ) {
+									$q_vars['post__in'] = $steps_ids;
+								} else {
+									$q_vars['post__in'] = array_merge( $q_vars['post__in'], $steps_ids );
+								}
+							} else {
+								$q_vars['post__in'] = array( 0 );
+							}
+						} else {
+							/**
+							 * For Quiz listing if the Lesson selector is used we can't do a simple query based
+							 * on the 'lesson_id' filter. This is because in the post_meta the 'lesson_id' might
+							 * reference a Topic post. So we need to include logic to query not just the 'lesson_id'
+							 * values but also include all related topics.
+							 */
+							if ( in_array( $this->post_type, learndash_get_post_type_slug( array( 'quiz', 'essay', 'assignment' ) ), true ) ) {
+								$lesson_ids     = array();
+								$course_lessons = learndash_get_lesson_list( $selector['selected'], $course_selector['selected'] );
+								if ( ! empty( $course_lessons ) ) {
+									$lesson_ids = wp_list_pluck( $course_lessons, 'ID' );
+								}
+								
+								if ( ! empty( $lesson_ids ) ) {
+									if ( ! isset( $q_vars['meta_query'] ) ) {
+										$q_vars['meta_query'] = array();
+									}
+
+									$q_vars['meta_query'][] = array(
+										'key'     => 'lesson_id',
+										'compare' => 'IN',
+										'value'   => $lesson_ids,
+									);
+								}
+							} else {
+								if ( ! isset( $q_vars['meta_query'] ) ) {
+									$q_vars['meta_query'] = array();
+								}
+
+								$q_vars['meta_query'][] = array(
+									'key'   => 'lesson_id',
+									'value' => absint( $selector['selected'] ),
+								);
 							}
 						}
-
-						$q_vars['meta_query'][] = array(
-							'key'     => 'lesson_id',
-							'compare' => 'IN',
-							'value'   => $lesson_ids,
-						);
-					} else {
-						$q_vars['meta_query'][] = array(
-							'key'   => 'lesson_id',
-							'value' => absint( $selector['selected'] ),
-						);
 					}
 				}
 			}
@@ -2321,30 +2353,40 @@ if ( ! class_exists( 'Learndash_Admin_Posts_Listing' ) ) {
 		 */
 		protected function listing_filter_by_topic( $q_vars, $selector = array() ) {
 			if ( ( isset( $selector['selected'] ) ) && ( ! empty( $selector['selected'] ) ) ) {
-				if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
-					$steps_ids = learndash_course_get_steps_by_type( $selector['selected'], $this->post_type );
-					if ( ! empty( $steps_ids ) ) {
-						$q_vars['post__in'] = $steps_ids;
-						$q_vars['orderby']  = 'post__in';
-					}
-				} else {
+				$course_selector = $this->get_selector( 'course_id' );
+				if ( ( $course_selector ) && ( isset( $course_selector['selected'] ) ) && ( ! empty( $course_selector['selected'] ) ) ) {
+					if ( learndash_is_course_shared_steps_enabled() ) {
+						$ld_course_steps_object = LDLMS_Factory_Post::course_steps( $course_selector['selected'] );
 
-					if ( ! isset( $q_vars['meta_query'] ) ) {
-						$q_vars['meta_query'] = array();
-					} else {
-						$lesson_item_found = false;
-						foreach ( $q_vars['meta_query'] as $meta_idx => &$meta_item ) {
-							if ( ( isset( $meta_item['key'] ) ) && ( 'lesson_id' === $meta_item['key'] ) ) {
-								$lesson_item_found  = true;
-								$meta_item['value'] = absint( $selector['selected'] );
-								break;
+						$steps_ids = $ld_course_steps_object->get_children_steps( $selector['selected'], $this->post_type );
+						if ( ! empty( $steps_ids ) ) {
+							if ( ( ! isset( $q_vars['post__in'] ) ) || ( empty( $q_vars['post__in'] ) ) ) {
+								$q_vars['post__in'] = $steps_ids;
+							} else {
+								$q_vars['post__in'] = array_merge( $q_vars['post__in'], $steps_ids );
 							}
+						} else {
+							$q_vars['post__in'] = array( 0 );
 						}
-						if ( ! $lesson_item_found ) {
-							$q_vars['meta_query'][] = array(
-								'key'   => 'lesson_id',
-								'value' => absint( $selector['selected'] ),
-							);
+					} else {
+
+						if ( ! isset( $q_vars['meta_query'] ) ) {
+							$q_vars['meta_query'] = array();
+						} else {
+							$lesson_item_found = false;
+							foreach ( $q_vars['meta_query'] as $meta_idx => &$meta_item ) {
+								if ( ( isset( $meta_item['key'] ) ) && ( 'lesson_id' === $meta_item['key'] ) ) {
+									$lesson_item_found  = true;
+									$meta_item['value'] = absint( $selector['selected'] );
+									break;
+								}
+							}
+							if ( ! $lesson_item_found ) {
+								$q_vars['meta_query'][] = array(
+									'key'   => 'lesson_id',
+									'value' => absint( $selector['selected'] ),
+								);
+							}
 						}
 					}
 				}

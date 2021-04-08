@@ -12,5 +12,9 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wpProQuiz_quizAnker" style="display: none;"></div>

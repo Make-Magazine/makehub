@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the LearnDash
  * custom post type Topics (sfwd-topic).
@@ -68,7 +72,7 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V2' ) ) && ( class_exists( 'LD
 				foreach ( $this->metaboxes as $metabox ) {
 					$metabox->load_settings_values();
 					$metabox->load_settings_fields();
-					$this->register_rest_fields( $metabox->get_settings_metabox_fields( $metabox ) );
+					$this->register_rest_fields( $metabox->get_settings_metabox_fields(), $metabox );
 				}
 			}
 		}
@@ -135,6 +139,14 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V2' ) ) && ( class_exists( 'LD
 			if ( ( true === $return ) && ( ! learndash_is_admin_user() ) ) {
 
 				$course_id = (int) $request['course'];
+				if ( ! empty( $course_id ) ) {
+					$GLOBALS['course_id'] = $course_id;
+				}
+
+				$topic_id = (int) $request['id'];
+				if ( ( $topic_id ) && ( sfwd_lms_has_access( $topic_id ) ) ) {
+					return true;
+				}
 
 				// If we don't have a course parameter we need to get all the courses the user has access to and all
 				// the courses the lesson is avaiable in and compare.

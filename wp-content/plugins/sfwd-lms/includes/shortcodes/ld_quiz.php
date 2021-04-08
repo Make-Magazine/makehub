@@ -85,7 +85,7 @@ function learndash_quiz_shortcode( $atts, $content = '', $show_materials = false
 		$quiz_settings = learndash_get_setting( $atts['quiz_id'] );
 		$meta          = SFWD_CPT_Instance::$instances['sfwd-quiz']->get_settings_values( 'sfwd-quiz' );
 
-		$show_content   = ! ( ! empty( $lesson_progression_enabled ) && ! is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) );
+		$show_content   = ! ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) );
 		$attempts_count = 0;
 		$repeats        = ( isset( $quiz_settings['repeats'] ) ) ? trim( $quiz_settings['repeats'] ) : '';
 		if ( '' === $repeats ) {
@@ -179,7 +179,7 @@ function learndash_quiz_shortcode( $atts, $content = '', $show_materials = false
 		$attempts_left = apply_filters( 'learndash_quiz_attempts', $attempts_left, absint( $attempts_count ), absint( $user_id ), absint( $quiz_post->ID ) );
 		$attempts_left = absint( $attempts_left );
 
-		if ( ! empty( $lesson_progression_enabled ) && ! is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) ) {
+		if ( ! empty( $lesson_progression_enabled ) && ! learndash_is_quiz_accessable( $user_id, $quiz_post, false, $course_id ) ) {
 			add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 );
 		}
 

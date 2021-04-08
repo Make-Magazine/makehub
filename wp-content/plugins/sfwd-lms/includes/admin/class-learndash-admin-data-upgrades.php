@@ -29,7 +29,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Upgrades' ) ) {
 		 *
 		 * @var array $_instances
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Upgrade Actions array

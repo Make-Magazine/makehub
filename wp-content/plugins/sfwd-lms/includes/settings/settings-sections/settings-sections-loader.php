@@ -56,7 +56,6 @@ require_once __DIR__ . '/class-ld-settings-section-groups-membership.php';
 require_once __DIR__ . '/class-ld-settings-section-courses-themes.php';
 require_once __DIR__ . '/class-ld-settings-section-general-per-page.php';
 require_once __DIR__ . '/class-ld-settings-section-general-admin-user.php';
-//require_once( __DIR__ . '/class-ld-settings-section-general-login-registration.php' );
 
 if ( ( defined( 'LEARNDASH_REST_API_ENABLED' ) ) && ( true === LEARNDASH_REST_API_ENABLED ) ) {
 	require_once __DIR__ . '/class-ld-settings-section-general-rest-api.php';
@@ -85,9 +84,6 @@ if ( ( defined( 'LEARNDASH_TRANSLATIONS' ) ) && ( LEARNDASH_TRANSLATIONS === tru
 	require_once __DIR__ . '/class-ld-settings-section-translations-refresh.php';
 	require_once __DIR__ . '/class-ld-settings-section-translations-learndash.php';
 }
-
-// Import/Export.
-//require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-sections-pages/class-ld-settings-page-import-export.php' );
 
 // Assignments
 require_once __DIR__ . '/class-ld-settings-section-assignments-cpt.php';

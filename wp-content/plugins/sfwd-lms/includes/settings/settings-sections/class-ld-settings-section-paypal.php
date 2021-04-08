@@ -108,7 +108,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'type'              => 'text',
 					'label'             => esc_html__( 'PayPal Currency', 'learndash' ),
 					'help_text'         => sprintf(
-						// translators: placholder: Link to PayPal.
+						// translators: placeholder: Link to PayPal.
 						esc_html_x( 'Enter the currency code for transactions. See PayPal %s Documentation', 'placeholder: URL to PayPal Currency Codes', 'learndash' ),
 						'<a href="https://developer.paypal.com/docs/api/reference/currency-codes/" target="_blank">' . esc_html__( 'Currency Codes', 'learndash' ) . '</a>'
 					),

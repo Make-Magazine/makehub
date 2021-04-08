@@ -10,6 +10,10 @@
  * @package Learndash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LDLMS_Base_Answer_Type' ) ) {
 
 	/**

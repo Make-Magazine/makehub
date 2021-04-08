@@ -176,6 +176,49 @@ class ACUI_Helper{
         return false;
     }
 
+    static function get_post_id_by_slug( $slug ){
+		global $wpdb;
+
+		$page_path     = rawurlencode( urldecode( $slug ) );
+		$page_path     = str_replace( '%2F', '/', $page_path );
+		$page_path     = str_replace( '%20', ' ', $page_path );
+		$parts         = explode( '/', trim( $page_path, '/' ) );
+		$parts         = array_map( 'sanitize_title_for_query', $parts );
+		$escaped_parts = esc_sql( $parts );
+
+		$in_string = "'" . implode( "','", $escaped_parts ) . "'";
+
+		$pages = $wpdb->get_results( $wpdb->prepare( "SELECT ID, post_name, post_parent, post_type FROM $wpdb->posts WHERE post_name IN (%s)", $in_string ), OBJECT_K );
+		$revparts = array_reverse( $parts );
+
+		$foundid = 0;
+
+		foreach ( (array) $pages as $page ) {
+			if ( $page->post_name == $revparts[0] ) {
+				$count = 0;
+				$p     = $page;
+
+				while ( 0 != $p->post_parent && isset( $pages[ $p->post_parent ] ) ) {
+					$count++;
+					$parent = $pages[ $p->post_parent ];
+					if ( ! isset( $revparts[ $count ] ) || $parent->post_name != $revparts[ $count ] ) {
+						break;
+					}
+					$p = $parent;
+				}
+
+				if ( 0 == $p->post_parent && count( $revparts ) == $count + 1 && $p->post_name == $revparts[ $count ] ) {
+					$foundid = $page->ID;
+					if ( $page->post_type == $p->post_type ) {
+						break;
+					}
+				}
+			}
+		}
+
+		return $foundid;
+	}
+
     function print_table_header_footer( $headers ){
         ?>
         <h3><?php echo apply_filters( 'acui_log_inserting_updating_data_title', __( 'Inserting and updating data', 'import-users-from-csv-with-meta' ) ); ?></h3>
@@ -219,8 +262,20 @@ class ACUI_Helper{
         foreach ( $data as $element ){
             if( is_wp_error( $element ) )
                 $element = $element->get_error_message();
-            elseif( is_array( $element ) )
-                $element = implode ( ',' , $element );
+            elseif( is_array( $element ) ){
+                $element_string = '';
+                $i = 0;
+
+                foreach( $element as $it => $el ){
+                    $element_string .= ( is_wp_error( $el ) ? $el->get_error_message() : $el );
+
+                    if(++$i !== count( $element ) ){
+                        $element_string .= ',';
+                    }
+                }
+
+                $element = $element_string;
+            }
 
             $element = sanitize_textarea_field( $element );
             echo "<td>$element</td>";
@@ -259,6 +314,32 @@ class ACUI_Helper{
                     <td><?php echo $error['type']; ?></td>
                 </tr>
                 <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php
+    }
+
+    function print_results( $results, $errors ){
+        ?>
+        <h3><?php _e( 'Results', 'import-users-from-csv-with-meta' ); ?></h3>
+        <table id="acui_errors">
+            <tbody>
+                <tr>
+                    <th><?php _e( 'Users processed', 'import-users-from-csv-with-meta' ); ?></th>
+                    <td><?php echo $results['created'] + $results['updated']; ?></td>
+                </tr>
+                <tr>
+                    <th><?php _e( 'Users created', 'import-users-from-csv-with-meta' ); ?></th>
+                    <td><?php echo $results['created']; ?></td>
+                </tr>
+                <tr>
+                    <th><?php _e( 'Users updated', 'import-users-from-csv-with-meta' ); ?></th>
+                    <td><?php echo $results['updated']; ?></td>
+                </tr>
+                <tr>
+                    <th><?php _e( 'Errors, warnings and notices found', 'import-users-from-csv-with-meta' ); ?></td>
+                    <td><?php echo count( $errors ); ?></td>
+                </tr>
             </tbody>
         </table>
         <?php

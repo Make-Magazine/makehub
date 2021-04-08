@@ -14,7 +14,7 @@ class GPPA_Compatibility_GravityView {
 
 	public function __construct() {
 
-		add_filter( 'gppa_hydrate_initial_load_entry_id', array( $this, 'hydrate_initial_load_entry_id' ), 10, 4 );
+		add_filter( 'gppa_hydrate_initial_load_entry', array( $this, 'hydrate_initial_load_entry' ), 10, 4 );
 
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'hydrate_gravityview_search_filters' ), 10, 4 );
 		add_filter( 'gravityview_widget_search_filters', array( $this, 'localize_for_search' ), 10, 4 );
@@ -31,17 +31,17 @@ class GPPA_Compatibility_GravityView {
 	 * If editing a form with Gravity View's edit screen, then the form should be hydrated with fields from the current
 	 * entry.
 	 */
-	public function hydrate_initial_load_entry_id( $entry_id, $form, $ajax, $field_values ) {
+	public function hydrate_initial_load_entry( $entry, $form, $ajax, $field_values ) {
 
 		if ( ! class_exists( 'GravityView_frontend' ) ) {
-			return $entry_id;
+			return $entry;
 		}
 
 		if ( $entry = GravityView_frontend::getInstance()->getEntry() ) {
-			return $entry['id'];
+			return $entry;
 		}
 
-		return $entry_id;
+		return $entry;
 
 	}
 

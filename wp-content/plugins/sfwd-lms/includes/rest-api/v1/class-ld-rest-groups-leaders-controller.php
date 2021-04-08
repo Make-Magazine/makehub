@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exists( 'LD_REST_Users_Controller_V1' ) ) ) {
 	class LD_REST_Groups_Leaders_Controller_V1 extends LD_REST_Users_Controller_V1 {
 
@@ -41,7 +45,16 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => esc_html__( 'Group ID to enroll group leader into.', 'learndash' ),
+							'description' => sprintf(
+								// translators: placeholders: group, group leader.
+								esc_html_x(
+									'%1$s ID to enroll %2$s into.',
+									'placeholders: group, group leader',
+									'learndash'
+								),
+								learndash_get_custom_label_lower( 'group' ),
+								learndash_get_custom_label_lower( 'group_leader' )
+							),
 							'required'    => true,
 							'type'        => 'integer',
 						),
@@ -58,7 +71,16 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'update_groups_leaders_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								'description' => esc_html__( 'Group Leader User IDs to enroll into Group.', 'learndash' ),
+								'description' => sprintf(
+									// translators: placeholders: Group Leader, Group
+									esc_html_x(
+										'%1$s User IDs to enroll into %2$s',
+										'placeholders: group leader, group',
+										'learndash'
+									),
+									learndash_get_custom_label( 'group_leader' ),
+									learndash_get_custom_label( 'group' )
+								),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -73,7 +95,16 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'delete_groups_leaders_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								'description' => esc_html__( 'Group Leader User IDs to remove from Group.', 'learndash' ),
+								'description' => sprintf(
+									// translators: placeholders: Group Leader, Group
+									esc_html_x(
+										'%1$s User IDs to remove from %2$s',
+										'placeholders: group leader, group',
+										'learndash'
+									),
+									learndash_get_custom_label( 'group_leader' ),
+									learndash_get_custom_label( 'group' )
+								),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -141,12 +172,36 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 		public function update_groups_leaders( $request ) {
 			$group_id = $request['id'];
 			if ( empty( $group_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid group ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: group
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$user_ids = $request['user_ids'];
 			if ( ( ! is_array( $user_ids ) ) || ( empty( $user_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group Leader User IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: group leader
+						esc_html_x(
+							'Missing %s User IDs.',
+							'placeholder: group leader',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group_leader' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$user_ids = array_map( 'intval', $user_ids );
 			}
@@ -169,12 +224,36 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 		public function delete_groups_leaders( $request ) {
 			$group_id = $request['id'];
 			if ( empty( $group_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid group ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: group
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$user_ids = $request['user_ids'];
 			if ( ( ! is_array( $user_ids ) ) || ( empty( $user_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group Leader User IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: group leader
+						esc_html_x(
+							'Missing %s User IDs.',
+							'placeholder: group leader',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group_leader' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$user_ids = array_map( 'intval', $user_ids );
 			}
@@ -198,7 +277,19 @@ if ( ( ! class_exists( 'LD_REST_Groups_Leaders_Controller_V1' ) ) && ( class_exi
 
 			$group_id = $request['id'];
 			if ( empty( $group_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid group ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: group
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			if ( is_user_logged_in() ) {

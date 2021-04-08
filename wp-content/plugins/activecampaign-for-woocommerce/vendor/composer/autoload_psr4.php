@@ -6,7 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Brick\\Money\\' => array($vendorDir . '/brick/money/src'),
+    'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'AcVendor\\Symfony\\Polyfill\\Php72\\' => array($baseDir . '/ac_vendor/symfony/polyfill-php72'),
+    'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\' => array('/ac_vendor/symfony/polyfill-intl-normalizer'),
     'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\' => array($baseDir . '/ac_vendor/symfony/polyfill-intl-idn'),
     'AcVendor\\Psr\\Log\\' => array($baseDir . '/ac_vendor/psr/log/Psr/Log'),
     'AcVendor\\Psr\\Http\\Message\\' => array($baseDir . '/ac_vendor/psr/http-message/src'),

@@ -67,7 +67,6 @@ function learndash_course_expire_status_shortcode( $atts, $content ) {
 
 	if ( ( ! empty( $atts['course_id'] ) ) && ( ! empty( $atts['user_id'] ) ) ) {
 		if ( sfwd_lms_has_access( $atts['course_id'], $atts['user_id'] ) ) {
-			$course_meta = get_post_meta( $atts['course_id'], '_sfwd-courses', true );
 
 			$courses_access_from = ld_course_access_from( $atts['course_id'], $atts['user_id'] );
 			if ( empty( $courses_access_from ) ) {
@@ -76,25 +75,42 @@ function learndash_course_expire_status_shortcode( $atts, $content ) {
 
 			if ( ! empty( $courses_access_from ) ) {
 
-				$expire_on = ld_course_access_expires_on( $atts['course_id'], $atts['user_id'] );
-				if ( ! empty( $expire_on ) ) {
-					if ( $expire_on > time() ) {
+				$atts['expires_on_timestamp'] = ld_course_access_expires_on( $atts['course_id'], $atts['user_id'] );
+				if ( ! empty( $atts['expires_on_timestamp'] ) ) {
+					if ( $atts['expires_on_timestamp'] > time() ) {
 						$content_shortcode .= $atts['label_before'];
-					} else {
-						$content_shortcode .= $atts['label_after'];
 					}
-					$content_shortcode .= ' ' . date( $atts['format'], $expire_on + ( get_option( 'gmt_offset' ) * 3600 ) );
+
+					$atts['expires_on_formatted'] = learndash_adjust_date_time_display( $atts['expires_on_timestamp'], $atts['format'] );
+
+					$content_shortcode .= ' <span class="learndash-course-expire-status-date learndash-course-expire-status-date-expires-on">' . $atts['expires_on_formatted'] . '</span>';
 				}
 			}
+		} else {
+
+			$atts['expired_on_timestamp'] = get_user_meta( $atts['user_id'], 'learndash_course_expired_' . $atts['course_id'], true );
+
+			if ( ! empty( $atts['expired_on_timestamp'] ) ) {
+
+				$content_shortcode .= $atts['label_after'];
+
+				$atts['expired_on_formatted'] = learndash_adjust_date_time_display( $atts['expired_on_timestamp'], $atts['format'] );
+
+				$content_shortcode .= ' <span class="learndash-course-expire-status-date learndash-course-expire-status-date-expired-on">' . $atts['expired_on_formatted'] . '</span>';
+
+			}
+		}
+
+		if ( ! empty( $content_shortcode ) ) {
 
 			$atts['content'] = do_shortcode( $content_shortcode );
-			return SFWD_LMS::get_template(
-				'learndash_course_expire_status_message',
-				array(
-					'shortcode_atts' => $atts,
-				),
-				false
-			);
+				return SFWD_LMS::get_template(
+					'learndash_course_expire_status_message',
+					array(
+						'shortcode_atts' => $atts,
+					),
+					false
+				);
 		}
 	}
 

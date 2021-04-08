@@ -49,12 +49,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				// Legacy fields
 				'course_price_type'                 => 'course_price_type',
+
 				'course_price_type_paynow_price'    => 'course_price',
+
 				'course_price_type_subscribe_price' => 'course_price',
 				'course_price_type_subscribe_billing_cycle' => 'course_price_billing_cycle',
+
 				'course_price_type_closed_custom_button_label' => 'custom_button_label',
 				'course_price_type_closed_custom_button_url' => 'custom_button_url',
 				'course_price_type_closed_price'    => 'course_price',
+
 				'course_prerequisite_enabled'       => 'course_prerequisite_enabled',
 				'course_prerequisite'               => 'course_prerequisite',
 				'course_prerequisite_compare'       => 'course_prerequisite_compare',
@@ -107,8 +111,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['course_access_list_enabled'] = '';
 				}
 
+				if ( ( ! isset( $this->setting_option_values['course_price_type'] ) ) || ( empty( $this->setting_option_values['course_price_type'] ) ) ) {
+					$this->setting_option_values['course_price_type'] = LEARNDASH_DEFAULT_COURSE_PRICE_TYPE;
+				}
+
 				if ( ! isset( $this->setting_option_values['course_price_type_paynow_price'] ) ) {
 					$this->setting_option_values['course_price_type_paynow_price'] = '';
+				}
+
+				if ( ! isset( $this->setting_option_values['course_price_type_subscribe_price'] ) ) {
+					$this->setting_option_values['course_price_type_subscribe_price'] = '';
 				}
 
 				if ( ! isset( $this->setting_option_values['course_price_type_subscribe_price'] ) ) {
@@ -121,10 +133,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ! isset( $this->setting_option_values['course_price_type_closed_custom_button_url'] ) ) {
 					$this->setting_option_values['course_price_type_closed_custom_button_url'] = '';
-				}
-
-				if ( ! isset( $this->setting_option_values['course_price_type'] ) ) {
-					$this->setting_option_values['course_price_type'] = LEARNDASH_DEFAULT_COURSE_PRICE_TYPE;
 				}
 
 				if ( ! isset( $this->setting_option_values['course_prerequisite_enabled'] ) ) {
@@ -166,6 +174,30 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				}
 			}
 
+			// Clear out the price type fields we are not using.
+			if ( 'paynow' === $this->setting_option_values['course_price_type'] ) {
+				$this->setting_option_values['course_price_type_subscribe_price']            = '';
+				$this->setting_option_values['course_price_type_subscribe_billing_cycle']    = '';
+				$this->setting_option_values['course_price_type_closed_price']               = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_label'] = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_url']   = '';
+			} elseif ( 'subscribe' === $this->setting_option_values['course_price_type'] ) {
+				$this->setting_option_values['course_price_type_paynow_price']               = '';
+				$this->setting_option_values['course_price_type_closed_price']               = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_label'] = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_url']   = '';
+			} elseif ( 'closed' === $this->setting_option_values['course_price_type'] ) {
+				$this->setting_option_values['course_price_type_subscribe_price']         = '';
+				$this->setting_option_values['course_price_type_subscribe_billing_cycle'] = '';
+				$this->setting_option_values['course_price_type_paynow_price']            = '';
+			} else {
+				$this->setting_option_values['course_price_type_paynow_price']               = '';
+				$this->setting_option_values['course_price_type_subscribe_price']            = '';
+				$this->setting_option_values['course_price_type_subscribe_billing_cycle']    = '';
+				$this->setting_option_values['course_price_type_closed_price']               = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_label'] = '';
+				$this->setting_option_values['course_price_type_closed_custom_button_url']   = '';
+			}
 		}
 
 		/**
@@ -823,7 +855,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::load_settings_fields();
 		}
 
-		protected function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
+		public function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
 			$settings_fields_map = $this->settings_fields_map;
 			if ( ( isset( $post_values['course_price_type'] ) ) && ( ! empty( $post_values['course_price_type'] ) ) ) {
 				if ( 'paynow' === $post_values['course_price_type'] ) {

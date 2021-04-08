@@ -234,8 +234,8 @@ function bb_access_control_rest_activity_prepare_value( $response, $request, $ac
 	$data     = $response->get_data();
 	$user_can = bb_user_can_create_activity();
 
-	$data['can_edit']   = $user_can;
-	$data['can_delete'] = $user_can;
+	$data['can_edit']   = ( ! empty( $user_can ) && ! empty( $data['can_edit'] ) ) ? $data['can_edit'] : false;
+	$data['can_delete'] = ( ! empty( $user_can ) && bp_activity_user_can_delete( $activity ) ) ? bp_activity_user_can_delete( $activity ) : false;
 
 	if ( isset( $data['activity_data']['can_edit_privacy'] ) || true === $data['activity_data']['can_edit_privacy'] ) {
 		$data['activity_data']['can_edit_privacy'] = $user_can;

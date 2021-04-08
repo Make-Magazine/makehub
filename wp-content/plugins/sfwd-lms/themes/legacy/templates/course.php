@@ -30,9 +30,10 @@
  * @package LearnDash\Course
  */
 
-?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
-<?php
 global $course_pager_results;
 
 /**

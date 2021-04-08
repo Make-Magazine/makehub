@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Users_Quiz_Attempts_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -42,7 +46,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 				array(
 					'args' => array(
 						'id' => array(
-							'description' => esc_html__( 'User ID to show course progress', 'learndash' ),
+							// translators: course
+							'description' => sprintf( esc_html_x( 'User ID to show %s progress.', 'placeholder: course', 'learndash' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),

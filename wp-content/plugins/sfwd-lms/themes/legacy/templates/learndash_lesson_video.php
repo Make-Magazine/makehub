@@ -17,11 +17,14 @@
  * @package LearnDash\Lesson
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // Basic usage. If the [ld_video] placeholder (not a shortcode) is added to the
 // lesson/topic content the video will be inserted at that place within the
 // $content.
 // If not then the $video_content will be appended to the end of the $content.
-
 
 if ( ! empty( $video_content ) ) {
 	if ( strpos( $content, '[ld_video]' ) !== false ) {
@@ -30,6 +33,9 @@ if ( ! empty( $video_content ) ) {
 		$content = $video_content . $content;
 	}
 } else {
+	if ( strpos( $content, '<p>[ld_video]</p>' ) !== false ) {
+		$content = str_replace( '<p>[ld_video]</p>', '', $content );
+	}
 	if ( strpos( $content, '[ld_video]' ) !== false ) {
 		$content = str_replace( '[ld_video]', '', $content );
 	}

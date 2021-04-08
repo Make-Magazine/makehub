@@ -149,7 +149,7 @@
 .learndash-wrapper .btn-join .ld-text,
 .learndash-wrapper #btn-join .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -303,7 +303,7 @@
 
 .learndash-wrapper .ld-button .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -540,7 +540,7 @@
 .learndash-wrapper .learndash_mark_complete_button .ld-text,
 .learndash-wrapper #learndash_mark_complete_button .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -1165,7 +1165,7 @@
 
 .learndash-wrapper .ld-item-list .ld-item-search .ld-item-search-fields .ld-item-search-submit .ld-button .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -1710,7 +1710,6 @@
   text-transform: uppercase;
   font-weight: 800;
   color: #019e7c;
-  margin-right: 1.5em;
 }
 
 .learndash-wrapper .ld-progress .ld-progress-bar {
@@ -1935,7 +1934,7 @@
 
 .learndash-wrapper .ld-expand-button .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -2206,7 +2205,6 @@
 
 .learndash-wrapper .ld-select-field select {
   -webkit-appearance: none;
-     -moz-appearance: none;
           appearance: none;
 }
 
@@ -2453,6 +2451,16 @@
   }
 }
 
+.learndash-wrapper .ld-lesson-status {
+  border-radius: 6px;
+  background: #f0f3f6;
+  overflow: hidden;
+}
+
+.learndash-wrapper .ld-lesson-status .ld-progress {
+  padding: 0 1em;
+}
+
 .learndash-wrapper .ld-topic-status {
   border-radius: 6px;
   background: #f0f3f6;
@@ -2649,7 +2657,7 @@
 .learndash-wrapper .wpProQuiz_content .wpProQuiz_button .ld-text,
 .learndash-wrapper .wpProQuiz_content .wpProQuiz_button2 .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -2830,7 +2838,7 @@
 
 .learndash-wrapper .wpProQuiz_content a#quiz_continue_link .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -3458,7 +3466,7 @@
 
 .learndash-wrapper .wpProQuiz_content form[name=uploadEssay] input[type=submit] .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -4011,7 +4019,7 @@
 
 #wpProQuiz_overlay_close .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 
@@ -5793,10 +5801,6 @@ body.ld-in-focus-mode.admin-bar {
   font-family: 'Open Sans', 'Arial','Helvetica', sans-serif;
 }
 
-.learndash-wrapper .ld-login-modal ::-ms-input-placeholder {
-  font-family: 'Open Sans', 'Arial','Helvetica', sans-serif;
-}
-
 .learndash-wrapper .ld-login-modal ::placeholder {
   font-family: 'Open Sans', 'Arial','Helvetica', sans-serif;
 }
@@ -6202,7 +6206,7 @@ body.ld-in-focus-mode.admin-bar {
 
 .learndash-wrapper .ld-focus-comments .form-submit #submit .ld-text {
   padding: 0 1em;
-  flex: 1;
+  flex: 1 1 100;
   text-align: center;
 }
 

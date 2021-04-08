@@ -46255,7 +46255,7 @@ var NodeHeader = /*#__PURE__*/function (_Component) {
                 builder_data.builder_nonce = builder_nonce;
 
                 if (!value) {
-                  _context.next = 22;
+                  _context.next = 23;
                   break;
                 }
 
@@ -46309,7 +46309,7 @@ var NodeHeader = /*#__PURE__*/function (_Component) {
                   });
                 }
 
-                _context.next = 21;
+                _context.next = 22;
                 break;
 
               case 17:
@@ -46332,13 +46332,16 @@ var NodeHeader = /*#__PURE__*/function (_Component) {
                   ID: node.ID,
                   post_title: value
                 });
+                this.setState({
+                  showForm: false
+                });
 
-              case 21:
+              case 22:
                 this.setState({
                   is_loading: false
                 });
 
-              case 22:
+              case 23:
               case "end":
                 return _context.stop();
             }

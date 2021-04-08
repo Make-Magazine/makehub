@@ -30,7 +30,15 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 <div class="wrap wpProQuiz_questionEdit">
 	<h2 style="margin-bottom: 10px;"><?php echo wp_kses_post( $this->header ); ?></h2>
 	<form action="admin.php?page=ldAdvQuiz&module=question&action=addEdit&quiz_id=<?php echo intval( $this->quiz->getId() ); ?>&questionId=<?php echo intval( $this->question->getId() ); ?>&post_id=<?php echo intval( $post_id ); ?>" method="POST">
-		<a style="float: left;" class="button-secondary" href="admin.php?page=ldAdvQuiz&module=question&action=show&quiz_id=<?php echo intval( $this->quiz->getId() ); ?>&post_id=<?php echo intval( $post_id ); ?>"><?php esc_html_e( 'Return to Questions Overview', 'learndash' ); ?></a>
+		<a style="float: left;" class="button-secondary" href="admin.php?page=ldAdvQuiz&module=question&action=show&quiz_id=<?php echo intval( $this->quiz->getId() ); ?>&post_id=<?php echo intval( $post_id ); ?>">
+		<?php
+		sprintf(
+			// translators: Question
+			esc_html_x( 'Return to %s Overview', 'placeholder: Question', 'learndash' ),
+			learndash_get_custom_label( 'question' )
+		)
+		?>
+		</a>
 		<div style="float: right;">
 			<select name="templateLoadId">
 				<?php
@@ -62,13 +70,25 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 				<div class="inside">
 					<div id="wpProQuiz_questionPoints>
 						<p class="description">
-							<?php esc_html_e( 'Points for this question (Standard is 1 point)', 'learndash' ); ?>
+							<?php
+								sprintf(
+									// translators: placeholder: question
+									esc_html_x( 'Points for this %s (Standard is 1 point)', 'placeholder: question', 'learndash' ),
+									learndash_get_custom_label_lower( 'question' )
+								)
+							?>
 						</p>
 						<label>
 							<input name="points" class="small-text" value="<?php echo esc_attr( $this->question->getPoints() ); ?>" type="number" min="1"> <?php esc_html_e( 'Points', 'learndash' ); ?>
 						</label>
 						<p class="description">
-							<?php esc_html_e( 'This points will be rewarded, only if the user closes the question correctly.', 'learndash' ); ?>
+							<?php
+								sprintf(
+									// translators: placeholder: question
+									esc_html_x( 'These points will be rewarded, only if the user answers the %s correctly.', 'placeholder: question', 'learndash' ),
+									learndash_get_custom_label_lower( 'question' )
+								)
+							?>
 						</p>
 					</div>
 					<div style="margin-top: 10px;" id="wpProQuiz_answerPointsActivated">
@@ -543,14 +563,14 @@ class WpProQuiz_View_QuestionEdit extends WpProQuiz_View_View {
 
 				<p class="description" style="margin-top: 10px">
 					<?php
-					// translators: placeholder: course.
-					echo sprintf( esc_html_x( 'This is a question that can be graded and potentially prevent a user from progressing to the next step of the %s.', 'placeholder: course', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'course' ) ) )
+					// translators: placeholder: question, course.
+					echo sprintf( esc_html_x( 'This is a %1$s that can be graded and potentially prevent a user from progressing to the next step of the %2$s.', 'placeholder: question, course', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'question' ) ), esc_html( learndash_get_custom_label_lower( 'course' ) ) )
 					?>
 					<br />
 					<?php esc_html_e( 'The user can only progress if the essay is marked as "Graded" and if the user has enough points to move on.', 'learndash' ); ?><br />
 					<?php
-					// translators: placeholder: quiz.
-					echo sprintf( esc_html_x( 'How should the answer to this question be marked and graded upon %s submission?', 'placeholder: quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
+					// translators: placeholder: question, quiz.
+					echo sprintf( esc_html_x( 'How should the answer to this %1$s be marked and graded upon %2$s submission?', 'placeholder: question, quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'question' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
 					?>
 					<br />
 				</p>

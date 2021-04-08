@@ -64,6 +64,8 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		$ecom_product->set_description( $product->get_description() );
 		$ecom_product->set_category( $this->get_product_category( $product ) );
 		$ecom_product->set_image_url( $this->get_product_image_url( $product ) );
+		$ecom_product->set_product_url( $this->get_product_url( $product ) );
+		$ecom_product->set_sku( $this->get_sku( $product ) );
 
 		return $ecom_product;
 	}
@@ -96,15 +98,51 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return string|null
 	 */
 	private function get_product_image_url( WC_Product $product ) {
+		// TODO: Verify these still work with latest WC
 		$post         = get_post( $product->get_id() );
 		$thumbnail_id = get_post_thumbnail_id( $post );
 		$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
 
 		if ( ! is_array( $image_src ) ) {
+			// TODO: Add fallback for if thumbnail cannot be found
 			return null;
 		}
 
 		// The first element is the actual URL
 		return $image_src[0];
+	}
+
+
+	/**
+	 * Get the product url for the product
+	 *
+	 * @param  WC_Product $product The WC Product.
+	 * @return false|string|null
+	 */
+	private function get_product_url( WC_Product $product ) {
+		$product_id = get_post( $product->get_id() );
+		$url        = get_permalink( $product_id );
+
+		if ( is_null( $url ) || empty( $url ) ) {
+			return null;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Get the sku for the product
+	 *
+	 * @param WC_Product $product The WC Product.
+	 * @return string|null
+	 */
+	private function get_sku( WC_Product $product ) {
+		$sku = $product->get_sku();
+
+		if ( is_null( $sku ) || empty( $sku ) ) {
+			return null;
+		}
+
+		return $sku;
 	}
 }

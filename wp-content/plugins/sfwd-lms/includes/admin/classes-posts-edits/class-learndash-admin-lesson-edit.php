@@ -34,11 +34,6 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			if ( $this->post_type_check() ) {
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-lesson-display-content.php';
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-lesson-access-settings.php';
-				/**
-				 * Keep for now in case we want to access the legacy metabox logic.
-				 */
-				//$cpt_instance = SFWD_CPT_Instance::$instances[ $this->post_type ];
-				//error_log( 'cpt_instance<pre>'. print_r( $cpt_instance, true ) .'</pre>' );
 
 				parent::on_load();
 			}
@@ -60,10 +55,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				return false;
 			}
 
-			if ( isset( $_POST['ld-course-primary-set'] ) ) {
-				$course_primary = absint( $_POST['ld-course-primary-set'] );
-				if ( ! empty( $course_primary ) ) {
-					learndash_set_primary_course_for_step( $post_id, $course_primary );
+			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( $_POST['ld-course-primary-set-nonce'], 'ld-course-primary-set-nonce' ) ) {
+				if ( isset( $_POST['ld-course-primary-set'] ) ) {
+					$course_primary = absint( $_POST['ld-course-primary-set'] );
+					if ( ! empty( $course_primary ) ) {
+						learndash_set_primary_course_for_step( $post_id, $course_primary );
+					}
 				}
 			}
 

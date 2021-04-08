@@ -7,6 +7,10 @@
  * @since 3.1.7
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LearnDash_Search' ) ) {
 
 	/**

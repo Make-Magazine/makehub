@@ -12,8 +12,11 @@
  *
  * @package LearnDash\Quiz
  */
-?>
-<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $info = '<div class="wpProQuiz_invalidate">' . esc_html__( 'You must fill out this field.', 'learndash' ) . '</div>';
 
 $validateText = array(
@@ -51,7 +54,7 @@ $validateText = array(
 						case WpProQuiz_Model_Form::FORM_TYPE_TEXT:
 						case WpProQuiz_Model_Form::FORM_TYPE_EMAIL:
 						case WpProQuiz_Model_Form::FORM_TYPE_NUMBER:
-							echo '<input name="' . esc_attr( $name ) . '" id="' . esc_attr( $id ) . '" type="text" ',
+							echo '<input name="' . esc_attr( $name ) . '" autocomplete="off" id="' . esc_attr( $id ) . '" type="text" ',
 								'data-required="' . (int) $form->isRequired() . '" data-type="' . esc_attr( $form->getType() ) . '" data-form_id="' . esc_attr( $form->getFormId() ) . '">';
 							break;
 						case WpProQuiz_Model_Form::FORM_TYPE_TEXTAREA:

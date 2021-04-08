@@ -14,6 +14,10 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div style="display: none;" class="wpProQuiz_sending">
 	<h4 class="wpProQuiz_header"><?php esc_html_e( 'Results', 'learndash' ); ?></h4>
@@ -52,8 +56,8 @@
 				array(
 					'quiz_post_id' => $quiz->getID(),
 					'context'      => 'quiz_questions_answered_correctly_message',
-					// translators: placeholder: correct answer, question count.
-					'message'      => '<p>' . sprintf( esc_html_x( '%1$s of %2$s questions answered correctly', 'placeholder: correct answer, question count', 'learndash' ), '<span class="wpProQuiz_correct_answer">0</span>', '<span>' . $question_count . '</span>' ) . '</p>',
+					// translators: placeholder: correct answer, question count, questions.
+					'message'      => '<p>' . sprintf( esc_html_x( '%1$s of %2$s %3$s answered correctly', 'placeholder: correct answer, question count, questions', 'learndash' ), '<span class="wpProQuiz_correct_answer">0</span>', '<span>' . $question_count . '</span>', learndash_get_custom_label( 'questions' ) ) . '</p>',
 					'placeholders' => array( '0', $question_count ),
 				)
 			)

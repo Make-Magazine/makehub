@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Theme_Register' ) ) && ( ! class_exists( 'LearnDash_Theme_Register_Legacy' ) ) ) {
 	/**
 	 * Class to create the settings section.

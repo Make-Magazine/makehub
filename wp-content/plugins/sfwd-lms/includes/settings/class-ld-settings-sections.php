@@ -61,6 +61,16 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		protected $settings_values_loaded = false;
 
 		/**
+		 * Flag to save settings values on load.
+		 *
+		 * This is needed is the settings values loaded
+		 * is false. 
+		 *
+		 * @var boolean $settings_values_save_on_load Flag.
+		 */
+		protected $settings_values_save_on_load = false;
+
+		/**
 		 * Flag for if settings fields have been loaded.
 		 *
 		 * @var boolean $settings_fields_loaded Flag.
@@ -159,6 +169,15 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		protected static $global_settings_deprecated = array();
 
 		/**
+		 * Controls if we need to load the Section settings from the wp_options table.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @var boolean $load_options
+		 */
+		protected $load_options = true;
+
+		/**
 		 * Public constructor for class
 		 */
 		protected function __construct() {
@@ -223,6 +242,7 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		public function init() {
 			if ( ! $this->settings_values_loaded ) {
 				$this->load_settings_values();
+				$this->after_load_settings_values();
 			}
 
 			if ( ! $this->settings_fields_loaded ) {
@@ -235,7 +255,26 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		 */
 		public function load_settings_values() {
 			$this->settings_values_loaded = true;
-			$this->setting_option_values  = get_option( $this->setting_option_key );
+
+			if ( true === $this->load_options ) {
+				$this->setting_option_values = get_option( $this->setting_option_key );
+				if ( ( false === $this->setting_option_values ) || ( '' === $this->setting_option_values ) ) {
+					// Track that the option value is not set. See after_load_settings_values().
+					$this->settings_values_save_on_load = true;
+				} else {
+					/**
+					 * Added to correct issues with Group Leader User capabilities.
+					 * See LEARNDASH-5707. See changes in
+					 * includes/settings/settings-sections/class-ld-settings-section-groups-group-leader-user.php
+					 *
+					 * @since 3.4.0.2
+					 */
+					$gl_user_activate = get_option( 'learndash_groups_group_leader_user_activate', '' );
+					if ( ! empty( $gl_user_activate ) ) {
+						$this->settings_values_save_on_load = true;
+					}
+				}
+			}
 		}
 
 		/**
@@ -306,6 +345,24 @@ if ( ! class_exists( 'LearnDash_Settings_Section' ) ) {
 		public function save_settings_values() {
 			$this->settings_values_loaded = false;
 			update_option( $this->setting_option_key, $this->setting_option_values );
+		}
+
+		/**
+		 * Update/Set the Section Settings values after loading.
+		 *
+		 * This is done to ensure the options DB record is present.
+		 *
+		 * @since 3.4.0
+		 */
+		protected function after_load_settings_values() {
+			if ( ( true === $this->settings_values_loaded ) && ( true === $this->load_options ) ) {
+				if ( true === $this->settings_values_save_on_load ) {
+					$this->save_settings_values();
+
+					// Set settings_values_loaded back to true as save_settings_values() will reset to false.
+					$this->settings_values_loaded = true;
+				}
+			}
 		}
 
 		/**

@@ -170,11 +170,9 @@ function learndash_update_setting( $post, $setting, $value ) {
 		if ( ! is_array( $meta ) ) {
 			$meta = array( $meta );
 		}
-		$meta[ $post->post_type . '_' . $setting ] = $value;
 
 		if ( 'course' === $setting ) {
-			$value                                     = intval( $value );
-			$meta[ $post->post_type . '_' . $setting ] = $value;
+			$value = absint( $value );
 			if ( ! empty( $value ) ) {
 				update_post_meta( $post->ID, 'course_id', $value );
 			} else {
@@ -183,7 +181,6 @@ function learndash_update_setting( $post, $setting, $value ) {
 		} elseif ( 'course_access_list' === $setting ) {
 			$value = learndash_convert_course_access_list( $value );
 			update_post_meta( $post->ID, 'course_access_list', $value );
-			$meta[ $post->post_type . '_' . $setting ] = $value;
 
 		} elseif ( 'course_points' === $setting ) {
 			$course_points = learndash_format_course_points( $value );
@@ -193,8 +190,7 @@ function learndash_update_setting( $post, $setting, $value ) {
 				delete_post_meta( $post->ID, 'course_points' );
 			}
 		} elseif ( 'lesson' === $setting ) {
-			$value                                     = intval( $value );
-			$meta[ $post->post_type . '_' . $setting ] = $value;
+			$value = intval( $value );
 			if ( ! empty( $value ) ) {
 				update_post_meta( $post->ID, 'lesson_id', $value );
 			} else {
@@ -248,8 +244,13 @@ function learndash_update_setting( $post, $setting, $value ) {
 				}
 
 				global $wpdb;
-				$sql_str            = 'DELETE FROM ' . $wpdb->postmeta . ' WHERE post_id=' . $post->ID . " AND meta_key like 'quiz_pro_id_%'";
-				$quiz_query_results = $wpdb->query( $sql_str );
+				$quiz_query_results = $wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$wpdb->postmeta} WHERE post_id = %d AND meta_key LIKE %s",
+						absint( $post->ID ),
+						'quiz_pro_id_%'
+					)
+				);
 
 				update_post_meta( $post->ID, 'quiz_pro_id', $quiz_pro_id_new );
 				update_post_meta( $post->ID, 'quiz_pro_id_' . $quiz_pro_id_new, $quiz_pro_id_new );
@@ -259,6 +260,8 @@ function learndash_update_setting( $post, $setting, $value ) {
 		} elseif ( 'timeLimitCookie' === $setting ) {
 			update_post_meta( $post->ID, '_timeLimitCookie', absint( $value ) );
 		}
+
+		$meta[ $post->post_type . '_' . $setting ] = $value;
 
 		$return = update_post_meta( $post->ID, '_' . $post->post_type, $meta );
 	}
@@ -538,7 +541,7 @@ function learndash_payment_buttons( $post ) {
 
 // Yes, global var here. This var is set within the payment button processing. The var will contain HTML for a fancy dropdown
 $dropdown_button = ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-add_action( 'wp_footer', 'ld_footer_payment_buttons' );
+
 /**
  * Prints the dropdown button to the footer.
  *
@@ -546,15 +549,15 @@ add_action( 'wp_footer', 'ld_footer_payment_buttons' );
  *
  * @global string $dropdown_button Dropdown button markup.
  */
-function ld_footer_payment_buttons() {
+function learndash_footer_payment_buttons() {
 	global $dropdown_button;
 
 	if ( ! empty( $dropdown_button ) ) {
 		echo $dropdown_button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 	}
 }
+add_action( 'wp_footer', 'learndash_footer_payment_buttons' );
 
-add_action( 'get_footer', 'learndash_get_footer' );
 /**
  * Dequeues the jquery dropdown js if dropdown button is empty.
  *
@@ -570,6 +573,7 @@ function learndash_get_footer() {
 		wp_dequeue_script( 'jquery-dropdown-js' );
 	}
 }
+add_action( 'get_footer', 'learndash_get_footer' );
 
 /**
  * Checks if a lesson, topic, or quiz is a sample or not.
@@ -609,7 +613,7 @@ function learndash_is_sample( $post ) {
 	}
 
 	if ( learndash_get_post_type_slug( 'topic' ) === $post->post_type ) {
-		if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+		if ( learndash_is_course_builder_enabled() ) {
 			$course_id = learndash_get_course_id( $post );
 			$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 		} else {
@@ -621,7 +625,7 @@ function learndash_is_sample( $post ) {
 	}
 
 	if ( learndash_get_post_type_slug( 'quiz' ) === $post->post_type ) {
-		if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+		if ( learndash_is_course_builder_enabled() ) {
 			$course_id = learndash_get_course_id( $post );
 			$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 		} else {
@@ -672,7 +676,7 @@ function learndash_ob_get_clean( $level = 0 ) {
  *
  * @param WP $wp The `WP` object.
  */
-function ld_remove_lessons_and_quizzes_page( $wp ) {
+function learndash_remove_lessons_and_quizzes_page( $wp ) {
 
 	if ( ( is_archive() ) && ( ! is_admin() ) ) {
 		$post_type = get_post_type();
@@ -685,7 +689,7 @@ function ld_remove_lessons_and_quizzes_page( $wp ) {
 	}
 }
 
-add_action( 'wp', 'ld_remove_lessons_and_quizzes_page' );
+add_action( 'wp', 'learndash_remove_lessons_and_quizzes_page' );
 
 /**
  * Checks if a LearnDash post type has archive support or not.
@@ -908,18 +912,6 @@ add_action(
 	}
 );
 
-
-if ( ! function_exists( 'ld_debug' ) ) {
-
-	/**
-	 * Log debug messages to file.
-	 *
-	 * @param int|str|arr|obj|bool $msg Data to log.
-	 */
-	function ld_debug( $msg ) {
-	}
-}
-
 /**
  * Converts the seconds to time output.
  *
@@ -1018,7 +1010,7 @@ function learndash_adjust_date_time_display( $timestamp = 0, $display_format = '
 		}
 
 		// First we convert the timestamp to local Y-m-d H:i:s format
-		$date_time_display = get_date_from_gmt( date( 'Y-m-d H:i:s', $timestamp ), 'Y-m-d H:i:s' );
+		$date_time_display = get_date_from_gmt( date( 'Y-m-d H:i:s', $timestamp ), 'Y-m-d H:i:s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 
 		// Then we take that value and reconvert it to a timestamp and call date_i18n to translate the month, date name etc.
 		$date_time_display = date_i18n( $display_format, strtotime( $date_time_display ) );
@@ -1040,7 +1032,7 @@ function learndash_get_timestamp_from_date_string( $date_string = '', $adjust_to
 	if ( ! empty( $date_string ) ) {
 		$value_timestamp = strtotime( $date_string );
 		if ( ( ! empty( $value_timestamp ) ) && ( $adjust_to_gmt ) ) {
-			$value_ymd = get_gmt_from_date( date( 'Y-m-d H:i:s', $value_timestamp ), 'Y-m-d H:i:s' );
+			$value_ymd = get_gmt_from_date( date( 'Y-m-d H:i:s', $value_timestamp ), 'Y-m-d H:i:s' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 			if ( ! empty( $value_ymd ) ) {
 				$value_timestamp = strtotime( $value_ymd );
 			} else {
@@ -1060,26 +1052,12 @@ function learndash_get_timestamp_from_date_string( $date_string = '', $adjust_to
  * @return boolean Returns true if the server is on Microsoft IIS otherwise false.
  */
 function learndash_on_iis() {
-	$sSoftware = strtolower( $_SERVER['SERVER_SOFTWARE'] );
-	if ( strpos( $sSoftware, 'microsoft-iis' ) !== false ) {
+	$s_software = strtolower( $_SERVER['SERVER_SOFTWARE'] );
+	if ( strpos( $s_software, 'microsoft-iis' ) !== false ) {
 		return true;
 	} else {
 		return false;
 	}
-}
-
-
-/**
- * Prints the given string in preformated text.
- *
- * @since 2.1.0
- *
- * @param string $msg The message to print in preformated text.
- */
-function ldp( $msg ) {
-	echo '<pre>';
-	print_r( $msg );
-	echo '</pre>';
 }
 
 /**
@@ -1093,10 +1071,10 @@ function ldp( $msg ) {
  *
  * @return array $arr The cleaned array after calling user functions.
  */
-function array_map_r( $func, $arr ) {
+function learndash_array_map_r( $func, $arr ) {
 	foreach ( $arr as $key => $value ) {
 		if ( is_array( $value ) ) {
-			$arr[ $key ] = array_map_r( $func, $value );
+			$arr[ $key ] = learndash_array_map_r( $func, $value );
 		} elseif ( is_array( $func ) ) {
 			$arr[ $key ] = call_user_func_array( $func, $value );
 		} else {
@@ -1152,60 +1130,6 @@ function learndash_template_url_from_path( $filepath = '' ) {
 	}
 
 	return $filepath;
-}
-
-/**
- * Saves the course, lesson, topic, and quiz settings meta to separate post meta.
- *
- * Normally Course, Lesson, Topic and Quiz settings are stored into a single post meta array. This
- * function runs after after that save and will save the array elements into individual postmeta
- * fields.
- *
- * @since 2.4.3
- *
- * @param int    $post_id   Optional. Course ID. Default 0.
- * @param array  $settings  Optional. An array of settings to be stored. Default empty array.
- * @param string $prefix     Optional. The post meta prefix. Default empty.
- */
-function learndash_convert_settings_to_single( $post_id = 0, $settings = array(), $prefix = '' ) {
-	return;
-
-	// Disabled for now.
-	if ( ( ! empty( $post_id ) ) && ( ! empty( $settings ) ) && ( is_array( $settings ) ) ) {
-		foreach ( $settings as $setting_key => $setting_value ) {
-
-			if ( ( ! empty( $prefix ) ) && ( ! empty( $setting_key ) ) ) {
-				$setting_key = str_replace( $prefix . '_', '', $setting_key );
-			}
-
-			if ( ( is_array( $setting_value ) ) && ( empty( $setting_value ) ) ) {
-				$setting_value = '';
-			}
-
-			update_post_meta( $post_id, $setting_key, $setting_value );
-		}
-		// Create a queryable marker so we know this settings has been converted.
-		update_post_meta( $post_id, '_settings_to_single', true );
-	}
-}
-
-/**
- * Saves the course, lesson, topic, and quiz settings meta to separate post meta if not already converted.
- *
- * @param int    $post_id Optional. Post ID. Default 0.
- * @param string $prefix   Optional. The post meta key prefix. Default empty.
- */
-function learndash_check_convert_settings_to_single( $post_id = 0, $prefix = '' ) {
-	return;
-
-	// Disabled for now.
-	if ( ! empty( $post_id ) ) {
-		if ( ! get_post_meta( $post_id, '_settings_to_single', true ) ) {
-
-			$settings = get_post_meta( $post_id, '_' . $prefix, true );
-			learndash_convert_settings_to_single( $post_id, $settings, $prefix );
-		}
-	}
 }
 
 /**
@@ -1314,7 +1238,6 @@ function learndash_recursive_rmdir( $dir = '' ) {
 	}
 }
 
-
 /**
  * Utility function to parse and validate whether the assignment upload extensions are allowed.
  *
@@ -1330,6 +1253,7 @@ function learndash_validate_extensions( $exts = array() ) {
 	if ( ( is_string( $exts ) ) && ( ! empty( $exts ) ) ) {
 		$exts = explode( ',', $exts );
 		$exts = array_map( 'trim', $exts );
+		$exts = array_map( 'strtolower', $exts );
 		$exts = array_map(
 			function( $ext ) {
 				return str_replace( '.', '', $ext );
@@ -1343,8 +1267,9 @@ function learndash_validate_extensions( $exts = array() ) {
 	if ( ! empty( $exts ) ) {
 		$ld_ignored_extensions = learndash_get_ignored_upload_file_extensions();
 		if ( ! empty( $ld_ignored_extensions ) ) {
+			$ld_ignored_extensions = array_map( 'strtolower', $ld_ignored_extensions );
 			foreach ( $exts as $ext_idx => $ext ) {
-				if ( in_array( $ext, $ld_ignored_extensions ) ) {
+				if ( in_array( $ext, $ld_ignored_extensions, true ) ) {
 					unset( $exts[ $ext_idx ] );
 				}
 			}
@@ -1392,8 +1317,10 @@ function learndash_get_allowed_upload_file_extensions( $include_mime = true, $in
 	}
 
 	if ( ( is_array( $include_exts ) ) && ( ! empty( $include_exts ) ) ) {
+		$include_exts = array_map( 'strtolower', $include_exts );
 		foreach ( $allowed_extensions as $ext => $mime ) {
-			if ( ! in_array( $ext, $include_exts ) ) {
+			$ext = strtolower( $ext );
+			if ( ! in_array( $ext, $include_exts, true ) ) {
 				unset( $allowed_extensions[ $ext ] );
 			}
 		}
@@ -1479,7 +1406,7 @@ function learndash_get_allowed_upload_mime_extensions_for_post( $post_id = 0 ) {
  *
  * @return boolean Returns true if the string is valid json otherwise false.
  */
-function learndash_is_valid_JSON( $string = '' ) {
+function learndash_is_valid_JSON( $string = '' ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid
 	if ( ( is_string( $string ) ) && ( ! empty( $string ) ) ) {
 		try {
 			$json = json_decode( $string );
@@ -1932,7 +1859,7 @@ function learndash_is_protected_meta( $protected = false, $meta_key = '', $meta_
 		}
 
 		// If post type is not empty and onf othe LD types.
-		if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, learndash_get_post_types() ) ) ) {
+		if ( ( ! empty( $post_type ) ) && ( in_array( $post_type, learndash_get_post_types(), true ) ) ) {
 			$protected_meta_keys = array( 'course_id', 'lesson_id', 'course_price_billing_p3', 'course_price_billing_t3', 'course_sections', 'ld_course_steps', 'course_access_list', 'quiz_pro_id', 'ld_course_steps_dirty', 'ld_auto_enroll_group_courses', 'group_price_billing_p3', 'group_price_billing_t3', 'ld_auto_enroll_group_course_ids', 'question_pro_id', 'course_points', 'ld_quiz_questions', 'ld_quiz_questions_dirty', 'learndash_certificate_options', 'question_id', 'ld_essay_grading_response', 'question_points', 'question_type', 'question_pro_id', 'question_pro_category' );
 
 			if ( ( in_array( $meta_key, $protected_meta_keys, true ) ) ) {
@@ -2340,7 +2267,7 @@ function learndash_safe_redirect( $location = '', $status = null, $exit = true, 
 			if ( apply_filters( 'learndash_use_wp_safe_redirect', LEARNDASH_USE_WP_SAFE_REDIRECT, $location, $status, $context ) ) {
 				$redirect_status = wp_safe_redirect( $location, $status );
 			} else {
-				$redirect_status = wp_redirect( $location, $status );
+				$redirect_status = wp_redirect( $location, $status ); //phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
 			}
 
 			if ( $redirect_status ) {
@@ -2388,5 +2315,19 @@ function learndash_use_select2_lib_ajax_fetch() {
 		if ( ( defined( 'LEARNDASH_SELECT2_LIB_AJAX_FETCH' ) ) && ( true === apply_filters( 'learndash_select2_lib_ajax_fetch', LEARNDASH_SELECT2_LIB_AJAX_FETCH ) ) ) {
 			return true;
 		}
+	}
+}
+
+function learndash_put_directory_index_file( $index_filename = '' ) {
+	if ( ! empty( $index_filename ) ) {
+		global $wp_filesystem;
+
+		// Initialize the WP filesystem, no more using 'file-put-contents' function
+		if ( empty( $wp_filesystem ) ) {
+			require_once ABSPATH . '/wp-admin/includes/file.php';
+			WP_Filesystem();
+		}
+
+		$wp_filesystem->put_contents( $index_filename, '//LearnDash is THE Best LMS', FS_CHMOD_FILE );
 	}
 }

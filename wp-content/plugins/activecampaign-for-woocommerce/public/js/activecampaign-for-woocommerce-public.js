@@ -10,7 +10,6 @@
 
 (function( $ ) {
 	'use strict';
-
 	// Holds the modified email address, first and last name values
 	var billing_email = '';
 	var billing_first_name = '';
@@ -84,10 +83,21 @@
 	}
 
 	$( document ).ready(function() {
-		$( '.woocommerce-checkout #billing_email' ).keyup(function() {
+		var email_field = '#billing_email';
+		if(document.getElementById('activecampaign-for-woocommerce-js')) {
+			var acUrl = document.getElementById('activecampaign-for-woocommerce-js').getAttribute('src');
+			if(acUrl && typeof acUrl !== 'undefined') {
+				var pat = /(?:custom_email_field=)(.*?)(?=&|$)/;
+				var e = acUrl.match(pat); //TODO: Invalid regular expression: invalid group specifier name
+				if (e && typeof e[1] !== 'undefined' && e[1] && e[1] !== '') {
+					email_field = '#' + e[1];
+				}
+			}
+		}
+		$( '.woocommerce-checkout ' + email_field ).keyup(function() {
 			var $checkout = $(this).closest('.woocommerce-checkout');
-			billing_first_name = $checkout.find("#billing_first_name").val();
-			billing_last_name = $checkout.find("#billing_last_name").val();
+			billing_first_name = $checkout.find('#billing_first_name').val();
+			billing_last_name = $checkout.find('#billing_last_name').val();
 
 			var billing_email_value = $( this ).val();
 

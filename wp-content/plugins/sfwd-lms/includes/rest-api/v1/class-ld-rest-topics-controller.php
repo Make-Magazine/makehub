@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Topics_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Topics_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -119,13 +123,14 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V1' ) ) && ( class_exists( 'LD
 			if ( ! isset( $query_params['lesson'] ) ) {
 				$query_params['lesson'] = array(
 					'description' => sprintf(
-						// translators: placeholder: lesson.
+						// translators: placeholder: lesson, course.
 						esc_html_x(
-							'Limit results to be within a specific %s. Must be used with course parameter.',
-							'placeholder: lesson',
+							'Limit results to be within a specific %1$s. Must be used with %2$s parameter.',
+							'placeholder: lesson, course',
 							'learndash'
 						),
-						LearnDash_Custom_Label::get_label( 'lesson' )
+						LearnDash_Custom_Label::get_label( 'lesson' ),
+						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'type'        => 'integer',
 				);
@@ -162,7 +167,19 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V1' ) ) && ( class_exists( 'LD
 					// check the step is part of that course.
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
@@ -195,7 +212,19 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V1' ) ) && ( class_exists( 'LD
 				if ( ! empty( $course_id ) ) {
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
@@ -203,13 +232,37 @@ if ( ( ! class_exists( 'LD_REST_Topics_Controller_V1' ) ) && ( class_exists( 'LD
 				if ( ! empty( $lesson_id ) ) {
 					$this->lesson_post = get_post( $lesson_id );
 					if ( ( ! $this->lesson_post ) || ( ! is_a( $this->lesson_post, 'WP_Post' ) ) || ( 'sfwd-lessons' !== $this->lesson_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Lesson ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: Lesson.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: Lesson',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'lesson' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
 				if ( ! learndash_is_admin_user() ) {
 					if ( ! $this->course_post ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					} elseif ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}

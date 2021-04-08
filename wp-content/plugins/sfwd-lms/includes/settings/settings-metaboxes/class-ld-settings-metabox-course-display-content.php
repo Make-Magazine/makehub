@@ -238,7 +238,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 							'schema' => array(
 								'field_key'   => 'materials',
 								'description' => esc_html__( 'Materials', 'learndash' ),
-								'type'        => 'object',
+								'type'        => 'string',
 								'default'     => '',
 								'properties'  => array(
 									'raw'      => array(
@@ -349,11 +349,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'           => 'course_lesson_per_page_custom',
 					'type'           => 'number',
 					'class'          => 'small-text',
-					'label'          => sprintf(
-						// translators: placeholder: Lessons per page.
-						esc_html_x( '%s', 'placeholder: Lessons per page', 'learndash' ), // phpcs:ignore WordPress.WP.I18n.NoEmptyStrings
-						learndash_get_custom_label( 'lessons' )
-					),
+					'label'          => learndash_get_custom_label( 'lessons' ),
 					'input_label'    => esc_html__( 'per page', 'learndash' ),
 					'value'          => $this->setting_option_values['course_lesson_per_page_custom'],
 					'default'        => '',
@@ -379,11 +375,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'           => 'course_topic_per_page_custom',
 					'type'           => 'number',
 					'class'          => 'small-text',
-					'label'          => sprintf(
-						// translators: placeholder: Topics per page.
-						esc_html_x( '%s', 'placeholder: Topics per page', 'learndash' ), // phpcs:ignore WordPress.WP.I18n.NoEmptyStrings
-						learndash_get_custom_label( 'topics' )
-					),
+					'label'          => learndash_get_custom_label( 'topics' ),
 					'input_label'    => esc_html__( 'per page', 'learndash' ),
 					'default'        => '',
 					'value'          => $this->setting_option_values['course_topic_per_page_custom'],
@@ -506,7 +498,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				),
 			);
 
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) === 'yes' ) {
+			if ( learndash_is_course_builder_enabled() ) {
 				unset( $this->setting_option_fields['course_lesson_order_enabled'] );
 				unset( $this->setting_option_fields['course_lesson_orderby'] );
 				unset( $this->setting_option_fields['course_lesson_order'] );

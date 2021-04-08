@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.6.1
+Tested up to: 5.7
 Requires PHP: 5.6.20
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,15 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.1 =
+* Improvements - Repositioned 'View Tutorial' buttons in the settings
+
+= 1.1.0.2 =
+* Activity - Fixed issue with Edit and Delete permission in REST API
+
+= 1.1.0.1 =
+* Messages - Removed Group Message overridden template
 
 = 1.1.0 =
 * Groups - Provided 'Member Access Controls' settings to decide which members should have access to create and join Social Groups

@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'course_id' => array(
 					'type'                     => 'post_type',
@@ -141,6 +145,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 		}
 
 		/**
@@ -169,8 +175,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				$quiz_pro_id = absint( $quiz_pro_id );
 				if ( ! empty( $quiz_pro_id ) ) {
 					$quiz_mapper = new WpProQuiz_Model_QuizMapper();
-					$quiz_pro    = $quiz_mapper->fetch( $quiz_pro_id );
-					if ( ( is_a( $quiz_pro, 'WpProQuiz_Model_Quiz' ) ) && ( $quiz_pro_id === $quiz_pro->getId() ) ) {
+					$quiz_exists = (bool) $quiz_mapper->exists( $quiz_pro_id );
+					if ( true === $quiz_exists ) {
 						$valid_quiz = true;
 						echo '<strong>[ld_quiz quiz_id="' . absint( $post_id ) . '"]</strong>';
 						echo '<br />[LDAdvQuiz ' . absint( $quiz_pro_id ) . ']';
@@ -254,9 +260,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 						}
 
 						$label = sprintf(
-							// translators: placeholder: Quiz.
-							esc_html_x( 'Show %s Questions', 'placeholder: Quiz', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'quiz' )
+							// translators: placeholder: Quiz, Questions.
+							esc_html_x( 'Show %1$s %2$s', 'placeholder: Quiz, Questions', 'learndash' ),
+							learndash_get_custom_label( 'quiz' ),
+							learndash_get_custom_label( 'questions' )
 						);
 
 						$row_actions['questions'] = sprintf(

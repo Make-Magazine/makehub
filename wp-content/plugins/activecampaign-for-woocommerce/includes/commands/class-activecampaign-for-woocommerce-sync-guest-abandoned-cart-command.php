@@ -153,14 +153,14 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	/**
 	 * Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command constructor.
 	 *
-	 * @param WC_Cart|null                              $cart The WC Cart.
-	 * @param WC_Customer|null                          $customer The WC Customer.
-	 * @param WC_Session|null                           $wc_session The WC Session.
-	 * @param Activecampaign_For_Woocommerce_Admin|null $admin The admin object.
-	 * @param Ecom_Order_Factory                        $factory The Ecom Order Factory.
-	 * @param Ecom_Order_Repository                     $order_repository The Ecom Order Repo.
-	 * @param Ecom_Customer_Repository|null             $customer_repository The Ecom Customer Repo.
-	 * @param Logger                                    $logger The ActiveCampaign WooCommerce logger.
+	 * @param     WC_Cart|null                              $cart     The WC Cart.
+	 * @param     WC_Customer|null                          $customer     The WC Customer.
+	 * @param     WC_Session|null                           $wc_session     The WC Session.
+	 * @param     Activecampaign_For_Woocommerce_Admin|null $admin     The admin object.
+	 * @param     Ecom_Order_Factory                        $factory     The Ecom Order Factory.
+	 * @param     Ecom_Order_Repository                     $order_repository     The Ecom Order Repo.
+	 * @param     Ecom_Customer_Repository|null             $customer_repository     The Ecom Customer Repo.
+	 * @param     Logger                                    $logger     The ActiveCampaign WooCommerce logger.
 	 */
 	public function __construct(
 		WC_Cart $cart = null,
@@ -193,15 +193,17 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	}
 
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
+
 	/**
 	 * Execute this command.
 	 *
-	 * @param mixed ...$args The array of parameters passed.
+	 * @param     mixed ...$args     The array of parameters passed.
+	 *
 	 * @return boolean Whether or not the command was successful
 	 */
 	public function execute( ...$args ) {
 		$this->init();
-
+		$this->logger->debug( 'Abandon cart guest sync: try to send a guest abandoned cart' );
 		if (
 			! $this->validate_request() ||
 			! $this->setup_woocommerce_customer() ||
@@ -235,8 +237,8 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * This has been modified to accurately work with woo commerce not independently
 	 * tracking cart session vs order session
 	 *
-	 * @param string $wc_session_hash The unique WooCommerce cart session ID.
-	 * @param string $billing_email The guest customer's email address.
+	 * @param     string $wc_session_hash     The unique WooCommerce cart session ID.
+	 * @param     string $billing_email     The guest customer's email address.
 	 *
 	 * @return string The hash used as the externalcheckoutid value
 	 */
@@ -261,18 +263,22 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 */
 	private function validate_request() {
 		if ( is_user_logged_in() ) {
+			$this->logger->debug( 'Abandon cart guest sync: User is logged in, cannot perform guest sync', [ 'current_user' => wp_get_current_user() ] );
+
 			return false;
 		}
 
 		if ( ! wp_verify_nonce( $_REQUEST['nonce'], 'sync_guest_abandoned_cart_nonce' ) ) {
-			$this->logger->debug( 'sync_guest_abandoned_cart_nonce failed' );
+			$this->logger->debug( 'Abandon cart guest sync: sync_guest_abandoned_cart_nonce failed' );
+
 			return false;
 		}
 
 		$this->customer_email = sanitize_email( $_REQUEST['email'] );
 
 		if ( ! $this->customer_email ) {
-			$this->logger->debug( 'invalid customer email' );
+			$this->logger->debug( 'Abandon cart guest sync: invalid customer email' );
+
 			return false;
 		}
 
@@ -302,7 +308,8 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		$this->customer_woo = $this->customer;
 
 		if ( ! ( $this->customer_woo instanceof WC_Customer ) ) {
-			$this->logger->debug( 'customer_woo not an instance of WC_Customer' );
+			$this->logger->debug( 'Abandon cart guest sync: customer_woo not an instance of WC_Customer' );
+
 			return false;
 		}
 
@@ -335,26 +342,29 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 			try {
 				// Try to create the new customer in AC
 				$this->logger->debug(
-					'Creating customer in ActiveCampaign: '
+					'Abandon cart guest sync: Creating customer in ActiveCampaign: '
 					. \AcVendor\GuzzleHttp\json_encode( $new_customer->serialize_to_array() )
 				);
 
 				$this->customer_ac = $this->customer_repository->create( $new_customer );
 			} catch ( Exception $e ) {
 				$this->logger->debug(
-					'guest customer creation exception: ' . $e->getMessage()
+					'Abandon cart guest sync: guest customer creation exception: ' . $e->getMessage()
 				);
+
 				return false;
 			}
 		} catch ( Exception $e ) {
 			$this->logger->debug(
-				'guest find customer exception: ' . $e->getMessage()
+				'Abandon cart guest sync: guest find customer exception: ' . $e->getMessage()
 			);
+
 			return false;
 		}
 
 		if ( ! $this->customer_ac ) {
-			$this->logger->debug( 'invalid AC customer' );
+			$this->logger->debug( 'Abandon cart guest sync: invalid AC customer' );
+
 			return false;
 		}
 
@@ -368,7 +378,8 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 */
 	private function setup_woocommerce_cart() {
 		if ( ! ( $this->cart instanceof WC_Cart ) ) {
-			$this->logger->debug( 'cart not an instance of WC_Cart' );
+			$this->logger->debug( 'Abandon cart guest sync: cart not an instance of WC_Cart' );
+
 			return false;
 		}
 
@@ -416,27 +427,31 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 			try {
 				// Try to create the new order in AC
 				$this->logger->debug(
-					'Creating order in ActiveCampaign: '
+					'Abandon cart guest sync: Creating order in ActiveCampaign: '
 					. \AcVendor\GuzzleHttp\json_encode( $this->ecom_order->serialize_to_array() )
 				);
 
 				$this->order_ac = $this->order_repository->create( $this->ecom_order );
+
 				return 2;
 			} catch ( Exception $e ) {
 				$this->logger->debug(
-					'guest order creation exception: ' . $e->getMessage()
+					'Abandon cart guest sync: guest order creation exception: ' . $e->getMessage()
 				);
+
 				return 0;
 			}
 		} catch ( Exception $e ) {
 			$this->logger->debug(
-				'guest find order exception: ' . $e->getMessage()
+				'Abandon cart guest sync: guest find order exception: ' . $e->getMessage()
 			);
+
 			return 0;
 		}
 
 		if ( ! $this->order_ac ) {
-			$this->logger->debug( 'invalid AC order' );
+			$this->logger->debug( 'Abandon cart guest sync: invalid AC order' );
+
 			return 0;
 		}
 
@@ -453,11 +468,13 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 
 		try {
 			$this->order_repository->update( $this->ecom_order );
+
 			return true;
 		} catch ( Exception $e ) {
 			$this->logger->debug(
-				'guest order update exception: ' . $e->getMessage()
+				'Abandon cart guest sync: guest order update exception: ' . $e->getMessage()
 			);
+
 			return false;
 		}
 
@@ -467,7 +484,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	/**
 	 * Set the logger (for testing)
 	 *
-	 * @param Activecampaign_For_Woocommerce_Logger $logger The logger.
+	 * @param     Activecampaign_For_Woocommerce_Logger $logger     The logger.
 	 */
 	public function setLogger( $logger ) {
 		$this->logger = $logger;
@@ -476,7 +493,7 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	/**
 	 * Set the session (for testing)
 	 *
-	 * @param WC_Session|null $wc_session The session.
+	 * @param     WC_Session|null $wc_session     The session.
 	 */
 	public function setWcSession( $wc_session ) {
 		$this->wc_session = $wc_session;

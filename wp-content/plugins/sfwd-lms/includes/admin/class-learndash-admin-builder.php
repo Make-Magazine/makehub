@@ -20,7 +20,6 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 		protected $builder_prefix      = 'learndash_builder';
 		protected $builder_assets      = array();
 		protected $selector_post_types = array();
-		//protected $ld_course_steps_object = null;
 
 		/**
 		 * Static array of section instances.
@@ -166,17 +165,7 @@ if ( ! class_exists( 'Learndash_Admin_Builder' ) ) {
 			?>
 			<div id="learndash_builder_box_wrap" class="learndash_builder_box_wrap" data-ld-course-id="<?php echo intval( $this->builder_post_id ); ?>" data-ld-typenow="<?php echo esc_attr( $post->post_type ); ?>">
 				<input type="hidden" id="<?php echo esc_attr( $this->builder_prefix ); ?>_data" name="<?php echo esc_attr( $this->builder_prefix ); ?>[<?php echo esc_attr( $this->builder_post_type ); ?>][<?php echo intval( $this->builder_post_id ); ?>]" value="" />
-				<div class="learndash_selectors">
-					<div class="learndash-header-right">
-						<span class="ld-show-all"><?php esc_html_e( 'Expand All', 'learndash' ); ?></span>
-						<span class="ld-divide-all">|</span>
-						<span class="ld-hide-all"><?php esc_html_e( 'Collapse All', 'learndash' ); ?></span>
-					</div>
-					<?php $this->show_builder_selectors(); ?>
-				</div>
 				<div class="learndash_builder_items">
-					<?php $this->show_builder_headers(); ?>
-					<?php echo $this->build_course_steps_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML ?>
 				</div>
 				<br style="clear:both;"/>
 			</div>

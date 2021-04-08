@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Quiz_List' ) ) ) {
 	/**
 	 * Class for handling LearnDash Quiz List Block
@@ -111,7 +115,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
 				$shortcode_out        = do_shortcode( $shortcode_params_str );
 				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				// This is mainly to protect against emty returns with the Gutenberg ServerSideRender function.

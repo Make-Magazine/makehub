@@ -6,6 +6,10 @@
  *
  * @package LearnDash\Course
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <?php the_title( '<h2 class="ld-entry-title entry-title"><a href="' . learndash_get_step_permalink( get_the_ID(), $course_id ) . '" title="' . the_title_attribute( 'echo=0' ) . '" rel="bookmark">', '</a></h2>' ); ?>
 

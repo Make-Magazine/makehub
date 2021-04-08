@@ -31,6 +31,10 @@
  *
  * @package LearnDash\Lesson
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <?php if ( @$lesson_progression_enabled && ! @$previous_lesson_completed ) : ?>
 	<span id="learndash_complete_prev_lesson">
@@ -162,7 +166,7 @@
 	 * Display Lesson Assignments
 	 */
 	?>
-	<?php if ( ( lesson_hasassignments( $post ) ) && ( ! empty( $user_id ) ) ) : ?>
+	<?php if ( ( learndash_lesson_hasassignments( $post ) ) && ( ! empty( $user_id ) ) ) : ?>
 		<?php
 			$ret = SFWD_LMS::get_template(
 				'learndash_lesson_assignment_uploads_list.php',

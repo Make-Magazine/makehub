@@ -7,8 +7,10 @@
  * @package LearnDash\Course
  */
 
-?>
-<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 global $pagenow;
 global $course_navigation_admin_pager;
 

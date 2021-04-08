@@ -148,9 +148,10 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
 			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
+			$tutorial_callback = ! empty( $section['tutorial_callback'] ) ? $section['tutorial_callback'] : false;
 
 			// Add the section.
-			$this->add_section( $section_id, $section_title, $section_callback );
+			$this->add_section( $section_id, $section_title, $section_callback, $tutorial_callback );
 
 			// Loop through fields for this section.
 			foreach ( (array) $fields as $field_id => $field ) {
@@ -174,16 +175,31 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function get_settings_sections() {
 
-		$settings = array(
-			'bp_zoom_settings_section'  => array(
-				'page'  => 'zoom',
-				'title' => __( 'Zoom Settings', 'buddyboss-pro' ),
-			),
-			'bp_zoom_gutenberg_section' => array(
-				'page'  => 'zoom',
-				'title' => __( 'Zoom Gutenberg Blocks', 'buddyboss-pro' ),
-			),
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$settings = array(
+				'bp_zoom_settings_section'  => array(
+					'page'  => 'zoom',
+					'title' => __( 'Zoom Settings', 'buddyboss-pro' )
+				),
+				'bp_zoom_gutenberg_section' => array(
+					'page'  => 'zoom',
+					'title' => __( 'Zoom Gutenberg Blocks', 'buddyboss-pro' )
+				),
+			);
+		} else {
+			$settings = array(
+				'bp_zoom_settings_section'  => array(
+					'page'  => 'zoom',
+					'title' => __( 'Zoom Settings', 'buddyboss-pro' ),
+					'tutorial_callback' => 'bp_zoom_settings_tutorial'
+				),
+				'bp_zoom_gutenberg_section' => array(
+					'page'  => 'zoom',
+					'title' => __( 'Zoom Gutenberg Blocks', 'buddyboss-pro' ),
+					'tutorial_callback' => 'bp_zoom_settings_tutorial'
+				),
+			);
+		}
 
 		return $settings;
 	}
@@ -304,10 +320,13 @@ class BP_Zoom_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				),
 			);
 
-			$fields['bp_zoom_settings_section']['bp_zoom_settings_tutorial'] = array(
-				'title'    => __( '&#160;', 'buddyboss-pro' ),
-				'callback' => 'bp_zoom_settings_tutorial',
-			);
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$fields['bp_zoom_settings_section']['bp_zoom_settings_tutorial'] = array(
+					'title'    => __( '&#160;', 'buddyboss-pro' ),
+					'callback' => 'bp_zoom_settings_tutorial',
+				);
+			}
+
 		}
 
 		return $fields;

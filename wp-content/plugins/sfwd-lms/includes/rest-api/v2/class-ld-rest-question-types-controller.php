@@ -6,6 +6,11 @@
  * @subpackage REST_API
  * @since 3.3.0
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Question_Types_Controller_V2' ) ) && ( class_exists( 'WP_REST_Controller' ) ) ) {
 	/**
 	 * Class REST API Question Types Controller.
@@ -64,7 +69,11 @@ if ( ( ! class_exists( 'LD_REST_Question_Types_Controller_V2' ) ) && ( class_exi
 				array(
 					'args'   => array(
 						'slug' => array(
-							'description' => __( 'An alphanumeric identifier for the question type.', 'learndash' ),
+							'description' => sprintf(
+								// translators: placeholder: question.
+								esc_html_x( 'An alphanumeric identifier for the %s type', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label_lower( 'question ' )
+							),
 							'type'        => 'string',
 						),
 					),

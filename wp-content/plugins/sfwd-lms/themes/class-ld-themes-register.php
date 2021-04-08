@@ -63,7 +63,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @since 3.0
 		 * @var array
 		 */
-		protected static $_instances = array();
+		protected static $_instances = array(); // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Boolean to inticate when init has or has not been called.
@@ -71,7 +71,7 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @since 3.0
 		 * @var boolean
 		 */
-		protected static $_init_called = false;
+		protected static $_init_called = false; // phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		protected $theme_settings_sections = array();
 
@@ -274,9 +274,6 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string directory path of active theme templates.
 		 */
 		final public static function get_active_theme_dir() {
-			//if ( function_exists( '_deprecated_function' ) ) {
-			//	_deprecated_function( __FUNCTION__, '3.0.3', 'LearnDash_Theme_Register::get_theme_template_dir()' );
-			//}
 			return self::get_theme_template_dir();
 		}
 
@@ -287,9 +284,6 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string URL of active theme templates.
 		 */
 		final public static function get_active_theme_url() {
-			//if ( function_exists( '_deprecated_function' ) ) {
-			//	_deprecated_function( __FUNCTION__, '3.0.3', 'LearnDash_Theme_Registerget_theme_template_dir()' );
-			//}
 			return self::get_theme_template_url();
 		}
 
@@ -365,9 +359,6 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string directory path of current theme templates.
 		 */
 		public function get_theme_dir() {
-			//if ( function_exists( '_deprecated_function' ) ) {
-			//	_deprecated_function( __FUNCTION__, '3.0.3', 'get_theme_template_dir()' );
-			//}
 			return $this->get_theme_template_dir();
 		}
 
@@ -378,9 +369,6 @@ if ( ! class_exists( 'LearnDash_Theme_Register' ) ) {
 		 * @return string URL of current theme templates.
 		 */
 		public function get_theme_url() {
-			//if ( function_exists( '_deprecated_function' ) ) {
-			//	_deprecated_function( __FUNCTION__, '3.0.3', 'get_theme_template_url()' );
-			//}
 			return $this->get_theme_template_url();
 		}
 

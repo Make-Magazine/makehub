@@ -500,9 +500,13 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			 * Finally we go through the user's meta again to grab the random course access items. These
 			 * would be there If the user was granted access but didn't actually start a lesson/quiz etc.
 			 */
-			$user_courses_access_sql  = $wpdb->prepare( 'SELECT user_id, meta_key, meta_value as course_access_from FROM ' . $wpdb->usermeta . ' WHERE user_id=%d', $user_id );
-			$user_courses_access_sql .= " AND meta_key LIKE 'course_%_access_from'";
-			$user_courses_access      = $wpdb->get_results( $user_courses_access_sql );
+			$user_courses_access = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT user_id, meta_key, meta_value as course_access_from FROM {$wpdb->usermeta} WHERE user_id = %d AND meta_key LIKE %s",
+					$user_id,
+					'course_%_access_from'
+				)
+			);
 
 			if ( ! empty( $user_courses_access ) ) {
 				foreach ( $user_courses_access as $user_course_access ) {

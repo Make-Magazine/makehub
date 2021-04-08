@@ -41,6 +41,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Reset ALL LearnDash Data', 'learndash' );
 
+			$this->load_options = false;
+
 			$this->metabox_context  = 'side';
 			$this->metabox_priority = 'high';
 

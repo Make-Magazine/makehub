@@ -7,6 +7,10 @@
  * @package LearnDash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LD_REST_Sections_Controller_V1' ) ) {
 
 	/**

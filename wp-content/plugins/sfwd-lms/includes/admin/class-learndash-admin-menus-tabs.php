@@ -45,7 +45,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 			 */
 			add_action( 'wp_loaded', array( $this, 'wp_loaded' ), 1000 );
 
-			//add_action( 'all_admin_notices', array( $this, 'learndash_admin_tabs' ), 20 );
 			add_action( 'in_admin_header', array( $this, 'learndash_admin_tabs' ), 20 );
 		}
 
@@ -168,11 +167,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 							if ( ( isset( $link_params['post_type'] ) ) && ( ! empty( $link_params['post_type'] ) ) ) {
 								$post_type_object = get_post_type_object( $link_params['post_type'] );
 								if ( $post_type_object ) {
-									$all_title = sprintf(
-										// translators: placeholder: Post Type Plural Name.
-										esc_html_x( 'All  %s', 'placeholder: Post Type Plural Name', 'learndash' ),
-										$post_type_object->labels->name
-									);
+									$all_title = $post_type_object->labels->all_items;
 								}
 							}
 
@@ -494,7 +489,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 			$current_screen  = get_current_screen();
 			$current_page_id = $current_screen->id;
 
-			//$current_screen_parent_file = $current_screen->parent_file;
 			if ( $parent_file ) {
 				$current_screen_parent_file = $parent_file;
 			} else {
@@ -602,7 +596,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 
 				$post_id = ! empty( $_GET['post_id'] ) ? $_GET['post_id'] : ( empty( $_GET['post'] ) ? 0 : $_GET['post'] );
 				if ( ! empty( $post_id ) ) {
-					$current_page_id = 'edit-sfwd-essays'; //. $current_page_id;
+					$current_page_id = 'edit-sfwd-essays';
 				}
 
 				$this->admin_tab_sets['edit.php?post_type=sfwd-essays'] = array();
@@ -717,7 +711,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 
 			if ( 'edit.php?post_type=groups' === $current_screen_parent_file ) {
 
-				//if ( learndash_is_admin_user() ) {
 				if ( current_user_can( 'edit_groups' ) ) {
 					$user_group_ids = learndash_get_administrators_group_ids( get_current_user_id(), true );
 					if ( ! empty( $user_group_ids ) ) {
@@ -1030,6 +1023,8 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'section-headings'    => esc_html__( 'Section Headings', 'learndash' ),
 					'answer'              => esc_html__( 'answer', 'learndash' ),
 					'answers'             => esc_html__( 'answers', 'learndash' ),
+					'certificate'         => esc_html__( 'Certificate', 'learndash' ),
+					'certificates'        => esc_html__( 'Certificates', 'learndash' ),
 					'course'              => \LearnDash_Custom_Label::get_label( 'course' ),
 					'courses'             => \LearnDash_Custom_Label::get_label( 'courses' ),
 					'lesson'              => \LearnDash_Custom_Label::get_label( 'lesson' ),
@@ -1050,6 +1045,7 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'sfwd-quizzes'        => \LearnDash_Custom_Label::get_label( 'quizzes' ),
 					'sfwd-courses'        => \LearnDash_Custom_Label::get_label( 'courses' ),
 					'sfwd-question'       => \LearnDash_Custom_Label::get_label( 'question' ),
+					'sfwd-certificates'   => esc_html__( 'Certificates', 'learndash' ),
 					'start-adding-lesson' => sprintf(
 						// translators: placeholder: Lesson.
 						esc_html_x( 'Start by adding a %s.', 'placeholder: Lesson', 'learndash' ),
@@ -1094,7 +1090,11 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'remove'                             => esc_html__( 'Remove', 'learndash' ),
 					'save'                               => esc_html__( 'Save', 'learndash' ),
 					'settings'                           => esc_html__( 'Settings', 'learndash' ),
-					'edit_question'                      => esc_html__( 'Click here to edit the question', 'learndash' ),
+					'edit_question'                      => sprintf(
+						// translators: placeholder: question
+						esc_html_x( 'Click here to edit the %s', 'placeholder: question', 'learndash' ),
+						learndash_get_custom_label_lower( 'question' )
+					),
 					'correct_answer_message'             => esc_html__( 'Message for correct answer - optional', 'learndash' ),
 					'different_incorrect_answer_message' => esc_html__( 'Use different message for incorrect answer', 'learndash' ),
 					'same_answer_message'                => esc_html__( 'Currently same message is displayed as above.', 'learndash' ),
@@ -1306,7 +1306,11 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 					'essay_answer_format'                => esc_html_x( 'Answer format', 'Type of essay answer', 'learndash' ),
 					'essay_text_answer'                  => esc_html_x( 'Text entry', 'Submit essay answer in a text box', 'learndash' ),
 					'essay_file_upload_answer'           => esc_html_x( 'File upload', 'Submit essay answer as an upload', 'learndash' ),
-					'essay_after_submission'             => esc_html_x( 'What should happen on quiz submission?', 'What grading options should be used after essay submission', 'learndash' ),
+					'essay_after_submission'             => sprintf(
+						/* translators: placeholder: quiz */
+						esc_html_x( 'What should happen on %s submission?', 'What grading options should be used after essay submission', 'learndash' ),
+						learndash_get_custom_label_lower( 'quiz' )
+					),
 					'essay_not_graded_no_points'         => esc_html_x( 'Not Graded, No Points Awarded', 'Essay answer grading option', 'learndash' ),
 					'essay_not_graded_full_points'       => esc_html_x( 'Not Graded, Full Points Awarded', 'Essay answer grading option', 'learndash' ),
 					'essay_graded_full_points'           => esc_html_x( 'Graded, Full Points Awarded', 'Essay answer grading option', 'learndash' ),
@@ -1895,7 +1899,6 @@ if ( ! class_exists( 'Learndash_Admin_Menus_Tabs' ) ) {
 							)
 						);
 					}
-
 				} elseif ( in_array(
 					$screen_post_type,
 					array(

@@ -507,3 +507,29 @@ function bb_access_control_array_flatten( $array ) {
 	return $result;
 }
 
+/**
+ * Link to Access Control tutorial
+ *
+ * @since 1.1.1
+ */
+function bb_admin_access_control_setting_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url( // phpcs:ignore
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 121813,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php esc_html_e( 'View Tutorial', 'buddyboss-pro' ); ?></a>
+	</p>
+
+	<?php
+}

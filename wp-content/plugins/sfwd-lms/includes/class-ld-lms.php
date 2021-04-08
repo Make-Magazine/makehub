@@ -24,7 +24,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		public $count      = null;
 
 		private $post_args                      = array();
-		private $ALL_PLUGUNS_CALLED             = false;
+		private $all_pluguns_called             = false;
 		private $learndash_legacy_plugins_paths = array(
 			'sfwd-lms/sfwd_lms.php',
 		);
@@ -52,7 +52,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_action( 'wpmu_new_blog', array( $this, 'wpmu_new_blog' ) );
 			add_action( 'delete_blog', array( $this, 'delete_blog' ), 10, 2 );
 
-			// add_action( 'plugins_loaded', array( $this, 'add_post_types' ), 1 );
 			add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 			add_action( 'parse_request', array( $this, 'parse_ipn_request' ) );
 			add_action( 'generate_rewrite_rules', array( $this, 'paypal_rewrite_rules' ) );
@@ -75,12 +74,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			add_action( 'shutdown', array( $this, 'wp_shutdown' ), 0 );
 
 			if ( is_admin() ) {
-				//require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/class-learndash-admin-groups-edit.php';
-				//$this->ld_admin_groups_edit = new Learndash_Admin_Groups_Edit();
-
-				// require_once( LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/class-learndash-admin-settings-support-panel.php' );
-				// $this->ld_admin_settings_support_panel = new Learndash_Admin_Settings_Support_Panel();
-
 				require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/class-learndash-admin-groups-users-list.php';
 				$this->ld_admin_groups_users_list = new Learndash_Admin_Groups_Users_list();
 
@@ -113,7 +106,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			$learndash_course_statuses = array(
 				'not_started' => esc_html__( 'Not Started', 'learndash' ),
 				'in_progress' => esc_html__( 'In Progress', 'learndash' ),
-				'complete'    => esc_html__( 'Completed', 'learndash' ),
+				'completed'   => esc_html__( 'Completed', 'learndash' ),
 			);
 
 			$learndash_question_types = array(
@@ -155,7 +148,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			 * Fires on LearnDash setting sections init.
 			 */
 			do_action( 'learndash_settings_sections_init' );
-			// do_action('learndash_themes_init');
 
 			if ( is_admin() ) {
 				/**
@@ -485,7 +477,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 					$question_proquiz_count = $wpdb->get_var(
 						$wpdb->prepare(
-							'SELECT id FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' LIMIT %d',
+							'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' LIMIT %d',
 							1
 						)
 					);
@@ -569,11 +561,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @return array    $vars  query vars
 		 */
 		public function add_query_vars( $vars ) {
-			// $courses_options = learndash_get_option( 'sfwd-courses' );
-			// if ((isset($courses_options['paypal_email'])) && (!empty($courses_options['paypal_email']))) {
-			// $vars = array_merge( array( 'sfwd-lms' ), $vars );
-			// }
-
 			$paypal_email = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_email' );
 			if ( ! empty( $paypal_email ) ) {
 				$vars = array_merge( array( 'sfwd-lms' ), $vars );
@@ -614,12 +601,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @param  object $wp_rewrite
 		 */
 		public function paypal_rewrite_rules( $wp_rewrite ) {
-
-			// $courses_options = learndash_get_option( 'sfwd-courses' );
-			// if ((isset($courses_options['paypal_email'])) && (!empty($courses_options['paypal_email']))) {
-			// $wp_rewrite->rules = array_merge( array( 'sfwd-lms/paypal' => 'index.php?sfwd-lms=paypal' ), $wp_rewrite->rules );
-			// }
-
 			$paypal_email = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_PayPal', 'paypal_email' );
 			if ( ! empty( $paypal_email ) ) {
 				$wp_rewrite->rules = array_merge( array( 'sfwd-lms/paypal' => 'index.php?sfwd-lms=paypal' ), $wp_rewrite->rules );
@@ -647,7 +628,11 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 			$options = get_option( 'sfwd_cpt_options' );
 
-			$level1 = $level2 = $level3 = $level4 = $level5 = '';
+			$level1 = '';
+			$level2 = '';
+			$level3 = '';
+			$level4 = '';
+			$level5 = '';
 
 			if ( ! empty( $options['modules'] ) ) {
 				$options = $options['modules'];
@@ -899,22 +884,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				)
 			);
 
-			// $learndash_settings_permalinks_cpt = get_option( 'learndash_settings_permalinks' );
-			/*
-			if ( !is_array( $learndash_settings_permalinks_cpt ) ) $learndash_settings_permalinks_cpt = array();
-			$learndash_settings_permalinks_cpt = wp_parse_args(
-				$learndash_settings_permalinks_cpt,
-				array(
-					'ld_course_category' 	=>	'course-category',
-					'ld_course_tag' 		=>	'course-tag',
-					'ld_lesson_category' 	=> 	'lesson-category',
-					'ld_lesson_tag' 		=> 	'lesson-tag',
-					'ld_topic_category'		=> 	'topic-category',
-					'ld_topic_tag' 			=> 	'topic-tag'
-				)
-			);
-			*/
-
 			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Taxonomies', 'ld_course_category' ) == 'yes' ) {
 				$course_taxonomies['ld_course_category'] = array(
 					'public'            => true,
@@ -924,8 +893,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_course_category'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Course_Category_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_course_category'] ),
 					'capabilities'      => array(
 						'manage_terms' => 'manage_categories',
@@ -970,8 +937,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_course_tag'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Course_Tag_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_course_tag'] ),
 					'labels'            => array(
 						// translators: placeholder: Course.
@@ -1018,8 +983,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_lesson_category'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Lesson_Category_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_lesson_category'] ),
 					'capabilities'      => array(
 						'manage_terms' => 'manage_categories',
@@ -1063,8 +1026,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_lesson_tag'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Lesson_Tag_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_lesson_tag'] ),
 					'labels'            => array(
 						// translators: placeholder: Lesson.
@@ -1111,8 +1072,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_category'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Category_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_topic_category'] ),
 					'capabilities'      => array(
 						'manage_terms' => 'manage_categories',
@@ -1156,8 +1115,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_tag'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Tag_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_topic_tag'] ),
 					'labels'            => array(
 						// translators: placeholder: Topic.
@@ -1196,8 +1153,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_category'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Category_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_quiz_category'] ),
 					'capabilities'      => array(
 						'manage_terms' => 'manage_categories',
@@ -1241,8 +1196,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_tag'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Tag_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_quiz_tag'] ),
 					'labels'            => array(
 						// translators: placeholder: Quiz.
@@ -1288,8 +1241,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-question' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-question' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_category'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Category_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_question_category'] ),
 					'capabilities'      => array(
 						'manage_terms' => 'manage_categories',
@@ -1333,8 +1284,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'show_admin_column' => true,
 					'query_var'         => true,
 					'show_in_rest'      => LearnDash_REST_API::enabled( 'sfwd-question' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-question' ),
-					// 'rest_base'       => $learndash_settings_permalinks_taxonomies['ld_topic_tag'],
-					// 'rest_controller_class' => 'LD_REST_Terms_Topic_Tag_Controller_V1',
 					'rewrite'           => array( 'slug' => $learndash_settings_permalinks_taxonomies['ld_question_tag'] ),
 					'labels'            => array(
 						// translators: placeholder: Question.
@@ -1371,9 +1320,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			}
 
 			$course_lessons_options_labels = array(
-				// 'orderby'     =>  LearnDash_Settings_Section_Lessons_Display_Order::get_setting_select_option_label( 'orderby' ),
 				'orderby' => LearnDash_Settings_Section::get_section_setting_select_option_label( 'LearnDash_Settings_Section_Lessons_Display_Order', 'orderby' ),
-				// 'order'   =>  LearnDash_Settings_Section_Lessons_Display_Order::get_setting_select_option_label( 'order' )
 				'order'   => LearnDash_Settings_Section::get_section_setting_select_option_label( 'LearnDash_Settings_Section_Lessons_Display_Order', 'order' ),
 			);
 
@@ -1385,18 +1332,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $course_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'           => learndash_post_type_has_archive( 'sfwd-courses' ),
-						'hierarchical'          => false,
-						'supports'              => array_merge(
+						'has_archive'         => learndash_post_type_has_archive( 'sfwd-courses' ),
+						'hierarchical'        => false,
+						'supports'            => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'supports' )
 						),
-						'labels'                => $course_labels,
-						'capability_type'       => 'course',
-						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'          => $course_capabilities,
-						'map_meta_cap'          => true,
-						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
+						'labels'              => $course_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-courses' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-courses' ),
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Course.
@@ -1479,7 +1426,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 							'name'         => sprintf( esc_html_x( '%s Access List', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
 							'type'         => 'textarea',
 							'help_text'    => esc_html__( 'This field is auto-populated with the UserIDs of those who have access to this course.', 'learndash' ),
-							'show_in_rest' => false, // LearnDash_REST_API::enabled(),
+							'show_in_rest' => false,
 						),
 						'course_lesson_orderby'         => array(
 							// translators: placeholder: Lesson.
@@ -1669,17 +1616,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $lesson_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'           => learndash_post_type_has_archive( 'sfwd-lessons' ),
-						'supports'              => array_merge(
+						'has_archive'         => learndash_post_type_has_archive( 'sfwd-lessons' ),
+						'supports'            => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'supports' )
 						),
-						'labels'                => $lesson_labels,
-						'capability_type'       => 'course',
-						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'          => $course_capabilities,
-						'map_meta_cap'          => true,
-						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
+						'labels'              => $lesson_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Lessons_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-lessons' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-lessons' ),
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Lesson.
@@ -1824,17 +1771,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $topic_taxonomies,
 					'cpt_options'        => array(
-						'supports'              => array_merge(
+						'supports'            => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'supports' )
 						),
-						'has_archive'           => learndash_post_type_has_archive( 'sfwd-topic' ),
-						'labels'                => $lesson_topic_labels,
-						'capability_type'       => 'course',
-						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'          => $course_capabilities,
-						'map_meta_cap'          => true,
-						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
+						'has_archive'         => learndash_post_type_has_archive( 'sfwd-topic' ),
+						'labels'              => $lesson_topic_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Topics_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-topic' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-topic' ),
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Topic.
@@ -1984,18 +1931,18 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => true,
 					'taxonomies'         => $quiz_taxonomies,
 					'cpt_options'        => array(
-						'has_archive'           => learndash_post_type_has_archive( 'sfwd-quiz' ),
-						'hierarchical'          => false,
-						'supports'              => array_merge(
+						'has_archive'         => learndash_post_type_has_archive( 'sfwd-quiz' ),
+						'hierarchical'        => false,
+						'supports'            => array_merge(
 							array( 'title', 'editor', 'author', 'page-attributes' ),
 							LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'supports' )
 						),
-						'labels'                => $quiz_labels,
-						'capability_type'       => 'course',
-						'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-						'capabilities'          => $course_capabilities,
-						'map_meta_cap'          => true,
-						'show_in_rest'          => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
+						'labels'              => $quiz_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Quizzes_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => LearnDash_REST_API::enabled( 'sfwd-quiz' ) || LearnDash_REST_API::gutenberg_enabled( 'sfwd-quiz' ),
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Quiz.
@@ -2082,16 +2029,16 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 					'template_redirect'  => false,
 					'taxonomies'         => $question_taxonomies,
 					'cpt_options'        => array(
-						'public'                => false,
-						'hierarchical'          => false,
-						'supports'              => array( 'title', 'thumbnail', 'editor', 'author', 'revisions', 'page-attributes' ),
-						'labels'                => $question_labels,
-						'capability_type'       => 'course',
-						'exclude_from_search'   => true,
-						'show_in_nav_menus'     => false,
-						'capabilities'          => $course_capabilities,
-						'map_meta_cap'          => true,
-						'show_in_rest'          => true,
+						'public'              => false,
+						'hierarchical'        => false,
+						'supports'            => array( 'title', 'thumbnail', 'editor', 'author', 'revisions', 'page-attributes' ),
+						'labels'              => $question_labels,
+						'capability_type'     => 'course',
+						'exclude_from_search' => true,
+						'show_in_nav_menus'   => false,
+						'capabilities'        => $course_capabilities,
+						'map_meta_cap'        => true,
+						'show_in_rest'        => true,
 					),
 					'options_page_title' => sprintf(
 						// translators: placeholder: Question
@@ -2126,11 +2073,9 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				),
 			);
 
-			$lcl_certificates    = 'Certificates';
-			$lcl_certificate     = 'Certificate';
 			$certificates_labels = array(
-				'name'                     => $lcl_certificates,
-				'singular_name'            => $lcl_certificate,
+				'name'                     => esc_html_x( 'Certificates', 'Certificates Post Type Label', 'learndash' ),
+				'singular_name'            => esc_html_x( 'Certificate', 'Certificates Post Type Singular Name', 'learndash' ),
 				'add_new'                  => esc_html_x( 'Add New', 'Add New Certificate Label', 'learndash' ),
 				'add_new_item'             => esc_html_x( 'Add New Certificate', 'Add New Item Certificate Label', 'learndash' ),
 				'edit_item'                => esc_html_x( 'Edit Certificate', 'Edit Certificate Label', 'learndash' ),
@@ -2345,19 +2290,19 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				'template_redirect' => true,
 				'taxonomies'        => $group_taxonomies,
 				'cpt_options'       => array(
-					'supports'              => array_merge(
+					'supports'            => array_merge(
 						array( 'title', 'editor', 'author' ),
 						LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'supports' )
 					),
-					'has_archive'           => learndash_post_type_has_archive( 'groups' ),
-					'labels'                => $group_labels,
-					'capability_type'       => 'groups',
-					'hierarchical'          => learndash_is_groups_hierarchical_enabled(),
-					'public'                => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === 'yes' ) ? true : false,
-					'exclude_from_search'   => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
-					'capabilities'          => $group_capabilities,
-					'map_meta_cap'          => true,
-					'show_in_rest'          => LearnDash_REST_API::enabled( 'groups' ) || LearnDash_REST_API::gutenberg_enabled( 'groups' ),
+					'has_archive'         => learndash_post_type_has_archive( 'groups' ),
+					'labels'              => $group_labels,
+					'capability_type'     => 'groups',
+					'hierarchical'        => learndash_is_groups_hierarchical_enabled(),
+					'public'              => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'public' ) === 'yes' ) ? true : false,
+					'exclude_from_search' => ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Groups_CPT', 'include_in_search' ) !== 'yes' ) ? true : false,
+					'capabilities'        => $group_capabilities,
+					'map_meta_cap'        => true,
+					'show_in_rest'        => LearnDash_REST_API::enabled( 'groups' ) || LearnDash_REST_API::gutenberg_enabled( 'groups' ),
 				),
 				'default_options'   => array(),
 				'fields'            => array(),
@@ -2416,7 +2361,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			}
 
 			// Added in v2.5.4 to hide the lesson, topic and quiz post type from nav menu when shared steps enabed.
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+			if ( learndash_is_course_shared_steps_enabled() ) {
 				$this->post_args['sfwd-lessons']['cpt_options']['show_in_nav_menus'] = false;
 				$this->post_args['sfwd-topic']['cpt_options']['show_in_nav_menus']   = false;
 				$this->post_args['sfwd-quiz']['cpt_options']['show_in_nav_menus']    = false;
@@ -2746,7 +2691,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 					if ( ! is_null( $atts['quiz_ids'] ) ) {
 						$quiz_ids = $atts['quiz_ids'];
-					} else if ( ! is_null( $atts['quiz_filter_quiz'] ) ) {
+					} elseif ( ! is_null( $atts['quiz_filter_quiz'] ) ) {
 						$quiz_ids = $atts['quiz_filter_quiz'];
 					} else {
 						$quiz_ids = wp_list_pluck( $quizzes, 'quiz' );
@@ -2827,7 +2772,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 											}
 										}
 
-										if ( $atts['quiz_orderby'] == 'taken' ) {
+										if ( 'taken' === $atts['quiz_orderby'] ) {
 											$quiz_key = $quiz_attempt['time'] . '-' . $quiz_attempt['quiz'];
 										} elseif ( 'title' == $atts['quiz_orderby'] ) {
 											$quiz_key = $post_idx . '-' . $quiz_attempt['time'];
@@ -3073,14 +3018,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				return;
 			}
 
-			$selected_D                        = $selected_W = $selected_M = $selected_Y = '';
+			$selected_d = '';
+			$selected_w = '';
+			$selected_m = '';
+			$selected_y = '';
 			${'selected_' . $price_billing_t3} = 'selected="selected"';
 			return '<input name="' . $settings_prefix . '_price_billing_p3" type="number" value="' . $price_billing_p3 . '" class="small-text" />
 					<select class="select_course_price_billing_p3" name="' . $settings_prefix . '_price_billing_t3">
-						<option value="D" ' . $selected_D . '>' . esc_html__( 'day(s)', 'learndash' ) . '</option>
-						<option value="W" ' . $selected_W . '>' . esc_html__( 'week(s)', 'learndash' ) . '</option>
-						<option value="M" ' . $selected_M . '>' . esc_html__( 'month(s)', 'learndash' ) . '</option>
-						<option value="Y" ' . $selected_Y . '>' . esc_html__( 'year(s)', 'learndash' ) . '</option>
+						<option value="D" ' . $selected_d . '>' . esc_html__( 'day(s)', 'learndash' ) . '</option>
+						<option value="W" ' . $selected_w . '>' . esc_html__( 'week(s)', 'learndash' ) . '</option>
+						<option value="M" ' . $selected_m . '>' . esc_html__( 'month(s)', 'learndash' ) . '</option>
+						<option value="Y" ' . $selected_y . '>' . esc_html__( 'year(s)', 'learndash' ) . '</option>
 					</select>';
 		}
 
@@ -3267,7 +3215,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @since 2.1.0
 		 */
 		public function course_export_init() {
-			if ( ( ! defined( 'LEARNDASH_DEBUG' ) ) || ( LEARNDASH_DEBUG !== true ) ) {
+			if ( ( defined( 'LEARNDASH_ERROR_REPORTING_ZERO' ) ) && ( true === LEARNDASH_ERROR_REPORTING_ZERO ) ) {
 				error_reporting( 0 );
 			}
 
@@ -3351,7 +3299,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @since 2.1.0
 		 */
 		public function quiz_export_init() {
-			if ( ( ! defined( 'LEARNDASH_DEBUG' ) ) || ( LEARNDASH_DEBUG !== true ) ) {
+			if ( ( defined( 'LEARNDASH_ERROR_REPORTING_ZERO' ) ) && ( true === LEARNDASH_ERROR_REPORTING_ZERO ) ) {
 				error_reporting( 0 );
 			}
 
@@ -3542,8 +3490,9 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 									if ( ( isset( $v['statistic_ref_id'] ) ) && ( ! empty( $v['statistic_ref_id'] ) ) ) {
 										global $wpdb;
 
-										$sql_str = $wpdb->prepare( ' SELECT count(*) as count FROM ' . LDLMS_DB::get_table_name( 'quiz_statistic' ) . ' WHERE statistic_ref_id = %d', $v['statistic_ref_id'] );
-										$count   = $wpdb->get_var( $sql_str );
+										$count = $wpdb->get_var(
+											$wpdb->prepare( ' SELECT count(*) as count FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_statistic' ) ) . ' WHERE statistic_ref_id = %d', $v['statistic_ref_id'] )
+										);
 										if ( ! $count ) {
 											$count = 0;
 										}
@@ -3738,8 +3687,6 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			return $submit;
 		}
 
-
-
 		/**
 		 * Set up quiz display settings
 		 *
@@ -3747,6 +3694,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * apply_filters in display_options() in swfd_module_class.php
 		 *
 		 * @since 2.1.0
+		 * @deprecated 3.4.0
 		 *
 		 * @param  array  $settings        quiz settings
 		 * @param  string $location        where these settings are being displayed
@@ -3754,180 +3702,8 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @return array                   quiz settings
 		 */
 		public function quiz_display_settings( $settings, $location, $current_options ) {
-			global $sfwd_lms;
-			$sfwd_quiz   = $sfwd_lms->post_types['sfwd-quiz'];
-			$quiz_prefix = $sfwd_quiz->get_prefix();
-
-			$prefix_len   = strlen( $quiz_prefix );
-			$quiz_options = $sfwd_quiz->get_current_options();
-
-			if ( null == $location ) {
-
-				foreach ( $quiz_options as $k => $v ) {
-					if ( strpos( $k, $quiz_prefix ) === 0 ) {
-						$quiz_options[ substr( $k, $prefix_len ) ] = $v;
-						unset( $quiz_options[ $k ] );
-					}
-				}
-
-				foreach ( array( 'level1', 'level2', 'level3', 'level4', 'level5' ) as $level ) {
-					$quiz['info'][ $level ] = $quiz_options[ $level ];
-				}
-
-				$quiz['info']['name']                  = $quiz['info']['main'] = $quiz['info']['results'] = '';
-				$quiz_json                             = wp_json_encode( $quiz );
-				$settings['sfwd-quiz_quiz']['default'] = '<div class="quizFormWrapper"></div><script type="text/javascript">var quizJSON = ' . $quiz_json . ';</script>';
-
-				if ( null == $location ) {
-					unset( $settings[ "{$quiz_prefix}quiz" ] );
-				}
-
-				if ( ! empty( $settings[ "{$quiz_prefix}certificate_post" ] ) ) {
-					$posts      = get_posts(
-						array(
-							'post_type'   => 'sfwd-certificates',
-							'numberposts' => -1,
-						)
-					);
-					$post_array = array( '0' => esc_html__( '-- Select a Certificate --', 'learndash' ) );
-
-					if ( ! empty( $posts ) ) {
-						foreach ( $posts as $p ) {
-							$post_array[ $p->ID ] = $p->post_title;
-						}
-					}
-
-					$settings[ "{$quiz_prefix}certificate_post" ]['initial_options'] = $post_array;
-				}
-			} else {
-
-				global $pagenow;
-				if ( ( 'post.php' === $pagenow ) || ( 'post-new.php' === $pagenow ) ) {
-					$current_screen = get_current_screen();
-					if ( 'sfwd-quiz' === $current_screen->post_type ) {
-
-						if ( ( isset( $settings[ "{$quiz_prefix}course" ] ) ) && ( ! empty( $settings[ "{$quiz_prefix}course" ] ) ) ) {
-
-							if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) != 'yes' ) {
-
-								$_settings = $settings[ "{$quiz_prefix}course" ];
-
-								$query_options = array(
-									'post_type'      => 'sfwd-courses',
-									'post_status'    => 'any',
-									'posts_per_page' => -1,
-									'exclude'        => get_the_id(),
-									'orderby'        => 'title',
-									'order'          => 'ASC',
-								);
-
-								/**
-								 * Filters whether to lazy load admin settings or not.
-								 *
-								 * @param boolean $lazy_load Whether to lazy load or not.
-								 */
-								$lazy_load = apply_filters( 'learndash_element_lazy_load_admin', true );
-								if ( ( true == $lazy_load ) && ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-									$query_options['paged'] = 1;
-
-									/**
-									 * Filters value of lazy load per page for admin settings.
-									 *
-									 * @param int    $lazy_load_per_page The per page value for lazy load.
-									 * @param string $context            The context for admin settings.
-									 */
-									$query_options['posts_per_page'] = apply_filters( 'learndash_element_lazy_load_per_page', LEARNDASH_LMS_DEFAULT_LAZY_LOAD_PER_PAGE, "{$quiz_prefix}course" );
-								}
-
-								/**
-								 * Filters course quiz query arguments.
-								 *
-								 * @since 2.1.0
-								 *
-								 * @param array $query_options Query arguments.
-								 * @param array $settings      Quiz settings.
-								 */
-								$query_options = apply_filters( 'learndash_quiz_cours_post_options', $query_options, $_settings );
-
-								$query_posts = new WP_Query( $query_options );
-								// translators: placeholder: Course.
-								$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %s --', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) );
-
-								if ( ! empty( $query_posts->posts ) ) {
-									if ( count( $query_posts->posts ) >= $query_posts->found_posts ) {
-										// If the number of returned posts is equal or greater then found_posts then no need to run lazy load
-										$_settings['lazy_load'] = false;
-									}
-
-									foreach ( $query_posts->posts as $p ) {
-										if ( get_the_id() == $p->ID ) {
-											// Skip for current post id as current course can not be prerequities of itself
-										} else {
-											$post_array[ $p->ID ] = $p->post_title;
-										}
-									}
-								} else {
-									// If we don't have any items then override the lazy load flag
-									$_settings['lazy_load'] = false;
-								}
-								$settings[ "{$quiz_prefix}course" ]['initial_options'] = $post_array;
-
-								if ( ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-									$lazy_load_data                                       = array();
-									$lazy_load_data['query_vars']                         = $query_options;
-									$lazy_load_data['query_type']                         = 'WP_Query';
-									$lazy_load_data['value']                              = $_settings['value'];
-									$settings[ "{$quiz_prefix}course" ]['lazy_load_data'] = $lazy_load_data;
-								}
-							} else {
-								unset( $settings[ "{$quiz_prefix}course" ] );
-							}
-						}
-
-						if ( ( isset( $settings[ "{$quiz_prefix}lesson" ] ) ) && ( ! empty( $settings[ "{$quiz_prefix}lesson" ] ) ) ) {
-							if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) != 'yes' ) {
-
-								// translators: placeholders: Lesson, Topic.
-								$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %1$s or %2$s --', 'placeholders: Lesson, Topic', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'topic' ) ) );
-								$course_id  = get_post_meta( get_the_id(), 'course_id', true );
-
-								$lessons_array = $this->select_a_lesson_or_topic( $course_id );
-								if ( ! empty( $lessons_array ) ) {
-									// We can't merge because it will destroy the array indexs.
-									// $post_array = array_merge( $post_array, $lessons_array );
-									foreach ( $lessons_array as $lesson_id => $lesson_title ) {
-										$post_array[ $lesson_id ] = $lesson_title;
-									}
-								}
-								$settings[ "{$quiz_prefix}lesson" ]['initial_options'] = $post_array;
-							} else {
-								unset( $settings[ "{$quiz_prefix}lesson" ] );
-							}
-						}
-
-						if ( ! empty( $settings[ "{$quiz_prefix}certificate" ] ) ) {
-							$posts      = get_posts(
-								array(
-									'post_type'   => 'sfwd-certificates',
-									'numberposts' => -1,
-								)
-							);
-							$post_array = array( '0' => esc_html__( '-- Select a Certificate --', 'learndash' ) );
-
-							if ( ! empty( $posts ) ) {
-								foreach ( $posts as $p ) {
-									$post_array[ $p->ID ] = $p->post_title;
-								}
-							}
-
-							$settings[ "{$quiz_prefix}certificate" ]['initial_options'] = $post_array;
-						}
-
-						if ( ! empty( $settings[ "{$quiz_prefix}quiz_pro" ] ) ) {
-							$settings[ "{$quiz_prefix}quiz_pro" ]['initial_options'] = array( 0 => esc_html__( '-- Select Settings --', 'learndash' ) ) + LD_QuizPro::get_quiz_list();
-						}
-					}
-				}
+			if ( function_exists( '_deprecated_function' ) ) {
+				_deprecated_function( __FUNCTION__, '3.4.0' );
 			}
 
 			return $settings;
@@ -3954,9 +3730,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			$prefix_len       = strlen( $question_prefix );
 			$question_options = $sfwd_question->get_current_options();
 
-			if ( null == $location ) {
-			} else {
-
+			if ( ! is_null( $location ) ) {
 				global $pagenow;
 				if ( ( 'post.php' == $pagenow ) || ( 'post-new.php' == $pagenow ) ) {
 					$current_screen = get_current_screen();
@@ -4005,9 +3779,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 								}
 
 								foreach ( $query_posts->posts as $p ) {
-									if ( get_the_id() == $p->ID ) {
-										// Skip for current post id as current course can not be prerequities of itself
-									} else {
+									if ( get_the_id() !== $p->ID ) {
 										$post_array[ $p->ID ] = $p->post_title;
 									}
 								}
@@ -4446,112 +4218,19 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * apply_filters in display_options() in swfd_module_class.php
 		 *
 		 * @since 2.1.0
+		 * @deprecated 3.4.0
 		 *
 		 * @param  array $settings        quiz settings
 		 * @return array                   quiz settings
 		 */
 		public function course_display_settings( $settings ) {
-
-			global $sfwd_lms;
-			$sfwd_courses   = $sfwd_lms->post_types['sfwd-courses'];
-			$courses_prefix = $sfwd_courses->get_prefix();
-
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
-				if ( isset( $settings['sfwd-courses_course_lesson_orderby'] ) ) {
-					unset( $settings['sfwd-courses_course_lesson_orderby'] );
-				}
-				if ( isset( $settings['sfwd-courses_course_lesson_order'] ) ) {
-					unset( $settings['sfwd-courses_course_lesson_order'] );
-				}
-			}
-
-			if ( ! empty( $settings[ "{$courses_prefix}course_prerequisite" ] ) ) {
-
-				$_settings = $settings[ "{$courses_prefix}course_prerequisite" ];
-
-				$query_options = array(
-					'post_type'      => 'sfwd-courses',
-					'post_status'    => 'any',
-					'posts_per_page' => -1,
-					'exclude'        => get_the_id(),
-					'orderby'        => 'title',
-					'order'          => 'ASC',
-				);
-
-				/** This filter is documented in includes/class-ld-lms.php */
-				$lazy_load = apply_filters( 'learndash_element_lazy_load_admin', true );
-				if ( ( true == $lazy_load ) && ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-					$query_options['paged'] = 1;
-					/** This filter is documented in includes/class-ld-lms.php */
-					$query_options['posts_per_page'] = apply_filters( 'learndash_element_lazy_load_per_page', LEARNDASH_LMS_DEFAULT_LAZY_LOAD_PER_PAGE, "{$courses_prefix}course_prerequisite" );
-				}
-
-				/**
-				 * Filters query arguments for course prerequisites.
-				 *
-				 * @since 2.1.0
-				 *
-				 * @param array $query_options Query arguments.
-				 * @param array $settings      Course prerequisites settings.
-				 */
-				$query_options = apply_filters( 'learndash_course_prerequisite_post_options', $query_options, $_settings );
-
-				$query_posts = new WP_Query( $query_options );
-
-				// translators: placeholder: Course.
-				$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %s --', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) );
-
-				if ( ! empty( $query_posts->posts ) ) {
-					if ( count( $query_posts->posts ) >= $query_posts->found_posts ) {
-						// If the number of returned posts is equal or greater then found_posts then no need to run lazy load
-						$_settings['lazy_load'] = false;
-					}
-
-					foreach ( $query_posts->posts as $p ) {
-						if ( get_the_id() == $p->ID ) {
-							// Skip for current post id as current course can not be prerequities of itself
-						} else {
-							$post_array[ $p->ID ] = $p->post_title;
-						}
-					}
-				} else {
-					// If we don't have any items then override the lazy load flag
-					$_settings['lazy_load'] = false;
-				}
-
-				$settings[ "{$courses_prefix}course_prerequisite" ]['initial_options'] = $post_array;
-
-				if ( ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-					$lazy_load_data               = array();
-					$lazy_load_data['query_vars'] = $query_options;
-					$lazy_load_data['query_type'] = 'WP_Query';
-					$lazy_load_data['value']      = $_settings['value'];
-					$settings[ "{$courses_prefix}course_prerequisite" ]['lazy_load_data'] = $lazy_load_data;
-				}
-			}
-
-			if ( ! empty( $settings[ "{$courses_prefix}certificate" ] ) ) {
-				$posts      = get_posts(
-					array(
-						'post_type'   => 'sfwd-certificates',
-						'numberposts' => -1,
-					)
-				);
-				$post_array = array( '0' => esc_html__( '-- Select a Certificate --', 'learndash' ) );
-
-				if ( ! empty( $posts ) ) {
-					foreach ( $posts as $p ) {
-						$post_array[ $p->ID ] = $p->post_title;
-					}
-				}
-
-				$settings[ "{$courses_prefix}certificate" ]['initial_options'] = $post_array;
+			if ( function_exists( '_deprecated_function' ) ) {
+				_deprecated_function( __FUNCTION__, '3.4.0' );
 			}
 
 			return $settings;
 
 		}
-
 
 		/**
 		 * Set up lesson display settings
@@ -4560,82 +4239,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * apply_filters in display_options() in swfd_module_class.php
 		 *
 		 * @since 2.2.0.2
+		 * @deprecated 3.4.0
 		 *
 		 * @param  array $settings        lesson settings
 		 * @return array                   lesson settings
 		 */
 		public function lesson_display_settings( $settings ) {
 
-			global $sfwd_lms;
-			$sfwd_lessons   = $sfwd_lms->post_types['sfwd-lessons'];
-			$lessons_prefix = $sfwd_lessons->get_prefix();
-
-			if ( ( isset( $settings[ "{$lessons_prefix}course" ] ) ) && ( ! empty( $settings[ "{$lessons_prefix}course" ] ) ) ) {
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) != 'yes' ) {
-					$_settings = $settings[ "{$lessons_prefix}course" ];
-
-					$query_options = array(
-						'post_type'      => 'sfwd-courses',
-						'post_status'    => 'any',
-						'posts_per_page' => -1,
-						'exclude'        => get_the_id(),
-						'orderby'        => 'title',
-						'order'          => 'ASC',
-					);
-
-					/** This filter is documented in includes/class-ld-lms.php */
-					$lazy_load = apply_filters( 'learndash_element_lazy_load_admin', true );
-					if ( ( true == $lazy_load ) && ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-						$query_options['paged'] = 1;
-						/** This filter is documented in includes/class-ld-lms.php */
-						$query_options['posts_per_page'] = apply_filters( 'learndash_element_lazy_load_per_page', LEARNDASH_LMS_DEFAULT_LAZY_LOAD_PER_PAGE, "{$lessons_prefix}course" );
-					}
-
-					/**
-					 * Filters query arguments for getting course lesson.
-					 *
-					 * @since 2.1.0
-					 *
-					 * @param array $options  Query Arguments.
-					 * @param array $settings Lesson settings
-					 */
-					$query_options = apply_filters( 'learndash_lesson_course_post_options', $query_options, $_settings );
-
-					$query_posts = new WP_Query( $query_options );
-					// translators: placeholder: Course.
-					$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %s --', 'Select a Course Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) );
-
-					if ( ! empty( $query_posts->posts ) ) {
-						if ( count( $query_posts->posts ) >= $query_posts->found_posts ) {
-							// If the number of returned posts is equal or greater then found_posts then no need to run lazy load
-							$_settings['lazy_load'] = false;
-						}
-
-						foreach ( $query_posts->posts as $p ) {
-							if ( get_the_id() == $p->ID ) {
-								// Skip for current post id as current course can not be prerequities of itself
-							} else {
-								$post_array[ $p->ID ] = $p->post_title;
-							}
-						}
-					} else {
-						// If we don't have any items then override the lazy load flag
-						$_settings['lazy_load'] = false;
-					}
-
-					if ( ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-						$lazy_load_data               = array();
-						$lazy_load_data['query_vars'] = $query_options;
-						$lazy_load_data['query_type'] = 'WP_Query';
-						$lazy_load_data['value']      = $_settings['value'];
-						$settings[ "{$lessons_prefix}course" ]['lazy_load_data'] = $lazy_load_data;
-					}
-
-					$settings[ "{$lessons_prefix}course" ]['initial_options'] = $post_array;
-				} else {
-					unset( $settings[ "{$lessons_prefix}course" ] );
-				}
+			if ( function_exists( '_deprecated_function' ) ) {
+				_deprecated_function( __FUNCTION__, '3.4.0' );
 			}
+
 			return $settings;
 		}
 
@@ -4647,103 +4261,16 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * apply_filters in display_options() in swfd_module_class.php
 		 *
 		 * @since 2.2.0.2
+		 * @deprecated 3.4.0
 		 *
 		 * @param  array $settings        topic settings
 		 * @return array                   topic settings
 		 */
 		public function topic_display_settings( $settings ) {
-			global $sfwd_lms;
-			$sfwd_topics   = $sfwd_lms->post_types['sfwd-topic'];
-			$topics_prefix = $sfwd_topics->get_prefix();
-
-			if ( ( isset( $settings[ "{$topics_prefix}course" ] ) ) && ( ! empty( $settings[ "{$topics_prefix}course" ] ) ) ) {
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) != 'yes' ) {
-
-					$_settings = $settings[ "{$topics_prefix}course" ];
-
-					$query_options = array(
-						'post_type'      => 'sfwd-courses',
-						'post_status'    => 'any',
-						'posts_per_page' => -1,
-						'exclude'        => get_the_id(),
-						'orderby'        => 'title',
-						'order'          => 'ASC',
-					);
-
-					/** This filter is documented in includes/class-ld-lms.php */
-					$lazy_load = apply_filters( 'learndash_element_lazy_load_admin', true );
-					if ( ( true == $lazy_load ) && ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-						$query_options['paged'] = 1;
-						/** This filter is documented in includes/class-ld-lms.php */
-						$query_options['posts_per_page'] = apply_filters( 'learndash_element_lazy_load_per_page', LEARNDASH_LMS_DEFAULT_LAZY_LOAD_PER_PAGE, "{$topics_prefix}course" );
-					}
-
-					/**
-					 * Filters query arguments for getting course topic.
-					 *
-					 * @since 2.2.0.2
-					 *
-					 * @param array $query_options Query arguments.
-					 * @param array $settings      Course prerequisites settings.
-					 */
-					$query_options = apply_filters( 'learndash_topic_course_post_options', $query_options, $_settings );
-
-					$query_posts = new WP_Query( $query_options );
-					// translators: placeholder: Course.
-					$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %s --', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ) );
-
-					if ( ! empty( $query_posts->posts ) ) {
-						if ( count( $query_posts->posts ) >= $query_posts->found_posts ) {
-							// If the number of returned posts is equal or greater then found_posts then no need to run lazy load
-							$_settings['lazy_load'] = false;
-						}
-
-						foreach ( $query_posts->posts as $p ) {
-							if ( get_the_id() == $p->ID ) {
-								// Skip for current post id as current course can not be prerequities of itself
-							} else {
-								$post_array[ $p->ID ] = $p->post_title;
-							}
-						}
-					} else {
-						// If we don't have any items then override the lazy load flag
-						$_settings['lazy_load'] = false;
-					}
-
-					if ( ( isset( $_settings['lazy_load'] ) ) && ( true == $_settings['lazy_load'] ) ) {
-						$lazy_load_data               = array();
-						$lazy_load_data['query_vars'] = $query_options;
-						$lazy_load_data['query_type'] = 'WP_Query';
-						$lazy_load_data['value']      = $_settings['value'];
-						$settings[ "{$topics_prefix}course" ]['lazy_load_data'] = $lazy_load_data;
-					}
-
-					$settings[ "{$topics_prefix}course" ]['initial_options'] = $post_array;
-				} else {
-					unset( $settings[ "{$topics_prefix}course" ] );
-				}
+			if ( function_exists( '_deprecated_function' ) ) {
+				_deprecated_function( __FUNCTION__, '3.4.0' );
 			}
 
-			if ( ( isset( $settings[ "{$topics_prefix}lesson" ] ) ) && ( ! empty( $settings[ "{$topics_prefix}lesson" ] ) ) ) {
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) != 'yes' ) {
-					// translators: placeholder: Lesson.
-					$post_array = array( '0' => sprintf( esc_html_x( '-- Select a %s --', 'placeholder: Lesson', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ) );
-					$course_id  = learndash_get_course_id( get_the_id() );
-					if ( ! empty( $course_id ) ) {
-						$lessons_items = $this->select_a_lesson_or_topic( intval( $course_id ), false );
-						if ( ! empty( $lessons_items ) ) {
-							if ( isset( $lessons_items[0] ) ) {
-								unset( $lessons_items[0] );
-							}
-							$post_array = $lessons_items;
-						}
-					}
-
-					$settings[ "{$topics_prefix}lesson" ]['initial_options'] = $post_array;
-				} else {
-					unset( $settings[ "{$topics_prefix}lesson" ] );
-				}
-			}
 			return $settings;
 		}
 
@@ -5040,7 +4567,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 		/**
 		 * Called from the 'all_plugins' filter. This is called from the Plugins listing screen and will let us
-		 * set out internal flag 'ALL_PLUGUNS_CALLED' so we know when (and when not) to add the legacy pluin paths
+		 * set out internal flag 'all_pluguns_called' so we know when (and when not) to add the legacy pluin paths
 		 *
 		 * @since 2.3.0.3
 		 *
@@ -5048,7 +4575,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @return array $all_plugings
 		 */
 		public function all_plugins_proc( $all_plugins ) {
-			$this->ALL_PLUGUNS_CALLED = true;
+			$this->all_pluguns_called = true;
 			return $all_plugins;
 		}
 
@@ -5061,7 +4588,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 		 * @return none
 		 */
 		public function pre_current_active_plugins_proc() {
-			$this->ALL_PLUGUNS_CALLED = false;
+			$this->all_pluguns_called = false;
 		}
 
 		/**
@@ -5078,7 +4605,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 			global $pagenow;
 
 			if ( ! empty( $active_plugins ) ) {
-				if ( ( 'plugins.php' !== $pagenow ) || ( true !== $this->ALL_PLUGUNS_CALLED ) ) {
+				if ( ( 'plugins.php' !== $pagenow ) || ( true !== $this->all_pluguns_called ) ) {
 					// Just a double check the current_plugin_dir is in the active plugins array.
 					if ( in_array( LEARNDASH_LMS_PLUGIN_KEY, $active_plugins ) ) {
 						if ( ( ! empty( $this->learndash_legacy_plugins_paths ) ) && ( is_array( $this->learndash_legacy_plugins_paths ) ) ) {
@@ -5125,7 +4652,7 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 
 			if ( ! empty( $active_plugins ) ) {
 
-				if ( ( 'plugins.php' !== $pagenow ) || ( true !== $this->ALL_PLUGUNS_CALLED ) ) {
+				if ( ( 'plugins.php' !== $pagenow ) || ( true !== $this->all_pluguns_called ) ) {
 
 					// Just a double check the current_plugin_dir is in the active plugins array.
 					if ( isset( $active_plugins[ LEARNDASH_LMS_PLUGIN_KEY ] ) ) {

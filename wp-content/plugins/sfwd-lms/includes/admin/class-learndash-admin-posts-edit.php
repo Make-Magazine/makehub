@@ -35,7 +35,7 @@ if ( ! class_exists( 'Learndash_Admin_Post_Edit' ) ) {
 		 *
 		 * @var array $_metaboxes;
 		 */
-		protected $_metaboxes = array();
+		protected $_metaboxes = array(); //phpcs:ignore PSR2.Classes.PropertyDeclaration.Underscore
 
 		/**
 		 * Public constructor for class.

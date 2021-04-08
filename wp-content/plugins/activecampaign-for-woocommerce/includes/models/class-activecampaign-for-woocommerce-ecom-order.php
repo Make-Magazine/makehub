@@ -51,6 +51,10 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 		'total_products'        => 'totalProducts',
 		'order_date'            => 'orderDate',
 		'order_url'             => 'orderUrl',
+		'discount_amount'       => 'discountAmount',
+		'shipping_amount'       => 'shippingAmount',
+		'shipping_method'       => 'shippingMethod',
+		'tax_amount'            => 'taxAmount',
 	];
 
 	/**
@@ -171,6 +175,34 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * @var string
 	 */
 	private $order_url;
+
+	/**
+	 * The order discount amount.
+	 *
+	 * @var string
+	 */
+	private $discount_amount;
+
+	/**
+	 * The order shipping amount.
+	 *
+	 * @var string
+	 */
+	private $shipping_amount;
+
+	/**
+	 * The order shipping method.
+	 *
+	 * @var string
+	 */
+	private $shipping_method;
+
+	/**
+	 * The order tax amount.
+	 *
+	 * @var string
+	 */
+	private $tax_amount;
 
 	/**
 	 * Returns the abandoned date.
@@ -440,6 +472,78 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 */
 	public function get_order_url() {
 		return $this->order_url;
+	}
+
+	/**
+	 * Set the order discount total.
+	 *
+	 * @param string $discount The order total discount.
+	 */
+	public function set_discount_amount( $discount ) {
+		$this->discount_amount = $discount;
+	}
+
+	/**
+	 * Get the order total discount.
+	 *
+	 * @return string
+	 */
+	public function get_discount_amount() {
+		return $this->discount_amount;
+	}
+
+	/**
+	 * Set the order shipping total.
+	 *
+	 * @param string $shipping The order total shipping.
+	 */
+	public function set_shipping_amount( $shipping ) {
+		$this->shipping_amount = $shipping;
+	}
+
+	/**
+	 * Get the order total shipping.
+	 *
+	 * @return string
+	 */
+	public function get_shipping_amount() {
+		return $this->shipping_amount;
+	}
+
+	/**
+	 * Set the order shipping method.
+	 *
+	 * @param string $shipping The order shipping method.
+	 */
+	public function set_shipping_method( $shipping ) {
+		$this->shipping_method = $shipping;
+	}
+
+	/**
+	 * Get the order shipping method.
+	 *
+	 * @return string
+	 */
+	public function get_shipping_method() {
+		return $this->shipping_method;
+	}
+
+	/**
+	 * Set the order tax total.
+	 *
+	 * @param string $tax The order tax total.
+	 */
+	public function set_tax_amount( $tax ) {
+		$this->tax_amount = $tax;
+	}
+
+	/**
+	 * Get the order tax total.
+	 *
+	 * @return string
+	 */
+	public function get_tax_amount() {
+		return $this->tax_amount;
 	}
 
 	/**

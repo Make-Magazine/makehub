@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Courses_Steps_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -36,7 +40,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => esc_html__( 'Course ID to enroll user into.', 'learndash' ),
+							// translators: course
+							'description' => sprintf( esc_html_x( '%s ID to enroll user into.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),
@@ -78,7 +83,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 						'readonly'    => true,
 					),
 					'type' => array(
-						'description' => __( 'The course step type.', 'learndash' ),
+						// translators: placeholder: course.
+						'description'         => sprintf( esc_html_x( 'The %s step type.', 'placeholder: course', 'learndash' ) ),
 						'type'        => 'string',
 						'enum'        => array(
 							'all',

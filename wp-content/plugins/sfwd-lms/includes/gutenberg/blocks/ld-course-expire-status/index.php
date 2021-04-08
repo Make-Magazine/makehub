@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Course_Expire_Status' ) ) ) {
 	/**
 	 * Class for handling LearnDash Course Expire Status Block
@@ -171,7 +175,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$shortcode_out        = do_shortcode( $shortcode_params_str );
 
 				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				$content = $this->render_block_wrap( $shortcode_out );

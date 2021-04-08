@@ -161,6 +161,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->setting_option_values['users-quiz-progress_v2'] = 'quiz-progress';
 			}
 
+			if ( ( ! isset( $this->setting_option_values['progress-status_v2'] ) ) || ( empty( $this->setting_option_values['progress-status_v2'] ) ) ) {
+				$this->setting_option_values['progress-status_v2'] = 'progress-status';
+			}
 			if ( ( ! isset( $this->setting_option_values['price-types_v2'] ) ) || ( empty( $this->setting_option_values['price-types_v2'] ) ) ) {
 				$this->setting_option_values['price-types_v2'] = 'price-types';
 			}
@@ -387,9 +390,10 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'name'           => 'quizzes-statistics-questions_v2',
 					'type'           => 'text',
 					'label'          => sprintf(
-						// translators: placeholder: Quiz.
-						esc_html_x( '%s Statistics Questions', 'placeholder: Quiz', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'quiz' )
+						// translators: placeholder: Quiz, Questions.
+						esc_html_x( '%1$s Statistics %2$s', 'placeholder: Quiz, Questions', 'learndash' ),
+						learndash_get_custom_label( 'quiz' ),
+						learndash_get_custom_label( 'questions' )
 					),
 					'value'          => $this->setting_option_values['quizzes-statistics-questions_v2'],
 					'value_prefix'   => $value_prefix_statistics,
@@ -501,7 +505,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'users-groups_v2'                 => array(
 					'name'           => 'users-groups_v2',
 					'type'           => 'text',
-					'label'          => esc_html__( 'User Groups', 'learndash' ),
+					'label'          => sprintf(
+						// translators: placeholder: Groups.
+						esc_html_x( 'User %s', 'placeholder: Groups', 'learndash' ),
+						learndash_get_custom_label( 'groups' )
+					),
 					'value'          => $this->setting_option_values['users-groups_v2'],
 					'value_prefix'   => $value_prefix_users,
 					'class'          => '-medium',
@@ -537,6 +545,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'parent_setting' => 'users_v2',
 				),
 
+				'progress-status_v2'              => array(
+					'name'         => 'progress-status_v2',
+					'type'         => 'text',
+					'label'        => esc_html__( 'Progess Status', 'learndash' ),
+					'value'        => $this->setting_option_values['progress-status_v2'],
+					'value_prefix' => $value_prefix_top,
+					'class'        => '-medium',
+					'placeholder'  => 'progress-status',
+				),
 				'price-types_v2'                  => array(
 					'name'         => 'price-types_v2',
 					'type'         => 'text',

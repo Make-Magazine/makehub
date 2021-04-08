@@ -557,7 +557,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 				// Add an index.php file to prevent directory browesing
 				$_index = trailingslashit( $upload_dir_path ) . 'index.php';
 				if ( ! file_exists( $_index ) ) {
-					file_put_contents( $_index, '//LearnDash is THE Best LMS' );
+					learndash_put_directory_index_file( $_index );
 				}
 
 				$file_time = microtime( true ) * 100;
@@ -626,8 +626,6 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
 	}
 }
 
-
-
 /**
  * Utility function to check whether a lesson has an assignment.
  *
@@ -637,7 +635,7 @@ function learndash_fileupload_process( $uploadfiles, $post_id ) {
  *
  * @return boolean
  */
-function lesson_hasassignments( $post ) {
+function learndash_lesson_hasassignments( $post ) {
 	$post_id     = $post->ID;
 	$assign_meta = get_post_meta( $post_id, '_' . $post->post_type, true );
 
@@ -774,8 +772,8 @@ function learndash_is_assignment_approved_by_meta( $assignment_id ) {
  */
 function learndash_assignment_inline_actions( $actions, $post ) {
 	if ( learndash_get_post_type_slug( 'assignment' ) === $post->post_type ) {
-		$download_link                      = get_post_meta( $post->ID, 'file_link', true );
-		$actions['download_assignment']     = "<a href='" . $download_link . "' target='_blank'>" . esc_html__( 'Download', 'learndash' ) . '</a>';
+		$download_link                  = get_post_meta( $post->ID, 'file_link', true );
+		$actions['download_assignment'] = "<a href='" . $download_link . "' target='_blank'>" . esc_html__( 'Download', 'learndash' ) . '</a>';
 	}
 
 	return $actions;
@@ -832,20 +830,27 @@ function learndash_assignment_permissions() {
 
 		if ( learndash_is_admin_user( $user_id ) ) {
 			return;
+		} elseif ( learndash_is_group_leader_user( $user_id ) ) {
+			/**
+			 * For the Group Leader we check for common groups between
+			 * Leader + Author + Course
+			 */
+			$course_id = get_post_meta( $post->ID, 'course_id', true );
+			$course_id = absint( $course_id );
+
+			if ( learndash_check_group_leader_course_user_intersect( $user_id, $post->post_author, $course_id ) ) {
+				return;
+			}
+		} elseif ( absint( $user_id ) === absint( $post->post_author ) ) {
+			return;
 		}
 
-		if ( absint( $user_id ) === absint( $post->post_author ) ) {
-			return;
-		} elseif ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) {
-			return;
-		} else {
-			/**
-			 * Filters Assignment permission redirect URL.
-			 *
-			 * @param string $redirect_url Redirect URL.
-			 */
-			learndash_safe_redirect( apply_filters( 'learndash_assignment_permissions_redirect_url', get_bloginfo( 'url' ) ) );
-		}
+		/**
+		 * Filters Assignment permission redirect URL.
+		 *
+		 * @param string $redirect_url Redirect URL.
+		 */
+		learndash_safe_redirect( apply_filters( 'learndash_assignment_permissions_redirect_url', get_bloginfo( 'url' ) ) );
 	}
 }
 
@@ -1243,5 +1248,32 @@ function learndash_check_upload( $uploadfiles = array(), $post_id = 0 ) {
 		}
 	}
 
-	return true;
+	/**
+	 * Filter to allow exteral approval of Assignment upload.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param bool  true           True if Assignment has been approved.
+	 * @param array $uploadfiles   Array of uploaded files.
+	 * @param int   $post_id       Assignment Post ID.
+	 * @param array $post_settings Array of Assignment Post Settings.
+	 *
+	 * @return bool true if upload is approved. false if not.
+	 *
+	 * The external processor should set a usermeta entry 'ld_assignment_message' with the
+	 * error message. This will be shown to the user.
+	 *
+	 * Example:
+	 * update_user_meta(
+	 *    get_current_user_id(),
+	 *    'ld_assignment_message',
+	 *    array(
+	 *       array(
+	 *          'type'    => 'error',
+	 *          'message' => esc_html__( 'Number of allowed assignment uploads reached.', 'learndash' ),
+	 *       ),
+	 *    )
+	 * );
+	 */
+	return (bool) apply_filters( 'learndash_assignment_check_upload', true, $uploadfiles, $post_id, $post_settings );
 }

@@ -69,8 +69,13 @@ if ( ! class_exists( 'LDLMS_Transients' ) ) {
 			if ( ! apply_filters( 'learndash_transients_disabled', LEARNDASH_TRANSIENTS_DISABLED, 'learndash_all_purge' ) ) {
 				global $wpdb;
 
-				$sql_str = 'DELETE FROM ' . $wpdb->options . " WHERE option_name LIKE '_transient_learndash_%' OR option_name LIKE '_transient_timeout_learndash_%'";
-				$wpdb->query( $sql_str );
+				$wpdb->query(
+					$wpdb->prepare(
+						"DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s",
+						'_transient_learndash_%',
+						'_transient_timeout_learndash_%'
+					)
+				);
 			}
 		}
 

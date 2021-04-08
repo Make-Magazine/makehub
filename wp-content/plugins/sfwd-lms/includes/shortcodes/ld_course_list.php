@@ -284,6 +284,9 @@ function ld_course_list( $attr ) {
 	 */
 	$atts = apply_filters( 'ld_course_list_shortcode_attr_values', $atts, $attr );
 
+	/* Bypasses group leader filtering, see LEARNDASH-5664 */
+	$attr_org = $attr;
+
 	if ( is_user_logged_in() ) {
 
 		if ( ( isset( $atts['user_id'] ) ) && ( false === $atts['user_id'] ) ) {
@@ -834,10 +837,41 @@ function ld_course_list( $attr ) {
 					$activity_query_args['post_ids'] = $filter['post__in'];
 
 					$user_courses_reports = learndash_reports_get_activity( $activity_query_args );
+
+					/*
 					if ( ! empty( $user_courses_reports['results'] ) ) {
 						// foreach( $user_courses_reports['results'] as $result ) {
 						$filter['post__in'] = wp_list_pluck( $user_courses_reports['results'], 'post_id' );
 						$filter['post__in'] = array_map( 'absint', $filter['post__in'] );
+					} else {
+						$filter['post__in'] = array( 0 );
+					}
+					*/
+
+					$user_courses_ids = array();
+					if ( ! empty( $user_courses_reports['results'] ) ) {
+						foreach( $user_courses_reports['results'] as $result ) {
+							if ( in_array( 'COMPLETED', $course_status, true ) ) {
+								if ( ! empty( $result->activity_completed ) ) {
+									$user_courses_ids[] = absint( $result->post_id );
+								}
+							}
+							if ( in_array( 'IN_PROGRESS', $course_status, true ) ) {
+								if ( ( ! empty( $result->activity_started ))  && ( empty( $result->activity_completed ) ) ) {
+									$user_courses_ids[] = absint( $result->post_id );
+								}
+							}
+
+							if ( in_array( 'NOT_STARTED', $course_status, true ) ) {
+								if ( empty( $result->activity_started ) ) {
+									$user_courses_ids[] = absint( $result->post_id );
+								}
+							}
+						}
+					}
+
+					if ( ! empty( $user_courses_ids ) ) {
+						$filter['post__in'] = array_map( 'absint', $user_courses_ids );
 					} else {
 						$filter['post__in'] = array( 0 );
 					}
@@ -1154,7 +1188,7 @@ function ld_course_list( $attr ) {
 		}
 	}
 
-	$filter_json = htmlspecialchars( wp_json_encode( $atts ) );
+	$filter_json = htmlspecialchars( wp_json_encode( $attr_org ) );
 	$filter_md5  = md5( $filter_json );
 
 	if ( 'true' == $include_outer_wrapper ) {
@@ -1174,26 +1208,55 @@ function ld_course_list( $attr ) {
 	 *
 	 * @since 2.5.9
 	 */
-	// if ( ( defined( 'REST_REQUEST' ) ) && ( true === REST_REQUEST ) ) {
-		$post_save = $post;
-	// }
 
-	while ( $loop->have_posts() ) {
-		$loop->the_post();
-		if ( empty( $atts['course_id'] ) ) {
-			$course_id = $course_id = learndash_get_course_id( get_the_ID() );
-		} else {
-			$course_id = $atts['course_id'];
+	$post_save = $post;
+
+	$active_template_key = LearnDash_Theme_Register::get_active_theme_key();
+	if ( 'legacy' === $active_template_key ) {
+		$user_legacy_loop = true;
+	} else {
+		$user_legacy_loop = false;
+	}
+
+	/**
+	 * Filters the course list shortcode loop processing logic.
+	 *
+	 * @param bool  $use_legacy_loop False by default.
+	 * @param array $atts            Shortcode attributes.
+	 */
+	if ( apply_filters( 'learndash_shortcode_course_list_legacy_loop', $user_legacy_loop, $atts ) ) {
+		while ( $loop->have_posts() ) {
+			$loop->the_post();
+			if ( empty( $atts['course_id'] ) ) {
+				$course_id = $course_id = learndash_get_course_id( get_the_ID() );
+			} else {
+				$course_id = $atts['course_id'];
+			}
+
+			echo SFWD_LMS::get_template( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
+				'course_list_template',
+				array(
+					'shortcode_atts' => $atts,
+					'course_id'      => $course_id,
+				)
+			);
 		}
+	} else {
+		foreach ( $loop->posts as $post ) {
+			if ( empty( $atts['course_id'] ) ) {
+				$course_id = $course_id = learndash_get_course_id( get_the_ID() );
+			} else {
+				$course_id = $atts['course_id'];
+			}
 
-		echo SFWD_LMS::get_template( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
-			'course_list_template',
-			array(
-				'shortcode_atts' => $atts,
-				'course_id'      => $course_id,
-			)
-		);
-		// }
+			echo SFWD_LMS::get_template( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
+				'course_list_template',
+				array(
+					'shortcode_atts' => $atts,
+					'course_id'      => $course_id,
+				)
+			);
+		}
 	}
 	?>
 	</div>
@@ -1227,15 +1290,12 @@ function ld_course_list( $attr ) {
 
 	$output = learndash_ob_get_clean( $level );
 
-	// if ( ( defined( 'REST_REQUEST' ) ) && ( true === REST_REQUEST ) ) {
-		$post = $post_save;
-		// $GLOBALS['post'] = $post_save;
+	$post = $post_save;
+
+
+	if ( apply_filters( 'learndash_shortcode_course_list_legacy_loop', false, $atts ) ) {
 		setup_postdata( $post_save );
-	// } else {
-		/*
-		 Restore original Post Data */
-	// wp_reset_postdata();
-	// }
+	}
 
 	$learndash_shortcode_used = true;
 

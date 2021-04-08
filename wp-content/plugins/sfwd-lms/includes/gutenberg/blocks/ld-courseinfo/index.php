@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Courseinfo' ) ) ) {
 	/**
 	 * Class for handling LearnDash Courseinfo Block
@@ -80,14 +84,31 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 
 			if ( is_user_logged_in() ) {
 
+				if ( ( isset( $attributes['preview_show'] ) ) && ( ! empty( $attributes['preview_show'] ) ) ) {
+					unset( $attributes['preview_show'] );
+					if ( ( isset( $attributes['preview_course_id'] ) ) && ( ! empty( $attributes['preview_course_id'] ) ) ) {
+						$attributes['course_id'] = absint( $attributes['preview_course_id'] );
+						unset( $attributes['preview_course_id'] );
+					}
+					if ( ( isset( $attributes['preview_course_id'] ) ) && ( ! empty( $attributes['preview_course_id'] ) ) ) {
+						$attributes['course_id'] = absint( $attributes['preview_course_id'] );
+						unset( $attributes['preview_course_id'] );
+					}
+					if ( ( isset( $attributes['preview_user_id'] ) ) && ( ! empty( $attributes['preview_user_id'] ) ) ) {
+						$attributes['user_id'] = absint( $attributes['preview_user_id'] );
+						unset( $attributes['preview_user_id'] );
+					}
+				}
+
 				if ( ( ! isset( $attributes['course_id'] ) ) || ( empty( $attributes['course_id'] ) ) ) {
 					if ( ( ! isset( $attributes_meta['course_id'] ) ) || ( empty( $attributes_meta['course_id'] ) ) ) {
 						return $this->render_block_wrap(
 							'<span class="learndash-block-error-message">' . sprintf(
-							// translators: placeholder: Course, Course.
-								_x( '%1$s ID is required when not used within a %2$s.', 'placeholder: Course, Course', 'learndash' ),
+							// translators: placeholder: Course, Course, Certificate.
+								_x( '%1$s ID is required when not used within a %2$s or %3$s.', 'placeholder: Course, Course, Certificate', 'learndash' ),
 								LearnDash_Custom_Label::get_label( 'course' ),
-								LearnDash_Custom_Label::get_label( 'course' )
+								LearnDash_Custom_Label::get_label( 'course' ),
+								'Certificate'
 							) . '</span>'
 						);
 					} else {
@@ -140,7 +161,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$shortcode_params_str = '[' . $this->shortcode_slug . $shortcode_params_str . ']';
 				$shortcode_out        = do_shortcode( $shortcode_params_str );
 				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				return $this->render_block_wrap( $shortcode_out );

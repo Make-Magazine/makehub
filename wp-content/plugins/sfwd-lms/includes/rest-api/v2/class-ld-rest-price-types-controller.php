@@ -6,6 +6,11 @@
  * @subpackage REST_API
  * @since 3.3.0
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Price_Types_Controller_V2' ) ) && ( class_exists( 'WP_REST_Controller' ) ) ) {
 	/**
 	 * Class REST API Price Types Controller.

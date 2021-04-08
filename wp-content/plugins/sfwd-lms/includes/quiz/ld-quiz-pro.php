@@ -136,6 +136,8 @@ class LD_QuizPro {
 			die();
 		}
 
+		$quiz_post = get_post( $quiz_post_id );
+
 		$view = new WpProQuiz_View_FrontQuiz();
 		$quizMapper = new WpProQuiz_Model_QuizMapper();
 		$quiz = $quizMapper->fetch( $id );
@@ -579,6 +581,15 @@ class LD_QuizPro {
 					if ( ! $quiz->isHideAnswerMessageBox() ) {
 						foreach ( $questionModels as $key => $value ) {
 							if ( $value->getId() == $question_id ) {
+								if ( isset( $quiz_post ) && ( is_a( $quiz_post, 'WP_Post' ) ) ) {
+									/**
+									 * Need to reset the Quiz post before calling the 'the_content' filter.
+									 * See LEARNDASH-5620 for details.
+									 */
+									$GLOBALS['post'] = $quiz_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+									setup_postdata( $quiz_post );
+								}
+
 								if ( $correct || $value->isCorrectSameText() ) {
 									//$extra['AnswerMessage'] = do_shortcode( apply_filters( 'comment_text', $value->getCorrectMsg() ) );
 									/** This filter is documented in https://developer.wordpress.org/reference/hooks/the_content/ */
@@ -1058,15 +1069,31 @@ class LD_QuizPro {
 			'percentage' 			=> 	$result,
 			'timespent' 			=> 	$timespent,
 			'has_graded'   			=> 	( $has_graded ) ? true : false,
-			'statistic_ref_id' 		=> 	absint( $statistic_ref_id )
+			'statistic_ref_id' 		=> 	absint( $statistic_ref_id ),
+			'started'               =>  0,
+			'completed'             =>  0,
 		);
 
 		//On the timestamps below we divide against 1000 because they were generated via JavaScript which uses milliseconds.
-		if ( isset( $_POST['results']['comp']['quizStartTimestamp'] ) )
+		if ( isset( $_POST['results']['comp']['quizStartTimestamp'] ) ) {
 			$quizdata['started'] = intval( $_POST['results']['comp']['quizStartTimestamp'] / 1000 );
-		if ( isset( $_POST['results']['comp']['quizEndTimestamp'] ) )
-			$quizdata['completed'] = intval( $_POST['results']['comp']['quizEndTimestamp'] / 1000 );
+		}
 
+		if ( isset( $_POST['results']['comp']['quizEndTimestamp'] ) ) {
+			$quizdata['completed'] = intval( $_POST['results']['comp']['quizEndTimestamp'] / 1000 );
+		}
+
+		if  ( ( isset( $quizdata['started'] ) ) && ( !empty( $quizdata['started'] ) ) && ( isset( $quizdata['completed'] ) ) && ( !empty( $quizdata['completed'] ) ) ) {
+			$quiz_time_diff = absint( $quizdata['completed'] ) - absint( $quizdata['started'] );
+			$quiz_time_end = time();
+			$quiz_time_start = $quiz_time_end - $quiz_time_diff;
+
+			$quizdata['started']   = $quiz_time_start;
+			$quizdata['completed'] = $quiz_time_end;
+		} else {
+			$quizdata['started']   = 0;
+			$quizdata['completed'] = 0;
+		}
 
 		if ( $graded ) {
 			$quizdata['graded'] = $graded;
@@ -1240,37 +1267,6 @@ class LD_QuizPro {
 	static function get_quiz_list() {
 		$quizzes_list = array();
 
-		/*
-
-		$transient_key = "learndash_quizzes_list";
-		$quizzes_list = LDLMS_Transients::get( $transient_key );
-		if ( $quizzes_list === false ) {
-
-			$quiz    = new WpProQuiz_Model_QuizMapper();
-			$quizzes = $quiz->fetchAll();
-
-			if ( ! empty( $quizzes ) ) {
-				foreach ( $quizzes as $q ) {
-					$quizzes_list[ $q->getId() ] = $q->getId() . ' - ' . $q->getName();
-				}
-			}
-			LDLMS_Transients::set( $transient_key, $quizzes_list, MINUTE_IN_SECONDS );
-		}
-		return $quizzes_list;
-		*/
-
-		 /**
-		 * Logic rewrite
-		 * The above logic was abondoned as being to heave for sites running over a few hundred quizzes. This function is only used on the
-		 * single Quix admin editor form and only used to show a select box with the quiz title. So don't need to ever overhead of the
-		 * MVC object loading.
-		 *
-		 *
-		 * @since 2.2.0.2
-		 *
-		 */
-
-
 		global $wpdb;
 
 		$quiz_items = $wpdb->get_results( $wpdb->prepare( "SELECT id, name FROM " . LDLMS_DB::get_table_name( 'quiz_master' ) . " ORDER BY %s ", 'id' ) );
@@ -1329,7 +1325,11 @@ class LD_QuizPro {
 					array(
 						'quiz_post_id'	=>	$quiz_post_id,
 						'context' 		=> 	'quiz_certificate_pending_message',
-						'message' 		=> 	esc_html__( 'Certificate Pending - Questions still need to be graded, please check your profile for the status.', 'learndash' )
+						'message' 	    =>  sprintf(
+							// translators: questions
+							esc_html_x( 'Certificate Pending - %s still need to be graded, please check your profile for the status', 'placeholder: questions', 'learndash' ),
+							learndash_get_custom_label( 'questions' )
+						)
 					)
 				) . '";';
 			echo '</script>';

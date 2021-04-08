@@ -125,7 +125,16 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 
 			<span class="ld-course-status-label"><?php echo esc_html__( 'Current Status', 'learndash' ); ?></span>
 			<div class="ld-course-status-content">
-				<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="<?php esc_attr_e( 'Enroll in this course to get access', 'learndash' ); ?>"><?php esc_html_e( 'Not Enrolled', 'learndash' ); ?></span>
+				<span class="ld-status ld-status-waiting ld-tertiary-background" data-ld-tooltip="
+				<?php
+					printf(
+						// translators: placeholder: course
+						esc_attr_x( 'Enroll in this %s to get access', 'placeholder: course', 'learndash' ),
+						esc_html( learndash_get_custom_label_lower( 'course' ) )
+					);
+				?>
+				">
+				<?php esc_html_e( 'Not Enrolled', 'learndash' ); ?></span>
 			</div>
 
 			<?php
@@ -293,7 +302,12 @@ if ( is_user_logged_in() && isset( $has_access ) && $has_access ) :
 						case ( 'closed' ):
 							$button = learndash_payment_buttons( $post );
 							if ( empty( $button ) ) :
-								echo '<span class="ld-text">' . esc_html__( 'This course is currently closed', 'learndash' ) . '</span>';
+								echo '<span class="ld-text">' . sprintf(
+									// translators: placeholder: course
+									esc_html_x( 'This %s is currently closed', 'placeholder: course', 'learndash' ),
+									esc_html( learndash_get_custom_label_lower( 'course' ) )
+								)
+									 . '</span>';
 								else :
 									echo $button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Outputs Button HTML
 								endif;

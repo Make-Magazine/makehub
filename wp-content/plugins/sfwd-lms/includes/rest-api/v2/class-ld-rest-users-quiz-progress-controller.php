@@ -6,6 +6,11 @@
  * @subpackage REST_API
  * @since 3.3.0
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Users_Quiz_Progress_Controller_V2' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V2' ) ) ) {
 	/**
 	 * Class REST API Courses Post Controller.

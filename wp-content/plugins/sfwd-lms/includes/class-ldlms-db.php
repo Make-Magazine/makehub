@@ -376,7 +376,13 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 				$table_name = self::get_table_name( $table_index_set['table_name'] );
 				$table      = $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', esc_attr( $table_name ) ) );
 				if ( ( $table === $table_name ) && ( ! empty( $wpdb->last_result ) ) ) {
-					$primary_column = $wpdb->get_var( $wpdb->prepare( "SHOW FIELDS FROM {$table_name} WHERE Field = %s", esc_attr( $table_index_set['primary_column'] ) ) );
+					$primary_column = $wpdb->get_var(
+						$wpdb->prepare(
+							// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+							"SHOW FIELDS FROM {$table_name} WHERE Field = %s",
+							esc_attr( $table_index_set['primary_column'] )
+						)
+					);
 					if ( ( $primary_column === $table_index_set['primary_column'] ) && ( ! empty( $wpdb->last_result ) ) ) {
 						foreach ( $wpdb->last_result as $result_object ) {
 							if ( $result_object->Field === $table_index_set['primary_column'] ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase -- DB field name
@@ -404,6 +410,151 @@ if ( ! class_exists( 'LDLMS_DB' ) ) {
 		private static function get_table_primary_index_set( $table_name = '' ) {
 			if ( ( ! empty( $table_name ) ) && ( isset( self::$tables_primary_indexes[ $table_name ] ) ) ) {
 				return self::$tables_primary_indexes[ $table_name ];
+			}
+		}
+
+		/**
+		 * Collect and return server DB info.
+		 *
+		 * @since 3.4.0
+		 */
+		public static function get_db_server_info() {
+			global $wpdb;
+
+			$db_server_info = array(
+				'mysqldb_active'      => false,
+				'mysqldb_version_min' => LEARNDASH_MIN_MYSQL_VERSION,
+				'mariadb_actve'       => false,
+				'mariadb_version_min' => LEARNDASH_MIN_MARIA_VERSION,
+				'db_version_found'    => '',
+			);
+
+			$db_server_version = $wpdb->get_results( "SHOW VARIABLES WHERE `Variable_name` IN ( 'version_comment', 'version' )", OBJECT_K );
+
+			if ( ! empty( $db_server_version ) ) {
+				foreach ( $db_server_version as $field_key => $field_set ) {
+
+					switch ( $field_key ) {
+						case 'version_comment':
+							if ( ( is_object( $field_set ) ) && ( property_exists( $field_set, 'Value' ) ) ) {
+								if ( stristr( $field_set->Value, 'mariadb' ) ) { //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+									$db_server_info['mariadb_actve'] = true;
+								} else {
+									$db_server_info['mysqldb_active'] = true;
+								}
+							}
+							break;
+
+						case 'version':
+							if ( ( is_object( $field_set ) ) && ( property_exists( $field_set, 'Value' ) ) ) {
+								$db_server_info['db_version_found'] = $field_set->Value; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+							}
+							break;
+
+					}
+				}
+			}
+
+			return $db_server_info;
+		}
+
+		/**
+		 * Utility function to pre-precess an array of values used in the SQL IN() clause.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param $items Array of items to process.
+		 * @param $force_type Optional type to enforce for all items.
+		 *
+		 * @return Array with 'placeholders' and 'values' elements.
+		 */
+		public static function escape_IN_clause_array( $items = array(), $force_type = '' ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+			global $wpdb;
+
+			$escaped_set = array(
+				'placeholders' => '',
+				'values'       => array(),
+			);
+
+			if ( ! empty( $items ) ) {
+				// Make sure $force_type is valid.
+				if ( ! in_array( $force_type, array( 'd', 'f', 's' ), true ) ) {
+					$force_type = '';
+				}
+
+				foreach ( $items as $k => $v ) {
+					if ( empty( $force_type ) ) {
+						if ( is_float( $v ) ) {
+							$var_type = 'f';
+						} elseif ( is_int( $v ) ) {
+							$var_type = 'd';
+						} else {
+							$var_type = 's';
+						}
+					} else {
+						$var_type = $force_type;
+					}
+
+					if ( 'f' === $var_type ) {
+						$escaped_set['values'][] = intval( $v );
+
+						if ( ! empty( $escaped_set['placeholders'] ) ) {
+							$escaped_set['placeholders'] .= ',';
+						}
+						$escaped_set['placeholders'] .= '%f';
+
+					} elseif ( 'd' === $var_type ) {
+						$escaped_set['values'][] = intval( $v );
+
+						if ( ! empty( $escaped_set['placeholders'] ) ) {
+							$escaped_set['placeholders'] .= ',';
+						}
+						$escaped_set['placeholders'] .= '%d';
+
+					} else {
+						$escaped_set['values'][] = esc_attr( $v );
+						if ( ! empty( $escaped_set['placeholders'] ) ) {
+							$escaped_set['placeholders'] .= ',';
+						}
+						$escaped_set['placeholders'] .= '%s';
+					}
+				}
+			}
+
+			return $escaped_set;
+		}
+
+		/**
+		 * Utility function to return the 'placeholders' IN clause items.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param $items      Array of items to process.
+		 * @param $force_type Optional type to enforce for all items.
+		 *
+		 * @return array Returns array.
+		 */
+		public static function escape_IN_clause_placeholders( $items = array(), $force_type = '' ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+			$in_array = self::escape_IN_clause_array( $items, $force_type );
+			if ( isset( $in_array['placeholders'] ) ) {
+				return $in_array['placeholders'];
+			}
+		}
+
+		/**
+		 * Utility function to return the 'values' IN clause items.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param $items      Array of items to process.
+		 * @param $force_type Optional type to enforce for all items.
+		 *
+		 * @return array Returns array.
+		 */
+		public static function escape_IN_clause_values( $items = array(), $force_type = '' ) { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
+			$in_array = self::escape_IN_clause_array( $items, $force_type );
+			if ( isset( $in_array['values'] ) ) {
+				return $in_array['values'];
 			}
 		}
 

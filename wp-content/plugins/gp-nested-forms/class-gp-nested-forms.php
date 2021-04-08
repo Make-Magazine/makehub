@@ -1250,7 +1250,8 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	public function parse_modifier( $modifier, $modifiers ) {
 		$modifiers = $this->parse_modifiers( $modifiers );
-		return rgar( $modifiers, $modifier, false );
+		// rgar() returns false when modifier is 0
+		return isset( $modifiers[ $modifier ] ) ? $modifiers[ $modifier ] : false;
 	}
 
 	/**

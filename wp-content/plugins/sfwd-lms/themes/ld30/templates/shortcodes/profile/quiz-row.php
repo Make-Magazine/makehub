@@ -5,18 +5,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Defaults for fallbacks
-$certificateLink = null;
-$score           = null;
-$stats           = '--';
+$certificate_link = null;
+$score            = null;
+$stats            = '--';
 
 /**
  * Set the quiz status and certificate link (if applicable)
  * @var [type]
  */
 if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
-	$certificateLink = $quiz_attempt['certificate']['certificateLink'];
+	$certificate_link = $quiz_attempt['certificate']['certificateLink'];
 } else {
-	$certificateLink = '';
+	$certificate_link = '';
 }
 
 $status = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
@@ -50,27 +50,22 @@ endif;
 // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 $quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? apply_filters( 'the_title', $quiz_attempt['post']->post_title, $quiz_attempt['post']->post_titleID ) : @$quiz_attempt['quiz_title'];
 
-				
-$quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalink( intval( $quiz_attempt['post']->ID ), $course_id ) : '#'; ?>
+
+$quiz_link = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalink( intval( $quiz_attempt['post']->ID ), $course_id ) : '#'; ?>
 
 <div class="ld-table-list-item <?php echo esc_attr( $status ); ?>">
 	<div class="ld-table-list-item-preview">
 
 		<div class="ld-table-list-title">
-			<a href="<?php echo esc_url( $quiz_link ); ?>">
-			<?php
-			echo wp_kses_post( learndash_status_icon( $status, 'sfwd-quiz' ) );
-			?>
-			<span><?php echo wp_kses_post( $quiz_title ); ?></span>
-			</a>
+			<a href="<?php echo esc_url( $quiz_link ); ?>"><?php echo wp_kses_post( learndash_status_icon( $status, 'sfwd-quiz' ) ); ?><span><?php echo wp_kses_post( $quiz_title ); ?></span></a>
 		</div> <!--/.ld-table-list-title-->
 
 		<div class="ld-table-list-columns">
 
 			<?php
 
-			if ( $certificateLink && ! empty( $certificateLink ) ) {
-				$certificateLink = '<a class="ld-certificate-link" href="' . $certificateLink . '" target="_new" aria-label="' . __( 'Certificate', 'learndash' ) . '"><span class="ld-icon ld-icon-certificate"></span></a>';
+			if ( $certificate_link && ! empty( $certificate_link ) ) {
+				$certificate_link = '<a class="ld-certificate-link" href="' . $certificate_link . '" target="_new" aria-label="' . __( 'Certificate', 'learndash' ) . '"><span class="ld-icon ld-icon-certificate"></span></a>';
 			}
 
 			/**
@@ -86,7 +81,7 @@ $quiz_link  = ! empty( $quiz_attempt['post']->ID ) ? learndash_get_step_permalin
 					'certificate' => array(
 						'id'      => $quiz_list_columns[0]['id'],
 						'label'   => $quiz_list_columns[0]['label'],
-						'content' => $certificateLink,
+						'content' => $certificate_link,
 						'class'   => '',
 					),
 					'score'       => array(

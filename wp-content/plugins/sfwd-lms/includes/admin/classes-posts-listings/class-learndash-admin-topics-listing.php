@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'course_id' => array(
 					'type'                     => 'post_type',
@@ -122,6 +126,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			}
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 		}
 
 		/**

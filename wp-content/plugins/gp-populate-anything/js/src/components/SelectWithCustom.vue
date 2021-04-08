@@ -12,7 +12,8 @@
 
 		<div class="gppa-select-with-custom-input-container">
 			<input type="text" v-model="inputValueProxy" :id="'gppa-select-with-custom-input_' + _uid"
-				   ref="customInput"/>
+				   ref="customInput"
+				   class="mt-position-right"/>
 			<a href="#"
 			   class="custom-reset"
 			   @click.prevent="reset"

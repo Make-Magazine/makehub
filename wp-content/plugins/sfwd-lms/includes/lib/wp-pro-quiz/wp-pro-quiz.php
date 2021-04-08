@@ -177,7 +177,7 @@ function fetchQuestionCloze( $answer_text, $convert_to_lower = true ) {
 			$rowText[]       = $text;
 		}
 
-		$a  = '<span class="wpProQuiz_cloze"><input data-wordlen="' . max( $len ) . '" type="text" value=""> ';
+		$a  = '<span class="wpProQuiz_cloze"><input autocomplete="off" data-wordlen="' . max( $len ) . '" type="text" value=""> ';
 		$a .= '<span class="wpProQuiz_clozeCorrect" style="display: none;"></span></span>';
 
 		$data['correct'][] = $multiTextData;

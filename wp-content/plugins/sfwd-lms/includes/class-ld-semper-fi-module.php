@@ -806,9 +806,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 			foreach ( $this->locations as $k => $v ) {
 
-				if ( 'sfwd-quiz' === $v['type'] ) {
-
-				} elseif ( 'metabox' === $v['type'] ) {
+				if ( 'metabox' === $v['type'] ) {
 					add_action( 'save_post', array( $this, 'save_post_data' ), 10, 3 );
 
 					if ( isset( $v['display'] ) && ! empty( $v['display'] ) ) {
@@ -1109,8 +1107,9 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 									}
 
 									global $wpdb;
-									$sql_str            = 'DELETE FROM ' . $wpdb->postmeta . ' WHERE post_id=' . $post_id . " AND meta_key like 'quiz_pro_id_%'";
-									$quiz_query_results = $wpdb->query( $sql_str );
+									$quiz_query_results = $wpdb->query(
+										$wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE post_id= %d AND meta_key like %s", $post_id, 'quiz_pro_id_%' )
+									);
 
 									update_post_meta( $post_id, 'quiz_pro_id', $quiz_pro_id_new );
 									update_post_meta( $post_id, 'quiz_pro_id_' . $quiz_pro_id_new, $quiz_pro_id_new );
@@ -1135,8 +1134,6 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							}
 
 							update_post_meta( $post_id, '_' . $this->get_prefix( $k ) . $k, $options );
-
-							learndash_convert_settings_to_single( $post_id, $options, $k );
 
 							// Purge the LD transients when we save any of our post types.
 							LDLMS_Transients::purge_all();
@@ -1188,7 +1185,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 
 				$show_required = false;
 
-				if ( in_array( $args['name'], array( 'sfwd-lessons_course', 'sfwd-topic_course', 'sfwd-topic_lesson' ) ) === true ) {
+				if ( in_array( $args['name'], array( 'sfwd-lessons_course', 'sfwd-topic_course', 'sfwd-topic_lesson' ), true ) === true ) {
 					if ( ( ! isset( $args['value'] ) ) || ( empty( $args['value'] ) ) ) {
 						$show_required = true;
 					}
@@ -1232,7 +1229,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 							$cmp = ( $value == $v );
 						}
 
-						if ( ( ! $is_arr && $cmp ) || ( $is_arr && in_array( $v, $value ) ) ) {
+						if ( ( ! $is_arr && $cmp ) || ( $is_arr && in_array( $v, $value, true ) ) ) {
 							$sel = $setsel;
 						}
 
@@ -1289,7 +1286,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 				return apply_filters( "{$this->prefix}output_option", '', $args );
 			}
 
-			if ( in_array( $options['type'], array( 'multiselect', 'select', 'multicheckbox', 'radio', 'checkbox', 'textarea', 'text', 'submit', 'hidden' ) ) ) {
+			if ( in_array( $options['type'], array( 'multiselect', 'select', 'multicheckbox', 'radio', 'checkbox', 'textarea', 'text', 'submit', 'hidden' ), true ) ) {
 				if ( is_string( $value ) ) {
 					$value = esc_attr( $value );
 				}
@@ -1843,176 +1840,7 @@ if ( ! class_exists( 'Semper_Fi_Module' ) ) {
 		 */
 		public function display_settings_page( $location = null ) {
 			return;
-
-			if ( null !== $location ) {
-				$location_info = $this->locations[ $location ];
-			}
-
-			$name = null;
-
-			if ( ( $location ) && ( isset( $location_info['name'] ) ) ) {
-				$name = $location_info['name'];
-			}
-
-			if ( ! $name ) {
-				$name = $this->name;
-			}
-
-			$message = $this->handle_settings_updates( $location );
-			$this->settings_page_init();
-
-			if ( ! empty( $message ) ) {
-				echo wp_kses_post( '<div id="message" class="updated fade"><p>' . $message . '</p></div>' );
-			}
-
-			?>
-		<div id="dropmessage" class="updated" style="display:none;"></div>
-			<div id="learndash-settings" class="wrap">
-				<h1><?php echo esc_html( $name ); ?></h1>
-
-				<?php
-					/**
-					 * Fires inside sfwd global settings header.
-					 *
-					 * @since 2.1.0
-					 *
-					 * @param null|string  $location Location index.
-					 */
-					do_action( 'sfwd_global_settings_header', $location );
-
-					/**
-					 *
-					 * Fires inside sfwd global settings header for a prefix.
-					 *
-					 * The dynamic part of the hook `$this->prefix` refers to the semperfi setting prefix.
-					 *
-					 * @since 2.1.0
-					 *
-					 * @param null|string  $location Location index.
-					 */
-					do_action( $this->prefix . 'settings_header', $location );
-				?>
-
-				<form id="sfp_settings_form" name="dofollow" enctype="multipart/form-data" action="" method="post">
-					<div class="sfwd_options_wrapper sfwd_settings_left">
-
-						<?php
-						$opts = $this->get_class_option();
-						if ( false !== $opts ) {
-							$this->options = $opts;
-						}
-
-						if ( is_array( $this->layout ) ) {
-							foreach ( $this->layout as $l => $lopts ) {
-								if ( ! isset( $lopts['tab'] ) || ( $this->current_tab == $lopts['tab'] ) ) {
-									add_meta_box(
-										$this->get_prefix( $location ) . $l . '_metabox',
-										$lopts['name'],
-										array( $this, 'display_options' ),
-										"{$this->prefix}settings",
-										'advanced',
-										'default',
-										$lopts
-									);
-								}
-							}
-						} else {
-							add_meta_box( $this->get_prefix( $location ) . 'metabox', $name, array( $this, 'display_options' ), "{$this->prefix}settings", 'advanced' );
-						}
-
-							do_meta_boxes( "{$this->prefix}settings", 'advanced', $location );
-						?>
-
-						<p class="submit" style="clear:both;">
-
-						<?php
-							$submit_options = array(
-								'action'         => array(
-									'type'  => 'hidden',
-									'value' => 'sfp_update_module',
-								),
-								'nonce-sfwd'     => array(
-									'type'  => 'hidden',
-									'value' => wp_create_nonce( 'sfwd-nonce' ),
-								),
-								'page_options'   => array(
-									'type'  => 'hidden',
-									'value' => 'sfp_home_description',
-								),
-								'Submit'         => array(
-									'type'  => 'submit',
-									'class' => 'button-primary',
-									'value' => esc_html__( 'Update Options', 'learndash' ) . ' &raquo;',
-								),
-								'Submit_Default' => array(
-									'type'  => 'submit',
-									'class' => 'button-primary',
-									'value' => esc_html__( 'Reset to Defaults', 'learndash' ) . ' &raquo;',
-								),
-							);
-
-							/**
-							 * Filters semperfi submit options for a prefix.
-							 *
-							 * The Dynamic portion `$this->prefix` refers to prefix.
-							 *
-							 * @since 2.1.0
-							 *
-							 * @param array        $submit_options An array of submit options
-							 * @param null|string  $location       Location index.
-							 */
-							$submit_options = apply_filters( "{$this->prefix}submit_options", $submit_options, $location );
-
-							foreach ( $submit_options as $k => $s ) {
-								$class = '';
-
-								if ( isset( $s['class'] ) ) {
-									$class = " class='{$s['class']}' ";
-								}
-
-								echo $this->get_option_html( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
-									array(
-										'name'    => $k,
-										'options' => $s,
-										'attr'    => $class,
-										'value'   => $s['value'],
-									)
-								);
-							}
-							?>
-
-						</p>
-					</div>
-				</form>
-
-					<?php
-					/**
-					 * Fires inside sfwd global settings footer for a prefix.
-					 *
-					 * The dynamic part of the hook `$this->prefix` refers to the semperfi setting prefix.
-					 *
-					 * @since 2.1.0
-					 *
-					 * @param null|string  $location Location index.
-					 */
-					do_action( $this->prefix . 'settings_footer', $location );
-
-					/**
-					 * Fires inside sfwd global settings footer.
-					 *
-					 * @since 2.1.0
-					 *
-					 * @param null|string  $location Location index.
-					 */
-					do_action( 'sfwd_global_settings_footer', $location );
-					?>
-
-			</div>
-
-			<?php
 		}
-
-
 
 		/**
 		 * Get the prefix used for a given location.

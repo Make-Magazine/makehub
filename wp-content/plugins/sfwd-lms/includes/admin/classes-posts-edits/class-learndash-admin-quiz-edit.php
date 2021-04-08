@@ -144,27 +144,30 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			}
 
 			// Check the Quiz custom fields to see if they need to be reformatted.
-			if ( isset( $_POST['form'] ) ) {
-				$form = $_POST['form'];
-				if ( 1 === count( $form[0] ) ) {
-					$form_items = array();
-					$form_item  = array();
-					foreach ( $form as $form_ele ) {
-						foreach ( $form_ele as $form_ele_name => $form_ele_value ) {
-							if ( 'fieldname' === $form_ele_name ) {
-								if ( ! empty( $form_item ) ) {
-									$form_items[] = $form_item;
+			if ( ( isset( $_POST['ld-quiz-custom-fields-nonce'] ) ) && ( ! empty( $_POST['ld-quiz-custom-fields-nonce'] ) ) && wp_verify_nonce( $_POST['ld-quiz-custom-fields-nonce'], 'ld-quiz-custom-fields-nonce' ) ) {
+
+				if ( isset( $_POST['form'] ) ) {
+					$form = $_POST['form'];
+					if ( 1 === count( $form[0] ) ) {
+						$form_items = array();
+						$form_item  = array();
+						foreach ( $form as $form_ele ) {
+							foreach ( $form_ele as $form_ele_name => $form_ele_value ) {
+								if ( 'fieldname' === $form_ele_name ) {
+									if ( ! empty( $form_item ) ) {
+										$form_items[] = $form_item;
+									}
+									$form_item = array();
 								}
-								$form_item = array();
+								$form_item[ $form_ele_name ] = $form_ele_value;
 							}
-							$form_item[ $form_ele_name ] = $form_ele_value;
 						}
+						if ( ! empty( $form_item ) ) {
+							$form_items[] = $form_item;
+						}
+						$form_item     = array();
+						$_POST['form'] = $form_items;
 					}
-					if ( ! empty( $form_item ) ) {
-						$form_items[] = $form_item;
-					}
-					$form_item     = array();
-					$_POST['form'] = $form_items;
 				}
 			}
 
@@ -176,10 +179,12 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				$this->quiz_builder->save_course_builder( $post_id, $post, $update );
 			}
 
-			if ( isset( $_POST['ld-course-primary-set'] ) ) {
-				$course_primary = absint( $_POST['ld-course-primary-set'] );
-				if ( ! empty( $course_primary ) ) {
-					learndash_set_primary_course_for_step( $post_id, $course_primary );
+			if ( ( isset( $_POST['ld-course-primary-set-nonce'] ) ) && ( ! empty( $_POST['ld-course-primary-set-nonce'] ) ) && wp_verify_nonce( $_POST['ld-course-primary-set-nonce'], 'ld-course-primary-set-nonce' ) ) {
+				if ( isset( $_POST['ld-course-primary-set'] ) ) {
+					$course_primary = absint( $_POST['ld-course-primary-set'] );
+					if ( ! empty( $course_primary ) ) {
+						learndash_set_primary_course_for_step( $post_id, $course_primary );
+					}
 				}
 			}
 
@@ -292,9 +297,10 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			$this->quiz_advanced_section_header(
 				sprintf(
-					// translators: placeholder: Quiz.
-					esc_html_x( 'LearnDash %s Question Settings', 'placeholder: Quiz', 'learndash' ),
-					LearnDash_Custom_Label::get_label( 'quiz' )
+					// translators: placeholder: Quiz, Question.
+					esc_html_x( 'LearnDash %1$s %2$s Settings', 'placeholder: Quiz, Question', 'learndash' ),
+					learndash_get_custom_label( 'quiz' ),
+					learndash_get_custom_label( 'question' )
 				)
 			);
 			$this->quiz_question_options_page_box( $post );

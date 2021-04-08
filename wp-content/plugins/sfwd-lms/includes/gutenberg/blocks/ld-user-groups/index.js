@@ -6,37 +6,28 @@
  */
 
 /**
+ * LearnDash block functions
+ */
+ import {
+	ldlms_get_custom_label,
+} from '../ldlms.js';
+
+/**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	Tooltip,
-	PanelBody,
-	PanelRow,
-	RangeControl,
-	FormToggle,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-user-groups',
 	{
-		title: __( 'LearnDash User Groups', 'learndash' ),
-		description: __( 'This block displays the list of groups users are assigned to as users or leaders.', 'learndash' ),
+		// translators: placeholder: Groups.
+		title: sprintf(_x('LearnDash User %s', 'placeholder: Groups', 'learndash'), ldlms_get_custom_label('groups')),
+		// translators: placeholder: Groups.
+		description: sprintf(_x( 'This block displays the list of %s users are assigned to as users or leaders.', 'placeholder: groups', 'learndash'), ldlms_get_custom_label('groups')),
 		icon: 'groups',
 		category: 'learndash-blocks',
 		example: {

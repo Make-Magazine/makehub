@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Group_Access_Settings' ) ) ) {
 	/**
 	 * Class to create the settings section.
@@ -40,15 +44,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 			// Map internal settings field ID to legacy field ID.
 			$this->settings_fields_map = array(
-				// Legacy fields
-				'group_price_type'                 => 'group_price_type',
-				'group_price_type_paynow_price'    => 'group_price',
-				'group_price_type_subscribe_price' => 'group_price',
+				'group_price_type'                         => 'group_price_type',
+				'group_price_type_paynow_price'            => 'group_price',
+				'group_price_type_subscribe_price'         => 'group_price',
+				'group_price_type_subscribe_billing_cycle' => 'group_price_type_subscribe_billing_cycle',
 				'group_price_type_closed_custom_button_label' => 'custom_button_label',
 				'group_price_type_closed_custom_button_url' => 'custom_button_url',
-				'group_price_type_closed_price'    => 'group_price',
-				'group_price_billing_p3'           => 'group_price_billing_p3',
-				'group_price_billing_t3'           => 'group_price_billing_t3',
+				'group_price_type_closed_price'            => 'group_price',
+				'group_price_billing_p3'                   => 'group_price_billing_p3',
+				'group_price_billing_t3'                   => 'group_price_billing_t3',
 			);
 
 			parent::__construct();
@@ -78,6 +82,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::load_settings_values();
 			if ( true === $this->settings_values_loaded ) {
 
+				if ( ! isset( $this->setting_option_values['group_price_type'] ) ) {
+					$this->setting_option_values['group_price_type'] = LEARNDASH_DEFAULT_GROUP_PRICE_TYPE;
+				}
+
 				if ( ! isset( $this->setting_option_values['group_price_type_paynow_price'] ) ) {
 					$this->setting_option_values['group_price_type_paynow_price'] = '';
 				}
@@ -94,10 +102,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$this->setting_option_values['group_price_type_closed_custom_button_url'] = '';
 				}
 
-				if ( ! isset( $this->setting_option_values['group_price_type'] ) ) {
-					$this->setting_option_values['group_price_type'] = LEARNDASH_DEFAULT_GROUP_PRICE_TYPE;
-				}
-
 				if ( ! isset( $this->setting_option_values['group_price_type_closed_custom_button_label'] ) ) {
 					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
 				}
@@ -108,6 +112,49 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				if ( ! isset( $this->setting_option_values[ $_internal ] ) ) {
 					$this->setting_option_values[ $_internal ] = '';
 				}
+			}
+
+			// Clear out the price type fields we are not using.
+			switch( $this->setting_option_values['group_price_type'] ) {
+				case 'paynow':
+					$this->setting_option_values['group_price_type_subscribe_price']            = '';
+					$this->setting_option_values['group_price_type_subscribe_billing_cycle']    = '';
+					$this->setting_option_values['group_price_type_closed_price']               = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_url']   = '';
+					break;
+			
+				case 'paynow':
+					$this->setting_option_values['group_price_type_subscribe_price']            = '';
+					$this->setting_option_values['group_price_type_subscribe_billing_cycle']    = '';
+					$this->setting_option_values['group_price_type_closed_price']               = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_url']   = '';
+					break;
+				
+				case 'subscribe':
+					$this->setting_option_values['group_price_type_paynow_price']               = '';
+					$this->setting_option_values['group_price_type_closed_price']               = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_url']   = '';
+					break;
+				
+				case 'closed':
+					$this->setting_option_values['group_price_type_subscribe_price']         = '';
+					$this->setting_option_values['group_price_type_subscribe_billing_cycle'] = '';
+					$this->setting_option_values['group_price_type_paynow_price']            = '';
+					break;
+				
+				case 'free':
+				default:
+					$this->setting_option_values['group_price_type']                            = 'free';
+					$this->setting_option_values['group_price_type_paynow_price']               = '';
+					$this->setting_option_values['group_price_type_subscribe_price']            = '';
+					$this->setting_option_values['group_price_type_subscribe_billing_cycle']    = '';
+					$this->setting_option_values['group_price_type_closed_price']               = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_label'] = '';
+					$this->setting_option_values['group_price_type_closed_custom_button_url']   = '';
+					break;
 			}
 		}
 
@@ -283,8 +330,9 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						'closed'    => array(
 							'label'               => esc_html__( 'Closed', 'learndash' ),
 							'description'         => sprintf(
-								// translators: placeholder: group.
-								esc_html_x( 'The %s can only be accessed through admin enrollment (manual), group enrollment, or integration (shopping cart or membership) enrollment. No enrollment button will be displayed, unless a URL is set (optional).', 'placeholder: group', 'learndash' ),
+								// translators: placeholder: group, group.
+								esc_html_x( 'The %1$s can only be accessed through admin enrollment (manual), %2$s enrollment, or integration (shopping cart or membership) enrollment. No enrollment button will be displayed, unless a URL is set (optional).', 'placeholder: group, group', 'learndash' ),
+								learndash_get_custom_label_lower( 'group' ),
 								learndash_get_custom_label_lower( 'group' )
 							),
 							'inline_fields'       => array(
@@ -320,7 +368,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			parent::load_settings_fields();
 		}
 
-		protected function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
+		public function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
 			$settings_fields_map = $this->settings_fields_map;
 			if ( ( isset( $post_values['group_price_type'] ) ) && ( ! empty( $post_values['group_price_type'] ) ) ) {
 				if ( 'paynow' === $post_values['group_price_type'] ) {

@@ -24,8 +24,8 @@ function learndash_mce_init() {
 	$screen = get_current_screen();
 	if ( ( $screen ) && ( $screen instanceof WP_Screen ) ) {
 		if ( ( 'post' === $screen->base ) && ( 'sfwd-certificates' === $screen->post_type ) ) {
-			add_filter( 'tiny_mce_before_init', 'wpLD_tiny_mce_before_init' );
-			add_filter( 'mce_css', 'filter_mce_css' );
+			add_filter( 'tiny_mce_before_init', 'learndash_wp_tiny_mce_before_init' );
+			add_filter( 'mce_css', 'learndash_filter_mce_css' );
 		}
 	}
 }
@@ -49,7 +49,7 @@ add_action( 'load-post-new.php', 'learndash_mce_init' );
  *
  * @return string Comma-delimited list of stylesheets.
  */
-function filter_mce_css( $mce_css = '' ) {
+function learndash_filter_mce_css( $mce_css = '' ) {
 	$ld_mce_css = plugins_url( 'assets/css/sfwd_editor.css', LEARNDASH_LMS_PLUGIN_DIR . 'index.php' );
 	if ( ! empty( $ld_mce_css ) ) {
 		if ( ! empty( $mce_css ) ) {
@@ -59,8 +59,6 @@ function filter_mce_css( $mce_css = '' ) {
 	}
 	return $mce_css;
 }
-
-
 
 /**
  * Loads the certificate image as the background for the visual editor.
@@ -72,11 +70,11 @@ function filter_mce_css( $mce_css = '' ) {
  *
  * @since 2.1.0
  *
- * @param array $initArray The tinymce editor settings.
+ * @param array $init_array The tinymce editor settings.
  *
  * @return array The tinymce editor settings.
  */
-function wpLD_tiny_mce_before_init( $initArray ) {
+function learndash_wp_tiny_mce_before_init( $init_array ) {
 	if ( isset( $_GET['post'] ) ) {
 		$post_id = $_GET['post'];
 	} else {
@@ -86,7 +84,7 @@ function wpLD_tiny_mce_before_init( $initArray ) {
 	if ( ! empty( $post_id ) ) {
 		$img_path = learndash_get_thumb_url( $post_id );
 		if ( ! empty( $img_path ) ) {
-			$initArray['setup'] = <<<JS
+			$init_array['setup'] = <<<JS
 [function(ed) {
     ed.onInit.add(function(ed, e) {
 		var w = jQuery("#content_ifr").width();
@@ -106,7 +104,7 @@ function wpLD_tiny_mce_before_init( $initArray ) {
 JS;
 		}
 	}
-	return $initArray;
+	return $init_array;
 }
 
 

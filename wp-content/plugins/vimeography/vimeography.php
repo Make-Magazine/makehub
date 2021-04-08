@@ -3,7 +3,7 @@
 Plugin Name: Vimeography
 Plugin URI: https://vimeography.com
 Description: Vimeography is the easiest way to set up a custom Vimeo gallery on your site.
-Version: 2.1.2
+Version: 2.2
 Requires PHP: 5.3
 Author: Dave Kiss
 Author URI: https://davekiss.com
@@ -73,6 +73,11 @@ if (!class_exists('Vimeography')) {
         self::$instance->addons = new Vimeography_Addons();
         new Vimeography_Robots();
         new Vimeography_Shortcode();
+
+        new \Vimeography\Logger();
+
+        new \Vimeography\Api\Galleries();
+        new \Vimeography\Api\Themes();
       }
 
       return self::$instance;
@@ -120,7 +125,7 @@ if (!class_exists('Vimeography')) {
         content_url() . '/vimeography/assets/css/'
       );
       define('VIMEOGRAPHY_BASENAME', plugin_basename(__FILE__));
-      define('VIMEOGRAPHY_VERSION', '2.1.2');
+      define('VIMEOGRAPHY_VERSION', '2.2');
       define('VIMEOGRAPHY_CURRENT_PAGE', basename($_SERVER['PHP_SELF']));
       define('VIMEOGRAPHY_ACCESS_TOKEN', 'eaf47146f04b5550a3e394f3bbf8273f');
     }
@@ -160,6 +165,11 @@ if (!class_exists('Vimeography')) {
 
       require_once VIMEOGRAPHY_PATH . 'lib/engine.php';
       require_once VIMEOGRAPHY_PATH . 'lib/shortcode.php';
+
+      require_once VIMEOGRAPHY_PATH . 'lib/logger.php';
+      require_once VIMEOGRAPHY_PATH . 'lib/api/galleries.php';
+      require_once VIMEOGRAPHY_PATH . 'lib/api/themes.php';
+
       require_once VIMEOGRAPHY_PATH .
         'vimeography-bugsauce/vimeography-bugsauce.php';
       require_once VIMEOGRAPHY_PATH .

@@ -51,6 +51,7 @@ class Activecampaign_For_Woocommerce_Public {
 	 * @access private
 	 */
 	private $admin;
+
 	/**
 	 * The custom ActiveCampaign logger
 	 *
@@ -59,12 +60,19 @@ class Activecampaign_For_Woocommerce_Public {
 	private $logger;
 
 	/**
+	 * Marker for if the checkbox was successfully populated on the page
+	 *
+	 * @var bool $checkbox_populated
+	 */
+	private $checkbox_populated;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @param string $plugin_name   The name of the plugin.
-	 * @param string $version       The version of this plugin.
-	 * @param Admin  $admin         An instantiated admin class to optionally use.
-	 * @param Logger $logger        The ActiveCampaign WooCommerce logger.
+	 * @param     string $plugin_name     The name of the plugin.
+	 * @param     string $version     The version of this plugin.
+	 * @param     Admin  $admin     An instantiated admin class to optionally use.
+	 * @param     Logger $logger     The ActiveCampaign WooCommerce logger.
 	 *
 	 * @since 1.0.0
 	 */
@@ -79,7 +87,8 @@ class Activecampaign_For_Woocommerce_Public {
 	 * Initialize injections that are still null
 	 */
 	public function init() {
-		$this->logger = $this->logger ?: new Logger();
+		$this->logger             = $this->logger ?: new Logger();
+		$this->checkbox_populated = $this->checkbox_populated ?: false;
 	}
 
 	/**
@@ -91,7 +100,7 @@ class Activecampaign_For_Woocommerce_Public {
 		wp_enqueue_style(
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'css/activecampaign-for-woocommerce-public.css',
-			array(),
+			[],
 			$this->version,
 			'all'
 		);
@@ -103,10 +112,25 @@ class Activecampaign_For_Woocommerce_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		$this->init();
+		$options            = $this->admin->get_options();
+		$custom_email_field = 'billing_email';
+		if ( isset( $options['custom_email_field'] ) ) {
+			$setting = $options['custom_email_field'];
+
+			/**
+			 * There are three settings available, but only this one results in not displaying the checkbox at all.
+			 */
+			if ( ! is_null( $setting ) && ! empty( $setting ) ) {
+				$custom_email_field = $setting;
+			}
+		} else {
+			$this->logger->error( 'custom_email_field not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
+		}
 		wp_register_script(
 			$this->plugin_name,
-			plugin_dir_url( __FILE__ ) . 'js/activecampaign-for-woocommerce-public.js',
-			array( 'jquery' ),
+			plugin_dir_url( __FILE__ ) . 'js/activecampaign-for-woocommerce-public.js?custom_email_field=' . $custom_email_field,
+			[ 'jquery' ],
 			$this->version
 		);
 
@@ -115,9 +139,9 @@ class Activecampaign_For_Woocommerce_Public {
 		wp_localize_script(
 			$this->plugin_name,
 			'public_vars',
-			array(
+			[
 				'ajaxurl' => admin_url( "admin-ajax.php?nonce=$sync_guest_abandoned_cart_nonce" ),
-			)
+			]
 		);
 
 		wp_enqueue_script( $this->plugin_name );
@@ -130,26 +154,42 @@ class Activecampaign_For_Woocommerce_Public {
 	 * owner of the site is able to customize on which hook this method should be called.
 	 */
 	public function handle_woocommerce_checkout_form() {
-		$options = $this->admin->get_options();
-		if ( isset( $options['checkbox_display_option'] ) ) {
-			$setting = $options['checkbox_display_option'];
-
-			/**
-			 * There are three settings available, but only this one results in not displaying the checkbox at all.
-			 */
-			if ( 'not_visible' === $setting ) {
-				return;
+		if ( ! $this->checkbox_populated ) {
+			if ( $this->admin->get_options() ) {
+				$options = $this->admin->get_options();
+			} else {
+				$options = get_option( 'activecampaign_for_woocommerce_settings' );
 			}
-		} else {
-			$this->logger->error( 'checkbox_display_option not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
-		}
 
-		if ( file_exists( __DIR__ . '/partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php' ) ) {
-			require_once __DIR__ . '/partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php';
-		} elseif ( file_exists( 'partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php' ) ) {
-			require_once 'partials/activecampaign-for-woocommerce-accepts-marketing-checkbox.php';
-		} else {
-			$this->logger->error( 'Cannot find the activecampaign-for-woocommerce-accepts-marketing-checkbox template. May be a file permissions issue. Cannot display the marketing opt-in checkbox' );
+			if ( isset( $options['checkbox_display_option'] ) ) {
+				$setting = $options['checkbox_display_option'];
+
+				/**
+				 * There are three settings available, but only this one results in not displaying the checkbox at all.
+				 */
+				if ( 'not_visible' === $setting ) {
+					$this->logger->debug( 'checkbox_display_option is set to not_visible. We will not display it.' );
+
+					return;
+				}
+			} else {
+				$this->logger->error( 'checkbox_display_option not found in database. This should not happen and may mean the setting has not been saved to the database. Go to the plugin settings page and save the opt-in setting again.' );
+			}
+
+			$activecampaign_for_woocommerce_is_checked              = $this->accepts_marketing_checkbox_is_checked();
+			$activecampaign_for_woocommerce_accepts_marketing_label = esc_html( $this->label_for_accepts_marketing_checkbox() );
+
+			// Label html must be built before the function
+			$label = '<label for="activecampaign_for_woocommerce_accepts_marketing" class="woocommerce-form__label woocommerce-form__label-for-checkbox inline"><span>' . $activecampaign_for_woocommerce_accepts_marketing_label . '</span></label>';
+
+			woocommerce_form_field( 'activecampaign_for_woocommerce_accepts_marketing', [
+				'type'     => 'checkbox',
+				'class'    => [ 'woocommerce-form__input', 'woocommerce-form__input-checkbox', 'input-checkbox' ],
+				'label'    => $label,
+				'required' => false,
+			], $activecampaign_for_woocommerce_is_checked );
+
+			$this->checkbox_populated = true;
 		}
 	}
 

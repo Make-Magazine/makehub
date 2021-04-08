@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Course_Groups_Settings' ) ) ) {
 	/**
 	 * Class to create the settings section.
@@ -53,10 +57,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 
 					$metabox_description .= sprintf(
-						// translators: placeholder: Groups, Course.
-						esc_html_x( 'Users enrolled via %1$s using this %2$s are excluded from the listings below and should be manage via the Group admin screen.', 'placeholder: Groups, Course', 'learndash' ),
+						// translators: placeholder: Groups, Course, Group.
+						esc_html_x( 'Users enrolled via %1$s using this %2$s are excluded from the listings below and should be manage via the %3$s admin screen.', 'placeholder: Groups, Course, Group', 'learndash' ),
 						LearnDash_Custom_Label::get_label( 'groups' ),
-						LearnDash_Custom_Label::get_label( 'course' )
+						LearnDash_Custom_Label::get_label( 'course' ),
+						LearnDash_Custom_Label::get_label( 'group' )
 					);
 					?>
 					<div id="learndash_course_users_page_box" class="learndash_course_users_page_box">

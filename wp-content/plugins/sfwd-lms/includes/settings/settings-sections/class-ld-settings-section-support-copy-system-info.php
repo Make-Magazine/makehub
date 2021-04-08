@@ -43,6 +43,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			$this->metabox_context = 'side';
 
+			$this->load_options = false;
+
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
 
 			parent::__construct();

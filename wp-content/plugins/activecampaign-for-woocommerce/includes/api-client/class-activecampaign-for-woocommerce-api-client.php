@@ -180,6 +180,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 		$this->client = new Client(
 			[
 				'base_uri' => $this->get_api_uri_with_v3_path(),
+				'timeout'  => 8,
 				'headers'  => [
 					'Api-Token'    => $this->get_api_key(),
 					'X-Request-Id' => RequestIdService::get_request_id(),
@@ -388,25 +389,53 @@ class Activecampaign_For_Woocommerce_Api_Client {
 	 */
 	public function execute() {
 		$endpoint = $this->construct_endpoint_with_filters();
+		if ( ! $this->configured ) {
+			$this->refresh_api_values();
 
-		if ( $this->body ) {
-			$response = $this->client->request(
-				$this->method, $endpoint, [
-					'body' => $this->body,
-				]
-			);
-		} else {
-			$response = $this->client->request( $this->method, $endpoint );
+			$this->configure_client();
 		}
 
-		if ( $response instanceof ResponseInterface && $this->ac_debug && $this->logger ) {
-			$this->logger->debug(
-				'Received response', [
-					'response_status_code' => $response->getStatusCode(),
-					'response_headers'     => $response->getHeaders(),
-					'response_body'        => $response->getBody()->getContents(),
-				]
-			);
+		try {
+			if ( $this->body ) {
+				$response = $this->client->request(
+					$this->method, $endpoint, [
+						'body' => $this->body,
+					]
+				);
+			} else {
+				$response = $this->client->request( $this->method, $endpoint );
+			}
+
+			if ( $response instanceof ResponseInterface && $this->ac_debug && $this->logger ) {
+				$this->logger->debug(
+					'Received response', [
+						'response_status_code' => $response->getStatusCode(),
+						'response_headers'     => $response->getHeaders(),
+						'response_body'        => $response->getBody()->getContents(),
+					]
+				);
+			}
+		} catch ( GuzzleException $e ) {
+			$message     = $e->getMessage();
+			$stack_trace = $e->getTrace();
+
+			if ( isset( $e ) && 422 === $e->getCode() ) {
+				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+			} else {
+				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+			}
+
+			return null;
+		} catch ( \Exception $e ) {
+			$message     = $e->getMessage();
+			$stack_trace = $e->getTrace();
+			if ( isset( $e ) && 422 === $e->getCode() ) {
+				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+			} else {
+				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+			}
+
+			return null;
 		}
 
 		return $response;

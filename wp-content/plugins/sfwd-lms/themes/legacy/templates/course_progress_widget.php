@@ -6,6 +6,10 @@
  *
  * @package LearnDash\Course
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <dd class="course_progress" title='

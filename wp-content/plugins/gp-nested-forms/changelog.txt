@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.0-beta-9.16
+
+	- Fixed a potential issue when using index[0] as a modifier with the All Fields Template snippet.
+
 ## 1.0-beta-9.15
 
 	- Removed the force display code that overrides GF's default conditional logic behavior. (#63)

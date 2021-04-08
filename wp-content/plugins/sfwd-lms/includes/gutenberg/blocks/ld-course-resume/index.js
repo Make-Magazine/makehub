@@ -8,34 +8,16 @@
 /**
  * LearnDash block functions
  */
-import {
-	ldlms_get_post_edit_meta,
-	ldlms_get_custom_label,
-	ldlms_get_integer_value
-} from '../ldlms.js';
+import { ldlms_get_custom_label } from '../ldlms.js';
 
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
- } = wp.blocks;
-
- const {
-	InspectorControls,
- } = wp.blockEditor;
-
-const {
-	PanelBody,
-	TextControl,
-	SelectControl,
-	ToggleControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-course-resume',

@@ -11,11 +11,11 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 	public function __construct( $id ) {
 		parent::__construct( $id );
 
-		add_action( 'gppa_pre_object_type_query_database', array( $this, 'add_filter_hooks' ) );
+		add_action( sprintf( 'gppa_pre_object_type_query_%s', $id ), array( $this, 'add_filter_hooks' ) );
 	}
 
 	public function add_filter_hooks() {
-		add_filter( 'gppa_object_type_database_filter', array( $this, 'process_filter_default' ), 10, 4 );
+		add_filter( sprintf( 'gppa_object_type_%s_filter', $this->id ), array( $this, 'process_filter_default' ), 10, 4 );
 	}
 
 	/**
@@ -190,13 +190,11 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	public function query( $args ) {
 
-		global $wpdb;
-
 		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
 
 		$query = $this->build_mysql_query( apply_filters( 'gppa_object_type_database_pre_query_parts', $query_args, $this ), rgar( $args, 'field' ) );
 
-		return $wpdb->get_results( apply_filters( 'gppa_object_type_database_query', $query, $args, $this ) );
+		return $this->get_db()->get_results( apply_filters( 'gppa_object_type_database_query', $query, $args, $this ) );
 
 	}
 

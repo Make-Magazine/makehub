@@ -8,6 +8,10 @@
  * @package Learndash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Interface LDLMS_Answer
  *

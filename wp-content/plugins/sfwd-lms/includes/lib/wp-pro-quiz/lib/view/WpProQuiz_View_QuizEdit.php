@@ -93,12 +93,20 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Display question randomly', 'learndash' ); ?>
+							<?php
+							// translators: questions
+							sprintf( esc_html_x( 'Display %s randomly', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) );
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Display question randomly', 'learndash' ); ?></span>
+									<span>
+									<?php
+									// translators: questions
+									sprintf( esc_html_x( 'Display %s randomly', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) );
+									?>
+									</span>
 								</legend>
 								<label for="question_random">
 									<input type="checkbox" id="question_random" value="1" name="questionRandom" <?php echo $this->quiz->isQuestionRandom() ? 'checked="checked"' : ''; ?> >
@@ -125,19 +133,30 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Sort questions by category', 'learndash' ); ?>
+						<?php
+							// translators: questions
+							sprintf( esc_html_x( 'Sort %s by category', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) );
+						?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Sort questions by category', 'learndash' ); ?></span>
+									<span>
+									<?php
+										// translators: questions
+										sprintf( esc_html_x( 'Sort %s by category', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) );
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="sortCategories" <?php $this->checked( $this->quiz->isSortCategories() ); ?> >
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'Also works in conjunction with the "display randomly question" option.', 'learndash' ); ?>
+								<?php
+									// translators: questions
+									sprintf( esc_html_x( 'Also works in conjunction with the "display random %s question" option.', 'placeholder: questions', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) );
+								?>
 								</p>
 							</fieldset>
 						</td>
@@ -329,23 +348,37 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Show only specific number of questions', 'learndash' ); ?>
+						<?php
+							// translators: placeholder: questions.
+								echo sprintf( esc_html_x( 'Show only specific number of %s', 'placeholder: questions', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'questions' ) ) );
+						?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Show only specific number of questions', 'learndash' ); ?></span>
+									<span>
+									<?php
+									// translators: placeholder: questions.
+										echo sprintf( esc_html_x( 'Show only specific number of %s', 'placeholder: questions', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'questions' ) ) );
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="showMaxQuestion" <?php echo $this->quiz->isShowMaxQuestion() ? 'checked="checked"' : ''; ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you enable this option, maximum number of displayed questions will be X from X questions. (The output of questions is random)', 'learndash' ); ?>
+								<?php
+									// translators: placeholders: questions, questions.
+									echo sprintf( esc_html_x( 'If you enable this option, maximum number of displayed %1$s will be X from X %2$s', 'placeholders: questions, questions', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'questions' ) ), esc_html( learndash_get_custom_label_lower( 'questions' ) ) );
+								?>
 								</p>
 								<div id="wpProQuiz_showMaxBox" style="display: none;">
 									<label>
-										<?php esc_html_e( 'How many questions should be displayed simultaneously:', 'learndash' ); ?>
+										<?php
+										// translators: questions
+										sprintf( esc_html_x( 'How many %s should be displayed simultaneously:', 'placeholder: questions', 'learndash' ), learndash_get_custom_label( 'questions' ) );
+										?>
 										<input class="small-text" type="text" name="showMaxQuestionValue" value="<?php echo esc_attr( $this->quiz->getShowMaxQuestionValue() ); ?>">
 									</label>
 									<label>
@@ -440,19 +473,41 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Question overview', 'learndash' ); ?>
+							<?php
+							sprintf(
+								// translators: question
+								esc_html_x( '%s overview', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label( 'question' )
+							)
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Question overview', 'learndash' ); ?></span>
+									<span>
+									<?php
+									sprintf(
+										// translators: question
+										esc_html_x( '%s overview', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label( 'question' )
+									)
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="showReviewQuestion" <?php $this->checked( $this->quiz->isShowReviewQuestion() ); ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'Add at the top of the quiz a question overview, which allows easy navigation. Additional questions can be marked "to review".', 'learndash' ); ?>
+									<?php
+									sprintf(
+										// translators: placeholders: quiz, question, questions
+										esc_html_x( 'Add at the top of the %1$s a %2$s overview, which allows easy navigation. Additional %3$s can be marked "to review".', 'placeholders: quiz, question, questions', 'learndash' ),
+										learndash_get_custom_label_lower( 'quiz' ),
+										learndash_get_custom_label_lower( 'question' ),
+										learndash_get_custom_label_lower( 'questions' )
+									);
+									?>
 								</p>
 								<p class="description">
 									<?php
@@ -496,19 +551,30 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr class="wpProQuiz_reviewQuestionOptions" style="display: none;">
 						<th scope="row">
-							<?php esc_html_e( 'Skip question', 'learndash' ); ?>
+							<?php
+							// translators: placeholder: question
+							sprintf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) );
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Skip question', 'learndash' ); ?></span>
+									<span>
+									<?php
+									// translators: placeholder: question
+									sprintf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) );
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="skipQuestionDisabled" <?php $this->checked( $this->quiz->isSkipQuestionDisabled() ); ?>>
 									<?php esc_html_e( 'Deactivate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you enable this option, user won\'t be able to skip question. (only in "Overview -> next" mode). User still will be able to navigate over "Question-Overview"', 'learndash' ); ?>
+									<?php
+									// translators: placeholder: question, question
+									sprintf( esc_html_x( 'If you enable this option, user won\'t be able to skip %1$s. (only in "Overview -> next" mode). User still will be able to navigate over "%2$s-Overview"', 'placeholder: question, question', 'learndash' ), learndash_get_custom_label_lower( 'question' ), learndash_get_custom_label( 'qusetion' ) );
+									?>
 								</p>
 							</fieldset>
 						</td>
@@ -723,19 +789,39 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Hide correct questions - display', 'learndash' ); ?>
+							<?php
+							sprintf(
+								// translators: questions
+								esc_html_x( 'Hide correct %s - display', 'placeholder: questions', 'learndash' ),
+								learndash_get_custom_label( 'questions' )
+							)
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Hide correct questions - display', 'learndash' ); ?></span>
+									<span>
+									<?php
+									sprintf(
+										// translators: questions
+										esc_html_x( 'Hide correct %s - display', 'placeholder: questions', 'learndash' ),
+										learndash_get_custom_label( 'questions' )
+									)
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" name="hideResultCorrectQuestion" value="1" <?php $this->checked( $this->quiz->isHideResultCorrectQuestion() ); ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you select this option, no longer the number of correctly answered questions are displayed on the results page.', 'learndash' ); ?>
+									<?php
+									sprintf(
+										// translators: questions
+										esc_html_x( 'If you select this option, no longer the number of correctly answered %s are dispayed on the results page.', 'placeholder: questions', 'learndash' ),
+										learndash_get_custom_label( 'questions' )
+									)
+									?>
 								</p>
 							</fieldset>
 						</td>
@@ -881,58 +967,126 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Force user to answer each question', 'learndash' ); ?>
+						<?php
+							sprintf(
+								// translators: question
+								esc_html_x( 'Force user to answer each %s', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label_lower( 'question' )
+							);
+						?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Force user to answer each question', 'learndash' ); ?></span>
+									<span>
+									<?php
+									sprintf(
+									// translators: question
+										esc_html_x( 'Force user to answer each %s', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									);
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="forcingQuestionSolve" <?php $this->checked( $this->quiz->isForcingQuestionSolve() ); ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you enable this option, the user is forced to answer each question.', 'learndash' ); ?> <br>
-									<?php esc_html_e( 'If the option "Question overview" is activated, this notification will appear after end of the quiz, otherwise after each question.', 'learndash' ); ?>
+									<?php
+									sprintf(
+										// translators: question
+										esc_html_x( 'If you enable this option, the user is forced to answer each %s', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									);
+									?>
+									<br>
+									<?php
+									sprintf(
+										// translators: question, quiz
+										esc_html_x( 'If the option "%1$s overview" is activated, this notification will appear after the end of the %2$s, otherwise after each %2$s', 'placeholder: question, quiz', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' ),
+										learndash_get_custom_label_lower( 'quiz' )
+									);
+									?>
 								</p>
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Hide question position overview', 'learndash' ); ?>
+							<?php
+							sprintf(
+								// translators: question
+								esc_html_x( 'Hide %s position overview', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label_lower( 'question' )
+							);
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Hide question position overview', 'learndash' ); ?></span>
+									<span>
+									<?php
+										sprintf(
+											// translators: question
+											esc_html_x( 'Hide %s position overview', 'placeholder: question', 'learndash' ),
+											learndash_get_custom_label_lower( 'question' )
+										);
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="hideQuestionPositionOverview" <?php $this->checked( $this->quiz->isHideQuestionPositionOverview() ); ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you enable this option, the question position overview is hidden.', 'learndash' ); ?>
+									<?php
+									sprintf(
+										// translators: question
+										esc_html_x( 'If you enable this option, the %s position overview is hidden.', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									);
+									?>
 								</p>
 							</fieldset>
 						</td>
 					</tr>
 					<tr>
 						<th scope="row">
-							<?php esc_html_e( 'Hide question numbering', 'learndash' ); ?>
+							<?php
+							sprintf(
+								// translators: question
+								esc_html_x( 'Hide %s numbering', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label_lower( 'question' )
+							);
+							?>
 						</th>
 						<td>
 							<fieldset>
 								<legend class="screen-reader-text">
-									<span><?php esc_html_e( 'Hide question numbering', 'learndash' ); ?></span>
+									<span>
+									<?php
+									sprintf(
+										// translators: question
+										esc_html_x( 'Hide %s numbering', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									);
+									?>
+									</span>
 								</legend>
 								<label>
 									<input type="checkbox" value="1" name="hideQuestionNumbering" <?php $this->checked( $this->quiz->isHideQuestionNumbering() ); ?>>
 									<?php esc_html_e( 'Activate', 'learndash' ); ?>
 								</label>
 								<p class="description">
-									<?php esc_html_e( 'If you enable this option, the question numbering is hidden.', 'learndash' ); ?>
+									<?php
+									sprintf(
+										// translators: question
+										esc_html_e( 'If you enable this option, the %s numbering is hidden.', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									);
+									?>
 								</p>
 							</fieldset>
 						</td>
@@ -1146,7 +1300,15 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 						<th style="width: 25%;"><?php esc_html_e( 'Normal', 'learndash' ); ?></th>
 						<th style="width: 25%;"><?php esc_html_e( 'Normal + Back-Button', 'learndash' ); ?></th>
 						<th style="width: 25%;"><?php esc_html_e( 'Check -> continue', 'learndash' ); ?></th>
-						<th style="width: 25%;"><?php esc_html_e( 'Questions below each other', 'learndash' ); ?></th>
+						<th style="width: 25%;">
+						<?php
+							sprintf(
+								// translators: questions
+								esc_html_x( '%s below each other', 'placeholder: question', 'learndash' ),
+								learndash_get_custom_label( 'questions' )
+							);
+						?>
+						</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -1159,40 +1321,53 @@ class WpProQuiz_View_QuizEdit extends WpProQuiz_View_View {
 					<tr>
 						<td>
 							<?php
-							// translators: placeholder: quiz.
-							echo sprintf( esc_html_x( 'Displays all questions sequentially, "right" or "false" will be displayed at the end of the %s.', 'placeholder: quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
+							// translators: placeholder: questions, quiz.
+							echo sprintf( esc_html_x( 'Displays all %1$s sequentially, "right" or "false" will be displayed at the end of the %2$s.', 'placeholder: quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'questions' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
 							?>
 						</td>
 						<td>
-							<?php esc_html_e( 'Allows to use the back button in a question.', 'learndash' ); ?>
+							<?php
+							// translators: question
+							sprintf( esc_html_x( 'Allows to use the back button in a %s.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) )
+							?>
 						</td>
 						<td>
-							<?php esc_html_e( 'Shows "right or wrong" after each question.', 'learndash' ); ?>
+							<?php
+							// translators: question
+								sprintf( esc_html_x( 'Shows "right or wrong" after each %s.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) )
+							?>
 						</td>
 						<td>
-							<?php esc_html_e( 'If this option is activated, all answers are displayed below each other, i.e. all questions are on a single page.', 'learndash' ); ?>
-						</td>
-					</tr>
-					<tr>
-						<td>
-
-						</td>
-						<td>
-
-						</td>
-						<td>
-
-						</td>
-						<td>
-
+							<?php
+							// translators: questions
+								sprintf( esc_html_x( 'If this option is activated, all answers are displayed below each other, i.e. all %s are on a single page.', 'placeholder: questions', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) )
+							?>
 						</td>
 					</tr>
 					<tr>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+						<td>
+
+						</td>
+					</tr>
+					<tr>
 						<td></td>
 						<td></td>
 						<td></td>
 						<td>
-							<?php esc_html_e( 'How many questions to be displayed on a page:', 'learndash' ); ?><br>
+						<?php
+							// translators: s
+							sprintf( esc_html_x( 'How many %s to be displayed on a page.', 'placeholder: questions', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) )
+						?>
+							<br>
 							<input type="number" name="questionsPerPage" value="<?php echo esc_attr( $this->quiz->getQuestionsPerPage() ); ?>" min="0">
 							<span class="description">
 								<?php esc_html_e( '(0 = All on one page)', 'learndash' ); ?>

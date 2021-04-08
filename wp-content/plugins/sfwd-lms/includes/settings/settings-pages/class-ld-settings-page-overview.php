@@ -23,28 +23,28 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 *
 		 * @var array
 		 */
-		protected $license_info = [];
+		protected $license_info = array();
 
 		/**
 		 * Announcement posts feed
 		 *
 		 * @var array
 		 */
-		protected $rss_announcements_posts = [];
+		protected $rss_announcements_posts = array();
 
 		/**
 		 * License information
 		 *
 		 * @var array
 		 */
-		protected $rss_tips_posts = [];
+		protected $rss_tips_posts = array();
 
 		/**
 		 * License information
 		 *
 		 * @var array
 		 */
-		protected $rss_sell_posts = [];
+		protected $rss_sell_posts = array();
 
 
 		/**
@@ -100,9 +100,9 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 * Filter the admin header data. We don't want to show the header panel on the Overview page.
 		 *
 		 * @since 3.0
-		 * @param array $header_data Array of header data used by the Header Panel React app.
+		 * @param array  $header_data Array of header data used by the Header Panel React app.
 		 * @param string $menu_key The menu key being displayed.
-		 * @param array $menu_items Array of menu/tab items.
+		 * @param array  $menu_items Array of menu/tab items.
 		 *
 		 * @return array $header_data.
 		 */
@@ -153,10 +153,10 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 			);
 			$learndash_assets_loaded['scripts']['learndash-admin-overview-page-script'] = __FUNCTION__;
 
-			$learndash_admin_overview_page_strings = [
+			$learndash_admin_overview_page_strings = array(
 				'mark_complete'   => esc_html__( 'Mark Complete', 'learndash' ),
 				'mark_incomplete' => esc_html__( 'Mark Incomplete', 'learndash' ),
-			];
+			);
 
 			wp_localize_script( 'learndash-admin-overview-page-script', 'LearnDashOverviewPageData', $learndash_admin_overview_page_strings );
 		}
@@ -259,7 +259,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 					// Check the license.
 					if ( ! empty( $license ) && ! empty( $email ) ) {
-						$license_status = is_learndash_license_valid();
+						$license_status = learndash_is_learndash_license_valid();
 
 						if ( ! $license_status ) {
 							// Clear just to be sure.
@@ -281,7 +281,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 								// Then re-update the licens using new utility function.
 								// Plus this provides simpler true/false boolean.
-								$license_status = is_learndash_license_valid();
+								$license_status = learndash_is_learndash_license_valid();
 							}
 						}
 
@@ -337,7 +337,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 							<div class="ld-bootcamp__widget--body">
 								<div class="ld-bootcamp__accordion" role="tablist">
 									<?php
-										$ld_license_completed = is_learndash_license_valid() ? '-completed' : '';
+										$ld_license_completed = learndash_is_learndash_license_valid() ? '-completed' : '';
 									if ( ! learndash_updates_enabled() ) {
 										$ld_license_completed = '-completed';
 									}
@@ -374,7 +374,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 												<div class="ld-bootcamp__license">
 													<form method="post" action="">
 													<?php
-													if ( ! is_learndash_license_valid() ) :
+													if ( ! learndash_is_learndash_license_valid() ) :
 														if ( learndash_get_license_show_notice() ) {
 															?>
 															<p class="<?php echo esc_attr( learndash_get_license_class( 'notice notice-error is-dismissible learndash-license-is-dismissible' ) ); ?>" <?php echo learndash_get_license_data_attrs(); ?>> <?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Element hardcoded in function. ?>
@@ -461,8 +461,9 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 											<p>
 											<?php
 											echo sprintf(
-												// translators: placeholder: Course.
-												esc_html_x( 'In this video we will demonstrate how you can create a course using the LearnDash %s Builder.', 'placeholder: Course.', 'learndash' ),
+												// translators: placeholder: course, Course.
+												esc_html_x( 'In this video we will demonstrate how you can create a %1$s using the LearnDash %2$s Builder.', 'placeholder: course, Course.', 'learndash' ),
+												LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 												LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 											);
 											?>
@@ -846,14 +847,14 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 										</h3>
 										<?php
 										$rss_sell = new SimplePie();
-										$rss_sell->set_cache_location(ABSPATH . '\wp-includes\SimplePie\Cache');
-										$rss_sell->set_feed_url('https://www.learndash.com/category/sell-online-courses/feed');
+										$rss_sell->set_cache_location( ABSPATH . 'wp-includes' . DIRECTORY_SEPARATOR . 'SimplePie' . DIRECTORY_SEPARATOR . 'Cache' );
+										$rss_sell->set_feed_url( 'https://www.learndash.com/category/sell-online-courses/feed' );
 										$rss_sell->init();
 										$rss_sell->handle_content_type();
 										if ( ! $rss_sell->error() ) {
 											if ( is_array( $rss_sell->get_items() ) ) {
 												echo '<ul>';
-												foreach ( $rss_sell->get_items(0, 4) as $rss_sell_posts ) {
+												foreach ( $rss_sell->get_items( 0, 4 ) as $rss_sell_posts ) {
 													echo '<li><a href="' . esc_url( $rss_sell_posts->get_permalink() ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $rss_sell_posts->get_title() ) . '</a></li>';
 												};
 												echo '</ul>';
@@ -882,14 +883,14 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 
 										<?php
 										$rss_tips = new SimplePie();
-										$rss_tips->set_cache_location(ABSPATH . '\wp-includes\SimplePie\Cache');
-										$rss_tips->set_feed_url('https://www.learndash.com/category/learndash-tips/feed');
+										$rss_tips->set_cache_location( ABSPATH . 'wp-includes' . DIRECTORY_SEPARATOR . 'SimplePie' . DIRECTORY_SEPARATOR . 'Cache' );
+										$rss_tips->set_feed_url( 'https://www.learndash.com/category/learndash-tips/feed' );
 										$rss_tips->init();
 										$rss_tips->handle_content_type();
 										if ( ! $rss_tips->error() ) {
 											if ( is_array( $rss_tips->get_items() ) ) {
 												echo '<ul>';
-												foreach ( $rss_tips->get_items(0, 4) as $rss_tips_posts ) {
+												foreach ( $rss_tips->get_items( 0, 4 ) as $rss_tips_posts ) {
 													echo '<li><a href="' . esc_url( $rss_tips_posts->get_permalink() ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $rss_tips_posts->get_title() ) . '</a></li>';
 												};
 												echo '</ul>';
@@ -921,24 +922,24 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 								</h3>
 
 								<?php
-									$rss_announcements = new SimplePie();
-									$rss_announcements->set_cache_location(ABSPATH . '\wp-includes\SimplePie\Cache');
-									$rss_announcements->set_feed_url('https://www.learndash.com/category/learndash/feed');
-									$rss_announcements->init();
-									$rss_announcements->handle_content_type();
-									if ( ! $rss_announcements->error() ) {
-										if ( is_array( $rss_announcements->get_items() ) ) {
-											echo '<ul>';
-											foreach ( $rss_announcements->get_items(0, 4) as $announcement_post ) {
-												echo '<li><a href="' . esc_url( $announcement_post->get_permalink() ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $announcement_post->get_title() ) . '</a></li>';
-											};
-											echo '</ul>';
-										} else {
-											esc_html_e( 'Something went wrong connecting to www.learndash.com. Please reload the page.', 'learndash' );
-										}
+								$rss_announcements = new SimplePie();
+								$rss_announcements->set_cache_location( ABSPATH . 'wp-includes' . DIRECTORY_SEPARATOR . 'SimplePie' . DIRECTORY_SEPARATOR . 'Cache' );
+								$rss_announcements->set_feed_url( 'https://www.learndash.com/category/learndash/feed' );
+								$rss_announcements->init();
+								$rss_announcements->handle_content_type();
+								if ( ! $rss_announcements->error() ) {
+									if ( is_array( $rss_announcements->get_items() ) ) {
+										echo '<ul>';
+										foreach ( $rss_announcements->get_items( 0, 4 ) as $announcement_post ) {
+											echo '<li><a href="' . esc_url( $announcement_post->get_permalink() ) . '" target="_blank" rel="noopener noreferrer">' . esc_html( $announcement_post->get_title() ) . '</a></li>';
+										};
+										echo '</ul>';
 									} else {
 										esc_html_e( 'Something went wrong connecting to www.learndash.com. Please reload the page.', 'learndash' );
 									}
+								} else {
+									esc_html_e( 'Something went wrong connecting to www.learndash.com. Please reload the page.', 'learndash' );
+								}
 								?>
 
 								<p class="ld-overview--more">

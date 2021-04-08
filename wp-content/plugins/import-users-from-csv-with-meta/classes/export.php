@@ -59,15 +59,9 @@ class ACUI_Exporter{
 				<tr id="acui_timestamp_wrapper" valign="top">
 					<th scope="row"><?php _e( 'Convert timestamp data to date format', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						<input type="checkbox" name="convert_timestamp" value="1" checked="checked">
-						<span class="description"><?php _e( 'If you have problems and you get some value exported as a date that should not be converted to date, please deactivate this option. If this option is not activated, datetime format will be ignored.', 'import-users-from-csv-with-meta' ); ?></span>
-					</td>
-				</tr>
-				<tr id="acui_datetime_format_wrapper" valign="top">
-					<th scope="row"><?php _e( 'Datetime format', 'import-users-from-csv-with-meta' ); ?></th>
-					<td>
-						<input name="datetime_format" type="text" value="Y-m-d H:i:s"/>
-						<span class="description"><a href="https://www.php.net/manual/en/datetime.formats.php"><?php _e( 'accepted formats', 'import-users-from-csv-with-meta' ); ?></a></span>
+						<input type="checkbox" name="convert_timestamp" id="convert_timestamp" value="1" checked="checked">
+						<input name="datetime_format" id="datetime_format" type="text" value="Y-m-d H:i:s"/> 
+                        <span class="description"><a href="https://www.php.net/manual/en/datetime.formats.php"><?php _e( 'accepted formats', 'import-users-from-csv-with-meta' ); ?></a> <?php _e( 'If you have problems and you get some value exported as a date that should not be converted to date, please deactivate this option. If this option is not activated, datetime format will be ignored.', 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>
 				<tr id="acui_order_fields_alphabetically_wrapper" valign="top">
@@ -75,6 +69,12 @@ class ACUI_Exporter{
 					<td>
 						<input type="checkbox" name="order_fields_alphabetically" value="1">
 						<span class="description"><?php _e( "Order all columns alphabetically to check easier your data. First two columns won't be affected", 'import-users-from-csv-with-meta' ); ?></span>
+					</td>
+				</tr>
+				<tr id="acui_fields" valign="top">
+					<th scope="row"><?php _e( 'Fields', 'import-users-from-csv-with-meta' ); ?></th>
+					<td>
+						
 					</td>
 				</tr>
 				<tr id="acui_download_csv_wrapper" valign="top">
@@ -93,7 +93,19 @@ class ACUI_Exporter{
 	jQuery( document ).ready( function( $ ){
 		$( "input[name='from']" ).change( function() {
 			$( "input[name='to']" ).attr( 'min', $( this ).val() );
-		})	
+		})
+
+		$( '#convert_timestamp' ).on( 'click', function() {
+			check_convert_timestamp_checked();
+		});
+
+		function check_convert_timestamp_checked(){
+			if( $('#convert_timestamp').is(':checked') ){
+				$( '#datetime_format' ).prop( 'disabled', false );
+			} else {
+				$( '#datetime_format' ).prop( 'disabled', true );
+			}
+		}
 	} )
 	</script>
 	<?php
@@ -154,7 +166,7 @@ class ACUI_Exporter{
 		elseif( strtotime( $value ) ){ // dates in datetime format
 			return date( $datetime_format, strtotime( $value ) );
 		}
-		elseif( ( self::is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ){ // dates in timestamp format
+		elseif( is_int( $value ) && ( ( self::is_valid_timestamp( $value ) && strlen( $value ) > 4 ) || in_array( $key, $timestamp_keys) ) ){ // dates in timestamp format
 			return date( $datetime_format, $value );
 		}
 		else{
@@ -197,6 +209,10 @@ class ACUI_Exporter{
 			case 'TAB':
 				$delimiter = "\t";
 				break;
+
+            default:
+                $delimiter = ",";
+                break;
 		}
 
 		$data = array();

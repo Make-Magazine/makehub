@@ -62,7 +62,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function check_show_metabox( $show_metabox, $settings_metabox_key = '' ) {
 			if ( $settings_metabox_key === $this->settings_metabox_key ) {
 				// IF Course shared Steps is enabled we don't show this metabox.
-				if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
+				if ( learndash_is_course_shared_steps_enabled() ) {
 					$show_metabox = false;
 				}
 			}
@@ -261,7 +261,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					),
 				),
 			);
-
+			
 			/** This filter is documented in includes/settings/settings-metaboxes/class-ld-settings-metabox-course-access-settings.php */
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_metabox_key );
 
@@ -285,6 +285,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 
 				if ( ( ! isset( $settings_values['lesson'] ) ) || ( '-1' === $settings_values['lesson'] ) ) {
 					$settings_values['lesson'] = '';
+				}
+
+				if ( learndash_is_course_shared_steps_enabled() ) {
+					unset( $settings_values['course'] );
+					unset( $settings_values['lesson'] );
 				}
 			}
 

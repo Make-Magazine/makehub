@@ -40,8 +40,11 @@ export default class GPPopulateAnything {
 	public postedValues:{ [input: string]: string } = {};
 	public gravityViewMeta?: gravityViewMeta;
 	public eventId = 0;
+	private triggerChangeAfterCalculate:boolean = false;
+	private triggerChangeExecuted:boolean = false;
+	private triggerChangeOnFields: { field_id: number, formula: string, rounding: string }[] = [];
 
-	private _onChangeHandlers: { [inputId: string]: () => void } = {};
+	private _lastRequestPromise : { [inputId: string]: JQueryXHR } = {};
 
 	constructor(public formId: formId, public fieldMap: fieldMap) {
 
@@ -56,6 +59,17 @@ export default class GPPopulateAnything {
 		jQuery(document).on('gform_post_render', this.postRenderSetCurrentPage);
 		jQuery(document).on('gform_post_render', this.postRender);
 
+		// Update prices when fields are updated. By default, Gravity Forms does not trigger recalculations when
+		// hidden inputs in product fields are updated.
+		jQuery(document).on('gppa_updated_batch_fields', () => window.gformCalculateTotalPrice(formId));
+
+		// Store a boolean in `triggerChangeAfterCalculate` to use once GPPA is initialized
+		window.gform.addAction( 'gform_post_calculation_events',
+			( mergeTagArr:object, formulaField:{field_id:number, formula:string, rounding:string}, formId:number, calcObj:object ) => {
+			this.triggerChangeAfterCalculate = true;
+			this.triggerChangeOnFields.push(formulaField);
+		});
+
 		/**
 		 * gform_post_render doesn't fire in the admin entry detail view so we'll call post render manually.
 		 *
@@ -64,6 +78,28 @@ export default class GPPopulateAnything {
 		if ($('#wpwrap #entry_form').length || this.gravityViewMeta) {
 			this.postRender(null, formId, 0);
 		}
+		/**
+		 * Disable conditional logic reset for fields populated by GPPA
+		 */
+		window.gform.addFilter('gform_reset_pre_conditional_logic_field_action', (reset:boolean, formId:number, targetId:string, defaultValues:string|Array<string>, isInit:boolean) => {
+			// Trigger forceReload when conditional fields used in LMTs are shown/hidden
+			const id = targetId.split('_').pop();
+			if (window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
+				$(targetId).find('input, select, textarea').trigger('forceReload');
+			}
+
+			// Cancel GF reset on multi input fields (e.g. address) that have LMTs
+			if ( $( targetId ).find('input[data-gppa-live-merge-tag-value]').length ) {
+				return false;
+			}
+
+			for (const field in this.fieldMap) {
+				if ('field_' + formId + '_' + field === targetId.substr(1)) {
+					return false;
+				}
+			}
+			return reset;
+		});
 
 	}
 
@@ -100,11 +136,16 @@ export default class GPPopulateAnything {
 		const lastFieldValuesDataId = 'gppa-batch-ajax-last-field-values';
 
 		$form.off( '.gppa' );
-		this.clearHandlers();
-
-		$form.on('keyup.gppa change.gppa DOMAutoComplete.gppa paste.gppa', '[name^="' + inputPrefix + '"]', (event) => {
+		$form.on('keyup.gppa change.gppa DOMAutoComplete.gppa paste.gppa forceReload.gppa', '[name^="' + inputPrefix + '"]', (event) => {
 
 			const $el = $(event.target);
+
+			/**
+			 * Flag to disable listener to prevent recursion.
+			 */
+			if ($el.data('gppaDisableListener')) {
+				return;
+			}
 
 			/**
 			 * Ignore change event if the input is a text input (e.g. single line or paragraph) since blurring the
@@ -134,12 +175,14 @@ export default class GPPopulateAnything {
 				return;
 			}
 
-			if (JSON.stringify($form.data(lastFieldValuesDataId)) === JSON.stringify(getFormFieldValues(this.formId, !!this.gravityViewMeta))) {
+			// Do not fire if values didn't change and `forceReload` is not the source event type
+			if (JSON.stringify($form.data(lastFieldValuesDataId)) === JSON.stringify(getFormFieldValues(this.formId, !!this.gravityViewMeta)) &&
+				event.type !== 'forceReload' ) {
 				console.debug('not firing due to field values matching last request');
 				return;
 			}
 
-			this.onChangeFactory(inputId)();
+			this.onChange(inputId);
 		});
 
 		$form.on('submit.gppa', ({ currentTarget: form }) => {
@@ -159,6 +202,14 @@ export default class GPPopulateAnything {
 		this.bindNestedForms();
 		this.bindConditionalLogicPricing();
 
+		// Trigger change event on calculated fields only once on initial load
+		if ( this.triggerChangeAfterCalculate && !this.triggerChangeExecuted ) {
+			for ( let i=0, max=this.triggerChangeOnFields.length; i<max; i++ ) {
+				$form.find('[name="' + inputPrefix + this.triggerChangeOnFields[i].field_id + '"]').trigger('change');
+			}
+			this.triggerChangeExecuted = true;
+		}
+
 	};
 
 	/**
@@ -166,50 +217,53 @@ export default class GPPopulateAnything {
 	 *
 	 * @param inputId
 	 */
-	onChangeFactory = (inputId: string) : () => void => {
-		if (this._onChangeHandlers[inputId]) {
-			return this._onChangeHandlers[inputId];
-		}
+	dependentFieldsToLoad: { field: fieldID, filters?: fieldMapFilter[] }[] = [];
+	triggerInputIds: fieldID[] = [];
 
+	onChange = (inputId: string) : void => {
 		const $form = this.getFormElement();
 		const lastFieldValuesDataId = 'gppa-batch-ajax-last-field-values';
 
-		this._onChangeHandlers[inputId] = debounce(() => {
-			const lmt = window.gppaLiveMergeTags[this.formId];
+		const lmt = window.gppaLiveMergeTags[this.formId];
 
-			$form.data(lastFieldValuesDataId, getFormFieldValues(this.formId, !!this.gravityViewMeta));
+		$form.data(lastFieldValuesDataId, getFormFieldValues(this.formId, !!this.gravityViewMeta));
 
-			const fieldId = parseInt(inputId);
+		const fieldId = parseInt(inputId);
 
-			let dependentFields: { field: fieldID, filters?: fieldMapFilter[] }[] = this.getDependentFields( inputId );
+		if (this.dependentFieldsToLoad.length === 0) {
+			this.dependentFieldsToLoad = this.getDependentFields( inputId );
+		}
 
-			lmt.getDependentInputs(fieldId).each((_: number, dependentInputEl: Element) => {
-				const $el = $(dependentInputEl);
-				const inputName = $el.attr('name');
+		lmt.getDependentInputs(fieldId).each((_: number, dependentInputEl: Element) => {
+			const $el = $(dependentInputEl);
+			const inputName = $el.attr('name');
 
-				if (!inputName) {
-					return;
-				}
-
-				const fieldId:number = +inputName.replace('input_', '');
-
-				dependentFields.push({field: fieldId});
-				dependentFields.push(...this.getDependentFields(fieldId));
-			});
-
-			dependentFields = uniqWith(dependentFields, isEqual);
-
-			if (dependentFields.length || lmt.hasLiveAttrOnPage(fieldId) || lmt.hasLiveMergeTagOnPage(fieldId)) {
-				this.batchedAjax($form, dependentFields, inputId );
+			if (!inputName) {
+				return;
 			}
-		}, 250);
 
-		return this._onChangeHandlers[inputId];
+			const fieldId:number = +inputName.replace('input_', '');
+
+			this.dependentFieldsToLoad.push({field: fieldId});
+			this.dependentFieldsToLoad.push(...this.getDependentFields(fieldId));
+		});
+
+		this.dependentFieldsToLoad = uniqWith(this.dependentFieldsToLoad, isEqual);
+
+		if (this.dependentFieldsToLoad.length || lmt.hasLiveAttrOnPage(fieldId) || lmt.hasLiveMergeTagOnPage(fieldId)) {
+			this.triggerInputIds.push(fieldId);
+			this.bulkBatchedAjax();
+		}
 	};
 
-	clearHandlers = () => {
-		this._onChangeHandlers = {};
-	};
+	bulkBatchedAjax = debounce(() : JQueryPromise<JQueryXHR> => {
+		const $form: JQuery = this.getFormElement();
+
+		return this.batchedAjax($form, this.dependentFieldsToLoad, this.triggerInputIds).always((xhr) => {
+			this.dependentFieldsToLoad = [];
+			this.triggerInputIds = [];
+		})
+	}, 250);
 
 	bindNestedForms() {
 		for( const prop in window ) {
@@ -220,7 +274,7 @@ export default class GPPopulateAnything {
 			const nestedFormFieldId = prop.replace(`GPNestedForms_${this.formId}_`, '');
 
 			(window[prop] as any).viewModel.entries.subscribe(() => {
-				this.onChangeFactory(nestedFormFieldId)();
+				this.onChange(nestedFormFieldId);
 			});
 		}
 	}
@@ -229,7 +283,7 @@ export default class GPPopulateAnything {
 		window.gform.addAction('gpcp_after_update_pricing', (triggerFieldId: string) => {
 			// When GPCP is initalized there is no trigger field.
 			if( triggerFieldId ) {
-				this.onChangeFactory(triggerFieldId)();
+				this.onChange(triggerFieldId);
 			}
 		});
 	}
@@ -300,7 +354,7 @@ export default class GPPopulateAnything {
 
 	}
 
-	batchedAjax($form: JQuery, requestedFields: { field: fieldID, filters?: fieldMapFilter[] }[], triggerInputId: fieldID ) : void {
+	batchedAjax($form: JQuery, requestedFields: { field: fieldID, filters?: fieldMapFilter[] }[], triggerInputId: fieldID | fieldID[]) : JQueryXHR {
 
 		this.eventId++;
 
@@ -388,7 +442,13 @@ export default class GPPopulateAnything {
 
 		});
 
-		window.gppaLiveMergeTags[this.formId].showLoadingIndicators( triggerInputId );
+		if (Array.isArray(triggerInputId)) {
+			for ( const inputId of triggerInputId ) {
+				window.gppaLiveMergeTags[this.formId].showLoadingIndicators( inputId );
+			}
+		} else {
+			window.gppaLiveMergeTags[this.formId].showLoadingIndicators( triggerInputId );
+		}
 
 		const data = window.gform.applyFilters('gppa_batch_field_html_ajax_data', {
 			'action': 'gppa_get_batch_field_html',
@@ -405,13 +465,13 @@ export default class GPPopulateAnything {
 			 */
 			'lmt-nonces': JSON.stringify(window.gppaLiveMergeTags[this.formId].whitelist),
 			'current-merge-tag-values': window.gppaLiveMergeTags[this.formId].currentMergeTagValues,
-			'security': window.GPPA_NONCE,
+			'security': window.GPPA.NONCE,
 			'event-id': this.eventId,
 		}, this.formId);
 
 		disableSubmitButton(this.getFormElement());
 
-		$.post(window.GPPA_AJAXURL, data, (response: { merge_tag_values: ILiveMergeTagValues, fields: any, event_id: any }) => {
+		return $.post(window.GPPA.AJAXURL, data, (response: { merge_tag_values: ILiveMergeTagValues, fields: any, event_id: any }) => {
 
 			// Skip out of order responses unless payload contains new markup
 			if( this.eventId > response.event_id && response.fields.length < 1 ) {
@@ -420,9 +480,12 @@ export default class GPPopulateAnything {
 
 			if (Object.keys(response.fields).length) {
 				for ( const fieldDetails of fields ) {
-					var fieldID = fieldDetails.field;
-					var $field = fieldDetails.$el!;
-					var $fieldContainer = $field.children('.clear-multi, .gform_hidden, .ginput_container, p').first();
+					const fieldID = fieldDetails.field;
+					const $field = fieldDetails.$el!;
+					const containerSelector = '.clear-multi, .gform_hidden, .ginput_container, p, .ginput_complex';
+					let $fieldContainer = $field.children(containerSelector).first();
+					// If container is not a direct descendent, attempt to use find() as a last resort
+					$fieldContainer = ($fieldContainer.length) ? $fieldContainer : $field.find(containerSelector).first();
 
 					/**
 					 * Documented above
@@ -432,17 +495,17 @@ export default class GPPopulateAnything {
 					[ $fieldContainer ] = window.gform.applyFilters( 'gppa_loading_field_target_meta', [ $fieldContainer ], $field, 'replace' );
 
 					if (!this.gravityViewMeta) {
-						$fieldContainer.replaceWith(response.fields[fieldID]);
+						$fieldContainer = $(response.fields[fieldID]).replaceAll($fieldContainer);
 					} else {
-						var $results = $(response.fields[fieldID]);
+						const $results = $(response.fields[fieldID]);
 
-						$fieldContainer.replaceWith($results.find('p'));
+						$fieldContainer = $results.find('p').replaceAll($fieldContainer);
 					}
 
 					this.populatedFields.push(fieldID);
 
 					if( fieldDetails.hasChosen ) {
-						window.gformInitChosenFields( ('#input_{0}_{1}' as any).format( this.formId, fieldID ), window.GPPA_I18N.chosen_no_results );
+						window.gformInitChosenFields( ('#input_{0}_{1}' as any).format( this.formId, fieldID ), window.GPPA.I18N.chosen_no_results );
 					}
 
 					if ( $fieldContainer.find('.wp-editor-area').length ) {
@@ -453,8 +516,11 @@ export default class GPPopulateAnything {
 						window.gformInitDatepicker();
 					}
 
-					$fieldContainer.find(':input').each((index, $el) => {
-						window.gform.doAction('gform_input_change', $el, this.formId, fieldID);
+					$fieldContainer.find(':input').each((index, el) => {
+						$(el).data('gppaDisableListener', true);
+						window.gform.doAction('gform_input_change', el, this.formId, fieldID);
+						$(el).trigger('change');
+						$(el).removeData('gppaDisableListener');
 					});
 
 					/**
@@ -466,6 +532,16 @@ export default class GPPopulateAnything {
 							(window as any).imageChoices_SetUpFields();
 						}
 					}
+
+					// Initialize any read only (GPRO) Datepicker fields for GPLD
+					if ( window.GPLimitDates ) {
+						$field.find('.gpro-disabled-datepicker').each((index, elem) => {
+							const $elem = $( elem );
+							window.GPLimitDates.initDisabledDatepicker( $elem );
+							$elem.trigger( 'change' );
+						});
+					}
+
 				}
 
 				this.runAndBindCalculationEvents();

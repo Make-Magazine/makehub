@@ -6,6 +6,11 @@
  * @subpackage REST
  * @since 3.3.0
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  *
  * This Controller is used as the parent Controller for all LearnDash

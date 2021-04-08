@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the LearnDash
  * custom post type Assignments (sfwd-assignment).
@@ -224,7 +228,7 @@ if ( ( ! class_exists( 'LD_REST_Assignments_Controller_V2' ) ) && ( class_exists
 					$metabox->load_settings_values();
 					$metabox->load_settings_fields();
 
-					$this->register_rest_fields( $metabox->get_settings_metabox_fields( $metabox ) );
+					$this->register_rest_fields( $metabox->get_settings_metabox_fields(), $metabox );
 				}
 			}
 			*/

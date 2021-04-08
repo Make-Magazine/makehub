@@ -14,6 +14,10 @@
  *
  * @package LearnDash\User
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <?php
 	global $learndash_assets_loaded;

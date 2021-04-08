@@ -201,9 +201,12 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		}
 
 		/**
-		 * Initialize self
+		 * Initialize Metabox instance.
+		 *
+		 * @param WP_Post $post Post object instance to initialize instance.
+		 * @param boolean $force True to force init. This will load values and settings again.
 		 */
-		public function init( $post = null ) {
+		public function init( $post = null, $force = false ) {
 			if ( ( ! $post ) || ( ! is_a( $post, 'WP_Post' ) ) ) {
 				return false;
 			}
@@ -214,11 +217,11 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 
 			$this->_post = $post;
 
-			if ( ! $this->settings_values_loaded ) {
+			if ( ( ! $this->settings_values_loaded ) || ( true === $force ) ) {
 				$this->load_settings_values();
 			}
 
-			if ( ! $this->settings_fields_loaded ) {
+			if ( ( ! $this->settings_fields_loaded ) || ( true === $force ) ) {
 				$this->load_settings_fields();
 			}
 		}
@@ -261,7 +264,7 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 			return true;
 		}
 
-		protected function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
+		public function get_save_settings_fields_map_form_post_values( $post_values = array() ) {
 			return $this->settings_fields_map;
 		}
 
@@ -498,18 +501,27 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		 * @param array   $settings_field_updates array of settings fields to update.
 		 */
 		public function save_post_meta_box( $post_id = 0, $saved_post = null, $update = null, $settings_field_updates = null ) {
-			if ( true === $this->verify_metabox_nonce_field() ) {
-				if ( is_null( $settings_field_updates ) ) {
-					$settings_field_updates = $this->get_post_settings_field_updates( $post_id, $saved_post, $update );
-				}
-				if ( ( ! empty( $settings_field_updates ) ) && ( is_array( $settings_field_updates ) ) ) {
-					foreach ( $settings_field_updates as $_key => $_val ) {
-						learndash_update_setting( $saved_post, $_key, $_val );
-					}
+			if ( is_null( $settings_field_updates ) ) {
+				$settings_field_updates = $this->get_post_settings_field_updates( $post_id, $saved_post, $update );
+			}
+			if ( ( ! empty( $settings_field_updates ) ) && ( is_array( $settings_field_updates ) ) ) {
+				foreach ( $settings_field_updates as $_key => $_val ) {
+					learndash_update_setting( $saved_post, $_key, $_val );
 				}
 			}
 		}
 
+		/**
+		 * Get Settings Metabox post updates.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param integer $post_id $Post ID is post being saved.
+		 * @param object  $saved_post WP_Post object being saved.
+		 * @param boolean $update If update true, otherwise false.
+		 *
+		 * @return array Array of settings fields to update.
+		 */
 		public function get_post_settings_field_updates( $post_id = 0, $saved_post = null, $update = null ) {
 			$settings_field_updates = array();
 
@@ -521,47 +533,78 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 					$post_values = $_POST[ $this->settings_metabox_key ];
 
 					$this->init( $saved_post );
+					$settings_field_updates = $this->validate_metabox_settings_post_updates( $post_values );
+				}
+			}
 
-					$settings_fields_map = $this->get_save_settings_fields_map_form_post_values( $post_values );
-					if ( ! empty( $settings_fields_map ) ) {
+			$settings_field_updates = $this->trigger_metabox_settings_post_filters( $settings_field_updates );
 
-						// This valiadate_args array will be passed to the validation function for context.
-						$validate_args = array(
-							'settings_page_id'   => $this->settings_screen_id,
-							'setting_option_key' => $this->settings_metabox_key,
-							'post_fields'        => $settings_field_updates,
-							'field'              => null,
-						);
+			return $settings_field_updates;
+		}
 
-						foreach ( $settings_fields_map as $_internal => $_legacy ) {
-							$settings_field = $this->get_settings_field_by_key( $_internal );
-							if ( $settings_field ) {
-								if ( isset( $post_values[ $_internal ] ) ) {
-									$post_value = $post_values[ $_internal ];
-								} else {
-									$post_value = '';
-								}
+		/**
+		 * Validate Settings Metabox post updates.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param array $post_values Array of settings values to validate.
+		 *
+		 * @return array Array of validated settings values.
+		 */
+		public function validate_metabox_settings_post_updates( $post_values = array() ) {
+			$settings_field_updates = array();
 
-								$validate_args['field'] = $settings_field['args'];
+			$settings_fields_map = $this->get_save_settings_fields_map_form_post_values( $post_values );
+			if ( ! empty( $settings_fields_map ) ) {
 
-								if ( ( isset( $settings_field['args']['value_callback'] ) ) && ( ! empty( $settings_field['args']['value_callback'] ) ) && ( is_callable( $settings_field['args']['value_callback'] ) ) ) {
-									$post_value = call_user_func( $settings_field['args']['value_callback'], $post_value, $_internal, $validate_args, $post_values );
-								} else {
-									$post_value = esc_attr( $post_value );
-								}
+				// This valiadate_args array will be passed to the validation function for context.
+				$validate_args = array(
+					'settings_page_id'   => $this->settings_screen_id,
+					'setting_option_key' => $this->settings_metabox_key,
+					'post_fields'        => $settings_field_updates,
+					'field'              => null,
+				);
 
-								if ( ( isset( $settings_field['args']['validate_callback'] ) ) && ( ! empty( $settings_field['args']['validate_callback'] ) ) && ( is_callable( $settings_field['args']['validate_callback'] ) ) ) {
-									$post_value = call_user_func( $settings_field['args']['validate_callback'], $post_value, $_internal, $validate_args );
-								} else {
-									$post_value = esc_attr( $post_value );
-								}
-								$settings_field_updates[ $_legacy ] = $post_value;
-							}
+				foreach ( $settings_fields_map as $_internal => $_legacy ) {
+					$settings_field = $this->get_settings_field_by_key( $_internal );
+					if ( $settings_field ) {
+						if ( isset( $post_values[ $_internal ] ) ) {
+							$post_value = $post_values[ $_internal ];
+						} else {
+							$post_value = '';
 						}
+
+						$validate_args['field'] = $settings_field['args'];
+
+						if ( ( isset( $settings_field['args']['value_callback'] ) ) && ( ! empty( $settings_field['args']['value_callback'] ) ) && ( is_callable( $settings_field['args']['value_callback'] ) ) ) {
+							$post_value = call_user_func( $settings_field['args']['value_callback'], $post_value, $_internal, $validate_args, $post_values );
+						} else {
+							$post_value = esc_attr( $post_value );
+						}
+
+						if ( ( isset( $settings_field['args']['validate_callback'] ) ) && ( ! empty( $settings_field['args']['validate_callback'] ) ) && ( is_callable( $settings_field['args']['validate_callback'] ) ) ) {
+							$post_value = call_user_func( $settings_field['args']['validate_callback'], $post_value, $_internal, $validate_args );
+						} else {
+							$post_value = esc_attr( $post_value );
+						}
+						$settings_field_updates[ $_legacy ] = $post_value;
 					}
 				}
 			}
 
+			return $settings_field_updates;
+		}
+
+		/**
+		 * Trigger Filters forSettings Metabox post updates.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param array $settings_field_updates Array of Settings field.
+		 *
+		 * @return array Array of Settings field.
+		 */
+		public function trigger_metabox_settings_post_filters( $settings_field_updates = array() ) {
 			/**
 			 * Filters settings meta box save fields.
 			 *
@@ -664,15 +707,62 @@ if ( ! class_exists( 'LearnDash_Settings_Metabox' ) ) {
 		}
 
 		/**
-		 * Get Settings Section Fields.
+		 * Get Settings Metabox Fields.
 		 *
-		 * @param object $metabox LearnDash_Settings_Metabox instance.
 		 * @return array Array of settings fields.
 		 */
-		public function get_settings_metabox_fields( $metabox = null ) {
-			if ( $metabox ) {
-				return $metabox->setting_option_fields;
+		public function get_settings_metabox_fields() {
+			return $this->setting_option_fields;
+		}
+
+		/**
+		 * Get Settings Metabox Values.
+		 *
+		 * @return array Array of settings values.
+		 */
+		public function get_settings_metabox_values() {
+			return $this->setting_option_values;
+		}
+
+		/**
+		 * Get Settings Metabox Field Value by key.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param string $field_key Settings Field Key for value.
+		 *
+		 * @return mixed.
+		 */
+		public function get_metabox_settings_value_by_key( $field_key = '' ) {
+			if ( ! empty( $field_key ) ) {
+				if ( ! $this->settings_values_loaded ) {
+					$this->load_settings_values();
+				}
+
+				if ( isset( $this->setting_option_values[ $field_key ] ) ) {
+					return $this->setting_option_values[ $field_key ];
+				}
 			}
+		}
+
+		/**
+		 * Update Metabox Settings values.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param array $settings_values Array of key/value settings changes.
+		 */
+		public function apply_metabox_settings_fields_changes( $settings_field_updates = array() ) {
+			$settings_field_values = $this->get_settings_metabox_values();
+			if ( ! empty( $settings_field_updates ) ) {
+				foreach ( $settings_field_updates as $setting_key => $setting_value ) {
+					if ( ( isset( $settings_field_values[ $setting_key ] ) ) && ( $settings_field_values[ $setting_key ] !== $setting_value ) ) {
+						$settings_field_values[ $setting_key ] = $setting_value;
+					}
+				}
+			}
+
+			return $settings_field_values;
 		}
 
 		/**

@@ -16,25 +16,11 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-courseinfo',
@@ -86,7 +72,7 @@ registerBlockType(
 			}
 		},
 		edit: props => {
-			const { attributes: { course_id, show, user_id, format, seconds_format, decimals, preview_show, preview_user_id },
+			const { attributes: { course_id, show, user_id, format, seconds_format, decimals, preview_show, preview_course_id, preview_user_id },
 				className, setAttributes } = props;
 
 			const field_show = (
@@ -146,53 +132,53 @@ registerBlockType(
 							value: 'enrolled_on',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Cumulative %s Score', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Cumulative %s Score', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'cumulative_score',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Cumulative %s Points', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Cumulative %s Points', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'cumulative_points',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Possible Cumulative %s Total Points', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Possible Cumulative %s Total Points', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'cumulative_total_points',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Cumulative %s Percentage', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Cumulative %s Percentage', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'cumulative_percentage',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Cumulative %s Time Spent', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Cumulative %s Time Spent', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'cumulative_timespent',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Aggregate %s Percentage', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Aggregate %s Percentage', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'aggregate_percentage',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Aggregate %s Score', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Aggregate %s Score', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'aggregate_score',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Aggregate %s Points', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Aggregate %s Points', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'aggregate_points',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Possible Aggregate %s Total Points', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Possible Aggregate %s Total Points', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'aggregate_total_points',
 						},
 						{
-							// translators: placeholder: Course.
-							label: sprintf(_x('Aggregate %s Time Spent', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('quizzes')),
+							// translators: placeholder: Quizzes.
+							label: sprintf(_x('Aggregate %s Time Spent', 'placeholder: Quizzes', 'learndash'), ldlms_get_custom_label('quizzes')),
 							value: 'aggregate_timespent',
 						},
 					]}
@@ -205,7 +191,7 @@ registerBlockType(
 					// translators: placeholder: Course.
 					label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course'))}
 					// translators: placeholders: Course, Course.
-					help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'))}
+					help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s or certificate.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course'))}
 					value={course_id || ''}
 					onChange={course_id => setAttributes({ course_id })}
 				/>
@@ -281,6 +267,15 @@ registerBlockType(
 						onChange={preview_show => setAttributes({ preview_show })}
 					/>
 					<TextControl
+						// translators: placeholder: Course.
+						label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course'))}
+						// translators: placeholder: Course.
+						help={sprintf(_x('Enter a %s ID to test preview', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course'))}
+						value={preview_course_id || ''}
+						type={'number'}
+						onChange={preview_course_id => setAttributes({ preview_course_id })}
+					/>
+					<TextControl
 						label={__('User ID', 'learndash')}
 						help={__('Enter a User ID to test preview', 'learndash')}
 						value={preview_user_id || ''}
@@ -329,6 +324,10 @@ registerBlockType(
 		save: function (props) {
 			// Delete meta from props to prevent it being saved.
 			delete(props.attributes.meta);
+
+			delete (props.attributes.preview_show);
+			delete (props.attributes.preview_course_id);
+			delete (props.attributes.preview_user_id);
 		}
 	},
 );

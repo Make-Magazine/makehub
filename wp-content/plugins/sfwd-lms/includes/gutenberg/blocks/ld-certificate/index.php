@@ -7,6 +7,10 @@
  * @since 3.1.4
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Certificate' ) ) ) {
 	/**
 	 * Class for handling LearnDash LearnDash_Gutenberg_Block_Certificate Block
@@ -152,7 +156,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
 				$shortcode_out        = do_shortcode( $shortcode_params_str );
 				if ( empty( $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				return $this->render_block_wrap( $shortcode_out );

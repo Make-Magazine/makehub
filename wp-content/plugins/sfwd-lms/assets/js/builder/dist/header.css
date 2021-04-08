@@ -54,7 +54,7 @@ body:not(.block-editor-page) .learndash-settings-page-wrap #sfwd-header {
 .branch-5-3 #sfwd-header {
   left: 0; }
 
-.learndash-user-group-leader .ld-global-header {
+.learndash-user-group-leader:not(.block-editor-page) .ld-global-header {
   margin-top: 25px; }
 
 /* Global header inner */

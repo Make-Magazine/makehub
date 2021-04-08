@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /** This filter is documented in themes/ld30/templates/modules/tabs.php */
 do_action( 'learndash-content-tabs-before', get_the_ID(), $group_id, $user_id );

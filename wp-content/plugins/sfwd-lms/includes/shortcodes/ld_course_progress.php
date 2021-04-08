@@ -32,70 +32,59 @@ function learndash_course_progress( $atts ) {
 	global $learndash_shortcode_used;
 	$learndash_shortcode_used = true;
 
-	extract(
-		shortcode_atts(
-			array(
-				'course_id' => 0,
-				'user_id'   => 0,
-				'array'     => false,
-			),
-			$atts
-		)
+	$atts = shortcode_atts(
+		array(
+			'course_id' => 0,
+			'user_id'   => 0,
+			'array'     => false,
+		),
+		$atts
 	);
 
-	if ( empty( $user_id ) ) {
-		// $current_user = wp_get_current_user();
+	if ( empty( $atts['user_id'] ) ) {
 		if ( is_user_logged_in() ) {
-			$user_id = get_current_user_id();
-		} else {
-			$user_id = 0;
+			$atts['user_id'] = get_current_user_id();
 		}
 	}
 
-	if ( empty( $course_id ) ) {
-		$course_id = learndash_get_course_id();
+	if ( empty( $atts['course_id'] ) ) {
+		$atts['course_id'] = learndash_get_course_id();
 	}
 
-	if ( empty( $course_id ) ) {
+	if ( ( empty( $atts['user_id'] ) ) || ( empty( $atts['course_id'] ) ) ) {
 		return '';
 	}
 
 	$completed = 0;
-	$total     = false;
+	$total     = 0;
 
-	if ( ! empty( $user_id ) ) {
+	$course_progress = learndash_user_get_course_progress( $atts['user_id'], $atts['course_id'] );
+	$percentage      = 0;
+	$message         = '';
 
-		$course_progress = get_user_meta( $user_id, '_sfwd-course_progress', true );
-
-		$percentage = 0;
-		$message    = '';
-
-		if ( ( ! empty( $course_progress ) ) && ( isset( $course_progress[ $course_id ] ) ) && ( ! empty( $course_progress[ $course_id ] ) ) ) {
-			if ( isset( $course_progress[ $course_id ]['completed'] ) ) {
-				$completed = absint( $course_progress[ $course_id ]['completed'] );
-			}
-
-			if ( isset( $course_progress[ $course_id ]['total'] ) ) {
-				$total = absint( $course_progress[ $course_id ]['total'] );
-			}
-		}
+	if ( isset( $course_progress['completed'] ) ) {
+		$completed = absint( $course_progress['completed'] );
 	}
 
-	// If $total is still false we calculate the total from course steps.
-	if ( false === $total ) {
-		$total = learndash_get_course_steps_count( $course_id );
+	if ( isset( $course_progress['total'] ) ) {
+		$total = absint( $course_progress['total'] );
 	}
 
+	if ( ( isset( $course_progress['status'] ) ) && ( 'completed' === $course_progress['status'] ) ) {
+		$completed = $total;
+	} 
+	
 	if ( $total > 0 ) {
 		$percentage = intval( $completed * 100 / $total );
 		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
 	} else {
 		$percentage = 0;
 	}
+	
 	// translators: placeholders: completed steps, total steps.
 	$message = sprintf( esc_html_x( '%1$d out of %2$d steps completed', 'placeholders: completed steps, total steps', 'learndash' ), $completed, $total );
 
-	if ( $array ) {
+	if ( $atts['array'] ) {
 		return array(
 			'percentage' => isset( $percentage ) ? $percentage : 0,
 			'completed'  => isset( $completed ) ? $completed : 0,
@@ -106,8 +95,8 @@ function learndash_course_progress( $atts ) {
 	return SFWD_LMS::get_template(
 		'course_progress_widget',
 		array(
-			'user_id'    => $user_id,
-			'course_id'  => $course_id,
+			'user_id'    => $atts['user_id'],
+			'course_id'  => $atts['course_id'],
 			'message'    => $message,
 			'percentage' => isset( $percentage ) ? $percentage : 0,
 			'completed'  => isset( $completed ) ? $completed : 0,

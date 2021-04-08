@@ -68,12 +68,12 @@ if ( ( ! isset( $quiz_post ) ) || ( ! is_a( $quiz_post, 'WP_Post' ) ) ) {
 	);
 
 	if ( ! empty( $lesson_progression_enabled ) ) :
-		$last_incomplete_step = is_quiz_accessable( null, $quiz_post, true, $course_id );
+		$last_incomplete_step = learndash_is_quiz_accessable( $user_id, $quiz_post, true, $course_id );
 		if ( learndash_is_sample( $quiz_post ) ) {
 			$last_incomplete_step = null;
-			$show_content = true;
+			$show_content         = true;
 		}
-		
+
 		if ( ( $last_incomplete_step ) && ( is_a( $last_incomplete_step, 'WP_Post' ) ) ) {
 			$show_content = false;
 

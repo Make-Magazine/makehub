@@ -24,8 +24,10 @@ class LearnDash_Custom_Label {
 		$labels = array();
 		$key    = strtolower( $key );
 
-		// The Setting logic for custom labels moved to includes/settings/class-ld-settings-section-custom-labels.php as of V2.4.
-		$labels[ $key ] = LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_Custom_Labels', $key );
+		$labels = get_option( 'learndash_settings_custom_labels', array() );
+		if ( ! is_array( $labels ) ) {
+			$labels = array();
+		}
 
 		switch ( $key ) {
 			case 'course':
@@ -74,6 +76,10 @@ class LearnDash_Custom_Label {
 
 			case 'groups':
 				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Groups', 'learndash' );
+				break;
+
+			case 'group_leader':
+				$label = ! empty( $labels[ $key ] ) ? $labels[ $key ] : esc_html__( 'Group Leader', 'learndash' );
 				break;
 
 			case 'button_take_this_course':

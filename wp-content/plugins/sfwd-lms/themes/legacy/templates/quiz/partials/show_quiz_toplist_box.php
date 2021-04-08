@@ -12,6 +12,10 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wpProQuiz_toplistShowInButton" style="display: none;">
 	<?php echo do_shortcode( '[LDAdvQuiz_toplist ' . $quiz->getId() . ' q="true"]' ); ?>

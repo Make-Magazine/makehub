@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller is used as the parent Controller for all LearnDash
  * custom post types like Courses (sfwd-courses), Lessons (sfwd-lessons), Topics (sfwd-topic),
@@ -91,11 +95,25 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		protected $metaboxes_fields = array();
 
 		/**
-		 * Rest Fields
+		 * REST Fields
 		 *
 		 * @var array $rest_fields.
 		 */
 		protected $rest_fields = array();
+
+		/**
+		 * Save Metabox Fields.
+		 *
+		 * @var array $saved_metabox_fields.
+		 */
+		protected $saved_metabox_fields = array();
+
+		/**
+		 * Save REST Registered Fields.
+		 *
+		 * @var array $saved_rest_registered_fields.
+		 */
+		protected $saved_rest_registered_fields = array();
 
 		/**
 		 * Protected constructor for class
@@ -111,6 +129,8 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 
 			add_filter( "rest_{$post_type}_query", array( $this, 'rest_query_filter' ), 20, 2 );
 			add_filter( "rest_prepare_{$post_type}", array( $this, 'rest_prepare_response_filter' ), 20, 3 );
+
+			add_action( "rest_after_insert_{$post_type}", array( $this, 'rest_after_insert_action' ), 20, 3 );
 		}
 
 		/**
@@ -191,21 +211,11 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *               not be inferred.
 		 */
 		protected function get_additional_fields( $object_type = null ) {
-			global $wp_rest_additional_fields;
-
-			if ( isset( $wp_rest_additional_fields[ $this->post_type ] ) ) {
-				$save_rest_fields = $wp_rest_additional_fields[ $this->post_type ];
-			} else {
-				$save_rest_fields = null;
-			}
-
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $this->rest_fields;
+			$this->swap_rest_registered_fields( $this->post_type );
 
 			$additional_fields = parent::get_additional_fields( $object_type );
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $save_rest_fields;
+			$this->reset_rest_registered_fields( $this->post_type );
 
 			return $additional_fields;
 		}
@@ -218,21 +228,11 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 * @return array
 		 */
 		public function get_public_item_schema() {
-			global $wp_rest_additional_fields;
-
-			if ( isset( $wp_rest_additional_fields[ $this->post_type ] ) ) {
-				$save_rest_fields = $wp_rest_additional_fields[ $this->post_type ];
-			} else {
-				$save_rest_fields = null;
-			}
-
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $this->rest_fields;
+			$this->swap_rest_registered_fields( $this->post_type );
 
 			$schema = parent::get_public_item_schema();
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $save_rest_fields;
+			$this->reset_rest_registered_fields( $this->post_type );
 
 			return $schema;
 		}
@@ -247,21 +247,29 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 		 */
 		public function get_item( $request ) {
-			global $wp_rest_additional_fields;
-
-			if ( isset( $wp_rest_additional_fields[ $this->post_type ] ) ) {
-				$save_rest_fields = $wp_rest_additional_fields[ $this->post_type ];
-			} else {
-				$save_rest_fields = null;
+			$valid_check = $this->get_post( $request['id'] );
+			if ( is_wp_error( $valid_check ) ) {
+				return $valid_check;
 			}
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $this->rest_fields;
+			if ( ( ! $valid_check ) || ( ! is_a( $valid_check, 'WP_Post' ) ) || ( $this->post_type !== $valid_check->post_type ) ) {
+				return $valid_check;
+			}
+
+			$this->swap_rest_registered_fields( $this->post_type );
+
+			/**
+			 * Initialize themetaboxes so we can apply the updates changes.
+			 */
+			if ( ! empty( $this->metaboxes ) ) {
+				foreach ( $this->metaboxes as &$metabox ) {
+					$metabox->init( $valid_check );
+				}
+			}
 
 			$response = parent::get_item( $request );
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $save_rest_fields;
+			$this->reset_rest_registered_fields( $this->post_type );
 
 			return $response;
 		}
@@ -276,21 +284,44 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 		 */
 		public function get_items( $request ) {
-			global $wp_rest_additional_fields;
+			$response = parent::get_items( $request );
+			return $response;
+		}
 
-			if ( isset( $wp_rest_additional_fields[ $this->post_type ] ) ) {
-				$save_rest_fields = $wp_rest_additional_fields[ $this->post_type ];
-			} else {
-				$save_rest_fields = null;
+
+		/**
+		 * Updates a single post.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param WP_REST_Request $request Full details about the request.
+		 *
+		 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+		 */
+		public function update_item( $request ) {
+			$valid_check = $this->get_post( $request['id'] );
+			if ( is_wp_error( $valid_check ) ) {
+				return $valid_check;
 			}
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $this->rest_fields;
+			if ( ( ! $valid_check ) || ( ! is_a( $valid_check, 'WP_Post' ) ) || ( $this->post_type !== $valid_check->post_type ) ) {
+				return $valid_check;
+			}
 
-			$response = parent::get_items( $request );
+			/**
+			 * Initialize themetaboxes so we can apply the updates changes.
+			 */
+			if ( ! empty( $this->metaboxes ) ) {
+				foreach ( $this->metaboxes as &$metabox ) {
+					$metabox->init( $valid_check );
+				}
+			}
 
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-			$wp_rest_additional_fields[ $this->post_type ] = $save_rest_fields;
+			$this->swap_rest_registered_fields( $this->post_type );
+
+			$response = parent::update_item( $request );
+
+			$this->reset_rest_registered_fields( $this->post_type );
 
 			return $response;
 		}
@@ -307,6 +338,102 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 */
 		protected function register_fields_metabox() {
 			return true;
+		}
+
+		/**
+		 * Swap Registered fields from V1 to V2.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param string $object_type Optional. The object type.
+		 */
+		protected function swap_rest_registered_fields( $object_type = null ) {
+			global $wp_rest_additional_fields;
+
+			if ( ( $object_type ) && ( $object_type === $this->post_type ) ) {
+				$this->saved_rest_registered_fields[ $object_type ] = array();
+
+				if ( isset( $wp_rest_additional_fields[ $object_type ] ) ) {
+					$this->saved_rest_registered_fields[ $object_type ] = $wp_rest_additional_fields[ $object_type ];
+
+					global $sfwd_lms;
+					$post_args_fields = $sfwd_lms->get_post_args_section( $object_type, 'fields' );
+					if ( ! empty( $post_args_fields ) ) {
+						foreach ( $post_args_fields as $post_args_field_key => $post_args_field ) {
+							if ( ( isset( $post_args_field['show_in_rest'] ) ) && ( true === $post_args_field['show_in_rest'] ) ) {
+								if ( isset( $wp_rest_additional_fields[ $object_type ][ $post_args_field_key ] ) ) {	
+									unset( $wp_rest_additional_fields[ $object_type ][ $post_args_field_key ] );
+								}
+							}
+						}
+					}
+
+					if ( ! empty( $this->rest_fields ) ) {
+						foreach ( $this->rest_fields as $rest_field_key => $rest_field ) {
+							$wp_rest_additional_fields[ $object_type ][ $rest_field_key ] = $rest_field;
+						}
+					}
+				} else {
+					$this->saved_rest_registered_fields[ $object_type ] = array();
+				}
+			}
+		}
+
+		/**
+		 * Reset Registered fields back to V1.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param string $object_type Optional. The object type.
+		 */
+		protected function reset_rest_registered_fields( $object_type = null ) {
+			global $wp_rest_additional_fields;
+
+			if ( ( $object_type ) && ( $object_type === $this->post_type ) ) {
+				if ( isset( $this->saved_rest_registered_fields[ $object_type ] ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+					$wp_rest_additional_fields[ $object_type ] = $this->saved_rest_registered_fields[ $object_type ];
+				}
+			}
+		}
+
+		/**
+		 * Fires after a single post is completely created or updated via the REST API.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param WP_Post         $post     Inserted or updated post object.
+		 * @param WP_REST_Request $request  Request object.
+		 * @param bool            $creating True when creating a post, false when updating.
+		 */
+		public function rest_after_insert_action( $post, $request, $creating ) {
+			if ( ( $post ) && ( is_a( $post, 'WP_Post' ) ) && ( $post->post_type === $this->post_type ) && ( ! empty( $this->metaboxes ) ) ) {
+
+				/**
+				 * In REST the $saved_metabox_fields is set during the update_rest_settings_field_value()
+				 * function.
+				 */
+				if ( ! empty( $this->saved_metabox_fields ) ) {
+					foreach( $this->saved_metabox_fields as $metabox_class => $metabox_fields_values ) {
+						if ( isset( $this->metaboxes[ $metabox_class ] ) ) {
+							$metabox = $this->metaboxes[ $metabox_class ];
+							$metabox->init( $post );
+
+							$settings_field_updates = $metabox->apply_metabox_settings_fields_changes( $metabox_fields_values ); 
+							$settings_field_updates = $metabox->validate_metabox_settings_post_updates( $settings_field_updates );
+							$settings_field_updates = $metabox->trigger_metabox_settings_post_filters( $settings_field_updates );
+
+							$metabox->save_post_meta_box( $post->ID, $post, $creating, $settings_field_updates );
+
+							/**
+							 * After we save the meta data we re-initialize the metabox with the
+							 * new values. This will reload metabox->setting_option_values
+							 */
+							$metabox->init( $post, true );
+						}
+					}
+				}
+			}
 		}
 
 		/**
@@ -328,7 +455,14 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 					if ( isset( $this->metaboxes_fields[ $field_name ] ) ) {
 						$field_set = $this->metaboxes_fields[ $field_name ];
 						if ( ( isset( $field_set['settings_field']['name'] ) ) && ( ! empty( $field_set['settings_field']['name'] ) ) ) {
-							$field_value = learndash_get_setting( $ld_post, $field_set['settings_field']['name'] );
+							if ( ( isset( $field_set['metabox'] ) ) && ( ! empty( $field_set['metabox'] ) ) && ( 'LearnDash_Settings_Metabox' === get_parent_class( $field_set['metabox'] ) ) ) {
+								$metabox_class_name = get_class( $field_set['metabox'] );
+								if ( ( $metabox_class_name ) && ( isset( $this->metaboxes[ $metabox_class_name ] ) ) ) {
+									$field_value = $this->metaboxes[ $metabox_class_name ]->get_metabox_settings_value_by_key( $field_set['settings_field']['name'] );
+								}
+							} else {
+								$field_value = learndash_get_setting( $ld_post, $field_set['settings_field']['name'] );
+							}
 						}
 						if ( ( isset( $field_set['settings_field']['args']['validate_callback'] ) ) && ( ! empty( $field_set['settings_field']['args']['validate_callback'] ) ) && ( is_callable( $field_set['settings_field']['args']['validate_callback'] ) ) ) {
 							$validate_args['field'] = $field_set['settings_field']['args'];
@@ -361,7 +495,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		public function update_rest_settings_field_value( $post_value, WP_Post $post, $field_name, WP_REST_Request $request, $post_type ) {
 			if ( ( is_a( $post, 'WP_Post' ) ) && ( $post->post_type == $this->post_type ) ) {
 				if ( isset( $this->metaboxes_fields[ $field_name ] ) ) {
-					$field_set              = $this->metaboxes_fields[ $field_name ];
+					$field_set = $this->metaboxes_fields[ $field_name ];
 					if ( ! isset( $field_set['settings_field']['name'] ) ) {
 						return false;
 					}
@@ -374,10 +508,20 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 					$validate_args['field'] = $field_set['settings_field']['args'];
 					$field_instance         = LearnDash_Settings_Fields::get_field_instance( $field_set['settings_field']['args']['type'] );
 					if ( ( $field_instance ) && ( 'LearnDash_Settings_Fields' === get_parent_class( $field_instance ) ) ) {
-						$post_value  = $field_instance->rest_value_to_field_value( $post_value, $setting_field_name, $validate_args );
-						$field_value = learndash_get_setting( $post, $setting_field_name );
-						if ( $field_value !== $post_value ) {
-							return learndash_update_setting( $post->ID, $setting_field_name, $post_value );
+						$post_value = $field_instance->rest_value_to_field_value( $post_value, $setting_field_name, $validate_args );
+						if ( ( isset( $field_set['metabox'] ) ) && ( ! empty( $field_set['metabox'] ) ) && ( 'LearnDash_Settings_Metabox' === get_parent_class( $field_set['metabox'] ) ) ) {
+							$metabox_class_name = get_class( $field_set['metabox'] );
+							if ( ( $metabox_class_name ) && ( isset( $this->metaboxes[ $metabox_class_name ] ) ) ) {
+								if ( ! isset( $this->saved_metabox_fields[ $metabox_class_name ] ) ) {
+									$this->saved_metabox_fields[ $metabox_class_name ] = array();
+								}
+								$this->saved_metabox_fields[ $metabox_class_name ][ $setting_field_name ] = $post_value;
+							}
+						} else {
+							$field_value = learndash_get_setting( $post, $setting_field_name );
+							if ( $field_value !== $post_value ) {
+								return learndash_update_setting( $post->ID, $setting_field_name, $post_value );
+							}
 						}
 					}
 				}
@@ -481,7 +625,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 		 *
 		 * @param array $fields Array of fields for section.
 		 */
-		public function register_rest_fields( $fields = array() ) {
+		public function register_rest_fields( $fields = array(), $metabox = null ) {
 
 			if ( ! empty( $fields ) ) {
 				// First we need to re-index the fields to use the rest field_key if set.
@@ -570,6 +714,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 							'field_key'      => $field_key,
 							'settings_field' => $field,
 							'rest_field'     => $field_args,
+							'metabox'        => $metabox,
 						);
 
 						if ( isset( $field['args']['type'] ) ) {
@@ -581,7 +726,7 @@ if ( ( ! class_exists( 'LD_REST_Posts_Controller_V2' ) ) && ( class_exists( 'WP_
 										foreach ( $field['args']['options'] as $option_set ) {
 											if ( ( isset( $option_set['inline_fields'] ) ) && ( ! empty( $option_set['inline_fields'] ) ) ) {
 												foreach ( $option_set['inline_fields'] as $inline_field_set ) {
-													$this->register_rest_fields( $inline_field_set );
+													$this->register_rest_fields( $inline_field_set, $metabox );
 												}
 											}
 										}

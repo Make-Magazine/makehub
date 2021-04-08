@@ -70,19 +70,20 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 	 */
 	if ( @$lesson_progression_enabled && ! @$previous_lesson_completed ) :
 
-		$previous_item = learndash_get_previous( $post );
-
-		learndash_get_template_part(
-			'modules/messages/lesson-progression.php',
-			array(
-				'previous_item' => $previous_item,
-				'course_id'     => $course_id,
-				'context'       => 'topic',
-				'user_id'       => $user_id,
-			),
-			true
-		);
-
+		//$previous_item = learndash_get_previous( $post );
+		$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+		if ( ! empty( $previous_item_id ) ) {
+			learndash_get_template_part(
+				'modules/messages/lesson-progression.php',
+				array(
+					'previous_item' => get_post( $previous_item_id ),
+					'course_id'     => $course_id,
+					'context'       => 'topic',
+					'user_id'       => $user_id,
+				),
+				true
+			);
+		}
 	endif;
 
 	if ( $show_content ) :
@@ -107,7 +108,7 @@ add_filter( 'comments_array', 'learndash_remove_comments', 1, 2 ); ?>
 		 * Display Lesson Assignments
 		 */
 		$bypass_course_limits_admin_users = learndash_can_user_bypass( $user_id, 'learndash_lesson_assignment' );
-		if ( lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+		if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
 			if ( ( learndash_lesson_progression_enabled() && learndash_lesson_topics_completed( $post->ID ) ) || ! learndash_lesson_progression_enabled() || $bypass_course_limits_admin_users ) :
 				/**
 				 * Fires before the lesson assignment.

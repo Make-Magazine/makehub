@@ -53,12 +53,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					</span>
 					<p>
 					<?php
-					printf(
-						// translators: placeholders: Quiz questions, Quiz.
-						esc_html_x( 'This upgrade will convert the %1$s %2$s to WordPress custom post type. <strong>This is required before enabling %3$s Builder.</strong> (Optional)', 'placeholders: Quiz questions, Quiz', 'learndash' ),
-						esc_html( learndash_get_custom_label_lower( 'Quiz' ) ),
-						esc_html( learndash_get_custom_label_lower( 'questions' ) ),
-						LearnDash_Custom_Label::get_label( 'Quiz' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					echo wp_kses_post(
+						sprintf(
+							// translators: placeholders: Quiz questions, Quiz.
+							_x( 'This upgrade will convert the %1$s %2$s to WordPress custom post type. <strong>This is required before enabling %3$s Builder.</strong> (Optional)', 'placeholders: Quiz questions, Quiz', 'learndash' ),
+							esc_html( learndash_get_custom_label_lower( 'Quiz' ) ),
+							esc_html( learndash_get_custom_label_lower( 'questions' ) ),
+							esc_html( learndash_get_custom_label( 'Quiz' ) )
+						)
 					);
 					?>
 					</p>
@@ -91,10 +93,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						}
 					}
 
-						$progress_style       = 'display:none;';
-						$progress_meter_style = '';
-						$progress_label       = '';
-						$progress_slug        = '';
+					$progress_style       = 'display:none;';
+					$progress_meter_style = '';
+					$progress_label       = '';
+					$progress_slug        = '';
 
 					if ( ( true === $show_progess ) && ( ! isset( $_GET['quiz_id'] ) ) ) {
 						?>
@@ -119,7 +121,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						if ( ( isset( $data_settings['last_run'] ) ) && ( ! empty( $data_settings['last_run'] ) ) ) {
 							$process_quiz_id = 0;
 							if ( ( isset( $_GET['quiz_id'] ) ) && ( ! empty( $_GET['quiz_id'] ) ) ) {
-								if ( get_post_type( $_GET['quiz_id'] ) === learndash_get_post_type_slug( 'quiz' ) ) {
+								if ( learndash_get_post_type_slug( 'quiz' ) === get_post_type( $_GET['quiz_id'] ) ) {
 									$process_quiz_id = absint( $_GET['quiz_id'] );
 								} else {
 									?>
@@ -329,8 +331,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 					}
 				}
 				if ( ! empty( $pro_quiz_id ) ) {
-					$quiz_question_sql = $wpdb->prepare( 'SELECT id FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' WHERE online = %d AND quiz_id = %d', '1', $pro_quiz_id );
-					$quiz_questions    = $wpdb->get_col( $quiz_question_sql );
+					$quiz_questions = $wpdb->get_col(
+						$wpdb->prepare(
+							// phpcs:ignore
+							'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d AND quiz_id = %d',
+							'1',
+							$pro_quiz_id
+						)
+					);
 					if ( ! empty( $quiz_questions ) ) {
 						$this->transient_data['process_users'] = array_merge( $this->transient_data['process_users'], $quiz_questions );
 						$this->transient_data['total_count']   = count( $this->transient_data['process_users'] );
@@ -345,8 +353,13 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			} else {
 
 				if ( ! isset( $this->transient_data['total_count'] ) ) {
-					$sql_count_rows   = $wpdb->prepare( 'SELECT COUNT(*) FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' WHERE online = %d', '1' );
-					$total_rows_count = $wpdb->get_var( $sql_count_rows );
+					$total_rows_count = $wpdb->get_var(
+						$wpdb->prepare(
+							// phpcs:ignore
+							'SELECT COUNT(*) FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d',
+							1
+						)
+					);
 					if ( ! is_null( $total_rows_count ) ) {
 						$this->transient_data['total_count'] = intval( $total_rows_count );
 					}
@@ -362,8 +375,15 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						}
 					}
 
-					$sql_count_rows = $wpdb->prepare( 'SELECT id FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' WHERE online = %d ORDER BY quiz_id ASC, id ASC LIMIT %d OFFSET %d', '1', LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, $this->transient_data['paged'] * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE );
-					$rows           = $wpdb->get_col( $sql_count_rows );
+					$rows = $wpdb->get_col(
+						$wpdb->prepare(
+							// phpcs:ignore
+							'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d ORDER BY quiz_id ASC, id ASC LIMIT %d OFFSET %d',
+							'1',
+							LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
+							$this->transient_data['paged'] * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE
+						)
+					);
 					if ( ! empty( $rows ) ) {
 						$this->transient_data['process_users'] = array_merge( $this->transient_data['process_users'], $rows );
 					}
@@ -382,8 +402,15 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			$question_pro_ids = array();
 			$pro_ids_paged    = 0;
 			while ( true ) {
-				$question_pro_ids_sql = $wpdb->prepare( 'SELECT id FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . ' WHERE online = %d ORDER BY quiz_id, sort ASC LIMIT %d OFFSET %d', '1', LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, $pro_ids_paged * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE );
-				$pro_ids              = $wpdb->get_col( $question_pro_ids_sql );
+				$pro_ids = $wpdb->get_col(
+					$wpdb->prepare(
+						// phpcs:ignore
+						'SELECT id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . ' WHERE online = %d ORDER BY quiz_id, sort ASC LIMIT %d OFFSET %d',
+						'1',
+						LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
+						$pro_ids_paged * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE
+					)
+				);
 				if ( ! empty( $pro_ids ) ) {
 					$pro_ids          = array_map( 'intval', $pro_ids );
 					$question_pro_ids = array_merge( $question_pro_ids, $pro_ids );
@@ -397,8 +424,14 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ! empty( $question_pro_ids ) ) {
 				$post_ids_paged = 0;
 				while ( true ) {
-					$question_post_ids_sql = $wpdb->prepare( 'SELECT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key = %s LIMIT %d OFFSET %d', 'question_pro_id', LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE, $post_ids_paged * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE );
-					$post_ids              = $wpdb->get_col( $question_post_ids_sql );
+					$post_ids = $wpdb->get_col(
+						$wpdb->prepare(
+							"SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = %s LIMIT %d OFFSET %d",
+							'question_pro_id',
+							LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE,
+							$post_ids_paged * LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE
+						)
+					);
 					if ( ! empty( $post_ids ) ) {
 						$post_ids          = array_map( 'intval', $post_ids );
 						$question_post_ids = array_merge( $question_post_ids, $post_ids );
@@ -473,8 +506,9 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 				if ( ! empty( $this->transient_data['skipped'] ) ) {
 					$skipped_out  = '<div class="learndash-skipped">';
 					$skipped_out .= sprintf(
-						// translators: placeholder: Number of skipper Questions.
-						esc_html_x( 'ProQuiz Questions Skipped %d', 'placeholder: Number of skipper Questions', 'learndash' ),
+						// translators: placeholder: Number of skipped Questions.
+						esc_html_x( 'ProQuiz %1$s Skipped %2$d', 'placeholder: Number of skipped Questions', 'learndash' ),
+						learndash_get_custom_label( 'questions' ),
 						count( $this->transient_data['skipped'] )
 					);
 					$skipped_out .= '<ol>';
@@ -507,9 +541,10 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 
 			if ( ( empty( $question_pro_id ) ) || ( ! isset( $this->transient_data['current_user']['user_id'] ) ) || ( $question_pro_id !== $this->transient_data['current_user']['user_id'] ) ) {
 				$this->transient_data['skipped'][ $question_pro_id ] = sprintf(
-					// translators: placeholder: ProQuiz Question ID.
-					esc_html_x( '[%d] Empty Question ProID given.', 'placeholder: ProQuiz Question ID', 'learndash' ),
-					$question_pro_id
+					// translators: placeholder: ProQuiz Question ID, question.
+					esc_html_x( '[%1$d] Empty %2$s ProID given.', 'placeholder: ProQuiz Question ID, question', 'learndash' ),
+					$question_pro_id,
+					learndash_get_custom_label_lower( 'question' )
 				);
 				return;
 			}
@@ -576,19 +611,6 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 						$question_insert_post['post_author'] = $quiz_post->post_author;
 						$question_insert_post['post_date']   = $quiz_post->post_date;
 					}
-
-					/**
-					 * If the number of associated Quiz posts is greater than one we force the
-					 * Quiz Builder settings to 'on'. Basically since there are multiple Quizzes
-					 * they will share the same Questions. Thus the 'Shared Questions' option is forced.
-					 */
-					//if ( count( $quiz_post_ids ) > 1 ) {
-					//	$quiz_builder_option['enabled'] = 'yes';
-					//	$quiz_builder_option['shared_questions'] = 'yes';
-					//	$quiz_builder_option['force_quiz_builder'] = 'yes';
-					//	$quiz_builder_option['force_shared_questions'] = 'yes';
-					//	update_option( 'learndash_settings_quizzes_builder', $quiz_builder_option );
-					//}
 				}
 				$question_insert_post    = wp_slash( $question_insert_post );
 				$question_insert_post_id = wp_insert_post( $question_insert_post );

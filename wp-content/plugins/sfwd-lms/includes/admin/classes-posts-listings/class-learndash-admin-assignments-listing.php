@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'author'          => array(
 					'type'                     => 'user',
@@ -136,6 +140,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 
 			add_filter( 'learndash_listing_selector_user_selector_query_args', array( $this, 'learndash_listing_selector_user_query_args_assignments' ), 30, 3 );
 		}
@@ -446,14 +452,16 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 							echo sprintf(
 								// translators: placeholders: Points label, points input, maximum points.
 								esc_html_x( '%1$s: %2$s / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								$points_label, $points_input, absint( $max_points )
+								$points_label, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								$points_input, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+								absint( $max_points )
 							);
 						} else {
 							$points_field = '<span class="learndash-listing-row-field-label">' . esc_html__( 'Points', 'learndash' ) . '</span>';
 							echo sprintf(
 								// translators: placeholders: Points label, current points, maximum points.
 								esc_html_x( '%1$s: %2$d / %3$d', 'placeholders: Points label, points input, maximum points', 'learndash' ),
-								$points_field,
+								$points_field, //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 								absint( $current_points ),
 								absint( $max_points )
 							);

@@ -134,10 +134,6 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 							$this->transient_data['activity_status'] = array( 'NOT_STARTED', 'IN_PROGRESS', 'COMPLETED' );
 						}
 
-						// if ( count( $this->transient_data['users_ids'] ) > 1000 ) {
-						// $this->transient_data['users_ids'] = array_slice( $this->transient_data['users_ids'], 0, 1000, true );
-						// }
-
 						$this->transient_data['total_users'] = count( $this->transient_data['users_ids'] );
 
 						$this->transient_data['course_step_totals'] = array();
@@ -405,10 +401,7 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 				$data['error_message'] = esc_html__( 'ERROR: Cannot create working folder. Check that the parent folder is writable', 'learndash' ) . ' ' . $ld_wp_upload_dir;
 				return $data;
 			}
-			file_put_contents( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php', '// nothing to see here' );
-
-			// Because we on;y want to store the relative path
-			// $ld_wp_upload_filename = str_replace( ABSPATH, '', $ld_wp_upload_filename );
+			learndash_put_directory_index_file( trailingslashit( dirname( $ld_wp_upload_filename ) ) . 'index.php' );
 
 			/**
 			 * Filters data report file path.
@@ -504,14 +497,13 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 						if ( ! empty( $completed_on ) ) {
 							$user_completed_course = true;
 						} elseif ( property_exists( $report_item, 'activity_status' ) ) {
-							if ( $report_item->activity_status == true ) {
+							if ( true === $report_item->activity_status ) {
 								$user_completed_course = true;
-							} 	
+							}
 						}
-					
-						if ( $user_completed_course == true ) {
-							// IF the user completed the course we set the user's completed steps to the number of steps in the course. 
-							// $column_value = learndash_get_course_steps_count( $report_item->post_id );
+
+						if ( true === $user_completed_course ) {
+							// IF the user completed the course we set the user's completed steps to the number of steps in the course.
 							if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
 								// error_log( 'found course_id[' . $course_id . ']' );
 								$column_value = $this->transient_data['course_step_totals'][ $course_id ];
@@ -522,9 +514,6 @@ if ( ! class_exists( 'Learndash_Admin_Data_Reports_Courses' ) ) {
 						} elseif ( ( property_exists( $report_item, 'activity_meta' ) ) && ( ! empty( $report_item->activity_meta ) ) ) {
 							if ( ( isset( $report_item->activity_meta['steps_completed'] ) ) && ( ! empty( $report_item->activity_meta['steps_completed'] ) ) ) {
 								$column_value = $report_item->activity_meta['steps_completed'];
-							
-								// $course_steps_count = learndash_get_course_steps_count( $report_item->post_id );
-								
 								if ( isset( $this->transient_data['course_step_totals'][ $course_id ] ) ) {
 									// error_log( 'found course_id[' . $course_id . ']' );
 									$course_steps_count = $this->transient_data['course_step_totals'][ $course_id ];

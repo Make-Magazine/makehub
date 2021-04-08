@@ -23,10 +23,6 @@ do_action( 'learndash-breadcrumbs-before' ); ?>
 		)
 	);
 
-	if ( is_rtl() ) {
-		$keys = array_reverse( $keys );
-	};
-
 	foreach ( $keys as $key ) :
 		if ( isset( $breadcrumbs[ $key ] ) ) :
 			?>

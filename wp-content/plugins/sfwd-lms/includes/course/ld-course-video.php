@@ -3,7 +3,8 @@
  * Handles Video Progression logic and setup.
  *
  * @package LearnDash
- * @subpackage Course Progression
+ * @subpackage Video Progression
+ * @since 2.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -602,6 +603,16 @@ if ( ! class_exists( 'Learndash_Course_Video' ) ) {
 
 						$this->video_content = '<div class="ld-video" data-video-progression="false">' . $this->video_content . '</div>';
 					}
+				} else {
+					$content = SFWD_LMS::get_template(
+						'learndash_lesson_video',
+						array(
+							'content'        => $content,
+							'video_content'  => '',
+							'video_settings' => $this->step_settings,
+							'video_data'     => $this->video_data,
+						)
+					);
 				}
 			}
 

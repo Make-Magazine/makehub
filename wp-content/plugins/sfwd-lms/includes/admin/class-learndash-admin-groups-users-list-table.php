@@ -32,9 +32,6 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		public function check_table_filters() {
 			$this->filters = array();
 
-			//echo "_GET<pre>"; print_r($_GET); echo "</pre>";
-			//echo "_POST<pre>"; print_r($_POST); echo "</pre>";
-
 			if ( ( isset( $_GET['s'] ) ) && ( ! empty( $_GET['s'] ) ) ) {
 				$this->filters['search'] = esc_attr( $_GET['s'] );
 			}
@@ -79,8 +76,6 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 		}
 
 		public function column_default( $item, $column_name ) {
-			//echo 'item<pre>'. print_r($item, true) .'</pre>';
-			//echo "column_name=[". $column_name ."]<br />";
 		}
 
 		public function column_group_name( $item ) {
@@ -269,7 +264,7 @@ if ( ! class_exists( 'Learndash_Admin_Groups_Users_List_Table' ) ) {
 				$search = array();
 
 				foreach ( (array) $q['search_terms'] as $term ) {
-					$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $wpdb->esc_like( $term ) . $n );
+					$search[] = $wpdb->prepare( "$wpdb->posts.post_title LIKE %s", $n . $term . $n );
 				}
 
 				if ( ! is_user_logged_in() ) {

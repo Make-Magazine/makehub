@@ -78,8 +78,6 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			global $sfwd_lms;
 
-			$post_settings_fields = $sfwd_lms->get_post_args_section( $this->settings_screen_id, 'fields' );
-
 			parent::load_settings_values();
 			if ( true === $this->settings_values_loaded ) {
 
@@ -644,6 +642,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 					'parent_setting' => 'lesson_video_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'video_focus_pause',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 				'lesson_video_track_time'            => array(
 					'name'           => 'lesson_video_track_time',
@@ -657,6 +665,16 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 						''   => '',
 					),
 					'parent_setting' => 'lesson_video_enabled',
+					'rest'           => array(
+						'show_in_rest' => LearnDash_REST_API::enabled(),
+						'rest_args'    => array(
+							'schema' => array(
+								'field_key' => 'video_resume',
+								'type'      => 'boolean',
+								'default'   => false,
+							),
+						),
+					),
 				),
 
 				'lesson_assignment_upload'           => array(
@@ -879,8 +897,8 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								'field_key'   => 'forced_timer_amount',
 								// translators: placeholder: Topic.
 								'description' => sprintf( esc_html_x( '%s Timer Amount.', 'placeholder: Topic', 'learndash' ), learndash_get_custom_label( 'topic' ) ),
-								'type'        => 'text',
-								'default'     => '',
+								'type'        => 'integer',
+								'default'     => 0,
 							),
 						),
 					),
@@ -896,6 +914,45 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_metabox_key );
 
 			parent::load_settings_fields();
+		}
+
+				/** This function is documented in includes/settings/class-ld-settings-metaboxes.php */
+		public function apply_metabox_settings_fields_changes( $settings_field_updates = array() ) {
+			$settings_field_values = $this->get_settings_metabox_values();
+
+			if ( ! empty( $settings_field_updates ) ) {
+				$settings_changes_only = array();
+				foreach ( $settings_field_updates as $setting_key => $setting_value ) {
+					if ( isset( $settings_field_values[ $setting_key ] ) ) {
+						$settings_changes_only[ $setting_key ] = $setting_value;
+					}
+				}
+
+				if ( ! empty( $settings_changes_only ) ) {
+					if ( ( isset( $settings_changes_only['lesson_video_enabled'] ) ) && ( 'on' === $settings_changes_only['lesson_video_enabled'] ) ) {
+						$settings_changes_only['lesson_assignment_upload']   = '';
+						$settings_changes_only['forced_lesson_time_enabled'] = '';
+					} elseif ( ( isset( $settings_changes_only['lesson_assignment_upload'] ) ) && ( 'on' === $settings_changes_only['lesson_assignment_upload'] ) ) {
+						$settings_changes_only['lesson_video_enabled']       = '';
+						$settings_changes_only['forced_lesson_time_enabled'] = '';
+					} elseif ( ( isset( $settings_changes_only['forced_lesson_time_enabled'] ) ) && ( 'on' === $settings_changes_only['forced_lesson_time_enabled'] ) ) {
+						$settings_changes_only['lesson_video_enabled']     = '';
+						$settings_changes_only['lesson_assignment_upload'] = '';
+					} else {
+						$settings_changes_only['lesson_video_enabled']       = '';
+						$settings_changes_only['lesson_assignment_upload']   = '';
+						$settings_changes_only['forced_lesson_time_enabled'] = '';
+					}
+
+					foreach ( $settings_changes_only as $setting_key => $setting_value ) {
+						if ( isset( $settings_field_values[ $setting_key ] ) ) {
+							$settings_field_values[ $setting_key ] = $setting_value;
+						}
+					}
+				}
+			}
+
+			return $settings_field_values;
 		}
 
 		/**

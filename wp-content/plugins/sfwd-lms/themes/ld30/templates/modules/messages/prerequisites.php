@@ -37,16 +37,35 @@ if ( ! empty( $prerequisite_posts_all ) ) {
 	<?php
 	$message = '<p>';
 
-	$message .= sprintf(
-		// translators: placeholders: Course, Lesson or Quiz sigular. (2) Course or Courses label.
-		esc_html_x(
-			'To take this %1$s, you need to complete the following %2$s first:',
-			'placeholders: (1) will be Course, Lesson or Quiz sigular. (2) Course sigular label',
-			'learndash'
-		),
-		$content_type,
-		esc_html( _n( learndash_get_custom_label_lower( 'course' ), learndash_get_custom_label_lower( 'courses' ), $i, 'learndash' ) )
-	);
+	$course_prereq_compare = learndash_get_setting( $current_post, 'course_prerequisite_compare' );
+
+	if ( 'ANY' === $course_prereq_compare && $i > 1 ) {
+
+		$message .= sprintf(
+			// translators: placeholders: course, courses
+			esc_html_x(
+				'To take this %1$s, you need to complete any of the following %2$s first:',
+				'placeholders: course, courses',
+				'learndash'
+			),
+			$content_type,
+			esc_html( learndash_get_custom_label_lower( 'courses' ) )
+		);
+
+	} else {
+
+		$message .= sprintf(
+			// translators: placeholders: (1) course singular, (2) course or courses.
+			esc_html_x(
+				'To take this %1$s, you need to complete the following %2$s first:',
+				'placeholders: (1) course singular, (2) course or courses',
+				'learndash'
+			),
+			$content_type,
+			esc_html( _n( learndash_get_custom_label_lower( 'course' ), learndash_get_custom_label_lower( 'courses' ), $i, 'learndash' ) )
+		);
+
+	}
 
 	if ( ! empty( $post_links ) ) {
 		$message .= ' <span class="ld-text">' . $post_links . '</span>';

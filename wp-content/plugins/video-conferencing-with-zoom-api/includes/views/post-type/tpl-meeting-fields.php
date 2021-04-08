@@ -112,6 +112,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <option value="<?php echo $user->id; ?>" <?php selected( $users[0]->id, $user->id ); ?> ><?php echo esc_html( $user->first_name ) . ' ( ' . esc_html( $user->email ) . ' )'; ?></option>
 								<?php } ?>
                             </select>
+                            <p class="vczapi-manually-hostid-wrap"><a href="javascript:void(0);" class="vczapi-admin-hostID-manually-add"><?php _e( 'User not in the list? Click here to manually enter Host.', 'video-conferencing-with-zoom-api' ); ?></a></p>
 						<?php } ?>
                         <p class="description" id="userId-description"><?php _e( 'This is host ID for the meeting (Required).', 'video-conferencing-with-zoom-api' ); ?></p>
 					<?php } else {
@@ -192,6 +193,21 @@ if ( ! defined( 'ABSPATH' ) ) {
         <td class="zvc-meetings-form">
             <input type="text" name="password" maxlength="10" data-maxlength="10" class="regular-text" value="<?php echo ! empty( $meeting_details->password ) ? esc_attr( $meeting_details->password ) : false; ?>">
             <p class="description" id="email-description"><?php _e( 'Password to join the meeting. Password may only contain the following characters: [a-z A-Z 0-9]. Max of 10 characters.( Leave blank for auto generate )', 'video-conferencing-with-zoom-api' ); ?></p>
+        </td>
+    </tr>
+    <tr>
+        <th scope="row">
+            <label for="disable-waiting-room"><?php _e( 'Disable Waiting Room', 'video-conferencing-with-zoom-api' ); ?></label></th>
+        <td>
+            <p class="description" id="disable-waiting-room">
+                <input type="checkbox"
+                       id="disable-waiting-room"
+                       name="disable-waiting-room"
+                       value="yes"
+					<?php ! empty( $meeting_fields['disable_waiting_room'] ) ? checked( 'yes', $meeting_fields['disable_waiting_room'] ) : false; ?> class="regular-text">
+				<?php _e( 'Waiting Room is enabled by default - if you want users to skip the waiting room and join the meeting directly - enable this option.' ); ?>
+                <span style="color:red"><?php _e( 'Please keep in mind anyone with the meeting link will be able to join without you allowing them into the meeting.', 'video-conferencing-with-zoom-api' ) ?></span>
+            </p>
         </td>
     </tr>
     <tr>

@@ -173,9 +173,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 
 						if ( ( isset( $_GET['course_id'] ) ) && ( ! empty( $_GET['course_id'] ) ) ) {
 							$course_id = absint( $_GET['course_id'] );
-						} //elseif ( ( isset( $GLOBALS['step_course_id'] ) ) && ( ! empty( $GLOBALS['step_course_id'] ) ) ) {
-						//	$course_id = absint( $GLOBALS['step_course_id'] );
-						//}
+						}
 						$course_id = apply_filters( 'learndash_post_link_course_id', $course_id, $post_link, $post );
 						if ( empty( $course_id ) ) {
 							return $post_link;
@@ -202,6 +200,8 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 				/** This filter is documented in includes/class-ld-permalinks.php */
 				$quizzes_cpt->rewrite['slug_alt'] = apply_filters( 'learndash_post_type_rewrite_slug', $quizzes_cpt->rewrite['slug'], learndash_get_post_type_slug( 'quiz' ) );
 
+				$draft_or_pending = in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft', 'future' ), true );
+
 				if ( $lessons_cpt->name == $post->post_type ) {
 
 					$lesson = $post;
@@ -227,7 +227,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 								$lesson_post_name = '%' . $lessons_cpt->name . '%';
 							}
 
-							if ( $wp_rewrite->using_permalinks() ) {
+							if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 								// Old URL part.
 								if ( strstr( $post_link, $lessons_cpt->rewrite['slug'] . '/' . $lesson_post_name ) ) {
 									$url_part_old = '/' . $lessons_cpt->rewrite['slug'] . '/' . $lesson_post_name;
@@ -277,7 +277,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 									$topic_post_name = '%' . $topics_cpt->name . '%';
 								}
 
-								if ( $wp_rewrite->using_permalinks() ) {
+								if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 									if ( strstr( $post_link, $topics_cpt->rewrite['slug'] . '/' . $topic_post_name ) ) {
 										$url_part_old = '/' . $topics_cpt->rewrite['slug'] . '/' . $topic_post_name;
 									} elseif ( strstr( $post_link, $topics_cpt->rewrite['slug_alt'] . '/' . $topic_post_name ) ) {
@@ -319,7 +319,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 								$quiz_post_name = '%' . $quizzes_cpt->name . '%';
 							}
 
-							if ( $wp_rewrite->using_permalinks() ) {
+							if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 								if ( strstr( $post_link, $quizzes_cpt->rewrite['slug'] . '/' . $quiz_post_name ) ) {
 									$url_part_old = '/' . $quizzes_cpt->rewrite['slug'] . '/' . $quiz_post_name;
 								} elseif ( strstr( $post_link, $quizzes_cpt->rewrite['slug_alt'] . '/' . $quiz_post_name ) ) {
@@ -351,7 +351,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 								}
 							}
 
-							if ( $wp_rewrite->using_permalinks() ) {
+							if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 								if ( ! strstr( $post_link, $courses_cpt->rewrite['slug_alt'] . '/' . $course_post_name ) ) {
 									$url_part_new .= '/' . $courses_cpt->rewrite['slug_alt'] . '/' . $course_post_name;
 								}
@@ -363,20 +363,20 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 								foreach ( $quiz_parents as $quiz_parent_id ) {
 									$quiz_parent_post = get_post( $quiz_parent_id );
 									if ( $quiz_parent_post->post_type == $lessons_cpt->name ) {
-										if ( $wp_rewrite->using_permalinks() ) {
+										if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 											$parent_slug = $lessons_cpt->rewrite['slug_alt'];
 										} else {
 											$parent_slug = $lessons_cpt->name;
 										}
 									} elseif ( $quiz_parent_post->post_type == $topics_cpt->name ) {
-										if ( $wp_rewrite->using_permalinks() ) {
+										if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 											$parent_slug = $topics_cpt->rewrite['slug_alt'];
 										} else {
 											$parent_slug = $topics_cpt->name;
 										}
 									}
 
-									if ( $wp_rewrite->using_permalinks() ) {
+									if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 										if ( ! strstr( $post_link, $parent_slug . '/' . $quiz_parent_post->post_name ) ) {
 											$url_part_new .= '/' . $parent_slug . '/' . $quiz_parent_post->post_name;
 										}
@@ -386,7 +386,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 								}
 							}
 
-							if ( $wp_rewrite->using_permalinks() ) {
+							if ( ( $wp_rewrite->using_permalinks() ) && ( ! $draft_or_pending ) ) {
 								$url_part_new .= '/' . $quizzes_cpt->rewrite['slug_alt'] . '/' . $quiz_post_name;
 							} else {
 								$url_part_new = add_query_arg( $quizzes_cpt->name, $quiz->post_name, $url_part_new );
@@ -397,7 +397,7 @@ if ( ! class_exists( 'LearnDash_Permalinks' ) ) {
 			}
 
 			if ( ( ! empty( $url_part_new ) ) && ( ! empty( $url_part_old ) ) && ( $url_part_old !== $url_part_new ) ) {
-				if ( ! $wp_rewrite->using_permalinks() ) {
+				if ( ( ! $wp_rewrite->using_permalinks() ) || ( $draft_or_pending ) ) {
 					$url_part_old = str_replace( '?', '', $url_part_old );
 					$url_part_new = str_replace( '?', '', $url_part_new );
 

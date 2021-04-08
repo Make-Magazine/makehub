@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exists( 'LD_REST_Users_Controller_V1' ) ) ) {
 	class LD_REST_Courses_Users_Controller_V1 extends LD_REST_Users_Controller_V1 {
 
@@ -43,7 +47,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => esc_html__( 'Course ID.', 'learndash' ),
+							// translators: course
+							'description' => sprintf( esc_html_x( '%s ID.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),
@@ -60,7 +65,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'update_courses_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								'description' => esc_html__( 'User IDs to enroll into Course. Limit 50 per request.', 'learndash' ),
+								// translators: course
+								'description' => sprintf( esc_html_x( 'User IDs to enroll into %s. Limit 50 per request.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -75,7 +81,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 						'permission_callback' => array( $this, 'delete_courses_users_permissions_check' ),
 						'args'                => array(
 							'user_ids' => array(
-								'description' => esc_html__( 'User IDs to remove from Group. Limit 50 per request.', 'learndash' ),
+								// translators: group
+								'description' => sprintf( esc_html_x( 'User IDs to remove from %s. Limit 50 per request.', 'placeholder: group', 'learndash' ), learndash_get_custom_label_lower( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -143,7 +150,19 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 		public function update_courses_users( $request ) {
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$user_ids = $request['user_ids'];
@@ -171,7 +190,19 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 		public function delete_courses_users( $request ) {
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$user_ids = $request['user_ids'];
@@ -200,7 +231,19 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V1' ) ) && ( class_exis
 
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			if ( is_user_logged_in() ) {

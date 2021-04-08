@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576
+class ComposerStaticInita98f7aea1063a809e780866bd2d58374
 {
     public static $files = array (
         '3235689ae520774249788ae5d5475c84' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/functions_include.php',
@@ -16,12 +16,19 @@ class ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576
         '164b067373632bcad8fd2c4a76f967ae' => __DIR__ . '/../..' . '/ac_vendor/ralouphie/getallheaders/src/getallheaders.php',
         '20ddbdbd63dafc3c360138290a64edba' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/bootstrap.php',
         '4307e8dc0ef699f143325f0c0348cea1' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72/bootstrap.php',
+        '28104acdf3bfc9663563c771afe3cb2b' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-normalizer/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
+        'B' => 
+        array (
+            'Brick\\Money\\' => 12,
+            'Brick\\Math\\' => 11,
+        ),
         'A' => 
         array (
             'AcVendor\\Symfony\\Polyfill\\Php72\\' => 32,
+            'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\' => 42,
             'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\' => 35,
             'AcVendor\\Psr\\Log\\' => 17,
             'AcVendor\\Psr\\Http\\Message\\' => 26,
@@ -37,9 +44,21 @@ class ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576
     );
 
     public static $prefixDirsPsr4 = array (
+        'Brick\\Money\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/money/src',
+        ),
+        'Brick\\Math\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/brick/math/src',
+        ),
         'AcVendor\\Symfony\\Polyfill\\Php72\\' => 
         array (
             0 => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72',
+        ),
+        'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        array (
+            0 => '/ac_vendor/symfony/polyfill-intl-normalizer',
         ),
         'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\' => 
         array (
@@ -308,6 +327,7 @@ class ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576
         'Activecampaign_For_Woocommerce_Interacts_With_Api' => __DIR__ . '/../..' . '/includes/traits/class-activecampaign-for-woocommerce-interacts-with-api-trait.php',
         'Activecampaign_For_Woocommerce_Loader' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-loader.php',
         'Activecampaign_For_Woocommerce_Logger' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-logger.php',
+        'Activecampaign_For_Woocommerce_Order_Finished_Event' => __DIR__ . '/../..' . '/includes/events/class-activecampaign-for-woocommerce-order-finished-event.php',
         'Activecampaign_For_Woocommerce_Public' => __DIR__ . '/../..' . '/public/class-activecampaign-for-woocommerce-public.php',
         'Activecampaign_For_Woocommerce_Repository_Interface' => __DIR__ . '/../..' . '/includes/repositories/interfaces/class-activecampaign-for-woocommerce-repository-interface.php',
         'Activecampaign_For_Woocommerce_Request_Id_Service' => __DIR__ . '/../..' . '/includes/services/class-activecampaign-for-woocommerce-request-id-service.php',
@@ -319,15 +339,56 @@ class ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576
         'Activecampaign_For_Woocommerce_Uninstall_Plugin_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-uninstall-plugin-command.php',
         'Activecampaign_For_Woocommerce_Update_Cart_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-update-cart-command.php',
         'Activecampaign_For_Woocommerce_User_Meta_Service' => __DIR__ . '/../..' . '/includes/services/class-activecampaign-for-woocommerce-user-meta-service.php',
+        'Activecampaign_For_Woocommerce_User_Registered_Event' => __DIR__ . '/../..' . '/includes/events/class-activecampaign-for-woocommerce-user-registered-event.php',
+        'Brick\\Math\\BigDecimal' => __DIR__ . '/..' . '/brick/math/src/BigDecimal.php',
+        'Brick\\Math\\BigInteger' => __DIR__ . '/..' . '/brick/math/src/BigInteger.php',
+        'Brick\\Math\\BigNumber' => __DIR__ . '/..' . '/brick/math/src/BigNumber.php',
+        'Brick\\Math\\BigRational' => __DIR__ . '/..' . '/brick/math/src/BigRational.php',
+        'Brick\\Math\\Exception\\DivisionByZeroException' => __DIR__ . '/..' . '/brick/math/src/Exception/DivisionByZeroException.php',
+        'Brick\\Math\\Exception\\IntegerOverflowException' => __DIR__ . '/..' . '/brick/math/src/Exception/IntegerOverflowException.php',
+        'Brick\\Math\\Exception\\MathException' => __DIR__ . '/..' . '/brick/math/src/Exception/MathException.php',
+        'Brick\\Math\\Exception\\NegativeNumberException' => __DIR__ . '/..' . '/brick/math/src/Exception/NegativeNumberException.php',
+        'Brick\\Math\\Exception\\NumberFormatException' => __DIR__ . '/..' . '/brick/math/src/Exception/NumberFormatException.php',
+        'Brick\\Math\\Exception\\RoundingNecessaryException' => __DIR__ . '/..' . '/brick/math/src/Exception/RoundingNecessaryException.php',
+        'Brick\\Math\\Internal\\Calculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator.php',
+        'Brick\\Math\\Internal\\Calculator\\BcMathCalculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator/BcMathCalculator.php',
+        'Brick\\Math\\Internal\\Calculator\\GmpCalculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator/GmpCalculator.php',
+        'Brick\\Math\\Internal\\Calculator\\NativeCalculator' => __DIR__ . '/..' . '/brick/math/src/Internal/Calculator/NativeCalculator.php',
+        'Brick\\Math\\RoundingMode' => __DIR__ . '/..' . '/brick/math/src/RoundingMode.php',
+        'Brick\\Money\\AbstractMoney' => __DIR__ . '/..' . '/brick/money/src/AbstractMoney.php',
+        'Brick\\Money\\Context' => __DIR__ . '/..' . '/brick/money/src/Context.php',
+        'Brick\\Money\\Context\\AutoContext' => __DIR__ . '/..' . '/brick/money/src/Context/AutoContext.php',
+        'Brick\\Money\\Context\\CashContext' => __DIR__ . '/..' . '/brick/money/src/Context/CashContext.php',
+        'Brick\\Money\\Context\\CustomContext' => __DIR__ . '/..' . '/brick/money/src/Context/CustomContext.php',
+        'Brick\\Money\\Context\\DefaultContext' => __DIR__ . '/..' . '/brick/money/src/Context/DefaultContext.php',
+        'Brick\\Money\\Currency' => __DIR__ . '/..' . '/brick/money/src/Currency.php',
+        'Brick\\Money\\CurrencyConverter' => __DIR__ . '/..' . '/brick/money/src/CurrencyConverter.php',
+        'Brick\\Money\\Exception\\CurrencyConversionException' => __DIR__ . '/..' . '/brick/money/src/Exception/CurrencyConversionException.php',
+        'Brick\\Money\\Exception\\MoneyException' => __DIR__ . '/..' . '/brick/money/src/Exception/MoneyException.php',
+        'Brick\\Money\\Exception\\MoneyMismatchException' => __DIR__ . '/..' . '/brick/money/src/Exception/MoneyMismatchException.php',
+        'Brick\\Money\\Exception\\UnknownCurrencyException' => __DIR__ . '/..' . '/brick/money/src/Exception/UnknownCurrencyException.php',
+        'Brick\\Money\\ExchangeRateProvider' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider.php',
+        'Brick\\Money\\ExchangeRateProvider\\BaseCurrencyProvider' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/BaseCurrencyProvider.php',
+        'Brick\\Money\\ExchangeRateProvider\\CachedProvider' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/CachedProvider.php',
+        'Brick\\Money\\ExchangeRateProvider\\ConfigurableProvider' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/ConfigurableProvider.php',
+        'Brick\\Money\\ExchangeRateProvider\\PDOProvider' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/PDOProvider.php',
+        'Brick\\Money\\ExchangeRateProvider\\PDOProviderConfiguration' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/PDOProviderConfiguration.php',
+        'Brick\\Money\\ExchangeRateProvider\\ProviderChain' => __DIR__ . '/..' . '/brick/money/src/ExchangeRateProvider/ProviderChain.php',
+        'Brick\\Money\\ISOCurrencyProvider' => __DIR__ . '/..' . '/brick/money/src/ISOCurrencyProvider.php',
+        'Brick\\Money\\Money' => __DIR__ . '/..' . '/brick/money/src/Money.php',
+        'Brick\\Money\\MoneyBag' => __DIR__ . '/..' . '/brick/money/src/MoneyBag.php',
+        'Brick\\Money\\MoneyComparator' => __DIR__ . '/..' . '/brick/money/src/MoneyComparator.php',
+        'Brick\\Money\\MoneyContainer' => __DIR__ . '/..' . '/brick/money/src/MoneyContainer.php',
+        'Brick\\Money\\RationalMoney' => __DIR__ . '/..' . '/brick/money/src/RationalMoney.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitaa4e689f03dfdbcafbad4baf21397576::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInita98f7aea1063a809e780866bd2d58374::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInita98f7aea1063a809e780866bd2d58374::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInita98f7aea1063a809e780866bd2d58374::$classMap;
 
         }, null, ClassLoader::class);
     }

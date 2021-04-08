@@ -234,10 +234,10 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 							if ( ( is_array( $response ) ) && ( wp_remote_retrieve_response_code( $response ) == '200' ) ) {
 								$response_body = wp_remote_retrieve_body( $response );
 								if ( ! empty( $response_body ) ) {
-									$fp = fopen( $dest_filename, 'w+' );
+									$fp = fopen( $dest_filename, 'w+' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 									if ( false !== $fp ) {
-										fwrite( $fp, $response_body );
-										fclose( $fp );
+										fwrite( $fp, $response_body ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+										fclose( $fp ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 										$reply_data['status']  = true;
 										$reply_data['message'] = '<p>' . sprintf(
 											// translators: placeholders: Language Name, Language code.
@@ -263,14 +263,14 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 			if ( ! empty( $project_slug ) ) {
 				$pot_filename = self::get_language_directory( $project_slug, false ) . '' . $project_slug . '.pot';
 				if ( file_exists( $pot_filename ) ) {
-					$pot_file_contents = file_get_contents( $pot_filename );
+					$pot_file_contents = file_get_contents( $pot_filename ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
 					header( 'Content-type: text/x-gettext-translation' );
 					header( 'Content-Length: ' . strlen( $pot_file_contents ) );
 					header( 'Cache-Control: no-cache, must-revalidate' );
 					header( 'Pragma: no-cache' );
 					header( 'Expires: 0' );
-					header( 'Content-Disposition: attachment; filename="' . basename( $pot_filename ) . '"; modification-date="' . date( 'r' ) . '";' );
+					header( 'Content-Disposition: attachment; filename="' . basename( $pot_filename ) . '"; modification-date="' . date( 'r' ) . '";' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 					echo $pot_file_contents; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 					die();
 				}
@@ -289,14 +289,14 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 					$installed_set = $installed_translations[ $locale_slug ];
 					$po_filename   = self::get_language_directory( $project_slug, false ) . $installed_set['po'];
 					if ( file_exists( $po_filename ) ) {
-						$po_file_contents = file_get_contents( $po_filename );
+						$po_file_contents = file_get_contents( $po_filename ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
 
 						header( 'Content-type: text/x-gettext-translation' );
 						header( 'Content-Length: ' . strlen( $po_file_contents ) );
 						header( 'Cache-Control: no-cache, must-revalidate' );
 						header( 'Pragma: no-cache' );
 						header( 'Expires: 0' );
-						header( 'Content-Disposition: attachment; filename="' . basename( $po_filename ) . '"; modification-date="' . date( 'r' ) . '";' );
+						header( 'Content-Disposition: attachment; filename="' . basename( $po_filename ) . '"; modification-date="' . date( 'r' ) . '";' ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
 						echo $po_file_contents; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML.
 						die();
 					}
@@ -336,10 +336,10 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 							if ( ( is_array( $response ) ) && ( wp_remote_retrieve_response_code( $response ) == '200' ) ) {
 								$response_body = wp_remote_retrieve_body( $response );
 								if ( ! empty( $response_body ) ) {
-									$fp = fopen( $dest_filename, 'w+' );
+									$fp = fopen( $dest_filename, 'w+' ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fopen
 									if ( false !== $fp ) {
-										fwrite( $fp, $response_body );
-										fclose( $fp );
+										fwrite( $fp, $response_body ); //phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fwrite
+										fclose( $fp );  // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_read_fclose
 										$reply_data['status']  = true;
 										$reply_data['message'] = '<p>' . sprintf(
 											// translators: placeholders: Language Name, Language code.
@@ -721,7 +721,7 @@ if ( ! class_exists( 'LearnDash_Translations' ) ) {
 
 			if ( ! empty( $project_slug ) ) {
 
-				$languages_plugins_dir    = $translations_dir = self::get_language_directory( $project_slug, false );
+				$languages_plugins_dir    = self::get_language_directory( $project_slug, false );
 				$languages_plugins_dir_mo = $languages_plugins_dir . $project_slug . '-*.mo';
 
 				$mo_files = glob( $languages_plugins_dir_mo );

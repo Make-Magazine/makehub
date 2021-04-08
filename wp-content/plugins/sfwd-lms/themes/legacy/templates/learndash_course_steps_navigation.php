@@ -14,6 +14,10 @@
  * @package LearnDash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $learndash_previous_nav = learndash_previous_post_link();
 $learndash_next_nav     = '';
 

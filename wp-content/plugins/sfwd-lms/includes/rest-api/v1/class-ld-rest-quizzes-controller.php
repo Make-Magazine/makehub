@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Quizzes_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -56,7 +60,11 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => esc_html__( 'Unique identifier for the Quiz object.', 'learndash' ),
+							'description' => sprintf(
+								// translators: quiz
+								esc_html_x( 'Unique identifier for the %s object.', 'placeholder: quiz', 'learndash' ),
+								learndash_get_custom_label_lower( 'quiz' )
+							),
 							'type'        => 'integer',
 						),
 					),
@@ -122,15 +130,16 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 			if ( ! isset( $query_params['lesson'] ) ) {
 				$query_params['lesson'] = array(
 					'description' => sprintf(
-						// translators: placeholder: lesson, course, quizzes.
+						// translators: placeholder: lesson, course, quizzes, course.
 						esc_html_x(
-							'Limit results to be within a specific %1$s. Pass zero to show global %2$s %3$s. Must be used with course parameter.',
-							'placeholder: lesson, course, quizzes',
+							'Limit results to be within a specific %1$s. Pass zero to show global %2$s %3$s. Must be used with %4$s parameter.',
+							'placeholder: lesson, course, quizzes, course',
 							'learndash'
 						),
 						LearnDash_Custom_Label::get_label( 'lesson' ),
 						LearnDash_Custom_Label::get_label( 'course' ),
-						LearnDash_Custom_Label::get_label( 'quizzes' )
+						LearnDash_Custom_Label::get_label( 'quizzes' ),
+						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'type'        => 'integer',
 				);
@@ -138,13 +147,14 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 			if ( ! isset( $query_params['topic'] ) ) {
 				$query_params['topic'] = array(
 					'description' => sprintf(
-						// translators: placeholder: topic.
+						// translators: placeholder: topic, course.
 						esc_html_x(
-							'Limit results to be within a specific %s. Must be used with course parameter.',
-							'placeholder: topic',
+							'Limit results to be within a specific %1$s. Must be used with %2$s parameter.',
+							'placeholder: topic, course',
 							'learndash'
 						),
-						LearnDash_Custom_Label::get_label( 'topic' )
+						LearnDash_Custom_Label::get_label( 'topic' ),
+						LearnDash_Custom_Label::get_label( 'course' )
 					),
 					'type'        => 'integer',
 				);
@@ -181,7 +191,19 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 					// check the step is part of that course.
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
@@ -215,7 +237,19 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 				if ( ! empty( $course_id ) ) {
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
@@ -223,7 +257,19 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 				if ( ! empty( $lesson_id ) ) {
 					$this->lesson_post = get_post( $lesson_id );
 					if ( ( ! $this->lesson_post ) || ( ! is_a( $this->lesson_post, 'WP_Post' ) ) || ( 'sfwd-lessons' !== $this->lesson_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Lesson ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: Lesson.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: Lesson',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'lesson' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
@@ -231,23 +277,71 @@ if ( ( ! class_exists( 'LD_REST_Quizzes_Controller_V1' ) ) && ( class_exists( 'L
 				if ( ! empty( $topic_id ) ) {
 					$this->topic_post = get_post( $topic_id );
 					if ( ( ! $this->topic_post ) || ( ! is_a( $this->topic_post, 'WP_Post' ) ) || ( 'sfwd-topic' !== $this->topic_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Topic ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: Topic.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: Topic',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'topic' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
 				if ( ! learndash_is_admin_user() ) {
 					if ( $this->topic_post ) {
 						if ( ! $this->course_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+							return new WP_Error(
+								'rest_post_invalid_id',
+								sprintf(
+									// translators: placeholder: Course.
+									esc_html_x(
+										'Invalid %s ID.',
+										'placeholder: Course',
+										'learndash'
+									),
+									LearnDash_Custom_Label::get_label( 'course' )
+								),
+								array( 'status' => 404 )
+							);
 						}
 
 						if ( ! $this->lesson_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+							return new WP_Error(
+								'rest_post_invalid_id',
+								sprintf(
+									// translators: placeholder: Course.
+									esc_html_x(
+										'Invalid %s ID.',
+										'placeholder: Course',
+										'learndash'
+									),
+									LearnDash_Custom_Label::get_label( 'course' )
+								),
+								array( 'status' => 404 )
+							);
 						}
 					}
 					if ( $this->lesson_post ) {
 						if ( ! $this->course_post ) {
-							return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+							return new WP_Error(
+								'rest_post_invalid_id',
+								sprintf(
+									// translators: placeholder: Course.
+									esc_html_x(
+										'Invalid %s ID.',
+										'placeholder: Course',
+										'learndash'
+									),
+									LearnDash_Custom_Label::get_label( 'course' )
+								),
+								array( 'status' => 404 )
+							);
 						}
 					}
 

@@ -286,11 +286,12 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			}
 
 			$data['progress_label'] = sprintf(
-				// translators: placeholders: result count, total count.
-				esc_html_x( '%1$s: %2$d of %3$d Courses', 'placeholders: progress status, result count, total count', 'learndash' ),
+				// translators: placeholders: result count, total count, Courses.
+				esc_html_x( '%1$s: %2$d of %3$d %4$s', 'placeholders: progress status, result count, total count, Courses', 'learndash' ),
 				$progress_status,
 				$data['result_count'],
-				$data['total_count']
+				$data['total_count'],
+				learndash_get_custom_label( 'courses' )
 			);
 
 			return $data;
@@ -425,21 +426,17 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			if ( ! empty( $course_id ) ) {
 				$course_access_list_setting = learndash_get_setting( $course_id, 'course_access_list' );
 				$course_access_list_setting = learndash_convert_course_access_list( $course_access_list_setting, true );
-				//error_log('course_access_list_setting<pre>'. print_r($course_access_list_setting, true) .'</pre>');
 
 				$course_access_list_post_meta = get_post_meta( $course_id, 'course_access_list', true );
 				$course_access_list_post_meta = learndash_convert_course_access_list( $course_access_list_post_meta, true );
-				//error_log('course_access_list_post_meta<pre>'. print_r($course_access_list_post_meta, true) .'</pre>');
 
 				$course_access_list_user_meta = learndash_get_course_users_access_from_meta( $course_id );
 				$course_access_list_user_meta = learndash_convert_course_access_list( $course_access_list_user_meta, true );
-				//error_log('course_access_list_user_meta<pre>'. print_r($course_access_list_user_meta, true) .'</pre>');
 
 				$course_access_list = array_merge( $course_access_list_setting, $course_access_list_post_meta, $course_access_list_user_meta );
 				$course_access_list = array_unique( $course_access_list );
 				if ( ! empty( $course_access_list ) ) {
 					asort( $course_access_list );
-					//error_log('course_access_list<pre>'. print_r($course_access_list, true) .'</pre>');
 				}
 			}
 			return $course_access_list;
@@ -448,7 +445,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		private function get_course_activity_access_for_user( $course_id = 0, $user_id = 0 ) {
 			global $wpdb;
 			if ( ( ! empty( $course_id ) ) && ( ! empty( $user_id ) ) ) {
-				$sql_str      = $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE activity_type=%s AND user_id = %d AND ( post_id = %d OR course_id = %d )', 'access', $user_id, $course_id, $course_id );
+				$sql_str      = $wpdb->prepare( 'SELECT * FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND user_id = %d AND ( post_id = %d OR course_id = %d )', 'access', $user_id, $course_id, $course_id );
 				$activity_row = $wpdb->get_row( $sql_str, ARRAY_A );
 				return $activity_row;
 			}
@@ -458,7 +455,7 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ( ! empty( $course_id ) ) && ( ! empty( $user_ids ) ) ) {
-				$sql_str  = $wpdb->prepare( 'SELECT activity_id FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE activity_type=%s AND ( post_id = %d OR course_id = %d )', 'access', $course_id, $course_id );
+				$sql_str  = $wpdb->prepare( 'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_type=%s AND ( post_id = %d OR course_id = %d )', 'access', $course_id, $course_id );
 				$user_ids = array_map( 'absint', $user_ids );
 				$sql_str .= 'AND user_id NOT IN (' . implode( ',', $user_ids ) . ')';
 

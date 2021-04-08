@@ -16,26 +16,11 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	RangeControl,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-course-info',
@@ -151,7 +136,7 @@ registerBlockType(
 					/>
 					<ToggleControl
 						// translators: placeholder: Course.
-						label={sprintf(_x('Show %s Progess', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
+						label={sprintf(_x('Show %s Progress', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
 						checked={!!progress_show}
 						onChange={progress_show => setAttributes({ progress_show })}
 					/>

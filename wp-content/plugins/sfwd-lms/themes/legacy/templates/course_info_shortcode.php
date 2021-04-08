@@ -17,6 +17,10 @@
  * Course registered
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 global $pagenow;
 
 $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
@@ -24,13 +28,13 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 <div id="ld_course_info" class="ld_course_info" data-shortcode-atts="<?php echo $shortcode_atts_json; ?>">
 
 	<!-- Course info shortcode -->
-	<?php if ( ( $pagenow != 'profile.php' ) && ( $pagenow != 'user-edit.php' ) ) { ?>
+	<?php if ( ( 'profile.php' !== $pagenow ) && ( 'user-edit.php' !== $pagenow ) ) { ?>
 		<?php if ( $courses_registered ) : ?>
 			<div id='ld_course_info_mycourses_list' class="ld_course_info_mycourses_list">
 				<h4>
 				<?php
 				// translators: placeholder: courses.
-				echo sprintf( _x( 'You are registered for the following %s', 'placeholder: courses', 'learndash' ), learndash_get_custom_label_lower( 'courses' ) );
+				echo sprintf( esc_html_x( 'You are registered for the following %s', 'placeholder: courses', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'courses' ) ) );
 				?>
 				</h4>
 				<div class="ld-courseregistered-content-container">
@@ -73,7 +77,7 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 	if ( is_admin() ) {
 		$current_screen = get_current_screen();
 
-		if ( ( $pagenow == 'profile.php' ) || ( $pagenow == 'user-edit.php' ) || ( $current_screen->id == 'learndash-lms_page_group_admin_page' ) ) {
+		if ( ( 'profile.php' === $pagenow ) || ( 'user-edit.php' === $pagenow ) || ( 'learndash-lms_page_group_admin_page' === $current_screen->id ) ) {
 			echo do_shortcode( '[ld_user_course_points user_id="' . $user_id . '" context="profile"]' );
 
 			if ( ( learndash_is_admin_user() ) || ( ( learndash_is_group_leader_user() ) && ( learndash_is_group_leader_of_user( get_current_user_id(), $user_id ) ) ) ) {
@@ -81,7 +85,7 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 					<p><label for="learndash-course-points-user"><strong>
 					<?php
 					// translators: placeholder: Course.
-					printf( _x( 'Extra %s points', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
+					printf( esc_html_x( 'Extra %s points', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					?>
 					</strong></label> <input id="learndash-course-points-user" name="learndash_course_points" type="number" min="0" step="any" value="<?php echo learndash_format_course_points( get_user_meta( $user_id, 'course_points', true ) ); ?>" /><?php } ?></p>
 					<?php
@@ -94,23 +98,23 @@ $shortcode_atts_json = htmlspecialchars( wp_json_encode( $shortcode_atts ) );
 			<h4>
 			<?php
 			// translators: placeholder: Course.
-			printf( _x( '%s progress details:', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
+			printf( esc_html_x( '%s progress details:', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			?>
 			</h4>
 			<?php
 			if ( learndash_show_user_course_complete( $user_id ) ) {
 				?>
-					<input type="hidden" id="user-progress-<?php echo $user_id; ?>" name="user_progress[<?php echo $user_id; ?>]" value="<?php echo htmlspecialchars( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
-						wp_json_encode(
-							array(
-								'course' => array(),
-								'quiz'   => array(),
-							),
-							JSON_FORCE_OBJECT
-						)
-					); ?>" /> <?php // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
-					<input type="hidden" name="user_progress-<?php echo $user_id; ?>-nonce" value="<?php echo wp_create_nonce( 'user_progress-' . $user_id ); ?>" />
-					<?php
+			<input type="hidden" id="user-progress-<?php echo esc_attr( $user_id ); ?>" name="user_progress[<?php echo (int) $user_id; ?>]" value="<?php echo htmlspecialchars( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+				wp_json_encode(
+					array(
+						'course' => array(),
+						'quiz'   => array(),
+					),
+					JSON_FORCE_OBJECT
+				)
+			); ?>" /> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+			<input type="hidden" name="user_progress-<?php echo esc_attr( $user_id ); ?>-nonce" value="<?php echo esc_attr( wp_create_nonce( 'user_progress-' . $user_id ) ); ?>" />
+				<?php
 			}
 			?>
 				<div class="ld-course-progress-content-container">

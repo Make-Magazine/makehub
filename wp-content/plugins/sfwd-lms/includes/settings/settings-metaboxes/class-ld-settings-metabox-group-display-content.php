@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Group_Display_Content' ) ) ) {
 	/**
 	 * Class to create the settings section.
@@ -195,6 +199,19 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 								'description' => esc_html__( 'Materials', 'learndash' ),
 								'type'        => 'string',
 								'default'     => '',
+								'properties'  => array(
+									'raw'      => array(
+										'description' => 'Content for the object, as it exists in the database.',
+										'type'        => 'string',
+										'context'     => array( 'edit' ),
+									),
+									'rendered' => array(
+										'description' => 'HTML content for the object, transformed for display.',
+										'type'        => 'string',
+										'context'     => array( 'view', 'edit' ),
+										'readonly'    => true,
+									),
+								),
 							),
 						),
 					),
