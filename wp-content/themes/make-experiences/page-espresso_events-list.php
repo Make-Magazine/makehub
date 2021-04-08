@@ -1,26 +1,10 @@
 <?php
 /**
- * The template for displaying archive pages
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/
- *
- * @package BuddyBoss_Theme
+ * Template Name: Event List pages
  */
 
 get_header();
 
-$blog_type = 'standard'; // standard, grid, masonry.
-$blog_type = apply_filters( 'bb_blog_type', $blog_type );
-
-$class = '';
-
-if ( 'masonry' === $blog_type ) {
-	$class = 'bb-masonry';
-} elseif ( 'grid' === $blog_type ) {
-	$class = 'bb-grid';
-} else {
-	$class = 'bb-standard';
-}
 ?>
 
 <div id="primary" class="content-area">
@@ -28,24 +12,18 @@ if ( 'masonry' === $blog_type ) {
 
 		<?php if ( have_posts() ) : ?>
 			<header class="page-header">
-				<?php
-				the_archive_title( '<h1 class="page-title">', '</h1>' );
-				the_archive_description( '<div class="archive-description">', '</div>' );
-				?>
+				<h1 class="page-title"><?php echo get_the_title(); ?></h1>
 			</header><!-- .page-header -->
         
 
-			<div class="post-grid <?php echo esc_attr( $class ); ?>">
+			<div class="events-list">
 
-				<?php if ( 'masonry' === $blog_type ) { ?>
-					<div class="bb-masonry-sizer"></div>
-				<?php } ?>
 
 				<?php
 				/* Start the Loop */
-				while ( have_posts() ) :
-					the_post();
-
+				$args = array( 'post_type' => 'espresso_events' );
+				$loop = new WP_Query( $args );
+				while ( $loop->have_posts() ) : $loop->the_post();
 					/*
 					 * Include the Post-Format-specific template for the content.
 					 * If you want to override this in a child theme, then include a file

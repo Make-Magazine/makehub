@@ -77,3 +77,15 @@ function register_taxonomy_event_type() {
 	register_taxonomy( 'event_types', array('espresso_events'), $args );
 }
 add_action( 'init', 'register_taxonomy_event_type' );
+
+// Disable the default archive page
+add_filter(
+    'FHEE__EE_Register_CPTs__get_CPTs__cpts',
+    'ee_remove_event_cpt_archive'
+);
+function ee_remove_event_cpt_archive( $cpt_registry_array ) {
+    if ( isset( $cpt_registry_array['espresso_events'] ) ) {
+        $cpt_registry_array['espresso_events']['args']['has_archive'] = false;
+    }
+    return $cpt_registry_array;
+}
