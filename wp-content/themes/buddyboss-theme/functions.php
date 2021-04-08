@@ -116,3 +116,10 @@ if ( ! function_exists( 'wp_body_open' ) ) {
 		do_action( 'wp_body_open' );
 	}
 }
+
+/**
+ * Load deprecated functions.
+ */
+require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-filters.php';
+require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-hooks.php';
+require_once trailingslashit( get_template_directory() ) . 'inc/core/deprecated/deprecated-functions.php';

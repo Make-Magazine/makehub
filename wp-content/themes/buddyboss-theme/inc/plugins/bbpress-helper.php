@@ -186,15 +186,15 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 				add_filter( 'bbp_get_reply_content', 'bbp_make_clickable', 4 );
 			}
 
-		    if ( function_exists( 'bp_media_forums_embed_attachments' ) ) {
+		    if ( function_exists( 'bp_media_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments' ) ) {
 			    add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
 		    }
 
-		    if ( function_exists( 'bp_document_forums_embed_attachments' ) ) {
+		    if ( function_exists( 'bp_document_forums_embed_attachments' ) && ! has_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments' ) ) {
 			    add_filter( 'bbp_get_reply_content', 'bp_document_forums_embed_attachments', 999, 2 );
 		    }
 
-		    if ( function_exists( 'bp_media_forums_embed_gif' ) ) {
+		    if ( function_exists( 'bp_media_forums_embed_gif' ) && ! has_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif' ) ) {
 			    add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_gif', 999, 2 );
 		    }
 

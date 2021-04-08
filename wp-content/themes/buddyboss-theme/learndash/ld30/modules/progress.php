@@ -24,6 +24,14 @@ if( $context !== 'topic' ) {
 
     $progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_course_progress( $progress_args ) );
 
+    if( empty ( $progress ) ) {
+        $progress = array (
+            'percentage' =>  0,
+            'completed'  =>  0,
+            'total'      =>  0,
+        );
+    }
+
 } else {
     global $post;
     $progress = apply_filters( 'learndash-' . $context . '-progress-stats', learndash_lesson_progress( $post, $course_id ) );
@@ -59,7 +67,8 @@ if($progress):
                         );
                         $course_activity = learndash_get_user_activity( $course_args );
                         if( $course_activity && $context === 'course' ) {
-	                        $date_time_display = get_date_from_gmt( date('Y-m-d H:i:s', $course_activity->activity_updated ), 'Y-m-d H:i:s' );
+	                        $last_activity     = ! empty ( $course_activity->activity_updated ) ? $course_activity->activity_updated : $course_activity->activity_started;
+	                        $date_time_display = get_date_from_gmt( date('Y-m-d H:i:s', $last_activity ), 'Y-m-d H:i:s' );
 	                        echo sprintf( esc_html_x( 'Last activity on %s', 'Last activity date in infobar', 'buddyboss-theme' ), date_i18n( get_option( 'date_format' ), strtotime( $date_time_display ) ) );
                         } else {
 	                        echo sprintf( __( '%s/%s Steps', 'buddyboss-theme' ), $progress['completed'], $progress['total'] );

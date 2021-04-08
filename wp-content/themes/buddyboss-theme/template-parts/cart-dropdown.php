@@ -3,10 +3,13 @@
         <span data-balloon-pos="down" data-balloon="<?php _e( 'Cart', 'buddyboss-theme' ); ?>">
 			<i class="bb-icon-shopping-cart"></i>
             <?php
-            $wc_cart_count = wc()->cart->get_cart_contents_count();
-            if( $wc_cart_count != 0 ) { ?>
-                <span class="count"><?php echo wc()->cart->get_cart_contents_count(); ?></span>
-            <?php } ?>
+            if ( is_object( WC()->cart ) ) {
+             $wc_cart_count = wc()->cart->get_cart_contents_count();
+             if( $wc_cart_count != 0 ) { ?>
+                 <span class="count"><?php echo wc()->cart->get_cart_contents_count(); ?></span>
+             <?php }
+            }
+            ?>
         </span>
 	</a>
     <section class="notification-dropdown">
@@ -14,7 +17,11 @@
             <h2 class="title"><?php _e( 'Cart', 'buddyboss-theme' ); ?></h2>
         </header>
         <div class="header-mini-cart">
-            <?php woocommerce_mini_cart(); ?>
+            <?php
+            if ( is_object( WC()->cart ) ) {
+	            woocommerce_mini_cart();
+            }
+            ?>
         </div>
     </section>
 </div>

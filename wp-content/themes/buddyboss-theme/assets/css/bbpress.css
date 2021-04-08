@@ -1720,13 +1720,6 @@ body:not(.logged-in) .bbp-form-fields-bottom-wrap.bb-tags-field-container {
 #bbp_editor_reply_content > p:last-child {
   margin-bottom: 0 !important; }
 
-.more-actions .appbosscm-moderation-button-wrap {
-  display: block; }
-  .more-actions .appbosscm-moderation-button-wrap a.appbosscm-report-button {
-    color: inherit;
-    margin-bottom: -3px;
-    margin-top: 3px; }
-
 @media (max-width: 680px) {
   .bb-search-title-head {
     -ms-flex-flow: row wrap;
@@ -2938,31 +2931,6 @@ div#bbpress-forums:after {
     padding-right: 5px; }
     .bbpress-sidebar .widget_tag_cloud .tagcloud a:hover {
       color: #007CFF; }
-
-#buddypress .bs-dropdown .appbosscm-moderation-button-wrap {
-  padding-top: 5px;
-  margin-bottom: -3px; }
-  #buddypress .bs-dropdown .appbosscm-moderation-button-wrap .appbosscm-report-button {
-    margin: 0;
-    padding: 9px 15px;
-    display: block;
-    text-align: left;
-    color: #4D5C6D;
-    opacity: 1;
-    border: 0;
-    font-size: 13px;
-    line-height: 1;
-    font-weight: inherit;
-    letter-spacing: -0.24px;
-    width: 100%;
-    text-transform: none;
-    background: transparent;
-    height: auto;
-    min-height: 1px;
-    box-shadow: none;
-    border-radius: 0; }
-    #buddypress .bs-dropdown .appbosscm-moderation-button-wrap .appbosscm-report-button:hover {
-      background: #F5F5F5; }
 
 .bbp-topic-revision-log-item img {
   vertical-align: middle; }

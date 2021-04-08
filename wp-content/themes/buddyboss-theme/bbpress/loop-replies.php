@@ -117,7 +117,7 @@
 					$reply_count       = bbp_get_topic_replies_link( $topic_id );
 					$topic_reply_text  = '';
 					?>
-                        <span class="bs-voices"><?php bbp_topic_voice_count(); ?><?php echo $voice_text; ?></span>
+                        <span class="bs-voices"><?php bbp_topic_voice_count(); ?> <?php echo $voice_text; ?></span>
 					<span class="bs-separator">&middot;</span>
 					<span class="bs-replies"><?php
 						if ( bbp_show_lead_topic() ) {

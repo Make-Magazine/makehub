@@ -222,6 +222,14 @@ if ( function_exists( 'is_plugin_active' ) && is_plugin_active('learndash-course
 								'array'     => true
 							) );
 
+							if( empty ( $progress ) ) {
+								$progress = array (
+									'percentage' =>  0,
+									'completed'  =>  0,
+									'total'      =>  0,
+								);
+							}
+
 							$status = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
 
 							if( $progress['percentage'] > 0 && $progress['percentage'] !== 100 ) {

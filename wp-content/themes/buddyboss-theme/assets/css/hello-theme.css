@@ -194,7 +194,7 @@ TABLE OF CONTENTS:
 .theme-hello-footer p {
   font-size: 15px; }
 
-.theme-hello-appboss .theme-hello-footer {
+.theme-hello-buddyboss-app .theme-hello-footer {
   border-top: none; }
 
 .theme-hello-social-cta {
@@ -234,7 +234,7 @@ TABLE OF CONTENTS:
 .theme-hello-content {
   background-color: white; }
 
-.theme-hello-appboss .theme-hello-content {
+.theme-hello-buddyboss-app .theme-hello-content {
   padding: 0; }
 
 .theme-hello-content img {
@@ -274,7 +274,7 @@ TABLE OF CONTENTS:
     border-radius: 3px; }
   #theme-hello-container .theme-hello-header h1 {
     line-height: inherit; }
-  #theme-hello-container.theme-hello-appboss {
+  #theme-hello-container.theme-hello-buddyboss-app {
     bottom: auto;
     width: 105vmin;
     max-width: 900px;
@@ -286,7 +286,7 @@ TABLE OF CONTENTS:
     -webkit-transform: translateY(-50%);
         -ms-transform: translateY(-50%);
             transform: translateY(-50%); }
-  #theme-hello-container.theme-hello-appboss .theme-hello-footer {
+  #theme-hello-container.theme-hello-buddyboss-app .theme-hello-footer {
     height: 60px;
     position: static; }
   .theme-hello-header {
@@ -310,7 +310,7 @@ TABLE OF CONTENTS:
     height: -webkit-calc(100% - 90px);
     height: calc(100% - 90px);
     padding: 0 23px; }
-  .theme-hello-appboss .theme-hello-content {
+  .theme-hello-buddyboss-app .theme-hello-content {
     height: -webkit-calc(100% - 120px);
     height: calc(100% - 120px);
     padding: 0; }
@@ -327,7 +327,7 @@ TABLE OF CONTENTS:
     left: calc((100% - 896px) / 2);
     right: -webkit-calc((100% - 896px) / 2);
     right: calc((100% - 896px) / 2); }
-  .theme-hello-appboss .theme-hello-content {
+  .theme-hello-buddyboss-app .theme-hello-content {
     height: -webkit-calc(100% - 120px);
     height: calc(100% - 120px);
     padding: 0; } }

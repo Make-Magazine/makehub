@@ -359,7 +359,8 @@ if ( !function_exists( 'boss_generate_option_css' ) ) {
 
             .bs-styled-checkbox:checked + label:before,
 			.bs-styled-radio:checked + label:after,
-			.bs-styled-radio:checked + .bb-radio-label:after {
+			.bs-styled-radio:checked + .bb-radio-label:after,
+            .group-messages.private-message #group-messages-container .group-messages-members-listing .all-members .group-message-member-li.selected .invite-button .icons:before {
                 background: <?php echo $primary_color; ?>;
             }
 
@@ -1161,7 +1162,8 @@ if ( !function_exists( 'boss_generate_option_bp_css' ) ) {
             #page #buddypress #item-body .bp-profile-wrapper #subnav .selected a,
             #buddypress .bp-settings-container .bp-navs .current a,
             #buddypress .bp-settings-container .bp-navs .selected a,
-            .buddypress-wrap .bp-subnavs ul #bp-zoom-switch-type > a.zoom_active {
+            .buddypress-wrap .bp-subnavs ul #bp-zoom-switch-type > a.zoom_active,
+            #group-messages-container .bp-navs.group-subnav li.selected a {
                 color: <?php echo buddyboss_theme_get_option( 'alternate_link_active' ); ?>;
             }
 
@@ -1176,7 +1178,8 @@ if ( !function_exists( 'boss_generate_option_bp_css' ) ) {
             .bp-navs ul li.selected a,
             nav#object-nav .selected > a,
 			body.invites.has-sidebar #buddypress .bp-settings-container .bp-navs .selected a,
-            #buddypress .profile.edit .button-nav .current a {
+            #buddypress .profile.edit .button-nav .current a,
+            #group-messages-container .bp-navs.group-subnav li.selected {
                 border-bottom-color: <?php echo $primary_color; ?>;
             }
 
@@ -1442,7 +1445,8 @@ if ( !function_exists( 'boss_generate_option_bp_css' ) ) {
             .topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-attachments,
             .topic-edit #bbpress-forums .bbp-topic-form .bbp-form #whats-new-toolbar,
             .bp-step-nav-main .bp-step-nav ul,
-            .bp-step-nav-main .bp-step-nav li.selected > a {
+            .bp-step-nav-main .bp-step-nav li.selected > a,
+            .bp-messages-content-wrapper.has_error .bp-messages-feedback {
                 border-color: <?php echo buddyboss_theme_get_option( 'body_blocks_border' ) ?>;
             }
 

@@ -1174,6 +1174,9 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				}
 
 				$query->set( 'author', $authors );
+			} elseif ( isset( $query->query_vars['author__in'] ) ) {
+				// unset author if it was set by instructor plugin.
+				unset( $query->query_vars['author__in'] );
 			}
 
 			return $query;
@@ -1188,8 +1191,11 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 				$user_id = get_current_user_id();
 
 				if ( ! $course_ids = wp_cache_get( $user_id, 'ld_mycourse_ids' ) ) {
+					// Filter to remove author__in argument which is set by instructor role plugin.
+					add_filter( 'ir_filter_instructor_query', array( $this, 'remove_author_set_by_instructor' ), 9999 );
 					$course_ids = ld_get_mycourses( $user_id, [] );
 					wp_cache_set( $user_id, $course_ids, 'ld_mycourse_ids' );
+					remove_filter( 'ir_filter_instructor_query', array( $this, 'remove_author_set_by_instructor' ), 9999 );
 				}
 
 				if ( empty( $course_ids ) ) {
@@ -1202,6 +1208,21 @@ if ( ! class_exists( '\BuddyBossTheme\LearndashHelper' ) ) {
 			return $query;
 		}
 
+		/**
+		 * Remove author argument which is set by instructor role plugin
+		 *
+		 * @param  mixed $query The WP_Query instance.
+		 *
+		 * @return mixed
+		 */
+		public function remove_author_set_by_instructor( $query ) {
+
+			if ( isset( $query->query_vars['author__in'] ) ) {
+				unset( $query->query_vars['author__in'] );
+			}
+
+			return $query;
+		}
 
 		protected function _get_orderby_options() {
 			$order_by_options = [

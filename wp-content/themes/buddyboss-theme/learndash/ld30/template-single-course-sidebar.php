@@ -47,11 +47,10 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
             <div class="bb-enroll-widget flex-1 push-right">
                 <div class="bb-course-preview-wrap bb-thumbnail-preview">
                     <div class="bb-preview-course-link-wrap">
-                        <div class="thumbnail-container <?php echo $thumb_mode; ?>">
+                        <div class="thumbnail-container <?php echo esc_attr( $thumb_mode ); ?>">
                             <div class="bb-course-video-overlay">
                                 <div>
-                                    <span class="bb-course-play-btn-wrapper"><span
-                                                class="bb-course-play-btn"></span></span>
+                                    <span class="bb-course-play-btn-wrapper"><span class="bb-course-play-btn"></span></span>
                                     <div><?php _e( 'Preview this', 'buddyboss-theme' ); ?> <?php echo LearnDash_Custom_Label::get_label( 'course' ); ?></div>
                                 </div>
                             </div>
@@ -103,6 +102,14 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 						'course_id' => $course_id,
 						'array'     => true,
 					) );
+
+					if( empty ( $progress ) ) {
+						$progress = array (
+							'percentage' =>  0,
+							'completed'  =>  0,
+							'total'      =>  0,
+						);
+					}
 
 					$status = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
 
@@ -296,16 +303,16 @@ if ( sfwd_lms_has_access( $course->ID, $current_user_id ) ) {
 					}
 				}
 
-				//course quizzes
+				//course quizzes.
 				$course_quizzes       = learndash_get_course_quiz_list( $course_id );
 				$course_quizzes_count = sizeof( $course_quizzes );
 
-				//lessons quizzes
+				//lessons quizzes.
 				if ( is_array( $lesson_count ) || is_object( $lesson_count ) ) {
 					foreach ( $lesson_count as $lesson ) {
 						$quizzes       = learndash_get_lesson_quiz_list( $lesson->ID, null, $course_id );
 						$lesson_topics = learndash_topic_dots( $lesson->ID, false, 'array', null, $course_id );
-						if ( $quizzes & ! empty( $quizzes ) ) {
+						if ( $quizzes && ! empty( $quizzes ) ) {
 							$course_quizzes_count += count( $quizzes );
 						}
 						if ( $lesson_topics && ! empty( $lesson_topics ) ) {

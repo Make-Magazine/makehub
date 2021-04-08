@@ -2276,6 +2276,8 @@ body .select2-container .select2-dropdown .select2-results__option {
     border-color: #EF3E46; }
   .woocommerce-checkout form .form-row.woocommerce-invalid label {
     color: #EF3E46; }
+  .woocommerce-checkout form .form-row .password-input .show-password-input {
+    top: 9px; }
 
 .woocommerce-checkout form #ship-to-different-address label {
   font-size: 16px; }

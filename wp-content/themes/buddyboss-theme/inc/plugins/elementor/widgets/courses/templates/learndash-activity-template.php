@@ -62,6 +62,14 @@ if ( ! defined( 'BB_LMS_WIDGET' ) ) exit; // Exit if accessed outside widget
                     )
                 );
 
+                if ( empty ( $progress ) ) {
+                    $progress = array (
+                        'percentage' => 0,
+                        'completed'  => 0,
+                        'total'      => 0,
+                    );
+                }
+
                 $percentage_completed   = $progress['percentage'];
                 $course_title           = get_the_title( $course->course_id );
                 $course_image           = get_the_post_thumbnail_url( $course->course_id );

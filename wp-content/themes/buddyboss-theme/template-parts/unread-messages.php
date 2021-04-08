@@ -379,13 +379,12 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						// } else if ( 1 === count( $recipient_names) ) {
 						// echo stripslashes_deep( $exerpt );
 					} else {
+						$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 						if ( bp_is_active( 'moderation' ) ) {
 							if ( $is_last_sender_suspended ) {
 								$last_sender = __( 'Suspended Member', 'buddyboss-theme' );
 							} elseif ( $is_last_sender_blocked ) {
 								$last_sender = __( 'Blocked Member', 'buddyboss-theme' );
-							} else {
-								$last_sender = bp_core_get_user_displayname( $messages_template->thread->last_sender_id );
 							}
 						}
 						echo $last_sender . ': ' . stripslashes_deep( $exerpt );

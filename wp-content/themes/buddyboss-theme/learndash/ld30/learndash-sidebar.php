@@ -59,7 +59,17 @@ if ( ( isset( $_COOKIE['lessonpanel'] ) && 'closed' == $_COOKIE['lessonpanel'] )
 
 <div class="lms-topic-sidebar-wrapper <?php echo $side_panel_state_class;?>">
 	<div class="lms-topic-sidebar-data">
-        <?php $course_progress = learndash_course_progress(array("user_id" => get_current_user_id(), "course_id" => $parent_course->ID, "array" => true)); ?>
+        <?php
+            $course_progress = learndash_course_progress(array("user_id" => get_current_user_id(), "course_id" => $parent_course->ID, "array" => true));
+
+            if ( empty ( $course_progress ) ) {
+                $course_progress = array (
+                    'percentage' =>  0,
+                    'completed'  =>  0,
+                    'total'      =>  0,
+                );
+            }
+        ?>
 
 		<div class="bb-elementor-header-items">
 			<a href="#" id="bb-toggle-theme">

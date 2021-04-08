@@ -19,6 +19,9 @@ if ( ! function_exists( 'buddyboss_notification_avatar' ) ) {
 					$object  = 'user';
 				}
 				break;
+			case has_action( 'bb_notification_avatar_' . $component ):
+				do_action( 'bb_notification_avatar_' . $component );
+				break;
 			default:
 				if ( ! empty( $notification->secondary_item_id ) ) {
 					$item_id = $notification->secondary_item_id;
@@ -32,7 +35,7 @@ if ( ! function_exists( 'buddyboss_notification_avatar' ) ) {
 
 		if ( isset( $item_id, $object ) ) {
 
-			if ( $object === 'group' ) {
+			if ( 'group' === $object ) {
 				$group = new BP_Groups_Group( $item_id );
 				$link  = bp_get_group_permalink( $group );
 			} else {
@@ -41,9 +44,16 @@ if ( ! function_exists( 'buddyboss_notification_avatar' ) ) {
 			}
 
 			?>
-			<a href="<?php echo $link ?>">
-				<?php echo bp_core_fetch_avatar( [ 'item_id' => $item_id, 'object' => $object ] ); ?>
-				<?php (isset($user) ? bb_user_status( $user->ID ) : ''); ?>
+			<a href="<?php echo esc_url( $link ); ?>">
+				<?php
+				echo bp_core_fetch_avatar(
+					array(
+						'item_id' => $item_id,
+						'object'  => $object,
+					)
+				);
+				?>
+				<?php ( isset( $user ) ? bb_user_status( $user->ID ) : '' ); ?>
 			</a>
 			<?php
 		}
@@ -65,7 +75,6 @@ if ( ! function_exists( 'buddyboss_unique_id' ) ) {
 	 * @return string Unique ID.
 	 *
 	 * @staticvar int $id_counter
-	 *
 	 */
 	function buddyboss_unique_id( $prefix = '' ) {
 		static $id_counter = 0;

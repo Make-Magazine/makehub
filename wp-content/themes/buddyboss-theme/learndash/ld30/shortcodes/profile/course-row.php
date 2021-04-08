@@ -9,6 +9,14 @@ $progress = learndash_course_progress( array(
     'array'     => true
 ) );
 
+if( empty ( $progress ) ) {
+    $progress = array (
+        'percentage' =>  0,
+        'completed'  =>  0,
+        'total'      =>  0,
+    );
+}
+
 $status = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
 
 if( $progress['percentage'] > 0 && $progress['percentage'] !== 100 ) {
