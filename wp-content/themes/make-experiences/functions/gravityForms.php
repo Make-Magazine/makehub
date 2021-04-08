@@ -10,9 +10,6 @@ add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
-//This filter is to set the current users facilitator image if available
-//add_filter( 'gform_field_content_7_118', 'set_facilitator_img', 10, 5 );
-
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
     //build field name, must match List field syntax to be processed correctly
@@ -112,29 +109,6 @@ function set_field_values($value, $field, $name) {
     return isset($values[$name]) ? $values[$name] : $value;
 }
 
-add_filter('gform_pre_render_7', 'GF_prepopulate_profile_photo');
-
-//TBD this code does not work as defaultValue is not a valid field for photo
-function GF_prepopulate_profile_photo($form) {
-    //check if facilitator exists
-    global $current_user;
-    $current_user = wp_get_current_user();
-    $userEmail = (string) $current_user->user_email;
-
-    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-    if ($person) {
-        $person_id = $person->ID();
-
-        //populate the image field
-        foreach ($form["fields"] as &$field) {
-            if ($field["id"] == 118) {
-                $field["defaultValue"] = get_the_post_thumbnail_url($person_id);
-            }
-        }
-    }
-    return $form;
-}
-
 //update the person record
 function updatePerson($parameter_array, $entry, $person) {
     $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
@@ -160,6 +134,9 @@ function updatePerson($parameter_array, $entry, $person) {
 /* If the person filling out this form is an existing facilitator, populate the preview image */
 add_filter( 'gform_field_content_7_118', 'set_facilitator_img', 10, 5 );
 function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
+    if(is_admin()){
+        return $input;
+    }
     //check if facilitator exists
     global $current_user;
     $facilitator_img ='';
