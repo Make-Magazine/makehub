@@ -196,7 +196,12 @@ if ( ! function_exists( 'buddyboss_theme_body_classes' ) ) {
 		if ( class_exists( 'MeprOptions' ) ) {
 			global $post, $wp_query;
 
-			$current_id       = isset( $post ) && isset( $post->ID ) ? $post->ID : $wp_query->post->ID;
+			$current_id = false;
+			if ( isset( $post ) && is_object( $post ) && isset( $post->ID ) ) {
+				$current_id = $post->ID;
+			}else if( isset( $wp_query->post ) && is_object( $wp_query->post ) && isset( $wp_query->post->ID ) ){
+				$current_id = $wp_query->post->ID;
+			}
 			$mepr_options     = MeprOptions::fetch();
 			$login_page_id    = ( ! empty( $mepr_options->login_page_id ) && $mepr_options->login_page_id > 0 ) ? $mepr_options->login_page_id : 0;
 			$account_page_id  = ( ! empty( $mepr_options->account_page_id ) && $mepr_options->account_page_id > 0 ) ? $mepr_options->account_page_id : 0;
@@ -1679,15 +1684,26 @@ if ( ! function_exists( 'bb_add_elementor_content_class' ) ) {
 }
 
 /**
- * Remove Header/Footer for AppBoss
+ * Remove Header/Footer for BuddyBoss App.
  */
-if ( ! function_exists( 'bb_theme_remove_header_footer_for_appboss' ) ) {
+if ( ! function_exists( 'bb_theme_remove_header_footer_for_buddyboss_app' ) ) {
 
-	function bb_theme_remove_header_footer_for_appboss() {
+	function bb_theme_remove_header_footer_for_buddyboss_app() {
 
-		if ( function_exists( 'appboss_is_loaded_from_inapp_browser' ) && appboss_is_loaded_from_inapp_browser() ) {
+		if (
+			(
+				function_exists( 'bbapp_is_loaded_from_inapp_browser' ) &&
+				bbapp_is_loaded_from_inapp_browser()
+			) ||
+			(
+				function_exists( 'appboss_is_loaded_from_inapp_browser' ) &&
+				appboss_is_loaded_from_inapp_browser()
+			)
+		) {
 			/* Disable the default template which loads on mobile app */
-			if ( function_exists( 'appboss_disable_default_inapp_browser_template' ) ) {
+			if ( function_exists( 'bbapp_disable_default_inapp_browser_template' ) ) {
+				bbapp_disable_default_inapp_browser_template();
+			} elseif ( function_exists( 'appboss_disable_default_inapp_browser_template' ) ) {
 				appboss_disable_default_inapp_browser_template();
 			}
 
@@ -1700,6 +1716,12 @@ if ( ! function_exists( 'bb_theme_remove_header_footer_for_appboss' ) ) {
 			remove_action( THEME_HOOK_PREFIX . 'header', 'buddyboss_theme_header_search' );
 			remove_action( THEME_HOOK_PREFIX . 'footer', 'buddyboss_theme_footer_area' );
 			remove_action( THEME_HOOK_PREFIX . 'before_page', 'buddyboss_theme_buddypanel' );
+
+			if( defined('ELEMENTOR_VERSION') ) {
+				remove_action( THEME_HOOK_PREFIX . 'header', array( buddyboss_theme()->elementor_pro_helper(), 'do_header' ), 0 );
+				remove_action( THEME_HOOK_PREFIX . 'footer', array( buddyboss_theme()->elementor_pro_helper(), 'do_footer' ), 0 );
+				remove_action( THEME_HOOK_PREFIX . 'before_header', array( buddyboss_theme()->elementor_pro_helper(), 'remove_theme_header_class' ), 0 );
+			}
 
 			/* Remove Header Class */
 			add_filter(
@@ -1715,7 +1737,7 @@ if ( ! function_exists( 'bb_theme_remove_header_footer_for_appboss' ) ) {
 		}
 	}
 
-	add_action( 'init', 'bb_theme_remove_header_footer_for_appboss' );
+	add_action( 'init', 'bb_theme_remove_header_footer_for_buddyboss_app' );
 }
 
 if ( ! function_exists( 'buddyboss_theme_sudharo_tapas' ) ) {

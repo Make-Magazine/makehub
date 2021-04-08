@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'transaction_type' => array(
 					'type'                   => 'early',
@@ -90,6 +94,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 		}
 
 		/**
@@ -288,7 +294,7 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 			}
 
-			if ( ( $user ) && ( is_a( $user, 'WP_User' ) ) ) {
+			if ( ( ! empty( $user ) ) && ( is_a( $user, 'WP_User' ) ) ) {
 				$display_name = $user->display_name . ' (' . $user->user_email . ')';
 				if ( current_user_can( 'edit_users' ) ) {
 					$edit_url = get_edit_user_link( $user->ID );

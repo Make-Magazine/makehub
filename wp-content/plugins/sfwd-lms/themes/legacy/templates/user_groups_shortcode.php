@@ -13,12 +13,23 @@
  * @package LearnDash\Groups
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 
 <div class="learndash-user-groups">
 <?php if ( $has_admin_groups ) { ?>
 	<div class="learndash-user-groups-section learndash-user-groups-section-leader-list">
-		<div class="learndash-user-groups-header"><?php esc_html_e( 'Group Leader in : ', 'learndash' ); ?></div>
+		<div class="learndash-user-groups-header">
+		<?php
+		printf(
+			// translators: placeholder: Group Leader
+			esc_html_x( '%s in : ', 'placeholder: Group Leader', 'learndash' ),
+			learndash_get_custom_label( 'group_leader' )
+		)
+		?>
+		</div>
 		<ul class="learndash-user-groups-items">
 			<?php
 			foreach ( $admin_groups as $group_id ) {
@@ -51,7 +62,15 @@
 
 <?php if ( $has_user_groups ) { ?>
 	<div class="learndash-user-groups-section learndash-user-groups-section-assigned-list">
-		<div class="learndash-user-groups-header"><?php esc_html_e( 'Assigned Group(s) : ', 'learndash' ); ?></div>
+		<div class="learndash-user-groups-header">
+		<?php
+		printf(
+			// translators: group
+			esc_html_x( 'Assigned %s(s) : ', 'placeholder: group', 'learndash' ),
+			learndash_get_custom_label( 'group' )
+		)
+		?>
+		</div>
 		<ul class="learndash-user-groups-items">
 			<?php
 			foreach ( $user_groups as $group_id ) {

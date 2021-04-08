@@ -82,6 +82,19 @@
 	color: #aaa;
 }
 
+.gf-legacy-ui .gppa-filter-and {
+	display: none;
+}
+
+.gppa-filter-and {
+	margin: 0 auto -30px;
+	height: 30px;
+	padding: 0 10px;
+	background: #f6f9fc;
+	line-height: 30px;
+	color: #AEB5D4;
+}
+
 .gppa-filter-group + .gppa-add-filter-group {
 	margin-top: 10px
 }
@@ -269,4 +282,86 @@ Notices
 
 .gppa-warning:last-child:first-child {
 	margin: 0;
+}
+
+/**
+ * GF 2.5 Specific Styling
+ */
+body:not(.gf-legacy-ui) .gppa-filter-group {
+	background: #f6f9fc;
+	border: 1px solid #daddec;
+	border-radius: 3px;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter {
+	flex-wrap: wrap;
+	border-bottom: 1px dashed #daddec;
+	padding: 15px;
+	margin: 0 0 10px;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter:last-of-type {
+	border-bottom: 0;
+	margin-bottom: 0;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter-property {
+	flex-basis: 100%;
+	margin-bottom: 0.5rem !important;
+	margin-right: 0 !important;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter-operator {
+	flex: 1;
+	margin-right: 0.5rem !important;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter-value {
+	flex: 3;
+}
+
+body:not(.gf-legacy-ui) .repeater-buttons {
+	flex-basis: 100%;
+	margin-top: 6px;
+}
+
+body:not(.gf-legacy-ui) .gppa-select-with-custom.gppa-has-merge-tag-selector a.custom-reset {
+	right: 51px;
+	top: 1px;
+	height: 28px;
+	border-radius: 0 2px 2px 0;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter .repeater-buttons a {
+	margin-left: 0;
+	cursor: pointer;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter .repeater-buttons a i {
+	font-family: 'dashicons';
+	font-size: 16px;
+	display: inline-block;
+	vertical-align: middle;
+	color: #000;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter .gficon-add:before {
+	content: "\f132";
+}
+
+body:not(.gf-legacy-ui) .gppa-filter .gficon-subtract {
+	margin-top: -3px;
+}
+
+body:not(.gf-legacy-ui) .gppa-filter .gficon-subtract:before {
+	content: "\f335";
+	font-size: 20px;
+}
+
+body:not(.gf-legacy-ui) .gppa-results-preview-contents {
+	background: transparent;
+}
+
+body:not(.gf-legacy-ui) .gppa .gp-child-settings {
+	padding-right: 0;
 }

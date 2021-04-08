@@ -237,7 +237,7 @@ function learndash_course_navigation_admin_box_content() {
 								$course_lessons_paged = array_chunk( $course_lesson_ids, $course_lessons_per_page, true );
 								$lessons_paged        = 0;
 								foreach ( $course_lessons_paged as $paged => $paged_set ) {
-									if ( in_array( $instance['current_lesson_id'], $paged_set ) ) {
+									if ( in_array( (int) $instance['current_lesson_id'], array_map( 'absint', $paged_set ), true ) ) {
 										$lessons_paged = $paged + 1;
 										break;
 									}
@@ -280,7 +280,7 @@ function learndash_course_navigation_admin_box_content() {
 			);
 		}
 
-		if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+		if ( learndash_is_course_shared_steps_enabled() ) {
 			learndash_course_switcher_admin( $course_id );
 		}
 	}
@@ -308,7 +308,7 @@ function learndash_course_info( $user_id, $atts = array() ) {
  *
  * @return void|string
  */
-function wp_ajax_ld_course_registered_pager() {
+function learndash_ajax_course_registered_pager() {
 	if ( ! is_user_logged_in() ) {
 		return '';
 	}
@@ -394,7 +394,7 @@ function wp_ajax_ld_course_registered_pager() {
 	echo wp_json_encode( $reply_data );
 	die();
 }
-add_action( 'wp_ajax_ld_course_registered_pager', 'wp_ajax_ld_course_registered_pager' );
+add_action( 'wp_ajax_ld_course_registered_pager', 'learndash_ajax_course_registered_pager' );
 
 /**
  * Handles the AJAX pagination for the course progress.
@@ -403,7 +403,7 @@ add_action( 'wp_ajax_ld_course_registered_pager', 'wp_ajax_ld_course_registered_
  *
  * @return void|string
  */
-function wp_ajax_ld_course_progress_pager() {
+function learndash_ajax_course_progress_pager() {
 	// Not sure why this is here since we have the 'wp_ajax_nopriv_ld_course_progress_pager' action setup
 	if ( ! is_user_logged_in() ) {
 		return '';
@@ -488,8 +488,8 @@ function wp_ajax_ld_course_progress_pager() {
 	echo wp_json_encode( $reply_data );
 	die();
 }
-add_action( 'wp_ajax_ld_course_progress_pager', 'wp_ajax_ld_course_progress_pager' );
-add_action( 'wp_ajax_nopriv_ld_course_progress_pager', 'wp_ajax_ld_course_progress_pager' );
+add_action( 'wp_ajax_ld_course_progress_pager', 'learndash_ajax_course_progress_pager' );
+add_action( 'wp_ajax_nopriv_ld_course_progress_pager', 'learndash_ajax_course_progress_pager' );
 
 /**
  * Handles the AJAX pagination for the quiz progress.
@@ -498,7 +498,7 @@ add_action( 'wp_ajax_nopriv_ld_course_progress_pager', 'wp_ajax_ld_course_progre
  *
  * @return void|string
  */
-function wp_ajax_ld_quiz_progress_pager() {
+function learndash_ajax_quiz_progress_pager() {
 	$reply_data = array();
 
 	if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-pager' ) ) ) {
@@ -581,8 +581,7 @@ function wp_ajax_ld_quiz_progress_pager() {
 	die();
 }
 
-add_action( 'wp_ajax_ld_quiz_progress_pager', 'wp_ajax_ld_quiz_progress_pager' );
-
+add_action( 'wp_ajax_ld_quiz_progress_pager', 'learndash_ajax_quiz_progress_pager' );
 
 /**
  * Handles the AJAX pagination for the courses navigation.
@@ -591,7 +590,7 @@ add_action( 'wp_ajax_ld_quiz_progress_pager', 'wp_ajax_ld_quiz_progress_pager' )
  *
  * @since 2.5.4
  */
-function wp_ajax_ld_course_navigation_pager() {
+function learndash_ajax_course_navigation_pager() {
 	$reply_data = array();
 
 	if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-pager' ) ) ) {
@@ -635,9 +634,8 @@ function wp_ajax_ld_course_navigation_pager() {
 	die();
 }
 
-add_action( 'wp_ajax_ld_course_navigation_pager', 'wp_ajax_ld_course_navigation_pager' );
-add_action( 'wp_ajax_nopriv_ld_course_navigation_pager', 'wp_ajax_ld_course_navigation_pager' );
-
+add_action( 'wp_ajax_ld_course_navigation_pager', 'learndash_ajax_course_navigation_pager' );
+add_action( 'wp_ajax_nopriv_ld_course_navigation_pager', 'learndash_ajax_course_navigation_pager' );
 
 /**
  * Handles the AJAX pagination for the admin courses navigation.
@@ -646,7 +644,7 @@ add_action( 'wp_ajax_nopriv_ld_course_navigation_pager', 'wp_ajax_ld_course_navi
  *
  * @since 2.5.4
  */
-function wp_ajax_ld_course_navigation_admin_pager() {
+function learndash_ajax_course_navigation_admin_pager() {
 	$reply_data = array();
 
 	if ( ( isset( $_POST['nonce'] ) ) && ( ! empty( $_POST['nonce'] ) ) && ( wp_verify_nonce( $_POST['nonce'], 'learndash-pager' ) ) ) {
@@ -689,7 +687,7 @@ function wp_ajax_ld_course_navigation_admin_pager() {
 	die();
 }
 
-add_action( 'wp_ajax_ld_course_navigation_admin_pager', 'wp_ajax_ld_course_navigation_admin_pager' );
+add_action( 'wp_ajax_ld_course_navigation_admin_pager', 'learndash_ajax_course_navigation_admin_pager' );
 
 /**
  * Verifies the attributes for AJAX pagination.

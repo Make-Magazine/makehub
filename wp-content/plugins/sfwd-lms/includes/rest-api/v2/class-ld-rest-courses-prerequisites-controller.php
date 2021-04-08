@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the association
  * between the LearnDash Courses (sfwd-courses) and Course

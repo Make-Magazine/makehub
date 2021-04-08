@@ -17,24 +17,11 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-course-content',
@@ -42,7 +29,7 @@ registerBlockType(
 		// translators: placeholder: Course.
 		title: sprintf(_x('LearnDash %s Content', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course')),
 		// translators: placeholder: Course.
-		description: sprintf(_x('This block displays the %s Content table.', 'placeholders: Course', 'learndash'), ldlms_get_custom_label('course') ),
+		description: sprintf(_x('This block displays the %s Content table.', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
 		icon: 'format-aside',
 		category: 'learndash-blocks',
 		example: {

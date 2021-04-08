@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Lessons_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -150,7 +154,19 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 					 */
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 
 					if ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
@@ -183,13 +199,37 @@ if ( ( ! class_exists( 'LD_REST_Lessons_Controller_V1' ) ) && ( class_exists( 'L
 				if ( ! empty( $course_id ) ) {
 					$this->course_post = get_post( $course_id );
 					if ( ( ! $this->course_post ) || ( ! is_a( $this->course_post, 'WP_Post' ) ) || ( 'sfwd-courses' !== $this->course_post->post_type ) ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					}
 				}
 
 				if ( ! learndash_is_admin_user() ) {
 					if ( ! $this->course_post ) {
-						return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+						return new WP_Error(
+							'rest_post_invalid_id',
+							sprintf(
+								// translators: placeholder: course.
+								esc_html_x(
+									'Invalid %s ID.',
+									'placeholder: course',
+									'learndash'
+								),
+								LearnDash_Custom_Label::get_label( 'course' )
+							),
+							array( 'status' => 404 )
+						);
 					} elseif ( ! sfwd_lms_has_access( $this->course_post->ID ) ) {
 						return new WP_Error( 'ld_rest_cannot_view', __( 'Sorry, you are not allowed to view this item.', 'learndash' ), array( 'status' => rest_authorization_required_code() ) );
 					}

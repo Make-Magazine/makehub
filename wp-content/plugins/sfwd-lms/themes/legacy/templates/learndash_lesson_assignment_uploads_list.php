@@ -13,6 +13,10 @@
  * @package LearnDash\Lesson
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( isset( $course_step_post ) ) && ( $course_step_post instanceof WP_Post ) ) {
 
 	$assignment_messages = get_user_meta( get_current_user_id(), 'ld_assignment_message', true );
@@ -36,9 +40,9 @@ if ( ( isset( $course_step_post ) ) && ( $course_step_post instanceof WP_Post ) 
 
 
 	$post_settings = learndash_get_setting( $course_step_post->ID );
-
-	$assignments = learndash_get_user_assignments( $course_step_post->ID, $user_id );
+	$assignments   = learndash_get_user_assignments( $course_step_post->ID, $user_id );
 	if ( ! empty( $assignments ) ) {
+
 		$assignment_post_type_object = get_post_type_object( 'sfwd-assignment' );
 		?>
 		<div id="learndash_uploaded_assignments" class="learndash_uploaded_assignments">
@@ -65,7 +69,7 @@ if ( ( isset( $course_step_post ) ) && ( $course_step_post instanceof WP_Post ) 
 						<?php
 						if ( true === $assignment_post_type_object->publicly_queryable ) {
 							?>
-								<a href='<?php echo esc_url( get_permalink( $assignment->ID ) ); ?>'><?php esc_html_e( 'View', 'learndash' ); ?></a> 
+								<a href='<?php echo esc_url( get_permalink( $assignment->ID ) ); ?>'><?php esc_html_e( 'View', 'learndash' ); ?></a>
 								<?php
 								if ( post_type_supports( 'sfwd-assignment', 'comments' ) ) {
 									/** This filter is documented in https://developer.wordpress.org/reference/hooks/comments_open/ */

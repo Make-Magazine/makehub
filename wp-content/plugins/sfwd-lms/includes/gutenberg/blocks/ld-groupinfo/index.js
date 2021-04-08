@@ -16,25 +16,11 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf} from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-groupinfo',
@@ -83,8 +69,8 @@ registerBlockType(
 			}
 		},
 		edit: props => {
-			const { attributes: { group_id, show, user_id, format, decimals, preview_show, preview_group_id, preview_user_id },
-				className, setAttributes } = props;
+			const { attributes: { group_id, show, user_id, format, decimals, preview_show, preview_user_id },
+				setAttributes } = props;
 
 			const field_show = (
 				<SelectControl

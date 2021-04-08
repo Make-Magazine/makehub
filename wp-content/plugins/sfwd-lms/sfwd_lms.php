@@ -3,7 +3,7 @@
  * Plugin Name: LearnDash LMS
  * Plugin URI: http://www.learndash.com
  * Description: LearnDash LMS Plugin - Turn your WordPress site into a learning management system.
- * Version: 3.3.0.3
+ * Version: 3.4.0.4
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * Text Domain: learndash
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * LearnDash Version Constant
  */
-define( 'LEARNDASH_VERSION', '3.3.0.3' );
+define( 'LEARNDASH_VERSION', '3.4.0.4' );
 define( 'LEARNDASH_SETTINGS_DB_VERSION', '2.5' );
 define( 'LEARNDASH_SETTINGS_TRIGGER_UPGRADE_VERSION', '2.5' );
 define( 'LEARNDASH_LMS_TEXT_DOMAIN', 'learndash' );
@@ -33,6 +33,7 @@ define( 'LEARNDASH_LMS_TEXT_DOMAIN', 'learndash' );
  */
 define( 'LEARNDASH_MIN_PHP_VERSION', '7.3' );
 define( 'LEARNDASH_MIN_MYSQL_VERSION', '5.6' );
+define( 'LEARNDASH_MIN_MARIA_VERSION', '10.0' );
 
 if ( ! defined( 'LEARNDASH_LMS_PLUGIN_DIR' ) ) {
 	define( 'LEARNDASH_LMS_PLUGIN_DIR', trailingslashit( str_replace( '\\', '/', WP_PLUGIN_DIR ) . '/' . basename( dirname( __FILE__ ) ) ) );
@@ -58,12 +59,22 @@ if ( ! defined( 'LEARNDASH_LMS_PLUGIN_KEY' ) ) {
 }
 
 if ( ! defined( 'LEARNDASH_TRANSIENTS_DISABLED' ) ) {
-	define( 'LEARNDASH_TRANSIENTS_DISABLED', false );
+	define( 'LEARNDASH_TRANSIENTS_DISABLED', true );
 }
 
 if ( ! defined( 'LEARNDASH_DEBUG' ) ) {
 	define( 'LEARNDASH_DEBUG', false );
 }
+
+/**
+ * Controls legacy reporting logic where the PHP error_reporting(0) was set.
+ *
+ * @since 3.4.0
+ */
+if ( ! defined( 'LEARNDASH_ERROR_REPORTING_ZERO' ) ) {
+	define( 'LEARNDASH_ERROR_REPORTING_ZERO', false );
+}
+
 
 // If the WordPress 'SCRIPT_DEBUG' is set then we also set our 'LEARNDASH_SCRIPT_DEBUG' so we are serving non-minified scripts.
 if ( ! defined( 'LEARNDASH_SCRIPT_DEBUG' ) ) {
@@ -79,7 +90,16 @@ if ( ! defined( 'LEARNDASH_BUILDER_DEBUG' ) ) {
 }
 
 /**
- * Controls the method used to updte the builder step.
+ * Controls Course query / Progression logic.
+ *
+ * @since 3.4.0
+ */
+if ( ! defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) {
+	define( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY', false );
+}
+
+/**
+ * Controls the method used to update the builder step.
  *
  * If defined 'true' will use the wp_update_post() method
  * else will use the default wpdb::update() and clean_post_cache().
@@ -138,6 +158,10 @@ if ( ! defined( 'LEARNDASH_LESSON_VIDEO' ) ) {
  */
 if ( ! defined( 'LEARNDASH_COURSE_BUILDER' ) ) {
 	define( 'LEARNDASH_COURSE_BUILDER', true );
+}
+
+if ( ! defined( 'LEARNDASH_COURSE_STEPS_PRELOAD' ) ) {
+	define( 'LEARNDASH_COURSE_STEPS_PRELOAD', true );
 }
 
 /**
@@ -219,6 +243,15 @@ if ( ! defined( 'LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE' ) ) {
 	define( 'LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE', 1000 );
 }
 
+/**
+ * Define the number of course steps load batch size.
+ *
+ * @since 3.4.0
+ */
+if ( ! defined( 'LEARNDASH_LMS_COURSE_STEPS_LOAD_BATCH_SIZE' ) ) {
+	define( 'LEARNDASH_LMS_COURSE_STEPS_LOAD_BATCH_SIZE', 500 );
+}
+
 // Define the default number of items per page.
 if ( ! defined( 'LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE' ) ) {
 	define( 'LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE', 20 );
@@ -253,6 +286,15 @@ if ( ! defined( 'LEARNDASH_DEFAULT_COURSE_ORDER' ) ) {
 }
 if ( ! defined( 'LEARNDASH_DEFAULT_COURSE_ORDERBY' ) ) {
 	define( 'LEARNDASH_DEFAULT_COURSE_ORDERBY', 'date' );
+}
+
+/**
+ * Controls if check is made to ensure user can read course step.
+ *
+ * @since 3.4.0.2
+ */
+if ( ! defined( 'LEARNDASH_COURSE_STEP_READ_CHECK' ) ) {
+	define( 'LEARNDASH_COURSE_STEP_READ_CHECK', true );
 }
 
 if ( ! defined( 'LEARNDASH_DEFAULT_GROUP_PRICE_TYPE' ) ) {
@@ -458,9 +500,29 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/admin/class-learndash-admin-me
 require_once dirname( __FILE__ ) . '/includes/widgets/widgets-loader.php';
 
 /**
+ * Course Legacy functions
+ */
+require_once dirname( __FILE__ ) . '/includes/course/ld-course-functions-legacy.php';
+
+/**
  * Course functions
  */
 require_once dirname( __FILE__ ) . '/includes/course/ld-course-functions.php';
+
+/**
+ * Course Steps functions
+ */
+require_once dirname( __FILE__ ) . '/includes/course/ld-course-steps-functions.php';
+
+/**
+ * Course User functions
+ */
+require_once dirname( __FILE__ ) . '/includes/course/ld-course-user-functions.php';
+
+/**
+ * Course Activity functions
+ */
+require_once dirname( __FILE__ ) . '/includes/course/ld-activity-functions.php';
 
 /**
  * Course navigation
@@ -496,11 +558,6 @@ require_once dirname( __FILE__ ) . '/includes/quiz/ld-quiz-functions.php';
  * Implements WP Pro Quiz
  */
 require_once dirname( __FILE__ ) . '/includes/quiz/ld-quiz-pro.php';
-
-/**
- * Quiz migration functions
- */
-require_once dirname( __FILE__ ) . '/includes/quiz/ld-quiz-migration.php';
 
 /**
  * Quiz essay question functions
@@ -682,7 +739,7 @@ require_once LEARNDASH_LMS_PLUGIN_DIR . 'themes/themes-loader.php';
 /**
  * Add Support for the LD LMS Post Factory.
  */
-require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/classes/class-ldlms-factory-post.php';
+require_once LEARNDASH_LMS_PLUGIN_DIR . '/includes/classes/class-loader.php';
 
 /**
  * Registers REST API Hooks.

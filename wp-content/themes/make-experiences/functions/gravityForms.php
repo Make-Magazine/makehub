@@ -10,6 +10,9 @@ add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
+//This filter is to set the current users facilitator image if available
+//add_filter( 'gform_field_content_7_118', 'set_facilitator_img', 10, 5 );
+
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
     //build field name, must match List field syntax to be processed correctly
@@ -152,4 +155,54 @@ function updatePerson($parameter_array, $entry, $person) {
     if ($userFullName != $person->get('PER_full_name'))
         $person->set('PER_full_name', $userFname . ' ' . $userLname);
     $person->save();
+}
+
+/* If the person filling out this form is an existing facilitator, populate the preview image */
+add_filter( 'gform_field_content_7_118', 'set_facilitator_img', 10, 5 );
+function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
+    //check if facilitator exists
+    global $current_user;
+    $facilitator_img ='';
+    
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;
+    $form = gfapi::get_form($form_id);
+    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+    if ($person) {
+        $person_id = $person->ID();
+
+        //populate the image field
+        foreach ($form["fields"] as &$field) {
+            if ($field["id"] == 118) {
+                $facilitator_img = get_the_post_thumbnail_url($person_id);
+            }
+        }
+    }
+    
+    $input .= '<div id="preview_input_7_118"> '
+            . '  This is the current image we have for you. If you would like to update it, please click \'Choose File\'<br/>'  
+            .   '<div class="preview_img-wrapper" style="background-image: url('.$facilitator_img.');"></div>'
+           . '</div>';
+    return $input;
+}
+
+add_filter( 'gform_pre_render', 'gw_conditional_requirement' );
+add_filter( 'gform_pre_validation', 'gw_conditional_requirement' );
+/* If the person filling out this form is an existing facilitator, populate the preview image */
+function gw_conditional_requirement( $form ) {
+    //Form 7 only
+    if ( $form['id'] != 7 ) {
+       return $form;
+    }
+ 
+    global $current_user;        
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;    
+    
+    foreach ( $form['fields'] as &$field ) {
+        if ( $field->id == 118 ) {
+            $field->isRequired = false;            
+        }
+    }
+    return $form;
 }

@@ -58,11 +58,6 @@ function learndash_certificate_details( $post_id, $cert_user_id = null ) {
 						'quiz' => $post->ID,
 					);
 
-					// $course_id = learndash_get_course_id();
-					// if ( !empty( $course_id ) ) {
-					// $cert_query_args['course_id'] = $course_id;
-					// }
-
 					// We add the user query string key/value if the viewing user is an admin. This
 					// allows the admin to view other user's certificated
 					if ( ( $cert_user_id != $view_user_id ) && ( ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) ) {
@@ -446,16 +441,28 @@ function learndash_certificates_post_updated_messages( $messages ) {
 	$post_type_object = get_post_type_object( $post_type );
 
 	$published_message = wp_kses_post(
-		__(
-			'Certificate published. <br /><br />To view the certificate, you must assign it to a quiz or course. <br />Once you complete the assigned milestone, you can generate the certificate. <br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
-			'learndash'
+		sprintf(
+		// translators: quiz, course
+			_x(
+				'Certificate published. <br /><br />To view the certificate, you must assign it to a %1$s or %2$s. <br />Once you complete the assigned milestone, you can generate the certificate. <br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
+				'placeholder: quiz, course',
+				'learndash'
+			),
+			esc_html( learndash_get_custom_label_lower( 'quiz' ) ),
+			esc_html( learndash_get_custom_label_lower( 'course' ) )
 		)
 	);
 
 	$updated_message = wp_kses_post(
-		__(
-			'Certificate updated. <br /><br />To view the certificate, you must assign it to a quiz or course. <br />Once you complete the assigned milestone, you can generate the certificate.<br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
-			'learndash'
+		sprintf(
+		// translators: quiz, course
+			_x(
+				'Certificate updated. <br /><br />To view the certificate, you must assign it to a %1$s or %2$s. <br />Once you complete the assigned milestone, you can generate the certificate. <br /><br />Click here to read more about this topic: <a href="https://www.learndash.com/support/docs/core/certificates/create-certificate/#previewing_certificates" target="_blank">Previewing Certificates</a>.',
+				'placeholder: quiz, course',
+				'learndash'
+			),
+			esc_html( learndash_get_custom_label_lower( 'quiz' ) ),
+			esc_html( learndash_get_custom_label_lower( 'course' ) )
 		)
 	);
 

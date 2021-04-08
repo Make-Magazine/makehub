@@ -54,6 +54,7 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 				array_unshift( $forms, new WpProQuiz_Model_Form() );
 			}
 
+			$html .= wp_nonce_field( 'ld-quiz-custom-fields-nonce', 'ld-quiz-custom-fields-nonce', false, false );
 			$html .= '<div class="form_table_wrapper">
 				<table style=" width: 100%; text-align: left; " id="form_table">';
 			$html .= '<thead>

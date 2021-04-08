@@ -64,27 +64,32 @@
 						</label>
 
 						<div class="gppa-filter-groups">
-							<div class="gppa-filter-group" v-for="(filters, filterGroupIndex) in filterGroups">
-								<gppa-filter v-for="(filter, filterIndex) in filters"
-											 :field="field"
-											 :filter="filter"
-											 :key="filter.uuid"
-											 :properties="properties"
-											 :flattened-properties="flattenedProperties"
-											 :property-values="propertyValues"
-											 :ungrouped-properties="ungroupedProperties"
-											 :grouped-properties="groupedProperties"
-											 :object-type-instance="objectTypeInstance"
-											 :get-property-values="getPropertyValues"
-											 @add-filter="addFilter(filterIndex, filterGroupIndex)"
-											 @remove-filter="removeFilter(filterIndex, filterGroupIndex)"></gppa-filter>
+							<template v-for="(filters, filterGroupIndex) in filterGroups">
+								<div class="gppa-filter-group">
+									<gppa-filter v-for="(filter, filterIndex) in filters"
+												 :field="field"
+												 :filter="filter"
+												 :filters="filters"
+												 :index="filterIndex"
+												 :key="filter.uuid"
+												 :properties="properties"
+												 :flattened-properties="flattenedProperties"
+												 :property-values="propertyValues"
+												 :ungrouped-properties="ungroupedProperties"
+												 :grouped-properties="groupedProperties"
+												 :object-type-instance="objectTypeInstance"
+												 :get-property-values="getPropertyValues"
+												 @add-filter="addFilter(filterIndex, filterGroupIndex)"
+												 @remove-filter="removeFilter(filterIndex, filterGroupIndex)"></gppa-filter>
+
+								</div>
 
 								<div
-										v-if="filterGroups.length > 1 && filterGroupIndex !== filterGroups.length - 1"
-										class="gppa-filter-group-or">
+									v-if="filterGroups.length > 1 && filterGroupIndex !== filterGroups.length - 1"
+									class="gppa-filter-group-or">
 									&mdash; OR &mdash;
 								</div>
-							</div>
+							</template>
 
 							<button class="gppa-add-filter-group button button-secondary"
 									@click="addFilterGroup">
@@ -136,6 +141,9 @@
 								<option
 									value="desc">{{ i18nStrings.descending }}
 								</option>
+								<option
+									value="rand">{{ i18nStrings.random }}
+								</option>
 							</select>
 						</div>
 					</template>
@@ -168,7 +176,7 @@
 														 :flattened-properties="flattenedProperties">
 									<option
 											v-if="!templates[templateRow.label] || !templates[templateRow.label].value"
-											value="" disabled hidden>&ndash; Property &ndash;
+											value="">&ndash; Property &ndash;
 									</option>
 
 									<option v-for="option in ungroupedProperties" v-bind:value="option.value">
@@ -476,11 +484,11 @@
 
 				switch (this.populate) {
 					case 'choices':
-						templateRows.push({id: 'value', label: this.i18nStrings.value});
-						templateRows.push({id: 'label', label: this.i18nStrings.label});
+						templateRows.push({id: 'value', label: this.i18nStrings.value, required: true});
+						templateRows.push({id: 'label', label: this.i18nStrings.label, required: true});
 
 						if ('basePrice' in this.field || this.field.type === 'option') {
-							templateRows.push({id: 'price', label: this.i18nStrings.price});
+							templateRows.push({id: 'price', label: this.i18nStrings.price, required: true});
 						}
 						break;
 
@@ -503,7 +511,16 @@
 						break;
 				}
 
-				return templateRows;
+				/**
+				 * Modify the templates that will be shown under Choice Templates and/or Value Templates.
+				 *
+				 * @since 1.0-beta-4.116
+				 *
+				 * @param {Object[]} The available template rows. Each template should have an "id" string, "label" string, and "required" boolean.
+				 * @param {Object}   The current field shown in the Form Editor.
+				 * @param {String}   What's being populated. Either "choices" or "values"
+				 */
+				return window.gform.applyFilters( 'gppa_template_rows', templateRows, this.field, this.populate );
 			},
 		},
 		methods: {
@@ -693,7 +710,8 @@
 
 				var ajaxArgs = {
 					'action': 'gppa_get_object_type_properties',
-					'object-type': this.objectTypeInstance.id
+					'object-type': this.objectTypeInstance.id,
+					'populate': this.populate,
 				};
 
 				if ('primary-property' in this.objectTypeInstance && this.primaryPropertyComputed) {

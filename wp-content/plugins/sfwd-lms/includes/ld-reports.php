@@ -105,88 +105,6 @@ function learndash_get_report_user_ids( $user_id = 0, $query_args = array() ) {
 }
 
 /**
- * Gets the list of user IDs for the report.
- *
- * This function will determine the list of users the current user can see. For example for
- * group leader, it will show the only user within the leader's groups. For admin, it will
- * show all users.
- *
- * @param int   $user_id    Optional. User ID. Defaults to the current user ID. Default 0.
- * @param array $query_args Optional. User query arguments. Default empty array.
- *
- * @return array An array of user IDs.
- */
-function learndash_get_report_user_ids_NEW_PP21( $user_id = 0, $query_args = array() ) {
-	if ( empty( $user_id ) ) {
-		// If the current user is not able to be determined. Then abort.
-		if ( ! is_user_logged_in() ) {
-			return array();
-		}
-
-		$user_id = get_current_user_id();
-	}
-
-	$default_args = array(
-		'fields'  => 'ID',
-		'orderby' => 'display_name',
-		'order'   => 'ASC',
-	);
-
-	$query_args = wp_parse_args( $query_args, $default_args );
-
-	if ( learndash_is_group_leader_user( $user_id ) ) {
-
-		$include_user_ids = learndash_get_group_leader_groups_users( $user_id );
-
-		// Even though we have the users ids from the learndash_get_group_leader_groups_users() we need to validate them
-		// by running them against the WP_User_Query
-		if ( ! empty( $include_user_ids ) ) {
-			$query_args['include'] = $include_user_ids;
-		} else {
-			$query_args = array();
-		}
-	} elseif ( learndash_is_admin_user( $user_id ) ) {
-		if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'reports_include_admin_users' ) != 'yes' ) {
-			$query_args['role__not_in'] = 'administrator';
-		}
-	} else {
-		$query_args['include'] = array( $user_id );
-	}
-
-	if ( ! empty( $query_args ) ) {
-
-		/** This filter is documented in includes/ld-reports.php */
-		$query_args = apply_filters( 'learndash_get_report_users_query_args', $query_args );
-
-		$report_user_ids = learndash_get_users_query( $query_args );
-
-		/** This filter is documented in includes/ld-reports.php */
-		$report_user_ids = apply_filters( 'learndash_get_report_user_ids', $report_user_ids );
-	} else {
-		$report_user_ids = array();
-	}
-
-	if ( version_compare( '2.0.2', LD_PP_VERSION, '<=' ) ) {
-		return $report_user_ids;
-	} else {
-
-		$return = array(
-			'user_ids_action' => 'IN',
-			'user_ids'        => $report_user_ids,
-		);
-
-		if ( learndash_is_admin_user( $user_id ) ) {
-			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'reports_include_admin_users' ) != 'yes' ) {
-				$return['user_ids_action'] = 'NOT IN';
-			}
-		}
-	}
-
-	return $return;
-}
-
-
-/**
  * Gets the count of active/pubished courses.
  *
  * @since 2.3.0
@@ -592,12 +510,10 @@ function learndash_get_group_leader_groups_users( $user_id = 0, $by_group = fals
 	if ( learndash_is_group_leader_user( $user_id ) ) {
 
 		$group_ids = learndash_get_administrators_group_ids( $user_id );
-		//error_log('group_ids<pre>'. print_r($group_ids, true) .'</pre>');
 		if ( ! empty( $group_ids ) ) {
 
 			foreach ( $group_ids as $group_id ) {
 				$group_user_ids = learndash_get_groups_user_ids( $group_id );
-				//error_log('group_user_ids<pre>'. print_r($group_user_ids, true) .'</pre>');
 
 				if ( true == $by_group ) {
 					if ( true == $totals_only ) {
@@ -713,7 +629,7 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 
 	$activity_results = array();
 
-	$ACTIVITY_STATUS_HAS_NULL = false;
+	$activity_status_has_null = false;
 
 	$defaults = array(
 		// array or comma lst of group ids to use in query. Default is all groups
@@ -793,7 +709,6 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	}
 
 	$query_args = wp_parse_args( $query_args, $defaults );
-	//error_log('query_args<pre>'. print_r($query_args, true) .'</pre>');
 
 	// We save a copy of the original query_args to compare after we have filled in some default values.
 	$query_args_org = $query_args;
@@ -864,9 +779,9 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		}
 		$query_args['activity_status'] = array_map( 'trim', $query_args['activity_status'] );
 
-		$not_started_idx = array_search( 'NOT_STARTED', $query_args['activity_status'] );
+		$not_started_idx = array_search( 'NOT_STARTED', $query_args['activity_status'], true );
 		if ( false !== $not_started_idx ) {
-			$ACTIVITY_STATUS_HAS_NULL = true;
+			$activity_status_has_null = true;
 			unset( $query_args['activity_status'][ $not_started_idx ] );
 		}
 
@@ -886,23 +801,24 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 			$query_args['user_ids'] = learndash_get_group_leader_groups_users( $current_user_id );
 		}
 	} else {
-		if ( learndash_is_group_leader_user( $current_user_id ) ) {
-		} elseif ( learndash_is_admin_user( $current_user_id ) ) {
-			// If the group_ids parameter is passed in we need to determine the course_ids contains in the group_ids
-			if ( '' != $query_args['group_ids'] ) {
-				$query_args['post_ids'] = learndash_get_groups_courses_ids( $current_user_id, $query_args['group_ids'] );
-			}
-		} else {
-			// If the user if not a group leader and not admin then abort until we have added support for those roles.
-			//return $activity_results;
-			if ( empty( $query_args['user_ids'] ) ) {
-				$query_args['user_ids'] = array( get_current_user_id() );
-			}
+		if ( ! learndash_is_group_leader_user( $current_user_id ) ) {
+			if ( learndash_is_admin_user( $current_user_id ) ) {
+				// If the group_ids parameter is passed in we need to determine the course_ids contains in the group_ids
+				if ( '' != $query_args['group_ids'] ) {
+					$query_args['post_ids'] = learndash_get_groups_courses_ids( $current_user_id, $query_args['group_ids'] );
+				}
+			} else {
+				// If the user if not a group leader and not admin then abort until we have added support for those roles.
+				//return $activity_results;
+				if ( empty( $query_args['user_ids'] ) ) {
+					$query_args['user_ids'] = array( get_current_user_id() );
+				}
 
-			if ( empty( $query_args['post_ids'] ) ) {
-				$query_args['post_ids'] = learndash_user_get_enrolled_courses( get_current_user_id() );
 				if ( empty( $query_args['post_ids'] ) ) {
-					return $activity_results;
+					$query_args['post_ids'] = learndash_user_get_enrolled_courses( get_current_user_id() );
+					if ( empty( $query_args['post_ids'] ) ) {
+						return $activity_results;
+					}
 				}
 			}
 		}
@@ -913,8 +829,10 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	foreach ( $time_items as $time_item ) {
 		if ( ! empty( $query_args[ $time_item ] ) ) {
 			if ( ! is_string( $query_args[ $time_item ] ) ) {
+				 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 				$time_yymmdd = date( 'Y-m-d H:i:s', $query_args[ $time_item ] );
 			} else {
+				 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 				$time_yymmdd = date( 'Y-m-d H:i:s', strtotime( $query_args[ $time_item ] ) );
 			}
 
@@ -951,9 +869,6 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		$query_args = apply_filters( 'learndash_get_activity_query_args', $query_args );
 	}
 
-	//error_log('FINAL: query_args<pre>'. print_r($query_args, true) .'</pre>');
-	//return;
-
 	$sql_str_fields = '
 	users.ID as user_id,
 	users.display_name as user_display_name,
@@ -975,17 +890,17 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	// 'NOT_STARTED'. In order to find users that have not started courses we need to do the INNER JOIN on the wp_posts table. This
 	// means for every combination of users AND posts (courses) we will fill out row. This can be expensive when you have thousands
 	// of users and courses.
-	if ( ( empty( $query_args['activity_status'] ) ) || ( true === $ACTIVITY_STATUS_HAS_NULL )
+	if ( ( empty( $query_args['activity_status'] ) ) || ( true === $activity_status_has_null )
 	&& ( ( ! empty( $query_args['post_ids'] ) ) || ( ! empty( $query_args['user_ids'] ) ) ) ) {
 
 		$sql_str_joins  = ' INNER JOIN ' . $wpdb->posts . ' as posts ';
-		$sql_str_joins .= ' LEFT JOIN ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' as ld_user_activity ON users.ID=ld_user_activity.user_id AND posts.ID=ld_user_activity.post_id ';
+		$sql_str_joins .= ' LEFT JOIN ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' as ld_user_activity ON users.ID=ld_user_activity.user_id AND posts.ID=ld_user_activity.post_id ';
 
 		if ( ! empty( $query_args['activity_types'] ) ) {
 			$sql_str_joins .= ' AND (ld_user_activity.activity_type IS NULL OR ld_user_activity.activity_type IN (' . "'" . implode( "','", $query_args['activity_types'] ) . "'" . ') )';
 		}
 	} else {
-		$sql_str_joins  = ' LEFT JOIN ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' as ld_user_activity ON users.ID=ld_user_activity.user_id ';
+		$sql_str_joins  = ' LEFT JOIN ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' as ld_user_activity ON users.ID=ld_user_activity.user_id ';
 		$sql_str_joins .= ' LEFT JOIN ' . $wpdb->posts . ' as posts ON posts.ID=ld_user_activity.post_id ';
 	}
 
@@ -999,7 +914,6 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		$sql_str_where .= ' AND posts.ID ' . $query_args['post_ids_action'] . ' (' . implode( ',', $query_args['post_ids'] ) . ') ';
 	}
 
-	//$sql_str_where .= " AND posts.post_status='publish' ";
 	if ( ! empty( $query_args['post_status'] ) ) {
 		$sql_str_where .= ' AND posts.post_status IN (' . "'" . implode( "','", $query_args['post_status'] ) . "'" . ') ';
 	}
@@ -1008,7 +922,7 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 		$sql_str_where .= ' AND posts.post_type IN (' . "'" . implode( "','", $query_args['post_types'] ) . "'" . ') ';
 	}
 
-	if ( true !== $ACTIVITY_STATUS_HAS_NULL ) {
+	if ( true !== $activity_status_has_null ) {
 
 		if ( ! empty( $query_args['activity_types'] ) ) {
 			$sql_str_where .= ' AND ld_user_activity.activity_type IN (' . "'" . implode( "','", $query_args['activity_types'] ) . "'" . ') ';
@@ -1031,16 +945,16 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	}
 
 	if ( ( isset( $query_args['time_start_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_start_gmt_timestamp'] ) ) ) {
-		if ( true === $ACTIVITY_STATUS_HAS_NULL ) {
+		if ( true === $activity_status_has_null ) {
 			$sql_str_where .= ' AND (ld_user_activity.activity_started >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ' OR ld_user_activity.activity_updated >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'] ) ) || ( false !== array_search( '0', $query_args['activity_status'] ) ) ) {
+		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
 			$sql_str_where .= ' AND (ld_user_activity.activity_completed >= ' . $query_args['time_start_gmt_timestamp'] . ') ';
 		}
 	}
 	if ( ( isset( $query_args['time_end_gmt_timestamp'] ) ) && ( ! empty( $query_args['time_end_gmt_timestamp'] ) ) ) {
-		if ( true === $ACTIVITY_STATUS_HAS_NULL ) {
+		if ( true === $activity_status_has_null ) {
 			$sql_str_where .= ' AND (ld_user_activity.activity_started <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ' OR ld_user_activity.activity_updated <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
-		} elseif ( ( false !== array_search( '1', $query_args['activity_status'] ) ) || ( false !== array_search( '0', $query_args['activity_status'] ) ) ) {
+		} elseif ( ( false !== array_search( '1', $query_args['activity_status'], true ) ) || ( false !== array_search( '0', $query_args['activity_status'], true ) ) ) {
 			$sql_str_where .= ' AND (ld_user_activity.activity_completed <= ' . $query_args['time_end_gmt_timestamp'] . ') ';
 		}
 	}
@@ -1122,7 +1036,6 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	}
 
 	$sql_str = 'SELECT ' . $sql_str_fields . $sql_str_tables . $sql_str_joins . $sql_str_where . $sql_str_order . $sql_str_limit;
-	//error_log('sql_str['. $sql_str .']');
 
 	if ( true != $query_args['suppress_filters_query_str'] ) {
 		/**
@@ -1143,8 +1056,7 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 	$activity_results['pager']['total_pages'] = 0;
 
 	if ( ( ! empty( $sql_str ) ) && ( 1 != $query_args['dry_run'] ) ) {
-		$activity_query_results = $wpdb->get_results( $sql_str );
-		//error_log('activity_query_results<pre>'. print_r($activity_query_results, true) .'</pre>');
+		$activity_query_results = $wpdb->get_results( $sql_str ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
 		if ( ( ! is_wp_error( $activity_query_results ) ) && ( count( $activity_query_results ) ) ) {
 			$activity_results['results'] = $activity_query_results;
@@ -1154,16 +1066,19 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 				// There are three date fields we need format.
 				// 1. activity_started
 				if ( ( property_exists( $result_item, 'activity_started' ) ) && ( ! empty( $result_item->activity_started ) ) ) {
+					 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 					$result_item->activity_started_formatted = get_date_from_gmt( date( 'Y-m-d H:i:s', $result_item->activity_started ), $query_args['date_format'] );
 				}
 
 				// 2. activity_completed
 				if ( ( property_exists( $result_item, 'activity_completed' ) ) && ( ! empty( $result_item->activity_completed ) ) ) {
+					 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 					$result_item->activity_completed_formatted = get_date_from_gmt( date( 'Y-m-d H:i:s', $result_item->activity_completed ), $query_args['date_format'] );
 				}
 
 				// 3. activity_completed
 				if ( ( property_exists( $result_item, 'activity_updated' ) ) && ( ! empty( $result_item->activity_updated ) ) ) {
+					 // phpcs:ignore: WordPress.DateTime.RestrictedFunctions.date_date
 					$result_item->activity_updated_formatted = get_date_from_gmt( date( 'Y-m-d H:i:s', $result_item->activity_updated ), $query_args['date_format'] );
 				}
 
@@ -1178,10 +1093,8 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 
 	if ( ( 1 != $query_args['dry_run'] ) && ( isset( $activity_results['results'] ) ) && ( ! empty( $activity_results['results'] ) ) && ( ! empty( $query_args['per_page'] ) ) ) {
 		$query_str_count = 'SELECT SQL_CALC_FOUND_ROWS count(*) as count ' . $sql_str_tables . $sql_str_joins . ' ' . $sql_str_where;
-		//error_log('query_str_count['. $query_str_count .']');
 
-		$activity_query_count = $wpdb->get_row( $query_str_count );
-		//error_log('activity_query_count<pre>'. print_r($activity_query_count, true) .'</pre>');
+		$activity_query_count = $wpdb->get_row( $query_str_count ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		if ( ( ! is_wp_error( $activity_query_count ) ) && ( property_exists( $activity_query_count, 'count' ) ) ) {
 
 			$activity_results['pager']                = array();
@@ -1216,16 +1129,10 @@ function learndash_reports_get_activity( $query_args = array(), $current_user_id
 function learndash_report_course_users_progress( $course_id = 0, $user_query_args = array(), $activity_query_args = array() ) {
 	$course_user_progress_data = array();
 
-	//error_log('in '. __FUNCTION__ );
-	//error_log('course_id['. $course_id .']');
-	//error_log('user_query_args<pre>'. print_r($user_query_args, true) .'</pre>');
-	//error_log('activity_query_args<pre>'. print_r($activity_query_args, true) .'</pre>');
-
 	if ( ! empty( $course_id ) ) {
 
 		// If the user_ids was not passed from the caller then we need to do that work
 		if ( ( ! isset( $activity_query_args['user_ids'] ) ) || ( empty( $activity_query_args['user_ids'] ) ) ) {
-			//error_log('user_ids is EMPTY, calling learndash_get_users_for_course');
 			$course_user_query = learndash_get_users_for_course( intval( $course_id ), $user_query_args );
 			if ( $course_user_query instanceof WP_User_Query ) {
 				$activity_query_args['user_ids'] = $course_user_query->get_results();
@@ -1304,14 +1211,23 @@ function learndash_report_clear_by_activity_ids( $activity_ids = array() ) {
 
 	if ( ! empty( $activity_ids ) ) {
 		$activity_ids = array_map( 'absint', $activity_ids );
-		$sql_str      = 'DELETE FROM ' . LDLMS_DB::get_table_name( 'user_activity_meta' ) . ' WHERE activity_id IN (' . implode( ',', $activity_ids ) . ') ';
-		$wpdb->query( $sql_str );
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared -- IN clause
+				'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity_meta' ) ) . ' WHERE activity_id IN (' . LDLMS_DB::escape_IN_clause_placeholders( $activity_ids ) . ')',
+				LDLMS_DB::escape_IN_clause_values( $activity_ids )
+			)
+		);
 
-		$sql_str = 'DELETE FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE activity_id IN (' . implode( ',', $activity_ids ) . ') ';
-		$wpdb->query( $sql_str );
+		$wpdb->query(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQL.NotPrepared -- IN clause
+				'DELETE FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE activity_id IN (' . LDLMS_DB::escape_IN_clause_placeholders( $activity_ids ) . ')',
+				LDLMS_DB::escape_IN_clause_values( $activity_ids )
+			)
+		);
 	}
 }
-
 
 
 /**
@@ -1327,14 +1243,9 @@ function learndash_report_clear_by_activity_ids( $activity_ids = array() ) {
 function learndash_activity_clear_mismatched_users() {
 	global $wpdb;
 
-	$sql_str = 'SELECT DISTINCT lua.user_id
-	FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . " as lua
-	LEFT JOIN {$wpdb->usermeta} as um1 ON lua.user_id = um1.user_id AND um1.meta_key = '{$wpdb->prefix}capabilities'
-	LEFT JOIN {$wpdb->users} as users ON lua.user_id = users.ID
-	WHERE 1=1
-	AND ( um1.meta_key IS NULL OR users.ID is NULL )";
-
-	$process_users = $wpdb->get_col( $sql_str );
+	$process_users = $wpdb->get_col(
+		'SELECT DISTINCT lua.user_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . " as lua LEFT JOIN {$wpdb->usermeta} as um1 ON lua.user_id = um1.user_id AND um1.meta_key = '{$wpdb->prefix}capabilities' LEFT JOIN {$wpdb->users} as users ON lua.user_id = users.ID WHERE 1=1 AND ( um1.meta_key IS NULL OR users.ID is NULL )"
+	);
 	if ( ! empty( $process_users ) ) {
 		foreach ( $process_users as $user_id ) {
 			learndash_report_clear_user_activity_by_types( $user_id );
@@ -1355,12 +1266,9 @@ function learndash_activity_clear_mismatched_users() {
 function learndash_activity_clear_mismatched_posts() {
 	global $wpdb;
 
-	$sql_str = 'SELECT DISTINCT ' . LDLMS_DB::get_table_name( 'user_activity' ) . '.post_id
-	FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' LEFT JOIN ' . $wpdb->posts . ' ON ' . LDLMS_DB::get_table_name( 'user_activity' ) . '.post_id=' . $wpdb->posts . '.ID
-	WHERE ' . $wpdb->posts . '.ID is NULL';
-	//error_log('sql_str['. $sql_str .']');
-
-	$process_posts = $wpdb->get_col( $sql_str );
+	$process_posts = $wpdb->get_col(
+		'SELECT DISTINCT ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . '.post_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' LEFT JOIN ' . $wpdb->posts . ' ON ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . '.post_id=' . $wpdb->posts . '.ID WHERE ' . $wpdb->posts . '.ID is NULL'
+	);
 	if ( ! empty( $process_posts ) ) {
 		foreach ( $process_posts as $post_id ) {
 			learndash_report_clear_post_activity_by_types( $post_id );
@@ -1388,20 +1296,25 @@ function learndash_report_get_activity_by_user_id( $user_id = 0, $activity_types
 		return;
 	}
 
-	$sql_str = 'SELECT activity_id FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=' . intval( $user_id );
-
-	if ( ! empty( $activity_types ) ) {
-		if ( ! is_array( $activity_types ) ) {
-			$activity_types = explode( ',', $activity_types );
-		}
-		$activity_types = array_map( 'trim', $activity_types );
-
-		$sql_str .= ' AND activity_type IN (' . "'" . implode( "','", $activity_types ) . "'" . ')';
-
+	$activity_ids = array();
+	if ( empty( $activity_types ) ) {
+		$activity_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE user_id = %d',
+				$user_id
+			)
+		);
+	} else {
+		$activity_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- IN clause
+				'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE user_id = %d AND activity_type IN (' . LDLMS_DB::escape_IN_clause_placeholders( $activity_types ) . ')',
+				array_merge( array( $user_id ), LDLMS_DB::escape_IN_clause_values( $activity_types ) )
+			)
+		);
 	}
-	//error_log('sql_str['. $sql_str .']');
 
-	return $wpdb->get_col( $sql_str );
+	return array_map( 'absint', $activity_ids );
 }
 
 /**
@@ -1424,18 +1337,25 @@ function learndash_report_get_activity_by_post_id( $post_id = 0, $activity_types
 		return;
 	}
 
-	$sql_str = 'SELECT activity_id FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE post_id=' . intval( $post_id );
-
-	if ( ! empty( $activity_types ) ) {
-		if ( ! is_array( $activity_types ) ) {
-			$activity_types = explode( ',', $activity_types );
-		}
-		$activity_types = array_map( 'trim', $activity_types );
-
-		$sql_str .= ' AND activity_type IN (' . "'" . implode( "','", $activity_types ) . "'" . ')';
-
+	$activity_ids = array();
+	if ( empty( $activity_types ) ) {
+		$activity_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE post_id = %d',
+				$post_id
+			)
+		);
+	} else {
+		$activity_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- IN clause
+				'SELECT activity_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE post_id = %d AND activity_type IN (' . LDLMS_DB::escape_IN_clause_placeholders( $activity_types ) . ')',
+				array_merge( array( $post_id ), LDLMS_DB::escape_IN_clause_values( $activity_types ) )
+			)
+		);
 	}
-	return $wpdb->get_col( $sql_str );
+
+	return array_map( 'absint', $activity_ids );
 }
 
 
@@ -1487,7 +1407,6 @@ function learndash_report_user_courses_progress( $user_id = 0, $course_query_arg
 			$user_courses_progress_data = $activity;
 		}
 	}
-	//error_log('results<pre>'. print_r($user_courses_progress_data['results'], true) .'</pre>');
 
 	return $user_courses_progress_data;
 }
@@ -1508,9 +1427,9 @@ function learndash_get_user_quiz_attempts( $user_id = 0, $quiz_id = 0 ) {
 	global $wpdb;
 
 	if ( ( ! empty( $user_id ) ) || ( ! empty( $quiz_id ) ) ) {
-		$sql_str = $wpdb->prepare( 'SELECT activity_id, activity_started, activity_completed FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND post_id=%d and activity_type=%s ORDER BY activity_id, activity_started ASC', $user_id, $quiz_id, 'quiz' );
-		//error_log('sql_str['. $sql_str .']');
-		return $wpdb->get_results( $sql_str );
+		return $wpdb->get_results(
+			$wpdb->prepare( 'SELECT activity_id, activity_started, activity_completed FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE user_id = %d AND post_id = %d AND activity_type = %s ORDER BY activity_id, activity_started ASC', $user_id, $quiz_id, 'quiz' )
+		);
 	}
 }
 
@@ -1574,9 +1493,9 @@ function learndash_get_user_course_attempts( $user_id = 0, $course_id = 0 ) {
 	global $wpdb;
 
 	if ( ( ! empty( $user_id ) ) || ( ! empty( $course_id ) ) ) {
-		$sql_str = $wpdb->prepare( 'SELECT activity_id, activity_started, activity_completed, activity_updated FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND post_id=%d and activity_type=%s ORDER BY activity_id, activity_started ASC', $user_id, $course_id, 'course' );
-		//error_log('sql_str['. $sql_str .']');
-		return $wpdb->get_results( $sql_str );
+		return $wpdb->get_results(
+			$wpdb->prepare( 'SELECT activity_id, activity_started, activity_completed, activity_updated FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity' ) ) . ' WHERE user_id=%d AND post_id=%d and activity_type=%s ORDER BY activity_id, activity_started ASC', $user_id, $course_id, 'course' )
+		);
 	}
 }
 
@@ -1597,7 +1516,6 @@ function learndash_get_user_course_attempts_time_spent( $user_id = 0, $course_id
 	$total_time_spent = 0;
 
 	$attempts = learndash_get_user_course_attempts( $user_id, $course_id );
-	//error_log('attempts<pre>'. print_r($attempts, true) .'</pre>');
 
 	// We should only ever have one entry for a user+course_id. But still we are returned an array of objects
 	if ( ( ! empty( $attempts ) ) && ( is_array( $attempts ) ) ) {
@@ -1634,13 +1552,14 @@ function learndash_get_activity_meta_fields( $activity_id = 0, $activity_meta_ke
 
 	if ( ! empty( $activity_id ) ) {
 
-		$sql_str           = $wpdb->prepare( 'SELECT activity_meta_key, activity_meta_value FROM ' . LDLMS_DB::get_table_name( 'user_activity_meta' ) . ' WHERE activity_id=%d', $activity_id );
-		$activity_meta_raw = $wpdb->get_results( $sql_str );
+		$activity_meta_raw = $wpdb->get_results(
+			$wpdb->prepare( 'SELECT activity_meta_key, activity_meta_value FROM ' . esc_sql( LDLMS_DB::get_table_name( 'user_activity_meta' ) ) . ' WHERE activity_id = %d', $activity_id )
+		);
 
 		// If we have some rows returned we want to restructure the meta to be proper key => value array pairs.
 		if ( ! empty( $activity_meta_raw ) ) {
 			foreach ( $activity_meta_raw as $activity_meta_item ) {
-				if ( ( empty( $activity_meta_keys ) ) || ( in_array( $activity_meta_item->activity_meta_key, $activity_meta_keys ) ) ) {
+				if ( ( empty( $activity_meta_keys ) ) || ( in_array( $activity_meta_item->activity_meta_key, $activity_meta_keys, true ) ) ) {
 					$activity_meta[ $activity_meta_item->activity_meta_key ] = $activity_meta_item->activity_meta_value;
 				}
 			}

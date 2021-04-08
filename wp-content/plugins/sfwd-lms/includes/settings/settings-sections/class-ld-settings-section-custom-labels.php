@@ -168,6 +168,14 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'value'     => isset( $this->setting_option_values['groups'] ) ? $this->setting_option_values['groups'] : '',
 					'class'     => 'regular-text',
 				),
+				'group_leader'                  => array(
+					'name'      => 'group_leader',
+					'type'      => 'text',
+					'label'     => esc_html__( 'Group Leader', 'learndash' ),
+					'help_text' => esc_html__( 'Label to rename Group Leader user role.', 'learndash' ),
+					'value'     => isset( $this->setting_option_values['group_leader'] ) ? $this->setting_option_values['group_leader'] : '',
+					'class'     => 'regular-text',
+				),
 				'button_take_this_course'       => array(
 					'name'      => 'button_take_this_course',
 					'type'      => 'text',
@@ -213,6 +221,39 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_fields = apply_filters( 'learndash_settings_fields', $this->setting_option_fields, $this->settings_section_key );
 
 			parent::load_settings_fields();
+		}
+
+		/**
+		 * Changes group_leader role display name
+		 *
+		 * @since 3.0
+		 * @param array $new_values Array of section fields values.
+		 * @param array $old_values Array of old values.
+		 * @param string $section_key Section option key should match $this->setting_option_key.
+		 */
+		public function section_pre_update_option( $new_values = '', $old_values = '', $setting_option_key = '' ) {
+			if ( $setting_option_key === $this->setting_option_key ) {
+				$new_values = parent::section_pre_update_option( $new_values, $old_values, $setting_option_key );
+
+				if ( ! isset( $new_values['group_leader'] ) ) {
+					$new_values['group_leader'] = '';
+				}
+
+				if ( ! isset( $old_values['group_leader'] ) ) {
+					$old_values['group_leader'] = '';
+				}
+
+				if ( $old_values['group_leader'] !== $new_values['group_leader'] ) {
+					$group_leader = get_role( 'group_leader' );
+					if ( ! is_null( $group_leader ) ) {
+						remove_role( 'group_leader' );
+						add_role( 'group_leader', $new_values['group_leader'], $group_leader->capabilities );
+					}
+				}
+			}
+
+			return $new_values;
+
 		}
 	}
 }

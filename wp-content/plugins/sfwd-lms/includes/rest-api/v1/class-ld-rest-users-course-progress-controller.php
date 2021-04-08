@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Users_Course_Progress_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -33,7 +37,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( cl
 				array(
 					'args' => array(
 						'id' => array(
-							'description' => esc_html__( 'User ID to show course progress', 'learndash' ),
+							// translators: course
+							'description' => sprintf( esc_html_x( 'User ID to show %s progress', 'placeholder: course', 'learndash' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),
@@ -389,11 +394,35 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V1' ) ) && ( cl
 			$course_id = $request['course'];
 			$lesson_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id_X', esc_html__( 'Invalid Course ID.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			if ( empty( $lesson_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id_Y', esc_html__( 'Invalid Lesson ID.', 'learndash' ), array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+						sprintf(
+							// translators: placeholder: Lesson.
+							esc_html_x(
+								'Invalid %s ID.',
+								'placeholder: Lesson',
+								'learndash'
+							),
+							LearnDash_Custom_Label::get_label( 'lesson' )
+						),
+					array( 'status' => 404 )
+				);
 			}
 
 			$current_user_id = get_current_user_id();

@@ -289,7 +289,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				)
 			);
 
-			if ( 'yes' !== $this->setting_option_values['course_builder_shared_steps'] ) {
+			if ( 'yes' !== $this->setting_option_values['course_builder_enabled'] ) {
 				$this->setting_option_fields = array_merge(
 					$this->setting_option_fields,
 					array(

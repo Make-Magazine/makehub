@@ -7,6 +7,10 @@
  * @package LearnDash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 
 	/**
@@ -45,7 +49,11 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'permission_callback' => array( $this, 'permissions_check' ),
 						'args'                => array(
 							'id' => array(
-								'description'       => __( 'The question ID', 'learndash' ),
+								'description'       => sprintf(
+									// translators: question
+									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
+									learndash_get_custom_label_lower( 'question' )
+								),
 								'required'          => true,
 								'validate_callback' => function( $param, $request, $key ) {
 									return is_numeric( $param );
@@ -60,7 +68,11 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'permission_callback' => array( $this, 'permissions_check' ),
 						'args'                => array(
 							'id' => array(
-								'description'       => __( 'The question ID', 'learndash' ),
+								'description'       => sprintf(
+									// translators: question
+									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
+									learndash_get_custom_label_lower( 'question' )
+								),
 								'required'          => true,
 								'validate_callback' => function( $param, $request, $key ) {
 									return is_numeric( $param );
@@ -75,7 +87,11 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'permission_callback' => array( $this, 'permissions_check' ),
 						'args'                => array(
 							'id' => array(
-								'description'       => __( 'The question ID', 'learndash' ),
+								'description'       => sprintf(
+									// translators: question
+									esc_html_x( 'The %s ID', 'placeholder: question', 'learndash' ),
+									learndash_get_custom_label_lower( 'question' )
+								),
 								'required'          => true,
 								'validate_callback' => function( $param, $request, $key ) {
 									return is_numeric( $param );
@@ -276,13 +292,15 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'readonly'    => true,
 					),
 					'_quizId'                         => array(
-						'description' => __( 'The ID of the quiz associated with the question.', 'learndash' ),
+						// translators: quiz, question
+						'description' => sprintf( esc_html_x( 'The ID of the %1$s associated with the %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'_sort'                           => array(
-						'description' => __( 'The order of the question in the quiz.', 'learndash' ),
+						// translators: question, quiz
+						'description' => sprintf( esc_html_x( 'The order of the %1$s in the %2$s', 'placeholder: question, quiz', 'learndash' ), learndash_get_custom_label_lower( 'question' ), learndash_get_custom_label_lower( 'quiz' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit' ),
 					),
@@ -292,7 +310,8 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'context'     => array( 'view', 'edit' ),
 					),
 					'_question'                       => array(
-						'description' => __( 'The question content.', 'learndash' ),
+						// translators: question
+						'description' => sprintf( esc_html_x( 'The %s content', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit' ),
 					),
@@ -322,7 +341,8 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						'context'     => array( 'view', 'edit' ),
 					),
 					'_points'                         => array(
-						'description' => __( 'The total number of points that can be obtained from the question', 'learndash' ),
+						// translators: placeholder: question
+						'description' => sprintf( esc_html_x( 'The total number of points that can be obtained from the %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'boolean',
 						'context'     => array( 'view', 'edit' ),
 					),
@@ -407,7 +427,8 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 								'context'     => array( 'view', 'edit' ),
 							),
 							'_gradingProgression' => array(
-								'description' => __( 'Determines how should the answer to this question be marked and graded upon quiz submission.', 'learndash' ),
+								// translators: question, quiz
+								'description' => sprintf( esc_html_x( 'Determines how should the answer to this %1$s be marked and graded upon %2$s submission.', 'placeholder: question, quiz', 'learndash' ), learndash_get_custom_label_lower( 'question' ), learndash_get_custom_label_lower( 'quiz' ) ),
 								'type'        => 'text',
 								'context'     => array( 'view', 'edit' ),
 								'enum'        => array( 'not-graded-none', 'not-graded-full', 'graded-full' ),
@@ -421,13 +442,15 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 						),
 					),
 					'question_id'                     => array(
-						'description' => __( 'The question post ID.', 'learndash' ),
+						// translators: question
+						'description' => sprintf( esc_html_x( 'The %s post ID.', 'placeholder: question', 'learndash' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'question_post_title'             => array(
-						'description' => __( 'The question post title.', 'learndash' ),
+						// translators: question
+						'description' => sprintf( esc_html_x( 'The %s post title.', 'placeholder: question', 'learndash' ) ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit' ),
 					),

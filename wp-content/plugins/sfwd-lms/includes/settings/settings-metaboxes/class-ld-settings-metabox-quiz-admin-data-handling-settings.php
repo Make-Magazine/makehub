@@ -452,7 +452,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'name'              => 'associated_settings',
 					'type'              => 'select',
 					'label_full'        => true,
-					'label'             => esc_html__( 'Associated Quiz Database Table', 'learndash' ),
+					'label'             => sprintf(
+						// translators: Quiz
+						esc_html_x( 'Associated %s Database Table', 'placeholder: Quiz', 'learndash' ),
+						learndash_get_custom_label( 'quiz' )
+					),
 					'label_description' => wp_kses_post( 'This will change the database association.<br /><strong>We do not recommend editing this</strong> unless for a specific purpose.', 'learndash' ),
 					'input_full'        => true,
 					'value'             => $this->setting_option_values['associated_settings'],

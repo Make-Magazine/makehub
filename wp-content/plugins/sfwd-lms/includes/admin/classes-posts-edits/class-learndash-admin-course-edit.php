@@ -90,7 +90,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				}
 				/** This filter is documented in includes/admin/class-learndash-admin-posts-edit.php */
 				$this->_metaboxes = apply_filters( 'learndash_post_settings_metaboxes_init_' . $this->post_type, $this->_metaboxes );
-				add_filter( 'learndash_header_data', 'LearnDash\Admin\CourseBuilderHelpers\get_course_data', 100 );
+				add_filter( 'learndash_header_data', 'LearnDash\Admin\CourseBuilderHelpers\learndash_get_course_data', 100 );
 			}
 		}
 

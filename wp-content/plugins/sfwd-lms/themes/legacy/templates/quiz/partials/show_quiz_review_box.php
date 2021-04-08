@@ -12,6 +12,10 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wpProQuiz_reviewDiv" style="display: none;">
 	<?php

@@ -33,7 +33,10 @@ if ( ! empty( $video_content ) ) {
 		$content = $video_content . $content;
 	}
 } else {
-	if ( false !== strpos( $content, '[ld_video]' ) ) {
+	if ( strpos( $content, '<p>[ld_video]</p>' ) !== false ) {
+		$content = str_replace( '<p>[ld_video]</p>', '', $content );
+	}
+	if ( strpos( $content, '[ld_video]' ) !== false ) {
 		$content = str_replace( '[ld_video]', '', $content );
 	}
 }

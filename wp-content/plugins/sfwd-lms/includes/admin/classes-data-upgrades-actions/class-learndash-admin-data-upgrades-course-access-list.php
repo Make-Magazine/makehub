@@ -282,11 +282,12 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			}
 
 			$data['progress_label'] = sprintf(
-				// translators: placeholders: result count, total count.
-				esc_html_x( '%1$s: %2$d of %3$d Courses', 'placeholders: progress status, result count, total count', 'learndash' ),
+				// translators: placeholders: result count, total count, Courses.
+				esc_html_x( '%1$s: %2$d of %3$d %4$s', 'placeholders: progress status, result count, total count, Courses', 'learndash' ),
 				$progress_status,
 				$data['result_count'],
-				$data['total_count']
+				$data['total_count'],
+				learndash_get_custom_label( 'courses' )
 			);
 
 			return $data;

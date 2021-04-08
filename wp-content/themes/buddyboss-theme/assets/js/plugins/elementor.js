@@ -10,6 +10,8 @@
         ignoreFitVids: function() {
             
             $( ".elementor-section[data-settings*='background_video_link']" ).addClass( 'fitvidsignore' );
+            $( '.elementor-widget-video' ).addClass( 'fitvidsignore' );
+            $( '.elementor-video-container' ).addClass( 'fitvidsignore' );
 
         },
 

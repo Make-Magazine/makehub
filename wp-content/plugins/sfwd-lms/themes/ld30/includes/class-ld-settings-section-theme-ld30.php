@@ -47,7 +47,7 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 
 			foreach ( $ld30_colors_defs as $definition => $value ) {
 				if ( ! defined( $definition ) ) {
-					define( $definition, $value );
+					define( $definition, $value ); //phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.VariableConstantNameFound -- Inside a protected constructor
 				}
 			}
 
@@ -91,11 +91,6 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 			if ( ( ! isset( $this->setting_option_values['focus_mode_content_width'] ) ) || ( empty( $this->setting_option_values['focus_mode_content_width'] ) ) ) {
 				$this->setting_option_values['focus_mode_content_width'] = 'default';
 			}
-
-			/*
-			if ( ( ! isset( $this->setting_option_values['color_4'] ) ) || ( empty( $this->setting_option_values['color_4'] ) ) ) {
-				$this->setting_option_values['color_4'] = '#35e8d0';
-			} */
 		}
 
 		/**
@@ -154,8 +149,9 @@ if ( ( class_exists( 'LearnDash_Theme_Settings_Section' ) ) && ( ! class_exists(
 					'type'                => 'checkbox-switch',
 					'label'               => esc_html__( 'Focus Mode', 'learndash' ),
 					'help_text'           => sprintf(
-						// translators: placeholder: courses.
-						esc_html_x( 'Provide a distraction-free course experience allowing users to focus on the content. This applies to ALL %s.', 'placeholder: courses.', 'learndash' ),
+						// translators: placeholder: course, courses.
+						esc_html_x( 'Provide a distraction-free %1$s experience allowing users to focus on the content. This applies to ALL %2$s.', 'placeholder: course, courses.', 'learndash' ),
+						learndash_get_custom_label_lower( 'course' ),
 						learndash_get_custom_label_lower( 'courses' )
 					),
 					'value'               => $this->setting_option_values['focus_mode_enabled'],

@@ -17,21 +17,10 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
- } = wp.blocks;
-
- const {
-	InnerBlocks,
-	InspectorControls,
- } = wp.blockEditor;
-
-const {
-	PanelBody,
-	TextControl,
-	ToggleControl
-} = wp.components;
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl } from '@wordpress/components';
 
 const block_title = sprintf(
 	// translators: placeholder: Quiz.
@@ -43,7 +32,7 @@ registerBlockType(
 	{
 		title: block_title,
 		// translators: placeholder: Quiz.
-		description: sprintf(_x('This block shows the content if the user is has completed the %s.', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz')),
+		description: sprintf(_x('This block shows the content if the user has completed the %s.', 'placeholder: Quiz', 'learndash'), ldlms_get_custom_label('quiz')),
 		icon: 'star-filled',
 		category: 'learndash-blocks',
 		supports: {

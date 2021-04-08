@@ -39,7 +39,7 @@
 			<strong>Error Loading Results:</strong> <code>{{ results.error }}</code>
 		</template>
 		<template v-else-if="loading">
-			<img :src="gfBaseUrl + '/images/spinner.gif'"/> Loading Results
+			<img :src="spinnerUrl"/> Loading Results
 		</template>
 		<template v-else-if="results && results.length === 0">
 			<strong>{{ results.length }}</strong> results found
@@ -88,7 +88,8 @@
 				previewResultsPromise: null,
 				results: null,
 				limit: null,
-				gfBaseUrl: GPPA_ADMIN.gfBaseUrl,
+				gfBaseUrl: window.GPPA_ADMIN.gfBaseUrl,
+				spinnerUrl: window.gf_global.spinnerUrl,
 			};
 		},
 		created: function () {
@@ -160,7 +161,7 @@
 				var missingTemplates = [];
 
 				this.templateRows.forEach(function (templateRow) {
-					if (!(templateRow.id in vm.templates) || !vm.templates[templateRow.id]) {
+					if (!vm.templates?.[templateRow.id] && templateRow.required) {
 						missingTemplates.push(templateRow.label);
 					}
 				});

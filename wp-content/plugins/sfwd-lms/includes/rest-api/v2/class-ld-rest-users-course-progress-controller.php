@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the user
  * course progress.
@@ -945,7 +949,12 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 				$user_course_progress_header['date_completed'] = '';
 			}
 
-			$user_course_progress_header['progress_status'] = learndash_course_status( $course_id, $user_id, true );
+			if ( isset( $user_course_progress_header['status'] ) ) {
+				$user_course_progress_header['progress_status'] = $user_course_progress_header['status'];
+				unset( $user_course_progress_header['status'] );
+			} else {
+				$user_course_progress_header['progress_status'] = learndash_course_status( $course_id, $user_id, true );
+			}
 
 			$user_course_progress_header['_links'] = array(
 				'self'       => array(
@@ -965,6 +974,16 @@ if ( ( ! class_exists( 'LD_REST_Users_Course_Progress_Controller_V2' ) ) && ( cl
 					),
 				),
 			);
+
+			$progress_status_rest_base = $this->get_rest_base( 'progress-status', 'progress-status' );
+			if ( ! empty( $progress_status_rest_base ) ) {
+				$user_course_progress_header['_links']['progress_status'] = array(
+					array(
+						'href'       => rest_url( $this->namespace . '/' . $progress_status_rest_base . '/' . str_replace( '_', '-', $user_course_progress_header['progress_status'] ) ),
+						'embeddable' => false,
+					),
+				);
+			}
 
 			return $user_course_progress_header;
 

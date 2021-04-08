@@ -40,5 +40,6 @@ require plugin_dir_path( __FILE__ ) . 'blocks/ld-certificate/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-quiz-complete/index.php';
 
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-courseinfo/index.php';
+require plugin_dir_path( __FILE__ ) . 'blocks/ld-quizinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-groupinfo/index.php';
 require plugin_dir_path( __FILE__ ) . 'blocks/ld-usermeta/index.php';

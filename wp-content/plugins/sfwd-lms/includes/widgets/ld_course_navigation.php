@@ -20,12 +20,12 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 		public function __construct() {
 			$widget_ops  = array(
 				'classname'   => 'widget_ldcoursenavigation',
-				// translators: placeholder: Course.
-				'description' => sprintf( esc_html_x( 'LearnDash - %s Navigation. Shows lessons and topics on the current course.', 'placeholder: Course', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ),
+				// translators: placeholder: Course, lessons, topics, course.
+				'description' => sprintf( esc_html_x( 'LearnDash - %1$s Navigation. Shows %2$s and %3$s on the current %4$s.', 'placeholder: Course, lessons, topics, course', 'learndash' ), learndash_get_custom_label( 'course' ), learndash_get_custom_label_lower( 'lessons' ), learndash_get_custom_label_lower( 'topics' ), learndash_get_custom_label_lower( 'course' ) ),
 			);
 			$control_ops = array();
 			// translators: placeholder: Course.
-			parent::__construct( 'widget_ldcoursenavigation', sprintf( esc_html_x( '%s Navigation', 'Course Navigation Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ), $widget_ops, $control_ops );
+			parent::__construct( 'widget_ldcoursenavigation', sprintf( esc_html_x( '%s Navigation', 'Course Navigation Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ), $widget_ops, $control_ops );
 		}
 
 		/**

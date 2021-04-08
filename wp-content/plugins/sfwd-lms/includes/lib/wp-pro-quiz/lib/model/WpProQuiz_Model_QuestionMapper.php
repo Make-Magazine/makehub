@@ -379,7 +379,13 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 		$question_id = absint( $question_id );
 
 		if ( ! $stat_id ) {
-			throw new Exception( __( 'Statistics ID cannot be empty in order to fetch questions for statistics.', 'learndash' ) );
+			throw new Exception(
+				sprintf(
+				// translators: questions
+					esc_html_x( 'Statistics ID cannot be empty in order to fetch %s for statistics.', 'placeholder: questions', 'learndash' ),
+					learndash_get_custom_label_lower( 'questions' )
+				)
+			);
 		}
 
 		if ( ! empty( $question_id ) ) {
@@ -414,7 +420,13 @@ class WpProQuiz_Model_QuestionMapper extends WpProQuiz_Model_Mapper {
 	public function fetchByStatIdCount( $stat_id = 0, $question_id = 0 ) {
 
 		if ( ! $stat_id ) {
-			throw new Exception( __( 'Statistics ID cannot be empty in order to fetch questions for statistics.', 'learndash' ) );
+			throw new Exception(
+				sprintf(
+				// translators: questions
+					esc_html_x( 'Statistics ID cannot be empty in order to fetch %s for statistics.', 'placeholder: questions', 'learndash' ),
+					learndash_get_custom_label_lower( 'questions' )
+				)
+			);
 		}
 
 		if ( ! empty( $question_id ) ) {

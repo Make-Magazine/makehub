@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Users_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -55,7 +59,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'update_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to add to User.', 'learndash' ),
+								// translators: group
+								'description' => sprintf( esc_html_x( '%s IDs to add to User.', 'placeholder: g roup', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -70,7 +75,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'delete_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to remove from User.', 'learndash' ),
+								// translators: group
+								'description' => sprintf( esc_html_x( '%s IDs to remove from User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -102,7 +108,15 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 						'readonly'    => true,
 					),
 					'group_ids' => array(
-						'description' => __( 'The Group IDs.', 'learndash' ),
+						'description' => sprintf(
+							// translators: placholder: group
+							esc_html_x(
+								'The %s IDs.',
+								'placeholder: group',
+								'learndash'
+							),
+							learndash_get_custom_lower_label( 'group' )
+						),
 						'type'        => 'array',
 						'items'       => array(
 							'type' => 'integer',
@@ -147,7 +161,19 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$group_ids = array_map( 'intval', $group_ids );
 			}
@@ -175,7 +201,19 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V1' ) ) && ( class_exist
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$group_ids = array_map( 'intval', $group_ids );
 			}

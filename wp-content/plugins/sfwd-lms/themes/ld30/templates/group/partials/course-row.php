@@ -12,6 +12,10 @@
  * @package LearnDash\Group
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 $course      = get_post( $course_id );
 $course_link = get_permalink( $course_id );
 

@@ -5,6 +5,11 @@
  * @package LearnDash
  * @subpackage Settings
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Group_Courses_Settings' ) ) ) {
 	/**
 	 * Class to create the settings section.

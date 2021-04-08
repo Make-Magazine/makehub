@@ -16,36 +16,17 @@
 /**
  * Internal block libraries
  */
-const {
-	__,
-	_x,
-	sprintf
-} = wp.i18n;
-
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __ } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-login',
 	{
-		title: _x('LearnDash Login', 'learndash'),
-		description: __('This shortcode adds the login button on any page', 'learndash'),
+		title: __('LearnDash Login', 'learndash'),
+		description: __('This block adds the login button on any page', 'learndash'),
 		icon: 'admin-network',
 		category: 'learndash-blocks',
 		example: {

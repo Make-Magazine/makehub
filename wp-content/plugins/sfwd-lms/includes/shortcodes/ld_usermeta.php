@@ -56,23 +56,33 @@ function learndash_usermeta_shortcode( $attr, $content = '' ) {
 
 	if ( ( ! empty( $attr['user_id'] ) ) && ( ! empty( $attr['field'] ) ) ) {
 
-		if ( ( learndash_is_admin_user() ) || ( get_current_user_id() == $attr['user_id'] ) ) {
-			$usermeta_available_fields = array( $attr['field'] => $attr['field'] );
-		} else {
-			$usermeta_available_fields = learndash_get_usermeta_shortcode_available_fields( $attr );
-		}
+		$userdata = get_userdata( intval( $attr['user_id'] ) );
+		if ( ( $userdata ) && ( is_a( $userdata, 'WP_User' ) ) ) {
 
-		if ( ! is_array( $usermeta_available_fields ) ) {
-			$usermeta_available_fields = array( $usermeta_available_fields );
-		}
+			if ( ( learndash_is_admin_user() ) || ( get_current_user_id() == $attr['user_id'] ) ) {
+				$usermeta_available_fields = array( $attr['field'] => $attr['field'] );
+			} else {
+				$usermeta_available_fields = learndash_get_usermeta_shortcode_available_fields( $attr );
+			}
 
-		if ( array_key_exists( $attr['field'], $usermeta_available_fields ) === true ) {
+			if ( ! is_array( $usermeta_available_fields ) ) {
+				$usermeta_available_fields = array( $usermeta_available_fields );
+			}
+			
 			$value = '';
+			if ( array_key_exists( $attr['field'], $usermeta_available_fields ) === true ) {
+			
+				switch( $attr['field'] ) {
+					case 'first_last_name':				
+						$value = $userdata->user_firstname . ' ' . $userdata->user_lastname;
+						break;
 
-			// First check the userdata fields
-			$userdata = get_userdata( intval( $attr['user_id'] ) );
-			if ( ( ( $userdata ) && ( $userdata instanceof WP_User ) ) ) {
-				$value = $userdata->{$attr['field']};
+					default:
+						if ( array_key_exists( $attr['field'], $usermeta_available_fields ) === true ) {
+							$value = $userdata->{$attr['field']};
+						}
+						break;
+				}
 			}
 
 			/**

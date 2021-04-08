@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! defined( 'LEARNDASH_REST_API_NAMESPACE' ) ) {
 	define( 'LEARNDASH_REST_API_NAMESPACE', 'ldlms' );
 }
@@ -125,6 +129,10 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-users-quiz-progress-controller.php',
 					),
+					'LD_REST_Quiz_Statistics_Controller_V2' => array(
+						'register_routes' => true,
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quiz-statistics-controller.php',
+					),
 					'LD_REST_Echo_Controller_V2'           => array(
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-echo-controller.php',
@@ -137,9 +145,9 @@ if ( ! class_exists( 'LearnDash_REST_API' ) ) {
 						'register_routes' => true,
 						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-question-types-controller.php',
 					),
-					'LD_REST_Quiz_Statistics_Controller_V2' => array(
+					'LD_REST_Progress_Status_Controller_V2' => array(
 						'register_routes' => true,
-						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-quiz-statistics-controller.php',
+						'file'            => LEARNDASH_REST_API_DIR . '/v2/class-ld-rest-progress-status-controller.php',
 					),
 				);
 

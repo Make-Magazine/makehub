@@ -149,6 +149,9 @@ function learndash_profile( $atts ) {
 
 			if ( get_current_user_id() == $atts['user_id'] && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
 				$quiz_attempt['certificate'] = $c;
+				if ( ( isset( $quiz_attempt['certificate']['certificateLink'] ) ) && ( ! empty( $quiz_attempt['certificate']['certificateLink'] ) ) ) {
+					$quiz_attempt['certificate']['certificateLink'] = add_query_arg( array( 'time' => $quiz_attempt['time'] ), $quiz_attempt['certificate']['certificateLink'] );
+				}
 			}
 
 			if ( ! isset( $quiz_attempt['course'] ) ) {

@@ -36,6 +36,8 @@ use Activecampaign_For_Woocommerce_Public as AC_Public;
 use Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command as Set_Connection_Id_Cache_Command;
 use Activecampaign_For_Woocommerce_Update_Cart_Command as Update_Cart_Command;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
+use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
+use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
 use AcVendor\Psr\Container\ContainerInterface;
 use AcVendor\Psr\Log\LoggerInterface;
 
@@ -45,6 +47,7 @@ return array(
 		Admin $admin,
 		AC_Public $public,
 		I18n $i18n,
+		LoggerInterface $logger,
 		Cart_Updated $cart_updated_event,
 		Cart_Emptied $cart_emptied_event,
 		Set_Connection_Id_Cache_Command $set_connection_id_cache_command,
@@ -55,7 +58,9 @@ return array(
 		Add_Cart_Id_To_Order $add_cart_id_to_order_command,
 		Add_Accepts_Marketing_To_Customer_Meta $add_am_to_meta_command,
 		Clear_User_Meta_Command $clear_user_meta_command,
-		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command
+		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command,
+		Order_Finished $order_finished_event,
+		User_Registered $user_registered_event
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -72,6 +77,7 @@ return array(
 			$admin,
 			$public,
 			$i18n,
+			$logger,
 			$cart_updated_event,
 			$cart_emptied_event,
 			$set_connection_id_cache_command,
@@ -82,7 +88,9 @@ return array(
 			$add_cart_id_to_order_command,
 			$add_am_to_meta_command,
 			$clear_user_meta_command,
-			$sync_guest_abandoned_cart_command
+			$sync_guest_abandoned_cart_command,
+			$order_finished_event,
+			$user_registered_event
 		);
 	},
 

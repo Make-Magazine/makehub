@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Block_Course_Content' ) ) ) {
 	/**
 	 * Class for handling LearnDash Course Content Block
@@ -124,7 +128,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				$shortcode_params_str = '[' . $this->shortcode_slug . ' ' . $shortcode_params_str . ']';
 				$shortcode_out        = do_shortcode( $shortcode_params_str );
 				if ( ( empty( $shortcode_out ) ) || ( '<div class="learndash user_has_no_access" id="learndash_post_29"></div>' === $shortcode_out ) ) {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				return $this->render_block_wrap( $shortcode_out );

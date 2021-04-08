@@ -6,8 +6,11 @@
  *
  * @package LearnDash\Course
  */
-?>
-<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Filter to allow override of widget instance arguments.
  * @since 2.3.3

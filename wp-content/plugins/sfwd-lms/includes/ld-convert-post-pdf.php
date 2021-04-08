@@ -202,7 +202,15 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		$target_post_id             = 0;
 		$cert_args['filename_type'] = 'title';
 
-		$logo_file = $logo_enable = $subsetting_enable = $filters = $header_enable = $footer_enable = $monospaced_font = $font = $font_size = '';
+		$logo_file         = '';
+		$logo_enable       = '';
+		$subsetting_enable = '';
+		$filters           = '';
+		$header_enable     = '';
+		$footer_enable     = '';
+		$monospaced_font   = '';
+		$font              = '';
+		$font_size         = '';
 
 		ob_start();
 
@@ -364,7 +372,7 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 				if ( ! file_exists( $ld_upload_certificates_dir ) ) {
 					if ( wp_mkdir_p( $ld_upload_certificates_dir ) !== false ) {
 						// To prevent security browsing add an index.php file.
-						file_put_contents( trailingslashit( $ld_upload_certificates_dir ) . 'index.php', '// nothing to see here' );
+						learndash_put_directory_index_file( trailingslashit( $ld_upload_certificates_dir ) . 'index.php' );
 					}
 				}
 				$filename = trailingslashit( $ld_upload_certificates_dir ) . $filename;
@@ -375,8 +383,8 @@ if ( ! function_exists( 'learndash_certificate_post_shortcode' ) ) {
 		 * Start Cert post content processing.
 		 */
 		if ( ! defined( 'LEARNDASH_TCPDF_LEGACY_LD322' ) ) {
-			$use_LD322_define = apply_filters( 'learndash_tcpdf_legacy_ld322', true, $cert_args );
-			define( 'LEARNDASH_TCPDF_LEGACY_LD322', $use_LD322_define );
+			$use_LD322_define = apply_filters( 'learndash_tcpdf_legacy_ld322', true, $cert_args ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
+			define( 'LEARNDASH_TCPDF_LEGACY_LD322', $use_LD322_define ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
 		}
 		$cert_content = $cert_args['cert_post']->post_content;
 

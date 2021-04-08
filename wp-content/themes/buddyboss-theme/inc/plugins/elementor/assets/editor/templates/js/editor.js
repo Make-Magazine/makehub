@@ -634,13 +634,13 @@
 			            });
 		            }
 	            } else {
-		            if (window.elementor.sections.currentView.collection.length) {
-			            $.each(window.elementor.sections.currentView.collection.models, function (index, model) {
-				            if (modelID === model.cid) {
-					            BBElementorSectionsEditor.atIndex = index;
-				            }
-			            });
-		            }
+		            if (elementor.previewView.collection.length) {
+                        $.each(elementor.previewView.collection.models, function (index, model) {
+                            if (modelID === model.cid) {
+                                BBElementorSectionsEditor.atIndex = index;
+                            }
+                        });
+                    }
 	            }
 
 

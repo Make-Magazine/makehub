@@ -18,10 +18,40 @@ export default class GPPALiveMergeTags {
 	constructor (formId:formId) {
 		this.formId = formId;
 
+		this.addHooks();
 		this.getLiveAttrs();
 		this.populateCurrentMergeTagValues();
 		this.getWhitelist();
 		this.getRegisteredEls();
+	}
+
+	addHooks() : void {
+		/**
+		 * Disable conditional logic reset for fields with LMTs
+		 */
+		window.gform.addFilter('gform_reset_pre_conditional_logic_field_action', (
+			reset: boolean,
+			formId: number,
+			targetId: string,
+			defaultValues: string | string[],
+			isInit: boolean
+		) => {
+			if (isInit) return reset;
+
+			// Loop through current merge tag values and compare them to a field's default value(s).
+			for (let mergeTag in this.currentMergeTagValues) {
+				if (typeof defaultValues === 'object') {
+					for (const defaultValue of defaultValues) {
+						if (mergeTag === defaultValue) {
+							return false;
+						}
+					}
+				} else if (mergeTag === defaultValues) {
+					return false;
+				}
+			}
+			return reset;
+		});
 	}
 
 	getLiveAttrs () {
@@ -119,14 +149,14 @@ export default class GPPALiveMergeTags {
 			if (attr === 'innerHtml') {
 				inputs = inputs
 					.add(this.getRegisteredEls().filter('[' + liveAttr + ']')
-					.filter('textarea'));
+						.filter('textarea'));
 
 				continue;
 			}
 
 			inputs = inputs
 				.add(this.getRegisteredEls().filter('[' + liveAttr + ']')
-				.filter('input, select'));
+					.filter('input, select'));
 		}
 
 		return inputs;
@@ -141,7 +171,9 @@ export default class GPPALiveMergeTags {
 	 */
 	checkMergeTagForFieldId(value: string, fieldId : fieldID): RegExpMatchArray | null {
 		return value.match(new RegExp(`:${fieldId}(\\.\\d+)?[}:]`, 'g')) ||
-			value.match(new RegExp(`:id=${fieldId}(\\.\\d+)?[}:]`, 'g')) // @{score:id=xx}
+			value.match(new RegExp(`:id=${fieldId}(\\.\\d+)?[}:]`, 'g')) || // @{score:id=xx}
+			value.match(/{all_fields(:.*)?}/g) ||
+			value.match(/{order_summary(:.*)?}/g);
 	}
 
 	getDependentInputs (fieldId: number) : JQuery {
@@ -273,21 +305,25 @@ export default class GPPALiveMergeTags {
 			return;
 		}
 
-        var value       = mergeTagValues[ elementMergeTag ],
-            removeClass = 'gppa-loading gppa-empty',
-            $target     = $el.parents( 'label, .gfield_html, .ginput_container, .gfield_description' ).first();
+		var value       = mergeTagValues[ elementMergeTag ],
+			removeClass = 'gppa-loading gppa-empty',
+			$target     = $el.parents( 'label, .gfield_html, .ginput_container, .gfield_description' ).first();
 
-        /** This filter is documented above. */
-        [ $target, removeClass ] = window.gform.applyFilters( 'gppa_loading_target_meta', [ $target, removeClass ], $el, 'replace' );
+		/** This filter is documented above. */
+		[ $target, removeClass ] = window.gform.applyFilters( 'gppa_loading_target_meta', [ $target, removeClass ], $el, 'replace' );
 
-        // Replace markup.
-        $el.html(mergeTagValues[elementMergeTag]);
+		// Replace markup.
+		$el.html(mergeTagValues[elementMergeTag]);
+		// Also use `val()` for textarea. This solves an issue with conditionally shown/hidden textareas.
+		if ($el.is('textarea')) {
+			$el.val(mergeTagValues[elementMergeTag]);
+		}
 
-        var isMergeTagSpecific = $target == $el,
-            isEmpty            = isMergeTagSpecific ? ! value && value !== 0 : ! $target.text(),
-            addClass           = isEmpty ? 'gppa-empty' : '';
+		var isMergeTagSpecific = $target == $el,
+			isEmpty            = isMergeTagSpecific ? ! value && value !== 0 : ! $target.text(),
+			addClass           = isEmpty ? 'gppa-empty' : '';
 
-        $target.removeClass( removeClass ).addClass( addClass );
+		$target.removeClass( removeClass ).addClass( addClass );
 
 	}
 
@@ -308,6 +344,11 @@ export default class GPPALiveMergeTags {
 						attrVal = $el.val();
 					} else {
 						attrVal = $el.html();
+						// Update Chosen.js if field is using EnhancedUI
+						if ($el.parents('.ginput_container').find('.chosen-container').length) {
+							const inputID = $el.parent().attr('id');
+							$(('#{0}' as any).format(inputID)).trigger("chosen:updated");
+						}
 					}
 					break;
 				case 'value':
@@ -320,11 +361,11 @@ export default class GPPALiveMergeTags {
 			}
 
 			var value       = mergeTagValues[ elementMergeTag ],
-                removeClass = 'gppa-loading',
-                $target     = $el.parents( 'label, .gfield_html, .ginput_container, .gfield_description' ).eq( 0 );
+				removeClass = 'gppa-loading',
+				$target     = $el.parents( 'label, .gfield_html, .ginput_container, .gfield_description' ).eq( 0 );
 
-            /** This filter is documented above. */
-            [ $target, removeClass ] = window.gform.applyFilters( 'gppa_loading_target_meta', [ $target, removeClass ], $el, 'replace' );
+			/** This filter is documented above. */
+			[ $target, removeClass ] = window.gform.applyFilters( 'gppa_loading_target_meta', [ $target, removeClass ], $el, 'replace' );
 
 			$target.removeClass( removeClass );
 

@@ -13,6 +13,11 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- we are inside of a template
 $global_points = 0;
 $json          = array();
@@ -69,8 +74,9 @@ $cat_points    = array();
 								'quiz_post_id' => $quiz->getID(),
 								'context'      => 'quiz_question_list_2_message',
 								'message'      => sprintf(
-									// translators: placeholder: question number, questions total
-									esc_html_x( 'Question %1$s of %2$s', 'placeholder: question number, questions total', 'learndash' ),
+									// translators: placeholder: question, question number, questions total
+									esc_html_x( '%1$s %2$s of %3$s', 'placeholder: question, question number, questions total', 'learndash' ),
+									learndash_get_custom_label( 'question' ),
 									'<span>' . $index . '</span>',
 									'<span>' . $question_count . '</span>'
 								),
@@ -287,7 +293,7 @@ $cat_points    = array();
 										?>
 										<span <?php echo $quiz->isNumberedAnswer() ? '' : 'style="display:none;"'; ?>></span>
 										<label>
-											<input class="wpProQuiz_questionInput"
+											<input class="wpProQuiz_questionInput" autocomplete="off"
 													type="<?php echo $question->getAnswerType() === 'single' ? 'radio' : 'checkbox'; ?>"
 													name="question_<?php echo esc_attr( $quiz->getId() ); ?>_<?php echo esc_attr( $question->getId() ); ?>"
 													value="<?php echo esc_attr( ( $answer_index + 1 ) ); ?>"> <?php echo $answer_text; ?>
@@ -312,7 +318,7 @@ $cat_points    = array();
 										$json[ $question->getId() ]['correct'] = $quiz_view->getFreeCorrect( $v );
 										?>
 										<label>
-											<input class="wpProQuiz_questionInput" type="text"
+											<input class="wpProQuiz_questionInput" type="text" autocomplete="off"
 													name="question_<?php echo esc_attr( $quiz->getId() ); ?>_<?php echo esc_attr( $question->getId() ); ?>"
 													style="width: 300px;">
 										</label>
@@ -658,11 +664,13 @@ $cat_points    = array();
 							array(
 								'quiz_post_id' => $quiz->getID(),
 								'context'      => 'quiz_skip_button_label',
-								'message'      => esc_html__( 'Skip question', 'learndash' ),
+								// translators: placeholder: question
+								'message'      => sprintf( esc_html_x( 'Skip %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 							)
 						)
 					) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: left; margin-right: 10px ;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 				<?php } ?>
+				<?php if ( ! is_rtl() ) { ?>
 				<input type="button" name="back" value="<?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
 					SFWD_LMS::get_template(
 						'learndash_quiz_messages',
@@ -673,6 +681,18 @@ $cat_points    = array();
 						)
 					)
 				) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: left ; margin-right: 10px ; display: none;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+				<?php } else { ?>
+					<input type="button" name="next" value="<?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+						SFWD_LMS::get_template(
+							'learndash_quiz_messages',
+							array(
+								'quiz_post_id' => $quiz->getID(),
+								'context'      => 'quiz_next_button_label',
+								'message'      => esc_html__( 'Next', 'learndash' ),
+							)
+						)
+					) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: left ; margin-right: 10px ; display: none;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+				<?php } ?>
 				<?php if ( $question->isTipEnabled() ) { ?>
 					<input type="button" name="tip" value="<?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
 						SFWD_LMS::get_template(
@@ -695,6 +715,7 @@ $cat_points    = array();
 						)
 					)
 				) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: right ; margin-right: 10px ; display: none;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+				<?php if ( ! is_rtl() ) { ?>
 				<input type="button" name="next" value="<?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
 					SFWD_LMS::get_template(
 						'learndash_quiz_messages',
@@ -705,7 +726,18 @@ $cat_points    = array();
 						)
 					)
 				) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: right; display: none;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
-
+				<?php } else { ?>
+				<input type="button" name="back" value="<?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+					SFWD_LMS::get_template(
+						'learndash_quiz_messages',
+						array(
+							'quiz_post_id' => $quiz->getID(),
+							'context'      => 'quiz_back_button_label',
+							'message'      => esc_html__( 'Back', 'learndash' ),
+						)
+					)
+				) ?>" class="wpProQuiz_button wpProQuiz_QuestionButton" style="float: right; display: none;"> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
+				<?php } ?>
 				<div style="clear: both;"></div>
 
 				<?php if ( $quiz->getQuizModus() == WpProQuiz_Model_Quiz::QUIZ_MODUS_SINGLE ) { ?>

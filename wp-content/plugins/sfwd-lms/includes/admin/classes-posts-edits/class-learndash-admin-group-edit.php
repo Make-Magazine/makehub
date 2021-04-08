@@ -6,6 +6,10 @@
  * @subpackage Admin
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learndash_Admin_Group_Edit' ) ) ) {
 	/**
 	 * Class for LearnDash Admin Group Edit.
@@ -93,6 +97,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 				$groups = wp_dropdown_pages( $dropdown_args ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- See list of args above
 				if ( ! empty( $groups ) ) {
+					wp_nonce_field( 'ld-group-attributes-metabox-nonce', 'ld-group-attributes-metabox-nonce', false );
 					?>
 					<p class="post-attributes-label-wrapper group-parent-id-label-wrapper"><label class="post-attributes-label" for="group_parent_id">
 					<?php
@@ -103,7 +108,7 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 					);
 					?>
 					</label></p>
-					<?php echo $groups; ?>
+					<?php echo $groups; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					<?php
 				}
 			}
@@ -144,19 +149,23 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 				'menu_order'  => $post->menu_order,
 			);
 
-			$updated_post = false;
-			if ( isset( $_POST['group_parent_id'] ) ) {
-				$updated_post             = true;
-				$edit_post['post_parent'] = absint( $_POST['group_parent_id'] );
-			}
+			if ( ( isset( $_POST['ld-group-attributes-metabox-nonce'] ) ) && ( ! empty( $_POST['ld-group-attributes-metabox-nonce'] ) ) && wp_verify_nonce( $_POST['ld-group-attributes-metabox-nonce'], 'ld-group-attributes-metabox-nonce' ) ) {
 
-			if ( isset( $_POST['group_menu_order'] ) ) {
-				$updated_post            = true;
-				$edit_post['menu_order'] = absint( $_POST['group_menu_order'] );
-			}
+				$updated_post = false;
 
-			if ( true === $updated_post ) {
-				wp_update_post( $edit_post );
+				if ( isset( $_POST['group_parent_id'] ) ) {
+					$updated_post             = true;
+					$edit_post['post_parent'] = absint( $_POST['group_parent_id'] );
+				}
+
+				if ( isset( $_POST['group_menu_order'] ) ) {
+					$updated_post            = true;
+					$edit_post['menu_order'] = absint( $_POST['group_menu_order'] );
+				}
+
+				if ( true === $updated_post ) {
+					wp_update_post( $edit_post );
+				}
 			}
 
 			$group_leaders = [];

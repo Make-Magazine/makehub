@@ -315,3 +315,58 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 	}
 }
 new Learndash_Admin_Assignment_Edit();
+
+/**
+ * Check if Group Leader can edit Essay.
+ *
+ * @since 3.4.0
+ *
+ * parameters documents in /wp-includes/class-wp-user.php
+ */
+function learndash_group_leader_can_edit_assignment_filter( $allcaps, $cap, $args, $user ) {
+	global $pagenow, $typenow;
+
+	if ( ( 'post.php' !== $pagenow ) && ( 'post-new.php' !== $pagenow ) ) {
+		return $allcaps;
+	}
+
+	if ( learndash_get_post_type_slug( 'assignment' ) !== $typenow ) {
+		return $allcaps;
+	}
+
+	if ( ! in_array( 'edit_others_assignments', $cap, true ) ) {
+		return $allcaps;
+	}
+
+	if ( ( ! isset( $args[2] ) ) || ( empty( $args[2] ) ) || ( get_post_type( $args[2] ) !== learndash_get_post_type_slug( 'assignment' ) ) ) {
+		return $allcaps;
+	}
+	$post_id = absint( $args[2] );
+	$post    = get_post( $post_id );
+
+	if ( ( ! isset( $args[1] ) ) || ( empty( $args[1] ) ) || ( ! learndash_is_group_leader_user( $args[1] ) ) ) {
+		return $allcaps;
+	}
+	$gl_user_id = absint( $args[1] );
+
+	$course_id = get_post_meta( $post_id, 'course_id', true );
+	$course_id = absint( $course_id );
+
+	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, $post->post_author, $course_id ) ) {
+		foreach ( $cap as $cap_slug ) {
+			$allcaps[ $cap_slug ] = false;
+		}
+	}
+	return $allcaps;
+}
+
+add_action(
+	'init',
+	function () {
+		if ( learndash_is_group_leader_user() ) {
+			add_filter( 'user_has_cap', 'learndash_group_leader_can_edit_assignment_filter', 10, 4 );
+		}
+	},
+	10
+);
+

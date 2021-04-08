@@ -71,6 +71,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			);
 
 			add_action( 'wp_ajax_' . $this->setting_field_prefix, array( $this, 'ajax_action' ) );
+			add_filter( 'learndash_settings_field', array( $this, 'learndash_settings_field_filter' ), 1, 1 );
 
 			parent::__construct();
 		}
@@ -149,6 +150,51 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_values['quiz_templates'] = array(
 				'' => __( 'Select a template', 'learndash' ),
 			);
+		}
+
+		/**
+		 * Filter the Settings Field args.
+		 *
+		 * This function is called via the `learndash_settings_field` filter and allows
+		 * late filtering of the field args just before the display. This is a way to
+		 * defer queries etc.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @param array $field_args An array of field arguments used to process the ouput.
+		 */
+		public function learndash_settings_field_filter( $field_args = array() ) {
+			if ( ( ! isset( $field_args['setting_option_key'] ) ) || ( $this->setting_option_key !== $field_args['setting_option_key'] ) ) {
+				return $field_args;
+			}
+
+			if ( ! isset( $field_args['name'] ) ) {
+				return $field_args;
+			}
+
+			if ( 'quiz_template' === $field_args['name'] ) {
+				$template_mapper = new WpProQuiz_Model_TemplateMapper();
+				$quiz_templates  = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUIZ, false );
+				if ( ( ! empty( $quiz_templates ) ) && ( is_array( $quiz_templates ) ) ) {
+					$_templates = array();
+					foreach ( $quiz_templates as $template_quiz ) {
+						$template_name = $template_quiz->getName();
+						$template_id   = $template_quiz->getTemplateId();
+
+						if ( ( ! empty( $template_name ) ) && ( ! isset( $_templates[ $template_id ] ) ) ) {
+							$_templates[ $template_id ] = esc_html( $template_name );
+						}
+					}
+					asort( $_templates );
+
+					if ( ! isset( $field_args['options'] ) ) {
+						$field_args['options'] = array();
+					}
+					$field_args['options'] += $_templates;
+				}
+			}
+
+			return $field_args;
 		}
 
 		/**
@@ -389,23 +435,6 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'options'        => $options,
 				'parent_setting' => 'quiz_builder_time_formats',
 			);
-
-			$template_mapper = new WpProQuiz_Model_TemplateMapper();
-			$quiz_templates  = $template_mapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUIZ, false );
-			if ( ( ! empty( $quiz_templates ) ) && ( is_array( $quiz_templates ) ) ) {
-				$_templates = array();
-				foreach ( $quiz_templates as $template_quiz ) {
-					$template_name = $template_quiz->getName();
-					$template_id   = $template_quiz->getTemplateId();
-
-					if ( ( ! empty( $template_name ) ) && ( ! isset( $_templates[ $template_id ] ) ) ) {
-						$_templates[ $template_id ] = esc_html( $template_name );
-					}
-				}
-				asort( $_templates );
-
-				$this->setting_option_values['quiz_templates'] += $_templates;
-			}
 
 			$this->setting_option_fields['quiz_template'] = array(
 				'name'        => 'quiz_template',

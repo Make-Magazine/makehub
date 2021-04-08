@@ -9,35 +9,29 @@
  * LearnDash block functions
  */
 import {
+	ldlms_get_custom_label,
 	ldlms_get_integer_value
 } from '../ldlms.js';
 
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InnerBlocks, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
 
-const {
-	InnerBlocks,
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	 PanelBody,
-	 TextControl,
-	 ToggleControl
-} = wp.components;
-
-const block_title = __('LearnDash Group', 'learndash');
+const block_title = sprintf(
+		// translators: placeholder: Group.
+	_x('LearnDash %s', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group')
+	);
 
 registerBlockType(
 	'learndash/ld-group',
 	{
 		title: block_title,
-		description: __( 'This block shows the content if the user is enrolled into the Group.', 'learndash'),
+		// translators: placeholder: Group.
+		description: sprintf(_x( 'This block shows the content if the user is enrolled into the %s.', 'learndash'), ldlms_get_custom_label('group')),
 		icon: 'groups',
 		category: 'learndash-blocks',
 		supports: {
@@ -65,8 +59,10 @@ registerBlockType(
 						title={__('Settings', 'learndash')}
 					>
 						<TextControl
-							label={__('Group ID', 'learndash')}
-							help={__('Group ID (required)', 'learndash')}
+							// translators: placeholder: Group.
+							label={sprintf(_x('%s ID', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
+							// translators: placeholder: Group.
+							help={sprintf(_x('%s ID (required)', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'))}
 							value={group_id || ''}
 							onChange={group_id => setAttributes({ group_id })}
 						/>
@@ -88,7 +84,8 @@ registerBlockType(
 			let ld_block_error_message = '';
 			let preview_group_id = ldlms_get_integer_value(group_id);
 			if (preview_group_id == 0) {
-				ld_block_error_message = __('Group ID is required.', 'learndash');
+				// translators: placeholder: Group.
+				ld_block_error_message = sprintf(_x('%s ID is required.', 'placeholder: Group', 'learndash'), ldlms_get_custom_label('group'));
 			}
 
 			if (ld_block_error_message.length) {

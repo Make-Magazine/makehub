@@ -36,6 +36,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product {
 		'quantity'    => 'quantity',
 		'orderid'     => 'orderid',
 		'product_url' => 'productUrl',
+		'sku'         => 'sku',
 		'image_url'   => 'imageUrl',
 		'description' => 'description',
 		'id'          => 'id',
@@ -110,6 +111,13 @@ class Activecampaign_For_Woocommerce_Ecom_Product {
 	 * @var string
 	 */
 	private $id;
+
+	/**
+	 * The sku.
+	 *
+	 * @var string
+	 */
+	private $sku;
 
 	/**
 	 * Returns the category.
@@ -235,6 +243,24 @@ class Activecampaign_For_Woocommerce_Ecom_Product {
 	 */
 	public function set_product_url( $product_url ) {
 		$this->product_url = $product_url;
+	}
+
+	/**
+	 * Sets the product sku.
+	 *
+	 * @param string $sku The product sku.
+	 */
+	public function set_sku( $sku ) {
+		$this->sku = $sku;
+	}
+
+	/**
+	 * Sets the product sku.
+	 *
+	 * @return string
+	 */
+	public function get_sku() {
+		return $this->sku;
 	}
 
 	/**

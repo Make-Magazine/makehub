@@ -17,6 +17,8 @@ use Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command as Add_Cart_Id_T
 use Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Command as Add_Accepts_Marketing_To_Customer_Meta;
 use Activecampaign_For_Woocommerce_Admin as Admin;
 use Activecampaign_For_Woocommerce_Cart_Emptied_Event as Cart_Emptied;
+use Activecampaign_For_Woocommerce_Order_Finished_Event as Order_Finished;
+use Activecampaign_For_Woocommerce_User_Registered_Event as User_Registered;
 use Activecampaign_For_Woocommerce_Cart_Updated_Event as Cart_Updated;
 use Activecampaign_For_Woocommerce_Clear_User_Meta_Command as Clear_User_Meta_Command;
 use Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command as Create_Or_Update_Connection_Option_Command;
@@ -28,6 +30,7 @@ use Activecampaign_For_Woocommerce_Public as AC_Public;
 use Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command as Set_Connection_Id_Cache_Command;
 use Activecampaign_For_Woocommerce_Update_Cart_Command as Update_Cart_Command;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The core plugin class.
@@ -111,6 +114,20 @@ class Activecampaign_For_Woocommerce {
 	private $cart_emptied_event;
 
 	/**
+	 * Used for triggering order finished event.
+	 *
+	 * @var Order_Finished The order finished event class.
+	 */
+	private $order_finished_event;
+
+	/**
+	 * Used for triggering new user registered event.
+	 *
+	 * @var User_Registered The user registered event class.
+	 */
+	private $user_registered_event;
+
+	/**
 	 * Handles setting the connection id cache.
 	 *
 	 * @var Set_Connection_Id_Cache_Command The set connection id command class.
@@ -179,34 +196,38 @@ class Activecampaign_For_Woocommerce {
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 *
-	 * @param string                                     $version                         The current version of the
+	 * @param     string                                     $version     The current version of the
 	 *                                                                                    plugin.
-	 * @param string                                     $plugin_name                     The kebab-case name of the
+	 * @param     string                                     $plugin_name     The kebab-case name of the
 	 *                                                                                    plugin.
-	 * @param Loader                                     $loader                          The loader class.
-	 * @param Admin                                      $admin                           The admin class.
-	 * @param AC_Public                                  $public                          The public class.
-	 * @param I18n                                       $i18n                            The internationalization
+	 * @param     Loader                                     $loader     The loader class.
+	 * @param     Admin                                      $admin     The admin class.
+	 * @param     AC_Public                                  $public     The public class.
+	 * @param     I18n                                       $i18n     The internationalization
 	 *                                                                                    class.
-	 * @param Cart_Updated                               $cart_updated_event              The cart update event class.
-	 * @param Cart_Emptied                               $cart_emptied_event              The cart emptied event class.
-	 * @param Set_Connection_Id_Cache_Command            $set_connection_id_cache_command The connection id cache
+	 * @param     Logger                                     $logger     The logger.
+	 * @param     Cart_Updated                               $cart_updated_event     The cart update event class.
+	 * @param     Cart_Emptied                               $cart_emptied_event     The cart emptied event class.
+	 * @param     Set_Connection_Id_Cache_Command            $set_connection_id_cache_command     The connection id cache
 	 *                                                                                    command class.
-	 * @param Create_Or_Update_Connection_Option_Command $c_or_u_co_command               The connection option command
+	 * @param     Create_Or_Update_Connection_Option_Command $c_or_u_co_command     The connection option command
 	 *                                                                                    class.
-	 * @param Create_And_Save_Cart_Id                    $create_and_save_cart_id_command The cart id command class.
-	 * @param Update_Cart_Command                        $update_cart_command             The update cart command
+	 * @param     Create_And_Save_Cart_Id                    $create_and_save_cart_id_command     The cart id command class.
+	 * @param     Update_Cart_Command                        $update_cart_command     The update cart command
 	 *                                                                                    class.
-	 * @param Delete_Cart_Id                             $delete_cart_id_command          The delete cart id
+	 * @param     Delete_Cart_Id                             $delete_cart_id_command     The delete cart id
 	 *                                                                                    command class.
-	 * @param Add_Cart_Id_To_Order                       $add_cart_id_to_order_command    The add cart id to order
+	 * @param     Add_Cart_Id_To_Order                       $add_cart_id_to_order_command     The add cart id to order
 	 *                                                                                    command class.
-	 * @param Add_Accepts_Marketing_To_Customer_Meta     $add_am_to_meta_command          The accepts marketing
+	 * @param     Add_Accepts_Marketing_To_Customer_Meta     $add_am_to_meta_command     The accepts marketing
 	 *                                                                                    command class.
-	 * @param Clear_User_Meta_Command                    $clear_user_meta_command         The clear user meta command
+	 * @param     Clear_User_Meta_Command                    $clear_user_meta_command     The clear user meta command
 	 *                                                                                    class.
-	 * @param Sync_Guest_Abandoned_Cart_Command          $sync_guest_abandoned_cart_command The sync guest abandoned
+	 * @param     Sync_Guest_Abandoned_Cart_Command          $sync_guest_abandoned_cart_command     The sync guest abandoned
 	 *                                                                                      cart command class.
+	 * @param     Order_Finished                             $order_finished_event     The order finished event class.
+	 *
+	 * @param     User_Registered                            $user_registered_event     The user registered event class.
 	 *
 	 * @since    1.0.0
 	 */
@@ -217,6 +238,7 @@ class Activecampaign_For_Woocommerce {
 		Admin $admin,
 		AC_Public $public,
 		I18n $i18n,
+		Logger $logger,
 		Cart_Updated $cart_updated_event,
 		Cart_Emptied $cart_emptied_event,
 		Set_Connection_Id_Cache_Command $set_connection_id_cache_command,
@@ -227,15 +249,17 @@ class Activecampaign_For_Woocommerce {
 		Add_Cart_Id_To_Order $add_cart_id_to_order_command,
 		Add_Accepts_Marketing_To_Customer_Meta $add_am_to_meta_command,
 		Clear_User_Meta_Command $clear_user_meta_command,
-		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command
+		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command,
+		Order_Finished $order_finished_event,
+		User_Registered $user_registered_event
 	) {
-		$this->version     = $version;
-		$this->plugin_name = $plugin_name;
-
+		$this->version                                    = $version;
+		$this->plugin_name                                = $plugin_name;
 		$this->loader                                     = $loader;
 		$this->admin                                      = $admin;
 		$this->public                                     = $public;
 		$this->i18n                                       = $i18n;
+		$this->logger                                     = $logger;
 		$this->cart_updated_event                         = $cart_updated_event;
 		$this->cart_emptied_event                         = $cart_emptied_event;
 		$this->set_connection_id_cache_command            = $set_connection_id_cache_command;
@@ -247,6 +271,8 @@ class Activecampaign_For_Woocommerce {
 		$this->add_accepts_marketing_to_customer_meta_command = $add_am_to_meta_command;
 		$this->clear_user_meta_command                        = $clear_user_meta_command;
 		$this->sync_guest_abandoned_cart_command              = $sync_guest_abandoned_cart_command;
+		$this->order_finished_event                           = $order_finished_event;
+		$this->user_registered_event                          = $user_registered_event;
 	}
 
 	/**
@@ -255,9 +281,9 @@ class Activecampaign_For_Woocommerce {
 	 * Uses the Activecampaign_For_Woocommerce_I18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
+	 * @throws Exception Thrown when Container definitions are missing.
 	 * @since    1.0.0
 	 * @access   private
-	 * @throws Exception Thrown when Container definitions are missing.
 	 */
 	private function set_locale() {
 		$this->loader->add_action( 'plugins_loaded', $this->i18n, 'load_plugin_textdomain' );
@@ -271,6 +297,13 @@ class Activecampaign_For_Woocommerce {
 	 * @access   private
 	 */
 	private function define_event_hooks() {
+		// If we can't get the config stop this function
+		if ( ! $this->admin->get_options() ) {
+			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public event hooks will not run.' );
+
+			return;
+		}
+
 		// Cart actions
 		$this->loader->add_filter(
 			'woocommerce_update_cart_action_cart_updated',
@@ -293,6 +326,18 @@ class Activecampaign_For_Woocommerce {
 		$this->loader->add_action(
 			'woocommerce_checkout_update_order_meta',
 			$this->cart_emptied_event,
+			'trigger'
+		);
+
+		$this->loader->add_action(
+			'woocommerce_checkout_update_order_meta',
+			$this->order_finished_event,
+			'checkout_meta'
+		);
+
+		$this->loader->add_action(
+			'user_register',
+			$this->user_registered_event,
 			'trigger'
 		);
 
@@ -332,6 +377,8 @@ class Activecampaign_For_Woocommerce {
 		 * plugin being configured.
 		 */
 		if ( ! $this->admin->get_options() ) {
+			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public commands will not run.' );
+
 			return;
 		}
 
@@ -413,9 +460,9 @@ class Activecampaign_For_Woocommerce {
 	 * Register all of the hooks related to the admin area functionality
 	 * of the plugin.
 	 *
+	 * @throws Exception Thrown when Container definitions are missing.
 	 * @since    1.0.0
 	 * @access   private
-	 * @throws Exception Thrown when Container definitions are missing.
 	 */
 	private function define_admin_hooks() {
 		$this->loader->add_action(
@@ -430,16 +477,24 @@ class Activecampaign_For_Woocommerce {
 			'enqueue_scripts'
 		);
 
+		// add menu item to bottom of WooCommerce menu
 		$this->loader->add_action(
 			'admin_menu',
 			$this->admin,
-			'add_admin_page'
+			'add_admin_page',
+			99
 		);
 
 		$this->loader->add_action(
 			'admin_post_' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE . '_settings',
 			$this->admin,
 			'handle_settings_post'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_api_test',
+			$this->admin,
+			'handle_api_test'
 		);
 
 		$this->loader->add_filter(
@@ -453,9 +508,9 @@ class Activecampaign_For_Woocommerce {
 	 * Register all of the hooks related to the public-facing functionality
 	 * of the plugin.
 	 *
+	 * @throws Exception Thrown when Container definitions are missing.
 	 * @since    1.0.0
 	 * @access   private
-	 * @throws Exception Thrown when Container definitions are missing.
 	 */
 	private function define_public_hooks() {
 		/**
@@ -463,7 +518,16 @@ class Activecampaign_For_Woocommerce {
 		 * registering any public commands since they will not work without the
 		 * plugin being configured.
 		 */
-		if ( ! $this->admin->get_options() ) {
+		if ( $this->admin->get_options() ) {
+			$ops = $this->admin->get_options();
+		} else {
+			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public hooks will not run.' );
+
+			return;
+		}
+
+		// end this function if not configured
+		if ( ! $this->is_configured() ) {
 			return;
 		}
 
@@ -479,13 +543,33 @@ class Activecampaign_For_Woocommerce {
 			'enqueue_scripts'
 		);
 
-		// This adds the checkbox
-		$this->loader->add_action(
-			'woocommerce_after_checkout_billing_form',
-			$this->public,
-			'handle_woocommerce_checkout_form',
-			5
-		);
+		// Verify the checkbox should display
+		if (
+			$ops['checkbox_display_option']
+			&& $ops['optin_checkbox_text']
+			&& 'not_visible' !== $ops['checkbox_display_option']
+			&& ! empty( $ops['checkbox_display_option'] )
+			&& ! empty( $ops['optin_checkbox_text'] )
+		) {
+			// Add the checkbox to the billing form
+			$this->loader->add_action(
+				'woocommerce_after_checkout_billing_form',
+				$this->public,
+				'handle_woocommerce_checkout_form',
+				5
+			);
+
+			// this hook is a fallback method in case we can't find the billing form hook
+			$this->loader->add_action(
+				'woocommerce_after_checkout_form',
+				$this->public,
+				'handle_woocommerce_checkout_form',
+				5
+			);
+
+		} else {
+			$this->logger->warning( 'Checkbox actions cannot be run. checkbox_display_option and/or optin_checkbox_text are not defined or not available in your theme.' );
+		}
 
 		$this->loader->add_action(
 			'wp_ajax_activecampaign_for_woocommerce_cart_sync_guest',
@@ -506,10 +590,11 @@ class Activecampaign_For_Woocommerce {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
 	 * @throws Exception Thrown when Container definitions are missing.
+	 * @since    1.0.0
 	 */
 	public function run() {
+		$this->logger = $this->logger ?: new Logger();
 		$this->set_locale();
 		$this->define_event_hooks();
 		$this->define_command_hooks();
@@ -523,8 +608,8 @@ class Activecampaign_For_Woocommerce {
 	 * The name of the plugin used to uniquely identify it within the context of
 	 * WordPress and to define internationalization functionality.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The name of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_name;
@@ -533,8 +618,8 @@ class Activecampaign_For_Woocommerce {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    Activecampaign_For_Woocommerce_Loader    Orchestrates the hooks of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_loader() {
 		return $this->loader;
@@ -543,11 +628,24 @@ class Activecampaign_For_Woocommerce {
 	/**
 	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     1.0.0
 	 * @return    string    The version number of the plugin.
+	 * @since     1.0.0
 	 */
 	public function get_version() {
 		return $this->version;
 	}
 
+	/**
+	 * Verify our plugin is configured
+	 *
+	 * @return bool
+	 */
+	private function is_configured() {
+		$ops = $this->admin->get_options();
+		if ( ! $ops || ! $ops['api_key'] || ! $ops['api_url'] ) {
+			return false;
+		}
+
+		return true;
+	}
 }

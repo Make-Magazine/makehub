@@ -3,8 +3,8 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.6
-Stable tag: 1.17.3.2
+Tested up to: 5.7
+Stable tag: 1.17.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,33 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.4.3 =
+*   BuddyPress member type import fixed
+*   Little improvement in export GUI
+
+= 1.17.4.2 =
+*   Frontend import email now can have a list of custom recipients, different to admin email
+
+= 1.17.4.1 =
+*   Process import results shown in a table at the end of process
+
+= 1.17.4 =
+*   New shortcode to export users
+
+= 1.17.3.6 =
+*   Fixed problem importing ACF multiple select field type, thanks to @lpointet
+
+= 1.17.3.5 =
+*   Fixed warning on export
+
+= 1.17.3.4 =
+*   Tested up to 5.7
+*   New method to fix error when a WP_Error appear into an array, when the array is being printed
+
+= 1.17.3.3 =
+*   Improved messages when deleting users not present in CSV
+*   Fixed error when a WP_Error appear into an array, when the array is being printed
 
 = 1.17.3.2 =
 *   Improved BuddyPress group management when importing, now you can remove users from a group

@@ -7,6 +7,10 @@
  * @package LearnDash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
 * Available Variables:
 * $pager_context    : (string) value defining context of pager output. For example 'course_lessons' would be the course template lessons listing.

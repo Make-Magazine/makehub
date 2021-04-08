@@ -87,7 +87,7 @@ class WpProQuiz_Helper_Upgrade {
 		$results = $wpdb->get_results(
 			'
 			SELECT id, answer_data
-			FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ) . " WHERE answer_type = 'cloze_answer' AND answer_points_activated = 1",
+			FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ) . " WHERE answer_type = 'cloze_answer' AND answer_points_activated = 1",
 			ARRAY_A
 		);
 
@@ -118,7 +118,7 @@ class WpProQuiz_Helper_Upgrade {
 		$results = $wpdb->get_results(
 			'
 				SELECT id, answer_data, answer_type, answer_points_activated, points
-				FROM ' . LDLMS_DB::get_table_name( 'quiz_question' ),
+				FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_question' ) ),
 			ARRAY_A
 		);
 

@@ -11,6 +11,10 @@
  * @package LearnDash\Course
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( $courses_registered ) {
 	foreach ( $courses_registered as $course_id ) {
 		?>

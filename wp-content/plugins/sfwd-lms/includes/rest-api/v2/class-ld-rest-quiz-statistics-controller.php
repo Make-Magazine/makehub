@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exists( 'WP_REST_Controller' ) ) {
 
 	/**
@@ -469,7 +473,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 				return false;
 			}
 
-			$stat_ref_id = $request->get_param( 'id' );
+			$stat_ref_id = $request->get_param( 'statistic' );
 			$stat_users  = (array) $this->users_for_stats();
 
 			if ( $stat_ref_id && $this->valid() ) {
@@ -898,13 +902,14 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 					),
 					'id'        => array(
 						'description' => sprintf(
-							// translators: placeholder: Quiz.
+							// translators: placeholder: Quiz, Question.
 							esc_html_x(
-								'Unique %s Statistic Question identifier for the object.',
-								'placeholder: Quiz',
+								'Unique %1$s Statistic %2$s identifier for the object.',
+								'placeholder: Quiz, Question',
 								'learndash'
 							),
-							LearnDash_Custom_Label::get_label( 'quiz' )
+							LearnDash_Custom_Label::get_label( 'quiz' ),
+							LearnDash_Custom_Label::get_label( 'question' )
 						),
 						'type'        => 'text',
 						'required'    => true,
@@ -964,7 +969,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 		 */
 		private function fetch_stat_refs() {
 			$this->build_params();
-			$stat_ref_id     = $this->request->get_param( 'id' );
+			$stat_ref_id     = $this->request->get_param( 'statistic' );
 			$stat_ref_mapper = new WpProQuiz_Model_StatisticRefMapper();
 
 			if ( ! $stat_ref_id ) {
@@ -1219,7 +1224,8 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 					return $object->newInstanceArgs( $args );
 
 				default:
-					throw new Exception( __( 'Invalid question type supplied', 'learndash' ), 404 );
+					// translators: placeholder: question
+					throw new Exception( _x( 'Invalid %s type supplied', 'placeholder: question', 'learndash' ), 404 );
 			}
 		}
 

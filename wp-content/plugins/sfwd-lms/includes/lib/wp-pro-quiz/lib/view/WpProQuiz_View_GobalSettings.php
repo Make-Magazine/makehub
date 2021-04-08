@@ -133,15 +133,36 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 						<?php if ( count( $this->category ) ) { ?>
 						<tr>
 							<th scope="row">
-								<?php esc_html_e( 'Question Category management', 'learndash' ); ?>
+							<?php
+								sprintf(
+								// translators: Question
+									esc_html_x( '%s Category Management', 'placeholder: Question', 'learndash' ),
+									learndash_get_custom_label( 'question' )
+								)
+							?>
 							</th>
 							<td>
 								<fieldset>
 									<legend class="screen-reader-text">
-										<span><?php esc_html_e( 'Question Category management', 'learndash' ); ?></span>
+										<span>
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( '%s Category Management', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
 									</legend>
 									<select name="category">
-										<option value=""><?php esc_html_e( 'Select Question Category', 'learndash' ); ?></option>
+										<option value="">
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( 'Select %s Category', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</option>
 										<?php
 										foreach ( $this->category as $cat ) {
 											echo '<option value="' . esc_attr( $cat->getCategoryId() ) . '">' . esc_html( $cat->getCategoryName() ) . '</option>';
@@ -152,11 +173,43 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 										<input type="text" value="" name="categoryEditText" class="regular-text" />
 									</div>
 									<div style="padding-top: 5px;">
-										<input type="button" title="<?php esc_html_e( 'Delete selected Question Category', 'learndash' ); ?>" value="<?php esc_html_e( 'Delete', 'learndash' ); ?>" name="categoryDelete" class="button-secondary">
-										<input type="button" title="<?php esc_html_e( 'Save changed to selected Question Category', 'learndash' ); ?>" value="<?php esc_html_e( 'Save Changes', 'learndash' ); ?>" name="categoryEdit" class="button-secondary">
+										<input type="button" title="
+										<?php
+										sprintf(
+										// translators: Question
+											esc_html_x( 'Delete selected %s Category', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										" value="<?php esc_html_e( 'Delete', 'learndash' ); ?>" name="categoryDelete" class="button-secondary">
+										<input type="button" title="
+										<?php
+										sprintf(
+										// translators: Question
+											esc_html_x( 'Save changes to selected %s Category', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										" value="<?php esc_html_e( 'Save Changes', 'learndash' ); ?>" name="categoryEdit" class="button-secondary">
 										<div class="categorySpinner spinner"></div>
-										<span class="categoryEditUpdate" style="display:none"><?php esc_html_e( 'Question Category Saved', 'learndash' ); ?></span>
-										<span class="categoryDeleteUpdate" style="display:none"><?php esc_html_e( 'Question Category Deleted', 'learndash' ); ?></span>
+										<span class="categoryEditUpdate" style="display:none">
+										<?php
+										sprintf(
+										// translators: Question Category Saved
+											esc_html_x( '%s Category Saved', 'placeholder: Question Category Saved', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</span>
+										<span class="categoryDeleteUpdate" style="display:none">
+										<?php
+										sprintf(
+										// translators: Question Category Deleted
+											esc_html_x( '%s Category Deleted', 'placeholder: Question Category Deleted', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</span>
 									</div>
 								</fieldset>
 							</td>
@@ -231,15 +284,37 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 						<?php if ( count( $this->templateQuestion ) ) { ?>
 						<tr>
 							<th scope="row">
-								<?php esc_html_e( 'Question template management', 'learndash' ); ?>
+							<?php
+								sprintf(
+								// translators: Question
+									esc_html_x( '%s Template Management', 'placeholder: Question', 'learndash' ),
+									learndash_get_custom_label( 'question' )
+								)
+							?>
 							</th>
 							<td>
 								<fieldset>
 									<legend class="screen-reader-text">
-										<span><?php esc_html_e( 'Question template management', 'learndash' ); ?></span>
+										<span>
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( '%s Template Management', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</span>
 									</legend>
 									<select name="templateQuestion">
-										<option value=""><?php esc_html_e( 'Select Question template', 'learndash' ); ?></option>
+										<option value="">
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( 'Select %s Template', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</option>
 
 										<?php
 										foreach ( $this->templateQuestion as $templateQuestion ) {
@@ -252,11 +327,43 @@ class WpProQuiz_View_GobalSettings extends WpProQuiz_View_View {
 										<input type="text" value="" name="templateQuestionEditText" class="regular-text" />
 									</div>
 									<div style="padding-top: 5px;">
-										<input type="button" title="<?php esc_html_e( 'Delete selected Question template', 'learndash' ); ?>" value="<?php esc_html_e( 'Delete', 'learndash' ); ?>" name="templateQuestionDelete" class="button-secondary">
-										<input type="button" title="<?php esc_html_e( 'Save changed to selected Question template', 'learndash' ); ?>" value="<?php esc_html_e( 'Save Changes', 'learndash' ); ?>" name="templateQuestionEdit" class="button-secondary">
+										<input type="button" title="
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( 'Delete selected %s template', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label_lower( 'question' )
+										)
+										?>
+										" value="<?php esc_html_e( 'Delete', 'learndash' ); ?>" name="templateQuestionDelete" class="button-secondary">
+										<input type="button" title="
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( 'Save changes to selected %s template', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label_lower( 'question' )
+										)
+										?>
+										" value="<?php esc_html_e( 'Save Changes', 'learndash' ); ?>" name="templateQuestionEdit" class="button-secondary">
 										<div class="templateQuestionSpinner spinner"></div>
-										<span class="templateQuestionEditUpdate" style="display:none"><?php esc_html_e( 'Question template Saved', 'learndash' ); ?></span>
-										<span class="templateQuestionDeleteUpdate" style="display:none"><?php esc_html_e( 'Question template Deleted', 'learndash' ); ?></span>
+										<span class="templateQuestionEditUpdate" style="display:none">
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( '%s template saved', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</span>
+										<span class="templateQuestionDeleteUpdate" style="display:none">
+										<?php
+										sprintf(
+											// translators: Question
+											esc_html_x( '%s template deleted', 'placeholder: Question', 'learndash' ),
+											learndash_get_custom_label( 'question' )
+										)
+										?>
+										</span>
 
 									</div>
 								</fieldset>

@@ -90,10 +90,7 @@ do_action( 'learndash-topic-row-before', $topic->ID, $course_id, $user_id ); ?>
 		 */
 		do_action( 'learndash-topic-row-title-before', $topic->ID, $course_id, $user_id );
 		?>
-		<span class="ld-topic-title"><?php
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) );
-		?></span>
+		<span class="ld-topic-title"><?php echo wp_kses_post( apply_filters( 'the_title', $topic->post_title, $topic->ID ) ); ?></span> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 		<?php
 		/**
 		 * Fires after the topic title.

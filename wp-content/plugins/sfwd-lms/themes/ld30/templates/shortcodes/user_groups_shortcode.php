@@ -60,7 +60,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="ld-item-list-group-leader ld-group-list">
 				<div class="ld-item-list-group-leader">
 					<div class="ld-section-heading">
-						<h2><?php esc_html_e( 'Assigned Group(s)', 'learndash' ); ?></h2>
+						<h2>
+						<?php
+						printf(
+							// translators: group
+							esc_html_x( 'Assigned %s(s)', 'placeholder: group', 'learndash' ),
+							learndash_get_custom_label( 'group' )
+						)
+						?>
+						</h2>
 					</div>
 					<div class="ld-item-list-items">
 						<?php

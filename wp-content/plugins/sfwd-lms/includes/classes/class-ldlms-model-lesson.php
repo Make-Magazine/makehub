@@ -1,50 +1,77 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
+/**
+ * Class to extend LDLMS_Model_Post to LDLMS_Model_Lesson.
+ *
+ * @package LearnDash
+ * @subpackage Lesson
+ * @since 3.2.0
+ */
+
+ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( ! class_exists( 'LDLMS_Model_Lesson' ) ) {
+if ( ( ! class_exists( 'LDLMS_Model_Lesson' ) ) && ( class_exists( 'LDLMS_Model_Post' ) ) ) {
 	class LDLMS_Model_Lesson extends LDLMS_Model_Post {
 
-		private static $post_type = 'sfwd-lessons';
-
+		/**
+		 * Class constructor.
+		 *
+		 * @since 3.2.0
+		 *
+		 * @param int $post_id Lesson Post ID to load.
+		 *
+		 * return mixed instance of class or exception.
+		 */
 		public function __construct( $lesson_id = 0 ) {
-			$this->load( $lesson_id );
+			$this->post_type = learndash_get_post_type_slug( 'lesson' );
+			$this->initialize( $lesson_id );
 		}
 
-		public static function get_post_type() {
-			return self::$post_type;
-		}
-
-		public function load( $lesson_id ) {
+		/**
+		 * Initialize post.
+		 *
+		 * @since 3.2.0
+		 *
+		 * @param int $post_id Lesson Post ID to load.
+		 *
+		 * @return bool True if post was loaded. False otherwise.
+		 */
+		public function initialize( $lesson_id ) {
 			if ( ! empty( $lesson_id ) ) {
-				$this->lesson_id = intval( $lesson_id );
-				//$this->init();
+				$lesson = get_post( $lesson_id );
+				if ( ( is_a( $lesson, 'WP_Post' ) ) && ( $lesson->post_type === $this->post_type ) ) {
+					$this->post_id = absint( $lesson_id );
+					$this->post    = $lesson;
+				}
 			}
 		}
 
-		public static function get_settings() {
-			return sfwd_lms_get_post_options( self::$post_type );
-		}
+		/**
+		 * Checks if lesson is sample.
+		 *
+		 * @since 3.4.0
+		 *
+		 * @return boolean Returns true if the post is sample otherwise false.
+		 */
+		public function is_sample() {
+			$is_sample = false;
 
-		public function load_steps( $query_args = array() ) {
-
-			$default_query_args = array(
-				'post_type' => $this->get_post_type(),
-			);
-
-			$this->last_query_args = wp_parse_args( $query_args, $default_query_args );
-
-			//error_log('query_args<pre>'. print_r($this->last_query_args, true) .'</pre>');
-			$this->last_query = new WP_Query( $this->last_query_args );
-			//error_log('last_query<pre>'. print_r($this->last_query, true) .'</pre>');
-			if ( ( $this->last_query instanceof WP_Query ) && ( property_exists( $this->last_query, 'posts' ) ) ) {
-				$lessons_ids = $this->last_query->posts;
+			if ( empty( $this->post_id ) ) {
+				return $is_sample;
 			}
 
-			return $lessons_ids;
+			if ( learndash_get_setting( $post->ID, 'sample_lesson' ) ) {
+				$is_sample = true;
+			}
+
+			/**
+			 * Filters whether the lesson is a sample lesson or not.
+			 *
+			 * @param boolean            $is_sample Whether the lesson is a sample lesson or not.
+			 * @param WP_Post|array|null $post      Post Object.
+			 */
+			return apply_filters( 'learndash_lesson_is_sample', $is_sample, $this->post );
 		}
-
-
 	}
 }

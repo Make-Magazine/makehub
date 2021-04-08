@@ -182,20 +182,23 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				'name'    => 'nested_urls',
 				'type'    => 'checkbox',
 				'label'   => __( 'Enable Nested URLs', 'learndash' ),
-				'desc'    => sprintf(
-					// translators: placeholders: Lesson, Topic, Quiz, Course, Site Home URL, URL to Course Builder Settings.
-					_x(
-						'This option will restructure %1$s, %2$s and %3$s URLs so they are nested hierarchically within the %4$s URL.<br />For example instead of the default topic URL <code>%5$s</code> the nested URL would be <code>%6$s</code>. If <a href="%7$s">Course Builder Share Steps</a> has been enabled this setting is also automatically enabled.',
-						'placeholders: Lesson, Topic, Quiz, Course, Site Home URL, URL to Course Builder Settings',
-						'learndash'
-					),
-					LearnDash_Custom_Label::get_label( 'lesson' ),
-					LearnDash_Custom_Label::get_label( 'topic' ),
-					LearnDash_Custom_Label::get_label( 'quiz' ),
-					LearnDash_Custom_Label::get_label( 'course' ),
-					$example_regular_topic_url,
-					$example_nested_topic_url,
-					admin_url( 'admin.php?page=courses-options' )
+				'desc'    => wp_kses_post(
+					sprintf(
+						// translators: placeholders: Lesson, Topic, Quiz, Course, topic, Site Home URL, URL to Course Builder Settings.
+						_x(
+							'This option will restructure %1$s, %2$s and %3$s URLs so they are nested hierarchically within the %4$s URL.<br />For example instead of the default %5$s URL <code>%6$s</code> the nested URL would be <code>%7$s</code>. If <a href="%7$s">Course Builder Share Steps</a> has been enabled this setting is also automatically enabled.',
+							'placeholders: Lesson, Topic, Quiz, Course, topic, Site Home URL, URL to Course Builder Settings',
+							'learndash'
+						),
+						learndash_get_custom_label( 'lesson' ),
+						learndash_get_custom_label( 'topic' ),
+						learndash_get_custom_label( 'quiz' ),
+						learndash_get_custom_label( 'course' ),
+						learndash_get_custom_label_lower( 'topic' ),
+						$example_regular_topic_url,
+						$example_nested_topic_url,
+						admin_url( 'admin.php?page=courses-options' )
+					)
 				),
 				'value'   => isset( $this->setting_option_values['nested_urls'] ) ? $this->setting_option_values['nested_urls'] : '',
 				'options' => array(

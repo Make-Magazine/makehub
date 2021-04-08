@@ -59,9 +59,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 		public function load_settings_values() {
 			parent::load_settings_values();
 
-			$_init = false;
 			if ( false === $this->setting_option_values ) {
-				$_init                       = true;
 				$this->setting_option_values = array(
 					'ld_quiz_category' => '',
 					'ld_quiz_tag'      => '',

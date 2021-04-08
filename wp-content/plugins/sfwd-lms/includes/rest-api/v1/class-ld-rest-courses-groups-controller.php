@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exists( 'LD_REST_Posts_Controller_V1' ) ) ) {
 	class LD_REST_Courses_Groups_Controller_V1 extends LD_REST_Posts_Controller_V1 {
 
@@ -54,7 +58,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 				array(
 					'args'   => array(
 						'id' => array(
-							'description' => esc_html__( 'Course ID to enroll into.', 'learndash' ),
+							// translators: course
+							'description' => sprintf( esc_html_x( '%s ID to enroll into.', 'placeholder: course', 'learndash' ), learndash_get_custom_label( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),
@@ -71,7 +76,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'update_courses_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to enroll into Course.', 'learndash' ),
+								// translators: group, course
+								'description' => sprintf( esc_html_x( '%1$s IDs to enroll into %2$s.', 'placeholder: group, course', 'learndash' ), learndash_get_custom_label( 'group' ), learndash_get_custom_label( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -86,7 +92,8 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 						'permission_callback' => array( $this, 'delete_courses_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to remove from Course.', 'learndash' ),
+								// translators: group, course
+								'description' => sprintf( esc_html_x( '%1$s IDs to remove from %2$s.', 'placeholder: group, course', 'learndash' ), learndash_get_custom_label( 'group' ), learndash_get_custom_label( 'course' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -120,7 +127,15 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 						'readonly'    => true,
 					),
 					'group_ids' => array(
-						'description' => __( 'The group IDs.', 'learndash' ),
+						'description' => sprintf(
+							// translators: placholder: group
+							esc_html_x(
+								'The %s IDs.',
+								'placeholder: group',
+								'learndash'
+							),
+							learndash_get_custom_lower_label( 'group' )
+						),
 						'type'        => 'array',
 						'items'       => array(
 							'type' => 'integer',
@@ -154,12 +169,36 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		public function update_courses_groups( $request ) {
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Course',
+							'learndash'
+						),
+						learndash_get_custom_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$group_ids = array_map( 'intval', $group_ids );
 			}
@@ -183,12 +222,36 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		public function delete_courses_groups( $request ) {
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array( 'status' => 404 )
+				);
 			} else {
 				$group_ids = array_map( 'intval', $group_ids );
 			}
@@ -211,7 +274,19 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 		public function get_courses_groups( $request ) {
 			$course_id = $request['id'];
 			if ( empty( $course_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid Course ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
 			}
 
 			if ( is_user_logged_in() ) {

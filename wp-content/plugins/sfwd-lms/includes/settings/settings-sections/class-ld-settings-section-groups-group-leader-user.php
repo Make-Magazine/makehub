@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'LearnDash_Settings_Section_Groups_Group_Leader_User' ) ) ) {
 	/**
 	 * Class to create the settings section.
@@ -38,9 +42,19 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->settings_section_key = 'settings_group_leader_user';
 
 			// Section label/header.
-			$this->settings_section_label = esc_html__( 'Group Leader User Settings', 'learndash' );
+			$this->settings_section_label = sprintf(
+				// translators: placeholder: Group Leader
+				esc_html_x( '%s User Settings', 'placeholder: Group Leader', 'learndash' ),
+				learndash_get_custom_label( 'group_leader' )
+			);
 
-			$this->settings_section_description = esc_html__( 'Controls the Group Leader capabilities.', 'learndash' );
+			$this->settings_section_description = wp_kses_post(
+				sprintf(
+					// translators: placeholder: Group Leader
+					esc_html_x( 'Controls the %s capabilities.', 'placeholder: Group Leader', 'learndash' ),
+					esc_html( learndash_get_custom_label( 'group_leader' ) )
+				)
+			);
 
 			add_filter( 'learndash_settings_row_outside_before', array( $this, 'learndash_settings_row_outside_before' ), 30, 2 );
 
@@ -198,21 +212,24 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'course' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholder: courses, course.
-						esc_html_x( 'Allow group leader users to have access to %1$s automatically without requiring %2$s enrollment.', 'placeholder: courses, course', 'learndash' ),
+						// translators: placeholder: group leader, courses, course.
+						esc_html_x( 'Allow %1$s users to have access to %2$s automatically without requiring %3$s enrollment.', 'placeholder: group leader, courses, course', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' ),
 						learndash_get_custom_label_lower( 'courses' ),
 						learndash_get_custom_label_lower( 'course' )
 					),
 					'value'     => $this->setting_option_values['courses_autoenroll'],
 					'options'   => array(
 						''    => sprintf(
-							// translators: placeholder: courses.
-							esc_html_x( 'Group Leader has access to enrolled %s only', 'placeholder: courses', 'learndash' ),
+							// translators: placeholder: Group Leader, courses.
+							esc_html_x( '%1$s has access to enrolled %2$s only', 'placeholder: Group Leader, courses', 'learndash' ),
+							learndash_get_custom_label( 'group_leader' ),
 							learndash_get_custom_label_lower( 'courses' )
 						),
 						'yes' => sprintf(
-							// translators: placeholder: courses.
-							esc_html_x( 'Group Leader has access to all %s automatically', 'placeholder: courses', 'learndash' ),
+							// translators: placeholder: Group Leader, courses.
+							esc_html_x( '%1$s has access to all %2$s automatically', 'placeholder: Group Leader, courses', 'learndash' ),
+							learndash_get_custom_label( 'group_leader' ),
 							learndash_get_custom_label_lower( 'courses' )
 						),
 					),
@@ -226,16 +243,22 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'course' )
 					),
 					'help_text' => sprintf(
-						// translators: placeholder:  course.
-						esc_html_x( 'Allow group leader users to access %s content in any order bypassing progression and access limitations', 'placeholder: course', 'learndash' ),
+						// translators: placeholder:  group leader, course.
+						esc_html_x( 'Allow %1$s users to access %2$s content in any order bypassing progression and access limitations', 'placeholder: course', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' ),
 						learndash_get_custom_label_lower( 'course' )
 					),
 					'value'     => $this->setting_option_values['bypass_course_limits'],
 					'options'   => array(
-						''    => esc_html__( 'Group Leader must follow the progression and access rules', 'learndash' ),
+						''    => sprintf(
+							// translators: placeholder: Group Leader
+							esc_html_x( '%s must follow the progression and access rules', 'placeholder: Group Leader', 'learndash' ),
+							learndash_get_custom_label( 'group_leader' )
+						),
 						'yes' => sprintf(
-							// translators: placeholder:  course.
-							esc_html_x( 'Group Leader can access %s content in any order', 'placeholder: course', 'learndash' ),
+							// translators: placeholder:  Group leader, course.
+							esc_html_x( '%1$s can access %2$s content in any order', 'placeholder: group leader, course', 'learndash' ),
+							learndash_get_custom_label( 'group_leader' ),
 							learndash_get_custom_label_lower( 'course' )
 						),
 					),
@@ -250,8 +273,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'groups' )
 					),
 					'help_text'           => sprintf(
-						// translators: placeholder: groups.
-						esc_html_x( 'Allow group leader to create and manage %s.', 'placeholder: groups', 'learndash' ),
+						// translators: placeholder: group leader, groups.
+						esc_html_x( 'Allow %1$s to create and manage %2$s.', 'placeholder: group leader, groups', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' ),
 						learndash_get_custom_label_lower( 'groups' )
 					),
 					'value'               => $this->setting_option_values['manage_groups_enabled'],
@@ -269,16 +293,18 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'basic'    => array(
 							'label'       => esc_html__( 'Basic', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: groups.
-								esc_html_x( 'Group Leader can only create, manage, and delete his / her own %s only.', 'placeholder: Groups', 'learndash' ),
+								// translators: placeholder: Group leader, groups.
+								esc_html_x( '%1$s can only create, manage, and delete his / her own %2$s only.', 'placeholder: Group leader, Groups', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' ),
 								learndash_get_custom_label_lower( 'groups' )
 							),
 						),
 						'advanced' => array(
 							'label'       => esc_html__( 'Advanced', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: groups.
-								esc_html_x( 'Group Leader can create, manage and delete ANY groups on the site.', 'placeholder: Groups', 'learndash' ),
+								// translators: placeholder: Group leader, groups.
+								esc_html_x( '%1$s can create, manage and delete ANY %2$s on the site.', 'placeholder: Group leader, groups', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' ),
 								learndash_get_custom_label_lower( 'groups' )
 							),
 						),
@@ -295,8 +321,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						learndash_get_custom_label( 'courses' )
 					),
 					'help_text'           => sprintf(
-						// translators: placeholder: courses.
-						esc_html_x( 'Allow group leader to create and manage %s.', 'placeholder: courses', 'learndash' ),
+						// translators: placeholder: group leader, courses.
+						esc_html_x( 'Allow %1$s to create and manage %2$s.', 'placeholder: group leader, courses', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' ),
 						learndash_get_custom_label_lower( 'courses' )
 					),
 					'value'               => $this->setting_option_values['manage_courses_enabled'],
@@ -314,16 +341,18 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'basic'    => array(
 							'label'       => esc_html__( 'Basic', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: courses.
-								esc_html_x( 'Group Leader can only create, manage, and delete his / her own %s only.', 'placeholder: courses', 'learndash' ),
+								// translators: placeholder: Group leader, courses.
+								esc_html_x( '%1$s can only create, manage, and delete his / her own %2$s only.', 'placeholder: Group leader, courses', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' ),
 								learndash_get_custom_label_lower( 'courses' )
 							),
 						),
 						'advanced' => array(
 							'label'       => esc_html__( 'Advanced', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: courses.
-								esc_html_x( 'Group Leader can create, manage and delete ANY %s on the site.', 'placeholder: courses', 'learndash' ),
+								// translators: placeholder: Group leader, courses.
+								esc_html_x( '%1$s can create, manage and delete ANY %2$s on the site.', 'placeholder: Group leader, courses', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' ),
 								learndash_get_custom_label_lower( 'courses' )
 							),
 						),
@@ -335,7 +364,11 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'name'                => 'manage_users_enabled',
 					'type'                => 'checkbox-switch',
 					'label'               => esc_html__( 'Manage Users', 'learndash' ),
-					'help_text'           => esc_html__( 'Allow group leader to create and manage users.', 'learndash' ),
+					'help_text'           => sprintf(
+						// translators: Group leader
+						esc_html_x( 'Allow %s to create and manage users.', 'placeholder: Group leader', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' )
+					),
 					'value'               => $this->setting_option_values['manage_users_enabled'],
 					'options'             => array(
 						'yes' => '',
@@ -351,14 +384,19 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 						'basic'    => array(
 							'label'       => esc_html__( 'Basic', 'learndash' ),
 							'description' => sprintf(
-								// translators: placeholder: courses.
-								esc_html_x( 'Group Leader can only manage users within his / her assigned %s only.', 'placeholder: courses', 'learndash' ),
+								// translators: placeholder: Group leader, courses.
+								esc_html_x( '%1$s can only manage users within his / her assigned %2$s only.', 'placeholder: Group leader, courses', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' ),
 								learndash_get_custom_label_lower( 'courses' )
 							),
 						),
 						'advanced' => array(
 							'label'       => esc_html__( 'Advanced', 'learndash' ),
-							'description' => esc_html__( 'Group Leader can create, manage and delete ANY users on the site.', 'learndash' ),
+							'description' => sprintf(
+								// translators: placeholder: Group leader
+								esc_html_x( '%s can create, manage and delete ANY users on the site.', 'placeholder: Group leader', 'learndash' ),
+								learndash_get_custom_label( 'group_leader' )
+							),
 						),
 					),
 					'parent_setting' => 'manage_users_enabled',
@@ -401,16 +439,26 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 				$new_values = parent::section_pre_update_option( $new_values, $old_values, $setting_option_key );
 
+				/**
+				 * Added to correct issues with Group Leader User capabilities.
+				 * See LEARNDASH-5707.
+				 *
+				 * if $gl_user_activate is not empty it will force changes needed.
+				 *
+				 * @since 3.4.0.2
+				 */
+				$gl_user_activate = get_option( 'learndash_groups_group_leader_user_activate', '' );
+
 				foreach ( array( 'groups', 'courses', 'users' ) as $type ) {
-					if ( ( $new_values[ 'manage_' . $type . '_enabled' ] !== $old_values[ 'manage_' . $type . '_enabled' ] ) || ( 'yes' === $new_values[ 'manage_' . $type . '_enabled' ] ) ) {
+					if ( ( ! isset( $old_values[ 'manage_' . $type . '_enabled' ] ) ) || ( $new_values[ 'manage_' . $type . '_enabled' ] !== $old_values[ 'manage_' . $type . '_enabled' ] ) || ( 'yes' === $new_values[ 'manage_' . $type . '_enabled' ] ) || ( ! empty( $gl_user_activate ) ) ) {
 						if ( 'yes' !== $new_values[ 'manage_' . $type . '_enabled' ] ) {
 							$new_values[ 'manage_' . $type . '_capabilities' ] = 'basic';
 							foreach ( $this->role_caps[ 'manage_' . $type . '_capabilities' ]['basic'] as $cap ) {
-								$group_leader_role->add_cap( $cap, false );
+								$group_leader_role->remove_cap( $cap );
 							}
 
 							foreach ( $this->role_caps[ 'manage_' . $type . '_capabilities' ]['advanced'] as $cap ) {
-								$group_leader_role->add_cap( $cap, false );
+								$group_leader_role->remove_cap( $cap );
 							}
 						} elseif ( 'yes' === $new_values[ 'manage_' . $type . '_enabled' ] ) {
 							foreach ( $this->role_caps[ 'manage_' . $type . '_capabilities' ]['basic'] as $cap ) {
@@ -421,11 +469,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 								if ( 'advanced' === $new_values[ 'manage_' . $type . '_capabilities' ] ) {
 									$group_leader_role->add_cap( $cap, true );
 								} else {
-									$group_leader_role->add_cap( $cap, false );
+									$group_leader_role->remove_cap( $cap );
 								}
 							}
 						}
 					}
+				}
+
+				if ( ! empty( $gl_user_activate ) ) {
+					update_option( 'learndash_groups_group_leader_user_activate', '' );
 				}
 
 				/**

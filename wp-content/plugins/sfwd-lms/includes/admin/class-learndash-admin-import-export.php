@@ -26,19 +26,6 @@ if ( ! class_exists( 'Learndash_Admin_Import_Export' ) ) {
 		 * Show the Import/Export module UI.
 		 */
 		public function show() {
-			/*
-			$export_post_types = array(
-				'sfwd-courses' => array(
-					'post_type' => 'sfwd-courses',
-					''
-					'label' => sprintf(
-						// translators: placeholder: Course.
-						esc_html_x( '%s', 'placeholder: Course', 'learndash' ),
-						LearnDash_Custom_Label::get_label( 'course' ),
-					),
-				)
-			);
-			*/
 		}
 		// End of functions.
 	}

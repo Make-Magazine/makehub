@@ -61,13 +61,15 @@ function ld_quiz_list( $attr = array() ) {
 
 		if ( ! empty( $course_steps ) ) {
 			$attr['post__in'] = $course_steps;
-			// if ( !isset( $attr['orderby'] ) ) $attr['orderby'] = 'post__in';
 		}
-		if ( ! isset( $attr['order'] ) ) {
-			$attr['order'] = 'ASC';
-		}
-		if ( ! isset( $attr['orderby'] ) ) {
-			$attr['orderby'] = 'title';
+
+		if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+			if ( ! isset( $attr['order'] ) ) {
+				$attr['order'] = 'ASC';
+			}
+			if ( ! isset( $attr['orderby'] ) ) {
+				$attr['orderby'] = 'post__in';
+			}
 		}
 	}
 

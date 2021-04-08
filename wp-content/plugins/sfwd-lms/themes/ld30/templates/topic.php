@@ -64,8 +64,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	 *
 	 */
 
-		$sub_context = '';
-	if ( $lesson_progression_enabled ) {
+	$sub_context = '';
+	if ( ( $lesson_progression_enabled ) && ( ! learndash_user_progress_is_step_complete( $user_id, $course_id, $post->ID ) ) ) {
 		$previous_item = learndash_get_previous( $post );
 		if ( ( ! $previous_topic_completed ) || ( empty( $previous_item ) ) ) {
 			if ( 'on' === learndash_get_setting( $lesson_post->ID, 'lesson_video_enabled' ) ) {
@@ -85,14 +85,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 		if ( 'video_progression' === $sub_context ) {
 			$previous_item = $lesson_post;
 		} else {
-			$previous_item = learndash_get_previous( $post );
-
-			if ( empty( $previous_item ) ) {
-				$previous_item = learndash_get_previous( $lesson_post );
+			$previous_item_id = learndash_user_progress_get_previous_incomplete_step( $user_id, $course_id, $post->ID );
+			if ( ! empty( $previous_item_id ) ) {
+				$previous_item = get_post( $previous_item_id );
 			}
 		}
 
-		if ( ! empty( $previous_item ) ) {
+		if ( ( isset( $previous_item ) ) && ( ! empty( $previous_item ) ) ) {
+			$show_content = false;
 			learndash_get_template_part(
 				'modules/messages/lesson-progression.php',
 				array(
@@ -138,7 +138,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		endif;
 
-		if ( lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
+		if ( learndash_lesson_hasassignments( $post ) && ! empty( $user_id ) ) :
 
 			learndash_get_template_part(
 				'assignment/listing.php',

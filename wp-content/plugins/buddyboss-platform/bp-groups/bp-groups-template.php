@@ -414,6 +414,11 @@ function bp_has_groups( $args = '' ) {
 		$parent_id = 0;
     }
 
+	$show_hidden = true;
+	if ( ! empty( bp_displayed_user_id() ) && ! empty( bp_current_user_id() ) && bp_displayed_user_id() === bp_current_user_id() ) {
+		$show_hidden = false;
+	}
+
 	// Parse defaults and requested arguments.
 	$r = bp_parse_args(
 		$args,
@@ -424,7 +429,7 @@ function bp_has_groups( $args = '' ) {
 			'page'               => 1,
 			'per_page'           => 20,
 			'max'                => false,
-			'show_hidden'        => true,
+			'show_hidden'        => $show_hidden,
 			'page_arg'           => 'grpage',
 			'user_id'            => bp_displayed_user_id(),
 			'slug'               => $slug,
@@ -1893,7 +1898,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?> data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+						<a href="<?php bp_group_permalink( $parent_group ); ?>" data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
 						<?php
 						echo bp_core_fetch_avatar(
 							array(

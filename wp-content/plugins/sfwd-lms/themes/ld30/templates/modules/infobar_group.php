@@ -16,6 +16,10 @@
  * @package LearnDash\Group
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /** This filter is documented in themes/ld30/templates/modules/tabs.php */
 do_action( 'learndash-infobar-before', get_post_type( $group_id ), $group_id, $user_id );
 

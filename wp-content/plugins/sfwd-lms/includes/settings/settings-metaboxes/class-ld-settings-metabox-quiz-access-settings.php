@@ -341,9 +341,10 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'label'     => esc_html__( 'Allowed Users', 'learndash' ),
 					'value'     => $this->setting_option_values['startOnlyRegisteredUser'],
 					'help_text' => sprintf(
-						// translators: placeholders: quizzes, courses, quiz.
-						esc_html_x( 'This option is especially useful if administering %1$s via shortcodes on non-course pages, or if your %2$s are open but you wish only authenticated users to take the %3$s.', 'placeholders: quizzes, courses, quiz.', 'learndash' ),
+						// translators: placeholders: quizzes, course, courses, quiz.
+						esc_html_x( 'This option is especially useful if administering %1$s via shortcodes on non-%2$s pages, or if your %3$s are open but you wish only authenticated users to take the %4$s.', 'placeholders: quizzes, courses, quiz.', 'learndash' ),
 						learndash_get_custom_label( 'quizzes' ),
+						learndash_get_custom_label_lower( 'course' ),
 						learndash_get_custom_label( 'course' ),
 						learndash_get_custom_label( 'quiz' )
 					),
@@ -351,7 +352,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					'options'   => array(
 						'on' => sprintf(
 							// translators: placeholder: quiz.
-							esc_html_x( 'Only registered users can take this quiz', 'placeholder: quiz', 'learndash' ),
+							esc_html_x( 'Only registered users can take this %s', 'placeholder: quiz', 'learndash' ),
 							learndash_get_custom_label( 'quiz' )
 						),
 					),
@@ -369,7 +370,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 				),
 			);
 
-			if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
+			if ( learndash_is_course_shared_steps_enabled() ) {
 				unset( $this->setting_option_fields['course'] );
 				unset( $this->setting_option_fields['lesson'] );
 			}
@@ -416,6 +417,11 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					$settings_values['prerequisite'] = true;
 				} else {
 					$settings_values['prerequisite'] = '';
+				}
+
+				if ( learndash_is_course_shared_steps_enabled() ) {
+					unset( $settings_values['course'] );
+					unset( $settings_values['lesson'] );
 				}
 			}
 

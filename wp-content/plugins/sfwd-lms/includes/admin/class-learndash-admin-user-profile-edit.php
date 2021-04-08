@@ -142,15 +142,7 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			$this->show_leader_groups( $user );
 
 			$this->show_user_course_info( $user );
-			//$this->show_user_course_progress( $user );
-			//$this->show_user_upgrade_data_link( $user );
 			$this->show_user_delete_data_link( $user );
-
-			//$user_couses = get_user_meta( $user->ID, '_sfwd-course_progress', true );
-			//error_log( 'user_couses<pre>'. print_r( $user_couses, true ) .'</pre>' );
-
-			//$user_quizzes = get_user_meta( $user->ID, '_sfwd-quizzes', true );
-			//error_log( 'user_quizzes<pre>'. print_r( $user_quizzes, true ) .'</pre>' );
 		}
 
 		/**
@@ -188,14 +180,6 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 			echo SFWD_LMS::get_course_info( $user_id, $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		}
 
-		/*
-		function show_user_upgrade_data_link( $user ) {
-			?>
-			<h2><?php esc_html_e( 'Upgrade User Data', 'learndash' ); ?></h2>
-			<p><button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-upgrades-user-meta-courses-' . get_current_user_id() ); ?>" data-slug="user-meta-courses"><?php printf( esc_html_x( 'Upgrade User %s Data', 'Upgrade User Course Data Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></button> <button class="learndash-data-upgrades-button button button-primary" data-nonce="<?php echo wp_create_nonce( 'learndash-data-upgrades-user-meta-quizzes-' . get_current_user_id() ); ?>" data-slug="user-meta-quizzes"><?php printf( esc_html_x( 'Upgrade User %s Data', 'Upgrade User Quiz Data Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ); ?></button></p><?php
-		}
-		*/
-
 		/**
 		 * Output link to delete course data for user
 		 *
@@ -219,11 +203,25 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 				);
 				?>
 				</h2>
-				<p><input type="checkbox" id="learndash_delete_user_data" name="learndash_delete_user_data" value="<?php echo (int) $user->ID; ?>"> <label for="learndash_delete_user_data"><?php echo wp_kses_post( __( 'Check and click update profile to permanently delete user\'s LearnDash course data. <strong>This cannot be undone.</strong>', 'learndash' ) ); ?></label></p>
+				<p><input type="checkbox" id="learndash_delete_user_data" name="learndash_delete_user_data" value="<?php echo (int) $user->ID; ?>"> <label for="learndash_delete_user_data">
+				<?php
+				echo wp_kses_post(
+					sprintf(
+						// translators: placeholder: course
+						_x( 'Check and click update profile to permanently delete users LearnDash %s data. <strong>This cannot be undone.</strong>', 'placeholder: course', 'learndash' ),
+						esc_html( learndash_get_custom_label_lower( 'course' ) )
+					)
+				)
+				?>
+				</label></p>
 				<?php
 					global $wpdb;
-					$sql_str     = $wpdb->prepare( 'SELECT quiz_id as proquiz_id FROM ' . LDLMS_DB::get_table_name( 'quiz_lock' ) . ' WHERE user_id=%d', $user->ID );
-					$proquiz_ids = $wpdb->get_col( $sql_str );
+					$proquiz_ids = $wpdb->get_col(
+						$wpdb->prepare(
+							'SELECT quiz_id as proquiz_id FROM ' . esc_sql( LDLMS_DB::get_table_name( 'quiz_lock' ) ) . ' WHERE user_id = %d',
+							$user->ID
+						)
+					);
 				if ( ! empty( $proquiz_ids ) ) {
 					$quiz_ids = array();
 
@@ -246,7 +244,17 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 						$quiz_query      = new WP_Query( $quiz_query_args );
 						if ( ! empty( $quiz_query->posts ) ) {
 							?>
-								<p><label for=""><?php esc_html_e( 'Remove the Quiz lock(s) for this user.', 'learndash' ); ?></label> <select
+								<p><label for="">
+								<?php
+								wp_kses_post(
+									printf(
+										// translators: placeholder: quiz
+										esc_html_x( 'Remove the %s lock(s) for this user.', 'placeholder: quiz', 'learndash' ),
+										esc_html( learndash_get_custom_label_lower( 'quiz' ) )
+									)
+								)
+								?>
+								</label> <select
 									id="learndash_delete_quiz_user_lock_data" name="learndash_delete_quiz_user_lock_data">
 									<option value=""></option>
 								<?php
@@ -638,7 +646,8 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 
 									echo $output_str; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Need to output HTML
 									?>
-									</td>								</tr>
+									</td>
+								</tr>
 								<?php
 						}
 						?>
@@ -658,12 +667,12 @@ if ( ! class_exists( 'Learndash_Admin_User_Profile_Edit' ) ) {
 
 			$quiz_time = 0;
 			if ( isset( $_POST['quiz_time'] ) ) {
-				$quiz_time = esc_attr( $_POST['quiz_time'] );
+				$quiz_time = esc_attr( $_POST['quiz_time'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
 			}
 
 			$quiz_nonce = 0;
 			if ( isset( $_POST['quiz_nonce'] ) ) {
-				$quiz_nonce = esc_attr( $_POST['quiz_nonce'] );
+				$quiz_nonce = esc_attr( $_POST['quiz_nonce'] ); // phpcs:ignore WordPress.Security.NonceVerification.Missing -- verify_nonce is called below
 			}
 
 			$user_id = 0;

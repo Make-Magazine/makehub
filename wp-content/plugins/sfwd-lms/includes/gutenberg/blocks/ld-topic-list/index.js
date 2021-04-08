@@ -16,26 +16,11 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
-} = wp.blockEditor;
-
-const {
-	PanelBody,
-	RangeControl,
-	SelectControl,
-	ToggleControl,
-	TextControl
-} = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, RangeControl, SelectControl, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-topic-list',
@@ -208,8 +193,8 @@ registerBlockType(
 						onChange={course_id => setAttributes({ course_id })}
 					/>
 					<TextControl
-						// translators: placeholder: Lesson ID.
-						label={sprintf(_x('%s ID', 'placeholder: Lesson ID', 'learndash'), ldlms_get_custom_label('lesson'))}
+						// translators: placeholder: Lesson.
+						label={sprintf(_x('%s ID', 'placeholder: Lesson', 'learndash'), ldlms_get_custom_label('lesson'))}
 						// translators: placeholders: Lesson, Course.
 						help={sprintf(_x('Enter single %1$s ID to limit listing. Leave blank if used within a %2$s.', 'placeholders: Lesson, Course', 'learndash'), ldlms_get_custom_label('lesson'), ldlms_get_custom_label('course'))}
 						value={lesson_id || ''}

@@ -37,6 +37,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'LearnDash LMS', 'learndash' );
 
+			$this->load_options = false;
+
 			LearnDash_Translations::register_translation_slug( $this->project_slug, LEARNDASH_LMS_PLUGIN_DIR . 'languages/' );
 
 			parent::__construct();

@@ -174,7 +174,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							<li><span>$result</span> - ' . esc_html__( 'Result in percent', 'learndash' ) . '</li>
 							<li><span>$points</span> - ' . esc_html__( 'Reached points', 'learndash' ) . '</li>
 							<li><span>$categories</span> - ' . esc_html__( 'Category-Overview', 'learndash' ) . '</li>
-						</ul>	
+						</ul>
 					</div>',
 				),
 				'admin_mail_html'       => array(
@@ -231,7 +231,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 							<li><span>$result</span> - ' . esc_html__( 'Result in percent', 'learndash' ) . '</li>
 							<li><span>$points</span> - ' . esc_html__( 'Reached points', 'learndash' ) . '</li>
 							<li><span>$categories</span> - ' . esc_html__( 'Category-Overview', 'learndash' ) . '</li>
-						</ul>	
+						</ul>
 					</div>',
 				),
 				'user_mail_html'        => array(
@@ -289,8 +289,9 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 					$content .= '<div class="ld-settings-email-description">';
 					$content .= sprintf(
-						// translators: placeholder: quiz, quiz.
-						esc_html_x( 'Manage the email content that will be sent out to the admin, group leader or other supervisors when a user completes a %1$s. You must enable "Admin Notification" on a per %2$s basis.', 'placeholder: quiz, quiz', 'learndash' ),
+						// translators: placeholder: group leader, quiz, quiz.
+						esc_html_x( 'Manage the email content that will be sent out to the admin, %1$s or other supervisors when a user completes a %2$s. You must enable "Admin Notification" on a per %3$s basis.', 'placeholder: group leader, quiz, quiz', 'learndash' ),
+						learndash_get_custom_label_lower( 'group_leader' ),
 						learndash_get_custom_label_lower( 'quiz' ),
 						learndash_get_custom_label_lower( 'quiz' )
 					);

@@ -34,8 +34,10 @@ function video_conference_zoom_check_login() {
  * @author Deepen
  * @since  3.0.0
  */
-function video_conference_zoom_featured_image() {
-	vczapi_get_template( 'fragments/image.php', true );
+if ( ! function_exists( 'video_conference_zoom_featured_image' ) ) {
+	function video_conference_zoom_featured_image() {
+		vczapi_get_template( 'fragments/image.php', true );
+	}
 }
 
 /**
@@ -44,9 +46,12 @@ function video_conference_zoom_featured_image() {
  * @author Deepen
  * @since  3.0.0
  */
-function video_conference_zoom_main_content() {
-	vczapi_get_template( 'fragments/content.php', true );
+if ( ! function_exists( 'video_conference_zoom_main_content' ) ) {
+	function video_conference_zoom_main_content() {
+		vczapi_get_template( 'fragments/content.php', true );
+	}
 }
+
 
 /**
  * Function to add in the counter
@@ -54,8 +59,10 @@ function video_conference_zoom_main_content() {
  * @author Deepen
  * @since  3.0.0
  */
-function video_conference_zoom_countdown_timer() {
-	vczapi_get_template( 'fragments/countdown-timer.php', true );
+if ( ! function_exists( 'video_conference_zoom_countdown_timer' ) ) {
+	function video_conference_zoom_countdown_timer() {
+		vczapi_get_template( 'fragments/countdown-timer.php', true );
+	}
 }
 
 /**
@@ -64,8 +71,10 @@ function video_conference_zoom_countdown_timer() {
  * @author Deepen
  * @since  3.0.0
  */
-function video_conference_zoom_meeting_details() {
-	vczapi_get_template( 'fragments/meeting-details.php', true );
+if ( ! function_exists( 'video_conference_zoom_meeting_details' ) ) {
+	function video_conference_zoom_meeting_details() {
+		vczapi_get_template( 'fragments/meeting-details.php', true );
+	}
 }
 
 /**
@@ -122,6 +131,7 @@ function video_conference_zoom_meeting_join() {
 			'post_id'    => $post_id,
 			'page'       => 'single-meeting'
 		);
+		$data               = apply_filters( 'vczapi_single_meeting_localized_data', $data );
 		wp_localize_script( 'video-conferencing-with-zoom-api', 'mtg_data', $data );
 	} else {
 		echo "<p>" . __( 'Please login to join this meeting.', 'video-conferencing-with-zoom-api' ) . "</p>";
@@ -478,6 +488,7 @@ function video_conference_zoom_before_jbh_html( $zoom ) {
         <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/bootstrap.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
         <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-select.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
         <link rel='stylesheet' type="text/css" href="<?php echo ZVC_PLUGIN_PUBLIC_ASSETS_URL . '/css/style.min.css?ver=' . ZVC_PLUGIN_VERSION; ?>" media='all'>
+        <link rel='stylesheet' type="text/css" href="<?php echo get_stylesheet_uri(); ?>" media='all'>
     </head><body class="join-via-browser-body">
 	<?php
 	ob_end_flush();
@@ -494,8 +505,8 @@ function video_conference_zoom_after_jbh_html() {
 		'ajaxurl'       => admin_url( 'admin-ajax.php' ),
 		'zvc_security'  => wp_create_nonce( "_nonce_zvc_security" ),
 		'redirect_page' => apply_filters( 'vczapi_api_redirect_join_browser', esc_url( home_url( '/' ) ) ),
-		'meeting_id'    => absint( vczapi_encrypt_decrypt( 'decrypt', $_GET['join'] ) ),
-		'meeting_pwd'   => ! empty( $_GET['pak'] ) ? sanitize_text_field( vczapi_encrypt_decrypt( 'decrypt', $_GET['pak'] ) ) : false,
+		'meeting_id'    => base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['join'] ) ),
+		'meeting_pwd'   => ! empty( $_GET['pak'] ) ? base64_encode( vczapi_encrypt_decrypt( 'decrypt', $_GET['pak'] ) ) : false,
 		'disableInvite' => ( get_option( 'vczapi_disable_invite' ) == 'yes' ) ? true : false
 	);
 
@@ -529,6 +540,7 @@ function video_conference_zoom_after_jbh_html() {
         var zvc_ajx = <?php echo wp_json_encode( $localize ); ?>;
     </script>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/jquery.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+
 <?php if ( ! defined( 'VCZAPI_STATIC_CDN' ) ) { ?>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react.production.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/zoom/react-dom.production.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
@@ -544,7 +556,9 @@ function video_conference_zoom_after_jbh_html() {
     <script src="<?php echo 'https://source.zoom.us/' . ZVC_ZOOM_WEBSDK_VERSION . '/lib/vendor/lodash.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo 'https://source.zoom.us/zoom-meeting-' . ZVC_ZOOM_WEBSDK_VERSION . '.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
 <?php } ?>
+    <script src="<?php echo ZVC_PLUGIN_VENDOR_ASSETS_URL . '/crypto-js/crypto-js.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
     <script src="<?php echo ZVC_PLUGIN_PUBLIC_ASSETS_URL . '/js/zoom-meeting.min.js?ver=' . ZVC_PLUGIN_VERSION; ?>"></script>
+<?php do_action( 'vczapi_join_via_browser_after_script_load' ); ?>
     </body>
     </html>
 	<?php
@@ -555,6 +569,7 @@ function video_conference_zoom_after_jbh_html() {
  * Before POST LOOP hook
  */
 function video_conference_zoom_before_post_loop() {
+	global $zoom_meetings;
 	unset( $GLOBALS['zoom'] );
 	$post_id               = get_the_id();
 	$show_zoom_author_name = get_option( 'zoom_show_author' );
@@ -574,5 +589,25 @@ function video_conference_zoom_before_post_loop() {
 			$set_terms[] = $term->name;
 		}
 		$GLOBALS['zoom']['terms'] = $set_terms;
+	}
+
+	if ( ! empty( $zoom_meetings ) && ! empty( $zoom_meetings->columns ) ) {
+		$columns = 'vczapi-col-4';
+		switch ( $zoom_meetings->columns ) {
+			case 3:
+				$columns = 'vczapi-col-4';
+				break;
+			case 2:
+				$columns = 'vczapi-col-6';
+				break;
+			case 4:
+				$columns = 'vczapi-col-3';
+				break;
+			case 1:
+				$columns = 'vczapi-col-12';
+				break;
+		}
+
+		$GLOBALS['zoom']['columns'] = $columns;
 	}
 }

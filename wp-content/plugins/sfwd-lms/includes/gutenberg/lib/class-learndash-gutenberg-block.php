@@ -6,6 +6,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 	/**
 	 * Abstract Parent class to hold common functions used by specific LearnDash Blocks.
@@ -278,7 +282,7 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 										/** This filter is documented in includes/gutenberg/blocks/ld-course-list/index.php */
 										$pattern_atts_array = apply_filters( 'learndash_block_markers_shortcode_atts', $pattern_atts_array, $shortcode_slug, $block_slug, $content );
 
-										$shortcode_atts     = '';
+										$shortcode_atts = '';
 
 										if ( ( is_array( $pattern_atts_array ) ) && ( ! empty( $pattern_atts_array ) ) ) {
 											foreach ( $pattern_atts_array as $attr_key => $attr_value ) {
@@ -376,16 +380,16 @@ if ( ! class_exists( 'LearnDash_Gutenberg_Block' ) ) {
 					continue;
 				} elseif ( 'preview_user_id' === $key ) {
 					if ( ( ! isset( $attributes['user_id'] ) ) && ( 'preview_user_id' === $key ) && ( '' !== $val ) ) {
-						if ( learndash_is_admin_user( get_current_user_id() ) ) {
-							// If admin user they can preview any user_id.
-						} elseif ( learndash_is_group_leader_user( get_current_user_id() ) ) {
-							// If group leader user we ensure the preview user_id is within their group(s).
-							if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
+						if ( ! learndash_is_admin_user( get_current_user_id() ) ) {
+							if ( learndash_is_group_leader_user( get_current_user_id() ) ) {
+								// If group leader user we ensure the preview user_id is within their group(s).
+								if ( ! learndash_is_group_leader_of_user( get_current_user_id(), $val ) ) {
+									continue;
+								}
+							} else {
+								// If neither admin or group leader then we don't see the user_id for the shortcode.
 								continue;
 							}
-						} else {
-							// If neither admin or group leader then we don't see the user_id for the shortcode.
-							continue;
 						}
 						$key = str_replace( 'preview_', '', $key );
 						$val = absint( $val );

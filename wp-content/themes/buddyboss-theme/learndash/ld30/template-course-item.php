@@ -58,6 +58,13 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 					'array'     => true,
 				) );
 
+				if( empty ( $progress ) ) {
+					$progress = array (
+						'percentage' =>  0,
+						'completed'  =>  0,
+						'total'      =>  0,
+					);
+				}
 				$status = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
 
 				if ( $progress['percentage'] > 0 && $progress['percentage'] !== 100 ) {

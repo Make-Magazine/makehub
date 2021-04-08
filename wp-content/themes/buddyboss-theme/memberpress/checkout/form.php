@@ -12,7 +12,7 @@
       <?php wp_nonce_field( 'logged_in_purchase', 'mepr_checkout_nonce' ); ?>
     <?php endif; ?>
 
-    <?php if( ($product->register_price_action != 'hidden') && MeprHooks::apply_filters('mepr_checkout_show_terms',true) ): ?>
+    <?php if( ($product->register_price_action != 'hidden') && MeprHooks::apply_filters('mepr_checkout_show_terms',true, $product) ): ?>
       <div class="mp-form-row mepr_bold mepr_price">
         <?php $price_label = ($product->is_one_time_payment() ? _x('Price:', 'ui', 'buddyboss-theme') : _x('Terms:', 'ui', 'buddyboss-theme')); ?>
         <label><?php echo $price_label; ?></label>

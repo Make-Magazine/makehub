@@ -28,7 +28,7 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 	 * @return string|number
 	 */
 	public function get_object_id( $object, $primary_property_value = null ) {
-		return $object->id;
+		return isset( $object->id ) ? $object->id : null;
 	}
 
 	public function get_label() {
@@ -151,6 +151,16 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			list( $month, $day, $year ) = explode( $delimiter, $date );
 		}
 
+		// Convert m/d/y to integer values
+		$month = intval( $month );
+		$day   = intval( $day );
+		$year  = intval( $year );
+
+		// Esnure m/d/y are available
+		if ( ! $month || ! $day || ! $year ) {
+			return null;
+		}
+
 		return mktime( 0, 0, 0, $month, $day, $year );
 
 	}
@@ -223,10 +233,6 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				return $gf_query_where;
 		}
 
-		if ( is_numeric( $filter_value ) ) {
-			$filter_value = floatval( $filter_value );
-		}
-
 		if ( is_array( $filter_value ) ) {
 			foreach ( $filter_value as &$_filter_value ) {
 				$_filter_value = new GF_Query_Literal( $_filter_value );
@@ -235,17 +241,16 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			$filter_value = new GF_Query_Series( $filter_value );
 		} else {
 			/**
-			 * Convert date string to ISO 8601 for MySQL date comparisons
-			 *
-			 * strtotime doesn't play nicely with formats like d/m/y out of the box so we need to parse the date
-			 * ourselves into a time based on the format from the actual date field saved in the form that we're
-			 * pulling entries from.
+			 * Get current source field to parse the query value appropriately
 			 */
-			$form_id    = $primary_property_value;
-			$field_id   = str_replace( 'gf_field_', '', rgar( $args, 'property_id' ) );
-			$date_field = GFAPI::get_field( $form_id, absint( $field_id ) );
-			$time       = null;
+			$form_id      = $primary_property_value;
+			$field_id     = str_replace( 'gf_field_', '', rgar( $args, 'property_id' ) );
+			$source_field = GFAPI::get_field( $form_id, absint( $field_id ) );
+			$is_field     = is_a( $source_field, 'GF_Field' );
 
+			if ( $is_field && $source_field->type === 'number' ) {
+				$filter_value = floatval( $filter_value );
+			}
 			/**
 			 * Force a value to be parsed as a date to enable date comparison using operators such as >, <, <=, etc.
 			 *
@@ -257,9 +262,19 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			 * @param boolean $value Whether or not to parse the value as a date.
 			 * @param \GF_Field $field The field that is having its value parsed.
 			 */
-			// Ensure we're querying a date field before attempting to parse the filter as such
-			if ( $date_field && ( $date_field->type === 'date' || gf_apply_filters( array( 'gppa_process_value_as_date', $form_id, $date_field->id ), false, $date_field ) ) ) {
-				if ( $date_format = rgar( $date_field, 'dateFormat' ) ) {
+			$gppa_process_value_as_date = gf_apply_filters( array_filter( array( 'gppa_process_value_as_date', $form_id, $is_field ? $source_field->id : null ) ), $is_field && $source_field->type === 'date', $source_field );
+
+			/**
+			 * Convert date string to ISO 8601 for MySQL date comparisons
+			 *
+			 * strtotime doesn't play nicely with formats like d/m/y out of the box so we need to parse the date
+			 * ourselves into a time based on the format from the actual date field saved in the form that we're
+			 * pulling entries from.
+			 */
+			if ( $gppa_process_value_as_date && strlen( $filter_value ) > 1 && $source_field ) {
+				$date_format = rgar( (array) $source_field, 'dateFormat' );
+				$time        = false;
+				if ( $date_format ) {
 					$time = $this->date_to_time( $filter_value, $date_format );
 				}
 
@@ -380,6 +395,23 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 
 		return $entries;
 
+	}
+
+	/**
+	 * Hashes GF Entry Query Arguments
+	 *
+	 * @param $args array  Query arguments to hash
+	 *
+	 * @return string   SHA1 representation of the requested query
+	 */
+	public function query_cache_hash( $args ) {
+		return sha1( sprintf( '%s-%s-%s-%s-%s',
+			$args['field']->formId,
+			json_encode( $args['filter_groups'] ),
+			json_encode( $args['ordering'] ),
+			json_encode( $args['primary_property_value'] ),
+			json_encode( $args['unique'] )
+		) );
 	}
 
 	public function get_forms() {

@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 5.6
-Version: 1.6.3.1
+Tested up to: 5.7
+Version: 1.6.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,32 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.6.5 =
+* Forums - Fixed closed discussion reply issue shows two instances on photo upload
+* Messages - Fixed chat responsive issue
+* LearnDash - Fixed compatibility issues with LearnDash 3.4
+* LearnDash - Fixed 'Instructor Role' plugin compatibility issue with Courses page
+* MemberPress - Fixed checkout page critical bug
+* WooCommerce - Fixed minor alignment issue with password show/hide icon
+* WooCommerce - Fixed lost password page permission on Private Website settings
+* GamiPress - Fixed compatibility issues with 'GamiPress - BuddyBoss integration'
+* Elementor - Fixed issue with the Video elements not playing
+* Elementor - Fixed members widget height issue
+* Elementor - Fixed header issue on BuddyBoss Mobile App
+
+= 1.6.4.1 =
+* Messages - Improved Group Send Private Message screen
+* AppBoss - Code refactoring
+
+= 1.6.4 =
+* Member Access Controls - Added styling for changes related to new Access Control settings provided in BuddyBoss Platform Pro
+* Groups - Improved 'Send Messages' screen to allow members to Send Group Message or Private Message
+* Notifications - Fixed notification dropdown issue where sender name do not show
+* Elementor - Fixed issue with the header bar widget compatibility with WooCommerce
+* Elementor - Fixed issue with the tab widget button link
+* Theme Options - Fixed theme options styling conflict with LearnDash
+* WooCommerce - Fixed issue with single product gallery where photos not showing
 
 = 1.6.3.1 =
 * MemberPress - Fixed MemberPress login form password field UI issue

@@ -118,7 +118,8 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->question   = $question;
 		$this->view->data       = $this->setAnswerObject( $question );
 
-		$this->view->header = $questionId ? esc_html__( 'Edit question', 'learndash' ) : esc_html__( 'New question', 'learndash' );
+		// translators: placeholder: question
+		$this->view->header = $questionId ? sprintf( esc_html_x( 'Edit %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) ) : sprintf( esc_html_x( 'New %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {
 			$this->view->question->setPoints( 1 );
@@ -166,8 +167,8 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 
 		if ( ( isset( $post['title'] ) ) && ( empty( $post['title'] ) ) ) {
 			$count = $questionMapper->count( $quizId );
-			// translators: placeholder: question count.
-			$post['title'] = sprintf( esc_html_x( 'Question: %d', 'placeholder: question count', 'learndash' ), $count + 1 );
+			// translators: placeholder: Question, question count.
+			$post['title'] = sprintf( esc_html_x( '%1$s: %2$d', 'placeholder: Question, question count', 'learndash' ), learndash_get_custom_label( 'question' ), $count + 1 );
 		}
 
 		if ( ( isset( $post['answerType'] ) ) && ( 'assessment_answer' === $post['answerType'] ) ) {
@@ -305,7 +306,8 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->data       = $this->setAnswerObject( $this->view->question );
 		$this->view->categories = $cateoryMapper->fetchAll();
 
-		$this->view->header = esc_html__( 'Edit question', 'learndash' );
+		// translators: placeholder: question
+		$this->view->header = sprintf( esc_html_x( 'Edit %s', 'placeholder: question', 'learndash' ), leanrndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {
 			$this->view->question->setPoints( 1 );
@@ -379,7 +381,8 @@ class WpProQuiz_Controller_Question extends WpProQuiz_Controller_Controller {
 		$this->view->data       = $this->setAnswerObject();
 		$this->view->templates  = $templateMapper->fetchAll( WpProQuiz_Model_Template::TEMPLATE_TYPE_QUESTION, false );
 
-		$this->view->header = esc_html__( 'New question', 'learndash' );
+		// translators: placeholder: question
+		$this->view->header = sprintf( esc_html_x( 'New %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) );
 
 		if ( $this->view->question->isAnswerPointsActivated() ) {
 			$this->view->question->setPoints( 1 );

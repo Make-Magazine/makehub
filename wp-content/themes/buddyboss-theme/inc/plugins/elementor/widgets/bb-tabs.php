@@ -1384,11 +1384,13 @@ class BB_Tabs extends Widget_Base {
 				</div>
 
 				<div class="bb-tabs__run" data-nav="<?php echo ( $settings_tabs_style == 'style1' && $settings['switch_arrows'] ) ? 'true' : 'false'; ?>" data-dots="<?php echo ( $settings_tabs_style == 'style1' && $settings['switch_dots'] ) ? 'true' : 'false'; ?>">
-					<?php foreach ( $settings['tab_list'] as $item ) : ?>
+					<?php 
+					$tab_count = 0;
+					foreach ( $settings['tab_list'] as $item ) : ?>
 						<?php if ( ! empty( $item['title'] ) ) : ?>
 
 							<?php if ( ! empty( $item['link']['url'] ) ) {
-								$this->add_link_attributes( 'link-wrapper', $item['link'] );
+								$this->add_link_attributes( 'link-wrapper' . $tab_count, $item['link'] );
 
 								$item_tag = 'a';
 							} ?>
@@ -1401,7 +1403,7 @@ class BB_Tabs extends Widget_Base {
 										<div class="bb-tabs__title"><h3><?php echo $item['title']; ?></h3></div>
 										<div class="bb-tabs__excerpt"><?php echo $item['item_excerpt']; ?></div>
 										<?php if ( ! empty( $item['link']['url'] ) && ! empty( $item['link_text'] ) ) : ?>
-											<<?php echo $item_tag . ' class="bb-tabs__link" ' . $this->get_render_attribute_string( 'link-wrapper' ); ?>><?php echo $item['link_text']; ?></<?php echo $item_tag; ?>>
+											<<?php echo $item_tag . ' class="bb-tabs__link" ' . $this->get_render_attribute_string( 'link-wrapper' . $tab_count ); ?>><?php echo $item['link_text']; ?></<?php echo $item_tag; ?>>
 										<?php endif; ?>
 									</div>
 
@@ -1415,7 +1417,9 @@ class BB_Tabs extends Widget_Base {
 							</div>
 
 						<?php endif; ?>
-					<?php endforeach; ?>
+					<?php 
+					$tab_count++;
+					endforeach; ?>
 				</div>
 
 			</div>

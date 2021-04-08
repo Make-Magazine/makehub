@@ -12,6 +12,10 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wpProQuiz_infopage" style="display: none;">
 	<h4><?php esc_html_e( 'Information', 'learndash' ); ?></h4>

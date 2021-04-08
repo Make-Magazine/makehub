@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /*
 Code included from the Enhanced Paypal Shortcodes plugin.
 http://thewpwarrior.com/wordpress-plugin-enhanced-paypal-shortcodes/

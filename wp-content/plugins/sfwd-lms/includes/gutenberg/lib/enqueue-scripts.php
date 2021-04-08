@@ -1,5 +1,7 @@
 <?php
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Enqueues block editor styles and scripts.
  *
@@ -7,14 +9,15 @@
  */
 function learndash_editor_scripts() {
 	// Make paths variables so we don't write em twice ;).
-	$learndash_block_path        = '../assets/js/index.js';
-	$learndash_editor_style_path = '../assets/css/blocks.editor.css';
+	$learndash_block_path         = '../assets/js/index.js';
+	$learndash_editor_style_path  = '../assets/css/blocks.editor.css';
+	$learndash_block_dependencies = include dirname( dirname( __FILE__ ) ) . '/assets/js/index.asset.php';
 
 	// Enqueue the bundled block JS file.
 	wp_enqueue_script(
 		'ldlms-blocks-js',
 		plugins_url( $learndash_block_path, __FILE__ ),
-		array( 'wp-i18n', 'wp-element', 'wp-blocks', 'wp-components', 'wp-editor' ),
+		$learndash_block_dependencies['dependencies'],
 		LEARNDASH_SCRIPT_VERSION_TOKEN
 	);
 

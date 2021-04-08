@@ -10,6 +10,10 @@
  * @package LearnDash\Group
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Populate a list of topics and quizzes for this lesson
  *

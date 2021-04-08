@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the LearnDash
  * custom post type Groups (groups).
@@ -88,13 +92,11 @@ if ( ( ! class_exists( 'LD_REST_Groups_Controller_V2' ) ) && ( class_exists( 'LD
 			require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/settings/settings-metaboxes/class-ld-settings-metabox-group-access-settings.php';
 			$this->metaboxes['LearnDash_Settings_Metabox_Group_Access_Settings'] = LearnDash_Settings_Metabox_Group_Access_Settings::add_metabox_instance();
 
-			//$this->metaboxes = apply_filters( 'learndash_post_settings_metaboxes_init_' . $this->post_type, $this->metaboxes );
-
 			if ( ! empty( $this->metaboxes ) ) {
 				foreach ( $this->metaboxes as $metabox ) {
 					$metabox->load_settings_values();
 					$metabox->load_settings_fields();
-					$this->register_rest_fields( $metabox->get_settings_metabox_fields( $metabox ) );
+					$this->register_rest_fields( $metabox->get_settings_metabox_fields(), $metabox );
 				}
 			}
 		}

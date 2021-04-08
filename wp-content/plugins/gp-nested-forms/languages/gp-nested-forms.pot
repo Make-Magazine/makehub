@@ -157,23 +157,23 @@ msgstr ""
 msgid "Oops! You don't have permission to duplicate this entry."
 msgstr ""
 
-#: ../class-gp-nested-forms.php:1928, ../class-gp-nested-forms.php:1947, ../class-gp-nested-forms.php:1956, ../includes/class-gp-field-nested-form.php:78
+#: ../class-gp-nested-forms.php:1929, ../class-gp-nested-forms.php:1948, ../class-gp-nested-forms.php:1957, ../includes/class-gp-field-nested-form.php:78
 msgid "Add %s"
 msgstr ""
 
-#: ../class-gp-nested-forms.php:1929, ../class-gp-nested-forms.php:1948, ../class-gp-nested-forms.php:1961
+#: ../class-gp-nested-forms.php:1930, ../class-gp-nested-forms.php:1949, ../class-gp-nested-forms.php:1962
 msgid "Edit %s"
 msgstr ""
 
-#: ../class-gp-nested-forms.php:1930
+#: ../class-gp-nested-forms.php:1931
 msgid "Cancel"
 msgstr ""
 
-#: ../class-gp-nested-forms.php:1931, ../includes/class-gp-field-nested-form.php:98
+#: ../class-gp-nested-forms.php:1932, ../includes/class-gp-field-nested-form.php:98
 msgid "Delete"
 msgstr ""
 
-#: ../class-gp-nested-forms.php:1932
+#: ../class-gp-nested-forms.php:1933
 msgid "Are you sure?"
 msgstr ""
 

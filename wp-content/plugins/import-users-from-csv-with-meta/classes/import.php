@@ -104,7 +104,7 @@ class ACUI_Import{
                 'donate' => __( 'Donate/Patreon', 'import-users-from-csv-with-meta' ), 
                 'shop' => __( 'Shop', 'import-users-from-csv-with-meta' ), 
                 'help' => __( 'Hire an expert', 'import-users-from-csv-with-meta' ),
-                'new_features' => __( 'New features', 'import-users-from-csv-with-meta' )
+               // 'new_features' => __( 'New features', 'import-users-from-csv-with-meta' )
         );
     
         $tabs = apply_filters( 'acui_tabs', $tabs );
@@ -219,6 +219,7 @@ class ACUI_Import{
                 $row = 0;
                 $positions = array();
                 $errors = array();
+                $results = array( 'created' => 0, 'updated' => 0 );
     
                 ini_set('auto_detect_line_endings',TRUE);
     
@@ -612,24 +613,25 @@ class ACUI_Import{
                         }
     
                         // wordpress default user created and edited emails
-                        if( get_option('acui_automatic_created_edited_wordpress_email') == 'true' && $created ){
-                            do_action( 'register_new_user', $user_id );
-                        }
-    
-                        if( get_option('acui_automatic_created_edited_wordpress_email') == 'true' && !$created ){
-                            do_action( 'edit_user_created_user', $user_id, 'both' );
+                        if( get_option('acui_automatic_created_edited_wordpress_email') === 'true' ){
+                            ( $created ) ? do_action( 'register_new_user', $user_id ) : do_action( 'edit_user_created_user', $user_id, 'both' );
                         }
                             
                         // send mail
                         if( isset( $mail_for_this_user ) && $mail_for_this_user ){
                             ACUI_Email_Options::send_email( $user_object, $positions, $headers, $data, $created, $password );
                         }
+
+                        // results
+                        ( $created ) ? $results['created']++ : $results['updated']++;
                     endif;
                 endwhile;
 
                 $acui_helper->print_table_end();
 
                 $acui_helper->print_errors( $errors );
+
+                $acui_helper->print_results( $results, $errors );
     
                 // let the filter of default WordPress emails as it were before deactivating them
                 if( !get_option('acui_automatic_wordpress_email') ){

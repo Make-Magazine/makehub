@@ -19,14 +19,13 @@ if ( 'profile.php' !== $pagenow && 'user-edit.php' !== $pagenow && $course_info[
 	<?php // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above ?>
 		<div class="<?php echo esc_attr( $class ); ?>" data-shortcode-atts="<?php echo $shortcode_atts_json; ?>">
 			<div class="ld-item-list">
-				<div class="ld-section-heading">
-					<?php
+				<div class="ld-section-heading"><?php echo wp_kses_post( // phpcs:ignore Squiz.PHP.EmbeddedPhp.ContentBeforeOpen,Squiz.PHP.EmbeddedPhp.ContentAfterOpen
+					$heading[0] . sprintf(
 						// translators: placeholder: Courses.
-						echo wp_kses_post( $heading[0] . sprintf( esc_html_x( 'Registered %s', 'placeholder: Courses', 'learndash' ),
-							LearnDash_Custom_Label::get_label( 'courses' )
-						) . $heading[1] );
-					?>
-				</div>
+						esc_html_x( 'Registered %s', 'placeholder: Courses', 'learndash' ),
+						LearnDash_Custom_Label::get_label( 'courses' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					) . $heading[1]
+				); ?></div> <?php // phpcs:ignore Generic.WhiteSpace.ScopeIndent.Incorrect,Squiz.PHP.EmbeddedPhp.ContentBeforeEnd,Squiz.PHP.EmbeddedPhp.ContentAfterEnd,PEAR.Functions.FunctionCallSignature.Indent,PEAR.Functions.FunctionCallSignature.CloseBracketLine ?>
 				<div class="ld-item-list-items">
 					<?php
 					foreach ( $course_info['courses_registered'] as $course_id ) :

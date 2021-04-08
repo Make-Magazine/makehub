@@ -36,22 +36,6 @@ class BB_Access_Control {
 		$this->includes();
 		$this->setup_actions();
 
-		$message_settings = bb_access_control_send_messages_settings();
-		if ( ! empty( $message_settings ) ) {
-			// Register the template stack for buddyboss so that theme can override.
-			bp_register_template_stack( array( $this, 'bb_access_control_register_template' ) );
-		}
-
-	}
-
-	/**
-	 * Register template path for BB.
-	 *
-	 * @since 1.1.0
-	 * @return string template path
-	 */
-	public function bb_access_control_register_template() {
-		return bb_access_control_path( '/bb-templates' );
 	}
 
 	/**
@@ -329,33 +313,6 @@ class BB_Access_Control {
 	}
 
 	/**
-	 * Link to Access Control tutorial
-	 *
-	 * @since BuddyBoss 1.5.7
-	 */
-	public function bb_admin_access_control_setting_tutorial() {
-		?>
-
-		<p>
-			<a class="button" href="
-			<?php
-			echo bp_get_admin_url( // phpcs:ignore
-				add_query_arg(
-					array(
-						'page'    => 'bp-help',
-						'article' => 121813,
-					),
-					'admin.php'
-				)
-			);
-			?>
-			"><?php esc_html_e( 'View Tutorial', 'buddyboss-pro' ); ?></a>
-		</p>
-
-		<?php
-	}
-
-	/**
 	 * Register the settings field.
 	 *
 	 * @param string $setting settings field.
@@ -365,14 +322,27 @@ class BB_Access_Control {
 	public function bb_admin_setting_activity_access_control_register_fields( $setting ) {
 
 		// Main General Settings Section.
-		$setting->add_section(
-			'activity_access_control_block',
-			sprintf(
-				'%1s <span class="require-licence">%2s</span>',
-				__( 'Activity Access', 'buddyboss-pro' ),
-				( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
-			)
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$setting->add_section(
+				'activity_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Activity Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				)
+			);
+		} else {
+			$setting->add_section(
+				'activity_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Activity Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				),
+				'',
+				'bb_admin_access_control_setting_tutorial'
+			);
+		}
 
 		if ( bbp_pro_is_license_valid() ) {
 			$args = array();
@@ -387,7 +357,9 @@ class BB_Access_Control {
 				$args
 			);
 
-			$setting->add_field( 'bb-access-control-setting-tutorial', '', array( $this, 'bb_admin_access_control_setting_tutorial' ) );
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
+			}
 
 			// simply add notice.
 			$setting->add_field(
@@ -460,14 +432,27 @@ class BB_Access_Control {
 	public function bb_admin_setting_friends_access_control_register_fields( $setting ) {
 
 		// Main General Settings Section.
-		$setting->add_section(
-			'connection_access_control_block',
-			sprintf(
-				'%1s <span class="require-licence">%2s</span>',
-				__( 'Connection Access', 'buddyboss-pro' ),
-				( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
-			)
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$setting->add_section(
+				'connection_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Connection Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				)
+			);
+		} else {
+			$setting->add_section(
+				'connection_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Connection Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				),
+				'',
+				'bb_admin_access_control_setting_tutorial'
+			);
+		}
 
 		if ( bbp_pro_is_license_valid() ) {
 
@@ -483,7 +468,9 @@ class BB_Access_Control {
 				$args
 			);
 
-			$setting->add_field( 'bb-access-control-setting-tutorial', '', array( $this, 'bb_admin_access_control_setting_tutorial' ) );
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
+			}
 
 			// simply add notice.
 			$setting->add_field(
@@ -562,14 +549,27 @@ class BB_Access_Control {
 	public function bb_admin_setting_messages_access_control_register_fields( $setting ) {
 
 		// Main General Settings Section.
-		$setting->add_section(
-			'messages_access_control_block',
-			sprintf(
-				'%1s <span class="require-licence">%2s</span>',
-				__( 'Messages Access', 'buddyboss-pro' ),
-				( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
-			)
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$setting->add_section(
+				'messages_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Messages Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				)
+			);
+		} else {
+			$setting->add_section(
+				'messages_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Messages Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				),
+				'',
+				'bb_admin_access_control_setting_tutorial'
+			);
+		}
 
 		if ( bbp_pro_is_license_valid() ) {
 			$args = array();
@@ -584,7 +584,9 @@ class BB_Access_Control {
 				$args
 			);
 
-			$setting->add_field( 'bb-access-control-setting-tutorial', '', array( $this, 'bb_admin_access_control_setting_tutorial' ) );
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
+			}
 
 			// simply add notice.
 			$setting->add_field(
@@ -740,14 +742,27 @@ class BB_Access_Control {
 	public function bb_admin_setting_media_access_control_register_fields( $setting ) {
 
 		// Main General Settings Section.
-		$setting->add_section(
-			'media_access_control_block',
-			sprintf(
-				'%1s <span class="require-licence">%2s</span>',
-				__( 'Media Access', 'buddyboss-pro' ),
-				( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
-			)
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$setting->add_section(
+				'media_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Media Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				)
+			);
+		} else {
+			$setting->add_section(
+				'media_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Media Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				),
+				'',
+				'bb_admin_access_control_setting_tutorial'
+			);
+		}
 
 		if ( bbp_pro_is_license_valid() ) {
 
@@ -775,7 +790,9 @@ class BB_Access_Control {
 				$args
 			);
 
-			$setting->add_field( 'bb-access-control-setting-tutorial', '', array( $this, 'bb_admin_access_control_setting_tutorial' ) );
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
+			}
 
 			// simply add notice.
 			$setting->add_field(
@@ -901,14 +918,27 @@ class BB_Access_Control {
 	public function bb_admin_setting_groups_access_control_register_fields( $setting ) {
 
 		// Main General Settings Section.
-		$setting->add_section(
-			'group_access_control_block',
-			sprintf(
-				'%1s <span class="require-licence">%2s</span>',
-				__( 'Group Access', 'buddyboss-pro' ),
-				( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
-			)
-		);
+		if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+			$setting->add_section(
+				'group_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Group Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				)
+			);
+		} else {
+			$setting->add_section(
+				'group_access_control_block',
+				sprintf(
+					'%1s <span class="require-licence">%2s</span>',
+					__( 'Group Access', 'buddyboss-pro' ),
+					( ! bbp_pro_is_license_valid() ? __( ' — requires license', 'buddyboss-pro' ) : '' )
+				),
+				'',
+				'bb_admin_access_control_setting_tutorial'
+			);
+		}
 
 		if ( bbp_pro_is_license_valid() ) {
 
@@ -934,7 +964,9 @@ class BB_Access_Control {
 				$args
 			);
 
-			$setting->add_field( 'bb-access-control-setting-tutorial', '', array( $this, 'bb_admin_access_control_setting_tutorial' ) );
+			if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) {
+				$setting->add_field( 'bb-access-control-setting-tutorial', '', 'bb_admin_access_control_setting_tutorial' );
+			}
 
 			// simply add notice.
 			$setting->add_field(
@@ -949,7 +981,11 @@ class BB_Access_Control {
 				'string',
 				$args
 			);
+			
+			
+
 		} else {
+			
 			// simply add notice.
 			$setting->add_field(
 				'group_access_control_block_notice',

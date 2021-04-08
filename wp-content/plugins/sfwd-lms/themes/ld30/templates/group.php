@@ -18,6 +18,9 @@
  * @package LearnDash\Group
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 //$group_course_ids = learndash_group_enrolled_courses( $group_id );
 ?>
 <div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">

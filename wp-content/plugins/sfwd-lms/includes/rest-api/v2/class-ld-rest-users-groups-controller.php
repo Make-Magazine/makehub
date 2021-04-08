@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the association
  * between a User and the enrolled Groups (groups).
@@ -79,7 +83,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'update_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to add to User.', 'learndash' ),
+								// translators: group
+								'description' => sprintf( esc_html_x( '%s IDs to add to User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -94,7 +99,8 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 						'permission_callback' => array( $this, 'delete_user_groups_permissions_check' ),
 						'args'                => array(
 							'group_ids' => array(
-								'description' => esc_html__( 'Group IDs to remove from User.', 'learndash' ),
+								// translators: group
+								'description' => sprintf( esc_html_x( '%s IDs to remove from User.', 'placeholder: group', 'learndash' ), learndash_get_custom_label( 'group' ) ),
 								'required'    => true,
 								'type'        => 'array',
 								'items'       => array(
@@ -200,21 +206,104 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 		public function update_user_groups( $request ) {
 			$user_id = $request['id'];
 			if ( empty( $user_id ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Invalid User ID.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					esc_html__( 'Invalid User ID.', 'learndash' ),
+					array(
+						'status' => 404,
+					)
+				);
+			}
+
+			$user = get_user_by( 'id', $user_id );
+			if ( ( ! $user ) || ( ! is_a( $user, 'WP_User' ) ) ) {
+				return new WP_Error(
+					'rest_user_invalid_id',
+					esc_html__( 'Invalid User ID.', 'learndash' ),
+					array(
+						'status' => 404,
+					)
+				);
 			}
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
-			} else {
-				$group_ids = array_map( 'intval', $group_ids );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array(
+						'status' => 404,
+					)
+				);
 			}
-
-			foreach ( $group_ids as $group_id ) {
-				ld_update_group_access( $user_id, $group_id, false );
-			}
+			$group_ids = array_map( 'absint', $group_ids );
 
 			$data = array();
+			foreach ( $group_ids as $group_id ) {
+				if ( empty( $group_id ) ) {
+					continue;
+				}
+
+				$data_item = new stdClass();
+
+				$group_post = get_post( $group_id );
+				if ( ( ! $group_post ) || ( ! is_a( $group_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'group' ) !== $group_post->post_type ) ) {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'failed';
+					$data_item->code     = 'learndash_rest_invalid_id';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+					$data[] = $data_item;
+
+					continue;
+				}
+
+				$ret = ld_update_group_access( $user_id, $group_id, false );
+				if ( true === $ret ) {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'success';
+					$data_item->code     = 'learndash_rest_enroll_success';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'User enrolled in %s success.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+				} else {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'failed';
+					$data_item->code     = 'learndash_rest_enroll_failed';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'User already enrolled in %s.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+				}
+				$data[] = $data_item;
+
+			}
 
 			// Create the response object
 			$response = rest_ensure_response( $data );
@@ -242,16 +331,82 @@ if ( ( ! class_exists( 'LD_REST_Users_Groups_Controller_V2' ) ) && ( class_exist
 
 			$group_ids = $request['group_ids'];
 			if ( ( ! is_array( $group_ids ) ) || ( empty( $group_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing Group IDs.', 'learndash' ) . ' ' . __CLASS__, array( 'status' => 404 ) );
-			} else {
-				$group_ids = array_map( 'intval', $group_ids );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					),
+					array(
+						'status' => 404,
+					)
+				);
 			}
-
-			foreach ( $group_ids as $group_id ) {
-				ld_update_group_access( $user_id, $group_id, true );
-			}
+			$group_ids = array_map( 'absint', $group_ids );
 
 			$data = array();
+
+			foreach ( $group_ids as $group_id ) {
+				if ( empty( $group_id ) ) {
+					continue;
+				}
+
+				$data_item = new stdClass();
+
+				$group_post = get_post( $group_id );
+				if ( ( ! $group_post ) || ( ! is_a( $group_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'group' ) !== $group_post->post_type ) ) {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'failed';
+					$data_item->code     = 'learndash_rest_invalid_id';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+					$data[] = $data_item;
+
+					continue;
+				}
+
+				$ret = ld_update_group_access( $user_id, $group_id, true );
+				if ( true === $ret ) {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'success';
+					$data_item->code     = 'learndash_rest_unenroll_success';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'User unenrolled from %s success.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+				} else {
+					$data_item->group_id = $group_id;
+					$data_item->status   = 'failed';
+					$data_item->code     = 'learndash_rest_unenroll_failed';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Group.
+						esc_html_x(
+							'User not enrolled from %s.',
+							'placeholder: Group',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'group' )
+					);
+				}
+				$data[] = $data_item;
+			}
 
 			// Create the response object
 			$response = rest_ensure_response( $data );

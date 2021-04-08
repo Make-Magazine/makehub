@@ -72,19 +72,24 @@ class Activecampaign_For_Woocommerce_Admin_Settings_Validator {
 	 *
 	 * @param array $new_data     The array of data to be updated.
 	 * @param array $current_data The existing data for the options.
+	 * @param bool  $api_only     Optional, only validating API.
 	 *
 	 * @return array
 	 */
-	public function validate( $new_data, $current_data ) {
+	public function validate( $new_data, $current_data, $api_only = false ) {
 		$this->errors = [];
 
-		$this->validate_accepts_marketing_checkbox_text( $new_data, $current_data );
+		if ( ! $api_only ) {
 
-		$this->validate_api_key( $new_data, $current_data );
+			$this->validate_accepts_marketing_checkbox_text( $new_data, $current_data );
 
-		$this->validate_api_url( $new_data, $current_data );
+			$this->validate_api_key( $new_data, $current_data );
 
-		$this->validate_ab_cart_wait_time( $new_data, $current_data );
+			$this->validate_api_url( $new_data, $current_data );
+
+			$this->validate_ab_cart_wait_time( $new_data, $current_data );
+
+		}
 
 		if ( empty( $this->errors ) ) {
 			$this->validate_changing_api_details( $new_data, $current_data );

@@ -199,14 +199,15 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Repository implements Repository
 		// map through all orders, setting them in-place
 		$orders = array_map(
 			function ( $order ) use ( $products ) {
-
-				// map through all order product ids, replacing them with their associated product object
-				$order['orderProducts'] = array_map(
-					function ( $product_id ) use ( $products ) {
-						return $this->binary_product_search( $product_id, $products );
-					}, $order['orderProducts']
-				);
-
+				if ( isset( $order['orderProducts'] ) && is_array( $order['orderProducts'] ) ) {
+					// map through all order product ids, replacing them with their associated product object
+					$order['orderProducts'] = array_map(
+						function ( $product_id ) use ( $products ) {
+							return $this->binary_product_search( $product_id, $products );
+						},
+						$order['orderProducts']
+					);
+				}
 				return $order;
 			}, $orders
 		);

@@ -49,6 +49,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'LearnDash Settings', 'learndash' );
 
+			$this->load_options = false;
+
 			add_filter( 'learndash_support_sections_init', array( $this, 'learndash_support_sections_init' ) );
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
 
@@ -419,8 +421,16 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				);
 
 				$this->settings_set['settings']['settings-sub-section-ld_settings_group-leader_user_settings'] = array(
-					'html' => esc_html__( 'Group Leader User Settings', 'learndash' ),
-					'text' => 'Group Leader User Settings',
+					'html' => sprintf(
+						// translators: placeholder: Group Leader
+						esc_html_x( '%s User Settings', 'placeholder: Group Leader', 'learndash' ),
+						learndash_get_custom_label( 'group_leader' )
+					),
+					'text' => sprintf(
+						// translators: placeholder: Group Leader
+						esc_html_x( '%s User Settings', 'placeholder: Group Leader', 'learndash' ),
+						learndash_get_custom_label( 'group_leader' )
+					),
 				);
 				$this->settings_set['settings']['courses_autoenroll_group_leader_users']                       = array(
 					'label'      => 'Courses Auto-enroll',
@@ -812,12 +822,71 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					'html' => esc_html__( 'Defines', 'learndash' ),
 					'text' => 'Defines',
 				);
+
+				$learndash_defines_array = array(
+					'LEARNDASH_LMS_PLUGIN_DIR',
+					'LEARNDASH_LMS_PLUGIN_URL',
+					'LEARNDASH_DEBUG',
+					'LEARNDASH_SCRIPT_DEBUG',
+					'LEARNDASH_SCRIPT_VERSION_TOKEN',
+					'LEARNDASH_GUTENBERG',
+					'LEARNDASH_TRANSLATIONS',
+					'LEARNDASH_DEFAULT_THEME',
+					'LEARNDASH_LEGACY_THEME',
+					'LEARNDASH_ADMIN_CAPABILITY_CHECK',
+					'LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK',
+					'LEARNDASH_COURSE_BUILDER',
+					'LEARNDASH_BUILDER_STEPS_UPDATE_POST',
+					'LEARNDASH_COURSE_STEPS_PRELOAD',
+					'LEARNDASH_COURSE_FUNCTIONS_LEGACY',
+					'LEARNDASH_LMS_DEFAULT_CB_INSERT_CHUNK_SIZE',
+					'LEARNDASH_QUIZ_BUILDER',
+					'LEARNDASH_BUILDER_DEBUG',
+					'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE',
+					'LEARNDASH_DEFAULT_COURSE_ORDER',
+					'LEARNDASH_DEFAULT_COURSE_ORDERBY',
+					'LEARNDASH_DEFAULT_GROUP_PRICE_TYPE',
+					'LEARNDASH_DEFAULT_GROUP_ORDER',
+					'LEARNDASH_DEFAULT_GROUP_ORDERBY',
+					'LEARNDASH_GROUP_ENROLLED_COURSE_FROM_USER_REGISTRATION',
+					'LEARNDASH_FILTER_SEARCH',
+					'LEARNDASH_FILTER_PRIORITY_THE_CONTENT',
+					'LEARNDASH_UPDATES_ENABLED',
+					'LEARNDASH_LESSON_VIDEO',
+					'LEARNDASH_ADDONS_UPDATER',
+					'LEARNDASH_QUIZ_PREREQUISITE_ALT',
+					'LEARNDASH_QUIZ_RESULT_MESSAGE_MAX',
+					'LEARNDASH_LMS_DEFAULT_QUESTION_POINTS',
+					'LEARNDASH_LMS_DEFAULT_ANSWER_POINTS',
+					'LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE',
+					'LEARNDASH_REST_API_ENABLED',
+					'LEARNDASH_BLOCK_WORDPRESS_CPT_ROUTES',
+					'LEARNDASH_TRANSIENTS_DISABLED',
+					'LEARNDASH_USE_WP_SAFE_REDIRECT',
+					'LEARNDASH_HTTP_REMOTE_GET_TIMEOUT',
+					'LEARNDASH_HTTP_REMOTE_POST_TIMEOUT',
+					'LEARNDASH_HTTP_BITBUCKET_README_DOWNLOAD_TIMEOUT',
+					'LEARNDASH_REPO_ERROR_THRESHOLD_COUNT',
+					'LEARNDASH_REPO_ERROR_THRESHOLD_TIME',
+					'LEARNDASH_LMS_DEFAULT_LAZY_LOAD_PER_PAGE',
+					'LEARNDASH_LMS_DEFAULT_DATA_UPGRADE_BATCH_SIZE',
+					'LEARNDASH_LMS_COURSE_STEPS_LOAD_BATCH_SIZE',
+					'LEARNDASH_DISABLE_TEMPLATE_CONTENT_OUTSIDE_LOOP',
+					'LEARNDASH_GROUP_ENROLLED_COURSE_FROM_USER_REGISTRATION',
+					'LEARNDASH_SELECT2_LIB',
+					'LEARNDASH_SELECT2_LIB_AJAX_FETCH',
+					'LEARNDASH_SETTINGS_METABOXES_LEGACY',
+					'LEARNDASH_SETTINGS_METABOXES_LEGACY_QUIZ',
+					'LEARNDASH_SETTINGS_HEADER_PANEL',
+					'LEARNDASH_SHOW_MARK_INCOMPLETE',
+				);
+
 				/**
 				 * Filters list of LearnDash constant defines.
 				 *
 				 * @param array $constants An array of constants.
 				 */
-				foreach ( apply_filters( 'learndash_support_ld_defines', array( 'LEARNDASH_LMS_PLUGIN_DIR', 'LEARNDASH_LMS_PLUGIN_URL', 'LEARNDASH_SCRIPT_DEBUG', 'LEARNDASH_SCRIPT_VERSION_TOKEN', 'LEARNDASH_GUTENBERG', 'LEARNDASH_ADMIN_CAPABILITY_CHECK', 'LEARNDASH_GROUP_LEADER_CAPABILITY_CHECK', 'LEARNDASH_COURSE_BUILDER', 'LEARNDASH_QUIZ_BUILDER', 'LEARNDASH_DEFAULT_COURSE_PRICE_TYPE', 'LEARNDASH_DEFAULT_GROUP_PRICE_TYPE', 'LEARNDASH_GROUP_ENROLLED_COURSE_FROM_USER_REGISTRATION', 'LEARNDASH_FILTER_SEARCH', 'LEARNDASH_UPDATES_ENABLED', 'LEARNDASH_LESSON_VIDEO', 'LEARNDASH_ADDONS_UPDATER', 'LEARNDASH_QUIZ_PREREQUISITE_ALT', 'LEARNDASH_LMS_DEFAULT_QUESTION_POINTS', 'LEARNDASH_LMS_DEFAULT_ANSWER_POINTS', 'LEARNDASH_LMS_DEFAULT_WIDGET_PER_PAGE', 'LEARNDASH_REST_API_ENABLED', 'LEARNDASH_TRANSIENTS_DISABLED' ) ) as $defined_item ) {
+				foreach ( apply_filters( 'learndash_support_ld_defines', $learndash_defines_array ) as $defined_item ) {
 					$defined_value = ( defined( $defined_item ) ) ? constant( $defined_item ) : '';
 					if ( 'LEARNDASH_LMS_PLUGIN_DIR' == $defined_item ) {
 						$defined_value = str_replace( $abspath_tmp, '', $defined_value );

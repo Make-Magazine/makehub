@@ -7,3 +7,6 @@
  * @package LearnDash\Template
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}

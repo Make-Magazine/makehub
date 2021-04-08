@@ -15,4 +15,5 @@ return array(
     '164b067373632bcad8fd2c4a76f967ae' => $baseDir . '/ac_vendor/ralouphie/getallheaders/src/getallheaders.php',
     '20ddbdbd63dafc3c360138290a64edba' => $baseDir . '/ac_vendor/symfony/polyfill-intl-idn/bootstrap.php',
     '4307e8dc0ef699f143325f0c0348cea1' => $baseDir . '/ac_vendor/symfony/polyfill-php72/bootstrap.php',
+    '28104acdf3bfc9663563c771afe3cb2b' => $baseDir . '/ac_vendor/symfony/polyfill-intl-normalizer/bootstrap.php',
 );

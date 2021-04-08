@@ -3,10 +3,11 @@
  * Handles server-side registration and use of all blocks and plugins available in Jetpack for the block editor, aka Gutenberg.
  * Works in tandem with client-side block registration via `index.json`
  *
- * @package Jetpack
+ * @package automattic/jetpack
  */
 
 use Automattic\Jetpack\Blocks;
+use Automattic\Jetpack\Connection\Manager as Connection_Manager;
 use Automattic\Jetpack\Constants;
 use Automattic\Jetpack\Status;
 
@@ -82,6 +83,14 @@ class Jetpack_Gutenberg {
 	 * @var array Extensions availability information
 	 */
 	private static $availability = array();
+
+	/**
+	 * A cached array of the fully processed availability data. Keeps track of
+	 * reasons why an extension is unavailable or missing.
+	 *
+	 * @var array Extensions availability information.
+	 */
+	private static $cached_availability = null;
 
 	/**
 	 * Check to see if a minimum version of Gutenberg is available. Because a Gutenberg version is not available in
@@ -320,8 +329,9 @@ class Jetpack_Gutenberg {
 	 * @return void
 	 */
 	public static function reset() {
-		self::$extensions   = array();
-		self::$availability = array();
+		self::$extensions          = array();
+		self::$availability        = array();
+		self::$cached_availability = null;
 	}
 
 	/**
@@ -428,6 +438,20 @@ class Jetpack_Gutenberg {
 	}
 
 	/**
+	 * Get the availability of each block / plugin, or return the cached availability
+	 * if it has already been calculated. Avoids re-registering extensions when not
+	 * necessary.
+	 *
+	 * @return array A list of block and plugins and their availability status.
+	 */
+	public static function get_cached_availability() {
+		if ( null === self::$cached_availability ) {
+			self::$cached_availability = self::get_availability();
+		}
+		return self::$cached_availability;
+	}
+
+	/**
 	 * Get availability of each block / plugin.
 	 *
 	 * @return array A list of block and plugins and their availablity status
@@ -499,7 +523,7 @@ class Jetpack_Gutenberg {
 	 * @return bool
 	 */
 	public static function should_load() {
-		if ( ! Jetpack::is_active() && ! ( new Status() )->is_offline_mode() ) {
+		if ( ! Jetpack::is_connection_ready() && ! ( new Status() )->is_offline_mode() ) {
 			return false;
 		}
 
@@ -638,7 +662,7 @@ class Jetpack_Gutenberg {
 		$status = new Status();
 
 		// Required for Analytics. See _inc/lib/admin-pages/class.jetpack-admin-page.php.
-		if ( ! $status->is_offline_mode() && Jetpack::is_active() ) {
+		if ( ! $status->is_offline_mode() && Jetpack::is_connection_ready() ) {
 			wp_enqueue_script( 'jp-tracks', '//stats.wp.com/w.js', array(), gmdate( 'YW' ), true );
 		}
 
@@ -693,7 +717,7 @@ class Jetpack_Gutenberg {
 		} else {
 			$user_data                 = Jetpack_Tracks_Client::get_connected_user_tracks_identity();
 			$blog_id                   = Jetpack_Options::get_option( 'id', 0 );
-			$is_current_user_connected = Jetpack::is_user_connected();
+			$is_current_user_connected = ( new Connection_Manager( 'jetpack' ) )->is_user_connected();
 		}
 
 		wp_localize_script(
@@ -702,10 +726,11 @@ class Jetpack_Gutenberg {
 			array(
 				'available_blocks' => self::get_availability(),
 				'jetpack'          => array(
-					'is_active'                 => Jetpack::is_active(),
+					'is_active'                 => Jetpack::is_connection_ready(),
 					'is_current_user_connected' => $is_current_user_connected,
 					/** This filter is documented in class.jetpack-gutenberg.php */
 					'enable_upgrade_nudge'      => apply_filters( 'jetpack_block_editor_enable_upgrade_nudge', false ),
+					'is_private_site'           => '-1' === get_option( 'blog_public' ),
 				),
 				'siteFragment'     => $status->get_site_suffix(),
 				'adminUrl'         => esc_url( admin_url() ),
@@ -932,14 +957,13 @@ class Jetpack_Gutenberg {
 	 *
 	 * @since 8.4.0
 	 *
-	 * @param string $slug The slug for the block.
+	 * @param array $availability_for_block The availability for the block.
 	 *
 	 * @return bool
 	 */
-	public static function should_show_frontend_preview( $slug ) {
-		$availability = self::get_availability();
+	public static function should_show_frontend_preview( $availability_for_block ) {
 		return (
-			isset( $availability[ $slug ]['details']['required_plan'] )
+			isset( $availability_for_block['details']['required_plan'] )
 			&& current_user_can( 'manage_options' )
 			&& ! is_feed()
 		);
@@ -985,17 +1009,17 @@ class Jetpack_Gutenberg {
 		$color = '';
 		switch ( $status ) {
 			case 'success':
-				$color = '#46b450';
+				$color = '#00a32a';
 				break;
 			case 'warning':
-				$color = '#ffb900';
+				$color = '#dba617';
 				break;
 			case 'error':
-				$color = '#dc3232';
+				$color = '#d63638';
 				break;
 			case 'info':
 			default:
-				$color = '#00a0d2';
+				$color = '#72aee6';
 				break;
 		}
 
@@ -1065,14 +1089,17 @@ class Jetpack_Gutenberg {
 	 */
 	public static function get_render_callback_with_availability_check( $slug, $render_callback ) {
 		return function ( $prepared_attributes, $block_content ) use ( $render_callback, $slug ) {
-			$availability = self::get_availability();
+			$availability = self::get_cached_availability();
 			$bare_slug    = self::remove_extension_prefix( $slug );
 			if ( isset( $availability[ $bare_slug ] ) && $availability[ $bare_slug ]['available'] ) {
 				return call_user_func( $render_callback, $prepared_attributes, $block_content );
 			}
 
 			// A preview of the block is rendered for admins on the frontend with an upgrade nudge.
-			if ( self::should_show_frontend_preview( $bare_slug ) ) {
+			if (
+				isset( $availability[ $bare_slug ] ) &&
+				self::should_show_frontend_preview( $availability[ $bare_slug ] )
+			) {
 				$upgrade_nudge = self::upgrade_nudge( $availability[ $bare_slug ]['details']['required_plan'] );
 				$block_preview = call_user_func( $render_callback, $prepared_attributes, $block_content );
 				return $upgrade_nudge . $block_preview;

@@ -54,16 +54,17 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 				$e
 			);
 		}
+		if ( $result ) {
+			$resource_array = \AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
 
-		$resource_array = \AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+			if ( $response_massager ) {
+				$resource_array = $response_massager( $resource_array );
+			}
 
-		if ( $response_massager ) {
-			$resource_array = $response_massager( $resource_array );
+			$resource = $resource_array[ self::RESOURCE_NAME ];
+
+			$model->set_properties_from_serialized_array( $resource );
 		}
-
-		$resource = $resource_array[ self::RESOURCE_NAME ];
-
-		$model->set_properties_from_serialized_array( $resource );
 	}
 
 	/**
@@ -168,28 +169,30 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			->with_filter( $filter_name, $filter_value )
 			->execute();
 
-		$resources_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+		if ( $result ) {
+			$resources_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
 
-		if ( count( $resources_array[ self::RESOURCE_NAME_PLURAL ] ) < 1 ) {
-			throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception(
-				'The resource was not found.',
-				[
-					'resource' => self::RESOURCE_NAME,
-					'found_by' => $filter_name,
-					'value'    => $filter_value,
-					'response' => $result->getBody() instanceof StreamInterface
-						? $result->getBody()->getContents()
-						: null,
-				],
-				404
-			);
+			if ( count( $resources_array[ self::RESOURCE_NAME_PLURAL ] ) < 1 ) {
+				throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception(
+					'The resource was not found.',
+					[
+						'resource' => self::RESOURCE_NAME,
+						'found_by' => $filter_name,
+						'value'    => $filter_value,
+						'response' => $result->getBody() instanceof StreamInterface
+							? $result->getBody()->getContents()
+							: null,
+					],
+					404
+				);
+			}
+
+			if ( $response_massager ) {
+				$resources_array = $response_massager( $resources_array );
+			}
+
+			return $resources_array[ self::RESOURCE_NAME_PLURAL ];
 		}
-
-		if ( $response_massager ) {
-			$resources_array = $response_massager( $resources_array );
-		}
-
-		return $resources_array[ self::RESOURCE_NAME_PLURAL ];
 	}
 
 	/**
@@ -238,15 +241,17 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			);
 		}
 
-		$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+		if ( $result ) {
+			$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
 
-		if ( $response_massager ) {
-			$resource_array = $response_massager( $resource_array );
+			if ( $response_massager ) {
+				$resource_array = $response_massager( $resource_array );
+			}
+
+			$resource = $resource_array[ self::RESOURCE_NAME ];
+
+			$model->set_properties_from_serialized_array( $resource );
 		}
-
-		$resource = $resource_array[ self::RESOURCE_NAME ];
-
-		$model->set_properties_from_serialized_array( $resource );
 	}
 
 	/**
@@ -312,14 +317,16 @@ trait Activecampaign_For_Woocommerce_Interacts_With_Api {
 			);
 		}
 
-		$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
+		if ( $result ) {
+			$resource_array = AcVendor\GuzzleHttp\json_decode( $result->getBody(), true );
 
-		if ( $response_massager ) {
-			$resource_array = $response_massager( $resource_array );
+			if ( $response_massager ) {
+				$resource_array = $response_massager( $resource_array );
+			}
+
+			$resource = $resource_array[ self::RESOURCE_NAME ];
+
+			$model->set_properties_from_serialized_array( $resource );
 		}
-
-		$resource = $resource_array[ self::RESOURCE_NAME ];
-
-		$model->set_properties_from_serialized_array( $resource );
 	}
 }

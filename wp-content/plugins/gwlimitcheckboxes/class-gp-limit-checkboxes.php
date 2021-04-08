@@ -22,6 +22,9 @@ class GP_Limit_Checkboxes extends GWPerk {
 		// Disable validation when importing via GV Import Entries.
 		add_filter( 'gravityview/import/column/checkbox/unchecked', array( $this, 'disable_validation' ) );
 
+		// Enable validation on Gravity Flow's User Input step.
+		add_filter( 'gravityflow_validation_user_input', array( $this, 'validate' ) );
+
 		add_action( 'wp_print_scripts', array( $this, 'enqueue_admin_scripts' ) );
 		add_filter( 'gform_enqueue_scripts', array( $this, 'enqueue_form_scripts' ) );
 

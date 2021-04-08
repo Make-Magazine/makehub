@@ -167,7 +167,9 @@
                     nextArrow: '<span class="bb-slide-next"><i class="bb-icon-angle-right"></i></span>',
                 }
 
-                $( '.woocommerce-product-gallery .flex-control-thumbs' ).slick( wcGallery );
+                setTimeout( function() { //Defer until DOM is ready
+                    $( '.woocommerce-product-gallery .flex-control-thumbs' ).not( '.slick-initialized' ).slick( wcGallery );
+                },0);
             }
 
             wcProductGallery();

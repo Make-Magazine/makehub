@@ -93,7 +93,7 @@ endif; ?>
 				if ( ! empty( $attributes ) ) :
 					foreach ( $attributes as $attribute ) :
 						?>
-					<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span>
+					<span class="ld-status-icon <?php echo esc_attr( $attribute['class'] ); ?>" data-ld-tooltip="<?php echo esc_attr( $attribute['label'] ); ?>"><span class="ld-icon <?php echo esc_attr( $attribute['icon'] ); ?>"></span></span>
 						<?php
 					endforeach;
 				endif;
@@ -119,7 +119,12 @@ endif; ?>
 			$content_count = learndash_get_lesson_content_count( $lesson, $course_id );
 			?>
 
-			<span class="ld-expand-button ld-button-alternate <?php echo esc_attr( $expand_class ); ?>" aria-label="<?php esc_html_e( 'Expand Lesson', 'learndash' ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>" data-ld-collapse-text="false">
+			<span class="ld-expand-button ld-button-alternate <?php echo esc_attr( $expand_class ); ?>" aria-label="
+			<?php
+			// translators: placeholder: lesson
+			echo sprintf( esc_html_x( 'Expand %s', 'placeholder: Lesson', 'learndash' ), esc_html( learndash_get_custom_label( 'lesson' ) ) );
+			?>
+			" data-ld-expands="<?php echo esc_attr( 'ld-nav-content-list-' . $lesson['post']->ID ); ?>" data-ld-collapse-text="false">
 				<span class="ld-icon-arrow-down ld-icon ld-primary-background"></span>
 				<span class="ld-text ld-primary-color">
 					<?php

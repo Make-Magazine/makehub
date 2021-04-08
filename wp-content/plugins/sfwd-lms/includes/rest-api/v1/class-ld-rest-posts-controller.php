@@ -1,4 +1,8 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LD_REST_Posts_Controller_V1' ) ) {
 	abstract class LD_REST_Posts_Controller_V1 extends WP_REST_Posts_Controller {
 

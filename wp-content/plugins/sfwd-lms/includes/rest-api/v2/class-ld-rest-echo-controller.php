@@ -9,6 +9,11 @@
  * @package LearnDash
  * @subpackage REST
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( ! class_exists( 'LD_REST_Echo_Controller_V2' ) ) && ( class_exists( 'WP_REST_Controller' ) ) ) {
 	/**
 	 * Class REST API Courses Post Controller.

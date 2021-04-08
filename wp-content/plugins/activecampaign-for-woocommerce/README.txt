@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.6
-Stable tag: 1.2.15
+Tested up to: 5.7.1
+Stable tag: 1.3.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,30 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.3.2 =
+* Bugfix for logger error when the plugin isn't configured properly
+* Bugfix for checkbox configuration issues
+* Adding a vendor library to always format money properly when sending to AC
+* Adding a missing package that was causing fatal errors on some installs
+* Add a new customer to ActiveCampaign on registration, also adds a synced to AC time to metadata for users/contacts
+
+= 1.3.1 =
+* Adding an API test button to verify that the connection to the customer's ActiveCampaign account is valid without needing to save
+* Bugfix adding a check to verify the orderProducts exists and is an array.
+* Bugfix for request errors when the plugin is not configured or there are settings issues
+* Bugfix for orders not completing and 500 errors when users try to place an order
+* Bugfix for Javascript syntax errors on iPhone/Safari devices
+
+= 1.3.0 =
+* The admin settings link on the left menu has moved from Settings to WooCommerce
+* New feature - Adding functionality to send orders to AC on order completed instead of waiting for webhooks (webhooks will still run in case this process fails)
+* Upon sending to AC a metadata field will be added to orders to track last sync time for that order to ActiveCampaign
+* New feature - Adding an advanced admin field to customize the email ID we bind on for abandoned cart
+* New feature - Adding an admin status page
+
+= 1.2.16 =
+* Bugfix for abandoned carts not sending product image, sku, or url
 
 = 1.2.15 =
 * Updated description copy

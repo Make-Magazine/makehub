@@ -108,19 +108,19 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			$valid_index = LDLMS_DB::check_table_primary_index( 'user_activity' );
 			if ( false === $valid_index ) {
 				// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-				$wpdb->query( $wpdb->prepare( "DELETE FROM {$learndash_user_activity_db_table} WHERE activity_id = %d", 0 ) );
-				$wpdb->query( "ALTER TABLE {$learndash_user_activity_db_table} MODIFY COLUMN activity_id bigint(20) unsigned NOT NULL AUTO_INCREMENT" );
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$learndash_user_activity_db_table} WHERE activity_id = %d", 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( "ALTER TABLE {$learndash_user_activity_db_table} MODIFY COLUMN activity_id bigint(20) unsigned NOT NULL AUTO_INCREMENT" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 
 			$valid_index = LDLMS_DB::check_table_primary_index( 'user_activity_meta' );
 			if ( false === $valid_index ) {
 				// If the AUTO_INCREMENT attrribute is missing we want to also remove any records where the primary index field is zero.
-				$wpdb->query( $wpdb->prepare( "DELETE FROM {$learndash_user_activity_meta_db_table} WHERE activity_meta_id = %d", 0 ) );
-				$wpdb->query( "ALTER TABLE {$learndash_user_activity_meta_db_table} MODIFY COLUMN activity_meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT" );
+				$wpdb->query( $wpdb->prepare( "DELETE FROM {$learndash_user_activity_meta_db_table} WHERE activity_meta_id = %d", 0 ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$wpdb->query( "ALTER TABLE {$learndash_user_activity_meta_db_table} MODIFY COLUMN activity_meta_id bigint(20) unsigned NOT NULL AUTO_INCREMENT" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			}
 
 			// v2.3.0.4 We changed the default from '0' to NULL for the activity_status column.
-			$wpdb->query( "ALTER TABLE {$learndash_user_activity_db_table} CHANGE `activity_status` `activity_status` TINYINT(1) UNSIGNED NULL DEFAULT NULL" );
+			$wpdb->query( "ALTER TABLE {$learndash_user_activity_db_table} CHANGE `activity_status` `activity_status` TINYINT(1) UNSIGNED NULL DEFAULT NULL" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		}
 
 		// End of functions.

@@ -54,8 +54,5 @@ jQuery('form[id^="gform_"], div[id^="gform_wrapper_"]').each((index, el) => {
 });
 
 window.gform.addAction('gpnf_init_nested_form', (formId: any) => {
-	if( window.gppaForms[formId] ) {
-		window.gppaForms[formId].clearHandlers();
-	}
 	maybeRegisterForm(formId);
 });

@@ -34,27 +34,34 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		add_filter( 'gform_field_choice_markup_pre_render', array( $this, 'replace_live_merge_tag_select_field_option' ), 10, 4 );
 
-		add_filter( 'gform_field_content', array( $this, 'replace_live_merge_tag_select_placeholder' ), 99, 2 );
-		add_filter( 'gform_field_content', array( $this, 'replace_live_merge_tag_textarea_default_value' ), 99, 2 );
-		add_filter( 'gform_field_content', array( $this, 'add_live_value_attr' ), 99, 2 );
-		add_filter( 'gform_field_content', array( $this, 'add_live_value_attr_textarea' ), 99, 2 );
-		add_filter( 'gform_field_content', array( $this, 'add_select_default_value_attr' ), 99, 2 );
+		/**
+		 * Prepare fields for LMTs such as adding data attributes and so on. Anything that is scoped to a specific
+		 * input should be done here.
+		 */
+		foreach ( array( 'gform_field_content', 'gppa_hydrate_input_html' ) as $field_filter ) {
+			add_filter( $field_filter, array( $this, 'replace_live_merge_tag_select_placeholder' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'replace_live_merge_tag_textarea_default_value' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_live_value_attr' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_live_value_attr_textarea' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_live_value_attr_radio_choice' ), 99, 2 );
+			add_filter( $field_filter, array( $this, 'add_select_default_value_attr' ), 99, 2 );
+		}
 
-		add_filter( 'gform_get_form_filter', array( $this, 'preserve_scripts' ), 98, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'preserve_product_field_label' ), 98, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'replace_live_merge_tag_attr' ), 99, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'replace_live_merge_tag_non_attr' ), 99, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'unescape_live_merge_tags' ), 99, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'add_localization_attr_variable' ), 99, 2 );
-		add_filter( 'gform_get_form_filter', array( $this, 'restore_escapes' ), 100, 2 );
+		/**
+		 * After the fields/inputs have been prepared, we can process the entire form (or hydrated HTML) for LMTs.
+		 */
+		foreach ( array( 'gform_get_form_filter', 'gppa_hydrate_field_html' ) as $wrapper_filter ) {
+			add_filter( $wrapper_filter, array( $this, 'preserve_scripts' ), 98, 2 );
+			add_filter( $wrapper_filter, array( $this, 'preserve_product_field_label' ), 98, 2 );
+			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_attr' ), 99, 2 );
+			add_filter( $wrapper_filter, array( $this, 'replace_live_merge_tag_non_attr' ), 99, 2 );
+			add_filter( $wrapper_filter, array( $this, 'unescape_live_merge_tags' ), 99, 2 );
+			add_filter( $wrapper_filter, array( $this, 'add_localization_attr_variable' ), 99, 2 );
+			add_filter( $wrapper_filter, array( $this, 'restore_escapes' ), 100, 2 );
+		}
 
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'preserve_scripts' ), 98, 2 );
 		add_filter( 'gppa_hydrate_field_html', array( $this, 'replace_live_merge_tag_textarea_default_value_hydrate_field' ), 99, 4 );
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'replace_live_merge_tag_attr' ), 99, 2 );
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'replace_live_merge_tag_non_attr' ), 99, 2 );
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'unescape_live_merge_tags' ), 99, 2 );
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'add_localization_attr_variable' ), 99, 2 );
-		add_filter( 'gppa_hydrate_field_html', array( $this, 'restore_escapes' ), 100, 2 );
+		add_filter( 'gform_field_choice_markup_pre_render', array( $this, 'replace_live_merge_tags_in_radio_choice_value' ), 10, 4 );
 
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 10, 7 );
 		add_filter( 'gform_admin_pre_render', array( $this, 'replace_field_label_live_merge_tags_static' ) );
@@ -100,6 +107,16 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	/**
+	 * Check whether or not a form contains Live Merge Tags
+	 *
+	 * @param string|number $form_id ID of form to check for Live Merge Tags.
+	 * @return boolean
+	 */
+	public function form_has_lmts( $form_id ) {
+		return count( rgar( $this->_lmt_whitelist, $form_id, array() ) ) > 0;
+	}
+
+	/**
 	 * Get LMTs that have been set in the default value to whitelist the merge tags that can be used in a particular
 	 * form.
 	 *
@@ -115,9 +132,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return $form;
 		}
 
-		if ( ! isset( $this->_lmt_whitelist[ $form['id'] ] ) ) {
-			$this->_lmt_whitelist[ $form['id'] ] = array();
+		/* Do not populate if already populated. */
+		if ( isset( $this->_lmt_whitelist[ $form['id'] ] ) ) {
+			return $form;
 		}
+
+		$this->_lmt_whitelist[ $form['id'] ] = array();
 
 		$iterator = new RecursiveIteratorIterator(
 			new RecursiveArrayIterator( $form )
@@ -323,7 +343,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		preg_match_all( $this->live_merge_tag_regex_textarea, $content, $matches, PREG_SET_ORDER );
 
-		if ( ! $matches ) {
+		if ( ! $matches || ! $field ) {
 			return $content;
 		}
 
@@ -363,12 +383,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * To get around this, we check if there are LMTs in the value and if not we re-add the data attr as long as there
 	 * are LMTs in the field's default value.
 	 *
-	 * @see GP_Populate_Anything_Live_Merge_Tags->add_live_value_attr_textarea() for textareas
-	 *
 	 * @param $content
 	 * @param $field
 	 *
 	 * @return mixed
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() for choices
+	 *
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_textarea() for textareas
 	 */
 	public function add_live_value_attr( $content, $field ) {
 
@@ -400,7 +421,6 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 	}
 
-
 	/**
 	 * In some cases such as using a multi-page form or nested form, Gravity Forms will supply GPPA with form values
 	 * which will overwrite the values that were initially LMTs. Because of this, LMTs won't be detected by the broad
@@ -409,12 +429,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * To get around this, we check if there are LMTs in the value and if not we re-add the data attr as long as there
 	 * are LMTs in the field's default value.
 	 *
-	 * @see GP_Populate_Anything_Live_Merge_Tags->add_live_value_attr() for other inputs
-	 *
 	 * @param $content
 	 * @param $field
 	 *
 	 * @return mixed
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() for choices
+	 *
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr() for other inputs
 	 */
 	public function add_live_value_attr_textarea( $content, $field ) {
 
@@ -450,6 +471,41 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		return str_replace( '<textarea ', '<textarea ' . $data_attr, $content );
 
+	}
+
+	/**
+	 * Add in value LMT data attr if the value for a specific choice has already had its Live Merge Tags parsed.
+	 * @see GP_Populate_Anything_Live_Merge_Tags::replace_live_merge_tags_in_radio_choice_value()
+	 *
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr() for other inputs
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_textarea() for textareas
+	 *
+	 * For additional context, see ticket #20452.
+	 *
+	 * @param $content
+	 * @param $field GF_Field
+	 *
+	 * @return mixed
+	 */
+	public function add_live_value_attr_radio_choice( $content, $field ) {
+		if ( ! $field->choices || $field->get_input_type() !== 'radio' ) {
+			return $content;
+		}
+
+		foreach ( $field->choices as $choice_index => $choice ) {
+			if (
+				$this->has_live_merge_tag( $choice['value'] )
+				&& strpos( $content, "value='{$choice['value']}'" ) === false
+			) {
+				$id_attr   = "id='choice_{$field->formId}_{$field->id}_{$choice_index}'";
+				$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $choice['value'] ) ) . '"';
+				$content   = str_replace( $id_attr, $id_attr . ' ' . $data_attr, $content );
+
+				$this->register_lmt_on_page( $field->formId, 'data-gppa-live-merge-tag-value' );
+			}
+		}
+
+		return $content;
 	}
 
 	/**
@@ -648,8 +704,9 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			return array();
 		}
 
-		$modifiers     = array();
-		$modifiers_str = rtrim( $merge_tag_parts[2], '}' );
+		$modifiers       = array();
+		$merge_tag_parts = array_slice( $merge_tag_parts, 2 );
+		$modifiers_str   = rtrim( join( ':', $merge_tag_parts ), '}' );
 
 		preg_match_all( '/([a-z]+)(?:(?:\[(.+?)\])|,?)/', $modifiers_str, $matches, PREG_SET_ORDER );
 
@@ -755,7 +812,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			// Return field ID for field-specific merge tags; otherwise, return generic merge tag (e.g. "all_fields").
-			$field_id = rgar( $merge_tag_match, 3, $merge_tag_match[1] );
+			// For input-specific merge tags (e.g. {:1.6}) desired match is at index 5. For field-specific merge tags (e.g. {:1}), it's 3.
+			$field_id = rgar( $merge_tag_match, 5, rgar( $merge_tag_match, 3, $merge_tag_match[1] ) );
 			/**
 			 * Filter the live merge tag value.
 			 *
@@ -783,18 +841,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 	}
 
-	/**
-	 * In some cases, live merge tags should be replaced statically without the need to make them "live" (i.e. in field
-	 * labels when rendering the {all_fields} merge tag).
-	 *
-	 * @return string $text
-	 */
-	public function replace_live_merge_tags_static( $text, $form, $entry, $url_encode = false, $esc_html = false, $nl2br = false, $format = 'html' ) {
-
-		if ( ! $entry ) {
-			return $text;
-		}
-
+	public function replace_live_merge_tags( $text, $form, $entry = null ) {
 		preg_match_all( $this->live_merge_tag_regex, $text, $matches, PREG_SET_ORDER );
 
 		if ( ! $matches ) {
@@ -816,6 +863,21 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		}
 
 		return $text;
+	}
+
+	/**
+	 * In some cases, live merge tags should be replaced statically without the need to make them "live" (i.e. in field
+	 * labels when rendering the {all_fields} merge tag).
+	 *
+	 * @return string $text
+	 */
+	public function replace_live_merge_tags_static( $text, $form, $entry = null, $url_encode = false, $esc_html = false, $nl2br = false, $format = 'html' ) {
+
+		if ( ! $entry ) {
+			return $text;
+		}
+
+		return $this->replace_live_merge_tags( $text, $form, $entry );
 
 	}
 
@@ -840,6 +902,60 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	public function has_live_merge_tag( $string ) {
 		preg_match_all( $this->live_merge_tag_regex, $string, $matches, PREG_SET_ORDER );
 		return (bool) count( $matches );
+	}
+
+	/**
+	 * When using Live Merge Tags in radio-based choice values, the selected radio will be lost when navigating
+	 * multi-page forms.
+	 *
+	 * @param $choice_markup string
+	 * @param $choice array
+	 * @param $field GF_Field_Radio
+	 * @param $value string
+	 *
+	 * @see GP_Populate_Anything_Live_Merge_Tags::add_live_value_attr_radio_choice() which re-adds the data attribute to make
+	 *   the LMT reactive on the frontend.
+	 *
+	 * For additional context, see ticket #20452.
+	 *
+	 */
+	public function replace_live_merge_tags_in_radio_choice_value( $choice_markup, $choice, $field, $value ) {
+		if ( $field->get_input_type() !== 'radio' ) {
+			return $choice_markup;
+		}
+
+		if ( ! $this->has_live_merge_tag( $choice['value'] ) ) {
+			return $choice_markup;
+		}
+
+		$form            = GFAPI::get_Form( $field->formId );
+		$choice['value'] = $this->replace_live_merge_tags( $choice['value'], $form );
+
+		/**
+		 * If there are still merge tags after performing a replacement, bail here to prevent infinite loop as
+		 * this recursively calls $field->get_choice_html().
+		 */
+		if ( $this->has_live_merge_tag( $choice['value'] ) ) {
+			return $choice_markup;
+		}
+
+		$is_entry_detail = $field->is_entry_detail();
+		$is_form_editor  = $field->is_form_editor();
+		$is_admin        = $is_entry_detail || $is_form_editor;
+
+		$disabled_text = $is_form_editor ? 'disabled="disabled"' : '';
+
+		$choice_id_pattern = '/\'gchoice_[0-9_]*?_(\d+)\'/';
+
+		preg_match( $choice_id_pattern, $choice_markup, $choice_id_match );
+
+		if ( ! $choice_id_match || ! is_numeric( $choice_id_match[1] ) ) {
+			return $choice_markup;
+		}
+
+		$choice_id = (int) $choice_id_match[1];
+
+		return $field->get_choice_html( $choice, $choice_id, $value, $disabled_text, $is_admin );
 	}
 
 }

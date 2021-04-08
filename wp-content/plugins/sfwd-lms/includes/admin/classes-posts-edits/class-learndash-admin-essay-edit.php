@@ -109,7 +109,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 						<div class="misc-pub-section">
 							<?php if ( $question && is_a( $question, 'WpProQuiz_Model_Question' ) ) : ?>
 								<p>
-									<strong><?php esc_html_e( 'Essay Question', 'learndash' ); ?>:</strong> <?php echo wp_kses_post( $question->getQuestion() ); ?>
+									<?php // translators: placeholder: question ?>
+									<strong><?php echo sprintf( esc_html_x( 'Essay %s', 'placeholder: question', 'learndash' ), esc_html( learndash_get_custom_label( 'question' ) ) ); ?>:</strong> <?php echo wp_kses_post( $question->getQuestion() ); ?>
 									<?php
 										$test_url          = admin_url( 'admin.php' );
 										$question_edit_url = '';
@@ -144,7 +145,15 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 								<input name="quiz_id" type="hidden" value="<?php echo esc_attr( $quiz_id ); ?>">
 								<input name="question_id" type="hidden" value="<?php echo esc_attr( $question->getId() ); ?>">
 							<?php else : ?>
-								<p><?php esc_html_e( 'We could not find the essay question for this response', 'learndash' ); ?></p>
+								<p>
+								<?php
+									sprintf(
+										// translators: placeholder: question
+										esc_html_x( 'We could not find the essay %s for this response', 'placeholder: question', 'learndash' ),
+										learndash_get_custom_label_lower( 'question' )
+									)
+								?>
+								</p>
 							<?php endif; ?>
 						</div>
 
@@ -315,7 +324,8 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 			if ( ! empty( $upload ) ) {
 				echo sprintf( '<a target="_blank" href="%1$s">%s</a>', esc_url( $upload ) );
 			} else {
-				esc_html_e( 'Upload was not provided for this question', 'learndash' );
+				// translators: placeholder: question
+				sprintf( esc_html_x( 'Upload was not provided for this %s', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) );
 			}
 		}
 
@@ -443,3 +453,62 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 	}
 }
 new Learndash_Admin_Essay_Edit();
+
+/**
+ * Check if Group Leader can edit Essay.
+ *
+ * @since 3.4.0
+ *
+ * parameters documents in /wp-includes/class-wp-user.php
+ */
+function learndash_group_leader_can_edit_essay_filter( $allcaps, $cap, $args, $user ) {
+	global $pagenow, $typenow;
+
+	if ( ( 'post.php' !== $pagenow ) && ( 'post-new.php' !== $pagenow ) ) {
+		return $allcaps;
+	}
+
+	if ( learndash_get_post_type_slug( 'essay' ) !== $typenow ) {
+		return $allcaps;
+	}
+
+	if ( ! in_array( 'edit_others_essays', $cap, true ) ) {
+		return $allcaps;
+	}
+
+	if ( ( ! isset( $args[2] ) ) || ( empty( $args[2] ) ) ) {
+		return $allcaps;
+	}
+	$post_id = absint( $args[2] );
+
+	$post = get_post( $post_id );
+	if ( ( ! $post ) || ( ! is_a( $post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'essay' ) !== $post->post_type ) ) {
+		return $allcaps;
+	}
+
+	if ( ( ! isset( $args[1] ) ) || ( empty( $args[1] ) ) || ( ! learndash_is_group_leader_user( $args[1] ) ) ) {
+		return $allcaps;
+	}
+	$gl_user_id = absint( $args[1] );
+
+	$course_id = get_post_meta( $post_id, 'course_id', true );
+	$course_id = absint( $course_id );
+
+	if ( ! learndash_check_group_leader_course_user_intersect( $gl_user_id, $post->post_author, $course_id ) ) {
+		foreach ( $cap as $cap_slug ) {
+			$allcaps[ $cap_slug ] = false;
+		}
+	}
+	return $allcaps;
+}
+
+add_action(
+	'init',
+	function () {
+		if ( learndash_is_group_leader_user() ) {
+			add_filter( 'user_has_cap', 'learndash_group_leader_can_edit_essay_filter', 10, 4 );
+		}
+	},
+	10
+);
+

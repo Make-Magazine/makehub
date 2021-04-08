@@ -49,7 +49,7 @@ if ( ( class_exists( 'LearnDash_Settings_Page' ) ) && ( ! class_exists( 'LearnDa
 		 */
 		public function submenu_item( $submenu ) {
 			if ( ! isset( $submenu[ $this->settings_page_id ] ) ) {
-				if ( is_learndash_license_valid() ) {
+				if ( learndash_is_learndash_license_valid() ) {
 					$submenu[ $this->settings_page_id ] = array(
 						'name' => $this->settings_tab_title,
 						'cap'  => $this->menu_page_capability,

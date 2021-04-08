@@ -1870,8 +1870,6 @@ function learndash_30_custom_colors() {
 }
 
 add_action( 'wp_ajax_ld30_ajax_profile_search', 'learndash_30_ajax_profile_search' );
-// @TODO: Why is nopriv AJAX supported on search as the profile must be for a logged in user.
-add_action( 'wp_ajax_nopriv_ld30_ajax_profile_search', 'learndash_30_ajax_profile_search' );
 
 /**
  * Gets the ajax profile search data.
@@ -1960,14 +1958,20 @@ function learndash_30_ajax_pager() {
 	// Assumed Course Navigation Widget but always check.
 	if ( isset( $widget_instance['widget_instance']['show_lesson_quizzes'] ) ) {
 		$widget_instance['widget_instance']['show_lesson_quizzes'] = (bool) $widget_instance['widget_instance']['show_lesson_quizzes'];
+	} else {
+		$widget_instance['widget_instance']['show_lesson_quizzes'] = true;
 	}
 
 	if ( isset( $widget_instance['widget_instance']['show_topic_quizzes'] ) ) {
 		$widget_instance['widget_instance']['show_topic_quizzes'] = (bool) $widget_instance['widget_instance']['show_topic_quizzes'];
+	} else {
+		$widget_instance['widget_instance']['show_topic_quizzes'] = true;
 	}
 
 	if ( isset( $widget_instance['widget_instance']['show_course_quizzes'] ) ) {
 		$widget_instance['widget_instance']['show_course_quizzes'] = (bool) $widget_instance['widget_instance']['show_course_quizzes'];
+	} else {
+		$widget_instance['widget_instance']['show_course_quizzes'] = true;
 	}
 
 	$cuser   = wp_get_current_user();
@@ -1985,8 +1989,10 @@ function learndash_30_ajax_pager() {
 		wp_send_json_error(
 			array(
 				'success' => false,
-				'message' => __(
-					'No course ID supplied',
+				// translators: placeholder: course
+				'message' => _x(
+					'No %s ID supplied',
+					'placeholder: course',
 					'learndash'
 				),
 			)
@@ -2030,7 +2036,7 @@ function learndash_30_ajax_pager() {
 	// We're paginating topics
 	if ( isset( $lesson_id ) && ! empty( $lesson_id ) ) {
 
-		$all_topics = learndash_topic_dots( $lesson_id, false, 'array' );
+		$all_topics = learndash_topic_dots( $lesson_id, $course_id, 'array' );
 
 		/**
 		 * Filters topic ajax pagination arguments.
@@ -2051,9 +2057,11 @@ function learndash_30_ajax_pager() {
 			wp_send_json_error(
 				array(
 					'success' => false,
-					'message' => __(
-						'No topics for this lesson',
-						'learndash'
+					'message' => sprintf(
+					// translators: No topics for this lesson
+						esc_html_x( 'No %1$s for this $2$s', 'placeholder: topics, lesson', 'learndash' ),
+						learndash_get_custom_label_lower( 'topics' ),
+						learndash_get_custom_label_lower( 'lesson' )
 					),
 				)
 			);
@@ -2609,52 +2617,22 @@ function learndash_30_get_course_sections( $course_id = null ) {
 		$course_id = get_the_ID();
 	}
 
-	if ( get_post_type( $course_id ) != 'sfwd-courses' ) {
+	if ( learndash_get_post_type_slug( 'course' ) !== get_post_type( $course_id ) ) {
 		$course_id = learndash_get_course_id( $course_id );
 	}
 
-	$sections       = array();
-	$sections_index = array();
+	$course_sections = learndash_course_get_sections( $course_id );
+	$sections        = array();
 
-	$sections_raw = get_post_meta( $course_id, 'course_sections', true );
-
-	if ( ! $sections_raw || empty( $sections_raw ) ) {
-		return false;
-	}
-
-	/**
-	 * Because sections only store total order, but lessons might be paginated -- we need to pass them in relative to their parent. Not great for performance.
-	 *
-	 * @var [type]
-	 */
-
-	$sections_raw = json_decode( $sections_raw );
-
-	if ( ! is_array( $sections_raw ) ) {
-		return false;
-	}
-
-	$lessons = learndash_get_course_lessons_list( $course_id, null, array( 'num' => -1 ) );
-
-	if ( ! $lessons || empty( $lessons ) || ! is_array( $lessons ) ) {
-		return false;
-	}
-
-	$lessons = array_values( $lessons );
-	$i       = 0;
-
-	foreach ( $lessons as $lesson ) {
-		foreach ( $sections_raw as $section ) {
-			if ( $section->order == $i ) {
-				$sections[ $lesson['post']->ID ] = $section;
-				$i++;
+	if ( ! empty( $course_sections ) ) {
+		foreach ( $course_sections as $section ) {
+			if ( ( property_exists( $section, 'steps' ) ) && ( ! empty( $section->steps ) ) ) {
+				$sections[ $section->steps[0] ] = $section;
 			}
 		}
-		$i++;
 	}
 
 	return $sections;
-
 }
 
 add_filter( 'body_class', 'learndash_30_custom_body_classes' );

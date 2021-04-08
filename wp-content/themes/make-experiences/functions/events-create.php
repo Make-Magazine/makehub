@@ -36,7 +36,11 @@ function create_event($entry, $form) {
     ));
     $event->save();
     $eventID = $event->ID();
-
+    
+    // assign basic questions to event
+    $qgroups = EEM_Event_Question_Group::instance()->get_one_by_ID(3);
+    $event->_add_relation_to($qgroups, 'Event_Question_Group'); //link the question group
+    
     /* Event Date/Time and Tickets
      *      Ticket and schedule information is set in a nested form
      *      Need to get nested form ID and then loop through the nested form information 
@@ -170,6 +174,10 @@ function create_event($entry, $form) {
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
     update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data    
     //update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
+    
+    //set the post id
+    global $wpdb;
+    $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
 }
 
 /*  This function performs the internal rest requests to Event Espresso */

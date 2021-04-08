@@ -483,13 +483,25 @@ if ( ( class_exists( 'Learndash_Admin_Post_Edit' ) ) && ( ! class_exists( 'Learn
 
 			?>
 			<p class="description">
-				<?php esc_html_e( 'Points for this question (Standard is 1 point)', 'learndash' ); ?>
+				<?php
+					printf(
+						// translators: placeholder: question
+						esc_html_x( 'Points for this %s (Standard is 1 point)', 'placeholder: question', 'learndash' ),
+						learndash_get_custom_label_lower( 'question' )
+					)
+				?>
 			</p>
 			<label>
 				<input name="points" class="small-text" value="<?php echo intval( $question_points ); ?>" type="number" min="1"> <?php esc_html_e( 'Points', 'learndash' ); ?>
 			</label>
 			<p class="description">
-				<?php esc_html_e( 'This points will be rewarded, only if the user closes the question correctly.', 'learndash' ); ?>
+				<?php
+					printf(
+						// translators: placeholder: question
+						esc_html_x( 'These points will be rewarded, only if the user chooses the %s correctly', 'placeholder: question', 'learndash' ),
+						learndash_get_custom_label( 'question' )
+					)
+				?>
 			</p>
 
 			<div style="margin-top: 10px;" id="wpProQuiz_answerPointsActivated">

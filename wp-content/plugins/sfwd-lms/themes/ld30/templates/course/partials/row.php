@@ -54,10 +54,7 @@ do_action( 'learndash-course-row-before', $course_id, $user_id );
 		do_action( 'learndash-course-row-link-before', $course_id, $user_id );
 		?>
 
-		<a href="<?php echo esc_url( $course_link ); ?>"><?php
-			// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
-			echo wp_kses_post( apply_filters( 'the_title', $course->post_title, $course->ID ) );
-		?></a>
+		<a href="<?php echo esc_url( $course_link ); ?>"><?php echo wp_kses_post( apply_filters( 'the_title', $course->post_title, $course->ID ) ); ?></a> <?php // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound ?>
 
 		<?php
 		/**

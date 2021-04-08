@@ -23,9 +23,7 @@ $topic_status = apply_filters( 'learndash-topic-status', ( $topic->completed ? '
 
 		<?php learndash_status_icon( $topic_status, 'sfwd-topic', null, true ); ?>
 
-		<div class="ld-topic-title">
-			<?php echo wp_kses_post( get_the_title( $topic->ID ) ); ?>
-		</div>
+		<div class="ld-topic-title"><?php echo wp_kses_post( get_the_title( $topic->ID ) ); ?></div>
 
 	</a>
 </div>

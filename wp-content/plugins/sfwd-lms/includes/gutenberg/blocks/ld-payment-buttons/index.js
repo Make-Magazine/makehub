@@ -17,31 +17,18 @@ import {
 /**
  * Internal block libraries
  */
-const { __, _x, sprintf } = wp.i18n;
-const {
-	registerBlockType,
-} = wp.blocks;
-
-const {
-	InspectorControls,
- } = wp.blockEditor;
-
-const {
-	PanelBody,
-	ToggleControl,
-	TextControl
- } = wp.components;
-
-const {
-	serverSideRender: ServerSideRender
-} = wp;
+import { __, _x, sprintf } from '@wordpress/i18n';
+import { registerBlockType } from '@wordpress/blocks';
+import { InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, ToggleControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
 registerBlockType(
 	'learndash/ld-payment-buttons',
 	{
 		title: __( 'LearnDash Payment Buttons', 'learndash' ),
 		// translators: placeholder: Course.
-		description: sprintf(_x('This block the %s payment buttons', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
+		description: sprintf(_x('This block displays the %s payment buttons', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ),
 		icon: 'cart',
 		category: 'learndash-blocks',
 		supports: {
@@ -76,7 +63,7 @@ registerBlockType(
 							// translators: placeholder: Course.
 							label={sprintf(_x('%s ID', 'placeholder: Course', 'learndash'), ldlms_get_custom_label('course') ) }
 							// translators: placeholders: Course, Course.
-							help={sprintf(_x('Enter single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course') ) }
+							help={sprintf(_x('Enter a single %1$s ID. Leave blank if used within a %2$s.', 'placeholders: Course, Course', 'learndash'), ldlms_get_custom_label('course'), ldlms_get_custom_label('course') ) }
 							value={ course_id || '' }
 							onChange={ course_id => setAttributes( { course_id } ) }
 						/>

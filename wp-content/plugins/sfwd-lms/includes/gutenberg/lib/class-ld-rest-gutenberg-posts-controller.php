@@ -6,6 +6,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LD_REST_Posts_Gutenberg_Controller' ) ) {
 	/**
 	 * LearnDash Gutenberg Posts Controller.

@@ -107,7 +107,21 @@ switch ( $context ) {
 				learndash_status_bubble( $status );
 				?>
 
-			</div>
+			</div> <!--/.ld-breadcrumbs-->
+
+			<?php
+			if ( is_user_logged_in() ) {
+				learndash_get_template_part(
+					'modules/progress.php',
+					array(
+						'context'   => 'topic',
+						'user_id'   => $user_id,
+						'course_id' => $course_id,
+					),
+					true
+				);
+			}
+			?>
 		</div>
 
 		<?php
@@ -141,15 +155,17 @@ switch ( $context ) {
 			</div> <!--/.ld-breadcrumbs-->
 
 			<?php
-			learndash_get_template_part(
-				'modules/progress.php',
-				array(
-					'context'   => 'topic',
-					'user_id'   => $user_id,
-					'course_id' => $course_id,
-				),
-				true
-			);
+			if ( is_user_logged_in() ) {
+				learndash_get_template_part(
+					'modules/progress.php',
+					array(
+						'context'   => 'topic',
+						'user_id'   => $user_id,
+						'course_id' => $course_id,
+					),
+					true
+				);
+			}
 			?>
 
 		</div>

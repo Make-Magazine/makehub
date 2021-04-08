@@ -6,8 +6,11 @@
  *
  * @package LearnDash\Course
  */
-?>
-<?php
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
 * @todo fix typo in navigation - consider reverse compatibility
 */

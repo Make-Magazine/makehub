@@ -27,5 +27,6 @@ import './ld-course-expire-status';
 import './ld-certificate';
 import './ld-quiz-complete';
 import './ld-courseinfo';
+import './ld-quizinfo';
 import './ld-groupinfo';
 import './ld-usermeta';

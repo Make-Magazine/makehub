@@ -316,15 +316,15 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 			global $wpdb;
 
 			if ( ! empty( $table_name ) ) {
-				$db_table_name = $wpdb->get_var( "SHOW TABLES LIKE '" . $table_name . "'" );
+				$db_table_name = $wpdb->get_var( "SHOW TABLES LIKE '" . esc_sql( $table_name ) . "'" );
 				if ( $db_table_name == $table_name ) {
 					return true;
 				} else {
 					return false;
 				}
 			}
-
 		}
+
 		public function build_tables_lists() {
 			global $wpdb;
 
@@ -543,8 +543,8 @@ if ( ( class_exists( 'Learndash_Admin_Data_Upgrades' ) ) && ( ! class_exists( 'L
 		private function rename_wpproquiz_table( $old_table = '', $new_table = '' ) {
 			global $wpdb;
 
-			$sql_rename = sprintf( 'ALTER TABLE `%s` RENAME `%s`', $old_table, $new_table );
-			$ret_rename = $wpdb->query( $sql_rename );
+			// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+			$ret_rename = $wpdb->query( sprintf( 'ALTER TABLE `%s` RENAME `%s`', esc_attr( $old_table ), esc_attr( $new_table ) ) );
 
 			if ( ( $this->check_table_exists( $new_table ) ) && ( ! $this->check_table_exists( $old_table ) ) ) {
 				return true;

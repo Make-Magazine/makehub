@@ -238,7 +238,7 @@ class ACUI_Buddypress{
 			}
 		}
 			
-		$pos_member_type = array_search( 'member_type', $headers );
+		$pos_member_type = array_search( 'bp_member_type', $headers );
 		if( $pos_member_type !== FALSE ){
 			bp_set_member_type( $user_id, $row[$pos_member_type] );
 		}

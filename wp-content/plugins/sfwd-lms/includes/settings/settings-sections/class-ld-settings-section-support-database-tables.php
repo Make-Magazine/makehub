@@ -43,6 +43,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Database Tables', 'learndash' );
 
+			$this->load_options = false;
+
 			add_filter( 'learndash_support_sections_init', array( $this, 'learndash_support_sections_init' ) );
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
 

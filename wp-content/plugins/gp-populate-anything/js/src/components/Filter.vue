@@ -60,8 +60,19 @@
 		</gppa-select-with-custom>
 
 		<div class="repeater-buttons">
-			<a class="add-item" @click="$emit('add-filter')"><i class="gficon-add"></i></a>
-			<a class="remove-item" @click="$emit('remove-filter')"><i class="gficon-subtract"></i></a>
+			<a class="add-item" @click="$emit('add-filter')">
+				<i class="gficon-add"></i>
+			</a>
+
+			<a class="remove-item" @click="$emit('remove-filter')">
+				<i class="gficon-subtract"></i>
+			</a>
+		</div>
+
+		<div
+			v-if="filters.length > 1 && index !== filters.length - 1"
+			class="gppa-filter-and">
+			AND
 		</div>
 	</div>
 </template>
@@ -74,6 +85,8 @@
 	export default Vue.extend({
 		props: [
 			'filter',
+			'filters',
+			'index',
 			'field',
 			'properties',
 			'flattenedProperties',

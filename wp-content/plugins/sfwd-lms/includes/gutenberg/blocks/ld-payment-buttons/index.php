@@ -7,6 +7,10 @@
  * @since 2.5.9
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'LearnDash_Gutenberg_Payment_Buttons' ) ) ) {
 	/**
 	 * Class for handling LearnDash Payment Buttons Block
@@ -102,7 +106,7 @@ if ( ( class_exists( 'LearnDash_Gutenberg_Block' ) ) && ( ! class_exists( 'Learn
 				if ( ! empty( $button_text ) ) {
 					$shortcode_out = '<a class="btn-join" href="#" id="btn-join">' . $button_text . '</a>';
 				} else {
-					$shortcode_out = '[' . $this->shortcode_slug . '] placholder output.';
+					$shortcode_out = '[' . $this->shortcode_slug . '] placeholder output.';
 				}
 
 				return $this->render_block_wrap( $shortcode_out );

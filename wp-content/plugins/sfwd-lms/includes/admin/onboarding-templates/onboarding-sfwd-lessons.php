@@ -26,11 +26,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<p>
 			<?php
 				printf(
-					// translators: placeholder: %1$s: Lessons, %2$s: Course, %3$s: Lessons, %4$s: Course
-					esc_html_x( '%1$s are where you add your content for your %2$s. You can add %3$s using the Course Builder, or you can create them individually and assign them to a %4$s later', 'placeholder: %1$s: Lessons, %2$s: Course, %3$s: Lessons, %4$s: Course', 'learndash' ),
+					// translators: placeholder: %1$s: Lessons, %2$s: Course, %3$s: Lessons, %4$s: Course, %5$s: Course
+					esc_html_x( '%1$s are where you add your content for your %2$s. You can add %3$s using the %4$s Builder, or you can create them individually and assign them to a %5$s later', 'placeholder: %1$s: Lessons, %2$s: Course, %3$s: Lessons, %4$s: Course, %5$s: Course', 'learndash' ),
 					\LearnDash_Custom_Label::get_label( 'lessons' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					\LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					\LearnDash_Custom_Label::get_label( 'lessons' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+					\LearnDash_Custom_Label::get_label( 'course' ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 					\LearnDash_Custom_Label::get_label( 'course' ) // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 				);
 				?>

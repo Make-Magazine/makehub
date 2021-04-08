@@ -7,6 +7,10 @@
  * @since 3.3.0
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * This Controller class is used to GET/UPDATE/DELETE the association
  * between a Course (sfwd-courses) and Users enrolled.
@@ -147,22 +151,36 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 		public function rest_query_filter( $query_args, $request ) {
 			$query_args = parent::rest_query_filter( $query_args, $request );
 
-			$route_url    = $request->get_route();
-			$ld_route_url = '/' . $this->namespace . '/' . $this->rest_base . '/' . absint( $request['id'] ) . '/' . $this->rest_sub_base;
+			$route_url         = $request->get_route();
+			$courses_rest_base = $this->get_rest_base( 'courses' );
+
+			$ld_route_url = '/' . $this->namespace . '/' . $courses_rest_base . '/' . absint( $request['id'] ) . '/' . $this->rest_sub_base;
 			if ( ( ! empty( $route_url ) ) && ( $ld_route_url === $route_url ) ) {
 				$course_id = (int) $request['id'];
 				if ( ! empty( $course_id ) ) {
-					$query_args['include'] = array( 0 );
 
-					if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
-						$exclude_admin = true;
+					if ( true === learndash_use_legacy_course_access_list() ) {
+						$query_args['include'] = array( 0 );
+
+						if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+							$exclude_admin = true;
+						} else {
+							$exclude_admin = false;
+						}
+
+						$course_users_query = learndash_get_users_for_course( $course_id, array(), $exclude_admin );
+						if ( is_a( $course_users_query, 'WP_User_Query' ) ) {
+							$query_args['include'] = $course_users_query->get_results();
+						}
 					} else {
-						$exclude_admin = false;
-					}
+						if ( ! isset( $query_args['meta_query'] ) ) {
+							$query_args['meta_query'] = array();
+						}
 
-					$course_users_query = learndash_get_users_for_course( $course_id, array(), $exclude_admin );
-					if ( is_a( $course_users_query, 'WP_User_Query' ) ) {
-						$query_args['include'] = $course_users_query->get_results();
+						$query_args['meta_query'][] = array(
+							'key'     => 'course_' . $course_id . '_access_from',
+							'compare' => 'EXISTS',
+						);
 					}
 				}
 			}
@@ -250,23 +268,124 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 							'learndash'
 						),
 						LearnDash_Custom_Label::get_label( 'course' )
-					) . ' ' . __CLASS__,
+					),
 					array( 'status' => 404 )
+				);
+			}
+
+			$course_post = get_post( $course_id );
+			if ( ( ! $course_post ) || ( ! is_a( $course_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'course' ) !== $course_post->post_type ) ) {
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
+			}
+
+			$course_price_type = learndash_get_setting( $course_id, 'course_price_type' );
+			if ( 'open' === $course_price_type ) {
+				return new WP_Error(
+					'learndash_rest_rejected_course_open',
+					sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'Cannot enroll users when %s price type is open.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 406 )
 				);
 			}
 
 			$user_ids = $request['user_ids'];
 			if ( ( ! is_array( $user_ids ) ) || ( empty( $user_ids ) ) ) {
-				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing User IDs.', 'learndash' ), array( 'status' => 404 ) );
-			} else {
-				$user_ids = array_map( 'intval', $user_ids );
+				return new WP_Error(
+					'rest_post_invalid_id',
+					esc_html__( 'Missing User IDs.', 'learndash' ),
+					array(
+						'status' => 404,
+					)
+				);
 			}
 
-			foreach ( $user_ids as $user_id ) {
-				ld_update_course_access( $user_id, $course_id );
+			$user_ids = array_map( 'absint', $user_ids );
+
+			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+				$ignore_admin_users = true;
+			} else {
+				$ignore_admin_users = false;
 			}
 
 			$data = array();
+
+			foreach ( $user_ids as $user_id ) {
+				if ( empty( $user_id ) ) {
+					continue;
+				}
+
+				$data_item = new stdClass();
+
+				$user = get_user_by( 'id', $user_id );
+				if ( ( ! $user ) || ( ! is_a( $user, 'WP_User' ) ) ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'rest_user_invalid_id';
+					$data_item->message = esc_html__( 'Invalid User ID.', 'learndash' );
+					$data[]             = $data_item;
+
+					continue;
+				}
+
+				if ( ( true === $ignore_admin_users ) && ( learndash_is_admin_user( $user_id ) ) ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'learndash_rest_admin_auto_enroll';
+					$data_item->message = esc_html__( 'Admin users are auto-enrolled.', 'learndash' );
+					$data[]             = $data_item;
+
+					continue;
+				}
+
+				$ret = ld_update_course_access( $user_id, $course_id );
+				if ( true === $ret ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'success';
+					$data_item->code    = 'learndash_rest_enroll_success';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'User enrolled in %s success.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					);
+				} else {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'learndash_rest_enroll_failed';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'User already enrolled in %s.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					);
+				}
+				$data[] = $data_item;
+			}
 
 			// Create the response object
 			$response = rest_ensure_response( $data );
@@ -299,23 +418,118 @@ if ( ( ! class_exists( 'LD_REST_Courses_Users_Controller_V2' ) ) && ( class_exis
 							'learndash'
 						),
 						LearnDash_Custom_Label::get_label( 'course' )
-					) . ' ' . __CLASS__,
+					),
 					array( 'status' => 404 )
+				);
+			}
+
+			$course_post = get_post( $course_id );
+			if ( ( ! $course_post ) || ( ! is_a( $course_post, 'WP_Post' ) ) || ( learndash_get_post_type_slug( 'course' ) !== $course_post->post_type ) ) {
+				return new WP_Error(
+					'rest_post_invalid_id',
+					sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'Invalid %s ID.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 404 )
+				);
+			}
+
+			$course_price_type = learndash_get_setting( $course_id, 'course_price_type' );
+			if ( 'open' === $course_price_type ) {
+				return new WP_Error(
+					'learndash_rest_rejected_course_open',
+					sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'Cannot unenroll users when %s price type is open.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					),
+					array( 'status' => 406 )
 				);
 			}
 
 			$user_ids = $request['user_ids'];
 			if ( ( ! is_array( $user_ids ) ) || ( empty( $user_ids ) ) ) {
 				return new WP_Error( 'rest_post_invalid_id', esc_html__( 'Missing User IDs.', 'learndash' ), array( 'status' => 404 ) );
-			} else {
-				$user_ids = array_map( 'intval', $user_ids );
 			}
 
-			foreach ( $user_ids as $user_id ) {
-				ld_update_course_access( $user_id, $course_id, true );
+			$user_ids = array_map( 'absint', $user_ids );
+
+			if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Section_General_Admin_User', 'courses_autoenroll_admin_users' ) === 'yes' ) {
+				$ignore_admin_users = true;
+			} else {
+				$ignore_admin_users = false;
 			}
 
 			$data = array();
+
+			foreach ( $user_ids as $user_id ) {
+				if ( empty( $user_id ) ) {
+					continue;
+				}
+
+				$data_item = new stdClass();
+
+				$user = get_user_by( 'id', $user_id );
+				if ( ( ! $user ) || ( ! is_a( $user, 'WP_User' ) ) ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'rest_post_invalid_id';
+					$data_item->message = esc_html__( 'Invalid User ID.', 'learndash' );
+					$data[]             = $data_item;
+
+					continue;
+				}
+
+				if ( ( true === $ignore_admin_users ) && ( learndash_is_admin_user( $user_id ) ) ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'learndash_rest_admin_auto_enroll';
+					$data_item->message = esc_html__( 'Admin users are auto-enrolled.', 'learndash' );
+					$data[]             = $data_item;
+
+					continue;
+				}
+
+				$ret = ld_update_course_access( $user_id, $course_id, true );
+				if ( true === $ret ) {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'success';
+					$data_item->code    = 'learndash_rest_unenroll_success';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'User enrolled from %s success.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					);
+				} else {
+					$data_item->user_id = $user_id;
+					$data_item->status  = 'failed';
+					$data_item->code    = 'learndash_rest_unenroll_failed';
+					$data_item->message  = sprintf(
+						// translators: placeholder: Course.
+						esc_html_x(
+							'User not enrolled from %s.',
+							'placeholder: Course',
+							'learndash'
+						),
+						LearnDash_Custom_Label::get_label( 'course' )
+					);
+				}
+				$data[] = $data_item;
+			}
 
 			// Create the response object
 			$response = rest_ensure_response( $data );

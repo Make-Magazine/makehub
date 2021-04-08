@@ -153,12 +153,20 @@ class WpProQuiz_View_QuestionOverall extends WpProQuiz_View_View {
 		do_action( 'learndash_questions_buttons_before' );
 		?>
 		<?php if ( current_user_can( 'wpProQuiz_edit_quiz' ) ) { ?>
-		<a class="button-secondary" href="admin.php?page=ldAdvQuiz&module=question&action=addEdit&quiz_id=<?php echo absint( $this->quiz->getId() ); ?>&post_id=<?php echo absint( $post_id ); ?>"><?php esc_html_e( 'Add question', 'learndash' ); ?></a>
+		<a class="button-secondary" href="admin.php?page=ldAdvQuiz&module=question&action=addEdit&quiz_id=<?php echo absint( $this->quiz->getId() ); ?>&post_id=<?php echo absint( $post_id ); ?>">
+			<?php
+			sprintf(
+				// translators: placeholder: question
+				esc_html_x( 'Add %s', 'placeholder: question', 'learndash' ),
+				learndash_get_custom_label( 'question' )
+			);
+			?>
+		</a>
 		<a class="button-secondary" href="#" id="wpProQuiz_saveSort"><?php esc_html_e( 'Save order', 'learndash' ); ?></a>
 		<a class="button-secondary" href="#" id="wpProQuiz_questionCopy">
 			<?php
-			// translators: placeholder: Quiz.
-			echo sprintf( esc_html_x( 'Copy questions from another %s', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+			// translators: placeholder: questions, quiz.
+			echo sprintf( esc_html_x( 'Copy %1$s from another %2$s', 'placeholder: questions, quiz', 'learndash' ), learndash_get_custom_label_lower( 'questions' ), learndash_get_custom_label_lower( 'quiz' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			?>
 		</a>
 		<?php } ?>
@@ -179,14 +187,14 @@ class WpProQuiz_View_QuestionOverall extends WpProQuiz_View_View {
 		<form action="admin.php?page=ldAdvQuiz&module=question&quiz_id=<?php echo absint( $this->quiz->getId() ); ?>&action=copy_question" method="POST">
 			<h2 style="margin-top: 0;">
 			<?php
-			// translators: placeholder: Quiz.
-			echo sprintf( esc_html_x( 'Copy questions from another %s', 'placeholder: Quiz', 'learndash' ), LearnDash_Custom_Label::get_label( 'quiz' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
+			// translators: placeholder: questions, quiz.
+			echo sprintf( esc_html_x( 'Copy %1$s from another %2$s', 'placeholder: questions, quiz', 'learndash' ), learndash_get_custom_label_lower( 'questions' ), learndash_get_custom_label_lower( 'quiz' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Method escapes output
 			?>
 			</h2>
 			<p>
 			<?php
-			// translators: placeholders: quiz, quiz.
-			echo sprintf( esc_html_x( 'Here you can copy questions from another %1$s into this %2$s. (Multiple selection enabled)', 'placeholders: quiz, quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
+			// translators: placeholders: questions, quiz, quiz.
+			echo sprintf( esc_html_x( 'Here you can copy %1$s from another %2$s into this %3$s. (Multiple selection enabled)', 'placeholders: questions, quiz, quiz', 'learndash' ), esc_html( learndash_get_custom_label_lower( 'questions' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ), esc_html( learndash_get_custom_label_lower( 'quiz' ) ) );
 			?>
 			</p>
 
@@ -200,7 +208,8 @@ class WpProQuiz_View_QuestionOverall extends WpProQuiz_View_View {
 				</select>
 			</div>
 
-			<input class="button-primary" name="questionCopy" value="<?php esc_html_e( 'Copy questions', 'learndash' ); ?>" type="submit">
+			<?php // translators: placeholder: questions ?>
+			<input class="button-primary" name="questionCopy" value="<?php sprintf( esc_html_x( 'Copy %s', 'placeholder: questions', 'learndash' ), learndash_get_custom_label_lower( 'questions' ) ); ?>" type="submit">
 		</form>
 	</div>
 </div>

@@ -8,6 +8,10 @@
  * @package Learndash
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LDLMS_Sort_Answer' ) ) {
 
 	/**

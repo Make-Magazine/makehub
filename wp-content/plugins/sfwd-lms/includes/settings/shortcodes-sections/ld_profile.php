@@ -130,8 +130,16 @@ if ( ( class_exists( 'LearnDash_Shortcodes_Section' ) ) && ( ! class_exists( 'Le
 					'id'        => $this->shortcodes_section_key . 'show_quizzes',
 					'name'      => 'show_quizzes',
 					'type'      => 'select',
-					'label'     => esc_html__( 'Show User Quiz Attempts', 'learndash' ),
-					'help_text' => esc_html__( 'Show User Quiz Attempts', 'learndash' ),
+					'label'     => sprintf(
+						// translators: placeholder: Quiz.
+						esc_html_x( 'Show User %s Attempts', 'placeholder: Quiz', 'learndash' ),
+						learndash_get_custom_label( 'quiz' )
+					),
+					'help_text' => sprintf(
+						// translators: placeholder: Quiz.
+						esc_html_x( 'Show User %s Attempts', 'placeholder: Quiz', 'learndash' ),
+						learndash_get_custom_label( 'quiz' )
+					),
 					'value'     => 'yes',
 					'options'   => array(
 						''   => esc_html__( 'Yes', 'learndash' ),

@@ -341,7 +341,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 			);
 
 			if ( ( ! defined( 'REST_REQUEST' ) ) || ( true !== REST_REQUEST ) ) {
-				if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
+				if ( learndash_is_course_shared_steps_enabled() ) {
 					unset( $this->setting_option_fields['course'] );
 				}
 			}
@@ -384,7 +384,7 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					}
 				}
 
-				if ( 'yes' === LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) ) {
+				if ( learndash_is_course_shared_steps_enabled() ) {
 					unset( $settings_values['course'] );
 				} elseif ( ( ! isset( $settings_values['course'] ) ) || ( '-1' === $settings_values['course'] ) ) {
 					$settings_values['course'] = '';

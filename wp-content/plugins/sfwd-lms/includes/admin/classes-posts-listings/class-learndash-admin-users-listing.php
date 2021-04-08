@@ -29,6 +29,10 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 		 * Called via the WordPress init action hook.
 		 */
 		public function listing_init() {
+			if ( $this->listing_init_done ) {
+				return;
+			}
+
 			$this->selectors = array(
 				'group_id'  => array(
 					'type'                     => 'post_type',
@@ -72,6 +76,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 			);
 
 			parent::listing_init();
+
+			$this->listing_init_done = true;
 		}
 
 		/**
@@ -209,15 +215,8 @@ if ( ( class_exists( 'Learndash_Admin_Posts_Listing' ) ) && ( ! class_exists( 'L
 				}
 
 				if ( ! empty( $selector['selected'] ) ) {
-					$course_users_query = learndash_get_users_for_course( $selector['selected'], array(), false );
-					if ( ( is_a( $course_users_query, 'WP_User_Query' ) ) && ( property_exists( $course_users_query, 'results' ) ) && ( ! empty( $course_users_query->results ) ) ) {
-						$user_ids = $course_users_query->get_results();
-						if ( ! empty( $user_ids ) ) {
-							$q_vars['include'] = $user_ids;
-						}
-					} else {
-						$q_vars['include'] = array( 0 );
-					}
+					$q_vars['meta_key']     = 'course_' . absint( $selector['selected'] ) . '_access_from';
+					$q_vars['meta_compare'] = 'EXISTS';
 				}
 			}
 

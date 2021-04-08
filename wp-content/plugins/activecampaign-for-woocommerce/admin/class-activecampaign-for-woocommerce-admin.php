@@ -112,20 +112,18 @@ class Activecampaign_For_Woocommerce_Admin {
 	}
 
 	/**
-	 * Register the page for the admin section
+	 * Register the page for the admin section, adds to the WooCommerce menu parent
 	 *
 	 * @since    1.0.0
 	 */
 	public function add_admin_page() {
-		add_options_page(
+		add_submenu_page(
+			'woocommerce',
 			'ActiveCampaign for WooCommerce',
 			'ActiveCampaign for WooCommerce',
 			'manage_options',
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE,
-			array(
-				$this,
-				'fetch_admin_page',
-			)
+			array( $this, 'fetch_admin_page' )
 		);
 	}
 
@@ -141,7 +139,7 @@ class Activecampaign_For_Woocommerce_Admin {
 
 		$html = sprintf(
 			$html_raw,
-			admin_url( 'options-general.php?page=' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE ),
+			admin_url( 'admin.php?page=' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_SNAKE ),
 			esc_attr__(
 				'View ActiveCampaign settings',
 				ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN
@@ -246,6 +244,43 @@ class Activecampaign_For_Woocommerce_Admin {
 	}
 
 	/**
+	 * Handles the API Test request from the settings page,
+	 * then redirects back to the plugin page
+	 */
+	public function handle_api_test() {
+		if ( ! $this->validate_request_nonce() ) {
+			wp_send_json_error( $this->get_response(), 403 );
+		}
+
+		$new_data     = $this->extract_post_data();
+		$current_data = get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
+
+		$errors = $this->validator->validate( $new_data, $current_data, true );
+
+		if ( ! empty( $errors ) ) {
+			foreach ( $errors as $error ) {
+				$this->push_response_error(
+					$this->format_response_message(
+						$error,
+						'error'
+					)
+				);
+			}
+		}
+
+		if ( $this->response_has_errors() ) {
+			wp_send_json_error( $this->get_response(), 422 );
+		}
+
+		$this->push_response_notice(
+			$this->format_response_message( 'API tested successfully!', 'success' )
+		);
+
+		wp_send_json_success( $this->get_response() );
+	}
+
+
+	/**
 	 * Handles the form submission for the settings page,
 	 * then redirects back to the plugin page.
 	 */
@@ -275,7 +310,11 @@ class Activecampaign_For_Woocommerce_Admin {
 	 * @return array
 	 */
 	public function get_options() {
-		return get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
+		if ( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME ) {
+			return get_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
+		} else {
+			return get_option( 'activecampaign_for_woocommerce_settings' );
+		}
 	}
 
 	/**

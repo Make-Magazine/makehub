@@ -68,7 +68,8 @@ function learndash_register_essay_post_type() {
 
 	$args = array(
 		'label'               => esc_html__( 'sfwd-essays', 'learndash' ),
-		'description'         => esc_html__( 'Submitted essays via a quiz question.', 'learndash' ),
+		// translators: quiz, question
+		'description'         => sprintf( esc_html_x( 'Submitted essays via a %1$s %2$s.', 'placeholder: quiz, question', 'learndash' ), learndash_get_custom_label_lower( 'quiz' ), learndash_get_custom_label_lower( 'question' ) ),
 		'labels'              => $labels,
 		'supports'            => array( 'title', 'editor', 'comments', 'author' ),
 		'hierarchical'        => false,
@@ -273,8 +274,17 @@ function learndash_essay_permissions() {
 			if ( ! empty( $user_id ) ) {
 				if ( ( learndash_is_admin_user( $user_id ) ) || ( $post->post_author == $user_id ) ) {
 					$can_view_file = true;
-				} elseif ( ( learndash_is_group_leader_user( $user_id ) ) && ( learndash_is_group_leader_of_user( $user_id, $post->post_author ) ) ) {
-					$can_view_file = true;
+				} elseif ( learndash_is_group_leader_user( $user_id ) ) {
+					/**
+					 * For the Group Leader we check for common groups between
+					 * Leader + Author + Course
+					 */
+					$course_id = get_post_meta( $post->ID, 'course_id', true );
+					$course_id = absint( $course_id );
+
+					if ( learndash_check_group_leader_course_user_intersect( $user_id, $post->post_author, $course_id ) ) {
+						$can_view_file = true;
+					}
 				}
 			}
 		}
@@ -855,7 +865,7 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 			// get file info
 			// @fixme: wp checks the file extension....
 			$filetype = wp_check_filetype( basename( $filename ), $limit_file_exts );
-			if ( ( empty( $filetype ) ) || ( empty( $filetype['ext'] ) ) || ( empty( $filetype['type'] ) ) || ( ! $limit_file_exts[ $filetype['ext'] ] ) ) {
+			if ( ( empty( $filetype ) ) || ( empty( $filetype['ext'] ) ) || ( empty( $filetype['type'] ) ) || ( ! $limit_file_exts[ strtolower( $filetype['ext'] ) ] ) ) {
 				wp_send_json_error(
 					array(
 						'message' => esc_html__( 'Invalid essay uploaded file type.', 'learndash' ),
@@ -863,6 +873,8 @@ function learndash_essay_fileupload_process( $uploadfiles, $question_id ) {
 				);
 				die();
 			}
+
+			$filetype['ext'] = strtolower( $filetype['ext'] );
 
 			$filetitle = pathinfo( $filename, PATHINFO_FILENAME );
 			$file_time = microtime( true ) * 100;

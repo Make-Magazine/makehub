@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.17.3.2
+Version:		1.17.4.3
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -11,7 +11,6 @@ License URI: 	https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: import-users-from-csv-with-meta
 Domain Path: /languages
 */
-
 if ( ! defined( 'ABSPATH' ) ) 
 	exit;
 
@@ -51,6 +50,7 @@ class ImportExportUsersCustomers{
 			'acui_frontend_send_mail'=> false,
 			'acui_frontend_send_mail_updated' => false,
 			'acui_frontend_mail_admin' => false,
+            'acui_frontend_send_mail_admin_address_list' => '',
 			'acui_frontend_delete_users' => false,
 			'acui_frontend_delete_users_assign_posts' => 0,
 			'acui_frontend_change_role_not_present' => false,
@@ -135,8 +135,9 @@ class ImportExportUsersCustomers{
 			return;
 		
 		wp_enqueue_style( 'acui_css', plugins_url( 'assets/style.css', __FILE__ ), false, '1.0.0' );
-		wp_enqueue_style( 'datatable', '//cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css' );
-		wp_enqueue_script( 'datatable', '//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js' );
+		wp_enqueue_style( 'datatable', '//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css' );
+		wp_enqueue_script( 'datatable', '//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js' );
+		//wp_enqueue_script( 'datatable-select', '//cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js' );
 	}
 
 	function action_links( $links, $file ) {

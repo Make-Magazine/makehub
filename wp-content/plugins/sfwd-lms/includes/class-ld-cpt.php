@@ -440,7 +440,7 @@ if ( ! class_exists( 'SFWD_CPT' ) ) {
 		 */
 		public static function show_content( $post ) {
 			if ( 'sfwd-quiz' === $post->post_type ) {
-				if ( LearnDash_Settings_Section::get_section_setting( 'LearnDash_Settings_Courses_Builder', 'shared_steps' ) == 'yes' ) {
+				if ( learndash_is_course_builder_enabled() ) {
 					$course_id = learndash_get_course_id( $post );
 					$lesson_id = learndash_course_get_single_parent_step( $course_id, $post->ID );
 				} else {

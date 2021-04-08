@@ -135,43 +135,43 @@ if ( ( class_exists( 'LearnDash_Settings_Fields' ) ) && ( ! class_exists( 'Learn
 		public function value_section_field( $val = '', $key = '', $args = array(), $post_args = array() ) {
 			if ( ( isset( $args['field']['type'] ) ) && ( $args['field']['type'] === $this->field_type ) ) {
 				if ( isset( $val['aa'] ) ) {
-					$val['aa'] = intval( $val['aa'] );
+					$val_aa = intval( $val['aa'] );
 				} else {
-					$val['aa'] = 0;
+					$val_aa = 0;
 				}
 
 				if ( isset( $val['mm'] ) ) {
-					$val['mm'] = intval( $val['mm'] );
+					$val_mm = intval( $val['mm'] );
 				} else {
-					$val['mm'] = 0;
+					$val_mm = 0;
 				}
 
 				if ( isset( $val['jj'] ) ) {
-					$val['jj'] = intval( $val['jj'] );
+					$val_jj = intval( $val['jj'] );
 				} else {
-					$val['jj'] = 0;
+					$val_jj = 0;
 				}
 
 				if ( isset( $val['hh'] ) ) {
-					$val['hh'] = intval( $val['hh'] );
+					$val_hh = intval( $val['hh'] );
 				} else {
-					$val['hh'] = 0;
+					$val_hh = 0;
 				}
 
 				if ( isset( $val['mn'] ) ) {
-					$val['mn'] = intval( $val['mn'] );
+					$val_mn = intval( $val['mn'] );
 				} else {
-					$val['mn'] = 0;
+					$val_mn = 0;
 				}
 
-				if ( ( ! empty( $val['aa'] ) ) && ( ! empty( $val['mm'] ) ) && ( ! empty( $val['jj'] ) ) ) {
+				if ( ( ! empty( $val_aa ) ) && ( ! empty( $val_mm ) ) && ( ! empty( $val_jj ) ) ) {
 					$date_string = sprintf(
 						'%04d-%02d-%02d %02d:%02d:00',
-						intval( $val['aa'] ),
-						intval( $val['mm'] ),
-						intval( $val['jj'] ),
-						intval( $val['hh'] ),
-						intval( $val['mn'] )
+						intval( $val_aa ),
+						intval( $val_mm ),
+						intval( $val_jj ),
+						intval( $val_hh ),
+						intval( $val_mn )
 					);
 
 					$date_string_gmt = get_gmt_from_date( $date_string, 'Y-m-d H:i:s' );

@@ -6,6 +6,10 @@
  * @subpackage Groups
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 	/**
 	 * Class to create the instance.
@@ -92,7 +96,6 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 							array(),
 							LEARNDASH_SCRIPT_VERSION_TOKEN
 						);
-						// wp_style_add_data( 'learndash-select2-jquery-style', 'rtl', 'replace' );
 						$learndash_assets_loaded['styles']['learndash-select2-jquery-style'] = __FUNCTION__;
 					}
 
@@ -136,9 +139,6 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 				add_action( 'bulk_edit_custom_box', array( $this, 'display_custom_bulk_edit' ), 10, 2 );
 
 				add_action( 'save_post', array( $this, 'save_post_bulk_edit' ), 10, 2 );
-
-				// add_action( 'quick_edit_custom_box', array( $this, 'display_custom_bulk_edit' ), 10, 3 );
-				// $column_name, $screen->post_type, '' );
 			}
 		}
 
@@ -265,7 +265,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 										echo sprintf(
 											// translators: placeholder: Group.
 											esc_html_x( 'Any %s', 'placeholder: Group', 'learndash' ),
-											learndash_get_custom_label( 'group' )
+											esc_attr( learndash_get_custom_label( 'group' ) )
 										);
 										?>
 										</option>
@@ -274,7 +274,7 @@ if ( ! class_exists( 'LD_Groups_Membership' ) ) {
 										echo sprintf(
 											// translators: placeholder: Groups.
 											esc_html_x( 'All %s', 'placeholder: Groups', 'learndash' ),
-											learndash_get_custom_label( 'groups' )
+											esc_attr( learndash_get_custom_label( 'groups' ) )
 										);
 										?>
 										</option>

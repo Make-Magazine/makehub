@@ -223,32 +223,18 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		$term     = null;
 
 		/**
-		 * Add special logic when searching for terms in an array. This is useful when searching for posts that are
-		 * in an array of categories.
+		 * Convert single filter_value to array to add support for is_in and is_not_in
 		 */
-		if ( is_array( $filter_value ) && in_array( $filter['operator'], array( 'is_in', 'is_not_in' ) ) ) {
+		if ( ! is_array( $filter_value ) ) {
+			$filter_value = array( $filter_value );
+		}
 
-			$escaped_filter_value = array_map(
-				function ( $v ) {
-					return "'" . esc_sql( $v ) . "'";
-				},
-				$filter_value
-			);
+		$term_taxonomy_ids = array();
 
-			$where = "(
-	SELECT COUNT(1)
-	FROM {$wpdb->term_relationships}
-	WHERE {$wpdb->term_relationships}.term_taxonomy_id IN (" . implode( ',', $escaped_filter_value ) . ")
-	AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
-) $operator 1";
-
-			/**
-			 * Traditional single taxonomy term lookup.
-			 */
-		} else {
+		foreach ( $filter_value as $value ) {
 			/* First, look for term by ID if the filter value is a number */
-			if ( is_numeric( $filter_value ) ) {
-				$term = get_term_by( 'id', $filter_value, $taxonomy );
+			if ( is_numeric( $value ) ) {
+				$term = get_term_by( 'id', $value, $taxonomy );
 			}
 
 			/**
@@ -258,21 +244,25 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 			 * it will return the term matching the ID rather than the slug.
 			 */
 			if ( ! $term ) {
-				$term = get_term_by( 'slug', $filter_value, $taxonomy );
+				$term = get_term_by( 'slug', $value, $taxonomy );
 			}
 
-			$filter_value = $term ? $term->term_taxonomy_id : - 1;
-
-			$where = $wpdb->prepare(
-				"(
-	SELECT COUNT(1)
-	FROM {$wpdb->term_relationships}
-	WHERE {$wpdb->term_relationships}.term_taxonomy_id = %d
-	AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
-) $operator 1",
-				$filter_value
-			);
+			$term_taxonomy_ids[] = $term ? $term->term_taxonomy_id : - 1;
 		}
+
+		$term_taxonomy_ids = array_map(
+			function ( $v ) {
+				return "'" . esc_sql( $v ) . "'";
+			},
+			$term_taxonomy_ids
+		);
+
+		$where = "(
+SELECT COUNT(1)
+FROM {$wpdb->term_relationships}
+WHERE {$wpdb->term_relationships}.term_taxonomy_id IN (" . implode( ',', $term_taxonomy_ids ) . ")
+AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
+) $operator 1";
 
 		$query_builder_args['where'][ $filter_group_index ][] = $where;
 
@@ -292,21 +282,26 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 */
 		extract( $args );
 
-		foreach ( $query_builder_args['where'] as $filter_group_index => $filter_group_wheres ) {
+		if ( count( $query_builder_args['where'] ) === 0 ) {
+			// Ensure that ( `post_status` is 'publish' ) is added even if there are no filter groups specified
+			$query_builder_args['where'][0] = array( $this->build_where_clause( $wpdb->posts, 'post_status', 'is', 'publish' ) );
+		} else {
+			foreach ( $query_builder_args['where'] as $filter_group_index => $filter_group_wheres ) {
 
-			$has_post_status = false;
+				$has_post_status = false;
 
-			foreach ( $filter_group_wheres as $filter_group_where ) {
-				if ( strpos( $filter_group_where, 'post_status' ) !== false ) {
-					$has_post_status = true;
-					break;
+				foreach ( $filter_group_wheres as $filter_group_where ) {
+					if ( strpos( $filter_group_where, 'post_status' ) !== false ) {
+						$has_post_status = true;
+						break;
+					}
 				}
-			}
 
-			/* Add post_status = 'publish' by default if there isn't a post status conditional in this group */
-			if ( ! $has_post_status ) {
-				$post_status_where                                    = $this->build_where_clause( $wpdb->posts, 'post_status', 'is', 'publish' );
-				$query_builder_args['where'][ $filter_group_index ][] = $post_status_where;
+				/* Add post_status = 'publish' by default if there isn't a post status conditional in this group */
+				if ( ! $has_post_status ) {
+					$post_status_where                                    = $this->build_where_clause( $wpdb->posts, 'post_status', 'is', 'publish' );
+					$query_builder_args['where'][ $filter_group_index ][] = $post_status_where;
+				}
 			}
 		}
 
@@ -560,7 +555,17 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 	public function query( $args ) {
 		$query_args = $this->process_filter_groups( $args, $this->default_query_args( $args ) );
 
-		$query = new WP_Query();
+		$query = new WP_Query( array(
+			// Set post_status to any to ensure that WP doesn't override our filters and force "published" status only.
+			// This ensures that WP_Query\get_posts() doesn't filter anything except for trash objects.
+			// The culprit for this issue is here:
+			// https://github.com/WordPress/WordPress/blob/801152b9d71dcc237586be06958d0b9fe17d2c03/wp-includes/class-wp-query.php#L3107
+			'post_status'         => 'any',
+
+			// Ignore sticky posts which may not respect other filters
+			// This will not exclude sticky posts if they're specified
+			'ignore_sticky_posts' => 1,
+		) );
 
 		/* $self is required for PHP 5.3 compatibility. */
 		$self = $this;

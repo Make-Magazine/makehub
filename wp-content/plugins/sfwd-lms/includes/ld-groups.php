@@ -7,7 +7,9 @@
  * @package LearnDash\Groups
  */
 
-
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Handles group email messages.
@@ -193,15 +195,15 @@ function learndash_group_emails() {
 						} else {
 							wp_send_json_success(
 								array(
-									// translators: email addresses.
-									'message' => sprintf( wp_kses_post( __( '<span style="color:green">Success: Email sent to %d group users.</span>', 'learndash' ) ), count( $email_addresses ) ),
+									// translators: email addresses, group.
+									'message' => sprintf( wp_kses_post( __( '<span style="color:green">Success: Email sent to %1$d %2$s users.</span>', 'learndash' ) ), count( $email_addresses ), learndash_get_custom_label_lower( 'group' ) ),
 								)
 							);
 						}
 					} else {
 						wp_send_json_error(
 							array(
-								'message' => __( '<span style="color:red">Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ),
+								'message' => wp_kses_post( __( '<span style="color:red">Mail Args empty. Unepected condition from filter: ld_group_email_users_args</span>', 'learndash' ) ),
 							)
 						);
 					}
@@ -262,6 +264,15 @@ function learndash_add_group_admin_role() {
 			$group_leader->add_cap( $role_cap, $active );
 		}
 	}
+	
+	/**
+	 * Added to correct issues with Group Leader User capabilities.
+	 * See LEARNDASH-5707. See changes in
+	 * includes/settings/settings-sections/class-ld-settings-section-groups-group-leader-user.php
+	 *
+	 * @since 3.4.0.2
+	 */
+	update_option( 'learndash_groups_group_leader_user_activate', time() );
 }
 
 add_action( 'learndash_activated', 'learndash_add_group_admin_role' );
@@ -645,8 +656,6 @@ function learndash_user_group_enrolled_to_course_from( $user_id = 0, $course_id 
 	 */
 	return apply_filters( 'learndash_user_group_enrolled_to_course_from', $enrolled_from, $user_id, $course_id, $group_id );
 }
-
-
 
 /**
  * Gets the list of group IDs administered by the user.
@@ -1506,12 +1515,17 @@ add_action( 'delete_post', 'learndash_delete_group', 10 );
  * Updates a user's group access.
  *
  * @since 2.1.0
+ * @since 3.4.0 Added return boolean.
  *
  * @param int     $user_id  User ID.
  * @param int     $group_id Group ID.
  * @param boolean $remove   Optional. Whether to remove user from the group. Default false.
+ *
+ * @return boolean true on action success otherwise false.
  */
 function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ) {
+	$action_success = false;
+
 	$user_id  = absint( $user_id );
 	$group_id = absint( $group_id );
 
@@ -1519,83 +1533,56 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ) 
 		$activity_type = 'group_access_user';
 
 		if ( $remove ) {
+			$user_enrolled = get_user_meta( $user_id, 'learndash_group_users_' . $group_id, true );
+			if ( $user_enrolled ) {
+				$action_success = true;
+				delete_user_meta( $user_id, 'learndash_group_users_' . $group_id );
 
-			delete_user_meta( $user_id, 'learndash_group_users_' . $group_id );
+				/**
+				 * If the user is removed from the course then also remove the group_progress Activity.
+				 */
+				$group_user_activity_args = array(
+					'activity_type' => 'group_progress',
+					'user_id'       => $user_id,
+					'post_id'       => $group_id,
+					'course_id'     => 0,
+				);
 
-			/**
-			 * If the user is removed from the course then also remove the group_progress Activity.
-			 */
-			$group_user_activity_args = array(
-				'activity_type' => 'group_progress',
-				'user_id'       => $user_id,
-				'post_id'       => $group_id,
-				'course_id'     => 0,
-			);
-
-			$group_user_activity = learndash_get_user_activity( $group_user_activity_args );
-			if ( is_object( $group_user_activity ) ) {
-				learndash_delete_user_activity( $group_user_activity->activity_id );
-			}
-
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => $user_id,
-				'post_id'       => $group_id,
-				'course_id'     => 0,
-			);
-			while ( true ) {
-				$group_activity = learndash_get_user_activity( $group_activity_args );
-				if ( ( $group_activity ) && ( is_object( $group_activity ) ) ) {
-					learndash_delete_user_activity( $group_activity->activity_id );
-				} else {
-					break;
+				$group_user_activity = learndash_get_user_activity( $group_user_activity_args );
+				if ( is_object( $group_user_activity ) ) {
+					learndash_delete_user_activity( $group_user_activity->activity_id );
 				}
+
+				/**
+				 * Fires after the user is removed from group access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_removed_group_access', $user_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is removed from group access meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_removed_group_access', $user_id, $group_id );
-
 		} else {
+			$user_enrolled = get_user_meta( $user_id, 'learndash_group_users_' . $group_id, true );
+			if ( ! $user_enrolled ) {
+				$action_success = true;
+				update_user_meta( $user_id, 'learndash_group_users_' . $group_id, $group_id );
 
-			update_user_meta( $user_id, 'learndash_group_users_' . $group_id, $group_id );
-
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => $user_id,
-				'post_id'       => $group_id,
-				'course_id'     => 0,
-			);
-
-			$group_activity = learndash_get_user_activity( $group_activity_args );
-			if ( ! is_object( $group_activity ) ) {
-				$group_activity_args['changed']            = true;
-				$group_activity_args['activity_started']   = time();
-				$group_activity_args['activity_completed'] = 0;
-				learndash_update_user_activity( $group_activity_args );
+				/**
+				 * Fires after the user is added to group access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_added_group_access', $user_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is added to group access meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_added_group_access', $user_id, $group_id );
 		}
 	}
+
+	return $action_success;
 }
 
 
@@ -1603,12 +1590,17 @@ function ld_update_group_access( $user_id = 0, $group_id = 0, $remove = false ) 
  * Updates the course group access.
  *
  * @since 2.1.0
+ * @since 3.4.0 Added return boolean.
  *
  * @param int     $course_id Course ID.
  * @param int     $group_id  Group ID.
  * @param boolean $remove    Optional. Whether to remove the group from the course. Default false.
+ *
+ * @return boolean true on action success otherwise false.
  */
 function ld_update_course_group_access( $course_id = 0, $group_id = 0, $remove = false ) {
+	$action_success = false;
+
 	$course_id = absint( $course_id );
 	$group_id  = absint( $group_id );
 
@@ -1616,69 +1608,41 @@ function ld_update_course_group_access( $course_id = 0, $group_id = 0, $remove =
 		$activity_type = 'group_access_course';
 
 		if ( $remove ) {
+			$group_enrolled = get_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id, true );
+			if ( $group_enrolled ) {
+				$action_success = true;
+				delete_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id );
 
-			delete_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id );
-
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => 0,
-				'post_id'       => $group_id,
-				'course_id'     => $course_id,
-			);
-			while ( true ) {
-				$group_activity = learndash_get_user_activity( $group_activity_args );
-				if ( ( $group_activity ) && ( is_object( $group_activity ) ) ) {
-					learndash_delete_user_activity( $group_activity->activity_id );
-				} else {
-					break;
-				}
+				/**
+				 * Fires after the user is removed from the course group meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_removed_course_group_access', $course_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is removed from the course group meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_removed_course_group_access', $course_id, $group_id );
-
 		} else {
+			$group_enrolled = get_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id, true );
+			if ( empty( $group_enrolled ) ) {
+				$action_success = true;
+				update_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id, time() );
 
-			update_post_meta( $course_id, 'learndash_group_enrolled_' . $group_id, time() );
-
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => 0,
-				'post_id'       => $group_id,
-				'course_id'     => $course_id,
-			);
-
-			$group_activity = learndash_get_user_activity( $group_activity_args );
-			if ( ! is_object( $group_activity ) ) {
-				$group_activity_args['changed']            = true;
-				$group_activity_args['activity_started']   = time();
-				$group_activity_args['activity_completed'] = 0;
-				learndash_update_user_activity( $group_activity_args );
+				/**
+				 * Fires after the user is added to the course group access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_added_course_group_access', $course_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is added to the course group access meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_added_course_group_access', $course_id, $group_id );
-
 		}
 	}
+
+	return $action_success;
 }
 
 
@@ -1686,12 +1650,17 @@ function ld_update_course_group_access( $course_id = 0, $group_id = 0, $remove =
  * Updates the group access for a group leader.
  *
  * @since 2.2.1
+ * @since 3.4.0 Added return boolean.
  *
  * @param int     $user_id  User ID.
  * @param int     $group_id Group ID.
  * @param boolean $remove   Optional. Whether to remove user from the group. Default false.
+ *
+ * @return boolean true on action success otherwise false.
  */
 function ld_update_leader_group_access( $user_id = 0, $group_id = 0, $remove = false ) {
+	$action_success = false;
+
 	$user_id  = absint( $user_id );
 	$group_id = absint( $group_id );
 
@@ -1699,70 +1668,44 @@ function ld_update_leader_group_access( $user_id = 0, $group_id = 0, $remove = f
 		$activity_type = 'group_access_leader';
 
 		if ( $remove ) {
+			$group_enrolled = get_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, true );
+			if ( ! empty( $group_enrolled ) ) {
+				$action_success = true;
 
-			delete_user_meta( $user_id, 'learndash_group_leaders_' . $group_id );
+				delete_user_meta( $user_id, 'learndash_group_leaders_' . $group_id );
 
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => $user_id,
-				'post_id'       => $group_id,
-				'course_id'     => 0,
-			);
-			while ( true ) {
-				$group_activity = learndash_get_user_activity( $group_activity_args );
-				if ( ( $group_activity ) && ( is_object( $group_activity ) ) ) {
-					learndash_delete_user_activity( $group_activity->activity_id );
-				} else {
-					break;
-				}
+				/**
+				 * Fires after the user is removed from group leader access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_removed_leader_group_access', $user_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is removed from group leader access meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_removed_leader_group_access', $user_id, $group_id );
 
 		} else {
+			$group_enrolled = get_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, true );
+			if ( empty( $group_enrolled ) ) {
+				$action_success = true;
+				update_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, $group_id );
 
-			update_user_meta( $user_id, 'learndash_group_leaders_' . $group_id, $group_id );
-
-			/*
-			$group_activity_args = array(
-				'activity_type' => $activity_type,
-				'user_id'       => $user_id,
-				'post_id'       => $group_id,
-				'course_id'     => 0,
-			);
-
-			$group_activity = learndash_get_user_activity( $group_activity_args );
-			if ( ! is_object( $group_activity ) ) {
-				$group_activity_args['changed']            = true;
-				$group_activity_args['activity_started']   = time();
-				$group_activity_args['activity_completed'] = 0;
-				learndash_update_user_activity( $group_activity_args );
+				/**
+				 * Fires after the user is added to the group leader access meta.
+				 *
+				 * @since 2.1.0
+				 *
+				 * @param int $user_id  User ID.
+				 * @param int $group_id Group ID.
+				 */
+				do_action( 'ld_added_leader_group_access', $user_id, $group_id );
 			}
-			*/
-
-			/**
-			 * Fires after the user is added to the group leader access meta.
-			 *
-			 * @since 2.1.0
-			 *
-			 * @param int $user_id  User ID.
-			 * @param int $group_id Group ID.
-			 */
-			do_action( 'ld_added_leader_group_access', $user_id, $group_id );
 		}
 	}
-}
 
+	return $action_success;
+}
 
 /**
  * Gets the group's user IDs if the course is associated with the group.
@@ -1773,7 +1716,7 @@ function ld_update_leader_group_access( $user_id = 0, $group_id = 0, $remove = f
  *
  * @return array An array of user IDs.
  */
-function get_course_groups_users_access( $course_id = 0 ) {
+function learndash_get_course_groups_users_access( $course_id = 0 ) {
 	$user_ids = array();
 
 	$course_id = absint( $course_id );
@@ -2589,8 +2532,39 @@ function learndash_get_group_leader_manage_users() {
  * @since 3.2.3
  */
 function learndash_group_leader_has_cap_filter( $allcaps, $cap, $args, $user ) {
+
+	if ( in_array( 'edit_posts', $cap, true ) ) {
+		if ( in_array( learndash_get_group_leader_manage_courses(), array( 'basic', 'advanced' ), true ) ) {
+			/** This filter is documented in includes/ld-groups.php */
+			if ( apply_filters( 'learndash_group_leader_has_cap_filter', true, $cap, $args, $user ) ) {
+				if ( ! isset( $args[2] ) ) {
+					$post_id = get_the_id();
+					if ( $post_id ) {
+						if ( ( in_array( get_post_type( $post_id ), learndash_get_post_type_slug( array( 'course', 'lesson', 'topic', 'quiz', 'group' ) ), true ) ) ) {
+							$args[2] = $post_id;
+						}
+					}
+				}
+
+				if ( ( isset( $args[2] ) ) && ( ! empty( $args[2] ) ) ) {
+					foreach ( $cap as $cap_slug ) {
+						$allcaps[ $cap_slug ] = true;
+					}
+				} elseif ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+					// Total KLUDGE. When editing in Gutenberg there is a call to /wp/v2/blocks with 'edit' context.
+					$route = untrailingslashit( $GLOBALS['wp']->query_vars['rest_route'] );
+					if ( '/wp/v2/blocks' === $route ) {
+						foreach ( $cap as $cap_slug ) {
+							$allcaps[ $cap_slug ] = true;
+						}
+					}
+				}
+			}
+		}
+	}
+
 	// Check if Group Leader can edit Groups they are Leader of.
-	if ( ( ( in_array( 'edit_others_groups', $cap, true ) ) ) && ( isset( $allcaps['edit_others_groups'] ) ) && ( true !== $allcaps['edit_others_groups'] ) ) {
+	elseif ( ( ( in_array( 'edit_others_groups', $cap, true ) ) ) && ( isset( $allcaps['edit_others_groups'] ) ) && ( true !== $allcaps['edit_others_groups'] ) ) {
 		if ( 'basic' === learndash_get_group_leader_manage_groups() ) {
 
 			/**
@@ -2706,3 +2680,58 @@ add_action(
 	10
 );
 
+/**
+ * Check if the Group Leader AND User and Course have common Groups.
+ *
+ * @since 3.4.0
+ *
+ * @param int $gl_user_id Group Leader User ID
+ * @param int $user_id    User ID
+ * @param int $course_id  Course ID
+ *
+ * @return bool true if a common group intersect is determined.
+ */
+function learndash_check_group_leader_course_user_intersect( $gl_user_id = 0, $user_id = 0, $course_id = 0 ) {
+
+	if ( ( empty( $gl_user_id ) ) || ( empty( $user_id ) ) || ( empty( $course_id ) ) ) {
+		return false;
+	}
+
+	if ( ! learndash_is_group_leader_user( $gl_user_id ) ) {
+		return false;
+	}
+
+	$common_group_ids = array();
+	// And that the Course is associated with some Groups.
+	$course_group_ids = learndash_get_course_groups( $course_id );
+	$course_group_ids = array_map( 'absint', $course_group_ids );
+	if ( ! empty( $course_group_ids ) ) {
+		/**
+		 * If the Group Leader can manage all Users or all Groups then return. Note
+		 * we are performing this check AFTER we check if the Course is part of a
+		 * Group. This is on purpose.
+		 */
+		if ( ( 'advanced' === learndash_get_group_leader_manage_users() ) || ( 'advanced' === learndash_get_group_leader_manage_groups() ) ) {
+			return true;
+		}
+
+		// Now check the Group Leader managed Groups...
+		$leader_group_ids = learndash_get_administrators_group_ids( $gl_user_id );
+		$leader_group_ids = array_map( 'absint', $leader_group_ids );
+		if ( ! empty( $leader_group_ids ) ) {
+			// ...and the user (post author) Groups...
+			$author_group_ids = learndash_get_users_group_ids( $user_id );
+			$author_group_ids = array_map( 'absint', $author_group_ids );
+
+			// ...and the course groups have an intersect.
+			$common_group_ids = array_intersect( $leader_group_ids, $course_group_ids, $author_group_ids );
+			$common_group_ids = array_map( 'absint', $common_group_ids );
+		}
+	}
+
+	if ( ! empty( $common_group_ids ) ) {
+		return true;
+	}
+
+	return false;
+}

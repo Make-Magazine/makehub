@@ -30,3 +30,7 @@
 .unlicensed-theme .redux-container * {
     pointer-events: none;
 }
+
+[id^=buddyboss_theme_options-] .ui-icon {
+    display: none;
+}

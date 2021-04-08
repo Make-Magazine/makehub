@@ -13,6 +13,10 @@
  *
  * @package LearnDash\Quiz
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 ?>
 <div class="wpProQuiz_checkPage" style="display: none;">
 	<h4 class="wpProQuiz_header">
@@ -39,10 +43,11 @@
 					'context'      => 'quiz_checkbox_questions_complete_message',
 					'message'      => '<p>' .
 						sprintf(
-							// translators: placeholders: quiz count completed, quiz count total.
-							esc_html_x( '%1$s of %2$s questions completed', 'placeholders: quiz count completed, quiz count total', 'learndash' ),
+							// translators: placeholders: quiz count completed, quiz count total, questions.
+							esc_html_x( '%1$s of %2$s %3$s completed', 'placeholders: quiz count completed, quiz count total, questions', 'learndash' ),
 							'<span>0</span>',
-							$question_count
+							$question_count,
+							learndash_get_custom_label( 'questions' )
 						) . '</p>',
 					'placeholders' => array( '0', $question_count ),
 				)

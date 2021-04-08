@@ -47,13 +47,15 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->setting_option_key = 'server_settings';
 
 			// This is the HTML form field prefix used.
-			//$this->setting_field_prefix = 'learndash_settings_paypal';
+			// $this->setting_field_prefix = 'learndash_settings_paypal';
 
 			// Used within the Settings API to uniquely identify this section.
 			$this->settings_section_key = 'settings_support_server_settings';
 
 			// Section label/header.
 			$this->settings_section_label = esc_html__( 'Server Settings', 'learndash' );
+
+			$this->load_options = false;
 
 			add_filter( 'learndash_support_sections_init', array( $this, 'learndash_support_sections_init' ) );
 			add_action( 'learndash_section_fields_before', array( $this, 'show_support_section' ), 30, 2 );
@@ -67,7 +69,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 
 			/************************************************************************************************
 			 * Server Settings.
-			 ************************************************************************************************/
+			 */
 			if ( ! isset( $support_sections[ $this->setting_option_key ] ) ) {
 				$this->settings_set = array();
 
@@ -106,7 +108,7 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 				$this->settings_set['settings']['phpversion']['value_html'] = '<span style="color: ' . $color . '">' . $php_version . '</span>';
 				if ( -1 == $version_compare ) {
 					$this->settings_set['settings']['phpversion']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
-					$this->settings_set['settings']['phpversion']['value'] .= ' - (X)';
+					$this->settings_set['settings']['phpversion']['value']      .= ' - (X)';
 				}
 
 				if ( defined( 'PHP_OS' ) ) {
@@ -125,25 +127,47 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 					);
 				}
 
-				if ( true == $wpdb->is_mysql ) {
-					$mysql_version = $wpdb->db_version();
+				$db_server_info = LDLMS_DB::get_db_server_info();
 
-					$this->settings_set['settings']['mysql_version'] = array(
+				if ( true == $db_server_info['mysqldb_active'] ) {
+					$db_version = $db_server_info['db_version_found'];
+
+					$this->settings_set['settings']['db_version'] = array(
 						'label'      => 'MySQL version',
 						'label_html' => esc_html__( 'MySQL version', 'learndash' ),
-						'value'      => $mysql_version,
+						'value'      => $db_version,
 					);
 
-					$version_compare = version_compare( LEARNDASH_MIN_MYSQL_VERSION, $mysql_version, '>' );
+					$version_compare = version_compare( LEARNDASH_MIN_MYSQL_VERSION, $db_version, '>' );
 					$color           = 'green';
 					if ( -1 == $version_compare ) {
 						$color = 'red';
 					}
 
-					$this->settings_set['settings']['mysql_version']['value_html'] = '<span style="color: ' . $color . '">' . $mysql_version . '</span>';
+					$this->settings_set['settings']['db_version']['value_html'] = '<span style="color: ' . $color . '">' . $db_version . '</span>';
 					if ( -1 == $version_compare ) {
-						$this->settings_set['settings']['mysql_version']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
-						$this->settings_set['settings']['mysql_version']['value'] .= ' - (X)';
+						$this->settings_set['settings']['db_version']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
+						$this->settings_set['settings']['db_version']['value']      .= ' - (X)';
+					}
+				} elseif ( true == $db_server_info['mariadb_actve'] ) {
+					$db_version = $db_server_info['db_version_found'];
+
+					$this->settings_set['settings']['db_version'] = array(
+						'label'      => 'MariaDB version',
+						'label_html' => esc_html__( 'MariaDB version', 'learndash' ),
+						'value'      => $db_version,
+					);
+
+					$version_compare = version_compare( LEARNDASH_MIN_MARIA_VERSION, $db_version, '>' );
+					$color           = 'green';
+					if ( -1 == $version_compare ) {
+						$color = 'red';
+					}
+
+					$this->settings_set['settings']['db_version']['value_html'] = '<span style="color: ' . $color . '">' . $db_version . '</span>';
+					if ( -1 == $version_compare ) {
+						$this->settings_set['settings']['db_version']['value_html'] .= ' - <a href="https://www.learndash.com/support/docs/getting-started/requirements/" target="_blank">' . esc_html__( 'LearnDash Minimum Requirements', 'learndash' ) . '</a>';
+						$this->settings_set['settings']['db_version']['value']      .= ' - (X)';
 					}
 				}
 

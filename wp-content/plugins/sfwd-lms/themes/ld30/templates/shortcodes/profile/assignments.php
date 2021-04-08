@@ -36,23 +36,41 @@ $assignment_post_type_object = get_post_type_object( 'sfwd-assignment' ); ?>
 	<div class="ld-table-list-items">
 			<?php
 			if ( $assignments->have_posts() ) :
-				while ( $assignments->have_posts() ) :
-					$assignments->the_post();
+				/** This filter is documented in includes/shortcodes/ld_course_list.php */
+				if ( apply_filters( 'learndash_shortcode_course_list_legacy_loop', false, array() ) ) {
 
-					global $post;
+					while ( $assignments->have_posts() ) :
+						$assignments->the_post();
 
-					learndash_get_template_part(
-						'shortcodes/profile/assignment-row.php',
-						array(
-							'assignment_post_type_object' => get_post_type_object( 'sfwd-assignment' ),
-							'assignment'                  => $post,
-							'course_id'                   => $course_id,
-							'user_id'                     => $user_id,
-						),
-						true
-					);
+						global $post;
 
-				endwhile;
+						learndash_get_template_part(
+							'shortcodes/profile/assignment-row.php',
+							array(
+								'assignment_post_type_object' => get_post_type_object( 'sfwd-assignment' ),
+								'assignment' => $post,
+								'course_id'  => $course_id,
+								'user_id'    => $user_id,
+							),
+							true
+						);
+
+					endwhile;
+				} else {
+					foreach ( $assignments->posts as $learndash_assignment_post ) {
+						learndash_get_template_part(
+							'shortcodes/profile/assignment-row.php',
+							array(
+								'assignment_post_type_object' => get_post_type_object( 'sfwd-assignment' ),
+								'assignment' => $learndash_assignment_post,
+								'course_id'  => $course_id,
+								'user_id'    => $user_id,
+							),
+							true
+						);
+					}
+				}
+
 			else :
 				// In theory this will never display, but fallback just in case.
 				?>
@@ -67,6 +85,5 @@ $assignment_post_type_object = get_post_type_object( 'sfwd-assignment' ); ?>
 			?>
 	</div> <!--/.ld-table-list-items-->
 	<div class="ld-table-list-footer">
-		<?php //TODO @37designs check for pagination ?>
 	</div>
 </div> <!--/.ld-assignment-list-->

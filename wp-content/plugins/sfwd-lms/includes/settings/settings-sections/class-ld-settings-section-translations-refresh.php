@@ -32,6 +32,8 @@ if ( ( class_exists( 'LearnDash_Settings_Section' ) ) && ( ! class_exists( 'Lear
 			$this->metabox_context  = 'side';
 			$this->metabox_priority = 'high';
 
+			$this->load_options = false;
+
 			parent::__construct();
 
 			// We override the parent value set for $this->metabox_key because we want the div ID to match the details WordPress

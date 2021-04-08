@@ -6,6 +6,10 @@
  * @subpackage Settings
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'LearnDash_Settings_Metabox_Group_Users_Settings' ) ) ) {
 	/**
 	 * Class to create the settings section.
@@ -46,9 +50,15 @@ if ( ( class_exists( 'LearnDash_Settings_Metabox' ) ) && ( ! class_exists( 'Lear
 					<?php
 						$ld_binary_selector_group_users = new Learndash_Binary_Selector_Group_Users(
 							array(
-								'html_title'   => '',
-								'group_id'     => $group_id,
-								'selected_ids' => learndash_get_groups_user_ids( $group_id, true ),
+								'html_title'          => '',
+								'group_id'            => $group_id,
+								'selected_ids'        => learndash_get_groups_user_ids( $group_id, true ),
+								'selected_meta_query' => array(
+									array(
+										'key'     => 'learndash_group_users_' . intval( $group_id ),
+										'compare' => 'EXISTS',
+									),
+								),
 							)
 						);
 						$ld_binary_selector_group_users->show();

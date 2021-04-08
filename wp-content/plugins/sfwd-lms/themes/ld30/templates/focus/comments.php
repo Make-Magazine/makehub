@@ -18,7 +18,7 @@ if ( post_password_required() ) {
 	do_action( 'learndash-focus-content-comments-before', $course_id, $user_id );
 
 	$learndash_comment_count = wp_count_comments( get_the_id() );
-	if ( ( ! empty( $count ) ) && ( $count->approved > 0 ) && ( ! isset( $_GET['replytocom'] ) ) ) {
+	if ( ( ! empty( $learndash_comment_count ) ) && ( $learndash_comment_count->approved > 0 ) && ( ! isset( $_GET['replytocom'] ) ) ) {
 		?>
 		<div class="ld-focus-comments__heading">
 			<div class="ld-focus-comments__header">
@@ -80,7 +80,7 @@ if ( post_password_required() ) {
 	 * @param int $user_id   User ID.
 	 */
 	do_action( 'learndash-focus-content-comments-after', $course_id, $user_id );
-	if ( ! empty( $count ) && 0 === absint( $count->approved ) ) :
+	if ( ! empty( $learndash_comment_count ) && 0 === absint( $learndash_comment_count->approved ) ) :
 		?>
 	<div class="ld-expand-button ld-button-alternate" id="ld-comments-post-button">
 		<span class="ld-icon-arrow-down ld-icon"></span>
@@ -88,7 +88,7 @@ if ( post_password_required() ) {
 	</div>
 		<?php
 	endif;
-	$learndash_comment_form_state = ( ! empty( $count ) && 0 === absint( $count->approved ) ) ? ' ld-collapsed' : '';
+	$learndash_comment_form_state = ( ! empty( $learndash_comment_count ) && 0 === absint( $learndash_comment_count->approved ) ) ? ' ld-collapsed' : '';
 	?>
 	<div class="ld-focus-comments__form-container<?php echo esc_attr( $learndash_comment_form_state ); ?>" id="ld-comments-form">
 		<?php
