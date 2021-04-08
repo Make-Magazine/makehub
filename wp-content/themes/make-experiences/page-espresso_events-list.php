@@ -63,7 +63,7 @@ get_header();
 								   <h3 class="event-title">
 								     <a href="' . get_permalink() . '">' . get_the_title() . '</a>
 								   </h3>
-								   <div class="event-description">' . get_field('short_description') . '</div
+								   <div class="event-description">' . get_field('short_description') . '</div>
 								   <div class="event-prices">';
 										if($ticket_price != 'Tickets Not Available') {
 											$return .= '<a href="' . get_permalink() . '" class="btn universal-btn">Get Tickets</a>';
