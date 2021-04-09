@@ -24,6 +24,12 @@ for ($x = 1; $x < 7; $x++) {
 }
 $post_image_ids_string = implode(', ', $post_image_ids);
 
+$user_id = bp_displayed_user_id();
+//get the users email
+$user_info = get_userdata($user_id);
+$user_email = $user_info->user_email;
+$user_slug = $user_info->user_nicename;
+
 get_header();
 ?>
 
@@ -68,7 +74,7 @@ get_header();
 							<?php } 
 							// ATTENDEES Section
 							$userList = EEM_Attendee::instance()->get_all();
-							if (array_search(wp_get_current_user()->user_email, array_column($userList, 'purchaser_email')) !== false) {
+							if (array_search($user_email, array_column($userList, 'purchaser_email')) !== false) {
 								?>
 								<hr />
 								<h4 style="margin-top:0px;">Attendee Resources:</h4> 
@@ -79,19 +85,7 @@ get_header();
 										COMING SOON
 									<?php } ?>
 								</div>
-								<?php /* <div class="tribe-link-view-attendee">
-									<?php 
-										$view = Tribe__Tickets__Tickets_View::instance();
-										$link = $view->get_tickets_page_url( $event_id, $is_event_page );
-									?>
-									<a href="<?php echo esc_url( $link ); ?>">
-										<?php
-										// Translators: %s: The name(s) of the type(s) of ticket(s) the specified user (optional) has for the specified event.
-										echo sprintf( esc_html__( 'View your Ticket(s)', 'event-tickets' ), $view->get_description_rsvp_ticket( $event_id, wp_get_current_user()->user_email ) );
-										?>
-									</a>
-								</div> */ ?>
-
+								<a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
 							<?php } ?>
 							<div class="event-description event-content-item">
 								<h4>What You'll Do:</h4> 
@@ -190,9 +184,8 @@ get_header();
 								<h3>Details</h3>
 								<?php 
 								// Age ranges
-	    						if($additional_fields['Age']) {
-									$age_array = explode(", ", $additional_fields['Age']);   
-									foreach ($age_array as $age) { 
+	    						if(get_field('audience')) { 
+									foreach (get_field('audience') as $age) { 
 										echo "<span class='age-item'>" . $age . "</span>"; 
 									} 
 								}

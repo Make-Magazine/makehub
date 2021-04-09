@@ -181,6 +181,18 @@
 					margin-bottom: 30px;
 					min-width: 100%;
 					padding: 0px 15px;
+					.event-age {
+						display: flex;
+						flex-wrap: wrap;
+						margin-top: -5px;
+						span.age-item {
+							border: solid 1px #ccc;
+							border-radius: 15px;
+							padding: 3px 5px;
+							white-space: nowrap;
+							margin: 5px;
+						}
+					}
 				}
 			}
 		}
