@@ -55,7 +55,7 @@ function makerfaire_info_content() {
     $sql = 'SELECT  wp_mf_maker_to_entity.entity_id, wp_mf_maker_to_entity.maker_type, '
             . '     wp_mf_maker_to_entity.maker_role, wp_mf_entity.presentation_title, '
             . '     wp_mf_entity.status, wp_mf_entity.faire, wp_mf_entity.project_photo, wp_mf_entity.desc_short, '
-            . '     wp_mf_faire.faire_name, year(wp_mf_faire.start_dt) as faire_year '
+            . '     wp_mf_faire.faire_name, year(wp_mf_faire.start_dt) as faire_year, wp_mf_faire.faire_badge '
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
@@ -67,14 +67,15 @@ function makerfaire_info_content() {
     $entryData = array();
 
     foreach ($entries as $entry) {        
-        $faire_name = ($entry['faire']=='NMF16' ? 'National Maker Faire 2016': $entry['faire_name']);
+        $faire_name  = ($entry['faire']=='NMF16' ? 'National Maker Faire 2016': $entry['faire_name']);
+        $faire_badge = ($entry['faire']=='NMF16' ? 'https://makerfaire.com/wp-content/uploads/2016/03/national-maker-faire-badge.png': $entry['faire_badge']);
         $entryData[] = array( 'entry_id'      =>  $entry['entity_id'], 
                             'title'         =>  $entry['presentation_title'], 
                             'faire_url'     =>  'makerfaire.com',
                             'faire_name'    =>  $faire_name, 
                             'year'          =>  $entry['faire_year'],
                             'photo'         =>  $entry['project_photo'],
-                            'faire_logo'     =>  "https://makerfaire.com/wp-content/uploads/2017/03/MF15_Makey-Pedestal.jpg",
+                            'faire_logo'     => $faire_badge,
                             'desc_short'    =>  $entry['desc_short']);        
     }   
 
