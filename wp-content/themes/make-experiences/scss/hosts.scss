@@ -1,0 +1,14 @@
+.tax-espresso_people_type {
+	.page-title {
+		visibility: hidden;
+		span { 
+			visibility: visible;
+			margin-left: -150px;
+		}
+	}
+	article {
+		.post-inner-wrap {
+			display: flex;
+		}
+	}
+}
