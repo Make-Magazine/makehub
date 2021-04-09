@@ -203,9 +203,9 @@ function dashboard_info_content() {
 				   </div>';
 	}
 	
-	////////////////////////////////////////
-	//       Espresso Events Widget       //
-	////////////////////////////////////////
+	///////////////////////////////////////////////
+	//       Event Espresso Tickets Widget       //
+	///////////////////////////////////////////////
 	$protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
 	$urlparts = parse_url(home_url());
 	$domain = $urlparts['host'];
@@ -220,7 +220,33 @@ function dashboard_info_content() {
 		$return .=   '</ul>
 				   </div>';
 	} 
-
+	
+	///////////////////////////////////////////////
+	//       Event Espresso Tickets Widget       //
+	///////////////////////////////////////////////
+	
+    
+    $hosted_events = EEM_Event::instance()->get_all(
+		array(
+			//'limit' => 10,
+			'order_by' => array('EVT_visible_on' => 'DESC'),
+			array(
+				'Person.PER_email' => $user_email
+			)
+		)
+    );
+	if(!empty($hosted_events)){
+		$return .= '<div class="dashboard-box expando-box">
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makercampus-logo.jpg" /> Hosted Events</h4>
+					  <ul>';
+		foreach($hosted_events as $event) {
+			$return .= '<li><b>' . $event->name() . '</b> - <a href="'. $event->get_permalink() .'">View</a></li>';
+		}
+		$return .=      '<li><a class="btn universal-btn" href="/edit-submission/">Edit Submissions</a></li>
+					  </ul>
+				   </div>';
+	}
+	
 	$return .= "</div>"; // End .dashboard-wrapper
 	
 	
