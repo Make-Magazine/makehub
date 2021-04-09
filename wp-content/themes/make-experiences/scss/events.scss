@@ -181,10 +181,14 @@
 					margin-bottom: 30px;
 					min-width: 100%;
 					padding: 0px 15px;
-					.event-age {
+					.event-sidebar-field {
 						display: flex;
 						flex-wrap: wrap;
+						align-items: center;
 						margin-top: -5px;
+						margin-bottom: 10px;
+						min-height: 30px;
+						b { margin-right: 10px; }
 						span.age-item {
 							border: solid 1px #ccc;
 							border-radius: 15px;
@@ -192,7 +196,36 @@
 							white-space: nowrap;
 							margin: 5px;
 						}
+						ul { 
+							list-style: none;
+							margin-bottom: 0px;
+							margin-left: 0px;
+						}
+						.event-categories-wrap {
+							clear: both;
+							visibility: hidden;
+							display: flex;
+							flex-wrap: wrap;
+							justify-content: center;
+							a {
+								background-color: #fff;
+								color: #005e9a;
+								font-size: 14px;
+								border: 1px solid #005e9a;
+								border-radius: 20px;
+								padding: 0px 10px;
+								display: block;
+								margin: 5px 0;
+								visibility: visible;
+								line-height: 25px;
+								&:hover {
+									background-color: #005e9a;
+									color: #fff;
+								}
+							}
+						}
 					}
+					
 				}
 			}
 		}

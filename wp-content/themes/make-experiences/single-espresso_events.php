@@ -182,15 +182,72 @@ get_header();
 							</div>
 							<div class="event-sidebar-item">
 								<h3>Details</h3>
+								<div class="event-sidebar-field event-date">
+									<b>Dates:</b>
+									<ul>
+										<?php 
+											$event = EEM_Event::instance()->get_one_by_ID($post->ID);
+											$dates = $event->datetimes_in_chronological_order();
+											foreach($dates as $date) {
+												echo '<li>' . $date->start_date() . ' ' . $date->start_time() . '</li>';
+											}
+										?>
+									</ul>
+								</div>
+								<div class="event-sidebar-field event-cost">
+									<b>Cost: </b>
+									<?php 
+										$tickets = EEH_Event_View::event_tickets_available( $post->ID );
+										if ( is_array( $tickets ) && count($tickets) > 1 ) {
+											foreach($tickets as  $ticket => $element) {
+												$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
+											}
+										}
+										sort($tickets);
+										$ticket_price = 'Tickets Not Available';
+										if ( is_array( $tickets ) && count($tickets) > 1 ) {
+											foreach($tickets as $ticket => $element) {
+												reset($tickets);
+												if ($ticket === key($tickets))
+													$ticket_price = $tickets[$ticket];
+
+												end($tickets);
+												if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
+													$ticket_price .= "-" . $tickets[$ticket];
+											}
+										} else if (count($tickets) > 0) {
+											$ticket_price = $tickets[0];
+										}
+										echo '<span class="price-item">' . $ticket_price . '</span>';
+									?>
+								</div>
 								<?php 
 								// Age ranges
-	    						if(get_field('audience')) { 
-									foreach (get_field('audience') as $age) { 
-										echo "<span class='age-item'>" . $age . "</span>"; 
-									} 
-								}
+	    						if(get_field('audience')) { ?>
+									<div class="event-sidebar-field event-age">
+										<b>Age Range:</b>
+										<?php foreach (get_field('audience') as $age) { ?>
+											<span class='age-item'><?php echo $age; ?></span>
+										<?php } ?>
+									</div>
+								<?php } 
+								$categories = get_the_terms($post->ID, 'espresso_event_categories');
+								if($categories) { ?>
+									<div class="event-sidebar-field event-categories">
+										<b>Event Categories:</b>
+										<div class="event-categories-wrap">
+											<?php foreach ($categories as $category) { ?>
+												<a href="/event-category/<?php echo $category->slug; ?>">
+													<?php echo $category->name; ?>
+												</a>
+											<?php } ?>
+										</div>
+									</div>
+								<?php } 
 								?>
+								
 								Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+								<br /><br />
 							</div>
 							<?php 
 							if( $relevents && is_singular( array( 'espresso_events') ) ){ ?>
