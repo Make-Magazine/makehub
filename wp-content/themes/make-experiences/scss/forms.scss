@@ -194,6 +194,7 @@
 			div[id^=preview_input] {
 				position: relative;
 				display: flex;
+				flex-direction: column;
 				justify-content: center;
 				.preview_img-wrapper {
 					height: 250px;
@@ -201,6 +202,7 @@
 					background-size: cover;
 					background-position: center;
 					background-repeat: no-repeat;
+					margin: 0 auto;
 				}
 			}
 			&~ .preview_image{ //override all but the first

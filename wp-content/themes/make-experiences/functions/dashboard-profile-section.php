@@ -68,13 +68,14 @@ function dashboard_info_content() {
 							<p>Looks like you haven\'t place any orders yet...</p><br />
 							<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
 						</li>';
-		}
-		foreach($orderJson['orders'] as $order) {
-			$return .= '<li><p><b><a href="' . $order['order_status_url'] . '">Order #' . $order['id'] . '</a></b></p>';
-			foreach($order['line_items'] as $line_item) {
-				$return .= '<p>' . $line_item['name'] . ' - $' . $line_item['price'] . '</p>';
+		} else {
+			foreach($orderJson['orders'] as $order) {
+				$return .= '<li><p><b><a href="' . $order['order_status_url'] . '">Order #' . $order['id'] . '</a></b></p>';
+				foreach($order['line_items'] as $line_item) {
+					$return .= '<p>' . $line_item['name'] . ' - $' . $line_item['price'] . '</p>';
+				}
+				$return .= '</li>';
 			}
-			$return .= '</li>';
 		}
 		$return .=   '</ul>
 				   </div>';
