@@ -184,8 +184,7 @@ get_header();
 								<h3>Details</h3>
 								<?php 
 								// Age ranges
-	    						if(get_field('audience')) {
-									error_log(print_r(get_field('audience'), TRUE)); 
+	    						if(get_field('audience')) { 
 									foreach (get_field('audience') as $age) { 
 										echo "<span class='age-item'>" . $age . "</span>"; 
 									} 
