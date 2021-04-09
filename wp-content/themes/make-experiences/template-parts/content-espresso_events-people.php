@@ -39,7 +39,13 @@ if ( $people ) :
 								<div class="eea-people-addon-feature-image" ><?php echo $feature_image; ?></div>
 							<?php endif; ?>
 							<a class="eea-people-addon-link-to-person" href="<?php echo get_permalink( $person->ID() ); ?>" title="<?php printf( __('Click here to view more info about %s', 'event_espresso' ), $person->full_name() ); ?>"><span class="eea-people-addon-person-full-name"><?php echo $person->full_name(); ?></span></a><br>
-							<span class="eea-people-addon-excerpt"><?php echo $person->get('PER_bio'); ?></span>
+							<span class="eea-people-addon-excerpt">
+								<?php 
+									$content = get_field('facilitator_info');
+									$postwithbreaks = wpautop( $content, true );
+									echo $postwithbreaks;
+								?>
+							</span>
 							<?php 
 								$social_links = get_field('social_links', $person->ID());
 								if($social_links) { ?>
