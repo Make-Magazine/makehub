@@ -41,100 +41,8 @@ function create_event($entry, $form) {
     $qgroups = EEM_Event_Question_Group::instance()->get_one_by_ID(3);
     $event->_add_relation_to($qgroups, 'Event_Question_Group'); //link the question group
     
-    /* Event Date/Time and Tickets
-     *      Ticket and schedule information is set in a nested form
-     *      Need to get nested form ID and then loop through the nested form information 
-     */
-    $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
-
-    //pull nested form to get submitted schedule/ticket
-    if (isset($parameter_array['nested-form'])) {
-        $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : 10);
-        $nstForm = GFAPI::get_form($nstFormID);
-
-        //get the list of entry id's for the nested form
-        $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
-        $nstEntryArr = explode(",", $nstEntryIDs);
-        $schedArray = array();
-        foreach ($nstEntryArr as $nstEntryID) {
-            $nst_entry = GFAPI::get_entry($nstEntryID);
-            $nest_parameter_arr = find_field_by_parameter($nstForm); //find all fields with paramater names set in nested form
-            //Ticket Information        
-            $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
-            $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
-
-            $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
-            $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
-            $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
-            $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
-            $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
-            
-            //create the ticket instance
-            $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
-                        'TKT_description' => $ticketDesc,
-                        'TKT_price' => $ticketPrice,
-                        'TKT_min' => $ticketMin,
-                        'TKT_max' => $ticketMax,
-                        'TKT_qty' => $ticketMax, //"Quantity of this ticket that is available"
-                        'TKT_required' => true));
-            $tkt->save();
-
-            //create Price object
-            $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
-            $price->save();
-            $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-            //Schedule Info
-            $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
-            $altSchedSer  = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
-
-            //TBD - Note we need to do something more secure here to avoid code injection
-            $prefSched = unserialize($prefSchedSer);
-
-            //create tickets
-            $preferred_schedule = array();
-            foreach ($prefSched as $sched) {
-                //Start Date
-                $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);                
-                $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
-
-                //End Date
-                $date = date_create($sched['Date'] . ' ' . $sched['End Time']);
-                $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
-
-                //create the date/time instance
-                $d = EE_Datetime::new_instance(
-                                array('EVT_ID' => $eventID,
-                                    'DTT_name' => $schedDesc,
-                                    'DTT_EVT_start' => $start_date, 'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
-
-                $d->save();
-                $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
-                
-                //set the preferred schedule for the ACF
-                $preferred_schedule[] = array('date'=> $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
-            }
-            //set alternate schedule
-            $alternate_schedule = array();
-            $altSched = unserialize($altSchedSer);
-            
-            foreach ($altSched as $sched) {
-                //set the preferred schedule for the ACF
-                $alternate_schedule[] = array('date'=> $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
-            }
-                        
-            $schedArray[] = array('ticket_name'        => $ticketName,                                                                
-                                  'ticket_price'       => $ticketPrice,
-                                  'ticket_description' => $ticketDesc,
-                                  'min_num_tickets'    => $ticketMin,
-                                  'max_num_tickets'    => $ticketMax,
-                                  'schedule_description'  => $schedDesc,
-                                  'preferred_schedule' => $preferred_schedule,
-                                  'alternate_schedule' => $alternate_schedule );
-        }
-                
-        //set ACF schedule and Tickets info
-        update_sched_ticket_acf($schedArray, $eventID);        
-    }
+    //set ticket schedue
+    setSchedTicket($parameter_array, $entry, $eventID);
 
     $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
     $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
@@ -178,20 +86,4 @@ function create_event($entry, $form) {
     //set the post id
     global $wpdb;
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
-}
-
-/*  This function performs the internal rest requests to Event Espresso */
-function int_rest_req($rest_endpoint, $body_params, $type = 'POST') {
-    $request = new WP_REST_Request($type, $rest_endpoint);
-    $request->set_body_params($body_params);
-
-    $response = rest_do_request($request);
-    $server = rest_get_server();
-    $data = $server->response_to_data($response, false);
-
-    if ($response->is_error()) {
-        echo 'Error in call to WPI Rest API endpoint (' . $rest_endpoint . ')<br/>';
-        var_dump($data);
-    }
-    return $data;
 }
