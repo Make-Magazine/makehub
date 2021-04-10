@@ -10,7 +10,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
     $entry = GFAPI::get_entry($entry_id);
     $event_id = $entry["post_id"];
     $event_status = get_post_status($event_id);
-    
+
     //if the event is not published,  update event name, description, short description, ticket/schedule information
     if ($event_status != 'publish') {
         //find all fields set with a parameter name 
@@ -34,7 +34,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
         //EE_Datetime
         //setSchedTicket($parameter_array, $entry, $eventID);
     }
-        
+
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
     update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data        
 }
@@ -42,18 +42,20 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
 // trigger an email to when an entry is updated via gravity view
 //add_action('gform_after_update_entry', 'send_update_entry_notification', 999, 3);
 function send_update_entry_notification($form, $entry_id, $orig_entry = array()) {
-    //TBD only do this if the user updating is not an admin user
-    //get updated entry
-    $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
+    //We do not want to trigger this email if the edit is being done by an admin
+    if (!current_user_can('administrator')) {
+        //get updated entry
+        $updatedEntry = GFAPI::get_entry(esc_attr($entry_id));
 
-    //check for updates and trigger maker update notification    
-    $notifications_to_send = GFCommon::get_notifications_to_send('maker_updated_exhibit', $form, $updatedEntry);
-    foreach ($notifications_to_send as $notification) {
-        if ($notification['isActive']) {
-            $text = $notification['message'];
-            $notification['message'] = gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form);
+        //check for updates and trigger maker update notification    
+        $notifications_to_send = GFCommon::get_notifications_to_send('maker_updated_exhibit', $form, $updatedEntry);
+        foreach ($notifications_to_send as $notification) {
+            if ($notification['isActive']) {
+                $text = $notification['message'];
+                $notification['message'] = gf_entry_changed_fields($text, $entry_id, $orig_entry, $updatedEntry, $form);
 
-            GFCommon::send_notification($notification, $form, $updatedEntry);
+                GFCommon::send_notification($notification, $form, $updatedEntry);
+            }
         }
     }
 }

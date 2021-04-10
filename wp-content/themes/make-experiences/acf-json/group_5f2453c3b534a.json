@@ -294,6 +294,25 @@
             ]
         },
         {
+            "key": "field_60721e4bc3623",
+            "label": "Your Expertise to teach on this subject matter",
+            "name": "program_expertise",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
+        },
+        {
             "key": "field_5f2478422db7f",
             "label": "Host Bio",
             "name": "about",
@@ -1100,5 +1119,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1617829623
+    "modified": 1618091667
 }
