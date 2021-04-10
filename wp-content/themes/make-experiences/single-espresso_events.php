@@ -174,7 +174,7 @@ get_header();
                         if (get_field('program_expertise')) {
                             ?>
                             <div class="event-materials event-content-item">
-                                <h4>Hosts experience:</h4> 
+                                <h4>About your Host(s):</h4> 
                                 <div class="materials-list">
                                     <?php echo get_field('program_expertise'); ?>
                                 </div>
