@@ -86,4 +86,30 @@ function create_event($entry, $form) {
     //set the post id
     global $wpdb;
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
+	
+	// now, give the user a basic membership level, if they don't have one already
+	$user_meta = get_user_meta($userID);
+	$user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
+	$time_data = ihc_get_start_expire_date_for_user_level($userID, $user_level);
+	error_log("Expire time: " . strtotime($time_data['expire_time']));
+	error_log("Time: " . time());
+	if( empty($user_meta['ihc_user_levels']) || time() > strtotime($time_data['expire_time']) ){
+		update_user_meta($userID, $user_meta['ihc_user_levels'], 17);
+	} else {
+		error_log("user already has membership");
+	}
+	
+	// finally, let's create a corresponding group to the event
+	$groupArgs = array(
+		'group_id'     => 0,
+		'creator_id'   => $personID,
+		'name'         => $eventName,
+		'description'  => $shortDescription,
+		'slug'         => str_replace(' ', '-', strtolower($eventName)),
+		'status'       => 'private',
+		'enable_forum' => 0,
+		'date_created' => bp_core_current_time()
+	);
+	error_log(print_r($groupArgs, TRUE));
+	groups_create_group($groupArgs);
 }

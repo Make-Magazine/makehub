@@ -237,7 +237,7 @@
 				position: absolute;
 			}
 			&> div {
-				&:first-of-type:not(.validation_message) {
+				&:first-of-type {
 					text-align: center;
 					padding: 2em 0;
 					border: 3px dashed #ddd;
@@ -409,8 +409,8 @@
 		border-radius: 20px;
 		padding: 8px !important;
 	}
-	ul.gfield_radio li { 
-		input[type="radio"] + label {
+	ul.gfield_radio li, ul.gfield_checkbox li { 
+		input[type="radio"] + label, input[type="checkbox"] + label {
 			font-weight: 300;
 			line-height: inherit;
 		}
