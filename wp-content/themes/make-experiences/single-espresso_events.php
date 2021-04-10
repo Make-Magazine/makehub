@@ -6,7 +6,6 @@
  *
  * @package BuddyBoss_Theme
  */
-
 global $post;
 
 // Build an array of all images associated with the post to create a gallery out of
@@ -33,244 +32,257 @@ $user_slug = $user_info->user_nicename;
 get_header();
 ?>
 
-	<div id="primary" class="content-area">
-		<main id="main" class="site-main">
-			<h1 class="entry-title"><?php echo( get_the_title() . espresso_event_status_banner() ); ?></h1>
-			<?php if ( has_post_thumbnail() ) { ?>
-				<div class="gallery-wrapper">
-				<?php
-					echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="small" order="DESC" orderby="ID"]');
-					if (count($post_image_ids) != 1) {
-						?>
-						<a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
-					<?php } ?>
-				</div>
-			<?php } ?>
-			<div class="entry-content">
-				<div class="event-datetimes">
-					<?php echo espresso_list_of_event_dates(); ?>
-				</div>
-				<div class="event-content container-fluid">
-					<div class="row">
-						<div class="col-sm-12">
-						<?php
-							if(class_exists('ESSB_Plugin_Options')){ 
-								$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-								echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $event_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
-							}
-						?>
-						</div>
-					</div>
-					<div class="row">
-						<div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
-							<div class="event-cat">
-								<?php echo get_field('event_type'); ?>
-							</div>
-							<?php if (get_field('event_type') == "In-Person" && get_field('location')) { ?>
-								<div class="event-location event-content-item">
-									<h4>Location:</h4> 
-									<?php echo get_field('location') ?>
-								</div>
-							<?php } 
-							// ATTENDEES Section
-							$userList = EEM_Attendee::instance()->get_all();
-							if (array_search($user_email, array_column($userList, 'purchaser_email')) !== false) {
-								?>
-								<hr />
-								<h4 style="margin-top:0px;">Attendee Resources:</h4> 
-								<div class="single-conference-link tribe-events-content" style="border-bottom: 0px;">
-									<?php if (get_field('webinar_link')) { ?>
-										<a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
-									<?php } else { ?>
-										COMING SOON
-									<?php } ?>
-								</div>
-								<a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
-							<?php } ?>
-							<div class="event-description event-content-item">
-								<h4>What You'll Do:</h4> 
-								<?php the_content(); ?>
-							</div>
-							<?php if (get_field('basic_skills')) { ?>
-								<div class="event-skill-level event-content-item">
-									<h4>Skill Level:</h4> 
-									<?php echo get_field('basic_skills') ?>
-								</div>
-							<?php } ?>
-							<?php if (get_field('skills_taught')) { ?>
-								<div class="event-skills-taught event-content-item">
-									<h4>Skills you will learn:</h4> 
-									<?php echo get_field('skills_taught') ?>
-								</div>
-							<?php } ?>
-							<?php if (get_field('kit_required') == "Yes") { ?>
-								<div class="event-kit event-content-item">
-									<h4>A kit is required for this program:</h4> 
-									<?php
-									if (get_field('kit_price_included') == "yes") {
-										echo " and is included in the ticket price";
-										echo " and will be supplied by ";
-										if (get_field("kit_supplier") == "other") {
-											echo get_field("other_kit_supplier");
-										} else {
-											echo get_field("kit_supplier");
-										}
-									}
-									if (get_field('kit_price_included') == "no") {
-										echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
-									}
-									?>
-								</div>
-							<?php } ?>
-							<?php if (get_field('materials') ) { ?>
-								<div class="event-materials event-content-item">
-									<h4>What You'll Need:</h4> 
-									<div class="materials-list">
-										<?php echo get_field('materials'); ?>
-									</div>
-									<?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
-										<h4>Wishlist Links: </h4>
-										<ul>
-											<?php
-											foreach (get_field('wish_list_urls') as $wishlist) {
-												echo '<li><a href="' . $wishlist['wish_list'] . '" target="_blank">' . $wishlist['wish_list'] . '</a></li>';
-											}
-											?>
-										</ul>
-									<?php } ?>
-								</div>
-								<?php
-							}
-							if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
-								?>
-								<div class="event-promo-videos event-content-item">
-									<h4>Videos: </h4>
+<div id="primary" class="content-area">
+    <main id="main" class="site-main">
+        <h1 class="entry-title"><?php echo( get_the_title() . espresso_event_status_banner() ); ?></h1>
+        <?php if (has_post_thumbnail()) { ?>
+            <div class="gallery-wrapper">
+                <?php
+                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="small" order="DESC" orderby="ID"]');
+                if (count($post_image_ids) != 1) {
+                    ?>
+                    <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
+                <?php } ?>
+            </div>
+        <?php } ?>
+        <div class="entry-content">
+            <div class="event-datetimes">
+                <?php echo espresso_list_of_event_dates(); ?>
+            </div>
+            <div class="event-content container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <?php
+                        if (class_exists('ESSB_Plugin_Options')) {
+                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $event_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
+                        }
+                        ?>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
+                        <div class="event-cat">
+                            <?php echo get_field('event_type'); ?>
+                        </div>
+                        <?php if (get_field('event_type') == "In-Person" && get_field('location')) { ?>
+                            <div class="event-location event-content-item">
+                                <h4>Location:</h4> 
+                                <?php echo get_field('location') ?>
+                            </div>
+                        <?php
+                        }
+                        // ATTENDEES Section
+                        $userList = EEM_Attendee::instance()->get_all();
+                        if (array_search($user_email, array_column($userList, 'purchaser_email')) !== false) {
+                            ?>
+                            <hr />
+                            <h4 style="margin-top:0px;">Attendee Resources:</h4> 
+                            <div class="single-conference-link tribe-events-content" style="border-bottom: 0px;">
+                                <?php if (get_field('webinar_link')) { ?>
+                                    <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
+                                <?php } else { ?>
+                                    COMING SOON
+                                <?php } ?>
+                            </div>
+                            <a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
+                        <?php } ?>
+                        <div class="event-description event-content-item">
+                            <h4>What You'll Do:</h4> 
+                            <?php the_content(); ?>
+                        </div>
+                        <?php if (get_field('basic_skills')) { ?>
+                            <div class="event-skill-level event-content-item">
+                                <h4>Skill Level:</h4> 
+                                <?php echo get_field('basic_skills') ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (get_field('skills_taught')) { ?>
+                            <div class="event-skills-taught event-content-item">
+                                <h4>Skills you will learn:</h4> 
+                                <?php echo get_field('skills_taught') ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (get_field('kit_required') == "Yes") { ?>
+                            <div class="event-kit event-content-item">
+                                <h4>A kit is required for this program:</h4> 
+                                <?php
+                                if (get_field('kit_price_included') == "yes") {
+                                    echo " and is included in the ticket price";
+                                    echo " and will be supplied by ";
+                                    if (get_field("kit_supplier") == "other") {
+                                        echo get_field("other_kit_supplier");
+                                    } else {
+                                        echo get_field("kit_supplier");
+                                    }
+                                }
+                                if (get_field('kit_price_included') == "no") {
+                                    echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
+                                }
+                                ?>
+                            </div>
+                        <?php } ?>
+                        <?php if (get_field('materials')) { ?>
+                            <div class="event-materials event-content-item">
+                                <h4>What You'll Need:</h4> 
+                                <div class="materials-list">
+                                    <?php echo get_field('materials'); ?>
+                                </div>
+                                <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+                                    <h4>Wishlist Links: </h4>
+                                    <ul>
+                                        <?php
+                                        foreach (get_field('wish_list_urls') as $wishlist) {
+                                            echo '<li><a href="' . $wishlist['wish_list'] . '" target="_blank">' . $wishlist['wish_list'] . '</a></li>';
+                                        }
+                                        ?>
+                                    </ul>
+                                <?php } ?>
+                            </div>
+                            <?php
+                        }
+                        if (get_field('promo_videos') && get_field('promo_videos')[0]['video'] != '') {
+                            ?>
+                            <div class="event-promo-videos event-content-item">
+                                <h4>Videos: </h4>
 
-									<?php
-									foreach (get_field('promo_videos') as $video) {
-										$project_video = $video['video'];
-										if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0 || strpos($project_video, "youtu.be") > 0) {
-											$dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
-											//youtube has two type of url formats we need to look for and change
-											$videoID = parse_yturl($dispVideo);
-											if ($videoID != false) {
-												$dispVideo = 'https://www.youtube.com/embed/' . $videoID;
-											}
-											?>
-											<div class="entry-video">
-												<div class="embed-youtube">
-													<iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-												</div>
-											</div>
-											<?php
-										} else {
-											echo "<p><a href='" . $video['video'] . "' target='_blank'>" . $video['video'] . "</a></p>";
-										}
-									}
-									?>
+                                <?php
+                                foreach (get_field('promo_videos') as $video) {
+                                    $project_video = $video['video'];
+                                    if (strpos($project_video, "youtube") > 0 || strpos($project_video, "vimeo") > 0 || strpos($project_video, "youtu.be") > 0) {
+                                        $dispVideo = str_replace('//vimeo.com', '//player.vimeo.com/video', $project_video);
+                                        //youtube has two type of url formats we need to look for and change
+                                        $videoID = parse_yturl($dispVideo);
+                                        if ($videoID != false) {
+                                            $dispVideo = 'https://www.youtube.com/embed/' . $videoID;
+                                        }
+                                        ?>
+                                        <div class="entry-video">
+                                            <div class="embed-youtube">
+                                                <iframe class="lazyload" src="<?php echo $dispVideo ?>" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    } else {
+                                        echo "<p><a href='" . $video['video'] . "' target='_blank'>" . $video['video'] . "</a></p>";
+                                    }
+                                }
+                                ?>
 
-								</div>
-							<?php } 
-							get_template_part( 'template-parts/content-espresso_events-people', 'page' );
-							?>
-						</div>
+                            </div>
+                        <?php }
+                        if (get_field('program_expertise')) {
+                            ?>
+                            <div class="event-materials event-content-item">
+                                <h4>Hosts experience:</h4> 
+                                <div class="materials-list">
+                                    <?php echo get_field('program_expertise'); ?>
+                                </div>
+                            </div>
+                            <?php
+                        }
+                        get_template_part('template-parts/content-espresso_events-people', 'page');
+                        ?>
+                    </div>
 
-						<div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
-							<div class="event-sidebar-item">
-								<h3>Tickets</h3>
-								<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=".$post->ID."]");	?>
-							</div>
-							<div class="event-sidebar-item">
-								<h3>Details</h3>
-								<div class="event-sidebar-field event-date">
-									<b>Dates:</b>
-									<ul>
-										<?php 
-											$event = EEM_Event::instance()->get_one_by_ID($post->ID);
-											$dates = $event->datetimes_in_chronological_order();
-											foreach($dates as $date) {
-												echo '<li>' . $date->start_date() . ' ' . $date->start_time() . '</li>';
-											}
-										?>
-									</ul>
-								</div>
-								<div class="event-sidebar-field event-cost">
-									<b>Cost: </b>
-									<?php 
-										$tickets = EEH_Event_View::event_tickets_available( $post->ID );
-										if ( is_array( $tickets ) && count($tickets) > 1 ) {
-											foreach($tickets as  $ticket => $element) {
-												$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
-											}
-										}
-										sort($tickets);
-										$ticket_price = 'Tickets Not Available';
-										if ( is_array( $tickets ) && count($tickets) > 1 ) {
-											foreach($tickets as $ticket => $element) {
-												reset($tickets);
-												if ($ticket === key($tickets))
-													$ticket_price = $tickets[$ticket];
+                    <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
+                        <div class="event-sidebar-item">
+                            <h3>Tickets</h3>
+                            <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
+                        </div>
+                        <div class="event-sidebar-item">
+                            <h3>Details</h3>
+                            <div class="event-sidebar-field event-date">
+                                <b>Dates:</b>
+                                <ul>
+                                    <?php
+                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);
+                                    $dates = $event->datetimes_in_chronological_order();
+                                    foreach ($dates as $date) {
+                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . '</li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                            <div class="event-sidebar-field event-cost">
+                                <b>Cost: </b>
+                                <?php
+                                $tickets = EEH_Event_View::event_tickets_available($post->ID);
+                                if (is_array($tickets) && count($tickets) > 1) {
+                                    foreach ($tickets as $ticket => $element) {
+                                        $tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
+                                    }
+                                }
+                                sort($tickets);
+                                $ticket_price = 'Tickets Not Available';
+                                if (is_array($tickets) && count($tickets) > 1) {
+                                    foreach ($tickets as $ticket => $element) {
+                                        reset($tickets);
+                                        if ($ticket === key($tickets))
+                                            $ticket_price = $tickets[$ticket];
 
-												end($tickets);
-												if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
-													$ticket_price .= "-" . $tickets[$ticket];
-											}
-										} else if (count($tickets) > 0) {
-											$ticket_price = $tickets[0];
-										}
-										echo '<span class="price-item">' . $ticket_price . '</span>';
-									?>
-								</div>
-								<?php 
-								// Age ranges
-	    						if(get_field('audience')) { ?>
-									<div class="event-sidebar-field event-age">
-										<b>Age Range:</b>
-										<?php foreach (get_field('audience') as $age) { ?>
-											<span class='age-item'><?php echo $age; ?></span>
-										<?php } ?>
-									</div>
-								<?php } 
-								$categories = get_the_terms($post->ID, 'espresso_event_categories');
-								if($categories) { ?>
-									<div class="event-sidebar-field event-categories">
-										<b>Event Categories:</b>
-										<div class="event-categories-wrap">
-											<?php foreach ($categories as $category) { ?>
-												<a href="/event-category/<?php echo $category->slug; ?>">
-													<?php echo $category->name; ?>
-												</a>
-											<?php } ?>
-										</div>
-									</div>
-								<?php } 
-								?>
-								
-								Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
-								<br /><br />
-							</div>
-							<?php 
-							if( $relevents && is_singular( array( 'espresso_events') ) ){ ?>
-								<div class="related-events">
-								<h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
-								<ul>
-									<?php foreach( $relevents as $relevent ): ?>
-										<li>
-											<a href="<?php echo get_permalink( $relevent->ID ); ?>">
-												<?php echo get_the_title( $relevent->ID ); ?>
-											</a>
-										</li>
-									<?php endforeach; ?>
-								</ul>
-								</div>
-							<?php } ?>
-						</div>
-					</div>
-				</div>
-			</div>
-			Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
-		</main><!-- #main -->
-	</div><!-- #primary -->
+                                        end($tickets);
+                                        if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
+                                            $ticket_price .= "-" . $tickets[$ticket];
+                                    }
+                                } else if (count($tickets) > 0) {
+                                    $ticket_price = $tickets[0];
+                                }
+                                echo '<span class="price-item">' . $ticket_price . '</span>';
+                                ?>
+                            </div>
+                            <?php
+                            // Age ranges
+                            if (get_field('audience')) {
+                                ?>
+                                <div class="event-sidebar-field event-age">
+                                    <b>Age Range:</b>
+                                    <?php foreach (get_field('audience') as $age) { ?>
+                                        <span class='age-item'><?php echo $age; ?></span>
+                                <?php } ?>
+                                </div>
+                            <?php
+                            }
+                            $categories = get_the_terms($post->ID, 'espresso_event_categories');
+                            if ($categories) {
+                                ?>
+                                <div class="event-sidebar-field event-categories">
+                                    <b>Event Categories:</b>
+                                    <div class="event-categories-wrap">
+                                        <?php foreach ($categories as $category) { ?>
+                                            <a href="/event-category/<?php echo $category->slug; ?>">
+                                    <?php echo $category->name; ?>
+                                            </a>
+                                <?php } ?>
+                                    </div>
+                                </div>
+                             <?php }
+                            ?>
+
+                            Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+                            <br /><br />
+                        </div>
+                                <?php if ($relevents && is_singular(array('espresso_events'))) { ?>
+                            <div class="related-events">
+                                <h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
+                                <ul>
+                                            <?php foreach ($relevents as $relevent): ?>
+                                        <li>
+                                            <a href="<?php echo get_permalink($relevent->ID); ?>">
+                                        <?php echo get_the_title($relevent->ID); ?>
+                                            </a>
+                                        </li>
+                            <?php endforeach; ?>
+                                </ul>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+    </main><!-- #main -->
+</div><!-- #primary -->
 
 
 <?php
