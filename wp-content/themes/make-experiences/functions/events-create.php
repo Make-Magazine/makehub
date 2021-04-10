@@ -91,15 +91,17 @@ function create_event($entry, $form) {
 	$user_meta = get_user_meta($userID);
 	$user_level = (isset($user_meta['ihc_user_levels'][0])?$user_meta['ihc_user_levels'][0]:'');
 	$time_data = ihc_get_start_expire_date_for_user_level($userID, $user_level);
-	error_log("Expire time: " . strtotime($time_data['expire_time']));
-	error_log("Time: " . time());
 	if( empty($user_meta['ihc_user_levels']) || time() > strtotime($time_data['expire_time']) ){
-		update_user_meta($userID, $user_meta['ihc_user_levels'], 17);
+		// create basic membership starting now, and lasting for 10 years (default)
+		$now = time();
+		ihc_handle_levels_assign($userID, 17, $now); 
+		// membership is assigned, but inactive
+		// ihc_set_level_status($userID, 17, 1); this is doing nothing now
 	} else {
-		error_log("user already has membership");
+		error_log("user already has active membership");
 	}
 	
-	// finally, let's create a corresponding group to the event
+	// finally, let's create a corresponding buddyboss group for the event
 	$groupArgs = array(
 		'group_id'     => 0,
 		'creator_id'   => $personID,
@@ -110,6 +112,5 @@ function create_event($entry, $form) {
 		'enable_forum' => 0,
 		'date_created' => bp_core_current_time()
 	);
-	error_log(print_r($groupArgs, TRUE));
 	groups_create_group($groupArgs);
 }
