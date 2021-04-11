@@ -12,9 +12,6 @@ add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
-    if(is_admin()){
-        return $input;
-    }
     //build field name, must match List field syntax to be processed correctly
     $input_field_name = 'input_' . $field->id . '[]';
     $input_field_id = 'input_' . $form_id . '_' . $field->id;
@@ -27,9 +24,6 @@ function set_date_field_type($input, $input_info, $field, $text, $value, $form_i
 
 //reformat field as time type
 function set_time_field_type($input, $input_info, $field, $text, $value, $form_id) {
-    if(is_admin()){
-        return $input;
-    }
     $tabindex = GFCommon::get_tabindex();
     $input_field_name = 'input_' . $field->id . '[]';
     $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
