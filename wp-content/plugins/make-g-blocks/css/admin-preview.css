@@ -1,3 +1,12 @@
 .editor-block-list__layout .wp-block, .editor-post-title .wp-block{
 	 max-width: 100%;
 }
+.editor-block-list__layout .slideshow-carousel {
+	max-height: 200px;
+}
+.editor-block-list__layout .slideshow-carousel::after {
+	content: "Lazyload won't show images in the backend";
+	display:block;
+	margin: 80px 40%;
+	position: absolute;
+}
