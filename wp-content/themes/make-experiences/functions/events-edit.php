@@ -8,9 +8,10 @@ add_action('gform_after_update_entry', 'gravityview_event_update', 998, 3);
 function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
     //let's get the entry id and event id
     $entry = GFAPI::get_entry($entry_id);
+    
     $event_id = $entry["post_id"];
     $event_status = get_post_status($event_id);
-
+    
     //if the event is not published,  update event name, description, short description, ticket/schedule information
     if ($event_status != 'publish') {
         //find all fields set with a parameter name 
@@ -21,16 +22,17 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
         $longDescription = getFieldByParam('long-description', $parameter_array, $entry); //long-description
         $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
 
-        $event = EEM_Event::instance()->get_one_by_ID($event_id);
-        $event->set_name($eventName);
-        $event->set_short_description($shortDescription);
-        $event->set_description($longDescription);
-
-        $event->save();
+        $event_values = array(
+            'EVT_name'     => $eventName,
+            'EVT_desc'     => $longDescription,
+            'EVT_short_desc' => $shortDescription
+        );
+        // update event
+        $success = EEM_Event::instance()->update_by_ID($event_values, $event_id);
+        
 
         //delete all schedule/tickets and then re-add to get all changes
-
-        // need to delete related tickets and prices first.
+        $event = EEM_Event::instance()->get_one_by_ID($event_id);
         $datetimes = $event->get_many_related('Datetime');
         foreach ($datetimes as $datetime) {
             $event->_remove_relation_to($datetime, 'Datetime');
@@ -42,12 +44,12 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
             }
             $datetime->delete();
         }
-        
-        setSchedTicket($parameter_array, $entry, $eventID);
+        //now let's re-add the schedule
+        setSchedTicket($parameter_array, $entry, $event_id);
     }
 
-    event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
-    update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data        
+    event_post_meta($entry, $form, $event_id, $parameter_array); // update taxonomies, featured image, etc    
+    update_event_acf($entry, $form, $event_id, $parameter_array); // Set the ACF data        
 }
 
 // trigger an email to when an entry is updated via gravity view
