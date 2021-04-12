@@ -1,0 +1,114 @@
+.page-crew {
+  .crew-description {
+    .crew-offices {
+      margin-top: 40px;
+      .col-sm-6 {
+        @media screen and (min-width: 768px) {
+          padding-left: 35px;
+        }
+      }
+      .col-sm-6:first-child {
+        @media screen and (min-width: 768px) {
+          border-right: 1px solid #3FAFED;
+          padding-right: 35px;
+          padding-left: 15px;
+        }
+        @media screen and (max-width: 767px) {
+          padding-bottom: 30px;
+        }
+      }
+
+      h5 {
+        margin-top: 0;
+      }
+      .dl-horizontal {
+        margin-bottom: 0;
+        @media screen and (min-width: 768px) and (max-width: 991px) {
+          dt {
+            width: 120px;
+          }
+          dd {
+            margin-left: 135px;
+          }
+        }
+      }
+    }
+  }
+  .crew-members-cont {
+    display: flex;
+    flex-wrap: wrap;
+
+    .crew-member {
+      flex: 0 1 33.33%;
+      margin-top: 50px;
+      padding-left: 15px;
+      padding-right: 15px;
+      img {
+        width: 100%;
+        box-shadow: 1px 2px 8px #dfdfdf;
+        transition: all .2s ease-in-out;
+        &:hover {
+          opacity: .5;
+          transition: all .2s ease-in-out;
+        }
+      }
+      h3 {
+			font-size: 1.875em;
+         color: #f40b0b;
+         padding-left: 10px;
+         margin-top: 10px;
+         margin-bottom: 0px;
+		   text-align: left;
+      }
+      p {
+        padding-left: 10px;
+      }
+      a:hover {
+        text-decoration: none;
+      }
+      @media screen and (max-width: 767px) {
+        flex: 0 1 50%;
+        h3 {
+            font-size: calc(8px + 3vw);
+        }
+      }
+    }
+  }
+}
+
+.crew-modal {
+	.col-sm-4 {
+		padding-left: 0;
+		@media screen and (max-width: 767px) {
+			padding-right: 0;
+		}
+	}
+	.col-sm-8 {
+		padding-right: 0;
+		@media screen and (max-width: 767px) {
+			padding-left: 0;
+		}
+		@media screen and (max-width: 767px) {
+			padding-top: 15px;
+		}
+	}
+	img {
+		width: 100%;
+		box-shadow: 1px 3px 10px #dfdfdf;
+		margin-bottom: 15px;
+	}
+	.fa-square {
+		color: #3FAFED;
+		background-color: #3FAFED;
+		width: 100%;
+		height: 100%;
+	}
+	h3 {
+		color: #f40b0b;
+		text-align: left;
+		margin-top: 0;
+	}
+	p, .crew-about {
+		color: #4a4a4a;
+	}
+}

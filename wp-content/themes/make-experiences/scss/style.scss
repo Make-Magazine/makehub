@@ -1,6 +1,7 @@
 @import "global.scss";
 @import "forms.scss";
 @import "jquery-timepicker.scss";
+@import "crew-page.scss";
 @import "videos.scss";
 @import "buddyboss.scss";
 @import "ultimate-membership-pro.scss";
@@ -10,11 +11,11 @@
 @import "item-grid.scss";
 @import "widgets.scss";
 @import "product.scss";
-@import "hosts.scss";
 @import "html5-simple-date-input-polyfill.scss";
-// Three views of the events archive
+// Event stylesheets
 @import "espresso-grid.scss";
 @import "espresso-calendar.scss";
 @import "espresso-list.scss";
 @import "events.scss";
 @import "events-checkout.scss";
+@import "hosts.scss";
