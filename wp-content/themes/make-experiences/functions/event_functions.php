@@ -117,8 +117,10 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
     $socialLinks = unserialize($userSocial); //TBD need to find more secure way of doing this to avoid code injection
 
     $repeater = array();
-    foreach ($socialLinks as $value) {
-        $repeater[] = array("field_5f7e086a4a5a3" => $value);
+    if(is_array($socialLinks)){
+        foreach ($socialLinks as $value) {
+            $repeater[] = array("field_5f7e086a4a5a3" => $value);
+        }
     }
     // update ACF fields for the event organizer    
     update_field("social_links", $repeater, $personID);

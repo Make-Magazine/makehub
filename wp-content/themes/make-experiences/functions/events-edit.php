@@ -29,10 +29,21 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
         $event->save();
 
         //delete all schedule/tickets and then re-add to get all changes
-        //EE_Ticket - price associated to ticket, datetime related to ticket
-        //EE_Price 
-        //EE_Datetime
-        //setSchedTicket($parameter_array, $entry, $eventID);
+
+        // need to delete related tickets and prices first.
+        $datetimes = $event->get_many_related('Datetime');
+        foreach ($datetimes as $datetime) {
+            $event->_remove_relation_to($datetime, 'Datetime');
+            $tickets = $datetime->get_many_related('Ticket');
+            foreach ($tickets as $ticket) {
+                $ticket->_remove_relation_to($datetime, 'Datetime');
+                $ticket->delete_related_permanently('Price');
+                $ticket->delete_permanently();
+            }
+            $datetime->delete();
+        }
+        
+        setSchedTicket($parameter_array, $entry, $eventID);
     }
 
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
