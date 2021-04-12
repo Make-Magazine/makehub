@@ -30,6 +30,7 @@
 		.host-photo {
 			height: 150px;
 			width: 150px;
+			min-width: 150px;
 			float: left;
 			margin-right: 30px;
 			@media screen  and (max-width: 768px) {
