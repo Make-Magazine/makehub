@@ -334,10 +334,10 @@
 
 // since all the make panels are in sections, we use this to get a full width even though the blocks are normally in a container
 .container section {
-	width: 100vw;
-   position: relative;
-   margin-left: -50vw;
-   left: 50%;
+	width: 96vw;
+	position: relative;
+	margin-left: -48vw;
+	left: 50%;
 }
 
 // color background options for all panels
@@ -1956,35 +1956,35 @@
 		 line-height: 18px;
 	}
    .grid-item-title-block {
-      background-color: #151733;
-      // background-color: rgba(0,0,0,.6);
-      color: #dedede;
-      padding: 1em;
+		background-color: #151733;
+		// background-color: rgba(0,0,0,.6);
+		padding: 1em;
 		max-height: 90px;
 		overflow-y: visible;
-      h3, p {
-         margin: 0;
-         padding: 0;
-      }
-      h3 {
-         font-size: 30px;
+		h3, p {
+			margin: 0;
+			padding: 0;
+			color: #dedede;
+		}
+		h3 {
+			font-size: 30px;
 			font-weight: bold;
 			text-align: left;
-      }
+		}
 
-      @media screen and (max-width: 960px) {
-         position: absolute;
-         bottom: 0;
-         width: 100%;
+		@media screen and (max-width: 960px) {
+			position: absolute;
+			bottom: 0;
+			width: 100%;
 			display: none;
-         p { font-size: 16px; }
-      }
+			p { font-size: 16px; }
+		}
 
-      @media screen and (max-width: 768px) {
-         position: relative;
-         bottom: auto;
-         transform: translateX(100%);
-      }
+		@media screen and (max-width: 768px) {
+			position: relative;
+			bottom: auto;
+			transform: translateX(100%);
+		}
 
    }
    .grid-item-desc {
