@@ -14,8 +14,8 @@ get_header();
 			<header class="page-header">
 				<h1 class="page-title"><?php echo get_the_title(); ?></h1>
 				<div class="event-view-btns">
-					<a href="/makercampus" class="universal-btn">Grid</a>
-					<a href="/makercampus/event-calendar" class="universal-btn">Calendar</a>
+					<a href="/maker-campus" class="universal-btn">Grid</a>
+					<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
 				</div>
 			</header><!-- .page-header -->
         	
