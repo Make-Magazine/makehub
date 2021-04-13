@@ -15,7 +15,7 @@ function create_event($entry, $form) {
     $current_user = get_user_by('id', $entry['created_by']);
     $userID = $entry['created_by'];
     $userEmail = (string) $current_user->user_email;
-echo '$userEmail='.$userEmail.'<br/>';
+
     //find all fields set with a parameter name 
     $parameter_array = find_field_by_parameter($form);
     
