@@ -9,14 +9,13 @@ function disable_post_creation($is_disabled, $form, $entry) {
 
 // Create event with ticket
 add_action('gform_after_submission_7', 'create_event', 10, 2);
-
 function create_event($entry, $form) {
-    //get current user info 
-    global $current_user;
-    $current_user = wp_get_current_user();
-    $userID = $current_user->ID;
+    //get current user info     
+    //global $current_user;
+    $current_user = get_user_by('id', $entry['created_by']);
+    $userID = $entry['created_by'];
     $userEmail = (string) $current_user->user_email;
-
+echo '$userEmail='.$userEmail.'<br/>';
     //find all fields set with a parameter name 
     $parameter_array = find_field_by_parameter($form);
     
@@ -69,10 +68,13 @@ function create_event($entry, $form) {
 
     // set person image
     set_post_thumbnail(get_post($personID), attachment_url_to_postid($entry['118'])); //user image is in field 118 of the submitted entry
+
     //assign that user to this event
     $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67')); //67 is the people type of facilitator
     $per_post->save();
-
+    
+    //now lets look for additional hosts
+    
     // this will update the organizer social, website, and facilitator info
     update_organizer_data($entry, $form, $personID, $parameter_array);
 
@@ -98,7 +100,7 @@ function create_event($entry, $form) {
 		// membership is assigned, but inactive
 		// ihc_set_level_status($userID, 17, 1); this is doing nothing now
 	} else {
-		error_log("user already has active membership");
+		//error_log("user already has active membership");
 	}
 	
 	// finally, let's create a corresponding buddyboss group for the event

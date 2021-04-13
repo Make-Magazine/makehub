@@ -151,11 +151,12 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
 
     //pull nested form to get submitted schedule/ticket
     if (isset($parameter_array['nested-form'])) {
-        $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : 10);
+        $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : '10');        
         $nstForm = GFAPI::get_form($nstFormID);
 
         //get the list of entry id's for the nested form
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
+        
         $nstEntryArr = explode(",", $nstEntryIDs);
         $schedArray = array();
         foreach ($nstEntryArr as $nstEntryID) {
