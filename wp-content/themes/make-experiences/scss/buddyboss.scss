@@ -1,3 +1,10 @@
+/* make buddypress pages full width */
+.buddypress .site-content .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+}
+
 .has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #primary, body.buddypress.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #page #primary {
 	max-width: none;
 }
