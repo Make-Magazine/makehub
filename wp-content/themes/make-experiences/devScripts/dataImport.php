@@ -188,5 +188,6 @@ if (isset($_POST["submit"])) {
         
         $nstentry = gfapi::get_entry($nstentry_id);        
         create_event($entry, $form); 
-    }    
+    }
+    echo 'finished import';    
 }
