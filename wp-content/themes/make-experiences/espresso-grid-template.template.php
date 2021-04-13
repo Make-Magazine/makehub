@@ -10,6 +10,10 @@ if ( have_posts() ) :
 	// allow other stuff
 	do_action( 'AHEE__espresso_grid_template_template__before_loop' );
 	?>
+	<div class="event-view-btns">
+		<a href="/makercampus/event-list" class="universal-btn">List</a>
+		<a href="/makercampus/event-calendar" class="universal-btn">Calendar</a>
+	</div>
 	<div id="mainwrapper" class="espresso-grid-wrapper">
 		<div class="espresso-grid-revised">
 		<?php
