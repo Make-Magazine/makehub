@@ -238,7 +238,7 @@ function dashboard_info_content() {
     );
 	if(!empty($hosted_events)){
 		$return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makercampus-logo.jpg" /> Hosted Events</h4>
+					  <h4><img src="'.get_stylesheet_directory_uri().'/images/makercampus-logo.jpg" /> Events</h4>
 					  <ul>';
 		foreach($hosted_events as $event) {
 			$return .= '<li><b>' . $event->name() . '</b> - <a href="'. $event->get_permalink() .'">View</a></li>';
