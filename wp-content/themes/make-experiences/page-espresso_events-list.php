@@ -33,28 +33,7 @@ get_header();
 				 	$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
 					$startime = date('F j, Y @ g:i a', strtotime($date->start_time()));
 					$endime = date('g:i a', strtotime($date->end_time()));
-					// grab array of EE_Ticket objects for event
-					$tickets = EEH_Event_View::event_tickets_available( $post->ID );
-					if ( is_array( $tickets ) && count($tickets) > 1 ) {
-						foreach($tickets as  $ticket => $element) {
-							$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
-						}
-					}
-					sort($tickets);
-				  	$ticket_price = 'Tickets Not Available';
-					if ( is_array( $tickets ) && count($tickets) > 1 ) {
-						foreach($tickets as $ticket => $element) {
-							reset($tickets);
-   							if ($ticket === key($tickets))
-								$ticket_price = $tickets[$ticket];
-							
-							end($tickets);
-							if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
-								$ticket_price .= "-" . $tickets[$ticket];
-						}
-					} else if (count($tickets) > 0) {
-						$ticket_price = $tickets[0];
-					}
+
 					$return = '<article id="post-' . $post->ID . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
 							     <div class="event-truncated-date">' . $dateFormat . '</div>
 							     <div class="event-image">
@@ -72,7 +51,7 @@ get_header();
 										if($ticket_price != 'Tickets Not Available') {
 											$return .= '<a href="' . get_permalink() . '" class="btn universal-btn">Get Tickets</a>';
 										}
-										$return .= $ticket_price . 
+										$return .= event_ticket_prices($post) . 
 								  '</div>
 								 </div>
 							   </article>';

@@ -36,12 +36,11 @@ if (!isset($gravityview) || empty($gravityview->template)) {
         $user_website = get_field("website", $post_id);
         $user_social = get_field("social_links", $post_id);
         $userBio = get_field("facilitator_info", $post_id);
-        $person_img = get_the_post_thumbnail_url($post_id);
     }
     ?>
     <div class="host-wrapper">        
         <div class="host-photo">
-            <img width="624" height="662" src="<?php echo $person_img; ?>">	
+            <?php get_the_post_thumbnail_url($post_id); ?>
         </div>
 
         <div class="host-meta">
@@ -78,30 +77,6 @@ if (!isset($gravityview) || empty($gravityview->template)) {
     </div>    
 </div>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-  Launch demo modal
-</button>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-<h2>My Events</h2>
 <?php gravityview_before($gravityview); ?>
 <div class="<?php gv_container_class('gv-list-container gv-list-view gv-list-multiple-container', true, $gravityview); ?>">    
     <?php gravityview_header($gravityview); ?>

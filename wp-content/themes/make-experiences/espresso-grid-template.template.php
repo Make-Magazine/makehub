@@ -22,9 +22,6 @@ if ( have_posts() ) :
 			// Include the post TYPE-specific template for the content.
 			global $post;
 
-			//Debug
-			//d( $post );
-
 			//Create the event link
 			$external_url 		= $post->EE_Event->external_url();
 			$button_text		= !empty($external_url) ? $alt_button_text : $reg_button_text;
@@ -71,7 +68,10 @@ if ( have_posts() ) :
 						</h3>
 					</div>
 				</div>
-				<p class="event-link"><?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?></p>
+				<div class="event-purchase">
+					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
+					<p class="price"><?php echo event_ticket_prices($post); ?></p>
+				</div>
 			</div>
 
 			<?php
