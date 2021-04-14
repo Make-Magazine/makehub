@@ -120,3 +120,4 @@ function ee_remove_event_cpt_archive( $cpt_registry_array ) {
     }
     return $cpt_registry_array;
 }
+

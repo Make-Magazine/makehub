@@ -45,7 +45,7 @@ get_header();
 								$eventDetails = '<div class="event-time-desc">Schedules Vary</div>';
 							}
 						} 
-				    } 
+				   } 
 
 					$return = '<article id="post-' . $post->ID . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
 							     <div class="event-truncated-date">' . $dateFormat . '</div>
@@ -61,7 +61,7 @@ get_header();
 								   </h3>
 								   <div class="event-description">' . get_field('short_description') . '</div>';
 					if($eventDetails != '') { $return .= $eventDetails; }
-					$return =     '<div class="event-prices">';
+					$return .=     '<div class="event-prices">';
 										$return .= event_ticket_prices($post) . 
 								  '</div>
 								 </div>

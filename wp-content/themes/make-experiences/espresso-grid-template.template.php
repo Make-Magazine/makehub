@@ -45,6 +45,13 @@ if ( have_posts() ) :
 			$ticket_count = count($tickets);
 
 			$datetime = end( $datetimes );
+			
+			//error_log(print_r(strtotime($post->EE_Event->first_datetime()->start_date()), TRUE));
+			//error_log(print_r(time(), TRUE));
+			// if the first date is passed and it's a multiday event with one ticket, skip this item in the loop
+			if(strtotime($post->EE_Event->first_datetime()->start_date()) < time() && $ticket_count == 1 ) {
+				continue;
+			}
 			if ($datetime instanceof EE_Datetime) {
 				$startmonth = $datetime->start_date('M');
 				$startday = $datetime->start_date('j');
