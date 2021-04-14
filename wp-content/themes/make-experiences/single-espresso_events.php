@@ -7,6 +7,8 @@
  * @package BuddyBoss_Theme
  */
 global $post;
+$post_id = get_the_ID();
+$url = '';
 
 // Build an array of all images associated with the post to create a gallery out of
 $post_image_ids = array();
@@ -23,11 +25,12 @@ for ($x = 1; $x < 7; $x++) {
 }
 $post_image_ids_string = implode(', ', $post_image_ids);
 
-$user_id = bp_displayed_user_id();
+global $current_user;
+$current__user = wp_get_current_user();;
+
 //get the users email
-$user_info = get_userdata($user_id);
-$user_email = $user_info->user_email;
-$user_slug = $user_info->user_nicename;
+$user_email = $current__user->user_email;
+$user_slug = $current__user->user_nicename;
 
 get_header();
 ?>
@@ -58,7 +61,7 @@ get_header();
                         <?php
                         if (class_exists('ESSB_Plugin_Options')) {
                             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $event_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
+                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $post_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
                         }
                         ?>
                     </div>
@@ -97,13 +100,13 @@ get_header();
                         <?php if (get_field('basic_skills')) { ?>
                             <div class="event-skill-level event-content-item">
                                 <h4>Skill Level:</h4> 
-                                <?php echo get_field('basic_skills') ?>
+                                <?php echo get_field('basic_skills'); ?>
                             </div>
                         <?php } ?>
                         <?php if (get_field('skills_taught')) { ?>
                             <div class="event-skills-taught event-content-item">
                                 <h4>Skills you will learn:</h4> 
-                                <?php echo get_field('skills_taught') ?>
+                                <?php echo html_entity_decode(get_field('skills_taught')); ?>
                             </div>
                         <?php } ?>
                         <?php if (get_field('kit_required') == "Yes") { ?>
@@ -129,7 +132,7 @@ get_header();
                             <div class="event-materials event-content-item">
                                 <h4>What You'll Need:</h4> 
                                 <div class="materials-list">
-                                    <?php echo get_field('materials'); ?>
+                                    <?php echo html_entity_decode(get_field('materials')); ?>
                                 </div>
                                 <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
                                     <h4>Wishlist Links: </h4>
@@ -179,7 +182,7 @@ get_header();
                             <div class="event-materials event-content-item">
                                 <h4>About your Host(s):</h4> 
                                 <div class="materials-list">
-                                    <?php echo get_field('program_expertise'); ?>
+                                    <?php echo html_entity_decode(get_field('program_expertise')); ?>
                                 </div>
                             </div>
                             <?php
@@ -265,7 +268,9 @@ get_header();
                             Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
                             <br /><br />
                         </div>
-                                <?php if ($relevents && is_singular(array('espresso_events'))) { ?>
+                                <?php 
+                                $relevents = get_field('events');
+                                if ($relevents && is_singular(array('espresso_events'))) { ?>
                             <div class="related-events">
                                 <h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
                                 <ul>

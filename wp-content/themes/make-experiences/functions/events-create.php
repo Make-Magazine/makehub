@@ -102,7 +102,8 @@ function create_event($entry, $form) {
 	} else {
 		//error_log("user already has active membership");
 	}
-	
+        
+	/* This should be done when the event is approved not when the entry is submitted
 	// finally, let's create a corresponding buddyboss group for the event
 	$groupArgs = array(
 		'group_id'     => 0,
@@ -114,5 +115,5 @@ function create_event($entry, $form) {
 		'enable_forum' => 0,
 		'date_created' => bp_core_current_time()
 	);
-	groups_create_group($groupArgs);
+	groups_create_group($groupArgs);*/
 }
