@@ -113,6 +113,7 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
     $userSocial = getFieldByParam('user_social', $parameter_array, $entry); //this is a serialized field
     $userWebsite = getFieldByParam('user_website', $parameter_array, $entry);
     $facilitator_info = getFieldByParam('user-bio', $parameter_array, $entry);
+    $facilitator_info = strip_tags(htmlspecialchars_decode($facilitator_info));
 
     $socialLinks = unserialize($userSocial); //TBD need to find more secure way of doing this to avoid code injection
 
