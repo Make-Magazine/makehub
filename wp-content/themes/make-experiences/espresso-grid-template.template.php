@@ -50,8 +50,6 @@ if ( have_posts() ) :
 				$startday = $datetime->start_date('j');
 				$timeData = $datetime->start_date('Y-m-d');
 				$timerange = $datetime->time_range('g:i a');
-				//$tz = strtotime($datetime)->getTimezone()->getName()->format('T'); // how to get timezone, probably just use get_field eventually
-
 			?>
 
 			<div class="ee_grid_box_revised item">
@@ -67,7 +65,7 @@ if ( have_posts() ) :
 					</div>
 					<div class="event-details">
 						<div class="event-time">
-							<?php echo $timerange; ?>
+							<?php echo $timerange; ?> PST
 						</div>
 						<h3 class="event-title title">
 							<a href="<?php echo $registration_url; ?>">
@@ -76,15 +74,23 @@ if ( have_posts() ) :
 						</h3>
 					</div>
 				</div>
-				<?php if($date_count > 1){ 
-						if($ticket_count == 1) { ?>
-							<div class="event-time-desc">
-								<?php echo $date_count; ?> sessions starting on <?php echo $startmonth . " " . $startday; ?>
-							</div>
-				<?php 	} else { ?>
-							<div class="event-time-desc">Schedules Vary</div>
-				<?php 	}
-					  } ?>
+				<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
+						<div class="event-time-desc">
+							<?php echo get_field('custom_schedule_details', $post->ID); ?>
+						</div>
+				<?php } else {
+						  if($date_count > 1){ 
+							if($ticket_count == 1) { ?>
+								<div class="event-time-desc">
+									<?php 
+										echo $date_count; ?> sessions starting on <?php echo $startmonth . " " . $startday; 
+									?>
+								</div>
+					<?php 	} else { ?>
+								<div class="event-time-desc">Schedules Vary</div>
+					<?php 	}
+						  } 
+					   }  ?>
 				<div class="event-purchase">
 					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
 					<p class="price"><?php echo event_ticket_prices($post); ?></p>
