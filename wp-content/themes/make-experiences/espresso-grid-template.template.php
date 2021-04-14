@@ -36,17 +36,20 @@ if ( have_posts() ) :
 
 			$datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time( $post->ID, $show_expired, false, 1 );
 			$date_count = count(EEM_Datetime::instance()->get_all_event_dates( $post->ID ));
-			$ticket_count = count(EEH_Event_View::event_tickets_available( $post->ID ));
-			error_log($post->post_title . " " . $ticket_count);
+
+			$event = EEH_Event_View::get_event($post->ID);
+			$tickets = array();
+			if ($event instanceof EE_Event) {
+				$tickets = $event->tickets();
+			}		
+			$ticket_count = count($tickets);
 
 			$datetime = end( $datetimes );
 			if ($datetime instanceof EE_Datetime) {
 				$startmonth = $datetime->start_date('M');
-				$startday = $datetime->start_date('d');
+				$startday = $datetime->start_date('j');
 				$timeData = $datetime->start_date('Y-m-d');
 				$timerange = $datetime->time_range('g:i a');
-				//$tz = strtotime($datetime)->getTimezone()->getName()->format('T'); // how to get timezone, probably just use get_field eventually
-
 			?>
 
 			<div class="ee_grid_box_revised item">
@@ -62,24 +65,32 @@ if ( have_posts() ) :
 					</div>
 					<div class="event-details">
 						<div class="event-time">
-							<?php echo $timerange; ?>
+							<?php echo $timerange; ?> PST
 						</div>
 						<h3 class="event-title title">
 							<a href="<?php echo $registration_url; ?>">
 								<?php echo $post->post_title; ?>
 							</a>
 						</h3>
-						<?php if($date_count > 1){ 
-								if($ticket_count == 1) { ?>
-									<div class="event-time">
-										<?php echo count($date_count); ?> sessions starting on <?php echo $startmonth . " " . $startday; ?>
-									</div>
-						<?php 	} else { ?>
-									<div class="event-time">Schedules Vary</div>
-						<?php 	}
-							  } ?>
 					</div>
 				</div>
+				<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
+						<div class="event-time-desc">
+							<?php echo get_field('custom_schedule_details', $post->ID); ?>
+						</div>
+				<?php } else {
+						  if($date_count > 1){ 
+							if($ticket_count == 1) { ?>
+								<div class="event-time-desc">
+									<?php 
+										echo $date_count; ?> sessions starting on <?php echo $startmonth . " " . $startday; 
+									?>
+								</div>
+					<?php 	} else { ?>
+								<div class="event-time-desc">Schedules Vary</div>
+					<?php 	}
+						  } 
+					   }  ?>
 				<div class="event-purchase">
 					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
 					<p class="price"><?php echo event_ticket_prices($post); ?></p>

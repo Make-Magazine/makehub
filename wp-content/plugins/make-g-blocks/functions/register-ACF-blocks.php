@@ -37,7 +37,7 @@ function make_add_acf_blocks() {
     if (function_exists('acf_register_block')) {
 
         //Get tickets
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'buy_tickets_float',
             'title' => __('Get Tickets Floating Banner'),
             'render_callback' => 'call_ACF_block_panels',
