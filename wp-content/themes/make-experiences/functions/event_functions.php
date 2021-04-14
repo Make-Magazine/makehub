@@ -118,7 +118,7 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
     $socialLinks = unserialize($userSocial); //TBD need to find more secure way of doing this to avoid code injection
 
     $repeater = array();
-    if(is_array($socialLinks)){
+    if (is_array($socialLinks)) {
         foreach ($socialLinks as $value) {
             $repeater[] = array("field_5f7e086a4a5a3" => $value);
         }
@@ -152,18 +152,17 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
 
     //pull nested form to get submitted schedule/ticket
     if (isset($parameter_array['nested-form'])) {
-        $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : '10');        
+        $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : '10');
         $nstForm = GFAPI::get_form($nstFormID);
 
         //get the list of entry id's for the nested form
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
-        
+
         $nstEntryArr = explode(",", $nstEntryIDs);
         $schedArray = array();
         foreach ($nstEntryArr as $nstEntryID) {
             $nst_entry = GFAPI::get_entry($nstEntryID);
             $nest_parameter_arr = find_field_by_parameter($nstForm); //find all fields with paramater names set in nested form
-            
             //Ticket Information        
             $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
             $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
@@ -188,7 +187,6 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
             $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
             $price->save();
             $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-            
             //Schedule Info
             $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
             $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
@@ -209,14 +207,23 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
 
                 //create the date/time instance
                 $d = EE_Datetime::new_instance(
-                                array('EVT_ID' => $eventID, 'DTT_name' => $schedDesc, 'DTT_EVT_start' => $start_date, 
-                                      'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
+                                array('EVT_ID' => $eventID, 'DTT_name' => $schedDesc, 'DTT_EVT_start' => $start_date,
+                                    'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
 
                 $d->save();
                 $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
                 //set the preferred schedule for the ACF
                 $preferred_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+                                
+                //update the ticket end date with the start of the event
+                $event = EEM_Event::instance()->get_one_by_ID($eventID);
+                $date = $event->first_datetime();       
+                echo 'ticket end date should be '.$date->start_date().'<br/>';
+                $tkt->set('TKT_end_date', $date->start_date());
+                $tkt->save();
+                
             }
+
             //set alternate schedule
             $alternate_schedule = array();
             $altSched = unserialize($altSchedSer);
@@ -235,7 +242,7 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
                 'preferred_schedule' => $preferred_schedule,
                 'alternate_schedule' => $alternate_schedule);
         }
-
+                        
         //set ACF schedule and Tickets info
         update_sched_ticket_acf($schedArray, $eventID);
     }
