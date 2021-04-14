@@ -136,7 +136,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('columns', 'dynamic', 'panel'),
         ));
-		acf_register_block_type(array(
+		acf_register_block(array(
             'name' => 'home_page_image_carousel',
             'title' => __('Home Page Image Carousel'),
             'render_callback' => 'home_page_image_carousel',
@@ -205,7 +205,7 @@ function make_add_acf_blocks() {
             'keywords' => array('image', 'panel'),
         ));    
 		// News Block Panel
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'news_block_panel',
             'title' => __('News Block Panel'),
             'render_callback' => 'call_ACF_block_panels',
@@ -214,7 +214,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('makey', 'banner','panel'),
         ));            
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'post_feed',
             'title' => __('News / Post Feed'),
             'render_callback' => 'call_ACF_block_panels',
@@ -225,7 +225,7 @@ function make_add_acf_blocks() {
         )); 
 		
 		//Flag Banner Separator Panel
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'flag_banner_panel',
             'title' => __('Flag Banner Separator Panel'),
             'render_callback' => 'call_ACF_block_panels',
@@ -235,7 +235,7 @@ function make_add_acf_blocks() {
             'keywords' => array('flag', 'banner', 'separator','panel'),
         ));
 
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'sponsors_panel',
             'title' => __('Sponsors'),
             'render_callback' => 'call_ACF_block_panels',
@@ -244,7 +244,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('sponsors', 'panel'),
         ));        
-        acf_register_block_type(array(
+        acf_register_block(array(
             'name' => 'what_is_maker_faire',
             'title' => __('What is Maker Faire'),
             'render_callback' => 'call_ACF_block_panels',
@@ -253,7 +253,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('maker', 'faire', 'panel'),
         ));
-		acf_register_block_type(array(
+		acf_register_block(array(
             'name' => 'image_button',
             'title' => __('Image Button'),
             'render_callback' => 'call_ACF_block_panels',

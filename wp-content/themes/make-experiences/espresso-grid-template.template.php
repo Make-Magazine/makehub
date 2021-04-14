@@ -46,12 +46,12 @@ if ( have_posts() ) :
 
 			$datetime = end( $datetimes );
 			
-			//error_log(print_r(strtotime($post->EE_Event->first_datetime()->start_date()), TRUE));
-			//error_log(print_r(time(), TRUE));
-			// if the first date is passed and it's a multiday event with one ticket, skip this item in the loop
-			if(strtotime($post->EE_Event->first_datetime()->start_date()) < time() && $ticket_count == 1 ) {
+			// if the first date of event has passed and it's a multiday event with one ticket, skip this item in the loop
+			$firstExpiredDate = EEM_Datetime::instance()->get_oldest_datetime_for_event( $post->ID, true, false, 1 )->get_i18n_datetime('DTT_EVT_start');
+			if(strtotime($firstExpiredDate) < time() && $ticket_count == 1 ) {
 				continue;
 			}
+			
 			if ($datetime instanceof EE_Datetime) {
 				$startmonth = $datetime->start_date('M');
 				$startday = $datetime->start_date('j');
