@@ -15,6 +15,7 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
     //1 indicie = acf field name/event meta fields
     //2 indicie (optional) = acf field key or subfield key (for repeaters)
     //can't set parameter names on image fields, so we have touse the field ids
+	// TBD automaticallly map if acf field name exists?
     $field_mapping = array(
         array('140', 'image_1'),
         array('141', 'image_2'),
@@ -46,7 +47,8 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
         array('', 'public_email'),
         array('', 'attendee_communication_email'),
         array('', 'webinar_link'),
-        array('', 'program_expertise')
+        array('', 'program_expertise'),
+        array('', 'custom_schedule_details')
     );
 
     //update the acf fields with the submitted values from the form
