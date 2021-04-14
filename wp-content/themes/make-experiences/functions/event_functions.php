@@ -221,9 +221,9 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
                 $event = EEM_Event::instance()->get_one_by_ID($eventID);
                 $date = $event->first_datetime();       
                 echo 'ticket end date should be '.$date->start_date().'<br/>';
-                $tkt->set('TKT_end_date', $date->start_date());
+                $start_date = new DateTime($date->start_date() . 'T00:00:00');
+                $tkt->set('TKT_end_date', $start_date);
                 $tkt->save();
-                
             }
 
             //set alternate schedule
