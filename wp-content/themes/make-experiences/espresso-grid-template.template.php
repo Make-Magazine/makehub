@@ -35,6 +35,9 @@ if ( have_posts() ) :
 			$image = !empty($feature_image_url) ? $feature_image_url : $default_image;
 
 			$datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time( $post->ID, $show_expired, false, 1 );
+			$date_count = count(EEM_Datetime::instance()->get_all_event_dates( $post->ID ));
+			$ticket_count = count(EEH_Event_View::event_tickets_available( $post->ID ));
+			error_log($post->post_title . " " . $ticket_count);
 
 			$datetime = end( $datetimes );
 			if ($datetime instanceof EE_Datetime) {
@@ -66,6 +69,15 @@ if ( have_posts() ) :
 								<?php echo $post->post_title; ?>
 							</a>
 						</h3>
+						<?php if($date_count > 1){ 
+								if($ticket_count == 1) { ?>
+									<div class="event-time">
+										<?php echo count($date_count); ?> sessions starting on <?php echo $startmonth . " " . $startday; ?>
+									</div>
+						<?php 	} else { ?>
+									<div class="event-time">Schedules Vary</div>
+						<?php 	}
+							  } ?>
 					</div>
 				</div>
 				<div class="event-purchase">

@@ -99,3 +99,22 @@
 		color: #1987C7;;
 	}
 }
+
+.host-wrapper.front {
+	height: auto !important;
+}
+.host-wrapper.back.smaller {
+	max-height: 200px;
+	transition: height .5s;
+}
+.host-form-wrapper {
+	width: 100%;
+	form#facilitator-edit {
+		width: 100%;
+		input, label, textarea {
+			display:block;
+			width: 100%;
+		}
+		label { margin-top: 10px; }
+	}
+}

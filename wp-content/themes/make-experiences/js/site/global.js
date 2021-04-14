@@ -19,7 +19,14 @@ jQuery(document).ready(function($) {
 			$(this).attr("target", "_blank");
 		});
 	}
+	jQuery("#flip-card").flip({
+	  trigger: 'manual'
+	});
 }); 
+jQuery(".flip-toggle").click(function(){
+	jQuery("#flip-card .back").toggleClass('smaller');
+	jQuery("#flip-card").flip('toggle');
+})
 
 
 // should this be universal?
@@ -44,3 +51,4 @@ jQuery(".expando-box h4").click(function(){
 	jQuery(this).toggleClass( "open" ); 
 	jQuery(this).next().toggleClass( "open" ); 
 }); 
+
