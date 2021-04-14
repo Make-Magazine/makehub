@@ -10,6 +10,10 @@ if ( have_posts() ) :
 	// allow other stuff
 	do_action( 'AHEE__espresso_grid_template_template__before_loop' );
 	?>
+	<div class="event-view-btns">
+		<a href="/maker-campus/events-list" class="universal-btn">List</a>
+		<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
+	</div>
 	<div id="mainwrapper" class="espresso-grid-wrapper">
 		<div class="espresso-grid-revised">
 		<?php
@@ -17,9 +21,6 @@ if ( have_posts() ) :
 		while ( have_posts() ) : the_post();
 			// Include the post TYPE-specific template for the content.
 			global $post;
-
-			//Debug
-			//d( $post );
 
 			//Create the event link
 			$external_url 		= $post->EE_Event->external_url();
@@ -34,6 +35,9 @@ if ( have_posts() ) :
 			$image = !empty($feature_image_url) ? $feature_image_url : $default_image;
 
 			$datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time( $post->ID, $show_expired, false, 1 );
+			$date_count = count(EEM_Datetime::instance()->get_all_event_dates( $post->ID ));
+			$ticket_count = count(EEH_Event_View::event_tickets_available( $post->ID ));
+			error_log($post->post_title . " " . $ticket_count);
 
 			$datetime = end( $datetimes );
 			if ($datetime instanceof EE_Datetime) {
@@ -65,9 +69,21 @@ if ( have_posts() ) :
 								<?php echo $post->post_title; ?>
 							</a>
 						</h3>
+						<?php if($date_count > 1){ 
+								if($ticket_count == 1) { ?>
+									<div class="event-time">
+										<?php echo count($date_count); ?> sessions starting on <?php echo $startmonth . " " . $startday; ?>
+									</div>
+						<?php 	} else { ?>
+									<div class="event-time">Schedules Vary</div>
+						<?php 	}
+							  } ?>
 					</div>
 				</div>
-				<p class="event-link"><?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?></p>
+				<div class="event-purchase">
+					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
+					<p class="price"><?php echo event_ticket_prices($post); ?></p>
+				</div>
 			</div>
 
 			<?php

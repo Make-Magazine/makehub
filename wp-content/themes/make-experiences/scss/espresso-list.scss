@@ -30,3 +30,12 @@
 		}
 	}
 }
+
+.page-template-page-espresso_events-list {
+	@media screen and (max-width: 1060px) {
+		#primary, #secondary {
+			width: 100%;
+			min-width: 97%;
+		}
+	}
+}

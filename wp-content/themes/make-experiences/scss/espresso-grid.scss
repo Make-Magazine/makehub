@@ -1,14 +1,16 @@
 .content-area .espresso-grid-wrapper {
-	display: flex;
 	.espresso-grid-revised {
 		display: flex;
 		flex-wrap: wrap;
 		width: 85%;
-		.ee_grid_box_revised {
+		float: left;
+		.ee_grid_box_revised.item {
 			flex: 25%;
 			max-width: 25%;
-			margin-bottom: 48px;
-			padding: 0px 20px;
+			margin-bottom: 15px;
+			padding: 0px 10px;
+			display: flex;
+    		flex-direction: column;
 			@media screen and (max-width: 1200px) {
 				flex: 33%;
 				max-width: 33%;
@@ -27,6 +29,7 @@
 				margin-bottom: 15px;
 			}
 			.event-info {
+				display: flex;
 				.event-date {
 					float: left;
 					margin-right: 15px;
@@ -55,11 +58,19 @@
 					}
 				}
 			}
-			.event-link .btn { width: 100%; }
+			.event-purchase {
+				margin-top: auto;
+				.btn { width: 100%; }
+				.price {
+					text-align: center;
+					margin-top: 5px;
+				}
+			}
 		}
 	}
 	.events-grid-sidebar {
 		width: 14%;
+		float: right;
 		ul.products {
 			li.product { 
 				max-width: 100%;

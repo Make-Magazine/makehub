@@ -33,7 +33,10 @@ h1.entry-title {
 	font-weight: 400;
 	font-size: 32px;
 }
-.sticky-header #content.site-content { min-height: initial; }
+.sticky-header #content.site-content { 
+	min-height: initial; 
+	display: flex;
+}
 @media screen and (max-width: 767px) {
 	h1, .entry-title { font-size: 2.6em; } 
 }
@@ -55,18 +58,6 @@ figure {
 // overwrite the jquery styling
 .ui-state-hover a, .ui-state-hover a:hover, .ui-state-hover a:link, .ui-state-hover a:visited, .ui-state-focus a, .ui-state-focus a:hover, .ui-state-focus a:link, .ui-state-focus a:visited {
 	color: #333;
-}
-
-/* make header 100% of the page */
-#masthead .container {
-    width: 100% !important;
-}
-
-/* make pages full width */
-.site-content .container {
-    width: 100%;
-    max-width: none;
-    padding: 0;
 }
 
 .full-width-div {
@@ -193,6 +184,16 @@ button, input[type="submit"] {
 	}
 	tr:last-of-type td {
 		border-bottom: 0px;
+	}
+}
+
+#flip-card {
+	display: flex;
+	width: 100%;
+	margin-bottom: 30px;
+	min-height: 200px;
+	.front, .back {
+		min-height: 200px;
 	}
 }
 

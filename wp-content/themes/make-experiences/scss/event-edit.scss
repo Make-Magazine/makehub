@@ -1,0 +1,120 @@
+// Edit Event
+.gv-widgets-header { margin-top: 15px; }
+.gv-list-container {
+	.gv-list-view-title {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		background: #fff;
+		h3 { 
+			margin: 0px; 
+			width: 100%;
+			font-size: 36px;
+			margin-bottom: 15px;
+			border-bottom: solid 1px #ccc;
+			padding-bottom: 10px;
+		}
+		div { flex: 1; }
+		.gv-field-label, .gv-field-7-is_approved {
+			font-weight: bold;
+			font-size: 18px;
+		}
+		.gv-field-7-is_approved { font-size: 24px; }
+		.gv-field-7-date_created, .gv-field-7-duplicate_link {
+			padding-bottom: 20px;
+		}
+		.gv-list-view-subtitle {
+			text-align: right;
+		}
+	}
+	.gv-list-view-content {
+		background: #fff;
+		.gv-list-view-content-image {
+			padding: 0px;
+			padding-right: 15px;
+		}
+		.gv-list-view-content-description {
+			.gv-field-label {
+				font-size: 20px;
+				font-weight: bold;
+				margin-bottom: 15px;
+			}
+		}
+	}
+	button { 
+		width: 100%;
+		font-size: 20px;
+	}
+	#topics-filter .tablenav input#doaction {
+		padding: 10px 15px;
+		border-radius: 5px;
+	}
+	#tribe-community-tickets-shortcode { visibility: visible !important; }
+	.wrap.tribe-report-page {
+		h1, .tablenav.bottom {
+			display: none;
+		}
+		.column-ticket { // hide delete tickets and multiplying checkins
+			.row-actions { display: none; }
+		}
+		.welcome-panel {
+			margin-top: 15px;
+			.welcome-panel-column li, .wp-list-table {
+				font-size: 16px;
+				
+			}
+		}
+		.wp-list-table {
+			font-size: 16px;
+		}
+		#topics-filter {
+			input.print, a.button.action {
+				padding: 10px;
+				background: #005e9a;
+				color: #fff;
+				border: solid 1px #005e9a;
+				border-radius: 3px;
+				margin-bottom: 10px;
+				&:hover {
+					background: #fff;
+					color: #005e9a;
+				}
+			}
+		}
+	}
+}
+.gv-edit-entry-wrapper {
+	#field_7_104 { // hide the preview submitted info field
+		display: none;
+	}
+}
+.gv-button-cancel {
+	color: #fff;
+	border: thin solid #1987C7;
+	padding: 10px 30px;
+	background-color: #1987C7;;
+	&:hover, &:active, &:focus {
+		background-color: #fff;
+		color: #1987C7;;
+	}
+}
+
+.host-wrapper.front {
+	height: auto !important;
+}
+.host-wrapper.back.smaller {
+	max-height: 200px;
+	transition: height .5s;
+}
+.host-form-wrapper {
+	width: 100%;
+	form#facilitator-edit {
+		width: 100%;
+		input, label, textarea {
+			display:block;
+			width: 100%;
+		}
+		label { margin-top: 10px; }
+	}
+}
