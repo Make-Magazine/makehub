@@ -15,7 +15,7 @@ function update_event_acf($entry, $form, $post_id, $parameterArray) {
     //1 indicie = acf field name/event meta fields
     //2 indicie (optional) = acf field key or subfield key (for repeaters)
     //can't set parameter names on image fields, so we have touse the field ids
-	// TBD automaticallly map if acf field name exists?
+    // TBD automaticallly map if acf field name exists?
     $field_mapping = array(
         array('140', 'image_1'),
         array('141', 'image_2'),
@@ -161,91 +161,100 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
 
         $nstEntryArr = explode(",", $nstEntryIDs);
+
         $schedArray = array();
         foreach ($nstEntryArr as $nstEntryID) {
             $nst_entry = GFAPI::get_entry($nstEntryID);
             $nest_parameter_arr = find_field_by_parameter($nstForm); //find all fields with paramater names set in nested form
-            //Ticket Information        
-            $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
-            $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
-
-            $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
-            $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
-            $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
-            $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
-            $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
-
-            //create the ticket instance
-            $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
-                        'TKT_description' => $ticketDesc,
-                        'TKT_price' => $ticketPrice,
-                        'TKT_min' => $ticketMin,
-                        'TKT_max' => $ticketMax,
-                        'TKT_qty' => $ticketMax, //"Quantity of this ticket that is available"
-                        'TKT_required' => true));
-            $tkt->save();
-
-            //create Price object
-            $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
-            $price->save();
-            $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-            //Schedule Info
-            $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
-            $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
-
-            //TBD - Note we need to do something more secure here to avoid code injection
-            $prefSched = unserialize($prefSchedSer);
-
-            //create tickets
-            $preferred_schedule = array();
-            foreach ($prefSched as $sched) {
-                //Start Date
-                $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);
-                $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
-
-                //End Date
-                $date = date_create($sched['Date'] . ' ' . $sched['End Time']);
-                $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
-
-                //create the date/time instance
-                $d = EE_Datetime::new_instance(
-                                array('EVT_ID' => $eventID, 'DTT_name' => $schedDesc, 'DTT_EVT_start' => $start_date,
-                                    'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
-
-                $d->save();
-                $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
-                //set the preferred schedule for the ACF
-                $preferred_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
-                                
-                //update the ticket end date with the start of the event
-                $event = EEM_Event::instance()->get_one_by_ID($eventID);
-                $date = $event->first_datetime();       
-                echo 'ticket end date should be '.$date->start_date().'<br/>';
-                $start_date = new DateTime($date->start_date() . 'T00:00:00');
-                $tkt->set('TKT_end_date', $start_date);
-                $tkt->save();
-            }
-
-            //set alternate schedule
-            $alternate_schedule = array();
-            $altSched = unserialize($altSchedSer);
-
-            foreach ($altSched as $sched) {
-                //set the preferred schedule for the ACF
-                $alternate_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
-            }
-
-            $schedArray[] = array('ticket_name' => $ticketName,
-                'ticket_price' => $ticketPrice,
-                'ticket_description' => $ticketDesc,
-                'min_num_tickets' => $ticketMin,
-                'max_num_tickets' => $ticketMax,
-                'schedule_description' => $schedDesc,
-                'preferred_schedule' => $preferred_schedule,
-                'alternate_schedule' => $alternate_schedule);
+            $schedArray[] = setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone);
         }
-                        
+
         //set ACF schedule and Tickets info
         update_sched_ticket_acf($schedArray, $eventID);
     }
+}
+
+function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
+    $schedArray = array();
+    $eventID = $entry["post_id"];
+    //Ticket Information        
+    $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
+    $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
+
+    $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
+    $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
+    $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
+    $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
+    $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
+
+    //create the ticket instance
+    $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
+                'TKT_description' => $ticketDesc,
+                'TKT_price' => $ticketPrice,
+                'TKT_min' => $ticketMin,
+                'TKT_max' => $ticketMax,
+                'TKT_qty' => $ticketMax, //"Quantity of this ticket that is available"
+                'TKT_required' => true));
+    $tkt->save();
+
+    //create Price object
+    $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
+    $price->save();
+    $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
+    
+    //Schedule Info
+    $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
+    $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
+
+    //TBD - Note we need to do something more secure here to avoid code injection
+    $prefSched = unserialize($prefSchedSer);
+
+    //create tickets
+    $preferred_schedule = array();
+    foreach ($prefSched as $sched) {
+        //Start Date
+        $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);
+        $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+
+        //End Date
+        $date = date_create($sched['Date'] . ' ' . $sched['End Time']);
+        $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+
+        //create the date/time instance
+        $d = EE_Datetime::new_instance(
+                        array('EVT_ID' => $eventID, 'DTT_name' => $schedDesc, 'DTT_EVT_start' => $start_date,
+                            'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
+
+        $d->save();
+        $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
+        //set the preferred schedule for the ACF
+        $preferred_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+
+        //update the ticket end date with the start of the event
+        $event = EEM_Event::instance()->get_one_by_ID($eventID);
+        $date = $event->first_datetime();
+        echo 'ticket end date should be ' . $date->start_date() . '<br/>';
+        $start_date = new DateTime($date->start_date() . 'T00:00:00');
+        $tkt->set('TKT_end_date', $start_date);
+        $tkt->save();
+    }
+
+    //set alternate schedule
+    $alternate_schedule = array();
+    $altSched = unserialize($altSchedSer);
+
+    foreach ($altSched as $sched) {
+        //set the preferred schedule for the ACF
+        $alternate_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+    }
+
+    $schedArray = array('ticket_name' => $ticketName,
+        'ticket_price' => $ticketPrice,
+        'ticket_description' => $ticketDesc,
+        'min_num_tickets' => $ticketMin,
+        'max_num_tickets' => $ticketMax,
+        'schedule_description' => $schedDesc,
+        'preferred_schedule' => $preferred_schedule,
+        'alternate_schedule' => $alternate_schedule);
+    return $schedArray;
 }
