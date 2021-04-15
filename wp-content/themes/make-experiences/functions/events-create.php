@@ -93,7 +93,7 @@ function create_event($entry, $form) {
     if (empty($user_meta['ihc_user_levels']) || time() > strtotime($time_data['expire_time'])) {
         // create basic membership starting now, and lasting for 10 years (default)
         $now = time();
-        ihc_handle_levels_assign($userID, 14, $now);
+        ihc_handle_levels_assign($userID, 9, $now);
         // membership is assigned, but inactive
         // ihc_set_level_status($userID, 17, 1); this is doing nothing now
     } else {
