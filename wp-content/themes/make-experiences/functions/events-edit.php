@@ -1,17 +1,16 @@
 <?php
 
 // After the gravity view is updated, we want to update the created post associated with it. 
-
-add_action('gform_after_update_entry', 'gravityview_event_update', 998, 3);
+add_action('gform_after_update_entry_7', 'gravityview_event_update', 998, 3);
 
 //function gravityview_event_update($form, $entry_id, $entry_object = '') {
 function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
-    //let's get the entry id and event id
+    //let's get the entry and event id
     $entry = GFAPI::get_entry($entry_id);
-    
+
     $event_id = $entry["post_id"];
     $event_status = get_post_status($event_id);
-    
+
     //if the event is not published,  update event name, description, short description, ticket/schedule information
     if ($event_status != 'publish') {
         //find all fields set with a parameter name 
@@ -23,26 +22,28 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
         $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
 
         $event_values = array(
-            'EVT_name'     => $eventName,
-            'EVT_desc'     => $longDescription,
+            'EVT_name' => $eventName,
+            'EVT_desc' => $longDescription,
             'EVT_short_desc' => $shortDescription
         );
         // update event
         $success = EEM_Event::instance()->update_by_ID($event_values, $event_id);
-        
+
 
         //delete all schedule/tickets and then re-add to get all changes
         $event = EEM_Event::instance()->get_one_by_ID($event_id);
-        $datetimes = $event->get_many_related('Datetime');
-        foreach ($datetimes as $datetime) {
-            $event->_remove_relation_to($datetime, 'Datetime');
-            $tickets = $datetime->get_many_related('Ticket');
-            foreach ($tickets as $ticket) {
-                $ticket->_remove_relation_to($datetime, 'Datetime');
-                $ticket->delete_related_permanently('Price');
-                $ticket->delete_permanently();
+        if ($event) {
+            $datetimes = $event->get_many_related('Datetime');
+            foreach ($datetimes as $datetime) {
+                $event->_remove_relation_to($datetime, 'Datetime');
+                $tickets = $datetime->get_many_related('Ticket');
+                foreach ($tickets as $ticket) {
+                    $ticket->_remove_relation_to($datetime, 'Datetime');
+                    $ticket->delete_related_permanently('Price');
+                    $ticket->delete_permanently();
+                }
+                $datetime->delete();
             }
-            $datetime->delete();
         }
         //now let's re-add the schedule
         setSchedTicket($parameter_array, $entry, $event_id);
@@ -167,3 +168,42 @@ add_filter('gform_entry_field_value', function ( $value, $field, $entry, $form )
 
     return $value;
 }, 10, 4);
+
+add_action('gform_after_update_entry_10', 'nested_form_event_upd', 998, 3);
+
+//this is the schedule and ticket form
+function nested_form_event_upd($nstForm, $entry_id, $orig_entry = array()) {
+    //let's get the entry and event id
+    $child_entry        = GFAPI::get_entry($entry_id);
+    $parent_entry       = GFAPI::get_entry($child_entry['gpnf_entry_parent']);
+    $parent_form        = GFAPI::get_form($child_entry['gpnf_entry_parent_form']);
+    
+    $nest_parameter_arr = find_field_by_parameter($nstForm); 
+    
+    $event_id = $parent_entry["post_id"];
+    $event_status = get_post_status($event_id);
+    
+    
+    $timeZone = get_option('timezone_string');
+        
+    //if the event is not published,  update ticket/schedule information
+    if ($event_status != 'publish') {
+        //delete all schedule/tickets and then re-add to get all changes
+        $event = EEM_Event::instance()->get_one_by_ID($event_id);
+        if ($event) {
+            $datetimes = $event->get_many_related('Datetime');
+            foreach ($datetimes as $datetime) {
+                $event->_remove_relation_to($datetime, 'Datetime');
+                $tickets = $datetime->get_many_related('Ticket');
+                foreach ($tickets as $ticket) {
+                    $ticket->_remove_relation_to($datetime, 'Datetime');
+                    $ticket->delete_related_permanently('Price');
+                    $ticket->delete_permanently();
+                }
+                $datetime->delete();
+            }
+        }
+        //now let's re-add the schedule        
+        setScheduleInfo($nest_parameter_arr, $child_entry, $parent_entry, $timeZone);
+    }
+}
