@@ -46,13 +46,13 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('buy', 'tickets', 'panel'),
             'example' => [
-		'attributes' => [
+			'attributes' => [
 			'mode' => 'preview',
 			'data' => ['is_example' => true],
 		]
             ]
         ));
-		  acf_register_block(array(
+		acf_register_block(array(
             'name' => 'panel_rollover_items',
             'title' => __('Rollover Items'),
             'render_callback' => 'call_ACF_block_panels',
@@ -61,16 +61,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('featured', 'makers', 'square', 'panel'),
         ));
-		  acf_register_block(array(
-            'name' => 'call_to_action_panel',
-            'title' => __('Star Ribbon Panel'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('cta', 'banner', 'panel'),
-        ));
-		  acf_register_block(array(
+		acf_register_block(array(
             'name' => 'ribbon_separator_panel',
             'title' => __('Ribbon Separator Panel'),
             'render_callback' => 'call_ACF_block_panels',
@@ -214,16 +205,7 @@ function make_add_acf_blocks() {
             'mode' => 'auto',
             'keywords' => array('makey', 'banner','panel'),
         ));            
-        acf_register_block(array(
-            'name' => 'post_feed',
-            'title' => __('News / Post Feed'),
-            'render_callback' => 'call_ACF_block_panels',
-            'category' => 'make-panels',
-            'icon' => 'admin-comments',
-            'mode' => 'auto',
-            'keywords' => array('post', 'panel'),
-        )); 
-		
+
 		//Flag Banner Separator Panel
         acf_register_block(array(
             'name' => 'flag_banner_panel',
