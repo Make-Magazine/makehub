@@ -17,6 +17,13 @@
 	font-weight: 300;
 }
 
+//show hidden groups if you're a member
+#groups-dir-list, .mygroups {
+	.is-member.hidden {
+		display: block !important
+	}
+}
+
 .subnav-search.groups-search {
 	margin: -10px 15px 20px;
 	float: none;
