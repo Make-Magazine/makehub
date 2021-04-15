@@ -18,12 +18,11 @@ get_header();
 					<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
 				</div>
 			</header><!-- .page-header -->
-        	
-
+      
 			<div class="events-list">
-
 				<?php
 				/* Start the Loop */
+				do_action('AHEE__archive_espresso_events_template__before_loop');
 				$args = array( 'post_type' => 'espresso_events', 'order' => 'ASC');
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
@@ -80,7 +79,7 @@ get_header();
 					$now = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
 					$now = $now->format('Y-m-d H:i:s');
 					if(date('Y-m-d H:i:s', $firstExpiredDate) < $now  && $ticket_count == 1 ) {
-						//$return = '';
+						$return = '';
 					}
 					echo $return;
 
@@ -89,7 +88,9 @@ get_header();
 			</div>
 
 			<?php
-			buddyboss_pagination();
+			espresso_pagination();
+			// allow moar other stuff
+			do_action('AHEE__archive_espresso_events_template__after_loop');
 
 		else :
 			get_template_part( 'template-parts/content', 'none' );
