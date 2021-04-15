@@ -1,4 +1,4 @@
-#page-panels {
+.customPanels {
   background-color: #fff;
 	p { color: #333; }
   .rectangle-image-carousel {
@@ -333,7 +333,7 @@
 
 
 // since all the make panels are in sections, we use this to get a full width even though the blocks are normally in a container
-.container section {
+.customPanels .container section {
 	width: 96vw;
 	position: relative;
 	margin-left: -48vw;

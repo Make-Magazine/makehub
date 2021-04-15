@@ -27,11 +27,13 @@ get_header();
 					// Are there custom panels to display?
 					  if( have_rows('content_panels')) {
 						 // loop through the rows of data      
-						 while ( have_rows('content_panels') ) {
-						   the_row();
-						   $row_layout = get_row_layout();           
-						   echo dispLayout($row_layout);
-						 }
+						 echo '<div class="customPanels">';
+							while ( have_rows('content_panels') ) {
+								the_row();
+								$row_layout = get_row_layout();           
+								echo dispLayout($row_layout);
+							}
+						 echo '</div>';
 					  }
 
 					do_action( THEME_HOOK_PREFIX . '_single_template_part_content', 'page' );
