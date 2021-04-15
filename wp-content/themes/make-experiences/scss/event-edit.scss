@@ -105,7 +105,12 @@
 }
 .host-wrapper.back.smaller {
 	max-height: 200px;
-	transition: height .5s;
+	opacity: 0;
+	transition: height .5s, opacity .3s;
+}
+.host-wrapper.back {
+	max-height: 1000px;
+	opacity: 1;
 }
 .host-form-wrapper {
 	width: 100%;

@@ -13,26 +13,6 @@ get_header();
         while (have_posts()) {
             the_post();
             ?>
-            <?php
-            /*  $results =  $vendor->addSubscriber($email, 494256);
-              $results =  $vendor->addSubscriber($email, 478666);
-              $results =  $vendor->addSubscriber($email, 466306);
-              $results =  $vendor->addSubscriber($email, 449478);
-              $results =  $vendor->addSubscriber($email, 478666);
-              $results =  $vendor->addSubscriber($email, 434632);
-              $results =  $vendor->addSubscriber($email, 369632);
-              $results =  $vendor->addSubscriber($email, 355660);
-              $results =  $vendor->addSubscriber($email, 333989);
-              $results =  $vendor->addSubscriber($email, 317354);
-              $results =  $vendor->addSubscriber($email, 285363);
-              $results =  $vendor->addSubscriber($email, 301846);
-              $results =  $vendor->addSubscriber($email, 301454);
-              $results =  $vendor->addSubscriber($email, 301840);
-
-              $vendor = new PdfVendor();
-              $email = 'webmaster@make.co';
-              $results = $vendor->showListOfPdfs($email); */
-            ?>
             <iframe id="bluetoad-iframe" src="/wp-content/themes/make-experiences/blue-toad-login.php"></iframe>
                 <?php the_content(); ?>
             <?php } // END WHILE ?>

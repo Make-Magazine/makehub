@@ -18,21 +18,28 @@ get_header();
 					<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
 				</div>
 			</header><!-- .page-header -->
-        	
-
+      
 			<div class="events-list">
-
 				<?php
 				/* Start the Loop */
-				$args = array( 'post_type' => 'espresso_events' );
+				do_action('AHEE__archive_espresso_events_template__before_loop');
+				$args = array( 'post_type' => 'espresso_events', 'posts_per_page' => 10, 'order' => 'ASC');
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
-
 					global $post;
+				
 				    $date = $post->EE_Event->first_datetime(); 
 				 	$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
-					$startime = date('F j, Y @ g:i a', strtotime($date->start_time()));
+					$startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
 					$endtime = date('g:i a', strtotime($date->end_time()));
+				
+					$event = EEH_Event_View::get_event($post->ID);
+					$tickets = array();
+					if ($event instanceof EE_Event) {
+						$tickets = $event->tickets();
+					}		
+					$ticket_count = count($tickets);
+				
 					$eventDetails = '';
 				
 					if(get_field('custom_schedule_details', $post->ID)) { 
@@ -45,19 +52,20 @@ get_header();
 								$eventDetails = '<div class="event-time-desc">Schedules Vary</div>';
 							}
 						} 
-				   } 
+				    } 
+				   	
 
 					$return = '<article id="post-' . $post->ID . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
-							     <div class="event-truncated-date">' . $dateFormat . '</div>
-							     <div class="event-image">
+								 <div class="event-truncated-date">' . $dateFormat . '</div>
+								 <div class="event-image">
 								   <a href="' . get_permalink() . '">
-								     <img src="' . get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) . '" />
+									 <img src="' . get_the_post_thumbnail_url( $post->ID, 'thumbnail' ) . '" />
 								   </a>
-							     </div>
-							     <div class="event-info">
+								 </div>
+								 <div class="event-info">
 								   <div class="event-date">'. $startime . ' - ' . $endtime . ' PST</div>
 								   <h3 class="event-title">
-								     <a href="' . get_permalink() . '">' . get_the_title() . '</a>
+									 <a href="' . get_permalink() . '">' . get_the_title() . '</a>
 								   </h3>
 								   <div class="event-description">' . get_field('short_description') . '</div>';
 					if($eventDetails != '') { $return .= $eventDetails; }
@@ -66,15 +74,23 @@ get_header();
 								  '</div>
 								 </div>
 							   </article>';
-
-				    echo $return;
+				    // if the first date of event has passed and it's a multiday event with one ticket, skip this item in the loop
+					$firstExpiredDate = EEM_Datetime::instance()->get_oldest_datetime_for_event( $post->ID, true, false, 1 )->start();
+					$now = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
+					$now = $now->format('Y-m-d H:i:s');
+					if(date('Y-m-d H:i:s', $firstExpiredDate) < $now  && $ticket_count == 1 ) {
+						$return = '';
+					}
+					echo $return;
 
 				endwhile;
 				?>
 			</div>
 
 			<?php
-			buddyboss_pagination();
+			espresso_pagination();
+			// allow moar other stuff
+			do_action('AHEE__archive_espresso_events_template__after_loop');
 
 		else :
 			get_template_part( 'template-parts/content', 'none' );

@@ -18,15 +18,20 @@ if (!isset($gravityview) || empty($gravityview->template)) {
     })
 </script>    
 <a class="universal-btn" style="float:right" href="/submit-event/" target="_blank">Submit a New Event</a>
+
+<?php
+global $current_user;
+$current_user = wp_get_current_user();
+$userEmail = (string) $current_user->user_email;
+
+$person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+if(!empty($person)) {
+?>
 <div class='single-espresso_people'>
     <h2>My Information</h2>
+    
     <?php
-    global $current_user;
-    $current_user = wp_get_current_user();
-    $userEmail = (string) $current_user->user_email;
-
-    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-    $user_website = $user_website = $userFname = $userLname = $userBio = $person_img = '';
+	$user_website = $user_website = $userFname = $userLname = $userBio = $person_img = '';
     $user_social = array();
     if ($person) {
         $userFname = $person->fname();
@@ -47,12 +52,13 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 			</div>
 			<div class="host-meta">
 				<h1 class="host-title"><?php echo $userFname . ' ' . $userLname; ?></h1>
-
+				<?php if($user_website) { ?>
 				<div class="host-email">
 					<i class="fas fa-link" aria-hidden="true"></i>
 					<a href="<?php $user_website; ?>" target="_blank"><?php echo $user_website; ?>/</a>
 				</div>            
 				<?php
+				}
 				if ($user_social) {
 					?>
 					<span class="social-links">
@@ -102,6 +108,8 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 	</div>
 	
 </div>
+
+<?php } ?>
 
 <?php gravityview_before($gravityview); ?>
 <div class="<?php gv_container_class('gv-list-container gv-list-view gv-list-multiple-container', true, $gravityview); ?>">    
