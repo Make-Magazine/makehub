@@ -23,7 +23,7 @@ get_header();
 				<?php
 				/* Start the Loop */
 				do_action('AHEE__archive_espresso_events_template__before_loop');
-				$args = array( 'post_type' => 'espresso_events', 'order' => 'ASC');
+				$args = array( 'post_type' => 'espresso_events', 'posts_per_page' => 10, 'order' => 'ASC');
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
 					global $post;
