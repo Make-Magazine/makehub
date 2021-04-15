@@ -6,11 +6,15 @@ body .grid-column-split {
 		margin-bottom: 0px;
 	}
 	&.scrolling {
-	    animation: left-to-right 19s linear infinite;
+	    animation: left-to-right 22s linear infinite;
 		background-position: 0px 0px;
 		background-repeat: repeat;
 		box-shadow: 0 0 0 #000;
 		background-size: 145%;
+		@media screen and (max-width: 768px) {
+			background-size: 225%;
+			animation: left-to-right 36s linear infinite;
+		}
 	}
 	.wysiwyg, .grid-column{
 		padding: 0px;
