@@ -24,11 +24,10 @@ get_header();
 
 				<?php
 				/* Start the Loop */
-				$args = array( 'post_type' => 'espresso_events' );
+				$args = array( 'post_type' => 'espresso_events', 'order' => 'ASC');
 				$loop = new WP_Query( $args );
 				while ( $loop->have_posts() ) : $loop->the_post();
 					global $post;
-		
 				
 				    $date = $post->EE_Event->first_datetime(); 
 				 	$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
@@ -81,8 +80,7 @@ get_header();
 					$now = new DateTime("now", new DateTimeZone('America/Los_Angeles'));
 					$now = $now->format('Y-m-d H:i:s');
 					if(date('Y-m-d H:i:s', $firstExpiredDate) < $now  && $ticket_count == 1 ) {
-						error_log("This goes off");
-						$return = '';
+						//$return = '';
 					}
 					echo $return;
 
