@@ -43,7 +43,7 @@ class LearnDash_Elementor_Widget_Topic_List extends LearnDash_Elementor_Widget_B
 			'orderby'                   => 'orderby',
 
 			'course_grid'               => 'course_grid',
-			//'progress_bar'              => 'progress_bar',
+			'progress_bar'              => 'progress_bar',
 			'col'                       => 'col',
 
 			'ld_topic_cat_id'           => 'topic_cat',
@@ -175,7 +175,6 @@ class LearnDash_Elementor_Widget_Topic_List extends LearnDash_Elementor_Widget_B
 				)
 			);
 
-			/*
 			$this->add_control(
 				'progress_bar',
 				array(
@@ -184,7 +183,6 @@ class LearnDash_Elementor_Widget_Topic_List extends LearnDash_Elementor_Widget_B
 					'default' => '',
 				)
 			);
-			*/
 
 			$this->add_control(
 				'col',
@@ -416,7 +414,7 @@ class LearnDash_Elementor_Widget_Topic_List extends LearnDash_Elementor_Widget_B
 				case 'topic_categoryselector':
 				case 'categoryselector':
 				case 'course_grid':
-				//case 'progress_bar':	
+				case 'progress_bar':	
 					if ( 'yes' === $val ) {
 						$val = 'true';
 					} else {

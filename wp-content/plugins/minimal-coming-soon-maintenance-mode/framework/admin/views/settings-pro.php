@@ -13,6 +13,14 @@ if (!defined('WPINC')) {
             refined access control options.</p>
 
         <div class="signals-section-content">
+            <?php
+            if (csmm_chat_available()) {
+            ?>
+                <p class="below-pricing">Our agents are online and available for any questions you have about the PRO version! <a title="Chat with our support agents" style="margin: 0 0 0 15px;" href="#" class="signals-btn csmm-open-chat"><span style="font-size: 19px;" class="dashicons dashicons-format-chat"></span> <strong>Chat with Live Support</strong></a></p>
+            <?php
+            }
+            ?>
+
             <table id="features-table">
                 <tr>
                     <td>
@@ -121,17 +129,17 @@ if (!defined('WPINC')) {
                         <td>Advanced SEO Preview &amp; Anaylsis</td>
                     </tr>
                     <tr>
-                        <td>2.5+ Million Hi-Resolution Images</td>
-                        <td>2.5+ Million Hi-Resolution Images</td>
-                        <td>2.5+ Million Hi-Resolution Images</td>
+                        <td>2+ Million Hi-Resolution Images</td>
+                        <td>2+ Million Hi-Resolution Images</td>
+                        <td>2+ Million Hi-Resolution Images</td>
                     </tr>
                     <tr>
-                        <td>85+ PRO Templates</td>
-                        <td>85+ PRO Templates</td>
-                        <td>85+ PRO Templates</td>
+                        <td>75+ PRO Templates</td>
+                        <td>75+ PRO Templates</td>
+                        <td>75+ PRO Templates</td>
                     </tr>
                     <tr>
-                        <td><b>85+ Extra Agency Templates = 170+ Templates</b></td>
+                        <td><b>75+ Extra Agency Templates = 150+ Templates</b></td>
                         <td class="not-available">n/a</td>
                         <td class="not-available">n/a</td>
                     </tr>
@@ -213,7 +221,15 @@ if (!defined('WPINC')) {
                 </tbody>
             </table>
 
+            <?php
+            if (csmm_chat_available()) {
+            ?>
+                <p class="below-pricing">Our agents are online and available for any questions you have about the PRO version! <a title="Chat with our support agents" style="margin: 0 0 0 15px;" href="#" class="signals-btn csmm-open-chat"><span style="font-size: 19px;" class="dashicons dashicons-format-chat"></span> <strong>Chat with Live Support</strong></a></p>
+            <?php
+            }
+            ?>
             <hr>
+
 
             <div class="signals-form-group" id="tab-pro">
                 <?php

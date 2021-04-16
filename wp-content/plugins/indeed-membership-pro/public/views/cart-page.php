@@ -1,5 +1,0 @@
-<div>
-
-    TEST
-
-</div>

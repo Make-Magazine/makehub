@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_login_level_redirect_on', $_POST['ihc_login_level_redirect_on']);
 }
@@ -45,12 +45,12 @@ $pages_arr[-1] = '...';
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Login Redirects based on MEmbership(s)', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Login Redirects based on Level(s)', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold Custom Redirects action', 'ihc');?></h2>
-				<p style="max-width:70%;"><?php _e('Replace the default redirect after login with a custom one based on the user assigned membership. Because UMP is a MultiMembership system, a user can have multiple memberships assigned but only one redirect can take place. You can set membership priorities to manage that.', 'ihc');?></p>
+				<p style="max-width:70%;"><?php _e('Replace the default redirect after login with a custom one based on the user assigned level. Because UMP is a MultiLevel system, a user can have multiple levels assigned but only one redirect can take place. You can set level priorities to manage that.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($check) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_login_level_redirect_on');" <?php echo $checked;?> />
@@ -58,7 +58,7 @@ $pages_arr[-1] = '...';
 				</label>
 				<input type="hidden" name="ihc_login_level_redirect_on" value="<?php echo (int)$check;?>" id="ihc_login_level_redirect_on" />
 			</div>
-			<p style="max-width:70%; font-weight:bold;"><?php _e('Important: In order for the custom Login Redirect to work, the membership of the user needs to be active. If expired or on hold, the custom redirect will not work.', 'ihc');?></p>
+			<p style="max-width:70%; font-weight:bold;"><?php _e('Important: In order for the custom Login Redirect to work, the level of the user needs to be active. If expired or on hold, the custom redirect will not work.', 'ihc');?></p>
 
 			<?php if ($levels):?>
 				<div class="iump-form-line">
@@ -85,9 +85,9 @@ $pages_arr[-1] = '...';
 		</div>
 	</div>
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Memberships Priorities:', 'ihc');?></h3>
+		<h3><?php _e('Levels Priorities:', 'ihc');?></h3>
 		<div class="inside">
-					<p style="max-width:70%;"><?php _e('Because UMP is a MultiMembership system, a user can have multiple memberships assigned but only one redirect can take place. You can set membership priorities to manage that.', 'ihc');?></p>
+					<p style="max-width:70%;"><?php _e('Because UMP is a MultiLevel system, a user can have multiple levels assigned but only one redirect can take place. You can set level priorities to manage that.', 'ihc');?></p>
 					<?php $i = 1;?>
 					<?php foreach ($levels as $id=>$array):?>
 						<?php

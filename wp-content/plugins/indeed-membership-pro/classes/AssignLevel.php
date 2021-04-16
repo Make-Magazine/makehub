@@ -60,13 +60,46 @@ class AssignLevel
       $endTime    = indeed_get_current_time_with_timezone($endTime);
       $updateTime = indeed_get_current_time_with_timezone();
 
-      \Indeed\Ihc\UserSubscriptions::assign( $this->uid, $this->lid, [
-                'start_time'      => $startTime,
-                'update_time'     => $updateTime,
-                'expire_time'     => $endTime
-      ] );
-      
+      if ($this->userGotLevel()){
+          $query = $wpdb->prepare("INSERT INTO {$wpdb->prefix}ihc_user_levels VALUES(null, {$this->uid}, {$this->lid}, '$startTime', '$endTime', 0, 1);");
+      } else {
+          $query = $wpdb->prepare("
+              UPDATE {$wpdb->prefix}ihc_user_levels
+                  SET
+                  start_time='$startTime',
+                  update_time='$updateTime',
+                  expire_time='$endTime',
+                  notification=0,
+                  status=1
+                  WHERE
+                  user_id={$this->uid}
+                  AND level_id={$this->lid};
+          ");
+      }
+      $wpdb->query($q);
       do_action('ihc_new_subscription_action', $this->uid, $this->lid);
+    }
+
+    private function userGotLevel()
+    {
+        global $wpdb;
+        return $wpdb->get_var($wpdb->prepare("SELECT user_id FROM {$wpdb->prefix}ihc_user_levels WHERE user_id={$this->uid} AND level_id={$this->lid} "));
+    }
+
+    private function setTheMetaUser()
+    {
+        /// in future this has to disaper, old workflow, now we keep the levels in a table, but in some parts of plugin it still using the old approch
+        $oldLevels = get_user_meta($this->uid, 'ihc_user_levels', true);
+        if ($oldLevels){
+            $oldLevelsArray = explode(',', $oldLevels);
+            if (!in_array($this->lid, $oldLevelsArray)){
+              $oldLevelsArray[] = $this->lid;
+            }
+            $levels = implode(',', $oldLevelsArray);
+        } else {
+            $levels = $lid;
+        }
+        update_user_meta( $this->uid, 'ihc_user_levels', $levels );
     }
 
     public function getStartTime()
@@ -103,7 +136,7 @@ class AssignLevel
 
         if ($this->levelData['payment_type']!='free'){ /// $this->is_public &&
           //end time will be expired, updated when payment
-          $this->endTime = \Indeed\Ihc\UserSubscriptions::getExpireTimeForSubscription($this->uid, $this->lid);
+          $this->endTime = \Ihc_Db::user_get_expire_time_for_level($this->uid, $this->lid);
           if ($this->endTime===FALSE || strtotime($this->endTime)<$this->currentTime){
             $this->endTime = '0000-00-00 00:00:00';
           }

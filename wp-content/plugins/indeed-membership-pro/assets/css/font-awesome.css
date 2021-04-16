@@ -383,22 +383,3 @@
 .fa-new-extension-ihc:before{
     content: "\f067";
 }
-/*extra for Admin only */
-.ihc-icon-completed-e:before {
-    content: "\f046";
-    color: #666;
-    font-size: 14px;
-    padding-left: 4px;
-}
-.ihc-icon-refund-e:before {
-    content: "\f0e2";
-    color: #666;
-    font-size: 14px;
-    padding-left: 4px;
-}
-.ihc-icon-plan-e:before {
-    content: "\f1ec";
-    color: #666;
-    font-size: 14px;
-    padding-left: 4px;
-}

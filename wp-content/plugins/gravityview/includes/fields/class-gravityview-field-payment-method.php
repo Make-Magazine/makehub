@@ -20,8 +20,6 @@ class GravityView_Field_Payment_Method extends GravityView_Field {
 
 	var $_custom_merge_tag = 'payment_method';
 
-	var $icon = 'dashicons-cart';
-
 	/**
 	 * GravityView_Field_Date_Created constructor.
 	 */

@@ -199,7 +199,7 @@
 					itemsStatus[e.values.index].incorrect = true;
 					setColor(e.values.index);
 				});
-
+				
 				$e.bind('changeQuestion', function(e) {
 
 					// On Matrix sort questions we need to set the sort capture UL to full height.
@@ -207,12 +207,12 @@
 						var questionItem = e.values.item[0];
 						plugin.methode.setupMatrixSortHeights();
 					}
-
+					
 
 					$items.removeClass('wpProQuiz_reviewQuestionTarget');
 					//$items.removeClass('wpProQuiz_reviewQuestionSolved');
 					//$items.removeClass('wpProQuiz_reviewQuestionReview');
-
+					
 					$items.eq(e.values.index).addClass('wpProQuiz_reviewQuestionTarget');
 
 					scroll(e.values.index);
@@ -289,12 +289,12 @@
 
 			this.toggle = function() {
 				if(bitOptions.reviewQustion) {
-					// The toggle is called after the quiz submit. So we want to hide the 'review' and 'answered' legend items.
+					// The toggle is called after the quiz submit. So we want to hide the 'review' and 'answered' legend items. 
 					$('.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-current').hide();
 					$('.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-review').hide();
 					$('.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-answered').hide();
 
-					// And show the 'correct' and 'incorrect' indicators.
+					// And show the 'correct' and 'incorrect' indicators. 
 					$('.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-correct').show();
 					$('.wpProQuiz_reviewLegend li.learndash-quiz-review-legend-item-incorrect').show();
 
@@ -375,7 +375,7 @@
 
 				if ( css_class != '' ) {
 					$items.eq(index).addClass( css_class );
-				}
+				} 
 			}
 
 			function moveScroll(e) {
@@ -445,7 +445,7 @@
 
 				results['comp'].quizEndTimestamp = quizEndTimer;
 				results['comp'].quizStartTimestamp = quizStartTimer;
-
+				
 				isQuizStart = false;
 			};
 
@@ -462,7 +462,7 @@
 			//if (config.ld_script_debug == true) {
 			//	console.log('readResponses: name[%o], data[%o], $question[%o], $questionList[%o], lockResponse[%o]', name, data, $question, $questionList, lockResponse);
 			//}
-
+			
 			if (lockResponse == undefined) lockResponse = true;
 			var response = {};
 			var func = {
@@ -472,7 +472,7 @@
 						$questionList.find('.wpProQuiz_questionInput').attr('disabled', 'disabled');
 					}
 					//$questionList.children().each(function(i) {
-					// Changed in v2.3 from the above. children() was pickup up some other random HTML elements within the UL like <p></p>.
+					// Changed in v2.3 from the above. children() was pickup up some other random HTML elements within the UL like <p></p>. 
 					// Now we are targetting specifically the .wpProQuiz_questionListItem HTML elements.
 					jQuery('.wpProQuiz_questionListItem', $questionList).each(function(i) {
 						var $item = $(this);
@@ -592,32 +592,32 @@
 				$questionList.children().each(function(i) {
 					var $item = $(this);
 					var index = $item.attr('data-pos');
-
+					
 					if (question_value[index] != undefined) {
 						var index_value = question_value[index];
 						if (index_value == true) {
 							$('.wpProQuiz_questionInput', $item).prop('checked', 'checked');
-
+							
 							$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-						}
-					}
+						} 
+					} 
 				});
-
+		
 			} else if (question_data.type == 'free_answer') {
 				$questionList.children().each(function(i) {
 					var $item = $(this);
 					$('.wpProQuiz_questionInput', this).val(question_value);
 				});
 				$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+				
 			} else if (question_data.type == 'sort_answer') {
 				jQuery.each(question_value, function(pos, key){
 					var this_li = $('li.wpProQuiz_questionListItem[data-pos="'+key+'"]', $questionList);
 					var this_li_inner = $('div.wpProQuiz_sortable', this_li);
 					var this_li_inner_value = $(this_li_inner).text();
-
+				
 					jQuery($questionList).append(this_li);
-
+					
 				});
 				$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
 
@@ -625,11 +625,11 @@
 				jQuery.each(question_value, function(pos, key){
 					var question_response_item = $('.wpProQuiz_matrixSortString .wpProQuiz_sortStringList li[data-pos="'+pos+'"]', question);
 					var question_destination_outer_li = $('li.wpProQuiz_questionListItem[data-pos="'+key+'"] ul.wpProQuiz_maxtrixSortCriterion', $questionList);
-
+				
 					jQuery(question_response_item).appendTo(question_destination_outer_li);
 				});
 				$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+				
 
 			} else if (question_data.type == 'cloze_answer') {
 				// Get the input fields within the questionList parent
@@ -639,11 +639,11 @@
 					}
 				});
 				$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+		
 			} else if (question_data.type == 'assessment_answer') {
 				$('input.wpProQuiz_questionInput[value="'+question_value+'"]', $questionList).attr('checked', 'checked');
 				$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+		
 			} else if (question_data.type == 'essay') {
 
 				// The 'essay' value is generic. We need to figure out if this is an upload or inline essay.
@@ -652,22 +652,22 @@
 					$( question_input ).val( question_value );
 					$('<p>'+basename( question_value )+'</p>').insertAfter( question_input );
 					$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+					
 				} else if ( $questionList.find('.wpProQuiz_questionEssay').length ) {
 					$questionList.find('.wpProQuiz_questionEssay').html( question_value );
 					$e.trigger({type: 'questionSolved', values: {item: question, index: question.index(), solved: true}});
-
+					
 				}
 			} else {
 				//console.log('unsupported type[%o]', question_data.type);
 				//console.log('setResponse: question_data[%o] question_value[%o] question[%o], $questionList[%o]', question_data, question_value, question, $questionList);
 			}
 		}
-
+		
 		function basename(path) {
 			if (path != undefined) {
 				return path.split('/').reverse()[0];
-			}
+			} 
 			return '';
 		}
 		/**
@@ -969,7 +969,7 @@
 				str = str.replace(/\u201D/, '"');
 
 				//return $.trim(str).toLowerCase();
-
+				
 				// Changes in v2.5 to NOT set cloze answers to lowercase
 				return $.trim(str);
 			},
@@ -1002,7 +1002,7 @@
 				//if (config.ld_script_debug == true) {
 				//	console.log('in startQuiz');
 				//}
-
+				
 				if(quizStatus.loadLock) {
 					quizStatus.isQuizStart = 1;
 
@@ -1164,7 +1164,7 @@
 
 					results[questionId] = {time: 0};
 				});
-
+				
 				catResults = {};
 
 				$.each(options.catPoints, function(i, v) {
@@ -1285,12 +1285,12 @@
 							var $questionList = $this.find(globalNames.questionList);
 							var question_id = $questionList.data('question_id');
 							var data = config.json[$questionList.data('question_id')];
-
+							
 							// Within the following logic. If the question type is 'sort_answer' there is a chance
-							// the sortable answers will be displayed in the correct order. In that case the user will click
-							// the next button.
-							// The trigger to set the question was answered is normally a function of the sort/drag action
-							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled.
+							// the sortable answers will be displayed in the correct order. In that case the user will click 
+							// the next button. 
+							// The trigger to set the question was answered is normally a function of the sort/drag action 
+							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled. 
 							//if (data.type == 'sort_answer') {
 							//	$e.trigger({type: 'questionSolved', values: {item: $this, index: $this.index(), solved: true}});
 							//}
@@ -1324,7 +1324,7 @@
 			skipQuestion: function() {
 				$e.trigger({type: 'skipQuestion', values: {item: currentQuestion, index: currentQuestion.index()}});
 				plugin.methode.nextQuestion();
-			},
+			},			
 			reviewQuestion: function() {
 				$e.trigger({type: 'reviewQuestion', values: {item: currentQuestion, index: currentQuestion.index()}});
 			},
@@ -1332,9 +1332,9 @@
 			uploadFile: function( event ) {
 				var question_id = event.currentTarget.id.replace('uploadEssaySubmit_', '');
 				var file = $( '#uploadEssay_' + question_id )[0].files[0];
-
+				
 				if (typeof file !== 'undefined') {
-
+				
 					var nonce = $( '#_uploadEssay_nonce_' + question_id ).val();
 					var uploadEssaySubmit = $('#uploadEssaySubmit_' + question_id );
 
@@ -1367,13 +1367,13 @@
 							if(response.success == true && typeof response.data.filelink != 'undefined' ) {
 								uploadEssayMessage.addClass( 'uploadEssayMessage_success');
 								$('#uploadEssayFile_' + question_id ).val(response.data.filelink);
-
+								
 								// disable the upload button. Only one file per quiz.
 								uploadEssaySubmit.attr('disabled', 'disabled');
-
+								
 								var $item = $('#uploadEssayFile_' + question_id ).parents('.wpProQuiz_listItem');
 								$e.trigger({type: 'questionSolved', values: {item: $item, index: $item.index(), solved: true}});
-
+				
 							} else {
 								uploadEssayMessage.addClass('uploadEssayMessage_fail');
 								uploadEssaySubmit.removeAttr('disabled');
@@ -1402,7 +1402,7 @@
 
 				var quizSummary = $e.find('.wpProQuiz_checkPage');
 
-				// Clone the Review questions and legand and add to the
+				// Clone the Review questions and legand and add to the 
 				//$e.find('.wpProQuiz_checkPage .wpProQuiz_reviewSummary').html('');
 				$e.find('.wpProQuiz_checkPage .wpProQuiz_reviewSummary').append($e.find('.wpProQuiz_reviewDiv .wpProQuiz_reviewQuestion').clone());
 
@@ -1477,7 +1477,7 @@
 					var certificateContainer = $e.find('.wpProQuiz_certificate');
 					if (results.comp.result >= certificate_details.certificate_threshold * 100 ) {
 						//if (true == hasNotGradedQuestion && typeof certificate_pending !== 'undefined') {
-						//	certificateContainer.append('<br />'+certificate_pending );
+						//	certificateContainer.append('<br />'+certificate_pending );	
 						//}
 						certificateContainer.show();
 					} else if ( true == hasNotGradedQuestion && typeof certificate_pending !== 'undefined') {
@@ -1487,14 +1487,14 @@
 				}
 
 				var quiz_continue_link = $e.find('.quiz_continue_link');
-
+				
 				var show_quiz_continue_buttom_on_fail = false;
 				if ( jQuery( quiz_continue_link).hasClass( 'show_quiz_continue_buttom_on_fail' ) ) {
 					show_quiz_continue_buttom_on_fail = true;
-				}
+				} 
 
 				if ((typeof options.passingpercentage !== 'undefined') && (parseFloat(options.passingpercentage) >= 0.0)) {
-
+					
 					if ((results.comp.result >= options.passingpercentage) || (show_quiz_continue_buttom_on_fail)) {
 
 						$e.addClass('ld-quiz-result-passed');
@@ -1507,7 +1507,7 @@
 						if(typeof continue_details !== 'undefined') {
 							$e.find('.quiz_continue_link').html(continue_details);
 							$e.find('.quiz_continue_link').show();
-						}
+						}				
 					} else {
 						$e.removeClass('ld-quiz-result-passed');
 						$e.addClass('ld-quiz-result-failed');
@@ -1521,7 +1521,7 @@
 					if(typeof continue_details !== 'undefined') {
 						$e.find('.quiz_continue_link').html(continue_details);
 						$e.find('.quiz_continue_link').show();
-					}
+					}				
 				}
 
 				$pointFields = $e.find('.wpProQuiz_points span');
@@ -1536,7 +1536,7 @@
 
 				$.each( results, function( question_id, result ) {
 					if ( $.isNumeric( question_id ) && result.graded_id ) {
-
+												
 						var possible = result.possiblePoints - result.points;
 						if (possible > 0) {
 							$gradedQuestionPoints += possible;
@@ -1638,7 +1638,7 @@
 				//if (config.ld_script_debug == true) {
 				//	console.log('questionSolved: e.values[%o]', e.values);
 				//}
-
+				
 				quizSolved[e.values.index] = e.values.solved;
 			},
 
@@ -1647,7 +1647,7 @@
 					return;
 
 				//console.log('sendCompletedQuiz: results[%o]', results);
-
+					
 				fetchAllAnswerData(results);
 
 				var formData = formClass.getFormData();
@@ -1673,7 +1673,7 @@
 							if (typeof config['quizId'] !== 'undefined') {
 								var quiz_pro_id = parseInt( config['quizId'] );
 								if ((typeof json[quiz_pro_id] !== 'undefined') && (typeof json[quiz_pro_id]['quiz_result_settings'] !== 'undefined')) {
-									result_settings = json[quiz_pro_id]['quiz_result_settings'];
+									result_settings = json[quiz_pro_id]['quiz_result_settings'];								
 									plugin.methode.afterSendUpdateIU(result_settings );
 								}
 							}
@@ -1730,7 +1730,7 @@
 						$e.find('.quiz_continue_link').remove();
 					}
 				}
-			},
+			}, 
 			findResultIndex: function(p) {
 				var r = config.resultsGrade;
 				var index = -1;
@@ -1804,7 +1804,7 @@
 				$e.find('textarea.wpProQuiz_questionEssay').val('');
 				$e.find('input.uploadEssayFile').val('');
 				$e.find('input.wpProQuiz_upload_essay').val('');
-
+					
 
 				$e.find('.wpProQuiz_response').hide().children().hide();
 
@@ -1823,7 +1823,7 @@
 				globalElements.next.last().val(lastButtonValue);
 
 				inViewQuestions = false;
-
+				
 				// Clear Cookie on restart
 				//plugin.methode.CookieDelete();
 
@@ -1837,7 +1837,7 @@
 				$e.find(".wpProQuiz_spinner").hide();
 			},
 			checkQuestion: function(list, endCheck) {
-
+				
 				var finishQuiz = (list == undefined) ? false : true;
 				var responses = {};
 				var r = {};
@@ -1864,7 +1864,7 @@
 					//if (config.ld_script_debug == true) {
 					//	console.log('checkQuestion: calling readResponses');
 					//}
-
+					
 					responses[question_id] = readResponses(name, data, $this, $questionList, true);
 					responses[question_id]['question_pro_id'] = data['id'];
 					responses[question_id]['question_post_id'] = data['question_post_id'];
@@ -1892,7 +1892,7 @@
 						quiz_nonce: config.quiz_nonce,
 						responses: JSON.stringify(responses)
 					}
-				}, function(json) {
+				}, function(json) {					
 					//console.log('json[%o]', json);
 
 					plugin.methode.hideSpinner();
@@ -1905,7 +1905,7 @@
 					list.each(function() {
 						var $this = $(this);
 						//console.log('this[%o]', $this);
-
+						
 						var $questionList = $this.find(globalNames.questionList);
 						var question_id = $questionList.data('question_id');
 						//var data = {id: question_id};
@@ -1916,7 +1916,7 @@
 
 						if ( typeof json[question_id] !== 'undefined' ) {
 							var result = json[question_id];
-
+							
 							data = config.json[$questionList.data('question_id')];
 
 
@@ -1930,7 +1930,7 @@
 								results[data.id].p_nonce = result.p_nonce;
 							else
 								results[data.id].p_nonce = '';
-
+						
 							results[data.id].correct = Number(result.c);
 							results[data.id].data = result.s;
 							if ( typeof result.a_nonce !== 'undefined' )
@@ -1940,8 +1940,8 @@
 							results[data.id].possiblePoints = result.e.possiblePoints;
 
 							// If the sort_answer or matrix_sort_answer question type is not 100% correct then the returned
-							// result.s object will be empty. So in order to pass the user's answers to the server for the
-							// sendCompletedQuiz AJAX call we need to grab the result.e.r object and store into results.
+							// result.s object will be empty. So in order to pass the user's answers to the server for the 
+							// sendCompletedQuiz AJAX call we need to grab the result.e.r object and store into results. 
 							if (jQuery.isEmptyObject(results[data.id].data)) {
 								if ((result.e.type != undefined) && ((result.e.type == 'sort_answer') || (result.e.type == 'matrix_sort_answer'))) {
 									results[data.id].data = result.e.r;
@@ -1963,33 +1963,33 @@
 							$this.find(globalNames.check).hide();
 							$this.find(globalNames.skip).hide();
 							$this.find(globalNames.next).show();
-
+						
 							//results[data.id].points = result.p;
 							//results[data.id].correct = Number(result.c);
 							//results[data.id].data = result.s;
-
+						
 							// If the sort_answer or matrix_sort_answer question type is not 100% correct then the returned
-							// result.s object will be empty. So in order to pass the user's answers to the server for the
-							// sendCompletedQuiz AJAX call we need to grab the result.e.r object and store into results.
+							// result.s object will be empty. So in order to pass the user's answers to the server for the 
+							// sendCompletedQuiz AJAX call we need to grab the result.e.r object and store into results. 
 							if (jQuery.isEmptyObject(results[data.id].data)) {
-
+							
 								if ( typeof result.e.type !== 'undefined' ) {
 									if ( (result.e.type == 'sort_answer' ) || ( result.e.type == 'matrix_sort_answer' ) ) {
 										if ( typeof result.e.r !== 'undefined' ) {
 											results[data.id].data = result.e.r;
 										}
 									}
-
+								
 									if ( result.e.type == 'essay' ) {
 										if ( typeof result.e.graded_id !== 'undefined' ) {
 											results[data.id].data = { "graded_id": result.e.graded_id };
 										}
 									}
 								}
-							}
-
+							}						
+						
 							//results['comp'].points += result.p;
-
+						
 							catResults[data.catId] += result.p;
 
 							//Marker
@@ -2021,24 +2021,24 @@
 								$e.trigger({ type: 'questionSolvedIncorrect', values: { item: $this, index: $this.index(), solved: true, result: result } });
 
 								$this.find('.wpProQuiz_incorrect').show();
-							}
-
+							}							
+							
 							$this.find('.wpProQuiz_responsePoints').text(result.p);
-
+							
 							$this.data('check', true);
 						}
 					});
-
+                    
 					// Set a default just in case.
 					//results.comp.p_nonce = '';
-
+					
 					//if ( typeof json['comp'] !== 'undefined' ) {
 					//	if ( ( typeof json['comp']['p'] !== 'undefined' ) && ( typeof json['comp']['p_nonce'] !== 'undefined' ) ) {
 					//		results.comp.points = json['comp']['p'];
 					//		results.comp.p_nonce = json['comp']['p_nonce'];
 					//	}
 					//}
-
+					
 					if(finishQuiz)
 						plugin.methode.finishQuizEnd();
 				});
@@ -2054,7 +2054,7 @@
 						$questionList.children().each(function(i) {
 							var $item = $(this);
 							var index = $item.attr('data-pos');
-
+							
 							if(result.e.c[index]) {
 								var checked = $('input.wpProQuiz_questionInput', $item).is(':checked');
 								if (checked) {
@@ -2085,7 +2085,7 @@
 							var input = cloze.eq(0);
 							var span = cloze.eq(1);
 							var inputText = plugin.methode.cleanupCurlyQuotes(input.val());
-
+							
 							if(result.s[i]) {
 								//input.css('background-color', '#B0DAB0');
 								input.addClass('wpProQuiz_answerCorrect');
@@ -2227,7 +2227,7 @@
 						 * Removed as part of LEARNDASH-4027
 						 * The restart button does not need to be removed. It can be hidden
 						 * via the Quiz setting.
-						 */
+						 */ 
 
 						/*
 						if(json.lock.pre) {
@@ -2330,7 +2330,7 @@
 
 				var $addToplistMessage = $e.find('.wpProQuiz_addToplistMessage').text(WpProQuizGlobal.loadData).show();
 				var $addBox = $e.find('.wpProQuiz_addBox').hide();
-
+				
 				plugin.methode.ajax({
 					action: 'wp_pro_quiz_add_toplist',
 					quizId: config.quizId,
@@ -2371,7 +2371,7 @@
 			},
 
 			registerSolved: function() {
-
+				
 				// Free Input field
 				$e.find('.wpProQuiz_questionInput[type="text"]').change(function(e) {
 					var $this = $(this);
@@ -2425,7 +2425,7 @@
 
 				});
 
-				// Essay textarea field. For Essay file uploads look into uploadFile() function
+				// Essay textarea field. For Essay file uploads look into uploadFile() function 
 				$e.find('.wpProQuiz_questionList[data-type="essay"] textarea.wpProQuiz_questionEssay').change(function(e) {
 					var $this = $(this);
 					var $p = $this.parents('.wpProQuiz_listItem');
@@ -2457,7 +2457,7 @@
 					globalElements.quiz.remove();
 
 					$e.find('.wpProQuiz_quizAnker').after(json.content);
-
+					
 					$('table.wpProQuiz_toplistTable caption span.wpProQuiz_max_points').html(config.globalPoints);
 
 					//Reinit globalElements
@@ -2492,33 +2492,33 @@
 			},
 			nextQuestionClicked: function() {
 				var $questionList = currentQuestion.find(globalNames.questionList);
-				var data = config.json[$questionList.data('question_id')];
+				var data = config.json[$questionList.data('question_id')];			
 
 				// Within the following logic. If the question type is 'sort_answer' there is a chance
-				// the sortable answers will be displayed in the correct order. In that case the user will click
-				// the next button.
-				// The trigger to set the question was answered is normally a function of the sort/drag action
-				// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled.
+				// the sortable answers will be displayed in the correct order. In that case the user will click 
+				// the next button. 
+				// The trigger to set the question was answered is normally a function of the sort/drag action 
+				// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled. 
 				//if (data.type == 'sort_answer') {
 				//	var question_index = currentQuestion.index();
 				//	if ( typeof quizSolved[question_index] === 'undefined') {
 				//		$e.trigger({type: 'questionSolved', values: {item: currentQuestion, index: question_index, solved: true}});
 				//	}
 				//}
-
+				
 				if ( bitOptions.forcingQuestionSolve && !quizSolved[currentQuestion.index()] && ( bitOptions.quizSummeryHide || !bitOptions.reviewQustion ) ) {
 					// Would really like to do something more stylized instead of a simple alert popup. yuk!
 					alert(WpProQuizGlobal.questionNotSolved);
 					return false;
 				}
-
+				
 				plugin.methode.nextQuestion();
 			},
 			initQuiz: function() {
 				//if (config.ld_script_debug == true) {
 				//	console.log('in initQuiz');
 				//}
-
+				
 				plugin.methode.setClozeStyle();
 				plugin.methode.registerSolved();
 
@@ -2539,22 +2539,22 @@
 				});
 
 				$e.find('input[name="checkSingle"]').click(function() {
-
+					
 					// First get all the questions...
 					list = globalElements.questionList.children();
 					if (list != null) {
-
+						
 						list.each(function() {
 							var $this = $(this);
 							var $questionList = $this.find(globalNames.questionList);
 							var question_id = $questionList.data('question_id');
 							var data = config.json[$questionList.data('question_id')];
-
+						
 							// Within the following logic. If the question type is 'sort_answer' there is a chance
-							// the sortable answers will be displayed in the correct order. In that case the user will click
-							// the next button.
-							// The trigger to set the question was answered is normally a function of the sort/drag action
-							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled.
+							// the sortable answers will be displayed in the correct order. In that case the user will click 
+							// the next button. 
+							// The trigger to set the question was answered is normally a function of the sort/drag action 
+							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled. 
 							//if (data.type == 'sort_answer') {
 							//	//var question_index = $this.index();
 							//	//if ( typeof quizSolved[question_index] === 'undefined') {
@@ -2563,9 +2563,9 @@
 							//}
 						});
 					}
-
+					
 					if (bitOptions.forcingQuestionSolve	&& (bitOptions.quizSummeryHide || !bitOptions.reviewQustion)) {
-
+												
 						for(var i = 0, c = $e.find('.wpProQuiz_listItem').length; i < c; i++) {
 							if(!quizSolved[i]) {
 								alert(WpProQuizGlobal.questionsNotSolved);
@@ -2587,37 +2587,37 @@
 
 				$e.find('input[name="wpProQuiz_pageRight"]').click(function() {
 					plugin.methode.showSinglePage(currentPage+1);
-
+					
 					plugin.methode.setupMatrixSortHeights();
 				});
-
+				
 				$e.find('input[id^="uploadEssaySubmit"]').click(plugin.methode.uploadFile);
-
+				
 				// Added in LD v2.4 to allow external notification when quiz init happens.
 				$e.trigger('learndash-quiz-init');
-
+				
 			},
-			// Setup the Cookie specific to the Quiz ID.
-			CookieInit: function() {
+			// Setup the Cookie specific to the Quiz ID. 
+			CookieInit: function() {				
 				if (config.timelimitcookie == 0) return;
-
+				
 				cookie_name = 'ld_' + config.quizId + '_quiz_responses';
-
+				
 				// Comment out to force clear cookie on init.
 				//jQuery.cookie(cookie_name, '');
 
 				cookie_value = jQuery.cookie(cookie_name);
-
+				
 				if ((cookie_value == '') || (cookie_value == undefined)) {
 					cookie_value = {};
 				} else {
 					cookie_value = JSON.parse(cookie_value);
 				}
-
+				
 				//if (config.ld_script_debug == true) {
 				//	console.log('CookieInit: cookie_name[%o] cookie_value[%o]', cookie_name, cookie_value);
 				//}
-
+				
 				plugin.methode.CookieSetResponses();
 				plugin.methode.CookieResponseTimer();
 			},
@@ -2628,7 +2628,7 @@
 					//}
 					return;
 				}
-
+				
 				cookie_name = 'ld_' + config.quizId + '_quiz_responses';
 				//if (config.ld_script_debug == true) {
 				//	console.log('CookieDelete: cookie_name[%o]', cookie_name);
@@ -2639,7 +2639,7 @@
 				if (list != null) {
 					list.each(function() {
 						var $this = $(this);
-
+						
 						var question_index = $this.index();
 						var $questionList = $this.find(globalNames.questionList);
 						var question_id = $questionList.data('question_id');
@@ -2650,37 +2650,37 @@
 						}
 
 						var question_response = readResponses(name, data, $this, $questionList, false);
-
+						
 						plugin.methode.CookieSaveResponse(question_id, question_index, data.type, question_response);
 					});
 				}
 			},
-			// Save the answer(response) to the cookie. This is called from 'checkQuestion' and cookie timer functions.
+			// Save the answer(response) to the cookie. This is called from 'checkQuestion' and cookie timer functions.			
 			CookieSaveResponse: function(question_id, question_index, question_type, question_response) {
 				if (config.timelimitcookie == 0) {
 					return;
 				}
-
+				
 				// set the value
 				cookie_value[question_id] = {'index': question_index, 'value': question_response['response'], 'type': question_type};
-
+				
 				// store the values.
 				// Calculate the cookie date to expire
 				var cookie_expire_date = new Date();
 				cookie_expire_date.setTime(cookie_expire_date.getTime() + (config.timelimitcookie * 1000));
 				jQuery.cookie(cookie_name, JSON.stringify(cookie_value), { expires:cookie_expire_date });
 			},
-			// The cookie timer loops every 5 seconds to save the last response from the user.
-			// This only effect Essay questions as there is some current logic where once
-			// 'readResponses' is called the question is locked.
+			// The cookie timer loops every 5 seconds to save the last response from the user. 
+			// This only effect Essay questions as there is some current logic where once 
+			// 'readResponses' is called the question is locked. 
 			CookieResponseTimer: function() {
 				if (config.timelimitcookie == 0) return;
 
 				/*
 				var list = null;
 				var poll_interval = 5;
-
-				// If mode is 3 we are display ALL questions. So we do this on an interval of 60 seconds.
+				
+				// If mode is 3 we are display ALL questions. So we do this on an interval of 60 seconds. 
 				if (config.mode == 3) {
 					list = globalElements.questionList.children();
 					var poll_interval = 60;
@@ -2689,51 +2689,51 @@
 						list = currentQuestion;
 					}
 				}
-
+				
 				if (list != null) {
 					if (config.ld_script_debug == true) {
 						console.log('CookieResponseTimer: liist[%o] ', list);
 					}
-
+					
 					plugin.methode.CookieProcessQuestionResponse( list );
 				}
 
 				setTimeout(function() {
 					plugin.methode.CookieResponseTimer();
-				}, poll_interval*1000);
+				}, poll_interval*1000);					
 				*/
-
+				
 				// Hook into the 'questionSolved' triggered event. This is much better than
-				// a timer to grab the answer values. With the event trigger we only process the
-				// single question when the user makes a change.
+				// a timer to grab the answer values. With the event trigger we only process the 
+				// single question when the user makes a change. 
 				$e.bind('questionSolved', function(e) {
 					//if (config.ld_script_debug == true) {
 					//	console.log('CookieResponseTimer: e.values[%o]', e.values);
 					//}
 					plugin.methode.CookieProcessQuestionResponse( e.values.item );
 				});
-
-
-
+				
+				
+				
 			},
 			// Load the Cookie (if present) and sets the values of the Quiz questions to the cookie saved value
 			CookieSetResponses: function() {
 				if (config.timelimitcookie == 0) return;
-
+				
 				if (( cookie_value == undefined ) || ( !Object.keys(cookie_value).length )) {
 					return;
 				}
-
+				
 				var list = globalElements.questionList.children()
 				list.each(function() {
 					var $this = $(this);
-
+					
 					var $questionList = $this.find(globalNames.questionList);
 					var form_question_id = $questionList.data('question_id');
 
 					if (cookie_value[form_question_id] != undefined) {
 						var cookie_question_data = cookie_value[form_question_id];
-
+						
 						var form_question_data = config.json[$questionList.data('question_id')];
 						if (form_question_data.type === cookie_question_data.type) {
 							//if (config.ld_script_debug == true) {
@@ -2741,20 +2741,20 @@
 							//}
 
 							setResponse(form_question_data, cookie_question_data.value, $this, $questionList);
-
+							
 						}
 					}
 				});
 				return;
 			},
 			setupMatrixSortHeights: function ( ) {
-				/** Here we have to do all the questions because the current logic when using X questions
-				 * per page doesn't allow that information.
+				/** Here we have to do all the questions because the current logic when using X questions 
+				 * per page doesn't allow that information. 
 				 */
 				$('li.wpProQuiz_listItem', globalElements.questionList).each(function (idx, questionItem) {
 					var question_type = $(questionItem).data('type');
 					if ('matrix_sort_answer' === question_type) {
-
+						
 						// On the draggable items get the items max height and set the parent ul to that.
 						var sortitems_height = 0;
 						$('ul.wpProQuiz_sortStringList li', questionItem).each(function (idx, el) {
@@ -2771,15 +2771,13 @@
 							var parent_td = $(el).parent('td');
 							if (typeof parent_td !== 'undefined') {
 								var parent_td_height = $(parent_td).height();
-								if ( parent_td_height ) {
-									$(el).css('height', parent_td_height);
-									$(el).css('min-height', parent_td_height);
-								}
+								$(el).css('height', parent_td_height);
+								$(el).css('min-height', parent_td_height);
 							}
 						});
 					}
 				});
-			},
+			},		
 		};
 
 		/**
@@ -2815,7 +2813,7 @@
 
 			$e.find('input[name="endQuizSummary"]').click(function() {
 				if(bitOptions.forcingQuestionSolve) {
-
+					
 					// First get all the questions...
 					list = globalElements.questionList.children();
 					if (list != null) {
@@ -2824,12 +2822,12 @@
 							var $questionList = $this.find(globalNames.questionList);
 							var question_id = $questionList.data('question_id');
 							var data = config.json[$questionList.data('question_id')];
-
+							
 							// Within the following logic. If the question type is 'sort_answer' there is a chance
-							// the sortable answers will be displayed in the correct order. In that case the user will click
-							// the next button.
-							// The trigger to set the question was answered is normally a function of the sort/drag action
-							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled.
+							// the sortable answers will be displayed in the correct order. In that case the user will click 
+							// the next button. 
+							// The trigger to set the question was answered is normally a function of the sort/drag action 
+							// by the user. So we need to set the question answered flag in the case the Quiz summary is enabled. 
 							//if (data.type == 'sort_answer') {
 							//	var question_index = $this.index();
 							//	if ( typeof quizSolved[question_index] === 'undefined') {
@@ -2838,7 +2836,7 @@
 							//}
 						});
 					}
-
+					
 					for(var i = 0, c = $e.find('.wpProQuiz_listItem').length; i < c; i++) {
 						if(!quizSolved[i]) {
 							alert(WpProQuizGlobal.questionsNotSolved);

@@ -352,11 +352,13 @@ const PriceSlider = ( {
 							: &nbsp;
 							<FormattedMonetaryAmount
 								currency={ currency }
+								displayType="text"
 								value={ minPrice }
 							/>
 							&nbsp;&ndash;&nbsp;
 							<FormattedMonetaryAmount
 								currency={ currency }
+								displayType="text"
 								value={ maxPrice }
 							/>
 						</div>

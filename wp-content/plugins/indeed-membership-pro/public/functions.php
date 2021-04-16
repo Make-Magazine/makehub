@@ -102,23 +102,20 @@ function ihc_is_user_level_expired($u_id, $l_id, $not_started_check=TRUE, $expir
 	 */
 
 	global $wpdb;
-
+	$grace_period = get_option('ihc_grace_period');
 	$u_id = esc_sql($u_id);
 	$l_id = esc_sql($l_id);
-
-	$grace_period = \Indeed\Ihc\UserSubscriptions::getGracePeriod( $u_id, $l_id );
-
-	$data = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription( $u_id, $l_id );
+	$data = $wpdb->get_row('SELECT expire_time, start_time FROM ' . $wpdb->prefix . 'ihc_user_levels WHERE user_id="' . $u_id . '" AND level_id="' . $l_id . '";');
 	$current_time = indeed_get_unixtimestamp_with_timezone();
-	if (!empty($data['start_time']) && $not_started_check){
-		$start_time = strtotime($data['start_time']);
+	if (!empty($data->start_time) && $not_started_check){
+		$start_time = strtotime($data->start_time);
 		if ($current_time<$start_time){
 			//it's not available yet
 			return 1;
 		}
 	}
-	if (!empty($data['expire_time']) && $expire_check){
-		$expire_time = strtotime($data['expire_time']) + ((int)$grace_period * 24 * 60 *60);
+	if (!empty($data->expire_time) && $expire_check){
+		$expire_time = strtotime($data->expire_time) + ((int)$grace_period * 24 * 60 *60);
 		if ($current_time>$expire_time){
 			//it's expired
 			return 1;
@@ -191,9 +188,9 @@ function ihc_check_drip_content($uid, $lid, $post_id){
 						$subscription_start = strtotime($data->user_registered);
 					}
 				} else {
-					$data = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription( $uid, $lid );
-					if (!empty($data['start_time'])){
-						$subscription_start = strtotime($data['start_time']);
+					$data = $wpdb->get_row("SELECT start_time FROM " . $wpdb->prefix . "ihc_user_levels WHERE user_id='" . $uid . "' AND level_id='" . $lid . "';");
+					if (!empty($data->start_time)){
+						$subscription_start = strtotime($data->start_time);
 					}
 				}
 
@@ -363,10 +360,8 @@ function ihc_check_block_rules($url='', $current_user='', $post_id=0){
 
 	/// CHECK BLOCK ALL POST TYPES
 	$block_posts = get_option('ihc_block_posts_by_type');
-
 	if (!empty($block_posts)){
 		$post_type = get_post_type($post_id);
-
 		foreach ($block_posts as $key=>$array){
 			if ($post_type==$array['post_type']){
 				$except_arr = array();
@@ -412,17 +407,10 @@ function ihc_check_block_rules($url='', $current_user='', $post_id=0){
 					$except_arr = array();
 					if (!empty($array['except'])){
 						$except_arr = explode(',', $array['except']);
-						if ( in_array( $post_id, $except_arr ) ){
-								continue;
-						}
 					}
-
-					/*
 					if (array_intersect($post_terms, $except_arr)){
 						continue; /// SKIP THIS RULE
 					}
-					*/
-
 					/// TARGET USERS
 					$target_users = FALSE;
 					if (!empty($array['target_users']) && $array['target_users']!=-1){
@@ -477,20 +465,10 @@ function ihc_if_register_url($url){
 		if (strpos($url,$reg_page_url) !== FALSE){
 			//current page is register page
 
-			$subscription_type = get_option('ihc_subscription_type');
-			if ( $subscription_type=='predifined_level' && !isset( $_GET['lid'] ) ){
-				 	return;
-			}
+			if ( isset($_GET['lid']) ) return;
 
-			$lid = isset( $_GET['lid'] ) ? $_GET['lid'] : -1;
-			$levels = \Indeed\Ihc\Db\Memberships::getAll();
-			if ( $lid > -1 && isset( $levels[$lid] ) ){
-					$checkResult = ihc_check_level_restricted_conditions( [ $lid => [] ] );
-					if ( isset( $checkResult[ $lid ] ) ){
-							// user can ask for this level
-							return;
-					}
-			}
+			$subscription_type = get_option('ihc_subscription_type');
+			if ($subscription_type=='predifined_level') return;
 
 			$subscription_pid = get_option('ihc_subscription_plan_page');
 			if ($subscription_pid && $subscription_pid!=-1){
@@ -608,14 +586,14 @@ function ihc_init_form_action($url){
 					Ihc_User_Logs::set_user_id($current_user->ID);
 					$username = Ihc_Db::get_username_by_wpuid($current_user->ID);
 					Ihc_User_Logs::write_log(__('User ', 'ihc') . $username . __(' suspend his profile.', 'ihc'), 'user_logs');
-					require_once IHC_PATH . 'public/logout.php';
+					require_once IHC_PATH . 'public/functions/logout.php';
 					ihc_do_logout($url);
 				}
 			}
 			break;
 		case 'login':
 			//login
-			include_once IHC_PATH . 'public/login.php';
+			include_once IHC_PATH . 'public/functions/login.php';
 			ihc_login($url);
 		break;
 		case 'register':
@@ -699,7 +677,7 @@ function ihc_init_form_action($url){
 					$username = Ihc_Db::get_username_by_wpuid($current_user->ID);
 					$level_name = Ihc_Db::get_level_name_by_lid($_POST['ihc_delete_level']);
 					Ihc_User_Logs::write_log(__('User ', 'ihc') . $username . __(' delete Level ', 'ihc') . $level_name, 'user_logs', $_POST['ihc_delete_level']);
-					\Indeed\Ihc\UserSubscriptions::deleteOne( $current_user->ID, $_POST['ihc_delete_level'] );
+					ihc_delete_user_level_relation($_POST['ihc_delete_level'], $current_user->ID);
 				}
 				$level_data = ihc_get_level_by_id($_POST['ihc_delete_level']);
 				if (isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
@@ -717,18 +695,8 @@ function ihc_init_form_action($url){
 				$level_name = Ihc_Db::get_level_name_by_lid($_POST['ihc_cancel_level']);
 				Ihc_User_Logs::write_log(__('User ', 'ihc') . $username . __(' cancel Level ', 'ihc') . $level_name, 'user_logs', $_POST['ihc_cancel_level']);
 				/// ihc_cancel_level($current_user->ID, $_POST['ihc_cancel_level']);
-				if ( ihc_payment_workflow() == 'standard' ){
-						// old way cancel
-						$cancel = new \Indeed\Ihc\CancelSubscription($current_user->ID, $_POST['ihc_cancel_level']);
-						$cancel->proceed();
-				} else {
-						// new way cancel
-						$cancel = new \Indeed\Ihc\Payments\CancelSubscription();
-						$cancel->setUid( $current_user->ID )
-									 ->setLid( esc_sql( $_POST['ihc_cancel_level'] ) )
-									 ->proceed();
-				}
-
+				$cancel = new \Indeed\Ihc\CancelSubscription($current_user->ID, $_POST['ihc_cancel_level']);
+				$cancel->proceed();
 			}
 
 			if (isset($_POST['ihc_renew_level']) && $_POST['ihc_renew_level']){
@@ -755,7 +723,6 @@ function ihc_do_pay_new_level(){
 			if (!class_exists('UserAddEdit')){
 				require_once IHC_PATH . 'classes/UserAddEdit.class.php';
 			}
-			$coupon = isset( $_REQUEST['ihc_coupon'] ) ? esc_attr( $_REQUEST['ihc_coupon'] ) : '';
 			$args = array(
 					'user_id' => $uid,
 					'type' => 'edit',
@@ -766,7 +733,7 @@ function ihc_do_pay_new_level(){
 			);
 			$obj = new UserAddEdit();
 			$obj->setVariable($args);//setting the object variables
-			$obj->set_coupon( $coupon );
+			$obj->set_coupon(@$_REQUEST['ihc_coupon']);
 			$obj->update_level($return_url);
 			$obj->save_coupon();
 		}
@@ -844,7 +811,7 @@ function ihc_add_stripe_public_form($content='', $doPrint=false){
 						//with coupon
 						jQuery.ajax({
 									type : "post",
-									url : "' . IHC_URL . 'public/ajax-custom.php",
+									url : "' . IHC_URL . 'public/custom-ajax.php",
 									data : {
 										    ihc_coupon: jQuery("#ihc_coupon").val(),
 										    l_id: lid,
@@ -932,7 +899,7 @@ function ihc_pay_new_lid_with_stripe($request=array()){
 	if (isset($request['stripeToken']) && isset($request['stripeEmail']) && isset($request['lid']) && isset($request['uid']) ) {
 
 		if (!class_exists('ihcStripe')){
-			require_once IHC_PATH . 'classes/PaymentGateways/ihcStripe.class.php';
+			require_once IHC_PATH . 'classes/ihcStripe.class.php';
 		}
 
 		$lid = $request['lid'];
@@ -952,9 +919,8 @@ function ihc_pay_new_lid_with_stripe($request=array()){
 		if (ihc_dont_pay_after_discount($lid, @$request['ihc_coupon'], $level_data, TRUE)){
 			// 0 amount to pay
 			$ihc_dont_pay_after_discount = true;
-
-			$succees = \Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
-			\Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid, false, [ 'payment_gateway' => 'stripe' ] );
+			$succees = ihc_handle_levels_assign($uid, $lid);
+			ihc_update_user_level_expire($level_data, $lid, $uid);
 			//v.7.1 Do not insert Orders with 0 amount anymore.
 			//ihc_insert_update_order($uid, $lid, 0, 'pending', 'stripe', array('coupon_used' => $request['ihc_coupon']));
 		} else {
@@ -966,15 +932,26 @@ function ihc_pay_new_lid_with_stripe($request=array()){
 				$trans_id = $pay_result['trans_id'];
 				$trans_info = $pay_result;
 				$trans_info['ihc_payment_type'] = 'stripe';
+				/// ihc_update_user_level_expire($level_data, $lid, $uid); /// update @ version 5.1
 				ihc_insert_update_transaction($uid, $trans_id, $trans_info, TRUE);
 			}
 		}
 
-		if($ihc_dont_pay_after_discount == FALSE){
-			$succees = \Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
+		$user_levels = get_user_meta($uid, 'ihc_user_levels', true);
+		if ($user_levels!==FALSE && $user_levels!=''){
+			$user_levels_arr = explode(',', $user_levels);
+			if (!in_array($lid, $user_levels_arr)){
+				$user_levels_arr[] = $lid;
+			}
+			$user_levels = implode(',', $user_levels_arr);
+		} else {
+			$user_levels = $lid;
 		}
+		if($ihc_dont_pay_after_discount == FALSE)
+			$succees = ihc_handle_levels_assign($uid, $lid);
 
 		if ($succees){
+			update_user_meta($uid, 'ihc_user_levels', $user_levels);//assign the new level
 			return TRUE;
 		}
 	}
@@ -989,7 +966,7 @@ function ihc_pay_new_lid_with_authorize($uid=0, $data=array()){
 	$level_data = ihc_get_level_by_id($data['lid']);
 
 	if (!class_exists('ihcAuthorizeNet')){
-		require_once IHC_PATH . 'classes/PaymentGateways/ihcAuthorizeNet.class.php';
+		require_once IHC_PATH . 'classes/ihcAuthorizeNet.class.php';
 	}
 	$auth_pay = new ihcAuthorizeNet();
 	$charge = $auth_pay->charge($data);
@@ -1001,9 +978,22 @@ function ihc_pay_new_lid_with_authorize($uid=0, $data=array()){
 			$trans_info = $pay_result;
 			$trans_info['ihc_payment_type'] = 'authorize';
 
-			$succees = \Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
+			$user_levels = get_user_meta($uid, 'ihc_user_levels', true);
+			if ($user_levels!==FALSE && $user_levels!=''){
+				$user_levels_arr = explode(',', $user_levels);
+				if (!in_array($data['lid'], $user_levels_arr)){
+					$user_levels_arr[] = $data['lid'];
+				}
+				$user_levels = implode(',', $user_levels_arr);
+			} else {
+				$user_levels = $data['lid'];
+			}
+			$succees = ihc_handle_levels_assign($uid, $data['lid']);
 			if ($succees){
-				\Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $data['lid'], false, [ 'payment_gateway' => 'authorize' ] );
+				update_user_meta($uid, 'ihc_user_levels', $user_levels);//assign the new level
+				ihc_update_user_level_expire($level_data, $data['lid'], $uid);
+				ihc_send_user_notifications($data->u_id, 'payment', $payment_data['level']);//send notification to user
+				ihc_send_user_notifications($data->u_id, 'admin_user_payment', $payment_data['level']);//send notification to admin
 				do_action( 'ihc_payment_completed', $data->u_id, $payment_data['level'] );
 				// @description run on payment complete. @param user id (integer), level id (integer)
 
@@ -1029,9 +1019,25 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 	}
 
 	switch ($payment_type){
+		/*
+		case 'paypal':
+			$url = IHC_URL . 'public/paypal_payment.php';
+			$url = add_query_arg('lid', $l_id, $url);
+			$url = add_query_arg('uid', $u_id, $url);
+			if (!empty($_REQUEST['ihc_coupon'])){
+				$url = add_query_arg('ihc_coupon', $_REQUEST['ihc_coupon'], $url);
+			}
+			if (isset($ihc_country)){
+				$url = add_query_arg('ihc_country', $ihc_country, $url);
+			}
+			insert_order_from_renew_level($u_id, $l_id, @$_REQUEST['ihc_coupon'], @$ihc_country, $payment_type, 'pending');
+			wp_redirect($url);
+			exit();
+			break;
+			*/
 		case 'stripe':
 			if (!class_exists('ihcStripe')){
-				require_once IHC_PATH . 'classes/PaymentGateways/ihcStripe.class.php';
+				require_once IHC_PATH . 'classes/ihcStripe.class.php';
 			}
 			$payment_obj = new ihcStripe();
 			$post_data['stripeEmail'] = $_REQUEST['stripeEmail'];
@@ -1062,7 +1068,7 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 			if(isset($level_data['access_type']) && $level_data['access_type']=='regular_period'){
 				$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; ///  $_SERVER['SERVER_NAME']
 			}else{
-				$url = IHC_URL . 'classes/PaymentGateways/authorize_payment.php';
+				$url = IHC_URL . 'public/authorize_payment.php';
 			}
 			$url = add_query_arg('ihc_authorize_fields', 1, $url);
 			$url = add_query_arg('lid', $l_id, $url);
@@ -1090,7 +1096,22 @@ function ihc_renew_level($u_id, $l_id, $payment_type=''){
 			$url .= '#ihc_bt_success_msg';
 			$order_id = insert_order_from_renew_level($u_id, $l_id, @$_REQUEST['ihc_coupon'], @$ihc_country, $payment_type, 'pending');
 
-			do_action( 'ihc_bank_transfer_charge', [ 'uid' => $u_id, 'lid' => $l_id, 'order_id' => $order_id ]  );
+			ihc_send_user_notifications($u_id, 'bank_transfer', $l_id, array('order_id'=>$order_id) );	/// send notification
+
+			wp_redirect($url);
+			exit();
+			break;
+		case 'payza':
+			$url = IHC_URL . 'public/payza_payment.php';
+			$url = add_query_arg('lid', $l_id, $url);
+			$url = add_query_arg('uid', $u_id, $url);
+			if (!empty($_REQUEST['ihc_coupon'])){
+				$url = add_query_arg('ihc_coupon', $_REQUEST['ihc_coupon'], $url);
+			}
+			if (isset($ihc_country)){
+				$url = add_query_arg('ihc_country', $ihc_country, $url);
+			}
+			insert_order_from_renew_level($u_id, $l_id, @$_REQUEST['ihc_coupon'], @$ihc_country, $payment_type, 'pending');
 			wp_redirect($url);
 			exit();
 			break;
@@ -1139,7 +1160,7 @@ function ihc_authorize_reccuring_payment(){
 			}
 		} else {
 			if (!class_exists('ihcAuthorizeNet')){
-				require_once IHC_PATH . 'classes/PaymentGateways/ihcAuthorizeNet.class.php';
+				require_once IHC_PATH . 'classes/ihcAuthorizeNet.class.php';
 			}
 			$auth_pay = new ihcAuthorizeNet();
 			$str = '';
@@ -1171,16 +1192,9 @@ function ihc_braintree_payment_for_reg_users(){
 		global $current_user;
 		$post_data = $_REQUEST;
 		$post_data['uid'] = (isset($current_user->ID)) ? $current_user->ID : 0;
-		\Indeed\Ihc\UserSubscriptions::assign( $post_data['uid'], $post_data['lid'] );
-		if ( version_compare( phpversion(), '7.2', '>=' ) ){
-				// braintree v2
-				require_once IHC_PATH . 'classes/PaymentGateways/Ihc_Braintree_V2.class.php';
-				$braintree = new Ihc_Braintree_V2();
-		} else {
-				// braintree v1
-				require_once IHC_PATH . 'classes/PaymentGateways/Ihc_Braintree.class.php';
-				$braintree = new Ihc_Braintree();
-		}
+		ihc_do_complete_level_assign_from_ap($post_data['uid'], $post_data['lid']);/// this will not add the level time into db, just assign
+		require_once IHC_PATH . 'classes/Ihc_Braintree.class.php';
+		$braintree = new Ihc_Braintree();
 		$paid = $braintree->do_charge($post_data);
 		if ($paid){
 			return __("Payment Complete", 'ihc');
@@ -1188,7 +1202,7 @@ function ihc_braintree_payment_for_reg_users(){
 			return __("An error have occured. Please try again later!", 'ihc');
 		}
 	} else {
-		require_once IHC_PATH . 'classes/PaymentGateways/Ihc_Braintree.class.php';
+		require_once IHC_PATH . 'classes/Ihc_Braintree.class.php';
 		$braintree = new Ihc_Braintree();
 		$str = '';
 		$str .= '<form method="post" action="">';

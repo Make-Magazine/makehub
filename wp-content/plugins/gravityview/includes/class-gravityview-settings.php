@@ -12,10 +12,10 @@ if ( ! class_exists( '\GV\Addon_Settings' ) ) {
 class GravityView_Settings extends \GV\Addon_Settings {
 	/**
 	 * @deprecated Use gravityview()->plugin->settings
-	 * @return \GV\Settings
+	 * @return \GV\Global_Settings
 	 */
-	public function __wakeup() {}
-	public function __clone() {}
+	private function __wakeup() {}
+	private function __clone() {}
 
 	/**
 	 * @deprecated Use gravityview()->plugin->settings

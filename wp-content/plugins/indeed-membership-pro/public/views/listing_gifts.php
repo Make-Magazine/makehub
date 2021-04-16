@@ -10,7 +10,7 @@
 	<?php foreach ($gifts as $gift):?>
 		<tr>
 			<td><?php echo $gift['code'];?></td>
-			<td><?php
+			<td><?php 
 				if ($gift['discount_type']=='price'){
 					echo ihc_format_price_and_currency($currency, $gift['discount_value']);
 				} else {
@@ -18,19 +18,19 @@
 				}
 			?></td>
 			<td>
-				<?php
+				<?php 
 					$l = $gift['target_level'];
 					if (isset($levels[$l]) && isset($levels[$l]['label'])){
-						echo $levels[$l]['label'];
-					}
+						echo $levels[$l]['label'];		
+					}	
 				?>
 			</td>
-			<td class="ihc-remove-onmobile"><?php
+			<td class="ihc-remove-onmobile"><?php 
 				if ($gift['is_active']):
 					_e('Unused', 'ihc');
 				else :
 					_e('Used', 'ihc');
-				endif;
+				endif;	
 			?></td>
 		</tr>
 	<?php endforeach;?>

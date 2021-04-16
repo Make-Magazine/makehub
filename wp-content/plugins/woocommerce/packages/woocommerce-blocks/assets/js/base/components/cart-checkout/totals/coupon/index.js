@@ -59,6 +59,7 @@ const TotalsCoupon = ( {
 					htmlFor={ textInputId }
 				/>
 			}
+			titleTag="h2"
 		>
 			<LoadingMask
 				screenReaderLabel={ __(

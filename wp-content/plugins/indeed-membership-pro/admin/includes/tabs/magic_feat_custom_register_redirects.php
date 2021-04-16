@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_register_redirects_by_level_enable', $_POST['ihc_register_redirects_by_level_enable']);
 }
@@ -28,12 +28,12 @@ $pages_arr[-1] = '...';
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Register Redirects based on Membership(s)', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Register Redirects based on Level(s)', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Rediger Redirects+ action', 'ihc');?></h2>
-				<p style="max-width:70%;"><?php _e('Replace the default redirect after register with a custom one based on the user assigned Membership.', 'ihc');?></p>
+				<h2><?php _e('Activate/Hold Custom Redirects action', 'ihc');?></h2>
+				<p style="max-width:70%;"><?php _e('Replace the default redirect after register with a custom one based on the user assigned level.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($check) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_redirects_by_level_enable');" <?php echo $checked;?> />

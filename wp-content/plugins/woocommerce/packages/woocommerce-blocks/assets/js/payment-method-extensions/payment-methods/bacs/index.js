@@ -26,7 +26,7 @@ const label = decodeEntities( settings.title ) || defaultLabel;
  * Content component
  */
 const Content = () => {
-	return decodeEntities( settings.description || '' );
+	return <div>{ decodeEntities( settings.description || '' ) }</div>;
 };
 
 /**

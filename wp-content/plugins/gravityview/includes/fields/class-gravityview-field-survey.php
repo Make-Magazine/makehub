@@ -15,8 +15,6 @@ class GravityView_Field_Survey extends GravityView_Field {
 
 	var $group = 'advanced';
 
-	var $icon = 'dashicons-forms';
-
 	public function __construct() {
 		$this->label = esc_html__( 'Survey', 'gravityview' );
 		parent::__construct();

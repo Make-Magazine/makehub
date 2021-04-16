@@ -1,9 +1,9 @@
-<?php
+<?php 
 echo ihc_inside_dashboard_error_license();
 ?>
 <div style="width: 97%">
 	<div class="ihc-dashboard-title">
-		Ultimate Membership Pro -
+		Ultimate Membership Pro - 
 		<span class="second-text">
 			<?php _e('Front-End Showcases', 'ihc');?>
 		</span>
@@ -15,9 +15,8 @@ echo ihc_inside_dashboard_error_license();
 	            <a href="<?php echo $url.'&tab=register';?>"><div class="ihc-popup-shortcodevalue"><i class="fa-ihc fa-user-plus-ihc"></i><?php _e('Register Form', 'ihc');?><span>Templates, Custom Fields, Special Settings, Custom Messages</span></div></a>
 	            <a href="<?php echo $url.'&tab=login';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-sign-in-ihc"></i><?php _e('Login Form', 'ihc');?><span>Templates, Display Options, Custom Messages</span></div></a>
 	            <a href="<?php echo $url.'&tab=subscription_plan';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-levels-ihc"></i><?php _e('Subscription Plan', 'ihc');?><span>Templates, Custom Style</span></div></a>
-	            <a href="<?php echo $url.'&tab=account_page';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-user-ihc"></i><?php _e('Account Page', 'ihc');?><span>Templates, ShowUp fields, ShowUp Tabs, Predefined Overview</span></div>  </a>
-	            <a href="<?php echo $url.'&tab=listing_users';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-listing_users-ihc"></i><?php _e('Members List', 'ihc');?><span>ShortCode Generator for listing current Members </span></div>  </a>
-	            <!--a href="<?php echo $url.'&tab=cart';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-cart-ihc"></i><?php _e('Cart', 'ihc');?><span>ShortCode Generator for Cart </span></div>  </a-->            
+	            <a href="<?php echo $url.'&tab=account_page';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-user-ihc"></i><?php _e('Account Page', 'ihc');?><span>Templates, ShowUp fields, ShowUp Tabs, Predefined Overview</span></div>  </a> 
+	            <a href="<?php echo $url.'&tab=listing_users';?>"><div class="ihc-popup-shortcodevalue"> <i class="fa-ihc fa-listing_users-ihc"></i><?php _e('Members List', 'ihc');?><span>ShortCode Generator for listing current Members </span></div>  </a>          
 				<div class="ihc-clear"></div>
         	</div>
     	</div>

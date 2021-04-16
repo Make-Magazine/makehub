@@ -2,8 +2,6 @@
 namespace Indeed\Ihc;
 /*
 @since 7.4
-@deprecated since 9.3
-This class works with 'payment workflow' option set as 'Standard'.
 */
 class CancelSubscription
 {
@@ -29,9 +27,6 @@ class CancelSubscription
       	$data = $wpdb->get_results($q);
         foreach ($data as $obj){
           $arr = json_decode($obj->payment_data, TRUE);
-          if ( !isset($arr['lid'] ) || $arr['lid'] != $this->lid ){
-              continue;
-          }
           $completed = FALSE;
           if (!empty($arr['payment_status'])){
             $completed = TRUE;
@@ -98,7 +93,7 @@ class CancelSubscription
     				break;
     			case 'stripe':
     				if (!class_exists('ihcStripe')){
-    					require_once IHC_PATH . 'classes/PaymentGateways/ihcStripe.class.php';
+    					require_once IHC_PATH . 'classes/ihcStripe.class.php';
     				}
     				$obj = new \ihcStripe();
     				$obj->cancel_subscription( $this->transactionId );
@@ -112,7 +107,7 @@ class CancelSubscription
     				break;
     			case 'authorize':
     				if (!class_exists('ihcAuthorizeNet')){
-    					require_once IHC_PATH . 'classes/PaymentGateways/ihcAuthorizeNet.class.php';
+    					require_once IHC_PATH . 'classes/ihcAuthorizeNet.class.php';
     				}
     				$obj = new \ihcAuthorizeNet();
     				$unsubscribe = $obj->cancel_subscription( $this->transactionId );
@@ -153,7 +148,10 @@ class CancelSubscription
 
     private function modifyStatusInDb()
     {
-        \Indeed\Ihc\UserSubscriptions::updateStatus( $this->uid, $this->lid, 0 );
+        global $wpdb;
+        $table = $wpdb->prefix . "ihc_user_levels";
+        $q = $wpdb->prepare("UPDATE $table SET status='0' WHERE user_id=%d AND level_id=%d;", $this->uid, $this->lid);
+        $wpdb->query($q);
         do_action('ihc_action_after_cancel_subscription', $this->uid, $this->lid);
         // @description run after cancel subscription. @param user id (integer), level id (integer)
     }

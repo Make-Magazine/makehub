@@ -4,7 +4,7 @@
 		<div class="inside">
 			<?php
 			if (!empty($data['metas']['uap_affiliate_payment_type'])):
-				$types = array('stripe'=>'Stripe', 'paypal'=>'PayPal', 'bt'=>'Bank Transfer', 'stripe_v2' => 'Stripe V2', 'stripe_v3' => 'Stripe V3');
+				$types = array('stripe'=>'Stripe', 'paypal'=>'PayPal', 'bt'=>'Bank Transfer', 'stripe_v2' => 'Stripe V2');
 				echo "<div><label>" . __('Payment Type:', 'uap') . "</label> " . $types[$data['metas']['uap_affiliate_payment_type']] . "</div>";
 				switch ($data['metas']['uap_affiliate_payment_type']){
 					case 'stripe':
@@ -14,7 +14,7 @@
 						<!-- div><label><?php echo __("CVC:", 'uap');?></label> <?php echo $data['metas']['uap_affiliate_stripe_cvc'];?></div -->
 						<div><label><?php echo __("Expiration:", 'uap');?></label> <?php echo $data['metas']['uap_affiliate_stripe_expiration_month'] . '/'. $data['metas']['uap_affiliate_stripe_expiration_year'];?></div>
 						<div><label><?php echo __("Type:", 'uap');?></label> <?php echo $data['metas']['uap_affiliate_stripe_card_type'];?></div>
-						<?php
+						<?php	
 						break;
 					case 'bt':
 						?>
@@ -34,7 +34,7 @@
 											'first_name' => __('First Name', 'uap'),
 											'day' => __('Birth day', 'uap'),
 											'month' => __('Month', 'uap'),
-											'year' => __('Year', 'uap'),
+											'year' => __('Year', 'uap'),											
 											'country' => __('Country', 'uap'),
 											'state' => __('State', 'uap'),
 											'city' => __('City', 'uap'),
@@ -47,34 +47,24 @@
 											'personal_id_number' => __('Personal id number', 'uap'),
 											'business_name' => __('Business name', 'uap'),
 											'business_tax_id' => __('Business tax id', 'uap'),
-											'personal_address.city' => __('Personal Address City', 'uap'),
+											'personal_address.city' => __('Personal Address City', 'uap'), 
 											'personal_address.line1' => __('Personal Address Line1', 'uap'),
 											'personal_address.postal_code' => __('Personal Address Postal Code', 'uap'),
-						);
+						);					
 						?>
-
+						
 						<?php foreach ($possible as $key=>$label):?>
 							<?php if (isset($stripe_v2_data[$key])):?>
-							<div><label><?php echo $label;?>:</label> <?php echo $stripe_v2_data[$key];?></div>
-							<?php endif;?>
-						<?php endforeach;?>
+							<div><label><?php echo $label;?>:</label> <?php echo $stripe_v2_data[$key];?></div>	
+							<?php endif;?>								
+						<?php endforeach;?>					
 
 						<?php
 						break;
-					case 'stripe_v3':
-						$accountId = get_user_meta( $uid, 'uap_stripe_v3_user_account_id', true );
-						if ( $accountId != false && $accountId != '' ):?>
-							<div class="uap-payment-details-do-payment">
-									<a href="https://dashboard.stripe.com/test/connect/accounts/<?php echo $accountId;?>" target="_blank"><?php
-									_e( 'View Stripe Affiliate Account', 'uap');
-							?></a></div>
-					<?php else :?>
-						<div class="uap-payment-details-do-payment"><?php _e('Incomplete Payment Settings', 'uap');?></div>
-						<?php endif;
-						break;
 				}
 			endif;
-			?>
+			?>			
 		</div>
 	</div>
 </div>
+

@@ -270,8 +270,7 @@ abstract class Field_Template extends Template {
 		) );
 
 		/** Alter the display value according to Gravity Forms. */
-		if ( \GV\Source::BACKEND_GRAVITYFORMS === $source_backend && ! $this->field instanceof Internal_Field ) {
-
+		if ( $source_backend == \GV\Source::BACKEND_GRAVITYFORMS ) {
 			/** Prevent any PHP warnings that may be generated. */
 			ob_start();
 

@@ -373,7 +373,7 @@
 			var that = this;
 
 			var marginTop = that.windowH/2-that.objH/2;
-			var modalHTML =  '<div id="croppicModal">'+'<div id="croppicModalObj" class="uap-cst-croppic" style="width:'+ that.objW +'px; height:'+ that.objH +'px; margin:0 auto; margin-top:'+ marginTop +'px; position: relative; max-width:100%;"> </div>'+'</div>';
+			var modalHTML =  '<div id="croppicModal">'+'<div id="croppicModalObj" style="width:'+ that.objW +'px; height:'+ that.objH +'px; margin:0 auto; margin-top:'+ marginTop +'px; position: relative; max-width:100%;"> </div>'+'</div>';
 
 			jQuery('body').append(modalHTML);
 
@@ -442,8 +442,8 @@
 			var cropControlZoomMuchOut =     '';
 			var cropControlRotateLeft =      '';
 	        var cropControlRotateRight =     '';
-	        var cropControlCrop =            '<i class="cropControlCrop">Save</i>';
-			var cropControlReset =           '<i class="cropControlReset">Cancel</i>';
+	        var cropControlCrop =            '<i class="cropControlCrop"></i>';
+			var cropControlReset =           '<i class="cropControlReset"></i>';
 
             var html;
 
@@ -456,7 +456,7 @@
 				cropControlRotateRight = '<i class="cropControlRotateRight"></i>';
 			}
 
-			html =  '<div class="cropControls cropControlsCrop">'+ cropControlZoomMuchIn + cropControlZoomIn + cropControlZoomOut + cropControlZoomMuchOut + cropControlRotateLeft + cropControlRotateRight + '<span id="uap-custom-controls">' + cropControlCrop + ' <span class="uap_delimiter">|</span> ' + cropControlReset + '</span></div>';
+			html =  '<div class="cropControls cropControlsCrop">'+ cropControlZoomMuchIn + cropControlZoomIn + cropControlZoomOut + cropControlZoomMuchOut + cropControlRotateLeft + cropControlRotateRight + cropControlCrop + cropControlReset + '</div>';
 
 			that.obj.append(html);
 

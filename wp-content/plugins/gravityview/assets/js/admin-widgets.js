@@ -3,7 +3,7 @@
  *
  * @package GravityView
  */
-jQuery(function( $ ) {
+jQuery( document).ready(function( $ ) {
 
 	gvWidgets = {
 
@@ -74,7 +74,7 @@ jQuery(function( $ ) {
 			$.post( ajaxurl, data, function ( response ) {
 				if ( response ) {
 
-					var parsed = JSON.parse( response );
+					var parsed = $.parseJSON( response );
 
 					// Set the merge tags for this form
 					gf_vars.mergeTags = parsed.mergeTags;

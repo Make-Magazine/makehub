@@ -52,15 +52,10 @@ class GPPA_Compatibility_GravityView {
 		foreach ( $search_fields as $search_field_index => $search_field ) {
 			$field = GFFormsModel::get_field( $form, $search_field['key'] );
 
-			$hydrated_field   = gp_populate_anything()->hydrate_field( $field, $form, $this->get_gravityview_filter_values() );
-			$hydrated_choices = rgars( $hydrated_field, 'field/choices' );
+			$hydrated_field = gp_populate_anything()->hydrate_field( $field, $form, $this->get_gravityview_filter_values() );
 
-			if ( $hydrated_choices === rgar( $field, 'choices' ) ) {
-				continue;
-			}
-
-			if ( $hydrated_choices ) {
-				$search_fields[ $search_field_index ]['choices'] = $hydrated_choices;
+			if ( $choices = rgars( $hydrated_field, 'field/choices' ) ) {
+				$search_fields[ $search_field_index ]['choices'] = $choices;
 			}
 		}
 

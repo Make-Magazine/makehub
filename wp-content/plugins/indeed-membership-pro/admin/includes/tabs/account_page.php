@@ -20,7 +20,6 @@ $font_awesome = Ihc_Db::get_font_awesome_codes();
 
 $custom_tabs = Ihc_Db::account_page_menu_get_custom_items();
 $available_tabs = Ihc_Db::account_page_get_menu();
-
 ?>
 <style>
 <?php foreach ($font_awesome as $base_class => $code):?>
@@ -84,7 +83,7 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 						<div class="switch" style="display:inline-block;"></div>
 					</label>
 					<input type="hidden" value="<?php echo $meta_arr['ihc_ap_edit_show_avatar'];?>" name="ihc_ap_edit_show_avatar" id="ihc_ap_edit_show_avatar" />
-					<label><?php _e('Display Member Avatar Image', 'ihc');?></label>
+					<label><?php _e('Show Avatar Image:', 'ihc');?></label>
 				</div>
 
 				<div>
@@ -94,7 +93,7 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 						<div class="switch" style="display:inline-block;"></div>
 					</label>
 					<input type="hidden" value="<?php echo $meta_arr['ihc_ap_edit_show_level'];?>" name="ihc_ap_edit_show_level" id="ihc_ap_edit_show_level" />
-					<label><?php _e('Display Member Memberships', 'ihc');?></label>
+					<label><?php _e('Show Level:', 'ihc');?></label>
 				</div>
 				<br/>
 				<h4><?php _e('Welcome Message:', 'ihc');?></h4>
@@ -106,7 +105,6 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 					<?php
 						$constants = array( '{username}'=>'',
 											'{user_email}'=>'',
-											'{user_id}'		=> '',
 											'{first_name}'=>'',
 											'{last_name}'=>'',
 											'{account_page}'=>'',

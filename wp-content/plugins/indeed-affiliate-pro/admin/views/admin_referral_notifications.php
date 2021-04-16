@@ -69,7 +69,7 @@
 			</div>
 
 			<div class="uap-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>

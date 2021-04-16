@@ -21,7 +21,7 @@ class InfusionSoft
 
     private function createInfusionSoftObject()
     {
-        require_once IHC_PATH . 'classes/services/infusionSoft/vendor/autoload.php';
+        require_once IHC_PATH . 'classes/services/infusionSoft-sdk/vendor/autoload.php';
         $object = new \iSDK();
         if ( empty($this->settings['ihc_infusionSoft_id']) || empty($this->settings['ihc_infusionSoft_api_key']) ){
             return;

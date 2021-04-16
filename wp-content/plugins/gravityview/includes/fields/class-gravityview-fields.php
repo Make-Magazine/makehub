@@ -110,19 +110,16 @@ final class GravityView_Fields {
 	 *
 	 * @since 1.16 Added $group parameter
 	 *
-	 * @param string|array $groups Optional. If defined, fetch all fields in a group or array of groups.
+	 * @param string $group Optional. If defined, fetch all fields in a group
 	 *
 	 * @return GravityView_Field[]
 	 */
-	public static function get_all( $groups = '' ) {
+	public static function get_all( $group = '' ) {
 
-		if( '' !== $groups ) {
+		if( '' !== $group ) {
 			$return_fields = self::$_fields;
-
-			$groups = (array) $groups;
-
 			foreach ( $return_fields as $key => $field ) {
-				if( ! in_array( $field->group, $groups, true ) ) {
+				if( $group !== $field->group ) {
 					unset( $return_fields[ $key ] );
 				}
 			}

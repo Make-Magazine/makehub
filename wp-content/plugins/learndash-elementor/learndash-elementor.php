@@ -5,7 +5,7 @@
  * Description:  LearnDash LMS add-on to add Elementor widgets and templates.
  * Author:       LearnDash
  * Author URI:   https://support.learndash.com
- * Version:      1.0.3
+ * Version:      1.0.2
  * License:      GPL v2 or later
  * Text Domain: learndash-elementor
  * Doman Path: /languages/
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die();
 }
 
-define( 'LEARNDASH_ELEMENTOR_VERSION', '1.0.3' );
+define( 'LEARNDASH_ELEMENTOR_VERSION', '1.0.2' );
 
 if ( ! class_exists( 'LearnDash_Elementor' ) ) {
 
@@ -308,7 +308,6 @@ if ( ! class_exists( 'LearnDash_Elementor' ) ) {
 require plugin_dir_path( __FILE__ ) . 'includes/course-template-functions.php';
 require plugin_dir_path( __FILE__ ) . 'includes/lesson-template-functions.php';
 require plugin_dir_path( __FILE__ ) . 'includes/topic-template-functions.php';
-require plugin_dir_path( __FILE__ ) . 'includes/class-learndash-elementor-shortcodes-tinymce.php';
 
 require plugin_dir_path( __FILE__ ) . 'includes/class-ld-dependency-check.php';
 LearnDash_Dependency_Check_LD_Elementor::get_instance()->set_dependencies(

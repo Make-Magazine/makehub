@@ -22,8 +22,6 @@ class GravityView_Field_MultiSelect extends GravityView_Field {
 
 	var $group = 'standard';
 
-	var $icon = 'dashicons-editor-ul';
-
 	public function __construct() {
 		$this->label = esc_html__( 'Multi Select', 'gravityview' );
 		parent::__construct();
@@ -57,7 +55,6 @@ class GravityView_Field_MultiSelect extends GravityView_Field {
 					'value' => __( 'Value of the input', 'gravityview' ),
 					'label' => __( 'Label of the input', 'gravityview' ),
 				),
-				'group'   => 'display',
 			);
 		}
 

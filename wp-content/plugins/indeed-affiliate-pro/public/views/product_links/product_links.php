@@ -17,7 +17,7 @@
         <div class="uap-clear"></div>
     </div>
     <div class="uap-product-links-extrasearch-wrapper">
-    <div class="uap-product-links-count-wrapper uap-special-label">
+    <div class="uap-product-links-count-wrapper">
     	<span class="uap-product-links-count uap-js-product-links-count">0</span><span><?php _e( ' Results', 'uap' );?></span>
     </div>
     <div class="uap-product-links-order-wrapper">

@@ -1,11 +1,7 @@
 <?php
 namespace Automattic\WooCommerce\Blocks;
 
-use Automattic\WooCommerce\Blocks\BlockTypes\AtomicBlock;
 use Automattic\WooCommerce\Blocks\Package;
-use Automattic\WooCommerce\Blocks\Assets\AssetDataRegistry;
-use Automattic\WooCommerce\Blocks\Assets\Api as AssetApi;
-use Automattic\WooCommerce\Blocks\Integrations\IntegrationRegistry;
 
 /**
  * Library class.
@@ -67,52 +63,38 @@ class Library {
 			'AttributeFilter',
 			'ActiveFilters',
 		];
-
 		if ( Package::feature()->is_feature_plugin_build() ) {
 			$blocks[] = 'Checkout';
 			$blocks[] = 'Cart';
 		}
-
 		if ( Package::feature()->is_experimental_build() ) {
 			$blocks[] = 'SingleProduct';
 		}
-
 		/**
 		 * This disables specific blocks in Widget Areas by not registering them.
 		 */
 		if ( 'themes.php' === $pagenow ) {
-			$blocks = array_diff(
-				$blocks,
-				[
-					'AllProducts',
-					'PriceFilter',
-					'AttributeFilter',
-					'ActiveFilters',
-				]
-			);
+			$blocks_to_unset = [
+				'AllProducts',
+				'PriceFilter',
+				'AttributeFilter',
+				'ActiveFilters',
+			];
+			$blocks          = array_diff( $blocks, $blocks_to_unset );
 		}
-
-		// Provide block types access to assets, data registry, and integration registry.
-		$asset_api     = Package::container()->get( AssetApi::class );
-		$data_registry = Package::container()->get( AssetDataRegistry::class );
-
-		foreach ( $blocks as $block_type ) {
-			$block_type_class    = __NAMESPACE__ . '\\BlockTypes\\' . $block_type;
-			$block_type_instance = new $block_type_class( $asset_api, $data_registry, new IntegrationRegistry() );
+		foreach ( $blocks as $class ) {
+			$class    = __NAMESPACE__ . '\\BlockTypes\\' . $class;
+			$instance = new $class();
+			$instance->register_block_type();
 		}
-
-		foreach ( self::get_atomic_blocks() as $block_type ) {
-			$block_type_instance = new AtomicBlock( $asset_api, $data_registry, new IntegrationRegistry(), $block_type );
-		}
+		self::register_atomic_blocks();
 	}
 
 	/**
-	 * Get atomic blocks types.
-	 *
-	 * @return array
+	 * Register atomic blocks on the PHP side.
 	 */
-	protected static function get_atomic_blocks() {
-		return [
+	protected static function register_atomic_blocks() {
+		$atomic_blocks = [
 			'product-title',
 			'product-button',
 			'product-image',
@@ -126,5 +108,9 @@ class Library {
 			'product-stock-indicator',
 			'product-add-to-cart',
 		];
+		foreach ( $atomic_blocks as $atomic_block ) {
+			$instance = new \Automattic\WooCommerce\Blocks\BlockTypes\AtomicBlock( $atomic_block );
+			$instance->register_block_type();
+		}
 	}
 }

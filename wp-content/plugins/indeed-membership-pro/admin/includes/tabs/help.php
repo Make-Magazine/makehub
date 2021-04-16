@@ -39,7 +39,7 @@ $envato_code = get_option('ihc_envato_code');
 						<label for="tag-name" class="iump-labels" style="text-align: left;"><?php _e('Purchase Code', 'ihc');?></label>
 					</div>
 					<div class="iump-form-line iump-no-border" style="width:70%; float:left; box-sizing:border-box;">
-						<input name="ihc_licensing_code_v2" type="password" value="<?php echo $envato_code;?>" style="width:100%;"/>
+						<input name="ihc_licensing_code_v2" type="text" value="<?php echo $envato_code;?>" style="width:100%;"/>
 					</div>
 
 					<div class="ihc-stuffbox-submit-wrap iump-submit-form" style="width:20%; float:right; box-sizing:border-box;">

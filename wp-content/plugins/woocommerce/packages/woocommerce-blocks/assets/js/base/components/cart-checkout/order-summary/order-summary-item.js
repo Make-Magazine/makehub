@@ -5,16 +5,9 @@ import { __, sprintf } from '@wordpress/i18n';
 import Label from '@woocommerce/base-components/label';
 import ProductPrice from '@woocommerce/base-components/product-price';
 import ProductName from '@woocommerce/base-components/product-name';
-import { getCurrencyFromPriceResponse } from '@woocommerce/price-format';
-import {
-	__experimentalApplyCheckoutFilter,
-	mustBeString,
-	mustContain,
-} from '@woocommerce/blocks-checkout';
+import { getCurrency } from '@woocommerce/price-format';
 import PropTypes from 'prop-types';
 import Dinero from 'dinero.js';
-import { DISPLAY_CART_PRICES_INCLUDING_TAX } from '@woocommerce/block-settings';
-import { useCallback, useMemo } from '@wordpress/element';
 
 /**
  * Internal dependencies
@@ -29,7 +22,7 @@ const OrderSummaryItem = ( { cartItem } ) => {
 		images,
 		low_stock_remaining: lowStockRemaining = null,
 		show_backorder_badge: showBackorderBadge = false,
-		name: initialName,
+		name,
 		permalink,
 		prices,
 		quantity,
@@ -37,71 +30,26 @@ const OrderSummaryItem = ( { cartItem } ) => {
 		description: fullDescription,
 		item_data: itemData = [],
 		variation,
-		totals,
-		extensions,
 	} = cartItem;
 
-	const productPriceValidation = useCallback(
-		( value ) => mustBeString( value ) && mustContain( value, '<price/>' ),
-		[]
-	);
-
-	const arg = useMemo(
-		() => ( {
-			context: 'summary',
-			cartItem,
-		} ),
-		[ cartItem ]
-	);
-
-	const priceCurrency = getCurrencyFromPriceResponse( prices );
-
-	const name = __experimentalApplyCheckoutFilter( {
-		filterName: 'itemName',
-		defaultValue: initialName,
-		extensions,
-		arg,
-		validation: mustBeString,
-	} );
-
+	const currency = getCurrency( prices );
 	const regularPriceSingle = Dinero( {
 		amount: parseInt( prices.raw_prices.regular_price, 10 ),
 		precision: parseInt( prices.raw_prices.precision, 10 ),
 	} )
-		.convertPrecision( priceCurrency.minorUnit )
+		.convertPrecision( currency.minorUnit )
 		.getAmount();
-	const priceSingle = Dinero( {
+	const unconvertedLinePrice = Dinero( {
 		amount: parseInt( prices.raw_prices.price, 10 ),
 		precision: parseInt( prices.raw_prices.precision, 10 ),
-	} )
-		.convertPrecision( priceCurrency.minorUnit )
+	} );
+	const linePriceSingle = unconvertedLinePrice
+		.convertPrecision( currency.minorUnit )
 		.getAmount();
-	const totalsCurrency = getCurrencyFromPriceResponse( totals );
-
-	let lineSubtotal = parseInt( totals.line_subtotal, 10 );
-	if ( DISPLAY_CART_PRICES_INCLUDING_TAX ) {
-		lineSubtotal += parseInt( totals.line_subtotal_tax, 10 );
-	}
-	const subtotalPrice = Dinero( {
-		amount: lineSubtotal,
-		precision: totalsCurrency.minorUnit,
-	} ).getAmount();
-	const subtotalPriceFormat = __experimentalApplyCheckoutFilter( {
-		filterName: 'subtotalPriceFormat',
-		defaultValue: '<price/>',
-		extensions,
-		arg,
-		validation: productPriceValidation,
-	} );
-
-	// Allow extensions to filter how the price is displayed. Ie: prepending or appending some values.
-	const productPriceFormat = __experimentalApplyCheckoutFilter( {
-		filterName: 'cartItemPrice',
-		defaultValue: '<price/>',
-		extensions,
-		arg,
-		validation: productPriceValidation,
-	} );
+	const linePrice = unconvertedLinePrice
+		.multiply( quantity )
+		.convertPrecision( currency.minorUnit )
+		.getAmount();
 
 	return (
 		<div className="wc-block-components-order-summary-item">
@@ -125,13 +73,12 @@ const OrderSummaryItem = ( { cartItem } ) => {
 					permalink={ permalink }
 				/>
 				<ProductPrice
-					currency={ priceCurrency }
-					price={ priceSingle }
+					currency={ currency }
+					price={ linePriceSingle }
 					regularPrice={ regularPriceSingle }
 					className="wc-block-components-order-summary-item__individual-prices"
 					priceClassName="wc-block-components-order-summary-item__individual-price"
 					regularPriceClassName="wc-block-components-order-summary-item__regular-individual-price"
-					format={ subtotalPriceFormat }
 				/>
 				{ showBackorderBadge ? (
 					<ProductBackorderBadge />
@@ -150,11 +97,7 @@ const OrderSummaryItem = ( { cartItem } ) => {
 				/>
 			</div>
 			<div className="wc-block-components-order-summary-item__total-price">
-				<ProductPrice
-					currency={ totalsCurrency }
-					format={ productPriceFormat }
-					price={ subtotalPrice }
-				/>
+				<ProductPrice currency={ currency } price={ linePrice } />
 			</div>
 		</div>
 	);

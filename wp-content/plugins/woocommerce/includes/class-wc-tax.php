@@ -815,7 +815,6 @@ class WC_Tax {
 
 		$existing       = self::get_tax_classes();
 		$existing_slugs = self::get_tax_class_slugs();
-		$name           = wc_clean( $name );
 
 		if ( in_array( $name, $existing, true ) ) {
 			return new WP_Error( 'tax_class_exists', __( 'Tax class already exists', 'woocommerce' ) );
@@ -823,11 +822,6 @@ class WC_Tax {
 
 		if ( ! $slug ) {
 			$slug = sanitize_title( $name );
-		}
-
-		// Stop if there's no slug.
-		if ( ! $slug ) {
-			return new WP_Error( 'tax_class_slug_invalid', __( 'Tax class slug is invalid', 'woocommerce' ) );
 		}
 
 		if ( in_array( $slug, $existing_slugs, true ) ) {

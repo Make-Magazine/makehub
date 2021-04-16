@@ -20,8 +20,6 @@ class GravityView_Field_Email extends GravityView_Field {
 
 	var $group = 'advanced';
 
-	var $icon = 'dashicons-email';
-
 	public function __construct() {
 		$this->label = esc_html__( 'Email', 'gravityview' );
 		parent::__construct();
@@ -42,7 +40,6 @@ class GravityView_Field_Email extends GravityView_Field {
 				'value' => true,
 				'label' => __( 'Link the Email Address', 'gravityview' ),
 				'desc' => __( 'Clicking the link will generate a new email.', 'gravityview' ),
-				'group' => 'field',
 			),
 			'emailsubject' => array(
 				'type' => 'text',
@@ -50,8 +47,6 @@ class GravityView_Field_Email extends GravityView_Field {
 				'value' => '',
 				'desc' => __( 'Set the default email subject line.', 'gravityview' ),
 				'merge_tags' => 'force',
-				'requires' => 'emailmailto',
-				'group' => 'field',
 			),
 			'emailbody' => array(
 				'type' => 'textarea',
@@ -59,18 +54,14 @@ class GravityView_Field_Email extends GravityView_Field {
 				'value' => '',
 				'desc' => __( 'Set the default email content.', 'gravityview' ),
 				'merge_tags' => 'force',
-				'class' => 'widefat code',
-				'requires' => 'emailmailto',
-				'group' => 'field',
+				'class' => 'widefat',
 			),
 			'emailencrypt' => array(
 				'type' => 'checkbox',
 				'value' => true,
 				'label' => __( 'Encrypt Email Address', 'gravityview' ),
-				'desc' => __( 'Make it harder for spammers to get email addresses from your entries. Email addresses will not be visible with Javascript disabled.', 'gravityview' ),
-				'group' => 'advanced',
-				'priority' => 100,
-			),
+				'desc' => __( 'Make it harder for spammers to get email addresses from your entries. Email addresses will not be visible with Javascript disabled.', 'gravityview' )
+			)
 		);
 
 		return $email_options + $field_options;

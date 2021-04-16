@@ -226,7 +226,6 @@ function csmm_admin_settings() {
     if (is_callable(array('Swift_Performance_Cache', 'clear_all_cache'))) {
       Swift_Performance_Cache::clear_all_cache();
     }
-    do_action('cache_enabler_clear_complete_cache');
 	}
 
 

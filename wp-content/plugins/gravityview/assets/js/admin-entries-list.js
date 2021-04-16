@@ -100,7 +100,7 @@
 					}
 
 					$( showEvent.popper )
-						.find( 'a[data-approved="' + key + '"]' ).trigger('click');
+						.find( 'a[data-approved="' + key + '"]' ).click();
 				};
 
 				$( document ).on( 'keyup', document.gvStatusKeyPressHandler );

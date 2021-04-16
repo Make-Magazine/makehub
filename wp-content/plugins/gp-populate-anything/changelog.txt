@@ -1,21 +1,5 @@
 # Changelog
 
-## 1.0-beta-4.167
-
-	- Added `gppa_register_form` hook for internal use.
-
-## 1.0-beta-4.166
-
-	- Fixed issue with Product Option fields not properly hydrating Field Value Objects.
-	- Fixed issue where Populate Anything would interfere with GravityView's sieve functionality in the Search Widget.
-	- Fixed issue where List fields in Nested Forms would cause the Edit entry functionality to freeze.
-	- Fixed potential PHP notice with date fields using Nested Forms {Parent} merge tag.
-	- Fixed issue where chains of populated inputs would sometimes not populate the last field's choices.
-	- Improved AJAX loading of updated fields by passing them through gform_pre_render which improves compatibility with Perks such as GP Limit Choices.
-	- Added new gppa_hydrated_field filter.
-	- Fixed performance issue where Gravity Forms calculation events could be bound multiple times.
-	- Fixed issue where Live Merge Tags would not work with multi-input fields such as Address fields in some cases.
-
 ## 1.0-beta-4.165
 
 	- Fixed an issue where `Other` radio options were disabled when there are no results.

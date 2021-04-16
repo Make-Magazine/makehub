@@ -20,8 +20,6 @@ class GravityView_Field_Date extends GravityView_Field {
 
 	var $group = 'advanced';
 
-	var $icon = 'dashicons-calendar-alt';
-
 	public function __construct() {
 
 		$this->label = esc_html__( 'Date', 'gravityview' );

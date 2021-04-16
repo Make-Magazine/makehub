@@ -33,8 +33,6 @@ class GravityView_Field_Textarea extends GravityView_Field {
 			return $field_options;
 		}
 
-		unset( $field_options['show_as_link'] );
-
 		$field_options['trim_words'] = array(
 			'type' => 'number',
 			'merge_tags' => false,

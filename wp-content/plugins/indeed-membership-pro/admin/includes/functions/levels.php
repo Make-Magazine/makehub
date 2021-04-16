@@ -19,9 +19,6 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 							'payment_type'=>'',
 							'price'=>'',
 						    'label'=>'',
-								//developer
-								'short_description' => '',
-								//end developer
 							'description'=>'',
 							'price_text' => '',
 							'order' => '',
@@ -35,11 +32,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 							'billing_type' => '',
 							'billing_limit_num' => '2',
 							'show_on' => '1',
-							'afterexpire_action' => 0,
 							'afterexpire_level' => -1,
-							'aftercancel_action' => 0,
-							'aftercancel_level' => -1,
-							'grace_period' => '',
 							'custom_role_level' => '-1',
 							'start_date_content' => '0',
 							'special_weekdays' => '',
@@ -98,12 +91,14 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 	}
 }
 
-// Deprecated
 function ihc_delete_level($lid=-1){
-
+	/*
+	 * delete LEVEL from wp_options, ihc_user_levels and user_meta
+	 * @param none
+	 * @return none
+	 */
 	//delete level wp option
 	global $wpdb;
-	/*
 	$data = get_option('ihc_levels');
 	foreach ($data as $k=>$v){
 		if ($k==$lid){
@@ -111,12 +106,32 @@ function ihc_delete_level($lid=-1){
 		}
 	}
 	update_option('ihc_levels', $data);
-	*/
-	\Indeed\Ihc\Db\Memberships::deleteOne( $lid );
 	do_action('ihc_delete_level_action', $lid);
 
-
-	\Indeed\Ihc\UserSubscriptions::deleteAllForSubscription( $lid );
+	$table = $wpdb->prefix . 'ihc_user_levels';
+	$table_b = $wpdb->base_prefix . 'users';
+	$q = $wpdb->prepare("SELECT a.user_id as uid FROM $table a INNER JOIN $table_b b ON a.user_id=b.ID WHERE 1=1 AND a.level_id=%d", $lid);
+	$users = $wpdb->get_results($q);
+	$q = $wpdb->prepare("DELETE FROM $table WHERE level_id=%d ", $lid);
+	$wpdb->query($q);
+	if ($users){
+		foreach ($users as $object){
+			$u_levels = get_user_meta($object->uid, 'ihc_user_levels', TRUE);
+			if ($u_levels){
+				$u_levels_arr = explode(",", $u_levels);
+				if ($u_levels_arr){
+					foreach ($u_levels_arr as $k=>$u_lid){
+						if ($u_lid==$lid){
+							unset($u_levels_arr[$k]);
+							$level_str = implode(',', $u_levels_arr);
+							update_user_meta($object->uid, 'ihc_user_levels', $level_str);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
 
 	$table = $wpdb->prefix . 'postmeta';
 	$data = $wpdb->get_results("SELECT post_id, meta_value FROM $table WHERE meta_key='ihc_mb_who';");

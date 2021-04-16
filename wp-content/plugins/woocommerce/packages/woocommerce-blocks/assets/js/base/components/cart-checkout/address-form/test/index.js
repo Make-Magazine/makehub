@@ -149,9 +149,6 @@ describe( 'AddressForm Component', () => {
 
 		// Verify state input has been removed.
 		expect( screen.queryByText( stateRegExp ) ).not.toBeInTheDocument();
-
-		inputAddress( tertiaryAddress );
-
 		// Verify postal code input label changed.
 		expect( screen.getByLabelText( /Postal code/ ) ).toBeInTheDocument();
 	} );

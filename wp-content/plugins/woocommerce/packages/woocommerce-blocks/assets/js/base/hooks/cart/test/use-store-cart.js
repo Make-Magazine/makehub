@@ -29,7 +29,6 @@ describe( 'useStoreCart', () => {
 	const previewCartData = {
 		cartCoupons: previewCart.coupons,
 		cartItems: previewCart.items,
-		cartFees: previewCart.fees,
 		cartItemsCount: previewCart.items_count,
 		cartItemsWeight: previewCart.items_weight,
 		cartNeedsPayment: previewCart.needs_payment,
@@ -38,6 +37,7 @@ describe( 'useStoreCart', () => {
 		cartIsLoading: false,
 		cartItemErrors: [],
 		cartErrors: [],
+		cartFees: [],
 		billingAddress: {
 			first_name: '',
 			last_name: '',
@@ -75,7 +75,6 @@ describe( 'useStoreCart', () => {
 	const mockCartData = {
 		coupons: [],
 		items: mockCartItems,
-		fees: [],
 		itemsCount: 1,
 		itemsWeight: 10,
 		needsPayment: true,
@@ -84,8 +83,6 @@ describe( 'useStoreCart', () => {
 		shippingAddress: mockShippingAddress,
 		shippingRates: [],
 		hasCalculatedShipping: true,
-		extensions: {},
-		errors: [],
 	};
 	const mockCartTotals = {
 		currency_code: 'USD',

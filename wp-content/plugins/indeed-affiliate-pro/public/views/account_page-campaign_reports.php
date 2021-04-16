@@ -38,15 +38,6 @@
 			</tbody>
 		</table>
 	</div>
-    <?php else: ?>
-    	   <div class="uap-account-detault-message">
-              <div>
-			  <?php _e('You have no campaign into your Affiliate account. Please create one ', 'uap');?>
-              <a href="<?php echo $data['campaign_page_url'];?>">
-			  	<?php _e('here', 'uap');?>
-              </a>
-              </div>
-          </div>
 <?php endif;?>
 
 <?php if (!empty($data['pagination'])):?>

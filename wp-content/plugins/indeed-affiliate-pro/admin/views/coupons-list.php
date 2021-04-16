@@ -1,7 +1,3 @@
-<?php if ( isset($data['errors']) ) :?>
-		<div class="uap-error-global-dashboard-message"><?php echo $data['errors'];?></div>
-<?php endif;?>
-
 			<form action="" method="post" id="form_coupons">
 				<div class="uap-stuffbox">
 					<h3 class="uap-h3"><?php _e('Affiliates Coupons', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/coupons/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
@@ -20,7 +16,7 @@
 						</div>
 						<input type="hidden" name="delete_coupons" value="" id="delete_coupons" />
 						<div class="uap-submit-form" style="margin-top:25px;">
-							<input type="submit" value="<?php _e('Save', 'uap');?>" name="uap_save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

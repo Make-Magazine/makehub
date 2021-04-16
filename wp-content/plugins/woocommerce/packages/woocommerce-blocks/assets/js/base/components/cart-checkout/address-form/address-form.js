@@ -12,16 +12,15 @@ import {
 	ShippingStateInput,
 } from '@woocommerce/base-components/state-input';
 import { useValidationContext } from '@woocommerce/base-context';
-import { useEffect, useMemo } from '@wordpress/element';
+import { useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { withInstanceId } from '@woocommerce/base-hocs/with-instance-id';
-import { useShallowEqual } from '@woocommerce/base-hooks';
 
 /**
  * Internal dependencies
  */
 import defaultAddressFields from './default-address-fields';
-import prepareAddressFields from './prepare-address-fields';
+import countryAddressFields from './country-address-fields';
 
 // If it's the shipping address form and the user starts entering address
 // values without having set the country first, show an error.
@@ -77,20 +76,18 @@ const AddressForm = ( {
 		setValidationErrors,
 		clearValidationError,
 	} = useValidationContext();
-
-	const currentFields = useShallowEqual( fields );
-
+	const countryLocale = countryAddressFields[ values.country ] || {};
+	const addressFields = fields.map( ( field ) => ( {
+		key: field,
+		...defaultAddressFields[ field ],
+		...countryLocale[ field ],
+		...fieldConfig[ field ],
+	} ) );
+	const sortedAddressFields = addressFields.sort(
+		( a, b ) => a.index - b.index
+	);
 	const countryValidationError =
 		getValidationError( 'shipping-missing-country' ) || {};
-
-	const addressFormFields = useMemo( () => {
-		return prepareAddressFields(
-			currentFields,
-			fieldConfig,
-			values.country
-		);
-	}, [ currentFields, fieldConfig, values.country ] );
-
 	useEffect( () => {
 		if ( type === 'shipping' ) {
 			validateShippingCountry(
@@ -114,7 +111,7 @@ const AddressForm = ( {
 
 	return (
 		<div id={ id } className="wc-block-components-address-form">
-			{ addressFormFields.map( ( field ) => {
+			{ sortedAddressFields.map( ( field ) => {
 				if ( field.hidden ) {
 					return null;
 				}

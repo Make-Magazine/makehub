@@ -51,7 +51,7 @@ if ($data){
 						<div class="ihc-coupon-box-title"><?php echo $item_data['slug'];?></div>
 						<div class="ihc-coupon-box-content">
 							<div class="ihc-coupon-box-levels"><?php
-								_e("Target Memberships: ", "ihc");
+								_e("Target Levels: ", "ihc");
 								if (!empty($item_data['levels'])){
 									foreach ($item_data['levels'] as $templid){
 										if ($templid==-1){

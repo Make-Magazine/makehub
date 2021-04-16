@@ -6,7 +6,7 @@
  */
 
 /**
- * @since 2.8
+ * @since TODO
  */
 class GravityView_Field_Gravatar extends GravityView_Field {
 
@@ -17,8 +17,6 @@ class GravityView_Field_Gravatar extends GravityView_Field {
 	var $group = 'gravityview';
 
 	var $contexts = array( 'single', 'multiple', 'export' );
-
-	var $icon = 'dashicons-id';
 
 	public function __construct() {
 		$this->label = esc_html__( 'Gravatar', 'gravityview' );
@@ -55,7 +53,6 @@ class GravityView_Field_Gravatar extends GravityView_Field {
 			'label' => $this->label,
 			'desc'  => $this->description,
 			'type'  => $this->name,
-			'icon'  => 'dashicons-id',
 		);
 
 		return $entry_default_fields;
@@ -105,15 +102,12 @@ class GravityView_Field_Gravatar extends GravityView_Field {
 			return $field_options;
 		}
 
-		unset( $field_options['new_window'] );
-
 		$field_options['email_field'] = array(
 			'type'    => 'select',
 			'label'   => __( 'Email to Use', 'gravityview' ),
 			'value'   => 'created_by_email',
 			'desc'    => __( 'Which email should be used to generate the Gravatar?', 'gravityview' ),
 			'choices' => $this->_get_email_field_choices( $form_id ),
-			'group' => 'display',
 		);
 
 		$field_options['default'] = array(
@@ -130,7 +124,6 @@ class GravityView_Field_Gravatar extends GravityView_Field {
 				'robohash'         => __( 'Robot Faces', 'gravityview' ),
 				'blank'            => __( 'Transparent Image', 'gravityview' ),
 			),
-			'group' => 'display',
 		);
 
 		$field_options['size'] = array(
@@ -139,8 +132,6 @@ class GravityView_Field_Gravatar extends GravityView_Field {
 			'value' => 80,
 			'max'   => 2048,
 			'min'   => 1,
-			'merge_tags' => false,
-			'group' => 'display',
 		);
 
 		return $field_options;

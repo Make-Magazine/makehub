@@ -24,8 +24,6 @@ class GravityView_Field_Number extends GravityView_Field {
 
 	var $group = 'standard';
 
-	var $icon = 'dashicons-editor-ol';
-
 	public function __construct() {
 		$this->label = esc_html__( 'Number', 'gravityview' );
 		parent::__construct();
@@ -38,7 +36,6 @@ class GravityView_Field_Number extends GravityView_Field {
 			'label' => __( 'Format number?', 'gravityview' ),
 			'desc' => __('Display numbers with thousands separators.', 'gravityview'),
 			'value' => false,
-			'group' => 'field',
 		);
 
 		$field_options['decimals'] = array(
@@ -47,7 +44,6 @@ class GravityView_Field_Number extends GravityView_Field {
 			'desc' => __('Precision of the number of decimal places. Leave blank to use existing precision.', 'gravityview'),
 			'value' => '',
 			'merge_tags' => false,
-			'group' => 'field',
 		);
 
 		return $field_options;

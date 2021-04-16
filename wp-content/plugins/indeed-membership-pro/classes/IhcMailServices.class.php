@@ -5,7 +5,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_getResponse($api_key, $token, $e_mail, $full_name=''){
 			if (!class_exists('jsonRPCClient')){
-				require_once $this->dir_path . '/services/email_services/getresponse/jsonRPCClient.php';
+				require_once $this->dir_path . '/email_services/getresponse/jsonRPCClient.php';
 			}
 			$api = new jsonRPCClient('http://api2.getresponse.com');
 			$args = array(
@@ -21,7 +21,7 @@ if (!class_exists('IhcMailServices')){
 		public function indeed_mailChimp($mailchimp_api, $mailchimp_id_list, $e_mail, $first_name='', $last_name=''){
 			if ($mailchimp_api !='' && $mailchimp_id_list !=''){
 				if (!class_exists('MailChimp')){
-					require_once $this->dir_path . '/services/email_services/mailchimp/MailChimp.php';
+					require_once $this->dir_path . '/email_services/mailchimp/MailChimp.php';
 				}
 
 				$MailChimp = new MailChimp($mailchimp_api);
@@ -46,7 +46,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_campaignMonitor($listId, $apiID, $e_mail, $full_name=''){
 			if (!class_exists('CS_REST_Subscribers')){
-				require_once $this->dir_path .'/services/email_services/campaignmonitor/csrest_subscribers.php';
+				require_once $this->dir_path .'/email_services/campaignmonitor/csrest_subscribers.php';
 			}
 			$obj = new CS_REST_Subscribers($listId, $apiID);
 			$args = array(
@@ -61,7 +61,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_iContact( $apiUser, $appId, $apiPass, $listId ,$e_mail, $first_name='', $last_name=''){
 			if (!class_exists('iContactApi')){
-				require_once $this->dir_path .'/services/email_services/icontact/iContactApi.php';
+				require_once $this->dir_path .'/email_services/icontact/iContactApi.php';
 			}
 			iContactApi::getInstance()->setConfig(array(
 					'appId' => $appId,
@@ -78,7 +78,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_constantContact($apiUser, $apiPass, $listId, $e_mail, $first_name='', $last_name=''){
 			if (!class_exists('cc')){
-				require_once $this->dir_path .'/services/email_services/constantcontact/class.cc.php';
+				require_once $this->dir_path .'/email_services/constantcontact/class.cc.php';
 			}
 			$extra_fields['FirstName'] = $first_name;
 			$extra_fields['LastName'] = $last_name;
@@ -199,7 +199,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_aWebberSubscribe( $consumer_key, $consumer_secret, $access_key, $access_secret, $aw_list, $e_mail, $full_name='' ){
 			if (!class_exists('AWeberAPI')){
-				require_once $this->dir_path .'/services/email_services/aweber/aweber_api.php';
+				require_once $this->dir_path .'/email_services/aweber/aweber_api.php';
 			}
 			try {
 				$aweber = new AWeberAPI($consumer_key, $consumer_secret);
@@ -219,7 +219,7 @@ if (!class_exists('IhcMailServices')){
 
 		public function indeed_madMimi($username, $api_key, $listName, $e_mail, $first_name='', $last_name=''){
 			if (!class_exists('MadMimi')){
-				require_once $this->dir_path .'/services/email_services/madmimi/MadMimi.class.php';
+				require_once $this->dir_path .'/email_services/madmimi/MadMimi.class.php';
 			}
 			$mailer = new MadMimi( $username, $api_key );
 			$user = array( 'email' => $e_mail,
@@ -238,7 +238,7 @@ if (!class_exists('IhcMailServices')){
 			 * @param string, string, string, string, string
 			 * @return none
 			 */
-			require_once $this->dir_path . '/services/email_services/active_campaign/ActiveCampaign.class.php';
+			require_once $this->dir_path . '/email_services/active_campaign/ActiveCampaign.class.php';
 			$ac = new ActiveCampaign($api_url, $api_key);
 			$contact = array(
 				"email"              => $email,

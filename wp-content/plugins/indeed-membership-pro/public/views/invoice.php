@@ -61,7 +61,7 @@
 					<tr <?php echo ($i%2==0) ? 'class="alternate"' : ''; ?> >
 						<td><?php echo $i;$i++;?></td>
 						<td><?php _e('Total Discount:', 'ihc');?></td>
-						<td><?php echo '- ' . $data['total_discount'];?></td>
+						<td><?php echo $data['total_discount'];?></td>
 					</tr>
 				<?php endif;?>
 				<?php if (!empty($data['total_taxes'])):?>

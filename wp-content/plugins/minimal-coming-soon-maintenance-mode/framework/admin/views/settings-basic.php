@@ -75,13 +75,17 @@ if (!defined('WPINC')) {
 					<p class="signals-form-help-block"><?php _e( 'Provide anti-spam text for the maintenance page.', 'signals' ); ?></p>
 				</div>
 
-        <div class="signals-form-group">
-					<label for="signals_csmm_custom_login" class="signals-strong"><?php _e( 'Custom login URL', 'signals' ); ?></label>
-					<input type="text" name="signals_csmm_custom_login" id="signals_csmm_custom_login" value="<?php echo esc_attr_e( $signals_csmm_options['custom_login_url'] ); ?>" placeholder="<?php esc_attr_e( 'Custom login URL', 'signals' ); ?>" class="signals-form-control">
+				<div class="signals-form-group accessibe-form">
+        <label for="signals_csmm_accessibe" class="signals-strong open-accessibe-upsell">Site Accessibility</label>
 
-					<p class="signals-form-help-block"><?php _e( 'In case you\'re using a plugin that customizes the default WP login URL, enter that URL above.', 'signals' ); ?></p>
+<?php  if (!is_plugin_active('accessibe/accessiebe.php')) { ?>
+          <input id="signals_csmm_accessibe" type="checkbox" class="signals-form-ios open-accessibe-upsell" name="signals_csmm_accessibe" value="1">
+
+					<p class="signals-form-help-block">Your coming soon page is currently not fully accessible for over 20% of visitors who have a disability. Make your site accessible for everybody from day one by installing the <a href="#" class="open-accessibe-upsell">accessiBe plugin.</a></p>
+<?php } else {
+  echo '<p>Open <a href="' . admin_url('options-general.php?page=accessiBe') . '">accessiBe settings</a> to configure your site\'s accessibility.</p>';
+ } ?>
 				</div>
-
       </div>
 
       <div class="signals-double-group signals-clearfix">
@@ -91,6 +95,13 @@ if (!defined('WPINC')) {
 
           <p class="signals-form-help-block"><?php _e( 'Show a discrete link to the login form, or WP admin if you\'re logged in, in the lower right corner of the page.', 'signals' ); ?></p>
         </div>
+
+        <div class="signals-form-group">
+					<label for="signals_csmm_custom_login" class="signals-strong"><?php _e( 'Custom login URL', 'signals' ); ?></label>
+					<input type="text" name="signals_csmm_custom_login" id="signals_csmm_custom_login" value="<?php echo esc_attr_e( $signals_csmm_options['custom_login_url'] ); ?>" placeholder="<?php esc_attr_e( 'Custom login URL', 'signals' ); ?>" class="signals-form-control">
+
+					<p class="signals-form-help-block"><?php _e( 'In case you\'re using a plugin that customizes the default WP login URL, enter that URL above.', 'signals' ); ?></p>
+				</div>
       </div>
 
       <div class="signals-form-group signals-clearfix">

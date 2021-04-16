@@ -2154,6 +2154,13 @@ array_unshift($themes, array('name' => 'Default', 'name_clean' => 'default', 'st
 
   <p>Filter themes: <input type="search" name="csmm-search-templates" id="csmm-search-templates" placeholder="Enter keyword" value="" class="skip-save"></p>
 
+  <?php
+  if (!is_plugin_active('accessibe/accessiebe.php')) {
+    echo '<p style="padding: 10px; border: 2px solid #fe2929;"><b>Make your website accessible to users with disabilities</b> - Having an accessible website is a must in 2021. It will not only save you from hefty fines but grow your audience too. Make your site accessible from day one! <a href="#" class="open-accessibe-upsell">Install the accessiBe plugin</a> from the wp.org repo, connect to their AI service and make your site more user-friendly.';
+    echo '</p>';
+  }
+  ?>
+
     <div id="csmm-themes-wrapper" class="signals-section-content">
       <?php
   foreach ($themes as $theme) {

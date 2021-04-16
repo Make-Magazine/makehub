@@ -70,7 +70,7 @@
         });
 
 
-        // $iframe.ready() and $iframe.load were inconsistent between browsers
+        // $iframe.ready() and $iframe.load were inconsistent between browsers    
         setTimeout(function() {
 
             // Add doctype to fix the style difference between printing and render
@@ -102,7 +102,7 @@
                     $head.append("<link type='text/css' rel='stylesheet' href='" + href + "' media='" + media + "'>")
                 }
             });
-
+            
             // import style tags
             if (opt.importStyle) $("style").each(function() {
                 $(this).clone().appendTo($head);
@@ -226,7 +226,7 @@
     $.fn.printThis.defaults = {
         debug: false,           // show the iframe for debugging
         importCSS: true,        // import parent page css
-        importStyle: true,     // import style tags
+        importStyle: false,     // import style tags
         printContainer: true,   // print outer container/$.selector
         loadCSS: "",            // load an additional css file - load multiple stylesheets with an array []
         pageTitle: "",          // add title to print page

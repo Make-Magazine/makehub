@@ -20,8 +20,6 @@ class GravityView_Field_Transaction_Type extends GravityView_Field {
 
 	var $_custom_merge_tag = 'transaction_type';
 
-	var $icon = 'dashicons-cart';
-
 	/**
 	 * @var int One-time payments are stored by Gravity Forms in the database as `1`
 	 */

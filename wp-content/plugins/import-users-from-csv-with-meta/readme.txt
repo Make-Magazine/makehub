@@ -4,7 +4,7 @@ Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
 Tested up to: 5.7
-Stable tag: 1.17.4.4
+Stable tag: 1.17.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,9 +102,6 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
-
-= 1.17.4.4 =
-*   Problems importing BuddyPress Groups solved
 
 = 1.17.4.3 =
 *   BuddyPress member type import fixed

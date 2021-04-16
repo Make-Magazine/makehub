@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_level_dynamic_price_on', $_POST['ihc_level_dynamic_price_on']);
@@ -28,10 +28,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Membership Dynamic Price', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Level Dynamic Price', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Membership Dynamic Price', 'ihc');?></h2>
+				<h2><?php _e('Activate/Hold Level Dynamic Price', 'ihc');?></h2>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_level_dynamic_price_on']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_level_dynamic_price_on');" <?php echo $checked;?> />
@@ -61,10 +61,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<?php foreach ($levels as $id=>$level):?>
 			<div class="ihc-stuffbox">
 
-				<h3 class="ihc-h3"><?php echo __('Membership: ', 'ihc') . $level['label'];?></h3>
+				<h3 class="ihc-h3"><?php echo __('Level: ', 'ihc') . $level['label'];?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<label><?php _e('Activate Dynamic Price for this membership', 'ihc');?></label>
+						<label><?php _e('Activate Dynamic Price for this level', 'ihc');?></label>
 						<div>
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = (empty($data['metas']['ihc_level_dynamic_price_levels_on'][$id])) ? '' : 'checked';?>

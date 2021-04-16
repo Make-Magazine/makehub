@@ -21,7 +21,7 @@ const settings = getSetting( 'paypal_data', {} );
  * Content component
  */
 const Content = () => {
-	return decodeEntities( settings.description || '' );
+	return <div>{ decodeEntities( settings.description || '' ) }</div>;
 };
 
 const paypalPaymentMethod = {

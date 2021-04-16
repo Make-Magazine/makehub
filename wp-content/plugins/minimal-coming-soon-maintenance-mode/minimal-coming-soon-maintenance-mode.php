@@ -3,7 +3,7 @@
  * Plugin Name: Minimal Coming Soon & Maintenance Mode
  * Plugin URI: https://comingsoonwp.com/
  * Description: Simply awesome coming soon & maintenance mode plugin. Super-simple to use. MailChimp support built-in.
- * Version: 2.27
+ * Version: 2.26
  * Requires at least: 4.0
  * Requires PHP: 5.2
  * Tested up to: 5.6
@@ -219,6 +219,9 @@ if (is_admin()) {
 }
 
 require CSMM_PATH . 'framework/public/init.php';
+
+// MailOptin
+require_once CSMM_PATH . 'framework/admin/include/mailoptin.php';
 
 function csmm_get_plugin_version() {
   $plugin_data = get_file_data(__FILE__, array('version' => 'Version'), 'plugin');

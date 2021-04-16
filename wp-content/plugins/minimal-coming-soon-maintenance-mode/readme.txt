@@ -1,14 +1,14 @@
 === Minimal Coming Soon & Maintenance Mode – Coming Soon Page ===
 Contributors: WebFactory
-Tags: coming soon, coming soon page, maintenance mode, maintenance mode page, coming soon mode, under construction, maintenance mode page, landing page, subscribe form, maintenance, coming soon builder, coming soon status
+Tags: coming soon, coming soon page, maintenance mode, maintenance mode page, coming soon mode, under construction, maintenance mode page, landing page, offline page, subscribe form, maintenance, mailchimp, gdpr, coming soon builder, coming soon status
 Requires at least: 4.0
 Requires PHP: 5.2
-Tested up to: 5.7
-Stable tag: 2.27
+Tested up to: 5.6
+Stable tag: 2.26
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Minimal Coming Soon & Maintenance Mode page! Create awesome Coming Soon Pages with a MailChimp form.
+Best Coming Soon & Maintenance Mode page! Create awesome Coming Soon Pages with a MailChimp form.
 
 == Description ==
 The <a href="https://comingsoonwp.com/">Minimal Coming Soon & Maintenance Mode</a> plugin allows you to **quickly & easily** set up a **Coming Soon Page, Maintenance Mode Page**, Landing Page or Launch Page for your website. It's best to start any new site with a Coming Soon page and collect leads from day one!
@@ -18,6 +18,8 @@ Minimal Coming Soon plugin is simple & flexible and works with any WordPress the
 [youtube https://www.youtube.com/watch?v=ux4Qj46pihg]
 
 You can collect leads and subscribers on your Coming Soon Page via the Mailchimp integration. It allows you to expand your audience from the moment your coming soon page is up. If you need to connect to any other autoresponder services check out the <a href="https://comingsoonwp.com/">PRO version</a>.
+
+**Web accessibility is not an option in 2021!** Making your site accessible to visitors with disabilities will save you from hefty fines and instantly grow your audience. That's why we've partnered with <a href="https://wordpress.org/plugins/accessibe/">accessiBe</a> - the fully automated AI service for web accessibility. Download their plugin from the official WP repository and make your site accessible in a few clicks.
 
 = Coming Soon Plugin Features =
 
@@ -29,7 +31,7 @@ You can collect leads and subscribers on your Coming Soon Page via the Mailchimp
 * Option to preview the Coming Soon or maintenance page before activation
 * <a href="https://comingsoonwp.com/">SEO preview and analysis tools</a> are available in the PRO version to make sure your coming soon site ranks as #1 from day zero
 * Rearrange position of the page elements to your liking - simple drag&drop
-* W3 Total Cache, WP Super Cache, Endurance Page Cache, SiteGround SuperCacher, WP Fastest Cache, Cache Enabler, and Swift Performance Cache support
+* W3 Total Cache, WP Super Cache, Endurance Page Cache, SiteGround SuperCacher, WP Fastest Cache and Swift Performance Cache support
 * Easily add Custom CSS and HTML
 * Collect Emails with MailChimp on your coming soon page - full GDPR compliant API support built-in for free
 * Plugin is GDPR compatible as it sets no cookies and displays an optional warning below the email field which users have to accept if they want to subscribe to the newsletter
@@ -82,11 +84,6 @@ Yes and no. When activated it enables itself across the entire WP-MU network.
 
 == Changelog ==
 
-= 2.27 =
-* 2021-02-21
-* added support for Cache Enabler plugin
-* code cleanup
-
 = 2.26 =
 * 2021-01-31
 * added fly out menu
@@ -96,6 +93,7 @@ Yes and no. When activated it enables itself across the entire WP-MU network.
 * updated Mailchimp API
 * added new coming soon page background images
 * minor fixes
+* integration with accessiBe
 
 = 2.22 =
 * 2020-12-08

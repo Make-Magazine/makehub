@@ -3,8 +3,8 @@ if (!empty($_POST['import']) && !empty($_FILES['import_file']) && !empty( $_POST
 	////////////////// IMPORT
 	$filename = IHC_PATH . 'import.xml';
 	move_uploaded_file($_FILES['import_file']['tmp_name'], $filename);
-	require_once IHC_PATH . 'classes/import-export/IndeedImport.class.php';
-	require_once IHC_PATH . 'classes/import-export/Ihc_Indeed_Import.class.php';
+	require_once IHC_PATH . 'classes/Indeed_Import_Export/IndeedImport.class.php';
+	require_once IHC_PATH . 'classes/Indeed_Import_Export/Ihc_Indeed_Import.class.php';
 	$import = new Ihc_Indeed_Import();
 	$import->setFile($filename);
 	$import->run();

@@ -4,9 +4,6 @@
 		<span class="uap-top-message"><?php _e('...create Banners for your Affiliates', 'uap');?></span>
 		<?php if (!empty($data['listing_items'])) : ?>
 			<form action="" method="post" id="form_banners" style="margin-top:30px;">
-
-				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 				<div class="uap-delete-wrapp">
 					<input type="submit" value="<?php _e('Delete', 'uap');?>" name="delete" class="button button-primary button-large">
 				</div>

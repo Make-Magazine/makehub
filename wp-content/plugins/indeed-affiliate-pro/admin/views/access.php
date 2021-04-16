@@ -1,8 +1,5 @@
 <form action="" method="post">
-
-	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
- 	<div class="uap-stuffbox">
+	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('Roles allowed to enter into WordPress Admin Dashboard:', 'uap');?></h3>
 		<div class="inside">
 			<div class="uap-half-block">

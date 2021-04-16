@@ -10,7 +10,6 @@
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='extra_settings') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=extra_settings';?>"><?php _e('Uploads Settings', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='admin_workflow') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=admin_workflow';?>"><?php _e('Admin Workflow', 'ihc');?></a>
 	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='public_workflow') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=public_workflow';?>"><?php _e('Public Workflow', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='security') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=security';?>"><?php _e('Security', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -455,8 +454,7 @@ switch ($subtab){
 											<label class="ihc-bold" style="display:block;"><?php _e('for:', 'ihc');?></label>
 											<?php
 												$posible_values = array('all'=>__('All', 'ihc'), 'reg'=>__('Registered Users', 'ihc'), 'unreg'=>__('Unregistered Users', 'ihc') );
-
-												$levels = \Indeed\Ihc\Db\Memberships::getAll();
+												$levels = get_option('ihc_levels');
 												if ($levels){
 													foreach ($levels as $id => $level){
 														$posible_values[$id] = $level['name'];
@@ -601,10 +599,6 @@ switch ($subtab){
 					<div style="margin-top: 15px;">
 						<div class="iump-labels-special"><?php _e("Third 'Before Expire' Time Interval:", 'ihc');?></div>
 						<input type="number" min="1" name="ihc_notification_before_time_third" value="<?php echo $meta_arr['ihc_notification_before_time_third'];?>" style="width: 300px;" /> <?php _e("Days", 'ihc');?>
-					</div>
-					<div style="margin-top: 15px;">
-						<div class="iump-labels-special"><?php _e("'Payment Due' Time Interval:", 'ihc');?></div>
-						<input type="number" min="1" name="ihc_notification_payment_due_time_interval" value="<?php echo $meta_arr['ihc_notification_payment_due_time_interval'];?>" style="width: 300px;" /> <?php _e("Days", 'ihc');?>
 					</div>
 					<div style="margin-top: 15px;">
 						<div class="iump-labels-special"><?php _e("Admin E-mail Address:", 'ihc');?></div>
@@ -784,85 +778,6 @@ switch ($subtab){
 						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
-			</div>
-
-			<div class="ihc-stuffbox">
-				<h3><?php _e('Payment Workflow', 'ihc');?></h3>
-				<div class="inside">
-
-						<?php
-								if ( !isset( $meta_arr['ihc_payment_workflow'] ) || $meta_arr['ihc_payment_workflow'] == '' ){
-										$meta_arr['ihc_payment_workflow'] = 'standard';
-								}
-						?>
-						<div class="iump-form-line">
-							<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_payment_workflow" >
-								<option value="standard" <?php if ( $meta_arr['ihc_payment_workflow'] == 'standard' ) echo 'selected';?> ><?php _e('Standard', 'ihc');?></option>
-								<option value="new" <?php if ( $meta_arr['ihc_payment_workflow'] == 'new' ) echo 'selected';?> ><?php _e('New Integration', 'ihc');?></option>
-							</select>
-						</div>
-
-					<div class="ihc-wrapp-submit-bttn iump-submit-form">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-					</div>
-				</div>
-			</div>
-
-			<div class="ihc-stuffbox">
-					<h3><?php _e('Merchant Business Address', 'ihc');?></h3>
-					<div class="inside">
-						<div class="row" style="margin-left: 0px;">
-						<div class="col-xs-4">
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e('Business Name:', 'ihc');?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_name" value="<?php echo $meta_arr['ihc_payment_merchant_business_name'];?>" />
-							</div>
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e( 'Address Line 1:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_address_1" value="<?php echo $meta_arr['ihc_payment_merchant_business_address_1'];?>" />
-							</div>
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e( 'Address Line 2:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_address_2" value="<?php echo $meta_arr['ihc_payment_merchant_business_address_2'];?>" />
-							</div>
-
-							<div class="iump-form-line iump-no-border">
-
-									<?php $countries = ihc_get_countries();?>
-									<select name="ihc_payment_merchant_business_country" class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " style="width:100%;    max-width: 100%;">
-									<?php foreach ( $countries as $key => $value ):?>
-											<option value="<?php echo $key;?>" <?php echo ( $key == $meta_arr['ihc_payment_merchant_business_country'] ) ? 'selected' : '';?> ><?php echo $value;?></option>
-									<?php endforeach;?>
-									</select>
-							</div>
-
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e( 'State:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_state" value="<?php echo $meta_arr['ihc_payment_merchant_business_state'];?>" />
-							</div>
-
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e( 'City:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_city" value="<?php echo $meta_arr['ihc_payment_merchant_business_city'];?>" />
-							</div>
-
-							<div class="iump-form-line iump-no-border input-group">
-								<span class="input-group-addon">	<?php _e( 'Postcode:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_postcode" value="<?php echo $meta_arr['ihc_payment_merchant_business_postcode'];?>" />
-							</div>
-
-							<div class="iump-form-line iump-no-border input-group">
-									<span class="input-group-addon"><?php _e( 'VAT No.:', 'ihc' );?></span>
-									<input type="text" class="form-control" name="ihc_payment_merchant_business_vat" value="<?php echo $meta_arr['ihc_payment_merchant_business_vat'];?>" />
-							</div>
-					 </div>
-				 </div>
-					</div>
-
-					<div class="ihc-wrapp-submit-bttn iump-submit-form">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-					</div>
-
 			</div>
 
 		</form>
@@ -1060,7 +975,7 @@ switch ($subtab){
 				<div class="inside">
 					<div class="iump-form-line">
 						<div class="iump-form-line">
-
+							
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = ($meta_arr['ihc_admin_workflow_dashboard_notifications']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_admin_workflow_dashboard_notifications');" <?php echo $checked;?> />
@@ -1109,7 +1024,7 @@ switch ($subtab){
 						<h3><?php _e('Unistall Settings', 'ihc');?></h3>
 						<div class="inside">
 								<div class="iump-form-line">
-
+										
 										<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 											<?php $checked = ($meta_arr['ihc_keep_data_after_delete']) ? 'checked' : '';?>
 											<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_keep_data_after_delete');" <?php echo $checked;?> />
@@ -1188,11 +1103,11 @@ switch ($subtab){
 				</div>
 
 
-				<div class="ihc-stuffbox" id="ihc_general_grace_period">
+				<div class="ihc-stuffbox">
 					<h3> <?php _e("Grace Subscription Period", 'ihc');?></h3>
 					<div class="inside">
 						<select class="iump-form-select ihc-form-element ihc-form-element-select ihc-form-select " name="ihc_grace_period"><?php
-							for ($i=0;$i<365;$i++){
+							for ($i=0;$i<32;$i++){
 								$selected = ($meta_arr['ihc_grace_period']==$i) ? 'selected' : '';
 								?>
 									<option value="<?php echo $i;?>" <?php echo $selected;?>><?php echo $i . ' ' . __('Days', 'ihc');?></option>
@@ -1281,123 +1196,6 @@ switch ($subtab){
 				</div>
 
 		</form>
-		<?php
-		break;
-	case 'security':
-		if ( isset( $_POST['ihc_save'] ) && !empty($_POST['ihc_admin_general_options_nonce']) && wp_verify_nonce( $_POST['ihc_admin_general_options_nonce'], 'ihc_admin_general_options_nonce' ) ){
-				ihc_save_update_metas('security');//save update metas
-		}
-
-		$meta_arr = ihc_return_meta_arr('security');//getting metas
-		echo ihc_check_default_pages_set();//set default pages message
-		echo ihc_check_payment_gateways();
-		echo ihc_is_curl_enable();
-		do_action( "ihc_admin_dashboard_after_top_menu" );
-		?>
-		<form action="" method="post">
-
-			<input type="hidden" name="ihc_admin_general_options_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_general_options_nonce' );?>" />
-
-				<div class="ihc-stuffbox">
-					<h3><?php _e('Authorize Search Engines', 'ihc');?></h3>
-					<div class="inside">
-						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Turn On access to Search engines for Restricted pages', 'ihc');?></span>
-							<p><?php _e('Once a WordPress Page is restricted, Search Engines (such Google) may not be able to index the page content. When this option is enabled Search Engines are allowed to view protected content on your site. This can help search engines index your content. ', 'ihc');?></p>
-							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
-								<?php $checked = ($meta_arr['ihc_security_allow_search_engines']) ? 'checked' : '';?>
-								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_security_allow_search_engines');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
-							</label>
-							<input type="hidden" name="ihc_security_allow_search_engines" value="<?php echo $meta_arr['ihc_security_allow_search_engines'];?>" id="ihc_security_allow_search_engines" />
-
-						</div>
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-				<div class="ihc-stuffbox">
-					<h3><?php _e('Block Username on SignUp', 'ihc');?></h3>
-					<div class="inside">
-						<div class="iump-form-line">
-							<p><?php _e('Usernames which are setup on this section will be blocked on Registration process. Any keywords stored will not be allowed to be part of username submission. Ex: "admin" will block usernames as "admin123", "Badmin". Place each keyword separated by comma.', 'ihc');?></p>
-							<textarea name="ihc_security_username" style="width: 40%; height: 100px;"><?php echo stripslashes($meta_arr['ihc_security_username']);?></textarea>
-							<div class="row">
-								<div class="col-xs-4">
-									<div class="iump-form-line iump-no-border input-group">
-											<span class="input-group-addon"><?php _e('Warning Message', 'ihc');?></span>
-												<input type="text" class="form-control" name="ihc_security_block_username_message" value="<?php echo stripslashes($meta_arr['ihc_security_block_username_message']);?>">
-									</div>
-								</div>
-							</div>
-						</div>
-					  <div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-				<div class="ihc-stuffbox">
-					<h3><?php _e('Restrict entire website without Login', 'ihc');?></h3>
-					<div class="inside">
-						<div class="iump-form-line">
-							<span class="iump-labels-special"><?php _e('Restrict access over entire Website. ', 'ihc');?></span>
-							<p><?php _e('All pages, except WP Homepage, UMP default pages (Login,Register, etc) will be restricted. Visitors are automtically redirected to UMP Login page. <strong>Important:</strong> Be sure that you already have UMP Login page properly setup and available for visitors.', 'ihc');?></p>
-							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
-								<?php $checked = (!empty($meta_arr['ihc_security_restrict_everything'])) ? 'checked' : '';?>
-								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_security_restrict_everything');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
-							</label>
-							<input type="hidden" name="ihc_security_restrict_everything" value="<?php echo $meta_arr['ihc_security_restrict_everything'];?>" id="ihc_security_restrict_everything" />
-
-							<div class="row" style="margin-left:-10px;">
-								<div class="col-xs-3">
-									<p><?php _e('Exclude other pages from current Restriction:', 'ihc');?></p>
-									<div class="iump-form-line iump-no-border input-group">
-
-												<input type="text" class="form-control" name="ihc_security_restrict_everything_except" value="<?php echo $meta_arr['ihc_security_restrict_everything_except'];?>" />
-									</div>
-								</div>
-							</div>
-						</div>
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-						</div>
-					</div>
-				</div>
-
-								<div class="ihc-stuffbox" style="display:none;">
-									<h3><?php _e('Rename wp-admin folder', 'ihc');?></h3>
-									<div class="inside">
-										<div class="iump-form-line">
-											<span class="iump-labels-special"><?php _e('Hide Default "wp-admin" from Link. ', 'ihc');?></span>
-											<p><?php _e('For backup, be sure that you have FTP access. In case you are not able to login anymore, just deactivate the plugin by changing the plugin folder name with something else', 'ihc');?></p>
-											<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
-												<?php $checked = (!empty($meta_arr['ihc_security_rename_wpadmin'])) ? 'checked' : '';?>
-												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_security_rename_wpadmin');" <?php echo $checked;?> />
-												<div class="switch" style="display:inline-block;"></div>
-											</label>
-											<input type="hidden" name="ihc_security_rename_wpadmin" value="<?php echo $meta_arr['ihc_security_rename_wpadmin'];?>" id="ihc_security_rename_wpadmin" />
-
-											<div class="row">
-												<div class="col-xs-4">
-													<div class="iump-form-line iump-no-border input-group">
-															<span class="input-group-addon"><?php _e('New wp-admin name', 'ihc');?></span>
-																<input type="text" class="form-control" name="ihc_security_rename_wpadmin_name" value="<?php echo $meta_arr['ihc_security_rename_wpadmin_name'];?>" />
-													</div>
-												</div>
-											</div>
-										</div>
-										<div style="margin-top: 15px;">
-											<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
-										</div>
-									</div>
-								</div>
-
-		</form>
-
 		<?php
 		break;
 }

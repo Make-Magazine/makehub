@@ -54,9 +54,9 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 $base_link = IHC_URL . 'apigate.php?ihch=';
 $actions = array(
 					'verify_user_level' => array(
-						'label' => __('"Verify User Membership" API Call', 'ihc'),
-						'return' => __("True if User got the membership and it's active. (Boolean Value)", 'ihc'),
-						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Membership Id', 'ihc'))
+						'label' => __('"Verify User Level" API Call', 'ihc'),
+						'return' => __("True if User got the level and it's active. (Boolean Value)", 'ihc'),
+						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Level Id', 'ihc'))
 					),
 					'user_approve' => array(
 						'label' => __('"Approve User" API Call', 'ihc'),
@@ -64,9 +64,9 @@ $actions = array(
 						'params' => array('uid' => __('User Id', 'ihc')),
 					),
 					'user_add_level' => array(
-						'label' => __('"Add new membership for User" API Call', 'ihc'),
-						'return' => __("True if the membership was succesfully added to User. (Boolean Value)", 'ihc'),
-						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Membership Id', 'ihc')),
+						'label' => __('"Add new level for User" API Call', 'ihc'),
+						'return' => __("True if the Level was succesfully added to User. (Boolean Value)", 'ihc'),
+						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Level Id', 'ihc')),
 					),
 					'user_get_details' => array(
 						'label' => __('"Get all User Data"  API Call', 'ihc'),
@@ -74,9 +74,9 @@ $actions = array(
 						'params' => array('uid' => __('User Id', 'ihc')),
 					),
 					'user_activate_level' => array(
-						'label' => __('"Activate User Membership" API Call', 'ihc'),
-						'return' => __("True if the Mmbership was succesfully activated. (Boolean)", 'ihc'),
-						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Membership Id', 'ihc')),
+						'label' => __('"Activate User Level" API Call', 'ihc'),
+						'return' => __("True if the Level was succesfully activated. (Boolean)", 'ihc'),
+						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Level Id', 'ihc')),
 					),
 					'get_user_field_value' => array(
 						'label' => __('"Get User Field Value" API Call', 'ihc'),
@@ -84,14 +84,14 @@ $actions = array(
 						'params' => array('uid' => __('User Id', 'ihc'), 'field' => __('Field Name', 'ihc')),
 					),
 					'get_user_levels' => array(
-						'label' => __('"Get User Memberships" API Call', 'ihc'),
-						'return' => __("A List of User Memberships. (Array)", 'ihc'),
+						'label' => __('"Get User Levels" API Call', 'ihc'),
+						'return' => __("A List of User Levels. (Array)", 'ihc'),
 						'params' => array('uid' => __('User Id', 'ihc')),
 					),
 					'get_user_level_details' => array(
-						'label' => __('"Get User Membership Details" API Call', 'ihc'),
+						'label' => __('"Get User Level Details" API Call', 'ihc'),
 						'return' => __("Create time, Update time and Expiration time. (Array)", 'ihc'),
-						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Membership Id', 'ihc')),
+						'params' => array('uid' => __('User Id', 'ihc'), 'lid' => __('Level Id', 'ihc')),
 					),
 					'get_user_posts' => array(
 						'label' => __('"Get User Available Posts" API Call', 'ihc'),
@@ -104,19 +104,19 @@ $actions = array(
 						'params' => array('term_name' => __('Term Name', 'ihc'), 'term_value' => __('Term Value', 'ihc')),
 					),
 					'list_levels' => array(
-						'label' => __('"List all Memberships" API Call', 'ihc'),
-						'return' => __("List of Memberships. (Array)", 'ihc'),
+						'label' => __('"List all Levels" API Call', 'ihc'),
+						'return' => __("List of Levels. (Array)", 'ihc'),
 						'params' => array(),
 					),
 					'get_level_users' => array(
-						'label' => __('"Get Membership Users" API Call', 'ihc'),
-						'return' => __("List of Users that have a certain Membership. (Array)", 'ihc'),
-						'params' => array('lid' => __('Membership Id', 'ihc')),
+						'label' => __('"Get Level Users" API Call', 'ihc'),
+						'return' => __("List of Users that have a certain Level. (Array)", 'ihc'),
+						'params' => array('lid' => __('Level Id', 'ihc')),
 					),
 					'get_level_details' => array(
-						'label' => __('"Get Membership details" API Call', 'ihc'),
-						'return' => __("List of Users that have a certain Membership. (Array)", 'ihc'),
-						'params' => array('lid' => __('Membership Id', 'ihc')),
+						'label' => __('"Get Level details" API Call', 'ihc'),
+						'return' => __("List of Users that have a certain Level. (Array)", 'ihc'),
+						'params' => array('lid' => __('Level Id', 'ihc')),
 					),
 					'orders_listing' => array(
 						'label' => __('"Listing Orders" API Call', 'ihc'),

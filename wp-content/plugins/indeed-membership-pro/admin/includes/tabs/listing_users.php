@@ -131,16 +131,16 @@ jQuery(document).ready(function(){
 							</div>
 							<div class="ihc-spacewp_b_divs"></div>
 							<div class="ihc-user-list-row">
-								<div class="ihc-label"><?php _e("Filter By Membership", 'ihc');?></div>
+								<div class="ihc-label"><?php _e("Filter By Level", 'ihc');?></div>
 								<div class="ihc-field">
 									<input type="checkbox" id="filter_by_level" onClick="ihcCheckboxDivRelation(this, '#levels_in__wrap_div');ihcPreviewUList();" />
 								</div>
 							</div>
 							<div class="ihc-user-list-row" id="levels_in__wrap_div" style="opacity: 0.5;">
-								<div class="ihc-label"><?php _e("User's Memberships:", 'ihc');?></div>
+								<div class="ihc-label"><?php _e("User's Levels:", 'ihc');?></div>
 								<div class="ihc-field">
 									<?php
-										$levels = \Indeed\Ihc\Db\Memberships::getAll();
+										$levels = get_option('ihc_levels');
 										if ($levels){
 											?>
 											<select class="iump-form-select " onchange="ihcWriteTagValueListUsers(this, '#levels_in', '#ihc-select-level-view-values', 'ihc-level-select-v-');ihcPreviewUList();">
@@ -737,7 +737,6 @@ jQuery(document).ready(function(){
 									$constants = array( '{AVATAR_HREF}' => '',
 														'{username}'=>'',
 														'{user_email}'=>'',
-														'{user_id}'		=> '',
 														'{first_name}'=>'',
 														'{last_name}'=>'',
 														'{level_list}'=>'',
@@ -890,7 +889,7 @@ jQuery(document).ready(function(){
 										<div class="switch" style="display:inline-block;"></div>
 									</label>
 									<input type="hidden" value="<?php echo $meta_arr['ihc_listing_users_inside_page_show_level'];?>" name="ihc_listing_users_inside_page_show_level" id="ihc_listing_users_inside_page_show_level" />
-									<label><?php _e('Show Membership', 'ihc');?></label>
+									<label><?php _e('Show Level', 'ihc');?></label>
 								</div>
 
 								<div style="margin-top: 10px;">

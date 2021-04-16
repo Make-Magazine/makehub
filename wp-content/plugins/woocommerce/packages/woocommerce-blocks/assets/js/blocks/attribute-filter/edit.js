@@ -287,7 +287,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak } ) => {
 		setAttributes( {
 			attributeId: selectedId,
 			heading: sprintf(
-				/* translators: %s attribute name. */
+				// Translators: %s attribute name.
 				__( 'Filter by %s', 'woocommerce' ),
 				attributeName
 			),
@@ -311,7 +311,7 @@ const Edit = ( { attributes, setAttributes, debouncedSpeak } ) => {
 			),
 			selected: ( n ) =>
 				sprintf(
-					/* translators: %d is the number of attributes selected. */
+					// Translators: %d is the number of attributes selected.
 					_n(
 						'%d attribute selected',
 						'%d attributes selected',

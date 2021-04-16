@@ -12,20 +12,10 @@ $view_id = $gravityview_view->getViewId();
 	// Output the Clear button, if enabled
 	GravityView_Widget_Search::the_clear_search_button();
 
-	$args = gv_get_query_args();
-
-	foreach ( $args as $key => $value ) {
-		if ( is_array( $value ) ) {
-			foreach ( $value as $k => $v ) {
-			?>
-			<input type="hidden" name="<?php echo esc_attr( sprintf( '%s[%s]', $key, $k ) ); ?>" value="<?php echo esc_attr( $v ); ?>" />
-			<?php
-			}
-		} else {
+	if ( isset( $_GET['page_size'] ) ) {
 		?>
-		<input type="hidden" name="<?php echo esc_attr( $key ); ?>" value="<?php echo esc_attr( $value ); ?>" />
+		<input type="hidden" name="page_size" value="<?php echo esc_attr( $_GET['page_size'] ); ?>" />
 		<?php
-		}
 	}
 
 	?>

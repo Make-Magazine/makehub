@@ -234,6 +234,11 @@ class GravityView_Cache {
 
 		$form_ids = is_array( $form_ids ) ? $form_ids : array( $form_ids );
 
+		gravityview()->log->debug( 'Adding form IDs to cache blacklist', array( 'data' => array(
+			'$form_ids'  => $form_ids,
+			'$blacklist' => $blacklist
+		) ) );
+
 		// Add the passed form IDs
 		$blacklist = array_merge( (array) $blacklist, $form_ids );
 
@@ -243,16 +248,8 @@ class GravityView_Cache {
 		// Remove empty items from blacklist
 		$blacklist = array_filter( $blacklist );
 
-		$updated = update_option( self::BLACKLIST_OPTION_NAME, $blacklist );
+		return update_option( self::BLACKLIST_OPTION_NAME, $blacklist );
 
-		if ( false !== $updated ) {
-			gravityview()->log->debug( 'Added form IDs to cache blacklist', array( 'data' => array(
-				'$form_ids'  => $form_ids,
-				'$blacklist' => $blacklist
-			) ) );
-		}
-
-		return $updated;
 	}
 
 	/**
@@ -413,7 +410,12 @@ class GravityView_Cache {
 
 			$key = '_transient_gv-cache-';
 
-			$key = $wpdb->esc_like( $key );
+			// WordPress 4.0+
+			if ( is_callable( array( $wpdb, 'esc_like' ) ) ) {
+				$key = $wpdb->esc_like( $key );
+			} else {
+				$key = like_escape( $key );
+			}
 
 			$form_id = intval( $form_id );
 

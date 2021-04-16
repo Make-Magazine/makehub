@@ -18,8 +18,6 @@ class GravityView_Field_Payment_Amount extends GravityView_Field {
 
 	var $group = 'pricing';
 
-	var $icon = 'dashicons-cart';
-
 	var $_custom_merge_tag = 'payment_amount';
 
 	/**

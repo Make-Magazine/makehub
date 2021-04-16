@@ -82,7 +82,7 @@
 							endif;
 						?></td>
 						<?php if (!empty($data['show_invoices'])):?>
-							<?php if (!empty($data['show_only_completed_invoices']) && $array['status'] !== 'Completed' ):?>
+							<?php if (!empty($data['show_only_completed_invoices']) && strcmp($array['status'], 'Completed')!==0):?>
 							<td data-title="<?php _e('Level', 'ihc');?>">-</td>
 							<?php else:?>
 							<td data-title="<?php _e('Invoice', 'ihc');?>">

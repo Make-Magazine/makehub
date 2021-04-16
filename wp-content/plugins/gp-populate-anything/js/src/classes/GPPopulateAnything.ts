@@ -575,52 +575,6 @@ export default class GPPopulateAnything {
 	}
 
 	/**
-	 * Gravity Forms does not have a built-in function to remove calculation events.
-	 *
-	 * This method was created to unbind any calculation events on inputs as GPPA re-binds calculation events after
-	 * fields are reloaded using batch AJAX.
-	 *
-	 * @param formulaField
-	 */
-	removeCalculationEvents(formulaField: any) {
-		const { formId } = this;
-		const matches = window.GFMergeTag.parseMergeTags( formulaField.formula );
-
-		for(var i in matches) {
-			if (!matches.hasOwnProperty(i))
-				continue;
-
-			const inputId = matches[i][1];
-			const fieldId = parseInt(inputId, 10);
-			const input = jQuery('#field_' + formId + '_' + fieldId)
-				.find('input[name="input_' + inputId + '"], select[name="input_' + inputId + '"]');
-
-			input.each(function() {
-				// @ts-ignore
-				const $this: JQuery = $(this);
-				// @ts-ignore - _data is not in JQueryStatic typings but it's been around for as long as I can remember.
-				const events: { [event: string]: any } = jQuery._data(this, 'events');
-
-				if (!events) {
-					return;
-				}
-
-				for ( const [event, eventHandlers] of Object.entries(events) ) {
-					for ( const eventHandler of eventHandlers ) {
-						const handlerStr = eventHandler.handler.toString();
-
-						if ( handlerStr.indexOf('.bindCalcEvent(') === -1 ) {
-							continue;
-						}
-
-						$this.unbind(event, eventHandler.handler);
-					}
-				}
-			});
-		}
-	}
-
-	/**
 	 * Run the calculation events for any field that is dependent on a GPPA-populated field that has been updated.
 	 */
 	runAndBindCalculationEvents() {
@@ -633,10 +587,7 @@ export default class GPPopulateAnything {
 
 		for (var i = 0; i < GFCalc.formulaFields.length; i++) {
 			var formulaField = $.extend({}, GFCalc.formulaFields[i]);
-
-			/* Prevent duplicate bindings of calculation events. */
-			this.removeCalculationEvents(formulaField);
-
+			// @todo: Will previously bound events stack and create a performance issue?
 			GFCalc.bindCalcEvents( formulaField, this.formId );
 			GFCalc.runCalc(formulaField, this.formId);
 		}

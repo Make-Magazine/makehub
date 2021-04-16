@@ -20,8 +20,6 @@ class GravityView_Field_Entry_Approval extends GravityView_Field {
 
 	var $contexts = array( 'single', 'multiple' );
 
-	var $icon = 'dashicons-yes-alt';
-
 	public function __construct() {
 
 		$this->label = esc_attr__( 'Approve Entries', 'gravityview' );

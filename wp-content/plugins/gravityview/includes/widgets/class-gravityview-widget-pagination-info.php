@@ -8,8 +8,6 @@
  */
 class GravityView_Widget_Pagination_Info extends \GV\Widget {
 
-	public $icon = 'dashicons-info';
-
 	/**
 	 * Does this get displayed on a single entry?
 	 * @var boolean

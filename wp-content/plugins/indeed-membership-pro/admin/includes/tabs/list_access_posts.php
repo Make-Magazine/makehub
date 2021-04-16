@@ -7,7 +7,7 @@ echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
 $post_types = ihc_get_all_post_types();
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
@@ -30,8 +30,8 @@ $levels = \Indeed\Ihc\Db\Memberships::getAll();
 
 
 			<div class="iump-form-line">
-				<h4><?php _e('Specific Memberships', 'ihc');?></h4>
-				<p><?php _e('The user needs to have the membership(s) assigned and active to see the available posts in his list.', 'ihc');?></p>
+				<h4><?php _e('Specific Levels', 'ihc');?></h4>
+				<p><?php _e('The user needs to have the level(s) assigned and active to see the available posts in his list.', 'ihc');?></p>
 				<?php $excluded = explode(',', $data['metas']['ihc_list_access_posts_order_exclude_levels']);?>
 				<?php foreach ($levels as $lid=>$larr):?>
 					<div style="margin: 0px 4px; margin-right:12px; display: inline-block; vertical-align: top; font-weight:bold;">

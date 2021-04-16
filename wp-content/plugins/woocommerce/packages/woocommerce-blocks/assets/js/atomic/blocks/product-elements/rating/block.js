@@ -36,7 +36,7 @@ const Block = ( { className } ) => {
 	};
 
 	const ratingText = sprintf(
-		/* translators: %f is referring to the average rating value */
+		/* Translators: %f is referring to the average rating value */
 		__( 'Rated %f out of 5', 'woocommerce' ),
 		rating
 	);

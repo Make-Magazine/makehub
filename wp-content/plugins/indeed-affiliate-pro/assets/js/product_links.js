@@ -160,7 +160,6 @@ uapProductLinks = {
     	      data 	: {
     	                   action							: "ia_ajax_return_url_for_aff",
     	                   aff_id							: jQuery( '#uap_show_link_affiliate_id' ).attr( 'data-affiliate_id' ),
-                         post_id            : jQuery( '#uap_show_link_affiliate_id' ).attr( 'data-post_id' ),
     	                   url								: window.location.href,
     	                   campaign						: '',
     	                   slug								: jQuery( '#uap_show_link_ref_type' ).val(),

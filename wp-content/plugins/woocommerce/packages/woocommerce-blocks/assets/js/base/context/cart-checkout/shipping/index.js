@@ -21,7 +21,7 @@ import { hasInvalidShippingAddress } from './utils';
 import { errorStatusReducer } from './reducers';
 import {
 	EMIT_TYPES,
-	emitterObservers,
+	emitterSubscribers,
 	reducer as emitReducer,
 	emitEvent,
 } from './event-emit';
@@ -64,19 +64,18 @@ export const ShippingDataProvider = ( { children } ) => {
 		errorStatusReducer,
 		NONE
 	);
-	const [ observers, observerDispatch ] = useReducer( emitReducer, {} );
+	const [ observers, subscriber ] = useReducer( emitReducer, {} );
 	const currentObservers = useRef( observers );
-	const eventObservers = useMemo(
+	const eventSubscribers = useMemo(
 		() => ( {
-			onShippingRateSuccess: emitterObservers( observerDispatch )
-				.onSuccess,
-			onShippingRateFail: emitterObservers( observerDispatch ).onFail,
-			onShippingRateSelectSuccess: emitterObservers( observerDispatch )
+			onShippingRateSuccess: emitterSubscribers( subscriber ).onSuccess,
+			onShippingRateFail: emitterSubscribers( subscriber ).onFail,
+			onShippingRateSelectSuccess: emitterSubscribers( subscriber )
 				.onSelectSuccess,
-			onShippingRateSelectFail: emitterObservers( observerDispatch )
+			onShippingRateSelectFail: emitterSubscribers( subscriber )
 				.onSelectFail,
 		} ),
-		[ observerDispatch ]
+		[ subscriber ]
 	);
 
 	// set observers on ref so it's always current.
@@ -218,7 +217,7 @@ export const ShippingDataProvider = ( { children } ) => {
 		setShippingAddress,
 		needsShipping,
 		hasCalculatedShipping,
-		...eventObservers,
+		...eventSubscribers,
 	};
 
 	return (

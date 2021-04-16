@@ -9,9 +9,8 @@
 					<div class="row">
 						<div class="col-xs-6">
 							<h4 style="margin-top:20px;"><?php _e('Source', 'uap');?></h4>
-							<select name="type" id="the_source"  class="form-control m-bot15" onChange="jQuery('#coupon_code').autocomplete( 'option', { source: '<?php echo UAP_URL . 'admin/uap-coupons-ajax-autocomplete.php';?>?source='+this.value } );"><?php
+							<select name="type" id="the_source"  class="form-control m-bot15" onChange="jQuery('#coupon_code').autocomplete( 'option', { source: '<?php echo UAP_URL . 'admin/Uap_Coupons_Ajax_Autocomplete.php';?>?source='+this.value } );"><?php
 								$values = uap_get_active_services();
-								if ( isset($values['ulp'])) unset($values['ulp']);
 								foreach ($values as $k=>$v){
 									$selected = ($data['metas']['type']==$k) ? 'selected' : '';
 									?>
@@ -22,13 +21,13 @@
 
 							<div class="input-group" style="margin-top:10px;">
 								<span class="input-group-addon" id="basic-addon1"><?php _e('Coupon Code', 'uap');?></span>
-								<input type="text" class="form-control" placeholder="<?php _e( 'Search coupon code', 'uap' );?>" value="<?php echo $data['metas']['code'];?>" name="code" id="coupon_code" />
+								<input type="text"  class="form-control" value="<?php echo $data['metas']['code'];?>" name="code" id="coupon_code" />
 							</div>
 
 							<div class="input-group" style="margin-top:10px;">
 								<span class="input-group-addon" id="basic-addon1"><?php _e('Affiliate', 'uap');?></span>
-								<input type="text" placeholder="<?php _e( 'Search affiliate', 'uap' );?>" class="form-control" value="<?php echo $data['affiliate'];?>" id="affiliate_name" />
-								<input type="hidden" id="affiliate_id_hidden" name="affiliate_id" value="<?php echo $data['metas']['affiliate_id'];?>"/>
+								<input type="text"  class="form-control" value="<?php echo $data['affiliate'];?>" id="affiliate_name" />
+								<input type="hidden" id="affiliate_id_hidden" name="affiliate_id" value="<?php echo $data['metas']['affiliate_id'];?>]"/>
 							</div>
 
 						</div>
@@ -53,9 +52,8 @@
 					<div class="uap-inside-item">
 						<div class="row">
 							<div class="col-xs-4">
-								<h4><?php _e('Referral Amount (optional)', 'uap');?></h4>
-								<p><?php _e('A special flat amount for Referral calculation when this coupon is used.', 'uap');?></p>
-								<p><?php _e('Leave blank if you do not wish to replace the standard amount Rank.', 'uap');?></p>
+								<h4><?php _e('Coupon Amount', 'uap');?></h4>
+								<p><?php _e('A special amount for this specific coupon needs to be set which will replace the standard amount rank.', 'uap');?></p>
 								<div style="margin-bottom:15px;">
 										<select name="amount_type" class="form-control m-bot15"><?php
 											foreach ($data['amount_types'] as $k=>$v):
@@ -68,7 +66,7 @@
 								 </div>
 								<div class="input-group">
 									<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'uap');?></span>
-									<input type="number" min="0" step='<?php echo uapInputNumerStep();?>' class="form-control" name="amount_value" value="<?php echo $data['metas']['amount_value'];?>" aria-describedby="basic-addon1">
+									<input type="number" min="0" step="0.01" class="form-control" name="amount_value" value="<?php echo $data['metas']['amount_value'];?>" aria-describedby="basic-addon1">
 								</div>
 							</div>
 						</div>
@@ -76,7 +74,7 @@
 
 				</div>
 				<div class="uap-submit-form">
-					<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large">
+					<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large">
 				</div>
 			</div>
 
@@ -105,7 +103,7 @@ jQuery(function() {
 	}).autocomplete({
 		focus: function( event, ui ){},
 		minLength: 0,
-		source: '<?php echo UAP_URL . 'admin/uap-coupons-ajax-autocomplete.php';?>?source='+uap_source,
+		source: '<?php echo UAP_URL . 'admin/Uap_Coupons_Ajax_Autocomplete.php';?>?source='+uap_source,
 		select: function( event, ui ) {
 			var v = ui.item.label;
 			jQuery('#coupon_code').val(v);
@@ -122,7 +120,7 @@ jQuery(function() {
 		}
 	}).autocomplete({
 		minLength: 0,
-		source: '<?php echo UAP_URL . 'admin/uap-coupons-ajax-autocomplete.php';?>?users=true',
+		source: '<?php echo UAP_URL . 'admin/Uap_Coupons_Ajax_Autocomplete.php';?>?users=true',
 		focus: function() {},
 		select: function( event, ui ) {
 			var v = ui.item.id;
@@ -136,4 +134,3 @@ jQuery(function() {
 });
 
 </script>
-<?php

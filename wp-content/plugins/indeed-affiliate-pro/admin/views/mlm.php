@@ -1,6 +1,3 @@
-<div class="uap-inside-notification">
-<?php _e('This module has a high level of complexity and requires proper knowledge about Ultimate Affiliate Pro system and Multi Level Marketing concept. It is recommended only for advanced users.', 'uap');?>
-</div>
 			<form action="" method="post">
 				<div class="uap-stuffbox">
 					<h3 class="uap-h3"><?php _e('Multi-Level Marketing', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/mlm-workflow-example/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
@@ -47,14 +44,10 @@
 							</div>
 						</div>
 						<div class="uap-line-break"  style="display:none;"></div>
-						<?php
-								global $indeed_db;
-								$isActive = $indeed_db->is_magic_feat_enable( 'uap_mlmpp' ) ? true : false;
-						?>
-						<div class="row" <?php if ( !$isActive ):?> style="display:none;" <?php endif;?> >
+						<div class="row" style="display:none;">
 							<div class="col-xs-10">
-								<h3><?php _e('MLM Workflow Concept', 'uap');?></h3>
-                <p><?php _e('By default, a MLM system rewards the uplines affiliates based on the main affiliate referral amount, no matter the source of the Referral. An additional workflow is available and let you relate the MLM rewards directly to Product price/Order amount when the main Referral is based on a purchased from integrated Systems (WooCommerce, Ultimate Membership Pro, EDD)', 'uap');?></p>
+								<h3><?php _e('MLM Worflow Concept', 'uap');?></h3>
+                                <p><?php _e('By default, a MLM system rewards the uplines affiliates based on the main affiliate referral amount, no matter the source of the Referral. An additional workflow is available and let you relate the MLM rewards directly to Product price/Order amount when the main Referral is based on a purchased from integrated Systems (WooCommerce, Ultimate Membership Pro, EDD)', 'uap');?></p>
 								<div class="uap-form-line col-xs-6" style="padding-left: 0px;">
 									<select name="uap_mlm_use_amount_from" id="uap_mlm_use_amount_from"  class="form-control m-bot15"><?php
 										$types = array(
@@ -79,7 +72,7 @@
 								<p><?php _e('Set the default amount that will be used when no special amount is set for a certain rank.', 'uap');?></p>
 								<div class="uap-form-line">
 									<div class="form-group">
-									<input type="number" class="form-control" step='<?php echo uapInputNumerStep();?>' id="uap_mlm_default_amount_value" name="uap_mlm_default_amount_value" value="<?php echo $data['metas']['uap_mlm_default_amount_value'];?>" min="0.01"/>
+									<input type="number" class="form-control" step="0.01" id="uap_mlm_default_amount_value" name="uap_mlm_default_amount_value" value="<?php echo $data['metas']['uap_mlm_default_amount_value'];?>" min="0.01"/>
 									</div>
 									<select name="uap_mlm_default_amount_type" id="uap_mlm_default_amount_type"><?php
 										foreach ($data['amount_types'] as $k=>$v):
@@ -110,7 +103,7 @@
 									<tr data-tr="<?php echo $i;?>" id="uap_mlm_level_<?php echo $i;?>">
 										<td><?php echo __('Level', 'uap') . ' ' . $i;?></td>
 										<td>
-											<input type="number" step='<?php echo uapInputNumerStep();?>' min="0" class="uap-input-number" value="<?php echo @$data['metas']['mlm_amount_value_per_level'][$i];?>" name="<?php echo "mlm_amount_value_per_level[$i]";?>" />
+											<input type="number" step="0.01" min="0" class="uap-input-number" value="<?php echo @$data['metas']['mlm_amount_value_per_level'][$i];?>" name="<?php echo "mlm_amount_value_per_level[$i]";?>" />
 											<select name="<?php echo "mlm_amount_type_per_level[$i]";?>"><?php
 												foreach ($data['amount_types'] as $k=>$v):
 													$selected = (!empty($data['metas']['mlm_amount_type_per_level'][$i]) && $data['metas']['mlm_amount_type_per_level'][$i]==$k) ? 'selected' : '';
@@ -128,7 +121,7 @@
 						</div>
 						</div>
 						<div class="uap-submit-form">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
@@ -140,7 +133,7 @@
 							<tr data-tr="{{i}}" id="uap_mlm_level_{{i}}">
 								<td><?php echo __('Level', 'uap') . ' {{i}}';?></td>
 								<td>
-									<input type="number" step='<?php echo uapInputNumerStep();?>' min="0" class="uap-input-number" value="" name="mlm_amount_value_per_level[{{i}}]" />
+									<input type="number" step="0.01" min="0" class="uap-input-number" value="" name="mlm_amount_value_per_level[{{i}}]" />
 									<select name="<?php echo "mlm_amount_type_per_level[{{i}}]";?>"><?php
 									foreach ($data['amount_types'] as $k=>$v):
 										?>
@@ -211,7 +204,7 @@ jQuery(function() {
 		}
 	}).autocomplete({
 		minLength: 0,
-		source: '<?php echo UAP_URL . 'admin/uap-coupons-ajax-autocomplete.php';?>?users=true',
+		source: '<?php echo UAP_URL . 'admin/Uap_Coupons_Ajax_Autocomplete.php';?>?users=true',
 		focus: function() {},
 		select: function( event, ui ) {
 			var l = ui.item.label;

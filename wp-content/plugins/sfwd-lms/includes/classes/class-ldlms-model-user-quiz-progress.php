@@ -177,9 +177,10 @@ if ( ( ! class_exists( 'LDLMS_Model_User_Quiz_Progress' ) ) && ( class_exists( '
 							if ( ! isset( $this->progress['course_id'][ $course_id ] ) ) {
 								$this->progress['course_id'][ $course_id ] = array();
 							}
-							if ( ! isset( $this->progress['course_id'][ $course_id ][ $quiz_id ] ) ) {
+							if ( ! isset( $progress_by_quiz[ $course_id ][ $quiz_id ] ) ) {
 								$this->progress['course_id'][ $course_id ][ $quiz_id ] = array();
 							}
+
 							$this->progress['course_id'][ $course_id ][ $quiz_id ][ $quiz_time ] = $quiz_item;
 						}
 					}

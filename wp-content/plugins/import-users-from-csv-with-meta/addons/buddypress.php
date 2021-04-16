@@ -217,7 +217,7 @@ class ACUI_Buddypress{
 			$groups_role = explode( ',', $row[ $pos_bp_group_role ] );
 
             for( $j = 0; $j < count( $groups ); $j++ ){
-				$group_id = BP_Groups_Group::group_exists( $groups[ $j ] );
+				$group_id = BP_Groups_Group::group_exists( intval( $groups[ $j ] ) );
 
 				if( !empty( $group_id ) ){
 					$this->add_user_group( $user_id, $group_id, $groups_role[ $j ], $update_roles_existing_users );

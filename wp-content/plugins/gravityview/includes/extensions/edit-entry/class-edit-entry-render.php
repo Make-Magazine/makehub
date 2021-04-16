@@ -1838,7 +1838,7 @@ class GravityView_Edit_Entry_Render {
 				// if here then probably we are facing the validation 'At least one field must be filled out'
 				if( GFFormDisplay::is_empty( $field, $this->form_id  ) && empty( $field->isRequired ) ) {
 				    unset( $field->validation_message );
-					$field->failed_validation = false;
+	                $field->validation_message = false;
 				    continue;
 				}
 

@@ -72,7 +72,7 @@ class InfoAffiliateBar
         wp_enqueue_script( 'uap_iml_popover_js', UAP_URL . 'assets/js/iml.min.js', [], false, false );
         wp_enqueue_style( 'uap_iml_popover_css', UAP_URL . 'assets/css/iml-styles.css', [], false, 'all' );
 
-        if ( uap_is_social_share_intalled_and_active() && get_option('uap_info_affiliate_bar_social_shortcode') ){
+        if ( uap_is_social_share_intalled_and_active() && get_option('uap_info_affiliate_bar_social_shortcode') ){ 
             wp_enqueue_script( 'ism_front_end_f' );
         }
 
@@ -149,9 +149,7 @@ class InfoAffiliateBar
     {
         global $indeed_db;
         $data = [
-                  'banner'                  => $banner,
-                  'affiliate_id'            => $this->affiliateId,
-                  'uid'                     => $this->uid,
+                  'banner'            => $banner,
         ];
         $viewObject = new \Indeed\Uap\IndeedView();
         return $viewObject->setTemplate( UAP_PATH . 'public/views/info_affiliate_bar-banner.php' )->setContentData( $data )->getOutput();

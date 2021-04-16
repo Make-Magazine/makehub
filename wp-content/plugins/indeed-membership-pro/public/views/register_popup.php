@@ -40,15 +40,12 @@
     ?>
 
     <script>
-
-
     jQuery(document).ready(function(){
         IhcRegisterModal.init({
                   triggerModalSelector  : '<?php echo $triggerSelector;?>',
                   preventDefault        : <?php echo $preventDefault;?>
         })
     })
-
     </script>
 
 <?php endif;?>

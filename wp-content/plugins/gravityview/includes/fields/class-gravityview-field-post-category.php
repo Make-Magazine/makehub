@@ -17,8 +17,6 @@ class GravityView_Field_Post_Category extends GravityView_Field {
 
 	var $group = 'post';
 
-	var $icon = 'dashicons-category';
-
 	public function __construct() {
 		$this->label = esc_html__( 'Post Category', 'gravityview' );
 
@@ -147,9 +145,6 @@ class GravityView_Field_Post_Category extends GravityView_Field {
 
 		$this->add_field_support('dynamic_data', $field_options );
 		$this->add_field_support('link_to_term', $field_options );
-		$this->add_field_support('new_window', $field_options );
-
-		$field_options['new_window']['requires'] = 'link_to_term';
 
 		return $field_options;
 	}

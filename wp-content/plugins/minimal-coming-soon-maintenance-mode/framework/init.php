@@ -142,12 +142,7 @@ add_action('init', array('CSMM', 'init'));
       $page = '/';
     }
 
-    if ($placement) {
-      $placement = trim($placement, '-');
-      $placement = '-' . $placement;
-    }
-
-    $parts = array_merge(array('ref' => 'csmm-free' . $placement), $params);
+    $parts = array_merge(array('utm_source' => 'csmm-free', 'utm_medium' => 'plugin', 'utm_content' => $placement, 'utm_campaign' => 'csmm-free-v' . csmm_get_plugin_version()), $params);
 
     if (!empty($anchor)) {
       $anchor = '#' . trim($anchor, '#');

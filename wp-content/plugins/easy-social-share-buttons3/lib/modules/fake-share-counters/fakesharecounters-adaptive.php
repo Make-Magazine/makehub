@@ -45,12 +45,8 @@ if (!function_exists('essb_apply_fake_sharecounter_value')) {
 				}
 			}
 			
-			/**
-			 * @since 7.7 Allow usage of non-integer values in the fake counter correction
-			 */
-			if (floatval($fake_counter_correction) != 0) {
-			    $shares = intval($shares) * floatval($fake_counter_correction);
-			    $shares = intval($shares); // round values
+			if (intval($fake_counter_correction) != 0) {
+				$shares = intval($shares) * intval($fake_counter_correction);
 			}
 			
 			$cached_counters[$network] = $shares;

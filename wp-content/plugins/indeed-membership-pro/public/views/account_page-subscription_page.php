@@ -1,4 +1,4 @@
-<?php $excluded_from_cancel = array( 'braintree', 'bank_transfer');?>
+<?php $excluded_from_cancel = array('payza', 'braintree', 'bank_transfer');?>
 <?php $needReasons = ihc_is_magic_feat_active( 'reason_for_cancel' );?>
 <?php $allPaymentTypes = ihc_list_all_payments();?>
 <div class="ihc-ap-wrap">
@@ -35,7 +35,7 @@
 				$show_renew = TRUE;
 
 				foreach ($levels_arr as $level_id){
-					$time_data = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription($this->current_user->ID, $level_id);
+					$time_data = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $level_id);
 					if (strtotime($time_data['expire_time'])>indeed_get_unixtimestamp_with_timezone()){
 						$expire = $time_data['expire_time'];
 					} else if (strtotime($time_data['expire_time'])<0) {
@@ -58,16 +58,8 @@
 					}
 
 					$hidden_div = 'ihc_ap_subscription_l_' . $i;
-					$status = \Indeed\Ihc\UserSubscriptions::getStatusAsString($this->current_user->ID, $level_id);
-
-					// first we search into order meta for payment type
-					$orderId = \Ihc_Db::getLastOrderIdByUserAndLevel( $this->current_user->ID, $level_id );
-					$orderMetaObject = new \Indeed\Ihc\Db\OrderMeta();
-					$payment_type_for_this_level = $orderMetaObject->get( $orderId, 'ihc_payment_type' );
-					if ( $payment_type_for_this_level === '' || $payment_type_for_this_level === false ){
-							// if we don't get the answer, it's probably an old implementation so we search in deprecated table indeed_members_payments
-							$payment_type_for_this_level = Ihc_Db::get_payment_tyoe_by_userId_levelId($this->current_user->ID, $level_id);
-					}
+					$status = ihc_get_user_level_status_for_ac($this->current_user->ID, $level_id);
+					$payment_type_for_this_level = Ihc_Db::get_payment_tyoe_by_userId_levelId($this->current_user->ID, $level_id);
 
 					?>
 					<tr>
@@ -197,7 +189,7 @@
 									if ($show_renew){
 										$include_stripe_script = TRUE;
 										$renew_label = __('Renew', 'ihc');
-										$time_arr = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription($this->current_user->ID, $level_id);
+										$time_arr = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $level_id);
 										if (isset($time_arr['expire_time']) && $time_arr['expire_time']=='0000-00-00 00:00:00'){
 											//it's for the first time
 											$renew_label = __('Finish payment', 'ihc');
@@ -209,7 +201,7 @@
                                           </span>
                                         </div>
 										<?php
-									} else if ( \Indeed\Ihc\UserSubscriptions::isOnHold($this->current_user->ID, $level_id) ){
+									} else if (ihc_is_level_on_hold($this->current_user->ID, $level_id)){
 
 										$include_stripe_script = TRUE;
 										?>
@@ -222,7 +214,7 @@
 									} else {
 										///finish payment
 										$include_stripe_script = TRUE;
-										$time_arr = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription($this->current_user->ID, $level_id);
+										$time_arr = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $level_id);
 										if (isset($time_arr['expire_time']) && ($time_arr['expire_time']=='0000-00-00 00:00:00' || ($time_arr['expire_time']==FALSE && $time_arr['start_time']==FALSE))){
 											//it's for the first time
 											$renew_label = __('Finish payment', 'ihc');

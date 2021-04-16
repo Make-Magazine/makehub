@@ -1270,18 +1270,21 @@ function learndash_is_lesson_notcomplete( $user_id = null, $lessons = array(), $
 	}
 
 	$course_id = absint( $course_id );
+	if ( empty( $course_id ) ) {
+		$use_lesson_course = true;
+	} else {
+		$use_lesson_course = false;
+	}
 
+	$course_progress = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
 	if ( ! empty( $lessons ) ) {
 		foreach ( $lessons as $lesson => $v ) {
-			if ( empty( $course_id ) ) {
+			if ( true === $use_lesson_course ) {
 				$course_id = learndash_get_course_id( $lesson );
 			}
-			if ( ! empty( $course_id ) ) {
-				$course_progress = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
 
-				if ( ( isset( $course_progress['lessons'][ $lesson ] ) ) && ( ! empty( $course_progress['lessons'][ $lesson ] ) ) ) {
-					unset( $lessons[ $lesson ] );
-				}
+			if ( ( isset( $course_progress['lessons'][ $lesson ] ) ) && ( 1 === $course_progress['lessons'][ $lesson ] ) ) {
+				unset( $lessons[ $lesson ] );
 			}
 		}
 	}
@@ -1330,27 +1333,26 @@ function learndash_is_topic_notcomplete( $user_id = null, $topics = array(), $co
 	}
 	$user_id   = absint( $user_id );
 	$course_id = absint( $course_id );
+	if ( empty( $course_id ) ) {
+		$use_topic_course = true;
+	} else {
+		$use_topic_course = false;
+	}
+
+	$course_progress = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
 
 	if ( ! empty( $topics ) ) {
 		foreach ( $topics as $topic_id => $v ) {
-			if ( empty( $course_id ) ) {
+			if ( true === $use_topic_course ) {
 				$course_id = learndash_get_course_id( $topic_id );
 			}
-			if ( ! empty( $course_id ) ) {
+			$lesson_id = learndash_get_lesson_id( $topic_id );
 
-				$course_progress = learndash_user_get_course_progress( $user_id, $course_id, 'legacy' );
-
-				//$lesson_id = learndash_get_lesson_id( $topic_id );
-				$lesson_id = learndash_course_get_single_parent_step( $course_id, $topic_id );
-				if ( ! empty( $lesson_id ) ) {
-
-					if ( ( isset( $course_progress['topics'] ) )
-						&& ( ! empty( $course_progress['topics'] ) )
-						&& ( isset( $course_progress['topics'][ $lesson_id ][ $topic_id ] ) )
-						&& ( ! empty( $course_progress['topics'][ $lesson_id ][ $topic_id ] ) ) ) {
-						unset( $topics[ $topic_id ] );
-					}
-				}
+			if ( ( isset( $course_progress['topics'] ) )
+				&& ( ! empty( $course_progress['topics'] ) )
+				&& ( isset( $course_progress['topics'][ $lesson_id ][ $topic_id ] ) )
+				&& ( ! empty( $course_progress['topics'][ $lesson_id ][ $topic_id ] ) ) ) {
+				unset( $topics[ $topic_id ] );
 			}
 		}
 	}
@@ -1378,7 +1380,7 @@ function learndash_course_status( $course_id, $user_id = null, $return_slug = fa
 	global $learndash_course_statuses;
 
 	if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) {
-		return learndash_course_status_legacy( $course_id, $user_id, $return_slug );
+		return learndash_course_status_legacy( $coure_id, $user_id, $return_slug );
 	}
 	$course_status_slug = '';
 

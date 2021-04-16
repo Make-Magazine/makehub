@@ -2,7 +2,6 @@
 $currency = get_option('ihc_currency');
 echo ihc_inside_dashboard_error_license();
 do_action( "ihc_admin_dashboard_after_top_menu" );
-$ordersObject = new \Indeed\Ihc\Db\Orders();
 ?>
 <div style="width: 97%">
 	<div class="ihc-dashboard-title">
@@ -33,7 +32,7 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 					<h4><strong><?php _e('Top Level', 'ihc');?></strong></h4>
 					<span>
 							<?php
-								$top_level = \Indeed\Ihc\UserSubscriptions::getTopSubscription();
+								$top_level = ihc_get_top_level();
 								if ($top_level) echo $top_level;
 								else _e('N/A', 'ihc');
 							?>
@@ -49,7 +48,7 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 					<h4>
 						<strong>
 							<?php
-								echo $ordersObject->getCountAll();
+								echo ihc_get_transactions_count();
 							?>
 						</strong>
 					</h4>
@@ -65,7 +64,7 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 					<h4>
 						<strong>
 							<?php
-									echo ihc_format_price_and_currency( $currency, $ordersObject->getTotalAmount() );
+									echo ihc_get_total_amount() . ' ' . $currency;
 							?>
 						</strong>
 					</h4>
@@ -77,7 +76,7 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 	</div>
 
 	<?php
-		$levels_arr =  \Indeed\Ihc\UserSubscriptions::getCountsForeachSubscription();
+		$levels_arr =  ihc_get_level_user_counts();
 		$levels_by_transactions = ihc_get_levels_top_by_transactions();
 	?>
 	<div class="row-fluid" style="height: 430px;">
@@ -179,16 +178,16 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 									<?php
 									if ($approved_users || $pending_users){
 
-										$last_five = $ordersObject->getLastOrders();
+										$last_five = ihc_get_last_five_transactions();
 										if ($last_five){
 											foreach ($last_five as $obj){
 												?>
 												<li>
 													<i class="fa-ihc ihc-icon-pop-list-black"></i>
 													<div class="list-cont"><?php
-															$user_info = get_userdata($obj->uid);
-															$first_name = get_user_meta($obj->uid, 'first_name', true);
-															$last_name = get_user_meta($obj->uid, 'last_name', true);
+															$user_info = get_userdata($obj->u_id);
+															$first_name = get_user_meta($obj->u_id, 'first_name', true);
+															$last_name = get_user_meta($obj->u_id, 'last_name', true);
 															if($first_name || $last_name){
 																echo $first_name .' '.$last_name;
 															}else{
@@ -198,10 +197,13 @@ $ordersObject = new \Indeed\Ihc\Db\Orders();
 																	_e('Unknown Name', 'ihc');
 																}
 															}
-															echo ihc_format_price_and_currency( $obj->amount_type, $obj->amount_value );
+															$payment_data = json_decode($obj->payment_data, true);
+															if (!empty($payment_data['mc_gross'])){
+																echo ' ' . $payment_data['mc_gross'].$payment_data['mc_currency'];
+															}
 
 														?></div>
-													<span style="color: #c9c9c9;"><?php _e('Payment on', 'ihc');?> <?php echo $obj->create_date;?></span>
+													<span style="color: #c9c9c9;"><?php _e('Payment on', 'ihc');?> <?php echo $obj->paydate;?></span>
 												</li>
 												<?php
 											}

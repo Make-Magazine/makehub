@@ -6,11 +6,11 @@ class DynamicPrice
     /**
      * @var bool
      */
-    private $isActive       = false;
+    $isActive       = false;
     /**
      * @param array
      */
-    private $settings       = [];
+    $settings       = [];
 
     /**
      * @param none
@@ -31,9 +31,6 @@ class DynamicPrice
      */
     public function checkPrice( $lid=0, $price=0 )
     {
-        if ( !$this->isActive ){
-            return false;
-        }
         $minimumPrice = isset($this->settings['ihc_level_dynamic_price_levels_min'][$lid]) ? $this->settings['ihc_level_dynamic_price_levels_min'][$lid] : 0;
         if ( $minimumPrice <= $price ){
             return true;

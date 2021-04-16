@@ -3,7 +3,6 @@ namespace Automattic\WooCommerce\Blocks\StoreApi\Schemas;
 
 use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
 use Automattic\WooCommerce\Blocks\Domain\Services\ExtendRestApi;
-use WP_Error;
 
 
 /**
@@ -32,49 +31,49 @@ class CartSchema extends AbstractSchema {
 	 *
 	 * @var CartItemSchema
 	 */
-	public $item_schema;
+	protected $item_schema;
 
 	/**
 	 * Coupon schema instance.
 	 *
 	 * @var CartCouponSchema
 	 */
-	public $coupon_schema;
+	protected $coupon_schema;
 
 	/**
 	 * Fee schema instance.
 	 *
 	 * @var CartFeeSchema
 	 */
-	public $fee_schema;
+	protected $fee_schema;
 
 	/**
 	 * Shipping rates schema instance.
 	 *
 	 * @var CartShippingRateSchema
 	 */
-	public $shipping_rate_schema;
+	protected $shipping_rate_schema;
 
 	/**
 	 * Shipping address schema instance.
 	 *
 	 * @var ShippingAddressSchema
 	 */
-	public $shipping_address_schema;
+	protected $shipping_address_schema;
 
 	/**
 	 * Billing address schema instance.
 	 *
 	 * @var BillingAddressSchema
 	 */
-	public $billing_address_schema;
+	protected $billing_address_schema;
 
 	/**
 	 * Error schema instance.
 	 *
 	 * @var ErrorSchema
 	 */
-	public $error_schema;
+	protected $error_schema;
 
 	/**
 	 * Constructor.
@@ -396,12 +395,7 @@ class CartSchema extends AbstractSchema {
 	 */
 	protected function get_cart_errors( $cart ) {
 		$controller    = new CartController();
-		$item_errors   = array_filter(
-			$controller->get_cart_item_errors(),
-			function ( WP_Error $error ) {
-				return $error->has_errors();
-			}
-		);
+		$item_errors   = $controller->get_cart_item_errors();
 		$coupon_errors = $controller->get_cart_coupon_errors();
 
 		return array_values( array_map( [ $this->error_schema, 'get_item_response' ], array_merge( $item_errors, $coupon_errors ) ) );

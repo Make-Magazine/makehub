@@ -19,8 +19,6 @@ class GravityView_Field_Date_Created extends GravityView_Field {
 
 	var $_custom_merge_tag = 'date_created';
 
-	var $icon = 'dashicons-calendar-alt';
-
 	/**
 	 * GravityView_Field_Date_Created constructor.
 	 */

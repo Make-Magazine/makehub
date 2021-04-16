@@ -773,9 +773,6 @@ function uap_print_form_login($meta_arr){
 
 	}
 
-	$nonce = wp_create_nonce( 'uap_login_nonce' );
-	$str .= "<input type='hidden' value='$nonce' name='uap_login_nonce' />";
-
 	$str .=   '</form>'
 			.'</div>';
 	$err_msg = __('Please complete all require fields!', 'uap');

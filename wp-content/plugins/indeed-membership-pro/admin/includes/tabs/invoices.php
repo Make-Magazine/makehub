@@ -78,7 +78,6 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 								$constants = array(
 													'{username}'=>'',
 													'{user_email}'=>'',
-													'{user_id}'		=> '',
 													'{first_name}'=>'',
 													'{last_name}'=>'',
 													'{account_page}'=>'',

@@ -28,7 +28,7 @@ function ihc_init(){
 	} else {
 		/// LOGOUT / PAY NEW LEVEL
 		if (!empty($_GET['ihcdologout'])){
-			include_once IHC_PATH . 'public/logout.php';
+			include_once IHC_PATH . 'public/functions/logout.php';
 			ihc_do_logout($url);
 		} else if (!empty($_GET['ihcnewlevel'])){
 			ihc_do_pay_new_level();
@@ -70,8 +70,6 @@ function ihc_init(){
 				if($url==get_permalink($homepage)) $postid = $homepage;
 			}
 		}
-
-		do_action( 'ihc_action_general_init', $postid );
 
 		$restrictionOn = apply_filters( 'ihc_filter_restriction', $restrictionOn, $postid );
 		if ( !$restrictionOn ){

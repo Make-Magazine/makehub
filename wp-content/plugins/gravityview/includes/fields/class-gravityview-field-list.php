@@ -34,8 +34,6 @@ class GravityView_Field_List extends GravityView_Field {
 
 	var $group = 'advanced';
 
-	var $icon = 'dashicons-list-view';
-
 	function __construct() {
 
 		$this->label = esc_html__( 'List', 'gravityview' );

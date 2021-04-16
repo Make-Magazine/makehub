@@ -45,6 +45,73 @@ function csmm_is_plugin_installed($slug)
     }
 }
 
+// auto download / install / activate Accessibe plugin
+function csmm_install_accessibe() {
+  if (false === current_user_can('administrator')) {
+    wp_die('Sorry, you have to be an admin to run this action.');
+  }
+
+  $plugin_slug = 'accessibe/accessiebe.php';
+  $plugin_zip = 'https://downloads.wordpress.org/plugin/accessibe.latest-stable.zip';
+
+  @include_once ABSPATH . 'wp-admin/includes/plugin.php';
+  @include_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+  @include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+  @include_once ABSPATH . 'wp-admin/includes/file.php';
+  @include_once ABSPATH . 'wp-admin/includes/misc.php';
+  echo '<style>
+  body{
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #444;
+  }
+  </style>';
+
+  echo '<div style="margin: 20px; color:#444;">';
+  echo 'If things are not done in a minute <a target="_parent" href="' . admin_url('plugin-install.php?s=accessibe&tab=search&type=term') .'">install the plugin manually via Plugins page</a><br><br>';
+  echo 'Starting ...<br><br>';
+
+  wp_cache_flush();
+  $upgrader = new Plugin_Upgrader();
+  echo 'Check if accessiBe is already installed ... <br />';
+  if (csmm_is_plugin_installed($plugin_slug)) {
+    echo 'accessiBe is already installed! <br /><br />Making sure it\'s the latest version.<br />';
+    $upgrader->upgrade($plugin_slug);
+    $installed = true;
+  } else {
+    echo 'Installing accessiBe.<br />';
+    $installed = $upgrader->install($plugin_zip);
+  }
+  wp_cache_flush();
+
+  if (!is_wp_error($installed) && $installed) {
+    echo 'Activating accessiBe.<br />';
+    $activate = activate_plugin($plugin_slug);
+
+    if (is_null($activate)) {
+      echo 'accessiBe Activated.<br />';
+
+      echo '<script>setTimeout(function() { top.location = "options-general.php?page=maintenance_mode_options"; }, 1000);</script>';
+      echo '<br>If you are not redirected in a few seconds - <a href="options-general.php?page=maintenance_mode_options" target="_parent">click here</a>.';
+    }
+  } else {
+    echo 'Could not install accessiBe. You\'ll have to <a target="_parent" href="' . admin_url('plugin-install.php?s=accessibe&tab=search&type=term') .'">download and install manually</a>.';
+  }
+
+  echo '</div>';
+} // install_accessibe
+
+// disabled till further notice
+function csmm_chat_available()
+{
+    if (0 && date('Y-m-d') >= '2018-10-01' && date('Y-m-d') <= '2018-10-14') {
+        return true;
+    } else {
+        return false;
+    }
+} // csmm_chat_available
+
 // enqueue JS and CSS files
 function csmm_admin_scripts()
 {
@@ -59,6 +126,8 @@ function csmm_admin_scripts()
     wp_register_script('csmm-admin-base', CSMM_URL . '/framework/admin/js/admin.js', 'jquery', csmm_get_plugin_version(), true);
 
     $mm_js_vars = array(
+        'accessibe_install_url' => add_query_arg(array('action' => 'csmm_install_accessibe', 'rnd' => rand(0,100)), admin_url('admin.php')),
+        'accessibe_dialog_upsell_title' => '<img style="max-height: 26px; vertical-align: text-bottom;" alt="accessiBe" title="accessiBe" src="' . CSMM_URL . '/framework/admin/img/accessibe-logo.png' . '">',
         'mm_url' => 'https://assets.comingsoonwp.com/free-backgrounds/',
         'mm_base_url' => CSMM_URL,
         'mm_notice_nonce' => wp_create_nonce('csmm_notice_nonce'),
@@ -203,6 +272,8 @@ function csmm_plugin_admin_init()
     add_action('admin_enqueue_scripts', 'csmm_enqueue_pointers', 100, 1);
 
     add_action('admin_action_csmm_activate_theme', 'csmm_activate_theme');
+
+    add_action('admin_action_csmm_install_accessibe', 'csmm_install_accessibe');
 } // csmm_plugin_admin_init
 
 add_action('init', 'csmm_plugin_admin_init');

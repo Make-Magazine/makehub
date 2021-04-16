@@ -20,8 +20,6 @@ class GravityView_Field_HTML extends GravityView_Field {
 
 	var $group = 'standard';
 
-	var $icon = 'dashicons-media-code';
-
 	public function __construct() {
 		$this->label = esc_html__( 'HTML', 'gravityview' );
 		parent::__construct();

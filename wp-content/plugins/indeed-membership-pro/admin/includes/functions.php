@@ -253,11 +253,16 @@ function ihc_delete_users($single_id=0, $ids=array()){
 		$ids[] = $single_id;
 	}
 	if ($ids){
+		global $wpdb;
+		$user_levels_table = $wpdb->prefix . "ihc_user_levels";
 		foreach ($ids as $id){
 			do_action('ihc_delete_user_action', $id);
+			//send notification
+			ihc_send_user_notifications($id, 'delete_account');
 			//delete
 			wp_delete_user($id);
-			\Indeed\Ihc\UserSubscriptions::deleteAllForUser( $id );
+			$q = $wpdb->prepare("DELETE FROM $user_levels_table WHERE user_id=%d", $id);
+			$wpdb->query($q);
 		}
 	}
 }
@@ -292,8 +297,7 @@ function ihc_save_block_urls(){
 					$key = ihc_array_value_exists($data, $_REQUEST[$val.'-url'], 'url');
 
 					if ($key===FALSE){
-						$arrayKeys = array_keys($data);
-						$key = end( $arrayKeys ) + 1;
+						$key = end((array_keys($data))) + 1;
 					}
 				} else {
 					$key = 1;
@@ -381,12 +385,46 @@ function ihc_get_last_five_users(){
 	return $users;
 }
 
+function ihc_get_top_level(){
+	global $wpdb;
+	$return_value = '';
+	$levels_data = get_option('ihc_levels');
+	$level_arr = array();
+	if ($levels_data){
+		$table = $wpdb->prefix . 'ihc_user_levels';
+		$table_u = $wpdb->base_prefix . 'users';
+		foreach ($levels_data as $lid=>$level_data){
+			$data = $wpdb->get_row("SELECT COUNT(a.id) as num FROM $table a INNER JOIN $table_u u ON a.user_id=u.ID WHERE a.level_id=$lid;");
+			$level_arr[$lid] = isset($data->num) ? $data->num : 0;
+		}
+		asort($level_arr);
+		end($level_arr);
+		$return_value = key($level_arr);
+		$return_value = $levels_data[$return_value]['name'];
+	}
+	return $return_value;
+}
 
-/*
-Deprecated, use instead:
-$ordersObject = new \Indeed\Ihc\Db\Orders();
-$ordersObject->getCountAll()
-*/
+function ihc_get_level_user_counts(){
+	global $wpdb;
+	$levels_data = get_option('ihc_levels');
+	$level_arr = array();
+
+	if ($levels_data){
+
+		$table = $wpdb->prefix . 'ihc_user_levels';
+		$table_u = $wpdb->base_prefix . 'users';
+
+		foreach ($levels_data as $lid=>$level_data){
+			$data = $wpdb->get_row("SELECT COUNT(a.id) as num FROM $table a INNER JOIN $table_u u ON a.user_id=u.ID WHERE a.level_id=$lid;");
+			$level_arr[$level_data['label']] = isset($data->num) ? $data->num : 0;
+
+		}
+	}
+
+	return $level_arr;
+}
+
 function ihc_get_transactions_count(){
 	global $wpdb;
 	$count = 0;
@@ -397,11 +435,6 @@ function ihc_get_transactions_count(){
 	return $count;
 }
 
-/*
-Deprecated, use instead:
-$ordersObject = new \Indeed\Ihc\Db\Orders();
-$ordersObject->getTotalAmount()
-*/
 function ihc_get_total_amount(){
 	/*
 	 * @param none
@@ -467,7 +500,7 @@ function ihc_get_levels_top_by_transactions(){
 	global $wpdb;
 	$levels_arr = array();
 	$arr = array();
-	$levels_data = \Indeed\Ihc\Db\Memberships::getAll();
+	$levels_data = get_option('ihc_levels');
 	if ($levels_data && count($levels_data)){
 		$levels_arr = array();
 		foreach ($levels_data as $k=>$v){
@@ -485,11 +518,6 @@ function ihc_get_levels_top_by_transactions(){
 	return $arr;
 }
 
-/*
-Deprecated, use instead:
-$ordersObject = new \Indeed\Ihc\Db\Orders();
-$ordersObject->getLastOrders( 5 )
-*/
 function ihc_get_last_five_transactions(){
 	global $wpdb;
 	$obj = '';
@@ -522,8 +550,52 @@ function ihc_get_notification_metas($id=FALSE){
 
 }
 
+function ihc_save_notification_metas($post_data=array()){
+	/*
+	 * @param array
+	 * @return none
+	 */
+	global $wpdb;
 
+	if(!isset($post_data['level_id'])) $post_data['level_id'] = -1;
 
+	if (isset($post_data['notification_id'])){
+		//update
+		$q = $wpdb->prepare("UPDATE {$wpdb->prefix}ihc_notifications
+						SET notification_type=%s,
+						level_id=%s,
+						subject=%s,
+						message=%s,
+						pushover_message=%s,
+						pushover_status=%s
+						WHERE id=%d
+		", $post_data['notification_type'], $post_data['level_id'], stripslashes_deep($post_data['subject']),
+		stripslashes_deep($post_data['message']), $post_data['pushover_message'], $post_data['pushover_status'],
+		$post_data['notification_id']);
+		$wpdb->query($q);
+	} else {
+		//create
+		$q = $wpdb->prepare("INSERT INTO {$wpdb->prefix}ihc_notifications
+														VALUES(null, %s, %d, %s, %s, %s, %s, '1')",
+														$post_data['notification_type'], $post_data['level_id'], stripslashes_deep($post_data['subject']), stripslashes_deep($post_data['message']),
+														$post_data['pushover_message'], $post_data['pushover_status']
+		);
+		$wpdb->query($q);
+	}
+	do_action( 'ihc_save_notification_action', $post_data );
+}
+
+function ihc_get_all_notification_available(){
+	global $wpdb;
+	$data = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM {$wpdb->prefix}ihc_notifications;" );
+	return $data;
+}
+
+function ihc_delete_notification($id){
+	global $wpdb;
+	$q = $wpdb->prepare("DELETE FROM {$wpdb->prefix}ihc_notifications WHERE id=%d ", $id);
+	$wpdb->query($q);
+}
 
 function ihc_general_options_print_page_links($id=FALSE){
 	if ($id!=-1 && $id!==FALSE){
@@ -592,6 +664,16 @@ function ihc_check_payment_status($p_type=''){
 				$return['settings'] = 'Completed';
 			}
 			break;
+		case 'payza':
+			$arr = ihc_return_meta_arr('payment_payza');
+			if ($arr['ihc_payza_status'] == 1) {
+				$return['active'] = 'payza-active';
+				$return['status'] = 1;
+			}
+			if (!empty($arr['ihc_payza_email'])){
+				$return['settings'] = 'Completed';
+			}
+			break;
 		case 'mollie':
 				$arr = ihc_return_meta_arr('payment_mollie');
 				if ($arr['ihc_mollie_status'] == 1) {
@@ -622,7 +704,7 @@ function ihc_check_payment_status($p_type=''){
 			}
 			break;
 	}
-	$return = apply_filters( 'ihc_payment_gateway_box_status', $return, $p_type );
+	$return = apply_filters( 'ihc_filter_check_payment_status', $return, $p_type );
 	// @description
 
 	return $return;
@@ -641,7 +723,7 @@ function ihc_generate_coupon_box($id=0, $settings=array(), $url=''){
 				<div class="ihc-coupon-box-title"><?php echo $settings['code'];?></div>
 				<div class="ihc-coupon-box-content">
 					<div class="ihc-coupon-box-levels"><?php
-						_e("Target Memberships: ", "ihc");
+						_e("Target Levels: ", "ihc");
 						echo '<span>';
 						if ($settings['settings']['target_level']==-1){
 							_e("All", "ihc");
@@ -752,7 +834,7 @@ function ihc_check_payment_gateways(){
 	 * @param none
 	 * @return string
 	 */
-	$levels = \Indeed\Ihc\Db\Memberships::getAll();
+	$levels = get_option('ihc_levels');
 	if ($levels){
 		$paid_levels = FALSE;
 		foreach ($levels as $level){
@@ -761,6 +843,20 @@ function ihc_check_payment_gateways(){
 			}
 		}
 		if ($paid_levels){
+			/*
+			$payments_gateways = array(
+																		'paypal',
+																		'authorize',
+																		'twocheckout',
+																		'bank_transfer',
+																		'stripe',
+																		'braintree',
+																		'payza',
+																		'mollie',
+																		'pagseguro',
+																		'paypal_express_checkout'
+			);
+			*/
 			$payments_gateways = ihc_list_all_payments();
 			$err_msg = TRUE;
 			foreach ($payments_gateways as $payment_gateway => $label ){
@@ -823,180 +919,4 @@ function ihc_delete_block_group($group_name='', $key=0){
 		 }
 		 update_option($group_name, $data);
 	 }
-}
-
-function ihc_return_membership_plan($level = array(), $currency='' ){
-
-$details = '';
-
-if(!isset($level) || empty($level))
- return $details;
-
-$price = '';
-if(isset($level['price'])){
-		if($level['price'] > 0) {
-				$price = ihc_format_price_and_currency($currency, $level['price']);
-		}else{
-			$price = __('Free','ihc');
-		}
-}
-
-$period = '';
-$trialprice = '';
-$trialperiod = '';
-
-	switch($level['access_type']){
-		case 'unlimited':
-			$period .= __(' for ','ihc').__('Lifetime', 'ihc');
-			break;
-		case 'limited':
-			if(isset($level['access_limited_time_value']) && isset($level['access_limited_time_type']) ){
-				$period .= __(' for ','ihc').$level['access_limited_time_value'].' ';
-				switch($level['access_limited_time_type']){
-						case 'D':
-								if($level['access_limited_time_value'] > 1) {
-									$period .= __('days', 'ihc');
-								}else{
-									$period .= __('day', 'ihc');
-								}
-							break;
-						case 'W':
-								if($level['access_limited_time_value'] > 1) {
-									$period .= __('weeks', 'ihc');
-								}else{
-									$period .= __('week', 'ihc');
-								}
-							break;
-						case 'M':
-								if($level['access_limited_time_value'] > 1) {
-									$period .= __('months', 'ihc');
-								}else{
-									$period .= __('month', 'ihc');
-								}
-							break;
-						case 'Y':
-								if($level['access_limited_time_value'] > 1) {
-									$period .= __('years', 'ihc');
-								}else{
-									$period .= __('year', 'ihc');
-								}
-							break;
-						default:
-								if($level['access_limited_time_value'] > 1) {
-									$period .= __('days', 'ihc');
-								}else{
-									$period .= __('day', 'ihc');
-								}
-
-				}
-			}
-			break;
-
-		case 'date_interval':
-			if(isset($level['access_interval_start']) && isset($level['access_interval_end']) ){
-				$period .= __(' between ','ihc').ihc_convert_date_to_us_format($level['access_interval_start']).__(' and ', 'ihc').ihc_convert_date_to_us_format($level['access_interval_end']);
-			}
-			break;
-
-		case 'regular_period':
-			$period .= __(' on every ', 'ihc');
-			$additional_details = '';
-
-				if($level['access_regular_time_type'] == 'D'){
-					if($level['access_regular_time_value'] == 1){
-						$period .=__('day', 'ihc');
-					}elseif($level['access_regular_time_value'] > 1){
-						$period .= $level['access_regular_time_value']. __(' days', 'ihc');
-					}
-				}
-				if($level['access_regular_time_type'] == 'W'){
-					if($level['access_regular_time_value'] == 1){
-						$period .=__('week', 'ihc');
-					}elseif($level['access_regular_time_value'] > 1){
-						$period .= $level['access_regular_time_value']. __(' weeks', 'ihc');
-					}
-				}
-				if($level['access_regular_time_type'] == 'M'){
-					if($level['access_regular_time_value'] == 1){
-						$period .=__('month', 'ihc');
-					}elseif($level['access_regular_time_value'] > 1){
-						$period .=$level['access_regular_time_value'].__(' months', 'ihc');
-					}
-				}
-				if($level['access_regular_time_type'] == 'Y'){
-					if($level['access_regular_time_value'] == 1){
-							$period .=__('year', 'ihc');
-					}elseif($level['access_regular_time_value'] > 1){
-							$period .= $level['access_regular_time_value'].__(' years', 'ihc');
-					}
-				}
-
-				if ($level['billing_type'] == 'bl_limited' && $level['billing_limit_num'] > 1){
-					$additional_details =__(' for ', 'ihc').$level['billing_limit_num'].__(' installments', 'ihc');
-				}
-
-				$period .= $additional_details;
-
-				if ( !empty( $level['access_trial_type'] )
-        && ( (!empty( $level['access_trial_time_value'] ) && ($level['access_trial_type']==1))
-        || (!empty( $level['access_trial_couple_cycles'] ) && ($level['access_trial_type']==2)) ) ){
-					if ( $level['access_trial_price'] > 0  ) {
-						$trialprice .= ihc_format_price_and_currency($currency, $level['access_trial_price']);
-					}else{
-						$trialprice .= __('Free', 'ihc');
-					}
-					$trialperiod .= __(' for ', 'ihc');
-
-					if($level['access_trial_type']==1){
-						if($level['access_trial_time_type'] == 'D'){
-							if($level['access_trial_time_value'] == 1){
-								$trialperiod .=__('1 day', 'ihc');
-							}elseif($level['access_trial_time_value'] > 1){
-								$trialperiod .= $level['access_trial_time_value']. __(' days', 'ihc');
-							}
-						}
-						if($level['access_trial_time_type'] == 'W'){
-							if($level['access_trial_time_value'] == 1){
-								$trialperiod .=__('1 week', 'ihc');
-							}elseif($level['access_trial_time_value'] > 1){
-								$trialperiod .= $level['access_trial_time_value']. __(' weeks', 'ihc');
-							}
-						}
-						if($level['access_trial_time_type'] == 'M'){
-							if($level['access_trial_time_value'] == 1){
-								$trialperiod .=__('1 month', 'ihc');
-							}elseif($level['access_trial_time_value'] > 1){
-								$trialperiod .=$level['access_trial_time_value'].__(' months', 'ihc');
-							}
-						}
-						if($level['access_trial_time_type'] == 'Y'){
-							if($level['access_trial_time_value'] == 1){
-									$trialperiod .=__('1 year', 'ihc');
-							}elseif($level['access_trial_time_value'] > 1){
-									$trialperiod .= $level['access_trial_time_value'].__(' years', 'ihc');
-							}
-						}
-					}
-					if($level['access_trial_type']==2){
-						if($level['access_trial_couple_cycles'] == 1){
-								$trialperiod .=__('1 cycle', 'ihc');
-						}elseif($level['access_trial_couple_cycles'] > 1){
-								$trialperiod .= $level['access_trial_couple_cycles'].__(' cycles', 'ihc');
-						}
-					}
-
-					$trialperiod .= __(' then ', 'ihc');
-				}
-			break;
-
-		default:
-		$period .= __('Life Time', 'ihc');
-	}
-	if($trialprice != '' && $trialperiod != '')
-			$details .= '<span class="ihc-membership-price ihc-membership-trialprice">'.$trialprice.'</span>'.'<span class="ihc-membership-price-period ihc-membership-trialperiod">'.$trialperiod.'</span>';
-
-if($price != '' && $period != '')
-		$details .= '<span class="ihc-membership-price">'.$price.'</span>'.'<span class="ihc-membership-price-period">'.$period.'</span>';
-
-return $details;
 }

@@ -60,7 +60,7 @@ class GravityView_Admin_Notices {
 	public function dismiss_notice() {
 
 		// No dismiss sent
-		if( empty( $_GET['gv-dismiss'] ) || empty( $_GET['notice'] ) ) {
+		if( empty( $_GET['gv-dismiss'] ) ) {
 			return;
 		}
 

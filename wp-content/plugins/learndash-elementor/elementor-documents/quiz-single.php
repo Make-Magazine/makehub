@@ -34,7 +34,7 @@ if ( ( class_exists( 'LearnDash_Elementor_Document_Base' ) ) && ( ! class_exists
 
 		/** Documented in core/base/document.php */
 		public function get_name() {
-			return self::$post_type_slug;
+			return learndash_get_post_type_slug( 'quiz' );
 		}
 
 		/** Documented in core/base/document.php */

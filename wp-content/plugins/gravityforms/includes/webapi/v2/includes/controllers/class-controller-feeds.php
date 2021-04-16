@@ -48,7 +48,7 @@ class GF_REST_Feeds_Controller extends GF_REST_Form_Feeds_Controller {
 				'args'                => array(),
 			),
 			array(
-				'methods'             => 'PUT,PATCH',
+				'methods'             => 'PUT',
 				'callback'            => array( $this, 'update_item' ),
 				'permission_callback' => array( $this, 'update_item_permissions_check' ),
 				'args'                => $this->get_endpoint_args_for_item_schema( false ),
@@ -102,13 +102,15 @@ class GF_REST_Feeds_Controller extends GF_REST_Form_Feeds_Controller {
 
 		$feed_id = $request->get_param( 'feed_id' );
 
-		$feed = GFAPI::get_feed( $feed_id );
+		$feeds = GFAPI::get_feeds( $feed_id );
 
-		if ( is_wp_error( $feed ) ) {
+		if ( is_wp_error( $feeds ) ) {
 			return new WP_Error( 'gf_feed_invalid_id', __( 'Invalid feed id.', 'gravityforms' ), array( 'status' => 404 ) );
 		}
 
-		return $this->prepare_item_for_response( $feed, $request );
+		$data = $this->prepare_item_for_response( $feeds[0], $request );
+
+		return $data;
 	}
 
 	/**
@@ -134,76 +136,32 @@ class GF_REST_Feeds_Controller extends GF_REST_Form_Feeds_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item( $request ) {
-		if ( ! GFAPI::feed_exists( $request['feed_id'] ) ) {
+
+		$feed_id = $request['feed_id'];
+
+		$feeds = GFAPI::get_feeds( $feed_id );
+
+		if ( is_wp_error( $feeds ) ) {
 			return new WP_Error( 'gf_feed_invalid_id', __( 'Invalid feed id.', 'gravityforms' ), array( 'status' => 404 ) );
 		}
 
-		$properties = $this->prepare_item_for_database( $request );
-		if ( is_wp_error( $properties ) ) {
-			return $properties;
+		$feed = $this->prepare_item_for_database( $request );
+
+		if ( is_wp_error( $feed ) ) {
+			return $feed;
 		}
 
-		unset( $properties['id'] );
+		$result = GFAPI::update_feed( $feed_id, $feed['meta'] );
 
-		$result = $this->update_feed_properties( $request['feed_id'], $properties );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
 
-		return $this->prepare_item_for_response( GFAPI::get_feed( $request['feed_id'] ), $request );
-	}
+		$updated_feeds = GFAPI::get_feeds( $feed_id );
 
-	/**
-	 * Prepares the item for the update operation.
-	 *
-	 * @since 2.4.24
-	 *
-	 * @param WP_REST_Request $request Request object
-	 *
-	 * @return WP_Error|array
-	 */
-	protected function prepare_item_for_database( $request ) {
-		if ( $request->get_method() !== 'PATCH' ) {
-			return parent::prepare_item_for_database( $request );
-		}
+		$response = $this->prepare_item_for_response( $updated_feeds[0], $request );
 
-		$properties = $request->get_json_params();
-
-		if ( empty( $properties ) ) {
-			return new WP_Error( 'missing_properties', __( 'Invalid JSON. Properties should be sent as key value pairs.', 'gravityforms' ), array( 'status' => 400 ) );
-		}
-
-		if ( ! empty( $properties['meta'] ) ) {
-			$feed               = GFAPI::get_feed( $request['feed_id'] );
-			$properties['meta'] = $this->patch_array_recursive( $feed['meta'], $properties['meta'] );
-		}
-
-		return $properties;
-	}
-
-	/**
-	 * Updates the specified feed with the given property values.
-	 *
-	 * @since 2.4.24
-	 *
-	 * @param int   $feed_id    The ID of the feed being updated.
-	 * @param array $properties The feed properties being updated.
-	 *
-	 * @return bool|WP_Error
-	 */
-	protected function update_feed_properties( $feed_id, $properties ) {
-		foreach ( $properties as $key => $value ) {
-			$result = GFAPI::update_feed_property( $feed_id, $key, $value );
-			if ( is_wp_error( $result ) ) {
-				return new WP_Error(
-					$result->get_error_code(),
-					$result->get_error_message(),
-					array( 'status' => $this->get_error_status( $result ) )
-				);
-			}
-		}
-
-		return true;
+		return rest_ensure_response( $response );
 	}
 
 	/**
@@ -218,8 +176,8 @@ class GF_REST_Feeds_Controller extends GF_REST_Form_Feeds_Controller {
 	public function delete_item( $request ) {
 		$feed_id = $request['feed_id'];
 
-		$feed = GFAPI::get_feed( $feed_id );
-		if ( is_wp_error( $feed ) ) {
+		$feeds = GFAPI::get_feeds( $feed_id );
+		if ( is_wp_error( $feeds ) ) {
 			return new WP_Error( 'gf_feed_invalid_id', __( 'Invalid feed id.', 'gravityforms' ), array( 'status' => 404 ) );
 		}
 
@@ -227,6 +185,8 @@ class GF_REST_Feeds_Controller extends GF_REST_Form_Feeds_Controller {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
+
+		$feed = $feeds[0];
 
 		$previous = $this->prepare_item_for_response( $feed, $request );
 		$response = new WP_REST_Response();

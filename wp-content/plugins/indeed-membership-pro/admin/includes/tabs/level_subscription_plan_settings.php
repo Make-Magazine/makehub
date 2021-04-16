@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 //ihc_save_update_metas('level_restrict_payment');//save update metas
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_level_subscription_plan_settings_enabled', $_POST['ihc_level_subscription_plan_settings_enabled']);
@@ -23,27 +23,27 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Membership - Subscription Plan Display Details', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Level - Subscription Plan Display Details', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold this feature', 'ihc');?></h2>
-				<p><?php _e('Restrict the purchase of a membership if the user has not made any purchases yet, or has already purchased certain memberships.', 'ihc');?></p>
+				<p><?php _e('Restrict the purchase of a level if the user has not made any purchases yet, or has already purchased certain levels.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_level_subscription_plan_settings_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_level_subscription_plan_settings_enabled');" <?php echo $checked;?> />
 					<div class="switch" style="display:inline-block;"></div>
 				</label>
-				<p><?php _e('Ex: We have memberships A,B,C. A user cannot purchase membership C if they already
-have membership A and B. Another example would be: a user cannot purchase membership B if they never purchased a membership before.
+				<p><?php _e('Ex: We have levels A,B,C. A user cannot purchase level C if they already
+have level A and B. Another example would be: a user cannot purchase level B if they never purchased a level before.
 				', 'ihc');?></p>
 				<input type="hidden" name="ihc_level_subscription_plan_settings_enabled" value="<?php echo $data['metas']['ihc_level_subscription_plan_settings_enabled'];?>" id="ihc_level_subscription_plan_settings_enabled" />
-				<p style="font-weight:bold;"><?php _e('Important: In order to manage a membership with this filter, the Show up in Subscription Plan setting must be turned on. To turn this on for a membership that has already been created, go here and edit the membership.', 'ihc');?></p>
+				<p style="font-weight:bold;"><?php _e('Important: In order to manage a level with this filter, the Show up in Subscription Plan setting must be turned on. To turn this on for a level that has already been created, go here and edit the level.', 'ihc');?></p>
 
 			</div>
 
 				<div class="iump-form-line">
-					<label> <?php _e("Show Membership Renew Link:", 'ihc');?></label>
+					<label> <?php _e("Show Level Renew Link:", 'ihc');?></label>
 					<div>
 						<label class="iump_label_shiwtch" >
 							<?php $checked = ($data['metas']['ihc_show_renew_link']) ? 'checked' : '';?>
@@ -55,7 +55,7 @@ have membership A and B. Another example would be: a user cannot purchase member
 				</div>
 
 				<div class="iump-form-line">
-					<label> <?php _e("Show Membership Delete Link:", 'ihc');?></label>
+					<label> <?php _e("Show Level Delete Link:", 'ihc');?></label>
 					<div>
 						<label class="iump_label_shiwtch">
 							<?php $checked = ($data['metas']['ihc_show_delete_link']) ? 'checked' : '';?>
@@ -77,10 +77,10 @@ have membership A and B. Another example would be: a user cannot purchase member
 		<?php foreach ($levels as $id=>$level):?>
 			<div class="ihc-stuffbox">
 
-					<h3 class="ihc-h3"><?php echo __('Membership: ', 'ihc') . $level['label'];?></h3>
+					<h3 class="ihc-h3"><?php echo __('Level: ', 'ihc') . $level['label'];?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<label><?php _e('Activate Restriction for this membership', 'ihc');?></label>
+						<label><?php _e('Activate Restriction for this level', 'ihc');?></label>
 						<div>
 							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 								<?php $checked = (empty($data['metas']['ihc_level_subscription_plan_settings_restr_levels'][$id])) ? '' : 'checked';?>

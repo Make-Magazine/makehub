@@ -16,6 +16,7 @@ import {
 	useValidationContext,
 } from '@woocommerce/base-context';
 import { useStoreCart, useStoreNotices } from '@woocommerce/base-hooks';
+import { CheckoutExpressPayment } from '@woocommerce/base-components/payment-methods';
 import {
 	Sidebar,
 	SidebarLayout,
@@ -34,7 +35,6 @@ import { isWcVersion, getSetting } from '@woocommerce/settings';
 import CheckoutForm from './form';
 import CheckoutSidebar from './sidebar';
 import CheckoutOrderError from './checkout-order-error';
-import { CheckoutExpressPayment } from '../payment-methods';
 import { LOGIN_TO_CHECKOUT_URL } from './utils';
 import './style.scss';
 
@@ -141,6 +141,7 @@ const Checkout = ( { attributes, scrollToTop } ) => {
 						allowCreateAccount={ allowCreateAccount }
 					/>
 					<div className="wc-block-checkout__actions">
+						<PlaceOrderButton />
 						{ attributes.showReturnToCart && (
 							<ReturnToCartButton
 								link={ getSetting(
@@ -149,7 +150,6 @@ const Checkout = ( { attributes, scrollToTop } ) => {
 								) }
 							/>
 						) }
-						<PlaceOrderButton />
 					</div>
 					{ attributes.showPolicyLinks && <Policies /> }
 				</Main>

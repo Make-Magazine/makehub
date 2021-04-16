@@ -40,7 +40,7 @@ if ($offset + $limit>$total){
 $data = Ihc_Db::get_all_gift_codes($limit, $offset);
 
 $currency = get_option('ihc_currency');
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 $levels[-1]['label'] = __('All', 'ihc');
 ?>
 <div class="iump-wrapper">
@@ -57,7 +57,7 @@ $levels[-1]['label'] = __('All', 'ihc');
 			<th><?php _e('Username', 'ihc');?></th>
 			<th><?php _e('Gift Code', 'ihc');?></th>
 			<th><?php _e('Discount Value', 'ihc');?></th>
-			<th><?php _e('Discount for Membership', 'ihc');?></th>
+			<th><?php _e('Discount for Level', 'ihc');?></th>
 			<th><?php _e('Gift Status', 'ihc');?></th>
 			<th><?php _e('Action', 'ihc');?></th>
 		</tr>

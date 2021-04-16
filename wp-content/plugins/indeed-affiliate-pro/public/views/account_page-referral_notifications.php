@@ -14,7 +14,7 @@
 
 			<div class="uap-single-notf-row-top">
 				<div class="uap-single-notf-col uap-single-notf-label"><?php _e("Referral Notification", 'uap');?></div>
-				<div class="uap-single-notf-col uap-single-notf-checkbox" style="text-align:center;"><?php _e("E-mail", 'uap');?></div>
+				<div class="uap-single-notf-col uap-single-notf-checkbox"><?php _e("E-mail", 'uap');?></div>
 			</div>
 			<?php
 				$posible_types = uap_get_possible_referral_types();
@@ -38,31 +38,22 @@
 	</div>
 	<?php endif;?>
 	<?php if (!empty($data['module_settings_reports']['uap_periodically_reports_enable'])) : ?>
-    <div class="uap-profile-box-wrapper">
-    	<div class="uap-profile-box-title"><span><?php _e("Periodic Reports Interval", 'uap');?></span></div>
-        <div class="uap-profile-box-content">
-        	<div class="uap-row ">
-            	<div class="uap-col-xs-6">
-                        <div><?php _e("You can decide if and when you want to receive reports via Email.", 'uap');?></div>
-                        <div>
-                            <select name="period"  class="uap-public-form-control "><?php
-                                foreach (array(0 => __('Never send reports', 'uap'), 1 => __('Daily Reports', 'uap'), 7 => __('Weekly Reports', 'uap'), 30 => __('Monthly Reports', 'uap')) as $k=>$v):
-                                    $selected = ($k==$data['report_settings']['period']) ? 'selected' : '';
-                                    ?>
-                                    <option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
-                                    <?php
-                                endforeach;
-                            ?></select>
-                        </div>
-          		</div>
-             </div>
-        </div>
-     </div>
-    
-	
+	<div class="uap-periodically-reports-wrapper">
+		<div class="uap-periodically-reports-title"><?php _e("Periodic Reports Interval", 'uap');?></div>
+		<div>
+			<select name="period"><?php
+				foreach (array(0 => __('Never send reports', 'uap'), 1 => __('Daily Reports', 'uap'), 7 => __('Weekly Reports', 'uap'), 30 => __('Monthly Reports', 'uap')) as $k=>$v):
+					$selected = ($k==$data['report_settings']['period']) ? 'selected' : '';
+					?>
+					<option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
+					<?php
+				endforeach;
+			?></select>
+		</div>
+	</div>
 	<?php endif;?>
 	<div class="uap-change-password-field-wrap">
-		<input type="submit" value="<?php _e("Save Changes", 'uap');?>" name="save_settings" class="button button-primary button-large" />
+		<input type="submit" value="<?php _e("Save", 'uap');?>" name="save_settings" class="button button-primary button-large" />
 	</div>
 </form>
 

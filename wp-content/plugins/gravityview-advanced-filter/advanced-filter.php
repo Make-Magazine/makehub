@@ -3,7 +3,7 @@
 Plugin Name: GravityView - Advanced Filter Extension
 Plugin URI: https://gravityview.co/extensions/advanced-filter/?utm_source=advanced-filter&utm_content=plugin_uri&utm_medium=meta&utm_campaign=internal
 Description: Filter which entries are shown in a View based on their values.
-Version: 2.1.8
+Version: 2.1.4
 Author: GravityView
 Author URI: https://gravityview.co/?utm_source=advanced-filter&utm_medium=meta&utm_content=author_uri&utm_campaign=internal
 Text Domain: gravityview-advanced-filter
@@ -38,7 +38,7 @@ function gv_extension_advanced_filtering_load() {
 
 		protected $_title = 'Advanced Filtering';
 
-		protected $_version = '2.1.8';
+		protected $_version = '2.1.4';
 
 		protected $_min_gravityview_version = '2.0';
 
@@ -113,13 +113,13 @@ function gv_extension_advanced_filtering_load() {
 		 */
 		function modify_view_field_settings( $field_options, $template_id, $field_id, $context, $input_type ) {
 
-			if ( 'edit' === $context ) {
+			if( 'edit' === $context ) {
 				return $field_options;
 			}
 
 			$strings = array(
 				'conditional_logic_label'             => esc_html__( 'Conditional Logic', 'gravityview-advanced-filter' ),
-				'conditional_logic_label_desc'        => esc_html__( 'Only show the field if the configured conditions apply.', 'gravityview-advanced-filter' ),
+				'conditional_logic_label_desc'        => esc_html__( 'Only show the field if the configured conditions apply.',  'gravityview-advanced-filter' ),
 				'conditional_logic_fail_output_label' => esc_html__( 'Empty Field Content', 'gravityview-advanced-filter' ),
 				'conditional_logic_fail_output_desc'  => esc_html__( 'Display custom content when field value does not meet conditional logic', 'gravityview-advanced-filter' ),
 			);
@@ -130,25 +130,18 @@ function gv_extension_advanced_filtering_load() {
 	<div class="gv-field-conditional-logic"></div>
 HTML;
 			$field_options['conditional_logic_container'] = array(
-				'type'     => 'html',
-				'desc'     => $conditional_logic_container,
-				'group'    => 'visibility',
-				'priority' => 10000,
+				'type' => 'html',
+				'desc' => $conditional_logic_container,
 			);
 
 			$field_options['conditional_logic_fail_output'] = array(
-				'type'       => 'textarea',
-				'label'      => $strings['conditional_logic_fail_output_label'],
-				'desc'       => $strings['conditional_logic_fail_output_desc'],
-				'merge_tags' => 'force',
-				'group'      => 'visibility',
-				'priority'   => 10100,
+				'type'  => 'textarea',
+				'label' => $strings['conditional_logic_fail_output_label'],
+				'desc'  => $strings['conditional_logic_fail_output_desc'],
 			);
 
 			$field_options[ self::CONDITIONAL_LOGIC_META ] = array(
-				'type'     => 'hidden',
-				'group'    => 'visibility',
-				'priority' => 10200,
+				'type' => 'hidden',
 			);
 
 			return $field_options;
@@ -182,7 +175,6 @@ HTML;
 		 * Add the scripts to the no-conflict mode whitelist
 		 *
 		 * @param array $scripts Array of script keys
-		 *
 		 * @return array          Modified array
 		 */
 		function no_conflict_script_filter( $scripts ) {
@@ -202,7 +194,6 @@ HTML;
 		 * @since 2.0
 		 *
 		 * @param array $styles Array of style keys
-		 *
 		 * @return array          Modified array
 		 */
 		function no_conflict_style_filter( $styles ) {
@@ -218,7 +209,6 @@ HTML;
 		 * @param array $criteria       Existing search criteria array, if any
 		 * @param array $form_ids       Form IDs for the search
 		 * @param int   $passed_view_id (optional)
-		 *
 		 * @return     [type]                 [description]
 		 *
 		 * @deprecated 2.0
@@ -332,7 +322,7 @@ HTML;
 					}
 
 					// Replace merge tags
-					$filter['value'] = self::process_merge_tags( $filter['value'], $form );
+					$filter['value'] = GravityView_API::replace_variables( $filter['value'], $form, array() );
 				}
 
 				if ( $filter && in_array( $filter['key'], array( 'date_created', 'date_updated', 'payment_date' ), true ) ) {
@@ -404,7 +394,6 @@ HTML;
 
 			/**
 			 * @filter `gravityview/adv_filter/filters` The filters to be applied to the query.
-			 *
 			 * @param  [in,out] array $filters The filter set.
 			 * @param \GV\View $view The View.
 			 */
@@ -495,7 +484,6 @@ HTML;
 		 * @since 1.0.12
 		 *
 		 * @see   gravityview_is_valid_datetime
-		 *
 		 * @param string $datetime        The date to check
 		 * @param string $expected_format Check whether the date is formatted as expected. Default: Y-m-d
 		 *
@@ -540,7 +528,6 @@ HTML;
 							 * Customise the capabilities that define an Administrator able to view entries in frontend when filtered by Created_by
 							 *
 							 * @since 1.0.9
-							 *
 							 * @param int          $post_id      View ID where the filter is set
 							 *
 							 * @param array|string $capabilities List of admin capabilities
@@ -611,7 +598,6 @@ HTML;
 
 		/**
 		 * @since 1.1
-		 *
 		 * @param      $filter
 		 * @param null $date_format
 		 * @param bool $use_gmt Whether the value is stored in GMT or not (GF-generated is GMT; datepicker is not)
@@ -654,7 +640,6 @@ HTML;
 		 * For some specific field types prepare the filter value before adding it to search criteria
 		 *
 		 * @param array $filter
-		 *
 		 * @return array
 		 */
 		static function parse_advanced_filters( $filter = array(), $view_id = null ) {
@@ -681,7 +666,7 @@ HTML;
 			}
 
 			// Replace merge tags
-			$filter['value'] = self::process_merge_tags( $filter['value'], $form );
+			$filter['value'] = GravityView_API::replace_variables( $filter['value'], $form, array() );
 
 			// If it's a numeric value, it's a field
 			if ( is_numeric( $filter['key'] ) ) {
@@ -757,7 +742,6 @@ HTML;
 		 * Store the filter settings in the `_gravityview_filters` post meta
 		 *
 		 * @param int $post_id Post ID
-		 *
 		 * @return void
 		 */
 		function save_post( $post_id ) {
@@ -788,7 +772,6 @@ HTML;
 		 * @see /assets/js/advfilter-admin-views.js
 		 *
 		 * @param string $hook String like "widgets.php" passed by WordPress in the admin_enqueue_scripts filter
-		 *
 		 * @return void
 		 */
 		function admin_enqueue_scripts( $hook ) {
@@ -846,7 +829,6 @@ HTML;
 					'available_choices_label'  => esc_html__( 'Return to the list of choices defined by the field.', 'gravityview-advanced-filter' ),
 					'custom_is_operator_input' => esc_html__( 'Custom Choice', 'gravityview-advanced-filter' ),
 					'untitled'                 => esc_html__( 'Untitled', 'gravityview-advanced-filter' ),
-					'field_not_available'      => esc_html__( 'Form field ID #%d is no longer available. Please remove this condition.', 'gravityview-advanced-filter' ),
 				),
 			) );
 		}
@@ -1093,7 +1075,6 @@ HTML;
 
 			/**
 			 * @filter `gravityview/adv_filter/field_filters` allow field filters manipulation
-			 *
 			 * @param array $field_filters configured filters
 			 * @param int   $post_id
 			 */
@@ -1218,9 +1199,7 @@ HTML;
 		 */
 		protected function meets_conditional_logic( $entry, $filters, $context ) {
 
-			$_this = $this;
-
-			$test_filter_conditions = function ( $filters, $mode ) use ( &$test_filter_conditions, $entry, $context, $_this ) {
+			$test_filter_conditions = function ( $filters, $mode ) use ( &$test_filter_conditions, $entry, $context ) {
 
 				$results = array();
 
@@ -1230,7 +1209,7 @@ HTML;
 						continue;
 					}
 
-					$field_value         = GravityView_Advanced_Filtering::process_merge_tags( $filter_condition['value'], $context->view->form->form, $entry );
+					$field_value         = GravityView_API::replace_variables( $filter_condition['value'], $context->view->form->form, $entry );
 					$comparison_operator = $filter_condition['operator'];
 
 					if ( ! empty( GravityView_Advanced_Filtering::$_proxy_operators_map[ $comparison_operator ] ) ) {
@@ -1245,12 +1224,7 @@ HTML;
 								continue;
 							}
 
-							$field = $context->field->by_id( $context->source, $filter_condition['key'] );
-
-							if ( 'date' === $field->type && $_this->compare_dates( $data, $field_value, $comparison_operator ) ) {
-								$_result = true; // a single match satisfies condition
-								break;
-							} elseif ( GFFormsModel::matches_operation( $data, $field_value, $comparison_operator ) ) {
+							if ( GFFormsModel::matches_operation( $data, $field_value, $comparison_operator ) ) {
 								$_result = true; // a single match satisfies condition
 								break;
 							}
@@ -1258,47 +1232,14 @@ HTML;
 
 						$results[] = $_result;
 					} else {
-						$form     = $context->view->form;
-						$field_id = $filter_condition['key'];
-
-						if ( strpos( $filter_condition['key'], '.' ) !== false ) {
-							$field_id = explode( '.', $filter_condition['key'] );
-							$field_id = $field_id[0];
-						}
-
-						$field = $form::get_field( $form, $field_id );
-
-						$entry_value = '';
-
-						if ( $field && $field->inputs && $field->choices ) {
-							$input_id = null;
-
-							foreach ( $field->choices as $i => $choice ) {
-								if ( $field_value === $choice['value'] ) {
-									$input_id = (string) $field->inputs[ $i ]['id'];
-								}
-							}
-
-							$entry_value = ( isset( $entry[ $input_id ] ) ) ? $entry[ $input_id ] : '';
-						} else if ( isset( $entry[ $filter_condition['key'] ] ) ) {
-							$entry_value = $entry[ $filter_condition['key'] ];
-						}
-
-						if ( ( $field && 'date' === $field->type ) || in_array( $filter_condition['key'], array( 'date_created', 'date_updated', 'payment_date' ), true ) ) {
-							$results[] = $_this->compare_dates( $entry_value, $field_value, $comparison_operator );
-						} else {
-							$results[] = GFFormsModel::matches_operation( $entry_value, $field_value, $comparison_operator );
-						}
+						$entry_value = $entry[ $filter_condition['key'] ];
+						$results[]   = GFFormsModel::matches_operation( $entry_value, $field_value, $comparison_operator );
 					}
 				}
 
-				// "and" mode requires all values to be true
-				if ( 'and' === $mode ) {
-					return ! in_array( false, $results, true );
-				} else {
-					// "or" mode requires at least one true value
-					return in_array( true, $results, true );
-				}
+				return ( 'and' === $mode ) ?
+					! in_array( false, $results, true ) : // "and" mode requires all values to be true
+					in_array( true, $results, true ); // "or" mode requires at least one true value
 			};
 
 			return $test_filter_conditions( $filters, $filters['mode'] );
@@ -1323,18 +1264,14 @@ HTML;
 			}
 
 			$filters = json_decode( $filters, true );
-
-			self::augment_filters( $filters, $context->view );
-			self::prune_filters( $filters );
-
-			$entry = $context->entry->as_entry();
+			$entry   = $context->entry->as_entry();
 
 			if ( $this->meets_conditional_logic( $entry, $filters, $context ) ) {
 				return $field_output;
 			}
 
 			$conditional_logic_fail_output = rgar( $context->field->as_configuration(), self::CONDITIONAL_LOGIC_FAIL_OUTPUT_META, false );
-			$conditional_logic_fail_output = self::process_merge_tags( $conditional_logic_fail_output, $context->view->form->form, $entry );
+			$conditional_logic_fail_output = GravityView_API::replace_variables( $conditional_logic_fail_output, $context->view->form->form, $entry );
 
 			/**
 			 * @filter `gravityview/field/value/empty` What to display when this field is empty.
@@ -1345,65 +1282,6 @@ HTML;
 			return apply_filters( 'gravityview/field/value/empty', $conditional_logic_fail_output, $context );
 		}
 
-		/**
-		 * Compare two dates
-		 *
-		 * @since 2.1.5
-		 *
-		 * @param string $source_date
-		 * @param string $target_date
-		 * @param string $comparison_operator
-		 *
-		 * @return bool
-		 */
-		function compare_dates( $source_date, $target_date, $comparison_operator ) {
-
-			try {
-				$source_date = new \DateTime( $source_date );
-				$source_date = $source_date->getTimestamp();
-			} catch ( Exception $e ) {
-				$error_message = sprintf( 'Date comparison: $source_date "%s" could not be converted to a valid DateTime object. Error: %s', $source_date, $e->getMessage() );
-				gravityview()->log->notice( $error_message );
-			}
-
-			try {
-				$target_date = new \DateTime( $target_date );
-				$target_date = $target_date->getTimestamp();
-			} catch ( Exception $e ) {
-				$error_message = sprintf( 'Date comparison: $target_date "%s" could not be converted to a valid DateTime object. Error: %s', $target_date, $e->getMessage() );
-				gravityview()->log->notice( $error_message );
-			}
-
-			return GFFormsModel::matches_operation( $source_date, $target_date, $comparison_operator );
-		}
-
-		/**
-		 * Process merge tags in filter values
-		 *
-		 * @since 2.1.6
-		 *
-		 * @param string $filter_value Filter value text
-		 * @param array  $form         GF Form array
-		 * @param array  $entry        GF Entry array
-		 *
-		 * @return string
-		 */
-		static function process_merge_tags( $filter_value, $form = array(), $entry = array() ) {
-
-			preg_match_all( "/{get:(.*?)}/ism", $filter_value, $get_merge_tags, PREG_SET_ORDER );
-
-			$urldecode_get_merge_tag_value = function ( $value ) {
-				return urldecode( $value );
-			};
-
-			foreach ( $get_merge_tags as $merge_tag ) {
-				add_filter( 'gravityview/merge_tags/get/value/' . $merge_tag[1], $urldecode_get_merge_tag_value );
-			}
-
-			$processed_filter_value = GravityView_API::replace_variables( $filter_value, $form, $entry );
-
-			return $processed_filter_value;
-		}
 	} // end class
 
 	new GravityView_Advanced_Filtering;

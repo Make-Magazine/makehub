@@ -181,9 +181,6 @@ function uapGetCheckboxRadioValue(type, selector){
 			return arr.join(',');
 		}
 	}
-	if ( jQuery('[name="' + selector + '"]').is(':checked') ){
-			return 1;
-	}
 	return '';
 }
 
@@ -218,6 +215,7 @@ function uapRegisterCheckViaAjaxRec(types_arr){
 				field_type = 'multiselect';
 			}
 		}
+
 		if (field_type=='checkbox' || field_type=='radio'){
 			var val1 = uapGetCheckboxRadioValue(field_type, types_arr[i]);
 		} else if ( field_type=='multiselect' ){
@@ -243,8 +241,6 @@ function uapRegisterCheckViaAjaxRec(types_arr){
 		}
 		fields_to_send.push({type: types_arr[i], value: val1, second_value: val2});
 	}
-	//console.log( fields_to_send );
-	//return false;
 
    	jQuery.ajax({
         type : "post",
@@ -324,7 +320,7 @@ function uapShowSubtabs(t){
 }
 
 function uapPaymentType(){
-	jQuery.each(['paypal', 'bt', 'stripe', 'stripe_v2', 'stripe_v3'], function(k, v){
+	jQuery.each(['paypal', 'bt', 'stripe', 'stripe_v2'], function(k, v){
 		jQuery('#uap_payment_with_' + v).css('display', 'none');
 	});
 	var t = jQuery('[name=uap_affiliate_payment_type]').val();
@@ -589,8 +585,3 @@ function uapInfoAffiliateBarChangeBannerSize( size )
 				}
 		});
 }
-
-jQuery(document).ready( function() {
-    var nonce = jQuery('meta[name="uap-token"]').attr('content');
-    jQuery.ajaxSetup( { headers: {'X-CSRF-UAP-TOKEN': nonce } } );
-});

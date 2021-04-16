@@ -1,6 +1,8 @@
 <?php
 namespace Automattic\WooCommerce\Blocks\StoreApi\Routes;
 
+use Automattic\WooCommerce\Blocks\StoreApi\Utilities\CartController;
+
 /**
  * CartSelectShippingRate class.
  *
@@ -60,12 +62,13 @@ class CartSelectShippingRate extends AbstractCartRoute {
 			throw new RouteException( 'woocommerce_rest_cart_missing_package_id', __( 'Invalid Package ID.', 'woocommerce' ), 400 );
 		}
 
-		$cart       = $this->cart_controller->get_cart_instance();
+		$controller = new CartController();
+		$cart       = $controller->get_cart_instance();
 		$package_id = wc_clean( wp_unslash( $request['package_id'] ) );
 		$rate_id    = wc_clean( wp_unslash( $request['rate_id'] ) );
 
 		try {
-			$this->cart_controller->select_shipping_rate( $package_id, $rate_id );
+			$controller->select_shipping_rate( $package_id, $rate_id );
 		} catch ( \WC_Rest_Exception $e ) {
 			throw new RouteException( $e->getErrorCode(), $e->getMessage(), $e->getCode() );
 		}

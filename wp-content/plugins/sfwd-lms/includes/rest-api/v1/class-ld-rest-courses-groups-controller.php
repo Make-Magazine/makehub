@@ -134,7 +134,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Groups_Controller_V1' ) ) && ( class_exi
 								'placeholder: group',
 								'learndash'
 							),
-							learndash_get_custom_label_lower( 'group' )
+							learndash_get_custom_lower_label( 'group' )
 						),
 						'type'        => 'array',
 						'items'       => array(

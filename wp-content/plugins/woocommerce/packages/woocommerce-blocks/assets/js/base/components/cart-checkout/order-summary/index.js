@@ -23,7 +23,6 @@ const OrderSummary = ( { cartItems = [] } ) => {
 		<Panel
 			className="wc-block-components-order-summary"
 			initialOpen={ isLarge }
-			hasBorder={ true }
 			title={
 				<span className="wc-block-components-order-summary__button-text">
 					{ __( 'Order summary', 'woocommerce' ) }

@@ -342,29 +342,17 @@ class GravityView_frontend {
 			return;
 		}
 
-		$is_GV_post_type = 'gravityview' === get_post_type( $post );
-
 		// Calculate requested Views
-		$post_content = ! empty( $post->post_content ) ? $post->post_content : null;
-
-		if ( ! $is_GV_post_type && function_exists( 'do_blocks' ) ) {
-
-			$post_content = do_blocks( $post_content );
-
-			$this->setGvOutputData( GravityView_View_Data::getInstance( $post_content ) );
-
-		} else {
-			$this->setGvOutputData( GravityView_View_Data::getInstance( $post ) );
-		}
+		$this->setGvOutputData( GravityView_View_Data::getInstance( $post ) );
 
 		// !important: we need to run this before getting single entry (to kick the advanced filter)
 		$this->set_context_view_id();
 
-		$this->setIsGravityviewPostType( $is_GV_post_type );
+		$this->setIsGravityviewPostType( get_post_type( $post ) === 'gravityview' );
 
-		$post_id = $this->getPostId() ? $this->getPostId() : ( isset( $post ) ? $post->ID : null );
+		$post_id = $this->getPostId() ? $this->getPostId() : (isset( $post ) ? $post->ID : null );
 		$this->setPostId( $post_id );
-		$post_has_shortcode = $post_content ? gravityview_has_shortcode_r( $post_content, 'gravityview' ) : false;
+		$post_has_shortcode = ! empty( $post->post_content ) ? gravityview_has_shortcode_r( $post->post_content, 'gravityview' ) : false;
 		$this->setPostHasShortcode( $this->isGravityviewPostType() ? null : ! empty( $post_has_shortcode ) );
 
 		// check if the View is showing search results (only for multiple entries View)
@@ -1200,7 +1188,7 @@ class GravityView_frontend {
 	 * @param int|string|array $sort_field_id Field used for sorting (`id` or `1.2`), or an array for multisorts
 	 * @param int $form_id GF Form ID
 	 *
-	 * @return string|array Possibly modified sorting ID. Array if $sort_field_id is passed as array.
+	 * @return string Possibly modified sorting ID
 	 */
 	public static function _override_sorting_id_by_field_type( $sort_field_id, $form_id ) {
 
@@ -1372,12 +1360,16 @@ class GravityView_frontend {
 
 					global $wp_filter;
 
+					if ( ! empty( $wp_filter[ 'gravity_view_lightbox_script' ] ) ) {
+						gravityview()->log->warning( 'gravity_view_lightbox_script filter is deprecated use gravityview_lightbox_script instead' );
+					}
+
 					/**
 					 * @filter `gravity_view_lightbox_script` Override the lightbox script to enqueue. Default: `thickbox`
 					 * @param string $script_slug If you want to use a different lightbox script, return the name of it here.
 					 * @deprecated 2.5.1 Naming. See `gravityview_lightbox_script` instead.
 					 */
-					$js_dependency = apply_filters_deprecated( 'gravity_view_lightbox_script', array( 'thickbox' ), '2.5.1', 'gravityview_lightbox_script' );
+					$js_dependency = apply_filters( 'gravity_view_lightbox_script', 'thickbox' );
 
 					/**
 					 * @filter `gravityview_lightbox_script` Override the lightbox script to enqueue. Default: `thickbox`
@@ -1385,15 +1377,19 @@ class GravityView_frontend {
 					 * @param string $script_slug If you want to use a different lightbox script, return the name of it here.
 					 * @param \GV\View The View.
 					 */
-					$js_dependency = apply_filters( 'gravityview_lightbox_script', $js_dependency, $view );
+					apply_filters( 'gravityview_lightbox_script', $js_dependency, $view );
 					$js_dependencies[] = $js_dependency;
+
+					if ( ! empty( $wp_filter[ 'gravity_view_lightbox_style' ] ) ) {
+						gravityview()->log->warning( 'gravity_view_lightbox_style filter is deprecated use gravityview_lightbox_style instead' );
+					}
 
 					/**
 					 * @filter `gravity_view_lightbox_style` Modify the lightbox CSS slug. Default: `thickbox`
 					 * @param string $script_slug If you want to use a different lightbox script, return the name of its CSS file here.
 					 * @deprecated 2.5.1 Naming. See `gravityview_lightbox_style` instead.
 					 */
-					$css_dependency = apply_filters_deprecated( 'gravity_view_lightbox_style', array( 'thickbox' ), '2.5.1', 'gravityview_lightbox_style' );
+					$css_dependency = apply_filters( 'gravity_view_lightbox_style', 'thickbox' );
 
 					/**
 					 * @filter `gravityview_lightbox_script` Override the lightbox script to enqueue. Default: `thickbox`

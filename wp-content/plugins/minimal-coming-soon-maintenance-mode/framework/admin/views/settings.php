@@ -120,6 +120,13 @@ require_once 'header.php';
                     <button type="submit" name="signals_csmm_submit" class="signals-btn signals-btn-red"><strong><?php _e('Save Changes', 'signals'); ?></strong></button>
                     <a id="csmm-preview" style="margin: 0 0 0 15px;" href="<?php echo home_url(); ?>/?preview_coming_soon" class="signals-btn" target="_blank"><strong><?php _e('Preview Maintenance Page', 'signals'); ?></strong></a>
                     <a title="Check out 70+ pixel perfect themes and other great PRO features" style="margin: 0 0 0 15px;" href="#pro" class="signals-btn csmm-change-tab" target="_blank"><span style="font-size: 19px;" class="dashicons dashicons-star-filled"></span> <strong><?php _e('Go PRO', 'signals'); ?></strong></a>
+                    <?php
+                    if (csmm_chat_available()) {
+                    ?>
+                        <a title="Chat with our support agents" style="margin: 0 0 0 15px;" href="#" class="signals-btn csmm-open-chat"><span style="font-size: 19px;" class="dashicons dashicons-format-chat"></span> <strong>Live Chat Support</strong></a>
+                    <?php
+                    }
+                    ?>
                 </p>
                 <p class="footer-buttons-right">
                     <a href="<?php echo csmm_generate_web_link('thank-you-for-creating'); ?>" target="_blank">Minimal Coming Soon & Maintenance Mode</a> v<?php echo csmm_get_plugin_version(); ?>. Please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/?filter=5#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a> Thank you!
@@ -130,4 +137,21 @@ require_once 'header.php';
 </form><!-- form.signals-admin-form -->
 
 <?php
+  // accessibe install dialog
+  echo '<div id="accessibe-upsell-dialog" style="display: none;" title="accessiBe"><span class="ui-helper-hidden-accessible"><input type="text"/></span>';
+  echo '<div style="padding: 20px; font-size: 15px;">';
+  echo '<ul class="normal-list">';
+  echo '<li>Make your site user-friendly for people with disabilities</li>';
+  echo '<li>Fully automated WordPress accessibility service</li>';
+  echo '<li>Protect your site from lawsuits and increase the audience</li>';
+  echo '<li>The free accessiBe plugin sets up in 5 minutes. No coding required</li>';
+  echo '<li>Compatible with all WordPress themes and plugins</li>';
+  echo '<li>AI-powered</li>';
+  echo '<li>7-day free trial available</li>';
+  echo '</ul>';
+  echo '<p class="upsell-footer"><a class="button button-primary" id="csmm-install-accessibe">Install &amp; activate accessiBe to make your website more user-friendly</a></p>';
+  echo '</div>';
+  echo '</div>';
+  // accessibe install dialog
+
 require_once 'footer.php';
