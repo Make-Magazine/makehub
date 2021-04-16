@@ -954,22 +954,4 @@ jQuery( document ).ready( function(){
 					}
 		 });
 	});
-
-	jQuery( '.uap-js-paypal-sandbox-on-off' ).on( 'click', function(){
-			if ( jQuery('.uap-js-paypal-sandbox-on-off').is(':checked') ){
-					/// sandbox
-					jQuery('.uap-js-paypal-sandbox-credentials').css( 'display', 'block' );
-					jQuery('.uap-js-paypal-live-credentials').css( 'display', 'none' );
-			} else {
-					/// live
-					jQuery('.uap-js-paypal-sandbox-credentials').css( 'display', 'none' );
-					jQuery('.uap-js-paypal-live-credentials').css( 'display', 'block' );
-			}
-	});
-
-});
-
-jQuery(document).ready( function() {
-    var nonce = jQuery('meta[name="uap-admin-token"]').attr('content');
-    jQuery.ajaxSetup( { headers: {'X-CSRF-UAP-ADMIN-TOKEN': nonce } } );
 });

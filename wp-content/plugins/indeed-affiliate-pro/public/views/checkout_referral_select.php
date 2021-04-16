@@ -1,4 +1,4 @@
-<p class="<?php echo $data['class'];?> uap-fair-checkout-reward-wrapper">
+<p class="<?php echo $data['class'];?>">
 	<?php if (self::$checkout_referrals_select_settings['uap_checkout_select_referral_label']):?>
 		<label><?php echo self::$checkout_referrals_select_settings['uap_checkout_select_referral_label'] . ' ' . $data['require'];?></label>
 	<?php endif;?>

@@ -27,7 +27,7 @@ $levels = ihc_get_levels_with_payment();
 			<div class="inside">
 
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php _e("Purchased Membership", 'ihc');?></label>
+					<label class="iump-labels-special"><?php _e("Purchased Level", 'ihc');?></label>
 					<select name="lid"><?php
 						if ($levels && count($levels)){
 							$levels_arr[-1] = __("All", 'ihc');
@@ -43,7 +43,7 @@ $levels = ihc_get_levels_with_payment();
 							}
 						?>
 					</select>
-					<p><?php _e('(this is the membership which has the gift assigned to it)', 'ihc');?></p>
+					<p><?php _e('(this is the level which has the gift assigned to it)', 'ihc');?></p>
 				</div>
 
 				<div class="iump-form-line">
@@ -70,7 +70,7 @@ $levels = ihc_get_levels_with_payment();
 				</div>
 
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php _e("Gifted Membership", 'ihc');?></label>
+					<label class="iump-labels-special"><?php _e("Gifted Level", 'ihc');?></label>
 					<select name="target_level"><?php
 						if ($levels && count($levels)){
 							$levels_arr[-1] = __("All", 'ihc');
@@ -86,11 +86,11 @@ $levels = ihc_get_levels_with_payment();
 							}
 						?>
 					</select>
-					<p><?php _e('(the discount set above will apply to this membership)', 'ihc');?></p>
+					<p><?php _e('(the discount set above will apply to this level)', 'ihc');?></p>
 				</div>
 
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php _e("On Subscriptions with Billing Recurrence apply the Discount:", 'ihc');?></label>
+					<label class="iump-labels-special"><?php _e("On Levels with Billing Recurrence apply the Discount:", 'ihc');?></label>
 					<select name="reccuring"><?php
 						$arr = array( 0 => __("Just Once", 'ihc'),
 									  1 => __("Forever", 'ihc'),

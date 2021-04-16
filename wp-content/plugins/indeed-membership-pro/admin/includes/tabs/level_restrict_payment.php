@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 //ihc_save_update_metas('level_restrict_payment');//save update metas
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_level_restrict_payment_enabled', $_POST['ihc_level_restrict_payment_enabled']);
@@ -23,12 +23,12 @@ $payments = ihc_get_active_payments_services();
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Membership - Payment Gateways restriction', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Level - Payment Gateways restriction', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold', 'ihc');?></h2>
-				<p><?php _e('Restrict each Membership to be paid only through a specific payment gateway. For example, you can provide the Bank Transfer payment option only for specific memberships or for an identical membership but with a higher price.', 'ihc');?></p>
+				<p><?php _e('Restrict each level to be paid only through a specific payment gateway. For example, you can provide the Bank Transfer payment option only for specific levels or for an identical level but with a higher price.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_level_restrict_payment_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_level_restrict_payment_enabled');" <?php echo $checked;?> />
@@ -63,7 +63,7 @@ $payments = ihc_get_active_payments_services();
 					?>
 
 		<div class="ihc-stuffbox">
-				<h3 class="ihc-h3"><?php echo __('Membership: ', 'ihc') . $level['label'];?></h3>
+				<h3 class="ihc-h3"><?php echo __('Level: ', 'ihc') . $level['label'];?></h3>
 			<div class="inside">
 				<div class="iump-form-line">
 					<h2></h2>

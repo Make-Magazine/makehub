@@ -8,11 +8,11 @@
 							<p><?php _e('Once activated you can process payments to your affiliate users via Stripe directly from the affiliate system.', 'uap');?></p>
 							<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
 							<?php $checked = ($data['metas']['uap_stripe_enable']) ? 'checked' : '';?>
-								<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_stripe_enable');" <?php echo $checked;?> disabled />
-								<div class="switch" style="display:inline-block; opacity:0.6"></div>
+								<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_stripe_enable');" <?php echo $checked;?> />
+								<div class="switch" style="display:inline-block;"></div>
 							</label>
 							<input type="hidden" name="uap_stripe_enable" value="<?php echo $data['metas']['uap_stripe_enable'];?>" id="uap_stripe_enable" />
-							<p style="font-weight:bold;color: #9b4449;"><?php _e('This Stripe API is deprecated. Use Stripe V3 module instead.', 'uap');?></p>
+							<p style="font-weight:bold;color: #9b4449;"><?php _e('This Stripe API is deprecated. Use Stripe V2 module instead.', 'uap');?></p>
 						</div>
 				</div>
 				<div class="uap-line-break"></div>
@@ -75,7 +75,7 @@
 				</div>
 
 				<div class="uap-submit-form">
-					<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+					<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 				</div>
 		</div>
 	</div>

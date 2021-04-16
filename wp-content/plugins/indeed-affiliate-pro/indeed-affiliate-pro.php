@@ -1,16 +1,11 @@
 <?php
 /*
 Plugin Name: Indeed Ultimate Affiliate Pro
-Plugin URI: https://www.wpindeed.com/
+Plugin URI: http://www.wpindeed.com/
 Description: The most complete and easy to use Affiliate system Plugin that provides you a complete solution for your affiliates.
-Version: 6.9.1
-Author: WPIndeed Development
-Author URI: https://www.wpindeed.com
-Text Domain: uap
-Domain Path: /languages
-
-@package        Indeed Ultimate Affiliate Pro
-@author           WPIndeed Development
+Version: 5.4.1
+Author: indeed
+Author URI: http://www.wpindeed.com
 */
 
 class UAP_Main{
@@ -18,12 +13,12 @@ class UAP_Main{
 
 	public function __construct(){}
 
-	/**
-	* @param none
-	* @return none
-	*/
-	public static function run()
-	{
+	public static function run(){
+		/*
+		 * @param none
+		 * @return none
+		 */
+
 		if (self::$instance==TRUE){
 			return;
 		}
@@ -54,29 +49,29 @@ class UAP_Main{
 
 		require_once UAP_PATH . 'autoload.php';
 		require_once UAP_PATH . 'utilities.php';
-		require_once UAP_PATH . 'classes/UapDb.class.php';
+		require_once UAP_PATH . 'classes/Uap_Db.class.php';
 		global $indeed_db;
-		$indeed_db = new UapDb();
-		$UapGDPR = new Indeed\Uap\UapGDPR();
+		$indeed_db = new Uap_Db();
+		$Uap_GDPR = new Indeed\Uap\Uap_GDPR();
 
 		define('UAP_LICENSE_SET', $indeed_db->envato_check_license() );
 
-		require_once UAP_PATH . 'classes/UapAjax.class.php';
-		$uap_ajax = new UapAjax();
+		require_once UAP_PATH . 'classes/Uap_Ajax.class.php';
+		$uap_ajax = new Uap_Ajax();
 
 		if ( is_admin() && !defined('DOING_AJAX')){ /// current_user_can('administrator')
 			/// ADMIN
-			require_once UAP_PATH . 'admin/UapMainAdmin.class.php';
-			$uap_main_object = new UapMainAdmin();
+			require_once UAP_PATH . 'admin/Uap_Main_Admin.class.php';
+			$uap_main_object = new Uap_Main_Admin();
 		} else {
 			/// PUBLIC
-			require_once UAP_PATH . 'public/UapMainPublic.class.php';
-			$uap_main_object = new UapMainPublic();
+			require_once UAP_PATH . 'public/Uap_Main_Public.class.php';
+			$uap_main_object = new Uap_Main_Public();
 		}
 
 		/// CRON
-		require_once UAP_PATH . 'classes/UapCronJobs.class.php';
-		$uap_cron_object = new UapCronJobs();
+		require_once UAP_PATH . 'classes/Uap_Cron_Jobs.class.php';
+		$uap_cron_object = new Uap_Cron_Jobs();
 
 		/// ADMIN MENU && NOTIFICATIONS
 		add_action('admin_bar_menu', array('UAP_Main', 'uap_add_custom_top_menu_dashboard'), 995);
@@ -86,14 +81,12 @@ class UAP_Main{
 		add_action('init', array('UAP_Main', 'uap_gate'), 92);
 
 		///other modules
-		require_once UAP_PATH . 'classes/WPSocialLoginIntegration.class.php';
-		WPSocialLoginIntegration::run();
+		require_once UAP_PATH . 'classes/Uap_Wp_Social_Login_Integration.class.php';
+		Uap_Wp_Social_Login_Integration::run();
 
 		$RewriteDefaultWpAvatar = new \Indeed\Uap\RewriteDefaultWpAvatar();
 		$LoadTemplates = new \Indeed\Uap\LoadTemplates();
-		if ( class_exists( 'WP_REST_Controller' ) ){
-				$uapRestAPI = new \Indeed\Uap\RestAPI();
-		}
+		$uapRestAPI = new \Indeed\Uap\RestAPI();
 		$wpmlActions = new \Indeed\Uap\WPMLActions();
 		$PayToBecomeAffiliate = new \Indeed\Uap\PayToBecomeAffiliate();
 
@@ -103,15 +96,6 @@ class UAP_Main{
 		$UploadFilesSecurity = new \Indeed\Uap\UploadFilesSecurity();
 
 		$uapGeneralActions = new \Indeed\Uap\GeneralActions();
-
-		$ElCheck = new \Indeed\Uap\ElCheck();
-		$WooSpecificReferralRates = new \Indeed\Uap\WooSpecificReferralRates();
-		$WooCategoryReferralRates = new \Indeed\Uap\WooCategoryReferralRates();
-
-		// nonce
-		add_action( 'admin_head', 'UAP_Main::adminNonce' );
-		add_action( 'admin_head', 'UAP_Main::uapStyleForTopNotifications' );
-		add_action( 'wp_head', 'UAP_Main::publicNonce' );
 
 	}
 
@@ -148,44 +132,21 @@ class UAP_Main{
 					$object = new \Indeed\Uap\Migration\BaseMigration();
 					$object->run($params);
 					break;
-				case 'tracking':
-						$type = isset($_GET['type']) ? $_GET['type'] : '';
-						if (empty($type)){
-								return;
-						}
-						switch ($type){
-								case 'cpm':
-									$object = new \Indeed\Uap\CPM($_GET['affiliate']);
-									break;
-						}
-						break;
-				case 'stripe_v3_auth':
-					global $current_user;
-					$stripe = new \Indeed\Uap\PayoutStripeV3();
-					$stripe->authAffiliate();
-					if ( isset( $current_user->ID ) ){
-							update_user_meta( $current_user->ID, 'uap_affiliate_payment_type', 'stripe_v3' );
-					}
-					$accountPageId = get_option( 'uap_general_user_page' );
-					if ( $accountPageId ){
-							$redirect = get_permalink( $accountPageId );
-					}
-					if ( !empty( $redirect ) ){
-							$redirect = add_query_arg( 'uap_aff_subtab', 'payments_settings', $redirect );
-					} else {
-							$redirect = get_home_url();
-					}
-					wp_safe_redirect( $redirect );
-					exit;
-					break;
-				case 'stripe_v3_webhook':
-					$stripe = new \Indeed\Uap\PayoutStripeV3();
-					$stripe->webhook();
-					break;
-				default:
-					$home = get_home_url();
-					wp_safe_redirect($home);
-					exit;
+			case 'tracking':
+				$type = isset($_GET['type']) ? $_GET['type'] : '';
+				if (empty($type)){
+						return;
+				}
+				switch ($type){
+						case 'cpm':
+							$object = new \Indeed\Uap\CPM($_GET['affiliate']);
+							break;
+				}
+				break;
+			default:
+				$home = get_home_url();
+				wp_safe_redirect($home);
+				exit;
 		 	}
 		 }
 	}
@@ -244,11 +205,11 @@ class UAP_Main{
 		///ITEMS
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_pages', 'title'=>__('Affiliate Pages', 'uap'), 'href'=>'#', 'meta'=>array()));
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_showcases', 'title'=>__('Showcases', 'uap'), 'href'=>'#', 'meta'=>array()));
-		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_magic_feat', 'title'=>__('Extensions', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=magic_features'), 'meta'=>array()));
+		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_magic_feat', 'title'=>__('Magic Features', 'uap'), 'href'=>'#', 'meta'=>array()));
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_ranks', 'title'=>__('Ranks', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=ranks'), 'meta'=>array()));
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_offers', 'title'=>__('Offers', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=offers'), 'meta'=>array()));
-		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_visits', 'title'=>__('Clicks', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=visits'), 'meta'=>array()));
-		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_notifications', 'title'=>__('Email Notifications', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=notifications'), 'meta'=>array()));
+		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_visits', 'title'=>__('Visits', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=visits'), 'meta'=>array()));
+		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_notifications', 'title'=>__('Notifications', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=notifications'), 'meta'=>array()));
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_shortcodes', 'title'=>__('Shortcodes', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=shortcodes'), 'meta'=>array()));
 		$wp_admin_bar->add_menu(array('parent'=>'uap_dashboard_menu', 'id'=>'uap_dashboard_menu_general', 'title'=>__('General Options', 'uap'), 'href'=>admin_url('admin.php?page=ultimate_affiliates_pro&tab=settings'), 'meta'=>array()));
 
@@ -305,7 +266,25 @@ class UAP_Main{
 						break;
 				}
 			}
-
+			?>
+			<style>
+				.uap-top-bar-count{
+				    display: inline-block !important;
+				    vertical-align: top !important;
+					padding: 2px 7px !important;
+				    background-color: #d54e21 !important;
+				    color: #fff !important;
+				    font-size: 9px !important;
+				    line-height: 17px !important;
+				    font-weight: 600 !important;
+				    margin: 5px !important;
+				    vertical-align: top !important;
+				    -webkit-border-radius: 10px !important;
+				    border-radius: 10px !important;
+				    z-index: 26 !important;
+				}
+			</style>
+			<?php
 
 
 			$admin_workflow = $indeed_db->return_settings_from_wp_option('general-admin_workflow');
@@ -337,30 +316,6 @@ class UAP_Main{
 
 	}
 
-	public static function uapStyleForTopNotifications()
-	{
-		?>
-		<style>
-			.uap-top-bar-count{
-					display: inline-block !important;
-					vertical-align: top !important;
-				padding: 2px 7px !important;
-					background-color: #d54e21 !important;
-					color: #fff !important;
-					font-size: 9px !important;
-					line-height: 17px !important;
-					font-weight: 600 !important;
-					margin: 5px !important;
-					vertical-align: top !important;
-					-webkit-border-radius: 10px !important;
-					border-radius: 10px !important;
-					z-index: 26 !important;
-			}
-		</style>
-		<?php
-	}
-
-
 	/**
 	 * @param none
 	 * @return float
@@ -382,25 +337,6 @@ class UAP_Main{
 			return $user_data;
 	}
 
-	/**
-	 * @param none
-	 * @return none
-	 */
-	public static function adminNonce()
-	{
-			$nonce = wp_create_nonce( 'uapAdminNonce' );
-			echo "<meta name='uap-admin-token' content='$nonce'>";
-	}
-
-	/**
-	 * @param none
-	 * @return none
-	 */
-	public static function publicNonce()
-	{
-			$nonce = wp_create_nonce( 'uapPublicNonce' );
-	    echo "<meta name='uap-token' content='$nonce'>";
-	}
 
 }
 

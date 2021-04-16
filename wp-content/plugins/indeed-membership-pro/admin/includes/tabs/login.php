@@ -146,10 +146,6 @@
 								<textarea name="ihc_login_pending" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_login_pending']);?></textarea>
 							</div>
 							<div>
-								<div class="iump-labels-special"><?php _e('Default message for error on social login', 'ihc');?></div>
-								<textarea name="ihc_social_login_failed" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_social_login_failed']);?></textarea>
-							</div>
-							<div>
 								<div class="iump-labels-special"><?php _e('Error Message:', 'ihc');?></div>
 								<textarea name="ihc_login_error" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_login_error']);?></textarea>
 							</div>

@@ -1,5 +1,5 @@
 <?php
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 $levels = array('reg' => array('label' => __('Users with no active level', 'ihc'))) + $levels;
 ihc_save_update_metas('download_monitor_integration');//save update metas
 if (isset($_POST['ihc_save'])){
@@ -26,7 +26,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="inside">
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold', 'ihc');?></h2>
-				<p style="margin-top:0px;"><?php _e('Limit the number of downloads (per file or per user) for each membership / subscription.', 'ihc');?></p>
+				<p style="margin-top:0px;"><?php _e('Limit the number of downloads (per file or per user) for each level / subscription.', 'ihc');?></p>
 
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_download_monitor_enabled']) ? 'checked' : '';?>
@@ -47,7 +47,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 			<div class="iump-form-line">
 				<?php if (!empty($levels)):?>
-					<h2><?php _e('Memberships limits', 'ihc');?></h2>
+					<h2><?php _e('Levels limits', 'ihc');?></h2>
 					<?php foreach ($levels as $id => $level):?>
 					<div class="row" style="margin-left:0px;">
 						<div class="col-xs-5">

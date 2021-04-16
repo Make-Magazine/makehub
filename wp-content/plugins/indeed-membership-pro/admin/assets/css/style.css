@@ -15,7 +15,7 @@
 }
 .ihc-dashboard-wrap input[type=checkbox]{
 	border-radius: 0 !important;
-	line-height: 1em;
+	line-height: 1em;	
 }
 .clear{
 	clear: both;
@@ -30,11 +30,6 @@
 	width: 100%;
 	min-height:700px;
 	margin-bottom:40px;
-}
-.ihc-magic-box-wrap:last-child{
-  float: none;
-    clear: both;
-    display: inline-block;
 }
 .ihc-dashboard-wrap .ihc-admin-header{
 	height: 100px;
@@ -91,11 +86,6 @@
 	text-align: center;
 	text-transform: uppercase;
 	line-height: 15px;
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: capitalize;
-  line-height: 15px;
-  letter-spacing: 0.05em;
 }
 
 .ihc-dashboard-wrap .ihc-stuffbox{
@@ -196,9 +186,6 @@
 	margin-bottom:6%;
 	bottom:10px;
     font-family: "Open Sans",sans-serif;
-    width: 100% !important;
-    max-width: 750px !important;
-    min-width: auto !important;
 }
 .ihc-popup-wrapp .ihc-the-popup .ihc-popup-top{
 	border-bottom: 1px solid #ddd;
@@ -345,7 +332,6 @@ border-bottom: 1px solid #fafafa;
 	width:250px;
     height: 250px;
 	max-width:20%;
-  min-width: 200px;
 }
 .showcases-wrapp  .ihc-popup-shortcodevalue .fa-ihc{
 	line-height:120px;
@@ -1002,7 +988,6 @@ i.mce-i-ihc_btn_forms:after{
   border: 1px solid #ddd;
   border-radius: 3px;
   text-align:center;
-  margin:2px;
 }
 .subcr-type-list.iump-pending{
 	background-color:rgba(240, 80, 80, 1.0);
@@ -1050,7 +1035,7 @@ i.mce-i-ihc_btn_forms:after{
 	line-height:27px;
     display: inline-block;
     margin: 5px 0;
-
+ 
   font-size: 15px;
   font-weight: 700;
 }
@@ -1285,7 +1270,7 @@ i.mce-i-ihc_btn_forms:after{
 	min-width:1px;
 }
 .iump-payment-box-bottom {
-    line-height: 37px;
+    line-height: 37px; 
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 15px;
     font-weight: 400;
@@ -1867,13 +1852,13 @@ input[type="checkbox"].iump-switch + div:after {
 		text-align: right;
 		font-size: 20px;
 		font-weight: bold;
-		cursor: pointer;
+		cursor: pointer;	
     position: absolute;
     right: 5px;
     top: 5px;
 }
 .ihc-license-warning{
-	position:relative;
+	position:relative;	
 }
 .ihc-inactive-tab{
 	color: #CCC !important;
@@ -1962,9 +1947,6 @@ input[type="checkbox"].iump-switch + div:after {
 }
 .fa-user_shortcodes-ihc:before {
     content: "\f121";
-}
-.fa-cart-ihc:before{
-    content: "\f217";
 }
 .ihc-right-menu .fa-ihc-menu{
 	width:25px;
@@ -2404,7 +2386,7 @@ input[type="checkbox"].iump-switch + div:after {
 	    color: #fff !important;
     border: 1px solid #0a9fd8 !important;
     background: #0a9fd8 !important;
-}
+}  
 .ihc-footer-text{
 	display: inline-block;
     vertical-align: middle;
@@ -2777,10 +2759,6 @@ color: #21759b;
 }
 .ihc_small_yellow_button{
 	    background: #f1c80e !important;
-		cursor:pointer;
-}
-.ihc_small_orange_button{
-	    background: #ffa726 !important;
 		cursor:pointer;
 }
 .ihc-level-skin-wrapper{
@@ -3158,16 +3136,10 @@ color: #21759b;
 @media screen and (max-width: 782px){
 
 	.iump-wrapper .ihc-admin-tables tbody td, .iump-wrapper .ihc-admin-tables tbody th{
-		    display: table-cell;
+		    display: table-cell !important;
 
 	}
-  .iump-wrapper .ihc-admin-tables thead th.column-primary {
-    width: 100% !important;
-}
-.iump-wrapper .ihc-admin-tables tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
-    padding: 3px 8px 3px 3px !important;
-    box-shadow: none;
-}
+
 
 	.ihc-filters-wrapper .col-xs-8, .ihc-filters-wrapper .col-xs-6, .ihc-filters-wrapper .col-xs-4{
 		float:none;
@@ -3194,7 +3166,7 @@ color: #21759b;
 		display: inline-block;
 		position: relative;
 		padding: 2px 10px;
-		margin: 7px 3px;
+		margin: 20px 3px;
 		background: #e4edef;
 	}
 
@@ -3271,7 +3243,7 @@ color: #21759b;
 		display: inline-block;
 		position: relative;
 		padding: 2px 10px;
-		margin: 7px 3px;
+		margin: 20px 3px;
 		background: #e4edef;
 	}
 	.col-xs-6 {
@@ -3422,9 +3394,8 @@ padding: 10px;
     -o-box-shadow: none;
 }
 .ihc-dashboard-wrap .ihc-form-element-text, .ihc-dashboard-wrap .ihc-form-element-password, .ihc-dashboard-wrap .ihc-form-element-number, .ihc-dashboard-wrap .ihc-form-element-textarea, .ihc-dashboard-wrap .ihc-form-element-select, .ihc-dashboard-wrap .ihc-form-element-multiselect, .ihc-dashboard-wrap .ihc-form-element-ihc_state{
-  max-width: 100%;
     padding: 0 10px;
-    width: 495px;
+    width: 500px;
     min-height: 34px;
 }
 .ihc-dashboard-wrap .ihc-form-checkbox-wrapper,
@@ -3434,26 +3405,7 @@ padding: 10px;
 	display:inline-block;
 }
 .ihc-admin-edit-user .iump-form-line-register .select2.select2-container{
-	width:495px !important;
-  max-width: 100%;
-}
-.iump-form-checkbox label, .iump-form-radio label, .iump-form-multi_select label{
-  vertical-align: top !important;
-}
-.iump-form-line-register .ihc-form-element-select, .iump-form-line-register .ihc-form-element-multi_select{
-  width: 495px;
-  max-width: 100%;
-}
-.iump-form-line-register .ihc-wrapp-file-upload{
-    box-sizing: border-box;
-    padding: 10px;
-    border: 2px dashed #ddd;
-    vertical-align: text-top;
-    width: 495px;
-    min-height: 34px;
-}
-.iump-form-checkbox-wrapper{
-  display: inline-block;
+	width:500px !important;
 }
 .ihc-admin-edit-user .ihc-form-sublabel{
 	text-align:right;
@@ -3500,7 +3452,7 @@ padding: 10px;
     height: 45px !important;
 	line-height:26px !important;
 }
-.ihc-dashboard-wrap .ihc-form-element-submit:hover,
+.ihc-dashboard-wrap .ihc-form-element-submit:hover, 
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):focus,
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):hover,
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):active,
@@ -3515,17 +3467,17 @@ padding: 10px;
     border-color: #4cab6a;
 }
 .ihc-admin-select-level-wrapper{
-	padding-left:40px;
+	padding-left:40px;	
 	border-top: 1px solid #EAEDF1;
     border-top: 2px solid #53ba73;
     margin-top: 30px;
 }
 #ihc-select-level-view-values{
-	margin:10px;
+	margin:10px;	
 	margin-left:0;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire-wrapper{
-	margin: 10px 0px 30px 50px;
+	margin: 10px 0px 30px 50px;	
 	max-width:1200px;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire{
@@ -3533,9 +3485,9 @@ padding: 10px;
 	box-shadow: none;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire thead{
-	background: #f1f4f8 !important;
+	background: #f1f4f8 !important;    
 	border-bottom: 1px solid #ddd;
-
+	
     line-height: 1.4;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire thead th{
@@ -3546,29 +3498,23 @@ padding: 10px;
 	border-color:transparent;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire .ihc-levels-table-access-type{
-	color:#444 !important;
+	color:#444 !important;	
 }
 .ihc-admin-edit-user .ihc-manage-user-expire input[type=text]{
 	border-color:#ddd;
-	box-shadow:none;
+	box-shadow:none;	
 }
 .ihc-admin-edit-user .ihc-tos-wrap{
-	padding-left:240px;
-}
-@media screen and (max-width: 782px){
-  .ihc-admin-edit-user .ihc-tos-wrap{
-  	padding-left:0;
-  }
-
+	padding-left:240px;	
 }
 .ihc-admin-edit-user-additional-settings-wrapper{
-	padding-left:40px;
+	padding-left:40px;	
 	border-top: 1px solid #EAEDF1;
     border-top: 2px solid #ddd;
     margin-top: 30px;
 }
 .ihc-admin-edit-user .iump-submit-form{
-	padding:30px 5px 30px 40px;
+	padding:30px 5px 30px 40px;	
 }
 .ihc-admin-user-form-wrapper{
 	padding: 20px 0 20px 40px;
@@ -3595,13 +3541,12 @@ padding: 10px;
 .ihc-js-delete-level{
 	display:inline-block;
 	}
-
+	
 .iump-wrapper .ihc-admin-tables thead th, .iump-wrapper .ihc-admin-tables tfoot th{
 	 background-color: #f9f9fa;
     border-bottom: 1px solid #cad0d6;
     color: #4b5764;
 font-weight:bold;
-font-size:11px !important;
 }
 .ihc-remove-group-button{
 	border: 1px solid #f1505b !important;
@@ -3614,7 +3559,7 @@ font-size:11px !important;
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .ihc-subtab-menu{
-	background-color: #597daa;
+	background-color: #597daa;	
 }
 .ihc-level-access-section .iump-labels{
 	width:180px;
@@ -3627,260 +3572,4 @@ font-size:11px !important;
 }
 .iump-form-line .quicktags-toolbar input, .iump-form-line quicktags-toolbar.select{
 	min-width:inherit;
-}
-.ihc-admin-tables-users{
-	/*min-width:1100px;*/
-}
-/*extra-extension-box*/
-.ihc-magic-box-wrap .ihc-extra-extension-box {
-  background-color: #53ba73;
-}
-.ihc-extra-extension-box .fa-ihc:before {
-    content: "\f085";
-}
-/*extra-extension-box*/
-.ihc-membership-price-wrapper{
-  font-size:14px;
-  color: #888;
-}
-.ihc-membership-price-wrapper .ihc-membership-price{
-  display: block;
-  color:#6cad65;
-  font-weight: 700;
-}
-.ihc-membership-price-wrapper .ihc-membership-price.ihc-membership-trialprice{
-  color:#444;
-  font-weight: 600;
-}
-.ihc-membership-price-wrapper .ihc-membership-price-period{
-  display: block;
-}
-.order-total-amount{
-  color: #222;
-font-weight: bold;
-font-size: 13px;
-text-transform: capitalize;
-}
-.ihc-order-edit-leftside, .ihc-order-edit-rightside{
-  float: left;
-  width: 49%;
-  padding-right: 50px;
-  box-sizing: border-box;
-}
-.ihc-order-edit-box{
-  padding-bottom: 20px;
-  font-size: 15px;
-  line-height: 1.5em;
-  color:#666;
-  font-weight: 300;
-}
-.ihc-order-edit-box h4{
-  color:#222;
-    font-size: 22px;
-    padding-bottom: 0px;
-    margin-bottom: 5px;
-}
-.ihc-order-edit-box .ihc-order-edit-box-title{
-  font-size: 18px;
-  font-weight: 400;
-  color:#444;
-}
-.ihc-order-edit-box-links{
-  padding-top: 5px;
-}
-.ihc-order-edit-box-links span{
-  padding-right: 10px;
-}
-.ihc-order-edit-box-links a{
-  text-decoration: underline;
-}
-.ihc-order-edit-leftside input[type="text"], .ihc-order-edit-leftside input[type="number"], .ihc-order-edit-leftside select{
-  width: 100%;
-}
-.ihc-edit-banner-wrapper .ihc-upload-top-banner-wrapper{
-  margin-bottom:20px;
-  min-width: 584px;
-  display: inline-block;
-  min-height: 150px;
-  box-sizing: border-box;
-  padding: 10px;
-  border: 2px dashed #ddd;
-}
-@media screen and (max-width: 782px){
-  .ihc-edit-banner-wrapper .ihc-upload-top-banner-wrapper{
-    min-width: auto;
-    max-width: 100%;
-    width: 100%;
-  }
-}
-.ihc-edit-banner-wrapper .ihc-upload-image-remove-bttn{
-      width: 120px;
-}
-.ihc-notification-logs-message, .ihc-notification-logs-message p{
-  font-size: 11px !important;
-  line-height: 1.2em !important;
-  margin: 0 !important;
-  color: #888;
-}
-.ihc-admin-user-profile-wrapper{
-  max-width: 1100px;
-  padding: 25px 20px;
-  width: 100%;
-}
-.ihc-admin-user-profile-wrapper .ihc-admin-user-page-top-ap-background {
-    width: 100%;
-    max-width: 1100px;
-    height:250px;
-    left: 0;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-blend-mode: overlay;
-    background-image: url(../../../assets/images/top_ump_bk_4.png);
-  }
-.ihc-admin-user-details-wrapper:after{
-    content: " ";
-    clear:both;
-}
-.ihc-admin-user-details-wrapper .ihc-admin-left-side{
-  float:left;
-  position:relative;
-  top:-50px;
-  width: 200px;
-  padding-left: 20px;
-}
-.ihc-admin-user-details-wrapper .ihc-admin-left-side img {
-    border-radius: 0;
-    box-shadow: none;
-    border: 5px solid #fff;
-    width: 180px;
-  }
-.ihc-admin-user-details-wrapper .ihc-admin-middle-side{
-  float:left;
-  width: 70%;
-  padding: 20px 10px 40px 40px;
-  box-sizing: border-box;
-}
-.ihc-admin-user-edit-profile{
-  text-align: center;
-  margin: 10px 0;
-}
-.ihc-admin-user-edit-profile a{
-border: 1px solid #00b2f0 !important;
-border-radius: 4px;
--webkit-border-radius: 4px;
--moz-border-radius: 4px;
--o-border-radius: 4px;
-background-color: #00b2f0 !important;
-font-size: 16px;
-}
-.ihc-admin-user-main-name{
-    font-size: 29px;
-    color: #111;
-    font-weight: 700;
-    line-height: 34px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #ddd;
-}
-.ihc-admin-user-data table{
-  border-collapse: collapse;
-  font-size: 14px;
-  line-height: 24px;
-    color: #5C5C60;
-    font-weight: 400;
-}
-.ihc-admin-user-data .ihc-admin-user-data-label{
-  font-weight: 700!important;
-min-width: auto!important;
-width: 200px;
-word-break: break-word;
-color: #191818;
-text-align: right;
-font-weight: 400;
-vertical-align: top;
-min-width: 240px;
-padding: 15px 10px;
-display: table-cell;
-}
-.ihc-admin-user-data .ihc-admin-user-data-content{
-  word-break: break-word;
-    height: auto!important;
-  padding: 10px;
-  margin: 0;
-  vertical-align: middle;
-  display: table-cell;
-}
-.ihc-admin-user-data-list{
-  margin-top: 40px;
-}
-.ihc-admin-user-data-list table{
-    margin-top: 30px;
-    border: 1px solid #ddd;
-    box-shadow: none;
-}
-.ihc-admin-user-data-list thead{
-background: #f1f4f8 !important;
-border-bottom: 1px solid #ddd;
-line-height: 1.4;
-}
-.ihc-admin-user-data-list thead th {
-    border-bottom: none;
-    line-height: 2;
-}
-.ihc-admin-user-data-list tr {
-   border-color: transparent;
-}
-.ihc-admin-user-profile-status{
-  padding-top: 15px;
-}
-.ihc-admin-user-profile-status span{
-  word-break: break-word;
-    color: #191818;
-  font-weight: 600;
-}
-.ihc-print-buttton-wrapper{
-    text-align: right;
-    max-width: 1100px;
-    width: 100%;
-    padding: 0 20px;
-    bottom: -20px;
-    position: relative;
-    right: 10px;
-}
-.ihc-user-details-showmore-fields{
-  color: #337ab7;
-    text-decoration: underline;
-    padding-left: 142px;
-    text-transform: capitalize;
-}
-.ihc-users-list-fullname{
-  color: #343a40!important;
-      font-size: 14px!important;
-      font-weight: 500;
-    line-height: 1.2;
-}
-.ihc-users-list-username{
-  color: #74788d!important;
-      font-weight: 400;
-  font-size: 13px;
-}
-.ihc-users-list-avatar-wrapper{
-  float: left;
-}
-.ihc-users-list-avatar-wrapper img{
-  width: 35px;
-height: 35px;
-vertical-align: middle;
--webkit-border-radius: 50%;
--moz-border-radius: 50%;
--o-border-radius: 50%;
-border-radius: 50%;
-margin-right: 10px;
-}
-.ihc-users-list-fullname-wrapper{
-
-}
-.ihc-users-list-wpid{
-  color: #74788d!important;
-  font-weight: 400;
-  font-size: 12px;
 }

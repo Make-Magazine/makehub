@@ -1,8 +1,7 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since v.7.4
-Deprecated starting with v.9.3
+@since 7.4
 */
 class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
@@ -25,10 +24,9 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       \Ihc_User_Logs::write_log( __('PayPal Payment: Start process', 'ihc'), 'payments');
 
       $paypal_email = get_option('ihc_paypal_email');
-      $levels = \Indeed\Ihc\Db\Memberships::getAll();
+      $levels = get_option('ihc_levels');
       $sandbox = get_option('ihc_paypal_sandbox');
       $r_url = get_option('ihc_paypal_return_page');
-      $cancelUrl = get_option( 'ihc_paypal_return_page_on_cancel' );
 
       if(!$r_url || $r_url==-1){
         $r_url = get_option('page_on_front');
@@ -37,15 +35,6 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       if (!$r_url){
         $r_url = get_home_url();
       }
-
-      if( !$cancelUrl || $cancelUrl == -1 ){
-        $cancelUrl = get_option('page_on_front');
-      }
-      $cancelUrl = get_permalink($cancelUrl);
-      if ( !$cancelUrl ){
-        $cancelUrl = get_home_url();
-      }
-
 
       if ($sandbox){
         $this->redirectUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
@@ -111,12 +100,12 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       $this->redirectUrl .= 'business=' . urlencode($paypal_email) . '&';
       $this->redirectUrl .= 'item_name=' . urlencode($level_arr['name']) . '&';
       $this->redirectUrl .= 'currency_code=' . $this->currency . '&';
-
-
+		
+		
       ///DYNAMIC PRICE
       $level_arr['price'] = $this->applyDynamicPrice($level_arr['price']);
-
-
+	  
+	  
       //COUPONS
       $coupon_data = array();
 
@@ -137,7 +126,7 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             }
           } else {
             //only one time
-            if (isset($level_arr['access_trial_price']) && $level_arr['access_trial_price']!==''){
+            if (isset($level_arr['access_trial_price']) && $level_arr['access_trial_price']!==''){ 
               $level_arr['access_trial_price'] = ihc_coupon_return_price_after_decrease($level_arr['access_trial_price'], $coupon_data, TRUE, $uid, $this->attributes['lid']);
             } else {
               $level_arr['access_trial_price'] = ihc_coupon_return_price_after_decrease($level_arr['price'], $coupon_data, TRUE, $uid, $this->attributes['lid']);
@@ -227,8 +216,8 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
       } else {
           $this->redirectUrl .= 'lc=EN_US&';
       }
-      $this->redirectUrl .= 'return=' . urlencode( $r_url ) . '&';
-      $this->redirectUrl .= 'cancel_return=' . urlencode( $cancelUrl ) . '&';
+      $this->redirectUrl .= 'return=' . urlencode($r_url) . '&';
+      $this->redirectUrl .= 'cancel_return=' . urlencode($r_url) . '&';
       $this->redirectUrl .= 'notify_url=' . urlencode($notify_url) . '&';
       $this->redirectUrl .= 'rm=2&';
       $this->redirectUrl .= 'no_shipping=1&';
@@ -360,31 +349,32 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               case 'Completed':
 
                 //v.7.1 - Cover Paid Trial with different period than Level Period. MUST be Double-Check
-                if(isset($level_data['access_trial_time_value']) && $level_data['access_trial_time_value'] > 0 && \Indeed\Ihc\UserSubscriptions::isFirstTime($data['user_id'],$data['level_id'])){
+                if(isset($level_data['access_trial_time_value']) && $level_data['access_trial_time_value'] > 0 && ihc_user_level_first_time($data['user_id'],$data['level_id'])){
                   \Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time (Trial).", 'ihc'), 'payments');
-                  \Indeed\Ihc\UserSubscriptions::makeComplete( $data['user_id'], $data['level_id'], true, ['payment_gateway' => 'paypal'] );
+                  ihc_set_level_trial_time_for_no_pay($data['level_id'], $data['user_id']);
                 }else{
                   //payment made, put the right expire time
                   \Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time.", 'ihc'), 'payments');
-                  \Indeed\Ihc\UserSubscriptions::makeComplete( $data['user_id'], $data['level_id'], false, ['payment_gateway' => 'paypal'] );
+                  ihc_update_user_level_expire($level_data, $data['level_id'], $data['user_id']);
                 }
 
-
+                ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
+                ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
                 // @description run on payment complete. @param user id (integer), level id (integer)
 
-                //ihc_switch_role_for_user($data['user_id']);
+                ihc_switch_role_for_user($data['user_id']);
 
                 break;
               case 'Pending':
                 break;
               case 'Reversed':
               case 'Denied':
-                \Indeed\Ihc\UserSubscriptions::deleteOne( $data['user_id'], $data['level_id'] );
+                ihc_delete_user_level_relation($data['level_id'], $data['user_id']);
                 break;
 
               case 'Refunded':
-                \Indeed\Ihc\UserSubscriptions::deleteOne( $data['user_id'], $data['level_id'] );
+                ihc_delete_user_level_relation($data['level_id'], $data['user_id']);
                 do_action('ump_paypal_user_do_refund', $data['user_id'], $data['level_id'], @$_POST['txn_id']);
                 // @description run on payment refund. @param user id (integer), level id (integer), transaction id (integer)
 
@@ -407,9 +397,10 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             if (!empty($_POST['period1'])){
               /// its trial
               if (isset($_POST['mc_amount1']) && (float)$_POST['mc_amount1']==0){
-                \Indeed\Ihc\UserSubscriptions::makeComplete( $data['user_id'], $data['level_id'], true, ['payment_gateway' => 'paypal'] );
+                ihc_set_level_trial_time_for_no_pay($data['level_id'], $data['user_id']);
                 \Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time (Trial).", 'ihc'), 'payments');
-
+                ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
+                ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
                 // @description run on payment complete. @param user id (integer), level id (integer)
 
@@ -421,11 +412,13 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             } else if (isset($_POST['mc_amount1']) && (int)$_POST['mc_amount1']==0){
               ///// Recurring, first payment was 0
               \Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time.", 'ihc'), 'payments');
-              \Indeed\Ihc\UserSubscriptions::makeComplete( $data['user_id'], $data['level_id'], false, ['payment_gateway' => 'paypal'] );
-
+              ihc_update_user_level_expire($level_data, $data['level_id'], $data['user_id']);
+              ihc_send_user_notifications($data['user_id'], 'payment', $data['level_id']);//send notification to user
+              ihc_send_user_notifications($data['user_id'], 'admin_user_payment', $data['level_id']);//send notification to admin
               do_action( 'ihc_payment_completed', $data['user_id'], $data['level_id'] );
               // @description run on payment complete. @param user id (integer), level id (integer)
 
+              ihc_switch_role_for_user($data['user_id']);
               ihc_insert_update_transaction($data['user_id'], $insert_data['txn_id'], $insert_data);
             }
             //header('HTTP/1.0 200 OK');
@@ -449,7 +442,7 @@ class PayPalStandard extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             case 'recurring_payment_suspended':
             case 'recurring_payment_suspended_due_to_max_failed_payment':
             case 'recurring_payment_failed':
-              \Indeed\Ihc\UserSubscriptions::deleteOne( $data['user_id'], $data['level_id'] );
+              ihc_delete_user_level_relation($data['level_id'], $data['user_id']);
             break;
           }
 

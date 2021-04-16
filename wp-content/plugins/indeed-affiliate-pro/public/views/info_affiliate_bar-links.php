@@ -3,7 +3,7 @@
 <?php if (!empty($data['friendly_links'])):?>
 <div class="uap-ap-field">
   <label class="uap-ap-label uap-special-label"><?php _e("Friendly Links:", 'uap');?> </label>
-  <select id="uap_affiliate_bar_friendly_links" onChange="" class="uap-public-form-control ">
+  <select id="uap_affiliate_bar_friendly_links" onChange="uapInfoAffiliateBarUpdateLink();" class="uap-public-form-control ">
     <option value="0"><?php _e('Off', 'uap');?></option>
     <option value="1"><?php _e('On', 'uap');?></option>
   </select>
@@ -16,15 +16,14 @@
   ?>
 <div class="uap-ap-field">
   <label class="uap-ap-label uap-special-label"><?php _e("Referrence Type:", 'uap');?> </label>
-  <select id="ap_affiliate_bar_ref_type" onChange="" class="uap-public-form-control ">
+  <select id="ap_affiliate_bar_ref_type" onChange="uapInfoAffiliateBarUpdateLink();" class="uap-public-form-control ">
     <option value="0"><?php echo $data['ref_type'];?></option>
     <option value="1"><?php _e('Custom Affiliate Slug', 'uap');?></option>
   </select>
 </div>
+<div id="uap_info_affiliate_bar_extra_info" data-affiliate_id="<?php echo $data['affiliate_id'];?>"></div>
 
 <?php endif;?>
-
-<div id="uap_info_affiliate_bar_extra_info" data-affiliate_id="<?php echo isset( $data['affiliate_id'] ) ? $data['affiliate_id'] : '';?>"></div>
 
 <div class="uap-ap-field uap-account-affiliatelinks-tab2">
   <div class="uap-ap-label"><?php _e("Your Affiliate Link", 'uap');?> </div>

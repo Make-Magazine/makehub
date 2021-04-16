@@ -38,29 +38,18 @@
 			<div class="uap-hidden-download-link" style="display: none;"><a href="" target="_blank"><?php _e("Click on this if download doesn't start automatically in 20 seconds!", 'uap');?></a></div>
 		</div>
 	</div>
-
-	<?php if ( !empty( $data['error_users'] ) || !empty( $data['error_details_for_users'] ) ):?>
-
-		<div class="uap-wrapp-the-errors">
-			<?php if ( !empty( $data['error_users'] ) ):?>
-					<?php foreach ($data['error_users'] as $user ):?>
-						<div><?php echo __('The Payment cannot be proceed for affiliate ', 'uap') . $user . __(' because of the payment settings.', 'uap');?></div>
-					<?php endforeach;?>
-			<?php endif;?>
-			<?php if ( !empty( $data['error_details_for_users'] ) ):?>
-					<?php foreach ($data['error_details_for_users'] as $details ):?>
-						<div><?php echo __('The Payment cannot be proceed for affiliate ', 'uap') . $details['username'] . '. ' . $details['error_message'];?></div>
-					<?php endforeach;?>
-			<?php endif;?>
-		</div>
-
-	<?php endif;?>
-
-
 	<?php if (!empty($data['listing_items'])) : ?>
 	<div class="uap-special-box">
 	<?php echo $data['filter'];?>
 	</div>
+
+	<?php if (isset($data['error_users'])):?>
+		<div class="uap-wrapp-the-errors">
+			<?php foreach ($data['error_users'] as $user):?>
+				<div><?php echo __('The Payment cannot be proceed for affiliate ', 'uap') . $user . __(' because of the payment settings.', 'uap');?></div>
+			<?php endforeach;?>
+		</div>
+	<?php endif;?>
 
 	<div style="margin: 10px 0px; text-align: right;">
 		<button class="button button-primary button-large" onClick="window.location.href='<?php echo $data['update_payments'];?>'"><?php _e("Check Payments Status", 'uap');?></button>
@@ -70,9 +59,6 @@
 
 
 	<form action="" method="post" id="form_payments">
-
-			<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-			
 					<table class="wp-list-table widefat fixed tags uap-admin-tables">
 						<thead>
 							<tr>

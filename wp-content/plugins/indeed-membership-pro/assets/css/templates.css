@@ -3216,6 +3216,7 @@
 .ihc-register-9{
 	margin: 10px;
 	padding:30px;
+	text-align:center;
 	box-sizing:border-box;
 	display:block;
   	min-width:300px;
@@ -3261,7 +3262,6 @@
   	padding: 8px 10px 7px;
 	display:block;
 	width:100%;
-	max-width: 100%;
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
@@ -3278,9 +3278,6 @@
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
-}
-.ihc-register-9 .iump-form-multi_select select{
-	border-radius: 0 !important;
 }
 .ihc-register-9 .iump-form-line-register .select2-selection{
 	padding-top:2px;
@@ -7433,7 +7430,6 @@ margin:0 auto;
     padding-top: 5px;
     padding-left: 20px;
 	word-break: break-word;
-	font-family: Open Sans,sans-serif,'Trebuchet MS';
 }
 .ihc-user-page-top-ap-wrapper .ihc-account-page-top-mess p, .ihc-user-page-top-ap-wrapper .ihc-account-page-top-mess div{
 	margin-bottom:8px;
@@ -7700,7 +7696,7 @@ margin:0 auto;
     background-image: url(../images/top_ump_bk_4.png);
 }
 .ihc-ap-top-theme-2 .ihc-user-page-avatar img{
-	min-width:180px;
+	min-width:180px;	
 }
 .ihc-ap-top-theme-2 .ihc-left-side{
 	    margin-bottom: -75px;

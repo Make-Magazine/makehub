@@ -20,12 +20,6 @@ class CropImage
         require_once ABSPATH . 'wp-admin/includes/media.php';
     }
 
-    public function setUserId( $userId=0 )
-    {
-        $this->userId = $userId;
-        return $this;
-    }
-
     public function setSaveUserMeta( $inputValue=true )
     {
         $this->saveUserMeta = $inputValue;

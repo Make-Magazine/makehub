@@ -100,18 +100,18 @@ switch ($subtab){
 					<div class="inside">
 						<div class="iump-form-line">
 
-							<h2><?php _e('Subscription Settings', 'ihc');?></h2>
+							<h2><?php _e('Level Settings', 'ihc');?></h2>
 							<div style="font-weight:bold"><?php _e('Choose Subscription Type:', 'ihc');?></div>
 							<select name="ihc_subscription_type" onClick="ihcSelectShDiv(this, '#level_assign_to_user', 'predifined_level');">
-								<option value="predifined_level" <?php if ('predifined_level'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php _e('Predifined Subscription', 'ihc');?></option>
+								<option value="predifined_level" <?php if ('predifined_level'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php _e('Predifined Level', 'ihc');?></option>
 								<option value="subscription_plan" <?php if ('subscription_plan'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php _e('Subscription Plan', 'ihc');?></option>
 							</select>
 							<div  class="iump-form-line" id="level_assign_to_user" style="padding:0;border-bottom: none; margin-top:10px; <?php if($meta_arr['ihc_subscription_type']=='predifined_level') echo 'display: block;'; else echo 'display: none;';?>" >
-								<div style="font-weight:bold"><?php _e('Subscription assigned to new Member', 'ihc');?></div>
+								<div style="font-weight:bold"><?php _e('Level assigned to new User', 'ihc');?></div>
 								<select name="ihc_register_new_user_level">
 									<option value="-1" <?php if($meta_arr['ihc_register_new_user_level']==-1)echo 'selected';?> ><?php _e('None', 'ihc');?></option>
 									<?php
-										$levels = \Indeed\Ihc\Db\Memberships::getAll();
+										$levels = get_option('ihc_levels');
 										if ($levels && count($levels)){
 											foreach ($levels as $id=>$v){
 												?>
@@ -123,7 +123,7 @@ switch ($subtab){
 								</select>
 							</div>
 
-							<p><?php _e('If Subscription Plan is selected, the user is redirected to the Subscription Plan Page to choose a Subscription. Be sure that the subscription plan page is properly set up.', 'ihc');?></p>
+							<p><?php _e('If Subscription Plan is selected, the user is redirected to the Subscription Plan Page to choose a level. Be sure that the subscription plan page is properly set up.', 'ihc');?></p>
 						</div>
 						<div  class="iump-form-line">
 								<h2><?php _e('WP Role', 'ihc');?></h2>
@@ -256,7 +256,7 @@ switch ($subtab){
 									<div class="switch" style="display:inline-block;"></div>
 								</label>
 								<input type="hidden" name="ihc_register_show_level_price" value="<?php echo $meta_arr['ihc_register_show_level_price'];?>" id="ihc_register_show_level_price" />
-								<?php _e('Show Subscription Price & Data On Register Form', 'ihc');?>
+								<?php _e('Show Level Price & Data On Register Form', 'ihc');?>
 							</div>
 
 							<div style="margin-bottom: 15px;">
@@ -433,7 +433,7 @@ switch ($subtab){
 		$reg_fields = ihc_get_user_reg_fields();
 		ksort($reg_fields);
 
-		$the_levels = \Indeed\Ihc\Db\Memberships::getAll();
+		$the_levels = get_option('ihc_levels');
 		if ($the_levels){
 			foreach ($the_levels as $k=>$v){
 				$levels_arr[$k] = $v['name'];
@@ -481,7 +481,7 @@ switch ($subtab){
 													<th class="manage-column"><?php _e('On Register Page', 'ihc');?></th>
 													<th class="manage-column"><?php _e('On Account Page', 'ihc');?></th>
 													<th class="manage-column"><?php _e('On Modal', 'ihc');?></th>
-													<th class="manage-column"><?php _e("Targeting Subscriptions", 'ihc');?></th>
+													<th class="manage-column"><?php _e("Targeting Levels", 'ihc');?></th>
 													<th class="manage-column"><?php _e('Required', 'ihc');?></th>
 													<th class="manage-column"><?php _e('WP Native', 'ihc');?></th>
 													<th class="manage-column" style="width: 25px;"><?php _e('Edit', 'ihc');?></th>
@@ -497,7 +497,7 @@ switch ($subtab){
 													<th class="manage-column"><?php _e('On Register Page', 'ihc');?></th>
 													<th class="manage-column"><?php _e('On Account Page', 'ihc');?></th>
 													<th class="manage-column"><?php _e('On Modal', 'ihc');?></th>
-													<th class="manage-column"><?php _e("Targeting Subscriptions", 'ihc');?></th>
+													<th class="manage-column"><?php _e("Targeting Levels", 'ihc');?></th>
 													<th class="manage-column"><?php _e('Required', 'ihc');?></th>
 													<th class="manage-column"><?php _e('WP Native', 'ihc');?></th>
 													<th class="manage-column" style="width: 25px;"><?php _e('Edit', 'ihc');?></th>
@@ -627,7 +627,7 @@ switch ($subtab){
 													$target_levels = explode(',', $v['target_levels']);
 													foreach ($target_levels as $target_value){
 														if ($target_value==-1){
-															echo '<div class="ihc-register-dashboard-level-targeting">' . __('No Membership selected', 'ihc') . '</div>';
+															echo '<div class="ihc-register-dashboard-level-targeting">' . __('No level selected', 'ihc') . '</div>';
 														} else if (isset($levels_arr[$target_value])){
 															echo '<div class="ihc-register-dashboard-level-targeting-l">' . $levels_arr[$target_value] . '</div>';
 														} else {
@@ -635,7 +635,7 @@ switch ($subtab){
 														}
 													}
 													if (!empty($deleted_level)){
-														_e("Deleted Membership", 'ihc');
+														_e("Deleted Level", 'ihc');
 														unset($deleted_level);
 													}
 													unset($target_levels);
@@ -908,8 +908,8 @@ switch ($subtab){
 
 						<div class="iump-special-line">
 							<?php
-								$posible_values[-1] = __('No Membership selected', 'ihc');
-								$levels = \Indeed\Ihc\Db\Memberships::getAll();
+								$posible_values[-1] = __('No level selected', 'ihc');
+								$levels = get_option('ihc_levels');
 								if ($levels){
 									foreach ($levels as $id=>$level){
 										$posible_values[$id] = $level['name'];
@@ -919,7 +919,7 @@ switch ($subtab){
 									$meta_arr['target_levels'] = '';
 								}
 							?>
-							<h2><?php _e('Targeting Memberships', 'ihc');?></h2>
+							<h2><?php _e('Targeting Levels', 'ihc');?></h2>
 							<label class="iump-labels"><?php _e('to show up for:', 'ihc');?></label>
 							<select name="" id="" class="iump-form-select " onchange="ihcWriteTagValueCfl(this, '#indeed-target-levels-cf', '#ihc_select_levels_cf_view', 'ihc-level-select-v-');" style="min-width: 250px;">
 								<option value="-2" selected="">...</option>
@@ -944,11 +944,11 @@ switch ($subtab){
 												if (Ihc_Db::does_level_exists($v)){
 													$temp_data = ihc_get_level_by_id($v);
 												} else {
-													$temp_data['name'] = __('Deleted Membership', 'ihc');
+													$temp_data['name'] = __('Deleted Level', 'ihc');
 													$temp_class .= ' ihc-expired-level';
 												}
 											} else {
-												$temp_data['name'] = __('No Membership selected', 'ihc');
+												$temp_data['name'] = __('No level selected', 'ihc');
 											}
 											if ($temp_data){
 												$str .= '<div id="ihc-level-select-v-'.$v.'" class="'.$temp_class.'">'.$temp_data['name']

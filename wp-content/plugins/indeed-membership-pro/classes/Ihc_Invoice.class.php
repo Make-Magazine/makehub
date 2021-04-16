@@ -110,17 +110,12 @@ class Ihc_Invoice{
 				$data['level_price'] = $data['level_price'] +	$data['order_details']['discount_value'];
 			}
 
-			if (!empty($data['order_details']['taxes_amount'])){
-				 // v 9.5
-				 $data['level_price'] = $data['level_price'] - $data['order_details']['taxes_amount'];
-				 $data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['taxes_amount']);
-			} else if (!empty($data['order_details']['tax_value'])){
-			    // v.7.0
-					$data['level_price'] = $data['level_price'] - $data['order_details']['tax_value'];
-					$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['tax_value']);
-			} else if (!empty($data['order_details']['taxes'])){
-					$data['level_price'] = $data['level_price'] - (float)$data['order_details']['taxes'];
-					$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['taxes']);
+			if (!empty($data['order_details']['tax_value'])){
+
+				$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['tax_value']);
+
+				//Added on v.7.0
+				$data['level_price'] = $data['level_price'] - $data['order_details']['tax_value'];
 			}
 
 			//Added on v.7.0
@@ -153,6 +148,8 @@ class Ihc_Invoice{
 
 
 		$data['order_details']['create_date'] = ihc_convert_date_to_us_format($data['order_details']['create_date']);
+
+
 
 		/// output
 

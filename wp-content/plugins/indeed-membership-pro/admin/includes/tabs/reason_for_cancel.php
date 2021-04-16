@@ -34,11 +34,11 @@ $items= $reasonDbObject->get( $limit, $offset );
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Ultimate Membership Pro - Reason for cancel/delete Membership', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Ultimate Membership Pro - Reason for cancel/delete level', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Reason for cancel/delete Membership', 'ihc');?></h2>
+				<h2><?php _e('Activate/Hold Reason for cancel/delete level', 'ihc');?></h2>
 				<p><?php //_e('', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_reason_for_cancel_enabled']) ? 'checked' : '';?>
@@ -70,7 +70,7 @@ $items= $reasonDbObject->get( $limit, $offset );
     <thead style="background: #f1f4f8 !important;    border-bottom: 1px solid #ccc;box-shadow: inset 0px -5px 10px 2px rgba(0,0,0,0.03); line-height: 1.4;">
       <tr>
           <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Username', 'ihc' );?></td>
-          <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Membership', 'ihc' );?></td>
+          <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Level', 'ihc' );?></td>
           <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Action', 'ihc' );?></td>
           <td style="width: 30%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Reason', 'ihc' );?></td>
           <td style="width: 10%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Date', 'ihc' );?></td>
@@ -81,8 +81,8 @@ $items= $reasonDbObject->get( $limit, $offset );
             <tr>
                 <td><?php echo $itemData->user_login;?></td>
                 <td><?php echo \Ihc_Db::get_level_name_by_lid( $itemData->lid );?></td>
-                <td><?php echo $itemData->action_type;?></td>
                 <td><?php echo $itemData->reason;?></td>
+                <td><?php echo $itemData->action_type;?></td>
                 <td><?php echo date( 'Y-m-d h:i:s', $itemData->action_date );?></td>
             </tr>
         <?php endforeach;?>

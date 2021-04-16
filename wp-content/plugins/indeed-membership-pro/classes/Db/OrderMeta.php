@@ -40,51 +40,8 @@ class OrderMeta
         if ( !$metaKey || !$metaValue ){
             return;
         }
-        $query = $wpdb->prepare( "SELECT order_id FROM {$wpdb->prefix}ihc_orders_meta WHERE meta_key=%s AND meta_value=%s ORDER BY id DESC LIMIT 1;", $metaKey, $metaValue );
+        $query = $wpdb->prepare( "SELECT order_id FROM {$wpdb->prefix}ihc_orders_meta WHERE meta_key=%s AND meta_value=%s;", $metaKey, $metaValue );
         return $wpdb->get_var( $query );
     }
-
-	public function getAllByOrderId( $orderId=0 )
-  {
-      global $wpdb;
-      if ( !$orderId ){
-          return [];
-      }
-      $queryString = $wpdb->prepare( "SELECT meta_key, meta_value FROM {$wpdb->prefix}ihc_orders_meta WHERE order_id=%d;", $orderId );
-      $data = $wpdb->get_results( $queryString );
-      if ( !$data ){
-          return [];
-      }
-      foreach ( $data as $object ){
-          $returnData[$object->meta_key] = $object->meta_value;
-      }
-      return $returnData;
-  }
-
-  /**
-   * @param string
-   * @param string
-   * @param string
-   * @return bool
-   */
-  public function updateValueByMetaNameAndValue( $metaKey='', $oldValue='', $newValue='' )
-  {
-      global $wpdb;
-      if ( $metaKey == '' || $oldValue == '' || $newValue == '' ){
-          return false;
-      }
-      if ( $this->getIdFromMetaNameMetaValue( $metaKey, $oldValue ) == false ){
-          return false;
-      }
-      $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_orders_meta
-                                  SET meta_value=%s
-                                  WHERE
-                                  meta_key=%s
-                                  AND
-                                  meta_value=%s;",
-                        $newValue, $metaKey, $oldValue
-      );
-      return $wpdb->query( $query );
-  }
 
 }

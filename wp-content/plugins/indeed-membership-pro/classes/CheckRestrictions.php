@@ -45,7 +45,7 @@ class CheckRestriction
 						return $this;
 				}
         // set levels
-        $this->userLevels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $this->uid, true );
+        $this->userLevels = \Ihc_Db::get_user_levels( $this->uid, true );
         return $this;
     }
 
@@ -103,7 +103,6 @@ class CheckRestriction
         if ( !$this->uid ){
             return $this->checkBlockForUnregistered();
         }
-
 
         // register users with no levels
         if ( !$this->userLevels ){
@@ -197,7 +196,7 @@ class CheckRestriction
                 return true;
             }
         } else { // show for
-            if ( !in_array( 'reg', $this->restrictionTarget ) && count( $this->restrictionTarget ) == 1 &&  $this->restrictionTarget[0]=='reg' ){
+            if ( !in_array( 'reg', $this->restrictionTarget ) ){
                 return true;
             }
         }
@@ -220,7 +219,6 @@ class CheckRestriction
                 }
             }
         }
-
         if ( !$show && $block ){
             return $block;
         } else {

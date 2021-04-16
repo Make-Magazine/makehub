@@ -16,16 +16,16 @@ class RegisterElementorWidgets
 
 	private function include_widgets_files()
   {
-		  require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Account_Page_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Register_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Login_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Logout_Link_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Password_Reset_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Select_Level_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Visitor_Inside_User_Page_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Login_Popup_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Register_Popup_Widget.php';
-      require_once IHC_PATH . 'classes/services/Elementor/Elementor_Ihc_Locker_Widget.php';
+		  require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Account_Page_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Register_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Login_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Logout_Link_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Password_Reset_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Select_Level_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Visitor_Inside_User_Page_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Login_Popup_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Register_Popup_Widget.php';
+      require_once IHC_PATH . 'classes/services/Elementor_Integration/Elementor_Ihc_Locker_Widget.php';
 	}
 
 	public function register_widgets()

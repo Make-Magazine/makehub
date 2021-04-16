@@ -26,7 +26,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 				<div class="iump-form-line">
 					<h2><?php _e('Activate/Hold Membership Gifts', 'ihc');?></h2>
-					<p style="max-width:70%;"><?php _e('Allow your customers to buy Memberships as gifts which can be then sent to other users or used by themselves.', 'ihc');?></p>
+					<p style="max-width:70%;"><?php _e('Allow your customers to buy Levels as gifts which can be then sent to other users or used by themselves.', 'ihc');?></p>
 					<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 						<?php $checked = empty($data['ihc_gifts_enabled']) ? '' : 'checked';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_gifts_enabled');" <?php echo $checked;?> />
@@ -38,7 +38,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<div class="iump-form-line">
 					<h2><?php _e('Additional Settings', 'ihc');?></h2>
 					<br/>
-					<h5><?php _e('Give User Gift on every recurring membership payment', 'ihc');?></h5>
+					<h5><?php _e('Give User Gift on every recurring level payment', 'ihc');?></h5>
 					<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 						<?php $checked = empty($data['ihc_gifts_user_get_multiple_on_recurring']) ? '' : 'checked';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_gifts_user_get_multiple_on_recurring');" <?php echo $checked;?> />
@@ -61,7 +61,7 @@ if (!empty($_POST['ihc_save_gift'])){
 	Ihc_Db::gifts_do_delete($_GET['do_delete']);
 }
 $data = Ihc_Db::gift_get_all_items();
-$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = get_option('ihc_levels');
 $levels[-1]['label'] = __('All', 'ihc');
 $currency = get_option('ihc_currency');
 ?>
@@ -74,9 +74,9 @@ $currency = get_option('ihc_currency');
 		<table class="wp-list-table widefat fixed tags ihc-admin-tables">
 			<thead>
 				<tr>
-					<th class="manage-column"><?php _e('Awarded Membership', 'ihc');?></th>
+					<th class="manage-column"><?php _e('Awarded Level', 'ihc');?></th>
 					<th class="manage-column"><?php _e('Discount Value', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Target Membership', 'ihc');?></th>
+					<th class="manage-column"><?php _e('Target Level', 'ihc');?></th>
 					<th class="manage-column"><?php _e('Action', 'ihc');?></th>
 				</tr>
 			</thead>

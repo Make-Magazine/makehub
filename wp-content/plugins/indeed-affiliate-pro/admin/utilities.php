@@ -1,4 +1,4 @@
-<?php
+<?php 
 function uap_create_ranks_graphic($ranks_arr, $current){
 	/*
 	 * @param array
@@ -63,30 +63,20 @@ function uap_return_payment_details_for_admin_table($payment_details=array()){
 					$output = '<div class="uap-payment-details-do-payment">' . __('PayPal E-mail Address: ', 'uap') . $payment_details['settings'] . '</div>';
 				} else {
 					$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
-				}
+				}			
 				break;
 			case 'stripe':
 				if (!empty($payment_details['settings']['uap_affiliate_stripe_name'])
-					&& !empty($payment_details['settings']['uap_affiliate_stripe_card_number'])
+					&& !empty($payment_details['settings']['uap_affiliate_stripe_card_number']) 
 					&& !empty($payment_details['settings']['uap_affiliate_stripe_expiration_month']) && !empty($payment_details['settings']['uap_affiliate_stripe_expiration_year'])){ //&& !empty($payment_details['settings']['uap_affiliate_stripe_cvc'])
-					$output = '<div class="uap-payment-details-do-payment">';
+					$output = '<div class="uap-payment-details-do-payment">';	
 					$output .= __("Name on Card: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_name'] . ', ';
-					$output .= __("Card Number: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_card_number'] . ', ';
-					//$output .= __("CVC: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_cvc'] . ', ';
-					$output .= __("Expiration: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_expiration_month'] . '/' . $payment_details['settings']['uap_affiliate_stripe_expiration_year'];
+					$output .= __("Card Number: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_card_number'] . ', '; 	
+					//$output .= __("CVC: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_cvc'] . ', '; 				
+					$output .= __("Expiration: ", 'uap') . $payment_details['settings']['uap_affiliate_stripe_expiration_month'] . '/' . $payment_details['settings']['uap_affiliate_stripe_expiration_year']; 						
 					$output .= '</div>';
 				} else {
 					$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
-				}
-				break;
-			case 'stripe_v2':
-				$output = '';
-				break;
-			case 'stripe_v3':
-				if ( empty( $payment_details['account_id'] ) ){
-						$output = '<div class="uap-payment-details-do-payment">' . __('Incomplete Payment Settings', 'uap') . '</div>';
-				} else {
-						$output = '<div class="uap-payment-details-do-payment"><a href="' . 'https://dashboard.stripe.com/test/connect/accounts/' . $payment_details['account_id'] . '" target="_blank">' . __( 'View Stripe Affiliate Account', 'uap') . '</a></div>';
 				}
 				break;
 	 	}

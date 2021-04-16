@@ -55,7 +55,6 @@ class Ihc_Workflow_Restrictions{
 			 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 			 	 $count_posts = Ihc_Db::user_get_inserted_posts_count($uid, $since);
 				 $limit = $this->get_limit_count_for_user($uid, 'add_posts');
-
 				 if ($limit!==FALSE && $data['post_status']!='auto-draft'){
 				 	 if ($limit<=$count_posts){
 				 	 	$data['post_status'] = 'pending';
@@ -77,10 +76,8 @@ class Ihc_Workflow_Restrictions{
 		 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 		 	 $count_comments = Ihc_Db::user_get_inserted_comments_count($uid, $since);
 		 	 $limit = $this->get_limit_count_for_user($uid, 'comments');
-			 $count_comments = (int)$count_comments;
-			 $limit = (int)$limit;
-		   if ($limit!==FALSE){
-			   if ($limit<=$count_comments){
+		     if ($limit!==FALSE){
+			  	 if ($limit<=$count_comments){
 			  	 	 IHc_Db::do_delete_comment($comment_id);
 			 	 }
 			 }
@@ -120,7 +117,6 @@ class Ihc_Workflow_Restrictions{
 
 			 if ($uid && !current_user_can('administrator')){
 				 $limit = $this->get_limit_count_for_user($uid, 'view_posts');
-
 				 if ($limit!==FALSE && !in_array($post_id, $cookie_post_arr) && $limit<=$count_views){
 					 return 1; /// do block
 				 } else {
@@ -200,13 +196,13 @@ class Ihc_Workflow_Restrictions{
 					$meta_name = 'ihc_workflow_restrictions_post_views';
 					break;
 				case 'comments':
-					$meta_name = 'ihc_workflow_restrictions_comments_created';
-					break;
-				case 'add_posts':
 					$meta_name = 'ihc_workflow_restrictions_posts_created';
 					break;
+				case 'add_posts':
+					$meta_name = 'ihc_workflow_restrictions_comments_created';
+					break;
 			 }
-		 	 $uid_levels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
+		 	 $uid_levels = Ihc_Db::get_user_levels($uid, TRUE);
 			 if ($uid_levels && count($uid_levels)>0 && $meta_name && isset(self::$metas[$meta_name])){
 				 $return_value = FALSE;
 				 foreach ($uid_levels as $level_data){

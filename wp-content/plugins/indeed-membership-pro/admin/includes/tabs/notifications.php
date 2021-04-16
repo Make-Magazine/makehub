@@ -7,8 +7,45 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <div class="iump-wrapper">
 <?php
-$notifications = new \Indeed\Ihc\Notifications();
-$notification_arr = $notifications->getAllNotificationNames();
+$notification_arr = array(
+		'admin_user_register' => __('New Registered User', 'ihc'), // - Admin Notification
+		'admin_before_user_expire_level' => __('First Alert Before Level Expire', 'ihc'),
+		'admin_second_before_user_expire_level' => __('Second Alert Before Level Expire', 'ihc'),
+		'admin_third_before_user_expire_level' => __('Third Alert Before Level Expire', 'ihc'),
+		'admin_user_expire_level' => __('After Level Expired', 'ihc'),
+		'admin_user_payment' => __('New Payment Completed', 'ihc'),
+		'admin_user_profile_update' => __('User Profile Update', 'ihc'),
+
+		'ihc_cancel_subscription_notification-admin' => __('When the Subscription was Canceled', 'ihc'),
+		'ihc_delete_subscription_notification-admin' => __('When the Subscription was Deleted', 'ihc'),
+		'ihc_order_placed_notification-admin' => __('New Order placed', 'ihc'),
+		'ihc_new_subscription_assign_notification-admin' => __('New Subscription assign', 'ihc'),
+
+		'register' => __('New Account', 'ihc'), //Register
+		'register_lite_send_pass_to_user' => __('Register Lite - Send password to user', 'ihc'),
+		'review_request' => __('New Account Review Request', 'ihc'), //register with pending
+		'before_expire' => __('First Alert Before Level Expire', 'ihc'),
+		'second_before_expire' => __('Second Alert Before Level Expire', 'ihc'),
+		'third_before_expire' => __('Third Alert Before Level Expire', 'ihc'),
+		'expire' => __('After Level Expired', 'ihc'),
+		'email_check' => __('Double E-mail Verification Request', 'ihc'),
+		'email_check_success' => __('Double E-mail Verification Validated', 'ihc'),
+		'reset_password_process' => __('Reset Password Start Process', 'ihc'),
+		'reset_password' => __('Reset Password Request', 'ihc'),
+		'change_password' => __('Changed Password Inform', 'ihc'),
+		'approve_account' => __('Approve Account'),
+		'delete_account' => __('Deleted Account Inform', 'ihc'),
+		'payment' => __('New Payment Completed', 'ihc'),
+		'user_update' => __('User Profile Updates', 'ihc'),
+		'bank_transfer' => __('Bank Transfer Payment Details', 'ihc'),
+
+		'ihc_order_placed_notification-user' => __('Order placed', 'ihc'),
+		'ihc_subscription_activated_notification' => __('Subscription Activated', 'ihc'),
+		'ihc_delete_subscription_notification-user' => __('When the Subscription was Deleted', 'ihc'),
+		'ihc_cancel_subscription_notification-user' => __('When the Subscription was Canceled', 'ihc'),
+
+		'drip_content-user' => __('When Post become available', 'ihc'),
+);
 
 if (isset($_GET['edit_notification']) || isset($_GET['add_notification'])){
 	//add/edit
@@ -41,52 +78,40 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 			<h3><?php _e('Add new Notification', 'ihc');?></h3>
 			<div class="inside">
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php _e('Notification Type:', 'ihc');?></label>
+					<label class="iump-labels-special"><?php _e('Action:', 'ihc');?></label>
 					<select name="notification_type" id="notification_type" class="ump-js-change-notification-type">
 						<?php
 							foreach ($notification_arr as $k=>$v){
 								//Manually set optGroups
 								switch($k){
 									case 'admin_user_register':
-											echo ' <optgroup label="' . __('-----Admininistrator Notifications-----', 'ihc') . '"> </optgroup>';
+											echo ' <optgroup label="' . __('----------Admin Notifications----------', 'ihc') . '"> </optgroup>';
 											echo ' <optgroup label="' . __('Register Process', 'ihc') . '">';
 										break;
-									case 'ihc_new_subscription_assign_notification-admin':
-													echo ' <optgroup label="Subscriptions">';
-													break;
-									case 'ihc_order_placed_notification-admin':
-													echo ' <optgroup label="Payments">';
-													break;
-									case 'admin_user_profile_update':
-													echo ' <optgroup label="Customer Actions">';
-													break;
-
-
 									case 'register':
-												  echo ' <optgroup label="' . __('---------Member Notifications----------', 'ihc') . '"> </optgroup>';
+													echo ' <optgroup label="' . __('----------Users Notifications----------', 'ihc') . '"> </optgroup>';
 													echo ' <optgroup label="Register Process">';
 													break;
-									case 'register_lite_send_pass_to_user':
-													echo ' <optgroup label="Register Lite">';
-													break;
+
 									case 'email_check':
 													echo ' <optgroup label="Double Email Verification">';
 													break;
+									case 'before_expire':
+									case 'admin_before_user_expire_level':
+													echo ' <optgroup label="Level Expire">';
+													break;
+									case 'admin_user_payment':
+													echo ' <optgroup label="User Actions">';
+													break;
 									case 'reset_password_process':
-													echo ' <optgroup label="Reset Password Process">';
+													echo ' <optgroup label="Password">';
 													break;
 									case 'approve_account':
-													echo ' <optgroup label="Customer Account">';
-													break;
-									case 'user_update':
-													echo ' <optgroup label="Customer Actions">';
-													break;
-									case 'ihc_new_subscription_assign_notification':
-													echo ' <optgroup label="Subscriptions">';
-													break;
-									case 'ihc_order_placed_notification-user':
-													echo ' <optgroup label="Payments">';
-													break;
+										echo ' <optgroup label="Admin Actions">';
+										break;
+									case 'payment':
+										echo ' <optgroup label="User Actions">';
+										break;
 									case 'drip_content-user':
 										echo ' <optgroup label="Drip Content">';
 										break;
@@ -95,22 +120,17 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 								<option value="<?php echo $k;?>" <?php if ($meta_arr['notification_type']==$k) echo 'selected';?>><?php echo $v;?></option>
 								<?php
 								switch($k){
-									case 'admin_user_register':
-									case 'admin_user_expire_level':
-									case 'admin_before_subscription_payment_due':
-									case 'ihc_delete_subscription_notification-admin':
-										echo ' </optgroup>';
-										break;
-
+									case 'ihc_new_subscription_assign_notification-admin':
 									case 'review_request':
-									case 'register_lite_send_pass_to_user':
 									case 'email_check_success':
+									case 'expire':
+									case 'admin_user_expire_level':
 									case 'change_password':
 									case 'delete_account':
-									case 'ihc_delete_subscription_notification':
-									case 'expire':
-									case 'user_before_subscription_payment_due':
+									case 'admin_user_profile_update':
+									case 'ihc_cancel_subscription_notification-user':
 									case 'drip_content-user':
+									//case 'bank_transfer':
 										echo ' </optgroup>';
 										break;
 								}
@@ -118,20 +138,14 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 							do_action( 'ihc_admin_notification_type_select_field', $meta_arr['notification_type'] );
 						?>
 					</select>
-					<?php
-							$notificationObject = new \Indeed\Ihc\Notifications();
-							$notificationPattern = $notificationObject->getNotificationTemplate( $meta_arr['notification_type'] );
-							$explanation = isset( $notificationPattern['explanation'] ) ? $notificationPattern['explanation'] : '';
-					?>
-					<div id="ihc_notification_explanation"><?php echo $explanation;?></div>
 				</div>
 				<div class="iump-form-line">
-					<label class="iump-labels-special"><?php _e('Membership:', 'ihc');?></label>
+					<label class="iump-labels-special"><?php _e('Level:', 'ihc');?></label>
 
 					<select name="level_id">
 						<option value="-1" <?php if ($meta_arr['level_id']==-1) echo 'selected';?>><?php _e( 'All', 'ihc' );?></option>
 						<?php
-						$levels = \Indeed\Ihc\Db\Memberships::getAll();
+						$levels = get_option('ihc_levels');
 						if ($levels && count($levels)){
 							foreach ($levels as $k=>$v){
 								?>
@@ -247,16 +261,14 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 <?php
 } else {
 	//listing
-	$notificationObject = new \Indeed\Ihc\Notifications();
 	$notification_arr = apply_filters( 'ihc_admin_list_notifications_types', $notification_arr );
 	if (isset($_POST['ihc_save']) && !empty($_POST['ihc_admin_notifications_nonce']) && wp_verify_nonce( $_POST['ihc_admin_notifications_nonce'], 'ihc_admin_notifications_nonce' ) ){
-		$notificationObject->save($_POST);
+		ihc_save_notification_metas($_POST);
 	} else if (isset($_POST['delete_notification_by_id']) && !empty($_POST['ihc_admin_notifications_nonce']) && wp_verify_nonce( $_POST['ihc_admin_notifications_nonce'], 'ihc_admin_notifications_nonce' ) ){
-		$notificationObject->deleteOne($_POST['delete_notification_by_id']);
+		ihc_delete_notification($_POST['delete_notification_by_id']);
 	}
-	$data = $notificationObject->getAllNotifications();
+	$data = ihc_get_all_notification_available();
 	$exclude = apply_filters( 'ihc_admin_remove_notification_from_listing_by_type', [] );
-	$runtime = $notificationObject->getNotificationRuntime();
 		?>
 		<div id="col-right" style="vertical-align:top;width: 100%;">
 		<div class="iump-page-title">Ultimate Membership Pro -
@@ -283,8 +295,7 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 								<th class="manage-column"><?php _e('Subject', 'ihc');?></th>
 								<th class="manage-column"><?php _e('Action', 'ihc');?></th>
 								<th class="manage-column"><?php _e('Goes to', 'ihc');?></th>
-								<th class="manage-column"><?php _e('RunTime', 'ihc');?></th>
-								<th class="manage-column ihc-text-center"><?php _e('Target Memberships', 'ihc');?></th>
+								<th class="manage-column ihc-text-center"><?php _e('Target Levels', 'ihc');?></th>
 								<?php if (ihc_is_magic_feat_active('pushover')):?>
 									<th class="manage-column ihc-text-center"><?php _e('Mobile Notification', 'ihc');?></th>
 								<?php endif;?>
@@ -296,8 +307,7 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 								<th class="manage-column"><?php _e('Subject', 'ihc');?></th>
 								<th class="manage-column"><?php _e('Action', 'ihc');?></th>
 								<th class="manage-column"><?php _e('Goes to', 'ihc');?></th>
-								<th class="manage-column"><?php _e('RunTime', 'ihc');?></th>
-								<th class="manage-column ihc-text-center"><?php _e('Target Memberships', 'ihc');?></th>
+								<th class="manage-column ihc-text-center"><?php _e('Target Levels', 'ihc');?></th>
 								<?php if (ihc_is_magic_feat_active('pushover')):?>
 									<th class="manage-column ihc-text-center"><?php _e('Mobile Notification', 'ihc');?></th>
 								<?php endif;?>
@@ -306,8 +316,19 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 
 						<tbody class="ui-sortable">
 							<?php
-								$notificationObject = new \Indeed\Ihc\Notifications();
-								$admin_actions = $notificationObject->getAdminCases();
+								$admin_actions = array(
+														'admin_user_register',
+														'admin_before_user_expire_level',
+														'admin_second_before_user_expire_level',
+														'admin_third_before_user_expire_level',
+														'admin_user_expire_level',
+														'admin_user_payment',
+														'admin_user_profile_update',
+														'ihc_cancel_subscription_notification-admin',
+														'ihc_delete_subscription_notification-admin',
+														'ihc_order_placed_notification-admin',
+														'ihc_new_subscription_assign_notification-admin',
+								);
 								foreach ($data as $item){
 									if ( $exclude && in_array( $item->notification_type, $exclude ) ) { continue; }
 								?>
@@ -328,16 +349,13 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 									<td class="ihc-highlighted-label"><?php
 										echo isset( $notification_arr[$item->notification_type] ) ? $notification_arr[$item->notification_type] : '';
 									?></td>
-
-
 									<td><?php
 										if (in_array($item->notification_type, $admin_actions)){
-											echo 'Administrators';
+											echo 'Admin';
 										} else {
-											echo 'Member';
+											echo 'User';
 										}
 									?></td>
-									<td><?php echo isset( $runtime[$item->notification_type] ) ? $runtime[$item->notification_type] : '';?></td>
 									<td class="ihc-text-center"><?php
 										if ($item->level_id==-1){
 											echo 'All';
@@ -346,8 +364,6 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 											echo $level_data['name'];
 										}
 									?></td>
-
-
 									<?php if (ihc_is_magic_feat_active('pushover')):?>
 										<td class="ihc-text-center">
 											<?php if (!empty($item->pushover_status)):?>
@@ -368,7 +384,6 @@ $meta_arr['message'] = stripslashes( htmlspecialchars_decode( $meta_arr['message
 				?>
 
 		</div>
-		<div><a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=notification-logs' );?>" target="_blank"><?php _e( 'Notifications Logs', 'ihc' );?></a></div>
 <script>
 
 	jQuery(document).ready(function(){

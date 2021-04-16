@@ -48,12 +48,8 @@ jQuery(document).ready(function(){
 													'rank_name_' . $data['rank']['id'],
 													apply_filters( 'wpml_current_language', NULL )
 					);
-					$atype = '%';
-					if($data['rank']['amount_type'] == 'flat'):
-						$atype = $data['stats']['currency'];
-					endif;
 			?>
-			<div class="uap-top-rank-box" style="background-color:#<?php echo $data['rank']['color'];?>;" title="<?php echo $data['rank']['amount_value'].$atype.' '.__('reward', 'uap');?>"><?php echo $data['rank']['label'];?></div>
+			<div class="uap-top-rank-box" style="background-color:#<?php echo $data['rank']['color'];?>;" title=""><?php echo $data['rank']['label'];?></div>
 		</div>
 		<?php endif;?>
 	</div>
@@ -72,23 +68,14 @@ jQuery(document).ready(function(){
 		<?php endif;?>
 
 
-		<?php if (!empty($data['top-achievement']) && $data['achieved']>-1 && isset($data['next_rank'])):?>
+		<?php if (!empty($data['top-achievement']) && $data['achieved']>-1):?>
 			<div class="uap-clear uap-special-clear"></div>
-            <?php if(!empty($data['next_rank'])){ ?>
-                <div class="uap-top-achievement">
-                <?php
-                    $atype = '%';
-                        if($data['next_rank']->amount_type == 'flat'):
-                            $atype = $data['stats']['currency'];
-                        endif;
-                ?>
-                    <div class="uap-stats-label"><?php echo __('Until', 'uap'); ?> <strong title="<?php echo $data['next_rank']->amount_value.$atype.' '.__('reward', 'uap');?>"> <?php echo $data['next_rank']->label; ?></strong> <?php echo __('Rank...', 'uap'); ?></div>
-                    <div class="uap-achievement-line" title="<?php echo $data['achieved'].'% '.__('achieved', 'uap'); ?>">
-                        <div class="uap-achieved" style="width:<?php echo $data['achieved']; ?>%;"></div>
-                    </div>
-                </div>
-            <?php } ?>
-            <div class="uap-clear uap-special-clear"></div>
+			<div class="uap-top-achievement">
+				<div class="uap-stats-label"><?php echo __('Until the next Rank...', 'uap'); ?></div>
+				<div class="uap-achievement-line">
+					<div class="uap-achieved" style="width:<?php echo $data['achieved']; ?>%;"></div>
+				</div>
+			</div>
 		<?php endif;?>
         <?php if (!empty($data['uap_ap_edit_show_metrics'])):?>
 			<div class="uap-top-metrics">
@@ -105,7 +92,6 @@ jQuery(document).ready(function(){
 					</div>
 				</div>
 			</div>
-            <div class="uap-clear uap-special-clear"></div>
 		<?php endif;?>
 
 		<div class="uap-clear"></div>
@@ -216,7 +202,7 @@ $tabs = array(
 											),
 					  						'simple_links' => array(
 												'type' => 'subtab',
-												'label' => __('Referrer Links', 'uap'),
+												'label' => __('Simple Links', 'uap'),
 												'slug' => 'simple_links',
 												'icon_code' => '',
 												'print_link' => TRUE,
@@ -336,7 +322,7 @@ $tabs = array(
 					),
 					'info_affiliate_bar' => array(
 								'type' => 'tab',
-								'label' => get_option('uap_tab_info_affiliate_bar_menu_label') ? get_option('uap_tab_info_affiliate_bar_menu_label') : __('Affiliate FlashBar', 'uap'),
+								'label' => __('Affiliate FlashBar', 'uap'),
 								'slug' => 'info_affiliate_bar',
 								'icon_code' => '',
 								'print_link' => FALSE,
@@ -382,6 +368,7 @@ $tabs = array(
 					),
 );
 
+
 foreach ($custom_menu as $temp_k=>$temp_arr){
 	if (emptY($temp_arr['type'])){
 		$custom_menu[$temp_k]['type'] = 'tab';
@@ -390,11 +377,9 @@ foreach ($custom_menu as $temp_k=>$temp_arr){
 $tabs = array_merge($tabs, $custom_menu);
 $tabs = uap_reorder_menu_items($order, $tabs);
 
-
 $selected_parent = '';
 foreach ($tabs as $first_slug => $array){
 	/// exclude item
-
 	if (in_array($first_slug, $exclude_tabs)){
 		unset($tabs[$first_slug]);
 		continue;
@@ -421,6 +406,7 @@ foreach ($tabs as $first_slug => $array){
 		$tabs[$first_slug]['label'] = $this->account_page_settings['uap_tab_' . $first_slug . '_menu_label'];
 	}
 
+
 	if (!empty($tabs[$first_slug]['children'])){
 		foreach ($tabs[$first_slug]['children'] as $second_slug => $second_array){
 
@@ -444,8 +430,8 @@ foreach ($tabs as $first_slug => $array){
 		}
 	}
 }
-
 //// DO REORDER MENU ITEMS
+
 ?>
 		<div class="uap-ap-menu">
 			<ul>
@@ -455,10 +441,8 @@ foreach ($tabs as $first_slug => $array){
 			        			if ($selected_parent==$slug){
 			        				$extra_style = 'display: block';
 			        				$i_class = 'fa-account-down-uap';
-									$tab_selected = ' uap-ap-menu-tab-item-selected';
 			        			} else {
 			        				$extra_style = '';
-									$tab_selected = '';
 			        				$i_class = 'fa-account-right-uap';
 			        			}
 								if ($data['uap_ap_theme']=='uap-ap-theme-1'){
@@ -467,7 +451,7 @@ foreach ($tabs as $first_slug => $array){
 									$action = "";
 								}
 			        ?>
-								<li class="uap-ap-submenu-item<?php echo $tab_selected;?>"><div class="uap-ap-menu-tab-item" <?php echo $action;?> ><a href="javascript:void(0);"><i class="uap-ap-menu-sign fa-uap <?php echo $i_class;?>" id="<?php echo 'uap_fa_sign-' . $slug;?>"></i><?php echo $array['label'];?></a></div>
+								<li class="uap-ap-submenu-item"><div class="uap-ap-menu-tab-item" <?php echo $action;?> ><a href="javascript:void(0);"><i class="uap-ap-menu-sign fa-uap <?php echo $i_class;?>" id="<?php echo 'uap_fa_sign-' . $slug;?>"></i><?php echo $array['label'];?></a></div>
 									<ul class="uap-public-ap-menu-subtabs" style="<?php echo $extra_style;?>" id="<?php echo 'uap_public_ap_' . $slug;?>">
 										<?php foreach ($array['children'] as $second_slug => $second_array): ?>
 											<?php $extra_class = ($data['selected_tab']==$second_slug) ? 'uap-ap-menu-item-selected' : '';?>

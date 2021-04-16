@@ -9,8 +9,6 @@
 
 			<form action="" method="post" id="form_notification">
 
-					<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 					<table class="wp-list-table widefat fixed tags uap-admin-tables">
 						<thead>
 							<tr>

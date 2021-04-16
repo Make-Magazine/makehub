@@ -356,9 +356,7 @@ if (!class_exists('IndeedFeedSystem')){
 				$output .= '<link rel="stylesheet" href="' . $this->dir_url . 'files/font-awesome.css" type="text/css" media="all" />';
 				$output .= '<script>';
 				$output .= 'function indeed_close_notf_div(){
-									var token = jQuery(\'meta[name="ump-admin-token"]\').attr("content");
 							   	jQuery.ajax({
-											headers: { "X-CSRF-UMP-ADMIN-TOKEN" : token },
 							        type : "post",
 							        url : "' . get_site_url() . '/wp-admin/admin-ajax.php",
 							        data : {

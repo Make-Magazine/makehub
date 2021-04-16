@@ -89,14 +89,14 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				<div class="row" style="margin-left:0px;">
 					<div class="col-xs-5">
 						<h4 style="font-size: 24px;"><?php _e('Targeting', 'ihc');?></h4>
-						<p><?php _e('Users with certain memberships will get a special price for some products.' , 'ihc');?></p>
+						<p><?php _e('Users with certain levels will get a special price for some products.' , 'ihc');?></p>
 						<br/>
-						<h4><?php _e('Memberships', 'ihc');?></h4>
+						<h4><?php _e('Levels', 'ihc');?></h4>
 						<div style="margin:0px 0 5px 0;">
-							<p><?php _e('Discount available only for users that have one of the selected memberships.', 'ihc');?></p>
+							<p><?php _e('Discount available only for users that have one of the selected levels.', 'ihc');?></p>
 							<?php
 							$posible_values = array( -2 => '...', -1 => __('All', 'ihc') );
-							$levels = \Indeed\Ihc\Db\Memberships::getAll();
+							$levels = get_option('ihc_levels');
 							if ($levels){
 								foreach ($levels as $id=>$level){
 									$posible_values[$id] = $level['name'];
@@ -140,7 +140,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 						<br/>
 						<h4><?php _e('Products', 'ihc');?></h4>
 						<p><?php _e('You can chose a list of products, a list of categories, or all products.', 'ihc');?></p>
-						<select onChange="jQuery('#product_search').autocomplete( 'option', { source: '<?php echo IHC_URL . 'admin/ajax-custom.php';?>?woo_type='+this.value } );ihcChangeSearchWooType();" id="search_woo_type" class="form-control" name="settings[woo_item_type]">
+						<select onChange="jQuery('#product_search').autocomplete( 'option', { source: '<?php echo IHC_URL . 'admin/custom_ajax.php';?>?woo_type='+this.value } );ihcChangeSearchWooType();" id="search_woo_type" class="form-control" name="settings[woo_item_type]">
 							<?php
 								if (empty($data['metas']['settings']['woo_item_type'])){
 									$data['metas']['settings']['woo_item_type'] = '';
@@ -311,7 +311,7 @@ jQuery(function() {
 	}).autocomplete({
 		focus: function( event, ui ){},
 		minLength: 0,
-		source: '<?php echo IHC_URL . 'admin/ajax-custom.php';?>?woo_type=' + ihc_woo_search_type,
+		source: '<?php echo IHC_URL . 'admin/custom_ajax.php';?>?woo_type=' + ihc_woo_search_type,
 		select: function( event, ui ) {
 			var input_id = '#product_search_input';
 			var terms = ihc_split(jQuery(input_id).val());//get items from input hidden

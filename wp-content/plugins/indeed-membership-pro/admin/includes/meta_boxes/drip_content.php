@@ -1,5 +1,4 @@
 <?php
-wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css');
 global $post;
 $meta_arr = ihc_post_metas($post->ID);
 
@@ -30,7 +29,7 @@ if ($meta_arr['ihc_mb_type']=='show' && !empty($meta_arr['ihc_mb_who'])){
 		_e('<b>Available for: </b>', 'ihc');
 
 		$posible_values = array('all'=>__('All', 'ihc'), 'reg'=>__('Registered Users','ihc'), 'unreg'=>__('Unregistered Users','ihc') );
-		$levels = \Indeed\Ihc\Db\Memberships::getAll();
+		$levels = get_option('ihc_levels');
 		if ($levels){
 			foreach ($levels as $id=>$level){
 				$posible_values[$id] = $level['name'];
@@ -214,6 +213,7 @@ if ($meta_arr['ihc_mb_type']=='show' && !empty($meta_arr['ihc_mb_who'])){
 
 <script>
 
+	<?php if ( function_exists( 'register_block_type' ) ) : // Gutenberg ?>
 
 			jQuery( document ).ready(function(){
 					jQuery( '.js-ump-select-drip-content-start-time' ).on( 'change', function(){
@@ -254,7 +254,26 @@ if ($meta_arr['ihc_mb_type']=='show' && !empty($meta_arr['ihc_mb_who'])){
 
 			});
 
-
+	<?php else :?>
+			jQuery("#ihc_drip_start_type").slider_indeed({
+				reversed : false,
+				min: 1,
+				max: 3,
+				step: 1,
+				orientation: 'vertical',
+				tooltip: 'hide',
+				value: <?php echo $meta_arr['ihc_drip_start_type'];?>,
+			});
+			jQuery("#ihc_drip_end_type").slider_indeed({
+				reversed : false,
+				min: 1,
+				max: 3,
+				step: 1,
+				orientation: 'vertical',
+				tooltip: 'hide',
+				value: <?php echo $meta_arr['ihc_drip_end_type'];?>,
+			});
+	<?php endif;?>
 
 	jQuery(document).ready(function() {
 		jQuery('#ihc_drip_start_certain_date').datepicker({

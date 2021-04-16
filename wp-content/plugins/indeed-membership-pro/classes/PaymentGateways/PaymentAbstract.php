@@ -1,9 +1,8 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-Created v.7.4
-Modified  v.7.4
-Deprecated starting with v.9.3
+created @version 7.4
+modified @version 8.4
 */
 abstract class PaymentAbstract
 {
@@ -35,7 +34,7 @@ abstract class PaymentAbstract
    */
   protected function setLevelsData()
   {
-      $levelsData = \Indeed\Ihc\Db\Memberships::getAll();
+      $levelsData = get_option('ihc_levels');
       if ( isset( $levelsData[ $this->attributes['lid'] ] ) ){
           return $levelsData[ $this->attributes['lid'] ];
       }
@@ -135,7 +134,8 @@ abstract class PaymentAbstract
   */
   protected function addTaxes($amount=0)
   {
-      $levelData = \Indeed\Ihc\Db\Memberships::getOne( $this->attributes['lid'] );
+      $levels = get_option('ihc_levels');
+      $levelData = $levels[$this->attributes['lid']];
       $country = (isset($this->attributes['ihc_country'])) ? $this->attributes['ihc_country'] : '';
       $state = (isset($this->attributes['ihc_state'])) ? $this->attributes['ihc_state'] : '';
       if ( $amount > 0 ){
@@ -186,11 +186,8 @@ abstract class PaymentAbstract
       if ($url){
           $this->defaultRedirect = $url;
       }
-      if ( !empty( $this->attributes['is_register'] ) ){
-          $this->defaultRedirect = apply_filters('ihc_register_redirect_filter', $this->defaultRedirect, $this->attributes['uid'], $this->attributes['lid']);
-      }
-
       $url = ihc_get_redirect_link_by_label($redirect, $this->attributes['uid']);
+      $url = apply_filters('ihc_register_redirect_filter', $url, $this->attributes['uid'], $this->attributes['lid']);
       if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){
           $this->defaultRedirect = $url;
       }
@@ -216,11 +213,12 @@ abstract class PaymentAbstract
       $this->attributes['lid'] = $paymentData['lid'];
       $this->levelData = $this->setLevelsData();
       if ( $isTrial ){
-          \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], true, [ 'payment_gateway' => $this->paymentType ] );
+          ihc_set_level_trial_time_for_no_pay($paymentData['lid'], $paymentData['uid']);
       } else {
-          \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], false, [ 'payment_gateway' => $this->paymentType ] );
+          ihc_update_user_level_expire( $this->levelData, $paymentData['lid'], $paymentData['uid'] );
       }
       \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(" Payment Webhook: Updated user (".$paymentData['uid'].") level (".$paymentData['lid'].") expire time.", 'ihc'), 'payments');
+      ihc_switch_role_for_user( $paymentData['uid'] );
 
       /// Order
       if ( empty( $paymentData['orderId'] ) ){
@@ -255,6 +253,10 @@ abstract class PaymentAbstract
 
       \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment Webhook: Payment - Completed.', 'ihc'), 'payments');
 
+      /// Notifications
+      ihc_send_user_notifications( $paymentData['uid'], 'payment', $paymentData['lid'] );
+      ihc_send_user_notifications( $paymentData['uid'], 'admin_user_payment', $paymentData['lid'] );//send notification to admin
+
       /// Action on payment completed
       do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
       // @description run on payment complete. @param user id (integer), level id (integer)
@@ -264,7 +266,8 @@ abstract class PaymentAbstract
   {
       // Level Expire
       $this->levelData = $this->setLevelsData();
-      \Indeed\Ihc\UserSubscriptions::makeComplete( $this->attributes['uid'], $this->attributes['lid'], false, [ 'payment_gateway' => $this->paymentType ] );
+      ihc_update_user_level_expire( $this->levelData, $this->attributes['lid'], $this->attributes['uid'] );
+      ihc_switch_role_for_user( $this->attributes['uid'] );
       do_action( 'ihc_payment_completed', $this->attributes['uid'], $this->attributes['lid'] );
       // @description run on payment complete. @param user id (integer), level id (integer)
   }

@@ -2303,7 +2303,7 @@
   display: table;
   content: " ";
   clear:both;
-}
+} 
 .ihc-col-xs-1, .ihc-col-xs-2, .ihc-col-xs-3, .ihc-col-xs-4, .ihc-col-xs-5, .ihc-col-xs-6, .ihc-col-xs-7, .ihc-col-xs-8, .ihc-col-xs-9, .ihc-col-xs-10, .ihc-col-xs-11, .ihc-col-xs-12 {
   float: left;
   position: relative;
@@ -2362,3 +2362,4 @@
 	margin:0 0 15px 0;
 	font-size:13px;font-family:"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif!important;
 	}
+	

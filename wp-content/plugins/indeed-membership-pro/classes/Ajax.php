@@ -22,7 +22,6 @@ class Ajax
         add_action( 'wp_ajax_nopriv_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
         add_action( 'wp_ajax_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
         add_action( 'wp_ajax_ihc_admin_list_users_total_spent_values', array( $this, 'usersTotalSpentValues') );
-        add_action( 'wp_ajax_ihc_admin_make_order_completed', array( $this, 'adminMakeOrderCompleted') );
     }
 
     /**
@@ -284,39 +283,9 @@ class Ajax
             die;
         }
         foreach ( $data as $object ){
-            $array[$object->uid] = ihc_format_price_and_currency( '', $object->sum );
+            $array[$object->uid] = $object->sum;
         }
         echo json_encode( $array );
-        die;
-    }
-
-    public function adminMakeOrderCompleted()
-    {
-        if ( !indeedIsAdmin() ){
-            die;
-        }
-        if ( !ihcAdminVerifyNonce() ){
-            die;
-        }
-        if ( empty( $_POST['id'] ) ){
-            die;
-        }
-        $orderId = esc_sql( $_POST['id'] );
-        $orderObject = new \Indeed\Ihc\Db\Orders();
-        $orderObject->setId( $orderId )->update( 'status', 'Completed' );
-        $orderData = $orderObject->fetch()->get();
-        if ( !$orderData ){
-            die;
-        }
-        $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
-        $paymentGateway = $orderMeta->get( $orderId, 'ihc_payment_type' );
-        $levelData = \Indeed\Ihc\Db\Memberships::getOne( $orderData->lid );
-        if (isset($levelData['access_trial_time_value']) && $levelData['access_trial_time_value'] > 0 && \Indeed\Ihc\UserSubscriptions::isFirstTime( $orderData->uid, $orderData->lid )){
-          /// CHECK FOR TRIAL
-            \Indeed\Ihc\UserSubscriptions::makeComplete( $orderData->uid, $orderData->lid, true, [ 'manual' => true, 'payment_gateway' => $paymentGateway ] );
-        } else {
-            \Indeed\Ihc\UserSubscriptions::makeComplete( $orderData->uid, $orderData->lid, false, [ 'manual' => true, 'payment_gateway' => $paymentGateway ] );
-        }
         die;
     }
 

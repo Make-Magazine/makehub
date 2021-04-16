@@ -1,11 +1,6 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 
-/*
-Created v.7.4
-Deprecated starting with v.9.3
-*/
-
 class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
     protected $attributes       = array();
@@ -68,7 +63,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     public function doPayment()
     {
         \Stripe\Stripe::setApiKey( $this->options['ihc_stripe_checkout_v2_secret_key'] );
-        $levels = \Indeed\Ihc\Db\Memberships::getAll();
+        $levels = get_option('ihc_levels');
         $this->levelData = $levels[$this->attributes['lid']];
 
         /// lacale
@@ -269,12 +264,12 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
 		 /// TAXES
         $this->amount = $this->addTaxes( $this->amount );
+		$this->amount = round( $this->amount, 2 );
 
         $amount = $this->amount * $this->multiply;
         if ( $this->multiply==100 && $amount> 0 && $amount<50){
             $amount = 50;// 0.50 cents minimum amount for stripe transactions
         }
-		    $this->amount = round( $this->amount, 0 );
 
         $ihcPlanCode = $this->attributes['uid'] . '_' . $this->attributes['lid'] . '_' . indeed_get_unixtimestamp_with_timezone();
         $plan = array(
@@ -309,6 +304,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             'cancel_url'                => $this->cancelUrl,
             'locale'                    => $this->locale,
         ];
+
 
         if ( !empty( $trialAmount ) ){
 
@@ -402,6 +398,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     }
 
     private function getCouponData()
+
     {
         $couponData = array();
         if ( !empty( $this->attributes['ihc_coupon'] ) ){
@@ -417,7 +414,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( $this->sessionId ){
             /// redirect
             \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Request submited.', 'ihc'), 'payments');
-            $redirect = IHC_URL . 'classes/PaymentGateways/stripe_checkout_v2_payment.php?sessionId=' . $this->sessionId . '&key=' . $this->options['ihc_stripe_checkout_v2_publishable_key'];
+            $redirect = IHC_URL . 'public/stripe_checkout_v2_payment.php?sessionId=' . $this->sessionId . '&key=' . $this->options['ihc_stripe_checkout_v2_publishable_key'];
         } else {
             /// go home
             $redirect = $this->siteUrl;
@@ -445,7 +442,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Set rresponse type @" . @$responseData['type'], 'ihc'), 'payments');
         switch ( $responseData['type'] ){
-			       case 'invoice.paid':
+            case 'invoice.payment_succeeded': /// make level completed
               $transactionIdentificator = isset($responseData['data']['object']['payment_intent']) ? $responseData['data']['object']['payment_intent'] : '';
               $dataFromDb = ihcGetTransactionDetails( $transactionIdentificator );
 
@@ -485,13 +482,15 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             exit();
         }
 
-        $levelData = \Indeed\Ihc\Db\Memberships::getOne( $data['lid'] );
+        $levels = get_option('ihc_levels');
+        $levelData = $levels[$data['lid']];
         $currentTransactionAmount = $transactionDetails['data']['object']['amount']/$this->multiply;
         //unset($transactionDetails['data']);
         //sleep(10);
 
-        \Indeed\Ihc\UserSubscriptions::makeComplete( $data['uid'], $data['lid'], false, ['payment_gateway' => 'stripe_checkout_v2'] );
+        ihc_update_user_level_expire( $levelData, $data['lid'], $data['uid'] );
         \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Updated user (".$data['uid'].") level (".$data['lid'].") expire time.", 'ihc'), 'payments');
+        ihc_switch_role_for_user($data['uid']);
 
         $dataDb = $data;//array_merge( $data, $transactionDetails['data']['object'] );
         $dataDb['message'] = 'success';
@@ -521,12 +520,14 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                               ->setUid( $data['uid'] )
                               ->setPaymentData( $paymentData )
                               ->setHistory( $paymentData )
-                              ->setOrders( $currentOrderId ) // $orderId
+                              ->setOrders( $orderId )
                               ->save();
 
         \Ihc_User_Logs::write_log( __('Stripe Checkout Payment Webhook: Single Payment - Completed.', 'ihc'), 'payments');
 
-
+        //send notification to user
+        ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);
+        ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
         do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
         // @description run on payment complete. @param user id (integer), level id (integer)
 
@@ -601,16 +602,18 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             exit;
         }
 
-        $levelData = \Indeed\Ihc\Db\Memberships::getOne( $data['lid'] );
+        $levels = get_option('ihc_levels');
+        $levelData = $levels[$data['lid']];
         $currentTransactionAmount = $transactionDetails['data']['object']['amount'] / $this->multiply;
 
         if ( $isTrial ){
             \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Set Trial Time.", 'ihc'), 'payments');
-            \Indeed\Ihc\UserSubscriptions::makeComplete( $data['uid'], $data['lid'], true, ['payment_gateway' => 'stripe_checkout_v2'] );
+            ihc_set_level_trial_time_for_no_pay( $metaData['lid'], $metaData['uid'] );
         } else {
-            \Indeed\Ihc\UserSubscriptions::makeComplete( $data['uid'], $data['lid'], false, ['payment_gateway' => 'stripe_checkout_v2'] );
+            ihc_update_user_level_expire( $levelData, $data['lid'], $data['uid'] );
         }
         \Ihc_User_Logs::write_log( __("Stripe Checkout Payment Webhook: Updated user (".$data['uid'].") level (".$data['lid'].") expire time.", 'ihc'), 'payments');
+        ihc_switch_role_for_user($data['uid']);
 
         $dataDb = $data;//array_merge( $data, $transactionDetails['data']['object'] );
         $dataDb['message'] = 'success';
@@ -644,7 +647,6 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         /// save charge_id
         $orderMeta->save( $currentOrderId, 'charge_id', $chargeId );
         $orderMeta->save( $currentOrderId, 'customer_id', $customerId );
-        $orderMeta->save( $currentOrderId, 'ihc_payment_type', 'stripe_checkout_v2' );
 
         $paymentData = [
                           "uid"               => $metaData['uid'],
@@ -665,32 +667,9 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         \Ihc_User_Logs::write_log( __('Stripe Checkout Payment Webhook: Recurring Payment - Completed.', 'ihc'), 'payments');
 
-        // update subscription plan
-        if ( isset( $transactionDetails['data']['object']['attempted'] ) && $transactionDetails['data']['object']['attempted'] == 1 ){
-            $levelsData = \Indeed\Ihc\Db\Memberships::getAll();
-            if ( isset($levelsData[$data['lid']] ) && isset($levelsData[$data['lid']]['billing_type']) && $levelsData[$data['lid']]['billing_type'] == 'bl_limited' ){
-                $done = \Stripe\SubscriptionSchedule::create([
-                        'customer'    => $transactionDetails['data']['object']['customer'],
-                        'start_date'  => $transactionDetails['data']['object']['created'],
-                        'end_behavior' => 'cancel',
-                        'phases'      => [
-                                            [
-                                              'plans' => [
-                                                [
-                                                  'price'     => @$transactionDetails['data']['object']['lines']['data'][0]['plan']['id'],
-                                                  'plan'      => @$transactionDetails['data']['object']['lines']['data'][0]['plan']['id'],
-                                                  'quantity'  => 1,
-                                                ],
-                                              ],
-                                              'iterations' => $levelsData[$data['lid']]['billing_limit_num'],/// modify this
-                                            ],
-                        ],
-                ]);
-            }
-        }
-        // end of update subscription plan
-
-
+        //send notification to user
+        ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);
+        ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
         do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
         // @description run on payment complete. @param user id (integer), level id (integer)
 
@@ -722,7 +701,7 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         }
 
         \Ihc_User_Logs::write_log( __("Stripe Payment Webhook: Delete user level.", 'ihc'), 'payments');
-        \Indeed\Ihc\UserSubscriptions::deleteOne( $uid, $lid );
+        ihc_delete_user_level_relation( $lid, $uid );
 
         http_response_code(200);
 
@@ -786,22 +765,11 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
         }
 
+
         if ( !$subscriptionId ){
             return false;
         }
 
-        // new api
-        $subscription = \Stripe\Subscription::retrieve( $subscriptionId);
-
-        if ( empty( $subscription ) ) {
-            return false;
-        }
-
-        $result = $subscription->cancel();
-
-        return $result;
-
-        /*
         $customer = \Stripe\Customer::retrieve( $customerId );
 
         if ( !$customer ){
@@ -833,7 +801,6 @@ class StripeCheckoutV2 extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $value = false;
         }
         return $value;
-        */
     }
 
 }

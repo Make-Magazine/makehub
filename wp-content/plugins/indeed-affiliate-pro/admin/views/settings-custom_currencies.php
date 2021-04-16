@@ -1,8 +1,5 @@
 <div class="uap-wrapper">
 			<form action="" method="post">
-
-				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-				
 				<div class="uap-stuffbox">
 					<h3 class="uap-h3"><?php _e('Add new Currency', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/custom-currencies/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
 					<div class="inside">
@@ -16,7 +13,7 @@
 							<input type="test" value="" name="new_currency_name" />
 						</div>
 						<div class="uap-submit-form">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="uap_save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="uap_save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

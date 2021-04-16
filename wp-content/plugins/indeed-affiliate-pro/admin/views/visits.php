@@ -2,7 +2,7 @@
 		wp_enqueue_script( 'indeed_csv_export', UAP_URL . 'assets/js/csv_export.js' );
 ?>
 <div class="uap-wrapper">
-	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Clicks', 'uap');?></span></div>
+	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Visits', 'uap');?></span></div>
 
 		<?php if (!empty($data['subtitle'])):?>
 			<h4><?php echo $data['subtitle'];?></h4>
@@ -13,15 +13,7 @@
 	</div>
 
 	<div class="uap-special-buttons-users">
-		<?php
-				$filters = [
-					'start' 									=> empty($_REQUEST['udf']) ? '' : $_REQUEST['udf'],
-					'end' 										=> empty($_REQUEST['udu']) ? '' : $_REQUEST['udu'],
-					'status' 									=> isset($_REQUEST['u_sts']) ? $_REQUEST['u_sts'] : -1,
-					'affiliate_username'			=> isset($_REQUEST['aff_u']) ? $_REQUEST['aff_u'] : '',
-				];
-		?>
-		<div class="uap-special-button js-uap-export-csv" data-filters='<?php if ( isset($_REQUEST) ) {echo serialize($filters);}?>' data-export_type="visits" style="background-color:#38cbcb;" >
+		<div class="uap-special-button js-uap-export-csv" data-export_type="visits" style="background-color:#38cbcb;" >
 				<i class="fa-uap fa-export-csv"></i><?php _e( 'Export CSV', 'uap' );?>
 		</div>
 	</div>
@@ -29,7 +21,7 @@
 	<?php if (!empty($data['listing_items'])) : ?>
 
 			<div style="display: inline-block;float: right;margin-right:10px;    margin: 10px 0px 10px 30px;">
-				<strong><?php _e('Number of Clicks to Display:', 'uap');?></strong>
+				<strong><?php _e('Number of Visits to Display:', 'uap');?></strong>
 				<select name="uap_limit" onchange="window.location = '<?php echo $data['base_list_url'];?>&uap_limit='+this.value;">
 					<?php
 						foreach ($this->items_per_page as $value){
@@ -121,13 +113,10 @@
 					?>
 				</div>
 				<input type="hidden" name="delete_visits[]" value="" id="delete_visit_h" />
-
-				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 			</form>
 
 		<?php else : ?>
-			<h4 style="margin-top:50px;"><?php _e('No Clicks Stored!', 'uap');?></h4>
+			<h4 style="margin-top:50px;"><?php _e('No Visits Stored!', 'uap');?></h4>
 		<?php endif;?>
 </div>
-</div><!-- end of uap-dashboard-wrap -->
+</div><!-- end of uap-dashboard-wrap --> 

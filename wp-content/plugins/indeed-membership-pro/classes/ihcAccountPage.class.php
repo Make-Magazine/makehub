@@ -74,9 +74,7 @@ if (!class_exists('ihcAccountPage')){
 						$str .= $this->account_details_page();
 						break;
 					case 'transactions':
-						// transactions is deprecated since version 9.4
-						// for safety reason if somehow the user got here we redirect to the orders page
-						$str .= $this->print_orders();
+						$str .= $this->transactions_page();
 						break;
 					case 'subscription':
 						$str .= $this->subscription_page();
@@ -163,7 +161,7 @@ if (!class_exists('ihcAccountPage')){
 
 			if (!empty($this->settings['ihc_ap_edit_show_level'])){
 				$data['levels'] = array();
-				$level_list_data = \Indeed\Ihc\UserSubscriptions::getAllForUserAsList( $this->current_user->ID );
+				$level_list_data = get_user_meta($this->current_user->ID, 'ihc_user_levels', true);
 				$level_list_data = apply_filters( 'ihc_public_get_user_levels', $level_list_data, $this->current_user->ID );
 				// @description
 
@@ -239,11 +237,6 @@ if (!class_exists('ihcAccountPage')){
 
 			if (!ihc_is_magic_feat_active('user_sites')){
 				unset($available_tabs['user_sites']);
-			}
-
-			// transactions is deprecated since version 9.4
-			if ( isset( $available_tabs['transactions'] ) ){
-					unset( $available_tabs['transactions'] );
 			}
 
 			$this->show_tabs = explode(',', $this->settings['ihc_ap_tabs']);
@@ -435,6 +428,55 @@ if (!class_exists('ihcAccountPage')){
 			return $output;
 		}
 
+		private function transactions_page(){
+			/*
+			 * transactions
+			 * @param none
+			 * @return string
+			 */
+
+			$data['content'] = (isset($this->settings['ihc_ap_transactions_msg'])) ? ihc_replace_constants($this->settings['ihc_ap_transactions_msg'], $this->current_user->ID) : '';
+			$data['title'] = (isset($this->settings['ihc_ap_transactions_title'])) ? ihc_replace_constants($this->settings['ihc_ap_transactions_title'], $this->current_user->ID) : '';
+			$data['content'] = $this->clean_text($data['content']);
+			$data['title'] = $this->clean_text($data['title']);
+			$data['total_items'] = Ihc_Db::transactions_get_total_for_user($this->current_user->ID);
+			$data['payment_types'] = ihc_list_all_payments();
+
+			if ($data['total_items']){
+				$url = $this->base_url;
+				$url = add_query_arg('ihc_ap_menu', 'transactions', $url);
+				$limit = 25;
+				$current_page = (empty($_GET['ihcp'])) ? 1 : $_GET['ihcp'];
+				if ($current_page>1){
+					$offset = ( $current_page - 1 ) * $limit;
+				} else {
+					$offset = 0;
+				}
+				if ($offset + $limit>$data['total_items']){
+					$limit = $data['total_items'] - $offset;
+				}
+				include_once IHC_PATH . 'classes/Ihc_Pagination.class.php';
+				$pagination = new Ihc_Pagination(array(
+														'base_url' => $url,
+														'param_name' => 'ihcp',
+														'total_items' => $data['total_items'],
+														'items_per_page' => $limit,
+														'current_page' => $current_page,
+				));
+				$data['pagination'] = $pagination->output();
+				$data['items'] = Ihc_Db::transaction_get_items_for_user($limit, $offset, $this->current_user->ID);
+			}
+
+			$fullPath = IHC_PATH . 'public/views/account_page-transactions.php';
+			$searchFilename = 'account_page-transactions.php';
+			$template = apply_filters('ihc_filter_on_load_template', $fullPath, $searchFilename );
+
+			ob_start();
+			require $template;
+			$output = ob_get_contents();
+			ob_end_clean();
+			return $output;
+		}
 
 		private function subscription_page(){
 			/*
@@ -474,7 +516,7 @@ if (!class_exists('ihcAccountPage')){
 
 			}
 
-			$levels_str = \Indeed\Ihc\UserSubscriptions::getAllForUserAsList( $this->current_user->ID );
+			$levels_str = get_user_meta($this->current_user->ID, 'ihc_user_levels', true);
 			$fields = get_option('ihc_user_fields');
 			////PRINT SELECT PAYMENT
 			$key = ihc_array_value_exists($fields, 'payment_select', 'name');
@@ -607,8 +649,19 @@ if (!class_exists('ihcAccountPage')){
 			 */
 			$output = '';
 			if ($this->current_user && isset($this->current_user->ID)){
-
-				$payment_gateways = ihc_list_all_payments();
+				$payment_gateways = array(
+									'paypal' 										=> 'PayPal',
+						      'authorize' 								=> 'Authorize',
+							   	'stripe' 										=> 'Stripe',
+							   	'twocheckout' 							=> '2Checkout',
+							   	'bank_transfer' 						=> 'Bank Transfer',
+							   	'braintree' 								=> 'Braintree',
+							   	'payza' 										=> 'Payza',
+									'mollie'										=> 'Mollie',
+									'stripe_checkout_v2'				=> 'Stripe Checkout',
+									'pagseguro'									=> 'Pagseguro',
+									'paypal_express_checkout'		=> 'PayPal Express Checkout',
+				);
 
 				$data['total_items'] = Ihc_Db::get_count_orders($this->current_user->ID);
 				if ($data['total_items']){
@@ -726,7 +779,7 @@ if (!class_exists('ihcAccountPage')){
 			 * @return string
 			 */
 			global $current_user;
-			$data['uid_levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $current_user->ID, false );
+			$data['uid_levels'] = Ihc_Db::get_user_levels($current_user->ID, FALSE);
 			$data['levels_can_do'] = get_option('ihc_user_sites_levels');
 
 			if (!empty($_POST['add_new_site']) && isset($_POST['lid']) && isset($_POST['ihc_multi_site_add_edit_nonce']) && wp_verify_nonce( $_POST['ihc_multi_site_add_edit_nonce'], 'ihc_multi_site_add_edit_nonce' ) ) {

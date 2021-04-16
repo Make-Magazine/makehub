@@ -1,7 +1,4 @@
 			<form action="<?php echo $data['url-manage'];?>" method="post">
-
-				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 				<div class="uap-stuffbox">
 					<h3 class="uap-h3"><?php _e('Manage Rank', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/step-1-create-ranks/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
 					<div class="inside">
@@ -89,19 +86,7 @@
 							 </div>
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'uap');?></span>
-								<input type="number" min="0" step='<?php echo uapInputNumerStep();?>' class="form-control" value="<?php echo $data['metas']['amount_value'];?>" name="amount_value" aria-describedby="basic-addon1">
-							</div>
-
-							<div>
-<?php
-$offerType = get_option( 'uap_referral_offer_type' );
-if ( $offerType == 'biggest' ){
-		$offerType = __( 'Biggest', 'uap' );
-} else {
-		$offerType = __( 'Lowest', 'uap' );
-}
-echo __( 'If there are multiple Amounts set for the same action, like Ranks, Offers, Product or Category rate the ', 'uap' ) . '<strong>' . $offerType . '</strong> ' . __( 'will be taken in consideration. You may change that from', 'uap' ) . ' <a href="' . admin_url( 'admin.php?page=ultimate_affiliates_pro&tab=settings' ) . '" target="_blank">' . __( 'here.', 'uap' ) . '</a>';
-?>
+								<input type="number" min="0" step="0.01" class="form-control" value="<?php echo $data['metas']['amount_value'];?>" name="amount_value" aria-describedby="basic-addon1">
 							</div>
 
 						</div>
@@ -212,7 +197,7 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 				</div>
 				<input type="hidden" name="id"	value="<?php echo $data['metas']['id'];?>" />
 				<div class="uap-submit-form" style="margin-top:10px;">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 		</div>
 		</div>
@@ -226,11 +211,11 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 					<p><?php _e('Affiliates will receive a bonus of a flat amount each time they will reach a higher rank.', 'uap');?></p>
 						<div class="input-group">
 							<span class="input-group-addon" id="basic-addon1">Amount</span>
-								 <input type="number" class="form-control" min="0" step='<?php echo uapInputNumerStep();?>' value="<?php echo $data['metas']['bonus'];?>" name="bonus" aria-describedby="basic-addon1">
+								 <input type="number" class="form-control" min="0" step="0.01" value="<?php echo $data['metas']['bonus'];?>" name="bonus" aria-describedby="basic-addon1">
 								 <div class="input-group-addon"><?php echo $data['amount_types']['flat'];?></div>
 						</div>
 						<div class="uap-submit-form" style="margin-top:10px;">
-								<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+								<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>
@@ -247,11 +232,11 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 						<div class="input-group">
 							<span class="input-group-addon" id="basic-addon1">Amount</span>
 								<?php $value = ($data['metas']['sign_up_amount_value']>-1) ? $data['metas']['sign_up_amount_value'] : '';?>
-								 <input type="number" class="form-control" min="0" step='<?php echo uapInputNumerStep();?>' value="<?php echo $value;?>" name="sign_up_amount_value" aria-describedby="basic-addon1">
+								 <input type="number" class="form-control" min="0" step="0.01" value="<?php echo $value;?>" name="sign_up_amount_value" aria-describedby="basic-addon1">
 								 <div class="input-group-addon"><?php echo $data['amount_types']['flat'];?></div>
 						</div>
 						<div class="uap-submit-form" style="margin-top:10px;">
-								<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+								<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>
@@ -280,12 +265,12 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 								<div class="input-group">
 									<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'uap');?></span>
 									<?php $value = ($data['metas']['lifetime_amount_value']>-1) ? $data['metas']['lifetime_amount_value'] : '';?>
-									<input type="number" min="0" step='<?php echo uapInputNumerStep();?>' class="form-control" value="<?php echo $value;?>" name="lifetime_amount_value" aria-describedby="basic-addon1">
+									<input type="number" min="0" step="0.01" class="form-control" value="<?php echo $value;?>" name="lifetime_amount_value" aria-describedby="basic-addon1">
 								</div>
 
 
 						<div class="uap-submit-form" style="margin-top:10px;">
-								<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+								<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>
@@ -313,11 +298,11 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 								<div class="input-group">
 									<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'uap');?></span>
 									<?php $value = ($data['metas']['reccuring_amount_value']>-1) ? $data['metas']['reccuring_amount_value'] : '';?>
-									<input type="number" min="0" step='<?php echo uapInputNumerStep();?>' class="form-control" value="<?php echo $value;?>" name="reccuring_amount_value" aria-describedby="basic-addon1">
+									<input type="number" min="0" step="0.01" class="form-control" value="<?php echo $value;?>" name="reccuring_amount_value" aria-describedby="basic-addon1">
 								</div>
 
 					<div class="uap-submit-form" style="margin-top:10px;">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>
@@ -343,7 +328,7 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 										<tr data-tr="<?php echo $i;?>" id="uap_mlm_level_<?php echo $i;?>">
 											<td><?php echo __('Level', 'uap') . ' ' . $i;?></td>
 											<td>
-												<input type="number" step='<?php echo uapInputNumerStep();?>' min="0" class="uap-input-number" value="<?php echo @$data['metas']['mlm_amount_value'][$i];?>" name="<?php echo "mlm_amount_value[$i]";?>" />
+												<input type="number" step="0.01" min="0" class="uap-input-number" value="<?php echo @$data['metas']['mlm_amount_value'][$i];?>" name="<?php echo "mlm_amount_value[$i]";?>" />
 												<select name="<?php echo "mlm_amount_type[$i]";?>"><?php
 													foreach ($data['amount_types'] as $k=>$v):
 														$selected = (!empty($data['metas']['mlm_amount_type'][$i]) && $data['metas']['mlm_amount_type'][$i]==$k) ? 'selected' : '';
@@ -359,7 +344,7 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 								?>
 						</table>
 						<div class="uap-submit-form" style="margin-top:10px;">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>
@@ -374,11 +359,11 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 					<p><?php _e('Affiliates will receive a PPC Referral with flat amount each time a new referred user visit your website.', 'uap');?></p>
 						<div class="input-group">
 							<span class="input-group-addon" id="basic-addon1">Amount</span>
-								 <input type="number" class="form-control" min="0" step='<?php echo uapInputNumerStep();?>' value="<?php echo $data['metas']['pay_per_click'];?>" name="pay_per_click" aria-describedby="basic-addon1">
+								 <input type="number" class="form-control" min="0" step="0.01" value="<?php echo $data['metas']['pay_per_click'];?>" name="pay_per_click" aria-describedby="basic-addon1">
 								 <div class="input-group-addon"><?php echo $data['amount_types']['flat'];?></div>
 						</div>
 						<div class="uap-submit-form" style="margin-top:10px;">
-								<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+								<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>
@@ -393,11 +378,11 @@ echo __( 'If there are multiple Amounts set for the same action, like Ranks, Off
 					<p><?php _e('Affiliates will receive a CPM Referral with flat amount rewarded for 1000 impressions (displaying your banners 1000 times)', 'uap');?></p>
 						<div class="input-group">
 							<span class="input-group-addon" id="basic-addon1">Amount</span>
-								 <input type="number" class="form-control" min="0" step='<?php echo uapInputNumerStep();?>' value="<?php echo $data['metas']['cpm_commission'];?>" name="cpm_commission" aria-describedby="basic-addon1">
+								 <input type="number" class="form-control" min="0" step="0.01" value="<?php echo $data['metas']['cpm_commission'];?>" name="cpm_commission" aria-describedby="basic-addon1">
 								 <div class="input-group-addon"><?php echo $data['amount_types']['flat'];?></div>
 						</div>
 						<div class="uap-submit-form" style="margin-top:10px;">
-								<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+								<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 				</div>
 			</div>

@@ -11,9 +11,6 @@
 	</div>
 </div>
 <form action="" method="post">
-
-	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('Design', 'uap');?></h3>
 		<div class="inside">
@@ -54,10 +51,8 @@
 				<div id="register_preview"></div>
 			</div>
 
-			<div class="uap-clear"></div>
-
 			<div style="margin-top: 15px;">
-				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -162,7 +157,7 @@
 			</div>
 
 			<div style="margin-top: 15px;">
-				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>
@@ -174,7 +169,7 @@
 						<input type="text" name="uap_register_terms_c" value="<?php echo uap_correct_text($data['metas']['uap_register_terms_c']);?>" style="min-width:350px"/>
 					  </div>
 						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" onClick="" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" onClick="" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
@@ -188,7 +183,7 @@
 							?></textarea>
 						</div>
 						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

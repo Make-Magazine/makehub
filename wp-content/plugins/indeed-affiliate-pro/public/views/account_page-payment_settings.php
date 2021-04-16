@@ -7,66 +7,25 @@
 <?php endif;?>
 
 <form action="" method="post" class="uap-change-password-form">
-
-	<input type="hidden" name="uap_payment_settings_nonce" value="<?php echo wp_create_nonce( 'uap_payment_settings_nonce' );?>" />
-
-	<div class="uap-profile-box-wrapper">
-    	<div class="uap-profile-box-title"><span><?php _e("Your Payout Method", 'uap');?></span></div>
-        <div class="uap-profile-box-content">
-        	<div class="uap-row ">
-            	<div class="uap-col-xs-6">
-                  <select class="uap-public-form-control" onChange="uapPaymentType();" name="uap_affiliate_payment_type"><?php
-                      foreach ($data['payment_types'] as $k=>$v):
-                          $selected = ($data['metas']['uap_affiliate_payment_type']==$k) ? 'selected' : '';
-                          ?>
-                          <option value="<?php echo $k;?>" <?php echo $selected;?>><?php _e("Pay me by", 'uap');?> <?php echo $v;?></option>
-                          <?php
-                      endforeach;
-                  ?></select>
-                 </div>
-             </div>
-             <div class="uap-row ">
-            	<div class="uap-col-xs-12">
-                   <div class="uap-account-notes"><?php _e("Before we can pay you, we must have your Payment Information. Be sure that are properly submitted.", 'uap');?></div>
-        		</div>
-            </div>
-        </div>
+	<div class="uap-ap-field">
+		<label class="uap-ap-label"><?php _e("Payment Type", 'uap');?></label>
+		<select class="uap-public-form-control" onChange="uapPaymentType();" name="uap_affiliate_payment_type"><?php
+			foreach ($data['payment_types'] as $k=>$v):
+				$selected = ($data['metas']['uap_affiliate_payment_type']==$k) ? 'selected' : '';
+				?>
+				<option value="<?php echo $k;?>" <?php echo $selected;?>><?php echo $v;?></option>
+				<?php
+			endforeach;
+		?></select>
 	</div>
-    <div class="uap-profile-box-wrapper">
-        <div class="uap-profile-box-content" style="padding-top: 0;">
-        	<div class="uap-row ">
-            	<div class="uap-col-xs-8">
-	<div id="uap_payment_with_paypal" style="display: none;">
-		<div class="uap-account-title-label"><?php _e("Your PayPal Account E-mail Address", 'uap');?></div>
+	<div class="uap-ap-field" id="uap_payment_with_paypal" style="display: none;">
+		<label class="uap-ap-label"><?php _e("PayPal E-mail Address", 'uap');?></label>
 		<input class="uap-public-form-control" type="text" value="<?php echo $data['metas']['uap_affiliate_paypal_email'];?>" name="uap_affiliate_paypal_email" />
 	</div>
 
-	<div id="uap_payment_with_bt" style="display: none;">
-		<div class="uap-account-title-label"><?php _e("Bank Account details", 'uap');?></div>
-        <div class="uap-account-notes"><?php _e("You can receive earnings in personal bank account", 'uap');?></div>
+	<div class="uap-ap-field" id="uap_payment_with_bt" style="display: none;">
+		<label class="uap-ap-label"><?php _e("Bank Transfer Details", 'uap');?></label>
 		<textarea style="min-height: 100px;" class="uap-public-form-control" name="uap_affiliate_bank_transfer_data"><?php echo $data['metas']['uap_affiliate_bank_transfer_data'];?></textarea>
-	</div>
-
-	<div id="uap_payment_with_stripe_v3" style="display: none;">
-		<div><?php
-			global $current_user;
-			$uid = isset( $current_user->ID ) ? $current_user->ID : 0;
-
-			$stripeObject = new \Indeed\Uap\PayoutStripeV3();
-			$link = $stripeObject->generateAuthLink( $uid );
-			if ( $link ){
-				  if ( get_user_meta( $uid, 'uap_stripe_v3_user_account_id' ) ){
-					  ?>
-					  <div class="uap-account-title-label"><?php _e( 'Your Stripe Account is connected. You may connect a different account using the link below.', 'uap' );?></div>
-					  <?php
-				  }else{?>
-					   <div class="uap-account-title-label"><?php _e("Create or use your existing Stripe account for Connection", 'uap');?></div>
-				  <?php
-				  } ?>
-
-         <a class="button button-primary button-large" href="<?php echo $link;?>"><?php _e( 'Authentificate Into Stripe', 'uap' );?></a>
-		 <?php }?>
-       </div>
 	</div>
 
 	<div class="uap-ap-field" id="uap_payment_with_stripe" style="display: none;">
@@ -305,7 +264,7 @@
 	</div>
 
 	<div class="uap-change-password-field-wrap">
-		<input type="submit" value="<?php _e("Save Changes", 'uap');?>" name="save_settings" class="button button-primary button-large" />
+		<input type="submit" value="<?php _e("Save", 'uap');?>" name="save_settings" class="button button-primary button-large" />
 	</div>
 	<?php if (!empty($data['error'])) : ?>
 		<div><?php echo $data['error'];?></div>
@@ -313,10 +272,6 @@
 		<div><?php echo $data['success'];?></div>
 	<?php endif; ?>
 </form>
-    		</div>
-            </div>
-        </div>
-	</div>
 </div>
 <script>
 

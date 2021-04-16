@@ -108,11 +108,6 @@
 	text-align: center;
 	text-transform: uppercase;
 	line-height: 15px;
-	font-size: 10px;
-font-weight: 600;
-text-transform: capitalize;
-line-height: 15px;
-letter-spacing: 0.05em;
 }
 @media screen and (max-width: 1280px) {
 .uap-dashboard-wrap .uap-admin-header .uap-top-menu-section .uap-dashboard-menu .uap-page-title div{
@@ -177,8 +172,8 @@ letter-spacing: 0.05em;
 	margin-top: 20px;
 }
 .uap-dashboard-wrap th{
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  font-weight:600 !important;
+  font-family: 'Oswald', arial, sans-serif !important;
+  font-weight:400;
 }
 
 .uap-dashboard-wrap .uap-stuffbox{
@@ -213,15 +208,10 @@ letter-spacing: 0.05em;
 }
 
 .uap-form-line .uap-label{
-    min-width: 170px;
+    min-width: 140px;
     text-align: right;
     padding-right: 15px;
     display: inline-block;
-}
-.uap-form-line .uap-sublabel{
-    text-align: left;
-    padding-left: 175px;
-    display: block;
 }
 .uap-form-line input[type=text], .uap-form-line textarea{
 	min-width: 400px;
@@ -407,8 +397,8 @@ letter-spacing: 0.05em;
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -11px 10px -11px;
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 700;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 .uap-special-box {
 	font-weight: bold;
@@ -419,8 +409,8 @@ letter-spacing: 0.05em;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     border-top: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -30px 10px -25px;
-   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 700;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 .uap-special-box  .uap-general-date-filter-wrap input[type=text], .uap-special-box  .uap-general-date-filter-wrap select{
 	min-width: 200px;
@@ -428,12 +418,10 @@ letter-spacing: 0.05em;
     padding: 3px 5px;
 	box-sizing:border-box;
     vertical-align: baseline;
-		font-weight: 500;
 }
 .uap-special-box  .uap-general-date-filter-wrap input[type=submit]{
 	margin:0 10px;
-	padding: 0 22px 2px;
-	margin-top: -3px;
+	padding: 0 22px 2px
 }
 .uap-form-line{
 	min-width: 120px;
@@ -553,8 +541,8 @@ input[type="checkbox"].uap-switch + div:after {
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: -10px -11px 15px -11px;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 700;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
     text-transform: uppercase;
 }
 .uap-dashboard-textarea{
@@ -613,7 +601,7 @@ input[type="checkbox"].uap-switch + div:after {
     font-size: 14px;
     font-weight: bold;
     text-transform: uppercase;
-   font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: Oswald;
 }
 #add_new_achieve{
 	margin: 10px 0px;
@@ -679,6 +667,7 @@ input[type="checkbox"].uap-switch + div:after {
 	display:block;
 	height:100%;
 	width:100%;
+	font-family: Oswald, Helvetica, Arial, sans-serif;
 	font-family: "Roboto", sans-serif;
 	overflow:hidden;
 	position:relative;
@@ -708,9 +697,9 @@ input[type="checkbox"].uap-switch + div:after {
 }
 .uap-admin-dashboard-offer-box-bottom{
 	line-height:37px;
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-	font-size:14px;
-	font-weight:600;
+	font-family: Oswald, Helvetica, Arial, sans-serif;
+	font-size:20px;
+	font-weight:200;
 	height:45px;
 	padding:4px 0 4px 5px;
 	box-sizing:border-box;
@@ -854,6 +843,7 @@ input[type="checkbox"].uap-switch + div:after {
 	display: block;
     height: 100%;
     width: 100%;
+    font-family: Oswald, Helvetica, Arial, sans-serif;
     font-family: "Roboto", sans-serif;
     overflow: hidden;
     position: relative;
@@ -904,7 +894,7 @@ input[type="checkbox"].uap-switch + div:after {
 .uap-dashboard-inside-table{
 	width: 100%;
 	margin: 5px 0px;
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-family: verdana,arial,sans-serif;
     font-size: 11px !important;
     color: #333333;
     border-width: 1px;
@@ -1334,14 +1324,12 @@ i.mce-i-uap_btn_forms:after{
     border-color: #f8cdcd;
 }
 .uap-list-affiliates-name-label{
-	color: #343a40 !important;
+	color: #21759b;
 	font-weight:bold;
 	width:120px;
-	font-size: 13px;
-	font-weight: 600;
-	font-size: 14px!important;
-	font-weight: 500;
-	display: block !important;
+	font-family: 'Oswald', arial, sans-serif !important;
+	font-size: 14px;
+	font-weight: 400;
 }
 .uap-inside-item{
 	padding: 10px 5px;
@@ -1368,7 +1356,7 @@ i.mce-i-uap_btn_forms:after{
     color: #21759b;
     display: block;
     margin: 5px 0;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-family: 'Oswald', arial, sans-serif !important;
     font-size: 14px;
     font-weight: 400;
 }
@@ -1381,11 +1369,7 @@ i.mce-i-uap_btn_forms:after{
     color: #9b4449;
     background-color: #fff6f4;
     border-color: #f8cdcd;
-		color: #8a6d3b;
-	border:1px solid transparent;
-    background-color: #fcf8e3;
-    border-color: #faebcc;
-    /*margin-top: -10px;*/
+    margin-top: -10px;
 }
 .uap-special-line {
     font-weight: bold;
@@ -1395,8 +1379,8 @@ i.mce-i-uap_btn_forms:after{
     border: 1px solid #e8e8e8;
     border-bottom: 2px solid rgba(31, 181, 172, 1.0);
     margin: 5px -11px 10px -11px;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 700;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 .uap-alternate tr:nth-child(even) {
     background-color: #f9f9f9;
@@ -1414,10 +1398,10 @@ i.mce-i-uap_btn_forms:after{
 	box-sizing:border-box;
 }
 .uap-achievement{
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-family: 'Oswald', arial, sans-serif !important;
 	padding: 8px 4px;
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 300;
     color: #666;
 }
 .uap-dashboard-list-posts-col-default-pages{
@@ -1511,12 +1495,6 @@ i.mce-i-uap_btn_forms:after{
 	background-color: #0bb586;
 }
 .uap-admin-aff-payment-type.uap-payment-type-active-stripe{
-	background-color: #6a3da3;
-}
-.uap-admin-aff-payment-type.uap-payment-type-active-stripe_v2{
-	background-color: #6a3da3;
-}
-.uap-admin-aff-payment-type.uap-payment-type-active-stripe_v3{
 	background-color: #6a3da3;
 }
 .uap-payment-details-bt-data{
@@ -1678,7 +1656,6 @@ i.mce-i-uap_btn_forms:after{
     line-height: 1.4em;
     display: block !important;
     margin-bottom: 20px;
-	position:relative;
 }
 .uap-error-global-dashboard-message p{
 	margin: 13px 0px;
@@ -1813,8 +1790,8 @@ i.mce-i-uap_btn_forms:after{
 	display: inline-block;
     padding-right: 10px;
     box-sizing: border-box;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 700;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
     color: #555;
     font-size: 14px;
     padding-top: 10px;
@@ -1963,8 +1940,8 @@ i.mce-i-uap_btn_forms:after{
     display: inline-block;
     padding-right: 10px;
     box-sizing: border-box;
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 600;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
     color: #555;
     font-size: 14px;
     padding-top: 10px;
@@ -2038,8 +2015,8 @@ i.mce-i-uap_btn_forms:after{
 #uap_mlm_chart .google-visualization-orgchart-node div{
 	font-size:12px;
 	color:#555;
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-	font-weight:700;
+	font-family: 'Oswald', Arial, Helvetica, sans-serif;
+	font-weight:500;
 }
 #uap_mlm_chart .google-visualization-orgchart-node:hover{
 	background-color: #2a81ae;
@@ -2118,11 +2095,6 @@ i.mce-i-uap_btn_forms:after{
     background: #fb5b4b !important;
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fb5b4b), to(#db4e40)) !important;
 }
-.uap-blue-button {
-	color:#fff !important;
-	border: 1px solid #0a9fd8  !important;
-    background: #0a9fd8  !important;
-}
 .uap-footer-text{
 	display: inline-block;
     vertical-align: middle;
@@ -2195,12 +2167,11 @@ i.mce-i-uap_btn_forms:after{
 }
 .uap-wrapper .uap-admin-tables thead th, .uap-wrapper .uap-admin-tables tfoot th{
 	color:rgba(255,255,255,1.0);
-	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	font-family: 'Oswald', arial, sans-serif;
 	padding: 8px 7px;
-    font-weight: 600;
+    font-weight: 300;
     font-style: normal;
     font-size: 16px;
-	word-wrap: normal;
 }
 
 .uap-wrapper input[type=checkbox], .uap-wrapper input[type=color], .uap-wrapper input[type=date], .uap-wrapper input[type=datetime-local], .uap-wrapper input[type=datetime], .uap-wrapper input[type=email], .uap-wrapper input[type=month], .uap-wrapper input[type=number], .uap-wrapper input[type=password], .uap-wrapper input[type=radio], .uap-wrapper input[type=search], .uap-wrapper input[type=tel], .uap-wrapper input[type=text], .uap-wrapper input[type=time], input[type=url], .uap-wrapper input[type=week], .uap-wrapper select, .uap-wrapper textarea {
@@ -2379,10 +2350,9 @@ i.mce-i-uap_btn_forms:after{
     height: 6px;
 }
 .uap-metrics-cell{
-	padding-left: 1px !important;
-    padding-right: 1px !important;
+	padding-left: 2px !important;
+    padding-right: 3px !important;
     font-weight: bold;
-	font-size:9px;
 }
 .uap-metris-leftside{
 	    float: left;
@@ -2471,521 +2441,9 @@ i.mce-i-uap_btn_forms:after{
 	content: " ";
 }
 .uap-close-notice{
-		color: #555;
+		color: red;
 		text-align: right;
 		font-size: 20px;
-		font-weight: 400;
+		font-weight: bold;
 		cursor: pointer;
-		position:absolute;
-		top:4px;
-		right:8px;
 }
-.uap-inside-notification{
-    clear: both;
-    margin: 15px 20px 15px 0;
-    box-sizing: border-box;
-    padding: 22px 12px 22px 12px;
-    border-radius: 3px 3px 3px 3px;
-    border: 1px solid #F0DBB4;
-    color: #fff;
-    font-size: 13px;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.5em;
-    background-color: #ab2c2c;
-    border-color: #ab2c2c;
-
-}
-.uap-admin-affiliate-list-avatar {
-    width: 55px;
-    height: 55px;
-    vertical-align: middle;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%;
-	float: left;
-    margin-right: 10px;
-}
-.uap-admin-affiliate-list-details:after{
-	clear:both;
-	content: " ";
-}
-.uap-admin-affiliate-list-details .uap-admin-aff-payment-type{
-	margin:5px 0;
-}
-.uap-admin-affiliate-list-details-unserame{
-	display:block;
-}
-
-
-
-/*Admin add/edit form*/
-.uap-admin-edit .uap-edit-profile-section-title{
-	padding:20px 0 20px 40px;
-}
-.uap-admin-edit .uap-register-form  {
-	display:block;
-}
-.uap-admin-edit .uap-form-line-register{
-padding: 10px;
-    margin: 0;
-    vertical-align: middle;
-	max-width:760px;
-}
-.uap-admin-edit .uap-labels-register{
-	line-height: 1.3;
-	font-size: 15px;
-    text-align: right;
-    font-weight: 600;
-    vertical-align: middle;
-    min-width: 240px;
-}
-.uap-admin-edit .uap-labels-register span {
-    font-size: 15px;
-    font-weight: 700;
-    vertical-align: top;
-    color: red;
-    display: inline-block;
-    margin: 0 0 0 3px;
-	float:right;
-}
-.uap-admin-edit .uap-strength-wrapper{
-	width:100% !important;
-}
-.uap-admin-edit input[type=checkbox], .uap-admin-edit input[type=color], .uap-admin-edit input[type=date], .uap-admin-editinput[type=datetime-local], .uap-admin-edit input[type=datetime], .uap-admin-edit input[type=email], .uap-admin-edit input[type=month], .uap-admin-edit input[type=number], .uap-admin-edit input[type=password], .uap-admin-edit input[type=radio], .uap-admin-edit input[type=search], .uap-admin-edit input[type=tel], .uap-admin-edit input[type=text], .uap-admin-edit input[type=time], input[type=url], .uap-admin-edit input[type=week], .uap-admin-edit select, .uap-admin-edit textarea {
-
-}
-.uap-admin-edit .uap-form-element{
-    border-radius: 3px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    -o-border-radius: 3px;
-    border: 1px solid #D2D2D2;
-    max-width: 96%;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-    -moz-box-shadow: none;
-    -o-box-shadow: none;
-}
-.uap-admin-edit .uap-form-element-text, .uap-admin-edit .uap-form-element-password, .uap-admin-edit .uap-form-element-number, .uap-admin-edit .uap-form-element-textarea, .uap-admin-edit .uap-form-element-select, .uap-admin-edit .uap-form-element-multiselect{
-    padding: 0 10px;
-    width: 500px;
-    min-height: 34px;
-}
-.uap-admin-edit .uap-form-checkbox-wrapper,
-.uap-admin-edit .uap-upload-image-wrapper,
-.uap-admin-edit .select2-container,
-.uap-admin-edit .uap-single-checkbox-wrap{
-	display:inline-block;
-}
-.uap-admin-edit .uap-form-line-register .select2.select2-container{
-	width:500px !important;
-}
-.uap-admin-edit .uap-form-sublabel{
-	text-align:right;
-	font-size: 14px;
-	font-weight:600;
-}
-.uap-admin-edit .uap-form-element-checkbox{
-	padding: 10px !important;
-}
-.uap-admin-edit .uap-form-element-checkbox:before{
-	    margin: -10px 0 0 -10px !important;
-}
-.uap-admin-edit .uap-additional-section-title{
-border-top: 1px solid #EAEDF1;
-border-top:2px solid #53ba73;
-margin-top:30px;
-}
-.uap-admin-edit .uap-additional-section-title,
-.uap-admin-edit .uap-form-select-role,
-.uap-admin-edit .uap-form-select-ranks,
-.uap-admin-edit .uap-form-select-overview-post,
-.uap-admin-edit .uap-form-select-slug,
-.uap-admin-edit .uap-autocomplete-field
-{
-	padding-left:40px;
-}
-.uap-admin-edit .uap-autocomplete-field .col-xs-6{
-	padding-left:0 !important;
-}
-.uap-admin-edit .uap-submit-form{
-	max-width:760px;
-	text-align:center;
-	margin:40px 0;
-}
-.uap-admin-edit .uap-form-element-submit{
-	    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -o-box-sizing: border-box;
-    -webkit-border-radius: 50px;
-    -o-border-radius: 50px;
-    -moz-border-radius: 50px;
-    font-size: 18px;
-    vertical-align: middle;
-    padding: 8px 20px 7px !important;
-    margin: 3px 10px 3px 0;
-    cursor: pointer;
-    min-width: 110px;
-    width: auto;
-    display: inline-block;
-    transition: color .1s ease 0s,background-color .1s ease 0s;
-    -webkit-transition: color .1s ease 0s,background-color .1s ease 0s;
-    -moz-transition: color .1s ease 0s,background-color .1s ease 0s;
-    -ms-transition: color .1s ease 0s,background-color .1s ease 0s;
-    -o-transition: color .1s ease 0s,background-color .1s ease 0s;
-    color: #fff;
-    background-color: #53ba73;
-    background-position: 20px center;
-    border: 2px solid #53ba73;
-    text-decoration: none;
-    text-transform: none;
-    text-shadow: none;
-    height: 45px !important;
-	line-height:26px !important;
-}
-.uap-admin-edit .uap-form-element-submit:hover
-
-
-.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):active,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):focus,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):hover,
-.uap-admin-edit .uap-form-element-submit:not(:disabled):focus{
-	color: #fff;
-    text-decoration: none;
-    background-color: #4cab6a;
-    border-color: #4cab6a;
-}
-.uap-admin-edit .uap-form-textarea  .uap-labels-register,
-.uap-admin-edit .uap-form-upload_image  .uap-labels-register
-{
-	vertical-align:top;
-}
-.uap-admin-edit .select2-selection{
-	min-height:34px;
-}
-.uap-admin-tables .uap-column-username .uap-admin-dashboard-table-avatar {
-    width: 55px;
-    height: 55px;
-    vertical-align: middle;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -o-border-radius: 50%;
-    border-radius: 50%;
-}
-.uap-danger-box{
-		color: #a94442;
-		background-color: #f2dede;
-		border-color: #ebccd1;
-		padding: 15px;
-		margin-bottom: 20px;
-		border: 1px solid transparent;
-		border-radius: 4px;
-}
-.uap-success-box{
-		padding: 15px;
-		margin-bottom: 20px;
-		border: 1px solid transparent;
-		border-radius: 4px;
-		color: #3c763d;
-		background-color: #dff0d8;
-		border-color: #d6e9c6;
-}
-.uap-warning-box{
-		padding: 15px;
-		margin-bottom: 20px;
-		border: 1px solid transparent;
-		border-radius: 4px;
-		color: #856404;
-		background-color: #fff3cd;
-		border-color: #ffeeba;
-}
-
-.uap-revoke-license{
-	background: #e95a5a;
-    border: none;
-    /* box-shadow: 0 4px 0 0 #d23939; */
-    color: #FFFFFF !important;
-    cursor: pointer;
-    font-size: 16px !important;
-    font-style: normal;
-    font-weight: 600;
-    height: 30px;
-    min-width: 90px;
-    width: auto;
-    outline: none;
-    padding: 0px 10px;
-    text-shadow: none;
-    text-transform: none;
-    vertical-align: middle;
-    text-align: center;
-    margin-bottom: 15px;
-	line-height: 30px;
-	width:150px;
-    border-radius: 3px;
-}
-.affiliate-userprofile .form-table td {
-    padding: 10px;
-    margin: 0;
-    vertical-align: middle;
-    display: table-cell;
-}
-.uap-affiliate-userprofile .form-table th{
-    color: #191818;
-    text-align: right;
-	font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif !important;
-    font-weight: 700 !important;
-    vertical-align: top;
-    padding: 15px 10px;
-    display: table-cell;
-}
-.uap-affiliate-userprofile .uap-userprofile-profiledetails .form-table th{
-	min-width:200px;
-}
-.uap-delete-span{
-		cursor: pointer;
-		color: red;
-}
-.uap-license-button{
-	    padding: 10px 5px;
-}
-.uap-no-border {
-    border: none !important;
-}
-.uap-labels {
-    min-width: 120px;
-    text-align: right;
-    padding-right: 15px;
-    display: inline-block;
-}
-.uap-new-extension-box{
-	background-color:rgba(0,0,0,0.05) !important;
-	border:1px solid #ddd !important;
-	border-radius:10px;
-}
-.uap-new-extension-box .uap-magic-box-title{
-	color:#bbb !important;
-	font-weight:400 !important;
-	text-shadow: 1px 1px rgba(255,255,255,0.6);
-}
-.uap-new-extension-box .uap-magic-box-icon{
-	color:#bbb !important;
-	text-shadow: 1px 1px rgba(255,255,255,0.6);
-
-    color: #999 !important;
-    opacity: 0.7;
-	font-size: 100px !important;
-}
-.uap-top-message-new-extension{
-    padding: 15px;
-    margin-bottom: 10px;
-    margin-right: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    color: rgb(125, 138, 157);
-    background-color: rgba(255,255,255,0.8);
-    border-color: #ddd;
-    line-height: 1.4em;
-    font-size: 14px;
-}
-.uap-userprofile-mainname-wrapper{
-	margin:0 20px;
-	margin-bottom:20px;
-	padding:20px 40px;
-
-	border-bottom:1px solid #ccc;
-}
-.uap-userprofile-mainname{
-	font-size:29px;
-	color:#111;
-	font-weight:700;
-    line-height: 34px;
-    padding-bottom: 15px;
-}
-.uap-userprofile-links{
-	font-size:14px;
-	padding-bottom:15px;
-}
-.uap-userprofile-links .div-notice{
-	font-size:12px;
-	font-style:italic;
-	padding:5px 0;
-}
-.uap-userprofile-links-label{
-	font-weight:bold;
-}
-.uap-userprofile-rank{
-	padding:15px;
-	box-sizing:border-box;
-	border:1px solid transparent;
-	font-size:14px;
-}
-.uap-currentrank{
-	color:#fff;
-}
-.uap-userprofile-rank-title{
-	font-size:24px;
-	font-weight:bold;
-	padding-bottom:15px;
-	border-bottom:1px solid #ddd;
-	margin-bottom:5px;
-}
-.uap-nextrank{
-	background-color:#efefef;
-	border-color:#ccc;
-}
-.uap-achievenextrank{
-    position: absolute;
-    top: 40%;
-    left: 41.6%;
-    text-align: center;
-    width: 16.6%;
-	border-bottom:1px solid #ddd;
-}
-.uap-userprofile-sectiontitle{
-	font-size:24px;
-	color:#111;
-	font-weight:400;
-    line-height: 30px;
-	margin: 10px 50px;
-	margin-top:0;
-	padding-bottom:10px;
-	border-bottom:1px solid #ddd;
-}
-.uap-userprofile-sectiontitle span{
-	font-size:13px;
-	color:#999;
-}
-.uap-userprofile-avatar{
-	margin: 0 auto;
-	padding:0 25px;
-	box-sizing:border-box;
-}
-.uap-userprofile-avatar .uap-avatar{
-	max-width:100%;
-}
-.uap-userprofile-stats .form-field{
-	line-height:20px;
-}
-.uap-userprofile-mainname-wrapper {
-    margin: 0 -12px;
-    margin-bottom: 45px;
-    padding: 40px 40px;
-    border-bottom: 1px solid #ddd;
-    background-color: #fafafa;
-    margin-top: -8px;
-}
-.uap-userprofile-stats .form-table th{
-	line-height:1.6;
-}
-.uap-userprofile-stats .form-table td{
-	line-height:1.6;
-	border-left:1px solid #ddd;
-}
-.uap-userprofile-list{
-	padding-left:60px !important;
-}
-.uap-userprofile-specialrow{
-    padding-top: 35px !important;
-    background-color: #fafafa;
-    margin: 0 -12px !important;
-    margin-top: 20px !important;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-.uap-userprofile-specialrow .uap-userprofile-sectiontitle{
-	font-size:19px;
-}
-.uap-userprofile-copyclipboard{
-	border-radius: 3px;
-    border: 1px solid #ddd;
-    padding: 5px 10px;
-    font-size: 11px;
-    cursor: pointer;
-}
-.chartjs-render-monitor{
-	min-height: 250px;
-}
-.uap-userprofile-top-wrapper{
-	text-align:center;
-}
-.uap-userprofile-top-wrapper img{
-	width:80%;
-	max-width: 115px;
-    padding-bottom: 10px;
-}
-.uap-userprofile-top-position{
-	font-weight:bold;
-	font-size:34px;
-	line-height:38px;
-}
-.uap-achievement-condition{
-	position:absolute;
-	top:110%;
-	text-align:center;
-	margin: 0 auto;
-    width: 100%;
-}
-.uap-affiliate-userprofile .uap-dashboard-inside-table{
-	max-width: 50%;
-    margin: 0 auto;
-}
-.uap-affiliate-userprofile .uap-dashboard-inside-table th{
-	background-color: rgba(80,88,107,1.0);
-}
-.uap-userprofile-chart-wrapper{
-	max-width:500px;
-	margin: 0 auto;
-}
-#register_preview  .uap-register-notice{
-	display:none !important;
-}
-.uap-userprofile-top-position-table{
-	font-weight:bold;
-	font-size: 14px;
-    line-height: 16px;
-	color: rgba(125,138,157,1.0);
-}
-.uap-cel-top-psition{
-	padding: 15px 0 !important;
-    text-align: center;
-	width:25px;
-}
-.uap-cel-top-psition img{
-	max-width:25px;
-	width:25px !important;
-}
-.uap-metrics-cell{
-	font-size:9px !important;
-	line-height:14px !important;
-}
-.uap-metrics-cell .uap-metris-rightside{
-	line-height:14px !important;
-}
-.uap-column-username a{
-	font-size:10px !important;
-}
-.uap-wrapper .uap-affiliates-list thead th, .uap-wrapper .uap-affiliates-list tfoot th{
-	font-size:11px;
-}
-.uap-wrapper .uap-affiliates-list .uap-metrics-cell{
-	font-weight:400;
-}
-.uap-wrapper .uap-affiliates-list .uap-metrics-cell .uap-metris-rightside{
-	padding:0;
-	float:none;
-	width:100%;
-}
-/*extra-extension-box*/
-.uap-magic-box-wrap .uap-extra-extension-box {
-  background-color: #53ba73;
-}
-.uap-extra-extension-box .fa-uap:before {
-    content: "\f085";
-}
-/*extra-extension-box*/

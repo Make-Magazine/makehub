@@ -1,8 +1,7 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-Created v.7.4
-Deprecated starting with v.9.3
+@since 7.4
 */
 class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
@@ -19,7 +18,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     public function doPayment()
     {
-        $levels = \Indeed\Ihc\Db\Memberships::getAll();
+        $levels = get_option('ihc_levels');
         $levelData = $levels[$this->attributes['lid']];
 
         $amount = $levelData['price'];
@@ -33,7 +32,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             }
         }
         /**************************** DYNAMIC PRICE ***************************/
-
+        
         $reccurrence = FALSE;
         if (isset($levelData['access_type']) && $levelData['access_type']=='regular_period'){
           $reccurrence = TRUE;
@@ -336,7 +335,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         			case 'Processed':
         			case 'Completed':
       					//v.7.1 - Cover Paid Trial with different period than Level Period. MUST be Double-Check
-      					if(isset($level_data['access_trial_time_value']) && $level_data['access_trial_time_value'] > 0 && \Indeed\Ihc\UserSubscriptions::isFirstTime( $data['uid'],$data['lid'] ) ){
+      					if(isset($level_data['access_trial_time_value']) && $level_data['access_trial_time_value'] > 0 && ihc_user_level_first_time( $data['uid'],$data['lid'] ) ){
       						\Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(" Payment IPN: Update user level expire time (Trial).", 'ihc'), 'payments');
 
                   $orderId = \Ihc_Db::getLastOrderIdForTransaction( $transactionId );
@@ -344,18 +343,19 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                       \Ihc_Db::updateOrderStatus( $orderId, 'Completed' );
                   }
                   $paymentData = ihcGetTransactionDetails($transactionId);
-                  \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], true, ['payment_gateway' => 'paypal_express_checkout'] );
-
+                  ihc_set_level_trial_time_for_no_pay($paymentData['lid'], $paymentData['uid']);
+                  ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
+                  ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                   do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
                   // @description run on payment complete. @param user id (integer), level id (integer)
 
-                  //ihc_switch_role_for_user($data['uid']);
+                  ihc_switch_role_for_user($data['uid']);
                   exit();
 
       					} else {
       						//payment made, put the right expire time
       						\Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(" Payment IPN: Update user level expire time.", 'ihc'), 'payments');
-                  \Indeed\Ihc\UserSubscriptions::makeComplete( $data['uid'], $data['lid'], false, ['payment_gateway' => 'paypal_express_checkout'] );
+      						ihc_update_user_level_expire($level_data, $data['lid'], $data['uid']);
 
                   /// check this
                   $orderId = \Ihc_Db::getLastOrderIdForTransaction( $transactionId );
@@ -363,33 +363,28 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                       \Ihc_Db::updateOrderStatus( $orderId, 'Completed' );
                   }
 
-                  $dontInsertNewOrder = false;
-                  $orderId = \Ihc_Db::getLastOrderIdForTransaction( $transactionId );
-                  if ( $orderId && \Ihc_Db::getOrderStatus( $orderId ) != 'Completed' ){
-                      \Ihc_Db::updateOrderStatus( $orderId, 'Completed' );
-                      $dontInsertNewOrder = true;
-                  }
                   $paymentData = ihcGetTransactionDetails($transactionId);
                   $paymentData['message'] = 'success';
                   $paymentData['status'] = 'Completed';
-                  ihc_insert_update_transaction($data['uid'], $transactionId, $paymentData, $dontInsertNewOrder );
+                  ihc_insert_update_transaction($data['uid'], $transactionId, $paymentData, true );
       					}
-
+      					ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
+      					ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
                 // @description run on payment complete. @param user id (integer), level id (integer)
 
-                //ihc_switch_role_for_user($data['uid']);
+                ihc_switch_role_for_user($data['uid']);
           			exit();
         				break;
       				case 'Pending':
         				break;
       				case 'Reversed':
       				case 'Denied':
-                \Indeed\Ihc\UserSubscriptions::deleteOne( $data['uid'], $data['lid'] );
+      					ihc_delete_user_level_relation($data['lid'], $data['uid']);
           			exit();
         				break;
       				case 'Refunded':
-                \Indeed\Ihc\UserSubscriptions::deleteOne( $data['uid'], $data['lid'] );
+    						ihc_delete_user_level_relation($data['lid'], $data['uid']);
     						do_action('ump_paypal_user_do_refund', $data['uid'], $data['lid'], $transactionId);
                 // @description run on payment refund. @param user id (integer), level id (integer), transaction id (integer)
 
@@ -400,12 +395,13 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
             if ( ((int)$postData['amount']==0) && ( trim( $postData['period_type'] ) == 'Trial' ) && ( trim( $postData['payer_status'] ) ) == 'verified' ){
                 $paymentData = ihcGetTransactionDetails($transactionId);
-                \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], true, ['payment_gateway' => 'paypal_express_checkout'] );
-
+                ihc_set_level_trial_time_for_no_pay($paymentData['lid'], $paymentData['uid']);
+                ihc_send_user_notifications($data['uid'], 'payment', $data['lid']);//send notification to user
+                ihc_send_user_notifications($data['uid'], 'admin_user_payment', $data['lid']);//send notification to admin
                 do_action( 'ihc_payment_completed', $data['uid'], $data['lid'] );
                 // @description run on payment complete. @param user id (integer), level id (integer)
 
-                //ihc_switch_role_for_user($data['uid']);
+                ihc_switch_role_for_user($data['uid']);
                 $orderId = \Ihc_Db::getLastOrderIdForTransaction( $transactionId );
                 if ( $orderId ){
                     \Ihc_Db::updateOrderStatus( $orderId, 'Completed' );
@@ -427,7 +423,7 @@ class PayPalExpressCheckout extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         			case 'recurring_payment_suspended':
         			case 'recurring_payment_suspended_due_to_max_failed_payment':
         			case 'recurring_payment_failed':
-                \Indeed\Ihc\UserSubscriptions::deleteOne( $data['uid'], $data['lid'] );
+        				ihc_delete_user_level_relation($data['lid'], $data['uid']);
         			  break;
         		}
 

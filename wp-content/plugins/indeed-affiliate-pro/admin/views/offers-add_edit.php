@@ -2,8 +2,6 @@
 	<div class="uap-stuffbox">
 	<form action="<?php echo $data['url-manage'];?>" method="post">
 
-	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
-
 	<h3 class="uap-h3"><?php _e('Manage Offers', 'uap');?><span class="uap-admin-need-help"><i class="fa-uap fa-help-uap"></i><a href="https://help.wpindeed.com/ultimate-affiliate-pro/knowledge-base/offers/" target="_blank"><?php _e('Need Help?', 'uap');?></a></span></h3>
 	<div class="inside">
 		<div class="uap-inside-item">
@@ -49,17 +47,9 @@
 							 </div>
 							<div class="input-group">
 								<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'uap');?></span>
-								<input type="number" min="0" step='<?php echo uapInputNumerStep();?>' class="form-control" name="amount_value" value="<?php echo $data['metas']['amount_value'];?>" aria-describedby="basic-addon1">
+								<input type="number" min="0" step="0.01" class="form-control" name="amount_value" value="<?php echo $data['metas']['amount_value'];?>" aria-describedby="basic-addon1">
 							</div>
-							<?php
-							$offerType = get_option( 'uap_referral_offer_type' );
-							if ( $offerType == 'biggest' ){
-									$offerType = __( 'Biggest', 'uap' );
-							} else {
-									$offerType = __( 'Lowest', 'uap' );
-							}
-							echo __( 'If there are multiple Amounts set for the same action, like Ranks, Offers, Product or Category rate the ', 'uap' ) . '<strong>' . $offerType . '</strong> ' . __( 'will be taken in consideration. You may change that from', 'uap' ) . ' <a href="' . admin_url( 'admin.php?page=ultimate_affiliates_pro&tab=settings' ) . '" target="_blank">' . __( 'here.', 'uap' ) . '</a>';
-							?>
+
 						</div>
 					</div>
 				</div>
@@ -82,7 +72,7 @@
 							<h3><?php _e('Targeting', 'uap');?></h3>
 							<p><?php _e('Based on referral source and only for certain affiliates, the offer will be available.', 'uap');?></p>
 							<h4 style="margin-top:20px;"><?php _e('Source', 'uap');?></h4>
-							<select name="source" id="the_source"  class="form-control m-bot15" onChange="jQuery('#reference_search').autocomplete( 'option', { source: '<?php echo UAP_URL . 'admin/uap-offers-ajax-autocomplete.php';?>?source='+this.value } );"><?php
+							<select name="source" id="the_source"  class="form-control m-bot15" onChange="jQuery('#reference_search').autocomplete( 'option', { source: '<?php echo UAP_URL . 'admin/Uap_Offers_Ajax_Autocomplete.php';?>?source='+this.value } );"><?php
 								$values = uap_get_active_services();
 								if ($values):
 									foreach ($values as $k=>$v){
@@ -169,7 +159,7 @@
 				</div>
 
 					<div class="uap-submit-form">
-						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large">
+						<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large">
 					</div>
 				</div>
 
@@ -222,7 +212,7 @@ jQuery(function() {
 	}).autocomplete({
 		focus: function( event, ui ){},
 		minLength: 0,
-		source: '<?php echo UAP_URL . 'admin/uap-offers-ajax-autocomplete.php';?>?source='+uap_offer_source,
+		source: '<?php echo UAP_URL . 'admin/Uap_Offers_Ajax_Autocomplete.php';?>?source='+uap_offer_source,
 		select: function( event, ui ) {
 			var input_id = '#reference_search_hidden';
 		 	var terms = uap_split(jQuery(input_id).val());//get items from input hidden
@@ -261,7 +251,7 @@ jQuery(function() {
 		}
 	}).autocomplete({
 		minLength: 0,
-		source: '<?php echo UAP_URL . 'admin/uap-offers-ajax-autocomplete.php';?>?users=true',
+		source: '<?php echo UAP_URL . 'admin/Uap_Offers_Ajax_Autocomplete.php';?>?users=true',
 		focus: function() {},
 		select: function( event, ui ) {
 			var input_id = '#usernames_search_hidden';
