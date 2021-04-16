@@ -388,58 +388,15 @@ function learndash_course_get_steps_by_type( $course_id = 0, $step_type = '' ) {
 	$course_steps_return = array();
 
 	if ( ( ! empty( $course_id ) ) && ( ! empty( $step_type ) ) ) {
-		if ( learndash_is_course_builder_enabled() ) {
-			$ld_course_steps_object = LDLMS_Factory_Post::course_steps( intval( $course_id ) );
-			if ( $ld_course_steps_object ) {
-				if ( in_array( $step_type, learndash_get_post_types( 'course_steps' ), true ) ) {
-					$course_steps_t = $ld_course_steps_object->get_steps( 't' );
-					if ( ( isset( $course_steps_t[ $step_type ] ) ) && ( ! empty( $course_steps_t[ $step_type ] ) ) ) {
-						$course_steps_return = $course_steps_t[ $step_type ];
-					}
-				} else {
-					$course_steps_return = $ld_course_steps_object->get_steps( $step_type );
+		$ld_course_steps_object = LDLMS_Factory_Post::course_steps( intval( $course_id ) );
+		if ( $ld_course_steps_object ) {
+			if ( in_array( $step_type, learndash_get_post_types( 'course_steps' ), true ) ) {
+				$course_steps_t = $ld_course_steps_object->get_steps( 't' );
+				if ( ( isset( $course_steps_t[ $step_type ] ) ) && ( ! empty( $course_steps_t[ $step_type ] ) ) ) {
+					$course_steps_return = $course_steps_t[ $step_type ];
 				}
-			}
-		} else {
-			$transient_key       = 'learndash_course_' . $course_id . '_' . $step_type;
-			$course_steps_return = LDLMS_Transients::get( $transient_key );
-			if ( false === $course_steps_return ) {
-				$lesson_order     = learndash_get_course_lessons_order( $course_id );
-				$steps_query_args = array(
-					'post_type'      => $step_type,
-					'posts_per_page' => -1,
-					'post_status'    => 'publish',
-					'fields'         => 'ids',
-					'order'          => isset( $lesson_order['order'] ) ? $lesson_order['order'] : false,
-					'orderby'        => isset( $lesson_order['orderby'] ) ? $lesson_order['orderby'] : false,
-					'meta_query'     => array(
-						array(
-							'key'     => 'course_id',
-							'value'   => intval( $course_id ),
-							'compare' => '=',
-						),
-					),
-				);
-				/**
-				 * Filters course steps by type query arguments.
-				 *
-				 * @since 2.6.0
-				 *
-				 * @param array  $steps_query_args An array steps query arguments.
-				 * @param int    $course_id        Course ID to get steps for.
-				 * @param string $step_type        Steps post type. Could be 'sfwd-lessons', 'sfwd-topics' etc.
-				 */
-				$steps_query_args = apply_filters( 'learndash_course_steps_by_type', $steps_query_args, $course_id, $step_type );
-				if ( ! empty( $steps_query_args ) ) {
-					$steps_query = new WP_Query( $steps_query_args );
-
-					if ( $steps_query->have_posts() ) {
-						$course_steps_return = $steps_query->posts;
-					} else {
-						$course_steps_return = array();
-					}
-					LDLMS_Transients::set( $transient_key, $course_steps_return, MINUTE_IN_SECONDS );
-				}
+			} else {
+				$course_steps_return = $ld_course_steps_object->get_steps( $step_type );
 			}
 		}
 	}

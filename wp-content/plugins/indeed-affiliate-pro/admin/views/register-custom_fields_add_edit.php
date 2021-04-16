@@ -1,10 +1,16 @@
 <form method="post" action="<?php echo $data['form_submit'];?>">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('User Custom Fields', 'uap');?></h3>
 		<div class="inside">
 			<div class="uap-form-line">
 				<label class="uap-label"><?php _e('Slug:', 'uap');?></label>
 				<input type="text" name="name" value="<?php echo $data['metas']['name'];?>" <?php echo $data['disabled'];?> />
+				<?php if ( $data['disabled'] ):?>
+						<input type="hidden" name="name" value="<?php echo $data['metas']['name'];?>" />
+				<?php endif;?>
 			</div>
 			<div class="uap-form-line">
 				<label class="uap-label"><?php _e('Field Type:', 'uap');?></label>
@@ -14,6 +20,9 @@
 						<option value="<?php echo $k?>" <?php echo $selected;?>><?php echo $v?></option>
 					<?php endforeach;?>
 				</select>
+				<?php if ( $data['disabled'] ):?>
+						<input type="hidden" name="type" value="<?php echo $data['metas']['type'];?>" />
+				<?php endif;?>
 			</div>
 
 			<?php
@@ -130,7 +139,7 @@
 
 			<input type="hidden" name="id" value="<?php echo $data['id'];?>" />
 			<div class="uap-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save_field" class="button button-primary button-large">
+				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save_field" class="button button-primary button-large">
 			</div>
 		</div>
 	</div>

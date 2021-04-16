@@ -175,7 +175,7 @@ function ihc_hide_content_shortcode($meta_arr=array(), $content=''){
 
 	//LOCKER HTML
 	if (isset($meta_arr['ihc_mb_template'])){
-		include_once IHC_PATH . 'public/locker-layouts.php';
+		include_once IHC_PATH . 'public/layouts-locker.php';
 		return ihc_print_locker_template($meta_arr['ihc_mb_template']);
 	}
 
@@ -340,7 +340,7 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 	}
 	//// BRAINTREE
 
-	$levels = get_option('ihc_levels');
+	$levels = \Indeed\Ihc\Db\Memberships::getAll();
 	if ($levels){
 		$register_url = '';
 
@@ -352,7 +352,11 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		// @description used in public section - subcription plan. @param list of levels to display ( array )
 
 		if ( !empty( $attr['id'] ) ){
+				if ( strpos( $attr['id'], '″' ) !== false ){
+						$attr['id'] = str_replace( '″', '', $attr['id'] );
+				}
 				$onlyIds = strpos( $attr['id'], ',' ) === false ? array($attr['id']) : explode( ',', $attr['id'] );
+
 				foreach ( $levels as $id => $levelData ){
 						if ( !in_array( $id, $onlyIds ) ){
 								unset( $levels[$id] );
@@ -388,7 +392,7 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		$str = '';
 
 		$u_type = ihc_get_user_type();
-		if ($u_type!='unreg' && $u_type!='pending'){ /// && $u_type!='admin'
+		if ($u_type!='unreg' && $u_type!='pending' && $levels ){ /// && $u_type!='admin'
 			global $current_user;
 			$taxes = Ihc_Db::get_taxes_rate_for_user(@$current_user->ID);
 			$register_template = get_option('ihc_register_template');
@@ -416,7 +420,7 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 			global $stop_printing_bt_msg;
 			$stop_printing_bt_msg = TRUE;
 		}
-		include_once IHC_PATH . 'public/subscription-layouts.php';
+		include_once IHC_PATH . 'public/layouts-subscription.php';
 		$str .= ihc_print_subscription_layout($template, $levels, $register_url, $custom_css, $select_payment);
 		return $str;
 	}
@@ -441,7 +445,7 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 		unset($_POST['stripeToken']);
 	} else if (isset($_GET['ihc_success_bt'])){
 		/// BT PAYMENT
-		add_filter('the_content', 'ihc_filter_print_bank_transfer_message', 79, 1);
+		//add_filter('the_content', 'ihc_filter_print_bank_transfer_message', 79, 1);
 	} else if (!empty($_GET['ihc_authorize_fields']) && !empty($_GET['lid'])){
 		/// AUTHORIZE RECURRING PAYMENT
 		add_filter('the_content', 'ihc_filter_reccuring_authorize_payment', 81, 1);
@@ -625,7 +629,7 @@ function ihc_public_visitor_inside_user_page(){
 				}
 				/// LEVELS
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_show_level'])){
-					$data['levels'] = Ihc_Db::get_user_levels($uid);
+					$data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid );
 				}
 				/// CUSTOM FIELDS
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_show_custom_fields'])){
@@ -688,7 +692,7 @@ function ihc_public_visitor_inside_user_page(){
 				}
 				$data['ihc_badges_on'] = get_option( 'ihc_badges_on' );
 				$data['ihc_badge_custom_css'] = get_option('ihc_badge_custom_css');
-				
+
 				/// output
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_template'])){
 					switch ($shortcode_attr['ihc_listing_users_inside_page_template']){
@@ -750,7 +754,7 @@ function ihc_membership_card($attr=array()){
 		}
 
 	 if ($data['metas']['ihc_membership_card_enable']){
-	 	 $data['levels'] = Ihc_Db::get_user_levels($current_user->ID, TRUE);
+	 	 $data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $current_user->ID, true );
 		 @$exclude_levels = explode(',', @$data['metas']['ihc_membership_card_exclude_levels']);
 		 $data['full_name'] = '';
 		 $user_data = get_userdata($current_user->ID);
@@ -890,7 +894,7 @@ function ihc_do_list_gifts(){
 	global $current_user;
 	if (!empty($current_user) && !empty($current_user->ID)){
 		$gifts = Ihc_Db::get_gifts_by_uid($current_user->ID);
-		$levels = get_option('ihc_levels');
+		$levels = \Indeed\Ihc\Db\Memberships::getAll();
 		$levels[-1]['label'] = __('All', 'ihc');
 		$currency = get_option('ihc_currency');
 		if ($gifts){
@@ -920,7 +924,7 @@ function ihc_list_all_access_posts($attr=array()){
 	$uid = (empty($current_user->ID)) ? 0 : $current_user->ID;
 	if ($uid && ihc_is_magic_feat_active('list_access_posts')){
 		 require_once IHC_PATH . 'classes/ListOfAccessPosts.class.php';
-		 $levels = Ihc_Db::get_user_levels($uid, TRUE);
+		 $levels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
 		 $levels = array_keys($levels);
 		 $metas = ihc_return_meta_arr('list_access_posts');
 		 if (!empty($attr['limit'])){
@@ -984,7 +988,7 @@ function ihc_list_user_levels($attr=array()){
 					$data['custom_css'] = $data['badges_metas']['ihc_badge_custom_css'];
 				}
 			}
-	 		$data['levels'] = Ihc_Db::get_user_levels($uid, $attr['exclude_expire']);
+	 		$data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, $attr['exclude_expire'] );
 
 			$fullPath = IHC_PATH . 'public/views/listing_levels.php';
 			$searchFilename = 'listing_levels.php';

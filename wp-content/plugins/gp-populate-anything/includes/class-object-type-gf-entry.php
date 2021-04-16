@@ -143,6 +143,13 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			$delimiter = '.';
 		}
 
+		/**
+		 * Check for the delimiter prior to converting below as PHP notices will result if the delimiter is not present.
+		 */
+		if ( strpos( $date, $delimiter ) === false ) {
+			return null;
+		}
+
 		if ( strpos( $format, 'ymd' ) === 0 ) {
 			list( $year, $month, $day ) = explode( $delimiter, $date );
 		} elseif ( strpos( $format, 'dmy' ) === 0 ) {

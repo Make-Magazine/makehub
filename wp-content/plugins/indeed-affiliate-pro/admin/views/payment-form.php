@@ -2,13 +2,17 @@
 <div class="uap-wrapper">
 	<div class="uap-page-title">Ultimate Affiliate Pro - <span class="second-text"><?php _e('Payment Form', 'uap');?></span></div>
 	<form method="post" action="<?php echo $data['submit_link'];?>">
+
+		<input type="hidden" name="uap_admin_payment_nonce" value="<?php echo wp_create_nonce( 'uap_admin_payment_nonce' );?>" />
+
 		<div class="row">
 				<?php
 					$checked_paypal = '';
 					$checked_bt = '';
 					$checked_stripe = '';
 					$checked_stripe_v2 = '';
-
+					$checked_stripe_v3 = '';
+					
 					if (!empty($data['affiliate_pay']) && !empty($data['affiliate_pay']['payment_gateway_data']) && !empty($data['affiliate_pay']['payment_gateway_data']['type'])){
 						switch ($data['affiliate_pay']['payment_gateway_data']['type']){
 							case 'paypal':
@@ -19,6 +23,9 @@
 								break;
 							case 'stripe_v2':
 								$checked_stripe_v2 = 'checked';
+								break;
+							case 'stripe_v3':
+								$checked_stripe_v3 = 'checked';
 								break;
 							case 'bank_transfer':
 							default:
@@ -47,8 +54,13 @@
 						</div>
 						<?php endif;?>
 						<?php if (!empty($data['stripe_v2'])):?>
-						<div class="uap-list-affiliates-name-label">
+						<div style="margin: 0px 0 10px 0;" class="uap-list-affiliates-name-label" >
 							<input style="vertical-align: bottom;" type="radio" value="stripe_v2" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe_v2;?> /> <?php _e('Stripe V2', 'uap');?>
+						</div>
+						<?php endif;?>
+						<?php if (!empty($data['stripe_v3'])):?>
+						<div class="uap-list-affiliates-name-label">
+							<input style="vertical-align: bottom;" type="radio" value="stripe_v3" name="paywith" onClick="uapPaymentFormPaymentStatus(this.value);" <?php echo $checked_stripe_v3;?> /> <?php _e('Stripe V3', 'uap');?>
 						</div>
 						<?php endif;?>
 					</div>
@@ -137,6 +149,15 @@
 									<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>">Stripe V2</span>
 									<?php
 									break;
+								case 'stripe_v3':
+										$payment_class = '';
+										if ($data['affiliate_pay']['payment_gateway_data']['is_active']){
+											$payment_class = 'uap-payment-type-active-stripe_v3';
+										}
+										?>
+										<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>">Stripe V3</span>
+										<?php
+										break;
 							endswitch;
 						} else {
 							echo '-';

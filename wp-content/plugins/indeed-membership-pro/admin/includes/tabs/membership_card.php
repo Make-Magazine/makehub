@@ -13,8 +13,7 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
-$levels = get_option('ihc_levels');
-
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
 ?>
 <form action="" method="post">
 	<div class="ihc-stuffbox">
@@ -93,7 +92,7 @@ $levels = get_option('ihc_levels');
 			<div class="row" style="margin-left:0px;">
 						<div class="col-xs-3">
 									<div class="iump-form-line">
-										<h2><?php _e('Level', 'ihc');?></h2>
+										<h2><?php _e('Membership', 'ihc');?></h2>
 												<div class="input-group" style="margin:30px 0 5px 0;">
 													<span class="input-group-addon" id="basic-addon1"><?php _e('Label:', 'ihc');?></span>
 													<input type="text" class="form-control" name="ihc_membership_member_level_label" value="<?php echo $data['metas']['ihc_membership_member_level_label'];?>" />
@@ -105,7 +104,7 @@ $levels = get_option('ihc_levels');
 			<div class="row" style="margin-left:0px;">
 					<div class="col-xs-3">
 							<div class="iump-form-line">
-								<h2><?php _e('Level Expire', 'ihc');?></h2>
+								<h2><?php _e('Membership Expire', 'ihc');?></h2>
 											<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 												<?php $checked = ($data['metas']['ihc_membership_member_level_expire']) ? 'checked' : '';?>
 												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_membership_member_level_expire');" <?php echo $checked;?> />

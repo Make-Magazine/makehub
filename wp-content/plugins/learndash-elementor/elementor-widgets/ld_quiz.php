@@ -374,6 +374,10 @@ class LearnDash_Elementor_Widget_Quiz extends LearnDash_Elementor_Widget_Base {
 				if ( ! empty( $lesson_progression_enabled ) ) :
 
 					$last_incomplete_step = is_quiz_accessable( null, $quiz_post, true, $atts['course_id'] );
+					if ( learndash_is_sample( $quiz_post ) ) {
+						$last_incomplete_step = null;
+					}
+
 					if ( is_a( $last_incomplete_step, 'WP_Post' ) ) {
 						/** This filter is documented in themes/ld30/templates/quiz.php */
 						do_action( 'learndash-quiz-progression-before', $quiz_post->ID, $atts['course_id'], $user_id );
@@ -399,61 +403,87 @@ class LearnDash_Elementor_Widget_Quiz extends LearnDash_Elementor_Widget_Base {
 					}
 				endif;
 
-				/**
-				 * Filters quiz shortcode content access message.
-				 *
-				 * If not null, message display instead of quiz content.
-				 *
-				 * @since 2.1.0
-				 *
-				 * @param string $message The content access message.
-				 * @param WP_Post $quiz_post    Quiz WP_Post object.
-				 */
-				$access_message = apply_filters( 'learndash_content_access', null, $quiz_post );
-				if ( ! is_null( $access_message ) ) {
-					$quiz_content = $access_message;
-				} else {
-
-					$quiz_content = '';
-					if ( ! empty( $quiz_settings['quiz_pro'] ) ) {
-						$quiz_settings['lesson'] = 0;
-						$quiz_settings['topic']  = 0;
-
-						if ( ( ! empty( $course_id ) ) && ( ! empty( $quiz_id ) ) ) {
-							$quiz_settings['topic'] = learndash_course_get_single_parent_step( $atts['course_id'], $quiz_id, learndash_get_post_type_slug( 'topic' ) );
-							$quiz_settings['topic'] = absint( $quiz_settings['topic'] );
-
-							$quiz_settings['lesson'] = learndash_course_get_single_parent_step( $atts['course_id'], $quiz_id, learndash_get_post_type_slug( 'lesson' ) );
-							$quiz_settings['lesson'] = absint( $quiz_settings['lesson'] );
-						}
-
-						/*
-						$quiz_content = wptexturize(
-							do_shortcode( '[LDAdvQuiz ' . $quiz_settings['quiz_pro'] . ' quiz_pro_id="' . $quiz_settings['quiz_pro'] . '" quiz_id="' . $quiz_post->ID . '" course_id="' . $atts['course_id'] . '" lesson_id="' . $quiz_settings['lesson'] . '" topic_id="' . $quiz_settings['topic'] . '"]' )
-						);
-						*/
-
-						$quiz_content = wptexturize(
-							do_shortcode( '[LDAdvQuiz ' . $quiz_settings['quiz_pro'] . ' quiz_pro_id="' . $quiz_settings['quiz_pro'] . '" quiz_id="' . $quiz_post->ID . '" course_id="' . $atts['course_id'] . '" lesson_id="' . $quiz_settings['lesson'] . '" topic_id="' . $quiz_settings['topic'] . '"]' )
-						);
-
-						if ( substr( $quiz_content, 0, strlen( '[LDAdvQuiz' ) ) == '[LDAdvQuiz' ) {
-							$quiz_content = '<div class="wpProQuiz_content"><div class="wpProQuiz_text"><div><input class="wpProQuiz_button" type="button" value="Start Quiz" name="startQuiz"></div></div></div>';
-						}
-					}
+				if ( $attempts_left ) {
 
 					/**
-					 * Filters `ld_quiz` shortcode content.
+					 * Filters quiz shortcode content access message.
+					 *
+					 * If not null, message display instead of quiz content.
 					 *
 					 * @since 2.1.0
 					 *
-					 * @param string  $quiz_content ld_quiz shortcode content.
+					 * @param string $message The content access message.
 					 * @param WP_Post $quiz_post    Quiz WP_Post object.
 					 */
-					$quiz_content = apply_filters( 'learndash_quiz_content', $quiz_content, $quiz_post );
-					if ( ! empty( $quiz_content ) ) {
-						echo '<div class="' . esc_attr( learndash_get_wrapper_class( $shortcode_pairs['quiz_id'] ) ) . '">' . $quiz_content . '</div>';
+					$access_message = apply_filters( 'learndash_content_access', null, $quiz_post );
+					if ( ! is_null( $access_message ) ) {
+						$quiz_content = $access_message;
+					} else {
+
+						$quiz_content = '';
+						if ( ! empty( $quiz_settings['quiz_pro'] ) ) {
+							$quiz_settings['lesson'] = 0;
+							$quiz_settings['topic']  = 0;
+
+							if ( ( ! empty( $course_id ) ) && ( ! empty( $quiz_id ) ) ) {
+								$quiz_settings['topic'] = learndash_course_get_single_parent_step( $atts['course_id'], $quiz_id, learndash_get_post_type_slug( 'topic' ) );
+								$quiz_settings['topic'] = absint( $quiz_settings['topic'] );
+
+								$quiz_settings['lesson'] = learndash_course_get_single_parent_step( $atts['course_id'], $quiz_id, learndash_get_post_type_slug( 'lesson' ) );
+								$quiz_settings['lesson'] = absint( $quiz_settings['lesson'] );
+							}
+
+							/*
+							$quiz_content = wptexturize(
+								do_shortcode( '[LDAdvQuiz ' . $quiz_settings['quiz_pro'] . ' quiz_pro_id="' . $quiz_settings['quiz_pro'] . '" quiz_id="' . $quiz_post->ID . '" course_id="' . $atts['course_id'] . '" lesson_id="' . $quiz_settings['lesson'] . '" topic_id="' . $quiz_settings['topic'] . '"]' )
+							);
+							*/
+
+							$quiz_content = wptexturize(
+								do_shortcode( '[LDAdvQuiz ' . $quiz_settings['quiz_pro'] . ' quiz_pro_id="' . $quiz_settings['quiz_pro'] . '" quiz_id="' . $quiz_post->ID . '" course_id="' . $atts['course_id'] . '" lesson_id="' . $quiz_settings['lesson'] . '" topic_id="' . $quiz_settings['topic'] . '"]' )
+							);
+
+							if ( substr( $quiz_content, 0, strlen( '[LDAdvQuiz' ) ) == '[LDAdvQuiz' ) {
+								$quiz_content = '<div class="wpProQuiz_content"><div class="wpProQuiz_text"><div><input class="wpProQuiz_button" type="button" value="Start Quiz" name="startQuiz"></div></div></div>';
+							}
+						}
+
+						/**
+						 * Filters `ld_quiz` shortcode content.
+						 *
+						 * @since 2.1.0
+						 *
+						 * @param string  $quiz_content ld_quiz shortcode content.
+						 * @param WP_Post $quiz_post    Quiz WP_Post object.
+						 */
+						$quiz_content = apply_filters( 'learndash_quiz_content', $quiz_content, $quiz_post );
+						if ( ! empty( $quiz_content ) ) {
+							echo '<div class="' . esc_attr( learndash_get_wrapper_class( $shortcode_pairs['quiz_id'] ) ) . '">' . $quiz_content . '</div>';
+						}
 					}
+				} else {
+					/**
+					 * Display an alert
+					 */
+
+					echo '<div class="' . esc_attr( learndash_get_wrapper_class( $shortcode_pairs['quiz_id'] ) ) . '">';
+
+					learndash_get_template_part(
+						'modules/alert.php',
+						array(
+							'type'    => 'warning',
+							'icon'    => 'alert',
+							'message' => sprintf(
+								// translators: placeholders: quiz, attempts count.
+								esc_html_x( 'You have already taken this %1$s %2$d time(s) and may not take it again.', 'placeholders: quiz, attempts count', 'learndash' ),
+								learndash_get_custom_label_lower( 'quiz' ),
+								$attempts_count
+							),
+						),
+						true
+					);
+
+					echo '</div>';
 				}
 			}
 		}

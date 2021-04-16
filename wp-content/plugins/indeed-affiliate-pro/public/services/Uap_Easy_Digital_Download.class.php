@@ -92,6 +92,10 @@ class Uap_Easy_Digital_Download extends Referral_Main{
 				$sum = $do_math->get_result($data['price'], '');
 			}
 
+			$orderDefailts = get_post_meta( $order_id, '_edd_payment_meta' );
+			$eddCurrency = isset( $orderDefailts[0]['currency'] ) ? $orderDefailts[0]['currency'] : '';
+			$sum = apply_filters( 'uap_public_filter_on_referral_insert_amount_value', $sum, $eddCurrency );
+
 			$args = array(
 					'refferal_wp_uid' => $data['user_info']['id'],
 					'campaign' => self::$campaign,

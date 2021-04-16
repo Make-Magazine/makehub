@@ -13,7 +13,12 @@
 
 
 		<div class="uap-special-buttons-users">
-			<div class="uap-special-button js-uap-export-csv" data-export_type="affiliates" style="background-color:#38cbcb;" >
+			<?php
+					$filters = [
+						'rank' 									=> empty($_REQUEST['ordertype_rank']) ? '' : $_REQUEST['ordertype_rank'],
+					];
+			?>
+			<div class="uap-special-button js-uap-export-csv"  data-filters='<?php if ( isset($_REQUEST['ordertype_rank']) ) {echo serialize($filters);}?>' data-export_type="affiliates" style="background-color:#38cbcb;" >
 					<i class="fa-uap fa-export-csv"></i><?php _e( 'Export CSV', 'uap' );?>
 			</div>
 			<div class="uap-special-button" onclick="jQuery('.uap-filters-wrapper').toggle();"><i class="fa-uap fa-search-uap"></i><?php _e('Add Filters', 'uap')?></div>
@@ -27,13 +32,14 @@
 				<input type="hidden" name="page" value="ultimate_affiliates_pro" />
 				<input type="hidden" name="tab" value="affiliates" />
 				<div class="row-fluid">
-					<div class="uap-span4">
+					<div class="uap-span3" style="padding: 20px 10px 20px 10px;">
 						<div class="iump-form-line iump-no-border">
-							<input name="search_t" type="text" value="<?php echo (isset($_REQUEST['search_t']) ? $_REQUEST['search_t'] : '') ?>" placeholder="<?php _e('Search by Name or Username', 'uap');?>..."/>
+							<input name="search_t" type="text" value="<?php echo (isset($_REQUEST['search_t']) ? $_REQUEST['search_t'] : '') ?>" placeholder="<?php _e('Search by Name, Username or Email Address', 'uap');?>..." style="min-width:400px;"/>
 						</div>
 					</div>
-					<div class="uap-span2">
+					<div class="uap-span2" style="padding: 20px 10px 20px 10px;">
 						<div class="iump-form-line iump-no-border">
+							<?php _e('Rank ', 'uap');?>
 							<select name="ordertype_rank">
 								<?php
 									$ranks = array(-1=>'...') + $indeed_db->get_rank_list();
@@ -49,8 +55,9 @@
 							</select>
 						</div>
 					</div>
-					<div class="uap-span3">
+					<div class="uap-span3" style="padding: 20px 10px 20px 10px;">
 						<div class="iump-form-line iump-no-border">
+							<?php _e('Order by ', 'uap');?>
 							<select name="orderby_user">
 								<option value="display_name" <?php echo (isset($_REQUEST['orderby_user']) && $_REQUEST['orderby_user']=='display_name') ? 'selected' : ''; ?>><?php _e('Name', 'uap');?></option>
 								<option value="user_login" <?php echo (isset($_REQUEST['orderby_user']) && $_REQUEST['orderby_user']=='user_login') ? 'selected' : ''; ?>><?php _e('Username', 'uap');?></option>
@@ -64,8 +71,8 @@
 							</select>
 						</div>
 					</div>
-					<div class="uap-span1" style="padding:30px 10px 0 0;">
-						<input type="submit" value="<?php _e('Search', 'uap');?>" name="search" class="button button-primary button-large">
+					<div class="uap-span1" style="padding: 20px 10px 20px 10px; vertical-align: middle;">
+						<input type="submit" value="<?php _e('Apply Filter', 'uap');?>" name="search" class="button button-primary button-large">
 					</div>
 				</div>
 			</form>
@@ -73,7 +80,7 @@
 
 		<?php if ($data['listing_affiliates']):?>
 			<div style="display: inline-block;float: right;margin-right:10px;margin-top: 5px;">
-				<strong><?php _e('Number of Users to Display:', 'uap');?></strong>
+				<strong><?php _e('Number of Affiliates to Display:', 'uap');?></strong>
 				<select name="uap_limit" onchange="window.location = '<?php echo $data['base_list_url'];?>&uap_limit='+this.value;">
 					<?php
 						foreach ($this->items_per_page as $value){
@@ -97,46 +104,46 @@
 						<input type="submit" name="apply_bttn" value="Apply" class="button action" onClick="checkSubmitAffiliateAction();return false;"/>
 					</div>
 
-					<table class="wp-list-table widefat fixed tags uap-admin-tables" style="font-size: 11px;">
+					<table class="wp-list-table widefat fixed tags uap-admin-tables uap-affiliates-list" style="font-size: 11px;">
 						<thead>
 							<tr>
 								<th style="width: 40px;"><input type="checkbox" onClick="uapSelectAllCheckboxes( this, '.uap-delete-affiliates' );" /></th>
-								<th style="width: 58px;"><?php _e('Affiliate ID', 'uap');?></th>
-								<th style="width:13%;"><?php _e('UserName', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th style="width:8%;"><?php _e('E-mail', 'uap');?></th>
-								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('Visits', 'uap');?></th>
+								<th style="width: 42px;"><?php _e('ID', 'uap');?></th>
+                                <th style="width: 50px;"><?php _e('Top', 'uap');?></th>
+								<th style="width:16%;"><?php _e('Full Name', 'uap');?></th>
+								<th style="width:8%;"><?php _e('Email Address', 'uap');?></th>
+								<th style="width:6%;"><?php _e('Rank', 'uap');?></th>
+								<th style="width:5%;"><?php _e('Clicks', 'uap');?></th>
 								<!--th><?php _e('Converted', 'uap');?></th-->
-								<th style="width: 7%;"><?php _e('Referrals', 'uap');?></th>
-								<th><?php _e('Paid Amount', 'uap');?></th>
-								<th><?php _e('UnPaid Amount', 'uap');?></th>
-								<th style="width:200px;"><?php _e('Metrics', 'uap');?></th>
-								<th><?php _e('Wp Role', 'uap');?></th>
+								<th style="width: 6%;"><?php _e('Referrals', 'uap');?></th>
+								<th style="width: 6%;"><?php _e('Paid Amount', 'uap');?></th>
+								<th style="width: 6%;"><?php _e('UnPaid Amount', 'uap');?></th>
+								<th style="width:110px;"><?php _e('Metrics', 'uap');?></th>
+								<th style="width: 100px;"><?php _e('WP Role', 'uap');?></th>
 								<?php if (!empty($data['email_verification'])):?>
-								<th><?php _e('E-mail Status', 'uap');?></th>
+								<th><?php _e('Email Status', 'uap');?></th>
 								<?php endif;?>
 								<th style="width:6%;"><?php _e('Affiliate Since', 'uap');?></th>
-								<th><?php _e('Details', 'uap');?></th>
+								<th style="width:10%;"><?php _e('Details', 'uap');?></th>
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
 								<th style="width: 40px;"><input type="checkbox" onClick="uapSelectAllCheckboxes( this, '.uap-delete-affiliates' );" /></th>
-								<th style="width: 58px;"><?php _e('Affiliate ID', 'uap');?></th>
-								<th><?php _e('UserName', 'uap');?></th>
-								<th><?php _e('Name', 'uap');?></th>
-								<th><?php _e('E-mail', 'uap');?></th>
+								<th><?php _e('ID', 'uap');?></th>
+                                <th><?php _e('Top', 'uap');?></th>
+								<th><?php _e('Full Name', 'uap');?></th>
+								<th><?php _e('Email Address', 'uap');?></th>
 								<th><?php _e('Rank', 'uap');?></th>
-								<th><?php _e('Visits', 'uap');?></th>
+								<th><?php _e('Clicks', 'uap');?></th>
 								<!--th><?php _e('Converted', 'uap');?></th-->
 								<th><?php _e('Referrals', 'uap');?></th>
 								<th><?php _e('Paid Amount', 'uap');?></th>
 								<th><?php _e('UnPaid Amount', 'uap');?></th>
-								<th style="width:180px;"><?php _e('Metrics', 'uap');?></th>
-								<th><?php _e('Wp Role', 'uap');?></th>
+								<th><?php _e('Metrics', 'uap');?></th>
+								<th><?php _e('WP Role', 'uap');?></th>
 								<?php if (!empty($data['email_verification'])):?>
-								<th><?php _e('E-mail Status', 'uap');?></th>
+								<th><?php _e('Email Status', 'uap');?></th>
 								<?php endif;?>
 								<th><?php _e('Affiliate Since', 'uap');?></th>
 								<th><?php _e('Details', 'uap');?></th>
@@ -148,8 +155,24 @@
 						<tr onmouseover="uapDhSelector('#aff_<?php echo $id;?>', 1);" onmouseout="uapDhSelector('#aff_<?php echo $id;?>', 0);" class="<?php if($i%2==0) echo 'alternate';?>">
 							<th><input type="checkbox" value="<?php echo $id;?>" name="affiliate_id_arr[]" class="uap-delete-affiliates"/></th>
 							<td><?php echo $id;?></td>
-							<td>
-								<span><?php echo $this->print_flag_for_affiliate($arr['uid']) . $arr['username'];?></span>
+                            <td class="uap-cel-top-psition">
+							<?php if ( !empty( $data['rankings'] ) ):?>
+											<?php if ( empty( $data['rankings'][$id] ) ):?>
+                                            		<!--img src="<?php echo UAP_URL;?>assets/images/uap_trophy.png"/>
+													 <div class="uap-userprofile-top-position-table">#<?php echo ( isset( $data['rankings_last_place'] ) ) ? $data['rankings_last_place'] : 'N/A';?></div-->
+											<?php else :?>
+													<img src="<?php echo UAP_URL;?>assets/images/uap_trophy.png"/>
+                           							 <div class="uap-userprofile-top-position-table">#<?php echo $data['rankings'][$id];?></div>
+											<?php endif;?>
+									<?php endif;?>
+
+                             </td>
+							<td class="uap-column-username">
+                            <img src="<?php echo uap_get_avatar_for_uid($arr['uid']);?>" class="uap-admin-affiliate-list-avatar" />
+                            <span class="uap-admin-affiliate-list-details">
+															<span class="uap-list-affiliates-name-label"><?php echo $arr['name'];?></span>
+															<span class="uap-admin-affiliate-list-details-unserame"><?php echo $this->print_flag_for_affiliate($arr['uid']) . $arr['username'];?>
+														</span>
 								<?php
 									if ($arr['payment_settings']):
 
@@ -186,6 +209,14 @@
 												</a>
 												<?php
 												break;
+											case 'stripe_v3':
+												$payment_class = ($arr['payment_settings']['is_active']) ? 'uap-payment-type-active-stripe' : '';
+												?>
+												<a href="<?php echo $data['base_view_payment_settings_url'] . $arr['uid'];?> " target="_blank">
+													<span class="uap-admin-aff-payment-type <?php echo $payment_class;?>"><?php _e('Stripe V3', 'uap');?></span>
+												</a>
+												<?php
+												break;
 										endswitch;
 									else :
 										?>
@@ -193,8 +224,14 @@
 										<?php
 									endif;
 								?>
+								</span>
 								<div id="aff_<?php echo $id;?>" style="visibility: hidden;">
-									<a href="<?php echo $data['url-add_edit'] . '&id=' . $arr['uid'];?>"><?php _e('Edit', 'uap');?></a> | <a onclick="uapDeleteFromTable(<?php echo $id;?>, 'Affiliate', '#delete_affiliate', '#form_affiliates');" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'uap');?></a>
+									<a href="<?php echo $data['url-add_edit'] . '&id=' . $arr['uid'];?>"><?php _e('Edit', 'uap');?></a>
+                                    | <a onclick="uapDeleteFromTable(<?php echo $id;?>, 'Affiliate', '#delete_affiliate', '#form_affiliates');" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'uap');?></a>
+
+                                    | <a  href="<?php echo $data['affiliate_profile_url'] . '&affiliate_id=' . $id;?>" target="_blank"><?php _e('Affiliate Profile', 'uap');?></a>
+                                    | <a  href="<?php echo $data['base_transations_url'] . '&affiliate=' . $id;?>"><?php _e('Transactions', 'uap');?></a>
+                                    | <a  href="<?php echo $data['base_reports_url'] . '&affiliate_id=' . $id;?>"><?php _e('Reports', 'uap');?></a>
 									<?php if ($arr['role']=='pending_user'):?>
 										| <a onClick="uapApproveAffiliate(<?php echo $arr['uid'];?>);" href="javascript:return false;"><?php _e('Approve Affiliate', 'uap');?></a>
 									<?php endif;?>
@@ -205,8 +242,7 @@
 									<?php endif;?>
 								</div>
 							</td>
-							<td><div class="uap-list-affiliates-name-label"><?php echo $arr['name'];?></div></td>
-							<td><?php echo $arr['email'];?></td>
+							<td><a href="mailto:<?php echo $arr['email'];?>" target="_blank"><?php echo $arr['email'];?></a></td>
 							<?php $style = (isset($arr['rank_color'])) ? 'background-color:#' . $arr['rank_color'] : 'background-color:#c9c9c9;';?>
 							<td><div class="rank-type-list" style="<?php echo $style;?>"><?php echo $arr['rank_label'];?></div></td>
 
@@ -295,13 +331,15 @@
 			    			</td>
 							<?php endif;?>
 							<td style="color: #396;"><?php echo uap_convert_date_to_us_format($arr['start_data']);?></td>
-							<td>
+							<td style="    padding: 15px 0;">
+                            <div class="referral-status-verified" style="display: inline-block; margin: 3px;background-color: #ffa726;; font-size:9px;"><a style="color:#fff;" href="<?php echo $data['affiliate_profile_url'] . '&affiliate_id=' . $id;?>"  target="_blank"><?php _e('Affiliate Profile', 'uap');?></a></div>
 								<div class="referral-status-verified" style="display: inline-block; margin: 3px;background-color: #38cbcb; font-size:9px;"><a style="color:#fff;" href="<?php echo $data['base_transations_url'] . '&affiliate=' . $id;?>"><?php _e('Transactions', 'uap');?></a></div>
 								<?php if (!empty($data['mlm_on']) && $indeed_db->affiliate_has_childrens($id) ) : ?>
 									<div class="referral-status-unverified" style="display: inline-block; margin: 3px;background-color: #0a9fd8; font-size:9px;"><a style="color:#fff;" href="<?php echo $data['mlm_matrix_link'] . $arr['username'];?>"><?php _e('MLM Matrix', 'uap');?></a></div>
 								<?php endif;?>
 								<div class="referral-status-unverified" style="display: inline-block; margin: 3px;background-color: #f1505b; font-size:9px;"><a style="color:#fff;" href="<?php echo $data['base_reports_url'] . '&affiliate_id=' . $id;?>"><?php _e('Reports', 'uap');?></a></div>
 								<div class="uap_frw_button uap_small_grey_button uap-admin-do-send-email-via-ump" data-uid="<?php echo $arr['uid'];?>"><?php _e('Direct Email', 'uap');?></div>
+							
 							</td>
 						</tr>
 					<?php $i++;
@@ -309,6 +347,7 @@
 				</tbody>
 			</table>
 			<input type="hidden" value='' name="delete_affiliate" id="delete_affiliate" />
+			<input type="hidden" value="<?php echo wp_create_nonce( 'uap_admin_list_affiliate_nonce' );?>" name="uap_admin_list_affiliate_nonce" />
 		</form>
 		<?php
 			if (!empty($data['pagination'])) :

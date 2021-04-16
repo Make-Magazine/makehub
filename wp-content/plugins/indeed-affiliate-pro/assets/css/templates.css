@@ -1,5 +1,3 @@
-/*@import url(http://fonts.googleapis.com/css?family=Oswald:300,400,700);*/
-@import url(//fonts.googleapis.com/css?family=Oswald:300,400,700);
 .uap-clear{
 	clear:both;
 }
@@ -51,7 +49,7 @@
 	float:right;
 }
 .uap-login-template-1 .uap-form-input-remember{
-	float:right;  
+	float:right;
 	margin-top: 1px;
 }
 .uap-login-template-1 .uap-form-label-remember:after{
@@ -60,7 +58,7 @@
 }
 .uap-login-template-1 .uap-form-links{
 	margin-top:5px;
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 	clear:both;
 }
@@ -123,7 +121,7 @@
 .uap-login-template-2 .uap-form-line-fr .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .uap-login-template-2 .uap-form-input-remember{
@@ -135,7 +133,7 @@
 }
 .uap-login-template-2 .uap-form-links{
 	margin-top:5px;
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 	clear:both;
 }
@@ -207,8 +205,8 @@
   -moz-box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
   box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.15);
 	width:360px;
-    max-width: 100%;    
-	font-family: 'Oswald', arial, sans-serif !important;    
+    max-width: 100%;
+	font-family: 'Oswald', arial, sans-serif !important;
 	font-size: 14px;
     color: #7f7f97;
 }
@@ -279,7 +277,7 @@
 .uap-login-template-3 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -341,11 +339,11 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	
-  
+  transition: all 0.3s linear 0s;
+
     padding: 10px 30px 11px;
 }
-.uap-login-template-3 .uap-form-submit input:hover{	
+.uap-login-template-3 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #1a9bcb !important;
 }
 
@@ -421,7 +419,7 @@
 .uap-login-template-4 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -485,9 +483,9 @@
     padding: 10px 30px 11px;
   border-radius: 3px;
   color: #b3eecc !important;
-  border-bottom: 4px solid #1e8449 !important;	
+  border-bottom: 4px solid #1e8449 !important;
 }
-.uap-login-template-4 .uap-form-submit input:hover{	
+.uap-login-template-4 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #43be77 !important;
 }
 .uap-login-template-4 .uap-form-line-fr{
@@ -567,7 +565,7 @@
 .uap-login-template-5 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .uap-login-template-5 .uap-form-input-remember{
@@ -616,7 +614,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.uap-login-template-5 .uap-form-submit input:hover{	
+.uap-login-template-5 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #e05d5d !important;
 }
 /*PASS*/
@@ -678,7 +676,7 @@
 	left:-20px;
     margin: 0 -40px 0 0px;
 	background-color:#f2f2f2;
-	padding:10px 20px;	
+	padding:10px 20px;
 	}
 .uap-login-template-6 .uap-temp6-row:after{
 	content:"";
@@ -696,7 +694,7 @@
 	display:inline-block !important;
 	font-weight:400;
 	font-size:12px;
-	font-weight:bold;	
+	font-weight:bold;
 	text-transform:inherit;
 }
 .uap-login-template-6 .uap-form-input-remember{
@@ -753,7 +751,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.uap-login-template-6 .uap-form-submit input:hover{	
+.uap-login-template-6 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #e05d5d !important;
 }
 /*PASS*/
@@ -823,7 +821,7 @@
 .uap-login-template-7 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	text-transform:inherit;
 }
 .uap-login-template-7 .uap-form-input-remember{
@@ -874,7 +872,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.uap-login-template-7 .uap-form-submit input:hover{	
+.uap-login-template-7 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #94a1b2 !important;
 }
 /*PASS*/
@@ -962,7 +960,7 @@
 .uap-login-template-8 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:12px;	
+	font-size:12px;
 	font-weight:bold;
 	text-transform:inherit;
 	padding-left:3px;
@@ -1034,9 +1032,9 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 }
-.uap-login-template-8 .uap-form-submit input:hover{	
+.uap-login-template-8 .uap-form-submit input:hover{
       background: none repeat scroll 0 0 #d3365e !important;
 }
 
@@ -1053,13 +1051,13 @@
 	padding-bottom:0px;
 	text-align:center;
 	box-sizing:border-box;
-    display: inline-block;
+    display: block;
 	background-color:#fff;
 	border-radius:3px;
 	width:460px;
     max-width: 100%;
 	font-size:15px;
-	
+
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 }
 .uap-login-template-9 .uap_login_form{
@@ -1149,7 +1147,7 @@
 .uap-login-template-9 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1208,7 +1206,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .uap-login-template-9 .uap-form-submit input{
 	color: #fff !important;
     width: 60%;
@@ -1236,14 +1234,14 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 	    -webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.uap-login-template-9 .uap-form-submit input:hover{	
+.uap-login-template-9 .uap-form-submit input:hover{
 	width: 65%;
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: rgb(241, 95, 121);
@@ -1332,7 +1330,7 @@
     border-bottom-right-radius: 0;
     border-right: 1px solid #ccc;
     min-width: 45px;
-    text-align: center;	
+    text-align: center;
 }
 .uap-login-template-10 .uap-form-line-fr .uap-form-label-fr{
 	min-width:350px;
@@ -1356,7 +1354,7 @@
 	border-radius: 4px !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
-    -o-border-radius: 4px !important; 
+    -o-border-radius: 4px !important;
 	height: auto !important;
     margin-bottom: 0px !important;
     line-height: 1 !important;
@@ -1371,7 +1369,7 @@
 .uap-login-template-10 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1430,7 +1428,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .uap-login-template-10 .uap-form-submit input{
 	color: #fff !important;
     width: 100%;
@@ -1455,14 +1453,14 @@
     -moz-border-radius: 2px;
     -o-border-radius: 2px;
     min-height: 45px;
-    font-size: 18px;	
+    font-size: 18px;
 	-webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.uap-login-template-10 .uap-form-submit input:hover{	
+.uap-login-template-10 .uap-form-submit input:hover{
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #65aed3;
     -moz-transition: all 0.3s linear 0s;
@@ -1490,7 +1488,7 @@
 	width:460px;
     max-width: 100%;
 	font-size:15px;
-	
+
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
 }
 .uap-login-template-11 .uap_login_form{
@@ -1580,7 +1578,7 @@
 .uap-login-template-11 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#777;
@@ -1669,7 +1667,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .uap-login-template-11 .uap-form-submit input{
     width: 80%;
     font-family: Helvetica, sans-serif, 'Trebuchet MS';
@@ -1696,14 +1694,14 @@
     -o-border-radius: 50px;
     min-height: 45px;
     font-size: 18px;
-    font-weight: bold;	
+    font-weight: bold;
 	    -webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.uap-login-template-11 .uap-form-submit input:hover{	
+.uap-login-template-11 .uap-form-submit input:hover{
 	width: 85%;
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #2bb7e3;
@@ -1794,7 +1792,7 @@
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     min-width: 45px;
-    text-align: center;	
+    text-align: center;
 }
 .uap-login-template-12 .uap-form-line-fr .uap-form-label-fr{
 	min-width:350px;
@@ -1818,7 +1816,7 @@
 	border-radius: 4px !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
-    -o-border-radius: 4px !important; 
+    -o-border-radius: 4px !important;
 	height: auto !important;
     margin-bottom: 0px !important;
     line-height: 1 !important;
@@ -1834,7 +1832,7 @@
 .uap-login-template-12 .uap-form-label-remember{
 	display:inline-block !important;
 	font-weight:400;
-	font-size:14px;	
+	font-size:14px;
 	text-transform:inherit;
 	padding-left:3px;
 	color:#6164c1;
@@ -1924,7 +1922,7 @@
     box-shadow: 2px 0px 30px rgba(0,0,0,0);
     -webkit-box-shadow: 0px 0px 9px rgba(0,0,0,0);
     -moz-box-shadow: 2px 0px 30px rgba(0,0,0,0);
-}	
+}
 .uap-login-template-12 .uap-form-submit input{
 	color: #fff !important;
     width: 100%;
@@ -1950,14 +1948,14 @@
     -o-border-radius: 4px;
     min-height: 45px;
     font-size: 18px;
-	font-weight:bold;	
+	font-weight:bold;
 	-webkit-transition: all 0.3s linear 0s;
     -moz-transition: all 0.3s linear 0s;
     -ms-transition: all 0.3s linear 0s;
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.uap-login-template-12 .uap-form-submit input:hover{	
+.uap-login-template-12 .uap-form-submit input:hover{
       /*background: none repeat scroll 0 0 #d3365e !important;*/
 	background-color: #8d7fd7;
     -moz-transition: all 0.3s linear 0s;
@@ -2030,7 +2028,7 @@
 	float:right;
 	width:48%;
 	margin-top:20px;
-	}	
+	}
 .uap-login-template-13 .uap-remember-wrapper{
 	clear:both;
 	text-align:left;
@@ -2041,7 +2039,7 @@
 	font-weight:400;
 	font-size:15px;
 	line-height:24px;
-	color:#888888;	
+	color:#888888;
 	text-transform:inherit;
 	margin-left:5px;
     vertical-align: middle;
@@ -2126,10 +2124,10 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;    
+  transition: all 0.3s linear 0s;
   display: block;
     width: 100%;
-	font-size:15px;    
+	font-size:15px;
 	-webkit-border-radius: 4px;
     -moz-border-radius: 4px;
     -ms-border-radius: 4px;
@@ -2140,7 +2138,7 @@
 	cursor:pointer;
 	    border-bottom: 2px solid rgba(0,0,0,.1)!important;
 }
-.uap-login-template-13 .uap-form-submit input:hover{	
+.uap-login-template-13 .uap-form-submit input:hover{
   background:none repeat scroll 0 0 #44b0ec;
 }
  .uap-login-template-13 .uap-form-links-reg{
@@ -2182,7 +2180,7 @@
 }
 /*Register Template 1*/
 .uap-register-1{
-	
+
 }
 .uap-register-1 .uap-labels-register{
 	font-size:13px;
@@ -2224,8 +2222,9 @@
     height: 30px;
     line-height: 28px;
     padding: 0 12px 2px;
-    
+
 }
+
 /*Register Template 2*/
 .uap-register-2{
 	min-width:300px;
@@ -2295,18 +2294,21 @@
     -o-transition: all 0.3s linear 0s;
     transition: all 0.3s linear 0s;
 }
-.uap-register-2 .uap-submit-form input:hover{	
+.uap-register-2 .uap-submit-form input:hover{
 	color:#fff !important;
   background:none repeat scroll 0 0 #08d1b2 !important;
   border-radius: 50px;
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
-}  
+}
+.uap-register-2 .uap-strength-wrapper{
+	width:auto !important;
+}
 /*Register Template 3*/
 .uap-register-3{
 	margin: 10px;
 	padding:30px;
-	text-align:center;
+	/*text-align:center;*/
 	box-sizing:border-box;
 	background-color:#fff;
 	border-top:7px solid #33b5e5;
@@ -2338,11 +2340,11 @@
 .uap-register-3 .uap-form-line-register{
 	border-bottom:none;
     margin-bottom: 10px;
-    position: relative;	
+    position: relative;
 }
 .uap-register-3 .uap-form-line-register input[type=text], .uap-register-3 .uap-form-line-register input[type=password], .uap-register-3 .uap-form-line-register input[type=number],
  .uap-register-3 .uap-form-line-register textarea, .uap-register-3 .uap-form-line-register select, .uap-register-3 .uap-form-line-register .select2-selection{
-	
+
 	border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     color: #7f7f97;
@@ -2387,6 +2389,13 @@
 	text-align:left;
 	padding-left:20px;
 }
+.uap-register-3  .uap-strength-wrapper{
+	max-height:15px;
+}
+.uap-register-3  .uap-single-checkbox-wrap{
+	text-align:left;
+	padding-left:20px;
+}
 .uap-register-3 .uap-form-checkbox,.uap-register-3  .uap-form-radiobox, .uap-register-3  .uap-form-paybox{
 	display:inline-block;
 }
@@ -2400,7 +2409,7 @@
 	padding-left:30px;
   	border-top: 1px solid #ddd;
   	border-bottom: 1px solid #ddd;
-	
+
 }
 .uap-register-3 .uap-submit-form{
 	text-align:center;
@@ -2423,10 +2432,10 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 }
-.uap-register-3 .uap-submit-form input:hover{	
+.uap-register-3 .uap-submit-form input:hover{
   background:none repeat scroll 0 0 #1a9bcb !important;
 }
 .uap-register-3 .uap-register-notice:before{
@@ -2457,7 +2466,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -2481,7 +2489,7 @@
 	border-radius:3px;
 	  min-width: 310px;
     max-width: 450px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 }
 .uap-register-4 .uap-sm-wrapp-fe{
@@ -2510,6 +2518,7 @@
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
     -o-border-radius: 4px !important;
+	display: block !important;
 }
 .uap-register-4 .uap-no-backs{
 	background:none !important;
@@ -2562,7 +2571,7 @@
     padding: 10px 30px 11px;
   border-radius: 3px;
   color: #b3eecc !important;
-  border-bottom: 4px solid #1e8449 !important;	
+  border-bottom: 4px solid #1e8449 !important;
 }
 .uap-register-4 .uap-submit-form input:hover{
   background:none repeat scroll 0 0 #43be77 !important;
@@ -2584,11 +2593,17 @@
   }
 /*Register Template 5*/
 .uap-register-5{
-	min-width: 400px;
+	min-width: 320px;
     max-width: 100%;
     font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
     display: block;
+}
+.uap-register-5 .uap-strength-wrapper{
+	width:auto !important;
+}
+.uap-register-5 .uap-strength-wrapper{
+	max-height:15px;
 }
 .uap-register-5 .uap-labels-register{
 	font-size:13px;
@@ -2613,7 +2628,7 @@
 .uap-register-5 .uap-submit-form{
 	text-align: right;
 }
-.uap-register-5 .uap-form-checkbox,.uap-register-5  .uap-form-radiobox, .uap-register-5  .uap-form-paybox{
+.uap-register-5 .uap-form-line-register .uap-form-checkbox,.uap-register-5  .uap-form-line-register .uap-form-radiobox, .uap-register-5  .uap-form-line-register .uap-form-paybox{
 	display:inline-block;
 }
 .uap-register-5 .uap-submit-form input{
@@ -2621,10 +2636,19 @@
 	background:none repeat scroll 0 0 #e05d5d  !important;
 	border-color:#e05d5d  !important;
 	box-shadow:none !important;
+	padding:16px 22px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
+	    border: none;
 }
 /*Register Template 6*/
 .uap-register-6{
 	min-width:620px;
+	 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif ;
 }
 @media (max-width: 620px) {
 	.uap-register-6{
@@ -2641,8 +2665,8 @@
     display: inline-block;
     vertical-align: top;
 }
-.uap-register-6 .uap-tos-wrap{ 
-	position:relative; 
+.uap-register-6 .uap-tos-wrap{
+	position:relative;
 }
 .uap-register-6 .uap-labels-register{
 	font-size:13px;
@@ -2658,7 +2682,7 @@
 }
 .uap-register-6 .uap-form-line-register input[type=text], .uap-register-6 .uap-form-line-register input[type=password], .uap-register-6 .uap-form-line-register input[type=number]
 , .uap-register-6 .uap-form-line-register textarea, .uap-register-6 .uap-form-line-register select, .uap-register-6 .uap-form-line-register .select2-selection{
-	
+
 	border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 2px;
     color: #2b2b2b;
@@ -2698,7 +2722,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -2731,10 +2754,10 @@
 /*Register Template 7*/
 .uap-register-7{
 	width:400px;
-    max-width: 100%;	
+    max-width: 100%;
 	margin: 10px;
 	padding:20px;
-	padding-bottom:0px;	
+	padding-bottom:0px;
 	border-radius:3px;
   -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.15);
@@ -2748,7 +2771,7 @@
 	left:-20px;
     margin: 15px -40px 0 0px;
 	background-color:#aab7c4;
-	padding:15px 20px;	
+	padding:15px 20px;
 }
 .uap-register-7 .uap-labels-register{
 	font-size:13px;
@@ -2773,7 +2796,7 @@
 	min-height:37px;
 }
 .uap-register-7 .uap-submit-form{
-	text-align: center; 
+	text-align: center;
 }
 .uap-register-7 .uap-submit-form input{
 	/*
@@ -2798,7 +2821,7 @@
     -webkit-border-radius: 50px;
     -moz-border-radius: 50px;
     -o-border-radius: 50px;
-    min-width: 70%;	
+    min-width: 70%;
 }
 .uap-register-7 .uap-submit-form input:hover{
 	color:#aab7c4 !important;
@@ -2823,7 +2846,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -2853,11 +2875,15 @@
 .uap-register-7 .uap-input-notice {
     border-color: #dd3559!important;
 }
+
+.uap-register-7 .uap-strength-wrapper{
+	width:auto !important;
+}
 /*Register Template 8*/
 .uap-register-8{
 	margin: 10px;
 	padding:30px;
-	text-align:center;
+	/*text-align:center;*/
 	box-sizing:border-box;
 	display:block;
   	min-width:300px;
@@ -2892,7 +2918,7 @@
 }
 .uap-register-8 .uap-form-line-register input[type=text], .uap-register-8 .uap-form-line-register input[type=password], .uap-register-8 .uap-form-line-register input[type=number],
  .uap-register-8 .uap-form-line-register textarea, .uap-register-8 .uap-form-line-register select, .uap-register-8 .uap-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -2904,7 +2930,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left; 
+	text-align: left;
 }
  .uap-register-8 .uap-form-line-register textarea{
 	 min-height:60px;
@@ -2921,6 +2947,13 @@
 	display:block;
     margin-top: 10px;
 }
+.uap-register-8 .uap-single-checkbox-wrap{
+	text-align:left;
+	padding-left:20px;
+}
+.uap-register-8 .uap-strength-wrapper{
+	width:auto !important;
+}
 .uap-register-8 .uap-form-checkbox-wrapper,.uap-register-8  .uap-form-radiobox-wrapper{
 	text-align:left;
 	padding-left:20px;
@@ -2932,7 +2965,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .uap-register-8 .uap-submit-form{
 	text-align:center;
@@ -2955,7 +2988,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -2963,9 +2996,9 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 }
-.uap-register-8 .uap-submit-form input:hover{	
+.uap-register-8 .uap-submit-form input:hover{
   background:none repeat scroll 0 0 #d3365e !important;
 }
 .uap-register-8 .uap-register-notice{
@@ -2992,7 +3025,7 @@
 .uap-register-9{
 	margin: 10px;
 	padding:30px;
-	text-align:center;
+	/*text-align:center;*/
 	box-sizing:border-box;
 	display:block;
   	min-width:300px;
@@ -3022,6 +3055,8 @@
 	display:block;
 	text-align:left;
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
+	    line-height: 18px;
+    padding-bottom: 5px;
 }
 .uap-register-9 .uap-form-line-register{
 	border-bottom:none;
@@ -3029,7 +3064,7 @@
 }
 .uap-register-9 .uap-form-line-register input[type=text], .uap-register-9 .uap-form-line-register input[type=password], .uap-register-9 .uap-form-line-register input[type=number],
  .uap-register-9 .uap-form-line-register textarea, .uap-register-9 .uap-form-line-register select, .uap-register-9 .uap-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3041,7 +3076,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left;     
+	text-align: left;
 	border-radius: 45px !important;
     -webkit-border-radius: 45px !important;
     -moz-border-radius: 45px !important;
@@ -3105,7 +3140,21 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
+}
+.uap-register-9 .uap-strength-wrapper{
+	width:auto !important;
+	margin-right: 15px;
+}
+.uap-register-9 .uap-single-checkbox-wrap{
+	text-align:left;
+    padding-right: 10px;
+    padding-left: 15px;
+}
+.uap-register-9 .uap-file-upload-button{
+	text-align:left;
+    padding-right: 10px;
+    padding-left: 15px;
 }
 .uap-register-9 .uap-submit-form{
 	text-align:center;
@@ -3129,7 +3178,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3137,11 +3186,11 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 	    background-color: rgb(241, 95, 121);
     background-image: linear-gradient(to left, rgb(178, 69, 146), rgb(241, 95, 121));
 }
-.uap-register-9 .uap-submit-form input:hover{	
+.uap-register-9 .uap-submit-form input:hover{
 	width:67%;
 }
 .uap-register-9 .uap-register-notice, .uap-register-9 #uap_coupon_code_check_div_msg{
@@ -3155,7 +3204,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3202,7 +3250,7 @@
     font-size: 14px;
 	box-sizing:border-box;
 	display:block;
-	max-width:500px;   
+	max-width:500px;
 	/*font-family: 'Oswald', arial, sans-serif !important;*/
     font-size: 14px;
 	color:#7f7f97;
@@ -3288,14 +3336,14 @@
 	border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 	border-right: 0;
-	display: table-cell;	
+	display: table-cell;
 	min-width: inherit;
 }
 .uap-register-10 .uap-form-text input[type=text],
 .uap-register-10 .uap-form-password input[type=text],
 .uap-register-10 .uap-form-unique_value_text input[type=text],
 .uap-register-10 .uap-form-date input[type=text]
-{   
+{
     border-radius: 4px;
 	height: 34px;
     padding: 6px 12px;
@@ -3308,7 +3356,7 @@
     color: #32373c;
     outline: 0;
     -webkit-transition: 50ms border-color ease-in-out;
-    transition: 50ms border-color ease-in-out; 
+    transition: 50ms border-color ease-in-out;
 	position: relative;
     z-index: 2;
     float: left;
@@ -3351,7 +3399,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3404,7 +3451,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.uap-register-10 .uap-submit-form input:hover{	
+.uap-register-10 .uap-submit-form input:hover{
 	color:#fff !important;
   /*background:none repeat scroll 0 0 #41b7ed !important;*/
   border-radius: 50px;
@@ -3423,6 +3470,12 @@
     border: 2px dashed #08d1b2;
 	width: 100%;
  }
+.uap-register-10 .uap-strength-wrapper {
+position: absolute;
+    right: 5px;
+	bottom: 0;
+    margin-bottom: -25px;
+}
 
 /*Register Template 11*/
 .uap-register-11{
@@ -3431,6 +3484,7 @@
 	box-sizing:border-box;
 	display:block;
 	text-align:left;
+	max-width:820px !important;
 }
 .uap-register-11 .uap-form-line-register{
 	margin-bottom:20px;
@@ -3461,7 +3515,7 @@
 }
 .uap-register-11 .uap-form-line-register input[type=text], .uap-register-11 .uap-form-line-register input[type=password], .uap-register-11 .uap-form-line-register input[type=number],
  .uap-register-11 .uap-form-line-register textarea, .uap-register-11 .uap-form-line-register select, .uap-register-11 .uap-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3473,7 +3527,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left; 
+	text-align: left;
 }
  .uap-register-11 .uap-form-line-register textarea{
 	 min-height:60px;
@@ -3501,7 +3555,9 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+}
+.uap-register-11 .uap-single-checkbox-wrap{
+	padding-left:20px;
 }
 .uap-register-11 .uap-submit-form{
 	text-align:center;
@@ -3524,7 +3580,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3532,9 +3588,9 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 }
-.uap-register-11 .uap-submit-form input:hover{	
+.uap-register-11 .uap-submit-form input:hover{
   background:none repeat scroll 0 0 #d3365e !important;
 }
 .uap-register-11 .uap-register-notice{
@@ -3564,6 +3620,7 @@
 	box-sizing:border-box;
 	display:block;
 	text-align:left;
+	max-width:820px !important;
 }
 .uap-register-12 .uap-form-line-register{
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
@@ -3595,7 +3652,7 @@
 }
 .uap-register-12 .uap-form-line-register input[type=text], .uap-register-12 .uap-form-line-register input[type=password], .uap-register-12 .uap-form-line-register input[type=number],
  .uap-register-12 .uap-form-line-register textarea, .uap-register-12 .uap-form-line-register select, .uap-register-12 .uap-form-line-register .select2-selection{
-	
+
 	border: 0px solid rgba(0, 0, 0, 0.1);
 	border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -3607,7 +3664,7 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	min-height:36px;
-	text-align: left;     
+	text-align: left;
 	border-radius: 45px !important;
     -webkit-border-radius: 45px !important;
     -moz-border-radius: 45px !important;
@@ -3639,7 +3696,7 @@
 
 }
  .uap-register-12 .uap-form-line-register textarea{
-	 min-height:60px;     
+	 min-height:60px;
 	border-radius: 10px !important;
     -webkit-border-radius: 10px !important;
     -moz-border-radius: 10px !important;
@@ -3656,6 +3713,8 @@
 }
 .uap-register-12 .uap-file-upload-button{
 	text-align:left;
+	    padding-right: 10px;
+    padding-left: 15px;
 }
  .uap-register-12 .uap-wrapp-file-upload{
 	display:block;
@@ -3672,7 +3731,7 @@
 	position:relative;
 	text-align:left;
 	padding:10px 0;
-	
+
 }
 .uap-register-12 .uap-submit-form{
 	text-align:center;
@@ -3696,7 +3755,7 @@
   -moz-transition: all 0.3s linear 0s;
   -ms-transition: all 0.3s linear 0s;
   -o-transition: all 0.3s linear 0s;
-  transition: all 0.3s linear 0s;	 
+  transition: all 0.3s linear 0s;
     padding: 10px 30px 11px;
 	border-radius: 50px;
     -webkit-border-radius: 50px;
@@ -3704,11 +3763,11 @@
     -o-border-radius: 50px;
 	min-height:45px;
 	font-size:18px;
-	font-weight:bold; 
+	font-weight:bold;
 	    background-color: rgb(241, 95, 121);
     background-image: linear-gradient(to left, rgb(178, 69, 146), rgb(241, 95, 121));
 }
-.uap-register-12 .uap-submit-form input:hover{	
+.uap-register-12 .uap-submit-form input:hover{
 	width:57%;
 }
 .uap-register-12 .uap-register-notice, .uap-register-12 #uap_coupon_code_check_div_msg{
@@ -3722,7 +3781,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3756,7 +3814,10 @@
 .uap-register-12 .uap-input-notice {
     border-color: #dd3559!important;
 }
-
+.uap-register-12 .uap-single-checkbox-wrap{
+	padding-right: 10px;
+    padding-left: 15px;
+}
 
 
 /*Register Template 13*/
@@ -3764,10 +3825,11 @@
 	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	box-sizing:border-box;
-	display:block;  
+	display:block;
 	/*font-family: 'Oswald', arial, sans-serif !important;*/
     font-size: 14px;
 	color:#7f7f97;
+	max-width:820px !important;
 }
 .uap-register-13 .uap-labels-register{
 	font-size:14px;
@@ -3849,14 +3911,14 @@
 	border-top-right-radius: 0;
     border-bottom-right-radius: 0;
 	border-right: 0;
-	display: table-cell;	
+	display: table-cell;
 	min-width: inherit;
 }
 .uap-register-13 .uap-form-text input[type=text],
 .uap-register-13 .uap-form-password input[type=text],
 .uap-register-13 .uap-form-unique_value_text input[type=text],
 .uap-register-13 .uap-form-date input[type=text]
-{   
+{
     border-radius: 4px;
 	height: 34px;
     padding: 6px 12px;
@@ -3869,7 +3931,7 @@
     color: #32373c;
     outline: 0;
     -webkit-transition: 50ms border-color ease-in-out;
-    transition: 50ms border-color ease-in-out; 
+    transition: 50ms border-color ease-in-out;
 	position: relative;
     z-index: 2;
     float: left;
@@ -3912,7 +3974,6 @@
     right: 0;
     margin-bottom: 8px;
     max-width: 230px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -3965,7 +4026,7 @@
   -o-transition: all 0.3s linear 0s;
   transition: all 0.3s linear 0s;
 }
-.uap-register-13 .uap-submit-form input:hover{	
+.uap-register-13 .uap-submit-form input:hover{
 	color:#fff !important;
   /*background:none repeat scroll 0 0 #41b7ed !important;*/
   border-radius: 50px;
@@ -3986,9 +4047,9 @@
  }
  .uap-register-13 .uap-strength-wrapper{
 	     position: absolute;
-    right: 0;
-    top: 100%;
-    margin-top: -6px;
+    right: 5px;
+	bottom: 0;
+    margin-bottom: -16px;
 }
  .uap-register-13 .uap-strength-wrapper .uap-strength-label{
 	  margin-top:-7px;
@@ -3996,12 +4057,12 @@
   .uap-register-13 .uap-form-password{
 	  margin-bottom:35px;
   }
- 
+
  /*Register Template 14*/
 .uap-register-14{
 	min-width:300px;
     max-width: 500px;
-	font-family: Helvetica, sans-serif, 'Trebuchet MS'; 
+	font-family: Helvetica, sans-serif, 'Trebuchet MS';
     font-size: 14px;
 	display:block;
 	margin:10px auto;
@@ -4025,8 +4086,8 @@
 	border-bottom:none;
 	    padding: 9px 5px;
 }
-.uap-register-14 .uap-form-line-register input[type=text], .uap-register-14 .uap-form-line-register input[type=password], 
-.uap-register-14 .uap-form-line-register input[type=number], .uap-register-14 .uap-form-line-register textarea, 
+.uap-register-14 .uap-form-line-register input[type=text], .uap-register-14 .uap-form-line-register input[type=password],
+.uap-register-14 .uap-form-line-register input[type=number], .uap-register-14 .uap-form-line-register textarea,
 .uap-register-14 .uap-form-line-register select, .uap-register-14 .uap-form-line-register .select2-selection{
 	border: 2px solid rgba(0, 0, 0, 0.15);
     border-radius: 2px;
@@ -4035,7 +4096,7 @@
 	display:block;
 	width:100%;
 	min-height: 37px;
-	
+
 }
  .uap-register-14 .uap-form-line-register .select2-selection{
 	 min-height:40px;
@@ -4051,7 +4112,7 @@
 	text-align: right;
 	padding:0;
 }
-.uap-register-14 .uap-form-checkbox,.uap-register-14  .uap-form-radiobox, .uap-register-14  .uap-form-paybox{
+.uap-register-14  .uap-form-line-register .uap-form-checkbox,.uap-register-14  .uap-form-line-register .uap-form-radiobox, .uap-form-line-register .uap-register-14  .uap-form-paybox{
 	display:inline-block;
 }
 .uap-register-14 .uap-submit-form input, .uap-register-14 .uap-login-link{
@@ -4113,12 +4174,12 @@
 .uap-register-14 .uap-register-row-left{
     float: left;
     width: 48%;
-    margin-top: 20px;	
+    margin-top: 20px;
 }
 .uap-register-14 .uap-register-row-right{
     float: right;
     width: 48%;
-    margin-top: 20px;	
+    margin-top: 20px;
 }
 
 /*==================REGISTER======================*/
@@ -4156,7 +4217,7 @@
 	float:right;
 }
 .uap-locker-wrap .uap-login-form-wrap .uap-form-input-remember{
-	float:right;  
+	float:right;
 	margin-top: 1px;
 }
 .uap-locker-wrap .uap-login-form-wrap .uap-form-label-remember:after{
@@ -4164,7 +4225,7 @@
 	clear:both;
 }
 .uap-locker-wrap .uap-form-links{
-	margin-bottom:5px;	
+	margin-bottom:5px;
 	text-align:right;
 }
 .uap-locker-wrap .uap-form-links div{
@@ -4200,12 +4261,12 @@
 	min-height: 120px;
 	padding:25px;
 	border-radius: 9px;
-	max-width:500px; 
-	margin:10px auto; 
+	max-width:500px;
+	margin:10px auto;
 }
 .uap_locker_2 .lock_content{
 	min-height:30px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:13px;
 	font-family:Arial, Helvetica, sans-serif;
 }
@@ -4244,7 +4305,7 @@
 	min-height: 140px;
 	padding:25px 15px;
 	position:relative;
-	max-width:600px; 
+	max-width:600px;
 	margin:10px auto;
 }
 .uap_locker_3 .lk_wrapper{
@@ -4257,7 +4318,7 @@
 }
 .uap_locker_3 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	padding-top:10px;
@@ -4271,7 +4332,7 @@
 	color:#719fd6;
 }
 .uap_locker_3 .lock_content h1,.uap_locker_3 .lock_content h2,.uap_locker_3 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .uap_locker_3 .lock_content p{
 	padding:0px;
@@ -4305,7 +4366,7 @@
 	min-height: 140px;
 	padding:25px;
 	position:relative;
-	max-width:620px; 
+	max-width:620px;
 	margin:10px auto;
 }
 .uap_locker_4 .lk_wrapper{
@@ -4335,7 +4396,7 @@
 }
 .uap_locker_4 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	margin-left:160px;
@@ -4356,7 +4417,7 @@
 	line-height:16px;
 }
 .uap_locker_4 .lock_content h1,.uap_locker_4 .lock_content h2,.uap_locker_4 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .uap_locker_4 .lock_content p{
 	padding:0px;
@@ -4376,8 +4437,8 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:610px; 
-	margin:10px auto; 
+	max-width:610px;
+	margin:10px auto;
 }
 .uap_locker_5 .lk_top_side{
 	background: url("../images/lockers/lock_5.png") center center no-repeat;
@@ -4402,7 +4463,7 @@
 	line-height:16px;
 }
 .uap_locker_5 .lock_content h1,.uap_locker_5 .lock_content h2,.uap_locker_5 .lock_content h3{
-	color:#0082a2;	
+	color:#0082a2;
 }
 .uap_locker_5 .lock_content p{
 	padding:0px;
@@ -4429,9 +4490,9 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:620px; 
+	max-width:620px;
 	margin:10px auto;
-	margin-top:50px; 
+	margin-top:50px;
 }
 .uap_locker_6 .lk_top_side{
 	border-radius: 50%;
@@ -4449,7 +4510,7 @@
 	-moz-box-shadow: inset 0 0 14px rgba(0,0,0,.22),0 1px 1px rgba(255,255,255,.7);
 	box-shadow: inset 0 0 14px rgba(0,0,0,.22),0 1px 1px rgba(255,255,255,.7);
 	background: #0082a2 url("../images/lockers/lock_4.png") center center no-repeat;
-	background-size: 46px auto;	
+	background-size: 46px auto;
 }
 .uap_locker_6 .lock_content{
 	min-height: 80px;
@@ -4468,7 +4529,7 @@
 	line-height:16px;
 }
 .uap_locker_6 .lock_content h1,.uap_locker_6 .lock_content h2,.uap_locker_6 .lock_content h3{
-	color:#0082a2;	
+	color:#0082a2;
 }
 .uap_locker_6 .lock_content p{
 	padding:0px;
@@ -4478,7 +4539,7 @@
 	margin-top:20px;
 }
 .uap_locker_6 .uap-login-template-6{
-	background-color:#fff;	
+	background-color:#fff;
 }
 /*Template 7*/
 .uap_locker_7{
@@ -4491,8 +4552,8 @@
 	min-height: 140px;
 	padding:15px 15px;
 	position:relative;
-	max-width:630px; 
-	margin:10px auto; 
+	max-width:630px;
+	margin:10px auto;
 }
 .uap_locker_7 .lk_wrapper{
 	position:absolute;
@@ -4525,7 +4586,7 @@
 	line-height:16px;
 }
 .uap_locker_7 .lock_content h1,.uap_locker_7 .lock_content h2,.uap_locker_7 .lock_content h3{
-	color:#fff;	
+	color:#fff;
 }
 .uap_locker_7 .lock_content p{
 	padding:0px;
@@ -4546,19 +4607,19 @@
 	border: 1px solid rgba(0,0,0,0.08);
 	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	-moz-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
-	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);	
+	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	z-index: 99999;
 	position: relative;
 }
 .uap_locker_7 .uap_timeout_line{
 	background-color: rgba(231,231,231,.7);
-	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);		
-	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
+	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
 }
 .uap_locker_7 .uap-login-template-2 .uap-form-links a {
-	color:#fff !important;	
+	color:#fff !important;
 }
 
 /*Template 8*/
@@ -4576,7 +4637,7 @@
 	padding:20px 15px;
 	padding-bottom:25px;
 	position:relative;
-	max-width:600px; 
+	max-width:600px;
 	margin:10px auto;
 }
 .uap_locker_8 .lk_top_side{
@@ -4584,7 +4645,7 @@
 	margin:0 auto;
 	height:36px;
 	width:100px;
-	background-size: 26px auto;	
+	background-size: 26px auto;
 }
 .uap_locker_8 .lk_wrapper_top{
 	position:absolute;
@@ -4610,7 +4671,7 @@
 }
 .uap_locker_8 .lock_content{
 	min-height:80px;
-	vertical-align:middle; 
+	vertical-align:middle;
 	font-size:12px;
 	font-family:Arial, Helvetica, sans-serif;
 	padding-top:10px;
@@ -4624,7 +4685,7 @@
 	color:#ededed;
 }
 .uap_locker_8 .lock_content h1,.uap_locker_8 .lock_content h2,.uap_locker_8 .lock_content h3{
-	color:#719fd6;	
+	color:#719fd6;
 }
 .uap_locker_8 .lock_content p{
 	padding:0px;
@@ -4641,14 +4702,14 @@
 	border-right:none;
 	-webkit-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 	-moz-box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
-	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);	
+	box-shadow: inset 0 0 3px rgba(0,0,0,.08),0 1px 1px rgba(255,255,255,.10);
 }
 .uap_locker_8 .uap_timeout_line{
 	background-color: rgba(231,231,231,.7);
-	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);		
-	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
-	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);	
+	background: -webkit-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -o-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: -moz-linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
+	background: linear-gradient(to top,rgba(231,231,231,.7) 0,rgba(255,255,255,.8) 100%);
 }
 .uap_locker_8 .uap-login-template-4{
 	background-color:transparent !important;
@@ -4783,7 +4844,7 @@ margin:0 auto;
 	font-family: 'Oswald', arial, sans-serif !important;
   font-size: 19px !important;
   border: none !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   padding: 4px;
   line-height:40px;
 }
@@ -4816,9 +4877,9 @@ margin:0 auto;
 	width: 100%;
   position: relative;
   box-sizing: border-box;
-	background: rgba(39, 190, 190,0.8) !important;  
+	background: rgba(39, 190, 190,0.8) !important;
 	font-size: 45px !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   text-align: center;
   line-height: 65px;
   padding: 10px 0;
@@ -4887,7 +4948,7 @@ margin:0 auto;
 .uap_level_template_3 .uap-level-item-title{
 	font-family: 'Oswald', arial, sans-serif !important;
   font-size: 19px !important;
-  border: none !important; 
+  border: none !important;
   padding: 10px 4px;
   line-height:40px;
 }
@@ -4923,7 +4984,7 @@ margin:0 auto;
   background: -ms-linear-gradient(top,#4f97cd,#3b8bc7);
   background: linear-gradient(top,#4f97cd,#3b8bc7);
 	font-size: 35px !important;
-  color: #FFF !important;  
+  color: #FFF !important;
   text-align: center;
   line-height: 75px;
   padding: 10px 0;
@@ -4931,7 +4992,7 @@ margin:0 auto;
 .uap_level_template_3 .uap-level-item-link{
 	text-align:center;
 	box-sizing:border-box;
-	
+
   	margin: 10px auto;
 	color: #fff !important;
   	width: 100px;
@@ -4962,7 +5023,7 @@ margin:0 auto;
 .uap_level_template_3 .uap-level-item-link a{
 	color:#fff;
 	text-decoration:none;
-} 
+}
 
 /*Template 4*/
 .uap_level_template_4{
@@ -5027,7 +5088,7 @@ margin:0 auto;
 	font-weight:200;
 	font-size:14px;
 	height:100%;
-	
+
 }
 .uap_level_template_4 .uap-level-item-link-wrap{
 
@@ -5088,7 +5149,7 @@ margin:0 auto;
 }
 .uap-user-page-mess-special{
 	font-size:19px;
-	  
+
 	font-family: 'Oswald', Arial, Helvetica, sans-serif;
   	font-weight: 400;
 	color:#999;
@@ -5115,7 +5176,7 @@ margin:0 auto;
 	font-size: 18px;
   	line-height: 40px;
   	color: #555;
-	text-transform: uppercase;  
+	text-transform: uppercase;
 	font-family: 'Oswald', Arial, Helvetica, sans-serif;
   	font-weight: 400;
 	margin-bottom:30px;
@@ -5243,7 +5304,7 @@ margin:0 auto;
 	height: 200%;
     left: 0;
     right: 0;
-    top: -100%;	
+    top: -100%;
 	z-index: -10;
 	background-size: cover;
     background-position: 50% 50%;
@@ -5286,6 +5347,7 @@ margin:0 auto;
     -moz-border-radius: 3px;
     box-radius: 3px;
     display: inline-block;
+	line-height:1.8;
 }
 .uap-user-page-top-wrapper .uap-user-page-details{
 	margin-top:10px;
@@ -5374,7 +5436,7 @@ margin:0 auto;
     padding: 0;
 	padding-right:5px;
 	    color: #555;
-	font-family: 'Open Sans',sans-serif;	
+	font-family: 'Open Sans',sans-serif;
 }
 .uap-user-page-top-wrapper .uap-stats-content{
 	    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -5383,13 +5445,23 @@ margin:0 auto;
     margin-bottom: 16px;
 	    color: #555;
 		    font-size: 24px;
-	font-family: 'Open Sans',sans-serif;		
+	font-family: 'Open Sans',sans-serif;
 }
 .uap-metris-rightside{
 	line-height:24px;
 }
+.uap-ap-top-theme-1 .uap-stats-label{
+	min-height:15px;
+}
+.uap-ap-top-theme-1 .uap-stats-content{
+	margin-bottom:10px;
+}
+.uap-ap-top-theme-1 .uap-metris-rightside {
+    line-height: 20px;
+}
+
 .uap-ap-top-theme-2{
-	padding-top:270px;	
+	padding-top:270px;
 
 }
 .uap-ap-top-theme-2 .cropControls{
@@ -5398,13 +5470,14 @@ margin:0 auto;
 .uap-ap-top-theme-2 .uap-user-page-top-background{
 	height: 250px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_2.png);
+    background-image: url(../images/top_aff_bk_4.png);
 }
 .uap-ap-top-theme-2 .uap-left-side{
 	    margin-bottom: -75px;
 }
 .uap-ap-top-theme-2 .uap-middle-side{
 	margin-top:-10px;
+	line-height:1.2;
 }
 .uap-ap-top-theme-2 .uap-user-page-details{
 	top: -75px;
@@ -5421,16 +5494,25 @@ margin:0 auto;
 	box-shadow:none;
 	border: 5px solid #fff;
 }
+.uap-ap-top-theme-2 .uap-stats-label{
+	min-height:15px;
+}
+.uap-ap-top-theme-2 .uap-stats-content{
+	margin-bottom:10px;
+}
+.uap-ap-top-theme-2 .uap-metris-rightside {
+    line-height: 20px;
+}
 
 .uap-ap-top-theme-3{
-	padding-top:320px;	
+	padding-top:320px;
 	padding-bottom:0px;
 
 }
 .uap-ap-top-theme-3 .uap-user-page-top-background{
 	height: 300px;
 	top: 0;
-    background-image: url(../images/top_aff_bk_3.png);
+    background-image: url(../images/top_aff_bk_4.png);
 }
 .uap-ap-top-theme-3 .uap-left-side{
 	    margin-bottom: -75px;
@@ -5439,6 +5521,7 @@ margin:0 auto;
 	float:none;
 	max-width:inherit;
     margin-top: -10px;
+	line-height:1.2;
 }
 .uap-ap-top-theme-3 .uap-right-side{
 	float:none;
@@ -5448,19 +5531,19 @@ margin:0 auto;
 	position:relative;
 	left:-15px;
 	margin-right:-30px;
-	margin-top: 20px;
+	margin-top: 15px;
 	border-top: 1px solid #ddd;
 }
 
 .uap-ap-top-theme-3 .uap-top-earnings{
-	float:left;    
+	float:left;
 	border-right: 1px solid #ddd;
     padding-right: 10px;
-    padding-top: 10px;
+    padding-top: 6px;
     box-sizing: border-box;
 }
 .uap-ap-top-theme-3 .uap-top-referrals {
-	float:left;    
+	float:left;
 	border-right: 1px solid #ddd;
     padding-right: 10px;
     padding-top: 6px;
@@ -5472,7 +5555,7 @@ margin:0 auto;
 .uap-ap-top-theme-3 .uap-top-achievement{
 	 width: 200px;
     float: right;
-    padding-top: 20px;
+    padding-top: 16px;
     margin-right: 20px;
     padding-bottom: 7px;
 }
@@ -5482,7 +5565,7 @@ margin:0 auto;
 	text-align:right;
     margin-right: 10px;
 	padding-right:5px;
-	font-size:14px;	
+	font-size:14px;
      padding-top: 10px;
 }
 .uap-ap-top-theme-3 .uap-stats-label{
@@ -5539,16 +5622,20 @@ margin:0 auto;
 	}
 	.uap-user-page-mess{
 		font-size: 0.9em;
-	}	
+	}
 	.uap-user-page-top-wrapper .uap-stats-content{
 		font-size: 1.3em;
-	}	
+	}
 	.uap-ap-top-theme-3 .uap-middle-side{
 		display:inline-block;
 	}
 	.uap-ap-top-theme-3 .uap-right-side{
 		width:auto;
     	max-width: inherit;
+	}
+	.uap-ap-top-theme-3 .uap-top-earnings, .uap-ap-top-theme-3 .uap-top-referrals{
+		    width: 50%;
+    		margin: 0 !important;
 	}
 }
 
@@ -5568,11 +5655,11 @@ margin:0 auto;
 	list-style:none;
 	padding: 0px;
 	margin:0px;
-	
+
 }
 .uap-ap-theme-1 .uap-ap-menu .uap-ap-menu-tab-item{
 	display: block;
-	font-size: 13px; 	
+	font-size: 13px;
     /*padding: 8px 16px 8px 14px;*/
 	cursor:pointer;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
@@ -5624,7 +5711,7 @@ margin:0 auto;
 .uap-ap-theme-1 .uap-ap-menu a{
 	text-decoration: none !important;
 	box-shadow:none;
-    border: none;	
+    border: none;
     padding: 8px 16px 8px 14px;
     box-sizing: border-box;
     display: block;
@@ -5653,7 +5740,7 @@ margin:0 auto;
 	font-family:Arial,Verdana,sans-serif;font-size:16px;
 	font-size:15px;
 	color:#333;
-	
+
 }
 .uap-ap-theme-1 #uap_account_page_tab_content{
 	padding-top:15px;
@@ -5744,7 +5831,7 @@ margin:0 auto;
 
 @media (max-width: 576px){
 	.uap-ap-menu .uap-ap-menu-item-selected, .uap-ap-menu .uap-ap-menu-tab-item-selected, .uap-ap-theme-1 .uap-ap-menu .uap-ap-menu-item:hover, .uap-ap-theme-1 .uap-ap-menu .uap-ap-menu-tab-item:hover{
-		    padding-left: 4px !important; 
+		    padding-left: 4px !important;
 	}
 }
 
@@ -5780,8 +5867,8 @@ margin:0 auto;
 }
 .uap-ap-theme-2 .uap-ap-menu .uap-ap-menu-tab-item{
 	/*display: inline-block;*/
-	float: left;	
-	font-size: 13px; 	
+	float: left;
+	font-size: 13px;
     /*padding: 8px 25px 8px 20px;*/
 	cursor:pointer;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
@@ -5823,7 +5910,7 @@ margin:0 auto;
 .uap-ap-theme-2 .uap-ap-menu .uap-ap-submenu-item{
 	/*display: inline-block;
 	vertical-align: top;*/
-	float: left; 
+	float: left;
 	/*background-color: #607d8b;*/
 }
 @media (max-width: 576px){
@@ -5833,7 +5920,7 @@ margin:0 auto;
 	.uap-ap-theme-2 .uap-ap-menu .uap-ap-submenu-item{
 		width:50%;
 	}
-	
+
 }
 .uap-ap-theme-2 .uap-ap-menu .uap-ap-submenu-item .uap-ap-menu-tab-item{
 	clear: both;
@@ -5871,7 +5958,7 @@ margin:0 auto;
 	background-color:#47565d !important;
 }
 .uap-ap-menu .uap-ap-submenu-item:hover .uap-ap-menu-tab-item .fa-account-right-uap:before{
-	     content: "\f107"; 
+	     content: "\f107";
 }
 .uap-ap-theme-2 .uap-ap-menu .uap-ap-menu-item-selected,.uap-ap-theme-2 .uap-ap-menu .uap-ap-menu-tab-item-selected{
 	background-color:#47565d !important;
@@ -5919,7 +6006,7 @@ margin:0 auto;
 	font-size:15px;
 	color:#333;
 	min-width:200px;
-	
+
 }
 .uap-ap-theme-2 #uap_account_page_tab_content{
 	padding-top:15px;
@@ -6032,8 +6119,8 @@ margin:0 auto;
 }
 .uap-ap-theme-3 .uap-ap-menu .uap-ap-menu-tab-item{
 	/*display: inline-block;*/
-	float: left;	
-	font-size: 13px; 	
+	float: left;
+	font-size: 13px;
     /*padding: 8px 25px 8px 20px;*/
 	cursor:pointer;
     font-family: 'Oswald', Arial, Helvetica, sans-serif;
@@ -6076,7 +6163,7 @@ margin:0 auto;
 .uap-ap-theme-3 .uap-ap-menu .uap-ap-submenu-item{
 	/*display: inline-block;
 	vertical-align: top;*/
-	float: left; 
+	float: left;
 	/*background-color: #607d8b;*/
 }
 @media (max-width: 576px){
@@ -6086,7 +6173,7 @@ margin:0 auto;
 	.uap-ap-theme-3 .uap-ap-menu .uap-ap-submenu-item{
 		width:50%;
 	}
-	
+
 }
 .uap-ap-theme-3 .uap-ap-menu .uap-ap-submenu-item .uap-ap-menu-tab-item{
 	clear: both;
@@ -6125,7 +6212,7 @@ margin:0 auto;
 	background-color:#333 !important;
 }
 .uap-ap-menu .uap-ap-submenu-item:hover .uap-ap-menu-tab-item .fa-account-right-uap:before{
-	     content: "\f107"; 
+	     content: "\f107";
 }
 .uap-ap-theme-3 .uap-ap-menu .uap-ap-menu-item-selected,.uap-ap-theme-3 .uap-ap-menu .uap-ap-menu-tab-item-selected{
 	background-color:#333 !important;
@@ -6146,13 +6233,13 @@ margin:0 auto;
 .uap-ap-theme-3 .uap-ap-menu a{
 	text-decoration: none !important;
 	box-shadow:none;
-    
+
     line-height: 30px;
     border: none;
     padding: 8px 25px 8px 20px;
     box-sizing: border-box;
     display: inline-block;
-	
+
 }
 .uap-ap-theme-3 .uap-ap-menu  .uap-ap-menu-item a{
 	color:#607D8B;
@@ -6178,7 +6265,7 @@ margin:0 auto;
 	font-size:15px;
 	color:#333;
 	min-width:200px;
-	
+
 }
 .uap-ap-theme-3 #uap_account_page_tab_content{
 	padding-top:15px;
@@ -6254,6 +6341,256 @@ margin:0 auto;
 	font-family: Oswald, arial, sans-serif !important;
 	color:#222;
 }
+
+/************************* AP THEME 4 *********************/
+
+.uap-ap-theme-4 .uap-ap-menu{
+	clear:both;
+	border-bottom: 1px solid #eee;
+    border-top: 1px solid #eee;
+}
+.uap-ap-theme-4 .uap-ap-menu:after{
+	clear:both;
+	display: table;
+    content: " ";
+}
+.uap-ap-theme-4 .uap-ap-menu ul{
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+.uap-ap-theme-4 .uap-ap-menu:after, .uap-ap-theme-4 .uap-ap-menu ul:after{
+	clear:both;
+	display: table;
+    content: " ";
+}
+.uap-ap-theme-4 .uap-ap-menu ul .uap-public-ap-menu-subtabs{
+	background-color: #fff;
+}
+.uap-ap-theme-4 .uap-ap-menu ul .uap-public-ap-menu-subtabs .uap-ap-menu-item{
+
+	background-color: rgba(255,255,255,0.15);
+	    border-bottom: 1px solid rgba(255,255,255,0.15);;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item{
+	/*display: inline-block;*/
+	float: left;
+	font-size: 13px;
+    /*padding: 8px 25px 8px 20px;*/
+	cursor:pointer;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+	font-weight:300;
+	/*border-bottom:1px solid #738E9A;
+	border-right:1px solid #738E9A;*/
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+    font-weight: 500;
+	webkit-transition: padding 0.5s ease;
+    -moz-transition: padding 0.5s ease;
+    -o-transition: padding 0.5s ease;
+    -ms-transition: padding 0.5s ease;
+    transition: padding 0.5s ease;
+	box-sizing:border-box;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item:last-child{
+	border-right:none;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-item{
+	display: block;
+	font-size: 13px;
+	/*float: left;*/
+     /*padding: 8px 25px 8px 20px;*/
+	cursor:pointer;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+	font-weight:300;
+	border-bottom:1px solid #738E9A;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+    font-weight: 500;
+	webkit-transition: padding 0.5s ease;
+    -moz-transition: padding 0.5s ease;
+    -o-transition: padding 0.5s ease;
+    -ms-transition: padding 0.5s ease;
+    transition: padding 0.5s ease;
+    background-color: #607d8b;
+	min-width:190px;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item{
+	/*display: inline-block;
+	vertical-align: top;*/
+	float: left;
+	/*background-color: #607d8b;*/
+}
+@media (max-width: 576px){
+	.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item{
+		width:50%;
+	}
+	.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item{
+		width:50%;
+	}
+
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item .uap-ap-menu-tab-item{
+	clear: both;
+    width: 100%;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-public-ap-menu-subtabs .uap-ap-menu-item a{
+	color: #fff !important;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item .uap-public-ap-menu-subtabs{
+	margin-top: 67px;
+	opacity:0;
+	/*display: none;*/
+	position:absolute;
+	visibility: hidden;
+    background-color: #2a91ae;
+	z-index:99999;
+	-moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -webkit-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-delay: 0.15s;
+    -moz-transition-delay: 0.15s;
+    -o-transition-delay: 0.15s;
+    transition-delay: 0.15s;
+}
+
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item:hover>.uap-public-ap-menu-subtabs{
+	visibility: visible;
+	margin-top: 46px;
+	opacity:1;
+    /*display: block;*/
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-item:hover,.uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item:hover .uap-ap-menu-tab-item,.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item:hover{
+	background-color:#18c1f0 !important;
+}
+.uap-ap-menu .uap-ap-submenu-item:hover .uap-ap-menu-tab-item .fa-account-right-uap:before{
+	     content: "\f107";
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-item-selected,.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item-selected{
+	background-color:#18c1f0 !important;
+	padding-left:0px !important;
+}
+.uap-ap-theme-4 .uap-ap-menu .fa-uap{
+	font-size: 19px;
+    line-height: 25px;
+    padding-right: 10px;
+    vertical-align: middle;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item .fa-uap{
+    line-height: 30px;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item .fa-account-down-uap, .uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item .fa-account-right-uap{
+	width:23px;
+}
+.uap-ap-theme-4 .uap-ap-menu a{
+	text-decoration: none !important;
+	box-shadow:none;
+
+    line-height: 30px;
+    border: none;
+    padding: 8px 25px 8px 20px;
+    box-sizing: border-box;
+    display: inline-block;
+
+}
+.uap-ap-theme-4 .uap-ap-menu  .uap-ap-menu-item a{
+	color:#607D8B;
+}
+.uap-ap-theme-4 .uap-ap-menu  .uap-ap-menu-tab-item a{
+	color: #18c1f0;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-item:hover a, .uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-item-selected a{
+	color: #fff;
+}
+.uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item:hover a, .uap-ap-theme-4 .uap-ap-menu .uap-ap-menu-tab-item-selected a, .uap-ap-theme-4 .uap-ap-menu .uap-ap-submenu-item:hover .uap-ap-menu-tab-item a{
+	color: #fff;
+}
+.uap-ap-theme-4 .uap-user-page-content{
+	padding-left:30px;
+	padding-right:10px;
+	box-sizing:border-box;
+	margin: 35px 0 20px 0;
+	font-family:Arial,Verdana,sans-serif;font-size:16px;
+	font-size:15px;
+	color:#333;
+	min-width:200px;
+
+}
+.uap-ap-theme-4 #uap_account_page_tab_content{
+	padding-top:15px;
+	padding-bottom:35px;
+    min-height: 400px;
+}
+.uap-ap-theme-4 .uap-user-page-box .uap-user-page-box-title{
+	font-size:21px;
+	border-width:0px;
+}
+.uap-ap-theme-4 .uap-user-page-wrapper{
+	padding:0px;
+}
+.uap-ap-theme-4 .uap-account-content-title{
+	font-size: 21px;
+    line-height: 40px;
+    color: #555;
+    text-transform: uppercase;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    margin-bottom: 30px;
+}
+.uap-ap-theme-4 .uap-account-subscr-list{
+	margin-top:20px;
+	color:#888;
+	font-size:13px;
+    margin-bottom: 40px;
+}
+.uap-ap-theme-4 .uap-account-subscr-list thead{
+	    color: #555;
+    text-transform: uppercase;
+    font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    margin-bottom: 30px;
+    border-bottom: 4px solid #33b5e5;
+	font-size: 14px;
+}
+.uap-ap-theme-4 .uap-account-subscr-list thead td{
+	padding: 6px 10px 6px 0;
+}
+.uap-ap-theme-4 .uap-account-subscr-list tbody td{
+	vertical-align:top;
+	padding:0px;
+	padding-left:5px;
+}
+.uap-ap-theme-4 .uap-account-subscr-list .uap-level-name{
+	font-family: 'Oswald', Arial, Helvetica, sans-serif;
+    font-weight: 400;
+	color:#21759b;
+	font-size:14px;
+}
+.uap-ap-theme-4 .uap-account-subscr-list .uap-level-name-wrapp{
+	padding-left:15px;
+	font-size:12px;
+	color:#21759b;
+}
+.uap-ap-theme-4 .uap-account-subscr-list tr:nth-child(even){
+	background-color:#fafafa;
+}
+.uap-ap-theme-4 .uap-account-tranz-list tr:nth-child(even){
+	background-color:rgba(90, 186, 198, 0.05);
+}
+.uap-ap-theme-4 .uap-account-tranz-list thead{
+    border-bottom: 2px solid #33b5e5;
+}
+.uap-ap-theme-4 .uap-account-tranz-list th{
+	text-align:center;
+}
+.uap-ap-theme-4 .uap-account-tranz-list td{
+	text-align:center;
+}
+.uap-ap-theme-4 .uap_account_level_status{
+	font-family: Oswald, arial, sans-serif !important;
+	color:#222;
+}
+
 
 /*==============SUBSCRIPTION PAGE===============*/
 /*==============LOGIN BUTTONS===============*/
@@ -6359,7 +6696,7 @@ margin:0 auto;
 	background-image: -ms-linear-gradient(top, #f4f4f4, #e7e8ea);
 	background-image: -o-linear-gradient(top, #f4f4f4, #e7e8ea);
 	background-image: linear-gradient(top, #f4f4f4, #e7e8ea);
-	
+
 	-webkit-transform: scaleY(1);
 	transform: scaleY(1);
 	-webkit-transform-origin: 50%;
@@ -6438,7 +6775,7 @@ margin:0 auto;
 	-moz-box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.24);
 	box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.24);
 	margin:7px;
-	
+
 }
 .uap-sm-template-5 .uap-sm-item-label{
 	padding-right:6px;
@@ -6478,40 +6815,40 @@ margin:0 auto;
 	color: #4099FF;
 }
 .uap-sm-template-5 .uap-in .fa-uap-sm, .uap-sm-template-5 .uap-in .uap-sm-item-label{
-	color: #0074a2;	
+	color: #0074a2;
 }
 .uap-sm-template-5 .uap-goo .fa-uap-sm, .uap-sm-template-5 .uap-goo .uap-sm-item-label{
-    color: rgb(217, 82, 50);	
+    color: rgb(217, 82, 50);
 }
 .uap-sm-template-5 .uap-vk .fa-uap-sm, .uap-sm-template-5 .uap-vk .uap-sm-item-label{
-    color: #5d83aa;	
+    color: #5d83aa;
 }
 .uap-sm-template-5 .uap-ig .fa-uap-sm, .uap-sm-template-5 .uap-ig .uap-sm-item-label{
-	color: #125688;	
+	color: #125688;
 }
 .uap-sm-template-5 .uap-tbr .fa-uap-sm, .uap-sm-template-5 .uap-tbr .uap-sm-item-label{
-	color: #2c4762;	
+	color: #2c4762;
 }
 .uap-sm-template-5 .uap-sm-item.uap-fb:hover{
-	background: rgb(59, 89, 152);	
+	background: rgb(59, 89, 152);
 }
 .uap-sm-template-5 .uap-sm-item.uap-tw:hover{
 	background: #4099FF;
 }
 .uap-sm-template-5 .uap-sm-item.uap-in:hover{
-	background: #0074a2;	
+	background: #0074a2;
 }
 .uap-sm-template-5 .uap-sm-item.uap-goo:hover{
-    background: rgb(217, 82, 50);	
+    background: rgb(217, 82, 50);
 }
 .uap-sm-template-5 .uap-sm-item.uap-vk:hover{
-    background: #5d83aa;	
+    background: #5d83aa;
 }
 .uap-sm-template-5 .uap-sm-item.uap-ig:hover{
-	background: #125688;	
+	background: #125688;
 }
 .uap-sm-template-5 .uap-sm-item.uap-tbr:hover{
-	background: #2c4762;	
+	background: #2c4762;
 }
 /*==============LOGIN BUTTONS===============*/
 .uap-public-wrapp-visitor-user .uap-user-page-avatar{
@@ -6577,4 +6914,22 @@ margin:0 auto;
 .uap-ap-top-theme-1 .cropControls{
 	right:auto !important;
 	left:20px !important;
+}
+
+.uap-user-page-top-wrapper .uap-top-achievement .uap-achieved{
+	background-color: #75c37d;
+}
+.uap-ap-top-theme-2 .uap-user-page-top-background, .uap-ap-top-theme-3 .uap-user-page-top-background{
+	    overflow: inherit;
+}
+.uap-ap-top-theme-1 .cropControls{
+    right: 40% !important;
+    z-index: 1000;
+    left: auto !important;
+}
+@media screen and (max-width: 567px){
+	.uap-ap-top-theme-1 .cropControls{
+    display: none;
+
+	}
 }

@@ -39,7 +39,15 @@ $width = 99 / $i;
 				        theme		      : 'uap-links-section',
 				        title 		    : '<?php echo __('Simple Affiliate Link', 'uap'); ?>',
             })
-        })
+        });
+        jQuery(document).ready(function(){
+          jQuery( document ).on( 'change', '#uap_affiliate_bar_friendly_links', function( e ){
+              uapInfoAffiliateBarUpdateLink();
+          });
+          jQuery( document ).on( 'change', '#ap_affiliate_bar_ref_type', function( e ){
+              uapInfoAffiliateBarUpdateLink();
+          });
+        });
         </script>
     <?php endif;?>
 
@@ -58,7 +66,13 @@ $width = 99 / $i;
 					          theme		      : 'uap-banners-section',
 					          title 		    : '<?php echo __('Banner Affiliate Link', 'uap'); ?>',
                 })
-            })
+            });
+            jQuery(document).ready(function(){
+              jQuery( document ).on( 'change', '#uap_iab_banner_select_size', function( e ){
+                  uapInfoAffiliateBarChangeBannerSize( jQuery( '#uap_iab_banner_select_size' ).val() );
+              });
+            });
+
             </script>
 
     <?php endif;?>

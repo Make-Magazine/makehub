@@ -40,7 +40,7 @@
 				</div>
 
                     <!-- LEVEL PRICE -->
-                <span class="iump-level-details-register-name"><?php echo $data['level_label'];?></span>
+                <span class="iump-level-details-register-name"><?php echo sprintf( __( '%s' ), $data['level_label'] );?></span>
                 <span class="iump-level-details-register-price"><?php echo $data['level_price'];?></span>
                 <div class="iump-clear"></div>
 
@@ -59,7 +59,7 @@
                         <?php if (!empty($data['taxes_details'])):?>
                             <div class="ihc-taxes-content">
                                 <?php foreach ($data['taxes_details'] as $k=>$v):?>
-                                    <div class="iump-level-subdetails-register-name"><?php echo $v['label']; ?></div>
+                                    <div class="iump-level-subdetails-register-name"><?php echo sprintf( __( '%s' ), $data['level_label'] );?></div>
                                     <div class="iump-level-subdetails-register-price"><?php echo $v['print_value'];?></div>
                                     <div class="iump-clear"></div>
                                 <?php endforeach;?>
@@ -85,7 +85,7 @@
 		<?php else :?>
 
         	                    <!-- LEVEL PRICE -->
-                <span class="iump-level-details-register-name"><?php echo $data['level_label'];?></span>
+                <span class="iump-level-details-register-name"><?php echo sprintf( __( '%s' ), $data['level_label'] );?></span>
                 <span class="iump-level-details-register-price"><?php echo $data['level_price'];?></span>
                 <div class="iump-clear"></div>
 
@@ -136,6 +136,6 @@
 	<?php endif;?>
 <input type="hidden" id="iumpfinalglobalp" value="<?php echo @$data['price_number'];?>" />
 <input type="hidden" id="iumpfinalglobalc" value="<?php echo @$currency;?>" />
-<input type="hidden" id="iumpfinalglobal_ll" value="<?php echo @$data['level_label'];?>" />
+<input type="hidden" id="iumpfinalglobal_ll" value="<?php echo sprintf( __( '%s' ), @$data['level_label'] );?>" />
 <input type="hidden" id="iump_site_name" value="<?php echo get_option('blogname');?>" />
 </div>

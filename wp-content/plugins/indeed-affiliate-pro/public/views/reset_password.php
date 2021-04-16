@@ -3,6 +3,7 @@
 <?php endif;?>
 <div class="uap-pass-form-wrap <?php echo $meta_arr['uap_login_template'];?>">
 	<form action="" method="post" >
+		<input type="hidden" name="uap_reset_password_nonce" value="<?php echo wp_create_nonce( 'uap_reset_password_nonce' );?>" />
 		<input name="uapaction" type="hidden" value="reset_pass">
 
 	<?php switch ($meta_arr['uap_login_template']){
@@ -107,7 +108,7 @@
                 	<div class="uap-form-pass-additional-content">
 					<?php _e('To reset your password, please enter your email address or username below', 'uap');?>
 					</div>
-			<div class="uap-form-line-fr">				
+			<div class="uap-form-line-fr">
 				  <input type="text" value="" name="email_or_userlogin" style="    padding: 8px 4px 7px 9px;" placeholder="<?php _e('Enter your username or email', 'uap');?>" />
 			</div>
 			<div class="uap-form-line-fr uap-form-submit">

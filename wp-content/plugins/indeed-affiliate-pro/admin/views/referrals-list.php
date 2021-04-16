@@ -18,7 +18,16 @@
 		<span class="uap-top-message"><?php _e('...add manual Referral (reward) for specific Affiliate', 'uap');?></span>
 
 		<div class="uap-special-buttons-users">
-			<div class="uap-special-button js-uap-export-csv" data-export_type="referrals" style="background-color:#38cbcb;" >
+			<?php
+					$filters = [
+						'start' 									=> empty($_REQUEST['udf']) ? '' : $_REQUEST['udf'],
+						'end' 										=> empty($_REQUEST['udu']) ? '' : $_REQUEST['udu'],
+						'status' 									=> isset($_REQUEST['u_sts']) ? $_REQUEST['u_sts'] : -1,
+						'affiliate_username'			=> isset($_REQUEST['aff_u']) ? $_REQUEST['aff_u'] : '',
+						'source'									=> isset($_REQUEST['u_source']) ? $_REQUEST['u_source'] : -1,
+					];
+			?>
+			<div class="uap-special-button js-uap-export-csv" data-filters='<?php if ( isset($_REQUEST) ) {echo serialize($filters);}?>' data-export_type="referrals" style="background-color:#38cbcb;" >
 					<i class="fa-uap fa-export-csv"></i><?php _e( 'Export CSV', 'uap' );?>
 			</div>
 		</div>
@@ -29,6 +38,8 @@
 
 		<?php if (!empty($data['listing_items'])) : ?>
 			<form action="" method="post" id="form_referrals">
+
+				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
 
 				<div style="display: inline-block;float: left;margin: 10px 0px 10px 0px;">
 					<select name="list_action"><?php
@@ -66,8 +77,8 @@
 						<thead>
 							<tr>
 								<th style="width: 50px;"><input type="checkbox" onClick="uapSelectAllCheckboxes( this, '.uap-delete-referral' );" /></th>
-								<th style="width: 60px;"><?php _e('User ID', 'uap');?></th>
-								<th><?php _e('Affiliate', 'uap');?></th>
+								<th style="width: 60px;"><?php _e('Affiliate ID', 'uap');?></th>
+								<th><?php _e('Affiliate Username', 'uap');?></th>
 								<th><?php _e('ID', 'uap');?></th>
 								<th><?php _e('From', 'uap');?></th>
 								<th><?php _e('Reference', 'uap');?></th>
@@ -80,8 +91,8 @@
 						<tfoot>
 							<tr>
 								<th style="width: 50px;"><input type="checkbox" onClick="uapSelectAllCheckboxes( this, '.uap-delete-referral' );" /></th>
-								<th style="width: 60px;"><?php _e('User ID', 'uap');?></th>
-								<th><?php _e('Affiliate', 'uap');?></th>
+								<th style="width: 60px;"><?php _e('Affiliate ID', 'uap');?></th>
+								<th><?php _e('Affiliate Username', 'uap');?></th>
 								<th><?php _e('ID', 'uap');?></th>
 								<th><?php _e('From', 'uap');?></th>
 								<th><?php _e('Referance', 'uap');?></th>
@@ -92,11 +103,11 @@
 							</tr>
 						</tfoot>
 						<tbody class="ui-sortable uap-alternate">
-							<?php foreach ($data['listing_items'] as $array) : ?>
+							<?php foreach ($data['listing_items'] as $array) :  ?>
 								<tr onmouseover="uapDhSelector('.hidden-div-referral-<?php echo $array['id'];?>', 1);" onmouseout="uapDhSelector('.hidden-div-referral-<?php echo $array['id'];?>', 0);">
 									<th style="vertical-align: top;"><input type="checkbox" value="<?php echo $array['id'];?>" name="referral_list[]" class="uap-delete-referral"/></th>
 									<?php $temp_uid = $indeed_db->get_uid_by_affiliate_id($array['affiliate_id']);?>
-									<td><a href="<?php echo admin_url('user-edit.php?user_id=' . $temp_uid);?>" target="_blank"><?php echo $temp_uid;?></a></td>
+									<td><a href="<?php echo admin_url('user-edit.php?user_id=' . $temp_uid);?>" target="_blank"><?php echo $array['affiliate_id'];?></a></td>
 									<td><?php
 										echo '<div class="uap-list-affiliates-name-label">';
 											if (!empty($array['username']))
@@ -153,6 +164,9 @@
 															$link = $data['user_sign_up_link'] . $uid_sign_up;
 														}
 														break;
+													default:
+														$link = apply_filters( 'uap_admin_dashboard_custom_referrence_link', '', $array );
+														break;
 												}
 											}
 											if (!empty($link)){
@@ -173,7 +187,7 @@
 											 */
 										if (!$array['status']){
 											?>
-											<div class="referral-status-refuse"><?php _e('Refuse', 'uap');?></div>
+											<div class="referral-status-refuse"><?php _e('Refused', 'uap');?></div>
 											<?php
 										} else if ($array['status']==1){
 											?>
@@ -186,7 +200,7 @@
 										}
 									?><div>
 											<?php
-												$status_arr = array(0 => __('Refuse', 'uap'), 1 => __('Unverified', 'uap'), 2 => __('Verified', 'uap') );
+												$status_arr = array(0 => __('Refused', 'uap'), 1 => __('Unverified', 'uap'), 2 => __('Verified', 'uap') );
 												$i = 1;
 												foreach ($status_arr as $k=>$v){
 													if ($k!=$array['status']){
@@ -231,4 +245,4 @@
 			<h4 style="margin-top:50px;"><?php _e('No Referrals Stored!', 'uap');?></h4>
 		<?php endif;?>
 </div>
-</div><!-- end of uap-dashboard-wrap --> 
+</div><!-- end of uap-dashboard-wrap -->

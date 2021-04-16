@@ -60,18 +60,25 @@ class Orders
             $writeData['uid'], $writeData['lid'], $writeData['amount_type'], $writeData['amount_value'], $writeData['automated_payment'],
             $writeData['status'], $writeData['create_date'], $writeData['id'] );
             $wpdb->query( $query );
+            do_action( 'ump_payment_check', $writeData['id'], 'update' );
             return $writeData['id'];
         } else {
             /// insert
 
             /// since version 8.6, before we used NOW() function in mysql
-            $currentDate = indeed_get_current_time_with_timezone();
+            $createDate = indeed_get_current_time_with_timezone();
+            if ( isset( $this->data['create_date'] ) && $this->data['create_date'] != '' ){
+                $createDate = $this->data['create_date'];
+            }
 
             $query = $wpdb->prepare( "INSERT INTO {$wpdb->prefix}ihc_orders
                                           VALUES( NULL, %d, %d, %s, %s, %d, %s, %s );",
             $this->data['uid'], $this->data['lid'], $this->data['amount_type'], $this->data['amount_value'], $this->data['automated_payment'],
-            $this->data['status'], $currentDate );
+            $this->data['status'], $createDate );
             $wpdb->query( $query );
+
+            do_action( 'ihc_action_after_order_placed', $this->data['uid'], $this->data['lid'] );
+            do_action( 'ump_payment_check', $wpdb->insert_id, 'insert' );
             return $wpdb->insert_id;
         }
 
@@ -90,6 +97,54 @@ class Orders
         }
         $colName = esc_sql( $colName );
         $queryString = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_orders SET $colName=%s WHERE id=%d;", $value, $this->id );
-        return $wpdb->query( $queryString );
+
+        $result = $wpdb->query( $queryString );
+        do_action( 'ump_payment_check', $this->id, 'update' );
+        return $result;
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    public function getCountAll()
+    {
+        global $wpdb;
+        $count = $wpdb->get_var( "SELECT COUNT( id ) FROM {$wpdb->prefix}ihc_orders ;");
+        if ( $count == false ){
+            return 0;
+        }
+        return $count;
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    public function getTotalAmount()
+    {
+        global $wpdb;
+        $data = $wpdb->get_var( "SELECT SUM( amount_value ) FROM {$wpdb->prefix}ihc_orders ;");
+        if ( $data == false ){
+            return 0;
+        }
+        return $data;
+    }
+
+    /**
+     * @param none
+     * @return none
+     */
+    public function getLastOrders( $limit=5 )
+    {
+        global $wpdb;
+        $query = $wpdb->prepare( "SELECT uid, lid, amount_type, amount_value, create_date
+                                        FROM {$wpdb->prefix}ihc_orders
+                                        ORDER BY create_date DESC LIMIT %d;", $limit );
+        $data = $wpdb->get_results( $query );
+        if ( $data == false ){
+            return [];
+        }
+        return $data;
     }
 }

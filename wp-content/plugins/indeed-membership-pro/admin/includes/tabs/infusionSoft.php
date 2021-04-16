@@ -7,7 +7,7 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
-$levels = get_option('ihc_levels');
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
 $object = new \Indeed\Ihc\Services\InfusionSoft();
 $tags = $object->getContactGroups();
 
@@ -20,7 +20,7 @@ $tags = $object->getContactGroups();
 		<div class="inside">
 		<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold InfusionSoft', 'ihc');?></h2>
-                <p><?php _e('Synchronize your InfusionSoft contacts based on Tags. For each user status or Level a Tag is associated. ', 'ihc');?></p>
+                <p><?php _e('Synchronize your InfusionSoft contacts based on Tags. For each user status or Membership a Tag is associated. ', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_infusionSoft_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_infusionSoft_enabled');" <?php echo $checked;?> />
@@ -58,7 +58,7 @@ $tags = $object->getContactGroups();
 
 
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Step 4: Assign UMP levels to InfusionSoft Tags', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php _e('Step 4: Assign UMP Memberships to InfusionSoft Tags', 'ihc');?></h3>
 		<div class="inside">
 				<?php if ( $tags ):?>
 						<?php foreach ( $levels as $lid => $levelData ):?>

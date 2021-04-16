@@ -11,7 +11,6 @@ add_action('init', 'ihc_init', 50, 0);
 
 //FILTERS
 require IHC_PATH . 'public/filters.php';
-add_filter('the_content', 'ihc_print_message', 99);
 
 //STYLE AND SCRIPTS
 add_action('wp_enqueue_scripts', 'ihc_public_head');

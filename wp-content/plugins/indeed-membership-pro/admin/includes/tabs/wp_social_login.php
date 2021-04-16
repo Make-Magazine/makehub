@@ -78,7 +78,7 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 					<select name="ihc_wp_social_login_default_level">
 						<option value="-1" <?php if ($data['metas']['ihc_wp_social_login_default_level']==-1) echo 'selected';?> ><?php _e('None', 'ihc');?></option>
 						<?php
-							$levels = get_option('ihc_levels');
+							$levels = \Indeed\Ihc\Db\Memberships::getAll();
 							if ($levels && count($levels)){
 								foreach ($levels as $id=>$v){
 								?>

@@ -7,6 +7,9 @@
 		<?php endif;?>
 		<?php if (!empty($data['listing_items'])) : ?>
 			<form action="" method="post" id="form_offers">
+
+				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+				
 				<div class="uap-offer-items-wrap">
 					<?php foreach ($data['listing_items'] as $arr) : ?>
 						<?php

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitf9bc6439186adcf7670425db90fd383a
+class ComposerStaticInit1b2cab1f0f7acf7923a366b31a1bde65
 {
     public static $prefixLengthsPsr4 = array (
         'M' => 
@@ -29,6 +29,7 @@ class ComposerStaticInitf9bc6439186adcf7670425db90fd383a
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'FlorianBrinkmann\\LazyLoadResponsiveImages\\Helpers' => __DIR__ . '/../..' . '/src/Helpers.php',
         'FlorianBrinkmann\\LazyLoadResponsiveImages\\Plugin' => __DIR__ . '/../..' . '/src/Plugin.php',
         'FlorianBrinkmann\\LazyLoadResponsiveImages\\Settings' => __DIR__ . '/../..' . '/src/Settings.php',
@@ -57,9 +58,9 @@ class ComposerStaticInitf9bc6439186adcf7670425db90fd383a
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitf9bc6439186adcf7670425db90fd383a::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitf9bc6439186adcf7670425db90fd383a::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitf9bc6439186adcf7670425db90fd383a::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit1b2cab1f0f7acf7923a366b31a1bde65::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit1b2cab1f0f7acf7923a366b31a1bde65::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit1b2cab1f0f7acf7923a366b31a1bde65::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -57,6 +57,11 @@ function learndash_elementor_show_topic_content_listing( $atts = array() ) {
 			$previous_topic_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $topic_post ), $topic_id, $user_id );
 			/** This filter is documented in includes/class-ld-cpt-instance.php */
 			$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $lesson_post ), $lesson_post->ID, $user_id );
+
+			if ( learndash_is_sample( $lesson_post ) ) {
+				$previous_lesson_completed = true;
+				$previous_topic_completed  = true;
+			}
 		}
 		$show_content = ( $previous_topic_completed && $previous_lesson_completed );
 

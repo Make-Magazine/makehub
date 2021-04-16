@@ -51,7 +51,7 @@ jQuery( document ).ready( function(){
 					<div class="ihc-top-levels">
 						<?php foreach ($data['levels'] as $lid => $level):?>
 							<?php
-				    			$time_arr = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $lid);
+				    			$time_arr = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription($this->current_user->ID, $lid);
 						    	$is_expired_class = '';
 									if ( !isset( $time_arr['expire_time'] ) ){
 											$time_arr['expire_time'] = '';

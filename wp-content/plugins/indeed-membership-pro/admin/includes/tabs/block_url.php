@@ -1,6 +1,7 @@
 <?php
 	$posible_values = array('all'=> __('All', 'ihc'), 'reg'=> __('Registered Users', 'ihc'), 'unreg'=> __('Unregistered Users', 'ihc') );
-	$levels = get_option('ihc_levels');
+	
+	$levels = \Indeed\Ihc\Db\Memberships::getAll();
 	if($levels){
 		foreach($levels as $id=>$level){
 			$posible_values[$id] = $level['name'];

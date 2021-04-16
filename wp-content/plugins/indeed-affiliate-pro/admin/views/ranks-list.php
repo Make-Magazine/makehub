@@ -34,7 +34,7 @@
 										<div id="rank_<?php echo $arr->id;?>" style="visibility: hidden;">
 											<a href="<?php echo $data['url-add_edit'] . '&id=' . $arr->id;?>"><?php _e('Edit', 'uap');?></a>
 											|
-											<a onclick="uapDeleteFromTable(<?php echo $arr->id;?>, 'Rank', '#delete_rank_id', '#form_ranks');" href="javascript:return false;" style="color: red;"><?php _e('Delete', 'uap');?></a>
+											<span class="uap-js-delete-ranks uap-delete-span" data-id="<?php echo $arr->id;?>" ><?php _e('Delete', 'uap');?></span>
 										</div>
 									</td>
 									<td><?php
@@ -56,9 +56,11 @@
 										for ($i=1; $i<=$achieve['i']; $i++):?>
 											<div class="uap-admin-listing-ranks-achieve">
 												<div><strong><?php echo $data['achieve_types'][$achieve['type_' . $i]];?></strong></div>
-												<div><?php echo __('From: ', 'uap') . $achieve['value_' . $i];
+												<div><?php echo __('From: ', 'uap');
 													if ($achieve['type_' . $i]=='total_amount'){
-														echo ' ' . $this->amount_type_list['flat'];
+															echo uap_format_price_and_currency( $this->amount_type_list['flat'], $achieve['value_' . $i] );
+													} else {
+															echo $achieve['value_' . $i];
 													}
 													?></div>
 											</div>
@@ -94,3 +96,44 @@
 
 
 </div><!-- end of uap-dashboard-wrap -->
+
+<script>
+jQuery( '.uap-js-delete-ranks' ).on( 'click', function(){
+		var rankId = jQuery( this ).attr( 'data-id' );
+		swal({
+			title: "<?php _e( 'Are you sure that you want to delete this rank?', 'uap' );?>",
+			text: "",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "OK",
+			closeOnConfirm: true
+		},
+		function(){
+				jQuery.ajax({
+						type : 'post',
+						url : decodeURI( window.uap_url )+'/wp-admin/admin-ajax.php',
+						data : {
+											 action									: 'uap_admin_delete_ranks',
+											 id											:	rankId,
+											 uap_admin_forms_nonce	:	'<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>',
+									 },
+						success: function (response) {
+								if ( response == 'success' ){
+										location.reload();
+								} else {
+									swal({
+										title: response,
+										text: "",
+										type: "warning",
+										showCancelButton: false,
+										confirmButtonClass: "btn-danger",
+										confirmButtonText: "OK",
+										closeOnConfirm: true
+									});
+								}
+						}
+			 });
+	 });
+});
+</script>

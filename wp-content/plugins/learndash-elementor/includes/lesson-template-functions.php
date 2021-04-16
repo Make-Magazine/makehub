@@ -54,6 +54,10 @@ function learndash_elementor_show_lesson_content_listing( $atts = array() ) {
 			 * @param int     $user_id User ID.
 			 */
 			$previous_lesson_completed = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $lesson_post ), $lesson_id, $user_id );
+
+			if ( learndash_is_sample( $lesson_post ) ) {
+				$previous_lesson_completed = true;
+			}
 		}
 		$show_content = $previous_lesson_completed;
 

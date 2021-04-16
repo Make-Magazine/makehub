@@ -51,6 +51,13 @@ class Plugin {
 	protected $basename;
 
 	/**
+	 * URL to editor JS file.
+	 *
+	 * @var string
+	 */
+	protected $js_asset_url;
+
+	/**
 	 * Placeholder data uri for img src attributes.
 	 *
 	 * @link https://stackoverflow.com/a/13139830
@@ -83,6 +90,9 @@ class Plugin {
 
 		// Get the disabled classes and save in property.
 		$this->disabled_classes = $this->settings->get_disabled_classes();
+
+		// Disable core lazy loading.
+		add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 
 		// Add link to settings in the plugin list.
 		add_filter( 'plugin_action_links', array(
@@ -121,6 +131,9 @@ class Plugin {
 		} else {
 			// Filter markup of the_content() calls to modify media markup for lazy loading.
 			add_filter( 'the_content', array( $this, 'filter_markup' ), 10001 );
+
+			// Filter allowed html for posts to allow <noscript> tag.
+			add_filter( 'wp_kses_allowed_html', array( $this, 'wp_kses_allowed_html' ), 10, 2 );
 
 			// Filter markup of Text widget to modify media markup for lazy loading.
 			add_filter( 'widget_text', array( $this, 'filter_markup' ) );
@@ -207,15 +220,12 @@ class Plugin {
             'disable_html_ns' => true,
         ) );
 
-		// Preserve html entities, script tags and conditional IE comments.
+		// Preserve html entities and conditional IE comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php.
 		$content = preg_replace( '/&([a-zA-Z]*);/', 'lazy-loading-responsive-images-entity1-$1-end', $content );
 		$content = preg_replace( '/&#([0-9]*);/', 'lazy-loading-responsive-images-entity2-$1-end', $content );
 		$content = preg_replace( '/<!--\[([\w ]*)\]>/', '<!--[$1]>-->', $content );
 		$content = str_replace( '<![endif]-->', '<!--<![endif]-->', $content );
-		$content = str_replace( '<script>', '<!--<script>', $content );
-		$content = str_replace( '<script ', '<!--<script ', $content );
-		$content = str_replace( '</script>', '</script>-->', $content );
 
 		// Load the HTML.
 		$dom = $html5->loadHTML( $content );
@@ -277,6 +287,16 @@ class Plugin {
 				$is_modified = true;
 			}
 
+			if (
+				'input' === $node->tagName
+				&& $node->hasAttribute( 'type' )
+				&& $node->getAttribute( 'type' ) === 'image'
+				&& $node->hasAttribute( 'src' )
+			) {
+				$dom = $this->modify_input_markup( $node, $dom );
+				$is_modified = true;
+			}
+
 			if ( '1' === $this->settings->get_enable_for_iframes() && 'iframe' === $node->tagName ) {
 				$dom = $this->modify_iframe_markup( $node, $dom );
 				$is_modified = true;
@@ -315,16 +335,13 @@ class Plugin {
 			}
 		}
 
-		// Restore the entities and script tags.
+		// Restore the entities and conditional comments.
 		// @link https://github.com/ivopetkov/html5-dom-document-php/blob/9560a96f63a7cf236aa18b4f2fbd5aab4d756f68/src/HTML5DOMDocument.php#L343.
 		if ( strpos( $content, 'lazy-loading-responsive-images-entity') !== false || strpos( $content, '<!--<script' ) !== false ) {
 			$content = preg_replace('/lazy-loading-responsive-images-entity1-(.*?)-end/', '&$1;', $content );
 			$content = preg_replace('/lazy-loading-responsive-images-entity2-(.*?)-end/', '&#$1;', $content );
 			$content = preg_replace( '/<!--\[([\w ]*)\]>-->/', '<!--[$1]>', $content );
 			$content = str_replace( '<!--<![endif]-->', '<![endif]-->', $content );
-			$content = str_replace( '<!--<script>', '<script>', $content );
-			$content = str_replace( '<!--<script ', '<script ', $content );
-			$content = str_replace( '</script>-->', '</script>', $content );
 		}
 
 		return $content;
@@ -444,16 +461,6 @@ class Plugin {
 		// Set data-src value.
 		$img->setAttribute( 'data-src', $src );
 
-		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
-			// Get width and height.
-			$img_width  = $img->getAttribute( 'width' );
-			$img_height = $img->getAttribute( 'height' );
-
-			if ( '' !== $img_width && '' !== $img_height ) {
-				$img->setAttribute( 'data-aspectratio', "$img_width/$img_height" );
-			}
-		}
-
 		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
 			$img->setAttribute( 'loading', 'lazy' );
 		}
@@ -467,8 +474,78 @@ class Plugin {
 		// Set the class string.
 		$img->setAttribute( 'class', $classes );
 
+		// Get width and height.
+		$img_width  = $img->getAttribute( 'width' );
+		$img_height = $img->getAttribute( 'height' );
+
 		// Set data URI for src attribute.
+		if ( '' !== $img_width && '' !== $img_height ) {
+			// We have image width and height, we can set a inline SVG to prevent content jumps.
+			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$img_width}%20{$img_height}%22%3E%3C%2Fsvg%3E";
+			$img->setAttribute( 'src', $svg_placeholder );
+			if ( $img->hasAttribute( 'srcset' ) ) {
+				$img->setAttribute( 'srcset', "$svg_placeholder {$img_width}w" );
+			}
+
+			return $dom;
+		}
 		$img->setAttribute( 'src', $this->src_placeholder );
+
+		return $dom;
+	}
+
+	/**
+	 * Modifies input[type="image"] markup to enable lazy loading.
+	 *
+	 * @param \DOMNode     $node            The input dom node.
+	 * @param \DOMDocument $dom             \DOMDocument() object of the HTML.
+	 * @param boolean      $create_noscript Whether to create a noscript element for the input or not.
+	 *
+	 * @return \DOMDocument The updated DOM.
+	 */
+	public function modify_input_markup( $node, $dom, $create_noscript = true ) {
+		// Check if the element already has a data-src attribute (might be the case for
+		// plugins that bring their own lazy load functionality) and skip it to prevent conflicts.
+		if ( $node->hasAttribute( 'data-src' ) ) {
+			return $dom;
+		}
+
+		// Add noscript element.
+		if ( true === $create_noscript ) {
+			$dom = $this->add_noscript_element( $dom, $node );
+		}
+
+		// Get src value.
+		$src = $node->getAttribute( 'src' );
+
+		// Set data-src value.
+		$node->setAttribute( 'data-src', $src );
+
+		// Get the classes.
+		$classes = $node->getAttribute( 'class' );
+
+		// Add lazyload class.
+		$classes .= ' lazyload';
+
+		// Set the class string.
+		$node->setAttribute( 'class', $classes );
+
+		// Get width and height.
+		$node_width  = $node->getAttribute( 'width' );
+		$node_height = $node->getAttribute( 'height' );
+
+		// Set data URI for src attribute.
+		if ( '' !== $node_width && '' !== $node_height ) {
+			// We have image width and height, we can set a inline SVG to prevent content jumps.
+			$svg_placeholder = "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20{$node_width}%20{$node_height}%22%3E%3C%2Fsvg%3E";
+			$node->setAttribute( 'src', $svg_placeholder );
+			if ( $node->hasAttribute( 'srcset' ) ) {
+				$node->setAttribute( 'srcset', "$svg_placeholder {$node_width}w" );
+			}
+
+			return $dom;
+		}
+		$node->setAttribute( 'src', $this->src_placeholder );
 
 		return $dom;
 	}
@@ -687,10 +764,42 @@ class Plugin {
 		$noscript = $dom->createElement( 'noscript' );
 		$noscript_node = $elem->parentNode->insertBefore( $noscript, $elem );
 
+		// Create copy of media element.
+		$noscript_media_fallback_elem = $elem->cloneNode( true );
+
+		/**
+		 * Array of HTML attributes that should be stripped from the fallback element in noscript.
+		 * 
+		 * @param array Array of elements to strip from fallback.
+		 */
+		$attrs_to_strip_from_fallback = (array) apply_filters( 'lazy_loader_attrs_to_strip_from_fallback_elem', [] );
+
+		foreach ( $attrs_to_strip_from_fallback as $attr_to_strip ) {
+			$noscript_media_fallback_elem->removeAttribute( $attr_to_strip );
+		}
+
 		// Add a copy of the media element to the noscript.
-		$noscript_node->appendChild( $elem->cloneNode( true ) );
+		$noscript_node->appendChild( $noscript_media_fallback_elem );
 
 		return $dom;
+	}
+
+	/**
+	 * Filter allowed html for posts.
+	 *
+	 * @param array  $allowedposttags Allowed post tags.
+	 * @param string $context         Context.
+	 *
+	 * @return array
+	 */
+	public function wp_kses_allowed_html( $allowedposttags, $context ) {
+		if ( 'post' !== $context ) {
+			return $allowedposttags;
+		}
+
+		$allowedposttags['noscript'] = [];
+
+		return $allowedposttags;
 	}
 
 	/**
@@ -709,23 +818,17 @@ class Plugin {
 		}
 
 		// Enqueue lazysizes.
-		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), false, true );
+		wp_enqueue_script( 'lazysizes', plugins_url( '/lazy-loading-responsive-images/js/lazysizes.min.js' ), array(), filemtime( plugin_dir_path( __FILE__ ) . '../js/lazysizes.min.js' ), true );
 
 		// Check if unveilhooks plugin should be loaded.
 		if ( '1' === $this->settings->get_load_unveilhooks_plugin() || '1' === $this->settings->get_enable_for_audios() || '1' === $this->settings->get_enable_for_videos() || '1' === $this->settings->get_enable_for_background_images() ) {
 			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), false, true );
-		}
-
-		// Check if unveilhooks plugin should be loaded.
-		if ( '1' === $this->settings->get_load_aspectratio_plugin() ) {
-			// Enqueue unveilhooks plugin.
-			wp_enqueue_script( 'lazysizes-aspectratio', plugins_url( '/lazy-loading-responsive-images/js/ls.aspectratio.min.js' ), array( 'lazysizes' ), false, true );
+			wp_enqueue_script( 'lazysizes-unveilhooks', plugins_url( '/lazy-loading-responsive-images/js/ls.unveilhooks.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.unveilhooks.min.js' ), true );
 		}
 
 		// Check if native loading plugin should be loaded.
 		if ( '1' === $this->settings->get_load_native_loading_plugin() ) {
-			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), false, true );
+			wp_enqueue_script( 'lazysizes-native-loading', plugins_url( '/lazy-loading-responsive-images/js/ls.native-loading.min.js' ), array( 'lazysizes' ), filemtime( plugin_dir_path( __FILE__ ) . '../js/ls.native-loading.min.js' ), true );
 		}
 
 		// Include custom lazysizes config if not empty.
@@ -822,9 +925,13 @@ class Plugin {
 	 */
 	public function enqueue_block_editor_assets() {
 		if ( isset( $_REQUEST['post'] ) && in_array( get_post_type( $_REQUEST['post'] ), $this->settings->get_disable_option_object_types() ) && post_type_supports( get_post_type( $_REQUEST['post'] ), 'custom-fields' ) ) {
-			$file_data  = get_file_data( __FILE__, array( 'v' => 'Version' ) );
-			$assets_url = trailingslashit( plugin_dir_url( __FILE__ ) );
-			wp_enqueue_script( 'lazy-loading-responsive-images-functions', plugins_url( '/lazy-loading-responsive-images/js/functions.js' ), array( 'wp-blocks', 'wp-element', 'wp-edit-post' ), $file_data['v'] );
+			$script_asset_file = require( __DIR__ . '/../js/build/functions.asset.php' );
+			wp_enqueue_script(
+				'lazy-loading-responsive-images-functions',
+				$this->js_asset_url,
+				$script_asset_file['dependencies'],
+				$script_asset_file['version']
+			);
 		}
 	}
 
@@ -842,6 +949,15 @@ class Plugin {
 	 */
 	public function set_basename( $basename ) {
 		$this->basename = $basename;
+	}
+
+	/**
+	 * Sets plugin basename.
+	 *
+	 * @param string $basename The plugin basename.
+	 */
+	public function set_js_asset_url( $js_asset_url ) {
+		$this->js_asset_url = $js_asset_url;
 	}
 
 	/**

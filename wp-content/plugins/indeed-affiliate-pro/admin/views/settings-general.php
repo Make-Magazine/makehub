@@ -1,5 +1,8 @@
 <div class="uap-wrapper">
 <form action="" method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 <div class="uap-stuffbox">
 	<h3 class="uap-h3"><?php _e('General Settings', 'uap');?></h3>
 	<div class="inside">
@@ -68,7 +71,7 @@ Do not enter a link from a different website.', 'uap');?></p>
 				<div class="col-xs-4">
 				<p class="uap-labels-special"><?php _e('Referral Format:', 'uap');?></p>
 				<select name="uap_default_ref_format" class="form-control m-bot15"><?php
-				$referral_format = array('id' => 'Referral ID', 'username'=>'UserName');
+				$referral_format = array('id' => 'Affiliate ID', 'username'=>'UserName');
 				foreach ($referral_format as $k=>$v){
 					$selected = ($data['metas']['uap_default_ref_format']==$k) ? 'selected' : '';
 					?>
@@ -80,6 +83,21 @@ Do not enter a link from a different website.', 'uap');?></p>
 				</div>
 			</div>
 		</div>
+
+		<div class="uap-inside-item">
+			<div class="row">
+				<div class="col-xs-4">
+						<p class="uap-labels-special"><?php _e('Search into URL for both referral format:', 'uap');?></p>
+						<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<?php $checked = ($data['metas']['uap_search_into_url_for_affid_or_username']) ? 'checked' : '';?>
+							<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_search_into_url_for_affid_or_username');" <?php echo $checked;?> />
+							<div class="switch" style="display:inline-block;"></div>
+						</label>
+						<input type="hidden" name="uap_search_into_url_for_affid_or_username" value="<?php echo $data['metas']['uap_search_into_url_for_affid_or_username'];?>" id="uap_search_into_url_for_affid_or_username" />
+				</div>
+			</div>
+		</div>
+
 		<div class="uap-inside-item">
 			<div class="row">
 				<div class="col-xs-4">
@@ -92,6 +110,34 @@ Do not enter a link from a different website.', 'uap');?></p>
 				</div>
 			</div>
 		</div>
+		<?php if ( is_multisite() ){?>
+		<div class="uap-inside-item">
+			<div class="row">
+				<div class="col-xs-4">
+						<p class="uap-labels-special"><?php _e('Cookie Sharing over all WP MultiSites', 'uap');?></p>
+						<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<?php $checked = ($data['metas']['uap_cookie_sharing']) ? 'checked' : '';?>
+							<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_cookie_sharing');" <?php echo $checked;?> />
+							<div class="switch" style="display:inline-block;"></div>
+						</label>
+						<input type="hidden" name="uap_cookie_sharing" value="<?php echo $data['metas']['uap_cookie_sharing'];?>" id="uap_cookie_sharing" />
+				</div>
+			</div>
+		</div>
+	<?php }?>
+	<div class="uap-line-break"></div>
+	<div class="uap-inside-item">
+		<div class="row">
+			<div class="col-xs-4">
+			<h3><?php _e('Referral URL Blacklist', 'uap');?></h3>
+			<br/>
+			<p><?php _e('If you wish to block specific affiliates’ websites from generating referrals for any reason, you can do it by placing here their website urls. Place one URL per line.', 'uap');?></p>
+				<div class="form-group">
+					<textarea type="text" class="form-control"  name="uap_blocked_referers"><?php echo $data['metas']['uap_blocked_referers'];?></textarea>
+				</div>
+			</div>
+		</div>
+	</div>
 		<div class="uap-line-break"></div>
 		<div class="uap-inside-item">
 			<div class="row">
@@ -134,6 +180,20 @@ Do not enter a link from a different website.', 'uap');?></p>
 							}
 						?></select>
 					</div>
+					<div class="uap-form-line">
+						<span class="uap-labels-special"><?php _e('Thousands Separator', 'uap');?></span>
+						<input type="text" value="<?php echo $data['metas']['uap_thousands_separator'];?>" name="uap_thousands_separator" class="form-control" />
+					</div>
+
+					<div class="uap-form-line">
+						<span class="uap-labels-special"><?php _e('Decimals Separator', 'uap');?></span>
+						<input type="text" value="<?php echo $data['metas']['uap_decimals_separator'];?>" name="uap_decimals_separator" class="form-control" />
+					</div>
+
+					<div class="uap-form-line">
+						<span class="uap-labels-special"><?php _e('Number of Decimals', 'uap');?></span>
+						<input type="number" min="0" value="<?php echo $data['metas']['uap_num_of_decimals'];?>" name="uap_num_of_decimals" class="form-control" />
+					</div>
 
 					<div class="uap-form-line">
 						<span class="uap-labels-special"><?php _e('Exclude Shipping', 'uap');?></span>
@@ -160,6 +220,29 @@ Do not enter a link from a different website.', 'uap');?></p>
 		</div>
 
 		<div class="uap-line-break"></div>
+
+		<div class="uap-inside-item">
+			<div class="row">
+				<div class="col-xs-6">
+					<h3><?php _e('Default Country', 'uap');?></h3>
+					<p><?php _e('Choose a default country for Affiliates submission form. If none is chosen default WordPress Locale will be used instead', 'uap');?></p>
+					<div class="uap-form-line">
+							<select name="uap_defaultcountry" class="form-control m-bot15">
+							<option value="" >....</option>
+							<?php
+							$types = uap_get_countries();
+							foreach ($types as $key=>$value){
+								$key = strtolower($key);
+								$selected = ($key==$data['metas']['uap_defaultcountry']) ? 'selected' : '';
+								?>
+								<option value="<?php echo $key?>" <?php echo $selected;?>><?php echo $value;?></option>
+								<?php
+							}
+						?></select>
+				</div>
+			</div>
+		</div>
+        <div class="uap-line-break"></div>
 
 		<div class="uap-inside-item">
 			<div class="row">
@@ -193,7 +276,7 @@ Do not enter a link from a different website.', 'uap');?></p>
 		</div>
 
 		<div class="uap-submit-form">
-			<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+			<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 		</div>
 	</div>
 </div>

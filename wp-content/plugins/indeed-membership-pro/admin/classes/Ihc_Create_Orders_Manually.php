@@ -36,8 +36,16 @@ class Ihc_Create_Orders_Manually{
             return;
         }
 
-        ihc_handle_levels_assign($uid, $this->_post_data['lid']);
-        
+        \Indeed\Ihc\UserSubscriptions::assign( $uid, $this->_post_data['lid'] );
+
+        $orderObject = new \Indeed\Ihc\Db\Orders();
+    		$orderData = $_POST;
+        $orderData['uid'] = $uid;
+        $orderData['status'] = 'pending';
+        $orderData['extra_fields'] = [];
+        $orderData['automated_payment'] = 1;
+    		$order_id = $orderObject->setData( $orderData )->save();
+        /*
         $order_id = ihc_insert_update_order($uid,
                                             $this->_post_data['lid'],
                                             $this->_post_data['amount_value'],
@@ -46,6 +54,7 @@ class Ihc_Create_Orders_Manually{
                                             array(),
                                             $this->_post_data['amount_type']
         );
+        */
 
         if ($order_id){
             $this->_status = 1;

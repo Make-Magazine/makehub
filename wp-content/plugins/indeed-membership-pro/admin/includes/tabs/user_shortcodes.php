@@ -71,7 +71,7 @@
 	</h3>
 	<div class="inside">
 		<?php
-		$levels = get_option('ihc_levels');
+		$levels = \Indeed\Ihc\Db\Memberships::getAll();
 		$levels = ihc_reorder_arr($levels);
 		if ($levels && count($levels)){
 			?>

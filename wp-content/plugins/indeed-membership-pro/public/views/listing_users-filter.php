@@ -198,11 +198,15 @@
 				$end_id = 'iump_end_' . $field['name'];
 				if (isset($_GET[$field['name']]) && isset($_GET[$field['name']][0])){
 					$field['values']['min'] = $_GET[$field['name']][0];
-					$min_value = $_GET[$field['name']][0];;
+					$min_value = $_GET[$field['name']][0];
+					$min_value = filter_var( $min_value, FILTER_SANITIZE_STRING );
+					$min_value = preg_replace( "([^0-9-])", '', $min_value );
 				}
 				if (isset($_GET[$field['name']]) && isset($_GET[$field['name']][1])){
 					$field['values']['max'] = $_GET[$field['name']][1];
 					$max_value = $_GET[$field['name']][1];
+					$max_value = filter_var( $max_value, FILTER_SANITIZE_STRING );
+					$max_value = preg_replace( "([^0-9-])", '', $max_value );
 				}
 				?>
 				<script>

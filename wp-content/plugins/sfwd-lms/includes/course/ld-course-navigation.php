@@ -460,7 +460,7 @@ function learndash_get_global_quiz_list( $id = null ) {
 	$course_id = learndash_get_course_id( $id );
 	if ( ! empty( $course_id ) ) {
 		if ( ( defined( 'LEARNDASH_COURSE_FUNCTIONS_LEGACY' ) ) && ( true === LEARNDASH_COURSE_FUNCTIONS_LEGACY ) ) {
-			return learndash_get_global_quiz_list( $id );
+			return learndash_get_global_quiz_list_legacy( $id );
 		}
 
 		$quizzes = learndash_course_get_quizzes( $course_id, $course_id );

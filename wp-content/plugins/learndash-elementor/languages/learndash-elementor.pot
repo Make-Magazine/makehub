@@ -1,15 +1,15 @@
-# Copyright (C) 2020 LearnDash
+# Copyright (C) 2021 LearnDash
 # This file is distributed under the same license as the LearnDash LMS - Elementor plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LearnDash LMS - Elementor 1.0.2\n"
+"Project-Id-Version: LearnDash LMS - Elementor 1.0.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/learndash-elementor\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-09-17T11:35:56+00:00\n"
+"POT-Creation-Date: 2021-01-06T15:58:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: learndash-elementor\n"
@@ -192,7 +192,7 @@ msgstr ""
 #: elementor-widgets/ld_course_infobar.php:765
 #: elementor-widgets/ld_course_infobar.php:875
 #: elementor-widgets/ld_course_list.php:389
-#: elementor-widgets/ld_lesson_list.php:355
+#: elementor-widgets/ld_lesson_list.php:357
 #: elementor-widgets/ld_login.php:230
 #: elementor-widgets/ld_login.php:274
 #: elementor-widgets/ld_profile.php:175
@@ -205,7 +205,7 @@ msgstr ""
 #: elementor-widgets/ld_profile.php:838
 #: elementor-widgets/ld_quiz.php:171
 #: elementor-widgets/ld_quiz_list.php:404
-#: elementor-widgets/ld_topic_list.php:377
+#: elementor-widgets/ld_topic_list.php:379
 msgid "Background Color"
 msgstr ""
 
@@ -331,10 +331,10 @@ msgstr ""
 
 #: elementor-widgets/ld_course_content.php:263
 #: elementor-widgets/ld_course_list.php:369
-#: elementor-widgets/ld_lesson_list.php:335
+#: elementor-widgets/ld_lesson_list.php:337
 #: elementor-widgets/ld_profile.php:343
 #: elementor-widgets/ld_quiz_list.php:384
-#: elementor-widgets/ld_topic_list.php:357
+#: elementor-widgets/ld_topic_list.php:359
 msgid "Row Item"
 msgstr ""
 
@@ -345,11 +345,11 @@ msgstr ""
 
 #: elementor-widgets/ld_course_content.php:312
 #: elementor-widgets/ld_course_list.php:377
-#: elementor-widgets/ld_lesson_list.php:343
+#: elementor-widgets/ld_lesson_list.php:345
 #: elementor-widgets/ld_profile.php:384
 #: elementor-widgets/ld_profile.php:478
 #: elementor-widgets/ld_quiz_list.php:392
-#: elementor-widgets/ld_topic_list.php:365
+#: elementor-widgets/ld_topic_list.php:367
 msgid "Title Color"
 msgstr ""
 
@@ -661,16 +661,13 @@ msgid "Show Grid"
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:193
-#: elementor-widgets/ld_lesson_list.php:159
-#: elementor-widgets/ld_quiz_list.php:204
-#: elementor-widgets/ld_topic_list.php:181
 msgid "Show Progress Bar"
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:202
-#: elementor-widgets/ld_lesson_list.php:168
+#: elementor-widgets/ld_lesson_list.php:170
 #: elementor-widgets/ld_quiz_list.php:213
-#: elementor-widgets/ld_topic_list.php:190
+#: elementor-widgets/ld_topic_list.php:192
 msgid "Columns"
 msgstr ""
 
@@ -711,22 +708,22 @@ msgid "shows %s with mentioned LearnDash tag."
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:300
-#: elementor-widgets/ld_lesson_list.php:266
+#: elementor-widgets/ld_lesson_list.php:268
 #: elementor-widgets/ld_quiz_list.php:313
-#: elementor-widgets/ld_topic_list.php:288
+#: elementor-widgets/ld_topic_list.php:290
 msgid "WordPress Taxonomies"
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:308
-#: elementor-widgets/ld_lesson_list.php:274
-#: elementor-widgets/ld_topic_list.php:296
+#: elementor-widgets/ld_lesson_list.php:276
+#: elementor-widgets/ld_topic_list.php:298
 msgid "Show WordPress Category Selector"
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:317
-#: elementor-widgets/ld_lesson_list.php:283
+#: elementor-widgets/ld_lesson_list.php:285
 #: elementor-widgets/ld_quiz_list.php:332
-#: elementor-widgets/ld_topic_list.php:305
+#: elementor-widgets/ld_topic_list.php:307
 msgid "Category"
 msgstr ""
 
@@ -737,9 +734,9 @@ msgid "shows %s with mentioned WordPress category."
 msgstr ""
 
 #: elementor-widgets/ld_course_list.php:341
-#: elementor-widgets/ld_lesson_list.php:307
+#: elementor-widgets/ld_lesson_list.php:309
 #: elementor-widgets/ld_quiz_list.php:356
-#: elementor-widgets/ld_topic_list.php:329
+#: elementor-widgets/ld_topic_list.php:331
 msgid "Tag"
 msgstr ""
 
@@ -779,49 +776,49 @@ msgid "%s per page"
 msgstr ""
 
 #. translators: placeholder: Lesson.
-#: elementor-widgets/ld_lesson_list.php:184
+#: elementor-widgets/ld_lesson_list.php:186
 msgctxt "placeholder: Lesson"
 msgid "%s Taxonomies"
 msgstr ""
 
 #. translators: placeholder: Lesson.
-#: elementor-widgets/ld_lesson_list.php:196
+#: elementor-widgets/ld_lesson_list.php:198
 msgctxt "placeholder: Lesson"
 msgid "Show %s Category Selector"
 msgstr ""
 
 #. translators: placeholder: Lesson.
-#: elementor-widgets/ld_lesson_list.php:209
+#: elementor-widgets/ld_lesson_list.php:211
 msgctxt "placeholder: Lesson"
 msgid "%s Category"
 msgstr ""
 
 #. translators: placeholder: Lessons.
-#: elementor-widgets/ld_lesson_list.php:215
+#: elementor-widgets/ld_lesson_list.php:217
 msgctxt "placeholder: Lessons"
 msgid "shows %s with mentioned LearnDash category."
 msgstr ""
 
 #. translators: placeholder: Lesson.
-#: elementor-widgets/ld_lesson_list.php:237
+#: elementor-widgets/ld_lesson_list.php:239
 msgctxt "placeholder: Lesson"
 msgid "%s Tag"
 msgstr ""
 
 #. translators: placeholder: Lessons.
-#: elementor-widgets/ld_lesson_list.php:243
+#: elementor-widgets/ld_lesson_list.php:245
 msgctxt "placeholder: Lessons"
 msgid "shows %s with mentioned LearnDash tag."
 msgstr ""
 
 #. translators: placeholder: Lessons.
-#: elementor-widgets/ld_lesson_list.php:286
+#: elementor-widgets/ld_lesson_list.php:288
 msgctxt "placeholder: Lessons"
 msgid "shows %s with mentioned WordPress category."
 msgstr ""
 
 #. translators: placeholder: Lessons.
-#: elementor-widgets/ld_lesson_list.php:310
+#: elementor-widgets/ld_lesson_list.php:312
 msgctxt "placeholder: Lessons"
 msgid "shows %s with mentioned WordPress tag."
 msgstr ""
@@ -1176,49 +1173,49 @@ msgid "%s per page"
 msgstr ""
 
 #. translators: placeholder: Topic.
-#: elementor-widgets/ld_topic_list.php:206
+#: elementor-widgets/ld_topic_list.php:208
 msgctxt "placeholder: Topic"
 msgid "%s Taxonomies"
 msgstr ""
 
 #. translators: placeholder: Topic.
-#: elementor-widgets/ld_topic_list.php:218
+#: elementor-widgets/ld_topic_list.php:220
 msgctxt "placeholder: Topic"
 msgid "Show %s Category Selector"
 msgstr ""
 
 #. translators: placeholder: Topic.
-#: elementor-widgets/ld_topic_list.php:231
+#: elementor-widgets/ld_topic_list.php:233
 msgctxt "placeholder: Topic"
 msgid "%s Category"
 msgstr ""
 
 #. translators: placeholder: Topics.
-#: elementor-widgets/ld_topic_list.php:237
+#: elementor-widgets/ld_topic_list.php:239
 msgctxt "placeholder: Topics"
 msgid "shows %s with mentioned LearnDash category."
 msgstr ""
 
 #. translators: placeholder: Topic.
-#: elementor-widgets/ld_topic_list.php:259
+#: elementor-widgets/ld_topic_list.php:261
 msgctxt "placeholder: Topic"
 msgid "%s Tag"
 msgstr ""
 
 #. translators: placeholder: Topics.
-#: elementor-widgets/ld_topic_list.php:265
+#: elementor-widgets/ld_topic_list.php:267
 msgctxt "placeholder: Topics"
 msgid "shows %s with mentioned LearnDash tag."
 msgstr ""
 
 #. translators: placeholder: Topics.
-#: elementor-widgets/ld_topic_list.php:308
+#: elementor-widgets/ld_topic_list.php:310
 msgctxt "placeholder: Topics"
 msgid "shows %s with mentioned WordPress category."
 msgstr ""
 
 #. translators: placeholder: Topics.
-#: elementor-widgets/ld_topic_list.php:332
+#: elementor-widgets/ld_topic_list.php:334
 msgctxt "placeholder: Topics"
 msgid "shows %s with mentioned WordPress tag."
 msgstr ""
@@ -1261,6 +1258,6 @@ msgstr ""
 msgid "LearnDash Elements"
 msgstr ""
 
-#: learndash-elementor.php:331
+#: learndash-elementor.php:332
 msgid "LearnDash LMS Elementor Add-on requires the following plugin(s) be active:"
 msgstr ""

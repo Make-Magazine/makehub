@@ -1,10 +1,10 @@
 === Lazy Loader ===
-Contributors: FlorianBrinkmann, MarcDK
+Contributors: FlorianBrinkmann
 Donate link: https://www.paypal.me/flobrinkmann
 Tags: lazysizes, lazy loading, performance, images
 Requires at least: 4.9.8
-Tested up to: 5.4
-Stable tag: 6.0.1
+Tested up to: 5.7
+Stable tag: 8.1.0
 Requires PHP: 7.0
 
 == Description ==
@@ -33,7 +33,6 @@ Lazy loads (without the need of any manually modifications):
 * Enable lazy loading for the poster frame of video elements.
 * Enable lazy loading for audio elements.
 * Enable lazy loading for inline background images.
-* Include [lazysizes aspectratio plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/aspectratio). This plugin calculates the needed space for images before they are loaded. That avoids content jumping when the images are loaded and makes the lazy loading work with masonry grids.
 * Display a loading spinner.
 * Disable the plugin on specific posts/pages (this shows a checkbox in the edit view of all public post types (except attachments) to disable lazy loading for an entire post).
 * Process the complete markup of the site.
@@ -46,8 +45,6 @@ Lazy loads (without the need of any manually modifications):
 * Styles.
 
 The plugin adds a `noscript` element as fallback for disabled JavaScript.
-
-By default, the auto-modifying of the image markup does not work for images that are added using `wp_get_attachment_image()`, because there cannot be a `noscript` fallback added. You can enable the option to process the complete markup to make them work.
 
 You can disable lazy loading for elements with specific CSS classes by defining them via the plugin settings (*Settings* › *Media* › *Lazy Loader options*). Or use the `skip-lazy` class or the `data-skip-lazy` attribute. `skip-lazy` and `data-skip-lazy` also work on wrapper elements to exclude the wrapper and its children from being processed.
 
@@ -106,6 +103,84 @@ The CSS from the example are the default styles that are used by the plugin (wit
 There is a textarea in the plugin settings where you can insert custom settings for the lazysizes config.
 
 == Changelog ==
+
+= 8.1.0 – 29.03.2021 =
+
+**Added**
+
+- Support for input elements of type `image`.
+
+= 8.0.0 – 22.03.2021 =
+
+**Removed**
+
+- Processing of `wp_get_attachment_image`, introduced in 7.2.0. I just noticed that processing that filter by default may break cases where a wrapper element has the `skip-lazy` class to disable lazy loading for contained media elements. Lazy Loader is not aware of this when processing `wp_get_attachment_image`, because it cannot check the parent elements. If you want to process that filter with Lazy Loader, you can enter it in the settings field for additional filters.
+
+= 7.2.3 – 17.03.2021 =
+
+**Fixed**
+
+- Stop processing embeds, because the lazysizes script is not loaded in the iframe and so the image in the embed can not be lazy loaded.
+
+= 7.2.2 – 17.03.2021 =
+
+**Fixed**
+
+- Duplicate images in Ultimate Addons for Elementor widget – thanks @kaggdesign.
+
+= 7.2.1 – 09.03.2021 =
+
+**Fixed**
+
+- Missing JS files in SVN repo.
+
+= 7.2.0 – 08.03.2021 =
+
+Tested with WordPress 5.7.
+
+**Added**
+
+* Process `wp_get_attachment_image` filter that was added in WordPress 5.6.
+
+**Changed**
+
+* Updated lazysizes and its plugins to 5.3.0.
+
+**Fixed**
+
+* Use same escaped version of SVG placeholder for `src` and `srcset` to fix a HTML validation error.
+
+= 7.1.0 – 04.11.2020 =
+
+**Changed**
+
+* Add timestamp of file modification as version query string to Lazy Loader JS files instead of WordPress version.
+
+**Fixed**
+
+* Problem with Lazy Loader being active in Oxygen Builder editor.
+
+= 7.0.0 – 10.08.2020 =
+
+If you depend on the aspectratio script of lazysizes somehow that came with the plugin, this release has a breaking change: it removes the aspectratio option (and the script) because it uses inline SVGs as placeholders that have the same effect without needing the aspectratio script.
+
+**Added**
+
+* Disable core lazy load funcionality that comes with WP 5.5.
+* `lazy_loader_attrs_to_strip_from_fallback_elem` filter that allows to provide an array of HTML attributes that should be stripped from the fallback element in the `noscript` element.
+
+**Changed**
+
+* If `width` and `height` attributes are present, the plugin uses an inline SVG to prevent content reflow – thanks to WP.org user lozula.
+* Updated lazysizes and its extensions to version 5.2.2.
+
+**Fixed**
+
+* Problems with inline HTML comments in `script` tags. To fix that. inline script elements are no longer wrapped in HTML comments during markup processing to hide them from the parser. That was necessary for `DOMDocument()` but is not needed when using `Masterminds\HTML5()` (what Lazy Loader does).
+
+**Removed**
+
+* Aspectratio option. The change with the inline SVG makes that obsolete.
 
 = 6.0.1 – 01.05.2020 =
 

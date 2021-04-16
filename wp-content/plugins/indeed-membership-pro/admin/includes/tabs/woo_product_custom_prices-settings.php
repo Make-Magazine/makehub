@@ -19,7 +19,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold WooCommerce Products Custom Prices', 'ihc');?></h2>
-                <p style="max-width:800px;"><?php _e('Provides special WooCommerce product prices for Users that have assigned a specific Subscription/Level', 'ihc');?></p>
+                <p style="max-width:800px;"><?php _e('Provides special WooCommerce product prices for Users that have assigned a specific Subscription/Membership', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_woo_product_custom_prices_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_woo_product_custom_prices_enabled');" <?php echo $checked;?> />

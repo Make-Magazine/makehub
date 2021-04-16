@@ -48,7 +48,7 @@ class Uap_Uap extends \Referral_Main{
 			$type = self::$checkout_referrals_select_settings['uap_checkout_select_referral_name'];
 			$data['affiliates'] = $indeed_db->get_affiliates_for_checkout_select($who, $type);
 			$data['require'] = '';
-			$data['class'] = 'iump-form-line-register';
+			$data['class'] = 'uap-form-line-register';
 			$data['select_class'] = '';
 			$data['input_class'] = '';
 			$data['require_on_input'] = '';

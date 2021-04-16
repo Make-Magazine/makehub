@@ -1,6 +1,6 @@
 <?php
-$levels = get_option('ihc_levels');
-$levels = array('reg' => array('label' => __('Users with no active level', 'ihc'))) + $levels;
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels = array('reg' => array('label' => __('Users with no active Membership', 'ihc'))) + $levels;
 //ihc_save_update_metas('level_restrict_payment');//save update metas
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_workflow_restrictions_timelimit', $_POST['ihc_workflow_restrictions_timelimit']);
@@ -42,14 +42,14 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="inside">
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold this WP WorkFlow Restrictions', 'ihc');?></h2>
-				<p><?php _e('You can restrict how many posts can be viewed, released and how many comments can be submitted for each level / subscription.', 'ihc');?></p>
+				<p><?php _e('You can restrict how many posts can be viewed, released and how many comments can be submitted for each membership / subscription.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_workflow_restrictions_on']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_workflow_restrictions_on');" <?php echo $checked;?> />
 					<div class="switch" style="display:inline-block;"></div>
 				</label>
 				<input type="hidden" name="ihc_workflow_restrictions_on" value="<?php echo $data['metas']['ihc_workflow_restrictions_on'];?>" id="ihc_workflow_restrictions_on" />
-			<p><?php _e('If a user has multiple levels assigned, it will be take in consideration the level with the highest number of views / submissions.', 'ihc');?></p>
+			<p><?php _e('If a user has multiple memberships assigned, it will be take in consideration the membership with the highest number of views / submissions.', 'ihc');?></p>
 			</div>
 
 			<div class="iump-form-line">
@@ -75,8 +75,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="ihc-stuffbox">
 			<h3 class="ihc-h3"><?php _e('Restrict Posts Views', 'ihc');?></h3>
 			<div class="inside">
-				<h4><?php _e('Levels Limits', 'ihc');?></h4>
-				<p><?php _e('Set for each level how many posts can be viewed by a user with that level. Leave blank for unlimited views.', 'ihc');?></p>
+				<h4><?php _e('Memberships Limits', 'ihc');?></h4>
+				<p><?php _e('Set for each membership how many posts can be viewed by a user with that membership. Leave blank for unlimited views.', 'ihc');?></p>
 				<div class="iump-form-line">
 						<div class="row" style="margin-left:0px;">
 							<div class="col-xs-5">
@@ -108,8 +108,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="ihc-stuffbox">
 			<h3 class="ihc-h3"><?php _e('Restrict Posts Created', 'ihc');?></h3>
 			<div class="inside">
-				<h4><?php _e('Levels Limits', 'ihc');?></h4>
-				<p><?php _e('Set for each level how many WP posts can be submitted by a user with that level. Leave blank for unlimited submissions.', 'ihc');?></p>
+				<h4><?php _e('Memberships Limits', 'ihc');?></h4>
+				<p><?php _e('Set for each membership how many WP posts can be submitted by a user with that membership. Leave blank for unlimited submissions.', 'ihc');?></p>
 				<p style="font-weight:bold;"><?php _e('The Submitted Posts that are not allowed to become Public because of this restriction will be set with a Pending Review status', 'ihc');?></p>
 
 				<div class="iump-form-line">
@@ -134,8 +134,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="ihc-stuffbox">
 			<h3 class="ihc-h3"><?php _e('Restrict Comments Created', 'ihc');?></h3>
 			<div class="inside">
-				<h4><?php _e('Levels Limits', 'ihc');?></h4>
-				<p><?php _e('Set for each level how many WP comments can be submitted by a user with that level. Leave blank for unlimited comments.', 'ihc');?></p>
+				<h4><?php _e('Memberships Limits', 'ihc');?></h4>
+				<p><?php _e('Set for each membership how many WP comments can be submitted by a user with that membership. Leave blank for unlimited comments.', 'ihc');?></p>
 
 				<div class="iump-form-line">
 					<?php foreach ($levels as $id=>$level):?>

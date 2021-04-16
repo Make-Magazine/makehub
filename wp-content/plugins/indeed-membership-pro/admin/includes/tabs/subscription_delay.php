@@ -1,5 +1,5 @@
 <?php
-$levels = get_option('ihc_levels');
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
 //ihc_save_update_metas('level_restrict_payment');//save update metas
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_subscription_delay_on', $_POST['ihc_subscription_delay_on']);
@@ -34,7 +34,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="inside">
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold Subscription Delay', 'ihc');?></h2>
-				<p><?php _e('Each level / subscription will become active after a custom delay time instead of when it was assigned. This option is available only when the level is assigned for the first time and not when user renews the subscription.', 'ihc');?></p>
+				<p><?php _e('Each membership / subscription will become active after a custom delay time instead of when it was assigned. This option is available only when the membership is assigned for the first time and not when user renews the subscription.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_subscription_delay_on']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_subscription_delay_on');" <?php echo $checked;?> />
@@ -54,7 +54,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 		<div class="ihc-stuffbox">
 			<h3 class="ihc-h3"><?php _e('Delay Time', 'ihc');?></h3>
 			<div class="inside">
-				<h4><?php _e('Levels', 'ihc');?></h4>
+				<h4><?php _e('Memberships', 'ihc');?></h4>
 				<div class="iump-form-line">
 					<?php foreach ($levels as $id=>$level):?>
 						<?php $value = (isset($data['metas']['ihc_subscription_delay_time'][$id])) ? $data['metas']['ihc_subscription_delay_time'][$id] : '';?>

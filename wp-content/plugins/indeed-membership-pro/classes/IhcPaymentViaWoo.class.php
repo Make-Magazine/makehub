@@ -55,7 +55,7 @@ class IhcPaymentViaWoo{
 		 * @return string
 		 */
 		global $woocommerce, $post;
-		$levels = get_option('ihc_levels');
+		$levels = \Indeed\Ihc\Db\Memberships::getAll();
 		@$current_value = get_post_meta(@$post->ID, 'iump_woo_product_level_relation', TRUE);
 		?>
 		<div id="iump_options" class="panel woocommerce_options_panel options_group" >
@@ -123,13 +123,14 @@ class IhcPaymentViaWoo{
 						}
 
 						/// save user id, level id relation
-						if (Ihc_Db::user_has_level($uid, $lid)){
-							if (!Ihc_Db::is_user_level_active($uid, $lid)){
-								ihc_do_complete_level_assign_from_ap($uid, $lid);
+						if ( \Indeed\Ihc\UserSubscriptions::userHasSubscription($uid, $lid ) ){
+							if ( !\Indeed\Ihc\UserSubscriptions::isActive( $uid, $lid ) ){
+								// user has subscription but is not active
+								\Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
 							}
-							/// else = user already has this level and it's active
 						} else {
-							ihc_do_complete_level_assign_from_ap($uid, $lid);
+							// user don't have this subscription
+							\Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
 						}
 						///ORDER
 						ihc_insert_update_order($uid, $lid, $amount, 'pending', 'woocommerce', $extra_order_info);
@@ -155,13 +156,11 @@ class IhcPaymentViaWoo{
 			 		if ($lid!==FALSE && $lid!=-1 && $lid!=''){
 			 			$product_id = $item['product_id'];
 						$level_data = ihc_get_level_by_id($lid);
-						ihc_update_user_level_expire($level_data, $lid, $uid);
-						ihc_send_user_notifications($uid, 'payment', $lid);//send notification to user
-						ihc_send_user_notifications($uid, 'admin_user_payment', $lid);//send notification to admin
+						\Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid, false, [ 'payment_gateway' => 'woocommerce' ] );
 						do_action( 'ihc_payment_completed', $uid, $lid );
 						// @description run on payment complete. @param user id (integer), level id (integer)
 
-						ihc_switch_role_for_user($uid);
+						//ihc_switch_role_for_user($uid);
 						$txn_id = 'woocommerce_order_' . $order_id . '_' . $lid;
 						$ihc_order_id = Ihc_Db::get_order_id_by_meta_value_and_meta_type('txn_id', $txn_id);
 						if ($ihc_order_id){

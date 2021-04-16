@@ -1,9 +1,3 @@
-<div class="ihc-subtab-menu">
-
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='orders') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=orders';?>"><?php _e('Orders', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='payments') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=payments';?>"><?php _e('Transactions', 'ihc');?></a>
-	<div class="ihc-clear"></div>
-</div>
 <?php
 echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
@@ -18,9 +12,6 @@ $table_name = $wpdb->prefix . 'indeed_members_payments';
 
 if (isset($_REQUEST['details_id'])){
 	?>
-	<div class="ihc-sortable-off" style="float:none; margin-bottom:15px;">
-		<a style="text-decoration:none;" href="<?php echo $url.'&tab=payments';?>"><?php _e('Back to Payment List', 'ihc');?></a>
-	</div>
 	<div class="ihc-stuffbox">
 	<h3><?php _e('Payment Details', 'ihc');?></h3>
 	<div class="inside">
@@ -56,7 +47,11 @@ if (isset($_REQUEST['details_id'])){
 							} else if (is_array($value)){
 									echo $key .' : ';
 									foreach ($value as $insideValue){
-											echo $insideValue , '<br/>';
+											if ( is_array( $insideValue ) ){
+													ihc_print_array_in_depth( $insideValue );
+											} else {
+												echo  $insideValue , '<br/>';
+											}
 									}
 									echo '<br/>';
 							}
@@ -416,5 +411,5 @@ $data_db = $wpdb->get_results($q);
 	}
 } // end of list all payments
 ?>
-</div>
+
 <?php

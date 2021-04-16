@@ -29,7 +29,6 @@ class Referral_Main{
 		}
 		self::$affiliate_id = apply_filters( 'uap_filter_affiliate_id', self::$affiliate_id );
 
-
 		self::$source = '';
 		self::$campaign = '';
 		self::$currency = get_option('uap_currency');
@@ -51,6 +50,8 @@ class Referral_Main{
 		 */
 		global $indeed_db;
 		$lifetime = get_option('uap_lifetime_commissions_enable');
+		self::$affiliate_id = apply_filters( 'uap_set_affiliate_id_filter', self::$affiliate_id );
+
 		if (empty(self::$affiliate_id) && empty($_COOKIE['uap_referral'])){ /// SEARCH INTO DB
 			if ($lifetime){
 			 	/// LIFETIME
@@ -67,7 +68,13 @@ class Referral_Main{
 			/// get affiliate id from cookie
 			$cookie_data = unserialize(stripslashes($_COOKIE['uap_referral']));
 			if (!empty($cookie_data['affiliate_id'])){
-				self::$affiliate_id = $cookie_data['affiliate_id'];
+				if ( get_option( 'uap_default_ref_format' ) == 'username' ){
+						$temporaryAffiliateId = $indeed_db->get_affiliate_id_by_username( $cookie_data['affiliate_id'] );
+				}
+				if ( empty( $temporaryAffiliateId ) ){
+						self::$affiliate_id = $cookie_data['affiliate_id'];
+				}
+
 				self::$campaign = (empty($cookie_data['campaign'])) ? '' : $cookie_data['campaign'];
 				self::$visit_id = (empty($cookie_data['visit_id'])) ? 0 : $cookie_data['visit_id'];
 			}
@@ -99,17 +106,22 @@ class Referral_Main{
 		global $indeed_db;
 		/// CHECK FOR OWN REFERRENCE
 		if (self::$affiliate_id && self::$user_id && $indeed_db->affiliate_get_id_by_uid(self::$user_id)==self::$affiliate_id){
+			$allowOwnRefference = true;
 			if (!get_option('uap_allow_own_referrence_enable')){
-				return FALSE;//own referrence not allowed
+					$allowOwnRefference = false;//own referrence not allowed
+			}
+			$allowOwnRefference = apply_filters( 'uap_allow_own_referrence_filter', $allowOwnRefference );
+			if ( !$allowOwnRefference ){
+					return false;
 			}
 		}
 		if (self::$affiliate_id && $indeed_db->is_affiliate_active(self::$affiliate_id)){
-			return TRUE;
+				return TRUE;
 		}
 		return FALSE;
 	}
 
-	protected function save_referral_unverified($args=array()){
+	public function save_referral_unverified($args=array()){ // protected
 		/*
 		 * UNVERIFIED STATUS
 		 * @param array
@@ -128,6 +140,8 @@ class Referral_Main{
 						'amount',
 						'currency',
 		);
+
+		$args = apply_filters( 'uap_public_filter_insert_referral_args', $args );
 
 		foreach ($keys as $key){
 			if (!isset($args[$key])){

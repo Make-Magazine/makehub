@@ -56,7 +56,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
       </div>
 
       <div class="iump-form-line">
-				<h4><?php _e('User get new Level', 'ihc');?></h4>
+				<h4><?php _e('User get new Membership', 'ihc');?></h4>
 
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_kissmetrics_events_user_get_level']) ? 'checked' : '';?>
@@ -102,7 +102,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
       </div>
 
   <div class="iump-form-line">
-      <h4><?php _e('Remove level from user', 'ihc');?></h4>
+      <h4><?php _e('Remove Membership from user', 'ihc');?></h4>
 
       <label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
           <?php $checked = ($data['metas']['ihc_kissmetrics_events_remove_user_level']) ? 'checked' : '';?>

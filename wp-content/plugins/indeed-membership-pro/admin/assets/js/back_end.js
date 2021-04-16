@@ -650,6 +650,7 @@ function ihcAccessPaymentType(v){
 	if(v !== 'unlimited'){
 		jQuery('#billind_rec_label').css('display', 'inline-block');
 		jQuery('#set_expired_level').css('display', 'block');
+		jQuery('#set_grace_period').css('display', 'block');
 	}
 
 	switch (v){
@@ -658,12 +659,14 @@ function ihcAccessPaymentType(v){
 			jQuery('#billing_type_1').css('display', 'inline-block');
 			jQuery('#billing_type_2').css('display', 'none');
 			jQuery('#regular_period_billing').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'none');
 			break;
 		case 'date_interval':
 			jQuery(arr[1]).css('display', 'block');
 			jQuery('#billing_type_1').css('display', 'inline-block');
 			jQuery('#billing_type_2').css('display', 'none');
 			jQuery('#regular_period_billing').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'none');
 			break;
 		case 'regular_period':
 			jQuery(arr[2]).css('display', 'block');
@@ -671,6 +674,7 @@ function ihcAccessPaymentType(v){
 			jQuery('#billing_type_1').css('display', 'none');
 			jQuery('#billing_type_2').css('display', 'inline-block');
 			jQuery('#trial_period_billing').css('display', 'inline-block');
+			jQuery('#set_cancel_level').css('display', 'block');
 			break;
 		case 'unlimited':
 			jQuery('#billing_type_1').css('display', 'none');
@@ -678,7 +682,18 @@ function ihcAccessPaymentType(v){
 			jQuery('#regular_period_billing').css('display', 'none');
 			jQuery('#trial_period_billing').css('display', 'none');
 			jQuery('#billind_rec_label').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'block');
+			jQuery('#set_cancel_level').css('display', 'none');
+			jQuery('#set_grace_period').css('display', 'none');
 			break;
+	}
+}
+
+function ihcAfterCancelAction(v){
+	if (v=='2'){
+		jQuery('#aftercancel_level').css('display', 'block');
+	} else {
+		jQuery('#aftercancel_level').css('display', 'none');
 	}
 }
 
@@ -841,6 +856,7 @@ function ihcChangeNotificationTemplate(){
 	        	console.log(o);
 	        	jQuery('#notification_subject').val(o.subject);
 	        	jQuery('#ihc_message').val(o.content);
+						jQuery('#ihc_notification_explanation').html(o.content);
 	        	jQuery( "#ihc_message_ifr" ).contents().find( '#tinymce' ).html(o.content);
 	        }
    });
@@ -1534,9 +1550,4 @@ jQuery(document).ready(function(){
 	jQuery('.ihc-admin-mobile-bttn').on('click', function(){
 		jQuery('.ihc-dashboard-menu-items').toggle();
 	});
-});
-
-jQuery(document).ready( function() {
-    var nonce = jQuery('meta[name="ump-admin-token"]').attr('content');
-    jQuery.ajaxSetup( { headers: {'X-CSRF-UMP-ADMIN-TOKEN': nonce }});
 });

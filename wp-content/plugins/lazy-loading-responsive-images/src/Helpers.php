@@ -130,6 +130,11 @@ class Helpers {
 			return false;
 		}
 
+		// Check if this content is embedded.
+		if ( is_embed() ) {
+			return false;
+		}
+
 		// Check if this is a request in the backend.
 		if ( $this->is_admin_request() ) {
 			return false;
@@ -137,6 +142,11 @@ class Helpers {
 
 		// Check for AMP page.
 		if ( $this->is_amp_page() ) {
+			return false;
+		}
+
+		// Check for Oxygen Builder mode.
+		if ( defined( 'SHOW_CT_BUILDER' ) ) {
 			return false;
 		}
 

@@ -3,129 +3,6 @@
 // update object @since 7.4
 $updateObject = new \Indeed\Ihc\Updates();
 
-add_action('init', 'ihc_admin_run_plugin_updates');
-function ihc_admin_run_plugin_updates(){
-	/*
-	 * Put here the updates from one version to another
-	 * @param none
-	 * @return none
-	 */
-	//==================== DB
-	Ihc_Db::create_tables();
-	Ihc_Db::update_tables_structure();
-
-
-
-	//==================== CRON JOBS
-	if (!wp_get_schedule( 'ihc_notifications_job')){
-		wp_schedule_event(time(), 'daily', 'ihc_notifications_job');
-	}
-	if (!wp_get_schedule( 'ihc_check_level_downgrade')){
-		wp_schedule_event(time(), 'hourly', 'ihc_check_level_downgrade');// twice daily
-	}
-	if (!wp_get_schedule( 'ihc_check_verify_email_status')){
-		wp_schedule_event(time(), 'daily', 'ihc_check_verify_email_status');
-	}
-	if (!wp_get_schedule('ihc_clean_security_table')){
-		wp_schedule_event(time(), 'daily', 'ihc_clean_security_table');
-	}
-	if (!wp_get_schedule('ihc_drip_content_notifications')){
-		wp_schedule_event(time(), 'daily', 'ihc_drip_content_notifications');
-	}
-
-	//==================== Register Fields
-	if (get_option('ihc_update_version13')===FALSE){
-
-		Ihc_Db::add_new_role();
-
-		/// REGISTER FIELDS
-		$data = get_option('ihc_user_fields');
-		if ($data){
-			require_once IHC_PATH . 'admin/includes/functions/register.php';
-			//////////////// AVATAR
-			if (ihc_array_value_exists($data, 'ihc_avatar', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_avatar', 'type'=>'upload_image', 'label'=>'Avatar');
-				ihc_save_user_field($field_data);
-			}
-			//////////////// COUPON
-			if (ihc_array_value_exists($data, 'ihc_coupon', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_coupon', 'type'=>'text', 'label'=>'Coupon');
-				ihc_save_user_field($field_data);
-			}
-			//////////////// SELECT PAYMENT
-			if (ihc_array_value_exists($data, 'payment_select', 'name')===FALSE){
-				$field_data = array('name'=>'payment_select', 'type'=>'payment_select', 'label'=>'Select Payment', 'theme'=>'ihc-select-payment-theme-1');
-				ihc_save_user_field($field_data);
-			}
-			//////////////// SOCIAL MEDIA
-			if (ihc_array_value_exists($data, 'ihc_social_media', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_social_media', 'type'=>'social_media', 'label'=>'-');
-				ihc_save_user_field($field_data);
-			}
-			//////// IHC_COUNTRY
-			if (ihc_array_value_exists($data, 'ihc_country', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_country', 'type'=>'ihc_country', 'label'=>'Country', 'native_wp' => 0);
-				ihc_save_user_field($field_data);
-			} else {
-				$temp_field_id = ihc_array_value_exists($data, 'ihc_country', 'name');
-				$field_data = array('name'=>'ihc_country', 'native_wp' => 0, 'id'=>$temp_field_id);
-				ihc_update_register_fields($field_data);
-			}
-			//////// ihc_invitation_code_field
-			if (ihc_array_value_exists($data, 'ihc_invitation_code_field', 'name')===FALSE){
-				$field_data = array('display_admin'=>0, 'display_public_reg'=>1, 'display_public_ap'=>0, 'name'=>'ihc_invitation_code_field', 'label'=>'Invitation Code', 'type'=>'ihc_invitation_code_field', 'native_wp' => 0, 'req' => 2, 'sublevel' => '');
-				ihc_save_user_field($field_data);
-			}
-			//////// IHC_STATE
-			if (ihc_array_value_exists($data, 'ihc_state', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_state', 'type'=>'ihc_state', 'label'=>'State');
-				ihc_save_user_field($field_data);
-			}
-			if (ihc_array_value_exists($data, 'ihc_dynamic_price', 'name')===FALSE){
-				$field_data = array('name'=>'ihc_dynamic_price', 'type'=>'ihc_dynamic_price', 'label'=>'Price');
-				ihc_save_user_field($field_data);
-			}
-
-			///////////// PASSWORD FIELD UPDATE
-			$register_arr = get_option('ihc_user_fields');
-			$key = ihc_array_value_exists($register_arr, 'pass1', 'name');
-			$update_arr = $register_arr[$key];
-			$update_arr['id'] = $key;
-			if ($update_arr['display_admin']==2){
-				$update_arr['display_admin'] = 1;
-			}
-			if ($update_arr['display_public_ap']==2){
-				$update_arr['display_public_ap'] = 1;
-			}
-			ihc_update_register_fields($update_arr);
-
-			$data = get_option('ihc_user_fields');
-			foreach ($data as $k => $v){
-				$new_data[$k] = $v;
-				if (isset($new_data[$k]['display'])){
-					$new_data[$k]['display_admin'] = $new_data[$k]['display'];
-					$new_data[$k]['display_public_reg'] = $new_data[$k]['display'];
-					$new_data[$k]['display_public_ap'] = $new_data[$k]['display'];
-					$new_data[$k]['display_on_modal'] = $new_data[$k]['display'];
-					unset($new_data[$k]['display']);
-				}
-				if (empty($new_data[$k]['sublabel'])){
-					$new_data[$k]['sublabel'] = '';
-				}
-			}
-			update_option('ihc_user_fields', $new_data);
-		}
-
-		/// NOTIFICATIONS
-		Ihc_Db::create_notifications();
-
-		//UPDATE STRIPE TRANSACTIONS
-		ihc_update_stripe_subscriptions();
-		update_option('ihc_update_version13', 1);//ihc_update_version
-	}
-
-}
-
 add_action('init', 'ihc_add_bttn_func');
 function ihc_add_bttn_func(){
 	/*
@@ -141,14 +18,22 @@ function ihc_add_bttn_func(){
 		$uid = get_current_user_id();
 		$role = '';
 		$user = new WP_User( $uid );
-		if ($user && !empty($user->roles) && !empty($user->roles[0]) && $user->roles[0]!='administrator'){
+		if ($user && !empty($user->roles) && !empty($user->roles[0]) && !in_array( 'administrator', $user->roles ) ){ // $user->roles[0]!='administrator'){
 			$allowed_roles = get_option('ihc_dashboard_allowed_roles');
 			if ($allowed_roles){
 				$roles = explode(',', $allowed_roles);
-				if ($roles && is_array($roles) && !in_array($user->roles[0], $roles)){
+				$show = false;
+				foreach ( $roles as $role ){
+						if ( !empty( $role ) && !empty( $user->roles ) && in_array( $role, $user->roles ) ){
+							$show = true;
+						}
+				}
+
+				if ( !$show ){
 					wp_redirect(home_url());
 					exit();
 				}
+
 			} else {
 					wp_redirect(home_url());
 					exit();
@@ -282,7 +167,7 @@ function ihc_menu() {
 }
 
 $ext_menu = 'ihc_manage';
-include_once plugin_dir_path(__FILE__) . 'extensions_plus/index.php';
+//include_once plugin_dir_path(__FILE__) . 'extensions_plus/index.php';
 
 
 
@@ -304,16 +189,13 @@ function ihc_head(){
 	wp_localize_script( 'ihc-back_end', 'ihc_site_url', get_site_url() );
 	//wp_enqueue_style( 'ihc_front_end_style', IHC_URL . 'assets/css/style.css' );
 
-	if ( !isset($_GET['page']) || $_GET['page']!='et_divi_options' && $_GET['page']!='et_support_center' ){
-		wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css');
-	}
 	wp_enqueue_script('jquery-ui-datepicker');
 
-	wp_enqueue_style( 'ihc_bootstrap-slider', IHC_URL . 'admin/assets/css/bootstrap-slider.css' );
-	wp_enqueue_script( 'ihc-bootstrap-slider', IHC_URL . 'admin/assets/js/bootstrap-slider.js' );
-
-
 	if (isset($_REQUEST['page']) && $_REQUEST['page']=='ihc_manage'){
+		wp_enqueue_style( 'ihc_jquery-ui.min.css', IHC_URL . 'admin/assets/css/jquery-ui.min.css');
+		wp_enqueue_style( 'ihc_bootstrap-slider', IHC_URL . 'admin/assets/css/bootstrap-slider.css' );
+		wp_enqueue_script( 'ihc-bootstrap-slider', IHC_URL . 'admin/assets/js/bootstrap-slider.js' );
+
 		if (!empty($_GET['tab']) && $_GET['tab']!='orders'){
 			wp_enqueue_style( 'ihc_bootstrap', IHC_URL . 'admin/assets/css/bootstrap.css' );
 		}
@@ -339,6 +221,9 @@ function ihc_head(){
 			wp_localize_script( 'ihc-back_end', 'ihcKeepData', get_option('ihc_keep_data_after_delete') );
 			wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js' );
 			wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css' );
+	}
+	if ( $pagenow == 'post.php' ){
+			wp_enqueue_style( 'ihc_templates_style', IHC_URL . 'assets/css/templates.min.css' );
 	}
 	wp_enqueue_script( 'ihc-back_end' );
 	wp_register_style( 'ihc_select2_style', IHC_URL . 'assets/css/select2.min.css' );
@@ -441,7 +326,7 @@ function ihc_ajax_template_popup_preview()
 			//get id
 			$arr = explode('_', esc_sql($_REQUEST['template']));
 			if(isset($arr[1]) && $arr[1]!=''){
-				include IHC_PATH . 'public/locker-layouts.php';
+				include IHC_PATH . 'public/layouts-locker.php';
 				echo ihc_print_locker_template($arr[1]);
 			}
 		}
@@ -487,7 +372,7 @@ function ihc_locker_preview_ajax()
 			  echo 0;
 			  die;
 		}
-		include IHC_PATH . 'public/locker-layouts.php';
+		include IHC_PATH . 'public/layouts-locker.php';
 		if (isset($_REQUEST['locker_id'])){
 			//ihc_print_locker_template(template id, meta array, preview)
 			if (isset($_REQUEST['popup_display']) && $_REQUEST['popup_display']){
@@ -607,7 +492,7 @@ function ihc_approve_user_email()
 			Ihc_User_Logs::write_log(__('E-mail address has become active for ', 'ihc') . $username, 'user_logs');
 
 			update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_verification_status', 1);
-			ihc_send_user_notifications(esc_sql($_REQUEST['uid']), 'email_check_success');//approve_account
+			do_action( 'ihc_action_approve_user_email', esc_sql($_REQUEST['uid']) );
 			echo 1;
 		}
 		die;
@@ -628,12 +513,11 @@ function ihc_reorder_levels()
 		$json = stripslashes($_REQUEST['json_data']);
 		$json_arr = json_decode($json);
 		$i = 0;
-		$data = get_option('ihc_levels');
 		foreach ($json_arr as $k){
-			$data[$k]['order'] = $i;
+			\Indeed\Ihc\Db\Memberships::setOrderForMembership( $k, $i );
+			//$data[$k]['order'] = $i;
 			$i++;
 		}
-		update_option('ihc_levels', $data);
 		die;
 }
 
@@ -671,7 +555,7 @@ function ihc_update_aweber()
 				echo 0;
 				die;
 		}
-		include_once IHC_PATH .'classes/email_services/aweber/aweber_api.php';
+		include_once IHC_PATH .'classes/services/email_services/aweber/aweber_api.php';
 		list($consumer_key, $consumer_secret, $access_key, $access_secret) = AWeberAPI::getDataFromAweberID( esc_sql($_REQUEST['auth_code']) );
 		update_option( 'ihc_aweber_consumer_key', $consumer_key );
 		update_option( 'ihc_aweber_consumer_secret', $consumer_secret );
@@ -762,353 +646,13 @@ function ihc_notification_templates_ajax()
 				die;
 		}
 		if (!empty($_REQUEST['type'])){
-			echo json_encode(ihc_return_notification_pattern(esc_sql($_REQUEST['type'])));
+			$notificationObject = new \Indeed\Ihc\Notifications();
+			$template = $notificationObject->getNotificationTemplate( esc_sql($_REQUEST['type']) );
+			echo json_encode( $template );
 		}
 		die;
 }
 
-/**
- * @param string
- * @return array
- */
-function ihc_return_notification_pattern($type='')
-{
-	 $template = array('subject'=>'', 'content'=>'');
-		switch ($type){
-			case 'register':
-$template['subject'] = '{blogname}: Welcome to {blogname}';
-$template['content'] = '<p>Hi {username},</p><br/>
-
-<p>Thanks for registering on {blogname}. Your account is now active.</p><br/>
-
-<p>To login please fill out your credentials on:<br/>
-{login_page}</p><br/>
-
-<p>Your Username: {username}</p><br/><br/>
-
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'review_request':
-$template['subject'] = '{blogname}: Welcome to {blogname}';
-$template['content'] = '<p>Hi {username},</p><br/>
-
-<p>Thanks for registering on {blogname}. Your account is waiting to be approved.</p><br/>
-
-<p>Once your Account is approved you can login using your credentials on:<br/>
-<a href="{login_page}">{login_page}</a></p><br/>
-
-<p>Your Username: {username}</p><br/><br/>
-
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'payment':
-				$template['subject'] = '{blogname}: Payment proceed';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>You have proceed a new Payment into your account on {blogname}.</p><br/><br/>
-
-
-<p>Thanks for your payment!</p>';
-				break;
-
-			case 'user_update':
-				$template['subject'] = '{blogname}: Your Account has been Updated';
-				$template['content'] = '<p>Hi {username},</p><br/>
-
-<p>Your Account has been Updated.</p><br/>
-
-<p>To visit your Profile page follow the next link:<br/>
-<a href="{account_page}">{account_page}</a></p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'before_expire':
-				$template['subject'] = '{blogname}: Your Subscription Expire';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>To update your Subscriptions, please, visit your Profile page on:<br/>
-<a href="{account_page}">{account_page}</a></p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-			case 'second_before_expire':
-				$template['subject'] = '{blogname}: Your Subscription Expire';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>To update your Subscriptions, please, visit your Profile page on:<br/>
-<a href="{account_page}">{account_page}</a></p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-			case 'third_before_expire':
-				$template['subject'] = '{blogname}: Your Subscription Expire';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your Subscription {current_level} is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>To update your Subscriptions, please, visit your Profile page on:<br/>
-<a href="{account_page}">{account_page}</a></p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-			case 'expire':
-				$template['subject'] = '{blogname}: Your Subscription has Expired';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your Subscription {current_level} has expired on {current_level_expire_date}.</p><br/>
-
-<p>To update your Subscriptions, please, visit your Profile page on:<br/>
-<a href="{account_page}">{account_page}</a></p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'email_check':
-				$template['subject'] = '{blogname}: Email Verification';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>You must confirm/validate your Email Account before logging in.</p><br/>
-
-<p>Please click on the following link to successfully activate your account:<br/>
-<a href="{verify_email_address_link}">click here</a></p><br/>
-
-<p>Have a nice day!</p><br/>';
-				break;
-
-			case 'email_check_success':
-				$template['subject'] = '{blogname}: Email Verification Successfully';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your account is now verified at {blogname}.</p><br/>
-
-<p>Have a nice day!</p><br/>';
-				break;
-
-			case 'reset_password_process':
-				$template['subject'] = '{blogname}: Reset Password request';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p></br>
-
-<p>You or someone else has requested to change password for your account: {username}</p></br>
-
-<p>To confirm this request click <a href="{password_reset_link}">here</a></p></br>
-
-<p>A new generated Password will be sent via Email next after the request was confirmed.</p>
-
-<p>If you did not request for a new password, please ignore this Email notification.</p>';
-				break;
-
-			case 'reset_password':
-				$template['subject'] = '{blogname}: Reset Password request';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p></br>
-
-<p>You or someone else has requested to change password for your account: {username}</p></br>
-
-<p>Your new Password is: <strong>{NEW_PASSWORD}</strong></p></br>
-
-<p>To update your Password once you are logged from your Profile Page:
-<a href="{account_page}">{account_page}</a></p></br>
-
-<p>If you did not request for a new password, please ignore this Email notification.</p>';
-				break;
-
-			case 'change_password':
-				$template['subject'] = '{blogname}: Your Password has been changed';
-				$template['content'] = '<p>Hi {first_name} {last_name},</p><br/>
-
-<p>Your Password has been changed.</p><br/>
-
-<p>To login please fill out your credentials on:<br/>
-<a href="{login_page}">{login_page}</a></p><br/>
-
-<p>Your Username: {username}</p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'delete_account':
-				$template['subject'] = '{blogname}: Your Account has been deleted';
-				$template['content'] = '<p>Hi {username},</p><br/>
-
-<p>Your account has been deleted from {blogname}.</p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'bank_transfer':
-					$template['subject'] = '{blogname}: Payment Inform';
-					$template['content'] = 'Hi {username},
-
-Please proceed the bank transfer payment for: {currency}{amount}
-
-<strong>Payment Details:</strong> Subscription {level_name} for {username} with Identification: {user_id}_{level_id}
-
-&nbsp;
-
-<strong>Bank Details:</strong>
-
-IBAN:xxxxxxxxxxxxxxxxxxxx
-
-Bank NAME';
-				break;
-
-			case 'approve_account':
-					$template['subject'] = '{blogname}: Your Account has been activated';
-					$template['content'] = '<p>Hi {username},</p><br/>
-
-<p>Your Account has been activated!</p><br/>
-
-<p>Have a nice day!</p>';
-				break;
-
-			case 'admin_user_register':
-				/// ADMIN - USER REGISTER
-					$template['subject'] = '{blogname}: New Membership User registration';
-					$template['content'] = '<html><head></head><body><p>New Membership User registration on: <strong> {blogname} </strong></p>
-
-<p><strong> Username:</strong> {username}</p>
-
-<p><strong> Email:</strong> {user_email}</p>
-
-<p><strong> Level Name:</strong> {level_name}</p>
-
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-
-			case 'admin_before_user_expire_level':
-				/// ADMIN - Before Level Expire
-					$template['subject'] = '{blogname}: User Level Expire';
-					$template['content'] = '<html><head></head><body>
-<p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-
-			case 'admin_second_before_user_expire_level':
-				/// ADMIN - Before Level Expire
-					$template['subject'] = '{blogname}: User Level Expire';
-					$template['content'] = '<html><head></head><body>
-<p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-
-			case 'admin_third_before_user_expire_level':
-				/// ADMIN - Before Level Expire
-					$template['subject'] = '{blogname}: User Level Expire';
-					$template['content'] = '<html><head></head><body>
-<p>Subscription {current_level} for <strong> Username: {username}</strong> is going to expire on {current_level_expire_date}.</p><br/>
-
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-
-			case 'admin_user_expire_level':
-				/// ADMIN - After Level Expired
-					$template['subject'] = '{blogname}: User Level Expire';
-					$template['content'] = '<html><head></head><body>
-<p>Subscription {current_level} for<strong> Username: {username}</strong> has expired on {current_level_expire_date}.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-
-			case 'admin_user_payment':
-				/// ADMIN - New Payment Completed
-					$template['subject'] = '{blogname}: New Payment Completed';
-					$template['content'] = '<html><head></head><body>
-<p><strong> User: {username}</strong> has completed a new payment.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'admin_user_profile_update':
-				/// ADMIN - User Profile Update
-					$template['subject'] = '{blogname}: User Update Profile';
-					$template['content'] = '<html><head></head><body>
-<p><strong> User: {username}</strong> has updated his profile.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'register_lite_send_pass_to_user':
-					$template['subject'] = '{blogname}: Your Password';
-					$template['content'] = '<html><head></head><body>
-<p>Hi {username}</p>
-<p>Your password for {blogname} is {NEW_PASSWORD}</p>
-					</body></html>';
-				break;
-
-			case 'ihc_cancel_subscription_notification-admin':
-					$template['subject'] = '{blogname}: Subscription Canceled';
-					$template['content'] = '<html><head></head><body>
-<p>{current_level} for {username} was canceled.</p>
-					</body></html>';
-				break;
-			case 'ihc_delete_subscription_notification-admin':
-					$template['subject'] = '{blogname}: Subscription Deleted';
-					$template['content'] = '<html><head></head><body>
-<p>{current_level} for {username} was deleted.</p>
-					</body></html>';
-				break;
-			case 'ihc_order_placed_notification-admin':
-					$template['subject'] = '{blogname}: New Order placed';
-					$template['content'] = '<html><head></head><body>
-<p>{username} has placed a new order.</p>
-					</body></html>';
-				break;
-			case 'ihc_new_subscription_assign_notification-admin':
-					$template['subject'] = '{blogname}: New Subscription assign';
-					$template['content'] = '<html><head></head><body>
-<p>{username} subscribe for {current_level}.</p>
-					</body></html>';
-				break;
-			case 'ihc_order_placed_notification-user':
-					$template['subject'] = '{blogname}: New Order placed';
-					$template['content'] = '<html><head></head><body>
-<p>Hello {username}! You just placed a new order on <strong> {blogname} </strong>.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'ihc_subscription_activated_notification':
-					$template['subject'] = '{blogname}: Subscription Activated';
-					$template['content'] = '<html><head></head><body>
-<p>Hello {username}! Your subscription on <strong> {blogname} </strong> just got activated.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'ihc_delete_subscription_notification-user':
-					$template['subject'] = '{blogname}: Subscription deleted';
-					$template['content'] = '<html><head></head><body>
-<p>Hello {username}! One of Your subscriptioms on <strong> {blogname} </strong> was completely deleted.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'ihc_cancel_subscription_notification-user':
-					$template['subject'] = '{blogname}: Subscription cancel';
-					$template['content'] = '<html><head></head><body>
-<p>Hello {username}! One of Your subscriptioms on <strong> {blogname} </strong> was canceled.</p>
-<p>Have a nice day!</p>
-					</body></html>';
-				break;
-			case 'drip_content-user':
-				$template['subject'] = '{blogname}: A new Post has become available';
-					$template['content'] = '<html><head></head><body>
-<p>Hello {username}! A new Post has become available. Check this out: {POST_LINK}</p>
-					</body></html>';
-				break;
-		}
-		$template = apply_filters( 'ihc_admin_filter_notification_template', $template, $type );
-		return $template;
-}
 
 /////////////////////////// DASHBOARD LIST POST/PAGES/CUSTOM POST TYPE ULTIMATE MEMBERSHIP PRO COLUMN WIHT DEFAULT PAGES/RESTRINCTED AND DRIP CONTENT
 
@@ -1268,22 +812,7 @@ function ihc_delete_user_level_relationship()
 				die;
 		}
 		if (isset($_REQUEST['lid']) && isset($_REQUEST['uid'])){
-			$levels_str = get_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', true);
-			$levels_arr = explode(',', $levels_str);
-			if (!is_array($_REQUEST['lid'])){
-				$lid_arr[] = esc_sql($_REQUEST['lid']);
-			}
-			$levels_arr = array_diff($levels_arr, $lid_arr);
-			$levels_str = implode(',', $levels_arr);
-			update_user_meta(esc_sql($_REQUEST['uid']), 'ihc_user_levels', $levels_str);
-			global $wpdb;
-			$table_name = $wpdb->prefix . "ihc_user_levels";
-			$uid = esc_sql($_REQUEST['uid']);
-			$lid = esc_sql($_REQUEST['lid']);
-			//$wpdb->query('DELETE FROM ' . $table_name . ' WHERE user_id="' . $uid . '" AND level_id="' . $lid . '";');
-			$q = $wpdb->prepare("DELETE FROM $table_name WHERE user_id=%d AND level_id=%d ", $uid, $lid);
-			$wpdb->query($q);
-			do_action('ihc_action_after_subscription_delete', $uid, $lid);
+				\Indeed\Ihc\UserSubscriptions::deleteOne( $_REQUEST['uid'], $_REQUEST['lid'] );
 			echo 1;
 		}
 		die;
@@ -1454,11 +983,11 @@ function ihc_make_export_file()
 			die;
 	}
 
-	require_once IHC_PATH . 'classes/Indeed_Import_Export/IndeedExport.class.php';
+	require_once IHC_PATH . 'classes/import-export/IndeedExport.class.php';
 	$export = new IndeedExport();
 	$hash = bin2hex( random_bytes( 20 ) );
 	$filename = $hash . '.xml';
-	$export->setFile( IHC_PATH . 'temporary_files/' . $filename );
+	$export->setFile( IHC_PATH . 'temporary/' . $filename );
 	if (!empty($_POST['import_users'])){
 		////////// USERS
 		$export->setEntity( array('full_table_name' => $wpdb->prefix . 'users', 'table_name' => 'users') );
@@ -1488,7 +1017,7 @@ function ihc_make_export_file()
 	}
 	if ($export->run()){
 		/// print link to file
-		echo IHC_URL . 'temporary_files/' . $filename;
+		echo IHC_URL . 'temporary/' . $filename;
 	} else {
 		/// no entity
 		echo 0;
@@ -1624,8 +1153,13 @@ function ihc_admin_delete_level()
 		if ( empty( $_POST['lid'] ) ){
 				die;
 		}
-		include_once IHC_PATH . 'admin/includes/functions/levels.php';
-		ihc_delete_level( $_POST['lid'] );//delete
+		$lid = esc_sql( $_POST['lid'] );
+		\Indeed\Ihc\Db\Memberships::deleteOne( $lid );
+
+		\Indeed\Ihc\UserSubscriptions::deleteAllForSubscription( $lid );
+
+		\Ihc_Db::deletePostMetaRestrictionsForMembership( $lid );
+	  do_action( 'ihc_delete_level_action', $lid );
 		die;
 }
 
@@ -1694,3 +1228,7 @@ function ihc_admin_delete_payment_transaction()
 		ihc_delete_payment_entry( $_POST['id'] );
 		die;
 }
+
+// on user delete - delete his media files
+$ihcHandleDeleteMedia = new \Indeed\Ihc\Admin\HandleDeleteMedia();
+$ihcEvents = new \Indeed\Ihc\Admin\Events();

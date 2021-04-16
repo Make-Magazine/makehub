@@ -1,4 +1,4 @@
-<div class="uap-banners-wrapp">
+<div class="uap-ap-wrap">
 
 	<?php if (!empty($data['title'])):?>
 		<h3><?php echo $data['title'];?></h3>
@@ -16,7 +16,7 @@
 
 		      function drawChart() {
 		        var data = new google.visualization.DataTable();
-						var theParent = '<?php echo $data['parent'];?>';
+						var theParent = '<?php echo $data['parent_id'];?>';
 
 		        data.addColumn('string', 'Name');
 		        data.addColumn('string', 'Manager');
@@ -26,12 +26,15 @@
 
 				data.addRows([
 						<?php if (!empty($data['parent'])):?>
-							[{v:'<?php echo $data['parent'];?>', f:'<?php echo $data['parent'];?>'}, '', ''],
+							 <?php $display_parent = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-parent"><img src="'.$data['parent_avatar'].'" /></div><div class="uap-mlm-tree-name-child">'.$data['parent_full_name'].'</div>'; ?>
+							[{v:'<?php echo $data['parent_id'];?>', f:'<?php echo $display_parent;?>'}, '', ''],
 						<?php endif;?>
-		          [{v:'<?php echo $data['username']; ?>', f:''}, theParent, 'Main Affiliate'],
+						<?php $display_affiliate = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-main"><img src="'.$data['avatar'].'" /></div><div class="uap-mlm-tree-name-child">'.$data['full_name'].'</div>'; ?>
+		          [{v:'<?php echo $data['id']; ?>', f:'<?php echo $display_affiliate;?>'}, theParent, 'Main Affiliate'],
 				<?php
 					foreach ($data['items'] as $item):
-					echo "[{v:'".$item['username']."',f:'".$item['username']."<div>".$item['amount_value']."</div>' }, '".$item['parent']."', ' Level ".$item['level']."'],";
+						$display = '<div class="uap-mlm-tree-avatar-child"><img src="'.$item['avatar'].'" /></div><div class="uap-mlm-tree-name-child">'.$item['full_name'].'</div>';
+					echo "[{v:'".$item['id']."',f:'".$display."' }, '".$item['parent_id']."', '".$item['amount_value']." rewards'],";
 					endforeach;
 				?>
 		        ]);
@@ -77,7 +80,9 @@
 				</tbody>
 			</table>
 		<?php else : ?>
-			<?php _e('No Children Yet!', 'uap');?>
+			<div class="uap-account-detault-message">
+              <div><?php _e('In order to have affiliates inisde your MLM Matrix just promote the affiliate program and bring new affiliates registered with your Affiliate Link.', 'uap');?></div>
+          </div>
 		<?php endif;?>
 
 </div>

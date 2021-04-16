@@ -4744,13 +4744,14 @@
   margin-bottom: 0.5em;
 }
 
-.learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content .ld-topic-status .ld-progress {
-  display: none;
-}
-
 .learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content .ld-topic-status,
 .learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content .ld-lesson-status {
   margin-bottom: 1em;
+}
+
+.learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content .ld-topic-status .ld-progress,
+.learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content .ld-lesson-status .ld-progress {
+  display: none;
 }
 
 .learndash-wrapper .ld-focus .ld-focus-header {

@@ -41,7 +41,7 @@ jQuery( document ).ready( function(){
 </script>
 
 
-<div class="">
+<div class="uap-upload-image-wrapper">
 
     <div class="uap-upload-image-wrapp" >
         <?php if ( !empty($data['imageUrl']) ):?>

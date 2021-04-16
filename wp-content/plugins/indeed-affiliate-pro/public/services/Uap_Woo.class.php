@@ -108,7 +108,9 @@ class Uap_Woo extends Referral_Main{
 			$sum = 0;
 			$product_price_sum = 0;
 			foreach ($items as $item){ /// foreach in lines
+
 				$products_arr[] = $item['product_id'];
+				$variableProductId = isset( $item['variation_id'] ) ? $item['variation_id'] : false;
 
 				///base price
 				$product_price = round($item['line_total'], 3);
@@ -126,7 +128,9 @@ class Uap_Woo extends Referral_Main{
 				$product_price_sum += $product_price;
 
 				/// get amount
-				$temp_amount = $do_math->get_result($product_price, $item['product_id']);// input price, product id
+				$do_math->setVariableProductId( $variableProductId );
+				$temp_amount = $do_math->get_result( $product_price, $item['product_id'] );// input price, product id
+
 				$sum += $temp_amount;
 
 				if (!empty($run_foreach_line_once)){
@@ -139,6 +143,17 @@ class Uap_Woo extends Referral_Main{
 			} else {
 				$product_list = '';
 			}
+
+			$wooCurrency = $order->get_currency();
+			if ( class_exists( 'WOOCS' ) && method_exists( $order, 'get_order_currency' ) ) {
+					$wooCurrency = $order->get_order_currency();
+			    global $WOOCS;
+			    if ( isset( $WOOCS->default_currency ) && $wooCurrency != $WOOCS->default_currency ) {
+			        $currencies = $WOOCS->get_currencies();
+			        $sum = $WOOCS->back_convert($sum, $currencies[$wooCurrency]['rate'] );
+			    }
+			}
+			$sum = apply_filters( 'uap_public_filter_on_referral_insert_amount_value', $sum, $wooCurrency );
 
 			$args = array(
 							'refferal_wp_uid' => self::$user_id,

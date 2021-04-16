@@ -53,7 +53,7 @@
 				<input type="submit" value="<?php _e('Add On Wallet', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 			<div style="float:right;">
-				<div class="uap-wallet-total"><?php _e('Total Credit: ', 'uap');?> <?php echo uap_format_price_and_currency($data['currency'], '<span id="uap_total_amount">0</span>');?></div>
+				<div class="uap-wallet-total"><?php _e('Total Credit: ', 'uap');?> <span id="uap_total_amount"><?php echo uap_format_price_and_currency($data['currency'], '0');?></span></div>
 			</div>
 			<div class="uap-clear"></div>
 	   </div>
