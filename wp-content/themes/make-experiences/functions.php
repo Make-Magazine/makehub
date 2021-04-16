@@ -180,6 +180,5 @@ function register_ee_attendee_id_meta() {
 
 //hide wp doing it wrong errors
 add_filter('doing_it_wrong_trigger_error', function () {return false;}, 10, 0);
-
 ?>
 
