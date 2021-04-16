@@ -70,20 +70,17 @@ function grid_block_split_block_render_callback($block){
 			$first .= '<div class="container-fluid">
 								<div class="row grid-column-row">';
 			// only repeat for the number of boxes we've set to display
-			$curRow = 1;
 			$gridRows = intval(get_field('how_many_of_the_boxes_to_display'));
-			if($gridRows === 6) { $gridRows = 4; }
-			while (have_rows('grid_column_spread') && ($curRow <= $gridRows)) {
+			while (have_rows('grid_column_spread')) {
 				the_row();
-				$curRow += 1;
 				$color = get_sub_field('color');
 				if($color === "ffffff") { $color = "fff"; }
 				$link = ''; // different link if logged in
-		      if(get_sub_field('link')){ $link = get_sub_field('link'); }
-		      if(is_user_logged_in() && get_sub_field('logged_in_link')){ $link = get_sub_field('logged_in_link'); }
+				if(get_sub_field('link')){ $link = get_sub_field('link'); }
+				if(is_user_logged_in() && get_sub_field('logged_in_link')){ $link = get_sub_field('logged_in_link'); }
 				// background image for the link boxes are optional
 				$first .= '<div class="col-md-'.get_field('how_many_of_the_boxes_to_display').' col-sm-6 col-xs-12 grid-column-content">';
-				           if($link != ''){ $first .= '<a href="'.$link.'">'; }
+				if($link != ''){ $first .= '<a href="'.$link.'">'; }
 				$first .= '		<div class="grid-column-inner rows-'.$gridRows.($color === "fff" ? ' white-bg' : '').'" style="background-color:#'.$color.';background-image:url('.get_sub_field('background_image')['url'].');">';
 				if(get_sub_field('title')){ $first .= '<h5>'.get_sub_field('title').'</h5>'; }
 				$first .= '			<div class="text">'.get_sub_field('text').'</div>';
