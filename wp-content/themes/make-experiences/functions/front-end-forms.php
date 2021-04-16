@@ -4,7 +4,7 @@ define('BP_BUDDYBLOG_SLUG', 'blog');
 
 
 function create_posttypes() {
-	if(function_exists(buddypress())) {
+	if(function_exists('buddypress')) {
 		register_post_type(
 	    'blog_posts',
 		array(
