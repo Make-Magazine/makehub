@@ -98,5 +98,5 @@ function create_event($entry, $form) {
         // ihc_set_level_status($userID, 17, 1); this is doing nothing now
     } else {
         //error_log("user already has active membership");
-    }
+    }    
 }
