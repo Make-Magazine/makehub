@@ -2,42 +2,25 @@
 
 define('BP_BUDDYBLOG_SLUG', 'blog');
 
+
 function create_posttypes() {
-    register_post_type( 
-		 'projects',
-        array(
-            'labels' => array(
-                'name' => __( 'Projects' ),
-                'singular_name' => __( 'Project' )
-            ),
-            'public' => true,
-            'has_archive' => true,
-            'rewrite' => array('slug' => 'projects'),
-			   'supports' => array('comments', 'thumbnail', 'excerpt', 'buddypress-activity'),
-				'bp_activity' => array(
-					'component_id' => buddypress()->activity->id,
-					'action_id'    => 'new_projects',
-					'contexts'     => array( 'activity', 'member' ),
-					'position'     => 40,
-			  ),
-        )
-    );
-	 register_post_type(
-	 	  'blog_posts',
-        array(
-            'labels' => array(
-                'name' 								=> __( 'Blog Posts' ),
-                'singular_name' 					=> __( 'Blog Post' ),
+	if(function_exists(buddypress())) {
+		register_post_type(
+	    'blog_posts',
+		array(
+			'labels' => array(
+				'name' 								=> __( 'Blog Posts' ),
+				'singular_name' 					=> __( 'Blog Post' ),
 					 'bp_activity_admin_filter'   => __( 'Published a new Blog Post' ),
-        			 'bp_activity_front_filter'   => __( 'Blog Posts'),
+					 'bp_activity_front_filter'   => __( 'Blog Posts'),
 					 'bp_activity_new_post'       => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
-        			 'bp_activity_new_post_ms'    => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
+					 'bp_activity_new_post_ms'    => __( '%1$s posted a new <a href="%2$s">Blog Post</a>' ),
 					 'bp_activity_new_comment'    => __( '%1$s commented on a <a href="%2$s">Blog Post</a>' ),
-    				 'bp_activity_new_comment_ms' => __( '%1$s commented on a <a href="%2$s">Blog Post</a>' )
-            ),
-            'public' => true,
-            'has_archive' => true,
-            'rewrite' => array('slug' => 'blog'),
+					 'bp_activity_new_comment_ms' => __( '%1$s commented on a <a href="%2$s">Blog Post</a>' )
+			),
+			'public' => true,
+			'has_archive' => true,
+			'rewrite' => array('slug' => 'blog'),
 			   'supports' => array('comments', 'editor', 'author', 'thumbnail', 'excerpt', 'buddypress-activity'),
 				'bp_activity' => array(
 					'component_id' => buddypress()->activity->id,
@@ -45,8 +28,9 @@ function create_posttypes() {
 					'contexts'     => array( 'activity', 'member' ),
 					'position'     => 40,
 			  ),
-        )
-	 );
+			)
+		);
+	}
 }
 add_action( 'init', 'create_posttypes' );
 
