@@ -951,6 +951,8 @@ function ld_course_list( $attr ) {
 
 		if ( ( isset( $_GET['catid'] ) ) && ( ! empty( $_GET['catid'] ) ) ) {
 			$atts['cat'] = intval( $_GET['catid'] );
+			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756
+			$attr_org['cat'] = intval( $_GET['catid'] );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();
@@ -994,7 +996,7 @@ function ld_course_list( $attr ) {
 						}
 
 						$cats[ $c ]['count']++;
-						$cats[ $c ]['posts'][] = $post->ID;
+						$cats[ $c ]['posts'][] = $cat_post->ID;
 					}
 				}
 			}
@@ -1037,6 +1039,8 @@ function ld_course_list( $attr ) {
 		if ( ( isset( $_GET[ $post_type_slug . '_catid' ] ) ) && ( ! empty( $_GET[ $post_type_slug . '_catid' ] ) ) ) {
 
 			$atts[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
+			// Duplicated variable related to changes on LEARNDASH-5664 and LEARNDASH-5756
+			$attr_org[ $post_type_slug . '_cat' ] = intval( $_GET[ $post_type_slug . '_catid' ] );
 
 			if ( ! isset( $filter['tax_query'] ) ) {
 				$filter['tax_query'] = array();

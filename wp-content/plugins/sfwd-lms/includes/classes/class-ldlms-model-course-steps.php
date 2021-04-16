@@ -111,7 +111,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 						$steps_h = $this->load_steps_legacy();
 					}
 
-					if ( ! is_array( $steps_h ) ) {
+					if ( ( ! isset( $steps_h ) ) || ( ! is_array( $steps_h ) ) ) {
 						$steps_h = array();
 					}
 

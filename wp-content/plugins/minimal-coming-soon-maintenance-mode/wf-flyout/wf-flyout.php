@@ -124,7 +124,7 @@ if (false == class_exists('wf_flyout')) {
 
       $out = '';
       $icons_url = plugin_dir_url($this->plugin_file) . 'wf-flyout/icons/';
-      $default_link_item = array('class' => '', 'href' => '#', 'target' => '_blank', 'label' => '', 'icon' => '');
+      $default_link_item = array('class' => '', 'href' => '#', 'target' => '_blank', 'label' => '', 'icon' => '', 'data' => '');
 
       $out .= '<div id="wff-overlay"></div>';
 
@@ -148,7 +148,7 @@ if (false == class_exists('wf_flyout')) {
           $item['class'] = trim($item['class']);
         }
 
-        $out .= '<a href="' . $item['href'] . '" class="wff-menu-item wff-menu-item-' . $i . ' ' . $item['class'] . '" target="_blank">';
+        $out .= '<a ' . $item['data'] . ' href="' . $item['href'] . '" class="wff-menu-item wff-menu-item-' . $i . ' ' . $item['class'] . '" target="_blank">';
         $out .= '<span class="wff-label visible">' . $item['label'] . '</span>';
         if (substr($item['icon'], 0, 9) == 'dashicons') {
           $out .= '<span class="dashicons ' . $item['icon'] . '"></span>';

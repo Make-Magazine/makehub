@@ -37,28 +37,6 @@ if (!defined('WPINC')) {
     <?php require_once CSMM_PATH . '/framework/public/include/styles.php'; ?>
 
     <?php
-
-
-    if (csmm_is_mailoptin_active() && $options['mailoptin_campaign'] > 0 && isset($options['mail_system_to_use']) && $options['mail_system_to_use'] == 'mo') {
-        echo '<script src="' . includes_url('/js/jquery/jquery.js') . '"></script>';
-        echo '<script type="text/javascript">
-				var mailoptin_globals = {
-					"admin_url":"' . admin_url() . '",
-					"public_js":"' . MAILOPTIN_ASSETS_URL . 'js/src",
-					"nonce":"' . wp_create_nonce('mailoptin-admin-nonce') . '",
-					"mailoptin_ajaxurl":"' . MailOptin\Core\AjaxHandler::get_endpoint() . '",
-					"ajaxurl":"' . admin_url('admin-ajax.php') . '",
-					"split_test_start_label":"Start Test",
-					"split_test_pause_label":"Pause Test",
-					"is_customize_preview":"false",
-					"disable_impression_tracking":"false",
-					"chosen_search_placeholder":"Type to search",
-					"js_confirm_text":"Are you sure you want to do this?",
-					"js_clear_stat_text":"Are you sure you want to do this? Clicking OK will delete all your optin analytics records."};
-			</script>';
-        echo '<script src="' . MAILOPTIN_ASSETS_URL . '/js/mailoptin.min.js"></script>';
-    }
-
     // analytics
     if (csmm_convert_ga($options['analytics'])) {
         echo "<script>
@@ -172,10 +150,6 @@ if (!defined('WPINC')) {
                     $signals_arrange['form'] .= '</div>';
                 } // mailchimp_api && mailchimp_list
 
-                if (csmm_is_mailoptin_active() && $options['mailoptin_campaign'] > 0 && isset($options['mail_system_to_use']) && $options['mail_system_to_use'] == 'mo') {
-                    $signals_arrange['form'] = MailOptin\Core\Admin\Customizer\OptinForm\OptinFormFactory::build($options['mailoptin_campaign']);
-                }
-
                 // Custom HTML
                 $signals_arrange['html'] = stripslashes($options['custom_html']);
 
@@ -208,10 +182,6 @@ if (!defined('WPINC')) {
             echo '<a title="' . __('Log in to WordPress admin', 'minimal-coming-soon-maintenance-mode') . '" href="' . get_site_url() . '/wp-login.php"><img src="' . CSMM_URL . '/framework/public/img/wp-logo-white.png" alt="' . __('Log in to WordPress admin', 'minimal-coming-soon-maintenance-mode') . '" title="' . __('Log in to WordPress admin', 'minimal-coming-soon-maintenance-mode') . '"></a>';
         }
         echo '</div>';
-    }
-
-    if (is_plugin_active('accessibe/accessiebe.php') && is_callable(array('Accessibe', 'render_js_in_footer'))) {
-      Accessibe::render_js_in_footer();
     }
     ?>
 </body>

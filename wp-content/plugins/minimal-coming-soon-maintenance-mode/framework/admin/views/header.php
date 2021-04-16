@@ -18,7 +18,7 @@ if (!defined('WPINC')) {
 			<img src="<?php echo CSMM_URL; ?>/framework/admin/img/mm-icon-dark.png" class="signals-logo">
 			<p>
 				<strong><?php _e( 'Minimal Coming Soon &amp; Maintenance Mode', 'signals' ); ?></strong>
-				<span><?php _e( 'by', 'signals' ); ?> <a href="http://www.webfactoryltd.com/?utm_source=csmm-free&utm_medium=plugin&utm_content=header-link&utm_campaign=csmm-free-v<?php echo csmm_get_plugin_version(); ?>" target="_blank"><?php _e( 'Web Factory Ltd', 'signals' ); ?></a></span>
+				<span><?php _e( 'by', 'signals' ); ?> <a href="http://www.webfactoryltd.com/" target="_blank"><?php _e( 'WebFactory Ltd', 'signals' ); ?></a></span>
 			</p>
 
 <?php
