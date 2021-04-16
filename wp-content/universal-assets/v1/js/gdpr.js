@@ -23,7 +23,6 @@ window.addEventListener('load', function() {
 		if( res == null ) {
 			jQuery("#cookie-footer").show();
 		} else if(res == 'yes') {
-			jQuery("#cookie-settings-btn").show();
 			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
 		} else {
 			jQuery("#cookie-settings-btn").show();
@@ -44,7 +43,6 @@ window.addEventListener('load', function() {
 	
 	jQuery("#cookie-accept").click(function(){
 		jQuery("#cookie-footer").hide();
-		jQuery("#cookie-settings-btn").show();
 		if( !localStorage.getItem('cookie-law') ) {
 			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
 			return storage.set('cookies-allowed', 'yes');
@@ -55,6 +53,7 @@ window.addEventListener('load', function() {
 		jQuery("#cookie-settings-btn").show();
 		if(jQuery("#nonNeccessaryCookies").is(':checked') ) {
 			setCookie('cookielawinfo-checkbox-non-necessary', 'yes', 365);
+			jQuery("#cookie-settings-btn").addClass("accepted");
 			return storage.set('cookies-allowed', 'yes');
 		} else {
 			setCookie('cookielawinfo-checkbox-non-necessary', 'no', 365);

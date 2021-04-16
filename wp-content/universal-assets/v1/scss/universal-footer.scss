@@ -291,6 +291,9 @@
 	z-index: 9999;
 	cursor: pointer;
 	box-shadow: #161616 2px 2px 5px 2px;
+	&.accepted {
+		display: none !important;
+	}
 }
 	
 #cookie-footer {
@@ -326,23 +329,34 @@
 				margin-right: 15px;
 			}
 		}
-		@media screen and (max-width: 710px) {
-			button:first-of-type {
-				margin-right: 0px;
-				margin-bottom: 10px;
+		
+	}
+	@media screen and (max-width: 710px) {
+		z-index: 99999999;
+		.cookie-footer-innerwrap {
+			button {
+				width: 45%;
 			}
 		}
 	}
 }
 #cookie-dialog {
 	display: none;
+	p { line-height: 1.2em; }
 }
 div[aria-describedby="cookie-dialog"] {
-	z-index: 999;
+	z-index: 9999999;
 	text-align: center;
 	background: #fff;
-	.ui-dialog-title {
-		display: none;
+	.ui-dialog-titlebar {
+		padding: 0px;
+		height: 0px;
+		.ui-dialog-title {
+			display: none;
+		}
+		.ui-dialog-titlebar-close {
+			margin: -1px 5px 0 0;
+		}
 	}
 	.ui-widget-content {
 		position: relative;

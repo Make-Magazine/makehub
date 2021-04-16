@@ -403,6 +403,26 @@ function parse_yturl($url) {
     return (isset($matches[1])) ? $matches[1] : false;
 }
 
+function featuredtoRSS($content) {
+	global $post;
+	if ( has_post_thumbnail( $post->ID ) ){
+		$content = '<div>' . get_the_post_thumbnail( $post->ID, 'medium', array( 'style' => 'margin-bottom: 15px;' ) ) . '</div>' . $content;
+	}
+	return $content;
+}
+ 
+add_filter('the_excerpt_rss', 'featuredtoRSS');
+add_filter('the_content_feed', 'featuredtoRSS');
+
+function add_event_date_to_rss() {
+    if(get_post_type() == 'tribe_events' && $start_date = get_field("preferred_start_date", $post->ID) ) {
+        ?>
+        <event_date><?php echo $start_date ?></event_date>
+        <?php
+    }
+}
+add_action('rss2_item', 'add_event_date_to_rss');
+
 // block wp-admin access for 
 function wpabsolute_block_users_backend() {
     $user = wp_get_current_user();
