@@ -1,8 +1,8 @@
 /*!
- *  Croppic Style 
+ *  Croppic Style
  *  Dedicated for cropping avatar feature
  */
-/* 
+/*
  * -------------------------- */
 /* Fix crop module compatibility */
 #croppicModalObj img,
@@ -19,17 +19,47 @@
 .cropControls{
 	top:auto !important;
 	bottom:10px;
-	right: 20px !important;
+	right: 0px !important;
 	padding: 12px 14px;
     height: auto !important;
     background-color: rgba(0,0,0,0) !important;
     border-radius: 50%;
 }
+
+.ihc-edit-top-ap-banner .cropControls{
+right: 20px !important;
+}
 .cropControlsCrop{
 	/*background-color: rgba(0,0,0,0.35) !important;*/
 	border-radius: 0;
-    padding: 5px 10px;
+    padding: 5px 4px;
 }
+/**** dev ***/
+
+.uap-cst-croppic .cropControls i {
+  background-color:rgba(0,0,0,0.35);
+}
+
+#uap-custom-controls i {
+
+  font-family: 'Open Sans', sans-serif;
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 9px 10px;
+    line-height: 20px;
+}
+#uap-custom-controls i:before {
+  content: none;
+}
+
+.uap_delimiter {
+  background-color:rgba(0,0,0,0.35);
+  float: left;
+  color:#fff;
+  font-weight:100;
+  opacity: 0.7;
+}
+/*** end dev ***/
 .cropControlsCrop:hover{
 	opacity: 1;
 }
@@ -359,6 +389,31 @@
   font-weight: bold;
   font-style: normal;
 
+}
+
+
+.ihc-cst-croppic .cropControls i {
+  background-color:rgba(0,0,0,0.35);
+}
+
+#ihc-custom-controls i {
+
+  font-family: 'Open Sans', sans-serif;
+    font-size: 0.7em;
+    font-weight: 600;
+    padding: 9px 10px;
+    line-height: 20px;
+}
+#ihc-custom-controls i:before {
+  content: none;
+}
+
+.ihc_delimiter {
+  background-color:rgba(0,0,0,0.35);
+  float: left;
+  color:#fff;
+  font-weight:100;
+  opacity: 0.7;
 }
 
 .cropControls i:hover{ background-color:rgba(0,0,0,0.7);  }

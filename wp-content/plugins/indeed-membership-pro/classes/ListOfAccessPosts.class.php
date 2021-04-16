@@ -34,6 +34,7 @@ class ListOfAccessPosts{
 		$this->set_drip_content();
 
 		$total = $this->get_count();
+
 		$current_page = (empty($_GET['ihcdu_page'])) ? 1 : $_GET['ihcdu_page'];
 		if ($current_page>1){
 			$offset = ( $current_page - 1 ) * $limit;
@@ -60,6 +61,7 @@ class ListOfAccessPosts{
 		}
 		$data['metas'] = $this->metas;
 		$data['items'] = $this->get_data($limit, $offset);
+
 
 		$fullPath = IHC_PATH . 'public/views/list_access_posts.php';
 		$searchFilename = 'list_access_posts.php';
@@ -104,12 +106,36 @@ class ListOfAccessPosts{
 				AND
 				( b.post_type IN ({$this->post_types_in}) )
 				AND
-				( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
-				AND
-				( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+				(
+						(
+								( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+								AND
+								( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+						)
+						OR
+						(
+							( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+							AND
+							( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+						)
+						OR
+						(
+							( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+							AND
+							( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+						)
+						OR
+						(
+							( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+							AND
+							( c.meta_key='ihc_mb_who' AND !( {$this->levels_conditions} ) )
+						)
+				)
 				$limit
 		";
+
 		$data = $wpdb->get_row($q);
+
 		if ($data && isset($data->count_value)){
 			if($data->count_value > $max){
 				return $max;
@@ -171,15 +197,40 @@ class ListOfAccessPosts{
 			AND
 			( b.post_type IN ({$this->post_types_in}) )
 			AND
-			( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
-			AND
-			( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+			(
+					(
+							( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+							AND
+							( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+					)
+					OR
+					(
+						( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+						AND
+						( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+					)
+					OR
+					(
+						( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+						AND
+						( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+					)
+					OR
+					(
+						( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+						AND
+						( c.meta_key='ihc_mb_who' AND !( {$this->levels_conditions} ) )
+					)
+			)
+
+
 			GROUP BY id
 			ORDER BY b.$order_by $order_type
 		";
 		if ( $limit > -1 ){
 				$q .= "	LIMIT $limit OFFSET $offset ";
 		}
+
 		$db_result = $wpdb->get_results($q);
 
 		foreach ($db_result as $db_object){
@@ -297,12 +348,12 @@ class ListOfAccessPosts{
 			$limit = 25;
 		}
 		//$this->levels_conditions = " 1=1 ";
-		
+
 		$this->set_level_conditions();
 
 		$this->set_drip_content();
- 
-		
+
+
 		$data = $this->get_data($limit, 0);
 		return $data;
 	}

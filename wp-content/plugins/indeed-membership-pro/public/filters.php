@@ -59,6 +59,7 @@ function ihc_message_update_profile_form_html($content='')
 		return $content;
 }
 
+add_filter('the_content', 'ihc_print_message', 99);
 function ihc_print_message($content){
 	/*
 	 * print success message after register
@@ -77,8 +78,10 @@ function ihc_print_message($content){
 			break;
 		 }
 	 }
-	 if (isset($_REQUEST['ihcbt']) && isset($_REQUEST['ihc_lid']) && isset($_REQUEST['ihc_uid']) ){
+	 global $stop_printing_bt_msg;
+	 if (isset($_REQUEST['ihcbt']) && isset($_REQUEST['ihc_lid']) && isset($_REQUEST['ihc_uid']) && empty( $stop_printing_bt_msg ) ){
 	 	$str .= ihc_print_bank_transfer_order($_REQUEST['ihc_uid'], $_REQUEST['ihc_lid']);
+		$stop_printing_bt_msg = true;
 	 }
 	 $content .= $str;
 	 return do_shortcode($content);
@@ -221,9 +224,10 @@ function ihc_filter_print_bank_transfer_message($content = ''){
 	 */
 	global $stop_printing_bt_msg;
 	$str = '';
-	if (isset($_GET['ihc_lid']) && empty($stop_printing_bt_msg)){
+	if (isset($_GET['ihc_lid']) ){ // && empty($stop_printing_bt_msg)
 		global $current_user;
 		$str = ihc_print_bank_transfer_order($current_user->ID, esc_sql($_GET['ihc_lid']) );
+		$stop_printing_bt_msg = true;
 	}
 	return do_shortcode ($content) . $str;
 }

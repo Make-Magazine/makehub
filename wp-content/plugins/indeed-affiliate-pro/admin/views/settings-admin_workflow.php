@@ -1,5 +1,8 @@
 <div class="uap-wrapper">
 <form action="" method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+	
 	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('Admin Workflow Settings', 'uap');?></h3>
 		<div class="inside">
@@ -80,7 +83,7 @@
 					</div>
 
 					<div class="col-xs-12">
-							<h3><?php _e('Unistall Settings:', 'uap');?></h3>
+							<h3><?php _e('Uninstall Settings:', 'uap');?></h3>
 							<div class="uap-form-line">
 								<span class="uap-labels-special"><?php _e("Keep data after delete plugin:", 'uap');?></span>
 								<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
@@ -97,7 +100,7 @@
 			</div>
 
 			<div class="uap-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>

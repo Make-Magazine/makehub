@@ -1,7 +1,550 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:100,400,300,500,600,700);
 @import url(//fonts.googleapis.com/css?family=Oswald:100,400,300,600,700);
 @import url(//fonts.googleapis.com/css?family=Roboto:400,100,300,500,600,700);
+/*!
+ *  Font Awesome 4.5.0 by @davegandy - http://fontawesome.io - @fontawesome
+ *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+ */
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome-uap';
+  src: url('../fonts/fontawesome-webfont.eot?v=4.5.0');
+  src: url('../fonts/fontawesome-webfont.eot?#iefix&v=4.5.0') format('embedded-opentype'), url('../fonts/fontawesome-webfont.woff2?v=4.5.0') format('woff2'), url('../fonts/fontawesome-webfont.woff?v=4.5.0') format('woff'), url('../fonts/fontawesome-webfont.ttf?v=4.5.0') format('truetype'), url('../fonts/fontawesome-webfont.svg?v=4.5.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+.fa-uap {
+  display: inline-block;
+  font: normal normal normal 14px/1 FontAwesome-uap;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
+.fa-uap-menu {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.fa-affiliates-uap:before {
+    content: "\f007";
+}
+
+.fa-referrals-uap:before {
+    content: "\f0c0";
+}
+
+.fa-ranks-uap:before {
+    content: "\f005";
+}
+
+.fa-payments-uap:before{
+	content: "\f0d6";
+}
+
+.fa-notifications-uap:before {
+    content: "\f0f3";
+}
+
+.fa-settings-uap:before {
+    content: "\f013";
+}
+
+.fa-showcases-uap:before {
+    content: "\f109";
+}
+
+.fa-reports-uap:before {
+    content: "\f080";
+}
+.fa-help-uap:before {
+    content: "\f059";
+}
+.fa-offers-uap:before {
+    content: "\f06b";
+}
+
+.fa-banners-uap:before {
+    content: "\f03e";
+}
+.fa-visits-uap:before{
+	content: "\f25a";
+}
+.fa-trash-uap:before{
+	content: "\f014";
+	cursor: pointer;
+}
+.fa-edit-uap:before{
+	content: "\f044";
+    color: #666;
+    font-size: 14px;
+    padding-left: 4px;
+}
+.fa-remove-uap:before{
+	content: "\f014";
+    color: #666;
+    font-size: 14px;
+    padding-left: 4px;
+}
+.fa-arrows-uap:before{
+    content: "\f047";
+    cursor: move;
+    color: #666;
+    font-size: 14px;
+    padding-left: 4px;
+}
+.fa-sign-in-uap:before {
+    content: "\f090";
+    line-height: 120px;
+    font-size: 70px;
+}
+.fa-user-uap:before {
+    content: "\f007";
+    line-height: 120px;
+    font-size: 70px;
+}
+.fa-user-plus-uap:before {
+    content: "\f234";
+    line-height: 120px;
+    font-size: 70px;
+}
+.fa-sign-in-uap, .fa-user-uap, .fa-user-plus-uap{
+	display: block;
+}
+.fa-add-new-item-uap:before{
+	content: "\f0fe";
+}
+.fa-web-uap:before{
+	content: "\f108";
+    font-size: 18px;
+    color: #333;
+}
+.fa-mobile-uap:before{
+	content: "\f10b";
+    font-size: 18px;
+    color: #333;
+}
+.fa-magic_features-uap:before{
+	content: "\f0d0";
+}
+.fa-search-uap:before{
+	content: "\f002";
+}
+.fa-dashboard-visits-uap:before{
+	content: "\f0c0";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #4cc0c1 !important;
+}
+.fa-dashboard-referrals-uap:before{
+	content: "\f0c0";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: rgba(240, 80, 80, 1.0) !important;
+}
+.fa-dashboard-paid-referrals-uap:before{
+	content: "\f0c0";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #0a9fd8 !important;;
+}
+.fa-dashboard-payments-paid-uap:before{
+	content: "\f0d6";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #fa8564 !important;
+	background-color: #f8ba01 !important;
+}
+.fa-dashboard-payments-unpaid-uap:before{
+	content: "\f155";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #fa8564 !important;
+}
+.fa-dashboard-payments-paided-uap:before{
+	content: "\f155";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #0bb586 !important;
+}
+.fa-visits-reports-uap:before{
+	content: "\f25a";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+    background-color: #94c523 !important;
+}
+.fa-dashboard-rank-uap:before{
+	content: "\f005";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+	background-color: rgb(66, 66, 66) !important;
+}
+.fa-success-rate-uap:before{
+	content: "\f295";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+	background-color: #f8ba01 !important;
+}
+.fa-success-number-uap:before{
+	content: "\f164";
+	margin-right: 0px;
+    width: 66px;
+    height: 66px;
+    text-align: center;
+    color: #ffffff;
+    padding: 20px;
+    border-radius: 50%;
+    font-size: 28px;
+    float: left!important;
+    box-sizing: border-box;
+	background-color: #f8ba01 !important;
+}
+
+.fa-list-uap:before{
+	content: "\f0ca";
+    line-height: 17px;
+    color: #fff;
+    font-size: 27px;
+    color: #fff;
+    margin: 3px 6px 0 0;
+}
+.fa-icon-pop-list-uap:before{
+	content: "\f10c";
+    font-size: 14px;
+    line-height: 17px;
+    vertical-align: top;
+    color: #fff;
+}
+.fa-unlock-uap:before {
+  content: "\f09c";
+}
+.fa-sign-out-uap:before {
+  content: "\f08b";
+}
+.fa-add-uap:before {
+  content: "\f067";
+}
+.fa-sign-in-ref-uap:before {
+    content: "\f090";
+}
+.fa-hourglass-start-uap:before {
+    content: "\f251";
+}
+.fa-history-uap:before {
+    content: "\f021";
+}
+.fa-share-alt-uap:before {
+    content: "\f1e0";
+}
+.fa-paypal-uap:before {
+    content: "\f1ed";
+}
+.fa-university-uap:before {
+    content: "\f19c";
+}
+.fa-life-ring-uap:before {
+    content: "\f1cd";
+}
+.fa-money-uap:before {
+    content: "\f0d6";
+}
+.fa-opt_in-uap:before{
+	content: "\f0e0";
+}
+.fa-overview-account-uap:before{
+	 content: "\f015";
+}
+.fa-edit_account-account-uap:before{
+	    content: "\f007";
+}
+.fa-change_pass-account-uap:before{
+	     content: "\f09c";
+}
+.fa-logout-account-uap:before{
+	 content: "\f08b";
+}
+.fa-affiliate_link-account-uap:before{
+	 content: "\f0c1";
+}
+.fa-campaigns-account-uap:before{
+	 content: "\f0a1";
+}
+.fa-banners-account-uap:before{
+	 content: "\f03e";
+}
+.fa-coupons-account-uap:before{
+	 content: "\f145";
+}
+.fa-visits-account-uap:before{
+	 content: "\f25a";
+}
+.fa-referrals-account-uap:before{
+	 content: "\f0c0";
+}
+.fa-campaign_reports-account-uap:before{
+	 content: "\f201";
+}
+.fa-reports-account-uap:before{
+	content: "\f080";
+}
+.fa-payments-account-uap:before{
+	 content: "\f0d6";
+}
+.fa-account-down-uap:before{
+	     content: "\f107";
+}
+.fa-account-right-uap:before{
+	     content: "\f105";
+
+}
+
+.fa-payments_settings-account-uap:before {
+    content: "\f0d6";
+}
+.fa-help-account-uap:before {
+	content: "\f059";
+}
+.fa-referrals_history-account-uap:before{
+	content: "\f253";
+}
+.fa-mlm-account-uap:before{
+	content: "\f0c0";
+}
+.fa-stripe-uap:before{
+	content: "\f1f5";
+}
+.fa-landing_commissions-uap:before{
+	content: "\f055";
+}
+.fa-coupons-uap:before{
+	content: "\f145";
+}
+.uap-icon-remove-e:before{
+	content: "\f014";
+    color: #666;
+    font-size: 14px;
+    padding-left: 4px;
+}
+.fa-friendly_links-uap:before{
+	content: "\f0c1";
+}
+.fa-custom_affiliate_slug-uap:before{
+	content: "\f21b";
+}
+.fa-custom_affiliate_slug-account-uap:before{
+	content: "\f21b";
+}
+.fa-wallet-uap:before{
+	content: "\f260";
+}
+.fa-wallet-account-uap:before{
+	content: "\f260";
+}
+.fa-checkout_select_referral-uap:before{
+	content: "\f1ec";
+}
+.fa-top-affiliates-uap:before{
+    content: "\f091";
+}
+.fa-bp-uap:before{
+	content: "\f29a";
+}
+.fa-woo-uap:before{
+	content: "\f19a";
+}
+.fa-referral_notifications-uap:before{
+	content: "\f0f3";
+}
+.fa-referral_notifications-account-uap:before{
+	content: "\f0f3";
+}
+.fa-periodically_reports-uap:before{
+	content: "\f017";
+}
+.fa-qr-uap:before{
+	content: "\f029";
+}
+.fa-email_verification-uap:before{
+	content: "\f132";
+}
+.fa-custom_currencies-uap:before{
+	content: "\f155";
+}
+.fa-source_details-uap:before{
+	content: "\f022";
+}
+.fa-register_lite-uap:before{
+	content: "\f234";
+}
+
+.fa-wp_social_login-uap:before{
+	content: "\f1d7";
+}
+.fa-pass-uap:before {
+    content: "\f023";
+}
+.fa-username-uap:before {
+    content: "\f007";
+}
+
+.fa-pushover-uap:before{
+	content: "\f10b";
+}
+
+.fa-pushover_notifications-account-uap:before{
+	content: "\f0f3";
+}
+
+.fa-pushover-on-uap:before{
+	color:#66cbff !important;
+	font-size:26px;
+	content: "\f0f3";
+}
+.fa-export-csv:before{
+	content: "\f019";
+}
+
+.fa-max_amount-uap:before{
+	content: "\f0e4";
+}
+
+.fa-simple_links-uap:before{
+	content: "\f14c";
+}
+.fa-simple_links-account-uap:before{
+	content: "\f08e";
+}
+.fa-account_page_menu-uap:before{
+	content: "\f0c9";
+}
+.fa-arrow-uap:before{
+    content: "\f0d7";
+}
+.fa-import_export-uap:before{
+	content: "\f0ec";
+}
+.fa-migrate_affiliates_pro-uap:before{
+	content: "\f0ec";
+}
+.fa-migrate_wp_affiliates-uap:before{
+	content: "\f0ec";
+}
+.fa-migrate_affiliate_wp-uap:before{
+	content: "\f0ec";
+}
+.fa-ranks_pro-uap:before{
+	content: "\f0e7";
+}
+.fa-landing_pages-uap:before{
+	content: "\f21d";
+}
+.fa-pay_per_click-uap:before{
+	content: "\f260";
+}
+.fa-cpm_commission-uap:before{
+	content: "\f012";
+}
+.fa-landing_pages-account-uap:before{
+	content: "\f21d";
+}
+.fa-pushover_referral_notifications-uap:before{
+  content: "\f0f3";
+}
+.fa-rest_api-uap:before{
+  content: "\f085";
+}
+.fa-info_affiliate_bar-uap:before{
+    content: "\f0eb";
+}
+.fa-info_affiliate_bar-menu:before{
+    content: "\f0c9";
+}
+.fa-product_links-uap:before{
+    content: "\f07a";
+}
+.fa-info_affiliate_bar-link:before{
+    content: "\f019";
+}
+.fa-info_affiliate_bar-banner:before{
+    content: "\f03e";
+}
+.fa-new-extension-uap:before{
+    content: "\f067";
+}
 /* BANNERS */
 .uap-banners-wrapp{
 	font-size: 12px;
@@ -311,6 +854,7 @@
 	padding: 0px 10px;
 	font-size: 13px;
 	box-sizing:border-box;
+	margin:0;
 }
 .uap-ap-menu .uap-ap-menu-item a{
 	text-decoration: none;
@@ -974,6 +1518,22 @@
 .uap-account-box-green{
 	background-color:#75c37d;
 }
+.uap-account-box-lightblue{
+	background-color: #428bca;
+}
+.uap-account-box-lightred{
+	    background-color: #ef5350;
+}
+.uap-account-box-lightgreen{
+	background-color: #8bc34a;
+}
+.uap-account-box-lightyellow{
+	background-color: #ffa726;
+}
+.uap-account-box-lightgray{
+	    background-color: #edf2f6;
+    color: #636d76;
+}
 .uap-row{
 	margin:5px 0 5px 0;
 }
@@ -1170,7 +1730,6 @@ background: #fff;
 	border-radius:5px;
 	background-color:#4f585f;
 	color:#fff;
-	font-family: 'Oswald', Arial, Helvetica, sans-serif;
 	font-size:15px;
 	font-weight:400;
 	display:inline-block;
@@ -1559,6 +2118,7 @@ overflow-x: auto;
 }
 
 .uap-login-notice {
+	font-size: 11px;
     position: absolute;
     z-index: 100;
     background: #dd3559;
@@ -1568,7 +2128,6 @@ overflow-x: auto;
     position: absolute;
     right: 0;
     margin-bottom: 8px;
-    font-size: .875rem;
     color: #fff;
     top: 100%;
     margin-top: -2px;
@@ -1608,16 +2167,19 @@ overflow-x: auto;
 .cropControls{
 	top:auto !important;
 	bottom:10px;
-	right: 20px !important;
+	right: 0px !important;
 	padding: 12px 14px;
     height: auto !important;
     background-color: rgba(0,0,0,0) !important;
     border-radius: 50%;
 }
+.uap-edit-top-ap-banner .cropControls{
+  right: 20px !important;
+}
 .cropControlsCrop{
 	/*background-color: rgba(0,0,0,0.35) !important;*/
 	border-radius: 0;
-    padding: 5px 10px;
+    padding: 5px 4px;
 }
 .cropControlsCrop:hover{
 	opacity: 1;
@@ -1786,8 +2348,10 @@ overflow-x: auto;
     border-radius:2px;
     display:inline-block;
     height:5px;
+	margin:0;
     margin-right:1px;
     width:20px;
+	margin-bottom:0px;
 }
 .uap-strength-label{
 	    margin: 0;
@@ -2142,11 +2706,11 @@ overflow-x: auto;
 }
 .fa-info_affiliate_bar-link{
 		    line-height: 0px;
-    		font-size: 0px;	
+    		font-size: 0px;
 	}
 	.fa-info_affiliate_bar-banner{
 		    line-height: 0px;
-    font-size: 0px;	
+    font-size: 0px;
 	}
 /****************** POPUP **********************/
 .uap-show-link-popup-wrapp{
@@ -2244,11 +2808,11 @@ overflow-x: auto;
 @media screen and (max-width: 782px){
 	.fa-info_affiliate_bar-link{
 		    line-height: 46px;
-    		font-size: 31px;	
+    		font-size: 31px;
 	}
 	.fa-info_affiliate_bar-banner{
 		    line-height: 46px;
-    font-size: 31px;	
+    font-size: 31px;
 	}
 	.uap-info-affiliate-bar-menu .fa-uap {
     line-height: 46px;
@@ -2331,7 +2895,7 @@ overflow-x: auto;
 	    padding: 10px 15px;
 		width:35%;
 	font-size: 13px;
-    line-height: 19px;	
+    line-height: 19px;
 }
 .uap-single-product-name a{
 text-decoration: none;
@@ -2346,7 +2910,7 @@ text-decoration: none;
 	font-size: 13px;
     line-height: 19px;
 	font-weight:bold;
-	color:#333;	
+	color:#333;
 }
 .uap-single-product-rewards{
 	    padding: 10px 15px;
@@ -2399,7 +2963,7 @@ text-decoration: none;
 	float:left;
 }
 .uap-product-links-search-bar-wrapper{
-	
+
 }
 .uap-product-links-single-item:nth-child(even) {
     background-color: #f9f9f9;
@@ -2419,13 +2983,13 @@ text-decoration: none;
 	    box-sizing: border-box;
 }
 .uap-product-links-search-bar-wrapper input{
-	height:40px;	
+	height:40px;
 	    box-sizing: border-box;
 }
 .uap-single-product-regular-price{
 	font-weight:300;
 	    text-decoration: line-through;
-		opacity:0.7;	
+		opacity:0.7;
 }
 .uap-product-links-count-wrapper{
 	float:left;
@@ -2434,7 +2998,7 @@ text-decoration: none;
 }
 .uap-product-links-count{
 	font-weight:600;
-	color:#222;	
+	color:#222;
 }
 .uap-product-links-order-wrapper{
 	float:right;
@@ -2490,3 +3054,477 @@ text-decoration: none;
 	min-width:inherit;
 }
 }
+
+
+/*v.6.0 */
+.uap-row:before,
+.uap-row:after {
+  display: table;
+  content: " ";
+  clear:both;
+}
+.uap-col-xs-1, .uap-col-xs-2, .uap-col-xs-3, .uap-col-xs-4, .uap-col-xs-5, .uap-col-xs-6, .uap-col-xs-7, .uap-col-xs-8, .uap-col-xs-9, .uap-col-xs-10, .uap-col-xs-11, .uap-col-xs-12 {
+  float: left;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+  box-sizing: border-box;
+}
+.uap-col-xs-12 {
+  width: 100%;
+}
+.uap-col-xs-11 {
+  width: 91.66666667%;
+}
+.uap-col-xs-10 {
+  width: 83.33333333%;
+}
+.uap-col-xs-9 {
+  width: 75%;
+}
+.uap-col-xs-8 {
+  width: 66.66666667%;
+}
+.uap-col-xs-7 {
+  width: 58.33333333%;
+}
+.uap-col-xs-6 {
+  width: 50%;
+}
+.uap-col-xs-5 {
+  width: 41.66666667%;
+}
+.uap-col-xs-4 {
+  width: 33.33333333%;
+}
+.uap-col-xs-3 {
+  width: 25%;
+}
+.uap-col-xs-2 {
+  width: 16.66666667%;
+}
+.uap-col-xs-1 {
+  width: 8.33333333%;
+}
+
+.uap-user-page-content{
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+ 	/*font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif !important;*/
+	color: #758697 !important;
+}
+.uap-special-label{
+	font-weight: 600;
+    color: #2b425b;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+.uap-profile-box-wrapper{
+	margin:10px 0;
+	padding: 5px;
+}
+.uap-profile-box-title{
+	height:30px;
+	border-bottom:1px solid #ddd;
+	margin-bottom:20px;
+	position:relative;
+}
+.uap-profile-box-title span{
+	    position: relative;
+    bottom: -10px;
+    font-size: 20px;
+    background-color: #fff;
+    padding: 0 10px;
+    margin-left: 25px;
+    color: #2b425b;
+}
+.uap-profile-box-content{
+	    padding: 15px 0;
+		color: #758697;
+}
+.uap-account-affiliatelinks-tab1{
+	font-size:16px;
+	padding-bottom:20px;
+}
+.uap-account-affiliatelinks-tab1{
+    border: 1px solid transparent;
+    background-color: #fafafa;
+    border-color: #eee;
+    padding: 5px;
+    margin: 0 0 15px 0;
+    width: 100%;
+    border-radius: 2px;
+}
+.uap-account-affiliatelinks-tab1 span{
+	font-weight:700;
+}
+.uap-account-affiliatelinks-tab2{
+	font-size:16px;
+	padding-bottom:20px;
+}
+.uap-account-affiliatelinks-tab2 span{
+	font-weight:700;
+}
+.uap-account-affiliatelinks-tab3{
+	text-align:center;
+	margin:0 auto;
+	display:block;
+    border-left: 1px solid #eee;
+}
+.uap-account-affiliatelinks-tab7{
+	font-size:16px;
+	padding-bottom:20px;
+}
+.uap-account-affiliatelinks-tab7 span{
+	font-weight:700;
+}
+.uap-account-affiliatelinks-tab4{
+	text-align:center;
+	margin:0 auto;
+	display:block;
+    border-left: 1px solid #eee;
+}
+.uap-account-notes{
+	font-size:14px;
+	color: #afb9c3;
+}
+.uap-button-primary{
+	display: inline-block;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+	cursor: pointer;
+    background-color: transparent;
+    color: inherit;
+    padding: 6px 12px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    line-height: 1.42857;
+    vertical-align: middle;
+    transition: all 0.25s;
+	background-color: #369ff4;
+    border-color: #42a5f5;
+    color: #ffffff;
+	font-size: 18px;
+    line-height: 1.33;
+	    border-radius: 3px;
+		padding:10px 20px;
+	text-decoration: none!important;
+}
+.uap-button-primary:hover, .uap-button-primary:active {
+    background-color: #1690f3;
+    border-color: #2095f3;
+    color: #ffffff;
+	text-decoration: none !important;
+}
+.uap-qr-code-wrapper img {
+    display: block;
+    max-height: 150px;
+	margin:0 auto;
+}
+.uap-public-form-control{
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+	    box-sizing: border-box !important;
+
+}
+.uap-account-affiliatelinks-tab5 .uap-ap-label{
+	width:100% !important;
+}
+.uap-change-password-form .uap-change-password-field-wrap {
+    padding: 12px 0px;
+}
+.uap-change-password-form .uap-change-password-field{
+	padding:3px;
+}
+.uap-change-password-label{
+	color: #758697;
+	width:30% !important;
+}
+.uap-change-password-field-details{
+	text-align:right;
+    font-size: 14px;
+    color: #afb9c3;
+	margin-right: 20%;
+}
+.uap-change-password-field-wrap submit{
+	text-align:right;
+	float: right;
+    margin-right: 20%;
+}
+.uap-account-title-label{
+	font-weight:600;
+	color: #2b425b;
+}
+.uap-success-box{
+		padding: 5px 15px;
+    	font-size: 13px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		color: #3c763d;
+		background-color: #dff0d8;
+		border-color: #d6e9c6;
+}
+.uap-warning-box{
+		padding: 5px 15px;
+    	font-size: 13px;
+		margin-bottom: 20px;
+		border: 1px solid transparent;
+		border-radius: 4px;
+		color: #856404;
+		background-color: #fff3cd;
+		border-color: #ffeeba;
+}
+.uap-user-page-content table td, .uap-user-page-content table th{
+		border-color:transparent;
+}
+.uap-account-table thead{
+	font-family:inherit;
+	    text-transform: none;
+}
+.uap-account-table tfoot {
+    font-family: inherit;
+    text-transform: none;
+	font-size: 14px;
+}
+.uap-user-page-content table{
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+.uap-account-no-box-inside .uap-count{
+	font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif !important;
+}
+.uap-account-no-box-inside {
+    font-size: 15px;
+    font-weight: 200;
+    letter-spacing: 0.05em;
+}
+.uap-account-referrals-filter .uap-general-date-filter{
+	width:20%;
+	display: inline-block;
+}
+.uap-account-referrals-filter select{
+	width:30%;
+}
+.uap-account-referrals-filter input[type="submit"]{
+	width:15%;
+}
+.uap-user-page-content input[type="text"], .uap-user-page-content select, .uap-user-page-content input[type="submit"]{
+	font-family: -apple-system, BlinkMacSystemFont, San Francisco, Roboto, Segoe UI, Helvetica Neue, sans-serif !important;
+}
+ .uap-user-page-content select{
+	 padding:7px 12px;
+ }
+.uap-subnote{
+	font-size:12px;
+	letter-spacing:0.1px;
+}
+.uap-account-campaign-list-header{
+	border-bottom:1px solid #ddd;
+	    font-size: 14px;
+    line-height: 1.5em;
+    color: #555;
+    padding: 8px 10px;
+    max-width: 600px;
+}
+.uap-single-product-link{
+	background-color: #369ff4;
+    border-color: #42a5f5;
+    text-decoration: none!important;
+    border-radius: 3px;
+}
+.uap-single-product-link:hover, .uap-single-product-link:active {
+    background-color: #1690f3;
+    border-color: #2095f3;
+    color: #ffffff;
+    text-decoration: none !important;
+}
+.uap-single-product-name a{
+	font-weight:700;
+}
+.uap-show-more-products-bttn:hover {
+    color: #555;
+}
+.uap-achievements-content-line{
+	font-family:inherit !important;
+}
+.uap-achievements{
+	margin-bottom:20px !important;
+	margin-top:20px !important;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) !important;
+}
+.uap-addd-to-wallet{
+	text-decoration:none !important;
+}
+.uap-user-page-top-wrapper .uap-top-achievement .uap-achieved{
+	background-color: #75c37d;
+}
+.uap-account-summary-month {
+    border: 1px solid #DDD;
+    background-color: #fff;
+    margin-bottom: 15px;
+    box-shadow: 0px 1px 3px 0px rgba(0,0,0,0.05);
+    border-radius: 2px;
+}
+.uap-account-summary-month-header {
+    display: inline-block;
+    width: 100%;
+    padding-left: 10px;
+    position: relative;
+}
+.uap-account-summary-month-title {
+    color: #428bca;
+    float: left;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 10px 5px 5px 5px;
+}
+.uap-account-summary-month-content {
+    border-top: 1px solid #DDD;
+	padding: 15px;
+}
+.uap-account-summary-month-data {
+    position: relative;
+    min-height: 255px;
+	word-break: break-all;
+}
+.uap-account-summary-month-data-row {
+    padding: 5px 0;
+    border-bottom: 1px solid #f3f3f3;
+	color: #2b425b;
+}
+.uap-account-summary-month-data-row-first {
+    padding-top: 0;
+}
+.uap-account-summary-graph-title{
+    color: #428bca;
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 10px 5px 5px 5px;
+}
+.uap-account-summary-graph-title span{
+	color:#aaa;
+	font-weight:300;
+}
+.uap-account-summary-graph-warpper .uap-account-summary-month-content{
+	border-top:none;
+}
+.uap-account-summary-graph-content{
+	min-height: 300px;
+}
+.uap-account-summary-summary-content{
+    border-top: 1px solid #DDD;
+}
+.uap-account-summary-summary-data-title {
+    font-size: 1em;
+    color: #333333;
+    min-height: 35px;
+	padding-left:10px;
+}
+.uap-account-summary-summary-data-content {
+    font-size: 1.1em;
+    font-weight: bold;
+    min-height: 19px;
+	padding-left:10px;
+	color: #2b425b;
+}
+.uap-account-summary-summary-content-first-col{
+	    border-right: 1px solid #DDD;
+		    max-width: 170px;
+}
+.uap-date-line{
+	min-height: 36px;
+    vertical-align: -webkit-baseline-middle;
+}
+.uap-user-page-top-wrapper .uap-stats-content{
+	color: #2b425b !important;
+}
+.uap-user-page-top-wrapper {
+	color: #758697 !important;
+}
+@media screen and (max-width: 567px){
+	.uapcol-md-4, .uapcol-md-3,  .uapcol-md-2{
+		width:100%;
+	}
+	.uap-col-xs-1, .uap-col-xs-2, .uap-col-xs-3, .uap-col-xs-4, .uap-col-xs-5, .uap-col-xs-6, .uap-col-xs-7, .uap-col-xs-8, .uap-col-xs-9, .uap-col-xs-10, .uap-col-xs-11, .uap-col-xs-12 {
+		width:100%;
+	}
+	.uap-account-summary-summary-content-first-col{
+	    border-right: none;
+		max-width: 100%;
+	}
+	.uap-general-date-filter-wrap .uap-general-date-filter, .uap-account-referrals-filter{
+		width:100%;
+	}
+	.uap-general-date-filter-wrap select{
+		width:100%;
+    	padding: 7px 0;
+	}
+	.uap-single-notf-row-top .uap-single-notf-checkbox{
+		visibility:hidden;
+	}
+	.uap-account-referrals-filter input[type="submit"] {
+    	width: 100%;
+	}
+	.uap-date-line{
+		display:none;
+	}
+	.uap-change-password-form .uap-change-password-label{
+		width:100% !important;
+		text-align:left;
+	}
+	.uap-change-password-field-details{
+			text-align:left;
+			margin-right:0;
+	}
+	.uap-change-password-form .uap-change-password-field{
+		width:100%;
+	}
+	.uap-account-table tbody td{
+		display:table-row;
+	}
+	.uap-account-table thead th, .uap-account-table tfoot th{
+		display:none;
+	}
+}
+@media screen and (max-width: 768px){
+	.uapcol-md-4{
+		width:50%;
+	}
+	.uap-account-table tbody td, .uap-account-table thead th, .uap-account-table tfoot th{
+		word-break:normal;
+	}
+	.uap-account-summary-wrapper .uap-col-xs-8, .uap-account-summary-wrapper .uap-col-xs-4{
+		width:100%;
+	}
+	.uap-account-summary-summary-content .uap-col-xs-4{
+		width:50%;
+	}
+}
+.grecaptcha-badge{
+	z-index:100;
+}
+.uap-product-links-items-wrapper{
+	clear:both;
+}
+.uap-single-product-image-wrapp{
+		width:20%;
+}
+.uap-mlm-tree-avatar-child img{width:70px;height:70px;vertical-align:middle;-webkit-border-radius:50%;-moz-border-radius:50%;-o-border-radius:50%;border-radius:50%;border:5px solid #f9f9f9;background:#fff;}
+ .uap-mlm-tree-avatar-parent img{
+   border-color:rgb(42, 129, 174);
+ }
+ .uap-mlm-tree-avatar-main img{
+   border-color:#f25a68;
+ }
+   .uap-mlm-tree-name-child{ font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;font-size: 14px;font-weight: 600;width: 125px !important; word-wrap: break-word;}
+ #uap_mlm_chart .google-visualization-orgchart-node{    background: none !important; padding: 0 !important;
+   border: none !important;
+   -webkit-box-shadow: none !important; vertical-align: top;}
+   #uap_mlm_chart .google-visualization-orgchart-node:hover div{
+     color: #555;
+   }
+   #uap_mlm_chart .google-visualization-orgchart-node:hover  .uap-mlm-tree-avatar-child img{
+     border-color:#777;
+   }
+ .uap-mlm-tree-username-child{visibility: hidden;height: 1px;}
+ .uap-mlm-tree-name-child{width: 125px !important;    margin: 0 auto !important;}

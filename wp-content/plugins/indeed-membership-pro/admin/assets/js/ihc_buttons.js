@@ -19,8 +19,10 @@
 
         ///LOAD POPUP
        ed.addCommand('ihc_locker_popup', function() {
+				 	var token = jQuery('meta[name="ump-admin-token"]').attr("content");
     	   	url = url.replace('assets/js', '');
     	   	jQuery.ajax({
+							 headers: { "X-CSRF-UMP-ADMIN-TOKEN" : token },
     	         type : "post",
     	         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
     	         data : {
@@ -60,7 +62,7 @@
         // Add a button that opens a window
         ed.addButton('ihc_button_forms', {
             icon: 'ihc_btn_forms',
-			title : 'Membership ShortCodes',
+						title : 'Membership ShortCodes',
             type: "button",
             text : "",
             cmd : "ihc_forms_popup"
@@ -68,17 +70,19 @@
 
         ///LOAD POPUP
         ed.addCommand('ihc_forms_popup', function() {
+					 var token = jQuery('meta[name="ump-admin-token"]').attr("content");
 	         url = url.replace('assets/js', '');
-	    	 jQuery.ajax({
-	    	     type : "post",
-	    	     url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-	    	     data : {
-	    	                action: "ihc_ajax_admin_popup_the_forms",
-	    	            },
-	    	     success: function (data) {
-	    	        	 	jQuery(data).hide().appendTo('body').fadeIn('normal');
-	    	     }
-	    	 });
+		    	 jQuery.ajax({
+						 	 headers: { "X-CSRF-UMP-ADMIN-TOKEN" : token },
+		    	     type : "post",
+		    	     url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+		    	     data : {
+		    	                action: "ihc_ajax_admin_popup_the_forms",
+		    	            },
+		    	     success: function (data) {
+		    	        	 	jQuery(data).hide().appendTo('body').fadeIn('normal');
+		    	     }
+		    	 });
         });
 
         ed.addCommand('ihc_return_text', function(text){

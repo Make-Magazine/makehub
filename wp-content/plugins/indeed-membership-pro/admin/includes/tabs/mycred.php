@@ -13,7 +13,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 			<div class="iump-form-line">
 				<h2><?php _e('Activate/Hold MyCred Points', 'ihc');?></h2>
-				<p><?php _e('Reward with MyCred points when a subscription is purchased. Just set Hooks for your MyCred points providing specific rewards for each specific purchased level.', 'ihc');?></p>
+				<p><?php _e('Reward with MyCred points when a subscription is purchased. Just set Hooks for your MyCred points providing specific rewards for each specific purchased membership.', 'ihc');?></p>
 				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
 					<?php $checked = ($data['metas']['ihc_mycred_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_mycred_enabled');" <?php echo $checked;?> />

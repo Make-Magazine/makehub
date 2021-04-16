@@ -1,7 +1,8 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since 7.4
+Created v.7.4
+Deprecated starting with v.9.3
 */
 class PayPalExpressCheckoutNVP
 {
@@ -280,10 +281,9 @@ class PayPalExpressCheckoutNVP
         }
         $levelData = ihc_get_level_by_id($userLevelDetails['lid']);
         \Ihc_User_Logs::write_log( __("PayPal Payment IPN: Update user level expire time.", 'ihc'), 'payments');
-        ihc_update_user_level_expire($levelData, $userLevelDetails['lid'], $userLevelDetails['uid']);
-        ihc_send_user_notifications($userLevelDetails['uid'], 'payment', $userLevelDetails['lid']);//send notification to user
-        ihc_send_user_notifications($userLevelDetails['uid'], 'admin_user_payment', $userLevelDetails['lid']);//send notification to admin
-        ihc_switch_role_for_user($userLevelDetails['uid']);
+        \Indeed\Ihc\UserSubscriptions::makeComplete( $userLevelDetails['uid'], $userLevelDetails['lid'], false, ['payment_gateway' => 'paypal_express_checkout'] );
+
+
         ihc_insert_update_transaction($userLevelDetails['uid'], $responseFromPayPal['PROFILEID'], $paymentData);
     }
 

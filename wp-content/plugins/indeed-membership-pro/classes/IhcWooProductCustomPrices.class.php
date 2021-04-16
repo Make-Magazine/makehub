@@ -22,45 +22,48 @@ class IhcWooProductCustomPrices{
 	 * @var array
 	 */
 	private $module_metas = array();
-	
-	
+
+
 	/**
 	 * @param none
 	 * @return none
 	 */
 	public function __construct(){
-		$this->setModuleMetas();	
+		$this->setModuleMetas();
 		if (!empty($this->module_metas['ihc_woo_product_custom_prices_enabled'])){
 			add_action('init', array($this, 'register'));
 		}
 	}
-	
+
 
 	/**
 	 * @param none
 	 * @return none
-	 */	
+	 */
 	public function register(){
 		if (!defined('WC_VERSION')){
 			return;
+		}
+		if ( is_admin() ){
+				return;
 		}
 		if (version_compare(WC_VERSION, '3.0.1')==-1){
 			/// < v3.0.1
 			add_filter('woocommerce_get_price', array($this, 'return_price'), 999, 2);
 		} else {
 			add_filter('woocommerce_product_get_price', array($this, 'return_price'), 999, 2);
-			add_filter('woocommerce_product_variation_get_price', array($this, 'return_price'), 999, 2);			
+			add_filter('woocommerce_product_variation_get_price', array($this, 'return_price'), 999, 2);
 		}
-					
+
 		if (!empty($this->module_metas['ihc_woo_product_custom_prices_like_discount']) ){
-			add_filter('woocommerce_get_price_html', array($this, 'print_as_discount'), 999, 2);				
-		}		
-		
-		add_filter('woocommerce_variable_price_html', array($this, 'variable_price'), 999, 2);	
-		
+			add_filter('woocommerce_get_price_html', array($this, 'print_as_discount'), 999, 2);
+		}
+
+		add_filter('woocommerce_variable_price_html', array($this, 'variable_price'), 999, 2);
+
 	}
-	
-	
+
+
 	/**
 	 * @param none
 	 * @return none
@@ -71,7 +74,7 @@ class IhcWooProductCustomPrices{
 		self::$user_set = TRUE;
 		if ($uid){
 			///getting levels for current user
-			$data = Ihc_Db::get_user_levels($uid, TRUE);
+			$data = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
 			if ($data){
 				$this->user_levels = array_keys($data);
 			}
@@ -80,8 +83,8 @@ class IhcWooProductCustomPrices{
 			remove_filter('woocommerce_get_price', array($this, 'return_price'));
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param none
 	 * @return none
@@ -89,8 +92,8 @@ class IhcWooProductCustomPrices{
 	private function setModuleMetas(){
 		$this->module_metas = ihc_return_meta_arr('woo_product_custom_prices');
 	}
-	
-	
+
+
 	/**
 	 * @param float ($price)
 	 * @param object ($product) - all infos about current product
@@ -106,14 +109,15 @@ class IhcWooProductCustomPrices{
 		} else {
 			$product_id = $product->get_id();
 		}
-		
-		
+
+		//indeed_debug_var( $price );
+
 		if ($this->user_levels && $product_id){
 			//if (isset(self::$output_prices[$product_id])){
 			//	 return self::$output_prices[$product_id];
 			//} else {
 				$possible = array();
-				
+
 				/// Categories
 				$cats_ids = array();
 				$cats = Ihc_Db::woo_get_product_terms_as_string($product_id);
@@ -139,16 +143,16 @@ class IhcWooProductCustomPrices{
 						if ($result>-1){
 							self::$output_prices[$product_id] = $result;
 							self::$input_prices[$product_id] = $price;
-							return $result;							
+							return $result;
 						}
-					}					
-				}			
+					}
+				}
 			//}
 		}
 		return $price;
 	}
-	
-	
+
+
 	/**
 	 * @param float (base price)
 	 * @param array (rule settings)
@@ -176,10 +180,10 @@ class IhcWooProductCustomPrices{
 		}
 		return -1;
 	}
-	
-	
+
+
 	/**
-	 * @param array 
+	 * @param array
 	 * @param float
 	 */
 	private function do_tiebreaker_between_possible_prices($prices=array()){
@@ -202,40 +206,40 @@ class IhcWooProductCustomPrices{
 						$return_value = $price;
 					}
 				}
-			}						
+			}
 		}
 		if (isset($return_value)){
 			return $return_value;
 		}
 		return -1;
 	}
-	
-	
+
+
 	/**
 	 * @param string (output html)
 	 * @param object (the product object)
 	 * @return string
 	 */
-	public function print_as_discount($price_html='', $object=array()){		
+	public function print_as_discount($price_html='', $object=array()){
 		if (is_a($object, 'WC_Product_Variable')){
 			return $price_html;
 		} else {
 			if (empty(self::$user_set)){
 				$this->setUserLevels();
-			}		
+			}
 			if ($this->user_levels){
 				$regular_price = $object->get_regular_price();
 				$new_price = $this->return_price($regular_price, $object);
-				
+
 				if (version_compare(WC_VERSION, '3.0.1')==-1){
-					return $object->get_price_html_from_to($regular_price, $new_price);	
+					return $object->get_price_html_from_to($regular_price, $new_price);
 				} else {
 					/// < v3.0.1
 					wc_format_sale_price($regular_price, $new_price);
-				}				
-						
-			}				
-		}	
+				}
+
+			}
+		}
 		return $price_html;
 	}
 
@@ -243,17 +247,17 @@ class IhcWooProductCustomPrices{
 	public function variable_price($price, $object){
 		if (empty(self::$user_set)){
 			$this->setUserLevels();
-		}		
+		}
 		if ($this->user_levels){
-			$min = $object->get_variation_regular_price( 'min', TRUE );
-			$max = $object->get_variation_regular_price( 'max', TRUE );
+			$min = $object->get_variation_price( 'min', TRUE );// get_variation_regular_price()
+			$max = $object->get_variation_price( 'max', TRUE );// get_variation_regular_price()
 			$min = $this->return_price($min, $object);
-			$max = $this->return_price($max, $object);			
-			return wc_format_price_range( $min, $max ) . $object->get_price_suffix();	
-		}		
+			$max = $this->return_price($max, $object);
+			return wc_format_price_range( $min, $max ) . $object->get_price_suffix();
+		}
 		return $price;
 	}
-	
+
 }
 
 endif;

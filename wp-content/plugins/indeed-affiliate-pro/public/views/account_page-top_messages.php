@@ -1,5 +1,5 @@
 <?php if (!empty($data['warning_messages'])):?>
-	<div class="uap-ap-warnings">
+	<div class="uap-warning-box">
 		<?php foreach ($data['warning_messages'] as $message):?>
 			<?php echo $message;?>
 		<?php endforeach;?>		

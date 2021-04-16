@@ -1,7 +1,8 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since 7.4
+Created v.7.4
+Deprecated starting with v.9.3
 */
 class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
@@ -40,12 +41,17 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             return $this;
         }
 
-        $levels = get_option('ihc_levels');
+        $levels = \Indeed\Ihc\Db\Memberships::getAll();
         $levelData = $levels[$this->attributes['lid']];
 
         $siteUrl = site_url();
         $siteUrl = trailingslashit($siteUrl);
         $webhook = add_query_arg('ihc_action', 'mollie', $siteUrl);
+        $redirectUrl = get_option( 'ihc_mollie_return_page' );
+        $redirectUrl = get_permalink( $redirectUrl );
+        if( !$redirectUrl || $redirectUrl == -1 ){
+          $redirectUrl = $siteUrl;
+        }
         $amount = $levelData['price'];
 
         $reccurrence = FALSE;
@@ -153,7 +159,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                                     "value"    => $amount,
                 ],
                 "description"     => __('Buy ', 'ihc') . $levelData['label'],
-                "redirectUrl"     => $siteUrl,
+                "redirectUrl"     => $redirectUrl,
                 "webhookUrl"      => $webhook,
                 "metadata"        => [
                                     "order_id" => @$this->attributes['orderId'],
@@ -237,7 +243,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                     "value"       => $amount,
                 ],
                 "description"     => __('Buy ', 'ihc') . $levelData['label'],
-                "redirectUrl"     => $siteUrl,
+                "redirectUrl"     => $redirectUrl,
                 "webhookUrl"      => $webhook,
 				"method"		  => NULL,
                 //"method"          => \Mollie\Api\Types\PaymentMethod::CREDITCARD,
@@ -372,14 +378,14 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         } elseif ($payment->isOpen()) {
         } elseif ($payment->isPending()) {
             /// pending
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->isFailed()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->isExpired()) {
         } elseif ($payment->isCanceled()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->hasRefunds()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->hasChargebacks()) {}
     }
 
@@ -512,8 +518,8 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         /// update
         \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
         $levelData = ihc_get_level_by_id( $lid );//getting details about current level
-        ihc_update_user_level_expire( $levelData, $lid, $uid );
-        ihc_switch_role_for_user( $uid );
+        \Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid, false, [ 'payment_gateway' => 'mollie' ] );
+        //ihc_switch_role_for_user( $uid );
         $paymentData['message'] = 'success';
         $paymentData['status'] = 'Completed';
 
@@ -533,9 +539,6 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                               ->save();
         \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Save transaction details.", 'ihc'), 'payments');
 
-        //send notification to user
-        ihc_send_user_notifications( $uid, 'payment', $lid );
-        ihc_send_user_notifications( $uid, 'admin_user_payment', $lid );//send notification to admin
         \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Send notifications.", 'ihc'), 'payments');
         do_action( 'ihc_payment_completed', $uid, $lid );
         return $result;

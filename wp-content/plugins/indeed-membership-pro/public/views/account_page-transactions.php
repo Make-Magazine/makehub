@@ -46,6 +46,7 @@
 					} else {
 							$data_payment = [];
 					}
+					$lid = isset( $data_payment->lid ) ? $data_payment->lid : -1;
 					?>
 					<tr>
 						<td class="manage-column ihc-content-left"  data-title="<?php _e('Level', 'ihc');?>">
@@ -60,7 +61,12 @@
 								} elseif (isset($data_payment->x_description)){
 									echo $data_payment->x_description;
 								} else {
-									echo '--';
+									$levelName = \Ihc_Db::get_level_name_by_lid( $lid );
+									if ( $levelName != '' ){
+											echo $levelName;
+									} else {
+											echo '--';
+									}
 								}
 							?>
 							</div>

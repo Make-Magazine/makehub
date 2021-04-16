@@ -1,6 +1,9 @@
 <div class="uap-wrapper">
 <div class="uap-stuffbox">
   <form action="<?php echo $data['form_action_url'];?>" method="post">
+
+  <input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<h3 class="uap-h3"><?php _e('Manage Banners', 'uap');?></h3>
 	<div class="inside">
 	  <div class="uap-inside-item">
@@ -41,10 +44,10 @@
 	</div>
 		<input type="hidden" name="status" value="1" />
 		<div class="uap-submit-form">
-			<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large">
+			<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large">
 		</div>
 	</div>
-	<input type="hidden" name="id" value="<?php echo $data['id'];?>" />		
+	<input type="hidden" name="id" value="<?php echo $data['id'];?>" />
   </form>
 </div>
 

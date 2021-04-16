@@ -1,4 +1,7 @@
 			<form action="" method="post" id="custom_fields_form">
+
+				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 				<span class="uap-add-new-like-wp">
 					<i class="fa-uap fa-add-uap"></i>
 					<a href="<?php echo $data['url_edit_custom_fields'];?>" class="uap-add-new-like-wp"><?php _e('Add New Register Form Field', 'uap');?></a>
@@ -7,7 +10,7 @@
 					<h3 class="uap-h3"><?php _e('Registration Form', 'uap');?></h3>
 					<div class="inside">
 						<div style="margin-bottom: 15px;">
-							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 								<div class="uap-sortable-table-wrapp">
 
@@ -95,7 +98,8 @@
 											<td><?php echo $v['type'];?></td>
 											<td>
 												<?php
-													if($v['name']=='uap_social_media' || $v['name']=='payment_select'){
+													$notAvailableForAdminSection = [ 'uap_social_media', 'payment_select', 'confirm_email', 'pass2' ];
+													if( in_array( $v['name'], $notAvailableForAdminSection ) ){
 														echo '-';
 													} else if ($v['display_admin']==2){
 														_e('Always', 'uap');
@@ -193,7 +197,7 @@
 								</div>
 						<input type="hidden" value="" name="delete_custom_field" id="delete_custom_field" />
 						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+							<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

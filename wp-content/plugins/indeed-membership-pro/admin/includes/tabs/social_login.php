@@ -126,6 +126,7 @@ if ($_GET['subtab']=='settings'){
 
 		<?php
 	} else {
+		$callbackURL = IHC_URL . 'public/social_handler.php'; // old was site_url()
 		switch ($_GET['item']){
 			case 'fb':
 				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
@@ -172,21 +173,29 @@ if ($_GET['subtab']=='settings'){
 							<div style="font-size: 11px; color: #333; padding-left: 10px;">
 								<div style="font-size: 14px;"><h4><?php _e("How to create a Facebook App")?></h4></div>
 
-								<!-- developerr -->
+
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
-								<li><?php _e('Look after \'My Apps\' and \'Create app\'.', 'ihc');?></li>
+								<li><?php _e("Go to ", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
+								<li><?php _e('Look after \'My Apps\' and \'Add a New App\'.', 'ihc');?></li>
 								<li><?php _e('After complete the name of the app (make sure not to put facebook or fb in app name) click \'Create App ID\'.', 'ihc');?></li>
-								<li><?php _e('In left side area look after \'Settings > Basic\' and fill App Domains with ' . '<b>'.site_url().'</b>', 'ihc');?></li>
-								<li><?php _e('Create a Privacy Policy page in your website and paste URL in \'Privacy Policy URL\'.', 'ihc');?></li>
-								<li><?php _e('In \'Category\' you may choose a category of your app.', 'ihc');?></li>
-								<li><?php _e('Look after \'Business Use\' and select one of the 2 options and \'Save Changes\'.', 'ihc');?></li>
-								<li><?php _e('In \'Settings > Basic\' in top of the page you will find \'App Id\' and \'App Secret\'.', 'ihc');?></li>
-								<li><?php _e('Look after \'Products\' in left side of the menu page and \'Set Up\' Facebook Login and press \'Settings\' from the \'Facebook Login\' app.', 'ihc');?></li>
-								<li><?php _e('In \'Valid OAuth Redirect URIs\' set ' . '<b>'.IHC_URL.'classes/hybrid_auth/hybridauth/?hauth_done=Facebook'.'</b>', 'ihc');?></li>
-								<li><?php _e('In \'Settings > Basic\' in top of the page you will see that app is \'In Development\'. Switch to live mode.', 'ihc');?></li>
+								<li><?php _e('In left side area look after \'Settings > Basic\' and fill <b>App Domains</b> with your site domain. (mywebsite.com,  www.mywebsite.com).', 'ihc');?></li>
+								<li><?php _e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in <b>Privacy Policy URL</b> and <b>Terms of Service URL</b> in your Facebook app.', 'ihc');?></li>
+								<li><?php _e('Choose a category of the app form <b>Category</b> list.', 'ihc');?></li>
+								<li><?php _e('Click on \'+\' from <b>PRODUCTS</b> and set up <b>Facebook Login</b> product. Choose Web platform and set your <b>Site URL</b> with '. site_url() . '.', 'ihc');?></li>
+								<li><?php _e('In Facebook Login product from the left side of the menu click on <b>Settings</b> and make sure that <b>Client OAuth Login</b> and <b>Web OAuth Login</b> are \'Yes\'.', 'ihc');?></li>
+								<li><?php _e('In <b>Valid OAuth Redirect URIs</b> put the <b>' . $callbackURL . '</b> url.', 'ihc');?></li>
+								<li><?php _e('In top of the page your app is in development mode. Switch to Live Mode.', 'ihc');?></li>
+								<li><?php _e('In Facebook app go to  Settings > Basic and copy \'App ID\' and \'App Secret\' and paste it to \'Facebook Settings\' from your website.', 'ihc');?></li>
+								<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked <b>ihc_social_media</b> on register page.', 'ihc');?></li>
+								<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the <b>Show Social Media Login Buttons</b> option.', 'ihc');?></li>
+
 								</ul>
-								<!-- developer -->
+
+							</div>
+							<div class="iump-form-line">
+								<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+								<p><?php _e("UMP members may synchronized their Facebook account with WP user account from the registration process.", "ihc");?></p>
+								<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -234,19 +243,29 @@ if ($_GET['subtab']=='settings'){
 										<h3><?php _e('Twitter Settings:', 'ihc');?></h3>
 										<div class="inside">
 											<div class="iump-form-line">
-												<label class="iump-labels"><?php _e('Application Key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_key'];?>" name="ihc_tw_app_key" style="width: 300px;" />
+												<label class="iump-labels"><?php _e('API key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_key'];?>" name="ihc_tw_app_key" style="width: 300px;" />
 											</div>
 											<div class="iump-form-line">
-												<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_secret'];?>" name="ihc_tw_app_secret" style="width: 300px;" />
+												<label class="iump-labels"><?php _e('API secret key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_secret'];?>" name="ihc_tw_app_secret" style="width: 300px;" />
 											</div>
 											<div style="font-size: 11px; color: #333; padding-left: 10px;">
 												<div style="font-size: 14px;"><h4><?php _e("How to create a Twitter App")?></h4></div>
 												<ul class="ihc-info-list">
-												<li><?php _e("Go to :", "ihc");?><a href="https://dev.twitter.com/apps" target="_blank">https://dev.twitter.com/apps</a></li>
-												<li><?php _e('Click "Create New App".', 'ihc');?></li>
-												<li><?php _e('Fill out the "Name", "Description", "Site URL". At "Callback URL" you must add: ', 'ihc'); echo '<b>'.site_url().'</b>';?></li>
-												<li><?php _e('You will find the "Consumer Key" (API Key) and "Consumer Secret" (API Secret) in the "Keys and Access Tokens" section.', 'ihc');?></li>
+												<li><?php _e("Go to ", "ihc");?><a href="https://dev.twitter.com/apps" target="_blank">https://dev.twitter.com/apps</a></li>
+												<li><?php _e('Create an app.', 'ihc');?></li>
+												<li><?php _e('Check <b>Enable Sign in with Twitter</b>.', 'ihc');?></li>
+												<li><?php _e('At "Callback URL" you must add ', 'ihc'); echo '<b>'.$callbackURL.'</b>';?></li>
+												<li><?php _e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in <b>Terms of Service URL</b> and <b>Privacy policy URL</b> in your app details.', 'ihc');?></li>
+												<li><?php _e('After app was created, go to <b>Keys and tokens </b> tab and copy API keys from Consumer API keys.', 'ihc');?></li>
+												<li><?php _e('In Permissions tab check \'Read-only\' in <b>Access permission</b> and  check \'Request email address from users\' in <b>Additional permissions</b>.', 'ihc');?></li>
+												<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked <b>ihc_social_media</b> on register page.', 'ihc');?></li>
+												<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the <b>Show Social Media Login Buttons</b> option.', 'ihc');?></li>
 												</ul>
+											</div>
+											<div class="iump-form-line">
+												<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+												<p><?php _e("UMP members may synchronized their Twitter account with WP user account from the registration process.", "ihc");?></p>
+												<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 											</div>
 											<div class="ihc-wrapp-submit-bttn iump-submit-form">
 												<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -303,14 +322,20 @@ if ($_GET['subtab']=='settings'){
 										<div style="font-size: 11px; color: #333; padding-left: 10px;">
 											<div style="font-size: 14px;"><h4><?php _e("How to create a LinkedIn App")?></h4></div>
 											<ul class="ihc-info-list">
-											<li><?php _e("Go to :", "ihc");?><a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a></li>
-											<li><?php _e('Click "Create Application".', 'ihc');?></li>
-											<li><?php _e('Fill the required fields and submit. "Sign In with LinkedIn" must be available.', 'ihc');?></li>
-                      <li><?php _e('Be sure that Company is Verified.', 'ihc');?></li>
-											<li><?php echo __( 'At Redirect URL write the following value: ', 'ihc' ) . IHC_URL . 'classes/hybridAuth-2.9/?hauth.done=LinkedIn';?></li>
-											<li><?php _e('After you verify the Company association, you will find available Permissions added into "Auth" section.', 'ihc');?></li>
-											<li><?php _e('You will find the "Client ID" and "Client Secret" in the "Auth" section.', 'ihc');?></li>
+											<li><?php _e("Go to ", "ihc");?><a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a></li>
+											<li><?php _e('Click "Create app".', 'ihc');?></li>
+											<li><?php _e('In \'LinkedIn Page*\' you have to add an existent LinkedIn company name or create a new company page. Complete the field with company name.', 'ihc');?></li>
+                      <li><?php _e('Once the app has been created in \'Settings\' tab you must verify the company. Clik on <b>Verify</b>, and \'Generate URL\'. Open the URL in a browser and click on \'Verify\'.', 'ihc');?></li>
+											<li><?php _e( 'In \'OAuth 2.0 settings\' add <b>' . $callbackURL . '</b> redirect URL.' , 'ihc' );?></li>
+											<li><?php _e('In \'Products\' select <b>Sign In with LinkedIn</b> product.', 'ihc');?></li>
+											<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ihc_social_media on register page.', 'ihc');?></li>
+											<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the Show Social Media Login Buttons option.', 'ihc');?></li>
 											</ul>
+										</div>
+										<div class="iump-form-line">
+											<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+											<p><?php _e("UMP members may synchronized their LinkedIn accounts with WP user account from the registration process.", "ihc");?></p>
+											<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 										</div>
 
 										<div class="ihc-wrapp-submit-bttn iump-submit-form">
@@ -359,23 +384,29 @@ if ($_GET['subtab']=='settings'){
 							<h3><?php _e('Tumblr Settings:', 'ihc');?></h3>
 							<div class="inside">
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application Key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_key'];?>" name="ihc_tbr_app_key" style="width: 300px;" />
+									<label class="iump-labels"><?php _e('OAuth consumer key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_key'];?>" name="ihc_tbr_app_key" style="width: 300px;" />
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_secret'];?>" name="ihc_tbr_app_secret" style="width: 300px;" />
+									<label class="iump-labels"><?php _e('OAuth consumer secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_secret'];?>" name="ihc_tbr_app_secret" style="width: 300px;" />
 								</div>
 
 								<div style="font-size: 11px; color: #333; padding-left: 10px;">
 									<div style="font-size: 14px;"><h4><?php _e("How to create a Tumblr App")?></h4></div>
 									<ul class="ihc-info-list">
-									<li><?php _e("Go to :", "ihc");?><a href="http://www.tumblr.com/oauth/apps" target="_blank">http://www.tumblr.com/oauth/apps</a></li>
+									<li><?php _e("Go to ", "ihc");?><a href="http://www.tumblr.com/oauth/apps" target="_blank">http://www.tumblr.com/oauth/apps</a></li>
 									<li><?php _e('Register a new application.', 'ihc');?>
 									<li><?php _e("Fill out the required fields and submit.", 'ihc');?></li>
-									<li><?php _e('Set the "Default callback URL" as:', 'ihc');echo site_url();?></li>
-									<li><?php _e('After submitting you will find "Application Key" and "Application Secret" just beside the App Logo.', 'ihc');?></li>
+									<li><?php _e('Set the "Default callback URL:" as: ', 'ihc'); echo '<b>' . $callbackURL. '</b>';?></li>
+									<li><?php _e('After submitting you will find "OAuth consumer key" and "OAuth consumer secret" in the right side of the screen.', 'ihc');?></li>
+									<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ihc_social_media on register page.', 'ihc');?></li>
+									<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the Show Social Media Login Buttons option.', 'ihc');?></li>
 									</ul>
 								</div>
-
+								<div class="iump-form-line">
+									<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+									<p><?php _e("UMP members may synchronized their Tumblr accounts with WP user account from the registration process.", "ihc");?></p>
+									<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
+								</div>
 								<div class="ihc-wrapp-submit-bttn iump-submit-form">
 									<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 								</div>
@@ -429,12 +460,30 @@ if ($_GET['subtab']=='settings'){
 							<div style="font-size: 11px; color: #333; padding-left: 10px;">
 								<div style="font-size: 14px;"><h4><?php _e("How to create a Instagram App")?></h4></div>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="http://instagr.am/developer/clients/manage/" target="_blank">http://instagr.am/developer/clients/manage/</a></li>
-								<li><?php _e('Register a new application.', 'ihc');?></li>
-								<li><?php _e("Fill out the required fields.", 'ihc')?></li>
-								<li><?php _e('Set the "Callback URL" for your application as: ', 'ihc');echo IHC_URL . 'classes/hybrid_auth/hybridauth/?hauth.done=Instagram';?></li>
-								<li><?php _e('After submitting you will find "Client Id" and "Client Secret" in the "Manage Clients" section.', 'ihc')?></li>
+								<li><?php _e("Go to ", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
+								<li><?php _e('Create a new App.', 'ihc');?></li>
+								<li><?php _e('In Dashboard click on Settings > Basic and fill \'App Domains\' with your site domain (mywebsite.com,  www.mywebsite.com).', 'ihc')?></li>
+								<li><?php _e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in <b>Privacy Policy URL</b> and <b>Terms of Service URL</b> in your Facebook app.', 'ihc');?></li>
+								<li><?php _e('Choose a category of the app from <b>Category</b> list.', 'ihc')?></li>
+								<li><?php _e('Click on \'+ Add Platform\', choose <b>Website</b> and add https://dev.wpindeed.com/.', 'ihc')?></li>
+								<li><?php _e('Click on \'+\' from <b>PRODUCTS</b> and set up an <b>Instagram Basic Display</b> product. Click on \'Create New App\', name the app and create it.', 'ihc')?></li>
+								<li><?php _e('Go back to the left side of the dashboard and In \'Instagram Basic Display\' > Basic Display you will find \'Instagram App ID\' and \'Instagram App Secret\'.', 'ihc')?></li>
+								<li><?php _e('In \'Client OAuth Settings\' put the <b>' . IHC_URL . 'public/social_handler.php</b>', 'ihc');?> </li>
+								<li><?php _e(' In \'Deauthorize\' and \'Data Deletion Requests\' put the ', 'ihc'); echo $callbackURL;?></li>
+								<li><?php _e('Add to Submission <b>instagram_graph_user_profile</b> and <b>instagram_graph_user_media</b> from \'App Review for Instagram Basic Display\'.', 'ihc');?></li>
+
+								<li><?php _e('In order to test your app go to <b>Roles</b> and in <b>Instagram Testers</b> add your instagram username.', 'ihc');?></li>
+								<li><?php _e('Log in in Instagram, navigate to (Profile Icon) > Edit Profile > <b>Apps and Websites</b> > Tester Invites and accept the invitation.', 'ihc');?></li>
+								<li><?php _e('Your Instagram account is now eligible to be accessed by your Facebook app while it is in <b>Development Mode</b>.', 'ihc');?></li>
+								<li><?php _e('To get the full access of your app go to Dashboard click on settings > Basic and verify your Business on Facebook.', 'ihc');?></li>
+								<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked <b>ihc_social_media</b> on register page.', 'ihc')?></li>
+								<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the <b>Show Social Media Login Buttons</b> option.', 'ihc')?></li>
 								</ul>
+							</div>
+							<div class="iump-form-line">
+								<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+								<p><?php _e("UMP members may synchronized their Instagram accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -490,13 +539,21 @@ if ($_GET['subtab']=='settings'){
 							<div style="font-size: 11px; color: #333; padding-left: 10px;">
 								<div style="font-size: 14px;"><h4><?php _e("How to create a VK App")?></h4></div>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="http://vk.com/developers.php" target="_blank">http://vk.com/developers.php</a></li>
-								<li><?php _e("Create a new application.", 'ihc')?></li>
-								<li><?php _e('For "Category" you must set as "Website".', 'ihc');?></li>
-								<li><?php _e('After submitting go to "Settings" and set the "Authorized redirect URI" as :', 'ihc');echo IHC_URL . 'classes/hybrid_auth/hybridauth/';?></li>
-								<li><?php _e('Be sure "Application status" is set to "Application on and visible to all".', 'ihc')?></li>
-								<li><?php _e('Save settings and copy the "Application ID" and "Application Secret".', 'ihc');?></li>
+								<li><?php _e("Go to ", "ihc");?><a href="http://vk.com/developers.php" target="_blank">http://vk.com/developers.php</a></li>
+								<li><?php _e("In top of the page click on <b>My Apps</b> and <b>Create app</b>.", 'ihc')?></li>
+								<li><?php _e('In \'Platform\' section you must select <b>Website</b>.', 'ihc');?></li>
+								<li><?php _e('Connect website.', 'ihc');?></li>
+								<li><?php _e('In <b>Contact info</b> section add <b>Terms and Conditions</b> and <b>Privacy Policy</b>pages.', 'ihc');?></li>
+								<li><?php _e(' Click on Settings menu tab and make sure that <b>App status</b> is \'Application on and visible to all\'.', 'ihc');?></li>
+								<li><?php _e('In Authorized redirect URI add ', 'ihc'); echo '<b>'.$callbackURL.'</b>';?></li>
+								<li><?php _e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked <b>ihc_social_media</b> on register page.', 'ihc')?></li>
+								<li><?php _e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the <b>Show Social Media Login Buttons</b> option.', 'ihc')?></li>
 								</ul>
+							</div>
+							<div class="iump-form-line">
+								<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+								<p><?php _e("UMP members may synchronized their Vkontakte accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
@@ -524,7 +581,7 @@ if ($_GET['subtab']=='settings'){
 					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Google Activation:', 'ihc');?></h3>
+						<h3><?php _e(' Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
 								<h4><?php _e("Once everything is set up, activate Google login to use it.", "ihc");?></h4>
@@ -553,13 +610,24 @@ if ($_GET['subtab']=='settings'){
 							<div style="font-size: 11px; color: #333; padding-left: 10px;">
 								<div style="font-size: 14px;"><h4><?php _e("How to create a Google App")?></h4></div>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to: ", "ihc");?><a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a></li>
+								<li><?php _e("Go to ", "ihc");?><a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a></li>
 								<li><?php _e("Create new project.", 'ihc')?></li>
-								<li><?php _e('Go to "ocial APIs" -> "Google+ API" and enable API.', 'ihc');?></li>
-								<li><?php _e('Go to "Credentials" -> "Credentials", at "add credentials" select "OAuth 2.0 client ID".', 'ihc');?></li>
-								<li><?php _e('Select web application, and set the "Authorized redirect URI" as : ', 'ihc'); echo IHC_URL . 'classes/hybrid_auth/hybridauth/?hauth.done=Google';?></li>
-								<li><?php _e('After submitting a popup will appear with "Application ID" and "Application Secret".', 'ihc');?></li>
+								<li><?php _e('Click on \'OAuth consent screen\'.', 'ihc');?></li>
+								<li><?php _e('Choose \'External\' in User Type section.', 'ihc');?></li>
+								<li><?php _e('Fill all the reqired fields.', 'ihc');?></li>
+								<li><?php _e('In <b>Authorized domains</b> you may add your website domain (mywebsite.com).', 'ihc');?></li>
+								<li><?php _e('Return to Credentials from left sidebar menu, and create an OAuth client ID in <b> CREATE CREDENTIALS</b>.', 'ihc');?></li>
+								<li><?php _e('In \'Create OAuth client ID\' select Web application. Add callback URL ' . '<b>' . $callbackURL .'</b>' . ' in  <b>Authorized redirect URIs</b> ', 'ihc'); ?></li>
+								<li><?php _e('After submitting a popup will appear with \'Your Client ID\' and \'Your Client Secret\'.', 'ihc');?></li>
+								<li><?php _e("In 'Domain verification' add a domain to configure webhook notifications.", 'ihc')?></li>
+								<li><?php _e("In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked <b>ihc_social_media</b> on register page.", 'ihc')?></li>
+								<li><?php _e("Go to UMP Dashboard -> Showcases -> Login Form page. Activate the <b>Show Social Media Login Buttons</b> option.", 'ihc')?></li>
 								</ul>
+							</div>
+							<div class="iump-form-line">
+								<p><?php _e("<b>Notice</b>:", "ihc");?></p>
+								<p><?php _e("UMP members may synchronized their Google accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php _e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the <b>Social Plus</b> tab.", "ihc");?></p>
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
 								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />

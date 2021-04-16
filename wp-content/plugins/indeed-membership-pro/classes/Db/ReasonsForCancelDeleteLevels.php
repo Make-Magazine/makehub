@@ -40,6 +40,22 @@ class ReasonsForCancelDeleteLevels
         return $wpdb->query( $query );
     }
 
+    public function getForUser( $uid=0, $limit=30, $offset=0 )
+    {
+        global $wpdb;
+        if ( !$uid ){
+            return [];
+        }
+        $query = $wpdb->prepare( "SELECT a.id, a.uid, a.lid, a.reason, a.action_type, a.action_date, b.user_login
+                                      FROM {$this->tableName} a
+                                      INNER JOIN {$wpdb->users} b
+                                      ON a.uid=b.ID
+                                      WHERE
+                                      a.uid=%d
+                                      ORDER BY action_date ASC LIMIT %d OFFSET %d;", $uid, $limit, $offset );
+        return $wpdb->get_results( $query );
+    }
+
     /*
     public function delete( $id=0 )
     {

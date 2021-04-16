@@ -1,5 +1,5 @@
 <?php
-require_once UAP_PATH . 'public/font_awesome_codes.php';
+require_once UAP_PATH . 'admin/font-awesome_codes.php';
 $font_awesome = uap_return_font_awesome();
 ?>
 <style>
@@ -31,6 +31,9 @@ $font_awesome = uap_return_font_awesome();
 
 <div class="metabox-holder indeed">
 <form action="" method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('Top Section:', 'uap');?></h3>
 
@@ -208,6 +211,7 @@ $font_awesome = uap_return_font_awesome();
 
 						$tabs = explode(',', $data['metas']['uap_ap_tabs']);
 						$i = 0;
+
 						foreach ($data['available_tabs'] as $k=>$v):?>
 							<div class="uap-ap-tabs-settings-item" id="<?php echo 'uap_tab_item_' . $k;?>">
 								<div class="input-group">

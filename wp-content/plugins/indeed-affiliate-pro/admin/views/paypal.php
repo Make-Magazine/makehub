@@ -21,7 +21,7 @@
 						<h4><?php _e('Sandbox', 'uap');?></h4>
 						<label class="uap_label_shiwtch" style="margin:10px 0 10px -10px;">
 						<?php $checked = ($data['metas']['uap_paypal_sandbox']) ? 'checked' : '';?>
-						<input type="checkbox" class="uap-switch" onClick="uapCheckAndH(this, '#uap_paypal_sandbox');" <?php echo $checked;?> />
+						<input type="checkbox" class="uap-switch uap-js-paypal-sandbox-on-off" onClick="uapCheckAndH(this, '#uap_paypal_sandbox');" <?php echo $checked;?> />
 						<div class="switch" style="display:inline-block;"></div>
 						</label>
 						<input type="hidden" name="uap_paypal_sandbox" value="<?php echo $data['metas']['uap_paypal_sandbox'];?>" id="uap_paypal_sandbox" />
@@ -30,22 +30,28 @@
 				<div class="uap-line-break"></div>
 				<div class="row">
 					<div class="col-xs-6">
-						<div class="uap-form-line">
-							<label class="uap-label"><?php _e('Sandbox Client ID', 'uap');?></label>
-							<input type="text" name="uap_paypal_sandbox_client_id" value="<?php echo $data['metas']['uap_paypal_sandbox_client_id'];?>" />
+						<div class="uap-js-paypal-sandbox-credentials" <?php if ( !$data['metas']['uap_paypal_sandbox'] ) echo "style='display: none;'";?> >
+								<div class="uap-form-line">
+									<label class="uap-label"><?php _e('Sandbox Client ID', 'uap');?></label>
+									<input type="text" name="uap_paypal_sandbox_client_id" value="<?php echo $data['metas']['uap_paypal_sandbox_client_id'];?>" />
+								</div>
+								<div class="uap-form-line">
+									<label class="uap-label"><?php _e('Sandbox Client Secret', 'uap');?></label>
+									<input type="text" name="uap_paypal_sandbox_client_secret" value="<?php echo $data['metas']['uap_paypal_sandbox_client_secret'];?>" />
+								</div>
 						</div>
-						<div class="uap-form-line">
-							<label class="uap-label"><?php _e('Sandbox Client Secret', 'uap');?></label>
-							<input type="text" name="uap_paypal_sandbox_client_secret" value="<?php echo $data['metas']['uap_paypal_sandbox_client_secret'];?>" />
+
+						<div class="uap-js-paypal-live-credentials" <?php if ( $data['metas']['uap_paypal_sandbox'] ) echo "style='display: none;'";?> >
+								<div class="uap-form-line">
+									<label class="uap-label"><?php _e('Client ID', 'uap');?></label>
+									<input type="text" name="uap_paypal_client_id" value="<?php echo $data['metas']['uap_paypal_client_id'];?>" />
+								</div>
+								<div class="uap-form-line">
+									<label class="uap-label"><?php _e('Client Secret', 'uap');?></label>
+									<input type="text" name="uap_paypal_client_secret" value="<?php echo $data['metas']['uap_paypal_client_secret'];?>" />
+								</div>
 						</div>
-						<div class="uap-form-line">
-							<label class="uap-label"><?php _e('Client ID', 'uap');?></label>
-							<input type="text" name="uap_paypal_client_id" value="<?php echo $data['metas']['uap_paypal_client_id'];?>" />
-						</div>
-						<div class="uap-form-line">
-							<label class="uap-label"><?php _e('Client Secret', 'uap');?></label>
-							<input type="text" name="uap_paypal_client_secret" value="<?php echo $data['metas']['uap_paypal_client_secret'];?>" />
-						</div>
+
 				</div>
 				</div>
 
@@ -54,11 +60,12 @@
 						<li><?php _e('1. Go to ', 'uap');?><a href="https://developer.paypal.com/" target="_blank">https://developer.paypal.com/</a> <?php _e('and login with your PayPal email and password.', 'uap');?></li>
 						<li><?php _e('2. After you have successfully logged in go to: ', 'uap');?> <a target="_blank" href="https://developer.paypal.com/developer/applications/">https://developer.paypal.com/developer/applications/</a> <?php _e(' and create a new REST API application.', 'uap');?></li>
 						<li><?php _e('3. After you have created a new application, the "Client ID" and "Client Secret" will be available.', 'uap');?></li>
+						<li><?php _e( '4. Be sure your PayPal account has permissions for Payouts.', 'uap' );?> <a href='https://developer.paypal.com/developer/accountStatus/' target=''>https://developer.paypal.com/developer/accountStatus/</a></li>
 					</ul>
 				</div>
 
 				<div class="uap-submit-form">
-					<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+					<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 				</div>
 			<?php else : ?>
 				<div style="color: red;font-weight: bold;">

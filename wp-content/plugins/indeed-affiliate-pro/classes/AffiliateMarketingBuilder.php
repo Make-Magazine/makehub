@@ -25,6 +25,7 @@ class AffiliateMarketingBuilder
     public function setCurrentPermalink( $currentPermalink='' )
     {
         $this->currentPermalink = $currentPermalink;
+        $this->currentPermalink = urldecode( $this->currentPermalink );
         return $this;
     }
 

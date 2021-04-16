@@ -1,5 +1,8 @@
 <div class="uap-wrapper">
 <form action="" method="post">
+
+	<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+
 	<div class="uap-stuffbox">
 		<h3 class="uap-h3"><?php _e('Public Workflow Settings', 'uap');?></h3>
 		<div class="inside">
@@ -16,6 +19,10 @@
 								<div class="switch" style="display:inline-block;"></div>
 							</label>
 							<input type="hidden" name="uap_hide_payments_warnings" value="<?php echo $data['metas']['uap_hide_payments_warnings'];?>" id="uap_hide_payments_warnings" />
+							<div>
+							<label class="uap-labels-special"><?php _e('Payout Service notice Message', 'uap');?></label>
+							<input type="text" name="uap_payments_warnings_message" value="<?php echo $data['metas']['uap_payments_warnings_message'];?>" id="uap_payments_warnings_message" />
+						</div>
 						</div>
 					</div>
 
@@ -78,7 +85,7 @@
 			</div>
 
 			<div class="uap-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 
 		</div>

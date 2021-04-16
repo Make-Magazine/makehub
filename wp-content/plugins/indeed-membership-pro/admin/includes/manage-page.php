@@ -12,17 +12,17 @@ $tab = 'dashboard';
 if(isset($_REQUEST['tab'])) $tab = $_REQUEST['tab'];
 
 $tabs_arr = array(
-					'users' => __('Users', 'ihc'),
+					'users' => __('Members', 'ihc'),
 					'affiliates' => __('Ultimate Affiliates', 'ihc'),
-					'levels' => __('Levels', 'ihc'),
+					'levels' => __('Memberships', 'ihc'),
 					'payment_settings' => __('Payment Services', 'ihc'),
 					'locker' => __('Inside Lockers', 'ihc'),
 					'showcases' => __('Showcases', 'ihc'),
 					'social_login' => __("Social Login", 'ihc'),
 					'coupons' => __("Coupons", "ihc"),
-					'block_url' => __('Lock Rules', 'ihc'),
+					'block_url' => __('Access Rules', 'ihc'),
 					'orders' => __('Payment History', 'ihc'),
-					'notifications' => __('Notifications', 'ihc'),
+					'notifications' => __('Email Notifications', 'ihc'),
 					'magic_feat' => __( 'Extensions', 'ihc'),
 					'general' => __('General Options', 'ihc'),
 				  );
@@ -31,6 +31,7 @@ $tabs_arr = array(
 	var ihc_messages = {
 					email_server_check: "<?php _e('An E-mail was sent to your Admin address. Check your inbox or Spam/Junk Folder!', 'ihc');?>",
 };
+jQuery(document).ready(function(){var e=jQuery('meta[name="ump-admin-token"]').attr("content");jQuery.ajaxSetup({headers:{"X-CSRF-UMP-ADMIN-TOKEN":e}})});
 </script>
 <?php $plugin_vs = get_ump_version(); ?>
 <div class="ihc-dashboard-wrap">
@@ -183,6 +184,9 @@ $tabs_arr = array(
 			case 'orders':
 				require_once IHC_PATH . 'admin/includes/tabs/orders.php';
 				break;
+			case 'order-edit':
+				require_once IHC_PATH . 'admin/includes/tabs/order-edit.php';
+				break;
 			case 'payments':
 				include_once IHC_PATH . 'admin/includes/tabs/list_payments.php';
 				break;
@@ -331,6 +335,18 @@ $tabs_arr = array(
 				break;
 			case 'reason_for_cancel':
 				require_once IHC_PATH . 'admin/includes/tabs/reason_for_cancel.php';
+				break;
+			case 'cart':
+				require_once IHC_PATH . 'admin/includes/tabs/cart.php';
+				break;
+			case 'order-details':
+				require_once IHC_PATH . 'admin/includes/tabs/order_details.php';
+				break;
+			case 'notification-logs':
+				require_once IHC_PATH . 'admin/includes/tabs/notification-logs.php';
+				break;
+			case 'user-details':
+				require_once IHC_PATH . 'admin/includes/tabs/user-details.php';
 				break;
 			default :
 				do_action( 'ump_print_admin_page', $tab );

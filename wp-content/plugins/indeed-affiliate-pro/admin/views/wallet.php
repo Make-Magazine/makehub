@@ -23,7 +23,7 @@
 				<div class="col-xs-4">
 					<div class="input-group" style="margin-top: 10px;">
 						<label class="input-group-addon"><?php _e('Minimum Amount', 'uap');?></label>
-						<input type="number" class="form-control" step="0.01" name="uap_wallet_minimum_amount" value="<?php echo $data['metas']['uap_wallet_minimum_amount'];?>" />
+						<input type="number" class="form-control" step='<?php echo uapInputNumerStep();?>' name="uap_wallet_minimum_amount" value="<?php echo $data['metas']['uap_wallet_minimum_amount'];?>" />
 
 					</div>
 				</div>
@@ -58,7 +58,7 @@
 
 
 			<div class="uap-submit-form">
-				<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large" />
+				<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>

@@ -21,7 +21,7 @@
           				<span class="input-group-addon ihc-special-input-label" id="basic-addon1" style="min-width:170px; text-align:right;"><?php _e('Level:', 'ihc');?></span>
                   <select name="lid">
                     <?php
-                      $levels = get_option('ihc_levels');
+											$levels = \Indeed\Ihc\Db\Memberships::getAll();
                       foreach ($levels as $k=>$v){
                         ?>
                         <option value="<?php echo $k?>" >

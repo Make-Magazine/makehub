@@ -72,30 +72,42 @@ function uap_custom_reorder_rank($ranks_arr, $id, $new_order){
 	return $ranks_arr;
 }
 
-function uap_correct_text($str, $wp_editor_content=false){
-	/*
-	 * @param string, bool
-	 * @return string
- 	 */
+if ( !function_exists( 'uap_correct_text' ) ):
+/**
+ * @param string
+ * @param bool
+ * @param bool
+ * @return string
+ */
+function uap_correct_text($str, $wp_editor_content=false, $escAttr=false )
+{
 	$str = stripcslashes(htmlspecialchars_decode($str));
+	if ( $escAttr ){
+			$str = esc_attr( $str );
+	}
 	if ($wp_editor_content){
 		return uap_format_str_like_wp($str);
 	}
 	return $str;
 }
+endif;
 
 function uap_format_str_like_wp( $str ){
 	/*
 	 * @param string
 	 * @return string
 	 */
+	/*
 	$str = preg_replace("/\n\n+/", "\n\n", $str);
 	$str_arr = preg_split('/\n\s*\n/', $str, -1, PREG_SPLIT_NO_EMPTY);
 	$str = '';
 
 	foreach ( $str_arr as $str_val ) {
-		$str .= '<p>' . trim($str_val, "\n") . "</p>\n";
+		$str .= '<p>' . trim($str_val, "\n") . "</p>\n";//trim($str_val, "\n") . "\n";
 	}
+	return $str;
+	*/
+	$str = wpautop( $str );
 	return $str;
 }
 
@@ -132,35 +144,40 @@ function uap_create_form_element($attr=array()){
 		switch ($attr['type']){
 			case 'text':
 			case 'conditional_text':
-				$str = '<input type="text" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" value="' . uap_correct_text($attr['value']) . '" placeholder="'.$attr['placeholder'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
+				$str = '<input type="text" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-text '.$attr['class'].'" value="' . uap_correct_text( $attr['value'], false, true ) . '" placeholder="'.$attr['placeholder'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'number':
-				$str = '<input type="number" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" value="'.$attr['value'].'"  '.$attr['other_args'].' '.$attr['disabled'].' />';
+				$str = '<input type="number" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-number '.$attr['class'].'" value="'.$attr['value'].'"  '.$attr['other_args'].' '.$attr['disabled'].' />';
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'textarea':
-				$str = '<textarea name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-textarea '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' >' . uap_correct_text($attr['value']) . '</textarea>';
+				$str = '<textarea name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-textarea uap-form-textarea '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' >' . uap_correct_text( $attr['value'], false, true ) . '</textarea>';
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'password':
+				global $wp_version;
 				wp_register_script('uap_passwordStrength', UAP_URL . 'assets/js/passwordStrength.js', array(), null );
-				wp_localize_script('uap_passwordStrength', 'uapPasswordStrengthLabels', json_encode( array(__('Very Weak', 'uap'), __('Weak', 'uap'), __('Good', 'uap'), __('Strong', 'uap'))) );
+				if ( version_compare ( $wp_version , '5.7', '>=' ) ){
+						wp_localize_script( 'uap_passwordStrength', 'uapPasswordStrengthLabels', array(__('Very Weak', 'uap'), __('Weak', 'uap'), __('Good', 'uap'), __('Strong', 'uap')) );
+				} else {
+						wp_localize_script( 'uap_passwordStrength', 'uapPasswordStrengthLabels', json_encode( array(__('Very Weak', 'uap'), __('Weak', 'uap'), __('Good', 'uap'), __('Strong', 'uap')) ) );
+				}
 				wp_enqueue_script('uap_passwordStrength');
 
 				$ruleOne = (int)get_option('uap_register_pass_min_length');
 				$ruleTwo = (int)get_option('uap_register_pass_options');
 
-				$str = '<input type="password" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" value="'.$attr['value'].'" placeholder="'.$attr['placeholder'].'" '.$attr['other_args'].' data-rules="' . $ruleOne . ',' . $ruleTwo . '" />';
+				$str = '<input type="password" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-password '.$attr['class'].'" value="'.$attr['value'].'" placeholder="'.$attr['placeholder'].'" '.$attr['other_args'].' data-rules="' . $ruleOne . ',' . $ruleTwo . '"  autocomplete="new-password" />';
 				$str .= '<div class="uap-strength-wrapper">';
 				$str .= '<ul class="uap-strength"><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li><li class="point"></li></ul>';
 				$str .= '<div class="uap-strength-label"></div>';
@@ -171,7 +188,7 @@ function uap_create_form_element($attr=array()){
 				break;
 
 			case 'hidden':
-				$str = '<input type="hidden" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" value="'.$attr['value'].'" '.$attr['other_args'].' />';
+				$str = '<input type="hidden" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-hidden '.$attr['class'].'" value="'.$attr['value'].'" '.$attr['other_args'].' />';
 				break;
 
 			case 'checkbox':
@@ -186,7 +203,7 @@ function uap_create_form_element($attr=array()){
 							$checked = ($v==$attr['value']) ? 'checked' : '';
 						}
 						$str .= '<div class="uap-form-checkbox">';
-						$str .= '<input type="checkbox" name="'.$attr['name'].'[]" id="'.$attr['id'].'" class="'.$attr['class'].'" value="' . uap_correct_text($v) . '" '.$checked.' '.$attr['other_args'].' '.$attr['disabled'].'  />';
+						$str .= '<input type="checkbox" name="'.$attr['name'].'[]" id="'.$attr['id'].'" class="uap-form-element uap-form-element-checkbox '.$attr['class'].'" value="' . uap_correct_text( $v, false, true ) . '" '.$checked.' '.$attr['other_args'].' '.$attr['disabled'].'  />';
 						$str .= uap_correct_text($v);
 						$str .= '</div>';
 					}
@@ -200,7 +217,7 @@ function uap_create_form_element($attr=array()){
 			case 'single_checkbox':
 				$str = "";
 				$str .= '<div class="uap-single-checkbox-wrap" id="' . $attr['id'] . '">'
-								. '<input type="checkbox" value="1" name="' . $attr['name'] . '" class="' . $attr['class'] . '" />';
+								. '<input type="checkbox" value="1" name="' . $attr['name'] . '" class="uap-form-element uap-form-element-checkbox ' . $attr['class'] . '" />';
 				if (!empty($attr['sublabel'])){
 						$str .= '<label class="iump-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
@@ -215,7 +232,7 @@ function uap_create_form_element($attr=array()){
 					foreach ($attr['multiple_values'] as $v){
 						$checked = ($v==$attr['value']) ? 'checked' : '';
 						$str .= '<div class="uap-form-radiobox">';
-						$str .= '<input type="radio" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" value="' . uap_correct_text($v) . '" '.$checked.' '.$attr['other_args'].' '.$attr['disabled'].'  />';
+						$str .= '<input type="radio" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-radio '.$attr['class'].'" value="' . uap_correct_text( $v, false, true ) . '" '.$checked.' '.$attr['other_args'].' '.$attr['disabled'].'  />';
 						$str .= uap_correct_text($v);
 						$str .= '</div>';
 					}
@@ -229,11 +246,11 @@ function uap_create_form_element($attr=array()){
 			case 'select':
 				$str = '';
 				if ($attr['multiple_values']){
-					$str .= '<select name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-select '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' >';
+					$str .= '<select name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-select uap-form-select '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' >';
 					if ($attr['multiple_values']){
 						foreach ($attr['multiple_values'] as $k=>$v){
 							$selected = ($k==$attr['value']) ? 'selected' : '';
-							$str .= '<option value="'.$k.'" '.$selected.'>' . uap_correct_text($v) . '</option>';
+							$str .= '<option value="'.$k.'" '.$selected.'>' . uap_correct_text( $v, false, true ) . '</option>';
 						}
 					}
 					$str .= '</select>';
@@ -246,14 +263,14 @@ function uap_create_form_element($attr=array()){
 			case 'multi_select':
 				$str = '';
 				if ($attr['multiple_values']){
-					$str .= '<select name="'.$attr['name'].'[]" id="'.$attr['id'].'" class="uap-form-multiselect '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' multiple>';
+					$str .= '<select name="'.$attr['name'].'[]" id="'.$attr['id'].'" class="uap-form-element uap-form-element-multiselect uap-form-multiselect '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' multiple>';
 					foreach ($attr['multiple_values'] as $k=>$v){
 						if (is_array($attr['value'])){
 							$selected = (in_array($v, $attr['value'])) ? 'selected' : '';
 						} else {
 							$selected = ($v==$attr['value']) ? 'selected' : '';
 						}
-						$str .= '<option value="'.$k.'" '.$selected.'>' . uap_correct_text($v) . '</option>';
+						$str .= '<option value="'.$k.'" '.$selected.'>' . uap_correct_text( $v, false, true ) . '</option>';
 					}
 					$str .= '</select>';
 				}
@@ -263,13 +280,14 @@ function uap_create_form_element($attr=array()){
 				break;
 
 			case 'submit':
-				$str = '<input type="submit" value="' . uap_correct_text($attr['value']) . '" name="'.$attr['name'].'" id="'.$attr['id'].'" class="'.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
+				$str = '<input type="submit" value="' . uap_correct_text( $attr['value'], false, true ) . '" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-submit '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'date':
+				wp_enqueue_script('jquery-ui-datepicker');
 				if (empty($attr['class'])){
 					$attr['class'] = 'uap-date-field';
 				}
@@ -289,13 +307,16 @@ function uap_create_form_element($attr=array()){
 		});
 		</script>
 		';
-				$str .= '<input type="text" value="'.$attr['value'].'" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-datepicker '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
+				$str .= '<input type="text" value="'.$attr['value'].'" name="'.$attr['name'].'" id="'.$attr['id'].'" class="uap-form-element uap-form-element-date uap-form-datepicker '.$attr['class'].'" '.$attr['other_args'].' '.$attr['disabled'].' />';
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'file':
+				wp_enqueue_script( 'uap-jquery_form_module' );
+				wp_enqueue_script( 'uap-jquery.uploadfile' );
+
 				global $indeed_db;
 				//$upload_settings = uap_return_meta_arr('extra_settings');
 				$upload_settings = $indeed_db->return_settings_from_wp_option('general-uploads');
@@ -478,18 +499,25 @@ jQuery(document).ready(function() {
 				break;
 
 			case 'plain_text':
-				$str = uap_correct_text($attr['value']);
+				$str = uap_correct_text($attr['value'], false, false );
 				if (!empty($attr['sublabel'])){
 					$str .= '<label class="uap-form-sublabel">' . uap_correct_text($attr['sublabel']) . '</label>';
 				}
 				break;
 
 			case 'uap_country':
+				wp_enqueue_style( 'uap_select2_style' );
+				wp_enqueue_script( 'uap-select2' );
+
 				if (empty($attr['id'])){
 					$attr['id'] = $attr['name'] . '_field';
 				}
 				$countries = uap_get_countries();
-				$str .= '<select name="' . $attr['name'] . '" id="' . $attr['id'] . '" >';
+
+				$default_country = getDefaultCountry();
+				if(empty($attr['value'])) $attr['value'] = $default_country;
+
+				$str .= '<select name="' . $attr['name'] . '" id="' . $attr['id'] . '" class="uap-form-element uap-form-element-select">';
 				foreach ($countries as $k=>$v):
 					$k = strtolower($k);
 					$selected = ($attr['value']==$k) ? 'selected' : '';
@@ -503,15 +531,17 @@ jQuery(document).ready(function() {
 
 				$str .= '</ul>';
 				$str .= '<script>
-					jQuery("#' . $attr['id'] . '").select2({
-					  placeholder: "Select Your Country",
-					  allowClear: true
+					jQuery(document).ready(function(){
+							jQuery("#' . $attr['id'] . '").select2({
+							  placeholder: "' . __( 'Select Your Country', 'uap' ) . '",
+							  allowClear: true
+							});
 					});
 				</script>';
 				break;
 			case 'uap_affiliate_autocomplete_field':
 				ob_start();
-				include UAP_PATH . 'admin/views/search_user_field_autocomplete.php';
+				include UAP_PATH . 'admin/views/search-user_field_autocomplete.php';
 				$str = ob_get_contents();
 				ob_end_clean();
 				break;
@@ -624,8 +654,8 @@ function uap_send_user_notifications($u_id=0, $notification_type='', $rank=0, $d
 
 		/// PUSHOVER
 		if ($indeed_db->is_magic_feat_enable('pushover')){
-			require_once UAP_PATH . 'classes/Uap_Pushover.class.php';
-			$pushover_object = new Uap_Pushover();
+			require_once UAP_PATH . 'classes/PushoverNotifications.class.php';
+			$pushover_object = new PushoverNotifications();
 			$pushover_object->send_notification($u_id, $rank, $notification_type, $send_to_admin);
 		}
 		/// PUSHOVER
@@ -696,9 +726,9 @@ function get_device_type(){
 	 * @param none
 	 * @return string
 	 */
-	if(!class_exists('Mobile_Detect'))
-		require UAP_PATH . 'classes/Mobile_Detect.class.php';
-	$detect = new Mobile_Detect();
+	if(!class_exists('MobileDetect'))
+		require UAP_PATH . 'classes/MobileDetect.php';
+	$detect = new MobileDetect();
 	if( ($detect->isMobile()) || ($detect->isTablet()) ) return 'mobile';
 	return 'web';
 }
@@ -855,6 +885,39 @@ function uap_get_currencies_list($type='all'){
 			'THB' => 'Thai Baht',
 			'TRY' => 'Turkish Lira (only for Turkish members)',
 			'RUB' => 'Russian Ruble',
+			'ARS' => 'Argentine Peso',
+			'BDT' => 'Bangladeshi Taka',
+			'BTC' => 'Bitcoin',
+			'BGN' => 'Bulgarian Lev',
+			'CLP' => 'Chilean Peso',
+			'CNY' => 'Chinese Yuan',
+			'COP' => 'Colombian Peso',
+			'HRK' => 'Croatia Kuna',
+			'DOP' => 'Dominican Peso',
+			'EGP' => 'Egyptian Pound',
+			'ISK' => 'Icelandic Krona',
+			'IDR' => 'Indonesia Rupiah',
+			'INR' => 'Indian Rupee',
+			'ILS' => 'Israeli Shekel',
+			'IRR' => 'Iranian Rial',
+			'KES' => 'Kenyan Shilling',
+			'KZT' => 'Kazakhstani Tenge',
+			'KIP' => 'Lao Kip',
+			'MYR' => 'Malaysian Ringgit',
+			'NPR' => 'Nepali Rupee',
+			'NGN' => 'Nigerian Naira',
+			'PKR' => 'Pakistani Rupee',
+			'PYG' => 'Paraguayan Guaraní',
+			'GBP' => 'Pounds Sterling',
+			'RON' => 'Romanian Leu',
+			'SAR' => 'Saudi Arabian Riyal',
+			'ZAR' => 'South African Rand',
+			'KRW' => 'South Korean Won',
+			'TWD' => 'Taiwan New Dollar',
+			'TND' => 'Tunisian Dinar',
+			'AED' => 'United Arab Emirates Dirham',
+			'UAH' => 'Ukrainian Hryvnia',
+			'VND' => 'Vietnamese Dong'
 	);
 	if ($type=='custom'){
 		return $custom;
@@ -974,16 +1037,21 @@ function uap_replace_constants($str = '', $u_id = FALSE, $dynamic_data = array()
 		);
 
 		$custom_constant_fields = uap_get_custom_constant_fields();
+
 		foreach ($custom_constant_fields as $k=>$v){
-			$replace[$k] = get_user_meta($u_id, $v, TRUE);
-			if (is_array($replace[$k])){
-				$replace[$k] = implode(',', $replace[$k]);
-			}
+				if ( !$v ){
+						continue;
+				}
+				$replace[$k] = get_user_meta($u_id, $v, TRUE);
+				if ( $replace[$k] && is_array($replace[$k])){
+					$replace[$k]= implode(',',$replace[$k]);
+				}
 		}
 
 		//if ($dynamic_data){
 			foreach ($dynamic_data as $k=>$v){
 				$replace[$k] = $v;
+
 			}
 		//}
 
@@ -1002,12 +1070,14 @@ function uap_get_custom_constant_fields(){
 	 */
 	global $indeed_db;
 	$data = $indeed_db->register_get_custom_fields();
+
 	if ($data && is_array($data)){
 		foreach ($data as $arr){
 			$fields["{CUSTOM_FIELD_" . $arr['name'] ."}"] = $arr['name'];
 		}
 		$diff = array('uap_social_media', 'recaptcha', 'tos', 'pass2', 'pass1', 'user_login', 'user_email', 'confirm_email', 'first_name', 'last_name', 'uap_avatar');
 		$fields = array_diff($fields, $diff);
+
 		return $fields;
 	}
 	return array();
@@ -1053,7 +1123,6 @@ function uap_return_cc_list($user, $pass){
 	 * @return array
 	 */
 	if (!class_exists('cc')){
-		include_once UAP_PATH .'classes/email_services/constantcontact/class.cc.php';
 	}
 	$list = array();
 	$cc = new cc($user, $pass);
@@ -1066,25 +1135,31 @@ function uap_return_cc_list($user, $pass){
 	return $list;
 }
 
-function uap_return_date_filter($url='', $status_arr=array(), $search_affiliate=FALSE){
+function uap_return_date_filter($url='', $status_arr=array(), $source_arr=array(), $search_affiliate=FALSE){
 	/*
 	 * @param string
 	 * @return string
 	 */
+	wp_enqueue_script('jquery-ui-datepicker');
 	ob_start();
 	$start = (empty($_REQUEST['udf'])) ? '' : $_REQUEST['udf'];
 	$end = (empty($_REQUEST['udu'])) ? '' : $_REQUEST['udu'];
 	$status = (isset($_REQUEST['u_sts'])) ? $_REQUEST['u_sts'] : -1;
+	$source = (isset($_REQUEST['u_source'])) ? $_REQUEST['u_source'] : -1;
 
+	$start = filter_var( $start, FILTER_SANITIZE_STRING );
+	$start = preg_replace( "([^0-9-])", '', $start );
+	$end = filter_var( $end, FILTER_SANITIZE_STRING );
+	$end = preg_replace( "([^0-9-])", '', $end );
 	?>
 	<form action="<?php echo $url;?>" method="post">
 		<div class="uap-general-date-filter-wrap" style="padding: 10px 0px;">
 			<?php if ($search_affiliate):?>
-			<input type="text" name="aff_u" value="<?php echo @$_REQUEST['aff_u'];?>" class="" placeholder="<?php _e('Affiliate', 'uap');?>"/>
+			<input type="text" name="aff_u" value="<?php echo @$_REQUEST['aff_u'];?>" style="min-width:400px; padding-right:30px;" class="" placeholder="<?php _e('Affiliate Username or Email Address', 'uap');?>"/>
 			<?php endif;?>
 			<!--label class="uap-label"><?php _e('Start:', 'uap');?></label-->
 			<input type="text" name="udf" value="<?php echo $start;?>" class="uap-general-date-filter" placeholder="From - mm/dd/yyyy"/>
-			<!--label class="uap-label"><?php _e('Until:', 'uap');?></label-->-
+			<!--label class="uap-label"><?php _e('Until:', 'uap');?></label--><span class="uap-date-line">-</span>
 			<input type="text" name="udu" value="<?php echo $end;?>" class="uap-general-date-filter" placeholder="To - mm/dd/yyyy"/>
 
 			<?php if (!empty($status_arr)):
@@ -1100,8 +1175,21 @@ function uap_return_date_filter($url='', $status_arr=array(), $search_affiliate=
 					endforeach;
 				?></select>
 			<?php endif;?>
+			<?php if (!empty($source_arr)):
+					$source_arr[-1] = '...';
+					ksort($source_arr);
+				?>
+				<select name="u_source"><?php
+					foreach ($source_arr as $key=>$value):
+					$selected = ($source==$key) ? 'selected' : '';
+					?>
+					<option value="<?php echo $key;?>" <?php echo $selected;?>><?php echo $value;?></option>
+					<?php
+					endforeach;
+				?></select>
+			<?php endif;?>
 
-			<input type="submit" value="<?php _e("Apply", 'uap');?>" name="apply" class="button button-primary button-large" />
+			<input type="submit" value="<?php _e("Apply Filter", 'uap');?>" name="apply" class="button button-primary button-large" />
 		</div>
 
 	</form>
@@ -1444,6 +1532,19 @@ function uap_is_ump_active(){
 	 }
 	 return FALSE;
 }
+function uap_is_woo_active(){
+	/*
+	 * @param none
+	 * @return bool
+	 */
+	  if (!function_exists('is_plugin_active')){
+	 	include_once ABSPATH . 'wp-admin/includes/plugin.php';
+	 }
+	 if (is_plugin_active('woocommerce/woocommerce.php')){
+	 	return TRUE;
+	 }
+	 return FALSE;
+}
 
 function uap_get_avatar_for_uid($uid){
 	/*
@@ -1527,7 +1628,7 @@ function uap_generate_qr_code($link='', $file_unique_name=''){
 	 */
 	 if ($link){
 	 	if (!class_exists('QRcode')){
-	 		require_once UAP_PATH . 'classes/qrcode/qrlib.php';
+	 		require_once UAP_PATH . 'classes/services/qrcode/qrlib.php';
 	 	}
 		ulp_empty_qr_images();/// delete old files
 		if (strpos($file_unique_name, 'home')!==FALSE){
@@ -1536,8 +1637,8 @@ function uap_generate_qr_code($link='', $file_unique_name=''){
 				$file_name = 'qrcode_' . $file_unique_name . time() . '.png';
 		}
 
-		$file_location = UAP_PATH . 'classes/qrcode/images/' . $file_name;
-		$file_link = UAP_URL . 'classes/qrcode/images/' . $file_name;
+		$file_location = UAP_PATH . 'classes/services/qrcode/images/' . $file_name;
+		$file_link = UAP_URL . 'classes/services/qrcode/images/' . $file_name;
 		$size = get_option('uap_qr_code_size');
 		if (!$size){
 			$size = 5;
@@ -1577,8 +1678,8 @@ function uap_do_opt_in($email=''){
 	}
 	$target_opt_in = get_option('uap_register_opt-in-type');
 	if ($target_opt_in && $email){
-		if (!class_exists('UapMailServices')){
-			require_once UAP_PATH . 'classes/UapMailServices.class.php';
+		if (!class_exists('OptInMailServices')){
+			require_once UAP_PATH . 'classes/OptInMailServices.class.php';
 		}
 
 		$uid = $indeed_db->getUidByEmail( $email );
@@ -1599,7 +1700,7 @@ function uap_do_opt_in($email=''){
 				$lastName = '';
 		}
 
-		$indeed_mail = new UapMailServices();
+		$indeed_mail = new OptInMailServices();
 		$indeed_mail->dir_path = UAP_PATH . 'classes';
 		switch ($target_opt_in){
 			case 'aweber':
@@ -1630,9 +1731,23 @@ function uap_do_opt_in($email=''){
 			case 'get_response':
 				$api_key = get_option('uap_getResponse_api_key');
 				$token = get_option('uap_getResponse_token');
+				/*
 				if ($api_key && $token){
 					$indeed_mail->indeed_getResponse( $api_key, $token, $email, $firstName . ' ' . $lastName );
 				}
+				*/
+				// since uap v. 5.8
+				require_once UAP_PATH . 'classes/services/email_services/get_response_v3/vendor/autoload.php';
+				$client = \Getresponse\Sdk\GetresponseClientFactory::createWithApiKey( $api_key );
+				$newContact = new \Getresponse\Sdk\Operation\Model\NewContact(
+							 new \Getresponse\Sdk\Operation\Model\CampaignReference( $token ),
+							 $email
+				);
+				if ( $firstName && $lastName ){
+						$newContact->setName( $firstName . ' ' . $lastName );
+				}
+				$createContact = new \Getresponse\Sdk\Operation\Contacts\CreateContact\CreateContact($newContact);
+				$createContactResponse = $client->call($createContact);
 				break;
 			case 'campaign_monitor':
 				$listId = get_option('uap_cm_list_id');
@@ -2030,6 +2145,16 @@ function uap_format_price_and_currency($currency='', $price_value=''){
 	 if (empty($data)){
 	 	$data = 'right';
 	 }
+
+	 $settings = [
+		 							'uap_num_of_decimals'			=> get_option( 'uap_num_of_decimals' ),
+							 		'uap_thousands_separator'	=> get_option( 'uap_thousands_separator' ),
+									'uap_decimals_separator'	=> get_option( 'uap_decimals_separator' ),
+	 ];
+	 if ( isset( $settings['uap_num_of_decimals'] ) && isset( $settings['uap_decimals_separator'] ) && isset( $settings['uap_thousands_separator'] ) ){
+			$price_value = number_format( $price_value, $settings['uap_num_of_decimals'], $settings['uap_decimals_separator'], $settings['uap_thousands_separator'] );
+	 }
+
 	 if ($data=='left'){
 	 	$output = $currency . $price_value;
 	 } else {
@@ -2075,7 +2200,7 @@ endif;
 
 if (!function_exists('ulp_empty_qr_images')):
 function ulp_empty_qr_images(){
-		$path = UAP_PATH . 'classes/qrcode/images/';
+		$path = UAP_PATH . 'classes/services/qrcode/images/';
 		if ($handle = opendir($path)) {
 				while (false !== ($file = readdir($handle))){
 						$filetime = filectime($path.'/'.$file)+3600;
@@ -2131,9 +2256,131 @@ function uapIsRegisterPage( $url )
 				return false;
 		}
 		$permalink = get_permalink($registerPage);
+		if ( empty( $permalink ) || $permalink == '' ){
+				return false;
+		}
 		if ( strpos( $url, $permalink) !== false ){
 				return true;
 		}
 		return false;
+}
+endif;
+
+if ( !function_exists( 'uap_generate_color_hex' ) ):
+/**
+ * @param none
+ * @return string
+ */
+function uap_generate_color_hex()
+{
+	$colors = [
+			'#0a9fd8',
+			'#38cbcb',
+			'#27bebe',
+			'#0bb586',
+			'#94c523',
+			'#6a3da3',
+			'#f1505b',
+			'#ee3733',
+			'#f36510',
+			'#f8ba01',
+	];
+	return $colors[rand(0, (count($colors)-1) )];
+}
+endif;
+
+if ( !function_exists( 'indeedIsAdmin' ) ):
+function indeedIsAdmin()
+{
+		global $current_user;
+		if ( empty( $current_user->ID ) ){
+				return false;
+		}
+		$userData = get_userdata( $current_user->ID );
+		if ( !$userData || empty( $userData->roles ) ){
+				return false;
+		}
+		if ( !in_array( 'administrator', $userData->roles ) ){
+				return false;
+		}
+		return true;
+}
+endif;
+
+if ( !function_exists( 'uapAdminVerifyNonce' ) ):
+function uapAdminVerifyNonce()
+{
+		$nonce = isset( $_SERVER['HTTP_X_CSRF_UAP_ADMIN_TOKEN'] ) ? $_SERVER['HTTP_X_CSRF_UAP_ADMIN_TOKEN']	: '';
+		if ( wp_verify_nonce( $nonce, 'uapAdminNonce' ) ) {
+				return true;
+		}
+		return false;
+}
+endif;
+
+if ( !function_exists( 'uapPublicVerifyNonce' ) ):
+function uapPublicVerifyNonce()
+{
+		$nonce = isset( $_SERVER['HTTP_X_CSRF_UAP_TOKEN'] ) ? $_SERVER['HTTP_X_CSRF_UAP_TOKEN']	: '';
+		if ( wp_verify_nonce( $nonce, 'uapPublicNonce' ) ) {
+				return true;
+		}
+		return false;
+}
+endif;
+
+if ( !function_exists('uapInputNumerStep') ):
+function uapInputNumerStep()
+{
+		$number = get_option( 'uap_num_of_decimals' );
+		if ( $number === FALSE ){
+				return 0.01;
+		}
+		if ( $number == 0 ){
+			return 1;
+		}
+		$j = 1;
+		for ( $i=0; $i<$number; $i++ ){
+				$j = $j / 10;
+		}
+		return $j;
+}
+endif;
+
+if ( !function_exists('getDefaultCountry') ):
+function getDefaultCountry()
+{
+		$locale = 'US';
+
+		$defaultcountry = get_option( 'uap_defaultcountry' );
+		if(empty($defaultcountry)){
+				$locale = get_locale();
+				$locale_arr = explode( '_' , $locale);
+
+				if(is_array($locale_arr) && isset($locale_arr[1]))
+					$locale = $locale_arr[1];
+				elseif(isset($locale_arr[0]))
+					$locale = $locale_arr[0];
+		}else{
+			$locale = $defaultcountry;
+		}
+		return strtolower ($locale);
+}
+endif;
+
+/**
+ * @param array
+ * @return array
+ */
+if ( !function_exists( 'indeedFilterVarArrayElements' ) ):
+function indeedFilterVarArrayElements( $data=[] )
+{
+		if ( !is_array( $data ) || count( $data ) == 0 ){
+				return $data;
+		}
+		foreach ( $data as $key => $value ){
+				$data[$key] = filter_var( $value, FILTER_SANITIZE_STRING );
+		}
+		return $data;
 }
 endif;

@@ -7,6 +7,9 @@
 <?php endif;?>
 
 			<form action="<?php echo $data['form_action_url'];?>" method="post">
+
+				<input type="hidden" name="uap_admin_forms_nonce" value="<?php echo wp_create_nonce( 'uap_admin_forms_nonce' );?>" />
+				
 <div class="uap-wrapper">
 		<div class="uap-stuffbox">
 				<h3 class="uap-h3"><?php _e('Add/Edit Notification', 'uap');?></h3>
@@ -108,7 +111,7 @@
 						<div class="uap-clear"></div>
 
 					<div class="uap-submit-form">
-						<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large">
+						<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large">
 					</div>
 				</div>
 			</div>
@@ -134,7 +137,7 @@
 										<div style="color: #777; font-weight:bold;font-size: 11px; font-style: italic;"><?php _e('Only Plain Text and up to ', 'uap');?><span style="color:#000;">1024</span><?php _e(' characters are available!', 'uap');?></div>
 									</div>
 									<div class="uap-submit-form">
-										<input type="submit" value="<?php _e('Save', 'uap');?>" name="save" class="button button-primary button-large">
+										<input type="submit" value="<?php _e('Save Changes', 'uap');?>" name="save" class="button button-primary button-large">
 									</div>
 								</div>
 							</div>

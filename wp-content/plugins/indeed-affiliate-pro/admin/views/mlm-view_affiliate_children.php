@@ -15,16 +15,19 @@
         data.addColumn('string', 'ToolTip');
 
         // For each orgchart box, provide the name, manager, and tooltip to show.
-				var theParent = '<?php echo $data['parent'];?>';
+				var theParent = '<?php echo $data['parent_id'];?>';
 		data.addRows([
 				<?php if (!empty($data['parent'])):?>
-					[{v:'<?php echo $data['parent'];?>', f:'<?php echo $data['parent'];?>'}, '', ''],
+				<?php $display_parent = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-parent"><img src="'.$data['parent_avatar'].'" /></div><div class="uap-mlm-tree-name-child">'.$data['parent_full_name'].'</div>'; ?>
+					[{v:'<?php echo $data['parent_id'];?>', f:'<?php echo $display_parent;?>'}, '', ''],
 				<?php endif;?>
-          [{v:'<?php echo $affiliate_name; ?>', f:''}, theParent, 'Main Affiliate'],
+						<?php $display_affiliate = '<div class="uap-mlm-tree-avatar-child uap-mlm-tree-avatar-main"><img src="'.$affiliate_avatar.'" /></div><div class="uap-mlm-tree-name-child">'.$affiliate_full_name.'</div>'; ?>
+          [{v:'<?php echo $affiliate_id; ?>', f:'<?php echo $display_affiliate;?>'}, theParent, 'Main Affiliate'],
 		<?php
 			if (!empty($data['items'])):
 				foreach ($data['items'] as $item):
-				echo "[{v:'".$item['username']."',f:'".$item['username']."<div>".$item['amount_value']."</div>' }, '".$item['parent']."', ' Level ".$item['level']."'],";
+					$display = '<div class="uap-mlm-tree-avatar-child"><img src="'.$item['avatar'].'" /></div><div class="uap-mlm-tree-name-child">'.$item['full_name'].'</div>';
+				 echo "[{v:'".$item['id']."',f:'".$display."' }, '".$item['parent_id']."', '".$item['amount_value']." rewards'],";
 				endforeach;
 			endif;
 		?>
@@ -58,7 +61,7 @@
 				</tbody>
 			</table>
 		<?php else : ?>
-			<?php _e('No Children Yet!', 'uap');?>
+			<?php _e('Current Affiliate user has no other sub-affiliates into his MLM Matrix on this moment', 'uap');?>
 		<?php endif;?>
 
 	</div>

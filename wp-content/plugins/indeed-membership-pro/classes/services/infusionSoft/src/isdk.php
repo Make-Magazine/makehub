@@ -33,7 +33,7 @@ class iSDK
      * @return bool
      * @throws iSDKException
      */
-    public function cfgCon($name='', $key = "", $dbOn = "on")
+    public function cfgCon($name, $key = "", $dbOn = "on")
     {
         $this->debug = (($key == 'on' || $key == 'off' || $key == 'kill' || $key == 'throw') ? $key : $dbOn);
 
@@ -75,7 +75,8 @@ class iSDK
             }
 
         } catch (iSDKException $e) {
-            throw new iSDKException($e->getMessage());
+            return false;
+            //throw new iSDKException($e->getMessage());
         }
 
         return true;

@@ -140,9 +140,9 @@
 							<input type="number" value="<?php echo $meta_arr['repeat'];?>" name="repeat" min="1" />
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Target Level", 'ihc');?></label>
+							<label class="iump-labels-special"><?php _e("Target Membership", 'ihc');?></label>
 							<select name="target_level"><?php
-								$levels = get_option('ihc_levels');
+								$levels = \Indeed\Ihc\Db\Memberships::getAll();
 								if ($levels && count($levels)){
 									$levels_arr[-1] = __("All", 'ihc');
 									foreach ($levels as $k=>$v){
@@ -158,7 +158,7 @@
 							?></select>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("On Levels with Billing Recurrence apply the Discount:", 'ihc');?></label>
+							<label class="iump-labels-special"><?php _e("On Subscriptions with Billing Recurrence apply the Discount:", 'ihc');?></label>
 							<select name="reccuring"><?php
 								$arr = array(0 => __("Just Once", 'ihc'), 1 => __("Forever", 'ihc'));
 								foreach ($arr as $k=>$v){

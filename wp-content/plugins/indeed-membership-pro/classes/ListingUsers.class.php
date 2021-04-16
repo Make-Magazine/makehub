@@ -83,6 +83,7 @@ if (!class_exists('ListingUsers')){
 			$search_by = empty($this->args['search_by']) ? '' : $this->args['search_by'];
 			$search_q = empty($_GET['ihc_search_u']) ? '' : esc_sql($_GET['ihc_search_u']);
 			$search_q = sanitize_text_field( $search_q );
+			$search_q = esc_attr( $search_q );
 
 			////// FILTER BY LEVELs
 			if (!empty($this->args['filter_by_level']) && !empty($this->args['levels_in'])){

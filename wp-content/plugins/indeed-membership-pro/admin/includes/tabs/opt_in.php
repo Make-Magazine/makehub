@@ -367,7 +367,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				            		$list_name = '';
 				            		if (isset($meta_arr['ihc_cc_list']) && $meta_arr['ihc_cc_list']){
 				            			//getting list name by id
-				            			include_once IHC_PATH . 'classes/email_services/constantcontact/class.cc.php';
+				            			include_once IHC_PATH . 'classes/services/email_services/constantcontact/class.cc.php';
 				            			$cc = new cc($meta_arr['ihc_cc_user'], $meta_arr['ihc_cc_pass']);
 				            			@$list_arr= $cc->get_list($meta_arr['ihc_cc_list']);
 				            			if(isset($list_arr['Name'])) $list_name = $list_arr['Name'];

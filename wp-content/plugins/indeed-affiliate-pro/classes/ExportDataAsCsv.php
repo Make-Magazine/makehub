@@ -5,6 +5,7 @@ class ExportDataAsCsv
 {
     private $typeOfData             = '';
     private $linkToDownload         = '';
+    private $filters                = [];
 
     public function __construct()
     {
@@ -14,6 +15,12 @@ class ExportDataAsCsv
     public function setTypeOfData( $typeOfData='' )
     {
         $this->typeOfData = $typeOfData;
+        return $this;
+    }
+
+    public function setFilters( $filters=[] )
+    {
+        $this->filters = $filters;
         return $this;
     }
 
@@ -36,18 +43,28 @@ class ExportDataAsCsv
     private function affiliates()
     {
         global $indeed_db;
-        $affiliates = $indeed_db->get_affiliates( -1, -1, false, '', '', [], 0 );
+
+        $rank = 0;
+        if ( !empty($this->filters['rank']) && $this->filters['rank'] > 0 ){
+          $rank = $this->filters['rank'];
+        }
+
+        $affiliates = $indeed_db->get_affiliates( -1, -1, false, '', '', [], $rank );
         if ( empty( $affiliates ) ){
             return;
         }
 
-        $targetFile = UAP_PATH . 'affiliates.csv';
+        $this->removeOldFiles();
+        $hash = bin2hex( random_bytes( 20 ) );
+        $filename = $hash . '.csv';
+        $targetFile = UAP_PATH . 'temporary/' . $filename;
         $fileResource = fopen( $targetFile, 'w' );
 
         $data = [
                     __( 'Affiliate ID', 'uap' ),
                     __( 'UserName', 'uap' ),
                     __( 'Name', 'uap' ),
+                    __( 'Email', 'uap' ),
                     __( 'Rank', 'uap' ),
                     __( 'Visits', 'uap' ),
                     __( 'Referrals', 'uap' ),
@@ -82,21 +99,44 @@ class ExportDataAsCsv
         }
 
         fclose( $fileResource );
-        $this->linkToDownload = UAP_URL . 'affiliates.csv';
+        $this->linkToDownload = UAP_URL . 'temporary/' . $filename;
     }
 
     private function visits()
     {
         global $indeed_db;
-        $visits = $indeed_db->get_visits( -1, -1, false, '', '', [] );
+        $where = array();
+
+        if ( !empty($this->filters['start']) && !empty($this->filters['end']) ){
+          $where[] = " v.visit_date>'" . $this->filters['start'] . "' ";
+          $where[] = " v.visit_date<'" . $this->filters['end'] . "' ";
+        }
+
+        if (isset($this->filters['status'])){
+  				switch($this->filters['status']){
+  					case '0':
+  							$where[] = " v.referral_id = 0 ";
+  							break;
+  					case '1':
+  							$where[] = " v.referral_id != 0 ";
+  							break;
+  				}
+  			}
+        if (!empty($this->filters['affiliate_username'])){
+            $where[] = " ((u.user_login LIKE '%" . $this->filters['affiliate_username'] . "%') OR  (u.user_email LIKE '%" . $this->filters['affiliate_username'] . "%') )";
+        }
+
+        $visits = $indeed_db->get_visits( -1, -1, false, '', '', $where);
 
         if ( empty( $visits ) ){
             return;
         }
 
-        $targetFile = UAP_PATH . 'visits.csv';
+        $this->removeOldFiles();
+        $hash = bin2hex( random_bytes( 20 ) );
+        $filename = $hash . '.csv';
+        $targetFile = UAP_PATH . 'temporary/' . $filename;
         $fileResource = fopen( $targetFile, 'w' );
-
         $data = [
                   __( 'IP', 'uap' ),
                   __( 'Affiliate Username', 'uap' ),
@@ -128,19 +168,37 @@ class ExportDataAsCsv
         }
 
         fclose( $fileResource );
-        $this->linkToDownload = UAP_URL . 'visits.csv';
+        $this->linkToDownload = UAP_URL . 'temporary/' . $filename;
     }
 
     private function referrals()
     {
         global $indeed_db;
-        $referrals = $indeed_db->get_referrals( -1, -1, false, '', '', [] );
+        $where = [];
+        if ( !empty($this->filters['start']) && !empty($this->filters['end']) ){
+          $where[] = " r.date>'" . $this->filters['start'] . "' ";
+          $where[] = " r.date<'" . $this->filters['end'] . "' ";
+        }
+        if (isset($this->filters['status']) && $this->filters['status']!=-1){
+          $where[] = " r.status='" . $this->filters['status'] . "' ";
+        }
+        if (isset($this->filters['source']) && $this->filters['source']!=-1){
+          $where[] = " r.source LIKE '%" . $this->filters['source'] . "%' ";
+        }
+        if (!empty($this->filters['affiliate_username'])){
+          $where[] = " ((u.user_login LIKE '%" . $this->filters['affiliate_username'] . "%') OR  (u.user_email LIKE '%" . $this->filters['affiliate_username'] . "%') )";
+        }
+
+        $referrals = $indeed_db->get_referrals( -1, -1, false, '', '', $where );
 
         if ( empty( $referrals ) ){
             return;
         }
 
-        $targetFile = UAP_PATH . 'referrals.csv';
+        $this->removeOldFiles();
+        $hash = bin2hex( random_bytes( 20 ) );
+        $filename = $hash . '.csv';
+        $targetFile = UAP_PATH . 'temporary/' . $filename;
         $fileResource = fopen( $targetFile, 'w' );
 
         $data = [
@@ -164,7 +222,7 @@ class ExportDataAsCsv
             if ( $referral['status'] == 1 ){
                 $status = __( 'Unverified', 'uap' );
             } else if ( $referral['status'] == 2 ){
-                $status = __( 'Unverified', 'uap' );
+                $status = __( 'Verified', 'uap' );
             }
             $data = [
                       $indeed_db->get_uid_by_affiliate_id( $referral['affiliate_id'] ),
@@ -182,11 +240,26 @@ class ExportDataAsCsv
         }
 
         fclose( $fileResource );
-        $this->linkToDownload = UAP_URL . 'referrals.csv';
+        $this->linkToDownload = UAP_URL . 'temporary/' . $filename;
     }
 
     public function getDownloadLink()
     {
         return $this->linkToDownload;
-    } 
+    }
+
+    private function removeOldFiles()
+    {
+        $directory = UAP_PATH . 'temporary/';
+        $files = scandir( $directory );
+        foreach ( $files as $file ){
+            $fileFullPath = $directory . $file;
+            if ( file_exists( $fileFullPath ) && filetype( $fileFullPath ) == 'file' ){
+                $extension = pathinfo( $fileFullPath, PATHINFO_EXTENSION );
+                if ( $extension == 'csv' ){
+                    unlink( $fileFullPath );
+                }
+            }
+        }
+    }
 }

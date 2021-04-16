@@ -7,9 +7,13 @@
 <?php endif;?>
 
 <form action="" method="post" class="uap-change-password-form">
+
+	<input type="hidden" value="<?php echo wp_create_nonce( 'uap_public_change_password_nonce' );?>" name="uap_public_change_password_nonce" />
+
 	<div class="uap-change-password-field-wrap">
-		<label class="uap-change-password-label"><?php _e("Old Password", 'uap');?></label>
+		<label class="uap-change-password-label"><?php _e("Current Password", 'uap');?></label>
 		<input class="uap-change-password-field" type="password" value="" name="old_pass" />
+        <div class="uap-change-password-field-details"><?php _e("we need your current password to confirm your changes", 'uap');?></div>
 	</div>
 	<div class="uap-change-password-field-wrap">
 		<label class="uap-change-password-label"><?php _e("New Password", 'uap');?></label>
@@ -20,7 +24,7 @@
 		<input class="uap-change-password-field" type="password" value="" name="pass2" />
 	</div>
 	<div class="uap-change-password-field-wrap">
-		<input type="submit" value="<?php _e("Save", 'uap');?>" name="update_pass" class="button button-primary button-large" />
+		<input type="submit" value="<?php _e("Save Changes", 'uap');?>" name="update_pass" class="button button-primary button-large" />
 	</div>
 	<?php if (!empty($data['error'])) : ?>
 		<div><?php echo $data['error'];?></div>

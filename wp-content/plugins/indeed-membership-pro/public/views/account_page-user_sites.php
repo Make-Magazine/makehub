@@ -18,7 +18,7 @@
 		</tr>
 	</thead>
 	<?php foreach ($data['uid_levels'] as $lid=>$array):?>
-		<?php $level_active = Ihc_Db::is_user_level_active($current_user->ID, $lid);?>
+		<?php $level_active = \Indeed\Ihc\UserSubscriptions::isActive( $current_user->ID, $lid );?>
 		<tr>
 			<td class="ihc-level-name-wrapp"><?php echo Ihc_Db::get_level_name_by_lid($lid);
 				if (!$level_active){
