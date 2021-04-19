@@ -151,15 +151,14 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
      *      Need to get nested form ID and then loop through the nested form information 
      */
     $timeZone = getFieldByParam('timezone', $parameter_array, $entry);
-
+    
     //pull nested form to get submitted schedule/ticket
     if (isset($parameter_array['nested-form'])) {
         $nstFormID = (isset($parameter_array['nested-form']['gpnfForm']) ? $parameter_array['nested-form']['gpnfForm'] : '10');
         $nstForm = GFAPI::get_form($nstFormID);
-
+        
         //get the list of entry id's for the nested form
         $nstEntryIDs = $entry[$parameter_array['nested-form']['id']];
-
         $nstEntryArr = explode(",", $nstEntryIDs);
 
         $schedArray = array();
@@ -187,7 +186,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
     $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
     $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
-
+   
     //create the ticket instance
     $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
                 'TKT_description' => $ticketDesc,
@@ -202,6 +201,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
     $price->save();
     $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
+   
     //Schedule Info
     $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
     $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);

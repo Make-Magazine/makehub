@@ -56,10 +56,11 @@ if (isset($_POST["submit"])) {
             $tmpName = $_FILES['fileToUpload']['tmp_name'];
 
             //Print File Details
+            /*
             echo "Upload: " . $name . "<br />";
             echo "Type: " . $type . "<br />";
             echo "Size: " . ($_FILES["fileToUpload"]["size"] / 1024) . " Kb<br />";
-            echo "Temp file: " . $tmpName . "<br />";
+            echo "Temp file: " . $tmpName . "<br />";*/
 
             //Save file to server
             //if file already exists
@@ -111,7 +112,8 @@ if (isset($_POST["submit"])) {
         foreach ($row as $rowKey => $rowData) {
             if ($fieldIDs[$rowKey] == 'created_by')
                 $created_by = $rowData;
-            if ($fieldIDs[$rowKey] == 'date_created')
+            //TBD fix date created 
+            if ($fieldIDs[$rowKey] == 'date_created') 
                 $date_created = $rowData;
             if ($fieldIDs[$rowKey] == 'source_url')
                 $source_url = $rowData;
@@ -132,7 +134,7 @@ if (isset($_POST["submit"])) {
             }
         }
         $entryId = gfapi::add_entry($entry);
-
+echo 'entry id is '.$entryId.'<br/>';
         //Create the Child/nested Entry
         $nstEntry = array('form_id' => 10, 'status' => 'active', 'created_by' => $created_by,
             GPNF_Entry::ENTRY_PARENT_KEY => $entryId, // The ID of the parent entry.
@@ -177,22 +179,20 @@ if (isset($_POST["submit"])) {
         $nstentry_id = gfapi::add_entry($nstEntry);
 
         $form = gfapi::get_form('7');
-
+        
         //reset so we get all the goodies
-        $entry = gfapi::get_entry($entryId);
-
+        gfapi::update_entry($entry);
+        $entry = gfapi::get_entry($entryId);        
+        
         //save access codes to db
         $dbSQL = 'INSERT INTO `wp_gf_entry_meta`(`form_id`, `entry_id`, `meta_key`, `meta_value`) VALUES '
                 . '("7",' . $entryId . ',"156","' . $nstentry_id . '")';
 
         $wpdb->get_results($dbSQL);
 
-        //update parent with child information
-        gfapi::update_entry($entry);
-        $entry = gfapi::get_entry($entryId);
+        //manually update parent with child information, as the above dbsql is not getting pulled in
         $entry['156'] = $nstentry_id;
-
-        $nstentry = gfapi::get_entry($nstentry_id);
+                        
         create_import_event($entry, $form);
     }
     echo 'finished import';
@@ -228,7 +228,14 @@ function create_import_event($entry, $form) {
                         'EVT_visible_on' => $currDateTime
     ));
     $event->save();
+    
     $eventID = $event->ID();
+    
+    //set the post id
+    global $wpdb;
+    $wpdb->update('wp_gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
+    $entry['post_id'] = $eventID;
+    
     echo 'add event '.$eventName.' ('.$eventID.')<br/>';
     
     // assign basic questions to event

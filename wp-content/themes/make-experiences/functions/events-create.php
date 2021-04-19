@@ -37,6 +37,11 @@ function create_event($entry, $form) {
     $event->save();
     $eventID = $event->ID();
 
+    //set the post id
+    global $wpdb;
+    $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
+    $entry['post_id'] = $eventID;    
+    
     // assign basic questions to event
     $qgroups = EEM_Question_Group::instance()->get_one_by_ID(3);
     $event->_add_relation_to($qgroups, 'Question_Group'); //link the question group
@@ -82,9 +87,6 @@ function create_event($entry, $form) {
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
     update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data    
     //update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
-    //set the post id
-    global $wpdb;
-    $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
 
     // now, give the user a basic membership level, if they don't have one already
     $user_meta = get_user_meta($userID);
