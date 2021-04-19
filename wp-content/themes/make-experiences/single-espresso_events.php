@@ -95,7 +95,7 @@ get_header();
                         <?php } ?>
                         <div class="event-description event-content-item">
                             <h4>What You'll Do:</h4> 
-                            <?php the_content(); ?>
+                            <?php echo apply_filters('the_content', $post->post_content); ?>
                         </div>
                         <?php if (get_field('basic_skills')) { ?>
                             <div class="event-skill-level event-content-item">
@@ -205,7 +205,7 @@ get_header();
                                     $event = EEM_Event::instance()->get_one_by_ID($post->ID);
                                     $dates = $event->datetimes_in_chronological_order();
                                     foreach ($dates as $date) {
-                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . '</li>';
+                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' PST</li>';
                                     }
                                     ?>
                                 </ul>
@@ -243,8 +243,10 @@ get_header();
                                 ?>
                                 <div class="event-sidebar-field event-age">
                                     <b>Age Range:</b>
-                                    <?php foreach (get_field('audience') as $age) { ?>
-                                        <span class='age-item'><?php echo $age; ?></span>
+                                    <?php foreach (get_field('audience') as $age) { 
+										$ageValues = get_field_object('audience')['choices'];
+									?>
+                                        <span class='age-item'><?php echo $ageValues[$age]; ?></span>
                                 <?php } ?>
                                 </div>
                             <?php
