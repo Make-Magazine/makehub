@@ -235,10 +235,13 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $event = EEM_Event::instance()->get_one_by_ID($eventID);
     if ($event) {
         $date = $event->first_datetime();
-
-        $start_date = new DateTime($date->start_date() . 'T00:00:00');
-        $tkt->set('TKT_end_date', $start_date);
-        $tkt->save();
+        if(!is_null($date)){
+            $start_date = new DateTime($date->start_date() . 'T00:00:00');
+            $tkt->set('TKT_end_date', $start_date);
+            $tkt->save();
+        }else{
+            error_log('For event '.$eventID.' $event->first_datetime() is null');
+        }
     } else {
         error_log('Issue in saving ticket sale end date for $eventID ' . $eventID);
         error_log($event);
