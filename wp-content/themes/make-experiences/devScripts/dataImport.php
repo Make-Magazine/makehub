@@ -134,7 +134,8 @@ if (isset($_POST["submit"])) {
             }
         }
         $entryId = gfapi::add_entry($entry);
-echo 'entry id is '.$entryId.'<br/>';
+        echo 'entry id is '.$entryId.'<br/>';
+        
         //Create the Child/nested Entry
         $nstEntry = array('form_id' => 10, 'status' => 'active', 'created_by' => $created_by,
             GPNF_Entry::ENTRY_PARENT_KEY => $entryId, // The ID of the parent entry.
@@ -225,7 +226,8 @@ function create_import_event($entry, $form) {
                         'EVT_short_desc' => $shortDescription,
                         'EVT_wp_user' => $userID,
                         'status' => $status,
-                        'EVT_visible_on' => $currDateTime
+                        'EVT_visible_on' => $currDateTime,
+                        'EVT_slug' => slugify($eventName)
     ));
     $event->save();
     

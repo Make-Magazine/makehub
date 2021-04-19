@@ -32,7 +32,8 @@ function create_event($entry, $form) {
                         'EVT_short_desc' => $shortDescription,
                         'EVT_wp_user' => $userID,
                         'status' => "pending",
-                        'EVT_visible_on' => $currDateTime
+                        'EVT_visible_on' => $currDateTime,
+                        'EVT_slug' => slugify($eventName)
     ));
     $event->save();
     $eventID = $event->ID();
