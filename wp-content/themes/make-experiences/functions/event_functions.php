@@ -177,6 +177,7 @@ function setSchedTicket($parameter_array, $entry, $eventID) {
 function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $schedArray = array();
     $eventID = $entry["post_id"];
+    
     //Ticket Information        
     $value = getFieldByParam('ticket-name', $nest_parameter_arr, $nst_entry);
     $ticketName = (!empty($value) ? $value : 'Ticket - ' . $entry[1]); //if ticket name not given, default ticket name to 'Ticket - Event Name'
@@ -201,7 +202,6 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $price = EE_Price::new_instance(array('PRT_ID' => 1, 'PRC_amount' => $ticketPrice));
     $price->save();
     $tkt->_add_relation_to($price, 'Price'); //link the price and ticket instances
-    
     //Schedule Info
     $prefSchedSer = getFieldByParam('preferred-schedule', $nest_parameter_arr, $nst_entry);
     $altSchedSer = getFieldByParam('alternative-schedule', $nest_parameter_arr, $nst_entry);
@@ -229,19 +229,19 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
         $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
         //set the preferred schedule for the ACF
         $preferred_schedule[] = array('date' => $sched['Date'], 'start_time' => $sched['Start Time'], 'end_time' => $sched['End Time']);
+    }
 
-        //update the ticket end date with the start of the event
-        $event = EEM_Event::instance()->get_one_by_ID($eventID);
-        if($event){
-            $date = $event->first_datetime();
-        
-            $start_date = new DateTime($date->start_date() . 'T00:00:00');
-            $tkt->set('TKT_end_date', $start_date);
-            $tkt->save();
-        }else{
-            error_log('Issue in saving ticket sale end date for $eventID '.$eventID);
-            error_log($event);
-        }
+    //update the ticket end date with the start of the event
+    $event = EEM_Event::instance()->get_one_by_ID($eventID);
+    if ($event) {
+        $date = $event->first_datetime();
+
+        $start_date = new DateTime($date->start_date() . 'T00:00:00');
+        $tkt->set('TKT_end_date', $start_date);
+        $tkt->save();
+    } else {
+        error_log('Issue in saving ticket sale end date for $eventID ' . $eventID);
+        error_log($event);
     }
 
     //set alternate schedule
