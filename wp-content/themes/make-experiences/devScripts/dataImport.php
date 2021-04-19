@@ -232,12 +232,12 @@ function create_import_event($entry, $form) {
     echo 'add event '.$eventName.' ('.$eventID.')<br/>';
     
     // assign basic questions to event
-    $qgroups = EEM_Event_Question_Group::instance()->get_one_by_ID(3);
+    $qgroups = EEM_Question_Group::instance()->get_one_by_ID('3');
     if(!$qgroups){   
         error_log('Error in finding question group 3');
         error_log($qgroups);
     }
-    $event->_add_relation_to($qgroups, 'Event_Question_Group'); //link the question group
+    $event->_add_relation_to($qgroups, 'Question_Group'); //link the question group
     
     //set ticket schedue
     setSchedTicket($parameter_array, $entry, $eventID);
