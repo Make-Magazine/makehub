@@ -1,344 +1,6 @@
-.customPanels {
-  background-color: #fff;
-	p { color: #333; }
-  .rectangle-image-carousel {
-    position: relative;
-    .carousel {
-      max-width: 100%;
-    }
-    .carousel-inner .item, {
-      max-height: 35.5vw;
-      @media screen and (min-width: 992px) and (max-width: 1199px) { 
-        max-height: 38vw;
-      }
-      @media screen and (min-width: 768px) and (max-width: 991px) { 
-        max-height: 46vw;
-      }
-      @media (max-width:767px) {
-        max-height: 50vw;
-      }
-    }
-    @media (max-width:767px) {
-      padding-left: 0;
-      padding-right: 0;
-    }
-    img {
-      width: 100%;
-    }
-    .carousel-caption {
-      color: #fff;
-      top: 50%;
-      transform: translateY(-50%);
-      bottom: inherit;
-      padding-left: 15px;
-      padding-right: 15px;
-      @media (max-width: 767px) {
-        top: 0;
-        transform: translateY(0);
-        bottom: 0;
-        right: 0;
-        left: 0;
-        .som-slider-link-left {
-          margin-bottom: 3px;
-        }
-      }
-      .carousel-caption-inner {
-        @media (max-width: 767px) {
-          position: absolute;
-          top: 50%;
-          right: 0;
-          left: 0;
-          margin-right: auto;
-          margin-left: auto;
-          transform: translateY(-50%);
-        }
-      }
-      h1 {
-        font-size: 6vw;
-        margin-top: 0;
-        margin-bottom: 30px;
-        font-weight: 100;
-        @media (max-width:767px) {
-          font-size: 22px;
-          margin-bottom: 10px;
-        }
-      }
-      .som-slider-txt {
-        margin-bottom: 30px;
-        color: #fff;
-        font-size: 16px;
-        @media (max-width:767px) {
-          margin-bottom: 0;
-        }
-      }
-      h2, h3 {
-        line-height: 1.3em;
-        @media (max-width:767px) {
-          font-size: 1em;
-          margin-top: 0;
-        }
-      }
-      p {
-        font-size: 16px;
-        font-weight: 400;
-        line-height: 1.8em;
-      }
-      .som-slider-btns {
-        .som-slider-link-left,
-        .som-slider-link-right {
-          font-weight: 400;
-          padding: 0 15px;
-          color: #fff;
-          transition: color 0.2s;
-          &:hover {
-            color: #00aeef;
-            transition: color 0.2s;
-          }
-          @media (max-width:767px) {
-            display: block;
-          }
-        }
-      }
-    }
-    .carousel-control {
-      @media (max-width:767px) {
-        z-index: 100;
-        width: 10%;
-      }
-      .glyphicon-chevron-left, 
-      .glyphicon-chevron-right {
-        font-size: 70px;
-        @media (max-width:767px) {
-          font-size: 40px;
-          top: 40%;
-        }
-      }
-    }
-    .carousel-inner>.item>a>img, 
-    .carousel-inner>.item>img {
-      width: 100%;
-    }
-    .som-carousel-arrow {
-      color: #fff;
-      width: 33px;
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      right: 0;
-      margin-left: auto;
-      margin-right: auto;
-      @media (max-width:767px) {
-        display: none;
-      }
-    }
-  }
-
-
-  .fom-panel {
-    background: linear-gradient(to right, #00A3DA,#00B7E3,#00A3DA);
-    padding: 15px 0 40px;
-    .house-ad {
-      @media (max-width:991px) {
-        margin-top: 30px;
-      }
-    }
-    a:hover {
-      text-decoration: none;
-    }
-    img {
-      max-width: 300px;
-      max-height: 250px;
-      margin-right: auto;
-      margin-left: auto;
-      @media (max-width:767px) {
-        max-width: 100%;
-      }
-    }
-    h2 {
-      color: #fff;
-      font-weight: 100;
-      margin: 20px 0;
-    }
-    p {
-      color: #fff;
-      margin: 5px 0 0 0;
-      font-size: 18px;
-    }
-  }
-
-
-
-
-  // 1 Collumn Panel
-  .som-content-panel-1 {
-    padding: 65px 0;
-    background: #00597E;
-    h2 {
-      color: #fff;
-      font-size: 50px;
-      font-weight: 100;
-      margin-top: 0;
-      margin-bottom: 30px;
-      @media (max-width:767px) {
-        font-size: 22px;
-      }
-    }
-    p {
-      font-size: 18px;
-      line-height: 1.8em;
-      color: #fff;
-    }
-  }
-
-
-
-  // 2 Column Panel
-  .som-content-panel-2 {
-    position: relative;
-    min-height: 300px;
-    .som-2col-img-l {
-      background-size: cover !important;
-      height: 100%;
-      width: 50%;
-      position: absolute;
-      @media (max-width:767px) {
-        height: 50vw;
-        width: 100%;
-        position: static;
-      }
-    }
-    .som-2col-img-r {
-      background-size: cover !important;
-      height: 100%;
-      width: 50%;
-      position: absolute;
-      right: 0;
-      @media (max-width:767px) {
-        height: 50vw;
-        width: 100%;
-        position: static;
-      }
-    }
-    .row {
-      height: 400px;
-      overflow: hidden;
-      @media (min-width:992px) and (max-width:1199px) {
-        height: 340px;
-      }
-      @media (min-width:768px) and (max-width:991px) {
-        height: 320px;
-      }
-      @media (max-width:767px) {
-        height: auto;
-      }
-    }
-    .som-2col-txt {
-      padding: 30px;
-		color: #333;
-      h3 {
-        font-weight: 100;
-        font-size: 42px;
-        margin-bottom: 15px;
-		  text-align: left;
-        @media (max-width:1199px) {
-          font-size: 30px;
-        }
-      }
-      .som-2col-wyswyg {
-        font-size: 18px;
-        line-height: 1.8em;
-        color: #231f20;
-        margin-bottom: 20px;
-      }
-    }
-  }
-
-
-
-  .wysiwyg_editor {
-    padding: 60px 0;
-    h3 {
-      font-weight: 100;
-      font-size: 42px;
-      color: #231f20;
-      margin-bottom: 15px;
-    }
-  }
-
-
-
-  .som-summer-reads {
-    padding: 60px 0;
-    background-size: cover !important;
-    height: 600px;
-    overflow: hidden;
-    @media (min-width:768px) and (max-width:991px) {
-      height: 550px;
-    }
-    @media (max-width:767px) {
-      height: auto;
-    }
-    h3 {
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 0;
-      margin-bottom: 50px;
-      padding: 8px;
-      font-size: 15px;
-      font-weight: 300;
-      line-height: 1em;
-      border: 1px solid #00aeef;
-      display: inline-block;
-      color: #00aeef;
-    }
-    h2 {
-      font-weight: 100;
-      font-size: 50px;
-      color: #fff;
-      margin-top: 0;
-      margin-bottom: 15px;
-      text-align: center;
-      @media (max-width:767px) {
-        font-size: 40px;
-      }
-    }
-    p {
-      font-size: 18px;
-      line-height: 1.8em;
-      color: #fff;
-      margin-bottom: 20px;
-    }
-    .som-sr-wysiwyg {
-      text-align: left;
-    }
-  }
-
-  .two_column_wysiwyg {
-    padding-top: 30px;
-    .col-sm-6 {
-      padding-bottom: 30px;
-    }
-    ul {
-      margin-top: 20px;
-      margin-bottom: 25px;
-      list-style-type: square;
-      color: #337ab7;
-    }
-  }
-}
-
 /***************************************
 //      Panels from Maker Faire       //
 ***************************************/
-
-
-// since all the make panels are in sections, we use this to get a full width even though the blocks are normally in a container
-.customPanels .container section {
-	width: 96vw;
-	position: relative;
-	margin-left: -48vw;
-	left: 50%;
-}
 
 // color background options for all panels
 .white-bg {
@@ -1872,6 +1534,7 @@
 
 
 .featured-image-grid {
+   padding-top: 30px;
    display: grid;
    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
    grid-column-gap: 24px;
@@ -1988,40 +1651,41 @@
 
    }
    .grid-item-desc {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 1em;
-      background-color: #151733;
-      background-color: rgba(21,23,51,0.8);
-      color: #f3f3f3;
-      width: 100%;
-      height: 100%;
-      //height: calc(100% + 1px);
-      transform: translateX(110%);
-      transition: transform 0.25s ease-in-out;
-      overflow: hidden;
-      text-decoration: none;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-between;
+		padding: 1em;
+		background-color: #151733;
+		background-color: rgba(21,23,51,0.8);
+		color: #f3f3f3;
+		width: 100%;
+		height: 100%;
+		//height: calc(100% + 1px);
+		transform: translateX(110%);
+		transition: transform 0.25s ease-in-out;
+		overflow: hidden;
+		text-decoration: none;
 		z-index: 1;
-      @media screen and (max-width: 960px) {
-         position: absolute;
-         transform: translateX(100%);
-         overflow: visible;
-         display: block;
-      }
+		@media screen and (max-width: 960px) {
+			 position: absolute;
+			 transform: translateX(100%);
+			 overflow: visible;
+			 display: block;
+		}
 		p { 
 			color: #fff; 
 			font-size: 1.1em; 
 		}
-      h4 {
+		h4 {
 			display: none;
-         margin: 0;
+			margin: 0;
 			font-size: 24px;
 			margin-bottom: 10px;
 			font-weight: bold;
-      }
+			color: #fff;
+		}
 		@media screen and (max-width: 960px) {
 			background-color: #151733;
 			h4 {
