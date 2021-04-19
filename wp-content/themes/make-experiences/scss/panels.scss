@@ -1651,40 +1651,41 @@
 
    }
    .grid-item-desc {
-      position: absolute;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 1em;
-      background-color: #151733;
-      background-color: rgba(21,23,51,0.8);
-      color: #f3f3f3;
-      width: 100%;
-      height: 100%;
-      //height: calc(100% + 1px);
-      transform: translateX(110%);
-      transition: transform 0.25s ease-in-out;
-      overflow: hidden;
-      text-decoration: none;
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		justify-content: space-between;
+		padding: 1em;
+		background-color: #151733;
+		background-color: rgba(21,23,51,0.8);
+		color: #f3f3f3;
+		width: 100%;
+		height: 100%;
+		//height: calc(100% + 1px);
+		transform: translateX(110%);
+		transition: transform 0.25s ease-in-out;
+		overflow: hidden;
+		text-decoration: none;
 		z-index: 1;
-      @media screen and (max-width: 960px) {
-         position: absolute;
-         transform: translateX(100%);
-         overflow: visible;
-         display: block;
-      }
+		@media screen and (max-width: 960px) {
+			 position: absolute;
+			 transform: translateX(100%);
+			 overflow: visible;
+			 display: block;
+		}
 		p { 
 			color: #fff; 
 			font-size: 1.1em; 
 		}
-      h4 {
+		h4 {
 			display: none;
-         margin: 0;
+			margin: 0;
 			font-size: 24px;
 			margin-bottom: 10px;
 			font-weight: bold;
-      }
+			color: #fff;
+		}
 		@media screen and (max-width: 960px) {
 			background-color: #151733;
 			h4 {
