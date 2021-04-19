@@ -269,7 +269,7 @@ function create_import_event($entry, $form) {
         set_post_thumbnail($personID, $attachID); //user image is in field 118 of the submitted entry
         
     //assign that user to this event
-    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '67')); //67 is the people type of facilitator
+    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '124')); //67 is the people type of facilitator
     $per_post->save();
 
     //now lets look for additional hosts
