@@ -232,11 +232,16 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
 
         //update the ticket end date with the start of the event
         $event = EEM_Event::instance()->get_one_by_ID($eventID);
-        $date = $event->first_datetime();
-        echo 'ticket end date should be ' . $date->start_date() . '<br/>';
-        $start_date = new DateTime($date->start_date() . 'T00:00:00');
-        $tkt->set('TKT_end_date', $start_date);
-        $tkt->save();
+        if($event){
+            $date = $event->first_datetime();
+        
+            $start_date = new DateTime($date->start_date() . 'T00:00:00');
+            $tkt->set('TKT_end_date', $start_date);
+            $tkt->save();
+        }else{
+            error_log('Issue in saving ticket sale end date for $eventID '.$eventID);
+            error_log($event);
+        }
     }
 
     //set alternate schedule
