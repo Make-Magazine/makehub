@@ -506,7 +506,7 @@ function rolloverItems($row_layout) {
 
 
    // Check if the background color selected was white
-   $return .= '<section class="featured-item-panel ' . $background_color . '"> ';
+   $return .= '<section class="featured-item-panel full-width-div ' . $background_color . '"> ';
 
 	if($title) {
    	$return .= '  <div class="panel-title title-w-border-y '.($background_color === "white-bg" ? ' navy-underline' : '') .'">
@@ -809,7 +809,7 @@ function getSliderPanel(){
    $slides = ($acf_blocks ? get_field('slide') : get_sub_field('slide')); 
 	
 	$return = '';
-	$return .= '<section class="slider-panel container-fluid ' . $background_color . ' position-' . $text_position . '">';
+	$return .= '<section class="slider-panel full-width-div container-fluid ' . $background_color . ' position-' . $text_position . '">';
    if(!empty($slideshow_title)){
 		$return .= '<div class="slideshow-title"><h2>' . $slideshow_title . '</h2></div>';
 	}
@@ -908,7 +908,7 @@ function getSocialPanel() {
    $panel_title = ($acf_blocks ? get_field('panel_title') : get_sub_field('panel_title'));
    if (have_rows('active_feeds')) {
       $return .= '
-    <section class="social-feeds-panel">
+    <section class="social-feeds-panel full-width-div">
       <div class="container">';
       if ($panel_title != '') {
          $return .= '
@@ -996,7 +996,7 @@ function getMakeyBanner() {
    $URL = ($acf_blocks ? get_field('link_url') : get_sub_field('link_url'));
    $background_color = ($acf_blocks ? get_field('background-color') : get_sub_field('background-color'));
 
-   $content = '<div class="makey-banner '.$background_color.'">';
+   $content = '<div class="makey-banner full-width-div '.$background_color.'">';
    $content .= '   <div class="container">';
    $content .= '      <div class="picture-holder">';
    $content .= '         <img alt="Maker Robot" height="74" class="lazyload" src="'.get_bloginfo('template_directory').'/img/maker-robot.png" width="53">';
