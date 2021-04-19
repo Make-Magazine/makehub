@@ -294,25 +294,12 @@ function create_import_event($entry, $form) {
     if (empty($user_meta['ihc_user_levels']) || time() > strtotime($time_data['expire_time'])) {
         // create basic membership starting now, and lasting for 10 years (default)
         $now = time();
-        ihc_handle_levels_assign($userID, 17, $now);
+        ihc_handle_levels_assign($userID, 14, $now);
         // membership is assigned, but inactive
         // ihc_set_level_status($userID, 17, 1); this is doing nothing now
     } else {
         //error_log("user already has active membership");
-    }
-
-    // finally, let's create a corresponding buddyboss group for the event
-    $groupArgs = array(
-        'group_id' => 0,
-        'creator_id' => $personID,
-        'name' => $eventName,
-        'description' => $shortDescription,
-        'slug' => str_replace(' ', '-', strtolower($eventName)),
-        'status' => 'private',
-        'enable_forum' => 0,
-        'date_created' => bp_core_current_time()
-    );
-    //groups_create_group($groupArgs);
+    }   
 }
 
 //
