@@ -141,7 +141,7 @@
 
 					// Don't re-init buttons on the confirmation page; currentPage is undefined on the confirmation page.
 					if ( currentPage ) {
-						self.initFormScripts();
+						self.initFormScripts(currentPage);
 						self.addModalButtons();
 						self.observeDefaultButtons();
 					}
@@ -153,12 +153,18 @@
 		};
 
 		self.initKnockout = function() {
+			/**
+			 * If VM already exists, reset the observable array as rebinding can cause issues.
+			 */
+			if (self.viewModel && ko.dataFor(self.$fieldContainer[0])) {
+				self.viewModel.entries(self.prepareEntriesForKnockout(self.entries));
+				return;
+			}
 
 			// Setup Knockout to handle our Nested Form field entries.
-			self.viewModel = new EntriesModel( self.prepareEntriesForKnockout( self.entries ), self );
-			ko.cleanNode( self.$fieldContainer[0] );
-			ko.applyBindings( self.viewModel, self.$fieldContainer[0] );
-
+			self.viewModel = new EntriesModel(self.prepareEntriesForKnockout(self.entries), self);
+			ko.cleanNode(self.$fieldContainer[0]);
+			ko.applyBindings(self.viewModel, self.$fieldContainer[0]);
 		};
 
 		self.initCalculations = function() {
@@ -357,7 +363,7 @@
 
 		self.addColorStyles = function() {
 
-			if ( self.$style ) {
+			if ( self.$style && typeof self.$style.remove === 'function' ) {
 				self.$style.remove();
 			}
 
@@ -672,6 +678,10 @@
 		};
 
 		self.handleParentMergeTag = function () {
+			// Do not process merge tags if the form was submitted and contains errors
+			if ( self.$modal.find( '.gform_validation_error' ).length !== 0 ) {
+				return;
+			}
 
 			self.$modal.find( ':input' ).each(function () {
 				var $this = $( this );

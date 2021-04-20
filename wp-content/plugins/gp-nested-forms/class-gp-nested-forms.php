@@ -63,6 +63,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		require_once( 'includes/class-gp-field-nested-form.php' );
 		require_once( 'includes/class-gpnf-feed-processing.php' );
 		require_once( 'includes/class-gpnf-gravityview.php' );
+		require_once( 'includes/class-gpnf-gfml.php' );
 		require_once( 'includes/class-gpnf-wc-product-addons.php' );
 		require_once( 'includes/class-gpnf-merge-tags.php' );
 		require_once( 'includes/class-gpnf-parent-merge-tag.php' );
@@ -88,6 +89,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		// Initialize sub classes.
 		gpnf_gravityview();
+		gpnf_gfml();
 		gpnf_feed_processing();
 		gpnf_parent_merge_tag();
 		gpnf_notification_processing();
@@ -270,7 +272,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		$scripts[] = array(
 			'handle'  => 'knockout',
-			'src'     => $this->get_base_url() . "/js/knockout-3.4.2{$min}.js",
+			'src'     => $this->get_base_url() . '/js/knockout-3.5.1.js',
 			'version' => $this->_version,
 			'enqueue' => null,
 		);
@@ -963,8 +965,6 @@ class GP_Nested_Forms extends GP_Plugin {
 		return rgar( $this->shortcode_field_values, $form_id );
 	}
 
-
-
 	// # AJAX
 
 	public function ajax_get_form_fields() {
@@ -1167,6 +1167,16 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	// # VALUES
 
+	public function get_child_entry_ids_from_value( $value ) {
+		$child_entry_ids = explode( ',', $value );
+		foreach ( $child_entry_ids as &$child_entry_id ) {
+			// We typecast the value as an integer for consistency and to as a security measure. See PR #77.
+			$child_entry_id = (int) trim( $child_entry_id );
+		}
+		$child_entry_ids = array_filter( $child_entry_ids );
+		return $child_entry_ids;
+	}
+
 	public function get_entries( $entry_ids ) {
 
 		$entries = array();
@@ -1176,7 +1186,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		if ( is_string( $entry_ids ) ) {
-			$entry_ids = array_map( 'trim', explode( ',', $entry_ids ) );
+			$entry_ids = $this->get_child_entry_ids_from_value( $entry_ids );
 		} elseif ( ! is_array( $entry_ids ) ) {
 			$entry_ids = array( $entry_ids );
 		}
@@ -1346,7 +1356,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		$template    = new GP_Template( gp_nested_forms() );
 		$nested_form = $this->get_nested_form( rgar( $field, 'gpnfForm' ) );
-		$entry_ids   = array_map( 'trim', explode( ',', $value ) );
+		$entry_ids   = $this->get_child_entry_ids_from_value( $value );
 
 		$args = array(
 			'template'    => 'nested-entries-simple-list',
@@ -1374,13 +1384,13 @@ class GP_Nested_Forms extends GP_Plugin {
 	public function get_single_value( $index, $field, $value, $modifiers, $format = 'html' ) {
 
 		$nested_form = $this->get_nested_form( rgar( $field, 'gpnfForm' ) );
-		$entry_ids   = array_map( 'trim', explode( ',', $value ) );
+		$entry_ids   = $this->get_child_entry_ids_from_value( $value );
 		$items       = $this->get_simple_list_items( $entry_ids, $nested_form, $modifiers, $format );
 
 		if ( $index < 0 ) {
-			$count = count( $items );
+			$count  = count( $items );
 			$index += $count;
-			$index = max( $index, 0 );
+			$index  = max( $index, 0 );
 		}
 
 		return rgars( $items, "{$index}/value" );
@@ -1412,7 +1422,7 @@ class GP_Nested_Forms extends GP_Plugin {
 	public function get_all_entries_markup( $field, $value, $modifiers, $is_all_fields, $format = 'html' ) {
 
 		$template    = new GP_Template( gp_nested_forms() );
-		$entry_ids   = array_map( 'trim', explode( ',', $value ) );
+		$entry_ids   = $this->get_child_entry_ids_from_value( $value );
 		$nested_form = $this->get_nested_form( rgar( $field, 'gpnfForm' ) );
 
 		$values = array();
@@ -2052,21 +2062,17 @@ class GP_Nested_Forms extends GP_Plugin {
 			if ( empty( $entry_ids ) || ! is_string( $entry_ids ) ) {
 				$entry_ids = array();
 			} else {
-				$entry_ids = explode( ',', $entry_ids );
+				$entry_ids = $this->get_child_entry_ids_from_value( $entry_ids );
 			}
 
 			// if no posted $entry_ids check if we are resuming a saved entry
-			if ( isset( $_GET['gf_token'] ) && empty( $entry_ids ) ) {
+			if ( $this->get_save_and_continue_token() && empty( $entry_ids ) ) {
 				$entry_ids = $this->get_save_and_continue_child_entry_ids( $form['id'], $field->id );
-
-				if ( $entry_ids ) {
-					$bypass_permissions = true;
-				}
 			}
 
 			if ( empty( $entry_ids ) && is_callable( 'gravityview' ) && $gv_entry = gravityview()->request->is_edit_entry() ) {
 				$parent_entry = $gv_entry->as_entry();
-				$entry_ids    = explode( ',', $this->get_field_value( $form, $parent_entry, $field->id ) );
+				$entry_ids    = $this->get_child_entry_ids_from_value( $this->get_field_value( $form, $parent_entry, $field->id ) );
 
 				if ( $entry_ids ) {
 					$bypass_permissions = true;
@@ -2080,7 +2086,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				$cart_item = WC()->cart->get_cart_item( $cart_item_key );
 				if ( ! empty( $cart_item ) && isset( $cart_item['_gravity_form_lead'] ) && isset( $cart_item['_gravity_form_data'] ) ) {
 					$entry     = $cart_item['_gravity_form_lead'];
-					$entry_ids = explode( ',', $this->get_field_value( $form, $entry, $field->id ) );
+					$entry_ids = $this->get_child_entry_ids_from_value( $this->get_field_value( $form, $entry, $field->id ) );
 				}
 			}
 
@@ -2185,9 +2191,18 @@ class GP_Nested_Forms extends GP_Plugin {
 		return $value;
 	}
 
+	/**
+	 * Get Save & Continue from URL if it exists.
+	 *
+	 * @return string|null
+	 */
+	public function get_save_and_continue_token() {
+		return isset( $_POST['gform_resume_token'] ) ? $_POST['gform_resume_token'] : rgget( 'gf_token' );
+	}
+
 	public function get_save_and_continue_child_entry_ids( $form, $field_id = false ) {
 
-		if ( ! rgget( 'gf_token' ) ) {
+		if ( ! $this->get_save_and_continue_token() ) {
 			return array();
 		}
 
@@ -2196,7 +2211,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			$form = GFAPI::get_form( $form );
 		}
 
-		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( rgget( 'gf_token' ) );
+		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $this->get_save_and_continue_token() );
 		if ( $incomplete_submission_info['form_id'] != $form['id'] ) {
 			return array();
 		}
@@ -2209,7 +2224,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->get_input_type() == 'form' ) {
-				$child_entries[ $field->id ] = explode( ',', rgar( $submitted_values, $field->id ) );
+				$child_entries[ $field->id ] = $this->get_child_entry_ids_from_value( rgar( $submitted_values, $field->id ) );
 			}
 		}
 

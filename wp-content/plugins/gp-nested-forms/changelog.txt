@@ -1,6 +1,25 @@
 
 # Changelog
 
+## 1.0-beta-9.19
+
+	- Fixed an issue displaying list fields in GPNF entries. (#82)
+	- Improved compatibility with Gravity Forms Multilingual by WPML.
+	- Improved compatibility with Paragraph fields using the Rich Text Editor (TinyMCE).
+
+## 1.0-beta-9.18
+
+	- Fixed an issue where parent merge tags replace submitted values on error.
+
+## 1.0-beta-9.17
+
+	- Improved compatibility with GravityView by filtering out child entries of unsubmitted parent forms.
+	- Added security enhancements. (#77)
+	- Added latest version of Knockout.js library
+	- Fixed issue with Save & Continue not working in some cases on multi-page forms.
+	- Fixed issue where child entries could show as duplicated on the client-side when submitting an AJAX parent form.
+	- Fixed a potential issue where Expanded Entries link may be displayed in GV.
+
 ## 1.0-beta-9.16
 
 	- Fixed a potential issue when using index[0] as a modifier with the All Fields Template snippet.
