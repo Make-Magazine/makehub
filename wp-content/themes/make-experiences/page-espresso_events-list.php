@@ -67,7 +67,7 @@ get_header();
 									   </a>
 									 </div>
 									 <div class="event-info">
-									   <div class="event-date">'. $startime . ' - ' . $endtime . ' PST</div>
+									   <div class="event-date">'. $startime . ' - ' . $endtime . ' Pacific</div>
 									   <h3 class="event-title">
 										 <a href="' . get_permalink($event->ID()) . '">' . get_the_title($event->ID()) . '</a>
 									   </h3>
