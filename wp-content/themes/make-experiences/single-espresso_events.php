@@ -206,7 +206,7 @@ get_header();
                                     $event = EEM_Event::instance()->get_one_by_ID($post->ID);
                                     $dates = $event->datetimes_in_chronological_order();
                                     foreach ($dates as $date) {
-                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' Pacific</li>';
+                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
                                     }
                                     ?>
                                 </ul>
