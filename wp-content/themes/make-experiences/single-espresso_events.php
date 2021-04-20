@@ -216,7 +216,7 @@ get_header();
                                 $tickets = EEH_Event_View::event_tickets_available($post->ID);
                                 if (is_array($tickets) && count($tickets) > 1) {
                                     foreach ($tickets as $ticket => $element) {
-                                        $tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
+                                        $tickets[$ticket] = $tickets[$ticket]->ticket_price();
                                     }
                                 }
                                 sort($tickets);
@@ -225,14 +225,13 @@ get_header();
                                     foreach ($tickets as $ticket => $element) {
                                         reset($tickets);
                                         if ($ticket === key($tickets))
-                                            $ticket_price = $tickets[$ticket];
-
+                                            $ticket_price = "$" . $tickets[$ticket] . ".00";
                                         end($tickets);
                                         if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
-                                            $ticket_price .= "-" . $tickets[$ticket];
+                                            $ticket_price .= "-" . $tickets[$ticket] . ".00";
                                     }
                                 } else if (count($tickets) > 0) {
-                                    $ticket_price = $tickets[0];
+                                    $ticket_price = "$" . $tickets[0] . ".00";
                                 }
                                 echo '<span class="price-item">' . $ticket_price . '</span>';
                                 ?>
