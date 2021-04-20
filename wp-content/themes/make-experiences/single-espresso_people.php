@@ -93,7 +93,7 @@ get_header();
 										$return = '<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
 													 <div class="event-truncated-date">' . $dateFormat . '</div>
 													 <div class="event-image">
-													   <a href="' . get_permalink() . '">
+													   <a href="' . get_permalink($evt->ID())  . '">
 														 <img src="' . get_the_post_thumbnail_url( $evt->ID(), 'thumbnail' ) . '" />
 													   </a>
 													 </div>
