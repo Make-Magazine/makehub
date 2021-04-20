@@ -165,7 +165,7 @@ if (!$gravityview->entries->count()) {
             ?>            
             <button data-toggle="collapse" data-target="#collapseAttendee<?php echo $entry['post_id'];?>">Attendees Report</button>
             <div id="collapseAttendee<?php echo $entry['post_id'];?>" class="collapse">
-                <?php echo do_shortcode('[tribe_community_tickets view="attendees_report" id="' . $entry['post_id'] . '"]');?>
+                <?php echo do_shortcode('[ESPRESSO_EVENT_ATTENDEES event_id="' . $entry['post_id'] . '"]');?>
             </div>            
 
             <?php
