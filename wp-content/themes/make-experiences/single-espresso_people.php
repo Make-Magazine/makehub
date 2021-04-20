@@ -55,18 +55,20 @@ get_header();
 			<div class='host-events'>
 				<?php
 					$events = EEH_People_View::get_events_for_person();
+				
 					?>
 					<div class="eea-people-addon-person-events-container">
 						<?php if ( $events ) : ?>
 						<h3>Events <?php echo get_the_title(); ?> is involved with:</h3>
-						<?php foreach ( $events as $type => $event ) : ?>
+						<?php foreach ( $events as $type => $event ) : // type here is the person type ?>
 							<div class="eea-people-addon-people-type-container">
 								<?php /* <h4 class="eea-people-addon-people-type-label"><?php echo $type; ?></h4> */ ?>
 								<div class="events-list">
-									<?php foreach ( $event as $evt ) {
+									<?php $event = array_reverse($event); // reverse this order to show upcoming first
+									foreach ( $event as $evt ) {
 										$date = $evt->first_datetime(); 
 										$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
-										$startime = date('F j, Y @ g:i a', strtotime($date->start_time()));
+										$startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
 										$endime = date('g:i a', strtotime($date->end_time()));
 										// grab array of EE_Ticket objects for event
 										$tickets = EEH_Event_View::event_tickets_available( $evt->ID() );
@@ -111,7 +113,7 @@ get_header();
 													  '</div>
 													 </div>
 												   </article>';
-
+			
 										echo $return;
 
 									} ?>
