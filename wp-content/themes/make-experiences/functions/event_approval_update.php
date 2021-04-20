@@ -21,15 +21,10 @@ function update_entry_status($entry_id, $status) {
         'post_status' => $post_status
     );
     wp_update_post($post_data);    
-    
-    	
+        	
     //check if facilitator exists
     $entry = gfapi::get_entry($entry_id);
-    $current_user = get_user_by('id', $entry['created_by']);    
-    $userEmail = (string) $current_user->user_email;
-    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-    $personID = $person->ID();
-    
+ 
     //find all fields set with a parameter name 
     $form = GFAPI::get_form($entry['form_id']);
     $parameter_array = find_field_by_parameter($form);
@@ -39,7 +34,7 @@ function update_entry_status($entry_id, $status) {
     // finally, let's create a corresponding buddyboss group for the event
     $groupArgs = array(
             'group_id'     => 0,
-            'creator_id'   => $personID,
+            'creator_id'   => $entry['created_by'],
             'name'         => $eventName,
             'description'  => $shortDescription,
             'slug'         => str_replace(' ', '-', strtolower($eventName)),
