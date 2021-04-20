@@ -85,7 +85,7 @@ get_header();
 													   </h3>
 													   <div class="event-description">' . get_field('short_description', $evt->ID()) . '</div>
 													   <div class="event-prices">';
-															$return .= event_ticket_prices($event) . 
+															$return .= event_ticket_prices($evt) . 
 													  '</div>
 													 </div>
 												   </article>';
