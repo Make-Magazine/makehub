@@ -20,27 +20,27 @@ function update_entry_status($entry_id, $status) {
         'ID' => $entry['post_id'],
         'post_status' => $post_status
     );
-    wp_update_post($post_data);    
-        	
-    //check if facilitator exists
-    $entry = gfapi::get_entry($entry_id);
- 
-    //find all fields set with a parameter name 
-    $form = GFAPI::get_form($entry['form_id']);
-    $parameter_array = find_field_by_parameter($form);
-    $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
-    $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
-   
-    // finally, let's create a corresponding buddyboss group for the event
-    $groupArgs = array(
-            'group_id'     => 0,
-            'creator_id'   => $entry['created_by'],
-            'name'         => $eventName,
-            'description'  => $shortDescription,
-            'slug'         => str_replace(' ', '-', strtolower($eventName)),
-            'status'       => 'private',
+    wp_update_post($post_data);
+
+    //if the event is approved, create an event
+    if ($status == 1) {
+        //find all fields set with a parameter name 
+        $entry = gfapi::get_entry($entry_id);
+        $form = GFAPI::get_form($entry['form_id']);
+        $parameter_array = find_field_by_parameter($form);
+        $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
+        $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
+        // finally, let's create a corresponding buddyboss group for the event
+        $groupArgs = array(
+            'group_id' => 0,
+            'creator_id' => $entry['created_by'],
+            'name' => $eventName,
+            'description' => $shortDescription,
+            'slug' => str_replace(' ', '-', strtolower($eventName)),
+            'status' => 'private',
             'enable_forum' => 0,
             'date_created' => bp_core_current_time()
-    );
-    groups_create_group($groupArgs);
+        );
+        groups_create_group($groupArgs);
+    }
 }
