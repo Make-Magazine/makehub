@@ -191,7 +191,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
                 'TKT_description' => $ticketDesc,
                 'TKT_price' => $ticketPrice,
-                'TKT_min' => $ticketMin,
+                'TKT_min' => 1,
                 'TKT_max' => $ticketMax,
                 'TKT_qty' => $ticketMax, //"Quantity of this ticket that is available"
                 'TKT_required' => true));

@@ -112,7 +112,6 @@ if (isset($_POST["submit"])) {
         foreach ($row as $rowKey => $rowData) {
             if ($fieldIDs[$rowKey] == 'created_by')
                 $created_by = $rowData;
-            //TBD fix date created 
             if ($fieldIDs[$rowKey] == 'date_created') 
                 $date_created = $rowData;
             if ($fieldIDs[$rowKey] == 'source_url')
@@ -121,20 +120,26 @@ if (isset($_POST["submit"])) {
                 $user_agent = $rowData;
             if ($fieldIDs[$rowKey] == 'ip')
                 $ip = $rowData;
-
-            if ($fieldIDs[$rowKey] != '' && $rowData != '') {
+            if ($fieldIDs[$rowKey] == 'NF-15')
+                $timeZone = $rowData;
+            
+            if ($fieldIDs[$rowKey] != '' && $rowData != '' && $rowKey!='id') {
                 $pos = strpos($fieldIDs[$rowKey], 'NF-');
                 if ($pos !== false) {
                     //build nested form here                    
                     $nst_fieldId = str_replace('NF-', '', $fieldIDs[$rowKey]);
-                    $nstArray[$nst_fieldId] = htmlentities($rowData);
+                    $nstArray[$nst_fieldId] = htmlspecialchars_decode ($rowData);
                 } else {
-                    $entry[$fieldIDs[$rowKey]] = htmlentities($rowData);
+                    $entry[$fieldIDs[$rowKey]] = htmlspecialchars_decode ($rowData);
                 }
             }
         }
+        $date = date_create($date_created);
+        $date_created = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+        
+        $entry['date_created'] = $date_created;
         $entryId = gfapi::add_entry($entry);
-        echo 'entry id is '.$entryId.'<br/>';
+        echo 'entry id is '.$entryId.' created on '.$date_created.'<br/>';
         
         //Create the Child/nested Entry
         $nstEntry = array('form_id' => 10, 'status' => 'active', 'created_by' => $created_by,
