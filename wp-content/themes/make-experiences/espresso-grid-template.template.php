@@ -72,7 +72,7 @@ if ( have_posts() ) :
 					</div>
 					<div class="event-details">
 						<div class="event-time">
-							<?php echo $timerange; ?> PST
+							<?php echo $timerange; ?> Pacific
 						</div>
 						<h3 class="event-title title">
 							<a href="<?php echo $registration_url; ?>">
@@ -100,7 +100,7 @@ if ( have_posts() ) :
 					   }  ?>
 				<div class="event-purchase">
 					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
-					<p class="price"><?php echo event_ticket_prices($post); ?></p>
+					<p class="price"><?php echo event_ticket_prices($event); ?></p>
 				</div>
 			</div>
 

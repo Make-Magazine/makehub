@@ -24,7 +24,7 @@ function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_for
 				$html .= '<span class="dashicons dashicons-clock"></span><span class="ee-event-datetimes-li-timerange">' . $datetime->time_range( $time_format ) . '</span>';
 				$datetime_description = $datetime->description();
 				$html .= ! empty( $datetime_description ) ? ' - ' . $datetime_description : '';
-				$html .= ' PST';
+				$html .= ' Pacific';
 				$html = apply_filters( 'FHEE__espresso_list_of_event_dates__datetime_html', $html, $datetime );
 				$html .= '</li>';
 			}
@@ -42,13 +42,13 @@ function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_for
 
 function event_ticket_prices($post) {
 	// grab array of EE_Ticket objects for event
-	$tickets = EEH_Event_View::event_tickets_available( $post->ID );
+	$tickets = EEH_Event_View::event_tickets_available( $post->ID() );
 	if ( is_array( $tickets ) && count($tickets) > 1 ) {
 		foreach($tickets as  $ticket => $element) {
 			$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
 		}
 	}
-	sort($tickets);
+	sort($tickets, SORT_NUMERIC);
 	$ticket_price = 'Tickets Not Available';
 	if ( is_array( $tickets ) && count($tickets) > 1 ) {
 		foreach($tickets as $ticket => $element) {
@@ -59,8 +59,9 @@ function event_ticket_prices($post) {
 					$ticket_price = 'FREE';
 				}
 			end($tickets);
-			if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price && $ticket_price != "FREE")
-				$ticket_price .= "-" . $tickets[$ticket];
+			if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price) {
+				$ticket_price .= "- " . $tickets[$ticket];
+			}
 		}
 	} else if (count($tickets) > 0) {
 		$ticket_price = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[0]->pretty_price());
