@@ -5,7 +5,7 @@
  * otherwise it returns errors
  */
 
-add_filter('gform_validation', 'custom_validation');
+//add_filter('gform_validation', 'custom_validation');
 
 function custom_validation($validation_result) {
     $form = $validation_result['form'];
@@ -58,10 +58,10 @@ function custom_validation($validation_result) {
     return $validation_result;
 }
 
-add_filter( 'gform_pre_render', 'populate_fields' ); //all forms
-add_filter( 'gform_pre_validation', 'populate_fields' );
-add_filter( 'gform_admin_pre_render', 'populate_fields' );
-add_filter( 'gform_pre_submission_filter', 'populate_fields' );
+//add_filter( 'gform_pre_render', 'populate_fields' ); //all forms
+//add_filter( 'gform_pre_validation', 'populate_fields' );
+//add_filter( 'gform_admin_pre_render', 'populate_fields' );
+//add_filter( 'gform_pre_submission_filter', 'populate_fields' );
 
 /*
  * this logic is for page 2 of 'linked forms'
@@ -74,9 +74,15 @@ function populate_fields($form) {
         return $form;
     }
     $jqueryVal = '';
-    $form_type = get_value_by_label('supplemental_form', $form, array());
+    //find all fields set with a parameter name 
+        $parameter_array = find_field_by_parameter($form);
+        if(isset($parameter_array['supplemental_form'])){
+            var_dump($parameter_array['supplemental_form']);
+        }
+    //update the event
     
-    if (isset($form_type['id']) && $form_type['id'] != '') {        
+    
+    if (isset($parameter_array['supplemental_form']) && isset($form_type['id']) && $form_type['id'] != '') {        
         //this is a 2-page form with the data from page one being displayed in an html field on following pages
         $current_page = GFFormDisplay::get_current_page($form['id']);
 
