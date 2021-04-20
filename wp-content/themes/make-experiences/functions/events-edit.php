@@ -54,7 +54,7 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
 }
 
 // trigger an email to when an entry is updated via gravity view
-//add_action('gform_after_update_entry', 'send_update_entry_notification', 999, 3);
+add_action('gform_after_update_entry', 'send_update_entry_notification', 999, 3);
 function send_update_entry_notification($form, $entry_id, $orig_entry = array()) {
     //We do not want to trigger this email if the edit is being done by an admin
     if (!current_user_can('administrator')) {
