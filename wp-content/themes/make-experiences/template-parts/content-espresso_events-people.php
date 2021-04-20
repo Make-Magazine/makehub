@@ -41,7 +41,7 @@ if ( $people ) :
 							<a class="eea-people-addon-link-to-person" href="<?php echo get_permalink( $person->ID() ); ?>" title="<?php printf( __('Click here to view more info about %s', 'event_espresso' ), $person->full_name() ); ?>"><span class="eea-people-addon-person-full-name"><?php echo $person->full_name(); ?></span></a><br>
 							<span class="eea-people-addon-excerpt">
 								<?php 
-									$content = get_field('facilitator_info');
+									$content = get_field('facilitator_info', $person->ID());
 									$postwithbreaks = wpautop( $content, true );
 									echo $postwithbreaks;
 								?>

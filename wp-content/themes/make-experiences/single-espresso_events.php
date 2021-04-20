@@ -69,9 +69,12 @@ get_header();
                 <div class="row">
                     <div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
                         <div class="event-cat">
-                            <?php echo get_field('event_type'); ?>
+							<?php $event_type = get_the_terms( $post, 'event_types' )[0] ?>
+							<a href="/event_types/<?php echo $event_type->slug; ?>">
+								<?php echo $event_type->name; ?>
+							</a>
                         </div>
-                        <?php if (get_field('event_type') == "In-Person" && get_field('location')) { ?>
+                        <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
                             <div class="event-location event-content-item">
                                 <h4>Location:</h4> 
                                 <?php echo get_field('location') ?>
@@ -179,11 +182,9 @@ get_header();
                         <?php }
                         if (get_field('program_expertise')) {
                             ?>
-                            <div class="event-materials event-content-item">
+                            <div class="event-host event-content-item">
                                 <h4>About your Host(s):</h4> 
-                                <div class="materials-list">
-                                    <?php echo html_entity_decode(get_field('program_expertise')); ?>
-                                </div>
+                                <?php echo html_entity_decode(get_field('program_expertise')); ?>
                             </div>
                             <?php
                         }
@@ -205,36 +206,14 @@ get_header();
                                     $event = EEM_Event::instance()->get_one_by_ID($post->ID);
                                     $dates = $event->datetimes_in_chronological_order();
                                     foreach ($dates as $date) {
-                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' PST</li>';
+                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' Pacific</li>';
                                     }
                                     ?>
                                 </ul>
                             </div>
                             <div class="event-sidebar-field event-cost">
                                 <b>Cost: </b>
-                                <?php
-                                $tickets = EEH_Event_View::event_tickets_available($post->ID);
-                                if (is_array($tickets) && count($tickets) > 1) {
-                                    foreach ($tickets as $ticket => $element) {
-                                        $tickets[$ticket] = $tickets[$ticket]->ticket_price();
-                                    }
-                                }
-                                sort($tickets);
-                                $ticket_price = 'Tickets Not Available';
-                                if (is_array($tickets) && count($tickets) > 1) {
-                                    foreach ($tickets as $ticket => $element) {
-                                        reset($tickets);
-                                        if ($ticket === key($tickets))
-                                            $ticket_price = "$" . $tickets[$ticket] . ".00";
-                                        end($tickets);
-                                        if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price)
-                                            $ticket_price .= "-" . $tickets[$ticket] . ".00";
-                                    }
-                                } else if (count($tickets) > 0) {
-                                    $ticket_price = "$" . $tickets[0] . ".00";
-                                }
-                                echo '<span class="price-item">' . $ticket_price . '</span>';
-                                ?>
+    							<span class="price-item"><?php echo event_ticket_prices($event); ?></span>
                             </div>
                             <?php
                             // Age ranges
