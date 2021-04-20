@@ -55,13 +55,6 @@ if (isset($_POST["submit"])) {
             $type = $_FILES['fileToUpload']['type'];
             $tmpName = $_FILES['fileToUpload']['tmp_name'];
 
-            //Print File Details
-            /*
-            echo "Upload: " . $name . "<br />";
-            echo "Type: " . $type . "<br />";
-            echo "Size: " . ($_FILES["fileToUpload"]["size"] / 1024) . " Kb<br />";
-            echo "Temp file: " . $tmpName . "<br />";*/
-
             //Save file to server
             //if file already exists
             $savedFile = "/dataUpload/upload/" . $name;
@@ -134,7 +127,7 @@ if (isset($_POST["submit"])) {
         }
         
         $date = date_create($date_created);
-        $date_created = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone('America/Los_Angeles'));
+        $date_created = date_format($date, "Y-m-d H:i:s");
         
         $entry['date_created'] = $date_created;
         $entryId = gfapi::add_entry($entry);
@@ -150,7 +143,7 @@ if (isset($_POST["submit"])) {
         );
 
         //loop through the nested array to build the nested entry
-        if ($nstArray['oneTime'] == 'yes' || $nstArray['oneTime'] == 'yes') {
+        if ($nstArray['oneTime'] == 'yes' || $nstArray['oneTime'] == '') {
             $preferedSchedule = array(array('Date' => $nstArray['9.1'], "Start Time" => $nstArray['9.2'], "End Time" => $nstArray['9.3']));
             $nstEntry['9'] = serialize($preferedSchedule);
         } else {
@@ -177,10 +170,11 @@ if (isset($_POST["submit"])) {
 
             $nstEntry['9'] = serialize($preferedSchedule);
         }
-
+        
         //set alt schedule
         $altSchedule = array(array('Date' => $nstArray['11.1'], "Start Time" => $nstArray['11.2'], "End Time" => $nstArray['11.3']));
         $nstEntry['11'] = serialize($altSchedule);
+        
         $nstentry_id = gfapi::add_entry($nstEntry);
 
         $form = gfapi::get_form('7');
@@ -234,7 +228,20 @@ function create_import_event($entry, $form) {
                         'EVT_slug' => slugify($eventName)
     ));
     $event->save();
-    
+    if($entry['is_approved']==1){
+        // finally, let's create a corresponding buddyboss group for the event
+        $groupArgs = array(
+                'group_id'     => 0,
+                'creator_id'   => $entry['created_by'],
+                'name'         => $eventName,
+                'description'  => $shortDescription,
+                'slug'         => str_replace(' ', '-', strtolower($eventName)),
+                'status'       => 'private',
+                'enable_forum' => 0,
+                'date_created' => bp_core_current_time()
+        );
+        groups_create_group($groupArgs);
+    }
     $eventID = $event->ID();
     
     //set the post id
