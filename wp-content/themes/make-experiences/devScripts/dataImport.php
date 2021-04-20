@@ -119,9 +119,7 @@ if (isset($_POST["submit"])) {
             if ($fieldIDs[$rowKey] == 'user_agent')
                 $user_agent = $rowData;
             if ($fieldIDs[$rowKey] == 'ip')
-                $ip = $rowData;
-            if ($fieldIDs[$rowKey] == 'NF-15')
-                $timeZone = $rowData;
+                $ip = $rowData;            
             
             if ($fieldIDs[$rowKey] != '' && $rowData != '' && $rowKey!='id') {
                 $pos = strpos($fieldIDs[$rowKey], 'NF-');
@@ -134,8 +132,9 @@ if (isset($_POST["submit"])) {
                 }
             }
         }
+        
         $date = date_create($date_created);
-        $date_created = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
+        $date_created = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone('America/Los_Angeles'));
         
         $entry['date_created'] = $date_created;
         $entryId = gfapi::add_entry($entry);
