@@ -128,9 +128,9 @@ if (isset($_POST["submit"])) {
                 if ($pos !== false) {
                     //build nested form here                    
                     $nst_fieldId = str_replace('NF-', '', $fieldIDs[$rowKey]);
-                    $nstArray[$nst_fieldId] = htmlspecialchars_decode ($rowData);
+                    $nstArray[$nst_fieldId] = htmlspecialchars_decode($rowData);
                 } else {
-                    $entry[$fieldIDs[$rowKey]] = htmlspecialchars_decode ($rowData);
+                    $entry[$fieldIDs[$rowKey]] = htmlspecialchars_decode($rowData);
                 }
             }
         }

@@ -46,6 +46,7 @@ function create_event($entry, $form) {
     // assign basic questions to event
     $qgroups = EEM_Question_Group::instance()->get_one_by_ID(3);
     $event->_add_relation_to($qgroups, 'Question_Group'); //link the question group
+    
     //set ticket schedue
     setSchedTicket($parameter_array, $entry, $eventID);
 

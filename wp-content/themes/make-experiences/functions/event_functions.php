@@ -209,7 +209,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     //TBD - Note we need to do something more secure here to avoid code injection
     $prefSched = unserialize($prefSchedSer);
 
-    //create tickets
+    //create tickets  
     $preferred_schedule = array();
     foreach ($prefSched as $sched) {
         //Start Date
