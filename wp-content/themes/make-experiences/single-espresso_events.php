@@ -193,7 +193,7 @@ get_header();
                     </div>
 
                     <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
-                        <div class="event-sidebar-item">
+                        <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
                             <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
                         </div>

@@ -73,7 +73,8 @@ get_header();
 									   </h3>
 									   <div class="event-description">' . get_field('short_description', $event->ID()) . '</div>';
 						if($eventDetails != '') { $return .= $eventDetails; }
-						$return .=     '<div class="event-prices">';
+						$return .=     '<div class="event-prices">
+											<a href="' . get_permalink($event->ID()) . '#tickets" class="btn universal-btn">Get Tickets</a>';
 											$return .= event_ticket_prices($event) . 
 									  '</div>
 									 </div>
@@ -102,7 +103,8 @@ get_header();
 			?>
 
 		<?php endif; ?>
-
+		<hr />
+		Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
 	</main><!-- #main -->
 </div><!-- #primary -->
 
