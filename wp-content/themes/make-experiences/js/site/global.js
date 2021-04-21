@@ -52,7 +52,4 @@ jQuery(".expando-box h4").click(function(){
 	jQuery(this).toggleClass( "open" ); 
 	jQuery(this).next().toggleClass( "open" ); 
 }); 
-jQuery(".fc-event.expired").on('click', function(){
-	alert("hello");
-});
 
