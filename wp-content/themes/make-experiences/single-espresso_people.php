@@ -22,11 +22,12 @@ get_header();
 				
 				<div class="host-meta">
 					<h1 class="host-title"><?php echo get_the_title(); ?></h1>
-
-					<div class="host-email">
-						<i class="fas fa-link"></i>
-						<a href="<?php echo get_field('website'); ?>" target="_blank"><?php echo get_field('website'); ?></a>
-					</div>
+					<?php if(get_field('website')) { ?>
+						<div class="host-email">
+							<i class="fas fa-link"></i>
+							<a href="<?php echo get_field('website'); ?>" target="_blank"><?php echo get_field('website'); ?></a>
+						</div>
+					<?php } ?>
 					<?php 
 						$social_links = get_field('social_links', $person->ID());
 						if($social_links) { ?>

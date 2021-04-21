@@ -53,14 +53,13 @@ if(!empty($person)) {
 			<div class="host-meta">
 				<h1 class="host-title"><?php echo $userFname . ' ' . $userLname; ?></h1>
 				<?php if($user_website) { ?>
-				<div class="host-email">
-					<i class="fas fa-link" aria-hidden="true"></i>
-					<a href="<?php $user_website; ?>" target="_blank"><?php echo $user_website; ?>/</a>
-				</div>            
+					<div class="host-email">
+						<i class="fas fa-link" aria-hidden="true"></i>
+						<a href="<?php $user_website; ?>" target="_blank"><?php echo $user_website; ?>/</a>
+					</div>            
 				<?php
 				}
-				if ($user_social) {
-					?>
+				if ($user_social) { ?>
 					<span class="social-links">
 						<b>See more of <?php echo $userFname . ' ' . $userLname; ?> at:</b>
 						<?php
@@ -72,9 +71,7 @@ if(!empty($person)) {
 						}
 						?>
 					</span>
-					<?php
-				}
-				?>
+				<?php } ?>
 				<div class="host-bio">                
 					<?php
 					$postwithbreaks = wpautop($userBio, true);
