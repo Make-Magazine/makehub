@@ -535,6 +535,10 @@
 	
 }
 
+.bs-styled-radio:checked + .bb-radio-label::after, .bs-styled-radio:checked + label::after {
+	left: -14px;
+}
+
 .woocommerce-order-received {
 	.woocommerce {
 		margin-top: 30px;

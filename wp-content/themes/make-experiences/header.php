@@ -14,6 +14,47 @@
     <head>
         <meta charset="<?php bloginfo('charset'); ?>">
         <link rel="profile" href="http://gmpg.org/xfn/11">
+		
+		<script type="text/javascript">
+			var templateUrl = '<?= get_site_url(); ?>';
+			var logoutURL = '<?php echo wp_logout_url( home_url() ); ?>';
+		</script>
+	
+		<?php
+			// Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
+			if(!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes" ) {
+		?>
+			<!-- Global site tag (gtag.js) - Google Analytics -->
+			<script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-36"></script>
+			<script>
+			 window.dataLayer = window.dataLayer || [];
+			 function gtag(){dataLayer.push(arguments);}
+			 gtag('set','linker', {
+				 'accept_incoming': true,
+				 'domains': [
+					'make.co',
+					'makermedia.auth0.com',
+					'makeco.staging.wpengine.com',
+					'stagemakehub.wpengine.com',
+					'devmakehub.wpengine.com'
+				 ]
+			  });
+			 gtag('js', new Date());
+			 gtag('config', 'UA-51157-36', {
+			   'cookie_domain': 'make.co'
+			 });
+			</script>
+
+			<!-- Google Tag Manager -->
+			<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+			new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+			j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+			'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+			})(window,document,'script','dataLayer','GTM-5PRW4M2');</script>
+			<!-- End Google Tag Manager -->
+
+		<?php } // end cookie law if ?>
+		
         <?php wp_head(); ?>
     </head>
 
