@@ -198,8 +198,8 @@ get_header();
                             <?php if(is_user_logged_in()){ ?>                                
                                 <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
                             <?php } else { ?>
-                                <h4>We require a login to purchase tickets. This helps us to provide you more information to the event you are attending and to add you to a special community group where you can communicate with the event facilitator and other event attendees.</h4>
-                                <a href="/wp-login.php">Login now</a> or <a href="/wp-login.php">Sign up</a> for a free account today!
+                                <div>We require a login to purchase tickets. This helps us to provide you more information to the event you are attending and to add you to a special community group where you can communicate with the event facilitator and other event attendees.</div>
+                                <div><a href="/wp-login.php">Login now</a> or <a href="/wp-login.php">Sign up</a> for a free account today!</div>
                             <?php } ?>
                         </div>
                         <div class="event-sidebar-item">
