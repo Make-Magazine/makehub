@@ -195,7 +195,12 @@ get_header();
                     <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
-                            <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
+                            <?php if(is_user_logged_in()){ ?>                                
+                                <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>
+                            <?php } else { ?>
+                                <h4>We require a login to purchase tickets. This helps us to provide you more information to the event you are attending and to add you to a special community group where you can communicate with the event facilitator and other event attendees.</h4>
+                                <a href="/wp-login.php">Login now</a> or <a href="/wp-login.php">Sign up</a> for a free account today!
+                            <?php } ?>
                         </div>
                         <div class="event-sidebar-item">
                             <h3>Details</h3>

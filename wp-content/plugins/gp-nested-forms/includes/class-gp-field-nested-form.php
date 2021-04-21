@@ -254,7 +254,7 @@ class GP_Field_Nested_Form extends GF_Field {
 		} elseif ( $this->should_use_count_template() ) {
 			$template = 'nested-entries-count';
 		}
-
+                $related_entries_link='';
 		// Related entries requires login, hide them if this is a public view
 		if ( is_admin() ) {
 			$related_entries_link = sprintf(
