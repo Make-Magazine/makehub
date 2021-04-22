@@ -22,6 +22,9 @@ body {
 	color: $color-grey;
 	font-family: 'Roboto';
 }
+
+.mobile body { position: relative !important; }
+
 a { 
 	color: $link-color;
 	&:hover {
