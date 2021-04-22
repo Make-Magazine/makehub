@@ -125,7 +125,7 @@
                 'z-index': this.element.css('z-index') + 1,
                 position: 'absolute',
                 left: timepickerPos.left,
-                top: timepickerPos.top + $(element)[0].offsetHeight
+                top: timepickerPos.top
             }).show();
             //If there is a show function, then call it with the input calling the timepicker and the
             // timepicker itself
@@ -219,11 +219,10 @@
             $(element).attr('tabindex', 0);
             $(element).on('click focus', function (event) {
                 //Prevent multiple firings
-                if ($(self.timepicker).is(':hidden')) {
                   self.showPicker($(this));
                   window.lastTimePickerControl = $(this); //Put the reference on this timepicker into global scope for unsing that in afterShow function
                   $(self.hoursElem).focus();
-                }
+            
             });
 
 
@@ -252,6 +251,7 @@
                     window.lastTimePickerControl = null;
                 }
             };
+			
             $(document).off('click', clickHandler).on('click', clickHandler);
         },
 
