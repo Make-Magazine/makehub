@@ -8,6 +8,8 @@ function profile_tab_dashboard_info_name() {
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
+    
+    //Is this the profile for the logged in user?
     if ($user_id != 0 && wp_get_current_user()->ID == $user_id) {
         bp_core_new_nav_item(array(
             'name' => 'Dashboard',
@@ -25,7 +27,6 @@ add_action('bp_setup_nav', 'profile_tab_dashboard_info_name');
 
 function dashboard_info_screen() {
     // Add title and content here - last is to call the members plugin.php template.
-    //add_action('bp_template_title', 'membership_info_title');
     add_action('bp_template_content', 'dashboard_info_content');
     bp_core_load_template('buddypress/members/single/plugins');
 }
@@ -37,11 +38,13 @@ function dashboard_info_title() {
 function dashboard_info_content() {
     global $wpdb;
 
-    $user_id = bp_displayed_user_id();
-    //get the users email
-    $user_info = get_userdata($user_id);
-    $user_email = $user_info->user_email;
-    $user_slug = $user_info->user_nicename;
+    global $current_user;
+    $current_user = wp_get_current_user();
+    
+    $user_email = (string) $current_user->user_email;
+    $user_id   = $current_user->ID;    
+    $user_slug = $current_user->user_nicename;    
+    $user_info = get_userdata($user_id);        
     $user_meta = get_user_meta($user_id);
 
     $return = '<div class="dashboard-wrapper">';
@@ -52,22 +55,23 @@ function dashboard_info_content() {
     $api_url = 'https://4e27971e92304f98d3e97056a02045f1:32e156e38d7df1cd6d73298fb647be72@makershed.myshopify.com';
     $customer_api = $api_url . '/admin/customers/search.json?query=email:"' . $user_email /* 'ken@nmhu.edu' */ . '"&fields=id';
     $customer_content = basicCurl($customer_api);
-
-    if (isset($customer_content) && !empty($customer_content)) {
-        // Decode the JSON in the file
-        $customer = json_decode($customer_content, true);
+    // Decode the JSON in the file
+    $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
+    
+    $return .= '<div class="dashboard-box expando-box">
+			<h4><img src="' . get_stylesheet_directory_uri() . '/images/makershed-logo.jpg" /> Orders</h4>
+			<ul>';
+    
+    if (!empty($customer['customers'])) {        
         $customerID = $customer['customers'][0]['id'];
         $orders_api = $api_url . '/admin/orders.json?customer_id=' . $customerID;
         $orders_content = basicCurl($orders_api);
-        $orderJson = json_decode($orders_content, true);
-        $return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="' . get_stylesheet_directory_uri() . '/images/makershed-logo.jpg" /> Orders</h4>
-					  <ul>';
+        $orderJson = json_decode($orders_content, true);        
         if (isset($orders_content) && !empty($orders_content)) {
-            $return .= '<li>
-							<p>Looks like you haven\'t place any orders yet...</p><br />
-							<a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
-						</li>';
+            $return .= '    <li>
+                                <p>Looks like you haven\'t place any orders yet...</p><br />
+                                <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
+                            </li>';
         } else {
             foreach ($orderJson['orders'] as $order) {
                 $return .= '<li><p><b><a href="' . $order['order_status_url'] . '">Order #' . $order['id'] . '</a></b></p>';
@@ -77,10 +81,15 @@ function dashboard_info_content() {
                 $return .= '</li>';
             }
         }
-        $return .= '</ul>
-				   </div>';
+    }else{
+        $return .= '    <li>
+                            <p>Looks like you haven\'t place any orders yet...</p><br />
+                            <a href="https://makershed.com" target="_blank" class="btn universal-btn">Here\'s your chance!</a>
+                        </li>';
     }
-
+    $return .= '    </ul>
+                </div>';
+    
     ////////////////////////////////////////
     //     Maker Faire Entries Widget     //
     ////////////////////////////////////////
@@ -197,38 +206,34 @@ function dashboard_info_content() {
 
     if (isset($user_meta['ihc_user_levels'][0])) {
         $return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
-					  <ul>';
-        $return .= '<li>' . do_shortcode("[ihc-membership-card]") . '</li>';
+			<h4><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
+			<ul>';
+        $return .= '        <li>' . do_shortcode("[ihc-membership-card]") . '</li>';
         //$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
-        $return .= '<li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
-        $return .= '</ul>
-				   </div>';
+        $return .= '        <li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
+        $return .= '    </ul>
+                    </div>';
     }
 
     ///////////////////////////////////////////////
     //       Event Espresso Tickets Widget       //
-    ///////////////////////////////////////////////
-    $protocol = stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://';
-    $urlparts = parse_url(home_url());
-    $domain = $urlparts['host'];
-    $attendee_info = json_decode(basicCurl($protocol . $domain . "/wp-json/wp/v2/users/" . $user_id . "?_fields=meta"), TRUE);
-    //error_log(print_r($attendee_info, TRUE));
-    $attendee_id = $attendee_info['meta']['wp_EE_Attendee_ID'];
-    if (shortcode_exists('ESPRESSO_MY_EVENTS') && !empty($attendee_id)) {
+    //  List all tickets purchased by this user  //
+    ///////////////////////////////////////////////    
+    
+    //if this individual is an attenddee
+    if(isset($user_meta['wp_EE_Attendee_ID']) && shortcode_exists('ESPRESSO_MY_EVENTS') ){
         $return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Tickets</h4>
-					  <ul>';
-        $return .= '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title="My Super Event List"]') . '</li>';
-        $return .= '</ul>
-				   </div>';
+                            <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
+                .  '    <ul>';
+        $return .=          '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title=“My Super Event List”]') . '</li>';
+        $return .= '    </ul><br/>';
+        $return .= '</div>';
     }
-
+      
     ///////////////////////////////////////////////
-    //       Event Espresso Tickets Widget       //
+    //       Event Espresso Events Widget        //
+    //  List all events submitted by this user   //
     ///////////////////////////////////////////////
-
-
     $hosted_events = EEM_Event::instance()->get_all(
             array(
                 //'limit' => 10,
@@ -240,14 +245,14 @@ function dashboard_info_content() {
     );
     if (!empty($hosted_events)) {
         $return .= '<div class="dashboard-box expando-box">
-					  <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Events</h4>
-					  <ul>';
+                        <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Events</h4>
+                        <ul>';
         foreach ($hosted_events as $event) {
-            $return .= '<li><b>' . $event->name() . '</b> - <a href="' . $event->get_permalink() . '">View</a></li>';
+            $return .= '    <li><b>' . $event->name() . '</b> - <a href="' . $event->get_permalink() . '">View</a></li>';
         }
-        $return .= '<li><a class="btn universal-btn" href="/edit-submission/">Edit Submissions</a></li>
-					  </ul>
-				   </div>';
+        $return .= '        <li><a class="btn universal-btn" href="/edit-submission/">Facilitator Portal</a></li>
+			</ul>
+                    </div>';
     }
 
     $return .= "</div>"; // End .dashboard-wrapper
