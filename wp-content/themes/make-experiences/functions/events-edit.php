@@ -10,12 +10,13 @@ function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
 
     $event_id = $entry["post_id"];
     $event_status = get_post_status($event_id);
+    
+    //find all fields set with a parameter name 
+    $parameter_array = find_field_by_parameter($form);
 
+        
     //if the event is not published,  update event name, description, short description, ticket/schedule information
     if ($event_status != 'publish') {
-        //find all fields set with a parameter name 
-        $parameter_array = find_field_by_parameter($form);
-
         //update the event
         $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
         $longDescription = getFieldByParam('long-description', $parameter_array, $entry); //long-description
