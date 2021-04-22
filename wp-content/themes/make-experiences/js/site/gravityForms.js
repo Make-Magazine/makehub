@@ -18,6 +18,19 @@ jQuery(document).ready(function ($) {
 	
 });
 
+jQuery(document).on("mouseenter touchstart",".timepicker",function(e){
+	var options = {
+		minutesInterval: 15,
+		now: "12:00", 
+		upArrow: 'wickedpicker__controls__control-up', 
+		downArrow: 'wickedpicker__controls__control-down',
+		close: 'wickedpicker__close',
+		hoverState: 'hover-state',
+	}
+	jQuery(this).wickedpicker(options);	
+});
+
+
 function numbersAndDashes() {
     var e = event || window.event;  // get event object
     var key = e.keyCode || e.which; // get key cross-browser
