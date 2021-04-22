@@ -22,6 +22,15 @@ body {
 	color: $color-grey;
 	font-family: 'Roboto';
 }
+
+.mobile body { 
+	position: relative !important;
+	.buddypanel { display: none !important; }
+	.bb-mobile-header-wrapper, .bb-mobile-panel-wrapper { display: inherit !important; }
+	#masthead.site-header { width: 100%; }
+	#page.site { margin-left: 0px; }
+}
+
 a { 
 	color: $link-color;
 	&:hover {
