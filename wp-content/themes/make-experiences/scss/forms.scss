@@ -216,6 +216,7 @@
 			&:first-of-type { width: 100%; }
 			@media screen and (max-width: 982px) { flex-direction: column; }
 			@media screen and (max-width: 641px) { width: 100%; }
+			.ginput_container_fileupload label { display: none; }
 		}
 
 		/* File Upload */
