@@ -32,3 +32,28 @@ function bp_set_dashboard_for_me() {
 	}
 }
 add_action( 'bp_setup_globals', 'bp_set_dashboard_for_me' );
+
+
+add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
+
+function ad_filter_menu($sorted_menu_objects, $args) {
+    //check if current user is a facilitator
+    global $current_user;
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;
+    
+    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+    
+    //if they are not a facilitator, remove the facilitator portal from the drop down
+    if($args->menu->slug=='profile-dropdown' && !$person){                
+        foreach ($sorted_menu_objects as $key => $menu_object) {
+            //look for "edit-submission" in the url
+            $pos = strpos($menu_object->url, "edit-submission");
+            if ($pos !== false) {
+                unset($sorted_menu_objects[$key]);
+                break;
+            }
+        }
+    }
+    return $sorted_menu_objects;
+}
