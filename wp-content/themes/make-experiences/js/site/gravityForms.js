@@ -18,18 +18,6 @@ jQuery(document).ready(function ($) {
 	
 });
 
-jQuery(document).on("mouseenter touchstart",".time",function(e){
-	jQuery(".ui-timepicker-wrapper").remove();
-	jQuery(this).timepicker({ 
-		stopScrollPropagation: false,
-		disableTextInput: true,
-		disableTouchKeyboard: true,
-		orientation: "bl",
-		step: 15
-	} );
-});
-
-
 function numbersAndDashes() {
     var e = event || window.event;  // get event object
     var key = e.keyCode || e.which; // get key cross-browser

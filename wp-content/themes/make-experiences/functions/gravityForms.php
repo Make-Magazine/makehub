@@ -28,7 +28,7 @@ function set_time_field_type($input, $input_info, $field, $text, $value, $form_i
     $input_field_name = 'input_' . $field->id . '[]';
     $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
 	
-    $new_input = '<input type="text" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' class="time ui-timepicker-input">';
+    $new_input = '<input type="text" name="' . $input_field_name . '" value="' . $value . '" ' . $tabindex . ' class="time timepicker">';
 
     return $new_input;
 }
