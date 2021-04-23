@@ -218,7 +218,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
         $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
 
         //End Date
-        $endTime = str_replace(" ", "", $sched['Start Time']); //time comes across with extra spaces
+        $endTime = str_replace(" ", "", $sched['End Time']); //time comes across with extra spaces
         $date = date_create($sched['Date'] . ' ' . $endTime);
         $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
 
