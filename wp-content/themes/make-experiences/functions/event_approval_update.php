@@ -28,22 +28,35 @@ function update_entry_status($entry_id, $status) {
         $entry = gfapi::get_entry($entry_id);
         $form = GFAPI::get_form($entry['form_id']);
         $parameter_array = find_field_by_parameter($form);
-        $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
         $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
+        $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
+        $event_id = $entry["post_id"];
+        
+        //get start date of the event
+        $event = EEM_Event::instance()->get_one_by_ID($event_id);
+        if ($event) {
+            $date = $event->first_datetime();            
+            $startDt = date("M Y", strtotime($date->start_date() ));
+        }else{
+            $startDt='';
+        }
+        
+        //add Month and year to end of group name ie. How to Make Your Dragon - May 2021
+        $groupName = $eventName .' - '. $startDt;
+        
         
         // finally, let's create a corresponding buddyboss group for the event
         $groupArgs = array(
             'group_id' => 0,
             'creator_id' => $entry['created_by'],
-            'name' => $eventName,
+            'name' => $groupName,
             'description' => $shortDescription,
-            'slug' => str_replace(' ', '-', strtolower($eventName)),
-            'status' => 'private',
+            'slug' => str_replace(' ', '-', strtolower($groupName)),
+            'status' => 'hidden',
             'enable_forum' => 0,
             'date_created' => bp_core_current_time()
         );
-        $group_id = groups_create_group($groupArgs);
-        $event_id = $entry["post_id"];
+        $group_id = groups_create_group($groupArgs);        
         
         //write the new group id to event acf
         update_field('group_id', $group_id, $event_id);
