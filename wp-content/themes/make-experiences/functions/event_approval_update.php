@@ -30,6 +30,7 @@ function update_entry_status($entry_id, $status) {
         $parameter_array = find_field_by_parameter($form);
         $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
         $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
+        
         // finally, let's create a corresponding buddyboss group for the event
         $groupArgs = array(
             'group_id' => 0,
@@ -41,6 +42,10 @@ function update_entry_status($entry_id, $status) {
             'enable_forum' => 0,
             'date_created' => bp_core_current_time()
         );
-        groups_create_group($groupArgs);
+        $group_id = groups_create_group($groupArgs);
+        $event_id = $entry["post_id"];
+        
+        //write the new group id to event acf
+        update_field('group_id', $group_id, $event_id);
     }
 }

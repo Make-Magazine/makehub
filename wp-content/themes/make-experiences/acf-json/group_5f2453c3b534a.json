@@ -1100,6 +1100,46 @@
             "prepend": "",
             "append": "",
             "maxlength": ""
+        },
+        {
+            "key": "field_607e3ca32c85c",
+            "label": "Message to Attendees",
+            "name": "message_to_attendees",
+            "type": "textarea",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": ""
+        },
+        {
+            "key": "field_60833c428d7a6",
+            "label": "Group ID",
+            "name": "group_id",
+            "type": "number",
+            "instructions": "The group id assigned to this event",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
         }
     ],
     "location": [
@@ -1119,5 +1159,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1618091667
+    "modified": 1619213401
 }
