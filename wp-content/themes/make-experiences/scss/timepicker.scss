@@ -8,7 +8,7 @@
 	margin: 0 auto;
 	border-radius: 0.1px;
 	width: 270px;
-	height: 130px;
+	height: 120px;
 	font-size: 14px;
 	display: none; 
 	z-index: 999999;
@@ -22,6 +22,8 @@
 		padding: 12px 11px 10px 15px;
 		color: #4C4C4C;
 		font-size: inherit;
+		visibility: hidden;
+    	height: 0px;
 	}
 	.wickedpicker__close {
 		-webkit-transform: translateY(-25%);
@@ -34,8 +36,10 @@
 		right: 10px;
 		color: #34495e;
 		cursor: pointer; 
+		visibility: visible;
 		&::before {
 			content: '\00d7';
+			font-size: 20px;
 		}
 	}
 	.wickedpicker__controls {
@@ -64,6 +68,12 @@
 .wickedpicker__controls__control-up:before { content: '\f077'; }
 .wickedpicker__controls__control-down:after { content: '\f078'; }
 .wickedpicker__controls__control--separator { width: 5px; }
+
+.wickedpicker__controls__control--hours {
+	&:active, &:focus {
+		outline: none;
+	}
+}
 
 .text-center, .wickedpicker__title, .wickedpicker__controls, .wickedpicker__controls__control, .wickedpicker__controls__control--separator, .wickedpicker__controls__control-up, .wickedpicker__controls__control-down {
   text-align: center; }
