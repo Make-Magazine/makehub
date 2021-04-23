@@ -133,15 +133,7 @@ function update_organizer_data($entry, $form, $personID, $parameter_array) {
 
 function update_sched_ticket_acf($schedArray, $eventID) {
     //acf field - tickets_scheduling (repeater)
-    /*
-      ticket_name
-      ticket_price
-      ticket_description
-      minimum_num_tickets
-      maximum_num_of_tickets
-      preferred_schedule
-      alternate_schedule
-     */
+    /* ticket_name, ticket_price, ticket_description, minimum_num_tickets, maximum_num_of_tickets, preferred_schedule, alternate_schedule*/
     update_field('field_606e135e03fa2', $schedArray, $eventID);
 }
 
