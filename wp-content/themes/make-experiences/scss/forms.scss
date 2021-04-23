@@ -267,6 +267,8 @@
 
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
+    margin-top: 0px;
+	margin-bottom: 0px;
 	background: $bg-color;
 	position: relative;
 	border-bottom: solid $bg-color 10px;
