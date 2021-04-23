@@ -43,8 +43,8 @@ function event_ticket_prices($post) {
 	// grab array of EE_Ticket objects for event
 	$tickets = EEH_Event_View::event_tickets_available( $post->ID() );
 	if ( is_array( $tickets ) && count($tickets) > 1 ) {
-		foreach($tickets as  $ticket => $element) {
-			$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
+		foreach($tickets as $ticket => $element) {
+			$tickets[$ticket] = $tickets[$ticket]->ticket_price();
 		}
 	}
 	sort($tickets, SORT_NUMERIC);
@@ -53,18 +53,18 @@ function event_ticket_prices($post) {
 		foreach($tickets as $ticket => $element) {
 			reset($tickets);
 			if ($ticket === key($tickets))
-				$ticket_price = $tickets[$ticket];
+				$ticket_price = "$" . $tickets[$ticket];
 				if(trim($ticket_price) == "$0.00"){
 					$ticket_price = 'FREE';
 				}
 			end($tickets);
-			if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price) {
-				$ticket_price .= "- " . $tickets[$ticket];
+			if ( $ticket === key($tickets) && $tickets[$ticket] != str_replace("$", "", $ticket_price) ) {
+				$ticket_price .= " - $" . $tickets[$ticket];
 			}
 		}
 	} else if (count($tickets) > 0) {
 		$ticket_price = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[0]->pretty_price());
-		if(trim($ticket_price) == "$0.00"){
+		if(trim($ticket_price) == "0.00"){
 			$ticket_price = 'FREE';
 		}
 	}

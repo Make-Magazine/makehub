@@ -109,8 +109,8 @@ if ( have_posts() ) :
 		endwhile; ?>
 		</div>
 		<div class="events-grid-sidebar">
-			<?php echo do_shortcode('[products columns="1" orderby="popularity" class="experiences" category="experience"]'); ?>
-			<a href="/product-category/experience/">
+			<?php echo do_shortcode('[products columns="1" orderby="popularity" class="experiences" category="experiences"]'); ?>
+			<a href="/product-category/experiences/">
 				<i class="fas fa-angle-double-right"></i> See More Experiences
 			</a>
 		</div>
