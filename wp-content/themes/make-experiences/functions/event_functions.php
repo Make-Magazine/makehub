@@ -208,16 +208,18 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
 
     //TBD - Note we need to do something more secure here to avoid code injection
     $prefSched = unserialize($prefSchedSer);
-
+    
     //create tickets  
     $preferred_schedule = array();
-    foreach ($prefSched as $sched) {
-        //Start Date
-        $date = date_create($sched['Date'] . ' ' . $sched['Start Time']);
+    foreach ($prefSched as $sched) {        
+        //Start Date        
+        $startTime = str_replace(" ", "", $sched['Start Time']); //time comes across with extra spaces
+        $date = date_create($sched['Date'] . ' ' . $startTime,timezone_open($timeZone));        
         $start_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
 
         //End Date
-        $date = date_create($sched['Date'] . ' ' . $sched['End Time']);
+        $endTime = str_replace(" ", "", $sched['Start Time']); //time comes across with extra spaces
+        $date = date_create($sched['Date'] . ' ' . $endTime);
         $end_date = new DateTime(date_format($date, "Y-m-d") . 'T' . date_format($date, "H:i:s"), new DateTimeZone($timeZone));
 
         //create the date/time instance
