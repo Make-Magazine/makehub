@@ -24,7 +24,7 @@ function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_for
 				$html .= '<span class="dashicons dashicons-clock"></span><span class="ee-event-datetimes-li-timerange">' . $datetime->time_range( $time_format ) . ' Pacific</span>';
 				$datetime_description = $datetime->description();
 				$html .= ! empty( $datetime_description ) ? ' - ' . $datetime_description : '';
-				$html = apply_filters( 'FHEE__espresso_list_of_event_dates__datetime_html', $html, $datetime );
+				//$html = apply_filters( 'FHEE__espresso_list_of_event_dates__datetime_html', $html, $datetime );
 				$html .= '</li>';
 			}
 		}
