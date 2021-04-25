@@ -2,8 +2,7 @@
 //duplicate entry
 add_action('acf/update_value', 'update_people_info', 10, 4);
 
-function update_fac_image($value, $post_id, $field, $original) {
-    $update_people_info = false;
+function update_people_info($value, $post_id, $field, $original) {    
     $personID = $post_id;    
     if($field['name']=='first_name'|| $field['name']=='last_name'){
         $person = EEM_Person::instance()->get_one_by_ID($post_id);
@@ -11,6 +10,7 @@ function update_fac_image($value, $post_id, $field, $original) {
         $lname = $person->lname();
     }
     
+    $update_people_info = false;
     switch ($field['name']){
         case 'facilitator_image':
             set_post_thumbnail( $post_id, $value );
@@ -30,7 +30,7 @@ function update_fac_image($value, $post_id, $field, $original) {
     }
     
     if($updatePerson){                
-        $success = EEM_Person::instance()->update_by_ID($person_values, $personID);
+       $success = EEM_Person::instance()->update_by_ID($person_values, $personID);
     }
 
     return $value;    
