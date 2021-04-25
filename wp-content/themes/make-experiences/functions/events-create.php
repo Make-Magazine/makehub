@@ -51,6 +51,7 @@ function create_event($entry, $form) {
     setSchedTicket($parameter_array, $entry, $eventID);
 
     $userBio = getFieldByParam('user-bio', $parameter_array, $entry);
+    var_dump($userBio);
     $userFname = getFieldByParam('user-fname', $parameter_array, $entry);
     $userLname = getFieldByParam('user-lname', $parameter_array, $entry);
 
