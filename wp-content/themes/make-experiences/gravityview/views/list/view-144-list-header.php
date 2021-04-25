@@ -11,9 +11,11 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 ?>
 
 <script>
+	jQuery(document).ready(function(){
+		jQuery("#flip-card").css("min-height", jQuery(".host-wrapper.front").outerHeight() + 20);
+	});
     var myModal = document.getElementById('myModal')
     var myInput = document.getElementById('myInput')
-
     myModal.addEventListener('shown.bs.modal', function () {
         myInput.focus()
     })

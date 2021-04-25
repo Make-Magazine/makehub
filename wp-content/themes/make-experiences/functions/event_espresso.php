@@ -24,7 +24,7 @@ function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_for
 				$html .= '<span class="dashicons dashicons-clock"></span><span class="ee-event-datetimes-li-timerange">' . $datetime->time_range( $time_format ) . ' Pacific</span>';
 				$datetime_description = $datetime->description();
 				$html .= ! empty( $datetime_description ) ? ' - ' . $datetime_description : '';
-				$html = apply_filters( 'FHEE__espresso_list_of_event_dates__datetime_html', $html, $datetime );
+				//$html = apply_filters( 'FHEE__espresso_list_of_event_dates__datetime_html', $html, $datetime );
 				$html .= '</li>';
 			}
 		}
@@ -42,9 +42,10 @@ function espresso_list_of_event_dates( $EVT_ID = 0, $date_format = '', $time_for
 function event_ticket_prices($post) {
 	// grab array of EE_Ticket objects for event
 	$tickets = EEH_Event_View::event_tickets_available( $post->ID() );
+	$formatter = new NumberFormatter('en_US', NumberFormatter::CURRENCY);
 	if ( is_array( $tickets ) && count($tickets) > 1 ) {
-		foreach($tickets as  $ticket => $element) {
-			$tickets[$ticket] = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[$ticket]->pretty_price());
+		foreach($tickets as $ticket => $element) {
+			$tickets[$ticket] = $tickets[$ticket]->ticket_price();
 		}
 	}
 	sort($tickets, SORT_NUMERIC);
@@ -53,17 +54,17 @@ function event_ticket_prices($post) {
 		foreach($tickets as $ticket => $element) {
 			reset($tickets);
 			if ($ticket === key($tickets))
-				$ticket_price = $tickets[$ticket];
+				$ticket_price = $formatter->formatCurrency($tickets[$ticket], 'USD');
 				if(trim($ticket_price) == "$0.00"){
 					$ticket_price = 'FREE';
 				}
 			end($tickets);
-			if ($ticket === key($tickets) && $tickets[$ticket] != $ticket_price) {
-				$ticket_price .= "- " . $tickets[$ticket];
+			if ( $ticket === key($tickets) && $formatter->formatCurrency($tickets[$ticket], 'USD') != $ticket_price ) {
+				$ticket_price .= " - " . $formatter->formatCurrency($tickets[$ticket], 'USD');
 			}
 		}
 	} else if (count($tickets) > 0) {
-		$ticket_price = preg_replace('/<span[^>]*>([\s\S]*?)<\/span[^>]*>/', '', $tickets[0]->pretty_price());
+		$ticket_price = $formatter->formatCurrency($tickets[0]->ticket_price(), 'USD');
 		if(trim($ticket_price) == "$0.00"){
 			$ticket_price = 'FREE';
 		}
