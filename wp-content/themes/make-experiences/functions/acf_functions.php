@@ -10,7 +10,7 @@ function update_people_info($value, $post_id, $field, $original) {
         $lname = $person->lname();
     }
     
-    $update_people_info = false;
+    $updatePerson = false;
     switch ($field['name']){
         case 'facilitator_image':
             set_post_thumbnail( $post_id, $value );
