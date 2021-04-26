@@ -123,3 +123,7 @@ function ee_remove_event_cpt_archive( $cpt_registry_array ) {
     return $cpt_registry_array;
 }
 
+add_filter( 'FHEE__EE_Ticket_Selector__display_ticket_selector_submit__btn_text', 'ee_mer_change_cart_button', 11 );
+function ee_mer_change_cart_button( $text ) {    
+    return 'Get Tickets';
+}
