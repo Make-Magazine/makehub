@@ -60,6 +60,8 @@
 	}
 }
 
+
+
 #ee-single-page-checkout-dv {
 	#spco-steps-big-hdr { display: none; }
 	#spco-steps-display-dv {
@@ -86,6 +88,9 @@
 	.ee-reg-form-attendee-dv {
 		background: #fdfdfd;
 		border-radius: 5px;
+		textarea {
+			width: 100%;
+		}
 	}
 	#spco-attendee_information-whats-next-buttons-dv {
 		.button { 
