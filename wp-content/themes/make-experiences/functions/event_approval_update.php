@@ -25,8 +25,8 @@ function update_entry_status($entry_id, $status) {
     //if the event is approved, create an event
     if ($status == 1) {
         //find all fields set with a parameter name 
-        $entry = gfapi::get_entry($entry_id);
-        $form = GFAPI::get_form($entry['form_id']);
+        $entry = GFAPI::get_entry($entry_id);
+        $form  = GFAPI::get_form($entry['form_id']);
         $parameter_array = find_field_by_parameter($form);
         $shortDescription = getFieldByParam('short-description', $parameter_array, $entry); //short_description
         $eventName = getFieldByParam('event-name', $parameter_array, $entry); //event-name
@@ -44,19 +44,43 @@ function update_entry_status($entry_id, $status) {
         //add Month and year to end of group name ie. How to Make Your Dragon - May 2021
         $groupName = $eventName .' - '. $startDt;
         
+        /*
+         * link to event listing at least (so registrants can help promote)
+         * Basic event information - dates, times
+         */        
+        $materials = getFieldByParam('materials', $parameter_array, $entry); //materials
         
+        $webinar_link = getFieldByParam('webinar_link', $parameter_array, $entry);
+        if($webinar_link == '')   $webinar_link = 'Coming Soon';
+        
+        $schedule = '<ul>';
+        $dates = $event->datetimes_in_chronological_order();
+        foreach ($dates as $date) {
+            $schedule .= '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
+        }
+        $schedule .= '</ul>';
+        
+        $description  = '<span><a href="'.$event->get_permalink().'">'.$eventName.'</a></span>
+                         <p>Webinar Link - '.$webinar_link.'</p>' .
+                         $schedule .
+                         $materials;
+        error_log($description);
         // finally, let's create a corresponding buddyboss group for the event
         $groupArgs = array(
-            'group_id' => 0,
             'creator_id' => $entry['created_by'],
             'name' => $groupName,
-            'description' => $shortDescription,
+            'description' => $description,
             'slug' => str_replace(' ', '-', strtolower($groupName)),
             'status' => 'hidden',
             'enable_forum' => 0,
             'date_created' => bp_core_current_time()
         );
         $group_id = groups_create_group($groupArgs);        
+        
+        //set the group image
+        // save to wp_upload_dir().'/group-avatars/'.{{group-id}}.'/'.{{imgname}}.'-bpfull.jpg'
+        // save to wp_upload_dir().'/group-avatars/'.{{group-id}}.'/'.{{imgname}}.'-bpthumb.jpg'
+        // save to wp_upload_dir().'/buddypress/groups/'.{{imgname}}.'-bp-cover-image.jpg'
         
         //write the new group id to event acf
         update_field('group_id', $group_id, $event_id);
