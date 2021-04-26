@@ -13,7 +13,41 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 <script>
 	jQuery(document).ready(function(){
 		jQuery("#flip-card").css("min-height", jQuery(".host-wrapper.front").outerHeight() + 20);
+		renderPage();
 	});
+	function renderPage() {
+	  // initialize the acf script
+	  acf.do_action('ready', $('body'));
+
+	  // will be used to check if a form submit is for validation or for saving
+	  let isValidating = false;
+
+	  acf.add_action('validation_begin', () => {
+		  isValidating = true;
+	  });
+
+	  acf.add_action('submit', ($form) => {
+		  isValidating = false;
+	  });
+
+	  jQuery('#acf_edit_facilitator').on('submit', (e) => {
+		let $form = jQuery(e.target);
+		e.preventDefault();
+		// if we are not validating, save the form data with our custom code.
+		if( !isValidating ) {
+			// lock the form
+			acf.validation.lockForm($form);
+			jQuery.ajax({
+				url: window.location.href,
+				method: 'post',
+				data: $form.serialize(),
+				success: () => {
+					location.reload();
+				}
+			});
+		}
+	  });
+	}
 </script>    
 <a class="universal-btn" style="float:right" href="/submit-event/" target="_blank">Submit a New Event</a>
 
@@ -91,7 +125,8 @@ if ($person) {
                         'post_id' => $personID,
                         'post_title' => false,
                         'post_content' => false,
-                        'submit_value' => __('Update Information')
+						'form_attributes' => array('id' => 'acf_edit_facilitator'),
+                        'submit_value' => __('Update Information'),
                     ));
                     ?>
                 </div>

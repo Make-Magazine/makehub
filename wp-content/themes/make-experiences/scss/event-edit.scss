@@ -109,17 +109,25 @@
 	transition: height .5s, opacity .3s;
 }
 .host-wrapper.back {
-	max-height: 1000px;
 	opacity: 1;
 }
 .host-form-wrapper {
 	width: 100%;
-	form#facilitator-edit {
+	form {
 		width: 100%;
-		input, label, textarea {
+		input:not(.button-small), label, textarea {
 			display:block;
 			width: 100%;
 		}
 		label { margin-top: 10px; }
+		.acf-form-submit {
+			.button {
+				width: 100%;
+				font-size: 20px;
+				padding: 10px 0px 40px;
+				margin-top: 25px;
+			}
+		}
 	}
+	
 }
