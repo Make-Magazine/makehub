@@ -319,7 +319,7 @@ function getVideoPanel() {
    //get data submitted on admin page
             
    $return = '';
-   $return .= '<section class="video-panel container-fluid">';    // create content-panel section
+   $return .= '<section class="video-panel container-fluid full-width-div">';    // create content-panel section
 
    //get requested data for each column
    GLOBAL $acf_blocks;
@@ -370,7 +370,7 @@ function getImagePanel() {
    //get data submitted on admin page
             
    $return = '';
-   $return .= '<section class="image-panel container-fluid">';    // create content-panel section
+   $return .= '<section class="image-panel container-fluid full-width-div">';    // create content-panel section
 
    //get requested data for each column
 	GLOBAL $acf_blocks;
