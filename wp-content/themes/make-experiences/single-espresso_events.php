@@ -201,7 +201,11 @@ get_header();
                         </div>
                         <div class="event-sidebar-item">
                             <h3>Details</h3>
-                            <div class="event-sidebar-field event-date">
+                            <?php 
+							/*$event = $post->EE_Event;
+							$tickets = $event->tickets();
+							var_dump($tickets);*/ ?>
+							<div class="event-sidebar-field event-date">
                                 <b>Dates:</b>
                                 <ul>
                                     <?php

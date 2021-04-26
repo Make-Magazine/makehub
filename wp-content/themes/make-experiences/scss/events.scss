@@ -267,11 +267,14 @@
 	}
 }
 
-.tckt-slctr-tkt-details-tbl {
-	th, td {
-		display: none;
-		&:nth-child(1), &:nth-child(2) {
-			display: table-cell;
+.ee-ticket-this-is-a-ticket-name-details {
+	.tckt-slctr-tkt-details-tbl {
+		th, td {
+			display: none;
+			&:nth-child(1), &:nth-child(2) {
+				display: table-cell;
+			}
 		}
 	}
+	.ticket-details-label-spn { width: auto; }
 }

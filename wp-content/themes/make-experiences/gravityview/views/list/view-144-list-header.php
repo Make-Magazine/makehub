@@ -14,11 +14,6 @@ if (!isset($gravityview) || empty($gravityview->template)) {
 	jQuery(document).ready(function(){
 		jQuery("#flip-card").css("min-height", jQuery(".host-wrapper.front").outerHeight() + 20);
 	});
-    var myModal = document.getElementById('myModal')
-    var myInput = document.getElementById('myInput')
-    myModal.addEventListener('shown.bs.modal', function () {
-        myInput.focus()
-    })
 </script>    
 <a class="universal-btn" style="float:right" href="/submit-event/" target="_blank">Submit a New Event</a>
 
