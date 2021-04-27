@@ -3,6 +3,20 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
+/* function convertTo24Hour(time) {
+	time = time.replace(/\s/g, '')
+    var hours = parseInt(time.substr(0, 2));
+    if(time.indexOf('am') != -1 && hours == 12) {
+        time = time.replace('12', '0');
+    }
+    if(time.indexOf('pm')  != -1 && hours < 12) {
+        time = time.replace(hours, (hours + 12));
+    }
+	// remove the am/pm
+    return time.slice(0, -2);
+}
+*/
+
 jQuery("#scrollToTop").click(function() {
 	jQuery('html, body').animate({scrollTop:0}, 300);
 });

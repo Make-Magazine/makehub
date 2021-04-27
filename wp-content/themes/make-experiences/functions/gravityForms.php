@@ -10,6 +10,9 @@ add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
+add_filter( 'gform_field_validation_10_9', 'validate_time', 10, 4 );
+//add_filter( 'gform_field_validation_10_11', 'validate_time', 10, 4 );
+
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
     //build field name, must match List field syntax to be processed correctly
@@ -31,6 +34,19 @@ function set_time_field_type($input, $input_info, $field, $text, $value, $form_i
     $new_input = '<input type="text" name="' . $input_field_name . '" value="12 : 00 PM" ' . $tabindex . ' class="time timepicker">';
 
     return $new_input;
+}
+
+// make sure the time of the end is past the time of the beginning
+function validate_time($result, $value, $form, $field) {
+	$startTime = date("G:i", strtotime(rgar( $value, $field->id . '.2' )));
+    $endTime   = date("G:i", strtotime(rgar( $value, $field->id . '.3' )));
+	if ( $startTime > $endTime  ) {
+		$result['is_valid'] = false;
+		$result['message']  = 'End Time must be greater than start time';
+	} else {
+		$result['is_valid'] = true;
+		$result['message']  = '';
+	}
 }
 
 function find_field_by_parameter($form) {
