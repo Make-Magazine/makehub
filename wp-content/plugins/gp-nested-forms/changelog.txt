@@ -1,6 +1,12 @@
 
 # Changelog
 
+## 1.0-beta-9.20
+
+	- Updated Gravity Perks minimum required version to 2.2.3.
+	- Updated field settings markup, styles and functionality to work with Gravity Forms 2.5.
+	- Fixed issue where Nested Forms would not load if using Conditional Logic and the gform_init_scripts_footer filter.
+
 ## 1.0-beta-9.19
 
 	- Fixed an issue displaying list fields in GPNF entries. (#82)

@@ -63,7 +63,10 @@ class GP_Populate_Anything extends GP_Plugin {
 				'version' => '4.8',
 			),
 			'plugins'      => array(
-				'gravityperks/gravityperks.php' => 'Gravity Perks',
+				'gravityperks/gravityperks.php' => array(
+					'name'    => 'Gravity Perks',
+					'version' => '2.2.3',
+				),
 			),
 		);
 	}
@@ -995,7 +998,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * be formatted numbers with currency.
 	 */
 	public function maybe_add_currency_to_price( $template_value, $field, $template, $populate, $object, $object_type, $objects ) {
-		if ( $field->type !== 'product' ) {
+		if ( rgar( $field, 'type' ) !== 'product' ) {
 			return $template_value;
 		}
 
@@ -1548,14 +1551,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			return null;
 		}
 
-		$objects = $this->get_field_objects( $field, $field_values, 'values' );
-
-		if ( count( $objects ) === 0 ) {
-			if ( $lead ) {
-				return RGFormsModel::get_lead_field_value( $lead, $field );
-			}
-		}
-
 		if ( $this->has_empty_field_value( $field, 'values', $field_values ) ) {
 			/**
 			 * Modify the value of an input when its value is being populated dynamically and there is a field
@@ -1569,7 +1564,17 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * @param array $templates Value templates for the current field
 			 */
 			return gf_apply_filters( array( 'gppa_has_empty_field_value', $field->formId, $field->id ), null, $field, $form, $templates );
-		} elseif ( count( $objects ) === 0 ) {
+		}
+
+		$objects = $this->get_field_objects( $field, $field_values, 'values' );
+
+		if ( count( $objects ) === 0 ) {
+			if ( $lead ) {
+				return RGFormsModel::get_lead_field_value( $lead, $field );
+			}
+		}
+
+		if ( count( $objects ) === 0 ) {
 			/**
 			 * Modify the value of an input when no object results have been found. Note, the field's Default Value will
 			 * be used if field dependencies have not been filled in.
@@ -1656,7 +1661,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * @param array $entry
 	 * @param boolean $force_use_field_value
 	 * @param boolean $include_html
-     * @param boolean $run_pre_render
+	 * @param boolean $run_pre_render
 	 *
 	 * @return array
 	 */
@@ -1723,34 +1728,32 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		/**
-		 * This is here to force using the provided field values in instances like save and continue.
-		 **/
-		if ( $force_use_field_value ) {
-
-			if ( ! $field->inputs ) {
-				$field_value = rgar( $field_values, $field->id );
-			} else {
-				$field_value = array();
-
-				foreach ( $field->inputs as $input ) {
-					$field_value[ $input['id'] ] = rgar( $field_values, $input['id'] );
-				}
-			}
-		} elseif ( $field->inputs && ! in_array( $field->type, self::get_interpreted_multi_input_field_types() ) ) {
+		if ( $field->inputs && ! in_array( $field->type, self::get_interpreted_multi_input_field_types() ) ) {
 
 			$field_value = array();
 
-			foreach ( $field->inputs as $input ) {
-				$value = $this->get_input_values( $field, $input['id'], $field_values, $entry, $form );
+			if ( $force_use_field_value ) {
+				foreach ( $field->inputs as $input ) {
+					$field_value[ $input['id'] ] = rgar( $field_values, $input['id'] );
+				}
+			} else {
+				foreach ( $field->inputs as $input ) {
+					$value = $this->get_input_values( $field, $input['id'], $field_values, $entry, $form );
 
-				if ( $value ) {
-					$field_value[ $input['id'] ] = $value;
+					if ( $value ) {
+						$field_value[ $input['id'] ] = $value;
+					}
 				}
 			}
 		} else {
-
-			$field_value = $this->get_input_values( $field, 'value', $field_values, $entry, $form );
+			/**
+			 * This is here to force using the provided field values in instances like save and continue.
+			 **/
+			if ( $force_use_field_value ) {
+				$field_value = rgar( $field_values, $field->id );
+			} else {
+				$field_value = $this->get_input_values( $field, 'value', $field_values, $entry, $form );
+			}
 
 			$filter_name = 'gppa_modify_field_value_' . $field->type;
 
@@ -1836,12 +1839,30 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field_value = str_replace( "\r\n", "\n", $field_value );
 		$request_val = str_replace( "\r\n", "\n", $request_val );
 
-		if ( $field_value == $request_val ) {
-			$field_value = $default_value;
+		/**
+		 * Added trim here to improve reliability of LMTs being in textareas. There were situations where the number of
+		 * line breaks would not equal and cause LMTs to stop populating.
+		 */
+		if ( is_string( $field_value ) ) {
+			if ( stripslashes( trim( $field_value ) ) == stripslashes( trim( $request_val ) ) ) {
+				$field_value = $default_value;
+			}
+		} else {
+			if ( $field_value == $request_val ) {
+				$field_value = $default_value;
+			}
 		}
 
 		$form_id = rgar( $form, 'id' );
 
+		/**
+		 * Filter the field object after it has been hydrated.
+		 *
+		 * @since 1.0-beta-4.166
+		 *
+		 * @param \GF_Field $field The field object that has been hydrated.
+		 * @param array     $form  The current form object to which the hydrated field belongs.
+		 */
 		$field = gf_apply_filters( array( 'gppa_hydrated_field', $form['id'], $field['id'] ), $field, $form );
 
 		/**
@@ -1901,6 +1922,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		if ( is_scalar( $field->get_value_default() ) && preg_match( $this->live_merge_tags->live_merge_tag_regex, $field->get_value_default() ) ) {
 			$result['field_value'] = $this->live_merge_tags->get_live_merge_tag_value( $result['field_value'], $form, $field_values );
+
+			$GLOBALS['gppa-field-values'][ $form_id ][ $field->id ] = $result['field_value'];
 		}
 
 		return $result;
@@ -2307,6 +2330,10 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	public function modify_field_values_time( $value, $field ) {
 
+		if ( ! is_string( $value ) ) {
+			return $value;
+		}
+
 		preg_match( '/^(\d*):(\d*) ?(.*)$/', $value, $matches );
 
 		if ( ! $matches || ! count( $matches ) ) {
@@ -2348,7 +2375,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function hydrate_form( $form, $entry ) {
-		return $this->hydrate_initial_load( $form, false, array(), $entry['id'] );
+		return $this->hydrate_initial_load( $form, false, array(), $entry );
 	}
 
 	public function hydrate_initial_load( $form, $ajax = false, $field_values = array(), $entry = null, $hydrate_values = true ) {
@@ -2680,8 +2707,6 @@ class GP_Populate_Anything extends GP_Plugin {
 			'event_id'         => rgpost( 'event-id' ),
 		);
 
-		$field_values_pre = $field_values;
-
 		/**
 		 * Remove field values for fields that are being populated as the choices may change.
 		 */
@@ -2710,18 +2735,25 @@ class GP_Populate_Anything extends GP_Plugin {
 		}, ARRAY_FILTER_USE_BOTH );
 
 		/**
-		 * Hydrate form to get more accurate merge tag values.
-		 */
-		$form = $this->hydrate_initial_load( $form, false, $field_values, $entry, false );
-
-		/**
 		 * Map the field values to $_POST to ensure that $field->get_value_save_entry() works as expected.
 		 */
 		foreach ( $field_values as $input => $value ) {
 			$_POST[ 'input_' . $input ] = $value;
 		}
 
-		foreach ( $field_values as $input => $value ) {
+		/**
+		 * Hydrate form to get more accurate merge tag values.
+		 */
+		$form = $this->hydrate_initial_load( $form, false, $field_values, $entry, false );
+
+		/**
+		 * Map field values again to $_POST after hydration. Note this is a duplication of a block above.
+		 */
+		foreach ( $GLOBALS['gppa-field-values'][ $form['id'] ] as $input => $value ) {
+			$_POST[ 'input_' . $input ] = $value;
+		}
+
+		foreach ( $GLOBALS['gppa-field-values'][ $form['id'] ] as $input => $value ) {
 			$field = GFFormsModel::get_field( $form, $input );
 
 			if ( ! $field ) {

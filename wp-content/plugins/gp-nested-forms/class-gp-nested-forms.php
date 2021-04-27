@@ -13,10 +13,6 @@ class GP_Nested_Forms extends GP_Plugin {
 	protected $_title       = 'Gravity Forms Nested Forms';
 	protected $_short_title = 'Nested Forms';
 
-	protected $min_gravity_perks_version = '2.0-beta-1';
-	protected $min_gravity_forms_version = '2.4';
-	protected $min_wp_version            = '4.9';
-
 	public $parent_form_id = null;
 	public $field_type     = 'form';
 
@@ -26,7 +22,7 @@ class GP_Nested_Forms extends GP_Plugin {
 
 	public static function get_instance() {
 
-		if ( self::$instance == null ) {
+		if ( self::$instance === null ) {
 			self::includes();
 			self::$instance = isset( self::$perk_class ) ? new self( new self::$perk_class ) : new self();
 		}
@@ -39,7 +35,7 @@ class GP_Nested_Forms extends GP_Plugin {
 	public function minimum_requirements() {
 		return array(
 			'gravityforms' => array(
-				'version' => '2.3-beta-1',
+				'version' => '2.4',
 			),
 			'wordpress'    => array(
 				'version' => '4.9',
@@ -47,7 +43,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			'plugins'      => array(
 				'gravityperks/gravityperks.php' => array(
 					'name'    => 'Gravity Perks',
-					'version' => '2.0',
+					'version' => '2.2.3',
 				),
 			),
 		);
@@ -633,9 +629,9 @@ class GP_Nested_Forms extends GP_Plugin {
 
 		?>
 
-		<li class="gpnf-setting field_setting">
+		<li class="gpnf-setting field_setting gp-field-setting">
 
-			<div class="gpnf-sub-setting">
+			<div class="gp-row">
 
 				<label for="gpnf-form" class="section_label">
 					<?php _e( 'Nested Form', 'gp-nested-forms' ); ?>
@@ -656,30 +652,34 @@ class GP_Nested_Forms extends GP_Plugin {
 
 			</div>
 
-			<div id="gpnf-form-settings" class="gpnf-sub-setting" style="display:none;">
+			<div id="gpnf-form-settings" class="gp-row">
 
 				<label for="gpnf-fields" class="section_label">
 					<?php _e( 'Summary Fields', 'gp-nested-forms' ); ?>
 					<?php gform_tooltip( 'gpnf_fields' ); ?>
 				</label>
-				<select id="gpnf-fields" multiple="" class="fieldwidth-3" onchange="SetFieldProperty( 'gpnfFields', jQuery( this ).val() );">
-					<!-- dynamically populated based on selection in 'form' select -->
-				</select>
+				<div id="gpnf-fields-container" class="gp-group">
+					<select id="gpnf-fields" class="fieldwidth-3" multiple disabled onchange="SetFieldProperty( 'gpnfFields', jQuery( this ).val() );">
+						<!-- dynamically populated based on selection in 'form' select -->
+					</select>
+					<img class="gpnf-static-spinner" src="<?php echo GFCommon::get_base_url(); ?>/images/<?php echo $this->is_gf_version_gte( '2.5-beta-1' ) ? 'spinner.svg' : 'spinner.gif';?>">
+				</div>
 
 			</div>
 
 			<!-- Entry Labels -->
-			<div id="gpnf-entry-labels" class="gpnf-sub-setting">
+			<div id="gpnf-entry-labels" class="gp-row">
 				<label for="gpnf-entry-label-singular" class="section_label">
 					<?php esc_html_e( 'Entry Labels', 'gp-nested-forms' ); ?>
-					<?php gform_tooltip( 'gpnf_entry_labels' ); ?></label>
-				<div>
+					<?php gform_tooltip( 'gpnf_entry_labels' ); ?>
+				</label>
+				<div class="gp-group">
 					<label for="gpnf-entry-label-singular">
 						<?php _e( 'Singular', 'gp-nested-forms' ); ?>
 					</label>
 					<input type="text" id="gpnf-entry-label-singular" placeholder="<?php esc_html_e( 'e.g. Entry', 'gp-nested-forms' ); ?>" onchange="SetFieldProperty( 'gpnfEntryLabelSingular', jQuery( this ).val() );" />
 				</div>
-				<div>
+				<div class="gp-group">
 					<label for="gpnf-entry-label-plural">
 						<?php _e( 'Plural', 'gp-nested-forms' ); ?>
 					</label>
@@ -702,9 +702,11 @@ class GP_Nested_Forms extends GP_Plugin {
 				<?php gform_tooltip( 'gpnf_modal_header_color' ); ?>
 			</label>
 
-			<input type='text' class="iColorPicker" onchange="SetFieldProperty( 'gpnfModalHeaderColor', this.value );" id="gpnf-modal-header-color" />
-			<img id="chip_gpnf-modal-header-color" height="24" width="24" src="<?php echo GFCommon::get_base_url(); ?>/images/blankspace.png" />
-			<img id="chooser_gpnf-modal-header-color" src="<?php echo GFCommon::get_base_url(); ?>/images/color.png" />
+			<div class="gp-group">
+				<input type="text" class="iColorPicker" onchange="SetFieldProperty( 'gpnfModalHeaderColor', this.value );" id="gpnf-modal-header-color" />
+				<img id="chip_gpnf-modal-header-color" height="24" width="24" src="<?php echo GFCommon::get_base_url(); ?>/images/blankspace.png" />
+				<img id="chooser_gpnf-modal-header-color" height="16" width="16" src="<?php echo GFCommon::get_base_url(); ?>/images/color.png" />
+			</div>
 
 		</li>
 
@@ -714,21 +716,21 @@ class GP_Nested_Forms extends GP_Plugin {
 	public function editor_field_advanced_settings() {
 		?>
 
-		<li class="gpnf-entry-limits-setting field_setting" id="gpnf-entry-limits" style="display:none;">
+		<li class="gpnf-entry-limits-setting field_setting gp-field-setting" id="gpnf-entry-limits" style="display:none;">
 
 			<label for="gpnf-entry-limit-min" class="section_label">
 				<?php esc_html_e( 'Entry Limits', 'gp-nested-forms' ); ?>
 				<?php gform_tooltip( 'gpnf_entry_limits' ); ?>
 			</label>
 
-			<div>
+			<div class="gp-group">
 				<label for="gpnf-entry-limit-min">
 					<?php _e( 'Minimum', 'gp-nested-forms' ); ?>
 				</label>
 				<input type="number" id="gpnf-entry-limit-min" placeholder="<?php esc_html_e( 'e.g. 2', 'gp-nested-forms' ); ?>" onchange="SetFieldProperty( 'gpnfEntryLimitMin', jQuery( this ).val() );" />
 			</div>
 
-			<div>
+			<div class="gp-group">
 				<label for="gpnf-entry-limit-max">
 					<?php _e( 'Maximum', 'gp-nested-forms' ); ?>
 				</label>
@@ -1091,7 +1093,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		/**
 		 * footer_init_scripts does not run by default if explicitly loading the form with AJAX enabled in GF >2.5.
 		 */
-		if ( $this->is_gf_version_gte( '2.5-beta-1' ) ) {
+		if ( $this->is_gf_version_gte( '2.5-beta-1' ) || apply_filters( 'gform_init_scripts_footer', false ) ) {
 			GFFormDisplay::footer_init_scripts( $nested_form_id );
 		}
 
