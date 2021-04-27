@@ -421,12 +421,17 @@
 	}
 }
 
-// specific tweaks 
+// specific tweaks, remove if we're just going to left align everything
 #gform_fields_7_3{
 	h2 { display: none; }
 	li.gfield:nth-of-type(2) label {
     	float: left;
-		font-size: 2em;
+		font-size: 1.8em;
+	}
+	li.gfield:nth-of-type(3) {
+		label, .gfield_description {
+			float: left;
+		}
 	}
 }
 
