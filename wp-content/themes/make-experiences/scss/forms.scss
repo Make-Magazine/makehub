@@ -422,15 +422,11 @@
 }
 
 // specific tweaks 
-#gform_fields_7_3 {
+#gform_fields_7_3{
 	h2 { display: none; }
-	> li label {
+	li:nth-of-type(2) label {
     	float: left;
 		font-size: 2em;
-	}
-	> li label ~ li label {
-		float: center;
-		font-size: 1.2em;
 	}
 }
 
