@@ -42,6 +42,7 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 			'2.0.0',
 			'2.0.3',
 			'2.0.4',
+			'2.4.0',
 		];
 	}
 
@@ -334,6 +335,16 @@ class Lifecycle extends Framework\Plugin\Lifecycle {
 		if ( $handler = $this->get_plugin()->get_background_remove_duplicate_visibility_meta_instance() ) {
 			$handler->dispatch();
 		}
+	}
+
+	/**
+	 * Upgrades to version 2.4.0
+	 *
+	 * @since 2.4.0
+	 */
+	protected function upgrade_to_2_4_0() {
+		delete_option( 'wc_facebook_google_product_categories' );
+		delete_transient( 'wc_facebook_google_product_categories' );
 	}
 
 }
