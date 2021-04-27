@@ -25,7 +25,7 @@ if ( ( ! class_exists( 'LearnDash_Course_Navigation_Widget' ) ) && ( class_exist
 			);
 			$control_ops = array();
 			// translators: placeholder: Course.
-			parent::__construct( 'widget_ldcoursenavigation', sprintf( esc_html_x( '%s Navigation', 'Course Navigation Label', 'learndash' ), LearnDash_Custom_Label::get_label( 'lesson' ) ), $widget_ops, $control_ops );
+			parent::__construct( 'widget_ldcoursenavigation', sprintf( esc_html_x( '%s Navigation', 'Course Navigation Label', 'learndash' ), learndash_get_custom_label( 'course' ) ), $widget_ops, $control_ops );
 		}
 
 		/**

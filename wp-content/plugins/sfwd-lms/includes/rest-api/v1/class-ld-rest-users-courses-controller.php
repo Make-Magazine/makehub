@@ -116,7 +116,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Courses_Controller_V1' ) ) && ( class_exis
 					),
 					'course_ids' => array(
 						// translators: course
-						'description'         => sprintf( esc_html_x( 'The %s IDs.', 'placeholder: course', 'learndash' ) ),
+						'description'         => sprintf( esc_html_x( 'The %s IDs.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 						'type'        => 'array',
 						'items'       => array(
 							'type' => 'integer',

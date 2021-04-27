@@ -27,6 +27,28 @@ $progress = learndash_course_progress(
 	)
 );
 
+/**
+ * The logic in learndash_course_progress() should
+ * return an array of elements. However, when scanning
+ * other calls to this function some check if the returned
+ * value is an empty string. 
+ */
+if ( ! is_array( $progress ) ) {
+	$progress = array();
+}
+
+if ( ! isset( $progress['percentage'] ) ) {
+	$progress['percentage'] = 0;
+}
+if ( ! isset( $progress['completed'] ) ) {
+	$progress['completed'] = 0;
+}
+
+if ( ! isset( $progress['total'] ) ) {
+	// We can set the 'total' to zero because the detail is not displayed.
+	$progress['total'] = 0;
+}
+
 $has_group_access = false;
 $status           = '';
 

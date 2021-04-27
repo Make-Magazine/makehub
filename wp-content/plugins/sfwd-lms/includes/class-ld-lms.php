@@ -3018,17 +3018,17 @@ if ( ! class_exists( 'SFWD_LMS' ) ) {
 				return;
 			}
 
-			$selected_d = '';
-			$selected_w = '';
-			$selected_m = '';
-			$selected_y = '';
+			$selected_D = '';
+			$selected_W = '';
+			$selected_M = '';
+			$selected_Y = '';
 			${'selected_' . $price_billing_t3} = 'selected="selected"';
 			return '<input name="' . $settings_prefix . '_price_billing_p3" type="number" value="' . $price_billing_p3 . '" class="small-text" />
 					<select class="select_course_price_billing_p3" name="' . $settings_prefix . '_price_billing_t3">
-						<option value="D" ' . $selected_d . '>' . esc_html__( 'day(s)', 'learndash' ) . '</option>
-						<option value="W" ' . $selected_w . '>' . esc_html__( 'week(s)', 'learndash' ) . '</option>
-						<option value="M" ' . $selected_m . '>' . esc_html__( 'month(s)', 'learndash' ) . '</option>
-						<option value="Y" ' . $selected_y . '>' . esc_html__( 'year(s)', 'learndash' ) . '</option>
+						<option value="D" ' . $selected_D . '>' . esc_html__( 'day(s)', 'learndash' ) . '</option>
+						<option value="W" ' . $selected_W . '>' . esc_html__( 'week(s)', 'learndash' ) . '</option>
+						<option value="M" ' . $selected_M . '>' . esc_html__( 'month(s)', 'learndash' ) . '</option>
+						<option value="Y" ' . $selected_Y . '>' . esc_html__( 'year(s)', 'learndash' ) . '</option>
 					</select>';
 		}
 

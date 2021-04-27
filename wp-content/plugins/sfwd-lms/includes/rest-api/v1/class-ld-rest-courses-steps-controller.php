@@ -84,7 +84,7 @@ if ( ( ! class_exists( 'LD_REST_Courses_Steps_Controller_V1' ) ) && ( class_exis
 					),
 					'type' => array(
 						// translators: placeholder: course.
-						'description'         => sprintf( esc_html_x( 'The %s step type.', 'placeholder: course', 'learndash' ) ),
+						'description' => sprintf( esc_html_x( 'The %s step type.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 						'type'        => 'string',
 						'enum'        => array(
 							'all',

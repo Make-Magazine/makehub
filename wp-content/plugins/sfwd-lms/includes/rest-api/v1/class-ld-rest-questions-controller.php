@@ -113,9 +113,12 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 		 */
 		public function permissions_check( $request ) {
 			$params      = $request->get_params();
-			$question_id = $params['id'];
+			if ( ( isset( $params['id'] ) ) && ( ! empty( $params['id'] ) ) ) {
+				$question_id = $params['id'];
 
-			return current_user_can( 'edit_post', $question_id );
+				return current_user_can( 'edit_post', $question_id );
+			}
+			return false;
 		}
 
 		/**
@@ -443,14 +446,14 @@ if ( ! class_exists( 'LD_REST_Questions_Controller_V1' ) ) {
 					),
 					'question_id'                     => array(
 						// translators: question
-						'description' => sprintf( esc_html_x( 'The %s post ID.', 'placeholder: question', 'learndash' ) ),
+						'description' => sprintf( esc_html_x( 'The %s post ID.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'integer',
 						'context'     => array( 'view', 'edit', 'embed' ),
 						'readonly'    => true,
 					),
 					'question_post_title'             => array(
 						// translators: question
-						'description' => sprintf( esc_html_x( 'The %s post title.', 'placeholder: question', 'learndash' ) ),
+						'description' => sprintf( esc_html_x( 'The %s post title.', 'placeholder: question', 'learndash' ), learndash_get_custom_label_lower( 'question' ) ),
 						'type'        => 'string',
 						'context'     => array( 'view', 'edit' ),
 					),

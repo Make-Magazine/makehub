@@ -1989,11 +1989,14 @@ function learndash_30_ajax_pager() {
 		wp_send_json_error(
 			array(
 				'success' => false,
-				// translators: placeholder: course
-				'message' => _x(
-					'No %s ID supplied',
-					'placeholder: course',
-					'learndash'
+				'message' => sprintf(
+					// translators: placeholder: course
+					esc_html_x(
+						'No %s ID supplied',
+						'placeholder: course',
+						'learndash'
+					),
+					learndash_get_custom_label( 'course' )
 				),
 			)
 		);

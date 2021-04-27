@@ -1225,7 +1225,7 @@ if ( ( ! class_exists( 'LD_REST_Quiz_Statistics_Controller_V2' ) ) && class_exis
 
 				default:
 					// translators: placeholder: question
-					throw new Exception( _x( 'Invalid %s type supplied', 'placeholder: question', 'learndash' ), 404 );
+					throw new Exception( sprintf( esc_html_x( 'Invalid %s type supplied', 'placeholder: question', 'learndash' ), learndash_get_custom_label( 'question' ) ), 404 );
 			}
 		}
 

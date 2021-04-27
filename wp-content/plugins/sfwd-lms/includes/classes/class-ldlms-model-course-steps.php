@@ -58,6 +58,14 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		protected $steps = array();
 
 		/**
+		 * Course Steps Objects Loaded flag.
+		 *
+		 * @var boolean $objects_loaded Set to false initially. Set to true once course
+		 * steps objects have been loaded.
+		 */
+		protected $objects_loaded = false;
+
+		/**
 		 * Course Objects array.
 		 *
 		 * @var array $objects Array of course steps.
@@ -115,7 +123,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 						$steps_h = array();
 					}
 
-					if ( json_encode( $this->steps['h'] ) !== json_encode( $steps_h ) ) {
+					if ( wp_json_encode( $this->steps['h'] ) !== wp_json_encode( $steps_h ) ) {
 						$this->steps      = array();
 						$this->steps['h'] = $steps_h;
 
@@ -143,6 +151,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		protected function load_steps_meta() {
 			$save_after_load = false;
 
+			$this->objects_loaded = false;
+			$this->objects        = array();
+
 			if ( learndash_is_course_builder_enabled() ) {
 				$this->meta = get_post_meta( $this->course_id, 'ld_course_steps', true );
 			}
@@ -166,9 +177,10 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 				$this->meta['steps'] = array();
 			}
 
-			if ( isset( $this->meta['version'] ) ) {
+			// Future Implementation logic to handle changes in meta structure between versions.
+			//if ( isset( $this->meta['version'] ) ) {
 				// We need to perform any needed upgrade logic.
-			}
+			//}
 
 			/**
 			 * We check the 'course_id' to verify the step metadata. This helps
@@ -362,11 +374,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			if ( ! isset( $this->steps['legacy'] ) ) {
 				$this->steps['legacy'] = array();
 			}
-
 			if ( ! isset( $this->steps['sections'] ) ) {
 				$this->steps['sections'] = array();
 			}
-
 			if ( isset( $this->steps['h']['section-heading'] ) ) {
 				unset( $this->steps['h']['section-heading'] );
 			}
@@ -403,7 +413,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 					}
 				}
 
-				$this->load_steps_objects( $this->steps['t'] );
+				$this->load_steps_objects();
 			}
 		}
 
@@ -639,41 +649,80 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 * WP_Post objects.
 		 *
 		 * @since 3.4.0
-		 *
-		 * @param array $steps Array of Steps by Type.
 		 */
-		protected function load_steps_objects( $steps = array() ) {
-			$steps_objects = array();
+		protected function load_steps_objects() {
+			$all_objects_ids = array();
 
-			$all_steps = array();
-			if ( isset( $steps['sfwd-lessons'] ) ) {
-				$all_steps = array_merge( $all_steps, $steps['sfwd-lessons'] );
+			if ( $this->objects_loaded ) {
+				return;
 			}
-			if ( isset( $steps['sfwd-topic'] ) ) {
-				$all_steps = array_merge( $all_steps, $steps['sfwd-topic'] );
+
+			$all_steps_ids = $this->get_all_steps_ids();
+			if ( empty( $all_steps_ids ) ) {
+				return;
 			}
-			if ( isset( $steps['sfwd-quiz'] ) ) {
-				$all_steps = array_merge( $all_steps, $steps['sfwd-quiz'] );
+
+			$this->objects = array();
+
+			if ( true !== $this->meta['course_shared_steps_enabled'] ) {
+				$steps_query_args = array(
+					'post_type'      => $this->steps_post_types,
+					'posts_per_page' => -1,
+					'post_status'    => $this->get_step_post_statuses(),
+					'meta_query'     => array(
+						array(
+							'key'     => 'course_id',
+							'value'   => absint( $this->course_id ),
+							'compare' => '=',
+						),
+					),
+				);
+			} else {
+				$steps_query_args = array(
+					'post_type'      => $this->steps_post_types,
+					'posts_per_page' => -1,
+					'post_status'    => $this->get_step_post_statuses(),
+					'post__in'       => $all_steps_ids,
+				);
 			}
+
+			$steps_query = new WP_Query( $steps_query_args );
+			if ( ( $steps_query ) && ( is_a( $steps_query, 'WP_Query' ) ) ) {
+				foreach ( $steps_query->posts as $steps_post ) {
+					$this->objects[ $steps_post->ID ] = $steps_post;
+				}
+				$this->objects_loaded = true;
+			}
+
+			$all_objects_ids = $this->get_objects_steps_ids();
 
 			/**
 			 * If we have loaded some objects we filter through these and remove
 			 * the post IDs from all_steps to cut down on queried objects.
 			 */
-			if ( ! empty( $all_steps ) ) {
-				$all_steps = array_map( 'absint', $all_steps );
-
-				$all_objects = array();
-				if ( ! empty( $this->objects ) ) {
-					$all_objects = array_keys( $this->objects );
+			if ( ( ! empty( $all_steps_ids ) ) && ( count( $all_objects_ids ) !== count( $all_steps_ids ) ) ) {
+				/**
+				 * If we are not using Shared Steps we set the dirty
+				 * flag and abort. This will cause the process to restart.
+				 */
+				if ( true !== $this->meta['course_shared_steps_enabled'] ) {
+					$this->set_steps_dirty();
+					$this->objects        = array();
+					$this->objects_loaded = false;
+					return;
 				}
 
-				$objects_intersect = array_intersect( $all_steps, $all_objects );
+				/**
+				 * The following code is left but legacy. If here then Share Course Steps
+				 * is enabled. But since we are loading all the known steps object in the
+				 * above WP_Query calls there should be no need to compare the arrays of ids.
+				 */
+				$all_intersect_ids = array_intersect( $all_steps_ids, $all_objects_ids );
 
 				// First remove the items we don't need.
-				$objects_remove = array_diff( $all_objects, $objects_intersect );
-				if ( ! empty( $objects_remove ) ) {
-					foreach ( $objects_remove as $id_remove ) {
+				$all_remove_ids = array_diff( $all_objects_ids, $all_intersect_ids );
+				if ( ! empty( $all_remove_ids ) ) {
+					foreach ( $all_remove_ids as $id_remove ) {
 						if ( isset( $this->objects[ $id_remove ] ) ) {
 							unset( $this->objects[ $id_remove ] );
 						}
@@ -681,12 +730,12 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 				}
 
 				// Then add the new items.
-				$objects_add = array_diff( $all_steps, $objects_intersect );
-				if ( ! empty( $objects_add ) ) {
+				$all_add_ids = array_diff( $all_steps_ids, $all_intersect_ids );
+				if ( ! empty( $all_add_ids ) ) {
 
-					$all_steps_chunks = array_chunk( $objects_add, LEARNDASH_LMS_COURSE_STEPS_LOAD_BATCH_SIZE );
-					foreach ( $all_steps_chunks as $steps_chunk ) {
-						if ( empty( $steps_chunk ) ) {
+					$all_steps_chunks_ids = array_chunk( $all_add_ids, LEARNDASH_LMS_COURSE_STEPS_LOAD_BATCH_SIZE );
+					foreach ( $all_steps_chunks_ids as $steps_chunk_ids ) {
+						if ( empty( $steps_chunk_ids ) ) {
 							continue;
 						}
 
@@ -694,7 +743,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 							'post_type'      => $this->steps_post_types,
 							'posts_per_page' => -1,
 							'post_status'    => $this->get_step_post_statuses(),
-							'post__in'       => $steps_chunk,
+							'post__in'       => $steps_chunk_ids,
 						);
 
 						$steps_query = new WP_Query( $steps_query_args );
@@ -705,9 +754,64 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 						}
 					}
 				}
-			} else {
-				$this->objects = array();
 			}
+		}
+
+		/**
+		 * Get all steps ids
+		 *
+		 * @since 3.4.0.7
+		 */
+		protected function get_all_steps_ids() {
+			$all_steps_ids = array();
+
+			$steps_by_type = array();
+			if ( isset( $this->steps['t'] ) ) {
+				$steps_by_type = $this->steps['t'];
+			} else {
+				if ( isset( $this->steps['h'] ) ) {
+					$steps_by_type = $this->steps_grouped_by_type( $this->steps['h'] );
+				}
+			}
+
+			if ( ! empty( $steps_by_type ) ) {
+				if ( isset( $steps_by_type['sfwd-lessons'] ) ) {
+					$all_steps_ids = array_merge( $all_steps_ids, $steps_by_type['sfwd-lessons'] );
+				}
+				if ( isset( $steps_by_type['sfwd-topic'] ) ) {
+					$all_steps_ids = array_merge( $all_steps_ids, $steps_by_type['sfwd-topic'] );
+				}
+				if ( isset( $steps_by_type['sfwd-quiz'] ) ) {
+					$all_steps_ids = array_merge( $all_steps_ids, $steps_by_type['sfwd-quiz'] );
+				}
+			}
+
+			if ( ! empty( $all_steps_ids ) ) {
+				$all_steps_ids = array_map( 'absint', $all_steps_ids );
+			}
+
+			return array_values( $all_steps_ids );
+		}
+
+		/**
+		 * Get the post IDs of the objects.
+		 *
+		 * @since 3.4.0.7
+		 *
+		 * @return array Array of Post IDs
+		 */
+		protected function get_objects_steps_ids() {
+			$objects_steps_ids = array();
+
+			if ( ! empty( $this->objects ) ) {
+				$objects_steps_ids = wp_list_pluck( $this->objects, 'ID' );
+			}
+
+			if ( ! empty( $objects_steps_ids ) ) {
+				$objects_steps_ids = array_map( 'absint', $objects_steps_ids );
+			}
+
+			return array_values( $objects_steps_ids );
 		}
 
 		/**
@@ -900,7 +1004,7 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			$course_steps_remove = array_diff( $course_steps_old, $course_steps_intersect );
 			if ( ! empty( $course_steps_remove ) ) {
 				$wpdb->query(
-					$wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (" . LDLMS_DB::escape_IN_clause_placeholders( $course_steps_remove ) . ")", array_merge( array( 'ld_course_' . $this->course_id ), LDLMS_DB::escape_IN_clause_values( $course_steps_remove ) ) ) //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$wpdb->prepare( "DELETE FROM {$wpdb->postmeta} WHERE meta_key = %s AND post_id IN (" . LDLMS_DB::escape_IN_clause_placeholders( $course_steps_remove ) . ')', array_merge( array( 'ld_course_' . $this->course_id ), LDLMS_DB::escape_IN_clause_values( $course_steps_remove ) ) ) //phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				);
 			}
 
@@ -1158,6 +1262,9 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 			$steps = array();
 
 			if ( ! empty( $this->course_id ) ) {
+				// Set that we loaded the objects to prevent double logic.
+				$this->objects_loaded = true;
+
 				$course_lesson_order = learndash_get_course_lessons_order( $this->course_id );
 
 				// Course > Lessons
@@ -1459,7 +1566,6 @@ if ( ( ! class_exists( 'LDLMS_Course_Steps' ) ) && ( class_exists( 'LDLMS_Model'
 		 *
 		 * @param array  $steps       Array of steps.
 		 * @param string $parent_type Parent Post Type slug.
-		 * 
 		 */
 		public static function steps_split_keys( $steps, $parent_type = '' ) {
 			if ( learndash_get_post_type_slug( 'lesson' ) === $parent_type ) {
