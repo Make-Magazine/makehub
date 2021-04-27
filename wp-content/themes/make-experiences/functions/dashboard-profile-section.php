@@ -226,7 +226,7 @@ function dashboard_info_content() {
                             <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
                 .  '    <ul>';
         $return .=          '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title=“My Super Event List”]') . '</li>';
-        $return .= '    </ul><br/>';
+        $return .= '    </ul>';
         $return .= '</div>';
     }
       
