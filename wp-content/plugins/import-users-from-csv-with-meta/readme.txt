@@ -3,8 +3,8 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.7
-Stable tag: 1.17.4.4
+Tested up to: 5.7.1
+Stable tag: 1.17.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,11 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.5 =
+*   Fixed problems importing avatar from WP User Avatar
+*   Avatars using WP User Avatar can now be exported
+*   Some code improvements
 
 = 1.17.4.4 =
 *   Problems importing BuddyPress Groups solved
