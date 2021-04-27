@@ -137,12 +137,14 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * @var boolean
 	 */
 	private $order_ac_exists = false;
+
 	/**
 	 * The custom ActiveCampaign logger
 	 *
 	 * @var Activecampaign_For_Woocommerce_Logger
 	 */
 	private $logger;
+
 	/**
 	 * The WooCommerce session
 	 *

@@ -30,7 +30,9 @@ use Activecampaign_For_Woocommerce_Public as AC_Public;
 use Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command as Set_Connection_Id_Cache_Command;
 use Activecampaign_For_Woocommerce_Update_Cart_Command as Update_Cart_Command;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
+use Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command as Run_Abandonment_Sync_Command;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
 
 /**
  * The core plugin class.
@@ -192,42 +194,46 @@ class Activecampaign_For_Woocommerce {
 	private $sync_guest_abandoned_cart_command;
 
 	/**
+	 * Handles syncing the abandoned carts to AC.
+	 *
+	 * @var Run_Abandonment_Sync_Command The sync sync runner command class.
+	 */
+	private $run_abandonment_sync_command;
+
+	/**
+	 * Handles plugin upgrade.
+	 *
+	 * @var Plugin_Upgrade_Command The upgrade command class.
+	 */
+	private $plugin_upgrade_command;
+
+	/**
 	 * Define the core functionality of the plugin.
 	 *
 	 * Set the plugin name and the plugin version that can be used throughout the plugin.
 	 *
-	 * @param     string                                     $version     The current version of the
-	 *                                                                                    plugin.
-	 * @param     string                                     $plugin_name     The kebab-case name of the
-	 *                                                                                    plugin.
+	 * @param     string                                     $version     The current version of the plugin.
+	 * @param     string                                     $plugin_name     The kebab-case name of the plugin.
 	 * @param     Loader                                     $loader     The loader class.
 	 * @param     Admin                                      $admin     The admin class.
 	 * @param     AC_Public                                  $public     The public class.
-	 * @param     I18n                                       $i18n     The internationalization
-	 *                                                                                    class.
+	 * @param     I18n                                       $i18n     The internationalization class.
 	 * @param     Logger                                     $logger     The logger.
 	 * @param     Cart_Updated                               $cart_updated_event     The cart update event class.
 	 * @param     Cart_Emptied                               $cart_emptied_event     The cart emptied event class.
-	 * @param     Set_Connection_Id_Cache_Command            $set_connection_id_cache_command     The connection id cache
-	 *                                                                                    command class.
-	 * @param     Create_Or_Update_Connection_Option_Command $c_or_u_co_command     The connection option command
-	 *                                                                                    class.
+	 * @param     Set_Connection_Id_Cache_Command            $set_connection_id_cache_command     The connection id cache command class.
+	 * @param     Create_Or_Update_Connection_Option_Command $c_or_u_co_command     The connection option command class.
 	 * @param     Create_And_Save_Cart_Id                    $create_and_save_cart_id_command     The cart id command class.
-	 * @param     Update_Cart_Command                        $update_cart_command     The update cart command
-	 *                                                                                    class.
-	 * @param     Delete_Cart_Id                             $delete_cart_id_command     The delete cart id
-	 *                                                                                    command class.
-	 * @param     Add_Cart_Id_To_Order                       $add_cart_id_to_order_command     The add cart id to order
-	 *                                                                                    command class.
-	 * @param     Add_Accepts_Marketing_To_Customer_Meta     $add_am_to_meta_command     The accepts marketing
-	 *                                                                                    command class.
-	 * @param     Clear_User_Meta_Command                    $clear_user_meta_command     The clear user meta command
-	 *                                                                                    class.
-	 * @param     Sync_Guest_Abandoned_Cart_Command          $sync_guest_abandoned_cart_command     The sync guest abandoned
-	 *                                                                                      cart command class.
+	 * @param     Update_Cart_Command                        $update_cart_command     The update cart command class.
+	 * @param     Delete_Cart_Id                             $delete_cart_id_command     The delete cart id command class.
+	 * @param     Add_Cart_Id_To_Order                       $add_cart_id_to_order_command     The add cart id to order command class.
+	 * @param     Add_Accepts_Marketing_To_Customer_Meta     $add_am_to_meta_command     The accepts marketing command class.
+	 * @param     Clear_User_Meta_Command                    $clear_user_meta_command     The clear user meta command class.
+	 * @param     Sync_Guest_Abandoned_Cart_Command          $sync_guest_abandoned_cart_command     The sync guest abandoned cart command class.
 	 * @param     Order_Finished                             $order_finished_event     The order finished event class.
-	 *
 	 * @param     User_Registered                            $user_registered_event     The user registered event class.
+	 * @param     Run_Abandonment_Sync_Command               $run_abandonment_sync_command     The scheduled runner to sync abandonments.
+	 * @param     Plugin_Upgrade_Command                     $plugin_upgrade_command     The plugin installation and upgrade commands.
 	 *
 	 * @since    1.0.0
 	 */
@@ -251,7 +257,9 @@ class Activecampaign_For_Woocommerce {
 		Clear_User_Meta_Command $clear_user_meta_command,
 		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command,
 		Order_Finished $order_finished_event,
-		User_Registered $user_registered_event
+		User_Registered $user_registered_event,
+		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
+		Plugin_Upgrade_Command $plugin_upgrade_command
 	) {
 		$this->version                                    = $version;
 		$this->plugin_name                                = $plugin_name;
@@ -273,6 +281,8 @@ class Activecampaign_For_Woocommerce {
 		$this->sync_guest_abandoned_cart_command              = $sync_guest_abandoned_cart_command;
 		$this->order_finished_event                           = $order_finished_event;
 		$this->user_registered_event                          = $user_registered_event;
+		$this->run_abandonment_sync_command                   = $run_abandonment_sync_command;
+		$this->plugin_upgrade_command                         = $plugin_upgrade_command;
 	}
 
 	/**
@@ -290,6 +300,38 @@ class Activecampaign_For_Woocommerce {
 	}
 
 	/**
+	 * On plugin update these hooks should run.
+	 */
+	private function plugin_updates() {
+		$this->loader->add_action(
+			'upgrader_post_install',
+			$this->plugin_upgrade_command,
+			'execute',
+			1
+		);
+
+		$this->loader->add_action(
+			'upgrader_process_complete',
+			$this->plugin_upgrade_command,
+			'execute',
+			1
+		);
+
+		$this->loader->add_action(
+			'update_plugin_complete_actions',
+			$this->plugin_upgrade_command,
+			'execute',
+			1
+		);
+
+		$this->loader->add_action(
+			'plugins_loaded',
+			$this->plugin_upgrade_command,
+			'execute',
+			1
+		);
+	}
+	/**
 	 * Register Events to be executed on different actions.
 	 *
 	 * @throws Exception Thrown when Container definitions are missing.
@@ -299,7 +341,7 @@ class Activecampaign_For_Woocommerce {
 	private function define_event_hooks() {
 		// If we can't get the config stop this function
 		if ( ! $this->admin->get_options() ) {
-			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public event hooks will not run.' );
+			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public event hooks will not run.' );
 
 			return;
 		}
@@ -330,7 +372,19 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
-			'woocommerce_checkout_update_order_meta',
+			'woocommerce_order_status_completed',
+			$this->order_finished_event,
+			'checkout_meta'
+		);
+
+		$this->loader->add_action(
+			'woocommerce_order_status_processing',
+			$this->order_finished_event,
+			'checkout_meta'
+		);
+
+		$this->loader->add_action(
+			'woocommerce_payment_complete',
 			$this->order_finished_event,
 			'checkout_meta'
 		);
@@ -377,7 +431,7 @@ class Activecampaign_For_Woocommerce {
 		 * plugin being configured.
 		 */
 		if ( ! $this->admin->get_options() ) {
-			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public commands will not run.' );
+			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public commands will not run.' );
 
 			return;
 		}
@@ -454,6 +508,21 @@ class Activecampaign_For_Woocommerce {
 			$this->add_accepts_marketing_to_customer_meta_command,
 			'execute'
 		);
+
+		// custom hook for hourly abandoned cart
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_cart_updated_recurring_event',
+			$this->run_abandonment_sync_command,
+			'abandoned_cart_hourly_task'
+		);
+
+		// woocommerce_cart_updated, start the initial abandon stuff
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_cart_updated',
+			$this->update_cart_command,
+			'abandonment'
+		);
+
 	}
 
 	/**
@@ -521,7 +590,7 @@ class Activecampaign_For_Woocommerce {
 		if ( $this->admin->get_options() ) {
 			$ops = $this->admin->get_options();
 		} else {
-			$this->logger->notice( 'Activecampaign for WooCommerce may not be configured properly. Public hooks will not run.' );
+			$this->logger->debug( 'Activecampaign for WooCommerce may not be configured properly. Public hooks will not run.' );
 
 			return;
 		}
@@ -596,6 +665,7 @@ class Activecampaign_For_Woocommerce {
 	public function run() {
 		$this->logger = $this->logger ?: new Logger();
 		$this->set_locale();
+		$this->plugin_updates();
 		$this->define_event_hooks();
 		$this->define_command_hooks();
 		$this->define_admin_hooks();

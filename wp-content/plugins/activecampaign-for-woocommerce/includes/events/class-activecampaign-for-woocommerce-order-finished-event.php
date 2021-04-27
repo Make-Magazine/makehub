@@ -10,15 +10,12 @@
  * @subpackage Activecampaign_For_Woocommerce/includes/events
  */
 
-use Activecampaign_For_Woocommerce_Triggerable_Interface as Triggerable;
-
 use Activecampaign_For_Woocommerce_Admin as Admin;
 use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
 use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
 use Activecampaign_For_Woocommerce_Logger as Logger;
-use Activecampaign_For_Woocommerce_Api_Client as Api_Client;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
 use Brick\Money\Money;
@@ -134,15 +131,6 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	private $order_ac;
 
 	/**
-	 * Whether or not the AC order exists.
-	 * Used to determine whether or not
-	 * we want to update the AC order (PUT request).
-	 *
-	 * @var boolean
-	 */
-	private $order_ac_exists = false;
-
-	/**
 	 * The custom ActiveCampaign logger
 	 *
 	 * @var Activecampaign_For_Woocommerce_Logger
@@ -204,40 +192,59 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	 * @return bool
 	 */
 	public function checkout_meta( $order_id ) {
-		$this->logger = $this->logger ?: new Logger();
-		// get order
-		if ( ! empty( $this->admin->get_storage() ) && isset( $this->admin->get_storage()['connection_id'] ) ) {
-			$this->connection_id = $this->admin->get_storage()['connection_id'];
+		try {
+			$this->logger = $this->logger ?: new Logger();
+			// get order
+			if ( ! empty( $this->admin->get_storage() ) && isset( $this->admin->get_storage()['connection_id'] ) ) {
+				$this->connection_id = $this->admin->get_storage()['connection_id'];
 
-			$order = wc_get_order( $order_id );
-			if ( $order->get_id() && $order->get_billing_email() ) {
-				// init functions
-				$this->cart           = $this->cart ?: wc()->cart;
-				$this->customer       = $this->customer ?: wc()->customer;
-				$this->customer_woo   = $this->customer;
-				$this->customer_email = $order->get_billing_email();
-				$this->setup_woocommerce_customer();
+				$order = wc_get_order( $order_id );
 
-				$find_or_create_ac_order = $this->setup_woocommerce_order( $order );
+				if ( $order && $order->get_id() && $order->get_billing_email() && $this->verify_order_status( $order->get_status() ) ) {
+					// init functions
+					if ( ! empty( wc()->customer ) ) {
+						// event origin is triggered by customer
+						$this->cart           = $this->cart ?: wc()->cart;
+						$this->customer       = $this->customer ?: wc()->customer;
+						$this->customer_woo   = $this->customer;
+						$this->customer_email = $order->get_billing_email();
+						$this->setup_woocommerce_customer();
 
-				if ( 1 === $find_or_create_ac_order ) {
-					// Existing order found in AC, try to update it
-					$this->logger->debug( 'Checkout meta: order exists, update it' );
-					$this->update_ac_order();
+						$find_or_create_ac_order = $this->setup_woocommerce_order( $order );
+
+						if ( 1 === $find_or_create_ac_order ) {
+							// Existing order found in AC, try to update it
+							$this->logger->debug( 'Checkout meta: order exists, update it' );
+							$this->update_ac_order();
+						}
+
+						if ( ! $find_or_create_ac_order ) {
+							// 0 was returned, meaning some kind of exception
+							$this->logger->error( 'Checkout meta: Could not create an order in AC', [
+								'order_id'      => $order->get_id(),
+								'email'         => $this->customer_email,
+								'connection_id' => $this->connection_id,
+							] );
+						} else {
+							// Mark the sync time in the order
+							add_post_meta( $order_id, 'activecampaign_for_woocommerce_last_synced', date( 'Y-m-d H:i:s' ), false );
+						}
+					}
+
+					return true;
 				}
-
-				if ( ! $find_or_create_ac_order ) {
-					// 0 was returned, meaning some kind of exception
-					$this->logger->error( 'Checkout meta: $find_or_create_ac_order exception: Could not create an order in AC' );
-				} else {
-					// Mark the sync time in the order
-					add_post_meta( $order_id, 'activecampaign_for_woocommerce_last_synced', date( 'Y-m-d H:i:s' ), false );
-				}
-
-				return true;
+			} else {
+				$this->logger->error( 'Checkout meta: Could not retrieve or find connection id.', [
+					'connection_id' => $this->connection_id,
+				] );
 			}
-		} else {
-			$this->logger->debug( 'Checkout meta: Could not retrieve or find connection id.' );
+		} catch ( Exception $e ) {
+			$this->logger->error( 'Checkout meta: There was a fatal error in the checkout AC sync process.', [
+				'exception'     => $e,
+				'message'       => $e->getMessage(),
+				'stack_trace'   => $e->getTrace(),
+				'connection_id' => $this->connection_id,
+			] );
 		}
 	}
 
@@ -284,53 +291,74 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				$this->ecom_order->set_shipping_method( $order->get_shipping_method() );
 				$this->ecom_order->set_tax_amount( Money::of( $order->get_total_tax(), get_woocommerce_currency() )->getMinorAmount() );
 			}
+		} catch ( Exception $e ) {
+			$this->logger->error( 'Checkout meta: There was an error creating the order object for AC:', [
+				'exception'            => $e,
+				'message'              => $e->getMessage(),
+				'stack_trace'          => $e->getTrace(),
+				'email'                => $this->customer->get_email(),
+				'external_checkout_id' => $this->external_checkout_id,
+				'connection_id'        => $this->connection_id,
+			] );
+
+			return 0;
+		}
+
+		try {
 			$products = $this->product_factory->create_products_from_cart_contents( $this->cart->get_cart_contents() );
 			// Add products to list
 			array_walk( $products, [ $order, 'push_order_product' ] );
-		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
-			$this->logger->error(
-				'Checkout meta: Creating order in ActiveCampaign '
-			);
+		} catch ( Exception $e ) {
+			$this->logger->error( 'Checkout meta: There was an error creating the products objects for AC:', [
+				'exception'            => $e,
+				'message'              => $e->getMessage(),
+				'stack_trace'          => $e->getTrace(),
+				'email'                => $this->customer->get_email(),
+				'external_checkout_id' => $this->external_checkout_id,
+				'connection_id'        => $this->connection_id,
+			] );
 		}
+
 		// Let's try to create the order
 		$this->order_ac = null;
 
 		try {
 			// Try to find the order by it's externalcheckoutid
 			$this->order_ac = $this->order_repository->find_by_externalcheckoutid( $this->external_checkout_id );
-		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
-			// Order does not exist in AC yet
-			try {
-				// Try to create the new order in AC
-				$this->logger->debug(
-					'Checkout meta: Creating order in ActiveCampaign: '
-					. \AcVendor\GuzzleHttp\json_encode( $this->ecom_order->serialize_to_array() )
-				);
+		} catch ( Exception $e ) {
+			$this->logger->debug( 'Checkout meta: Could not find existing order by this id: ', [
+				'external_checkout_id' => $this->external_checkout_id,
+				'connection_id'        => $this->connection_id,
+				'exception'            => $e,
+				'message'              => $e->getMessage(),
+				'stack_trace'          => $e->getTrace(),
+			] );
+		}
 
+		if ( ! $this->order_ac ) {
+			try {
+				$this->logger->debug( 'Checkout meta: Creating order in ActiveCampaign: ', [
+					'serialized_order' => \AcVendor\GuzzleHttp\json_encode( $this->ecom_order->serialize_to_array() ),
+				] );
+
+				// Try to create the new order in AC
 				$this->order_ac = $this->order_repository->create( $this->ecom_order );
 
 				return 2;
 			} catch ( Exception $e ) {
-				$this->logger->debug(
-					'Checkout meta: guest order creation exception: ' . $e->getMessage()
-				);
+				$this->logger->error( 'Checkout meta: Could not send/create order in AC: ', [
+					'exception'            => $e,
+					'message'              => $e->getMessage(),
+					'stack_trace'          => $e->getTrace(),
+					'email'                => $this->customer->get_email(),
+					'external_checkout_id' => $this->external_checkout_id,
+					'connection_id'        => $this->connection_id,
+				] );
 
 				return 0;
 			}
-		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Checkout meta: guest find order exception: ' . $e->getMessage()
-			);
-
-			return 0;
-		}
-
-		if ( ! $this->order_ac ) {
-			$this->logger->debug( 'Checkout meta: invalid AC order' );
-
-			return 0;
 		} else {
-			$this->logger->debug( 'Checkout meta: valid AC order' );
+			$this->logger->debug( 'Checkout meta: Valid AC order' );
 
 			return 1;
 		}
@@ -350,18 +378,23 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 		try {
 			// Try to find the customer in AC
 			$this->customer_ac = $this->customer_repository->find_by_email_and_connection_id( $this->customer_email, $this->connection_id );
+		} catch ( Exception $e ) {
+			$this->logger->debug( 'Checkout meta: Could not find existing customer: ', [
+				'customer_email' => $this->customer_email,
+			] );
+		}
 
+		if ( $this->customer_ac ) {
 			return true;
-		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
-			// Set up AC customer model for a new customer
-			$new_customer = new Ecom_Customer();
-			$new_customer->set_email( $this->customer_email );
-			$new_customer->set_connectionid( $this->connection_id );
-			$new_customer->set_first_name( $this->customer_first_name );
-			$new_customer->set_last_name( $this->customer_last_name );
-
+		} else {
 			try {
 				// Try to create the new customer in AC
+				$new_customer = new Ecom_Customer();
+				$new_customer->set_email( $this->customer_email );
+				$new_customer->set_connectionid( $this->connection_id );
+				$new_customer->set_first_name( $this->customer_first_name );
+				$new_customer->set_last_name( $this->customer_last_name );
+
 				$this->logger->debug(
 					'Checkout meta: Creating customer in ActiveCampaign: '
 					. \AcVendor\GuzzleHttp\json_encode( $new_customer->serialize_to_array() )
@@ -369,22 +402,28 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 
 				$this->customer_ac = $this->customer_repository->create( $new_customer );
 			} catch ( Exception $e ) {
-				$this->logger->debug(
-					'Checkout meta: guest customer creation exception: ' . $e->getMessage()
-				);
+				$this->logger->error( 'Checkout meta: Could not create customer in AC: ', [
+					'connection_id' => $this->connection_id,
+					'email'         => $this->customer_email,
+					'exception'     => $e,
+					'message'       => $e->getMessage(),
+					'stack_trace'   => $e->getTrace(),
+				] );
 
 				return false;
 			}
-		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Checkout meta: guest find customer exception: ' . $e->getMessage()
-			);
 
-			return false;
-		}
-
-		if ( $this->customer_ac ) {
-			return true;
+			if ( $this->customer_ac ) {
+				return true;
+			} else {
+				$this->logger->error( 'Checkout meta: It appears we could not find or create a contact in AC.', [
+					'connection_id' => $this->connection_id,
+					'email'         => $this->customer_email,
+					'first_name'    => $this->customer_first_name,
+					'last_name'     => $this->customer_last_name,
+				] );
+				return false;
+			}
 		}
 	}
 
@@ -403,21 +442,6 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	}
 
 	/**
-	 * Set up the ecom order with necessary data
-	 *
-	 * @return bool This job was successful
-	 */
-	private function setup_ecom_order() {
-		// Create the order object
-		$this->ecom_order = $this->factory->from_woocommerce( $this->cart, $this->customer_woo );
-
-		$this->ecom_order->set_externalcheckoutid( $this->external_checkout_id );
-		$this->ecom_order->set_customerid( $this->customer_ac->get_id() );
-
-		return true;
-	}
-
-	/**
 	 * Update the existing ecom order in AC
 	 *
 	 * @return bool Whether or not this job was successful
@@ -430,14 +454,13 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 
 			return true;
 		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Checkout meta: guest order update exception: ' . $e->getMessage()
-			);
+			$this->logger->error( 'Checkout meta: Could not update the order in AC: ', [
+				'message'     => $e->getMessage(),
+				'stack_trace' => $e->getTrace(),
+			] );
 
 			return false;
 		}
-
-		return true;
 	}
 
 	/**
@@ -467,13 +490,19 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 	}
 
 	/**
-	 * The method called during events.
+	 * Verifies the status of the order for sending to AC
 	 *
-	 * @param     array ...$args     An array of all arguments passed in.
+	 * @param string $status The order status.
 	 *
-	 * @since 1.0.0
+	 * @return bool Whether or not the order passes.
 	 */
-	public function trigger( ...$args ) {
-		// TODO: Implement trigger() method.
+	private function verify_order_status( $status ) {
+		if ( ! empty( $status ) ) {
+			$accepted_statuses = [ 'completed', 'processing' ];
+
+			return in_array( $status, $accepted_statuses, true );
+		} else {
+			return false;
+		}
 	}
 }

@@ -32,7 +32,9 @@ use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repositor
 use Activecampaign_For_Woocommerce_I18n as I18n;
 use Activecampaign_For_Woocommerce_Loader as Loader;
 use Activecampaign_For_Woocommerce_Logger as Log;
+use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
 use Activecampaign_For_Woocommerce_Public as AC_Public;
+use Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command as Run_Abandonment_Sync_Command;
 use Activecampaign_For_Woocommerce_Set_Connection_Id_Cache_Command as Set_Connection_Id_Cache_Command;
 use Activecampaign_For_Woocommerce_Update_Cart_Command as Update_Cart_Command;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
@@ -60,7 +62,9 @@ return array(
 		Clear_User_Meta_Command $clear_user_meta_command,
 		Sync_Guest_Abandoned_Cart_Command $sync_guest_abandoned_cart_command,
 		Order_Finished $order_finished_event,
-		User_Registered $user_registered_event
+		User_Registered $user_registered_event,
+		Run_Abandonment_Sync_Command $run_abandonment_sync_command,
+		Plugin_Upgrade_Command $plugin_upgrade_command
 	) {
 		$version = defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ?
 			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION :
@@ -90,7 +94,9 @@ return array(
 			$clear_user_meta_command,
 			$sync_guest_abandoned_cart_command,
 			$order_finished_event,
-			$user_registered_event
+			$user_registered_event,
+			$run_abandonment_sync_command,
+			$plugin_upgrade_command
 		);
 	},
 

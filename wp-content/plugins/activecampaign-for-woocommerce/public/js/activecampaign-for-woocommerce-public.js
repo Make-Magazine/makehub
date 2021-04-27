@@ -88,7 +88,7 @@
 			var acUrl = document.getElementById('activecampaign-for-woocommerce-js').getAttribute('src');
 			if(acUrl && typeof acUrl !== 'undefined') {
 				var pat = /(?:custom_email_field=)(.*?)(?=&|$)/;
-				var e = acUrl.match(pat); //TODO: Invalid regular expression: invalid group specifier name
+				var e = acUrl.match(pat);
 				if (e && typeof e[1] !== 'undefined' && e[1] && e[1] !== '') {
 					email_field = '#' + e[1];
 				}

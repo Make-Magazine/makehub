@@ -10,6 +10,9 @@
  * @subpackage Activecampaign_For_Woocommerce/includes
  */
 
+use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Plugin_Upgrade_Command as Plugin_Upgrade_Command;
+
 /**
  * Fired during plugin activation.
  *
@@ -31,7 +34,7 @@ class Activecampaign_For_Woocommerce_Activator {
 	/**
 	 * Activecampaign_For_Woocommerce_Activator constructor.
 	 *
-	 * @param Activecampaign_For_Woocommerce_Admin $admin The admin instance.
+	 * @param     Activecampaign_For_Woocommerce_Admin $admin     The admin instance.
 	 */
 	public function __construct( Activecampaign_For_Woocommerce_Admin $admin ) {
 		$this->admin = $admin;
@@ -43,6 +46,8 @@ class Activecampaign_For_Woocommerce_Activator {
 	 * @since    1.0.0
 	 */
 	public function activate() {
+		$this->logger = new Logger();
+		$this->logger->info( 'Activation running...' );
 		$current_options = $this->admin->get_options();
 
 		$options_to_be_saved = [];
@@ -64,5 +69,11 @@ class Activecampaign_For_Woocommerce_Activator {
 		}
 
 		$this->admin->update_storage( $options_to_be_saved );
+
+		// Perform the table steps
+		$upgrade = new Plugin_Upgrade_Command();
+		$upgrade->execute();
+
+		$this->logger->info( 'Finished ActiveCampaign for WooCommerce plugin activation.' );
 	}
 }

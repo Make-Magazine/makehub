@@ -9,6 +9,8 @@
  * @subpackage Activecampaign_For_Woocommerce/
  */
 
+use Activecampaign_For_Woocommerce_Logger as Logger;
+
 /**
  * The Ecom Product Factory class.
  *
@@ -62,7 +64,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		$ecom_product->set_name( $product->get_name() );
 		$ecom_product->set_price( $product->get_price() * 100 );
 		$ecom_product->set_description( $product->get_description() );
-		$ecom_product->set_category( $this->get_product_category( $product ) );
+		$ecom_product->set_category( $this->get_product_all_categories( $product ) );
 		$ecom_product->set_image_url( $this->get_product_image_url( $product ) );
 		$ecom_product->set_product_url( $this->get_product_url( $product ) );
 		$ecom_product->set_sku( $this->get_sku( $product ) );
@@ -77,7 +79,7 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 *
 	 * @return string|null
 	 */
-	private function get_product_category( WC_Product $product ) {
+	private function get_product_first_category( WC_Product $product ) {
 		$terms = get_the_terms( $product->get_id(), 'product_cat' );
 
 		if ( ! is_array( $terms ) ) {
@@ -88,6 +90,40 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		if ( $term instanceof WP_Term ) {
 			return $term->name;
 		}
+	}
+
+	/**
+	 * Parse the results of the all of a product's categories and return all as separated list
+	 *
+	 * @param WC_Product $product The WC Product.
+	 *
+	 * @return string|null
+	 */
+	private function get_product_all_categories( WC_Product $product ) {
+		$logger   = new Logger();
+		$terms    = get_the_terms( $product->get_id(), 'product_cat' );
+		$cat_list = [];
+
+		// go through the categories and make a named list
+		foreach ( $terms as $term ) {
+			$product_cat_id   = $term->term_id;
+			$product_cat_name = $term->name;
+			if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
+				$cat_list[] = $product_cat_name;
+			} else {
+				$logger->warning( 'A product category attached to this product does not have a valid category and/or name.', [
+					'product_id' => $product->get_id(),
+					'term_id'    => $term->term_id,
+					'term_name'  => $term->name,
+				] );
+			}
+		}
+
+		if ( ! empty( $cat_list ) ) {
+			// Convert to a comma separated string
+			return implode( ', ', $cat_list );
+		}
+
 		return null;
 	}
 
@@ -98,13 +134,12 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 	 * @return string|null
 	 */
 	private function get_product_image_url( WC_Product $product ) {
-		// TODO: Verify these still work with latest WC
 		$post         = get_post( $product->get_id() );
 		$thumbnail_id = get_post_thumbnail_id( $post );
 		$image_src    = wp_get_attachment_image_src( $thumbnail_id, 'woocommerce_single' );
 
 		if ( ! is_array( $image_src ) ) {
-			// TODO: Add fallback for if thumbnail cannot be found
+			// Right now this is null by default, we could go looking for a fallback.
 			return null;
 		}
 
