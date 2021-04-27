@@ -426,7 +426,7 @@
 	h2 { display: none; }
 	> li label {
     	float: left;
-		font-size: 1.5em;
+		font-size: 2em;
 	}
 	> li label ~ li label {
 		float: center;
@@ -527,7 +527,7 @@
 			background: #fff;
 		}
 		#coupon_code {
-			width: 180px;
+			width: 180px !important;
 		}
 	}
 	#add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment, .woocommerce-error, .woocommerce-info, .woocommerce-message, .woocommerce-cart-form, .cart_totals table {
@@ -538,7 +538,7 @@
 		background: #005e9a;
 		&:hover {
 			color: #005e9a;
-			background: #fff;
+			background-color: #fff !important;
 		}
 	}
 	label[for=payment_method_stripe] {
@@ -584,10 +584,14 @@
 			text-align: center;
 			font-size: 1.7rem;
 		}
-		.woocommerce-customer-details address { 
-			border: solid 1px #005e9a !important;
-			font-size: 18px !important;
-			padding: 15px !important;
+		.woocommerce-customer-details {
+			address { 
+				padding: 15px !important;
+				font-size: 18px !important;
+			}
+			.woocommerce-customer-details--maincolumn address { 
+				border: solid 1px #005e9a !important;
+			}
 		}
 	}
 }
