@@ -180,4 +180,13 @@ function register_ee_attendee_id_meta() {
 
 //do not display doing it wrong errors
 add_filter('doing_it_wrong_trigger_error', function () {return false;}, 10, 0);
+
+function add_slug_body_class( $classes ) {
+	global $post;
+	if ( isset( $post ) ) {
+		$classes[] = $post->post_type . '-' . $post->post_name;
+	}
+		return $classes;
+	}
+add_filter( 'body_class', 'add_slug_body_class' )
 ?>
