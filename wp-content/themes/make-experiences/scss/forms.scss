@@ -421,6 +421,19 @@
 	}
 }
 
+// specific tweaks 
+#gform_fields_7_3 {
+	h2 { display: none; }
+	> li label {
+    	float: left;
+		font-size: 1.5em;
+	}
+	> li label ~ li label {
+		float: center;
+		font-size: 1.2em;
+	}
+}
+
 .gform_confirmation_message {
     display: flex;
 	flex-direction: column;
