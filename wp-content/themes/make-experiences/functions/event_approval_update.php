@@ -15,13 +15,13 @@ function update_entry_status($entry_id, $status) {
             $post_status = 'pending';
     }
     $entry = GFAPI::get_entry($entry_id);
-
-    $post_data = array(
-        'ID' => $entry['post_id'],
-        'post_status' => $post_status
-    );
-    wp_update_post($post_data);
-
+    if(isset($entry['post_id']) && $entry['post_id']!=''){
+        $post_data = array(
+            'ID' => $entry['post_id'],
+            'post_status' => $post_status
+        );
+        wp_update_post($post_data);
+    }
     //if the event is approved, create an event
     if ($status == 1) {
         //find all fields set with a parameter name 

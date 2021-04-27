@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the LearnDash LMS plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LearnDash LMS 3.4.0.6\n"
+"Project-Id-Version: LearnDash LMS 3.4.0.7\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/dev.master\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2021-04-15T14:24:16+00:00\n"
+"POT-Creation-Date: 2021-04-20T15:13:03+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: learndash\n"
@@ -7032,7 +7032,7 @@ msgstr ""
 #: includes/rest-api/v1/class-ld-rest-groups-leaders-controller.php:135
 #: includes/rest-api/v1/class-ld-rest-groups-users-controller.php:109
 #: includes/rest-api/v1/class-ld-rest-lessons-controller.php:60
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:289
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:292
 #: includes/rest-api/v1/class-ld-rest-topics-controller.php:60
 #: includes/rest-api/v1/class-ld-rest-users-courses-controller.php:112
 #: includes/rest-api/v1/class-ld-rest-users-groups-controller.php:105
@@ -7818,7 +7818,7 @@ msgstr ""
 
 #: includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php:47
 #: themes/ld30/includes/helpers.php:61
-#: themes/ld30/includes/helpers.php:3063
+#: themes/ld30/includes/helpers.php:3066
 msgid "day"
 msgid_plural "days"
 msgstr[0] ""
@@ -7827,7 +7827,7 @@ msgstr[1] ""
 #: includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php:55
 #: includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php:63
 #: themes/ld30/includes/helpers.php:67
-#: themes/ld30/includes/helpers.php:3069
+#: themes/ld30/includes/helpers.php:3072
 msgid "month"
 msgid_plural "months"
 msgstr[0] ""
@@ -7835,7 +7835,7 @@ msgstr[1] ""
 
 #: includes/lib/wp-pro-quiz/lib/helper/WpProQuiz_Helper_Until.php:73
 #: themes/ld30/includes/helpers.php:70
-#: themes/ld30/includes/helpers.php:3072
+#: themes/ld30/includes/helpers.php:3075
 msgid "year"
 msgid_plural "years"
 msgstr[0] ""
@@ -10336,131 +10336,131 @@ msgid "The %s ID"
 msgstr ""
 
 #. translators: placeholder: Question label.
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:167
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:170
 #: includes/rest-api/v2/class-ld-rest-questions-controller.php:402
 msgctxt "placeholder: Question label"
 msgid "Could not delete the %s."
 msgstr ""
 
 #. translators: quiz, question
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:296
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:299
 msgctxt "placeholder: quiz, question"
 msgid "The ID of the %1$s associated with the %2$s."
 msgstr ""
 
 #. translators: question, quiz
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:303
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:306
 msgctxt "placeholder: question, quiz"
 msgid "The order of the %1$s in the %2$s"
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:308
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:311
 msgid "The title for the object."
 msgstr ""
 
 #. translators: question
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:314
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:317
 msgctxt "placeholder: question"
 msgid "The %s content"
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:319
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:322
 msgid "The message to show when the answer is correct."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:324
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:334
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:327
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:337
 msgid "The message to show when the answer is incorrect."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:329
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:332
 msgid "Whether the incorrect and correct message are same."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:339
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:342
 msgid "The solution hint for the question."
 msgstr ""
 
 #. translators: placeholder: question
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:345
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:348
 msgctxt "placeholder: question"
 msgid "The total number of points that can be obtained from the %s"
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:350
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:353
 msgid "Whether to show points in box."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:355
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:358
 msgid "Whether the individual points for the answers are activated."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:360
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:363
 msgid "The type of the answer."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:375
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:378
 msgid "Whether the different points modus is activated."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:380
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:383
 msgid "Whether to distinguish between correct and incorrect when the different point modus is activated."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:385
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:388
 msgid "The percentage width of the criteria table column for matrix sort answer."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:390
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:393
 msgid "An array of answer data objects"
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:395
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:398
 msgid "The answer text."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:400
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:403
 msgid "Whether the HTML is allowed in the answer or not"
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:405
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:408
 msgid "The number of points that can be obtained from the answer."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:410
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:413
 msgid "Whether the answer is correct."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:415
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:418
 msgid "Sort string."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:420
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:423
 msgid "Whether to allow HTML in sort string."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:425
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:428
 msgid "Whether the answer can be graded or not."
 msgstr ""
 
 #. translators: question, quiz
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:431
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:434
 msgctxt "placeholder: question, quiz"
 msgid "Determines how should the answer to this %1$s be marked and graded upon %2$s submission."
 msgstr ""
 
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:437
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:440
 msgid "Determines how a user can submit answer."
 msgstr ""
 
 #. translators: question
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:446
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:449
 msgctxt "placeholder: question"
 msgid "The %s post ID."
 msgstr ""
 
 #. translators: question
-#: includes/rest-api/v1/class-ld-rest-questions-controller.php:453
+#: includes/rest-api/v1/class-ld-rest-questions-controller.php:456
 msgctxt "placeholder: question"
 msgid "The %s post title."
 msgstr ""
@@ -19182,7 +19182,7 @@ msgid "LearnDash 3.0"
 msgstr ""
 
 #: themes/ld30/includes/helpers.php:64
-#: themes/ld30/includes/helpers.php:3066
+#: themes/ld30/includes/helpers.php:3069
 msgid "week"
 msgid_plural "weeks"
 msgstr[0] ""
@@ -19244,23 +19244,23 @@ msgid "verify failed"
 msgstr ""
 
 #: themes/ld30/includes/helpers.php:1898
-#: themes/ld30/includes/helpers.php:2308
+#: themes/ld30/includes/helpers.php:2311
 msgid "No attributes passed in"
 msgstr ""
 
 #: themes/ld30/includes/helpers.php:1942
-#: themes/ld30/includes/helpers.php:2418
+#: themes/ld30/includes/helpers.php:2421
 msgid "No Pagination Match"
 msgstr ""
 
 #. translators: placeholder: course
-#: themes/ld30/includes/helpers.php:1993
+#: themes/ld30/includes/helpers.php:1994
 msgctxt "placeholder: course"
 msgid "No %s ID supplied"
 msgstr ""
 
 #. translators: No topics for this lesson
-#: themes/ld30/includes/helpers.php:2062
+#: themes/ld30/includes/helpers.php:2065
 msgctxt "placeholder: topics, lesson"
 msgid "No %1$s for this $2$s"
 msgstr ""
@@ -19427,8 +19427,8 @@ msgctxt "Placeholder for course home link"
 msgid "%s Home"
 msgstr ""
 
-#: themes/ld30/templates/group/partials/course-row.php:67
-#: themes/ld30/templates/group/partials/course-row.php:69
+#: themes/ld30/templates/group/partials/course-row.php:89
+#: themes/ld30/templates/group/partials/course-row.php:91
 #: themes/ld30/templates/lesson/listing.php:156
 #: themes/ld30/templates/lesson/partials/row.php:286
 #: themes/ld30/templates/lesson/partials/row.php:288
@@ -19438,7 +19438,7 @@ msgstr ""
 msgid "Expand"
 msgstr ""
 
-#: themes/ld30/templates/group/partials/course-row.php:67
+#: themes/ld30/templates/group/partials/course-row.php:89
 #: themes/ld30/templates/lesson/partials/row.php:286
 #: themes/ld30/templates/shortcodes/profile/course-row.php:59
 msgid "Collapse"

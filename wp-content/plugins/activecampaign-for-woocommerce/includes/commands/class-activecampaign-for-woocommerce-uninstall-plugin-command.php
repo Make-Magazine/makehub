@@ -30,7 +30,7 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 	 *
 	 * Erases all plugin specific data from the database.
 	 *
-	 * @param mixed ...$args An array of arguments that may be passed in from the action/filter called.
+	 * @param     mixed ...$args     An array of arguments that may be passed in from the action/filter called.
 	 *
 	 * @since 1.0.0
 	 */
@@ -39,6 +39,17 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
 
 		User_Meta_Service::delete_all_user_meta();
+
+		// Remove the DB version for our plugin because we're removing our table
+		add_option( 'activecampaign_for_woocommerce_db_version', null );
+		delete_option( 'activecampaign_for_woocommerce_db_version' );
+
+		try {
+			global $wpdb;
+			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %s', $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME ) );
+		} catch ( Exception $e ) {
+			// If this fails we should add an admin message to notify there could be an abandoned table.
+		}
 	}
 	// phpcs:enable
 }

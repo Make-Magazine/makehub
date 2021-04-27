@@ -118,7 +118,7 @@ if ( $progress ) :
 							);
 							$course_activity = learndash_get_user_activity( $course_args );
 
-							if ( $course_activity && get_post_type() === 'sfwd-courses' ) :
+							if ( ! empty( $course_activity->activity_updated ) && get_post_type() === 'sfwd-courses' ) :
 								echo sprintf(
 									// translators: Last activity date in infobar.
 									esc_html_x( 'Last activity on %s', 'Last activity date in infobar', 'learndash' ),

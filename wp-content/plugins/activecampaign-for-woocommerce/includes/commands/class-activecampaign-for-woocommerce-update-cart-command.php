@@ -15,10 +15,11 @@ use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
 use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
 use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
-
 use AcVendor\Psr\Log\LoggerInterface;
+use Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command as Save_Abandoned_Cart_Command;
 
 /**
  * Send the cart and its products to ActiveCampaign for the given customer.
@@ -126,7 +127,6 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		$this->cart     = $this->cart ?: wc()->cart;
 		$this->customer = $this->customer ?: wc()->customer;
 	}
-
 	// phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
 
 	/**
@@ -141,6 +141,8 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 
 		// If the customer is not logged in, there is nothing to do
 		if ( ! ( $this->customer instanceof WC_Customer ) || $this->customer->get_email() === null ) {
+			$this->logger->debug( 'Customer not logged in...' );
+
 			return false;
 		}
 
@@ -160,8 +162,7 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 		}
 
 		// Create the order object
-		$order = $this->get_order_factory()
-					  ->from_woocommerce( $this->cart, $this->customer );
+		$order = $this->get_order_factory()->from_woocommerce( $this->cart, $this->customer );
 
 		// If we already have an AC ID, then this is an update. Otherwise, it's a create.
 		try {
@@ -191,7 +192,21 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 
 		return true;
 	}
+
 	// phpcs:enable
+
+	/**
+	 * Runs the abandoned cart saving functionality.
+	 */
+	public function abandonment() {
+		$this->logger = $this->logger ?: new Logger();
+
+		$abandoned = new Save_Abandoned_Cart_Command(
+			$this->logger
+		);
+
+		$abandoned->init();
+	}
 
 	/**
 	 * Try and find the AC customer ID in the local DB. If not found, create the customer

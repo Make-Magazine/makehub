@@ -14,6 +14,7 @@ use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Ecom_Product_Factory as Ecom_Product_Factory;
 use Activecampaign_For_Woocommerce_User_Meta_Service as User_Meta_Service;
 use Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command as Sync_Guest_Abandoned_Cart_Command;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * Ecom Order Factory
@@ -61,37 +62,40 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 	public function from_woocommerce( WC_Cart $cart, WC_Customer $customer ) {
 		$order = new Ecom_Order();
 
-		$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		try {
+			$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
 
-		$order->set_id( $this->get_ac_id() );
+			$order->set_id( $this->get_ac_id() );
 
-		// TODO: Use generate instead of external checkout
-		// $external_id = $this->get_external_id();
-		//
-		// if ( ! $external_id ) {
-		// $external_id = wc()->session->get_customer_id();
-		// }
-		$external_id = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
-			wc()->session->get_customer_id(),
-			$customer->get_email()
-		);
+			$external_id = Sync_Guest_Abandoned_Cart_Command::generate_externalcheckoutid(
+				wc()->session->get_customer_id(),
+				$customer->get_email()
+			);
 
-		// TODO: Find a value that is unique for the cart order that changes once an order is placed.
-		$order->set_externalcheckoutid( $external_id );
-		$order->set_source( '1' );
-		$order->set_email( $customer->get_email() );
-		$order->set_total_price( $this->get_cart_total( $cart ) );
-		$order->set_currency( $this->get_woocommerce_currency() );
-		$order->set_connectionid( $this->admin->get_storage()['connection_id'] );
-		$order->set_customerid( $this->get_ac_customer_id() );
-		$order->set_order_date( $date->format( DATE_ATOM ) );
-		$order->set_order_url( wc_get_cart_url() );
+			$order->set_externalcheckoutid( $external_id );
+			$order->set_source( '1' );
+			$order->set_email( $customer->get_email() );
+			$order->set_total_price( $this->get_cart_total( $cart ) );
+			$order->set_currency( $this->get_woocommerce_currency() );
+			$order->set_connectionid( $this->admin->get_storage()['connection_id'] );
+			$order->set_customerid( $this->get_ac_customer_id() );
+			$order->set_order_date( $date->format( DATE_ATOM ) );
+			$order->set_order_url( wc_get_cart_url() );
 
-		$products = $this
-			->product_factory
-			->create_products_from_cart_contents( $cart->get_cart_contents() );
+			$products = $this
+				->product_factory
+				->create_products_from_cart_contents( $cart->get_cart_contents() );
 
-		array_walk( $products, [ $order, 'push_order_product' ] );
+			array_walk( $products, [ $order, 'push_order_product' ] );
+		} catch ( Exception $e ) {
+			$logger = new Logger();
+			$logger->warning( 'Could not create product from cart contents', [
+				'email'         => $customer->get_email(),
+				'cart_contents' => $cart->get_cart_contents(),
+			] );
+
+			return null;
+		}
 
 		return $order;
 	}

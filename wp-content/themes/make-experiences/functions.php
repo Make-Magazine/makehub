@@ -163,6 +163,14 @@ function get_resized_remote_image_url($url, $width, $height, $escape = true){
     }
 }
 
+function get_first_image_url($html){
+    if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {
+        return $matches[1];
+    }
+    else return get_stylesheet_directory_uri() . "/images/default-related-article.png";
+}
+
+
 add_action('rest_api_init', 'register_ee_attendee_id_meta');
 function register_ee_attendee_id_meta() {
     global $wpdb;

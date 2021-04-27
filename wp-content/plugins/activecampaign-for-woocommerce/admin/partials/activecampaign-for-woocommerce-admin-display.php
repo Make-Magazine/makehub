@@ -124,9 +124,11 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 						  label="<?php esc_html_e( 'API Key', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>"
 						  v-model="api_key"></ac-input>
 
-				<ac-button id="activecampaign-update-api-button" value="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" @click="testAcApi" :loading="loading">
+				<ac-button id="activecampaign-update-api-button"
+						   value="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" @click="testAcApi"
+						   :loading="loading">
 					<?php
-						esc_html_e( 'Test API connection', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+					esc_html_e( 'Test API connection', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 					?>
 				</ac-button>
 
@@ -194,6 +196,34 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 					<tbody>
 					<tr>
 						<td>
+							<?php
+							esc_html_e( 'ActiveCampaign connection ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+							?>
+						</td>
+						<td>
+							<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_id'] ) ) : ?>
+								<?php esc_html_e( 'Error: No connection ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							<?php else : ?>
+								<?php echo esc_html( $this->get_storage()['connection_id'] ); ?>
+							<?php endif; ?>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<?php
+							esc_html_e( 'ActiveCampaign connection option ID: ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+							?>
+						</td>
+						<td>
+							<?php if ( empty( $this->get_storage() ) || ! $this->get_storage() || ! isset( $this->get_storage()['connection_option_id'] ) ) : ?>
+								<?php esc_html_e( 'Error: No connection option ID found in settings! ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
+							<?php else : ?>
+								<?php echo esc_html( $this->get_storage()['connection_option_id'] ); ?>
+							<?php endif; ?>
+						</td>
+					</tr>
+					<tr>
+						<td>
 							<?php esc_html_e( 'Legacy API Enabled:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 						</td>
 						<td>
@@ -234,7 +264,7 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 							<?php foreach ( $activecampaign_for_woocommerce_wc_webhooks as $activecampaign_for_woocommerce_hook ) : ?>
 								<?php if ( strpos( $activecampaign_for_woocommerce_hook->name, 'ActiveCampaign' ) >= 0 ) : ?>
 									<?php
-										echo esc_html( $activecampaign_for_woocommerce_hook->name );
+									echo esc_html( $activecampaign_for_woocommerce_hook->name );
 									?>
 									<br/>
 									<?php
@@ -941,7 +971,8 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 				</h2>
 				<p>
 					<ac-input name="custom_email_field"
-							  label="<?php esc_html_e( 'Custom Email Field', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>" v-model="custom_email_field"></ac-input>
+							  label="<?php esc_html_e( 'Custom Email Field', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>"
+							  v-model="custom_email_field"></ac-input>
 					<?php esc_html_e( 'Default: billing_email (expects ID as input, do not include #)', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 					<br/>
 					<?php esc_html_e( 'Warning: Advanced users only. Do not set this unless you are having issues with the abandoned cart not triggering on your email field.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>

@@ -752,12 +752,18 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 				switch ( $field_name ) {
 					case 'approved_status':
 						// We don't allow essay status to revert to unapproved.
+
+						// Commented for now per LEARNDASH-5779. Fix coming in a later release
+						/*
 						if ( $post_value ) {
 							learndash_essay_mark_approved( $post->ID );
 						}
+						*/
 						break;
 
 					case 'points_awarded':
+						// Commented for now per LEARNDASH-5779. Fix coming in a later release
+						/*
 						if ( learndash_essay_is_points_enabled( $post->ID ) ) {
 							$max_points     = absint( learndash_get_setting( $lesson_id, 'lesson_essay_points_amount' ) );
 							$points_awarded = absint( $post_value );
@@ -766,6 +772,7 @@ if ( ( ! class_exists( 'LD_REST_Essays_Controller_V2' ) ) && ( class_exists( 'LD
 							}
 							update_post_meta( $post->ID, 'points', $points_awarded );
 						}
+						*/
 						break;
 
 					// We don't allow updates to Course, Lesson, Lesson Points enabled, Lesson Points max

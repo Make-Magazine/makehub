@@ -16,7 +16,27 @@
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.3.2' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.3.5' );
+}
+
+/**
+ * Current Database Migration Version.
+ * Update the version as any changes to our tables are made.
+ *
+ * @since 1.3.3
+ */
+if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION' ) ) {
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_VERSION', '1.0.0' );
+}
+
+/**
+ * The abandoned cart table name.
+ * Be sure to add the WordPress prefix to the usage.
+ *
+ * @since 1.3.3
+ */
+if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME' ) ) {
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME', 'activecampaign_for_woocommerce_abandoned_cart' );
 }
 
 /**

@@ -47,7 +47,7 @@ if ( ( ! class_exists( 'LD_REST_Users_Quiz_Attempts_Controller_V1' ) ) && ( clas
 					'args' => array(
 						'id' => array(
 							// translators: course
-							'description' => sprintf( esc_html_x( 'User ID to show %s progress.', 'placeholder: course', 'learndash' ) ),
+							'description' => sprintf( esc_html_x( 'User ID to show %s progress.', 'placeholder: course', 'learndash' ), learndash_get_custom_label_lower( 'course' ) ),
 							'required'    => true,
 							'type'        => 'integer',
 						),

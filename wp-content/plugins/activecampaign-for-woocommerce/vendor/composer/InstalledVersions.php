@@ -55,12 +55,12 @@ private static $installed = array (
     ),
     'brick/money' => 
     array (
-      'pretty_version' => '0.5.1',
-      'version' => '0.5.1.0',
+      'pretty_version' => '0.5.2',
+      'version' => '0.5.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c6f2883c8a759bf7f77c79aaa6004af6d6c0afaf',
+      'reference' => 'f5a372df99c17c805c6816b3057eb057a357735c',
     ),
   ),
 );
