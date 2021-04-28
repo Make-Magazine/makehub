@@ -214,7 +214,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
 
         //create the date/time instance
         $d = EE_Datetime::new_instance(
-                        array('EVT_ID' => $eventID, 'DTT_name' => $schedDesc, 'DTT_EVT_start' => $start_date,
+                        array('EVT_ID' => $eventID, 'DTT_name' => $ticketName, 'DTT_EVT_start' => $start_date,
                             'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
 
         $d->save();

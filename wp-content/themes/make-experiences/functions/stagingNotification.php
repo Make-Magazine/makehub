@@ -11,12 +11,12 @@ function change_email_for_wp($email) {
        $toEmail = str_replace(' ', '', $email['to']); //remove spaces
        $toEmailArr = explode(",",$toEmail); //put all to emails in an array
        $newTo = array('webmaster@make.co', 'dan@make.co', 'siana@make.co');
-       foreach($toEmailArr as $email){           
-            $pos = strpos($email, '@make.co',-7);
+       foreach($toEmailArr as $checkEmail){           
+            $pos = strpos($checkEmail, '@make.co',-7);
             
             //if this email is from @make.co keep it.
             if ($pos === false) {
-                $newTo[]=$email;
+                $newTo[]=$checkEmail;
             }
        }
        $email['subject'] = 'Redirect Email sent to '.$email['to'].' - '.$email['subject'];              
