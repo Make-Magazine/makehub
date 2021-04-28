@@ -170,6 +170,12 @@ function get_first_image_url($html){
     else return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
 }
 
+add_action('after_setup_theme', 'new_image_sizes');
+function new_image_sizes() {
+    add_image_size('grid-cropped', 300, 300, true);
+	add_image_size('medium-large', 600, 600);
+}
+
 // why u no work?
 function featuredtoRSS($content) {
 	global $post;
