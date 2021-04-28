@@ -175,8 +175,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     $ticketPrice = getFieldByParam('ticket-price', $nest_parameter_arr, $nst_entry);
     $ticketDesc = getFieldByParam('ticket-desc', $nest_parameter_arr, $nst_entry);
     $ticketMin = getFieldByParam('ticket-min', $nest_parameter_arr, $nst_entry);
-    $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);
-    $schedDesc = getFieldByParam('sched-desc', $nest_parameter_arr, $nst_entry);
+    $ticketMax = getFieldByParam('ticket-max', $nest_parameter_arr, $nst_entry);    
    
     //create the ticket instance
     $tkt = EE_Ticket::new_instance(array('TKT_name' => $ticketName,
@@ -254,7 +253,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
         'ticket_description' => $ticketDesc,
         'min_num_tickets' => 0,
         'max_num_tickets' => $ticketMax,
-        'schedule_description' => $schedDesc,
+        'schedule_description' => $ticketDesc,
         'preferred_schedule' => $preferred_schedule,
         'alternate_schedule' => $alternate_schedule);
     return $schedArray;
