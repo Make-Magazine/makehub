@@ -10,7 +10,7 @@ add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
 add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
 
-add_filter( 'gform_field_validation_10_9', 'validate_time', 10, 4 );
+//add_filter( 'gform_field_validation_10_9', 'validate_time', 10, 4 );
 //add_filter( 'gform_field_validation_10_11', 'validate_time', 10, 4 );
 
 //reformat field as date type
