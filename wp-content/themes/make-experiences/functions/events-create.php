@@ -43,9 +43,23 @@ function create_event($entry, $form) {
     $wpdb->update($wpdb->prefix . 'gf_entry', array('post_id' => $eventID), array('id' => $entry['id']));
     $entry['post_id'] = $eventID;    
     
-    // assign basic questions to event
-    $qgroups = EEM_Question_Group::instance()->get_one_by_ID(3);
-    $event->_add_relation_to($qgroups, 'Question_Group'); //link the question group
+    // assign basic questions to primary registrant    
+    $eQgroup = EE_Event_Question_Group::new_instance(
+                    array('EVT_ID' => $eventID,
+                        'QSG_ID' => 3,
+                        'EQG_primary' => 1
+    ));
+    $eQgroup->save();    
+    $event->_add_relation_to($eQgroup, 'Event_Question_Group'); //link the question group
+    
+    // assign personal questions to additional registrant    
+    $eQgroup = EE_Event_Question_Group::new_instance(
+                    array('EVT_ID' => $eventID,
+                        'QSG_ID' => 1,
+                        'EQG_additional' => 1
+    ));
+    $eQgroup->save();    
+    $event->_add_relation_to($eQgroup, 'Event_Question_Group'); //link the question group
     
     //set ticket schedue
     setSchedTicket($parameter_array, $entry, $eventID);
