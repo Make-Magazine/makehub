@@ -73,33 +73,35 @@ if ( have_posts() ) :
 						</time>
 					</div>
 					<div class="event-details">
-						<div class="event-time">
-							<?php echo $timerange; ?> Pacific
-						</div>
 						<h3 class="event-title title">
 							<a href="<?php echo $registration_url; ?>">
 								<?php echo $post->post_title; ?>
 							</a>
 						</h3>
+						<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
+								<div class="event-time-desc">
+									<?php echo get_field('custom_schedule_details', $post->ID); ?>
+								</div>
+						<?php } else {
+								  if($date_count > 1){ 
+									if($ticket_count == 1) { ?>
+										<div class="event-time-desc">
+											<?php 
+												echo $date_count; ?> sessions starting on <?php echo $startmonth . " " . $startday; 
+											?>
+										</div>
+							<?php 	} else { ?>
+										<div class="event-time-desc">Schedules Vary</div>
+							<?php 	}
+								  } 
+							   }  ?>
+						<div class="event-time">
+							<?php echo $timerange; ?> Pacific
+						</div>
+						
 					</div>
 				</div>
-				<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
-						<div class="event-time-desc">
-							<?php echo get_field('custom_schedule_details', $post->ID); ?>
-						</div>
-				<?php } else {
-						  if($date_count > 1){ 
-							if($ticket_count == 1) { ?>
-								<div class="event-time-desc">
-									<?php 
-										echo $date_count; ?> sessions starting on <?php echo $startmonth . " " . $startday; 
-									?>
-								</div>
-					<?php 	} else { ?>
-								<div class="event-time-desc">Schedules Vary</div>
-					<?php 	}
-						  } 
-					   }  ?>
+				
 				<div class="event-purchase">
 					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
 					<p class="price"><?php echo event_ticket_prices($event); ?></p>

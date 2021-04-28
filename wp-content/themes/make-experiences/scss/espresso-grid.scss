@@ -59,22 +59,25 @@
 				}
 				.event-details {
 					.event-title {
-						margin-top: 0px;
+						margin-top: -2px;
 						line-height: .6em;
 						a {
 							color: #333;
 							font-size: 18px;
 						}
 					}
+					.event-time-desc, .event-time {
+						margin-bottom: 5px;
+					}
 				}
 			}
-			.event-time-desc {
-				text-align: center;
-				margin-bottom: 5px;
-			}
+			
 			.event-purchase {
 				margin-top: auto;
-				.btn { width: 100%; }
+				.btn { 
+					width: 100%;
+					font-weight: bold;
+				}
 				.price {
 					text-align: center;
 					margin-top: 5px;
