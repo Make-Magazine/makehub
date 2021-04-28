@@ -26,7 +26,7 @@ if ( have_posts() ) :
 			$external_url 		= $post->EE_Event->external_url();
 			$button_text		= !empty($external_url) ? $alt_button_text : $reg_button_text;
 			$registration_url 	= !empty($external_url) ? $post->EE_Event->external_url() : $post->EE_Event->get_permalink();
-			$feature_image_url	= $post->EE_Event->feature_image_url();
+			$feature_image_url	= $post->EE_Event->feature_image_url('medium');
 
 			if(!isset($default_image) || $default_image == '') {
 				$default_image = EE_GRID_TEMPLATE_URL .'/images/default.jpg';

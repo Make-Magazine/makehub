@@ -170,6 +170,7 @@ function get_first_image_url($html){
     else return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
 }
 
+// why u no work?
 function featuredtoRSS($content) {
 	global $post;
 	if ( has_post_thumbnail( $post->ID ) ){
@@ -182,6 +183,7 @@ add_filter('the_excerpt_rss', 'featuredtoRSS');
 add_filter('the_content_feed', 'featuredtoRSS');
 
 function add_event_date_to_rss() {
+	global $post;
     if(get_post_type() == 'espresso_events' && $start_date = get_field("preferred_start_date", $post->ID) ) {
         ?>
         <event_date><?php echo $start_date ?></event_date>

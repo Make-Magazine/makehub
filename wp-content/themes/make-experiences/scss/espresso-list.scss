@@ -13,10 +13,8 @@
 			text-align: center;
 		}
 		.event-image a {
-			width: 330px;
-			height: 250px;
 			img {
-				object-fit: cover;
+				min-width: 150px;
 			}
 		}
 		.event-info {

@@ -44,7 +44,7 @@ get_header();
         <?php if (has_post_thumbnail()) { ?>
             <div class="gallery-wrapper">
                 <?php
-                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="small" order="DESC" orderby="ID"]');
+                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium" order="DESC" orderby="ID"]');
                 if (count($post_image_ids) != 1) {
                     ?>
                     <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
@@ -202,22 +202,24 @@ get_header();
                         <div class="event-sidebar-item">
                             <h3>Details</h3>                            
                             <div class="event-sidebar-field event-date">
-                                <b>Dates:</b><br/>
-                                
+                                <b>Dates:</b>
                                     <?php
-                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);                                    
+                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);          
                                     $tickets = $event->tickets();   
-                                    
-                                    foreach($tickets as $ticket){
-                                        echo $ticket->name();
-                                        $dates = $ticket->datetimes();
-                                        echo '<ul>';
-                                        foreach ($dates as $date) {
-                                            echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
-                                        }                                         
-                                        echo '</ul>';
-                                    }                                    
-                                    ?>
+                                    foreach($tickets as $ticket){ ?>
+										<div class="ticket-detail">
+                                        	<div class="ticket-detail-name"><?php echo $ticket->name(); ?></div>
+                                        	<ul>
+											<?php $dates = $ticket->datetimes();
+												  foreach ($dates as $date) { ?>
+													<li>
+														<?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+												    </li>
+											<?php }
+											?>                                    
+                                            </ul>
+										</div>
+                                    <?php } ?>
                                 
                             </div>
                             <div class="event-sidebar-field event-cost">
