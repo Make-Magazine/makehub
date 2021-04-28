@@ -252,10 +252,12 @@
 		.eea-people-addon-event-people-list-single {
 			.eea-people-addon-people-list-ul {
 				list-style: none;
+				margin-left: 0px;
 				li {
+					border: 1px solid #005e9a;
 					background: #fff;
-					padding: 10px 15px;
-					border: solid 1px $color-light-grey;
+					padding: 10 15px;
+					border-radius: 5px;
 					.eea-people-addon-link-to-person { font-size: 20px; }
 				}
 			}
