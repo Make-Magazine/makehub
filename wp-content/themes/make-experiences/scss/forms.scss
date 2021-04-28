@@ -225,6 +225,10 @@
 			border-radius: 3px;
 			position: relative;
 			width: 100%;
+			.gform_fileupload_rules {
+				margin-top: 35px;
+				display: block;
+			}
 			.screen-reader-text {
 				display:inline;
 			}
@@ -429,9 +433,20 @@
 		font-size: 1.8em;
 	}
 	li.gfield:nth-of-type(3) {
-		label, .gfield_description {
-			float: left;
-		}
+		label{ float: left; }
+		.gfield_description { text-align: left; }
+	}
+}
+
+.submit-event-login-message {
+	text-align: center;
+	font-size: 32px;
+	margin: 40px auto 60px;
+	button { 
+		font-size: 20px;
+		min-height: 50px;
+		min-width: 300px;
+		margin-top: 20px;
 	}
 }
 

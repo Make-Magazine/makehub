@@ -163,6 +163,33 @@ function get_resized_remote_image_url($url, $width, $height, $escape = true){
     }
 }
 
+function get_first_image_url($html){
+    if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {
+        return $matches[1];
+    }
+    else return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
+}
+
+function featuredtoRSS($content) {
+	global $post;
+	if ( has_post_thumbnail( $post->ID ) ){
+		$content = '<div>' . get_the_post_thumbnail( $post->ID, 'medium', array( 'style' => 'margin-bottom: 15px;' ) ) . '</div>' . $content;
+	}
+	return $content;
+}
+ 
+add_filter('the_excerpt_rss', 'featuredtoRSS');
+add_filter('the_content_feed', 'featuredtoRSS');
+
+function add_event_date_to_rss() {
+    if(get_post_type() == 'espresso_events' && $start_date = get_field("preferred_start_date", $post->ID) ) {
+        ?>
+        <event_date><?php echo $start_date ?></event_date>
+        <?php
+    }
+}
+add_action('rss2_item', 'add_event_date_to_rss');
+
 
 add_action('rest_api_init', 'register_ee_attendee_id_meta');
 function register_ee_attendee_id_meta() {

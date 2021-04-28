@@ -1,12 +1,5 @@
 <?php
 
-//grabs our post thumbnail image
-function get_first_image_url($html) {
-    if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {
-        return $matches[1];
-    }
-}
-
 // get just the text
 function get_summary($html) {
     $summary = preg_replace('/<a[^>]*>([\s\S]*?)<\/a[^>]*>/', '', $html);
