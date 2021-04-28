@@ -817,6 +817,8 @@ class EED_Espresso_Calendar extends EED_Module
                     // tooltip wrapper
                     $tooltip_html = '<div class="qtip_info">';
                     // show time ?
+					$thumbnail_url = $event->feature_image_url('medium');
+					$tooltip_html .= '<img src="' . $thumbnail_url . '" />';
                     $tooltip_html .= ! $pswrd_required && $startTime && $this->config()->time->show
                         ? '<p class="time_cal_qtip">' . __('Event Time: ', 'event_espresso') . $startTime . ' - ' . $endTime . '</p>'
                         : '';

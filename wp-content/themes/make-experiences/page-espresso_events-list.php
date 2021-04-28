@@ -12,11 +12,7 @@ get_header();
 		
 		<?php if ( have_posts() ) : ?>
 			<header class="page-header">
-				<h1 class="page-title"><?php echo get_the_title(); ?></h1>
-				<div class="event-view-btns">
-					<a href="/maker-campus" class="universal-btn">Grid</a>
-					<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
-				</div>
+				<h1 class="page-title">Upcoming Maker Campus Events</h1>
 			</header><!-- .page-header -->
       
 			<div class="events-list">
@@ -36,8 +32,12 @@ get_header();
 					foreach ( $events as $event ) {
 						$date = $event->first_datetime(); 
 						$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
+						$startmonth = date('F', strtotime($date->start_date()));
+						$startday = date('j', strtotime($date->start_date()));
 						$startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
 						$endtime = date('g:i a', strtotime($date->end_time()));
+						
+						$date_count = count(EEM_Datetime::instance()->get_all_event_dates( $event->ID() ));
 
 						$tickets = array();
 						if ($event instanceof EE_Event) {
@@ -107,8 +107,7 @@ get_header();
 		Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
 	</main><!-- #main -->
 </div><!-- #primary -->
-
-<?php get_sidebar(); ?>
+<?php dynamic_sidebar('event_listing_sidebar'); ?>
 
 <?php
 get_footer();
