@@ -44,7 +44,7 @@ get_header();
         <?php if (has_post_thumbnail()) { ?>
             <div class="gallery-wrapper">
                 <?php
-                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium" order="DESC" orderby="ID"]');
+                echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="large" order="DESC" orderby="ID"]');
                 if (count($post_image_ids) != 1) {
                     ?>
                     <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
