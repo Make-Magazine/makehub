@@ -276,3 +276,13 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 		}
 	}
 }
+
+.seeMore {
+    width: 100%;
+    text-align: right;
+    float: right;
+    margin: -10px 0px 10px;
+	&::after {
+		content: " >>";
+	}
+}

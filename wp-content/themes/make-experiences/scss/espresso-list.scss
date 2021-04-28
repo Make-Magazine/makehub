@@ -34,9 +34,25 @@
 	.page-header, .page-header h1 {
 		margin-top: 0px;
 	}
-	.event-view-btns {
-		position: relative;
-		top: 0px;
+	#secondary {
+		.event-view-btns {
+			position: relative;
+			top: 0px;
+		}
+		.event-listing-widget-item:not(:first-child) {
+			border: solid 1px $color-light-grey;
+			border-radius: 2px;
+			padding: 5px 15px;
+			background: #fff;
+			margin-top: 20px;
+			.mx-block-title {
+				text-align: left;
+				border-bottom: solid 1px $border-color;
+				font-size: 20px;
+				padding-bottom: 10px;
+				a { color: $color-grey; }
+			}
+		}
 	}
 	@media screen and (max-width: 1060px) {
 		#primary, #secondary {

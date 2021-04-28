@@ -15,8 +15,8 @@ function experiences_widgets_init() {
 		'name'          => esc_html__( 'Event Listing Sidebar', 'experiences' ),
 		'id'            => 'event_listing_sidebar',
 		'description'   => esc_html__( 'Add widgets here.', 'experiences' ),
-		'before_widget' => '<div id="secondary" class="widget-area sm-grid-1-1">',
-		'after_widget'  => '</div>',
+		'before_widget' => '<section id="%1$s" class="event-listing-widget-item">',
+		'after_widget'  => '</section>',
 		'before_title'  => '<h4 class="mx-block-title">',
 		'after_title'   => '</h4>',
 	) );

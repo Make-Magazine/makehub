@@ -65,12 +65,14 @@ class make_projects_widget extends WP_Widget {
 						  </a>
 						</li>";
         }
-        $return .= "</ul></div>";
+        $return .= "</ul>";
+		if(isset($projectJson->result->projects)) {
+			$return .= '<a class="seeMore" href="https://makeprojects.com" target="_blank">See More</a>';
+		}
+		$return .= "</div>";
         echo __($return, 'make_projects_widget_domain');
         echo $args['after_widget'];
-		if(isset($projectJson->result->projects)) {
-			echo '<a class="seeMore" href="https://makeprojects.com" target="_blank">See More</a>';
-		}
+		
     }
 
     // Widget Backend 

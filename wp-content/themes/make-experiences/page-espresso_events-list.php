@@ -107,7 +107,8 @@ get_header();
 		Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
 	</main><!-- #main -->
 </div><!-- #primary -->
-<?php dynamic_sidebar('event_listing_sidebar'); ?>
-
+<div id="secondary" class="widget_text widget-area sm-grid-1-1">
+	<?php dynamic_sidebar('event_listing_sidebar'); ?>
+</div>
 <?php
 get_footer();
