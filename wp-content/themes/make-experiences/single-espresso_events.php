@@ -68,21 +68,21 @@ get_header();
                 </div>
                 <div class="row">
                     <div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
-						<?php if(get_the_terms( $post, 'event_types' )) { ?>
-							<div class="event-cat">
-								<?php $event_type = get_the_terms( $post, 'event_types' )[0]; ?>
-								<a href="/event_types/<?php echo $event_type->slug; ?>">
-									<?php echo $event_type->name; ?>
-								</a>
-							</div>
-							<?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
-								<div class="event-location event-content-item">
-									<h4>Location:</h4> 
-									<?php echo get_field('location') ?>
-								</div>
-							<?php
-							}
-						}
+                        <?php if(get_the_terms( $post, 'event_types' )) { ?>
+                                <div class="event-cat">
+                                        <?php $event_type = get_the_terms( $post, 'event_types' )[0]; ?>
+                                        <a href="/event_types/<?php echo $event_type->slug; ?>">
+                                                <?php echo $event_type->name; ?>
+                                        </a>
+                                </div>
+                                <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
+                                        <div class="event-location event-content-item">
+                                                <h4>Location:</h4> 
+                                                <?php echo get_field('location') ?>
+                                        </div>
+                                <?php
+                                }
+                        }
                         // ATTENDEES Section
                         $userList = EEM_Attendee::instance()->get_all();
                         if (array_search($user_email, array_column($userList, 'purchaser_email')) !== false) {
@@ -200,22 +200,25 @@ get_header();
                             <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
                         </div>
                         <div class="event-sidebar-item">
-                            <h3>Details</h3>
-                            <?php 
-							/*$event = $post->EE_Event;
-							$tickets = $event->tickets();
-							var_dump($tickets);*/ ?>
-							<div class="event-sidebar-field event-date">
-                                <b>Dates:</b>
-                                <ul>
+                            <h3>Details</h3>                            
+                            <div class="event-sidebar-field event-date">
+                                <b>Dates:</b><br/>
+                                
                                     <?php
-                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);
-                                    $dates = $event->datetimes_in_chronological_order();
-                                    foreach ($dates as $date) {
-                                        echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
-                                    }
+                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);                                    
+                                    $tickets = $event->tickets();   
+                                    
+                                    foreach($tickets as $ticket){
+                                        echo $ticket->name();
+                                        $dates = $ticket->datetimes();
+                                        echo '<ul>';
+                                        foreach ($dates as $date) {
+                                            echo '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
+                                        }                                         
+                                        echo '</ul>';
+                                    }                                    
                                     ?>
-                                </ul>
+                                
                             </div>
                             <div class="event-sidebar-field event-cost">
                                 <b>Cost: </b>
