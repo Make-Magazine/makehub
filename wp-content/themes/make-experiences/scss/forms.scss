@@ -36,7 +36,7 @@
 				align-items: center;
 				flex-direction: column;
 				border-radius: 2px;
-				margin: 0 16px 0 0;
+				margin: 0 16px 10px 0;
 				text-transform: uppercase;
 				font-size: 16px;
 				font-weight: 300;
@@ -51,8 +51,24 @@
 			input:last-of-type {
 				margin-right: 0px;
 			}
-			a.gform_save_link { order: 0; }
-
+			a.gform_save_link { 
+				order: 0; 
+			}
+			@media screen and (max-width: 768px) {
+				flex-wrap: wrap;
+				input[type="button"] { width: 50%; }
+				a.gform_save_link {
+					order: 3;
+					min-width: 100%;
+				}
+				input { margin-right: 0px !important; }
+				input[type="submit"] {
+					order: 5;
+					height: 80px;
+					font-size: 20px;
+					font-weight: bold;
+				}
+			}
 		}
 		.gform_ajax_spinner {
 			position: fixed;
@@ -379,6 +395,7 @@
 			}
 		}
     }
+	/* is this necessary, because it screws up mobile
 	.gform_page {
 		display: flex;
 		flex-direction: column;
@@ -386,7 +403,7 @@
 		.gform_page_fields {
 			flex-grow: 1;
 		}
-	}
+	} */
 
 	.gfgeo-address-locator-wrapper {
 		input.gfgeo-address-field[data-locator_enabled="1"] {
@@ -395,12 +412,12 @@
 		div.gfgeo-locator-button-wrapper.infield {
 			display: flex;
 			align-items: center;
-			padding-lefT: 5px;
+			padding-left: 5px;
 			img { height: 18px; }
 		}
 	}
 	.image_uploads ul {
-		display: flex;
+		display: inline-flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
 		.gfield_html { flex: 0 0 100%; }

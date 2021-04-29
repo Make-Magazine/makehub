@@ -121,6 +121,10 @@ figure {
 	}
 }
 
+.page-template-page-fullscreen .site-content>.container, .page-template-page-fullwidth-content .site-content>.container {
+	max-width: 100% !important;
+}
+
 body.admin-bar {
 	.navbar.navbar-fixed-top, .navbar.navbar-fixed-top.slide-active  {
 		margin-top: 32px;
