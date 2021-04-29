@@ -20,7 +20,11 @@
 		.event-info {
 			margin: 0px 20px;
 			.event-title {
+				margin-top: 10px;
 				a { color: #333; }
+			}
+			.event-time-desc {
+				font-weight: bold;
 			}
 		}
 		.event-prices {
@@ -39,12 +43,15 @@
 			position: relative;
 			top: 0px;
 		}
+		.event-listing-widget-item:first-child {
+			margin-bottom: 30px;
+		}
 		.event-listing-widget-item:not(:first-child) {
 			border: solid 1px $color-light-grey;
 			border-radius: 2px;
 			padding: 5px 15px;
 			background: #fff;
-			margin-top: 20px;
+			margin-top: 15px;
 			.mx-block-title {
 				text-align: left;
 				border-bottom: solid 1px $border-color;

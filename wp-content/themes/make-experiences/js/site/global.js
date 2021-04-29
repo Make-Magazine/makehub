@@ -17,6 +17,10 @@ function isValidEmailAddress(emailAddress) {
 }
 */
 
+jQuery(".truncated").click(function() {
+	jQuery(this).css("display", "inherit");
+});
+
 jQuery("#scrollToTop").click(function() {
 	jQuery('html, body').animate({scrollTop:0}, 300);
 });

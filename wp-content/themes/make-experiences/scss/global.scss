@@ -127,6 +127,13 @@ body.admin-bar {
 	}
 }
 
+.truncated {
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical; 
+	overflow: hidden;
+}
+
 button, input[type="submit"] {
 	color: #fff;
 	border: thin solid $color-blue;

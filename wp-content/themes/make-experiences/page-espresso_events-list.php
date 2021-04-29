@@ -71,7 +71,7 @@ get_header();
 									   <h3 class="event-title">
 										 <a href="' . get_permalink($event->ID()) . '">' . get_the_title($event->ID()) . '</a>
 									   </h3>
-									   <div class="event-description">' . get_field('short_description', $event->ID()) . '</div>';
+									   <div class="event-description truncated">' . get_field('short_description', $event->ID()) . '</div>';
 						if($eventDetails != '') { $return .= $eventDetails; }
 						$return .=     '<div class="event-prices">
 											<a href="' . get_permalink($event->ID()) . '#tickets" class="btn universal-btn">Get Tickets</a>';
