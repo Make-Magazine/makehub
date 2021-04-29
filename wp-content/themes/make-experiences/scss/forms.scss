@@ -559,8 +559,8 @@
 		.woocommerce-checkout-review-order-table {
 			background: #fff;
 		}
-		#coupon_code {
-			width: 180px !important;
+		.coupon { 
+			margin-left: 80px;
 		}
 	}
 	#add_payment_method #payment, .woocommerce-cart #payment, .woocommerce-checkout #payment, .woocommerce-error, .woocommerce-info, .woocommerce-message, .woocommerce-cart-form, .cart_totals table {

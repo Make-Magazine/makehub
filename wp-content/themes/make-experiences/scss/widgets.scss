@@ -39,6 +39,19 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 	}
 }
 
+.widget_shopify_widget {
+	&::before {
+		content: url("/wp-content/themes/make-experiences/images/makershed-logo-lrg.jpg");
+		width:100%;
+		text-align: center;
+		display: block;
+	}
+	h2.widget-title {
+		height: 0px;
+		padding: 0px;
+		visibility: hidden;
+	}
+}
 .shopify-product-feed {
 	.product-feed-item a {
 		display: flex;
@@ -274,6 +287,32 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 				}
 			}
 		}
+	}
+}
+
+// Event Espresso Upcoming Events Widget
+.widget_ee-upcoming-events-widget {
+	&::before {
+		content: url("/wp-content/themes/make-experiences/images/makercampus-logo-lrg.jpg");
+		width:100%;
+		text-align: center;
+		display: block;
+	}
+	h2.widget-title {
+		margin-top: 10px;
+		margin-bottom: 0px;
+		a {
+			text-align: center;
+			width: 100%;
+		}
+	}
+	.ee-upcoming-events-widget-title-h5 {
+		margin-top: 15px;
+		font-size: 20px;
+	}
+	.ee-upcoming-events-widget-img-dv {
+		max-height: 150px;
+		overflow: hidden;
 	}
 }
 
