@@ -27,6 +27,9 @@
 		padding: 32px;
 		display: flex;
 		background: #fff;
+		@media screen and (max-width: 600px) {
+			flex-direction: column;
+		}
 		.host-photo {
 			height: 150px;
 			width: 150px;
