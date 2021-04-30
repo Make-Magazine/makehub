@@ -120,6 +120,33 @@ function update_entry_status($entry_id, $status) {
         $user_meta = get_user_meta($userID);
 
         // assign community membership
-        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);          
+        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);      
+        
+        //assign notifications to event
+        $eMtemplate = EE_Event_Message_Template::new_instance(
+                    array('EVT_ID' => $event_id,
+                          'EMT_ID' => 20
+        ));
+        $eMtemplate->save();            
+        error_log(print_r($eMtemplate,TRUE));
+        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
+        $eMtemplate = EE_Event_Message_Template::new_instance(
+                    array('EVT_ID' => $event_id,
+                          'EMT_ID' => 21
+        ));
+        $eMtemplate->save();            
+        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
+        $eMtemplate = EE_Event_Message_Template::new_instance(
+                    array('EVT_ID' => $event_id,
+                          'EMT_ID' => 22
+        ));
+        $eMtemplate->save();            
+        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
+        $eMtemplate = EE_Event_Message_Template::new_instance(
+                    array('EVT_ID' => $event_id,
+                          'EMT_ID' => 23
+        ));
+        $eMtemplate->save();            
+        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
     }
 }
