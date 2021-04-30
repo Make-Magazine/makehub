@@ -220,9 +220,13 @@ add_filter('doing_it_wrong_trigger_error', function () {return false;}, 10, 0);
 function add_slug_body_class( $classes ) {
 	global $post;
 	if ( isset( $post ) ) {
-		$classes[] = $post->post_type . '-' . $post->post_name;
-	}
+		if($post->post_name) {
+			$classes[] = $post->post_type . '-' . $post->post_name;
+		} else {
+			$classes[] = $post->post_type . '-' . str_replace( "/", "-", trim($_SERVER['REQUEST_URI'], '/') );
+		}
 		return $classes;
 	}
-add_filter( 'body_class', 'add_slug_body_class' )
+}
+add_filter( 'body_class', 'add_slug_body_class' );
 ?>

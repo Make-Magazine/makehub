@@ -59,8 +59,8 @@ function dashboard_info_content() {
     $customer = ((isset($customer_content) && !empty($customer_content)) ? json_decode($customer_content, true) : '');
     
     $return .= '<div class="dashboard-box expando-box">
-			<h4><img src="' . get_stylesheet_directory_uri() . '/images/makershed-logo.jpg" /> Orders</h4>
-			<ul>';
+			<h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makershed-logo.jpg" /> Orders</h4>
+			<ul class="open">';
     
     if (!empty($customer['customers'])) {        
         $customerID = $customer['customers'][0]['id'];
@@ -165,8 +165,8 @@ function dashboard_info_content() {
         $entryDataUnique = array_unique($entryData, SORT_REGULAR);
         if (isset($entryDataUnique) && !empty($entryDataUnique)) {
             $return .= '<div class="dashboard-box expando-box">
-						  <h4><img src="' . get_stylesheet_directory_uri() . '/images/makerfaire-logo.jpg" /> Entries</h4>
-						  <ul>';
+						  <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makerfaire-logo.jpg" /> Entries</h4>
+						  <ul class="open">';
             foreach ($entryDataUnique as $entry) {
                 $return .= '<li><p><b><a href="https://' . $entry['faire_url'] . '/maker/entry/' . $entry['entry_id'] . '" target="_blank">' . $entry['title'] . '</a></b> - ' . $entry['faire_name'] . '</p>';
             }
@@ -191,8 +191,8 @@ function dashboard_info_content() {
 
     if (!empty($ms_results)) {
         $return .= '<div class="dashboard-box expando-box">
-					  <h4>My &nbsp;&nbsp;<img src="' . get_stylesheet_directory_uri() . '/images/makerspaces-logo.jpg" /></h4>
-					  <ul>';
+					  <h4 class="open">My &nbsp;&nbsp;<img src="' . get_stylesheet_directory_uri() . '/images/makerspaces-logo.jpg" /></h4>
+					  <ul class="open">';
         $return .= '<li><p><b>' . $ms_results[0]->meta_value . '</b> - <a href="' . $ms_results[1]->meta_value . '" target="_blank">' . $ms_results[1]->meta_value . '</a></p>';
         $return .= '<li><a href="/members/' . $user_slug . '/makerspace_info/" class="btn universal-btn">See More Details</a></li>';
         $return .= '<li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>';
@@ -206,8 +206,8 @@ function dashboard_info_content() {
 
     if (isset($user_meta['ihc_user_levels'][0])) {
         $return .= '<div class="dashboard-box expando-box">
-			<h4><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
-			<ul>';
+			<h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
+			<ul class="open">';
         $return .= '        <li>' . do_shortcode("[ihc-membership-card]") . '</li>';
         //$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
         $return .= '        <li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
@@ -223,8 +223,8 @@ function dashboard_info_content() {
     //if this individual is an attenddee
     if(isset($user_meta['wp_EE_Attendee_ID']) && shortcode_exists('ESPRESSO_MY_EVENTS') ){
         $return .= '<div class="dashboard-box expando-box">
-                            <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
-                .  '    <ul>';
+                            <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
+                .  '    <ul class="open">';
         $return .=          '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title=“My Super Event List”]') . '</li>';
         $return .= '    </ul>';
         $return .= '</div>';
@@ -245,8 +245,8 @@ function dashboard_info_content() {
     );
     if (!empty($hosted_events)) {
         $return .= '<div class="dashboard-box expando-box">
-                        <h4><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Events</h4>
-                        <ul>';
+                        <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Events</h4>
+                        <ul class="open">';
         foreach ($hosted_events as $event) {
             $return .= '    <li><b>' . $event->name() . '</b> - <a href="' . $event->get_permalink() . '">View</a></li>';
         }

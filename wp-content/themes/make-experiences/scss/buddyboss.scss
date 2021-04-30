@@ -134,3 +134,10 @@
 		max-width: 300px;
 	}
 }
+
+// Makerspace dir Page
+.page-members-type-makerspaces {
+	h1.entry-title::after {
+		content: ": Makerspaces";
+	}
+}

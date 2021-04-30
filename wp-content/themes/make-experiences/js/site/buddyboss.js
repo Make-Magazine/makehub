@@ -5,4 +5,7 @@ jQuery(document).ready(function(){
 			scrollTop: jQuery("#group-settings-form").offset().top - 100
 		}, 2000);
 	}
+	if (window.location.href.indexOf("/members/type/makerspaces/") > -1)   {
+		jQuery(".members-nav").append("<a href='https://makerspaces.make.co' class='btn universal-btn' style='float:right;margin-bottom:10px;margin-top:-10px;'>See Map</a>");
+	}
 });
