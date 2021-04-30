@@ -166,16 +166,19 @@ function bp_activity_add_meta_boxes() {
 		return;
 	}
 
-	$post_ID = $post->ID;
-
-	if (
-		(
+        if (isset($post->ID)){
+            $post_ID =  $post->ID;
+        }else{
+            return;
+        }
+	if (!isset($post->post_type)||
+		((
 			'sfwd-courses' == $post->post_type
 			|| 'sfwd-lessons' == $post->post_type
 			|| 'sfwd-topic' == $post->post_type
 			|| 'sfwd-quiz' == $post->post_type
 		)
-		&& !post_type_supports( $post->post_type, 'buddypress-activity' )
+		&& !post_type_supports( $post->post_type, 'buddypress-activity' ))
 	) {
 		return;
 	}

@@ -61,6 +61,8 @@ function update_entry_status($entry_id, $status) {
         }
         $schedule .= '</ul>';
 
+        //please keep this with the physical line breaks. for some reason html gets stripped from parts of this.
+        //use wpautop
         $description = '<span><a href="' . $event->get_permalink() . '">' . $eventName . '</a></span>
                          <p>Webinar Link - ' . $webinar_link . '</p>' .
                 $schedule .
@@ -84,7 +86,7 @@ function update_entry_status($entry_id, $status) {
 
         $uploads = wp_get_upload_dir();
         $uploadDir = $uploads['basedir'];
-        error_log('$group_id=' . $group_id);
+        //error_log('$group_id=' . $group_id);
 
         //make the necessary directories to place the images in        
         wp_mkdir_p($uploadDir . '/group-avatars/' . $group_id . '/');
@@ -111,5 +113,12 @@ function update_entry_status($entry_id, $status) {
 
         //write the new group id to event acf
         update_field('group_id', $group_id, $event_id);
+        
+        $userID = $entry['created_by'];
+        // now, give the user a basic membership level, if they don't have one already
+        $user_meta = get_user_meta($userID);
+
+        // assign community membership
+        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);          
     }
 }

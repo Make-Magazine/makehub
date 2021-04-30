@@ -154,18 +154,18 @@ function attendee_approved( $registration) {
             }
         }
         
-        //note need to send email to user with new user information
+        //TBD?? note need to send email to user with new user information
         $user_id = wp_create_user( $username, 'MakerCampus'.$eventID, $attendeeEmail );
-    }else{
-        error_log('valid user '.$user->ID);
+    }else{        
         $user_id = $user->ID;
     }
      
     // give them a free membership    
-    $result = ihc_do_complete_level_assign_from_ap($user_id, $lid=14, $custom_start_time=0, $custom_end_time=0);
+    $result = ihc_do_complete_level_assign_from_ap($user_id, 14, 0, 0);
     
-    //add them to the event group
-    $group_id= get_post_meta($eventID, 'group_id');
+    //add them to the event group    
+    $group_id = get_field('group_id', $eventID);
+    
     groups_join_group( $group_id, $user_id);
     
     return $registration;
