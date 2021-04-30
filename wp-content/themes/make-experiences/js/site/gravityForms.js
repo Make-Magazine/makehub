@@ -19,8 +19,9 @@ jQuery(document).ready(function ($) {
 });
 
 jQuery(document).on("mouseenter touchstart",".timepicker",function(e){
+	var time = "12:00";
 	if(jQuery(this).val()) {
-		var time = jQuery(this).val().replace(/\s+/g, '');
+		time = jQuery(this).val().replace(/\s+/g, '');
 		var timeAdd = 0;
 		if(time.indexOf("PM") !== -1) {
 			timeAdd = 12;
@@ -30,10 +31,8 @@ jQuery(document).on("mouseenter touchstart",".timepicker",function(e){
 			time[0] = parseInt(time[0]) + timeAdd;
 		}
 		time = time.join(":");
-	} else {
-		var time = "12:00";
-	}
-	
+	} 
+
 	var options = {
 		minutesInterval: 15,
 		now: time, 
@@ -44,6 +43,7 @@ jQuery(document).on("mouseenter touchstart",".timepicker",function(e){
 	}
 	jQuery(this).wickedpicker(options);	
 });
+
 
 
 function numbersAndDashes() {
