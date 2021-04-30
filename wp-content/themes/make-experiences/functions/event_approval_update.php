@@ -1,6 +1,6 @@
 <?php
 
-add_action('gravityview/approve_entries/updated', 'update_entry_status', 10, 3);
+add_action('gravityview/approve_entries/updated', 'update_entry_status', 1, 3);
 
 function update_entry_status($entry_id, $status) {
     //$status - 1 for approved, 2 for rejected, 3 for pending
@@ -22,6 +22,7 @@ function update_entry_status($entry_id, $status) {
         );
         wp_update_post($post_data);
     }
+    
     //if the event is approved, create an event
     if ($status == 1) {
         //find all fields set with a parameter name 
