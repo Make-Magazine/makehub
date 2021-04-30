@@ -30,11 +30,14 @@ function set_time_field_type($input, $input_info, $field, $text, $value, $form_i
     $tabindex = GFCommon::get_tabindex();
     $input_field_name = 'input_' . $field->id . '[]';
     $input_field_id = $field->id . "_" . str_replace(" ", "_", strtolower($text));
+
+	if(!$value) { $value = "12 : 00 PM"; } // if we aren't seeing a set value, set it noon as default
 	
-    $new_input = '<input type="text" name="' . $input_field_name . '" value="12 : 00 PM" ' . $tabindex . ' class="time timepicker">';
+    $new_input = '<input type="text" name="' . $input_field_name . '" value="'.$value.'" ' . $tabindex . ' class="time timepicker">';
 
     return $new_input;
 }
+
 
 // make sure the time of the end is past the time of the beginning
 function validate_time($result, $value, $form, $field) {
