@@ -127,3 +127,46 @@ add_filter( 'FHEE__EE_Ticket_Selector__display_ticket_selector_submit__btn_text'
 function ee_mer_change_cart_button( $text ) {    
     return 'Get Tickets';
 }
+
+add_filter( 'AHEE__EE_Registration__set_status__to_approved', 'attendee_approved', 4 );
+//attendee registration approved
+function attendee_approved( $registration) {            
+    $attendeeID = $registration->attendee_ID();
+    $eventID = $registration->event_ID();
+    $attendee = EEM_Attendee::instance()->get_one_by_ID($attendeeID);
+    
+    //get the user information for the attendee
+    $attendeeEmail = $attendee->email();
+    $user = get_user_by('email', $attendeeEmail);
+    
+    if(!$user) {
+        //create a user
+        $username = strstr($attendeeEmail, '@', true); //first try username being the first part of the email
+        if(username_exists( $username )){  //username exists try something else
+            $count=1;
+            $exists = true;
+            while($exists){
+                $username = $username.$count;
+                if(!username_exists($username)){
+                    $exists = false;
+                }
+                $count++;
+            }
+        }
+        
+        //note need to send email to user with new user information
+        $user_id = wp_create_user( $username, 'MakerCampus'.$eventID, $attendeeEmail );
+    }else{
+        error_log('valid user '.$user->ID);
+        $user_id = $user->ID;
+    }
+     
+    // give them a free membership    
+    $result = ihc_do_complete_level_assign_from_ap($user_id, $lid=14, $custom_start_time=0, $custom_end_time=0);
+    
+    //add them to the event group
+    $group_id= get_post_meta($eventID, 'group_id');
+    groups_join_group( $group_id, $user_id);
+    
+    return $registration;
+}

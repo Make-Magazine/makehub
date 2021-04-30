@@ -102,19 +102,5 @@ function create_event($entry, $form) {
      */
     event_post_meta($entry, $form, $eventID, $parameter_array); // update taxonomies, featured image, etc    
     update_event_acf($entry, $form, $eventID, $parameter_array); // Set the ACF data    
-    //update_event_additional_fields($entry, $form, $eventID); // Set event custom fields for filtering
-
-    // now, give the user a basic membership level, if they don't have one already
-    $user_meta = get_user_meta($userID);
-    $user_level = (isset($user_meta['ihc_user_levels'][0]) ? $user_meta['ihc_user_levels'][0] : '');
-    $time_data = ihc_get_start_expire_date_for_user_level($userID, $user_level);
-    if (empty($user_meta['ihc_user_levels']) || time() > strtotime($time_data['expire_time'])) {
-        // create basic membership starting now, and lasting for 10 years (default)
-        $now = time();
-        ihc_handle_levels_assign($userID, 14, $now);
-        // membership is assigned, but inactive
-        // ihc_set_level_status($userID, 17, 1); this is doing nothing now
-    } else {
-        //error_log("user already has active membership");
-    }    
+    
 }
