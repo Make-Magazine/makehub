@@ -9,6 +9,7 @@
 global $post;
 $post_id = get_the_ID();
 $url = '';
+$event = EEM_Event::instance()->get_one_by_ID($post->ID);
 
 // Build an array of all images associated with the post to create a gallery out of
 $post_image_ids = array();
@@ -26,7 +27,7 @@ for ($x = 1; $x < 7; $x++) {
 $post_image_ids_string = implode(', ', $post_image_ids);
 
 global $current_user;
-$current__user = wp_get_current_user();;
+$current__user = wp_get_current_user();
 
 //get the users email
 $user_email = $current__user->user_email;
@@ -37,23 +38,54 @@ get_header();
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
-		<p class="events-back">
-			<a class="universal-btn" href="/maker-campus"> « All Events</a>
-		</p>
+        <p class="events-back">
+            <a class="universal-btn" href="/maker-campus"> « All Events</a>
+        </p>
         <h1 class="entry-title"><?php echo( get_the_title() . espresso_event_status_banner() ); ?></h1>
-        <?php if (has_post_thumbnail()) { ?>
+            <?php if (has_post_thumbnail()) { ?>
             <div class="gallery-wrapper">
                 <?php
                 echo do_shortcode('[gallery ids="' . $post_image_ids_string . '" size="medium-large" order="DESC" orderby="ID"]');
                 if (count($post_image_ids) != 1) {
                     ?>
                     <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
-                <?php } ?>
+            <?php } ?>
             </div>
-        <?php } ?>
+<?php } ?>
         <div class="entry-content">
-            <div class="event-datetimes">
-                <?php echo espresso_list_of_event_dates(); ?>
+            <div class="event-datetimes">                
+                <?php
+                $eventDetails = '';
+                $date = $event->first_datetime(); 
+                $startmonth = date('F', strtotime($date->start_date()));
+                $startyear = date('Y', strtotime($date->start_date()));
+                $startday = date('j', strtotime($date->start_date()));
+                $startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
+                $endtime = date('g:i a', strtotime($date->end_time()));
+                $date_count = count(EEM_Datetime::instance()->get_all_event_dates( $event->ID() ));
+                
+                $tickets = array();
+                if ($event instanceof EE_Event) {
+                        $tickets = $event->tickets();
+                }		
+                $ticket_count = count($tickets);
+                //$eventDetails .= '<div>'. $dateFormat .'</div>';
+                $eventDetails .= '<div class="event-date"><h2>'. $startime . ' - ' . $endtime . ' Pacific</h2></div>';
+                if (get_field('custom_schedule_details', $event->ID())) {
+                    $eventDetails = '<div class="event-time-desc">' . get_field('custom_schedule_details', $event->ID()) . '</div>';
+                } else {
+                    if ($date_count > 1) {
+                        $date_count = count(EEM_Datetime::instance()->get_all_event_dates( $event->ID() ));
+                        if ($ticket_count == 1) {
+                            $eventDetails .= '<div class="event-time-desc"><h2>' . $date_count . ' sessions starting on  ' . $startmonth . " " . $startday . '</h2></div>';
+                        } else {
+                            $eventDetails = '<div class="event-time-desc"><h2>Schedules Vary</h2> See Details section for more information.</div>';
+                        }
+                    }
+                }
+                
+                echo $eventDetails;
+                ?>
             </div>
             <div class="event-content container-fluid">
                 <div class="row">
@@ -68,20 +100,20 @@ get_header();
                 </div>
                 <div class="row">
                     <div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
-                        <?php if(get_the_terms( $post, 'event_types' )) { ?>
-                                <div class="event-cat">
-                                        <?php $event_type = get_the_terms( $post, 'event_types' )[0]; ?>
-                                        <a href="/event_types/<?php echo $event_type->slug; ?>">
-                                                <?php echo $event_type->name; ?>
-                                        </a>
+                            <?php if (get_the_terms($post, 'event_types')) { ?>
+                            <div class="event-cat">
+                                    <?php $event_type = get_the_terms($post, 'event_types')[0]; ?>
+                                <a href="/event_types/<?php echo $event_type->slug; ?>">
+    <?php echo $event_type->name; ?>
+                                </a>
+                            </div>
+    <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
+                                <div class="event-location event-content-item">
+                                    <h4>Location:</h4> 
+                                <?php echo get_field('location') ?>
                                 </div>
-                                <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
-                                        <div class="event-location event-content-item">
-                                                <h4>Location:</h4> 
-                                                <?php echo get_field('location') ?>
-                                        </div>
                                 <?php
-                                }
+                            }
                         }
                         // ATTENDEES Section
                         $userList = EEM_Attendee::instance()->get_all();
@@ -94,27 +126,27 @@ get_header();
                                     <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
                                 <?php } else { ?>
                                     COMING SOON
-                                <?php } ?>
+    <?php } ?>
                             </div>
                             <a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
-                        <?php } ?>
+<?php } ?>
                         <div class="event-description event-content-item">
                             <h4>What You'll Do:</h4> 
-                            <?php echo apply_filters('the_content', $post->post_content); ?>
+                        <?php echo apply_filters('the_content', $post->post_content); ?>
                         </div>
-                        <?php if (get_field('basic_skills')) { ?>
+<?php if (get_field('basic_skills')) { ?>
                             <div class="event-skill-level event-content-item">
                                 <h4>Skill Level:</h4> 
-                                <?php echo get_field('basic_skills'); ?>
+                            <?php echo get_field('basic_skills'); ?>
                             </div>
                         <?php } ?>
-                        <?php if (get_field('skills_taught')) { ?>
+<?php if (get_field('skills_taught')) { ?>
                             <div class="event-skills-taught event-content-item">
                                 <h4>Skills you will learn:</h4> 
-                                <?php echo html_entity_decode(get_field('skills_taught')); ?>
+                            <?php echo html_entity_decode(get_field('skills_taught')); ?>
                             </div>
                         <?php } ?>
-                        <?php if (get_field('kit_required') == "Yes") { ?>
+<?php if (get_field('kit_required') == "Yes") { ?>
                             <div class="event-kit event-content-item">
                                 <h4>A kit is required for this program:</h4> 
                                 <?php
@@ -133,13 +165,13 @@ get_header();
                                 ?>
                             </div>
                         <?php } ?>
-                        <?php if (get_field('materials')) { ?>
+<?php if (get_field('materials')) { ?>
                             <div class="event-materials event-content-item">
                                 <h4>What You'll Need:</h4> 
                                 <div class="materials-list">
-                                    <?php echo html_entity_decode(get_field('materials')); ?>
+                                <?php echo html_entity_decode(get_field('materials')); ?>
                                 </div>
-                                <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+    <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
                                     <h4>Wishlist Links: </h4>
                                     <ul>
                                         <?php
@@ -148,7 +180,7 @@ get_header();
                                         }
                                         ?>
                                     </ul>
-                                <?php } ?>
+                            <?php } ?>
                             </div>
                             <?php
                         }
@@ -181,12 +213,13 @@ get_header();
                                 ?>
 
                             </div>
-                        <?php }
+                        <?php
+                        }
                         if (get_field('program_expertise')) {
                             ?>
                             <div class="event-host event-content-item">
                                 <h4>About your Host(s):</h4> 
-                                <?php echo html_entity_decode(get_field('program_expertise')); ?>
+                            <?php echo html_entity_decode(get_field('program_expertise')); ?>
                             </div>
                             <?php
                         }
@@ -197,84 +230,87 @@ get_header();
                     <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
-                            <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
+<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
                         </div>
                         <div class="event-sidebar-item">
                             <h3>Details</h3>                            
                             <div class="event-sidebar-field event-date">
                                 <b>Dates:</b>
-                                    <?php
-                                    $event = EEM_Event::instance()->get_one_by_ID($post->ID);          
-                                    $tickets = $event->tickets();   
-                                    foreach($tickets as $ticket){ ?>
-										<div class="ticket-detail">
-                                        	<div class="ticket-detail-name"><?php echo $ticket->name(); ?></div>
-                                        	<ul>
-											<?php $dates = $ticket->datetimes();
-												  foreach ($dates as $date) { ?>
-													<li>
-														<?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
-												    </li>
-											<?php }
-											?>                                    
-                                            </ul>
-										</div>
-                                    <?php } ?>
-                                
+                                <?php                                
+                                $tickets = $event->tickets();
+                                foreach ($tickets as $ticket) {
+                                    ?>
+                                    <div class="ticket-detail">
+                                        <div class="ticket-detail-name"><?php echo $ticket->name(); ?></div>
+                                        <ul>
+                                                <?php $dates = $ticket->datetimes();
+                                                foreach ($dates as $date) {
+                                                    ?>
+                                                <li>
+        <?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+                                                </li>
+                                    <?php }
+                                    ?>                                    
+                                        </ul>
+                                    </div>
+<?php } ?>
+
                             </div>
                             <div class="event-sidebar-field event-cost">
                                 <b>Cost: </b>
-    							<span class="price-item"><?php echo event_ticket_prices($event); ?></span>
+                                <span class="price-item"><?php echo event_ticket_prices($event); ?></span>
                             </div>
-                            <?php
-                            // Age ranges
-                            if (get_field('audience')) {
-                                ?>
+<?php
+// Age ranges
+if (get_field('audience')) {
+    ?>
                                 <div class="event-sidebar-field event-age">
                                     <b>Age Range:</b>
-                                    <?php foreach (get_field('audience') as $age) { 
-										$ageValues = get_field_object('audience')['choices'];
-									?>
+                                    <?php
+                                    foreach (get_field('audience') as $age) {
+                                        $ageValues = get_field_object('audience')['choices'];
+                                        ?>
                                         <span class='age-item'><?php echo $ageValues[$age]; ?></span>
                                 <?php } ?>
                                 </div>
-                            <?php
-                            }
-                            $categories = get_the_terms($post->ID, 'espresso_event_categories');
-                            if ($categories) {
-                                ?>
+    <?php
+}
+$categories = get_the_terms($post->ID, 'espresso_event_categories');
+if ($categories) {
+    ?>
                                 <div class="event-sidebar-field event-categories">
                                     <b>Event Categories:</b>
                                     <div class="event-categories-wrap">
-                                        <?php foreach ($categories as $category) { ?>
+    <?php foreach ($categories as $category) { ?>
                                             <a href="/event-category/<?php echo $category->slug; ?>">
                                     <?php echo $category->name; ?>
                                             </a>
-                                <?php } ?>
+    <?php } ?>
                                     </div>
                                 </div>
-                             <?php }
-                            ?>
+                        <?php }
+                        ?>
 
                             Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
                             <br /><br />
                         </div>
-                                <?php 
+                                <?php
                                 $relevents = get_field('events');
-                                if ($relevents && is_singular(array('espresso_events'))) { ?>
+                                if ($relevents && is_singular(array('espresso_events'))) {
+                                    ?>
                             <div class="related-events">
                                 <h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
                                 <ul>
-                                            <?php foreach ($relevents as $relevent): ?>
+                                    <?php foreach ($relevents as $relevent): ?>
                                         <li>
                                             <a href="<?php echo get_permalink($relevent->ID); ?>">
-                                        <?php echo get_the_title($relevent->ID); ?>
+                                <?php echo get_the_title($relevent->ID); ?>
                                             </a>
                                         </li>
-                            <?php endforeach; ?>
+    <?php endforeach; ?>
                                 </ul>
                             </div>
-                        <?php } ?>
+<?php } ?>
                     </div>
                 </div>
             </div>
