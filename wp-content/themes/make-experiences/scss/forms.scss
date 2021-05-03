@@ -535,6 +535,15 @@
 }
 .gv-edit-entry-wrapper .gform_wrapper li.gfield.gfield_error.gfield_contains_required .gfield_label { color: #333 !important; }
 
+// This is necessary for the wickedpicker to appear on the edit submission page because fml
+.page-edit-submission, .page-edit-submission-2 {
+	.wickedpicker {
+		position: fixed !important;
+		left: 42% !important;
+		top: 50% !important;
+	}
+}
+
 .woocommerce-cart { background: #f1f1f1; }
 .woocommerce {
 	form {
