@@ -72,7 +72,7 @@ get_header();
                 //$eventDetails .= '<div>'. $dateFormat .'</div>';
                 $eventDetails .= '<div class="event-date"><h2>'. $startime . ' - ' . $endtime . ' Pacific</h2></div>';
                 if (get_field('custom_schedule_details', $event->ID())) {
-                    $eventDetails = '<div class="event-time-desc">' . get_field('custom_schedule_details', $event->ID()) . '</div>';
+                    $eventDetails = '<div class="event-time-desc"><h2>' . get_field('custom_schedule_details', $event->ID()) . '</h2></div>';
                 } else {
                     if ($date_count > 1) {
                         $date_count = count(EEM_Datetime::instance()->get_all_event_dates( $event->ID() ));
