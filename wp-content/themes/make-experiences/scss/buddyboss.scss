@@ -2,12 +2,12 @@
 .buddypress, .home-page {
 	.site-content .container {
 		width: 100%;
-		max-width: none;
+		max-width: 100%;
 		padding: 0;
 	}
 }
 .has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #primary, body.buddypress.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #page #primary {
-	max-width: none;
+	max-width: 100%;
 }
 
 // no sign up, we have ump for that
@@ -141,3 +141,6 @@
 		content: ": Makerspaces";
 	}
 }
+
+// nobody needs to know when I was last on the notification page
+.member-request-list-wrap .last-activity { display: none; }

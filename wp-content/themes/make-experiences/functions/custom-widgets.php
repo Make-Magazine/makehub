@@ -105,7 +105,8 @@ function make_widget_rss_output($rss, $args = array()) {
 
         $date = '';
         if ($show_date) {
-            $date = '<date>' . $item->get_date('M j, Y', true) . '</date>';
+			$dateString = new DateTime($item->get_item_tags('','event_date')[0]['data']);
+            $date = '<date>' . $dateString->format('M j, Y') . '</date>';
         }
 
         if ($link == '') {
