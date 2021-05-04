@@ -49,9 +49,9 @@ get_header();
                 if (count($post_image_ids) != 1) {
                     ?>
                     <a id="showAllGallery" class="universal-btn" href="javascript:void(jQuery('.psgal .msnry_item:first-of-type a').click())"><i class="fas fa-images"></i></a>
-            <?php } ?>
+				<?php } ?>
             </div>
-<?php } ?>
+			<?php } ?>
         <div class="entry-content">
             <div class="event-datetimes">                
                 <?php
@@ -104,10 +104,10 @@ get_header();
                             <div class="event-cat">
                                     <?php $event_type = get_the_terms($post, 'event_types')[0]; ?>
                                 <a href="/event_types/<?php echo $event_type->slug; ?>">
-    <?php echo $event_type->name; ?>
+								    <?php echo $event_type->name; ?>
                                 </a>
                             </div>
-    <?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
+    						<?php if ($event_type->name == "In-Person" && get_field('location')) { ?>
                                 <div class="event-location event-content-item">
                                     <h4>Location:</h4> 
                                 <?php echo get_field('location') ?>
@@ -126,27 +126,27 @@ get_header();
                                     <a href="<?php echo get_field('webinar_link'); ?>" target="_blank" class="btn universal-btn">Online Event Link</a>
                                 <?php } else { ?>
                                     COMING SOON
-    <?php } ?>
+								<?php } ?>
                             </div>
                             <a href="/members/<?php echo $user_slug; ?>/dashboard" class="btn universal-btn">Access Your Tickets</a>
-<?php } ?>
+						<?php } ?>
                         <div class="event-description event-content-item">
                             <h4>What You'll Do:</h4> 
                         <?php echo apply_filters('the_content', $post->post_content); ?>
                         </div>
-<?php if (get_field('basic_skills')) { ?>
+						<?php if (get_field('basic_skills')) { ?>
                             <div class="event-skill-level event-content-item">
                                 <h4>Skill Level:</h4> 
                             <?php echo get_field('basic_skills'); ?>
                             </div>
                         <?php } ?>
-<?php if (get_field('skills_taught')) { ?>
+						<?php if (get_field('skills_taught')) { ?>
                             <div class="event-skills-taught event-content-item">
                                 <h4>Skills you will learn:</h4> 
                             <?php echo html_entity_decode(get_field('skills_taught')); ?>
                             </div>
                         <?php } ?>
-<?php if (get_field('kit_required') == "Yes") { ?>
+						<?php if (get_field('kit_required') == "Yes") { ?>
                             <div class="event-kit event-content-item">
                                 <h4>A kit is required for this program:</h4> 
                                 <?php
@@ -165,13 +165,13 @@ get_header();
                                 ?>
                             </div>
                         <?php } ?>
-<?php if (get_field('materials')) { ?>
+						<?php if (get_field('materials')) { ?>
                             <div class="event-materials event-content-item">
                                 <h4>What You'll Need:</h4> 
                                 <div class="materials-list">
                                 <?php echo html_entity_decode(get_field('materials')); ?>
                                 </div>
-    <?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
+    							<?php if (get_field('wish_list_urls') && get_field('wish_list_urls')[0]['wish_list'] != '') { ?>
                                     <h4>Wishlist Links: </h4>
                                     <ul>
                                         <?php
@@ -230,7 +230,7 @@ get_header();
                     <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
-<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
+							<?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
                         </div>
                         <div class="event-sidebar-item">
                             <h3>Details</h3>                            
@@ -238,32 +238,35 @@ get_header();
                                 <b>Dates:</b>
                                 <?php                                
                                 $tickets = $event->tickets();
-                                foreach ($tickets as $ticket) {
-                                    ?>
+                                foreach ($tickets as $ticket) { ?>
                                     <div class="ticket-detail">
-                                        <div class="ticket-detail-name"><?php echo $ticket->name(); ?></div>
-                                        <ul>
-                                                <?php $dates = $ticket->datetimes();
-                                                foreach ($dates as $date) {
-                                                    ?>
+										<div class="ticket-detail-name"><b><?php echo $ticket->name(); ?></b>
+											<?php if( $ticket->remaining() < 6 ) { ?>
+											  <span class="tickets-remaining">- Only <?php echo $ticket->remaining(); ?> tickets remaining.</span>
+											<?php } ?>
+										</div>
+										<ul>
+											<?php $dates = $ticket->datetimes();
+											foreach ($dates as $date) {
+												
+												?>
                                                 <li>
-        <?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+        											<?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
                                                 </li>
-                                    <?php }
-                                    ?>                                    
+                                    		<?php } ?>                                    
                                         </ul>
                                     </div>
-<?php } ?>
+								<?php } ?>
 
                             </div>
                             <div class="event-sidebar-field event-cost">
                                 <b>Cost: </b>
                                 <span class="price-item"><?php echo event_ticket_prices($event); ?></span>
                             </div>
-<?php
-// Age ranges
-if (get_field('audience')) {
-    ?>
+							<?php
+							// Age ranges
+							if (get_field('audience')) {
+								?>
                                 <div class="event-sidebar-field event-age">
                                     <b>Age Range:</b>
                                     <?php
@@ -273,44 +276,40 @@ if (get_field('audience')) {
                                         <span class='age-item'><?php echo $ageValues[$age]; ?></span>
                                 <?php } ?>
                                 </div>
-    <?php
-}
-$categories = get_the_terms($post->ID, 'espresso_event_categories');
-if ($categories) {
-    ?>
+							<?php
+							}
+							$categories = get_the_terms($post->ID, 'espresso_event_categories');
+							if ($categories) { ?>
                                 <div class="event-sidebar-field event-categories">
                                     <b>Event Categories:</b>
                                     <div class="event-categories-wrap">
-    <?php foreach ($categories as $category) { ?>
+									    <?php foreach ($categories as $category) { ?>
                                             <a href="/event-category/<?php echo $category->slug; ?>">
-                                    <?php echo $category->name; ?>
+                                    			<?php echo $category->name; ?>
                                             </a>
-    <?php } ?>
+    									<?php } ?>
                                     </div>
                                 </div>
-                        <?php }
-                        ?>
-
+                        <?php }  ?>
                             Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
                             <br /><br />
                         </div>
-                                <?php
-                                $relevents = get_field('events');
-                                if ($relevents && is_singular(array('espresso_events'))) {
-                                    ?>
+						<?php
+						$relevents = get_field('events');
+						if ($relevents && is_singular(array('espresso_events'))) { ?>
                             <div class="related-events">
                                 <h3 class="event-venues-h3 ee-event-h3">Related Events</h3>
                                 <ul>
                                     <?php foreach ($relevents as $relevent): ?>
                                         <li>
                                             <a href="<?php echo get_permalink($relevent->ID); ?>">
-                                <?php echo get_the_title($relevent->ID); ?>
+                                				<?php echo get_the_title($relevent->ID); ?>
                                             </a>
                                         </li>
-    <?php endforeach; ?>
+    								<?php endforeach; ?>
                                 </ul>
                             </div>
-<?php } ?>
+						<?php } ?>
                     </div>
                 </div>
             </div>

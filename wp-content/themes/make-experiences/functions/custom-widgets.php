@@ -9,6 +9,12 @@ function register_custom_widgets() {
 
 add_action('widgets_init', 'register_custom_widgets', 99);
 
+function my_add_force_rss($feed,$url){
+   $feed->force_feed(true);
+   $feed->enable_order_by_date(false);
+}
+add_action('wp_feed_options', 'my_add_force_rss', 10,2);
+
 function make_widget_rss_output($rss, $args = array()) {
     if (is_string($rss)) {
         $rss = fetch_feed($rss);
@@ -51,19 +57,20 @@ function make_widget_rss_output($rss, $args = array()) {
 
     echo '<ul class="custom-rss">';
     if (strpos($args['url'], 'campus.make.co') !== false) {
-        $feedItems = $rss->get_items(0);
+        $feedItems = $rss->get_items();
         $count = count($feedItems);
         array_splice($feedItems, 0, $count - $items);
         $feedItems = array_reverse($feedItems);
     } else {
-        $feedItems = $rss->get_items(0, $items);
+        $feedItems = $rss->get_items();
     }
 
     $date1 = new DateTime('now');
     foreach ($feedItems as $item) {
         //exclude events that have already occured
         $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);
-        if($date1 > $dateString){
+		echo($date1->format('M j, Y') . " " . $dateString->format('M j, Y'));
+        if(date_timestamp_get($date1) > date_timestamp_get($dateString)){
             continue; //(skip this record);
         }
         $link = $item->get_link();
