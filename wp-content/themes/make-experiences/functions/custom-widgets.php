@@ -50,17 +50,22 @@ function make_widget_rss_output($rss, $args = array()) {
     }
 
     echo '<ul class="custom-rss">';
-	if(strpos($args['url'],'campus.make.co') !== false) {
-		$feedItems = $rss->get_items(0);
-		$count = count($feedItems);
-		array_splice($feedItems, 0, $count - $items);
-		$feedItems = array_reverse($feedItems);
-	} else {
-		$feedItems = $rss->get_items(0, $items);
-	}
-	
-    foreach ($feedItems as $item) {
+    if (strpos($args['url'], 'campus.make.co') !== false) {
+        $feedItems = $rss->get_items(0);
+        $count = count($feedItems);
+        array_splice($feedItems, 0, $count - $items);
+        $feedItems = array_reverse($feedItems);
+    } else {
+        $feedItems = $rss->get_items(0, $items);
+    }
 
+    $date1 = new DateTime('now');
+    foreach ($feedItems as $item) {
+        //exclude events that have already occured
+        $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);
+        if($date1 > $dateString){
+            continue; //(skip this record);
+        }
         $link = $item->get_link();
         while (stristr($link, 'http') != $link) {
             $link = substr($link, 1);
@@ -72,12 +77,12 @@ function make_widget_rss_output($rss, $args = array()) {
             $title = __('Untitled');
         }
         $title = '<div class="rssTitle">' . $title . "</div>";
-		
-		if (strpos($args['url'],'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
-			$image = '<img src="' . get_resized_remote_image_url( $enclosure->get_thumbnail(), 140, 100 )  . '" width="140" height="100" />';
-		} else {
-        	$image = '<img src="' . get_resized_remote_image_url( get_first_image_url($item->get_content()), 140, 100 ) . '" width="140" height="100" />';
-		}
+
+        if (strpos($args['url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
+            $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 140, 100) . '" width="140" height="100" />';
+        } else {
+            $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 140, 100) . '" width="140" height="100" />';
+        }
 
         $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
         $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));
@@ -104,8 +109,7 @@ function make_widget_rss_output($rss, $args = array()) {
         }
 
         $date = '';
-        if ($show_date) {
-			$dateString = new DateTime($item->get_item_tags('','event_date')[0]['data']);
+        if ($show_date) {            
             $date = '<date>' . $dateString->format('M j, Y') . '</date>';
         }
 
