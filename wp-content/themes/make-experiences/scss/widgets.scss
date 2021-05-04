@@ -45,8 +45,10 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 		width:100%;
 		text-align: center;
 		display: block;
+		margin-top: 15px;
+		margin-bottom: -15px;
 	}
-	h2.widget-title {
+	h2.widget-title, h4.mx-block-title {
 		height: 0px;
 		padding: 0px;
 		visibility: hidden;
@@ -162,6 +164,7 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 // our Custom RSS feed widget styling
 .widget_rss {
 	.custom-rss {
+		margin-left: 0px;
 		li {
 			display: inline-flex;
 			padding: 5px 0px;

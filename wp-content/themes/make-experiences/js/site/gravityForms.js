@@ -14,8 +14,7 @@ jQuery(document).ready(function ($) {
             }
             reader.readAsDataURL(input.files[0]);
         }
-    }	
-	
+    }
 });
 
 jQuery(document).on("mouseenter touchstart",".timepicker",function(e){

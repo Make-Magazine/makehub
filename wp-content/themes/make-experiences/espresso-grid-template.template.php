@@ -11,8 +11,8 @@ if ( have_posts() ) :
 	do_action( 'AHEE__espresso_grid_template_template__before_loop' );
 	?>
 	<div class="event-view-btns">
-		<a href="/maker-campus/events-list" class="universal-btn">List</a>
-		<a href="/maker-campus/event-calendar" class="universal-btn">Calendar</a>
+		<a href="/maker-campus/events-list" title="List View" class="universal-btn"><i class="fas fa-th-list"></i></a>
+		<a href="/maker-campus/event-calendar" title="Calendar View" class="universal-btn"><i class="fas fa-calendar-alt"></i></a>
 	</div>
 	<div id="mainwrapper" class="espresso-grid-wrapper">
 		<div class="espresso-grid-revised">

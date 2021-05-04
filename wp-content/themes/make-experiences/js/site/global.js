@@ -3,6 +3,27 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
+jQuery(document).ready(function () {
+	jQuery('.signin-button').attr("href", function(i, href) {
+		return href + '?redirect_to=' + window.location.href;
+	});
+});
+
+function GetURLParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : sParameterName[1];
+        }
+    }
+};
+
 /* function convertTo24Hour(time) {
 	time = time.replace(/\s/g, '')
     var hours = parseInt(time.substr(0, 2));
