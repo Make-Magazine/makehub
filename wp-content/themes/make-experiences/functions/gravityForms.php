@@ -206,3 +206,17 @@ function gw_conditional_requirement( $form ) {
     }
     return $form;
 }
+
+//allow event preview if you are the facilitator, whatever role you might have (e.g. subscriber )
+function facilitator_preview_post( $posts ) {
+	if( isset($_GET['post_type']) && isset($_GET['p']) ) {
+		if($_GET['post_type'] == "espresso_events" && !empty($posts)){
+			$current_user_id = get_current_user_id();
+			$author_id= $posts[0]->post_author;
+			if($current_user_id == $author_id)
+			    $posts[0]->post_status = 'publish';
+		}
+	}
+    return $posts;
+}
+add_filter( 'posts_results', 'facilitator_preview_post', 10, 2 );

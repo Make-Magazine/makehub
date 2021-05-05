@@ -258,6 +258,52 @@ button, input[type="submit"] {
   background: rgba(255, 255, 255, 0.5) !important;
 }
 
+#makey-sign {
+	position: fixed;
+    bottom: 0;
+    -ms-transform: rotate(20deg);
+    transform: rotate(20deg);
+    margin-bottom: -70px;
+    margin-left: 30px;
+    width: 12%;
+    z-index: 99;
+    transition: 0.3s;
+	&:hover {
+		width: 15%;
+		margin-bottom: -45px;
+		margin-left: 40px;
+	}
+	@media screen and (max-width: 1200px) {
+		width: 150px;
+		&:hover {
+			width: 180px;
+		}
+	}
+	@media screen and (max-width: 600px) {
+		display: none;
+	}
+}
+
+.feedback-btn {
+	position: fixed;
+	z-index: 9999;
+    bottom: 20px;
+    background: #eb002a;
+	color: #fff;
+	border: solid 1px #eb002a;
+    width: 120px;
+    right: -15px;
+	transition: 0.3s;
+	&:hover {
+		background: #fff;
+		color: #eb002a;
+		bottom: 38px;
+		right: -5px;
+		padding: 5px;
+		font-size: 18px;
+	}
+}
+
 // Safari only
 .safari-mac {
 	.row:before, .row:after {
