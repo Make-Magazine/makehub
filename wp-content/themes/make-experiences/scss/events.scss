@@ -168,6 +168,9 @@
 						margin-top: 10px;
 					}
 				}
+				.event-promo-video {
+					.entry-video { margin-top: -15px; }
+				}
 				ul li {
 					margin-bottom: 5px;
 				}
@@ -292,6 +295,15 @@
 	}
 }
 
+// Ticket Selector
+.tkt-slctr-tbl {
+	td, th { 
+		padding: 5px 0;
+	}
+	strong { display: block; }
+	a { margin-left: 0px; }
+}
+
 .tckt-slctr-tkt-details-tr {
 	.tckt-slctr-tkt-details-tbl {
 		th, td {
@@ -304,3 +316,12 @@
 	.ticket-details-label-spn { width: auto; }
 	.dashicons { margin-right: 0px; }
 }
+
+// Event Statuses
+.ee-status.event-active-status-DTS { background-color: $color-grey; } // sold out
+.ee-status.event-active-status-DTA { background-color: $color-light-blue; } // active
+.ee-status.event-active-status-DTU { background-color: $color-light-blue; } // upcoming
+.ee-status.event-active-status-DTP { background-color: $color-grey; } // postponed
+.ee-status.event-active-status-DTC { background-color: $color-red; } // canceled
+.ee-status.event-active-status-DTE { background-color: $color-red; } // expired
+.ee-status.event-active-status-DTI { background-color: $color-grey; } // inactive

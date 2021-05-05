@@ -533,7 +533,10 @@
 		color: #000 !important;
 	}
 }
-.gv-edit-entry-wrapper .gform_wrapper li.gfield.gfield_error.gfield_contains_required .gfield_label { color: #333 !important; }
+.gv-edit-entry-wrapper {
+	.gform_wrapper li.gfield.gfield_error.gfield_contains_required .gfield_label { color: #333 !important; }
+	.info-btn { display: none; }
+}
 
 // This is necessary for the wickedpicker to appear on the edit submission page because fml
 .page-edit-submission, .page-edit-submission-2 {
@@ -651,4 +654,15 @@
 
 .tingle-btn:hover {
 	color: $color-light-grey;
+}
+
+// Register page
+.page-register .entry-content { 
+	text-align: center; 
+	.ihc-register-notice, #ihc_coupon_code_check_div_msg {
+		background: $color-red;
+		font-size: 16px;
+		font-weight: 500;
+		max-width: 300px;
+	}
 }
