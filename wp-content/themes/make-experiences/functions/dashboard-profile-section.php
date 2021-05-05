@@ -197,7 +197,7 @@ function dashboard_info_content() {
         $return .= '<li><a href="/members/' . $user_slug . '/makerspace_info/" class="btn universal-btn">See More Details</a></li>';
         $return .= '<li><a href="https://makerspaces.make.co/edit-your-makerspace/" class="btn universal-btn">Manage your Makerspace Listing</a></li>';
         $return .= '</ul>
-				   </div>';
+                </div>';
     }
 
     ////////////////////////////////////////
@@ -220,8 +220,10 @@ function dashboard_info_content() {
     //  List all tickets purchased by this user  //
     ///////////////////////////////////////////////    
     
-    //if this individual is an attenddee
-    if(isset($user_meta['wp_EE_Attendee_ID']) && shortcode_exists('ESPRESSO_MY_EVENTS') ){
+    //if this individual is an attenddee   
+    $where = array('ATT_email' => $user_email);
+    $attendee = EEM_Attendee::instance()->get_all(array($where));    
+    if($attendee && shortcode_exists('ESPRESSO_MY_EVENTS')){            
         $return .= '<div class="dashboard-box expando-box">
                             <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
                 .  '    <ul class="open">';
