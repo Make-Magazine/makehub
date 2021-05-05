@@ -36,7 +36,7 @@ function makerfaire_info_title() {
 
 function makerfaire_info_content() {
     global $wpdb;
-
+/*
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
 
@@ -130,7 +130,7 @@ function makerfaire_info_content() {
     //sort entry data by year, newest first
     usort($entryDataUnique, function($a, $b) {
         return -($a['year'] <=> $b['year']);
-    });
+    }); */
     
     //build outpupt
     echo '<h2><a class="btn universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
@@ -138,7 +138,7 @@ function makerfaire_info_content() {
     
     echo '<div class="item-grid">';
     
-    
+    /*
     foreach($entryDataUnique as $entry){
         $imgSize = getimagesize($entry['photo']);
         $photo = ($imgSize==FALSE?$entry['faire_logo']:$entry['photo']);
@@ -160,5 +160,5 @@ function makerfaire_info_content() {
 		</a>
             </div>';
     }
-    echo '</div>';
+    echo '</div>';*/
 }
