@@ -134,6 +134,8 @@ function makerfaire_info_content() {
     
     //build outpupt
     echo '<h2><a href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
+    echo '<h3>'.bp_get_displayed_user_fullname(). " Maker Faire Entries</h3>";
+    
     echo '<div class="item-grid">';
     
     
