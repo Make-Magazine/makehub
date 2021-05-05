@@ -120,5 +120,21 @@
 	}
 	.ee-attention {
 		border-color: $color-blue;
+		.extra-padding-sides {
+			>.ee-button {
+				float: left;
+				min-width: 390px;
+			}
+			.jst-rght {
+				margin-top: -25px;
+			}
+			@media screen and (max-width: 1020px) {
+				>.ee-button, .jst-rght .ee-button{
+					min-width: 100%;
+					float: none;
+					text-align: center;
+				}
+			}
+		}
 	}
 }
