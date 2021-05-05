@@ -133,6 +133,7 @@ function makerfaire_info_content() {
     });
     
     //build outpupt
+    echo '<h2><a href="https://makerfaire.com/map/">Find a Faire Near You!</a></h2>';
     echo '<div class="item-grid">';
     
     
