@@ -168,6 +168,9 @@
 						margin-top: 10px;
 					}
 				}
+				.event-promo-video {
+					.entry-video { margin-top: -15px; }
+				}
 				ul li {
 					margin-bottom: 5px;
 				}
@@ -304,3 +307,11 @@
 	.ticket-details-label-spn { width: auto; }
 	.dashicons { margin-right: 0px; }
 }
+
+.ee-status.event-active-status-DTS { background-color: $color-grey; }
+.ee-status.event-active-status-DTA { background-color: $color-light-blue; }
+.ee-status.event-active-status-DTU { background-color: $color-light-blue; }
+.ee-status.event-active-status-DTP { background-color: $color-grey; }
+.ee-status.event-active-status-DTC { background-color: $color-red; }
+.ee-status.event-active-status-DTE { background-color: $color-red; }
+.ee-status.event-active-status-DTI { background-color: $color-grey; }
