@@ -154,8 +154,10 @@ function attendee_approved( $registration) {
             }
         }
         
-        //TBD?? note need to send email to user with new user information
-        $user_id = wp_create_user( $username, 'MakerCampus'.$eventID, $attendeeEmail );
+        //generate random password, create user, send email        
+        $random_password = wp_generate_password( 12, false );
+        $user_id = wp_create_user( $username, $random_password, $attendeeEmail );
+        wp_new_user_notification( $user_id, $random_password);
     }else{        
         $user_id = $user->ID;
     }
