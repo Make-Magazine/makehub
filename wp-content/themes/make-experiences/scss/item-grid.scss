@@ -1,7 +1,8 @@
 .item-grid {
 	display: flex;
 	flex-wrap: wrap;
-	width: 100%;
+	width: calc(100% + 30px);
+    margin: 0px -15px;
 	.item-wrapper {
 		width: 20%;
 		height: 360px;

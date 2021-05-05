@@ -94,7 +94,7 @@ function makerfaire_info_content() {
             . 'FROM `wp_mf_maker` '
             . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
             . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '
-            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" '
+            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type="contact" '
             . 'order by entity_id desc';
     $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");    
     
@@ -134,6 +134,8 @@ function makerfaire_info_content() {
     
     //build outpupt
     echo '<h2><a href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
+    echo '<h3>'.bp_get_displayed_user_fullname(). " Maker Faire Entries</h3>";
+    
     echo '<div class="item-grid">';
     
     
