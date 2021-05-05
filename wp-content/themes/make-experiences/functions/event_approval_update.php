@@ -119,9 +119,6 @@ function update_entry_status($entry_id, $status) {
         $user_meta = get_user_meta($userID);
 
         // assign community membership
-        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);      
-        
-        //assign notifications to event                     
-        $event->_add_relation_to(15, 'Message_Template_Group');        
+        $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);              
     }
 }
