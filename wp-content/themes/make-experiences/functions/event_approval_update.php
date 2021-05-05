@@ -64,10 +64,10 @@ function update_entry_status($entry_id, $status) {
 
         //please keep this with the physical line breaks. for some reason html gets stripped from parts of this.
         //use wpautop
-        $description = '<span><a href="' . $event->get_permalink() . '">' . $eventName . '</a></span>
-                         <p>Webinar Link - ' . $webinar_link . '</p>' .
-                $schedule .
-                $materials;
+        $description = wpautop(' <span><a href="' . $event->get_permalink() . '">' . $eventName . '</a></span>
+                                 <p>Webinar Link - ' . $webinar_link . '</p>' .
+                                 $schedule .
+                                 $materials);
 
         // finally, let's create a corresponding buddyboss group for the event
         $groupArgs = array(
@@ -86,8 +86,7 @@ function update_entry_status($entry_id, $status) {
         $pathinfo = pathinfo($file);
 
         $uploads = wp_get_upload_dir();
-        $uploadDir = $uploads['basedir'];
-        //error_log('$group_id=' . $group_id);
+        $uploadDir = $uploads['basedir'];        
 
         //make the necessary directories to place the images in        
         wp_mkdir_p($uploadDir . '/group-avatars/' . $group_id . '/');
@@ -122,31 +121,7 @@ function update_entry_status($entry_id, $status) {
         // assign community membership
         $result = ihc_do_complete_level_assign_from_ap($userID, 14, 0, 0);      
         
-        //assign notifications to event
-        $eMtemplate = EE_Event_Message_Template::new_instance(
-                    array('EVT_ID' => $event_id,
-                          'EMT_ID' => 20
-        ));
-        $eMtemplate->save();            
-        error_log(print_r($eMtemplate,TRUE));
-        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
-        $eMtemplate = EE_Event_Message_Template::new_instance(
-                    array('EVT_ID' => $event_id,
-                          'EMT_ID' => 21
-        ));
-        $eMtemplate->save();            
-        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
-        $eMtemplate = EE_Event_Message_Template::new_instance(
-                    array('EVT_ID' => $event_id,
-                          'EMT_ID' => 22
-        ));
-        $eMtemplate->save();            
-        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
-        $eMtemplate = EE_Event_Message_Template::new_instance(
-                    array('EVT_ID' => $event_id,
-                          'EMT_ID' => 23
-        ));
-        $eMtemplate->save();            
-        $event->_add_relation_to($eMtemplate, 'Event_Message_Template'); //link the question group
+        //assign notifications to event                     
+        $event->_add_relation_to(15, 'Message_Template_Group');        
     }
 }
