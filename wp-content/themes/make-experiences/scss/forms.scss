@@ -655,3 +655,14 @@
 .tingle-btn:hover {
 	color: $color-light-grey;
 }
+
+// Register page
+.page-register .entry-content { 
+	text-align: center; 
+	.ihc-register-notice, #ihc_coupon_code_check_div_msg {
+		background: $color-red;
+		font-size: 16px;
+		font-weight: 500;
+		max-width: 300px;
+	}
+}
