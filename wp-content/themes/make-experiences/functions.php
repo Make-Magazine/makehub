@@ -242,4 +242,17 @@ function add_slug_body_class($classes) {
 }
 
 add_filter('body_class', 'add_slug_body_class');
+
+function bb_group_redirect(){
+	/** Detect if author archive is being requested  and redirect to bp user profile page */
+	if(preg_match('/^\/groups\/[0-9]*\/$/', $_SERVER['REQUEST_URI'])) {  
+		$path = $_SERVER['REQUEST_URI'];
+		$path_array = array_filter(explode('/',$link));
+		$group = groups_get_group( array( 'group_id' => end($path_array) ) );
+		$slug = $group->slug;
+		wp_redirect( (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/groups/" . $slug );
+		exit();
+	}
+}
+add_action( 'template_redirect', 'bb_group_redirect' );
 ?>
