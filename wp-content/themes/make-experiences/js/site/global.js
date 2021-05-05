@@ -5,7 +5,11 @@ function isValidEmailAddress(emailAddress) {
 
 jQuery(document).ready(function () {
 	jQuery('.signin-button').attr("href", function(i, href) {
-		return href + '?redirect_to=' + window.location.href;
+		if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to their dashboard
+			return href + '?redirect_to=' + window.location.protocol + "//" + window.location.host + "/members/me/";
+		} else { // otherwise send them to where they logged in from
+			return href + '?redirect_to=' + window.location.href;
+		}
 	});
 });
 
