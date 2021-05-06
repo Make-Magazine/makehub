@@ -69,7 +69,7 @@ function make_widget_rss_output($rss, $args = array()) {
     foreach ($feedItems as $item) {
         //exclude events that have already occured
         $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);
-		echo($date1->format('M j, Y') . " " . $dateString->format('M j, Y'));
+	echo($date1->format('M j, Y') . " " . $dateString->format('M j, Y'));
         if(date_timestamp_get($date1) > date_timestamp_get($dateString)){
             continue; //(skip this record);
         }
