@@ -69,7 +69,7 @@ get_header();
 									foreach ( $event as $evt ) {
 										$date = $evt->first_datetime(); 
 										$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
-										$startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
+										$startime = date('F j, Y', strtotime($date->start_date())) . " @ " . date('g:i a', strtotime($date->start_time()));;
 										$endime = date('g:i a', strtotime($date->end_time()));
 
 										$return = '<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>

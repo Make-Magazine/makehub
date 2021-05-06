@@ -34,7 +34,7 @@ get_header();
 						$dateFormat = date('D <\b/>j<\/b/>', strtotime($date->start_date()));
 						$startmonth = date('F', strtotime($date->start_date()));
 						$startday = date('j', strtotime($date->start_date()));
-						$startime = date('F j, Y @ g:i a', strtotime($date->start_date()));
+						$startime = date('F j, Y', strtotime($date->start_date())) . " @ " . date('g:i a', strtotime($date->start_time()));;
 						$endtime = date('g:i a', strtotime($date->end_time()));
 						
 						$date_count = count(EEM_Datetime::instance()->get_all_event_dates( $event->ID() ));
