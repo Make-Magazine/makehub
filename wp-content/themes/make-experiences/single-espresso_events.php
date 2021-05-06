@@ -39,7 +39,7 @@ get_header();
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
         <p class="events-back">
-            <a class="universal-btn" href="/maker-campus"> « All Events</a>
+            <a class="btn" href="/maker-campus"> « All Events</a>
         </p>
         <h1 class="entry-title"><?php echo( get_the_title() . espresso_event_status_banner() ); ?></h1>
             <?php if (has_post_thumbnail()) { ?>

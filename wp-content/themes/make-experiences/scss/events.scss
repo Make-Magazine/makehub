@@ -273,8 +273,12 @@
 .events-back {
 	position: relative;
     margin-bottom: -20px;
-    top: -30px;
+    top: -20px;
     left: -30px;
+	a.btn { 
+		font-size: 2em;
+		font-weight: bold;
+	}
 	@media screen and (max-width: 768px) {
 		left: -20px;
 	}
@@ -318,6 +322,11 @@
 }
 
 // Event Statuses
+.ee-status { 
+	position: absolute;
+	right: 0px;
+	top: -15px;
+}
 .ee-status.event-active-status-DTS { background-color: $color-grey; } // sold out
 .ee-status.event-active-status-DTA { background-color: $color-light-blue; } // active
 .ee-status.event-active-status-DTU { background-color: $color-light-blue; } // upcoming
