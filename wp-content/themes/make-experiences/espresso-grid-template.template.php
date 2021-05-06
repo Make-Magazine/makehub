@@ -102,6 +102,7 @@ if ( have_posts() ) :
 			<?php
 			}
 		endwhile; ?>
+			<a href="/submit-event" class="btn universal-btn submit-event-btn">Submit Your Program</a>
 		</div>
 		<div class="events-grid-sidebar">
 			<?php echo do_shortcode('[products columns="1" orderby="popularity" class="experiences" category="experiences"]'); ?>

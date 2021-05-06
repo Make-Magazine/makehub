@@ -7,6 +7,15 @@
 }
 
 .content-area .espresso-grid-wrapper {
+	display: flex;
+	justify-content: space-between;
+	.submit-event-btn {
+		width: 100%;
+		align-self: flex-end;
+		@media screen and ( max-width: 768px ) {
+			margin-bottom: 30px;
+		}
+	}
 	.espresso-grid-revised {
 		display: flex;
 		flex-wrap: wrap;
