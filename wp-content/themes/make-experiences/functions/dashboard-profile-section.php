@@ -48,6 +48,21 @@ function dashboard_info_content() {
     $user_meta = get_user_meta($user_id);
 
     $return = '<div class="dashboard-wrapper">';
+	
+	////////////////////////////////////////
+    //       Membership Card Widget       //
+    ////////////////////////////////////////
+
+    if (isset($user_meta['ihc_user_levels'][0])) {
+        $return .= '<div class="dashboard-box expando-box">
+			<h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
+			<ul class="open">';
+        $return .= '        <li>' . do_shortcode("[ihc-membership-card]") . '</li>';
+        //$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
+        $return .= '        <li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
+        $return .= '    </ul>
+                    </div>';
+    }
 
     //////////////////////////////////////
     //     Maker Shed Orders widget     //
@@ -180,7 +195,7 @@ function dashboard_info_content() {
     }*/
 
     ////////////////////////////////////////
-    //       Makerspace Card Widget       //
+    //       Makerspace List Widget       //
     ////////////////////////////////////////
 
     $sql = 'SELECT meta_key, meta_value from wp_3_gf_entry_meta '
@@ -200,20 +215,6 @@ function dashboard_info_content() {
                 </div>';
     }
 
-    ////////////////////////////////////////
-    //       Membership Card Widget       //
-    ////////////////////////////////////////
-
-    if (isset($user_meta['ihc_user_levels'][0])) {
-        $return .= '<div class="dashboard-box expando-box">
-			<h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/make-logo.png" /> Membership Details</h4>
-			<ul class="open">';
-        $return .= '        <li>' . do_shortcode("[ihc-membership-card]") . '</li>';
-        //$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
-        $return .= '        <li><a href="/members/' . $user_slug . '/membership/" class="btn universal-btn">See More Details</a></li>';
-        $return .= '    </ul>
-                    </div>';
-    }
 
     ///////////////////////////////////////////////
     //       Event Espresso Tickets Widget       //
@@ -247,7 +248,7 @@ function dashboard_info_content() {
     );
     if (!empty($hosted_events)) {
         $return .= '<div class="dashboard-box expando-box">
-                        <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Events</h4>
+                        <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" /> Facilitator</h4>
                         <ul class="open">';
         foreach ($hosted_events as $event) {
             $return .= '    <li><b>' . $event->name() . '</b> - <a href="' . $event->get_permalink() . '">View</a></li>';

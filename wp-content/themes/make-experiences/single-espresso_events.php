@@ -259,7 +259,7 @@ get_header();
                                             foreach ($dates as $date) {
                                                 ?>
                                                 <li>
-                                                <?php echo $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+                                                <?php echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
                                                 </li>
     <?php } ?>                                    
                                         </ul>

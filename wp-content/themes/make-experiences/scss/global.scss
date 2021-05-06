@@ -162,6 +162,9 @@ button, input[type="submit"] {
 		text-align: center;
 		a {
 			min-height: 55px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
 			.essb_icon, .essb_counter_bottom {
 				line-height: .1em;
 			}

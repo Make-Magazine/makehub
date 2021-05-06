@@ -2,9 +2,6 @@
 // Options
 $date_format = get_option( 'date_format' );
 $time_format = get_option( 'time_format' );
-$temp_month = '';
-$reg_button_text = !isset($button_text) ? __('Register Now!', 'event_espresso') : $button_text;
-$alt_button_text = !isset($alt_button_text) ? __('View Details', 'event_espresso') : $alt_button_text;//For alternate registration pages
 
 if ( have_posts() ) :
 	// allow other stuff
@@ -24,7 +21,6 @@ if ( have_posts() ) :
 
 			//Create the event link
 			$external_url 		= $post->EE_Event->external_url();
-			$button_text		= !empty($external_url) ? $alt_button_text : $reg_button_text;
 			$registration_url 	= !empty($external_url) ? $post->EE_Event->external_url() : $post->EE_Event->get_permalink();
 			$feature_image_url	= $post->EE_Event->feature_image_url('grid-cropped');
 
@@ -59,11 +55,9 @@ if ( have_posts() ) :
 				$timerange = $datetime->time_range('g:i a');
 			?>
 
-			<div class="ee_grid_box_revised item">
+			<a href="<?php echo $registration_url; ?>" class="ee_grid_box_revised item">
 				<div class="event-image-wrapper">
-					<a href="<?php echo $registration_url; ?>">
-						<img src="<?php echo $image; ?>" alt="" />
-					</a>
+					<img src="<?php echo $image; ?>" alt="" />
 				</div>
 				<div onclick="" class="event-info">
 					<div class="event-date">
@@ -74,9 +68,7 @@ if ( have_posts() ) :
 					</div>
 					<div class="event-details">
 						<h3 class="event-title title">
-							<a href="<?php echo $registration_url; ?>">
-								<?php echo $post->post_title; ?>
-							</a>
+							<?php echo $post->post_title; ?>
 						</h3>
 						<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
 								<div class="event-time-desc">
@@ -103,10 +95,9 @@ if ( have_posts() ) :
 				</div>
 				
 				<div class="event-purchase">
-					<?php echo '<a class="btn universal-btn" id="a_register_link-' . $post->ID .'" href="' . $registration_url . '">' . $button_text . '</a>'; ?>
 					<p class="price"><?php echo event_ticket_prices($event); ?></p>
 				</div>
-			</div>
+			</a>
 
 			<?php
 			}
