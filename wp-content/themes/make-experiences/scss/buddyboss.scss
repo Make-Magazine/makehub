@@ -101,7 +101,23 @@
     }
 }
 
-// Members page
+// Profile pages
+.profile.buddypress {
+	.buddypress-wrap#buddypress {
+		.member-header-actions {
+			.generic-button a {
+				border-radius: 2px;
+			}
+		}
+	}
+}
+
+// Makerspace dir Page
+.page-members-type-makerspaces {
+	h1.entry-title::after {
+		content: ": Makerspaces";
+	}
+}
 .directory {
 	.dir-list {
 		.grid.bp-list > li {
@@ -135,12 +151,6 @@
 	}
 }
 
-// Makerspace dir Page
-.page-members-type-makerspaces {
-	h1.entry-title::after {
-		content: ": Makerspaces";
-	}
-}
 
 // nobody needs to know when I was last on the notification page
 .member-request-list-wrap .last-activity { display: none; }
