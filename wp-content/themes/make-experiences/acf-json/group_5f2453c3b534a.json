@@ -1121,11 +1121,11 @@
             "new_lines": ""
         },
         {
-            "key": "field_60833c428d7a6",
+            "key": "field_6093312293c23",
             "label": "Group ID",
             "name": "group_id",
-            "type": "number",
-            "instructions": "The group id assigned to this event",
+            "type": "text",
+            "instructions": "",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -1137,9 +1137,7 @@
             "placeholder": "",
             "prepend": "",
             "append": "",
-            "min": "",
-            "max": "",
-            "step": ""
+            "maxlength": ""
         }
     ],
     "location": [
@@ -1159,5 +1157,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1619213401
+    "modified": 1620259163
 }
