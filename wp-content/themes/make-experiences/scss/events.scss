@@ -105,6 +105,13 @@
 	.entry-content {
 		.event-datetimes {
 			text-align: center;
+			h2 { font-weight: normal; }
+			.event-time-desc {
+				a { 
+					display: block;
+					margin-bottom: 20px; 
+				}
+			}
 			.ee-event-datetimes-ul {
 				list-style: none;
 				display: flex;
@@ -234,19 +241,12 @@
 							display: block;
 							margin-bottom: 15px;
 							.ticket-detail {
-								margin-left: 15px;
 								margin-top: 5px;
 								.ticket-detail-name {
-									b { 
-										text-decoration: underline;
-										margin-right: 5px;
-									}
+									b { text-decoration: underline; }
 									.tickets-remaining { color: $color-red; }
 								}
-								ul { 
-									margin-left: 10px;
-									margin-bottom: 5px; 
-								}
+								ul { margin-bottom: 5px; }
 							}
 						}
 					}
@@ -325,7 +325,7 @@
 .ee-status { 
 	position: absolute;
 	right: 0px;
-	top: -15px;
+	top: -20px;
 }
 .ee-status.event-active-status-DTS { background-color: $color-grey; } // sold out
 .ee-status.event-active-status-DTA { background-color: $color-light-blue; } // active

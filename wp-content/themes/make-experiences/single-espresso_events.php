@@ -84,7 +84,7 @@ get_header();
                         if ($ticket_count == 1) {
                             $eventDetails .= '<div class="event-time-desc"><h2>' . $date_count . ' sessions starting on  ' . $startmonth . " " . $startday . '</h2></div>';
                         } else {
-                            $eventDetails = '<div class="event-time-desc"><h2>Schedules Vary</h2> See Details section for more information.</div>';
+                            $eventDetails = '<div class="event-time-desc"><h2>Schedules Vary</h2><a href="#event-details">See Details section for more information.</a></div>';
                         }
                     }else{
                         $eventDetails .= '<div class="event-date"><h2>' . $startmonth. ' '. $startday.', '.$startyear.' @ '.$timerange . ' Pacific</h2></div>';
@@ -239,7 +239,7 @@ get_header();
                             <h3>Tickets</h3>
                             <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
                         </div>
-                        <div class="event-sidebar-item">
+                        <div class="event-sidebar-item" id="event-details">
                             <h3>Details</h3>                            
                             <div class="event-sidebar-field event-date">
                                 <b>Dates:</b>

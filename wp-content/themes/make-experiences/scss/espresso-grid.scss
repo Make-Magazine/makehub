@@ -59,20 +59,19 @@
 				.event-date {
 					float: left;
 					margin-right: 15px;
+					color: $color-light-blue;
 					.event-start-month, .event-start-day {
 						display: block;
 					}
 					.event-start-month {
 						font-weight: bold;
 						text-transform: uppercase;
-						color: $color-red;
 					}
 					.event-start-day {
 						font-size: 24px;
 						line-height: 1;
 						font-family: "Roboto Bold";
 						text-align: center;
-						color: $color-light-blue;
 					}
 				}
 				.event-details {
