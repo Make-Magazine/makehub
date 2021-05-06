@@ -2,4 +2,9 @@
 	.woocommerce-breadcrumb {
 		display: none;
 	}
+	
+}
+
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce form button.button, .paypal-button.paypal-button-shape-rect {
+	border-radius: 2px !important;
 }

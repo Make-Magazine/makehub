@@ -1,3 +1,11 @@
+.page-maker-campus {
+	h1 {
+		@media screen and (min-width: 768px) {
+			margin-left: -14%;
+		}
+	}
+}
+
 .content-area .espresso-grid-wrapper {
 	.espresso-grid-revised {
 		display: flex;
@@ -47,6 +55,7 @@
 			.event-info {
 				display: flex;
 				color: #000;
+				line-height: 20px;
 				.event-date {
 					float: left;
 					margin-right: 15px;
@@ -56,12 +65,14 @@
 					.event-start-month {
 						font-weight: bold;
 						text-transform: uppercase;
+						color: $color-red;
 					}
 					.event-start-day {
 						font-size: 24px;
-						line-height: 1.42;
+						line-height: 1;
 						font-family: "Roboto Bold";
 						text-align: center;
+						color: $color-light-blue;
 					}
 				}
 				.event-details {
