@@ -48,26 +48,15 @@ function update_entry_status($entry_id, $status) {
         /*
          * link to event listing at least (so registrants can help promote)
          * Basic event information - dates, times
-         */
-        $materials = getFieldByParam('materials', $parameter_array, $entry); //materials
-
+         */        
         $webinar_link = getFieldByParam('webinar_link', $parameter_array, $entry);
         if ($webinar_link == '')
             $webinar_link = 'Coming Soon';
 
-        $schedule = '<ul>';
-        $dates = $event->datetimes_in_chronological_order();
-        foreach ($dates as $date) {
-            $schedule .= '<li>' . $date->start_date() . ' ' . $date->start_time() . ' - ' . $date->end_time() . ' <span class="small">(Pacific)</span></li>';
-        }
-        $schedule .= '</ul>';
-
-        //please keep this with the physical line breaks. for some reason html gets stripped from parts of this.
-        //use wpautop
+        
+        //Add Event Link and webinar link to the description of the event
         $description = wpautop(' <span><a href="' . $event->get_permalink() . '">' . $eventName . '</a></span>
-                                 <p>Webinar Link - ' . $webinar_link . '</p>' .
-                                 $schedule .
-                                 $materials);
+                                 <p>Webinar Link - ' . $webinar_link . '</p>');
 
         // finally, let's create a corresponding buddyboss group for the event
         $groupArgs = array(
@@ -80,7 +69,8 @@ function update_entry_status($entry_id, $status) {
             'date_created' => bp_core_current_time()
         );
         $group_id = groups_create_group($groupArgs);
-
+        bp_groups_set_group_type($group_id,'maker-campus');
+        
         //set the group image
         $file = get_the_post_thumbnail_url($event_id, 'full');
         $pathinfo = pathinfo($file);
