@@ -49,7 +49,6 @@ if ( $people ) :
 							<?php 
 								$social_links = get_field('social_links', $person->ID());
 								if($social_links) { ?>
-									<br />
 									<b>Follow them at: </b>
 									<span class="social-links">
 									<?php foreach ($social_links as $link) {

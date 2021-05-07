@@ -67,10 +67,10 @@ if ( have_posts() ) :
 						</time>
 					</div>
 					<div class="event-details">
-						<h3 class="event-title title" style="font-weight:normal;">
+						<h3 class="event-title title">
 							<?php echo $post->post_title; ?>
 						</h3>
-						<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
+						<?php /* if(get_field('custom_schedule_details', $post->ID)) { ?>
 								<div class="event-time-desc">
 									<?php echo get_field('custom_schedule_details', $post->ID); ?>
 								</div>
@@ -86,17 +86,17 @@ if ( have_posts() ) :
 										<div class="event-time-desc">Schedules Vary</div>
 							<?php 	}
 								  } 
-							   }  ?>
+							   }  */ ?>
 						<!--<div class="event-time">
-							<?php echo $timerange; ?> Pacific
+							<?php //echo $timerange; ?> Pacific
 						</div>-->
 						
 					</div>
 				</div>
 				
-				<div class="event-purchase">
-				<!--	<p class="price"><?php //echo event_ticket_prices($event); ?></p>-->
-				</div>
+				<!-- <div class="event-purchase">
+				   <p class="price"><?php //echo event_ticket_prices($event); ?></p>
+				</div>-->
 			</a>
 
 			<?php

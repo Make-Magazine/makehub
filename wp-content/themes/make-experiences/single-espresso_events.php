@@ -300,7 +300,7 @@ get_header();
                                     </div>
                                 </div>
 <?php } ?>
-                            Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+                            Have questions or comments? email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
                             <br /><br />
                         </div>
                         <?php
@@ -324,7 +324,7 @@ get_header();
                 </div>
             </div>
         </div>
-        Have questions or comments – email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
+        Have questions or comments? email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
     </main><!-- #main -->
 </div><!-- #primary -->
 

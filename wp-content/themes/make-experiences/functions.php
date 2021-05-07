@@ -255,4 +255,23 @@ function bb_group_redirect(){
 	}
 }
 add_action( 'template_redirect', 'bb_group_redirect' );
+
+/*
+* Override any of the translation files if we need to change language
+*
+* @param $translation The current translation
+* @param $text The text being translated
+* @param $domain The domain for the translation
+* @return string The translated / filtered text.
+*/
+function filter_gettext($translation, $text, $domain) {
+	$translations = get_translations_for_domain( $_SERVER['HTTP_HOST'] );
+	switch($text){
+	case 'Nickname':
+		return $translations->translate( 'Display Name' );
+		break;
+	}
+	return $translation;
+}
+add_filter('gettext', 'filter_gettext', 10, 4);
 ?>
