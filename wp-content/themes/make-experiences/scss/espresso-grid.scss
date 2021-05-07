@@ -17,6 +17,9 @@
 		@media screen and ( max-width: 768px ) {
 			margin-bottom: 30px;
 		}
+		@media screen and ( min-width: 600px ) {
+			display: none;
+		}
 	}
 	.espresso-grid-revised {
 		display: flex;
@@ -68,19 +71,22 @@
 				.event-date {
 					float: left;
 					margin-right: 15px;
-					color: $color-light-blue;
+					margin-top: -2px;
+					
 					.event-start-month, .event-start-day {
 						display: block;
 					}
 					.event-start-month {
 						font-weight: bold;
 						text-transform: uppercase;
+						color: $color-red;
 					}
 					.event-start-day {
 						font-size: 24px;
 						line-height: 1;
 						font-family: "Roboto Bold";
 						text-align: center;
+						color: $color-light-blue;
 					}
 				}
 				.event-details {
@@ -88,6 +94,7 @@
 						margin-top: -2px;
 						line-height: 1.1em;
 						font-size: 18px;
+						font-weight: normal;
 					}
 					.event-time-desc, .event-time {
 						margin-bottom: 5px;
