@@ -14,7 +14,6 @@ function remove_profile_nav() {
     global $bp;
     bp_core_remove_nav_item('blog');
 }
-
 add_action('bp_init', 'remove_profile_nav');
 
 // for logged in users, change the default tab to their dashboard page
@@ -31,12 +30,9 @@ function bp_set_dashboard_for_me() {
         }
     }
 }
-
 add_action('bp_setup_globals', 'bp_set_dashboard_for_me');
 
-
 add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
-
 function ad_filter_menu($sorted_menu_objects, $args) {
     //check if current user is a facilitator
     global $current_user;
@@ -44,7 +40,7 @@ function ad_filter_menu($sorted_menu_objects, $args) {
     $userEmail = (string) $current_user->user_email;
 
     $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-
+	
     //if they are not a facilitator, remove the facilitator portal from the drop down
     if ($args->menu->slug == 'profile-dropdown' && !$person) {
         foreach ($sorted_menu_objects as $key => $menu_object) {
@@ -55,12 +51,13 @@ function ad_filter_menu($sorted_menu_objects, $args) {
                 break;
             }
         }
+		global $bp;
+		bp_core_remove_nav_item('facilitator-portal');
     }
     return $sorted_menu_objects;
 }
 
 add_action('bp_init', 'setup_group_nav');
-
 //add tabs to the group nav for schedule and materials
 function setup_group_nav() {
     global $bp;
