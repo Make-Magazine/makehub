@@ -30,7 +30,7 @@
 
 <?php if(strpos($_SERVER['REQUEST_URI'], "maker-campus")) { ?>
 	<a href="/submit-event" id="makey-sign" target="blank">
-		<img src="/wp-content/themes/make-campus/images/submit-program-makey.png" alt />
+		<img src="/wp-content/themes/make-experiences/images/submit-program-makey.png" alt />
 	</a>
 <?php } ?>
 
