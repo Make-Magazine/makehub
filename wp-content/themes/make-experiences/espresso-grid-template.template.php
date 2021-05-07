@@ -67,7 +67,7 @@ if ( have_posts() ) :
 						</time>
 					</div>
 					<div class="event-details">
-						<h3 class="event-title title">
+						<h3 class="event-title title" style="font-weight:normal;">
 							<?php echo $post->post_title; ?>
 						</h3>
 						<?php if(get_field('custom_schedule_details', $post->ID)) { ?>
@@ -87,15 +87,15 @@ if ( have_posts() ) :
 							<?php 	}
 								  } 
 							   }  ?>
-						<div class="event-time">
+						<!--<div class="event-time">
 							<?php echo $timerange; ?> Pacific
-						</div>
+						</div>-->
 						
 					</div>
 				</div>
 				
 				<div class="event-purchase">
-					<p class="price"><?php echo event_ticket_prices($event); ?></p>
+				<!--	<p class="price"><?php //echo event_ticket_prices($event); ?></p>-->
 				</div>
 			</a>
 
