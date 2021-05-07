@@ -2519,7 +2519,6 @@ function InitializeFields(){
 			jQuery( '.field_selected' ).removeClass( 'field_selected' );
 			jQuery( this ).addClass( 'field_hover' );
 			jQuery( this ).addClass( 'field_selected' );
-			ShowSettings( this );
 		}
 	).on( 'keypress', this, function ( event ) {
 		var key = event.which;
@@ -2580,6 +2579,8 @@ function FieldClick( field ) {
 		$fieldSettingsContainer.data( 'active-field-class', fieldClass );
 		$fieldSettingsContainer.addClass( fieldClass );
 	}
+
+	ShowSettings( field );
 }
 
 function ShowSettings( element ) {

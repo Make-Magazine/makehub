@@ -307,7 +307,7 @@ function learndash_elementor_activity_start_step( $user_id = 0, $step_id = 0, $c
  * @return string Materials content.
  */
 function learndash_elementor_add_step_material_content( $content = '', $select_type = '', $user_id = 0, $step_id = 0, $course_id = 0 ) {
-	if ( ( ! empty( $user_id ) ) && ( ! empty( $step_id ) ) ) {
+	if ( /* ( ! empty( $user_id ) ) && */ ( ! empty( $step_id ) ) ) {
 		$select_type = esc_attr( $select_type );
 		$user_id     = absint( $user_id );
 		$course_id   = absint( $course_id );
@@ -357,7 +357,7 @@ function learndash_elementor_add_step_material_content( $content = '', $select_t
 function learndash_elementor_get_step_material( $user_id = 0, $step_id = 0 ) {
 	$materials = '';
 
-	if ( ( ! empty( $user_id ) ) && ( ! empty( $step_id ) ) ) {
+	if ( /* ( ! empty( $user_id ) ) && */ ( ! empty( $step_id ) ) ) {
 		$user_id = absint( $user_id );
 		$step_id = absint( $step_id );
 
@@ -398,7 +398,7 @@ function learndash_elementor_user_step_access_state( $state = '', $user_id = 0, 
 
 	$state_value = '';
 
-	if ( ( ! empty( $state ) ) && ( ! empty( $user_id ) ) && ( ! empty( $step_id ) ) && ( ! empty( $course_id ) ) ) {
+	if ( ( ! empty( $state ) ) /* && ( ! empty( $user_id ) ) */ && ( ! empty( $step_id ) ) && ( ! empty( $course_id ) ) ) {
 		$state     = esc_attr( $state );
 		$user_id   = absint( $user_id );
 		$step_id   = absint( $step_id );
@@ -418,13 +418,14 @@ function learndash_elementor_user_step_access_state( $state = '', $user_id = 0, 
 				}
 
 				$bypass_course_limits = learndash_elementor_bypass_course_limits( $user_id, $step_id, $course_id );
+				$is_sample            = learndash_is_sample( $step_id );
 
 				$step_state                 = array();
 				$lesson_progression_enabled = learndash_lesson_progression_enabled( $course_id );
 				if ( $lesson_progression_enabled ) {
 					switch ( get_post_type( $step_id ) ) {
 						case learndash_get_post_type_slug( 'topic' ):
-							if ( ! $bypass_course_limits ) {
+							if ( ( ! $bypass_course_limits ) && ( ! $is_sample ) ) {
 								$lesson_id   = learndash_course_get_single_parent_step( $course_id, $step_id );
 								$lesson_post = get_post( $lesson_id );
 
@@ -441,13 +442,19 @@ function learndash_elementor_user_step_access_state( $state = '', $user_id = 0, 
 							break;
 
 						case learndash_get_post_type_slug( 'lesson' ):
-							$step_state['previous_lesson_completed'] = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $step_post ), $step_id, $user_id );
-							$step_state['show_content']              = $step_state['previous_lesson_completed'];
+							if ( ( ! $bypass_course_limits ) && ( ! $is_sample ) ) {
+								$step_state['previous_lesson_completed'] = apply_filters( 'learndash_previous_step_completed', is_previous_complete( $step_post ), $step_id, $user_id );
+								$step_state['show_content']              = $step_state['previous_lesson_completed'];
+							} else {
+								$step_state['previous_lesson_completed'] = true;
+								$step_state['show_content']              = $step_state['previous_lesson_completed'];
+							}
+
 							break;
 
 						case learndash_get_post_type_slug( 'quiz' ):
 							$last_incomplete_step = is_quiz_accessable( null, $step_post, true, $course_id );
-							if ( is_a( $last_incomplete_step, 'WP_Post' ) ) {
+							if ( ( is_a( $last_incomplete_step, 'WP_Post' ) ) && ( ! $is_sample ) ) {
 								$step_state['show_content'] = false;
 							} else {
 								$step_state['show_content'] = true;

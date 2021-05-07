@@ -44,7 +44,7 @@ class LearnDash_Elementor_Widget_Quiz_List extends LearnDash_Elementor_Widget_Ba
 			'orderby'        => 'orderby',
 
 			'course_grid'    => 'course_grid',
-			'progress_bar'   => 'progress_bar',
+			//'progress_bar'   => 'progress_bar',
 			'col'            => 'col',
 
 			'ld_quiz_cat_id' => 'quiz_cat',
@@ -197,7 +197,7 @@ class LearnDash_Elementor_Widget_Quiz_List extends LearnDash_Elementor_Widget_Ba
 					'default' => '',
 				)
 			);
-
+			/*
 			$this->add_control(
 				'progress_bar',
 				array(
@@ -206,7 +206,7 @@ class LearnDash_Elementor_Widget_Quiz_List extends LearnDash_Elementor_Widget_Ba
 					'default' => '',
 				)
 			);
-
+			*/
 			$this->add_control(
 				'col',
 				array(
@@ -445,7 +445,7 @@ class LearnDash_Elementor_Widget_Quiz_List extends LearnDash_Elementor_Widget_Ba
 				case 'quizc_categoryselector':
 				case 'categoryselector':
 				case 'course_grid':
-				case 'progress_bar':
+				//case 'progress_bar':
 					if ( 'yes' === $val ) {
 						$val = 'true';
 					} else {

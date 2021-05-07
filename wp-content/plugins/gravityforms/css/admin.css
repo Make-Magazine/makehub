@@ -7589,13 +7589,17 @@ tr.gf-locking.wp-locked img.gform_active_icon {
 	font-weight: bold;
 	letter-spacing: 0.65px;
 	line-height: 1.1rem;
-	padding: 20px 0;
+	padding: 1.25rem 0;
 	text-align: center;
 }
 
+.gf-pagebreak-first {
+	padding: 0 0 2.5rem 0;
+}
+
 .gf-pagebreak-first, .gf-pagebreak-end {
-	padding-left: 4rem;
-	padding-right: 4rem;
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
 .gf-pagebreak::before, .gf-pagebreak::after {

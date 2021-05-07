@@ -1,3 +1,13 @@
+### 2.5.0.2
+- Fixed an issue which prevents certain add-ons from displaying Plugin Settings fields.
+- Fixed an issue which prevents non-admin users from accessing Form Settings when no add-ons are enabled.
+
+
+### 2.5.0.1
+- Fixed an issue that causes certain fields to not trigger the settings tab to open in the form editor.
+- Fixed an issue that causes the page break end settings to not be visible in the form editor.
+
+
 ### 2.5 | 2021-04-27
 - Added security enhancements.
 - Added support for dragging and dropping fields into columns in the form editor.
@@ -17,7 +27,7 @@
 - Added accessibility enhancements for the Post Tags field.
 - Added alternative text to the Post Image field.
 - Added the accessibility warning when "Enhanced User Interface" is enabled.
-- Added a fall back for an empty label for better accessibility. The placeholder or description can be used when no field label is set.
+- Added a fall back for an empty label for better accessibility. The placeholder or description can be used as label text when no field label is set.
 - Added a form setting to control the display of a validation summary at the top of the form for greater accessibility where appropriate. Each validation error links to the respective field.
 - Added a form setting to control the required field indicator. The default is set to the word "Required" for better accessibility.
 - Added a message to the top of the form to explain the meaning of the required fields indicator. This is not displayed when the indicator is set to "Required".
