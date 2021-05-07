@@ -124,15 +124,27 @@
 			>.ee-button {
 				float: left;
 				min-width: 390px;
+				background-color: $color-blue;
+				border-color: $color-blue !important;
+				&:hover {
+					background-color: #fff;
+					color: $color-blue;
+				}
 			}
 			.jst-rght {
 				margin-top: -25px;
+				.ee-button {
+					margin-top: 0px;
+				}
 			}
 			@media screen and (max-width: 1020px) {
 				>.ee-button, .jst-rght .ee-button{
 					min-width: 100%;
 					float: none;
 					text-align: center;
+				}
+				.jst-right {
+					margin-top: 0px;
 				}
 			}
 		}
