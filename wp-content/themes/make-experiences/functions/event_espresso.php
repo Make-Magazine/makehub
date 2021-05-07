@@ -183,3 +183,9 @@ function confirmation_page_text($order_conf_desc){
     $order_conf_desc .=   (is_user_logged_in()?'<a class="ee-button ee-roundish indented-text big-text" href="/my/groups/">View Event Group</a>':'');
     return $order_conf_desc;
 }
+
+add_filter('FHEE__EED_Multi_Event_Registration__return_to_events_list_btn_txt','change_return_to_event_text',1);
+function change_return_to_event_text($text){
+    $text = 'Return to Event';
+    return $text;
+}
