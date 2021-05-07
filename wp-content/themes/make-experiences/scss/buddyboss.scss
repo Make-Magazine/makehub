@@ -102,7 +102,12 @@
 }
 
 // Profile pages
-.profile.buddypress {
+.profile.buddypress, .my-account.buddypress {
+	.item-header-wrap {
+		.item-meta {
+			.separator, .activity { display: none; }
+		}
+	}
 	.buddypress-wrap#buddypress {
 		.member-header-actions {
 			.generic-button a {
