@@ -38,13 +38,17 @@ if ( have_posts() ) :
 			if ($event instanceof EE_Event) {
 				$tickets = $event->tickets();
 			}		
-			$ticket_count = count($tickets);
+			$tickets_expired = array();
 
 			$datetime = end( $datetimes );
 			
-			// if the first date of event has passed and it's a multiday event with one ticket, skip this item in the loop
-			$firstExpiredDate = EEM_Datetime::instance()->get_oldest_datetime_for_event( $post->ID, true, false, 1 )->get_i18n_datetime('DTT_EVT_start');
-			if(strtotime($firstExpiredDate) < time() && $ticket_count == 1 ) {
+			// check how many tickets have expired. if that is equal to the total tickets, skip that event
+			foreach($tickets as $ticket) {
+				if($ticket->ticket_status() == "TKE") {
+					$tickets_expired[] = "TKE";
+				}
+			}
+			if(count($tickets) == count($tickets_expired)) {
 				continue;
 			}
 			
