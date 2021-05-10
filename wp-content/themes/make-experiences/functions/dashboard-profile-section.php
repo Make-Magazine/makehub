@@ -214,25 +214,7 @@ function dashboard_info_content() {
         $return .= '</ul>
                 </div>';
     }
-
-
-    ///////////////////////////////////////////////
-    //       Event Espresso Tickets Widget       //
-    //  List all tickets purchased by this user  //
-    ///////////////////////////////////////////////    
     
-    //if this individual is an attenddee   
-    $where = array('ATT_email' => $user_email);
-    $attendee = EEM_Attendee::instance()->get_all(array($where));    
-    if($attendee && shortcode_exists('ESPRESSO_MY_EVENTS')){            
-        $return .= '<div class="dashboard-box expando-box">
-                            <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
-                .  '    <ul class="open">';
-        $return .=          '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title=“My Super Event List”]') . '</li>';
-        $return .= '    </ul>';
-        $return .= '</div>';
-    }
-      
     ///////////////////////////////////////////////
     //       Event Espresso Events Widget        //
     //  List all events submitted by this user   //
@@ -257,6 +239,25 @@ function dashboard_info_content() {
 			</ul>
                     </div>';
     }
+    
+    ///////////////////////////////////////////////
+    //       Event Espresso Tickets Widget       //
+    //  List all tickets purchased by this user  //
+    ///////////////////////////////////////////////    
+    
+    //if this individual is an attenddee   
+    $where = array('ATT_email' => $user_email);
+    $attendee = EEM_Attendee::instance()->get_all(array($where));    
+    if($attendee && shortcode_exists('ESPRESSO_MY_EVENTS')){            
+        $return .= '<div class="dashboard-box expando-box" style="width:100%">
+                            <h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/makercampus-logo.jpg" />Tickets</h4>'
+                .  '    <ul class="open">';
+        $return .=          '<li>' . do_shortcode('[ESPRESSO_MY_EVENTS title=“My Super Event List”]') . '</li>';
+        $return .= '    </ul>';
+        $return .= '</div>';
+    }
+      
+    
 
     $return .= "</div>"; // End .dashboard-wrapper
 

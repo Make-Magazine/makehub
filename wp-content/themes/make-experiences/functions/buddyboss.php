@@ -51,8 +51,8 @@ function ad_filter_menu($sorted_menu_objects, $args) {
                 break;
             }
         }
-		global $bp;
-		bp_core_remove_nav_item('facilitator-portal');
+        global $bp;
+        bp_core_remove_nav_item('facilitator-portal');
     }
     return $sorted_menu_objects;
 }
