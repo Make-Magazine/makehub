@@ -157,7 +157,10 @@ function attendee_approved( $registration) {
         //generate random password, create user, send email        
         $random_password = wp_generate_password( 12, false );
         $user_id = wp_create_user( $username, $random_password, $attendeeEmail );
-        wp_new_user_notification( $user_id, $random_password);
+        wp_new_user_notification( $user_id, '','user');
+        //add wp_EE_Attendee_ID usermeta
+        $attendeeID = $attendee->get('ATT_ID');
+        add_user_meta($user_id,'wp_EE_Attendee_ID',$attendeeID);
     }else{        
         $user_id = $user->ID;
     }
