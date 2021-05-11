@@ -1121,11 +1121,11 @@
             "new_lines": ""
         },
         {
-            "key": "field_6093312293c23",
-            "label": "Group ID",
-            "name": "group_id",
-            "type": "text",
-            "instructions": "",
+            "key": "field_6099caf80ea4a",
+            "label": "Suppress from RSS Widget",
+            "name": "suppress_from_rss_widget",
+            "type": "true_false",
+            "instructions": "This will suppress this event from showing on the Make created 'Fancy RSS Widget'",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -1133,11 +1133,11 @@
                 "class": "",
                 "id": ""
             },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
         }
     ],
     "location": [
@@ -1157,5 +1157,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1620259163
+    "modified": 1620691755
 }
