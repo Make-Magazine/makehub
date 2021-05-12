@@ -105,12 +105,16 @@ a { // don't let genesis molest our links
 }
 .universal-btn-reversed {
 	@extend .universal-btn;
-	background-color: #FFF;
+	background-color: #fff;
 	border-color: #005e9a;
 	color: #005e9a !important;
-	&:hover, &:focus {
-		color: #FFF !important;
+	&:hover, &:focus, &:active {
+		color: #fff !important;
 		background-color: #005e9a;
+	}
+	&:visited {
+		background-color: #fff;
+		color: #005e9a !important;
 	}
 }
 .btn.full-width, .btn.full-width a {
