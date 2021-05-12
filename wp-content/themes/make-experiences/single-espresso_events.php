@@ -279,9 +279,9 @@ get_header();
                                     <b>Age Range:</b>
                                     <?php
                                     foreach (get_field('audience') as $age) {
-                                        $ageValues = get_field_object('audience')['choices'];
-                                        ?>
-                                        <span class='age-item'><?php echo $ageValues[$age]; ?></span>
+                                        $ageValues = get_field_object('audience')['choices'];                                        
+                                         ?>
+                                         <span class='age-item'><?php echo (isset($ageValues[$age])?$ageValues[$age]:''); ?></span>
                                 <?php } ?>
                                 </div>
                                 <?php
