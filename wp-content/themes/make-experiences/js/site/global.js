@@ -96,3 +96,10 @@ jQuery(".expando-box h4").click(function(){
 	jQuery(this).next().toggleClass( "open" ); 
 }); 
 
+// universal treatment for info buttons to pull up their related "modal"
+jQuery(".info-btn").on("click", function(){
+	if(jQuery(this)[0].hasAttribute("data-info")) {
+		var infoElement = jQuery(this).attr("data-info");
+		jQuery('.info-modal.'+infoElement).toggle();
+	}
+});
