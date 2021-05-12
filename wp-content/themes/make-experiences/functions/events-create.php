@@ -51,11 +51,12 @@ function create_event($entry, $form) {
     ));
     $eQgroup->save();    
     $event->_add_relation_to($eQgroup, 'Event_Question_Group'); //link the question group
-    
+        
     // assign personal questions to additional registrant    
     $eQgroup = EE_Event_Question_Group::new_instance(
                     array('EVT_ID' => $eventID,
                         'QSG_ID' => 1,
+                        'EQG_primary' => 1,
                         'EQG_additional' => 1
     ));
     $eQgroup->save();    
