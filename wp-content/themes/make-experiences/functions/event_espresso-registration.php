@@ -40,7 +40,7 @@ function attendee_approved( $registration) {
     }else{        
         $user_id = $user->ID;
     }
-    /*
+    
     //add wp_EE_Attendee_ID usermeta
     //is wp_EE_Attendee_ID set?
     $havemeta = get_user_meta($user_id, 'wp_EE_Attendee_ID', true); 
@@ -50,7 +50,7 @@ function attendee_approved( $registration) {
     }else{
        error_log('$havemeta='.$havemeta); 
     }
-        */
+        
     // give them a free membership    
     $result = ihc_do_complete_level_assign_from_ap($user_id, 14, 0, 0);
     
