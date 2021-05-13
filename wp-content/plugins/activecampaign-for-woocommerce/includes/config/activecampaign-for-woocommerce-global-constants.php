@@ -16,7 +16,7 @@
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.3.5' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.3.6' );
 }
 
 /**

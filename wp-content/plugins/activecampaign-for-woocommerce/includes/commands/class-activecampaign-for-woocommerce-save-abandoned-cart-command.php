@@ -109,10 +109,13 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 				);
 
 				if ( $wpdb->last_error ) {
-					$this->logger->error( 'Save abandoned cart command: There was an error selecting the id for a customer abandoned cart record.', [
-						'wpdb_last_error' => $wpdb->last_error,
-						'customer_id'     => $customer_id,
-					] );
+					$this->logger->error(
+						'Save abandoned cart command: There was an error selecting the id for a customer abandoned cart record.',
+						[
+							'wpdb_last_error' => $wpdb->last_error,
+							'customer_id'     => $customer_id,
+						]
+					);
 				}
 
 				if ( empty( $cart ) ) {
@@ -143,11 +146,14 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					);
 
 					if ( $wpdb->last_error ) {
-						$this->logger->error( 'Save abandoned cart command: There was an error updating an abandoned cart record.', [
-							'wpdb_last_error' => $wpdb->last_error,
-							'activecampaignfwc_order_external_uuid' => $activecampaignfwc_order_external_uuid,
-							'stored_id'       => $stored_id,
-						] );
+						$this->logger->error(
+							'Save abandoned cart command: There was an error updating an abandoned cart record.',
+							[
+								'wpdb_last_error' => $wpdb->last_error,
+								'activecampaignfwc_order_external_uuid' => $activecampaignfwc_order_external_uuid,
+								'stored_id'       => $stored_id,
+							]
+						);
 					}
 				} else {
 					$wpdb->insert(
@@ -169,22 +175,28 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 					);
 
 					if ( $wpdb->last_error ) {
-						$this->logger->error( 'Save abandoned cart command: There was an error inserting an abandoned cart record.', [
-							'wpdb_last_error'     => $wpdb->last_error,
-							'customer_id'         => $customer_id,
-							'customer_first_name' => $customer_first_name,
-							'customer_last_name'  => $customer_last_name,
-							'activecampaignfwc_order_external_uuid' => $activecampaignfwc_order_external_uuid,
-						] );
+						$this->logger->error(
+							'Save abandoned cart command: There was an error inserting an abandoned cart record.',
+							[
+								'wpdb_last_error'     => $wpdb->last_error,
+								'customer_id'         => $customer_id,
+								'customer_first_name' => $customer_first_name,
+								'customer_last_name'  => $customer_last_name,
+								'activecampaignfwc_order_external_uuid' => $activecampaignfwc_order_external_uuid,
+							]
+						);
 					}
 				}
 			} catch ( Exception $e ) {
-				$this->logger->warning( 'Save abandoned cart command: There was an error attempting to save this abandoned cart', [
-					'exception'           => $e,
-					'customer_email'      => $customer_email,
-					'customer_first_name' => $customer_first_name,
-					'$customer_last_name' => $customer_last_name,
-				] );
+				$this->logger->warning(
+					'Save abandoned cart command: There was an error attempting to save this abandoned cart',
+					[
+						'exception'           => $e,
+						'customer_email'      => $customer_email,
+						'customer_first_name' => $customer_first_name,
+						'$customer_last_name' => $customer_last_name,
+					]
+				);
 			}
 		}
 	}
@@ -207,10 +219,13 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 
 			return;
 		} catch ( Exception $e ) {
-			$this->logger->debug( 'Checkout meta: could not delete the abandoned cart entry.', [
-				'exception'   => $e,
-				'customer_id' => $customer_id,
-			] );
+			$this->logger->debug(
+				'Checkout meta: could not delete the abandoned cart entry.',
+				[
+					'exception'   => $e,
+					'customer_id' => $customer_id,
+				]
+			);
 
 			return;
 		}
@@ -225,7 +240,8 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 			wp_schedule_event( time(), 'hourly', 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 		} else {
 			$this->logger->debug(
-				'Recurring cron already scheduled', [
+				'Recurring cron already scheduled',
+				[
 					'time_now' => time(),
 					'myevent'  => wp_get_scheduled_event( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ),
 				]

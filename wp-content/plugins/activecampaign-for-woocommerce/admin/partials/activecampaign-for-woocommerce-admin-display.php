@@ -279,15 +279,15 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 					<tr>
 						<td><?php esc_html_e( 'Rest APIs:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?></td>
 						<td>
-							<?php foreach ( $activecampaign_for_woocommerce_wc_rest_keys as $key ) : ?>
-								<?php if ( strpos( $key->description, 'ActiveCampaign' ) >= 0 ) : ?>
-									<?php echo esc_html( $key->description ); ?>
+							<?php foreach ( $activecampaign_for_woocommerce_wc_rest_keys as $activecampaign_for_woocommerce_key ) : ?>
+								<?php if ( strpos( $activecampaign_for_woocommerce_key->description, 'ActiveCampaign' ) >= 0 ) : ?>
+									<?php echo esc_html( $activecampaign_for_woocommerce_key->description ); ?>
 									<br/>
 									<?php
 									esc_html_e( 'Last Access:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									echo esc_html( $key->last_access );
+									echo esc_html( $activecampaign_for_woocommerce_key->last_access );
 									esc_html_e( '| Permission:', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									echo esc_html( $key->permissions );
+									echo esc_html( $activecampaign_for_woocommerce_key->permissions );
 									?>
 									<br/><br/>
 								<?php endif; ?>
@@ -652,8 +652,8 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 					</tr>
 					<?php
 					$activecampaign_for_woocommerce_env_rows = apply_filters( 'activecampaign_for_woocommerce_system_status_environment_rows', array() );
-					foreach ( $activecampaign_for_woocommerce_env_rows as $row ) {
-						if ( ! empty( $row['success'] ) ) {
+					foreach ( $activecampaign_for_woocommerce_env_rows as $activecampaign_for_woocommerce_row ) {
+						if ( ! empty( $activecampaign_for_woocommerce_row['success'] ) ) {
 							$activecampaign_for_woocommerce_css_class = 'yes';
 							$activecampaign_for_woocommerce_icon      = '<span class="dashicons dashicons-yes"></span>';
 						} else {
@@ -662,12 +662,12 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 						}
 						?>
 						<tr>
-							<td data-export-label="<?php echo esc_attr( $row['name'] ); ?>"><?php echo esc_html( $row['name'] ); ?>
+							<td data-export-label="<?php echo esc_attr( $activecampaign_for_woocommerce_row['name'] ); ?>"><?php echo esc_html( $activecampaign_for_woocommerce_row['name'] ); ?>
 								:
 							</td>
 							<td>
 								<mark class="<?php echo esc_attr( $activecampaign_for_woocommerce_css_class ); ?>">
-									<?php echo wp_kses_post( $activecampaign_for_woocommerce_icon ); ?><?php echo wp_kses_data( ! empty( $row['note'] ) ? $row['note'] : '' ); ?>
+									<?php echo wp_kses_post( $activecampaign_for_woocommerce_icon ); ?><?php echo wp_kses_data( ! empty( $activecampaign_for_woocommerce_row['note'] ) ? $activecampaign_for_woocommerce_row['note'] : '' ); ?>
 								</mark>
 							</td>
 						</tr>
@@ -948,13 +948,13 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 					</tr>
 					<?php if ( $activecampaign_for_woocommerce_wc_actionscheduler_status_array ) : ?>
 						<tr>
-							<?php foreach ( $activecampaign_for_woocommerce_wc_actionscheduler_status_array as $s ) : ?>
+							<?php foreach ( $activecampaign_for_woocommerce_wc_actionscheduler_status_array as $activecampaign_for_woocommerce_status ) : ?>
 								<td>
 									<?php esc_html_e( 'Status - ', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
-									<?php echo esc_html( $s->status ); ?>
+									<?php echo esc_html( $activecampaign_for_woocommerce_status->status ); ?>
 								</td>
 								<td>
-									<?php echo esc_html( $s->count ); ?>
+									<?php echo esc_html( $activecampaign_for_woocommerce_status->count ); ?>
 									<?php esc_html_e( ' actions', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN ); ?>
 								</td>
 							<?php endforeach; ?>

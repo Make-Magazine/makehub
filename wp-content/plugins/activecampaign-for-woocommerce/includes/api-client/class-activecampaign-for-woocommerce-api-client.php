@@ -398,7 +398,9 @@ class Activecampaign_For_Woocommerce_Api_Client {
 		try {
 			if ( $this->body ) {
 				$response = $this->client->request(
-					$this->method, $endpoint, [
+					$this->method,
+					$endpoint,
+					[
 						'body' => $this->body,
 					]
 				);
@@ -408,7 +410,8 @@ class Activecampaign_For_Woocommerce_Api_Client {
 
 			if ( $response instanceof ResponseInterface && $this->ac_debug && $this->logger ) {
 				$this->logger->debug(
-					'Received response', [
+					'Received response',
+					[
 						'response_status_code' => $response->getStatusCode(),
 						'response_headers'     => $response->getHeaders(),
 						'response_body'        => $response->getBody()->getContents(),

@@ -89,10 +89,13 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 			array_walk( $products, [ $order, 'push_order_product' ] );
 		} catch ( Exception $e ) {
 			$logger = new Logger();
-			$logger->warning( 'Could not create product from cart contents', [
-				'email'         => $customer->get_email(),
-				'cart_contents' => $cart->get_cart_contents(),
-			] );
+			$logger->warning(
+				'Could not create product from cart contents',
+				[
+					'email'         => $customer->get_email(),
+					'cart_contents' => $cart->get_cart_contents(),
+				]
+			);
 
 			return null;
 		}

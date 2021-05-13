@@ -54,7 +54,8 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		$this->logger      = new Logger();
 		$installed_version = get_option( 'activecampaign_for_woocommerce_db_version' );
 
-		$this->logger->info( 'Plugin Upgrade Check...',
+		$this->logger->info(
+			'Plugin Upgrade Check...',
 			[
 				'Your DB Version'   => $installed_version,
 				'Plugin DB Version' => $this->get_plugin_db_version(),
@@ -99,9 +100,12 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 				}
 			}
 		} catch ( Exception $e ) {
-			$this->logger->error( 'There was an exception in table verification...', [
-				'exception' => $e,
-			] );
+			$this->logger->error(
+				'There was an exception in table verification...',
+				[
+					'exception' => $e,
+				]
+			);
 			$table_exists = false;
 		}
 

@@ -111,11 +111,14 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 			if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
 				$cat_list[] = $product_cat_name;
 			} else {
-				$logger->warning( 'A product category attached to this product does not have a valid category and/or name.', [
-					'product_id' => $product->get_id(),
-					'term_id'    => $term->term_id,
-					'term_name'  => $term->name,
-				] );
+				$logger->warning(
+					'A product category attached to this product does not have a valid category and/or name.',
+					[
+						'product_id' => $product->get_id(),
+						'term_id'    => $term->term_id,
+						'term_name'  => $term->name,
+					]
+				);
 			}
 		}
 

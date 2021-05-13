@@ -131,7 +131,8 @@ class Activecampaign_For_Woocommerce_Public {
 			$this->plugin_name,
 			plugin_dir_url( __FILE__ ) . 'js/activecampaign-for-woocommerce-public.js?custom_email_field=' . $custom_email_field,
 			[ 'jquery' ],
-			$this->version
+			$this->version,
+			true
 		);
 
 		$sync_guest_abandoned_cart_nonce = wp_create_nonce( 'sync_guest_abandoned_cart_nonce' );
@@ -182,12 +183,16 @@ class Activecampaign_For_Woocommerce_Public {
 			// Label html must be built before the function
 			$label = '<label for="activecampaign_for_woocommerce_accepts_marketing" class="woocommerce-form__label woocommerce-form__label-for-checkbox inline"><span>' . $activecampaign_for_woocommerce_accepts_marketing_label . '</span></label>';
 
-			woocommerce_form_field( 'activecampaign_for_woocommerce_accepts_marketing', [
-				'type'     => 'checkbox',
-				'class'    => [ 'woocommerce-form__input', 'woocommerce-form__input-checkbox', 'input-checkbox' ],
-				'label'    => $label,
-				'required' => false,
-			], $activecampaign_for_woocommerce_is_checked );
+			woocommerce_form_field(
+				'activecampaign_for_woocommerce_accepts_marketing',
+				[
+					'type'     => 'checkbox',
+					'class'    => [ 'woocommerce-form__input', 'woocommerce-form__input-checkbox', 'input-checkbox' ],
+					'label'    => $label,
+					'required' => false,
+				],
+				$activecampaign_for_woocommerce_is_checked
+			);
 
 			$this->checkbox_populated = true;
 		}

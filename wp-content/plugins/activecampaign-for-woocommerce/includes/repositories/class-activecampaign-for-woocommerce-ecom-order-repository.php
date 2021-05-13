@@ -209,7 +209,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Repository implements Repository
 					);
 				}
 				return $order;
-			}, $orders
+			},
+			$orders
 		);
 
 		if ( $is_order_list ) {
@@ -226,8 +227,6 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Repository implements Repository
 	 *
 	 * Some orders may include a very large data set of order products. By performing a binary search
 	 * we can reduce the total search time as the complexity grows logarithmically.
-	 *
-	 * @todo: Consider memoizing this to reduce load even more.
 	 *
 	 * @param string|int $target_id The id of the product we're looking for.
 	 * @param array      $products  The array of products.

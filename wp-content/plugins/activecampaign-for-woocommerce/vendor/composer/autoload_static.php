@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
+class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
 {
     public static $files = array (
         '3235689ae520774249788ae5d5475c84' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/functions_include.php',
@@ -14,12 +14,6 @@ class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
         '275cdeae0a0b233cf2f6c151b81d41c7' => __DIR__ . '/../..' . '/ac_vendor/php-di/php-di/src/DI/ContainerBuilder.php',
         '03744023bb0c65527553d487b84e3d27' => __DIR__ . '/../..' . '/ac_vendor/php-di/php-di/src/DI/functions.php',
         '164b067373632bcad8fd2c4a76f967ae' => __DIR__ . '/../..' . '/ac_vendor/ralouphie/getallheaders/src/getallheaders.php',
-        '05fdcc961095ca8d58a2ec4c02ef2add' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/Idn.php',
-        '20ddbdbd63dafc3c360138290a64edba' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/bootstrap.php',
-        'afc8a61db2f86f8c61190c6388460f56' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72/Php72.php',
-        '4307e8dc0ef699f143325f0c0348cea1' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72/bootstrap.php',
-        'd2ca1d71c67854de0d378b6a2375dd02' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-normalizer/Normalizer.php',
-        '28104acdf3bfc9663563c771afe3cb2b' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-normalizer/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -30,9 +24,6 @@ class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
         ),
         'A' => 
         array (
-            'AcVendor\\Symfony\\Polyfill\\Php72\\' => 32,
-            'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\' => 42,
-            'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\' => 35,
             'AcVendor\\Psr\\Log\\' => 17,
             'AcVendor\\Psr\\Http\\Message\\' => 26,
             'AcVendor\\Psr\\Container\\' => 23,
@@ -54,18 +45,6 @@ class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
         'Brick\\Math\\' => 
         array (
             0 => __DIR__ . '/..' . '/brick/math/src',
-        ),
-        'AcVendor\\Symfony\\Polyfill\\Php72\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72',
-        ),
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-normalizer',
-        ),
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn',
         ),
         'AcVendor\\Psr\\Log\\' => 
         array (
@@ -289,12 +268,6 @@ class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
         'AcVendor\\Psr\\Log\\Test\\DummyTest' => __DIR__ . '/../..' . '/ac_vendor/psr/log/Psr/Log/Test/DummyTest.php',
         'AcVendor\\Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/../..' . '/ac_vendor/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'AcVendor\\Psr\\Log\\Test\\TestLogger' => __DIR__ . '/../..' . '/ac_vendor/psr/log/Psr/Log/Test/TestLogger.php',
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\Idn' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/Idn.php',
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\Info' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/Info.php',
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\Resources\\unidata\\DisallowedRanges' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/Resources/unidata/DisallowedRanges.php',
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Idn\\Resources\\unidata\\Regex' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-idn/Resources/unidata/Regex.php',
-        'AcVendor\\Symfony\\Polyfill\\Intl\\Normalizer\\Normalizer' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-intl-normalizer/Normalizer.php',
-        'AcVendor\\Symfony\\Polyfill\\Php72\\Php72' => __DIR__ . '/../..' . '/ac_vendor/symfony/polyfill-php72/Php72.php',
         'ActiveCampaign_For_WooCommerce_Runtime_Exception' => __DIR__ . '/../..' . '/includes/exceptions/class-activecampaign-for-woocommerce-runtime-exception.php',
         'Activecampaign_For_Woocommerce' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce.php',
         'Activecampaign_For_Woocommerce_Activator' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-activator.php',
@@ -393,9 +366,9 @@ class ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit3bc84fbfbd587406e7923891012bb9b1::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$classMap;
 
         }, null, ClassLoader::class);
     }

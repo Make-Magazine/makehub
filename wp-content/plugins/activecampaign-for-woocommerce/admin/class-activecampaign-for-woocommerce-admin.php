@@ -453,7 +453,8 @@ class Activecampaign_For_Woocommerce_Admin {
 		$post_data = array_map(
 			function ( $entry ) {
 				return sanitize_text_field( $entry );
-			}, $post_data
+			},
+			$post_data
 		);
 
 		return $post_data;
