@@ -165,15 +165,7 @@ function populate_fields($form) {
                         } else { //populate by specific parameter name
                             //populate fields
                             $fieldIDarr = array(
-                                'project-name' => 151,
-                                'contact-email' => 98,
-                                'exhibit-contain-fire' => 83,
-                                'interactive-exhibit' => 84,
-                                'fire-safety-issues' => 85,
-                                'serving-food' => 44,
-                                'you-are-entity' => 45,
-                                'plans-type' => "55",
-                                'short-project-desc' => 16,
+                                'project-name' => 116,                                                                
                                 'entry-id' => $entry_id);
 
                             //find the project name for submitted entry-id
@@ -189,7 +181,8 @@ function populate_fields($form) {
                                 } elseif ($parmName == 'entry-id') {
                                     $value = $entry_id;
                                 } else {
-                                    $value = $entry[$fieldIDarr[$parmName]];
+                                    if(isset($fieldIDarr[$parmName]))
+                                        $value = $entry[$fieldIDarr[$parmName]];
                                 }
                             }
 
@@ -259,12 +252,19 @@ function updLinked_fields($form, $origEntryID) {
                              *  else, update with blanks
                              */
                             $updValue = (isset($_POST['input_' . $inputID]) ? $_POST['input_' . $inputID] : '');
-                            mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));
+                            mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));                            
                         }
                     } else {
                         //find submitted value
                         $updValue = (isset($_POST['input_' . $field['id']]) ? $_POST['input_' . $field['id']] : '');
                         mf_update_entry_field($origEntryID, $updField, stripslashes($updValue));
+                        
+                        //update the message to attendees in event (need to find a more generic way of doing this 
+                        if($updField==147){
+                            $entry = GFAPI::get_entry($origEntryID);
+                            $event_id = $entry["post_id"];                            
+                            update_field('message_to_attendees', $updValue, $event_id);
+                        }
                     }
                 }
             }
