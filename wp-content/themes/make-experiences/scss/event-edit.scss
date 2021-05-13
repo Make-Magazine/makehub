@@ -101,10 +101,10 @@
 .gv-button-cancel, .gv-button-delete {
 	color: #fff;
 	border: 1px solid $color-blue;
-	padding: 8px 30px;
+	padding: 7px 30px;
 	font-size: 16px;
 	font-weight: 500;
-	border-radius: 3px !important;
+	border-radius: 2px !important;
 	&:hover, &:active, &:focus {
 		background-color: #fff;
 		color: $color-blue;
