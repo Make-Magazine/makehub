@@ -101,6 +101,14 @@ if ( !class_exists( 'LearnDash_ProPanel_Widget' ) ) {
 		function register_widget() {
 			// Only show the ProPanel widgets for admin and group leaders
 			if ( ( learndash_is_group_leader_user() ) || ( learndash_is_admin_user() ) || ( current_user_can( 'propanel_widgets' ) ) ) { 
+				$is_dashboard = true;
+			} else {
+				$is_dashboard = false;
+			}
+
+			/** This filter is documented in includes/class-ld-propanel.php */
+			$is_dashboard = apply_filters( 'ld_propanel_dashboard_show_widgets', $is_dashboard );
+			if ( true === $is_dashboard ) {
 				wp_add_dashboard_widget( 'learndash-propanel-' . $this->name, $this->label, array( $this, 'initial_template' ) );
 			}
 		}

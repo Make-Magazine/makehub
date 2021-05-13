@@ -5,7 +5,7 @@ Plugin URI: https://learndash.com/propanel-by-learndash/
 LD Requires at least: 2.4.0
 Slug: learndash-propanel
 Requires at least: 5.0
-Tested up to: 5.5
+Tested up to: 5.5.1
 Requires PHP: 7.0
 Stable tag: 2.1.4
 Last Update: 2020-10-15

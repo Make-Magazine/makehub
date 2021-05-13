@@ -1,18 +1,18 @@
 <?php
 /**
- * @package LearnDash_ProPanel
- * @version 2.1.4
- *
- * Plugin Name: LearnDash ProPanel
+ * Plugin Name: LearnDash LMS - ProPanel
  * Plugin URI: http://www.learndash.com
  * Description: Easily manage and view your LearnDash LMS activity.
- * Version: 2.1.4
+ * Version: 2.1.4.1
  * Author: LearnDash
  * Author URI: http://www.learndash.com
  * License: GPL-2.0+
  * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: ld_propanel
  * Domain Path: /languages
+ * @package LearnDash_ProPanel
+ * @version 2.1.4
+ *
  */
 
 // If this file is called directly, abort.
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
  */
 
 if ( ! defined( 'LD_PP_VERSION' ) ) {
-	define( 'LD_PP_VERSION', '2.1.4' );
+	define( 'LD_PP_VERSION', '2.1.4.1' );
 }
 
 if ( ! defined( 'LD_PP_PLUGIN_DIR' ) ) {

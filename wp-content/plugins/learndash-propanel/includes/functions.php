@@ -114,9 +114,9 @@ function ld_propanel_get_users_count( $bypass_transient = false ) {
 				$users_courses_sql .= "LEFT JOIN {$wpdb->usermeta} as um2 ON ( users.ID = um2.user_id ) WHERE 1=1 ";
 
 				if ( is_multisite() ) {
-					$users_courses_sql .= "um1.meta_key = '{$wpdb->prefix}capabilities' ";
+					$users_courses_sql .= " AND um1.meta_key = '{$wpdb->prefix}capabilities' ";
 				}
-				$users_courses_sql .= "AND um2.meta_key IN ('_sfwd-course_progress', '_sfwd-quizzes')";
+				$users_courses_sql .= " AND um2.meta_key IN ('_sfwd-course_progress', '_sfwd-quizzes') ";
 				$users_courses_results = $wpdb->get_col( $users_courses_sql );
 				if ( ( is_array( $users_courses_results ) ) && ( ! empty( $users_courses_results ) ) ) {
 					$all_user_ids = array_merge( $all_user_ids, $users_courses_results );
@@ -148,9 +148,9 @@ function ld_propanel_get_users_count( $bypass_transient = false ) {
 				}
 				$users_groups_sql .= "LEFT JOIN {$wpdb->usermeta} as um2 ON ( users.ID = um2.user_id ) WHERE 1=1 ";
 				if ( is_multisite() ) {
-					$users_groups_sql .= "um1.meta_key = '{$wpdb->prefix}capabilities' ";
+					$users_groups_sql .= " AND um1.meta_key = '{$wpdb->prefix}capabilities' ";
 				}
-				$users_groups_sql .= "AND um2.meta_key IN ( 
+				$users_groups_sql .= " AND um2.meta_key IN ( 
 					SELECT CONCAT('learndash_group_users_', p.ID, '') FROM {$wpdb->prefix}posts p WHERE p.post_type='groups' AND p.post_status='publish'
 				)";
 				$users_groups_results = $wpdb->get_col( $users_groups_sql );
@@ -175,7 +175,7 @@ function ld_propanel_get_users_count( $bypass_transient = false ) {
 		set_transient( $transient_key, $return_total_users, MINUTE_IN_SECONDS * 5 );
 	}
 	
-	return $return_total_users;
+	return absint( $return_total_users );
 }
 
 function ld_propanel_exclude_admin_users() {

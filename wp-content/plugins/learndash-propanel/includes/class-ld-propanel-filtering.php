@@ -176,7 +176,7 @@ if ( ( !class_exists( 'LearnDash_ProPanel_Filtering' ) ) && ( class_exists( 'Lea
 		 *
 		 * @return bool
 		 */
-		function email_users( $user_ids = array(), $subject, $message ) {
+		function email_users( $user_ids = array(), $subject = '', $message = '' ) {
 			global $wpdb;
 
 			if ( !empty( $user_ids ) ) { 

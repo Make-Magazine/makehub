@@ -275,6 +275,18 @@ final class LearnDash_ProPanel {
 				if ( in_array( $screen->id, array( 'dashboard', 'dashboard_page_propanel-reporting' ) ) ) {
 					$force_load_scripts = true;
 					$is_dashboard       = true;
+
+					/**
+					 * Filters whether to show the ProPanel widgets on the Dashboard.
+					 *
+					 * @since 2.1.4.1
+					 *
+					 * @param boolean $is_dashboard Whether to show the Dashboard widgets.
+					 */
+					$is_dashboard = apply_filters( 'ld_propanel_dashboard_show_widgets', $is_dashboard );
+					if ( true !== $is_dashboard ) {
+						return;
+					}
 				}
 			}
 
@@ -304,17 +316,29 @@ final class LearnDash_ProPanel {
 				if ( empty( $date_format ) ) {
 					$date_format = 'Y-m-d';
 				}
+				// Convert the PHP date params to match the params available in flatpickr JS.
+				if ( ! empty( $date_format ) ) {
+					$date_format = str_replace(
+						array( 'jS', 'dS' ),
+						array( 'J', 'J' ),
+						$date_format
+					);
+				}
 
 				$time_format = get_option( 'time_format', 'H:i:s' );
 				if ( empty( $time_format ) ) {
 					$time_format = 'H:i:s';
 				}
+				// Convert the PHP time params to match the params available in flatpickr JS.
+				if ( ! empty( $time_format ) ) {
+					$time_format = str_replace(
+						array( 'g', 'a', 'A', 'T' ),
+						array( 'G', 'K', 'K', '' ), 
+						$time_format
+					);
+				}
 
 				global $wp_locale;
-				// error_log( 'wp_locale<pre>' . print_r( $wp_locale, true ) . '</pre>' );
-
-				// $wp_local_months = array_values( $wp_locale->month );
-				// error_log( 'wp_local_months<pre>' . print_r( $wp_local_months, true ) . '</pre>' );
 
 				$flatpickr_locale = array();
 

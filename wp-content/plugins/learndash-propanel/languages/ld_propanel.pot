@@ -1,23 +1,21 @@
-# Copyright (C) 2020 LearnDash
-# This file is distributed under the same license as the LearnDash ProPanel plugin.
+# Copyright (C) 2021 LearnDash
+# This file is distributed under the same license as the LearnDash LMS - ProPanel plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: LearnDash ProPanel 2.1.4\n"
+"Project-Id-Version: LearnDash LMS - ProPanel 2.1.4.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/learndash-propanel\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-10-15T11:50:49+00:00\n"
+"POT-Creation-Date: 2021-05-12T12:13:29+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: ld_propanel\n"
 
 #. Plugin Name of the plugin
-#: includes/class-ld-translations-propanel.php:17
-#: templates/ld-propanel-full-page.php:20
-msgid "LearnDash ProPanel"
+msgid "LearnDash LMS - ProPanel"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -58,12 +56,12 @@ msgid "last_login_date"
 msgstr ""
 
 #. translators: placeholder: Quiz.
-#: includes/class-ld-propanel-activity.php:702
+#: includes/class-ld-propanel-activity.php:710
 msgctxt "placeholder: Quiz"
 msgid "View %s Statistics"
 msgstr ""
 
-#: includes/class-ld-propanel-activity.php:704
+#: includes/class-ld-propanel-activity.php:712
 msgid "Statistics"
 msgstr ""
 
@@ -91,7 +89,7 @@ msgid ""
 msgstr ""
 
 #: includes/class-ld-propanel-filtering.php:316
-#: includes/class-ld-propanel-reporting.php:309
+#: includes/class-ld-propanel-reporting.php:317
 msgid "We do not have any email addresses to send your message to."
 msgstr ""
 
@@ -154,13 +152,13 @@ msgid "ProPanel Reporting"
 msgstr ""
 
 #. translators: placeholder: count users.
-#: includes/class-ld-propanel-reporting.php:286
+#: includes/class-ld-propanel-reporting.php:294
 msgctxt "placeholder: count users."
 msgid "Email sent to %d destinations"
 msgstr ""
 
 #. translators: placeholder: error message
-#: includes/class-ld-propanel-reporting.php:301
+#: includes/class-ld-propanel-reporting.php:309
 msgctxt "placeholder: error message"
 msgid ""
 "We could not send the email successfully. Please try again or check with your hosting provider.\n"
@@ -175,36 +173,36 @@ msgstr ""
 msgid "LearnDash is required to be activated before LearnDash ProPanel can work properly."
 msgstr ""
 
-#: includes/class-ld-propanel.php:338
+#: includes/class-ld-propanel.php:362
 msgid "Hour"
 msgstr ""
 
-#: includes/class-ld-propanel.php:339
+#: includes/class-ld-propanel.php:363
 msgid "Minute"
 msgstr ""
 
-#: includes/class-ld-propanel.php:340
-#: includes/class-ld-propanel.php:341
+#: includes/class-ld-propanel.php:364
+#: includes/class-ld-propanel.php:365
 msgid "Month"
 msgstr ""
 
-#: includes/class-ld-propanel.php:342
+#: includes/class-ld-propanel.php:366
 msgid " to "
 msgstr ""
 
-#: includes/class-ld-propanel.php:343
+#: includes/class-ld-propanel.php:367
 msgid "Scroll to increment"
 msgstr ""
 
-#: includes/class-ld-propanel.php:344
+#: includes/class-ld-propanel.php:368
 msgid "Click to toggle"
 msgstr ""
 
-#: includes/class-ld-propanel.php:345
+#: includes/class-ld-propanel.php:369
 msgid "Wk"
 msgstr ""
 
-#: includes/class-ld-propanel.php:346
+#: includes/class-ld-propanel.php:370
 msgid "Year"
 msgstr ""
 
@@ -344,6 +342,11 @@ msgstr ""
 
 #: includes/class-ld-tinymce-courseinfo.php:169
 msgid "When using the \"reporting\" or \"progress_chart\" widget shortcodes. A selection from the Group, Course or User filters is required unless also using the \"filtering\" widget shortcode on the same page."
+msgstr ""
+
+#: includes/class-ld-translations-propanel.php:17
+#: templates/ld-propanel-full-page.php:20
+msgid "LearnDash ProPanel"
 msgstr ""
 
 #: learndash_propanel.php:81

@@ -272,7 +272,7 @@ if ( !class_exists( 'LearnDash_ProPanel_Activity' ) ) {
 			return $data_headers;
 		}
 		
-		function learndash_courses_report_display_column( $header_output = '', $header_key, $activity, $report_user ) {
+		function learndash_courses_report_display_column( $header_output, $header_key, $activity, $report_user ) {
 			$data_slug = 'user-courses';
 			include ld_propanel_get_template( 'ld-propanel-reporting-columns.php' );
 			return $header_output;
@@ -685,10 +685,18 @@ if ( !class_exists( 'LearnDash_ProPanel_Activity' ) ) {
 			if ( ( $activity->user_id == get_current_user_id() ) || ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) {				
 				if ( ( isset( $activity->activity_meta['statistic_ref_id'] ) ) && ( !empty( $activity->activity_meta['statistic_ref_id'] ) ) ) {
 					if ( ! isset( $activity->activity_meta['quiz'] ) ) {
-						$activity->activity_meta['quiz'] = 0;
+						if ( isset( $activity->post_id ) ) {
+							$activity->activity_meta['quiz'] = absint( $activity->post_id );
+						} else {
+							$activity->activity_meta['quiz'] = 0;
+						}
 					}
 					if ( ! isset( $activity->activity_meta['pro_quizid'] ) ) {
-						$activity->activity_meta['pro_quizid'] = 0;
+						if ( isset( $activity->activity_meta['quiz'] ) ) {
+							$activity->activity_meta['pro_quizid'] = get_post_meta( $activity->activity_meta['quiz'], 'quiz_pro_id', true );
+						} else {
+							$activity->activity_meta['pro_quizid'] = 0;
+						}
 					}
 					/**
 					 *	 @since 2.3

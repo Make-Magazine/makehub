@@ -132,7 +132,10 @@ var learnDashProPanel = jQuery( function ( $ ) {
 					$( document ).on( 'proPanel.filterChanged', getProgessChartsData );
 				}
 
-				filterReporting();
+				// See PP-241: This timeout is needed to allow the template HTML to be added to the DOM.
+				setTimeout(function () {
+					filterReporting();
+				}, ld_propanel_settings.template_load_delay);
 			}
 		}
 	}
@@ -258,20 +261,45 @@ var learnDashProPanel = jQuery( function ( $ ) {
 		});
 	}
 
-	function showSpinner( element ) {
-		var spinnerExists = element.parents('.postbox').find( 'loading' );
-
-		if ( spinnerExists.length ) {
-			return;
+	function showSpinner( element ) {		
+		if ((typeof ld_propanel_settings.is_dashboard !== 'undefined') && (ld_propanel_settings.is_dashboard == '1' ))  {
+			// Dashbord widgets...
+			var spinnerExists = element.parents('.postbox').find( '.loading' );
+			if (spinnerExists.length) {
+				return;
+			}
+			var widgetTitle = element.parents('.postbox').find('h2.hndle');
+			if (typeof widgetTitle !== 'undefined') {
+				widgetTitle.append('<img src="' + ld_propanel_settings.spinner_admin_img + '" class="loading">');
+			}
+		} else if (jQuery('body').hasClass('.ld-propanel-full-page')) {
+			// Front-end full page template...
+			var spinnerExists = element.prev('h2').find('.loading');
+			if (spinnerExists.length) {
+				return;
+			}
+			var widgetTitle = element.prev('h2');
+			if (typeof widgetTitle !== 'undefined') {
+				widgetTitle.append('<img src="' + ld_propanel_settings.spinner_admin_img + '" class="loading">');
+			}
+		} else {
+			// Shortcodes...
+			element.prepend('<img src="' + ld_propanel_settings.spinner_admin_img + '" class="loading">');
 		}
-
-		var widgetTitle = element.parents('.postbox').find( 'h2.hndle' );
-		widgetTitle.append( '<img src="'+ld_propanel_settings.spinner_admin_img+'" class="loading">' );
 	}
 
 	function hideSpinner( element ) {
 		setTimeout( function() {
-			element.parents('.postbox').find( '.loading' ).remove();
+			if ((typeof ld_propanel_settings.is_dashboard !== 'undefined') && (ld_propanel_settings.is_dashboard == '1')) {
+				// Dashbord widgets...
+				element.parents('.postbox').find('.loading').remove();
+			} else if(jQuery('body').hasClass('.ld-propanel-full-page')) {
+				// Front-end full page template...
+				element.prev('h2').find('.loading').remove();
+			} else {
+				// Shortcodes...
+				element.find('.loading').remove();
+			}
 		}, 500 );
 	}
 
@@ -452,10 +480,10 @@ var learnDashProPanel = jQuery( function ( $ ) {
 		}
 
 		var fp = flatpickr(".filter-selection.filter-section-date .ld_filter_section_date", {
-			allowInput: true,
+			allowInput: false,
 			//mode: "range",
 			enableTime: true,
-			dateFormat: "Y-m-d H:i",
+			dateFormat: "Y-m-d H:i:s",
 			altInput: true,
 			altFormat: ld_propanel_settings.flatpickr_date_time_format,
 
@@ -756,7 +784,9 @@ var learnDashProPanel = jQuery( function ( $ ) {
 						sent.html(response.data.message);
 					}
 					sent.fadeIn();
-
+					
+					sending.hide();
+					
 					if ((typeof response.data.debug !== 'undefined') && (response.data.debug !== '') && (ld_propanel_settings.is_debug)) {
 						alert(response.data.debug);
 					}
@@ -1500,6 +1530,8 @@ jQuery(document).ready(function(){
 
 
 				jQuery('#wpProQuiz_user_content').show();
+
+				jQuery('body').trigger('learndash-statistics-contentchanged');
 
 				jQuery('#wpProQuiz_loadUserData').hide();
 

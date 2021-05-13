@@ -67,7 +67,7 @@ if ( ! class_exists( 'LearnDash_ProPanel_Gutenberg_Block' ) ) {
 		 *
 		 * @return void The output is echoed.
 		 */
-		public function render_block( $block_attributes = array(), $block_content = '', $block ) {
+		public function render_block( $block_attributes = array(), $block_content = '', $block = null ) {
 			if ( is_user_logged_in() ) {
 				$shortcode_str = '[' . $this->shortcode_slug;
 				if ( ! empty( $this->shortcode_widget ) ) {
