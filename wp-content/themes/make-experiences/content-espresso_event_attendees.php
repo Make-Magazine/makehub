@@ -42,7 +42,7 @@ foreach($answer as $ans){
 
 ?>
 <tr>
-    <td><?php echo $gravatar . '&nbsp;' .  $contact->full_name(); ?></td>    
+    <td><?php echo '<span class="hidden-xs">' . $gravatar . '&nbsp;</span>' . $contact->full_name(); ?></td>    
     <td><?php echo '<a href = "mailto:'. $contact->email().'">'.$contact->email().'</a>';?></td>
     <td><?php echo $registration->get('REG_date');?></td>            
     <td><?php echo $attendee_age;?></td>

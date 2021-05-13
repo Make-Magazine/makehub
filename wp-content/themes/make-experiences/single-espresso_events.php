@@ -100,7 +100,7 @@ get_header();
                         <?php
                         if (class_exists('ESSB_Plugin_Options')) {
                             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $post_id . '" url="' . $url . '" text="' . get_the_title() . '"]');
+                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $post_id . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
                         }
                         ?>
                     </div>

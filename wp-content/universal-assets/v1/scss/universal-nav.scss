@@ -1,0 +1,33 @@
+#primary-menu {
+	li.menu-item {
+		font-weight: bold;
+		position: relative;
+		&::after { display: none; }
+		&:hover {
+			background: #f1f1f1;
+			a { 
+				color: #333;
+				text-decoration: none;
+			}
+		}
+		.sub-menu {
+			left: 50%;
+			transform: translate(-50%);
+			top: 100%;
+			width: max-content;
+			&::before {
+				right: 50%;
+			}
+			li.menu-item {
+				font-weight: 400;
+			}
+			.sub-menu {
+				transform: none;
+				left: 100%;
+				top: 0px;
+				border-top-left-radius: 0px;
+				border-bottom-left-radius: 0px;
+			}
+		}
+	}
+}

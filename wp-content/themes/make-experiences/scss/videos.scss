@@ -30,6 +30,11 @@
 			}
 		}    
 	}
+	.vimeography-gallery {
+		.vimeography-player > div {
+			padding: 0px !important;
+		}
+	}
 	.select-selected {
 		border: 1px solid #fff;
 		color: #fff;
