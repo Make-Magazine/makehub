@@ -45,6 +45,13 @@
 			.bp-controls-wrap { display: none; }
 		}
 	}
+	&.group-hidden, &.group-private {
+		&:not(.my-group) {
+			#invite-groups-li {
+				display: none;
+			}
+		}
+	}
 }
 
 
