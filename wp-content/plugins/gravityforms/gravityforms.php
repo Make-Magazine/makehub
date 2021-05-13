@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms
 Plugin URI: https://gravityforms.com
 Description: Easily create web forms and manage form entries within the WordPress admin.
-Version: 2.5.0.2
+Version: 2.5.1
 Requires at least: 4.0
 Requires PHP: 5.6
 Author: Gravity Forms
@@ -205,7 +205,7 @@ class GFForms {
 	 *
 	 * @var string $version The version number.
 	 */
-	public static $version = '2.5.0.2';
+	public static $version = '2.5.1';
 
 	/**
 	 * Handles background upgrade tasks.
@@ -534,7 +534,6 @@ class GFForms {
 
 		wp_register_style( 'gf-preview', "$base_url/css/preview$min.css" );
 		wp_register_style( 'gf-preview-rtl', "$base_url/css/rtl$min.css" );
-		wp_register_style( 'gf-preview-reset', "$base_url/css/reset$min.css" );
 
 		add_filter( 'gform_preview_styles', function( $styles ) {
 			$styles[] = 'gf-preview-reset';
@@ -2858,7 +2857,7 @@ class GFForms {
 		}
 
 		GFCommon::localize_gform_gravityforms_multifile();
-		GFCommon::localize_legacy_check( 'gform_form_editor' );
+		GFCommon::localize_legacy_check( 'gform_layout_editor' );
 
 	}
 
@@ -4663,6 +4662,10 @@ class GFForms {
 	public static function add_admin_body_class( $body_classes ) {
 		$classes = explode( ' ', $body_classes );
 		$classes = array_merge( $classes, array( 'gform-admin' ) );
+
+		if ( GFCommon::is_form_editor() && wp_style_is( 'jetpack-admin-menu' ) && ! is_rtl() ) {
+			$classes[] = 'gform-jetpack-admin-menu';
+		}
 
 		return implode( ' ', $classes );
 	}
