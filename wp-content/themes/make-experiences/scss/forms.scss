@@ -444,7 +444,7 @@
 
 .gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
 	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
-		top: 0px;
+		top: 4px;
 	}
 }
 
