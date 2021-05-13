@@ -231,30 +231,26 @@ add_filter('doing_it_wrong_trigger_error', function () {
 
 function add_slug_body_class($classes) {
     global $post;
+	global $bp;
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
+		// let's see if your the group owner and what kind of group it is (hidden, private, etc)
+		if ( bp_is_groups_component() ) {
+			$classes[] = 'group-' . groups_get_group( array( 'group_id' => bp_get_current_group_id() ) )->status;
+			if( is_super_admin() || groups_is_user_mod( get_current_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( get_current_user_id(), bp_get_current_group_id() ) )  {
+				$classes[] = 'my-group';
+			}
+
+		}
         return $classes;
     }
 }
 
 add_filter('body_class', 'add_slug_body_class');
-
-function bb_group_redirect(){
-	// if someone tries to access a group by id, redirect them to the proper url
-	if(preg_match('/^\/groups\/[0-9]*\/$/', $_SERVER['REQUEST_URI'])) {  
-		$path = $_SERVER['REQUEST_URI'];
-		$path_array = array_filter(explode('/', $path));
-		$group = groups_get_group( array( 'group_id' => end($path_array) ) );
-		$slug = $group->slug;
-		wp_redirect( (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://" . $_SERVER['HTTP_HOST'] . "/groups/" . $slug );
-		exit();
-	}
-}
-add_action( 'template_redirect', 'bb_group_redirect' );
 
 /*
 * Override any of the translation files if we need to change language
