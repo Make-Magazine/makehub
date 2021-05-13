@@ -78,6 +78,11 @@ class ACUI_Doc{
 				</td>
 			</tr>
 
+			<tr valign="top">
+				<th scope="row"><?php _e( 'Cron', 'import-users-from-csv-with-meta' ); ?></th>
+			<td><?php _e( 'Cron tab allows you to make periodical imports using the WordPress cron scheduler.','import-users-from-csv-with-meta'); ?></td>
+			</tr>
+
 			<?php do_action( 'acui_documentation_after_plugins_activated' ); ?>
 			
 			<tr valign="top">

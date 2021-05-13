@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.17.5
+Version:		1.17.5.2
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -11,7 +11,6 @@ License URI: 	https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: import-users-from-csv-with-meta
 Domain Path: /languages
 */
-
 if ( ! defined( 'ABSPATH' ) ) 
 	exit;
 
@@ -21,55 +20,7 @@ class ImportExportUsersCustomers{
 	function __construct(){
 	}
 
-	public static function get_default_options_list(){
-		return array(
-			'acui_columns' => array(),
-			// emails
-			'acui_mail_subject' => __('Welcome to', 'import-users-from-csv-with-meta') . ' ' . get_bloginfo("name"),
-			'acui_mail_body' => __('Welcome,', 'import-users-from-csv-with-meta') . '<br/>' . __('Your data to login in this site is:', 'import-users-from-csv-with-meta') . '<br/><ul><li>' . __('URL to login', 'import-users-from-csv-with-meta') . ': **loginurl**</li><li>' . __( 'Username', 'import-users-from-csv-with-meta') . '= **username**</li><li>Password = **password**</li></ul>',
-			'acui_mail_template_id' => 0,
-			'acui_mail_attachment_id' => 0,
-			'acui_enable_email_templates' => false,
-			'acui_mail_disable_wp_editor' => false,
-			// cron
-			'acui_cron_activated' => false,
-			'acui_cron_send_mail' => false,
-			'acui_cron_send_mail_updated' => false,
-			'acui_cron_delete_users' => false,
-			'acui_cron_delete_users_assign_posts' => 0,
-			'acui_cron_change_role_not_present' => false,
-			'acui_cron_change_role_not_present_role' => 0,
-			'acui_cron_path_to_file' => '',
-			'acui_cron_path_to_move' => '',
-			'acui_cron_path_to_move_auto_rename' => false,
-			'acui_cron_period' => '',
-			'acui_cron_role' => '',
-			'acui_cron_update_roles_existing_users' => '',
-			'acui_cron_log' => '',
-			'acui_cron_allow_multiple_accounts' => 'not_allowed',
-			// frontend
-			'acui_frontend_send_mail'=> false,
-			'acui_frontend_send_mail_updated' => false,
-			'acui_frontend_mail_admin' => false,
-            'acui_frontend_send_mail_admin_address_list' => '',
-			'acui_frontend_delete_users' => false,
-			'acui_frontend_delete_users_assign_posts' => 0,
-			'acui_frontend_change_role_not_present' => false,
-			'acui_frontend_change_role_not_present_role' => 0,
-			'acui_frontend_role' => '',
-			'acui_frontend_update_existing_users' => false,
-			'acui_frontend_update_roles_existing_users' => false,
-			// emials
-			'acui_manually_send_mail' => false,
-			'acui_manually_send_mail_updated' => false,
-			'acui_automatic_wordpress_email' => false,
-			'acui_automatic_created_edited_wordpress_email' => false,
-			// profile fields
-			'acui_show_profile_fields' => false
-		);
-	}
-
-	public function on_init(){
+	function on_init(){
 		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 		if( is_plugin_active( 'buddypress/bp-loader.php' ) || function_exists( 'bp_is_active' ) ){
@@ -114,15 +65,16 @@ class ImportExportUsersCustomers{
 		}
 	}
 	
-	public static function activate(){
-		$acui_default_options_list = self::get_default_options_list();
+	static function activate(){
+		include_once( 'classes/options.php' );
+		$acui_default_options_list = ACUI_Options::get_default_list();
 			
 		foreach ( $acui_default_options_list as $key => $value) {
 			add_option( $key, $value, '', false );		
 		}
 	}
 
-	public static function deactivate(){
+	static function deactivate(){
 		wp_clear_scheduled_hook( 'acui_cron' );
 	}
 

@@ -15,9 +15,10 @@ class ACUI_Import{
     
             switch ( $tab ){
                   case 'homepage':
-                      update_option( 'acui_last_roles_used', ( empty( $_POST['role'] ) ? '' : array_map( 'sanitize_text_field', $_POST['role'] ) ) );
-                      $this->fileupload_process( $_POST, false );
-                      return;
+                    ACUI_Options::update( 'last_roles_used', ( empty( $_POST['role'] ) ? '' : array_map( 'sanitize_text_field', $_POST['role'] ) ) );
+                    ACUI_Options::update( 'path_to_file', sanitize_text_field( $_POST['path_to_file'] ) );
+                    $this->fileupload_process( $_POST, false );
+                    return;
                   break;
     
                   case 'frontend':
@@ -129,7 +130,7 @@ class ACUI_Import{
         echo '</h2>';
     }
 
-    public function fileupload_process( $form_data, $is_cron = false, $is_frontend  = false ) {
+    function fileupload_process( $form_data, $is_cron = false, $is_frontend  = false ) {
         if ( !defined( 'DOING_CRON' ) && ( !isset( $form_data['security'] ) || !wp_verify_nonce( $form_data['security'], 'codection-security' ) ) ){
             wp_die( __( 'Nonce check failed', 'import-users-from-csv-with-meta' ) ); 
         }
@@ -595,7 +596,7 @@ class ACUI_Import{
 
                         $acui_helper->print_row_imported( $row, $data, $errors );
     
-                        do_action('post_acui_import_single_user', $headers, $data, $user_id, $role, $positions, $form_data, $is_frontend, $is_cron );
+                        do_action( 'post_acui_import_single_user', $headers, $data, $user_id, $role, $positions, $form_data, $is_frontend, $is_cron );
     
                         $mail_for_this_user = false;
                         if( $is_cron ){

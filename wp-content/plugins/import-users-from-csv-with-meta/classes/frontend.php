@@ -386,6 +386,8 @@ class ACUI_Frontend{
 			$form_data[ "empty_cell_action" ] = "leave";
 			$form_data[ "activate_users_wp_members" ] = empty( get_option( "acui_frontend_activate_users_wp_members" ) ) ? 'no_activate' : get_option( "acui_frontend_activate_users_wp_members" );
 			$form_data[ "security" ] = wp_create_nonce( "codection-security" );
+
+            $form_data = apply_filters( 'acui_frontend_import_form_data', $form_data );
 			
 			$acui_import = new ACUI_Import();
 			$acui_import->fileupload_process( $form_data, false, true );
@@ -395,13 +397,26 @@ class ACUI_Frontend{
 	        do_action( 'acui_post_frontend_import' );
 		else:
 		?>
+
+        <?php do_action( 'acui_frontend_import_before_form' ); ?>
+
 		<form method="POST" enctype="multipart/form-data" action="" accept-charset="utf-8" class="acui_frontend_form">
+            <?php do_action( 'acui_frontend_import_before_input_file' ); ?>
+
 			<label><?php _e( 'CSV file <span class="description">(required)</span>', 'import-users-from-csv-with-meta' ); ?></label></th>
 			<input class="acui_frontend_file" type="file" name="uploadfile" id="uploadfile" size="35" class="uploadfile" />
+
+            <?php do_action( 'acui_frontend_import_after_input_file' ); ?>
+
 			<input class="acui_frontend_submit" type="submit" value="<?php _e( 'Upload and process', 'import-users-from-csv-with-meta' ); ?>"/>
+
+            <?php do_action( 'acui_frontend_import_after_submit' ); ?>
 
 			<?php wp_nonce_field( 'codection-security', 'security' ); ?>
 		</form>
+
+        <?php do_action( 'acui_frontend_import_after_form' ); ?>
+
 		<?php endif; ?>
 		
 		<?php
