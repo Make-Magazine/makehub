@@ -24,21 +24,30 @@
 	font-weight: 600;
 }
 
+///////////// GROUPS //////////////////
+
 //show hidden groups if you're a member
 #groups-dir-list, .mygroups {
 	.is-member.hidden {
 		display: block !important
 	}
 }
-
-#bp-media-uploader .modal-container {
-	position: inherit;
-}
-
 .subnav-search.groups-search {
 	margin: -10px 15px 20px;
 	float: none;
 }
+#bp-media-uploader .modal-container {
+	position: inherit;
+}
+.groups {
+	.bp-manage-group-container {
+		#group-settings-form {
+			.bp-controls-wrap { display: none; }
+		}
+	}
+}
+
+
 
 .bs-styled-radio + .bb-radio-label, .bs-styled-radio + label {
 	display: flex;
