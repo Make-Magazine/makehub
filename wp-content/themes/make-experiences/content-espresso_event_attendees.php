@@ -31,6 +31,7 @@ $where = array(
 );
 $answer = EEM_Answer::instance()->get_all(array($where));
 $anything_else='';
+$attendee_age = 'Declined to State';
 foreach($answer as $ans){
     if($ans->get('QST_ID')=='15'){
         $attendee_age = $ans->get('ANS_value');

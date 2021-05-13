@@ -442,6 +442,12 @@
 	}
 }
 
+.gv-edit-entry-wrapper .gform_wrapper.event_form_wrapper{
+	.gfield_radio input[type="radio"]:checked + label::after, .gfield_checkbox input[type="checkbox"]:checked + label::before {
+		top: 4px;
+	}
+}
+
 // specific tweaks, remove if we're just going to left align everything
 #gform_fields_7_3{
 	h2 { display: none; }
@@ -544,7 +550,6 @@
 		position: fixed !important;
 		left: 42% !important;
 		top: 50% !important;
-		
 	}
 }
 .wickedpicker {
@@ -605,10 +610,6 @@
 	
 }
 
-.bs-styled-radio:checked + .bb-radio-label::after, .bs-styled-radio:checked + label::after {
-	left: -14px;
-}
-
 .woocommerce-order-received {
 	.woocommerce {
 		margin-top: 30px;
@@ -652,6 +653,14 @@
 	}
 }
 
+.gv-btn-cancel, .gv-btn-delete {
+	border: 1px solid #005E9A !important;
+	font-size: 16px !important;
+	border-radius: 2px !important;
+	padding: 8px 30px;
+	font-weight: 500;
+	border-radius: 2px;
+}
 .tingle-btn:hover {
 	color: $color-light-grey;
 }

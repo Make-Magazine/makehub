@@ -41,6 +41,15 @@
 				margin-bottom: 15px;
 			}
 		}
+		table.gpnf-nested-entries {
+			thead, tbody {
+				tr {
+					@media screen and (max-width: 500px) {
+						td:nth-of-type(3) { display: none; }
+					}
+				}
+			}
+		}
 	}
 	button { 
 		width: 100%;
@@ -89,14 +98,30 @@
 		display: none;
 	}
 }
-.gv-button-cancel {
+.gv-button-cancel, .gv-button-delete {
 	color: #fff;
-	border: thin solid #1987C7;
-	padding: 10px 30px;
-	background-color: #1987C7;;
+	border: 1px solid $color-blue;
+	padding: 7px 30px;
+	font-size: 16px;
+	font-weight: 500;
+	border-radius: 2px !important;
 	&:hover, &:active, &:focus {
 		background-color: #fff;
-		color: #1987C7;;
+		color: $color-blue;
+	}
+}
+
+.event-attendees {
+	@media screen and (max-width: 600px) {
+		table, tr, td, tbody {display: block; text-align: left;width:100%;}
+		table tr:first-of-type { display: none; }
+		td { border: none; }
+		tr { 
+			padding: 5px;
+			border: solid 1px $color-light-grey;
+			margin-bottom: 10px;
+			background: #fff;
+		}
 	}
 }
 
