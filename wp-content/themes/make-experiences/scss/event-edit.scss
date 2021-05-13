@@ -98,14 +98,16 @@
 		display: none;
 	}
 }
-.gv-button-cancel {
+.gv-button-cancel, .gv-button-delete {
 	color: #fff;
-	border: thin solid #1987C7;
-	padding: 10px 30px;
-	background-color: #1987C7;;
+	border: 1px solid $color-blue;
+	padding: 8px 30px;
+	font-size: 16px;
+	font-weight: 500;
+	border-radius: 3px !important;
 	&:hover, &:active, &:focus {
 		background-color: #fff;
-		color: #1987C7;;
+		color: $color-blue;
 	}
 }
 

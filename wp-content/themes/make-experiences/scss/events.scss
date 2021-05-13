@@ -335,6 +335,8 @@
 .ee-status.event-active-status-DTE { background-color: $color-red; } // expired
 .ee-status.event-active-status-DTI { background-color: $color-grey; } // inactive
 
-td.event-status-DTU, td.event-status-DTA { color: $color-light-blue; }
-td.event-status-DTC, td.event-status-DTE { color: $color-red; }
-td.event-status-DTS, td.event-status-DTP, td.event-status-DTI { color: $color-grey; }
+.dashboard .espresso-my-events-table tr {
+	td.event-status-DTU, td.event-status-DTA { color: $color-light-blue; }
+	td.event-status-DTC, .td.event-status-DTP { color: $color-red; }
+	td.event-status-DTS, td.event-status-DTI, td.event-status-DTE { color: $color-grey; }
+}
