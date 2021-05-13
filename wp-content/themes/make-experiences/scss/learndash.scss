@@ -1,4 +1,8 @@
 /* make buddypress pages full width */
-.bb-follow-links a i {
-    font-size: 60px;
+.bb-follow-links {
+    font-size: 40px;
+    margin-top: 10px;
+    a i {
+        font-size: 40px;
+    }
 }
