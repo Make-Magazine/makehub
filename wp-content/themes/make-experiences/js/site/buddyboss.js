@@ -9,7 +9,7 @@ jQuery(document).ready(function(){
 		jQuery(".members-nav").append("<a href='https://makerspaces.make.co' class='btn universal-btn' style='float:right;margin-bottom:10px;margin-top:-10px;'>See Map</a>");
 	}
 	if (window.location.href.indexOf("/groups/") > -1) {
-		jQuery('.bp-groups-tab a').attr('target', '_self');
+		setTimeout("jQuery('.bp-groups-tab a').attr('target', '_self');", 100);
 	}
 });
 

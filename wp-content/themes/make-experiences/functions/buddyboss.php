@@ -77,7 +77,7 @@ function setup_group_nav() {
                 'screen_function' => 'bp_group_event_info',
                 'position' => 50,
                 'user_has_access' => $user_access,
-                'item_css_id' => 'custom'
+                'item_css_id' => 'event-info'
             ));
         }
     }
