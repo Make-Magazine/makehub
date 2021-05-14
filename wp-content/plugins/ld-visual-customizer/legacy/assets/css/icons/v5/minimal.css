@@ -1,0 +1,77 @@
+
+#shark {
+
+}
+
+.learndash .topic-completed span::before,
+.learndash .topic-notcompleted span::before {
+	content: "\f00c";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-size: 24px !important;
+	display: block;
+	font-weight: 900;
+}
+
+/* Navigation Arrows, Not Complete */
+.learndash_navigation_lesson_topics_list .list_arrow.collapse:before,
+.learndash_nevigation_lesson_topics_list .list_arrow.collapse:before {
+  	content: "\f054";
+	font-size: 12px;
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900 !important;
+}
+
+.list_arrow.expand.lesson_completed:before {
+	content: "\f078";
+  	font-size: 12px;
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900 !important;
+}
+
+
+.learndash_navigation_lesson_topics_list .topic_item a:before,
+.learndash_nevigation_lesson_topics_list .topic_item a:before {
+	content: "\f00c";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+}
+
+.lesson_incomplete.list_arrow.expand:before {
+	content: "\f078";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+}
+
+.learndash .notcompleted:before,
+#learndash_profile .notcompleted:before,
+.learndash a.completed:before,
+#learndash_profile a.completed:before {
+	content: "\f00c";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+	font-size: 24px !important;
+}
+
+.learndash_profile_quizzes .passed_icon,
+.learndash_profile_quizzes .failed_icon {
+	content: "\f00c";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+}
+
+
+.list_arrow.expand:before,
+#learndash_profile .list_arrow.expand:before
+ {
+  content: "\f078";
+  font-family: 'Font Awesome 5 Free' !important;
+  font-weight: 900;
+}
+
+
+.list_arrow.collapse:before,
+#learndash_profile .list_arrow.collapse:before {
+    content: "\f054";
+    font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+}

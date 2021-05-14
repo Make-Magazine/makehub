@@ -1,0 +1,1097 @@
+/* line 4, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-message-actions {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 15px 0;
+  align-items: flex-end;
+}
+/* line 9, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-message-actions .ldms-tabs {
+  background: #efefef;
+  display: inline-flex;
+  border-radius: 3px;
+  border: 3px solid #efefef;
+}
+/* line 14, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-message-actions .ldms-tabs a {
+  background: transparent;
+  color: #333;
+  padding: 5px 15px;
+  display: inline-block;
+  border-radius: 2px;
+  font-size: 16px;
+}
+/* line 21, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-message-actions .ldms-tabs a.active {
+  background: transparent;
+  background: #DB4902;
+  color: #fff;
+}
+/* line 31, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .lds-search-messages form {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* line 35, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .lds-search-messages form input[type='text'] {
+  all: unset;
+  border-radius: 3px 0 0 3px;
+  border: 2px solid #DB4902;
+  padding: 8px 15px;
+  display: inline-block;
+  transition: all ease-in-out 250ms;
+  width: 200px;
+}
+/* line 43, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .lds-search-messages form input[type='text']:focus {
+  width: 300px;
+}
+/* line 47, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .lds-search-messages form input[type='submit'] {
+  all: unset;
+  padding: 10px 15px;
+  border: 0;
+  border-radius: 0 3px 3px 0;
+  background: #DB4902;
+  color: #fff;
+  cursor: pointer;
+}
+/* line 59, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ld-username {
+  display: block;
+  font-size: 14px;
+}
+/* line 63, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table {
+  border: 0;
+  width: 100%;
+  border-radius: 4px;
+}
+/* line 67, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table th {
+  background: #DB4902;
+  color: #fff;
+  padding: 16px;
+  font-size: 14px;
+  border: 0;
+}
+/* line 74, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr {
+  transition: all ease-in-out 250ms;
+}
+/* line 76, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr.ldms-stared td {
+  background: #eeeefa !important;
+}
+/* line 79, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:last-child {
+  border-radius: 0 0 4px 4px;
+}
+/* line 81, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:last-child td:first-child {
+  border-radius: 0 0 0 4px;
+}
+/* line 84, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:last-child td:last-child {
+  border-radius: 0 0 4px 0;
+}
+/* line 89, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table td {
+  border: 0;
+  padding: 15px;
+  background: #f3f3f3;
+  transition: all ease-in-out 250ms;
+}
+/* line 93, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table td .ldms-comment-icon {
+  width: 15px;
+  margin: -3px 0 0 2px;
+  height: auto;
+  opacity: 0.75;
+}
+/* line 102, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:nth-child(even) td {
+  background: #fafafa;
+}
+/* line 105, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:hover {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+/* line 106, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table tr:hover td {
+  background: #fff;
+}
+/* line 112, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table .ldms-text-center {
+  text-align: center;
+}
+/* line 116, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table .ldms-message-list__actions .ldms-action-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+/* line 120, ../sass/_partials/_messagelist.scss */
+#ldms-message-list table .ldms-message-list__actions .ldms-action-wrapper a.ldms-view-message {
+  margin-right: 20px;
+}
+/* line 126, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-next-posts {
+  margin: 30px 0;
+}
+/* line 128, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-next-posts .ldms-prev-posts-link {
+  float: left;
+}
+/* line 131, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-next-posts .ldms-next-posts-link {
+  float: right;
+}
+/* line 134, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-next-posts a {
+  display: inline-block;
+  padding: 5px 20px;
+  font-size: 12px;
+  text-decoration: none;
+}
+/* line 140, ../sass/_partials/_messagelist.scss */
+#ldms-message-list .ldms-next-posts::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* line 149, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file {
+  margin: 0 0 16px 0;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* line 157, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file a {
+  text-decoration: none;
+  align-items: center;
+}
+/* line 161, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file a.has-thumbnail {
+  display: flex;
+  align-items: flex-start;
+}
+/* line 164, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file a.has-thumbnail img {
+  margin-right: 8px;
+  max-width: 75px;
+  height: auto;
+}
+/* line 171, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file-name {
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+/* line 178, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file-name::before {
+  background: url("../svg/download.svg") center center no-repeat;
+  background-size: contain;
+  content: '';
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 2px solid #333;
+  margin-right: 8px;
+}
+/* line 188, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file-name:hover {
+  color: #666;
+}
+/* line 192, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file.file-type-image, .ldms-file-list .ldms-file__file.file-type-audio, .ldms-file-list .ldms-file__file.file-type-video {
+  flex-wrap: wrap;
+}
+/* line 196, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file.file-type-image .ldms-file__file-name::before, .ldms-file-list .ldms-file__file.file-type-audio .ldms-file__file-name::before, .ldms-file-list .ldms-file__file.file-type-video .ldms-file__file-name::before {
+  display: none;
+}
+/* line 200, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__file.file-type-audio, .ldms-file-list .ldms-file__file.file-type-video {
+  justify-content: center;
+}
+/* line 206, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__body {
+  margin-bottom: 0px;
+}
+/* line 209, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__meta {
+  color: #666;
+  font-size: 12px;
+  margin-left: 8px;
+  padding: 4px 16px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  text-decoration: none;
+}
+/* line 217, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__meta:hover {
+  background: #fcfcfc;
+}
+/* line 225, ../sass/_partials/_messagelist.scss */
+.ldms-file-list .ldms-file__meta:hover {
+  cursor: pointer;
+}
+
+/* line 1, ../sass/_partials/_tabs.scss */
+.ldms-session__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #ddd;
+  padding: 0;
+  margin: 24px 0;
+}
+@media screen and (max-width: 768px) {
+  /* line 1, ../sass/_partials/_tabs.scss */
+  .ldms-session__tabs {
+    border-bottom: 0;
+  }
+}
+/* line 10, ../sass/_partials/_tabs.scss */
+.ldms-session__tabs-tab {
+  border: 1px solid #ddd;
+  border-radius: 3px 3px 0 0;
+  margin: 0 4px -1px 4px;
+}
+/* line 14, ../sass/_partials/_tabs.scss */
+.ldms-session__tabs-tab.is-active {
+  border-bottom: 1px solid #fff;
+}
+/* line 17, ../sass/_partials/_tabs.scss */
+.ldms-session__tabs-tab button {
+  all: unset;
+  border: 0;
+  text-shadow: none;
+  border: 0;
+  box-shadow: none;
+  letter-spacing: 0;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 1.3;
+  background: transparent !important;
+  color: #333 !important;
+  display: block;
+  padding: 8px 24px;
+}
+/* line 31, ../sass/_partials/_tabs.scss */
+.ldms-session__tabs-tab button:hover {
+  cursor: pointer;
+  background: #fafafa;
+}
+@media screen and (max-width: 768px) {
+  /* line 10, ../sass/_partials/_tabs.scss */
+  .ldms-session__tabs-tab {
+    border: 0;
+  }
+  /* line 38, ../sass/_partials/_tabs.scss */
+  .ldms-session__tabs-tab button {
+    padding: 4px 16px;
+    border-radius: 4px;
+    margin: 0 4px 8px 0;
+    border: 2px solid #f1f1f1;
+    background: #f1f1f1;
+    font-size: 14px;
+  }
+  /* line 46, ../sass/_partials/_tabs.scss */
+  .ldms-session__tabs-tab.is-active {
+    border: 0;
+  }
+  /* line 48, ../sass/_partials/_tabs.scss */
+  .ldms-session__tabs-tab.is-active button {
+    border-color: #ddd;
+    background: transparent;
+  }
+}
+
+/* line 58, ../sass/_partials/_tabs.scss */
+.ldms-session__content-tab {
+  display: none;
+}
+/* line 60, ../sass/_partials/_tabs.scss */
+.ldms-session__content-tab.is-active {
+  display: block;
+}
+
+/* line 6, ../sass/global.scss */
+#ldms-return-to-message p {
+  margin: 0 0 40px 0;
+  padding: 0 0 20px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* line 13, ../sass/global.scss */
+#ldms-message-widget p {
+  margin: 0 !important;
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+/* line 17, ../sass/global.scss */
+#ldms-message-widget p:last-child {
+  border-bottom: 0;
+}
+
+/* line 24, ../sass/global.scss */
+.ldms-text-link .ldms-btn-msgs {
+  min-width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  line-height: 1.5em;
+  display: inline-block;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 100%;
+  text-decoration: none;
+}
+
+/* line 37, ../sass/global.scss */
+#ldms-comment-form input[type='submit'],
+.ldms-next-posts a,
+input[type='submit'].ldms-btn,
+.ldms-btn {
+  display: block;
+  padding: 16px 24px 16px 48px;
+  font-size: 14px;
+  font-weight: bold;
+  background: #DB4902;
+  color: #fff !important;
+  border-radius: 3px;
+  transition: all ease-in-out 250ms;
+  position: relative;
+  text-decoration: none;
+}
+/* line 51, ../sass/global.scss */
+#ldms-comment-form input[type='submit']:hover,
+.ldms-next-posts a:hover,
+input[type='submit'].ldms-btn:hover,
+.ldms-btn:hover {
+  cursor: pointer;
+}
+/* line 54, ../sass/global.scss */
+#ldms-comment-form input[type='submit'] .ldms-btn-icon,
+.ldms-next-posts a .ldms-btn-icon,
+input[type='submit'].ldms-btn .ldms-btn-icon,
+.ldms-btn .ldms-btn-icon {
+  width: 50px;
+  text-align: center;
+  position: absolute;
+  left: 0;
+  opacity: 0.8;
+}
+/* line 60, ../sass/global.scss */
+#ldms-comment-form input[type='submit'] .ldms-btn-icon img,
+.ldms-next-posts a .ldms-btn-icon img,
+input[type='submit'].ldms-btn .ldms-btn-icon img,
+.ldms-btn .ldms-btn-icon img {
+  vertical-align: middle;
+  width: 25px;
+  height: 25px;
+}
+/* line 69, ../sass/global.scss */
+#ldms-comment-form input[type='submit'] .ldms-btn-msgs,
+.ldms-next-posts a .ldms-btn-msgs,
+input[type='submit'].ldms-btn .ldms-btn-msgs,
+.ldms-btn .ldms-btn-msgs {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+  margin-top: -5px;
+  display: inline-block;
+  border-radius: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+}
+/* line 80, ../sass/global.scss */
+#ldms-comment-form input[type='submit']:hover,
+.ldms-next-posts a:hover,
+input[type='submit'].ldms-btn:hover,
+.ldms-btn:hover {
+  opacity: 0.8;
+}
+
+/* line 86, ../sass/global.scss */
+#ldms-comment-form input[type='submit'],
+input[type='submit'].ldms-btn {
+  padding-left: 25px;
+  border: 0 !important;
+}
+
+/* line 92, ../sass/global.scss */
+#ldms-response-box {
+  background: #db4902;
+  color: #fff;
+  margin-top: 20px;
+}
+
+/* line 98, ../sass/global.scss */
+.ldms-message-tab {
+  position: fixed;
+  bottom: 0px;
+  right: 250px;
+  height: 55px;
+  z-index: 100;
+  -webkit-font-smoothing: antialiased;
+  z-index: 1;
+  background: #db4902;
+  border-radius: 2px 2px 0 0;
+  opacity: 0.8;
+  transition: all ease-in-out 250ms;
+}
+/* line 110, ../sass/global.scss */
+.ldms-message-tab:hover {
+  opacity: .95;
+}
+/* line 113, ../sass/global.scss */
+.ldms-message-tab.ldms-located-top {
+  top: 0;
+  bottom: auto;
+}
+/* line 117, ../sass/global.scss */
+.ldms-message-tab.ldms-located-right {
+  right: 0 !important;
+  top: 50%;
+  bottom: auto;
+  transform: rotate(270deg) translateX(50%);
+  transform-origin: right bottom;
+}
+/* line 123, ../sass/global.scss */
+.ldms-message-tab.ldms-located-right .lds-tooltip {
+  transform: rotate(90deg) translateX(-20%) translateY(100%);
+  transform-origin: right bottom;
+}
+/* line 128, ../sass/global.scss */
+.ldms-message-tab a {
+  color: #fff !important;
+  text-decoration: none;
+  padding: 15px 30px;
+  display: inline-block;
+  color: #fff;
+  font-weight: bold;
+  opacity: 0.8;
+  font-size: 14px;
+  margin: 0;
+  float: left;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
+  transition: ease-in-out all 250ms;
+  height: 55px;
+}
+/* line 142, ../sass/global.scss */
+.ldms-message-tab a:last-child {
+  border-right: 0;
+}
+/* line 145, ../sass/global.scss */
+.ldms-message-tab a .ldms-message-count {
+  min-width: 25px;
+  height: 25px;
+  line-height: 25px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+  margin: 0 5px;
+  vertical-align: middle;
+}
+/* line 158, ../sass/global.scss */
+.ldms-message-tab a:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+/* line 163, ../sass/global.scss */
+.ldms-message-tab img {
+  width: 25px;
+  height: 25px;
+}
+
+/* line 169, ../sass/global.scss */
+.admin-bar .ldms-message-tab.ldms-located-top {
+  top: 30px !important;
+}
+
+/* line 174, ../sass/global.scss */
+#ldms-new-session {
+  margin: 50px 0;
+  background: #f3f3f3;
+  padding: 0 30px 30px 30px;
+  border-radius: 4px;
+  position: relative;
+}
+/* line 180, ../sass/global.scss */
+#ldms-new-session #ldmsform {
+  transition: all ease-in-out 500ms;
+}
+/* line 183, ../sass/global.scss */
+#ldms-new-session .ldms-loading-image {
+  display: none;
+  opacity: 0;
+  transition: all ease-in-out 500ms;
+}
+/* line 189, ../sass/global.scss */
+#ldms-new-session.processing .ldms-loading-image {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  opacity: 1;
+  transform: translate(-50%, -50%);
+  padding: 15px;
+  border-radius: 100%;
+  background: #fff;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
+/* line 201, ../sass/global.scss */
+#ldms-new-session.processing #ldmsform {
+  opacity: 0.5;
+}
+/* line 205, ../sass/global.scss */
+#ldms-new-session p {
+  margin: 0 0 16px 0;
+}
+/* line 208, ../sass/global.scss */
+#ldms-new-session label {
+  font-weight: bold;
+  display: block;
+  margin: 0 0 10px 0;
+}
+/* line 213, ../sass/global.scss */
+#ldms-new-session h2 {
+  margin: 0 -30px 30px -30px;
+  margin-bottom: 32px;
+  padding: 16px;
+  background: #DB4902;
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 4px 4px 0 0;
+  font-weight: bold;
+}
+/* line 224, ../sass/global.scss */
+#ldms-new-session input[type='text'],
+#ldms-new-session select {
+  width: 100%;
+}
+/* line 228, ../sass/global.scss */
+#ldms-new-session input[type='text'] {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+/* line 233, ../sass/global.scss */
+#ldms-new-session #ldms-response {
+  padding: 20px 0;
+  display: none;
+}
+/* line 236, ../sass/global.scss */
+#ldms-new-session #ldms-response #ldms-response-content {
+  padding: 20px;
+  text-align: center;
+  color: #fff;
+  background: #DB4902;
+}
+/* line 237, ../sass/global.scss */
+#ldms-new-session #ldms-response #ldms-response-content h3, #ldms-new-session #ldms-response #ldms-response-content p, #ldms-new-session #ldms-response #ldms-response-content a {
+  color: #fff;
+}
+
+/* line 252, ../sass/global.scss */
+#ldms-message-list tr.unread-messages td,
+#ldms-message-list tr.unread-messages:nth-child(2n) td {
+  font-weight: bold;
+  background: rgba(255, 247, 153, 0.25);
+}
+
+/* line 258, ../sass/global.scss */
+.ldms-comment {
+  margin: 0;
+  padding: 0;
+}
+/* line 261, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper {
+  margin: 16px 0;
+  padding: 0 0 0 65px;
+  position: relative;
+}
+/* line 265, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body {
+  padding: 16px;
+  background: #f3f3f3;
+  border-radius: 4px;
+  position: relative;
+}
+/* line 270, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body::before {
+  content: '';
+  display: block;
+  position: absolute;
+  height: 0;
+  width: 0;
+  border-right: 8px solid #f3f3f3;
+  border-left: 0px solid transparent;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  left: -8px;
+  top: 16px;
+}
+/* line 283, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile {
+  margin: 16px 0 0;
+}
+/* line 288, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile .attachmentLink {
+  display: flex;
+  padding: 16px;
+  border-radius: 4px;
+  background: #fff;
+  transition: all ease-in-out 200ms;
+  align-items: center;
+  text-decoration: none;
+  border: 4px solid #fff;
+  color: #333;
+  font-size: 16px;
+}
+/* line 299, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile .attachmentLink::before {
+  background: url("../svg/download.svg") center center no-repeat;
+  background-size: contain;
+  content: '';
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  border: 2px solid #333;
+  margin-right: 8px;
+}
+/* line 309, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile .attachmentLink:hover {
+  background: transparent;
+}
+/* line 312, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile .attachmentLink[rel="lightbox"] {
+  display: inline-flex;
+  width: auto;
+}
+/* line 315, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-body .attachmentFile .attachmentLink[rel="lightbox"]::before {
+  display: none;
+}
+/* line 323, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper.ldms-focus .ldms-comment-body {
+  background: rgba(255, 247, 153, 0.25);
+}
+/* line 325, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper.ldms-focus .ldms-comment-body::before {
+  border-right-color: rgba(255, 247, 153, 0.25);
+}
+/* line 330, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-author {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  background: #efefef;
+}
+/* line 338, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-author img.avatar {
+  width: 50px;
+  height: auto;
+  border-radius: 100%;
+}
+/* line 344, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-username {
+  font-weight: normal;
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 8px 0;
+  padding: 0 0 8px 0;
+}
+/* line 350, ../sass/global.scss */
+.ldms-comment .ldms-comment-wrapper .ldms-comment-username strong {
+  font-weight: bold;
+  color: #333;
+}
+
+/* line 359, ../sass/global.scss */
+#ldms-comments .ldms-comment-list {
+  list-style: none;
+  margin: 0 0 20px 0;
+  padding: 0;
+}
+/* line 363, ../sass/global.scss */
+#ldms-comments .ldms-comment-list li {
+  margin: 0 0 50px 0;
+}
+
+/* line 369, ../sass/global.scss */
+#ldms-comment-form {
+  padding: 0 30px 30px 30px;
+  background: #f3f3f3;
+  margin: 30px 0;
+  border-radius: 4px;
+  position: relative;
+}
+/* line 375, ../sass/global.scss */
+#ldms-comment-form #commentform {
+  margin: 0;
+  padding: 0;
+}
+/* line 379, ../sass/global.scss */
+#ldms-comment-form #respond {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+/* line 384, ../sass/global.scss */
+#ldms-comment-form h3 {
+  border-radius: 4px 4px 0 0;
+  margin: 0 -30px 30px -30px;
+  position: relative;
+  margin-bottom: 30px;
+  padding: 16px;
+  background: #DB4902;
+  color: #fff;
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+/* line 396, ../sass/global.scss */
+#ldms-comment-form p {
+  margin: 0 0 10px 0;
+}
+/* line 399, ../sass/global.scss */
+#ldms-comment-form p.form-submit {
+  margin-top: 24px;
+}
+/* line 402, ../sass/global.scss */
+#ldms-comment-form p.comment-form-attachment {
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 1px;
+  border-radius: 4px 4px 0 0;
+}
+/* line 407, ../sass/global.scss */
+#ldms-comment-form p.comment-form-attachment + p.comment-form-attachment {
+  border-radius: 0 0 4px 4px;
+}
+/* line 411, ../sass/global.scss */
+#ldms-comment-form p.comment-form-attachment + p.comment-form-attachment {
+  margin-bottom: 30px;
+}
+/* line 413, ../sass/global.scss */
+#ldms-comment-form p.comment-form-attachment + p.comment-form-attachment input {
+  border: 0;
+  padding: 0;
+}
+
+/**
+ * Tooltips
+ */
+/* line 424, ../sass/global.scss */
+.lds-tooltip {
+  position: absolute;
+  z-index: 1070;
+  display: block;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 14px;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+/* line 446, ../sass/global.scss */
+.lds-tooltip.in {
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+}
+
+/* line 450, ../sass/global.scss */
+.lds-tooltip.top {
+  margin-top: -3px;
+  padding: 5px 0;
+}
+
+/* line 454, ../sass/global.scss */
+.lds-tooltip.right {
+  margin-left: 3px;
+  padding: 0 5px;
+}
+
+/* line 458, ../sass/global.scss */
+.lds-tooltip.bottom {
+  margin-top: 3px;
+  padding: 5px 0;
+}
+
+/* line 462, ../sass/global.scss */
+.lds-tooltip.left {
+  margin-left: -3px;
+  padding: 0 5px;
+}
+
+/* line 466, ../sass/global.scss */
+.tooltip-inner {
+  max-width: 200px;
+  padding: 10px 15px;
+  color: #ffffff;
+  text-align: center;
+  background-color: #000000;
+  border-radius: 4px;
+}
+
+/* line 474, ../sass/global.scss */
+.tooltip-arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+
+/* line 481, ../sass/global.scss */
+.lds-tooltip.top .tooltip-arrow {
+  bottom: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000000;
+}
+
+/* line 488, ../sass/global.scss */
+.lds-tooltip.top-left .tooltip-arrow {
+  bottom: 0;
+  right: 5px;
+  margin-bottom: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000000;
+}
+
+/* line 495, ../sass/global.scss */
+.lds-tooltip.top-right .tooltip-arrow {
+  bottom: 0;
+  left: 5px;
+  margin-bottom: -5px;
+  border-width: 5px 5px 0;
+  border-top-color: #000000;
+}
+
+/* line 502, ../sass/global.scss */
+.lds-tooltip.right .tooltip-arrow {
+  top: 50%;
+  left: 0;
+  margin-top: -5px;
+  border-width: 5px 5px 5px 0;
+  border-right-color: #000000;
+}
+
+/* line 509, ../sass/global.scss */
+.lds-tooltip.left .tooltip-arrow {
+  top: 50%;
+  right: 0;
+  margin-top: -5px;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #000000;
+}
+
+/* line 516, ../sass/global.scss */
+.lds-tooltip.bottom .tooltip-arrow {
+  top: 0;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000000;
+}
+
+/* line 523, ../sass/global.scss */
+.lds-tooltip.bottom-left .tooltip-arrow {
+  top: 0;
+  right: 5px;
+  margin-top: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000000;
+}
+
+/* line 530, ../sass/global.scss */
+.lds-tooltip.bottom-right .tooltip-arrow {
+  top: 0;
+  left: 5px;
+  margin-top: -5px;
+  border-width: 0 5px 5px;
+  border-bottom-color: #000000;
+}
+
+/* line 537, ../sass/global.scss */
+.ldms-archive-icon,
+.ldms-delete-icon {
+  width: 25px;
+}
+
+/* line 542, ../sass/global.scss */
+.ldms-success {
+  padding: 20px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: bold;
+  margin-bottom: 20px;
+  background: #CDD7B6;
+}
+/* line 549, ../sass/global.scss */
+.ldms-success p {
+  font-weight: bold !important;
+  margin: 0 !important;
+}
+
+/* line 555, ../sass/global.scss */
+.ldms-stared .ldms-star-session {
+  border-bottom-color: #fc0;
+}
+/* line 557, ../sass/global.scss */
+.ldms-stared .ldms-star-session:before, .ldms-stared .ldms-star-session:after {
+  border-bottom-color: #fc0;
+}
+
+/* line 562, ../sass/global.scss */
+.ldms-star-session {
+  position: relative;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: .9em;
+  margin-right: .9em;
+  margin-bottom: 1.2em;
+  border-right: .3em solid transparent;
+  border-bottom: .7em  solid #ddd;
+  border-left: .3em solid transparent;
+  /* Controlls the size of the stars. */
+  font-size: 10px;
+}
+/* line 580, ../sass/global.scss */
+.ldms-star-session:before, .ldms-star-session:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: .6em;
+  left: -1em;
+  border-right: 1em solid transparent;
+  border-bottom: .7em  solid #ddd;
+  border-left: 1em solid transparent;
+  transform: rotate(-35deg);
+}
+/* line 598, ../sass/global.scss */
+.ldms-star-session:after {
+  transform: rotate(35deg);
+}
+
+/* line 603, ../sass/global.scss */
+.ldms-notice {
+  background: #fff5cc;
+  padding: 16px 24px;
+  border-radius: 4px;
+  border: 3px solid #ffcc00;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  text-align: center;
+  margin: 15px 0;
+}
+/* line 612, ../sass/global.scss */
+.ldms-notice p {
+  margin: 0 !important;
+}
+
+/* line 619, ../sass/global.scss */
+#ldms-message-list thead th:first-child {
+  border-radius: 4px 0 0 0;
+}
+/* line 622, ../sass/global.scss */
+#ldms-message-list thead th:last-child {
+  border-radius: 0 4px 0 0;
+}
+
+/* line 628, ../sass/global.scss */
+#ldms-message-list table tr td a {
+  display: inline-block;
+  margin-right: 10px;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+/* line 635, ../sass/global.scss */
+#ldms-message-list table tr td a.link.ldms-delete-message {
+  float: right;
+}
+
+@media (max-width: 768px) {
+  /* line 640, ../sass/global.scss */
+  #ldms-message-list table thead {
+    display: none;
+  }
+
+  /* line 643, ../sass/global.scss */
+  #ldms-message-list table tbody tr {
+    margin-bottom: 20px;
+    display: block;
+    clear: both;
+  }
+
+  /* line 648, ../sass/global.scss */
+  #ldms-message-list table td {
+    display: block;
+    width: 100%;
+    text-align: left !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* line 655, ../sass/global.scss */
+  #ldms-message-list table td:before {
+    content: attr(data-label) ":";
+    display: inline-block;
+    font-weight: 800;
+    float: left;
+    margin-right: 0.4em;
+  }
+
+  /* line 662, ../sass/global.scss */
+  #ldms-message-list table td:after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+
+  /* line 667, ../sass/global.scss */
+  #ldms-message-list table td:last-child {
+    border-bottom: 0px;
+  }
+
+  /* line 670, ../sass/global.scss */
+  #ldms-message-list table td:last-child:before {
+    display: none;
+  }
+}

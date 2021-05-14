@@ -1,0 +1,11 @@
+.customize-control-range {
+    position: relative;
+}
+
+.lds-range-input {
+    width: 30% !important;
+    float: right;
+    text-align: center;
+    box-shadow: none;
+    margin-top: -3px !important;
+}

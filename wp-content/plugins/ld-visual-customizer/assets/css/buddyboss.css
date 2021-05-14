@@ -1,0 +1,220 @@
+/* line 6, ../sass/buddyboss.scss */
+.learndash-wrapper:not(.lds-template-grid-banner) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title, .learndash-wrapper:not(.lds-template-expanded) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title, .learndash-wrapper:not(.lds-template-stacked) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title {
+  flex-wrap: wrap;
+}
+/* line 8, ../sass/buddyboss.scss */
+.learndash-wrapper:not(.lds-template-grid-banner) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components, .learndash-wrapper:not(.lds-template-expanded) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components, .learndash-wrapper:not(.lds-template-stacked) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components {
+  display: flex;
+  width: 100%;
+  padding-top: 10px;
+  align-items: center;
+}
+/* line 13, ../sass/buddyboss.scss */
+.learndash-wrapper:not(.lds-template-grid-banner) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components .lds-meta-item, .learndash-wrapper:not(.lds-template-expanded) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components .lds-meta-item, .learndash-wrapper:not(.lds-template-stacked) .ld-item-list .ld-item-list-item .ld-item-name .ld-item-title .ld-item-components .lds-meta-item {
+  display: inline-flex;
+  align-items: center;
+}
+/* line 25, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item.ld-item-lesson-item .ld-item-list-item-preview .ld-item-name .ld-item-title .ld-item-components, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item.ld-item-lesson-item .ld-item-list-item-preview .ld-item-name .ld-item-title .ld-item-components, .learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item.ld-item-lesson-item .ld-item-list-item-preview .ld-item-name .ld-item-title .ld-item-components {
+  margin-top: 0 !important;
+}
+/* line 29, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-table-list-item.learndash-complete .ld-item-title > span:first-child,
+.learndash-wrapper.lds-template-grid-banner .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview.learndash-complete .ld-topic-title,
+.learndash-wrapper.lds-template-grid-banner .learndash-complete .ld-item-list-item-preview .ld-item-title > span:first-child, .learndash-wrapper.lds-template-expanded .ld-table-list-item.learndash-complete .ld-item-title > span:first-child,
+.learndash-wrapper.lds-template-expanded .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview.learndash-complete .ld-topic-title,
+.learndash-wrapper.lds-template-expanded .learndash-complete .ld-item-list-item-preview .ld-item-title > span:first-child, .learndash-wrapper.lds-template-stacked .ld-table-list-item.learndash-complete .ld-item-title > span:first-child,
+.learndash-wrapper.lds-template-stacked .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview.learndash-complete .ld-topic-title,
+.learndash-wrapper.lds-template-stacked .learndash-complete .ld-item-list-item-preview .ld-item-title > span:first-child {
+  text-decoration: none;
+}
+/* line 37, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-topic-list .ld-topic-title::before, .learndash-wrapper.lds-template-expanded .ld-topic-list .ld-topic-title::before, .learndash-wrapper.lds-template-stacked .ld-topic-list .ld-topic-title::before {
+  display: none !important;
+}
+/* line 45, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview, .learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview {
+  overflow: hidden;
+  background: #fff;
+}
+/* line 48, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-text, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-text, .learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-text {
+  display: block;
+}
+/* line 51, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name, .learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name {
+  all: unset;
+}
+/* line 53, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title, .learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title {
+  display: block;
+  width: auto;
+  padding: 0;
+}
+/* line 63, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-title, .learndash-wrapper.lds-template-expanded .ld-item-title, .learndash-wrapper.lds-template-stacked .ld-item-title {
+  all: unset;
+}
+/* line 75, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .learndash_content_wrap .ld-table-list .ld-table-list-items div.ld-table-list-item:nth-child(even) a.ld-table-list-item-preview,
+.learndash-wrapper.lds-template-grid-banner .learndash_content_wrap .ld-table-list .ld-table-list-items div.ld-table-list-item:nth-child(odd) a.ld-table-list-item-preview {
+  background: transparent;
+}
+/* line 79, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .learndash_content_wrap .ld-table-list .ld-table-list-items .ld-table-list-item .ld-table-list-item-quiz .ld-quiz-complete ~ .ld-item-title:before {
+  display: none;
+}
+/* line 83, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .learndash_content_wrap .ld-table-list-item-quiz .ld-item-title::before {
+  display: none;
+}
+/* line 89, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner a.ld-item-name .ld-status-icon {
+  left: auto;
+}
+/* line 98, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list-items a.ld-table-list-item-preview .ld-status-icon {
+  left: 0;
+}
+/* line 104, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item {
+  display: block !important;
+}
+/* line 106, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+/* line 111, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-preview .ld-item-name {
+  display: flex !important;
+  flex: 1 1 100% !important;
+}
+/* line 114, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-status-icon {
+  order: 1 !important;
+  margin-right: 15px !important;
+}
+/* line 121, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview {
+  padding: 20px 0;
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center;
+}
+/* line 126, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-item-title {
+  order: inherit;
+}
+/* line 130, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
+  order: inherit;
+  margin-right: 10px;
+}
+/* line 139, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list-items {
+  position: relative;
+}
+/* line 142, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview {
+  padding: 20px 0 !important;
+  justify-content: flex-start !important;
+}
+/* line 145, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
+  order: inherit !important;
+  margin-right: 10px !important;
+}
+/* line 149, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper.lds-template-expanded .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .ld-item-title {
+  order: inherit !important;
+}
+/* line 157, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item {
+  background: transparent;
+  margin: 0 !important;
+  display: flex;
+  flex: 1 1 100%;
+}
+/* line 162, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview {
+  background: transparent;
+}
+/* line 166, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded a.ld-item-name .ld-status-icon,
+.learndash-wrapper.lds-template-expanded a.ld-topic-row .ld-status-icon {
+  z-index: 1000;
+}
+/* line 171, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-status-icon {
+  left: auto;
+}
+/* line 173, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-status-icon .ld-icon.ld-icon-quiz {
+  margin-left: 0;
+}
+/* line 176, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-status-icon.ld-quiz-incomplete .ld-icon.ld-icon-quiz::before {
+  font-size: 24px;
+}
+/* line 185, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .learndash_content_wrap .ld-table-list .ld-table-list-items div.ld-table-list-item:nth-child(even) a.ld-table-list-item-preview,
+.learndash-wrapper.lds-template-expanded .learndash_content_wrap .ld-table-list .ld-table-list-items div.ld-table-list-item:nth-child(odd) a.ld-table-list-item-preview {
+  background: transparent;
+}
+/* line 191, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-expanded .ld-table-list .ld-table-list-items .ld-table-list-item {
+  margin-bottom: 0;
+}
+/* line 198, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview, .learndash-wrapper.lds-template-grid-banner .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview {
+  display: block;
+}
+/* line 200, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview .ld-topic-title, .learndash-wrapper.lds-template-grid-banner .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview .ld-topic-title {
+  width: 100%;
+  display: block;
+}
+/* line 213, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-status-icon .ld-icon.ld-icon-quiz::before, .learndash-wrapper.lds-template-grid-banner .ld-status-icon .ld-icon.ld-icon-quiz::before, .learndash-wrapper.lds-template-expanded .ld-status-icon .ld-icon.ld-icon-quiz::before {
+  content: '\e956';
+  font-family: 'ld-icons' !important;
+}
+/* line 218, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-status-icon.ld-quiz-incomplete .ld-icon.ld-icon-quiz::before, .learndash-wrapper.lds-template-grid-banner .ld-status-icon.ld-quiz-incomplete .ld-icon.ld-icon-quiz::before, .learndash-wrapper.lds-template-expanded .ld-status-icon.ld-quiz-incomplete .ld-icon.ld-icon-quiz::before {
+  font-size: 24px;
+}
+/* line 224, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-item-title:before, .learndash-wrapper.lds-template-grid-banner .ld-item-title:before, .learndash-wrapper.lds-template-expanded .ld-item-title:before {
+  display: none !important;
+}
+/* line 228, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .learndash-wrapper .ld-table-list-header.ld-primary-background, .learndash-wrapper.lds-template-grid-banner .learndash-wrapper .ld-table-list-header.ld-primary-background, .learndash-wrapper.lds-template-expanded .learndash-wrapper .ld-table-list-header.ld-primary-background {
+  background: inherit !important;
+}
+/* line 231, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-status-icon.ld-quiz-incomplete, .learndash-wrapper.lds-template-stacked .learndash-wrapper .ld-status-icon.ld-quiz-pending, .learndash-wrapper.lds-template-stacked .learndash-wrapper .ld-status-icon.ld-status-incomplete, .learndash-wrapper.lds-template-grid-banner .ld-status-icon.ld-quiz-incomplete, .learndash-wrapper.lds-template-grid-banner .learndash-wrapper .ld-status-icon.ld-quiz-pending, .learndash-wrapper.lds-template-grid-banner .learndash-wrapper .ld-status-icon.ld-status-incomplete, .learndash-wrapper.lds-template-expanded .ld-status-icon.ld-quiz-incomplete, .learndash-wrapper.lds-template-expanded .learndash-wrapper .ld-status-icon.ld-quiz-pending, .learndash-wrapper.lds-template-expanded .learndash-wrapper .ld-status-icon.ld-status-incomplete {
+  border: 0;
+}
+/* line 238, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down, .learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down {
+  transform: rotate(0) !important;
+}
+/* line 240, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down::before, .learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down::before, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-icon-arrow-down::before {
+  content: "\e915";
+  font-family: 'ld-icons' !important;
+  color: #fff;
+}
+/* line 247, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-stacked .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button.ld-expanded .ld-icon-arrow-down, .learndash-wrapper.lds-template-grid-banner .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button.ld-expanded .ld-icon-arrow-down, .learndash-wrapper.lds-template-expanded .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button.ld-expanded .ld-icon-arrow-down {
+  transform: rotate(180deg) !important;
+}
+/* line 257, ../sass/buddyboss.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-table-list .ld-table-list-items div.ld-table-list-item a.ld-table-list-item-preview {
+  padding-left: 0 !important;
+}

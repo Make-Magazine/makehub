@@ -1,0 +1,44 @@
+.customize-control-range {
+    position: relative;
+}
+
+.iconpicker-element {
+    padding-left: 30px !important;
+}
+.lds-range-input {
+    width: 30% !important;
+    float: right;
+    text-align: center;
+    box-shadow: none;
+    margin-top: -3px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+        /*
+    pointer-events: none;
+    border: 0 !important;
+    */
+    border: 1px solid #ddd !important;
+    background: #fff !important;
+    position: relative;
+    font-weight: bold;
+}
+
+li.customize-control-range span.customize-control-title {
+     display: block;
+}
+li.customize-control-range label::after {
+     content: '';
+     display: block;
+     clear: both;
+}
+
+.lds-range-input::after {
+    position: absolute;
+    right: 0;
+    content: 'px';
+    display: inline-block;
+}
+
+#customize-control-lds_grid_columns {
+    display: none;
+}

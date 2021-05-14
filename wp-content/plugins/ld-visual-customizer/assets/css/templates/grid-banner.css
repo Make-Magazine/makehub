@@ -1,0 +1,578 @@
+/* line 23, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper {
+  /**
+    * Topic List
+    */
+}
+/* line 24, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner {
+  /**
+    * Lesson List
+    */
+}
+/* line 26, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-table-list.ld-topic-list:not(.ld-quiz-list) .ld-table-list-header {
+  padding: 20px 0;
+}
+/* line 33, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-left: -1%;
+  margin-right: -1%;
+  /**
+    * Quiz Card in Course Level Listing
+    *
+    */
+}
+/* line 41, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-lesson-section-heading,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-lesson-section-heading {
+  padding: 0 1%;
+}
+@media screen and (max-width: 768px) {
+  /* line 33, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) {
+    display: block;
+  }
+  /* line 46, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item {
+    max-width: 400px;
+    margin: 0 auto 4% auto !important;
+  }
+}
+/* line 51, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item:last-child::after,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item:last-child::after {
+  content: '';
+  flex: auto;
+}
+/* line 55, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item {
+  flex-basis: 48%;
+  margin: 0 1% 4% 1%;
+  display: flex;
+  flex-direction: column;
+}
+/* line 62, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item:not(.ld-item-list-item-quiz) .ld-item-list-item-preview a.ld-item-name,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item:not(.ld-item-list-item-quiz) .ld-item-list-item-preview a.ld-item-name {
+  padding-top: 0;
+}
+/* line 65, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item:not(.ld-item-list-item-quiz) .ld-item-list-item-preview .lds-grid-banners-thumbnail,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item:not(.ld-item-list-item-quiz) .ld-item-list-item-preview .lds-grid-banners-thumbnail {
+  left: 0;
+  right: 0;
+}
+/* line 71, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview {
+  position: relative;
+  padding: 0 0 20px 0;
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+}
+/* line 77, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail {
+  background: url("../img/placeholder-image.svg") #efefef center center;
+  background-size: 50px 50px;
+  margin: 0 0 20px 0;
+  padding-top: 55%;
+  position: relative;
+  background-size: cover;
+  background-position: center center;
+  width: 100%;
+  background-repeat: no-repeat;
+  display: block;
+}
+/* line 88, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail a,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .lds-grid-banners-thumbnail a {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: block;
+}
+/* line 97, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-name {
+  display: flex;
+  flex-direction: column;
+}
+/* line 100, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title {
+  flex-grow: 1;
+  padding-top: 6px;
+}
+/* line 104, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title,
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-status-icon,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-item-title,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-name .ld-status-icon {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* line 110, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-name .lds-enhanced-short-description,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-name .lds-enhanced-short-description {
+  padding-top: 15px;
+}
+/* line 114, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .grid-actions,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .grid-actions {
+  flex-grow: 1;
+  width: 100%;
+}
+/* line 118, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details {
+  width: 100%;
+  align-content: space-between;
+  padding: 30px 20px 0;
+  align-self: flex-end;
+}
+@media screen and (max-width: 640px) {
+  /* line 118, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details {
+    flex-wrap: wrap;
+    align-content: center;
+  }
+  /* line 4, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .grid-actions,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details .grid-actions {
+    margin-bottom: 16px;
+    justify-content: center;
+    display: flex;
+  }
+  /* line 8, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .grid-actions .lds-btn,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details .grid-actions .lds-btn {
+    text-align: center;
+  }
+  /* line 12, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-expand-button,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-expand-button {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    justify-content: center;
+  }
+  /* line 17, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-expand-button .ld-text,
+  .learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-details .ld-expand-button .ld-text {
+    padding-right: 0;
+  }
+}
+/* line 130, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-expand-button {
+  display: inline-flex;
+  justify-content: flex-end;
+  flex: 0;
+}
+/* line 134, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-text,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-expand-button .ld-text {
+  flex: 0;
+  display: none;
+}
+/* line 139, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-status-icon,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-status-icon {
+  margin-top: -33px;
+  box-shadow: 0 0 0 5px #fff;
+  order: inherit;
+}
+/* line 144, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-quiz-complete, .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-quiz-incomplete, .learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-status-incomplete,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-quiz-complete,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-quiz-incomplete,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-status-icon.ld-status-incomplete {
+  background: #fff;
+}
+/* line 150, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview a.ld-item-name,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview a.ld-item-name {
+  flex-basis: 100%;
+  width: 100%;
+  line-height: 1.5;
+  padding-left: 0 !important;
+}
+/* line 156, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-components,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-components {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 10px;
+}
+/* line 161, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-components .lds-enhanced-meta,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-components .lds-enhanced-meta {
+  display: flex;
+}
+/* line 164, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-components .ld-status,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-components .ld-status {
+  flex-break: before;
+}
+/* line 167, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item .ld-item-list-item-preview .ld-item-components .ld-status-waiting,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item .ld-item-list-item-preview .ld-item-components .ld-status-waiting {
+  text-align: left;
+  line-height: 1.4em;
+  margin-bottom: 10px;
+}
+/* line 176, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .lds-btn,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .lds-btn {
+  padding-left: 25px;
+  text-align: center;
+  line-height: 1.3;
+  padding-right: 25px;
+}
+/* line 188, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: flex-start;
+}
+/* line 193, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-short-description,
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-meta,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-short-description,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-meta {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* line 198, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-meta,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .lds-enhanced-meta {
+  margin-top: 10px;
+}
+/* line 201, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .ld-item-title,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-item-name .ld-item-title {
+  flex-grow: 0;
+}
+/* line 205, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .lds-enhanced-meta-before,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .lds-enhanced-meta-before {
+  display: inline-flex;
+}
+/* line 208, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .grid-actions,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .grid-actions {
+  display: flex;
+  flex-grow: 1;
+  margin: 20px 20px 0 20px;
+  align-items: flex-end;
+}
+/* line 215, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-item.ld-item-list-item-quiz .lds-grid-banners-thumbnail,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item.ld-item-list-item-quiz .lds-grid-banners-thumbnail {
+  width: 100%;
+}
+/* line 220, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-item-list-section-heading,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-section-heading {
+  flex-basis: 100%;
+}
+/* line 223, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-course-list-items .ld-item-list .ld-pagination,
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-items:not(#ld-main-course-list) .ld-pagination {
+  margin: 60px auto;
+  flex-basis: 100%;
+  justify-content: center;
+}
+/* line 229, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list-item-expanded:before {
+  display: none;
+}
+/* line 235, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-header {
+  padding: 10px 25px;
+  flex-wrap: wrap;
+}
+/* line 238, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-header .ld-table-list-title {
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  line-height: 1.5;
+}
+/* line 243, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-header .ld-table-list-lesson-details {
+  display: none;
+}
+/* line 247, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item-preview {
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px 0;
+}
+/* line 251, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item-preview .lds-enhanced-meta {
+  margin-top: 10px;
+}
+/* line 254, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item-preview .lds-enhanced-meta-before {
+  width: 100%;
+  display: inline-block;
+}
+/* line 259, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item {
+  margin: 0;
+}
+/* line 261, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item .ld-item-title {
+  line-height: 1.5;
+}
+/* line 263, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item .ld-item-title::after {
+  content: '';
+  flex-basis: 100%;
+}
+/* line 269, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-template-grid-banner .ld-item-list.ld-lesson-list .ld-topic-list .ld-pagination {
+  margin: 0;
+}
+/* line 277, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .ld-item-list-item-expanded .ld-table-list-item .grid-actions,
+.learndash-wrapper .ld-item-list-item-expanded .ld-table-list-item-quiz .grid-actions {
+  display: none;
+}
+/* line 287, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list {
+  /**
+    * Reset container
+    */
+  border-radius: 0;
+  overflow: visible;
+  box-shadow: none !important;
+}
+/* line 294, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-header,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-header {
+  background: transparent !important;
+  color: inherit;
+}
+/* line 297, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-header .ld-table-list-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-header .ld-table-list-title {
+  width: 100%;
+}
+/* line 301, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items {
+  overflow: visible;
+  border: 0;
+}
+/* line 305, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0 -1%;
+  /**
+    * Basic card styling
+    */
+}
+@media screen and (max-width: 768px) {
+  /* line 305, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items,
+  .learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items {
+    display: block;
+  }
+  /* line 313, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+  .learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+    max-width: 350px;
+  }
+}
+/* line 323, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item {
+  flex-basis: 48%;
+  width: 48%;
+  margin: 0 1% 4% 1%;
+  border-bottom: 0;
+  border: 2px solid #e2e7ed;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+}
+/* line 332, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .ld-table-list-item-quiz,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .ld-table-list-item-quiz {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+}
+/* line 336, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .ld-table-list-item-quiz a.ld-table
+.grid-actions,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .ld-table-list-item-quiz a.ld-table
+.grid-actions {
+  display: flex;
+  margin: 20px 20px 0 20px;
+}
+/* line 342, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview {
+  position: relative;
+  flex-direction: column;
+  padding: 0 0 20px 0 !important;
+  display: flex;
+  flex-grow: 1;
+  align-items: flex-start;
+}
+/* line 349, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-grid-banners-thumbnail,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-grid-banners-thumbnail {
+  flex-basis: auto !important;
+}
+/* line 352, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-grid-banner-thumbnail,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-grid-banner-thumbnail,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title {
+  flex-basis: auto !important;
+}
+/* line 357, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon {
+  margin-top: -33px;
+  box-shadow: 0 0 0 5px #fff;
+  margin-bottom: 8px;
+  order: inherit;
+  display: block;
+}
+/* line 364, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-quiz-complete, .learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-quiz-incomplete, .learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-status-incomplete,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-quiz-complete,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-quiz-incomplete,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon.ld-status-incomplete {
+  background: #fff;
+}
+/* line 370, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-item-title,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-item-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title {
+  flex-basis: 100%;
+  line-height: 1.5;
+  display: block;
+  margin-bottom: 10px;
+}
+/* line 377, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .grid-actions,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .grid-actions {
+  margin: 20px 20px 0 20px;
+  display: flex;
+  flex-grow: 1;
+  align-items: flex-end;
+}
+/* line 383, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-short-description,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-item-title,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-topic-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-short-description,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-item-title,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .ld-status-icon {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+/* line 391, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-short-description,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item a.ld-table-list-item-preview .lds-enhanced-short-description {
+  width: auto;
+}
+/* line 396, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .lds-grid-banners-thumbnail,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item .lds-grid-banners-thumbnail {
+  background: #efefef;
+  margin-bottom: 20px;
+  padding-top: 55%;
+  background-size: cover;
+  background-position: center center;
+  flex-basis: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  display: block;
+}
+/* line 410, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list-footer,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list-footer {
+  background: transparent;
+  padding: 0;
+}
+/* line 413, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper .lds-template-grid-banner .learndash_content_wrap .ld-table-list-footer .ld-pagination,
+.learndash-wrapper .ld-lesson-topic-list .ld-table-list-footer .ld-pagination {
+  justify-content: center;
+}
+/* line 419, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-columns-3 .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+.learndash-wrapper.lds-columns-3 .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item {
+  flex-basis: 31%;
+  width: 31%;
+  margin-bottom: 2%;
+}
+/* line 427, ../../sass/templates/grid-banner.scss */
+.learndash-wrapper.lds-columns-4 .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+.learndash-wrapper.lds-columns-4 .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item {
+  flex-basis: 23%;
+  width: 23%;
+  margin-bottom: 2%;
+}
+@media screen and (max-width: 960px) {
+  /* line 442, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper.lds-columns-3 .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+  .learndash-wrapper.lds-columns-3 .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item, .learndash-wrapper.lds-columns-4 .ld-lesson-topic-list .ld-table-list.ld-topic-list .ld-table-list-items .ld-table-list-item,
+  .learndash-wrapper.lds-columns-4 .ld-item-list-items:not(#ld-main-course-list) .ld-item-list-item {
+    flex-basis: 100% !important;
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  /* line 453, ../../sass/templates/grid-banner.scss */
+  .ld-lesson-section-heading {
+    text-align: center;
+  }
+}
+@media screen and (max-width: 640px) {
+  /* line 458, ../../sass/templates/grid-banner.scss */
+  .learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-preview {
+    flex-direction: row;
+  }
+}

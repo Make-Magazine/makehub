@@ -1,0 +1,420 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: LearnDash Notes\n"
+"POT-Creation-Date: 2017-08-28 20:21-0400\n"
+"PO-Revision-Date: 2019-07-18 18:23+1000\n"
+"Last-Translator: Björn Granberg <bjorn@mentabee.com>\n"
+"Language-Team: \n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.2.3\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: note.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: EDD_SL_Plugin_Updater.php:185
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:193
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:336
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:336
+msgid "Error"
+msgstr "Fel"
+
+#: nt-admin.php:11 templates/archive-note-listing.php:32
+#: templates/user-courses.php:28
+msgid "Notes"
+msgstr "Anteckningar"
+
+#: nt-ajax.php:171 nt-views.php:51
+msgid "Notes:"
+msgstr "Anteckningar:"
+
+#: nt-assets.php:12 nt-assets.php:32 nt-assets.php:79
+msgid "Note saved."
+msgstr "Anteckning sparad."
+
+#: nt-assets.php:13 nt-assets.php:33 nt-assets.php:80
+msgid "Note saved at"
+msgstr "Anteckningen sparades"
+
+#: nt-assets.php:34 nt-assets.php:81
+msgid "Are you sure you want to delete this?"
+msgstr "Är du säker på att du vill radera den här anteckningen?"
+
+#: nt-controller.php:99 nt-controller.php:153 nt-views.php:198
+#: templates/archive-note-listing.php:48
+msgid "Location:"
+msgstr "Plats:"
+
+#: nt-controller.php:184
+msgid "You do not have access to this note. "
+msgstr "Du saknar behörighet att läsa denna anteckning. "
+
+#: nt-controller.php:197
+msgid "Back to All Notes"
+msgstr "Tillbaks till alla anteckningar"
+
+#: nt-controller.php:229 nt-views.php:114
+msgid "Save"
+msgstr "Spara"
+
+#: nt-models.php:12 nt-models.php:13
+msgid "Course Notes"
+msgstr "Anteckningar"
+
+#: nt-models.php:14
+msgid "Add New"
+msgstr "Skapa ny"
+
+#: nt-models.php:15
+msgid "Add New Note"
+msgstr "Skapa ny anteckning"
+
+#: nt-models.php:16
+msgid "Edit"
+msgstr "Ändra"
+
+#: nt-models.php:17
+msgid "Edit Course Note"
+msgstr "Ändra anteckning"
+
+#: nt-models.php:18
+msgid "New Course Note"
+msgstr "Ny anteckning"
+
+#: nt-models.php:19 nt-models.php:20
+msgid "View Course Note"
+msgstr "Visa anteckning"
+
+#: nt-models.php:21
+msgid "Search Notes"
+msgstr "Sök anteckningar"
+
+#: nt-models.php:22
+msgid "Parent Course Note"
+msgstr "Överordnad kursanteckning"
+
+#: nt-models.php:23
+msgid "No Notes Found"
+msgstr "Inga anteckningar hittades"
+
+#: nt-models.php:24
+msgid "No Notes in Trash"
+msgstr "Inga anteckningar fanns i papperskorgen"
+
+#: nt-models.php:62 nt-models.php:70
+msgid "Course Note Categories"
+msgstr "Anteckningskategorier"
+
+#: nt-models.php:63
+msgid "Course Note Category"
+msgstr "Anteckningskategori"
+
+#: nt-models.php:64
+msgid "Search Course Notes Categories"
+msgstr "Sök anteckningskategorier"
+
+#: nt-models.php:65
+msgid "All Course Note Categories"
+msgstr "Alla anteckningskategorier"
+
+#: nt-models.php:66
+msgid "Edit Course Note Category"
+msgstr "Ändra anteckningskategori"
+
+#: nt-models.php:67
+msgid "Update Course Note Category"
+msgstr "Uppdatera anteckningskategori"
+
+#: nt-models.php:68
+msgid "Add New Course Note Category"
+msgstr "Skapa ny anteckningskategori"
+
+#: nt-models.php:69
+msgid "New Course Note Category"
+msgstr "Ny anteckningskategori"
+
+#: nt-models.php:87 templates/archive-note-listing.php:34
+msgid "User"
+msgstr "Användare"
+
+#: nt-models.php:88 nt-views.php:189
+msgid "Title"
+msgstr "Rubrik"
+
+#: nt-models.php:89
+msgid "Location"
+msgstr "Plats"
+
+#: nt-models.php:90 nt-views.php:190 templates/archive-note-listing.php:36
+msgid "Date"
+msgstr "Datum"
+
+#: nt-models.php:91
+msgid "Updated"
+msgstr "Uppdaterad"
+
+#. Plugin Name of the plugin/theme
+#: nt-settings.php:4
+msgid "LearnDash Notes"
+msgstr "LearnDash Notes"
+
+#: nt-settings.php:4
+msgid "User Notes"
+msgstr "Användaranteckningar"
+
+#: nt-settings.php:20
+msgid "Plugin License Options"
+msgstr ""
+
+#: nt-settings.php:30
+msgid "License"
+msgstr "Licens"
+
+#: nt-settings.php:44
+msgid "License Key"
+msgstr "Licensnyckel"
+
+#: nt-settings.php:48
+msgid "Enter your license key"
+msgstr "Ange din licensnyckel"
+
+#: nt-settings.php:54 nt-settings.php:62
+msgid "Activate License"
+msgstr "Aktivera licens"
+
+#: nt-settings.php:58
+msgid "active"
+msgstr "aktiv"
+
+#: nt-settings.php:59
+msgid "Deactivate License"
+msgstr "Inaktivera licens"
+
+#: nt-settings.php:75
+msgid "Settings"
+msgstr "Inställningar"
+
+#: nt-settings.php:95
+msgid "Enable Notes On"
+msgstr "Aktivera anteckningar på"
+
+#: nt-settings.php:109
+msgid "All notes page"
+msgstr "Sidan med alla anteckningar"
+
+#: nt-settings.php:129
+msgid "Recommended you use the"
+msgstr "Du bör använda"
+
+#: nt-settings.php:129
+msgid "shortcode"
+msgstr "kortkod"
+
+#: nt-settings.php:134
+msgid "Show notes in the admin"
+msgstr "Visa anteckningar för admin"
+
+#: nt-settings.php:138 nt-settings.php:149 nt-settings.php:183
+msgid "Yes"
+msgstr "Ja"
+
+#: nt-settings.php:139 nt-settings.php:150 nt-settings.php:184
+msgid "No"
+msgstr "Nej"
+
+#: nt-settings.php:145
+msgid "Open links in a new window"
+msgstr "Öppna länkar i nytt fönster"
+
+#: nt-settings.php:160
+msgid "Apperance"
+msgstr "Utseende"
+
+#: nt-settings.php:165
+msgid "Note Icon Placement"
+msgstr "Anteckningsikonens placering"
+
+#: nt-settings.php:169
+msgid "Fixed to the bottom of the screen"
+msgstr "Fäst längst ned på skärmen"
+
+#: nt-settings.php:170
+msgid "Fixed to the top of the screen"
+msgstr "Fäst till toppen av skärmen"
+
+#: nt-settings.php:171
+msgid "Above the content"
+msgstr "Ovanför innehållet"
+
+#: nt-settings.php:172
+msgid "Below the content"
+msgstr "Under innehållet"
+
+#: nt-settings.php:173
+msgid "Using the [notepad] shortcode"
+msgstr "Använd kortkoden [notepad]"
+
+#: nt-settings.php:179
+msgid "Hide on Mobile"
+msgstr "Dölj på mobil"
+
+#: nt-settings.php:190
+msgid "Notepad / Icon Background Color"
+msgstr "Anteckning / Ikonens bakgrundsfärg"
+
+#: nt-settings.php:198
+msgid "Notepad / Icon Text Color"
+msgstr "Anteckning / Ikonens textfärg"
+
+#: nt-settings.php:206
+msgid "Notepad Header Background"
+msgstr "Anteckningarnas sidhuvudsfärg"
+
+#: nt-settings.php:214
+msgid "Notepad Header Text"
+msgstr "Anteckningarnas sidhuvudstext"
+
+#: nt-settings.php:222
+msgid "Notepad Link/Icon Colors"
+msgstr "Anteckning länk/ikonfärger"
+
+#: nt-settings.php:230
+msgid "Notepad Button Background"
+msgstr "Anteckning knappars bakgrund"
+
+#: nt-settings.php:238
+msgid "Notepad Button Text"
+msgstr "Anteckning knappars text"
+
+#: nt-settings.php:357
+msgid "Note Options"
+msgstr "Anteckningar"
+
+#: nt-settings.php:363
+msgid "Note Details"
+msgstr "Anteckning detaljuppgifter"
+
+#: nt-settings.php:382
+msgid "Disable notes on this page"
+msgstr "Inaktivera anteckningar på denna sida"
+
+#: nt-settings.php:384
+msgid "Default note title"
+msgstr "Förvald anteckningsrubrik"
+
+#: nt-settings.php:385
+msgid "Default text in the notes editor"
+msgstr "Förvald text i anteckningseditorn"
+
+#: nt-settings.php:414
+msgid "Author"
+msgstr "Författare"
+
+#: nt-settings.php:418
+msgid "Recorded"
+msgstr "Sparades"
+
+#: nt-shortcodes.php:86
+msgid "You're not signed up for any courses."
+msgstr "Du är inte anmäld till några kurser."
+
+#: nt-shortcodes.php:227
+msgid "You are not assigned to any groups"
+msgstr "Du är inte ansluten till någon grupp"
+
+#: nt-views.php:65
+msgid "Take Notes"
+msgstr "Anteckna"
+
+#: nt-views.php:118
+msgid "Reset Dimensions"
+msgstr "Återställ storlek"
+
+#: nt-views.php:123
+msgid "View All Notes"
+msgstr "Alla anteckningar"
+
+#: nt-views.php:185
+msgid "Users Notes"
+msgstr "Användaranteckningar"
+
+#: templates/archive-note-listing.php:6
+msgid "Search for notes..."
+msgstr "Leta i anteckningar..."
+
+#: templates/archive-note-listing.php:16
+msgid "All"
+msgstr "Alla"
+
+#: templates/archive-note-listing.php:66
+msgid "No notes found"
+msgstr "Inga anteckningar hittades"
+
+#: templates/archive-note-listing.php:73
+msgid "Download Selected"
+msgstr "Ladda ner markerad"
+
+#: templates/user-courses.php:7 templates/user-notes-by-course.php:8
+msgid "You do not have access to this users notes."
+msgstr "Du saknar behörighet till denna användares anteckningar."
+
+#: templates/user-courses.php:20 templates/user-notes-by-course.php:29
+msgid "Users Notes:"
+msgstr "Användaranteckningar:"
+
+#: templates/user-courses.php:20 templates/user-notes-by-course.php:30
+msgid "Groups"
+msgstr "Grupper"
+
+#: templates/user-courses.php:20 templates/user-notes-by-course.php:32
+#: templates/user-notes-by-course.php:36
+msgid "'s notes"
+msgstr "s anteckningar"
+
+#: templates/user-courses.php:27
+msgid "Courses"
+msgstr "Kurser"
+
+#: templates/user-notes-by-course.php:42
+msgid "User has no notes for this course."
+msgstr "Användaren har inte gjort några anteckningar i denna kurs."
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.snaporbital.com/learndash-notes"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Take notes on any Learndash course, lesson or topic and list a users notes "
+"using [learndash_my_notes]"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SnapOrbital"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.snaporbital.com"
+msgstr ""

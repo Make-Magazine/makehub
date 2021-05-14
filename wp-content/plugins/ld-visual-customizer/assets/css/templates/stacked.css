@@ -1,0 +1,237 @@
+/* line 1, ../../sass/templates/stacked.scss */
+.learndash-wrapper .ld-table-list.ld-no-pagination {
+  border-bottom: 0 !important;
+}
+
+/* line 6, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked {
+  /**
+    * Topic List Specifics
+    */
+}
+/* line 8, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item {
+  overflow: hidden;
+  /** Expanded Elements **/
+}
+/* line 12, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview a.ld-item-name {
+  display: block;
+  padding: 0 0 20px 0 !important;
+}
+/* line 16, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .ld-status-icon {
+  position: absolute;
+  top: inherit;
+  left: inherit;
+}
+/* line 22, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview div.ld-item-title {
+  padding: 0 25px !important;
+}
+/* line 25, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .lds-enhanced-meta,
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item.ld-item-list-item-quiz .ld-item-list-item-preview .lds-enhanced-short-description {
+  padding-left: 25px;
+  padding-right: 25px;
+}
+/* line 33, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview {
+  position: relative;
+  flex-wrap: wrap;
+  padding: 0 0 20px 0;
+}
+/* line 37, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview a.ld-item-name {
+  padding: 10px 25px 0 25px !important;
+  position: static;
+  display: block;
+  width: 100%;
+}
+/* line 42, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview a.ld-item-name .ld-status-icon {
+  left: 33px;
+  margin-top: -36px;
+  box-shadow: 0 0 0 5px #fff;
+  background: #fff;
+  position: absolute;
+}
+/* line 49, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview a.ld-item-name .ld-status {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+/* line 53, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview a.ld-item-name .ld-status.ld-status-unlocked {
+  background-color: #fff !important;
+}
+/* line 58, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-preview .ld-item-details {
+  padding: 20px 20px 0 20px;
+}
+/* line 63, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded {
+  background: #f6f6f6;
+}
+/* line 65, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded::before {
+  left: 32px;
+}
+/* line 68, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-header {
+  padding: 30px 30px 0 33px;
+}
+/* line 71, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-items {
+  padding: 0;
+  margin: 0 30px;
+}
+/* line 74, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded .ld-table-list-items .ld-table-list-item {
+  margin: 0;
+  padding: 0;
+}
+/* line 79, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .ld-item-list-item-expanded .lds-enhanced-meta {
+  background: #fff !important;
+}
+/* line 83, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .lds-stacked-thumbnail {
+  background: #efefef url("../../img/placeholder-image.svg") center center no-repeat;
+  background-size: cover;
+  padding-top: 33%;
+  display: block;
+  position: relative;
+  width: 100%;
+  margin: 0 0 20px 0;
+}
+/* line 91, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-item-list-item .lds-stacked-thumbnail a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+/* line 100, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-lesson-list .ld-topic-row .lds-stacked-thumbnail {
+  display: none !important;
+}
+/* line 105, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items {
+  border-left: 0;
+  border-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+/* line 113, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list {
+  box-shadow: none !important;
+  overflow: visible;
+}
+/* line 117, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-header,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list .ld-table-list-header {
+  background: transparent !important;
+  color: inherit;
+  /* padding-left: 0 !important; */
+}
+/* line 121, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-header .ld-table-list-title,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list .ld-table-list-header .ld-table-list-title {
+  width: 100%;
+}
+/* line 125, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-footer,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list .ld-table-list-footer {
+  background: transparent;
+  justify-content: center;
+}
+/* line 128, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-footer .ld-pagination,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list .ld-table-list-footer .ld-pagination {
+  justify-content: center;
+}
+/* line 130, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-footer .ld-pagination .ld-pages,
+.learndash-wrapper.lds-template-stacked .ld-table-list.ld-topic-list .ld-table-list-footer .ld-pagination .ld-pages {
+  padding: 8px 16px;
+}
+/* line 140, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-topic-list.ld-table-list .ld-table-list-item .ld-table-list-item-preview {
+  flex-wrap: wrap;
+}
+/* line 141, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-topic-list.ld-table-list .ld-table-list-item .ld-table-list-item-preview .lds-enhanced-meta-before {
+  width: 100%;
+  display: block;
+}
+/* line 145, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .ld-topic-list.ld-table-list .ld-table-list-item .ld-table-list-item-preview .lds-enhanced-short-description,
+.learndash-wrapper.lds-template-stacked .ld-topic-list.ld-table-list .ld-table-list-item .ld-table-list-item-preview .lds-enhanced-meta {
+  margin-left: 31px;
+}
+/* line 152, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list {
+  overflow: visible;
+}
+/* line 155, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-header,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-header {
+  padding: 22px 0;
+}
+/* line 160, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-items,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-items {
+  overflow: visible;
+  padding: 0;
+  border: 0;
+}
+/* line 165, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-item,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-item {
+  margin: 1em 0;
+  border: 2px solid #e2e7ed;
+  border-radius: 6px;
+}
+/* line 169, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-item .ld-table-list-item-preview {
+  position: relative;
+  padding-top: 36%;
+  /*
+  padding-left: 30px !important;
+  padding-right: 30px;
+  */
+}
+/* line 176, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .ld-status-icon,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-item .ld-table-list-item-preview .ld-status-icon {
+  left: 33px;
+  margin-top: -36px;
+  box-shadow: 0 0 0 5px #fff;
+  background: #fff;
+}
+/* line 182, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .lds-stacked-thumbnail,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-item .ld-table-list-item-preview .lds-stacked-thumbnail {
+  background: #efefef url("../../img/placeholder-image.svg") center center no-repeat;
+  background-size: cover;
+  padding-top: 33%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+}
+/* line 190, ../../sass/templates/stacked.scss */
+.learndash-wrapper.lds-template-stacked .learndash_content_wrap .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview .lds-stacked-thumbnail a,
+.learndash-wrapper.lds-template-stacked .ld-lesson-topic-list .ld-table-list-item .ld-table-list-item-preview .lds-stacked-thumbnail a {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

@@ -1,0 +1,204 @@
+/* line 3, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-header {
+  display: none;
+  transition: all ease-in-out 250ms;
+}
+@media (max-width: 768px) {
+  /* line 3, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus .ld-focus-header {
+    display: flex;
+    top: auto !important;
+    bottom: 0;
+    position: fixed;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+  }
+  /* line 13, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus .ld-focus-header .ld-content-actions {
+    order: 1;
+    border-top: 0;
+    border-bottom: 1px solid #f0f3f6;
+  }
+  /* line 18, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus .ld-focus-header .ld-mobile-nav {
+    order: 2;
+  }
+}
+/* line 23, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar {
+  border-right: 0;
+}
+/* line 26, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar {
+  padding-top: 0;
+  padding-bottom: 120px;
+}
+/* line 29, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-focus-sidebar-trigger {
+  height: inherit;
+}
+/* line 32, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-focus-sidebar-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+/* line 37, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-progress {
+  position: relative;
+  z-index: 100;
+  padding-top: 1em;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  width: 100%;
+  margin-bottom: 0;
+}
+/* line 44, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-progress .ld-progress-percentage {
+  color: #fff !important;
+}
+/* line 47, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-progress .ld-progress-bar {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+/* line 49, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-progress .ld-progress-bar .ld-progress-bar-percentage {
+  background-color: #fff !important;
+}
+@media (max-width: 768px) {
+  /* line 26, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus .ld-focus-sidebar {
+    top: 0;
+    position: fixed;
+    bottom: 0;
+  }
+}
+/* line 60, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-navigation {
+  background: #f0f3f6;
+  padding: 1.5em 0;
+}
+/* line 64, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item {
+  position: relative;
+  margin-left: 1em;
+  margin-right: 1em;
+  border-bottom: 0;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+/* line 71, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item .ld-lesson-item-preview {
+  padding: 1.5em 1em;
+}
+/* line 74, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item .ld-topic-list.ld-table-list {
+  background: #f9f9f9;
+  box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.03);
+}
+/* line 79, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item-section-heading {
+  background: #f0f3f6;
+  margin: -1px 0 0 0;
+  padding: 1em;
+  position: relative;
+  z-index: 10;
+}
+/* line 88, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ldvc-focus-sidebar-logo {
+  padding: 30px;
+  transition: all ease-in-out 250ms;
+}
+@media screen and (max-width: 768px) {
+  /* line 92, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus:not(.ld-focus-sidebar-collapsed) {
+    height: 100vh;
+    overflow: hidden;
+  }
+  /* line 96, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus:not(.ld-focus-sidebar-collapsed) .ld-focus-sidebar {
+    width: 97%;
+  }
+  /* line 98, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus:not(.ld-focus-sidebar-collapsed) .ld-focus-sidebar .ld-course-navigation-heading {
+    width: 100%;
+  }
+  /* line 102, ../../../sass/themes/focus/sidebar.scss */
+  .learndash-wrapper .ld-focus:not(.ld-focus-sidebar-collapsed) .ld-focus-header {
+    opacity: 0;
+  }
+}
+/* line 107, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-course-navigation-heading,
+.learndash-wrapper .ld-focus .ld-focus-sidebar-trigger {
+  transition: all ease-in-out 200ms;
+}
+/* line 110, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus .ld-course-navigation-heading .ld-progress,
+.learndash-wrapper .ld-focus .ld-course-navigation-heading .ld-icon-arrow-right,
+.learndash-wrapper .ld-focus .ld-focus-sidebar-trigger .ld-progress,
+.learndash-wrapper .ld-focus .ld-focus-sidebar-trigger .ld-icon-arrow-right {
+  transition: all ease-in-out 200ms;
+}
+/* line 117, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar .ld-focus-sidebar-trigger,
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar .ld-course-navigation-heading {
+  background: transparent !important;
+}
+/* line 121, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar .ld-icon-arrow-right {
+  background: #000;
+  padding: 12px;
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+}
+/* line 126, ../../../sass/themes/focus/sidebar.scss */
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar .ld-progress,
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar .ldvc-focus-sidebar-logo {
+  opacity: 0;
+}
+
+/* line 135, ../../../sass/themes/focus/sidebar.scss */
+body.admin-bar.ld-in-focus-mode .ld-focus-sidebar {
+  top: 32px;
+}
+@media screen and (max-width: 768px) {
+  /* line 135, ../../../sass/themes/focus/sidebar.scss */
+  body.admin-bar.ld-in-focus-mode .ld-focus-sidebar {
+    top: 46px;
+  }
+}
+
+/*
+
+.ld-focus-content .ld-content-actions {
+     visibility: hidden;
+}
+
+.learndash-wrapper .ld-focus .ld-focus-header {
+     display: flex !important;
+     top: auto !important;
+     bottom: 0;
+     position: fixed;
+     box-shadow: 0 0 30px rgba(0,0,0,0.1);
+     z-index: 9999;
+     left: 350px;
+}
+
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-header {
+     left: 0;
+}
+
+.learndash-wrapper .ld-focus .ld-focus-header .ld-mobile-nav,
+.learndash-wrapper .ld-focus .ld-focus-header .ld-brand-logo,
+.learndash-wrapper .ld-focus .ld-focus-header .ld-user-menu,
+.learndash-wrapper .ld-focus .ld-focus-header .ld-progress {
+     display: none !important;
+}
+
+@media screen and (max-width: 768px) {
+     .learndash-wrapper .ld-focus .ld-focus-header .ld-mobile-nav,
+     .learndash-wrapper .ld-focus .ld-focus-header .ld-user-menu,
+     .learndash-wrapper .ld-focus .ld-focus-header .ld-progress {
+          display: inherit !important;
+     }
+}
+*/

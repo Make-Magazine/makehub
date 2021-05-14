@@ -1,0 +1,1181 @@
+#learndash_enhanced_course_header {
+    padding: 20px;
+    margin: 30px 0;
+    background: #333;
+    &.lds-no-leaderboard {
+        padding-bottom: 0;
+    }
+    hgroup {
+        background: rgba(255,255,255,.15);
+        padding: 20px;
+        margin: -20px -20px 0 -20px;
+    }
+    h2 {
+        margin: 0 !important;
+        color: #fff;
+    }
+    p.lds-enhanced-course-status {
+        color: #fff;
+        opacity: 0.75;
+        margin: 0;
+        float: right;
+    }
+    ul, li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    ul {
+        margin: 20px 0 0;
+    }
+    li {
+        box-sizing: border-box;
+        display: inline-block;
+        width: 32%;
+        text-align: center;
+        border-left: 1px solid rgba(255,255,255,.15);
+        padding-left: 20px;
+        color: #fff;
+        span {
+            font-size: 24px;
+            font-weight: normal;
+        }
+        strong {
+            display: block;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+        &:first-child {
+            border-left: 0;
+            padding-left: 0;
+        }
+    }
+    &.lds-has-background {
+        position: relative;
+        background-position: center center;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        &::before {
+            position: absolute;
+            background: rgba(0,0,0,.65);
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+            content: '';
+        }
+        hgroup,
+        ul {
+            position: relative;
+            z-index: 5;
+        }
+        p.lds-enhanced-course-status,
+        h2,
+        li {
+            color: #fff !important;
+            border-color: rgba(255,255,255,.35) !important;
+        }
+    }
+}
+
+#lds-shortcode {
+
+    &.lds-course-list-style-icon {
+
+        padding-top: 30px;
+        padding-bottom: 30px;
+
+        .lds-course-item-icon {
+            max-width: 150px;
+            max-height: 150px;
+            overflow: hidden;
+            border-radius: 100%;
+            border: 1px solid rgba(0,0,0,.1);
+            padding: 2px;
+
+            img {
+                border-radius: 100%;
+            }
+
+            a {
+                display: block;
+                width: 144px;
+                height: 144px;
+                border-radius: 100%;
+                text-decoration: none;
+            }
+
+        }
+
+    }
+
+    &.lds-course-list-style-banner {
+        padding-top: 30px;
+        padding-bottom: 30px;
+        .lds-course-item-icon {
+            width: 100%;
+            position: relative;
+            background: #fff;
+            box-shadow: inset 0 0 50px rgba(0,0,0,.075);
+            overflow: hidden;
+            a {
+                display: block;
+                width: 100%;
+                padding-top: 60%;
+                position: relative;
+                text-decoration: none;
+                i.fa {
+                    font-size: 72px;
+                    position: absolute;
+                    top: 50%;
+                    width: 100%;
+                    text-align: center;
+                    transform: translateY(-50%);
+                }
+            }
+        }
+    }
+
+    .lds-course-item {
+        margin-bottom: 65px;
+        h3 {
+            line-height: 1.5em;
+        }
+        .lds-course-item-icon {
+            display: block;
+            margin: 0 auto 15px auto;
+            a {
+                background-size: cover;
+                transition: all ease 0.5s;
+                background-repeat: no-repeat;
+                text-decoration: none;
+                &:hover {
+                    opacity: 0.5;
+                }
+                &.default {
+                    background-size: auto;
+                    background-position: center center;
+                }
+            }
+        }
+        .lds-entry-content {
+            font-size: 14px;
+            margin: 0 0 30px 0;
+        }
+    }
+
+    .lds-button {
+        font-weight: bold;
+        text-transform: uppercase;
+        border-radius: 4px;
+        padding: 10px 25px;
+        background: #fafafa;
+        transition: all ease 0.5s;
+        &:hover {
+            opacity: 0.5;
+            padding: 10px 20px 10px 25px;
+            i {
+                margin-left: 5px;
+            }
+        }
+        i {
+            transition: all ease 0.5s;
+        }
+    }
+
+    .lds-expanded-course-item {
+        margin-bottom: 100px;
+        hgroup {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(0,0,0,.1);
+            position: relative;
+            &.with-image {
+                padding-left: 90px;
+                min-height: 95px;
+            }
+        }
+        .lds-expanded-section {
+            margin-bottom: 20px;
+        }
+        .lds-expanded-meta {
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .lds-expanded-course-item-icon {
+            width: 75px;
+            height: 75px;
+            padding: 2px;
+            border: 1px solid #ddd;
+            border-radius: 100%;
+            position: absolute;
+            left: 0;
+            top: -10px;
+            a {
+                width: 100%;
+                height: 69px;
+                background: #fafafa;
+                text-align: center;
+                line-height: 69px;
+                border-radius: 100%;
+                font-size: 24px;
+                display: block;
+                background-size: cover;
+                text-decoration: none;
+                &:hover {
+                    opacity: 0.6;
+                }
+            }
+        }
+        .lds-expanded-section {
+            margin: 30px 0;
+        }
+        .lds-expanded-course-lesson-list {
+            ul {
+                list-style: none;
+                margin-left: 0;
+                padding-left: 0;
+                border-top: 1px solid rgba(0,0,0,.1);
+                &.lds-expanded-topic-list {
+                    border-top: 0px;
+                    padding-left: 25px;
+                    position: relative;
+                    &::before {
+                        left: 11px;
+                        top: 0;
+                        bottom: 0px;
+                        width: 3px;
+                        background: rgba(0,0,0,.15);
+                        position: absolute;
+                        content: '';
+                        display: block;
+                    }
+                    span.lds-ec-icon::after {
+                        position: absolute;
+                        top: 50%;
+                        margin-top: -2px;
+                        left: -11px;
+                        height: 2px;
+                        width: 10px;
+                        background: rgba(0,0,0,.15);
+                        content: '';
+                        display: block;
+                    }
+                    li {
+                        border-bottom: 0px;
+                    }
+                    a::before,
+                    a::after {
+                        display: none;
+                    }
+                }
+                li {
+                    list-style: none;
+                    margin: 0;
+                    padding: 0;
+                    border-bottom: 1px dotted rgba(0,0,0,.1);
+                    &:last-child {
+                        border-bottom: 0;
+                        a::before {
+                            border-radius: 0 0 5px 5px;
+                        }
+                    }
+                    &.lds-expanded-list-title {
+                        font-weight: bold;
+                        padding: 20px 0 10px 0;
+                        color: #000;
+                    }
+                    a {
+                        display: block;
+                        padding-left: 35px;
+                        padding-top: 15px;
+                        padding-bottom: 15px;
+                        position: relative;
+                        border-bottom: 0;
+                        box-shadow: none;
+                        text-decoration: none;
+                        &:hover {
+                            opacity: 0.6;
+                            border-bottom: 0;
+                            box-shadow: none;
+                            text-decoration: none;
+                        }
+                        &::before {
+                            left:11px;
+                            bottom: 0;
+                            top: 0;
+                            width: 3px;
+                            background: #ddd;
+                            position: absolute;
+                            content: '';
+                            display: block;
+                        }
+                        &::after {
+                            left:11px;
+                            bottom: 0px;
+                            top: 40px;
+                            width: 3px;
+                            background: #ddd;
+                            position: absolute;
+                            content: '';
+                            display: block;
+                        }
+                    }
+                    &:first-child a:before,
+                    &:last-child a:after {
+                        display: none;
+                    }
+                    .lds-ec-icon {
+                        width: 25px;
+                        height: 25px;
+                        text-align: center;
+                        line-height: 25px;
+                        background: #666;
+                        margin-right: 10px;
+                        border-radius: 100%;
+                        color: #fff;
+                        position: absolute;
+                        z-index: 2;
+                        left: 0;
+                    }
+                    .lds-ec-duration {
+                        display: inline-block;
+                        margin-left: 10px;
+                        opacity: 0.6;
+                        font-size: 12px;
+                        &.standalone {
+                            margin-left: 0px;
+                            display: block;
+                        }
+                    }
+                    .lds-ec-notavailable {
+                        margin: 5px 0;
+                        opacity: 0.8;
+                        display: block;
+                    }
+                    .lds-ec-description {
+                        display: block;
+                        font-style: italic;
+                        margin: 5px 0;
+                        opacity: 0.8;
+                        font-size: 16px;
+                    }
+                }
+                &.lds-expanded-navigation-widget {
+                    ul.lds-expanded-topic-list {
+                        display: none;
+                    }
+                    li.learndash-current-menu-ancestor ul.lds-expanded-topic-list {
+                        display: block;
+                    }
+                }
+                .lds-ec-notavailable {
+                    font-size: 12px;
+                    padding-top: 8px;
+                }
+            }
+        }
+
+    }
+
+    .lds-dialog {
+        background: #fafafa;
+        padding: 0 20px 20px;
+        margin: 30px auto;
+        max-width: 600px;
+        hgroup.lds-dialog-title {
+            margin: 0 -20px 20px -20px;
+            background: #efefef;
+            padding: 20px;
+            h2 {
+                margin: 0;
+                padding: 0;
+                color: #333;
+            }
+        }
+        label {
+            display: block;
+        }
+        input[type='text'],
+        input[type='password'] {
+            width: 100%;
+            border: 0;
+            padding: 10px;
+            background: #fff;
+            border: 1px solid transparent;
+            transition: all ease 500ms;
+            &:focus {
+                border: 1px solid rgba(0,0,0,.35);
+            }
+        }
+        input[type='submit'] {
+            border: 0;
+            padding: 10px 15px;
+            box-shadow: 0;
+            transition: all ease 250ms;
+            &:hover {
+                cursor: pointer;
+                opacity: 0.7;
+            }
+        }
+        p {
+            margin: 0 0 15px 0;
+        }
+        p.lds-dialog-lost-password {
+            margin-top: 25px;
+        }
+    }
+
+}
+
+//
+// Progress Shortcode
+// --------------------------------------------------
+
+.lds-course-progress {
+    margin-bottom: 40px;
+
+    .lds-progress-bar {
+        background: #efefef;
+        height: 25px;
+        margin-bottom: 5px;
+        span {
+            height: 25px;
+            display: inline-block;
+            background: #333;
+            position: relative;
+        }
+
+        b {
+            display: inline-block;
+            line-height: 25px;
+            position: absolute;
+            height: 25px;
+            right: 5px;
+            color: #fff;
+        }
+
+    }
+
+    .progress-meta {
+        text-transform: uppercase;
+        opacity: 0.8;
+        font-size: 12px;
+    }
+
+}
+
+/**
+  * Modules, wrap these in a #lds-shortcode for priority
+  */
+
+#lds-shortcode {
+    @import '_modules/grid-item';
+    @import '_utilities/utilities';
+    @import '_utilities/typography';
+    @import '_layouts/grid';
+}
+
+//
+// Grid system
+// --------------------------------------------------
+
+
+.lds-container {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  * {
+    box-sizing: border-box
+  }
+}
+
+.u-lds-flush-margins {
+    margin-left: -15px !important;
+    margin-right: -15px !important;
+}
+
+
+@media (min-width: 768px) {
+  .lds-container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .lds-container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .lds-container {
+    width: 1170px;
+  }
+}
+.lds-container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+    * {
+      box-sizing: border-box
+    }
+}
+.lds-row {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.lds-col-xs-1, .lds-col-sm-1, .lds-col-md-1, .lds-col-lg-1, .lds-col-xs-2, .lds-col-sm-2, .lds-col-md-2, .lds-col-lg-2, .lds-col-xs-3, .lds-col-sm-3, .lds-col-md-3, .lds-col-lg-3, .lds-col-xs-4, .lds-col-sm-4, .lds-col-md-4, .lds-col-lg-4, .lds-col-xs-5, .lds-col-sm-5, .lds-col-md-5, .lds-col-lg-5, .lds-col-xs-6, .lds-col-sm-6, .lds-col-md-6, .lds-col-lg-6, .lds-col-xs-7, .lds-col-sm-7, .lds-col-md-7, .lds-col-lg-7, .lds-col-xs-8, .lds-col-sm-8, .lds-col-md-8, .lds-col-lg-8, .lds-col-xs-9, .lds-col-sm-9, .lds-col-md-9, .lds-col-lg-9, .lds-col-xs-10, .lds-col-sm-10, .lds-col-md-10, .lds-col-lg-10, .lds-col-xs-11, .lds-col-sm-11, .lds-col-md-11, .lds-col-lg-11, .lds-col-xs-12, .lds-col-sm-12, .lds-col-md-12, .lds-col-lg-12 {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+.lds-col-xs-1, .lds-col-xs-2, .lds-col-xs-3, .lds-col-xs-4, .lds-col-xs-5, .lds-col-xs-6, .lds-col-xs-7, .lds-col-xs-8, .lds-col-xs-9, .lds-col-xs-10, .lds-col-xs-11, .lds-col-xs-12 {
+  float: left;
+}
+.lds-col-xs-12 {
+  width: 100%;
+}
+.lds-col-xs-11 {
+  width: 91.66666667%;
+}
+.lds-col-xs-10 {
+  width: 83.33333333%;
+}
+.lds-col-xs-9 {
+  width: 75%;
+}
+.lds-col-xs-8 {
+  width: 66.66666667%;
+}
+.lds-col-xs-7 {
+  width: 58.33333333%;
+}
+.lds-col-xs-6 {
+  width: 50%;
+}
+.lds-col-xs-5 {
+  width: 41.66666667%;
+}
+.lds-col-xs-4 {
+  width: 33.33333333%;
+}
+.lds-col-xs-3 {
+  width: 25%;
+}
+.lds-col-xs-2 {
+  width: 16.66666667%;
+}
+.lds-col-xs-1 {
+  width: 8.33333333%;
+}
+.lds-col-xs-pull-12 {
+  right: 100%;
+}
+.lds-col-xs-pull-11 {
+  right: 91.66666667%;
+}
+.lds-col-xs-pull-10 {
+  right: 83.33333333%;
+}
+.lds-col-xs-pull-9 {
+  right: 75%;
+}
+.lds-col-xs-pull-8 {
+  right: 66.66666667%;
+}
+.lds-col-xs-pull-7 {
+  right: 58.33333333%;
+}
+.lds-col-xs-pull-6 {
+  right: 50%;
+}
+.lds-col-xs-pull-5 {
+  right: 41.66666667%;
+}
+.lds-col-xs-pull-4 {
+  right: 33.33333333%;
+}
+.lds-col-xs-pull-3 {
+  right: 25%;
+}
+.lds-col-xs-pull-2 {
+  right: 16.66666667%;
+}
+.lds-col-xs-pull-1 {
+  right: 8.33333333%;
+}
+.lds-col-xs-pull-0 {
+  right: auto;
+}
+.lds-col-xs-push-12 {
+  left: 100%;
+}
+.lds-col-xs-push-11 {
+  left: 91.66666667%;
+}
+.lds-col-xs-push-10 {
+  left: 83.33333333%;
+}
+.lds-col-xs-push-9 {
+  left: 75%;
+}
+.lds-col-xs-push-8 {
+  left: 66.66666667%;
+}
+.lds-col-xs-push-7 {
+  left: 58.33333333%;
+}
+.lds-col-xs-push-6 {
+  left: 50%;
+}
+.lds-col-xs-push-5 {
+  left: 41.66666667%;
+}
+.lds-col-xs-push-4 {
+  left: 33.33333333%;
+}
+.lds-col-xs-push-3 {
+  left: 25%;
+}
+.lds-col-xs-push-2 {
+  left: 16.66666667%;
+}
+.lds-col-xs-push-1 {
+  left: 8.33333333%;
+}
+.lds-col-xs-push-0 {
+  left: auto;
+}
+.lds-col-xs-offset-12 {
+  margin-left: 100%;
+}
+.lds-col-xs-offset-11 {
+  margin-left: 91.66666667%;
+}
+.lds-col-xs-offset-10 {
+  margin-left: 83.33333333%;
+}
+.lds-col-xs-offset-9 {
+  margin-left: 75%;
+}
+.lds-col-xs-offset-8 {
+  margin-left: 66.66666667%;
+}
+.lds-col-xs-offset-7 {
+  margin-left: 58.33333333%;
+}
+.lds-col-xs-offset-6 {
+  margin-left: 50%;
+}
+.lds-col-xs-offset-5 {
+  margin-left: 41.66666667%;
+}
+.lds-col-xs-offset-4 {
+  margin-left: 33.33333333%;
+}
+.lds-col-xs-offset-3 {
+  margin-left: 25%;
+}
+.lds-col-xs-offset-2 {
+  margin-left: 16.66666667%;
+}
+.lds-col-xs-offset-1 {
+  margin-left: 8.33333333%;
+}
+.lds-col-xs-offset-0 {
+  margin-left: 0%;
+}
+@media (min-width: 768px) {
+  .lds-col-sm-1, .lds-col-sm-2, .lds-col-sm-3, .lds-col-sm-4, .lds-col-sm-5, .lds-col-sm-6, .lds-col-sm-7, .lds-col-sm-8, .lds-col-sm-9, .lds-col-sm-10, .lds-col-sm-11, .lds-col-sm-12 {
+    float: left;
+  }
+  .lds-col-sm-12 {
+    width: 100%;
+  }
+  .lds-col-sm-11 {
+    width: 91.66666667%;
+  }
+  .lds-col-sm-10 {
+    width: 83.33333333%;
+  }
+  .lds-col-sm-9 {
+    width: 75%;
+  }
+  .lds-col-sm-8 {
+    width: 66.66666667%;
+  }
+  .lds-col-sm-7 {
+    width: 58.33333333%;
+  }
+  .lds-col-sm-6 {
+    width: 50%;
+  }
+  .lds-col-sm-5 {
+    width: 41.66666667%;
+  }
+  .lds-col-sm-4 {
+    width: 33.33333333%;
+  }
+  .lds-col-sm-3 {
+    width: 25%;
+  }
+  .lds-col-sm-2 {
+    width: 16.66666667%;
+  }
+  .lds-col-sm-1 {
+    width: 8.33333333%;
+  }
+  .lds-col-sm-pull-12 {
+    right: 100%;
+  }
+  .lds-col-sm-pull-11 {
+    right: 91.66666667%;
+  }
+  .lds-col-sm-pull-10 {
+    right: 83.33333333%;
+  }
+  .lds-col-sm-pull-9 {
+    right: 75%;
+  }
+  .lds-col-sm-pull-8 {
+    right: 66.66666667%;
+  }
+  .lds-col-sm-pull-7 {
+    right: 58.33333333%;
+  }
+  .lds-col-sm-pull-6 {
+    right: 50%;
+  }
+  .lds-col-sm-pull-5 {
+    right: 41.66666667%;
+  }
+  .lds-col-sm-pull-4 {
+    right: 33.33333333%;
+  }
+  .lds-col-sm-pull-3 {
+    right: 25%;
+  }
+  .lds-col-sm-pull-2 {
+    right: 16.66666667%;
+  }
+  .lds-col-sm-pull-1 {
+    right: 8.33333333%;
+  }
+  .lds-col-sm-pull-0 {
+    right: auto;
+  }
+  .lds-col-sm-push-12 {
+    left: 100%;
+  }
+  .lds-col-sm-push-11 {
+    left: 91.66666667%;
+  }
+  .lds-col-sm-push-10 {
+    left: 83.33333333%;
+  }
+  .lds-col-sm-push-9 {
+    left: 75%;
+  }
+  .lds-col-sm-push-8 {
+    left: 66.66666667%;
+  }
+  .lds-col-sm-push-7 {
+    left: 58.33333333%;
+  }
+  .lds-col-sm-push-6 {
+    left: 50%;
+  }
+  .lds-col-sm-push-5 {
+    left: 41.66666667%;
+  }
+  .lds-col-sm-push-4 {
+    left: 33.33333333%;
+  }
+  .lds-col-sm-push-3 {
+    left: 25%;
+  }
+  .lds-col-sm-push-2 {
+    left: 16.66666667%;
+  }
+  .lds-col-sm-push-1 {
+    left: 8.33333333%;
+  }
+  .lds-col-sm-push-0 {
+    left: auto;
+  }
+  .lds-col-sm-offset-12 {
+    margin-left: 100%;
+  }
+  .lds-col-sm-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .lds-col-sm-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .lds-col-sm-offset-9 {
+    margin-left: 75%;
+  }
+  .lds-col-sm-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .lds-col-sm-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .lds-col-sm-offset-6 {
+    margin-left: 50%;
+  }
+  .lds-col-sm-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .lds-col-sm-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .lds-col-sm-offset-3 {
+    margin-left: 25%;
+  }
+  .lds-col-sm-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .lds-col-sm-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .lds-col-sm-offset-0 {
+    margin-left: 0%;
+  }
+}
+@media (min-width: 992px) {
+  .lds-col-md-1, .lds-col-md-2, .lds-col-md-3, .lds-col-md-4, .lds-col-md-5, .lds-col-md-6, .lds-col-md-7, .lds-col-md-8, .lds-col-md-9, .lds-col-md-10, .lds-col-md-11, .lds-col-md-12 {
+    float: left;
+  }
+  .lds-col-md-12 {
+    width: 100%;
+  }
+  .lds-col-md-11 {
+    width: 91.66666667%;
+  }
+  .lds-col-md-10 {
+    width: 83.33333333%;
+  }
+  .lds-col-md-9 {
+    width: 75%;
+  }
+  .lds-col-md-8 {
+    width: 66.66666667%;
+  }
+  .lds-col-md-7 {
+    width: 58.33333333%;
+  }
+  .lds-col-md-6 {
+    width: 50%;
+  }
+  .lds-col-md-5 {
+    width: 41.66666667%;
+  }
+  .lds-col-md-4 {
+    width: 33.33333333%;
+  }
+  .lds-col-md-3 {
+    width: 25%;
+  }
+  .lds-col-md-2 {
+    width: 16.66666667%;
+  }
+  .lds-col-md-1 {
+    width: 8.33333333%;
+  }
+  .lds-col-md-pull-12 {
+    right: 100%;
+  }
+  .lds-col-md-pull-11 {
+    right: 91.66666667%;
+  }
+  .lds-col-md-pull-10 {
+    right: 83.33333333%;
+  }
+  .lds-col-md-pull-9 {
+    right: 75%;
+  }
+  .lds-col-md-pull-8 {
+    right: 66.66666667%;
+  }
+  .lds-col-md-pull-7 {
+    right: 58.33333333%;
+  }
+  .lds-col-md-pull-6 {
+    right: 50%;
+  }
+  .lds-col-md-pull-5 {
+    right: 41.66666667%;
+  }
+  .lds-col-md-pull-4 {
+    right: 33.33333333%;
+  }
+  .lds-col-md-pull-3 {
+    right: 25%;
+  }
+  .lds-col-md-pull-2 {
+    right: 16.66666667%;
+  }
+  .lds-col-md-pull-1 {
+    right: 8.33333333%;
+  }
+  .lds-col-md-pull-0 {
+    right: auto;
+  }
+  .lds-col-md-push-12 {
+    left: 100%;
+  }
+  .lds-col-md-push-11 {
+    left: 91.66666667%;
+  }
+  .lds-col-md-push-10 {
+    left: 83.33333333%;
+  }
+  .lds-col-md-push-9 {
+    left: 75%;
+  }
+  .lds-col-md-push-8 {
+    left: 66.66666667%;
+  }
+  .lds-col-md-push-7 {
+    left: 58.33333333%;
+  }
+  .lds-col-md-push-6 {
+    left: 50%;
+  }
+  .lds-col-md-push-5 {
+    left: 41.66666667%;
+  }
+  .lds-col-md-push-4 {
+    left: 33.33333333%;
+  }
+  .lds-col-md-push-3 {
+    left: 25%;
+  }
+  .lds-col-md-push-2 {
+    left: 16.66666667%;
+  }
+  .lds-col-md-push-1 {
+    left: 8.33333333%;
+  }
+  .lds-col-md-push-0 {
+    left: auto;
+  }
+  .lds-col-md-offset-12 {
+    margin-left: 100%;
+  }
+  .lds-col-md-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .lds-col-md-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .lds-col-md-offset-9 {
+    margin-left: 75%;
+  }
+  .lds-col-md-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .lds-col-md-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .lds-col-md-offset-6 {
+    margin-left: 50%;
+  }
+  .lds-col-md-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .lds-col-md-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .lds-col-md-offset-3 {
+    margin-left: 25%;
+  }
+  .lds-col-md-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .lds-col-md-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .lds-col-md-offset-0 {
+    margin-left: 0%;
+  }
+}
+@media (min-width: 1200px) {
+  .lds-col-lg-1, .lds-col-lg-2, .lds-col-lg-3, .lds-col-lg-4, .lds-col-lg-5, .lds-col-lg-6, .lds-col-lg-7, .lds-col-lg-8, .lds-col-lg-9, .lds-col-lg-10, .lds-col-lg-11, .lds-col-lg-12 {
+    float: left;
+  }
+  .lds-col-lg-12 {
+    width: 100%;
+  }
+  .lds-col-lg-11 {
+    width: 91.66666667%;
+  }
+  .lds-col-lg-10 {
+    width: 83.33333333%;
+  }
+  .lds-col-lg-9 {
+    width: 75%;
+  }
+  .lds-col-lg-8 {
+    width: 66.66666667%;
+  }
+  .lds-col-lg-7 {
+    width: 58.33333333%;
+  }
+  .lds-col-lg-6 {
+    width: 50%;
+  }
+  .lds-col-lg-5 {
+    width: 41.66666667%;
+  }
+  .lds-col-lg-4 {
+    width: 33.33333333%;
+  }
+  .lds-col-lg-3 {
+    width: 25%;
+  }
+  .lds-col-lg-2 {
+    width: 16.66666667%;
+  }
+  .lds-col-lg-1 {
+    width: 8.33333333%;
+  }
+  .lds-col-lg-pull-12 {
+    right: 100%;
+  }
+  .lds-col-lg-pull-11 {
+    right: 91.66666667%;
+  }
+  .lds-col-lg-pull-10 {
+    right: 83.33333333%;
+  }
+  .lds-col-lg-pull-9 {
+    right: 75%;
+  }
+  .lds-col-lg-pull-8 {
+    right: 66.66666667%;
+  }
+  .lds-col-lg-pull-7 {
+    right: 58.33333333%;
+  }
+  .lds-col-lg-pull-6 {
+    right: 50%;
+  }
+  .lds-col-lg-pull-5 {
+    right: 41.66666667%;
+  }
+  .lds-col-lg-pull-4 {
+    right: 33.33333333%;
+  }
+  .lds-col-lg-pull-3 {
+    right: 25%;
+  }
+  .lds-col-lg-pull-2 {
+    right: 16.66666667%;
+  }
+  .lds-col-lg-pull-1 {
+    right: 8.33333333%;
+  }
+  .lds-col-lg-pull-0 {
+    right: auto;
+  }
+  .lds-col-lg-push-12 {
+    left: 100%;
+  }
+  .lds-col-lg-push-11 {
+    left: 91.66666667%;
+  }
+  .lds-col-lg-push-10 {
+    left: 83.33333333%;
+  }
+  .lds-col-lg-push-9 {
+    left: 75%;
+  }
+  .lds-col-lg-push-8 {
+    left: 66.66666667%;
+  }
+  .lds-col-lg-push-7 {
+    left: 58.33333333%;
+  }
+  .lds-col-lg-push-6 {
+    left: 50%;
+  }
+  .lds-col-lg-push-5 {
+    left: 41.66666667%;
+  }
+  .lds-col-lg-push-4 {
+    left: 33.33333333%;
+  }
+  .lds-col-lg-push-3 {
+    left: 25%;
+  }
+  .lds-col-lg-push-2 {
+    left: 16.66666667%;
+  }
+  .lds-col-lg-push-1 {
+    left: 8.33333333%;
+  }
+  .lds-col-lg-push-0 {
+    left: auto;
+  }
+  .lds-col-lg-offset-12 {
+    margin-left: 100%;
+  }
+  .lds-col-lg-offset-11 {
+    margin-left: 91.66666667%;
+  }
+  .lds-col-lg-offset-10 {
+    margin-left: 83.33333333%;
+  }
+  .lds-col-lg-offset-9 {
+    margin-left: 75%;
+  }
+  .lds-col-lg-offset-8 {
+    margin-left: 66.66666667%;
+  }
+  .lds-col-lg-offset-7 {
+    margin-left: 58.33333333%;
+  }
+  .lds-col-lg-offset-6 {
+    margin-left: 50%;
+  }
+  .lds-col-lg-offset-5 {
+    margin-left: 41.66666667%;
+  }
+  .lds-col-lg-offset-4 {
+    margin-left: 33.33333333%;
+  }
+  .lds-col-lg-offset-3 {
+    margin-left: 25%;
+  }
+  .lds-col-lg-offset-2 {
+    margin-left: 16.66666667%;
+  }
+  .lds-col-lg-offset-1 {
+    margin-left: 8.33333333%;
+  }
+  .lds-col-lg-offset-0 {
+    margin-left: 0%;
+  }
+}
+.clearfix:before,
+.clearfix:after,
+.lds-container:before,
+.lds-container:after,
+.lds-container-fluid:before,
+.lds-container-fluid:after,
+.lds-row:before,
+.lds-row:after {
+  content: " ";
+  display: table;
+}
+.clearfix:after,
+.lds-container:after,
+.lds-container-fluid:after,
+.lds-row:after {
+  clear: both;
+}

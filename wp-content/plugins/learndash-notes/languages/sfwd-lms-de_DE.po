@@ -1,0 +1,304 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: LearnDash Notes\n"
+"POT-Creation-Date: 2017-02-10 14:52+0100\n"
+"PO-Revision-Date: 2017-02-10 14:56+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: note.php\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
+"_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: EDD_SL_Plugin_Updater.php:185
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+"Es ist eine neue Version von %1$s verfügbar. %2$sVersion ansehen %3$s "
+"Details%4$s."
+
+#: EDD_SL_Plugin_Updater.php:193
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+"Es ist eine neuere Version von %1$s verfügbar. %2$sDetails %3$s anzeigen"
+"%4$s oder %5$sjetzt aktualisieren%6$s."
+
+#: EDD_SL_Plugin_Updater.php:336
+msgid "You do not have permission to install plugin updates"
+msgstr "Sie haben nicht die Möglichkeit um Plugins zu Updaten."
+
+#: EDD_SL_Plugin_Updater.php:336
+msgid "Error"
+msgstr "Fehler"
+
+#: nt-ajax.php:175 nt-views.php:48
+msgid "Notes:"
+msgstr "Notizen:"
+
+#: nt-controller.php:114 nt-controller.php:168 nt-shortcodes.php:53
+#: nt-views.php:191
+msgid "Location:"
+msgstr "Ort:"
+
+#: nt-controller.php:196
+msgid "You do not have access to this note. "
+msgstr "Sie haben keinen Zugriff auf diese Notiz."
+
+#: nt-controller.php:232 nt-views.php:112
+msgid "Save"
+msgstr "Speichern"
+
+#: nt-controller.php:237
+msgid "Note Actions:"
+msgstr "Notiz Aktionen:"
+
+#: nt-models.php:87
+msgid "User"
+msgstr "Benutzer"
+
+#: nt-models.php:88 nt-views.php:182
+msgid "Title"
+msgstr "Titel"
+
+#: nt-models.php:89
+msgid "Location"
+msgstr "Land"
+
+#: nt-models.php:90 nt-views.php:183
+msgid "Date"
+msgstr "Datum"
+
+#: nt-models.php:91
+msgid "Updated"
+msgstr "Aktualisiert"
+
+#: nt-settings.php:17
+msgid "Plugin License Options"
+msgstr "Plugin Lizenz Optionen"
+
+#: nt-settings.php:27
+msgid "License"
+msgstr "Lizenz"
+
+#: nt-settings.php:41
+msgid "License Key"
+msgstr "Lizenzschlüssel"
+
+#: nt-settings.php:45
+msgid "Enter your license key"
+msgstr "Lizenzschlüssel eingeben"
+
+#: nt-settings.php:51 nt-settings.php:59
+msgid "Activate License"
+msgstr "Lizenz aktivieren"
+
+#: nt-settings.php:55
+msgid "active"
+msgstr "aktiv"
+
+#: nt-settings.php:56
+msgid "Deactivate License"
+msgstr "Linzenz deaktiviern"
+
+#: nt-settings.php:72
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: nt-settings.php:99
+msgid "Enable Notes On"
+msgstr "Notizen auf dieser Seite aktivieren"
+
+#: nt-settings.php:102
+msgid "Courses"
+msgstr "Kurse"
+
+#: nt-settings.php:103
+msgid "Lessons"
+msgstr "Lektionen"
+
+#: nt-settings.php:104
+msgid "Topics"
+msgstr "Themen"
+
+#: nt-settings.php:105
+msgid "Assignments"
+msgstr "Aufgaben"
+
+#: nt-settings.php:106
+msgid "Quizes"
+msgstr "Quizze"
+
+#: nt-settings.php:115
+msgid "All notes page"
+msgstr "Seite \"alle Notizen\""
+
+#: nt-settings.php:139
+msgid "Show notes in the admin"
+msgstr "Notizen im Adminbereich anzeigen"
+
+#: nt-settings.php:143 nt-settings.php:154 nt-settings.php:187
+msgid "Yes"
+msgstr "Ja"
+
+#: nt-settings.php:144 nt-settings.php:155 nt-settings.php:188
+msgid "No"
+msgstr "Nein"
+
+#: nt-settings.php:150
+msgid "Open links in a new window"
+msgstr "Links in neuem Fenster öffnen"
+
+#: nt-settings.php:165
+msgid "Apperance"
+msgstr "Erscheinungsbild"
+
+#: nt-settings.php:170
+msgid "Note Icon Placement"
+msgstr "Icon Platzierung"
+
+#: nt-settings.php:174
+msgid "Fixed to the bottom of the screen"
+msgstr "Befestigt an der Unterseite des Bildschirms"
+
+#: nt-settings.php:175
+msgid "Fixed to the top of the screen"
+msgstr "Befestigt am oberen Rand des Bildschirms"
+
+#: nt-settings.php:176
+msgid "Above the content"
+msgstr "Über dem Inhalt"
+
+#: nt-settings.php:177
+msgid "Below the content"
+msgstr "Unter dem Inhalt"
+
+#: nt-settings.php:183
+msgid "Hide on Mobile"
+msgstr "Auf Mobilgeräten ausblenden"
+
+#: nt-settings.php:194
+msgid "Notepad / Icon Background Color"
+msgstr "Notizblock / Symbol Hintergrundfarbe"
+
+#: nt-settings.php:202
+msgid "Notepad / Icon Text Color"
+msgstr "Notizblock / Symbol Textfarbe"
+
+#: nt-settings.php:210
+msgid "Notepad Header Background"
+msgstr "Header-Hintergrund"
+
+#: nt-settings.php:218
+msgid "Notepad Header Text"
+msgstr "Headertext"
+
+#: nt-settings.php:226
+msgid "Notepad Link/Icon Colors"
+msgstr "Notepad-Link / Icon Farben"
+
+#: nt-settings.php:234
+msgid "Notepad Button Background"
+msgstr "Notepad-Taste Hintergrund"
+
+#: nt-settings.php:242
+msgid "Notepad Button Text"
+msgstr "Notepad-Taste Text"
+
+#: nt-settings.php:360
+msgid "Note Options"
+msgstr "Notiz Optionen"
+
+#: nt-settings.php:366
+msgid "Note Details"
+msgstr "Notiz Details"
+
+#: nt-settings.php:385
+msgid "Disable notes on this page"
+msgstr "Notizen auf dieser Seite deaktivieren"
+
+#: nt-settings.php:387
+msgid "Default note title"
+msgstr "Standardnotiztitel"
+
+#: nt-settings.php:388
+msgid "Default text in the notes editor"
+msgstr "Standard-Text im Notizen-Editor"
+
+#: nt-settings.php:417
+msgid "Author"
+msgstr "Autor"
+
+#: nt-settings.php:421
+msgid "Recorded"
+msgstr "Aufgezeichnet"
+
+#: nt-shortcodes.php:66
+msgid "Download Selected"
+msgstr "Ausgewählte downloaden"
+
+#: nt-shortcodes.php:116
+msgid "You're not signed up for any courses."
+msgstr "Sie sind für keine Fortbildung angemeldet."
+
+#: nt-views.php:47
+msgid "Note Title"
+msgstr "Notiz Titel"
+
+#: nt-views.php:61
+msgid "Take Notes"
+msgstr "Notizen"
+
+#: nt-views.php:70
+msgid "Notes"
+msgstr "Notizen"
+
+#: nt-views.php:116
+msgid "Reset Dimensions"
+msgstr "Größe zurücksetzen"
+
+#: nt-views.php:118
+msgid "View All Notes"
+msgstr "Alle Notizen"
+
+#: nt-views.php:178
+msgid "Users Notes"
+msgstr "Benutzer Notizen"
+
+#. Plugin Name of the plugin/theme
+msgid "LearnDash Notes"
+msgstr "LearnDash Notizen"
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.snaporbital.com/learndash-notes"
+msgstr "http://www.snaporbital.com/learndash-Notes"
+
+#. Description of the plugin/theme
+msgid ""
+"Take notes on any Learndash course, lesson or topic and list a users notes "
+"using [learndash_my_notes]"
+msgstr ""
+"Machen Sie sich Notizen auf Learndash Kurs, Unterricht oder Thema und in "
+"der Liste einen Benutzer Notizen mit [Learndash_my_notes]"
+
+#. Author of the plugin/theme
+msgid "SnapOrbital"
+msgstr "SnapOrbital"
+
+#. Author URI of the plugin/theme
+msgid "http://www.snaporbital.com"
+msgstr "http://www.snaporbital.com"
+

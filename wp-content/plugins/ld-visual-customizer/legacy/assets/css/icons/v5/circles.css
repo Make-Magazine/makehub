@@ -1,0 +1,113 @@
+/** CIRCLE ICONS **/
+
+/**
+ * Complete / Incomplete Icons
+ * @type {[type]}
+ */
+
+/*
+ * LESSONS / PROFILE
+ */
+
+#scrub {
+
+}
+
+.learndash .topic-completed span::before,
+.learndash .topic-notcompleted span::before,
+ .learndash .notcompleted:before,
+ #learndash_profile .notcompleted:before,
+ .learndash a.completed:before,
+ #learndash_profile a.completed:before {
+ 	content: "\f111";
+ 	font-family: 'Font Awesome 5 Free' !important;
+ 	font-weight: normal !important;
+ 	float: right;
+ 	font-size: 24px;
+ 	display: inline-block;
+ 	margin: 0 0 15px 15px;
+ }
+
+/*
+ * TOPICS
+ */
+
+#leardash_profile .topic-notcompleted span:before,
+.learndash .topic-notcompleted span:before {
+	content: "\f111";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+	float: right;
+	font-size: 24px;
+	display: inline-block;
+	margin-left: 10px;
+	margin-right: 20px;
+}
+
+#learndash_profile .topic-notcompleted span::before,
+#leardash_profile .topic-completed span::before,
+.learndash .topic-completed span::before,
+.learndash .topic-notcompleted span::before {
+	content: "\f111";
+	font-weight: normal;
+	font-family: 'Font Awesome 5 Free' !important;
+	display: block;
+	font-size: 24px;
+}
+
+.learndash_navigation_lesson_topics_list .topic_item a,
+.learndash_nevigation_lesson_topics_list .topic_item a {
+	display: block;
+	position: relative;
+	padding-left: 15px;
+}
+
+/*
+ * QUIZES
+ */
+
+ .learndash_profile_quizzes .passed_icon,
+ .learndash_profile_quizzes .failed_icon {
+ 	content: "\f05d";
+ 	font-family: 'Font Awesome 5 Free' !important;
+ 	font-weight: 900;
+ 	font-size: 42px;
+ 	display: inline-block;
+ 	opacity: 1;
+ }
+
+/*
+ * NAVIGATION ARROWS
+ */
+
+ /* LD Navigation List: Arrows (expand / collapse) */
+
+#learndash_profile .list_arrow.expand::before,
+ .learndash_navigation_lesson_topics_list .list_arrow::before {
+ 	content: "\f107";
+ 	font-family: 'Font Awesome 5 Free' !important;
+ 	display: inline-block;
+ 	font-size: 14px;
+ 	font-weight: 900 !important;
+ }
+
+ #learndash_profile .list_arrow.collapse::before,
+.learndash_navigation_lesson_topics_list .list_arrow.collapse::before {
+  	content: "\f054";
+	font-size: 12px;
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900 !important;
+}
+
+/* LD Navigation List: Topic Items */
+.learndash_navigation_lesson_topics_list .topic_item a:before {
+	content: "\f111";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: normal !important;
+	font-size: 12px;
+	left: 0;
+	top: 3px;
+	position: absolute;
+	display: inline-block;
+	margin-right: 5px;
+}

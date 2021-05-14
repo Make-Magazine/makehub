@@ -1,0 +1,202 @@
+/* line 1, ../../sass/themes/modern.scss */
+.learndash-wrapper {
+  /**
+    * Section Headings
+    *
+    */
+  /**
+    * Fill in the expanded tables
+    **/
+  /**
+    * Full caps on item components */
+  /**
+    * # Individual Elements
+    */
+}
+/* line 4, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list-items .ld-item-list-item:nth-child(even):not(.ld-item-list-item-course) {
+  position: relative;
+}
+/* line 6, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list-items .ld-item-list-item:nth-child(even):not(.ld-item-list-item-course)::before {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.02);
+  content: '';
+  display: block;
+  position: absolute;
+}
+/* line 20, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded {
+  background: transparent !important;
+  padding-top: 0 !important;
+}
+/* line 23, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded::before {
+  display: none;
+}
+/* line 26, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-header {
+  margin: 15px 15px 0 15px !important;
+  padding: 20px !important;
+}
+/* line 30, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-items {
+  margin: 0 15px 15px;
+  background: transparent !important;
+}
+/* line 33, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-items .ld-table-list-item {
+  padding: 0 20px !important;
+  background: #fff !important;
+  margin-bottom: 1px !important;
+}
+/* line 42, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-footer {
+  padding-top: 0;
+  background: transparent !important;
+}
+/* line 44, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-footer .ld-pagination,
+.learndash-wrapper .ld-lesson-list .ld-item-list-item-expanded .ld-table-list-footer .ld-pages {
+  background: transparent !important;
+}
+/* line 54, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-topic-list .ld-table-list-items {
+  padding: 15px 15px 0 15px;
+}
+/* line 56, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-topic-list .ld-table-list-items .ld-table-list-item {
+  background: #fff;
+  margin-bottom: 1px;
+  padding: 0 20px;
+}
+/* line 60, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-topic-list .ld-table-list-items .ld-table-list-item:last-child {
+  border-bottom: 0;
+}
+/* line 65, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-topic-list .ld-pagination {
+  margin-top: 0;
+}
+/* line 75, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list.ld-course-list .ld-section-heading,
+.learndash-wrapper .ld-item-list.ld-lesson-list .ld-section-heading {
+  margin-bottom: 0;
+}
+/* line 80, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list-section-heading {
+  margin-top: 0px;
+}
+/* line 84, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list-section-heading {
+  padding: 20px;
+}
+/* line 88, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list.ld-course-list .ld-lesson-section-heading,
+.learndash-wrapper .ld-item-list.ld-lesson-list .ld-lesson-section-heading {
+  margin: 0;
+}
+/* line 97, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-table-list .ld-table-list-item {
+  border: 0;
+}
+/* line 101, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list-item-expanded .ld-table-list.ld-topic-list .ld-table-list-items {
+  padding: 0;
+}
+/* line 107, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-list.ld-lesson-list .ld-topic-list .ld-table-list-item {
+  margin: 0;
+  border-color: #fff;
+  padding: 0 60px;
+}
+/* line 114, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-topic-list.ld-table-list .ld-table-list-item .ld-table-list-item {
+  padding: 20px;
+}
+/* line 119, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-item-components span {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+/* line 125, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-expand-button .ld-text {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+}
+/* line 132, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-pagination {
+  margin-top: 16px;
+}
+/* line 142, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-section-heading .ld-lesson-section-heading {
+  font-size: 14px;
+}
+/* line 145, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item {
+  background: #f6f6f7;
+  padding: 0 10px;
+}
+/* line 148, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item:nth-child(even) {
+  background: #f1f1f1;
+}
+/* line 152, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded {
+  margin: 0 -10px;
+}
+/* line 154, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded.ld-expanded {
+  margin-bottom: 0;
+}
+/* line 157, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded .ld-table-list-items {
+  padding: 0;
+}
+/* line 159, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded .ld-table-list-items .ld-table-list-item {
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.03);
+}
+/* line 162, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded .ld-table-list-items .ld-table-list-item .ld-table-list-item-preview {
+  background: transparent;
+}
+/* line 167, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-expanded::before {
+  border-top-color: #f6f6f7;
+}
+/* line 176, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar {
+  background: #f2f5f7;
+}
+/* line 179, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item-preview {
+  background: #f2f5f7;
+}
+/* line 182, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list {
+  background: rgba(0, 0, 0, 0.075);
+}
+/* line 184, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list::before {
+  background: #f2f5f7;
+}
+/* line 188, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item-section-heading {
+  margin-top: 0;
+  padding: 10px 20px;
+}
+/* line 193, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item-expanded .ld-table-list-items {
+  background: transparent !important;
+}
+/* line 195, ../../sass/themes/modern.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item-expanded .ld-table-list-items .ld-table-list-item {
+  background: transparent;
+}

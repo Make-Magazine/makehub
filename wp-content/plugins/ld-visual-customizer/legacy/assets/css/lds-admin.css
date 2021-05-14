@@ -1,0 +1,131 @@
+.lds-group {
+
+}
+
+.lds-hide {
+	display: none;
+}
+
+.lds-group legend {
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 14px;
+	padding: 30px 0 0 0;
+	margin: 0;
+	display: block;
+}
+
+.lds-group h3 {
+	margin-top: 30px;
+	padding-top: 30px;
+	border-top: 1px solid #ddd;
+}
+
+.lds-group:first-child h3 {
+	border-top: 0px !important;
+}
+
+.lds-layout-preview,
+.lds-preview {
+	background: #fff;
+	padding: 20px;
+	border: 1px solid #ddd;
+	display: inline-block;
+	text-align: center;
+}
+
+.lds-layout-preview,
+.lds-theme-preview {
+	display: none;
+}
+
+.lds-theme-preview p {
+	font-size: 14px;
+	color: #333;
+}
+
+.lds-theme-preview p strong {
+	color: #111;
+	display: block;
+	font-size: 18px;
+}
+
+
+.lds-activation-notice {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #fff;
+    border-radius: 4px;
+}
+
+.lds-tab {
+	display: none;
+}
+
+.lds-tab-active {
+	display: block;
+}
+
+.lds-mb-60 {
+	margin-bottom: 60px;
+}
+
+.lds-ntb {
+	border-top: 0px !important;
+}
+
+.lds-settings-tabs {
+	margin: 0 0 50px 0;
+	list-style: none;
+	padding: 0;
+}
+
+.lds-settings-tabs li {
+	display: inline-block;
+	list-style: none;
+	margin: 0 10px 0 0;
+	padding: 0 10px 0 0;
+	border-right: 1px solid #aaa;
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+.lds-settings-tabs li:last-child {
+	border-right: 0px;
+}
+
+.lds-settings-tabs li a {
+	text-decoration: none;
+}
+.lds-settings-tabs li.nav-tab-active a {
+	color: #333;
+}
+
+.lds-section {
+	display: none;
+}
+
+.lds-section.active {
+	display: block;
+}
+
+.lds-form-table input[type='text'] {
+	width: 100%;
+}
+
+.lds-form-table pre {
+	display: inline !important;
+}
+
+.lds-form-table label {
+	display: block;
+	color: #444;
+	font-weight: bold;
+}
+
+.lds-form-table .lds-form-help {
+	font-size: 11px;
+	font-weight: normal;
+	color: #666;
+	padding-top: 3px;
+}

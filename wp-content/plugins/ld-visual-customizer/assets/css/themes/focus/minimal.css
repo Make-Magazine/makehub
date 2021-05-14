@@ -1,0 +1,118 @@
+/* line 2, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-header {
+  border-bottom: 0;
+  height: 70px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+}
+/* line 6, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-header .ld-content-actions {
+  display: none;
+}
+/* line 9, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-header .ld-progress,
+.learndash-wrapper .ld-focus .ld-focus-header .ld-user-menu {
+  border: 0;
+}
+/* line 13, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-header .ld-progress {
+  display: none;
+}
+/* line 18, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-main .ld-focus-content {
+  padding-top: 120px;
+}
+/* line 22, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar {
+  border: 0;
+  top: 20px;
+  box-shadow: inset 0 -5px 25px rgba(0, 0, 0, 0.025);
+  background: #f0f3f6;
+  /* Typography */
+}
+/* line 27, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-progress {
+  padding: 1em;
+}
+/* line 30, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation-heading {
+  padding: 20px 1em;
+  min-height: auto;
+  position: relative;
+}
+/* line 34, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation-heading .ld-focus-sidebar-trigger {
+  height: auto;
+  top: 0;
+  bottom: 0;
+}
+/* line 41, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item {
+  background: transparent;
+  border: 0;
+}
+/* line 44, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item .ld-table-list {
+  background: #fff;
+  margin-left: 1em;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  border-radius: 4px;
+  padding: 10px 0 5px 0;
+}
+/* line 51, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-lesson-item .ld-table-list::before {
+  background: #f0f3f6;
+}
+@media (max-width: 768px) {
+  /* line 22, ../../../sass/themes/focus/minimal.scss */
+  .learndash-wrapper .ld-focus .ld-focus-sidebar {
+    top: 0;
+  }
+}
+/* line 61, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-section-heading {
+  font-size: 125%;
+}
+/* line 65, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-preview .ld-lesson-title {
+  font-size: 100%;
+}
+/* line 68, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-preview .ld-expand-button {
+  margin-top: 5px;
+}
+/* line 70, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-preview .ld-expand-button .ld-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* line 79, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-preview .ld-expand-button .ld-text {
+  font-size: 90%;
+}
+/* line 83, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-preview .ld-status-icon {
+  margin-right: 8px;
+}
+/* line 88, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-lesson-item-expanded .ld-topic-title {
+  font-size: 100%;
+}
+/* line 94, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus.ld-focus-sidebar-collapsed .ld-focus-sidebar {
+  background: #f0f3f6;
+}
+/* line 98, ../../../sass/themes/focus/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-content .ld-content-actions {
+  border: 0;
+}
+
+/* line 104, ../../../sass/themes/focus/minimal.scss */
+body.admin-bar .learndash-wrapper .ld-focus .ld-focus-sidebar {
+  top: 52px;
+}

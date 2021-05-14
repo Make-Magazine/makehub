@@ -1,0 +1,86 @@
+#leardash_profile .topic-completed span::before,
+.learndash .topic-completed span::before,
+#leardash_profile .topic-notcompleted span::before,
+.learndash .topic-notcompleted span::before {
+	content: "\f14a";
+	font-family: 'Font Awesome 5 Free' !important;
+	float: right;
+	font-size: 24px;
+	font-weight: normal;
+	display: inline-block;
+}
+
+.learndash .topic-completed span::before,
+.learndash .topic-notcompleted span::before {
+	content: "\f14a";
+	font-weight: normal;
+	font-family: 'Font Awesome 5 Free' !important;
+}
+
+.single-sfwd-lessons .learndash .topic-completed span::before,
+.single-sfwd-lessons .topic-notcompleted span::before {
+	font-size: 32px;
+}
+
+.learndash_navigation_lesson_topics_list .topic_item a:before,
+.learndash_nevigation_lesson_topics_list .topic_item a:before {
+	content: "\f14a";
+	font-weight: normal;
+	font-family: 'Font Awesome 5 Free' !important;
+	font-size: 12px;
+	display: inline-block;
+	margin-right: 5px;
+}
+
+.learndash a.completed,
+#learndash_profile a.completed,
+.learndash .notcompleted,
+#learndash_profile .notcompleted {
+	position: relative;
+}
+
+.learndash .notcompleted::before,
+#learndash_profile .notcompleted::before,
+.learndash a.completed::before,
+#learndash_profile a.completed::before {
+	content: "\f14a";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: normal;
+	position: absolute;
+	font-size: 42px;
+}
+
+.learndash_profile_quizzes .passed_icon,
+.learndash_profile_quizzes .failed_icon {
+	content: "\f14a";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: normal;
+	font-size: 42px;
+	display: inline-block;
+	opacity: 1;
+}
+
+.list_arrow.expand::before,
+#learndash_profile .list_arrow.expand::before
+ {
+  content: "\f150";
+  font-family: 'Font Awesome 5 Free' !important;
+  font-weight: normal !important;
+  font-size: 22px;
+}
+
+.list_arrow.collapse::before,
+#learndash_profile .list_arrow.collapse::before {
+    content: "\f152";
+    font-family: 'Font Awesome 5 Free' !important;
+	font-weight: normal !important;
+    font-size: 22px;
+}
+
+#learndash_profile .passed_icon:before {
+	display: inline-block;
+	content: "\f14a";
+	font-family: 'Font Awesome 5 Free' !important;
+	font-weight: 900;
+	font-size: 14px;
+}

@@ -1,0 +1,113 @@
+/* line 1, ../../sass/themes/minimal.scss */
+.learndash-wrapper {
+  /**
+    * Specific Elements
+    */
+}
+/* line 6, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list .ld-item-list-item,
+.learndash-wrapper .ld-item-list .ld-item-lesson-item {
+  border-left-width: 0;
+  border-right-width: 0;
+  border-top-width: 0;
+  border-bottom-style: solid !important;
+}
+/* line 12, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list .ld-item-list-item:last-child,
+.learndash-wrapper .ld-item-list .ld-item-lesson-item:last-child {
+  border-bottom-width: 0px !important;
+}
+/* line 15, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-preview,
+.learndash-wrapper .ld-item-list .ld-item-lesson-item .ld-item-list-item-preview {
+  padding-left: 0;
+  padding-right: 0;
+}
+/* line 21, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list .ld-item-list-section-heading + .ld-item-lesson-item {
+  border-top-width: 0 !important;
+}
+/* line 28, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item {
+  border-top: rgba(0, 0, 0, 0.1) solid 1px;
+}
+/* line 30, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item:first-child {
+  border-top: 0;
+}
+/* line 34, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-course-navigation .ld-lesson-item-section-heading + .ld-lesson-item {
+  border-top: 0;
+}
+/* line 40, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list.ld-course-list .ld-section-heading h2,
+.learndash-wrapper .ld-item-list.ld-lesson-list .ld-section-heading h2 {
+  font-weight: bold;
+}
+/* line 44, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-lesson-item-section-heading,
+.learndash-wrapper .ld-item-list-section-heading {
+  margin-top: 50px;
+  position: relative;
+}
+/* line 48, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-lesson-item-section-heading::after,
+.learndash-wrapper .ld-item-list-section-heading::after {
+  margin: 20px 0;
+  content: '';
+  display: block;
+  width: 50px;
+  height: 5px;
+  background: #ddd;
+}
+/* line 63, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-breadcrumbs,
+.learndash-wrapper .ld-course-status.ld-course-status-enrolled {
+  padding: 0 0 30px 0;
+  margin: 0 0 30px 0;
+  border-radius: 0;
+  border-bottom: 1px solid #efefef;
+}
+/* line 71, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-pagination .ld-pages {
+  margin: 16px 0;
+}
+/* line 75, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-course-status.ld-course-status-not-enrolled .ld-course-status-content,
+.learndash-wrapper .ld-course-status.ld-course-status-not-enrolled > * {
+  text-align: left;
+  justify-content: flex-start;
+}
+/* line 81, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-tabs .ld-tabs-navigation::after,
+.learndash-wrapper .ld-progress .ld-progress-bar {
+  background: #f3f3f3;
+}
+/* line 89, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar {
+  border-right: 1px solid #ddd;
+}
+/* line 91, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list {
+  padding: 0;
+}
+/* line 93, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list .ld-table-list-item {
+  padding: 0 35px;
+}
+/* line 95, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list .ld-table-list-item:first-child {
+  padding-top: 15px;
+}
+/* line 98, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-focus .ld-focus-sidebar .ld-course-navigation .ld-topic-list.ld-table-list .ld-table-list-item:last-child {
+  padding-bottom: 15px;
+}
+/* line 109, ../../sass/themes/minimal.scss */
+.learndash-wrapper #ld-profile .ld-table-list .ld-table-list-items {
+  background: #fff !important;
+}
+/* line 114, ../../sass/themes/minimal.scss */
+.learndash-wrapper .ld-item-list .ld-item-list-item .ld-item-list-item-expanded .ld-progress {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}

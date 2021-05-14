@@ -1,0 +1,998 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Private Sessions for LearnDash\n"
+"POT-Creation-Date: 2021-04-17 13:39-0400\n"
+"PO-Revision-Date: 2021-04-17 13:39-0400\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: init.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: EDD_SL_Plugin_Updater.php:201
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:209
+#, php-format
+msgid ""
+"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
+"or %5$supdate now%6$s."
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:396
+msgid "You do not have permission to install plugin updates"
+msgstr ""
+
+#: EDD_SL_Plugin_Updater.php:396
+msgid "Error"
+msgstr ""
+
+#: includes/assets.php:21
+msgid "Are you sure you want to delete this conversation?"
+msgstr ""
+
+#: includes/assets.php:22
+msgid "Are you sure you want to archive this conversation?"
+msgstr ""
+
+#: includes/assets.php:23
+msgid "Are you sure you want to restore this conversation?"
+msgstr ""
+
+#: includes/controller.php:83
+msgid "You must log in to create a message"
+msgstr ""
+
+#: includes/controller.php:105
+msgid ""
+"Something went wrong on our end. Please try again and if the issue continues "
+"contact the system administor"
+msgstr ""
+
+#: includes/controller.php:130
+msgid "Session Started"
+msgstr ""
+
+#: includes/controller.php:131 includes/model.php:14
+msgid "View Session"
+msgstr ""
+
+#: includes/controller.php:136
+msgid "Email notification sent"
+msgstr ""
+
+#: includes/controller.php:138
+msgid "There was an issue notifying the recipient"
+msgstr ""
+
+#: includes/controller.php:208 includes/controller.php:227
+msgid "Please login to continue"
+msgstr ""
+
+#: includes/controller.php:210 includes/controller.php:229
+msgid "You do not have access"
+msgstr ""
+
+#: includes/controller.php:238
+msgid "Message to "
+msgstr ""
+
+#: includes/controller.php:500
+msgid "No user found with this email address"
+msgstr ""
+
+#: includes/controller.php:524
+msgid "No private sessions for this user"
+msgstr ""
+
+#: includes/controller.php:539
+msgid "Private sessions removed"
+msgstr ""
+
+#: includes/controller.php:547
+msgid "Private Sessions Plugin"
+msgstr ""
+
+#: includes/controller.php:605 includes/old-settings.php:27
+#: includes/settings.php:41 includes/settings.php:141 includes/settings.php:147
+#: init.php:102
+msgid "Private Sessions"
+msgstr ""
+
+#: includes/controller.php:613 includes/view.php:225
+msgid "Session with "
+msgstr ""
+
+#: includes/controller.php:635 includes/ldms-shortcodes.php:90
+msgid "Session Title"
+msgstr ""
+
+#: includes/controller.php:639
+msgid "Session Author"
+msgstr ""
+
+#: includes/controller.php:643
+msgid "Session Recipient"
+msgstr ""
+
+#: includes/controller.php:647
+msgid "Start Date"
+msgstr ""
+
+#: includes/controller.php:651 includes/view.php:184 includes/view.php:252
+msgid "Last Response"
+msgstr ""
+
+#: includes/controller.php:655
+msgid "Total Messages"
+msgstr ""
+
+#: includes/controller.php:659
+msgid "Initial Message"
+msgstr ""
+
+#: includes/controller.php:671
+msgid "Response "
+msgstr ""
+
+#: includes/controller.php:700
+msgid "Private Sessions Data"
+msgstr ""
+
+#: includes/controller.php:743
+msgid "You don't have permission to archive this message"
+msgstr ""
+
+#: includes/integrations/simply-schedule-appointments.php:16
+#: includes/settings.php:328
+msgid "Appointment Scheduling"
+msgstr ""
+
+#: includes/integrations/simply-schedule-appointments.php:17
+#: includes/settings.php:329
+msgid "Allow users to schedule an appointment through Simply Schedule"
+msgstr ""
+
+#: includes/integrations/simply-schedule-appointments.php:20
+#: includes/settings.php:270 includes/settings.php:332
+msgid "No"
+msgstr ""
+
+#: includes/integrations/simply-schedule-appointments.php:21
+#: includes/settings.php:269 includes/settings.php:333
+msgid "Yes"
+msgstr ""
+
+#: includes/integrations/simply-schedule-appointments.php:37
+msgid "Schedule Appointment"
+msgstr ""
+
+#: includes/ldms-comments.php:120
+msgid "Leave a Response"
+msgstr ""
+
+#: includes/ldms-comments.php:121
+msgid "Respond"
+msgstr ""
+
+#: includes/ldms-comments.php:130
+msgid "This session has been archived."
+msgstr ""
+
+#: includes/ldms-docs.php:5 includes/ldms-docs.php:6
+msgid "Welcome To LearnDash Private Sessions"
+msgstr ""
+
+#: includes/ldms-docs.php:18 includes/old-settings.php:16
+#: includes/old-settings.php:17 includes/settings.php:33
+msgid "LearnDash Private Sessions"
+msgstr ""
+
+#: includes/ldms-shortcodes.php:74 includes/model.php:12 includes/view.php:93
+#: includes/view.php:96 includes/widget.php:40 includes/widget.php:43
+msgid "New Session"
+msgstr ""
+
+#: includes/ldms-shortcodes.php:80
+msgid "Start Session With"
+msgstr ""
+
+#: includes/ldms-shortcodes.php:86
+msgid "You don't currently have anyone to send a message to."
+msgstr ""
+
+#: includes/ldms-shortcodes.php:106
+msgid "Start Session"
+msgstr ""
+
+#: includes/ldms-shortcodes.php:141
+msgid "You do not have access to any messages."
+msgstr ""
+
+#: includes/ldms-shortcodes.php:147
+msgid "Back"
+msgstr ""
+
+#: includes/model.php:6
+msgctxt "Message general name"
+msgid "Private Sessions"
+msgstr ""
+
+#: includes/model.php:7
+msgctxt "Message singular name"
+msgid "Session"
+msgstr ""
+
+#: includes/model.php:8
+msgctxt "admin menu"
+msgid "Private Sessions"
+msgstr ""
+
+#: includes/model.php:9
+msgctxt "add new message on admin bar"
+msgid "Session"
+msgstr ""
+
+#: includes/model.php:10
+msgctxt "message"
+msgid "Add New"
+msgstr ""
+
+#: includes/model.php:11
+msgid "Add New Session"
+msgstr ""
+
+#: includes/model.php:13
+msgid "Edit Session"
+msgstr ""
+
+#: includes/model.php:15
+msgid "All Sessions"
+msgstr ""
+
+#: includes/model.php:16
+msgid "Search Sessions"
+msgstr ""
+
+#: includes/model.php:17
+msgid "Parent Sessions:"
+msgstr ""
+
+#: includes/model.php:18
+msgid "No messages found."
+msgstr ""
+
+#: includes/model.php:19
+msgid "No messages found in Trash."
+msgstr ""
+
+#: includes/model.php:24
+msgid "Message"
+msgstr ""
+
+#: includes/model.php:25
+msgid "Message Description"
+msgstr ""
+
+#: includes/model.php:55
+msgctxt "Taxonomy General Name"
+msgid "Statuses"
+msgstr ""
+
+#: includes/model.php:56
+msgctxt "Taxonomy Singular Name"
+msgid "Status"
+msgstr ""
+
+#: includes/model.php:57
+msgid "Taxonomy"
+msgstr ""
+
+#: includes/model.php:58
+msgid "All Items"
+msgstr ""
+
+#: includes/model.php:59
+msgid "Parent Item"
+msgstr ""
+
+#: includes/model.php:60
+msgid "Parent Item:"
+msgstr ""
+
+#: includes/model.php:61
+msgid "New Item Name"
+msgstr ""
+
+#: includes/model.php:62
+msgid "Add New Item"
+msgstr ""
+
+#: includes/model.php:63
+msgid "Edit Item"
+msgstr ""
+
+#: includes/model.php:64
+msgid "Update Item"
+msgstr ""
+
+#: includes/model.php:65
+msgid "View Item"
+msgstr ""
+
+#: includes/model.php:66
+msgid "Separate items with commas"
+msgstr ""
+
+#: includes/model.php:67
+msgid "Add or remove items"
+msgstr ""
+
+#: includes/model.php:68
+msgid "Choose from the most used"
+msgstr ""
+
+#: includes/model.php:69
+msgid "Popular Items"
+msgstr ""
+
+#: includes/model.php:70
+msgid "Search Items"
+msgstr ""
+
+#: includes/model.php:71
+msgid "Not Found"
+msgstr ""
+
+#: includes/model.php:72
+msgid "No items"
+msgstr ""
+
+#: includes/model.php:73
+msgid "Items list"
+msgstr ""
+
+#: includes/model.php:74
+msgid "Items list navigation"
+msgstr ""
+
+#: includes/model.php:114
+msgctxt "Settings Menu Label"
+msgid "Messages"
+msgstr ""
+
+#: includes/model.php:129
+msgctxt "Create Message Label"
+msgid "Create Message"
+msgstr ""
+
+#: includes/model.php:136
+msgctxt "View Message Label"
+msgid "View Message"
+msgstr ""
+
+#: includes/notifications.php:25
+msgid " started a conversation"
+msgstr ""
+
+#: includes/notifications.php:28
+msgid " left a reply in your conversation"
+msgstr ""
+
+#: includes/notifications.php:53 includes/notifications.php:413
+msgid "has started a conversation on"
+msgstr ""
+
+#: includes/notifications.php:419
+msgid "Email not displaying correctly?"
+msgstr ""
+
+#: includes/notifications.php:419
+msgid "View the new message on the site"
+msgstr ""
+
+#: includes/notifications.php:442
+msgid "Reply From: "
+msgstr ""
+
+#: includes/notifications.php:442
+msgid "Conversation Started"
+msgstr ""
+
+#: includes/notifications.php:500 includes/notifications.php:508
+msgid "Hello, %recipient_name%"
+msgstr ""
+
+#: includes/notifications.php:501
+msgid "You've received a message from %sender_name% on %site_name%."
+msgstr ""
+
+#: includes/notifications.php:502 includes/notifications.php:510
+msgid "%sender_name% wrote:"
+msgstr ""
+
+#: includes/notifications.php:505 includes/notifications.php:513
+msgid "To respond click here: "
+msgstr ""
+
+#: includes/notifications.php:509
+msgid "You've received a reply from %sender_name% on %site_name%."
+msgstr ""
+
+#: includes/old-settings.php:68 includes/settings.php:212
+msgid "Indicator Location"
+msgstr ""
+
+#: includes/old-settings.php:87
+msgid "How far from the edge do you want the tab to appear?"
+msgstr ""
+
+#: includes/old-settings.php:94 includes/settings.php:247
+msgid "Private Sessions Page"
+msgstr ""
+
+#: includes/old-settings.php:112 includes/settings.php:287
+msgid "E-mail Message"
+msgstr ""
+
+#: includes/settings.php:146
+msgid "Click to toggle"
+msgstr ""
+
+#: includes/settings.php:205
+msgid "License Key"
+msgstr ""
+
+#: includes/settings.php:206
+msgid "Enter and activate your license key"
+msgstr ""
+
+#: includes/settings.php:213
+msgid "Where would you like the Session Locator?"
+msgstr ""
+
+#: includes/settings.php:216
+msgid "Attached to Top"
+msgstr ""
+
+#: includes/settings.php:217
+msgid "Attached to Bottom"
+msgstr ""
+
+#: includes/settings.php:218
+msgid "Attached to the right of the screen"
+msgstr ""
+
+#: includes/settings.php:219
+msgid "Embed using [sessions_widget] shortcode"
+msgstr ""
+
+#: includes/settings.php:220
+msgid "Embed using a widget"
+msgstr ""
+
+#: includes/settings.php:226
+msgid "Indicator Spacing"
+msgstr ""
+
+#: includes/settings.php:227
+msgid "How far from the edge do you want the tab to appear (in pixels)?"
+msgstr ""
+
+#: includes/settings.php:233
+msgid "Accent Color"
+msgstr ""
+
+#: includes/settings.php:234
+msgid "What color would you like to use as a background accent?"
+msgstr ""
+
+#: includes/settings.php:240
+msgid "Accent Text Color"
+msgstr ""
+
+#: includes/settings.php:241
+msgid "What color would you like to use as a text accent?"
+msgstr ""
+
+#: includes/settings.php:248
+msgid ""
+"Select the page with the private sessions shortcode. The page \"Private "
+"Sessions\" was created and the shortcode was added when you activate the "
+"plugin. Feel free to pick another page that you have added the shortcode on"
+msgstr ""
+
+#: includes/settings.php:254
+msgid "File Uploads"
+msgstr ""
+
+#: includes/settings.php:255
+msgid "Enable or disable uploads to the private sessions page"
+msgstr ""
+
+#: includes/settings.php:258
+msgid "Enabled"
+msgstr ""
+
+#: includes/settings.php:259
+msgid "Disabled"
+msgstr ""
+
+#: includes/settings.php:265
+msgid "Send e-mail notifications"
+msgstr ""
+
+#: includes/settings.php:266
+msgid "Enable or disable email notifications"
+msgstr ""
+
+#: includes/settings.php:276
+msgid "Email Format"
+msgstr ""
+
+#: includes/settings.php:277
+msgid "Do you want to send an HTML email or plain text?"
+msgstr ""
+
+#: includes/settings.php:280
+msgid "HTML"
+msgstr ""
+
+#: includes/settings.php:281
+msgid "Plain Text"
+msgstr ""
+
+#: includes/settings.php:288
+msgid ""
+"Create your own Default message using the following variables %recipient_name"
+"% , %sender_name%, %site_name%, %message%, %session_url%"
+msgstr ""
+
+#: includes/settings.php:295
+msgid "E-mail Reply Message"
+msgstr ""
+
+#: includes/settings.php:296
+msgid ""
+"Create your own Default Reply message using the following variables "
+"%recipient_name% , %sender_name%, %site_name%, %message%, %session_url%"
+msgstr ""
+
+#: includes/settings.php:303
+msgid "Other users allowed to Start Sessions"
+msgstr ""
+
+#: includes/settings.php:304
+msgid ""
+"Allow users other then Admin, Editor, and Group Leaders to start a session "
+"with a Group Leader"
+msgstr ""
+
+#: includes/settings.php:310
+msgid "What groups can start sessions"
+msgstr ""
+
+#: includes/settings.php:311
+msgid "Allow users within this group to start sessions with a group leader"
+msgstr ""
+
+#: includes/settings.php:317
+msgid "Session Moderators"
+msgstr ""
+
+#: includes/settings.php:318
+msgid "Allow these users to see all sessions"
+msgstr ""
+
+#: includes/settings.php:502
+msgid "View Page"
+msgstr ""
+
+#: includes/settings.php:536
+msgid "Active"
+msgstr ""
+
+#: includes/settings.php:538
+msgid "Deactivate License"
+msgstr ""
+
+#: includes/settings.php:541
+msgid "Activate License"
+msgstr ""
+
+#: includes/settings.php:585 includes/settings.php:613
+msgid "An error occurred, please try again."
+msgstr ""
+
+#: includes/settings.php:592
+#, php-format
+msgid "Your license key expired on %s."
+msgstr ""
+
+#: includes/settings.php:597
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: includes/settings.php:600
+msgid "Invalid license."
+msgstr ""
+
+#: includes/settings.php:604
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: includes/settings.php:607
+#, php-format
+msgid "This appears to be an invalid license key for %s."
+msgstr ""
+
+#: includes/settings.php:610
+msgid "Your license key has reached its activation limit."
+msgstr ""
+
+#: includes/view.php:51
+msgid "Create a New Private Session"
+msgstr ""
+
+#: includes/view.php:51
+msgid "New Message"
+msgstr ""
+
+#: includes/view.php:54
+msgid " New Message"
+msgid_plural " New Messages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/view.php:55 includes/view.php:109 includes/view.php:146
+#: includes/widget.php:56
+msgid "My Sessions"
+msgstr ""
+
+#: includes/view.php:103 includes/widget.php:50
+msgid " New Messages"
+msgstr ""
+
+#: includes/view.php:172
+msgid "Search..."
+msgstr ""
+
+#: includes/view.php:173
+msgid "Go"
+msgstr ""
+
+#: includes/view.php:181 includes/view.php:247
+msgid "Title"
+msgstr ""
+
+#: includes/view.php:182 includes/view.php:250
+msgid "Messages"
+msgstr ""
+
+#: includes/view.php:183 includes/view.php:251
+msgid "Started"
+msgstr ""
+
+#: includes/view.php:245
+msgid "Star session"
+msgstr ""
+
+#: includes/view.php:250
+msgid "Comments"
+msgstr ""
+
+#: includes/view.php:255
+msgid "View"
+msgstr ""
+
+#: includes/view.php:258
+msgid "Archive"
+msgstr ""
+
+#: includes/view.php:258
+msgid "Archive Session"
+msgstr ""
+
+#: includes/view.php:259
+msgid "Delete"
+msgstr ""
+
+#: includes/view.php:272
+msgid "Older Sessions"
+msgstr ""
+
+#: includes/view.php:275
+msgid "Newer Sessions"
+msgstr ""
+
+#: includes/view.php:281
+msgid "No Messages"
+msgstr ""
+
+#: includes/view.php:304
+msgid "You do not have access to view this message"
+msgstr ""
+
+#: includes/view.php:320
+msgid "Back to Private Sessions"
+msgstr ""
+
+#: includes/view.php:327
+msgid "Private Session Started"
+msgstr ""
+
+#: includes/view.php:333
+msgid "Discussions"
+msgstr ""
+
+#: includes/view.php:337
+msgid "Files"
+msgstr ""
+
+#: includes/view.php:407
+msgid "No files shared on this session"
+msgstr ""
+
+#: includes/view.php:463
+msgid "Posted on "
+msgstr ""
+
+#: includes/view.php:466
+msgid "by"
+msgstr ""
+
+#: templates/partials/comment.php:15 templates/partials/original-comment.php:10
+msgid "Comment Link"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:52
+msgid "Comment Attachment deleted."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:90
+msgid "Comment Attachment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:91
+msgid "Allowed File Types"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:110
+msgid "Display attachment field"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:115
+msgid "Before default comment form fields."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:116
+msgid "After default comment form fields."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:119
+msgid "Attachment field title"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:121
+#: vendor/attachments/comment-attachment-init.php:718
+msgid "Upload attachment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:126
+msgid "Maxium file size <small>(in megabytes)</small>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:127
+#, php-format
+msgid ""
+"Your server currently allows us to use maximum of <strong>%s MB(s).</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:134
+msgid "Is attachment required?"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:141
+msgid "Attach attachment with current post?"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:147
+msgid "Text before attachment in a commment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:149
+msgid "Attachment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:155
+msgid "Position of attchment in comment text"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:160
+msgid "Before comment."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:161
+msgid "After comment."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:162
+msgid "Don't display attachment. (really?)"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:166
+msgid "Make attachment in comment a link?"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:167
+msgid "(Links to the original file.)"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:173
+msgid "Show image thumbnail?"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:174
+msgid "(if attachment is image)"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:180
+msgid "Image attachment size in comment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:181
+msgid "(if thumbnail is set to visible, and is image)"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:188
+msgid "Try to embed audio/video player?"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:189
+msgid ""
+"(if attachment is audio/video)<br /><strong style=\"color: red;\">NOTE: </"
+"strong>This is an experimental feature, assuming you are using "
+"<strong>Wordpress 3.6, and higher,</strong> it uses the wordpress native "
+"<br /><code>[video]</code> and <code>[audio]</code> shortcodes to attach "
+"media file. It only takes <strong>.mp4, .m4v, .webm, .ogv, .wmv, .flv</"
+"strong> for videos,<br />and <strong>.mp3, .m4a, .ogg, .wav, .wma</strong> "
+"for audio files. Read more about <a href=\"http://codex.wordpress.org/"
+"Video_Shortcode\" target=\"_blank\">[video] shortcode</a>, or read more "
+"about <a href=\"https://codex.wordpress.org/Audio_Shortcode\" target=\"_blank"
+"\">[audio] shortcode.</a>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:195
+msgid "Delete attachment upon comment deletition?<br />"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:200
+msgid "<strong>Images</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:205
+msgid "<strong>Documents</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:216
+msgid "<strong>Archives</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:219
+msgid "<strong>Audio</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:225
+msgid "<strong>Video</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:237
+msgid "<strong>Others</strong>"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:718
+msgid "Allowed file types"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:718
+msgid "maximum file size"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:748
+#, php-format
+msgid ""
+"<strong>ERROR:</strong> File you upload must be valid file type "
+"<strong>(%1$s)</strong>, and under %2$sMB!"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:753
+msgid "<strong>ERROR:</strong> Attachment is a required field!"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:755
+msgid ""
+"<strong>ERROR:</strong> The uploaded file exceeds the upload_max_filesize "
+"directive in php.ini."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:757
+msgid ""
+"<strong>ERROR:</strong> The uploaded file exceeds the MAX_FILE_SIZE "
+"directive that was specified in the HTML form."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:759
+msgid ""
+"<strong>ERROR:</strong> The uploaded file was only partially uploaded. "
+"Please try again later."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:761
+msgid "<strong>ERROR:</strong> Missing a temporary folder."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:763
+msgid "<strong>ERROR:</strong> Failed to write file to disk."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:765
+msgid "<strong>ERROR:</strong> A PHP extension stopped the file upload."
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:784
+msgid "Attachment:"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:961
+msgid "Delete Attachment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:980
+msgid "Settings > Discussion > Comment Attachment"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:980
+msgid "Settings"
+msgstr ""
+
+#: vendor/attachments/comment-attachment-init.php:998
+msgid ""
+"I'm sorry, but we can't have attachment bigger than server allows us to. If "
+"you wish to change this and you don't know how, <a href=\"https://www.google."
+"com/search?q=how+to+change+php.ini+upload_max_filesize\" target=\"_blank"
+"\">try this.</a>"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Private Sessions for LearnDash"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://example.com/plugin-name"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Private 1 on 1 coaching sessions for LearnDash"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "SnapOrbital"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://3.7designs.co"
+msgstr ""
