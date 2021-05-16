@@ -207,6 +207,32 @@ function add_event_date_to_rss() {
 
 add_action('rss2_item', 'add_event_date_to_rss',30,1);
 
+// Exclude espresso_events from rss feed if marked for supression
+function filter_posts_from_rss( $where, $query = NULL ) {
+    global $wpdb;
+    if ( !$query->is_admin && $query->is_feed) {
+		$args = array(
+		  'post_type' => 'espresso_events',
+		  'posts_per_page' => -1,
+		  'fields' => 'ids',
+		  'meta_query' => array(
+			array(
+			  'key' => 'suppress_from_rss_widget',
+			  'value' => '1',
+			)
+		  )
+		);
+		$suppression_query = new WP_Query($args);
+		$suppression_IDs = $suppression_query->posts;
+		$exclude = implode( ",", $suppression_IDs );
+		if(!empty($exclude)) {
+			$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+		}
+	}
+    return $where;
+}
+add_filter( 'posts_where', 'filter_posts_from_rss', 1, 4 );
+
 
 add_action('rest_api_init', 'register_ee_attendee_id_meta');
 
