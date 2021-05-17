@@ -225,7 +225,7 @@ get_header();
                         if (get_field('program_expertise')) {
                             ?>
                             <div class="event-host event-content-item">
-                                <h4>About your Host(s):</h4> 
+                                <h4>About your Facilitator:</h4> 
                                 <?php echo html_entity_decode(get_field('program_expertise')); ?>
                             </div>
                             <?php
