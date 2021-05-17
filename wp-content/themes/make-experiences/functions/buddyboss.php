@@ -145,3 +145,15 @@ function bb_group_redirect(){
 	}
 }
 add_action( 'template_redirect', 'bb_group_redirect' );
+
+// overwrite the recommended dimensions for the cover image
+function bp_custom_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if ( 'xprofile' === $component || 'groups' === $component ) {
+		return array(
+			'width'  => 1300,
+			'height' => 225,
+		);
+	}
+	return $wh;
+}
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_custom_get_cover_image_dimensions', 10, 4 );
