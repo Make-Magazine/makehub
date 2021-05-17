@@ -296,4 +296,14 @@ function filter_gettext($translation, $text, $domain) {
 	return $translation;
 }
 add_filter('gettext', 'filter_gettext', 10, 4);
+
+// don't jetpack lazyload on the project print template
+function lazyload_exclude() {
+    if ( is_page_template('project-print-template.php') == true ) {
+        return false;
+    } else {
+        return true;
+    }
+}
+add_filter( 'lazyload_is_enabled', 'lazyload_exclude', 15 );
 ?>
