@@ -35,7 +35,14 @@ function attendee_approved( $registration) {
         //generate random password, create user, send email        
         $random_password = wp_generate_password( 12, false );
         $user_id = wp_create_user( $username, $random_password, $attendeeEmail );
-        wp_new_user_notification( $user_id, '','user');
+
+		$subject = 'Welcome to Maker Campus on Make: Community.';
+		$my_groups = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
+		$message = 'You have been given a free membership to Make: Community as part of your Maker Campus event ticket purchase.  Please login to access Make Community and your <a href="'. $my_groups .'">Maker Campus event groups</a>. \r\n\r\n
+Username:' . $username . '.\r\n
+Password:' . $random_password . '.\r\n';
+		$headers = array('Content-Type: text/html; charset=UTF-8','From: Make: Community <make@make.co>');
+		wp_mail( $attendeeEmail, $subject, $message, $headers );
 
     }else{        
         $user_id = $user->ID;

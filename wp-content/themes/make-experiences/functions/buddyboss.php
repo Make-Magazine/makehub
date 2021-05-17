@@ -158,8 +158,9 @@ function bp_custom_get_cover_image_dimensions( $wh, $settings, $component ) {
 }
 add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_custom_get_cover_image_dimensions', 10, 4 );
 
+// if we have the group name as a token, we probably want the group.url as well
 function add_group_url_email_token( $formatted_tokens, $tokens, $obj ) {
-	if ( isset( $formatted_tokens['group.name'] ) ) {	
+	if ( isset( $formatted_tokens['group.name'] && !isset( $formatted_tokens['group.url'] ) ) {	
 		$group_id = BP_Groups_Group::group_exists( sanitize_title( $formatted_tokens['group.name'] ) );
 		$formatted_tokens['group.url']  = bp_get_group_permalink( groups_get_group( $group_id ) );
 	}
