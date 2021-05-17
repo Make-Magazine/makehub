@@ -121,8 +121,8 @@
         <?php wp_footer(); ?>
 
         <script>
-            window.onload = function () {
-            //window.print();
+            jQuery( document ).ready(function() {            
+                window.print();
             }
         </script>
 
