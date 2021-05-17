@@ -267,7 +267,7 @@ function add_slug_body_class($classes) {
 		// let's see if your the group owner and what kind of group it is (hidden, private, etc)
 		if ( bp_is_groups_component() ) {
 			$classes[] = 'group-' . groups_get_group( array( 'group_id' => bp_get_current_group_id() ) )->status;
-			if( is_super_admin() || groups_is_user_mod( get_current_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( get_current_user_id(), bp_get_current_group_id() ) )  {
+			if( current_user_can( 'manage_options' ) || groups_is_user_mod( get_current_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( get_current_user_id(), bp_get_current_group_id() ) )  {
 				$classes[] = 'my-group';
 			}
 
