@@ -68,7 +68,7 @@
             }
         } elseif ($lesson_id != '') {
             $lesson = get_post($lesson_id);
-            $course_id = learndash_get_setting($lesson, 'course');                                    
+            $course_id = learndash_get_setting($lesson, 'course');
             get_lesson_output($lesson_id, $course_id);
         }
         ?>
@@ -82,8 +82,8 @@
         <?php wp_footer(); ?>
 
         <script>
-            jQuery( document ).ready(function() {            
-            window.print();
+            window.onload = function () {
+                window.print();
             }
         </script>
 
