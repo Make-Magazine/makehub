@@ -18,15 +18,13 @@
 				.elementor-column.elementor-col-33 {
 					width: 33.333% !important;
 				}
-				@page{ 
-					size: auto;   /* auto is the initial value */ 
-					/* this affects the margin in the printer settings */ 
-					margin: 25mm 25mm 25mm 25mm;  
-				} 
-				body { 
-					/* this affects the margin on the content before sending to printer */ 
-					margin: 0px;  
-				} 
+				.elementor-social-icons-wrapper {
+					display: none;
+				}
+				* {
+					-webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+					color-adjust: exact !important;                 /*Firefox*/
+				}
 			}
         </style>
 
@@ -65,7 +63,7 @@
         <?php wp_footer(); ?>
 
         <script>
-            window.onload = function () {
+            jQuery(window).on("load", function() {
                 window.print();
             }
         </script>
