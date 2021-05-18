@@ -38,7 +38,7 @@ function attendee_approved( $registration) {
 
 		$subject = 'Welcome to Maker Campus on Make: Community.';
 		$my_groups = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
-		$message = 'You have been given a free membership to Make: Community as part of your Maker Campus event ticket purchase.  Please login to access Make: Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
+		$message = 'Hello ' . $user->first_name .  ', <br />Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make:Community. This is where you will find the event information, resources and community.  Please login to access Make Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
 <b>Username:</b> ' . $username . '<br />
 <b>Password:</b> ' . $random_password;
 		$headers = array('Content-Type: text/html; charset=ISO-8859-1','From: Make: Community <make@make.co>');

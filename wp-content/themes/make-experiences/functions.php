@@ -295,7 +295,7 @@ function filter_gettext($translation, $text, $domain) {
 
 add_filter('gettext', 'filter_gettext', 10, 4);
 
-// don't jetpack lazyload on the project print template
+// don't lazyload on the project print template
 function lazyload_exclude() {
     if (is_page_template('project-print-template.php') == true) {
         return false;
@@ -303,6 +303,6 @@ function lazyload_exclude() {
         return true;
     }
 }
-
 add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
+add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 ?>

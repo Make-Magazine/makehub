@@ -18,8 +18,10 @@
 				.elementor-column.elementor-col-33 {
 					width: 33.333% !important;
 				}
-				.elementor-social-icons-wrapper {
+				.elementor-social-icons-wrapper, .elementor-social-icon, .elementor-social-icon svg {
 					display: none;
+					visibility: hidden;
+					height: 0p
 				}
 				* {
 					-webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
@@ -64,8 +66,9 @@
 
         <script>
             jQuery(window).on("load", function() {
-                window.print();
-            }
+				 jQuery(document).scrollTop(jQuery(document).height());
+				 window.print();
+            });
         </script>
 		
     </body>
