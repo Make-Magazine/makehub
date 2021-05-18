@@ -55,45 +55,44 @@ function make_widget_rss_output($rss, $args = array()) {
         return;
     }
 
-    echo '<ul class="custom-rss">';
-    if (strpos($args['url'], 'campus.make.co') !== false) {
-        $feedItems = $rss->get_items();
-        $count = count($feedItems);
-        array_splice($feedItems, 0, $count - $items);
-        $feedItems = array_reverse($feedItems);
-    } else {
-        $feedItems = $rss->get_items();
-    }
-
     $date1 = new DateTime('now');
+    
+    $sortedFeed = array();
+    $feedItems = $rss->get_items();    
     foreach ($feedItems as $item) {
         //exclude events that have already occured
-        $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);
+        $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);        
+        
         if(date_timestamp_get($date1) > date_timestamp_get($dateString)){
             continue; //(skip this record);
         }
-		
+        
+        //get the link
         $link = $item->get_link();
         while (stristr($link, 'http') != $link) {
             $link = substr($link, 1);
         }
         $link = esc_url(strip_tags($link));
-
+        
+        //set the title
         $title = esc_html(trim(strip_tags($item->get_title())));
         if (empty($title)) {
             $title = __('Untitled');
         }
         $title = '<div class="rssTitle">' . $title . "</div>";
-
+        
+        //set image
         if (strpos($args['url'], 'youtube.com/feeds') !== false && $enclosure = $item->get_enclosure()) {
             $image = '<img src="' . get_resized_remote_image_url($enclosure->get_thumbnail(), 140, 100) . '" width="140" height="100" />';
         } else {
             $image = '<img src="' . get_resized_remote_image_url(get_first_image_url($item->get_content()), 140, 100) . '" width="140" height="100" />';
         }
 
+        //set description
         $desc = html_entity_decode($item->get_description(), ENT_QUOTES, get_option('blog_charset'));
-        $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));
-
+        $desc = esc_attr(wp_trim_words($desc, 55, ' [&hellip;]'));        
+        
+        //summary
         $summary = '';
         if ($show_summary) {
             $summary = $desc;
@@ -105,7 +104,8 @@ function make_widget_rss_output($rss, $args = array()) {
 
             $summary = '<div class="rssSummary">' . esc_html($summary) . '</div>';
         }
-
+        
+        //author
         $author = '';
         if ($show_author) {
             $author = $item->get_author();
@@ -114,18 +114,37 @@ function make_widget_rss_output($rss, $args = array()) {
                 $author = ' <cite>' . esc_html(strip_tags($author)) . '</cite>';
             }
         }
-
-        $date = '';
-        if ($show_date) {            
-            $date = '<date>' . $dateString->format('M j, Y') . '</date>';
+        
+        //date
+        $date = $dateString->format('M j, Y');
+        
+        $sortedFeed[] = array('date' => $date, 'show_date' => $show_date, 'link' => $link, 'title' => $title, 'image' => $image, 'desc' => $desc, 'summary' => $summary, 'author' => $author);
+    }
+    
+    //sort this by date,newest first
+    usort($sortedFeed, function($a, $b) {
+        return $a['date'] - $b['date'];
+    });
+            
+    echo '<ul class="custom-rss">';    
+    foreach ($sortedFeed as $item) {    
+        $link       = $item['link'];
+        $title      = $item['title'];
+        $image      = $item['image'];
+        $desc       = $item['desc'];
+        $summary    = $item['summary'];
+        $author     = $item['author'];
+        
+        if ($item['show_date']) {            
+            $date = '<date>' . $item['date'] . '</date>';
         }
-
+        
         if ($link == '') {
             echo "<li>{$image}<div class='rss-widget-text'>$title{$date}{$summary}{$author}</div></li>";
         } elseif ($show_summary) {
-            echo "<li><a class='rss-image-link' href='$link'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link'>$title{$date}{$summary}{$author}</a></div></li>";
+            echo "<li><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$summary}{$author}</a></div></li>";
         } else {
-            echo "<li><a class='rss-image-link' href='$link'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link'>$title{$date}{$author}</a></div></li>";
+            echo "<li><a class='rss-image-link' href='$link' target='_blank'>{$image}</a><div class='rss-widget-text'><a class='rsswidget' href='$link' target='_blank'>$title{$date}{$author}</a></div></li>";
         }
     }
     echo '</ul>';
