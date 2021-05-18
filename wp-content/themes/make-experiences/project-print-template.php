@@ -11,41 +11,21 @@
         </script>
         <style>
             #wpadminbar, .ldms-message-tab,a.nt-note-tab {display:none}
+			@media print {
+				.elementor-column.elementor-col-50 {
+					width: 50% !important;
+				}
+				@page{ 
+					size: auto;   /* auto is the initial value */ 
+					/* this affects the margin in the printer settings */ 
+					margin: 25mm 25mm 25mm 25mm;  
+				} 
+				body { 
+					/* this affects the margin on the content before sending to printer */ 
+					margin: 0px;  
+				} 
+			}
         </style>
-        <?php
-        // Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
-        if (!isset($_COOKIE['cookielawinfo-checkbox-non-necessary']) || $_COOKIE['cookielawinfo-checkbox-non-necessary'] == "yes") {
-            ?>
-            <!-- Global site tag (gtag.js) - Google Analytics -->
-            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51157-36"></script>
-            <script>
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('set','linker', {
-                'accept_incoming': true,
-                'domains': [
-                'make.co',
-                'makermedia.auth0.com',
-                'makeco.staging.wpengine.com',
-                'stagemakehub.wpengine.com',
-                'devmakehub.wpengine.com'
-                ]
-                });
-                gtag('js', new Date());
-                gtag('config', 'UA-51157-36', {
-                'cookie_domain': 'make.co'
-                });
-            </script>
-
-            <!-- Google Tag Manager -->
-            <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-5PRW4M2');</script>
-            <!-- End Google Tag Manager -->
-
-        <?php } // end cookie law if ?>
 
         <?php wp_head(); ?>
     </head>
@@ -86,29 +66,6 @@
                 window.print();
             }
         </script>
-
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-            ga('create', 'UA-51157-25', 'auto');
-            ga('require', 'displayfeatures');
-            ga('send', 'pageview', {
-            'page': location.pathname + location.search + location.hash
-            });
-        </script>
-        <script>
-            var _prum = [['id', '53fcea2fabe53d341d4ae0eb'],
-            ['mark', 'firstbyte', (new Date()).getTime()]];
-            (function() {
-            var s = document.getElementsByTagName('script')[0]
-            , p = document.createElement('script');
-            p.async = 'async';
-            p.src = '//rum-static.pingdom.net/prum.min.js';
-            s.parentNode.insertBefore(p, s);
-            })();
-        </script>
+		
     </body>
 </html>
