@@ -77,9 +77,10 @@ function make_experiences_scripts_styles() {
 add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
 
 
-add_action( 'admin_enqueue_scripts', 'load_admin_styles' );
+add_action('admin_enqueue_scripts', 'load_admin_styles');
+
 function load_admin_styles() {
-	wp_enqueue_style( 'admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0' );
+    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
 }
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
@@ -193,11 +194,11 @@ add_filter('the_content_feed', 'featuredtoRSS', 20, 1);
 
 function add_event_date_to_rss() {
     global $post;
-    
+
     if (get_post_type() == 'espresso_events') {
         //determine start date
         $event = EEM_Event::instance()->get_one_by_ID($post->ID);
-        $date = $event->first_datetime(); 
+        $date = $event->first_datetime();
         $start_date = date('m/d/Y', strtotime($date->start_date()));
         ?>
         <event_date><?php echo $start_date ?></event_date>
@@ -205,34 +206,30 @@ function add_event_date_to_rss() {
     }
 }
 
-add_action('rss2_item', 'add_event_date_to_rss',30,1);
+add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 
 // Exclude espresso_events from rss feed if marked for supression
-function filter_posts_from_rss( $where, $query = NULL ) {
+function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
-    if ( !$query->is_admin && $query->is_feed) {
-		$args = array(
-		  'post_type' => 'espresso_events',
-		  'posts_per_page' => -1,
-		  'fields' => 'ids',
-		  'meta_query' => array(
-			array(
-			  'key' => 'suppress_from_rss_widget',
-			  'value' => '1',
-			)
-		  )
-		);
-		$suppression_query = new WP_Query($args);
-		$suppression_IDs = $suppression_query->posts;
-		$exclude = implode( ",", $suppression_IDs );
-		if(!empty($exclude)) {
-			$where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
-		}
-	}
+
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type']=='espresso_events') {                    
+        $dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
+        $results = $wpdb->get_results($dbSQL);
+        $suppression_IDs = array();
+        
+        foreach($results as $result){         
+            $suppression_IDs[] = $result->post_id;
+        }
+                
+        $exclude = implode(",", $suppression_IDs);
+        
+        if (!empty($exclude)) {
+            $where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+        }
+    }
     return $where;
 }
 add_filter( 'posts_where', 'filter_posts_from_rss', 1, 4 );
-
 
 add_action('rest_api_init', 'register_ee_attendee_id_meta');
 
@@ -257,21 +254,20 @@ add_filter('doing_it_wrong_trigger_error', function () {
 
 function add_slug_body_class($classes) {
     global $post;
-	global $bp;
+    global $bp;
     if (isset($post)) {
         if ($post->post_name) {
             $classes[] = $post->post_type . '-' . $post->post_name;
         } else {
             $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
         }
-		// let's see if your the group owner and what kind of group it is (hidden, private, etc)
-		if ( bp_is_groups_component() ) {
-			$classes[] = 'group-' . groups_get_group( array( 'group_id' => bp_get_current_group_id() ) )->status;
-			if( current_user_can( 'manage_options' ) || groups_is_user_mod( get_current_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( get_current_user_id(), bp_get_current_group_id() ) )  {
-				$classes[] = 'my-group';
-			}
-
-		}
+        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
+        if (bp_is_groups_component()) {
+            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
+            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
+                $classes[] = 'my-group';
+            }
+        }
         return $classes;
     }
 }
@@ -279,31 +275,34 @@ function add_slug_body_class($classes) {
 add_filter('body_class', 'add_slug_body_class');
 
 /*
-* Override any of the translation files if we need to change language
-*
-* @param $translation The current translation
-* @param $text The text being translated
-* @param $domain The domain for the translation
-* @return string The translated / filtered text.
-*/
+ * Override any of the translation files if we need to change language
+ *
+ * @param $translation The current translation
+ * @param $text The text being translated
+ * @param $domain The domain for the translation
+ * @return string The translated / filtered text.
+ */
+
 function filter_gettext($translation, $text, $domain) {
-	$translations = get_translations_for_domain( $_SERVER['HTTP_HOST'] );
-	switch($text){
-	case 'Nickname':
-		return $translations->translate( 'Display Name' );
-		break;
-	}
-	return $translation;
+    $translations = get_translations_for_domain($_SERVER['HTTP_HOST']);
+    switch ($text) {
+        case 'Nickname':
+            return $translations->translate('Display Name');
+            break;
+    }
+    return $translation;
 }
+
 add_filter('gettext', 'filter_gettext', 10, 4);
 
 // don't jetpack lazyload on the project print template
 function lazyload_exclude() {
-    if ( is_page_template('project-print-template.php') == true ) {
+    if (is_page_template('project-print-template.php') == true) {
         return false;
     } else {
         return true;
     }
 }
-add_filter( 'lazyload_is_enabled', 'lazyload_exclude', 15 );
+
+add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 ?>
