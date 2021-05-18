@@ -35,10 +35,11 @@ function attendee_approved( $registration) {
         //generate random password, create user, send email        
         $random_password = wp_generate_password( 12, false );
         $user_id = wp_create_user( $username, $random_password, $attendeeEmail );
+		$new_user = get_user_by('id', $user_id);
 
 		$subject = 'Welcome to Maker Campus on Make: Community.';
 		$my_groups = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
-		$message = 'Hello ' . $user->first_name .  ', <br />Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make:Community. This is where you will find the event information, resources and community.  Please login to access Make Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
+		$message = 'Hello ' . $new_user->nicename .  ', <br />Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make:Community. This is where you will find the event information, resources and community.  Please login to access Make Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
 <b>Username:</b> ' . $username . '<br />
 <b>Password:</b> ' . $random_password;
 		$headers = array('Content-Type: text/html; charset=ISO-8859-1','From: Make: Community <make@make.co>');

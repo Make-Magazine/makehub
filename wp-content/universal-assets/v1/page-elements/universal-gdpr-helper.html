@@ -8,6 +8,7 @@
 		// Set permissions for all the sites that will share gdpr privacy settings
 		CrossStorageHub.init([
 		  {origin: /\.makehub.local$/,							allow: ['get', 'set', 'getKeys']},
+		  {origin: /\.makehub.test$/,							allow: ['get', 'set', 'getKeys']},
 		  {origin: /\makeco.local$/,							allow: ['get', 'set', 'getKeys']},
 		  {origin: /\makerfaire.local$/,						allow: ['get', 'set', 'getKeys']},
 		  {origin: /\makercamp.local$/,							allow: ['get', 'set', 'getKeys']},
