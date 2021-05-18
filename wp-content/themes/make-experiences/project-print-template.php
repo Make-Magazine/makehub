@@ -15,6 +15,9 @@
 				.elementor-column.elementor-col-50 {
 					width: 50% !important;
 				}
+				.elementor-column.elementor-col-33 {
+					width: 33.333% !important;
+				}
 				@page{ 
 					size: auto;   /* auto is the initial value */ 
 					/* this affects the margin in the printer settings */ 
