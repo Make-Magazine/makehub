@@ -15,15 +15,18 @@
 				.elementor-column.elementor-col-50 {
 					width: 50% !important;
 				}
-				@page{ 
-					size: auto;   /* auto is the initial value */ 
-					/* this affects the margin in the printer settings */ 
-					margin: 25mm 25mm 25mm 25mm;  
-				} 
-				body { 
-					/* this affects the margin on the content before sending to printer */ 
-					margin: 0px;  
-				} 
+				.elementor-column.elementor-col-33 {
+					width: 33.333% !important;
+				}
+				.elementor-social-icons-wrapper, .elementor-social-icon, .elementor-social-icon svg {
+					display: none;
+					visibility: hidden;
+					height: 0p
+				}
+				* {
+					-webkit-print-color-adjust: exact !important;   /* Chrome, Safari */
+					color-adjust: exact !important;                 /*Firefox*/
+				}
 			}
         </style>
 
@@ -62,9 +65,10 @@
         <?php wp_footer(); ?>
 
         <script>
-            window.onload = function () {
-                window.print();
-            }
+            jQuery(window).on("load", function() {
+				 jQuery(document).scrollTop(jQuery(document).height());
+				 window.print();
+            });
         </script>
 		
     </body>
