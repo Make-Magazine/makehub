@@ -53,7 +53,7 @@ function makerfaire_info_content() {
     include(get_stylesheet_directory() . '/db-connect/mf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
     if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        error_log("Makerfaire profile section - Failed to connect to makerfaire database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
 
     //pull maker information from database.    
@@ -88,7 +88,7 @@ function makerfaire_info_content() {
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
     if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        error_log("Makerfaire profile section - Failed to connect to makerfaire global database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }
     
     //pull maker information from database.    
@@ -139,11 +139,9 @@ function makerfaire_info_content() {
     
     //build outpupt
     //echo '<h2><a class="btn universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
-    echo '<h3>Maker Faire Entries from '.bp_get_displayed_user_fullname(). '</h3>';
-    
+    echo '<h3>Maker Faire Entries from '.bp_get_displayed_user_fullname(). '</h3>';    
     echo '<div class="item-grid">';
-    
-    
+        
     foreach($entryDataUnique as $entry){
         $imgSize = getimagesize($entry['photo']);
         $photo = ($imgSize==FALSE?$entry['faire_logo']:$entry['photo']);
@@ -179,8 +177,8 @@ function has_mf_entries(){
     //check flagship
     include(get_stylesheet_directory() . '/db-connect/mf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
-    if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    if ($mysqli->connect_errno) {        
+        error_log("Makerfaire profile section - Failed to connect to makerfaire database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);
     }   
     
     $sql = 'SELECT  count(*) as count '
@@ -201,7 +199,7 @@ function has_mf_entries(){
     include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
     $mysqli = new mysqli($host, $user, $password, $database);
     if ($mysqli->connect_errno) {
-        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        error_log("Makerfaire profile section - Failed to connect to makerfaire global database: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error);        
     }
     
     //pull maker information from database.    
