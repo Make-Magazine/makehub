@@ -5,10 +5,15 @@
  */
 
 function profile_tab_makerfaire_infoname() {
+    global $current_user;
+    get_currentuserinfo();
+
+    $email = $current_user->user_email; 
+    
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
-    if ($user_id != 0) {
+    if($user_id != 0 && has_mf_entries()){
         bp_core_new_nav_item(array(
             'name' => 'Maker Faire Information',
             'slug' => 'makerfaire_info',
@@ -161,4 +166,56 @@ function makerfaire_info_content() {
             </div>';
     }
     echo '</div>';
+}
+
+function has_mf_entries(){
+    global $wpdb;
+    $user_id = bp_displayed_user_id();
+
+    //get the users email
+    $user_info = get_userdata($user_id);
+    $user_email = $user_info->user_email;
+    
+    //check flagship
+    include(get_stylesheet_directory() . '/db-connect/mf-config.php');
+    $mysqli = new mysqli($host, $user, $password, $database);
+    if ($mysqli->connect_errno) {
+        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }   
+    
+    $sql = 'SELECT  count(*) as count '
+            . 'FROM `wp_mf_maker` '
+            . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
+            . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id '
+            . 'left outer join wp_gf_entry on wp_mf_entity.lead_id = wp_gf_entry.id  '                        
+            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type!="contact" and wp_gf_entry.status !="trash" ';
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");
+    
+    foreach ($entries as $entry) {
+        if($entry['count']>0) {
+            return true;        
+        }
+    }
+    
+    //check global
+    include(get_stylesheet_directory() . '/db-connect/globalmf-config.php');
+    $mysqli = new mysqli($host, $user, $password, $database);
+    if ($mysqli->connect_errno) {
+        echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+    }
+    
+    //pull maker information from database.    
+    $sql = 'SELECT  count(*) as count '
+            . 'FROM `wp_mf_maker` '
+            . 'left outer join wp_mf_maker_to_entity on wp_mf_maker_to_entity.maker_id = wp_mf_maker.maker_id '
+            . 'left outer join wp_mf_entity on wp_mf_maker_to_entity.entity_id = wp_mf_entity.lead_id  and wp_mf_maker_to_entity.blog_id = wp_mf_entity.blog_id '
+            . 'where Email like "' . $user_email . '" and wp_mf_entity.status="Accepted"  and maker_type="contact" '
+            . 'order by entity_id desc';
+    $entries = $mysqli->query($sql) or trigger_error($mysqli->error . "[$sql]");        
+    foreach ($entries as $entry) {
+        if($entry['count']>0) {
+            return true;        
+        }
+    }    
+    return false;
 }
