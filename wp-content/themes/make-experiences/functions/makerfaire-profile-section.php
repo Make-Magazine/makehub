@@ -138,7 +138,7 @@ function makerfaire_info_content() {
     });
     
     //build outpupt
-    echo '<h2><a class="btn universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
+    //echo '<h2><a class="btn universal-btn" href="https://makerfaire.com/map/">Find a Maker Faire Near You!</a></h2>';
     echo '<h3>Maker Faire Entries from '.bp_get_displayed_user_fullname(). '</h3>';
     
     echo '<div class="item-grid">';
