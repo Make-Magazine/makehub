@@ -156,7 +156,7 @@ jQuery(document).ready(function(){
 		jQuery( this ).toggleClass("show-submenu");
 	});
 	
-	// still got to get our credit from make projects
+	/* still got to get our credit from make projects
 	var source = window.location.hostname.substr(0, source.indexOf('.')); 
 	var _href = jQuery(".mp-nav-link a").attr("href");
 	if (_href.indexOf('?') != -1) {
@@ -164,6 +164,7 @@ jQuery(document).ready(function(){
 	} else {
 		jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");	
 	}
+	*/
 
 });
 
