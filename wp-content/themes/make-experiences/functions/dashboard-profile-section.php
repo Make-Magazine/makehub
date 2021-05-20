@@ -256,10 +256,10 @@ function dashboard_info_content() {
                                         <table class="espresso-my-events-table event_section_table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" class="espresso-my-events-event-th">Event Group</th>
-                                                    <th scope="col" class="espresso-my-events-datetime-range-th">When            </th>
-                                                    <th scope="col" class="espresso-my-events-tickets-num-th"># Tickets            </th>
-                                                    <th scope="col" class="espresso-my-events-actions-th">Actions            </th>
+                                                    <th width="45%" scope="col" class="espresso-my-events-event-th">Event Group</th>
+                                                    <th width="35%" scope="col" class="espresso-my-events-datetime-range-th">When</th>
+                                                    <th width="5%" scope="col" class="espresso-my-events-tickets-num-th">#</th>
+                                                    <th width="15%" scope="col" class="espresso-my-events-actions-th">Attendee(s)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>';
@@ -308,7 +308,7 @@ function build_ee_ticket_section($event, $user_email) {
     
         //attendee name
         $attendee=$registration->attendee();
-        $actions['attendee'] = $attendee->full_name();
+        $actions['attendee'] = $attendee->full_name().'<br/>';
         // only show the edit registration link IF the registration has question groups.
         $actions['edit_registration'] = $registration->count_question_groups()
             ? '<a aria-label="' . $link_to_edit_registration_text
