@@ -1,3 +1,4 @@
+/*
 (function($) {
 	if(jQuery(".universal-nav").length) {
 		// keep these from happening before any angular or login scripts
@@ -211,6 +212,7 @@
 		});
 	}
 })(jQuery);
+*/
 
 function mp_utm(source) {
 	source = source.substr(0, source.indexOf('.')); 

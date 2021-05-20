@@ -72,27 +72,21 @@
 
         <div id="page" class="site">
 
-                <?php do_action(THEME_HOOK_PREFIX . 'before_header'); ?>
+			<?php do_action(THEME_HOOK_PREFIX . 'before_header'); ?>
 
-            <header id="masthead" class="<?php echo apply_filters('buddyboss_site_header_class', 'site-header site-header--bb'); ?>">
-                <?php
-                // Nav Level 1 and Hamburger      
-                require_once(WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html');
-                ?>
-                <!-- hide the universal nav -->
-                <style>
-                    .nav-level-1, .nav-hamburger, #masthead > a {display:none;}
-                </style>
-            <?php do_action(THEME_HOOK_PREFIX . 'header'); ?>
-            </header>
+			<?php
+				// Universal Nav     
+				require_once(WP_CONTENT_DIR . '/universal-assets/v1/page-elements/universal-topnav.html');
+			?>
+			<?php //do_action(THEME_HOOK_PREFIX . 'header'); ?>
 
-<?php do_action(THEME_HOOK_PREFIX . 'after_header'); ?>
+			<?php do_action(THEME_HOOK_PREFIX . 'after_header'); ?>
 
-                <?php do_action(THEME_HOOK_PREFIX . 'before_content'); ?>
+            <?php do_action(THEME_HOOK_PREFIX . 'before_content'); ?>
 
             <div id="content" class="site-content">
 
-<?php do_action(THEME_HOOK_PREFIX . 'begin_content'); ?>
+				<?php do_action(THEME_HOOK_PREFIX . 'begin_content'); ?>
 
                 <div class="container">
                     <div class="<?php echo apply_filters('buddyboss_site_content_grid_class', 'bb-grid site-content-grid'); ?>">
