@@ -450,13 +450,13 @@
 	}
 }
 
-body:not(.buddyboss-theme) {
+//body:not(.buddyboss-theme) {
 	.login-section {
 		.dropdown-links {
 			display: none;
 		}
 	}
-}
+//}
 body.buddyboss-theme {
 	.site-header-custom {
 		width: 100% !important;
