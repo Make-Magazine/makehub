@@ -222,14 +222,16 @@ get_header();
                             </div>
                             <?php
                         }
-                        if (get_field('program_expertise')) {
+                        
                             ?>
                             <div class="event-host event-content-item">
-                                <h4>About your Facilitator:</h4> 
-                                <?php echo html_entity_decode(get_field('program_expertise')); ?>
+                                <h4>About your Facilitator:</h4>                                 
+                                <?php //per siana, always show the about your facilitator title regardless if the program expertise is set 
+                                if (get_field('program_expertise')) {
+                                    echo html_entity_decode(get_field('program_expertise')); 
+                                }?>
                             </div>
-                            <?php
-                        }
+                            <?php                       
                         get_template_part('template-parts/content-espresso_events-people', 'page');
                         ?>
                     </div>
