@@ -54,7 +54,9 @@
 	}
 }
 
-
+button.ges-change, button.ges-change:hover {
+    padding: 10px 20px !important;
+}
 
 .bs-styled-radio + .bb-radio-label, .bs-styled-radio + label {
 	display: flex;
