@@ -55,7 +55,7 @@ function dashboard_info_content() {
 
     if (isset($user_meta['ihc_user_levels'][0])) {
         $return .= '<div class="dashboard-box expando-box">
-			<h4 class="open"><img src="' . get_stylesheet_directory_uri() . '/images/make-community-logo.png" /> Membership Details</h4>
+			<h4 class="open"><img style="max-width:100px;" src="' . get_stylesheet_directory_uri() . '/images/make-community-logo.png" /> Membership Details</h4>
 			<ul class="open">';
         $return .= '        <li>' . do_shortcode("[ihc-membership-card]") . '</li>';
         //$return .= 	'<h5>Current Membership Level: ' . $user_meta['ihc_user_levels'][0];
