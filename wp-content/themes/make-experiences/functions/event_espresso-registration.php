@@ -78,7 +78,7 @@ function confirmation_page_text($order_conf_desc){
                         'This membership provides attendees with a central hub for the workshop; material list, online webinar access, group access to connect with the facilitator, attendees, and more!  Make: Community is a great place to connect with others and find making activities online and at your local makerspace.<br/><br/>'.                      
                         'Attendees, check your email for your registration confirmation and login instructions to access your event information and benefit from the full Maker Campus experience. '.
                         'Click the button below to view / download / print a full description of your purchases and registration information.<br/><br   />';
-    $order_conf_desc .=   (is_user_logged_in()?'<a class="ee-button ee-roundish indented-text big-text" href="/my/groups/">View Event Group</a>':'');
+    $order_conf_desc .=   (is_user_logged_in()?'<a class="ee-button ee-roundish indented-text big-text" href="/members/me/groups/">View Event Group</a>':'');
     return $order_conf_desc;
 }
 
