@@ -3,6 +3,8 @@ jQuery(document).ready(function(){
 	* Allow use of Array.from in implementations that don't natively support it
 	function conNavArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	*/
+	
+	// Buddyboss code
 
 	function conNavArray(arr) {
 		if (Array.isArray( arr )) {
@@ -99,7 +101,7 @@ jQuery(document).ready(function(){
 			}
 		);
 	}
-
+	
 	jQuery( document ).on('click', '.more-button', function (e) {
 		e.preventDefault();
 		jQuery( this ).toggleClass( 'active' ).next().toggleClass( 'active' );
@@ -153,4 +155,15 @@ jQuery(document).ready(function(){
 		jQuery( '.bottom-menu.menu-item-has-children' ).not(this).removeClass("show-submenu");
 		jQuery( this ).toggleClass("show-submenu");
 	});
+	
+	// still got to get our credit from make projects
+	var source = window.location.hostname.substr(0, source.indexOf('.')); 
+	var _href = jQuery(".mp-nav-link a").attr("href");
+	if (_href.indexOf('?') != -1) {
+		jQuery(".mp-nav-link a").attr("href", _href + '&utm_source=' + source + "_nav");	
+	} else {
+		jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");	
+	}
+
 });
+
