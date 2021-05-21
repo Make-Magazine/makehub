@@ -159,15 +159,14 @@ jQuery(document).ready(function(){
 		jQuery( this ).toggleClass("show-submenu");
 	});
 	
-	/* still got to get our credit from make projects
-	var source = window.location.hostname.substr(0, source.indexOf('.')); 
+	// still got to get our credit from make projects
+	var source = window.location.hostname.split(".")[0];
 	var _href = jQuery(".mp-nav-link a").attr("href");
 	if (_href.indexOf('?') != -1) {
 		jQuery(".mp-nav-link a").attr("href", _href + '&utm_source=' + source + "_nav");	
 	} else {
 		jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");	
 	}
-	*/
-
+	
 });
 
