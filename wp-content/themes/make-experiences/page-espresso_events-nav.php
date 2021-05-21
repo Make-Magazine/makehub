@@ -13,7 +13,7 @@ get_header();
 		<?php if ( have_posts() ) : ?>
 				<div class="event-view-btns">
 					<a href="/maker-campus" title="Grid View"><i class="fas fa-th-large"></i></a>
-					<a href="/maker-campus/event-list" title="List View"><i class="fas fa-th-list"></i></a>
+					<a href="/maker-campus/events-list" title="List View"><i class="fas fa-th-list"></i></a>
 				</div>
 		<?php
 			do_action( THEME_HOOK_PREFIX . '_template_parts_content_top' );
