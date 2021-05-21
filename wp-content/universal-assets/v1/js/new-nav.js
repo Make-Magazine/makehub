@@ -131,7 +131,7 @@ jQuery(document).ready(function(){
 	});
 	
 	// make some room for our fixed header
-	jQuery("#masthead.site-header-custom").next().css("padding-top", "76px");
+	jQuery("#masthead.site-header-custom").nextAll().not("script, style").first().css("padding-top", "76px");
 	
 	// mobile
 	jQuery( document ).on('click', '.mobile-toggle-panel', function (e) {
