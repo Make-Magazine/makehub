@@ -137,7 +137,7 @@ jQuery(document).ready(function(){
 	jQuery( document ).on('click', '.mobile-toggle-panel', function (e) {
 		e.preventDefault();
 		jQuery( "body" ).addClass("mobile-nav");
-		jQuery( "#site-navigation.main-navigation" ).addClass("show");
+		jQuery( "#site-navigation-custom.main-navigation" ).addClass("show");
 		navCollapse.classList.remove( 'hasItems' );
 		jQuery("#navbar-extend > li").each(function(){
 			jQuery("#primary-menu").append(jQuery(this));
@@ -146,7 +146,7 @@ jQuery(document).ready(function(){
 	jQuery( document ).on('click', '.close-mobile', function (e) {
 		e.preventDefault();
 		jQuery( "body" ).removeClass("mobile-nav");
-		jQuery( "#site-navigation.main-navigation" ).removeClass("show");
+		jQuery( "#site-navigation-custom.main-navigation" ).removeClass("show");
 		jQuery( ".menu-item-has-children" ).removeClass("show-submenu");
 	});
 	jQuery( document ).on('click', '.top-menu.menu-item-has-children', function (e) {

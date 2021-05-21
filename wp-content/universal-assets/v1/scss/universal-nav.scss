@@ -96,6 +96,7 @@
 						vertical-align: middle;
 						height: 76px;
 						white-space: nowrap;
+						padding-left: 0px;
 						a { 
 							font-size: 16px;
 							font-weight: 500;
@@ -289,6 +290,7 @@
 			.mobile-toggle-panel {
 				display: block;
 				margin-right: 70px;
+				color: #333;
 			}
 			.search-separator { display: none; }
 			#site-navigation-custom {
@@ -548,8 +550,10 @@ body.buddyboss-theme {
 }
 
 body.mobile-nav {
-	overflow: hidden;
-	#navbar-collapse { display: none; }
+	@media screen and (max-width: 805px) {
+		overflow: hidden;
+		#navbar-collapse { display: none; }
+	}
 }
 
 .nav-separator {
@@ -686,18 +690,11 @@ body.mobile-nav {
 	align-items: center;
 	min-width: 160px;
 	@media (max-width: 805px) {
+		min-width: 65px;
 		.subscribe-call-out {
 			 display: none;
 		}
 	}
-    @media (max-width: 767px) {
-        position: fixed;
-        top: 5px;
-        z-index: 1000;
-    }
-    @media (max-width: 577px) {
-        right: 16px;
-    }
     li {
        list-style: none;
 		flex: 1
