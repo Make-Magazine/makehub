@@ -4,7 +4,7 @@
 	background: #fff;
 	position: fixed;
 	z-index: 610;
-	box-shadow: 0 1px 0 0 rgba(139,141,157,.05),0 0 1px 0 rgba(65,71,108,.15);
+	box-shadow: 0 1px 5px rgba(0,0,0, .3);
 	width: 100%;
 	i {
 		color: #939597;
@@ -14,6 +14,9 @@
 	}
 	.menu-item-has-children > a {
 		position: relative;
+	}
+	#site-logo.site-branding {
+		margin: 0px;
 	}
 	.sub-menu {
 		background: #fff;
@@ -69,6 +72,7 @@
 					z-index: 1;
 					max-height: 76px;
 					width: 100px;
+					margin-top:-4px;
 				}
 			}
 		}
@@ -93,10 +97,12 @@
 						vertical-align: middle;
 						height: 76px;
 						white-space: nowrap;
+						padding-left: 0px;
 						a { 
 							font-size: 16px;
 							font-weight: 500;
 							color: #333;
+							font-family: "Roboto Bold";
 							p { margin: 0px; }
 						}
 						&> li.menu-item {
@@ -152,6 +158,7 @@
 									font-weight: 400;
 									position: relative;
 									line-height: 30px;
+									a { font-family: Roboto; }
 									&.menu-item-has-children:not(.hideshow)::after {
 										line-height: 1;
 										right: 10px;
@@ -250,6 +257,9 @@
 					-webkit-box-align: center;
 					-ms-flex-align: center;
 					align-items: center;
+					&> * {
+						line-height: 1;
+					}
 					.nav-header-buttons {
 						padding: 0px;
 						.button.link {
@@ -281,9 +291,10 @@
 			.mobile-toggle-panel {
 				display: block;
 				margin-right: 70px;
+				color: #333;
 			}
 			.search-separator { display: none; }
-			#site-navigation {
+			#site-navigation-custom {
 				position: absolute;
 				z-index: 99999;
 				top: 0px;
@@ -415,6 +426,7 @@
 	.login-section {
 		#LoginBtn, #LogoutBtn {
 			color: #333;
+			display: none;
 		}
 		#LogoutBtn {
 			padding: 10px 15px;
@@ -539,8 +551,10 @@ body.buddyboss-theme {
 }
 
 body.mobile-nav {
-	overflow: hidden;
-	#navbar-collapse { display: none; }
+	@media screen and (max-width: 805px) {
+		overflow: hidden;
+		#navbar-collapse { display: none; }
+	}
 }
 
 .nav-separator {
@@ -552,4 +566,203 @@ body.mobile-nav {
 	margin: 0 12px 0 12px;
 	padding: 0;
 	vertical-align: middle;
+}
+
+// SEARCH related stuff //
+#search-modal, #sb-search { 
+    display: none;
+}
+
+.makezine, .makercamp {
+	#sb-search {
+		display: block;
+	}
+}
+
+.fancybox-overlay {
+    background: #333;
+    opacity: .95;
+	width: 100vw !important;
+    height: 100vh !important;
+    position: fixed;
+    top: 0px;
+}
+.fancybox-wrap.search-modal-wrapper .fancybox-skin{
+    background: transparent;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    .sb-search-label {
+        color: #fff;
+        display: block;
+        font-size: 62px;
+        font-family: "Roboto-Light";
+        text-align:center;
+        margin-bottom: 30px;
+    }
+    .search-form {
+		min-width: 620px;
+		label { font-weight: 300; }
+        .sb-search-input {
+            background: transparent;
+            color: #fff;
+            border: 0px;
+            border-bottom: solid white 1px;
+            outline-width: 0;
+            font-weight: normal;
+            width: 475px;
+            margin-right: 20px;
+            text-align: center;
+            padding-bottom: 8px;
+            &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+                color: #fff;
+                opacity: 1; /* Firefox */
+            }
+            &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+                color: #fff;
+            }
+            &::-ms-input-placeholder { /* Microsoft Edge */
+                color: #fff;
+            }
+            @media (max-width: 767px) {
+                width: 100%;
+            }
+        }
+        .sb-search-submit {
+            background: #eb002a;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 25px;
+            color: #fff;
+            font-weight: normal;
+            font-size: 22px;
+            margin-top: -5px;
+			height: 50px;
+        }
+    }
+    #popular-links {
+        width: 340px;
+        margin: 40px auto 0px;
+        text-align: center;
+        h5 { 
+            color: #fff;
+            font-family: "Roboto-Light";
+            font-size: 18px;
+            font-weight: normal;
+        }
+        ul.pop-links-list {
+            float: left;
+            text-align: left;
+            margin-left: 20px;
+            &:last-child { float: right; }
+            li {
+                padding: 10px;
+                list-style: none;
+                a { 
+                    color: #ED1C24;
+                    opacity: .9;
+                    &:hover { opacity: 1; }
+                }
+            }
+        }
+    }
+    .fancybox-close {
+        background: none;
+        color: #fff;
+        font-size: 30px;
+        margin-top: -30px;
+        margin-right: 15px;
+        font-family: Tahoma;
+		position: absolute;
+		top: 50px;
+    	right: 0px;
+        &:before {
+            content: "x";
+        }
+        @media (max-width: 767px) {
+            margin-top: 0;
+        }
+    }
+}
+
+.search-button-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	min-width: 160px;
+	@media (max-width: 805px) {
+		min-width: 65px;
+		.subscribe-call-out {
+			 display: none;
+		}
+	}
+    li {
+       list-style: none;
+		flex: 1
+    }
+	//Search button
+	.sb-search {
+		position: relative;
+		width: 0%;
+		min-width: 32px;
+		height: 32px;
+		font-size: 24px;
+		float: right;
+		overflow: hidden;
+		cursor: pointer;
+		-webkit-backface-visibility: hidden;
+		top: 5px;
+		right: 0px;
+		z-index: 999;
+		margin-left: 20px;
+		&::after {
+			font-family: FontAwesome;
+			content: "\f002";
+		}
+	}
+	.subscribe-call-out {
+		float: left;
+		color: #333;
+		position: relative;
+		height: 50px;
+		margin-top: 20px;
+		.subscribe-text {
+			float: left;
+			text-align: right;
+			a {
+				font-size: 14px;
+				font-weight: 300;
+				text-transform: capitalize;
+				color:#333;
+			}
+		}
+		#nav-subscribe-img {
+			margin: 0 10px;
+			margin-top: -18px;
+			width: 50px;
+		}
+		.subscribe-pop-out {
+			display: none;
+			min-width: 300px;
+			background: #f1f1f1;
+			position: absolute;
+			left: -40px;
+			top: 50px;
+			text-align: center;
+			border: solid 2px #fff;
+			box-shadow: 0 10px 12px rgba(102, 102, 102, 50%);
+			-webkit-box-shadow: 0 10px 12px rgba(102, 102, 102, 50%);
+			img {
+				width: 100%;
+			}
+			@media screen and (max-width: 988px) {
+				left: -70px;
+			}
+		}
+		&:hover {
+			.subscribe-pop-out {
+				display: block;
+			}
+		}
+	}
 }
