@@ -98,12 +98,17 @@ jQuery(".expando-box h4").click(function(){
 }); 
 
 // universal treatment for info buttons to pull up their related "modal"
+jQuery(document).on('gpnf_post_render', function(){
+    infoButton();
+});
+
 jQuery(document).on('gform_page_loaded', function(event, form_id, current_page){
 	infoButton();
 });
 jQuery(document).ready(function(event, form_id, current_page){
 	infoButton();
 });
+
 function infoButton(){
 	jQuery(".info-btn").on("click", function(){
 		var infoElement = jQuery(this).attr("data-info");
