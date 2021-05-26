@@ -248,9 +248,11 @@ get_header();
                                 <?php
                                 $tickets = $event->tickets();
                                 foreach ($tickets as $ticket) {
+									$datetimes = $ticket->datetimes();
                                     ?>
                                     <div class="ticket-detail">
-                                        <div class="ticket-detail-name"><b><?php echo $ticket->name(); ?></b>
+                                        <div class="ticket-detail-name">
+											<b><?php echo $ticket->name(); ?></b>
                                             <?php if ($ticket->remaining() < 6) { ?>
                                                 <span class="tickets-remaining">- Only <?php echo $ticket->remaining(); ?> tickets remaining.</span>
     <?php } ?>
@@ -261,7 +263,8 @@ get_header();
                                             foreach ($dates as $date) {
                                                 ?>
                                                 <li>
-                                                <?php echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+													<p><?php echo $date->description(); ?></p>
+                                                	<?php echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
                                                 </li>
     <?php } ?>                                    
                                         </ul>
