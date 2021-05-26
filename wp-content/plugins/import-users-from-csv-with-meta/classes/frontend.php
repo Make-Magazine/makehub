@@ -56,20 +56,25 @@ class ACUI_Frontend{
 					</td>
 				</tr>
 
-				<tr class="form-field">
+                <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td><?php _e( 'You can use role as attribute to choose directly in the shortcode the role to use during the import. Remind that you must use the role slug, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta role="editor"]</pre>
 					</td>
 				</tr>
 
-				<tr class="form-field">
+                <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute delete-only-specified-role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td><?php _e( 'You can use this attribute to make delete only users of the specified role that are not present in the CSV, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta role="editor" delete-only-specified-role="true"]</pre> <?php _e( 'will only delete (if the deletion is active) the users not present in the CSV with are editors', 'import-users-from-csv-with-meta' ); ?>
 					</td>
 				</tr>
+                </tbody>
+            </table>
 
+            <h2 id="acui_roles_header"><?php _e( 'Roles', 'import-users-from-csv-with-meta'); ?></h2>
+            <table class="form-table">
+                <tbody>
 				<tr class="form-field form-required">
-					<th scope="row"><label for="role"><?php _e( 'Role', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<th scope="row"><label for="role"><?php _e( 'Default role', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<select id="role-frontend" name="role-frontend">
 							<?php 
@@ -90,18 +95,32 @@ class ACUI_Frontend{
 						<p class="description"><?php _e( 'Which role would be used to import users?', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
+                </tbody>
+            </table>
 
-				<tr class="form-field form-required">
-					<th scope="row"><label for="send-mail-frontend"><?php _e( 'Send mail when using frontend import?', 'import-users-from-csv-with-meta' ); ?></label></th>
+            <h2 id="acui_options_header"><?php _e( 'Options', 'import-users-from-csv-with-meta'); ?></h2>
+            <table class="form-table">
+                <tbody>
+
+                <tr id="acui_send_email_wrapper" class="form-field">
+					<th scope="row"><label for="user_login"><?php _e( 'Send mail', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<input type="checkbox" name="send-mail-frontend" value="yes" <?php if( $send_mail_frontend == true ) echo "checked='checked'"; ?>/>
+						<p id="sends_email_wrapper">
+							<?php _e( 'Do you wish to send a mail with credentials and other data?', 'import-users-from-csv-with-meta' ); ?> 
+							<input type="checkbox" name="send-mail-frontend" value="yes" <?php checked( $send_mail_frontend ); ?>/>
+						</p>
+						<p id="send_email_updated_wrapper">
+							<?php _e( 'Do you wish to send this mail also to users that are being updated? (not only to the one which are being created)', 'import-users-from-csv-with-meta' ); ?>
+							<input type="checkbox" name="send-mail-updated-frontend" value="yes" <?php checked( $send_mail_updated_frontend ); ?>/>
+						</p>
 					</td>
 				</tr>
 
-				<tr class="form-field form-required">
-					<th scope="row"><label for="send-mail-updated-frontend"><?php _e( 'Send mail also to users that are being updated?', 'import-users-from-csv-with-meta' ); ?></label></th>
+                <tr class="form-field form-required">
+					<th scope="row"><label for=""><?php _e( 'Force users to reset their passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
-						<input type="checkbox" name="send-mail-updated-frontend" value="yes" <?php if( $send_mail_updated_frontend == true ) echo "checked='checked'"; ?>/>
+						<input type="checkbox" name="force_user_reset_password" value="yes" <?php checked( get_option( 'acui_frontend_force_user_reset_password' ) ); ?>/>
+                        <p class="description"><?php _e( 'If a password is set to an user and you activate this option, the user will be forced to reset their password in their first login', 'import-users-from-csv-with-meta' ); ?></p>
 					</td>
 				</tr>
 
@@ -307,19 +326,7 @@ class ACUI_Frontend{
 			wp_die( __( 'Nonce check failed', 'import-users-from-csv-with-meta' ) ); 
 		}
 
-		update_option( "acui_frontend_send_mail", isset( $form_data["send-mail-frontend"] ) && $form_data["send-mail-frontend"] == "yes" );
-		update_option( "acui_frontend_send_mail_updated", isset( $form_data["send-mail-updated-frontend"] ) && $form_data["send-mail-updated-frontend"] == "yes" );
-		update_option( "acui_frontend_mail_admin", isset( $form_data["send_mail_admin_frontend"] ) && $form_data["send_mail_admin_frontend"] == "yes" );
-        update_option( "acui_frontend_send_mail_admin_address_list", sanitize_text_field( $form_data["send_mail_admin_frontend_address_list"] ) );
-		update_option( "acui_frontend_delete_users", isset( $form_data["delete_users_frontend"] ) && $form_data["delete_users_frontend"] == "yes" );
-		update_option( "acui_frontend_delete_users_assign_posts", sanitize_text_field( $form_data["delete-users-assign-posts-frontend"] ) );
-		update_option( "acui_frontend_change_role_not_present", isset( $form_data["change_role_not_present_frontend"] ) && $form_data["change_role_not_present_frontend"] == "yes" );
-		update_option( "acui_frontend_change_role_not_present_role", sanitize_text_field( $form_data["change_role_not_present_role_frontend"] ) );
-		update_option( "acui_frontend_activate_users_wp_members", isset( $form_data["activate-users-wp-members-frontend"] ) ? sanitize_text_field( $form_data["activate-users-wp-members-frontend"] ) : 'no_activate' );
-
-		update_option( "acui_frontend_role", sanitize_text_field( $form_data["role-frontend"] ) );
-		update_option( "acui_frontend_update_existing_users", sanitize_text_field( $form_data["update_existing_users"] ) );
-		update_option( "acui_frontend_update_roles_existing_users", sanitize_text_field( $form_data["update_roles_existing_users"] ) );
+		ACUI_Options::save_options( $form_data, false, true );
 		?>
 		<div class="updated">
 	       <p><?php _e( 'Settings updated correctly', 'import-users-from-csv-with-meta' ) ?></p>
@@ -364,18 +371,19 @@ class ACUI_Frontend{
 
 	        // start
 	        $form_data = array();
-			$form_data[ "path_to_file" ] = get_attached_file( $csv_file_id );
+			$form_data["path_to_file"] = get_attached_file( $csv_file_id );
 
 			// emails
-			$form_data[ "sends_email" ] = get_option( "acui_frontend_send_mail" );
-			$form_data[ "send_email_updated" ] = get_option( "acui_frontend_send_mail_updated" );
+			$form_data["sends_email"] = get_option( "acui_frontend_send_mail" );
+			$form_data["send_email_updated"] = get_option( "acui_frontend_send_mail_updated" );
+            $form_data["force_user_reset_password"] = get_option( "acui_frontend_force_user_reset_password" );
 
 			// roles
-			$form_data[ "role" ] = empty( $atts['role'] ) ? get_option( "acui_frontend_role") : $atts['role'];
+			$form_data["role"] = empty( $atts["role"] ) ? get_option( "acui_frontend_role") : $atts["role"];
 
 			// update
-			$form_data["update_existing_users" ] = empty( get_option( "acui_frontend_update_existing_users" ) ) ? 'no' : get_option( "acui_frontend_update_existing_users" );
-			$form_data["update_roles_existing_users" ] = empty( get_option( "acui_frontend_update_roles_existing_users" ) ) ? 'no' : get_option( "acui_frontend_update_roles_existing_users" );
+			$form_data["update_existing_users"] = empty( get_option( "acui_frontend_update_existing_users" ) ) ? 'no' : get_option( "acui_frontend_update_existing_users" );
+			$form_data["update_roles_existing_users"] = empty( get_option( "acui_frontend_update_roles_existing_users" ) ) ? 'no' : get_option( "acui_frontend_update_roles_existing_users" );
 
 			// delete
 			$form_data["delete_users"] = ( get_option( "acui_frontend_delete_users" ) ) ? 'yes' : 'no';
@@ -383,9 +391,9 @@ class ACUI_Frontend{
 			$form_data["delete_users_only_specified_role"] = empty( $form_data[ "role" ] ) ? false : $atts['delete-only-specified-role'];
 
 			// others
-			$form_data[ "empty_cell_action" ] = "leave";
-			$form_data[ "activate_users_wp_members" ] = empty( get_option( "acui_frontend_activate_users_wp_members" ) ) ? 'no_activate' : get_option( "acui_frontend_activate_users_wp_members" );
-			$form_data[ "security" ] = wp_create_nonce( "codection-security" );
+			$form_data["empty_cell_action"] = "leave";
+			$form_data["activate_users_wp_members"] = empty( get_option( "acui_frontend_activate_users_wp_members" ) ) ? 'no_activate' : get_option( "acui_frontend_activate_users_wp_members" );
+			$form_data["security"] = wp_create_nonce( "codection-security" );
 
             $form_data = apply_filters( 'acui_frontend_import_form_data', $form_data );
 			
@@ -441,8 +449,6 @@ class ACUI_Frontend{
 		
 		if( !current_user_can( apply_filters( 'acui_capability', 'create_users' ) ) )
             wp_die( __( 'Only users who are able to create users can export them.', 'import-users-from-csv-with-meta' ) );
-
-		
 		?>
 		<form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>" class="acui_frontend_form">
             <input type="hidden" name="action" value="acui_export_users_csv"/>

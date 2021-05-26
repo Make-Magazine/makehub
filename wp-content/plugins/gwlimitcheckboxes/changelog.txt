@@ -1,6 +1,17 @@
 
 # Changelog
 
+## 1.2.16
+
+	- Improved compatibility with Gravity Forms 2.5.
+	- Updated minimum Gravity Perks version to 2.2.5.
+	- Improved compatibility with Gravity Forms 2.5.
+
+## 1.3
+
+	- Improved compatibility with Gravity Forms 2.5.
+	- Updated minimum Gravity Perks version to 2.2.5.
+
 ## 1.2.15
 
 	- Added support for Gravity Flow's User Input steps.

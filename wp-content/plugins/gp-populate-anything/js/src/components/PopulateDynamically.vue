@@ -613,7 +613,7 @@
 						}
 						break;
 					case 'values':
-                        if( $.inArray( GetInputType( GetSelectedField() ), [ 'number', 'calculation' ] ) !== -1 ) {
+						if( $.inArray( GetInputType( GetSelectedField() ), [ 'number', 'calculation' ] ) !== -1 && GetSelectedField()['type'] !== 'quantity' ) {
                             $('.calculation_setting').show();
 						}
 					    break;

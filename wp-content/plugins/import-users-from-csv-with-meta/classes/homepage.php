@@ -80,7 +80,7 @@ class ACUI_Homepage{
 					</td>
 				</tr>
 
-				<tr  id="acui_send_email_wrapper" class="form-field">
+				<tr id="acui_send_email_wrapper" class="form-field">
 					<th scope="row"><label for="user_login"><?php _e( 'Send mail', 'import-users-from-csv-with-meta' ); ?></label></th>
 					<td>
 						<p id="sends_email_wrapper">
@@ -93,10 +93,18 @@ class ACUI_Homepage{
 						</p>
 					</td>
 				</tr>
+
+                <tr class="form-field form-required">
+					<th scope="row"><label for=""><?php _e( 'Force users to reset their passwords?', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td>
+						<input type="checkbox" name="force_user_reset_password" value="yes" <?php checked( get_option( 'acui_manually_force_user_reset_password' ) ); ?>/>
+                        <p class="description"><?php _e( 'If a password is set to an user and you activate this option, the user will be forced to reset their password in their first login', 'import-users-from-csv-with-meta' ); ?></p>
+					</td>
+				</tr>
 				</tbody>
 			</table>
 
-			<h2  id="acui_update_users_header"><?php _e( 'Update users', 'import-users-from-csv-with-meta'); ?></h2>
+			<h2 id="acui_update_users_header"><?php _e( 'Update users', 'import-users-from-csv-with-meta'); ?></h2>
 
 			<table id="acui_update_users_wrapper" class="form-table">
 				<tbody>

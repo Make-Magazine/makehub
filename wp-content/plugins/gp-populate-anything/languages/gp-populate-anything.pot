@@ -181,11 +181,11 @@ msgstr ""
 msgid "Too many values to display."
 msgstr ""
 
-#: ../class-gp-populate-anything.php:1176
+#: ../class-gp-populate-anything.php:1207
 msgid "Fill Out Other Fields"
 msgstr ""
 
-#: ../class-gp-populate-anything.php:1197
+#: ../class-gp-populate-anything.php:1228
 msgid "No Results"
 msgstr ""
 
@@ -229,39 +229,39 @@ msgstr ""
 msgid "Post Meta"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:354
+#: ../includes/class-object-type-post.php:367
 msgid "Author"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:361
+#: ../includes/class-object-type-post.php:374
 msgid "Post Status"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:367
+#: ../includes/class-object-type-post.php:380
 msgid "Post Title"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:374
+#: ../includes/class-object-type-post.php:387
 msgid "Post Content"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:380
+#: ../includes/class-object-type-post.php:393
 msgid "Post Name (Slug)"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:387
+#: ../includes/class-object-type-post.php:400
 msgid "Post ID"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:394
+#: ../includes/class-object-type-post.php:407
 msgid "Post Type"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:401
+#: ../includes/class-object-type-post.php:414
 msgid "Post Date"
 msgstr ""
 
-#: ../includes/class-object-type-post.php:408
+#: ../includes/class-object-type-post.php:421
 msgid "Parent Post"
 msgstr ""
 

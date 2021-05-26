@@ -3698,13 +3698,14 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 				if ( ! empty( $meeting->recurring ) && ! empty( $occurance_meeting ) ) {
 					$utc_date_time = $occurance_meeting->start_date_utc;
 					$time_zone     = $occurance_meeting->timezone;
-					$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				} else {
 					$utc_date_time = $meeting->start_date_utc;
 					$time_zone     = $meeting->timezone;
-					$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				}
 
+				$date = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) );
+				$date .= __( ' at ', 'buddyboss-pro' );
+				$date .= wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				?>
 				<table style="margin: 0 !important;">
 					<tbody>
@@ -3849,7 +3850,7 @@ function bp_zoom_webinar_email_token_zoom_webinar( $bp_email, $formatted_tokens,
 				<?php
 				$utc_date_time = $webinar->start_date_utc;
 				$time_zone     = $webinar->timezone;
-				$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				$date          = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 
 				?>
 				<table style="margin: 0 !important;">

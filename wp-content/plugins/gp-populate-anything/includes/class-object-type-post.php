@@ -138,10 +138,23 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		 */
 		extract( $args );
 
-		if ( $filter['operator'] === '>=' || $filter['operator'] === '>' ) {
-			$filter_value = date( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
-		} elseif ( $filter['operator'] === '<=' || $filter['operator'] === '<' ) {
-			$filter_value = date( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
+		switch ( $filter['operator'] ) {
+			case '>=':
+			case '>':
+				$filter_value = date( 'Y-m-d 00:00:00', strtotime( $filter_value ) );
+				break;
+			case '<=':
+			case '<':
+				$filter_value = date( 'Y-m-d 23:59:59', strtotime( $filter_value ) );
+				break;
+			case 'is': // `post_date` is a DATETIME column which includes time, ensure date is within range (see HS#24545)
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>=', date( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<=', date( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
+				return $query_builder_args;
+			case 'isnot': // Same as is, just inverse and make sure it's outside of the 24 hours range
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '<', date( 'Y-m-d 00:00:00', strtotime( $filter_value ) ) );
+				$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), '>', date( 'Y-m-d 23:59:59', strtotime( $filter_value ) ) );
+				return $query_builder_args;
 		}
 
 		$query_builder_args['where'][ $filter_group_index ][] = $this->build_where_clause( $wpdb->posts, rgar( $property, 'value' ), $filter['operator'], $filter_value );

@@ -1,6 +1,32 @@
 
 # Changelog
 
+## 1.0-beta-9.26
+
+	- Added support for filtering the modal's submit button label.
+
+## 1.0-beta-9.25
+
+	- Fixed issue where submitting a child entry with a pending upload would result in the submit button getting stuck as a spinner.
+
+## 1.0-beta-9.24
+
+	- Added [gpnf_disable_new_cancel_confirmation](http://gravitywiz.com/documentation/gpnf_disable_new_cancel_confirmation-js) filter.
+
+## 1.0-beta-9.23
+
+	- Fixed issue where GPNF's cookie could be reset under certain network conditions and if there are more than one Nested Forms on a parent form.
+	- Fixed a potential issue that may cause GPNF to fail to render.
+
+## 1.0-beta-9.22
+
+	- Fixed issue where init scripts were not executed with older versions of jQuery.
+	- Fixed an issue where modified parent merge tag values would be reset on entry edit.
+
+## 1.0-beta-9.21
+
+	- Fixed a potential issue where In-line Calendars may duplicate on submission error.
+
 ## 1.0-beta-9.20
 
 	- Updated Gravity Perks minimum required version to 2.2.3.

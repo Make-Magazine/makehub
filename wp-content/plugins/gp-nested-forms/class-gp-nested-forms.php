@@ -1074,6 +1074,19 @@ class GP_Nested_Forms extends GP_Plugin {
 		$nested_form_field    = GFFormsModel::get_field( $form, $nested_form_field_id );
 		$nested_form_id       = rgar( $nested_form_field, 'gpnfForm' );
 
+		// Display an error if the child form contains a nested form as well
+		if ( $this->has_child_form( $nested_form_id ) ) {
+			// GF 2.5 border color
+			$border_color = ( version_compare( GFForms::$version, '2.5.0', '>=' ) ) ? '#ddd' : '#D2E0EB';
+			wp_send_json( sprintf(
+				'<div class="gpnf-nested-entries-container ginput_container"><p style=" border: 1px dashed %s; border-radius: 3px; padding: 1rem; background: #fff; "><strong style="color: #ca4a1f;">%s</strong><br>%s</p></div>',
+				$border_color,
+				__( 'Configuration Error', 'gp-nested-forms' ),
+				__( 'Child forms cannot contain nested forms. Please edit the child form and remove any nested form fields in it.', 'gp-nested-forms' )
+			) );
+			wp_die();
+		}
+
 		ob_start();
 
 		$this->load_nested_form_hooks( $nested_form_id, $form_id );
@@ -1940,6 +1953,8 @@ class GP_Nested_Forms extends GP_Plugin {
 				'modalLabels'         => array(
 					'title'         => sprintf( __( 'Add %s', 'gp-nested-forms' ), $field->get_item_label() ),
 					'editTitle'     => sprintf( __( 'Edit %s', 'gp-nested-forms' ), $field->get_item_label() ),
+					'submit'        => false,
+					'editSubmit'    => false,
 					'cancel'        => esc_html__( 'Cancel', 'gp-nested-forms' ),
 					'delete'        => esc_html__( 'Delete', 'gp-nested-forms' ),
 					'confirmAction' => esc_html__( 'Are you sure?', 'gp-nested-forms' ),
@@ -2697,8 +2712,28 @@ class GP_Nested_Forms extends GP_Plugin {
 		return $this->parent_form_id;
 	}
 
+	/**
+	 * Check if a form has a nested form field
+	 * @param string $form_id  Form ID to check
+	 * @return bool Form contains a nested form
+	 */
+	public function has_child_form( $form_id ) {
+		$form = GFAPI::get_form( $form_id );
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->type === 'form' ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public function get_nested_form( $nested_form_id ) {
-		return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form_id ), GFAPI::get_form( $nested_form_id ) );
+		// Do not return a form object if it contains a child form
+		// This prevents recursion/infinite loop.
+		if ( ! $this->has_child_form( $nested_form_id ) ) {
+			return gf_apply_filters( array( 'gpnf_get_nested_form', $nested_form_id ), GFAPI::get_form( $nested_form_id ) );
+		}
+		return false;
 	}
 
 	public function get_posted_parent_form_id() {

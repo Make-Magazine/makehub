@@ -21,7 +21,7 @@
 				<?php
 				$utc_date_time = bp_get_zoom_meeting_start_date_utc();
 				$time_zone     = bp_get_zoom_meeting_timezone();
-				$date          = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
+				$date          = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				echo esc_html( $date ) . ( ! empty( $time_zone ) ? ' (' . esc_html( bp_zoom_get_timezone_label( $time_zone ) ) . ')' : '' );
 				?>
 			</div>

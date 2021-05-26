@@ -17,6 +17,7 @@ class ACUI_Import{
                   case 'homepage':
                     ACUI_Options::update( 'last_roles_used', ( empty( $_POST['role'] ) ? '' : array_map( 'sanitize_text_field', $_POST['role'] ) ) );
                     ACUI_Options::update( 'path_to_file', sanitize_text_field( $_POST['path_to_file'] ) );
+                    ACUI_Options::save_options( $_POST );
                     $this->fileupload_process( $_POST, false );
                     return;
                   break;
@@ -92,7 +93,7 @@ class ACUI_Import{
         }
     }
 
-    public static function admin_tabs( $current = 'homepage' ) {
+    static function admin_tabs( $current = 'homepage' ) {
         $tabs = array( 
                 'homepage' => __( 'Import', 'import-users-from-csv-with-meta' ),
                 'export' => __( 'Export', 'import-users-from-csv-with-meta' ),
@@ -158,7 +159,7 @@ class ACUI_Import{
         endif;
     }
 
-    public function import_users( $file, $form_data, $attach_id = 0, $is_cron = false, $is_frontend = false ){
+    function import_users( $file, $form_data, $attach_id = 0, $is_cron = false, $is_frontend = false ){
         if ( ! function_exists( 'get_editable_roles' ) ) {
             require_once ABSPATH . 'wp-admin/includes/user.php';
         }
@@ -166,10 +167,10 @@ class ACUI_Import{
         <div class="wrap">
             <h2><?php echo apply_filters( 'acui_log_main_title', __('Importing users','import-users-from-csv-with-meta') ); ?></h2>
             <?php
-                set_time_limit(0);
+                @set_time_limit( 0 );
                 
                 do_action( 'before_acui_import_users' );
-    
+
                 $acui_helper = new ACUI_Helper();
                 $restricted_fields = $acui_helper->get_restricted_fields();
                 $all_roles = array_keys( wp_roles()->roles );
@@ -179,13 +180,14 @@ class ACUI_Import{
                 $headers = array();
                 $headers_filtered = array();
                 $is_backend = !$is_frontend && !$is_cron;			
+                
                 $update_existing_users = isset( $form_data["update_existing_users"] ) ? sanitize_text_field( $form_data["update_existing_users"] ) : '';
     
                 $role_default = isset( $form_data["role"] ) ? $form_data["role"] : array( '' );
                 if( !is_array( $role_default ) )
                     $role_default = array( $role_default );
                 array_walk( $role_default, 'sanitize_text_field' );
-                
+               
                 $update_emails_existing_users = isset( $form_data["update_emails_existing_users"] ) ? sanitize_text_field( $form_data["update_emails_existing_users"] ) : 'yes';
                 $update_roles_existing_users = isset( $form_data["update_roles_existing_users"] ) ? sanitize_text_field( $form_data["update_roles_existing_users"] ) : '';
                 $update_allow_update_passwords = isset( $form_data["update_allow_update_passwords"] ) ? sanitize_text_field( $form_data["update_allow_update_passwords"] ) : 'yes';
@@ -204,9 +206,6 @@ class ACUI_Import{
                     $allow_multiple_accounts = ( empty( $form_data["allow_multiple_accounts"] ) ) ? "not_allowed" : sanitize_text_field( $form_data["allow_multiple_accounts"] );
                 }
         
-                update_option( "acui_manually_send_mail", isset( $form_data["sends_email"] ) && $form_data["sends_email"] == 'yes' );
-                 update_option( "acui_manually_send_mail_updated", isset( $form_data["send_email_updated"] ) && $form_data["send_email_updated"] == 'yes' );
-    
                 // disable WordPress default emails if this must be disabled
                 if( !get_option('acui_automatic_wordpress_email') ){
                     add_filter( 'send_email_change_email', function() { return false; }, 999 );
@@ -305,6 +304,7 @@ class ACUI_Import{
                         $email = $data[1];
                         $user_id = 0;
                         $password_position = $positions["password"];
+                        $password_changed = false;
                         $password = ( $password_position === false ) ? wp_generate_password( apply_filters( 'acui_auto_password_length', 12 ), apply_filters( 'acui_auto_password_special_chars', true ), apply_filters( 'acui_auto_password_extra_special_chars', false ) ) : $data[ $password_position ];
                         $role_position = $positions["role"];
                         $role = "";
@@ -343,10 +343,12 @@ class ACUI_Import{
                         if( !empty( $email ) && ( ( sanitize_email( $email ) == '' ) ) ){ // if email is invalid
                             $errors[] = $acui_helper->new_error( $row, sprintf( __( 'Invalid email "%s"', 'import-users-from-csv-with-meta' ), $email ) );     
                             $data[0] = __('Invalid EMail','import-users-from-csv-with-meta')." ($email)";
+                            continue;
                         }
                         elseif( empty( $email) ) {
                             $errors[] = $acui_helper->new_error( $row, __( 'Email not specified', 'import-users-from-csv-with-meta' ) );     
                             $data[0] = __( 'EMail not specified', 'import-users-from-csv-with-meta' );
+                            continue;
                         }
     
                         if( !empty( $id ) ){ // if user have used id
@@ -362,8 +364,10 @@ class ACUI_Import{
                                 if( $user->user_login == $username ){
                                     $user_id = $id;
                                     
-                                    if( $password !== "" && $update_allow_update_passwords == 'yes' )
+                                    if( $password !== "" && $update_allow_update_passwords == 'yes' ){
                                         wp_set_password( $password, $user_id );
+                                        $password_changed = true;
+                                    }
     
                                     $new_user_id = $acui_helper->maybe_update_email( $user_id, $email, $password, $update_emails_existing_users );
                                     if( empty( $new_user_id ) ){
@@ -400,6 +404,7 @@ class ACUI_Import{
                                 ) );
     
                                 $created = true;
+                                $password_changed = true;
                             }
                         }
                         elseif( username_exists( $username ) ){
@@ -411,8 +416,11 @@ class ACUI_Import{
                             $user_object = get_user_by( "login", $username );
                             $user_id = $user_object->ID;
     
-                            if( $password !== "" && $update_allow_update_passwords == 'yes' )
+                            if( $password !== "" && $update_allow_update_passwords == 'yes' ){
                                 wp_set_password( $password, $user_id );
+                                $password_changed = true;
+                            }
+                                
     
                             $new_user_id = $acui_helper->maybe_update_email( $user_id, $email, $password, $update_emails_existing_users );
                             if( empty( $new_user_id ) ){
@@ -446,8 +454,10 @@ class ACUI_Import{
                             $data[0] = sprintf( __( 'User already exists as: %s (in this CSV file is called: %s)', 'import-users-from-csv-with-meta' ), $user_object->user_login, $username );
                             $errors[] = $acui_helper->new_error( $row, $data[0], 'warning' );
     
-                            if( $password !== "" && $update_allow_update_passwords == 'yes' )
+                            if( $password !== "" && $update_allow_update_passwords == 'yes' ){
                                 wp_set_password( $password, $user_id );
+                                $password_changed = true;
+                            }
     
                             $created = false;
                         }
@@ -468,6 +478,7 @@ class ACUI_Import{
                             }
                             
                             $user_id = wp_create_user( $username, $password, $email );
+                            $password_changed = true;
                         }
                             
                         if( is_wp_error( $user_id ) ){ // in case the user is generating errors after this checks
@@ -596,7 +607,7 @@ class ACUI_Import{
 
                         $acui_helper->print_row_imported( $row, $data, $errors );
     
-                        do_action( 'post_acui_import_single_user', $headers, $data, $user_id, $role, $positions, $form_data, $is_frontend, $is_cron );
+                        do_action( 'post_acui_import_single_user', $headers, $data, $user_id, $role, $positions, $form_data, $is_frontend, $is_cron, $password_changed );
     
                         $mail_for_this_user = false;
                         if( $is_cron ){
@@ -620,6 +631,9 @@ class ACUI_Import{
                             
                         // send mail
                         if( isset( $mail_for_this_user ) && $mail_for_this_user ){
+                            if( !$created && $update_allow_update_passwords == 'no' )
+                                $password = __( 'Password has not been changed', 'import-users-from-csv-with-meta' );
+
                             ACUI_Email_Options::send_email( $user_object, $positions, $headers, $data, $created, $password );
                         }
 

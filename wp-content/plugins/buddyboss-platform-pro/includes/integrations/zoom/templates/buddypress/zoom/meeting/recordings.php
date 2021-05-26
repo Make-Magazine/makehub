@@ -172,7 +172,7 @@ $recording_groups_dates_print = array_unique( $recording_groups_dates_print );
 		<?php
 
 		foreach ( $recordings_groups as $date => $recording_group ) {
-			$recorded_date = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $date ) );
+			$recorded_date = wp_date( bp_core_date_format( false, true ), strtotime( $date ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $date ) );
 
 			?>
 			<div class="recording-list-row-group" data-recorded-date="<?php echo esc_attr( wp_date( 'Y-m-d', strtotime( $date ) ) ); ?>">
@@ -283,14 +283,14 @@ $recording_groups_dates_print = array_unique( $recording_groups_dates_print );
 										<div class="bb-media-section">
 											<?php if ( 'MP4' === $recording_file->file_type ) : ?>
 												<video controls>
-													<source src="<?php echo esc_url( $recording_file->download_url . '/?access_token=' . bp_zoom_conference()->generate_jwt_key() ); ?>"
+													<source src="<?php echo esc_url( $recording_file->download_url . '?access_token=' . bp_zoom_conference()->generate_jwt_key() ); ?>"
 															type="video/mp4">
 													<p><?php esc_html_e( 'Your browser does not support HTML5 video.', 'buddyboss-pro' ); ?></p>
 												</video>
 											<?php endif; ?>
 											<?php if ( 'M4A' === $recording_file->file_type ) : ?>
 												<audio controls>
-													<source src="<?php echo esc_url( $recording_file->download_url . '/?access_token=' . bp_zoom_conference()->generate_jwt_key() ); ?>"
+													<source src="<?php echo esc_url( $recording_file->download_url . '?access_token=' . bp_zoom_conference()->generate_jwt_key() ); ?>"
 															type="audio/mp4">
 													<p><?php esc_html_e( 'Your browser does not support HTML5 audio.', 'buddyboss-pro' ); ?></p>
 												</audio>

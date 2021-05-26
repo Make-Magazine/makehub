@@ -33,13 +33,13 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 		}
 
 		if ( ! isset( $this->_primary_key_cache[ $primary_property_value ] ) ) {
-			$props = array_keys( get_object_vars( $object ) );
+			$props = array_keys( $object );
 			$this->_primary_key_cache[ $primary_property_value ] = $props[0];
 		}
 
 		$key = $this->_primary_key_cache[ $primary_property_value ];
 
-		return $object->{$key};
+		return $object[ $key ];
 	}
 
 	public function get_label() {
@@ -194,7 +194,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 		$query = $this->build_mysql_query( apply_filters( 'gppa_object_type_database_pre_query_parts', $query_args, $this ), rgar( $args, 'field' ) );
 
-		return $this->get_db()->get_results( apply_filters( 'gppa_object_type_database_query', $query, $args, $this ) );
+		return $this->get_db()->get_results( apply_filters( 'gppa_object_type_database_query', $query, $args, $this ), ARRAY_A );
 
 	}
 
@@ -204,11 +204,11 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 			return null;
 		}
 
-		if ( ! isset( $object->{$prop} ) ) {
+		if ( ! isset( $object[ $prop ] ) ) {
 			return null;
 		}
 
-		return $object->{$prop};
+		return $object[ $prop ];
 
 	}
 

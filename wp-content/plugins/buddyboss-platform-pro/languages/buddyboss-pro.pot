@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform Pro 1.1.1\n"
+"Project-Id-Version: BuddyBoss Platform Pro 1.1.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2021-03-30 15:54:58+00:00\n"
+"POT-Creation-Date: 2021-05-17 18:57:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -891,9 +891,8 @@ msgstr ""
 msgid "Once in 5 minutes"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3701
-#: includes/integrations/zoom/bp-zoom-functions.php:3705
-#: includes/integrations/zoom/bp-zoom-functions.php:3852
+#: includes/integrations/zoom/bp-zoom-functions.php:3707
+#: includes/integrations/zoom/bp-zoom-functions.php:3853
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:27
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:28
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:27
@@ -906,18 +905,18 @@ msgstr ""
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:24
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:24
 #: includes/integrations/zoom/templates/buddypress/zoom/webinar/recordings.php:175
-msgid " \\a\\t "
+msgid " at "
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3713
+#: includes/integrations/zoom/bp-zoom-functions.php:3714
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:62
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:145
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:96
 msgid "Meeting ID"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3727
-#: includes/integrations/zoom/bp-zoom-functions.php:3873
+#: includes/integrations/zoom/bp-zoom-functions.php:3728
+#: includes/integrations/zoom/bp-zoom-functions.php:3874
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:56
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:54
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:131
@@ -925,8 +924,8 @@ msgstr ""
 msgid "Date and Time"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3735
-#: includes/integrations/zoom/bp-zoom-functions.php:3881
+#: includes/integrations/zoom/bp-zoom-functions.php:3736
+#: includes/integrations/zoom/bp-zoom-functions.php:3882
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:79
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:77
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:161
@@ -940,8 +939,8 @@ msgstr ""
 msgid "Duration"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3745
-#: includes/integrations/zoom/bp-zoom-functions.php:3891
+#: includes/integrations/zoom/bp-zoom-functions.php:3746
+#: includes/integrations/zoom/bp-zoom-functions.php:3892
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:84
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:82
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:166
@@ -958,8 +957,8 @@ msgid_plural "%d hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3749
-#: includes/integrations/zoom/bp-zoom-functions.php:3895
+#: includes/integrations/zoom/bp-zoom-functions.php:3750
+#: includes/integrations/zoom/bp-zoom-functions.php:3896
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:88
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:86
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:170
@@ -976,8 +975,8 @@ msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3762
-#: includes/integrations/zoom/bp-zoom-functions.php:3908
+#: includes/integrations/zoom/bp-zoom-functions.php:3763
+#: includes/integrations/zoom/bp-zoom-functions.php:3909
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:155
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:151
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:205
@@ -987,34 +986,34 @@ msgstr[1] ""
 msgid "Registration Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3778
+#: includes/integrations/zoom/bp-zoom-functions.php:3779
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:168
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:218
 #: includes/integrations/zoom/templates/buddypress/zoom/single-meeting-item.php:206
 msgid "Meeting Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3790
+#: includes/integrations/zoom/bp-zoom-functions.php:3791
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-meeting-entry.php:45
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/meeting-block.php:122
 msgid "Meeting Details"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3859
+#: includes/integrations/zoom/bp-zoom-functions.php:3860
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:60
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:144
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:96
 msgid "Webinar ID"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3924
+#: includes/integrations/zoom/bp-zoom-functions.php:3925
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:164
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:217
 #: includes/integrations/zoom/templates/buddypress/zoom/single-webinar-item.php:206
 msgid "Webinar Link"
 msgstr ""
 
-#: includes/integrations/zoom/bp-zoom-functions.php:3936
+#: includes/integrations/zoom/bp-zoom-functions.php:3937
 #: includes/integrations/zoom/templates/buddypress/zoom/activity-webinar-entry.php:44
 #: includes/integrations/zoom/templates/buddypress/zoom/blocks/webinar-block.php:121
 msgid "Webinar Details"

@@ -552,6 +552,14 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 			return $template_value;
 		}
 
+		/**
+		 * Check for existence of merge tags prior to trying to parse as looking up the form and replace_variables()
+		 * itself can be expensive when there are a lot of entries.
+		 */
+		if ( ! preg_match( gp_populate_anything()->live_merge_tags->merge_tag_regex, $template_value ) ) {
+			return $template_value;
+		}
+
 		if ( empty( $object->form_id ) || ! $form = GFAPI::get_form( $object->form_id ) ) {
 			return $template_value;
 		}

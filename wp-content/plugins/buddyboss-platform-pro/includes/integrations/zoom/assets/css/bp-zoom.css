@@ -438,6 +438,16 @@ a.button.outline.join-meeting-in-browser {
 	margin-bottom: 15px;
 }
 
+.bzm-white-popup .recording-list-row-group .recording-list-row .bb-media-model-inner .bb-media-section {
+	max-height: 90vh;
+	min-height: 90vh;
+}
+
+.bzm-white-popup .recording-list-row-group .recording-list-row .bb-media-model-inner .bb-media-section video {
+	max-height: 90vh;
+	min-height: 90vh;
+}
+
 .bzm-white-popup .recording-list-row-group .recording-list-row:last-child {
 	border-bottom: 0;
 	margin-bottom: 0;
@@ -506,12 +516,17 @@ header.bb-zm-model-header {
 
 .bp-zoom-block-show-recordings header.bb-zm-model-header {
 	margin-bottom: 0;
+	display: flex;
+	align-items: center;
+	padding-right: 45px;
+}
+
+.bp-zoom-block-show-recordings header.bb-zm-model-header .bp-meeting-title-recording-popup {
+	padding-right: 15px;
 }
 
 .bp-zoom-block-show-recordings header.bb-zm-model-header > .bp-zoom-recordings-dates {
-	float: right;
-	margin-top: -10px;
-	margin-right: 25px;
+	margin-left: 10px;
 }
 
 @media screen and (max-width: 540px) {
@@ -521,7 +536,8 @@ header.bb-zm-model-header {
 	}
 	.bp-zoom-block-show-recordings header.bb-zm-model-header {
 		text-align: center;
-		padding: 12px 20px;
+		padding: 12px 40px 12px 20px;
+		flex-flow: column;
 	}
 	.bp-zoom-block-show-recordings header.bb-zm-model-header > .bp-zoom-recordings-dates {
 		float: none;
@@ -928,6 +944,16 @@ header.bb-zm-model-header {
 .meeting-item-table .recording-list .recording-list-row {
 	display: table-row;
 	width: 100%;
+}
+
+.meeting-item-table .recording-list .recording-list-row .bb-media-model-inner .bb-media-section {
+	max-height: 90vh;
+	min-height: 90vh;
+}
+
+.meeting-item-table .recording-list .recording-list-row .bb-media-model-inner .bb-media-section video {
+	max-height: 90vh;
+	min-height: 90vh;
 }
 
 .meeting-item-table .recording-list .recording-list-row-col {

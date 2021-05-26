@@ -114,7 +114,7 @@ if ( ! class_exists( 'BB_Platform_Pro' ) ) {
 		 * @since 1.0.0
 		 */
 		private function setup_globals() {
-			$this->version        = '1.1.1';
+			$this->version        = '1.1.2';
 			$this->db_version     = 231;
 			$this->db_version_raw = (int) bp_get_option( '_bbp_pro_db_version' );
 

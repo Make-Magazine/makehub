@@ -1,5 +1,41 @@
 # Changelog
 
+## 1.0-beta-5.8
+
+	- Fixed issue where merge tags of fields with dynamically populated choices would show the value instead of the label in GravityView Custom Content fields.
+
+## 1.0-beta-5.7
+
+	- Fixed a potential issue where filtering by a `post_date` may not work.
+
+## 1.0-beta-5.6
+
+	- Fixed a potential issue where FVO may return all entries.
+	- Fixed a potential issue when LMTs are used to copy Drop Down fields.
+
+## 1.0-beta-5.5
+
+	- Fixed a potential issue with numerically named DB table columns.
+
+## 1.0-beta-5.4
+
+	- Fixed issue where calculations field setting was incorrectly displayed for Quantity fields. (#181)
+
+## 1.0-beta-5.3
+
+	- Added [gppa_process_template_cache_key](https://gravitywiz.com/documentation/gppa_process_template_cache_key/) filter.
+	- Improved performance when querying a high number of Gravity Forms entries as choices or values.
+
+## 1.0-beta-5.2
+
+	- Fixed issue where Live Merge Tags for Date fields would show an empty value on initial page load in some situations.
+	- Fixed an issue where conditionally hidden fields may show up in LMTs.
+
+## 1.0-beta-5.1
+
+	- Fixed a compatibility issue with Gravity Flow Vacation Requests Extension.
+	- Fixed regression with compatibility layer for Gravity PDF.
+
 ## 1.0-beta-4.171
 
 	- Updated minimum Gravity Perks version to 2.2.3.

@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.1
+
+	- Improved compatibility with Gravity Forms 2.5.
+
 ## 1.0.10
 
 	- Fixed compatibility issue with GF 2.5 and conditional logic.

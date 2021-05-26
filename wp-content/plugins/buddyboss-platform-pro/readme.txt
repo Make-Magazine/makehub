@@ -1,9 +1,9 @@
 === BuddyBoss Platform Pro ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.7
+Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -31,6 +31,12 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 5. Activate 'BuddyBoss Platform Pro' from your Plugins page.
 
 == Changelog ==
+
+= 1.1.2 =
+* Zoom - Fixed Recordings play issue in the popup
+* Zoom - Fixed Recordings popup when meeting title is long
+* Translations - Updated German (formal) language files
+* Compatibility - Fixed translation issue with 'TranslatePress' plugin
 
 = 1.1.1 =
 * Improvements - Repositioned 'View Tutorial' buttons in the settings

@@ -503,6 +503,12 @@ export default class GPPopulateAnything {
 					 */
 					[ $fieldContainer ] = window.gform.applyFilters( 'gppa_loading_field_target_meta', [ $fieldContainer ], $field, 'replace' );
 
+					// Gravity Flow Vacation Plugin uses its own container around the field input.
+					// This causes overwriting it to duplicate the "current balance" DOM. Detect this class and use it instead.
+					var $gravityflowVacationContainer = $fieldContainer.parents( '.gravityflow-vacation-request-container' );
+					if ( $gravityflowVacationContainer.length ) {
+						$fieldContainer = $gravityflowVacationContainer;
+					}
 					if (!this.gravityViewMeta) {
 						$fieldContainer = $(response.fields[fieldID]).replaceAll($fieldContainer);
 					} else {

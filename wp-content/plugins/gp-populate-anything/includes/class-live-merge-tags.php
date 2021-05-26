@@ -415,6 +415,12 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			$this->add_current_lmt_value( $field->formId, $field->defaultValue, $merge_tag_value );
 		}
 
+		// No need to add data attributes for select fields as this
+		// will modify the enclosed <option> elements causing hydration to fail. See HS#24437
+		if ( $field->get_input_type() === 'select' ) {
+			return $content;
+		}
+
 		$data_attr = 'data-gppa-live-merge-tag-value="' . esc_attr( $this->escape_live_merge_tags( $field->defaultValue ) ) . '"';
 
 		return str_replace( ' value=\'', ' ' . $data_attr . ' value=\'', $content );
@@ -730,7 +736,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	public function is_value_submission_empty( $entry_value, $field, $form ) {
 		$is_empty = $field->is_value_submission_empty( $form['id'] );
 
-		if ( $is_empty ) {
+		// Only do this check if AJAX as GF_Field::is_value_submission_empty() relies on POSTed values.
+		if ( wp_doing_ajax() && $is_empty ) {
 			return true;
 		}
 
@@ -864,6 +871,14 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			}
 
 			$merge_tag_modifiers = $this->extract_merge_tag_modifiers( $merge_tag );
+
+			// Do not merge the value of conditionally hidden fields
+			if ( isset( $merge_tag_match[3] ) && is_numeric( $merge_tag_match[3] ) ) {
+				$field = GFFormsModel::get_field( $form, $merge_tag_match[3] );
+				if ( GFFormsModel::is_field_hidden( $form, $field, array(), $entry_values ) ) {
+					$merge_tag_match_value = '';
+				}
+			}
 
 			if ( ( $fallback = rgar( $merge_tag_modifiers, 'fallback' ) ) && ! $merge_tag_match_value ) {
 				$merge_tag_match_value = $fallback;

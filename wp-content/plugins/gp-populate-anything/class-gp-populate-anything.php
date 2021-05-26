@@ -501,6 +501,11 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	public function get_primary_property( $field, $populate ) {
+		static $primary_property_cache = array();
+
+		if ( isset( $primary_property_cache[ $field->id ] ) ) {
+			return $primary_property_cache[ $field->id ];
+		}
 
 		$object_type_id = rgar( $field, 'gppa-' . $populate . '-object-type' );
 		$id_parts       = explode( ':', $object_type_id );
@@ -513,6 +518,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		$primary_property = rgar( $field, 'gppa-' . $populate . '-primary-property' );
+
+		$primary_property_cache[ $field->id ] = $primary_property;
 
 		return $primary_property;
 	}
@@ -785,13 +792,29 @@ class GP_Populate_Anything extends GP_Plugin {
 		$primary_property = $this->get_primary_property( $field, $populate );
 		$template         = rgar( $templates, $template_name );
 
-		$cache_key = serialize(
+		/**
+		 * Modify cache key for template processing as required.
+		 *
+		 * In some cases, it can be advantageous to relax the cache key to improve performance.
+		 *
+		 * @param string $cache_key Cache key to use
+		 * @param \GF_Field $field The current field
+		 * @param array $object The current object being processed into the template.
+		 * @param string $template Current template being processed.
+		 * @param string $template_name Name of template being processed.
+		 * @param mixed|null|string $object_type Object type being used for template
+		 * @param mixed|null|string $primary_property Primary property for field if set
+		 *
+		 * @since 1.0-beta-5.3
+		 *
+		 */
+		$cache_key = apply_filters( 'gppa_process_template_cache_key', serialize(
 			array(
 				$template,
 				$object_type->get_object_id( $object, $primary_property ),
 				rgar( $field, 'id' ),
 			)
-		);
+		), $field, $object, $template, $template_name, $object_type, $primary_property );
 
 		if ( isset( $_cache[ $cache_key ] ) ) {
 			return $_cache[ $cache_key ];
@@ -983,6 +1006,14 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		if ( isset( $this->gf_merge_tags_cache[ $template_value ] ) ) {
 			return $this->gf_merge_tags_cache[ $template_value ];
+		}
+
+		/**
+		 * Check for existence of merge tags prior to trying to parse as replace_variables() can be expensive if there
+		 * are a lot of entries to parse.
+		 */
+		if ( ! preg_match( gp_populate_anything()->live_merge_tags->merge_tag_regex, $template_value ) ) {
+			return $template_value;
 		}
 
 		$result = GFCommon::replace_variables_prepopulate( $template_value, false, false, true );
@@ -1315,15 +1346,19 @@ class GP_Populate_Anything extends GP_Plugin {
 			$object_type_split           = explode( ':', rgar( $field, 'gppa-values-object-type' ) );
 			$field_value_object_field_id = $object_type_split[1];
 			$field_value_object_field    = GFFormsModel::get_field( $field->formId, $field_value_object_field_id );
+			$objects                     = array();
+			// If no choices are selected in the dynamically populated field
+			// do not hydrate the field value object with all the entries.
+			if ( ! rgblank( rgar( $field_values, $field_value_object_field_id ) ) ) {
+				/* When using field value objects, we need to always set $populate to choices */
+				$field_value_object_choices = $this->get_input_choices( $field_value_object_field, $field_values, true );
+				$objects                    = wp_list_pluck( $field_value_object_choices, 'object' );
 
-			/* When using field value objects, we need to always set $populate to choices */
-			$field_value_object_choices = $this->get_input_choices( $field_value_object_field, $field_values, true );
-			$objects                    = wp_list_pluck( $field_value_object_choices, 'object' );
-
-			foreach ( $field_value_object_choices as $field_value_object_choice ) {
-				if ( $field_value_object_choice['value'] == rgar( $field_values, $field_value_object_field_id ) ) {
-					$objects = array( $field_value_object_choice['object'] );
-					break;
+				foreach ( $field_value_object_choices as $field_value_object_choice ) {
+					if ( $field_value_object_choice['value'] == rgar( $field_values, $field_value_object_field_id ) ) {
+						$objects = array( $field_value_object_choice['object'] );
+						break;
+					}
 				}
 			}
 		} else {

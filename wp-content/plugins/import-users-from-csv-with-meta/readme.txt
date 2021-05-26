@@ -3,8 +3,8 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.7.1
-Stable tag: 1.17.5.2
+Tested up to: 5.7.2
+Stable tag: 1.17.5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,23 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.5.6 =
+*   Frontend force reset password fixed
+
+= 1.17.5.5 =
+*   Frontend settings GUI improved
+*   Force users to reset their passwords after login also available for frontend import
+*   Fixed issue created in 1.17.5.4 saving options in frontend when import started
+
+= 1.17.5.4 =
+*   Solved this issue https://wordpress.org/support/topic/password-gets-changed/
+*   Solved this issue https://wordpress.org/support/topic/users-without-an-email-address-are-imported/
+*   Others issues solved
+
+= 1.17.5.3 =
+*   You can now force the users to reset their passwords after login if you have changed the password in the import
+*   Some code improvements
 
 = 1.17.5.2 =
 *   New hooks into shortcode form to enable include actions from there

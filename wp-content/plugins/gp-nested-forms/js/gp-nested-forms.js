@@ -78,17 +78,28 @@
 			}
 		};
 
+		/**
+		 * Initialize cookie for GPNF via AJAX.
+		 *
+		 * Session should only be initialized once per parent form.
+		 *
+		 * @returns {JQueryXHR}
+		 */
 		self.initSession = function() {
-			return $.post( self.ajaxUrl, self.sessionData, function( response ) {
-				/**
-				 * Do something after the Nested Forms session has been initialized.
-				 *
-				 * @since 1.0-beta-8.62
-				 *
-				 * @param {GPNestedForms} gpnf Current instance of the GPNestedForms class.
-				 */
-				gform.doAction( 'gpnf_session_initialized', self );
-			} );
+			if (typeof window['gpnfSessionPromise_' + self.formId] === 'undefined') {
+				window['gpnfSessionPromise_' + self.formId] = $.post( self.ajaxUrl, self.sessionData, function( response ) {
+					/**
+					 * Do something after the Nested Forms session has been initialized.
+					 *
+					 * @since 1.0-beta-8.62
+					 *
+					 * @param {GPNestedForms} gpnf Current instance of the GPNestedForms class.
+					 */
+					gform.doAction( 'gpnf_session_initialized', self );
+				} );
+			}
+
+			return window['gpnfSessionPromise_' + self.formId];
 		};
 
 		self.initModal = function() {
@@ -195,7 +206,17 @@
 		self.openModal = function( trigger ) {
 			self.saveParentFocus( trigger );
 			self.modal.open();
-			if ( self.isGF25 ) {
+			/**
+			 * We need to to manually trigger our `gpnf_post_render` event so that init scripts are executed in
+			 * two scenarios.
+			 *
+			 * 1. When running GF 2.5 as it wraps init scripts in DOMContentLoaded (instead of jQuery's ready event) so
+			 *    child form init scripts are not automatically executed when they're included in the DOM.
+			 * 2. When the version of jQuery is less than v3. v3.5 is included in WordPress 5.5+. Before that,
+			 *    jQuery v1.12.4 was included. Not sure why this is necessary but I'm assuming most users will either be
+			 *    on WordPress 5.5+ - or - progressively, they'll be on GF 2.5.
+			 */
+			if ( self.isGF25 || parseInt( jQuery.fn.jquery ) < 3 ) {
 				$( document ).trigger( 'gpnf_post_render', [ self.nestedFormId, '1' ] );
 			}
 			self.initIframe( self.nestedFormId );
@@ -294,6 +315,28 @@
 			return self.getMode() === 'add' ? self.modalArgs.labels.title : self.modalArgs.labels.editTitle;
 		};
 
+		/**
+		 * Logic borrowed from gravityforms.js (Lines 2539-2551)
+		 *
+		 * @returns {boolean}
+		 */
+		self.hasPendingUploads = function() {
+			var pendingUploads = false;
+
+			if (!gfMultiFileUploader || !gfMultiFileUploader.uploaders) {
+				return false;
+			}
+
+			$.each(gfMultiFileUploader.uploaders, function(i, uploader){
+				if(uploader.total.queued>0){
+					pendingUploads = true;
+					return false;
+				}
+			});
+
+			return pendingUploads;
+		}
+
 		self.addModalButtons = function() {
 
 			self.modal.modalBoxFooter.innerHTML = '';
@@ -310,10 +353,10 @@
 				var isWooCommercePage = typeof window.jQuery.fn.wc_gravity_form === 'function';
 				if ( $button[0].style.display !== 'none' || ( isWooCommercePage && $button[0].style.display === '' ) ) {
 
-					var useModalTitleText = ( $button.attr( 'type' ) === 'submit' || $button.attr( 'type' ) === 'image' ),
-						label             = useModalTitleText ? self.getModalTitle() : $button.val(),
-						classes           = [ 'tingle-btn', 'tingle-btn--primary' ],
-						isDisabled        = $button.is( ':disabled' );
+					var isSubmitButton = ( $button.attr( 'type' ) === 'submit' || $button.attr( 'type' ) === 'image' ),
+						label          = isSubmitButton ? self.getSubmitButtonLabel() : $button.val(),
+						classes        = [ 'tingle-btn', 'tingle-btn--primary' ],
+						isDisabled     = $button.is( ':disabled' );
 
 					if ( $button.hasClass( 'gform_previous_button' ) ) {
 						classes.push( 'gpnf-btn-previous' );
@@ -324,6 +367,13 @@
 					}
 
 					var tingleBtn = self.modal.addFooterBtn( label, classes.join( ' ' ), function( event ) {
+						if (self.hasPendingUploads()) {
+							var gfStrings = typeof gform_gravityforms != 'undefined' ? gform_gravityforms.strings : {};
+							alert(gfStrings.currently_uploading);
+
+							return;
+						}
+
 						$( event.target ).addClass( 'gpnf-spinner' );
 						$button.click();
 					} );
@@ -361,6 +411,19 @@
 
 		};
 
+		self.getSubmitButtonLabel = function() {
+
+			var mode = self.getMode();
+
+			if ( mode === 'add' && self.modalArgs.labels.submit ) {
+				return self.modalArgs.labels.submit;
+			} else if ( mode === 'edit' && self.modalArgs.labels.editSubmit ) {
+				return self.modalArgs.labels.editSubmit;
+			}
+
+			return self.getModalTitle();
+		}
+
 		self.addColorStyles = function() {
 
 			if ( self.$style && typeof self.$style.remove === 'function' ) {
@@ -397,9 +460,17 @@
 		};
 
 		self.handleCancelClick = function( $button ) {
+			/**
+			 * Filter if GPNF should not warn before canceling adding a new entry.
+			 *
+			 * Return "true" here to disable the "Are you sure?" button prompt.
+			 *
+			 * @since 1.0-beta-9.24
+			 */
+			var disableNewCancelConfirmation = window.gform.applyFilters( 'gpnf_disable_new_cancel_confirmation', false );
 			if ( $button.data( 'isConfirming' ) ) {
 				self.modal.close();
-			} else if ( self.hasChanges() ) {
+			} else if ( self.hasChanges() && ! disableNewCancelConfirmation ) {
 				$button
 					.data( 'isConfirming', true )
 					.removeClass( 'tingle-btn--default' )
@@ -686,12 +757,18 @@
 			self.$modal.find( ':input' ).each(function () {
 				var $this = $( this );
 				var value = $this.data( 'gpnf-value' );
+				var currentValue = $this.val();
 
 				if ($this.data( 'gpnf-changed' )) {
 					return true;
 				}
 
 				if ( ! value) {
+					return true;
+				}
+
+				// Handle edited/populated merge tags
+				if ( currentValue.length > 0 && currentValue !== value ) {
 					return true;
 				}
 
@@ -816,9 +893,6 @@
 							$formWrapper.removeClass( 'gform_validation_error' );
 						}
 						setTimeout( function() { /* delay the scroll by 50 milliseconds to fix a bug in chrome */ }, 50 );
-						if ( window['gformInitDatepicker'] ) {
-							gformInitDatepicker();
-						}
 						if ( window['gformInitPriceFields']) {
 							gformInitPriceFields();
 						}

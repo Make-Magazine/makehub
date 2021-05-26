@@ -172,7 +172,7 @@ $recording_groups_dates_print = array_unique( $recording_groups_dates_print );
 		<?php
 
 		foreach ( $recordings_groups as $date => $recording_group ) {
-			$recorded_date = wp_date( bp_core_date_format( true, true, __( ' \a\t ', 'buddyboss-pro' ) ), strtotime( $date ) );
+			$recorded_date = wp_date( bp_core_date_format( false, true ), strtotime( $date ) ) . __( ' at ', 'buddyboss-pro' ) . wp_date( bp_core_date_format( true, false ), strtotime( $date ) );
 
 			?>
 			<div class="recording-list-row-group" data-recorded-date="<?php echo esc_attr( wp_date( 'Y-m-d', strtotime( $date ) ) ); ?>">
