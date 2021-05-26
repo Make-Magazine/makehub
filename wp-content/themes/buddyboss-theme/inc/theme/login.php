@@ -97,9 +97,9 @@ function buddyboss_redirect_previous_page( $redirect_to, $request, $user ) {
         }
 	}
 
-	$request = str_replace( array( '?loggedout=true', '&loggedout=true' ), '', $request );
+	$redirect_to = str_replace( array( '?loggedout=true', '&loggedout=true' ), '', $redirect_to );
 
-	return $request;
+	return $redirect_to;
 }
 
 /**

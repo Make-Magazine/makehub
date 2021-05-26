@@ -13244,6 +13244,10 @@ body.bp-user.profile:not(.public) .bp-vertical-navs #subnav {
           flex: 1;
   min-width: 1px;
   margin: 0; }
+  @media screen and (max-width: 748px) {
+    .bp-vertical-navs .bb-profile-grid {
+      margin-right: -10px;
+      margin-left: -10px; } }
 
 .buddypress-wrap .profile {
   margin: 0; }
@@ -15909,11 +15913,27 @@ body.bp-search .bp-search-ac-header {
     max-width: 1190px;
     margin: auto;
     width: -webkit-calc(100% - 68px);
-    width: calc(100% - 68px); }
+    width: calc(100% - 68px);
+    float: none;
+    /* Overwrite jQuery-ui CSS for Header Searchbar */ }
   body.bp-search .bp-search-ac-header > li.bbls-view_all_type-type {
     margin-top: 10px;
     margin-bottom: -10px;
     text-align: center; }
+  body.bp-search .bp-search-ac-header > li a:not(.x) {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    /* Overwrite jQuery-ui CSS for Header Searchbar */ }
+  body.bp-search .bp-search-ac-header > li .ui-state-active {
+    /* Overwrite jQuery-ui CSS for Header Searchbar */
+    background: transparent;
+    border: none; }
+  body.bp-search .bp-search-ac-header > li.bbls-view_all_type-type {
+    /* Overwrite jQuery-ui CSS for Header Searchbar */ }
+    body.bp-search .bp-search-ac-header > li.bbls-view_all_type-type a {
+      color: #007CFF;
+      font-size: 16px; }
   body.bp-search .bp-search-ac-header img {
     border-radius: 50%; }
 
@@ -15974,6 +15994,8 @@ body.bp-search .bp-search-ac .item-avatar img {
     position: relative;
     width: 100%;
     height: auto; }
+    .bp-search-results-list .bp-search-item .item-avatar a:empty {
+      display: none; }
   .bp-search-results-list .bp-search-item .item-avatar img {
     position: absolute;
     top: 0;

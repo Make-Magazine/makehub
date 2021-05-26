@@ -17,16 +17,12 @@
     
     if ( is_page_template( 'page-fullwidth.php' ) ) {
         if ( empty( $show_title ) ){ ?>
-            <header class="entry-header">
-        		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-        	</header><!-- .entry-header -->
+            <header class="entry-header"><?php the_title( '<h1 class="entry-title">', '</h1>' ); ?></header>
         <?php } else {
             // hidden title
         }
     } elseif( !is_search() and !is_page_template( 'page-fullscreen.php') and !is_page_template( 'page-fullwidth-content.php') ) { ?>
-        <header class="entry-header">
-    		<?php the_title( '<h1 class="entry-title">', '</h1>' ); ?>
-    	</header><!-- .entry-header -->
+        <header class="entry-header"><?php the_title( '<h1 class="entry-title">', '</h1>' ); ?></header>
     <?php } ?>
 
 	<div class="entry-content">

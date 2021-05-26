@@ -132,7 +132,7 @@
                         }
                         paged = response.data.page;
                         if ( $( '.ld-sidebar-widgets' ).length === 0 ) {
-                            $( 'html, body' ).animate({ scrollTop: $(document).height() }, 1000);
+                            $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: $(document).height() }, 1000);
                         }
                         spinnerSelector.addClass( 'bb-icon-chevron-down' );
                         spinnerSelector.removeClass( 'bb-icon-spin' );
@@ -781,11 +781,20 @@
             if ( $(window).width() > 768 && $('.bb-ld-sticky-sidebar .ld-sidebar-widgets').length == 0 ) {
                 $('.bb-ld-sticky-sidebar').stick_in_parent({offset_top: bbHeaderHeight + 45});
 
-                if( $('body').hasClass('sticky-header') ) {
-                    $('.lms-topic-sidebar-data').stick_in_parent({offset_top: bbHeaderHeight + 30 });
-                } else {
-                    $('.lms-topic-sidebar-data').stick_in_parent({offset_top: 30});
+                var adminBarHeight = 0;
+                if( $('body').hasClass('admin-bar') ) {
+                    adminBarHeight = 32;
                 }
+                $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });
+                if( !$('body').hasClass( 'sticky-header' ) ) {
+                    if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
+                        bbHeaderHeight = 0;
+                    } else {
+                        bbHeaderHeight = $('#masthead').outerHeight();
+                    }
+                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });    
+                }
+
             }
 
             $(window).on('resize', function () {
@@ -793,8 +802,20 @@
                     $('.bb-ld-sticky-sidebar').stick_in_parent({offset_top: bbHeaderHeight + 45});
                 } else {
                     $('.bb-ld-sticky-sidebar').trigger("sticky_kit:detach");
-                    $('.lms-topic-sidebar-data').trigger("sticky_kit:detach");
+                    // $('.lms-topic-sidebar-data').trigger("sticky_kit:detach");
                 }
+            });
+
+            $(window).on('scroll', function () {
+                if( !$('body').hasClass( 'sticky-header' ) ) {
+                    if( $(window).scrollTop() >= $('#masthead').outerHeight() ) {
+                        bbHeaderHeight = 0;
+                    } else {
+                        bbHeaderHeight = $('#masthead').outerHeight();
+                    }
+                    $('.lms-topic-sidebar-data').css({'max-height': 'calc(100vh - '+ ( bbHeaderHeight + adminBarHeight ) +'px', 'top': ( bbHeaderHeight + adminBarHeight ) +'px' });    
+                }
+                
             });
 
             if ($('.wpProQuiz_matrixSortString').length > 0) {

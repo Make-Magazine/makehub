@@ -5338,7 +5338,8 @@ header.llms-pa-area-header.llms-pa-posts--single a {
   margin-bottom: 0 !important;
   padding-right: 0 !important; }
 
-.single.llms_my_certificate-template-default .site-content .container .site-content-grid {
+.single.llms_my_certificate-template-default .site-content .container .site-content-grid,
+.single-llms_certificate .site-content .container .site-content-grid {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -5347,14 +5348,20 @@ header.llms-pa-area-header.llms-pa-posts--single a {
       -ms-flex-direction: column;
           flex-direction: column; }
 
-.single.llms_my_certificate-template-default .llms-certificate-container {
+.single.llms_my_certificate-template-default .llms-certificate-container,
+.single-llms_certificate .llms-certificate-container {
   position: relative; }
   @media (max-width: 850px) {
-    .single.llms_my_certificate-template-default .llms-certificate-container {
+    .single.llms_my_certificate-template-default .llms-certificate-container,
+    .single-llms_certificate .llms-certificate-container {
       width: 100% !important; } }
-  .single.llms_my_certificate-template-default .llms-certificate-container .certificate-background {
+  .single.llms_my_certificate-template-default .llms-certificate-container .certificate-background,
+  .single-llms_certificate .llms-certificate-container .certificate-background {
     margin-bottom: 0px !important; }
-  .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate {
+  .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate,
+  .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate,
+  .single-llms_certificate .llms-certificate-container .llms_my_certificate,
+  .single-llms_certificate .llms-certificate-container .llms_certificate {
     position: absolute;
     right: 0px;
     left: 0px;
@@ -5370,30 +5377,49 @@ header.llms-pa-area-header.llms-pa-posts--single a {
         -ms-flex-pack: center;
             justify-content: center; }
     @media (max-width: 480px) {
-      .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate {
+      .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate,
+      .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate,
+      .single-llms_certificate .llms-certificate-container .llms_my_certificate,
+      .single-llms_certificate .llms-certificate-container .llms_certificate {
         margin: 40px 60px; } }
     @media (max-width: 400px) {
-      .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate {
+      .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate,
+      .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate,
+      .single-llms_certificate .llms-certificate-container .llms_my_certificate,
+      .single-llms_certificate .llms-certificate-container .llms_certificate {
         margin: 20px 40px; } }
-    .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary h1 {
+    .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary h1,
+    .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate .llms-summary h1,
+    .single-llms_certificate .llms-certificate-container .llms_my_certificate .llms-summary h1,
+    .single-llms_certificate .llms-certificate-container .llms_certificate .llms-summary h1 {
       font-size: 32px;
       line-height: 1.2;
       font-weight: 700;
       margin-bottom: 0; }
       @media (max-width: 480px) {
-        .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary h1 {
+        .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary h1,
+        .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate .llms-summary h1,
+        .single-llms_certificate .llms-certificate-container .llms_my_certificate .llms-summary h1,
+        .single-llms_certificate .llms-certificate-container .llms_certificate .llms-summary h1 {
           font-size: 24px;
           margin-top: 20px; } }
-    .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary p {
+    .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary p,
+    .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate .llms-summary p,
+    .single-llms_certificate .llms-certificate-container .llms_my_certificate .llms-summary p,
+    .single-llms_certificate .llms-certificate-container .llms_certificate .llms-summary p {
       text-align: center;
       margin-top: 40px; }
       @media (max-width: 480px) {
-        .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary p {
+        .single.llms_my_certificate-template-default .llms-certificate-container .llms_my_certificate .llms-summary p,
+        .single.llms_my_certificate-template-default .llms-certificate-container .llms_certificate .llms-summary p,
+        .single-llms_certificate .llms-certificate-container .llms_my_certificate .llms-summary p,
+        .single-llms_certificate .llms-certificate-container .llms_certificate .llms-summary p {
           margin-top: 20px;
           font-size: 14px; } }
 
 @media (min-width: 768px) {
-  .single.llms_my_certificate-template-default.bb-buddypanel .site {
+  .single.llms_my_certificate-template-default.bb-buddypanel .site,
+  .single-llms_certificate.bb-buddypanel .site {
     margin-right: 0px;
     -webkit-transition: margin-right 0.2s;
             transition: margin-right 0.2s; } }
@@ -5994,9 +6020,6 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 .nf-form-wrap .nf-form-content .listradio-wrap .nf-field-element li .bs-radio {
   display: none; }
 
-.single-llms_certificate .bb-grid .llms-print-certificate {
-  max-width: 380px; }
-
 @media screen and (max-width: 1200px) {
   .single-llms_certificate .bb-grid {
     display: block; }
@@ -6009,6 +6032,9 @@ body div[submit-success] > .wpforms-confirmation-container-full:not(.wpforms-red
 .llms-print-certificate .button,
 .llms-print-certificate .back_to_home_page {
   font-size: 14px; }
+
+.llms-print-certificate .llms-button-secondary:focus, .llms-print-certificate .llms-button-secondary:active {
+  color: #fff; }
 
 .llms-print-certificate .back_to_home_page {
   padding-top: 10px;

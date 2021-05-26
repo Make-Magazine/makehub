@@ -865,7 +865,8 @@ if ( !function_exists( 'boss_generate_option_css' ) ) {
             #buddypress input[type=reset].small, 
             #buddypress input[type=submit].small, 
             #buddypress ul.button-nav li a.small, 
-            a.bp-title-button.small {
+            a.bp-title-button.small,
+            .ld-course-list-items .ld_course_grid .bb-cover-list-item p.ld_course_grid_button a {
                 border-radius: <?php echo $button_radius; ?>px;
             }
 
@@ -1946,7 +1947,8 @@ if ( !function_exists( 'boss_generate_option_learndash_css' ) ) {
             .wpProQuiz_questionList[data-type="assessment_answer"] .wpProQuiz_questionListItem label.is-selected:before,
             .wpProQuiz_questionList[data-type="single"] .wpProQuiz_questionListItem label.is-selected:before,
             .wpProQuiz_questionList[data-type="multiple"] .wpProQuiz_questionListItem label.is-selected:before,
-            .learndash-wrapper .bb-ld-status .ld-status.ld-status-progress {
+            .learndash-wrapper .bb-ld-status .ld-status.ld-status-progress,
+            .ld-course-list-items .ld_course_grid .bb-cover-list-item p.ld_course_grid_button a {
                 background-color:  <?php echo $primary_color; ?>;
             }
 
@@ -1994,7 +1996,8 @@ if ( !function_exists( 'boss_generate_option_learndash_css' ) ) {
             .learndash-wrapper .wpProQuiz_content .wpProQuiz_questionListItem label:focus-within,
             #learndash-page-content .ld-focus-comments .comment .ld-comment-avatar > img,
             #learndash-page-content .ld-focus-comments .form-submit #submit,
-            .wpProQuiz_questionList[data-type="multiple"] .wpProQuiz_questionListItem label.is-selected:before {
+            .wpProQuiz_questionList[data-type="multiple"] .wpProQuiz_questionListItem label.is-selected:before,
+            .ld-course-list-items .ld_course_grid .bb-cover-list-item p.ld_course_grid_button a {
                 border-color:  <?php echo $primary_color; ?>;
             }
 
@@ -2907,11 +2910,16 @@ if ( !function_exists( 'boss_generate_option_events_css' ) ) {
             #tribe-bar-form .tribe-bar-submit input[type=submit],
             #tribe-bar-form .tribe-bar-submit input[type=submit]:hover,
             .tribe-events-venue .tribe-events-venue-meta a.tribe-events-gmap,
+            .tribe-common .tribe-common-c-btn,
+            .tribe-common a.tribe-common-c-btn,
+            .tribe-common .tribe-common-c-btn:hover,
+            .tribe-common a.tribe-common-c-btn:hover,
             .tribe-events-venue .tribe-events-venue-meta a.tribe-events-gmap:hover {
                 background: <?php echo $primary_color; ?>;
             }
 
             .tribe-events-venue .tribe-events-venue-meta a.tribe-events-gmap:before,
+            .tribe-events .tribe-events-c-ical__link:hover,
             .events-archive.events-gridview #tribe-events-content table.tribe-events-calendar tbody td div.tribe_events,
             .events-archive.events-gridview #tribe-events-content table.tribe-events-calendar tbody td div.type-tribe_events,
             .tribe-events-grid .tribe-grid-header .tribe-week-today {
@@ -2921,16 +2929,20 @@ if ( !function_exists( 'boss_generate_option_events_css' ) ) {
             #tribe-events .bs-single-content .tribe-events-cal-links a.tribe-events-button,
             #tribe-events .bs-single-content .tribe-events-cal-links a.tribe-events-button:hover,
             .tribe-events-venue .tribe-events-venue-meta a.tribe-events-gmap,
+            .tribe-events .tribe-events-c-ical__link,
             .tribe-events-venue .tribe-events-venue-meta a.tribe-events-gmap:hover {
                 border-color: <?php echo $primary_color; ?>;
             }
 
             #tribe-events .bs-single-content .tribe-events-cal-links a.tribe-events-button,
             #tribe-events .bs-single-content .tribe-events-cal-links a.tribe-events-button:hover,
+            .tribe-events .tribe-events-calendar-month__day--current .tribe-events-calendar-month__day-date,
+            .tribe-events .tribe-events-calendar-month__day--current .tribe-events-calendar-month__day-date-link,
+            .tribe-events .tribe-events-c-ical__link,
             #tribe-geo-results .tribe-event-featured a {
                 color: <?php echo $primary_color; ?>;
             }
-            
+
             #tribe-geo-results .tribe-event-featured a:hover {
                 color: <?php echo $secondary_color; ?>;
             }

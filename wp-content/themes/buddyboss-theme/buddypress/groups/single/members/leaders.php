@@ -50,8 +50,8 @@ $follow_class = $is_follow_active ? 'follow-active' : '';
 					<div class="list-wrap-inner">
 						<div class="item-avatar">
 							<a href="<?php bp_group_member_domain(); ?>">
-								<?php bp_group_member_avatar(); ?>
 								<?php bb_user_status( bp_get_group_member_id() ); ?>
+								<?php bp_group_member_avatar(); ?>
 							</a>
 						</div>
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Theme v1.6.1.1\n"
-"POT-Creation-Date: 2020-11-20 08:51+0100\n"
-"PO-Revision-Date: 2020-12-23 16:03+0400\n"
+"Project-Id-Version: BuddyBoss Theme v1.6.4\n"
+"POT-Creation-Date: 2021-02-11 21:54+0100\n"
+"PO-Revision-Date: 2021-05-13 13:28+0530\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.1\n"
+"X-Generator: Poedit 2.4.3\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: style.css\n"
@@ -141,24 +141,24 @@ msgstr "Als Titelbild verwenden"
 msgid "Done"
 msgstr "Fertig"
 
-#: bbpress/content-single-forum.php:36
+#: bbpress/content-single-forum.php:39
 msgid "Main Forum"
 msgstr "Hauptforum"
 
-#: bbpress/content-single-forum.php:43 inc/plugins/bbpress-helper.php:59
+#: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:59
 #: sidebar-bbpress.php:18
 msgid "New discussion"
 msgstr "Neue Diskussion"
 
-#: bbpress/content-single-forum.php:60
+#: bbpress/content-single-forum.php:69
 msgid "Sub Forums"
 msgstr "Unterforen"
 
-#: bbpress/content-single-topic.php:69
+#: bbpress/content-single-topic.php:80
 msgid "Original Post"
 msgstr "Originalbeitrag"
 
-#: bbpress/content-single-topic.php:73 learndash/ld30/lesson.php:104
+#: bbpress/content-single-topic.php:84 learndash/ld30/lesson.php:104
 #: learndash/ld30/quiz.php:85
 #: lifterlms/assignment/template-single-assignment-content.php:61
 #: lifterlms/lesson/template-single-lesson-content.php:63
@@ -166,15 +166,15 @@ msgstr "Originalbeitrag"
 msgid "of"
 msgstr "von"
 
-#: bbpress/content-single-topic.php:73
+#: bbpress/content-single-topic.php:84
 msgid "posts"
 msgstr "Beiträge"
 
-#: bbpress/content-single-topic.php:74
+#: bbpress/content-single-topic.php:85
 msgid "June 2018"
 msgstr "Juni 2018"
 
-#: bbpress/content-single-topic.php:81
+#: bbpress/content-single-topic.php:92
 msgid "Now"
 msgstr "Jetzt"
 
@@ -251,7 +251,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: bbpress/form-reply.php:147 bbpress/form-topic.php:191
-#: bbpress/loop-replies.php:120
+#: bbpress/loop-replies.php:128
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:100
 #: lifterlms/card-new-share.php:28
 msgid "Post"
@@ -314,7 +314,22 @@ msgstr "Sie können keine neuen Diskussionen erstellen."
 msgid "You must be logged in to create new discussions."
 msgstr "Sie müssen angemeldet sein, um neue Diskussionen erstellen zu können."
 
-#: bbpress/loop-replies.php:33
+#: bbpress/loop-blocked-single-reply.php:46
+#: template-parts/unread-messages.php:371
+msgid "This content has been hidden as the member is suspended."
+msgstr "Dieser Inhalt wurde ausgeblendet, da das Mitglied gesperrt ist."
+
+#: bbpress/loop-blocked-single-reply.php:48
+#: template-parts/unread-messages.php:373
+msgid "This content has been hidden as you have blocked this member."
+msgstr ""
+"Dieser Inhalt wurde ausgeblendet, da Sie dieses Mitglied blockiert haben."
+
+#: bbpress/loop-blocked-single-reply.php:50
+msgid "This content has been hidden from site admin."
+msgstr "Dieser Inhalt wurde von der Website-Administration ausgeblendet."
+
+#: bbpress/loop-replies.php:35
 #: inc/admin/framework/ReduxCore/inc/tracking.php:175
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-cpt.php:287
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-cpt.php:288
@@ -329,40 +344,40 @@ msgstr "Sie müssen angemeldet sein, um neue Diskussionen erstellen zu können."
 msgid "Close"
 msgstr "Schließen"
 
-#: bbpress/loop-replies.php:36 inc/admin/options-init.php:444
+#: bbpress/loop-replies.php:39 inc/admin/options-init.php:444
 msgid "Open"
 msgstr "Öffnen"
 
-#: bbpress/loop-replies.php:46 bbpress/loop-replies.php:62
+#: bbpress/loop-replies.php:49 bbpress/loop-replies.php:65
 msgid "Unstick"
 msgstr "Oben lösen"
 
-#: bbpress/loop-replies.php:50 bbpress/loop-search-topic.php:14
+#: bbpress/loop-replies.php:53 bbpress/loop-search-topic.php:14
 #: bbpress/loop-topic-list.php:15
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:1154
 msgid "Sticky"
 msgstr "Anpinnen"
 
-#: bbpress/loop-replies.php:67 bbpress/loop-search-topic.php:12
+#: bbpress/loop-replies.php:71 bbpress/loop-search-topic.php:12
 #: bbpress/loop-topic-list.php:13
 msgid "Super Sticky"
 msgstr "Besonders fixieren"
 
-#: bbpress/loop-replies.php:79 bbpress/loop-replies.php:80
-#: bbpress/loop-replies.php:87
+#: bbpress/loop-replies.php:83 bbpress/loop-replies.php:84
+#: bbpress/loop-replies.php:91
 msgid "Unfavorite"
 msgstr "Gefällt mir nicht mehr"
 
-#: bbpress/loop-replies.php:81 bbpress/loop-replies.php:86
-#: bbpress/loop-replies.php:88
+#: bbpress/loop-replies.php:85 bbpress/loop-replies.php:90
+#: bbpress/loop-replies.php:92
 msgid "Favorite"
 msgstr "Favorisieren"
 
-#: bbpress/loop-replies.php:99 functions.php:100
+#: bbpress/loop-replies.php:107 functions.php:100
 msgid "updated"
 msgstr "aktualisiert"
 
-#: bbpress/loop-replies.php:105 bbpress/loop-search-topic.php:39
+#: bbpress/loop-replies.php:113 bbpress/loop-search-topic.php:39
 #: bbpress/loop-topic-list.php:40
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1492
 #: inc/plugins/elementor/widgets/bb-forums.php:565
@@ -372,31 +387,31 @@ msgstr "aktualisiert"
 msgid "Members"
 msgstr "Mitglieder"
 
-#: bbpress/loop-replies.php:105 bbpress/loop-search-topic.php:39
+#: bbpress/loop-replies.php:113 bbpress/loop-search-topic.php:39
 #: bbpress/loop-topic-list.php:40
 #: inc/plugins/elementor/widgets/bb-forums.php:565
 msgid "Member"
 msgstr "Mitglied"
 
-#: bbpress/loop-replies.php:117 bbpress/loop-search-topic.php:50
+#: bbpress/loop-replies.php:125 bbpress/loop-search-topic.php:50
 #: bbpress/loop-search-topic.php:53 bbpress/loop-topic-list.php:51
 #: bbpress/loop-topic-list.php:54
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1817
 msgid "Replies"
-msgstr "Kommentieren"
+msgstr "Antworten"
 
-#: bbpress/loop-replies.php:117 bbpress/loop-search-topic.php:50
+#: bbpress/loop-replies.php:125 bbpress/loop-search-topic.php:50
 #: bbpress/loop-search-topic.php:53 bbpress/loop-topic-list.php:51
 #: bbpress/loop-topic-list.php:54
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1812
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3142
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:232
-#: inc/theme/template-functions.php:1816 inc/theme/template-functions.php:1829
-#: inc/theme/template-functions.php:1937 inc/theme/template-functions.php:1952
+#: inc/theme/template-functions.php:1821 inc/theme/template-functions.php:1834
+#: inc/theme/template-functions.php:1942 inc/theme/template-functions.php:1957
 msgid "Reply"
-msgstr "Kommentieren"
+msgstr "Antwort"
 
-#: bbpress/loop-replies.php:120 template-parts/header-profile-menu.php:104
+#: bbpress/loop-replies.php:128 template-parts/header-profile-menu.php:119
 msgid "Posts"
 msgstr "Beiträge"
 
@@ -427,11 +442,11 @@ msgstr "Abonniert"
 msgid "Search Results"
 msgstr "Sucheergebnisse"
 
-#: bbpress/loop-single-reply.php:33
+#: bbpress/loop-single-reply.php:36
 msgid "in reply to: "
 msgstr "als Antwort auf: "
 
-#: bbpress/loop-single-reply.php:108
+#: bbpress/loop-single-reply.php:119
 msgid "More actions"
 msgstr "Weitere Aktionen"
 
@@ -508,7 +523,7 @@ msgid "%s's Favorites"
 msgstr "Favoriten von %s"
 
 #: bbpress/user-details.php:62 template-parts/entry-meta.php:42
-#: template-parts/entry-meta.php:71 template-parts/header-profile-menu.php:109
+#: template-parts/entry-meta.php:71 template-parts/header-profile-menu.php:124
 msgid "Likes"
 msgstr "Gefällt-mir-Klicks"
 
@@ -517,7 +532,7 @@ msgstr "Gefällt-mir-Klicks"
 msgid "%s's Subscriptions"
 msgstr "Abonnements von %s"
 
-#: bbpress/user-details.php:70 template-parts/header-profile-menu.php:354
+#: bbpress/user-details.php:70 template-parts/header-profile-menu.php:369
 msgid "Subscriptions"
 msgstr "Abonnements"
 
@@ -536,7 +551,7 @@ msgstr "%ss Profil bearbeiten"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:275
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2467
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:682
-#: inc/theme/template-functions.php:735
+#: inc/theme/template-functions.php:740
 #: template-parts/header-profile-menu.php:23
 #: woocommerce/myaccount/dashboard.php:194
 #: woocommerce/myaccount/my-address.php:73
@@ -546,7 +561,7 @@ msgstr "Bearbeiten"
 #: buddypress.php:30 inc/lib/buddyboss-updater/includes/views/package.php:37
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:717
 #: inc/plugins/lifterlms-helper.php:1717 inc/plugins/lifterlms-helper.php:1797
-#: inc/theme/login.php:397 inc/theme/template-functions.php:693
+#: inc/theme/login.php:397 inc/theme/template-functions.php:698
 #: learndash/ld30/learndash-sidebar.php:154
 #: learndash/ld30/learndash-sidebar.php:156
 #: learndash/ld30/learndash-sidebar.php:157
@@ -678,6 +693,7 @@ msgid "Change Profile Photo"
 msgstr "Profilbild ändern"
 
 #: buddypress/members/single/groups/invites.php:10
+#: template-parts/header-profile-menu.php:82
 msgid "Group Invites"
 msgstr "Gruppeneinladungen"
 
@@ -706,7 +722,7 @@ msgstr ""
 "bereits Mitglieder sind:"
 
 #: buddypress/members/single/invites/sent-invites.php:54
-#: template-parts/header-profile-menu.php:432
+#: template-parts/header-profile-menu.php:447
 msgid "Sent Invites"
 msgstr "Versendete Einladungen"
 
@@ -776,7 +792,7 @@ msgstr "« Zurück"
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:116
 #: inc/plugins/elementor/widgets/bb-header-bar.php:179
 #: template-parts/content-buddypress.php:31
-#: template-parts/header-profile-menu.php:160
+#: template-parts/header-profile-menu.php:175
 #: template-parts/notification-dropdown.php:10
 #: template-parts/notification-dropdown.php:19
 msgid "Notifications"
@@ -876,7 +892,7 @@ msgstr "Von mir begonnen"
 msgid "Edited By Me"
 msgstr "Von mir bearbeitet"
 
-#: docs/tabs-nouveau.php:14 template-parts/header-profile-menu.php:310
+#: docs/tabs-nouveau.php:14 template-parts/header-profile-menu.php:325
 msgid "My Groups"
 msgstr "Meine Gruppen"
 
@@ -5062,8 +5078,8 @@ msgstr "Verstecken"
 #: inc/admin/options-init.php:321 inc/admin/options-init.php:362
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:106
 #: inc/plugins/elementor/widgets/bb-header-bar.php:162
-#: template-parts/header-profile-menu.php:204
-#: template-parts/header-profile-menu.php:205
+#: template-parts/header-profile-menu.php:219
+#: template-parts/header-profile-menu.php:220
 #: template-parts/messages-dropdown.php:10
 #: template-parts/messages-dropdown.php:19
 msgid "Messages"
@@ -6154,7 +6170,7 @@ msgstr "Stellen Sie die Höhe des Gruppen-Titelbildes ein."
 #: inc/admin/options-init.php:2129
 #: inc/plugins/elementor/widgets/bb-forums.php:40
 #: inc/plugins/elementor/widgets/bb-forums.php:197
-#: template-parts/header-profile-menu.php:337
+#: template-parts/header-profile-menu.php:352
 msgid "Forums"
 msgstr "Foren"
 
@@ -6445,7 +6461,7 @@ msgstr ""
 "zuzugreifen, können Sie Ihre globale Variable verwenden: <strong>$%1$s</"
 "strong></p>"
 
-#: inc/admin/options/custom-css.php:4213
+#: inc/admin/options/custom-css.php:4229
 msgid "Quiz Progress"
 msgstr "Quiz-Fortschritt"
 
@@ -7158,7 +7174,7 @@ msgstr "Trennzeichen"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:764
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:437
 #: inc/plugins/elementor/widgets/bb-header-bar.php:196
-#: template-parts/cart-dropdown.php:3 template-parts/cart-dropdown.php:14
+#: template-parts/cart-dropdown.php:3 template-parts/cart-dropdown.php:17
 msgid "Cart"
 msgstr "Warenkorb"
 
@@ -8303,8 +8319,8 @@ msgid "Compass"
 msgstr "Kompass"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:642
-#: template-parts/header-profile-menu.php:114
-#: template-parts/header-profile-menu.php:253
+#: template-parts/header-profile-menu.php:129
+#: template-parts/header-profile-menu.php:268
 msgid "Connections"
 msgstr "Kontakte"
 
@@ -8814,8 +8830,8 @@ msgstr "Gitter-Ansicht: Klein"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:1019
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:48
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:210
-#: template-parts/header-profile-menu.php:119
-#: template-parts/header-profile-menu.php:285
+#: template-parts/header-profile-menu.php:134
+#: template-parts/header-profile-menu.php:300
 msgid "Groups"
 msgstr "Gruppen"
 
@@ -9020,9 +9036,9 @@ msgid "Log In"
 msgstr "Anmelden"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1437
-#: inc/theme/functions.php:1422 inc/theme/template-functions.php:1435
+#: inc/theme/functions.php:1422 inc/theme/template-functions.php:1440
 #: template-parts/header-mobile.php:163
-#: template-parts/header-profile-menu.php:443
+#: template-parts/header-profile-menu.php:458
 msgid "Log Out"
 msgstr "Abmelden"
 
@@ -10821,7 +10837,7 @@ msgstr "CC"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:750
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2292
 #: learndash/ld30/shortcodes/profile/course-row.php:44
-#: learndash/ld30/template-single-course-sidebar.php:345
+#: learndash/ld30/template-single-course-sidebar.php:344
 msgid "Certificate"
 msgstr "Zertifikat"
 
@@ -14538,14 +14554,17 @@ msgid "Filter Types"
 msgstr "Filtertypen"
 
 #: inc/plugins/elementor/widgets/groups/templates/bb-groups-template.php:34
+#: inc/plugins/elementor/widgets/members/templates/bb-members-template.php:37
 msgid "active"
 msgstr "aktiv"
 
 #: inc/plugins/elementor/widgets/groups/templates/bb-groups-template.php:35
+#: inc/plugins/elementor/widgets/members/templates/bb-members-template.php:38
 msgid "popular"
 msgstr "beliebt"
 
 #: inc/plugins/elementor/widgets/groups/templates/bb-groups-template.php:36
+#: inc/plugins/elementor/widgets/members/templates/bb-members-template.php:39
 msgid "newest"
 msgstr "neueste"
 
@@ -14618,7 +14637,7 @@ msgstr "Online-Statusgrenze"
 msgid "Online Status Border Radius"
 msgstr "Online-Status Rahmenradius"
 
-#: inc/plugins/elementor/widgets/members/templates/bb-members-template.php:93
+#: inc/plugins/elementor/widgets/members/templates/bb-members-template.php:108
 msgid "Sorry, no members were found."
 msgstr "Es wurden keine Mitglieder gefunden."
 
@@ -14696,7 +14715,7 @@ msgid "Sorry, no memberships were found."
 msgstr "Es wurden leider keine Mitgliedschaften gefunden."
 
 #: inc/plugins/lifterlms-helper.php:1495
-#: learndash/ld30/template-single-course-sidebar.php:142
+#: learndash/ld30/template-single-course-sidebar.php:141
 msgid "Continue"
 msgstr "Fortsetzen"
 
@@ -14709,7 +14728,7 @@ msgstr "Fortsetzen"
 #: learndash/ld30/shortcodes/course_list_template.php:109
 #: learndash/ld30/shortcodes/course_list_template.php:116
 #: learndash/ld30/shortcodes/profile.php:85
-#: learndash/ld30/template-single-course-sidebar.php:139
+#: learndash/ld30/template-single-course-sidebar.php:138
 msgid "Completed"
 msgstr "Abgeschlossen"
 
@@ -15438,26 +15457,26 @@ msgid "The search widget area. Only appears if widgets are added."
 msgstr ""
 "Der Such-Widget Bereich. Erscheint nur, wenn Widgets hinzugefügt werden."
 
-#: inc/theme/template-functions.php:389 inc/theme/template-functions.php:404
-#: inc/theme/template-functions.php:427 inc/theme/widgets.php:82
+#: inc/theme/template-functions.php:394 inc/theme/template-functions.php:409
+#: inc/theme/template-functions.php:432 inc/theme/widgets.php:82
 #, php-format
 msgid "Permalink to %s"
 msgstr "Permalink zu %s"
 
-#: inc/theme/template-functions.php:694
+#: inc/theme/template-functions.php:699
 #, php-format
 msgid "%1$s"
 msgstr "%1$s"
 
-#: inc/theme/template-functions.php:699
+#: inc/theme/template-functions.php:704
 msgid "Your comment is awaiting moderation."
 msgstr "Ihr Kommentar wartet auf Freischaltung."
 
-#: inc/theme/template-functions.php:773
+#: inc/theme/template-functions.php:778
 msgid "Load More"
 msgstr "Mehr anzeigen"
 
-#: inc/theme/template-functions.php:1222
+#: inc/theme/template-functions.php:1227
 msgid ""
 "<i class=\"bb-icon-connection-remove\"></i><span class=\"bb-friend-button-tag"
 "\">Cancel connection request</span>"
@@ -15465,11 +15484,11 @@ msgstr ""
 "<i class=\"bb-icon-connection-remove\"></i><span class=\"bb-friend-button-tag"
 "\">Kontaktanfrage abbrechen</span>"
 
-#: inc/theme/template-functions.php:1226
+#: inc/theme/template-functions.php:1231
 msgid "Cancel connection request"
 msgstr "Kontaktanfrage abbrechen"
 
-#: inc/theme/template-functions.php:1233
+#: inc/theme/template-functions.php:1238
 msgid ""
 "<i class=\"bb-icon-connection-waiting\"></i><span class=\"bb-friend-button-"
 "tag\">Connect Requested</span>"
@@ -15477,11 +15496,11 @@ msgstr ""
 "<i class=\"bb-icon-connection-waiting\"></i><span class=\"bb-friend-button-"
 "tag\">Kontaktanfrage gestellt</span>"
 
-#: inc/theme/template-functions.php:1237
+#: inc/theme/template-functions.php:1242
 msgid "Connect Requested"
 msgstr "Kontaktanfrage gestellt"
 
-#: inc/theme/template-functions.php:1244
+#: inc/theme/template-functions.php:1249
 msgid ""
 "<i class=\"bb-icon-connected\"></i><span class=\"bb-friend-button-tag"
 "\">Connected</span>"
@@ -15489,11 +15508,11 @@ msgstr ""
 "<i class=\"bb-icon-connected\"></i><span class=\"bb-friend-button-tag"
 "\">Verbunden</span>"
 
-#: inc/theme/template-functions.php:1248
+#: inc/theme/template-functions.php:1253
 msgid "Connected"
 msgstr "Verbunden"
 
-#: inc/theme/template-functions.php:1255
+#: inc/theme/template-functions.php:1260
 msgid ""
 "<i class=\"bb-icon-connection-request\"></i><span class=\"bb-friend-button-"
 "tag\">Connect</span>"
@@ -15501,41 +15520,41 @@ msgstr ""
 "<i class=\"bb-icon-connection-request\"></i><span class=\"bb-friend-button-"
 "tag\">Verbinden</span>"
 
-#: inc/theme/template-functions.php:1259
+#: inc/theme/template-functions.php:1264
 msgid "Connect"
 msgstr "Verbinden"
 
-#: inc/theme/template-functions.php:1320
+#: inc/theme/template-functions.php:1325
 msgid "<b>0</b> followers"
 msgstr "<b>0</b> Personen folgen Ihnen"
 
-#: inc/theme/template-functions.php:1322
+#: inc/theme/template-functions.php:1327
 msgid "<b>1</b> follower"
 msgstr "<b>1</b> Person folgt Ihnen"
 
-#: inc/theme/template-functions.php:1324
+#: inc/theme/template-functions.php:1329
 #, php-format
 msgid "<b>%s</b> followers"
 msgstr "<b>%s</b> Personen folgen Ihnen"
 
-#: inc/theme/template-functions.php:1360
+#: inc/theme/template-functions.php:1365
 msgid "<b>0</b> following"
-msgstr "<b>0</b> Personen folgen Sie"
+msgstr "<b>0</b> Personen folgend"
 
-#: inc/theme/template-functions.php:1362
+#: inc/theme/template-functions.php:1367
 msgid "<b>1</b> following"
-msgstr "<b>1</b> Person folgen Sie"
+msgstr "<b>1</b> Person folgend"
 
-#: inc/theme/template-functions.php:1364
+#: inc/theme/template-functions.php:1369
 #, php-format
 msgid "<b>%s</b> following"
-msgstr "<b>%s</b> Personen folgen Sie"
+msgstr "<b>%s</b> Personen folgend"
 
-#: inc/theme/template-functions.php:1592 inc/theme/template-functions.php:1619
+#: inc/theme/template-functions.php:1597 inc/theme/template-functions.php:1624
 msgid "You need to be loggedin."
 msgstr "Sie müssen eingeloggt sein."
 
-#: inc/theme/template-functions.php:2139
+#: inc/theme/template-functions.php:2144
 msgid "Edit Post Privacy"
 msgstr "Datenschutz bearbeiten"
 
@@ -15762,7 +15781,7 @@ msgid "Please login to view sample content"
 msgstr "Bitte melden Sie sich an, um Beispielinhalte anzuzeigen"
 
 #: learndash/ld30/modules/login-modal.php:25
-#: learndash/ld30/template-single-course-sidebar.php:244
+#: learndash/ld30/template-single-course-sidebar.php:243
 #: woocommerce/myaccount/form-login.php:29
 #: woocommerce/myaccount/form-login.php:46
 #: woocommerce/myaccount/form-login.php:70
@@ -15872,8 +15891,8 @@ msgstr "Mehr anzeigen …"
 #: learndash/ld30/shortcodes/course_list_template.php:97
 #: learndash/ld30/shortcodes/course_list_template.php:249
 #: learndash/ld30/template-course-item.php:84
-#: learndash/ld30/template-single-course-sidebar.php:184
-#: learndash/ld30/template-single-course-sidebar.php:271
+#: learndash/ld30/template-single-course-sidebar.php:183
+#: learndash/ld30/template-single-course-sidebar.php:270
 #: lifterlms/course/lesson-preview.php:169
 msgid "Free"
 msgstr "Frei"
@@ -15897,7 +15916,7 @@ msgstr "Start %s "
 
 #: learndash/ld30/shortcodes/course_list_template.php:253
 #: learndash/ld30/template-course-item.php:88
-#: learndash/ld30/template-single-course-sidebar.php:122
+#: learndash/ld30/template-single-course-sidebar.php:121
 msgid "Not Enrolled"
 msgstr "Nicht eingeschrieben"
 
@@ -15963,51 +15982,51 @@ msgstr "Über den Dozenten / die Dozentin"
 msgid "0 %s"
 msgstr "0 %s"
 
-#: learndash/ld30/template-single-course-sidebar.php:55
+#: learndash/ld30/template-single-course-sidebar.php:54
 msgid "Preview this"
 msgstr "Vorschau"
 
-#: learndash/ld30/template-single-course-sidebar.php:88
+#: learndash/ld30/template-single-course-sidebar.php:87
 #: lifterlms/course/template-single-course-sidebar.php:77
 msgid "+"
 msgstr "+"
 
-#: learndash/ld30/template-single-course-sidebar.php:91
+#: learndash/ld30/template-single-course-sidebar.php:90
 #: lifterlms/course/template-single-course-sidebar.php:82
 msgid "enrolled"
 msgstr "Eingeschrieben"
 
-#: learndash/ld30/template-single-course-sidebar.php:135
+#: learndash/ld30/template-single-course-sidebar.php:134
 #, php-format
 msgid "Start %s"
 msgstr "%s starten"
 
-#: learndash/ld30/template-single-course-sidebar.php:154
+#: learndash/ld30/template-single-course-sidebar.php:153
 msgid "Login to Enroll"
 msgstr "Für die Einschreibung bitte anmelden"
 
-#: learndash/ld30/template-single-course-sidebar.php:181
+#: learndash/ld30/template-single-course-sidebar.php:180
 msgid "Open Registration"
 msgstr "Registrierung öffnen"
 
-#: learndash/ld30/template-single-course-sidebar.php:190
+#: learndash/ld30/template-single-course-sidebar.php:189
 msgid "This course is currently closed"
 msgstr "Dieser Kurs ist derzeit noch geschlossen"
 
-#: learndash/ld30/template-single-course-sidebar.php:244
+#: learndash/ld30/template-single-course-sidebar.php:243
 msgid "or "
 msgstr "oder "
 
-#: learndash/ld30/template-single-course-sidebar.php:325
+#: learndash/ld30/template-single-course-sidebar.php:324
 msgid "Includes"
 msgstr "Beinhaltet"
 
-#: learndash/ld30/template-single-course-sidebar.php:370
+#: learndash/ld30/template-single-course-sidebar.php:369
 #: lifterlms/course/template-single-course-sidebar.php:178
 msgid "Your browser does not support HTML5 video."
 msgstr "Ihr Browser unterstützt kein HTML5-Video."
 
-#: learndash/ld30/template-single-course-sidebar.php:374
+#: learndash/ld30/template-single-course-sidebar.php:373
 #: lifterlms/course/template-single-course-sidebar.php:182
 msgid "Video format is not supported, use Youtube video or MP4 format."
 msgstr ""
@@ -16847,142 +16866,146 @@ msgstr "E-Mail-Voreinstellungen"
 msgid "Privacy"
 msgstr "Datenschutz"
 
-#: template-parts/header-profile-menu.php:73
+#: template-parts/header-profile-menu.php:75
+msgid "Blocked Members"
+msgstr "Geblockte Mitglieder"
+
+#: template-parts/header-profile-menu.php:88
 msgid "Export Data"
 msgstr "Daten exportieren"
 
-#: template-parts/header-profile-menu.php:79
+#: template-parts/header-profile-menu.php:94
 msgid "Delete Account"
 msgstr "Konto löschen"
 
-#: template-parts/header-profile-menu.php:99
+#: template-parts/header-profile-menu.php:114
 msgid "Timeline"
 msgstr "Chronik"
 
-#: template-parts/header-profile-menu.php:104
+#: template-parts/header-profile-menu.php:119
 msgid "Personal"
 msgstr "Persönliches"
 
-#: template-parts/header-profile-menu.php:124
+#: template-parts/header-profile-menu.php:139
 msgid "Mentions"
 msgstr "Erwähnungen"
 
-#: template-parts/header-profile-menu.php:129
+#: template-parts/header-profile-menu.php:144
 msgid "Following"
 msgstr "Folgen"
 
 #. translators: %s: Unread notification count for the current user
-#: template-parts/header-profile-menu.php:151
+#: template-parts/header-profile-menu.php:166
 #, php-format
 msgid "Notifications %s"
 msgstr "Benachrichtigungen %s"
 
 #. translators: %s: Unread notification count for the current user
-#: template-parts/header-profile-menu.php:156
+#: template-parts/header-profile-menu.php:171
 #, php-format
 msgid "Unread %s"
 msgstr "Ungelesen %s"
 
-#: template-parts/header-profile-menu.php:161
+#: template-parts/header-profile-menu.php:176
 msgid "Unread"
 msgstr "Als ungelesen markieren"
 
-#: template-parts/header-profile-menu.php:175
+#: template-parts/header-profile-menu.php:190
 msgid "Read"
 msgstr "Als gelesen markieren"
 
 #. translators: %s: Unread message count for the current user
-#: template-parts/header-profile-menu.php:195
-#: template-parts/header-profile-menu.php:200
+#: template-parts/header-profile-menu.php:210
+#: template-parts/header-profile-menu.php:215
 #, php-format
 msgid "Messages %s"
 msgstr "Nachrichten %s"
 
-#: template-parts/header-profile-menu.php:219
+#: template-parts/header-profile-menu.php:234
 msgid "New Message"
 msgstr "Neue Nachricht"
 
-#: template-parts/header-profile-menu.php:223
+#: template-parts/header-profile-menu.php:238
 msgid "Site Notices"
 msgstr "Website-Hinweise"
 
 #. translators: %s: Pending friend request count for the current user
-#: template-parts/header-profile-menu.php:244
+#: template-parts/header-profile-menu.php:259
 #, php-format
 msgid "Connections %s"
 msgstr "Kontakte %s"
 
 #. translators: %s: Pending friend request count for the current user
-#: template-parts/header-profile-menu.php:249
+#: template-parts/header-profile-menu.php:264
 #, php-format
 msgid "Pending Requests %s"
 msgstr "Ausstehende Anfragen %s"
 
-#: template-parts/header-profile-menu.php:254
+#: template-parts/header-profile-menu.php:269
 msgid "No Pending Requests"
 msgstr "Keine ausstehenden Anfragen"
 
-#: template-parts/header-profile-menu.php:265
+#: template-parts/header-profile-menu.php:280
 msgid "My Connections"
 msgstr "Meine Kontakte"
 
-#: template-parts/header-profile-menu.php:286
+#: template-parts/header-profile-menu.php:301
 msgid "No Pending Invites"
 msgstr "Keine ausstehenden Einladungen"
 
 #. translators: %s: Group invitation count for the current user
-#: template-parts/header-profile-menu.php:291
+#: template-parts/header-profile-menu.php:306
 #, php-format
 msgid "Groups %s"
 msgstr "Gruppen  %s"
 
 #. translators: %s: Group invitation count for the current user
-#: template-parts/header-profile-menu.php:297
+#: template-parts/header-profile-menu.php:312
 #, php-format
 msgid "Pending Invites %s"
 msgstr "Anstehende Einladungen %s"
 
-#: template-parts/header-profile-menu.php:317
+#: template-parts/header-profile-menu.php:332
 msgid "Create Group"
 msgstr "Gruppe erstellen"
 
-#: template-parts/header-profile-menu.php:342
+#: template-parts/header-profile-menu.php:357
 msgid "My Discussions"
 msgstr "Meine Diskussionen"
 
-#: template-parts/header-profile-menu.php:345
+#: template-parts/header-profile-menu.php:360
 msgid "My Replies"
 msgstr "Meine Antworten"
 
-#: template-parts/header-profile-menu.php:349
+#: template-parts/header-profile-menu.php:364
 msgid "My Favorites"
 msgstr "Meine Favoriten"
 
-#: template-parts/header-profile-menu.php:373
+#: template-parts/header-profile-menu.php:388
 msgid "Photos"
 msgstr "Fotos"
 
-#: template-parts/header-profile-menu.php:378
+#: template-parts/header-profile-menu.php:393
 msgid "My Photos"
 msgstr "Meine Fotos"
 
-#: template-parts/header-profile-menu.php:382
+#: template-parts/header-profile-menu.php:397
 msgid "My Albums"
 msgstr "Meine Alben"
 
-#: template-parts/header-profile-menu.php:401
+#: template-parts/header-profile-menu.php:416
 msgid "Documents"
 msgstr "Dokumente"
 
-#: template-parts/header-profile-menu.php:406
+#: template-parts/header-profile-menu.php:421
 msgid "My Documents"
 msgstr "Meine Dokumente"
 
-#: template-parts/header-profile-menu.php:424
+#: template-parts/header-profile-menu.php:439
 msgid "Email Invites"
 msgstr "E-Mail-Einladungen"
 
-#: template-parts/header-profile-menu.php:429
+#: template-parts/header-profile-menu.php:444
 msgid "Send Invites"
 msgstr "Einladungen versenden"
 
@@ -17019,31 +17042,41 @@ msgstr "Gelöschte Gruppe"
 msgid "Deleted User"
 msgstr "Gelöschter Benutzer"
 
-#: template-parts/unread-messages.php:328
+#: template-parts/unread-messages.php:306
+#: template-parts/unread-messages.php:385
+msgid "Suspended Member"
+msgstr "Gesperrtes Mitglied"
+
+#: template-parts/unread-messages.php:308
+#: template-parts/unread-messages.php:387
+msgid "Blocked Member"
+msgstr "Geblocktes Mitglied"
+
+#: template-parts/unread-messages.php:339
 msgid "sent a photo"
 msgstr "sendete ein Foto"
 
-#: template-parts/unread-messages.php:330
+#: template-parts/unread-messages.php:341
 msgid "sent some photos"
 msgstr "sendete einige Fotos"
 
-#: template-parts/unread-messages.php:342
+#: template-parts/unread-messages.php:353
 msgid "sent a document"
 msgstr "sendete ein Dokument"
 
-#: template-parts/unread-messages.php:344
+#: template-parts/unread-messages.php:355
 msgid "sent some documents"
 msgstr "sendete einige Dokumente"
 
-#: template-parts/unread-messages.php:353
+#: template-parts/unread-messages.php:364
 msgid "sent a gif"
 msgstr "sendete eine GIF"
 
-#: template-parts/unread-messages.php:359
+#: template-parts/unread-messages.php:378
 msgid "You"
 msgstr "Sie"
 
-#: template-parts/unread-messages.php:375
+#: template-parts/unread-messages.php:402
 msgid "No new messages!"
 msgstr "Keine neuen Nachrichten!"
 

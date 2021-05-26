@@ -39,6 +39,35 @@
                 }
             }
 
+            //Vertical nav condition
+            function checkVerticalMenu() {
+
+                if( $( window ).width() > 748 && $elem.parent().hasClass( 'vertical' ) ) {
+
+                    if( $elem.find( 'li.hideshow' ).length ) {
+
+                        var verticalmenuhtml = '';
+
+                        $.each( $elem.find( 'li.hideshow ul' ).children(), function () {
+                            verticalmenuhtml +=  $( this ).wrap('<p/>').parent().html();
+                            $( this ).parent().remove();
+                        } );
+
+                        $elem.append( verticalmenuhtml );
+                        $elem.append( $( $( $elem.children( 'li.hideshow' ) ).children( 'ul' ) ).html() );
+                        $elem.children( 'li.hideshow' ).remove();
+
+                    } else {
+                        return;
+                    }
+
+                }
+
+            }
+
+            window.addEventListener( 'resize', checkVerticalMenu );
+            window.addEventListener( 'load', checkVerticalMenu );
+
         } );
     }
 }( jQuery ) );

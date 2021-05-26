@@ -11,9 +11,9 @@ $post_title = '';
 if ( empty( $_GET['s'] ) || '' === $_GET['s'] ) {
 	$post_title = __( 'No results found', "buddyboss-theme" );
 } elseif ( BP_Search::instance()->has_search_results() ) {
-	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss-theme" ), $_GET['s'] );
+	$post_title = sprintf( __( 'Showing results for \'%s\'', "buddyboss-theme" ), esc_html( $_GET['s'] ) );
 } else {
-	$post_title = sprintf( __( 'No results for \'%s\'', "buddyboss-theme" ), $_GET['s'] );
+	$post_title = sprintf( __( 'No results for \'%s\'', "buddyboss-theme" ), esc_html( $_GET['s'] ) );
 }
 ?>
 

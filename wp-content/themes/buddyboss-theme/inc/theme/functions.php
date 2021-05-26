@@ -269,6 +269,10 @@ function buddyboss_theme_scripts() {
 	// Tribe Events Main
     if ( class_exists( 'Tribe__Events__Main' ) ) {
         wp_enqueue_style( 'buddyboss-theme-eventscalendar', get_template_directory_uri() . '/assets/css' . $rtl_css . '/eventscalendar' . $mincss . '.css', '', buddyboss_theme()->version() );
+		
+		if ( function_exists('tribe_events_views_v2_is_enabled') && tribe_events_views_v2_is_enabled() ) {
+			wp_enqueue_style( 'buddyboss-theme-eventscalendar-v2', get_template_directory_uri() . '/assets/css' . $rtl_css . '/eventscalendar-v2' . $mincss . '.css', '', buddyboss_theme()->version() );
+		}
     }
 
     if ( class_exists( 'LifterLMS' ) ){
@@ -320,10 +324,15 @@ function buddyboss_theme_scripts() {
 	wp_enqueue_script( 'boss-sticky-js', get_template_directory_uri() . '/assets/js/vendors/sticky-kit.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'boss-jssocials-js', get_template_directory_uri() . '/assets/js/vendors/jssocials.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'buddyboss-theme-main-js', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-    wp_enqueue_script( 'boss-validate-js', get_template_directory_uri() . '/assets/js/vendors/validate.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-    wp_enqueue_script( 'boss-magnific-popup-js', get_template_directory_uri() . '/assets/js/vendors/magnific-popup.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-    wp_enqueue_script( 'select2-js', get_template_directory_uri() . '/assets/js/vendors/select2.full.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-    wp_enqueue_script( 'progressbar-js', get_template_directory_uri() . '/assets/js/vendors/progressbar.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+	wp_enqueue_script( 'boss-validate-js', get_template_directory_uri() . '/assets/js/vendors/validate.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+	
+	if ( ! wp_script_is( 'bp-nouveau-magnific-popup' ) ) {
+		// 'bp-nouveau-magnific-popup', using this handler for platfrom, platfrom pro and theme
+		wp_enqueue_script( 'bp-nouveau-magnific-popup', get_template_directory_uri() . '/assets/js/vendors/magnific-popup.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+	}
+	
+	wp_enqueue_script( 'select2-js', get_template_directory_uri() . '/assets/js/vendors/select2.full.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
+	wp_enqueue_script( 'progressbar-js', get_template_directory_uri() . '/assets/js/vendors/progressbar.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'mousewheel-js', get_template_directory_uri() . '/assets/js/vendors/mousewheel.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	//Add polyfill for Event() constructor in IE 11 and below
 	if (preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT']) || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false)) {
@@ -411,6 +420,9 @@ add_action( 'wp_enqueue_scripts', 'buddyboss_theme_scripts' );
  */
 function bb_elementor_admin_scripts() {
 	if ( defined('ELEMENTOR_VERSION') ) {
+		$rtl_css      = is_rtl() ? '-rtl' : '';
+		$minified_css = buddyboss_theme_get_option( 'boss_minified_css' );
+		$mincss       = $minified_css ? '.min' : '';
 		wp_enqueue_style( 'bb-elementor-admin', get_template_directory_uri() . '/assets/css' . $rtl_css . '/elementor-admin' . $mincss . '.css', '', buddyboss_theme()->version() );
 	}
 }

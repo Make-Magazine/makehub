@@ -213,7 +213,7 @@
 			var $width = 150;
 			// $( '#primary-menu' ).BossSocialMenu( $width );
 			$( '#activity-sub-nav' ).BossSocialMenu( 90 );
-			$( '#object-nav:not(.vertical) > ul' ).BossSocialMenu( 35 );
+			$( '#object-nav > ul' ).BossSocialMenu( 35 );
 			// $( '.widget_bp_groups_widget #alphabetical-groups' ).after( '<div class="bb-widget-dropdown"><a class="bb-toggle-dropdown"><i class="bb-icon-menu-dots-v"></i></a><div class="bb-dropdown"></div></div>' ).appendTo( '.bb-widget-dropdown .bb-dropdown' );
 			$( '.toggle-button' ).panelslider( {bodyClass: 'ps-active', clickClose: true, onOpen: null} );
 

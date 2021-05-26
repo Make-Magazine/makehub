@@ -297,9 +297,15 @@ if ( !class_exists( '\BuddyBossTheme\BaseTheme' ) ) {
 			require_once( $this->_inc_dir . '/maintenance-mode/maintenance-mode.php' );
 
 			// WooCommerce helpers and widgets
-			if ( function_exists( 'WC' ) ){
+			if ( function_exists( 'WC' ) ) {
 				require_once( $this->_inc_dir . '/plugins/woocommerce-helper.php' );
 				$this->_woocommerce_helper = new \BuddyBossTheme\WooCommerceHelper();
+			}
+
+			// The Events Calendar
+			if ( class_exists( 'Tribe__Events__Main' ) ) {
+				require_once( $this->_inc_dir . '/plugins/events-calendar.php' );
+				$this->_tribe_events_helper = new \BuddyBossTheme\EventsCalendarHelper();
 			}
 
             // The Events Calendar

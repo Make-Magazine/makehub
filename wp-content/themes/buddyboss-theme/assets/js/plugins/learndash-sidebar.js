@@ -12,6 +12,7 @@ var BBLMS_Sidebar;
             //this.membersExpand();
             //this.learnDashNextPrevData();
             this.setupLdSidebarGroupCookie();
+            this.scrollToLesson();
 
             // $( document ).on( 'click', '.lms-topic-sidebar-wrapper .lms-lesson-item>a,.lms-topic-sidebar-wrapper .lms-topic-item>a,.lms-topic-sidebar-wrapper .lms-quiz-item>a', function ( e ) {
             //     e.preventDefault();
@@ -129,7 +130,42 @@ var BBLMS_Sidebar;
                 var dataCourseId = $(this).attr('data-course-id');
                 $.cookie('bp-ld-active-course-groups-'+dataCourseId, dataGroupId,{ path: '/'});
             } );
-        }
+        },
+        scrollToLesson: function() {
+            setTimeout(function(){
+                var activeTopic = $('.lms-topic-sidebar-wrapper .lms-lessions-list .bb-lessons-list .lms-topic-item.current' );
+                var activeLesson = $('.lms-topic-sidebar-wrapper .lms-lessions-list .bb-lessons-list .lms-lesson-item.current ' );
+                var activeQuiz = $('.lms-topic-sidebar-wrapper .lms-course-quizzes-list .lms-quiz-item.current ' );
+                var activeQuizinLesson = $('.lms-topic-sidebar-wrapper .lms-lessions-list .bb-lessons-list .lms-quiz-item.current ' );
+                var headerStickyHeight = 0;
+                var adminbarHeight = 0;
+                if( $('body').hasClass('sticky-header') ) {
+                    headerStickyHeight = $('header.site-header').height();
+                } else {
+                    if( $( window ).scrollTop() > $('header.site-header').height() ) {
+                        headerStickyHeight = 0;
+                    } else {
+                        headerStickyHeight = $('header.site-header').height();
+                    }
+                }
+                if( $('#wpadminbar').length ) {
+                    adminbarHeight = $('#wpadminbar').height();
+                }
+                //Reset Page scroll
+                $( window ).scrollTop(0);
+                //Scroll to active Lesson, Topic or Quiz
+                if( activeTopic.length ) {
+                    $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: activeTopic.offset().top - ( headerStickyHeight + adminbarHeight ) });
+                } else if( activeLesson.length ){
+                    $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: activeLesson.offset().top - ( headerStickyHeight + adminbarHeight ) });
+                } else if( activeQuiz.length ){
+                    $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: activeQuiz.offset().top - ( headerStickyHeight + adminbarHeight ) });
+                } else if ( activeQuizinLesson.length ) {
+                    $( '.lms-topic-sidebar-wrapper .lms-topic-sidebar-data' ).animate({ scrollTop: activeQuizinLesson.offset().top - ( headerStickyHeight + adminbarHeight ) });
+                }
+            },100);
+            
+        },
     }
 
     function fetchContent(e){

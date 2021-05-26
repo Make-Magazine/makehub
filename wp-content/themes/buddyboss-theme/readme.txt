@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 5.7
-Version: 1.6.5
+Tested up to: 5.7.2
+Version: 1.6.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,25 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.6.6 =
+* Profiles - Improved mobile layout when profile navigation configured to show vertically
+* Members - Fixed members listing online indication UI issue
+* Groups - Activity feed alignment issue when group navigation configured to show vertically
+* Network Search - Fixed styling issue with members search results
+* Network Search - Small code improvement
+* LearnDash - Fixed focus mode scroll issue in the Course navigation
+* LearnDash - Fixed course breadcrumbs background color issue
+* LearnDash - Fixed LearnDash 'Course Grid' plugin template issue
+* LifterLMS - Fixed view and share Certificates issue
+* WooCommerce - Fixed outdated template notice after WooCommerce latest update
+* Elementor - Fixed post and page error on edit with Elementor
+* Elementor - Fixed issue with the facebook logo hidden when post edited
+* Events Calendar Pro - Fixed layout when 'Enable updated designs for all calendar views' checked
+* Events Calendar Pro - Fixed search style issue on events pages
+* Events Calendar Pro - Fixed redirection issue with Login to Purchase
+* Translations - Updated German (formal) language files
+* Compatibility - Fixed magnific popup js conflict with Platform
 
 = 1.6.5 =
 * Forums - Fixed closed discussion reply issue shows two instances on photo upload

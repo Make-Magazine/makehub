@@ -4648,6 +4648,8 @@ a.user-link {
 
 .entry-header {
   margin-bottom: 2.1875rem; }
+  .entry-header:empty {
+    display: none; }
   .post-grid .entry-header {
     margin-bottom: 1.25rem; }
   .entry-header.has-parent-forums {
@@ -7986,10 +7988,10 @@ img.jssocials-share-logo {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.jssocials-share-logo.fa-twitter:before {
+.jssocials-share-logo.fa.fa-twitter:before {
   content: '\e83e'; }
 
-.jssocials-share-logo.fa-facebook:before {
+.jssocials-share-logo.fa.fa-facebook:before {
   content: '\e83f'; }
 
 .full-fi .site-content-grid > .bb-share-container,

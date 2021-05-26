@@ -96,8 +96,7 @@ global $post;
 			}
 			?>
 
-			<header class="entry-header">
-				<?php
+			<header class="entry-header"><?php
 				if ( is_singular() && ! is_related_posts() ) :
 					the_title( '<h1 class="entry-title">', '</h1>' );
 				else :
