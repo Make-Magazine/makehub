@@ -214,8 +214,10 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
 
         //create the date/time instance
         $d = EE_Datetime::new_instance(
-                        array('EVT_ID' => $eventID, 'DTT_name' => $ticketName, 'DTT_EVT_start' => $start_date,
-                            'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
+                        array('EVT_ID' => $eventID, 
+                              'DTT_name' => $ticketName, 
+                              'DTT_EVT_start' => $start_date,
+                              'DTT_EVT_end' => $end_date, 'DTT_reg_limit' => $ticketMax));
 
         $d->save();
         $tkt->_add_relation_to($d, 'Datetime'); //link the datetime and the ticket instances
@@ -226,9 +228,13 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
     //update the ticket end date with the start of the event
     $event = EEM_Event::instance()->get_one_by_ID($eventID);
     if ($event) {
-        $date = $event->first_datetime();
+        $date = $tkt->first_datetime();                
+        
         if(!is_null($date)){
-            $start_date = new DateTime($date->start_date() . 'T00:00:00');
+            $start_date = $date->start_date_and_time();                                    
+            $time = strtotime($start_date);
+            $start_date = date("F j, Y h:i a", strtotime('+30 minutes', $time));
+            
             $tkt->set('TKT_end_date', $start_date);
             $tkt->save();
         }else{
