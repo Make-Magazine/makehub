@@ -249,7 +249,12 @@
                                     b { text-decoration: underline; }
                                     .tickets-remaining { color: $color-red; }
                                 }
-                                ul { margin-bottom: 5px; }
+                                ul { 
+									margin-bottom: 5px;
+									li {
+										p { margin-bottom: 0px}
+									}
+								}
                             }
                         }
                     }
@@ -309,20 +314,24 @@
     }
     strong { display: block; }
     a { margin-left: 0px; }
+	.display-tckt-slctr-tkt-details {
+		display: none;
+		.tckt-slctr-tkt-details-tr {
+			.tckt-slctr-tkt-details-tbl {
+				th, td {
+					display: none;
+					&:nth-child(1), &:nth-child(2) {
+						display: table-cell;
+					}
+				}
+			}
+			.ticket-details-label-spn { width: auto; }
+			.dashicons { margin-right: 0px; }
+		}
+	}
 }
 
-.tckt-slctr-tkt-details-tr {
-    .tckt-slctr-tkt-details-tbl {
-        th, td {
-            display: none;
-            &:nth-child(1), &:nth-child(2) {
-                display: table-cell;
-            }
-        }
-    }
-    .ticket-details-label-spn { width: auto; }
-    .dashicons { margin-right: 0px; }
-}
+
 
 // Event Statuses
 .ee-status { 
