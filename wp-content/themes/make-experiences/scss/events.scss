@@ -249,7 +249,12 @@
                                     b { text-decoration: underline; }
                                     .tickets-remaining { color: $color-red; }
                                 }
-                                ul { margin-bottom: 5px; }
+                                ul { 
+									margin-bottom: 5px;
+									li {
+										p { margin-bottom: 0px}
+									}
+								}
                             }
                         }
                     }
