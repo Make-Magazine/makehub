@@ -156,20 +156,19 @@
                             .sub-menu {
                                 li.menu-item {
                                     font-weight: 400;
-                                    position: relative;
                                     line-height: 30px;
                                     a { font-family: Roboto; }
                                     &.menu-item-has-children:not(.hideshow)::after {
                                         line-height: 1;
                                         right: 10px;
-                                        top: 0px;
+                                        top: -35px;
+                                        float: right;
                                         content: '\f054';
                                         font-family: FontAwesome;
                                         font-weight: 400;
-                                        speak: none;
                                         display: inline-block;
                                         color: #939597;
-                                        position: absolute;
+                                        position: relative;
                                         font-size: 16px;
                                         -webkit-font-smoothing: antialiased;
                                         -moz-osx-font-smoothing: grayscale;
@@ -184,13 +183,14 @@
                                 .sub-menu {
                                     transform: none;
                                     left: 100%;
-                                    top: 0px;
+                                    top: 6px;
                                     border-top-left-radius: 0px;
                                     border-bottom-left-radius: 0px;
                                     width: 50%;
                                     li {
                                         a {
                                             font-weight: 300;
+                                            line-height: 18px;
                                         }
                                     }
                                 }
