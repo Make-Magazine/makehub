@@ -231,19 +231,27 @@
                             left: 100%;
                             padding: 10px;
                             width: 200%;
-                        }
-                        &:hover .nav-hidden-text{
-                            display: block; 
+                            border: solid 2px #fff;
                             &::after {
-                                border-color: #000 #000 transparent transparent;
-                                -webkit-transform-origin: 0 0;
-                                -ms-transform-origin: 0 0;
-                                transform-origin: 0 0;
+                                content: " ";
+                                border-color: #000;
                                 -webkit-transform: rotate(-45deg);
                                 -ms-transform: rotate(-45deg);
                                 transform: rotate(-45deg);
-                                z-index: 1002;
+                                z-index: 9999999999999999999;
+                                position: absolute;
+                                top: 12px;
+                                left: -8px;
+                                height: 15px;
+                                width: 15px;
+                                background: #000;
                             }
+                        }
+                        .nav-hidden-text::after {
+                            
+                        }
+                        &:hover .nav-hidden-text{
+                            display: block; 
                         }
                     }
                 }
