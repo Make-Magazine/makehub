@@ -19,6 +19,8 @@ wp-content/advanced-cache.php
 wp-content/object-cache.php
 wp-content/mu-plugins/*
 wp-content/mysql.sql
+wp-content/themes/make-experiences/nbproject/*
+wp-content/universal-assets/v1/nbproject/*
 
 # wp core (as of 3.4.1)
 /db-config.php
@@ -110,3 +112,4 @@ node_modules/
 
 wp-content/themes/make-experiences/devScripts/uploads
 wp-content/plugins/indeed-membership-pro/temporary_files
+/wp-content/universal-assets/v1/nbproject/private/

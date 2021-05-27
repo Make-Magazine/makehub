@@ -4,7 +4,7 @@ function isValidEmailAddress(emailAddress) {
 }
 
 jQuery(document).ready(function () {
-	jQuery('.signin-button').attr("href", function(i, href) {
+	jQuery('#LoginBtn').attr("href", function(i, href) {
 		if(window.location.pathname == "/join/") { // if they logged in from the join page, send them to the referrer if it exists
 			var redirect_url = window.location.protocol + "//" + window.location.host + "/members/me/";
 			if(document.referrer && document.referrer != "") { redirect_url = document.referrer; }
