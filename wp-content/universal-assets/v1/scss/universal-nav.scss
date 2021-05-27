@@ -187,6 +187,12 @@
                                     top: 0px;
                                     border-top-left-radius: 0px;
                                     border-bottom-left-radius: 0px;
+                                    width: 50%;
+                                    li {
+                                        a {
+                                            font-weight: 300;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -221,42 +227,6 @@
                         padding: .5625rem .9375rem;
                         white-space: normal;
                         max-width: 360px;
-                        position: relative;
-                        .nav-hidden-text {
-                            display: none;
-                            background: #000;
-                            color: #fff;
-                            font-weight: 300;
-                            position: absolute;
-                            top: -10%;
-                            left: 100%;
-                            padding: 10px;
-                            width: 200%;
-                            border: solid 2px #fff;
-                            &::after {
-                                content: " ";
-                                border-color: #000;
-                                -webkit-transform: rotate(-45deg);
-                                -ms-transform: rotate(-45deg);
-                                transform: rotate(-45deg);
-                                z-index: 9999999999999999999;
-                                position: absolute;
-                                top: 12px;
-                                left: -8px;
-                                height: 15px;
-                                width: 15px;
-                                background: #000;
-                            }
-                            @media screen and (max-width: 580px) {
-                                width: 100%;
-                            }
-                        }
-                        .nav-hidden-text::after {
-                            
-                        }
-                        &:hover .nav-hidden-text{
-                            display: block; 
-                        }
                     }
                 }
             }
@@ -390,11 +360,11 @@
                             &.show-submenu > .sub-menu {
                                 opacity: 1;
                                 visibility: visible;
+                                left: 10%;
                             }
 
                             .sub-menu {
                                 transform: translate(0%);
-                                left: auto;
                                 right: auto;
                                 top: 50px;
                                 &::before {
@@ -407,6 +377,7 @@
                                 .sub-menu {
                                     top: 0px;
                                     right: -79%;
+                                    left: 100%;
                                 }
                             }
                         }

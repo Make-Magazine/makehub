@@ -132,6 +132,8 @@ jQuery(document).ready(function(){
 	
 	// make some room for our fixed header
 	jQuery("#masthead.site-header-custom").nextAll().not("script, style").first().css("padding-top", "76px");
+        
+        
 	
 	// mobile
 	jQuery( document ).on('click', '.mobile-toggle-panel', function (e) {
@@ -158,6 +160,8 @@ jQuery(document).ready(function(){
 		jQuery( '.bottom-menu.menu-item-has-children' ).not(this).removeClass("show-submenu");
 		jQuery( this ).toggleClass("show-submenu");
 	});
+        
+        jQuery( '.sub-menu-full-height' ).css('height',jQuery( '.sub-menu-full-height' ).closest(".sub-menu-parent").height() + 8);
 	
 	// still got to get our credit from make projects
 	var source = window.location.hostname.split(".")[0];
@@ -167,6 +171,7 @@ jQuery(document).ready(function(){
 	} else {
 		jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");	
 	}
+        
 	
 });
 
