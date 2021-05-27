@@ -226,8 +226,9 @@
                             display: none;
                             background: #000;
                             color: #fff;
-                            top: -10%;
+                            font-weight: 300;
                             position: absolute;
+                            top: -10%;
                             left: 100%;
                             padding: 10px;
                             width: 200%;
@@ -245,6 +246,9 @@
                                 height: 15px;
                                 width: 15px;
                                 background: #000;
+                            }
+                            @media screen and (max-width: 580px) {
+                                width: 100%;
                             }
                         }
                         .nav-hidden-text::after {
