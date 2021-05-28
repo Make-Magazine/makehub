@@ -2,7 +2,7 @@
 ////////////////////////////////////////////////////////////////////
 // Adds SMTP Settings
 ////////////////////////////////////////////////////////////////////
-//add_action('phpmailer_init', 'send_smtp_email');
+add_action('phpmailer_init', 'send_smtp_email');
 
 function send_smtp_email($phpmailer) {
   // Define that we are sending with SMTP

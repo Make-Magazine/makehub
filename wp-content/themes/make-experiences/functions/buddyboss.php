@@ -162,7 +162,7 @@ add_filter( 'bp_attachments_get_cover_image_dimensions', 'bp_custom_get_cover_im
 function add_group_url_email_token( $formatted_tokens, $tokens, $obj ) {
 	if ( isset( $formatted_tokens['group.name'] ) ) {	
 		$group_id = BP_Groups_Group::group_exists( sanitize_title( $formatted_tokens['group.name'] ) );
-		$formatted_tokens['group.url']  = 'https://devmakehub.wpengine.com/wp-login.php?redirect_to='.bp_get_group_permalink( groups_get_group( $group_id ) );
+		$formatted_tokens['group.url']  = get_site_url().'/wp-login.php?redirect_to='.bp_get_group_permalink( groups_get_group( $group_id ) );
 	}
 	return $formatted_tokens;
 }
