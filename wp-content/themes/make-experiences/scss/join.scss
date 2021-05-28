@@ -109,6 +109,19 @@
             }
         }
     }
+    
+    .button-row {
+        display: inline-flex;
+        justify-content: space-between;
+        width: 100%;
+        .membership-btn {
+            width: 50%;
+            margin: 0 15px;
+            @media screen and (max-width: 768px) {
+                width: 100%;
+            }
+        }
+    }
 
     .join-box {
         padding: 10px 20px 20px;
@@ -121,6 +134,9 @@
             position: relative;
             z-index: 1;
             color: #fff;
+        }
+        h5 {
+            font-size: 18px;
         }
         &::after {
             content: "";
