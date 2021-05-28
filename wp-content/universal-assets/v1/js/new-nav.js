@@ -144,7 +144,9 @@ jQuery(document).ready(function(){
 	// Subnav
 	jQuery("#site-logo").append(jQuery("#universal-subnav"));
 	jQuery("#site-logo").on( "mouseenter mouseleave", function() {
-		jQuery("#universal-subnav").toggle();
+		if (jQuery(window).width() > 800) {
+			jQuery("#universal-subnav").toggle();
+		}
 	});
 	if (jQuery(window).width() < 800) {
 		jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));

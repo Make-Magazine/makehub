@@ -1,64 +1,91 @@
 .nav-level-2 {
-	height: 45px;
-	background-color: #333;
-	position: fixed;
-	z-index: 9999;
-	top: 76px;
-	left: 0%;
-	width: 100%;
-	display: none;
-	#menu-secondary_universal_menu /*, #menu-secondary_universal_menu-emulator*/ {
-		height: 100%;
-		width: 100%;
-		display: flex;
-		flex-wrap: nowrap;
-		align-items: center;
-		&::before {
-			left: 60px;
-			content: ' ';
-			position: absolute;
-			width: 0;
-			height: 0;
-			top: 0;
-			border: 7px solid #000;
-			border-color: #000 #000 transparent transparent;
-			-webkit-transform-origin: 0 0;
-			-ms-transform-origin: 0 0;
-			transform-origin: 0 0;
-			-webkit-transform: rotate(-45deg);
-			-ms-transform: rotate(-45deg);
-			transform: rotate(-45deg);
-			z-index: 1002;
-		}
-		li {
-			a {
-				color: #fff;
-				font-weight: 300;
-				line-height: 1.2em;
-				padding: 0;
-				text-decoration: none;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				opacity: 1;
-				&:hover, &:focus, &:active {
-					background: transparent;
-					opacity: .7;
-				}
-				span {
-					padding: 0 23px;
-					transition: font-weight .1s ease-in-out;
-				}
-			}
-			&.active {
-				a { opacity: .7; }
-			}
-			&.menu-item-has-children {
-				a span:first-of-type { width: 140px; }
-				&.open a {
-					background: transparent !important;
-				}
-			}
-		}
-	}
+    height: 45px;
+    background-color: #333;
+    position: fixed;
+    z-index: 9999;
+    top: 76px;
+    left: 0%;
+    width: 100%;
+    display: none;
+    #menu-secondary_universal_menu /*, #menu-secondary_universal_menu-emulator*/ {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        &::before {
+            left: 60px;
+            content: ' ';
+            position: absolute;
+            width: 0;
+            height: 0;
+            top: 0;
+            border: 7px solid #000;
+            border-color: #000 #000 transparent transparent;
+            -webkit-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            transform-origin: 0 0;
+            -webkit-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+            z-index: 1002;
+        }
+        li {
+            a {
+                color: #fff;
+                font-weight: 300;
+                line-height: 1.2em;
+                padding: 0;
+                text-decoration: none;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 1;
+                &:hover, &:focus, &:active {
+                    background: transparent;
+                    opacity: .7;
+                }
+                span {
+                    padding: 0 23px;
+                    transition: font-weight .1s ease-in-out;
+                }
+            }
+            &.active {
+                a { opacity: .7; }
+            }
+            &.menu-item-has-children {
+                &.open a {
+                    background: transparent !important;
+                    min-height: 30px;
+                }
+            }
+        }
+    }
+}
+
+// If you're crazy enough to give your subnav a dropdown
+#menu-secondary_universal_menu{
+    .dropdown {
+        &:focus { background: #333; }
+        a.dropdown-toggle {
+            span.caret {
+                padding: 0px;
+                width: 5px;
+                height: 5px;
+                margin-right: 20px;
+                margin-left: -15px;
+            }
+        }
+        .dropdown-menu {
+            background: #333;
+            min-width: 125px;
+            li { 
+                border: 0px;
+                &:hover {
+                    background: #666;
+                }
+            }
+        }
+        .dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover { background-color: #666; }
+    }
 }
