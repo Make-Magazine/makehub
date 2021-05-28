@@ -116,10 +116,14 @@
         width: 100%;
         .membership-btn {
             width: 50%;
-            margin: 0 15px;
-            @media screen and (max-width: 768px) {
-                width: 100%;
-            }
+            margin: 0 15px; 
+        }
+        @media screen and (max-width: 768px) {
+            flex-direction: column;
+           .membership-btn { 
+               width: 95%;
+               margin-top: 10px;
+           }
         }
     }
 
@@ -136,7 +140,7 @@
             color: #fff;
         }
         h5 {
-            font-size: 18px;
+            font-size: 22px;
         }
         &::after {
             content: "";
