@@ -56,8 +56,6 @@ function attendee_approved( $registration) {
     if(!$havemeta){
         $attendeeID = $attendee->get('ATT_ID');
         add_user_meta($user_id,'wp_EE_Attendee_ID',$attendeeID);
-    }else{
-       error_log('$havemeta='.$havemeta); 
     }
         
     // give them a free membership    
