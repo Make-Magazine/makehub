@@ -39,7 +39,7 @@ function attendee_approved( $registration) {
 		update_user_meta( $user_id, 'last_name', $attendee->lname() );
 
 		$subject = 'Welcome to Maker Campus on Make: Community.';
-		$my_groups = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
+		$my_groups = 'https://devmakehub.wpengine.com/wp-login.php?redirect_to='.(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]/members/me/groups/";
 		$message = 'Hello ' . $attendee->fname().', <br /><br />Thank you for registering for an upcoming Maker Campus program.  Included with the event ticket is a free membership to Make:Community. This is where you will find the event information, resources and community.  Please login to access Make Community and your Maker Campus <a href="'. $my_groups .'">event groups</a>. <br /><br />
 <b>Username:</b> ' . $username . '<br />
 <b>Temporary Password:</b> ' . $random_password;
