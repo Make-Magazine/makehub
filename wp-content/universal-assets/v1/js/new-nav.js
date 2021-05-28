@@ -58,12 +58,20 @@ jQuery(document).ready(function(){
 		}
 
 		primaryNav.classList.remove( 'bb-primary-overflow' );
+		
+		// also gonna piggyback on this to handle where the subnav appears
+		if (jQuery(window).width() < 800 && jQuery("#universal-subnav #menu-secondary_universal_menu").length) {
+			jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
+		} else if(jQuery(window).width() > 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length) {
+			jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
+		}
 	}
 
 	if (typeof (primaryNav) != 'undefined' && primaryNav != null) {
 		if (jQuery(window).width() > 800) {
 			window.onresize = navListOrder;
 		}
+
 		navListOrder();
 
 		setTimeout(
@@ -139,7 +147,7 @@ jQuery(document).ready(function(){
 		jQuery("#universal-subnav").toggle();
 	});
 	if (jQuery(window).width() < 800) {
-		jQuery("#primary-menu").prepend(jQuery("#menu-secondary_universal_menu"));
+		jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
 	}
         
 	// mobile

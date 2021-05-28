@@ -88,8 +88,19 @@
                     -ms-flex-wrap: nowrap;
                     flex-wrap: nowrap;
                     min-width: 130px;
-                    @screen and (min-width: 992px) {
-                        min-width: 210px;
+					@media screen and (max-width: 800px) {
+    					flex-direction: column;
+						max-width: fit-content;
+						#menu-secondary_universal_menu {
+							background: #fff;
+							width: 100%;
+							margin: 0px;
+							padding-top: 10px;
+							a {
+								color: #333;
+								padding-left: 30px;
+							}
+						}
                     }
                     #primary-menu {
                         margin: 0;
@@ -730,21 +741,23 @@ body.mobile-nav {
         float: left;
         color: #333;
         position: relative;
-        height: 50px;
-        margin-top: 20px;
+        display: flex;
+		align-items: center;
+		@media screen and (max-width: 800px) {
+			display: none;
+		}
         .subscribe-text {
             float: left;
             text-align: right;
             a {
-                font-size: 14px;
-                font-weight: 300;
+                font-size: 16px;
+                font-weight: 500;
                 text-transform: capitalize;
                 color:#333;
             }
         }
         #nav-subscribe-img {
             margin: 0 10px;
-            margin-top: -18px;
             width: 50px;
         }
         .subscribe-pop-out {
