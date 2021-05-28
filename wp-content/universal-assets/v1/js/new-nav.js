@@ -131,10 +131,17 @@ jQuery(document).ready(function(){
 	});
 	
 	// make some room for our fixed header
-	jQuery("#masthead.site-header-custom").nextAll().not("script, style").first().css("padding-top", "76px");
-        
-        
+	jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
 	
+	// Subnav
+	jQuery("#site-logo").append(jQuery("#universal-subnav"));
+	jQuery("#site-logo").on( "mouseenter mouseleave", function() {
+		jQuery("#universal-subnav").toggle();
+	});
+	if (jQuery(window).width() < 800) {
+		jQuery("#primary-menu").prepend(jQuery("#menu-secondary_universal_menu"));
+	}
+        
 	// mobile
 	jQuery( document ).on('click', '.mobile-toggle-panel', function (e) {
 		e.preventDefault();
