@@ -79,8 +79,11 @@
             }
         }
         .dropdown-menu {
+            font-size: 16px;
             background: #333;
             min-width: 125px;
+            position: relative !important;
+            transform: none !important;
             li { 
                 border: 0px;
                 &:hover {
@@ -91,6 +94,7 @@
         .dropdown-menu > .active > a, .dropdown-menu > .active > a:focus, .dropdown-menu > .active > a:hover { background-color: #666; }
     }
     .dropdown:not(.v-select) {
+        font-size: 16px;
         position: relative;
         width: auto;
         background: transparent;

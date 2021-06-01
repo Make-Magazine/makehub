@@ -158,7 +158,6 @@ jQuery(document).ready(function () {
     }
     // account for admin bar
     if(jQuery("#wpadminbar").length && jQuery(window).width() > 800) {
-        alert("hello");
         jQuery("#universal-subnav").css("margin-top", "32px");
     }
 

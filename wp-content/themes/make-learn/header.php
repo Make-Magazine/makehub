@@ -111,10 +111,24 @@ do_action( 'genesis_before_header' );
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5PRW4M2" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-   <?php // Nav Level 1 and Hamburger      
-      require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
-   ?>
-
+	<?php // Nav Level 1 and Hamburger      
+		require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-topnav.html');
+	?>
+	<div id="universal-subnav" class="nav-level-2">
+		<?php
+			wp_nav_menu( array(
+			  'menu'              => 'secondary_universal_menu',
+			  'theme_location'    => 'secondary_universal_menu',
+			  'container'         => '',
+			  'container_class'   => '',
+			  'link_before'       => '<span>',
+			  'link_after'        => '</span>',
+			  'menu_class'        => 'nav navbar-nav',
+			  'fallback_cb'       => 'wp_bootstrap_navwalker::fallback',
+			  'walker'            => new wp_bootstrap_navwalker())
+			);
+		?>
+	</div>
 
 <?php
 /**
