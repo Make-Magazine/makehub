@@ -198,7 +198,7 @@ jQuery(document).ready(function(){
             case "makerfaire.staging.wpengine.com":
             case "dev.makerfaire.com":
             case "stage.makerfaire.com":
-                document.getElementById("navLogo").src = "https:/make.co/wp-content/universal-assets/v1/images/Maker_Faire_Logo.svg";
+                document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
                 break;
             case "makercamp.local":
             case "makercamp.test":
@@ -206,7 +206,7 @@ jQuery(document).ready(function(){
             case "makercamp.staging.wpengine.com":
             case "dev.makercamp.com":
             case "stage.makercamp.com":
-                document.getElementById("navLogo").src = "https:/make.co/wp-content/universal-assets/v1/images/makercamp-logo.jpg";
+                document.getElementById("navLogo").src = "/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
                 break;
             case "makezine.test":
             case "makezine.local":
@@ -222,16 +222,16 @@ jQuery(document).ready(function(){
             case "makerspaces.devmakehub.wpengine.com":
             case "makerspaces.stagemakehub.wpengine.com":
             case "makerspaces.make.co":
-                document.getElementById("navLogo").src = "https:/make.co/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
+                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
                 break;
             default:// the default is makehub/make.co/makezine
                 if(window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
                     // except for makercampus which gets it's own logo and subnav items
-                    document.getElementById("navLogo").src = "https:/make.co/wp-content/universal-assets/v1/images/makercampus-logo.jpg";
+                    document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makercampus-logo.jpg";
                     jQuery("#universal-subnav .community-subnav-item").hide();
                     jQuery("#universal-subnav .campus-subnav-item").show();
                 } else {
-                    document.getElementById("navLogo").src = "https://make.co/wp-content/universal-assets/v1/images/make_co_logo.png";
+                    document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make_co_logo.png";
                 }
                 break;
         }
