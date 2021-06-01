@@ -6,7 +6,7 @@
 
 function profile_tab_makerfaire_infoname() {
     global $current_user;
-    get_currentuserinfo();
+    $current_user = wp_get_current_user();
 
     $email = $current_user->user_email; 
     
