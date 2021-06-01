@@ -54,9 +54,6 @@ require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.p
 // Adds the Genesis Connect WooCommerce notice.
 require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
 
-// Add that navwalker for the custom menus
-require_once('lib/wp_bootstrap_navwalker.php');
-
 // Include all function files in the makerfaire/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
    include_once $file;

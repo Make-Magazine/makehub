@@ -20,8 +20,8 @@
             width: 0;
             height: 0;
             top: 0;
-            border: 7px solid #000;
-            border-color: #000 #000 transparent transparent;
+            border: 7px solid #333;
+            border-color: #333 #333 transparent transparent;
             -webkit-transform-origin: 0 0;
             -ms-transform-origin: 0 0;
             transform-origin: 0 0;
@@ -60,6 +60,8 @@
                 }
             }
         }
+        // hide campus menu items unless you are on campus
+        .campus-subnav-item { display: none; }
     }
 }
 

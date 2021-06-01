@@ -55,9 +55,6 @@ function make_campus_add_woocommerce_support() {
 
 add_action('after_setup_theme', 'make_campus_add_woocommerce_support');
 
-// Add that navwalker for the custom menus
-require_once('lib/wp_bootstrap_navwalker.php');
-
 // FIX CONFLICT BETWEEN TRIBE EVENTS PLUGIN AND FRONT END IMAGE UPLOADER FOR BLOG POSTS
 require_once(ABSPATH . 'wp-admin/includes/screen.php');
 

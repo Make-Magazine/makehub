@@ -46,6 +46,7 @@
         -ms-flex-align: center;
         align-items: center;
         display: flex !important;
+        max-width: 100%;
         .site-branding {
             display: -webkit-box;
             display: -ms-flexbox;
@@ -71,8 +72,7 @@
                     position: relative;
                     z-index: 1;
                     max-height: 76px;
-                    width: 100px;
-                    margin-top:-4px;
+                    height: 40px;
                 }
             }
         }

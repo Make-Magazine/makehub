@@ -21,6 +21,9 @@ function ajax_check_user_logged_in() {
 add_action('wp_ajax_is_user_logged_in', 'ajax_check_user_logged_in');
 add_action('wp_ajax_nopriv_is_user_logged_in', 'ajax_check_user_logged_in');
 
+// Add that navwalker for the custom menus
+require_once('lib/wp_bootstrap_navwalker.php');
+
 // check if user is a user, but isn't a user of the current blog, and add them if they aren't
 function create_user_on_blog($user_object) {
     $user_id = $user_object->ID;
