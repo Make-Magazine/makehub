@@ -110,7 +110,9 @@ if (have_posts()) :
             <a href="/submit-event" class="btn universal-btn submit-event-btn">Submit Your Program</a>
         </div>
         <div class="events-grid-sidebar">
-            <?php
+            <?php dynamic_sidebar('event_grid_sidebar'); ?>
+            <?php            
+            /*
             echo do_shortcode('[products columns="1" orderby="popularity" class="experiences" category="experiences"]');
             $count = get_term_by('name', "experiences", 'product_cat')->count;
             if ($count != 0) {
@@ -122,7 +124,7 @@ if (have_posts()) :
                 <a href="https://makershed.com" class="btn universal-btn" style="height:auto;padding:15px 10px;">
                     Checkout Maker Shed for Kits and More!
                 </a>
-    <?php } ?>
+    <?php } */?>
         </div>
     </div>
     <?php

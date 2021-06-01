@@ -71,3 +71,13 @@ function event_ticket_prices($post) {
 	}
 	return $ticket_price;
 }
+
+function events_sidebar() {
+
+    register_sidebar( array(
+        'id'            => 'event_grid_sidebar',
+        'name'          => 'Event Grid Sidebar',
+    ) );
+
+}
+add_action( 'widgets_init', 'events_sidebar' );
