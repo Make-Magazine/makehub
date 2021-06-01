@@ -88,6 +88,30 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
     }
 }
 
+.events-grid-sidebar {
+	.widget_shopify_widget {
+		&::before {
+			transform: scale(.42);
+			margin-top: -20px;
+			margin-left: -5px;
+		}
+		h2.widgettitle {
+			display: none;
+		}
+		.shopify-product-feed .product-feed-item a {
+			display: flex;
+			flex-direction: column;
+			.product-image {
+				min-width: 130px;
+				max-width: 130px;
+			}
+			.product-info {
+				padding: 10px 0px 0px;
+			}
+		}
+	}
+}
+
 // The feeds
 .posts-feeds-wrapper {
     margin-bottom: 50px;
