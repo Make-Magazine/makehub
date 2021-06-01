@@ -91,9 +91,11 @@ body .site-content-grid .widget-area:not(.widget-area-secondary) {
 .events-grid-sidebar {
 	.widget_shopify_widget {
 		&::before {
-			transform: scale(.42);
+			transform: scale(.435);
 			margin-top: -20px;
-			margin-left: -5px;
+			margin-left: -7px;
+			margin-bottom: -5px;
+			width: 20%;
 		}
 		h2.widgettitle {
 			display: none;
