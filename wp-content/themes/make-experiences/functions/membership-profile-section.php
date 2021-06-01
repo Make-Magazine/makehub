@@ -43,7 +43,7 @@ function membership_info_content() {
     $user_email = $user_info->user_email;
 
 	require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
-	\Stripe\Stripe::setApiKey('sk_test_2p3NPkMLrR81uL09daZDxnMg');
+	\Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
 	$customer = \Stripe\Customer::all(["email" => $user_email]);
 	$customerID = $customer->data[0]['id'];
 	
