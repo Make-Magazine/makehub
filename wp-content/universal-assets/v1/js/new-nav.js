@@ -234,10 +234,17 @@ jQuery(document).ready(function () {
         case "makerspaces.make.co":
             document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
             break;
+        case "learn.makehub.test":
+        case "learn.makehub.local":
+        case "learn.devmakehub.wpengine.com":
+        case "learn.stagemakehub.wpengine.com":
+        case "learn.make.co":
+            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
+            break;
         default:// the default is makehub/make.co/makezine
             if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
                 // except for makercampus which gets it's own logo and subnav items
-                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makercampus-logo.jpg";
+                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
                 jQuery("#universal-subnav .community-subnav-item").hide();
                 jQuery("#universal-subnav .campus-subnav-item").show();
             } else {
