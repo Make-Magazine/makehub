@@ -244,6 +244,7 @@ jQuery(document).ready(function () {
         default:// the default is makehub/make.co/makezine
             if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
                 // except for makercampus which gets it's own logo and subnav items
+                jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
                 document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
                 jQuery("#universal-subnav .community-subnav-item").hide();
                 jQuery("#universal-subnav .campus-subnav-item").show();

@@ -49,4 +49,7 @@ $pageUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
    <?php echo(do_shortcode('[vimeography id="' . $galleryID . '"]')); ?>
 </div><!-- end .page-content -->
 
+<h2 class="text-center"><a href="https://www.youtube.com/c/MAKE/featured" target="_blank">See more videos from our Youtube Channel</a></h2>
+<?php echo do_shortcode('[embedyt]https://www.youtube.com/embed?listType=playlist&amp;list=UUhtY6O8Ahw2cz05PS2GhUbg&amp;layout=gallery[/embedyt]'); ?>
+
 <?php get_footer(); ?>
