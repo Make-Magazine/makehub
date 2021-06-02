@@ -1,7 +1,7 @@
 <?php
 
 define('BP_BUDDYBLOG_SLUG', 'blog');
-
+/*
 function create_posttypes() {
     register_post_type( 
 		 'projects',
@@ -48,7 +48,7 @@ function create_posttypes() {
         )
 	 );
 }
-add_action( 'init', 'create_posttypes' );
+add_action( 'init', 'create_posttypes' );*/
 
 
 /**
