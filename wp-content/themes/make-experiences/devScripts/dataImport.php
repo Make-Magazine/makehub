@@ -100,7 +100,7 @@ if (isset($_POST["submit"])) {
     $catArray = [];
 
     foreach ($csv as $row) {
-        $entry = array('form_id' => 7, 'status' => 'active');
+        $entry = array('form_id' => 1, 'status' => 'active');
         //Create the Parent Entry 
         foreach ($row as $rowKey => $rowData) {
             if ($fieldIDs[$rowKey] == 'created_by')
@@ -134,7 +134,7 @@ if (isset($_POST["submit"])) {
         echo 'entry id is '.$entryId.' created on '.$date_created.'<br/>';
         
         //Create the Child/nested Entry
-        $nstEntry = array('form_id' => 10, 'status' => 'active', 'created_by' => $created_by,
+        $nstEntry = array('form_id' => 4, 'status' => 'active', 'created_by' => $created_by,
             GPNF_Entry::ENTRY_PARENT_KEY => $entryId, // The ID of the parent entry.
             GPNF_Entry::ENTRY_PARENT_FORM_KEY => 7, // The ID of the parent form.
             GPNF_Entry::ENTRY_NESTED_FORM_FIELD_KEY => 156, // The ID of the Nested Form field on the parent form
@@ -177,7 +177,7 @@ if (isset($_POST["submit"])) {
         
         $nstentry_id = gfapi::add_entry($nstEntry);
 
-        $form = gfapi::get_form('7');
+        $form = gfapi::get_form('1');
         
         //reset so we get all the goodies
         gfapi::update_entry($entry);

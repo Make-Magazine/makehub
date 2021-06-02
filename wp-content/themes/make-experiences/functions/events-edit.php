@@ -1,7 +1,7 @@
 <?php
 
 // After the gravity view is updated, we want to update the created post associated with it. 
-add_action('gform_after_update_entry_7', 'gravityview_event_update', 998, 3);
+add_action('gform_after_update_entry_1', 'gravityview_event_update', 998, 3);
 
 //function gravityview_event_update($form, $entry_id, $entry_object = '') {
 function gravityview_event_update($form, $entry_id, $orig_entry = array()) {
@@ -170,7 +170,7 @@ add_filter('gform_entry_field_value', function ( $value, $field, $entry, $form )
     return $value;
 }, 10, 4);
 
-add_action('gform_after_update_entry_10', 'nested_form_event_upd', 998, 3);
+add_action('gform_after_update_entry_4', 'nested_form_event_upd', 998, 3);
 
 //this is the schedule and ticket form
 function nested_form_event_upd($nstForm, $entry_id, $orig_entry = array()) {

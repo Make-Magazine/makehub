@@ -1,17 +1,17 @@
 <?php
 
-//This filter declaration targets form 10 - field 9 - the last digit is the column in the list field
-add_filter('gform_column_input_content_10_9_1', 'set_date_field_type', 10, 6);
-add_filter('gform_column_input_content_10_9_2', 'set_time_field_type', 10, 6);
-add_filter('gform_column_input_content_10_9_3', 'set_time_field_type', 10, 6);
+//This filter declaration targets form 4 - field 9 - the last digit is the column in the list field
+add_filter('gform_column_input_content_4_9_1', 'set_date_field_type', 10, 6);
+add_filter('gform_column_input_content_4_9_2', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_content_4_9_3', 'set_time_field_type', 10, 6);
 
-//This filter declaration targets form 10 - field 11 - the last digit is the column in the list field
-add_filter('gform_column_input_content_10_11_1', 'set_date_field_type', 10, 6);
-add_filter('gform_column_input_content_10_11_2', 'set_time_field_type', 10, 6);
-add_filter('gform_column_input_content_10_11_3', 'set_time_field_type', 10, 6);
+//This filter declaration targets form 4 - field 11 - the last digit is the column in the list field
+add_filter('gform_column_input_content_4_11_1', 'set_date_field_type', 10, 6);
+add_filter('gform_column_input_content_4_11_2', 'set_time_field_type', 10, 6);
+add_filter('gform_column_input_content_4_11_3', 'set_time_field_type', 10, 6);
 
-add_filter( 'gform_field_validation_10_9', 'validate_time', 10, 4 );
-add_filter( 'gform_field_validation_10_11', 'validate_time', 10, 4 );
+add_filter( 'gform_field_validation_4_9', 'validate_time', 10, 4 );
+add_filter( 'gform_field_validation_4_11', 'validate_time', 10, 4 );
 
 //reformat field as date type
 function set_date_field_type($input, $input_info, $field, $text, $value, $form_id) {
@@ -155,7 +155,7 @@ function updatePerson($parameter_array, $entry, $person) {
 }
 
 /* If the person filling out this form is an existing facilitator, populate the preview image */
-add_filter( 'gform_field_content_7_118', 'set_facilitator_img', 10, 5 );
+add_filter( 'gform_field_content_1_118', 'set_facilitator_img', 10, 5 );
 function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
     if(is_admin()){
         return $input;
@@ -179,7 +179,7 @@ function set_facilitator_img($input, $field, $value, $lead_id, $form_id){
         }
     }
     
-    $input .= '<div id="preview_input_7_118"> '
+    $input .= '<div id="preview_input_1_118"> '
             . '  This is the current image we have for you. If you would like to update it, please click \'Choose File\'<br/>'  
             .   '<div class="preview_img-wrapper" style="background-image: url('.$facilitator_img.');"></div>'
            . '</div>';
@@ -190,8 +190,8 @@ add_filter( 'gform_pre_render', 'gw_conditional_requirement' );
 add_filter( 'gform_pre_validation', 'gw_conditional_requirement' );
 /* If the person filling out this form is an existing facilitator, populate the preview image */
 function gw_conditional_requirement( $form ) {
-    //Form 7 only
-    if ( $form['id'] != 7 ) {
+    //Form 1 only
+    if ( $form['id'] != 1 ) {
        return $form;
     }
  

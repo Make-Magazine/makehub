@@ -1,14 +1,14 @@
 <?php
 
 //We do not want gravity forms creating the post, we will be doing that ourselves
-add_filter('gform_disable_post_creation_7', 'disable_post_creation', 10, 3);
+add_filter('gform_disable_post_creation_1', 'disable_post_creation', 10, 3);
 
 function disable_post_creation($is_disabled, $form, $entry) {
     return true;
 }
 
 // Create event with ticket
-add_action('gform_after_submission_7', 'create_event', 10, 2);
+add_action('gform_after_submission_1', 'create_event', 10, 2);
 
 function create_event($entry, $form) {
     //get current user info     
