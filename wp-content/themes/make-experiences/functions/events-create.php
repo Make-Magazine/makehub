@@ -91,7 +91,7 @@ function create_event($entry, $form) {
     // set person image
     set_post_thumbnail(get_post($personID), attachment_url_to_postid($entry['118'])); //user image is in field 118 of the submitted entry
     //assign that user to this event
-    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '124')); //124 is the people type of facilitator
+    $per_post = EE_Person_Post::new_instance(array('PER_ID' => $personID, 'OBJ_ID' => $eventID, 'PT_ID' => '77')); //124 is the people type of facilitator
     $per_post->save();
 
     //now lets look for additional hosts
