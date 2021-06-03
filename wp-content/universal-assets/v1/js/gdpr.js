@@ -1,7 +1,7 @@
 // GDPR compliance never looked so good
 window.addEventListener('load', function() {
 
-	var storage = new CrossStorageClient('https://make.co/wp-content/universal-assets/v1/page-elements/universal-gdpr-helper.html', {
+	var storage = new CrossStorageClient('https://community.make.co/wp-content/universal-assets/v1/page-elements/universal-gdpr-helper.html', {
 	  timeout: 90000000,
 	  frameId: 'storageFrame'
 	});
