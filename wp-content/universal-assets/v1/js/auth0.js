@@ -1,7 +1,7 @@
 window.addEventListener('load', function() {
 	
 	var url = new URL(location.href).hostname;
-	var wplogin_domains = ["makerfaire", "campus", "makerspaces", "community", "makehub", "experiencestage", "learn"];
+	var wplogin_domains = ["makerfaire", "campus", "makerspaces", "community", "makehub", "experiencestage", "learn", "make.co"];
 	var wpLoginRequired = false;
 	for (var i = 0, ln = wplogin_domains.length; i < ln; i++) {
 	  if (url.indexOf(wplogin_domains[i]) !== -1) {
@@ -123,7 +123,7 @@ window.addEventListener('load', function() {
 				}
 				if(wpLoginRequired && loggedin == false && !jQuery( '.logged-in' ).length ) {
 					// loading spinner to show user we're pulling up their data. Once styles are completely universal, move these inline styles out of there
-					jQuery('.universal-footer').append('<img src="https://community.make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
+					jQuery('.universal-footer').append('<img src="https://make.co/wp-content/universal-assets/v1/images/makey-spinner.gif" class="universal-loading-spinner" style="position:absolute;top:50%;left:50%;margin-top:-75px;margin-left:-75px;" />');
 					WPlogin();
 				}
 			}
