@@ -1121,7 +1121,7 @@
             "new_lines": ""
         },
         {
-            "key": "field_6099caf80ea4a",
+            "key": "field_6099c981bf6d7",
             "label": "Suppress from RSS Widget",
             "name": "suppress_from_rss_widget",
             "type": "true_false",
@@ -1138,6 +1138,27 @@
             "ui": 0,
             "ui_on_text": "",
             "ui_off_text": ""
+        },
+        {
+            "key": "field_60ba7042979b2",
+            "label": "Group ID",
+            "name": "group_id",
+            "type": "number",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "min": "",
+            "max": "",
+            "step": ""
         }
     ],
     "location": [
@@ -1157,5 +1178,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1620691755
+    "modified": 1622831420
 }
