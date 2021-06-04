@@ -1,6 +1,7 @@
 // a little normalization of our own
 body {
     position: absolute;
+    width: 100%;
     top: 0px;
     &.admin-bar {
         margin-top: 32px;
