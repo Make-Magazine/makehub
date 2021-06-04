@@ -163,7 +163,7 @@ function get_hostname(url) {
 }
 
 // remove the hubspot code for anything other than prod sites
-var prodDomains = ["https://community.make.co", "https://learn.make.co", "https://makerspaces.make.co"];
+var prodDomains = ["https://make.co", "https://learn.make.co", "https://makerspaces.make.co"];
 jQuery(document).ready(function () {
     if (jQuery.inArray(get_hostname(window.location.href), prodDomains) < 0) {
         jQuery("#hs-script-loader").remove();

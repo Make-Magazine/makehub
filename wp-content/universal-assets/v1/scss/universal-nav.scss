@@ -96,6 +96,8 @@
                             width: 100%;
                             margin: 0px;
                             padding-top: 10px;
+                            display: flex;
+                            flex-direction: column;
                             a {
                                 color: #333;
                                 padding-left: 30px;
@@ -319,22 +321,25 @@
                 position: absolute;
                 z-index: 99999;
                 top: 0px;
-                left: -300px;
+                left: -1100px;
                 transition: left .5s, width .5s;
                 height: 100vh;
                 &.show {
                     left: 0px;
                     background: rgba(0, 0, 0, .8);
                     width: 100%;
+                    overflow-y: auto;
+                    overflow-x: hidden;
                     .close-mobile {
                         display: block;
                         position: absolute;
-                        right: 10px;
+                        right: 0px;
                         top: 10px;
+                        height: 50px;
                         background: transparent;
                         border: none;
                         i { 
-                            color: #fff;
+                            color: #ccc;
                             font-size: 32px;
                         }
                     }
