@@ -81,3 +81,12 @@ function events_sidebar() {
 
 }
 add_action( 'widgets_init', 'events_sidebar' );
+
+//default the admin menu link to sort by newest event first
+add_action ( 'admin_menu', 'ee_filter_ee_events_orderyby_datetime', 99 );
+function ee_filter_ee_events_orderyby_datetime() {
+    // call global submenu item
+    global $submenu;
+    // edit main link for events
+    $submenu['espresso_events'][0][2] = 'admin.php?page=espresso_events&orderby=Datetime.DTT_EVT_start&order=asc';
+}
