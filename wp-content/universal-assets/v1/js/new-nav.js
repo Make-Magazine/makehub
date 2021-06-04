@@ -208,6 +208,7 @@ jQuery(document).ready(function () {
         case "makerfaire.staging.wpengine.com":
         case "dev.makerfaire.com":
         case "stage.makerfaire.com":
+            jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
             document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
             break;
         case "makercamp.local":
@@ -216,6 +217,7 @@ jQuery(document).ready(function () {
         case "makercamp.staging.wpengine.com":
         case "dev.makercamp.com":
         case "stage.makercamp.com":
+            jQuery("h2.site-title a").attr("href", "https://makercamp.com");
             document.getElementById("navLogo").src = "/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
             break;
         case "makezine.test":
@@ -224,6 +226,7 @@ jQuery(document).ready(function () {
         case "makezine.com":
         case "stage.makezine.com":
         case "dev.makezine.com":
+            jQuery("h2.site-title a").attr("href", "https://makezine.com");
             jQuery("#site-logo .nav-logo").css("height", "30.4px");
             jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
             break;
@@ -232,6 +235,7 @@ jQuery(document).ready(function () {
         case "makerspaces.devmakehub.wpengine.com":
         case "makerspaces.stagemakehub.wpengine.com":
         case "makerspaces.make.co":
+            jQuery("h2.site-title a").attr("href", "https://makerspaces.make.co");
             document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
             break;
         case "learn.makehub.test":
@@ -239,11 +243,13 @@ jQuery(document).ready(function () {
         case "learn.devmakehub.wpengine.com":
         case "learn.stagemakehub.wpengine.com":
         case "learn.make.co":
+            jQuery("h2.site-title a").attr("href", "https://learn.make.co");
             document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
             break;
         default:// the default is makehub/make.co/makezine
             if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
                 // except for makercampus which gets it's own logo and subnav items
+                jQuery("h2.site-title a").attr("href", "https://make.co/maker-campus");
                 jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
                 document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
                 jQuery("#universal-subnav .community-subnav-item").hide();
