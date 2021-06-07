@@ -55,17 +55,25 @@ function make_widget_rss_output($rss, $args = array()) {
         return;
     }
 
-    $date1 = new DateTime('now');
+    $dateNow = new DateTime('now');
     
     $sortedFeed = array();
     $feedItems = $rss->get_items();    
     foreach ($feedItems as $item) {
         //exclude events that have already occured
-        $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);        
-        
-        if(date_timestamp_get($date1) > date_timestamp_get($dateString)){
-            continue; //(skip this record);
+		if($item->get_item_tags('', 'event_date')[0]['data']) {
+            $dateString = new DateTime($item->get_item_tags('', 'event_date')[0]['data']);  
+			if(date_timestamp_get($dateNow) > 	date_timestamp_get($dateString)){
+				continue; //(skip this record);
+			}
+		// if it isn't a youtube feed, exclude feed items with no date
+        } else if(strpos($args['url'], 'youtube.com/feeds') == false ) {
+			if(!$item->get_item_tags('', 'pubDate')[0]['data']){
+				continue; //(skip this record);
+			}
+            $dateString = new DateTime($item->get_item_tags('', 'pubDate')[0]['data']);
         }
+        
         
         //get the link
         $link = $item->get_link();
@@ -116,16 +124,20 @@ function make_widget_rss_output($rss, $args = array()) {
         }
         
         //date
-        $date = $dateString->format('M j, Y');
-        
-        $sortedFeed[] = array('date' => $date, 'show_date' => $show_date, 'link' => $link, 'title' => $title, 'image' => $image, 'desc' => $desc, 'summary' => $summary, 'author' => $author);
+        $date = '';
+        if ($show_date) {
+            $date = $dateString->format('M j, Y');
+		}
+		$sortedFeed[] = array('date' => $date, 'show_date' => $show_date, 'link' => $link, 'title' => $title, 'image' => $image, 'desc' => $desc, 'summary' => $summary, 'author' => $author);
+		//sort this by date, newest first, if it's an event
+		if($item->get_item_tags('', 'event_date')[0]['data']) {
+			usort($sortedFeed, function($a, $b) {
+				return strtotime($a['date']) - strtotime($b['date']);
+			});
+		}
+		
     }
-    
-    //sort this by date,newest first
-    usort($sortedFeed, function($a, $b) {
-        return $a['date'] - $b['date'];
-    });
-            
+	
     echo '<ul class="custom-rss">';    
     foreach ($sortedFeed as $item) {    
         $link       = $item['link'];
