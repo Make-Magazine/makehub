@@ -1,57 +1,63 @@
 /* make buddypress pages full width */
 .buddypress, .home-page {
-	.site-content .container {
-		width: 100%;
-		max-width: 100%;
-		padding: 0;
-	}
+    .site-content .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
 }
 .has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #primary, body.buddypress.has-sidebar:not(.profile-sidebar):not(.group-sidebar):not(.llms-pointer) #page #primary {
-	max-width: 100%;
+    max-width: 100%;
 }
 
 // no sign up, we have ump for that
 .bb-header-buttons {
-	.button.singup {
-		display: none;
-	}
+    .button.singup {
+        display: none;
+    }
 }
 
 // Everything from buddyboss that we have to override with Roboto Font
 .bb-custom-typo h1, .bb-custom-typo .h1, .bb-custom-typo h2, .bb-custom-typo .h2, .bb-custom-typo h3, .bb-custom-typo .h3, .bb-custom-typo h4, .bb-custom-typo .h4, .bb-custom-typo h5, .bb-custom-typo .h5, .bb-custom-typo h6, .bb-custom-typo .h6, .bb-custom-typo .bb-course-footer, .bb-custom-typo .ld-table-list-header .ld-text, .bb-custom-typo .gamipress-achievement-points { 
-	font-family: 'Roboto';
-	color: #333;
-	font-weight: 600;
+    font-family: 'Roboto';
+    color: #333;
+    font-weight: 600;
 }
 
 ///////////// GROUPS //////////////////
 
 //show hidden groups if you're a member
 #groups-dir-list, .mygroups {
-	.is-member.hidden {
-		display: block !important
-	}
+    .is-member.hidden {
+        display: block !important
+    }
 }
 .subnav-search.groups-search {
-	margin: -10px 15px 20px;
-	float: none;
+    margin: -10px 15px 20px;
+    float: none;
 }
 #bp-media-uploader .modal-container {
-	position: inherit;
+    position: inherit;
 }
 .groups {
-	.bp-manage-group-container {
-		#group-settings-form {
-			.bp-controls-wrap { display: none; }
-		}
-	}
-	&.group-hidden, &.group-private {
-		&:not(.my-group) {
-			#invite-groups-li {
-				display: none;
-			}
-		}
-	}
+    .bp-manage-group-container {
+        #group-settings-form {
+            .bp-controls-wrap { display: none; }
+        }
+    }
+    &.group-hidden, &.group-private {
+        &:not(.my-group) {
+            #invite-groups-li {
+                display: none;
+            }
+        }
+    }
+}
+// only admins get to set group types
+body:not(.admin-bar) {
+    #create-group-form {
+        .group-create-types { display: none; }
+    }
 }
 
 button.ges-change, button.ges-change:hover {
@@ -59,12 +65,12 @@ button.ges-change, button.ges-change:hover {
 }
 
 .bs-styled-radio + .bb-radio-label, .bs-styled-radio + label {
-	display: flex;
-	align-items: center;
-	&::before {
-		left: -20px;
-		margin-right: -10px;
-	}
+    display: flex;
+    align-items: center;
+    &::before {
+        left: -20px;
+        margin-right: -10px;
+    }
 }
 
 /* makerspace information */
@@ -94,25 +100,25 @@ button.ges-change, button.ges-change:hover {
 
 /* Learn Dash */
 /* Hide topic list on non mobile sites only */
- @media screen and (min-width: 768px) {
-     .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
-     .sfwd-lessons .bb-ld-info-bar, 
-     .topic-page .bb-ld-info-bar, 
-     .sfwd-lessons .bb-position,
-     .topic-page .bb-position,
-     .sfwd-lessons .sfwd-course-nav,
-     .topic-page .sfwd-course-nav,
-     .sfwd-lessons .ld-progress, 
-     .topic-page .ld-progress, 
-     .sfwd-lessons .ld-content-actions,
-     .topic-page .ld-content-actions,
-     .sfwd-lessons .lms-header-instructor, 
-     .topic-page .lms-header-instructor {
-         display: none;
-     }
- }
- 
- /* remove padding on learndash content for non mobile viewing */
+@media screen and (min-width: 768px) {
+    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
+    .sfwd-lessons .bb-ld-info-bar, 
+    .topic-page .bb-ld-info-bar, 
+    .sfwd-lessons .bb-position,
+    .topic-page .bb-position,
+    .sfwd-lessons .sfwd-course-nav,
+    .topic-page .sfwd-course-nav,
+    .sfwd-lessons .ld-progress, 
+    .topic-page .ld-progress, 
+    .sfwd-lessons .ld-content-actions,
+    .topic-page .ld-content-actions,
+    .sfwd-lessons .lms-header-instructor, 
+    .topic-page .lms-header-instructor {
+        display: none;
+    }
+}
+
+/* remove padding on learndash content for non mobile viewing */
 @media screen and (min-width: 768px) {
     .learndash-page-content {
         padding: 30px 30px 0;
@@ -121,57 +127,57 @@ button.ges-change, button.ges-change:hover {
 
 // Profile pages
 .profile.buddypress, .my-account.buddypress {
-	.item-header-wrap {
-		.item-meta {
-			.separator, .activity { display: none; }
-		}
-	}
-	.buddypress-wrap#buddypress {
-		.member-header-actions {
-			.generic-button a {
-				border-radius: 2px;
-			}
-		}
-	}
+    .item-header-wrap {
+        .item-meta {
+            .separator, .activity { display: none; }
+        }
+    }
+    .buddypress-wrap#buddypress {
+        .member-header-actions {
+            .generic-button a {
+                border-radius: 2px;
+            }
+        }
+    }
 }
 
 // Makerspace dir Page
 .page-members-type-makerspaces {
-	h1.entry-title::after {
-		content: ": Makerspaces";
-	}
+    h1.entry-title::after {
+        content: ": Makerspaces";
+    }
 }
 .directory {
-	.dir-list {
-		.grid.bp-list > li {
-			flex: 0 0 20%;
-			max-width: 20%;
-			@media screen and (max-width: 1500px) {
-				flex: 0 0 25%;
-				max-width: 25%;
-			}
-			@media screen and (max-width: 1200px) {
-				flex: 0 0 33%;
-				max-width: 33%;
-			}
-			@media screen and (max-width: 981px) {
-				flex: 0 0 50%;
-				max-width: 50%;
-			}
-			@media screen and (max-width: 768px) {
-				flex: 0 0 50%;
-				max-width: 50%;
-			}
-			@media screen and (max-width: 480px) {
-				flex: 0 0 100%;
-				max-width: 100%;
-			}
-		}
-	}
-	#secondary {
-		flex: 0 0 300px;
-		max-width: 300px;
-	}
+    .dir-list {
+        .grid.bp-list > li {
+            flex: 0 0 20%;
+            max-width: 20%;
+            @media screen and (max-width: 1500px) {
+                flex: 0 0 25%;
+                max-width: 25%;
+            }
+            @media screen and (max-width: 1200px) {
+                flex: 0 0 33%;
+                max-width: 33%;
+            }
+            @media screen and (max-width: 981px) {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            @media screen and (max-width: 768px) {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+            @media screen and (max-width: 480px) {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    }
+    #secondary {
+        flex: 0 0 300px;
+        max-width: 300px;
+    }
 }
 
 
