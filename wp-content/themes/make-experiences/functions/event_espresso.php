@@ -88,5 +88,5 @@ function ee_filter_ee_events_orderyby_datetime() {
     // call global submenu item
     global $submenu;
     // edit main link for events
-    $submenu['espresso_events'][0][2] = 'admin.php?page=espresso_events&orderby=Datetime.DTT_EVT_start&order=asc';
+    $submenu['espresso_events'][0][2] = 'admin.php?page=espresso_events&orderby=Datetime.DTT_EVT_start&order=desc';
 }
