@@ -1,35 +1,20 @@
 .nav-level-2 {
     height: 45px;
     background-color: #333;
-    position: fixed;
-    z-index: 9999;
-    top: 76px;
+    position: relative;
+    z-index: 99;
     left: 0%;
     width: 100%;
     display: none;
+    @media screen and (max-width: 800px) {
+        display: none !important;
+    }
     #menu-secondary_universal_menu /*, #menu-secondary_universal_menu-emulator*/ {
         height: 100%;
         width: 100%;
         display: flex;
         flex-wrap: nowrap;
         align-items: center;
-        &::before {
-            left: 60px;
-            content: ' ';
-            position: absolute;
-            width: 0;
-            height: 0;
-            top: 0;
-            border: 7px solid #333;
-            border-color: #333 #333 transparent transparent;
-            -webkit-transform-origin: 0 0;
-            -ms-transform-origin: 0 0;
-            transform-origin: 0 0;
-            -webkit-transform: rotate(-45deg);
-            -ms-transform: rotate(-45deg);
-            transform: rotate(-45deg);
-            z-index: 1002;
-        }
         li {
             a {
                 color: #fff;

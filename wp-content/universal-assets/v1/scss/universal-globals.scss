@@ -4,7 +4,11 @@ body {
     width: 100%;
     top: 0px;
     &.admin-bar {
-        margin-top: 32px;
+        margin-top: 32px;  
+        overflow: visible;
+        #wpadminbar {
+            margin-top: -32px;
+        }
     }
 }
 body > div {

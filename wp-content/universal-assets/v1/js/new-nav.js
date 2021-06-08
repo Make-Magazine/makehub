@@ -59,18 +59,9 @@ jQuery(document).ready(function () {
 
         primaryNav.classList.remove('bb-primary-overflow');
 
-        // also gonna piggyback on this to handle where the subnav appears
-        if (jQuery(window).width() < 800 && jQuery("#universal-subnav #menu-secondary_universal_menu").length) {
-            jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
-        } else if (jQuery(window).width() > 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length) {
-            jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
-        }
     }
 
     if (typeof (primaryNav) != 'undefined' && primaryNav != null) {
-        if (jQuery(window).width() > 800) {
-            window.onresize = navListOrder;
-        }
 
         navListOrder();
 
@@ -139,28 +130,29 @@ jQuery(document).ready(function () {
     });
 
     // make some room for our fixed header
-    jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
+    jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
+    if (jQuery(window).width() < 800) {
+        jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
+    }
 
     // Subnav
-    jQuery("#site-logo").append(jQuery("#universal-subnav"));
-    jQuery("#site-logo").on("mouseenter", function () {
-        if (jQuery(window).width() > 800) {
-            jQuery("#universal-subnav").show();
-        }
-    });
-    jQuery("#site-logo").on("mouseleave", function () {
-        if (jQuery(window).width() > 800) {
-            jQuery("#universal-subnav").hide();
-        }
-    });
+    jQuery(".site-header-custom").append(jQuery("#universal-subnav"));
+    jQuery(".nav-level-2").css("display", "block");
     if (jQuery(window).width() < 800) {
         jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
     }
-    // account for admin bar
-    if(jQuery("#wpadminbar").length && jQuery(window).width() > 800) {
-        jQuery("#universal-subnav").css("margin-top", "32px");
+    window.onresize = function() {
+        if (jQuery(window).width() < 800 && jQuery("#universal-subnav #menu-secondary_universal_menu").length) {
+            jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
+            jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
+        } else if (jQuery(window).width() > 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length) {
+            jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
+            jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
+        }
+        if (jQuery(window).width() > 800) {
+            navListOrder();
+        }
     }
-
 
     // mobile
     jQuery(document).on('click', '.mobile-toggle-panel', function (e) {
