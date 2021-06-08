@@ -1,0 +1,10 @@
+.single-product {
+	.woocommerce-breadcrumb {
+		display: none;
+	}
+	
+}
+
+.woocommerce #respond input#submit, .woocommerce a.button, .woocommerce button.button, .woocommerce input.button, .woocommerce form button.button, .paypal-button.paypal-button-shape-rect {
+	border-radius: 4px !important; // 4px is to match the paypal buttons
+}

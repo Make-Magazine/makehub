@@ -1,0 +1,57 @@
+@mixin reset() {
+  color: #000;
+  text-shadow: none;
+  height: auto;
+  width: auto;
+  padding: 0;
+  line-height: normal;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+.calendar-polyfill {
+	&, select, table, th, td {
+		@include reset();
+	}
+	border: 1px solid #005e9a;
+	width: auto;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 0 10px 0 rgba(0,0,0,.5);
+	padding: 0px !important;
+	text-align: center;
+	background: #005e9a;
+	select {
+		margin: 3px 5px;
+		padding: 2px;
+		border: 1px solid #c0c0c0;
+		background: #fff;
+	}
+	table { margin-bottom: 0px; background: #005e9a; }
+	th, td {
+		width: 15.15%;
+		padding: 5px 5px !important;
+		text-align: center;
+		border-top: 1px solid #005e9a;
+		border-right: 1px solid #005e9a;
+		box-shadow: inset 1px 1px 0 0 rgba(0, 94, 154,.3);
+		border: 0px;
+		line-height: inherit;
+	}
+	th { background: #f1f1f1; }
+	td {
+		background: #fff;
+		cursor: pointer;
+		&:hover {
+			color: #666;
+			font-weight: bold;
+		}
+		&:empty {
+			background: #005e9a;
+		}
+	}
+
+	.selected {
+		font-weight: bold;
+	}
+}

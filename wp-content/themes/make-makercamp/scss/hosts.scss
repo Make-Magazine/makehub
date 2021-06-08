@@ -1,0 +1,81 @@
+.tax-espresso_people_type {
+	.page-header {
+		margin-top: 0px;
+		.page-title {
+			visibility: hidden;
+			margin-top: 0px;
+			span { 
+				visibility: visible;
+				margin-left: -150px;
+			}
+		}
+	}
+	
+	article {
+		.post-inner-wrap {
+			display: flex;
+			img { margin: 30px; }
+		}
+	}
+}
+
+.single-espresso_people {
+	.host-wrapper {
+		margin-top: 30px;
+		border: 1px solid #d5d5d5;
+		margin-bottom: 40px;
+		padding: 32px;
+		display: flex;
+		background: #fff;
+		@media screen and (max-width: 600px) {
+			flex-direction: column;
+		}
+		.host-photo {
+			height: 150px;
+			width: 150px;
+			min-width: 150px;
+			float: left;
+			margin-right: 30px;
+			@media screen  and (max-width: 768px) {
+				float: none;
+				margin: 0px auto 10px;
+			}
+			img {
+				height: 150px;
+				width: 150px;
+				object-fit: cover;
+			}
+		}
+		.social-links {
+			margin: 10px 0px;
+			display: flex;
+			align-items: center;
+			b { margin-right: 15px; }
+		}
+		.host-meta {
+			flex-direction: row;
+			h1 { 
+				text-align: left;
+				font-weight: 600;
+			}
+			.host-bio {
+				line-height: 16px;
+				ol { list-style: decimal; }
+				ul { list-style: disc; }
+				ol, ul { 
+					padding-top: 15px;
+					padding-left: 30px; 
+					br { display: none; }
+				}
+				a { 
+					color: #337ab7;
+					&:hover { color: #23527c; }
+				}
+			}
+		}
+		.fas { margin-left: auto; }
+	}
+	.host-events {
+		h3 { font-weight: $font-bold; }
+	}
+}

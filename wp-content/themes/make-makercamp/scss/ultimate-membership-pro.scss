@@ -1,0 +1,74 @@
+.membership-tab-wrapper {
+	padding: 0px 15px;
+	position: relative;
+	#manage-membership-btn {
+		position: absolute;
+		right: 25px;
+		margin-top: 40px;
+		@media screen and (max-width: 480px) {
+			position: relative;
+			width: 100%;
+			margin-top: 0px;
+			right: 0px;
+		}
+	}
+	.iump-wrapp-listing-levels {
+		text-align: center;
+		margin-bottom: 30px;
+		.iump-listing-levels-label {
+			background-color: #fff;
+			padding: 10px 20px;
+			font-size: 18px;
+			cursor: default;
+			border-bottom: #ccc solid 3px;
+			color: #999;
+			width: 100%;
+			&::before {
+				content: "Current Level: ";
+			}
+		}
+	}
+	.ihc-user-page-top-ap-wrapper {
+		display: none;
+		width: 100%;
+		.ihc-middle-side {
+			margin-lefT: 0px;
+			.ihc-account-page-top-mess {
+				padding: 0px;
+				.ihc-account-page-top-extra-mess {
+					margin-bottom:0px;
+				}
+			}
+			.ihc-top-levels { margin: 0px; }
+		}
+	}
+	.ihc-ap-menu {
+		display: none;
+	}
+	.ihc-ap-wrap {
+		table.ihc-account-tranz-list {
+			border-radius: 5px;
+			overflow: hidden;
+			thead tr { 
+				background-color: $color-grey !important;
+				th { 
+					color: #fff;
+					font-size: 18px;
+					padding: 10px 5px;
+				}
+			}
+			tr:nth-child(odd){ background-color: $color-light-grey; }
+			tfoot { display: none; }
+			td {
+				padding: 10px 5px;
+				font-size: 16px;
+				color: $color-grey;
+				font-family: Roboto;
+				span { font-size: 16px; }
+				&.ihc-content-oswald {
+					font-family: Roboto;
+				}
+			}
+		}
+	}
+}
