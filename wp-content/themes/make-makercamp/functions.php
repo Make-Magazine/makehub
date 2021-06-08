@@ -1,6 +1,6 @@
 <?php
 /**
- * @package Make Experiences
+ * @package Maker Camp
  * The parent theme functions are located at /buddyboss-theme/inc/theme/functions.php
  * Add your own functions at the bottom of this file.
  */
