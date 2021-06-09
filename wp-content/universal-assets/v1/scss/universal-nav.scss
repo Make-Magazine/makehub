@@ -74,6 +74,9 @@
                     height: 40px;
                 }
             }
+            @media screen and (max-width: 800px) {
+                padding-right: 0px;
+            }
         }
         &.default-header {
             .main-navigation {
@@ -464,6 +467,13 @@
                 margin-left: 10px;
             }
         }
+        #profile-view {
+            &:hover {
+                 .dropdown-menu {
+                     display: block;
+                 }
+            }
+        }
         .avatar {
             border-radius: 100px;
         }
@@ -775,6 +785,7 @@ body.mobile-nav {
             min-width: 300px;
             background: #f1f1f1;
             position: absolute;
+            z-index: 999999;
             left: -40px;
             top: 72px;
             text-align: center;
