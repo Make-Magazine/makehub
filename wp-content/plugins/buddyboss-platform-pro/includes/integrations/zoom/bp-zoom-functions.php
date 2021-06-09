@@ -72,8 +72,6 @@ function bp_zoom_enqueue_scripts_and_styles() {
 		'bp_zoom_vars',
 		array(
 			'ajax_url'                => bp_core_ajax_url(),
-			'bp_zoom_key'             => $api_key,
-			'bp_zoom_secret'          => $api_secret,
 			'home_url'                => home_url( $wp->request ),
 			'is_single_meeting'       => bp_zoom_is_single_meeting(),
 			'is_single_webinar'       => bp_zoom_is_single_webinar(),
@@ -82,6 +80,8 @@ function bp_zoom_enqueue_scripts_and_styles() {
 			'group_meetings_past_url' => $past_meetings_url,
 			'group_webinars_url'      => $webinars_url,
 			'group_webinar_past_url'  => $past_webinars_url,
+			'bp_staple'               => base64_encode( $api_key ), // Zoom API Key
+			'bp_contrast'             => base64_encode ( $api_secret ), // Zoom API Secret
 			'meeting_delete_nonce'    => wp_create_nonce( 'bp_zoom_meeting_delete' ),
 			'meeting_confirm_msg'     => __( 'Are you sure you want to delete this meeting?', 'buddyboss-pro' ),
 			'webinar_delete_nonce'    => wp_create_nonce( 'bp_zoom_webinar_delete' ),

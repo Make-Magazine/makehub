@@ -1689,8 +1689,8 @@ window.bp = window.bp || {};
 
 					$('#zmmtg-root').addClass('active');
 					var meetConfig = {
-						apiKey: bp_zoom_vars.bp_zoom_key,
-						apiSecret: bp_zoom_vars.bp_zoom_secret,
+						apiKey: atob( bp_zoom_vars.bp_staple ),
+						apiSecret: atob( bp_zoom_vars.bp_contrast ),
 						meetingNumber: _this.data('meeting-id'),
 						userName: bp_zoom_vars.user.name,
 						passWord: _this.data('meeting-pwd'),
@@ -2414,8 +2414,8 @@ window.bp = window.bp || {};
 
 					$('#zmmtg-root').addClass('active');
 					var meetConfig = {
-						apiKey: bp_zoom_vars.bp_zoom_key,
-						apiSecret: bp_zoom_vars.bp_zoom_secret,
+						apiKey: atob( bp_zoom_vars.bp_staple ),
+						apiSecret: atob( bp_zoom_vars.bp_contrast ),
 						meetingNumber: _this.data('webinar-id'),
 						userName: bp_zoom_vars.user.name,
 						passWord: _this.data('webinar-pwd'),
