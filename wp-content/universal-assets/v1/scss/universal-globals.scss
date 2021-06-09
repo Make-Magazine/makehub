@@ -6,6 +6,8 @@ body {
     &.admin-bar {
         margin-top: 32px;  
         overflow: visible;
+        position: absolute !important;
+        top: 0px !important;
         @media screen and (max-width: 600px) {
             margin-top: 0px;
         }

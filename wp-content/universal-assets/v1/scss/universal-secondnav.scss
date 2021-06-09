@@ -32,6 +32,7 @@
                 }
                 span {
                     padding: 0 23px;
+                    height: 20px;
                     transition: font-weight .1s ease-in-out;
                 }
             }
@@ -39,9 +40,11 @@
                 a { opacity: .7; }
             }
             &.menu-item-has-children {
-                &.open a {
+                &.open > a, &.show > a {
                     background: transparent !important;
-                    min-height: 30px;
+                }
+                .dropdown-menu a {
+                    height: 30px;
                 }
             }
         }
@@ -69,6 +72,7 @@
             min-width: 125px;
             position: relative !important;
             transform: none !important;
+            top: 0px;
             li { 
                 border: 0px;
                 &:hover {
@@ -92,5 +96,9 @@
         width: auto;
         background: transparent;
         box-shadow: none;
+        &.open, &.show {
+            height: 20px;
+            overflow: visible;
+        }
     }
 }
