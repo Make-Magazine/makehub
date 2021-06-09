@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
-Version: 1.6.6
+Version: 1.6.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,14 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.6.7.1 =
+* Forums - Fixed media link embed issue in Forum discussion and replies
+
+= 1.6.7 =
+* Theme Options - Fixed important issue to clear transient on theme update
+* GamiPress - Fixed blocks alignment compatibility issues with 'GamiPress - BuddyBoss integration'
+* Translations - Updated German (formal) language files
 
 = 1.6.6 =
 * Profiles - Improved mobile layout when profile navigation configured to show vertically

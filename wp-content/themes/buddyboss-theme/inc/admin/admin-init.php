@@ -318,26 +318,40 @@ if ( !function_exists('redux_options_buddyboss_theme_saved' ) ) {
 				    'buddyboss_theme_options_ajax_save',
 				    'customize_save'
 			    ) ) ) {
-		    delete_transient( 'buddyboss_theme_typography' );
-		    delete_transient( 'buddyboss_theme_compressed_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_bp_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_forums_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_learndash_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_woocommerce_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_jobsmanager_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_events_custom_css' );
-		    delete_transient( 'buddyboss_theme_compressed_gamipress_custom_css' );
-            delete_transient( 'buddyboss_theme_compressed_badgeos_custom_css' );
-            delete_transient( 'buddyboss_theme_compressed_pmpro_custom_css' );
-			delete_transient( 'buddyboss_theme_compressed_plugins_custom_css' );
-			delete_transient( 'buddyboss_theme_compressed_lifterLMS_custom_css' );
-			delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
+		    buddyboss_theme_compressed_transient_delete();
 	    }
 
     }
 
     add_action( 'redux/options/buddyboss_theme_options/saved', 'redux_options_buddyboss_theme_saved' );
     add_action( 'customize_save', 'redux_options_buddyboss_theme_saved' );
+}
+
+if ( ! function_exists( 'buddyboss_theme_compressed_transient_delete' ) ) {
+	
+	/**
+	 * Delete theme compressed transient.
+	 * 
+	 * @since 1.6.7
+	 *
+	 * @return void
+	 */
+	function buddyboss_theme_compressed_transient_delete() {
+		delete_transient( 'buddyboss_theme_typography' );
+		delete_transient( 'buddyboss_theme_compressed_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_bp_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_forums_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_learndash_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_woocommerce_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_jobsmanager_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_events_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_gamipress_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_badgeos_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_pmpro_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_plugins_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_lifterLMS_custom_css' );
+		delete_transient( 'buddyboss_theme_compressed_elementor_custom_css' );
+	}
 }
 
 if ( ! function_exists( 'buddyboss_theme_reset_profile_cover_position' ) ) {

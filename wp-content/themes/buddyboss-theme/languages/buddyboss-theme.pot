@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-17 18:31:29+00:00\n"
+"POT-Creation-Date: 2021-05-27 14:34:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -671,7 +671,7 @@ msgstr ""
 #: buddypress/members/single/invites/sent-invites.php:68
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:289
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:647
-#: inc/theme-activation.php:2565 lifterlms/myaccount/view-order.php:39
+#: inc/theme-activation.php:2594 lifterlms/myaccount/view-order.php:39
 #: paid-memberships-pro/pages/account.php:127
 #: woocommerce/myaccount/dashboard.php:79
 #: woocommerce/myaccount/my-orders.php:16
@@ -822,31 +822,31 @@ msgstr ""
 msgid "Could not load the starter file!"
 msgstr ""
 
-#: functions.php:73 inc/theme-activation.php:285
+#: functions.php:73 inc/theme-activation.php:288
 msgid "Install Required Plugins"
 msgstr ""
 
-#: functions.php:74 inc/theme-activation.php:286
+#: functions.php:74 inc/theme-activation.php:289
 msgid "Install Plugins"
 msgstr ""
 
-#: functions.php:75 inc/theme-activation.php:288
+#: functions.php:75 inc/theme-activation.php:291
 #. translators: %s: plugin name.
 msgid "Installing Plugin: %s"
 msgstr ""
 
-#: functions.php:77 inc/theme-activation.php:291
+#: functions.php:77 inc/theme-activation.php:294
 msgid "Something went wrong with the plugin API."
 msgstr ""
 
-#: functions.php:78 inc/theme-activation.php:293
+#: functions.php:78 inc/theme-activation.php:296
 #. translators: 1: plugin name(s).
 msgid "This theme requires the following plugin: %1$s."
 msgid_plural "This theme requires the following plugins: %1$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:80 inc/theme-activation.php:299
+#: functions.php:80 inc/theme-activation.php:302
 #. translators: 1: plugin name(s).
 msgid "This theme recommends the following plugin: %1$s."
 msgid_plural "This theme recommends the following plugins: %1$s."
@@ -865,14 +865,14 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:84 inc/theme-activation.php:317
+#: functions.php:84 inc/theme-activation.php:320
 #. translators: 1: plugin name(s).
 msgid "The following required plugin is currently inactive: %1$s."
 msgid_plural "The following required plugins are currently inactive: %1$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:86 inc/theme-activation.php:323
+#: functions.php:86 inc/theme-activation.php:326
 #. translators: 1: plugin name(s).
 msgid "The following recommended plugin is currently inactive: %1$s."
 msgid_plural "The following recommended plugins are currently inactive: %1$s."
@@ -891,7 +891,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:90 inc/theme-activation.php:305
+#: functions.php:90 inc/theme-activation.php:308
 #. translators: 1: plugin name(s).
 msgid ""
 "The following plugin needs to be updated to its latest version to ensure "
@@ -914,7 +914,7 @@ msgid_plural ""
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:94 inc/theme-activation.php:328
+#: functions.php:94 inc/theme-activation.php:331
 msgid "Begin installing plugin"
 msgid_plural "Begin installing plugins"
 msgstr[0] ""
@@ -926,11 +926,11 @@ msgid_plural "Activate installed plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: functions.php:96 inc/theme-activation.php:343
+#: functions.php:96 inc/theme-activation.php:346
 msgid "Return to Required Plugins Installer"
 msgstr ""
 
-#: functions.php:97 inc/theme-activation.php:345 inc/theme-activation.php:3173
+#: functions.php:97 inc/theme-activation.php:348 inc/theme-activation.php:3202
 msgid "Plugin activated successfully."
 msgstr ""
 
@@ -951,7 +951,7 @@ msgid ""
 "href=\"%s\">HERE</a> and try again."
 msgstr ""
 
-#: inc/admin/admin-init.php:527 inc/admin/admin-init.php:603
+#: inc/admin/admin-init.php:541 inc/admin/admin-init.php:617
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:663
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:204
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:267
@@ -964,67 +964,67 @@ msgstr ""
 msgid "Padding"
 msgstr ""
 
-#: inc/admin/admin-init.php:538
+#: inc/admin/admin-init.php:552
 msgid "Padding:"
 msgstr ""
 
-#: inc/admin/admin-init.php:676
+#: inc/admin/admin-init.php:690
 msgid ""
 "BuddyBoss Theme requires LearnDash 3.0 or above.  <a href=\"%s\">Update "
 "LearnDash</a>"
 msgstr ""
 
-#: inc/admin/admin-init.php:683
+#: inc/admin/admin-init.php:697
 msgid ""
 "BuddyBoss Theme requires the <strong>LearnDash 3.0</strong>  template, "
 "however you are using the <strong>Legacy</strong> template. <a "
 "href=\"%s\">Repair</a>"
 msgstr ""
 
-#: inc/admin/admin-init.php:703
+#: inc/admin/admin-init.php:717
 msgid "Default Fonts"
 msgstr ""
 
-#: inc/admin/admin-init.php:706 inc/admin/admin-init.php:714
+#: inc/admin/admin-init.php:720 inc/admin/admin-init.php:728
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:138
 msgid "Normal 400"
 msgstr ""
 
-#: inc/admin/admin-init.php:707 inc/admin/admin-init.php:715
+#: inc/admin/admin-init.php:721 inc/admin/admin-init.php:729
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:141
 msgid "Medium 500"
 msgstr ""
 
-#: inc/admin/admin-init.php:708
+#: inc/admin/admin-init.php:722
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:147
 msgid "Bold 700"
 msgstr ""
 
-#: inc/admin/admin-init.php:713
+#: inc/admin/admin-init.php:727
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:135
 msgid "Light 300"
 msgstr ""
 
-#: inc/admin/admin-init.php:716
+#: inc/admin/admin-init.php:730
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:144
 msgid "Semi Bold 600"
 msgstr ""
 
-#: inc/admin/admin-init.php:717
+#: inc/admin/admin-init.php:731
 msgid "Light 300 Italic"
 msgstr ""
 
-#: inc/admin/admin-init.php:718
+#: inc/admin/admin-init.php:732
 msgid "Normal 400 Italic"
 msgstr ""
 
-#: inc/admin/admin-init.php:736
+#: inc/admin/admin-init.php:750
 msgid ""
 "Please update BuddyBoss Platform to v1.4.0 to maintain compatibility with "
 "BuddyBoss Theme. Some icons in your theme will look wrong until you update."
 msgstr ""
 
-#: inc/admin/admin-init.php:748
+#: inc/admin/admin-init.php:762
 msgid "This panel is set to be Read-Only. Saving is disabled."
 msgstr ""
 
@@ -3854,7 +3854,7 @@ msgstr ""
 #: inc/plugins/elementor/widgets/bb-review.php:187
 #: inc/plugins/elementor/widgets/bb-tabs.php:222
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:145
-#: inc/theme-activation.php:2560
+#: inc/theme-activation.php:2589
 msgid "Type"
 msgstr ""
 
@@ -6637,7 +6637,7 @@ msgid "PressThis"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:749
-#: inc/theme-activation.php:2736
+#: inc/theme-activation.php:2765
 msgid "Update"
 msgstr ""
 
@@ -9176,7 +9176,7 @@ msgid "Notice"
 msgstr ""
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:552
-#: inc/theme-activation.php:2558
+#: inc/theme-activation.php:2587
 msgid "Plugin"
 msgstr ""
 
@@ -10329,7 +10329,7 @@ msgstr ""
 
 #: inc/plugins/elementor/widgets/bb-review.php:218
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:178
-#: inc/theme-activation.php:2559
+#: inc/theme-activation.php:2588
 msgid "Source"
 msgstr ""
 
@@ -10869,7 +10869,7 @@ msgstr ""
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:123
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:517
 #: inc/plugins/elementor/widgets/members/bb-members.php:119
-#: inc/theme-activation.php:2332
+#: inc/theme-activation.php:2361
 msgid "Active"
 msgstr ""
 
@@ -11835,300 +11835,300 @@ msgid ""
 "then display the social networks added to the post author's profile."
 msgstr ""
 
-#: inc/theme-activation.php:290
+#: inc/theme-activation.php:293
 #. translators: %s: plugin name.
 msgid "Updating Plugin: %s"
 msgstr ""
 
-#: inc/theme-activation.php:311
+#: inc/theme-activation.php:314
 #. translators: 1: plugin name(s).
 msgid "There is an update available for: %1$s."
 msgid_plural "There are updates available for the following plugins: %1$s."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:333
+#: inc/theme-activation.php:336
 msgid "Begin updating plugin"
 msgid_plural "Begin updating plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:338
+#: inc/theme-activation.php:341
 msgid "Begin activating plugin"
 msgid_plural "Begin activating plugins"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:344
+#: inc/theme-activation.php:347
 msgid "Return to the Dashboard"
 msgstr ""
 
-#: inc/theme-activation.php:346 inc/theme-activation.php:2966
+#: inc/theme-activation.php:349 inc/theme-activation.php:2995
 msgid "The following plugin was activated successfully:"
 msgstr ""
 
-#: inc/theme-activation.php:348
+#: inc/theme-activation.php:351
 #. translators: 1: plugin name.
 msgid "No action taken. Plugin %1$s was already active."
 msgstr ""
 
-#: inc/theme-activation.php:350
+#: inc/theme-activation.php:353
 #. translators: 1: plugin name.
 msgid ""
 "Plugin not activated. A higher version of %s is needed for this theme. "
 "Please update the plugin."
 msgstr ""
 
-#: inc/theme-activation.php:352
+#: inc/theme-activation.php:355
 #. translators: 1: dashboard link.
 msgid "All plugins installed and activated successfully. %1$s"
 msgstr ""
 
-#: inc/theme-activation.php:353
+#: inc/theme-activation.php:356
 msgid "Dismiss this notice"
 msgstr ""
 
-#: inc/theme-activation.php:354
+#: inc/theme-activation.php:357
 msgid ""
 "There are one or more required or recommended plugins to install, update or "
 "activate."
 msgstr ""
 
-#: inc/theme-activation.php:355
+#: inc/theme-activation.php:358
 msgid "Please contact the administrator of this site for help."
 msgstr ""
 
-#: inc/theme-activation.php:499
+#: inc/theme-activation.php:528
 msgid "This plugin needs to be updated to be compatible with your theme."
 msgstr ""
 
-#: inc/theme-activation.php:500
+#: inc/theme-activation.php:529
 msgid "Update Required"
 msgstr ""
 
-#: inc/theme-activation.php:615
+#: inc/theme-activation.php:644
 msgid "Set the parent_slug config variable instead."
 msgstr ""
 
-#: inc/theme-activation.php:922
+#: inc/theme-activation.php:951
 msgid ""
 "The remote plugin package does not contain a folder with the desired slug "
 "and renaming did not work."
 msgstr ""
 
-#: inc/theme-activation.php:922 inc/theme-activation.php:932
+#: inc/theme-activation.php:951 inc/theme-activation.php:961
 msgid ""
 "Please contact the plugin provider and ask them to package their plugin "
 "according to the WordPress guidelines."
 msgstr ""
 
-#: inc/theme-activation.php:932
+#: inc/theme-activation.php:961
 msgid ""
 "The remote plugin package consists of more than one file, but the files are "
 "not packaged in a folder."
 msgstr ""
 
-#: inc/theme-activation.php:1990
+#: inc/theme-activation.php:2019
 #. translators: %s: version number
 msgid "BBTA v%s"
 msgstr ""
 
-#: inc/theme-activation.php:2284
+#: inc/theme-activation.php:2313
 msgid "Required"
 msgstr ""
 
-#: inc/theme-activation.php:2287
+#: inc/theme-activation.php:2316
 msgid "Recommended"
 msgstr ""
 
-#: inc/theme-activation.php:2303
+#: inc/theme-activation.php:2332
 msgid "WordPress Repository"
 msgstr ""
 
-#: inc/theme-activation.php:2306
+#: inc/theme-activation.php:2335
 msgid "External Source"
 msgstr ""
 
-#: inc/theme-activation.php:2309
+#: inc/theme-activation.php:2338
 msgid "Pre-Packaged"
 msgstr ""
 
-#: inc/theme-activation.php:2326
+#: inc/theme-activation.php:2355
 msgid "Not Installed"
 msgstr ""
 
-#: inc/theme-activation.php:2330
+#: inc/theme-activation.php:2359
 msgid "Installed But Not Activated"
 msgstr ""
 
-#: inc/theme-activation.php:2338
+#: inc/theme-activation.php:2367
 msgid "Required Update not Available"
 msgstr ""
 
-#: inc/theme-activation.php:2341
+#: inc/theme-activation.php:2370
 msgid "Requires Update"
 msgstr ""
 
-#: inc/theme-activation.php:2344
+#: inc/theme-activation.php:2373
 msgid "Update recommended"
 msgstr ""
 
-#: inc/theme-activation.php:2403
+#: inc/theme-activation.php:2432
 #. translators: 1: number of plugins.
 msgid "To Install <span class=\"count\">(%s)</span>"
 msgid_plural "To Install <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:2407
+#: inc/theme-activation.php:2436
 #. translators: 1: number of plugins.
 msgid "Update Available <span class=\"count\">(%s)</span>"
 msgid_plural "Update Available <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:2411
+#: inc/theme-activation.php:2440
 #. translators: 1: number of plugins.
 msgid "To Activate <span class=\"count\">(%s)</span>"
 msgid_plural "To Activate <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:2501
+#: inc/theme-activation.php:2530
 msgid "Installed version:"
 msgstr ""
 
-#: inc/theme-activation.php:2509
+#: inc/theme-activation.php:2538
 msgid "Minimum required version:"
 msgstr ""
 
-#: inc/theme-activation.php:2521
+#: inc/theme-activation.php:2550
 msgid "Available version:"
 msgstr ""
 
-#: inc/theme-activation.php:2544
+#: inc/theme-activation.php:2573
 msgid "No plugins to install, update or activate."
 msgstr ""
 
-#: inc/theme-activation.php:2564
+#: inc/theme-activation.php:2593
 msgid "Version"
 msgstr ""
 
-#: inc/theme-activation.php:2614
+#: inc/theme-activation.php:2643
 #. translators: %2$s: plugin name in screen reader markup
 msgid "Install %2$s"
 msgstr ""
 
-#: inc/theme-activation.php:2619
+#: inc/theme-activation.php:2648
 #. translators: %2$s: plugin name in screen reader markup
 msgid "Update %2$s"
 msgstr ""
 
-#: inc/theme-activation.php:2625
+#: inc/theme-activation.php:2654
 #. translators: %2$s: plugin name in screen reader markup
 msgid "Activate %2$s"
 msgstr ""
 
-#: inc/theme-activation.php:2697
+#: inc/theme-activation.php:2726
 msgid "Upgrade message from the plugin author:"
 msgstr ""
 
-#: inc/theme-activation.php:2730
+#: inc/theme-activation.php:2759
 msgid "Install"
 msgstr ""
 
-#: inc/theme-activation.php:2739
+#: inc/theme-activation.php:2768
 msgid "Activate"
 msgstr ""
 
-#: inc/theme-activation.php:2770
+#: inc/theme-activation.php:2799
 msgid "No plugins were selected to be installed. No action taken."
 msgstr ""
 
-#: inc/theme-activation.php:2772
+#: inc/theme-activation.php:2801
 msgid "No plugins were selected to be updated. No action taken."
 msgstr ""
 
-#: inc/theme-activation.php:2813
+#: inc/theme-activation.php:2842
 msgid "No plugins are available to be installed at this time."
 msgstr ""
 
-#: inc/theme-activation.php:2815
+#: inc/theme-activation.php:2844
 msgid "No plugins are available to be updated at this time."
 msgstr ""
 
-#: inc/theme-activation.php:2922
+#: inc/theme-activation.php:2951
 msgid "No plugins were selected to be activated. No action taken."
 msgstr ""
 
-#: inc/theme-activation.php:2948
+#: inc/theme-activation.php:2977
 msgid "No plugins are available to be activated at this time."
 msgstr ""
 
-#: inc/theme-activation.php:3172
+#: inc/theme-activation.php:3201
 msgid "Plugin activation failed."
 msgstr ""
 
-#: inc/theme-activation.php:3516
+#: inc/theme-activation.php:3545
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
 msgid "Updating Plugin %1$s (%2$d/%3$d)"
 msgstr ""
 
-#: inc/theme-activation.php:3519
+#: inc/theme-activation.php:3548
 #. translators: 1: plugin name, 2: error message.
 msgid "An error occurred while installing %1$s: <strong>%2$s</strong>."
 msgstr ""
 
-#: inc/theme-activation.php:3521
+#: inc/theme-activation.php:3550
 #. translators: 1: plugin name.
 msgid "The installation of %1$s failed."
 msgstr ""
 
-#: inc/theme-activation.php:3525
+#: inc/theme-activation.php:3554
 msgid ""
 "The installation and activation process is starting. This process may take "
 "a while on some hosts, so please be patient."
 msgstr ""
 
-#: inc/theme-activation.php:3527
+#: inc/theme-activation.php:3556
 #. translators: 1: plugin name.
 msgid "%1$s installed and activated successfully."
 msgstr ""
 
-#: inc/theme-activation.php:3528
+#: inc/theme-activation.php:3557
 msgid "All installations and activations have been completed."
 msgstr ""
 
-#: inc/theme-activation.php:3530
+#: inc/theme-activation.php:3559
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
 msgid "Installing and Activating Plugin %1$s (%2$d/%3$d)"
 msgstr ""
 
-#: inc/theme-activation.php:3533
+#: inc/theme-activation.php:3562
 msgid ""
 "The installation process is starting. This process may take a while on some "
 "hosts, so please be patient."
 msgstr ""
 
-#: inc/theme-activation.php:3535
+#: inc/theme-activation.php:3564
 #. translators: 1: plugin name.
 msgid "%1$s installed successfully."
 msgstr ""
 
-#: inc/theme-activation.php:3536
+#: inc/theme-activation.php:3565
 msgid "All installations have been completed."
 msgstr ""
 
-#: inc/theme-activation.php:3538
+#: inc/theme-activation.php:3567
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
 msgid "Installing Plugin %1$s (%2$d/%3$d)"
 msgstr ""
 
-#: inc/theme-activation.php:3543
+#: inc/theme-activation.php:3572
 msgid "Show Details"
 msgstr ""
 
-#: inc/theme-activation.php:3543
+#: inc/theme-activation.php:3572
 msgid "Hide Details"
 msgstr ""
 
@@ -13872,18 +13872,18 @@ msgctxt "placeholders: comment date, comment time"
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: inc/theme-activation.php:1121 inc/theme-activation.php:2962
+#: inc/theme-activation.php:1150 inc/theme-activation.php:2991
 msgctxt "plugin A *and* plugin B"
 msgid "and"
 msgstr ""
 
-#: inc/theme-activation.php:2353
+#: inc/theme-activation.php:2382
 #. translators: 1: install status, 2: update status
 msgctxt "Install/Update Status"
 msgid "%1$s, %2$s"
 msgstr ""
 
-#: inc/theme-activation.php:2399
+#: inc/theme-activation.php:2428
 #. translators: 1: number of plugins.
 msgctxt "plugins"
 msgid "All <span class=\"count\">(%s)</span>"
@@ -13891,7 +13891,7 @@ msgid_plural "All <span class=\"count\">(%s)</span>"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/theme-activation.php:2493
+#: inc/theme-activation.php:2522
 msgctxt "as in: \"version nr unknown\""
 msgid "unknown"
 msgstr ""

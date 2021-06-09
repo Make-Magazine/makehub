@@ -323,6 +323,10 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
             $output_array = $embeds_array = array();
 			$flag = true;
 
+			if ( strpos( $content, 'download_document_file' ) || strpos( $content, 'download_media_file' ) || strpos( $content, 'download_video_file' ) ) {
+				return $content;
+			}
+
             if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
                 preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
             }

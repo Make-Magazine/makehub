@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Theme v1.6.4\n"
-"POT-Creation-Date: 2021-02-11 21:54+0100\n"
-"PO-Revision-Date: 2021-05-13 13:28+0530\n"
+"Project-Id-Version: BuddyBoss Theme v1.6.6\n"
+"POT-Creation-Date: 2021-05-20 09:13+0200\n"
+"PO-Revision-Date: 2021-05-27 20:14+0530\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -158,7 +158,7 @@ msgstr "Unterforen"
 msgid "Original Post"
 msgstr "Originalbeitrag"
 
-#: bbpress/content-single-topic.php:84 learndash/ld30/lesson.php:104
+#: bbpress/content-single-topic.php:84 learndash/ld30/lesson.php:109
 #: learndash/ld30/quiz.php:85
 #: lifterlms/assignment/template-single-assignment-content.php:61
 #: lifterlms/lesson/template-single-lesson-content.php:63
@@ -406,8 +406,8 @@ msgstr "Antworten"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1812
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3142
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:232
-#: inc/theme/template-functions.php:1821 inc/theme/template-functions.php:1834
-#: inc/theme/template-functions.php:1942 inc/theme/template-functions.php:1957
+#: inc/theme/template-functions.php:1838 inc/theme/template-functions.php:1851
+#: inc/theme/template-functions.php:1959 inc/theme/template-functions.php:1974
 msgid "Reply"
 msgstr "Antwort"
 
@@ -562,19 +562,18 @@ msgstr "Bearbeiten"
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:717
 #: inc/plugins/lifterlms-helper.php:1717 inc/plugins/lifterlms-helper.php:1797
 #: inc/theme/login.php:397 inc/theme/template-functions.php:698
-#: learndash/ld30/learndash-sidebar.php:154
-#: learndash/ld30/learndash-sidebar.php:156
-#: learndash/ld30/learndash-sidebar.php:157
+#: learndash/ld30/learndash-sidebar.php:164
+#: learndash/ld30/learndash-sidebar.php:166
+#: learndash/ld30/learndash-sidebar.php:167
 #: learndash/ld30/lesson/partials/row.php:117
 #: learndash/ld30/lesson/partials/row.php:119
 #: learndash/ld30/lesson/partials/row.php:120
 #: learndash/ld30/lesson/partials/row.php:137
 #: learndash/ld30/lesson/partials/row.php:139
 #: learndash/ld30/lesson/partials/row.php:140
-#: learndash/ld30/shortcodes/course_list_template.php:259
-#: learndash/ld30/shortcodes/course_list_template.php:303
-#: learndash/ld30/template-course-item.php:73
-#: learndash/ld30/template-course-item.php:95
+#: learndash/ld30/shortcodes/course_list_template.php:298
+#: learndash/ld30/template-course-item.php:80
+#: learndash/ld30/template-course-item.php:102
 #: lifterlms/course/course-index-loop.php:82
 #: lifterlms/course/course-index-loop.php:94
 #: lifterlms/loop/featured-image.php:44
@@ -3301,7 +3300,7 @@ msgstr "Theme-Optionen"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:142
 #: learndash/ld30/lesson/listing.php:81
 #: learndash/ld30/lesson/partials/row.php:209
-#: learndash/ld30/shortcodes/profile/course-row.php:31
+#: learndash/ld30/shortcodes/profile/course-row.php:39
 msgid "Expand"
 msgstr "Ausklappen"
 
@@ -6461,7 +6460,7 @@ msgstr ""
 "zuzugreifen, können Sie Ihre globale Variable verwenden: <strong>$%1$s</"
 "strong></p>"
 
-#: inc/admin/options/custom-css.php:4229
+#: inc/admin/options/custom-css.php:4242
 msgid "Quiz Progress"
 msgstr "Quiz-Fortschritt"
 
@@ -9036,7 +9035,7 @@ msgid "Log In"
 msgstr "Anmelden"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1437
-#: inc/theme/functions.php:1422 inc/theme/template-functions.php:1440
+#: inc/theme/functions.php:1434 inc/theme/template-functions.php:1440
 #: template-parts/header-mobile.php:163
 #: template-parts/header-profile-menu.php:458
 msgid "Log Out"
@@ -9073,7 +9072,7 @@ msgstr "Karten-Pin: Klein"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1472
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:162
-#: learndash/ld30/learndash-sidebar.php:69 template-parts/header-aside.php:78
+#: learndash/ld30/learndash-sidebar.php:79 template-parts/header-aside.php:78
 msgid "Maximize"
 msgstr "Maximieren"
 
@@ -9118,7 +9117,7 @@ msgstr "Mikro: Aus"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1532
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:167
-#: learndash/ld30/learndash-sidebar.php:70 template-parts/header-aside.php:79
+#: learndash/ld30/learndash-sidebar.php:80 template-parts/header-aside.php:79
 msgid "Minimize"
 msgstr "Minnimieren"
 
@@ -9360,7 +9359,7 @@ msgstr "Power: Klein"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3082
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:524
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:207
-#: lifterlms/content-certificate.php:46
+#: lifterlms/content-certificate.php:44
 msgid "Print"
 msgstr "Drucken"
 
@@ -9438,7 +9437,7 @@ msgstr "RSS: Quadratisch"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1847
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1863
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:529
-#: inc/theme/login.php:168 lifterlms/content-certificate.php:52
+#: inc/theme/login.php:168 lifterlms/content-certificate.php:50
 msgid "Save"
 msgstr "Sichern"
 
@@ -10836,8 +10835,8 @@ msgstr "CC"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:750
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:2292
-#: learndash/ld30/shortcodes/profile/course-row.php:44
-#: learndash/ld30/template-single-course-sidebar.php:344
+#: learndash/ld30/shortcodes/profile/course-row.php:52
+#: learndash/ld30/template-single-course-sidebar.php:352
 msgid "Certificate"
 msgstr "Zertifikat"
 
@@ -12437,7 +12436,7 @@ msgstr "Widget"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:914
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:182
-#: inc/plugins/learndash-helper.php:1778
+#: inc/plugins/learndash-helper.php:1799
 #: lifterlms/assignment/template-single-assignment-content.php:93
 #: lifterlms/lesson/template-single-lesson-content.php:145
 #: lifterlms/myaccount/my-notifications.php:41
@@ -12448,7 +12447,7 @@ msgstr "Zurück"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:929
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:187
-#: inc/plugins/learndash-helper.php:1777
+#: inc/plugins/learndash-helper.php:1798
 #: lifterlms/assignment/template-single-assignment-content.php:97
 #: lifterlms/lesson/template-single-lesson-content.php:155
 #: lifterlms/myaccount/my-notifications.php:42
@@ -13320,7 +13319,7 @@ msgid "repl"
 msgstr "antworten"
 
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:983
-#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:157
+#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:165
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-activity-template.php:153
 msgid "You are not logged in."
 msgstr "Sie sind nicht angemeldet."
@@ -13390,7 +13389,7 @@ msgid "Start a Discussion"
 msgstr "Eine Diskussion beginnen"
 
 #: inc/plugins/elementor/widgets/bb-header-bar.php:213
-#: learndash/ld30/learndash-sidebar.php:66 template-parts/header-aside.php:75
+#: learndash/ld30/learndash-sidebar.php:76 template-parts/header-aside.php:75
 #: template-parts/header-mobile.php:50
 msgid "Dark Mode"
 msgstr "Dunkle Betriebsart"
@@ -13686,7 +13685,7 @@ msgstr "Details Container-Schatten"
 
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:743
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:757
-#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:114
+#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:122
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-activity-template.php:109
 msgid "%"
 msgstr "%"
@@ -14428,9 +14427,9 @@ msgstr "Zeitfarbe"
 msgid "Time Typography"
 msgstr "Zeittypografie"
 
-#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:108
+#: inc/plugins/elementor/widgets/courses/templates/learndash-activity-template.php:116
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-activity-template.php:103
-#: learndash/ld30/learndash-sidebar.php:172
+#: learndash/ld30/learndash-sidebar.php:182
 msgid "% Completed"
 msgstr "%  abgeschlossen"
 
@@ -14694,19 +14693,19 @@ msgstr "Alle Kategorien"
 msgid "All Instructors"
 msgstr "Alle Kursleiter"
 
-#: inc/plugins/learndash-helper.php:1208 inc/plugins/lifterlms-helper.php:468
+#: inc/plugins/learndash-helper.php:1229 inc/plugins/lifterlms-helper.php:468
 msgid "Alphabetical"
 msgstr "Alphabetisch"
 
-#: inc/plugins/learndash-helper.php:1209 inc/plugins/lifterlms-helper.php:469
+#: inc/plugins/learndash-helper.php:1230 inc/plugins/lifterlms-helper.php:469
 msgid "Newly Created"
 msgstr "Neu erstellt"
 
-#: inc/plugins/learndash-helper.php:1213 inc/plugins/lifterlms-helper.php:473
+#: inc/plugins/learndash-helper.php:1234 inc/plugins/lifterlms-helper.php:473
 msgid "My Progress"
 msgstr "Mein Fortschritt"
 
-#: inc/plugins/learndash-helper.php:1503
+#: inc/plugins/learndash-helper.php:1524
 msgid "RESUME"
 msgstr "FORTSETZEN"
 
@@ -14715,20 +14714,21 @@ msgid "Sorry, no memberships were found."
 msgstr "Es wurden leider keine Mitgliedschaften gefunden."
 
 #: inc/plugins/lifterlms-helper.php:1495
-#: learndash/ld30/template-single-course-sidebar.php:141
+#: learndash/ld30/template-single-course-sidebar.php:149
 msgid "Continue"
 msgstr "Fortsetzen"
 
 #: inc/plugins/lifterlms-helper.php:1515
-#: learndash/ld30/learndash-sidebar.php:168
-#: learndash/ld30/learndash-sidebar.php:217
-#: learndash/ld30/learndash-sidebar.php:249
-#: learndash/ld30/learndash-sidebar.php:287
-#: learndash/ld30/learndash-sidebar.php:331
-#: learndash/ld30/shortcodes/course_list_template.php:109
-#: learndash/ld30/shortcodes/course_list_template.php:116
+#: learndash/ld30/learndash-sidebar.php:178
+#: learndash/ld30/learndash-sidebar.php:227
+#: learndash/ld30/learndash-sidebar.php:259
+#: learndash/ld30/learndash-sidebar.php:297
+#: learndash/ld30/learndash-sidebar.php:341
+#: learndash/ld30/shortcodes/course_list_template.php:162
+#: learndash/ld30/shortcodes/course_list_template.php:171
+#: learndash/ld30/shortcodes/course_list_template.php:205
 #: learndash/ld30/shortcodes/profile.php:85
-#: learndash/ld30/template-single-course-sidebar.php:138
+#: learndash/ld30/template-single-course-sidebar.php:146
 msgid "Completed"
 msgstr "Abgeschlossen"
 
@@ -15190,35 +15190,35 @@ msgstr "BuddyPanel - Abgemeldete Benutzer"
 msgid "Titlebar"
 msgstr "Titelleiste"
 
-#: inc/theme/functions.php:398
+#: inc/theme/functions.php:407
 msgid "Share on Facebook"
 msgstr "Auf Facebook teilen"
 
-#: inc/theme/functions.php:399
+#: inc/theme/functions.php:408
 msgid "Tweet"
 msgstr "Twittern"
 
-#: inc/theme/functions.php:401
+#: inc/theme/functions.php:410
 msgid "Your comment has been posted."
 msgstr "Ihr Kommentar wurde veröffentlicht."
 
-#: inc/theme/functions.php:402
+#: inc/theme/functions.php:411
 msgid "Please Wait..."
 msgstr "Bitte warten ..."
 
-#: inc/theme/functions.php:442
+#: inc/theme/functions.php:454
 msgid "Choose or Upload an Image"
 msgstr "Ein Bild auswählen oder hochladen"
 
-#: inc/theme/functions.php:443
+#: inc/theme/functions.php:455
 msgid "Use this image"
 msgstr "Dieses Bild verwenden"
 
-#: inc/theme/functions.php:1287
+#: inc/theme/functions.php:1299
 msgid "Start typing to search..."
 msgstr "Einfach tippen, um die Suche zu beginnen …"
 
-#: inc/theme/functions.php:1333
+#: inc/theme/functions.php:1345
 msgid "Stick to Bottom"
 msgstr "Unten anheften"
 
@@ -15554,7 +15554,7 @@ msgstr "<b>%s</b> Personen folgend"
 msgid "You need to be loggedin."
 msgstr "Sie müssen eingeloggt sein."
 
-#: inc/theme/template-functions.php:2144
+#: inc/theme/template-functions.php:2161
 msgid "Edit Post Privacy"
 msgstr "Datenschutz bearbeiten"
 
@@ -15711,49 +15711,49 @@ msgstr "Alle aufklappen"
 msgid "Collapse All"
 msgstr "Alle zusammenklappen"
 
-#: learndash/ld30/learndash-sidebar.php:67 template-parts/header-aside.php:76
+#: learndash/ld30/learndash-sidebar.php:77 template-parts/header-aside.php:76
 #: template-parts/header-mobile.php:51
 msgid "Light Mode"
 msgstr "Helle Betriebsart"
 
-#: learndash/ld30/learndash-sidebar.php:75
+#: learndash/ld30/learndash-sidebar.php:85
 #, php-format
 msgctxt "link: Back to Course"
 msgid "Back to %s"
 msgstr "Zurück zu %s"
 
-#: learndash/ld30/learndash-sidebar.php:107
-#: learndash/ld30/learndash-sidebar.php:319
+#: learndash/ld30/learndash-sidebar.php:117
+#: learndash/ld30/learndash-sidebar.php:329
 #: learndash/ld30/lesson/partials/row.php:29
 #: learndash/ld30/quiz/partials/row.php:21
 msgid "You don't currently have access to this content"
 msgstr "Sie haben derzeit keinen Zugriff auf diesen Inhalt"
 
-#: learndash/ld30/learndash-sidebar.php:170
-#: learndash/ld30/learndash-sidebar.php:224
-#: learndash/ld30/learndash-sidebar.php:257
-#: learndash/ld30/learndash-sidebar.php:291
-#: learndash/ld30/learndash-sidebar.php:335
+#: learndash/ld30/learndash-sidebar.php:180
+#: learndash/ld30/learndash-sidebar.php:234
+#: learndash/ld30/learndash-sidebar.php:267
+#: learndash/ld30/learndash-sidebar.php:301
+#: learndash/ld30/learndash-sidebar.php:345
 msgid "Not Completed"
 msgstr "Nicht abgeschlossen"
 
-#: learndash/ld30/learndash-sidebar.php:490
+#: learndash/ld30/learndash-sidebar.php:500
 #: lifterlms/lesson/template-single-lesson-sidebar.php:107
 msgid "Participants"
 msgstr "Teilnehmer"
 
-#: learndash/ld30/learndash-sidebar.php:522
+#: learndash/ld30/learndash-sidebar.php:532
 #: lifterlms/lesson/template-single-lesson-sidebar.php:146
 msgid "Show more"
 msgstr "Mehr anzeigen"
 
-#: learndash/ld30/lesson.php:120 learndash/ld30/quiz.php:95
-#: learndash/ld30/topic.php:132
+#: learndash/ld30/lesson.php:125 learndash/ld30/quiz.php:95
+#: learndash/ld30/topic.php:137
 msgid "Expires at"
 msgstr "Läuft ab am"
 
-#: learndash/ld30/lesson.php:120 learndash/ld30/quiz.php:95
-#: learndash/ld30/topic.php:132
+#: learndash/ld30/lesson.php:125 learndash/ld30/quiz.php:95
+#: learndash/ld30/topic.php:137
 msgid "Expired at"
 msgstr "Abgelaufen am"
 
@@ -15781,7 +15781,7 @@ msgid "Please login to view sample content"
 msgstr "Bitte melden Sie sich an, um Beispielinhalte anzuzeigen"
 
 #: learndash/ld30/modules/login-modal.php:25
-#: learndash/ld30/template-single-course-sidebar.php:243
+#: learndash/ld30/template-single-course-sidebar.php:251
 #: woocommerce/myaccount/form-login.php:29
 #: woocommerce/myaccount/form-login.php:46
 #: woocommerce/myaccount/form-login.php:70
@@ -15851,30 +15851,30 @@ msgstr "Ein Konto einrichten"
 msgid "Registration confirmation will be emailed to you."
 msgstr "Eine Registrierungsbestätigung wird Ihnen per E-Mail zugesandt."
 
-#: learndash/ld30/modules/progress.php:42
+#: learndash/ld30/modules/progress.php:50
 #, php-format
 msgctxt "Placeholder: Lesson Progress"
 msgid "%s Progress"
 msgstr "%s Fortschritt"
 
-#: learndash/ld30/modules/progress.php:50
+#: learndash/ld30/modules/progress.php:58
 #, php-format
 msgctxt "placeholder: Progress percentage"
 msgid "%s%% Complete"
 msgstr "%s%% abgeschlossen"
 
-#: learndash/ld30/modules/progress.php:63
+#: learndash/ld30/modules/progress.php:72
 #, php-format
 msgctxt "Last activity date in infobar"
 msgid "Last activity on %s"
 msgstr "Letzte Aktivität am %s"
 
-#: learndash/ld30/modules/progress.php:65
+#: learndash/ld30/modules/progress.php:74
 #, php-format
 msgid "%s/%s Steps"
 msgstr "%s / %s Schritten"
 
-#: learndash/ld30/quiz.php:204
+#: learndash/ld30/quiz.php:229
 #, php-format
 msgctxt "placeholders: quiz, attempts count"
 msgid ""
@@ -15883,62 +15883,45 @@ msgstr ""
 "Sie haben dieses %1$s bereits %2$d mal durchgeführt und haben somit keine "
 "weiteren Versuche mehr."
 
-#: learndash/ld30/shortcodes/course_list_template.php:40
+#: learndash/ld30/shortcodes/course_list_template.php:50
 msgid "See more..."
 msgstr "Mehr anzeigen …"
 
-#: learndash/ld30/shortcodes/course_list_template.php:68
-#: learndash/ld30/shortcodes/course_list_template.php:97
-#: learndash/ld30/shortcodes/course_list_template.php:249
-#: learndash/ld30/template-course-item.php:84
-#: learndash/ld30/template-single-course-sidebar.php:183
-#: learndash/ld30/template-single-course-sidebar.php:270
+#: learndash/ld30/shortcodes/course_list_template.php:94
+#: learndash/ld30/shortcodes/course_list_template.php:146
+#: learndash/ld30/template-course-item.php:91
+#: learndash/ld30/template-single-course-sidebar.php:191
+#: learndash/ld30/template-single-course-sidebar.php:278
 #: lifterlms/course/lesson-preview.php:169
 msgid "Free"
 msgstr "Frei"
 
-#: learndash/ld30/shortcodes/course_list_template.php:106
-#: learndash/ld30/shortcodes/course_list_template.php:113
+#: learndash/ld30/shortcodes/course_list_template.php:158
+#: learndash/ld30/shortcodes/course_list_template.php:167
 msgid "Enrolled"
 msgstr "Eingeschrieben"
 
-#: learndash/ld30/shortcodes/course_list_template.php:232
-#, php-format
-msgctxt "Start ribbon"
-msgid "%s"
-msgstr "%s"
+#: learndash/ld30/shortcodes/course_list_template.php:208
+msgid "In progress"
+msgstr "In Bearbeitung"
 
-#: learndash/ld30/shortcodes/course_list_template.php:239
-#, php-format
-msgctxt "Start ribbon"
-msgid "Start %s "
-msgstr "Start %s "
+#: learndash/ld30/shortcodes/course_list_template.php:211
+msgid "Not available"
+msgstr "Nicht verfügbar"
 
-#: learndash/ld30/shortcodes/course_list_template.php:253
-#: learndash/ld30/template-course-item.php:88
-#: learndash/ld30/template-single-course-sidebar.php:121
-msgid "Not Enrolled"
-msgstr "Nicht eingeschrieben"
-
-#: learndash/ld30/shortcodes/course_list_template.php:258
-#: learndash/ld30/template-course-item.php:72
-#: learndash/ld30/template-course-item.php:94
-msgid "Start "
-msgstr "Start "
-
-#: learndash/ld30/shortcodes/course_list_template.php:289
-#: learndash/ld30/template-course-item.php:113
-#: learndash/ld30/template-course-item.php:118
+#: learndash/ld30/shortcodes/course_list_template.php:285
+#: learndash/ld30/template-course-item.php:120
+#: learndash/ld30/template-course-item.php:125
 #, php-format
 msgid "%1$s %2$s"
 msgstr "%1$s %2$s"
 
-#: learndash/ld30/shortcodes/course_list_template.php:294
+#: learndash/ld30/shortcodes/course_list_template.php:290
 #, php-format
 msgid "%1$s %2$s "
 msgstr "%1$s %2$s "
 
-#: learndash/ld30/shortcodes/course_list_template.php:303
+#: learndash/ld30/shortcodes/course_list_template.php:298
 msgid "0 "
 msgstr "0 "
 
@@ -15977,7 +15960,17 @@ msgstr "%s-Details anzeigen"
 msgid "About Instructor"
 msgstr "Über den Dozenten / die Dozentin"
 
-#: learndash/ld30/template-course-item.php:128
+#: learndash/ld30/template-course-item.php:79
+#: learndash/ld30/template-course-item.php:101
+msgid "Start "
+msgstr "Start "
+
+#: learndash/ld30/template-course-item.php:95
+#: learndash/ld30/template-single-course-sidebar.php:129
+msgid "Not Enrolled"
+msgstr "Nicht eingeschrieben"
+
+#: learndash/ld30/template-course-item.php:135
 #, php-format
 msgid "0 %s"
 msgstr "0 %s"
@@ -15996,37 +15989,37 @@ msgstr "+"
 msgid "enrolled"
 msgstr "Eingeschrieben"
 
-#: learndash/ld30/template-single-course-sidebar.php:134
+#: learndash/ld30/template-single-course-sidebar.php:142
 #, php-format
 msgid "Start %s"
 msgstr "%s starten"
 
-#: learndash/ld30/template-single-course-sidebar.php:153
+#: learndash/ld30/template-single-course-sidebar.php:161
 msgid "Login to Enroll"
 msgstr "Für die Einschreibung bitte anmelden"
 
-#: learndash/ld30/template-single-course-sidebar.php:180
+#: learndash/ld30/template-single-course-sidebar.php:188
 msgid "Open Registration"
 msgstr "Registrierung öffnen"
 
-#: learndash/ld30/template-single-course-sidebar.php:189
+#: learndash/ld30/template-single-course-sidebar.php:197
 msgid "This course is currently closed"
 msgstr "Dieser Kurs ist derzeit noch geschlossen"
 
-#: learndash/ld30/template-single-course-sidebar.php:243
+#: learndash/ld30/template-single-course-sidebar.php:251
 msgid "or "
 msgstr "oder "
 
-#: learndash/ld30/template-single-course-sidebar.php:324
+#: learndash/ld30/template-single-course-sidebar.php:332
 msgid "Includes"
 msgstr "Beinhaltet"
 
-#: learndash/ld30/template-single-course-sidebar.php:369
+#: learndash/ld30/template-single-course-sidebar.php:377
 #: lifterlms/course/template-single-course-sidebar.php:178
 msgid "Your browser does not support HTML5 video."
 msgstr "Ihr Browser unterstützt kein HTML5-Video."
 
-#: learndash/ld30/template-single-course-sidebar.php:373
+#: learndash/ld30/template-single-course-sidebar.php:381
 #: lifterlms/course/template-single-course-sidebar.php:182
 msgid "Video format is not supported, use Youtube video or MP4 format."
 msgstr ""
@@ -16070,7 +16063,7 @@ msgstr "In Bearbeitung"
 #: template-parts/content-gamipress.php:83 template-parts/content-job.php:86
 #: template-parts/content-llms_course.php:118
 #: template-parts/content-llms_quiz.php:89 template-parts/content-quote.php:43
-#: template-parts/content-resume.php:124 template-parts/content.php:154
+#: template-parts/content-resume.php:124 template-parts/content.php:153
 #, php-format
 msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
 msgstr "Weiterlesen<span class=\"screen-reader-text\"> „%s“</span>"
@@ -16091,11 +16084,15 @@ msgstr "Zertifikat in"
 msgid "Earned on"
 msgstr "Erworben am"
 
-#: lifterlms/content-certificate.php:17
-msgid "Certificate not found."
-msgstr "Zertifikat nicht gefunden."
+#: lifterlms/content-certificate.php:55
+msgid "Disable sharing"
+msgstr "Teilen deaktivieren"
 
-#: lifterlms/content-certificate.php:65
+#: lifterlms/content-certificate.php:55
+msgid "Enable sharing"
+msgstr "Teilen aktivieren"
+
+#: lifterlms/content-certificate.php:69
 msgid "Back to My Certificates"
 msgstr "Zurück zu Meinen Zertifikaten"
 
@@ -16749,7 +16746,7 @@ msgid "Search forums..."
 msgstr "Foren durchsuchen …"
 
 #: template-parts/content-bbpress.php:34
-#: template-parts/content-buddypress.php:41 template-parts/content-page.php:37
+#: template-parts/content-buddypress.php:41 template-parts/content-page.php:33
 #: template-parts/content-sfwd-assignment.php:18
 #: template-parts/content-sfwd.php:18
 msgid "Pages:"
@@ -16757,7 +16754,7 @@ msgstr "Seiten:"
 
 #. translators: %s: Name of current post. Only visible to screen readers
 #: template-parts/content-bbpress.php:47
-#: template-parts/content-buddypress.php:54 template-parts/content-page.php:50
+#: template-parts/content-buddypress.php:54 template-parts/content-page.php:46
 #: template-parts/content-sfwd-assignment.php:31
 #: template-parts/content-sfwd.php:31
 #, php-format
@@ -16773,7 +16770,7 @@ msgstr "oder"
 #: template-parts/content-related-posts.php:50
 #: template-parts/content-related-posts.php:94
 #: template-parts/content-resume.php:49 template-parts/content-resume.php:86
-#: template-parts/content.php:59 template-parts/content.php:106
+#: template-parts/content.php:59 template-parts/content.php:105
 msgid "[Link]"
 msgstr "[Link]"
 
@@ -16818,15 +16815,15 @@ msgstr ""
 msgid "No Results"
 msgstr "Keine Ergebnisse"
 
-#: template-parts/content.php:177
+#: template-parts/content.php:176
 msgid "Categories: "
 msgstr "Kategorien: "
 
-#: template-parts/content.php:178 template-parts/content.php:186
+#: template-parts/content.php:177 template-parts/content.php:185
 msgid ", "
 msgstr ", "
 
-#: template-parts/content.php:185
+#: template-parts/content.php:184
 msgid "Tagged: "
 msgstr "Markiert: "
 
@@ -17528,6 +17525,19 @@ msgstr "Inhalt über die gesamte Breite"
 #. Template Name of the plugin/theme
 msgid "No Sidebar"
 msgstr "Keine Seitenleiste"
+
+#, php-format
+#~ msgctxt "Start ribbon"
+#~ msgid "%s"
+#~ msgstr "%s"
+
+#, php-format
+#~ msgctxt "Start ribbon"
+#~ msgid "Start %s "
+#~ msgstr "Start %s "
+
+#~ msgid "Certificate not found."
+#~ msgstr "Zertifikat nicht gefunden."
 
 #~ msgid " of "
 #~ msgstr " von "

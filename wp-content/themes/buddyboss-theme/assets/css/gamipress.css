@@ -1094,6 +1094,30 @@ body.buddypress .gamipress-rank-description .gamipress-rank-title {
                 flex: 0 0 100%;
         max-width: 100%; } }
 
+.gamipress-user-points.gamipress-align-right > div {
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end; }
+  .gamipress-user-points.gamipress-align-right > div .gamipress-user-points-image {
+    margin-left: 10px; }
+
+.gamipress-user-points.gamipress-layout-right.gamipress-align-right > div {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start; }
+
+.gamipress-user-points.gamipress-align-left > div {
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start; }
+
+.gamipress-user-points.gamipress-align-center > div,
+.gamipress-user-points.gamipress-align-justify > div {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  text-align: justify; }
+
 .gamipress-points-types {
   margin-left: -10px;
   margin-right: -10px; }

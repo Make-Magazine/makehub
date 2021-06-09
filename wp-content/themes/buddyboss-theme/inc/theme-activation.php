@@ -227,6 +227,9 @@ if ( ! class_exists( 'BB_Theme_Activation' ) ) {
 
 			// When the rest of WP has loaded, kick-start the rest of the class.
 			add_action( 'init', array( $this, 'init' ) );
+
+			// When WordPress completes its upgrade process.
+			add_action( 'upgrader_process_complete', array( $this, 'reset_theme_compressed_transient' ), 10, 2 );
 		}
 
 		/**
@@ -405,6 +408,32 @@ if ( ! class_exists( 'BB_Theme_Activation' ) ) {
 
 			// Add CSS for the BBTA admin page.
 			add_action( 'admin_head', array( $this, 'admin_css' ) );
+		}
+
+		/**
+		 * This function runs when WordPress completes its upgrade process.
+		 * 
+		 * @since 1.6.7
+		 *
+		 * @param object $upgrader _object Array
+		 * @param array $options  Array
+		 * @uses buddyboss_theme_compressed_transient_delete To remove theme compressed transient.
+		 *
+		 * @return void
+		 */
+		public function reset_theme_compressed_transient( $upgrader_object, $options ) {
+			// Is udgrade type theme.
+			if ( 'theme' != $options['type'] ) {
+				return;
+			}
+
+			$update_theme_dir = $upgrader_object->result['destination'];
+			$self_theme_dir   = dirname( dirname( __FILE__ ) ) . '/';
+			
+			// Is upgrade buddydboss theme.
+			if ( $update_theme_dir == $self_theme_dir ) {
+				buddyboss_theme_compressed_transient_delete();
+			}
 		}
 
 		/**

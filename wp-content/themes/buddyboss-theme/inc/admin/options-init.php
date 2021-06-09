@@ -16,7 +16,7 @@ if ( !class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 			}
 
 			// This is needed. Bah WordPress bugs.  ;)
-			if ( true == Redux_Helpers::isTheme( __FILE__ ) ) {
+			if ( true === apply_filters( 'buddyboss_theme_redux_is_theme', (bool) Redux_Helpers::isTheme( __FILE__ ) ) ) {
 				$this->initSettings();
 			} else {
 				add_action( 'plugins_loaded', array( $this, 'initSettings' ), 10 );
