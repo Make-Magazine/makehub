@@ -241,7 +241,7 @@ function setScheduleInfo($nest_parameter_arr, $nst_entry, $entry, $timeZone) {
             error_log('For event '.$eventID.' $event->first_datetime() is null');
         }
     } else {
-        error_log('Issue in saving ticket sale end date for $eventID ' . $eventID);
+        error_log('Issue in saving ticket sale end date for Event ' . $eventID);
         error_log($event);
     }
 

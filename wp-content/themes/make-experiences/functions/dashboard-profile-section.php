@@ -37,7 +37,6 @@ function dashboard_info_title() {
 
 function dashboard_info_content() {
     global $wpdb;
-
     global $current_user;
     $current_user = wp_get_current_user();
 
@@ -235,7 +234,7 @@ function dashboard_info_content() {
         foreach ($hosted_events as $event) {
             $return .= '    <li><b>' . $event->name() . '</b> - <a href="' . $event->get_permalink() . '">View</a></li>';
         }
-        $return .= '        <li><a class="btn universal-btn" href="/edit-submission/">Facilitator Portal</a></li>
+        $return .= '        <li><a class="btn universal-btn" href="/facilitator-portal/">Facilitator Portal</a></li>
 			</ul>
                     </div>';
     }
