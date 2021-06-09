@@ -551,7 +551,6 @@
         //left: 42% !important;
         //top: 50% !important;
     }
-    .gform_wrapper.gravity-theme .gfield .datepicker { width: 100%; }
 }
 .wickedpicker {
 	pointer-events: none;
@@ -559,6 +558,7 @@
 		pointer-events: all;
 	}
 }
+.gform_wrapper.gravity-theme .gfield .datepicker { width: 100%; }
 
 .woocommerce-cart { background: #f1f1f1; }
 .woocommerce {
