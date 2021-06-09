@@ -808,3 +808,10 @@ body.mobile-nav {
 }
 
 .menu-item.invisible { display: none; }
+
+// for the facilitators
+body:not(.facilitator-user) {
+    .menu-item-facilitator-portal {
+        display: none;
+    }
+}
