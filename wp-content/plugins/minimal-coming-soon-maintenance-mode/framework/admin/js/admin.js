@@ -483,10 +483,10 @@ function getMMUploader($text, $target) {
     // reposition main on/off button on window resize and load
     $(window)
       .on("resize", function (e) {
-        if ($(".signals-float-right").width() >= 1200) {
+        if (false && $(".signals-float-right").width() >= 1200) {
           position = 1113;
         } else {
-          position = parseInt($(".signals-float-right").width() - 87, 10);
+          position = parseInt($(".signals-float-right").width() - 7, 10);
         }
         $("#header-right").css("left", position + "px");
       })

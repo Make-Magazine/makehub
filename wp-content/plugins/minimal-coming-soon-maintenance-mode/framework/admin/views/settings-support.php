@@ -16,7 +16,7 @@ if (!defined('WPINC')) {
 <div class="signals-tile" id="support">
 	<div class="signals-tile-body">
 		<div class="signals-tile-title"><?php _e( 'SUPPORT', 'signals' ); ?></div>
-		<p>Report issues to our support system and we will get back to you ASAP. If our support did a great job please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/?filter=5#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a>. Thank you!</p>
+		<p>Report issues to our support system and we will get back to you ASAP. If our support did a great job please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a>. Thank you!</p>
 
 		<div class="signals-section-content signals-support-form">
 

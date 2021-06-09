@@ -17,6 +17,7 @@ $csmm_lc = new WF_Licensing_CSMM(array(
     'version' => csmm_get_plugin_version(),
     'plugin_file' => CSMM_FILE,
     'skip_hooks' => false,
+    'plugin_page' => 'settings_page_maintenance_mode_options',
     'disable_remote' => true,
     'debug' => false,
     'js_folder' => plugin_dir_url(CSMM_FILE) . 'framework/admin/js/'

@@ -45,7 +45,7 @@ require_once 'header.php';
         ) {
             echo '<div id="rating-notice"><p>';
             echo '<b>Hi' . $name . '!</b><br>We saw you\'ve been using the <b>Minimal Maintenance Mode</b> plugin for some time (that\'s awesome!) and wanted to ask for your help to <b>make the plugin better</b>.<br>It just takes a minute of your time to rate the plugin. It helps us out a lot! Thank you!</p>';
-            echo '<p><a href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/?rate=5&filter=5#new-post" target="_blank" class="button button-flat">Rate the plugin</a>';
+            echo '<p><a href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/#new-post" target="_blank" class="button button-flat">Rate the plugin</a>';
             echo '<a href="#" id="mm_rate_cancel">I\'ve already rated the plugin</a>';
             echo '</p></div>';
         }
@@ -122,7 +122,7 @@ require_once 'header.php';
                     <a title="Check out 70+ pixel perfect themes and other great PRO features" style="margin: 0 0 0 15px;" href="#pro" class="signals-btn csmm-change-tab" target="_blank"><span style="font-size: 19px;" class="dashicons dashicons-star-filled"></span> <strong><?php _e('Go PRO', 'signals'); ?></strong></a>
                 </p>
                 <p class="footer-buttons-right">
-                    <a href="<?php echo csmm_generate_web_link('thank-you-for-creating'); ?>" target="_blank">Minimal Coming Soon & Maintenance Mode</a> v<?php echo csmm_get_plugin_version(); ?>. Please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/?filter=5#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a> Thank you!
+                    <a href="<?php echo csmm_generate_web_link('thank-you-for-creating'); ?>" target="_blank">Minimal Coming Soon & Maintenance Mode</a> v<?php echo csmm_get_plugin_version(); ?>. Please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a> Thank you!
                 </p>
             </div><!-- .signals-tile-body -->
         </div><!-- .signals-fixed-save-btn -->

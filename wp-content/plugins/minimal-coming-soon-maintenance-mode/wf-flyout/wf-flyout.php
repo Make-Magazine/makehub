@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Universal fly-out menu for WebFactory plugins
  * (c) WebFactory Ltd, 2021
@@ -95,21 +94,21 @@ if (false == class_exists('wf_flyout')) {
 
       $out = '<style type="text/css">';
       $out .= '#wf-flyout {
-        right: ' . $this->config['icon_right'] . ';
-        bottom: ' . $this->config['icon_bottom'] . ';
+        right: ' .  sanitize_text_field($this->config['icon_right']) . ';
+        bottom: ' .  sanitize_text_field($this->config['icon_bottom']) . ';
       }';
       $out .= '#wf-flyout #wff-image-wrapper {
-        border: ' . $this->config['icon_border'] . ';
+        border: ' .  sanitize_text_field($this->config['icon_border']) . ';
       }';
       $out .= '#wf-flyout #wff-button img {
-        padding: ' . $this->config['icon_padding'] . ';
-        width: ' . $this->config['icon_size'] . ';
-        height: ' . $this->config['icon_size'] . ';
+        padding: ' .  sanitize_text_field($this->config['icon_padding']) . ';
+        width: ' .  sanitize_text_field($this->config['icon_size']) . ';
+        height: ' .  sanitize_text_field($this->config['icon_size']) . ';
       }';
       $out .= '#wf-flyout .wff-menu-item.accent {
-        background: ' . $this->config['menu_accent_color'] . ';
+        background: ' .  sanitize_text_field($this->config['menu_accent_color']) . ';
       }';
-      $out .= $this->config['custom_css'];
+      $out .=  sanitize_text_field($this->config['custom_css']);
       $out .= '</style>';
 
       echo $out;
@@ -133,7 +132,7 @@ if (false == class_exists('wf_flyout')) {
       $out .= '<a href="#" id="wff-button">';
       $out .= '<span class="wff-label">Open Quick Links</span>';
       $out .= '<span id="wff-image-wrapper">';
-      $out .= '<img src="' . $icons_url . $this->config['icon_image'] . '" alt="Open Quick Links" title="Open Quick Links">';
+      $out .= '<img src="' . esc_url($icons_url . $this->config['icon_image']) . '" alt="Open Quick Links" title="Open Quick Links">';
       $out .= '</span>';
       $out .= '</a>';
 
@@ -148,12 +147,12 @@ if (false == class_exists('wf_flyout')) {
           $item['class'] = trim($item['class']);
         }
 
-        $out .= '<a ' . $item['data'] . ' href="' . $item['href'] . '" class="wff-menu-item wff-menu-item-' . $i . ' ' . $item['class'] . '" target="_blank">';
-        $out .= '<span class="wff-label visible">' . $item['label'] . '</span>';
+        $out .= '<a href="' . esc_url($item['href']) . '" class="wff-menu-item wff-menu-item-' . $i . ' ' . esc_attr($item['class']) . '" target="_blank">';
+        $out .= '<span class="wff-label visible">' . esc_html($item['label']) . '</span>';
         if (substr($item['icon'], 0, 9) == 'dashicons') {
-          $out .= '<span class="dashicons ' . $item['icon'] . '"></span>';
+          $out .= '<span class="dashicons ' . sanitize_text_field($item['icon']) . '"></span>';
         } elseif (!empty($item['icon'])) {
-          $out .= '<span class="wff-icon"><img src="' . $icons_url . $item['icon'] . '"></span>';
+          $out .= '<span class="wff-icon"><img src="' . esc_url($icons_url . $item['icon']) . '"></span>';
         }
         $out .= '</a>';
       } // foreach

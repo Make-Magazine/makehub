@@ -106,7 +106,7 @@ function csmm_plugin_action_links($links)
 function csmm_plugin_meta_links($links, $file)
 {
     $support_link = '<a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode" title="Get help">Support</a>';
-    $rate_link = '<a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/?filter=5#new-post" title="Let others know how you like the plugin">Rate the plugin ★★★★★</a>';
+    $rate_link = '<a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/#new-post" title="Let others know how you like the plugin">Rate the plugin ★★★★★</a>';
 
     if ($file == CSMM_BASENAME) {
         $links[] = $support_link;
@@ -249,7 +249,7 @@ function csmm_activate_theme()
     }
 
     $themes = array();
-    $theme = basename(trim(@$_GET['theme']));
+    $theme = sanitize_text_field(trim(@$_GET['theme']));
     $settings = csmm_get_options();
 
     $themes['default'] = array(

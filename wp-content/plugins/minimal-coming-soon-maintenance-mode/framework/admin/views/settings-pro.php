@@ -201,8 +201,7 @@ if (!defined('WPINC')) {
                                     100% No-Risk Money Back Guarantee</span>
                             </td>
                             <td>
-                                <a data-gumroad-single-product="true" class="promo-button go-to-license-key" href="https://gum.co/csmm-pro-yearly/?yearly=true&plugin_info=CSMM+v<?php echo csmm_get_plugin_version(); ?>" target="_blank">BUY
-                                    NOW<br>$39<small>/year</small></a>
+                                <a data-gumroad-single-product="true" class="promo-button go-to-license-key" href="https://gum.co/csmm-pro-yearly/olduser/?monthly=true&plugin_info=CSMM+v<?php echo csmm_get_plugin_version(); ?>" target="_blank">BUY NOW - 25% OFF<br><del>$7.99</del> $5.99<small> /month</small></a>
                                 <span class="instant-download"><span class="dashicons dashicons-yes"></span> Secure payment<br><span class="dashicons dashicons-yes"></span> Instant activation from WordPress admin<br><span class="dashicons dashicons-yes"></span>
                                     100% No-Risk Money Back Guarantee</span>
                             </td>

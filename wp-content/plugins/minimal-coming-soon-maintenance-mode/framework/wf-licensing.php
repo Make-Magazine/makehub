@@ -31,6 +31,7 @@ if (false === class_exists('WF_Licensing_CSMM')) {
       $this->slug = dirname(plugin_basename(trim($params['plugin_file'])));
       $this->basename = plugin_basename(trim($params['plugin_file']));
       $this->plugin_file = $params['plugin_file'];
+      $this->plugin_page = trim($params['plugin_page']);
       $this->disable_remote = !empty($params['disable_remote']);
       $this->debug = !empty($params['debug']);
 
@@ -70,27 +71,38 @@ if (false === class_exists('WF_Licensing_CSMM')) {
     function init()
     {
       if (is_admin()) {
-        $vars = array(
-          'prefix' => $this->prefix,
-          'debug' => $this->debug,
-          'nonce' => wp_create_nonce('wf_licensing_' . $this->prefix),
-          'licensing_endpoint' => $this->licensing_servers[0] . $this->api_ver,
-          'request_data' => array(
-            'action' => 'validate_license',
-            'license_key' => '',
-            'rand' => rand(1000, 9999),
-            'version' => $this->version,
-            'wp_version' => get_bloginfo('version'),
-            'site_url' => get_home_url(),
-            'site_title' => get_bloginfo('name'),
-            'meta' => array()
-          )
-        );
-
-        wp_enqueue_script('wf_licensing', $this->js_folder . 'wf-licensing.js', array(), 1.0, true);
-        wp_localize_script('wf_licensing', 'wf_licensing_' . $this->prefix, $vars);
+        add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
       }
     } // init
+
+
+    function admin_enqueue_scripts() {
+      $current_screen = get_current_screen();
+
+      if (empty($current_screen->id) || $current_screen->id != $this->plugin_page) {
+        return false;
+      }
+
+      $vars = array(
+        'prefix' => $this->prefix,
+        'debug' => $this->debug,
+        'nonce' => wp_create_nonce('wf_licensing_' . $this->prefix),
+        'licensing_endpoint' => $this->licensing_servers[0] . $this->api_ver,
+        'request_data' => array(
+          'action' => 'validate_license',
+          'license_key' => '',
+          'rand' => rand(1000, 9999),
+          'version' => $this->version,
+          'wp_version' => get_bloginfo('version'),
+          'site_url' => get_home_url(),
+          'site_title' => get_bloginfo('name'),
+          'meta' => array()
+        )
+      );
+
+      wp_enqueue_script('wf_licensing', $this->js_folder . 'wf-licensing.js', array(), 1.0, true);
+      wp_localize_script('wf_licensing', 'wf_licensing_' . $this->prefix, $vars);
+    } // admin_enqueue_scripts
 
 
     function monitor_remote_actions()
@@ -584,15 +596,15 @@ if (false === class_exists('WF_Licensing_CSMM')) {
     {
       check_ajax_referer('wf_licensing_' . $this->prefix);
 
-      $out['license_key'] = trim($_POST['license_key']);
+      $out['license_key'] = trim(sanitize_text_field($_POST['license_key']));
 
-      if ($_POST['success'] == 'true') {
-        $out['error'] = trim($_POST['data']['error']);
-        $out['name'] = trim($_POST['data']['name']);
-        $out['valid_until'] = trim($_POST['data']['valid_until']);
-        $out['meta'] = $_POST['data']['meta'];
+      if (sanitize_text_field($_POST['success']) == 'true') {
+        $out['error'] = trim(sanitize_text_field($_POST['data']['error']));
+        $out['name'] = trim(sanitize_text_field($_POST['data']['name']));
+        $out['valid_until'] = trim(sanitize_text_field($_POST['data']['valid_until']));
+        $out['meta'] = sanitize_text_field($_POST['data']['meta']);
       } else {
-        $out['error'] = trim($_POST['data']);
+        $out['error'] = trim(sanitize_text_field($_POST['data']));
         $out['name'] = '';
         $out['valid_until'] = '';
         $out['meta'] = array();

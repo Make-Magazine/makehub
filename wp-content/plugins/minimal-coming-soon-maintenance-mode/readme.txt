@@ -1,14 +1,14 @@
-=== Minimal Coming Soon & Maintenance Mode – Coming Soon Page ===
+=== Minimal Coming Soon – Coming Soon Page ===
 Contributors: WebFactory
 Tags: coming soon, coming soon page, maintenance mode, maintenance mode page, coming soon mode, under construction, maintenance mode page, landing page, subscribe form, maintenance, coming soon builder, coming soon status
 Requires at least: 4.0
 Requires PHP: 5.2
 Tested up to: 5.7
-Stable tag: 2.27
+Stable tag: 2.30
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Minimal Coming Soon & Maintenance Mode page! Create awesome Coming Soon Pages with a MailChimp form.
+Minimal Coming Soon & Maintenance Mode page! Create awesome Coming Soon Pages in seconds.
 
 == Description ==
 The <a href="https://comingsoonwp.com/">Minimal Coming Soon & Maintenance Mode</a> plugin allows you to **quickly & easily** set up a **Coming Soon Page, Maintenance Mode Page**, Landing Page or Launch Page for your website. It's best to start any new site with a Coming Soon page and collect leads from day one!
@@ -81,6 +81,10 @@ Yes and no. When activated it enables itself across the entire WP-MU network.
 
 
 == Changelog ==
+
+= 2.30 =
+* 2021-06-05
+* security fixes
 
 = 2.27 =
 * 2021-02-21

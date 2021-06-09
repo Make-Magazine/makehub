@@ -31,14 +31,12 @@ if (!defined('WPINC')) {
   }
 
   /*
-
-<div id="header-right">
-        <div id="header-status" title="Click to change the Coming Soon status" data-action-url="<?php echo $action_url; ?>">
+  <div id="header-status" title="Click to change the Coming Soon status" data-action-url="<?php echo $action_url; ?>">
           <label for="">Coming Soon Status:</label> <div class="csmm-status-wrapper <?php echo ($signals_csmm_options['status'] != '1')? 'off': 'on'; ?>"><span class="csmm-status-btn csmm-status-off">OFF</span><span class="csmm-status-btn csmm-status-on">ON</span></div>
         </div>
-      </div>
-
-  */
+        */
 ?>
-			<?php if ( isset( $signals_header_addon ) ) { echo $signals_header_addon; } ?>
+<div id="header-right">
+        <a href="#pro" class="csmm-change-tab">Get <b>PRO</b> for only $5.99 <small>/m</small></a>
+      </div>
 		</div><!-- .signals-header -->

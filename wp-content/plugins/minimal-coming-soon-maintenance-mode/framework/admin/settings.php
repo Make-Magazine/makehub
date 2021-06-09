@@ -21,7 +21,7 @@ function csmm_admin_settings() {
 	// List of Google fonts
 	require_once 'include/fonts.php';
 
-  if (!empty($_POST['save-license']) && 'save-license' == $_POST['save-license'] && isset($_POST['csmm_save_nonce']) && wp_verify_nonce($_POST['csmm_save_nonce'], 'csmm_save_settings')) {
+  if (!empty($_POST['save-license']) && 'save-license' == sanitize_text_field($_POST['save-license']) && isset($_POST['csmm_save_nonce']) && wp_verify_nonce($_POST['csmm_save_nonce'], 'csmm_save_settings')) {
     $meta = csmm_get_meta();
     if (empty($_POST['license_key'])) {
         $options['license_type'] = '';
@@ -30,7 +30,7 @@ function csmm_admin_settings() {
         $options['license_key'] = '';
         set_transient('csmm_error_msg', '<div class="signals-alert signals-alert-info"><strong>License key saved.</strong><button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>', 1);
       } else {
-        $tmp = csmm_license::validate_license_key($_POST['license_key']);
+        $tmp = csmm_license::validate_license_key(sanitize_text_field($_POST['license_key']));
         if ($tmp['success']) {
           $options['license_type'] = $tmp['license_type'];
           $options['license_expires'] = $tmp['license_expires'];
@@ -204,11 +204,16 @@ function csmm_admin_settings() {
 		update_option( 'signals_csmm_options', $update_options );
 		$signals_csmm_err = '<div class="signals-alert signals-alert-info"><strong>Great!</strong> Options have been updated.<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button></div>';
 
-    if (function_exists('w3tc_pgcache_flush')) {
-      w3tc_pgcache_flush();
+    wp_cache_flush();
+
+    if (function_exists('w3tc_flush_all')) {
+      w3tc_flush_all();
     }
     if (function_exists('wp_cache_clear_cache')) {
       wp_cache_clear_cache();
+    }
+    if (method_exists('LiteSpeed_Cache_API', 'purge_all')) {
+      LiteSpeed_Cache_API::purge_all();
     }
     if (class_exists('Endurance_Page_Cache')) {
       $epc = new Endurance_Page_Cache;
@@ -225,6 +230,12 @@ function csmm_admin_settings() {
     }
     if (is_callable(array('Swift_Performance_Cache', 'clear_all_cache'))) {
       Swift_Performance_Cache::clear_all_cache();
+    }
+    if (is_callable(array('Hummingbird\WP_Hummingbird', 'flush_cache'))) {
+      Hummingbird\WP_Hummingbird::flush_cache(true, false);
+    }
+    if (function_exists('rocket_clean_domain')) {
+      rocket_clean_domain();
     }
     do_action('cache_enabler_clear_complete_cache');
 	}
