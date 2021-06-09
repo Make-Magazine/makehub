@@ -132,6 +132,10 @@ window.addEventListener('load', function () {
                 errorMsg("There was an issue logging in at the getProfile phase. That error was: " + JSON.stringify(err));
             }
             jQuery(".login-section").css("display", "block");
+            // if this is a buddyboss site, we want to default the buddypanel to open on the homepage 
+            if(jQuery("body").is(".home-page.buddyboss-theme")) {
+                jQuery("body").addClass("buddypanel-open");
+            }
         });
     }
 

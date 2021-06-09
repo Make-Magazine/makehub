@@ -815,3 +815,10 @@ body:not(.facilitator-user) {
         display: none;
     }
 }
+
+// Buddypanel Nav
+#buddypanel-menu {
+    .bb-menu-item {
+        span { white-space: break-spaces !important; }
+    }
+}
