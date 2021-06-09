@@ -545,12 +545,13 @@
 }
 
 // This is necessary for the wickedpicker to appear on the edit submission page because fml
-.page-edit-submission, .page-edit-submission-2 {
-	.wickedpicker {
-		position: fixed !important;
-		left: 42% !important;
-		top: 50% !important;
-	}
+.page-edit-submission, .page-edit-submission-2, .page-facilitator-portal  {
+    .wickedpicker {
+        position: fixed !important;
+        //left: 42% !important;
+        //top: 50% !important;
+    }
+    .datepicker { width: 100%; }
 }
 .wickedpicker {
 	pointer-events: none;
