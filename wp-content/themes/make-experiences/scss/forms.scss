@@ -285,6 +285,13 @@
 	}
 }
 
+.gform_wrapper .gform_validation_errors {
+    &> h2, &.gform_validation_error_link {
+        color: #fff;
+        font-size: 18px;
+    }
+}
+
 // The event form 
 .gform_wrapper.event_form_wrapper { //.event_form_wrapper
     margin-top: 0px;
@@ -558,7 +565,7 @@
 		pointer-events: all;
 	}
 }
-.gform_wrapper.gravity-theme .gfield .datepicker { width: 100%; }
+.gform_wrapper.gravity-theme .gfield input.medium.datepicker { width: 100%; }
 
 .woocommerce-cart { background: #f1f1f1; }
 .woocommerce {
