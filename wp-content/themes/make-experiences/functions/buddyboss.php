@@ -34,8 +34,7 @@ add_action('bp_setup_globals', 'bp_set_dashboard_for_me');
 
 add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
 function ad_filter_menu($sorted_menu_objects, $args) {
-    //check if current user is a facilitator
-    
+    //check if current user is a facilitator    
     global $current_user;
     $current_user = wp_get_current_user();
     $userEmail = (string) $current_user->user_email;
@@ -170,3 +169,18 @@ function add_group_url_email_token( $formatted_tokens, $tokens, $obj ) {
 	return $formatted_tokens;
 }
 add_filter( 'bp_email_set_tokens', 'add_group_url_email_token', 11, 3  );
+
+//add 'facilitator' to body class if the logged in user is a facilitator
+add_filter( 'body_class','my_body_classes' );
+function my_body_classes( $classes ) {
+//check if current user is a facilitator    
+    global $current_user;
+    $current_user = wp_get_current_user();
+    $userEmail = (string) $current_user->user_email;
+
+    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
+    if($person){    
+        $classes[] = 'facilitator-user';     
+    }
+    return $classes;     
+}
