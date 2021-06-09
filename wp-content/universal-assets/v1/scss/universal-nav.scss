@@ -74,6 +74,9 @@
                     height: 40px;
                 }
             }
+            @media screen and (max-width: 800px) {
+                padding-right: 0px;
+            }
         }
         &.default-header {
             .main-navigation {
