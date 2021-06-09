@@ -32,8 +32,10 @@
                 }
                 span {
                     padding: 0 23px;
-                    height: 20px;
                     transition: font-weight .1s ease-in-out;
+                    &:not(.caret) {
+                        height: 20px;
+                    }
                 }
             }
             &.active {
