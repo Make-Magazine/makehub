@@ -817,8 +817,16 @@ body:not(.facilitator-user) {
 }
 
 // Buddypanel Nav
-#buddypanel-menu {
-    .bb-menu-item {
-        span { white-space: break-spaces !important; }
+body.buddypanel-open {
+    #buddypanel-menu {
+        .bb-menu-item {
+            span { white-space: break-spaces !important; }
+        }
+    }
+}
+#buddypanel-menu.side-panel-menu {
+    a {
+        display: flex;
+        align-items: start;
     }
 }
