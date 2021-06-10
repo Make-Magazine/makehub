@@ -44,7 +44,6 @@ h1.entry-title {
 }
 .sticky-header #content.site-content { 
 	min-height: initial; 
-	display: flex;
 	.container { max-width: 100%; }
 }
 @media screen and (max-width: 767px) {
