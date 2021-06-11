@@ -40,7 +40,7 @@ function make_widget_rss_output($rss, $args = array()) {
     );
     $args = wp_parse_args($args, $default_args);
 
-    $items = (int) $args['items'];
+    $items = (int) $args['items']; // this is the number of items we show
     if ($items < 1 || 20 < $items) {
         $items = 10;
     }
@@ -58,7 +58,8 @@ function make_widget_rss_output($rss, $args = array()) {
     $dateNow = new DateTime('now');
     
     $sortedFeed = array();
-    $feedItems = $rss->get_items();    
+    $feedItems = $rss->get_items(); 
+	$i = 0;
     foreach ($feedItems as $item) {
         //exclude events that have already occured
 		if($item->get_item_tags('', 'event_date')[0]['data']) {
@@ -135,7 +136,8 @@ function make_widget_rss_output($rss, $args = array()) {
 				return strtotime($a['date']) - strtotime($b['date']);
 			});
 		}
-		
+		// limit by items
+		if (++$i == $items) break;
     }
 	
     echo '<ul class="custom-rss">';    
