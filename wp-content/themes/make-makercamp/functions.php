@@ -17,7 +17,7 @@ define('CHILD_THEME_URL', 'https://experiences.make.co');
  *
  * @since Make Experiences 1.0.0
  */
-function make_experiences_languages() {
+function maker_camp_languages() {
     /**
      * Makes child theme available for translation.
      * Translations can be added into the /languages/ directory.
@@ -26,18 +26,18 @@ function make_experiences_languages() {
     load_theme_textdomain('buddyboss-theme', get_stylesheet_directory() . '/languages');
 
     // Translate text from the CHILD theme only.
-    // Change 'buddyboss-theme' instances in all child theme files to 'make_experiences'.
-    // load_theme_textdomain( 'make_experiences', get_stylesheet_directory() . '/languages' );
+    // Change 'buddyboss-theme' instances in all child theme files to 'maker_camp'.
+    // load_theme_textdomain( 'maker_camp', get_stylesheet_directory() . '/languages' );
 }
 
-add_action('after_setup_theme', 'make_experiences_languages');
+add_action('after_setup_theme', 'maker_camp_languages');
 
 /**
  * Enqueues scripts and styles for child theme front-end.
  *
  * @since Make Experiences  1.0.0
  */
-function make_experiences_scripts_styles() {
+function maker_camp_scripts_styles() {
     $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
     /**
@@ -61,7 +61,7 @@ function make_experiences_scripts_styles() {
 	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
     // lib src packages up bootstrap, fancybox, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
-    wp_enqueue_script('make_experiences-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
+    wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
     wp_localize_script('universal', 'ajax_object',
             array(
@@ -74,7 +74,7 @@ function make_experiences_scripts_styles() {
     );
 }
 
-add_action('wp_enqueue_scripts', 'make_experiences_scripts_styles', 9999);
+add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
 
 
 add_action('admin_enqueue_scripts', 'load_admin_styles');
@@ -117,9 +117,6 @@ foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
 foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
     include_once $file;
 }
-
-//* Disable email match check for all users - this error would keep users from registering users already in our system
-add_filter('EED_WP_Users_SPCO__verify_user_access__perform_email_user_match_check', '__return_false');
 
 add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
 
@@ -174,12 +171,6 @@ function get_first_image_url($html) {
         return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
 }
 
-add_action('after_setup_theme', 'new_image_sizes');
-
-function new_image_sizes() {
-    add_image_size('grid-cropped', 300, 300, true);
-    add_image_size('medium-large', 600, 600);
-}
 
 function featuredtoRSS($content) {
     global $post;
@@ -231,26 +222,7 @@ function filter_posts_from_rss($where, $query = NULL) {
 }
 add_filter( 'posts_where', 'filter_posts_from_rss', 1, 4 );
 
-add_action('rest_api_init', 'register_ee_attendee_id_meta');
 
-function register_ee_attendee_id_meta() {
-    global $wpdb;
-    $args = array(
-        'type' => 'integer',
-        'single' => true,
-        'show_in_rest' => true
-    );
-    register_meta(
-            'user',
-            $wpdb->prefix . 'EE_Attendee_ID',
-            $args
-    );
-}
-
-//do not display doing it wrong errors
-add_filter('doing_it_wrong_trigger_error', function () {
-    return false;
-}, 10, 0);
 
 function add_slug_body_class($classes) {
     global $post;
@@ -274,26 +246,6 @@ function add_slug_body_class($classes) {
 
 add_filter('body_class', 'add_slug_body_class');
 
-/*
- * Override any of the translation files if we need to change language
- *
- * @param $translation The current translation
- * @param $text The text being translated
- * @param $domain The domain for the translation
- * @return string The translated / filtered text.
- */
-
-function filter_gettext($translation, $text, $domain) {
-    $translations = get_translations_for_domain($_SERVER['HTTP_HOST']);
-    switch ($text) {
-        case 'Nickname':
-            return $translations->translate('Display Name');
-            break;
-    }
-    return $translation;
-}
-
-add_filter('gettext', 'filter_gettext', 10, 4);
 
 // don't lazyload on the project print template
 function lazyload_exclude() {
@@ -306,4 +258,13 @@ function lazyload_exclude() {
 add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
+
+// limit default site search to learndash categories
+function searchfilter($query) {
+    if ($query->is_search && !is_admin() ) {
+        $query->set('post_type',array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
+    }
+	return $query;
+}
+add_filter('pre_get_posts','searchfilter');
 ?>
