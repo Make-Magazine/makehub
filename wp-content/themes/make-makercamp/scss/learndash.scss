@@ -8,6 +8,11 @@
     }
 }
 
+.bb-learndash-banner::before {
+	background: transparent;
+	opacity: 0;
+}
+
 // margins for learn dash pages
 .single-sfwd-lessons, .sfwd-courses-template, .post-type-archive-sfwd-courses {
 	#page {
