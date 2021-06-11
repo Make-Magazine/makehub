@@ -59,13 +59,11 @@ if ( $query->have_posts() ) {
 			$user_link = str_replace("/author/", "/members/", get_author_posts_url($author_id));
 			?>
 			<div class="result-item">
-				<?php 
-					if ( has_post_thumbnail() ) {
-						echo '<div class="result-image"><a href="<?php the_permalink(); ?>">';
-						the_post_thumbnail("small");
-						echo '</a></div>';
-					}
-				?>
+				<?php if ( has_post_thumbnail() ) { ?>
+						<div class="result-image"><a href="<?php the_permalink(); ?>">
+							<?php the_post_thumbnail("small"); ?>
+						</a></div>
+				<?php } ?>
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 				<?php /* <p><br /><?php the_excerpt(); ?></p> */ ?>
 				<p><?php the_category(); ?></p>

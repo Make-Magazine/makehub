@@ -31,7 +31,7 @@ function ldfc_assets() {
          $favcon_css .= '--ldfc-table-radius: ' . $settings['table_border_radius'] . 'px !important; ';
     }
 
-    $facon_css .= '}';
+    $favcon_css .= '}';
 
     wp_add_inline_style( 'favcon', $favcon_css );
 
