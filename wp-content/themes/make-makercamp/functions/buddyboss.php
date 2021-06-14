@@ -17,31 +17,6 @@ function remove_profile_nav() {
 add_action('bp_init', 'remove_profile_nav');
 
 
-add_filter('wp_nav_menu_objects', 'ad_filter_menu', 10, 2);
-function ad_filter_menu($sorted_menu_objects, $args) {
-    //check if current user is a facilitator
-    global $current_user;
-    $current_user = wp_get_current_user();
-    $userEmail = (string) $current_user->user_email;
-
-    $person = EEM_Person::instance()->get_one([['PER_email' => $userEmail]]);
-	
-    //if they are not a facilitator, remove the facilitator portal from the drop down
-    if ($args->menu->slug == 'profile-dropdown' && !$person) {
-        foreach ($sorted_menu_objects as $key => $menu_object) {
-            //look for "edit-submission" in the url
-            $pos = strpos($menu_object->url, "edit-submission");
-            if ($pos !== false) {
-                unset($sorted_menu_objects[$key]);
-                break;
-            }
-        }
-        global $bp;
-        bp_core_remove_nav_item('facilitator-portal');
-    }
-    return $sorted_menu_objects;
-}
-
 add_action('bp_init', 'setup_group_nav');
 //add tabs to the group nav for schedule and materials
 function setup_group_nav() {
@@ -84,39 +59,6 @@ function group_event_info_screen_title() {
     echo get_the_title();
 }
 
-function group_event_info_screen_content() {
-    global $bp;
-
-    //get event by pulling group id
-    global $wpdb;
-    $sql = 'SELECT post_id  FROM `wp_postmeta` WHERE `meta_key` LIKE "group_id" and meta_value="' . $bp->groups->current_group->id . '" limit 1';
-    $event_id = $wpdb->get_var($sql);
-
-    $return = '';
-    if ($event_id) {
-        $event = EEM_Event::instance()->get_one_by_ID($event_id);
-        $tickets = $event->tickets();
-        
-        $return = '<div id="tickets"> <h4>Tickets & Times</h4>';
-        foreach ($tickets as $ticket) {
-            $return .= '<div class="ticket-detail">
-                        <div class="ticket-detail-name"><b>' . $ticket->name() . '</b></div>
-                        <ul>';
-            $dates = $ticket->datetimes();
-            foreach ($dates as $date) {
-                $return .= '<li>' . date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time() . '<span class="small">(Pacific)</span></li>';
-            }
-            $return .= '    </ul>'
-                    . '</div>';                        
-        }
-        $return .= '</div>';
-        $return .= '<div id="materials"> <h4>Materials</h4>';
-        $return .= '<div>'.get_field("materials", $event_id).'</div>';
-        $return .= '</div>';
-    }
-
-    echo $return;
-}
 
 function bb_group_redirect(){
 	// if someone tries to access a group by id, redirect them to the proper url
