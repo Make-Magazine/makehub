@@ -35,8 +35,8 @@
 	.lms-topic-sidebar-data {
 		top: 138px !important;
 	}
-	#learndash-course-header {
-		width: 100%;
+	#learndash-course-header .lms-header-title {
+		max-width: 100%;
 		padding: 0 30px;
 	}
 	// style the activities grid
@@ -112,6 +112,35 @@
 					
 				}
 			}
+		}
+	}
+	.learndash-wrapper .ld-tabs .ld-tabs-navigation .ld-tab.ld-active {
+		color: $color-light-blue !important;
+		&::after {
+			background: $color-light-blue !important;
+		}
+	}
+}
+// Use css to rewrite the materials tab to "Resources"
+.ld-tab[data-ld-tab^="ld-tab-materials"] { 
+	.ld-text { display: none; }
+	.ld-icon-materials {
+		display: flex;
+		align-items: center;
+		&::after {
+			content: "Resources";
+			font-weight: 700;
+			color: #728188;
+			cursor: pointer;
+			white-space: nowrap;
+			font-family: Roboto;
+			font-size: 14px;
+			margin-left: 10px;
+		}
+	}
+	&.ld-active {
+		.ld-icon-materials::after {
+			color: $color-light-blue;
 		}
 	}
 }

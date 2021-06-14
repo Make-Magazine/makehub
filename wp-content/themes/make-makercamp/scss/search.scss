@@ -59,4 +59,9 @@
 		position: relative;
 		bottom: -4px !important;
 	}
+	.children {
+		.sf-label-checkbox {
+			font-weight: 300;
+		}
+	}
 }
