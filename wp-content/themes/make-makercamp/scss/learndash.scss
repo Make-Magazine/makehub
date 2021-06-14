@@ -30,9 +30,88 @@
 	}
 }
 
-// Lessons
+// Lessons / Projects
 .single-sfwd-lessons {
 	.lms-topic-sidebar-data {
 		top: 138px !important;
+	}
+	#learndash-course-header {
+		width: 100%;
+		padding: 0 30px;
+	}
+	// style the activities grid
+	.learndash-wrapper.lds-template-grid-banner {
+		.ld-table-list { overflow: visible; }
+		.ld-table-list-items {
+			display: flex;
+			flex-wrap: wrap;
+			flex-direction: row;
+			justify-content: flex-start;
+			margin-left: -30px;
+			margin-right: -30px;
+			border: 0px;
+			.ld-table-list-item {
+				margin: 0 1% 4% 1%;
+				display: flex;
+				flex-direction: column;
+				flex-basis: 23%;
+				width: 23%;
+				border: 2px solid #e2e7ed;
+				border-radius: 12px;
+				background: #fff;
+				@media screen and (max-width: 1350px) {
+					flex-basis: 31%;
+					width: 31%;
+				}
+				@media screen and (max-width: 1100px) {
+					flex-basis: 48%;
+					width: 48%;
+				}
+				@media screen and (max-width: 800px) {
+					flex-basis: 100%;
+					width: 100%;
+				}
+				.ld-table-list-item-preview {
+					position: relative;
+					padding: 0 0 20px 0;
+					flex-direction: column;
+					display: flex !important;
+					flex-grow: 1;
+					.lds-grid-banners-thumbnail {
+						background: url("../img/placeholder-image.svg") #efefef center center no-repeat;
+						margin: 0 0 20px 0;
+						padding-top: 55%;
+						position: relative;
+						background-size: cover;
+						width: 100%;
+						display: block;
+					}
+
+					.ld-status-icon {
+						margin-top: -33px;
+						margin-left: 20px;
+						box-shadow: 0 0 0 5px #fff;
+						background: #fff;
+						order: inherit;
+						display: block;
+					}
+					.ld-topic-title {
+						margin-left: 20px;
+						margin-right: 20px;
+						color: #4d646d;
+						font-size: 16px;
+						width: 90% !important;
+						line-height: 18px;
+						padding: 10px 0;
+						order: 0;
+					}
+					.grid-actions {
+						padding: 30px 20px 0;
+						margin-top: auto;
+					}
+					
+				}
+			}
+		}
 	}
 }

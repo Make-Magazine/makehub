@@ -73,7 +73,7 @@ function ldfc_dashboard_custom_styling() {
           $favcon_css .= '--ldfc-table-radius: ' . $settings['table_border_radius'] . 'px !important; ';
      }
 
-     $facon_css .= '}';
+     $favcon_css .= '}';
 
      echo '<style type="text/css">' . $favcon_css . '</style>';
 
