@@ -85,6 +85,7 @@ a { // don't let genesis molest our links
     display: inline-flex;
     justify-content: center;
     align-content: center;
+    align-items: center;
     flex-direction: column;
     border-radius: 0;
     border-radius: 2px;
@@ -119,13 +120,13 @@ a { // don't let genesis molest our links
     }
 }
 .universal-btn-light-blue {
-	@extend .universal-btn;
-	background-color: #3fafed;
-	border-color: #3fafed;
-	&:hover {
-		color: #3fafed;
-		border-color: #3fafed;
-	}
+    @extend .universal-btn;
+    background-color: #3fafed;
+    border-color: #3fafed;
+    &:hover {
+        color: #3fafed;
+        border-color: #3fafed;
+    }
 }
 .universal-btn-reversed {
     @extend .universal-btn;
