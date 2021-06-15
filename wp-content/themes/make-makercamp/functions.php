@@ -267,14 +267,4 @@ function searchfilter($query) {
 	return $query;
 }
 add_filter('pre_get_posts','searchfilter');
-
-// see if we can allow Sandy to embed google slideshow iframes
-
-
-function prefix_filter_allowed_html( $allowedposttags, $context ) {
-	$allowedposttags["iframe"] = array('class'=>array());
-	return $allowedposttags;
-}
-
-add_filter( 'wp_kses_allowed_html', 'prefix_filter_allowed_html', 10, 2 );
 ?>
