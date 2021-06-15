@@ -112,6 +112,7 @@ a { // don't let genesis molest our links
 .universal-btn-navy {
     @extend .universal-btn;
     background-color: #151733;
+	border-color: #151733;
     &:hover, &:focus {
         color: #151733;
         border-color: #151733;
@@ -120,6 +121,7 @@ a { // don't let genesis molest our links
 .universal-btn-light-blue {
 	@extend .universal-btn;
 	background-color: #3fafed;
+	border-color: #3fafed;
 	&:hover {
 		color: #3fafed;
 		border-color: #3fafed;
