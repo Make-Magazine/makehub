@@ -36,7 +36,7 @@ $post_image_ids_string = implode(', ', $post_image_ids);
 
 	<?php 
 	if ( ( !is_single() || is_related_posts() ) && function_exists( 'buddyboss_theme_entry_header' ) ) {
-		echo '<a href="' . get_permalink() . '"><img src="' . get_the_post_thumbnail_url( $post, 'thumbnail' ) . '" /></a>';
+		echo '<div class="image-wrapper"><a href="' . get_permalink() . '"><img src="' . get_the_post_thumbnail_url( $post, 'thumbnail' ) . '" /></a></div>';
 	} 
 	?>
 

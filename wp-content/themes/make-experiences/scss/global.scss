@@ -314,3 +314,23 @@ button, input[type="submit"] {
 		display: none;
 	}
 }
+
+// taxonomy styling
+body.tax-espresso_event_categories {
+	article .post-inner-wrap {
+		display: flex;
+		align-items: center;
+		.image-wrapper { 
+			min-width: 150px;
+		}
+		.entry-header { margin-bottom: 0px; }
+		.entry-content { display: none; }
+		@media screen and (max-width: 800px) {
+			flex-direction: column;
+			.image-wrapper { 
+				min-width: 100%;
+				img { width: 100%; }
+			}
+		}
+	}
+}
