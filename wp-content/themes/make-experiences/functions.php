@@ -308,7 +308,13 @@ add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
 
 // Set Buddypress emails from and reply to 
-add_action( 'bp_email', function( $email_type, $email_obj ) {
-	$email_obj->set_from( "community@make.co", "Make: Community" );
-}, 10, 2 );
+add_filter( 'bp_email_set_reply_to', function( $retval ) {
+    return new BP_Email_Recipient( 'community@make.co' );
+} );
+add_filter( 'wp_mail_from', function( $email ) {
+    return 'community@make.co';
+}, 10, 3 );
+add_filter( 'wp_mail_from_name', function( $name ) {
+    return 'Make: Community';
+}, 10, 3 );
 ?>
