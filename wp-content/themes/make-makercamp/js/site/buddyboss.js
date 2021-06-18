@@ -11,7 +11,7 @@ jQuery(document).ready(function(){
 	if (window.location.href.indexOf("/groups/") > -1) {
 		setTimeout("jQuery('.bp-groups-tab a').attr('target', '_self');", 100);
 	}
-	if (window.location.href.indexOf("/project-search/") > -1) {
+	if (window.location.href.indexOf("/projects-search/") > -1) {
 		jQuery("article").before("<a href='/adventures' class='btn univesal-btn'>Back to Adventures</a>");
 	}
 });
