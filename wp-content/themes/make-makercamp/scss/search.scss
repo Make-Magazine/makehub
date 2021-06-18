@@ -7,6 +7,14 @@
 		display: flex;
 		justify-content: space-between;
 	}
+	.universal-btn {
+		position: absolute;
+		right: 0px;
+		top: 10px;
+		@media screen and (max-width: 800px) {
+			top: -50px;
+		}
+	}
 	.result-items {
 		display: flex;
 		flex-wrap: wrap;
@@ -54,7 +62,25 @@
 				border: solid 1px $color-blue;
 				background: $color-blue;
 				color: #fff;
+				line-height: 0;
+    			visibility: hidden;
+				&::after {
+					visibility: visible;
+					content: 'More Results';
+					font-family: inherit;
+					text-indent: 0px;
+					height: 40px;
+					width: 120px;
+					background: $color-blue;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					padding: 10px;
+				}
 			}
+		}
+		.nav-next a::after {
+			content: "Previous Results";
 		}
 	}
 }
@@ -73,5 +99,5 @@
 }
 
 .sf-field-taxonomy-ld_lesson_category {
-	.sf-level-0 > input, .sf-level-0 > .sf-count { display: none; }
+	.sf-level-0 > input, .sf-level-0 > label span.sf-count { display: none; }
 }
