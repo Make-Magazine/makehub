@@ -306,4 +306,9 @@ function lazyload_exclude() {
 add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
 add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
+
+// Set Buddypress emails from and reply to 
+add_action( 'bp_email', function( $email_type, $email_obj ) {
+	$email_obj->set_from( "community@make.co", "Make: Community" );
+}, 10, 2 );
 ?>
