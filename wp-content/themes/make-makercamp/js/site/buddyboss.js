@@ -12,7 +12,7 @@ jQuery(document).ready(function(){
 		setTimeout("jQuery('.bp-groups-tab a').attr('target', '_self');", 100);
 	}
 	if (window.location.href.indexOf("/projects-search/") > -1) {
-		jQuery("article").before("<a href='/adventures' class='btn univesal-btn'>Back to Adventures</a>");
+		jQuery("article").before("<a href='/adventures' class='btn universal-btn'>Back to Adventures</a>");
 	}
 });
 
