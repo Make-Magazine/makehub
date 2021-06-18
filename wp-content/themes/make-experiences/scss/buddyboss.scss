@@ -53,9 +53,11 @@
         }
     }
 }
-.group-invites-screen {
-	.bp-single-group.hidden {
-		display: block !important;
+.bp-navs.users-nav {
+	#groups-list {
+		.bp-single-group.hidden {
+			display: block !important;
+		}
 	}
 }
 // only admins get to set group types
