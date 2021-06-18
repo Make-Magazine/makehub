@@ -53,6 +53,11 @@
         }
     }
 }
+.group-invites-screen {
+	.bp-single-group.hidden {
+		display: block !important;
+	}
+}
 // only admins get to set group types
 body:not(.admin-bar) {
     #create-group-form {
