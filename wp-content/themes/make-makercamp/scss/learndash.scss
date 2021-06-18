@@ -144,3 +144,10 @@
 		}
 	}
 }
+
+// hide the category sort filter since it's redundant with search and filter in the sidebar
+.sfwd-courses-filters {
+	#sfwd_cats-order-by {
+		display: none;
+	}
+}
