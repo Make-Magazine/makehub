@@ -448,6 +448,9 @@
                     li:hover {
                         a { color: #333; }
                     }
+                    .menu-item-has-children:after {
+                        display: none;
+                    }
                 }
             }
         }
