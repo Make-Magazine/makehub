@@ -211,8 +211,12 @@ jQuery(document).ready(function () {
         case "makercamp.staging.wpengine.com":
         case "dev.makercamp.com":
         case "stage.makercamp.com":
+        case "makercamp.makehub.local":
+        case "makercamp.make.co":
+        case "makercamp.devmakehub.wpengine.com":
+        case "makercamp.stagemakehub.wpengine.com":
             jQuery("h2.site-title a").attr("href", "https://makercamp.com");
-            document.getElementById("navLogo").src = "/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
+            document.getElementById("navLogo").src = "https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
             break;
         case "makezine.test":
         case "makezine.local":
