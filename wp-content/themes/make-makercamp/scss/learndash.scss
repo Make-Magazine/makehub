@@ -30,6 +30,15 @@
 	}
 }
 
+// Adventures grid page
+.bb-course-items .bb-card-course-details--hasAccess .bb-course-excerpt {
+	display: block;
+	color: #333;
+	font-size: 16px;
+	overflow: visible;
+    max-height: inherit;
+}
+
 // Lessons / Projects
 .single-sfwd-lessons {
 	.lms-topic-sidebar-data {
