@@ -62,13 +62,13 @@
             </div>
 			<div class="author-description">
 				<?php
-				/*if ( class_exists( 'BuddyPress' ) ) {
+				if ( class_exists( 'BuddyPress' ) ) {
 					$user_data_args = array(
 						'field'   => 'description',
 						'user_id' => $user_id,
 					);
-					echo bp_get_member_profile_data( $user_data_args );
-				}*/
+					echo bp_profile_field_data($user_data_args);
+				}
 				?>
 			</div>
         </div>
