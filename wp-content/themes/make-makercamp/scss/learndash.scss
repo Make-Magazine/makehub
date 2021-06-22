@@ -65,6 +65,21 @@
     max-height: inherit;
 }
 
+// Adventures page
+.sfwd-courses-template {
+	.bb-course-meta {
+		width: 100%;
+		align-content: space-between;
+		padding: 10px 20px 0px;
+		margin-bottom: 0px;
+	}
+	.ld-item-details {
+		.lds-btn {
+			width: 100%;
+		}
+	}
+}
+
 // Lessons / Projects
 .single-sfwd-lessons {
 	.lms-topic-sidebar-data {

@@ -28,7 +28,7 @@
 
 //show hidden groups if you're a member
 #groups-dir-list, .mygroups {
-    .is-member.hidden {
+    .hidden {
         display: block !important
     }
 }
