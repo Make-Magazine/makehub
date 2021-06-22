@@ -98,33 +98,6 @@ button.ges-change, button.ges-change:hover {
     padding-bottom: 150px;
 }
 
-/* Learn Dash */
-/* Hide topic list on non mobile sites only */
-@media screen and (min-width: 768px) {
-    .lesson-page .ld-topic-list, .lesson-page > #learndash-course-header, 
-    .sfwd-lessons .bb-ld-info-bar, 
-    .topic-page .bb-ld-info-bar, 
-    .sfwd-lessons .bb-position,
-    .topic-page .bb-position,
-    .sfwd-lessons .sfwd-course-nav,
-    .topic-page .sfwd-course-nav,
-    .sfwd-lessons .ld-progress, 
-    .topic-page .ld-progress, 
-    .sfwd-lessons .ld-content-actions,
-    .topic-page .ld-content-actions,
-    .sfwd-lessons .lms-header-instructor, 
-    .topic-page .lms-header-instructor {
-        display: none;
-    }
-}
-
-/* remove padding on learndash content for non mobile viewing */
-@media screen and (min-width: 768px) {
-    .learndash-page-content {
-        padding: 30px 30px 0;
-    }
-}
-
 // Profile pages
 .profile.buddypress, .my-account.buddypress {
     .item-header-wrap {

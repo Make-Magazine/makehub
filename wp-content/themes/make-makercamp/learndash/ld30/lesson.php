@@ -140,15 +140,6 @@ if ( empty( $course ) ) {
                                     </div>
                                 </div>
                             </div>
-                            <?php
-                            global $post;
-                            $course_post = learndash_get_setting( $post, 'course' );
-                            $course_data = get_post( $course_post );
-                            $author_id = $course_data->post_author;
-                            learndash_get_template_part( 'template-course-author.php', array(
-                                'user_id'   => $author_id
-                            ), true );
-                            ?>
                         </div>
 
                      <div class="learndash_content_wrap">
@@ -297,6 +288,15 @@ if ( empty( $course ) ) {
                                 comments_template();
                             endif;
                         }
+						// Author section
+						global $post;
+						$course_post = learndash_get_setting( $post, 'course' );
+						$course_data = get_post( $course_post );
+						$author_id = $course_data->post_author;
+						learndash_get_template_part( 'template-course-author.php', array(
+							'user_id'   => $author_id
+						), true );
+                            
                         ?>
 
                             </div><?php /* .learndash_content_wrap */ ?>
