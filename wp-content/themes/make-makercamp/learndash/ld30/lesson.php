@@ -64,7 +64,10 @@ if ( empty( $course ) ) {
 
         <div id="learndash-page-content" class="lesson-page">
             <div class="learndash-content-body">
+				
+				
                 <?php
+				               
                 $buddyboss_content = apply_filters( 'buddyboss_learndash_content', '', $post );
                 if ( ! empty( $buddyboss_content ) ) {
 	                echo $buddyboss_content;
@@ -186,7 +189,7 @@ if ( empty( $course ) ) {
                                     'materials' => $materials,
                                     'context'   => 'lesson'
                                 ), true );
-                                
+					
                                 /**
                                  * Display Lesson Assignments
                                  */
@@ -287,7 +290,9 @@ if ( empty( $course ) ) {
                             if ( comments_open() ) :
                                 comments_template();
                             endif;
-                        }
+                        } ?>
+						 
+						<?php
 						// Author section
 						global $post;
 						$course_post = learndash_get_setting( $post, 'course' );
@@ -298,10 +303,12 @@ if ( empty( $course ) ) {
 						), true );
                             
                         ?>
+						
 
                             </div><?php /* .learndash_content_wrap */ ?>
-
+						
                     </div> <!--/.learndash-wrapper-->
+					<a href="/print-courses/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
                 <?php } ?>
             </div><?php /* .learndash-content-body */ ?>
         </div><?php /* #learndash-page-content */ ?>
