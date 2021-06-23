@@ -20,7 +20,7 @@ get_header();
 
 				while ( have_posts() ) :
 					the_post();
-					do_action( THEME_HOOK_PREFIX . '_single_template_part_content', 'page' );
+					echo the_content();
 				    // Are there custom panels to display?
 					if (have_rows('content_panels')) {
 						// loop through the rows of data      
