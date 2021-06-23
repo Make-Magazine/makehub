@@ -308,7 +308,7 @@ if ( empty( $course ) ) {
                             </div><?php /* .learndash_content_wrap */ ?>
 						
                     </div> <!--/.learndash-wrapper-->
-					<a href="/print-courses/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
+					<a href="/print-projects/?lesson=<?php echo $post->ID; ?>" class="btn universal-btn print-btn">Print Project</a>
                 <?php } ?>
             </div><?php /* .learndash-content-body */ ?>
         </div><?php /* #learndash-page-content */ ?>
