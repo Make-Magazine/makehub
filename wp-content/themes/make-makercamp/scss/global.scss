@@ -314,15 +314,21 @@ button, input[type="submit"] {
 	}
 }
 
-.logged-out-wrapper {
-	display: flex;
-	justify-content: center;
-	.logged-out-message {
-		padding: 10px 20px;
-		font-size: 18px;
-		border: solid 1px $color-light-grey;
-		border-radius: 10px;
-		margin: 20px 0;
-		background: #fff;
+.page-template-page-login-required {
+	.logged-out-wrapper {
+		display: flex;
+		justify-content: center;
+		.logged-out-message {
+			padding: 10px 20px;
+			font-size: 18px;
+			border: solid 1px $color-light-grey;
+			border-radius: 10px;
+			margin: 20px 0;
+			background: #fff;
+		}
+	}
+	.content-area {
+		padding-top: 0px;
+		padding-bottom: 0px;
 	}
 }
