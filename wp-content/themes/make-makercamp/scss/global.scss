@@ -313,3 +313,16 @@ button, input[type="submit"] {
 		display: none;
 	}
 }
+
+.logged-out-wrapper {
+	display: flex;
+	justify-content: center;
+	.logged-out-message {
+		padding: 10px 20px;
+		font-size: 18px;
+		border: solid 1px $color-light-grey;
+		border-radius: 10px;
+		margin: 20px 0;
+		background: #fff;
+	}
+}

@@ -498,9 +498,7 @@
                                 "darkgrey-bg": "Dark Grey",
                                 "darkblue-bg": "Dark Blue"
                             },
-                            "default_value": [
-                                "blue-bg"
-                            ],
+                            "default_value": "blue-bg",
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
@@ -668,9 +666,7 @@
                                 "darkgrey-bg": "Dark Grey",
                                 "darkblue-bg": "Dark Blue"
                             },
-                            "default_value": [
-                                "blue-bg"
-                            ],
+                            "default_value": "blue-bg",
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
@@ -1794,9 +1790,7 @@
                                                 "grey-bg": "Grey",
                                                 "darkgrey-bg": "Dark Grey"
                                             },
-                                            "default_value": [
-                                                "Blue"
-                                            ],
+                                            "default_value": "Blue",
                                             "allow_null": 0,
                                             "multiple": 0,
                                             "ui": 0,
@@ -1972,9 +1966,7 @@
                                 "blue-bg": "Blue",
                                 "darkblue-bg": "Dark Blue"
                             },
-                            "default_value": [
-                                "darkblue-bg"
-                            ],
+                            "default_value": "darkblue-bg",
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
@@ -2391,9 +2383,7 @@
                                         "blue-bg": "Blue",
                                         "darkblue-bg": "Dark Blue"
                                     },
-                                    "default_value": [
-                                        "white-bg"
-                                    ],
+                                    "default_value": "white-bg",
                                     "allow_null": 0,
                                     "multiple": 0,
                                     "ui": 0,
@@ -2591,7 +2581,7 @@
                                         "grey-bg": "Grey",
                                         "darkgrey-bg": "Dark Grey"
                                     },
-                                    "default_value": [],
+                                    "default_value": false,
                                     "allow_null": 0,
                                     "multiple": 0,
                                     "ui": 0,
@@ -2640,9 +2630,7 @@
                                 "blue-bg": "Blue",
                                 "darkblue-bg": "Dark Blue"
                             },
-                            "default_value": [
-                                "white-bg"
-                            ],
+                            "default_value": "white-bg",
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
@@ -2668,9 +2656,7 @@
                                 "center": "Center",
                                 "bottom": "Bottom"
                             },
-                            "default_value": [
-                                "top"
-                            ],
+                            "default_value": "top",
                             "allow_null": 0,
                             "multiple": 0,
                             "ui": 0,
@@ -2738,7 +2724,19 @@
             {
                 "param": "page_template",
                 "operator": "==",
-                "value": "default"
+                "value": "page-fullwidth-content.php"
+            }
+        ],
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            },
+            {
+                "param": "post_template",
+                "operator": "==",
+                "value": "page-login-required.php"
             }
         ]
     ],
@@ -2750,5 +2748,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1617829633
+    "modified": 1624486009
 }
