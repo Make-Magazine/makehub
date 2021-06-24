@@ -64,6 +64,11 @@
 	overflow: visible;
     max-height: inherit;
 }
+.post-type-archive-sfwd-courses {
+	#courses-my-courses {
+		span.count { display: none; }
+	}
+}
 
 // Adventures page
 .sfwd-courses-template {
