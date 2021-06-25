@@ -218,3 +218,35 @@
 		display: none;
 	}
 }
+
+.page-template-project-print-template {
+	.print-materials-wrapper {
+		background: #f1f1f1;
+		margin: 20px 10px;
+		padding: 15px 0px 10px;
+		.print-materials {
+			font-size: 24px;
+			font-weight: bold;
+			margin: 0 auto;
+			max-width: fit-content;
+			ul li { font-size: 18px; }
+		}
+	}
+	.elementor-section-boxed {
+		margin: 0 20px;
+		.bb-about-instructor {
+			border: solid 1px #ccc;
+			border-radius: 5px;
+			padding: 15px;
+			margin-bottom: 15px;
+		}
+		.print-disclaimer {
+			font-style: italic;
+		}
+	}
+	@media print {
+		a[href]:after {
+			content: " (" attr(href) ")";
+		}
+	}
+}

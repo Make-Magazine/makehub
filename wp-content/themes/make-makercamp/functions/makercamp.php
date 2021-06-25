@@ -21,8 +21,14 @@ function get_lesson_output($lesson_id, $course_id) {
     <div id="primary" class="content-area bb-grid-cell">
         <main id="main" class="site-main">
             <div style="text-align:center"><img src="<?php echo get_stylesheet_directory_uri() . '/images/makercamp-logo.png'; ?> " /></div>
+			
+			<div class="print-materials-wrapper">
+				<div class="print-materials">
+					<?php echo $lesson_materials; ?>    
+				</div>
+            </div>     
 
-            <div style="float:left;width:70%">
+            <div class="print-body">
                 <?php
                 //print out lesson content                    
                 $post = get_post($lesson_id, OBJECT); //set post info                                       
@@ -36,9 +42,7 @@ function get_lesson_output($lesson_id, $course_id) {
                 }
                 ?>
             </div>
-            <div style="float:left;width:30%">
-                <?php echo $lesson_materials; ?>    
-            </div>                        
+                               
 
 
         </main>
