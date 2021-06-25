@@ -59,10 +59,9 @@
                 <div class="elementor-widget-container">
                     <?php
                     // Author section
-                    global $post;
-                    $course_post = learndash_get_setting($post, 'course');
-                    $course_data = get_post($course_post);
+                    $course_data = get_post($lesson_id);                    
                     $author_id = $course_data->post_author;
+                    
                     learndash_get_template_part('template-course-author.php', array(
                         'user_id' => $author_id
                             ), true);
