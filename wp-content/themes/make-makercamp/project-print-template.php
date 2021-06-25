@@ -59,10 +59,12 @@
                 <div class="elementor-widget-container">
                     <?php
                     // Author section
-                    $course_data = get_post($lesson_id);
+                    $course_data = get_post($lesson_id);                    
                     $author_id = $course_data->post_author;
-                    learndash_get_template_part('template-course-author.php', 
-						array( 'user_id' => $author_id ), true);
+                    
+                    learndash_get_template_part('template-course-author.php', array(
+                        'user_id' => $author_id
+                            ), true);
                     ?>
                     <p style="width:100%"><strong>Please Note</strong></p>
                     <p class="print-disclaimer">Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Maker Media, Inc., disclaims all responsibility for any resulting damage, injury, or expense.</p>
