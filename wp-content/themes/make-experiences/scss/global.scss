@@ -23,6 +23,13 @@ body {
 	font-family: 'Roboto';
 }
 
+// don't print urls
+@media print {
+  a[href]:after {
+	content: none !important;
+  }
+}
+
 .mobile body { 
 	position: relative !important;
 	.buddypanel { display: none !important; }
