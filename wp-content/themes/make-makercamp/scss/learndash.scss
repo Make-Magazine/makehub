@@ -252,6 +252,13 @@
 			font-style: italic;
 		}
 	}
+	.bb-avatar-wrap {
+		min-width: 120px;
+		margin-right: 25px;
+		img.avatar {
+			min-width: 120px;
+		}
+	}
 	@media print {
 		a[href]:after {
 			content: " (" attr(href) ")";
