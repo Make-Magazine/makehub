@@ -179,8 +179,16 @@
 		border: solid 1px #ccc;
 		padding: 20px;
 		border-radius: 3px;
-		.author-description {
-			margin-left: 42px;
+		.bb-avatar-wrap {
+			min-width: 120px;
+			margin-right: 25px;
+			img.avatar {
+				min-width: 120px;
+			}
+		}
+		h5 { margin-bottom: 15px; }
+		.flex {
+			align-items: start;
 		}
 	}
 	.print-btn {

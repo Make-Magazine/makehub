@@ -27,7 +27,7 @@
                                 <a href="<?php echo get_author_posts_url( $user_id, get_the_author_meta( 'user_nicename', $user_id ) ); ?>">
                                 <?php
                             } ?>
-                                <img class="round avatar" src="<?php echo $avatar; ?>"/>
+                                <img class="round avatar" src="<?php echo $avatar; ?>" />
                             </a>
 							<?php
                         endif;
@@ -58,19 +58,20 @@
                             <?php
                         } ?>
                     </h5>
+					<div class="author-description">
+						<?php
+						if ( class_exists( 'BuddyPress' ) ) {
+							$user_data_args = array(
+								'field'   => 'description',
+								'user_id' => $user_id,
+							);
+							echo bp_profile_field_data($user_data_args);
+						}
+						?>
+					</div>
                 </div>
             </div>
-			<div class="author-description">
-				<?php
-				if ( class_exists( 'BuddyPress' ) ) {
-					$user_data_args = array(
-						'field'   => 'description',
-						'user_id' => $user_id,
-					);
-					echo bp_profile_field_data($user_data_args);
-				}
-				?>
-			</div>
+			
         </div>
 		<?php
 	}
