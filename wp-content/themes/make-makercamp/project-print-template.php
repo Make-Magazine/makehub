@@ -15,10 +15,10 @@
             @media print {
                 .container, .elementor-section.elementor-section-boxed > .elementor-container {width:100% !important; max-width: 100% !important}
                 .elementor-column.elementor-col-50 {
-                    //width: 50% !important;
+                    width: 50% !important;
                 }
                 .elementor-column.elementor-col-33 {
-                    //width: 33.333% !important;
+                    width: 33.333% !important;
                 }
                 .elementor-social-icons-wrapper, .elementor-social-icon, .elementor-social-icon svg {
                     display: none;
@@ -58,15 +58,15 @@
             <section class="elementor-container">
                 <div class="elementor-widget-container">
                     <?php
-                // Author section
-                global $post;
-                $course_post = learndash_get_setting($post, 'course');
-                $course_data = get_post($course_post);
-                $author_id = $course_data->post_author;
-                learndash_get_template_part('template-course-author.php', array(
-                    'user_id' => $author_id
-                        ), true);
-                ?>
+                    // Author section
+                    global $post;
+                    $course_post = learndash_get_setting($post, 'course');
+                    $course_data = get_post($course_post);
+                    $author_id = $course_data->post_author;
+                    learndash_get_template_part('template-course-author.php', array(
+                        'user_id' => $author_id
+                            ), true);
+                    ?>
                     <p style="width:100%"><strong>Please Note</strong></p>
                     <p>Your safety is your own responsibility, including proper use of equipment and safety gear, and determining whether you have adequate skill and experience. Power tools, electricity, and other resources used for these projects are dangerous, unless used properly and with adequate precautions, including safety gear and adult supervision. Some illustrative photos do not depict safety precautions or equipment, in order to show the project steps more clearly. Use of the instructions and suggestions found in Maker Camp is at your own risk. Maker Media, Inc., disclaims all responsibility for any resulting damage, injury, or expense.</p>
                 </div>
