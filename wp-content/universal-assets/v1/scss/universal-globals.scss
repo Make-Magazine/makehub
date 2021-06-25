@@ -396,3 +396,12 @@ input.cmn-toggle-round:checked + label:after {
         }
     }
 }
+
+// don't print urls
+@media print {
+	a[href]:after, a[href]:before {
+		content: none !important;
+		display: none !important;
+		visibility: hidden !important;
+	}
+}
