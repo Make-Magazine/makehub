@@ -90,3 +90,19 @@ function ee_filter_ee_events_orderyby_datetime() {
     // edit main link for events
     $submenu['espresso_events'][0][2] = 'admin.php?page=espresso_events&orderby=Datetime.DTT_EVT_start&order=desc';
 }
+
+// hide events tagged as 'hidden'
+function ee_filter_pre_get_posts( $query ) {
+	if ( $query->query['post_type'] == 'espresso_events' ) {
+		$query->set( 'tax_query', array(
+				array(
+					'taxonomy' => 'post_tag',
+					'field' => 'term_id',
+					'terms' => get_tag_ID('hidden'),
+					'operator' => 'NOT IN'
+				)
+			) 
+		);
+	}
+}
+add_action( 'pre_get_posts', 'ee_filter_pre_get_posts' );
