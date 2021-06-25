@@ -272,7 +272,7 @@ add_filter('pre_get_posts','searchfilter');
 add_filter('template_redirect', 'theme_check_user_permissions', 1, 1);
 function theme_check_user_permissions($template) {
 	$group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
-	if((!is_user_logged_in() || !groups_is_user_member( get_current_user_id(), $group_id )) && $_SERVER['REQUEST_URI'] != "/makercamp-register/") {
+	if((!is_user_logged_in() || !groups_is_user_member( get_current_user_id(), $group_id )) && $_SERVER['REQUEST_URI'] != "/makercamp-register/" && !current_user_can('administrator') ) {
 		wp_redirect( '/makercamp-register/' );
 	} 
 }
