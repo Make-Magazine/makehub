@@ -103,23 +103,36 @@ class Activecampaign_For_Woocommerce_Ecom_Product_Factory {
 		$logger   = new Logger();
 		$terms    = get_the_terms( $product->get_id(), 'product_cat' );
 		$cat_list = [];
-
-		// go through the categories and make a named list
-		foreach ( $terms as $term ) {
-			$product_cat_id   = $term->term_id;
-			$product_cat_name = $term->name;
-			if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
-				$cat_list[] = $product_cat_name;
-			} else {
-				$logger->warning(
-					'A product category attached to this product does not have a valid category and/or name.',
-					[
-						'product_id' => $product->get_id(),
-						'term_id'    => $term->term_id,
-						'term_name'  => $term->name,
-					]
-				);
+		try {
+			// go through the categories and make a named list
+			if ( ! empty( $terms ) && is_array( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$product_cat_id   = $term->term_id;
+					$product_cat_name = $term->name;
+					if ( $product_cat_id >= 0 && ! empty( $product_cat_name ) ) {
+						$cat_list[] = $product_cat_name;
+					} else {
+						$logger->warning(
+							'A product category attached to this product does not have a valid category and/or name.',
+							[
+								'product_id' => $product->get_id(),
+								'term_id'    => $term->term_id,
+								'term_name'  => $term->name,
+							]
+						);
+					}
+				}
 			}
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'There was an error getting all product categories.',
+				[
+					'terms'          => $terms,
+					'product_id'     => $product->get_id(),
+					'trace'          => $t->getTrace(),
+					'thrown_message' => $t->getMessage(),
+				]
+			);
 		}
 
 		if ( ! empty( $cat_list ) ) {

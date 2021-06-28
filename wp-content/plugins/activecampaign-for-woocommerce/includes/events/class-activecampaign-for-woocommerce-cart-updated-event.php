@@ -50,7 +50,7 @@ class Activecampaign_For_Woocommerce_Cart_Updated_Event implements Triggerable {
 		$logger = new Logger();
 		if ( isset( wc()->session ) && wc()->session->get( 'activecampaignfwc_order_external_uuid' ) ) {
 			wc()->session->set( 'activecampaignfwc_order_external_uuid', false );
-			$logger->debug( 'Reset the activecampaignfwc_order_external_uuid on cart' );
+			$logger->debug( 'Cart Updated Event: Reset the activecampaignfwc_order_external_uuid on cart' );
 		}
 	}
 	// phpcs:enable

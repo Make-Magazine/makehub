@@ -239,31 +239,37 @@ class ACUI_Frontend{
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute role', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use role as attribute to choose directly in the shortcode the role to use during the export. Remind that you must use the role slug, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta role="editor"]</pre>
+					<td><?php _e( 'You can use role as attribute to choose directly in the shortcode the role to use during the export. Remind that you must use the role slug, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users role="editor"]</pre>
 					</td>
 				</tr>
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute from', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use from attribute to filter users created from a specified date. Date format has to be: Y-m-d, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta from="<?php echo date( 'Y-m-d' ); ?>"]</pre>
+					<td><?php _e( 'You can use from attribute to filter users created from a specified date. Date format has to be: Y-m-d, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users from="<?php echo date( 'Y-m-d' ); ?>"]</pre>
 					</td>
 				</tr>
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute to', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use from attribute to filter users created before a specified date. Date format has to be: Y-m-d, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta to="<?php echo date( 'Y-m-d' ); ?>"]</pre>
+					<td><?php _e( 'You can use from attribute to filter users created before a specified date. Date format has to be: Y-m-d, for example:', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users to="<?php echo date( 'Y-m-d' ); ?>"]</pre>
 					</td>
 				</tr>
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute delimiter', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use delimiter attribute to set which delimiter is going to be used, allowed values are:', 'import-users-from-csv-with-meta' ); ?> COMMA, COLON, SEMICOLON, TAB <pre>[import-users-from-csv-with-meta delimiter="SEMICOLON"]</pre>
+					<td><?php _e( 'You can use delimiter attribute to set which delimiter is going to be used, allowed values are:', 'import-users-from-csv-with-meta' ); ?> COMMA, COLON, SEMICOLON, TAB <pre>[export-users delimiter="SEMICOLON"]</pre>
 					</td>
 				</tr>
 
                 <tr class="form-field">
 					<th scope="row"><label for=""><?php _e( 'Attribute order-alphabetically', 'import-users-from-csv-with-meta' ); ?></label></th>
-					<td><?php _e( 'You can use order-alphabetically attribute to order alphabetically the fields, for example', 'import-users-from-csv-with-meta' ); ?> <pre>[import-users-from-csv-with-meta order-alphabetically]</pre>
+					<td><?php _e( 'You can use order-alphabetically attribute to order alphabetically the fields, for example', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users order-alphabetically]</pre>
+					</td>
+				</tr>
+
+                <tr class="form-field">
+					<th scope="row"><label for=""><?php _e( 'Attribute columns', 'import-users-from-csv-with-meta' ); ?></label></th>
+					<td><?php _e( 'You can use columns attribute to set which columns must be exported. Use a list of fields separated by commas, for example', 'import-users-from-csv-with-meta' ); ?> <pre>[export-users columns="user_email,first_name,last_name"]</pre>
 					</td>
 				</tr>
 
@@ -443,7 +449,7 @@ class ACUI_Frontend{
 	}
 
     function shortcode_export( $atts ) {
-		$atts = shortcode_atts( array( 'role' => '', 'from' => '', 'to' => '', 'delimiter' => '', 'order-alphabetically' => '' ), $atts );
+		$atts = shortcode_atts( array( 'role' => '', 'from' => '', 'to' => '', 'delimiter' => '', 'order-alphabetically' => '', 'columns' => '' ), $atts );
 
 		ob_start();
 		
@@ -465,6 +471,5 @@ class ACUI_Frontend{
 		return ob_get_clean();
 	}
 }
-
 $acui_frontend = new ACUI_Frontend();
 $acui_frontend->hooks();

@@ -86,6 +86,7 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 					'<',
 					'<=',
 					'contains',
+					'does_not_contain',
 					'starts_with',
 					'ends_with',
 					'like',

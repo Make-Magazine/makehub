@@ -734,7 +734,9 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	 * @return bool
 	 */
 	public function is_value_submission_empty( $entry_value, $field, $form ) {
-		$is_empty = $field->is_value_submission_empty( $form['id'] );
+		$dummy_field = clone $field;
+
+		$is_empty = $dummy_field->is_value_submission_empty( $form['id'] );
 
 		// Only do this check if AJAX as GF_Field::is_value_submission_empty() relies on POSTed values.
 		if ( wp_doing_ajax() && $is_empty ) {
@@ -748,10 +750,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 		 * Fortunately, GF_Field->validate() has been changed and it's more suitable for this use-case.
 		 */
 		if ( version_compare( GFForms::$version, '2.5-beta-1', '>=' ) ) {
-			$field->isRequired = true;
-			$field->validate( $entry_value, $form );
+			$dummy_field->isRequired = true;
 
-			if ( ! empty( $field->validation_message ) ) {
+			// Suppress any PHP notices as there may be undefined indexes.
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
+			@$dummy_field->validate( $entry_value, $form );
+
+			if ( ! empty( $dummy_field->validation_message ) ) {
 				return true;
 			}
 		}
@@ -863,8 +868,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			 * Otherwise, we need to use the merge tag result when the format is text to avoid an issue where
 			 * HTML entities get escaped and break coupling/decoupling when users enter characters such as & in
 			 * fields that are depended upon.
+			 *
+			 * <br /> is an allowed tag to improve support for linebreaks in textareas.
 			 */
-			if ( strip_tags( $merge_tag_match_value_html ) !== $merge_tag_match_value_html ) {
+			if ( strip_tags( $merge_tag_match_value_html, '<br>' ) !== $merge_tag_match_value_html ) {
 				$merge_tag_match_value = $merge_tag_match_value_html;
 			} else {
 				$merge_tag_match_value = GFCommon::replace_variables( $merge_tag, $form, $entry_values, false, false, false, 'text' );

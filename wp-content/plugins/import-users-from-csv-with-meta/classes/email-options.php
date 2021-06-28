@@ -224,9 +224,14 @@ class ACUI_Email_Options{
 		}
 
 		for( $i = 0 ; $i < count( $headers ); $i++ ) {
+			$to_replace = "**" . $headers[ $i ] .  "**";
+			
+			if( strpos( $body, $to_replace ) === false && strpos( $subject, $to_replace ) === false )
+				continue;
+			
 			$data[ $i ] = ( is_array( $data[ $i ] ) ) ? implode( "-", $data[ $i ] ) : $data[ $i ];
-			$body = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $body );
-			$subject = str_replace( "**" . $headers[ $i ] .  "**", $data[ $i ] , $subject );
+			$body = str_replace( $to_replace, $data[ $i ] , $body );
+			$subject = str_replace( $to_replace, $data[ $i ] , $subject );
 		}
 		
 		$body = apply_filters( 'acui_import_email_body_before_wpautop', $body, $headers, $data, $created, $user_id );

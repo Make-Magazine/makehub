@@ -4,7 +4,7 @@ Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
 Tested up to: 5.7.2
-Stable tag: 1.17.5.6
+Stable tag: 1.17.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,21 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.6.2 =
+*   Objects in CSV can now be printed using serialization
+
+= 1.17.6.1 =
+*   Force users to reset their passwords is also compatible with WP User Manager forms
+*   Improved the way data to replace is searched preparing the emails
+*   Improved the way some data is shown to prevent notices from array to string conversions
+
+= 1.17.6 =
+*   Now you can filter the columns that are going to be exported using the shortcode and the attribute columns
+
+= 1.17.5.7 =
+*   Email templates are being sent translated in the current WPML language if column locale is not set
+*   Warning fixed in ACF addon
 
 = 1.17.5.6 =
 *   Frontend force reset password fixed

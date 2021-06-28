@@ -26,6 +26,15 @@ class GPPA_Object_Type_Post extends GPPA_Object_Type {
 		add_filter( 'gppa_property_label_post_post_type', array( $this, 'label_transform_post_type' ) );
 	}
 
+	/**
+	 * @param $args array  Query arguments to hash
+	 *
+	 * @return string   SHA1 representation of the requested query
+	 */
+	public function query_cache_hash( $args ) {
+		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
+	}
+
 	public function parse_date_in_filter_value( $filter_value, $field_values, $primary_property_value, $filter, $ordering, $field, $property ) {
 		$property_id = ! empty( $property['group'] ) ? $property['group'] . '_' . $property['value'] : $property['value'];
 

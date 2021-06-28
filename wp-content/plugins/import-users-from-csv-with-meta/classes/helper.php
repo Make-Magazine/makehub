@@ -262,12 +262,20 @@ class ACUI_Helper{
         foreach ( $data as $element ){
             if( is_wp_error( $element ) )
                 $element = $element->get_error_message();
+            elseif( is_object( $element ) ){
+                $element = serialize( $element );
+            }
             elseif( is_array( $element ) ){
                 $element_string = '';
                 $i = 0;
 
                 foreach( $element as $it => $el ){
-                    $element_string .= ( is_wp_error( $el ) ? $el->get_error_message() : $el );
+                    if( is_wp_error( $el ) )
+                        $element_string .= $el->get_error_message();
+                    elseif( is_array( $el ) )
+                        $element_string .= serialize( $el );
+                    else
+                        $element_string .= $el;
 
                     if(++$i !== count( $element ) ){
                         $element_string .= ',';
@@ -349,7 +357,9 @@ class ACUI_Helper{
         ?>
         <script>
         jQuery( document ).ready( function( $ ){
-            $( '#acui_results,#acui_errors' ).DataTable();
+            $( '#acui_results,#acui_errors' ).DataTable({
+                "scrollX": true,
+            });
         } )
         </script>
         <?php

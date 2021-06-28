@@ -1690,7 +1690,6 @@ window.bp = window.bp || {};
 					$('#zmmtg-root').addClass('active');
 					var meetConfig = {
 						apiKey: atob( bp_zoom_vars.bp_staple ),
-						apiSecret: atob( bp_zoom_vars.bp_contrast ),
 						meetingNumber: _this.data('meeting-id'),
 						userName: bp_zoom_vars.user.name,
 						passWord: _this.data('meeting-pwd'),
@@ -1698,15 +1697,7 @@ window.bp = window.bp || {};
 						role: _this.data('is-host') == '1' ? 1 : 0,
 					};
 
-					var signature = ZoomMtg.generateSignature({
-						meetingNumber: meetConfig.meetingNumber,
-						apiKey: meetConfig.apiKey,
-						apiSecret: meetConfig.apiSecret,
-						role: meetConfig.role,
-						success: function (res) {
-							console.log(res.result);
-						}
-					});
+					var signature = _this.data('meeting-sign');
 
 					ZoomMtg.init({
 						leaveUrl: meetConfig.leaveUrl,
@@ -2415,7 +2406,6 @@ window.bp = window.bp || {};
 					$('#zmmtg-root').addClass('active');
 					var meetConfig = {
 						apiKey: atob( bp_zoom_vars.bp_staple ),
-						apiSecret: atob( bp_zoom_vars.bp_contrast ),
 						meetingNumber: _this.data('webinar-id'),
 						userName: bp_zoom_vars.user.name,
 						passWord: _this.data('webinar-pwd'),
@@ -2424,7 +2414,7 @@ window.bp = window.bp || {};
 						role: 0,
 					};
 
-					var signature = ZoomMtg.generateSignature(meetConfig);
+					var signature = _this.data('meeting-sign');
 
 					ZoomMtg.init({
 						leaveUrl: meetConfig.leaveUrl,

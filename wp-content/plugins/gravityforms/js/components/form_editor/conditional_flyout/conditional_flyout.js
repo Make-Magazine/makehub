@@ -166,7 +166,7 @@ function getOptionsFromSelect( field, value ) {
 		var config = {
 			label: choice.text,
 			value: choice.value,
-			selected: choice.value === value ? 'selected="selected"' : '',
+			selected: choice.value == value ? 'selected="selected"' : '',
 		};
 
 		options.push( config );
@@ -302,7 +302,7 @@ function isValidFlyoutClick( e ) {
  * @return {boolean}
  */
 function ruleNeedsTextValue( rule ) {
-	return ['contains', 'starts_with', 'ends_with'].indexOf ( rule.operator ) !== -1;
+	return ['contains', 'starts_with', 'ends_with', '<', '>' ].indexOf ( rule.operator ) !== -1;
 }
 
 /**
@@ -376,6 +376,8 @@ GFConditionalLogic.prototype.renderFlyout = function() {
 	var html = gf_vars.conditionalLogic.views.flyout;
 
 	renderView( html, this.els.flyouts[ this.objectType ], config, true );
+
+	gform.tools.trigger( 'gform_render_simplebars' );
 };
 
 /**
@@ -677,15 +679,6 @@ GFConditionalLogic.prototype.renderRuleValue = function( rule, idx ) {
 GFConditionalLogic.prototype.renderRule = function( rule, idx ) {
 	var field = getFieldById( rule.fieldId );
 
-	// Field is select - if value doesn't exist, set it to the first choice.
-	if ( field && field.choices.length && ! ruleNeedsTextValue( rule ) ) {
-		var found = field.choices.filter( function( choice ) { return rule.value == choice.value; } )[0];
-
-		if ( ! found && field.type !== 'multiselect' ) {
-			rule.value = field.choices[ 0 ].value;
-		}
-	}
-
 	if ( ! field ) {
 		field = {
 			choices: '',
@@ -751,7 +744,7 @@ GFConditionalLogic.prototype.getDefaultRule = function() {
 	var fieldId = GetFirstRuleField();
 	var field = GetFieldById( fieldId );
 
-	var value = field && field.choices.length ? field.choices[0].value : '';
+	var value = field && field.choices && field.choices.length ? field.choices[0].value : '';
 
 	return {
 		fieldId: GetFirstRuleField(),

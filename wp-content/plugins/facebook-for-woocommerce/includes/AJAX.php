@@ -214,6 +214,11 @@ class AJAX {
 	 * @since 2.0.0
 	 */
 	public function sync_products() {
+		// Allow opt-out of full batch-API sync, for example if store has a large number of products.
+		if ( ! facebook_for_woocommerce()->get_integration()->allow_full_batch_api_sync() ) {
+			wp_send_json_error( __( 'Full product sync disabled by filter hook `facebook_for_woocommerce_allow_full_batch_api_sync`.', 'facebook-for-woocommerce' ) );
+			return;
+		}
 
 		check_admin_referer( Product_Sync::ACTION_SYNC_PRODUCTS, 'nonce' );
 
@@ -384,12 +389,9 @@ class AJAX {
 			$has_excluded_term = false;
 
 			foreach ( $product_ids as $product_id ) {
-
 				$product = wc_get_product( $product_id );
 
-				// product belongs to at least one excluded term: break the loop
-				if ( $product instanceof \WC_Product && Products::is_sync_excluded_for_product_terms( $product ) ) {
-
+				if ( $product instanceof \WC_Product && ! facebook_for_woocommerce()->get_product_sync_validator( $product )->passes_product_terms_check() ) {
 					$has_excluded_term = true;
 					break;
 				}

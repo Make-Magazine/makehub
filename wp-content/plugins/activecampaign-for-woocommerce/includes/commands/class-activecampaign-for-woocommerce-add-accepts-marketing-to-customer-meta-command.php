@@ -66,30 +66,30 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 		$order = $args[0];
 
 		if ( ! $this->nonce_is_valid() ) {
-			$this->logger->error( 'Invalid checkout nonce' );
+			$this->logger->error( 'Accepts Marketing: Invalid checkout nonce' );
 
 			return $order;
 		}
 
 		$accepts_marketing = $this->extract_accepts_marketing_value();
 
-		$this->logger->debug( "Extracted accepts marketing value: $accepts_marketing" );
+		$this->logger->debug( "Accepts Marketing: Extracted accepts marketing value: $accepts_marketing" );
 
 		$id = $order->get_customer_id();
 
 		// If a customer is logged in, set the value of accepts marketing on the user meta-data.
 		// For guest checkouts set it on the order meta-data.
 		if ( ! $id ) {
-			$this->logger->debug( 'No ID for customer. Setting accepts marketing on the order.' );
+			$this->logger->debug( 'Accepts Marketing: No ID for customer. Setting accepts marketing on the order.' );
 
 			$this->update_order_accepts_marketing( $order, $accepts_marketing );
 
 			$this->logger->debug(
 				'Updated order with accepts marketing meta data: '
-				. $order->get_meta( User_Meta_Service::ACTIVECAMPAIGN_ACCEPTS_MARKETING )
+				. $order->get_meta( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME )
 			);
 		} else {
-			$this->logger->debug( "ID found for customer: $id. Setting accepts marketing on the customer record." );
+			$this->logger->debug( "Accepts Marketing: ID found for customer: $id. Setting accepts marketing on the customer record." );
 			$this->update_user_accepts_marketing( $id, $accepts_marketing );
 		}
 
@@ -108,7 +108,7 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 		$valid = (bool) wp_verify_nonce( $nonce_value, 'woocommerce-process_checkout' );
 
 		if ( ! $valid ) {
-			$this->logger->debug( 'Invalid nonce', [ 'nonce_value' => $nonce_value ] );
+			$this->logger->debug( 'Accepts Marketing: Invalid nonce', [ 'nonce_value' => $nonce_value ] );
 		}
 
 		return $valid;
@@ -151,7 +151,7 @@ class Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Comm
 	 */
 	private function update_order_accepts_marketing( $order, $accepts_marketing ) {
 		$order->update_meta_data(
-			User_Meta_Service::ACTIVECAMPAIGN_ACCEPTS_MARKETING,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME,
 			$accepts_marketing
 		);
 	}

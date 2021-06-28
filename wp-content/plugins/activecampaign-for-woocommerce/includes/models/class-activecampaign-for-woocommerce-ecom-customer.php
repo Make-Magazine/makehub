@@ -32,12 +32,13 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	 * @var array
 	 */
 	public $api_mappings = [
-		'connectionid' => 'connectionid',
-		'externalid'   => 'externalid',
-		'email'        => 'email',
-		'id'           => 'id',
-		'first_name'   => 'first_name',
-		'last_name'    => 'last_name',
+		'connectionid'      => 'connectionid',
+		'externalid'        => 'externalid',
+		'email'             => 'email',
+		'id'                => 'id',
+		'first_name'        => 'first_name',
+		'last_name'         => 'last_name',
+		'accepts_marketing' => 'acceptsMarketing',
 	];
 
 	/**
@@ -81,6 +82,13 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	 * @var string
 	 */
 	private $last_name;
+
+	/**
+	 * The customer's marketing checkbox choice.
+	 *
+	 * @var string
+	 */
+	private $accepts_marketing;
 
 	/**
 	 * Returns a connection id.
@@ -188,5 +196,23 @@ class Activecampaign_For_Woocommerce_Ecom_Customer implements Ecom_Model, Has_Id
 	 */
 	public function set_last_name( $last_name ) {
 		$this->last_name = $last_name;
+	}
+
+	/**
+	 * Returns the accepts_marketing.
+	 *
+	 * @return string
+	 */
+	public function get_accepts_marketing() {
+		return $this->accepts_marketing;
+	}
+
+	/**
+	 * Sets the accepts_marketing.
+	 *
+	 * @param string $accepts_marketing The accepts marketing checkbox value.
+	 */
+	public function set_accepts_marketing( $accepts_marketing ) {
+		$this->accepts_marketing = $accepts_marketing;
 	}
 }

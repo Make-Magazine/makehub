@@ -3,7 +3,7 @@
   Plugin Name: Event Espresso - Automated Upcoming Event Notification (EE 4.9.44+)
   Plugin URI: http://www.eventespresso.com
   Description: Adds new message types to the EE messages system to help with automating messages to attendees of upcoming Events and Datetimes.
-  Version: 1.0.3.p
+  Version: 1.0.4.p
   Author: Event Espresso
   Author URI: http://www.eventespresso.com
   Copyright 2014 Event Espresso (email : support@eventespresso.com)
@@ -38,7 +38,7 @@
  */
 
 // define versions and this file
-define('EE_AUTOMATED_UPCOMING_EVENT_NOTIFICATION_VERSION', '1.0.3.p');
+define('EE_AUTOMATED_UPCOMING_EVENT_NOTIFICATION_VERSION', '1.0.4.p');
 define('EE_AUTOMATED_UPCOMING_EVENT_NOTIFICATION_FILE', __FILE__);
 
 // check php version, if not sufficient then deactivate and show notice
@@ -48,7 +48,18 @@ if (! defined('PHP_VERSION_ID')
 ) {
     add_action('admin_notices', 'eea_auen_php_version_deactivation_and_notice');
 } else {
-    require_once __DIR__ . '/bootstrap.php';
+    add_action(
+        'plugins_loaded',
+        function () {
+            // register namespace
+            EE_Psr4AutoloaderInit::psr4_loader()->addNamespace(
+                'EventEspresso\AutomatedUpcomingEventNotifications',
+                __DIR__
+            );
+            new EventEspresso\AutomatedUpcomingEventNotifications\domain\Bootstrap();
+        },
+        1
+    );
 }
 
 function eea_auen_php_version_deactivation_and_notice()

@@ -1,6 +1,23 @@
 
 # Changelog
 
+## 1.0-beta-9.29
+
+	- Fixed an issue where AJAX rendered forms may display a JS error when using List fields.
+
+## 1.0-beta-9.28
+
+	- Added [gpnf_replace_parent_merge_tag_on_edit](https://gravitywiz.com/documentation/gpnf_replace_parent_merge_tag_on_edit-js) filter to re-populate parent merge tags when editing an entry.
+	- Added new [gpnf_fetch_form_html_after_add](https://gravitywiz.com/documentation/gpnf_fetch_form_html_after_add/) and [gpnf_fetch_form_html_after_delete](https://gravitywiz.com/documentation/gpnf_fetch_form_html_after_delete/) JavaScript filters
+	- Fixed an issue where an imported parent form without its child may generate a PHP notice.
+	- Fixed PHP notice in Gravity Forms Coupons Add-On settings page.
+
+## 1.0-beta-9.27
+
+	- Fixed an issue where {Parent} merge tags didn't work with Drop Down fields.
+	- Fixed issue where parent form ID was not correctly set as a template name variant for the 'nested-entries-detail' template.
+	- Fixed issue where Rich Text Editor test searched for Windows-specific keyboard shortcut in button label.
+
 ## 1.0-beta-9.26
 
 	- Added support for filtering the modal's submit button label.

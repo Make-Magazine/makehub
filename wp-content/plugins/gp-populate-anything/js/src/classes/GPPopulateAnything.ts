@@ -86,6 +86,7 @@ export default class GPPopulateAnything {
 			const id = targetId.split('_').pop();
 			if (window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
 				$(targetId).find('input, select, textarea').trigger('forceReload');
+				return false;
 			}
 
 			// Cancel GF reset on multi input fields (e.g. address) that have LMTs
@@ -99,6 +100,14 @@ export default class GPPopulateAnything {
 				}
 			}
 			return reset;
+		});
+
+		// Force reload conditionally shown fields that are used in LMTs
+		window.gform.addAction('gform_post_conditional_logic_field_action', (formId:string, action:string, targetId:string, defaultValues:string|Array<string>, isInit:boolean) => {
+			const id = targetId.split('_').pop();
+			if (action === 'show' && window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
+				$(targetId).find('input, select, textarea').trigger('forceReload');
+			}
 		});
 
 	}
@@ -488,6 +497,7 @@ export default class GPPopulateAnything {
 			}
 
 			if (Object.keys(response.fields).length) {
+				const updatedFieldIDs = [];  // Stores updated field IDs for `gppa_updated_batch_fields`
 				for ( const fieldDetails of fields ) {
 					const fieldID = fieldDetails.field;
 					const $field = fieldDetails.$el!;
@@ -556,7 +566,7 @@ export default class GPPopulateAnything {
 							$elem.trigger( 'change' );
 						});
 					}
-
+					updatedFieldIDs.push(fieldID);
 				}
 
 				this.runAndBindCalculationEvents();
@@ -564,7 +574,7 @@ export default class GPPopulateAnything {
 					($( '.js-range-slider' ) as any).ionRangeSlider();
 				}
 
-				$(document).trigger('gppa_updated_batch_fields', this.formId);
+				$(document).trigger('gppa_updated_batch_fields', [this.formId, updatedFieldIDs]);
 			}
 
 			window.gppaLiveMergeTags[this.formId].replaceMergeTagValues(response.merge_tag_values);

@@ -127,8 +127,8 @@ class ACUI_WooCommerce{
         return wc_get_page_permalink( 'myaccount' );
     }
 
-    function force_reset_password_redirect_condition(){
-        return is_account_page();
+    function force_reset_password_redirect_condition( $condition ){
+        return ( function_exists( 'is_account_page' ) ) ? is_account_page() : $condition;
     }
 
     function force_reset_password_notice(){

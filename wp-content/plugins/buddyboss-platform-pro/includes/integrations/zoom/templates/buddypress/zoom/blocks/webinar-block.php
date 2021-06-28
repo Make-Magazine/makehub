@@ -36,6 +36,7 @@ $recurring              = isset( $bp_zoom_webinar_block->type ) && 9 === $bp_zoo
 $recurrence             = ! empty( $bp_zoom_webinar_block->recurrence ) ? $bp_zoom_webinar_block->recurrence : false;
 $webinar_status         = ! empty( $bp_zoom_webinar_block->status ) ? $bp_zoom_webinar_block->status : '';
 
+
 if ( is_user_logged_in() ) {
 	$current_userdata = get_userdata( get_current_user_id() );
 
@@ -65,6 +66,12 @@ if ( is_user_logged_in() ) {
 		}
 	}
 }
+
+$meeting_number = esc_attr( $webinar_id );
+$api_key        = bp_zoom_api_key();
+$api_secret     = bp_zoom_api_secret();
+$role           = $can_start_webinar ? 1 : 0;
+$sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
 
 $webinar_date_raw   = false;
 $webinar_is_started = false;
@@ -288,7 +295,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 		<?php endif; ?>
 		<div class="webinar-actions <?php echo 'started' === $webinar_status || ( $show_join_webinar_button && $current_date < $webinar_date_unix ) ? '' : 'bp-hide'; ?>">
 			<?php if ( ! $can_start_webinar && empty( $registration_url ) && empty( $webinar_authentication ) ) : ?>
-				<a href="#" class="button small outline join-webinar-in-browser" data-webinar-id="<?php echo esc_attr( $webinar_id ); ?>" data-webinar-pwd="<?php echo esc_attr( $password ); ?>" data-is-host="<?php echo $can_start_webinar ? esc_attr( '1' ) : esc_attr( '0' ); ?>">
+				<a href="#" class="button small outline join-webinar-in-browser" data-webinar-id="<?php echo esc_attr( $webinar_id ); ?>" data-webinar-pwd="<?php echo esc_attr( $password ); ?>" data-is-host="<?php echo $can_start_webinar ? esc_attr( '1' ) : esc_attr( '0' ); ?>" data-meeting-sign="<?php echo esc_attr( $sign ); ?>">
 					<?php esc_html_e( 'Join Webinar in Browser', 'buddyboss-pro' ); ?>
 				</a>
 			<?php endif; ?>

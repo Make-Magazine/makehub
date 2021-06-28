@@ -1,6 +1,6 @@
 <?php
 
-// Exit if accessed directly.
+// Exit if accessed directly..
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -582,6 +582,7 @@ class BuddyPress {
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.2.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.2.9.php';
 			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.5.3.php';
+			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.6.4.php';
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {

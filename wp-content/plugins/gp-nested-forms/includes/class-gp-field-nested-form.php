@@ -328,8 +328,8 @@ class GP_Field_Nested_Form extends GF_Field {
 		$template = new GP_Template( gp_nested_forms() );
 		$markup   = $template->parse_template(
 			array(
-				sprintf( '%s-%s-%s.php', $args['template'], $this->form_id, $this->id ),
-				sprintf( '%s-%s.php', $args['template'], $this->form_id ),
+				sprintf( '%s-%s-%s.php', $args['template'], $this->formId, $this->id ),
+				sprintf( '%s-%s.php', $args['template'], $this->formId ),
 				sprintf( '%s.php', $args['template'] ),
 			),
 			true,

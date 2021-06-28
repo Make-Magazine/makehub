@@ -2394,7 +2394,8 @@ class GP_Nested_Forms extends GP_Plugin {
 
 						if ( $is_multiple ) {
 							$return[] = array(
-								'temp_filename'     => 'GPNF_DOES_NOT_EXIT.png',
+								// Temp filename will not exist as entry is already submitted
+								'temp_filename'     => 'GPNF_DOES_NOT_EXIST.png',
 								'uploaded_filename' => $path_info['basename'],
 							);
 						} else {
@@ -2719,6 +2720,9 @@ class GP_Nested_Forms extends GP_Plugin {
 	 */
 	public function has_child_form( $form_id ) {
 		$form = GFAPI::get_form( $form_id );
+		if ( ! $form || empty( $form['fields'] ) ) {
+			return false;
+		}
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->type === 'form' ) {
 				return true;
@@ -2787,6 +2791,10 @@ class GP_Nested_Forms extends GP_Plugin {
 			'gp-nested-forms_fields' => 'gpnfFields',
 			'gp-nested-forms_form'   => 'gpnfForm',
 		);
+
+		if ( empty( $form['fields'] ) ) {
+			return $form;
+		}
 
 		foreach ( $form['fields'] as &$field ) {
 

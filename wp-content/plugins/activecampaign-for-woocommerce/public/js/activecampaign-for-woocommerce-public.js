@@ -55,6 +55,7 @@
 	 * abandoned cart to the AC account.
 	 */
 	function sync_guest_abandoned_cart() {
+		get_name_fields();
 		jQuery.ajax({
 			type: 'post',
 			dataType: 'json',
@@ -72,7 +73,17 @@
 		// Release the wait so it can be set again.
 		sync_guest_abandoned_cart_wait = null;
 	}
-	
+
+	function get_name_fields() {
+		if ( billing_first_name === '' ) {
+			billing_first_name = $('.woocommerce-checkout #billing_first_name').val();
+		}
+
+		if ( billing_last_name === '' ) {
+			billing_last_name = $('.woocommerce-checkout #billing_last_name').val();
+		}
+	}
+
 	/**
 	*	Validate email, using the regex from ac_str_email_pattern
 	* ac_global/functions/str.php in Hosted
@@ -96,11 +107,7 @@
 		}
 		$( '.woocommerce-checkout ' + email_field ).keyup(function() {
 			var $checkout = $(this).closest('.woocommerce-checkout');
-			billing_first_name = $checkout.find('#billing_first_name').val();
-			billing_last_name = $checkout.find('#billing_last_name').val();
-
 			var billing_email_value = $( this ).val();
-
 			var billing_email_val_not_empty = billing_email_value !== '';
 			var billing_email_val_changed = billing_email_value !== billing_email;
 			var billing_email_val_valid_email = validate_email(billing_email_value);
@@ -110,6 +117,8 @@
 				billing_email_val_changed &&
 				billing_email_val_valid_email
 			) {
+				billing_first_name = $checkout.find('#billing_first_name').val();
+				billing_last_name = $checkout.find('#billing_last_name').val();
 				// The email value looks good - let's queue the request.
 				sync_guest_abandoned_cart_wait_set();
 			}

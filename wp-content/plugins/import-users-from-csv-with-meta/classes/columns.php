@@ -189,19 +189,23 @@ class ACUI_Columns{
 	}
 
 	function save_extra_user_profile_fields( $user_id ){
+		$post_filtered = filter_input_array( INPUT_POST );
+		if( empty( $post_filtered ) || count( $post_filtered ) == 0 )
+			return;
+		
 		$acui_helper = new ACUI_Helper();
 		$headers = get_option("acui_columns");
 		$acui_restricted_fields = $acui_helper->get_restricted_fields();
-	
-		$post_filtered = filter_input_array( INPUT_POST );
-	
+		
 		if( is_array( $headers ) && count( $headers ) > 0 ):
 			foreach ( $headers as $column ){
 				if( in_array( $column, $acui_restricted_fields ) )
 					continue;
 	
-				$column_sanitized = str_replace(" ", "_", $column);
-				update_user_meta( $user_id, $column, $post_filtered[$column_sanitized] );
+				$column_sanitized = str_replace(" ", "_", $column );
+
+				if( isset( $post_filtered[ $column_sanitized ] ) )
+					update_user_meta( $user_id, $column, $post_filtered[$column_sanitized] );
 			}
 		endif;
 	}

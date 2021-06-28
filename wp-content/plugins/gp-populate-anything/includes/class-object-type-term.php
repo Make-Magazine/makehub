@@ -318,6 +318,15 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 
 	}
 
+	/**
+	 * @param $args array  Query arguments to hash
+	 *
+	 * @return string   SHA1 representation of the requested query
+	 */
+	public function query_cache_hash( $args ) {
+		return sha1( serialize( $this->process_filter_groups( $args, $this->default_query_args( $args ) ) ) );
+	}
+
 	public function query( $args ) {
 
 		global $wpdb;

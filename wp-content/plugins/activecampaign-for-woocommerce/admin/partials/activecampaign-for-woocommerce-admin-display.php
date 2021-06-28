@@ -65,9 +65,9 @@ $activecampaign_for_woocommerce_wc_theme                        = $activecampaig
 $activecampaign_for_woocommerce_wc_actionscheduler_status_array = $wpdb->get_results( 'SELECT status, COUNT(*) as "count" FROM ' . $wpdb->prefix . 'actionscheduler_actions GROUP BY status;' );
 $activecampaign_for_woocommerce_wc_webhooks                     = $wpdb->get_results( 'SELECT name, status FROM ' . $wpdb->prefix . 'wc_webhooks;' );
 $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_results( 'SELECT description, last_access, permissions FROM ' . $wpdb->prefix . 'woocommerce_api_keys;' );
-
+$activecampaign_for_woocommerce_recent_log_errors               = $this->fetch_recent_log_errors();
 ?>
-
+<?php settings_errors(); ?>
 <div id="activecampaign-for-woocommerce-app" data='{
 	"abCartOptions": <?php echo esc_html( $this->get_ab_cart_wait_options() ); ?>,
 	"acDebugOptions": <?php echo esc_html( $this->get_ac_debug_options() ); ?>,
@@ -294,6 +294,70 @@ $activecampaign_for_woocommerce_wc_rest_keys                    = $wpdb->get_res
 							<?php endforeach; ?>
 						</td>
 					</tr>
+					</tbody>
+				</table>
+				<table class="wc_status_table widefat status_activecampaign_errors" cellspacing="0">
+					<caption> <i>(<a href="
+							<?php
+							echo esc_url(
+								wc_admin_url(
+									'status',
+									array(
+										'page' => 'wc-status',
+										'tab'  => 'logs',
+									)
+								)
+							);
+							?>
+							">See the ActiveCampaign for WooCommerce logs for more info</a>)</i></caption>
+					<thead>
+					<tr>
+						<td>
+							WooCommerce Logs: ActiveCampaign for WooCommerce error messages
+						</td>
+						<td>
+							Context
+						</td>
+						<td class="right-align">
+							<span id="activecampaign-for-woocommerce-clear-error-log">
+								<?php if ( $activecampaign_for_woocommerce_recent_log_errors ) : ?>
+									<span class="button-secondary" href="#" title="Clear Log Errors">Clear Log Errors</span>
+								<?php else : ?>
+									<span class="button-secondary button-disabled" href="#" title="Clear Log Errors">Clear Log Errors</span>
+								<?php endif; ?>
+							</span>
+						</td>
+					</tr>
+					</thead>
+					<tbody>
+						<?php if ( $activecampaign_for_woocommerce_recent_log_errors ) : ?>
+							<?php foreach ( $activecampaign_for_woocommerce_recent_log_errors as $activecampaign_for_woocommerce_err ) : ?>
+							<tr>
+								<td>
+									<div class="td-container">
+										<?php echo esc_html( $activecampaign_for_woocommerce_err->message ); ?>
+									</div>
+								</td>
+								<td colspan="2">
+									<?php if ( is_null( $activecampaign_for_woocommerce_err->context ) ) : ?>
+										<div class="td-container no-context">
+											<?php echo esc_html( 'No context available' ); ?>
+										</div>
+									<?php else : ?>
+										<div class="td-container">
+											<?php echo esc_html( wp_json_encode( maybe_unserialize( $activecampaign_for_woocommerce_err->context ) ) ); ?>
+										</div>
+									<?php endif; ?>
+								</td>
+							</tr>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<tr>
+								<td>
+									There are no errors at this time.
+								</td>
+							</tr>
+						<?php endif; ?>
 					</tbody>
 				</table>
 				<table class="wc_status_table widefat status_wordpress_env" cellspacing="0" id="status">

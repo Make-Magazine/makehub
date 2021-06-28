@@ -90,6 +90,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gform_field_content', array( $this, 'field_content_disable_if_empty_field_values' ), 10, 2 );
 
 		add_filter( 'gppa_get_batch_field_html', array( $this, 'field_content_disable_if_empty_field_values' ), 10, 2 );
+		add_filter( 'gppa_get_batch_field_html', array( $this, 'batch_field_html_maxlen_counter' ), 10, 6 );
 
 		add_filter( 'gform_entry_field_value', array( $this, 'entry_field_value' ), 20, 4 );
 
@@ -124,6 +125,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		/* Field Value Parsing */
 		add_filter( 'gppa_modify_field_value_date', array( $this, 'modify_field_values_date' ), 10, 2 );
 		add_filter( 'gppa_modify_field_value_time', array( $this, 'modify_field_values_time' ), 10, 2 );
+		add_filter( 'gppa_modify_field_value_multiselect', array( $this, 'modify_field_values_multiselect' ), 10, 2 );
 
 		/* Field HTML when there are input field values */
 		add_filter( 'gppa_field_html_empty_field_value_radio', array( $this, 'radio_field_html_empty_field_value' ) );
@@ -395,6 +397,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				'<',
 				'<=',
 				'contains',
+				'does_not_contain',
 				'starts_with',
 				'ends_with',
 				'like',
@@ -458,18 +461,19 @@ class GP_Populate_Anything extends GP_Plugin {
 				'choiceTemplate'                    => esc_html__( 'Choice Template', 'gp-populate-anything' ),
 				'valueTemplates'                    => esc_html__( 'Value Templates', 'gp-populate-anything' ),
 				'operators'                         => array(
-					'is'          => __( 'is', 'gp-populate-anything' ),
-					'isnot'       => __( 'is not', 'gp-populate-anything' ),
-					'>'           => __( '>', 'gp-populate-anything' ),
-					'>='          => __( '>=', 'gp-populate-anything' ),
-					'<'           => __( '<', 'gp-populate-anything' ),
-					'<='          => __( '<=', 'gp-populate-anything' ),
-					'contains'    => __( 'contains', 'gp-populate-anything' ),
-					'starts_with' => __( 'starts with', 'gp-populate-anything' ),
-					'ends_with'   => __( 'ends with', 'gp-populate-anything' ),
-					'like'        => __( 'is LIKE', 'gp-populate-anything' ),
-					'is_in'       => __( 'is in', 'gp-populate-anything' ),
-					'is_not_in'   => __( 'is not in', 'gp-populate-anything' ),
+					'is'               => __( 'is', 'gp-populate-anything' ),
+					'isnot'            => __( 'is not', 'gp-populate-anything' ),
+					'>'                => __( '>', 'gp-populate-anything' ),
+					'>='               => __( '>=', 'gp-populate-anything' ),
+					'<'                => __( '<', 'gp-populate-anything' ),
+					'<='               => __( '<=', 'gp-populate-anything' ),
+					'contains'         => __( 'contains', 'gp-populate-anything' ),
+					'does_not_contain' => __( 'does not contain', 'gp-populate-anything' ),
+					'starts_with'      => __( 'starts with', 'gp-populate-anything' ),
+					'ends_with'        => __( 'ends with', 'gp-populate-anything' ),
+					'like'             => __( 'is LIKE', 'gp-populate-anything' ),
+					'is_in'            => __( 'is in', 'gp-populate-anything' ),
+					'is_not_in'        => __( 'is not in', 'gp-populate-anything' ),
 				),
 				'chosen_no_results'                 => esc_attr( gf_apply_filters( array( 'gform_dropdown_no_results_text', 0 ), __( 'No results matched', 'gp-populate-anything' ), 0 ) ),
 				'restrictedObjectTypeNonPrivileged' => esc_html__( 'This field is configured to an object type for which you do not have permission to edit.', 'gp-populate-anything' ),
@@ -503,8 +507,10 @@ class GP_Populate_Anything extends GP_Plugin {
 	public function get_primary_property( $field, $populate ) {
 		static $primary_property_cache = array();
 
-		if ( isset( $primary_property_cache[ $field->id ] ) ) {
-			return $primary_property_cache[ $field->id ];
+		$cache_key = rgar( $field, 'formId' ) . '_' . rgar( $field, 'id' );
+
+		if ( isset( $primary_property_cache[ $cache_key ] ) ) {
+			return $primary_property_cache[ $cache_key ];
 		}
 
 		$object_type_id = rgar( $field, 'gppa-' . $populate . '-object-type' );
@@ -519,7 +525,7 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$primary_property = rgar( $field, 'gppa-' . $populate . '-primary-property' );
 
-		$primary_property_cache[ $field->id ] = $primary_property;
+		$primary_property_cache[ $cache_key ] = $primary_property;
 
 		return $primary_property;
 	}
@@ -717,7 +723,7 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * accurate results while utilizing caching for performance.
 		 */
 		$query_cache_hash      = $object_type_instance->query_cache_hash( $args );
-		$unique_cache_hash     = ( $query_cache_hash ) ? sha1( $query_cache_hash . $args['field']->id ) : null;
+		$unique_cache_hash     = ( $query_cache_hash ) ? sha1( $query_cache_hash . $field['id'] ) : null;
 		$return_unique_results = gf_apply_filters( array( "gppa_object_type_{$object_type}_unique", $field['formId'], $field['id'] ), $unique );
 
 		if ( $return_unique_results ) {
@@ -1797,12 +1803,8 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types() ) ) {
-			$field_value = $this->get_selected_choices( $field, $field_values );
-
-			if ( $field->storageType === 'json' ) {
-				$field_value = json_encode( $field_value );
-			}
+		if ( in_array( $field->type, self::get_multi_selectable_choice_field_types(), true ) ) {
+			$selected_choices_value = $this->get_selected_choices( $field, $field_values );
 		}
 
 		/**
@@ -1813,12 +1815,25 @@ class GP_Populate_Anything extends GP_Plugin {
 		 * contain an input-specific value, so let's check for it. Currently, this is limited to Single Product fields
 		 * because GF-dyn-pop Quantity is not fetched correctly by the get_value_default_if_empty() below.
 		 */
-		if ( rgblank( $field_value ) ) {
+		if ( rgblank( $field_value ) || ( is_array( $field_value ) && count( $field_value ) === 0 ) ) {
 			if ( rgar( $field, 'gppa-values-enabled' ) || rgar( $field, 'gppa-choices-enabled' ) ) {
-				$field_value = GFFormsModel::get_field_value( $field, $field_values );
-			} else {
-				$field_value = rgar( $field_values, $field->id );
+				$dynamic_field_value = GFFormsModel::get_field_value( $field, $field_values );
 			}
+		}
+
+		if ( ( isset( $dynamic_field_value ) && ! rgblank( $dynamic_field_value ) ) && ! $force_use_field_value ) {
+			$field_value = $dynamic_field_value;
+		}
+
+		if ( isset( $selected_choices_value ) && ! $force_use_field_value ) {
+			$field_value = $selected_choices_value;
+		}
+
+		/**
+		 * If still blank after pulling in populated choices/values, fallback to field value.
+		 */
+		if ( rgblank( $field_value ) && ! rgar( $field, 'gppa-values-enabled' ) && ! rgar( $field, 'gppa-choices-enabled' ) ) {
+			$field_value = rgar( $field_values, $field->id );
 		}
 
 		if ( rgar( $_REQUEST, 'gravityview-meta' ) && isset( $field_values[ $field->id ] ) ) {
@@ -1871,8 +1886,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		$default_value = $field->get_value_default();
 		$request_val   = rgar( rgar( $_REQUEST, 'current-merge-tag-values', array() ), ! is_array( $default_value ) ? $default_value : '' );
 
-		$field_value = str_replace( "\r\n", "\n", $field_value );
-		$request_val = str_replace( "\r\n", "\n", $request_val );
+		$field_value = is_scalar( $field_value ) ? str_replace( "\r\n", "\n", $field_value ) : $field_value;
+		$request_val = $request_val ? str_replace( "\r\n", "\n", $request_val ) : null;
 
 		/**
 		 * Added trim here to improve reliability of LMTs being in textareas. There were situations where the number of
@@ -2009,11 +2024,11 @@ class GP_Populate_Anything extends GP_Plugin {
 		$ajax_id         = intval( rgar( $_POST, 'form-id', - 1 ) );
 		$parse_request   = ( $form_id === $gform_submit_id || $form_id === $ajax_id );
 
-		$field_values = $this->get_prepopulate_values( $form, rgar( $this->_prepopulate_fields_values, $form['id'], array() ) );
+		$field_values = $this->get_prepopulate_values( $form, rgar( $this->_prepopulate_fields_values, $form_id, array() ) );
 		$field_values = array_replace( $field_values, $this->get_save_and_continue_values( rgar( $_REQUEST, 'gf_token' ) ) );
 
-		if ( isset( $GLOBALS['gppa-field-values'][ $form['id'] ] ) ) {
-			$field_values = array_replace( $field_values, rgar( $GLOBALS['gppa-field-values'], $form['id'], array() ) );
+		if ( isset( $GLOBALS['gppa-field-values'][ $form_id ] ) ) {
+			$field_values = array_replace( $field_values, rgar( $GLOBALS['gppa-field-values'], $form_id, array() ) );
 		} elseif ( isset( $_REQUEST['field-values'] ) && $parse_request ) {
 			$field_values = array_replace( $field_values, $this->get_field_values_from_request() );
 		}
@@ -2174,6 +2189,35 @@ class GP_Populate_Anything extends GP_Plugin {
 
 	}
 
+	/**
+	 * Output max len counter script from core when field is replaced to re-add the counter.
+	 *
+	 * @todo Is there a more robust way we can output any init scripts registered by a field?
+	 *
+	 * @param $html string
+	 * @param $field GF_Field
+	 * @param $form array
+	 * @param $fields array
+	 * @param $entry_id number
+	 * @param $hydrated_field array
+	 */
+	public function batch_field_html_maxlen_counter( $html, $field, $form, $fields, $entry_id, $hydrated_field ) {
+		if ( ! class_exists( 'GFFormDisplay' ) ) {
+			require_once( GFCommon::get_base_path() . '/form_display.php' );
+		}
+
+		/**
+		 * Limit Form fields to only the one being replaced.
+		 */
+		$form['fields'] = array_filter( $form['fields'], function ( $field ) use ( $hydrated_field ) {
+			return $field->id === rgars( $hydrated_field, 'field/id' );
+		} );
+
+		$html .= '<script type="text/javascript">' . GFFormDisplay::get_counter_init_script( $form ) . '</script>';
+
+		return $html;
+	}
+
 	public function radio_field_html_empty_field_value() {
 		return '<p>Please fill out other fields.</p>';
 	}
@@ -2268,6 +2312,10 @@ class GP_Populate_Anything extends GP_Plugin {
 			$field_values = array_replace( (array) $field_values, $this->get_posted_field_values( $form ) );
 		}
 
+		if ( empty( $form['fields'] ) ) {
+			return $form;
+		}
+
 		foreach ( $form['fields'] as &$field ) {
 
 			if ( empty( $field->choices ) ) {
@@ -2350,8 +2398,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		$month_value = esc_attr( rgget( 'month', $date_info ) );
 		$year_value  = esc_attr( rgget( 'year', $date_info ) );
 
-		$date_array        = $field->get_date_array_by_format( array( $month_value, $day_value, $year_value ) );
-		$date_array_values = array_values( $date_array );
+		// Date field inputs are always [m, d, y], no need to call $field->get_date_array_by_format() here.
+		$date_array_values = array( $month_value, $day_value, $year_value );
 
 		$value = array();
 
@@ -2386,6 +2434,24 @@ class GP_Populate_Anything extends GP_Plugin {
 		$value[ $field->id . '.' . 3 ] = strpos( $the_rest, 'am' ) > - 1 ? 'am' : 'pm';
 
 		return $value;
+
+	}
+
+	public function modify_field_values_multiselect( $value, $field ) {
+
+		if ( ! $value ) {
+			return $value;
+		}
+
+		if ( is_string( $value ) && self::is_json( $value ) ) {
+			$value = json_decode( $value, ARRAY_A );
+		}
+
+		if ( ! is_array( $value ) ) {
+			return null;
+		}
+
+		return json_encode( array_values( $value ) );
 
 	}
 
@@ -2470,7 +2536,11 @@ class GP_Populate_Anything extends GP_Plugin {
 							}
 						}
 					} else {
-						$field->defaultValue = $hydrated_value;
+						if ( rgar( $field, 'storageType' ) === 'json' ) {
+							$field->defaultValue = json_encode( $hydrated_value );
+						} else {
+							$field->defaultValue = $hydrated_value;
+						}
 					}
 				}
 			}
@@ -2530,6 +2600,10 @@ class GP_Populate_Anything extends GP_Plugin {
 			$field_values = $this->get_current_entry();
 		} else {
 			$field_values = array_replace( (array) $field_values, $this->get_posted_field_values( $form ) );
+		}
+
+		if ( empty( $form['fields'] ) ) {
+			return $form;
 		}
 
 		foreach ( $form['fields'] as &$field ) {
@@ -2788,19 +2862,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			$_POST[ 'input_' . $input ] = $value;
 		}
 
-		foreach ( $GLOBALS['gppa-field-values'][ $form['id'] ] as $input => $value ) {
-			$field = GFFormsModel::get_field( $form, $input );
-
-			if ( ! $field ) {
-				continue;
-			}
-
-			if ( $field->has_calculation() || $field->type == 'total' ) {
-				$fake_lead[ $input ] = $value;
-			} else {
-				$fake_lead[ $input ] = $field->get_value_save_entry( $value, $form, $input, null, null );
-			}
-		}
+		$fake_lead = $GLOBALS['gppa-field-values'][ $form['id'] ];
 
 		/**
 		 * Flush GF cache to prevent issues from the fake lead creation from before.
@@ -2827,7 +2889,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			 * Use force_use_field_values if a lead is loaded in to ensure that Live Merge Tags are populated
 			 * correctly in GravityView.
 			 */
-			$hydrated_field = $this->hydrate_field( $field, $form, $GLOBALS['gppa-field-values'][ $form['id'] ], $entry, $using_entry, true );
+			$hydrated_field = $this->hydrate_field( $field, $form, $GLOBALS['gppa-field-values'][ $form['id'] ], $entry, $using_entry, true, true );
 
 			$response['fields'][ $field_id ] = apply_filters( 'gppa_get_batch_field_html', rgar( $hydrated_field, 'html' ), rgar( $hydrated_field, 'field' ), $form, $fields, $entry_id, $hydrated_field );
 

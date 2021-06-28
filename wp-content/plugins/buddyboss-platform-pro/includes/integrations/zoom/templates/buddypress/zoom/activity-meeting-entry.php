@@ -266,9 +266,16 @@ $meeting_date_unix = $meeting_date_obj->format( 'U' );
 				<?php bp_get_template_part( 'zoom/meeting/recordings' ); ?>
 			</div>
 		<?php endif; ?>
-		<?php if ( 'started' === bp_get_zoom_meeting_current_status() || ( $show_join_meeting_button && $current_date < $meeting_date_unix ) ) : ?>
+		<?php
+			if ( 'started' === bp_get_zoom_meeting_current_status() || ( $show_join_meeting_button && $current_date < $meeting_date_unix ) ) :
+				$meeting_number = esc_attr( bp_get_zoom_meeting_zoom_meeting_id() );
+				$api_key        = bb_zoom_group_api_key( bp_get_zoom_meeting_group_id() );
+				$api_secret     = bb_zoom_group_api_secret( bp_get_zoom_meeting_group_id() );
+				$role           = bp_zoom_can_current_user_start_meeting( bp_get_zoom_meeting_id() ) ? 1 : 0;
+				$sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
+		?>
 			<div class="meeting-actions">
-				<a href="#" class="button small outline join-meeting-in-browser" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>" data-meeting-pwd="<?php bp_zoom_meeting_password(); ?>" data-is-host="<?php echo bp_zoom_can_current_user_start_meeting( bp_get_zoom_meeting_id() ) ? esc_attr( '1' ) : esc_attr( '0' ); ?>">
+				<a href="#" class="button small outline join-meeting-in-browser" data-meeting-id="<?php bp_zoom_meeting_zoom_meeting_id(); ?>" data-meeting-pwd="<?php bp_zoom_meeting_password(); ?>" data-is-host="<?php echo bp_zoom_can_current_user_start_meeting( bp_get_zoom_meeting_id() ) ? esc_attr( '1' ) : esc_attr( '0' ); ?>" data-meeting-sign="<?php echo esc_attr( $sign ); ?>">
 					<?php if ( bp_zoom_can_current_user_start_meeting( bp_get_zoom_meeting_id() ) ) : ?>
 						<?php esc_html_e( 'Host Meeting in Browser', 'buddyboss-pro' ); ?>
 					<?php else : ?>

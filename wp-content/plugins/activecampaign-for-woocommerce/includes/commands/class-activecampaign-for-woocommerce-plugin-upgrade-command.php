@@ -63,15 +63,15 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 		);
 
 		if ( ! $installed_version ) {
-			$this->logger->notice( 'We need to add the ActiveCampaign table.' );
+			$this->logger->notice( 'Plugin Upgrade Command: We need to add the ActiveCampaign table.' );
 			$this->install_table();
 		} elseif ( $installed_version !== $this->get_plugin_db_version() ) {
-			$this->logger->notice( 'It looks like your installed version needs a db upgrade.' );
+			$this->logger->notice( 'Plugin Upgrade Command: It looks like your installed version needs a db upgrade.' );
 			$this->upgrade_table();
 		} elseif ( $installed_version === $this->get_plugin_db_version() ) {
-			$this->logger->debug( 'Plugin db is up to date.' );
+			$this->logger->debug( 'Plugin Upgrade Command: Plugin db is up to date.' );
 		} else {
-			$this->logger->notice( 'Plugin is unsure what to do with the upgrade.' );
+			$this->logger->notice( 'Plugin Upgrade Command: Plugin is unsure what to do with the upgrade.' );
 		}
 	}
 	// phpcs:enable
@@ -89,19 +89,19 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
 				$table_exists = true;
 			} else {
-				$this->logger->info( 'Could not find the activecampaign_for_woocommerce_abandoned_cart table so try to create it...' );
+				$this->logger->info( 'Plugin Upgrade Command: Could not find the activecampaign_for_woocommerce_abandoned_cart table so try to create it...' );
 				$table_exists = false;
 				$this->install_table();
 
 				if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name ) {
 					$table_exists = true;
 				} else {
-					$this->logger->error( 'There was an exception in creating the table...' );
+					$this->logger->error( 'Plugin Upgrade Command: There was an exception in creating the table...' );
 				}
 			}
 		} catch ( Exception $e ) {
 			$this->logger->error(
-				'There was an exception in table verification...',
+				'Plugin Upgrade Command: There was an exception in table verification...',
 				[
 					'exception' => $e,
 				]
@@ -116,7 +116,7 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 	 * Adds our table to the WordPress install.
 	 */
 	private function install_table() {
-		$this->logger->info( 'Install the activecampaign_for_woocommerce_abandoned_cart table...' );
+		$this->logger->info( 'Plugin Upgrade Command: Install the activecampaign_for_woocommerce_abandoned_cart table...' );
 		global $wpdb;
 
 		$table_name      = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
@@ -145,14 +145,14 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 
 		// Add the db version
 		add_option( 'activecampaign_for_woocommerce_db_version', $this->get_plugin_db_version() );
-		$this->logger->info( 'Table installation finished!' );
+		$this->logger->info( 'Plugin Upgrade Command: Table installation finished!' );
 	}
 
 	/**
 	 * Upgrades the table with new changes.
 	 */
 	private function upgrade_table() {
-		$this->logger->debug( 'There is no upgrade currently...' );
+		$this->logger->debug( 'Plugin Upgrade Command: There is no upgrade currently...' );
 		// update_option( "activecampaign_for_woocommerce_db_version", $this->get_plugin_db_version() );
 	}
 

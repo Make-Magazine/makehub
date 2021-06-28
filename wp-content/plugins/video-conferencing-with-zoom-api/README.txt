@@ -4,7 +4,7 @@ Tags: zoom video conference, video conference, zoom, zoom video conferencing, we
 Donate link: https://deepenbajracharya.com.np/donate
 Requires at least: 4.9
 Tested up to: 5.7
-Stable tag: 3.8.2
+Stable tag: 3.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -169,6 +169,12 @@ Yes, you should be registered in Zoom. Also, depending on the zoom account plan 
 9. Shortcode Output
 
 == Changelog ==
+
+= 3.8.3 June 10th, 2021 =
+* Fixed: PRO version register now link not working due to priority check incorrectly.
+* Fixed: Importing meetings not working sometimes due to incorrect meeting ID check.
+* Added: Option to stop meeting deletion on zoom side when you delete it from your website.
+* Updated: WebSDK to version 1.9.6
 
 = 3.8.2 May 18th, 2021 =
 * Updated: WebSDK version to 1.9.5

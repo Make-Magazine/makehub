@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
+class ComposerStaticInitbfb3e842719ed24c6c8886b52287dad3
 {
     public static $files = array (
         '3235689ae520774249788ae5d5475c84' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/functions_include.php',
@@ -160,7 +160,6 @@ class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
         'AcVendor\\GuzzleHttp\\Exception\\ClientException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/ClientException.php',
         'AcVendor\\GuzzleHttp\\Exception\\ConnectException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/ConnectException.php',
         'AcVendor\\GuzzleHttp\\Exception\\GuzzleException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/GuzzleException.php',
-        'AcVendor\\GuzzleHttp\\Exception\\InvalidArgumentException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/InvalidArgumentException.php',
         'AcVendor\\GuzzleHttp\\Exception\\RequestException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/RequestException.php',
         'AcVendor\\GuzzleHttp\\Exception\\SeekException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/SeekException.php',
         'AcVendor\\GuzzleHttp\\Exception\\ServerException' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Exception/ServerException.php',
@@ -228,7 +227,6 @@ class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
         'AcVendor\\GuzzleHttp\\RetryMiddleware' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/RetryMiddleware.php',
         'AcVendor\\GuzzleHttp\\TransferStats' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/TransferStats.php',
         'AcVendor\\GuzzleHttp\\UriTemplate' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/UriTemplate.php',
-        'AcVendor\\GuzzleHttp\\Utils' => __DIR__ . '/../..' . '/ac_vendor/guzzlehttp/guzzle/src/Utils.php',
         'AcVendor\\Interop\\Container\\ContainerInterface' => __DIR__ . '/../..' . '/ac_vendor/container-interop/container-interop/src/Interop/Container/ContainerInterface.php',
         'AcVendor\\Interop\\Container\\Exception\\ContainerException' => __DIR__ . '/../..' . '/ac_vendor/container-interop/container-interop/src/Interop/Container/Exception/ContainerException.php',
         'AcVendor\\Interop\\Container\\Exception\\NotFoundException' => __DIR__ . '/../..' . '/ac_vendor/container-interop/container-interop/src/Interop/Container/Exception/NotFoundException.php',
@@ -270,6 +268,8 @@ class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
         'AcVendor\\Psr\\Log\\Test\\TestLogger' => __DIR__ . '/../..' . '/ac_vendor/psr/log/Psr/Log/Test/TestLogger.php',
         'ActiveCampaign_For_WooCommerce_Runtime_Exception' => __DIR__ . '/../..' . '/includes/exceptions/class-activecampaign-for-woocommerce-runtime-exception.php',
         'Activecampaign_For_Woocommerce' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce.php',
+        'Activecampaign_For_Woocommerce_AC_Contact' => __DIR__ . '/../..' . '/includes/models/class-activecampaign-for-woocommerce-ac-contact.php',
+        'Activecampaign_For_Woocommerce_AC_Contact_Repository' => __DIR__ . '/../..' . '/includes/repositories/class-activecampaign-for-woocommerce-ac-contact-repository.php',
         'Activecampaign_For_Woocommerce_Activator' => __DIR__ . '/../..' . '/includes/class-activecampaign-for-woocommerce-activator.php',
         'Activecampaign_For_Woocommerce_Add_Accepts_Marketing_To_Customer_Meta_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-add-accepts-marketing-to-customer-meta-command.php',
         'Activecampaign_For_Woocommerce_Add_Cart_Id_To_Order_Command' => __DIR__ . '/../..' . '/includes/commands/class-activecampaign-for-woocommerce-add-cart-id-to-order-command.php',
@@ -366,9 +366,9 @@ class ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9b36e1fdd846f79f7cea7725517aee4b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitbfb3e842719ed24c6c8886b52287dad3::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitbfb3e842719ed24c6c8886b52287dad3::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitbfb3e842719ed24c6c8886b52287dad3::$classMap;
 
         }, null, ClassLoader::class);
     }

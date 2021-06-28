@@ -18,9 +18,8 @@
  * @author     acteamintegrations <team-integrations@activecampaign.com>
  */
 class Activecampaign_For_Woocommerce_User_Meta_Service {
-	const ACTIVECAMPAIGN_CUSTOMER_ID       = 'activecampaign_for_woocommerce_ac_customer_id';
-	const ACTIVECAMPAIGN_CART_ID           = 'activecampaign_for_woocommerce_ac_cart_id';
-	const ACTIVECAMPAIGN_ACCEPTS_MARKETING = 'activecampaign_for_woocommerce_accepts_marketing';
+	const ACTIVECAMPAIGN_CUSTOMER_ID = 'activecampaign_for_woocommerce_ac_customer_id';
+	const ACTIVECAMPAIGN_CART_ID     = 'activecampaign_for_woocommerce_ac_cart_id';
 
 	/**
 	 * Returns the current cart id for the user from the user meta table.
@@ -183,7 +182,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 	public static function get_user_accepts_marketing( $user_id ) {
 		return (bool) get_user_meta(
 			$user_id,
-			static::ACTIVECAMPAIGN_ACCEPTS_MARKETING,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME,
 			true
 		);
 	}
@@ -215,7 +214,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 
 		return update_user_meta(
 			$user_id,
-			static::ACTIVECAMPAIGN_ACCEPTS_MARKETING,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME,
 			$set_value
 		);
 	}
@@ -227,7 +226,7 @@ class Activecampaign_For_Woocommerce_User_Meta_Service {
 		delete_metadata(
 			'user',
 			0, // this doesn't actually matter in this call
-			static::ACTIVECAMPAIGN_ACCEPTS_MARKETING,
+			ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME,
 			'', // this also doesn't actually matter in this call
 			true
 		);

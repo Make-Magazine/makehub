@@ -1,10 +1,10 @@
 === Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream ===
 Contributors: embedplus
 Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
-Tags: youtube gallery, minify css defer javascript, youtube channel, youtube live, youtube playlist
+Tags: youtube gallery, video gallery, channel gallery, playlist gallery, defer css javascript, youtube channel, youtube live, youtube playlist, embed live chat, lazy load, non critical javascript
 Requires at least: 4.1
 Tested up to: 5.7
-Stable tag: 13.4.2
+Stable tag: 13.4.3
 License: GPLv3 or later
 
 YouTube Embed Plugin. Embed a responsive video, YouTube channel gallery, playlist gallery, YouTube live stream. With defer JavaScript options
@@ -150,6 +150,10 @@ You can also start and end each individual video at particular times. Like the a
 9. Embed Plus for YouTube WordPress Plugin Screenshot 9: Optional YouTube channel subscription button above gallery thumbnails
 
 == Changelog ==
+
+= Embed Plus for YouTube WordPress Plugin 13.4.3 =
+* Automatically turn on default dimensions for new installations, to skip oEmbed width/height lookups. Improves performance (recommended for all users, given most YouTube videos are 16:9 ratio)
+* Better compatibility with cookie compliance plugins that overtake the player with a placeholder
 
 = Embed Plus for YouTube WordPress Plugin 13.4.2 =
 * Compatible with latest jQuery updates

@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.7.1
-Stable tag: 1.3.6
+Tested up to: 5.7.2
+Stable tag: 1.4.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,23 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.4.1 =
+* Plugin now surfaces errors to admin with a dismissible notice.
+* You can find a list of the last 10 errors related to this plugin in this plugin's status tab to help quickly identify problems.
+* Added an abandon cart manual sync button to allow manual re-running of the abandoned cart sync process.
+* Added the ability to delete individual rows from the abandoned cart page.
+
+= 1.4.0 =
+* New menu item for ActiveCampaign features.
+* Guest abandoned carts now sync as a background process creating more reliable data in ActiveCampaign.
+* All abandoned carts are now synced on an hourly basis.
+* New abandoned carts status page shows abandoned carts in WooCommerce and their current status.
+* Contacts and phone numbers now properly sync to ActiveCampaign when orders are placed.
+* Bugfix for various cases where "place order" hangs or errors and causes orders to not be placed.
+* Bugfix for accepts marketing selection not always being set in ActiveCampaign.
+* Bugfix for duplicate orders appearing in ActiveCampaign.
+* Bugfix for orders marked as abandoned no longer create bad records as both abandoned and completed in ActiveCampaign.
 
 = 1.3.6 =
 * Bugfix for Normalizer fatal error issues, removing Normalizer dependency

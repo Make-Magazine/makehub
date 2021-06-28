@@ -33,6 +33,8 @@
 				self.entries = oldGPNF.entries;
 				oldGPNF.modal.destroy();
 				$( document ).off( '.{0}'.format( self.getNamespace() ) );
+				window.gform.removeHook( 'action', 'gform_list_post_item_add', 10, self.getNamespace() );
+				window.gform.removeHook( 'action', 'gform_list_post_item_delete', 10, self.getNamespace() );
 				gform.removeFilter( 'gform_calculation_formula', 10, 'gpnf_{0}_{1}'.format( self.formId, self.fieldId ) );
 				/* Hack: fixes issue when Beaver Builder triggers ready event again without reloading UI */
 				self.viewModel = oldGPNF.viewModel;
@@ -516,13 +518,8 @@
 				}
 			} );
 
-			gform.addAction( 'gform_list_post_item_add', function() {
-				self.modal.checkOverflow();
-			} );
-
-			gform.addAction( 'gform_list_post_item_delete', function() {
-				self.modal.checkOverflow();
-			} );
+			gform.addAction( 'gform_list_post_item_add', self.modal.checkOverflow, 10, self.getNamespace() );
+			gform.addAction( 'gform_list_post_item_delete', self.modal.checkOverflow, 10, self.getNamespace() );
 
 		};
 
@@ -618,8 +615,21 @@
 					// Success!
 					self.viewModel.entries.remove( item );
 
-					self.refreshMarkup();
-
+					/**
+					 * Filter to determine if the child form HTML should be refreshed after deleting child entries.
+					 *
+					 * Return "false" here to disable refreshing child form HTML via AJAX after entries are deleted.
+					 *
+					 * @since 1.0-beta-9.28
+					 *
+					 * @param boolean 			refreshMarkup   	Whether or not to refresh HTML after deleting entries.
+					 * @param int           	formId 				The parent form ID.
+					 * @param int             	fieldId   			The field ID of the Nested Form field.
+					 * @param {GPNestedForms} 	gpnf      			Current instance of the GPNestedForms object.
+					 */
+					if ( window.gform.applyFilters( 'gpnf_fetch_form_html_after_delete', true, self.formId, self.fieldId, self ) ) {
+						self.refreshMarkup();
+					}
             } );
 
 		};
@@ -757,8 +767,6 @@
 			self.$modal.find( ':input' ).each(function () {
 				var $this = $( this );
 				var value = $this.data( 'gpnf-value' );
-				var currentValue = $this.val();
-
 				if ($this.data( 'gpnf-changed' )) {
 					return true;
 				}
@@ -767,8 +775,16 @@
 					return true;
 				}
 
-				// Handle edited/populated merge tags
-				if ( currentValue.length > 0 && currentValue !== value ) {
+				/**
+				 * Filter whether GPNF should re-populate any parent merge tags  when editing an entry
+				 *
+				 * @since 1.0-beta-9.28
+				 *
+				 * @param boolean 			replace_parent_merge_tag   Whether or not to re-apply parent merge tags
+				 * @param int           	formId 				       The parent form ID.
+				 */
+				if ( self.mode === 'edit' && ! gform.applyFilters( 'gpnf_replace_parent_merge_tag_on_edit', false, self.formId ) ) {
+					// Skip processing edited/populated merge tags
 					return true;
 				}
 
@@ -944,7 +960,22 @@
 			else {
 
 				gpnf.viewModel.entries.push( entry );
-				gpnf.refreshMarkup();
+
+				/**
+				 * Filter to determine if the child form HTML should be refreshed after adding entries.
+				 *
+				 * Return "false" here to disable refreshing child form HTML via AJAX after new entries are added.
+				 *
+				 * @since 1.0-beta-9.28
+				 *
+				 * @param boolean 			refreshMarkup   	Whether or not to refresh HTML after adding entries.
+				 * @param int           	formId 				The parent form ID.
+				 * @param int             	fieldId   			The field ID of the Nested Form field.
+				 * @param {GPNestedForms} 	gpnf      			Current instance of the GPNestedForms object.
+				 */
+				if ( window.gform.applyFilters( 'gpnf_fetch_form_html_after_add', true, self.formId, self.fieldId, self ) ) {
+					gpnf.refreshMarkup();
+				}
 
 			}
 

@@ -86,6 +86,8 @@ class ACUI_Options{
             update_option( "acui_manually_force_user_reset_password", isset( $form_data["force_user_reset_password"] ) && $form_data["force_user_reset_password"] == 'yes' );
         }
         elseif( $is_frontend ){
+            $form_data["send_mail_admin_frontend_address_list"] = isset( $form_data["send_mail_admin_frontend_address_list"] ) ? $form_data["send_mail_admin_frontend_address_list"] : '';
+
             update_option( "acui_frontend_send_mail", isset( $form_data["send-mail-frontend"] ) && $form_data["send-mail-frontend"] == "yes" );
             update_option( "acui_frontend_send_mail_updated", isset( $form_data["send-mail-updated-frontend"] ) && $form_data["send-mail-updated-frontend"] == "yes" );
             update_option( "acui_frontend_mail_admin", isset( $form_data["send_mail_admin_frontend"] ) && $form_data["send_mail_admin_frontend"] == "yes" );

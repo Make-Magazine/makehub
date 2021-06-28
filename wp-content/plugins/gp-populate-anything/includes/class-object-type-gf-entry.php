@@ -194,6 +194,10 @@ class GPPA_Object_Type_GF_Entry extends GPPA_Object_Type {
 				$operator     = GF_Query_Condition::LIKE;
 				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
 				break;
+			case 'DOES_NOT_CONTAIN':
+				$operator     = GF_Query_Condition::NLIKE;
+				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );
+				break;
 			case 'STARTS_WITH':
 				$operator     = GF_Query_Condition::LIKE;
 				$filter_value = $this->get_sql_value( $filter['operator'], $filter_value );

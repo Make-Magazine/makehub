@@ -3,7 +3,7 @@
   Plugin Name: Embed Plus for YouTube - Gallery, Channel, Playlist, Live Stream
   Plugin URI: https://www.embedplus.com/dashboard/pro-easy-video-analytics.aspx?ref=plugin
   Description: YouTube Embed and YouTube Gallery WordPress Plugin. Embed a responsive video, YouTube channel, playlist gallery, or live stream
-  Version: 13.4.2
+  Version: 13.4.3
   Author: Embed Plus for YouTube Team
   Author URI: https://www.embedplus.com
  */
@@ -34,7 +34,7 @@ class YouTubePrefs
 
     public static $folder_name = 'youtube-embed-plus';
     public static $curltimeout = 30;
-    public static $version = '13.4.2';
+    public static $version = '13.4.3';
     public static $opt_version = 'version';
     public static $optembedwidth = null;
     public static $optembedheight = null;
@@ -1885,9 +1885,9 @@ class YouTubePrefs
         $_restrict_wizard_roles = self::$dft_roles;
         $_ajax_compat = 0;
         $_ytapi_load = 'light';
-        $_defaultdims = 0;
-        $_defaultwidth = '';
-        $_defaultheight = '';
+        $_defaultdims = 1;
+        $_defaultwidth = isset($GLOBALS['content_width']) && is_numeric($GLOBALS['content_width']) ? intval($GLOBALS['content_width']) : 800;
+        $_defaultheight = intval($_defaultwidth * 9.0 / 16.0);
         $_playsinline = 0;
         $_origin = 0;
         $_pause_others = 0;
@@ -1984,9 +1984,9 @@ class YouTubePrefs
             $_restrict_wizard_roles = self::tryget($arroptions, self::$opt_restrict_wizard_roles, self::$dft_roles);
             $_ajax_compat = self::tryget($arroptions, self::$opt_ajax_compat, 0);
             $_ytapi_load = self::tryget($arroptions, self::$opt_ytapi_load, $_ytapi_load);
-            $_defaultdims = self::tryget($arroptions, self::$opt_defaultdims, 0);
-            $_defaultwidth = self::tryget($arroptions, self::$opt_defaultwidth, '');
-            $_defaultheight = self::tryget($arroptions, self::$opt_defaultheight, '');
+            $_defaultdims = self::tryget($arroptions, self::$opt_defaultdims, $_defaultdims);
+            $_defaultwidth = self::tryget($arroptions, self::$opt_defaultwidth, $_defaultwidth);
+            $_defaultheight = self::tryget($arroptions, self::$opt_defaultheight, $_defaultheight);
             $_pause_others = self::tryget($arroptions, self::$opt_pause_others, $_pause_others);
             $_defaultvol = self::tryget($arroptions, self::$opt_defaultvol, 0);
             $_vol = self::tryget($arroptions, self::$opt_vol, '');
@@ -3182,7 +3182,7 @@ class YouTubePrefs
         $new_pointer_content = '<h3>' . __('New Update') . '</h3>'; // ooopointer
 
         $new_pointer_content .= '<p>'; // ooopointer
-        $new_pointer_content .= "This update adds compatability for WordPress 5.7+ and the latest version of jQuery for both Free and <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro versions</a>.";
+        $new_pointer_content .= "This update provides better gallery compatibility with cookie compliance plugins, and better oEmbed performance for both Free and Pro versions, as well as live stream chat on mobile devices for the <a target=_blank href=" . self::$epbase . '/dashboard/pro-easy-video-analytics.aspx?ref=frompointer' . ">Pro version</a>.";
         if (self::vi_logged_in())
         {
             $new_pointer_content .= "<br><br><strong>Note:</strong> You are currently logged into the vi intelligence feature. vi support is being deprecated in the next version, so we recommend taking the vi ads down from your site. Please contact ext@embedplus.com for questions.";
@@ -3595,7 +3595,7 @@ class YouTubePrefs
                                     Height: <input type="number" min="200" name="<?php echo self::$opt_defaultheight; ?>" id="<?php echo self::$opt_defaultheight; ?>" value="<?php echo esc_attr(trim($all[self::$opt_defaultheight])); ?>" class="textinput" style="width: 75px;">
                                 </span>
 
-                                <label for="<?php echo self::$opt_defaultdims; ?>"><?php _e('<b class="chktitle">Default Dimensions:</b> Make your videos have a default size. Recommended: 800 x 450 (NOTE: If responsive sizing is also turned on, your videos will be responsive but also keep this aspect ratio.). Also, according to YouTube guidelines, the player must be a minimum of 200 x 200 (or recommended 480 x 270 for 16:9 ratio players) in order to display correctly.') ?></label>
+                                <label for="<?php echo self::$opt_defaultdims; ?>"><?php _e('<b class="chktitle">Default Dimensions:</b> Make your videos have a default size, for better loading performance and consistency. Recommended: 800 x 450 (NOTE: If responsive sizing is also turned on, your videos will be responsive but also keep this aspect ratio.). Also, according to YouTube guidelines, the player must be a minimum of 200 x 200 (or recommended 480 x 270 for 16:9 ratio players) in order to display correctly.') ?></label>
                             </p>
                             <p>
                                 <input name="<?php echo self::$opt_responsive; ?>" id="<?php echo self::$opt_responsive; ?>" <?php checked($all[self::$opt_responsive], 1); ?> type="checkbox" class="checkbox">

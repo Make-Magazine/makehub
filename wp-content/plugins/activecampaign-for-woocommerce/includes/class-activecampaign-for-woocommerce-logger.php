@@ -20,7 +20,7 @@ use Activecampaign_For_Woocommerce_Request_Id_Service as RequestIdService;
  * @subpackage Activecampaign_For_Woocommerce/includes
  * @author     acteamintegrations <team-integrations@activecampaign.com>
  */
-class Activecampaign_For_Woocommerce_Logger implements LoggerInterface {
+class Activecampaign_For_Woocommerce_Logger extends WC_Log_Handler_DB implements LoggerInterface {
 
 	/**
 	 * Instance of the WooCommerce logger.
@@ -49,6 +49,8 @@ class Activecampaign_For_Woocommerce_Logger implements LoggerInterface {
 	 * @var bool
 	 */
 	private $ac_debug;
+
+
 
 	/**
 	 * Logger constructor.
@@ -110,6 +112,7 @@ class Activecampaign_For_Woocommerce_Logger implements LoggerInterface {
 	 * {@inheritdoc}
 	 */
 	public function error( $message, array $context = array() ) {
+		$this->add_wc_log_entry($message, $context, 'error');
 		$context = $this->resolveContext( $context );
 		$message = $this->formatMessageWithContext( $message, $context );
 		$this->logger->error( $message, $context );
@@ -237,4 +240,38 @@ class Activecampaign_For_Woocommerce_Logger implements LoggerInterface {
 		// The logger doesn't seem to actually use the context array, so we'll merge it in with the message
 		return $message . "\nContext: " . wp_json_encode( $context, JSON_PRETTY_PRINT );
 	}
+
+	/**
+	 * Clears the WooCommerce error log of our errors.
+	 */
+	public function clear_wc_error_log() {
+		return WC_Log_Handler_DB::clear( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB );
+	}
+
+	/**
+	 * Adds a log entry to the WooCommerce log.
+	 *
+	 * @param string $message The message to be saved.
+	 * @param array  $context The context from the event.
+	 * @param string $level The log level.
+	 *
+	 * @throws Throwable The error thrown.
+	 */
+	private function add_wc_log_entry( $message, $context, $level ) {
+		$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+		try {
+			// Post this error to the woocommerce log
+			WC_Log_Handler_DB::add( $date->getTimestamp(), $level, $message, ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_NAME_KEBAB, $context );
+		} catch ( Throwable $t ) {
+			$this->info(
+				'There was an issue adding an entry to the WooCommerce log',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
+		}
+
+	}
+
 }

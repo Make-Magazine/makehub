@@ -137,7 +137,7 @@ class ACUI_Exporter{
 		return array_merge( array_flip( $columns ), $row );
 	}
 
-	public static function clean_bad_characters_formulas( $value ){
+	static function clean_bad_characters_formulas( $value ){
 		if( strlen( $value ) == 0 )
 			return $value;
 
@@ -149,7 +149,7 @@ class ACUI_Exporter{
 		return $value;
 	}
 
-	public static function prepare( $key, $value, $datetime_format, $user = 0 ){
+	static function prepare( $key, $value, $datetime_format, $user = 0 ){
 		$timestamp_keys = apply_filters( 'acui_export_timestamp_keys', array( 'wc_last_active' ) );
 		$non_date_keys = apply_filters( 'acui_export_non_date_keys', array() );
 		$original_value = $value;
@@ -179,6 +179,15 @@ class ACUI_Exporter{
 		return implode( ',', $user->roles );
 	}
 
+    function manage_filtered_columns( $filtered_columns ){
+        $filtered_columns = ( is_array( $filtered_columns ) ) ? array_walk( $filtered_columns, 'sanitize_text_field' ) : explode( ',', sanitize_text_field( $filtered_columns ) );
+
+        if( empty( $filtered_columns[0] ) )
+            $filtered_columns = array();
+
+        return $filtered_columns;
+    }
+    
 	function export_users_csv(){
 		check_ajax_referer( 'codection-security', 'security' );
 
@@ -192,8 +201,10 @@ class ACUI_Exporter{
 		$convert_timestamp = isset( $_POST['convert_timestamp'] ) && !empty( $_POST['convert_timestamp'] );
 		$datetime_format = ( $convert_timestamp ) ? sanitize_text_field( $_POST['datetime_format'] ) : '';
 		$order_fields_alphabetically = isset( $_POST['order_fields_alphabetically'] ) && !empty( $_POST['order_fields_alphabetically'] );
-
-		switch ( $delimiter ) {
+        $filtered_columns = ( isset( $_POST['columns'] ) && !empty( $_POST['columns'] ) ) ? $_POST['columns'] : array();
+        $filtered_columns = $this->manage_filtered_columns( $filtered_columns );
+        
+        switch ( $delimiter ) {
 			case 'COMMA':
 				$delimiter = ",";
 				break;
@@ -219,13 +230,14 @@ class ACUI_Exporter{
 		$row = array();
 		
 		// header
-		foreach ( $this->user_data as $key ) {
-			$row[] = $key;
+		foreach ( $this->get_user_data( $filtered_columns ) as $key ) {
+            $row[] = $key;
 		}
 
-		$row[] = "role";
+        if( count( $filtered_columns ) == 0 || in_array( 'role', $filtered_columns ) )
+		    $row[] = "role";
 
-		foreach ( $this->get_user_meta_keys() as $key ) {
+		foreach ( $this->get_user_meta_keys( $filtered_columns ) as $key ) {
 			$row[] = $key;
 		}
 
@@ -239,18 +251,20 @@ class ACUI_Exporter{
 		foreach ( $users as $user ) {
 			$userdata = get_userdata( $user );
 
-			foreach ( $this->user_data as $key ) {
+            foreach ( $this->get_user_data( $filtered_columns ) as $key ) {
 				$key = apply_filters( 'acui_export_get_key_user_data', $key );
 				$row[ $key ] = self::prepare( $key, $userdata->data->{$key}, $datetime_format, $user );
 			}
 
-			$row[] = $this->get_role( $user );
+            if( count( $filtered_columns ) == 0 || in_array( 'role', $filtered_columns ) )
+			    $row[] = $this->get_role( $user );
 
-			foreach ( $this->get_user_meta_keys() as $key ) {
+			foreach ( $this->get_user_meta_keys( $filtered_columns ) as $key ) {
 				$row[ $key ] = self::prepare( $key, get_user_meta( $user, $key, true ), $datetime_format, $user );
 			}
 
-			$row = $this->maybe_fill_empty_data( $row, $user );
+            if( count( $filtered_columns ) == 0 || in_array( 'user_email', $filtered_columns ) || in_array( 'user_login', $filtered_columns ) )
+			    $row = $this->maybe_fill_empty_data( $row, $user, $filtered_columns );
 
 			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format, $columns, $order_fields_alphabetically );
 
@@ -290,7 +304,22 @@ class ACUI_Exporter{
 		wp_die();
 	}
 
-	function get_user_meta_keys() {
+    function get_user_data( $filtered_columns ){
+        if( count( $filtered_columns ) == 0 )
+            return $this->user_data;
+        
+        var_export( $filtered_columns );
+
+        $result = array();
+        foreach( $this->user_data as $column ){
+            if( in_array( $column, $filtered_columns ) )
+                $result[] = $column;
+        }
+        
+        return $result;
+    }
+
+	function get_user_meta_keys( $filtered_columns ) {
 	    global $wpdb;
 	    $meta_keys = array();
 
@@ -301,7 +330,8 @@ class ACUI_Exporter{
 			if( $value["meta_key"] == 'role' )
 				continue;
 
-			$meta_keys[] = $value["meta_key"];
+            if( count( $filtered_columns ) == 0 || in_array( $value["meta_key"], $filtered_columns ) )
+			    $meta_keys[] = $value["meta_key"];
 		}
 
 	    return apply_filters( 'acui_export_get_user_meta_keys', $meta_keys );
@@ -340,15 +370,18 @@ class ACUI_Exporter{
 		return ( $key == 'source_user_id' ) ? 'ID' : $key;
 	}
 
-	function maybe_fill_empty_data( $row, $user_id ){
+	function maybe_fill_empty_data( $row, $user_id, $filtered_columns ){
 		if( empty( $row['user_login'] ) || empty( $row['user_email'] ) ){
 			$user = new WP_User( $user_id );
 
 			if( $user->ID == 0 )
 				return $row;
 
-			$row['user_login'] = $user->user_login;
-			$row['user_email'] = $user->user_email;
+            if( count( $filtered_columns ) == 0 || in_array( 'user_login', $filtered_columns ) )
+			    $row['user_login'] = $user->user_login;
+
+            if( count( $filtered_columns ) == 0 || in_array( 'user_email', $filtered_columns ) )
+			    $row['user_email'] = $user->user_email;
 		}
 		
 		return $row;

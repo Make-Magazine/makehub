@@ -16,7 +16,7 @@
  * @since 1.0.0
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION' ) ) {
-	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.3.6' );
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_VERSION', '1.4.1' );
 }
 
 /**
@@ -117,4 +117,8 @@ if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PERSISTANT_CART_ID_NAME' ) ) {
  */
 if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOG_PATH' ) ) {
 	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOG_PATH', WP_CONTENT_DIR . '/uploads/wc-logs/ac-debug.log' );
+}
+
+if ( ! defined( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME' ) ) {
+	define( 'ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ACCEPTS_MARKETING_NAME', 'activecampaign_for_woocommerce_accepts_marketing' );
 }

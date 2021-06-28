@@ -429,6 +429,7 @@ class GFFormSettings {
 								'name'       => 'limitEntriesMessage',
 								'type'       => 'textarea',
 								'label'      => esc_html__( 'Entry Limit Reached Message', 'gravityforms' ),
+								'allow_html' => true,
 								'dependency' => array(
 									'live'   => true,
 									'fields' => array(
@@ -482,6 +483,7 @@ class GFFormSettings {
 								'name'       => 'schedulePendingMessage',
 								'type'       => 'textarea',
 								'label'      => esc_html__( 'Form Pending Message', 'gravityforms' ),
+								'allow_html' => true,
 								'dependency' => array(
 									'live'   => true,
 									'fields' => array(
@@ -495,6 +497,7 @@ class GFFormSettings {
 								'name'       => 'scheduleMessage',
 								'type'       => 'textarea',
 								'label'      => esc_html__( 'Form Expired Message', 'gravityforms' ),
+								'allow_html' => true,
 								'dependency' => array(
 									'live'   => true,
 									'fields' => array(
@@ -654,6 +657,9 @@ class GFFormSettings {
 
 					// Set form version.
 					$form['version'] = GFForms::$version;
+
+					// Save custom settings fields to the form object if they don't already exist there.
+					$form = self::save_changed_form_settings_fields( $form, $values );
 
 					// Form Basics
 					$form['title']       = rgar( $values, 'title' );
@@ -1316,5 +1322,31 @@ class GFFormSettings {
 
 		die( json_encode( $result ) );
 
+	}
+
+	/**
+	 * Saves new or changed form settings fields to the form object to automatically save custom fields.
+	 *
+	 * @since  2.5.2
+	 * @access public
+	 *
+	 * @param  array $form   The form object.
+	 * @param  array $values The array of values being saved.
+	 *
+	 * @return array $form The Form Object.
+	 */
+	public static function save_changed_form_settings_fields( $form, $values ) {
+
+		// Find the new settings that are not already saved to the form object or changed settings.
+		foreach ( $values as $key => $value ) {
+
+			if ( array_key_exists( $key, $form ) && $value === $form[ $key ] ) {
+				continue;
+			}
+
+			$form[ $key ] = $value;
+		}
+
+		return $form;
 	}
 }

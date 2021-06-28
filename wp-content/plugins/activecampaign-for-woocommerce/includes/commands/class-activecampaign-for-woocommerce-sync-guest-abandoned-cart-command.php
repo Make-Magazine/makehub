@@ -13,9 +13,8 @@
 use Activecampaign_For_Woocommerce_Admin as Admin;
 use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
-use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
-use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
 use Activecampaign_For_Woocommerce_Logger as Logger;
+use Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command as Abandoned_Cart;
 
 /**
  * Handles sending the guest customer and pending order to AC.
@@ -42,20 +41,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * @var WC_Customer
 	 */
 	public $customer;
-
-	/**
-	 * The Ecom Order Factory
-	 *
-	 * @var Ecom_Order_Factory
-	 */
-	public $factory;
-
-	/**
-	 * The Ecom Order Repo
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Order_Repository
-	 */
-	public $order_repository;
 
 	/**
 	 * The Ecom Customer Repo
@@ -115,30 +100,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	private $external_checkout_id;
 
 	/**
-	 * The native ecom order object used to
-	 * create or update an order in AC
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Order
-	 */
-	private $ecom_order;
-
-	/**
-	 * The resulting existing or newly created AC ecom order
-	 *
-	 * @var Activecampaign_For_Woocommerce_Ecom_Model_Interface
-	 */
-	private $order_ac;
-
-	/**
-	 * Whether or not the AC order exists.
-	 * Used to determine whether or not
-	 * we want to update the AC order (PUT request).
-	 *
-	 * @var boolean
-	 */
-	private $order_ac_exists = false;
-
-	/**
 	 * The custom ActiveCampaign logger
 	 *
 	 * @var Activecampaign_For_Woocommerce_Logger
@@ -159,8 +120,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 * @param     WC_Customer|null                          $customer     The WC Customer.
 	 * @param     WC_Session|null                           $wc_session     The WC Session.
 	 * @param     Activecampaign_For_Woocommerce_Admin|null $admin     The admin object.
-	 * @param     Ecom_Order_Factory                        $factory     The Ecom Order Factory.
-	 * @param     Ecom_Order_Repository                     $order_repository     The Ecom Order Repo.
 	 * @param     Ecom_Customer_Repository|null             $customer_repository     The Ecom Customer Repo.
 	 * @param     Logger                                    $logger     The ActiveCampaign WooCommerce logger.
 	 */
@@ -169,8 +128,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		WC_Customer $customer = null,
 		WC_Session $wc_session = null,
 		Admin $admin,
-		Ecom_Order_Factory $factory,
-		Ecom_Order_Repository $order_repository,
 		Ecom_Customer_Repository $customer_repository,
 		Logger $logger = null
 	) {
@@ -178,8 +135,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		$this->customer            = $customer;
 		$this->wc_session          = $wc_session;
 		$this->admin               = $admin;
-		$this->factory             = $factory;
-		$this->order_repository    = $order_repository;
 		$this->customer_repository = $customer_repository;
 		$this->logger              = $logger;
 	}
@@ -205,27 +160,33 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 	 */
 	public function execute( ...$args ) {
 		$this->init();
-		$this->logger->debug( 'Abandon cart guest sync: try to send a guest abandoned cart' );
+
 		if (
 			! $this->validate_request() ||
 			! $this->setup_woocommerce_customer() ||
 			! $this->find_or_create_ac_customer() ||
-			! $this->setup_woocommerce_cart() ||
-			! $this->setup_ecom_order()
+			! $this->setup_woocommerce_cart()
 		) {
 			return false;
 		}
 
-		$find_or_create_ac_order = $this->find_or_create_ac_order();
-
-		if ( 1 === $find_or_create_ac_order ) {
-			// Existing order found in AC, try to update it
-			return $this->update_ac_order();
-		}
-
-		if ( ! $find_or_create_ac_order ) {
-			// 0 was returned, meaning some kind of exception
-			return false;
+		try {
+			$abandoned_cart = new Abandoned_Cart();
+			$abandoned_cart->init_data(
+				[
+					'customer_email'      => $this->customer_email,
+					'customer_first_name' => $this->customer_first_name,
+					'customer_last_name'  => $this->customer_last_name,
+				]
+			);
+		} catch ( Throwable $t ) {
+			$this->logger->warning(
+				'Sync Guest Abandoned Cart: Some POST information was missing from the AJAX call.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
 		}
 
 		return true;
@@ -351,14 +312,14 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 				$this->customer_ac = $this->customer_repository->create( $new_customer );
 			} catch ( Exception $e ) {
 				$this->logger->debug(
-					'Abandon cart guest sync: guest customer creation exception: ' . $e->getMessage()
+					'Abandon cart guest sync: Could not create a new customer in AC. ' . $e->getMessage()
 				);
 
 				return false;
 			}
 		} catch ( Exception $e ) {
 			$this->logger->debug(
-				'Abandon cart guest sync: guest find customer exception: ' . $e->getMessage()
+				'Abandon cart guest sync: Could not find customer in AC. ' . $e->getMessage()
 			);
 
 			return false;
@@ -389,96 +350,6 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 			$this->wc_session->get_customer_id(),
 			$this->customer_email
 		);
-
-		return true;
-	}
-
-	/**
-	 * Set up the ecom order with necessary data
-	 *
-	 * @return bool This job was successful
-	 */
-	private function setup_ecom_order() {
-		// Create the order object
-		$this->ecom_order = $this->factory->from_woocommerce( $this->cart, $this->customer_woo );
-
-		$this->ecom_order->set_externalcheckoutid( $this->external_checkout_id );
-		$this->ecom_order->set_customerid( $this->customer_ac->get_id() );
-
-		return true;
-	}
-
-	/**
-	 * Lookup ecom customer record in AC. If it does not exist, create it.
-	 * The end goal is to have a valid AC order
-	 * either already existing in AC or newly created.
-	 *
-	 * @return int Status on what happened:
-	 *             0 = Failure of some kind
-	 *             1 = Existing order found in AC
-	 *             2 = New order successfully created in AC
-	 */
-	private function find_or_create_ac_order() {
-		$this->order_ac = null;
-
-		try {
-			// Try to find the order by it's externalcheckoutid
-			$this->order_ac = $this->order_repository->find_by_externalcheckoutid( $this->external_checkout_id );
-		} catch ( Activecampaign_For_Woocommerce_Resource_Not_Found_Exception $e ) {
-			// Order does not exist in AC yet
-			try {
-				// Try to create the new order in AC
-				$this->logger->debug(
-					'Abandon cart guest sync: Creating order in ActiveCampaign: '
-					. \AcVendor\GuzzleHttp\json_encode( $this->ecom_order->serialize_to_array() )
-				);
-
-				$this->order_ac = $this->order_repository->create( $this->ecom_order );
-
-				return 2;
-			} catch ( Exception $e ) {
-				$this->logger->debug(
-					'Abandon cart guest sync: guest order creation exception: ' . $e->getMessage()
-				);
-
-				return 0;
-			}
-		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Abandon cart guest sync: guest find order exception: ' . $e->getMessage()
-			);
-
-			return 0;
-		}
-
-		if ( ! $this->order_ac ) {
-			$this->logger->debug( 'Abandon cart guest sync: invalid AC order' );
-
-			return 0;
-		}
-
-		return 1;
-	}
-
-	/**
-	 * Update the existing ecom order in AC
-	 *
-	 * @return bool Whether or not this job was successful
-	 */
-	private function update_ac_order() {
-		$this->ecom_order->set_id( $this->order_ac->get_id() );
-
-		try {
-			$this->order_repository->update( $this->ecom_order );
-
-			return true;
-		} catch ( Exception $e ) {
-			$this->logger->debug(
-				'Abandon cart guest sync: guest order update exception: ' . $e->getMessage()
-			);
-
-			return false;
-		}
 
 		return true;
 	}

@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.2.1
+Stable tag: 1.1.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -32,8 +32,11 @@ To run BuddyBoss Platform Pro, we recommend your host supports:
 
 == Changelog ==
 
+= 1.1.3 =
+* Zoom - Improved meeting and webinar security
+
 = 1.1.2.1 =
-* Zoom: Fixed meeting and webinar critical security issue
+* Zoom - Fixed meeting and webinar critical security issue
 
 = 1.1.2 =
 * Zoom - Fixed Recordings play issue in the popup

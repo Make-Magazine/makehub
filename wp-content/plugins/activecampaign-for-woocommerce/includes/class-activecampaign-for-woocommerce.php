@@ -515,14 +515,6 @@ class Activecampaign_For_Woocommerce {
 			$this->run_abandonment_sync_command,
 			'abandoned_cart_hourly_task'
 		);
-
-		// woocommerce_cart_updated, start the initial abandon stuff
-		$this->loader->add_action(
-			'activecampaign_for_woocommerce_cart_updated',
-			$this->update_cart_command,
-			'abandonment'
-		);
-
 	}
 
 	/**
@@ -570,6 +562,67 @@ class Activecampaign_For_Woocommerce {
 			'plugin_action_links_' . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_PLUGIN_BASE_NAME,
 			$this->admin,
 			'add_plugin_settings_link'
+		);
+
+		$this->loader->add_action(
+			'rest_api_init',
+			$this->admin,
+			'active_campaign_register_settings_api',
+			1
+		);
+
+		$disable_notice = 0;
+		if ( get_option( 'activecampaign_for_woocommerce_dismiss_error_notice' ) ) {
+			$dismiss_setting = json_decode( get_option( 'activecampaign_for_woocommerce_dismiss_error_notice' ), 'array' );
+			$user_id         = get_current_user_id();
+
+			if ( isset( $dismiss_setting[ $user_id ] ) && 1 === $dismiss_setting[ $user_id ] ) {
+				$disable_notice = 1;
+			}
+		}
+
+		if ( ! $disable_notice ) {
+			$this->loader->add_action(
+				'admin_notices',
+				$this->admin,
+				'error_admin_notice'
+			);
+		}
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_dismiss_error_notice',
+			$this->admin,
+			'update_dismiss_error_notice_option'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_clear_error_log',
+			$this->admin,
+			'clear_error_logs'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_manual_abandonment_sync',
+			$this->admin,
+			'handle_abandon_cart_sync'
+		);
+
+		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_delete_abandoned_cart_row',
+			$this->admin,
+			'handle_abandon_cart_delete'
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_manual_abandonment_sync',
+			$this->run_abandonment_sync_command,
+			'abandoned_cart_manual_run'
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_manual_abandonment_delete',
+			$this->run_abandonment_sync_command,
+			'abandoned_cart_manual_delete'
 		);
 	}
 

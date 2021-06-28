@@ -91,8 +91,8 @@ class ACUI_ACF{
 		
 		$field_groups = acf_get_field_groups( array( 'user_id' => 'new', 'user_form' => '#your-profile' ) );
 		
-		if( empty($field_groups) ) 
-			return;
+		if( empty( $field_groups ) ) 
+			return array();
 		
 		acf_form_data( array( 'post_id'	=> "user_new", 'nonce' => 'user' ) );
 		

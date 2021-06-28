@@ -1,5 +1,45 @@
 # Changelog
 
+## 1.0-beta-5.16
+
+	- Updated "Ordering" property dropdown in Field Settings to use option groups like the property dropdown for filters.
+	- Added support for ordering by user meta to the User Object Type.
+	- Fixed PHP notice in certain AJAX requests.
+
+## 1.0-beta-5.15
+
+	- Fixed issue where Live Merge Tags would not use the correct value if the field where the value is coming from has its value populated dynamically.
+
+## 1.0-beta-5.14
+
+	- Added support for the "does not contain" operator.
+	- Fixed formatting issue with Multi Select values in Live Merge Tags and addressed regression related to population of multi-choice values.
+	- Fixed issue where newlines in Live Merge Tag values from textareas would improperly include a "<br>" tag.
+	- Fixed issue where Live Merge Tags would return the wrong value when dependent fields were conditionally hidden by multi-select fields.
+	- Fixed issue where dynamically populated fields with Max Character limits would not have the JavaScript counter re-added after population.
+	- Improved performance of Post, Term, and User Object Types by utilizing runtime query caching.
+
+## 1.0-beta-5.13
+
+	- Fixed an issue where conditionally shown HTML fields may not refresh LMTs.
+
+## 1.0-beta-5.12
+
+	- Fixed an issue where required Time Fields used in LMTs are rendered incorrectly.
+	- Fixed PHP notices in Gravity Forms Coupons Add-On settings page.
+
+## 1.0-beta-5.11
+
+	- Improved support for running Gravity Forms pre_render hook during AJAX repopulation of fields. This improves compatibility with integrations such as GPPA + GPLC.
+
+## 1.0-beta-5.10
+
+	- Added updated field IDs to `gppa_updated_batch_fields`.
+
+## 1.0-beta-5.9
+
+	- Fixed an issue with date formatting when populating from a form entry.
+
 ## 1.0-beta-5.8
 
 	- Fixed issue where merge tags of fields with dynamically populated choices would show the value instead of the label in GravityView Custom Content fields.

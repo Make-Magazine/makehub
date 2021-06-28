@@ -266,6 +266,12 @@
 		$webinar_date_obj = new DateTime( bp_get_zoom_webinar_start_date_utc(), new DateTimeZone( 'UTC' ) );
 		$webinar_date_obj->modify( '+' . bp_get_zoom_webinar_duration() . ' minutes' );
 		$webinar_date_unix = $webinar_date_obj->format( 'U' );
+		$meeting_number = esc_attr( bp_get_zoom_webinar_zoom_webinar_id() );
+		$api_key        = bb_zoom_group_api_key( bp_get_zoom_webinar_group_id () );
+		$api_secret     = bb_zoom_group_api_secret( bp_get_zoom_webinar_group_id() );
+		$role           = bp_zoom_can_current_user_start_webinar( bp_get_zoom_webinar_id() ) ? 1 : 0;
+		$sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
+
 		?>
 
 		<?php if ( ! $webinar_is_started ) : ?>
@@ -301,6 +307,7 @@
 						<a href="#" data-webinar-id="<?php echo esc_attr( bp_get_zoom_webinar_zoom_webinar_id() ); ?>"
 						data-webinar-pwd="<?php echo esc_attr( bp_get_zoom_webinar_password() ); ?>"
 						data-is-host="<?php echo $can_host ? esc_attr( '1' ) : esc_attr( '0' ); ?>"
+						data-meeting-sign="<?php echo esc_attr( $sign ); ?>"
 						class="button outline small join-webinar-in-browser">
 							<?php esc_html_e( 'Join Webinar in Browser', 'buddyboss-pro' ); ?>
 						</a>

@@ -112,7 +112,6 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/** @var string custom taxonomy FB product set ID */
 	const FB_PRODUCT_SET_ID = 'fb_product_set_id';
 
-
 	/** @var string|null the configured product catalog ID */
 	public $product_catalog_id;
 
@@ -137,6 +136,8 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/** @var array the page name and url */
 	private $page;
 
+	/** @var WC_Facebookcommerce_Graph_API API handling class. */
+	private $fbgraph;
 
 	/** Legacy properties *********************************************************************************************/
 
@@ -685,6 +686,16 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 		<?php
 	}
 
+	/**
+	 * Returns graph API client object.
+	 *
+	 * @since 2.6.0
+	 *
+	 * @return WC_Facebookcommerce_Graph_API
+	 */
+	public function get_graph_api() {
+		return $this->fbgraph;
+	}
 
 	/**
 	 * Gets a list of Product Item IDs indexed by the ID of the variation.
@@ -773,26 +784,41 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 		return $product_item_ids;
 	}
 
-
 	/**
-	 * Gets the total of published products.
+	 * Gets the total number of published products.
 	 *
 	 * @return int
 	 */
 	public function get_product_count() {
+		$product_counts = wp_count_posts( 'product' );
+		return $product_counts->publish;
+	}
 
-		$args = array(
-			'post_type'      => 'product',
-			'post_status'    => 'publish',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
+	/**
+	 * Should full batch-API sync be allowed?
+	 *
+	 * May be used to disable various full sync UI/APIs to avoid performance impact.
+	 *
+	 * @return boolean True if full batch sync is safe.
+	 * @since 2.6.1
+	 */
+	public function allow_full_batch_api_sync() {
+		$default_allow_sync = true;
+
+		/**
+		 * Allow full batch api sync to be enabled or disabled.
+		 *
+		 * @param bool $allow Default value - is full batch sync allowed?
+		 * @param int $product_count Number of products in store.
+		 *
+		 * @return boolean True if full batch sync is safe.
+		 * @since 2.6.1
+		 */
+		return apply_filters(
+			'facebook_for_woocommerce_allow_full_batch_api_sync',
+			$default_allow_sync,
+			$this->get_product_count()
 		);
-
-		$products = new WP_Query( $args );
-
-		wp_reset_postdata();
-
-		return $products->found_posts;
 	}
 
 
@@ -1192,10 +1218,6 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 
 		$product = wc_get_product( $product_id );
 
-		if ( ! $this->product_should_be_synced( $product ) ) {
-			return;
-		}
-
 		if ( $product->is_type( 'variable' ) ) {
 			$this->on_variable_product_publish( $product_id );
 		} else {
@@ -1343,25 +1365,19 @@ class WC_Facebookcommerce_Integration extends WC_Integration {
 	/**
 	 * Determines whether the product with the given ID should be synced.
 	 *
+	 * @deprecated use \SkyVerge\WooCommerce\Facebook\ProductSync\ProductValidator::validate instead
+	 *
 	 * @since 2.0.0
 	 *
 	 * @param \WC_Product|false $product product object
 	 */
 	public function product_should_be_synced( $product ) {
-
-		$should_be_synced = $this->is_product_sync_enabled();
-
-		// can't sync if we don't have a valid product object
-		if ( $should_be_synced && ! $product instanceof \WC_Product ) {
-			$should_be_synced = false;
+		try {
+			facebook_for_woocommerce()->get_product_sync_validator( $product )->validate();
+			return true;
+		} catch ( \Exception $e ) {
+			return false;
 		}
-
-		// make sure the given product is enabled for sync
-		if ( $should_be_synced && ! Products::product_should_be_synced( $product ) ) {
-			$should_be_synced = false;
-		}
-
-		return $should_be_synced;
 	}
 
 

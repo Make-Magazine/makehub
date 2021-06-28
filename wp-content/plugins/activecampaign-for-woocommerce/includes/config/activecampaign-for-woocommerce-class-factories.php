@@ -177,8 +177,6 @@ return array(
 
 	Sync_Guest_Abandoned_Cart_Command::class          => function (
 		Admin $admin,
-		Ecom_Order_Factory $factory,
-		Ecom_Order_Repository $order_repository,
 		Ecom_Customer_Repository $customer_repository
 	) {
 		return new Sync_Guest_Abandoned_Cart_Command(
@@ -186,10 +184,14 @@ return array(
 			null,
 			null,
 			$admin,
-			$factory,
-			$order_repository,
 			$customer_repository
 		);
+	},
+
+	Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command::class => function (
+		LoggerInterface $logger
+	) {
+		return new Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command( $logger );
 	},
 
 	LoggerInterface::class                            => AcVendor\DI\factory(

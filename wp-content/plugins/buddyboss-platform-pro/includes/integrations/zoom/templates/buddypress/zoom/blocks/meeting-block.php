@@ -37,6 +37,7 @@ $recurring              = isset( $bp_zoom_meeting_block->type ) && 8 === $bp_zoo
 $recurrence             = ! empty( $bp_zoom_meeting_block->recurrence ) ? $bp_zoom_meeting_block->recurrence : false;
 $meeting_status         = ! empty( $bp_zoom_meeting_block->status ) ? $bp_zoom_meeting_block->status : '';
 
+
 if ( is_user_logged_in() ) {
 	$current_userdata = get_userdata( get_current_user_id() );
 
@@ -66,6 +67,12 @@ if ( is_user_logged_in() ) {
 		}
 	}
 }
+
+$meeting_number = esc_attr( $meeting_id );
+$api_key        = bp_zoom_api_key();
+$api_secret     = bp_zoom_api_secret();
+$role           = $can_start_meeting ? 1 : 0;
+$sign           = bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role );
 
 $meeting_date_raw   = false;
 $meeting_is_started = false;
@@ -322,7 +329,7 @@ $date              = wp_date( bp_core_date_format( false, true ), strtotime( $st
 			</div>
 		<?php endif; ?>
 		<div class="meeting-actions <?php echo 'started' === $meeting_status || ( $show_join_meeting_button && $current_date < $meeting_date_unix ) ? '' : 'bp-hide'; ?>">
-			<a href="#" class="button small outline join-meeting-in-browser" data-meeting-id="<?php echo esc_attr( $meeting_id ); ?>" data-meeting-pwd="<?php echo esc_attr( $password ); ?>" data-is-host="<?php echo $can_start_meeting ? esc_attr( '1' ) : esc_attr( '0' ); ?>">
+			<a href="#" class="button small outline join-meeting-in-browser" data-meeting-id="<?php echo esc_attr( $meeting_id ); ?>" data-meeting-pwd="<?php echo esc_attr( $password ); ?>" data-is-host="<?php echo $can_start_meeting ? esc_attr( '1' ) : esc_attr( '0' ); ?>" data-meeting-sign="<?php echo esc_attr( $sign ); ?>">
 				<?php if ( $can_start_meeting ) : ?>
 					<?php esc_html_e( 'Host Meeting in Browser', 'buddyboss-pro' ); ?>
 				<?php else : ?>

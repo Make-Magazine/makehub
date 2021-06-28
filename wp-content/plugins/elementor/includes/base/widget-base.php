@@ -483,7 +483,7 @@ abstract class Widget_Base extends Element_Base {
 
 		if ( 'no' === $lightbox_setting_key ) {
 			if ( $is_global_image_lightbox_enabled ) {
-				$this->add_render_attribute( $element, 'data-elementor-open-lightbox', 'no' );
+				$this->add_render_attribute( $element, 'data-elementor-open-lightbox', 'no', $overwrite );
 			}
 
 			return $this;
@@ -677,6 +677,26 @@ abstract class Widget_Base extends Element_Base {
 	 */
 	protected function print_content() {
 		$this->render_content();
+	}
+
+	/**
+	 * Print a setting content without escaping.
+	 *
+	 * Script tags are allowed on frontend according to the WP theme securing policy.
+	 *
+	 * @param string $setting
+	 * @param null $repeater_name
+	 * @param null $index
+	 */
+	final protected function print_unescaped_setting( $setting, $repeater_name = null, $index = null ) {
+		if ( $repeater_name ) {
+			$repeater = $this->get_settings_for_display( $repeater_name );
+			$output = $repeater[ $index ][ $setting ];
+		} else {
+			$output = $this->get_settings_for_display( $setting );
+		}
+
+		echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

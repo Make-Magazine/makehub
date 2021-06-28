@@ -54,7 +54,6 @@ function bp_zoom_enqueue_scripts_and_styles() {
 	$past_webinars_url = '';
 	$group_id          = false;
 	$api_key           = bp_zoom_api_key();
-	$api_secret        = bp_zoom_api_secret();
 	if ( bp_is_group() ) {
 		$group_id          = bp_get_current_group_id();
 		$current_group     = groups_get_current_group();
@@ -64,7 +63,6 @@ function bp_zoom_enqueue_scripts_and_styles() {
 		$webinars_url      = trailingslashit( $group_link . 'zoom/webinars' );
 		$past_webinars_url = trailingslashit( $group_link . 'zoom/past-webinars' );
 		$api_key           = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-key', true );
-		$api_secret        = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-secret', true );
 	}
 
 	wp_localize_script(
@@ -81,7 +79,6 @@ function bp_zoom_enqueue_scripts_and_styles() {
 			'group_webinars_url'      => $webinars_url,
 			'group_webinar_past_url'  => $past_webinars_url,
 			'bp_staple'               => base64_encode( $api_key ), // Zoom API Key
-			'bp_contrast'             => base64_encode ( $api_secret ), // Zoom API Secret
 			'meeting_delete_nonce'    => wp_create_nonce( 'bp_zoom_meeting_delete' ),
 			'meeting_confirm_msg'     => __( 'Are you sure you want to delete this meeting?', 'buddyboss-pro' ),
 			'webinar_delete_nonce'    => wp_create_nonce( 'bp_zoom_webinar_delete' ),
@@ -1434,7 +1431,7 @@ function bp_zoom_api_host_show() {
 function bp_zoom_api_check_connection_button() {
 	?>
 	<p>
-		<?php if( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) { ?>
+		<?php if ( version_compare( BP_PLATFORM_VERSION, '1.5.7.3', '<=' ) ) { ?>
 			<a class="button" href="
 				<?php
 				echo esc_url(
@@ -1919,6 +1916,63 @@ function bp_zoom_is_group_setup( $group_id ) {
 	}
 
 	return true;
+}
+
+/**
+ * Get default group api key.
+ *
+ * @param int $group_id Group ID.
+ * @since 1.1.4
+ * @return string API key string.
+ */
+function bb_zoom_group_api_key( $group_id ) {
+	if ( empty( $group_id ) || ! bp_zoom_is_group_setup( $group_id ) ) {
+		return '';
+	}
+	$api_key = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-key', true );
+
+	return $api_key;
+}
+
+/**
+ * Get default group api secret.
+ *
+ * @param int $group_id Group ID.
+ * @since 1.1.4
+ * @return string API secret string.
+ */
+
+function bb_zoom_group_api_secret( $group_id ) {
+	if ( empty( $group_id ) || ! bp_zoom_is_group_setup( $group_id ) ) {
+		return '';
+	}
+	$api_key = groups_get_groupmeta( $group_id, 'bp-group-zoom-api-secret', true );
+
+	return $api_key;
+}
+
+/**
+ * Get default group api signature.
+ *
+ * @param string $api_key Key.
+ * @param string $api_secret Secret.
+ * @param int    $meeting_number Meeting ID.
+ * @param int    $role Role ID.
+ * @since 1.1.4
+ * @return string API signature string.
+ */
+
+function bb_get_meeting_signature( $api_key, $api_secret, $meeting_number, $role ) {
+
+	$time = time() * 1000 - 30000; // time in milliseconds (or close enough)
+
+	$data = base64_encode( $api_key . $meeting_number . $time . $role );
+
+	$hash = hash_hmac( 'sha256', $data, $api_secret, true );
+
+	$_sig = $api_key . '.' . $meeting_number . '.' . $time . '.' . $role . '.' . base64_encode( $hash );
+
+	return rtrim( strtr( base64_encode( $_sig ), '+/', '-_' ), '=' );
 }
 
 /**
@@ -3703,7 +3757,7 @@ function bp_zoom_meeting_email_token_zoom_meeting( $bp_email, $formatted_tokens,
 					$time_zone     = $meeting->timezone;
 				}
 
-				$date = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) );
+				$date  = wp_date( bp_core_date_format( false, true ), strtotime( $utc_date_time ) );
 				$date .= __( ' at ', 'buddyboss-pro' );
 				$date .= wp_date( bp_core_date_format( true, false ), strtotime( $utc_date_time ), new DateTimeZone( $time_zone ) );
 				?>

@@ -294,7 +294,7 @@
                     {
                         if (typeof window.YT === 'undefined')
                         {
-                            if (window._EPYT_.ytapi_load !== 'never' && (window._EPYT_.ytapi_load === 'always' || $('iframe[src*="youtube.com/embed/"], iframe[data-src*="youtube.com/embed/"]').length))
+                            if (window._EPYT_.ytapi_load !== 'never' && (window._EPYT_.ytapi_load === 'always' || $('iframe[src*="youtube.com/embed/"], iframe[data-src*="youtube.com/embed/"], .__youtube_prefs__').length))
                             {
                                 var iapi = document.createElement('script');
                                 iapi.src = "https://www.youtube.com/iframe_api";
