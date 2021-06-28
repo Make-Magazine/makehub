@@ -1532,10 +1532,6 @@
    flex-wrap: wrap;
 }
 
-
-// A couple of vars for these styles
-
-
 .featured-image-grid {
    padding-top: 30px;
    display: grid;
@@ -1557,13 +1553,12 @@
       height: 150px;
       padding-top: 50%;
       box-sizing: content-box;
-
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       position: relative;
       overflow: hidden;
-
+	  text-decoration: none;
       &:hover {
          &> .grid-item-desc {
             transform: translateX(0);
