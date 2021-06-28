@@ -282,4 +282,18 @@ function remove_admin_bar() {
         show_admin_bar(false);
     }
 }
+    
+function bpdev_fix_avatar_dir_path( $path ){
+   if ( is_multisite() && BP_ENABLE_MULTIBLOG )
+       $path = ABSPATH . 'wp-content/uploads/';
+   return $path;
+}
+add_filter( 'bp_core_avatar_upload_path', 'bpdev_fix_avatar_dir_path', 1 );
+//fix the upload dir url
+function bpdev_fix_avatar_dir_url( $url ){
+  if ( is_multisite() )
+      $url = network_home_url('/wp-content/uploads') ;
+  return $url;
+}
+add_filter( 'bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1 );
 ?>
