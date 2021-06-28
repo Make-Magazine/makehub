@@ -541,29 +541,31 @@ function rolloverItems($row_layout) {
 
     //loop thru item data and build the table
     foreach ($itemArr as $item) {
-
-        $return .= '<div class="grid-item lazyload" data-bg="' . $item['image'] . '">';
+		$markup = !empty($item['maker_url']) ? 'a' : 'div';
+		$href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" target="_blank"' : '';
+		
+        $return .= '<' . $markup . ' ' . $href . ' class="grid-item lazyload" data-bg="' . $item['image'] . '">';
 
         if (!empty($item['desc'])) {
-            $markup = !empty($item['maker_url']) ? 'a' : 'div';
+            
             $newTab = $item;
             $newTab = ($newTab == true ? "target='_blank'" : "target='_self'");
-            $href = !empty($item['maker_url']) ? 'href="' . $item['maker_url'] . '" target="_blank"' : '';
-            $return .= '<' . $markup . ' ' . $href . ' class="grid-item-desc">
+            
+            $return .= '<div class="grid-item-desc">
                      <div class="desc-body"><h4>' . $item['name'] . '</h4>
                      <p class="desc">' . $item['desc'] . '</p></div>';
             if (!empty($item['maker_url'])) {
                 $return .= '  <p class="btn btn-blue read-more-link">Learn More</p>'; //<a href="' . $maker['maker_url'] . '"></a>
             }
-            $return .= ' </' . $markup . '>';
+            $return .= ' </div>';
         }
         // the caption section
         $return .= '  <div class="grid-item-title-block">
 		                 <h3>' . $item['name'] . '</h3>
                     </div>';
-        $return .= '</div>'; //close .grid-item
+        $return .= '</' . $markup . '>'; //close .grid-item
     }
-    $return .= '</div>';  //close #performers
+    $return .= '</div>';  //close 
     //check if we should display a more maker button
 
     if ($cta_url) {

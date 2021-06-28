@@ -21,7 +21,6 @@ $course_price           = trim( learndash_get_course_meta_setting( $course_id, '
 $course_price_type      = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
 $course_button_url      = learndash_get_course_meta_setting( $course_id, 'custom_button_url' );
 $short_description      = $lds_post_meta['_lds_short_description'][0];
-error_log(print_r($lds_post_meta['_learndash_course_grid_short_description'][0], TRUE));
 $courses_progress       = buddyboss_theme()->learndash_helper()->get_courses_progress( $current_user_id );
 $course_progress        = isset( $courses_progress[ $course_id ] ) ? $courses_progress[ $course_id ] : null;
 $course_status          = learndash_course_status( $course_id, $current_user_id );
