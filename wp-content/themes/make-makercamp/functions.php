@@ -58,7 +58,7 @@ function maker_camp_scripts_styles() {
 
     // Javascript
     wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
     // lib src packages up bootstrap, fancybox, jquerycookie etc
     wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
     wp_enqueue_script('maker_camp-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
@@ -75,7 +75,6 @@ function maker_camp_scripts_styles() {
 }
 
 add_action('wp_enqueue_scripts', 'maker_camp_scripts_styles', 9999);
-
 
 add_action('admin_enqueue_scripts', 'load_admin_styles');
 
@@ -171,7 +170,6 @@ function get_first_image_url($html) {
         return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
 }
 
-
 function featuredtoRSS($content) {
     global $post;
     if (has_post_thumbnail($post->ID)) {
@@ -203,26 +201,25 @@ add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
 function filter_posts_from_rss($where, $query = NULL) {
     global $wpdb;
 
-    if (!$query->is_admin && $query->is_feed && $query->query['post_type']=='espresso_events') {                    
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type'] == 'espresso_events') {
         $dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
         $results = $wpdb->get_results($dbSQL);
         $suppression_IDs = array();
-        
-        foreach($results as $result){         
+
+        foreach ($results as $result) {
             $suppression_IDs[] = $result->post_id;
         }
-                
+
         $exclude = implode(",", $suppression_IDs);
-        
+
         if (!empty($exclude)) {
             $where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
         }
     }
     return $where;
 }
-add_filter( 'posts_where', 'filter_posts_from_rss', 1, 4 );
 
-
+add_filter('posts_where', 'filter_posts_from_rss', 1, 4);
 
 function add_slug_body_class($classes) {
     global $post;
@@ -246,7 +243,6 @@ function add_slug_body_class($classes) {
 
 add_filter('body_class', 'add_slug_body_class');
 
-
 // don't lazyload on the project print template
 function lazyload_exclude() {
     if (is_page_template('project-print-template.php') == true) {
@@ -255,26 +251,35 @@ function lazyload_exclude() {
         return true;
     }
 }
+
 add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
 add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
-add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3 );
+add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3);
 
 // limit default site search to learndash categories
 function searchfilter($query) {
-    if ($query->is_search && !is_admin() ) {
-        $query->set('post_type',array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
+    if ($query->is_search && !is_admin()) {
+        $query->set('post_type', array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
     }
-	return $query;
+    return $query;
 }
-add_filter('pre_get_posts','searchfilter');
+
+add_filter('pre_get_posts', 'searchfilter');
 
 // If the user isn't a member of our group, redirect them to the makercamp register page
 //add_filter('template_redirect', 'theme_check_user_permissions', 1, 1);
 function theme_check_user_permissions($template) {
-	$group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
-	if((!is_user_logged_in() || !groups_is_user_member( get_current_user_id(), $group_id )) && $_SERVER['REQUEST_URI'] != "/makercamp-register/" && !current_user_can('administrator') ) {
-		wp_redirect( '/makercamp-register/' );
-	} 
+    $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
+    if ((!is_user_logged_in() || !groups_is_user_member(get_current_user_id(), $group_id)) && $_SERVER['REQUEST_URI'] != "/makercamp-register/" && !current_user_can('administrator')) {
+        wp_redirect('/makercamp-register/');
+    }
 }
 
+add_action('after_setup_theme', 'remove_admin_bar');
+
+function remove_admin_bar() {
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
+}
 ?>
