@@ -18,8 +18,9 @@
                                 'user_id',
                                 ( ( isset($user_id) ) && (!empty($user_id) ) ? $user_id : get_the_author_meta('ID'))
                         );
-
-                        $avatar = get_avatar_url(get_the_author_meta('email', $user_id), array('size' => 300));
+                        $avatar = bp_core_fetch_avatar(array('html'=>false,'item_id' => $user_id, 'email' => get_the_author_meta('email', $user_id), 
+                            'width' => 15, 'height' => 15, 'avatar_dir'=>'avatars'));
+                        
                         if (!empty($avatar)) :
                             if (class_exists('BuddyPress')) {
                                 ?>

@@ -282,9 +282,11 @@ function remove_admin_bar() {
         show_admin_bar(false);
     }
 }
-    
+
+define( 'BP_AVATAR_URL', '/wp-content/uploads/' );
+
 function bpdev_fix_avatar_dir_path( $path ){
-   if ( is_multisite() && BP_ENABLE_MULTIBLOG )
+   if ( is_multisite())
        $path = ABSPATH . 'wp-content/uploads/';
    return $path;
 }
