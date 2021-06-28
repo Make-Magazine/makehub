@@ -194,7 +194,7 @@ if (empty($course)) {
                                 /**
                                  * Display Lesson Assignments
                                  */
-                                if (lesson_hasassignments($post) && !empty($user_id)):
+                                if (learndash_lesson_hasassignments($post) && !empty($user_id)):
                                     /**
                                      * Action to add custom content before the lesson assignment
                                      *
@@ -304,7 +304,6 @@ if (empty($course)) {
                                 'user_id' => $author_id
                                     ), true);
                             ?>
-
 
                         </div><?php /* .learndash_content_wrap */ ?>
 
