@@ -83,6 +83,12 @@
 			width: 100%;
 		}
 	}
+	a.ld-item-name {
+		cursor: pointer;
+		span, div {
+			cursor: pointer;
+		}
+	}
 }
 
 // Lessons / Projects
