@@ -288,7 +288,9 @@ function bpdev_fix_avatar_dir_path( $path ){
        $path = ABSPATH . 'wp-content/uploads/';
    return $path;
 }
+
 add_filter( 'bp_core_avatar_upload_path', 'bpdev_fix_avatar_dir_path', 1 );
+
 //fix the upload dir url
 function bpdev_fix_avatar_dir_url( $url ){
   if ( is_multisite() )
