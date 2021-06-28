@@ -37,10 +37,11 @@
 			var dataSearchValue = $( '.site-header--elementor' ).data( data );
 			if ( $( '.site-header--elementor' ).data( data ) !== '' ) {
 				iVar.removeClass( iClass );
-				iVar.addClass( 'bb-el-i ' + dataSearchValue );
+				iVar.addClass( dataSearchValue );
 			} else {
-				iVar.addClass( 'bb-el-i ' + iClass );
+				iVar.addClass( iClass );
 			}
+			$( '.site-header--elementor' ).removeClass('icon-fill-in');
 		}
 
 		iconReplace( '.site-header--elementor .header-search-link i', 'bb-icon-search', 'search-icon' );

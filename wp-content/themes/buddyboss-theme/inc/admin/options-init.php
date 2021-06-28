@@ -1377,6 +1377,7 @@ if ( !class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 
 			// Array of social options
 			$social_options = array(
+				'clubhouse'   => '',
 				'dribbble'    => '',
 				'email'       => '',
 				'facebook'    => '',
@@ -1392,6 +1393,8 @@ if ( !class_exists( 'buddyboss_theme_Redux_Framework_config' ) ) {
 				'reddit'      => '',
 				'rss'         => '',
 				'skype'       => '',
+				'telegram'    => '',
+				'tiktok'      => '',
 				'tumblr'      => '',
 				'twitter'     => '',
 				'vimeo'       => '',

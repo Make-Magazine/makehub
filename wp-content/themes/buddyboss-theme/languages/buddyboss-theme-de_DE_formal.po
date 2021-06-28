@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Theme v1.6.6\n"
-"POT-Creation-Date: 2021-05-20 09:13+0200\n"
-"PO-Revision-Date: 2021-05-27 20:14+0530\n"
+"Project-Id-Version: BuddyBoss Theme v1.6.8\n"
+"POT-Creation-Date: 2021-06-19 19:07+0200\n"
+"PO-Revision-Date: 2021-06-24 10:54+0530\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.4.3\n"
+"X-Generator: Poedit 3.0\n"
 "X-Poedit-Basepath: .\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: style.css\n"
@@ -49,11 +49,11 @@ msgstr "%s"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3172
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:247
 #: inc/plugins/elementor/templates/scripts/template-modal-search-item.php:7
-#: inc/plugins/elementor/widgets/bb-header-bar.php:145
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:598
 #: inc/plugins/elementor/widgets/courses/templates/learndash-courses-template.php:35
 #: inc/plugins/elementor/widgets/courses/templates/learndash-courses-template.php:36
 #: inc/plugins/elementor/widgets/courses/templates/lifterlms-courses-template.php:45
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:281
 #: learndash/ld30/shortcodes/profile.php:119
 #: lifterlms/course/course-index.php:20
 #: lifterlms/membership/membership-index.php:20 searchform.php:15
@@ -145,7 +145,7 @@ msgstr "Fertig"
 msgid "Main Forum"
 msgstr "Hauptforum"
 
-#: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:59
+#: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:60
 #: sidebar-bbpress.php:18
 msgid "New discussion"
 msgstr "Neue Diskussion"
@@ -754,7 +754,7 @@ msgstr "Eingeladen"
 #: inc/admin/framework/ReduxCore/inc/welcome/welcome.php:359
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:289
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:647
-#: inc/theme-activation.php:2565 lifterlms/myaccount/view-order.php:39
+#: inc/theme-activation.php:2594 lifterlms/myaccount/view-order.php:39
 #: paid-memberships-pro/pages/account.php:127
 #: woocommerce/myaccount/dashboard.php:79
 #: woocommerce/myaccount/my-orders.php:16
@@ -789,7 +789,7 @@ msgstr "« Zurück"
 #: buddypress/members/single/notifications.php:11
 #: inc/admin/options-init.php:330 inc/admin/options-init.php:371
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:116
-#: inc/plugins/elementor/widgets/bb-header-bar.php:179
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:315
 #: template-parts/content-buddypress.php:31
 #: template-parts/header-profile-menu.php:175
 #: template-parts/notification-dropdown.php:10
@@ -899,32 +899,32 @@ msgstr "Meine Gruppen"
 msgid "Could not load the starter file!"
 msgstr "Die Startdatei konnte nicht geladen werden!"
 
-#: functions.php:73 inc/theme-activation.php:285
+#: functions.php:73 inc/theme-activation.php:288
 msgid "Install Required Plugins"
 msgstr "Erforderliche Plugins installieren"
 
-#: functions.php:74 inc/theme-activation.php:286
+#: functions.php:74 inc/theme-activation.php:289
 msgid "Install Plugins"
 msgstr "Plugins installieren"
 
 #. translators: %s: plugin name.
-#: functions.php:75 inc/theme-activation.php:288
+#: functions.php:75 inc/theme-activation.php:291
 #, php-format
 msgid "Installing Plugin: %s"
 msgstr "Plugin wird installiert: %s"
 
-#: functions.php:77 inc/theme-activation.php:291
+#: functions.php:77 inc/theme-activation.php:294
 msgid "Something went wrong with the plugin API."
 msgstr "Es ist ein Fehler mit der Plugin-API aufgetreten."
 
-#: functions.php:78 inc/theme-activation.php:294
+#: functions.php:78 inc/theme-activation.php:297
 #, php-format
 msgid "This theme requires the following plugin: %1$s."
 msgid_plural "This theme requires the following plugins: %1$s."
 msgstr[0] "Dieses Theme erfordert das folgende Plugin: %1$s."
 msgstr[1] "Dieses Theme erfordert die folgende Plugins: %1$s."
 
-#: functions.php:80 inc/theme-activation.php:300
+#: functions.php:80 inc/theme-activation.php:303
 #, php-format
 msgid "This theme recommends the following plugin: %1$s."
 msgid_plural "This theme recommends the following plugins: %1$s."
@@ -950,14 +950,14 @@ msgstr[1] ""
 "% s-Plugins zu installieren. Wenden Sie sich an den Administrator dieser "
 "Website, um Hilfe beim Installieren der Plugins zu erhalten."
 
-#: functions.php:84 inc/theme-activation.php:318
+#: functions.php:84 inc/theme-activation.php:321
 #, php-format
 msgid "The following required plugin is currently inactive: %1$s."
 msgid_plural "The following required plugins are currently inactive: %1$s."
 msgstr[0] "Das folgende benötigte Plugin ist derzeit inaktiv: %1$s."
 msgstr[1] "Die folgenden benötigten Plugins sind derzeit inaktiv: %1$s."
 
-#: functions.php:86 inc/theme-activation.php:324
+#: functions.php:86 inc/theme-activation.php:327
 #, php-format
 msgid "The following recommended plugin is currently inactive: %1$s."
 msgid_plural "The following recommended plugins are currently inactive: %1$s."
@@ -983,7 +983,7 @@ msgstr[1] ""
 "Plugins zu aktivieren. Wenden Sie sich an den Administrator dieser Website, "
 "um Hilfe zum Aktivieren der Plugins zu erhalten."
 
-#: functions.php:90 inc/theme-activation.php:306
+#: functions.php:90 inc/theme-activation.php:309
 #, php-format
 msgid ""
 "The following plugin needs to be updated to its latest version to ensure "
@@ -1017,7 +1017,7 @@ msgstr[1] ""
 "Plugins zu aktualisieren. Wenden Sie sich an den Administrator dieser "
 "Website, um Hilfe zum Aktualisieren der Plugins zu erhalten."
 
-#: functions.php:94 inc/theme-activation.php:329
+#: functions.php:94 inc/theme-activation.php:332
 msgid "Begin installing plugin"
 msgid_plural "Begin installing plugins"
 msgstr[0] "Installation des Plugins beginnen"
@@ -1029,11 +1029,11 @@ msgid_plural "Activate installed plugins"
 msgstr[0] "Installiertes Plugin aktivieren"
 msgstr[1] "Installierte Plugins aktivieren"
 
-#: functions.php:96 inc/theme-activation.php:343
+#: functions.php:96 inc/theme-activation.php:346
 msgid "Return to Required Plugins Installer"
 msgstr "Zurück zur Installation der benötigten Plugins"
 
-#: functions.php:97 inc/theme-activation.php:345 inc/theme-activation.php:3173
+#: functions.php:97 inc/theme-activation.php:348 inc/theme-activation.php:3202
 msgid "Plugin activated successfully."
 msgstr "Plugin erfolgreich aktiviert."
 
@@ -1046,7 +1046,7 @@ msgstr "Alle Plugins wurden erfolgreich installiert und aktiviert. %s"
 #: inc/admin/admin-init.php:52 inc/admin/admin-init.php:55
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-render.php:96
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:18
-#: inc/plugins/elementor/entry.php:60
+#: inc/plugins/elementor/entry.php:62
 msgid "BuddyBoss"
 msgstr "BuddyBoss"
 
@@ -1059,7 +1059,7 @@ msgstr ""
 "Warnung: Zugang eingeschränkt. Bitte aktivieren Sie den BuddyBoss Theme-"
 "Lizenzschlüssel <a href=\"%s\">HIER</a> und versuchen Sie es erneut."
 
-#: inc/admin/admin-init.php:527 inc/admin/admin-init.php:603
+#: inc/admin/admin-init.php:541 inc/admin/admin-init.php:617
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:663
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:204
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:267
@@ -1072,11 +1072,11 @@ msgstr ""
 msgid "Padding"
 msgstr "Innenabstand"
 
-#: inc/admin/admin-init.php:538
+#: inc/admin/admin-init.php:552
 msgid "Padding:"
 msgstr "Innenabstand (Padding):"
 
-#: inc/admin/admin-init.php:676
+#: inc/admin/admin-init.php:690
 #, php-format
 msgid ""
 "BuddyBoss Theme requires LearnDash 3.0 or above.  <a href=\"%s\">Update "
@@ -1085,7 +1085,7 @@ msgstr ""
 "BuddyBoss Theme erfordert LearnDash 3.0 oder höher.  <a href=\"%s\">Update "
 "LearnDash</a>"
 
-#: inc/admin/admin-init.php:683
+#: inc/admin/admin-init.php:697
 #, php-format
 msgid ""
 "BuddyBoss Theme requires the <strong>LearnDash 3.0</strong>  template, "
@@ -1096,44 +1096,44 @@ msgstr ""
 "allerdings verwenden Sie die <strong>Legacy</strong>-Vorlage. <a href=\"%s"
 "\">Reparieren</a>"
 
-#: inc/admin/admin-init.php:703
+#: inc/admin/admin-init.php:717
 msgid "Default Fonts"
 msgstr "Standardschriftarten"
 
-#: inc/admin/admin-init.php:706 inc/admin/admin-init.php:714
+#: inc/admin/admin-init.php:720 inc/admin/admin-init.php:728
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:138
 msgid "Normal 400"
 msgstr "Normal 400"
 
-#: inc/admin/admin-init.php:707 inc/admin/admin-init.php:715
+#: inc/admin/admin-init.php:721 inc/admin/admin-init.php:729
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:141
 msgid "Medium 500"
 msgstr "Medium 500"
 
-#: inc/admin/admin-init.php:708
+#: inc/admin/admin-init.php:722
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:147
 msgid "Bold 700"
 msgstr "Fett 700"
 
-#: inc/admin/admin-init.php:713
+#: inc/admin/admin-init.php:727
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:135
 msgid "Light 300"
 msgstr "Leicht 300"
 
-#: inc/admin/admin-init.php:716
+#: inc/admin/admin-init.php:730
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-admin.php:144
 msgid "Semi Bold 600"
 msgstr "Halbfett 600"
 
-#: inc/admin/admin-init.php:717
+#: inc/admin/admin-init.php:731
 msgid "Light 300 Italic"
 msgstr "Leicht 300 kursiv"
 
-#: inc/admin/admin-init.php:718
+#: inc/admin/admin-init.php:732
 msgid "Normal 400 Italic"
 msgstr "Normal 400 kursiv"
 
-#: inc/admin/admin-init.php:736
+#: inc/admin/admin-init.php:750
 msgid ""
 "Please update BuddyBoss Platform to v1.4.0 to maintain compatibility with "
 "BuddyBoss Theme. Some icons in your theme will look wrong until you update."
@@ -1142,7 +1142,7 @@ msgstr ""
 "Kompatibilität mit dem BuddyBoss-Theme zu gewährleisten. Einige Symbole in "
 "Ihrem Theme werden falsch aussehen, bis Sie sie aktualisieren."
 
-#: inc/admin/admin-init.php:748
+#: inc/admin/admin-init.php:762
 msgid "This panel is set to be Read-Only. Saving is disabled."
 msgstr ""
 "Dieses Panel ist auf schreibgeschützt eingestellt. Das Speichern ist "
@@ -1638,7 +1638,7 @@ msgid "Press return or enter to expand"
 msgstr "Drücken Sie zur Erweiterung die Eingabetaste"
 
 #: inc/admin/framework/ReduxCore/inc/extensions/import_export/extension_import_export.php:120
-#: inc/admin/options-init.php:2522
+#: inc/admin/options-init.php:2525
 msgid "Import / Export"
 msgstr "Importieren / Exportieren"
 
@@ -1820,7 +1820,6 @@ msgstr "Oben"
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:109
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:620
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:688
-#: inc/plugins/elementor/widgets/bb-header-bar.php:364
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:111
 #: inc/plugins/elementor/widgets/bb-review.php:872
 #: inc/plugins/elementor/widgets/bb-tabs.php:293
@@ -1834,6 +1833,9 @@ msgstr "Oben"
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:403
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:713
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:567
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:203
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:233
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:677
 #: inc/plugins/elementor/widgets/members/bb-members.php:184
 msgid "Right"
 msgstr "Rechts"
@@ -1864,7 +1866,6 @@ msgstr "Unten"
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:101
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:612
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:680
-#: inc/plugins/elementor/widgets/bb-header-bar.php:356
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:103
 #: inc/plugins/elementor/widgets/bb-review.php:868
 #: inc/plugins/elementor/widgets/bb-tabs.php:289
@@ -1878,6 +1879,9 @@ msgstr "Unten"
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:395
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:705
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:559
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:199
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:225
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:669
 #: inc/plugins/elementor/widgets/members/bb-members.php:180
 msgid "Left"
 msgstr "Links"
@@ -1903,8 +1907,8 @@ msgid "Select Color"
 msgstr "Farbe auswählen"
 
 #: inc/admin/framework/ReduxCore/inc/fields/dimensions/field_dimensions.php:156
-#: inc/plugins/elementor/widgets/bb-header-bar.php:728
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:249
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1051
 msgid "Width"
 msgstr "Breite"
 
@@ -1933,11 +1937,6 @@ msgstr "Normal"
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:554
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:746
 #: inc/plugins/elementor/widgets/bb-forums.php:438
-#: inc/plugins/elementor/widgets/bb-header-bar.php:695
-#: inc/plugins/elementor/widgets/bb-header-bar.php:868
-#: inc/plugins/elementor/widgets/bb-header-bar.php:955
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1044
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1119
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:589
 #: inc/plugins/elementor/widgets/bb-tabs.php:633
 #: inc/plugins/elementor/widgets/bb-tabs.php:1253
@@ -1949,6 +1948,13 @@ msgstr "Normal"
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:946
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:822
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:548
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:546
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:630
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1018
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1191
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1278
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1370
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1445
 msgid "Hover"
 msgstr "Hover"
 
@@ -1961,8 +1967,10 @@ msgstr "Besucht"
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:930
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:123
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:517
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:525
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:610
 #: inc/plugins/elementor/widgets/members/bb-members.php:119
-#: inc/theme-activation.php:2332
+#: inc/theme-activation.php:2361
 msgid "Active"
 msgstr "Aktiv"
 
@@ -2010,7 +2018,7 @@ msgstr "Neu %s"
 
 #: inc/admin/framework/ReduxCore/inc/fields/slides/field_slides.php:145
 #: inc/admin/framework/ReduxCore/inc/fields/slides/field_slides.php:200
-#: inc/admin/options-init.php:1832 inc/admin/options-init.php:1895
+#: inc/admin/options-init.php:1835 inc/admin/options-init.php:1898
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:101
 #: inc/plugins/elementor/widgets/bb-review.php:502
 #: inc/plugins/elementor/widgets/bb-review.php:563
@@ -2053,31 +2061,31 @@ msgstr "%s hinzufügen"
 #: inc/admin/options-init.php:152 inc/admin/options-init.php:186
 #: inc/admin/options-init.php:280 inc/admin/options-init.php:301
 #: inc/admin/options-init.php:402 inc/admin/options-init.php:695
-#: inc/admin/options-init.php:1435 inc/admin/options-init.php:1460
-#: inc/admin/options-init.php:1627 inc/admin/options-init.php:1644
-#: inc/admin/options-init.php:1652 inc/admin/options-init.php:1660
-#: inc/admin/options-init.php:1673 inc/admin/options-init.php:1711
-#: inc/admin/options-init.php:1744 inc/admin/options-init.php:1889
-#: inc/admin/options-init.php:1925 inc/admin/options-init.php:1941
-#: inc/admin/options-init.php:1959 inc/admin/options-init.php:1993
-#: inc/admin/options-init.php:2037 inc/admin/options-init.php:2151
-#: inc/admin/options-init.php:2228 inc/admin/options-init.php:2255
-#: inc/admin/options-init.php:2276 inc/admin/options-init.php:2291
-#: inc/admin/options-init.php:2301 inc/admin/options-init.php:2312
-#: inc/admin/options-init.php:2322 inc/admin/options-init.php:2349
-#: inc/admin/options-init.php:2372 inc/admin/options-init.php:2387
-#: inc/admin/options-init.php:2397 inc/admin/options-init.php:2407
-#: inc/admin/options-init.php:2417 inc/admin/options-init.php:2443
-#: inc/admin/options-init.php:2459 inc/admin/options-init.php:2477
-#: inc/admin/options-init.php:2505 inc/admin/options-init.php:2514
-#: inc/plugins/elementor/widgets/bb-header-bar.php:116
-#: inc/plugins/elementor/widgets/bb-header-bar.php:131
-#: inc/plugins/elementor/widgets/bb-header-bar.php:147
-#: inc/plugins/elementor/widgets/bb-header-bar.php:164
-#: inc/plugins/elementor/widgets/bb-header-bar.php:181
-#: inc/plugins/elementor/widgets/bb-header-bar.php:198
-#: inc/plugins/elementor/widgets/bb-header-bar.php:216
-#: inc/plugins/elementor/widgets/bb-header-bar.php:232
+#: inc/admin/options-init.php:1438 inc/admin/options-init.php:1463
+#: inc/admin/options-init.php:1630 inc/admin/options-init.php:1647
+#: inc/admin/options-init.php:1655 inc/admin/options-init.php:1663
+#: inc/admin/options-init.php:1676 inc/admin/options-init.php:1714
+#: inc/admin/options-init.php:1747 inc/admin/options-init.php:1892
+#: inc/admin/options-init.php:1928 inc/admin/options-init.php:1944
+#: inc/admin/options-init.php:1962 inc/admin/options-init.php:1996
+#: inc/admin/options-init.php:2040 inc/admin/options-init.php:2154
+#: inc/admin/options-init.php:2231 inc/admin/options-init.php:2258
+#: inc/admin/options-init.php:2279 inc/admin/options-init.php:2294
+#: inc/admin/options-init.php:2304 inc/admin/options-init.php:2315
+#: inc/admin/options-init.php:2325 inc/admin/options-init.php:2352
+#: inc/admin/options-init.php:2375 inc/admin/options-init.php:2390
+#: inc/admin/options-init.php:2400 inc/admin/options-init.php:2410
+#: inc/admin/options-init.php:2420 inc/admin/options-init.php:2446
+#: inc/admin/options-init.php:2462 inc/admin/options-init.php:2480
+#: inc/admin/options-init.php:2508 inc/admin/options-init.php:2517
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:252
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:267
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:283
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:300
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:317
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:334
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:352
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:368
 msgid "On"
 msgstr "An"
 
@@ -2086,32 +2094,32 @@ msgstr "An"
 #: inc/admin/options-init.php:153 inc/admin/options-init.php:187
 #: inc/admin/options-init.php:281 inc/admin/options-init.php:302
 #: inc/admin/options-init.php:403 inc/admin/options-init.php:696
-#: inc/admin/options-init.php:1436 inc/admin/options-init.php:1461
-#: inc/admin/options-init.php:1628 inc/admin/options-init.php:1645
-#: inc/admin/options-init.php:1653 inc/admin/options-init.php:1661
-#: inc/admin/options-init.php:1674 inc/admin/options-init.php:1712
-#: inc/admin/options-init.php:1745 inc/admin/options-init.php:1890
-#: inc/admin/options-init.php:1926 inc/admin/options-init.php:1942
-#: inc/admin/options-init.php:1960 inc/admin/options-init.php:1994
-#: inc/admin/options-init.php:2038 inc/admin/options-init.php:2152
-#: inc/admin/options-init.php:2229 inc/admin/options-init.php:2256
-#: inc/admin/options-init.php:2277 inc/admin/options-init.php:2292
-#: inc/admin/options-init.php:2302 inc/admin/options-init.php:2313
-#: inc/admin/options-init.php:2323 inc/admin/options-init.php:2350
-#: inc/admin/options-init.php:2373 inc/admin/options-init.php:2388
-#: inc/admin/options-init.php:2398 inc/admin/options-init.php:2408
-#: inc/admin/options-init.php:2418 inc/admin/options-init.php:2444
-#: inc/admin/options-init.php:2460 inc/admin/options-init.php:2478
-#: inc/admin/options-init.php:2506 inc/admin/options-init.php:2515
+#: inc/admin/options-init.php:1439 inc/admin/options-init.php:1464
+#: inc/admin/options-init.php:1631 inc/admin/options-init.php:1648
+#: inc/admin/options-init.php:1656 inc/admin/options-init.php:1664
+#: inc/admin/options-init.php:1677 inc/admin/options-init.php:1715
+#: inc/admin/options-init.php:1748 inc/admin/options-init.php:1893
+#: inc/admin/options-init.php:1929 inc/admin/options-init.php:1945
+#: inc/admin/options-init.php:1963 inc/admin/options-init.php:1997
+#: inc/admin/options-init.php:2041 inc/admin/options-init.php:2155
+#: inc/admin/options-init.php:2232 inc/admin/options-init.php:2259
+#: inc/admin/options-init.php:2280 inc/admin/options-init.php:2295
+#: inc/admin/options-init.php:2305 inc/admin/options-init.php:2316
+#: inc/admin/options-init.php:2326 inc/admin/options-init.php:2353
+#: inc/admin/options-init.php:2376 inc/admin/options-init.php:2391
+#: inc/admin/options-init.php:2401 inc/admin/options-init.php:2411
+#: inc/admin/options-init.php:2421 inc/admin/options-init.php:2447
+#: inc/admin/options-init.php:2463 inc/admin/options-init.php:2481
+#: inc/admin/options-init.php:2509 inc/admin/options-init.php:2518
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:380
-#: inc/plugins/elementor/widgets/bb-header-bar.php:117
-#: inc/plugins/elementor/widgets/bb-header-bar.php:132
-#: inc/plugins/elementor/widgets/bb-header-bar.php:148
-#: inc/plugins/elementor/widgets/bb-header-bar.php:165
-#: inc/plugins/elementor/widgets/bb-header-bar.php:182
-#: inc/plugins/elementor/widgets/bb-header-bar.php:199
-#: inc/plugins/elementor/widgets/bb-header-bar.php:217
-#: inc/plugins/elementor/widgets/bb-header-bar.php:233
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:253
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:268
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:284
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:301
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:318
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:335
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:353
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:369
 msgid "Off"
 msgstr "Aus"
 
@@ -2985,7 +2993,7 @@ msgid "The name of the current active theme."
 msgstr "Name des aktuell aktiven Themes."
 
 #: inc/admin/framework/ReduxCore/inc/welcome/views/status_report.php:715
-#: inc/theme-activation.php:2564
+#: inc/theme-activation.php:2593
 msgid "Version"
 msgstr "Version"
 
@@ -3291,7 +3299,7 @@ msgid "FORCED DEV MODE OFF ENABLED"
 msgstr "ZWANGSENTWICKLUNGSMODUS AUS AKTIVIERT"
 
 #: inc/admin/framework/ReduxCore/templates/panel/header.tpl.php:63
-#: inc/admin/options-init.php:2551
+#: inc/admin/options-init.php:2554
 msgid "Theme Options"
 msgstr "Theme-Optionen"
 
@@ -3331,7 +3339,7 @@ msgstr ""
 
 #: inc/admin/framework/sample/barebones-config.php:186
 #: inc/admin/framework/sample/sample-config.php:225
-#: inc/admin/options-init.php:2605
+#: inc/admin/options-init.php:2608
 msgid ""
 "<p>This text is displayed above the options panel. It isn't required, but "
 "more info is always better! The intro_text field accepts all HTML.</p>"
@@ -3768,6 +3776,12 @@ msgstr "Farbwahl"
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:504
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:524
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:555
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:511
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:532
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:553
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:597
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:617
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:637
 #: inc/plugins/elementor/widgets/members/bb-members.php:505
 #: inc/plugins/elementor/widgets/members/bb-members.php:577
 msgid "Color"
@@ -3872,7 +3886,6 @@ msgstr "Body-Hintergrund mit Bild, Farbe, etc."
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:228
 #: inc/plugins/elementor/widgets/bb-forums.php:234
 #: inc/plugins/elementor/widgets/bb-forums.php:330
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1153
 #: inc/plugins/elementor/widgets/bb-review.php:664
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:359
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:651
@@ -3881,6 +3894,7 @@ msgstr "Body-Hintergrund mit Bild, Farbe, etc."
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:247
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:350
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:473
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1479
 #: inc/plugins/elementor/widgets/members/bb-members.php:305
 #: inc/plugins/elementor/widgets/members/bb-members.php:432
 msgid "Border"
@@ -4564,6 +4578,8 @@ msgstr ""
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:642
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:671
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:485
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:492
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:578
 msgid "Typography"
 msgstr "Typografie"
 
@@ -5076,7 +5092,7 @@ msgstr "Verstecken"
 
 #: inc/admin/options-init.php:321 inc/admin/options-init.php:362
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:106
-#: inc/plugins/elementor/widgets/bb-header-bar.php:162
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:298
 #: template-parts/header-profile-menu.php:219
 #: template-parts/header-profile-menu.php:220
 #: template-parts/messages-dropdown.php:10
@@ -5695,17 +5711,17 @@ msgstr "Alle Farben auf das Standardfarbschema zurücksetzen"
 msgid "Styling"
 msgstr "Gestaltung"
 
-#: inc/admin/options-init.php:1425
+#: inc/admin/options-init.php:1428
 #: inc/plugins/elementor/widgets/bb-review.php:855
 #: inc/plugins/elementor/widgets/courses/controls/lifterlms-courses-controls.php:284
 msgid "Footer"
 msgstr "Footer"
 
-#: inc/admin/options-init.php:1432
+#: inc/admin/options-init.php:1435
 msgid "Footer Widget Area"
 msgstr "Footer Widget Bereich"
 
-#: inc/admin/options-init.php:1433
+#: inc/admin/options-init.php:1436
 msgid ""
 "Enable footer widget area. You will then need to add widgets at "
 "<em>Appearance &gt; Widgets</em>."
@@ -5713,48 +5729,48 @@ msgstr ""
 "Aktivieren Sie den Fußzeilen-Widget Bereich. Sie müssen dann Widgets unter "
 "<em>Design &gt; Widgets</em> hinzufügen."
 
-#: inc/admin/options-init.php:1441
+#: inc/admin/options-init.php:1444
 msgid "Footer Widget Columns"
 msgstr "Fußzeilen-Widget-Spalten"
 
-#: inc/admin/options-init.php:1442
+#: inc/admin/options-init.php:1445
 msgid "Select number of columns in footer."
 msgstr "Wählen Sie die Anzahl der Spalten in der Fußzeile aus."
 
-#: inc/admin/options-init.php:1457
+#: inc/admin/options-init.php:1460
 msgid "Footer Bottom Area"
 msgstr "Fußzeilenbereich unten"
 
-#: inc/admin/options-init.php:1458
+#: inc/admin/options-init.php:1461
 msgid "Enable footer bottom area"
 msgstr "Fußzeilenbereich unten aktivieren"
 
-#: inc/admin/options-init.php:1465
+#: inc/admin/options-init.php:1468
 msgid "Footer Style"
 msgstr "Fußzeilen-Stil"
 
-#: inc/admin/options-init.php:1466
+#: inc/admin/options-init.php:1469
 msgid "Select the footer layout."
 msgstr "Wählen Sie das Layout der Fußzeile aus."
 
-#: inc/admin/options-init.php:1475
+#: inc/admin/options-init.php:1478
 msgid "Footer Logo"
 msgstr "Fußzeilenlogo"
 
-#: inc/admin/options-init.php:1476
+#: inc/admin/options-init.php:1479
 msgid "Upload your custom site logo for footer layout."
 msgstr ""
 "Laden Sie Ihr benutzerdefiniertes Website-Logo für das Fußzeilen-Layout hoch."
 
-#: inc/admin/options-init.php:1485
+#: inc/admin/options-init.php:1488
 msgid "Footer Logo Size"
 msgstr "Fußzeilenlogogröße"
 
-#: inc/admin/options-init.php:1486
+#: inc/admin/options-init.php:1489
 msgid "Adjust the size of footer logo"
 msgstr "Anpassen der Größe des Fußzeilenlogos"
 
-#: inc/admin/options-init.php:1487
+#: inc/admin/options-init.php:1490
 msgid ""
 "Maximum logo width 350px.<br ?>If the logo size is taller than the footer "
 "height, it will be made smaller to fit within the footer."
@@ -5762,73 +5778,73 @@ msgstr ""
 "Maximale Logobreite 350px.<br ?>Wenn die Logogröße höher als die Höhe der "
 "Fußzeile ist, wird sie so verkleinert, dass sie in die Fußzeile passt."
 
-#: inc/admin/options-init.php:1498
+#: inc/admin/options-init.php:1501
 msgid "Footer Tagline"
 msgstr "Fußzeilen-Slogan"
 
-#: inc/admin/options-init.php:1499
+#: inc/admin/options-init.php:1502
 msgid "Set footer tagline"
 msgstr "Fußzeilen-Slogan festlegen"
 
-#: inc/admin/options-init.php:1506
+#: inc/admin/options-init.php:1509
 msgid "Copyright Text"
 msgstr "Copyright-Text"
 
-#: inc/admin/options-init.php:1507
+#: inc/admin/options-init.php:1510
 msgid "Enter your custom copyright text."
 msgstr "Geben Sie Ihren benutzerdefinierten Copyright-Text ein."
 
-#: inc/admin/options-init.php:1519
+#: inc/admin/options-init.php:1522
 msgid "Footer Menu"
 msgstr "Fußzeilenmenü"
 
-#: inc/admin/options-init.php:1520 inc/admin/options-init.php:1529
+#: inc/admin/options-init.php:1523 inc/admin/options-init.php:1532
 msgid "Select menu from the dropdown."
 msgstr "Wählen Sie das Menü aus der Dropdown-Liste aus."
 
-#: inc/admin/options-init.php:1528
+#: inc/admin/options-init.php:1531
 msgid "Footer Secondary Menu"
 msgstr "Fußzeile Sekundäres Menü"
 
-#: inc/admin/options-init.php:1537
+#: inc/admin/options-init.php:1540
 msgid "Footer Description"
 msgstr "Fußzeilenbeschreibung"
 
-#: inc/admin/options-init.php:1538
+#: inc/admin/options-init.php:1541
 msgid "Enter content or shortcode to show on footer right side."
 msgstr ""
 "Geben Sie den Inhalt oder den Shortcode ein, der in der rechten Fußzeile "
 "angezeigt werden soll."
 
-#: inc/admin/options-init.php:1551
+#: inc/admin/options-init.php:1554
 msgid "Social Links"
 msgstr "Soziale Links"
 
-#: inc/admin/options-init.php:1561
+#: inc/admin/options-init.php:1564
 msgid "Blog"
 msgstr "Blog"
 
-#: inc/admin/options-init.php:1569
+#: inc/admin/options-init.php:1572
 msgid "Blog Layout"
 msgstr "Blog-Layout"
 
-#: inc/admin/options-init.php:1573
+#: inc/admin/options-init.php:1576
 msgid "Blog Archive Layout"
 msgstr "Blog-Layout Archiv"
 
-#: inc/admin/options-init.php:1574
+#: inc/admin/options-init.php:1577
 msgid "Set layout (List, Masonry or Grid) for blog page."
 msgstr "Layout (Liste, Mauerwerk oder Gitter) für die Blog-Seite festlegen."
 
-#: inc/admin/options-init.php:1596
+#: inc/admin/options-init.php:1599
 msgid "Single blog post"
 msgstr "Einzelner Blogbeitrag"
 
-#: inc/admin/options-init.php:1600
+#: inc/admin/options-init.php:1603
 msgid "Featured Image Style"
 msgstr "Stil des Beitragsbildes"
 
-#: inc/admin/options-init.php:1601
+#: inc/admin/options-init.php:1604
 msgid ""
 "Select layout for single blog post featured image (Above Content, Fullwidth "
 "Below Title, Fullwidth Above Content"
@@ -5837,178 +5853,178 @@ msgstr ""
 "dem Inhalt, in voller Breite unter dem Titel, in voller Breite über dem "
 "Inhalt)"
 
-#: inc/admin/options-init.php:1603
+#: inc/admin/options-init.php:1606
 msgid "In fullwidth the sidebar will not be visible."
 msgstr "In voller Breite ist die Seitenleiste nicht sichtbar."
 
-#: inc/admin/options-init.php:1625
+#: inc/admin/options-init.php:1628
 msgid "Enable Related Posts"
 msgstr "Ähnliche Beiträge aktivieren"
 
-#: inc/admin/options-init.php:1633
+#: inc/admin/options-init.php:1636
 msgid "Related posts limit"
 msgstr "Limit für zugehörige Beiträge"
 
-#: inc/admin/options-init.php:1634
+#: inc/admin/options-init.php:1637
 msgid "Limit the number of related posts on single blog page"
 msgstr ""
 "Begrenzen Sie die Anzahl verwandter Beiträge auf einer einzelnen Blog-Seite"
 
-#: inc/admin/options-init.php:1642
+#: inc/admin/options-init.php:1645
 msgid "Enable Post Author Box"
 msgstr "Beitragsautorenbox aktivieren"
 
-#: inc/admin/options-init.php:1650
+#: inc/admin/options-init.php:1653
 msgid "Enable Floating Social Share"
 msgstr "Floating Social Share aktivieren"
 
-#: inc/admin/options-init.php:1658
+#: inc/admin/options-init.php:1661
 msgid "Enable BuddyPress Profile Link"
 msgstr "BuddyPress-Profilverknüpfung aktivieren"
 
-#: inc/admin/options-init.php:1666
+#: inc/admin/options-init.php:1669
 msgid "Newsletter Sign Up"
 msgstr "Newsletter Anmeldung"
 
-#: inc/admin/options-init.php:1671
+#: inc/admin/options-init.php:1674
 msgid "Toggle Newsletter Sign Up Form"
 msgstr "Umschalten des Newsletter-Anmeldeformulars"
 
-#: inc/admin/options-init.php:1679
+#: inc/admin/options-init.php:1682
 msgid "Add Shortcode"
 msgstr "Shortcode hinzufügen"
 
-#: inc/admin/options-init.php:1680
+#: inc/admin/options-init.php:1683
 msgid "Add shortcode to show Newsletter Sign Up Form"
 msgstr "Shortcode hinzufügen, um das Newsletter-Anmeldeformular anzuzeigen"
 
-#: inc/admin/options-init.php:1699
+#: inc/admin/options-init.php:1702
 msgid "Login / Register"
 msgstr "Anmelden / Registrieren"
 
-#: inc/admin/options-init.php:1707
+#: inc/admin/options-init.php:1710
 msgid "Custom Login/Register Screen"
 msgstr "Benutzerdefinierter Anmelde- / Registrierungsbildschirm"
 
-#: inc/admin/options-init.php:1708
+#: inc/admin/options-init.php:1711
 msgid "Toggle the custom login/register screen design options on or off."
 msgstr ""
 "Schalten Sie die benutzerdefinierten Optionen für das Anmeldungs- / "
 "Registrierungsbildschirmdesign ein oder aus."
 
-#: inc/admin/options-init.php:1717
+#: inc/admin/options-init.php:1720
 msgid "Custom Logo"
 msgstr "Benutzerdefiniertes Logo"
 
-#: inc/admin/options-init.php:1718
+#: inc/admin/options-init.php:1721
 msgid "We display a custom logo in place of the default WordPress logo."
 msgstr ""
 "Wir zeigen ein benutzerdefiniertes Logo anstelle des Standardlogos von "
 "WordPress an."
 
-#: inc/admin/options-init.php:1727
+#: inc/admin/options-init.php:1730
 msgid "Logo Width"
 msgstr "Breite des Logos"
 
-#: inc/admin/options-init.php:1728
+#: inc/admin/options-init.php:1731
 msgid "Set logo width size"
 msgstr "Größe der Logobreite einstellen"
 
-#: inc/admin/options-init.php:1729
+#: inc/admin/options-init.php:1732
 msgid "Value between 50 and 320px"
 msgstr "Wert zwischen 50 und 320px"
 
-#: inc/admin/options-init.php:1741
+#: inc/admin/options-init.php:1744
 msgid "Toggle custom background"
 msgstr "Benutzerdefinierten Hintergrund umschalten"
 
-#: inc/admin/options-init.php:1742
+#: inc/admin/options-init.php:1745
 msgid "Set custom background design on or off."
 msgstr ""
 "Das Setzen eines benutzerdefinierten Hintergrunddesign ein- oder ausschalten."
 
-#: inc/admin/options-init.php:1751
+#: inc/admin/options-init.php:1754
 msgid "Background Image"
 msgstr "Hintergrundbild"
 
-#: inc/admin/options-init.php:1752
+#: inc/admin/options-init.php:1755
 msgid "We display a custom background image in half width of the screen."
 msgstr ""
 "Wir zeigen ein benutzerdefiniertes Hintergrundbild in halber Breite des "
 "Bildschirms an."
 
-#: inc/admin/options-init.php:1760
+#: inc/admin/options-init.php:1763
 msgid "Custom Heading"
 msgstr "Benutzerdefinierte Überschrift"
 
-#: inc/admin/options-init.php:1761
+#: inc/admin/options-init.php:1764
 msgid "We display a custom title above the background image."
 msgstr ""
 "Wir zeigen einen benutzerdefinierten Titel über dem Hintergrundbild an."
 
-#: inc/admin/options-init.php:1769
+#: inc/admin/options-init.php:1772
 msgid "Custom Text"
 msgstr "Benutzerdefinierter Text"
 
-#: inc/admin/options-init.php:1770
+#: inc/admin/options-init.php:1773
 msgid "We display custom text above the background image."
 msgstr "Wir zeigen einen benutzerdefinierten Text über dem Hintergrundbild an."
 
-#: inc/admin/options-init.php:1787
+#: inc/admin/options-init.php:1790
 msgid "Custom Heading Position"
 msgstr "Benutzerdefinierte Überschriftenposition"
 
-#: inc/admin/options-init.php:1788
+#: inc/admin/options-init.php:1791
 msgid "Set vertical heading position"
 msgstr "Vertikale Überschriftsposition festlegen"
 
-#: inc/admin/options-init.php:1789
+#: inc/admin/options-init.php:1792
 msgid "Value between 5 and 90%"
 msgstr "Wert zwischen 5 und 90%"
 
-#: inc/admin/options-init.php:1800
+#: inc/admin/options-init.php:1803
 msgid "Overlay Opacity"
 msgstr "Deckkraft der Überlagerung (Opazität)"
 
-#: inc/admin/options-init.php:1801
+#: inc/admin/options-init.php:1804
 msgid "Set overlay opacity"
 msgstr "Deckkraft der Überlagerung (Opazität) einstellen"
 
-#: inc/admin/options-init.php:1802 inc/admin/options-init.php:2177
+#: inc/admin/options-init.php:1805 inc/admin/options-init.php:2180
 msgid "Value between 0 and 100%"
 msgstr "Wert zwischen 0 und 100%"
 
-#: inc/admin/options-init.php:1813
+#: inc/admin/options-init.php:1816
 msgid "Custom Heading Color"
 msgstr "Benutzerdefinierte Überschriftenfarbe"
 
-#: inc/admin/options-init.php:1814
+#: inc/admin/options-init.php:1817
 msgid "Select your text color for custom heading section."
 msgstr ""
 "Wählen Sie Ihre Textfarbe für den benutzerdefinierten Überschriftenabschnitt "
 "aus."
 
-#: inc/admin/options-init.php:1824
+#: inc/admin/options-init.php:1827
 msgid "404 Page"
 msgstr "404-Fehlerseite"
 
-#: inc/admin/options-init.php:1833
+#: inc/admin/options-init.php:1836
 msgid "Title that will be shown on 404 page."
 msgstr "Titel, der auf 404 Seiten angezeigt wird."
 
-#: inc/admin/options-init.php:1840
+#: inc/admin/options-init.php:1843
 msgid "404 Description"
 msgstr "404 Beschreibung"
 
-#: inc/admin/options-init.php:1841
+#: inc/admin/options-init.php:1844
 msgid "Add text to 404 Page"
 msgstr "Hinzufügen von Text zur 404 Seite"
 
-#: inc/admin/options-init.php:1857
+#: inc/admin/options-init.php:1860
 msgid "404 Image"
 msgstr "404 Bild"
 
-#: inc/admin/options-init.php:1863
+#: inc/admin/options-init.php:1866
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:144
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:171
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:225
@@ -6016,136 +6032,136 @@ msgstr "404 Bild"
 msgid "Button Text"
 msgstr "Schaltflächentext"
 
-#: inc/admin/options-init.php:1869
+#: inc/admin/options-init.php:1872
 msgid "Button Link"
 msgstr "Schaltflächenlink"
 
-#: inc/admin/options-init.php:1877
+#: inc/admin/options-init.php:1880
 msgid "Maintenance Mode"
 msgstr "Wartungsmodus"
 
-#: inc/admin/options-init.php:1885
+#: inc/admin/options-init.php:1888
 msgid "Enable Maintenance Mode"
 msgstr "Wartungsmodus aktivieren"
 
-#: inc/admin/options-init.php:1886
+#: inc/admin/options-init.php:1889
 msgid "If enabled it will show maintenance message for logged out users."
 msgstr ""
 "Wenn diese Option aktiviert ist, wird eine Wartungsmeldung für abgemeldete "
 "Benutzer angezeigt."
 
-#: inc/admin/options-init.php:1896
+#: inc/admin/options-init.php:1899
 msgid "Title that will be shown on Maintenance page."
 msgstr "Titel, der auf der Wartungsseite angezeigt wird."
 
-#: inc/admin/options-init.php:1904
+#: inc/admin/options-init.php:1907
 msgid "Maintenance Description"
 msgstr "Wartungsbeschreibung"
 
-#: inc/admin/options-init.php:1905
+#: inc/admin/options-init.php:1908
 msgid "Add text to Maintenance Page. Basic HTML is allowed."
 msgstr "Text zur Wartungsseite hinzufügen. Einfaches HTML ist erlaubt."
 
-#: inc/admin/options-init.php:1923
+#: inc/admin/options-init.php:1926
 msgid "Enable Maintenance Image"
 msgstr "Wartungsbild aktivieren"
 
-#: inc/admin/options-init.php:1932
+#: inc/admin/options-init.php:1935
 msgid "Custom Image"
 msgstr "Benutzerdefiniertes Bild"
 
-#: inc/admin/options-init.php:1939
+#: inc/admin/options-init.php:1942
 msgid "Enable Countdown"
 msgstr "Countdown aktivieren"
 
-#: inc/admin/options-init.php:1948
+#: inc/admin/options-init.php:1951
 msgid "Back Online Date"
 msgstr "Zurück zum Online-Datum"
 
-#: inc/admin/options-init.php:1951
+#: inc/admin/options-init.php:1954
 msgid "Enter the date the site will come back online."
 msgstr ""
 "Geben Sie das Datum ein, an dem die Website wieder online geschaltet wird."
 
-#: inc/admin/options-init.php:1957
+#: inc/admin/options-init.php:1960
 msgid "Enable Subscribe"
 msgstr "Abonnieren aktivieren"
 
-#: inc/admin/options-init.php:1966
+#: inc/admin/options-init.php:1969
 msgid "Subscribe Title"
 msgstr "Titel des Abonnements"
 
-#: inc/admin/options-init.php:1974
+#: inc/admin/options-init.php:1977
 msgid "Subscribe Form Shortcode"
 msgstr "Abonnement-Formular Shortcode"
 
-#: inc/admin/options-init.php:1991
+#: inc/admin/options-init.php:1994
 msgid "Enable Social Networks"
 msgstr "Soziale Netzwerke aktivieren"
 
-#: inc/admin/options-init.php:2000
+#: inc/admin/options-init.php:2003
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2117
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:674
 msgid "Twitter"
 msgstr "Twitter"
 
-#: inc/admin/options-init.php:2007
+#: inc/admin/options-init.php:2010
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:802
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:694
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:699
 msgid "Facebook"
 msgstr "Facebook"
 
-#: inc/admin/options-init.php:2014
+#: inc/admin/options-init.php:2017
 msgid "Google"
 msgstr "Google"
 
-#: inc/admin/options-init.php:2021
+#: inc/admin/options-init.php:2024
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1312
 msgid "Instagram"
 msgstr "Instagram"
 
-#: inc/admin/options-init.php:2028
+#: inc/admin/options-init.php:2031
 msgid "Youtube"
 msgstr "Youtube"
 
-#: inc/admin/options-init.php:2035
+#: inc/admin/options-init.php:2038
 msgid "Enable Contact"
 msgstr "Kontakt aktivieren"
 
-#: inc/admin/options-init.php:2044
+#: inc/admin/options-init.php:2047
 msgid "Contact Text"
 msgstr "Kontakttext"
 
-#: inc/admin/options-init.php:2059
+#: inc/admin/options-init.php:2062
 msgid "Cover Images"
 msgstr "Titelbilder"
 
-#: inc/admin/options-init.php:2067
+#: inc/admin/options-init.php:2070
 msgid "Member Profiles"
 msgstr "Mitgliederprofile"
 
-#: inc/admin/options-init.php:2072 inc/admin/options-init.php:2101
+#: inc/admin/options-init.php:2075 inc/admin/options-init.php:2104
 msgid "Cover Image Width"
 msgstr "Bildbreite des Titelbilds"
 
-#: inc/admin/options-init.php:2073
+#: inc/admin/options-init.php:2076
 msgid "Adjust the width of member profile cover image."
 msgstr "Stellen Sie die Breite des Titelbildes des Mitgliedsprofils ein."
 
-#: inc/admin/options-init.php:2080 inc/admin/options-init.php:2109
+#: inc/admin/options-init.php:2083 inc/admin/options-init.php:2112
 msgid "Cover Image Height"
 msgstr "Bildhöhe des Titelbilds"
 
-#: inc/admin/options-init.php:2081
+#: inc/admin/options-init.php:2084
 msgid "Adjust the height of member profile cover image."
 msgstr "Stellen Sie die Höhe des Titelbildes des Mitgliedsprofils ein."
 
-#: inc/admin/options-init.php:2088 inc/admin/options-init.php:2117
+#: inc/admin/options-init.php:2091 inc/admin/options-init.php:2120
 msgid "Default Cover Image"
 msgstr "Standard-Titelbild"
 
-#: inc/admin/options-init.php:2089 inc/admin/options-init.php:2118
+#: inc/admin/options-init.php:2092 inc/admin/options-init.php:2121
 msgid ""
 "You can optionally upload your own image to always use a default cover "
 "photo. Ideal size is 1300px by 300px or larger."
@@ -6154,162 +6170,162 @@ msgstr ""
 "Standard-Titelbild zu verwenden. Die ideale Größe ist 1300px x 300px oder "
 "größer."
 
-#: inc/admin/options-init.php:2096
+#: inc/admin/options-init.php:2099
 msgid "Social Groups"
 msgstr "Soziale Gruppen"
 
-#: inc/admin/options-init.php:2102
+#: inc/admin/options-init.php:2105
 msgid "Adjust the width of group cover image."
 msgstr "Stellen Sie die Breite des Gruppen-Titelbildes ein."
 
-#: inc/admin/options-init.php:2110
+#: inc/admin/options-init.php:2113
 msgid "Adjust the height of group cover image."
 msgstr "Stellen Sie die Höhe des Gruppen-Titelbildes ein."
 
-#: inc/admin/options-init.php:2129
+#: inc/admin/options-init.php:2132
 #: inc/plugins/elementor/widgets/bb-forums.php:40
 #: inc/plugins/elementor/widgets/bb-forums.php:197
 #: template-parts/header-profile-menu.php:352
 msgid "Forums"
 msgstr "Foren"
 
-#: inc/admin/options-init.php:2137
+#: inc/admin/options-init.php:2140
 msgid "Forum Grids"
 msgstr "Forum Grids"
 
-#: inc/admin/options-init.php:2138
+#: inc/admin/options-init.php:2141
 msgid "Set forum grid layouts to Card or Cover style."
 msgstr "Setzen Sie die Forenraster-Layouts auf den Karten- oder Cover-Stil."
 
-#: inc/admin/options-init.php:2148
+#: inc/admin/options-init.php:2151
 msgid "Show Forum Banner"
 msgstr "Forum-Banner anzeigen"
 
-#: inc/admin/options-init.php:2149
+#: inc/admin/options-init.php:2152
 msgid "If enabled it will show a banner on the Forum index."
 msgstr ""
 "Wenn diese Option aktiviert ist, wird ein Banner auf dem Forum-Index "
 "angezeigt."
 
-#: inc/admin/options-init.php:2157
+#: inc/admin/options-init.php:2160
 msgid "Custom Banner Image"
 msgstr "Benutzerdefinierte Banner-Bild"
 
-#: inc/admin/options-init.php:2158
+#: inc/admin/options-init.php:2161
 msgid "We display a custom banner on forum index page."
 msgstr ""
 "Wir zeigen ein benutzerdefiniertes Banner auf der Indexseite des Forums an."
 
-#: inc/admin/options-init.php:2165
+#: inc/admin/options-init.php:2168
 msgid "Background Overlay Color"
 msgstr "Hintergrund-Überlagerungsfarbe"
 
-#: inc/admin/options-init.php:2166
+#: inc/admin/options-init.php:2169
 msgid "Select background overlay color for banner image."
 msgstr "Wählen Sie die Hintergrund-Überlagerungsfarbe für das Banner-Bild."
 
-#: inc/admin/options-init.php:2175
+#: inc/admin/options-init.php:2178
 msgid "Background Overlay Opacity"
 msgstr "Hintergrund-Überlagerungsdeckkraft"
 
-#: inc/admin/options-init.php:2176
+#: inc/admin/options-init.php:2179
 msgid "Set background overlay opacity"
 msgstr "Hintergrund-Überlagerungsdeckkraft einstellen"
 
-#: inc/admin/options-init.php:2188
+#: inc/admin/options-init.php:2191
 msgid "Banner Text Color"
 msgstr "Banner-Textfarbe"
 
-#: inc/admin/options-init.php:2189
+#: inc/admin/options-init.php:2192
 msgid "Select text color for banner area."
 msgstr "Wählen Sie die Textfarbe für den Bannerbereich aus."
 
-#: inc/admin/options-init.php:2197
+#: inc/admin/options-init.php:2200
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:295
 msgid "Forum Title"
 msgstr "Forumtitel"
 
-#: inc/admin/options-init.php:2198
+#: inc/admin/options-init.php:2201
 msgid "Title that will be shown on forum index banner area."
 msgstr "Titel, der im Bannerbereich des Forenindexes angezeigt wird."
 
-#: inc/admin/options-init.php:2206
+#: inc/admin/options-init.php:2209
 msgid "Forum Description"
 msgstr "Beschreibung des Forums"
 
-#: inc/admin/options-init.php:2207
+#: inc/admin/options-init.php:2210
 msgid "Description that will be shown on forum index banner area."
 msgstr "Beschreibung, die im Bannerbereich des Forumsindex angezeigt wird."
 
-#: inc/admin/options-init.php:2225
+#: inc/admin/options-init.php:2228
 msgid "Enable Search"
 msgstr "Suche aktivieren"
 
-#: inc/admin/options-init.php:2226
+#: inc/admin/options-init.php:2229
 msgid "If enabled search will show on banner."
 msgstr "Wenn aktiviert, wird die Suche auf dem Banner angezeigt."
 
-#: inc/admin/options-init.php:2239
+#: inc/admin/options-init.php:2242
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:19
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:27
 msgid "LearnDash"
 msgstr "LearnDash"
 
-#: inc/admin/options-init.php:2247 inc/admin/options-init.php:2341
+#: inc/admin/options-init.php:2250 inc/admin/options-init.php:2344
 msgid "Courses Index"
 msgstr "Kursindex"
 
-#: inc/admin/options-init.php:2252 inc/admin/options-init.php:2346
+#: inc/admin/options-init.php:2255 inc/admin/options-init.php:2349
 msgid "Show Categories Filter"
 msgstr "Kategoriefilter anzeigen"
 
-#: inc/admin/options-init.php:2253 inc/admin/options-init.php:2347
+#: inc/admin/options-init.php:2256 inc/admin/options-init.php:2350
 msgid "Enable filtering the courses index by categories."
 msgstr "Aktiviere das Filtern des Kursindexes nach Kategorien."
 
-#: inc/admin/options-init.php:2261 inc/admin/options-init.php:2355
+#: inc/admin/options-init.php:2264 inc/admin/options-init.php:2358
 msgid "Taxonomy"
 msgstr "Taxonomie"
 
-#: inc/admin/options-init.php:2262 inc/admin/options-init.php:2356
+#: inc/admin/options-init.php:2265 inc/admin/options-init.php:2359
 msgid "Select the taxonomy to filter by."
 msgstr "Wählen Sie die Taxonomie aus, nach der Sie filtern möchten."
 
-#: inc/admin/options-init.php:2264 inc/admin/options-init.php:2358
+#: inc/admin/options-init.php:2267 inc/admin/options-init.php:2361
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:154
 msgid "Course Categories"
 msgstr "Kurskategorien"
 
-#: inc/admin/options-init.php:2265 inc/admin/options-init.php:2359
+#: inc/admin/options-init.php:2268 inc/admin/options-init.php:2362
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:163
 msgid "Course Tags"
 msgstr "Kurs-Schlagwörter"
 
-#: inc/admin/options-init.php:2273 inc/admin/options-init.php:2369
+#: inc/admin/options-init.php:2276 inc/admin/options-init.php:2372
 msgid "Show Instructors Filter"
 msgstr "Filter für Dozenten anzeigen"
 
-#: inc/admin/options-init.php:2274 inc/admin/options-init.php:2370
+#: inc/admin/options-init.php:2277 inc/admin/options-init.php:2373
 msgid "Enable filtering the courses index by instructors."
 msgstr "Aktiviere das Filtern des Kursindexes nach Kursleitern."
 
-#: inc/admin/options-init.php:2282 inc/admin/options-init.php:2378
+#: inc/admin/options-init.php:2285 inc/admin/options-init.php:2381
 msgid "Course Content"
 msgstr "Kursinhalt"
 
-#: inc/admin/options-init.php:2287 inc/admin/options-init.php:2383
+#: inc/admin/options-init.php:2290 inc/admin/options-init.php:2386
 msgid "Course Author"
 msgstr "Kursautor"
 
-#: inc/admin/options-init.php:2288 inc/admin/options-init.php:2384
+#: inc/admin/options-init.php:2291 inc/admin/options-init.php:2387
 msgid "Display the course author on courses, lessons and topics."
 msgstr "Den Kursautor zu Kursen, Lerneinheiten und Themen anzeigen."
 
-#: inc/admin/options-init.php:2297
+#: inc/admin/options-init.php:2300
 msgid "Course Author Bio"
 msgstr "Kursautor-Bio"
 
-#: inc/admin/options-init.php:2298
+#: inc/admin/options-init.php:2301
 msgid ""
 "Display the course author bio on single courses. This data comes from the "
 "\"Biographical Info\" section when editing a user in the backend."
@@ -6317,19 +6333,19 @@ msgstr ""
 "Anzeige der Kursautor-Bio zu einzelnen Kursen. Diese Daten stammen aus dem "
 "Abschnitt „Biographische Infos“ beim Bearbeiten eines Benutzers im Backend."
 
-#: inc/admin/options-init.php:2308 inc/admin/options-init.php:2393
+#: inc/admin/options-init.php:2311 inc/admin/options-init.php:2396
 msgid "Course Date"
 msgstr "Kursdatum"
 
-#: inc/admin/options-init.php:2309 inc/admin/options-init.php:2394
+#: inc/admin/options-init.php:2312 inc/admin/options-init.php:2397
 msgid "Display the course date on courses, lessons and topics."
 msgstr "Zeigen Sie das Kursdatum zu Kursen, Lerneinheiten und Themen an."
 
-#: inc/admin/options-init.php:2318 inc/admin/options-init.php:2413
+#: inc/admin/options-init.php:2321 inc/admin/options-init.php:2416
 msgid "Course Participants"
 msgstr "Kursteilnehmer"
 
-#: inc/admin/options-init.php:2319
+#: inc/admin/options-init.php:2322
 msgid ""
 "Display the list of enrolled course participants on courses, lessons and "
 "topics."
@@ -6337,31 +6353,31 @@ msgstr ""
 "Die Liste der eingeschriebenen Kursteilnehmer zu Kursen, Lerneinheiten und "
 "Themen anzeigen."
 
-#: inc/admin/options-init.php:2333
+#: inc/admin/options-init.php:2336
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:23
 #: inc/plugins/elementor/templates/scripts/template-modal-item.php:30
 msgid "LifterLMS"
 msgstr "LifterLMS"
 
-#: inc/admin/options-init.php:2360
+#: inc/admin/options-init.php:2363
 msgid "Course Tracks"
 msgstr "Fortbildungsreihen"
 
-#: inc/admin/options-init.php:2361
+#: inc/admin/options-init.php:2364
 msgid "Course Difficulty"
 msgstr "Kursschwierigkeitsgrad"
 
-#: inc/admin/options-init.php:2403
+#: inc/admin/options-init.php:2406
 msgid "Lessons List"
 msgstr "Liste der Lerneinheiten"
 
-#: inc/admin/options-init.php:2404
+#: inc/admin/options-init.php:2407
 msgid "Display the lessons list on lessons, quizzes and topics."
 msgstr ""
 "Zeigen Sie die Liste der Lerneinheiten zu Lektionen, Quizfragen und Themen "
 "an."
 
-#: inc/admin/options-init.php:2414
+#: inc/admin/options-init.php:2417
 msgid ""
 "Display the list of enrolled course participants on courses, lessons and "
 "quizzes."
@@ -6369,15 +6385,15 @@ msgstr ""
 "Zeigen Sie die Liste der eingeschriebenen Kursteilnehmer zu Kursen, "
 "Lektionen und Quizfragen an."
 
-#: inc/admin/options-init.php:2433
+#: inc/admin/options-init.php:2436
 msgid "Custom Codes"
 msgstr "Benutzerdefinierte Codes"
 
-#: inc/admin/options-init.php:2440
+#: inc/admin/options-init.php:2443
 msgid "Tracking Code"
 msgstr "Tracking-Code"
 
-#: inc/admin/options-init.php:2441
+#: inc/admin/options-init.php:2444
 msgid ""
 "Paste your Google Analytics (or other) tracking code here. This will be "
 "added before the closing of body tag."
@@ -6385,11 +6401,11 @@ msgstr ""
 "Fügen Sie hier Ihren Google Analytics- (oder anderen) Tracking-Code ein. "
 "Dieser wird vor dem Schließen des Body-Tags hinzugefügt."
 
-#: inc/admin/options-init.php:2456
+#: inc/admin/options-init.php:2459
 msgid "CSS"
 msgstr "CSS"
 
-#: inc/admin/options-init.php:2457
+#: inc/admin/options-init.php:2460
 msgid ""
 "Quickly add some CSS here to make design adjustments. It is a much better "
 "solution then manually editing the theme. You may also consider using a "
@@ -6400,11 +6416,11 @@ msgstr ""
 "Sie können auch die Verwendung eines untergeordneten Themes in Betracht "
 "ziehen."
 
-#: inc/admin/options-init.php:2474
+#: inc/admin/options-init.php:2477
 msgid "JavaScript"
 msgstr "JavaScript"
 
-#: inc/admin/options-init.php:2475
+#: inc/admin/options-init.php:2478
 msgid ""
 "Quickly add some JavaScript code here. It is a much better solution then "
 "manually editing the theme. You may also consider using a child theme."
@@ -6413,15 +6429,15 @@ msgstr ""
 "Lösung als die manuelle Bearbeitung des Themes. Sie können auch die "
 "Verwendung eines untergeordneten Themes in Betracht ziehen."
 
-#: inc/admin/options-init.php:2494
+#: inc/admin/options-init.php:2497
 msgid "Minify Assets"
 msgstr "Assets minimieren"
 
-#: inc/admin/options-init.php:2502
+#: inc/admin/options-init.php:2505
 msgid "Minify CSS"
 msgstr "CSS minimieren"
 
-#: inc/admin/options-init.php:2503
+#: inc/admin/options-init.php:2506
 msgid ""
 "By default the theme loads stylesheets that are not minified. You can enable "
 "this setting to instead load minified and combined stylesheets."
@@ -6430,11 +6446,11 @@ msgstr ""
 "können diese Einstellung aktivieren, um stattdessen minimierte und "
 "kombinierte Stylesheets zu laden."
 
-#: inc/admin/options-init.php:2511
+#: inc/admin/options-init.php:2514
 msgid "Minify JavaScript"
 msgstr "JavaScript minimieren"
 
-#: inc/admin/options-init.php:2512
+#: inc/admin/options-init.php:2515
 msgid ""
 "By default the theme loads scripts that are not minified. You can enable "
 "this setting to instead load minified and combined JS files."
@@ -6444,13 +6460,13 @@ msgstr ""
 "Dateien zu laden."
 
 #. Theme Name of the plugin/theme
-#: inc/admin/options-init.php:2552
+#: inc/admin/options-init.php:2555
 #: inc/lib/buddyboss-updater/includes/functions.php:207
 #: inc/lib/buddyboss-updater/includes/functions.php:271
 msgid "BuddyBoss Theme"
 msgstr "BuddyBoss Theme"
 
-#: inc/admin/options-init.php:2603
+#: inc/admin/options-init.php:2606
 #, php-format
 msgid ""
 "<p>To access any of your saved options from within your code you can use "
@@ -6518,11 +6534,6 @@ msgstr "Ultrafett 900"
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:512
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:704
 #: inc/plugins/elementor/widgets/bb-forums.php:416
-#: inc/plugins/elementor/widgets/bb-header-bar.php:674
-#: inc/plugins/elementor/widgets/bb-header-bar.php:847
-#: inc/plugins/elementor/widgets/bb-header-bar.php:920
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1024
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1088
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:559
 #: inc/plugins/elementor/widgets/bb-tabs.php:602
 #: inc/plugins/elementor/widgets/bb-tabs.php:1211
@@ -6535,6 +6546,13 @@ msgstr "Ultrafett 900"
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:791
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:910
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:497
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:504
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:590
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:997
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1170
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1243
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1350
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1414
 msgid "Normal"
 msgstr "Normal"
 
@@ -7094,14 +7112,14 @@ msgstr ""
 msgid "Down for Maintenance | "
 msgstr "Wegen Wartungsmodus nicht erreichbar | "
 
-#: inc/plugins/bbpress-helper.php:81
+#: inc/plugins/bbpress-helper.php:82
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 "Etwas ist schief gelaufen. Aktualisieren Sie Ihren Browser (z. B. mit der "
 "Taste F5) und versuchen Sie es erneut."
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:16
-#: inc/plugins/elementor/widgets/bb-header-bar.php:48
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:54
 msgid "Header Bar"
 msgstr "Kopfzeile"
 
@@ -7141,7 +7159,6 @@ msgstr "Antwort"
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:287
 #: inc/plugins/elementor/widgets/bb-forums.php:184
 #: inc/plugins/elementor/widgets/bb-forums.php:395
-#: inc/plugins/elementor/widgets/bb-header-bar.php:107
 #: inc/plugins/elementor/widgets/bb-review.php:495
 #: inc/plugins/elementor/widgets/bb-review.php:805
 #: inc/plugins/elementor/widgets/bb-tabs.php:275
@@ -7152,59 +7169,60 @@ msgstr "Antwort"
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:547
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:197
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:415
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:130
 #: inc/plugins/elementor/widgets/members/bb-members.php:255
 msgid "Content"
 msgstr "Inhalt"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:79
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:443
-#: inc/plugins/elementor/widgets/bb-header-bar.php:114
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:250
 #: inc/theme/functions.php:75
 msgid "Profile Dropdown"
 msgstr "Profil-Dropdown-Menü"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:88
-#: inc/plugins/elementor/widgets/bb-header-bar.php:129
-#: inc/plugins/elementor/widgets/bb-header-bar.php:401
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:265
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:718
 msgid "Separator"
 msgstr "Trennzeichen"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:126
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:764
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:437
-#: inc/plugins/elementor/widgets/bb-header-bar.php:196
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:332
 #: template-parts/cart-dropdown.php:3 template-parts/cart-dropdown.php:17
 msgid "Cart"
 msgstr "Warenkorb"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:137
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:238
-#: inc/plugins/elementor/widgets/bb-header-bar.php:249
-#: inc/plugins/elementor/widgets/bb-header-bar.php:495
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:385
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:812
 msgid "Icons"
 msgstr "Symbole"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:141
-#: inc/plugins/elementor/widgets/bb-header-bar.php:256
-#: inc/plugins/elementor/widgets/bb-header-bar.php:562
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:392
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:882
 msgid "Search Icon"
 msgstr "Symbol suchen"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:149
-#: inc/plugins/elementor/widgets/bb-header-bar.php:270
-#: inc/plugins/elementor/widgets/bb-header-bar.php:575
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:406
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:895
 msgid "Messages Icon"
 msgstr "Nachrichten-Symbol"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:158
-#: inc/plugins/elementor/widgets/bb-header-bar.php:285
-#: inc/plugins/elementor/widgets/bb-header-bar.php:589
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:421
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:909
 msgid "Notifications Icon"
 msgstr "Benachrichtigungssymbol"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:167
-#: inc/plugins/elementor/widgets/bb-header-bar.php:300
-#: inc/plugins/elementor/widgets/bb-header-bar.php:603
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:436
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:923
 msgid "Cart Icon"
 msgstr "Einkaufswagensymbol"
 
@@ -7216,7 +7234,6 @@ msgstr "Einkaufswagensymbol"
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:349
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:88
 #: inc/plugins/elementor/widgets/bb-forums.php:88
-#: inc/plugins/elementor/widgets/bb-header-bar.php:344
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:84
 #: inc/plugins/elementor/widgets/bb-review.php:104
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:110
@@ -7225,7 +7242,6 @@ msgid "Layout"
 msgstr "Layout"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:186
-#: inc/plugins/elementor/widgets/bb-header-bar.php:352
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:98
 #: inc/plugins/elementor/widgets/bb-tabs.php:404
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:993
@@ -7233,6 +7249,7 @@ msgstr "Layout"
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:390
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:700
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:555
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:665
 #: inc/plugins/elementor/widgets/members/bb-members.php:176
 msgid "Alignment"
 msgstr "Ausrichtung"
@@ -7250,22 +7267,22 @@ msgid "right"
 msgstr "rechts"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:196
-#: inc/plugins/elementor/widgets/bb-header-bar.php:376
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:693
 msgid "Space Between"
 msgstr "Abstand dazwischen"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:213
-#: inc/plugins/elementor/widgets/bb-header-bar.php:410
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:727
 msgid "Separator Width"
 msgstr "Trennzeichen Breite"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:230
-#: inc/plugins/elementor/widgets/bb-header-bar.php:433
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:750
 msgid "Separator Color"
 msgstr "Trennzeichen Farbe"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:242
-#: inc/plugins/elementor/widgets/bb-header-bar.php:503
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:823
 msgid "Icons Size"
 msgstr "Symbolgröße"
 
@@ -7290,7 +7307,7 @@ msgid "Cart Icon Color"
 msgstr "Symbolfarbe des Einkaufwagens"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:328
-#: inc/plugins/elementor/widgets/bb-header-bar.php:644
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:964
 msgid "Profile Navigation"
 msgstr "Profilnavigation"
 
@@ -7305,37 +7322,37 @@ msgid "Avatar Border Style"
 msgstr "Avatar-Rahmenstil"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:352
-#: inc/plugins/elementor/widgets/bb-header-bar.php:759
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:285
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1082
 #: inc/plugins/elementor/widgets/members/bb-members.php:381
 msgid "None"
 msgstr "Nichts"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:353
-#: inc/plugins/elementor/widgets/bb-header-bar.php:755
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:281
 #: inc/plugins/elementor/widgets/bb-review.php:478
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1078
 #: inc/plugins/elementor/widgets/members/bb-members.php:377
 msgid "Solid"
 msgstr "Durchgezogen"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:354
-#: inc/plugins/elementor/widgets/bb-header-bar.php:757
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:283
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1080
 #: inc/plugins/elementor/widgets/members/bb-members.php:379
 msgid "Dotted"
 msgstr "Gepunktet"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:355
-#: inc/plugins/elementor/widgets/bb-header-bar.php:756
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:282
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1079
 #: inc/plugins/elementor/widgets/members/bb-members.php:378
 msgid "Dashed"
 msgstr "Gestrichelt"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:356
-#: inc/plugins/elementor/widgets/bb-header-bar.php:758
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:284
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1081
 #: inc/plugins/elementor/widgets/members/bb-members.php:380
 msgid "Double"
 msgstr "Doppelt"
@@ -7359,10 +7376,10 @@ msgstr "Name der Schriftartanzeige"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:417
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:473
-#: inc/plugins/elementor/widgets/bb-header-bar.php:681
-#: inc/plugins/elementor/widgets/bb-header-bar.php:702
-#: inc/plugins/elementor/widgets/bb-header-bar.php:854
-#: inc/plugins/elementor/widgets/bb-header-bar.php:875
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1004
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1025
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1177
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1198
 msgid "Display Name Color"
 msgstr "Farbe des angezeigten Namens"
 
@@ -7376,8 +7393,8 @@ msgid "Profile Dropdown Background Color"
 msgstr "Hintergrundfarbe beim Profil-Dropdown"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:505
-#: inc/plugins/elementor/widgets/bb-header-bar.php:927
-#: inc/plugins/elementor/widgets/bb-header-bar.php:962
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1250
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1285
 msgid "Menu Item Background Color"
 msgstr "Hintergrundfarbe des Menüelements"
 
@@ -7386,8 +7403,8 @@ msgid "Menu Item Hover Background Color"
 msgstr "Hintergrundfarbe des Menüelements bei Mauszeigerkontakt"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:519
-#: inc/plugins/elementor/widgets/bb-header-bar.php:940
-#: inc/plugins/elementor/widgets/bb-header-bar.php:975
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1263
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1298
 msgid "Menu Item Color"
 msgstr "Farbe des Menüelements"
 
@@ -7397,18 +7414,18 @@ msgstr "Menüelement Textfarbe (Hover)"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:534
 #: inc/plugins/elementor/widgets/bb-dashboard-grid.php:641
-#: inc/plugins/elementor/widgets/bb-header-bar.php:445
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:762
 msgid "Tooltips"
 msgstr "Tooltips"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:564
-#: inc/plugins/elementor/widgets/bb-header-bar.php:994
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1317
 msgid "Logged Out"
 msgstr "Abgemeldet"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:577
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1031
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1051
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1357
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1377
 msgid "Sign In Color"
 msgstr "Farbe beim Anmelden"
 
@@ -7417,8 +7434,8 @@ msgid "Sign In Hover Color"
 msgstr "Hover-Farbe beim Anmelden"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:601
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1095
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1126
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1421
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1452
 msgid "Sign Up Color"
 msgstr "Farbe beim Registrieren"
 
@@ -7427,8 +7444,8 @@ msgid "Sign Up Hover Color"
 msgstr "Hover-Farbe beim Registrieren"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:625
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1106
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1137
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1432
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1463
 msgid "Sign Up Background Color"
 msgstr "Hintergrundfarbe beim Registrieren"
 
@@ -7504,7 +7521,7 @@ msgstr "Volle Größe"
 #: inc/plugins/elementor/widgets/bb-review.php:187
 #: inc/plugins/elementor/widgets/bb-tabs.php:222
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:145
-#: inc/theme-activation.php:2560
+#: inc/theme-activation.php:2589
 msgid "Type"
 msgstr "Art"
 
@@ -9099,6 +9116,7 @@ msgstr "Menüpunkte: Vertikal"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1512
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:204
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:522
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:156
 msgid "Menu"
 msgstr "Menü"
 
@@ -9186,6 +9204,7 @@ msgstr "Musik"
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:771
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:378
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:770
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:480
 msgid "Navigation"
 msgstr "Navigation"
 
@@ -10220,7 +10239,7 @@ msgid "PressThis"
 msgstr "PressThis"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:749
-#: inc/theme-activation.php:2736
+#: inc/theme-activation.php:2765
 msgid "Update"
 msgstr "Aktualisieren"
 
@@ -11922,7 +11941,7 @@ msgid "Shower"
 msgstr "Dusche"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3242
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1002
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1328
 msgid "Sign In"
 msgstr "Anmelden"
 
@@ -12608,7 +12627,7 @@ msgid "Checkmark"
 msgstr "Häkchen"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:127
-#: inc/plugins/elementor/widgets/bb-header-bar.php:825
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1148
 msgid "Dropdown"
 msgstr "Aufklappmenü"
 
@@ -12714,7 +12733,7 @@ msgid "Notice"
 msgstr "Notiz"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:552
-#: inc/theme-activation.php:2558
+#: inc/theme-activation.php:2587
 msgid "Plugin"
 msgstr "Plugin"
 
@@ -12906,8 +12925,6 @@ msgstr "Text für Link-Aktivität eingeben"
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:239
 #: inc/plugins/elementor/widgets/bb-forums.php:245
 #: inc/plugins/elementor/widgets/bb-forums.php:341
-#: inc/plugins/elementor/widgets/bb-header-bar.php:802
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1164
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:319
 #: inc/plugins/elementor/widgets/bb-review.php:675
 #: inc/plugins/elementor/widgets/bb-review.php:780
@@ -12922,6 +12939,8 @@ msgstr "Text für Link-Aktivität eingeben"
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:879
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:258
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:361
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1125
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1490
 #: inc/plugins/elementor/widgets/members/bb-members.php:316
 #: inc/plugins/elementor/widgets/members/bb-members.php:443
 msgid "Border Radius"
@@ -12938,9 +12957,9 @@ msgstr "Linkfarbe zu allen Aktivitäten"
 #: inc/plugins/elementor/widgets/bb-activity.php:368
 #: inc/plugins/elementor/widgets/bb-dashboard-intro.php:162
 #: inc/plugins/elementor/widgets/bb-forums.php:295
-#: inc/plugins/elementor/widgets/bb-header-bar.php:719
 #: inc/plugins/elementor/widgets/bb-review.php:533
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:308
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1042
 #: inc/plugins/elementor/widgets/members/bb-members.php:402
 msgid "Avatar"
 msgstr "Profilbild"
@@ -13091,7 +13110,6 @@ msgstr "Symbol-Link"
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:583
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:733
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:775
-#: inc/plugins/elementor/widgets/bb-header-bar.php:790
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:310
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:579
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:609
@@ -13104,6 +13122,7 @@ msgstr "Symbol-Link"
 #: inc/plugins/elementor/widgets/courses/bb-lms-activity.php:1230
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:468
 #: inc/plugins/elementor/widgets/groups/bb-groups.php:535
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1113
 #: inc/plugins/elementor/widgets/members/bb-members.php:389
 msgid "Border Color"
 msgstr "Rahmenfarbe"
@@ -13283,7 +13302,6 @@ msgstr "Schaltfläche Ausrichtung"
 
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:616
 #: inc/plugins/elementor/widgets/bb-forums-activity.php:684
-#: inc/plugins/elementor/widgets/bb-header-bar.php:360
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:107
 #: inc/plugins/elementor/widgets/bb-tabs.php:413
 #: inc/plugins/elementor/widgets/bb-tabs.php:879
@@ -13295,6 +13313,8 @@ msgstr "Schaltfläche Ausrichtung"
 #: inc/plugins/elementor/widgets/courses/bb-lms-courses.php:709
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:563
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:588
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:229
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:673
 msgid "Center"
 msgstr "Zentriert"
 
@@ -13388,141 +13408,6 @@ msgstr " Antwort"
 msgid "Start a Discussion"
 msgstr "Eine Diskussion beginnen"
 
-#: inc/plugins/elementor/widgets/bb-header-bar.php:213
-#: learndash/ld30/learndash-sidebar.php:76 template-parts/header-aside.php:75
-#: template-parts/header-mobile.php:50
-msgid "Dark Mode"
-msgstr "Dunkle Betriebsart"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:214
-msgid "Show \"dark mode\" toggle icon on a single lesson/topic page."
-msgstr ""
-"Umschaltsymbol „Dunkelmodus“ auf einer einzelnen Lektions-/Themenseite "
-"anzeigen."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:229
-msgid "Sidebar Toggle"
-msgstr "Seitenleisten-Umschalter"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:230
-msgid "Show \"sidebar\" toggle icon on a single lesson/topic page."
-msgstr ""
-"Umschaltsymbol in der „Seitenleiste“ auf einer einzelnen Lektions-/"
-"Themenseite anzeigen."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:257
-msgid "Replace default search icon with one of your choice."
-msgstr "Ersetzen Sie das Standard-Suchsymbol durch eines Ihrer Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:271
-msgid "Replace default messages icon with one of your choice."
-msgstr ""
-"Ersetzen Sie das Symbol für Standardnachrichten durch ein Symbol Ihrer Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:286
-msgid "Replace default notifications icon with one of your choice."
-msgstr ""
-"Ersetzen Sie das Symbol für Standardbenachrichtigungen durch ein Symbol "
-"Ihrer Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:301
-msgid "Replace default cart icon with one of your choice."
-msgstr ""
-"Ersetzen Sie das standardmäßige Warenkorb-Symbol durch eines Ihrer Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:315
-msgid "Dark Mode Icon"
-msgstr "Dunkelmodus-Symbol"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:316
-msgid "Replace default dark mode icon with one of your choice."
-msgstr ""
-"Ersetzen Sie das standardmäßige Dunkelmodus-Symbol durch eines Ihrer Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:328
-msgid "Toggle Sidebar Icon"
-msgstr "Seitenleisten-Symbol umschalten"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:329
-msgid "Replace default toggle sidebar icon with one of your choice."
-msgstr ""
-"Ersetzen Sie das Standard-Umschalt-Seitenleistensymbol durch eines Ihrer "
-"Wahl."
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:455
-msgid "Typography Tooltips"
-msgstr "Typografie Tooltips"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:463
-msgid "Counter"
-msgstr "Zähler"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:472
-msgid "Counter Background Color"
-msgstr "Hintergrundfarbe des Zählers"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:485
-msgid "Counter Shadow"
-msgstr "Schatten des Zählers"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:530
-msgid "Icons Shadow"
-msgstr "Schatten der Icons"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:538
-msgid "Icons Colors"
-msgstr "Farben der Symbole"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:547
-msgid "All Icons"
-msgstr "Alle Symbole"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:617
-msgid "Dark Icon"
-msgstr "Dunkel-Symbol"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:629
-msgid "Sidebar Toggle Icon"
-msgstr "Umschaltsymbol in der Seitenleiste"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:652
-#: inc/plugins/elementor/widgets/bb-header-bar.php:834
-msgid "Display Name"
-msgstr "Angezeigter Name"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:662
-msgid "Typography Display Name"
-msgstr "Typografie des angezeigten Namens"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:751
-msgid "Border Style"
-msgstr "Rahmenstil"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:767
-#: inc/plugins/elementor/widgets/bb-profile-completion.php:290
-msgid "Border Width"
-msgstr "Rahmenbreite"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:892
-msgid "Typography Menu"
-msgstr "Typografie des Menüs"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:900
-msgid "Dropdown Background Color"
-msgstr "Hintergrundfarbe des Dropdowns"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1012
-msgid "Typography Sign In"
-msgstr "Typografie beim Anmelden"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1066
-msgid "Sign Up"
-msgstr "Registrieren"
-
-#: inc/plugins/elementor/widgets/bb-header-bar.php:1076
-msgid "Typography Sign Up"
-msgstr "Typografie beim Registrieren"
-
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:38
 msgid "Profile Completion"
 msgstr "Vervollständigung des Profils"
@@ -13603,6 +13488,11 @@ msgstr "Schaltflächentext, sobald der Fortschritt 100% erreicht hat"
 #: inc/plugins/elementor/widgets/members/bb-members.php:373
 msgid "Border Type"
 msgstr "Rahmentyp"
+
+#: inc/plugins/elementor/widgets/bb-profile-completion.php:290
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1090
+msgid "Border Width"
+msgstr "Rahmenbreite"
 
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:332
 msgid "Progress Graph"
@@ -13726,7 +13616,7 @@ msgstr "Datum anzeigen"
 
 #: inc/plugins/elementor/widgets/bb-review.php:218
 #: inc/plugins/elementor/widgets/gallery/bb-gallery.php:178
-#: inc/theme-activation.php:2559
+#: inc/theme-activation.php:2588
 msgid "Source"
 msgstr "Quelle"
 
@@ -14575,6 +14465,172 @@ msgstr "Keine Gruppen entsprachen dem aktuellen Filter."
 msgid "Create a group"
 msgstr "Eine Gruppe erstellen"
 
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:137
+msgid "Show Logo Image"
+msgstr "Logo-Bild anzeigen"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:145
+msgid "Show Navigation"
+msgstr "Navigation anzeigen"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:172
+msgid "There are no menus available."
+msgstr "Es sind keine Menüs verfügbar."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:172
+#, php-format
+msgid "Start by creating one <a href=\"%s\" target=\"_blank\">here</a>."
+msgstr ""
+"Beginnen Sie mit der Erstellung eines <a href=\"%s\" target=\"_blank\">hier</"
+"a>."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:185
+msgid "Show Header Bar"
+msgstr "Header-Leiste anzeigen"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:194
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:220
+msgid "Logo Position"
+msgstr "Position des Logos"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:349
+#: learndash/ld30/learndash-sidebar.php:76 template-parts/header-aside.php:75
+#: template-parts/header-mobile.php:50
+msgid "Dark Mode"
+msgstr "Dunkle Betriebsart"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:350
+msgid "Show \"dark mode\" toggle icon on a single lesson/topic page."
+msgstr ""
+"Umschaltsymbol „Dunkelmodus“ auf einer einzelnen Lektions-/Themenseite "
+"anzeigen."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:365
+msgid "Sidebar Toggle"
+msgstr "Seitenleisten-Umschalter"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:366
+msgid "Show \"sidebar\" toggle icon on a single lesson/topic page."
+msgstr ""
+"Umschaltsymbol in der „Seitenleiste“ auf einer einzelnen Lektions-/"
+"Themenseite anzeigen."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:393
+msgid "Replace default search icon with one of your choice."
+msgstr "Ersetzen Sie das Standard-Suchsymbol durch eines Ihrer Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:407
+msgid "Replace default messages icon with one of your choice."
+msgstr ""
+"Ersetzen Sie das Symbol für Standardnachrichten durch ein Symbol Ihrer Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:422
+msgid "Replace default notifications icon with one of your choice."
+msgstr ""
+"Ersetzen Sie das Symbol für Standardbenachrichtigungen durch ein Symbol "
+"Ihrer Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:437
+msgid "Replace default cart icon with one of your choice."
+msgstr ""
+"Ersetzen Sie das standardmäßige Warenkorb-Symbol durch eines Ihrer Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:451
+msgid "Dark Mode Icon"
+msgstr "Dunkelmodus-Symbol"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:452
+msgid "Replace default dark mode icon with one of your choice."
+msgstr ""
+"Ersetzen Sie das standardmäßige Dunkelmodus-Symbol durch eines Ihrer Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:464
+msgid "Toggle Sidebar Icon"
+msgstr "Seitenleisten-Symbol umschalten"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:465
+msgid "Replace default toggle sidebar icon with one of your choice."
+msgstr ""
+"Ersetzen Sie das Standard-Umschalt-Seitenleistensymbol durch eines Ihrer "
+"Wahl."
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:568
+msgid "Sub Menu"
+msgstr "Untermenü"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:654
+msgid "Header Bar Layout"
+msgstr "Layout der Kopfzeilenleiste"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:772
+msgid "Typography Tooltips"
+msgstr "Typografie Tooltips"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:780
+msgid "Counter"
+msgstr "Zähler"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:789
+msgid "Counter Background Color"
+msgstr "Hintergrundfarbe des Zählers"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:802
+msgid "Counter Shadow"
+msgstr "Schatten des Zählers"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:850
+msgid "Icons Shadow"
+msgstr "Schatten der Icons"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:858
+msgid "Icons Colors"
+msgstr "Farben der Symbole"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:867
+msgid "All Icons"
+msgstr "Alle Symbole"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:937
+msgid "Dark Icon"
+msgstr "Dunkel-Symbol"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:949
+msgid "Sidebar Toggle Icon"
+msgstr "Umschaltsymbol in der Seitenleiste"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:975
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1157
+msgid "Display Name"
+msgstr "Angezeigter Name"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:985
+msgid "Typography Display Name"
+msgstr "Typografie des angezeigten Namens"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1074
+msgid "Border Style"
+msgstr "Rahmenstil"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1215
+msgid "Typography Menu"
+msgstr "Typografie des Menüs"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1223
+msgid "Dropdown Background Color"
+msgstr "Hintergrundfarbe des Dropdowns"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1338
+msgid "Typography Sign In"
+msgstr "Typografie beim Anmelden"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1392
+msgid "Sign Up"
+msgstr "Registrieren"
+
+#: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:1402
+msgid "Typography Sign Up"
+msgstr "Typografie beim Registrieren"
+
 #: inc/plugins/elementor/widgets/members/bb-members.php:113
 msgid "Default Members Order"
 msgstr "Standardmäßige Reihenfolge der Mitglieder"
@@ -14814,48 +14870,48 @@ msgid "State / County"
 msgstr "Bundesland / Landkreis"
 
 #. translators: %s: plugin name.
-#: inc/theme-activation.php:290
+#: inc/theme-activation.php:293
 #, php-format
 msgid "Updating Plugin: %s"
 msgstr "Plugin wird aktualisiert: %s"
 
-#: inc/theme-activation.php:312
+#: inc/theme-activation.php:315
 #, php-format
 msgid "There is an update available for: %1$s."
 msgid_plural "There are updates available for the following plugins: %1$s."
 msgstr[0] "Es ist eine Aktualisierung verfügbar, für: %1$s."
 msgstr[1] "Es sind Aktualisierungen verfügbar, für: %1$s."
 
-#: inc/theme-activation.php:334
+#: inc/theme-activation.php:337
 msgid "Begin updating plugin"
 msgid_plural "Begin updating plugins"
 msgstr[0] "Mit der Plugin-Aktualisierung beginnen"
 msgstr[1] "Mit den Plugins-Aktualisierung beginnen"
 
-#: inc/theme-activation.php:339
+#: inc/theme-activation.php:342
 msgid "Begin activating plugin"
 msgid_plural "Begin activating plugins"
 msgstr[0] "Beginnen Sie mit der Aktivierung des Plugins"
 msgstr[1] "Beginnen Sie mit der Aktivierung von Plugins"
 
-#: inc/theme-activation.php:344
+#: inc/theme-activation.php:347
 msgid "Return to the Dashboard"
 msgstr "Zurück zur Übersicht"
 
-#: inc/theme-activation.php:346 inc/theme-activation.php:2966
+#: inc/theme-activation.php:349 inc/theme-activation.php:2995
 msgid "The following plugin was activated successfully:"
 msgid_plural "The following plugins were activated successfully:"
 msgstr[0] "Das folgende Plugin wurde erfolgreich aktiviert:"
 msgstr[1] "Das folgenden Plugins wurden erfolgreich aktiviert:"
 
 #. translators: 1: plugin name.
-#: inc/theme-activation.php:348
+#: inc/theme-activation.php:351
 #, php-format
 msgid "No action taken. Plugin %1$s was already active."
 msgstr "Keine Maßnahmen ergriffen. Plugin %1$s war bereits aktiv."
 
 #. translators: 1: plugin name.
-#: inc/theme-activation.php:350
+#: inc/theme-activation.php:353
 #, php-format
 msgid ""
 "Plugin not activated. A higher version of %s is needed for this theme. "
@@ -14865,16 +14921,16 @@ msgstr ""
 "Theme erforderlich. Bitte aktualisieren Sie das Plugin."
 
 #. translators: 1: dashboard link.
-#: inc/theme-activation.php:352
+#: inc/theme-activation.php:355
 #, php-format
 msgid "All plugins installed and activated successfully. %1$s"
 msgstr "Alle Plugins wurden erfolgreich installiert und aktiviert. %1$s"
 
-#: inc/theme-activation.php:353
+#: inc/theme-activation.php:356
 msgid "Dismiss this notice"
 msgstr "Diesen Hinweis ausblenden"
 
-#: inc/theme-activation.php:354
+#: inc/theme-activation.php:357
 msgid ""
 "There are one or more required or recommended plugins to install, update or "
 "activate."
@@ -14882,27 +14938,27 @@ msgstr ""
 "Es existieren ein oder mehrere benötigte oder empfohlene Plugins, die "
 "installiert, aktualisiert oder aktiviert werden müssen."
 
-#: inc/theme-activation.php:355
+#: inc/theme-activation.php:358
 msgid "Please contact the administrator of this site for help."
 msgstr ""
 "Bitte kontaktieren Sie den Administrator dieser Website, wenn Sie Hilfe "
 "benötigen."
 
-#: inc/theme-activation.php:499
+#: inc/theme-activation.php:528
 msgid "This plugin needs to be updated to be compatible with your theme."
 msgstr ""
 "Dieses Plugin muss aktualisiert werden, um mit Ihrem Theme kompatibel zu "
 "sein."
 
-#: inc/theme-activation.php:500
+#: inc/theme-activation.php:529
 msgid "Update Required"
 msgstr "Aktualisierung erforderlich"
 
-#: inc/theme-activation.php:615
+#: inc/theme-activation.php:644
 msgid "Set the parent_slug config variable instead."
 msgstr "Verwenden Sie stattdessen die Variable parent_slug."
 
-#: inc/theme-activation.php:922
+#: inc/theme-activation.php:951
 msgid ""
 "The remote plugin package does not contain a folder with the desired slug "
 "and renaming did not work."
@@ -14910,7 +14966,7 @@ msgstr ""
 "Das Remote-Plugin-Paket enthält keinen Ordner mit dem gewünschten Kürzel und "
 "eine Umbenennung hat nicht funktioniert."
 
-#: inc/theme-activation.php:922 inc/theme-activation.php:932
+#: inc/theme-activation.php:951 inc/theme-activation.php:961
 msgid ""
 "Please contact the plugin provider and ask them to package their plugin "
 "according to the WordPress guidelines."
@@ -14918,7 +14974,7 @@ msgstr ""
 "Bitte kontaktieren Sie den Plugin-Anbieter und bitten Sie ihn, seine Plugins "
 "nach den Wordpress-Richtlinien zu komprimieren."
 
-#: inc/theme-activation.php:932
+#: inc/theme-activation.php:961
 msgid ""
 "The remote plugin package consists of more than one file, but the files are "
 "not packaged in a folder."
@@ -14926,66 +14982,66 @@ msgstr ""
 "Das Remote-Plugin-Paket besteht aus mehreren Dateien, aber die Dateien sind "
 "nicht in einem Ordner gepackt."
 
-#: inc/theme-activation.php:1121 inc/theme-activation.php:2962
+#: inc/theme-activation.php:1150 inc/theme-activation.php:2991
 msgctxt "plugin A *and* plugin B"
 msgid "and"
 msgstr "und"
 
 #. translators: %s: version number
-#: inc/theme-activation.php:1990
+#: inc/theme-activation.php:2019
 #, php-format
 msgid "BBTA v%s"
 msgstr "BBTA v%s"
 
-#: inc/theme-activation.php:2284
+#: inc/theme-activation.php:2313
 msgid "Required"
 msgstr "Erforderlich"
 
-#: inc/theme-activation.php:2287
+#: inc/theme-activation.php:2316
 msgid "Recommended"
 msgstr "Empfohlen"
 
-#: inc/theme-activation.php:2303
+#: inc/theme-activation.php:2332
 msgid "WordPress Repository"
 msgstr "WordPress-Repository"
 
-#: inc/theme-activation.php:2306
+#: inc/theme-activation.php:2335
 msgid "External Source"
 msgstr "Externe Quelle"
 
-#: inc/theme-activation.php:2309
+#: inc/theme-activation.php:2338
 msgid "Pre-Packaged"
 msgstr "Vorverpackt"
 
-#: inc/theme-activation.php:2326
+#: inc/theme-activation.php:2355
 msgid "Not Installed"
 msgstr "Nicht installiert"
 
-#: inc/theme-activation.php:2330
+#: inc/theme-activation.php:2359
 msgid "Installed But Not Activated"
 msgstr "Installiert aber nicht aktiviert"
 
-#: inc/theme-activation.php:2338
+#: inc/theme-activation.php:2367
 msgid "Required Update not Available"
 msgstr "Erforderliche Aktualisierung nicht verfügbar"
 
-#: inc/theme-activation.php:2341
+#: inc/theme-activation.php:2370
 msgid "Requires Update"
 msgstr "Update erforderlich"
 
-#: inc/theme-activation.php:2344
+#: inc/theme-activation.php:2373
 msgid "Update recommended"
 msgstr "Update empfohlen"
 
 #. translators: 1: install status, 2: update status
-#: inc/theme-activation.php:2353
+#: inc/theme-activation.php:2382
 #, php-format
 msgctxt "Install/Update Status"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
 #. translators: 1: number of plugins.
-#: inc/theme-activation.php:2399
+#: inc/theme-activation.php:2428
 #, php-format
 msgctxt "plugins"
 msgid "All <span class=\"count\">(%s)</span>"
@@ -14994,7 +15050,7 @@ msgstr[0] "Alle <span class=\"count\">(%s)</span>"
 msgstr[1] "Alle <span class=\"count\">(%s)</span>"
 
 #. translators: 1: number of plugins.
-#: inc/theme-activation.php:2403
+#: inc/theme-activation.php:2432
 #, php-format
 msgid "To Install <span class=\"count\">(%s)</span>"
 msgid_plural "To Install <span class=\"count\">(%s)</span>"
@@ -15002,7 +15058,7 @@ msgstr[0] "Zu installieren <span class=\"count\">(%s)</span>"
 msgstr[1] "Zu installieren <span class=\"count\">(%s)</span>"
 
 #. translators: 1: number of plugins.
-#: inc/theme-activation.php:2407
+#: inc/theme-activation.php:2436
 #, php-format
 msgid "Update Available <span class=\"count\">(%s)</span>"
 msgid_plural "Update Available <span class=\"count\">(%s)</span>"
@@ -15010,106 +15066,106 @@ msgstr[0] "Aktualisierung verfügbar <span class=\"count\">(%s)</span>"
 msgstr[1] "Aktualisierung verfügbar <span class=\"count\">(%s)</span>"
 
 #. translators: 1: number of plugins.
-#: inc/theme-activation.php:2411
+#: inc/theme-activation.php:2440
 #, php-format
 msgid "To Activate <span class=\"count\">(%s)</span>"
 msgid_plural "To Activate <span class=\"count\">(%s)</span>"
 msgstr[0] "Zu Aktivieren <span class=\"count\">(%s)</span>"
 msgstr[1] "Zu Aktivieren <span class=\"count\">(%s)</span>"
 
-#: inc/theme-activation.php:2493
+#: inc/theme-activation.php:2522
 msgctxt "as in: \"version nr unknown\""
 msgid "unknown"
 msgstr "unbekannt"
 
-#: inc/theme-activation.php:2501
+#: inc/theme-activation.php:2530
 msgid "Installed version:"
 msgstr "Installierte Version:"
 
-#: inc/theme-activation.php:2509
+#: inc/theme-activation.php:2538
 msgid "Minimum required version:"
 msgstr "Minimal erforderliche Version:"
 
-#: inc/theme-activation.php:2521
+#: inc/theme-activation.php:2550
 msgid "Available version:"
 msgstr "Verfügbare Version:"
 
-#: inc/theme-activation.php:2544
+#: inc/theme-activation.php:2573
 msgid "No plugins to install, update or activate."
 msgstr "Keine Plugins zum Installieren, Aktualisieren oder Aktivieren."
 
 #. translators: %2$s: plugin name in screen reader markup
-#: inc/theme-activation.php:2614
+#: inc/theme-activation.php:2643
 #, php-format
 msgid "Install %2$s"
 msgstr "%2$s installieren"
 
 #. translators: %2$s: plugin name in screen reader markup
-#: inc/theme-activation.php:2619
+#: inc/theme-activation.php:2648
 #, php-format
 msgid "Update %2$s"
 msgstr "Aktualisiere %2$s"
 
 #. translators: %2$s: plugin name in screen reader markup
-#: inc/theme-activation.php:2625
+#: inc/theme-activation.php:2654
 #, php-format
 msgid "Activate %2$s"
 msgstr "%2$s aktivieren"
 
-#: inc/theme-activation.php:2697
+#: inc/theme-activation.php:2726
 msgid "Upgrade message from the plugin author:"
 msgstr "Aktualisierungsnachricht vom Plugin-Autor:"
 
-#: inc/theme-activation.php:2730
+#: inc/theme-activation.php:2759
 msgid "Install"
 msgstr "Installieren"
 
-#: inc/theme-activation.php:2739
+#: inc/theme-activation.php:2768
 msgid "Activate"
 msgstr "Aktivieren"
 
-#: inc/theme-activation.php:2770
+#: inc/theme-activation.php:2799
 msgid "No plugins were selected to be installed. No action taken."
 msgstr ""
 "Es wurden keine Plugins zur Installation ausgewählt. Es wurde nichts "
 "unternommen."
 
-#: inc/theme-activation.php:2772
+#: inc/theme-activation.php:2801
 msgid "No plugins were selected to be updated. No action taken."
 msgstr ""
 "Es wurden keine Plugins zur Aktualisierung ausgewählt. Es wurde nichts "
 "unternommen."
 
-#: inc/theme-activation.php:2813
+#: inc/theme-activation.php:2842
 msgid "No plugins are available to be installed at this time."
 msgstr "Derzeit stehen keine Plugins zur Installation zur Verfügung."
 
-#: inc/theme-activation.php:2815
+#: inc/theme-activation.php:2844
 msgid "No plugins are available to be updated at this time."
 msgstr "Derzeit stehen keine Plugins zur Aktualisierung zur Verfügung."
 
-#: inc/theme-activation.php:2922
+#: inc/theme-activation.php:2951
 msgid "No plugins were selected to be activated. No action taken."
 msgstr ""
 "Es wurden keine Plugins zur Aktivierung ausgewählt. Es wurde nichts "
 "unternommen."
 
-#: inc/theme-activation.php:2948
+#: inc/theme-activation.php:2977
 msgid "No plugins are available to be activated at this time."
 msgstr "Derzeit stehen keine Plugins zur Aktivierung zur Verfügung."
 
-#: inc/theme-activation.php:3172
+#: inc/theme-activation.php:3201
 msgid "Plugin activation failed."
 msgstr "Plugin-Aktivierung fehlgeschlagen."
 
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
-#: inc/theme-activation.php:3516
+#: inc/theme-activation.php:3545
 #, php-format
 msgid "Updating Plugin %1$s (%2$d/%3$d)"
 msgstr "Aktualisierung des Plugins %1$s (%2$d/%3$d)"
 
 #. translators: 1: plugin name, 2: error message.
-#: inc/theme-activation.php:3519
+#: inc/theme-activation.php:3548
 #, php-format
 msgid "An error occurred while installing %1$s: <strong>%2$s</strong>."
 msgstr ""
@@ -15117,12 +15173,12 @@ msgstr ""
 "aufgetreten."
 
 #. translators: 1: plugin name.
-#: inc/theme-activation.php:3521
+#: inc/theme-activation.php:3550
 #, php-format
 msgid "The installation of %1$s failed."
 msgstr "Die Installation von %1$s ist fehlgeschlagen."
 
-#: inc/theme-activation.php:3525
+#: inc/theme-activation.php:3554
 msgid ""
 "The installation and activation process is starting. This process may take a "
 "while on some hosts, so please be patient."
@@ -15131,22 +15187,22 @@ msgstr ""
 "Weile dauern, haben Sie etwas Geduld."
 
 #. translators: 1: plugin name.
-#: inc/theme-activation.php:3527
+#: inc/theme-activation.php:3556
 #, php-format
 msgid "%1$s installed and activated successfully."
 msgstr "%1$s wurde erfolgreich installiert und aktiviert."
 
-#: inc/theme-activation.php:3528
+#: inc/theme-activation.php:3557
 msgid "All installations and activations have been completed."
 msgstr "Alle Installationen und Aktivierungen sind abgeschlossen."
 
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
-#: inc/theme-activation.php:3530
+#: inc/theme-activation.php:3559
 #, php-format
 msgid "Installing and Activating Plugin %1$s (%2$d/%3$d)"
 msgstr "Plugin installieren und aktivieren %1$s (%2$d/%3$d)"
 
-#: inc/theme-activation.php:3533
+#: inc/theme-activation.php:3562
 msgid ""
 "The installation process is starting. This process may take a while on some "
 "hosts, so please be patient."
@@ -15155,26 +15211,26 @@ msgstr ""
 "Servern etwas Zeit in Anspruch nehmen. Bitte haben Sie Geduld."
 
 #. translators: 1: plugin name.
-#: inc/theme-activation.php:3535
+#: inc/theme-activation.php:3564
 #, php-format
 msgid "%1$s installed successfully."
 msgstr "%1$s wurde erfolgreich installiert."
 
-#: inc/theme-activation.php:3536
+#: inc/theme-activation.php:3565
 msgid "All installations have been completed."
 msgstr "Alle Installationen wurden abgeschlossen."
 
 #. translators: 1: plugin name, 2: action number 3: total number of actions.
-#: inc/theme-activation.php:3538
+#: inc/theme-activation.php:3567
 #, php-format
 msgid "Installing Plugin %1$s (%2$d/%3$d)"
 msgstr "Installation des Plugins %1$s (%2$d/%3$d)"
 
-#: inc/theme-activation.php:3543
+#: inc/theme-activation.php:3572
 msgid "Show Details"
 msgstr "Details anzeigen"
 
-#: inc/theme-activation.php:3543
+#: inc/theme-activation.php:3572
 msgid "Hide Details"
 msgstr "Details ausblenden"
 

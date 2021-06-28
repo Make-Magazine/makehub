@@ -187,7 +187,10 @@
 
 			if ( $( '.bb-sfwd-aside #masthead' ).hasClass( 'elementor-header' ) ) {
 				$( '.bb-toggle-panel' ).prependTo( '.ld-course-navigation' );
-				$( '.bb-elementor-header-items' ).prependTo( '.learndash-content-body' );
+				//Check if Elementor Header has Learndash theme toggle button and learndash corse sidebar toggle button, add only if not
+				if( !$('.site-header--elementor #bb-toggle-theme').length && !$( '.site-header--elementor .course-toggle-view' ).length ) {
+					$( '.bb-elementor-header-items' ).prependTo( '.learndash-content-body' );
+				}
 			}
 
 			if ( $( '.bb-sfwd-aside #masthead' ).hasClass( 'beaver-header' ) ) {
@@ -1520,7 +1523,8 @@
 					if ( $bbpress_forums_element.find( '.bbp-reply-form' ).length ) {
 						$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp_reply_to' ).val( 0 );
 						$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp-reply-to-user' ).html( $bbpress_forums_element.find( $bbpress_forums_element.find( '.bs-reply-list-item' ).get( 0 ) ).find( '.bbp-author-name' ).text() );
-						var reply_exerpt = $bbpress_forums_element.find( $bbpress_forums_element.find( '.bs-reply-list-item' ).get( 0 ) ).find( '>.bbp-reply-content>p' ).text().substring( 0, 50 );
+						var topic_id     = $('#bbp_topic_id').val();
+						var reply_exerpt = $('#topic-' + topic_id + '-replies li.bs-item-wrap #bbp_topic_excerpt').val();
 						if (reply_exerpt != '') {
 							reply_exerpt = '"' + reply_exerpt + '..."';
 							$bbpress_forums_element.find( '.bbp-reply-form' ).find( '#bbp-reply-exerpt' ).text( reply_exerpt );
@@ -1579,6 +1583,10 @@
 							var clickToDownloadText  = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bb-activity-media-elem .document-helper-text' )[0];
 							clickToDownloadText = $( clickToDownloadText ).text();
 							reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().trim().replace( clickToDownloadText,'').substring( 0, 50 )
+						}
+						if( $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bbp-reply-revision-log' ).length ) {
+							var revisionText  = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content .bbp-reply-revision-log' ).text().trim();
+							reply_exerpt = $( this ).closest( '.bs-reply-list-item' ).find( '>.bbp-reply-content' ).text().replace( revisionText,'').substring( 0, 50 ).trim();
 						}
 						if (reply_exerpt != '') {
 							reply_exerpt = '"' + reply_exerpt + '..."';

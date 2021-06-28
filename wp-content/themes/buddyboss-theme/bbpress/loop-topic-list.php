@@ -18,7 +18,7 @@
 				<?php if( is_user_logged_in() ) {
 					$is_subscribed = bbp_is_user_subscribed_to_topic( get_current_user_id(), bbp_get_topic_id() );
 					if( $is_subscribed ) { ?>
-						<i data-balloon-pos="up" data-balloon="<?php _e('Subscribed', 'buddyboss-theme'); ?>" class="bb-topic-status subscribed"></i><?php 
+						<i data-balloon-pos="up" data-balloon="<?php _e('Subscribed', 'buddyboss-theme'); ?>" class="bb-topic-status subscribed"></i><?php
 					}
 				} ?>
             </div>
@@ -45,7 +45,7 @@
 							?>
 							<span class="bs-voices"><?php bbp_topic_voice_count(); ?> <?php echo $voice_text; ?></span>
 							<span class="bs-separator">&middot;</span>
-							<span class="bs-replies"><?php 
+							<span class="bs-replies"><?php
 								if( bbp_show_lead_topic() ) {
 									bbp_topic_reply_count();
 									$topic_reply_text = $topic_reply_count > 1 ? __('Replies', 'buddyboss-theme') : __('Reply', 'buddyboss-theme');

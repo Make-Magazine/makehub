@@ -29,7 +29,8 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 	        add_action( 'bbp_new_reply_post_extras', array( $this, 'new_reply_post_extras' ), 99 );
 	        add_action( 'bbp_edit_reply_post_extras', array( $this, 'edit_reply_post_extras' ), 99 );
 	        add_filter( 'bbp_get_reply_to_link', array( $this, 'reply_to_link' ), 10, 3 );
-
+	        add_filter( 'bbp_get_reply_edit_url', array( $this, 'bbp_get_reply_edit_url_callback' ), PHP_INT_MAX, 2 );
+	        add_filter( 'bbp_edit_reply_redirect_to', array( $this, 'bbp_edit_reply_redirect_to_callback' ), PHP_INT_MAX, 2 );
         }
 
         public function get_oembed_reply_content( $content ) {
@@ -160,14 +161,36 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
 	    private function reply_ajax_response( $reply_id, $type ) {
 
 		    $reply_html = $this->get_reply_html( $reply_id );
+		    /**
+		     * Redirect to last page when anyone reply from begging of the page.
+		     */
+		    $redirect_to = bbp_get_redirect_to();
+		    $reply_url   = bbp_get_reply_url( $reply_id, $redirect_to );
+		    $total_pages = '';
+		    if ( bbp_thread_replies() ) {
+			    if ( function_exists( 'bbp_get_total_parent_reply' ) ) {
+				    $total_pages = ceil( (int) bbp_get_total_parent_reply( $_REQUEST['bbp_topic_id'] ) / (int) bbp_get_replies_per_page() ); //1;
+			    }
+		    } else {
+			    $total_pages = ceil( (int) bbp_get_reply_position( $reply_id, $_REQUEST['bbp_topic_id'] ) / (int) bbp_get_replies_per_page() );
+		    }
+		    $current_page = get_query_var( 'paged', $reply_url );
+		    if ( 0 === (int) $current_page ) {
+			    $current_page = 1;
+		    }
+		    /**
+		     * Ended code for redirection to the last page
+		     */
 		    $extra_info = array(
 			    'reply_id'     => $reply_id,
 			    'reply_type'   => $type,
 			    'reply_parent' => (int) $_REQUEST['bbp_reply_to'],
 			    'tags'         => $this->bb_get_topic_tags( (int) $_REQUEST['bbp_topic_id'] ),
+			    'redirect_url' => $reply_url, // Get last page URl - Redirect to last page when anyone reply from begging of the page.
+			    'current_page' => $current_page, // Get current page - Redirect to last page when anyone reply from begging of the page.
+			    'total_pages'  => $total_pages, // Get total pages - Redirect to last page when anyone reply from begging of the page.
 		    );
 		    bbp_ajax_response( true, $reply_html, 200, $extra_info );
-
 	    }
 	    /**
 	     * Uses a bbPress template file to generate reply HTML
@@ -351,6 +374,48 @@ if ( !class_exists( '\BuddyBossTheme\BBPressHelper' ) ) {
             // Put the line breaks back.
             return $content . implode( '', $embeds_array );
         }
+	
+	    /**
+	     * Function will add new parameter in the URL when click on forum replys.
+	     *
+	     * @param string $url
+	     * @param int    $reply_id
+	     *
+	     * @return string $url
+	     *
+	     * @since 1.6.8
+	     */
+	    public function bbp_get_reply_edit_url_callback( $url, $reply_id ) {
+		    $url = add_query_arg( 'forum_redirect_to', ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1, $url );
+		
+		    return $url;
+	    }
+	
+	    /**
+	     * Function will work for the redirection - The page from which he would have clicked will redirect to the same page.
+	     *
+	     * @param string $reply_url
+	     * @param string $redirect_to
+	     *
+	     * @return string $reply_url
+	     *
+	     * @since 1.6.8
+	     */
+	    public function bbp_edit_reply_redirect_to_callback( $reply_url, $redirect_to ) {
+		    if ( isset( $_POST ) && isset( $_POST['bbp_redirect_page_to'] ) ) {
+			    $reply_id   = bbp_get_reply_id( (int) $_POST['bbp_reply_id'] );
+			    $topic_id   = bbp_get_reply_topic_id( $reply_id );
+			    $reply_hash = '#post-' . $reply_id;
+			    $topic_link = bbp_get_topic_permalink( $topic_id, $redirect_to );
+			    if ( 1 === $_POST['bbp_redirect_page_to'] ) {
+				    $reply_url = $topic_link . $reply_hash;
+			    } else {
+				    $reply_url = $topic_link . 'page/' . $_POST['bbp_redirect_page_to'] . $reply_hash;
+			    }
+		    }
+		
+		    return $reply_url;
+	    }
 
     }
 

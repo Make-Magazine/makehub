@@ -62,6 +62,15 @@ function buddyboss_redirect_previous_page( $redirect_to, $request, $user ) {
 		}
 	}
 
+    // Check if redirect to url is admin url.
+    	$admin_url_info       = wp_parse_url( admin_url() );
+    	$redirect_to_url_info = wp_parse_url( $redirect_to );
+    	// Check by the url path.
+    	if ( isset( $admin_url_info['path'] ) && isset( $redirect_to_url_info['path'] ) && $redirect_to_url_info['path'] === $admin_url_info['path'] ) {
+        	// Redirect url is admin url. So set it to home page.
+        	$redirect_to = home_url();
+    	}
+
 	$request = wp_get_referer();
 
 	if ( ! $request ) {

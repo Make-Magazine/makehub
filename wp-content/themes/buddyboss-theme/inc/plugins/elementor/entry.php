@@ -4,8 +4,8 @@ namespace BBElementor;
 
 use BBElementor\Widgets\Header_Bar;
 
-//use BBElementor\Widgets\Ld_Activity;
-//use BBElementor\Widgets\Ld_Courses;
+// use BBElementor\Widgets\Ld_Activity;
+// use BBElementor\Widgets\Ld_Courses;
 use BBElementor\Widgets\BBP_Members;
 use BBElementor\Widgets\BBP_Activity;
 use BBElementor\Widgets\BBP_Forums;
@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class bbElementorWidgets {
+class BB_Elementor_Widgets {
 
 	/**
 	 * Constructor
@@ -47,6 +47,8 @@ class bbElementorWidgets {
 
 	/**
 	 * BB Categories
+	 *
+	 * @param object $elements_manager Elementor Object.
 	 *
 	 * @since  1.0.0
 	 *
@@ -78,15 +80,15 @@ class bbElementorWidgets {
 
 		add_action(
 			'elementor/frontend/after_register_scripts',
-			function () {
-				wp_register_script( 'elementor-bb-frontend', get_template_directory_uri() . '/inc/plugins/elementor/assets/js/frontend.js', array( 'jquery' ), false, true );
+			function() {
+				wp_register_script( 'elementor-bb-frontend', get_template_directory_uri() . '/inc/plugins/elementor/assets/js/frontend.js', array( 'jquery' ), '1.6.8', true );
 			}
 		);
 
 		add_action(
 			'elementor/editor/after_enqueue_scripts',
-			function () {
-				wp_enqueue_script( 'elementor-bb-editor', get_template_directory_uri() . '/inc/plugins/elementor/assets/js/editor.js', array( 'jquery' ), false, true );
+			function() {
+				wp_enqueue_script( 'elementor-bb-editor', get_template_directory_uri() . '/inc/plugins/elementor/assets/js/editor.js', array( 'jquery' ), '1.6.8', true );
 			}
 		);
 	}
@@ -111,7 +113,7 @@ class bbElementorWidgets {
 	 * @access private
 	 */
 	private function includes() {
-		require __DIR__ . '/widgets/bb-header-bar.php';
+		require __DIR__ . '/widgets/header-bar/bb-header-bar.php';
 		require __DIR__ . '/widgets/bb-dashboard-grid.php';
 		require __DIR__ . '/widgets/bb-tabs.php';
 		require __DIR__ . '/widgets/bb-review.php';
@@ -176,4 +178,4 @@ class bbElementorWidgets {
 	}
 }
 
-new bbElementorWidgets();
+new BB_Elementor_Widgets();

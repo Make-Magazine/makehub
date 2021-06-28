@@ -2,7 +2,7 @@
 Contributors: BuddyBoss
 Requires at least: 4.9.1
 Tested up to: 5.7.2
-Version: 1.6.7.1
+Version: 1.6.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,6 +18,18 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
+
+= 1.6.8.1 =
+* Login - Fixed login issue redirected to the admin dashboard
+* Text Editor - Fixed numbered list formatting issue
+* Translations - Updated German (formal) language files
+
+= 1.6.8 =
+* Forums - Provided forum discussion first level replies pagination support
+* Elementor - Added 'Header Bar' block enhancements
+
+= 1.6.7.2 =
+* Theme Options - Provided TikTok, Telegram, and ClubHouse options for footer Social Links
 
 = 1.6.7.1 =
 * Forums - Fixed media link embed issue in Forum discussion and replies
