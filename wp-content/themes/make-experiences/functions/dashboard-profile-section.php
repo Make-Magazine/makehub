@@ -304,26 +304,31 @@ function dashboard_info_content() {
         //           Maker Camp Widget               //
         //  Adventures enrolled & favorite content   //
         ///////////////////////////////////////////////    
+        $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
+        if (!groups_is_user_member(get_current_user_id(), $group_id)) {
+            ?>
+            <div class="dashboard-box expando-box" style="width:100%">
+                <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
+                <ul class="open">
+                    <li>
+                        <?php
+                        $prev_blog_id = get_current_blog_id();
+
+                        //switch to makercamp blog
+                        switch_to_blog(7);
+
+                        echo do_shortcode('[favorite_content]');
+                        //echo do_shortcode('[ld_course_list]');
+                        //switch back to main blog
+                        switch_to_blog($prev_blog_id);
+                        ?>
+                    </li>
+                </ul>
+            </div>
+            <?php
+        }
         ?>
-        <div class="dashboard-box expando-box" style="width:100%">
-            <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
-            <ul class="open">
-                <li>
-                    <?php
-                    $prev_blog_id = get_current_blog_id();
-
-                    //switch to makercamp blog
-                    switch_to_blog(7);
-
-                    echo do_shortcode('[favorite_content]');
-                    //echo do_shortcode('[ld_course_list]');
-                    //switch back to main blog
-                    switch_to_blog($prev_blog_id);
-                    ?>
-                </li>
-            </ul>
-        </div>
-    </div>
+    </div><!-- end .dashboard-wrapper -->
     <?php
 }
 
