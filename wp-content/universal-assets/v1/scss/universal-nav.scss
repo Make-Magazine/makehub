@@ -472,7 +472,7 @@
         }
         #profile-view {
 			display: flex;
-			height: 80px;
+			height: 90px;
 			align-items: center;
             &:hover {
                  .dropdown-menu {
@@ -495,7 +495,7 @@
         }
         .dropdown-menu {
             right: -40px;
-            top: 100% !important;
+            top: 90% !important;
             left: auto !important;
             min-width: 260px;
             transform: none !important;
