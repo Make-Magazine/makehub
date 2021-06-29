@@ -305,7 +305,8 @@ function dashboard_info_content() {
         //  Adventures enrolled & favorite content   //
         ///////////////////////////////////////////////    
         $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
-        if (!groups_is_user_member(get_current_user_id(), $group_id)) {
+        
+        if (groups_is_user_member(get_current_user_id(), $group_id)) {        
             ?>
             <div class="dashboard-box expando-box" style="width:100%">
                 <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
