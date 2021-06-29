@@ -56,8 +56,7 @@ function dashboard_info_content() {
             <div class="dashboard-box expando-box">
                 <h4 class="open"><img style="max-width:100px;" src="<?php echo get_stylesheet_directory_uri(); ?>/images/make-community-logo.png" /> Membership Details</h4>
                 <ul class="open">
-                    <li><?php echo do_shortcode("[ihc-membership-card]"); ?></li>
-                    <h5>Current Membership Level:<?php echo $user_meta['ihc_user_levels'][0]; ?></h5>
+                    <li><?php echo do_shortcode('[ihc-membership-card]'); ?></li>                    
                     <li><a href="/members/'<?php echo $user_slug; ?>/membership/" class="btn universal-btn">See More Details</a></li>
                 </ul>
             </div>
