@@ -319,7 +319,8 @@ function dashboard_info_content() {
                         switch_to_blog(7);
 
                         echo do_shortcode('[favorite_content]');
-                        //echo do_shortcode('[ld_course_list]');
+                        echo do_shortcode('[ld_course_list num="10"]');
+                        
                         //switch back to main blog
                         switch_to_blog($prev_blog_id);
                         ?>
