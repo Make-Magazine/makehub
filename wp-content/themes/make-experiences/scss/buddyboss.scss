@@ -52,6 +52,14 @@
             }
         }
     }
+	// don't let facilitators to maker campus groups invite more users
+	&.group-type-maker-campus {
+		&:not(.admin-bar) {
+			#invite-groups-li {
+                display: none;
+            }
+		}
+	}
 }
 .bp_members {
 	#groups-list {
