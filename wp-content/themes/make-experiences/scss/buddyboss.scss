@@ -192,5 +192,12 @@ button.ges-change, button.ges-change:hover {
 .member-request-list-wrap .last-activity { display: none; }
 
 // Profile Page
-
-#blogs-personal-li { display: none; }
+.bp-user {
+	#blogs-personal-li { display: none; }
+	.main-navs {
+		#messages-personal-li, #notifications-personal-li{
+			width: auto !important;
+			display: flex !important;
+		}
+	}
+}
