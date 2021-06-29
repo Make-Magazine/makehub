@@ -44,7 +44,7 @@ function membership_info_content() {
     require_once(get_stylesheet_directory() . '/vendor/stripe/stripe-php/init.php');
     \Stripe\Stripe::setApiKey('sk_live_fx1xtpmDg3BUWIxZwKVfZugt');
     $customer = \Stripe\Customer::all(["email" => $user_email]);
-    $customerID = $customer->data[0]['id'];
+    $customerID = (isset($customer->data[0]['id']) ? $customer->data[0]['id'] : NULL);
 
     echo '<div class="membership-tab-wrapper">';
     echo '<h1>Make: Membership Details</h1>';

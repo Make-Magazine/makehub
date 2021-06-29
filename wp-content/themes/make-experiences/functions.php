@@ -84,12 +84,9 @@ function load_admin_styles() {
 }
 
 /* * **************************** CUSTOM FUNCTIONS ***************************** */
-
-// Add your own custom functions here
 remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
 
 //clean up the top black nav bar in admin
-
 function experiences_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('wp-logo');
     $wp_admin_bar->remove_node('new-content');
@@ -100,9 +97,22 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
     $wp_admin_bar->remove_node('uap_dashboard_menu'); //ultimate affiliate pro
     $wp_admin_bar->remove_node('elementor_inspector'); // elementor debugger
     $wp_admin_bar->remove_node('essb'); // easy social share buttons
+
 }
 
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
+
+function remove_admin_menu_items(){
+    global $menu;
+    //remove learndash from the base site. the plugin needs to be activated for shortcodes to work in the user dashboard
+    //but we don't want admins seeing the item and getting confused.
+    foreach($menu as $key=>$item){
+        if(in_array('learndash-lms',$item)){
+            unset($menu[$key]);
+        }    
+    }    
+}
+add_action('admin_menu', 'remove_admin_menu_items', 999);
 
 // Include all function files in the make-experiences/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {

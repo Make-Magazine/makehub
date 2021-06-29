@@ -56,8 +56,7 @@ function dashboard_info_content() {
             <div class="dashboard-box expando-box">
                 <h4 class="open"><img style="max-width:100px;" src="<?php echo get_stylesheet_directory_uri(); ?>/images/make-community-logo.png" /> Membership Details</h4>
                 <ul class="open">
-                    <li><?php echo do_shortcode("[ihc-membership-card]"); ?></li>
-                    <h5>Current Membership Level:<?php echo $user_meta['ihc_user_levels'][0]; ?></h5>
+                    <li><?php echo do_shortcode('[ihc-membership-card]'); ?></li>                    
                     <li><a href="/members/'<?php echo $user_slug; ?>/membership/" class="btn universal-btn">See More Details</a></li>
                 </ul>
             </div>
@@ -305,7 +304,8 @@ function dashboard_info_content() {
         //  Adventures enrolled & favorite content   //
         ///////////////////////////////////////////////    
         $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
-        if (!groups_is_user_member(get_current_user_id(), $group_id)) {
+        
+        if (groups_is_user_member(get_current_user_id(), $group_id)) {        
             ?>
             <div class="dashboard-box expando-box" style="width:100%">
                 <h4 class="open"><img src="https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png" /></h4>
@@ -318,7 +318,8 @@ function dashboard_info_content() {
                         switch_to_blog(7);
 
                         echo do_shortcode('[favorite_content]');
-                        //echo do_shortcode('[ld_course_list]');
+                        echo do_shortcode('[ld_course_list num="10"]');
+                        
                         //switch back to main blog
                         switch_to_blog($prev_blog_id);
                         ?>

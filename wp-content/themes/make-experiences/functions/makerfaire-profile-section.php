@@ -13,6 +13,12 @@ function profile_tab_makerfaire_infoname() {
     global $bp;
     $user_id = bp_displayed_user_id();
     $type = bp_get_member_type(bp_displayed_user_id());
+    
+    //do not display this section on a local install as it can't connect to the wpengine db's
+    $homeurl = get_home_url();    
+    if(strpos($homeurl, 'makehub.local') !== false || strpos($homeurl, 'makehub.test')!==false) {    
+        return;
+    }
     if($user_id != 0 && has_mf_entries()){
         bp_core_new_nav_item(array(
             'name' => 'Maker Faire Information',
