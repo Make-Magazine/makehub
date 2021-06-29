@@ -108,3 +108,17 @@
 .ee-my-events-event-section-summary-row td {
     padding: 10px 0px;
 }
+
+// makercamp class dashboard
+.ld-course-list-items .ld_course_grid {
+	.course {
+		display: flex;
+    	flex-direction: column;
+		.bb-card-course-details {
+			flex-grow: 1;
+			.ld_course_grid_button {
+				margin-top: auto !important;
+			}
+		}
+	}
+}
