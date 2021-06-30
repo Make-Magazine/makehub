@@ -166,10 +166,10 @@
         },
         {
             "key": "field_60dcf74b6f69c",
-            "label": "Item Title Orientation",
+            "label": "Item Name Orientation",
             "name": "item_title_orientation",
             "type": "radio",
-            "instructions": "Text orientation applied to all Featured Items title text",
+            "instructions": "Text orientation applied to all Featured Items name text",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -184,7 +184,7 @@
             },
             "allow_null": 0,
             "other_choice": 0,
-            "default_value": "",
+            "default_value": "left",
             "layout": "vertical",
             "return_format": "value",
             "save_other_choice": 0
@@ -297,5 +297,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1625096569
+    "modified": 1625096855
 }
