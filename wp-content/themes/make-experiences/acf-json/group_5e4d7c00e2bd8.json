@@ -253,6 +253,31 @@
             "return_format": "value",
             "ajax": 0,
             "placeholder": ""
+        },
+        {
+            "key": "field_60dcfb379f8b8",
+            "label": "Title Orientation",
+            "name": "title_orientation",
+            "type": "radio",
+            "instructions": "Text orientation for the title",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "choices": {
+                "left": "Left",
+                "center": "Center",
+                "right": "Right"
+            },
+            "allow_null": 0,
+            "other_choice": 0,
+            "default_value": "",
+            "layout": "vertical",
+            "return_format": "value",
+            "save_other_choice": 0
         }
     ],
     "location": [
@@ -272,5 +297,5 @@
     "hide_on_screen": "",
     "active": true,
     "description": "",
-    "modified": 1621960085
+    "modified": 1625095002
 }
