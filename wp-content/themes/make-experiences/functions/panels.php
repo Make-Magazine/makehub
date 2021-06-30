@@ -561,7 +561,7 @@ function rolloverItems($row_layout) {
         }
         // the caption section
         $return .= '  <div class="grid-item-title-block">
-		                 <h3 class="text-'. get_field('title_orientation') . '">' . $item['name'] . '</h3>
+		                 <h3 class="text-'. get_field('item_title_orientation') . '">' . $item['name'] . '</h3>
                     </div>';
         $return .= '</' . $markup . '>'; //close .grid-item
     }
