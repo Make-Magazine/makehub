@@ -271,6 +271,7 @@ add_filter('template_redirect', 'check_makercamp_group_membership', 9999, 1);
 function check_makercamp_group_membership($template) {
     if (!is_user_logged_in()) {
         wp_redirect('/makercamp-register/');
+        return;
     }
 
     $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
