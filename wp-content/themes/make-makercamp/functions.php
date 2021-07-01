@@ -270,7 +270,7 @@ add_filter('pre_get_posts', 'searchfilter');
 add_filter('template_redirect', 'check_makercamp_group_membership', 999, 1);
 function check_makercamp_group_membership($template) {
     if (!is_user_logged_in()) {
-        wp_redirect('/makercamp-register/');
+     //   wp_redirect('/makercamp-register/');
         return;
     }
 
