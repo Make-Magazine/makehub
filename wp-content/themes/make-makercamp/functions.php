@@ -267,7 +267,7 @@ function searchfilter($query) {
 add_filter('pre_get_posts', 'searchfilter');
 
 // If the user isn't a member of our group, redirect them to the makercamp register page
-add_filter('template_redirect', 'check_makercamp_group_membership', 9999, 1);
+add_filter('template_redirect', 'check_makercamp_group_membership', 999, 1);
 function check_makercamp_group_membership($template) {
     if (!is_user_logged_in()) {
         wp_redirect('/makercamp-register/');
