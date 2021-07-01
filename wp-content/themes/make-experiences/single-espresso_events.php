@@ -263,8 +263,14 @@ get_header();
                                             foreach ($dates as $date) {
                                                 ?>
                                                 <li>
-													<p><?php echo $date->description(); ?></p>
-                                                	<?php echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+                                                	<?php 
+													if(count($dates) == 1 && get_field('custom_schedule_details', $event->ID())) {
+														echo get_field('custom_schedule_details', $event->ID());
+													} else { ?>
+														<p><?php echo $date->description(); ?></p>
+													<?php
+														echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+													<?php } ?>
                                                 </li>
     <?php } ?>                                    
                                         </ul>
