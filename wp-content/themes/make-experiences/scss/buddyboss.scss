@@ -61,9 +61,10 @@
 		}
 	}
 }
-.bp_members {
+// buddypress wants to hide hidden groups everywhere
+.bp_members, .bp-user {
 	#groups-list {
-		.bp-single-group.hidden {
+		.bp-single-group.hidden, .item-entry.hidden {
 			display: block !important;
 		}
 	}
