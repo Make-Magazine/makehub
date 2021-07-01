@@ -1,7 +1,6 @@
 <?php
 
 function makercamp_new_customizer_settings($wp_customize) {
-	// add a setting for the site logo
 	$wp_customize->add_setting('logged_out_message', array(
 		'default' => '',
 		'sanitize_callback' => '',

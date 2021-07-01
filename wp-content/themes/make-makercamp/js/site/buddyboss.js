@@ -3,7 +3,7 @@ jQuery(window).load(function(){
 		jQuery("article").before("<a href='/adventures' class='btn universal-btn'>Reset Filters</a>");
 	}
 	if (window.location.href.indexOf("/makercamp-register/") > -1) {
-		jQuery("#LoginBtn").attr("href", "/wp-login.php?redirect_to=" + window.location.protocol + "//" + window.location.hostname + "/adventures");
+		jQuery("#LoginBtn").attr("href", "/wp-login.php?redirect_to=" + window.location.protocol + "//" + window.location.hostname + "/?logged-in=true");
 	}
 });
 
