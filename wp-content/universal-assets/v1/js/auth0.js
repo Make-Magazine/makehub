@@ -160,7 +160,8 @@ window.addEventListener('load', function () {
                 success: function (data) {
                 },
             }).done(function () {
-                if (loggedin == false) {
+				// the very first time a user visits and gets logged in to wordpress, we need to refresh some things
+                if (loggedin == false) { 
 					// reload subnavs as necessary
                     jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
 					if (jQuery('aside.buddypanel').length) {
