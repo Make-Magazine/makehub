@@ -34,7 +34,7 @@ function setup_group_nav() {
                 'parent_url' => $group_link,
                 'parent_slug' => $bp->groups->current_group->slug,
                 'screen_function' => 'bp_group_camp_hub',
-                'position' => 0,
+                'position' => 1,
                 'user_has_access' => $user_access,
                 'item_css_id' => 'camp-hub'
             ));
