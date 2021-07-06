@@ -133,3 +133,14 @@ function get_tag_ID($tag_name) {
 		return 0;
 	}
 }
+
+/* disable wordpress emails if that is set in wp-config
+add_filter('wp_mail','disabling_emails', 10,1);
+function disabling_emails( $args ){
+	error_log("variable is: " . ALLOW_WP_EMAILS);
+    if ( ! $_GET['allow_wp_mail'] ) {
+        unset ( $args['to'] );
+    }
+    return $args;
+}
+*/
