@@ -303,7 +303,7 @@ function dashboard_info_content() {
         //           Maker Camp Widget               //
         //  Adventures enrolled & favorite content   //
         ///////////////////////////////////////////////    
-        $group_id = BP_Groups_Group::group_exists("maker-camp-2021-team-connection");
+        $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
         
         if (groups_is_user_member(get_current_user_id(), $group_id)) {        
             ?>
