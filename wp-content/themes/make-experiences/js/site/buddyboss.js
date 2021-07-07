@@ -11,6 +11,14 @@ jQuery(document).ready(function(){
 	if (window.location.href.indexOf("/groups/") > -1) {
 		setTimeout("jQuery('.bp-groups-tab a').attr('target', '_self');", 100);
 	}
+	jQuery("a").each(function() {
+		if (jQuery(this).attr('href') && jQuery(this).attr('href').indexOf("event_cart=view") > -1) {
+			console.log(jQuery(this).attr('href'));
+			var removeHash = jQuery(this).attr('href').substring(0, jQuery(this).attr('href').indexOf("#"));
+			console.log(removeHash);
+			jQuery(this).attr('href', removeHash); 
+		}
+	});
 });
 
 // 
