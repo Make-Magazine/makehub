@@ -526,6 +526,9 @@
                     :-moz-only-whitespace {
                         display: none;
                     }
+                    &.menu-item-event-cart {
+                        display: none;
+                    }
                     a { 
                         color: #333;
                         display: flex;
@@ -535,6 +538,7 @@
                             display: block !important;
                         }
                     }
+                    
                     &.menu-item-has-children {
                         .ab-submenu {
                             display: none;
@@ -573,6 +577,13 @@
             }
         }
     }
+}
+body.event-espresso .site-header-custom{
+   .login-section .dropdown-menu .dropdown-links {
+       .menu-item-event-cart {
+           display: block;
+       }
+   }
 }
 
 body:not(.buddyboss-theme) {

@@ -134,6 +134,15 @@ function get_tag_ID($tag_name) {
 	}
 }
 
+function add_universal_body_classes($classes) {
+    if ( defined('EVENT_ESPRESSO_VERSION') ){
+        $classes[] = "event-espresso";  
+        return $classes;
+    }
+}
+
+add_filter('body_class', 'add_universal_body_classes');
+
 /* disable wordpress emails if that is set in wp-config
 add_filter('wp_mail','disabling_emails', 10,1);
 function disabling_emails( $args ){
