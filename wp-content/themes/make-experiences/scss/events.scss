@@ -4,6 +4,7 @@
         font-weight: 700;
         font-size: 2.5em;
         margin-bottom: 10px;
+		text-align: center;
     }
     .gallery-wrapper {
         display: flex;
@@ -221,7 +222,6 @@
                             visibility: hidden;
                             display: flex;
                             flex-wrap: wrap;
-                            justify-content: center;
                             a {
                                 background-color: #fff;
                                 color: #005e9a;
@@ -237,6 +237,7 @@
                                 &:hover {
                                     background-color: #005e9a;
                                     color: #fff;
+									text-decoration: none;
                                 }
                             }
                         }

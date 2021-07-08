@@ -148,6 +148,8 @@ button, input[type="submit"] {
 	padding: 10px 30px;
 	background-color: $color-blue;
 	border-radius: 2px !important;
+	min-height: 50px;
+	font-size: 16px;
 	&:hover, &:active, &:focus {
 		background-color: #fff;
 		color: $color-blue;

@@ -96,16 +96,6 @@ get_header();
             </div>
             <div class="event-content container-fluid">
                 <div class="row">
-                    <div class="col-sm-12">
-                        <?php
-                        if (class_exists('ESSB_Plugin_Options')) {
-                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $post_id . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
-                        }
-                        ?>
-                    </div>
-                </div>
-                <div class="row">
                     <div class='event-main-content col-md-7 col-sm-12 col-xs-12'>
                         <?php if (get_the_terms($post, 'event_types')) { ?>
                             <div class="event-cat">
@@ -167,7 +157,7 @@ get_header();
                                     }
                                 }
                                 if (get_field('kit_price_included') == "no") {
-                                    echo "<p><a class='btn btn-blue-universal' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
+                                    echo "<p><a class='btn universal-btn' href='" . get_field("kit_url") . "'  target='_blank'>Get Kit Here</a>";
                                 }
                                 ?>
                             </div>
@@ -327,9 +317,19 @@ get_header();
 <?php } ?>
                     </div>
                 </div>
+				<div class="row">
+                    <div class="col-sm-12">
+                        <?php
+                        if (class_exists('ESSB_Plugin_Options')) {
+                            $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+                            echo do_shortcode('[easy-social-share buttons="facebook,pinterest,reddit,twitter,linkedin,love,more" morebutton_icon="dots" morebutton="2" counters="yes" counter_pos="after" total_counter_pos="hidden" animation="essb_icon_animation6" style="icon" fullwidth="yes" template="6" postid="' . $post_id . '" url="' . $url . '" text="' . preg_replace('@\[.*?\]@', '', get_the_title()) . '"]');
+                        }
+                        ?>
+						<div class="text-center">Have questions or comments? Email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a></div>
+                    </div>
+                </div>
             </div>
         </div>
-        Have questions or comments? Email us at <a href="mailto:makercampus@make.co">makercampus@make.co</a>
     </main><!-- #main -->
 </div><!-- #primary -->
 

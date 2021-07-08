@@ -23,9 +23,11 @@
 	.host-wrapper {
 		margin-top: 30px;
 		border: 1px solid #d5d5d5;
+		border-radisu: 3px;
 		margin-bottom: 40px;
 		padding: 32px;
 		display: flex;
+		flex-wrap: wrap;
 		background: #fff;
 		@media screen and (max-width: 600px) {
 			flex-direction: column;
@@ -58,24 +60,53 @@
 				text-align: left;
 				font-weight: 600;
 			}
-			.host-bio {
-				line-height: 16px;
-				ol { list-style: decimal; }
-				ul { list-style: disc; }
-				ol, ul { 
-					padding-top: 15px;
-					padding-left: 30px; 
-					br { display: none; }
-				}
-				a { 
-					color: #337ab7;
-					&:hover { color: #23527c; }
-				}
+		}
+		.host-bio {
+			line-height: 16px;
+			ol { list-style: decimal; }
+			ul { list-style: disc; }
+			ol, ul { 
+				padding-top: 15px;
+				padding-left: 30px; 
+				br { display: none; }
+			}
+			a { 
+				color: #337ab7;
+				&:hover { color: #23527c; }
 			}
 		}
 		.fas { margin-left: auto; }
 	}
 	.host-events {
-		h3 { font-weight: $font-bold; }
+		h2 { 
+			font-weight: $font-bold;
+			background: $color-navy;
+			padding: 10px 15px;
+			color: #fff;
+			border-radius: 4px;
+		}
+		.events-list {
+			article {
+				border: 1px solid #d5d5d5;
+				.event-image {
+					position: relative;
+					.event-truncated-date {
+						position: absolute;
+						bottom: 0px;
+						background: #fff;
+						padding: 8px 14px;
+						border-radius: 0px 10px 0px 0px;
+						color: $color-red;
+						font-weight: bold;
+						text-transform: uppercase;
+						line-height: 20px;
+						b { 
+							color: $color-light-blue;
+							font-size: 24px;
+						}
+					}
+				}
+			}
+		}
 	}
 }
