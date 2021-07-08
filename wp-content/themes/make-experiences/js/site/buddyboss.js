@@ -17,7 +17,7 @@ jQuery(document).ready(function(){
 			jQuery(this).attr('href', removeHash); 
 		}
 	});
-	if (window.location.href.indexOf("registration-checkout/?event_cart=view") > -1) {
+	if (window.location.href.indexOf("event_cart=view") > -1) {
 		if(jQuery.trim(jQuery(".event-cart-grand-total").html())=='') {
 			jQuery("#event-cart-whats-next-buttons").append("<a href='/maker-campus' class='btn universal-btn' style='width:100%;'>Your Cart is Empty. Browse Events?</a>");
 		}
