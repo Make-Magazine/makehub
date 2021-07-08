@@ -185,6 +185,9 @@
                 h4.eea-people-addon-people-type-label{
                     display: none;
                 }
+				.btn {
+					text-transform: capitalize;
+				}
             }
             .event-sidebar-content {
                 .event-sidebar-item {
@@ -312,6 +315,7 @@
 .tkt-slctr-tbl {
     td, th { 
         padding: 5px 0;
+		text-align: left;
     }
     strong { display: block; }
     a { margin-left: 0px; }

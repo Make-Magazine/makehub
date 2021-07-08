@@ -110,8 +110,9 @@ $wp_query = new EE_Grid_Template_Query($attributes);
                     }
                     ?>
                     <article id="post-<?php echo $event->ID(); ?>" <?php esc_attr(implode(' ', get_post_class())); ?>>
-                        <div class="event-truncated-date"><?php echo $dateFormat; ?></div>
+                        
                         <div class="event-image">
+							<div class="event-truncated-date"><?php echo $dateFormat; ?></div>
                             <a href="<?php echo $registration_url; ?>">
                                 <img src="<?php echo $image; ?>" />
                             </a>

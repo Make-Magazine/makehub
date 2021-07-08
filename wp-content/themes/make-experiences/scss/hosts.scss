@@ -85,28 +85,11 @@
 			padding: 10px 15px;
 			color: #fff;
 			border-radius: 4px;
+			margin-bottom: 40px;
 		}
 		.events-list {
 			article {
 				border: 1px solid #d5d5d5;
-				.event-image {
-					position: relative;
-					.event-truncated-date {
-						position: absolute;
-						bottom: 0px;
-						background: #fff;
-						padding: 8px 14px;
-						border-radius: 0px 10px 0px 0px;
-						color: $color-red;
-						font-weight: bold;
-						text-transform: uppercase;
-						line-height: 20px;
-						b { 
-							color: $color-light-blue;
-							font-size: 24px;
-						}
-					}
-				}
 			}
 		}
 	}
