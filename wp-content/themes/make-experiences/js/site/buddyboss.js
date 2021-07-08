@@ -13,12 +13,15 @@ jQuery(document).ready(function(){
 	}
 	jQuery("a").each(function() {
 		if (jQuery(this).attr('href') && jQuery(this).attr('href').indexOf("event_cart=view") > -1) {
-			console.log(jQuery(this).attr('href'));
 			var removeHash = jQuery(this).attr('href').substring(0, jQuery(this).attr('href').indexOf("#"));
-			console.log(removeHash);
 			jQuery(this).attr('href', removeHash); 
 		}
 	});
+	if (window.location.href.indexOf("registration-checkout/?event_cart=view") > -1) {
+		if(jQuery.trim(jQuery(".event-cart-grand-total").html())=='') {
+			jQuery("#event-cart-whats-next-buttons").append("<a href='/maker-campus' class='btn universal-btn' style='width:100%;'>Your Cart is Empty. Browse Events?</a>");
+		}
+	}
 });
 
 // 
