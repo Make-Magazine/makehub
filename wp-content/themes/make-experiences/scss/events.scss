@@ -4,6 +4,7 @@
         font-weight: 700;
         font-size: 2.5em;
         margin-bottom: 10px;
+		text-align: center;
     }
     .gallery-wrapper {
         display: flex;
@@ -184,6 +185,9 @@
                 h4.eea-people-addon-people-type-label{
                     display: none;
                 }
+				.btn {
+					text-transform: capitalize;
+				}
             }
             .event-sidebar-content {
                 .event-sidebar-item {
@@ -221,7 +225,6 @@
                             visibility: hidden;
                             display: flex;
                             flex-wrap: wrap;
-                            justify-content: center;
                             a {
                                 background-color: #fff;
                                 color: #005e9a;
@@ -229,14 +232,15 @@
                                 border: 1px solid #005e9a;
                                 border-radius: 20px;
                                 padding: 0px 10px;
-                                margin-left: 5px;
                                 display: block;
                                 margin: 5px;
+								margin-left: 0px;
                                 visibility: visible;
                                 line-height: 25px;
                                 &:hover {
                                     background-color: #005e9a;
                                     color: #fff;
+									text-decoration: none;
                                 }
                             }
                         }
@@ -311,6 +315,7 @@
 .tkt-slctr-tbl {
     td, th { 
         padding: 5px 0;
+		text-align: left;
     }
     strong { display: block; }
     a { margin-left: 0px; }

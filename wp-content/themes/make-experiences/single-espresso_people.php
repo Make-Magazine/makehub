@@ -41,14 +41,13 @@ get_header();
 							</span>
 						<?php }
 					?>
-
-					<div class="host-bio">
-						<?php
-							$content = get_field('facilitator_info');
-							$postwithbreaks = wpautop( $content, true );
-							echo $postwithbreaks;
-						?>	
-					</div>
+				</div>
+				<div class="host-bio">
+					<?php
+						$content = get_field('facilitator_info');
+						$postwithbreaks = wpautop( $content, true );
+						echo $postwithbreaks;
+					?>	
 				</div>
 
 			</div>
@@ -60,7 +59,7 @@ get_header();
 					?>
 					<div class="eea-people-addon-person-events-container">
 						<?php if ( $events ) : ?>
-						<h3>Events <?php echo get_the_title(); ?> is involved with:</h3>
+						<h2>Events <?php echo get_the_title(); ?> is involved with:</h2>
 						<?php foreach ( $events as $type => $event ) : // type here is the person type ?>
 							<div class="eea-people-addon-people-type-container">
 								<?php /* <h4 class="eea-people-addon-people-type-label"><?php echo $type; ?></h4> */ ?>
@@ -73,8 +72,8 @@ get_header();
 										$endime = date('g:i a', strtotime($date->end_time()));
 
 										$return = '<article id="post-' . $evt->ID() . '" '. esc_attr( implode( ' ', get_post_class() ) )  .'>
-													 <div class="event-truncated-date">' . $dateFormat . '</div>
 													 <div class="event-image">
+													   <div class="event-truncated-date">' . $dateFormat . '</div>
 													   <a href="' . get_permalink($evt->ID())  . '">
 														 <img src="' . get_the_post_thumbnail_url( $evt->ID(), 'thumbnail' ) . '" />
 													   </a>

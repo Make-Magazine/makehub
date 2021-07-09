@@ -11,6 +11,17 @@ jQuery(document).ready(function(){
 	if (window.location.href.indexOf("/groups/") > -1) {
 		setTimeout("jQuery('.bp-groups-tab a').attr('target', '_self');", 100);
 	}
+	jQuery("a").each(function() {
+		if (jQuery(this).attr('href') && jQuery(this).attr('href').indexOf("event_cart=view") > -1) {
+			var removeHash = jQuery(this).attr('href').substring(0, jQuery(this).attr('href').indexOf("#"));
+			jQuery(this).attr('href', removeHash); 
+		}
+	});
+	if (window.location.href.indexOf("event_cart=view") > -1) {
+		if(jQuery.trim(jQuery(".event-cart-grand-total").html())=='') {
+			jQuery("#event-cart-whats-next-buttons").append("<a href='/maker-campus' class='btn universal-btn' style='width:100%;'>Your Cart is Empty. Browse Events?</a>");
+		}
+	}
 });
 
 // 

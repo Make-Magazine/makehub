@@ -38,7 +38,7 @@
 		padding: 10px 30px 20px;
 		#cart-results-whats-next-buttons-dv {
 			.cart-results-button { 
-				width: 48%;
+				width: 100%;
 			}
 		}
 		#cart-results-current-cart-dv {
@@ -55,7 +55,8 @@
 		display: flex;
 		justify-content: space-between;
 		.event-cart-button.button {
-			min-width: 40%;
+			min-width: 100%;
+			font-size: 20px;
 		}
 	}
 }
@@ -102,6 +103,11 @@
 			line-height: 1.3;
 		}
 	}
+}
+
+// These buttons don't do much for us since the referring event is often unknown
+.event-cart-go-back-button, .cart-results-go-back-button {
+	display: none !important;
 }
 
 .ee-button {

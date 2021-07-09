@@ -62,14 +62,14 @@ if (have_posts()) :
                     <a href="<?php echo $registration_url; ?>" class="ee_grid_box_revised item">
                         <div class="event-image-wrapper">
                             <img src="<?php echo $image; ?>" alt="" />
-                        </div>
-                        <div onclick="" class="event-info">
-                            <div class="event-date">
+							<div class="event-date">
                                 <time class="event-date-time" datetime="<?php echo $timeData; ?>">
                                     <span class="event-start-month"><?php echo $startmonth; ?></span>
                                     <span class="event-start-day"><?php echo $startday; ?></span>
                                 </time>
                             </div>
+                        </div>
+                        <div onclick="" class="event-info">
                             <div class="event-details">
                                 <h3 class="event-title title">
                                     <?php echo $post->post_title; ?>
