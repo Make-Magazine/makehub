@@ -93,16 +93,18 @@ function ee_filter_ee_events_orderyby_datetime() {
 
 // hide events tagged as 'hidden'
 function ee_filter_pre_get_posts( $query ) {
-	if ( isset($query->query['post_type'])&& $query->query['post_type'] == 'espresso_events' ) {
-		$query->set( 'tax_query', array(
-				array(
-					'taxonomy' => 'post_tag',
-					'field' => 'term_id',
-					'terms' => get_tag_ID('hidden'),
-					'operator' => 'NOT IN'
-				)
-			) 
-		);
+	if ( isset($query->query['post_type']) ) {
+		if( $query->query['post_type'] == 'espresso_events' ) {
+			$query->set( 'tax_query', array(
+					array(
+						'taxonomy' => 'post_tag',
+						'field' => 'term_id',
+						'terms' => get_tag_ID('hidden'),
+						'operator' => 'NOT IN'
+					)
+				) 
+			);
+		}
 	}
 }
 add_action( 'pre_get_posts', 'ee_filter_pre_get_posts' );
