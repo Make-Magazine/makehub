@@ -23,12 +23,12 @@ class shopify_widget extends WP_Widget {
     public function widget($args, $instance) {
 
         $title = apply_filters('widget_title', $instance['title']);
-		$url = $instance['url'];
+        $url = (isset($instance['url'])?$instance['url']:'https://makershed.com');
 
         // before and after widget arguments are defined by themes
         echo $args['before_widget'];
         if (!empty($title)) {
-            echo $args['before_title'] . '<a href="'.$url.'">' . $title . '</a>' . $args['after_title'];
+            echo $args['before_title'] . '<a href="' . $url . '">' . $title . '</a>' . $args['after_title'];
         }
 
         // Here's where we pull data from shopify
@@ -39,14 +39,13 @@ class shopify_widget extends WP_Widget {
         $number = $instance['number'];
 
         // Create the API URL for the Shopify collect
-        $collects_url = $api_url . '/admin/api/2021-04/collections/'.$collection_id.'/products.json?limit=' . $number;
+        $collects_url = $api_url . '/admin/api/2021-04/collections/' . $collection_id . '/products.json?limit=' . $number;
 
         $collection_content = @file_get_contents($collects_url);
 
         // Decode the JSON in the file
         $collection = json_decode($collection_content, true);
-		//error_log(print_r($collection, TRUE));
-
+        //error_log(print_r($collection, TRUE));
         // Reset variant inventory count
         $variant_inventory = 0;
 
@@ -92,7 +91,7 @@ class shopify_widget extends WP_Widget {
             $return .= '<div class="product-feed-item">
                             <a href="https://makershed.com/products/' . $product_handle . '" target="_blank">
                                 <div class="product-image">
-                                    <img src="' . get_resized_remote_image_url( $product_image_src , 140, 100 ). '" alt="' . $product_title . '" width="140" height="100" />
+                                    <img src="' . get_resized_remote_image_url($product_image_src, 140, 100) . '" alt="' . $product_title . '" width="140" height="100" />
                                 </div>
                                 <div class="product-info">
                                     <h3>' . $product_title . '</h3>';
@@ -128,10 +127,10 @@ class shopify_widget extends WP_Widget {
         } else {
             $title = __('Maker Shed', 'shopify_widget_domain');
         }
-		if (isset($instance['url'])) {
+        if (isset($instance['url'])) {
             $url = $instance['url'];
         } else {
-            $url = __('https://makershed.com', 'shopify_widget_domain');
+            $url = 'https://makershed.com';
         }
         if (isset($instance['collection_id'])) {
             $collection_id = $instance['collection_id'];
@@ -145,22 +144,22 @@ class shopify_widget extends WP_Widget {
         }
         // Widget admin form
         ?>
-                <p>
-                    <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
-                    <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
-                </p>
-				<p>
-                    <label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('URL:'); ?></label> 
-                    <input class="widefat" id="<?php echo $this->get_field_id('url'); ?>" name="<?php echo $this->get_field_name('url'); ?>" type="text" value="<?php echo esc_attr($url); ?>" />
-                </p>
-                <p>
-                    <label for="<?php echo $this->get_field_id('collection_id'); ?>"><?php _e('Shopify Collection ID:'); ?></label> 
-                    <input class="widefat" id="<?php echo $this->get_field_id('collection_id'); ?>" name="<?php echo $this->get_field_name('collection_id'); ?>" type="text" value="<?php echo esc_attr($collection_id); ?>" />
-                </p>
-                <p>
-                    <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Products to Show:'); ?></label> 
-                    <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo esc_attr($number); ?>" />
-                </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label> 
+            <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" />
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('url'); ?>"><?php _e('URL:'); ?></label> 
+            <input class="widefat" id="<?php echo $this->get_field_id('url'); ?>" name="<?php echo $this->get_field_name('url'); ?>" type="text" value="<?php echo esc_attr($url); ?>" />
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('collection_id'); ?>"><?php _e('Shopify Collection ID:'); ?></label> 
+            <input class="widefat" id="<?php echo $this->get_field_id('collection_id'); ?>" name="<?php echo $this->get_field_name('collection_id'); ?>" type="text" value="<?php echo esc_attr($collection_id); ?>" />
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Products to Show:'); ?></label> 
+            <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo esc_attr($number); ?>" />
+        </p>
         <?php
     }
 
@@ -168,7 +167,7 @@ class shopify_widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = array();
         $instance['title'] = (!empty($new_instance['title']) ) ? strip_tags($new_instance['title']) : '';
-		$instance['url'] = (!empty($new_instance['url']) ) ? strip_tags($new_instance['url']) : '';
+        $instance['url'] = (!empty($new_instance['url']) ) ? strip_tags($new_instance['url']) : '';
         $instance['collection_id'] = (!empty($new_instance['collection_id']) ) ? strip_tags($new_instance['collection_id']) : '';
         $instance['number'] = (!empty($new_instance['number']) ) ? strip_tags($new_instance['number']) : '';
         return $instance;
