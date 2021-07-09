@@ -347,7 +347,7 @@ function build_ee_ticket_section($event, $user_email) {
     $group_link = bp_get_group_link($group);
 
     //build the inner rows        
-    $return .= '<tr class="ee-my-events-event-section-summary-row">
+    $return = '<tr class="ee-my-events-event-section-summary-row">
                     <td>' . $group_link . '</td>    
                     <td>' . $time_range . '</td>
                     <td>' . count($registrations) . ' </td>
