@@ -4,23 +4,20 @@
  */
 get_header();
 // make sure $attributes is an array
-$attributes = array_merge(
-        // defaults
-        array(
-            'template_file' => 'espresso-grid-template.template.php', //Default template file
-            //'title' => NULL,
-            'limit' => 10,
-            //'css_class' => NULL,
-            'show_expired' => false,
-            'month' => null,
-            'category_slug' => null,
-            'order_by' => 'start_date',
-            'sort' => 'ASC',
-        //'show_featured' => '0',
-        //'table_header' => '1'
-        ),
-        (array) $attributes
+$attributes = array(
+	'template_file' => 'espresso-grid-template.template.php', //Default template file
+	//'title' => NULL,
+	'limit' => 10,
+	//'css_class' => NULL,
+	'show_expired' => false,
+	'month' => null,
+	'category_slug' => null,
+	'order_by' => 'start_date',
+	'sort' => 'ASC',
+	//'show_featured' => '0',
+	//'table_header' => '1'
 );
+
 // the following get sanitized/whitelisted in EEH_Event_Query
 $custom_sanitization = array(
     'category_slug' => 'skip_sanitization',
@@ -66,7 +63,7 @@ $wp_query = new EE_Grid_Template_Query($attributes);
 
                     $image = !empty($feature_image_url) ? $feature_image_url : $default_image;
 
-                    $datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time($post->ID, $show_expired, false, 1);
+                    $datetimes = EEM_Datetime::instance()->get_datetimes_for_event_ordered_by_start_time($post->ID, $attributes['show_expired'], false, 1);
                     $date_count = count(EEM_Datetime::instance()->get_all_event_dates($post->ID));
 
                     $event = EEH_Event_View::get_event($post->ID);
@@ -74,6 +71,7 @@ $wp_query = new EE_Grid_Template_Query($attributes);
                     if ($event instanceof EE_Event) {
                         $tickets = $event->tickets();
                     }
+					$ticket_count = count($tickets);
                     $tickets_expired = array();
 
                     $datetime = end($datetimes);
@@ -110,7 +108,6 @@ $wp_query = new EE_Grid_Template_Query($attributes);
                     }
                     ?>
                     <article id="post-<?php echo $event->ID(); ?>" <?php esc_attr(implode(' ', get_post_class())); ?>>
-                        
                         <div class="event-image">
 							<div class="event-truncated-date"><?php echo $dateFormat; ?></div>
                             <a href="<?php echo $registration_url; ?>">
