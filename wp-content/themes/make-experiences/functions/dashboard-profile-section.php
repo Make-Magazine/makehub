@@ -357,8 +357,7 @@ function build_ee_ticket_section($event, $user_email) {
             continue;
         }
         $actions = array();
-        $link_to_edit_registration_text = esc_html__('Link to edit registration.', 'event_espresso');
-        $link_to_resend_registration_message_text = esc_html__('Link to resend registration message', 'event_espresso');
+        $link_to_edit_registration_text = esc_html__('Link to edit registration.', 'event_espresso');        
         $link_to_make_payment_text = esc_html__('Link to make payment', 'event_espresso');
         $link_to_view_receipt_text = esc_html__('Link to view receipt', 'event_espresso');
         $link_to_view_invoice_text = esc_html__('Link to view invoice', 'event_espresso');
@@ -379,15 +378,6 @@ function build_ee_ticket_section($event, $user_email) {
                     array('token' => $registration->reg_url_link(), 'resend' => true),
                     null
             );
-            if ($registration->is_primary_registrant() ||
-                    (!$registration->is_primary_registrant() && $registration->status_ID() === EEM_Registration::status_id_approved)
-            ) {
-                $actions['resend_registration'] = '<a aria-label="'
-                        . $link_to_resend_registration_message_text
-                        . '" title="' . $link_to_resend_registration_message_text
-                        . '" href="' . $resend_registration_link . '">'
-                        . '<span class="dashicons dashicons-email-alt"></span></a>';
-            }
         }
 
         // make payment?
