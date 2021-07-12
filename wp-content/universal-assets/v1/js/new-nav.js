@@ -55,7 +55,7 @@ jQuery(document).ready(function () {
         case "learn.make.co":
             jQuery("h2.site-title a").attr("href", "https://learn.make.co");
             document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
-			sitename = "Make Learning";
+			sitename = "Learning Labs";
             break;
         default:// the default is makehub/make.co
             if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
