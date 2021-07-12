@@ -164,8 +164,8 @@ window.addEventListener('load', function () {
                 if (loggedin == false) { 
 					// reload subnavs as necessary
                     jQuery('#menu-secondary_universal_menu').load(document.URL + " #menu-secondary_universal_menu > *");
-					if (jQuery('aside.buddypanel').length) {
-                    	jQuery("aside.buddypanel").load(document.URL + " aside.buddypanel > *");
+					if (jQuery('#buddypanel-menu').length) {
+                    	jQuery("#buddypanel-menu").load(document.URL + " aside.buddypanel > *");
 					}
 					// reload the digital libary if necessary
                     if (jQuery('.main-content').length && jQuery('.join-box').length) {

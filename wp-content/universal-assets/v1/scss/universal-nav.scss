@@ -94,7 +94,7 @@
                     min-width: 130px;
                     @media screen and (max-width: 800px) {
                         flex-direction: column;
-                        max-width: fit-content;
+                        min-width: fit-content;
 						h3 {
 							background: #fff;
                             width: 100%;

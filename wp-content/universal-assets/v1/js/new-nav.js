@@ -1,4 +1,77 @@
 jQuery(document).ready(function () {
+	
+	    // Change logo based on site
+    var site = window.location.hostname
+	var sitename = "Make: Community";
+    switch (site) {
+        case "makerfaire.local":
+        case "makerfaire.test":
+        case "makerfaire.com":
+        case "makerfaire.staging.wpengine.com":
+        case "dev.makerfaire.com":
+        case "stage.makerfaire.com":
+            jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
+            document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
+			sitename = "Maker Faire";
+            break;
+        case "makercamp.local":
+        case "makercamp.test":
+        case "makercamp.com":
+        case "makercamp.staging.wpengine.com":
+        case "dev.makercamp.com":
+        case "stage.makercamp.com":
+        case "makercamp.makehub.local":
+        case "makercamp.make.co":
+        case "makercamp.devmakehub.wpengine.com":
+        case "makercamp.stagemakehub.wpengine.com":
+            jQuery("h2.site-title a").attr("href", "https://makercamp.com");
+            document.getElementById("navLogo").src = "https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
+			sitename = "Maker Camp";
+            break;
+        case "makezine.test":
+        case "makezine.local":
+        case "makezine.staging.wpengine.com":
+        case "makezine.com":
+        case "stage.makezine.com":
+        case "dev.makezine.com":
+            jQuery("h2.site-title a").attr("href", "https://makezine.com");
+            jQuery("#site-logo .nav-logo").css("height", "30.4px");
+            jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
+			sitename = "Make: Magazine";
+            break;
+        case "makerspaces.makehub.test":
+        case "makerspaces.makehub.local":
+        case "makerspaces.devmakehub.wpengine.com":
+        case "makerspaces.stagemakehub.wpengine.com":
+        case "makerspaces.make.co":
+			sitename = "Maker Spaces";
+            jQuery("h2.site-title a").attr("href", "https://makerspaces.make.co");
+            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
+            break;
+        case "learn.makehub.test":
+        case "learn.makehub.local":
+        case "learn.devmakehub.wpengine.com":
+        case "learn.stagemakehub.wpengine.com":
+        case "learn.make.co":
+            jQuery("h2.site-title a").attr("href", "https://learn.make.co");
+            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
+			sitename = "Make Learning";
+            break;
+        default:// the default is makehub/make.co
+            if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
+				sitename = "Maker Campus";
+                // except for makercampus which gets it's own logo and subnav items
+                jQuery("h2.site-title a").attr("href", "https://make.co/maker-campus");
+                jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
+                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
+                jQuery("#universal-subnav .community-subnav-item, #primary-navbar .community-subnav-item").hide();
+                jQuery("#universal-subnav .campus-subnav-item, #primary-navbar .campus-subnav-item").show();
+            } else {
+                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make_co_logo.png";
+            }
+            break;
+    }
+	
     /*
      * Allow use of Array.from in implementations that don't natively support it
      function conNavArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -143,7 +216,7 @@ jQuery(document).ready(function () {
     if (jQuery(window).width() < 800) {
         jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
 		jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
-		jQuery("#primary-navbar").prepend("<h3>Site Links</h3>");
+		jQuery("#primary-navbar").prepend("<h3>" + sitename + "</h3>");
     }
     window.onresize = function() {
         if (jQuery(window).width() < 800 && jQuery("#universal-subnav #menu-secondary_universal_menu").length) {
@@ -152,7 +225,7 @@ jQuery(document).ready(function () {
 			if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
 				jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
 			}
-			jQuery("#primary-navbar").prepend("<h3>Site Links</h3>");
+			jQuery("#primary-navbar").prepend("<h3>" + sitename + "</h3>");
         } else if (jQuery(window).width() > 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
             jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
@@ -203,70 +276,7 @@ jQuery(document).ready(function () {
         jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");
     }
 
-    // Change logo based on site
-    var site = window.location.hostname
-    switch (site) {
-        case "makerfaire.local":
-        case "makerfaire.test":
-        case "makerfaire.com":
-        case "makerfaire.staging.wpengine.com":
-        case "dev.makerfaire.com":
-        case "stage.makerfaire.com":
-            jQuery("h2.site-title a").attr("href", "https://makerfaire.com");
-            document.getElementById("navLogo").src = "/wp-content/themes/makerfaire/img/Maker_Faire_Logo.svg";
-            break;
-        case "makercamp.local":
-        case "makercamp.test":
-        case "makercamp.com":
-        case "makercamp.staging.wpengine.com":
-        case "dev.makercamp.com":
-        case "stage.makercamp.com":
-        case "makercamp.makehub.local":
-        case "makercamp.make.co":
-        case "makercamp.devmakehub.wpengine.com":
-        case "makercamp.stagemakehub.wpengine.com":
-            jQuery("h2.site-title a").attr("href", "https://makercamp.com");
-            document.getElementById("navLogo").src = "https://makercamp.com/wp-content/themes/makercamp-theme/assets/img/makercamp-logo.png";
-            break;
-        case "makezine.test":
-        case "makezine.local":
-        case "makezine.staging.wpengine.com":
-        case "makezine.com":
-        case "stage.makezine.com":
-        case "dev.makezine.com":
-            jQuery("h2.site-title a").attr("href", "https://makezine.com");
-            jQuery("#site-logo .nav-logo").css("height", "30.4px");
-            jQuery("#site-logo .nav-logo").css("margin-top", "-5px");
-            break;
-        case "makerspaces.makehub.test":
-        case "makerspaces.makehub.local":
-        case "makerspaces.devmakehub.wpengine.com":
-        case "makerspaces.stagemakehub.wpengine.com":
-        case "makerspaces.make.co":
-            jQuery("h2.site-title a").attr("href", "https://makerspaces.make.co");
-            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/makerspaces-logo.jpg";
-            break;
-        case "learn.makehub.test":
-        case "learn.makehub.local":
-        case "learn.devmakehub.wpengine.com":
-        case "learn.stagemakehub.wpengine.com":
-        case "learn.make.co":
-            jQuery("h2.site-title a").attr("href", "https://learn.make.co");
-            document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make-learning-labs-logo.png";
-            break;
-        default:// the default is makehub/make.co/makezine
-            if (window.location.href.indexOf("makercampus") > -1 || window.location.href.indexOf("maker-campus") > -1) {
-                // except for makercampus which gets it's own logo and subnav items
-                jQuery("h2.site-title a").attr("href", "https://make.co/maker-campus");
-                jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
-                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
-                jQuery("#universal-subnav .community-subnav-item, #primary-navbar .community-subnav-item").hide();
-                jQuery("#universal-subnav .campus-subnav-item, #primary-navbar .campus-subnav-item").show();
-            } else {
-                document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make_co_logo.png";
-            }
-            break;
-    }
+
 
 });
 

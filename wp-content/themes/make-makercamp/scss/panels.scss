@@ -427,6 +427,7 @@
 	}
 
 }
+
 .featured-panel {
 	.more-makers-link {
 		color: #fff;
@@ -1764,3 +1765,17 @@
    }
 
 }
+
+/*
+.page-home-page {
+	.featured-image-grid {
+		@media screen and (max-width: 560px) {
+			display: flex;
+			justify-content: space-between;
+			.grid-item {
+				width: 45%;
+				
+			}
+		}
+	}
+}*/
