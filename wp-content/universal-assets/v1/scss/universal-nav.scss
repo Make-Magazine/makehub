@@ -11,6 +11,8 @@
         line-height: 1;
         display: inline-block;
     }
+	// hide campus menu items unless you are on campus
+	.campus-subnav-item { display: none; }
     .menu-item-has-children > a {
         position: relative;
     }
@@ -93,13 +95,21 @@
                     @media screen and (max-width: 800px) {
                         flex-direction: column;
                         max-width: fit-content;
-                        #menu-secondary_universal_menu {
+						h3 {
+							background: #fff;
+                            width: 100%;
+							padding-left: 30px;
+							padding-top: 30px;
+							font-size: 18px;
+							margin: 0px;
+						}
+                        #menu-secondary_universal_menu, #buddypanel-menu {
                             background: #fff;
                             width: 100%;
                             margin: 0px;
-                            padding-top: 10px;
                             display: flex;
                             flex-direction: column;
+							li { min-height: 40px; }
                             a {
                                 color: #333;
                                 padding-left: 30px;
@@ -107,7 +117,9 @@
                                 &:hover {
                                     background: #f5f5f5;
                                 }
+								i.buddyboss { display: none; }
                             }
+							.bp-logout-nav { display: none; }
                         }
                     }
                     #primary-menu {

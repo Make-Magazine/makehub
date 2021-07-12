@@ -142,14 +142,24 @@ jQuery(document).ready(function () {
     jQuery(".nav-level-2").css("display", "block");
     if (jQuery(window).width() < 800) {
         jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
+		jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
+		jQuery("#primary-navbar").prepend("<h3>Site Links</h3>");
     }
     window.onresize = function() {
         if (jQuery(window).width() < 800 && jQuery("#universal-subnav #menu-secondary_universal_menu").length) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "76px");
             jQuery("#primary-navbar").prepend(jQuery("#menu-secondary_universal_menu"));
+			if(jQuery(".side-panel-menu-container #buddypanel-menu").length) {
+				jQuery("#primary-navbar").prepend(jQuery("#buddypanel-menu"));
+			}
+			jQuery("#primary-navbar").prepend("<h3>Site Links</h3>");
         } else if (jQuery(window).width() > 800 && jQuery("#primary-navbar #menu-secondary_universal_menu").length) {
             jQuery("#masthead.site-header-custom").nextAll().not("script, style, #universal-subnav").first().css("padding-top", "121px");
             jQuery("#universal-subnav").append(jQuery("#menu-secondary_universal_menu"));
+			if(jQuery("#primary-navbar #buddypanel-menu").length) {
+				jQuery(".side-panel-menu-container").append(jQuery("#buddypanel-menu"));
+			}
+			jQuery("#primary-navbar h3").remove();
         }
         if (jQuery(window).width() > 800) {
             navListOrder();
@@ -250,8 +260,8 @@ jQuery(document).ready(function () {
                 jQuery("h2.site-title a").attr("href", "https://make.co/maker-campus");
                 jQuery("#site-logo .nav-logo").css("margin-top", "-8px");
                 document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/MakerCampus_Logo_Boxless.png";
-                jQuery("#universal-subnav .community-subnav-item").hide();
-                jQuery("#universal-subnav .campus-subnav-item").show();
+                jQuery("#universal-subnav .community-subnav-item, #primary-navbar .community-subnav-item").hide();
+                jQuery("#universal-subnav .campus-subnav-item, #primary-navbar .campus-subnav-item").show();
             } else {
                 document.getElementById("navLogo").src = "/wp-content/universal-assets/v1/images/make_co_logo.png";
             }
