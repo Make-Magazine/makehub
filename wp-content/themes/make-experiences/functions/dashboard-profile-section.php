@@ -219,7 +219,7 @@ function dashboard_info_content() {
         if (!empty($ms_results)) {
             ?>
             <div class="dashboard-box expando-box">
-                <h4 class="open">My &nbsp;&nbsp;<img src="<?php echo get_stylesheet_directory_uri(); ?>/images/makerspaces-logo.jpg" /></h4>
+                <h4 class="open">My &nbsp;&nbsp;<img src="https://makerspaces.make.co/wp-content/universal-assets/v1/images/makerspaces-logo.jpg" /></h4>
                 <ul class="open">
                     <li><p><b><?php echo $ms_results[0]->meta_value; ?></b> - <a href="<?php echo $ms_results[1]->meta_value; ?>" target="_blank"><?php echo $ms_results[1]->meta_value; ?></a></p></li>
                     <li><a href="/members/<?php echo $user_slug; ?>/makerspace_info/" class="btn universal-btn">See More Details</a></li>
