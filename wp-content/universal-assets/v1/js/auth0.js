@@ -88,7 +88,9 @@ window.addEventListener('load', function () {
 			if (wpLoginRequired == true) {
 				jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
 				getProfile();
-			} 
+			} else {
+				jQuery(".search-separator").hide();
+			}
         } else {
             jQuery("#LoginBtn").css("display", "block");
             jQuery("#profile-view, #LogoutBtn").css('display', 'none'); 
