@@ -73,11 +73,13 @@
 // Adventures page
 .sfwd-courses-template, .learndash-cpt-sfwd-courses {
 	.ld-course-status { display: none !important; }
-	.bb-course-meta {
-		width: 100%;
-		align-content: space-between;
-		padding: 10px 20px 0px;
-		margin-bottom: 0px;
+	.ld-lesson-list {
+		.bb-course-meta {
+			width: 100%;
+			align-content: space-between;
+			padding: 10px 20px 0px;
+			margin-bottom: 0px;
+		}
 	}
 	.ld-item-details {
 		.lds-btn {
@@ -99,6 +101,11 @@
 	}
 	.lms-topic-sidebar-data {
 		top: 138px !important;
+	}
+	@media screen and (max-width: 767px) {
+		#learndash-content .lms-topic-sidebar-wrapper {
+			display: none;
+		}
 	}
 	#learndash-course-header .lms-header-title {
 		max-width: 100%;

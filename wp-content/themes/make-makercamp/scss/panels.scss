@@ -1578,7 +1578,7 @@
 			width: 47%;
 			height: 50px;
 			.grid-item-title-block {
-				max-height: auto;
+				max-height: inherit;
 				h3{
 					display: flex;
 					justify-content: center;
