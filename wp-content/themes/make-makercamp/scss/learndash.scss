@@ -107,9 +107,19 @@
 			display: none;
 		}
 	}
-	#learndash-course-header .lms-header-title {
-		max-width: 100%;
-		padding: 0 30px;
+	#learndash-course-header {
+		.lms-header-title {
+			max-width: 100%;
+			padding: 0 30px;
+		}
+		@media screen and (max-width: 767px) {
+			.lds-breadcrumb-meta, .bb-ld-info-bar {
+				display: none;
+			}
+			.bb-position {
+				padding: 0 15px;
+			}
+		}
 	}
 	// style the activities grid
 	.learndash-wrapper.lds-template-grid-banner {
