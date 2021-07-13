@@ -49,7 +49,7 @@ function event_ticket_prices($post) {
 		}
 	}
 	sort($tickets, SORT_NUMERIC);
-	$ticket_price = 'Tickets Not Available';
+	$ticket_price = 'SOLD OUT';
 	if ( is_array( $tickets ) && count($tickets) > 1 ) {
 		foreach($tickets as $ticket => $element) {
 			reset($tickets);
