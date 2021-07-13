@@ -1575,15 +1575,17 @@
 	}
 	@media screen and (max-width: 600px) {
 		.grid-item {
-			width: 47%;
+			width: 46%;
 			height: 50px;
 			.grid-item-title-block {
 				max-height: inherit;
+				padding: 5px;
 				h3{
 					display: flex;
 					justify-content: center;
 					align-items: center;
 					text-align: center;
+					font-size: 18px;
 				}
 			}
 		}
