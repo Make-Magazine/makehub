@@ -89,11 +89,13 @@ window.addEventListener('load', function () {
             getProfile();
         } else {
             jQuery("#LoginBtn").css("display", "block");
-            jQuery("#profile-view, #LogoutBtn").css('display', 'none');
-            jQuery(".login-section").css("display", "block");
+            jQuery("#profile-view, #LogoutBtn").css('display', 'none'); 
             if (wpLoginRequired == true) {
+				jQuery(".login-section").css("display", "block");
                 WPlogout();
-            }
+            } else {
+				jQuery(".search-separator").hide();
+			}
         }
     }
 
