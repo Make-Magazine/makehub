@@ -427,6 +427,7 @@
 	}
 
 }
+
 .featured-panel {
 	.more-makers-link {
 		color: #fff;
@@ -1533,80 +1534,60 @@
 }
 
 .featured-image-grid {
-   padding-top: 30px;
-   display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-   grid-column-gap: 24px;
-   grid-row-gap: 24px;
-   margin-bottom: 24px;
-	@media screen and (min-width: 960px) {
-		padding: 0 15px;
+	padding-top: 30px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+	grid-column-gap: 24px;
+	grid-row-gap: 24px;
+	margin-bottom: 24px;
+	.grid-item {
+		background-repeat: no-repeat;
+		background-position: center;
+		background-size: cover;
+		// Responsive Height
+		height: 150px;
+		padding-top: 50%;
+		box-sizing: content-box;
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-end;
+		position: relative;
+		overflow: hidden;
+		text-decoration: none;
+		&:hover {
+			&> .grid-item-desc {
+				transform: translateX(0);
+				transition: transform 0.25s ease-in-out;
+			}
+		}
 	}
-   @media screen and (max-width: 960px) {
-      display: block;
-   }
-   .grid-item {
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-      // Responsive Height
-      height: 150px;
-      padding-top: 50%;
-      box-sizing: content-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      position: relative;
-      overflow: hidden;
-	  text-decoration: none;
-      &:hover {
-         &> .grid-item-desc {
-            transform: translateX(0);
-            transition: transform 0.25s ease-in-out;
-         }
-      }
-      @media screen and (max-width: 960px) {
-         width: 50%;
-         overflow: visible;
-         margin-bottom: 24px;
-         height: 300px;
-         padding-top: 0;
-         &:hover {
-            &> .grid-item-desc {
-               transform: translateX(100%);
-               transition: transform 0.25s ease-in-out;
-            }
-         }
-      }
-
-      @media screen and (max-width: 560px) {
-         width: auto;
-         padding-top: 75%;
-         height: auto;
-         background-size: 100%;
-         background-position: top;
-         &:hover {
-            transform: none;
-            transition: none;
-            &> .grid-item-desc {
-               transform: none;
-               transition: none;
-            }
-         }
-         &> .grid-item-title-block {
-            transform: translateX(0);
-            //transition: transform 0.25s ease-in-out;
-         }
-         &> .grid-item-desc {
-            height: auto;
-            transform: translateX(0);
-            //transition: transform 0.25s ease-in-out;
-         }
-         .grid-item-title-block h3 {
-            margin-bottom: 12px;
-         }
-      }
-   }
+	@media screen and (max-width: 1150px) {
+		padding-left: 30px;
+	}
+	@media screen and (max-width: 800px) {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		padding: 0px 15px;
+		.grid-item {
+			width: 48%;
+		}
+	}
+	@media screen and (max-width: 600px) {
+		.grid-item {
+			width: 47%;
+			height: 50px;
+			.grid-item-title-block {
+				max-height: auto;
+				h3{
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					text-align: center;
+				}
+			}
+		}
+	}
 	// used for tiny text in the header
 	sup {
 		 display: block;
@@ -1630,20 +1611,6 @@
 		h3 {
 			font-size: 30px;
 			font-weight: bold;
-		}
-
-		@media screen and (max-width: 960px) {
-			position: absolute;
-			bottom: 0;
-			width: 100%;
-			display: none;
-			p { font-size: 16px; }
-		}
-
-		@media screen and (max-width: 768px) {
-			position: relative;
-			bottom: auto;
-			transform: translateX(100%);
 		}
 
    }
@@ -1683,36 +1650,7 @@
 			font-weight: bold;
 			color: #fff;
 		}
-		@media screen and (max-width: 960px) {
-			background-color: #151733;
-			h4 {
-				font-size: 34px;
-				display: block;
-				sup { 
-					font-size: 18px; 
-					line-height: 20px; 
-					margin-bottom: 5px;
-				}
-			}
-		}
-      @media screen and (max-width: 768px) {
-         position: relative;
-         display: flex;
-         background-color: #151733;
-         .desc-body {
-            height: 0;
-            overflow: hidden;
-         }
-      }
-		@media screen and (max-width: 768px) and (min-width: 560px) {
-			height: 71%;
-		}
-      @media screen and (max-width: 560px) {
-         .desc-body {
-            height: auto;
-            overflow: visible;
-         }
-      }
+
       .read-more-link {
          bottom: 0;
          border: 1px solid #151733;
