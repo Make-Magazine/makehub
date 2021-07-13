@@ -85,8 +85,10 @@ window.addEventListener('load', function () {
 
     function displayButtons() {
         if (localStorage.getItem('expires_at')) {
-            jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
-            getProfile();
+			if (wpLoginRequired == true) {
+				jQuery("#profile-view, #LogoutBtn").css('display', 'flex');
+				getProfile();
+			} 
         } else {
             jQuery("#LoginBtn").css("display", "block");
             jQuery("#profile-view, #LogoutBtn").css('display', 'none'); 
