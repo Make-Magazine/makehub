@@ -14,7 +14,7 @@
 }
 
 // margins for learn dash pages
-.single-sfwd-lessons, .sfwd-courses-template, .post-type-archive-sfwd-courses {
+.single-sfwd-lessons, .sfwd-courses-template, .post-type-archive-sfwd-courses, .learndash-cpt-sfwd-lessons {
 	#page {
 		.site-content > .container{
 			width: 100%;
@@ -71,7 +71,8 @@
 }
 
 // Adventures page
-.sfwd-courses-template {
+.sfwd-courses-template, .learndash-cpt-sfwd-courses {
+	.ld-course-status { display: none !important; }
 	.bb-course-meta {
 		width: 100%;
 		align-content: space-between;
@@ -92,7 +93,7 @@
 }
 
 // Lessons / Projects
-.single-sfwd-lessons {
+.learndash-cpt-sfwd-lessons {
 	.lms-topic-sidebar-data {
 		top: 138px !important;
 	}
