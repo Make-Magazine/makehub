@@ -141,11 +141,12 @@ function group_camp_hub_screen_title() {
 }
 
 function group_camp_hub_screen_content() {
-    //makercamp.make.co home page post id is 7594
-    switch_to_blog(7);         //switch to makercamp blog
-    //output the page content for post 7594
-    echo apply_filters('the_content', get_post_field('post_content', 7594));
-    switch_to_blog(1); //switch back to main site
+    //get the url of the makercamp blog
+    $mc_blog_details = get_blog_details( array( 'blog_id' => 7 ) );    
+    //pull in the contents of the home page from the mc blog. 
+    //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content    
+    $result = file_get_contents($mc_blog_details->siteurl.'/wp-json/MakerCamp/v1/pages/7594/contentElementor');
+    echo json_decode($result);    
 }
 
 //rename group tabs
@@ -158,4 +159,4 @@ function bp_rename_group_tabs() {
     }        
 }
 
-add_action( 'bp_actions', 'bp_rename_group_tabs', 9999 );
+add_action( 'bp_actions', 'bp_rename_group_tabs', 999 );

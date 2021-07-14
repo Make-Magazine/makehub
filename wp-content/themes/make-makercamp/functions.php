@@ -266,8 +266,13 @@ function searchfilter($query) {
 
 add_filter('pre_get_posts', 'searchfilter');
 
-// If the user isn't a member of our group, redirect them to the makercamp register page
+/*
+ * This action hook executes just before WordPress determines which template page to load.
+ * If the user isn't a member of our group, redirect them to the makercamp register page
+ */
+
 add_filter('template_redirect', 'check_makercamp_group_membership', 9999, 1);
+
 function check_makercamp_group_membership($template) {
     $group_id = BP_Groups_Group::group_exists("maker-camp-2021");
     if ((!is_user_logged_in() || !groups_is_user_member(get_current_user_id(), $group_id)) && $_SERVER['REQUEST_URI'] != "/makercamp-register/" && !current_user_can('administrator')) {
@@ -301,4 +306,29 @@ function bpdev_fix_avatar_dir_url($url) {
 }
 
 add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
+
+/* This allows us to send elementor styled pages to other blogs */
+add_action("rest_api_init", function () {
+    register_rest_route(
+            "MakerCamp/v1"
+            , "/pages/(?P<id>\d+)/contentElementor"
+            , [
+        "methods" => "GET",
+        "callback" => function (\WP_REST_Request $req) {
+
+            $contentElementor = "";
+
+            if (class_exists("\\Elementor\\Plugin")) {
+                $post_ID = $req->get_param("id");
+
+                $pluginElementor = \Elementor\Plugin::instance();
+                $contentElementor = $pluginElementor->frontend->get_builder_content($post_ID);
+            }
+
+
+            return $contentElementor;
+        },
+            ]
+    );
+});
 ?>
