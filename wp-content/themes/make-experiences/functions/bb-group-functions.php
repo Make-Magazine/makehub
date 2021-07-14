@@ -42,6 +42,22 @@ function setup_group_nav() {
     }
 }
 
+// use this to set specific default tabs for specific groups
+function custom_group_default_tabs( $default_tab ){
+	if ( class_exists( 'BP_Group_Extension' ) ) : 
+		$group = groups_get_current_group();
+		$group_type = bp_groups_get_group_type($group->id);
+		if( empty( $group ) ) {
+			return $default_tab;
+		}
+		if($group_type == 'maker-camp') {
+			$default_tab = 'camp-hub';
+		}
+	endif; // end if ( class_exists( 'BP_Group_Extension' ) )
+	return $default_tab;
+}
+add_filter('bp_groups_default_extension','custom_group_default_tabs');
+
 function bp_group_event_info() {
     add_action('bp_template_title', 'group_event_info_screen_title');
     add_action('bp_template_content', 'group_event_info_screen_content');
