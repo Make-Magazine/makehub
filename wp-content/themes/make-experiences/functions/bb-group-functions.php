@@ -141,11 +141,14 @@ function group_camp_hub_screen_title() {
 }
 
 function group_camp_hub_screen_content() {
+    $mc_home_postid=7594;
+    $mc_blogid = 7;
     //get the url of the makercamp blog
-    $mc_blog_details = get_blog_details( array( 'blog_id' => 7 ) );    
+    $mc_blog_details = get_blog_details( array( 'blog_id' => $mc_blogid ) );    
+    wp_enqueue_style('elementor-page', $mc_blog_details->siteurl.'/wp-content/uploads/sites/'.$mc_blogid.'/elementor/css/post-'.$mc_home_postid.'.css', '', 'all');
     //pull in the contents of the home page from the mc blog. 
-    //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content    
-    $result = file_get_contents($mc_blog_details->siteurl.'/wp-json/MakerCamp/v1/pages/7594/contentElementor');
+    //note: we have to do it this way as elementor does not return all of it's good stuff with just a get_content        
+    $result = file_get_contents($mc_blog_details->siteurl.'/wp-json/MakerCamp/v1/pages/'.$mc_home_postid.'/contentElementor');
     echo json_decode($result);    
 }
 
