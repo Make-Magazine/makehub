@@ -151,9 +151,11 @@ function group_camp_hub_screen_content() {
 //rename group tabs
 function bp_rename_group_tabs() {
     global $bp;
+    
     if (bp_is_group()) {
         $bp->groups->nav->edit_nav( array('name' =>  'Activitiy' ),'activity', bp_current_item() );
+        $bp->groups->nav->edit_nav( array('name' =>  'Settings' ),'notifications', bp_current_item() );        
     }        
 }
 
-add_action( 'bp_init', 'bp_rename_group_tabs', 999 );
+add_action( 'bp_actions', 'bp_rename_group_tabs', 9999 );
