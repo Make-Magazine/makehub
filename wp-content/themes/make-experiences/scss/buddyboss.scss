@@ -32,6 +32,19 @@
         display: block !important
     }
 }
+// buddypress wants to hide hidden groups everywhere
+.bp_members, .bp-user {
+	#groups-list {
+		.bp-single-group.hidden, .item-entry.hidden {
+			display: block !important;
+		}
+	}
+}
+.groups-header {
+	.group-subscription-div, .group-item-actions#item-actions {
+		display: none;
+	}
+}
 .subnav-search.groups-search {
     margin: -10px 15px 20px;
     float: none;
@@ -64,20 +77,15 @@
 .bb-album-content-wrap {
 	h4 { color: #fff; }
 }
-// buddypress wants to hide hidden groups everywhere
-.bp_members, .bp-user {
-	#groups-list {
-		.bp-single-group.hidden, .item-entry.hidden {
-			display: block !important;
-		}
-	}
-}
+
 // only admins get to set group types
 body:not(.admin-bar) {
     #create-group-form {
         .group-create-types { display: none; }
     }
 }
+
+
 
 button.ges-change, button.ges-change:hover {
     padding: 10px 20px !important;

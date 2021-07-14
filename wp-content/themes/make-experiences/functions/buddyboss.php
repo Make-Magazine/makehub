@@ -95,21 +95,3 @@ function my_body_classes( $classes ) {
     }
     return $classes;     
 }
-
-/**
- * Reorder BuddyPress profile tabs/navigation.
- */
-function buddydev_reorder_buddypress_profile_tabs() {
-    $nav = buddypress()->members->nav;
- 
-    // it's a map of nav items for user profile.
-    // mapping component slug to their position.
-    $nav_items = array(
-        'notifications' => 50,
-    );
- 
-    foreach ( $nav_items as $nav_item => $position ) {
-        $nav->edit_nav( array( 'position' => $position ), $nav_item );
-    }
-}
-add_action( 'bp_setup_nav', 'buddydev_reorder_buddypress_profile_tabs', 999 );
