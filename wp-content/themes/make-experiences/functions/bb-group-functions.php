@@ -38,25 +38,26 @@ function setup_group_nav() {
                 'user_has_access' => $user_access,
                 'item_css_id' => 'camp-hub'
             ));
-        }        
+        }
     }
 }
 
 // use this to set specific default tabs for specific groups
-function custom_group_default_tabs( $default_tab ){
-	if ( class_exists( 'BP_Group_Extension' ) ) : 
-		$group = groups_get_current_group();
-		$group_type = bp_groups_get_group_type($group->id);
-		if( empty( $group ) ) {
-			return $default_tab;
-		}
-		if($group_type == 'maker-camp') {
-			$default_tab = 'camp-hub';
-		}
-	endif; // end if ( class_exists( 'BP_Group_Extension' ) )
-	return $default_tab;
+function custom_group_default_tabs($default_tab) {
+    if (class_exists('BP_Group_Extension')) :
+        $group = groups_get_current_group();
+        $group_type = bp_groups_get_group_type($group->id);
+        if (empty($group)) {
+            return $default_tab;
+        }
+        if ($group_type == 'maker-camp') {
+            $default_tab = 'camp-hub';
+        }
+    endif; // end if ( class_exists( 'BP_Group_Extension' ) )
+    return $default_tab;
 }
-add_filter('bp_groups_default_extension','custom_group_default_tabs');
+
+add_filter('bp_groups_default_extension', 'custom_group_default_tabs');
 
 function bp_group_event_info() {
     add_action('bp_template_title', 'group_event_info_screen_title');
@@ -122,7 +123,6 @@ function bb_group_redirect() {
 
 add_action('template_redirect', 'bb_group_redirect');
 
-
 //makercamp group hub info
 function bp_group_camp_hub() {
     add_action('bp_template_title', 'group_camp_hub_screen_title');
@@ -140,11 +140,20 @@ function group_camp_hub_screen_title() {
     echo get_the_title();
 }
 
-function group_camp_hub_screen_content() {    
-   //makercamp.make.co home page post id is 7594
+function group_camp_hub_screen_content() {
+    //makercamp.make.co home page post id is 7594
     switch_to_blog(7);         //switch to makercamp blog
-
     //output the page content for post 7594
-    echo apply_filters( 'the_content', get_post_field('post_content', 7594 ) );
+    echo apply_filters('the_content', get_post_field('post_content', 7594));
     switch_to_blog(1); //switch back to main site
 }
+
+//rename group tabs
+function bp_rename_group_tabs() {
+    global $bp;
+    if (bp_is_group()) {
+        $bp->groups->nav->edit_nav( array('name' =>  'Activitiy' ),'activity', bp_current_item() );
+    }        
+}
+
+add_action( 'bp_init', 'bp_rename_group_tabs', 999 );
