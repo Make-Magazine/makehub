@@ -209,8 +209,8 @@ button.ges-change, button.ges-change:hover {
 
 .bb-media-info-section {
 	a.download-media {
-		padding-bottom: 25px;
-		background: $color-blue;
+		padding-bottom: 25px !important;
+		background: $color-blue !important;
 		color: #fff;
 		font-weight: bold;
 	}
