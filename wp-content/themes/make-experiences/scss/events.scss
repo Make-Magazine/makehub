@@ -333,6 +333,11 @@
 			.dashicons { margin-right: 0px; }
 		}
 	}
+	.ticket-selector-tbl-qty-slct {
+		@media screen and (max-width: 768px) {
+			width: 100%;
+		}
+	}
 }
 
 
