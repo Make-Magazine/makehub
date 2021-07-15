@@ -227,6 +227,7 @@ get_header();
                     </div>
 
                     <div class='event-sidebar-content col-md-5 col-sm-12 col-xs-12'>
+						<a name="tickets"></a>
                         <div class="event-sidebar-item" id="tickets">
                             <h3>Tickets</h3>
                             <?php echo do_shortcode("[ESPRESSO_TICKET_SELECTOR event_id=" . $post->ID . "]"); ?>                            
@@ -319,6 +320,7 @@ get_header();
                 </div>
 				<div class="row">
                     <div class="col-sm-12">
+						<a href="#tickets" class="btn universal-btn hidden-lg hidden-md" style="width:100%;margin-bottom:25px;">Select your Tickets Now!</a>
                         <?php
                         if (class_exists('ESSB_Plugin_Options')) {
                             $url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
