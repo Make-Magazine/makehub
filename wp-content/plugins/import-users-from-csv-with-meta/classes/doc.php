@@ -56,7 +56,12 @@ class ACUI_Doc{
 			</tr>
 			<tr valign="top">
 				<th scope="row"><?php _e( "Lists", 'import-users-from-csv-with-meta' ); ?></th>
-				<td><?php _e( "Plugin can now import lists an array. Use this separator:", 'import-users-from-csv-with-meta'); ?> <strong>::</strong> <?php _e("two colons, inside the cell in order to split the string in a list of items.", 'import-users-from-csv-with-meta' ); ?>
+				<td><?php _e( "Plugin can import lists an array. Use this separator:", 'import-users-from-csv-with-meta'); ?> <strong>::</strong> <?php _e("two colons, inside the cell in order to split the string in a list of items.", 'import-users-from-csv-with-meta' ); ?>
+				</td>
+			</tr>
+            <tr valign="top">
+				<th scope="row"><?php _e( "Arrays with string keys", 'import-users-from-csv-with-meta' ); ?></th>
+				<td><?php _e( "Plugin can also import arrays with string keys. Use this separator:", 'import-users-from-csv-with-meta'); ?> <strong>::</strong> <?php _e("two colons, inside the cell in order to split the string in a list of items. Every item should be splitted using => to separate the key from the value. For example: ", 'import-users-from-csv-with-meta' ); ?>key1=>value1::key2=>value2::key3=>value3
 				</td>
 			</tr>
 			<tr valign="top">

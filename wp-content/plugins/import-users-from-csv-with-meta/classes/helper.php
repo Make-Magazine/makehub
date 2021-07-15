@@ -274,6 +274,8 @@ class ACUI_Helper{
                         $element_string .= $el->get_error_message();
                     elseif( is_array( $el ) )
                         $element_string .= serialize( $el );
+                    elseif( !is_int( $it ) )
+                        $element_string .= $it . "=>" . $el;
                     else
                         $element_string .= $el;
 
@@ -384,6 +386,20 @@ class ACUI_Helper{
         <?php
     }
 
+    static function get_array_from_cell( $value ){
+        if( strpos( $value, "=>" ) === false )
+            return explode( "::", $value );
+        
+        $array_prepared = array();
+
+        foreach( explode( "::", $value ) as $data ){
+            $key_value = explode( "=>", $data );
+            $array_prepared[ $key_value[0] ] = $key_value[1];
+        }
+
+        return $array_prepared;
+    }
+
     static function get_value_from_row( $key, $headers, $row, $user_id = 0 ){
         $pos = array_search( $key, $headers );
 
@@ -392,5 +408,10 @@ class ACUI_Helper{
         }
 
         return $row[ $pos ];
+    }
+
+    static function show_meta( $user_id, $meta_key ){
+        $user_meta = get_user_meta( $user_id, $meta_key, true );
+        return is_array( $user_meta ) ? var_export( $user_meta, true ) : $user_meta;
     }
 }

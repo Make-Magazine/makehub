@@ -102,7 +102,7 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 
 		if ( ! empty( $abandoned_carts ) ) {
 			$this->process_abandoned_carts_per_record( $abandoned_carts );
-			wp_send_json_success( 'Finished sync of abandoned carts. Processed ' . count( $abandoned_carts ) . ' carts.' );
+			wp_send_json_success( 'Finished sync of abandoned cart. Processed ' . count( $abandoned_carts ) . ' carts.' );
 		} else {
 			wp_send_json_success( 'No abandoned carts to process.' );
 		}
@@ -122,6 +122,76 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 		wp_send_json_success( 'Row deleted.' );
 	}
 
+	/**
+	 * Forces the sync of a specific row
+	 *
+	 * @param int $id The row id.
+	 */
+	public function force_sync_row( $id ) {
+		$abandoned_cart = $this->get_abandoned_cart_by_id( $id );
+		if ( ! empty( $abandoned_cart ) ) {
+			$this->process_abandoned_carts_per_record( $abandoned_cart );
+		} else {
+			$this->logger->warning(
+				'Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command [force_sync_row]: No abandoned carts found by id',
+				[
+					'id'             => $id,
+					'abandoned_cart' => $abandoned_cart,
+				]
+			);
+		}
+	}
+
+	/**
+	 * Get an abandoned cart by row id.
+	 *
+	 * @param int $id The row id.
+	 *
+	 * @return array|bool|object|null
+	 */
+	private function get_abandoned_cart_by_id( $id ) {
+		global $wpdb;
+
+		try {
+			// Get the expired carts from our table
+			$abandoned_cart = $wpdb->get_results(
+			// phpcs:disable
+				$wpdb->prepare( 'SELECT id, customer_ref_json, cart_ref_json, cart_totals_ref_json, removed_cart_contents_ref_json, activecampaignfwc_order_external_uuid 
+					FROM
+						`' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME . '`
+					WHERE
+						id = %s;',
+					$id
+				)
+			// phpcs:enable
+			);
+
+			if ( $wpdb->last_error ) {
+				$this->logger->error(
+					'Abandonment sync: There was an error getting results for abandoned cart records.',
+					[
+						'wpdb_last_error' => $wpdb->last_error,
+					]
+				);
+			}
+
+			if ( ! empty( $abandoned_cart ) ) {
+				// abandoned carts found
+				return $abandoned_cart;
+			} else {
+				// no abandoned carts
+				return false;
+			}
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Abandonment Sync: There was an error with preparing or getting abandoned cart results.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
+		}
+	}
 	/**
 	 * Get all active carts.
 	 *

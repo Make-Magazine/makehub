@@ -124,7 +124,23 @@
 		};
 
 		self.isGroupMaxed = function( group ) {
-			var count = $( self.getSelector( group.fields ) ).filter( ':checked:not( .gplc-select-all )' ).length;
+			var count = 0;
+			$( self.getSelector( group.fields ) ).filter( ':checked:not( .gplc-select-all )' ).each( function() {
+				var idIndex = this.id.split( '_' );
+				/**
+				 * Filter the count value of each checkbox in a field.
+				 * Useful when trying to specify a custom weighted value for some checkboxes.
+				 *
+				 * @since 1.3.1
+				 *
+				 *
+				 * @param number value    Value of the current choice, default 1.
+				 * @param number formId   The ID of the current form.
+				 * @param number fieldId  The ID of the current Checkbox field.
+				 * @param number choice   The sequence number of the current Checkbox (starts from 1).
+				 */
+				count += gform.applyFilters( 'gplcb_checkbox_count', 1, self.formId, parseInt( idIndex[2] ), parseInt( idIndex[3] ) );
+			} );
 			return count >= group.max;
 		};
 

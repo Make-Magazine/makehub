@@ -4,7 +4,7 @@ Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
 Tested up to: 5.7.2
-Stable tag: 1.17.6.2
+Stable tag: 1.17.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,16 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.8 =
+*   Array with string keys now can be imported using this syntax inside your CSV cell: key1=>value1::key2=>value2::key3=>value3
++   Improved the way that "Extra profile information" is shown in users profiles to be able to show arrays without notices
+
+= 1.17.7 =
+*   New option in export to prevent problems when exporting serialized values: serialized values sometimes can have problems being displayed in Microsoft Excel or LibreOffice, we can double encapsulate this kind of data but you would not be able to import this data beucase instead of serialized data it would be managed as strings
+
+= 1.17.6.3 =
+*   Fixed bug in WP User Manager addon
 
 = 1.17.6.2 =
 *   Objects in CSV can now be printed using serialization

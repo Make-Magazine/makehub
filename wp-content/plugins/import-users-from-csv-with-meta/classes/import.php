@@ -249,8 +249,8 @@ class ACUI_Import{
     
                         if( is_serialized( $data[$i] ) ) // serialized
                             $data[$i] = maybe_unserialize( $data[$i] );
-                        elseif( strpos( $data[$i], "::" ) !== false  ) // list of items
-                            $data[$i] = explode( "::", $data[$i] );
+                        elseif( strpos( $data[$i], "::" ) !== false ) // list of items
+                            $data[$i] = ACUI_Helper::get_array_from_cell( $data[$i] );                                              
                     }
                     
                     if( $row == 1 ):

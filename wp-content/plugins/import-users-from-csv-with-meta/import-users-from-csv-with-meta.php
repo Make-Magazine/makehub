@@ -3,7 +3,7 @@
 Plugin Name:	Import and export users and customers
 Plugin URI:		https://www.codection.com
 Description:	Using this plugin you will be able to import and export users or customers choosing many options and interacting with lots of other plugins
-Version:		1.17.6.2
+Version:		1.17.8
 Author:			codection
 Author URI: 	https://codection.com
 License:     	GPL2
@@ -11,6 +11,7 @@ License URI: 	https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: import-users-from-csv-with-meta
 Domain Path: /languages
 */
+
 if ( ! defined( 'ABSPATH' ) ) 
 	exit;
 
@@ -37,7 +38,7 @@ class ImportExportUsersCustomers{
 	}
 	
 	public function loader(){
-		add_action( "admin_menu", array( $this, 'menu' ) );
+		add_action( 'admin_menu', array( $this, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10, 1 );
 		add_filter( 'plugin_action_links', array( $this, 'action_links' ), 10, 2 );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );

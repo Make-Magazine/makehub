@@ -12,7 +12,7 @@ $config['menu_accent_color'] = '#fe2929';
 $config['custom_css'] = '#wf-flyout .csmm-icon .wff-icon img { max-width: 70%; } #wf-flyout .csmm-icon .wff-icon { line-height: 57px; }';
 
 $config['menu_items'] = array(
-  array('href' => 'https://comingsoonwp.com/?ref=wff-csmm&coupon=welcome', 'target' => '_blank', 'label' => 'Get Coming Soon PRO with 25% off', 'icon' => 'csmm.png', 'class' => 'csmm-icon accent'),
+  array('href' => '#pro', 'label' => 'Get Coming Soon PRO with 50% off', 'icon' => 'csmm.png', 'class' => 'csmm-icon accent csmm-change-tab'),
   array('href' => 'https://wp301redirects.com/?ref=wff-csmm&coupon=50off', 'label' => 'Fix 2 most common SEO issues on WordPress', 'icon' => '301-logo.png', 'class' => 'wp301-icon'),
   array('href' => 'https://wpreset.com/?ref=wff-csmm&coupon=50off', 'target' => '_blank', 'label' => 'Get WP Reset PRO with 50% off', 'icon' => 'wp-reset.png'),
   array('href' => 'https://wpsticky.com/?ref=wff-csmm', 'target' => '_blank', 'label' => 'Make a menu sticky with WP Sticky', 'icon' => 'dashicons-admin-post'),

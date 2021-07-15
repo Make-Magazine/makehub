@@ -620,6 +620,18 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
+			'wp_ajax_activecampaign_for_woocommerce_sync_abandoned_cart_row',
+			$this->admin,
+			'handle_abandon_cart_force_row_sync'
+		);
+
+		$this->loader->add_action(
+			'activecampaign_for_woocommerce_run_force_row_abandonment_sync',
+			$this->run_abandonment_sync_command,
+			'force_sync_row'
+		);
+
+		$this->loader->add_action(
 			'activecampaign_for_woocommerce_run_manual_abandonment_delete',
 			$this->run_abandonment_sync_command,
 			'abandoned_cart_manual_delete'

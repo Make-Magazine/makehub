@@ -4,7 +4,7 @@ Tags: coming soon, coming soon page, maintenance mode, maintenance mode page, co
 Requires at least: 4.0
 Requires PHP: 5.2
 Tested up to: 5.7
-Stable tag: 2.30
+Stable tag: 2.33
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -81,6 +81,11 @@ Yes and no. When activated it enables itself across the entire WP-MU network.
 
 
 == Changelog ==
+
+= 2.33 =
+* 2021-07-06
+* new background images
+* lower prices
 
 = 2.30 =
 * 2021-06-05

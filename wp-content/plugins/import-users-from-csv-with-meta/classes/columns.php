@@ -179,7 +179,7 @@ class ACUI_Columns{
 		?>
 			<tr>
 				<th><label for="<?php echo $column; ?>"><?php echo $column; ?></label></th>
-				<td><input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>" value="<?php echo esc_attr(get_the_author_meta($column, $user->ID )); ?>" class="regular-text" /></td>
+				<td><input type="text" name="<?php echo $column; ?>" id="<?php echo $column; ?>" value="<?php echo esc_attr( ACUI_Helper::show_meta( $user->ID, $column ) ); ?>" class="regular-text" /></td>
 			</tr>
 			<?php
 		endforeach;

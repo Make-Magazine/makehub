@@ -18,6 +18,7 @@ class ACUI_Exporter{
 		add_filter( 'acui_export_non_date_keys', array( $this, 'get_non_date_keys' ), 1, 1 );
 		add_filter( 'acui_export_columns', array( $this, 'maybe_order_columns_alphabetacally' ), PHP_INT_MAX, 2 );
 		add_filter( 'acui_export_data', array( $this, 'maybe_order_row_alphabetically' ), PHP_INT_MAX, 5 );
+        add_filter( 'acui_export_data', array( $this, 'maybe_double_encapsulate_serialized_values' ), PHP_INT_MAX - 1, 5 );
 	}
 
 	public static function admin_gui(){
@@ -71,10 +72,11 @@ class ACUI_Exporter{
 						<span class="description"><?php _e( "Order all columns alphabetically to check easier your data. First two columns won't be affected", 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>
-				<tr id="acui_fields" valign="top">
-					<th scope="row"><?php _e( 'Fields', 'import-users-from-csv-with-meta' ); ?></th>
+                <tr id="acui_order_fields_double_encapsulate_serialized_values" valign="top">
+					<th scope="row"><?php _e( 'Double encapsulate serialized values', 'import-users-from-csv-with-meta' ); ?></th>
 					<td>
-						
+						<input type="checkbox" name="double_encapsulate_serialized_values" value="1">
+						<span class="description"><?php _e( "Serialized values sometimes can have problems being displayed in Microsoft Excel or LibreOffice, we can double encapsulate this kind of data but you would not be able to import this data beucase instead of serialized data it would be managed as strings", 'import-users-from-csv-with-meta' ); ?></span>
 					</td>
 				</tr>
 				<tr id="acui_download_csv_wrapper" valign="top">
@@ -119,23 +121,40 @@ class ACUI_Exporter{
 		return array_merge( $non_date_keys, $this->user_data, $this->woocommerce_default_user_meta_keys, $this->other_non_date_keys );
 	}
 
-	function maybe_order_columns_alphabetacally( $row, $order_fields_alphabetically ){
-		if( !$order_fields_alphabetically)
+	function maybe_order_columns_alphabetacally( $row, $args ){
+        if( !$args['order_fields_alphabetically'] )
 			return $row;
 		
 		$first_two_columns = array_slice( $row, 0, 2 );
-		$to_order_columns = array_slice( $row, 2 );
-		sort( $to_order_columns );
+		$to_order_columns = array_unique( array_slice( $row, 2 ) );
+		sort( $to_order_columns, SORT_LOCALE_STRING );
 
-		return array_merge( $first_two_columns, $to_order_columns );
+        return array_merge( $first_two_columns, $to_order_columns );
 	}
 
-	function maybe_order_row_alphabetically( $row, $user, $datetime_format, $columns, $order_fields_alphabetically ){
-		if( !$order_fields_alphabetically )
+	function maybe_order_row_alphabetically( $row, $user, $datetime_format, $columns, $args ){
+        if( !$args['order_fields_alphabetically'] )
 			return $row;
 
-		return array_merge( array_flip( $columns ), $row );
+        $row_sorted = array();
+        foreach( $columns as $field ){
+            $row_sorted[ $field ] = $row[ $field ];
+        }
+
+        return $row_sorted;
 	}
+
+    function maybe_double_encapsulate_serialized_values( $row, $user, $datetime_format, $columns, $args ){
+        if( !$args['double_encapsulate_serialized_values'] )
+			return $row;
+
+        foreach( $columns as $field ){
+            if( is_serialized( $row[ $field ] ) )
+                $row[ $field ] = '"' . $row[ $field ] . '"';
+        }
+
+        return $row;
+	}    
 
 	static function clean_bad_characters_formulas( $value ){
 		if( strlen( $value ) == 0 )
@@ -201,6 +220,7 @@ class ACUI_Exporter{
 		$convert_timestamp = isset( $_POST['convert_timestamp'] ) && !empty( $_POST['convert_timestamp'] );
 		$datetime_format = ( $convert_timestamp ) ? sanitize_text_field( $_POST['datetime_format'] ) : '';
 		$order_fields_alphabetically = isset( $_POST['order_fields_alphabetically'] ) && !empty( $_POST['order_fields_alphabetically'] );
+        $double_encapsulate_serialized_values = isset( $_POST['double_encapsulate_serialized_values'] ) && !empty( $_POST['double_encapsulate_serialized_values'] );
         $filtered_columns = ( isset( $_POST['columns'] ) && !empty( $_POST['columns'] ) ) ? $_POST['columns'] : array();
         $filtered_columns = $this->manage_filtered_columns( $filtered_columns );
         
@@ -241,7 +261,7 @@ class ACUI_Exporter{
 			$row[] = $key;
 		}
 
-		$row = apply_filters( 'acui_export_columns', $row, $order_fields_alphabetically );
+		$row = apply_filters( 'acui_export_columns', $row, array( 'order_fields_alphabetically' => $order_fields_alphabetically, 'double_encapsulate_serialized_values' => $double_encapsulate_serialized_values ) );
 		$columns = $row;
 		$data[] = $row;
 		$row = array();
@@ -266,8 +286,7 @@ class ACUI_Exporter{
             if( count( $filtered_columns ) == 0 || in_array( 'user_email', $filtered_columns ) || in_array( 'user_login', $filtered_columns ) )
 			    $row = $this->maybe_fill_empty_data( $row, $user, $filtered_columns );
 
-			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format, $columns, $order_fields_alphabetically );
-
+			$row = apply_filters( 'acui_export_data', $row, $user, $datetime_format, $columns, array( 'order_fields_alphabetically' => $order_fields_alphabetically, 'double_encapsulate_serialized_values' => $double_encapsulate_serialized_values ));
 			$data[] = array_values( $row );
 			$row = array();
 		}

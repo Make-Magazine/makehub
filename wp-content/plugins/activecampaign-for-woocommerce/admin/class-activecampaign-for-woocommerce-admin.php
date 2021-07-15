@@ -405,6 +405,7 @@ class Activecampaign_For_Woocommerce_Admin {
 	 */
 	public function handle_abandon_cart_delete() {
 		if ( ! wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_settings_nonce_field'], 'activecampaign_for_woocommerce_abandoned_form' ) ) {
+			$this->logger->warning( 'Invalid nonce from the delete abandoned cart row call:', [ 'request' => $_REQUEST ] );
 			wp_send_json_error( 'The nonce appears to be invalid.' );
 			return false;
 		}
@@ -412,7 +413,26 @@ class Activecampaign_For_Woocommerce_Admin {
 		if ( isset( $_REQUEST['rowId'] ) ) {
 			do_action( 'activecampaign_for_woocommerce_run_manual_abandonment_delete', $_REQUEST['rowId'] );
 		} else {
+			$this->logger->warning( 'Invalid request, rowId missing from the delete abandoned cart call:', [ 'request' => $_REQUEST ] );
 			wp_send_json_error( 'No row ID defined.' );
+		}
+	}
+
+	/**
+	 * Handles the abandoned cart sync function and triggers the manual forced sync
+	 */
+	public function handle_abandon_cart_force_row_sync() {
+		if ( ! wp_verify_nonce( $_REQUEST['activecampaign_for_woocommerce_settings_nonce_field'], 'activecampaign_for_woocommerce_abandoned_form' ) ) {
+			$this->logger->warning( 'Invalid nonce from the force row sync call:', [ 'request' => $_REQUEST ] );
+			wp_send_json_error( 'The nonce appears to be invalid.' );
+			return false;
+		}
+
+		if ( isset( $_REQUEST['rowId'] ) ) {
+			do_action( 'activecampaign_for_woocommerce_run_force_row_abandonment_sync', $_REQUEST['rowId'] );
+		} else {
+			$this->logger->warning( 'Invalid request, rowId missing from the force row sync call:', [ 'request' => $_REQUEST ] );
+			wp_send_json_error( 'The request appears to be invalid. The rowId is missing from the request.' );
 		}
 	}
 

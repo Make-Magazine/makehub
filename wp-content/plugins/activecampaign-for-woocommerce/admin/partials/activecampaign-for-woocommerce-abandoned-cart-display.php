@@ -21,12 +21,30 @@ if ( isset( $_REQUEST['offset'] ) ) {
 }
 
 $activecampaign_for_woocommerce_abandoned_carts = $this->get_abandoned_carts( $activecampaign_for_woocommerce_offset );
+$activecampaign_for_woocommerce_total           = 0;
 
 if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 	$activecampaign_for_woocommerce_total = $this->get_total_abandoned_carts();
 	$activecampaign_for_woocommerce_pages = ceil( $activecampaign_for_woocommerce_total / $activecampaign_for_woocommerce_limit );
 }
 ?>
+<style>
+	button.button.ac-spinner{
+		background-image: url(images/spinner.gif) !important;
+		background-size: 20px 20px;
+		opacity: .7;
+		background-repeat: no-repeat;
+		background-position: center;
+	}
+	button.button.success{
+		border-color: #008a20;
+		color: #008a20;
+	}
+	button.button.fail{
+		border-color: #8a151f;
+		color: #8a151f;
+	}
+</style>
 <?php settings_errors(); ?>
 <div id="activecampaign-for-woocommerce-abandoned-cart" class="wrap">
 	<h1>
@@ -39,12 +57,15 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 		esc_html_e( 'All abandoned cart entries will appear here. Records for customers who have finished their order will be removed from the list.', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
 		?>
 	</div>
-	<?php if ( $activecampaign_for_woocommerce_total > 0 ) : ?>
 	<section>
 		<div class="card">
 			<div>
 				<div class="columnbox">
-					<button id="activecampaign-run-abandoned-cart" class="button">Sync Abandoned Carts</button>
+					<button id="activecampaign-run-abandoned-cart" class="button 
+					<?php
+					if ( ! $activecampaign_for_woocommerce_total ) :
+						?>
+						disabled<?php endif; ?>">Sync Abandoned Carts</button>
 					<div id="activecampaign-run-abandoned-cart-status"></div>
 				</div>
 			</div>
@@ -63,18 +84,20 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 	</section>
 	<section>
 		<div class="col-container">
-			<div class="pagination">
-				Page:
-				<?php for ( $activecampaign_for_woocommerce_c = 1; $activecampaign_for_woocommerce_c <= $activecampaign_for_woocommerce_pages; $activecampaign_for_woocommerce_c++ ) : ?>
-					<?php if ( $activecampaign_for_woocommerce_c === $activecampaign_for_woocommerce_offset + 1 ) : ?>
-						<?php echo esc_html( $activecampaign_for_woocommerce_c ); ?>
-					<?php else : ?>
-						<a href="<?php echo esc_html( add_query_arg( 'offset', $activecampaign_for_woocommerce_c - 1, wc_get_current_admin_url() ) ); ?>">
+			<?php if ( $activecampaign_for_woocommerce_total ) : ?>
+				<div class="pagination">
+					Page:
+					<?php for ( $activecampaign_for_woocommerce_c = 1; $activecampaign_for_woocommerce_c <= $activecampaign_for_woocommerce_pages; $activecampaign_for_woocommerce_c++ ) : ?>
+						<?php if ( $activecampaign_for_woocommerce_c === $activecampaign_for_woocommerce_offset + 1 ) : ?>
 							<?php echo esc_html( $activecampaign_for_woocommerce_c ); ?>
-						</a>
-					<?php endif; ?>
-				<?php endfor; ?>
-			</div>
+						<?php else : ?>
+							<a href="<?php echo esc_html( add_query_arg( 'offset', $activecampaign_for_woocommerce_c - 1, wc_get_current_admin_url() ) ); ?>">
+								<?php echo esc_html( $activecampaign_for_woocommerce_c ); ?>
+							</a>
+						<?php endif; ?>
+					<?php endfor; ?>
+				</div>
+			<?php endif; ?>
 			<form method="POST" id="activecampaign-for-woocommerce-form">
 				<?php
 				wp_nonce_field( 'activecampaign_for_woocommerce_abandoned_form', 'activecampaign_for_woocommerce_settings_nonce_field' );
@@ -121,47 +144,51 @@ if ( count( $activecampaign_for_woocommerce_abandoned_carts ) > 0 ) {
 					</tr>
 					</thead>
 					<tbody>
-					<?php foreach ( $activecampaign_for_woocommerce_abandoned_carts as $activecampaign_for_woocommerce_ab_cart ) : ?>
-						<?php if ( isset( $activecampaign_for_woocommerce_ab_cart->id ) ) : ?>
-							<tr rowid="<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->id ); ?>">
+					<?php if ( $activecampaign_for_woocommerce_total ) : ?>
+						<?php foreach ( $activecampaign_for_woocommerce_abandoned_carts as $activecampaign_for_woocommerce_ab_cart ) : ?>
+							<?php if ( isset( $activecampaign_for_woocommerce_ab_cart->id ) ) : ?>
+								<tr rowid="<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->id ); ?>">
+									<td>
+										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_id ); ?>
+									</td>
+									<td>
+										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_email ); ?>
+									</td>
+									<td>
+										<?php
+										if ( $activecampaign_for_woocommerce_ab_cart->synced_to_ac ) {
+											esc_html_e( 'Yes', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+										} else {
+											esc_html_e( 'No', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
+										}
+										?>
+									</td>
+									<td>
+										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_first_name ); ?>
+									</td>
+									<td>
+										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_last_name ); ?>
+									</td>
+									<td>
+										<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->last_access_time ); ?>
+									</td>
+									<td>
+										<button class="activecampaign-sync-abandoned-cart button">Sync</button>
+										<button class="activecampaign-delete-abandoned-cart button">Delete</button>
+									</td>
+								</tr>
+							<?php endif; ?>
+						<?php endforeach; ?>
+						<?php else : ?>
+							<tr>
 								<td>
-									<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_id ); ?>
-								</td>
-								<td>
-									<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_email ); ?>
-								</td>
-								<td>
-									<?php
-									if ( $activecampaign_for_woocommerce_ab_cart->synced_to_ac ) {
-										esc_html_e( 'Yes', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									} else {
-										esc_html_e( 'No', ACTIVECAMPAIGN_FOR_WOOCOMMERCE_LOCALIZATION_DOMAIN );
-									}
-									?>
-								</td>
-								<td>
-									<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_first_name ); ?>
-								</td>
-								<td>
-									<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->customer_last_name ); ?>
-								</td>
-								<td>
-									<?php echo esc_html( $activecampaign_for_woocommerce_ab_cart->last_access_time ); ?>
-								</td>
-								<td>
-									<button class="activecampaign-delete-abandoned-cart" class="button">Delete</button>
+									No abandoned carts recorded.
 								</td>
 							</tr>
 						<?php endif; ?>
-					<?php endforeach; ?>
 					</tbody>
 				</table>
 			</form>
 		</div>
 	</section>
-	<?php else : ?>
-		<div>
-			No Results
-		</div>
-	<?php endif; ?>
 </div>

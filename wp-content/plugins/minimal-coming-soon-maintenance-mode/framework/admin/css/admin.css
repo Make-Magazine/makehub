@@ -60,7 +60,8 @@
   padding: 10px;
   background: #ec414d;
   color: white;
-  top: 46px;
+  top: 30px;
+  text-align: center;
 }
 #header-right a {
   color: white;

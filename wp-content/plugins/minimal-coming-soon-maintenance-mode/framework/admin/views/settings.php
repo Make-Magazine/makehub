@@ -34,8 +34,8 @@ require_once 'header.php';
             $name = ' ' . $current_user->user_firstname;
         }
         $meta = csmm_get_meta();
-        $promo_delta = HOUR_IN_SECONDS;
-        $promo_delta2 = DAY_IN_SECONDS * 35;
+        $promo_delta = HOUR_IN_SECONDS * 3;
+        $promo_delta2 = DAY_IN_SECONDS * 30;
         $notice_shown = false;
 
         // temporarily removed
@@ -52,13 +52,13 @@ require_once 'header.php';
 
         if (
             !$notice_shown && !get_transient('csmm_welcome_hide')
-            && (time() - $meta['first_install_gmt']) < $promo_delta && (time() - $meta['first_install_gmt']) > 20
+            && (time() - $meta['first_install_gmt']) < $promo_delta && (time() - $meta['first_install_gmt']) > 3
         ) {
             echo '<div id="upsell-notice"><p>';
-            echo 'Minimal Coming Soon &amp; Maintenance Mode PRO features over 120 themes, advanced SEO options, content animations, Instagram filters, animated backgrounds and premium support.';
-            echo '<br>We\'ve prepared a special <b>25% WELCOMING DISCOUNT</b> available only for another <b class="mm-countdown" data-endtime="' . ($meta['first_install_gmt'] + $promo_delta) . '" style="font-weight: bold;">59 min</b>.</p>';
-            echo '<p><a href="#pro" class="button button-flat csmm-change-tab" data-anchor="pricing-table-above">GET the 25% DISCOUNT NOW</a>';
-            echo ' &nbsp; <a href="#" id="mm_welcome_cancel" style="color: white;"><small>I\'m not interested in PRO features</small></a>';
+            echo 'Minimal Coming Soon &amp; Maintenance Mode PRO features over 190 themes, advanced SEO options, content animations, Instagram filters, animated backgrounds and premium support.';
+            echo '<br>We\'ve prepared a special <b>50% DISCOUNT</b>.</p>';
+            echo '<p><a href="#pro" data-anchor="pricing-table" class="button button-flat csmm-change-tab">GET the 50% DISCOUNT NOW</a>';
+            echo ' &nbsp; <a href="#" id="mm_welcome_cancel" style="color: white;"><small>I\'m not interested</small></a>';
             echo '</p></div>';
             $notice_shown = true;
         }
@@ -68,9 +68,8 @@ require_once 'header.php';
             && (time() - $meta['first_install_gmt']) > $promo_delta2
         ) {
             echo '<div id="upsell-notice"><p>';
-            //echo 'Minimal Maintenance Mode PRO features over 120 themes, advanced SEO options, content animations, Instagram filters, animated backgrounds and premium support.';
-            echo 'We have a <a style="color: white;" class="csmm-change-tab" data-anchor="pricing-table" href="#pro">special offer</a> only for <b>users like you</b> who\'ve been using the Minimal Coming Soon &amp; Maintenance Mode plugin for a long time: a <b>25% DISCOUNT</b> on lifetime licenses! No nonsense! Pay once and use the plugin forever.</p>';
-            echo '<p><a href="#pro" class="button button-flat csmm-change-tab" data-anchor="pricing-table">GET the 25% DISCOUNT NOW</a>';
+            echo 'We have a <a style="color: white;" class="csmm-change-tab" data-anchor="pricing-table" href="#pro">special offer</a> for <b>users like you</b> who\'ve been using the Minimal Coming Soon &amp; Maintenance Mode plugin for a long time: a <b>50% DISCOUNT</b> on lifetime licenses! No nonsense! Pay once and use the PRO plugin forever.</p>';
+            echo '<p><a href="#pro" data-anchor="pricing-table" class="button button-flat csmm-change-tab" data-anchor="pricing-table">GET the 50% DISCOUNT NOW</a>';
             echo ' &nbsp; <a href="#" id="mm_olduser_cancel" style="color: white;"><small>I don\'t need PRO features</small></a>';
             echo '</p></div>';
             $notice_shown = true;
@@ -93,7 +92,7 @@ require_once 'header.php';
                 <li><a href="#form"><?php _e('Form', 'signals'); ?></a></li>
                 <li><a href="#advanced"><?php _e('Advanced', 'signals'); ?></a></li>
                 <li><a href="#support"><?php _e('Support', 'signals'); ?></a></li>
-                <li><a style="color: #fe2929;" href="#pro"><span style="height: auto; font-size: 19px;" class="dashicons dashicons-star-filled"></span> <b><?php _e('PRO', 'signals'); ?></b></a></li>
+                <li><a style="color: white; background-color: #fe2929;;" href="#pro"><span style="height: auto; font-size: 19px;" class="dashicons dashicons-star-filled"></span> <b><?php _e('PRO', 'signals'); ?></b> <span style="height: auto; font-size: 19px;" class="dashicons dashicons-star-filled"></span></a></li>
             </ul>
         </div><!-- .signals-float-left -->
 
@@ -119,7 +118,7 @@ require_once 'header.php';
                     <?php wp_nonce_field('csmm_save_settings', 'csmm_save_nonce'); ?>
                     <button type="submit" name="signals_csmm_submit" class="signals-btn signals-btn-red"><strong><?php _e('Save Changes', 'signals'); ?></strong></button>
                     <a id="csmm-preview" style="margin: 0 0 0 15px;" href="<?php echo home_url(); ?>/?preview_coming_soon" class="signals-btn" target="_blank"><strong><?php _e('Preview Maintenance Page', 'signals'); ?></strong></a>
-                    <a title="Check out 70+ pixel perfect themes and other great PRO features" style="margin: 0 0 0 15px;" href="#pro" class="signals-btn csmm-change-tab" target="_blank"><span style="font-size: 19px;" class="dashicons dashicons-star-filled"></span> <strong><?php _e('Go PRO', 'signals'); ?></strong></a>
+                    <a title="Check out 70+ pixel perfect themes and other great PRO features" style="margin: 0 0 0 15px;" href="#pro" class="signals-btn csmm-change-tab" target="_blank"><span style="font-size: 19px;" class="dashicons dashicons-star-filled"></span> <strong><?php _e('Go PRO', 'signals'); ?></strong> <span style="font-size: 19px;" class="dashicons dashicons-star-filled"></span></a>
                 </p>
                 <p class="footer-buttons-right">
                     <a href="<?php echo csmm_generate_web_link('thank-you-for-creating'); ?>" target="_blank">Minimal Coming Soon & Maintenance Mode</a> v<?php echo csmm_get_plugin_version(); ?>. Please <a target="_blank" href="https://wordpress.org/support/plugin/minimal-coming-soon-maintenance-mode/reviews/#new-post" title="Let others know how you like the plugin">rate the plugin ★★★★★</a> Thank you!

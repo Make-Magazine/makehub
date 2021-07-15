@@ -146,22 +146,6 @@ function getMMUploader($text, $target) {
     e.preventDefault();
   });
 
-  $(".csmm-open-chat").on("click", function (e) {
-    e.preventDefault();
-    // disabled till further notice
-    return false;
-
-    if (csmm_chat_loaded) {
-      Beacon("open");
-    } else {
-      csmm_chat_loaded = true;
-      $("body").append(
-        '<script type="text/javascript">!function(e,t,n){function a(){var e=t.getElementsByTagName("script")[0],n=t.createElement("script");n.type="text/javascript",n.async=!0,n.src="https://beacon-v2.helpscout.net",e.parentNode.insertBefore(n,e)}if(e.Beacon=n=function(t,n,a){e.Beacon.readyQueue.push({method:t,options:n,data:a})},n.readyQueue=[],"complete"===t.readyState)return a();e.attachEvent?e.attachEvent("onload",a):e.addEventListener("load",a,!1)}(window,document,window.Beacon||function(){});</script><script type="text/javascript">window.Beacon("init", "8dea34f8-a21a-4390-923e-c55b82340cc9"); Beacon("open"); </script>'
-      );
-    }
-
-    return false;
-  });
 
   // css and html editor
   function getEditor($editorID, $textareaID, $mode) {
@@ -422,7 +406,7 @@ function getMMUploader($text, $target) {
       .find("tr")
       .each(function (index) {
         $(this).find("td").eq(1).addClass("hover");
-        if (index == 0 || index == 14) {
+        if (index == 0 || index == 12) {
           return true;
         }
         $(this)
@@ -554,8 +538,8 @@ function getMMUploader($text, $target) {
       $('a[href="' + $state + '"]').addClass("active");
       $($state).show();
     } else {
-      $(".signals-main-menu li:first a").addClass("active");
-      $(".signals-tile:first").show();
+      $(".signals-main-menu li:last a").addClass("active");
+      $(".signals-tile:last").show();
     }
 
     $(".signals-main-menu li a").click(function (e) {
