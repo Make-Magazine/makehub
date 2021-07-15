@@ -207,6 +207,15 @@ button.ges-change, button.ges-change:hover {
     }
 }
 
+.bb-media-info-section {
+	a.download-media {
+		padding-bottom: 25px;
+		background: $color-blue;
+		color: #fff;
+		font-weight: bold;
+	}
+}
+
 
 // nobody needs to know when I was last on the notification page
 .member-request-list-wrap .last-activity { display: none; }
