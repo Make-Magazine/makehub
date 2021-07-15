@@ -103,6 +103,7 @@
             right: 20px;
         }
     }
+
     .entry-content {
         .event-datetimes {
             text-align: center;
@@ -134,9 +135,16 @@
             }
         }
         .event-content {
+			.row {
+				display: flex;
+				flex-direction: column;
+			}
             .event-main-content {
                 display: flex;
                 flex-direction: column;
+				@media screen and (max-width: 768px) {
+					order: 2;
+				}
                 &> div {
                     border-bottom: solid 1px #ccc;
                     padding-bottom: 15px;
