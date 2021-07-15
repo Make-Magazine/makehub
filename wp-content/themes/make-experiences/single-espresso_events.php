@@ -317,7 +317,7 @@ get_header();
 <?php } ?>
                     </div>
                 </div>
-				<div class="row" style="max-height:100px;">
+				<div class="row" style="display:flex;">
                     <div class="col-sm-12">
                         <?php
                         if (class_exists('ESSB_Plugin_Options')) {
