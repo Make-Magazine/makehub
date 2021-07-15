@@ -137,14 +137,18 @@
         .event-content {
 			.row {
 				display: flex;
-				flex-direction: column;
+				flex-direction: row;
+				@media screen and (max-width: 768px) {
+					flex-direction: column;
+					order: 2;
+					.event-main-content {
+						order: 2;
+					}
+				}
 			}
             .event-main-content {
                 display: flex;
                 flex-direction: column;
-				@media screen and (max-width: 768px) {
-					order: 2;
-				}
                 &> div {
                     border-bottom: solid 1px #ccc;
                     padding-bottom: 15px;
