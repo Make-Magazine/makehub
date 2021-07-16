@@ -246,21 +246,22 @@ get_header();
 											<b><?php echo $ticket->name(); ?></b>
                                             <?php if ($ticket->remaining() < 6) { ?>
                                                 <span class="tickets-remaining">- Only <?php echo $ticket->remaining(); ?> tickets remaining.</span>
-    <?php } ?>
+    										<?php } ?>
                                         </div>
                                         <ul>
                                             <?php
                                             $dates = $ticket->datetimes();
+											
                                             foreach ($dates as $date) {
                                                 ?>
                                                 <li>
 													<p><?php echo $date->description(); ?></p>
-                                                	<?php echo date_format(new DateTime($date->start_date()), 'M j, Y') . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
+                                                	<?php echo date('M j, Y',$date->get_raw( 'DTT_EVT_start')) . ' ' . $date->start_time() . ' - ' . $date->end_time(); ?> <span class="small">(Pacific)</span> 
                                                 </li>
-    <?php } ?>                                    
+											<?php } ?>                                    
                                         </ul>
                                     </div>
-<?php } ?>
+								<?php } ?>
 
                             </div>
                             <div class="event-sidebar-field event-cost">
