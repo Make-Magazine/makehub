@@ -163,7 +163,7 @@ function bp_rename_group_tabs() {
     global $bp;
     
     if (bp_is_group()) {
-        $bp->groups->nav->edit_nav( array('name' =>  'Activitiy' ),'activity', bp_current_item() );
+        $bp->groups->nav->edit_nav( array('name' =>  'Activity' ),'activity', bp_current_item() );
         $bp->groups->nav->edit_nav( array('name' =>  'Settings' ),'notifications', bp_current_item() );        
     }        
 }
