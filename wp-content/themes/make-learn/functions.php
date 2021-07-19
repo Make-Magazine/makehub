@@ -1,289 +1,321 @@
 <?php
 /**
- * Make - Learn Theme
- *
- * This file adds functions to the Make - Learn Theme.
- *
- * @package Make - Learn
- * @author  Make Community
- * @license GPL-2.0-or-later
- * @link    https://make.co/
+ * @package Make Learn
+ * The parent theme functions are located at /buddyboss-theme/inc/theme/functions.php
+ * Add your own functions at the bottom of this file.
  */
+/* * **************************** THEME SETUP ***************************** */
 
-// Starts the engine.
-require_once get_template_directory() . '/lib/init.php';
-
-// Defines the child theme (do not remove).
-define( 'CHILD_THEME_NAME', 'Make - Learn' );
-define( 'CHILD_THEME_URL', 'https://make.co' );
-
-// Sets up the Theme.
-require_once get_stylesheet_directory() . '/lib/theme-defaults.php';
-
-add_action( 'after_setup_theme', 'make_learn_localization_setup' );
-/**
- * Sets localization (do not remove).
- *
- * @since 1.0.0
- */
-function make_learn_localization_setup() {
-	load_child_theme_textdomain( 'make-learn', get_stylesheet_directory() . '/languages' );
-}
-
-// Adds helper functions.
-require_once get_stylesheet_directory() . '/lib/helper-functions.php';
-
-// Adds image upload and color select to Customizer.
-require_once get_stylesheet_directory() . '/lib/customize.php';
-
-// Includes Customizer CSS.
-require_once get_stylesheet_directory() . '/lib/output.php';
-
-// Adds WooCommerce support.
-require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-setup.php';
-
-// Adds the required WooCommerce styles and Customizer CSS.
-require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-output.php';
-
-// Adds the Genesis Connect WooCommerce notice.
-require_once get_stylesheet_directory() . '/lib/woocommerce/woocommerce-notice.php';
-
-// Include all function files in the makerfaire/functions directory:
-foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
-   include_once $file;
-}
-
-// Universal functions like auth0
 require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
 
-add_action( 'after_setup_theme', 'genesis_child_gutenberg_support' );
+// Defines the child theme (do not remove).
+define('CHILD_THEME_NAME', 'Make - Learn');
+define('CHILD_THEME_URL', 'https://learn.make.co');
+
 /**
- * Adds Gutenberg opt-in features and styling.
+ * Sets up theme for translation
  *
- * @since 2.7.0
+ * @since Make Learn 1.0.0
  */
-function genesis_child_gutenberg_support() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound -- using same in all child themes to allow action to be unhooked.
-	require_once get_stylesheet_directory() . '/lib/gutenberg/init.php';
+function make_learn_languages() {
+    /**
+     * Makes child theme available for translation.
+     * Translations can be added into the /languages/ directory.
+     */
+    // Translate text from the PARENT theme.
+    load_theme_textdomain('buddyboss-theme', get_stylesheet_directory() . '/languages');
+
+    // Translate text from the CHILD theme only.
+    // Change 'buddyboss-theme' instances in all child theme files to 'make-learn'.
 }
 
+add_action('after_setup_theme', 'make_learn_languages');
 
-add_action( 'wp_enqueue_scripts', 'make_learn_enqueue_scripts_styles' );
 /**
- * Enqueues scripts and styles.
+ * Enqueues scripts and styles for child theme front-end.
  *
- * @since 1.0.0
+ * @since Make Learn  1.0.0
  */
-function make_learn_enqueue_scripts_styles() {
-	$my_theme = wp_get_theme();
+function make_learn_scripts_styles() {
+    $my_theme = wp_get_theme();
     $my_version = $my_theme->get('Version');
-	
-    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all' );
-	wp_enqueue_style('linearicons', 'https://cdn.linearicons.com/free/1.0.0/icon-font.min.css', '', 'all' );
-	wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
-	
-	### GENESIS STYLES #####
-	$parent_style = 'genesis-style'; 
-    wp_enqueue_style( $parent_style, get_template_directory_uri() . '/style.css' );
-	
-	### UNIVERSAL STYLES ###
-	wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version );
-	
-	### SUBTHEME STYLES ###
-	wp_enqueue_style('make-learn-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version );
+    /**
+     * Scripts and Styles loaded by the parent theme can be unloaded if needed
+     * using wp_deregister_script or wp_deregister_style.
+     *
+     * See the WordPress Codex for more information about those functions:
+     * http://codex.wordpress.org/Function_Reference/wp_deregister_script
+     * http://codex.wordpress.org/Function_Reference/wp_deregister_style
+     * */
+    // Styles
+    wp_enqueue_style('bootstrap-css', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', '', 'all');
+    wp_enqueue_style('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/css/jquery.fancybox.min.css', '', 'all');
+    ### UNIVERSAL STYLES ###
+    wp_enqueue_style('universal.css', content_url() . '/universal-assets/v1/css/universal.min.css', array(), $my_version);
+    ### SUBTHEME STYLES ###
+    wp_enqueue_style('make-co-style', get_stylesheet_directory_uri() . '/css/style.min.css', array(), $my_version);
 
+    // Javascript
+    wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true);
+    wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true);
+    // lib src packages up bootstrap, fancybox, jquerycookie etc
+    wp_enqueue_script('built-libs-js', get_stylesheet_directory_uri() . '/js/min/built-libs.min.js', array('jquery'), $my_version, true);
+    wp_enqueue_script('make_learn-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
 
-	$suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
-	wp_enqueue_script(
-		'make-learn-responsive-menu',
-		get_stylesheet_directory_uri() . "/js/responsive-menus{$suffix}.js",
-		array( 'jquery' ),
-		$my_version,
-		true
-	);
-
-	wp_localize_script(
-		'make-learn-responsive-menu',
-		'genesis_responsive_menu',
-		make_learn_responsive_menu_settings()
-	);
-	
-	wp_enqueue_script('auth0', 'https://cdn.auth0.com/js/auth0/9.3.1/auth0.min.js', array(), false, true );
-	wp_enqueue_script('bootstrap-js', 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', array('jquery'), '', true );
-	wp_enqueue_script('fancybox', 'https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.6/js/jquery.fancybox.min.js', array('jquery'), '', true );
-	// font awesome load script
-	wp_enqueue_script('fontawesome5-js', 'https://kit.fontawesome.com/7c927d1b5e.js', array(), '', true ); 
-	// universal scripts
-	wp_enqueue_script('universal', content_url() . '/universal-assets/v1/js/min/universal.min.js', array(), $my_version, true );
-	// our custom scripts
-	wp_enqueue_script('theme-js', get_stylesheet_directory_uri() . '/js/min/scripts.min.js', array('jquery'), $my_version, true);
-	// gutenberg script
-	wp_enqueue_script('make-learn', get_stylesheet_directory_uri() . '/js/make-learn.js', array( 'jquery' ), $my_version, true);
-	
-	wp_localize_script('make-learn', 'ajax_object',
-	  array(
-			'ajax_url' => admin_url('admin-ajax.php'),
-			'home_url' => get_home_url(),
-			'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
-			'wp_user_email' => wp_get_current_user()->user_email,
-	  )
-	);
-
+    wp_localize_script('universal', 'ajax_object',
+            array(
+                'ajax_url' => admin_url('admin-ajax.php'),
+                'home_url' => get_home_url(),
+                'logout_nonce' => wp_create_nonce('ajax-logout-nonce'),
+                'wp_user_email' => wp_get_current_user()->user_email,
+                'wp_user_nicename' => wp_get_current_user()->user_nicename
+            )
+    );
 }
 
-// remove the subtheme level style.css to use it as a version
-remove_action( 'genesis_meta', 'genesis_load_stylesheet' );
+add_action('wp_enqueue_scripts', 'make_learn_scripts_styles', 9999);
 
-add_filter('show_admin_bar', 'remove_admin_bar', PHP_INT_MAX);
-// if you're not an admin, don't show the admin bar
-function remove_admin_bar(){
-    if (current_user_can('administrator')) {
+add_action('admin_enqueue_scripts', 'load_admin_styles');
+
+function load_admin_styles() {
+    wp_enqueue_style('admin_css', get_stylesheet_directory_uri() . '/css/admin-styles.css', false, '1.0.0');
+}
+
+/* * **************************** CUSTOM FUNCTIONS ***************************** */
+
+// Add your own custom functions here
+remove_filter('wp_edit_nav_menu_walker', 'indeed_create_walker_menu_class');
+
+//clean up the top black nav bar in admin
+
+function make_learn_remove_toolbar_node($wp_admin_bar) {
+    $wp_admin_bar->remove_node('wp-logo');
+    $wp_admin_bar->remove_node('new-content');
+    $wp_admin_bar->remove_node('updates');
+    $wp_admin_bar->remove_node('customize');
+    $wp_admin_bar->remove_node('comments');
+    $wp_admin_bar->remove_node('bp-notifications'); //buddypress notifications
+    $wp_admin_bar->remove_node('uap_dashboard_menu'); //ultimate affiliate pro
+    $wp_admin_bar->remove_node('elementor_inspector'); // elementor debugger
+    $wp_admin_bar->remove_node('essb'); // easy social share buttons
+}
+
+add_action('admin_bar_menu', 'make_learn_remove_toolbar_node', 999);
+
+// Include all function files in the make-learn/functions directory:
+foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
+    include_once $file;
+}
+
+// Include all class files in the make-learn/classes directory:
+foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
+    include_once $file;
+}
+//include any subfolders like 'widgets'
+foreach (glob(dirname(__FILE__) . '/classes/*/*.php') as $file) {
+    include_once $file;
+}
+
+add_filter('gform_ajax_spinner_url', 'spinner_url', 10, 2);
+
+function spinner_url($image_src, $form) {
+    return "/wp-content/universal-assets/v1/images/makey-spinner.gif";
+}
+
+function basicCurl($url, $headers = null) {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    if ($headers != null) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    }
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $data = curl_exec($ch);
+    curl_close($ch);
+    return $data;
+}
+
+function parse_yturl($url) {
+    $pattern = '#^(?:https?://)?(?:www\.)?(?:youtu\.be/|youtube\.com(?:/embed/|/v/|/watch\?v=|/watch\?.+&v=))([\w-]{11})(?:.+)?$#x';
+    preg_match($pattern, $url, $matches);
+    return (isset($matches[1])) ? $matches[1] : false;
+}
+
+////////////////////////////////////////////////////////////////////
+// Use Jetpack Photon if it exists, else use original photo
+////////////////////////////////////////////////////////////////////
+
+function get_resized_remote_image_url($url, $width, $height, $escape = true) {
+    if (class_exists('Jetpack') && Jetpack::is_module_active('photon')) {
+        $width = (int) $width;
+        $height = (int) $height;
+        // Photon doesn't support redirects, so help it out by doing http://foobar.wordpress.com/files/ to http://foobar.files.wordpress.com/
+        if (function_exists('new_file_urls'))
+            $url = new_file_urls($url);
+
+        $thumburl = jetpack_photon_url($url, array(
+            'resize' => array($width, $height),
+            'strip' => 'all',
+        ));
+        return ($escape) ? esc_url($thumburl) : $thumburl;
+    } else {
+        return $url;
+    }
+}
+
+function get_first_image_url($html) {
+    if (preg_match('/<img.+?src="(.+?)"/', $html, $matches)) {
+        return $matches[1];
+    } else
+        return get_stylesheet_directory_uri() . "/images/default-related-article.jpg";
+}
+
+function featuredtoRSS($content) {
+    global $post;
+    if (has_post_thumbnail($post->ID)) {
+        $content = '<div>' . get_the_post_thumbnail($post->ID, 'medium', array('style' => 'margin-bottom: 15px;')) . '</div>' . $content;
+    }
+    return $content;
+}
+
+add_filter('the_excerpt_rss', 'featuredtoRSS', 20, 1);
+add_filter('the_content_feed', 'featuredtoRSS', 20, 1);
+
+function add_event_date_to_rss() {
+    global $post;
+
+    if (get_post_type() == 'espresso_events') {
+        //determine start date
+        $event = EEM_Event::instance()->get_one_by_ID($post->ID);
+        $date = $event->first_datetime();
+        $start_date = date('m/d/Y', strtotime($date->start_date()));
+        ?>
+        <event_date><?php echo $start_date ?></event_date>
+        <?php
+    }
+}
+
+add_action('rss2_item', 'add_event_date_to_rss', 30, 1);
+
+// Exclude espresso_events from rss feed if marked for supression
+function filter_posts_from_rss($where, $query = NULL) {
+    global $wpdb;
+
+    if (!$query->is_admin && $query->is_feed && $query->query['post_type'] == 'espresso_events') {
+        $dbSQL = "SELECT post_id FROM `wp_postmeta` WHERE `meta_key` LIKE 'suppress_from_rss_widget' and meta_value = 1";
+        $results = $wpdb->get_results($dbSQL);
+        $suppression_IDs = array();
+
+        foreach ($results as $result) {
+            $suppression_IDs[] = $result->post_id;
+        }
+
+        $exclude = implode(",", $suppression_IDs);
+
+        if (!empty($exclude)) {
+            $where .= ' AND wp_posts.ID NOT IN (' . $exclude . ')';
+        }
+    }
+    return $where;
+}
+
+add_filter('posts_where', 'filter_posts_from_rss', 1, 4);
+
+function add_slug_body_class($classes) {
+    global $post;
+    global $bp;
+    if (isset($post)) {
+        if ($post->post_name) {
+            $classes[] = $post->post_type . '-' . $post->post_name;
+        } else {
+            $classes[] = $post->post_type . '-' . str_replace("/", "-", trim($_SERVER['REQUEST_URI'], '/'));
+        }
+        // let's see if your the group owner and what kind of group it is (hidden, private, etc)
+        if (bp_is_groups_component()) {
+            $classes[] = 'group-' . groups_get_group(array('group_id' => bp_get_current_group_id()))->status;
+            if (current_user_can('manage_options') || groups_is_user_mod(get_current_user_id(), bp_get_current_group_id()) || groups_is_user_admin(get_current_user_id(), bp_get_current_group_id())) {
+                $classes[] = 'my-group';
+            }
+        }
+        return $classes;
+    }
+}
+
+add_filter('body_class', 'add_slug_body_class');
+
+// don't lazyload on the project print template
+function lazyload_exclude() {
+    if (is_page_template('project-print-template.php') == true) {
+        return false;
+    } else {
         return true;
     }
-    return false;
 }
 
-/**
- * Defines responsive menu settings.
- *
- * @since 2.3.0
- */
-function make_learn_responsive_menu_settings() {
+add_filter('lazyload_is_enabled', 'lazyload_exclude', 15);
+add_filter('wp_lazy_loading_enabled', 'lazyload_exclude', 10, 3);
+add_filter('do_rocket_lazyload', 'lazyload_exclude', 10, 3);
 
-	$settings = array(
-		'mainMenu'         => __( 'Menu', 'make-learn' ),
-		'menuIconClass'    => 'dashicons-before dashicons-menu',
-		'subMenu'          => __( 'Submenu', 'make-learn' ),
-		'subMenuIconClass' => 'dashicons-before dashicons-arrow-down-alt2',
-		'menuClasses'      => array(
-			'combine' => array(
-				'.nav-primary',
-			),
-			'others'  => array(),
-		),
-	);
-
-	return $settings;
-
+// limit default site search to learndash categories
+function searchfilter($query) {
+    if ($query->is_search && !is_admin()) {
+        $query->set('post_type', array('sfwd-courses', 'sfwd-lessons', 'sfwd-quiz', 'sfwd-topic', 'sfwd-certificates'));
+    }
+    return $query;
 }
 
-// Adds support for HTML5 markup structure.
-add_theme_support( 'html5', genesis_get_config( 'html5' ) );
+add_filter('pre_get_posts', 'searchfilter');
 
-// Adds support for accessibility.
-add_theme_support( 'genesis-accessibility', genesis_get_config( 'accessibility' ) );
 
-// Adds viewport meta tag for mobile browsers.
-add_theme_support( 'genesis-responsive-viewport' );
 
-// Adds custom logo in Customizer > Site Identity.
-add_theme_support( 'custom-logo', genesis_get_config( 'custom-logo' ) );
+add_action('after_setup_theme', 'remove_admin_bar');
 
-// Renames primary and secondary navigation menus.
-add_theme_support( 'genesis-menus', genesis_get_config( 'menus' ) );
-
-// Adds image sizes.
-add_image_size( 'sidebar-featured', 75, 75, true );
-
-// Adds support for after entry widget.
-add_theme_support( 'genesis-after-entry-widget-area' );
-
-// Adds support for 3-column footer widgets.
-add_theme_support( 'genesis-footer-widgets', 3 );
-
-// Removes header right widget area.
-unregister_sidebar( 'header-right' );
-
-// Removes secondary sidebar.
-unregister_sidebar( 'sidebar-alt' );
-
-// Removes site layouts.
-genesis_unregister_layout( 'content-sidebar-sidebar' );
-genesis_unregister_layout( 'sidebar-content-sidebar' );
-genesis_unregister_layout( 'sidebar-sidebar-content' );
-
-// Removes output of primary navigation right extras.
-remove_filter( 'genesis_nav_items', 'genesis_nav_right', 10, 2 );
-remove_filter( 'wp_nav_menu_items', 'genesis_nav_right', 10, 2 );
-
-add_action( 'genesis_theme_settings_metaboxes', 'make_learn_remove_metaboxes' );
-/**
- * Removes output of unused admin settings metaboxes.
- *
- * @since 2.6.0
- *
- * @param string $_genesis_admin_settings The admin screen to remove meta boxes from.
- */
-function make_learn_remove_metaboxes( $_genesis_admin_settings ) {
-	remove_meta_box( 'genesis-theme-settings-header', $_genesis_admin_settings, 'main' );
-	remove_meta_box( 'genesis-theme-settings-nav', $_genesis_admin_settings, 'main' );
+function remove_admin_bar() {
+    if (!current_user_can('administrator') && !is_admin()) {
+        show_admin_bar(false);
+    }
 }
 
-add_filter( 'genesis_customizer_theme_settings_config', 'make_learn_remove_customizer_settings' );
-/**
- * Removes output of header and front page breadcrumb settings in the Customizer.
- *
- * @since 2.6.0
- *
- * @param array $config Original Customizer items.
- * @return array Filtered Customizer items.
- */
-function make_learn_remove_customizer_settings( $config ) {
-	unset( $config['genesis']['sections']['genesis_header'] );
-	unset( $config['genesis']['sections']['genesis_breadcrumbs']['controls']['breadcrumb_front_page'] );
-	return $config;
+define('BP_AVATAR_URL', '/wp-content/uploads/');
+
+function bpdev_fix_avatar_dir_path($path) {
+    if (is_multisite())
+        $path = ABSPATH . 'wp-content/uploads/';
+    return $path;
 }
 
-// Displays custom logo.
-add_action( 'genesis_site_title', 'the_custom_logo', 0 );
+add_filter('bp_core_avatar_upload_path', 'bpdev_fix_avatar_dir_path', 1);
 
-// Repositions primary navigation menu.
-remove_action( 'genesis_after_header', 'genesis_do_nav' );
-add_action( 'genesis_header', 'genesis_do_nav', 12 );
-
-// Repositions the secondary navigation menu.
-remove_action( 'genesis_after_header', 'genesis_do_subnav' );
-add_action( 'genesis_footer', 'genesis_do_subnav', 10 );
-
-add_filter( 'wp_nav_menu_args', 'make_learn_secondary_menu_args' );
-/**
- * Reduces secondary navigation menu to one level depth.
- *
- * @since 2.2.3
- *
- * @param array $args Original menu options.
- * @return array Menu options with depth set to 1.
- */
-function make_learn_secondary_menu_args( $args ) {
-	if ( 'secondary' !== $args['theme_location'] ) {
-		return $args;
-	}
-	$args['depth'] = 1;
-	return $args;
+//fix the upload dir url
+function bpdev_fix_avatar_dir_url($url) {
+    if (is_multisite())
+        $url = network_home_url('/wp-content/uploads');
+    return $url;
 }
 
-add_filter( 'genesis_author_box_gravatar_size', 'make_learn_author_box_gravatar' );
-/**
- * Modifies size of the Gravatar in the author box.
- *
- * @since 2.2.3
- *
- * @param int $size Original icon size.
- * @return int Modified icon size.
- */
-function make_learn_author_box_gravatar( $size ) {
-	return 90;
-}
+add_filter('bp_core_avatar_url', 'bpdev_fix_avatar_dir_url', 1);
 
-add_filter( 'genesis_comment_list_args', 'make_learn_comments_gravatar' );
-/**
- * Modifies size of the Gravatar in the entry comments.
- *
- * @since 2.2.3
- *
- * @param array $args Gravatar settings.
- * @return array Gravatar settings with modified size.
- */
-function make_learn_comments_gravatar( $args ) {
-	$args['avatar_size'] = 60;
-	return $args;
-}
+/* This allows us to send elementor styled pages to other blogs */
+add_action("rest_api_init", function () {
+    register_rest_route(
+            "MakeLearn/v1"
+            , "/pages/(?P<id>\d+)/contentElementor"
+            , [
+        "methods" => "GET",
+        "callback" => function (\WP_REST_Request $req) {
+
+            $contentElementor = "";
+
+            if (class_exists("\\Elementor\\Plugin")) {
+                $post_ID = $req->get_param("id");
+
+                $pluginElementor = \Elementor\Plugin::instance();
+                $contentElementor = $pluginElementor->frontend->get_builder_content($post_ID);
+            }
+
+
+            return $contentElementor;
+        },
+            ]
+    );
+});
+?>

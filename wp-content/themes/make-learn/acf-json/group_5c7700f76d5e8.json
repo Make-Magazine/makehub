@@ -1337,25 +1337,6 @@
                             "button_label": "",
                             "sub_fields": [
                                 {
-                                    "key": "field_5c8a82946a158",
-                                    "label": "Column Header",
-                                    "name": "column_header",
-                                    "type": "text",
-                                    "instructions": "",
-                                    "required": 0,
-                                    "conditional_logic": 0,
-                                    "wrapper": {
-                                        "width": "",
-                                        "class": "",
-                                        "id": ""
-                                    },
-                                    "default_value": "",
-                                    "placeholder": "",
-                                    "prepend": "",
-                                    "append": "",
-                                    "maxlength": ""
-                                },
-                                {
                                     "key": "field_5c8a82a06a159",
                                     "label": "Column Text",
                                     "name": "column_text",
@@ -1427,6 +1408,25 @@
                                     },
                                     "default_value": "",
                                     "placeholder": ""
+                                },
+                                {
+                                    "key": "field_5c8a82946a158",
+                                    "label": "Column Header",
+                                    "name": "column_header",
+                                    "type": "text",
+                                    "instructions": "",
+                                    "required": 0,
+                                    "conditional_logic": 0,
+                                    "wrapper": {
+                                        "width": "",
+                                        "class": "",
+                                        "id": ""
+                                    },
+                                    "default_value": "",
+                                    "placeholder": "",
+                                    "prepend": "",
+                                    "append": "",
+                                    "maxlength": ""
                                 }
                             ]
                         }
@@ -1445,7 +1445,7 @@
             {
                 "param": "page_template",
                 "operator": "==",
-                "value": "page_landing.php"
+                "value": "default"
             }
         ]
     ],
@@ -1455,7 +1455,7 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
-    "active": 1,
+    "active": true,
     "description": "",
-    "modified": 1552679905
+    "modified": 1617829646
 }

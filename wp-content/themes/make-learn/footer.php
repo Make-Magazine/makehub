@@ -1,41 +1,37 @@
 <?php
-// first close the genesis site-inner wrapper...
-// if we don't want these wrappers, we can strip it out of here and the header.php
-genesis_structural_wrap( 'site-inner', 'close' );
-genesis_markup(
-	array(
-		'close'   => '</div>',
-		'context' => 'site-inner',
-	)
-);
-   require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer.html');
-?>
+/**
+ * The template for displaying the footer
+ *
+ * Contains the closing of the #content div and all content after.
+ *
+ * @link https://developer.wordpress.org/themes/basics/template-files/#template-partials
+ *
+ * @package BuddyBoss_Theme
+ */
 
-<div id="nav-overlay"></div>
+?>
+<?php do_action( THEME_HOOK_PREFIX . 'end_content' ); ?>
+
+</div><!-- .bb-grid -->
+</div><!-- .container -->
+</div><!-- #content -->
+
+<?php do_action( THEME_HOOK_PREFIX . 'after_content' ); ?>
+
+<?php do_action( THEME_HOOK_PREFIX . 'before_footer' ); ?>
+
+<?php //do_action( THEME_HOOK_PREFIX . 'footer' ); ?>
+<?php    require_once(WP_CONTENT_DIR.'/universal-assets/v1/page-elements/universal-footer.html'); ?>
+<?php do_action( THEME_HOOK_PREFIX . 'after_footer' ); ?>
+
+</div><!-- #page -->
+
+<?php do_action( THEME_HOOK_PREFIX . 'after_page' ); ?>
+
+
 <?php wp_footer(); ?>
 
-<div class="fancybox-thx" style="display:none;">
-  <div class="nl-modal-cont nl-thx-p2">
-    <div class="col-sm-4 hidden-xs nl-modal">
-      <span class="fa-stack fa-4x">
-        <i class="fa fa-circle-thin fa-stack-2x"></i>
-        <i class="fa fa-thumbs-o-up fa-stack-1x"></i>
-      </span>
-    </div>
-    <div class="col-sm-8 col-xs-12 nl-modal">
-      <h3 style="text-align:center">Awesome!</h3>
-      <p style="color:#333;text-align:center;margin-top:20px;">Thanks for signing up.</p>
-    </div>
-    <div class="clearfix"></div>
-  </div>
-</div>
-
-<div class="nl-modal-error" style="display:none;">
-  <div class="col-xs-12 nl-modal padtop">
-    <p class="lead">The reCAPTCHA box was not checked. Please try again.</p>
-  </div>
-  <div class="clearfix"></div>
-</div>
+<a href="mailto:feedback@make.co" class="btn feedback-btn">FEEDBACK</a>
 
 <?php
     // Tracking pixels users can turn off through the cookie law checkbox -- defaults to yes
@@ -50,6 +46,5 @@ genesis_markup(
 		</script>
 		<!-- Start Active Campaign Pixel -->
 <?php } ?>
-
 </body>
 </html>

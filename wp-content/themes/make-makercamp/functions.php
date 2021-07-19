@@ -9,8 +9,8 @@
 require_once(ABSPATH . 'wp-content/universal-assets/v1/universal-functions.php');
 
 // Defines the child theme (do not remove).
-define('CHILD_THEME_NAME', 'Make - Experiences');
-define('CHILD_THEME_URL', 'https://experiences.make.co');
+define('CHILD_THEME_NAME', 'Make - Maker Camp');
+define('CHILD_THEME_URL', 'https://makercamp.make.co');
 
 /**
  * Sets up theme for translation
@@ -103,12 +103,12 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
 
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
-// Include all function files in the make-experiences/functions directory:
+// Include all function files in the make-makercamp/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
 }
 
-// Include all class files in the make-experiences/classes directory:
+// Include all class files in the make-makercamp/classes directory:
 foreach (glob(dirname(__FILE__) . '/classes/*.php') as $file) {
     include_once $file;
 }
