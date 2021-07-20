@@ -23,6 +23,9 @@ a { // don't let genesis molest our links
     text-decoration: none;
 }
 
+#buddypanel-menu > .panel-head {
+	display: none;
+}
 
 .btn-red, .btn-reversed {
     font-weight: 300;
