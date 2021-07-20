@@ -60,12 +60,17 @@
 
 
 // Adventures grid page
-.bb-course-items .bb-card-course-details--hasAccess .bb-course-excerpt {
-	display: block;
-	color: #333;
-	font-size: 16px;
-	overflow: visible;
-    max-height: inherit;
+.bb-course-items {
+	.bb-card-course-details--hasAccess .bb-course-excerpt {
+		display: block;
+		color: #333;
+		font-size: 16px;
+		overflow: visible;
+		max-height: inherit;
+	}
+	.bb-course-cover {
+		.ld-status { display: none; }
+	}
 }
 .post-type-archive-sfwd-courses {
 	#courses-my-courses {
