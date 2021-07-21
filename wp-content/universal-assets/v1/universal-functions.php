@@ -143,6 +143,9 @@ function add_universal_body_classes($classes) {
 
 add_filter('body_class', 'add_universal_body_classes');
 
+// don't just use the auth0 email field for the wpuser name
+add_filter( 'auth0_use_management_api_for_userinfo', '__return_false', 101 );
+
 /* disable wordpress emails if that is set in wp-config
 add_filter('wp_mail','disabling_emails', 10,1);
 function disabling_emails( $args ){
