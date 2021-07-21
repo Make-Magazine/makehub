@@ -329,4 +329,18 @@ add_filter( 'wp_mail_from', function( $email ) {
 add_filter( 'wp_mail_from_name', function( $name ) {
     return 'Make: Community';
 }, 10, 3 );
+
+//add link to 'Add event' form entries in gf admin drop down
+function gf_add_entries_link( $wp_admin_bar ) {
+	$wp_admin_bar->add_node(
+			array(
+					'id'     => 'gform-form-entries',
+					'parent' => 'gform-forms',
+					'title'  => esc_html__( "'Add Event' Entries", 'gravityforms' ),					
+					'href'   => admin_url('admin.php?page=gf_entries&id=1')
+			));
+	return $wp_admin_bar;
+}
+
+add_filter( 'admin_bar_menu', 'gf_add_entries_link', 25 );
 ?>
