@@ -45,6 +45,9 @@
 		display: none;
 	}
 }
+.groups-list {
+	.groups-loop-buttons { display: none; }
+}
 .subnav-search.groups-search {
     margin: -10px 15px 20px;
     float: none;
@@ -73,10 +76,19 @@
             }
 		}
 	}
+	@media screen and (max-width:800px) {
+		.bb-grid { margin: 0px; }
+	}
+}
+.groups.bp-user {
+	@media screen and (max-width:800px) {
+		.bb-grid.site-content-grid { margin: 0px -10px; }
+	}
 }
 .bb-album-content-wrap {
 	h4 { color: #fff; }
 }
+
 
 // only admins get to set group types
 body:not(.admin-bar) {
