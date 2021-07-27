@@ -27,6 +27,7 @@ a { // don't let genesis molest our links
 	display: none;
 }
 
+// These are based off the commonly used btn colors of makerfaire
 .btn-red, .btn-reversed {
     font-weight: 300;
     padding: 15px 50px;
@@ -56,14 +57,14 @@ a { // don't let genesis molest our links
     &:hover, &:active, &:focus { color: #fff; }
 }
 
-.btn-blue-universal { // These are based off the commonly used btn colors of makerfaire
-                      color: #1987C7;
-                      border: thin solid #1987C7;
-                      padding: 10px 30px;
-                      &:hover, &:active, &:focus {
-                          background-color: #1987C7;
-                          color: #fff;
-                      }
+.btn-blue-universal { 
+	color: #1987C7;
+	border: thin solid #1987C7;
+	padding: 10px 30px;
+	&:hover, &:active, &:focus {
+	  background-color: #1987C7;
+	  color: #fff;
+	}
 }
 .btn-blue-reversed {
     color: #fff;
