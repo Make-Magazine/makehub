@@ -56,12 +56,11 @@ function membership_info_content() {
             $hasDigitalAccess = true;
         }
     }
-
     echo do_shortcode("[ihc-list-user-levels exclude_expire=true]");    
     if (!is_null($customerID)) { // if customer exists in stripe
         $session = \Stripe\BillingPortal\Session::create([
             'customer' => $customerID,
-            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->display_name . "/membership",
+            'return_url' => 'https://' . $_SERVER['SERVER_NAME'] . '/members/' . $user_info->user_nicename . "/membership",
         ]);
 
         echo '<a href="' . $session->url . '" class="btn universal-btn" id="manage-membership-btn" target="_blank">Update Payment information</a>';        
