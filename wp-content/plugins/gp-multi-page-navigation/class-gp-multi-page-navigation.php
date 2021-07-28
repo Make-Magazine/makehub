@@ -435,7 +435,14 @@ class GP_Multi_Page_Navigation extends GWPerk {
 
 		$message[] = __( 'Errors have been highlighted below.', 'gravityforms' );
 
-		return sprintf( '<div class="validation_error">%s</div>', implode( ' ', $message ) );
+		// Apply GF 2.4 error markup if needed
+		if ( GravityPerks::is_gf_version_lte( '2.5' ) ) {
+			return sprintf( '<div class="validation_error">%s</div>', implode( ' ', $message ) );
+		}
+
+		return sprintf( '<h2 class="gform_submission_error"><span class="gform-icon gform-icon--close"></span>%s</h2>',
+			implode( ' ', $message )
+		);
 	}
 
 	public function get_first_page_with_validation_error( $form ) {

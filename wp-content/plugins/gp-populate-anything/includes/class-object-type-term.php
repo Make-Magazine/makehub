@@ -40,7 +40,7 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 		if ( strpos( $prop, 'meta_' ) === 0 ) {
 			$meta_key = preg_replace( '/^meta_/', '', $prop );
 
-			return get_term_meta( $object->term_id, $meta_key );
+			return get_term_meta( $object->term_id, $meta_key, true );
 		}
 
 		/* All other props */
@@ -312,7 +312,7 @@ class GPPA_Object_Type_Term extends GPPA_Object_Type {
 				"LEFT JOIN {$wpdb->term_taxonomy} ON ( {$wpdb->terms}.term_id = {$wpdb->term_taxonomy}.term_id )",
 			),
 			'group_by' => "{$wpdb->terms}.term_id",
-			'order_by' => $orderby,
+			'order_by' => $orderby ? "{$wpdb->terms}.{$orderby}" : '', // Append terms table to make sure that `orderby` is not ambiguous. See HS#25707
 			'order'    => $order,
 		);
 

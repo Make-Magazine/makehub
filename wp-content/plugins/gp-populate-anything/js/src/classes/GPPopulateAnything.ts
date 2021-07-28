@@ -82,10 +82,13 @@ export default class GPPopulateAnything {
 		 * Disable conditional logic reset for fields populated by GPPA
 		 */
 		window.gform.addFilter('gform_reset_pre_conditional_logic_field_action', (reset:boolean, formId:number, targetId:string, defaultValues:string|Array<string>, isInit:boolean) => {
+			if (isInit) {
+				return reset;
+			}
+
 			// Trigger forceReload when conditional fields used in LMTs are shown/hidden
 			const id = targetId.split('_').pop();
 			if (window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
-				$(targetId).find('input, select, textarea').trigger('forceReload');
 				return false;
 			}
 
@@ -104,12 +107,16 @@ export default class GPPopulateAnything {
 
 		// Force reload conditionally shown fields that are used in LMTs
 		window.gform.addAction('gform_post_conditional_logic_field_action', (formId:string, action:string, targetId:string, defaultValues:string|Array<string>, isInit:boolean) => {
+			if (isInit) {
+				return;
+			}
+
 			const id = targetId.split('_').pop();
-			if (action === 'show' && window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
+
+			if (window.gppaLiveMergeTags[this.formId].hasLiveAttrOnPage(id as string)) {
 				$(targetId).find('input, select, textarea').trigger('forceReload');
 			}
 		});
-
 	}
 
 	postRenderSetCurrentPage = (event: JQueryEventObject, formId: any, currentPage: number) => {
@@ -149,28 +156,16 @@ export default class GPPopulateAnything {
 
 			const $el = $(event.target);
 
-			/**
-			 * Flag to disable listener to prevent recursion.
-			 */
-			if ($el.data('gppaDisableListener')) {
+			const inputId = String( $el.attr('name') ).replace(new RegExp(`^${inputPrefix}`), '');
+
+			if( ! inputId ) {
 				return;
 			}
 
 			/**
-			 * Ignore change event if the input is a text input (e.g. single line or paragraph) since blurring the
-			 * input will fire a redundant event. keyup has us covered here.
-			 *
-			 * Change still needs to be listened to for non-text inputs such as selects, checkboxes, radios, etc.
+			 * Flag to disable listener to prevent recursion.
 			 */
-			if (event.type === 'change' && $el.is(':text')) {
-				if( $el.data( 'lastValue' ) == $el.val() ) {
-					return;
-				}
-			}
-			$el.data( 'lastValue', $el.val() );
-
-			const inputId = String( $el.attr('name') ).replace(new RegExp(`^${inputPrefix}`), '');
-			if( ! inputId ) {
+			if ($el.data('gppaDisableListener')) {
 				return;
 			}
 
@@ -190,6 +185,40 @@ export default class GPPopulateAnything {
 				console.debug('not firing due to field values matching last request');
 				return;
 			}
+
+			/**
+			 * Override when fields and Live Merge Tag values are refreshed when dependent inputs change.
+			 *
+			 * A common use of this filter is to require a certain number of characters in an input before triggering
+			 * an update.
+			 *
+			 * @since 1.0-beta-5.20
+			 *
+			 * @param boolean triggerChange Whether or not to trigger update of fields and Live Merge Tags.
+			 * @param string formId The current form ID.
+			 * @param string inputId The ID of the input that had a change event triggered.
+			 * @param JQuery $el Input element that had change event.
+			 * @param JQueryEventObject event Original event on input.
+			 *
+			 * @returns boolean Whether or not to trigger update of fields and Live Merge Tags
+			 */
+			if ( ! window.gform.applyFilters('gppa_should_trigger_change', true, this.formId, inputId, $el, event) ) {
+				return;
+			}
+
+			/**
+			 * Ignore change event if the input is a text input (e.g. single line or paragraph) since blurring the
+			 * input will fire a redundant event. keyup has us covered here.
+			 *
+			 * Change still needs to be listened to for non-text inputs such as selects, checkboxes, radios, etc.
+			 */
+			if (event.type === 'change' && $el.is('input[type=text], input[type=number], input[type=time], textarea')) {
+				if( $el.data( 'lastValue' ) == $el.val() ) {
+					return;
+				}
+			}
+
+			$el.data( 'lastValue', $el.val() );
 
 			this.onChange(inputId);
 		});
@@ -372,7 +401,7 @@ export default class GPPopulateAnything {
 
 	}
 
-	batchedAjax($form: JQuery, requestedFields: { field: fieldID, filters?: fieldMapFilter[] }[], triggerInputId: fieldID | fieldID[]) : JQueryXHR {
+	batchedAjax($form: JQuery, requestedFields: { field: fieldID, filters?: fieldMapFilter[] }[], triggerInputId: fieldID | fieldID[]) : JQueryPromise<any> {
 
 		this.eventId++;
 
@@ -469,7 +498,6 @@ export default class GPPopulateAnything {
 		}
 
 		const data = window.gform.applyFilters('gppa_batch_field_html_ajax_data', {
-			'action': 'gppa_get_batch_field_html',
 			'form-id': this.formId,
 			'lead-id': window.gform.applyFilters('gppa_batch_field_html_entry_id', null, this.formId),
 			'field-ids': fields.map((field) => {
@@ -481,7 +509,7 @@ export default class GPPopulateAnything {
 			/**
 			 * JSON is used here due to issues with modifiers causing merge tags to be truncated in $_REQUEST and $_POST
 			 */
-			'lmt-nonces': JSON.stringify(window.gppaLiveMergeTags[this.formId].whitelist),
+			'lmt-nonces': window.gppaLiveMergeTags[this.formId].whitelist,
 			'current-merge-tag-values': window.gppaLiveMergeTags[this.formId].currentMergeTagValues,
 			'security': window.GPPA.NONCE,
 			'event-id': this.eventId,
@@ -489,10 +517,16 @@ export default class GPPopulateAnything {
 
 		disableSubmitButton(this.getFormElement());
 
-		return $.post(window.GPPA.AJAXURL, data, (response: { merge_tag_values: ILiveMergeTagValues, fields: any, event_id: any }) => {
+		return $.ajax({
+			url: window.GPPA.AJAXURL + '?action=gppa_get_batch_field_html',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			type: 'POST',
+		}).done((response: { merge_tag_values: ILiveMergeTagValues, fields: any, event_id: any }) => {
 
 			// Skip out of order responses unless payload contains new markup
-			if( this.eventId > response.event_id && response.fields.length < 1 ) {
+			if (this.eventId > response.event_id && response.fields.length < 1) {
 				return;
 			}
 
@@ -595,7 +629,7 @@ export default class GPPopulateAnything {
 				$focus.focus();
 			}
 
-		}, 'json');
+		});
 
 	}
 
@@ -656,11 +690,13 @@ export default class GPPopulateAnything {
 
 		var GFCalc = window.gf_global.gfcalc[this.formId];
 
+		// Remove all calculation events prior to binding to prevent unbinding in the loop after a binding has been done.
 		for (var i = 0; i < GFCalc.formulaFields.length; i++) {
-			var formulaField = $.extend({}, GFCalc.formulaFields[i]);
+			this.removeCalculationEvents(GFCalc.formulaFields[i]);
+		}
 
-			/* Prevent duplicate bindings of calculation events. */
-			this.removeCalculationEvents(formulaField);
+		for (var j = 0; j < GFCalc.formulaFields.length; j++) {
+			var formulaField = $.extend({}, GFCalc.formulaFields[j]);
 
 			GFCalc.bindCalcEvents( formulaField, this.formId );
 			GFCalc.runCalc(formulaField, this.formId);

@@ -398,6 +398,13 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 					'callable' => '__return_empty_array',
 					'orderby'  => true,
 				),
+				'post_excerpt' => array(
+					'label'    => esc_html__( 'Post Excerpt', 'gp-populate-anything' ),
+					'value'    => 'post_excerpt',
+					'callable' => array( $this, 'get_col_rows' ),
+					'args'     => array( $wpdb->posts, 'post_excerpt' ),
+					'orderby'  => true,
+				),
 				'post_name'    => array(
 					'label'    => esc_html__( 'Post Name (Slug)', 'gp-populate-anything' ),
 					'value'    => 'post_name',

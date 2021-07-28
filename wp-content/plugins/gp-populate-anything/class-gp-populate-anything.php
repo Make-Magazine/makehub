@@ -99,7 +99,13 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_action( 'gform_entry_detail_content_before', array( $this, 'field_value_js' ) );
 		add_action( 'gform_entry_detail_content_before', array( $this, 'field_value_object_js' ) );
 
-		add_action( 'gform_pre_process', array( $this, 'hydrate_fields' ) );
+		/**
+		 * `gform_pre_process` priority is set to 5 to give other plugins some wiggle room after
+		 * GPPA hydrates a form's fields while also avoiding any potential caching issues.
+		 * An example of a caching issue here was with GPLCD and confirmation URL query strings
+		 * returning IDs instead of hydrated labels. See HS#25419.
+		 */
+		add_action( 'gform_pre_process', array( $this, 'hydrate_fields' ), 5 );
 		add_action( 'gform_pre_validation', array( $this, 'hydrate_fields' ) ); // Required for Gravity View's Edit Entry view.
 		add_action( 'gform_pre_submission_filter', array( $this, 'hydrate_fields' ) );
 
@@ -128,7 +134,9 @@ class GP_Populate_Anything extends GP_Plugin {
 		add_filter( 'gppa_modify_field_value_multiselect', array( $this, 'modify_field_values_multiselect' ), 10, 2 );
 
 		/* Field HTML when there are input field values */
-		add_filter( 'gppa_field_html_empty_field_value_radio', array( $this, 'radio_field_html_empty_field_value' ) );
+		add_filter( 'gppa_field_html_empty_field_value_radio', function( $text, $field, $form_id, $field_values ) {
+			return $this->radio_field_html_empty_field_value( $text, $field );
+		}, 10, 4 );
 
 		/* Conditional Logic */
 		add_filter( 'gform_field_filters', array( $this, 'conditional_logic_field_filters' ), 10, 2 );
@@ -935,7 +943,13 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$field = GFAPI::get_field( $object->form_id, str_replace( 'gf_field_', '', $template ) );
 
-		$value_export = $field ? $field->get_value_export( $array_value ) : '';
+		if ( $field ) {
+			// JSON encode $array_value for file uploads. This fixes a PHP warning (see HS#25675)
+			// Encoding all fields causes the default value of name fields to be comma separated (see HS#25880)
+			$value_export = $field['type'] === 'fileupload' ? $field->get_value_export( json_encode( $array_value ) ) : $field->get_value_export( $array_value );
+		} else {
+			$value_export = '';
+		}
 
 		if ( $value_export ) {
 			$text_value = $value_export;
@@ -1386,7 +1400,7 @@ class GP_Populate_Anything extends GP_Plugin {
 				/**
 				 * Convert comma separated values to an array if source is meta/ACF and it's still not an array.
 				 */
-				if ( strpos( $templates['value'], 'meta_' ) === 0 && strpos( $object_processed, ',' ) ) {
+				if ( ! is_array( $object_processed ) && strpos( $templates['value'], 'meta_' ) === 0 && strpos( $object_processed, ',' ) ) {
 					$object_processed = array_map( 'trim', explode( ',', $object_processed ) );
 				}
 			}
@@ -1916,11 +1930,29 @@ class GP_Populate_Anything extends GP_Plugin {
 		$field = gf_apply_filters( array( 'gppa_hydrated_field', $form['id'], $field['id'] ), $field, $form );
 
 		/**
-		 * Pass field through gform_pre_render to improve compatibility with Perks like GPLC during AJAX
+		 * Filter whether gform_pre_render should be utilized when fetching the new markup for fields when
+		 * populated via AJAX.
+		 *
+		 * While disabling gform_pre_render during AJAX can be helpful in some cases, consider it a workaround as it
+		 * can have adverse effects on certain integrations.
+		 *
+		 * @param boolean $run_pre_render Whether or not to use gform_pre_render filter.
+		 * @param \GF_Field $field The field that is being populated.
+		 * @param array $form The current form.
+		 *
+		 * @since 1.0.6
 		 */
-		if ( $run_pre_render ) {
+		if ( gf_apply_filters( array( 'gppa_run_pre_render_in_ajax', $form['id'], $field['id'] ), $run_pre_render, $field, $form ) ) {
 			remove_filter( 'gform_pre_render', array( $this, 'hydrate_initial_load' ), 8 );
 
+			// Ensure that GFFormDisplay is loaded for `gform_pre_render` to function correctly
+			if ( ! class_exists( 'GFFormDisplay' ) ) {
+				require_once( GFCommon::get_base_path() . '/form_display.php' );
+			}
+
+			/**
+			 * Pass field through gform_pre_render to improve compatibility with Perks like GPLC during AJAX
+			 */
 			$pseudo_form = gf_apply_filters(
 				array( 'gform_pre_render', $form['id'], $field['id'] ),
 				array_merge(
@@ -1929,8 +1961,7 @@ class GP_Populate_Anything extends GP_Plugin {
 						'fields' => array( $field ),
 					)
 				),
-				$form,
-				false,
+				true,
 				$field_values
 			);
 
@@ -2218,8 +2249,8 @@ class GP_Populate_Anything extends GP_Plugin {
 		return $html;
 	}
 
-	public function radio_field_html_empty_field_value() {
-		return '<p>Please fill out other fields.</p>';
+	public function radio_field_html_empty_field_value( $text, $field ) {
+		return apply_filters( 'gppa_missing_filter_text', '<p>' . esc_html__( 'Please fill out other fields.', 'gp-populate-anything' ) . '</p>', $field );
 	}
 
 	/**
@@ -2801,19 +2832,25 @@ class GP_Populate_Anything extends GP_Plugin {
 			sleep( 1 );
 		}
 
+		$data = self::maybe_decode_json( WP_REST_Server::get_raw_data() );
+
+		// Copy $data onto $_REQUEST and $_POST
+		$_REQUEST = array_merge( $_REQUEST, $data );
+		$_POST    = array_merge( $_POST, $data );
+
 		check_ajax_referer( 'gppa', 'security' );
 
-		$form         = GFAPI::get_form( $_REQUEST['form-id'] );
-		$fields       = rgar( $_REQUEST, 'field-ids', array() );
+		$form         = GFAPI::get_form( rgar( $data, 'form-id' ) );
+		$fields       = rgar( $data, 'field-ids', array() );
 		$field_values = $this->get_field_values_from_request();
-		$entry_id     = rgar( $_REQUEST, 'lead-id', 0 );
+		$entry_id     = rgar( $data, 'lead-id', 0 );
 		$using_entry  = ! ! $entry_id;
 		$entry        = $using_entry ? GFAPI::get_entry( $entry_id ) : null;
 		$fake_lead    = array();
 		$response     = array(
 			'fields'           => array(),
 			'merge_tag_values' => array(),
-			'event_id'         => rgpost( 'event-id' ),
+			'event_id'         => rgar( $data, 'event-id' ),
 		);
 
 		/**
@@ -2914,7 +2951,7 @@ class GP_Populate_Anything extends GP_Plugin {
 			}
 		}
 
-		$live_merge_tags = rgar( $_REQUEST, 'merge-tags', array() );
+		$live_merge_tags = rgar( $data, 'merge-tags', array() );
 
 		foreach ( $live_merge_tags as $live_merge_tag ) {
 			$live_merge_tag = stripslashes( $live_merge_tag );

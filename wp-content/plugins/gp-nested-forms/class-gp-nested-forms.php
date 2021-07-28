@@ -1052,7 +1052,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		/**
 		 * footer_init_scripts does not run by default if explicitly loading the form with AJAX enabled in GF >2.5.
 		 */
-		if ( $this->is_gf_version_gte( '2.5-beta-1' ) ) {
+		if ( $this->is_gf_version_gte( '2.5-beta-1' ) && apply_filters( 'gform_init_scripts_footer', false ) ) {
 			GFFormDisplay::footer_init_scripts( $form_id );
 		}
 
@@ -1087,6 +1087,19 @@ class GP_Nested_Forms extends GP_Plugin {
 			wp_die();
 		}
 
+		$nested_form   = GFAPI::get_form( $nested_form_id );
+		$require_login = rgar( $nested_form, 'requireLogin' );
+		if ( $require_login && ! is_user_logged_in() ) {
+			// GF 2.5 border color
+			$border_color = ( version_compare( GFForms::$version, '2.5.0', '>=' ) ) ? '#ddd' : '#D2E0EB';
+			wp_send_json( sprintf(
+				'<div class="gpnf-nested-entries-container ginput_container"><p style=" border: 1px dashed %s; border-radius: 3px; padding: 1rem; background: #fff; "><strong style="color: #ca4a1f;">%s</strong><br>%s</p></div>',
+				$border_color,
+				__( 'Sorry. You must be logged in to view this form.', 'gp-nested-forms' ),
+				sprintf( '%s', $nested_form['requireLoginMessage'] )
+			) );
+		}
+
 		ob_start();
 
 		$this->load_nested_form_hooks( $nested_form_id, $form_id );
@@ -1106,7 +1119,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		/**
 		 * footer_init_scripts does not run by default if explicitly loading the form with AJAX enabled in GF >2.5.
 		 */
-		if ( $this->is_gf_version_gte( '2.5-beta-1' ) || apply_filters( 'gform_init_scripts_footer', false ) ) {
+		if ( $this->is_gf_version_gte( '2.5-beta-1' ) && apply_filters( 'gform_init_scripts_footer', false ) ) {
 			GFFormDisplay::footer_init_scripts( $nested_form_id );
 		}
 
@@ -1264,19 +1277,57 @@ class GP_Nested_Forms extends GP_Plugin {
 		return $this->get_all_entries_template( $field, $raw_value, $modifiers, $merge_tag, $format );
 	}
 
-	public function parse_modifiers( $modifiers ) {
+	/**
+	 * @param string $modifiers
+	 * @param boolean $standard_mode Due to the dependency on All Fields Template, there are multiple ways to parse
+	 *   the modifiers. All Fields Template utilizes commas when combining multiple modifiers
+	 *   such as {Nested Form A:1:filter[1],value}
+	 *
+	 * @return array
+	 */
+	public function parse_modifiers( $modifiers, $standard_mode = false ) {
 
-		if ( ! is_callable( 'gw_all_fields_template' ) ) {
+		if ( empty( $modifiers ) ) {
 			return array();
 		}
 
-		return gw_all_fields_template()->parse_modifiers( $modifiers );
+		if ( $standard_mode ) {
+			$parsed = explode( ',', $modifiers );
+			$parsed = array_fill_keys( $parsed, $parsed );
+		} elseif ( is_callable( 'gw_all_fields_template' ) ) {
+			$parsed = gw_all_fields_template()->parse_modifiers( $modifiers );
+		} else {
+			$parsed = array();
+		}
+
+		return $parsed;
 	}
 
 	public function parse_modifier( $modifier, $modifiers ) {
-		$modifiers = $this->parse_modifiers( $modifiers );
+		$standard_modifiers = array( 'value' );
+		$modifiers          = $this->parse_modifiers( $modifiers, in_array( $modifier, $standard_modifiers, true ) );
 		// rgar() returns false when modifier is 0
 		return isset( $modifiers[ $modifier ] ) ? $modifiers[ $modifier ] : false;
+	}
+
+	public function get_template_names( $base, $form_id, $field_id, $custom_suffix = false ) {
+		$template_names = array(
+			sprintf( '%s-%s-%s.php', $base, $form_id, $field_id ),
+			sprintf( '%s-%s.php', $base, $form_id ),
+			sprintf( '%s.php', $base ),
+		);
+		
+		if ( $custom_suffix ) {
+			$custom_template_names = array();
+			
+			foreach ( $template_names as $template_name ) {
+				$custom_template_names[] = str_replace( $base, $base . '-' . $custom_suffix, $template_name );
+			}
+			
+			$template_names = array_merge( $custom_template_names, $template_names );
+		}
+		
+		return $template_names;
 	}
 
 	/**
@@ -1321,11 +1372,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$markup = $template->parse_template(
-			array(
-				sprintf( '%s-%s-%s.php', $args['template'], $field->formId, $field->id ),
-				sprintf( '%s-%s.php', $args['template'], $field->formId ),
-				sprintf( '%s.php', $args['template'] ),
-			),
+			gp_nested_forms()->get_template_names( $args['template'], $field->formId, $field->id, $this->parse_modifier( 'template', $modifiers ) ),
 			true,
 			false,
 			$args
@@ -1383,11 +1430,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		);
 
 		$markup = $template->parse_template(
-			array(
-				sprintf( '%s-%s-%s.php', $args['template'], $field->formId, $field->id ),
-				sprintf( '%s-%s.php', $args['template'], $field->formId ),
-				sprintf( '%s.php', $args['template'] ),
-			),
+			gp_nested_forms()->get_template_names( $args['template'], $field->formId, $field->id, $this->parse_modifier( 'template', $modifiers ) ),
 			true,
 			false,
 			$args
@@ -1449,7 +1492,7 @@ class GP_Nested_Forms extends GP_Plugin {
 				'nested_form'     => $nested_form,
 				'modifiers'       => $modifiers,
 				'is_all_fields'   => $is_all_fields,
-				'use_text'        => true,
+				'use_text'        => $this->parse_modifier( 'value', $modifiers ) === false,
 				'use_admin_label' => false,
 				'display_empty'   => false,
 				'format'          => $format,
@@ -1474,11 +1517,7 @@ class GP_Nested_Forms extends GP_Plugin {
 			$args['modifiers'] = $modifiers . ",entry[{$entry_id}]";
 
 			$values[] = $template->parse_template(
-				array(
-					sprintf( '%s-%s-%s.php', $args['template'], $field->formId, $field->id ),
-					sprintf( '%s-%s.php', $args['template'], $field->formId ),
-					sprintf( '%s.php', $args['template'] ),
-				),
+				gp_nested_forms()->get_template_names( $args['template'], $field->formId, $field->id, $this->parse_modifier( 'template', $modifiers ) ),
 				true,
 				false,
 				$args
@@ -2362,6 +2401,20 @@ class GP_Nested_Forms extends GP_Plugin {
 						$entry[ $field->id ] = implode( ',', $list_values );
 					}
 
+					break;
+
+				case 'number':
+					$value         = rgar( $entry, $field->id );
+					$number_format = rgar( $field, 'numberFormat' );
+
+					/*
+					 * Ensure that number is correctly formatted when loaded into the form. By default, the saved value
+					 * will always come through with periods for the decimal place and commas for thousand separator.
+					 *
+					 * Without this when using comma-period (e.g. Euro) format, conditional logic will reload the
+					 * default value and can cause the number to be drastically changed.
+					 */
+					$entry[ $field['id'] ] = GFCommon::format_number( $value, $number_format );
 					break;
 
 				case 'multiselect':

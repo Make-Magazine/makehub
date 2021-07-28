@@ -395,7 +395,8 @@
 			if ( self.mode == 'edit' && $( self.modal.modalBoxContent ).find( '.gform_wrapper' ).length > 0 ) {
 				self.modal.addFooterBtn( self.modalArgs.labels.delete, 'tingle-btn tingle-btn--danger tingle-btn--pull-left gpnf-btn-delete', function() {
 					var $button = $( this );
-					if ( ! $button.data( 'isConfirming' ) ) {
+					var isConfirmActionEnabled = self.modalArgs.labels.confirmAction !== false && self.modalArgs.labels.confirmAction !== '';
+					if ( ! $button.data( 'isConfirming' ) && isConfirmActionEnabled ) {
 						$button
 							.data( 'isConfirming', true )
 							.text( self.modalArgs.labels.confirmAction );
@@ -469,7 +470,7 @@
 			 *
 			 * @since 1.0-beta-9.24
 			 */
-			var disableNewCancelConfirmation = window.gform.applyFilters( 'gpnf_disable_new_cancel_confirmation', false );
+			var disableNewCancelConfirmation = window.gform.applyFilters( 'gpnf_disable_new_cancel_confirmation', self.modalArgs.labels.confirmAction === false || self.modalArgs.labels.confirmAction === '' );
 			if ( $button.data( 'isConfirming' ) ) {
 				self.modal.close();
 			} else if ( self.hasChanges() && ! disableNewCancelConfirmation ) {

@@ -16,7 +16,7 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	public $live_merge_tag_regex_option_choice      = '/(<option.*>)(.*?@({.*?:?.+?}).*?)<\/option>/';
 	public $live_merge_tag_regex_textarea           = '/(<textarea.*>)([\S\s]*?@({.*?:?.+?})[\S\s]*?)<\/textarea>/';
 	public $live_merge_tag_regex                    = '/@({((.*?):?(.+?))})/';
-	public $merge_tag_regex                         = '/{((.*?):?([0-9]+?)?(:(.+?))?)}/';
+	public $merge_tag_regex                         = '/{((.*?):?([0-9]+?\.?[0-9]*?)?(:(.+?))?)}/';
 	public $live_merge_tag_regex_attr               = '/([a-zA-Z-]+)=([\'"]([^\'"]*@{.*?:?.+?}[^\'"]*)(?<!\\\)[\'"])/';
 	public $value_attr                              = '/value=\'/';
 	public $script_regex                            = '/<script[\s\S]*?<\/script>/';
@@ -30,7 +30,10 @@ class GP_Populate_Anything_Live_Merge_Tags {
 	}
 
 	public function __construct() {
+		add_filter( 'gform_admin_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
 		add_filter( 'gform_pre_render', array( $this, 'populate_lmt_whitelist' ), 5 );
+		add_filter( 'gform_before_resend_notifications', array( $this, 'populate_lmt_whitelist' ), 5 );
+		add_filter( 'gform_pre_submission_filter', array( $this, 'populate_lmt_whitelist' ), 5 );
 
 		add_filter( 'gform_field_choice_markup_pre_render', array( $this, 'replace_live_merge_tag_select_field_option' ), 10, 4 );
 
@@ -65,6 +68,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		add_filter( 'gform_replace_merge_tags', array( $this, 'replace_live_merge_tags_static' ), 10, 7 );
 		add_filter( 'gform_admin_pre_render', array( $this, 'replace_field_label_live_merge_tags_static' ) );
+
+		add_filter( 'gform_order_summary', array( $this, 'replace_live_merge_tags_static' ), 10, 3 );
 
 		/**
 		 * Prevent replacement of Live Merge Tags in Preview Submission.
@@ -768,11 +773,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 
 		$lmt_nonces = null;
 
-		/**
-		 * JSON is used here due to issues with modifiers causing merge tags to be truncated in $_REQUEST and $_POST
-		 */
 		if ( rgar( $_REQUEST, 'lmt-nonces' ) ) {
-			$lmt_nonces = GFCommon::json_decode( stripslashes( rgar( $_REQUEST, 'lmt-nonces' ) ), true );
+			$lmt_nonces = rgar( $_REQUEST, 'lmt-nonces' );
 		}
 
 		if ( ! $entry_values ) {
@@ -891,9 +893,8 @@ class GP_Populate_Anything_Live_Merge_Tags {
 				$merge_tag_match_value = $fallback;
 			}
 
-			// Return field ID for field-specific merge tags; otherwise, return generic merge tag (e.g. "all_fields").
-			// For input-specific merge tags (e.g. {:1.6}) desired match is at index 5. For field-specific merge tags (e.g. {:1}), it's 3.
-			$field_id = rgar( $merge_tag_match, 5, rgar( $merge_tag_match, 3, $merge_tag_match[1] ) );
+			// Return input ID for field-specific merge tags; otherwise, return generic merge tag (e.g. "all_fields").
+			$field_id = rgar( $merge_tag_match, 3, $merge_tag_match[1] );
 			/**
 			 * Filter the live merge tag value.
 			 *
