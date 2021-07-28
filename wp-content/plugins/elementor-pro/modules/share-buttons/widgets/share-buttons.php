@@ -7,6 +7,7 @@ use Elementor\Icons_Manager;
 use Elementor\Repeater;
 use ElementorPro\Base\Base_Widget;
 use ElementorPro\Modules\ShareButtons\Module;
+use ElementorPro\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -68,7 +69,7 @@ class Share_Buttons extends Base_Widget {
 		return [ 'sharing', 'social', 'icon', 'button', 'like' ];
 	}
 
-	protected function _register_controls() {
+	protected function register_controls() {
 		$this->start_controls_section(
 			'section_buttons_content',
 			[
@@ -229,9 +230,18 @@ class Share_Buttons extends Base_Widget {
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
+				/* TODO: `prefix_class` is redundant since v3.1.0
+				 * It is only here for backwards compatibility reasons.
+				 * It should be removed in the future.
+				 */
 				'prefix_class' => 'elementor-share-buttons%s--align-',
+				/*---------------------------------------------------*/
 				'condition' => [
 					'columns' => '0',
+				],
+				/* `selectors` was added on v3.1.0 as a superior alternative to the previous `prefix_class` solution */
+				'selectors' => [
+					'{{WRAPPER}}' => '--alignment: {{VALUE}}',
 				],
 			]
 		);
@@ -352,7 +362,7 @@ class Share_Buttons extends Base_Widget {
 				],
 				'size_units' => [ 'em', 'px' ],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-share-btn__icon i' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .elementor-share-btn__icon' => '--e-share-buttons-icon-size: {{SIZE}}{{UNIT}};',
 				],
 				'condition' => [
 					'view!' => 'text',
@@ -578,31 +588,38 @@ class Share_Buttons extends Base_Widget {
 		?>
 		<div class="elementor-grid">
 			<?php
+			$networks_data = Module::get_networks();
+
 			foreach ( $settings['share_buttons'] as $button ) {
 				$network_name = $button['button'];
 
-				$social_network_class = ' elementor-share-btn_' . $network_name;
+				// A deprecated network.
+				if ( ! isset( $networks_data[ $network_name ] ) ) {
+					continue;
+				}
 
+				$social_network_class = ' elementor-share-btn_' . $network_name;
 				?>
-				<div class="elementor-grid-item">
-					<div class="<?php echo esc_attr( $button_classes . $social_network_class ); ?>">
-						<?php if ( 'icon' === $settings['view'] || 'icon-text' === $settings['view'] ) : ?>
-							<span class="elementor-share-btn__icon">
-								<i class="<?php echo self::get_network_class( $network_name ); ?>" aria-hidden="true"></i>
-								<span class="elementor-screen-only"><?php echo sprintf( __( 'Share on %s', 'elementor-pro' ), $network_name ); ?></span>
+					<div class="elementor-grid-item">
+						<div class="<?php echo esc_attr( $button_classes . $social_network_class ); ?>">
+							<?php if ( 'icon' === $settings['view'] || 'icon-text' === $settings['view'] ) : ?>
+								<span class="elementor-share-btn__icon">
+								<?php echo self::get_share_icon( $network_name ); ?>
+								<span
+									class="elementor-screen-only"><?php echo sprintf( __( 'Share on %s', 'elementor-pro' ), $network_name ); ?></span>
 							</span>
-						<?php endif; ?>
-						<?php if ( $show_text ) : ?>
-							<div class="elementor-share-btn__text">
-								<?php if ( 'yes' === $settings['show_label'] || 'text' === $settings['view'] ) : ?>
-									<span class="elementor-share-btn__title">
-										<?php echo $button['text'] ? $button['text'] : Module::get_networks( $network_name )['title']; ?>
+							<?php endif; ?>
+							<?php if ( $show_text ) : ?>
+								<div class="elementor-share-btn__text">
+									<?php if ( 'yes' === $settings['show_label'] || 'text' === $settings['view'] ) : ?>
+										<span class="elementor-share-btn__title">
+										<?php echo $button['text'] ? $button['text'] : $networks_data[ $network_name ]['title']; ?>
 									</span>
-								<?php endif; ?>
-							</div>
-						<?php endif; ?>
+									<?php endif; ?>
+								</div>
+							<?php endif; ?>
+						</div>
 					</div>
-				</div>
 				<?php
 			}
 			?>
@@ -629,6 +646,11 @@ class Share_Buttons extends Base_Widget {
 		<div class="elementor-grid">
 			<#
 				_.each( settings.share_buttons, function( button ) {
+					// A deprecated network.
+					if ( ! shareButtonsEditorModule.getNetworkData( button ) ) {
+						return;
+					}
+
 					var networkName = button.button,
 						socialNetworkClass = 'elementor-share-btn_' + networkName;
 					#>
@@ -652,5 +674,24 @@ class Share_Buttons extends Base_Widget {
 			<#  } ); #>
 		</div>
 		<?php
+	}
+
+	private static function get_svg_icon( $icon_value ) {
+		$icon = [
+			'library' => 'fa-brands',
+			'value' => $icon_value,
+		];
+
+		return Icons_Manager::render_font_icon( $icon );
+	}
+
+	private static function get_share_icon( $network_name ) {
+		$network_class = self::get_network_class( $network_name );
+
+		if ( Plugin::elementor()->experiments->is_feature_active( 'e_font_icon_svg' ) ) {
+			return self::get_svg_icon( $network_class );
+		}
+
+		return sprintf( '<i class="%s" aria-hidden="true"></i>', $network_class );
 	}
 }

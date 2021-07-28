@@ -38,14 +38,18 @@ class Archive_Posts extends Posts_Base {
 		return [ 'posts', 'cpt', 'archive', 'loop', 'query', 'cards', 'custom post type' ];
 	}
 
-	protected function _register_skins() {
+	public function get_inline_css_depends() {
+		return [ 'posts' ];
+	}
+
+	protected function register_skins() {
 		$this->add_skin( new Skins\Posts_Archive_Skin_Classic( $this ) );
 		$this->add_skin( new Skins\Posts_Archive_Skin_Cards( $this ) );
 		$this->add_skin( new Skins\Posts_Archive_Skin_Full_Content( $this ) );
 	}
 
-	protected function _register_controls() {
-		parent::_register_controls();
+	protected function register_controls() {
+		parent::register_controls();
 
 		$this->register_pagination_section_controls();
 
