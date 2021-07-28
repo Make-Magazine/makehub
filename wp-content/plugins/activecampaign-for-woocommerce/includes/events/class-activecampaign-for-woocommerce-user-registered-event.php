@@ -159,9 +159,17 @@ class Activecampaign_For_Woocommerce_User_Registered_Event implements Triggerabl
 					$this->logger->debug( 'Registered event: guest customer creation exception ', [ 'message' => $e->getMessage() ] );
 
 					return false;
+				} catch ( Throwable $t ) {
+					$this->logger->debug( 'Registered event: guest customer creation exception ', [ 'message' => $t->getMessage() ] );
+
+					return false;
 				}
 			} catch ( Exception $e ) {
 				$this->logger->debug( 'Registered event: Guest find customer exception ', [ 'message' => $e->getMessage() ] );
+
+				return false;
+			} catch ( Throwable $t ) {
+				$this->logger->debug( 'Registered event: Guest find customer exception ', [ 'message' => $t->getMessage() ] );
 
 				return false;
 			}

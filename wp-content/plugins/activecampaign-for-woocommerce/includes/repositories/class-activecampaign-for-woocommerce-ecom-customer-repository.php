@@ -17,7 +17,7 @@ use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Interacts_With_Api as Interacts_With_Api;
 use Activecampaign_For_Woocommerce_Repository_Interface as Repository;
 use AcVendor\GuzzleHttp\Exception\GuzzleException;
-
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The repository class for Ecom Customers
@@ -126,25 +126,36 @@ class Activecampaign_For_Woocommerce_Ecom_Customer_Repository implements Reposit
 			return null;
 		}
 
-		$ecom_order_model = new Ecom_Customer();
+		try {
+			$ecom_order_model = new Ecom_Customer();
 
-		$result_array = $this->get_result_set_from_api_by_filter(
-			$this->client,
-			'email',
-			$email
-		);
-		$result       = array_filter(
-			$result_array,
-			function( $result ) use ( $connection_id ) {
-				return $result['connectionid'] === $connection_id;
+			$result_array = $this->get_result_set_from_api_by_filter(
+				$this->client,
+				'email',
+				$email
+			);
+			$result       = array_filter(
+				$result_array,
+				function ( $result ) use ( $connection_id ) {
+					return $result['connectionid'] === $connection_id;
+				}
+			);
+
+			if ( empty( $result ) ) {
+				throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception();
 			}
-		);
 
-		if ( empty( $result ) ) {
-			throw new Activecampaign_For_Woocommerce_Resource_Not_Found_Exception();
+			return $ecom_order_model->set_properties_from_serialized_array( array_values( $result )[0] );
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->warning(
+				'find_by_email_and_connection_id: There was an issue creating the customer model or finding the contact in ActiveCampaign.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
 		}
-
-		return $ecom_order_model->set_properties_from_serialized_array( array_values( $result )[0] );
 	}
 
 	/**

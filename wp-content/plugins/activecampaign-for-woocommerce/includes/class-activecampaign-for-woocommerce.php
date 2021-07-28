@@ -372,18 +372,6 @@ class Activecampaign_For_Woocommerce {
 		);
 
 		$this->loader->add_action(
-			'woocommerce_order_status_completed',
-			$this->order_finished_event,
-			'checkout_meta'
-		);
-
-		$this->loader->add_action(
-			'woocommerce_order_status_processing',
-			$this->order_finished_event,
-			'checkout_meta'
-		);
-
-		$this->loader->add_action(
 			'woocommerce_payment_complete',
 			$this->order_finished_event,
 			'checkout_meta'

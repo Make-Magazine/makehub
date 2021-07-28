@@ -226,13 +226,17 @@ class Activecampaign_For_Woocommerce_Admin {
 			);
 
 			if ( $err_count ) {
-				$admin_log_url = wc_admin_url(
-					'status',
-					array(
-						'page' => 'wc-status',
-						'tab'  => 'logs',
-					)
-				);
+				if ( function_exists( 'wc_admin_url' ) ) {
+					$admin_log_url = wc_admin_url(
+						'status',
+						array(
+							'page' => 'wc-status',
+							'tab'  => 'logs',
+						)
+					);
+				} else {
+					$admin_log_url = admin_url( 'admin.php?page=wc-status&tab=logs' );
+				}
 
 				echo '<div id="activecampaign-for-woocommerce-notice-error" class="notice notice-error is-dismissible activecampaign-for-woocommerce-error"><p>' .
 					esc_html(

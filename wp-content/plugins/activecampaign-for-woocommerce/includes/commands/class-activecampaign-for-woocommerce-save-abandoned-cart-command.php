@@ -260,8 +260,9 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 				$this->logger->warning(
 					'Save abandoned cart command: There was an error attempting to save this abandoned cart',
 					[
-						'exception'     => $t,
+						'message'       => $t->getMessage(),
 						'customer_data' => $customer_data,
+						'trace'         => $t->getTrace(),
 					]
 				);
 			}
@@ -333,12 +334,13 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 			);
 
 			return;
-		} catch ( Exception $e ) {
+		} catch ( Throwable $t ) {
 			$this->logger->warning(
 				'Checkout meta: could not delete the abandoned cart entry.',
 				[
-					'exception'   => $e,
+					'message'     => $t->getMessage(),
 					'customer_id' => $customer_id,
+					'trace'       => $t->getTrace(),
 				]
 			);
 
@@ -354,13 +356,15 @@ class Activecampaign_For_Woocommerce_Save_Abandoned_Cart_Command {
 		if ( ! wp_next_scheduled( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ) ) {
 			wp_schedule_event( time(), 'hourly', 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 		} else {
-			$this->logger->debug(
-				'Recurring cron already scheduled',
-				[
-					'time_now' => time(),
-					'myevent'  => wp_get_scheduled_event( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ),
-				]
-			);
+			if ( function_exists( 'wp_get_scheduled_event' ) ) {
+				$this->logger->debug(
+					'Recurring cron already scheduled',
+					[
+						'time_now' => time(),
+						'myevent'  => wp_get_scheduled_event( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ),
+					]
+				);
+			}
 		}
 	}
 

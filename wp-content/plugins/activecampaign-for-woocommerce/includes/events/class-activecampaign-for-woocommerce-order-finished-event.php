@@ -15,6 +15,7 @@ use Activecampaign_For_Woocommerce_AC_Contact as AC_Contact;
 use Activecampaign_For_Woocommerce_Ecom_Customer as Ecom_Customer;
 use Activecampaign_For_Woocommerce_Ecom_Customer_Repository as Ecom_Customer_Repository;
 use Activecampaign_For_Woocommerce_AC_Contact_Repository as AC_Contact_Repository;
+use Activecampaign_For_Woocommerce_Ecom_Order as Ecom_Order;
 use Activecampaign_For_Woocommerce_Ecom_Order_Factory as Ecom_Order_Factory;
 use Activecampaign_For_Woocommerce_Ecom_Order_Repository as Ecom_Order_Repository;
 use Activecampaign_For_Woocommerce_Logger as Logger;
@@ -466,17 +467,44 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 			// setup the ecom order
 			if ( ! empty( $this->cart ) && ! empty( $this->customer_woo->get_email() ) ) {
 				$this->ecom_order = $this->factory->from_woocommerce( $this->cart, $this->customer_woo );
-			} else {
+			} elseif ( $this->order_ac && $this->order_ac->get_id() ) {
 				// Use the order from ActiveCampaign as the base for our order object
 				$this->ecom_order = $this->order_ac;
+			} else {
+				$this->ecom_order = new Ecom_Order();
 			}
 
 			// add the data to the order factory
-			if ( $this->ecom_order && ! empty( $this->ecom_order->get_email() ) ) {
+			if (
+				$this->ecom_order && (
+					! empty( $this->customer->get_email() ) ||
+					! empty( $order->get_billing_email() )
+				)
+			) {
+				if ( $this->customer && $this->customer->get_email() ) {
+					$this->ecom_order->set_email( $this->customer->get_email() );
+				} elseif ( wc()->customer && wc()->customer->get_email() ) {
+					// Set the email address from customer
+					$this->ecom_order->set_email( wc()->customer->get_email() );
+				} elseif ( get_user_meta( $order->get_user_id(), 'email' ) ) {
+					// Set the email address from user
+					$this->ecom_order->set_email( get_user_meta( $order->get_user_id(), 'email' ) );
+				} elseif ( $order->get_billing_email() ) {
+					// Set the email address from order
+					$this->ecom_order->set_email( $order->get_billing_email() );
+				} else {
+					$this->logger->warning(
+						'Order_Finished_Event: There was an issue setting the email on this order. This order may not be synced to ActiveCampaign.',
+						[
+							'order_number' => $order->get_order_number(),
+							'order'        => $order,
+						]
+					);
+				}
+
 				$this->ecom_order->set_connectionid( $this->connection_id );
 				$this->ecom_order->set_source( '1' );
 				$this->ecom_order->set_id( User_Meta_Service::get_current_cart_ac_id( get_current_user_id() ) );
-				$this->ecom_order->set_email( $this->customer->get_email() );
 				$this->ecom_order->set_customerid( $this->customer_ac->get_id() );
 				$this->ecom_order->set_currency( get_woocommerce_currency() );
 				$this->ecom_order->set_order_number( $order->get_order_number() );
@@ -489,10 +517,13 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 				// If the event is triggered by customer add these values, otherwise do not update them
 				if ( ! empty( wc()->cart ) ) {
 					$this->ecom_order->set_total_price( $this->get_cart_total( $this->cart ) );
-					$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
-					$this->ecom_order->set_order_url( wc_get_cart_url() );
-					$this->ecom_order->set_order_date( $date->format( DATE_ATOM ) );
+				} else {
+					$this->ecom_order->set_total_price( Money::of( $order->get_total(), get_woocommerce_currency() )->getMinorAmount() );
 				}
+
+				$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
+				$this->ecom_order->set_order_url( wc_get_cart_url() );
+				$this->ecom_order->set_order_date( $date->format( DATE_ATOM ) );
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->error(
@@ -510,17 +541,42 @@ class Activecampaign_For_Woocommerce_Order_Finished_Event {
 		}
 
 		try {
+			$products = null;
+
 			if ( ! empty( $this->cart ) ) {
 				$products = $this->product_factory->create_products_from_cart_contents( $this->cart->get_cart_contents() );
-			} else {
+			}
+
+			if ( ! $products ) {
 				// There is no cart object, build the products and add to the order
 				$products = [];
-				// Get and Loop Over Order Items to populate products
-				foreach ( $order->get_items() as $item_id => $item ) {
-					$products[ $item_id ] = $this->build_ecom_product( $item );
+				if ( $order->get_items() ) {
+					// Get and Loop Over Order Items to populate products
+					foreach ( $order->get_items() as $item_id => $item ) {
+						$products[ $item_id ] = $this->build_ecom_product( $item );
+					}
+					// Add products to list
+					if ( count( $products ) > 0 ) {
+						array_walk( $products, [ $this->ecom_order, 'push_order_product' ] );
+					} else {
+						$this->logger->warning(
+							'Activecampaign_For_Woocommerce_Order_Finished_Event: There was an issue creating the product objects for AC',
+							[
+								'email'                => $this->customer->get_email(),
+								'external_checkout_id' => $this->external_checkout_id,
+								'connection_id'        => $this->connection_id,
+							]
+						);
+					}
+				} else {
+					$this->logger->warning(
+						'Activecampaign_For_Woocommerce_Order_Finished_Event: Could not retrieve items from order. Products could not be populated.',
+						[
+							'email'        => $this->customer->get_email(),
+							'order_number' => $order->get_order_number(),
+						]
+					);
 				}
-				// Add products to list
-				array_walk( $products, [ $this->ecom_order, 'push_order_product' ] );
 			}
 		} catch ( Throwable $t ) {
 			$this->logger->error(

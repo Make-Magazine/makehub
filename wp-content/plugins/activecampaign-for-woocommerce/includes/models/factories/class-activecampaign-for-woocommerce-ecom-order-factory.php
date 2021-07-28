@@ -60,7 +60,8 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 	 * @return Ecom_Order
 	 */
 	public function from_woocommerce( WC_Cart $cart, WC_Customer $customer ) {
-		$order = new Ecom_Order();
+		$order  = new Ecom_Order();
+		$logger = new Logger();
 
 		try {
 			$date = new DateTime( 'now', new DateTimeZone( 'UTC' ) );
@@ -81,19 +82,42 @@ class Activecampaign_For_Woocommerce_Ecom_Order_Factory {
 			$order->set_customerid( $this->get_ac_customer_id() );
 			$order->set_order_date( $date->format( DATE_ATOM ) );
 			$order->set_order_url( wc_get_cart_url() );
+		} catch ( Throwable $t ) {
+			$logger->warning(
+				'Order Factory from_woocommerce: There was an error creating the order.',
+				[
+					'message'       => $t->getMessage(),
+					'email'         => $customer->get_email(),
+					'cart_contents' => $cart->get_cart_contents(),
+					'trace'         => $t->getTrace(),
+				]
+			);
+		}
 
+		try {
 			$products = $this
 				->product_factory
 				->create_products_from_cart_contents( $cart->get_cart_contents() );
 
-			array_walk( $products, [ $order, 'push_order_product' ] );
-		} catch ( Exception $e ) {
-			$logger = new Logger();
+			if ( count( $products ) > 0 ) {
+				array_walk( $products, [ $order, 'push_order_product' ] );
+			} else {
+				$logger->warning(
+					'Order Factory: Could not create product from cart contents.',
+					[
+						'email'         => $customer->get_email(),
+						'cart_contents' => $cart->get_cart_contents(),
+					]
+				);
+			}
+		} catch ( Throwable $t ) {
 			$logger->warning(
-				'Could not create product from cart contents',
+				'Order Factory: Could not create product from cart contents.',
 				[
+					'message'       => $t->getMessage(),
 					'email'         => $customer->get_email(),
 					'cart_contents' => $cart->get_cart_contents(),
+					'trace'         => $t->getTrace(),
 				]
 			);
 

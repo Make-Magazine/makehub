@@ -180,7 +180,7 @@ class Activecampaign_For_Woocommerce_Api_Client {
 		$this->client = new Client(
 			[
 				'base_uri' => $this->get_api_uri_with_v3_path(),
-				'timeout'  => 8,
+				'timeout'  => 20,
 				'headers'  => [
 					'Api-Token'    => $this->get_api_key(),
 					'X-Request-Id' => RequestIdService::get_request_id(),
@@ -433,6 +433,16 @@ class Activecampaign_For_Woocommerce_Api_Client {
 			$message     = $e->getMessage();
 			$stack_trace = $e->getTrace();
 			if ( isset( $e ) && 422 === $e->getCode() ) {
+				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
+			} else {
+				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+			}
+
+			return null;
+		} catch ( Throwable $t ) {
+			$message     = $t->getMessage();
+			$stack_trace = $t->getTrace();
+			if ( isset( $t ) && 422 === $t->getCode() ) {
 				$this->logger->debug( $message, [ 'stack trace' => $stack_trace ] );
 			} else {
 				$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );

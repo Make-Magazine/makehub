@@ -196,14 +196,14 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 			$this->repository->create( $connection_option );
 
 			$this->logger->info( 'Create or update connection option command: connection option created.' );
-		} catch ( \Exception $e ) {
+		} catch ( Throwable $t ) {
 			$this->admin->add_async_processing_notification(
 				'There was a problem updating the Abandoned Cart time, please try saving your settings again.',
 				'error'
 			);
 
-			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$message     = $t->getMessage();
+			$stack_trace = $t->getTrace();
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return;
@@ -268,14 +268,14 @@ class Activecampaign_For_Woocommerce_Create_Or_Update_Connection_Option_Command 
 			$this->maybe_find_connection_option_by_connection_id();
 
 			$this->update_connection_option( ++ $attempts );
-		} catch ( \Exception $e ) {
+		} catch ( Throwable $t ) {
 			/**
 			 * We have seen issues for a few users of this plugin where either the create or update call throws
 			 * an exception, which ends up breaking their store. This try/catch is a stop-gap measure for now.
 			 */
 
-			$message     = $e->getMessage();
-			$stack_trace = $e->getTrace();
+			$message     = $t->getMessage();
+			$stack_trace = $t->getTrace();
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return;

@@ -299,15 +299,21 @@ $activecampaign_for_woocommerce_recent_log_errors               = $this->fetch_r
 				<table class="wc_status_table widefat status_activecampaign_errors" cellspacing="0">
 					<caption> <i>(<a href="
 							<?php
-							echo esc_url(
-								wc_admin_url(
-									'status',
-									array(
-										'page' => 'wc-status',
-										'tab'  => 'logs',
+							if ( function_exists( 'wc_admin_url' ) ) {
+								echo esc_url(
+									wc_admin_url(
+										'status',
+										array(
+											'page' => 'wc-status',
+											'tab'  => 'logs',
+										)
 									)
-								)
-							);
+								);
+							} else {
+								echo esc_url(
+									admin_url( 'admin.php?page=wc-status&tab=logs' )
+								);
+							}
 							?>
 							">See the ActiveCampaign for WooCommerce logs for more info</a>)</i></caption>
 					<thead>

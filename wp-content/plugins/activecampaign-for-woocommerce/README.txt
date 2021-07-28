@@ -2,8 +2,8 @@
 Contributors: acteamintegrations, bartboy011
 Tags: marketing, ecommerce, woocommerce, email, activecampaign, abandoned cart
 Requires at least: 4.7
-Tested up to: 5.7.2
-Stable tag: 1.4.2
+Tested up to: 5.8
+Stable tag: 1.4.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,19 @@ Installation
 10. Click "Update Settings".
 
 == Changelog ==
+
+= 1.4.4 =
+* Bugfix to check if undefined functions wc_admin_url() & wp_get_scheduled_event() are available.
+* Bugfix for array_walk issue to make sure the WC_Order is not set to null during checkout.
+* Bugfix for get() on null error on order processing.
+* Bugfix for zero dollar totals
+* Bugfix for error on dropping the table on deletion of the plugin
+* Adds catches for more error conditions
+
+= 1.4.3 =
+* Bugfix for array_walk error.
+* Adding more error handling.
+* Extending the connection timeout so customers with slower connection to ActiveCampaign can send data.
 
 = 1.4.2 =
 * Bugfix for abandoned cart report page errors

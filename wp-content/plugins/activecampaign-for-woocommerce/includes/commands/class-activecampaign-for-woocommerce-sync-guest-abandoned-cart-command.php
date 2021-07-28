@@ -304,15 +304,23 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 
 			try {
 				// Try to create the new customer in AC
-				$this->logger->debug(
-					'Abandon cart guest sync: Creating customer in ActiveCampaign: '
-					. \AcVendor\GuzzleHttp\json_encode( $new_customer->serialize_to_array() )
-				);
+				if ( $new_customer->get_email() ) {
+					$this->logger->debug(
+						'Abandon cart guest sync: Creating customer in ActiveCampaign: '
+						. \AcVendor\GuzzleHttp\json_encode( $new_customer->serialize_to_array() )
+					);
 
-				$this->customer_ac = $this->customer_repository->create( $new_customer );
+					$this->customer_ac = $this->customer_repository->create( $new_customer );
+				}
 			} catch ( Exception $e ) {
 				$this->logger->debug(
 					'Abandon cart guest sync: Could not create a new customer in AC. ' . $e->getMessage()
+				);
+
+				return false;
+			} catch ( Throwable $t ) {
+				$this->logger->debug(
+					'Abandon cart guest sync: Could not create a new customer in AC. ' . $t->getMessage()
 				);
 
 				return false;
@@ -320,6 +328,12 @@ class Activecampaign_For_Woocommerce_Sync_Guest_Abandoned_Cart_Command implement
 		} catch ( Exception $e ) {
 			$this->logger->debug(
 				'Abandon cart guest sync: Could not find customer in AC. ' . $e->getMessage()
+			);
+
+			return false;
+		} catch ( Throwable $t ) {
+			$this->logger->debug(
+				'Abandon cart guest sync: Could not find customer in AC. ' . $t->getMessage()
 			);
 
 			return false;

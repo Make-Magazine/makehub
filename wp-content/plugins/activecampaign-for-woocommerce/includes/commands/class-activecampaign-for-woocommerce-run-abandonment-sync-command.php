@@ -363,12 +363,31 @@ class Activecampaign_For_Woocommerce_Run_Abandonment_Sync_Command {
 				$order->set_external_created_date( $date->format( DATE_ATOM ) );
 				$order->set_order_url( wc_get_cart_url() );
 				$order->set_total_products( $item_count_total );
-
-				// Step 3: Add the products to the order
-				array_walk( $products, [ $order, 'push_order_product' ] );
 			} catch ( Throwable $t ) {
 				$this->logger->error(
-					'Abandonment Sync: Failed to build ecom order: ',
+					'Abandonment Sync: Failed to build ecom order.',
+					[
+						'exception_message' => $t->getMessage(),
+						'exception_trace'   => $t->getTrace(),
+					]
+				);
+			}
+
+			try {
+				// Step 3: Add the products to the order
+				if ( count( $products ) > 0 ) {
+					array_walk( $products, [ $order, 'push_order_product' ] );
+				} else {
+					$this->logger->warning(
+						'Abandonment Sync: Failed to add products to ecom order.',
+						[
+							'email' => $customer->email,
+						]
+					);
+				}
+			} catch ( Throwable $t ) {
+				$this->logger->error(
+					'Abandonment Sync: Failed to add products to ecom order.',
 					[
 						'exception_message' => $t->getMessage(),
 						'exception_trace'   => $t->getTrace(),

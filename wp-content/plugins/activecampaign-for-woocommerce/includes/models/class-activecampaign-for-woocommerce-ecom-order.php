@@ -14,6 +14,7 @@ use Activecampaign_For_Woocommerce_Api_Serializable as Api_Serializable;
 use Activecampaign_For_Woocommerce_Ecom_Model_Interface as Ecom_Model;
 use Activecampaign_For_Woocommerce_Has_Id as Has_Id;
 use Activecampaign_For_Woocommerce_Has_Email as Has_Email;
+use Activecampaign_For_Woocommerce_Logger as Logger;
 
 /**
  * The model class for the EcomOrder
@@ -591,16 +592,29 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * @param array $array The serialized array.
 	 */
 	public function set_properties_from_serialized_array( array $array ) {
-		$this->set_all_but_products_as_properties_from_serialized_array( $array );
+		try {
+			$this->set_all_but_products_as_properties_from_serialized_array( $array );
+			if ( isset( $array['orderProducts'] ) ) {
+				foreach ( $array['orderProducts'] as $product ) {
+					if ( ! isset( $product['orderid'] ) ) {
+						$product['orderid'] = $this->get_id();
+					}
 
-		foreach ( $array['orderProducts'] as $product ) {
-			if ( ! isset( $product['orderid'] ) ) {
-				$product['orderid'] = $this->get_id();
+					$order_product = new Activecampaign_For_Woocommerce_Ecom_Product();
+					$order_product->set_properties_from_serialized_array( $product );
+					$this->push_order_product( $order_product );
+				}
 			}
-
-			$order_product = new Activecampaign_For_Woocommerce_Ecom_Product();
-			$order_product->set_properties_from_serialized_array( $product );
-			$this->push_order_product( $order_product );
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->warning(
+				'Activecampaign_For_Woocommerce_Ecom_Order: The set_properties_from_serialized_array function encountered an issue. The orderProducts array may not exist.',
+				[
+					'message'      => $t->getMessage(),
+					'passed_array' => $array,
+					'trace'        => $t->getTrace(),
+				]
+			);
 		}
 	}
 
@@ -613,16 +627,29 @@ class Activecampaign_For_Woocommerce_Ecom_Order implements Ecom_Model, Has_Id, H
 	 * @return array
 	 */
 	public function serialize_to_array() {
-		$array = $this->serialize_all_but_products_to_array();
+		try {
+			$array = $this->serialize_all_but_products_to_array();
 
-		$order_products = [];
+			$order_products = [];
 
-		foreach ( $this->order_products as $order_product ) {
-			$order_products[] = $order_product->serialize_to_array();
+			foreach ( $this->order_products as $order_product ) {
+				$order_products[] = $order_product->serialize_to_array();
+			}
+
+			$array['orderProducts'] = $order_products;
+
+			return $array;
+		} catch ( Throwable $t ) {
+			$logger = new Logger();
+			$logger->warning(
+				'Activecampaign_For_Woocommerce_Ecom_Order: The serialize_to_array function encountered an issue. A valid order object may not exist.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
+
+			return null;
 		}
-
-		$array['orderProducts'] = $order_products;
-
-		return $array;
 	}
 }

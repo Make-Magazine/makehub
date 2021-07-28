@@ -241,6 +241,9 @@ class Activecampaign_For_Woocommerce_Admin_Settings_Validator {
 			} catch ( \Exception $e ) {
 				$this->log->error( (string) $e );
 				$this->errors[] = 'Something went wrong while authenticating, please try again.';
+			} catch ( Throwable $t ) {
+				$this->log->error( (string) $t );
+				$this->errors[] = 'Something went wrong while authenticating, please try again.';
 			} finally {
 				// Restore old credentials
 				$this->client->set_api_key( $old_api_key );

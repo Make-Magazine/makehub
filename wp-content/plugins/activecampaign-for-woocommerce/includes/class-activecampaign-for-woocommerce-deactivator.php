@@ -46,12 +46,14 @@ class Activecampaign_For_Woocommerce_Deactivator {
 
 			wp_clear_scheduled_hook( 'activecampaign_for_woocommerce_cart_updated_recurring_event' );
 
-			$this->logger->info(
-				'Verify that the scheduled event was removed...',
-				[
-					'activecampaign_for_woocommerce_cart_updated_recurring_event' => wp_get_scheduled_event( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ),
-				]
-			);
+			if ( function_exists( 'wp_get_scheduled_event' ) ) {
+				$this->logger->info(
+					'Verify that the scheduled event was removed...',
+					[
+						'activecampaign_for_woocommerce_cart_updated_recurring_event' => wp_get_scheduled_event( 'activecampaign_for_woocommerce_cart_updated_recurring_event' ),
+					]
+				);
+			}
 		} else {
 			$this->logger->info( 'No event scheduled. Nothing to deactivate.' );
 		}

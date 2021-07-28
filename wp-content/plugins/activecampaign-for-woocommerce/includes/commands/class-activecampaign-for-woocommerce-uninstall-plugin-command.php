@@ -37,6 +37,8 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 	public function execute( ...$args ) {
 		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_OPTION_NAME );
 		delete_option( ACTIVECAMPAIGN_FOR_WOOCOMMERCE_DB_STORAGE_NAME );
+		delete_option( 'activecampaign_for_woocommerce_db_version' );
+		delete_option( 'activecampaign_for_woocommerce_dismiss_error_notice' );
 
 		User_Meta_Service::delete_all_user_meta();
 
@@ -46,8 +48,10 @@ class Activecampaign_For_Woocommerce_Uninstall_Plugin_Command implements Executa
 
 		try {
 			global $wpdb;
-			$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %s', $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME ) );
-		} catch ( Exception $e ) {
+			// phpcs:disable
+			$wpdb->query( 'DROP TABLE IF EXISTS ' . $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME );
+			// phpcs:enable
+		} catch ( Throwable $t ) {
 			// If this fails we should add an admin message to notify there could be an abandoned table.
 		}
 	}

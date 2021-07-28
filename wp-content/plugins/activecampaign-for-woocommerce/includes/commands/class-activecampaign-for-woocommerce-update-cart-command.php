@@ -237,6 +237,12 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
 
 			return false;
+		} catch ( Throwable $t ) {
+			$message     = $t->getMessage();
+			$stack_trace = $t->getTrace();
+			$this->logger->error( $message, [ 'stack trace' => $stack_trace ] );
+
+			return false;
 		}
 
 		if ( $ecom_customer ) {
@@ -265,10 +271,10 @@ class Activecampaign_For_Woocommerce_Update_Cart_Command implements Activecampai
 
 			try {
 				$this->set_customer_ac( $this->customer_repository->create( $new_customer ) );
-			} catch ( Exception $e ) {
+			} catch ( Throwable $t ) {
 				$this->logger->warning(
 					'Update Cart: Customer creation exception',
-					[ 'message' => $e->getMessage() ]
+					[ 'message' => $t->getMessage() ]
 				);
 
 				return false;

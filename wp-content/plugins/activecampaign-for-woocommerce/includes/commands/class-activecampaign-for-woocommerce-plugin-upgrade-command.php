@@ -99,11 +99,12 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 					$this->logger->error( 'Plugin Upgrade Command: There was an exception in creating the table...' );
 				}
 			}
-		} catch ( Exception $e ) {
+		} catch ( Throwable $t ) {
 			$this->logger->error(
 				'Plugin Upgrade Command: There was an exception in table verification...',
 				[
-					'exception' => $e,
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
 				]
 			);
 			$table_exists = false;
@@ -118,34 +119,43 @@ class Activecampaign_For_Woocommerce_Plugin_Upgrade_Command implements Executabl
 	private function install_table() {
 		$this->logger->info( 'Plugin Upgrade Command: Install the activecampaign_for_woocommerce_abandoned_cart table...' );
 		global $wpdb;
+		try {
+			$table_name      = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
+			$charset_collate = $wpdb->get_charset_collate();
 
-		$table_name      = $wpdb->prefix . ACTIVECAMPAIGN_FOR_WOOCOMMERCE_ABANDONED_CART_NAME;
-		$charset_collate = $wpdb->get_charset_collate();
+			$sql = "CREATE TABLE $table_name (
+			`id` INT NOT NULL AUTO_INCREMENT,
+			`synced_to_ac` TINYINT NOT NULL DEFAULT 0,
+			`customer_id` VARCHAR(45) NULL,
+			`customer_email` VARCHAR(255),
+			`customer_first_name` VARCHAR(255),
+			`customer_last_name` VARCHAR(255),
+			`last_access_time` DATETIME,
+			`user_ref_json` MEDIUMTEXT,
+			`customer_ref_json` LONGTEXT,
+			`cart_ref_json` LONGTEXT,
+			`cart_totals_ref_json` MEDIUMTEXT,
+			`removed_cart_contents_ref_json` LONGTEXT,
+			`activecampaignfwc_order_external_uuid` VARCHAR(255),
+			PRIMARY KEY (`id`),
+			INDEX `synced_to_ac_last_access_time` (`last_access_time` ASC, `synced_to_ac` ASC),
+			UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC)) $charset_collate;";
 
-		$sql = "CREATE TABLE $table_name (
-		`id` INT NOT NULL AUTO_INCREMENT,
-		`synced_to_ac` TINYINT NOT NULL DEFAULT 0,
-		`customer_id` VARCHAR(45) NULL,
-		`customer_email` VARCHAR(255),
-		`customer_first_name` VARCHAR(255),
-		`customer_last_name` VARCHAR(255),
-		`last_access_time` DATETIME,
-		`user_ref_json` MEDIUMTEXT,
-		`customer_ref_json` LONGTEXT,
-		`cart_ref_json` LONGTEXT,
-		`cart_totals_ref_json` MEDIUMTEXT,
-		`removed_cart_contents_ref_json` LONGTEXT,
-		`activecampaignfwc_order_external_uuid` VARCHAR(255),
-		PRIMARY KEY (`id`),
-		INDEX `synced_to_ac_last_access_time` (`last_access_time` ASC, `synced_to_ac` ASC),
-		UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC)) $charset_collate;";
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+			dbDelta( $sql );
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
-
-		// Add the db version
-		add_option( 'activecampaign_for_woocommerce_db_version', $this->get_plugin_db_version() );
-		$this->logger->info( 'Plugin Upgrade Command: Table installation finished!' );
+			// Add the db version
+			add_option( 'activecampaign_for_woocommerce_db_version', $this->get_plugin_db_version() );
+			$this->logger->info( 'Plugin Upgrade Command: Table installation finished!' );
+		} catch ( Throwable $t ) {
+			$this->logger->error(
+				'Plugin Upgrade install table: There was an exception creating the abandoned cart table.',
+				[
+					'message' => $t->getMessage(),
+					'trace'   => $t->getTrace(),
+				]
+			);
+		}
 	}
 
 	/**
