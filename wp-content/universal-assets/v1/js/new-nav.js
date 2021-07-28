@@ -268,14 +268,19 @@ jQuery(document).ready(function () {
     jQuery('.sub-menu-full-height').css('height', jQuery('.sub-menu-full-height').closest(".sub-menu-parent").height() + 8);
 
     // still got to get our credit from make projects
-    var source = window.location.hostname.split(".")[0];
-    var _href = jQuery(".mp-nav-link a").attr("href");
-    if (_href.indexOf('?') != -1) {
-        jQuery(".mp-nav-link a").attr("href", _href + '&utm_source=' + source + "_nav");
-    } else {
-        jQuery(".mp-nav-link a").attr("href", _href + '?utm_source=' + source + "_nav");
-    }
-
+    var site = window.location.hostname.split(".")[0];
+	// add utm parameters to all makeprojects links that don't have them
+	jQuery('[href*="makeprojects.com"]').each(function() {
+		var href = jQuery(this).attr('href');
+		if (href && href.indexOf('utm') == -1) {
+			var medium = site == 'makezine' ? 'blog' : 'make';
+			if(jQuery(this).parents('header').length) {
+				medium = site + "_nav";
+			}
+			href += (href.match(/\?/) ? '&' : '?') + 'utm_source=make&utm_medium=' + medium + '&utm_campaign=' + site + '&utm_content=link';
+			jQuery(this).attr('href', href);
+		}
+	});
 
 
 });
