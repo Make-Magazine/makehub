@@ -704,6 +704,32 @@ div.elementor-price-table__ribbon-inner {
   background-color: #FE6F4B;
 }
 
+.bb-sfwd-aside .site > .elementor-location-header {
+  -webkit-transition: padding-right 0.3s ease-in-out;
+          transition: padding-right 0.3s ease-in-out;
+}
+.bb-sfwd-aside .site > .elementor-location-header .elementor-section.elementor-section-stretched {
+  right: inherit !important;
+}
+
+.bb-sfwd-aside:not(.lms-side-panel-close) .site > .elementor-location-header {
+  padding: 0 370px 0 0;
+}
+.bb-sfwd-aside:not(.lms-side-panel-close) .site > .elementor-location-header .elementor-section.elementor-section-stretched {
+  width: 100% !important;
+  right: inherit !important;
+  padding: 0 !important;
+}
+@media screen and (max-width: 767px) {
+  .bb-sfwd-aside:not(.lms-side-panel-close) .site > .elementor-location-header {
+    padding: 0;
+  }
+}
+
+.bb-sfwd-aside .site > .elementor-location-header {
+  z-index: initial !important;
+}
+
 /** header bar widget */
 .site-header.site-header--elementor,
 .sticky-header .site-header.site-header--elementor,

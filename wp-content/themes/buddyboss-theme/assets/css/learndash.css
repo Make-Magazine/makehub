@@ -5561,6 +5561,7 @@ ul.bb-lms-user-profile-tabs .more-button.active:after {
   position: fixed;
   width: 370px;
   overflow: auto;
+  z-index: 111;
 }
 .lms-topic-sidebar-wrapper .lms-links {
   border-top: 1px solid #E7E9EC;
@@ -10586,6 +10587,7 @@ body:not(.bb-dark-theme) .sfwd-light-mode {
 }
 .bb-sfwd-aside.bb-dark-theme .bb-learndash-banner,
 .bb-sfwd-aside.bb-dark-theme .lms-topic-sidebar-wrapper,
+.bb-sfwd-aside.bb-dark-theme .lms-topic-sidebar-wrapper .lms-topic-sidebar-data,
 .bb-sfwd-aside.bb-dark-theme .learndash-wrapper .ld-topic-status {
   background-color: #1c1c1c;
 }

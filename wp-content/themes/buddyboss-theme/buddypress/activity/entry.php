@@ -13,6 +13,12 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 <li class="<?php bp_activity_css_class(); ?>" id="activity-<?php bp_activity_id(); ?>" data-bp-activity-id="<?php bp_activity_id(); ?>" data-bp-timestamp="<?php bp_nouveau_activity_timestamp(); ?>" data-bp-activity="<?php ( function_exists('bp_nouveau_edit_activity_data') ) ? bp_nouveau_edit_activity_data() : ''; ?>">
 
+	<?php
+	if ( function_exists( 'bb_nouveau_activity_entry_bubble_buttons' ) ) {
+		bb_nouveau_activity_entry_bubble_buttons();
+	}
+	?>
+
 	<div class="bp-activity-head">
 		<div class="activity-avatar item-avatar">
 			<a href="<?php bp_activity_user_link(); ?>"><?php bp_activity_avatar( array( 'type' => 'full' ) ); ?></a>
@@ -41,7 +47,15 @@ bp_nouveau_activity_hook( 'before', 'entry' ); ?>
 
 	<div class="activity-content <?php ( function_exists('bp_activity_entry_css_class') ) ? bp_activity_entry_css_class(): ''; ?>">
 		<?php if ( bp_nouveau_activity_has_content() ) : ?>
-			<div class="activity-inner"><?php bp_nouveau_activity_content(); ?></div>
+			<div class="activity-inner">
+				<?php
+					bp_nouveau_activity_content();
+
+					if ( function_exists( 'bb_nouveau_activity_inner_buttons' ) ) {
+						bb_nouveau_activity_inner_buttons();
+					}
+				?>
+			</div>
 		<?php endif; ?>
 
 		<?php

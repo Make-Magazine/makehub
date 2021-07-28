@@ -989,7 +989,7 @@ function bb_access_control_groups_potential_invites( $requests ) {
 								
 								LEFT JOIN 
 								
-									{$wpdb->posts} on wp_users.ID = {$wpdb->posts}.post_author 
+									{$wpdb->posts} on {$wpdb->users}.ID = {$wpdb->posts}.post_author
 									
 								AND 
 								
