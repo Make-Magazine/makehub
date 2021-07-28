@@ -3,8 +3,8 @@ Contributors: carazo, hornero
 Donate link: https://codection.com/go/donate-import-users-from-csv-with-meta/
 Tags: csv, import, importer, meta data, meta, user, users, user meta,  editor, profile, custom, fields, delimiter, update, insert
 Requires at least: 3.4
-Tested up to: 5.7.2
-Stable tag: 1.17.8
+Tested up to: 5.8
+Stable tag: 1.17.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,9 @@ Plugin will automatically detect:
 5. Extra profile information (user meta)
 
 == Changelog ==
+
+= 1.17.8.1 =
+*   Ready for WordPress 5.8
 
 = 1.17.8 =
 *   Array with string keys now can be imported using this syntax inside your CSV cell: key1=>value1::key2=>value2::key3=>value3
