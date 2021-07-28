@@ -38,8 +38,8 @@ function gv_import_entries_get_db_schema() {
 	 */
 "CREATE TABLE `{$tables['rows']}` (
 	`id`         BIGINT UNSIGNED AUTO_INCREMENT,
-	`batch_id`   INT UNSIGNED NOT NULL,
-	`entry_id`   INT,
+	`batch_id`   BIGINT UNSIGNED NOT NULL,
+	`entry_id`   BIGINT UNSIGNED,
 	`number`     INT UNSIGNED NOT NULL,
 	`status`     ENUM('new','processing', 'processed', 'skipped', 'error'),
 	`error`      LONGTEXT,

@@ -1,6 +1,6 @@
 === GravityView Importer ===
 Requires at least: 5.0
-Tested up to: 5.6
+Tested up to: 5.8
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 3 or higher
@@ -18,6 +18,17 @@ Easily import Gravity Forms entries from a CSV file. Learn more on [gravityview.
 3. Follow the instructions
 
 == Changelog ==
+
+= 2.2.3 on July 20, 2021 =
+
+* Fixed: Zeros could not be imported into a number field
+
+= 2.2.2 on May 6, 2021 =
+
+* Fixed: Compatibility with [Gravity Forms Zero Spam plugin](https://wordpress.org/plugins/gravity-forms-zero-spam/)
+* Fixed: Import may silently fail when the database contains a large number of entries (thanks, Alexander St. John!)
+* Fixed: PHP warnings when running [Gravity Forms Entries in Excel](https://wordpress.org/plugins/gf-entries-in-excel/)
+* Tweak: Modified code to improve future support for [Image Hopper](https://imagehopper.tech)
 
 = 2.2.1 on January 6, 2021 =
 

@@ -12,7 +12,7 @@ class Core {
 	/**
 	 * @var int The database version.
 	 */
-	const db_version = 2;
+	const db_version = '2.1';
 
 	/**
 	 * @var string The REST namespace.

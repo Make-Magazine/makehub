@@ -14,6 +14,9 @@ add_action( 'gravityview/import/processor/init', function() {
 		}, 1 );
 	}
 
+	// Imported files shall never be considered spam!
+	add_filter( 'gform_entry_is_spam', '__return_false', 1000 );
+
 	/**
 	 * Akismet should not be spammed.
 	 * https://github.com/gravityview/Import-Entries/issues/331

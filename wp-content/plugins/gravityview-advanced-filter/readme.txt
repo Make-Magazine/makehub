@@ -1,7 +1,7 @@
 === GravityView - Advanced Filter Extension ===
 Tags: gravityview
 Requires at least: 4.4
-Tested up to: 5.7
+Tested up to: 5.7.2
 Stable tag: trunk
 Contributors: The GravityView Team
 License: GPL 3 or higher
@@ -23,6 +23,11 @@ UI was written using [Svelte](https://svelte.dev/) and requires compilation. Mak
 3. Compile assets by running `npm run build`
 
 == Changelog ==
+
+= 2.1.9 on May 31, 2021 =
+
+* Fixed: "Created by Currently Logged-in User (Disabled for Administrators)" filter did not work with field conditional logic
+* Fixed: Relative date comparison did not respect WordPress's timezone offset
 
 = 2.1.8 on April 12, 2021 =
 

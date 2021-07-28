@@ -2,8 +2,8 @@
 /**
  * Plugin Name: GravityView - Gravity Forms Import Entries
  * Plugin URI:  https://gravityview.co/extensions/gravity-forms-entry-importer/
- * Description: The best way to import entries into Gravity Forms.
- * Version:     2.2.1
+ * Description: The best way to import entries into Gravity Forms. Proud to be a Gravity Forms Certified Add-On.
+ * Version:     2.2.3
  * Author:      GravityView
  * Author URI:  https://gravityview.co
  * Text Domain: gravityview-importer
@@ -14,7 +14,7 @@
 
 if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-define( 'GV_IMPORT_ENTRIES_VERSION', '2.2.1' );
+define( 'GV_IMPORT_ENTRIES_VERSION', '2.2.3' );
 
 define( 'GV_IMPORT_ENTRIES_FILE', __FILE__ );
 

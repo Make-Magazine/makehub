@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GravityView - Gravity Forms Import Entries 2.2.1\n"
+"Project-Id-Version: GravityView - Gravity Forms Import Entries 2.2.3\n"
 "Report-Msgid-Bugs-To: https://gravityview.co/support/\n"
-"POT-Creation-Date: 2021-01-06 15:40:32+00:00\n"
+"POT-Creation-Date: 2021-07-20 20:43:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -152,21 +152,21 @@ msgid "Batch is not in stop state: %s"
 msgstr ""
 
 #: class-gv-import-entries-core.php:225
-#: class-gv-import-entries-processor.php:556
+#: class-gv-import-entries-processor.php:571
 msgid "Latitude"
 msgstr ""
 
 #: class-gv-import-entries-core.php:226
-#: class-gv-import-entries-processor.php:557
+#: class-gv-import-entries-processor.php:572
 msgid "Longitude"
 msgstr ""
 
 #: class-gv-import-entries-core.php:229
-#: class-gv-import-entries-processor.php:558
+#: class-gv-import-entries-processor.php:573
 msgid "Approval Status"
 msgstr ""
 
-#: class-gv-import-entries-gf-export-screen.php:35
+#: class-gv-import-entries-gf-export-screen.php:49
 #: class-gv-import-entries-ui.php:854
 msgid "Entry Notes"
 msgstr ""
@@ -358,189 +358,188 @@ msgstr ""
 msgid "Entry #%s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:100
+#: class-gv-import-entries-processor.php:105
 msgid "Batch does not exist"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:114
+#: class-gv-import-entries-processor.php:120
 msgid "Batch is in stop state. Running no longer possible."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:197
+#: class-gv-import-entries-processor.php:203
 msgid "Breakpoint on status %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:310
+#: class-gv-import-entries-processor.php:322
 msgid "Invalid form ID."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:441
-#: class-gv-import-entries-processor.php:603
+#: class-gv-import-entries-processor.php:456
+#: class-gv-import-entries-processor.php:618
 msgid "Notes"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:452
+#: class-gv-import-entries-processor.php:467
 msgid "Created By (User Id)"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:463
+#: class-gv-import-entries-processor.php:478
 #: class-gv-import-entries-ui.php:1380
 msgid "User IP"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:464
+#: class-gv-import-entries-processor.php:479
 msgid "IP Address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:736
+#: class-gv-import-entries-processor.php:752
 msgid "Column %d"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:792
+#: class-gv-import-entries-processor.php:808
 msgid "Malformed, empty or invalid row data"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:932
+#: class-gv-import-entries-processor.php:949
 msgid "Wait timeout on processing rows. Zombies: %d."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1106
+#: class-gv-import-entries-processor.php:1132
 msgid "No schema provided. Nothing to do."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1447
+#: class-gv-import-entries-processor.php:1487
 #: class-gv-import-entries-ui.php:425
 msgid "Street Address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1448
+#: class-gv-import-entries-processor.php:1488
 #: class-gv-import-entries-ui.php:430
 msgid "Address Line 2"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1449
+#: class-gv-import-entries-processor.php:1489
 #: class-gv-import-entries-ui.php:435
 msgid "City"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1450
+#: class-gv-import-entries-processor.php:1490
 #: class-gv-import-entries-ui.php:440
 msgid "State / Province / Region"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1451
+#: class-gv-import-entries-processor.php:1491
 #: class-gv-import-entries-ui.php:445
 msgid "ZIP / Postal Code"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1452
+#: class-gv-import-entries-processor.php:1492
 #: class-gv-import-entries-ui.php:450
 msgid "Country"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1678
+#: class-gv-import-entries-processor.php:1721
 msgid "Radio choice is not one of: %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1708
+#: class-gv-import-entries-processor.php:1752
 msgid "Select choice is not one of: %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1728
-#: class-gv-import-entries-processor.php:1733
+#: class-gv-import-entries-processor.php:1772
+#: class-gv-import-entries-processor.php:1777
 msgid "Poll/Quiz choice is not one of: %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1766
-#: class-gv-import-entries-processor.php:1771
+#: class-gv-import-entries-processor.php:1810
+#: class-gv-import-entries-processor.php:1815
 msgid "Survey choice is not one of: %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1809
+#: class-gv-import-entries-processor.php:1854
 msgid "Multiselect choice is not one of: %s"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1881
+#: class-gv-import-entries-processor.php:1925
 msgid "ID does not exist for form"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:1887
-#: class-gv-import-entries-processor.php:2015
-#: class-gv-import-entries-processor.php:2200
-#: class-gv-import-entries-processor.php:2274
-#: class-gv-import-entries-processor.php:2367
-#: class-gv-import-entries-processor.php:2403
-#: class-gv-import-entries-processor.php:2744
-#: class-gv-import-entries-processor.php:2806
-msgid "Failed to process row ID %d"
-msgstr ""
-
-#: class-gv-import-entries-processor.php:1941
+#: class-gv-import-entries-processor.php:1975
 msgid "Entry Notes are not properly formatted."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2105
+#: class-gv-import-entries-processor.php:2053
+#: class-gv-import-entries-processor.php:2802
+#: class-gv-import-entries-processor.php:3255
+msgid "Failed to process row ID %d"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2145
 msgid "Checked"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2194
+#: class-gv-import-entries-processor.php:2234
 msgid "Gravity Forms Signature Addon is not active."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2361
+#: class-gv-import-entries-processor.php:2385
 msgid "Gravity Forms Coupons Addon is not active."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2397
+#: class-gv-import-entries-processor.php:2412
 msgid "Invalid coupon code"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2786
+#: class-gv-import-entries-processor.php:2782
 msgid "Unknown"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2797
+#: class-gv-import-entries-processor.php:2791
+msgid "Failed validation: %s"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2793
 msgid "Failed to pass one of Gravity Forms' form processing conditions"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2841
+#: class-gv-import-entries-processor.php:2837
 msgid "GravityView Import"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2955
-#: class-gv-import-entries-processor.php:2971
+#: class-gv-import-entries-processor.php:2956
+#: class-gv-import-entries-processor.php:2973
 msgid "No more rows to process."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2988
+#: class-gv-import-entries-processor.php:2991
 msgid "Rollback not possible on a non-logged batch."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:2993
+#: class-gv-import-entries-processor.php:2996
 msgid "Rollback failed."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3015
+#: class-gv-import-entries-processor.php:3019
 msgid "Batch is not in \"%s\" state, wrong handler called."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3029
+#: class-gv-import-entries-processor.php:3034
 msgid "Source is no longer readable."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3076
+#: class-gv-import-entries-processor.php:3082
 msgid "Source protocol not supported."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3084
+#: class-gv-import-entries-processor.php:3090
 msgid "Source URL could not be downloaded."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3095
+#: class-gv-import-entries-processor.php:3101
 msgid "Source does not exist."
 msgstr ""
 
-#: class-gv-import-entries-processor.php:3099
+#: class-gv-import-entries-processor.php:3105
 msgid "Source is not readable."
 msgstr ""
 
@@ -1251,369 +1250,376 @@ msgid "Error"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "The best way to import entries into Gravity Forms."
+msgid ""
+"The best way to import entries into Gravity Forms. Proud to be a Gravity "
+"Forms Certified Add-On."
 msgstr ""
 
-#: class-gv-import-entries-gf-export-screen.php:29
+#: class-gv-import-entries-gf-export-screen.php:42
 msgctxt "First replacement is field label. JSON is a file format."
 msgid "%s (Export as JSON)"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:630
+#: class-gv-import-entries-processor.php:645
 msgctxt ""
 "Typemap keyword. Part of a word that matches an email field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "email"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:632
+#: class-gv-import-entries-processor.php:647
 msgctxt ""
 "Typemap keyword. Part of a word that matches a phone field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "fax"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:633
+#: class-gv-import-entries-processor.php:648
 msgctxt ""
 "Typemap keyword. Part of a word that matches a phone field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "mobile"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:634
+#: class-gv-import-entries-processor.php:649
 msgctxt ""
 "Typemap keyword. Part of a word that matches a phone field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "phone"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:635
+#: class-gv-import-entries-processor.php:650
 msgctxt ""
 "Typemap keyword. Part of a word that matches a phone field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "telephone"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:636
+#: class-gv-import-entries-processor.php:651
 msgctxt ""
 "Typemap keyword. Part of a word that matches a phone field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "cell"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:638
+#: class-gv-import-entries-processor.php:653
 msgctxt ""
 "Typemap keyword. Part of a word that matches a number field. Has to be "
 "lowercase."
 msgid "number"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:639
+#: class-gv-import-entries-processor.php:654
 msgctxt ""
 "Typemap keyword. Part of a word that matches a number field. Has to be "
 "lowercase."
 msgid "month"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:640
+#: class-gv-import-entries-processor.php:655
 msgctxt ""
 "Typemap keyword. Part of a word that matches a number field. Has to be "
 "lowercase."
 msgid "year"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:641
+#: class-gv-import-entries-processor.php:656
 msgctxt ""
 "Typemap keyword. Part of a word that matches a number field. Has to be "
 "lowercase."
 msgid "count"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:643
+#: class-gv-import-entries-processor.php:658
 msgctxt ""
 "Typemap keyword. Part of a word that matches a file field. Has to be "
 "lowercase."
 msgid "file"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:645
+#: class-gv-import-entries-processor.php:660
 msgctxt ""
 "Typemap keyword. Part of a word that matches a URL field. Has to be "
 "lowercase."
 msgid "website"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:646
+#: class-gv-import-entries-processor.php:661
 msgctxt ""
 "Typemap keyword. Part of a word that matches a URL field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "site"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:647
+#: class-gv-import-entries-processor.php:662
 msgctxt ""
 "Typemap keyword. Part of a word that matches a URL field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "url"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:649
+#: class-gv-import-entries-processor.php:664
 msgctxt ""
 "Typemap keyword. Part of a word that matches a textarea field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "bio"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:651
+#: class-gv-import-entries-processor.php:666
 msgctxt ""
 "Typemap keyword. Part of a word that matches a date field. Has to be "
 "lowercase."
 msgid "date"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:652
+#: class-gv-import-entries-processor.php:667
 msgctxt ""
 "Typemap keyword. Part of a word that matches a date field. Has to be "
 "lowercase."
 msgid "birthday"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:653
+#: class-gv-import-entries-processor.php:668
 msgctxt ""
 "Typemap keyword. Part of a word that matches a date field. Has to be "
 "lowercase."
 msgid "anniversary"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:655
+#: class-gv-import-entries-processor.php:670
 msgctxt ""
 "Typemap keyword. Part of a word that matches a time field. Has to be "
 "lowercase."
 msgid "time"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:656
+#: class-gv-import-entries-processor.php:671
 msgctxt ""
 "Typemap keyword. Part of a word that matches a time field. Has to be "
 "lowercase."
 msgid "hour"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:657
+#: class-gv-import-entries-processor.php:672
 msgctxt ""
 "Typemap keyword. Part of a word that matches a time field. Has to be "
 "lowercase."
 msgid "hours"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:659
+#: class-gv-import-entries-processor.php:674
 msgctxt ""
 "Typemap keyword. Part of a word that matches a hidden field. Has to be "
 "lowercase."
 msgid "hidden"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:661
+#: class-gv-import-entries-processor.php:676
 msgctxt ""
 "Typemap keyword. Part of a word that matches a total field. Has to be "
 "lowercase."
 msgid "total"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:663
+#: class-gv-import-entries-processor.php:678
 msgctxt ""
 "Typemap keyword. Part of a word that matches a consent field. Has to be "
 "lowercase."
 msgid "consent"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:666
+#: class-gv-import-entries-processor.php:681
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "name"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:667
+#: class-gv-import-entries-processor.php:682
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "prefix"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:668
+#: class-gv-import-entries-processor.php:683
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "title"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:669
+#: class-gv-import-entries-processor.php:684
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "first"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:670
+#: class-gv-import-entries-processor.php:685
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "last"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:671
+#: class-gv-import-entries-processor.php:686
 msgctxt ""
 "Typemap keyword. Part of a word that matches a name field. Has to be "
 "lowercase."
 msgid "suffix"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:674
+#: class-gv-import-entries-processor.php:689
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:675
+#: class-gv-import-entries-processor.php:690
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "street"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:676
+#: class-gv-import-entries-processor.php:691
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "street address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:677
+#: class-gv-import-entries-processor.php:692
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "address 2"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:678
+#: class-gv-import-entries-processor.php:693
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "line 2"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:679
+#: class-gv-import-entries-processor.php:694
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "mailing"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:680
+#: class-gv-import-entries-processor.php:695
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "mailing address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:681
+#: class-gv-import-entries-processor.php:696
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "city"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:687
+#: class-gv-import-entries-processor.php:702
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase."
 msgid "country"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:682
+#: class-gv-import-entries-processor.php:697
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "state"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:683
+#: class-gv-import-entries-processor.php:698
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "province"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:684
+#: class-gv-import-entries-processor.php:699
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "region"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:685
+#: class-gv-import-entries-processor.php:700
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "zip"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:686
+#: class-gv-import-entries-processor.php:701
 msgctxt ""
 "Typemap keyword. Part of a word that matches an address field. Has to be "
 "lowercase. Set to ### if does not apply."
 msgid "postal code"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:689
+#: class-gv-import-entries-processor.php:704
 msgctxt ""
 "Typemap keyword. Part of a word that matches an entry property. Has to be "
 "lowercase."
 msgid "longitude"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:690
+#: class-gv-import-entries-processor.php:705
 msgctxt ""
 "Typemap keyword. Part of a word that matches an entry property. Has to be "
 "lowercase."
 msgid "latitude"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:691
+#: class-gv-import-entries-processor.php:706
 msgctxt ""
 "Typemap keyword. Part of a word that matches the name of an entry property. "
 "Has to be lowercase."
 msgid "entry id"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:692
+#: class-gv-import-entries-processor.php:707
 msgctxt ""
 "Typemap keyword. Part of a word that matches the name of an entry property. "
 "Has to be lowercase."
 msgid "entry date"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:693
+#: class-gv-import-entries-processor.php:708
 msgctxt ""
 "Typemap keyword. Part of a word that matches the name of an entry property. "
 "Has to be lowercase."
 msgid "user ip"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:694
+#: class-gv-import-entries-processor.php:709
 msgctxt ""
 "Typemap keyword. Part of a word that matches the name of an entry property. "
 "Has to be lowercase."
 msgid "ip address"
 msgstr ""
 
-#: class-gv-import-entries-processor.php:695
+#: class-gv-import-entries-processor.php:710
 msgctxt ""
 "Typemap keyword. Part of a word that matches the name of an entry property. "
 "Has to be lowercase."
 msgid "approval status"
+msgstr ""
+
+#: class-gv-import-entries-processor.php:2551
+msgctxt "%s is replaced with field ID"
+msgid "Form field with ID %s does not exist"
 msgstr ""
 
 #: class-gv-import-entries-ui.php:124

@@ -3,7 +3,7 @@
 Plugin Name: GravityView - Advanced Filter Extension
 Plugin URI: https://gravityview.co/extensions/advanced-filter/?utm_source=advanced-filter&utm_content=plugin_uri&utm_medium=meta&utm_campaign=internal
 Description: Filter which entries are shown in a View based on their values.
-Version: 2.1.8
+Version: 2.1.9
 Author: GravityView
 Author URI: https://gravityview.co/?utm_source=advanced-filter&utm_medium=meta&utm_content=author_uri&utm_campaign=internal
 Text Domain: gravityview-advanced-filter
@@ -38,7 +38,7 @@ function gv_extension_advanced_filtering_load() {
 
 		protected $_title = 'Advanced Filtering';
 
-		protected $_version = '2.1.8';
+		protected $_version = '2.1.9';
 
 		protected $_min_gravityview_version = '2.0';
 
@@ -215,15 +215,17 @@ HTML;
 		/**
 		 * Modify search criteria
 		 *
-		 * @param array $criteria       Existing search criteria array, if any
-		 * @param array $form_ids       Form IDs for the search
-		 * @param int   $passed_view_id (optional)
-		 *
-		 * @return     [type]                 [description]
-		 *
 		 * @deprecated 2.0
 		 *
 		 * Use the 2.0 GF_Query filters instead
+		 *
+		 * @param array $form_ids       Form IDs for the search
+		 * @param int   $passed_view_id (optional)
+		 *
+		 * @param array $criteria       Existing search criteria array, if any
+		 *
+		 * @return     [type]                 [description]
+		 *
 		 */
 		function filter_search_criteria( $criteria, $form_ids = null, $passed_view_id = null ) {
 
@@ -625,16 +627,11 @@ HTML;
 				return $filter;
 			}
 
-			// Not a relative date; use the perceived time (local)
-			if ( self::is_valid_datetime( $filter['value'] ) ) {
-				$local_timestamp = GFCommon::get_local_timestamp();
-				$date            = strtotime( $filter['value'], $local_timestamp );
-				$date_format     = isset( $date_format ) ? $date_format : 'Y-m-d';
-			} // Relative date; use same format as stored in (GMT)
-			else {
-				// Relative date compares to
-				$date        = strtotime( $filter['value'] );
-				$date_format = isset( $date_format ) ? $date_format : 'Y-m-d H:i:s';
+			$local_timestamp = GFCommon::get_local_timestamp();
+			$date            = strtotime( $filter['value'], $local_timestamp );
+
+			if ( ! isset( $date_format ) ) {
+				$date_format = self::is_valid_datetime( $filter['value'] ) ? 'Y-m-d' : 'Y-m-d H:i:s';
 			}
 
 			if ( $use_gmt ) {
@@ -1329,7 +1326,7 @@ HTML;
 
 			$entry = $context->entry->as_entry();
 
-			if ( $this->meets_conditional_logic( $entry, $filters, $context ) ) {
+			if ( empty( $filters ) || $this->meets_conditional_logic( $entry, $filters, $context ) ) {
 				return $field_output;
 			}
 

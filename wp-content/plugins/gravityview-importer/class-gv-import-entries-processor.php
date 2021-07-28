@@ -1,7 +1,10 @@
 <?php
+
 namespace GV\Import_Entries;
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
 
 use Goodby\CSV\Import\Standard\Lexer;
 use Goodby\CSV\Import\Standard\Interpreter;
@@ -30,7 +33,7 @@ class Processor {
 	private $valid_delimiters = array( "\t", ',', '|', ';' );
 
 	/**
-	 * @param array $args Various arguments for this processor:
+	 * @param array $args     Various arguments for this processor:
 	 *                        batch_id   string Only process tasks for this batch.
 	 *                        timeout    int    The maximum number of seconds to process.
 	 *                        memory     int    The maximum number of bytes for memory limit.
@@ -52,12 +55,14 @@ class Processor {
 
 		/**
 		 * @filter `gravityview/import/processor/args` Filter the processor arguments.
-		 * @param[in,out] array $args The arguments.
+		 *
+		 * @param  [in,out] array $args The arguments.
 		 */
 		$this->args = apply_filters( 'gravityview/import/processor/args', $args );
 
 		/**
 		 * @action `gravityview/import/processor/init` Processor is ready to be run.
+		 *
 		 * @param \GV\Import_Entries\Processor $processor The processor.
 		 * @param array                        $args      The args.
 		 */
@@ -102,7 +107,8 @@ class Processor {
 
 		/**
 		 * @filter `gravityview/import/run/batch` Alter the batch before it's being run.
-		 * @param[in,out] array $batch The batch.
+		 *
+		 * @param  [in,out] array $batch The batch.
 		 * @param \GV\Import_Entries\Processor The processor.
 		 */
 		$batch = apply_filters( 'gravityview/import/run/batch', $batch, $this );
@@ -111,7 +117,7 @@ class Processor {
 		 * Invalid statuses.
 		 */
 		if ( in_array( $batch['status'], $schema['properties']['status']['extra']['stop'] ) ) {
-			$batch['error']  =  $error = __( 'Batch is in stop state. Running no longer possible.', 'gravityview-importer' );
+			$batch['error'] = $error = __( 'Batch is in stop state. Running no longer possible.', 'gravityview-importer' );
 			Batch::update( $batch );
 			return new \WP_Error( 'gravityview/import/errors/invalid_state', $error );
 		}
@@ -199,7 +205,7 @@ class Processor {
 
 		if ( is_wp_error( $result = call_user_func( array( $this, 'handle_' . $batch['status'] ), $batch ) ) ) {
 			$batch['status'] = 'error';
-			$batch['error']  =  $result->get_error_message();
+			$batch['error']  = $result->get_error_message();
 
 			do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
 
@@ -217,7 +223,8 @@ class Processor {
 	public function has_resources() {
 		/**
 		 * @filter `gravityview/import/has_resources` Whether the current processor has resources or not.
-		 * @param[in,out] null|boolean True or false when overriding. Default: null, use default logic.
+		 *
+		 * @param  [in,out] null|boolean True or false when overriding. Default: null, use default logic.
 		 * @param \GV\Import_Entries\Processor The processor.
 		 */
 		if ( ! is_null( $result = apply_filters( 'gravityview/import/has_resources', null, $this ) ) ) {
@@ -262,6 +269,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_new( $batch ) {
@@ -271,15 +279,15 @@ class Processor {
 
 		if ( is_wp_error( $source = $this->to_local( $batch['source'], true ) ) ) {
 			Batch::update( array(
-				'id'     =>  $batch['id'],
+				'id'     => $batch['id'],
 				'status' => 'error',
-				'error'  =>  $source->get_error_message(),
+				'error'  => $source->get_error_message(),
 			) );
 			return $source;
 		}
 
 		return Batch::update( array(
-			'id'     =>  $batch['id'],
+			'id'     => $batch['id'],
 			'status' => 'parsing'
 		) );
 	}
@@ -290,10 +298,14 @@ class Processor {
 	 * Detect headers, fields, rowcount, etc.
 	 * Sets status to 'parsed' on success.
 	 *
-	 * @todo prevent race conditions on cuncurrency here
 	 * @internal
 	 *
+	 * @todo prevent race conditions on cuncurrency here
+	 *
+	 * @throws \Exception
+	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_parsing( $batch ) {
@@ -315,31 +327,32 @@ class Processor {
 
 		$interpreter = $this->get_interpreter_for( $batch );
 
-		$lexer       = $this->get_lexer_for( $batch );
+		$lexer = $this->get_lexer_for( $batch );
 
 		/**
 		 * Field detection functions.
 		 */
 		$all_funcs = array(
 			'numeric'   => 'is_numeric',
-			'new_lines' =>  function( $d ) {
+			'new_lines' => function ( $d ) {
 				return strpos( $d, "\n" );
 			},
 			'email'     => 'is_email',
-			'html'      =>  function( $d ) {
+			'html'      => function ( $d ) {
 				return strip_tags( $d ) != $d;
 			},
-			'date'      =>  function( $d ) {
+			'date'      => function ( $d ) {
 				return strtotime( $d );
 			},
-			'time'      =>  function( $d ) {
+			'time'      => function ( $d ) {
 				return preg_match( '#\d{1,2}:\d{2}(:\d{2})?#', $d );
 			},
 		);
 
 		/**
 		 * @filter `gravityview/import/parse/excerpt` The excerpt size.
-		 * @param[in,out] int  The size of the exerpt in rows. Includes headers. Default: 20
+		 *
+		 * @param  [in,out] int  The size of the exerpt in rows. Includes headers. Default: 20
 		 * @param array $batch The batch.
 		 */
 		$excerpt_size = apply_filters( 'gravityview/import/parse/excerpt', 20, $batch );
@@ -353,18 +366,18 @@ class Processor {
 				$batch['progress']['total']++;
 			}
 			$batch['progress']['total'] = max( 0, $batch['progress']['total'] - 1 /** ignore headers */ );
-			$batch = Batch::update( $batch );
+			$batch                      = Batch::update( $batch );
 			fclose( $csv );
 		}
 
 		/**
 		 * Analyze and build the hints.
 		 */
-		$headers = empty( $batch['meta']['_headers'] ) ? array() : $batch['meta']['_headers'];
-		$columns = empty( $batch['meta']['_columns'] ) ? array() : $batch['meta']['_columns'];
-		$number = 0;
+		$headers   = empty( $batch['meta']['_headers'] ) ? array() : $batch['meta']['_headers'];
+		$columns   = empty( $batch['meta']['_columns'] ) ? array() : $batch['meta']['_columns'];
+		$number    = 0;
 		$processor = &$this;
-		$interpreter->addObserver( function( $row ) use ( &$batch, &$headers, &$columns, &$all_funcs, &$number, $form, $excerpt_size, $processor ) {
+		$interpreter->addObserver( function ( $row ) use ( &$batch, &$headers, &$columns, &$all_funcs, &$number, $form, $excerpt_size, $processor ) {
 			$number++;
 
 			/**
@@ -374,6 +387,7 @@ class Processor {
 
 			/**
 			 * @action `gravityview/import/process/row` This row is being processed.
+			 *
 			 * @param array $row    The row.
 			 * @param int   $number The row number (starts from 1, the headers).
 			 * @param array $batch  The batch.
@@ -390,6 +404,7 @@ class Processor {
 			if ( empty( $headers ) ) {
 				/**
 				 * Fix BOM added by Gravity Forms export.php
+				 *
 				 * @see http://stackoverflow.com/questions/5601904/encoding-a-string-as-utf-8-with-bom-in-php
 				 */
 				$row[0] = str_replace( chr( 239 ) . chr( 187 ) . chr( 191 ), '', $row[0] );
@@ -553,9 +568,9 @@ class Processor {
 						 * Figure out the meta maps.
 						 */
 						$meta_hints = array(
-							__( 'Latitude', 'gravityview-maps', 'gravityview-importer' ) => 'long',
+							__( 'Latitude', 'gravityview-maps', 'gravityview-importer' )  => 'long',
 							__( 'Longitude', 'gravityview-maps', 'gravityview-importer' ) => 'lat',
-							__( 'Approval Status', 'gravityview-importer' ) => 'is_approved',
+							__( 'Approval Status', 'gravityview-importer' )               => 'is_approved',
 						);
 
 						foreach ( $meta_hints as $meta_hint => $meta_key ) {
@@ -627,77 +642,78 @@ class Processor {
 						 * Looks ugly.
 						 */
 						$typemap = array(
-							_x( 'email',    'Typemap keyword. Part of a word that matches an email field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'email',
+							_x( 'email', 'Typemap keyword. Part of a word that matches an email field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'email',
 
-							_x( 'fax',     'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
-							_x( 'mobile',  'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
-							_x( 'phone',   'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
-							_x( 'telephone',   'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
-							_x( 'cell',    'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
+							_x( 'fax', 'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )       => 'phone',
+							_x( 'mobile', 'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )    => 'phone',
+							_x( 'phone', 'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )     => 'phone',
+							_x( 'telephone', 'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'phone',
+							_x( 'cell', 'Typemap keyword. Part of a word that matches a phone field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )      => 'phone',
 
 							_x( 'number', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' ) => 'number',
-							_x( 'month', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' ) => 'number',
-							_x( 'year', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' ) => 'number',
-							_x( 'count', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' ) => 'number',
+							_x( 'month', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' )  => 'number',
+							_x( 'year', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' )   => 'number',
+							_x( 'count', 'Typemap keyword. Part of a word that matches a number field. Has to be lowercase.', 'gravityview-importer' )  => 'number',
 
 							_x( 'file', 'Typemap keyword. Part of a word that matches a file field. Has to be lowercase.', 'gravityview-importer' ) => 'fileupload',
 
-							_x( 'website', 'Typemap keyword. Part of a word that matches a URL field. Has to be lowercase.', 'gravityview-importer' ) => 'website',
+							_x( 'website', 'Typemap keyword. Part of a word that matches a URL field. Has to be lowercase.', 'gravityview-importer' )                            => 'website',
 							_x( 'site', 'Typemap keyword. Part of a word that matches a URL field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'website',
-							_x( 'url',  'Typemap keyword. Part of a word that matches a URL field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'website',
+							_x( 'url', 'Typemap keyword. Part of a word that matches a URL field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )  => 'website',
 
-							_x( 'bio',  'Typemap keyword. Part of a word that matches a textarea field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'textarea',
+							_x( 'bio', 'Typemap keyword. Part of a word that matches a textarea field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'textarea',
 
-							_x( 'date',  'Typemap keyword. Part of a word that matches a date field. Has to be lowercase.', 'gravityview-importer' ) => 'date',
-							_x( 'birthday',  'Typemap keyword. Part of a word that matches a date field. Has to be lowercase.', 'gravityview-importer' ) => 'date',
+							_x( 'date', 'Typemap keyword. Part of a word that matches a date field. Has to be lowercase.', 'gravityview-importer' )        => 'date',
+							_x( 'birthday', 'Typemap keyword. Part of a word that matches a date field. Has to be lowercase.', 'gravityview-importer' )    => 'date',
 							_x( 'anniversary', 'Typemap keyword. Part of a word that matches a date field. Has to be lowercase.', 'gravityview-importer' ) => 'date',
 
-							_x( 'time', 'Typemap keyword. Part of a word that matches a time field. Has to be lowercase.', 'gravityview-importer' ) => 'time',
-							_x( 'hour', 'Typemap keyword. Part of a word that matches a time field. Has to be lowercase.', 'gravityview-importer' ) => 'time',
+							_x( 'time', 'Typemap keyword. Part of a word that matches a time field. Has to be lowercase.', 'gravityview-importer' )  => 'time',
+							_x( 'hour', 'Typemap keyword. Part of a word that matches a time field. Has to be lowercase.', 'gravityview-importer' )  => 'time',
 							_x( 'hours', 'Typemap keyword. Part of a word that matches a time field. Has to be lowercase.', 'gravityview-importer' ) => 'time',
 
 							_x( 'hidden', 'Typemap keyword. Part of a word that matches a hidden field. Has to be lowercase.', 'gravityview-importer' ) => 'hidden',
 
 							_x( 'total', 'Typemap keyword. Part of a word that matches a total field. Has to be lowercase.', 'gravityview-importer' ) => 'total',
 
-							_x( 'consent', 'Typemap keyword. Part of a word that matches a consent field. Has to be lowercase.', 'gravityview-importer' ) => 'consent',
+							_x( 'consent', 'Typemap keyword. Part of a word that matches a consent field. Has to be lowercase.', 'gravityview-importer' )                                    => 'consent',
 
 							// Put generic first, so more specific can override
-							_x( 'name', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.3',
-							_x( 'prefix', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.2',
-							_x( 'title', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.2',
-							_x( 'first', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.3',
-							_x( 'last', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.6',
-							_x( 'suffix', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' ) => 'name.8',
+							_x( 'name', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                          => 'name.3',
+							_x( 'prefix', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                        => 'name.2',
+							_x( 'title', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                         => 'name.2',
+							_x( 'first', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                         => 'name.3',
+							_x( 'last', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                          => 'name.6',
+							_x( 'suffix', 'Typemap keyword. Part of a word that matches a name field. Has to be lowercase.', 'gravityview-importer' )                                        => 'name.8',
 
 							// Put generic first, so more specific can override
-							_x( 'address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.1',
-							_x( 'street', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.1',
-							_x( 'street address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.1',
-							_x( 'address 2', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.2',
-							_x( 'line 2', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.2',
-							_x( 'mailing', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.1',
-							_x( 'mailing address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.1',
-							_x( 'city', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.3',
-							_x( 'state', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'address.4',
-							_x( 'province', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'address.4',
-							_x( 'region', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'address.4',
-							_x( 'zip', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'address.5',
+							_x( 'address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                   => 'address.1',
+							_x( 'street', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                    => 'address.1',
+							_x( 'street address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                            => 'address.1',
+							_x( 'address 2', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                 => 'address.2',
+							_x( 'line 2', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                    => 'address.2',
+							_x( 'mailing', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                   => 'address.1',
+							_x( 'mailing address', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                           => 'address.1',
+							_x( 'city', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                      => 'address.3',
+							_x( 'state', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )       => 'address.4',
+							_x( 'province', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )    => 'address.4',
+							_x( 'region', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )      => 'address.4',
+							_x( 'zip', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' )         => 'address.5',
 							_x( 'postal code', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase. Set to ### if does not apply.', 'gravityview-importer' ) => 'address.5',
-							_x( 'country', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' ) => 'address.6',
+							_x( 'country', 'Typemap keyword. Part of a word that matches an address field. Has to be lowercase.', 'gravityview-importer' )                                   => 'address.6',
 
-							_x( 'longitude', 'Typemap keyword. Part of a word that matches an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'address.long',
-							_x( 'latitude', 'Typemap keyword. Part of a word that matches an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'address.lat',
-							_x( 'entry id', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'id',
-							_x( 'entry date', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'date_created',
-							_x( 'user ip', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'ip',
-							_x( 'ip address', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'ip',
+							_x( 'longitude', 'Typemap keyword. Part of a word that matches an entry property. Has to be lowercase.', 'gravityview-importer' )                   => 'address.long',
+							_x( 'latitude', 'Typemap keyword. Part of a word that matches an entry property. Has to be lowercase.', 'gravityview-importer' )                    => 'address.lat',
+							_x( 'entry id', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' )        => 'id',
+							_x( 'entry date', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' )      => 'date_created',
+							_x( 'user ip', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' )         => 'ip',
+							_x( 'ip address', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' )      => 'ip',
 							_x( 'approval status', 'Typemap keyword. Part of a word that matches the name of an entry property. Has to be lowercase.', 'gravityview-importer' ) => 'is_approved',
 						);
 
 						/**
 						 * @filter `gravityview/import/parse/typemap` The typemap for new form fields.
-						 * @param[in,out] array An associative array of search string => type.
+						 *
+						 * @param  [in,out] array An associative array of search string => type.
 						 * @param string $column The column header.
 						 * @param array  $batch  The batch.
 						 */
@@ -783,8 +799,8 @@ class Processor {
 			global $wpdb;
 
 			$data = array(
-				'number'   =>  $number,
-				'batch_id' =>  $batch['id'],
+				'number'   => $number,
+				'batch_id' => $batch['id'],
 				'status'   => 'new',
 			);
 
@@ -792,7 +808,7 @@ class Processor {
 				$data['error']  = __( 'Malformed, empty or invalid row data', 'gravityview-importer' );
 				$data['status'] = 'error';
 			} else {
-				$data['data']   =  $encoded_row;
+				$data['data'] = $encoded_row;
 			}
 
 			$wpdb->insert( $tables['rows'], $data );
@@ -847,11 +863,11 @@ class Processor {
 						} elseif ( ! empty( $columns[ $i ]['_is_all_date'] ) ) {
 							$columns[ $i ]['field'] = 'date';
 						} /* @TODO determine if this is necessary
-						    elseif ( ! empty( $columns[ $i ]['_options'] )
-							&& ( $options = count( $columns[ $i ]['_options'] ) ) > 1
-							&& ( $options / $batch['meta']['rows'] <= 0.2 ) ) {
-								$columns[ $i ]['field'] = 'radio';
-						} */else {
+						 * elseif ( ! empty( $columns[ $i ]['_options'] )
+						 * && ( $options = count( $columns[ $i ]['_options'] ) ) > 1
+						 * && ( $options / $batch['meta']['rows'] <= 0.2 ) ) {
+						 * $columns[ $i ]['field'] = 'radio';
+						 * } */ else {
 							$columns[ $i ]['field'] = 'text';
 						}
 					}
@@ -885,7 +901,7 @@ class Processor {
 			}
 		}
 
-		$batch['meta']['columns'] = array_filter( $columns, function( $column ) {
+		$batch['meta']['columns'] = array_filter( $columns, function ( $column ) {
 			return ! empty( $column['field'] );
 		} );
 
@@ -909,7 +925,7 @@ class Processor {
 	 *
 	 * @param array $batch The batch.
 	 *
-	 * @return \WP_Erorr|array The batch or an error on timeout.
+	 * @return \WP_Error|array The batch or an error on timeout.
 	 */
 	public function handle_halt( $batch ) {
 		global $wpdb;
@@ -922,14 +938,15 @@ class Processor {
 			 * @filter `gravityview/import/halt/timeout` The amount of patience before the batch
 			 *                                           enters an error an error state on frozen
 			 *                                           row processing.
-			 * @param[in,out] int   $timeout             The amount of time to wait before erroring.
-			 * @param         array $batch               The batch.
+			 *
+			 * @param  [in,out] int   $timeout             The amount of time to wait before erroring.
+			 * @param array $batch The batch.
 			 */
 			$timeout = apply_filters( 'gravityview/import/halt/timeout', 10, $batch );
 
 			if ( $timeout && ( ( $batch['updated'] + $timeout ) < time() ) ) {
 				$batch['status'] = 'error';
-				$batch['error']  =  $error = sprintf( __( 'Wait timeout on processing rows. Zombies: %d.', 'gravityview-importer' ), $processing );
+				$batch['error']  = $error = sprintf( __( 'Wait timeout on processing rows. Zombies: %d.', 'gravityview-importer' ), $processing );
 
 				do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
 
@@ -938,7 +955,8 @@ class Processor {
 
 			/**
 			 * @filter `gravityview/import/halt/sleep` The time to sleep before trying to halt again.
-			 * @param[in,out] int $sleep               The amount of time to wait before trying again.
+			 *
+			 * @param  [in,out] int $sleep               The amount of time to wait before trying again.
 			 *                                         Defaults to 1 if there are enough resources to continue.
 			 *                                         0 if there are none.
 			 * @param array $batch                     The batch.
@@ -962,6 +980,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \Goodby\CSV\Import\Standard\Interpreter
 	 */
 	public function get_interpreter_for( $batch ) {
@@ -975,13 +994,14 @@ class Processor {
 
 		/**
 		 * @filter `gravityview/import/unstrict` Whether to allow importing rows that aren't the same size as expected
-		 * @since 2.0 Changed default to true
+		 * @since  2.0 Changed default to true
+		 *
 		 * @param bool  $allow_mismatched_rows Default: true
-		 * @param array $batch The batch
+		 * @param array $batch                 The batch
 		 */
 		$allow_mismatched_rows = apply_filters( 'gravityview/import/unstrict', $allow_mismatched_rows, $batch );
 
-		if( $allow_mismatched_rows ) {
+		if ( $allow_mismatched_rows ) {
 			$interpreter->unstrict();
 		}
 
@@ -995,16 +1015,19 @@ class Processor {
 	 *
 	 * @param array  $batch The batch.
 	 * @param string $class Override the Lexer class. Used in tests.
+	 *
 	 * @return \Goodby\CSV\Import\Standard\Lexer
 	 */
 	public function get_lexer_for( $batch, $class = null ) {
 		$config = new LexerConfig();
 
 		$headers = fopen( $batch['source'], 'rb' );
-		while ( ! $header = fgets( $headers ) ) {} /** Rid us of empty new lines. */
+		while ( ! $header = fgets( $headers ) ) {
+		}
+		/** Rid us of empty new lines. */
 
 		if ( preg_match( '#[\w ]+(\W)([\w+ ]\\1)?#', $header, $matches ) ) {
-			if( in_array( $matches[1], $this->valid_delimiters, true ) ) {
+			if ( in_array( $matches[1], $this->valid_delimiters, true ) ) {
 				$config->setDelimiter( $matches[1] );
 			}
 		}
@@ -1017,15 +1040,16 @@ class Processor {
 		/**
 		 * @action `gravityview/import/config` Configure the import format.
 		 * Used to set exotic formats, escapes, etc.
-		 * @param   Goodby\CSV\Import\Standard\Lexer\Config $config The config object.
-		 * @param                                     array $batch  The batch.
+		 *
+		 * @param Goodby\CSV\Import\Standard\Lexer\Config $config The config object.
+		 * @param array                                   $batch  The batch.
 		 */
 		do_action_ref_array( 'gravityview/import/config', array( &$config, $batch ) );
 
 		if ( $class ) {
-			$lexer  = new $class( $config );
+			$lexer = new $class( $config );
 		} else {
-			$lexer  = new Lexer( $config );
+			$lexer = new Lexer( $config );
 		}
 
 		return $lexer;
@@ -1045,6 +1069,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_process( $batch ) {
@@ -1074,6 +1099,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_processing( $batch ) {
@@ -1088,8 +1114,8 @@ class Processor {
 		/**
 		 * Strip read-only batch values before validation.
 		 */
-		$schema = gv_import_entries_get_batch_json_schema();
-		$_batch = $batch;
+		$schema           = gv_import_entries_get_batch_json_schema();
+		$_batch           = $batch;
 		$_batch['status'] = 'process';
 
 		foreach ( $schema['properties'] as $name => $property ) {
@@ -1112,9 +1138,9 @@ class Processor {
 		if ( is_null( $batch['form_id'] ) ) {
 
 			$form_id = \GFAPI::add_form( array(
-				'title'  => ( ! empty( $batch['form_title'] ) ) ? $batch['form_title'] : 'Import Batch #' . $batch['id'],
+				'title'          => ( ! empty( $batch['form_title'] ) ) ? $batch['form_title'] : 'Import Batch #' . $batch['id'],
 				'labelPlacement' => null,
-				'fields' => array(),
+				'fields'         => array(),
 			) );
 
 			if ( is_wp_error( $error = $form_id ) ) {
@@ -1131,18 +1157,28 @@ class Processor {
 			 * So we'll maintain a list and a filter.
 			 */
 			$multiinput_fields = array(
-				'address', 'checkbox', 'name', 'survey', 'time', 'option',
-				'creditcard', 'password', 'consent', 'poll', 'quiz',
+				'address',
+				'checkbox',
+				'name',
+				'survey',
+				'time',
+				'option',
+				'creditcard',
+				'password',
+				'consent',
+				'poll',
+				'quiz',
 			);
 
 			/**
 			 * @filter `gravityview/import/fields/multi-input` A list of multi-input fields. Here for forward patching purposes.
-			 * @param[in,out] string[] A list of field types that are multi-input.
+			 *
+			 * @param  [in,out] string[] A list of field types that are multi-input.
 			 * @param array The batch.
 			 */
 			$multiinput_fields = apply_filters( 'gravityview/import/fields/multi-input', $multiinput_fields, $batch );
 
-			$fields = array();
+			$fields   = array();
 			$field_id = 0;
 
 			foreach ( $batch['schema'] as &$column ) {
@@ -1221,7 +1257,8 @@ class Processor {
 							$fields[ $field_key ]->choices = array();
 							foreach ( $column['meta']['list_cols'] as $label ) {
 								$fields[ $field_key ]->choices[] = array(
-									"text" => $label, "value" => $label
+									"text"  => $label,
+									"value" => $label
 								);
 							}
 							$fields[ $field_key ]->enableColumns = true;
@@ -1229,8 +1266,8 @@ class Processor {
 							/**
 							 * Maybe JSON or PHP serialized?
 							 */
-							$result  = $wpdb->get_col( $wpdb->prepare( "SELECT data FROM {$tables['rows']} WHERE batch_id = %d;", $batch['id'] ) );
-							$data    = array_filter( array_unique( wp_list_pluck( array_map( 'json_decode', $result ), $column['column'] ) ) );
+							$result = $wpdb->get_col( $wpdb->prepare( "SELECT data FROM {$tables['rows']} WHERE batch_id = %d;", $batch['id'] ) );
+							$data   = array_filter( array_unique( wp_list_pluck( array_map( 'json_decode', $result ), $column['column'] ) ) );
 
 							foreach ( $data as $d ) {
 								if (
@@ -1244,7 +1281,8 @@ class Processor {
 									if ( ! empty( $d ) && is_array( $d[0] ) ) {
 										foreach ( $d[0] as $label => $_ ) {
 											$fields[ $field_key ]->choices[] = array(
-												"text" => $label, "value" => $label
+												"text"  => $label,
+												"value" => $label
 											);
 										}
 
@@ -1269,8 +1307,8 @@ class Processor {
 
 						foreach ( $choices as $choice ) {
 							$fields[ $field_key ]->choices[] = array(
-								'text'   => $choice,
-								'value'  => $choice,
+								'text'  => $choice,
+								'value' => $choice,
 							);
 						}
 					}
@@ -1284,17 +1322,18 @@ class Processor {
 
 						/**
 						 * @filter `gravityview/import/column/multiselect/delimiter` The delimiter for multiselect fields.
-						 * @param[in,out] string    $delimiter The delimiter. Default: comma.
-						 * @param         \GF_Field $field  The multiselect field.
-						 * @param         array     $column The column that is being processed.
-						 * @param         array     $batch  The batch.
+						 *
+						 * @param  [in,out] string    $delimiter The delimiter. Default: comma.
+						 * @param \GF_Field $field  The multiselect field.
+						 * @param array     $column The column that is being processed.
+						 * @param array     $batch  The batch.
 						 */
 						$delimiter = apply_filters( 'gravityview/import/column/multiselect/delimiter', ',', $fields[ $field_key ], $column, $batch );
 
 						$all_the_choices = array();
 
 						foreach ( $choices as $choice ) {
-							$multichoices = array_map( 'trim', explode( $delimiter, $choice ) );
+							$multichoices    = array_map( 'trim', explode( $delimiter, $choice ) );
 							$all_the_choices = array_unique( array_merge( $all_the_choices, $multichoices ) );
 						}
 
@@ -1302,8 +1341,8 @@ class Processor {
 
 						foreach ( $all_the_choices as $choice ) {
 							$fields[ $field_key ]->choices[] = array(
-								'text'   => $choice,
-								'value'  => $choice,
+								'text'  => $choice,
+								'value' => $choice,
 							);
 						}
 
@@ -1323,18 +1362,19 @@ class Processor {
 
 						/**
 						 * @filter `gravityview/import/column/checkbox/unchecked` The delimiter for multiselect fields.
-						 * @param[in,out] string    $unchecked The unchecked values.
-						 * @param         \GF_Field $field  The checkbox field.
-						 * @param         array     $column The column that is being processed.
-						 * @param         array     $batch  The batch.
+						 *
+						 * @param  [in,out] string    $unchecked The unchecked values.
+						 * @param \GF_Field $field  The checkbox field.
+						 * @param array     $column The column that is being processed.
+						 * @param array     $batch  The batch.
 						 */
 						$unchecked = apply_filters( 'gravityview/import/column/checkbox/unchecked', $this->default_false_values, $fields[ $field_key ], $column, $batch );
 
 						foreach ( $choices as $choice ) {
 							if ( ! in_array( Core::strtolower( $choice ), $unchecked, true ) ) {
 								$fields[ $field_key ]->choices[] = array(
-									'text'   => $choice,
-									'value'  => 'gpoll' . substr( md5( uniqid( '', true ) ), 0, 8 ),
+									'text'  => $choice,
+									'value' => 'gpoll' . substr( md5( uniqid( '', true ) ), 0, 8 ),
 								);
 							}
 						}
@@ -1346,9 +1386,9 @@ class Processor {
 						$fields[ $field_key ]->inputs = array();
 					}
 
-					$id = sprintf( "%d.%d", $fields[ $field_key ]->id, count( $fields[ $field_key ]->inputs ) + 1 );
+					$id                             = sprintf( "%d.%d", $fields[ $field_key ]->id, count( $fields[ $field_key ]->inputs ) + 1 );
 					$fields[ $field_key ]->inputs[] = array(
-						'id' => $id,
+						'id'    => $id,
 						'label' => $column['name'],
 					);
 
@@ -1357,8 +1397,8 @@ class Processor {
 					}
 
 					$fields[ $field_key ]->choices[] = array(
-						'text'   => $column['name'],
-						'value'  => ! empty ( $column['meta']['value'] ) ? $column['meta']['value'] : $column['name'],
+						'text'  => $column['name'],
+						'value' => ! empty ( $column['meta']['value'] ) ? $column['meta']['value'] : $column['name'],
 					);
 				}
 
@@ -1419,7 +1459,7 @@ class Processor {
 						/**
 						 * Inputs and choices for quiz checkboxes.
 						 */
-						$id = sprintf( "%d.%d", $fields[ $field_key ]->id, count( $fields[ $field_key ]->inputs ) + 1 );
+						$id                             = sprintf( "%d.%d", $fields[ $field_key ]->id, count( $fields[ $field_key ]->inputs ) + 1 );
 						$fields[ $field_key ]->inputs[] = array(
 							'id'    => $id,
 							'label' => $column['name'],
@@ -1444,12 +1484,12 @@ class Processor {
 							list( $_, $subinput ) = explode( '.', $input_id );
 
 							$address_inputs = array(
-								'1'       => esc_html__( 'Street Address', 'gravityview-importer' ),
-								'2'       => esc_html__( 'Address Line 2', 'gravityview-importer' ),
-								'3'       => esc_html__( 'City', 'gravityview-importer' ),
-								'4'       => esc_html__( 'State / Province / Region', 'gravityview-importer' ),
-								'5'       => esc_html__( 'ZIP / Postal Code', 'gravityview-importer' ),
-								'6'       => esc_html__( 'Country', 'gravityview-importer' )
+								'1' => esc_html__( 'Street Address', 'gravityview-importer' ),
+								'2' => esc_html__( 'Address Line 2', 'gravityview-importer' ),
+								'3' => esc_html__( 'City', 'gravityview-importer' ),
+								'4' => esc_html__( 'State / Province / Region', 'gravityview-importer' ),
+								'5' => esc_html__( 'ZIP / Postal Code', 'gravityview-importer' ),
+								'6' => esc_html__( 'Country', 'gravityview-importer' )
 							);
 
 							$fields[ $field_key ]->inputs[] = array(
@@ -1461,8 +1501,8 @@ class Processor {
 					} elseif ( $type !== 'checkbox' ) {
 						if ( ! in_array( $input_id, wp_list_pluck( $fields[ $field_key ]->inputs, 'id' ), true ) ) {
 							$fields[ $field_key ]->inputs[] = array(
-								'id'     => $input_id,
-								'label'  => ( ! empty( $column['name'] ) ) ? $column['name'] : '',
+								'id'    => $input_id,
+								'label' => ( ! empty( $column['name'] ) ) ? $column['name'] : '',
 							);
 						}
 					}
@@ -1497,14 +1537,14 @@ class Processor {
 			\GFAPI::update_form( $form );
 
 			$batch['form_id'] = $form_id;
-			$batch = Batch::update( $batch );
+			$batch            = Batch::update( $batch );
 		} else {
 			$form = \GFAPI::get_form( $batch['form_id'] );
 		}
 
-		$row = $wpdb->get_row($wpdb->prepare( "SELECT * FROM {$tables['rows']} WHERE batch_id = %d AND status = 'processing'", $batch['id']));
+		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$tables['rows']} WHERE batch_id = %d AND status = 'processing'", $batch['id'] ) );
 
-		if (!$row) {
+		if ( ! $row ) {
 
 			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$tables['rows']} SET status = 'processing' WHERE batch_id = %d AND status = 'new' AND LAST_INSERT_ID(id) LIMIT 1", $batch['id'] ) ) ) {
 
@@ -1512,6 +1552,7 @@ class Processor {
 
 				/**
 				 * @action `gravityview/import/process/$status` Callback on batch status updates.
+				 *
 				 * @param array $batch The batch.
 				 */
 				do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
@@ -1537,6 +1578,7 @@ class Processor {
 
 				/**
 				 * @action `gravityview/import/process/row/skipped` This row is skipped due to conditional logic.
+				 *
 				 * @param object $row   The row.
 				 * @param array  $batch The batch.
 				 */
@@ -1548,9 +1590,9 @@ class Processor {
 		}
 
 		/**
-		 * Empty skips.
+		 * Skip empty rows.
 		 */
-		if ( empty( array_filter( $row->data ) ) ) {
+		if ( empty( array_filter( $row->data, 'strlen' ) ) ) {
 			$wpdb->update( $tables['rows'], array( 'status' => 'skipped', 'entry_id' => 0 ), array( 'id' => $row->id ) );
 
 			do_action( 'gravityview/import/process/row/skipped', $row, $batch );
@@ -1563,7 +1605,6 @@ class Processor {
 		/**
 		 * Do some actual work.
 		 */
-
 		if ( ! class_exists( 'GFFormDisplay' ) ) {
 			require_once \GFCommon::get_base_path() . '/form_display.php';
 		}
@@ -1588,7 +1629,7 @@ class Processor {
 		 *
 		 * etc.
 		 */
-		add_filter( 'gform_pre_process', $pre_process_validate_callback = function( $form ) use ( $batch, &$single_fileupload_fields, &$notifications_callback, &$validate_callbacks ) {
+		add_filter( 'gform_pre_process', $pre_process_validate_callback = function ( $form ) use ( $batch, &$single_fileupload_fields, &$notifications_callback, &$validate_callbacks ) {
 			$form['is_active']    = true;
 			$form['is_trash']     = false;
 			$form['requireLogin'] = false;
@@ -1618,9 +1659,10 @@ class Processor {
 
 				/**
 				 * @filter `gravityview/import/field/unrequire` Allow setting the isRequired property of this field to false.
-				 * @param[in,out] bool      $unrequire Allow unrequire? Default: true.
-				 * @param         \GF_Field $field     The field.
-				 * @param         array     $batch     The batch.
+				 *
+				 * @param  [in,out] bool      $unrequire Allow unrequire? Default: true.
+				 * @param \GF_Field $field The field.
+				 * @param array     $batch The batch.
 				 */
 				$unrequire = apply_filters( 'gravityview/import/field/unrequire', true, $field, $batch );
 
@@ -1633,10 +1675,10 @@ class Processor {
 				if ( 'total' === $field->type ) {
 					foreach ( $batch['schema'] as $rule ) {
 						if ( $rule['field'] == $field->id ) {
-							$number = \GF_Fields::get_instance( 'number' );
-							$number->id = $field->id;
+							$number         = \GF_Fields::get_instance( 'number' );
+							$number->id     = $field->id;
 							$number->formId = $field->formId;
-							$field = $number;
+							$field          = $number;
 							break;
 						}
 					}
@@ -1649,7 +1691,7 @@ class Processor {
 				// Strict radio matches in hard mode
 				if ( 'radio' === $field->type ) {
 					if ( ! $field->enableOtherChoice && ! in_array( 'soft', $batch['flags'] ) ) {
-						add_filter( 'gform_field_validation', $validate_callbacks[] = function( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
+						add_filter( 'gform_field_validation', $validate_callbacks[] = function ( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
 							if ( $field->id != $the_field->id ) {
 								return $result;
 							}
@@ -1658,7 +1700,7 @@ class Processor {
 								return $result;
 							}
 
-							$values = array_map( function( $choice ) use ( $field ) {
+							$values = array_map( function ( $choice ) use ( $field ) {
 								return ! empty( $choice['value'] ) || $field->enableChoiceValue ? $choice['value'] : $choice['text'];
 							}, $field->choices );
 
@@ -1669,9 +1711,10 @@ class Processor {
 
 							/**
 							 * @filter `gravityview/import/column/radio/strict` Suppress strict radio value validation.
-							 * @param[in,out] string    $validate Validate. Default: true.
-							 * @param         \GF_Field $field  The radio field.
-							 * @param         array     $batch  The batch.
+							 *
+							 * @param  [in,out] string    $validate Validate. Default: true.
+							 * @param \GF_Field $field The radio field.
+							 * @param array     $batch The batch.
 							 */
 							if ( ! in_array( $value, $values ) && apply_filters( 'gravityview/import/column/radio/strict', $strict_radio_choices, $field, $batch ) ) {
 								$result['is_valid'] = false;
@@ -1684,7 +1727,7 @@ class Processor {
 
 				// Strict select matches in hard mode
 				if ( 'select' === $field->type && ! in_array( 'soft', $batch['flags'] ) ) {
-					add_filter( 'gform_field_validation', $validate_callbacks[] = function( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
+					add_filter( 'gform_field_validation', $validate_callbacks[] = function ( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
 						if ( $field->id != $the_field->id ) {
 							return $result;
 						}
@@ -1693,15 +1736,16 @@ class Processor {
 							return $result;
 						}
 
-						$values = array_map( function( $choice ) use ( $field ) {
+						$values = array_map( function ( $choice ) use ( $field ) {
 							return ! empty( $choice['value'] ) || $field->enableChoiceValue ? $choice['value'] : $choice['text'];
 						}, $field->choices );
 
 						/**
 						 * @filter `gravityview/import/column/select/strict` Suppress strict select value validation.
-						 * @param[in,out] string    $validate Validate. Default: true.
-						 * @param         \GF_Field $field  The select field.
-						 * @param         array     $batch  The batch.
+						 *
+						 * @param  [in,out] string    $validate Validate. Default: true.
+						 * @param \GF_Field $field The select field.
+						 * @param array     $batch The batch.
 						 */
 						if ( ! in_array( $value, $values ) && apply_filters( 'gravityview/import/column/select/strict', true, $field, $batch ) ) {
 							$result['is_valid'] = false;
@@ -1713,7 +1757,7 @@ class Processor {
 
 				// Strict matches for polls and quizzes
 				if ( in_array( $field->type, array( 'poll', 'quiz' ) ) ) {
-					add_filter( 'gform_field_validation', $validate_callbacks[] = function( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
+					add_filter( 'gform_field_validation', $validate_callbacks[] = function ( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
 						if ( $field->id != $the_field->id ) {
 							return $result;
 						}
@@ -1740,7 +1784,7 @@ class Processor {
 
 				// Strict matches for survey
 				if ( 'survey' === $field->type && ! in_array( $field->inputType, array( 'text', 'textarea', 'rank' ) ) ) {
-					add_filter( 'gform_field_validation', $validate_callbacks[] = function( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
+					add_filter( 'gform_field_validation', $validate_callbacks[] = function ( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
 						if ( $field->id != $the_field->id ) {
 							return $result;
 						}
@@ -1779,7 +1823,7 @@ class Processor {
 				// Strict multiselect matches in hard mode
 				if ( 'multiselect' === $field->type ) {
 					if ( ! in_array( 'soft', $batch['flags'] ) ) {
-						add_filter( 'gform_field_validation', $validate_callbacks[] = function( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
+						add_filter( 'gform_field_validation', $validate_callbacks[] = function ( $result, $value, $form, $the_field ) use ( &$field, &$batch ) {
 							if ( $field->id != $the_field->id ) {
 								return $result;
 							}
@@ -1788,11 +1832,11 @@ class Processor {
 								return $result;
 							}
 
-							$values = array_map( function( $choice ) use ( $field ) {
+							$values = array_map( function ( $choice ) use ( $field ) {
 								return ! empty( $choice['value'] ) ? $choice['value'] : '';
 							}, $field->choices );
 
-							$values = array_merge( $values, array_map( function( $choice ) use ( $field ) {
+							$values = array_merge( $values, array_map( function ( $choice ) use ( $field ) {
 								return ! empty( $choice['text'] ) ? $choice['text'] : '';
 							}, $field->choices ) );
 
@@ -1800,9 +1844,10 @@ class Processor {
 
 							/**
 							 * @filter `gravityview/import/column/multiselect/strict` Suppress strict multiselect value validation.
-							 * @param[in,out] string    $validate Validate. Default: true.
-							 * @param         \GF_Field $field  The multiselect field.
-							 * @param         array     $batch  The batch.
+							 *
+							 * @param  [in,out] string    $validate Validate. Default: true.
+							 * @param \GF_Field $field The multiselect field.
+							 * @param array     $batch The batch.
 							 */
 							if ( array_diff( array_filter( $value ), $values ) && apply_filters( 'gravityview/import/column/multiselect/strict', true, $field, $batch ) ) {
 								$result['is_valid'] = false;
@@ -1815,8 +1860,8 @@ class Processor {
 
 				if ( 'fileupload' === $field->type && ! $field->multipleFiles ) {
 					$single_fileupload_fields[] = $field->id;
-					$field->multipleFiles = true;
-					$field->maxFiles = 1;
+					$field->multipleFiles       = true;
+					$field->maxFiles            = 1;
 				}
 
 				/**
@@ -1856,16 +1901,15 @@ class Processor {
 		$has_fields     = false;
 		$has_user_agent = false;
 
-		$datetime_partials       = array();
-		$fileupload_keeplinks    = array();
-		$consent_partials        = array();
-		$product_partials        = array();
-		$applied_coupons         = array();
-		$notes                   = array();
+		$datetime_partials    = array();
+		$fileupload_keeplinks = array();
+		$consent_partials     = array();
+		$product_partials     = array();
+		$applied_coupons      = array();
+		$notes                = array();
 
 		foreach ( $batch['schema'] as $column ) {
-
-			if ( empty( $row->data[ $column['column'] ] ) ) {
+			if ( ! isset( $row->data[ $column['column'] ] ) || ( ! is_numeric( $row->data[ $column['column'] ] ) && empty( $row->data[ $column['column'] ] ) ) ) {
 				$row->data[ $column['column'] ] = '';
 			}
 
@@ -1878,20 +1922,9 @@ class Processor {
 				if ( 'id' === $column['field'] ) {
 					if ( $update_id = $row->data[ $column['column'] ] ) {
 						if ( is_wp_error( $entry = \GFAPI::get_entry( $update_id ) ) || $entry['form_id'] != $form['id'] ) {
-							$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( 'ID does not exist for form', 'gravityview-importer' ) ), array( 'id' => $row->id ) );
+							$error = __( 'ID does not exist for form', 'gravityview-importer' );
 
-							do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
-
-							if ( ! in_array( 'soft', $batch['flags'] ) ) {
-								$batch['status'] = 'error';
-								$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-								do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
-
-								return $batch;
-							}
-
-							return Batch::update( $batch );
+							return $this->handle_row_processing_error( $error, $row, $batch );
 						}
 					}
 				} else {
@@ -1914,9 +1947,10 @@ class Processor {
 
 					/**
 					 * @filter `gravityview/import/column/data` Allow the transformation of data for a column.
-					 * @param[in,out] string $data   The cell data.
-					 * @param         array  $column The column schema definition.
-					 * @param         array  $batch  The batch.
+					 *
+					 * @param  [in,out] string $data   The cell data.
+					 * @param array $column The column schema definition.
+					 * @param array $batch  The batch.
 					 */
 					$row->data[ $column['column'] ] = apply_filters( 'gravityview/import/column/data', $row->data[ $column['column'] ], $column, $batch );
 
@@ -1945,13 +1979,15 @@ class Processor {
 					}
 				}
 			} else {
-				if ( $field = \GFFormsModel::get_field( $form, $column['field'] ) ) {
+				$field = \GFFormsModel::get_field( $form, $column['field'] );
+
+				if ( $field ) {
 					if ( in_array( $field->type, array( 'date' ) ) ) {
 						$row->data[ $column['column'] ] = self::transform_datetime( 'date', $row->data[ $column['column'] ], isset( $column['meta']['datetime_format'] ) ? $column['meta']['datetime_format'] : null, 'Y-m-d', null );
 					}
 
 					if ( in_array( $field->type, array( 'time' ) ) ) {
-						$format = $field->timeFormat === '24' ? 'H i' : 'h i a';
+						$format                         = $field->timeFormat === '24' ? 'H i' : 'h i a';
 						$row->data[ $column['column'] ] = self::transform_datetime( 'time', $row->data[ $column['column'] ], isset( $column['meta']['datetime_format'] ) ? $column['meta']['datetime_format'] : null, $format, null );
 						$row->data[ $column['column'] ] = explode( ' ', $row->data[ $column['column'] ] );
 					}
@@ -1959,26 +1995,27 @@ class Processor {
 
 				/**
 				 * @filter `gravityview/import/column/data` Allow the transformation of data for a column.
-				 * @param[in,out] string $data   The cell data.
-				 * @param         array  $column The column schema definition.
-				 * @param         array  $batch  The batch.
+				 *
+				 * @param  [in,out] string $data   The cell data.
+				 * @param array $column The column schema definition.
+				 * @param array $batch  The batch.
 				 */
 				$row->data[ $column['column'] ] = apply_filters( 'gravityview/import/column/data', $row->data[ $column['column'] ], $column, $batch );
 
 				if ( ! empty( $column['meta']['is_meta'] ) ) {
 					$update_entry_meta[] = array( $column['field'], $row->data[ $column['column'] ] );
-				} else {
+				} else if ( $field ) {
 					// @todo: move to a file/flow of its own soon
-					if ( 'fileupload' === $field->type ) {
+					if ( 'fileupload' === $field->get_input_type() ) {
 						if ( ! isset( $column['flags'] ) || ! in_array( 'keeplinks', $column['flags'] ) ) {
 							if ( $field->multipleFiles && ! in_array( $field->id, $single_fileupload_fields ) ) {
 								$urls = @json_decode( $row->data[ $column['column'] ] );
 
 								if ( null === $urls && JSON_ERROR_NONE !== json_last_error() ) {
-									$urls = explode(',', $row->data[ $column['column'] ] );
+									$urls = explode( ',', $row->data[ $column['column'] ] );
 								}
 
-								$urls = is_array($urls) ? $urls : array($urls);
+								$urls = is_array( $urls ) ? $urls : array( $urls );
 							} else {
 								$urls = array( $row->data[ $column['column'] ] );
 							}
@@ -1988,11 +2025,12 @@ class Processor {
 							foreach ( $urls as $url ) {
 								/**
 								 * @filter `gravityview/import/column/file/source` Path to local file that can be moved to uploads.
-								 * @param[in,out] string    $source The local file path, that can be moved.
-								 * @param         string    $url    The current cell value.
-								 * @param         \GF_Field $field  The upload field.
-								 * @param         array     $column The column that is being processed.
-								 * @param         array     $batch  The batch.
+								 *
+								 * @param  [in,out] string    $source The local file path, that can be moved.
+								 * @param string    $url    The current cell value.
+								 * @param \GF_Field $field  The upload field.
+								 * @param array     $column The column that is being processed.
+								 * @param array     $batch  The batch.
 								 */
 								if ( ! $source = apply_filters( 'gravityview/import/column/file/source', '', $url, $field, $column, $batch ) ) {
 									wp_mkdir_p( $source_dir = \GFFormsModel::get_upload_path( $batch['form_id'] ) . '/tmp/' );
@@ -2012,7 +2050,7 @@ class Processor {
 
 										if ( ! in_array( 'soft', $batch['flags'] ) ) {
 											$batch['status'] = 'error';
-											$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
+											$batch['error']  = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
 
 											do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
 										}
@@ -2026,11 +2064,12 @@ class Processor {
 
 								/**
 								 * @filter `gravityview/import/column/file/name` The name of the file.
-								 * @param[in,out] string    $name   The name of the file.
-								 * @param         string    $url    The current cell value.
-								 * @param         \GF_Field $field  The upload field.
-								 * @param         array     $column The column that is being processed.
-								 * @param         array     $batch  The batch.
+								 *
+								 * @param  [in,out] string    $name   The name of the file.
+								 * @param string    $url    The current cell value.
+								 * @param \GF_Field $field  The upload field.
+								 * @param array     $column The column that is being processed.
+								 * @param array     $batch  The batch.
 								 */
 								if ( ! $filename = apply_filters( 'gravityview/import/column/file/name', '', $url, $field, $column, $batch ) ) {
 									$url_parts = parse_url( $url );
@@ -2047,17 +2086,17 @@ class Processor {
 									}
 								}
 
-								if ( empty( $_POST['gform_uploaded_files'][ "input_{$field->id}" ] ) ) {
-									$_POST['gform_uploaded_files'][ "input_{$field->id}" ] = array();
+								if ( empty( $_POST['gform_uploaded_files']["input_{$field->id}"] ) ) {
+									$_POST['gform_uploaded_files']["input_{$field->id}"] = array();
 								}
 
-								$_POST['gform_uploaded_files'][ "input_{$field->id}" ][] = array(
+								$_POST['gform_uploaded_files']["input_{$field->id}"][] = array(
 									'temp_filename'     => basename( $source ),
 									'uploaded_filename' => $filename,
 								);
 
 								if ( 1 === (int) $field->maxFiles ) {
-										$_FILES[ "input_{$field->id}" ] = array(
+									$_FILES["input_{$field->id}"] = array(
 										'tmp_name' => $source,
 										'name'     => $filename,
 										'error'    => UPLOAD_ERR_NO_FILE,
@@ -2070,11 +2109,11 @@ class Processor {
 							// Links are kept as is.
 							$fileupload_keeplinks[ $field->id ] = $row->data[ $column['column'] ];
 
-							if ( empty( $_POST['gform_uploaded_files'][ "input_{$field->id}" ] ) ) {
-								$_POST['gform_uploaded_files'][ "input_{$field->id}" ] = array();
+							if ( empty( $_POST['gform_uploaded_files']["input_{$field->id}"] ) ) {
+								$_POST['gform_uploaded_files']["input_{$field->id}"] = array();
 							}
 
-							$_POST['gform_uploaded_files'][ "input_{$field->id}" ][] = array(
+							$_POST['gform_uploaded_files']["input_{$field->id}"][] = array(
 								'temp_filename'     => wp_generate_password( 16, false ),
 								'uploaded_filename' => wp_generate_password( 16, false ),
 							);
@@ -2097,29 +2136,30 @@ class Processor {
 							case '1':
 								/**
 								 * @filter `gravityview/import/column/consent/checked` The text for which the field is considered checked.
-								 * @param[in,out] string    $checked The checked text. Default: Checked in the current locale.
-								 * @param         \GF_Field $field   The consent field.
-								 * @param         array     $column  The column that is being processed.
-								 * @param         array     $batch   The batch.
+								 *
+								 * @param  [in,out] string    $checked The checked text. Default: Checked in the current locale.
+								 * @param \GF_Field $field  The consent field.
+								 * @param array     $column The column that is being processed.
+								 * @param array     $batch  The batch.
 								 */
-								$checked    = apply_filters( 'gravityview/import/column/consent/checked', __( 'Checked', 'gravityview-importer' ), $field, $column, $batch );
+								$checked = apply_filters( 'gravityview/import/column/consent/checked', __( 'Checked', 'gravityview-importer' ), $field, $column, $batch );
 								if ( $is_checked = ( $row->data[ $column['column'] ] === $checked ) ) {
 									$_POST[ 'input_' . $field_id . "_$input_id" ] = '1';
-									$consent_partials[ $field_id ][ $input_id ]   =  true;
+									$consent_partials[ $field_id ][ $input_id ]   = true;
 
 									$has_fields = true;
 								}
 								break;
 							case '2':
 								$_POST[ 'input_' . $field_id . "_$input_id" ] = $row->data[ $column['column'] ];
-								$has_fields = true;
+								$has_fields                                   = true;
 								break;
 							case '3':
 								if ( $description = $row->data[ $column['column'] ] ) {
 									if ( $field->description !== $description ) {
 										// Find revision number for the description
 										$revisions_table_name = \GFFormsModel::get_form_revisions_table_name();
-										$revision_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $revisions_table_name WHERE display_meta LIKE %s AND form_id = %d",
+										$revision_id          = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM $revisions_table_name WHERE display_meta LIKE %s AND form_id = %d",
 											'%' . json_encode( $wpdb->esc_like( $description ) ) . '%',
 											$form['id']
 										) );
@@ -2130,7 +2170,7 @@ class Processor {
 												if ( $field->id == $_field->id ) {
 													$_field->description = $description;
 													\GFAPI::update_form( $form );
-													$revision_id = \GFFormsModel::get_latest_form_revisions_id( $form['id'] );
+													$revision_id         = \GFFormsModel::get_latest_form_revisions_id( $form['id'] );
 													$_field->description = $consent_partials[ $field_id ]['_'];
 													\GFAPI::update_form( $form );
 													$consent_partials[ $field_id ]['3'] = \GFFormsModel::get_latest_form_revisions_id( $form['id'] );
@@ -2140,7 +2180,7 @@ class Processor {
 										}
 
 										$_POST[ 'input_' . $field_id . "_$input_id" ] = $revision_id;
-										$has_fields = true;
+										$has_fields                                   = true;
 									}
 								}
 								break;
@@ -2187,25 +2227,16 @@ class Processor {
 						$delimiter = apply_filters( 'gravityview/import/column/multiselect/delimiter', ',', $field, $column, $batch );
 						if ( $data = array_filter( explode( $delimiter, $row->data[ $column['column'] ] ) ) ) {
 							$_POST[ 'input_' . $column['field'] ] = $data;
-							$has_fields = true;
+							$has_fields                           = true;
 						}
 					} elseif ( 'signature' === $field->type ) {
 						if ( ! class_exists( '\GFSignature' ) ) {
-							$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( 'Gravity Forms Signature Addon is not active.', 'gravityview-importer' ) ), array( 'id' => $row->id ) );
-
-							do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
-
-							if ( ! in_array( 'soft', $batch['flags'] ) ) {
-								$batch['status'] = 'error';
-								$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-								do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
-							}
+							$error = __( 'Gravity Forms Signature Addon is not active.', 'gravityview-importer' );
 
 							$_POST  = $post;
 							$_FILES = $files;
 
-							return Batch::update( $batch );
+							return $this->handle_row_processing_error( $error, $row, $batch );
 						}
 
 						$url = $row->data[ $column['column'] ];
@@ -2218,11 +2249,12 @@ class Processor {
 
 						/**
 						 * @filter `gravityview/import/column/signature/name` The name of the signature file.
-						 * @param[in,out] string    $name   The name of the file.
-						 * @param         string    $url    The current cell value.
-						 * @param         \GF_Field $field  The signature field.
-						 * @param         array     $column The column that is being processed.
-						 * @param         array     $batch  The batch.
+						 *
+						 * @param  [in,out] string    $name   The name of the file.
+						 * @param string    $url    The current cell value.
+						 * @param \GF_Field $field  The signature field.
+						 * @param array     $column The column that is being processed.
+						 * @param array     $batch  The batch.
 						 */
 						if ( ! $filename = apply_filters( 'gravityview/import/column/signature/name', '', $url, $field, $column, $batch ) ) {
 
@@ -2247,11 +2279,12 @@ class Processor {
 
 						/**
 						 * @filter `gravityview/import/column/signature/source` Path to local file that can be moved to signatures.
-						 * @param[in,out] string    $source The local file path, that can be moved.
-						 * @param         string    $url    The current cell value.
-						 * @param         \GF_Field $field  The signature field.
-						 * @param         array     $column The column that is being processed.
-						 * @param         array     $batch  The batch.
+						 *
+						 * @param  [in,out] string    $source The local file path, that can be moved.
+						 * @param string    $url    The current cell value.
+						 * @param \GF_Field $field  The signature field.
+						 * @param array     $column The column that is being processed.
+						 * @param array     $batch  The batch.
 						 */
 						if ( ! $source = apply_filters( 'gravityview/import/column/signature/source', '', $url, $field, $column, $batch ) ) {
 
@@ -2262,31 +2295,22 @@ class Processor {
 
 							if ( is_wp_error( $response ) || ( wp_remote_retrieve_response_code( $response ) != 200 ) ) {
 								if ( is_wp_error( $response ) ) {
-									$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = $response->get_error_message() ), array( 'id' => $row->id ) );
+									$error = $response->get_error_message();
 								} else {
-									$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = sprintf( 'HTTP %d', wp_remote_retrieve_response_code( $response ) ) ), array( 'id' => $row->id ) );
-								}
-
-								do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
-
-								if ( ! in_array( 'soft', $batch['flags'] ) ) {
-									$batch['status'] = 'error';
-									$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-									do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
+									$error = sprintf( 'HTTP %d', wp_remote_retrieve_response_code( $response ) );
 								}
 
 								$_POST  = $post;
 								$_FILES = $files;
 
-								return Batch::update( $batch );
+								return $this->handle_row_processing_error( $error, $row, $batch );
 							}
 						} else {
 							rename( $source, $signatures_dir . $filename );
 						}
 
 						$_POST[ 'input_' . $column['field'] ] = $filename;
-						$has_fields = true;
+						$has_fields                           = true;
 
 					} elseif ( 'checkbox' === $field->type ) {
 						/**
@@ -2319,7 +2343,7 @@ class Processor {
 									foreach ( $field->choices as $choice ) {
 										if ( $choice['text'] == $input['label'] ) {
 											if ( Core::strtolower( $row->data[ $column['column'] ] ) != Core::strtolower( $choice['value'] ) &&
-												 ! in_array( Core::strtolower( $row->data[ $column['column'] ] ), $this->default_true_values ) ) {
+											     ! in_array( Core::strtolower( $row->data[ $column['column'] ] ), $this->default_true_values ) ) {
 												continue;
 											}
 
@@ -2351,28 +2375,19 @@ class Processor {
 						}
 
 						$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $row->data[ $column['column'] ];
-						$has_fields = true;
+						$has_fields                                                    = true;
 					} elseif ( 'coupon' == $field->type ) {
 						if ( ! isset( $applied_coupons[ $field->id ] ) ) {
 							$applied_coupons[ $field->id ] = array();
 						}
 
 						if ( ! class_exists( '\GFCoupons' ) ) {
-							$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( 'Gravity Forms Coupons Addon is not active.', 'gravityview-importer' ) ), array( 'id' => $row->id ) );
-
-							do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
-
-							if ( ! in_array( 'soft', $batch['flags'] ) ) {
-								$batch['status'] = 'error';
-								$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-								do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
-							}
+							$error = __( 'Gravity Forms Coupons Addon is not active.', 'gravityview-importer' );
 
 							$_POST  = $post;
 							$_FILES = $files;
 
-							return Batch::update( $batch );
+							return $this->handle_row_processing_error( $error, $row, $batch );
 						}
 
 						$coupons = \GFCoupons::get_instance();
@@ -2394,21 +2409,12 @@ class Processor {
 							}
 
 							if ( $error ) {
-								$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = __( 'Invalid coupon code', 'gravityview-importer' ) ), array( 'id' => $row->id ) );
-
-								do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
-
-								if ( ! in_array( 'soft', $batch['flags'] ) ) {
-									$batch['status'] = 'error';
-									$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-									do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
-								}
+								$error = __( 'Invalid coupon code', 'gravityview-importer' );
 
 								$_POST  = $post;
 								$_FILES = $files;
 
-								return Batch::update( $batch );
+								return $this->handle_row_processing_error( $error, $row, $batch );
 							}
 						}
 					} elseif ( in_array( $field->type, array( 'poll', 'quiz' ) ) ) {
@@ -2446,7 +2452,7 @@ class Processor {
 							case 'textarea':
 							case 'text':
 								$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $row->data[ $column['column'] ];
-								$has_fields = $has_fields || ! empty( $row->data[ $column['column'] ] );
+								$has_fields                                                    = $has_fields || ! empty( $row->data[ $column['column'] ] );
 								break;
 							case 'likert':
 							case 'radio':
@@ -2459,7 +2465,7 @@ class Processor {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = '#'; // No exact matches, validate into an error after submission
 								} else {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $field->choices[ $i ]['value'];
-									$has_fields = true;
+									$has_fields                                                    = true;
 								}
 
 								break;
@@ -2472,7 +2478,7 @@ class Processor {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = '#'; // No exact matches, validate into an error after submission
 								} else {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $field->choices[ $i ]['value'];
-									$has_fields = true;
+									$has_fields                                                    = true;
 								}
 
 								break;
@@ -2493,13 +2499,13 @@ class Processor {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = '#'; // No exact matches, validate into an error after submission
 								} else {
 									$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = "$likert_row:{$field->choices[ $i ]['value']}";
-									$has_fields = true;
+									$has_fields                                                    = true;
 								}
 
 								break;
 							case 'rank':
 								$re_choice = implode( '|', array_map( 'preg_quote', wp_list_pluck( $field->choices, 'text' ) ) );
-								$values = array();
+								$values    = array();
 								if ( preg_match_all( "#\d\. ($re_choice),?#", $row->data[ $column['column'] ], $matches ) ) {
 									foreach ( $matches[1] as $match ) {
 										foreach ( $field->choices as $choice ) {
@@ -2511,7 +2517,7 @@ class Processor {
 									}
 								}
 								$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $has_rank = implode( ',', $values );
-								$has_fields = $has_fields || $has_rank;
+								$has_fields                                                    = $has_fields || $has_rank;
 								break;
 						endswitch;
 					} elseif ( '' === $row->data[ $column['column'] ] ) {
@@ -2524,22 +2530,27 @@ class Processor {
 
 						/**
 						 * @filter `gravityview/import/column/default` Whether to use the default field value on an empty cell or not.
-						 * @param[in,out] array $use_default Use or not. Default: the value of the `default` column flat (usually false).
-						 * @param	      array $column      The column.
-						 * @param         array $batch       The batch.
+						 *
+						 * @param  [in,out] array $use_default Use or not. Default: the value of the `default` column flat (usually false).
+						 * @param array $column The column.
+						 * @param array $batch  The batch.
 						 */
 						$use_default = apply_filters( 'gravityview/import/column/default', $use_default, $column, $batch );
 
 						if ( $use_default ) {
 							$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $field->defaultValue;
-							$has_fields = true;
+							$has_fields                                                    = true;
 						} else {
 							$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = ''; // Empty
 						}
 					} else {
 						$_POST[ 'input_' . str_replace( '.', '_', $column['field'] ) ] = $row->data[ $column['column'] ];
-						$has_fields = $has_fields || ! empty( $row->data[ $column['column'] ] ) || ! empty( trim( $row->data[ $column['column'] ] ) );
+						$has_fields                                                    = $has_fields || ! empty( $row->data[ $column['column'] ] ) || ! empty( trim( $row->data[ $column['column'] ] ) );
 					}
+				} else {
+					$error = sprintf( _x( 'Form field with ID %s does not exist', '%s is replaced with field ID', 'gravityview-importer' ), $column['field'] );
+
+					return $this->handle_row_processing_error( $error, $row, $batch );
 				}
 
 				/**
@@ -2549,12 +2560,12 @@ class Processor {
 					if ( $inputs['1'] ) {
 						if ( empty( $_POST[ 'input_' . $field_id . "_2" ] ) ) {
 							$_POST[ 'input_' . $field_id . "_2" ] = $inputs['2'];
-							$has_fields = true;
+							$has_fields                           = true;
 						}
 
 						if ( empty( $_POST[ 'input_' . $field_id . "_3" ] ) ) {
 							$_POST[ 'input_' . $field_id . "_3" ] = $inputs['3'];
-							$has_fields = true;
+							$has_fields                           = true;
 						}
 					} else {
 						unset( $_POST[ 'input_' . $field_id . "_2" ] );
@@ -2567,8 +2578,8 @@ class Processor {
 				 */
 				foreach ( $applied_coupons as $field_id => $coupons ) {
 					if ( $coupons ) {
-						$_POST[ "gf_coupons_$field_id" ] = json_encode( $coupons );
-						$_POST[ "input_$field_id" ] = implode( ',', wp_list_pluck( $coupons, 'couponCode' ) );
+						$_POST["gf_coupons_$field_id"] = json_encode( $coupons );
+						$_POST["input_$field_id"]      = implode( ',', wp_list_pluck( $coupons, 'couponCode' ) );
 
 						$has_fields = true;
 					}
@@ -2585,7 +2596,7 @@ class Processor {
 
 		add_filter( 'gravityview/approve_entries/after_submission', '__return_false' );
 
-		add_filter( 'gform_save_field_value', $save_field_value_upload_single_callback = function( $value, $entry, $field, $form, $input_id ) use ( &$single_fileupload_fields ) {
+		add_filter( 'gform_save_field_value', $save_field_value_upload_single_callback = function ( $value, $entry, $field, $form, $input_id ) use ( &$single_fileupload_fields ) {
 			foreach ( $single_fileupload_fields as $field_id ) {
 				/**
 				 * Single fileupload fields are turned into multiple ones in order to leverage
@@ -2603,7 +2614,7 @@ class Processor {
 			return $value;
 		}, 10, 5 );
 
-		add_filter( 'gform_save_field_value', $save_field_value_fileupload_keeplinks = function( $value, $entry, $field, $form, $input_id ) use ( &$fileupload_keeplinks ) {
+		add_filter( 'gform_save_field_value', $save_field_value_fileupload_keeplinks = function ( $value, $entry, $field, $form, $input_id ) use ( &$fileupload_keeplinks ) {
 			if ( in_array( $field->id, array_keys( $fileupload_keeplinks ) ) ) {
 				return $fileupload_keeplinks[ $field->id ];
 			}
@@ -2614,7 +2625,7 @@ class Processor {
 		/**
 		 * Only process feeds that were specifically set.
 		 */
-		add_filter( 'gform_addon_pre_process_feeds', $pre_process_feeds = function( $feeds, $entry, $form ) use ( $batch ) {
+		add_filter( 'gform_addon_pre_process_feeds', $pre_process_feeds = function ( $feeds, $entry, $form ) use ( $batch ) {
 			$_feeds = array();
 
 			if ( ! empty( $batch['feeds'] ) ) {
@@ -2637,22 +2648,23 @@ class Processor {
 				 * claiming that "At least one field must be filled out".
 				 * See: \GFFormDisplay::is_form_empty
 				 */
-				 add_filter( 'gform_validation', $validation_empty_fields_callback = function( $validation_result ) {
+				add_filter( 'gform_validation', $validation_empty_fields_callback = function ( $validation_result ) {
 					$validation_result['is_valid'] = true;
 					return $validation_result;
-				 } );
+				} );
 			}
 
 			/**
 			 * Global validation overrides.
 			 */
-			add_filter( 'gform_validation', $global_validation_callback = function( $validation_result ) use ( $batch, $row ) {
+			add_filter( 'gform_validation', $global_validation_callback = function ( $validation_result ) use ( $batch, $row ) {
 				/**
 				 * @filter `gravityview/import/entry/validate` Suppress global validation.
-				 * @param[in,out] boolean $validate          Whether to validate or not. Default: true; validate.
-				 * @param         array   $validation_result The current validation result.
-				 * @param         object  $row               The row.
-				 * @param         array   $batch             The batch.
+				 *
+				 * @param  [in,out] boolean $validate          Whether to validate or not. Default: true; validate.
+				 * @param array  $validation_result The current validation result.
+				 * @param object $row               The row.
+				 * @param array  $batch             The batch.
 				 */
 				if ( in_array( 'valid', $batch['flags'] ) || ! apply_filters( 'gravityview/import/entry/validate', true, $validation_result, $row, $batch ) ) {
 					$validation_result['is_valid'] = true;
@@ -2663,13 +2675,14 @@ class Processor {
 
 			$global_field_validation_callbacks = array();
 			foreach ( $form['fields'] as &$field ) {
-				add_filter( 'gform_field_validation', $global_field_validation_callbacks[] = function( $validation_result, $value, $form, $the_field ) use ( $batch, $row ) {
+				add_filter( 'gform_field_validation', $global_field_validation_callbacks[] = function ( $validation_result, $value, $form, $the_field ) use ( $batch, $row ) {
 					/**
 					 * @filter `gravityview/import/entry/validate` Suppress global validation.
-					 * @param[in,out] boolean $validate          Whether to validate or not. Default: true; validate.
-					 * @param         array   $validation_result The current validation result.
-					 * @param         object  $row               The row.
-					 * @param         array   $batch             The batch.
+					 *
+					 * @param  [in,out] boolean $validate          Whether to validate or not. Default: true; validate.
+					 * @param array  $validation_result The current validation result.
+					 * @param object $row               The row.
+					 * @param array  $batch             The batch.
 					 */
 					if ( ! apply_filters( 'gravityview/import/field/validate', true, $validation_result, $the_field, $row, $batch ) ) {
 						$validation_result['is_valid'] = true;
@@ -2701,15 +2714,7 @@ class Processor {
 
 			\GFFormDisplay::process_form( $batch['form_id'] ); // @todo try submit_form()
 		} catch ( \Exception $e ) {
-			$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error = $e->getMessage() ), array( 'id' => $row->id ) );
-
-			/**
-			 * @action `gravityview/import/process/row/error` This row has errored for some reason.
-			 * @param object $row   The row object in the database.
-			 * @param string $error The error.
-			 * @param array  $batch The batch.
-			 */
-			do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
+			$error = $e->getMessage();
 
 			remove_filter( 'gform_suppress_confirmation_redirect', '__return_true' );
 			remove_filter( 'gform_pre_process', $pre_process_validate_callback );
@@ -2734,25 +2739,16 @@ class Processor {
 				remove_filter( 'gform_field_validation', $callback );
 			}
 
-			$_POST  = $post;
-			$_FILES = $files;
+			$_POST                         = $post;
+			$_FILES                        = $files;
 			\GFFormsModel::$uploaded_files = array();
 			$GLOBALS['_gf_uploaded_files'] = array();
 
-			if ( ! in_array( 'soft', $batch['flags'] ) ) {
-				$batch['status'] = 'error';
-				$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
-
-				do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
-
-				return $batch;
-			}
-
-			return Batch::update( $batch );
+			return $this->handle_row_processing_error( $error, $row, $batch );
 		}
 
-		$_POST  = $post;
-		$_FILES = $files;
+		$_POST                         = $post;
+		$_FILES                        = $files;
 		\GFFormsModel::$uploaded_files = array();
 		$GLOBALS['_gf_uploaded_files'] = array();
 
@@ -2792,7 +2788,7 @@ class Processor {
 					}
 				}
 
-				$error = sprintf( esc_html__( sprintf( 'Failed validation: %s', $validation_error ), 'gravityview-importer' ) );
+				$error = sprintf( esc_html__( 'Failed validation: %s', 'gravityview-importer' ), esc_html( $validation_error ) );
 			} else {
 				$error = __( "Failed to pass one of Gravity Forms' form processing conditions", 'gravityview-importer' );
 			}
@@ -2803,7 +2799,7 @@ class Processor {
 
 			if ( ! in_array( 'soft', $batch['flags'] ) ) {
 				$batch['status'] = 'error';
-				$batch['error'] = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
+				$batch['error']  = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
 
 				do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
 
@@ -2842,10 +2838,11 @@ class Processor {
 
 				/**
 				 * @filter `gravityview/import/user-agent` Set a missing User-Agent string for an entry.
-				 * @param[in,out] string $user_agen The User-Agent. Default: "GravityView Import"
-				 * @param         array $entry The entry.
-				 * @param         array $batch The batch.
-				 * @param         array $data The row data.
+				 *
+				 * @param  [in,out] string $user_agen The User-Agent. Default: "GravityView Import"
+				 * @param array $entry The entry.
+				 * @param array $batch The batch.
+				 * @param array $data  The row data.
 				 */
 				$update_entry_properties['user_agent'] = apply_filters( 'gravityview/import/user-agent', $update_entry_properties['user_agent'], $entry, $batch, $row->data );
 			}
@@ -2879,22 +2876,23 @@ class Processor {
 
 			/**
 			 * @filter `gravityview/import/column/notes/user` Override the note user.
-			 * @param[in,out] \WP_User  $user   The default user. Default: current user.
-			 * @param         object    $note   The note.
-			 * @param         array     $entry  The entry.
-			 * @param         array     $batch  The batch.
+			 *
+			 * @param  [in,out] \WP_User  $user   The default user. Default: current user.
+			 * @param object $note  The note.
+			 * @param array  $entry The entry.
+			 * @param array  $batch The batch.
 			 */
 			$user = apply_filters( 'gravityview/import/column/notes/user', $user, $note, $entry, $batch );
 
-			add_action( 'gform_post_note_added', $note_update_date_callback = function( $note_insert_id ) use ( $note ) {
+			add_action( 'gform_post_note_added', $note_update_date_callback = function ( $note_insert_id ) use ( $note ) {
 				if ( empty( $note->date_created ) ) {
 					return;
 				}
 
 				$GLOBALS['wpdb']->update(
 					\GFFormsModel::get_entry_notes_table_name(), array(
-						'date_created' => $note->date_created
-					), array( 'id' => $note_insert_id )
+					'date_created' => $note->date_created
+				), array( 'id' => $note_insert_id )
 				);
 			} );
 
@@ -2917,6 +2915,7 @@ class Processor {
 
 			/**
 			 * @action `gravityview/import/entry/updated` An entry has been updated.
+			 *
 			 * @param array $entry     The entry.
 			 * @param array $old_entry The entry.
 			 * @param array $batch     The batch.
@@ -2930,6 +2929,7 @@ class Processor {
 
 			/**
 			 * @action `gravityview/import/entry/created` A new entry has been created.
+			 *
 			 * @param array $entry The entry.
 			 * @param array $batch The batch.
 			 */
@@ -2945,6 +2945,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_done( $batch ) {
@@ -2961,6 +2962,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_rolledback( $batch ) {
@@ -2977,6 +2979,7 @@ class Processor {
 	 * @internal
 	 *
 	 * @param array $batch The batch.
+	 *
 	 * @return \WP_Error|array A batch or an error.
 	 */
 	public function handle_rollback( $batch ) {
@@ -3007,7 +3010,8 @@ class Processor {
 	 *
 	 * @param string $function The function this is being called from.
 	 * @param array  $batch    The batch array.
-	 * @return \WP_Error|null
+	 *
+	 * @return \WP_Error|void
 	 */
 	public function _handle_check_status( $function, $batch ) {
 		$status = str_replace( 'handle_', '', $function );
@@ -3021,8 +3025,9 @@ class Processor {
 	 *
 	 * @internal
 	 *
-	 * @param array  $batch    The batch array.
-	 * @return \WP_Error|null
+	 * @param array $batch The batch array.
+	 *
+	 * @return \WP_Error|void
 	 */
 	public function _handle_check_source( $batch ) {
 		if ( ! is_array( $batch ) || empty( $batch['source'] ) || ! is_readable( $batch['source'] ) ) {
@@ -3031,7 +3036,7 @@ class Processor {
 	}
 
 	/**
-	 * A default proces setup.
+	 * A default process setup.
 	 *
 	 * Called via REST. Can be used as an example
 	 * to build more complicated setups, with parallel processing,
@@ -3039,8 +3044,9 @@ class Processor {
 	 *
 	 * @internal
 	 *
-	 * @param WP_REST_Request   $request Full details about the request.
-	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 * @param \WP_REST_Request $request Full details about the request.
+	 *
+	 * @return \WP_Error|\WP_REST_Response|\WP_HTTP_Response
 	 */
 	public static function rest_process( $request ) {
 		$processor = new Processor( array(
@@ -3057,14 +3063,14 @@ class Processor {
 	 * If the source is a remote URI, it will be downloaded to the
 	 * temporary directory. Supports HTTP/HTTPS.
 	 *
-	 * @todo Add SFTP, FTP, FTPS support
-	 *
 	 * @internal
+	 *
+	 * @todo Add SFTP, FTP, FTPS support
 	 *
 	 * @param string $source The source as given in the batch.
 	 * @param bool   $force  Force a download if remote and local path exists.
 	 *
-	 * @return string|WP_Erorr A local path or an error.
+	 * @return string|\WP_Error A local path or an error.
 	 */
 	public function to_local( $source, $force = false ) {
 		/**
@@ -3134,7 +3140,8 @@ class Processor {
 			}
 
 			switch ( $order ):
-				case 'g': /** Fallthrough at needed mark. */
+				case 'g':
+					/** Fallthrough at needed mark. */
 					$memory_limit *= 1024;
 				case 'm':
 					$memory_limit *= 1024;
@@ -3142,7 +3149,7 @@ class Processor {
 					$memory_limit *= 1024;
 			endswitch;
 
-			if ( $memory_limit <= 0) {
+			if ( $memory_limit <= 0 ) {
 				// Unlimited.
 				$memory_limit = 0;
 			}
@@ -3156,7 +3163,7 @@ class Processor {
 	 *
 	 * Uses https://www.php.net/manual/en/datetime.createfromformat.php
 	 *
-	 * @param string $type         		 The input type.
+	 * @param string $type               The input type.
 	 * @param string $input_date         The input date.
 	 * @param string $input_date_format  The input date format.
 	 * @param string $output_date_format The output date format.
@@ -3205,7 +3212,7 @@ class Processor {
 		}
 
 		// Add missing seconds
-		if ( 'Y-m-d G:i:s' === $input_date_format && 1 === substr_count($input_date, ':') ) {
+		if ( 'Y-m-d G:i:s' === $input_date_format && 1 === substr_count( $input_date, ':' ) ) {
 			$input_date .= ':00';
 		}
 
@@ -3214,5 +3221,44 @@ class Processor {
 		}
 
 		return $date->format( $output_date_format );
+	}
+
+	/**
+	 * Handle errors when a row can't be processed.
+	 *
+	 * @since 2.2.3
+	 *
+	 * @param string     $error Error message
+	 * @param array|null $row   Row data
+	 * @param array      $batch Batch data
+	 *
+	 * @return array|\WP_Error|null
+	 */
+	public function handle_row_processing_error( $error, $row, $batch ) {
+		global $wpdb;
+
+		$tables = gv_import_entries_get_db_tables();
+
+		$wpdb->update( $tables['rows'], array( 'status' => 'error', 'error' => $error ), array( 'id' => $row->id ) );
+
+		/**
+		 * @action `gravityview/import/process/row/error` This row has errored for some reason.
+		 *
+		 * @param object $row   The row object in the database.
+		 * @param string $error The error.
+		 * @param array  $batch The batch.
+		 */
+		do_action( 'gravityview/import/process/row/error', $row, $error, $batch );
+
+		if ( ! in_array( 'soft', $batch['flags'] ) ) {
+			$batch['status'] = 'error';
+			$batch['error']  = sprintf( __( 'Failed to process row ID %d', 'gravityview-importer' ), $row->id );
+
+			do_action( "gravityview/import/process/{$batch['status']}", $batch = Batch::update( $batch ) );
+
+			return $batch;
+		}
+
+		return Batch::update( $batch );
 	}
 }

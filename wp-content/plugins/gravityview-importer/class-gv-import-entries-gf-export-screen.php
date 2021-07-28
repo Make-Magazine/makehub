@@ -19,15 +19,29 @@ add_filter( 'gform_export_fields', 'GV\Import_Entries\filter_gform_export_fields
  */
 function filter_gform_export_fields( $form ) {
 
-	$list_fields = GFAPI::get_fields_by_type( $form, 'list' );
+	/**
+	 * GFAPI::get_fields_by_type assumes all fields are GF_Fields. It was throwing a PHP warning.
+	 * So we strip non-GF_Fields and use that instead.
+	 */
+	$_only_gf_fields_form = $form;
+
+	foreach ( $_only_gf_fields_form['fields'] as $key => $field ) {
+		if ( ! $field instanceof \GF_Field ) {
+			unset( $_only_gf_fields_form['fields'][ $key ] );
+		}
+	}
+
+	$list_fields = GFAPI::get_fields_by_type( $_only_gf_fields_form, 'list' );
 
 	/** @var \GF_Field $list_field */
 	foreach ( $list_fields as $list_field ) {
 
+		// We're adding back to the $form now.
 		array_push( $form['fields'], array(
 			'id' => 'list_json.' . $list_field->id,
 			'label' => sprintf( esc_html_x( '%s (Export as JSON)', 'First replacement is field label. JSON is a file format.', 'gravityview-importer' ), GFFormsModel::get_label( $list_field ) ),
 		) );
+
 	}
 
 	array_push( $form['fields'], array(
