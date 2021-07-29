@@ -80,7 +80,7 @@
 
 // Adventures page
 .sfwd-courses-template, .learndash-cpt-sfwd-courses {
-	.ld-course-status { display: none !important; }
+	.ld-course-status, .bb-course-member-wrap { display: none !important; }
 	.ld-lesson-list {
 		.bb-course-meta {
 			width: 100%;
