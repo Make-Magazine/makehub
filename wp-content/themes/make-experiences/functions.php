@@ -102,18 +102,6 @@ function experiences_remove_toolbar_node($wp_admin_bar) {
 
 add_action('admin_bar_menu', 'experiences_remove_toolbar_node', 999);
 
-function remove_admin_menu_items(){
-    global $menu;
-    //remove learndash from the base site. the plugin needs to be activated for shortcodes to work in the user dashboard
-    //but we don't want admins seeing the item and getting confused.
-    foreach($menu as $key=>$item){
-        if(in_array('learndash-lms',$item)){
-            unset($menu[$key]);
-        }    
-    }    
-}
-add_action('admin_menu', 'remove_admin_menu_items', 999);
-
 // Include all function files in the make-experiences/functions directory:
 foreach (glob(get_stylesheet_directory() . '/functions/*.php') as $file) {
     include_once $file;
