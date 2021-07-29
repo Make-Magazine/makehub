@@ -178,14 +178,14 @@ function nested_form_event_upd($nstForm, $entry_id, $orig_entry = array()) {
     $child_entry        = GFAPI::get_entry($entry_id);
     $parent_entry       = GFAPI::get_entry($child_entry['gpnf_entry_parent']);
     $parent_form        = GFAPI::get_form($child_entry['gpnf_entry_parent_form']);
-    
+
     $nest_parameter_arr = find_field_by_parameter($nstForm); 
-    
+    $parent_parameter_arr = find_field_by_parameter($parent_form); 
+
     $event_id = $parent_entry["post_id"];
     $event_status = get_post_status($event_id);
-    
-    
-    $timeZone = get_option('timezone_string');
+
+    $timeZone = getFieldByParam('timezone', $parent_parameter_arr, $parent_entry);
         
     //if the event is not published,  update ticket/schedule information
     if ($event_status != 'publish') {
