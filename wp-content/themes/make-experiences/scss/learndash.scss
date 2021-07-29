@@ -107,9 +107,13 @@
 	.site-content {
 		padding: 0px;
 	}
-	.lms-topic-sidebar-data {
-		top: 138px !important;
+	.lms-topic-sidebar-wrapper {
+		z-index: 0;
+		.lms-topic-sidebar-data {
+			top: 138px !important;
+		}
 	}
+	
 	@media screen and (max-width: 767px) {
 		#learndash-content .lms-topic-sidebar-wrapper {
 			display: none;

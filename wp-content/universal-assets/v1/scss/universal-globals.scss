@@ -12,6 +12,9 @@ body {
             margin-top: 0px;
         }
     }
+	&[class^="elementor-page"] {
+		padding-top: 0px;
+	}
 }
 body > div {
     font-size: 1rem; // undo genesis font sizing
