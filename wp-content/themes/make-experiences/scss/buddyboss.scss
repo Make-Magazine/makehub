@@ -221,10 +221,12 @@ button.ges-change, button.ges-change:hover {
 
 // pdf and media download button
 .bb-media-info-section a.download-media, #buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list .download-document{
-	padding-bottom: 25px !important;
 	background: $color-blue !important;
 	color: #fff;
 	font-weight: bold;
+}
+.bb-media-info-section a.download-media {
+	padding-bottom: 25px !important;
 }
 
 // nobody needs to know when I was last on the notification page
