@@ -88,9 +88,6 @@ class BP_Latest_Activities extends WP_Widget {
 		// Check instance for custom activity types
 		if ( ! empty( $instance['type'] ) ) {
 			$type    = maybe_unserialize( $instance['type'] );
-			if ( ! is_array( $type ) ) {
-				$type = (array) maybe_unserialize( $type );
-			}
 			$classes = array_map( 'sanitize_html_class', array_merge( $type, array( 'bp-latest-activities' ) ) );
 
 			// Add classes to the container
@@ -180,9 +177,6 @@ class BP_Latest_Activities extends WP_Widget {
 		$type = array( 'activity_update' );
 		if ( ! empty( $instance['type'] ) ) {
 			$type = maybe_unserialize( $instance['type'] );
-			if ( ! is_array( $type ) ) {
-				$type = (array) maybe_unserialize( $type );
-			}
 		}
 		?>
 		<p>
@@ -198,7 +192,7 @@ class BP_Latest_Activities extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'type' ); ?>"><?php esc_html_e( 'Activity Type:', 'buddyboss' ); ?></label>
 			<select class="widefat" multiple="multiple" id="<?php echo $this->get_field_id( 'type' ); ?>" name="<?php echo $this->get_field_name( 'type' ); ?>[]">
 				<?php foreach ( bp_nouveau_get_activity_filters() as $key => $name ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type, true ) ); ?>><?php echo esc_html( $name ); ?></option>
+					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( in_array( $key, $type ) ); ?>><?php echo esc_html( $name ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</p>

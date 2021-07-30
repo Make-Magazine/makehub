@@ -1,8 +1,8 @@
 === BuddyBoss Theme ===
 Contributors: BuddyBoss
 Requires at least: 4.9.1
-Tested up to: 5.8
-Version: 1.7.2
+Tested up to: 5.7.2
+Version: 1.6.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -18,26 +18,6 @@ BuddyBoss Theme is a community theme for the BuddyBoss Platform.
 4. Upload the file 'buddyboss-theme-child.zip'
 
 == Changelog ==
-
-= 1.7.2 =
-* Moderation - Added styling to show Report button less prominent in the dropdown for all content types
-* Forums - Fixed critical issue on deactivating BuddyBoss Platform
-
-= 1.7.1.1 =
-* Activity - Fixed critical error when Forums component disabled
-
-= 1.7.1 =
-* Activity - Added styling for new Activity workflow update from BuddyBoss Platform
-* Compatibility - Fixed Elementor header overlapping issue with LearnDash lessons page sidebar
-* Translations - Fixed minor issue with text not translatable
-* Translations - Updated German (formal) language files
-
-= 1.7.0.1 =
-* Compatibility - Improved tablet view for BuddyBoss Mobile App
-
-= 1.7.0 =
-* Videos - Added styling for new Videos features from BuddyBoss Platform
-* Notifications - Added styling for new On-Screen Notifications features from BuddyBoss Platform
 
 = 1.6.8.1 =
 * Login - Fixed login issue redirected to the admin dashboard

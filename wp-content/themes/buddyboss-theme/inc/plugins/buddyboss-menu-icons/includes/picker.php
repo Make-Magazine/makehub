@@ -120,8 +120,8 @@ final class Menu_Icons_Picker {
 		if ( '' === $meta['type'] && isset( $_POST['action'] ) && 'add-menu-item' === $_POST['action'] ) {
 
 			$llms_stack = array(
-				'llms-nav-item-view-courses',
-				'llms-nav-item-dashboard',
+				'llms-nav-item-view-courses', 
+				'llms-nav-item-dashboard', 
 				'llms-nav-item-my-grades',
 				'llms-nav-item-view-memberships',
 				'llms-nav-item-view-achievements',
@@ -179,8 +179,6 @@ final class Menu_Icons_Picker {
 			        $icon = 'bb-icon-groups';
 		        } elseif ( 'bp-forums-nav' === $item->classes[1] ) {
 			        $icon = 'bb-icon-discussion';
-		        } elseif ( 'bp-videos-nav' === $item->classes[1] ) {
-			        $icon = 'bb-icon-video';
 		        } elseif ( 'bp-documents-nav' === $item->classes[1] ) {
 			        $icon = 'bb-icon-folder-stacked';
 		        } elseif ( 'bp-photos-nav' === $item->classes[1] ) {
@@ -207,7 +205,7 @@ final class Menu_Icons_Picker {
 			$meta["font_size"]      = '20';
 			$meta["svg_width"]      = '1';
 			$meta["image_size"]     = 'thumbnail';
-
+			
         }
 		$fields        = self::_get_menu_item_fields( $meta );
 		?>

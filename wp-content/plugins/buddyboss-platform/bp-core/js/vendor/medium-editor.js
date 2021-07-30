@@ -1446,10 +1446,7 @@ MediumEditor.extensions = {};
 
         cleanupAttrs: function (el, attrs) {
             attrs.forEach(function (attr) {
-                // Added support for emoji class - BuddyBoss.
-                if ( !jQuery( el ).hasClass( 'emojioneemoji' ) && !jQuery( el ).hasClass( 'emoji' ) ) {
-                    el.removeAttribute( attr );
-                }
+                el.removeAttribute(attr);
             });
         },
 
@@ -5251,14 +5248,6 @@ MediumEditor.extensions = {};
         return data;
     }
 
-    // Added support for removing image while pasting - BuddyBoss.
-    var isFilePaste = function (event) {
-        return event &&
-            event.clipboardData &&
-            event.clipboardData.items &&
-            event.clipboardData.types.includes( 'Files' );
-    }
-
     var PasteHandler = MediumEditor.Extension.extend({
         /* Paste Options */
 
@@ -5335,12 +5324,6 @@ MediumEditor.extensions = {};
                 return;
             }
 
-            // Added support for removing image while pasting - BuddyBoss.
-            if ( isFilePaste( event ) ) {
-                event.preventDefault();
-                return;
-            }
-
             var clipboardContent = getClipboardContent(event, this.window, this.document),
                 pastedHTML = clipboardContent['text/html'],
                 pastedPlain = clipboardContent['text/plain'];
@@ -5395,11 +5378,6 @@ MediumEditor.extensions = {};
         handlePasteBinPaste: function (event) {
             if (event.defaultPrevented) {
                 this.removePasteBin();
-                return;
-            }
-
-            // Added support for removing image while pasting - BuddyBoss.
-            if ( isFilePaste( event ) ) {
                 return;
             }
 

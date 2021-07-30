@@ -15,7 +15,10 @@
 				if ( buddyboss_theme_get_option( 'learndash_course_author' ) ) { ?>
                     <div class="bb-avatar-wrap">
 						<?php
-						$user_id = get_the_author_meta( 'ID' );
+						$user_id = apply_filters(
+							'user_id',
+							( ( isset($user_id) ) && (!empty($user_id) ) ? $user_id : get_the_author_meta('ID'))
+                        );
 						$avatar  = get_avatar_url( get_the_author_meta( 'email', $user_id ), array( 'size' => 300 ) );
 						if ( ! empty( $avatar ) ) :
                             if ( class_exists( 'BuddyPress' ) ) {

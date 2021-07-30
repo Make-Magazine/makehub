@@ -48,18 +48,8 @@
             </div><?php
 		} ?>
 		<?php
-		if ( function_exists( 'bbp_forum_report_link' ) && function_exists( 'bp_is_active' ) && bp_is_active( 'moderation' ) && bbp_get_forum_report_link( array( 'id' => $post->ID ) ) ) { ?>
-
-            <div class="bb_more_options action">
-                <a href="#" class="bb_more_options_action">
-                    <i class="bb-icon-menu-dots-h"></i>
-                </a>
-                <div class="bb_more_options_list">
-					<?php bbp_forum_report_link( array( 'id' => $post->ID ) ); ?>
-                </div>
-            </div><!-- .bb_more_options -->
-
-			<?php
+		if ( function_exists( 'bbp_forum_report_link' ) && bp_is_active( 'moderation' ) ) {
+			bbp_forum_report_link( array( 'id' => $post->ID ) );
 		}
 		?>
     </div>

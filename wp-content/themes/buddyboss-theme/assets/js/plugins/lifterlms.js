@@ -883,14 +883,14 @@
                     var $fileInput = $( this );
                     var $fileInputFor = $fileInput.attr( 'id' );
                     $fileInput.addClass('styled');
-                    $fileInput.after( '<label for="' + $fileInputFor + '">' + bs_data.translation.choose_a_file_label + '</label>' );
+                    $fileInput.after( '<label for="' + $fileInputFor + '">Choose a file</label>' );
                 } );
 
                 $( 'input.wpProQuiz_upload_essay[type=file]' ).change( function ( e ) {
                     var $in = $( this );
                     var $inval = $in.next().html( $in.val() );
                     if ( $in.val().length === 0 ) {
-                        $in.next().html( bs_data.translation.choose_a_file_label );
+                        $in.next().html( 'Choose a file' );
                     } else {
                         $in.next().html( $in.val().replace( /C:\\fakepath\\/i, '' ) );
                     }

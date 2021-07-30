@@ -49,11 +49,6 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 		if ( bp_is_active( 'media' ) ) {
 			// Moderation support for media.
 			$this->bp_rest_moderation_media_support();
-
-			// Moderation support for video.
-			if ( bp_is_active( 'video' ) ) {
-				$this->bp_rest_moderation_video_support();
-			}
 		}
 
 		if ( bp_is_active( 'document' ) ) {
@@ -1674,40 +1669,6 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 	}
 
 	/**
-	 * Added support for blocked Video.
-	 */
-	protected function bp_rest_moderation_video_support() {
-
-		bp_rest_register_field(
-			'video',
-			'can_report',
-			array(
-				'get_callback' => array( $this, 'bp_rest_media_can_report' ),
-				'schema'       => array(
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether or not user can report or not.', 'buddyboss' ),
-					'type'        => 'boolean',
-					'readonly'    => true,
-				),
-			)
-		);
-
-		bp_rest_register_field(
-			'video',
-			'reported',
-			array(
-				'get_callback' => array( $this, 'bp_rest_media_is_reported' ),
-				'schema'       => array(
-					'context'     => array( 'embed', 'view', 'edit' ),
-					'description' => __( 'Whether the Video is reported or not.', 'buddyboss' ),
-					'type'        => 'boolean',
-					'readonly'    => true,
-				),
-			)
-		);
-	}
-
-	/**
 	 * The function to use to get can_report of the media REST Field.
 	 *
 	 * @param BP_Media $media The Media object.
@@ -1721,13 +1682,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
-		} else {
-			$type = BP_Suspend_Media::$type;
-		}
-
-		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, $type ) ) {
+		if ( is_user_logged_in() && bp_moderation_user_can( $media_id, BP_Suspend_Media::$type ) ) {
 			return true;
 		}
 
@@ -1748,13 +1703,7 @@ class BP_REST_Moderation_Endpoint extends WP_REST_Controller {
 			return false;
 		}
 
-		if ( ! empty( $media['type'] ) && 'video' === $media['type'] ) {
-			$type = BP_Suspend_Video::$type;
-		} else {
-			$type = BP_Suspend_Media::$type;
-		}
-
-		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $media_id, $type ) ) {
+		if ( is_user_logged_in() && $this->bp_rest_moderation_report_exist( $media_id, BP_Suspend_Media::$type ) ) {
 			return true;
 		}
 

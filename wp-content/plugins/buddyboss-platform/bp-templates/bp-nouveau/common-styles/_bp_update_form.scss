@@ -93,7 +93,7 @@
 		padding: 10px 0;
 		background-color: rgba(250, 251, 253, 0.9);
 		box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.1);
-		z-index: 9999901;
+		z-index: 999901;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -181,37 +181,6 @@
 
 		.dropzone .dz-preview.dz-complete .dz-progress {
 			display: none;
-		}
-
-
-		#activity-post-video-uploader.dropzone .dz-preview.dz-complete {
-
-			.dz-filename {
-				color: #4d5c6d;
-			}
-
-			&.dz-file-preview {
-				background-color: #f0f3f7;
-			}
-
-			.dz-details {
-				min-height: 120px;
-
-				.dz-size {
-					display: block !important;
-				}
-
-			}
-
-		}
-
-		#activity-post-video-uploader.dropzone .dz-preview.dz-complete.dz-has-thumbnail {
-
-			.dz-filename,
-			.dz-size {
-				color: #fff;
-			}
-
 		}
 
 		@media screen and (max-width: 646px) {
@@ -644,7 +613,7 @@
 		line-height: 1;
 
 		&:before {
-			content: "\e819";
+			content: "\e960";
 			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
@@ -759,7 +728,7 @@
 		}
 
 		&.public:before {
-			content: "\e819";
+			content: "\e960";
 		}
 
 		&.onlyme:before {
@@ -836,20 +805,19 @@ div[class*="attached-gif-container"] {
 	.gif-image-remove {
 		border-radius: 10px;
 		cursor: pointer;
-		height: 16px;
-		right: 5px;
-		top: 5px;
-		width: 16px;
-		background-color: #f8f8f8;
+		height: 19px;
+		right: 2px;
+		top: 4px;
+		width: 19px;
 	}
 
 	.gif-image-overlay {
-		color: #9ea8b3;
+		color: #fff;
 		margin-top: 0;
 		position: absolute;
 
 		.bb-icon-close {
-			font-size: 17px;
+			font-size: 20px;
 			vertical-align: top;
 		}
 	}

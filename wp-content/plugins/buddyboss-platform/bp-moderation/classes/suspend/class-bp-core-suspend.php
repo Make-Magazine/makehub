@@ -63,10 +63,6 @@ class BP_Core_Suspend {
 			new BP_Suspend_Media();
 		}
 
-		if ( bp_is_active( 'video' ) ) {
-			new BP_Suspend_Video();
-		}
-
 		if ( bp_is_active( 'messages' ) ) {
 			new BP_Suspend_Message();
 		}

@@ -141,15 +141,6 @@ function buddyboss_theme_load_textdomain() {
 	$mofile_custom = sprintf( '%s-%s.mo', $domain, apply_filters( 'buddyboss_theme_locale', get_locale() ) );
 
 	/**
-	 * Filters the author locale to be loaded for the language files.
-	 *
-	 * @since BuddyBoss 1.7.1
-	 *
-	 * @param string $value Current locale for the install.
-	 */
-	$mofile_author = sprintf( '%s.mo', apply_filters( 'buddyboss_theme_author_locale', get_locale() ) );
-
-	/**
 	 * Filters the locations to load language files from.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -164,7 +155,7 @@ function buddyboss_theme_load_textdomain() {
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
-		if ( load_textdomain( 'buddyboss-theme', $location . $mofile_custom ) || load_textdomain( 'buddyboss-theme', $location . $mofile_author ) ) {
+		if ( load_textdomain( 'buddyboss-theme', $location . $mofile_custom ) ) {
 			return true;
 		}
 	}
@@ -278,7 +269,7 @@ function buddyboss_theme_scripts() {
 	// Tribe Events Main
     if ( class_exists( 'Tribe__Events__Main' ) ) {
         wp_enqueue_style( 'buddyboss-theme-eventscalendar', get_template_directory_uri() . '/assets/css' . $rtl_css . '/eventscalendar' . $mincss . '.css', '', buddyboss_theme()->version() );
-
+		
 		if ( function_exists('tribe_events_views_v2_is_enabled') && tribe_events_views_v2_is_enabled() ) {
 			wp_enqueue_style( 'buddyboss-theme-eventscalendar-v2', get_template_directory_uri() . '/assets/css' . $rtl_css . '/eventscalendar-v2' . $mincss . '.css', '', buddyboss_theme()->version() );
 		}
@@ -334,12 +325,12 @@ function buddyboss_theme_scripts() {
 	wp_enqueue_script( 'boss-jssocials-js', get_template_directory_uri() . '/assets/js/vendors/jssocials.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'buddyboss-theme-main-js', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'boss-validate-js', get_template_directory_uri() . '/assets/js/vendors/validate.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
-
+	
 	if ( ! wp_script_is( 'bp-nouveau-magnific-popup' ) ) {
 		// 'bp-nouveau-magnific-popup', using this handler for platfrom, platfrom pro and theme
 		wp_enqueue_script( 'bp-nouveau-magnific-popup', get_template_directory_uri() . '/assets/js/vendors/magnific-popup.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	}
-
+	
 	wp_enqueue_script( 'select2-js', get_template_directory_uri() . '/assets/js/vendors/select2.full.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'progressbar-js', get_template_directory_uri() . '/assets/js/vendors/progressbar.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
 	wp_enqueue_script( 'mousewheel-js', get_template_directory_uri() . '/assets/js/vendors/mousewheel.min.js', array( 'jquery' ), buddyboss_theme()->version(), true );
@@ -417,8 +408,7 @@ function buddyboss_theme_scripts() {
 		'twitter_label'      => __( 'Tweet', 'buddyboss-theme' ),
 		'translation'        => array(
 			"comment_posted"      => __( "Your comment has been posted.", 'buddyboss-theme' ),
-			"comment_btn_loading" => __( "Please Wait...", 'buddyboss-theme' ),
-			"choose_a_file_label" => __( "Choose a file", 'buddyboss-theme' )
+			"comment_btn_loading" => __( "Please Wait...", 'buddyboss-theme' )
 		),
 	) ) );
 }

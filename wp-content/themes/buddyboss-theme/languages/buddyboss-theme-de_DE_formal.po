@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Theme v1.7.1.0\n"
-"POT-Creation-Date: 2021-07-15 21:54+0200\n"
-"PO-Revision-Date: 2021-07-23 11:16+0530\n"
+"Project-Id-Version: BuddyBoss Theme v1.6.8\n"
+"POT-Creation-Date: 2021-06-19 19:07+0200\n"
+"PO-Revision-Date: 2021-06-24 10:54+0530\n"
 "Last-Translator: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language-Team: Thorsten Wollenhöfer <thorsten.wollenhoefer@gmail.com>\n"
 "Language: de_DE@formal\n"
@@ -57,8 +57,8 @@ msgstr "%s"
 #: learndash/ld30/shortcodes/profile.php:119
 #: lifterlms/course/course-index.php:20
 #: lifterlms/membership/membership-index.php:20 searchform.php:15
-#: template-parts/bbpress-banner.php:108 template-parts/header-aside.php:93
-#: template-parts/header-aside.php:120 template-parts/header-mobile.php:58
+#: template-parts/bbpress-banner.php:108 template-parts/header-aside.php:88
+#: template-parts/header-aside.php:108 template-parts/header-mobile.php:58
 #: template-parts/header-mobile.php:70
 msgid "Search"
 msgstr "Suchen"
@@ -145,7 +145,7 @@ msgstr "Fertig"
 msgid "Main Forum"
 msgstr "Hauptforum"
 
-#: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:66
+#: bbpress/content-single-forum.php:47 inc/plugins/bbpress-helper.php:60
 #: sidebar-bbpress.php:18
 msgid "New discussion"
 msgstr "Neue Diskussion"
@@ -198,7 +198,7 @@ msgstr "E-Mail (wird nicht veröffentlicht, erforderlich):"
 msgid "Website:"
 msgstr "Website:"
 
-#: bbpress/form-reply-activity.php:27 bbpress/form-reply.php:28
+#: bbpress/form-reply.php:28
 msgid ""
 "This discussion is marked as closed to new replies, however your posting "
 "capabilities still allow you to do so."
@@ -206,12 +206,11 @@ msgstr ""
 "Diese Diskussion wird als geschlossen für neue Antworten markiert, aber Ihre "
 "Veröffentlichungsmöglichkeiten erlauben es Ihnen immer noch, dies zu tun."
 
-#: bbpress/form-reply-activity.php:40 bbpress/form-reply-success.php:15
-msgid "Reply to"
-msgstr "Antwort an"
+#: bbpress/form-reply.php:41
+msgid "Reply to:"
+msgstr "Antwort auf:"
 
-#: bbpress/form-reply-activity.php:61 bbpress/form-reply.php:62
-#: bbpress/form-topic.php:82
+#: bbpress/form-reply.php:62 bbpress/form-topic.php:82
 msgid ""
 "You may use these <abbr title=\"HyperText Markup Language\">HTML</abbr> tags "
 "and attributes:"
@@ -219,76 +218,29 @@ msgstr ""
 "Sie können diese <abbr title=\"HyperText Markup Language\">HTML</abbr> Tags "
 "und Attribute verwenden:"
 
-#: bbpress/form-reply-activity.php:75 bbpress/form-reply.php:76
-#: bbpress/form-topic.php:96
+#: bbpress/form-reply.php:76 bbpress/form-topic.php:96
 msgid "Type one or more tag, comma separated"
 msgstr "Geben Sie einen oder mehrere Tags, durch Komma getrennt, ein"
 
-#: bbpress/form-reply-activity.php:92 bbpress/form-reply.php:93
-#: bbpress/form-topic.php:114
+#: bbpress/form-reply.php:93 bbpress/form-topic.php:114
 msgid "Keep a log of this edit:"
 msgstr "Führen Sie ein Protokoll über diese Bearbeitung:"
 
-#: bbpress/form-reply-activity.php:96 bbpress/form-reply.php:97
-#: bbpress/form-topic.php:118
+#: bbpress/form-reply.php:97 bbpress/form-topic.php:118
 msgid "Optional reason for editing:"
 msgstr "Grund für die Bearbeitung (optional):"
 
-#: bbpress/form-reply-activity.php:97 bbpress/form-reply.php:98
-#: bbpress/form-topic.php:119
+#: bbpress/form-reply.php:98 bbpress/form-topic.php:119
 msgid "Optional reason for editing"
 msgstr "Optionaler Grund für die Bearbeitung"
 
-#: bbpress/form-reply-activity.php:120 bbpress/form-reply.php:121
-#: bbpress/form-topic.php:171
+#: bbpress/form-reply.php:121 bbpress/form-topic.php:171
 msgid "Notify the author of replies via email"
 msgstr "Benachrichtigt den Autor bei Antworten via E-Mail"
 
-#: bbpress/form-reply-activity.php:124 bbpress/form-reply.php:125
-#: bbpress/form-topic.php:175
+#: bbpress/form-reply.php:125 bbpress/form-topic.php:175
 msgid "Notify me of replies via email"
 msgstr "Benachrichtigt mich bei Antworten via E-Mail"
-
-#: bbpress/form-reply-activity.php:144
-msgid "Post Reply"
-msgstr "Antwort verfassen"
-
-#: bbpress/form-reply-activity.php:172 bbpress/form-reply.php:175
-#, php-format
-msgid "The discussion &#8216;%s&#8217; is closed to new replies."
-msgstr "Die Diskussion &#8216;%s&#8217; ist für neue Antworten geschlossen."
-
-#: bbpress/form-reply-activity.php:181 bbpress/form-reply.php:184
-#, php-format
-msgid "The forum &#8216;%s&#8217; is closed to new discussions and replies."
-msgstr ""
-"Das Forum &#8216;%s&#8217; ist für neue Diskussionen und Antworten "
-"geschlossen."
-
-#: bbpress/form-reply-activity.php:190 bbpress/form-reply.php:193
-msgid "You cannot reply to this discussion."
-msgstr "Sie können auf diese Diskussion nicht antworten."
-
-#: bbpress/form-reply-activity.php:190 bbpress/form-reply.php:193
-msgid "Log in  to reply."
-msgstr "Melden Sie sich an, um zu antworten."
-
-#: bbpress/form-reply-success.php:21 bbpress/form-topic.php:66
-#: bbpress/form-topic.php:67
-msgid "Discussion Title"
-msgstr "Titel der Diskussion"
-
-#: bbpress/form-reply-success.php:33
-msgid "Your reply has been posted to the discussion"
-msgstr "Ihre Antwort wurde in der Diskussion veröffentlicht"
-
-#: bbpress/form-reply-success.php:36
-msgid "View Reply"
-msgstr "Antwort ansehen"
-
-#: bbpress/form-reply.php:41
-msgid "Reply to:"
-msgstr "Antwort auf:"
 
 #: bbpress/form-reply.php:144 bbpress/form-topic.php:189
 #: buddypress/groups/single/cover-image-header.php:58
@@ -305,6 +257,26 @@ msgstr "Abbrechen"
 msgid "Post"
 msgstr "Beitrag"
 
+#: bbpress/form-reply.php:175
+#, php-format
+msgid "The discussion &#8216;%s&#8217; is closed to new replies."
+msgstr "Die Diskussion &#8216;%s&#8217; ist für neue Antworten geschlossen."
+
+#: bbpress/form-reply.php:184
+#, php-format
+msgid "The forum &#8216;%s&#8217; is closed to new discussions and replies."
+msgstr ""
+"Das Forum &#8216;%s&#8217; ist für neue Diskussionen und Antworten "
+"geschlossen."
+
+#: bbpress/form-reply.php:193
+msgid "You cannot reply to this discussion."
+msgstr "Sie können auf diese Diskussion nicht antworten."
+
+#: bbpress/form-reply.php:193
+msgid "Log in  to reply."
+msgstr "Melden Sie sich an, um zu antworten."
+
 #: bbpress/form-topic.php:34
 msgid ""
 "This forum is marked as closed to new discussions, however your posting "
@@ -312,6 +284,10 @@ msgid ""
 msgstr ""
 "Dieses Forum ist als geschlossen für neue Diskussionen markiert, aber Ihre "
 "Veröffentlichungsmöglichkeiten erlauben es Ihnen dennoch, dies zu tun."
+
+#: bbpress/form-topic.php:66 bbpress/form-topic.php:67
+msgid "Discussion Title"
+msgstr "Titel der Diskussion"
 
 #: bbpress/form-topic.php:137
 msgid "Forum:"
@@ -339,12 +315,12 @@ msgid "You must be logged in to create new discussions."
 msgstr "Sie müssen angemeldet sein, um neue Diskussionen erstellen zu können."
 
 #: bbpress/loop-blocked-single-reply.php:46
-#: template-parts/unread-messages.php:386
+#: template-parts/unread-messages.php:371
 msgid "This content has been hidden as the member is suspended."
 msgstr "Dieser Inhalt wurde ausgeblendet, da das Mitglied gesperrt ist."
 
 #: bbpress/loop-blocked-single-reply.php:48
-#: template-parts/unread-messages.php:388
+#: template-parts/unread-messages.php:373
 msgid "This content has been hidden as you have blocked this member."
 msgstr ""
 "Dieser Inhalt wurde ausgeblendet, da Sie dieses Mitglied blockiert haben."
@@ -585,7 +561,7 @@ msgstr "Bearbeiten"
 #: buddypress.php:30 inc/lib/buddyboss-updater/includes/views/package.php:37
 #: inc/plugins/elementor/widgets/bb-profile-completion.php:717
 #: inc/plugins/lifterlms-helper.php:1717 inc/plugins/lifterlms-helper.php:1797
-#: inc/theme/login.php:406 inc/theme/template-functions.php:698
+#: inc/theme/login.php:397 inc/theme/template-functions.php:698
 #: learndash/ld30/learndash-sidebar.php:164
 #: learndash/ld30/learndash-sidebar.php:166
 #: learndash/ld30/learndash-sidebar.php:167
@@ -681,7 +657,7 @@ msgstr "%s (%s)"
 msgid "Organized by"
 msgstr "Organisiert von"
 
-#: buddypress/media/actions.php:36
+#: buddypress/media/actions.php:13
 #: inc/admin/buddyboss-extensions/extensions/repeater/repeater/field_repeater.php:186
 #: inc/admin/buddyboss-extensions/extensions/repeater/repeater/field_repeater.php:229
 #: inc/admin/framework/ReduxCore/inc/fields/slides/field_slides.php:167
@@ -692,7 +668,7 @@ msgstr "Organisiert von"
 msgid "Delete"
 msgstr "Löschen"
 
-#: buddypress/media/actions.php:37
+#: buddypress/media/actions.php:14
 msgid "Select All"
 msgstr "Alles auswählen"
 
@@ -745,7 +721,7 @@ msgstr ""
 "bereits Mitglieder sind:"
 
 #: buddypress/members/single/invites/sent-invites.php:54
-#: template-parts/header-profile-menu.php:478
+#: template-parts/header-profile-menu.php:447
 msgid "Sent Invites"
 msgstr "Versendete Einladungen"
 
@@ -764,7 +740,7 @@ msgstr "Name"
 #: inc/lib/buddyboss-updater/includes/views/package.php:68
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:684
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:689
-#: inc/theme/login.php:168 learndash/ld30/modules/login-modal.php:246
+#: inc/theme/login.php:159 learndash/ld30/modules/login-modal.php:246
 #: paid-memberships-pro/pages/account.php:107
 msgid "Email"
 msgstr "Infos via E-Mail"
@@ -1808,8 +1784,8 @@ msgstr "Hochladen"
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-cpt.php:385
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-cpt.php:393
 #: inc/custom-fonts/classes/class-buddyboss-custom-fonts-cpt.php:401
-#: inc/plugins/buddyboss-menu-icons/includes/picker.php:231
-#: inc/plugins/buddyboss-menu-icons/includes/picker.php:234
+#: inc/plugins/buddyboss-menu-icons/includes/picker.php:229
+#: inc/plugins/buddyboss-menu-icons/includes/picker.php:232
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:743
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/fields/base.php:68
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/elusive.php:465
@@ -2007,14 +1983,14 @@ msgid "Add More"
 msgstr "Mehr hinzufügen"
 
 #: inc/admin/framework/ReduxCore/inc/fields/password/field_password.php:62
-#: inc/admin/framework/sample/sample-config.php:467 inc/theme/login.php:166
+#: inc/admin/framework/sample/sample-config.php:467 inc/theme/login.php:157
 #: woocommerce/myaccount/form-login.php:57
 #: woocommerce/myaccount/form-login.php:106
 msgid "Password"
 msgstr "Passwort"
 
 #: inc/admin/framework/ReduxCore/inc/fields/password/field_password.php:63
-#: inc/theme/login.php:167 learndash/ld30/modules/login-modal.php:242
+#: inc/theme/login.php:158 learndash/ld30/modules/login-modal.php:242
 #: paid-memberships-pro/pages/account.php:106
 #: woocommerce/myaccount/form-login.php:92
 msgid "Username"
@@ -2342,8 +2318,8 @@ msgstr ""
 "Wenn Sie in Sachen Redux auf dem Laufenden bleiben möchten, abonnieren Sie "
 "bitte unseren Newsletter"
 
-#: inc/admin/framework/ReduxCore/inc/tracking.php:159 inc/theme/login.php:165
-#: inc/theme/login.php:169
+#: inc/admin/framework/ReduxCore/inc/tracking.php:159 inc/theme/login.php:156
+#: inc/theme/login.php:160
 msgid "Email Address"
 msgstr "E-Mail-Adresse"
 
@@ -4326,7 +4302,7 @@ msgid "Select Fields"
 msgstr "Felder auswählen"
 
 #: inc/admin/framework/sample/sample-config.php:1261
-#: inc/plugins/buddyboss-menu-icons/includes/picker.php:233
+#: inc/plugins/buddyboss-menu-icons/includes/picker.php:231
 #: inc/plugins/buddyboss-menu-icons/includes/settings.php:742
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1867
 msgid "Select"
@@ -6500,7 +6476,7 @@ msgstr ""
 "zuzugreifen, können Sie Ihre globale Variable verwenden: <strong>$%1$s</"
 "strong></p>"
 
-#: inc/admin/options/custom-css.php:4320
+#: inc/admin/options/custom-css.php:4242
 msgid "Quiz Progress"
 msgstr "Quiz-Fortschritt"
 
@@ -7136,15 +7112,11 @@ msgstr ""
 msgid "Down for Maintenance | "
 msgstr "Wegen Wartungsmodus nicht erreichbar | "
 
-#: inc/plugins/bbpress-helper.php:88
+#: inc/plugins/bbpress-helper.php:82
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 "Etwas ist schief gelaufen. Aktualisieren Sie Ihren Browser (z. B. mit der "
 "Taste F5) und versuchen Sie es erneut."
-
-#: inc/plugins/bbpress-helper.php:473 inc/plugins/bbpress-helper.php:474
-msgid "Quick Reply"
-msgstr "Schnelle Antwort"
 
 #: inc/plugins/beaver-builder/header-bar/header-bar.php:16
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:54
@@ -7554,11 +7526,11 @@ msgid "Type"
 msgstr "Art"
 
 #: inc/plugins/buddyboss-menu-icons/includes/picker.php:85
-#: inc/plugins/buddyboss-menu-icons/includes/picker.php:283
+#: inc/plugins/buddyboss-menu-icons/includes/picker.php:281
 msgid "Icon"
 msgstr "Icon"
 
-#: inc/plugins/buddyboss-menu-icons/includes/picker.php:228
+#: inc/plugins/buddyboss-menu-icons/includes/picker.php:226
 msgid "Icon:"
 msgstr "Icon:"
 
@@ -9080,9 +9052,9 @@ msgid "Log In"
 msgstr "Anmelden"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1437
-#: inc/theme/functions.php:1444 inc/theme/template-functions.php:1440
+#: inc/theme/functions.php:1434 inc/theme/template-functions.php:1440
 #: template-parts/header-mobile.php:163
-#: template-parts/header-profile-menu.php:491
+#: template-parts/header-profile-menu.php:458
 msgid "Log Out"
 msgstr "Abmelden"
 
@@ -9117,7 +9089,7 @@ msgstr "Karten-Pin: Klein"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1472
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:162
-#: learndash/ld30/learndash-sidebar.php:79 template-parts/header-aside.php:80
+#: learndash/ld30/learndash-sidebar.php:79 template-parts/header-aside.php:78
 msgid "Maximize"
 msgstr "Maximieren"
 
@@ -9163,7 +9135,7 @@ msgstr "Mikro: Aus"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1532
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/genericon.php:167
-#: learndash/ld30/learndash-sidebar.php:80 template-parts/header-aside.php:81
+#: learndash/ld30/learndash-sidebar.php:80 template-parts/header-aside.php:79
 msgid "Minimize"
 msgstr "Minnimieren"
 
@@ -9484,7 +9456,7 @@ msgstr "RSS: Quadratisch"
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:1847
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:1863
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:529
-#: inc/theme/login.php:177 lifterlms/content-certificate.php:50
+#: inc/theme/login.php:168 lifterlms/content-certificate.php:50
 msgid "Save"
 msgstr "Sichern"
 
@@ -9837,109 +9809,96 @@ msgid "Video"
 msgstr "Video"
 
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2222
-msgid "Video: Album"
-msgstr "Video: Album"
-
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2227
-msgid "Video: Albums"
-msgstr "Video: Alben"
-
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2232
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2237
-msgid "Video: Alt"
-msgstr "Video: Alternativ"
-
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2242
 msgid "Video: Off"
 msgstr "Video: Aus"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2247
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2227
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:549
 msgid "Visibility"
 msgstr "Sichtbarkeit"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2252
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2232
 msgid "Visibility: Hidden"
 msgstr "Sichtbarkeit: Verborgen"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2257
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2237
 msgid "Voicemail"
 msgstr "Anrufbeantworter"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2262
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2242
 msgid "Volume: Down"
 msgstr "Lautstärke: Verringern"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2267
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2247
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:944
 msgid "Volume: Mute"
 msgstr "Lautstärke: Stumm"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2272
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2252
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/dashicons.php:889
 msgid "Volume: Off"
 msgstr "Lautstärke: Aus"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2277
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2257
 msgid "Volume: Up"
 msgstr "Lautstärke: Erhöhen"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2282
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2262
 msgid "Watch"
 msgstr "Uhr"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2287
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2267
 msgid "Watch Alarm"
 msgstr "Uhren-Alarm"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2292
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2272
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/fa.php:3632
 msgid "WiFi"
 msgstr "WiFi"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2297
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2277
 msgid "WiFi: Off"
 msgstr "WiFi: Aus"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2302
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2282
 msgid "Wind"
 msgstr "Wind"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2307
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2287
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:689
 #: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/foundation-icons.php:694
 msgid "X"
 msgstr "X"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2312
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2292
 msgid "X: Circle"
 msgstr "X: Kreis"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2317
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2297
 msgid "X: Square"
 msgstr "X: Quadratisch"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2322
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2302
 msgid "Youtube: Circle"
 msgstr "YouTube: Kreis"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2327
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2307
 msgid "Youtube: Logo"
 msgstr "YouTube: Logo"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2332
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2312
 msgid "Zap"
 msgstr "Zap"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2337
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2317
 msgid "ZIP"
 msgstr "ZIP"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2342
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2322
 msgid "Zoom: In"
 msgstr "Zoom: Vergrößern"
 
-#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2347
+#: inc/plugins/buddyboss-menu-icons/vendor/kucrut/icon-picker/includes/types/buddyboss.php:2327
 msgid "Zoom: Out"
 msgstr "Zoom: Verkleinern"
 
@@ -14535,7 +14494,7 @@ msgid "Logo Position"
 msgstr "Position des Logos"
 
 #: inc/plugins/elementor/widgets/header-bar/bb-header-bar.php:349
-#: learndash/ld30/learndash-sidebar.php:76 template-parts/header-aside.php:77
+#: learndash/ld30/learndash-sidebar.php:76 template-parts/header-aside.php:75
 #: template-parts/header-mobile.php:50
 msgid "Dark Mode"
 msgstr "Dunkle Betriebsart"
@@ -15287,63 +15246,59 @@ msgstr "BuddyPanel - Abgemeldete Benutzer"
 msgid "Titlebar"
 msgstr "Titelleiste"
 
-#: inc/theme/functions.php:416
+#: inc/theme/functions.php:407
 msgid "Share on Facebook"
 msgstr "Auf Facebook teilen"
 
-#: inc/theme/functions.php:417
+#: inc/theme/functions.php:408
 msgid "Tweet"
 msgstr "Twittern"
 
-#: inc/theme/functions.php:419
+#: inc/theme/functions.php:410
 msgid "Your comment has been posted."
 msgstr "Ihr Kommentar wurde veröffentlicht."
 
-#: inc/theme/functions.php:420
+#: inc/theme/functions.php:411
 msgid "Please Wait..."
 msgstr "Bitte warten ..."
 
-#: inc/theme/functions.php:421
-msgid "Choose a file"
-msgstr "Datei auswählen"
-
-#: inc/theme/functions.php:464
+#: inc/theme/functions.php:454
 msgid "Choose or Upload an Image"
 msgstr "Ein Bild auswählen oder hochladen"
 
-#: inc/theme/functions.php:465
+#: inc/theme/functions.php:455
 msgid "Use this image"
 msgstr "Dieses Bild verwenden"
 
-#: inc/theme/functions.php:1309
+#: inc/theme/functions.php:1299
 msgid "Start typing to search..."
 msgstr "Einfach tippen, um die Suche zu beginnen …"
 
-#: inc/theme/functions.php:1355
+#: inc/theme/functions.php:1345
 msgid "Stick to Bottom"
 msgstr "Unten anheften"
 
-#: inc/theme/login.php:124
+#: inc/theme/login.php:115
 msgid "Create an account"
 msgstr "Erstellen Sie ein Konto"
 
-#: inc/theme/login.php:125
+#: inc/theme/login.php:116
 msgid "Log in"
 msgstr "Einloggen"
 
-#: inc/theme/login.php:170
+#: inc/theme/login.php:161
 msgid "Add new password"
 msgstr "Neues Passwort hinzufügen"
 
-#: inc/theme/login.php:171 inc/theme/login.php:649
+#: inc/theme/login.php:162 inc/theme/login.php:640
 msgid "Retype new password"
 msgstr "Neues Passwort erneut eingeben"
 
-#: inc/theme/login.php:173
+#: inc/theme/login.php:164
 msgid "Reset Password"
 msgstr "Passwort zurücksetzen"
 
-#: inc/theme/login.php:174
+#: inc/theme/login.php:165
 msgid ""
 "<div>Forgot your password?</div><p class=\"message\">Please enter your email "
 "address. You will receive an email with instructions on how to reset your "
@@ -15353,33 +15308,33 @@ msgstr ""
 "Mail-Adresse ein. Sie erhalten eine E-Mail mit Anweisungen, wie Sie Ihr "
 "Passwort zurücksetzen können.</p>"
 
-#: inc/theme/login.php:176
+#: inc/theme/login.php:167
 msgid "Request reset link"
 msgstr "Link zum Zurücksetzen"
 
-#: inc/theme/login.php:179
+#: inc/theme/login.php:170
 msgid "Password has been updated"
 msgstr "Passwort wurde aktualisiert"
 
-#: inc/theme/login.php:182
+#: inc/theme/login.php:173
 msgid "Back to sign in"
 msgstr "Zurück zur Anmeldung"
 
-#: inc/theme/login.php:333
+#: inc/theme/login.php:324
 msgid "Create an Account"
 msgstr "Konto erstellen"
 
-#: inc/theme/login.php:336 inc/theme/login.php:342
-#: template-parts/content-buddypress.php:20 template-parts/header-aside.php:128
+#: inc/theme/login.php:327 inc/theme/login.php:333
+#: template-parts/content-buddypress.php:20 template-parts/header-aside.php:116
 #: template-parts/header-mobile.php:158
 msgid "Sign in"
 msgstr "Anmelden"
 
-#: inc/theme/login.php:629
+#: inc/theme/login.php:620
 msgid "Forgot Password?"
 msgstr "Passwort vergessen?"
 
-#: inc/theme/login.php:658
+#: inc/theme/login.php:649
 msgid "The passwords do not match."
 msgstr "Die Passwörter stimmen nicht überein."
 
@@ -15812,7 +15767,7 @@ msgstr "Alle aufklappen"
 msgid "Collapse All"
 msgstr "Alle zusammenklappen"
 
-#: learndash/ld30/learndash-sidebar.php:77 template-parts/header-aside.php:78
+#: learndash/ld30/learndash-sidebar.php:77 template-parts/header-aside.php:76
 #: template-parts/header-mobile.php:51
 msgid "Light Mode"
 msgstr "Helle Betriebsart"
@@ -16936,7 +16891,7 @@ msgid_plural "%1$s <span class=\"bb-comment-text\">Comments</span>"
 msgstr[0] "1 <span class=\"bb-comment-text\">Kommentar</span>"
 msgstr[1] "%1$s <span class=\"bb-comment-text\">Kommentar</span>"
 
-#: template-parts/header-aside.php:131 template-parts/header-mobile.php:160
+#: template-parts/header-aside.php:119 template-parts/header-mobile.php:160
 msgid "Sign up"
 msgstr "Registrieren"
 
@@ -17099,19 +17054,11 @@ msgstr "Dokumente"
 msgid "My Documents"
 msgstr "Meine Dokumente"
 
-#: template-parts/header-profile-menu.php:443
-msgid "Videos"
-msgstr "Videos"
-
-#: template-parts/header-profile-menu.php:448
-msgid "My Videos"
-msgstr "Meine Videos"
-
-#: template-parts/header-profile-menu.php:470
+#: template-parts/header-profile-menu.php:439
 msgid "Email Invites"
 msgstr "E-Mail-Einladungen"
 
-#: template-parts/header-profile-menu.php:475
+#: template-parts/header-profile-menu.php:444
 msgid "Send Invites"
 msgstr "Einladungen versenden"
 
@@ -17149,48 +17096,40 @@ msgid "Deleted User"
 msgstr "Gelöschter Benutzer"
 
 #: template-parts/unread-messages.php:306
-#: template-parts/unread-messages.php:400
+#: template-parts/unread-messages.php:385
 msgid "Suspended Member"
 msgstr "Gesperrtes Mitglied"
 
 #: template-parts/unread-messages.php:308
-#: template-parts/unread-messages.php:402
+#: template-parts/unread-messages.php:387
 msgid "Blocked Member"
 msgstr "Geblocktes Mitglied"
 
-#: template-parts/unread-messages.php:340
+#: template-parts/unread-messages.php:339
 msgid "sent a photo"
 msgstr "sendete ein Foto"
 
-#: template-parts/unread-messages.php:342
+#: template-parts/unread-messages.php:341
 msgid "sent some photos"
 msgstr "sendete einige Fotos"
 
-#: template-parts/unread-messages.php:354
-msgid "sent a video"
-msgstr "sendete eine Video"
-
-#: template-parts/unread-messages.php:356
-msgid "sent some videos"
-msgstr "sendete einige Videos"
-
-#: template-parts/unread-messages.php:368
+#: template-parts/unread-messages.php:353
 msgid "sent a document"
 msgstr "sendete ein Dokument"
 
-#: template-parts/unread-messages.php:370
+#: template-parts/unread-messages.php:355
 msgid "sent some documents"
 msgstr "sendete einige Dokumente"
 
-#: template-parts/unread-messages.php:379
+#: template-parts/unread-messages.php:364
 msgid "sent a gif"
 msgstr "sendete eine GIF"
 
-#: template-parts/unread-messages.php:393
+#: template-parts/unread-messages.php:378
 msgid "You"
 msgstr "Sie"
 
-#: template-parts/unread-messages.php:419
+#: template-parts/unread-messages.php:402
 msgid "No new messages!"
 msgstr "Keine neuen Nachrichten!"
 

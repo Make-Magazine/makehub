@@ -183,7 +183,6 @@ class BP_Document_Template {
 					'folder'         => $folder,
 					'user_directory' => $user_directory,
 					'meta_query'     => $meta_query,
-					'privacy'        => $privacy,
 				)
 			);
 

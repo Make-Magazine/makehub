@@ -2218,26 +2218,6 @@ class Icon_Picker_Type_BuddyBoss extends Icon_Picker_Type_Font {
 			),
 			array(
 				'group' => 'media',
-				'id'    => 'bb-icon-video-album',
-				'name'  => __( 'Video: Album', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media',
-				'id'    => 'bb-icon-video-albums',
-				'name'  => __( 'Video: Albums', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media',
-				'id'    => 'bb-icon-video-alt',
-				'name'  => __( 'Video: Alt', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media',
-				'id'    => 'bb-icon-video-alt',
-				'name'  => __( 'Video: Alt', 'buddyboss-theme' ),
-			),
-			array(
-				'group' => 'media',
 				'id'    => 'bb-icon-video-off',
 				'name'  => __( 'Video: Off', 'buddyboss-theme' ),
 			),

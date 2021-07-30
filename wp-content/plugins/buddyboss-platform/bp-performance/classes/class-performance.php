@@ -19,7 +19,6 @@ use BuddyBoss\Performance\Integration\BB_Messages;
 use BuddyBoss\Performance\Integration\BB_Notifications;
 use BuddyBoss\Performance\Integration\BB_Replies;
 use BuddyBoss\Performance\Integration\BB_Topics;
-use BuddyBoss\Performance\Integration\BB_Videos;
 
 if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
@@ -159,12 +158,6 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 						require_once $documents_integration;
 						BB_Documents::instance();
 					}
-
-					$videos_integration = dirname( __FILE__ ) . '/integrations/class-bb-videos.php';
-					if ( self::mu_is_component_active( 'video' ) && file_exists( $videos_integration ) ) {
-						require_once $videos_integration;
-						BB_Videos::instance();
-					}
 				}
 
 				// Load platform or bbPress related cache integration.
@@ -241,9 +234,7 @@ if ( ! class_exists( 'BuddyBoss\Performance\Performance' ) ) {
 
 			$charset_collate = $wpdb->get_charset_collate();
 
-			if ( ! function_exists( 'dbDelta' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			}
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 			$sql = "CREATE TABLE {$wpdb->prefix}bb_performance_cache (
 	            id bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

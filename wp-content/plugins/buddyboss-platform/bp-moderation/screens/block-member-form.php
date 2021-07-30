@@ -14,9 +14,7 @@
 				<div class="modal-container">
 					<header class="bb-model-header">
 						<h4><?php esc_html_e( 'Block Member?', 'buddyboss' ); ?></h4>
-						<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close">
-							<span class="bb-icon bb-icon-close"></span>
-						</button>
+						<button title="<?php esc_html_e( 'Close (Esc)', 'buddyboss' ); ?>" type="button" class="mfp-close"></button>
 					</header>
 
 					<div class="bb-report-type-wrp">
@@ -27,7 +25,7 @@
 							<?php esc_html_e( 'You will no longer be able to:', 'buddyboss' ); ?>
 						</p>
 						<ul>
-							<?php if ( bp_is_active( 'activity' ) ) : ?>
+							<?php if ( bp_is_active( 'activity' ) ): ?>
 							<li>
 								<?php
 								esc_html_e( 'See blocked member\'s posts', 'buddyboss' );
@@ -46,14 +44,14 @@
 								?>
 							</li>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'messages' ) ) : ?>
+							<?php if ( bp_is_active( 'messages' ) ): ?>
 							<li>
 								<?php
 								esc_html_e( 'Message this member', 'buddyboss' );
 								?>
 							</li>
 							<?php endif; ?>
-							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<?php if ( bp_is_active( 'friends' ) ): ?>
 							<li>
 								<?php
 								esc_html_e( 'Add this member as a connection', 'buddyboss' );
@@ -61,9 +59,9 @@
 							</li>
 							<?php endif; ?>
 						</ul>
-
+						
 						<p>
-							<?php if ( bp_is_active( 'friends' ) ) : ?>
+							<?php if ( bp_is_active( 'friends' ) ): ?>
 								<strong><?php esc_html_e( 'Please note: ', 'buddyboss' ); ?></strong>
 								<?php esc_html_e( 'This action will also remove this member from your connections and send a report to the site admin.', 'buddyboss' ); ?>
 							<?php endif; ?>

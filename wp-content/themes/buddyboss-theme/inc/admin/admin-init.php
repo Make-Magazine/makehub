@@ -15,7 +15,7 @@ if ( ! function_exists( 'buddyboss_theme_get_theme_sudharo' ) ) {
 		);
 
 		foreach ( $whitelist_domain as $domain ) {
-			if ( isset( $_SERVER ) && isset( $_SERVER['SERVER_NAME'] ) && false !== strpos( $_SERVER['SERVER_NAME'], $domain ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
+			if ( false !== strpos( $_SERVER['SERVER_NAME'], $domain ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.MissingUnslash
 				return false;
 			}
 		}

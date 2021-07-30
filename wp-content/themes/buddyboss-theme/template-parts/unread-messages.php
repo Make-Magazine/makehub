@@ -203,9 +203,9 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				}
 			}
 		}
-		$include_you = count( $other_recipients ) >= 2;
+		$include_you = sizeof( $other_recipients ) >= 2;
 		$first_three = array_slice( $other_recipients, 0, 3 );
-		if ( count( $first_three ) === 0 ) {
+		if ( sizeof( $first_three ) == 0 ) {
 			$include_you = true;
 		}
 		?>
@@ -248,7 +248,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 				?>
 				<div class="notification-avatar">
 					<?php
-					if ( count( $other_recipients ) > 1 ) {
+					if ( sizeof( $other_recipients ) > 1 ) {
 						?>
 						<a href="<?php echo bp_core_get_user_domain( $messages_template->thread->last_sender_id ); ?>">
 							<?php bp_message_thread_avatar(); ?>
@@ -294,7 +294,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							$recipient_names = array();
 
 							foreach ( $recipients as $recipient ) :
-								if ( bp_loggedin_user_id() !== (int) $recipient->user_id ) :
+								if ( (int) $recipient->user_id !== bp_loggedin_user_id() ) :
 									$recipient_name = bp_core_get_user_displayname( $recipient->user_id );
 
 									if ( empty( $recipient_name ) ) :
@@ -313,7 +313,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								endif;
 							endforeach;
 
-							echo ( ! empty( $recipient_names ) ? implode( ', ', $recipient_names ) : '' );
+							echo implode( ', ', $recipient_names );
 							?>
 						</a>
 					</span>
@@ -326,8 +326,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 						$is_last_sender_suspended = bp_moderation_is_user_suspended( $messages_template->thread->last_sender_id );
 						$is_last_sender_blocked   = bp_moderation_is_user_blocked( $messages_template->thread->last_sender_id );
 					}
-
-					$exerpt = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
+					$exerpt                   = wp_strip_all_tags( bp_create_excerpt( $messages_template->thread->last_message_content, 50, array( 'ending' => '&hellip;' ) ) );
 
 					if ( function_exists( 'buddypress' ) && bp_is_active( 'media' ) ) :
 						if ( bp_is_messages_media_support_enabled() ) :
@@ -336,24 +335,10 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							if ( ! empty( $media_ids ) ) :
 								$media_ids = explode( ',', $media_ids );
 
-								if ( count( $media_ids ) < 2 ) :
+								if ( sizeof( $media_ids ) < 2 ) :
 									$exerpt = __( 'sent a photo', 'buddyboss-theme' );
 								else :
 									$exerpt = __( 'sent some photos', 'buddyboss-theme' );
-								endif;
-							endif;
-						endif;
-
-						if ( function_exists( 'bp_is_messages_video_support_enabled' ) && bp_is_messages_video_support_enabled() ) :
-							$video_ids = bp_messages_get_meta( $last_message_id, 'bp_video_ids', true );
-
-							if ( ! empty( $video_ids ) ) :
-								$video_ids = explode( ',', $video_ids );
-
-								if ( count( $video_ids ) < 2 ) :
-									$exerpt = __( 'sent a video', 'buddyboss-theme' );
-								else :
-									$exerpt = __( 'sent some videos', 'buddyboss-theme' );
 								endif;
 							endif;
 						endif;
@@ -364,7 +349,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 							if ( ! empty( $document_ids ) ) :
 								$document_ids = explode( ',', $document_ids );
 
-								if ( count( $document_ids ) < 2 ) :
+								if ( sizeof( $document_ids ) < 2 ) :
 									$exerpt = __( 'sent a document', 'buddyboss-theme' );
 								else :
 									$exerpt = __( 'sent some documents', 'buddyboss-theme' );
@@ -402,9 +387,7 @@ if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . g
 								$last_sender = __( 'Blocked Member', 'buddyboss-theme' );
 							}
 						}
-						if ( $last_sender ) {
-							echo $last_sender . ': ' . stripslashes_deep( $exerpt );
-						}
+						echo $last_sender . ': ' . stripslashes_deep( $exerpt );
 					}
 					?>
 				</span>
