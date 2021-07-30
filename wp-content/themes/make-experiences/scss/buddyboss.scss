@@ -219,15 +219,13 @@ button.ges-change, button.ges-change:hover {
     }
 }
 
-.bb-media-info-section {
-	a.download-media {
-		padding-bottom: 25px !important;
-		background: $color-blue !important;
-		color: #fff;
-		font-weight: bold;
-	}
+// pdf and media download button
+.bb-media-info-section a.download-media, #buddypress.bb-media-model-wrapper.document-theatre .activity-list.bp-list .download-document{
+	padding-bottom: 25px !important;
+	background: $color-blue !important;
+	color: #fff;
+	font-weight: bold;
 }
-
 
 // nobody needs to know when I was last on the notification page
 .member-request-list-wrap .last-activity { display: none; }
