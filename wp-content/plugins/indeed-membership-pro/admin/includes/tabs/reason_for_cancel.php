@@ -32,32 +32,32 @@ if ( $offset + $limit>$count ){
 
 $items= $reasonDbObject->get( $limit, $offset );
 ?>
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Ultimate Membership Pro - Reason for cancel/delete level', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - Reason for cancel/delete Membership', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Reason for cancel/delete level', 'ihc');?></h2>
-				<p><?php //_e('', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold Reason for cancel/delete Membership', 'ihc');?></h2>
+				<p><?php //esc_html_e('', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_reason_for_cancel_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_reason_for_cancel_enabled');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_reason_for_cancel_enabled" value="<?php echo $data['metas']['ihc_reason_for_cancel_enabled'];?>" id="ihc_reason_for_cancel_enabled" />
 			</div>
 
 			<div class="iump-form-line">
-					<label><?php _e('Predefined values', 'ihc');?></label>
+					<label><?php esc_html_e('Predefined values', 'ihc');?></label>
 					<div>
-							<textarea style="width: 90%; height: 200px;" name="ihc_reason_for_cancel_resons"><?php echo stripslashes($data['metas']['ihc_reason_for_cancel_resons']);?></textarea>
+							<textarea class="ihc-custom-css-box" name="ihc_reason_for_cancel_resons"><?php echo stripslashes($data['metas']['ihc_reason_for_cancel_resons']);?></textarea>
 					</div>
-					<p><?php _e("Write values separated by comma ','.", 'ihc');?></p>
+					<p><?php esc_html_e("Write values separated by comma ','.", 'ihc');?></p>
 			</div>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -66,14 +66,15 @@ $items= $reasonDbObject->get( $limit, $offset );
 </form>
 
 <?php if ( $items ):?>
+	<div class="ihc-admin-user-data-list">
 <table class="wp-list-table widefat fixed tags">
-    <thead style="background: #f1f4f8 !important;    border-bottom: 1px solid #ccc;box-shadow: inset 0px -5px 10px 2px rgba(0,0,0,0.03); line-height: 1.4;">
+    <thead>
       <tr>
-          <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Username', 'ihc' );?></td>
-          <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Level', 'ihc' );?></td>
-          <td style="width: 20%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Action', 'ihc' );?></td>
-          <td style="width: 30%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Reason', 'ihc' );?></td>
-          <td style="width: 10%;font-weight:bold;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e( 'Date', 'ihc' );?></td>
+          <td><?php esc_html_e( 'Username', 'ihc' );?></td>
+          <td><?php esc_html_e( 'Membership', 'ihc' );?></td>
+          <td><?php esc_html_e( 'Action', 'ihc' );?></td>
+          <td><?php esc_html_e( 'Reason', 'ihc' );?></td>
+          <td><?php esc_html_e( 'Date', 'ihc' );?></td>
       </tr>
     </thead>
     <tbody class="ihc-alternate">
@@ -81,13 +82,14 @@ $items= $reasonDbObject->get( $limit, $offset );
             <tr>
                 <td><?php echo $itemData->user_login;?></td>
                 <td><?php echo \Ihc_Db::get_level_name_by_lid( $itemData->lid );?></td>
-                <td><?php echo $itemData->reason;?></td>
                 <td><?php echo $itemData->action_type;?></td>
+                <td><?php echo $itemData->reason;?></td>
                 <td><?php echo date( 'Y-m-d h:i:s', $itemData->action_date );?></td>
             </tr>
         <?php endforeach;?>
     </tbody>
 </table>
+</div>
 <?php endif;?>
 
 <?php if ($pagination):?>

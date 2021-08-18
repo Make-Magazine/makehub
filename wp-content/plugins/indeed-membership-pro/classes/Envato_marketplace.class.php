@@ -18,7 +18,9 @@ class Envato_marketplaces {
 
 
    function __construct($api_key = null) {
-     if ( isset($api_key) ) $this->api_key = $api_key; // allow the user to pass the API key upon instantiation
+     if ( isset($api_key) ){
+        $this->api_key = $api_key; // allow the user to pass the API key upon instantiation
+     }
    }
 
 
@@ -40,7 +42,9 @@ class Envato_marketplaces {
    */
    public function get_api_key()
    {
-      if ( ! isset($this->api_key) ) return 'No API Key is set.';
+      if ( ! isset($this->api_key) ){
+         return 'No API Key is set.';
+      }
       return $this->api_key;
    }
 
@@ -73,11 +77,17 @@ class Envato_marketplaces {
     */
    public function private_user_data($user_name, $set, $purchase_code = null)
    {
-      if ( ! isset($this->api_key) ) exit('You have not set an api key yet. $class->set_api_key(key)');
-      if (! isset($set) ) return 'Missing parameters';
+      if ( ! isset($this->api_key) ){
+         exit('You have not set an api key yet. $class->set_api_key(key)');
+      }
+      if (! isset($set) ){
+         return 'Missing parameters';
+      }
 
       $url = "https://marketplace.envato.com/api/edge/$user_name/$this->api_key/$set";
-      if ( !is_null($purchase_code) ) $url .= ":$purchase_code";
+      if ( !is_null($purchase_code) ){
+         $url .= ":$purchase_code";
+      }
       $url .= '.json';
 
       $result = $this->fetch($url);
@@ -116,11 +126,7 @@ class Envato_marketplaces {
 	$boughtdate = new DateTime($envatoRes->sold_at);
 	$bresult = $boughtdate->format('Y-m-d H:i:s');
 	$sresult = $date->format('Y-m-d H:i:s');
-  /*
-	echo "<pre>";
-	print_r($envatoRes);
-	die('STOP');
-  */
+
 		if (isset($envatoRes->item->name)) {
 				 return $envatoRes;
 				 //return " - Verification Success:  ({$envatoRes->item->name})  -  (Bought Date: {$bresult} )  - (Support Till: {$sresult})";
@@ -285,7 +291,9 @@ class Envato_marketplaces {
 
       echo "<ul class='envato-marketplace-thumbs'> \n";
       foreach($results as $item) : ?>
-      <?php if ( is_null($item) ) break; ?>
+      <?php if ( is_null($item) ){
+         break;
+      } ?>
       <li>
           <a href="<?php echo $item->url . "?ref=$user_name"; ?>" title="<?php echo $item->item;?>">
              <img src="<?php echo $item->thumbnail; ?>" alt="<?php echo $item->item?>">
@@ -335,7 +343,9 @@ class Envato_marketplaces {
    */
    public function search($search_expression, $marketplace_name = '', $type = '', $limit = null)
    {
-      if ( empty($search_expression) ) return false;
+      if ( empty($search_expression) ){
+         return false;
+      }
       # Can't use spaces. Need to replace them with pipes.
       else $search_expression = preg_replace('/\s/', '|', $search_expression);
 
@@ -382,7 +392,7 @@ class Envato_marketplaces {
       // So: http://marketplace.envato.com/api/edge/collection:739793.json
       // Becomes: collection-739793.json
       $cache_path = $this->cache_dir . '/' . str_replace(':', '-', substr(strrchr($url, '/'), 1));
-      $cache_has_expire = TRUE;//$cache_has_expire = $this->has_expired($cache_path);
+      $cache_has_expire = TRUE;
 
       if ( $cache_has_expire ) {
          // get fresh copy
@@ -412,10 +422,14 @@ class Envato_marketplaces {
    */
    public function apply_limit($orig_arr, $limit)
    {
-      if ( !is_int($limit) ) return $orig_arr;
+      if ( !is_int($limit) ){
+         return $orig_arr;
+      }
 
       // Make sure that there are enough items to filter through...
-      if ( $limit > count($orig_arr) ) $limit = count($orig_arr);
+      if ( $limit > count($orig_arr) ){
+         $limit = count($orig_arr);
+      }
 
       $new_arr = array();
       for ( $i = 0; $i <= $limit - 1; $i++ ) {
@@ -432,7 +446,9 @@ class Envato_marketplaces {
    * @return object The results of the curl request.
    */
    protected function curl($url) {
-      if ( empty($url) ) return false;
+      if ( empty($url) ){
+         return false;
+      }
       $ch = curl_init($url);
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	  curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
@@ -452,7 +468,9 @@ class Envato_marketplaces {
    */
    protected function cache_it($cache_path, $data)
    {
-      if ( !isset($data) ) return;
+      if ( !isset($data) ){
+         return;
+      }
       !file_exists($this->cache_dir) && mkdir($this->cache_dir);
       file_put_contents( $cache_path, json_encode($data) );
 
@@ -468,7 +486,9 @@ class Envato_marketplaces {
    */
    protected function has_expired($cache_path, $expires = null)
    {
-      if ( !isset($expires) ) $expires = $this->cache_expires;
+      if ( !isset($expires) ){
+         $expires = $this->cache_expires;
+      }
 
       if ( file_exists($cache_path) ) {
          return time() - $expires * 60 * 60 > filemtime($cache_path);

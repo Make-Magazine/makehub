@@ -2,311 +2,257 @@
 $currency = get_option('ihc_currency');
 echo ihc_inside_dashboard_error_license();
 do_action( "ihc_admin_dashboard_after_top_menu" );
+$ordersObject = new \Indeed\Ihc\Db\Orders();
+$currency = get_option( 'ihc_currency' );
 ?>
-<div style="width: 97%">
-	<div class="ihc-dashboard-title">
+<div>
+	<div class="iump-page-title">
 		Ultimate Membership Pro -
 		<span class="second-text">
-			<?php _e('Dashboard Overall', 'ihc');?>
+			<?php esc_html_e('Dashboard Overall', 'ihc');?>
 		</span>
 	</div>
+<div class="ihc-dashboard-wrapper">
 
+	<div class="ihc-dashboard-row-title"><?php esc_html_e('Last 30 days', 'ihc');?></div>
 	<div class="row-fluid">
 
-		<div class="span3">
-			<div class="ihc-dashboard-top-box">
-				<i class="fa-ihc fa-ihc-dashboard ihc-dashboard-color-1 fa-users-ihc"></i>
-				<div class="stats">
-					<h4>
-						<strong><?php echo ihc_get_users_counts(1);?></strong>
-					</h4>
-					<span><?php _e('Total Users', 'ihc');?></span>
-				</div>
-			</div>
-		</div>
-
-		<div class="span3">
-			<div class="ihc-dashboard-top-box">
-				<i class="fa-ihc fa-ihc-dashboard ihc-dashboard-color-2 fa-levels-ihc"></i>
-				<div class="stats">
-					<h4><strong><?php _e('Top Level', 'ihc');?></strong></h4>
-					<span>
-							<?php
-								$top_level = ihc_get_top_level();
-								if ($top_level) echo $top_level;
-								else _e('N/A', 'ihc');
-							?>
-					</span>
-				</div>
-			</div>
-		</div>
-
-		<div class="span3">
-			<div class="ihc-dashboard-top-box">
-				<i class="fa-ihc fa-ihc-dashboard ihc-dashboard-color-3 fa-payments-ihc"></i>
-				<div class="stats">
-					<h4>
-						<strong>
-							<?php
-								echo ihc_get_transactions_count();
-							?>
-						</strong>
-					</h4>
-					<span><?php _e('Total Number of Transactions', 'ihc');?></span>
-				</div>
-			</div>
-		</div>
-
-		<div class="span3">
-			<div class="ihc-dashboard-top-box">
-				<i class="fa-ihc fa-ihc-dashboard ihc-dashboard-color-4 fa-payment_settings-ihc"></i>
-				<div class="stats">
-					<h4>
-						<strong>
-							<?php
-									echo ihc_get_total_amount() . ' ' . $currency;
-							?>
-						</strong>
-					</h4>
-					<span><?php _e('Total Amount of Transactions', 'ihc');?></span>
-				</div>
-			</div>
-		</div>
-
-	</div>
-
-	<?php
-		$levels_arr =  ihc_get_level_user_counts();
-		$levels_by_transactions = ihc_get_levels_top_by_transactions();
-	?>
-	<div class="row-fluid" style="height: 430px;">
-
-				<div class="span8">
-					<div class="ihc-box-content-dashboard">
-						<div style="padding: 20px;">
-							<div><?php _e('Total Members per Level', 'ihc');?></div>
-						<?php if ($levels_arr){ ?>
-							<div id="ihc-chart-1" class='ihc-flot'></div>
-						<?php } else { ?>
-							<div><h3><?php _e('Not enough data available.', 'ihc');?></h3></div>
-						<?php }?>
-						</div>
-					</div>
-				</div>
 		<div class="span4">
-
-					<div class="ihc-box-content-dashboard">
-						<div style="padding: 20px;">
-							<div><?php _e('Levels By Transactions', 'ihc');?></div>
-							<?php if ($levels_by_transactions){ ?>
-								<div id="ihc-pie-1" class='ihc-flot'></div>
-							<?php }else { ?>
-								<div><h3><?php _e('Not enough data available.', 'ihc');?></h3></div>
-						<?php }?>
-						</div>
-					</div>
-		</div>
-	</div>
-
-	<div class="row-fluid">
-		<div class="span6">
-			<div class="ihc-box-content-dashboard ihc-color-box-green">
-				<div style="padding: 20px;">
-					<div class="info-title">
-						<i class="fa-ihc fa-list-ihc"></i>
-						<div style="display:inline-block;">
-							<?php _e('Last 5 Registered Users:', 'ihc');?>
-						</div>
-					</div>
-					<div class="ihc-pops-list">
-					<?php
-						$users = ihc_get_last_five_users();
-						if ($users){
-						?>
-							<ul>
-								<?php
-								foreach ($users as $user){
-									?>
-										<li>
-											<i class="fa-ihc ihc-icon-pop-list"></i>
-											<div class="list-cont">
-												<a href="<?php echo $url.'&tab=users&ihc-edit-user='.$user->data->ID;?>">
-													<?php
-														echo $user->data->user_login;
-													?>
-												</a>
-											</div>
-											<span>
-												<?php
-													if (isset($user->user_registered) && $user->user_registered){
-														?>
-														<?php _e('Register on', 'ihc');?> <?php echo $user->user_registered;?>
-														<?php
-													}
-												?>
-											</span>
-										</li>
-									<?php
-									}
-								?>
-							</ul>
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-users-ihc"></i>
+					<div class="ihc-dashboard-stats">
 						<?php
-						} else { ?>
-							<div><h3 style="color:#fff;"><?php _e('Not Registered Users available.', 'ihc');?></h3></div>
-					<?php }
-					?>
+								$percentage = false;
+								$start = time() - 30*24*60*60;// 30days
+								$end = time();
+								$lastThirty = \Indeed\Ihc\Db\Users::countInInterval( $start, $end );
+
+								$start = time() - 60*24*60*60;// 60days
+								$end = time() - 30*24*60*60;// 30days
+								$beforeLastThirty = \Indeed\Ihc\Db\Users::countInInterval( $start, $end );
+
+								if ( $beforeLastThirty > 0 ){
+										$percentage = $beforeLastThirty / 100;
+										$percentage = $lastThirty / $percentage;
+										$percentage = round( $percentage, 1 );
+										$percentage = $percentage - 100;
+								}
+						?>
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Members', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php echo $lastThirty;?></span>
+							<?php if ( $percentage !== false ):?>
+								<?php $extraClass = $percentage > -0.01 ? 'ihc-dashboard-stats-trendup' : 'ihc-dashboard-stats-trenddown';?>
+								<span class="ihc-dashboard-stats-trend <?php echo $extraClass;?>">
+									<i class="fa-ihc fa-arrow-ihc"></i>
+									<?php echo $percentage;?>
+									<span>%</span>
+								</span>
+							<?php endif;?>
 					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=users' );?>"><?php esc_html_e('View all', 'ihc');?></a>
 				</div>
 			</div>
 		</div>
-		<?php
 
-			$approved_users = ihc_get_users_counts(3);
-			$pending_users = ihc_get_users_counts(2);
-				?>
-				<div class="span6">
-					<div class="ihc-box-content-dashboard">
-						<div style="padding: 20px;">
-							<div class="info-title">
-								<i class="fa-ihc fa-list-ihc"></i>
-								<div style="display:inline-block;">
-									<?php _e('Last 5 Transactions:', 'ihc');?>
-								</div>
-							</div>
-								<div class="ihc-pops-list">
-									<ul>
-									<?php
-									if ($approved_users || $pending_users){
+		<div class="span4">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-levels-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<?php
+								$percentage = false;
+								$start = time() - 30*24*60*60;// 30days
+								$end = time();
+								$lastThirty = \Indeed\Ihc\UserSubscriptions::countInInterval( $start, $end );
 
-										$last_five = ihc_get_last_five_transactions();
-										if ($last_five){
-											foreach ($last_five as $obj){
-												?>
-												<li>
-													<i class="fa-ihc ihc-icon-pop-list-black"></i>
-													<div class="list-cont"><?php
-															$user_info = get_userdata($obj->u_id);
-															$first_name = get_user_meta($obj->u_id, 'first_name', true);
-															$last_name = get_user_meta($obj->u_id, 'last_name', true);
-															if($first_name || $last_name){
-																echo $first_name .' '.$last_name;
-															}else{
-																if (isset($user_info->user_nicename)){
-																	echo $user_info->user_nicename;
-																}else{
-																	_e('Unknown Name', 'ihc');
-																}
-															}
-															$payment_data = json_decode($obj->payment_data, true);
-															if (!empty($payment_data['mc_gross'])){
-																echo ' ' . $payment_data['mc_gross'].$payment_data['mc_currency'];
-															}
+								$start = time() - 60*24*60*60;// 60days
+								$end = time() - 30*24*60*60;// 30days
+								$beforeLastThirty = \Indeed\Ihc\UserSubscriptions::countInInterval( $start, $end );
 
-														?></div>
-													<span style="color: #c9c9c9;"><?php _e('Payment on', 'ihc');?> <?php echo $obj->paydate;?></span>
-												</li>
-												<?php
-											}
-										} else { echo '<div><h3>' . __('Not enough data available.', 'ihc') . '</h3></div>'; }
-									}else { echo '<div><h3>' . __('Not enough data available.', 'ihc') . '</h3></div>'; }
+								if ( $beforeLastThirty > 0 ){
+										$percentage = $beforeLastThirty / 100;
+										$percentage = $lastThirty / $percentage;
+										$percentage = round( $percentage, 1 );
+										$percentage = $percentage - 100;
+								}
+						?>
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Memberships', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php echo $lastThirty;?></span>
 
-									?>
-									</ul>
-							</div>
-						</div>
+						<?php if ( $percentage !== false ):?>
+							<?php $extraClass = $percentage > -0.01 ? 'ihc-dashboard-stats-trendup' : 'ihc-dashboard-stats-trenddown';?>
+							<span class="ihc-dashboard-stats-trend <?php echo $extraClass;?>">
+								<i class="fa-ihc fa-arrow-ihc"></i>
+								<?php echo $percentage;?>
+								<span>%</span>
+							</span>
+						<?php endif;?>
+
 					</div>
 				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=users' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
 
+		<div class="span4">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-payment_settings-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<?php
+								$percentage = false;
+								$start = time() - 30*24*60*60;// 30days
+								$end = time();
+								$lastThirty = $ordersObject->getTotalAmountInInterval( $start, $end );
+
+								$start = time() - 60*24*60*60;// 60days
+								$end = time() - 30*24*60*60;// 30days
+								$beforeLastThirty = $ordersObject->getTotalAmountInInterval( $start, $end );
+								if ( $beforeLastThirty > 0 ){
+										$percentage = $beforeLastThirty / 100;
+										$percentage = $lastThirty / $percentage;
+										$percentage = round( $percentage, 1 );
+										$percentage = $percentage - 100;
+								}
+						?>
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Earnings', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php echo ihc_format_price_and_currency( $currency, $lastThirty );?></span>
+						<?php if ( $percentage !== false ):?>
+							<?php $extraClass = $percentage > -0.01 ? 'ihc-dashboard-stats-trendup' : 'ihc-dashboard-stats-trenddown';?>
+							<span class="ihc-dashboard-stats-trend <?php echo $extraClass;?>">
+								<i class="fa-ihc fa-arrow-ihc"></i>
+								<?php echo $percentage;?>
+								<span>%</span>
+							</span>
+						<?php endif;?>
+					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=orders' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="ihc-dashboard-row-title"><?php esc_html_e('All-time', 'ihc');?></div>
+	<div class="row-fluid">
+
+		<div class="span3">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-users-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Members', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php echo \Indeed\Ihc\Db\Users::countAll();?></span>
+					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=users' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="span3">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-levels-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Memberships', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php echo \Indeed\Ihc\UserSubscriptions::getCount();?></span>
+					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=users' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="span3">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-payment_settings-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Earnings', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php
+									echo ihc_format_price_and_currency( $currency, $ordersObject->getTotalAmount() );
+							?></span>
+					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=orders' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="span3">
+			<div class="ihc-dashboard-box-wrapper">
+				<div class="ihc-dashboard-box-top-section">
+					<i class="fa-ihc fa-ihc-dashboard fa-payments-ihc"></i>
+					<div class="ihc-dashboard-stats">
+						<div class="ihc-dashboard-stats-title"><?php esc_html_e('Orders', 'ihc');?></div>
+						<span class="ihc-dashboard-stats-count"><?php	echo $ordersObject->getCountAll();?></span>
+					</div>
+				</div>
+				<div class="ihc-dashboard-box-bottom-section">
+					<a href="<?php echo admin_url( 'admin.php?page=ihc_manage&tab=orders' );?>"><?php esc_html_e('View all', 'ihc');?></a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<div class="ihc-dashboard-row-title"><?php esc_html_e('Overall Earnings', 'ihc');?></div>
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="ihc-dashboard-earnings-graph-wrapper">
+					<?php
+							$timePassed = $ordersObject->getFirstOrderDaysPassed();
+
+							$startTime = time() - $timePassed * 24 * 60 * 60;
+
+							if ( $timePassed < 31 ){
+									// days
+									$earnings_arr = $ordersObject->getTotalAmountInLastTime( $startTime, 'days' );
+							} else if ( $timePassed > 30 && $timePassed < 181 ){
+									// weeks
+									$earnings_arr = $ordersObject->getTotalAmountInLastTime( $startTime, 'weeks' );
+							} else if ( $timePassed > 180 && $timePassed < 721 ){
+									// months
+									$earnings_arr = $ordersObject->getTotalAmountInLastTime( $startTime, 'months' );
+							} else if ( $timePassed > 720 ){
+									// years
+									$earnings_arr = $ordersObject->getTotalAmountInLastTime( $startTime, 'years' );
+							}
+							if ( count( $earnings_arr ) > 18 ){
+									$extraClass = 'flot-tick-label-rotate';
+							} else {
+									$extraClass =  '';
+							}
+					?>
+					<div id="ihc-chart-earnings" class='ihc-flot <?php echo $extraClass;?>'></div>
+
+					<?php if ($earnings_arr):	?>
+							<?php foreach ( $earnings_arr as $k => $v ):?>
+									<?php
+											$date = $v->the_time;
+											$sum = $v->sum_value;
+									?>
+									<span class="ihc-js-dashboard-earnings-data" data-date="<?php echo $date;?>" data-sum="<?php echo $sum;?>"></span>
+							<?php endforeach;?>
+					<?php endif;?>
+
+			</div>
+		</div>
 	</div>
 
 </div>
-<script>
 
-<?php
 
-	if ($levels_arr){
-		?>
-		if (jQuery("#ihc-chart-1").length > 0) {
-			var ihc_ticks = [];
-			var ihc_chart_stats = [];
-		<?php
-		$i = 0;
-		foreach ($levels_arr as $k=>$v){
-			if(strlen($k) >= 11) {
-				$k = substr($k, 0, 11);
-			}
-			echo 'ihc_ticks['.$i.']=['.$i.', "'.$k.'"];';
-			echo 'ihc_chart_stats['.$i.']={0:'.$i.',1:'.$v.'};';
-			$i++;
-		}
-		if (count($levels_arr)<10){
-			for($j=count($levels_arr);$j<11;$j++){
-			echo 'ihc_ticks['.$i.']=['.$i.', ""];';
-			echo 'ihc_chart_stats['.$i.']={0:'.$i.',1:0};';
-			$i++;
-			}
-		}
-		?>
-		var options = {
-			    bars: { show: true, barWidth: 0.75, fillColor: '#7ebffc', lineWidth: 0 },
-				grid: { hoverable: false, backgroundColor: "#fff", minBorderMargin: 0,  borderWidth: {top: 0, right: 0, bottom: 1, left: 1}, borderColor: "#aaa" },
-				xaxis: { ticks: ihc_ticks, tickLength:0 },
-				yaxis: { tickDecimals: 0, tickColor: "#eee"},
-				legend: {
-				    show: true,
-				    position: "ne",
-				    }
-			  };
-			jQuery.plot(jQuery("#ihc-chart-1"), [ {
-				color: "#669ccf",
-				data: ihc_chart_stats,
-			} ], options
-			);
-		}
-		<?php
-	}
-
-	if ($levels_by_transactions){
-		?>
-			if (jQuery("#ihc-pie-1").length > 0) {
-				var d = [];
-		<?php
-		$i = 0;
-
-		///generate colors for pie
-		$colors = array('#fa8564', '#9972b5', '#1fb5ac', '#ffc333', '#466baf', '#FDB45C');
-		if (count($levels_by_transactions)>count($colors)){
-			for($j=count($colors);$j<count($levels_by_transactions);$j++){
-				$color = ihc_generate_color();
-				if (!in_array($color, $colors)){
-					$colors[] = $color;
-				} else {
-					do {
-						$color = ihc_generate_color();
-					} while (in_array($color, $colors));
-					$colors[] = $color;
-				}
-			}
-		}
-
-		foreach ($levels_by_transactions as $k=>$v){
-			?>
-				d[<?php echo $i;?>] = { label: '<?php echo $k;?>', data: "<?php echo $v;?>",  color: '<?php echo $colors[$i];?>'};//, color: 'if(isset($colors[$i])) echo $colors[$i];'
-			<?php
-			$i++;
-		}
-		?>
-			//console.log(d);
-			jQuery.plot(jQuery("#ihc-pie-1"), d, {
-				series: {
-			        pie: {
-			            show: true,
-			        },
-			    },
-			});
-			}
-		<?php
-	}
-?>
-</script>
+</div>
 <?php

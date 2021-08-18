@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Backend Functions
+*/
+"use strict";
 function setAddVal(id, target){
 	var value;
 	switch(jQuery(id).val()){
@@ -48,14 +52,14 @@ function setAddVal(id, target){
 
 
 function ihcMakeInputhString(divCheck, showValue, hiddenInputId){
-    str = jQuery(hiddenInputId).val();
+    var str = jQuery(hiddenInputId).val();
     if (str==-1){
 				str = '';
 		}
     if (str!=''){
-				showArr = str.split(',');
+				var showArr = str.split(',');
 		} else {
-			  showArr = new Array();
+			  var showArr = new Array();
 		}
     if (jQuery(divCheck).is(':checked')){
         show_arr.push(showValue);
@@ -100,165 +104,188 @@ function ihcLoginPreview(){
 }
 
 function ihcWriteTagValue(id, hiddenId, viewDivId, prevDivPrefix){
-    if(id.value==-1) return;
-    hidden_i = jQuery(hiddenId).val();
+    if ( id.value==-1 ){
+				return;
+		}
+    var hidden_i = jQuery(hiddenId).val();
 
-    if(hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if (hidden_i!=''){
+				var show_arr = hidden_i.split(',');
+		} else {
+				var show_arr = new Array();
+		}
 
-    if(show_arr.indexOf(id.value)==-1){
+    if ( show_arr.indexOf( id.value ) == -1 ){
         show_arr.push(id.value);
-
-	    str = show_arr.join(',');
-	    jQuery(hiddenId).val(str);
-
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
+		    var str = show_arr.join(',');
+		    jQuery(hiddenId).val(str);
+				var label = jQuery(id).find("option:selected").text();
+				jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
     }
 
     jQuery(id).val(-1);
 }
 
 function ihcWriteTagValueForEditPost(id, hiddenId, viewDivId, prevDivPrefix){
-    if(id.value==-1) return;
-    hidden_i = jQuery(hiddenId).val();
+    if ( id.value == -1 ){
+			return;
+		}
+    var hidden_i = jQuery(hiddenId).val();
 
-    if(hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if (hidden_i!=''){
+				var show_arr = hidden_i.split(',');
+		} else {
+				var show_arr = new Array();
+		}
 
-    if(show_arr.indexOf(id.value)==-1){
+    if ( show_arr.indexOf( id.value ) == -1 ){
         show_arr.push(id.value);
 
-	    str = show_arr.join(',');
-	    jQuery(hiddenId).val(str);
+		    var str = show_arr.join(',');
+		    jQuery(hiddenId).val(str);
 
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
+				var label = jQuery(id).find("option:selected").text();
+				jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
 
-		//drip
-		jQuery('#ihc_drip_content_list_targets').append('<div id="ihc_drip_target-'+id.value+'">'+label+'</div>');
-		if (jQuery('#ihc_mb_type').val()=='show'){
-			jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
-			jQuery('#ihc_drip_content_meta_box').css('display', 'block');
-		}
+				//drip
+				jQuery('#ihc_drip_content_list_targets').append('<div id="ihc_drip_target-'+id.value+'">'+label+'</div>');
+				if (jQuery('#ihc_mb_type').val()=='show'){
+					jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
+					jQuery('#ihc_drip_content_meta_box').css('display', 'block');
+				}
     }
     jQuery(id).val(-1);
 }
 
 function ihcWriteLevelTagValue(id, hiddenId, viewDivId, prevDivPrefix){
-    if (id.value==-2) return;
-    hidden_i = jQuery(hiddenId).val();
+    if (id.value==-2){
+			 	return;
+		}
+    var hidden_i = jQuery(hiddenId).val();
 
-    if (hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if ( hidden_i != '' ){
+				var show_arr = hidden_i.split(',');
+		} else {
+				var show_arr = new Array();
+		}
 
     if (show_arr.indexOf(id.value)==-1){
         show_arr.push(id.value);
 
-	    str = show_arr.join(',');
-	    jQuery(hiddenId).val(str);
+		    var str = show_arr.join(',');
+		    jQuery(hiddenId).val(str);
 
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
+				var label = jQuery(id).find("option:selected").text();
+				jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
 
-		//drip
-		jQuery('#ihc_drip_content_list_targets').append('<div id="ihc_drip_target-'+id.value+'">'+label+'</div>');
-		if (jQuery('#ihc_mb_type').val()=='show'){
-			jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
-			jQuery('#ihc_drip_content_meta_box').css('display', 'block');
-		}
+				//drip
+				jQuery('#ihc_drip_content_list_targets').append('<div id="ihc_drip_target-'+id.value+'">'+label+'</div>');
+				if (jQuery('#ihc_mb_type').val()=='show'){
+						jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
+						jQuery('#ihc_drip_content_meta_box').css('display', 'block');
+				}
     }
     jQuery(id).val(-2);
 }
 
 function ihcremoveTagForEditPost(removeVal, prevDivPrefix, hiddenId){
-	jQuery(prevDivPrefix+removeVal).fadeOut(200, function(){
-		jQuery(this).remove();
-	});
-
-    hidden_i = jQuery(hiddenId).val();
-    show_arr = hidden_i.split(',');
-
-    show_arr = removeArrayElement(removeVal, show_arr);
-    str = show_arr.join(',');
-	jQuery(hiddenId).val(str);
-
-	//drip
-	jQuery('#ihc_drip_target-'+removeVal).remove();
-	if (str==''){
-		jQuery('#ihc_drip_content_meta_box').fadeOut(300, function(){
-			jQuery('#ihc_drip_content_empty_meta_box').css('display', 'block');
+		jQuery(prevDivPrefix+removeVal).fadeOut(200, function(){
+			jQuery(this).remove();
 		});
-	}
+
+    var hidden_i = jQuery(hiddenId).val();
+    var show_arr = hidden_i.split(',');
+
+    var show_arr = removeArrayElement(removeVal, show_arr);
+    var str = show_arr.join(',');
+		jQuery(hiddenId).val(str);
+
+		//drip
+		jQuery('#ihc_drip_target-'+removeVal).remove();
+		if (str==''){
+			jQuery('#ihc_drip_content_meta_box').fadeOut(300, function(){
+				jQuery('#ihc_drip_content_empty_meta_box').css('display', 'block');
+			});
+		}
 }
 
 function ihcWriteTagValueCfl(id, hiddenId, viewDivId, prevDivPrefix){
-    if(id.value==-2) return;
-    hidden_i = jQuery(hiddenId).val();
+    if ( id.value==-2 ){
+				return;
+		}
+    var hidden_i = jQuery(hiddenId).val();
 
-    if(hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if ( hidden_i != '' ){
+				var show_arr = hidden_i.split(',');
+		} else {
+				var show_arr = new Array();
+		}
 
-    if(show_arr.indexOf(id.value)==-1){
+    if ( show_arr.indexOf(id.value) == -1 ){
         show_arr.push(id.value);
 
-	    str = show_arr.join(',');
-	    jQuery(hiddenId).val(str);
+		    var str = show_arr.join(',');
+		    jQuery(hiddenId).val(str);
 
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
+				var label = jQuery(id).find("option:selected").text();
+				jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
     }
 
     jQuery(id).val(-2);
 }
 
 function ihcWriteTagValueListUsers(id, hiddenId, viewDivId, prevDivPrefix){
-    if(id.value==-1) return;
-    hidden_i = jQuery(hiddenId).val();
+    if (id.value==-1){
+			 	return;
+		}
+    var hidden_i = jQuery(hiddenId).val();
 
-    if(hidden_i!='') show_arr = hidden_i.split(',');
-    else show_arr = new Array();
+    if ( hidden_i != '' ){
+				var show_arr = hidden_i.split(',');
+		} else {
+				var show_arr = new Array();
+		}
 
-    if(show_arr.indexOf(id.value)==-1){
+    if ( show_arr.indexOf(id.value) == -1 ){
         show_arr.push(id.value);
 
-	    str = show_arr.join(',');
-	    jQuery(hiddenId).val(str);
+		    var str = show_arr.join(',');
+		    jQuery(hiddenId).val(str);
 
-		label = jQuery(id).find("option:selected").text();
-		jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');ihcPreviewUList();" title="Removing tag">x</div></div>');
+				var label = jQuery(id).find("option:selected").text();
+				jQuery(viewDivId).append('<div id="'+prevDivPrefix+id.value+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcremoveTag(\''+id.value+'\', \'#'+prevDivPrefix+'\', \''+hiddenId+'\');ihcPreviewUList();" title="Removing tag">x</div></div>');
     }
 
     jQuery(id).val(-1);
 }
 
 function ihcShowHideDrip(){
-	if (jQuery('#ihc_mb_type').val()=='show'){
-		jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
-		jQuery('#ihc_drip_content_meta_box').css('display', 'block');
-	} else {
-		jQuery('#ihc_drip_content_empty_meta_box').css('display', 'block');
-		jQuery('#ihc_drip_content_meta_box').css('display', 'none');
-	}
+		if (jQuery('#ihc_mb_type').val()=='show'){
+				jQuery('#ihc_drip_content_empty_meta_box').css('display', 'none');
+				jQuery('#ihc_drip_content_meta_box').css('display', 'block');
+		} else {
+				jQuery('#ihc_drip_content_empty_meta_box').css('display', 'block');
+				jQuery('#ihc_drip_content_meta_box').css('display', 'none');
+		}
 }
 
 function ihcremoveTag(removeVal, prevDivPrefix, hiddenId){
-	jQuery(prevDivPrefix+removeVal).fadeOut(200, function(){
-		jQuery(this).remove();
-	});
+		jQuery(prevDivPrefix+removeVal).fadeOut(200, function(){
+				jQuery(this).remove();
+		});
 
-    hidden_i = jQuery(hiddenId).val();
-    show_arr = hidden_i.split(',');
+    var hidden_i = jQuery(hiddenId).val();
+    var show_arr = hidden_i.split(',');
 
     show_arr = removeArrayElement(removeVal, show_arr);
-    str = show_arr.join(',');
-	jQuery(hiddenId).val(str);
+    var str = show_arr.join(',');
+		jQuery(hiddenId).val(str);
 }
 
 function removeArrayElement(elem, arr){
-	for (i=0;i<arr.length;i++) {
-	    if(arr[i]==elem){
-	    	arr.splice(i, 1);
+	for ( var i=0; i<arr.length; i++ ) {
+	    if ( arr[i] == elem ){
+	    		arr.splice(i, 1);
 	    }
 	}
 	return arr;
@@ -268,12 +295,12 @@ function ihcRedirectReplaceDd(v){
 	var replace_id = '#ihc-meta-box-replace';
 	var redirect_id = '#ihc-meta-box-redirect';
 	var hidden_replace_content = '#ihc_replace_content';
-	if(v=='redirect'){
+	if ( v == 'redirect' ){
 		jQuery(replace_id).attr('class', 'ihc-display-none');
 		jQuery(redirect_id).attr('class', 'ihc-display-block');
 		//hide the replace content editor
 		jQuery(hidden_replace_content).fadeOut(300);
-	}else{
+	} else {
 		jQuery(redirect_id).attr('class', 'ihc-display-none');
 		jQuery(replace_id).attr('class', 'ihc-display-block');
 		//hide the replace content editor
@@ -282,17 +309,17 @@ function ihcRedirectReplaceDd(v){
 }
 
 jQuery('#ihc_locker_custom_content').on('blur', function(){
-	ihcLockerPreview();
+		ihcLockerPreview();
 });
 
 function ihcUpdateTextarea(){
-    content = jQuery( "#ihc_locker_custom_content_ifr" ).contents().find( '#tinymce' ).html();
+    var content = jQuery( "#ihc_locker_custom_content_ifr" ).contents().find( '#tinymce' ).html();
     jQuery('#ihc_locker_custom_content').val(content);
     ihcLockerPreview();
 }
 
 function ihcLockerPreview(){
-	//preview locker based of current selections
+	  //preview locker based of current selections
    	jQuery.ajax({
         type : "post",
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
@@ -305,18 +332,18 @@ function ihcLockerPreview(){
                    ihc_locker_custom_content: jQuery('#ihc_locker_custom_content').val(),
                    ihc_locker_custom_css: jQuery('#ihc_locker_custom_css').val(),
                    ihc_locker_display_sm: jQuery('#ihc_locker_display_sm').val(),
-               },
+        },
         success: function (response) {
-        	jQuery('#locker-preview').fadeOut(200, function(){
-        		jQuery(this).html(response);
-        		jQuery(this).fadeIn(400);
-        	});
+	        	jQuery('#locker-preview').fadeOut(200, function(){
+		        		jQuery(this).html(response);
+		        		jQuery(this).fadeIn(400);
+	        	});
         }
    });
 }
 
 function ihcLockerPreviewWi(id, popupDisplay){
-	if(id==-1){
+	if ( id == -1 ){
 		return;
 	}
 	//preview locker based on id
@@ -324,9 +351,10 @@ function ihcLockerPreviewWi(id, popupDisplay){
         type : "post",
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
         data : {
-                   action: 'ihc_locker_preview_ajax',
-                   locker_id: id,
-                   popup_display: popupDisplay,
+                   action					: 'ihc_locker_preview_ajax',
+                   locker_id			: id,
+                   popup_display	: popupDisplay,
+									 nonce					: jQuery('meta[name="ump-admin-token"]').attr("content")
                },
         success: function (response) {
         	if (popupDisplay){
@@ -343,85 +371,38 @@ function ihcLockerPreviewWi(id, popupDisplay){
 }
 
 function ihcReq(id, n){
-	if(!jQuery(id).is(':checked')){
-		jQuery('#req-check-'+n).removeAttr('checked');
-		jQuery('#ihc-require-'+n).val(0);
+	if ( !jQuery(id).is(':checked') ){
+			jQuery('#req-check-'+n).removeAttr('checked');
+			jQuery('#ihc-require-'+n).val(0);
 	}
 }
 
-jQuery(document).ready(function(){
-	jQuery('#ihc-register-fields-table tbody').sortable({
-		 update: function(e, ui) {
-		        jQuery('#ihc-register-fields-table tbody tr').each(function (i, row) {
-		        	id = jQuery(this).attr('id');
-		        	var newindex = jQuery("#ihc-register-fields-table tbody tr").index(jQuery('#'+id));
-		        	jQuery('#'+id+' .ihc-order').val(newindex);
-		        });
-		    }
-	});
-
-	jQuery('#ihc-levels-table tbody').sortable({
-		 disabled: true,
-		 update: function(e, ui) {
-			 	arr = new Array();i = 0;
-			 	jQuery('#ihc-levels-table tbody tr').each(function (i, row) {
-
-			 		id = jQuery(this).attr('id');
-			 		if(id){
-			        	//var new_index = jQuery("#ihc-levels-table tbody tr").index(jQuery('#'+id));
-			        	var level_id = jQuery('#'+id+' .ihc-hidden-level-id').val();
-			        	arr.push(level_id);
-			        	//arr[i]['id'] = level_id;
-			        	//arr[i]['order'] = new_index;
-			 		}
-		        	i++;
-		        });
-			 	j = false;
-			 	j = JSON.stringify(arr);
-		        if (j){
-		           	jQuery.ajax({
-		                type : 'post',
-		                url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-		                data : {
-		                           action: 'ihc_reorder_levels',
-		                           json_data: j,
-		                       },
-		                success: function (response) {
-							console.log(response);
-		                }
-		           });
-		        }
-		    }
-	});
-});
-
 function ihcSortableOnOff(i, selector){
-	if (window.ihc_sortable){
-		//disable
-		jQuery( selector ).sortable( "disable" );
-		jQuery( i ).attr('class', 'ihc-sortable-off');
-		jQuery(selector).css('cursor', '');
-		jQuery(selector).css('opacity', '1');
-		jQuery('#ihc-reorder-msg').fadeOut(200);
-		window.ihc_sortable = 0;
-	} else {
-		//enable
-		jQuery( selector ).sortable( "enable" );
-		jQuery( i ).attr('class', 'ihc-sortable-on');
-		jQuery(selector).css('cursor', 'move');
-		jQuery(selector).css('opacity', '0.7');
-		jQuery('#ihc-reorder-msg').fadeIn(200);
-		window.ihc_sortable = 1;
-	}
-
+		if (window.ihc_sortable){
+			//disable
+			jQuery( selector ).sortable( "disable" );
+			jQuery( i ).attr('class', 'ihc-sortable-off');
+			jQuery(selector).css('cursor', '');
+			jQuery(selector).css('opacity', '1');
+			jQuery('#ihc-reorder-msg').fadeOut(200);
+			window.ihc_sortable = 0;
+		} else {
+			//enable
+			jQuery( selector ).sortable( "enable" );
+			jQuery( i ).attr('class', 'ihc-sortable-on');
+			jQuery(selector).css('cursor', 'move');
+			jQuery(selector).css('opacity', '0.7');
+			jQuery('#ihc-reorder-msg').fadeIn(200);
+			window.ihc_sortable = 1;
+		}
 }
 
 function ihcSelectAllCheckboxes(check, selector){
-	if(jQuery(check).is(':checked')){
+	if (jQuery(check).is(':checked')){
 		jQuery(selector).each(function(){
 			jQuery(this).attr('checked', 'checked');
 		});
-	}else{
+	} else {
 		jQuery(selector).each(function(){
 			jQuery(this).removeAttr('checked');
 		});
@@ -458,33 +439,25 @@ function ihcDeleteUserPrompot(i){
 						jQuery('#ihc_user_id_'+i).fadeOut(200);
 					}
 		 });
-	 });
-
+	 }
+ 	);
 }
 
 function ihcFirstConfirm(m){
-	/*
-	var c = confirm(m);
-	if (c){
-		return true;
-	} else {
-		return false;
-	}
-*/
-	swal({
-		title: m,
-		text: "",
-		type: "warning",
-		showCancelButton: true,
-		confirmButtonClass: "btn-danger",
-		confirmButtonText: "OK",
-		closeOnConfirm: true
-	},
-	function(){
-		return true;
- });
-
+		swal({
+			title: m,
+			text: "",
+			type: "warning",
+			showCancelButton: true,
+			confirmButtonClass: "btn-danger",
+			confirmButtonText: "OK",
+			closeOnConfirm: true
+		},
+		function(){
+			return true;
+	 });
 }
+
 function ihcFirstConfirmBeforeSubmitForm(m){
 		swal({
 				title: m,
@@ -497,7 +470,6 @@ function ihcFirstConfirmBeforeSubmitForm(m){
 			},
 			function(){
 				jQuery("form[name='ihc-users']").submit();
-				//return true;
 	 	});
 }
 
@@ -517,19 +489,20 @@ function indeedConfirmAndRedirect(url){
 }
 
 function ihcRegisterLockerPreview(){
-	//preview locker based of current selections
+	  // preview locker based of current selections
    	jQuery.ajax({
         type : 'post',
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
         data : {
-                   action: 'ihc_register_preview_ajax',
-                   template: jQuery('#ihc_register_template').val(),
-                   custom_css: jQuery('#ihc_register_custom_css').val(),
+
+                   action				: 'ihc_register_preview_ajax',
+                   template			: jQuery('#ihc_register_template').val(),
+                   custom_css		: jQuery('#ihc_register_custom_css').val(),
                },
         success: function (response) {
         	jQuery('#register_preview').fadeOut(200, function(){
-        		jQuery(this).html(response);
-        		jQuery(this).fadeIn(400);
+	        		jQuery(this).html(response);
+	        		jQuery(this).fadeIn(400);
         	});
         }
    });
@@ -537,9 +510,9 @@ function ihcRegisterLockerPreview(){
 
 function ihcSelectShDiv(s, target, value){
 	if (jQuery(s).val()==value){
-		jQuery(target).fadeIn(300, function(){
-			jQuery(this).css('display', 'block');
-		});
+			jQuery(target).fadeIn(300, function(){
+					jQuery(this).css('display', 'block');
+			});
 	} else {
 		jQuery(target).fadeOut(300, function(){
 			jQuery(this).css('display', 'none');
@@ -557,8 +530,8 @@ function ihcApproveUser(id){
                },
         success: function (response) {
         	jQuery('#user-'+id+'-status').fadeOut(200, function(){
-        		the_span_style = 'background-color: #f1f1f1;color: #666;padding: 3px 0px;font-size: 10px;font-weight: bold;display: inline-block; min-width: 70px; border: 1px solid #ddd;border-radius: 3px;text-align: center; text-transform: capitalize;';
-        		jQuery(this).html('<span style="'+the_span_style+'">'+response+'</span>');
+        		var the_span_styl = 'ihc-approve-user-span';
+        		jQuery(this).html('<span class="'+the_span_styl+'">'+response+'</span>');
         		jQuery(this).fadeIn(200);
         		jQuery('#approveUserLNK'+id).fadeOut(200, function(){
         			jQuery(this).html('');
@@ -573,18 +546,18 @@ function ihcApproveEmail(id, new_label){
         type : 'post',
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
         data : {
-                   action: 'ihc_approve_user_email',
-                   uid: id,
+                   action			: 'ihc_approve_user_email',
+                   uid				: id,
                },
         success: function (response) {
         	jQuery('#user_email_'+id+'_status').fadeOut(200, function(){
-        		the_span_style = 'background-color: #f1f1f1;color: #666;padding: 3px 0px;font-size: 10px;font-weight: bold;display: inline-block; min-width: 70px; border: 1px solid #ddd;border-radius: 3px;text-align: center;';
-        		jQuery(this).html('<span style="'+the_span_style+'">'+new_label+'</span>');
-        		jQuery(this).fadeIn(200);
+	        		var the_span_styl = 'ihc-approve-email-span';
+	        		jQuery(this).html('<span class="'+the_span_styl+'">'+new_label+'</span>');
+	        		jQuery(this).fadeIn(200);
 
-        		jQuery('#approve_email_'+id).fadeOut(200, function(){
-        			jQuery(this).html('');
-        		});
+	        		jQuery('#approve_email_'+id).fadeOut(200, function(){
+	        				jQuery(this).html('');
+	        		});
         	});
         }
    });
@@ -600,10 +573,10 @@ function ihcPreviewSelectLevels(){
                    custom_css: jQuery('#ihc_select_level_custom_css').val()
                },
         success: function (response) {
-        	jQuery('#ihc_preview_levels').fadeOut(200, function(){
-        		jQuery(this).html(response);
-        		jQuery(this).fadeIn(200);
-        	});
+	        	jQuery('#ihc_preview_levels').fadeOut(200, function(){
+		        		jQuery(this).html(response);
+		        		jQuery(this).fadeIn(200);
+	        	});
         }
    });
 }
@@ -624,7 +597,7 @@ function ihcConnectAweber(t){
 }
 
 function ihcGetCcList( ihc_cc_user,ihc_cc_pass ){
-    jQuery("#ihc_cc_list").find('option').remove();
+  jQuery("#ihc_cc_list").find('option').remove();
 	jQuery.ajax({
             type : "post",
 			dataType: 'JSON',
@@ -635,21 +608,22 @@ function ihcGetCcList( ihc_cc_user,ihc_cc_pass ){
                     ihc_cc_pass: jQuery( ihc_cc_pass ).val()
             },
             success: function (data) {
-					jQuery.each(data, function(i, option){
-						jQuery("<option/>").val(i).text(option.name).appendTo("#ihc_cc_list");
-					});
-			}
+								jQuery.each(data, function(i, option){
+										jQuery("<option/>").val(i).text(option.name).appendTo("#ihc_cc_list");
+								});
+						}
     });
 }
 
 function ihcAccessPaymentType(v){
 	var arr = ['#limited_access_metas','#date_interval_access_metas','#regular_period_access_metas', '#set_expired_level'];
-	for (i=0;i<arr.length;i++) {
+	for ( var i=0; i<arr.length; i++ ) {
 	    jQuery(arr[i]).css('display', 'none');
 	}
 	if(v !== 'unlimited'){
 		jQuery('#billind_rec_label').css('display', 'inline-block');
 		jQuery('#set_expired_level').css('display', 'block');
+		jQuery('#set_grace_period').css('display', 'block');
 	}
 
 	switch (v){
@@ -658,12 +632,14 @@ function ihcAccessPaymentType(v){
 			jQuery('#billing_type_1').css('display', 'inline-block');
 			jQuery('#billing_type_2').css('display', 'none');
 			jQuery('#regular_period_billing').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'none');
 			break;
 		case 'date_interval':
 			jQuery(arr[1]).css('display', 'block');
 			jQuery('#billing_type_1').css('display', 'inline-block');
 			jQuery('#billing_type_2').css('display', 'none');
 			jQuery('#regular_period_billing').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'none');
 			break;
 		case 'regular_period':
 			jQuery(arr[2]).css('display', 'block');
@@ -671,6 +647,7 @@ function ihcAccessPaymentType(v){
 			jQuery('#billing_type_1').css('display', 'none');
 			jQuery('#billing_type_2').css('display', 'inline-block');
 			jQuery('#trial_period_billing').css('display', 'inline-block');
+			jQuery('#set_cancel_level').css('display', 'block');
 			break;
 		case 'unlimited':
 			jQuery('#billing_type_1').css('display', 'none');
@@ -678,7 +655,18 @@ function ihcAccessPaymentType(v){
 			jQuery('#regular_period_billing').css('display', 'none');
 			jQuery('#trial_period_billing').css('display', 'none');
 			jQuery('#billind_rec_label').css('display', 'none');
+			jQuery('#set_cancel_level').css('display', 'block');
+			jQuery('#set_cancel_level').css('display', 'none');
+			jQuery('#set_grace_period').css('display', 'none');
 			break;
+	}
+}
+
+function ihcAfterCancelAction(v){
+	if (v=='2'){
+		jQuery('#aftercancel_level').css('display', 'block');
+	} else {
+		jQuery('#aftercancel_level').css('display', 'none');
 	}
 }
 
@@ -717,7 +705,6 @@ function checkAndH(id, target){
 
 
 function ihcMakeUserCsv(){
-		// console.log( jQuery( '#ihc_make_user_csv_file' ).attr( 'data-get_variables' ) )
    	jQuery.ajax({
         type : 'post',
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
@@ -761,22 +748,22 @@ function ihcRegisterFields(v){
 }
 
 function ihcAddNewRegisterFieldValue(){
-	var s = '<div style="display: block; margin-bottom: 5px;" class="ihc-custom-field-item-wrapp" >';
+	var s = '<div class="ihc-custom-field-item-wrapp ihc-custom-field-item-wrapp-st" >';
 	s += '<input type="text" name="values[]" value=""/> ';
-	s += '<i class="fa-ihc ihc-icon-remove-e" style="cursor: pointer;" onclick="jQuery(this).parent().remove();"></i>';
+	s += '<i class="fa-ihc ihc-icon-remove-e" onclick="jQuery(this).parent().remove();"></i>';
 	s += '<i class="fa-ihc fa-arrows-ihc"></i>';
 	s += '</div>';
 	jQuery('.ihc-register-the-values').append(s);
 }
 
 function ihcMakeInputhString(divCheck, showValue, hidden_input_id){
-    str = jQuery(hidden_input_id).val();
+    var str = jQuery(hidden_input_id).val();
     if (str!=''){
-    	show_arr = str.split(',');
+    	var show_arr = str.split(',');
     } else{
-    	show_arr = new Array();
+    	var show_arr = new Array();
     }
-    if (jQuery(divCheck).is(':checked')){
+    if ( jQuery( divCheck ).is(':checked') ){
         show_arr.push(showValue);
     } else {
         var index = show_arr.indexOf(showValue);
@@ -787,44 +774,44 @@ function ihcMakeInputhString(divCheck, showValue, hidden_input_id){
 }
 
 function ihcGenerateCode(target, length){
-	var str = "";
-    var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		var str = "";
+	  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for (var i=0;i<length;i++){
-    	str += characters.charAt(Math.floor(Math.random() * characters.length));
-	}
-	jQuery(target).val(str);
+	  for ( var i=0; i<length; i++ ){
+	    	str += characters.charAt(Math.floor(Math.random() * characters.length));
+		}
+		jQuery(target).val(str);
 }
 
 function ihcDiscountType(v){
-	if (v=='percentage'){
-		jQuery("#discount_currency").fadeOut(300, function(){
-			jQuery("#discount_percentage").css("display", "inline");
-		});
-	} else {
-		jQuery("#discount_percentage").fadeOut(300, function(){
-			jQuery("#discount_currency").css("display", "inline");
-		});
-	}
+		if (v=='percentage'){
+				jQuery("#discount_currency").fadeOut(300, function(){
+						jQuery("#discount_percentage").css("display", "inline");
+				});
+		} else {
+				jQuery("#discount_percentage").fadeOut(300, function(){
+						jQuery("#discount_currency").css("display", "inline");
+				});
+		}
 }
 
 function ihcDeleteCoupon(i, d){
 	var c = confirm("Are You sure You wish to delete this coupon?");
 	if (c){
-		//delete here
+		  //delete here
 	   	jQuery.ajax({
-	        type : 'post',
-	        url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-	        data : {
-	                   action: 'ihc_delete_coupon_ajax',
-	                   id: i
-	               },
-	        success: function (r) {
-	        	if (r){
-	        		jQuery(d).fadeOut(300);
-	        	}
-	        }
-	   });
+		        type : 'post',
+		        url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+		        data : {
+		                   action: 'ihc_delete_coupon_ajax',
+		                   id: i
+		               },
+		        success: function (r) {
+		        	if (r){
+		        		jQuery(d).fadeOut(300);
+		        	}
+		        }
+		   });
     }
 }
 
@@ -838,9 +825,9 @@ function ihcChangeNotificationTemplate(){
 	               },
 	        success: function (r) {
 	        	var o = jQuery.parseJSON(r);
-	        	console.log(o);
 	        	jQuery('#notification_subject').val(o.subject);
 	        	jQuery('#ihc_message').val(o.content);
+						jQuery('#ihc_notification_explanation').html(o.explanation);
 	        	jQuery( "#ihc_message_ifr" ).contents().find( '#tinymce' ).html(o.content);
 	        }
    });
@@ -855,9 +842,9 @@ function ihcRemoveCurrency(c){
                    code: c
                },
         success: function (r) {
-        	if (r){
-        		jQuery("#ihc_div_"+c).fadeOut(300);
-        	}
+	        	if ( r ){
+	        			jQuery("#ihc_div_" + c ).fadeOut(300);
+	        	}
         }
    });
 }
@@ -881,36 +868,41 @@ function ihcChangeColorScheme(id, value, where ){
     jQuery(id).attr('class', 'color-scheme-item-selected');
     jQuery(where).val(value);
 }
+function ihcChageColor(id, value, where ){
+	jQuery('#colors_ul li').each(function(){
+			jQuery(this).removeClass('color-scheme-item-selected');
+	});
+	jQuery(id).addClass('color-scheme-item-selected');
+	jQuery(where).val(value);
+}
 
 function ihcChangeColorSchemeWd(id, value, where ){
-	var non_selected = 'color-scheme-item';
-	var selected = 'color-scheme-item-selected';
-	var c = jQuery(id).attr('class');
-    jQuery('#colors_ul li').each(function(){
-        jQuery(this).attr('class', non_selected);
-    });
-    jQuery(where).val('');
-    if (c==non_selected){
-	    jQuery(id).attr('class', selected);
-	    jQuery(where).val(value);
-    }
+		var non_selected = 'color-scheme-item';
+		var selected = 'color-scheme-item-selected';
+		var c = jQuery(id).attr('class');
+	  jQuery('#colors_ul li').each(function(){
+	      jQuery(this).attr( 'class', non_selected );
+	  });
+	  jQuery(where).val('');
+	  if (c==non_selected){
+		    jQuery(id).attr('class', selected);
+		    jQuery(where).val(value);
+	  }
 }
 
 function ihcPreviewUList(){
 	jQuery('#preview').html('');
-	jQuery("#preview").html('<div style="background:#fff;width: 100%;text-align:center;"><img src="'+window.ihc_url+'admin/assets/images/loading.gif" class=""/></div>');
+	jQuery("#preview").html('<div class="ihc-loading-img-wrapper"><img src="'+window.ihc_plugin_url+'admin/assets/images/loading.gif"/></div>');
 	var meta = [];
 	meta.num_of_entries = jQuery('#num_of_entries').val();
 	meta.entries_per_page = jQuery('#entries_per_page').val();
 	meta.order_by = jQuery('#order_by').val();
 	meta.order_type = jQuery('#order_type').val();
 	if (jQuery('#filter_by_level').is(":checked")){
-		meta.filter_by_level = 1;
-		meta.levels_in = jQuery('#levels_in').val();
+			meta.filter_by_level = 1;
+			meta.levels_in = jQuery('#levels_in').val();
 	}
 	meta.user_fields = jQuery('#user_fields').val();
-
-	//console.log(meta.user_fields);
 
 	if (jQuery('#include_fields_label').is(':checked')){
 		meta.include_fields_label = 1;
@@ -934,9 +926,9 @@ function ihcPreviewUList(){
 		meta.animation_out = jQuery('#animation_out').val();
 		var slider_special_metas = ['bullets', 'nav_button', 'autoplay', 'stop_hover', 'responsive', 'autoheight', 'lazy_load', 'loop'];
 		for (var i=0; i<slider_special_metas.length; i++){
-			if (jQuery('#'+slider_special_metas[i]).is(":checked")){
-				meta[slider_special_metas[i]] = 1;
-			}
+				if ( jQuery('#'+slider_special_metas[i]).is(":checked") ){
+						meta[slider_special_metas[i]] = 1;
+				}
 		}
 	}
 
@@ -953,12 +945,12 @@ function ihcPreviewUList(){
 	meta.pagination_pos = jQuery('#pagination_pos').val();
 
 	if (jQuery('#exclude_pending').is(':checked')){
-		meta.exclude_pending = 1;
+			meta.exclude_pending = 1;
 	}
 
 	///SHORTCODE
 	var str = "[ihc-list-users ";
-	for (var key in meta) {
+	for ( var key in meta ) {
 		str += key + " ='" + meta[key] +"' ";
 	}
 	str += ']';
@@ -970,11 +962,12 @@ function ihcPreviewUList(){
         type : 'post',
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
         data : {
-                   action: 'ihc_preview_user_listing',
-                   shortcode: str
+                   action			: 'ihc_preview_user_listing',
+                   shortcode	:	str
                },
         success: function (r) {
-        	jQuery('#preview').html(r);
+        		jQuery('#preview').html(r);
+						ihcInitiateOwl( jQuery( '.ihc-js-owl-settings-data' ) );
         }
    	});
 }
@@ -984,9 +977,9 @@ function ihcAdminDeleteUserLevelRelationship(l_id, u_id){
         type : 'post',
         url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
         data : {
-                   action: 'ihc_delete_user_level_relationship',
-                   uid: u_id,
-                   lid: l_id
+                   action			: 'ihc_delete_user_level_relationship',
+                   uid				: u_id,
+                   lid				: l_id
                },
         success: function (r){
         	jQuery('#tr_level_user_' + l_id + '_' + u_id).remove();
@@ -1032,12 +1025,11 @@ function ihcChangeUapAffiliate(i){
 	        type : 'post',
 	        url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 	        data : {
-	                   action: 'ihc_make_user_affiliate',
-	                   uid: i,
-					   act: the_action
-	               },
+	                   action		: 'ihc_make_user_affiliate',
+	                   uid			: i,
+					   		 		 act			: the_action
+	        },
 	        success: function (r){
-	        	//console.log(r);
 	        }
 	   	});
 	}
@@ -1079,9 +1071,9 @@ function ihcCheckEmailServer(){
 	        url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 	        data : {
 	                   action: 'ihc_check_mail_server',
-	               },
+	        },
 	        success: function (r){
-	        	alert(window.ihc_messages.email_server_check);
+	        		alert(window.ihc_messages.email_server_check);
 	        }
 	});
 }
@@ -1108,7 +1100,7 @@ function openMediaUp(target, img_target){
       return;
   }
   //Extend the wp.media object
-  custom_uploader = wp.media.frames.file_frame = wp.media({
+	custom_uploader = wp.media.frames.file_frame = wp.media({
       title: 'Choose Image',
       button: {
           text: 'Choose Image'
@@ -1117,12 +1109,12 @@ function openMediaUp(target, img_target){
   });
   //When a file is selected, grab the URL and set it as the text field's value
   custom_uploader.on('select', function() {
-      attachment = custom_uploader.state().get('selection').first().toJSON();
-      jQuery(target).val(attachment.url);
-      if (img_target!=''){
-      	jQuery(img_target).attr('src', attachment.url);
-      	jQuery(img_target).css('display', 'block');
-      }
+		  var attachment = custom_uploader.state().get('selection').first().toJSON();
+		  jQuery(target).val(attachment.url);
+		  if (img_target!=''){
+		    	jQuery(img_target).attr('src', attachment.url);
+		    	jQuery(img_target).css('display', 'block');
+		  }
   });
   //Open the uploader dialog
   custom_uploader.open();
@@ -1171,8 +1163,8 @@ function iumpAdminPreviewInvoice(){
 		type : 'post',
 	    url : decodeURI(window.ihc_site_url) + '/wp-admin/admin-ajax.php',
 	    data : {
-	            action: 'ihc_preview_invoice_via_ajax',
-	            m: metas
+	            action			: 'ihc_preview_invoice_via_ajax',
+	            m						: metas
 	    },
 	    success: function (r){
 	    	jQuery('#preview_container').html(r);
@@ -1181,15 +1173,13 @@ function iumpAdminPreviewInvoice(){
 }
 
 function ihcInsidePageChangeContentType(){
-	//var v = jQuery('[name=ihc_listing_users_inside_page_type]').val();
-
-	if (jQuery('#iump-switch_left').is(':checked')){
-		jQuery('#ihc_listing_users_content_basic').css('display', 'block');
-		jQuery('#ihc_listing_users_content_extra_custom').css('display', 'none');
-	} else {
-		jQuery('#ihc_listing_users_content_basic').css('display', 'none');
-		jQuery('#ihc_listing_users_content_extra_custom').css('display', 'block');
-	}
+		if (jQuery('#iump-switch_left').is(':checked')){
+				jQuery('#ihc_listing_users_content_basic').css('display', 'block');
+				jQuery('#ihc_listing_users_content_extra_custom').css('display', 'none');
+		} else {
+				jQuery('#ihc_listing_users_content_basic').css('display', 'none');
+				jQuery('#ihc_listing_users_content_extra_custom').css('display', 'block');
+		}
 }
 
 function ihcDoCleanUpLogs(u){
@@ -1204,18 +1194,6 @@ function ihcCheckFieldLimit(limit, d){
 		alert(limit + ' is the maximum number of characters for this field!');
 	}
 }
-
-
-jQuery(document).ready(function(){
-	jQuery('#ihc_reorder_menu_items tbody').sortable({
-		 update: function(e, ui) {
-		        jQuery('#ihc_reorder_menu_items tbody tr').each(function (i, row) {
-		        	var id = jQuery(this).attr('id');
-		        	jQuery('#'+id+' .ihc_account_page_menu_order').val(i);
-		        });
-		 }
-	});
-});
 
 
 function ihcDoUpdateHashField(){
@@ -1242,7 +1220,7 @@ function indeedShinySelect(params){
 
 	jQuery(current_object.selector).after('<input type="hidden" name="' + current_object.option_name_code + '" value="' + params.default_code + '" />');
 	jQuery(current_object.selector).after('<input type="hidden" name="' + current_object.option_name_icon + '" value="' + params.default_icon + '" />');
-	jQuery(current_object.selector).after('<div class="indeed_select_popup" style="display: none;" id="' + current_object.popup_id + '"></div>');
+	jQuery(current_object.selector).after('<div class="indeed_select_popup ihc-display-none" id="' + current_object.popup_id + '"></div>');
 
 	///run init
 	if (this.init_default){
@@ -1251,54 +1229,54 @@ function indeedShinySelect(params){
 
 
 	function loadDataViaAjax(){
-		var img = "<img src='" + decodeURI(window.ihc_site_url)+'/wp-content/plugins/indeed-membership-pro/admin/assets/images/loading.gif' + "' style='width: 200px'/>";
-		jQuery('#'+current_object.popup_id).html(img);
-		jQuery('#'+current_object.popup_id).css('display', 'block');
-		jQuery.ajax({
-		    type : 'post',
-		    dataType: "text",
-		    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-		    data : {
-		             action: 'ihc_get_font_awesome_popup'
-		    },
-		    success: function (r){
-		       	jQuery('#'+current_object.popup_id).html(r);
-		       	jQuery(current_object.item_selector).on('click', function(){
-					var code = jQuery(this).attr('data-code');
-					var i_class = jQuery(this).attr('data-class');
-					var the_html = jQuery(this).html();
+			var img = "<img src='" + decodeURI(window.ihc_site_url)+'/wp-content/plugins/indeed-membership-pro/admin/assets/images/loading.gif' + "' class='ihc-loading-img'/>";
+			jQuery('#'+current_object.popup_id).html(img);
+			jQuery('#'+current_object.popup_id).css('display', 'block');
+			jQuery.ajax({
+			    type : 'post',
+			    dataType: "text",
+			    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+			    data : {
+			             action: 'ihc_get_font_awesome_popup'
+			    },
+			    success: function (r){
+			       	jQuery('#'+current_object.popup_id).html(r);
+			       	jQuery(current_object.item_selector).on('click', function(){
+									var code = jQuery(this).attr('data-code');
+									var i_class = jQuery(this).attr('data-class');
+									var the_html = jQuery(this).html();
 
-					jQuery('[name=' + current_object.option_name_code + ']').val(code);
-					jQuery('[name=' + current_object.option_name_icon + ']').val(i_class);
-					jQuery(current_object.selector).html(the_html);
-					removePopup();
-		       	});
-			}
-		});
+									jQuery('[name=' + current_object.option_name_code + ']').val(code);
+									jQuery('[name=' + current_object.option_name_icon + ']').val(i_class);
+									jQuery(current_object.selector).html(the_html);
+									removePopup();
+			       	});
+					}
+			});
 	}
 
 	jQuery(current_object.selector).on('click', function(){
-		if (!current_object.popup_visible){
-			current_object.popup_visible = true;
-			loadDataViaAjax();
-		} else {
-			removePopup();
-		}
+			if (!current_object.popup_visible){
+					current_object.popup_visible = true;
+					loadDataViaAjax();
+			} else {
+					removePopup();
+			}
 	});
 
 	jQuery(current_object.second_selector).on('click', function(){
-		if (!current_object.popup_visible){
-			current_object.popup_visible = true;
-			loadDataViaAjax();
-		} else {
-			removePopup();
-		}
+			if (!current_object.popup_visible){
+					current_object.popup_visible = true;
+					loadDataViaAjax();
+			} else {
+					removePopup();
+			}
 	});
 
 	function removePopup(){
-		jQuery('#'+current_object.popup_id).empty();
-		jQuery('#'+current_object.popup_id).css('display', 'none');
-		current_object.popup_visible = false;
+			jQuery('#'+current_object.popup_id).empty();
+			jQuery('#'+current_object.popup_id).css('display', 'none');
+			current_object.popup_visible = false;
 	}
 
 }
@@ -1318,11 +1296,11 @@ function ihcMakeExportFile(){
 	                   import_postmeta: pm
 	               },
 	        success: function (response) {
-	        	if (response!=0){
-	        		jQuery('.ihc-hidden-download-link a').attr('href', response);
-	        		jQuery('.ihc-hidden-download-link').fadeIn(200);
-							jQuery('#ihc_loading_gif .spinner').css('visibility', 'hidden');
-	        	}
+		        	if (response!=0){
+			        		jQuery('.ihc-hidden-download-link a').attr('href', response);
+			        		jQuery('.ihc-hidden-download-link').fadeIn(200);
+									jQuery('#ihc_loading_gif .spinner').css('visibility', 'hidden');
+		        	}
 	        }
 	   });
 }
@@ -1333,41 +1311,41 @@ function ihcAutocompleteWriteTag(value_id, hiddenId, viewDivId, prevDivPrefix, l
 	 * prevDivPrefix - prefix of tag
 	 * hiddenId - where values are
 	 */
-	id = prevDivPrefix + value_id;
+	var id = prevDivPrefix + value_id;
 	jQuery(viewDivId).append('<div id="'+id+'" class="ihc-tag-item">'+label+'<div class="ihc-remove-tag" onclick="ihcRemoveTag(\''+value_id+'\', \'#'+id+'\', \''+hiddenId+'\');" title="Removing tag">x</div></div>');
 }
 
 function ihcRemoveTag(removeVal, removeDiv, hiddenId){
-	jQuery(removeDiv).fadeOut(200, function(){
-		jQuery(this).remove();
-	});
+		jQuery(removeDiv).fadeOut(200, function(){
+			jQuery(this).remove();
+		});
 
-    hidden_i = jQuery(hiddenId).val();
-    show_arr = hidden_i.split(',');
+    var hidden_i = jQuery(hiddenId).val();
+    var show_arr = hidden_i.split(',');
 
     show_arr = removeArrayElement(removeVal, show_arr);
-    str = show_arr.join(',');
-	jQuery(hiddenId).val(str);
+    var str = show_arr.join(',');
+	  jQuery(hiddenId).val(str);
 }
 
 function removeArrayElement(elem, arr){
-	for (i=0;i<arr.length;i++) {
-	    if(arr[i]==elem){
-	    	arr.splice(i, 1);
-	    }
-	}
-	return arr;
+		for ( var i=0; i<arr.length; i++ ) {
+		    if ( arr[i] == elem ){
+		    		arr.splice(i, 1);
+		    }
+		}
+		return arr;
 }
 
 function ihcDoDeleteWooIhcRelation(i, u){
 	jQuery.ajax({
-		type : 'post',
-	    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-	    data : {
-	            action: 'ihc_do_delete_woo_ihc_relation',
-	            id: i,
+			type 		: 'post',
+	    url 		: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+	    data 		: {
+			            action		: 'ihc_do_delete_woo_ihc_relation',
+			            id				: i,
 	    },
-	    success: function (response) {
+	    success	: function (response) {
 	    	window.location.href = u;
 	    }
 	});
@@ -1412,131 +1390,1100 @@ function ihcResetAutocomplete(hidden, wrapper){
 function ihcRunAjaxProcess(t){
 	jQuery('#ihc_ajax_run_process_spinner').css('visibility', 'visible');
 	jQuery.ajax({
-		type : 'post',
-	    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-	    data : {
-	            action: 'ihc_run_custom_process',
-	            type: t
-	    },
-	    success: function (response) {
-			jQuery('#ihc_ajax_run_process_spinner').css('visibility', 'hidden');
-	    }
+				type 		: 'post',
+	    	url 		: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+	    	data 		: {
+	            action		: 'ihc_run_custom_process',
+	            type			: t
+	    	},
+	    	success : function (response) {
+						jQuery('#ihc_ajax_run_process_spinner').css('visibility', 'hidden');
+		    }
 	});
 }
 
-jQuery(document).ready(function(){
-		jQuery('#direct_link_generate_link').on('click', function(event){
-				event.preventDefault()
-				jQuery.ajax({
-					type : 'post',
-						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-						data : {
-										action: 'ihc_generate_direct_link',
-										username: jQuery('#direct_login_usernmae').val(),
-										expire_time: jQuery('#direct_login_timeout').val()
-						},
-						success: function (response) {
-								jQuery('#direct_link_value').html(response);
-						}
-				})
-		})
+function ihc_split(v){
+	if (v.indexOf(',')!=-1){
+	    return v.split( /,\s*/ );
+	} else if (v!=''){
+		return [v];
+	}
+	return [];
+}
+function ihc_extract(t) {
+    return ihc_split(t).pop();
+}
 
-		jQuery('.ihc-admin-direct-login-generator').on('click', function(event){
-				jQuery.ajax({
-					type : 'post',
-						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-						data : {
-										action: 'ihc_generate_direct_link_by_uid',
-										uid: jQuery(event.target).attr('data-uid'),
-						},
-						success: function (response) {
-								swal({
-									title: "Success",
-									text: response,
-									type: "success",
-									showCancelButton: false,
-									confirmButtonText: "OK",
-									closeOnConfirm: true
-								})
-						}
-				})
-		})
+function ihcContains(a, obj) {
+    return a.some(function(element){return element == obj;})
+}
 
-		jQuery('.ihc-direct-login-remove-item').on('click', function(event){
-				swal({
-					title: "Are you sure that you want to delete this link?",
-					text: "",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonClass: "btn-danger",
-					confirmButtonText: "OK",
-					closeOnConfirm: true
-				},
-				function(){
-					jQuery.ajax({
-							type : 'post',
-							url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-							data : {
-												 action: 'ihc_direct_login_delete_item',
-												 uid: jQuery(event.target).attr('data-uid'),
-										 },
-							success: function (response) {
-									location.reload();
-							}
-				 });
-			 });
-		});
-});
+function ihcInitiateOwl(selector)
+{
+		var selector = jQuery( selector ).attr( 'data-selector' );
+		var autoHeight = jQuery( selector ).attr( 'data-autoHeight' );
+		var animateOut = jQuery( selector ).attr( 'data-animateOut' );
+		var animateIn = jQuery( selector ).attr( 'data-animateIn' );
+		var lazyLoad = jQuery( selector ).attr( 'data-lazyLoad' );
+		var loop = jQuery( selector ).attr( 'data-loop' );
+		var autoplay = jQuery( selector ).attr( 'data-autoplay' );
+		var autoplayTimeout = jQuery( selector ).attr( 'data-autoplayTimeout' );
+		var autoplayHoverPause = jQuery( selector ).attr( 'data-autoplayHoverPause' );
+		var autoplaySpeed = jQuery( selector ).attr( 'data-autoplaySpeed' );
+		var nav = jQuery( selector ).attr( 'data-nav' );
+		var navSpeed = jQuery( selector ).attr( 'data-navSpeed' );
+		var dots = jQuery( selector ).attr( 'data-dots' );
+		var dotsSpeed = jQuery( selector ).attr( 'data-dotsSpeed' );
+		var responsiveClass = jQuery( selector ).attr( 'data-responsiveClass' );
+		var navigation = jQuery( selector ).attr( 'data-navigation' );
+		var owl = jQuery( selector );
+		owl.owlihcCarousel({
+				items : 1,
+				mouseDrag: true,
+				touchDrag: true,
 
-jQuery( document ).ready(function(){
-		jQuery( '.deactivate' ).on( 'click', function(evt){
-				if ( jQuery( evt.target ).attr('href').indexOf( 'indeed-membership-pro' ) > -1 ){
-						if ( window.ihcKeepData == 1 ){
-								var theMessage = 'Plugin data will be kept in database after you delete the plugin.';
-						} else {
-								var theMessage = 'Plugin data will be lost after you delete the plugin.';
-						}
-						var target = jQuery( evt.target ).attr('href');
-						swal({
-							title: theMessage,
-							text: "Go to WP Admin dashboard, select Membership Pro Ultimate WP, click on General Options followed by Admin Workflow in the submenu. Toggle the Keep data after delete plugin: to 'On'.",
-							type: "warning",
-							showCancelButton: true,
-							confirmButtonClass: "btn-danger",
-							confirmButtonText: "OK",
-							closeOnConfirm: true
-						},	function(){
-								window.location.href = target;
-						});
-						return false;
+				autoHeight: autoHeight,
+
+				animateOut: animateOut,
+				animateIn: animateIn,
+
+				lazyLoad : lazyLoad,
+				loop: loop,
+
+				autoplay : autoplay,
+				autoplayTimeout: autoplayTimeout,
+				autoplayHoverPause: autoplayHoverPause,
+				autoplaySpeed: autoplaySpeed,
+
+				nav : nav,
+				navSpeed : navSpeed,
+				navText: [ '', '' ],
+
+				dots: dots,
+				dotsSpeed : dotsSpeed,
+
+				responsiveClass: responsiveClass,
+				responsive:{
+					0:{
+						nav:false
+					},
+					450:{
+						nav : navigation
+					}
 				}
 		});
+}
 
-		jQuery( '.ihc-js-close-admin-dashboard-notice' ).on( 'click', function(){
-				var parent = jQuery(this).parent();
-				parent.fadeOut( 1000 );
+
+
+jQuery(window).on('load', function(){
+
+	// affiliates
+	if ( jQuery( '.ihc-js-admin-affiliates-limit' ).length ){
+	    jQuery( '.ihc-js-admin-affiliates-limit' ).on( 'change', function(){
+					var url = jQuery( this ).attr( 'data-url' );
+	       	window.location = url + this.value;
+	    });
+	}
+
+	if ( jQuery( '.ihc-js-admin-restrict-wp-menu-links' ).length ){
+			jQuery( '.ihc-js-admin-restrict-wp-menu-links' ).on( 'change', function(){
+					var url = jQuery( this ).attr( 'data-url' );
+					window.location = url + this.value;
+			});
+	}
+
+	// users
+	if ( jQuery( '.js-ihc-search-users-limit' ).length ){
+			jQuery( '.js-ihc-search-users-limit' ).on( 'change', function(){
+					var url = jQuery( this ).attr( 'data-url' );
+					window.location = url + this.value;
+			});
+	}
+
+
+	// woo product custom prices
+	if ( jQuery( '.ihc-js-woo-product-custom-prices-select' ).length ){
+	    jQuery( '.ihc-js-woo-product-custom-prices-select' ).on( 'change', function(){
+					var url = jQuery( this ).attr( 'data-url' );
+					jQuery('#product_search').autocomplete( 'option', { source: url + this.value } );
+					ihcChangeSearchWooType();
+			});
+	}
+
+	// remove top image
+	jQuery( '.ihc-js-admin-top-bacgrkound-image-delete' ).on( 'click', function(){
+			jQuery('#ihc_ap_top_background_image').val('');
+	});
+
+	// remove badge image
+	jQuery( '.ihc-js-admin-badge-image-remove' ).on( 'click', function(){
+		  var id = jQuery( this ).attr( 'data-id' );
+			jQuery( '#badge_image_url' + id ).val('');
+			jQuery( '#img_level' + id ).css('display', 'none');
+	});
+
+	jQuery( '.ihc-js-admin-block-url-delete-block-url' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery( '#delete_block_url' ).val( key );
+			jQuery('#block_url_form').submit();
+	});
+
+	jQuery( '.ihc-js-admin-block-regex' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery( '#delete_block_regex' ).val( key );
+			jQuery( '#block_url_form' ).submit();
+	});
+
+	jQuery( '.ihc-js-admin-delete-block-url-block' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery('#delete_block').val( key );
+			jQuery('#delete_block_form').submit();
+	});
+
+	jQuery( '.ihc-js-admin-delete-block-url-redirect' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery('#delete_block').val( key );
+			jQuery('#delete_block_form').submit();
+	});
+
+	jQuery( '.ihc-js-delete-block-url-redirect' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery('#delete_block').val( key );
+			jQuery('#delete_block_form').submit();
+	});
+
+	jQuery( '.ihc-js-admin-delete-logo-image' ).on( 'click', function(){
+			jQuery('#ihc_wp_login_logo_image').val('');
+	});
+
+	jQuery( '.ihc-js-admin-invitation-code-delete-code' ).on( 'click', function(){
+			var id = jQuery( this ).attr( 'data-id' );
+			jQuery('#delete_code').val( id );
+			jQuery('#delete_code_form').submit();
+	});
+
+	jQuery( '.ihc-js-admin-invoices-delete' ).on( 'click', function(){
+			jQuery('[name=ihc_invoices_logo]').val('');
+	});
+
+	jQuery( '.ihc-js-admin-badge-image-do-delete' ).on( 'click', function(){
+			jQuery('#badge_image_url').val('');
+	});
+
+	jQuery( '.ihc-js-admin-redirect-links-do-delete' ).on( 'click', function(){
+			var key = jQuery( this ).attr( 'data-key' );
+			jQuery('#delete_redirect_link').val( key );
+			jQuery('#redirect_links_form').submit();
+	});
+
+	jQuery( '.ihc-js-admin-register-delete-parent' ).on( 'click', function(){
+			jQuery(this).parent().remove();
+	});
+
+	jQuery( '.ihc-js-admin-levels-delete-product-assign' ).on( 'click', function(){
+			jQuery('#iump_change_level_product_relation').css('display', 'block');
+			jQuery('#iump_current_product_level').css('display', 'none');
+	});
+
+	jQuery( '.ihc-js-listing-users-slide-up' ).on( 'click', function(){
+			jQuery('#the_ihc_user_list_settings').slideToggle();
+	});
+	jQuery( '.ihc-js-listing-users-slide-up-preview' ).on( 'click', function(){
+			jQuery('#preview').slideToggle();
+	});
+
+	jQuery( '.ihc-js-admin-listing-users-delete-banner-image' ).on( 'click', function(){
+			jQuery('#ihc_listing_users_inside_page_banner_href').val('');
+	});
+
+	jQuery( '.ihc-js-admin-notifications-delete-notification' ).on( 'click', function(){
+			var id = jQuery( this ).attr( 'data-id' );
+			jQuery('#delete_notification_by_id').val( id );
+			jQuery('#delete_notification').submit();
+	});
+
+	// user sites
+	if ( jQuery( '.ihc-js-user-sites-table-data' ).length ){
+		var ihc_current_url = jQuery( '.ihc-js-user-sites-table-data' ).attr( 'data-current_url' );
+		var ihc_current_question  = jQuery( '.ihc-js-user-sites-table-data' ).attr( 'data-current_question' );
+	}
+
+	// Listing Members
+	if ( jQuery( '.ihc-js-owl-settings-data' ).length ){
+			jQuery( '.ihc-js-owl-settings-data' ).each(function( e, html ){
+					ihcInitiateOwl( this );
+			});
+	}
+
+	// member form
+	if ( jQuery( '.ihc-js-countries-list-data' ).length ){
+			jQuery( jQuery( '.ihc-js-countries-list-data' ).attr( 'data-selector' ) ).select2({
+					placeholder					: jQuery( '.ihc-js-countries-list-data' ).attr( 'data-placeholder' ),
+					allowClear					: true,
+					selectionCssClass		: "ihc-select2-dropdown"
+			});
+	}
+
+	// member form
+	if ( jQuery( '.ihc-js-member-form-datepicker-data' ).length ){
+			var currentYear = new Date().getFullYear() + 10;
+			jQuery( '.ihc-js-member-form-datepicker-data' ).each( function( e, html ){
+					jQuery( jQuery( this ).attr( 'data-selector' ) ).datepicker({
+							dateFormat   : "dd-mm-yy",
+							changeMonth  : true,
+							changeYear   : true,
+							yearRange    : "1900:"+currentYear,
+							onClose      : function(r) {
+										jQuery( this ).attr( 'data-callback' )
+							}
+					});
+			});
+	}
+
+	// custom banner
+	if ( jQuery( '.ihc-js-custom-banner-data' ).length ){
+			jQuery( '.ihc-js-custom-banner-data' ).each( function( e, html ){
+					IhcImageUpload.init({
+							triggerId					           : jQuery( this ).attr('data-trigger_id'),
+							saveImageTarget		           : jQuery( this ).attr('data-url'),
+							cropImageTarget              : jQuery( this ).attr('data-url'),
+							imageSelectorWrapper         : '.ihc-upload-top-banner-wrapper',
+							hiddenInputSelector          : '[name=' + jQuery( this ).attr('data-field_name') + ']',
+							imageClass                   : 'ihc-image-photo',
+							removeImageSelector          : jQuery( this ).attr('data-remove_image_bttn'),
+							buttonId 					           : 'ihc_top_custom_banner_js_bttn',
+							buttonLabel 			           : jQuery( this ).attr('data-bttn_label'),
+					});
+			});
+	}
+
+	// upload image
+	if ( jQuery( '.ihc-js-admin-upload-image-data' ).length ){
+			jQuery( '.ihc-js-admin-upload-image-data' ).each( function(e,html){
+					var rand = jQuery( this ).attr( 'data-rand' );
+					var url = jQuery( this ).attr( 'data-url' );
+					var name = jQuery( this ).attr( 'data-name' );
+					var bttn = jQuery( this ).attr( 'data-bttn_label' );
+					IhcAvatarCroppic.init({
+							triggerId					           : 'js_ihc_trigger_avatar' + rand,
+							saveImageTarget		           : url,
+							cropImageTarget              : url,
+							imageSelectorWrapper         : '.ihc-js-upload-image-wrapp',
+							hiddenInputSelector          : '[name='+name+']',
+							imageClass                   : 'ihc-member-photo',
+							removeImageSelector          : '#ihc_upload_image_remove_bttn_' + rand,
+							buttonId 					           : 'ihc-avatar-button',
+							buttonLabel 			           : bttn,
+					});
+			});
+	}
+
+	// file upload
+	if ( jQuery( '.ihc-js-upload-file-data' ).length ){
+			jQuery( '.ihc-js-upload-file-data' ).each( function( e, html ){
+					var rand = jQuery( this ).attr( 'data-rand' );
+					var alert_text = jQuery( this ).attr( 'data-alert_text' );
+					var theUrl = jQuery( this ).attr( 'data-url' );
+					var maxSize = jQuery( this ).attr( 'data-max_size' );
+					var allowed_types = jQuery( this ).attr( 'data-allowed_types' );
+					var fieldName = jQuery( this ).attr( 'data-field_name' );
+					jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").uploadFile({
+						onSelect: function (files) {
+								jQuery("#ihc_fileuploader_wrapp_" + rand + " .ajax-file-upload-container").css("display", "block");
+								var check_value = jQuery("#ihc_upload_hidden_" + rand ).val();
+								if (check_value!="" ){
+									alert(alert_text);
+									return false;
+								}
+								return true;
+						},
+						url: theUrl,
+						fileName: "ihc_file",
+						dragDrop: false,
+						showFileCounter: false,
+						showProgress: true,
+						showFileSize: false,
+						maxFileSize: maxSize,
+						allowedTypes: allowed_types,
+						onSuccess: function(a, response, b, c){
+							if (response){
+								var obj = jQuery.parseJSON(response);
+								if (typeof obj.secret!="undefined"){
+										jQuery("#ihc_fileuploader_wrapp_" + rand ).attr("data-h", obj.secret);
+								}
+								jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").prepend("<div onClick=\"ihcDeleteFileViaAjax("+obj.id+", -1, '#ihc_fileuploader_wrapp_' + rand, fieldName, '#ihc_upload_hidden_+ rand);\" class=\'ihc-delete-attachment-bttn\'>Remove</div>");
+								switch (obj.type){
+									case "image":
+										jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").prepend("<img src="+obj.url+" class=\'ihc-member-photo\' /><div class=\'ihc-clear\'></div>");
+									break;
+									case "other":
+										jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").prepend("<div class=ihc-icon-file-type></div><div class=ihc-file-name-uploaded>"+obj.name+"</div>");
+									break;
+								}
+								jQuery("#ihc_upload_hidden_" + rand ).val(obj.id);
+								setTimeout(function(){
+									jQuery("#ihc_fileuploader_wrapp_" + rand + " .ajax-file-upload-container").css("display", "none");
+								}, 3000);
+							}
+						}
+					});
+			});
+	}
+
+	jQuery('#direct_link_generate_link').on('click', function(event){
+			event.preventDefault();
+			jQuery.ajax({
+				type : 'post',
+					url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+					data : {
+									action: 'ihc_generate_direct_link',
+									username: jQuery('#direct_login_usernmae').val(),
+									expire_time: jQuery('#direct_login_timeout').val()
+					},
+					success: function (response) {
+							jQuery('#direct_link_value').html(response);
+					}
+			});
+	});
+
+	jQuery('.ihc-admin-direct-login-generator').on('click', function(event){
+			jQuery.ajax({
+				type : 'post',
+					url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+					data : {
+									action: 'ihc_generate_direct_link_by_uid',
+									uid: jQuery(event.target).attr('data-uid'),
+					},
+					success: function (response) {
+							swal({
+								title: "Success",
+								text: response,
+								type: "success",
+								showCancelButton: false,
+								confirmButtonText: "OK",
+								closeOnConfirm: true
+							});
+					}
+			});
+	});
+
+	jQuery('.ihc-direct-login-remove-item').on('click', function(event){
+			swal({
+				title: "Are you sure that you want to delete this link?",
+				text: "",
+				type: "warning",
+				showCancelButton: true,
+				confirmButtonClass: "btn-danger",
+				confirmButtonText: "OK",
+				closeOnConfirm: true
+			},
+			function(){
 				jQuery.ajax({
 						type : 'post',
 						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 						data : {
-											 action: 'ihc_close_admin_notice'
+											 action: 'ihc_direct_login_delete_item',
+											 uid: jQuery(event.target).attr('data-uid'),
 									 },
 						success: function (response) {
-								parent.remove();
+								location.reload();
+						}
+			 });
+		 });
+	});
+
+	jQuery( '.deactivate' ).on( 'click', function(evt){
+			if ( jQuery( evt.target ).attr('href').indexOf( 'indeed-membership-pro' ) > -1 ){
+					if ( window.ihcKeepData == 1 ){
+							var theMessage = 'Plugin data will be kept in database after you delete the plugin.';
+					} else {
+							var theMessage = 'Plugin data will be lost after you delete the plugin.';
+					}
+					var target = jQuery( evt.target ).attr('href');
+					swal({
+						title: theMessage,
+						text: "Go to WP Admin dashboard, select Membership Pro Ultimate WP, click on General Options followed by Admin Workflow in the submenu. Toggle the Keep data after delete plugin: to 'On'.",
+						type: "warning",
+						showCancelButton: true,
+						confirmButtonClass: "btn-danger",
+						confirmButtonText: "OK",
+						closeOnConfirm: true
+					},	function(){
+							window.location.href = target;
+					});
+					return false;
+			}
+	});
+
+	jQuery( '.ihc-js-close-admin-dashboard-notice' ).on( 'click', function(){
+			var parent = jQuery(this).parent();
+			parent.fadeOut( 1000 );
+			jQuery.ajax({
+					type : 'post',
+					url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+					data : {
+										 action: 'ihc_close_admin_notice'
+								 },
+					success: function (response) {
+							parent.remove();
+					}
+		 });
+	});
+
+	jQuery('.ihc-admin-mobile-bttn').on('click', function(){
+		jQuery('.ihc-dashboard-menu-items').toggle();
+	});
+
+	jQuery('.ihc-js-membership-card-select-size').on('change', function( e ){
+		var size = jQuery( e.target ).val();
+		var imageHref = jQuery( '.ihc-membership-card-size-image-example-wrapper' ).attr( 'data-path_to_image' );
+		switch ( size ){
+				case 'ihc-membership-card-small':
+					imageHref += 'membership-card-size-small.png';
+					break;
+				case 'ihc-membership-card-medium':
+					imageHref += 'membership-card-size-medium.png';
+					break;
+				case 'ihc-membership-card-large':
+					imageHref += 'membership-card-size-large.png';
+					break;
+		}
+		jQuery( '.ihc-membership-card-size-image-example-wrapper img').attr( 'src', imageHref );
+	});
+
+	jQuery( '.ihc-js-image-type-selector' ).on( 'click', function( e ){
+			if ( jQuery( e.target ).val() == 1 ){
+					// show
+					jQuery( '.ihc-membership-card-settings-image' ).removeClass( 'ihc-display-none' );
+			} else {
+					// hide
+					jQuery( '.ihc-membership-card-settings-image' ).addClass( 'ihc-display-none' );
+			}
+	});
+
+	jQuery('#ihc-register-fields-table tbody').sortable({
+		 update: function(e, ui) {
+						jQuery('#ihc-register-fields-table tbody tr').each(function (i, row) {
+							var id = jQuery(this).attr('id');
+							var newindex = jQuery("#ihc-register-fields-table tbody tr").index(jQuery('#'+id));
+							jQuery('#'+id+' .ihc-order').val(newindex);
+						});
+				}
+	});
+
+	jQuery('#ihc-levels-table tbody').sortable({
+		 disabled: true,
+		 update: function(e, ui) {
+				var arr = new Array();
+				var i = 0;
+				jQuery('#ihc-levels-table tbody tr').each(function (i, row) {
+					var id = jQuery(this).attr('id');
+					if ( id ){
+								var level_id = jQuery('#'+id+' .ihc-hidden-level-id').val();
+								arr.push(level_id);
+							}
+							i++;
+					});
+					var j = false;
+					var j = JSON.stringify(arr);
+					if (j){
+								jQuery.ajax({
+										type : 'post',
+										url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+										data : {
+															 action			: 'ihc_reorder_levels',
+															 json_data	: j,
+													 },
+										success: function (response) {
+												console.log(response);
+										}
+							 });
+					 }
+				}
+	});
+
+	jQuery('#ihc_reorder_menu_items tbody').sortable({
+		 update: function(e, ui) {
+						jQuery('#ihc_reorder_menu_items tbody tr').each(function (i, row) {
+							var id = jQuery(this).attr('id');
+							jQuery('#'+id+' .ihc_account_page_menu_order').val(i);
+						});
+		 }
+	});
+
+	var indeed_shiny_object = new indeedShinySelect({
+				selector					: '#indeed_shiny_select',
+				item_selector			: '.ihc-font-awesome-popup-item',
+				option_name_code	: 'ihc_account_page_menu_add_new-the_icon_code',
+				option_name_icon	: 'ihc_account_page_menu_add_new-the_icon_class',
+				default_icon			: '',
+				default_code			: '',
+				init_default			: false,
+				second_selector		: '.ihc-icon-arrow'
+	});
+
+	var ihcCurrentUrl = window.location.href;
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=add_edit_taxes' ) !== -1 ){
+					// Taxes - add edit
+					jQuery("#country_field").select2({
+							placeholder		: "Select Your Country",
+							allowClear		: true
+					});
+					return;
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=add_new_order' ) !== -1 ){
+			// orders - add new
+			jQuery('#created_date_ihc').datepicker({
+          dateFormat  : 'yy-mm-dd',
+          onSelect		: function(datetext){
+              var d = new Date();
+              datetext = datetext+" "+d.getHours()+":"+ihcAddZero(d.getMinutes())+":"+ihcAddZero(d.getSeconds());
+              jQuery(this).val(datetext);
+          }
+      });
+	}
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=coupons&subtab=multiple_coupons' ) !== -1 ||
+				ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=coupons&subtab=add_edit' ) !== -1
+	){
+			jQuery('#ihc_start_time').datepicker({
+					dateFormat : 'dd-mm-yy'
+			});
+			jQuery('#ihc_end_time').datepicker({
+					dateFormat : 'dd-mm-yy'
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=general&subtab=public_workflow' ) !== -1 ){
+			// general settings - public workflow
+			jQuery("[name=ihc_default_country]").select2({
+				placeholder: "Select Your Country",
+				allowClear: true
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=general&subtab=captcha' ) !== -1 ){
+			// general settings
+			jQuery( '.js-ihc-change-recaptcha-version' ).on( 'change', function( evt ){
+					if ( this.value == 'v2' ){
+							jQuery( '.js-ihc-recaptcha-v2-wrapp' ).css( 'display', 'block' );
+							jQuery( '.js-ihc-recaptcha-v3-wrapp' ).css( 'display', 'none' );
+					} else {
+							jQuery( '.js-ihc-recaptcha-v2-wrapp' ).css( 'display', 'none' );
+							jQuery( '.js-ihc-recaptcha-v3-wrapp' ).css( 'display', 'block' );
+					}
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=levels' ) !== -1 ){
+			// levels
+			ihcUpdateLevelSlugSpan();
+			// delete levels
+			jQuery( '.ihc-js-delete-level' ).on( 'click', function(){
+					var levelId = jQuery( this ).attr( 'data-id' );
+					swal({
+						title: jQuery('.ihc-js-admin-messages').attr('data-delete_level'),
+						text: "",
+						type: "warning",
+						showCancelButton: true,
+						confirmButtonClass: "btn-danger",
+						confirmButtonText: "OK",
+						closeOnConfirm: true
+					},
+					function(){
+							jQuery.ajax({
+									type 			: 'post',
+									url 			: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+									data 			: {
+														 action		: 'ihc_admin_delete_level',
+														 lid			: levelId,
+									},
+									success		: function (response) {
+										  location.reload();
+									}
+						 });
+				 });
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=levels&edit_level' ) !== -1 ||
+ 				ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=levels&new_level=true' ) !== -1
+	){
+			// levels - add/edit
+			jQuery('#access_interval_start').datepicker({
+					dateFormat : 'dd-mm-yy'
+			});
+			jQuery('#access_interval_end').datepicker({
+					dateFormat : 'dd-mm-yy'
+			});
+
+			/// REFERENCE SEARCH
+			jQuery( "#reference_search" ).on( "keydown", function(event){
+				if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+						jQuery(this).autocomplete( "instance" ).menu.active){
+						event.preventDefault();
+				}
+			}).autocomplete({
+				focus				: function( event, ui ){},
+				minLength		: 0,
+				source			: window.ihc_plugin_url + 'admin/ajax-custom.php?ihcAdminAjaxNonce=' + window.ihcAdminAjaxNonce,
+				select			: function( event, ui ) {
+						jQuery('[name=new_woo_product]').val(ui.item.id);
+						jQuery('#reference_search').val(ui.item.label);
+						return false;
+				}
+			});
+
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=order-edit' ) !== -1 ){
+			jQuery('#created_date_ihc').datepicker({
+					dateFormat 		: 'yy-mm-dd',
+					onSelect			: function(datetext){
+							var d = new Date();
+							datetext = datetext+" "+d.getHours()+":"+ihcAddZero(d.getMinutes())+":"+ihcAddZero(d.getSeconds());
+							jQuery(this).val(datetext);
+					}
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=orders' ) !== -1 ){
+
+
+		jQuery( '.ihc-js-delete-payment-transaction' ).on( 'click', function(){
+				var transactionId = jQuery( this ).attr( 'data-id' );
+				swal({
+						title								: jQuery( '.ihc-js-admin-messages' ).attr( 'data-delete_transaction' ),
+						text								: "",
+						type								: "warning",
+						showCancelButton		: true,
+						confirmButtonClass	: "btn-danger",
+						confirmButtonText		: "OK",
+						closeOnConfirm			: true
+				},
+				function(){
+						jQuery.ajax({
+								type : 'post',
+								url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+								data : {
+													 action: 'ihc_admin_delete_payment_transaction',
+													 id:			transactionId,
+											 },
+								success: function (response) {
+										location.reload();
+								}
+					 });
+			 });
+		});
+
+		jQuery( '.ihc-js-delete-order' ).on( 'click', function(){
+				var orderId = jQuery( this ).attr( 'data-id' );
+				swal({
+						title									: jQuery( '.ihc-js-admin-messages' ).attr( 'data-delete_order' ),
+						text									: "",
+						type									: "warning",
+						showCancelButton			: true,
+						confirmButtonClass		: "btn-danger",
+						confirmButtonText			: "OK",
+						closeOnConfirm				: true
+				},
+				function(){
+						jQuery.ajax({
+								type 				: 'post',
+								url 				: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+								data 				: {
+													 action: 'ihc_admin_delete_order',
+													 id:			orderId,
+								},
+								success			: function (response) {
+										location.reload();
+								}
+					 });
+			 });
+		});
+
+		jQuery( '.ihc-js-make-order-completed' ).on( 'click', function(){
+				var orderId = jQuery( this ).attr( 'data-id' );
+				jQuery.ajax({
+						type : 'post',
+						url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+						data : {
+											 action: 'ihc_admin_make_order_completed',
+											 id:			orderId,
+									 },
+						success: function (response) {
+								location.reload();
 						}
 			 });
 		});
 
-});
+	}
 
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=listing_users' ) !== -1 ){
+			// Members Directory
+			ihcPreviewUList();
+	}
 
-jQuery(document).ready(function(){
-	jQuery('.ihc-admin-mobile-bttn').on('click', function(){
-		jQuery('.ihc-dashboard-menu-items').toggle();
-	});
-});
+	if ( ihcCurrentUrl.indexOf( 'page=ihc_manage&tab=locker&subtab=add_new' ) !== -1 ){
+			// Locker - add/edit
+			ihcLockerPreview();
+			jQuery(document).on('click', '#ihc_locker_custom_content-html', function() {
+					jQuery('#ihc-update-bttn-show-edit').css('display', 'none');
+			});
+			jQuery(document).on('click', '#ihc_locker_custom_content-tmce', function() {
+					jQuery('#ihc-update-bttn-show-edit').css('display', 'block');
+			});
 
-jQuery(document).ready( function() {
-    var nonce = jQuery('meta[name="ump-admin-token"]').attr('content');
-    jQuery.ajaxSetup( { headers: {'X-CSRF-UMP-ADMIN-TOKEN': nonce }});
-});
+			var display = jQuery('#ihc_locker_custom_content').css('display');
+			if ( display == 'none' ){
+					jQuery('#ihc-update-bttn-show-edit').css('display', 'block');
+			}
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=locker' ) !== -1 ){
+			// Locker - list all
+			jQuery( '.ihc-js-admin-delete-locker' ).on( 'click', function(){
+					var lockerId = jQuery( this ).attr( 'data-id' );
+					swal({
+						title: jQuery( '.ihc-js-admin-messages' ).attr( 'data-delete_item' ),
+						text: "",
+						type: "warning",
+						showCancelButton: true,
+						confirmButtonClass: "btn-danger",
+						confirmButtonText: "OK",
+						closeOnConfirm: true
+					},
+					function(){
+							jQuery.ajax({
+									type : 'post',
+									url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+									data : {
+														 action: 'ihc_admin_delete_locker',
+														 id:			lockerId,
+												 },
+									success: function (response) {
+											location.reload();
+									}
+						 });
+				 });
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=login' ) !== -1 ){
+			// Login
+			ihcLoginPreview();
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications&edit_notification=' ) !== -1 ||
+				ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications&add_notification=true' ) !== -1
+ 	){
+		// notifications - add/edit
+		jQuery( '.ump-js-change-notification-type' ).on( 'change', function( e ){
+				ihcChangeNotificationTemplate();
+				ihcNotificationLevelOnlyFor();
+				jQuery( '.ump-js-list-constants' ).html('');
+				jQuery.ajax({
+						type 				: "post",
+						url 				: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+						data 				: {
+											 action							: "ihc_update_list_notification_constants",
+											 notificationType		: jQuery(e.target).val(),
+						},
+						success			: function (data) {
+								jQuery( '.ump-js-list-constants' ).html( data );
+						}
+			 });
+		});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications&add_notification=true' ) !== -1 ){
+			// notifications - add
+			ihcChangeNotificationTemplate();
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=notifications ' ) !== -1 ){
+			// notifications - list
+				ihcNotificationLevelOnlyFor();
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=register' ) !== -1 ){
+			// register
+			jQuery('.ihc-register-the-values').sortable({
+				cursor: 'move'
+			});
+			ihcRegisterLockerPreview();
+
+			jQuery( '.ihc-js-delete-register-field' ).on( 'click', function(){
+					var fieldId = jQuery( this ).attr( 'data-id' );
+					swal({
+						title									: jQuery( '.ihc-js-admin-messages' ).attr( 'data-delete_item' ),
+						text									: "",
+						type									: "warning",
+						showCancelButton			: true,
+						confirmButtonClass		: "btn-danger",
+						confirmButtonText			: "OK",
+						closeOnConfirm				: true
+					},
+					function(){
+							jQuery.ajax({
+									type 			: 'post',
+									url 			: decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+									data 			: {
+														 action: 'ihc_admin_delete_register_field',
+														 id:			fieldId,
+									},
+									success		: function (response) {
+											location.reload();
+									}
+						 });
+				 });
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=subscription_plan' ) !== -1 ){
+			// Subscription Plan
+			ihcPreviewSelectLevels();
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=user-details' ) !== -1 ){
+			// User Details
+
+			var ihcPrintThisOptions = {
+						importCSS: true,
+			      importStyle: true,
+			      loadCSS: window.ihc_plugin_url + 'admin/assets/css/style.css',
+			      debug: false,
+			      printContainer: true,
+			      pageTitle: "",
+			      removeInline: false,
+			      printDelay: 333,
+			      header: null,
+			      formValues: false,
+			      base: true
+			};
+
+			// print page
+			jQuery(".ihc-js-print-page").on("click", function(e){
+					jQuery( "#ihc_js_print_this" ).printThis( ihcPrintThisOptions );
+			});
+
+			// show more details about member
+			jQuery( '.ihc-js-show-more' ).on( 'click', function( e ){
+				var show = jQuery( '.ihc-js-user-extra-fields' ).css( 'display' );
+				if ( show == 'block' ){
+						jQuery( '.ihc-js-user-extra-fields' ).css( 'display', 'none' );
+						jQuery( '.ihc-js-show-more' ).html( jQuery('.ihc-js-admin-messages').attr('data-show_more') );
+				} else {
+						jQuery( '.ihc-js-user-extra-fields' ).css( 'display', 'block' );
+						jQuery( '.ihc-js-show-more' ).html( jQuery('.ihc-js-admin-messages').attr('data-show_less') );
+				}
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=users&ihc-edit-user' ) !== -1 ){
+			jQuery('.start_input_text').datepicker({
+					dateFormat : 'yy-mm-dd',
+					onSelect: function(datetext){
+							var d = new Date();
+							datetext = datetext+" "+d.getHours()+":"+ihcAddZero(d.getMinutes())+":"+ihcAddZero(d.getSeconds());
+							jQuery(this).val(datetext);
+					}
+			});
+			jQuery('.expire_input_text').datepicker({
+					dateFormat : 'yy-mm-dd',
+					onSelect: function(datetext){
+							if ( datetext == '' || datetext == null ){
+								jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( jQuery( '.ihc-js-admin-messages' ).attr( 'data-hold' ) ).attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Expired');
+							}
+							var d = new Date();
+							datetext = datetext+" "+d.getHours()+":"+ihcAddZero(d.getMinutes())+":"+ihcAddZero(d.getSeconds());
+							jQuery(this).val(datetext);
+							var currentTimestamp = ( new Date().getTime()/1000 );
+							var selectedTimestamp = (new Date(datetext).getTime() / 1000 );
+							if ( currentTimestamp > selectedTimestamp ){
+									jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( jQuery( '.ihc-js-admin-messages' ).attr( 'data-expired' ) ).attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Expired');
+							} else {
+									jQuery( '#' + jQuery(this).parent().parent().attr('id') + ' .ihc-level-status' ).html( jQuery( '.ihc-js-admin-messages' ).attr( 'data-active' ) ).attr( 'class', '' ).attr( 'class', 'ihc-level-status ihc-level-status-Active');
+							}
+
+					}
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=users' ) !== -1 ){
+			if ( jQuery( '.ihc-js-users-list-users-spent-values' ).length ){
+					jQuery.ajax({
+							type : "post",
+							url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+							data : {
+												 action			: "ihc_admin_list_users_total_spent_values",
+												 users   		: jQuery( '.ihc-js-users-list-users-spent-values' ).attr( 'data-value' ),
+										 },
+							success: function (data) {
+									if ( data == '' ){
+											return false;
+									}
+									var jsonObject = JSON.parse( data );
+									Object.keys( jsonObject ).forEach( function (key){
+											document.getElementById('ihc_js_total_spent_for_'+key).innerHTML = jsonObject[key];
+									});
+							}
+				 });
+			}
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=add_edit' ) !== -1 ){
+			var search_cats_label = jQuery( '.ihc-js-admin-messages' ).attr( 'data-search_cats' );
+			var search_prod_label = jQuery( '.ihc-js-admin-messages' ).attr( 'data-search_products' );
+			var ihc_woo_search_type = jQuery('#search_woo_type').val();
+
+			var ihc_from = jQuery('#start_date_input').datepicker({
+					dateFormat : 'yy-mm-dd'
+			})
+			.on( "change", function() {
+					ihc_to.datepicker( "option", "minDate", this.value );
+			});
+			var ihc_to = jQuery('#end_date_input').datepicker({
+					dateFormat : 'yy-mm-dd'
+			})
+			.on( "change", function() {
+					ihc_from.datepicker( "option", "maxDate", this.value );
+			});
+
+			/// REFERENCE SEARCH
+		jQuery( "#product_search" ).on( "keydown", function(event){
+			if ( event.keyCode === jQuery.ui.keyCode.TAB &&
+				jQuery(this).autocomplete( "instance" ).menu.active){
+				event.preventDefault();
+			}
+		}).autocomplete({
+			focus: function( event, ui ){},
+			minLength: 0,
+			source: window.ihc_plugin_url + 'admin/ajax-custom.php?ihcAdminAjaxNonce=' + window.ihcAdminAjaxNonce + '&woo_type=' + ihc_woo_search_type,
+			select: function( event, ui ) {
+				var input_id = '#product_search_input';
+				var terms = ihc_split(jQuery(input_id).val());//get items from input hidden
+				var v = ui.item.id;
+				var l = ui.item.label;
+				if (!ihcContains(terms, v)){
+					terms.push(v);
+					ihcAutocompleteWriteTag(v, input_id, '#ihc_reference_search_tags', 'ihc_reference_tag_', l);// print the new shiny box
+				}
+				var str_value = terms.join( "," );
+				jQuery(input_id).val(str_value);//send to input hidden
+				this.value = '';//reset search input
+				return false;
+			}
+		});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=account_page' ) !== -1 ){
+			// account page
+				ihcApMakeVisible('overview', '#ihc_tab-overview');
+				var i = 0;
+				var ihc_shiny_object = [];
+				jQuery( '.ihc-js-data-for-indeed-shinny-select' ).each( function( e, html ){
+
+						var type = jQuery( this ).attr( 'data-type' );
+						var value = jQuery( this ).attr( 'data-value' );
+
+						ihc_shiny_object[i] = new indeedShinySelect({
+										selector: '#indeed_shiny_select_' + type,
+										item_selector: '.ihc-font-awesome-popup-item',
+										option_name_code: 'ihc_ap_' + type + '_icon_code',
+										option_name_icon: 'ihc_ap_' + type + '_icon_class',
+										default_icon: 'fa-ihc fa-' + type + '-account-ihc',
+										default_code: value,
+										init_default: true,
+										second_selector: '#ihc_icon_arrow_' + type
+							});
+						i++;
+				});
+	}
+
+	if ( ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=dashboard' ) !== -1 )
+			|| ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage' ) !== -1 && ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab' ) === -1 )
+	){
+			// dashboard
+			if ( jQuery( '.ihc-js-dashboard-earnings-data' ).length ){
+					var i = 0;
+					var ihc_ticks = [];
+					var ihc_chart_stats = [];
+					jQuery( '.ihc-js-dashboard-earnings-data' ).each( function( e, hmtl ){
+							var date = jQuery( this ).attr('data-date');
+							var sum = jQuery( this ).attr('data-sum');
+							ihc_ticks[i] = [ i, date];
+							ihc_chart_stats[i] = { 0: i, 1: sum };
+							i++;
+					});
+
+					var options = {
+							lines: { show: true, fill: '#7ebffc', fillColor: "rgba(32, 211, 129, 0.1)", lineWidth:2},
+							points: {radius: 2,show: true, fillColor: "rgb(32, 211, 129)"},
+							grid: { hoverable: false, backgroundColor: "#fff", minBorderMargin: 0,  borderWidth: {top: 0, right: 0, bottom: 1, left: 1}, borderColor: "#ddd", color: "#ddd" },
+							xaxis: {
+												show: true,
+												ticks: ihc_ticks,
+												tickLength: 1,
+												color:"#9fa6b2",
+												position: "bottom",
+												reserveSpace : true
+							},
+							yaxis: { tickDecimals: 0, tickColor: "#f4f5f7", color:"#9fa6b2"},
+							legend: {
+									show: true,
+									position: "ne",
+									}
+						};
+						jQuery.plot( jQuery( "#ihc-chart-earnings" ), [ {
+								color: "rgb(32, 211, 129)",
+								data: ihc_chart_stats,
+								shadowSize: 0
+							} ], options
+						);
+			}
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=help' ) !== -1 ){
+			// help
+			jQuery( '[name=ihc_save_licensing_code]' ).on( 'click', function(){
+					jQuery.ajax({
+							type : "post",
+							url : decodeURI( window.ihc_site_url ) + '/wp-admin/admin-ajax.php',
+							data : {
+												 action						: "ihc_el_check_get_url_ajax",
+												 purchase_code		: jQuery( '[name=ihc_licensing_code_v2]' ).val(),
+												 nonce						: jQuery( '.ihc-js-help-page-data' ).attr( 'data-nonce' ),
+										 },
+							success: function (data) {
+									if ( data ){
+											window.location.href = data;
+									} else {
+											alert( jQuery( '.ihc-js-help-page-data' ).attr( 'data-help' ) );
+									}
+							}
+				  });
+					return false;
+			});
+
+			jQuery( '.ihc-js-revoke-license' ).on( 'click', function(){
+					jQuery.ajax({
+								type : "post",
+								url : decodeURI( window.ihc_site_url ) + '/wp-admin/admin-ajax.php',
+								data : {
+												 action						: "ihc_revoke_license",
+												 nonce						: jQuery( '.ihc-js-help-page-data' ).attr( 'data-nonce' ),
+								},
+								success: function (data) {
+										window.location.href = jQuery( '.ihc-js-help-page-data' ).attr( 'data-revoke_url' );
+								}
+					});
+			});
+	}
+
+	if ( ihcCurrentUrl.indexOf( 'admin.php?page=ihc_manage&tab=invoices' ) !== -1 ){
+			iumpAdminPreviewInvoice();
+	}
+
+}); // end of document load

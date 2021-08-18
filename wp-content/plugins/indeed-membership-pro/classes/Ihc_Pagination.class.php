@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (!class_exists('Ihc_Pagination')):
 
 class Ihc_Pagination{
@@ -13,7 +13,7 @@ class Ihc_Pagination{
 	private $class_item_break = 'ihc-user-pagination';
 	private $wrapper_class = 'iump-pagination-wrapper';
 	private $is_unset = FALSE;
-	
+
 	public function __construct($input=array()){
 		/*
 		 * @param array
@@ -24,14 +24,14 @@ class Ihc_Pagination{
 			foreach ($required as $key){
 				if (empty($input[$key])){
 					$this->is_unset = TRUE;
-				} 
+				}
 				$this->$key = $input[$key];
 			}
 		} else {
 			$this->is_unset = TRUE;
 		}
 	}
-	
+
 	public function output(){
 		/*
 		 * @param none
@@ -40,11 +40,13 @@ class Ihc_Pagination{
 		if ($this->is_unset){
 			return '';
 		}
-		
+
 		$output = '';
 		$total_pages = ceil($this->total_items/$this->items_per_page);
-		if ($total_pages<2) return '';
-		
+		if ($total_pages<2){
+			 return '';
+		}
+
 		if ($total_pages<=5){
 			//show all the links
 			for ($i=1; $i<=$total_pages; $i++){
@@ -68,7 +70,7 @@ class Ihc_Pagination{
 				}
 			}
 		}
-	
+
 		/// Back link
 		if ($this->current_page>1){
 			$prev_page = $this->current_page - 1;
@@ -81,13 +83,13 @@ class Ihc_Pagination{
 			$href = add_query_arg($this->param_name, $next_page, $this->base_url);
 			$output = $output . "<a href='" . $href . "' class='" . $this->link_class . "'> > </a>";
 		}
-	
+
 		//Wrappers
-		$output = "<div class='" . $this->wrapper_class . "'>" . $output . "</div><div style='clear:both;'></div>";
+		$output = "<div class='" . $this->wrapper_class . "'>" . $output . "</div><div class='ihc-clear'></div>";
 		return $output;
 	}
-	
-	
+
+
 }//end of class
 
 endif;

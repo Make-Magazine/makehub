@@ -76,7 +76,7 @@ class Ihc_Invoice{
 
 		$data['ihc_invoices_title'] = stripslashes($data['ihc_invoices_title']);
 
-		$data ['css'] = stripslashes(@$data['ihc_invoices_custom_css']);
+		$data ['css'] = stripslashes((isset($data['ihc_invoices_custom_css'])) ? $data['ihc_invoices_custom_css'] : '');
 
 
 
@@ -96,9 +96,6 @@ class Ihc_Invoice{
 
 			$data['total_amount'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['amount_value']);
 
-			//Deprecated
-			//$data['level_price'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $level_details['price']);
-
 			//Added on v.7.0
 			$data['level_price'] =$data['order_details']['amount_value'];
 
@@ -110,12 +107,17 @@ class Ihc_Invoice{
 				$data['level_price'] = $data['level_price'] +	$data['order_details']['discount_value'];
 			}
 
-			if (!empty($data['order_details']['tax_value'])){
-
-				$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['tax_value']);
-
-				//Added on v.7.0
-				$data['level_price'] = $data['level_price'] - $data['order_details']['tax_value'];
+			if (!empty($data['order_details']['taxes_amount'])){
+				 // v 9.5
+				 $data['level_price'] = $data['level_price'] - $data['order_details']['taxes_amount'];
+				 $data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['taxes_amount']);
+			} else if (!empty($data['order_details']['tax_value'])){
+			    // v.7.0
+					$data['level_price'] = $data['level_price'] - $data['order_details']['tax_value'];
+					$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['tax_value']);
+			} else if (!empty($data['order_details']['taxes'])){
+					$data['level_price'] = $data['level_price'] - (float)$data['order_details']['taxes'];
+					$data['total_taxes'] = ihc_format_price_and_currency($data['order_details']['amount_type'], $data['order_details']['taxes']);
 			}
 
 			//Added on v.7.0
@@ -148,8 +150,6 @@ class Ihc_Invoice{
 
 
 		$data['order_details']['create_date'] = ihc_convert_date_to_us_format($data['order_details']['create_date']);
-
-
 
 		/// output
 
@@ -189,7 +189,7 @@ class Ihc_Invoice{
 
 		$data['content'] = $input;
 
-		$data['title'] =  __('Invoice', 'ihc');
+		$data['title'] =  esc_html__('Invoice', 'ihc');
 
 		$fullPath = IHC_PATH . 'public/views/popup.php';
 		$searchFilename = 'popup.php';

@@ -1,7 +1,10 @@
+<?php
+	$subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'manage';
+?>
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='add_edit') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=add_edit';?>"><?php _e('Add Single Coupon', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='multiple_coupons') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=multiple_coupons';?>"><?php _e('Add Bulk Coupons', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='manage' || !isset($_REQUEST['subtab'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=manage';?>"><?php _e('Manage Coupons', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='add_edit') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=add_edit';?>"><?php esc_html_e('Add Single Coupon', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='multiple_coupons') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=multiple_coupons';?>"><?php esc_html_e('Add Bulk Coupons', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='manage' ) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=manage';?>"><?php esc_html_e('Manage Coupons', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -10,11 +13,8 @@
 	echo ihc_is_curl_enable();
 	do_action( "ihc_admin_dashboard_after_top_menu" );
 
-	if (empty($_GET['subtab'])){
-		$_GET['subtab'] = 'manage';
-	}
 
-	if ($_GET['subtab']=='manage'){
+	if ($subtab=='manage'){
 		/// save
 		if (isset($_POST['ihc_bttn'])  && !empty($_POST['ihc_admin_coupons_nonce']) && wp_verify_nonce( $_POST['ihc_admin_coupons_nonce'], 'ihc_admin_coupons_nonce' ) ){
 			if (empty($_POST['id'])){
@@ -34,53 +34,43 @@
 			}
 		} else {
 			?>
-			<a href="<?php echo $url.'&tab='.$tab.'&subtab=add_edit';?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php _e("Add New Coupon", 'ihc');?></a>
-			<div class="iump-page-title">Ultimate Membership Pro - <span class="second-text"><?php _e("MemberShip Coupons", 'ihc');?></span>
+			<a href="<?php echo $url.'&tab='.$tab.'&subtab=add_edit';?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php esc_html_e("Add New Coupon", 'ihc');?></a>
+			<div class="iump-page-title">Ultimate Membership Pro - <span class="second-text"><?php esc_html_e("MemberShip Coupons", 'ihc');?></span>
 			</div>
-			<div class="ihc-warning-message"><?php _e(" No Coupons available! Please create your first Coupon.", "ihc");?></div>
+			<div class="ihc-warning-message"><?php esc_html_e(" No Coupons available! Please create your first Coupon.", "ihc");?></div>
 			<?php
 		}
 	} else {
-		$meta_arr = ihc_get_coupon_by_id(@$_GET['id']);
+		$meta_arr = ihc_get_coupon_by_id((isset($_GET['id'])) ? $_GET['id'] : 0);
 		?>
-		<script>
-			//date picker
-			jQuery(document).ready(function() {
-			    jQuery('#ihc_start_time').datepicker({
-			        dateFormat : 'dd-mm-yy'
-			    });
-			    jQuery('#ihc_end_time').datepicker({
-			        dateFormat : 'dd-mm-yy'
-			    });
-			});
-		</script>
-			<div class="iump-page-title"><?php  _e("Coupons", 'ihc');?></div>
+
+			<div class="iump-page-title"><?php  esc_html_e("Coupons", 'ihc');?></div>
 			<form method="post" action="<?php echo $url.'&tab='.$tab.'&subtab=manage';?>">
 
 				<input type="hidden" name="ihc_admin_coupons_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_coupons_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
 					<?php if (!empty($_GET['id'])){?>
-					<h3><?php _e("Edit", 'ihc');?></h3>
+					<h3><?php esc_html_e("Edit", 'ihc');?></h3>
 					<input type="hidden" name="id" value="<?php echo $_GET['id'];?>" />
 					<?php } else { ?>
-					<h3><?php _e("Add New", 'ihc');?></h3>
+					<h3><?php esc_html_e("Add New", 'ihc');?></h3>
 					<?php } ?>
 					<div class="inside">
 						<?php
-							if ($_GET['subtab']=='multiple_coupons'){
+							if ($subtab=='multiple_coupons'){
 								//////////////// MULTIPLE COUPONS ////////////
 								?>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php _e("Code prefix", 'ihc');?></label>
+									<label class="iump-labels-special"><?php esc_html_e("Code prefix", 'ihc');?></label>
 									<input type="text" value="" name="code_prefix" />
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php _e("Length", 'ihc');?></label>
+									<label class="iump-labels-special"><?php esc_html_e("Length", 'ihc');?></label>
 									<input type="number" min="2" value="10" name="code_length" />
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php _e("Number of Codes", 'ihc');?></label>
+									<label class="iump-labels-special"><?php esc_html_e("Number of Codes", 'ihc');?></label>
 									<input type="number" min="2" value="2" name="how_many_codes" />
 								</div>
 								<?php
@@ -88,22 +78,22 @@
 								/////////////// ONE /////////////
 								?>
 								<div class="iump-form-line">
-									<label class="iump-labels-special"><?php _e("Code", 'ihc');?></label>
-									<input type="text" value="<?php echo $meta_arr['code'];?>" name="code" id="ihc_the_coupon_code" /> <span style="font-size: 11px;color: #fff; padding: 6px 9px;-webkit-border-radius: 3px;box-radius: 3px;    background-color: rgba(240, 80, 80, 0.8);cursor: pointer;" onClick="ihcGenerateCode('#ihc_the_coupon_code', 10);"><?php _e("Generate Code", "ihc");?></span>
+									<label class="iump-labels-special"><?php esc_html_e("Code", 'ihc');?></label>
+									<input type="text" value="<?php echo $meta_arr['code'];?>" name="code" id="ihc_the_coupon_code" /> <span class="ihc-generate-coupon-button" onClick="ihcGenerateCode('#ihc_the_coupon_code', 10);"><?php esc_html_e("Generate Code", "ihc");?></span>
 								</div>
 								<?php
 							}
 						?>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Description", 'ihc');?></label>
-							<textarea name="description" style="    min-width: 250px;"><?php echo @$meta_arr['description'];?></textarea>
+							<label class="iump-labels-special"><?php esc_html_e("Description", 'ihc');?></label>
+							<textarea name="description" class="ihc-coupon-description"><?php echo (isset($meta_arr['description'])) ? $meta_arr['description'] : '';?></textarea>
 						</div>
 
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Type of discount", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("Type of discount", 'ihc');?></label>
 							<select name="discount_type" onChange="ihcDiscountType(this.value);"><?php
-								$arr = array('price' => __("Price", 'ihc'), 'percentage'=>"Percentage (%)");
+								$arr = array('price' => esc_html__("Price", 'ihc'), 'percentage'=>"Percentage (%)");
 								foreach ($arr as $k=>$v){
 									$selected = ($meta_arr['discount_type']==$k) ? 'selected' : '';
 									?>
@@ -113,16 +103,28 @@
 							?></select>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Discount Value", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("Discount Value", 'ihc');?></label>
 							<input type="number" step="0.01" value="<?php echo $meta_arr['discount_value'];?>" name="discount_value"/>
 
-							<span id="discount_currency" style="display: <?php if ($meta_arr['discount_type']=='price') echo 'inline'; else echo 'none';?>"><?php echo get_option('ihc_currency');?></span>
-							<span id="discount_percentage" style="display: <?php if ($meta_arr['discount_type']=='percentage') echo 'inline'; else echo 'none';?>">%</span>
+							<span id="discount_currency" class="<?php if ($meta_arr['discount_type']=='price'){
+								 echo 'ihc-display-inline';
+							}else{
+								 echo 'ihc-display-none';
+							}
+							?>">
+								<?php echo get_option('ihc_currency');?>
+							</span>
+							<span id="discount_percentage" class="<?php if ($meta_arr['discount_type']=='percentage'){
+								 echo 'ihc-display-inline';
+							}else{
+								 echo 'ihc-display-none';
+							}
+							?>">%</span>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Period Type", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("Period Type", 'ihc');?></label>
 							<select name="period_type" onChange="ihcSelectShDiv(this, '#the_date_range', 'date_range');"><?php
-								$arr = array('date_range' => __("Date Range", 'ihc'), 'unlimited'=>__("Unlimited", 'ihc'));
+								$arr = array('date_range' => esc_html__("Date Range", 'ihc'), 'unlimited'=>esc_html__("Unlimited", 'ihc'));
 								foreach ($arr as $k=>$v){
 									$selected = ($meta_arr['period_type']==$k) ? 'selected' : '';
 									?>
@@ -131,20 +133,25 @@
 								}
 							?></select>
 						</div>
-						<div class="iump-form-line" id="the_date_range" style="display: <?php if ($meta_arr['period_type']=='date_range') echo 'block'; else echo 'none'?>;">
-							<label class="iump-labels-special"><?php _e("Date Range", 'ihc');?></label>
+						<div class="iump-form-line" id="the_date_range" class="<?php if ($meta_arr['period_type']=='date_range'){
+							 echo 'ihc-display-block';
+						}else{
+							 echo 'ihc-display-none';
+						}
+						?>">
+							<label class="iump-labels-special"><?php esc_html_e("Date Range", 'ihc');?></label>
 							<input type="text" name="start_time" id="ihc_start_time" value="<?php echo $meta_arr['start_time'];?>" /> - <input type="text" name="end_time" id="ihc_end_time" value="<?php echo $meta_arr['end_time'];?>" />
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Repeat", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("Repeat", 'ihc');?></label>
 							<input type="number" value="<?php echo $meta_arr['repeat'];?>" name="repeat" min="1" />
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("Target Level", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("Target Membership", 'ihc');?></label>
 							<select name="target_level"><?php
-								$levels = get_option('ihc_levels');
+								$levels = \Indeed\Ihc\Db\Memberships::getAll();
 								if ($levels && count($levels)){
-									$levels_arr[-1] = __("All", 'ihc');
+									$levels_arr[-1] = esc_html__("All", 'ihc');
 									foreach ($levels as $k=>$v){
 										$levels_arr[$k] = $v['name'];
 									}
@@ -158,9 +165,9 @@
 							?></select>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels-special"><?php _e("On Levels with Billing Recurrence apply the Discount:", 'ihc');?></label>
+							<label class="iump-labels-special"><?php esc_html_e("On Subscriptions with Billing Recurrence apply the Discount:", 'ihc');?></label>
 							<select name="reccuring"><?php
-								$arr = array(0 => __("Just Once", 'ihc'), 1 => __("Forever", 'ihc'));
+								$arr = array(0 => esc_html__("Just Once", 'ihc'), 1 => esc_html__("Forever", 'ihc'));
 								foreach ($arr as $k=>$v){
 									$selected = ($meta_arr['reccuring']==$k) ? 'selected' : '';
 									?>
@@ -171,7 +178,7 @@
 						</div>
 						<input type="hidden" name="box_color" value="<?php echo $meta_arr['box_color'];?>" />
 						<div class="ihc-wrapp-submit-bttn">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_bttn" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>

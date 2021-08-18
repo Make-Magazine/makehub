@@ -25,7 +25,9 @@ class ReasonsForCancelDeleteLevels
     public function count()
     {
         global $wpdb;
-        return $wpdb->get_var( "SELECT COUNT(id) FROM {$this->tableName};" );
+        //No query parameters required, Safe query. prepare() method without parameters can not be called
+        $query = "SELECT COUNT(id) FROM {$this->tableName};";
+        return $wpdb->get_var( $query );
     }
 
     public function save( $attr=array() )
@@ -40,12 +42,20 @@ class ReasonsForCancelDeleteLevels
         return $wpdb->query( $query );
     }
 
-    /*
-    public function delete( $id=0 )
+    public function getForUser( $uid=0, $limit=30, $offset=0 )
     {
         global $wpdb;
-        $query = $wpdb->prepare( "DELETE FROM {$this->tableName} WHERE id=%d ", $id );
-        return $wpdb->query( $query );
+        if ( !$uid ){
+            return [];
+        }
+        $query = $wpdb->prepare( "SELECT a.id, a.uid, a.lid, a.reason, a.action_type, a.action_date, b.user_login
+                                      FROM {$this->tableName} a
+                                      INNER JOIN {$wpdb->users} b
+                                      ON a.uid=b.ID
+                                      WHERE
+                                      a.uid=%d
+                                      ORDER BY action_date ASC LIMIT %d OFFSET %d;", $uid, $limit, $offset );
+        return $wpdb->get_results( $query );
     }
-    */
+
 }

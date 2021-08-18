@@ -7,38 +7,50 @@ if ($dashboard_notifications!==FALSE && $dashboard_notifications!=0){
 
 $url = get_admin_url() . 'admin.php?page=ihc_manage';
 
-
+wp_enqueue_script( 'ihc-manage-page', IHC_URL . 'admin/assets/js/manage-page.js', [], 1.1 );
 $tab = 'dashboard';
-if(isset($_REQUEST['tab'])) $tab = $_REQUEST['tab'];
+if(isset($_REQUEST['tab'])){
+	 $tab = $_REQUEST['tab'];
+}
 
 $tabs_arr = array(
-					'users' => __('Users', 'ihc'),
-					'affiliates' => __('Ultimate Affiliates', 'ihc'),
-					'levels' => __('Levels', 'ihc'),
-					'payment_settings' => __('Payment Services', 'ihc'),
-					'locker' => __('Inside Lockers', 'ihc'),
-					'showcases' => __('Showcases', 'ihc'),
-					'social_login' => __("Social Login", 'ihc'),
-					'coupons' => __("Coupons", "ihc"),
-					'block_url' => __('Lock Rules', 'ihc'),
-					'orders' => __('Payment History', 'ihc'),
-					'notifications' => __('Notifications', 'ihc'),
-					'magic_feat' => __( 'Extensions', 'ihc'),
-					'general' => __('General Options', 'ihc'),
+					'users' => esc_html__('Members', 'ihc'),
+					'affiliates' => esc_html__('Ultimate Affiliates', 'ihc'),
+					'levels' => esc_html__('Memberships', 'ihc'),
+					'payment_settings' => esc_html__('Payment Services', 'ihc'),
+					'locker' => esc_html__('Inside Lockers', 'ihc'),
+					'showcases' => esc_html__('Showcases', 'ihc'),
+					'social_login' => esc_html__("Social Login", 'ihc'),
+					'coupons' => esc_html__("Coupons", "ihc"),
+					'block_url' => esc_html__('Access Rules', 'ihc'),
+					'orders' => esc_html__('Payment History', 'ihc'),
+					'notifications' => esc_html__('Email Notifications', 'ihc'),
+					'magic_feat' => esc_html__( 'Extensions', 'ihc'),
+					'general' => esc_html__('General Options', 'ihc'),
 				  );
 ?>
-<script>
-	var ihc_messages = {
-					email_server_check: "<?php _e('An E-mail was sent to your Admin address. Check your inbox or Spam/Junk Folder!', 'ihc');?>",
-};
-</script>
+<span class="ihc-js-admin-messages"
+			data-delete_level="<?php esc_html_e( 'Are you sure that you want to delete this level?', 'ihc' );?>"
+			data-delete_transaction="<?php esc_html_e( 'Are you sure that you want to delete this transaction?', 'ihc' );?>"
+			data-delete_item="<?php esc_html_e( 'Are you sure that you want to delete this item?', 'ihc' );?>"
+			data-delete_order="<?php esc_html_e( 'Are you sure that you want to delete this order?', 'ihc' );?>"
+			data-hold='<?php esc_html_e('Hold');?>'
+			data-expired='<?php esc_html_e( 'Expired', 'ihc' );?>'
+			data-active='<?php esc_html_e( 'Active', 'ihc');?>'
+			data-show_more='<?php esc_html_e( 'Show More', 'ihc' );?>'
+			data-show_less='<?php esc_html_e( 'Show Less', 'ihc' );?>'
+			data-search_cats='<?php esc_html_e('Search Categories', 'ihc');?>'
+			data-search_products='<?php esc_html_e('Search Products', 'ihc');?>'
+			data-email_server_check="<?php esc_html_e('An E-mail was sent to your Admin address. Check your inbox or Spam/Junk Folder!', 'ihc');?>"
+></span>
+
 <?php $plugin_vs = get_ump_version(); ?>
 <div class="ihc-dashboard-wrap">
 	<div class="ihc-admin-header">
 		<div class="ihc-top-menu-section">
 			<div class="ihc-dashboard-logo">
 			<a href="<?php echo $url.'&tab=dashboard';?>">
-				<img src="<?php echo IHC_URL;?>admin/assets/images/dashboard-logo.jpg"/>
+				<img alt="Ultimate Membership Pro" src="<?php echo IHC_URL;?>admin/assets/images/dashboard-logo.jpg"/>
 				<div class="ihc-plugin-version"><?php echo $plugin_vs; ?></div>
 			</a>
 			</div>
@@ -65,7 +77,9 @@ $tabs_arr = array(
 						}
 
 
-						if($menu_tab==$k) $selected = 'selected';
+						if($menu_tab==$k){
+							 $selected = 'selected';
+						}
 
 						if (!IHCACTIVATEDMODE && $k=='coupons'){
 							$tab_url = '';
@@ -182,6 +196,9 @@ $tabs_arr = array(
 				break;
 			case 'orders':
 				require_once IHC_PATH . 'admin/includes/tabs/orders.php';
+				break;
+			case 'order-edit':
+				require_once IHC_PATH . 'admin/includes/tabs/order-edit.php';
 				break;
 			case 'payments':
 				include_once IHC_PATH . 'admin/includes/tabs/list_payments.php';
@@ -332,6 +349,33 @@ $tabs_arr = array(
 			case 'reason_for_cancel':
 				require_once IHC_PATH . 'admin/includes/tabs/reason_for_cancel.php';
 				break;
+			case 'weekly_summary_email':
+				require_once IHC_PATH . 'admin/includes/tabs/weekly_summary_email.php';
+				break;
+			case 'checkout':
+				require_once IHC_PATH . 'admin/includes/tabs/checkout.php';
+				break;
+			case 'order-details':
+				require_once IHC_PATH . 'admin/includes/tabs/order_details.php';
+				break;
+			case 'notification-logs':
+				require_once IHC_PATH . 'admin/includes/tabs/notification-logs.php';
+				break;
+			case 'user-details':
+				require_once IHC_PATH . 'admin/includes/tabs/user-details.php';
+				break;
+			case 'edit-user-subscriptions':
+				require_once IHC_PATH . 'admin/includes/tabs/edit-user-subscriptions.php';
+				break;
+			case 'manage_subscription_table':
+				require_once IHC_PATH . 'admin/includes/tabs/manage_subscription_table.php';
+				break;
+			case 'manage_order_table':
+				require_once IHC_PATH . 'admin/includes/tabs/manage_order_table.php';
+				break;
+			case 'profile-form':
+				require_once IHC_PATH . 'admin/includes/tabs/profile-form.php';
+				break;
 			default :
 				do_action( 'ump_print_admin_page', $tab );
 				break;
@@ -343,19 +387,19 @@ $tabs_arr = array(
 <div class="ihc-footer-wrap">
 	<div class="ihc-additional-help">
 	<div class="ihc-footer-text"><strong>Ultimate Membership Pro v. <?php echo $plugin_vs; ?></strong> Wordpress Plugin by <a href="https://codecanyon.net/user/azzaroco/portfolio?ref=azzaroco" target="_blank">azzaroco</a></div>
-	<a href="https://codecanyon.net/item/ultimate-membership-pro-wordpress-plugin/12159253?ref=azzaroco" target="_blank" title="Support us with 5-stars Rating for further development" class="button float_right ihc-black-button" style="margin-right: 5px;"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 5-stars Rating </a>
-	<a href="http://help.wpindeed.com/ultimate-membership-pro/" target="_blank" title="Knowledge Base" class="button float_right ihc-green-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Knowledge Base</a>
-    <a href="https://www.youtube.com/playlist?list=PLmOiaKgLhsFlhpkMb_fHKV45u4qZ1IZHd" target="_blank" title="Video Tutorials" class="button float_right ihc-red-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Video Tutorials</a>
-    <a href="https://store.wpindeed.com/addon/category/ultimate-membership-pro/" target="_blank" title="Video Tutorials" class="button float_right ihc-blue-button" style="margin-right: 5px;"><i class="fa fa-book"></i> Extra AddOns</a>
-	<a href="http://codecanyon.net/downloads/" target="_blank" title="Download Item" class="button float_right" style="margin-right: 5px;"><i class="fa fa-download"></i> Download</a>
+	<a href="https://codecanyon.net/item/ultimate-membership-pro-wordpress-plugin/12159253?ref=azzaroco" target="_blank" title="Support us with 5-stars Rating for further development" class="button float_right ihc-black-button"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i> 5-stars Rating </a>
+	<a href="http://help.wpindeed.com/ultimate-membership-pro/" target="_blank" title="Knowledge Base" class="button float_right ihc-green-button"><i class="fa fa-book"></i> Knowledge Base</a>
+    <a href="https://www.youtube.com/playlist?list=PLmOiaKgLhsFlhpkMb_fHKV45u4qZ1IZHd" target="_blank" title="Video Tutorials" class="button float_right ihc-red-button"><i class="fa fa-book"></i> Video Tutorials</a>
+    <a href="https://store.wpindeed.com/addon/category/ultimate-membership-pro/" target="_blank" title="Video Tutorials" class="button float_right ihc-blue-button"><i class="fa fa-book"></i> Extra AddOns</a>
+	<a href="http://codecanyon.net/downloads/" target="_blank" title="Download Item" class="button float_right"><i class="fa fa-download"></i> Download</a>
 	</div>
 </div>
 <div class="ihc-right-menu">
 	<?php
 		$right_menu = array(
 							'user_shortcodes' => 'Shortcodes',
-							'import_export' => __('Import/Export', 'ihc'),
-							'help' => __('Help', 'ihc')
+							'import_export' => esc_html__('Import/Export', 'ihc'),
+							'help' => esc_html__('Help', 'ihc')
 		);
 		foreach ($right_menu as $k=>$v){
 		?>

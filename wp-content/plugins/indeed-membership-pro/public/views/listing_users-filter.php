@@ -1,7 +1,8 @@
 <?php if ($this->filter_form_fields):?>
+<?php wp_enqueue_script( 'ihc-listing-users-filter', IHC_URL . '/assets/js/listing-users-filter.js', [], 1.1 );?>
 <div class="iump-listing-users-filter">
-<div class="iump-filter-title"><?php _e("Search for specific Members", 'ihc');?></div>
-<form action="<?php echo $base_url;?>" method="get">
+<div class="iump-filter-title"><?php esc_html_e("Search for specific Members", 'ihc');?></div>
+<form action="<?php echo $base_url;?>" method="get" class="ihc-js-listing-user-filter-form" data-base_url="<?php echo $base_url;?>" >
 	<?php foreach ($this->filter_form_fields as $field):?>
 
 		<?php switch ($field['type']):
@@ -37,38 +38,33 @@
 				?>
 				<div class="iump-filter-row">
 					<label><?php echo $field['label'];?></label>
-					<div style="display: inline-block; margin-left: 10px;" id="<?php echo 'iump_slider_' . $field['name'] . '_view_values';?>">
+					<div class="ihc-filter-value" id="<?php echo 'iump_slider_' . $field['name'] . '_view_values';?>">
 						<?php echo $current['min'] . ' - ' . $current['max'];?>
 					</div>
 					<div id="<?php echo 'iump_slider_' . $field['name'];?>"></div>
 				</div>
-				<script>
-				  jQuery(document).ready(function(){
-					    jQuery("<?php echo '#iump_slider_' . $field['name'];?>").slider({
-						      range: true,
-						      min: <?php echo $field['values']['min'];?>,
-						      max: <?php echo $field['values']['max'];?>,
-						      values: [<?php echo $current['min'];?>, <?php echo $current['max'];?>],
-						      slide: function( event, ui ){
-						      		jQuery('<?php echo '#' . $field['name'] . 'min';?>').val(ui.values[0]);
-						      		jQuery('<?php echo '#' . $field['name'] . 'max';?>').val(ui.values[1]);
-						      		jQuery('<?php echo '#iump_slider_' . $field['name'] . '_view_values';?>').html(ui.values[0] + ' - ' + ui.values[1]);
-						      }
-					    });
-				  });
-				  </script>
+				<span class="ihc-js-listin-users-filter-number-data"
+						data-selector="<?php echo '#iump_slider_' . $field['name'];?>"
+						data-min="<?php echo $field['values']['min'];?>"
+						data-max="<?php echo $field['values']['max'];?>"
+						data-current_min="<?php echo $current['min'];?>"
+						data-current_max="<?php echo $current['max'];?>"
+						data-min_selector="<?php echo '#' . $field['name'] . 'min';?>"
+						data-max_selector="<?php echo '#' . $field['name'] . 'max';?>"
+						data-view_selector="<?php echo '#iump_slider_' . $field['name'] . '_view_values';?>"
+				></span>
 				  <?php endif;?>
 				  <input type="hidden" name="<?php echo $field['name'];?>[0]" value="<?php echo $hidden_min;?>" id="<?php echo $field['name'] . 'min';?>" />
 				  <input type="hidden" name="<?php echo $field['name'];?>[1]" value="<?php echo $hidden_max;?>" id="<?php echo $field['name'] . 'max';?>" />
 				<?php
 				break;
 			case 'select':
-					//if ($field['values']):
+					
 					?>
 						<div class="iump-filter-row iump-filter-country">
 							<label><?php echo $field['label'];?></label>
-							<select name="<?php echo $field['name'];?>" id="" class="iump-form-select" >
-								<option value="" selected><?php _e('All', 'ihc');?></option>
+							<select name="<?php echo $field['name'];?>" class="iump-form-select" >
+								<option value="" selected><?php esc_html_e('All', 'ihc');?></option>
 							<?php
 								$get_value = (isset($_GET[$field['name']])) ? $_GET[$field['name']] : '';
 								if ($field['values']):
@@ -83,15 +79,15 @@
 							</select>
 						</div>
 					<?php
-					//endif;
+					
 				break;
 			case 'ihc_country':
-					//if ($field['values']):
+					
 					?>
 						<div class="iump-filter-row iump-filter-country">
 							<label><?php echo $field['label'];?></label>
-							<select name="<?php echo $field['name'];?>" id="" class="iump-form-select" >
-								<option value="" selected><?php _e('All', 'ihc');?></option>
+							<select name="<?php echo $field['name'];?>" class="iump-form-select" >
+								<option value="" selected><?php esc_html_e('All', 'ihc');?></option>
 							<?php
 								$get_value = (isset($_GET[$field['name']])) ? $_GET[$field['name']] : '';
 								if ($field['values']):
@@ -106,15 +102,15 @@
 							</select>
 						</div>
 					<?php
-					//endif;
+					
 				break;
 			case 'multi_select':
-				//if ($field['values']):
+				
 				?>
 				<div class="iump-filter-row iump-filter-multi">
 					<label><?php echo $field['label'];?></label>
-					<select name="<?php echo $field['name'];?>[]" id="" class="iump-form-select" multiple >
-						<option value="" selected><?php _e('All', 'ihc');?></option>
+					<select name="<?php echo $field['name'];?>[]" class="iump-form-select" multiple >
+						<option value="" selected><?php esc_html_e('All', 'ihc');?></option>
 					<?php
 						$get_value = (isset($_GET[$field['name']])) ? $_GET[$field['name']] : array();
 						if ($field['values']):
@@ -127,7 +123,7 @@
 					</select>
 				</div>
 				<?php
-				//endif;
+			
 				break;
 			case 'radio':
 				if ($field['values']):
@@ -137,7 +133,7 @@
 						<div class="iump-form-radiobox-wrapper">
 							<div class="iump-form-radiobox">
 								<input type="radio" name="<?php echo $field['name'];?>" value="" checked />
-								<?php _e('All', 'ihc');?>
+								<?php esc_html_e('All', 'ihc');?>
 							</div>
 						<?php
 						$get_value = (isset($_GET[$field['name']])) ? $_GET[$field['name']] : array();
@@ -163,7 +159,7 @@
 						<div class="iump-form-checkbox">
 							<?php $checked = (empty($get_value)) ? 'checked' : '';?>
 							<input type="checkbox" name="<?php echo $field['name'];?>[]" value="" onClick="ihcDeselectAll('<?php echo $field['name'];?>', this);" <?php echo $checked;?> />
-							<?php _e('All', 'ihc');?>
+							<?php esc_html_e('All', 'ihc');?>
 						</div>
 				<?php
 				foreach ($field['values'] as $v){
@@ -198,37 +194,24 @@
 				$end_id = 'iump_end_' . $field['name'];
 				if (isset($_GET[$field['name']]) && isset($_GET[$field['name']][0])){
 					$field['values']['min'] = $_GET[$field['name']][0];
-					$min_value = $_GET[$field['name']][0];;
+					$min_value = $_GET[$field['name']][0];
+					$min_value = filter_var( $min_value, FILTER_SANITIZE_STRING );
+					$min_value = preg_replace( "([^0-9-])", '', $min_value );
 				}
 				if (isset($_GET[$field['name']]) && isset($_GET[$field['name']][1])){
 					$field['values']['max'] = $_GET[$field['name']][1];
 					$max_value = $_GET[$field['name']][1];
+					$max_value = filter_var( $max_value, FILTER_SANITIZE_STRING );
+					$max_value = preg_replace( "([^0-9-])", '', $max_value );
 				}
 				?>
-				<script>
-					jQuery(document).ready(function() {
-						var currentYear = new Date().getFullYear() + 20;
-						jQuery("#<?php echo $start_id;?>").datepicker({
-							dateFormat : "dd-mm-yy",
-							changeMonth: true,
-						    changeYear: true,
-							yearRange: "1900:"+currentYear,
-							onClose: function(r){}
-						});
-						jQuery("#<?php echo $end_id;?>").datepicker({
-							dateFormat : "dd-mm-yy",
-							changeMonth: true,
-						    changeYear: true,
-							yearRange: "1900:"+currentYear,
-							onClose: function(r){}
-						});
-					});
-				</script>
+				<span class="ihc-js-listing-users-filter-data" data-start_selector="#<?php echo $start_id;?>" data-end_selector="#<?php echo $end_id;?>" ></span>
+
 				<div class="iump-filter-row iump-filter-date">
 					<label><?php echo $field['label'];?></label>
-					<input type="text" value="<?php echo $min_value;?>" name="<?php echo $field['name'] . '[0]';?>" id="<?php echo $start_id;?>" class="iump-form-datepicker" style="width:45%;" />
-					<span style="width:7%; text-align:center;  display: inline-block;" >-</span>
-					<input type="text" value="<?php echo $max_value;?>" name="<?php echo $field['name'] . '[1]';?>" id="<?php echo $end_id;?>" class="iump-form-datepicker"  style="width:45%;" />
+					<input type="text" value="<?php echo $min_value;?>" name="<?php echo $field['name'] . '[0]';?>" id="<?php echo $start_id;?>" class="iump-form-datepicker ihc-min"  />
+					<span class="ihc-line" >-</span>
+					<input type="text" value="<?php echo $max_value;?>" name="<?php echo $field['name'] . '[1]';?>" id="<?php echo $end_id;?>" class="iump-form-datepicker ihc-min" />
 				</div>
 				<?php
 				break;
@@ -237,28 +220,9 @@
 	<?php endforeach;?>
 	<input type="hidden" name="iump_filter" value="0" />
 	<div class="iump-filter-submit">
-		<input type="submit" name="filter" value="<?php echo __('Search', 'ihc');?>"/>
-		<input type="submit" name="reset" value="<?php _e('Reset', 'ihc');?>" id="iump_reset_bttn" />
+		<input type="submit" name="filter" value="<?php echo esc_html__('Search', 'ihc');?>"/>
+		<input type="submit" name="reset" value="<?php esc_html_e('Reset', 'ihc');?>" id="iump_reset_bttn" />
 	</div>
 </form>
 </div>
-<script>
-	jQuery(document).ready(function(){
-		jQuery('#iump_reset_bttn').on("click", function(event){
-		  	event.preventDefault();
-		  	window.location.href = '<?php echo $base_url;?>';
-		  	return false;
-		});
-		jQuery("[name=filter]").on('click', function(event){
-			event.preventDefault();
-			jQuery.each(this.form, function(index, field){
-				if (field.value==''){
-					field.name = '';
-				}
-			});
-			jQuery('[name=iump_filter]').val(1);
-			this.form.submit();
-		});
-	});
-</script>
 <?php endif;?>

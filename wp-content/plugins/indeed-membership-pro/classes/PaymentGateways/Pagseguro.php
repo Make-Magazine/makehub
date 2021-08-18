@@ -1,7 +1,8 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since 7.4
+Created v.7.4
+Deprecated starting with v.9.3
 */
 class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
@@ -18,13 +19,13 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 
     public function doPayment()
     {
-        \Ihc_User_Logs::set_user_id( @$this->attributes['uid'] );
-        \Ihc_User_Logs::set_level_id( @$this->attributes['lid'] );
-        \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Start process', 'ihc'), 'payments' );
+        \Ihc_User_Logs::set_user_id((isset($this->attributes['uid'])) ? $this->attributes['uid'] : '');
+        \Ihc_User_Logs::set_level_id((isset($this->attributes['lid'])) ? $this->attributes['lid'] : '');
+        \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Start process', 'ihc'), 'payments' );
 
         $settings = ihc_return_meta_arr('payment_pagseguro');
 
-        $levels = get_option('ihc_levels');
+        $levels = \Indeed\Ihc\Db\Memberships::getAll();
         $levelData = $levels[$this->attributes['lid']];
 
         $siteUrl = site_url();
@@ -35,12 +36,12 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $reccurrence = FALSE;
         if ( isset( $levelData['access_type'] ) && $levelData['access_type']=='regular_period' ){
           $reccurrence = TRUE;
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Recurrence payment set.', 'ihc'), 'payments' );
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Recurrence payment set.', 'ihc'), 'payments' );
         }
         $couponData = array();
         if (!empty($this->attributes['ihc_coupon'])){
           $couponData = ihc_check_coupon( $this->attributes['ihc_coupon'], $this->attributes['lid'] );
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __( ': the user used the following coupon: ', 'ihc' ) . $this->attributes['ihc_coupon'], 'payments' );
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__( ': the user used the following coupon: ', 'ihc' ) . $this->attributes['ihc_coupon'], 'payments' );
         }
 
         if ( $reccurrence ){
@@ -51,7 +52,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               $url = 'https://ws.pagseguro.uol.com.br/v2/pre-approvals/request';
           }
           if ($levelData['billing_type']=='bl_ongoing'){
-            //$rec = 52;
+        
             $recurringLimit = 52;
           } else {
             if (isset($levelData['billing_limit_num'])){
@@ -122,12 +123,12 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               //certain period
               $trialTimeType = $levelData['access_trial_time_type'];//type of time
               $trialTimeValue = $levelData['access_trial_time_value'];//time value
-              \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Trial time value set @ ', 'ihc') . $levelData['access_trial_time_value'] . ' ' .$levelData['access_trial_time_type'] , 'payments');
+              \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Trial time value set @ ', 'ihc') . $levelData['access_trial_time_value'] . ' ' .$levelData['access_trial_time_type'] , 'payments');
             } else {
               //one subscription
               $trialTimeType = $levelData['access_regular_time_type'];//type of time
               $trialTimeValue = $levelData['access_regular_time_value'];//time value
-              \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Trial time value set @ ', 'ihc') . $levelData['access_regular_time_value'] . ' ' .$levelData['access_regular_time_type'] , 'payments');
+              \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Trial time value set @ ', 'ihc') . $levelData['access_regular_time_value'] . ' ' .$levelData['access_regular_time_type'] , 'payments');
             }
 
             switch ($trialTimeType){
@@ -156,7 +157,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               $temp_amount = $this->attributes['ihc_dynamic_price'];
               if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
                   $amount = $temp_amount;
-                  \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
+                  \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
               }
           }
           /**************************** DYNAMIC PRICE ***************************/
@@ -231,7 +232,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $temp_amount = $this->attributes['ihc_dynamic_price'];
             if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
               $amount = $temp_amount;
-              \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
+              \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
             }
           }
           /**************************** DYNAMIC PRICE ***************************/
@@ -364,14 +365,14 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         ihc_insert_update_transaction( $this->attributes['uid'], $paymentId, $transactionData, true ); /// will save the order too
 
         /// update indeed_members_payments table, add order id
-        \Ihc_Db::updateTransactionAddOrderId( $paymentId, @$this->attributes['orderId'] );
+        \Ihc_Db::updateTransactionAddOrderId( $paymentId, (isset($this->attributes['orderId'])) ? $this->attributes['orderId'] : '' );
 
         return $this;
     }
 
     public function redirect()
     {
-        \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' : Request submited.', 'ihc'), 'payments' );
+        \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__(' : Request submited.', 'ihc'), 'payments' );
         header( 'location:' . $this->redirectUrl );
         exit();
     }
@@ -384,7 +385,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( empty($_POST['notificationCode']) || empty($_POST['notificationType']) || $_POST['notificationType']!='transaction' ){
             return false;
         }
-        $filename = IHC_PATH . 'temporary_files/' . esc_sql($_POST['notificationCode']) . '.log';
+        $filename = IHC_PATH . 'temporary/' . esc_sql($_POST['notificationCode']) . '.log';
         if ( file_exists( $filename ) ){
             sleep( 30 );
         }
@@ -469,29 +470,25 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               $paymentData['status'] = 'Completed';
               $paymentData['amount'] = $amount;
 
-              if ( ihc_user_level_first_time( $paymentData['uid'], $paymentData['lid'] ) && \Ihc_Db::level_has_trial_period( $paymentData['lid'] ) ){
+              if ( \Indeed\Ihc\UserSubscriptions::isFirstTime( $paymentData['uid'], $paymentData['lid'] ) && \Ihc_Db::level_has_trial_period( $paymentData['lid'] ) ){
                   /// Trial
-                  ihc_set_level_trial_time_for_no_pay( $paymentData['lid'], $paymentData['uid'] );
-                  \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __( ' IPN: Update user level expire time (Trial).', 'ihc' ), 'payments' );
-                  ihc_send_user_notifications( $paymentData['uid'], 'payment', $paymentData['lid'] );//send notification to user
-                  ihc_send_user_notifications( $paymentData['uid'], 'admin_user_payment', $paymentData['lid'] );//send notification to admin
+                  \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], true, [ 'payment_gateway' => 'pagseguro' ] );
+                  \Ihc_User_Logs::write_log( $this->paymentTypeLabel .esc_html__( ' IPN: Update user level expire time (Trial).', 'ihc' ), 'payments' );
+
                   do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
                   // @description run on payment complete. @param user id (integer), level id (integer)
 
-                  ihc_switch_role_for_user( $paymentData['uid'] );
                   ihc_insert_update_transaction( $paymentData['uid'], $transactionCode, $paymentData, true );
                   \Ihc_Db::updateOrderStatus( $lastOrderId, 'Completed' );
                   unlink( $filename );
                   exit;
               }
               /// success
-              ihc_update_user_level_expire($levelData, $paymentData['lid'], $paymentData['uid']);
-              ihc_switch_role_for_user($paymentData['uid']);
+              \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], false, [ 'payment_gateway' => 'pagseguro' ] );
               ihc_insert_update_transaction($paymentData['uid'], $transactionCode, $paymentData, false);
-              \Ihc_User_Logs::write_log( __("Pagseguro Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
+              \Ihc_User_Logs::write_log(esc_html__("Pagseguro Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
               //send notification to user
-              ihc_send_user_notifications($paymentData['uid'], 'payment', $paymentData['lid']);
-              ihc_send_user_notifications($paymentData['uid'], 'admin_user_payment', $paymentData['lid']);//send notification to admin
+
               do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
               // @description run on payment complete. @param user id (integer), level id (integer)
 
@@ -502,7 +499,7 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             case 6:
             case 7:
               /// cancelled, refunded
-              ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+              \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
               break;
         }
         unlink( $filename );
@@ -513,7 +510,9 @@ class Pagseguro extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     public function cancelSubscription($preApprovalCode='')
     {
         // not working in sandbox, try this on live, maybe it will work
-        if (empty($preApprovalCode)) return false;
+        if (empty($preApprovalCode)){
+           return false;
+        }
         $settings = ihc_return_meta_arr('payment_pagseguro');
         if ( $settings['ihc_pagseguro_sandbox'] ){
             $url = 'https://ws.sandbox.pagseguro.uol.com.br/v2/pre-approvals/cancel/';

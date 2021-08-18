@@ -79,10 +79,13 @@ if (!class_exists('ListingUsers')){
 			$search_bar = '';
 			$search_filter = '';
 
-			if (empty($this->args['entries_per_page'])) $this->args['entries_per_page'] = 25;
+			if (empty($this->args['entries_per_page'])){
+				 $this->args['entries_per_page'] = 25;
+			}
 			$search_by = empty($this->args['search_by']) ? '' : $this->args['search_by'];
 			$search_q = empty($_GET['ihc_search_u']) ? '' : esc_sql($_GET['ihc_search_u']);
 			$search_q = sanitize_text_field( $search_q );
+			$search_q = esc_attr( $search_q );
 
 			////// FILTER BY LEVELs
 			if (!empty($this->args['filter_by_level']) && !empty($this->args['levels_in'])){
@@ -105,7 +108,7 @@ if (!class_exists('ListingUsers')){
 			$this->set_filter_form_fields();
 
 			//// FILTER
-			if (!empty($_GET['iump_filter'])){ ///$_GET['filter]
+			if (!empty($_GET['iump_filter'])){ 
 				foreach ($_GET as $get_key=>$get_value){
 					$get_key = sanitize_text_field( $get_key );
 					if (isset($this->filter_form_fields[$get_key]) && $_GET[$get_key]!=''){
@@ -188,17 +191,17 @@ if (!class_exists('ListingUsers')){
 						break;
 				}
 			} else {
-				$html .= '<h3 style="margin-top: 20px;text-align: center;">' . __("No Users Found", 'ihc') . '</h3>';
+				$html .= '<h3>' . esc_html__("No Users Found", 'ihc') . '</h3>';
 			}
 
 			/// SEARCH BAR
 			if (!empty($this->args['show_search'])){
-				$search_bar .= '<form action="" method="get">';
+				$search_bar .= '<form  method="get">';
 				$search_bar .= '<div class="ihc-search-bar-wrapper">';
 				$search_bar .= '<div class="ihc-input-pre"><i class="fa-ihc fa-srch-ihc"></i></div>';
 				$get_val = empty($_GET['ihc_search_u']) ? '' : $_GET['ihc_search_u'];
 				$get_val = sanitize_text_field( $get_val );
-				$search_bar .= '<input type="text" name="ihc_search_u" value="" class="ihc-search-bar" placeholder="'.__('Search for...','ihc').'" />';
+				$search_bar .= '<input type="text" name="ihc_search_u" value="" class="ihc-search-bar" placeholder="'.esc_html__('Search for...','ihc').'" />';
 				$search_bar .= '</div>';
 				$search_bar .= '</form>';
 			}
@@ -231,7 +234,9 @@ if (!class_exists('ListingUsers')){
 						if (isset($user_data->$field)){
 							$this->users[$id][$field] = $user_data->$field;
 						} else {
-							@$this->users[$id][$field] = get_user_meta($id, $field, TRUE);
+							if(get_user_meta($id, $field, TRUE) !== NULL){
+								$this->users[$id][$field] = get_user_meta($id, $field, TRUE);
+							}
 						}
 					}
 				}
@@ -252,7 +257,7 @@ if (!class_exists('ListingUsers')){
 			}
 		}
 
-		private function get_users($order_by, $order_type, $offset=-1, $limit=-1, $count=FALSE, $inner_join_levels=array(), $search_by='', $search_q='', $skip_filter=FALSE){
+		private function get_users($order_by='', $order_type='', $offset=-1, $limit=-1, $count=FALSE, $inner_join_levels=array(), $search_by='', $search_q='', $skip_filter=FALSE){
 			/*
 			 * GETTING USERS FROM DB, COUNT USERS FROM DB
 			 * @param: string, string, int, int, boolean, array, string, string
@@ -328,9 +333,7 @@ if (!class_exists('ListingUsers')){
 					$q .= " b.level_id='" . $inner_join_levels[$i] . "'";
 				}
 				$q .= ") ";
-				///$q .= " AND b.start_time<NOW()";
-				//$q .= " AND b.expire_time>NOW()";
-				//$now = time(); /// <ver 6.2
+
 				$now = indeed_get_current_time_with_timezone();
 				$q .= " AND b.expire_time>'$now' ";
 			}
@@ -367,8 +370,7 @@ if (!class_exists('ListingUsers')){
 							$q .= " (c.meta_key IN ($fields_str) AND c.meta_value LIKE '%$search_q%') ";
 					}
 				}
-				//$q .= " AND ( c.meta_key='$search_by' AND c.meta_value LIKE '%$search_q%' )"; /// old version
-				$q .= ")";
+							$q .= ")";
 			}
 
 			/// EXCLUDE PENDING
@@ -380,7 +382,7 @@ if (!class_exists('ListingUsers')){
 			if (is_multisite()){
 				global $blog_id;
 				$role_key = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
-				$q .= " AND (e.meta_key='{$role_key}' AND e.meta_value IS NOT NULL) ";
+				$q .= $wpdb->prepare(" AND (e.meta_key=%s AND e.meta_value IS NOT NULL) ", $role_key );
 			}
 
 			/// FILTER
@@ -442,19 +444,19 @@ if (!class_exists('ListingUsers')){
 
 
 			$q .= " AND f.meta_key='last_name' ";
-			if ( $order_by == 'last_name' ){
+			if ( isset( $order_by ) && $order_by == 'last_name' ){
 					$order_by_str = 'f.meta_value';
-			} else {
+			} else if ( isset( $order_by ) && $order_by !== '' ){
 					$order_by_str = "a." . $order_by;
 			}
 
-			if ($order_type && $order_by){
+			if ($order_type && $order_by && isset( $order_by_str ) && $order_by_str !== '' ){
 				$q .= " ORDER BY $order_by_str " . $order_type;
 			}
 
 
 			if ($limit>-1 && $offset>-1){
-				$q .= " LIMIT " . $limit . " OFFSET " . $offset;
+				$q .= $wpdb->prepare(" LIMIT %d OFFSET %d ", $limit, $offset );
 			}
 
 			$data = $wpdb->get_results($q);
@@ -478,10 +480,10 @@ if (!class_exists('ListingUsers')){
 						}
 					}
 				}
-				//var_dump($return);die();
+
 				return $return;
 			}
-			return array();///$data
+			return array();
 		}
 
 		private function checkIfUserAcceptedToBeDisplayed()
@@ -528,46 +530,25 @@ if (!class_exists('ListingUsers')){
 					$animation_out = (($this->args['animation_out'])=='none') ? 'false' : "'{$this->args['animation_out']}'";
 					$slide_pagination_speed = $this->args['pagination_speed'];
 
-					$str .= "<script>
-												jQuery(document).ready(function() {
-													var owl = jQuery('#" . $this->div_parent_id . "');
-													owl.owlihcCarousel({
-															items : 1,
-															mouseDrag: true,
-															touchDrag: true,
-
-															autoHeight: $autoheight,
-
-															animateOut: $animation_out,
-															animateIn: $animation_in,
-
-															lazyLoad : $lazy_load,
-															loop: $loop,
-
-															autoplay : $autoplay,
-															autoplayTimeout: $autoplayTimeout,
-															autoplayHoverPause: $stop_hover,
-															autoplaySpeed: $slide_pagination_speed,
-
-															nav : $navigation,
-															navSpeed : $slide_pagination_speed,
-															navText: [ '', '' ],
-
-															dots: $bullets,
-															dotsSpeed : $slide_pagination_speed,
-
-															responsiveClass: $responsive,
-															responsive:{
-																0:{
-																	nav:false
-																},
-																450:{
-																	nav : $navigation
-																}
-															}
-													});
-												});
-					</script>";
+					$str .= "
+										<span class='ihc-js-owl-settings-data'
+												data-selector='#" . $this->div_parent_id . "'
+												data-autoHeight='$autoheight'
+												data-animateOut='$animation_out'
+												data-animateIn='$animation_in'
+												data-lazyLoad='$lazy_load'
+												data-loop='$loop'
+												data-autoplay='$autoplay'
+												data-autoplayTimeout='$autoplayTimeout'
+												data-autoplayHoverPause='$stop_hover'
+												data-autoplaySpeed='$slide_pagination_speed'
+												data-nav='$navigation'
+												data-navSpeed='$slide_pagination_speed'
+												data-dots='$bullets'
+												data-dotsSpeed='$slide_pagination_speed'
+												data-responsiveClass='$responsive'
+												data-navigation='$navigation'
+										></span>";
 				}
 			}
 			return $str;
@@ -596,10 +577,10 @@ if (!class_exists('ListingUsers')){
 				$str .= '<link rel="stylesheet" type="text/css" href="' . IHC_URL . 'public/listing_users/assets/css/layouts.css">';
 				define('IHC_COLOR_CSS_FILE', TRUE);
 			}
-			$str .= '<style>';
+			$custom_css = '';
 			///// SLIDER COLORS
 			if (!empty($this->args['color_scheme']) && !empty($this->args['slider_set'])){
-				$str .= '
+				$custom_css .= '
 							.style_'.$this->args['color_scheme'].' .owl-ihc-theme .owl-ihc-dots .owl-ihc-dot.active span, .style_'.$this->args['color_scheme'].'  .owl-ihc-theme .owl-ihc-dots .owl-ihc-dot:hover span { background: #'.$this->args['color_scheme'].' !important; }
 							.style_'.$this->args['color_scheme'].' .pag-theme1 .owl-ihc-theme .owl-ihc-nav [class*="owl-ihc-"]:hover{ background-color: #'.$this->args['color_scheme'].'; }
 							.style_'.$this->args['color_scheme'].' .pag-theme2 .owl-ihc-theme .owl-ihc-nav [class*="owl-ihc-"]:hover{ color: #'.$this->args['color_scheme'].'; }
@@ -608,16 +589,16 @@ if (!class_exists('ListingUsers')){
 			}
 			////// ALIGN CENTER
 			if (!empty($this->args['align_center'])) {
-				$str .= '#'.$this->div_parent_id.' ul{text-align: center;}';
+				$custom_css .= '#'.$this->div_parent_id.' ul{text-align: center;}';
 			}
 			///// CUSTOM CSS
 			if (!empty($this->general_settings['ihc_listing_users_custom_css'])){
-				$str .= stripslashes($this->general_settings['ihc_listing_users_custom_css']);
+				$custom_css .= stripslashes($this->general_settings['ihc_listing_users_custom_css']);
 			}
 			//// RESPONSIVE
 			if (!empty($this->general_settings['ihc_listing_users_responsive_small'])){
 				$width = 100 / $this->general_settings['ihc_listing_users_responsive_small'];
-				$str .= '
+				$custom_css .= '
 						@media only screen and (max-width: 479px){
 							#' . $this->div_parent_id . ' ul li{
 								width: calc(' . $width . '% - 1px) !important;
@@ -627,7 +608,7 @@ if (!class_exists('ListingUsers')){
 			}
 			if (!empty($this->general_settings['ihc_listing_users_responsive_medium'])){
 				$width = 100 / $this->general_settings['ihc_listing_users_responsive_medium'];
-				$str .= '
+				$custom_css .= '
 						@media only screen and (min-width: 480px) and (max-width: 767px){
 							#' . $this->div_parent_id . ' ul li{
 								width: calc(' . $width . '% - 1px) !important;
@@ -637,7 +618,7 @@ if (!class_exists('ListingUsers')){
 			}
 			if (!empty($this->general_settings['ihc_listing_users_responsive_large'])){
 				$width = 100 / $this->general_settings['ihc_listing_users_responsive_large'];
-				$str .= '
+				$custom_css .= '
 						@media only screen and (min-width: 768px) and (max-width: 959px){
 							#' . $this->div_parent_id . ' ul li{
 								width: calc(' . $width . '% - 1px) !important;
@@ -645,7 +626,11 @@ if (!class_exists('ListingUsers')){
 						}
 				';
 			}
-			$str .= '</style>';
+
+			wp_register_style( 'dummy-handle', false );
+			wp_enqueue_style( 'dummy-handle' );
+			wp_add_inline_style( 'dummy-handle', stripslashes($custom_css) );
+
 			return $str;
 		}
 
@@ -656,7 +641,7 @@ if (!class_exists('ListingUsers')){
 			 */
 			$str = '';
 			if (!empty($this->args['slider_set']) && !defined('IHC_SLIDER_LOAD_JS')){
-				$str .= '<script src="' . IHC_URL . 'public/listing_users/assets/js/owl.carousel.js" ></script>';
+				wp_enqueue_script( 'ihc-owl-carousel', IHC_URL . 'public/listing_users/assets/js/owl.carousel.js', [], 1.1 );
 				define('IHC_SLIDER_LOAD_JS', TRUE);
 			}
 			return $str;
@@ -670,7 +655,7 @@ if (!class_exists('ListingUsers')){
 			$str = '';
 			$current_page = (empty($this->args['current_page'])) ? 1 : $this->args['current_page'];
 			$this->total_pages = ceil($this->total_users/$this->args['entries_per_page']);
-			///$url = IHC_PROTOCOL . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+		
 			$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			$str = '';
 
@@ -742,7 +727,7 @@ if (!class_exists('ListingUsers')){
 
 			///// WRAPPERS
 			$extra_class = (empty($this->args['pagination_theme'])) ? '' : $this->args['pagination_theme'];
-			$str .= "<div class='' id='ihc_public_list_users_" . rand(1, 10000) . "'>";
+			$str .= "<div id='ihc_public_list_users_" . rand(1, 10000) . "'>";
 			$str .= "<div class='$color_class'>";
 			$str .= "<div class='" . $this->args['theme'] . " " . $extra_class . "'>";
 			$str .= "<div class='ihc-wrapp-list-users'>";
@@ -752,7 +737,7 @@ if (!class_exists('ListingUsers')){
 			foreach ($this->users as $uid=>$arr){
 				if (!empty($new_div)){
 					$div_id = $ul_id . '_' . $breaker_div;
-					$str .= "<ul id='$div_id' class=''>"; /////ADDING THE UL
+					$str .= "<ul id='$div_id'>"; /////ADDING THE UL
 				}
 
 				$str .= $this->print_item($uid, $list_item_template, $socials_arr);///// PRINT SINGLE ITEM
@@ -786,7 +771,7 @@ if (!class_exists('ListingUsers')){
 			$fields = $this->user_fields;
 
 			$str = '';
-			$str .= "<li style='width: $this->li_width' >";
+			$str .= "<li style = ' width: $this->li_width' >";
 
 			//AVATAR
 			$this->users[$uid]['ihc_avatar'] = ihc_get_avatar_for_uid($uid);
@@ -860,11 +845,17 @@ if (!class_exists('ListingUsers')){
 						}else{
 							$extra_fields_str .= '<span class="ihc-user-list-result">';
 						}
-						if (is_array($this->users[$uid][$value])){
-							$extra_fields_str .= implode(',', $this->users[$uid][$value]);
-						} else {
-							$extra_fields_str .= $this->users[$uid][$value];
+						if ($value === 'ihc_country'){
+							$countries = ihc_get_countries();
+						$extra_fields_str .= $countries[$this->users[$uid][$value]];
+						}else{
+							if (is_array($this->users[$uid][$value])){
+								$extra_fields_str .= implode(',', $this->users[$uid][$value]);
+							} else {
+								$extra_fields_str .= $this->users[$uid][$value];
+							}
 						}
+						
 						$extra_fields_str .= '</span>';
 						$extra_fields_str .= '<div class="ihc-clear"></div>';
 						if (!empty($extra_fields_str)){
@@ -910,14 +901,14 @@ if (!class_exists('ListingUsers')){
 				 $fields = explode(',', $this->args['search_filter_items']);
 				 $output = '';
 				 global $post;
-				 $base_url = get_permalink(@$post->ID);
+				 $base_url = get_permalink((isset($post->ID)) ? $post->ID : '');
 
 				 if ($fields){
 				 	foreach ($fields as $field){
 				 		$temporary_array['type'] = ihc_register_field_get_type_by_slug($field);
 						$temporary_array['label'] = ihc_get_custom_field_label($field);
 						$temporary_array['name'] = $field;
-						//$temporary_array['values'] = $this->get_register_field_possible_values($field, $temporary_array['type']);
+					
 						$field_temp_array[$field] = $temporary_array;
 			 		}
 					/// let's reorder the field so will look like on register form
@@ -951,7 +942,7 @@ if (!class_exists('ListingUsers')){
 			 $output = '';
 			 global $post;
 			 $countries = ihc_get_countries();
-			 $base_url = get_permalink(@$post->ID);
+			 $base_url = get_permalink((isset($post->ID)) ? $post->ID : '');
 
 			 $fullPath = IHC_PATH . 'public/views/listing_users-filter.php';
 			 $searchFilename = 'listing_users-filter.php';
@@ -988,7 +979,7 @@ if (!class_exists('ListingUsers')){
 					case 'ihc_country':
 					case 'select':
 					case 'radio':
-						$q = "SELECT DISTINCT meta_value FROM $table WHERE meta_key='$field_slug' ";
+						$q = $wpdb->prepare("SELECT DISTINCT meta_value FROM $table WHERE meta_key=%s ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1004,7 +995,7 @@ if (!class_exists('ListingUsers')){
 						$do_reorder = TRUE;
 						break;
 					case 'ihc_country':
-						$q = "SELECT DISTINCT meta_value FROM $table WHERE meta_key='$field_slug' ";
+						$q = $wpdb->prepare("SELECT DISTINCT meta_value FROM $table WHERE meta_key=%s ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1021,7 +1012,7 @@ if (!class_exists('ListingUsers')){
 						break;
 					case 'checkbox':
 					case 'multi_select':
-						$q = "SELECT DISTINCT meta_value FROM $table WHERE meta_key='$field_slug' ";
+						$q = $wpdb->prepare("SELECT DISTINCT meta_value FROM $table WHERE meta_key=%s ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1029,8 +1020,8 @@ if (!class_exists('ListingUsers')){
 						$data = $wpdb->get_results($q);
 						if ($data){
 						 	 foreach ($data as $object){
-						 	 	if (isset($object->meta_value)){
-						 	 		$temp = unserialize($object->meta_value);
+						 	 	if ( isset( $object->meta_value ) && !empty( $object->meta_value ) && is_serialized( $object->meta_value ) ){
+									$temp = @unserialize($object->meta_value);
 									if (is_array($temp)){
 										foreach ($temp as $temp_val){
 									 	 	if (!in_array($temp_val, $array)){
@@ -1044,7 +1035,7 @@ if (!class_exists('ListingUsers')){
 						$do_reorder = TRUE;
 						break;
 					case 'number':
-						$q = "SELECT CAST(meta_value AS SIGNED) as min FROM $table WHERE meta_key='$field_slug' AND meta_value!='' ";
+						$q = $wpdb->prepare("SELECT CAST(meta_value AS SIGNED) as min FROM $table WHERE meta_key=%s AND meta_value!='' ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1053,7 +1044,7 @@ if (!class_exists('ListingUsers')){
 						if (isset($data->min)){
 							$array['min'] = $data->min;
 						}
-						$q = "SELECT CAST(meta_value AS SIGNED) as max FROM $table WHERE meta_key='$field_slug' AND meta_value!='' ";
+						$q = $wpdb->prepare("SELECT CAST(meta_value AS SIGNED) as max FROM $table WHERE meta_key=%s AND meta_value!='' ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1064,7 +1055,7 @@ if (!class_exists('ListingUsers')){
 						}
 						break;
 					case 'date':
-						$q = "SELECT meta_value FROM $table WHERE meta_key='$field_slug' AND meta_value!='' ";
+						$q = $wpdb->prepare( "SELECT meta_value FROM $table WHERE meta_key=%s AND meta_value!='' ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1073,7 +1064,7 @@ if (!class_exists('ListingUsers')){
 						if (isset($data->meta_value)){
 							$array['min'] = $data->meta_value;
 						}
-						$q = "SELECT meta_value FROM $table WHERE meta_key='$field_slug' AND meta_value!='' ";
+						$q = $wpdb->prepare( "SELECT meta_value FROM $table WHERE meta_key=%s AND meta_value!='' ", $field_slug );
 						if ($ids_in){
 							$q .= " AND user_id IN ($ids_in) ";
 						}
@@ -1113,7 +1104,9 @@ if (!class_exists('ListingUsers')){
 			$search_bar = '';
 			$search_filter = '';
 
-			if (empty($this->args['entries_per_page'])) $this->args['entries_per_page'] = 25;
+			if (empty($this->args['entries_per_page'])){
+				 $this->args['entries_per_page'] = 25;
+			}
 			$search_by = empty($this->args['search_by']) ? '' : $this->args['search_by'];
 			$search_q = empty($_GET['ihc_search_u']) ? '' : $_GET['ihc_search_u'];
 			$search_q = sanitize_text_field( $search_q );
@@ -1137,7 +1130,7 @@ if (!class_exists('ListingUsers')){
 			$order_type = $this->args['order_type'];
 
 			//// FILTER
-			if (!empty($_GET['iump_filter'])){ ///$_GET['filter]
+			if (!empty($_GET['iump_filter'])){ 
 				foreach ($_GET as $get_key=>$get_value){
 					$get_key = sanitize_text_field( $get_key );
 					if (isset($this->filter_form_fields[$get_key]) && $_GET[$get_key]!=''){
@@ -1157,7 +1150,7 @@ if (!class_exists('ListingUsers')){
 
 			//////////TOTAL USERS
 			$this->get_users($order_by, $order_type, -1, -1, TRUE, $inner_join_levels, $search_by, $search_q, TRUE);
-			//$this->set_filter_form_possible_values();
+		
 		}
 
 

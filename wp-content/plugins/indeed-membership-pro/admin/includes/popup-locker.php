@@ -1,21 +1,21 @@
 <div class="ihc-popup-wrapp" id="popup_box">
 	<div class="ihc-the-popup ihc-the-popup-locker">
         <div class="ihc-popup-top">
-        	<div class="title">Membership Pro Ultimate Wp - <?php _e('Locker', 'ihc');?></div>
+        	<div class="title">Membership Pro Ultimate Wp - <?php esc_html_e('Locker', 'ihc');?></div>
             <div class="close-bttn" onClick="ihcClosePopup();"></div>
             <div class="clear"></div>
         </div>
-        <div class="ihc-popup-content" style="padding:0px;">
+        <div class="ihc-popup-content">
         	<div class="ihc-popup-left-section">
 	        	<div>
 	  				<select class="ihc-fullwidth ihc-select"  id="ihc_mb_type-shortcode">
-	  					<option value="show"><?php _e('Show Content Only For', 'ihc');?></option>
-	  					<option value="block" selected><?php _e('Hide Content Only For', 'ihc');?></option>
+	  					<option value="show" selected><?php esc_html_e('Show Content Only For', 'ihc');?></option>
+	  					<option value="block"><?php esc_html_e('Hide Content Only For', 'ihc');?></option>
 	  				</select>
 	        	</div>
 	        	<div>
 		         	<div class="ihc-popup-label">
-		         		<?php _e('Target Users:', 'ihc');?>
+		         		<?php esc_html_e('Target Users:', 'ihc');?>
 		         	</div>
 		         	<?php
 						if(isset($meta_arr['ihc_mb_who']) && strpos($meta_arr['ihc_mb_who'], ',')!==FALSE){
@@ -24,7 +24,8 @@
 							$arr[] = '';
 						}
 						$posible_values = array('all'=>'All', 'reg'=>'Registered Users', 'unreg'=>'Unregistered Users');
-						$levels = get_option('ihc_levels');
+
+						$levels = \Indeed\Ihc\Db\Memberships::getAll();
 						if($levels){
 							foreach($levels as $id=>$level){
 								$posible_values[$id] = $level['name'];
@@ -46,7 +47,7 @@
 	        	</div>
 	        	<div class="clear"></div>
 	        	<div class="ihc-popup-label">
-	        		<div><?php _e('Choose Locker:', 'ihc');?></div>
+	        		<div><?php esc_html_e('Choose Locker:', 'ihc');?></div>
 	        		<?php
 	        			$lockers = ihc_return_meta('ihc_lockers');
 	        			if ($lockers){
@@ -63,7 +64,7 @@
 	        		</select>
 							<?php
 	        			}else{
-	        				_e('No Lockers Available.', 'ihc');
+	        				esc_html_e('No Lockers Available.', 'ihc');
 	        			}
 
 	        		?>
@@ -73,7 +74,7 @@
 	        	</div>
         	</div>
         	<div class="ihc-popup-right-section">
-    			<div style="  font-size: 17px; font-weight: bold; margin: -10px 0 20px 15px;"><?php _e('Preview', 'ihc');?></div>
+    			<div><?php esc_html_e('Preview', 'ihc');?></div>
 				<div id="locker-preview">
 				</div>
     		</div>

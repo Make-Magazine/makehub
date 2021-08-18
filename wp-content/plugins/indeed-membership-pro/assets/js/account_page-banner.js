@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - My Account banner
+*/
+"use strict";
 var IhcAccountPageBanner = {
     triggerId       : '',
     saveImageTarget : '',
@@ -7,8 +11,7 @@ var IhcAccountPageBanner = {
     init: function(args){
         var obj = this;
         obj.setAttributes(obj, args);
-        jQuery(document).ready(function(){
-            var options = {
+        var options = {
               uploadUrl                 : obj.saveImageTarget,
               cropUrl                   : obj.cropImageTarget,
               modal                     : true,
@@ -24,9 +27,8 @@ var IhcAccountPageBanner = {
               onAfterRemoveCroppedImg   : function(){ obj.handleRemove(obj); },
               onError                   : function(e){ console.log('onError:' + e); },
               imageAppendAfter          : false,
-            }
-            var cropperHeader = new Croppic(obj.triggerId, options);
-        })
+        }
+        var cropperHeader = new Croppic(obj.triggerId, options);
     },
 
     setAttributes: function(obj, args){

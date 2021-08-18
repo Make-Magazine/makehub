@@ -144,7 +144,7 @@ class Ihc_API{
 			$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			$lid = $this->secure_input_var($_GET['lid'], TRUE);
 			if ($uid && $lid!=''){
-				if (Ihc_Db::user_has_level($uid, $lid) && Ihc_Db::is_user_level_active($uid, $lid)){
+				if ( \Indeed\Ihc\UserSubscriptions::userHasSubscription( $uid, $lid ) && \Indeed\Ihc\UserSubscriptions::isActive( $uid, $lid ) ){
 					$return_value = 1;
 				}
 			}
@@ -169,13 +169,14 @@ class Ihc_API{
 	    * @param none
 	    * @return bool
 	    */
-	   private function user_add_new_level(){
+	   private function user_add_new_level()
+		 {
 	    	$uid = $this->secure_input_var($_GET['uid'], TRUE);
-			$lid = $this->secure_input_var($_GET['lid'], TRUE);
-			if ($uid && $lid!=''){
-				return ihc_do_complete_level_assign_from_ap($uid, $lid);
-			}
-			return FALSE;
+				$lid = $this->secure_input_var($_GET['lid'], TRUE);
+				if ($uid && $lid!=''){
+					return \Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
+				}
+				return FALSE;
 	    }
 
 
@@ -202,7 +203,7 @@ class Ihc_API{
 			$lid = $this->secure_input_var($_GET['lid'], TRUE);
 			if ($uid && $lid!=''){
 				$level_data = ihc_get_level_by_id($lid);
-				ihc_update_user_level_expire($level_data, $lid, $uid);
+				\Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid );
 				return TRUE;
 			}
 			return FALSE;
@@ -215,7 +216,7 @@ class Ihc_API{
 		 */
 		private function levels_list_all(){
 			$array = array();
-			$data = get_option('ihc_levels');
+			$data = \Indeed\Ihc\Db\Memberships::getAll();
 			if ($data){
 				foreach ($data as $lid=>$temp){
 					$array[] = array(
@@ -235,7 +236,7 @@ class Ihc_API{
 		 */
 		private function orders_listing(){
 			$array = array();
-			$limit = $this->secure_input_var(@$_GET['limit'], TRUE);
+			$limit = $this->secure_input_var((isset($_GET['limit'])) ? $_GET['limit'] : '', TRUE);
 			$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			if (empty($limit)){
 				$limit = 999;
@@ -243,14 +244,14 @@ class Ihc_API{
 			$data = Ihc_Db::get_all_order($limit, 0, $uid);
 			if ($data){
 				foreach ($data as $temp){
-					$temp_array['code'] = @$temp['metas']['code'];
-					$temp_array['transaction_id'] = @$temp['transaction_id'];
-					$temp_array['id'] = @$temp['id'];
-					$temp_array['user'] = @$temp['user'];
-					$temp_array['level'] = @$temp['level'];
-					$temp_array['payment_type'] = @$temp['metas']['ihc_payment_type'];
-					$temp_array['amount'] = @$temp['amount_value'] . ' ' . @$temp['amount_type'];
-					$temp_array['status'] = @$temp['status'];
+					$temp_array['code'] = (isset($temp['metas']['code'])) ? $temp['metas']['code'] : '';
+					$temp_array['transaction_id'] = (isset($temp['transaction_id'])) ? $temp['transaction_id'] : '';
+					$temp_array['id'] = (isset($temp['id'])) ? $temp['id'] : '';
+					$temp_array['user'] = (isset($temp['user'])) ? $temp['user'] : '';
+					$temp_array['level'] = (isset($temp['level'])) ? $temp['level'] : '';
+					$temp_array['payment_type'] = (isset($temp['metas']['ihc_payment_type'])) ? $temp['metas']['ihc_payment_type'] : '';
+					$temp_array['amount'] = ((isset($temp['amount_value'])) ? $temp['amount_value'] : '') . ' ' . ((isset($temp['amount_type'])) ? $temp['amount_type'] : '');
+					$temp_array['status'] = (isset($temp['status'])) ? $temp['status'] : '';
 					$array[] = $temp_array;
 					unset($temp_array);
 				}
@@ -321,7 +322,7 @@ class Ihc_API{
 				$only_active = FALSE;
 			}
 			if ($uid){
-			 	$data = Ihc_Db::get_user_levels($uid, $only_active);
+			 	$data = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, $only_active );
 			}
 			return $data;
 		}
@@ -336,7 +337,7 @@ class Ihc_API{
 		 	$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			$lid = $this->secure_input_var($_GET['lid'], TRUE);
 			if ($uid && $lid!=''){
-				$data = Ihc_Db::user_get_level_details($uid, $lid);
+				$data = \Indeed\Ihc\UserSubscriptions::getOne( $uid, $lid );
 			}
 			return $data;
 		}
@@ -351,7 +352,7 @@ class Ihc_API{
 		 	$uid = $this->secure_input_var($_GET['uid'], TRUE);
 			if ($uid){
 				 require_once IHC_PATH . 'classes/ListOfAccessPosts.class.php';
-				 $levels = Ihc_Db::get_user_levels($uid, TRUE);
+				 $levels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
 				 $levels = array_keys($levels);
 				 $metas = ihc_return_meta_arr('list_access_posts');
 
@@ -419,7 +420,7 @@ class Ihc_API{
 			$data = array();
 		 	$lid = $this->secure_input_var($_GET['lid'], TRUE);
 			if ($lid!=''){
-				$data = Ihc_Db::get_level_users_list($lid);
+				$data = \Indeed\Ihc\UserSubscriptions::getSubscriptionsUsersList( $lid );
 			}
 			return $data;
 		}
@@ -433,7 +434,7 @@ class Ihc_API{
 			$data = array();
 		 	$lid = $this->secure_input_var($_GET['lid'], TRUE);
 			if ($lid!=''){
-				$data = get_option('ihc_levels');
+				$data = \Indeed\Ihc\Db\Memberships::getAll();
 				if ($data[$lid]){
 					return $data[$lid];
 				}

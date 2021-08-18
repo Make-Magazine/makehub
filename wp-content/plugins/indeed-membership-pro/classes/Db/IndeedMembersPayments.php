@@ -1,6 +1,8 @@
 <?php
 namespace Indeed\Ihc\Db;
-if (!defined('ABSPATH')) exit();
+if (!defined('ABSPATH')){
+   exit();
+}
 
 class IndeedMembersPayments
 {
@@ -63,7 +65,6 @@ class IndeedMembersPayments
             $this->history[indeed_get_unixtimestamp_with_timezone()] = $history;
         }
         $this->history = serialize( $this->history );
-        // file_put_contents( IHC_PATH . 'log.log', $this->history, FILE_APPEND );
 
         if ( !empty( $oldData->payment_data ) ){
             $paymentData = json_decode( $oldData->payment_data, true );

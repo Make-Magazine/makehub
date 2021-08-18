@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Gutenberg Locker
+*/
+"use strict";
 (function(wp){
     var registerBlockType = wp.blocks.registerBlockType;
     var InspectorControls = wp.editor.InspectorControls;
@@ -5,13 +9,15 @@
     var el                = wp.element.createElement;
     var withState         = wp.compose.withState;
     var __                = wp.i18n.__;
-    var lockerOptions     = JSON.parse(window.ihc_locker_options);
+    var lockerOptions     = window.ihc_locker_options;
 
     function lockerControl(props) {
+        if ( typeof window.ihc_locker_options != 'object' ){
+            lockerOptions = JSON.parse(window.ihc_locker_options);
+        }
         var attributes = props.attributes
         var setAttributes = props.setAttributes
         var inspectorControl = el(InspectorControls, {},
-            //el('h4', {}, el('span', {}, 'Settings')),
             el(SelectControl, {
                 label     : 'Type:',
                 value     : attributes.lockerType,
@@ -50,7 +56,7 @@
     }
 
     registerBlockType('indeed-membership-pro/locker', {
-        title       : __('UMP - Locker'),
+        title       : 'UMP - Locker',
         category    : 'ihc-locker',
         icon        : 'universal-access-alt',
         attributes  : {

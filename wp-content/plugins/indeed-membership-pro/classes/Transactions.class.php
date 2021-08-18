@@ -111,7 +111,6 @@ namespace Ump{
 			} else if(isset($this->transaction_data['message']) && $this->transaction_data['message']=='success'){
 				return "Completed";
 			} else if(isset($this->transaction_data['ap_status']) && ($this->transaction_data['ap_status']=='Success' || $this->transaction_data['ap_status']=='Subscription-Payment-Success')){
-				/// PAYZA
 				return "Completed";
 			}
 			return '';

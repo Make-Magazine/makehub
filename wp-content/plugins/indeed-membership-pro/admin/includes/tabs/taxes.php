@@ -15,46 +15,46 @@ $data['countries'] = ihc_get_countries();
 $data['metas'] = ihc_return_meta_arr('ihc_taxes_settings');
 ?>
 <div class="iump-wrapper">
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Tax Settings', 'ihc');?></h3>
+		<h3><?php esc_html_e('Tax Settings', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Taxes', 'ihc');?></h2>
-				<p style="margin-top:0px;"><?php _e('You can activate this option to take in place in your membership system.', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold Taxes', 'ihc');?></h2>
+				<p><?php esc_html_e('You can activate this option to take in place in your membership system.', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_enable_taxes']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onclick="iumpCheckAndH(this, '#ihc_enable_taxes');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_enable_taxes" value="<?php echo $data['metas']['ihc_enable_taxes'];?>" id="ihc_enable_taxes" />
 			</div>
 			<div class="iump-form-line">
-				<h2><?php _e('Show Tax details', 'ihc');?></h2>
-				<p><?php _e('Display tax details and amount in the register process.', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Show Tax details', 'ihc');?></h2>
+				<p><?php esc_html_e('Display tax details and amount in the register process.', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_show_taxes']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onclick="iumpCheckAndH(this, '#ihc_show_taxes');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_show_taxes" value="<?php echo $data['metas']['ihc_show_taxes'];?>" id="ihc_show_taxes" />
 				<br/>
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 				<div class="col-xs-5">
-					<div class="input-group" style="margin:30px 0 15px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('Label:', 'ihc');?></span>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Label:', 'ihc');?></span>
 						<input type="text" class="form-control" name="ihc_default_tax_label"value="<?php echo $data['metas']['ihc_default_tax_label'];?>" />
 					</div>
 				</div>
 				</div>
 			 </div>
 			 <div class="iump-form-line">
-				<h2><?php _e('General Tax Value', 'ihc');?></h2>
-				<p><?php _e("Set a default tax value that will be used if there isn't a special tax for a specific Country.", 'ihc');?></p>
-				<div class="row" style="margin-left:0px;">
+				<h2><?php esc_html_e('General Tax Value', 'ihc');?></h2>
+				<p><?php esc_html_e("Set a default tax value that will be used if there isn't a special tax for a specific Country.", 'ihc');?></p>
+				<div class="row">
 				<div class="col-xs-5">
-					<div class="input-group" style="margin:30px 0 15px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('Default Tax Value:', 'ihc');?></span>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Default Tax Value:', 'ihc');?></span>
 						<input type="number" class="form-control" min="0" step="0.01" name="ihc_default_tax_value" value="<?php echo $data['metas']['ihc_default_tax_value'];?>" />
 						<div class="input-group-addon">%</div>
 					</div>
@@ -62,38 +62,41 @@ $data['metas'] = ihc_return_meta_arr('ihc_taxes_settings');
 				</div>
 			</div>
 
-			<div style="margin-top: 15px;">
-				<input type="submit" value="Save" name="save_settings" class="button button-primary button-large">
+			<div class="ihc-submit-form">
+				<input type="submit" value="Save Changes" name="save_settings" class="button button-primary button-large">
 			</div>
 		</div>
 	</div>
 </form>
 
-<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_edit_taxes');?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php _e('Add New Tax', 'ihc');?></a>
+<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_edit_taxes');?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php esc_html_e('Add New Tax', 'ihc');?></a>
 
 <?php
 if ($data['items']):
 	?>
-	<div style="width: 100%; margin-top: 20px;">
-		<table class="wp-list-table widefat fixed tags ihc-admin-tables">
+	<div>
+		<table class="wp-list-table widefat fixed tags ihc-admin-tables ihc-taxes-table">
 			<thead>
 				<tr>
-					<th class="manage-column"><?php _e('Country', 'ihc');?></th>
-					<th class="manage-column"><?php _e('State', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Label', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Tax Value (%)', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Country', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('State', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Label', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Tax Value (%)', 'ihc');?></th>
 				</tr>
 			</thead>
 			<tbody>
 				<?php
 					$i = 1;
 					foreach ($data['items'] as $item):?>
-					<tr  class="<?php if($i%2==0) echo 'alternate';?>" onMouseOver="ihcDhSelector('#tax_tr_<?php echo $item['id'];?>', 1);" onMouseOut="ihcDhSelector('#tax_tr_<?php echo $item['id'];?>', 0);">
+					<tr  class="<?php if($i%2==0){
+						 echo 'alternate';
+					}
+					?>" onMouseOver="ihcDhSelector('#tax_tr_<?php echo $item['id'];?>', 1);" onMouseOut="ihcDhSelector('#tax_tr_<?php echo $item['id'];?>', 0);">
 						<td><?php echo $data['countries'][$item['country_code']];?>
-							<div style="visibility: hidden;" id="tax_tr_<?php echo $item['id'];?>">
-								<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_edit_taxes&edit=') . $item['id'];?>"><?php _e('Edit', 'ihc');?></a>
+							<div class="ihc-visibility-hidden" id="tax_tr_<?php echo $item['id'];?>">
+								<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_edit_taxes&edit=') . $item['id'];?>"><?php esc_html_e('Edit', 'ihc');?></a>
 								|
-								<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=taxes&delete=') . $item['id'];?>" style="color: red;"><?php _e('Delete', 'ihc');?></a>
+								<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=taxes&delete=') . $item['id'];?>" class="ihc-red"><?php esc_html_e('Delete', 'ihc');?></a>
 							</div>
 						</td>
 						<td><?php
@@ -114,7 +117,7 @@ if ($data['items']):
 	<?php
 else :
 	?>
-	<div><?php _e('No Taxes yet!', 'ihc');?></div>
+	<div><?php esc_html_e('No Taxes yet!', 'ihc');?></div>
 	<?php
 endif;
 ?>

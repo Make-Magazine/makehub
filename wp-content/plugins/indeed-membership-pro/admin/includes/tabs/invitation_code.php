@@ -1,7 +1,7 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code-add_new');?>"><?php _e('Add Single Invitation Code', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code-add_new&multiple=true');?>"><?php _e('Add Bulk Invitation Codes', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code');?>"><?php _e('Manage Invitation Codes', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code-add_new');?>"><?php esc_html_e('Add Single Invitation Code', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code-add_new&multiple=true');?>"><?php esc_html_e('Add Bulk Invitation Codes', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=invitation_code');?>"><?php esc_html_e('Manage Invitation Codes', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -28,32 +28,32 @@ $items = Ihc_Db::invitation_code_get_all();
 <div class="iump-wrapper">
 <div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
-					<?php  _e("Invitation Code", 'ihc');?>
+					<?php  esc_html_e("Invitation Code", 'ihc');?>
 				</span>
 		</div>
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Settings', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Settings', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Section', 'ihc');?></h2>
+				<h2><?php esc_html_e('Activate/Hold Section', 'ihc');?></h2>
 
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_invitation_code_enable']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_invitation_code_enable');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_invitation_code_enable" value="<?php echo $data['metas']['ihc_invitation_code_enable'];?>" id="ihc_invitation_code_enable" />
 			</div>
 
 			<div class="iump-form-line">
-				<label><?php _e('Error Message', 'ihc');?></label>
+				<label><?php esc_html_e('Error Message', 'ihc');?></label>
 				<input type="text" name="ihc_invitation_code_err_msg" value="<?php echo $data['metas']['ihc_invitation_code_err_msg'];?>" />
 			</div>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -61,30 +61,40 @@ $items = Ihc_Db::invitation_code_get_all();
 </form>
 
 <?php if ($items):?>
-	<form method="post" action="" id="delete_code_form">
+	<form method="post" id="delete_code_form">
 		<input type="hidden" value="" name="delete_code" id="delete_code" />
 		<div class="ihc-dashboard-form-wrap">
-			<table class="wp-list-table widefat fixed tags ihc-admin-tables" style="margin-top: 20px" >
+			<table class="wp-list-table widefat fixed tags ihc-admin-tables">
 				<thead>
 					<tr>
-						<th class="manage-column" style="width: 4%;"><input type="checkbox" onClick="ihcSelectAllCheckboxes(this, '.ihc-delete-code');" /></th>
-						<th class="manage-column"><?php _e('Code', 'ihc');?></th>
-						<th class="manage-column"><?php _e('Repeat', 'ihc');?></th>
-						<th class="manage-column"><?php _e('Used', 'ihc');?></th>
-						<th class="manage-column" style="width:80px;  text-align: center;"><?php _e('Delete', 'ihc');?></th>
+						<th class="manage-column" width="10px;"><input type="checkbox" onClick="ihcSelectAllCheckboxes(this, '.ihc-delete-code');" /></th>
+						<th class="manage-column"><?php esc_html_e('Code', 'ihc');?></th>
+						<th class="manage-column"><?php esc_html_e('Repeat', 'ihc');?></th>
+						<th class="manage-column"><?php esc_html_e('Used', 'ihc');?></th>
+						<th class="manage-column" width="80px;"><?php esc_html_e('Remove', 'ihc');?></th>
 					</tr>
 				</thead>
 				<?php
 				$i = 1;
 				foreach ($items as $key=>$arr):?>
-				<?php $done =''; if($arr['repeat_limit'] == $arr['submited']) $done = 'ihc-invitationcode-disabled';?>
-				<tr class="<?php if ($i%2==0) echo 'alternate'; echo $done; ?>">
-					<td style="text-align: center;"><input type="checkbox" name="delete_multiple_codes[]" value="<?php echo $arr['id'];?>" class="ihc-delete-code" /></td>
+				<?php
+				$done ='';
+				if($arr['repeat_limit'] == $arr['submited']){
+					 $done = 'ihc-invitationcode-disabled';
+				}
+				?>
+				<tr class="<?php if ($i%2==0){
+					 echo 'alternate';
+				}
+					echo $done;
+					?>
+					">
+					<td><input type="checkbox" name="delete_multiple_codes[]" value="<?php echo $arr['id'];?>" class="ihc-delete-code" /></td>
 					<td><?php echo $arr['code'];?></td>
 					<td><?php echo $arr['repeat_limit'];?></td>
 					<td><?php echo $arr['submited'];?></td>
 					<td align="center">
-						<i class="fa-ihc ihc-icon-remove-e" style="cursor:pointer;" onClick="jQuery('#delete_code').val('<?php echo $arr['id'];?>');jQuery('#delete_code_form').submit();"></i>
+						<i class="fa-ihc ihc-icon-remove-e ihc-js-admin-invitation-code-delete-code" data-id="<?php echo $arr['id'];?>"></i>
 					</td>
 				</tr>
 				<?php
@@ -92,8 +102,8 @@ $items = Ihc_Db::invitation_code_get_all();
 				endforeach;?>
 			</table>
 		</div>
-		<div class="ihc-submit-form" style="margin-top: 20px;">
-			<input type="submit" value="<?php _e('Delete', 'ihc');?>" name="delete" class="button button-primary button-large" />
+		<div class="ihc-submit-form">
+			<input type="submit" value="<?php esc_html_e('Remove', 'ihc');?>" name="delete" class="button button-primary button-large" />
 		</div>
 	</form>
 <?php endif;?>

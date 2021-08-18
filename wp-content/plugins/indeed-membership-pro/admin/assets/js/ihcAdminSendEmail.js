@@ -1,4 +1,8 @@
-ihcAdminSendEmail = {
+/*
+* Ultimate Membership Pro - Sends Direct Emails
+*/
+"use strict";
+var ihcAdminSendEmail = {
   popupAjax		       : '',
   sendEmailAjax	     : '',
   ajaxPath           : '',
@@ -13,7 +17,6 @@ ihcAdminSendEmail = {
     var obj = this;
     obj.setAttributes(obj, args);
 
-    jQuery(document).ready(function(){
         jQuery(obj.openPopupSelector).on('click', function(evt){
             obj.handleOpenPopup(obj, evt);
         });
@@ -23,7 +26,6 @@ ihcAdminSendEmail = {
         jQuery(document).on("click", obj.closePopupBttn,function(){
            obj.handleClosePopup(obj);
         });
-    });
   },
 
 	setAttributes: function(obj, args){
@@ -72,7 +74,7 @@ ihcAdminSendEmail = {
 
 }
 
-jQuery(document).ready(function(){
+jQuery(window).on('load', function(){
   ihcAdminSendEmail.init({
       popupAjax		       : 'ihc_admin_send_email_popup',
     	sendEmailAjax	     : 'ihc_admin_do_send_email',

@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Search & Filter Members
+*/
+"use strict";
 var ihcSearchUsers = {
     itemSelectSelector          : '',
     itemOrderSelector           : '',
@@ -19,7 +23,6 @@ var ihcSearchUsers = {
         var obj = this;
         obj.setAttributes(obj, args);
 
-        jQuery(document).ready(function(){
 
             /// select
             jQuery( obj.itemSelectSelector ).on('click', function( evt ){
@@ -114,7 +117,6 @@ var ihcSearchUsers = {
                 obj.handleSelection( obj );
             });
 
-        });
     },
 
   	setAttributes: function(obj, args){
@@ -189,7 +191,7 @@ var ihcSearchUsers = {
 
 };
 
-jQuery(document).ready(function(){
+jQuery( window ).on( 'load', function(){
     ihcSearchUsers.init({
         itemSelectSelector          : '.js-ihc-search-select',
         itemOrderSelector           : '.js-ihc-search-order',

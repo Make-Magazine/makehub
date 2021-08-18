@@ -64,6 +64,8 @@ function ihc_update_register_fields($post_data){
 									'target_levels',
 									'class',
 									'theme',
+									'ihc_optin_accept_checked',
+									'ihc_memberlist_accept_checked',
 									'plain_text_value',
 									'conditional_text',
 									'error_message',
@@ -112,9 +114,9 @@ function ihc_save_user_field($post_data){
 				'label' => $post_data['label'],
 				'type' => $post_data['type'],
 				'native_wp' => 0,
-				'sublabel' => @$post_data['sublabel'],
-				'target_levels' => @$post_data['target_levels'],
-				'class' => @$post_data['class'],
+				'sublabel' => (isset($post_data['sublabel'])) ? $post_data['sublabel'] : '',
+				'target_levels' => (isset($post_data['target_levels'])) ? $post_data['target_levels'] : '',
+				'class' => (isset($post_data['class'])) ? $post_data['class'] : '',
 		);
 		$new['req'] = (isset($post_data['req'])) ? $post_data['req'] : 0;
 		$new['display_admin'] = (isset($post_data['display_admin'])) ? $post_data['display_admin'] : 0;
@@ -124,6 +126,8 @@ function ihc_save_user_field($post_data){
 		$optional_metas = array(
 									'values',
 									'theme',
+									'ihc_optin_accept_checked',
+									'ihc_memberlist_accept_checked',
 									'plain_text_value',
 									'conditional_text',
 									'error_message',

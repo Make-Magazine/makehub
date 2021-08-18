@@ -1,7 +1,8 @@
-<?php
+.esc_html__(<?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since 7.4
+Created v.7.4
+Deprecated starting with v.9.3
 */
 class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
 {
@@ -27,9 +28,9 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
      */
   	public function doPayment()
     {
-        \Ihc_User_Logs::set_user_id(@$this->attributes['uid']);
-        \Ihc_User_Logs::set_level_id(@$this->attributes['lid']);
-        \Ihc_User_Logs::write_log( __('Mollie Payment: Start process', 'ihc'), 'payments');
+        \Ihc_User_Logs::set_user_id((isset($this->attributes['uid'])) ? $this->attributes['uid'] : '');
+        \Ihc_User_Logs::set_level_id((isset($this->attributes['lid'])) ? $this->attributes['lid'] : '');
+        \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Start process', 'ihc'), 'payments');
 
         $settings = ihc_return_meta_arr('payment_mollie');
         $mollie = new \Mollie\Api\MollieApiClient();
@@ -40,23 +41,28 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             return $this;
         }
 
-        $levels = get_option('ihc_levels');
+        $levels = \Indeed\Ihc\Db\Memberships::getAll();
         $levelData = $levels[$this->attributes['lid']];
 
         $siteUrl = site_url();
         $siteUrl = trailingslashit($siteUrl);
         $webhook = add_query_arg('ihc_action', 'mollie', $siteUrl);
+        $redirectUrl = get_option( 'ihc_mollie_return_page' );
+        $redirectUrl = get_permalink( $redirectUrl );
+        if( !$redirectUrl || $redirectUrl == -1 ){
+          $redirectUrl = $siteUrl;
+        }
         $amount = $levelData['price'];
 
         $reccurrence = FALSE;
     		if (isset($levelData['access_type']) && $levelData['access_type']=='regular_period'){
     			$reccurrence = TRUE;
-    			\Ihc_User_Logs::write_log( __('Mollie Payment: Recurrence payment set.', 'ihc'), 'payments');
+    			\Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Recurrence payment set.', 'ihc'), 'payments');
     		}
     		$couponData = array();
     		if (!empty($this->attributes['ihc_coupon'])){
     			$couponData = ihc_check_coupon($this->attributes['ihc_coupon'], $this->attributes['lid']);
-    			\Ihc_User_Logs::write_log( __('Mollie Payment: the user used the following coupon: ', 'ihc') . $this->attributes['ihc_coupon'], 'payments');
+    			\Ihc_User_Logs::write_log( esc_html__('Mollie Payment: the user used the following coupon: ', 'ihc') . $this->attributes['ihc_coupon'], 'payments');
     		}
 
         if ($reccurrence){
@@ -74,7 +80,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             /********************************* end of COUPON *****************************/
 
             $amount = $levelData['price'];
-            \Ihc_User_Logs::write_log( __('Mollie Payment: amount set @ ', 'ihc') . $amount . $this->currency, 'payments');
+            \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: amount set @ ', 'ihc') . $amount . $this->currency, 'payments');
 
             if ($levelData['billing_type']=='bl_ongoing'){
               $recurringLimit = '';
@@ -109,14 +115,14 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 $interval = '12 months';
                 break;
             }
-            \Ihc_User_Logs::write_log( __('Mollie Payment: recurrence number: ', 'ihc') . $recurringLimit, 'payments');
+            \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: recurrence number: ', 'ihc') . $recurringLimit, 'payments');
 
             /*************************** DYNAMIC PRICE ***************************/
             if (ihc_is_magic_feat_active('level_dynamic_price') && isset($this->attributes['ihc_dynamic_price'])){
                 $temp_amount = $this->attributes['ihc_dynamic_price'];
                 if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
                     $amount = $temp_amount;
-                    \Ihc_User_Logs::write_log( __('Mollie Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
+                    \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
                 }
             }
             /**************************** end of DYNAMIC PRICE ***************************/
@@ -152,21 +158,21 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                                     "currency" => $this->currency,
                                     "value"    => $amount,
                 ],
-                "description"     => __('Buy ', 'ihc') . $levelData['label'],
-                "redirectUrl"     => $siteUrl,
+                "description"     => esc_html__('Buy ', 'ihc') . $levelData['label'],
+                "redirectUrl"     => $redirectUrl,
                 "webhookUrl"      => $webhook,
                 "metadata"        => [
-                                    "order_id" => @$this->attributes['orderId'],
+                                    "order_id" => (isset($this->attributes['orderId'])) ? $this->attributes['orderId'] : '',
                 ],
                 "sequenceType"    => \Mollie\Api\Types\SequenceType::SEQUENCETYPE_FIRST,
             ];
             if ( isset( $firstPaymentAmount ) ){
                 $paymentParams['amount']['value'] = $this->addTaxes( $firstPaymentAmount );
                 $paymentParams['amount']['value'] = number_format( (float)$paymentParams['amount']['value'], 2, '.', '' );
-                $paymentParams['description'] = __('Buy ', 'ihc') . $levelData['label']
-                                                . __( '. For trial period you pay: ', 'ihc' )
+                $paymentParams['description'] = esc_html__('Buy ', 'ihc') . $levelData['label']
+                                                . esc_html__( '. For trial period you pay: ', 'ihc' )
                                                 . $paymentParams['amount']['value'] . $this->currency
-                                                . __( '. After trial period you will pay: ', 'ihc' )
+                                                . esc_html__( '. After trial period you will pay: ', 'ihc' )
                                                 . $amount . $this->currency;
             }
 
@@ -191,7 +197,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                 ],
                 "startDate"   => $start_time,
 				        "interval"    => $interval,
-                "description" => __('Sign for ', 'ihc') . $levelData['label'].__(' subscription', 'ihc'),
+                "description" => esc_html__('Sign for ', 'ihc') . $levelData['label'].esc_html__(' subscription', 'ihc'),
                 "webhookUrl"  => $webhook,
                 "method"      => NULL,
             ];
@@ -220,7 +226,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
               $temp_amount = $this->attributes['ihc_dynamic_price'];
               if (ihc_check_dynamic_price_from_user($this->attributes['lid'], $temp_amount)){
                 $amount = $temp_amount;
-                \Ihc_User_Logs::write_log( __('Mollie Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
+                \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments');
               }
             }
             /**************************** DYNAMIC PRICE ***************************/
@@ -236,11 +242,10 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                     "currency"    => $this->currency,
                     "value"       => $amount,
                 ],
-                "description"     => __('Buy ', 'ihc') . $levelData['label'],
-                "redirectUrl"     => $siteUrl,
+                "description"     => esc_html__('Buy ', 'ihc') . $levelData['label'],
+                "redirectUrl"     => $redirectUrl,
                 "webhookUrl"      => $webhook,
-				"method"		  => NULL,
-                //"method"          => \Mollie\Api\Types\PaymentMethod::CREDITCARD,
+				        "method"		      => NULL,
             ]);
         }
 
@@ -263,7 +268,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         ihc_insert_update_transaction($this->attributes['uid'], $paymentId, $transactionData, true); /// will save the order too
 
         /// update indeed_members_payments table, add order id
-        \Ihc_Db::updateTransactionAddOrderId($paymentId, @$this->attributes['orderId']);
+        \Ihc_Db::updateTransactionAddOrderId($paymentId, (isset($this->attributes['orderId'])) ? $this->attributes['orderId'] : '');
         $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
         $orderMeta->save( $this->attributes['orderId'], 'transaction_id', $paymentId );
 
@@ -316,7 +321,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         }
 
         $startTime = date('Y-m-d', strtotime("+ " . $trialPeriod . " days"));
-        \Ihc_User_Logs::write_log( __('Mollie Payment: Trial Time ends on ', 'ihc') . $trialPeriod, 'payments');
+        \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Trial Time ends on ', 'ihc') . $trialPeriod, 'payments');
         return [
                   'startTime'     => $startTime,
                   'startAmount'   => $levelData['access_trial_price'],
@@ -331,12 +336,12 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     {
         if ( $this->redirectUrl ){
             // redirect to payment
-            \Ihc_User_Logs::write_log( __('Mollie Payment: Request submited.', 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Request submited.', 'ihc'), 'payments');
             header( 'location:' . $this->redirectUrl );
             exit;
         } else {
             // redirect home ...
-            \Ihc_User_Logs::write_log( __('Mollie Payment: Payment url to mollie is not available.', 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__('Mollie Payment: Payment url to mollie is not available.', 'ihc'), 'payments');
             $url = get_option( 'home' );
             header( 'location:' . $url );
             exit;
@@ -350,18 +355,18 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     public function webhook()
     {
         $rand = rand( 0, 1000000);
-		    \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Start Process.", 'ihc'), 'payments');
+		    \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Start Process.", 'ihc'), 'payments');
 
         $settings = ihc_return_meta_arr('payment_mollie');
         $mollie = new \Mollie\Api\MollieApiClient();
         $mollie->setApiKey($settings['ihc_mollie_api_key']);
         $transactionId = esc_sql($_POST["id"]);
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Transaction id is: " . $transactionId, 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Transaction id is: " . $transactionId, 'ihc'), 'payments');
 
         $payment = $mollie->payments->get( $transactionId );
         $paymentData = ihcGetTransactionDetails( $transactionId );
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Transaction data from mollie: " . serialize($payment), 'ihc'), 'payments');
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Payment data from database: " . serialize($paymentData), 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Transaction data from mollie: " . serialize($payment), 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Payment data from database: " . serialize($paymentData), 'ihc'), 'payments');
 
         if ($payment->isPaid() && !$payment->hasRefunds() && !$payment->hasChargebacks()) {
             if ( empty( $payment->subscriptionId ) ){
@@ -372,14 +377,14 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         } elseif ($payment->isOpen()) {
         } elseif ($payment->isPending()) {
             /// pending
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->isFailed()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->isExpired()) {
         } elseif ($payment->isCanceled()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->hasRefunds()) {
-            ihc_delete_user_level_relation($paymentData['lid'], $paymentData['uid']);
+            \Indeed\Ihc\UserSubscriptions::deleteOne( $paymentData['uid'], $paymentData['lid'] );
         } elseif ($payment->hasChargebacks()) {}
     }
 
@@ -392,7 +397,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     {
         $paymentData = ihcGetTransactionDetails( $transactionId );
         if ( !$paymentData ){
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process! No payment data for this transaction id.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process! No payment data for this transaction id.", 'ihc'), 'payments');
             return false;
         }
         $paymentData = $paymentData + $this->MollieObjectToArray( $paymentDataFromMollie );
@@ -404,7 +409,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $orderObject = new \Indeed\Ihc\Db\Orders();
         $orderDetails = $orderObject->setId( $orderId )->fetch()->get();
         if ( !empty( $orderDetails->status ) && $orderDetails->status == 'Completed' ){
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process! This transaction has already been saved.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process! This transaction has already been saved.", 'ihc'), 'payments');
             return false;
         }
 
@@ -412,7 +417,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( $completed ){
             $order = new \Indeed\Ihc\Db\Orders();
             $order->setId( $orderId )->update( 'status', 'Completed' );
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Order completed!", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Order completed!", 'ihc'), 'payments');
         }
     }
 
@@ -424,17 +429,17 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
      */
     private function webhookRecurringPayment( $subscriptionId='', $transactionId='', $paymentDataFromMollie=[] )
     {
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Start recurring payment.", 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Start recurring payment.", 'ihc'), 'payments');
         $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
         $firstOrderId = $orderMeta->getIdFromMetaNameMetaValue( 'subscription_id', $subscriptionId );
         if ( !$firstOrderId ){
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process! No order for this subscription Id.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process! No order for this subscription Id.", 'ihc'), 'payments');
             return false;
         }
         $orderObject = new \Indeed\Ihc\Db\Orders();
         $firstOrderDetails = $orderObject->setId( $firstOrderId )->fetch()->get();
         if ( !$firstOrderDetails ){
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process! No data for this order.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process! No data for this order.", 'ihc'), 'payments');
             return false;
         }
         $uid = isset( $firstOrderDetails->uid ) ? $firstOrderDetails->uid : 0;
@@ -444,7 +449,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         $currency = isset( $paymentDataFromMollie->amount->currency ) ? $paymentDataFromMollie->amount->currency : '';
 
         if ( !$uid || $lid==-1 ){
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process! No user id or level id for this subscription Id.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process! No user id or level id for this subscription Id.", 'ihc'), 'payments');
             return false;
         }
 
@@ -456,7 +461,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $orderDetails = $orderObject->setId( $orderIdForTransaction )->fetch()->get();
             if ( empty( $orderDetails->status ) || $orderDetails->status == 'Completed' ){
                 // this transaction has been already marked as completed . so we out
-                \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Stop process, this transaction has been already saved!", 'ihc'), 'payments');
+                \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Stop process, this transaction has been already saved!", 'ihc'), 'payments');
                 return false;
             } else {
                 // update level access
@@ -480,7 +485,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             // save the order
             $createOrder = new \Indeed\Ihc\CreateOrder( $orderAttributes, 'mollie' );
             $orderId = $createOrder->proceed()->getOrderId();
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Create new order for this transaction.", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Create new order for this transaction.", 'ihc'), 'payments');
 
             // save transaction id into meta order
             $orderMeta->save( $orderId, 'transaction_id', $transactionId );
@@ -494,7 +499,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
         if ( !empty( $completed ) ){
             $order = new \Indeed\Ihc\Db\Orders();
             $order->setId( $orderId )->update( 'status', 'Completed' );
-            \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Order completed!", 'ihc'), 'payments');
+            \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Order completed!", 'ihc'), 'payments');
         }
     }
 
@@ -510,10 +515,10 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
     private function webhookMakeCompleted( $uid=0, $lid=0, $paymentData=[], $amountValue=0, $transactionId='', $orderId=0 )
     {
         /// update
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Update user level expire time.", 'ihc'), 'payments');
         $levelData = ihc_get_level_by_id( $lid );//getting details about current level
-        ihc_update_user_level_expire( $levelData, $lid, $uid );
-        ihc_switch_role_for_user( $uid );
+        \Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid, false, [ 'payment_gateway' => 'mollie' ] );
+        
         $paymentData['message'] = 'success';
         $paymentData['status'] = 'Completed';
 
@@ -522,7 +527,7 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
             $paymentData['amount'] = 0;
         }
 
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Payment completed.", 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Payment completed.", 'ihc'), 'payments');
 
         $IndeedMembersPayments = new \Indeed\Ihc\Db\IndeedMembersPayments();
         $result = $IndeedMembersPayments->setTxnId( $transactionId )
@@ -531,12 +536,9 @@ class Mollie extends \Indeed\Ihc\PaymentGateways\PaymentAbstract
                               ->setHistory( $paymentData )
                               ->setOrders( $orderId )
                               ->save();
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Save transaction details.", 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Save transaction details.", 'ihc'), 'payments');
 
-        //send notification to user
-        ihc_send_user_notifications( $uid, 'payment', $lid );
-        ihc_send_user_notifications( $uid, 'admin_user_payment', $lid );//send notification to admin
-        \Ihc_User_Logs::write_log( __("Mollie Payment Webhook: Send notifications.", 'ihc'), 'payments');
+        \Ihc_User_Logs::write_log( esc_html__("Mollie Payment Webhook: Send notifications.", 'ihc'), 'payments');
         do_action( 'ihc_payment_completed', $uid, $lid );
         return $result;
     }

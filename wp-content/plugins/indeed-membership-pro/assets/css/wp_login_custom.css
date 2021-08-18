@@ -1,3 +1,6 @@
+/*!
+ *  Customize the WP Login page
+ */
 body, body.login, html{
 	font-family: Poppins-Regular, sans-serif;
 	background-color: transparent;
@@ -64,14 +67,14 @@ body.login div#login form p label{
     color: #fff;
     line-height: 1.5;
     padding-left: 7px;
-	
+
 }
 body.login div#login form input[type=password], body.login div#login form input[type=text], body.login div#login form input[type=email], body.login div#login form select, body.login div#login form textarea{
 	height:50px;
     padding: 15px!important;
 	border:none;
 	border-bottom: 2px solid #d9d9d9;
-	background: #fff;	
+	background: #fff;
 	box-shadow: none;
 	font-family: Poppins-Regular;    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 	font-size: 16px;

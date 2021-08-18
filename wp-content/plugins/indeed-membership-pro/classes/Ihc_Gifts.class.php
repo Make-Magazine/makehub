@@ -12,7 +12,8 @@ class Ihc_Gifts{
 		 	 $gifts_available = Ihc_Db::gift_get_all_items($lid);
 			 if ($gifts_available){
 			 	$user_meta_value = array();
-			 	$user_meta_value[] = get_user_meta($uid, 'ihc_gifts', TRUE);
+
+				$user_meta_value = get_user_meta($uid, 'ihc_gifts', true );
 
 			 	if (ihc_is_level_reccuring($lid) && $user_meta_value){
 			 		/// extra check
@@ -24,6 +25,10 @@ class Ihc_Gifts{
 			 			}
 			 		}
 			 	}
+
+				if ( empty( $user_meta_value ) ){
+						$user_meta_value = [];
+				}
 
 			 	foreach ($gifts_available as $gift_id => $gift_metas){
 			 		$code = $this->generate_coupon_code($gift_metas, $uid);
@@ -42,7 +47,7 @@ class Ihc_Gifts{
 		 }
 	}
 
-	private function generate_coupon_code($meta=array(), $uid){
+	private function generate_coupon_code($meta=array(), $uid=0){
 		/*
 		 * @param array, int
 		 * @return string
@@ -50,7 +55,7 @@ class Ihc_Gifts{
 		 $code = ihc_random_str(10);
 		 $data = array(
 		 				'code' => $code,
-		 				'description' => __('Gift', 'ihc'),
+		 				'description' => esc_html__('Gift', 'ihc'),
 		 				'period_type' => 'unlimited',
 		 				'discount_type' => $meta['discount_type'],
 		 				'discount_value' => $meta['discount_value'],

@@ -31,7 +31,7 @@ class IndeedView
 	 * @param array
 	 * @return none
 	 */
-	public function setContentData($data, $extract=FALSE){
+	public function setContentData($data=null, $extract=FALSE){
 			$this->_content_data = $data;
 			$this->_do_extract = $extract;
 			return $this;

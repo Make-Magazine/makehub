@@ -33,7 +33,7 @@ class iSDK
      * @return bool
      * @throws iSDKException
      */
-    public function cfgCon($name='', $key = "", $dbOn = "on")
+    public function cfgCon($name, $key = "", $dbOn = "on")
     {
         $this->debug = (($key == 'on' || $key == 'off' || $key == 'kill' || $key == 'throw') ? $key : $dbOn);
 
@@ -61,7 +61,7 @@ class iSDK
         /* SSL Certificate Verification */
         $this->client->setSSLVerifyPeer(TRUE);
         $this->client->setCaCertificate((__DIR__ != '__DIR__' ? __DIR__ : dirname(__FILE__)) . '/infusionsoft.pem');
-        //$this->client->setDebug(2);
+   
 
         $this->encKey = php_xmlrpc_encode($this->key);
 
@@ -75,7 +75,8 @@ class iSDK
             }
 
         } catch (iSDKException $e) {
-            throw new iSDKException($e->getMessage());
+            return false;
+            //throw new iSDKException($e->getMessage());
         }
 
         return true;

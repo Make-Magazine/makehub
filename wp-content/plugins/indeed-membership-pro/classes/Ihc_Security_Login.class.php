@@ -159,8 +159,9 @@ class Ihc_Security_Login{
 		 * @return none
 		 */
 		global $wpdb;
-		$table = $wpdb->prefix . 'ihc_security_login';
-		$data = $wpdb->get_row("SELECT attempts_count, locked, log_time, username FROM $table WHERE ip='{$this->ip}';");
+		$query = $wpdb->prepare( "SELECT attempts_count, locked, log_time, username FROM {$wpdb->prefix}ihc_security_login
+																		WHERE ip=%s ;", $this->ip );
+		$data = $wpdb->get_row( $query );
 		if ($data && !empty($data->log_time)){
 		 	$this->current_ip['attempts_count'] = $data->attempts_count;
 			$this->current_ip['locked'] = $data->locked;
@@ -169,29 +170,31 @@ class Ihc_Security_Login{
 		}
 	}
 
-	private function ip_is_extended_locked(){
-		/*
-		 * @param none
-		 * @return boolean
-		 */
+	/**
+	 * @param none
+	 * @return boolean
+	 */
+	private function ip_is_extended_locked()
+	{
 		 if (!empty($this->current_ip['locked']) && $this->current_ip['locked']>=$this->metas['ihc_login_security_max_lockouts']){
 		 	 //check time
 		 	 $lock_time = $this->current_ip['log_time'] + $this->metas['ihc_login_security_extended_lockout_time'] * 60 * 60;
 			 if ($lock_time>indeed_get_unixtimestamp_with_timezone()){
-			 	 return TRUE;
+			 	 return true;
 			 } else {
 			 	 $this->reset_locked();
 				 $this->reset_attempts();
 			 }
 		 }
-		 return FALSE;
+		 return false;
 	}
 
-	private function ip_is_locked(){
-		/*
-		 * @param none
-		 * @return none
-		 */
+	/**
+	 * @param none
+	 * @return none
+	 */
+	private function ip_is_locked()
+	{
 		 if (!empty($this->current_ip['locked']) && $this->metas['ihc_login_security_allowed_retries']<=$this->current_ip['attempts_count']){
 		 	 /// check time
 		 	 $end_lock_time = $this->current_ip['log_time'] + $this->metas['ihc_login_security_lockout_time'] * 60;
@@ -204,11 +207,12 @@ class Ihc_Security_Login{
 		 return FALSE;
 	}
 
-	private function do_login(){
-		/*
-		 * @param none
-		 * @return boolean
-		 */
+	/**
+	 * @param none
+	 * @return boolean
+	 */
+	private function do_login()
+	{
 		$array['user_login'] = $this->username;
 		$array['user_password'] = $this->password;
 		$array['remember'] = FALSE;
@@ -220,31 +224,34 @@ class Ihc_Security_Login{
 		}
 	}
 
-	private function reset_attempts(){
-		/*
-		 * @param none
-		 * @return none
-		 */
+	/**
+	 * @param none
+	 * @return none
+	 */
+	private function reset_attempts()
+	{
 		 global $wpdb;
-		 $table = $wpdb->prefix . 'ihc_security_login';
-		 $wpdb->query("UPDATE $table SET attempts_count=0 WHERE ip='{$this->ip}';");
+		 $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_security_login SET attempts_count=0 WHERE ip=%s ;", $this->ip );
+		 $wpdb->query( $query );
 	}
 
-	private function reset_locked(){
-		/*
-		 * @param none
-		 * @return none
-		 */
+	/**
+	 * @param none
+	 * @return none
+	 */
+	private function reset_locked()
+	{
 		 global $wpdb;
-		 $table = $wpdb->prefix . 'ihc_security_login';
-		 $wpdb->query("UPDATE $table SET locked=0 WHERE ip='{$this->ip}';");
+		 $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_security_login SET locked=0 WHERE ip=%s;", $this->ip );
+		 $wpdb->query( $query );
 	}
 
-	private function increment_attempts(){
-		/*
-		 * @param none
-		 * @return none
-		 */
+	/**
+	 * @param none
+	 * @return none
+	 */
+	private function increment_attempts()
+	{
 		 global $wpdb;
 		 $time = indeed_get_unixtimestamp_with_timezone();
 		 $this->current_ip['attempts_count']++;
@@ -261,30 +268,35 @@ class Ihc_Security_Login{
 		 }
 		 $table = $wpdb->prefix . 'ihc_security_login';
 		 $time = indeed_get_unixtimestamp_with_timezone();
-		 $q = "UPDATE $table SET attempts_count='{$this->current_ip['attempts_count']}',
-		 						 locked='{$this->current_ip['locked']}',
-		 						 username='{$this->username}',
-		 						 log_time='$time'
-		 						 WHERE ip='{$this->ip}';";
+		 $q = $wpdb->prepare("UPDATE {$wpdb->prefix}ihc_security_login
+			 												SET attempts_count=%s,
+		 						 									locked=%s,
+		 						 									username=%s,
+		 						 									log_time=%s
+		 						 							WHERE ip=%s;",
+													$this->current_ip['attempts_count'], $this->current_ip['locked'], $this->username, $time, $this->ip );
 		 $wpdb->query($q);
 	}
 
-	private function insert_attempt(){
-		/*
-		 * @oaram none
-		 * @return none
-		 */
+	/**
+	 * @param none
+	 * @return none
+	 */
+	private function insert_attempt()
+	{
 		 global $wpdb;
-		 $table = $wpdb->prefix . 'ihc_security_login';
 		 $time = indeed_get_unixtimestamp_with_timezone();
-		 $wpdb->query("INSERT INTO $table VALUES(null, '{$this->username}', '{$this->ip}', '$time', 1, 0);");
+		 $query = $wpdb->prepare( "INSERT INTO {$wpdb->prefix}ihc_security_login
+			 															VALUES(null, %s, %s, %s, 1, 0);", $this->username, $this->ip, $time );
+		 $wpdb->query( $query );
 	}
 
-	private function ihc_send_security_notification_to_admin(){
-		/*
-		 * @param none
-		 * @return boolean
-		 */
+	/**
+	 * @param none
+	 * @return boolean
+	 */
+	private function ihc_send_security_notification_to_admin()
+	{
 		$from_email = get_option('ihc_notification_email_from');
 		if (!$from_email){
 			$from_email = get_option('admin_email');
@@ -297,8 +309,8 @@ class Ihc_Security_Login{
 		if (!$to){
 			$to = get_option('admin_email');
 		}
-		$title = __('Security alert on ', 'ihc');
-		$message = __('Someone with following IP address: {IP}, has try multiple times to login into Your website.', 'ihc');
+		$title = esc_html__('Security alert on ', 'ihc');
+		$message = esc_html__('Someone with following IP address: {IP}, has try multiple times to login into Your website.', 'ihc');
 		$message = str_replace('{IP}', $this->ip, $message);
 
 		if (!empty($from_email) && !empty($from_name)){

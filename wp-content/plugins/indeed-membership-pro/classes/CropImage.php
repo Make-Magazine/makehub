@@ -20,6 +20,12 @@ class CropImage
         require_once ABSPATH . 'wp-admin/includes/media.php';
     }
 
+    public function setUserId( $userId=0 )
+    {
+        $this->userId = $userId;
+        return $this;
+    }
+
     public function setSaveUserMeta( $inputValue=true )
     {
         $this->saveUserMeta = $inputValue;
@@ -28,15 +34,6 @@ class CropImage
 
     public function saveImage($filesData=array())
     {
-        /*
-        if (empty($this->userId)){
-            $this->response = array(
-                        "status"  => 'error',
-                        "message" => 'User is not logged'
-            );
-            return $this;
-        }
-        */
         $inputName = 'img'; /// ihc_upload_image_top_banner
 
       	$allowedExts = array("gif", "jpeg", "jpg", "png", "GIF", "JPEG", "JPG", "PNG");
@@ -70,12 +67,13 @@ class CropImage
         }
 
 		$fileUrl = wp_get_attachment_url( $uploadId );
+    list($widthNew, $heightNew) = getimagesize( $fileUrl  );
 
         $this->response = array(
           "status"    => 'success',
           "url"       => $fileUrl,
-          "width"     => $width,
-          "height"    => $height,
+          "width"     => $widthNew,
+          "height"    => $heightNew,
           "uploadId"  => $uploadId,
         );
         return $this;
@@ -99,7 +97,6 @@ class CropImage
           $cropH = $postData['cropH'];
           // rotation angle
           $angle = $postData['rotation'];
-          //$output_filename = IHC_PATH . "croppedImg_" . time() . '_' . rand(1, 10000);
 
           // uncomment line below to save the cropped image in the same location as the original image.
           $uploadDirData = wp_upload_dir(date('Y/m'));
@@ -109,28 +106,30 @@ class CropImage
           $output_filename = $uploadDirData['path'] . '/' . $fileNameWithoutTypeStr;
           $urlPath = $uploadDirData['url'];
 
-          $what = getimagesize($imgUrl);
 
+          $imgpath = $uploadDirData['path'] . '/' . $fileName;
+
+          $what = getimagesize($uploadDirData['path'] . '/' . $fileName);
           switch(strtolower($what['mime'])){
               case 'image/png':
-                  $img_r = imagecreatefrompng($imgUrl);
-              		$source_image = imagecreatefrompng($imgUrl);
+                  $img_r = imagecreatefrompng($imgpath);
+              		$source_image = imagecreatefrompng($imgpath);
               		$type = '.png';
                   break;
               case 'image/jpeg':
-                  $img_r = imagecreatefromjpeg($imgUrl);
-              		$source_image = imagecreatefromjpeg($imgUrl);
+                  $img_r = imagecreatefromjpeg($imgpath);
+              		$source_image = imagecreatefromjpeg($imgpath);
               		$type = '.jpeg';
                   /// check if really is jpeg
-                  $pieces = explode('.', $imgUrl);
+                  $pieces = explode('.', $uploadDirData['path'] . '/' . $fileName);
                   end($pieces);
                   if ( current($pieces)=='jpg' ){
                       $type = '.jpg';
                   }
                   break;
               case 'image/gif':
-                  $img_r = imagecreatefromgif($imgUrl);
-              		$source_image = imagecreatefromgif($imgUrl);
+                  $img_r = imagecreatefromgif($imgpath);
+              		$source_image = imagecreatefromgif($imgpath);
               		$type = '.gif';
                   break;
               default:
@@ -140,7 +139,6 @@ class CropImage
                 );
                 return $this;
           }
-
 
             // resize the original image to size of editor
             $resizedImage = imagecreatetruecolor($imgW, $imgH);
@@ -162,13 +160,11 @@ class CropImage
         	imagecolortransparent($final_image, imagecolorallocate($final_image, 0, 0, 0));
         	imagecopyresampled($final_image, $cropped_rotated_image, 0, 0, $imgX1, $imgY1, $cropW, $cropH, $cropW, $cropH);
         	// finally output png image
-        	//imagepng($final_image, $output_filename.$type, $png_quality);
+
 
            $rand = rand(1, 10000);
            $temporaryFileName = $output_filename . $rand . $type;
         	 imagejpeg( $final_image, $temporaryFileName, 100 );
-          // $fileUrl = $urlPath . '/' . $fileNameWithoutTypeStr . $rand . $type;
-          // $oldFileUrl = $urlPath . '/' . $fileNameWithoutTypeStr . $type;
 
           $filetype = wp_check_filetype( basename( $temporaryFileName ), null );
           $attachment = array(

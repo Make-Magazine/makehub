@@ -22,7 +22,7 @@ namespace Ump{
 				\Ihc_User_Logs::set_level_id($data['lid']);
 				$username = \Ihc_Db::get_username_by_wpuid($data['uid']);
 				$level_name = \Ihc_Db::get_level_name_by_lid($data['lid']);
-				\Ihc_User_Logs::write_log($username . __(' has ordered Level ', 'ihc') . $level_name, 'user_logs');
+				\Ihc_User_Logs::write_log($username . esc_html__(' has ordered Level ', 'ihc') . $level_name, 'user_logs');
 
 				/// since version 8.6, before we used NOW() function in mysql
 				$currentDate = indeed_get_current_time_with_timezone();
@@ -82,7 +82,7 @@ namespace Ump{
 				///Wp Admin Dashboard Notification
 				\Ihc_Db::increment_dashboard_notification('orders');
 
-				do_action('ihc_action_after_order_placed', @$data['uid'], @$data['lid']);
+				do_action('ihc_action_after_order_placed', (isset($data['uid'])) ? $data['uid'] : '', (isset($data['lid'])) ? $data['lid'] : '');
 				// @description after order was created. @param user id (integer), level id (integer)
 
 				return $id;
@@ -115,7 +115,7 @@ namespace Ump{
 				", $data['uid'], $data['lid'], $data['amount']);
 				$query_result = $wpdb->get_row($q);
 				if (!empty($query_result) && !empty($query_result->id)){
-					$order_id = @$query_result->id;
+					$order_id = (isset($query_result->id)) ? $query_result->id : '';
 				}
 
 				if (empty($order_id)){
@@ -168,9 +168,10 @@ namespace Ump{
 				global $wpdb;
 				$table = $wpdb->prefix . 'indeed_members_payments';
 				$txn_id = esc_sql($txn_id);
-				$data = $wpdb->get_row("SELECT orders FROM $table WHERE txn_id='$txn_id';");
+				$query = $wpdb->prepare( "SELECT orders FROM $table WHERE txn_id=%s ;", $txn_id );
+				$data = $wpdb->get_row( $query );
 				if ($data && !empty($data->orders)){
-					@$ids = unserialize($data->orders);
+					$ids = (isset($data->orders)) ? unserialize($data->orders) : '';
 				}
 				if ( isset( $ids ) && in_array( $id, $ids ) ){
 						return;
@@ -178,7 +179,8 @@ namespace Ump{
 				$id = esc_sql($id);
 				$ids[] = (int)$id;
 				$ids = serialize($ids);
-				$made = $wpdb->query("UPDATE $table SET orders='$ids' WHERE txn_id='$txn_id';");
+				$query = $wpdb->prepare( "UPDATE $table SET orders=%s WHERE txn_id=%s ;", $ids, $txn_id );
+				$made = $wpdb->query( $query );
 			}
 		}
 

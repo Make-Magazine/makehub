@@ -1,6 +1,6 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php _e('Settings', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php _e('Generated Membership Gift Codes', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php esc_html_e('Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php esc_html_e('Generated Membership Gift Codes', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -19,36 +19,36 @@ echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 <div class="iump-wrapper">
-	<form action="" method="post">
+	<form  method="post">
 		<div class="ihc-stuffbox">
-			<h3 class="ihc-h3"><?php _e('Membership Gifts', 'ihc');?></h3>
+			<h3 class="ihc-h3"><?php esc_html_e('Membership Gifts', 'ihc');?></h3>
 			<div class="inside">
 
 				<div class="iump-form-line">
-					<h2><?php _e('Activate/Hold Membership Gifts', 'ihc');?></h2>
-					<p style="max-width:70%;"><?php _e('Allow your customers to buy Levels as gifts which can be then sent to other users or used by themselves.', 'ihc');?></p>
-					<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+					<h2><?php esc_html_e('Activate/Hold Membership Gifts', 'ihc');?></h2>
+					<p><?php esc_html_e('Allow your customers to buy Memberships as gifts which can be then sent to other users or used by themselves.', 'ihc');?></p>
+					<label class="iump_label_shiwtch ihc-switch-button-margin">
 						<?php $checked = empty($data['ihc_gifts_enabled']) ? '' : 'checked';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_gifts_enabled');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
+						<div class="switch ihc-display-inline"></div>
 					</label>
 					<input type="hidden" name="ihc_gifts_enabled" value="<?php echo $data['ihc_gifts_enabled'];?>" id="ihc_gifts_enabled" />
 				</div>
 
 				<div class="iump-form-line">
-					<h2><?php _e('Additional Settings', 'ihc');?></h2>
+					<h2><?php esc_html_e('Additional Settings', 'ihc');?></h2>
 					<br/>
-					<h5><?php _e('Give User Gift on every recurring level payment', 'ihc');?></h5>
-					<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+					<h5><?php esc_html_e('Give User Gift on every recurring membership payment', 'ihc');?></h5>
+					<label class="iump_label_shiwtch ihc-switch-button-margin">
 						<?php $checked = empty($data['ihc_gifts_user_get_multiple_on_recurring']) ? '' : 'checked';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_gifts_user_get_multiple_on_recurring');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
+						<div class="switch ihc-display-inline"></div>
 					</label>
 					<input type="hidden" name="ihc_gifts_user_get_multiple_on_recurring" value="<?php echo $data['ihc_gifts_user_get_multiple_on_recurring'];?>" id="ihc_gifts_user_get_multiple_on_recurring" />
 				</div>
 
-				<div class="ihc-submit-form" style="margin-top: 20px;">
-					<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-submit-form">
+					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 
 			</div>
@@ -61,34 +61,37 @@ if (!empty($_POST['ihc_save_gift'])){
 	Ihc_Db::gifts_do_delete($_GET['do_delete']);
 }
 $data = Ihc_Db::gift_get_all_items();
-$levels = get_option('ihc_levels');
-$levels[-1]['label'] = __('All', 'ihc');
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels[-1]['label'] = esc_html__('All', 'ihc');
 $currency = get_option('ihc_currency');
 ?>
-<div style="margin-bottom: 10px;">
-	<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_new_gift');?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php _e('Add new Gift Offer', 'ihc');?></a>
+<div  class="iump-form-line">
+	<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_new_gift');?>" class="indeed-add-new-like-wp"><i class="fa-ihc fa-add-ihc"></i><?php esc_html_e('Add new Gift Offer', 'ihc');?></a>
 </div>
 
 <?php if (!empty($data)):?>
-	<div style="margin-right:20px;">
+	<div>
 		<table class="wp-list-table widefat fixed tags ihc-admin-tables">
 			<thead>
 				<tr>
-					<th class="manage-column"><?php _e('Awarded Level', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Discount Value', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Target Level', 'ihc');?></th>
-					<th class="manage-column"><?php _e('Action', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Awarded Membership', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Discount Value', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Target Membership', 'ihc');?></th>
+					<th class="manage-column"><?php esc_html_e('Action', 'ihc');?></th>
 				</tr>
 			</thead>
 			<?php  $i = 1;
 				foreach ($data as $id => $array):?>
-				<tr class="<?php if($i%2==0) echo 'alternate';?>">
-					<td style="color: #21759b; font-weight:bold; width:120px;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;"><?php
+				<tr class="<?php if($i%2==0){
+					 echo 'alternate';
+				}
+				?>">
+					<td><strong><?php
 						$l = $array['lid'];
 						if (isset($levels[$l]) && isset($levels[$l]['label'])){
 							echo $levels[$l]['label'];
 						}
-					?></td>
+					?></strong></td>
 					<td>
 						<?php
 							if ($array['discount_type']=='price'){
@@ -109,8 +112,8 @@ $currency = get_option('ihc_currency');
 						</div>
 					</td>
 					<td>
-						<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_new_gift&id=' . $id);?>"><?php _e('Edit', 'ihc');?></a> |
-						<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts&do_delete=' . $id);?>"><?php _e('Delete', 'ihc');?></a>
+						<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=add_new_gift&id=' . $id);?>"><?php esc_html_e('Edit', 'ihc');?></a> |
+						<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts&do_delete=' . $id);?>"><?php esc_html_e('Delete', 'ihc');?></a>
 					</td>
 				</tr>
 			<?php

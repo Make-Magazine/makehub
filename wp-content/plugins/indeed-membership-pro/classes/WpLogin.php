@@ -29,22 +29,19 @@ class WpLogin
         wp_enqueue_style( 'ihc_wp_login_style', IHC_URL . 'assets/css/wp_login_custom.css', array(), false, 'all' );
         $customLogo = get_option( 'ihc_wp_login_logo_image' );
         if ( $customLogo ):?>
-            <style>
-                body.login div#login h1 a{
-					background: url(<?php echo $customLogo;?>) top center no-repeat !important;
-                }
-            </style>
         <?php
+        $custom_css = '';
+        $custom_css .= "
+        body.login div#login h1 a{
+          background: url(".$customLogo.") top center no-repeat !important;
+        }
+        ";
+        wp_register_style( 'dummy-handle', false );
+      	wp_enqueue_style( 'dummy-handle' );
+      	wp_add_inline_style( 'dummy-handle', stripslashes($custom_css) );
         endif;
-		    ?>
-		    <script type="text/javascript">
-            jQuery(function () {
-                jQuery('input#user_login').attr('placeholder', 'Username');
-                jQuery('input#user_email').attr('placeholder', 'E-mail');
-                jQuery('input#user_pass').attr('placeholder', 'Password');
-            });
-        </script>
-        <?php
+        wp_enqueue_script( 'ihc-wp-login', IHC_URL . 'assets/js/wp-login.js', [], 1.1 );
+
     }
 
 	public function loginFooter()

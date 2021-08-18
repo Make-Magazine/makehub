@@ -1,6 +1,6 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php _e('Settings', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php _e('Generated Membership Gift Codes', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=gifts');?>"><?php esc_html_e('Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code');?>"><?php esc_html_e('Generated Membership Gift Codes', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -40,32 +40,35 @@ if ($offset + $limit>$total){
 $data = Ihc_Db::get_all_gift_codes($limit, $offset);
 
 $currency = get_option('ihc_currency');
-$levels = get_option('ihc_levels');
-$levels[-1]['label'] = __('All', 'ihc');
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
+$levels[-1]['label'] = esc_html__('All', 'ihc');
 ?>
 <div class="iump-wrapper">
 <div class="iump-page-title">Ultimate Membership Pro -
 			<span class="second-text">
-				<?php _e('MemberShip Codes', 'ihc');?>
+				<?php esc_html_e('MemberShip Codes', 'ihc');?>
 			</span>
 </div>
 
 <?php if (!empty($data)):?>
-<table class="wp-list-table widefat fixed tags ihc-admin-tables" style="margin-top: 50px;">
+<table class="wp-list-table widefat fixed tags ihc-admin-tables">
 	<thead>
 		<tr>
-			<th><?php _e('Username', 'ihc');?></th>
-			<th><?php _e('Gift Code', 'ihc');?></th>
-			<th><?php _e('Discount Value', 'ihc');?></th>
-			<th><?php _e('Discount for Level', 'ihc');?></th>
-			<th><?php _e('Gift Status', 'ihc');?></th>
-			<th><?php _e('Action', 'ihc');?></th>
+			<th><?php esc_html_e('Username', 'ihc');?></th>
+			<th><?php esc_html_e('Gift Code', 'ihc');?></th>
+			<th><?php esc_html_e('Discount Value', 'ihc');?></th>
+			<th><?php esc_html_e('Discount for Membership', 'ihc');?></th>
+			<th><?php esc_html_e('Gift Status', 'ihc');?></th>
+			<th><?php esc_html_e('Action', 'ihc');?></th>
 		</tr>
 	</thead>
 	<?php $i = 1;
 		foreach ($data as $gift_id => $gift):?>
-		<tr class="<?php if($i%2==0) echo 'alternate';?>">
-			<td style="color: #21759b; font-weight:bold; width:120px;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;"><?php echo $gift['username'];?></td>
+		<tr class="<?php if($i%2==0){
+			 echo 'alternate';
+		}
+		?>">
+			<td><strong><?php echo $gift['username'];?></strong></td>
 			<td><?php echo $gift['code'];?></td>
 			<td><?php
 				if ($gift['discount_type']=='price'){
@@ -86,12 +89,12 @@ $levels[-1]['label'] = __('All', 'ihc');
 			</td>
 			<td><?php
 				if ($gift['is_active']):
-					_e('Unused', 'ihc');
+					esc_html_e('Unused', 'ihc');
 				else :
-					_e('Used', 'ihc');
+					esc_html_e('Used', 'ihc');
 				endif;
 			?></td>
-			<td><a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code&delete_generated_code=' . $gift_id);?>"><?php _e('Delete', 'ihc');?></a></td>
+			<td><a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=generated-gift-code&delete_generated_code=' . $gift_id);?>"><?php esc_html_e('Delete', 'ihc');?></a></td>
 		</tr>
 	<?php
 	$i++;
@@ -99,6 +102,6 @@ $levels[-1]['label'] = __('All', 'ihc');
 </table>
 <?php echo $pagination;?>
 <?php else : ?>
-	<h3><?php _e('No Gift Codes available!', 'ihc');?></h3>
+	<h3><?php esc_html_e('No Gift Codes available!', 'ihc');?></h3>
 <?php endif;?>
 </div>

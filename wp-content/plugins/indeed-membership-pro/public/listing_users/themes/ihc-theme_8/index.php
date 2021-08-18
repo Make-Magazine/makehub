@@ -2,9 +2,7 @@
 if (empty($total_items)){
 	die("Direct access not permitted");
 }
-$dir_path = plugin_dir_path (__FILE__);
-$style="<style>".file_get_contents( $dir_path.'style.css')."
-</style>";
+
 $list_item_template = '
 <div class="team-member">
 <div class="member-img">
@@ -20,7 +18,7 @@ $list_item_template = '
  <a #POST_LINK#>
 IHC_FIRST_NAME IHC_LAST_NAME
  </a>
-</div>	
+</div>
 <div class="member-username">
 IHC_USERNAME
  </div>

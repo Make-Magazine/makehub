@@ -8,25 +8,26 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 $data['items'] = Ihc_Db::get_woo_product_level_relations();
 ?>
-<form action="" method="post">
+<div class="ihc-admin-user-data-list">
+<form method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('WooCommerce Payment Integration', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('WooCommerce Payment Integration', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-					<h2><?php _e('Activate/Hold WooCommerce Payment Integration', 'ihc');?></h2>
-					<p style="max-width:800px;"><?php _e('Link a WooCommerce product with a membership level from "Product Edit Page". Once an order with that product is created into Woo, a new UMP order is created and the subscription is managed based on that order status.', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+					<h2><?php esc_html_e('Activate/Hold WooCommerce Payment Integration', 'ihc');?></h2>
+					<p><?php esc_html_e('Link a WooCommerce product with a membership from "Product Edit Page". Once an order with that product is created into Woo, a new UMP order is created and the subscription is managed based on that order status.', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_woo_payment_on']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_woo_payment_on');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_woo_payment_on" value="<?php echo $data['metas']['ihc_woo_payment_on'];?>" id="ihc_woo_payment_on" />
-				<p style=" font-size:110%; font-weight:bold;"><?php _e('The user will have an active level only when the WooCommerce order will be set as completed (manually or automatically).', 'ihc');?></p>
+				<p><strong><?php esc_html_e('The user will have an active membership only when the WooCommerce order will be set as completed (manually or automatically).', 'ihc');?></strong></p>
 			</div>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -34,12 +35,11 @@ $data['items'] = Ihc_Db::get_woo_product_level_relations();
 
 		<?php if (!empty($data['items'])):?>
 			<div class="ihc-stuffbox">
-				<table class="wp-list-table widefat fixed tags">
-					<thead style="background: #f1f4f8 !important;    border-bottom: 1px solid #ccc;box-shadow: inset 0px -5px 10px 2px rgba(0,0,0,0.03);
-    line-height: 1.4;">
+				<table class="wp-list-table widefat fixed tags ihc-no-margin">
+					<thead>
 						<tr>
-							<td style="font-weight:400;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e('Ultimate Membership Pro Level', 'ihc');?></td>
-							<td style="font-weight:400;font-family: 'Oswald', arial, sans-serif !important;padding: 16px 12px;"><?php _e('WooCommerce Product', 'ihc');?></td>
+							<th><?php esc_html_e('Ultimate Membership Pro Membership', 'ihc');?></th>
+							<th><?php esc_html_e('WooCommerce Product', 'ihc');?></th>
 						</tr>
 					</thead>
 					<tbody class="ihc-alternate">
@@ -55,3 +55,4 @@ $data['items'] = Ihc_Db::get_woo_product_level_relations();
 		<?php endif;?>
 
 </form>
+</div>

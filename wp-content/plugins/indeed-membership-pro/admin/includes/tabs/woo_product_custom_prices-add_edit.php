@@ -1,6 +1,6 @@
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=manage');?>"><?php _e('Manage Discounts', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=settings');?>"><?php _e('Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=manage');?>"><?php esc_html_e('Manage Discounts', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=settings');?>"><?php esc_html_e('Settings', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -30,18 +30,18 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 <form action="<?php echo admin_url('admin.php?page=ihc_manage&tab=woo_product_custom_prices&subtab=manage');?>" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('WooCommerce Discounts', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('WooCommerce Discounts', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 					<div class="col-xs-5">
-						<h4><?php _e('Activate/Hold', 'ihc');?></h4>
-						<p><?php _e('Activate or deactivate a discount without needing to delete it.', 'ihc');?></p>
-						<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+						<h4><?php esc_html_e('Activate/Hold', 'ihc');?></h4>
+						<p><?php esc_html_e('Activate or deactivate a discount without needing to delete it.', 'ihc');?></p>
+						<label class="iump_label_shiwtch ihc-switch-button-margin">
 							<?php $checked = ($data['metas']['status']) ? 'checked' : '';?>
 							<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#the_status');" <?php echo $checked;?> />
-							<div class="switch" style="display:inline-block;"></div>
+							<div class="switch ihc-display-inline"></div>
 						</label>
 						<input type="hidden" name="status" value="<?php echo $data['metas']['status'];?>" id="the_status" />
 					</div>
@@ -51,10 +51,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			<div class="ihc-line-break"></div>
 
 			<div class="iump-form-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 					<div class="col-xs-5">
-						<div class="input-group" style="">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('Name', 'ihc');?></span>
+						<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Name', 'ihc');?></span>
 						<input type="text" class="form-control" name="slug" value="<?php echo $data['metas']['slug'];?>" />
 						</div>
 					</div>
@@ -64,21 +64,25 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			<div class="ihc-line-break"></div>
 
 			<div class="iump-form-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 				<div class="col-xs-5">
-					<h4 style="font-size: 24px;"><?php _e('Discount Amount', 'ihc');?></h4>
-					<p><?php _e('Set the value and type of Discount', 'ihc');?></p>
-					<div style="margin-bottom:15px;">
+					<h2><?php esc_html_e('Discount Amount', 'ihc');?></h2>
+					<p><?php esc_html_e('Set the value and type of Discount', 'ihc');?></p>
+					<div class="input-group">
 						<select name="discount_type" class="form-control m-bot15">
 							<?php
-								$types = array('%'=>__('Percentage Value', 'ihc'), 'flat' => __('Flat Value', 'ihc') );
+								$types = array('%'=>esc_html__('Percentage Value', 'ihc'), 'flat' => esc_html__('Flat Value', 'ihc') );
 								foreach ($types as $k => $v):?>
-							<option value="<?php echo $k;?>" <?php if ($data['metas']['discount_type']==$k) echo 'selected';?> ><?php echo $v;?></option>
+							<option value="<?php echo $k;?>" <?php if ($data['metas']['discount_type']==$k){
+								 echo 'selected';
+							}
+							?>
+							><?php echo $v;?></option>
 							<?php endforeach;?>
 						</select>
 					</div>
-					<div class="input-group" style="margin:0px 0 5px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('Value', 'ihc');?></span>
+					<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Value', 'ihc');?></span>
 						<input type="number" class="form-control" name="discount_value" value="<?php echo $data['metas']['discount_value'];?>" min=0 step="0.01" />
 					</div>
 				</div>
@@ -86,24 +90,24 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			</div>
 
 			<div class="iump-form-line iump-special-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 					<div class="col-xs-5">
-						<h4 style="font-size: 24px;"><?php _e('Targeting', 'ihc');?></h4>
-						<p><?php _e('Users with certain levels will get a special price for some products.' , 'ihc');?></p>
+						<h2><?php esc_html_e('Targeting', 'ihc');?></h2>
+						<p><?php esc_html_e('Users with certain memberships will get a special price for some products.' , 'ihc');?></p>
 						<br/>
-						<h4><?php _e('Levels', 'ihc');?></h4>
-						<div style="margin:0px 0 5px 0;">
-							<p><?php _e('Discount available only for users that have one of the selected levels.', 'ihc');?></p>
+						<h4><?php esc_html_e('Memberships', 'ihc');?></h4>
+						<div class="input-group">
+							<p><?php esc_html_e('Discount available only for users that have one of the selected memberships.', 'ihc');?></p>
 							<?php
-							$posible_values = array( -2 => '...', -1 => __('All', 'ihc') );
-							$levels = get_option('ihc_levels');
+							$posible_values = array( -2 => '...', -1 => esc_html__('All', 'ihc') );
+							$levels = \Indeed\Ihc\Db\Memberships::getAll();
 							if ($levels){
 								foreach ($levels as $id=>$level){
 									$posible_values[$id] = $level['name'];
 								}
 							}
 							?>
-							<select class="form-control" id="ihc-change-target-user-set" onChange="ihcWriteLevelTagValue(this, '#list_levels_hidden', '#ihc_tags_field_2', 'ihc_select_tag_' );" style="width: 100%;    padding: 16px 0px;">
+							<select class="form-control" id="ihc-change-target-user-set" onChange="ihcWriteLevelTagValue(this, '#list_levels_hidden', '#ihc_tags_field_2', 'ihc_select_tag_' );">
 								<?php
 									foreach ($posible_values as $k=>$v){
 										?>
@@ -127,7 +131,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			                        			?>
 					                        		<div id="ihc_select_tag_<?php echo $value;?>" class="ihc-tag-item">
 					                        	    	<?php echo $posible_values[$value];?>
-					                        	    	<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost('<?php echo $value;?>', '#ihc_select_tag_', '#list_levels_hidden');" title="<?php _e('Removing tag', 'ihc');?>">x</div>
+					                        	    	<div class="ihc-remove-tag" onclick="ihcremoveTagForEditPost('<?php echo $value;?>', '#ihc_select_tag_', '#list_levels_hidden');" title="<?php esc_html_e('Removing tag', 'ihc');?>">x</div>
 					                        	    </div>
 					                        	<?php
 			                        		}
@@ -138,18 +142,19 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			                    <?php endif; ?>
 						</div>
 						<br/>
-						<h4><?php _e('Products', 'ihc');?></h4>
-						<p><?php _e('You can chose a list of products, a list of categories, or all products.', 'ihc');?></p>
-						<select onChange="jQuery('#product_search').autocomplete( 'option', { source: '<?php echo IHC_URL . 'admin/custom_ajax.php';?>?woo_type='+this.value } );ihcChangeSearchWooType();" id="search_woo_type" class="form-control" name="settings[woo_item_type]">
+						<h4><?php esc_html_e('Products', 'ihc');?></h4>
+						<p><?php esc_html_e('You can chose a list of products, a list of categories, or all products.', 'ihc');?></p>
+						<select data-url="<?php echo IHC_URL . 'admin/ajax-custom.php?ihcAdminAjaxNonce=' . wp_create_nonce( 'ihcAdminAjaxNonce' );?>&woo_type="
+							 id="search_woo_type" class="form-control ihc-js-woo-product-custom-prices-select" name="settings[woo_item_type]">
 							<?php
 								if (empty($data['metas']['settings']['woo_item_type'])){
 									$data['metas']['settings']['woo_item_type'] = '';
 								}
 								$possible_values = array(
 															'-1' => '...',
-															'all' => __('All', 'ihc'),
-															'category' => __('Specific Categories', 'ihc'),
-															'product' => __('Specific Products', 'ihc'),
+															'all' => esc_html__('All', 'ihc'),
+															'category' => esc_html__('Specific Categories', 'ihc'),
+															'product' => esc_html__('Specific Products', 'ihc'),
 								);
 								foreach ($possible_values as $k => $v){
 									$selected = $data['metas']['settings']['woo_item_type']==$k ? 'selected' : '';
@@ -160,18 +165,23 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 							?>
 						</select>
 
-						<div id="woo_the_search_box" style="display: <?php if ($data['metas']['settings']['woo_item_type']=='category' || $data['metas']['settings']['woo_item_type']=='product') echo 'block'; else echo 'none';?>">
-							<div class="input-group" style="margin:5px 0 5px 0;">
+						<div id="woo_the_search_box" class="<?php if ($data['metas']['settings']['woo_item_type']=='category' || $data['metas']['settings']['woo_item_type']=='product'){
+							 echo 'ihc-display-block';
+						}else{
+							 echo 'ihc-display-none';
+						}
+						?>">
+							<div class="input-group">
 								<span class="input-group-addon" id="the_search_label"><?php
-									$label = __('Search ', 'ihc');
+									$label = esc_html__('Search ', 'ihc');
 									if ($data['metas']['settings']['woo_item_type']=='products'){
-										$label .= __('Product', 'ihc');
+										$label .= esc_html__('Product', 'ihc');
 									} else if ($data['metas']['settings']['woo_item_type']=='categories'){
-										$label .= __('Category', 'ihc');
+										$label .= esc_html__('Category', 'ihc');
 									}
 								echo $label;?></span>
 								<input type="text" class="form-control" id="product_search"/>
-								<input type="hidden" name="products" class="form-control" id="product_search_input" value="<?php echo @$data['metas']['products'];?>"/>
+								<input type="hidden" name="products" class="form-control" id="product_search_input" value="<?php echo (isset($data['metas']['products'])) ? $data['metas']['products'] : '';?>"/>
 							</div>
 							<div id="ihc_reference_search_tags"><?php
 								if (!empty($data['metas']['products'])){
@@ -195,18 +205,23 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 							?></div>
 						</div>
 
-						<div id="ihc_woo_all_products" style="display: <?php if ($data['metas']['settings']['woo_item_type']=='all') echo 'block'; else echo 'none';?>"><div class="ihc-tag-item"><?php _e('All Products', 'ihc');?></div></div>
+						<div id="ihc_woo_all_products" class="<?php if ($data['metas']['settings']['woo_item_type']=='all'){
+							 echo 'ihc-display-block';
+						}else{
+							 echo 'ihc-display-none';
+						}
+						?>"><div class="ihc-tag-item"><?php esc_html_e('All Products', 'ihc');?></div></div>
 
 					</div>
 				</div>
 			</div>
 
 			<div class="iump-form-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 				<div class="col-xs-4">
-					<h4 style="font-size: 24px;"><?php _e('Date Range', 'ihc');?></h4>
-					<p><?php _e('The discount will be active during a certain time interval based on your selling strategy.', 'ihc');?></p>
-					<input type="text" style="max-width:40%; display:inline-block;" class="form-control" id="start_date_input" name="start_date" value="<?php echo $data['metas']['start_date'];?>"  /> - <input type="text"  style="max-width:40%; display:inline-block;" class="form-control" id="end_date_input" name="end_date" value="<?php echo $data['metas']['end_date'];?>"  />
+					<h2><?php esc_html_e('Date Range', 'ihc');?></h2>
+					<p><?php esc_html_e('The discount will be active during a certain time interval based on your selling strategy.', 'ihc');?></p>
+					<input type="text" class="form-control ihc-date-range-fields" id="start_date_input" name="start_date" value="<?php echo $data['metas']['start_date'];?>"  /> - <input type="text" class="form-control ihc-date-range-fields" id="end_date_input" name="end_date" value="<?php echo $data['metas']['end_date'];?>"  />
 				</div>
 				</div>
 			</div>
@@ -221,10 +236,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			?>
 
 			<div class="iump-form-line">
-				<div class="row" style="margin-left:0px;">
+				<div class="row">
 					<div class="col-xs-5">
-						<div class="input-group" style="margin:0px 0 5px 0;">
-							<h4 style="font-size: 24px;"><?php _e("Color Scheme", 'ihc');?></h4>
+						<div class="input-group">
+							<h2><?php esc_html_e("Color Scheme", 'ihc');?></h2>
 							<div class="ihc-user-list-wrap">
 		                    	<ul id="colors_ul" class="colors_ul">
 		                        <?php
@@ -242,10 +257,12 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 									);
 		                            $i = 0;
 		                                    foreach ($color_scheme as $color){
-		                                        if( $i==5 ) echo "<div class='clear'></div>";
-		                                        $class = ($data['metas']['settings']['color']==$color) ? 'color-scheme-item-selected' : 'color-scheme-item';
+		                                        if( $i==5 ){
+																							 echo "<div class='clear'></div>";
+																						}
+		                                        $class = ($data['metas']['settings']['color']==$color) ? 'color-scheme-item-selected' : '';
 		                                        ?>
-		                                            <li class="<?php echo $class;?>" onClick="ihcChangeColorScheme(this, '<?php echo $color;?>', '#color_scheme');" style="background-color: <?php echo $color;?>;"></li>
+		                                            <li class=" color-scheme-item <?php echo $class;?>  ihc-box-background-<?php echo substr($color,1);?>" onClick="ihcChageColor(this, '<?php echo $color;?>', '#color_scheme');"></li>
 		                                        <?php
 		                                        $i++;
 		                                    }
@@ -261,74 +278,10 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 			<input type="hidden" name="id" value="<?php echo $data['metas']['id'];?>" />
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
 	</div>
 </form>
-
-<script>
-var search_cats_label = '<?php _e('Search Categories', 'ihc');?>';
-var search_prod_label = '<?php _e('Search Products', 'ihc');?>';
-var ihc_woo_search_type = jQuery('#search_woo_type').val();
-
-jQuery(document).ready(function(){
-    var ihc_from = jQuery('#start_date_input').datepicker({
-        dateFormat : 'yy-mm-dd'
-    })
-    .on( "change", function() {
-        ihc_to.datepicker( "option", "minDate", this.value );
-    });
-    var ihc_to = jQuery('#end_date_input').datepicker({
-        dateFormat : 'yy-mm-dd'
-    })
-    .on( "change", function() {
-        ihc_from.datepicker( "option", "maxDate", this.value );
-    });
-});
-
-function ihc_split(v){
-	if (v.indexOf(',')!=-1){
-	    return v.split( /,\s*/ );
-	} else if (v!=''){
-		return [v];
-	}
-	return [];
-}
-function ihc_extract(t) {
-    return ihc_split(t).pop();
-}
-
-jQuery(function() {
-    /// REFERENCE SEARCH
-	jQuery( "#product_search" ).bind( "keydown", function(event){
-		if ( event.keyCode === jQuery.ui.keyCode.TAB &&
-			jQuery(this).autocomplete( "instance" ).menu.active){
-		 	event.preventDefault();
-		}
-	}).autocomplete({
-		focus: function( event, ui ){},
-		minLength: 0,
-		source: '<?php echo IHC_URL . 'admin/custom_ajax.php';?>?woo_type=' + ihc_woo_search_type,
-		select: function( event, ui ) {
-			var input_id = '#product_search_input';
-			var terms = ihc_split(jQuery(input_id).val());//get items from input hidden
-			var v = ui.item.id;
-			var l = ui.item.label;
-			if (!contains(terms, v)){
-				terms.push(v);
-			 	ihcAutocompleteWriteTag(v, input_id, '#ihc_reference_search_tags', 'ihc_reference_tag_', l);// print the new shiny box
-			}
-			var str_value = terms.join( "," );
-			jQuery(input_id).val(str_value);//send to input hidden
-			this.value = '';//reset search input
-			return false;
-		}
-	});
-});
-function contains(a, obj) {
-    return a.some(function(element){return element == obj;})
-}
-</script>

@@ -1,27 +1,25 @@
 <div class="iump-view-user-wrapp-temp2 iump-color-scheme-<?php echo $data['color_scheme_class'];?>">
-	<?php if ($data['color_scheme_class'] !=''){ ?>
-	<style>
+
+<?php $custom_css = ''; ?>
+	<?php if ($data['color_scheme_class'] !=''){
+		$custom_css .= "
 		.iump-view-user-wrapp-temp2 .ihc-levels-wrapper .ihc-top-level-box{
-			background-color:#<?php echo $data['color_scheme_class'];?>;
-			border-color:#<?php echo $data['color_scheme_class'];?>;
+			background-color:#".$data['color_scheme_class'].";
+			border-color:#".$data['color_scheme_class'].";
 			color:#fff;
 		}
-		.iump-view-user-wrapp-temp2 .ihc-levels-wrapper{
-
-		}
 		.iump-view-user-wrapp-temp2 .ihc-middle-side .iump-username{
-			color:#<?php echo $data['color_scheme_class'];?>;
+			color:#".$data['color_scheme_class'].";
 		}
 		.iump-view-user-wrapp-temp2 .ihc-left-side .ihc-user-page-avatar img{
-			border-color:#<?php echo $data['color_scheme_class'];?>;
+			border-color:#".$data['color_scheme_class'].";
 		}
 		.iump-view-user-wrapp-temp2 .ihc-levels-wrapper{
 			background-color: transparent;
-		}
-	</style>
-	<?php } ?>
-	<?php if (empty($data['banner'])){ ?>
-	<style>
+		}";
+	 } ?>
+	<?php if (empty($data['banner'])){
+		$custom_css .= "
 		.iump-view-user-wrapp-temp2 .ihc-user-page-top-ap-wrapper{
 			padding-top:10px;
 		}
@@ -30,9 +28,26 @@
 		}
 		.iump-view-user-wrapp-temp2 .ihc-left-side .ihc-user-page-details{
 			top:0px;
-		}
-	</style>
-	<?php } ?>
+		}";
+	} ?>
+	<?php if (!empty($data['banner'])){
+					if($data['banner'] !='default'){
+						$custom_css .= "
+						.iump-view-user-wrapp-temp2 .ihc-user-page-top-ap-background{
+							background-image:url('".$data['banner']."') !important;
+						}";
+					}
+				} ?>
+	<?php if ( !empty( $data['ihc_badges_on'] ) && !empty( $data['ihc_badge_custom_css'] ) ):?>
+			<?php $custom_css .= stripslashes( $data['ihc_badge_custom_css'] );?>
+	<?php endif;?>
+	<?php
+
+	wp_register_style( 'dummy-handle', false );
+	wp_enqueue_style( 'dummy-handle' );
+	wp_add_inline_style( 'dummy-handle', $custom_css );
+
+	 ?>
 	<div class="ihc-user-page-top-ap-wrapper">
 	<?php if (!empty($data['avatar'])):?>
 		<div class="ihc-left-side">
@@ -41,11 +56,7 @@
 			</div>
 		</div>
 	<?php endif;?>
-	<?php if ( !empty( $data['ihc_badges_on'] ) && !empty( $data['ihc_badge_custom_css'] ) ):?>
-		<style>
-			<?php echo stripslashes( $data['ihc_badge_custom_css'] );?>
-		</style>
-	<?php endif;?>
+
 	<div class="ihc-middle-side">
 		<?php if (!empty($data['flag'])):?>
 			<div class="iump-flag"><?php echo $data['flag'];?></div>
@@ -68,18 +79,14 @@
 		<?php endif;?>
 
 		<?php if (!empty($data['since'])):?>
-			<span class="iump-element iump-since"><?php echo __('Joined ', 'ihc');?><?php echo $data['since'];?></span>
+			<span class="iump-element iump-since"><?php echo esc_html__('Joined ', 'ihc');?><?php echo $data['since'];?></span>
 		<?php endif;?>
 		</div>
 
 	</div>
 	<div class="ihc-clear"></div>
-	<?php if (!empty($data['banner'])):
-		$bn_style ='';
-		if($data['banner'] !='default')
-			$bn_style =' style="background-image:url('.$data['banner'].');"';
-	?>
-	<div class="ihc-user-page-top-ap-background" <?php echo $bn_style; ?>></div>
+	<?php if (!empty($data['banner'])): ?>
+	<div class="ihc-user-page-top-ap-background"></div>
 	<?php endif;?>
 
 	</div>

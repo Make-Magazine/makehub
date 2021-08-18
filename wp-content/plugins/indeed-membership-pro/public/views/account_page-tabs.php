@@ -1,13 +1,17 @@
-<style>
-	<?php foreach ($available_tabs as $slug => $array):?>
-		<?php if (!empty($array['icon'])):?>
-		<?php echo '.fa-' . $slug . '-account-ihc:before';?>{
-			content: '\<?php echo $array['icon'];?>';
-		}
-		<?php endif;?>
-	<?php endforeach;?>
-</style>
+<?php
+$custom_css = '';
+foreach ($available_tabs as $slug => $array):
+	if (!empty($array['icon'])):
+	$custom_css .= ".fa-" . $slug . "-account-ihc:before{".
+		"content: '\\".$array['icon']."';".
+	"}";
+	endif;
+endforeach;
+wp_register_style( 'dummy-handle', false );
+wp_enqueue_style( 'dummy-handle' );
+wp_add_inline_style( 'dummy-handle', $custom_css );
 
+ ?>
 <div class="ihc-mobile-bttn-wrapp"><i class="ihc-mobile-bttn"></i></div>
 <div class="ihc-ap-menu">
 	<?php if ($data['menu']):?>

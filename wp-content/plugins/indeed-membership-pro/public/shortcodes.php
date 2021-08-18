@@ -11,28 +11,34 @@
  * User Listing [ihc-list-users] - ihc_public_listing_users
  * View User Page [ihc-view-user-page] - ihc_public_view_user_page
  */
+
+add_shortcode( 'ihc-register', 'ihc_register_form' );
 add_shortcode( 'ihc-login-form', 'ihc_login_form' );
 add_shortcode( 'ihc-logout-link', 'ihc_logout_link' );
-add_shortcode( 'ihc-register', 'ihc_register_form' );
-add_shortcode( 'ihc-hide-content', 'ihc_hide_content_shortcode' );
 add_shortcode( 'ihc-pass-reset', 'ihc_lost_pass_form' );
 add_shortcode( 'ihc-user-page', 'ihc_user_page_shortcode' );
 add_shortcode( 'ihc-select-level', 'ihc_user_select_level' );
-add_shortcode( 'ihc-level-link', 'ihc_print_level_link' );
-add_shortcode( 'ihc-lgoin-fb', 'ihc_print_fb_login' );
-add_shortcode( 'ihc-user', 'ihc_print_user_data' );
-add_shortcode( 'ihc-list-users', 'ihc_public_listing_users' );
 add_shortcode( 'ihc-visitor-inside-user-page', 'ihc_public_visitor_inside_user_page' );
+
+add_shortcode( 'ihc-list-users', 'ihc_public_listing_users' );
+add_shortcode( 'ihc-hide-content', 'ihc_hide_content_shortcode' );
+
+add_shortcode( 'ihc-user', 'ihc_print_user_data' );
+add_shortcode( 'ihc-level-link', 'ihc_print_level_link' );
+
+add_shortcode( 'ihc-lgoin-fb', 'ihc_print_fb_login' );
+
 add_shortcode( 'ihc-membership-card', 'ihc_membership_card' );
+add_shortcode( 'ihc-list-gifts', 'ihc_do_list_gifts' );
 add_shortcode( 'ihc-register-lite', 'ihc_do_lite_register' );
 add_shortcode( 'ihc-individual-page-link', 'ihc_link_to_individual_page' );
-add_shortcode( 'ihc-list-gifts', 'ihc_do_list_gifts' );
 add_shortcode( 'ihc-list-all-access-posts', 'ihc_list_all_access_posts' );
 add_shortcode( 'ihc-list-user-levels', 'ihc_list_user_levels' );
 add_shortcode( 'ihc-suspend-account', 'ihc_suspend_account_bttn' );
 add_shortcode( 'ihc-login-popup', 'ihc_login_popup' );
-add_shortcode( 'ihc-register-form-for-popup', 'ihc_register_form_for_modal' );
 add_shortcode( 'ihc-register-popup', 'ihc_register_popup' );
+
+add_shortcode( 'ihc-register-form-for-popup', 'ihc_register_form_for_modal' );
 
 if (!function_exists('ihc_login_form')):
 function ihc_login_form($attr=array()){
@@ -59,7 +65,7 @@ function ihc_login_form($attr=array()){
 		} else {
 			//already logged in
 			if ($user_type=='admin'){
-				$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Login Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
+				$str .= '<div class="ihc-warning-message">' . esc_html__('Administrator Info: Login Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. ', 'ihc') . '<i>' . esc_html__('This message will not be visible for other users', 'ihc') . '</i></div>';
 			}
 		}
 	} else {
@@ -89,7 +95,7 @@ function ihc_login_form($attr=array()){
 			$security_object = new Ihc_Security_Login();
 			if ($security_object->is_ip_on_black_list()){
 				$show_form = FALSE;
-				$hide_form_message = __('You are not allowed to see this Page.', 'ihc');
+				$hide_form_message = esc_html__('You are not allowed to see this Page.', 'ihc');
 			} else {
 				$show_form = $security_object->show_login_form();
 				if (!$show_form){
@@ -129,14 +135,16 @@ function ihc_logout_link($attr=array()){
 	if (is_user_logged_in()){
 		$meta_arr = ihc_return_meta_arr('login');
 		if($meta_arr['ihc_login_custom_css']){
-			$str .= '<style>' . stripslashes($meta_arr['ihc_login_custom_css']) . '</style>';
+			wp_register_style( 'dummy-handle', false );
+			wp_enqueue_style( 'dummy-handle' );
+			wp_add_inline_style( 'dummy-handle', $meta_arr['ihc_login_custom_css'] );
 		}
 		if (!empty($attr['template'])){
 			$meta_arr['ihc_login_template'] = $attr['template'];
 		}
 		$str .= '<div class="ihc-logout-wrap '.$meta_arr['ihc_login_template'].'">';
 			$link = add_query_arg( 'ihcdologout', 'true', get_permalink() );//name was ihcaction, value was logout
-			$str .= '<a href="'.$link.'">'.__('Log Out', 'ihc').'</a>';
+			$str .= '<a href="'.$link.'">' .esc_html__('Log Out', 'ihc').'</a>';
 		$str .= '</div>';
 	}
 	return $str;
@@ -150,8 +158,22 @@ function ihc_hide_content_shortcode($meta_arr=array(), $content=''){
 	 * @return string
 	 */
 	///GETTING USER TYPE
+
 	$current_user = ihc_get_user_type();
-	if ($current_user=='admin') return do_shortcode($content);//admin can view anything
+	if ($current_user=='admin'){
+		return do_shortcode($content);//admin can view anything
+	}
+
+		if ((!isset($meta_arr['ihc_mb_who']) || $meta_arr['ihc_mb_who'] == '') && isset($meta_arr['membership'])){
+			$meta_arr['ihc_mb_who'] = $meta_arr['membership'];
+		}
+		if (!isset($meta_arr['ihc_mb_type']) || $meta_arr['ihc_mb_type'] == ''){
+			$meta_arr['ihc_mb_type'] = "show";
+		}
+		if (!isset($meta_arr['ihc_mb_template']) || $meta_arr['ihc_mb_template'] == ''){
+			$meta_arr['ihc_mb_template'] = "-1";
+		}
+
 
 	if (isset($meta_arr['ihc_mb_who'])){
 		if ($meta_arr['ihc_mb_who']!=-1 && $meta_arr['ihc_mb_who']!=''){
@@ -166,7 +188,7 @@ function ihc_hide_content_shortcode($meta_arr=array(), $content=''){
 
 	////TESTING USER
 	global $post;
-	$block = ihc_test_if_must_block($meta_arr['ihc_mb_type'], $current_user, $target_users, @$post->ID, TRUE);
+	$block = ihc_test_if_must_block($meta_arr['ihc_mb_type'], $current_user, $target_users, (isset($post->ID)) ? $post->ID : -1, TRUE);
 
 	//IF NOT BLOCKING, RETURN THE CONTENT
 	if (!$block){
@@ -175,7 +197,7 @@ function ihc_hide_content_shortcode($meta_arr=array(), $content=''){
 
 	//LOCKER HTML
 	if (isset($meta_arr['ihc_mb_template'])){
-		include_once IHC_PATH . 'public/locker-layouts.php';
+		include_once IHC_PATH . 'public/layouts-locker.php';
 		return ihc_print_locker_template($meta_arr['ihc_mb_template']);
 	}
 
@@ -214,8 +236,7 @@ function ihc_lost_pass_form(){
 	} else {
 		$user_type = ihc_get_user_type();
 		if ($user_type=='admin'){
-			$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Lost Password Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
-
+				$str .= '<div class="ihc-warning-message"><strong>' . esc_html__('Administrator Info', 'ihc') . '</strong>' . esc_html__(': Lost Password Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by opening the page into a separate incognito browser window.','ihc') . '<i>' . esc_html__('this message will not be visible for other users','ihc') .'</i></div>';
 		}
 	}
 	return $str;
@@ -257,7 +278,9 @@ function ihc_register_form($attr=array()){
 	if ($user_type=='unreg'){
 		///////ONLY UNREGISTERED CAN SEE THE REGISTER FORM
 
-		if (isset($_GET['ihc_register'])) return;
+		if (isset($_GET['ihc_register'])){
+			return;
+		}
 
 			/// TEMPLATE
 			if (!empty($attr['template'])){
@@ -282,7 +305,11 @@ function ihc_register_form($attr=array()){
 			$shortcodes_attr['level'] = (isset($attr['level'])) ? $attr['level'] : FALSE;
 
 			$custom_style = get_option('ihc_register_custom_css');
-			$str .= '<style>' . stripslashes($custom_style) . '</style>';
+			if(!empty($custom_style)){
+					wp_register_style( 'dummy-handle', false );
+					wp_enqueue_style( 'dummy-handle' );
+					wp_add_inline_style( 'dummy-handle', stripslashes($custom_style) );
+				}
 
 			global $ihc_error_register;
 			if (empty($ihc_error_register)){
@@ -309,7 +336,7 @@ function ihc_register_form($attr=array()){
 	} else {
 		//already logged in
 		if ($user_type=='admin'){
-			$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Register Form  is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
+			$str .= '<div class="ihc-warning-message"><strong>' . esc_html__('Administrator Info', 'ihc') . '</strong>' . esc_html__(': Register Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by opening the page into a separate incognito browser window.','ihc') . '<i>' . esc_html__('This message will not be visible for other users','ihc') .'</i></div>';
 		}
 	}
 	return $str;
@@ -317,7 +344,7 @@ function ihc_register_form($attr=array()){
 endif;
 
 if (!function_exists('ihc_user_select_level')):
-function ihc_user_select_level($attr=array()){   /// $template='', $custom_css=''
+function ihc_user_select_level($attr=array()){
 	/*
 	 * @param array
 	 * @return string
@@ -340,7 +367,7 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 	}
 	//// BRAINTREE
 
-	$levels = get_option('ihc_levels');
+	$levels = \Indeed\Ihc\Db\Memberships::getAll();
 	if ($levels){
 		$register_url = '';
 
@@ -352,7 +379,11 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		// @description used in public section - subcription plan. @param list of levels to display ( array )
 
 		if ( !empty( $attr['id'] ) ){
+				if ( strpos( $attr['id'], '″' ) !== false ){
+						$attr['id'] = str_replace( '″', '', $attr['id'] );
+				}
 				$onlyIds = strpos( $attr['id'], ',' ) === false ? array($attr['id']) : explode( ',', $attr['id'] );
+
 				foreach ( $levels as $id => $levelData ){
 						if ( !in_array( $id, $onlyIds ) ){
 								unset( $levels[$id] );
@@ -388,9 +419,9 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		$str = '';
 
 		$u_type = ihc_get_user_type();
-		if ($u_type!='unreg' && $u_type!='pending'){ /// && $u_type!='admin'
+		if ($u_type!='unreg' && $u_type!='pending' && $levels ){
 			global $current_user;
-			$taxes = Ihc_Db::get_taxes_rate_for_user(@$current_user->ID);
+			$taxes = Ihc_Db::get_taxes_rate_for_user((isset($current_user->ID)) ? $current_user->ID : 0);
 			$register_template = get_option('ihc_register_template');
 			$default_payment = get_option('ihc_payment_selected');
 			if ($select_payment && empty( $attr['is_admin_preview'] ) ){
@@ -412,11 +443,11 @@ function ihc_user_select_level($attr=array()){   /// $template='', $custom_css='
 		///bt message
 		if (!empty($_GET['ihc_lid'])){
 			global $current_user;
-			$str = ihc_print_bank_transfer_order($current_user->ID, @$_GET['ihc_lid']);
+			$str = ihc_print_bank_transfer_order($current_user->ID, $_GET['ihc_lid']);
 			global $stop_printing_bt_msg;
 			$stop_printing_bt_msg = TRUE;
 		}
-		include_once IHC_PATH . 'public/subscription-layouts.php';
+		include_once IHC_PATH . 'public/layouts-subscription.php';
 		$str .= ihc_print_subscription_layout($template, $levels, $register_url, $custom_css, $select_payment);
 		return $str;
 	}
@@ -432,7 +463,7 @@ if (!function_exists('ihc_print_level_link')):
  * @param bool
  * @return string
  */
-function ihc_print_level_link( $attr, $content='', $print_payments=false, $subscription_plan=false ){
+function ihc_print_level_link( $attr=null, $content='', $print_payments=false, $subscription_plan=false ){
 
 	if (!empty($_POST['stripeToken']) && (empty($_GET['ihc_register']) || $_GET['ihc_register']!='create_message') && !defined('IHC_PAYMENT_WITH_STRIPE_WAS_MADE') ){  // && empty( $subscription_plan )
 		/// STRIPE PAYMENT
@@ -441,7 +472,6 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 		unset($_POST['stripeToken']);
 	} else if (isset($_GET['ihc_success_bt'])){
 		/// BT PAYMENT
-		add_filter('the_content', 'ihc_filter_print_bank_transfer_message', 79, 1);
 	} else if (!empty($_GET['ihc_authorize_fields']) && !empty($_GET['lid'])){
 		/// AUTHORIZE RECURRING PAYMENT
 		add_filter('the_content', 'ihc_filter_reccuring_authorize_payment', 81, 1);
@@ -453,7 +483,7 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 	if (!empty($content)){
 		$str = $content;
 	} else {
-		$str =  __('Sign Up', 'ihc');
+		$str =  esc_html__('Sign Up', 'ihc');
 	}
 
 	$href = '';
@@ -464,15 +494,14 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 		$attr['item_class'] = '';
 	}
 
-	/// $purchased = ihc_user_has_level(get_current_user_id(), $attr['id']);
 	$purchased = FALSE;
 
 	if (!empty($purchased)){
-		return ' <div class="ihc-level-item-link ihc-purchased-level"><span class="'.$attr['class'].' " >' .__('Purchased', 'ihc'). '</span></div> ';
+		return ' <div class="ihc-level-item-link ihc-purchased-level"><span class="'.$attr['class'].' " >'  .esc_html__('Purchased', 'ihc'). '</span></div> ';
 	} else {
 		$url = FALSE;
 		$u_type = ihc_get_user_type();
-		if ($u_type!='unreg' && $u_type!='pending'){//is_user_logged_in()
+		if ($u_type!='unreg' && $u_type!='pending'){
 			///////////////////////////////// REGISTERED USER
 			$payments_available = ihc_get_active_payments_services(TRUE);
 			$level_data = ihc_get_level_by_id($attr['id']);
@@ -487,13 +516,13 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 
 				$page = get_option('ihc_general_user_page');
 				$url = get_permalink($page);
-				$url = add_query_arg('ihcnewlevel', 'true', $url );//add_query_arg( 'ihcaction', 'paynewlid', $url );
+				$url = add_query_arg('ihcnewlevel', 'true', $url );
 				$url = add_query_arg('lid', $attr['id'], $url );
-				$url = add_query_arg('urlr', urlencode(IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), $url ); ///  $_SERVER['SERVER_NAME']
+				$url = add_query_arg('urlr', urlencode(IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), $url );
 
 				$onClick = 'ihcBuyNewLevelFromAp(\''.$level_data['label'].'\', \''.$level_data['price'].'\', '.$attr['id'].', \'' . $url . '\');';
 
-				if (!defined('IHC_HIDDEN_PAYMENT_PRINT')){ // !$subscription_plan &&
+				if (!defined('IHC_HIDDEN_PAYMENT_PRINT')){
 					$default_payment = get_option('ihc_payment_selected');
 					$the_payment_type = ( ihc_check_payment_available($default_payment) ) ? $default_payment : '';
 					$str .= '<input type=hidden name=ihc_payment_gateway value=' . $the_payment_type . ' />';
@@ -501,7 +530,7 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 				}
 
 
-			return '<div onClick="' . $onClick . '" class="ihc-level-item-link ' . $attr['item_class'] . '" style="cursor: pointer;">' . $str . '</div>';
+			return '<div onClick="' . $onClick . '" class="ihc-level-item-link ' . $attr['item_class'] . ' ihc-cursor-pointer">' . $str . '</div>';
 
 		} else {
 			//////////////////////////////// NEW USER
@@ -512,7 +541,7 @@ function ihc_print_level_link( $attr, $content='', $print_payments=false, $subsc
 				$url = get_permalink($page);
 				$url = add_query_arg( 'lid', $attr['id'], $url );
 			}
-			return '<div onClick="ihcBuyNewLevel(\'' . $url . '\');" class="ihc-level-item-link ' . $attr['item_class'] . '" style="cursor: pointer;">' . $str . '</div>';
+			return '<div onClick="ihcBuyNewLevel(\'' . $url . '\');" class="ihc-level-item-link ' . $attr['item_class'] . ' ihc-cursor-pointer">' . $str . '</div>';
 		}
 		return $str;
 	}
@@ -587,7 +616,10 @@ function ihc_public_visitor_inside_user_page(){
 			///CUSTOM CSS
 			if (!empty($shortcode_attr['ihc_listing_users_inside_page_custom_css'])){
 				$shortcode_attr['ihc_listing_users_inside_page_custom_css'] = stripslashes($shortcode_attr['ihc_listing_users_inside_page_custom_css']);
-				$css = '<style>' . $shortcode_attr['ihc_listing_users_inside_page_custom_css'] . '</style>';
+				$css = '';
+				wp_register_style( 'dummy-handle', false );
+				wp_enqueue_style( 'dummy-handle' );
+				wp_add_inline_style( 'dummy-handle', $shortcode_attr['ihc_listing_users_inside_page_custom_css'] );
 			}
 
 			if ($shortcode_attr['ihc_listing_users_inside_page_type']=='custom'){
@@ -625,7 +657,7 @@ function ihc_public_visitor_inside_user_page(){
 				}
 				/// LEVELS
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_show_level'])){
-					$data['levels'] = Ihc_Db::get_user_levels($uid);
+					$data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid );
 				}
 				/// CUSTOM FIELDS
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_show_custom_fields'])){
@@ -645,8 +677,10 @@ function ihc_public_visitor_inside_user_page(){
 											$data['custom_fields'][$label] = '';
 											foreach($values as $key => $value){
 												$data['custom_fields'][$label] .= $value;
-												if($key < count($values)-1)
+												if($key < count($values)-1){
 													$data['custom_fields'][$label] .= ', ';
+												}
+
 											}
 										}
 									break;
@@ -673,10 +707,10 @@ function ihc_public_visitor_inside_user_page(){
 				}
 
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_show_banner'])){
-					if (!empty($shortcode_attr['ihc_listing_users_inside_page_banner_href'])){
-					$data['banner'] = $shortcode_attr['ihc_listing_users_inside_page_banner_href'];
-					}else{
-						$data['banner'] = 'default';
+					if ( !empty( $shortcode_attr['ihc_listing_users_inside_page_banner_href'] ) ){
+							$data['banner'] = $shortcode_attr['ihc_listing_users_inside_page_banner_href'];
+					} else {
+							$data['banner'] = 'default';
 					}
 				} else {
 					$data['banner'] = '';
@@ -688,7 +722,7 @@ function ihc_public_visitor_inside_user_page(){
 				}
 				$data['ihc_badges_on'] = get_option( 'ihc_badges_on' );
 				$data['ihc_badge_custom_css'] = get_option('ihc_badge_custom_css');
-				
+
 				/// output
 				if (!empty($shortcode_attr['ihc_listing_users_inside_page_template'])){
 					switch ($shortcode_attr['ihc_listing_users_inside_page_template']){
@@ -748,10 +782,13 @@ function ihc_membership_card($attr=array()){
 	if (isset($attr['exclude_levels'])){
 			$data['metas']['ihc_membership_card_exclude_levels'] = $attr['exclude_levels'];
 		}
+	if (isset($attr['ihc_membership_member_show_extrafields'])){
+			$data['metas']['ihc_membership_member_show_extrafields'] = $attr['ihc_membership_member_show_extrafields'];
+		}
 
 	 if ($data['metas']['ihc_membership_card_enable']){
-	 	 $data['levels'] = Ihc_Db::get_user_levels($current_user->ID, TRUE);
-		 @$exclude_levels = explode(',', @$data['metas']['ihc_membership_card_exclude_levels']);
+	 	 $data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $current_user->ID, true );
+		 $exclude_levels = explode(',', (isset($data['metas']['ihc_membership_card_exclude_levels'])) ? $data['metas']['ihc_membership_card_exclude_levels'] : '');
 		 $data['full_name'] = '';
 		 $user_data = get_userdata($current_user->ID);
 		 if (!empty($user_data->first_name) && !empty($user_data->last_name)){
@@ -761,31 +798,65 @@ function ihc_membership_card($attr=array()){
 		 	$data['member_since'] = ihc_convert_date_to_us_format($user_data->data->user_registered);
 		 }
 
+		 /// CUSTOM FIELDS
+
+		 if (!empty($data['metas']['ihc_membership_member_show_extrafields'])){
+			 $temp_fields = $data['metas']['ihc_membership_member_show_extrafields'];
+			 $temp_fields = ihc_order_like_register( $temp_fields );
+			 foreach ($temp_fields as $field){
+				 $label = ihc_get_custom_field_label($field);
+				 $type = ihc_register_field_get_type_by_slug($field);
+				 switch($type){
+					case 'date':
+							 $data['custom_fields'][$label] = ihc_convert_date_to_us_format(get_user_meta($current_user->ID, $field, TRUE));
+							 break;
+				 case 'checkbox':
+				 case 'multi_select':
+								 $values = get_user_meta($current_user->ID, $field, TRUE);
+								 if(!empty($values)){
+									 $data['custom_fields'][$label] = '';
+									 foreach($values as $key => $value){
+										 $data['custom_fields'][$label] .= $value;
+										 if($key < count($values)-1){
+											 $data['custom_fields'][$label] .= ', ';
+										 }
+									 }
+								 }
+							 break;
+
+				 default:
+							 $data['custom_fields'][$label] = get_user_meta($current_user->ID, $field, TRUE);
+							 if ($field == 'user_login'){
+								 $data['custom_fields'][$label] = $user_data->user_login;
+							 }
+							 if ($field == 'user_email'){
+								 $data['custom_fields'][$label] = $user_data->user_email;
+							 }
+					 break;
+				 }
+			 }
+		 }
+		 if(isset($data['custom_fields']) && is_array($data['custom_fields'])){
+				 foreach ($data['custom_fields'] as $key => $value) {
+				 	if (empty($data['custom_fields'][$key])){
+						unset($data['custom_fields'][$key]);
+					}
+				 }
+	 	}
+
 		 if (!empty($data['levels'])){
+
 			$fullPath = IHC_PATH . 'public/views/membership_card.php';
 			$searchFilename = 'membership_card.php';
 			$template = apply_filters('ihc_filter_on_load_template', $fullPath, $searchFilename );
 			wp_enqueue_script( 'ihc-print-this' );
-			$output .= '	<script>
-					var printhisopt = {
-						importCSS: true,
-			            importStyle: true,
-			            loadCSS:"'.IHC_URL.'assets/css/style.css",
-			         	debug: false,
-			        	printContainer: true,
-			        	pageTitle: "",
-			        	removeInline: true,
-			        	printDelay: 333,
-			        	header: null,
-			        	formValues: false,
-			        };
-							jQuery(document).ready(function(){
-									jQuery(".fa-print-ihc").on("click", function(e){
-											var idToPrint = jQuery( e.target ).attr( "data-id-to-print" );
-											jQuery( "#" + idToPrint ).printThis(printhisopt);
-									});
-							});
-				</script>';
+
+			if (!empty($data['metas']['ihc_membership_card_custom_css'])){
+				wp_register_style( 'dummy-handle', false );
+				wp_enqueue_style( 'dummy-handle' );
+				wp_add_inline_style( 'dummy-handle', stripslashes($data['metas']['ihc_membership_card_custom_css']) );
+			}
+
 		 	foreach ($data['levels'] as $lid => $level_data){
 		 		if (in_array($lid, $exclude_levels)){
 		 			continue;
@@ -796,7 +867,7 @@ function ihc_membership_card($attr=array()){
 				ob_end_clean();
 		 	}
 		 }else{
-			$output = '<div class="ihc-additional-message">'. __("No Membership Cards available based on your Subscriptions. SignUp on new Subscriptions or renew the existent one.", 'ihc').'</div>';
+			$output = '<div class="ihc-additional-message">'. esc_html__("No Membership Cards available based on your Subscriptions. SignUp on new Subscriptions or renew the existent one.", 'ihc').'</div>';
 		 }
 	 }
 	 return $output;
@@ -816,7 +887,9 @@ function ihc_do_lite_register(){
 	$user_type = ihc_get_user_type();
 	if ($user_type=='unreg'){
 		///////ONLY UNREGISTERED CAN SEE THE REGISTER FORM
-		if (isset($_GET['ihc_register'])) return;
+		if (isset($_GET['ihc_register'])){
+			 return;
+		}
 
 		$data['metas'] = ihc_return_meta_arr('register_lite');
 		if (!empty($data['metas']['ihc_register_lite_enabled'])){
@@ -852,7 +925,7 @@ function ihc_do_lite_register(){
 	} else {
 		//already logged in
 		if ($user_type=='admin'){
-			$output .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>: Register Lite Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
+			$output .= '<div class="ihc-warning-message"><strong>' . esc_html__('Administrator Info', 'ihc') . '</strong>' . esc_html__(': Register Lite Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window.','ihc') . '<i>' . esc_html__('This message will not be visible for other users','ihc') .'</i></div>';
 		}
 	}
 	return $output;
@@ -872,7 +945,7 @@ function ihc_link_to_individual_page(){
 		 if ($individual_page){
 		 	 $permalink = get_permalink($individual_page);
 			 if ($permalink){
-			 	$output = '<a href="' . $permalink . '" class="ihc-individual-page-link">' . __('Individual Page', 'ihc') . '</a>';
+			 	$output = '<a href="' . $permalink . '" class="ihc-individual-page-link">' . esc_html__('Individual Page', 'ihc') . '</a>';
 			 }
 		 }
 	 }
@@ -890,8 +963,8 @@ function ihc_do_list_gifts(){
 	global $current_user;
 	if (!empty($current_user) && !empty($current_user->ID)){
 		$gifts = Ihc_Db::get_gifts_by_uid($current_user->ID);
-		$levels = get_option('ihc_levels');
-		$levels[-1]['label'] = __('All', 'ihc');
+		$levels = \Indeed\Ihc\Db\Memberships::getAll();
+		$levels[-1]['label'] = esc_html__('All', 'ihc');
 		$currency = get_option('ihc_currency');
 		if ($gifts){
 			$fullPath = IHC_PATH . 'public/views/listing_gifts.php';
@@ -903,7 +976,7 @@ function ihc_do_list_gifts(){
 			$output .= ob_get_contents();
 			ob_end_clean();
 		}else{
-			$output = '<div class="ihc-additional-message">'. __("No Membership Gifts have been received yet", 'ihc').'</div>';
+			$output = '<div class="ihc-additional-message">'. esc_html__("No Membership Gifts have been received yet", 'ihc').'</div>';
 		}
 	}
 	return $output;
@@ -920,7 +993,7 @@ function ihc_list_all_access_posts($attr=array()){
 	$uid = (empty($current_user->ID)) ? 0 : $current_user->ID;
 	if ($uid && ihc_is_magic_feat_active('list_access_posts')){
 		 require_once IHC_PATH . 'classes/ListOfAccessPosts.class.php';
-		 $levels = Ihc_Db::get_user_levels($uid, TRUE);
+		 $levels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
 		 $levels = array_keys($levels);
 		 $metas = ihc_return_meta_arr('list_access_posts');
 		 if (!empty($attr['limit'])){
@@ -984,7 +1057,7 @@ function ihc_list_user_levels($attr=array()){
 					$data['custom_css'] = $data['badges_metas']['ihc_badge_custom_css'];
 				}
 			}
-	 		$data['levels'] = Ihc_Db::get_user_levels($uid, $attr['exclude_expire']);
+	 		$data['levels'] = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, $attr['exclude_expire'] );
 
 			$fullPath = IHC_PATH . 'public/views/listing_levels.php';
 			$searchFilename = 'listing_levels.php';
@@ -1016,7 +1089,9 @@ function ihc_register_form_for_modal($attr=array()){
 		if ($user_type=='unreg'){
 			///////ONLY UNREGISTERED CAN SEE THE REGISTER FORM
 
-			if (isset($_GET['ihc_register'])) return;
+			if (isset($_GET['ihc_register'])){
+				 return;
+			}
 
 				/// TEMPLATE
 				if (!empty($attr['template'])){
@@ -1035,8 +1110,11 @@ function ihc_register_form_for_modal($attr=array()){
 				$shortcodes_attr['level'] = (isset($attr['level'])) ? $attr['level'] : FALSE;
 
 				$custom_style = get_option('ihc_register_custom_css');
-				$str .= '<style>' . stripslashes($custom_style) . '</style>';
-
+				if(!empty($custom_style)){
+					wp_register_style( 'dummy-handle', false );
+					wp_enqueue_style( 'dummy-handle' );
+					wp_add_inline_style( 'dummy-handle', stripslashes($custom_style) );
+				}
 				global $ihc_error_register;
 				if (empty($ihc_error_register)){
 					$ihc_error_register = array();
@@ -1059,7 +1137,7 @@ function ihc_register_form_for_modal($attr=array()){
 		} else {
 			//already logged in
 			if ($user_type=='admin'){
-				$str .= '<div class="ihc-warning-message">' . __('<strong>Administrator Info</strong>:  Register Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by openeing the page into a separate incognito browser window. <i>(this message will not be visible for other users)</i>', 'ihc') . '</div>';
+				$str .= '<div class="ihc-warning-message"><strong>' . esc_html__('Administrator Info', 'ihc') . '</strong>' . esc_html__(': Register Form is not showing up once you\'re logged. You may check how it it looks for testing purpose by opening the page into a separate incognito browser window. ', 'ihc') . '<i>' . esc_html__(' This message will not be visible for other users ', 'ihc') . '</i></div>';
 			}
 		}
 		return $str;

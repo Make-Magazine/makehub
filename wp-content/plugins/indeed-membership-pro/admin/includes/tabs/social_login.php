@@ -1,6 +1,9 @@
+<?php
+$subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'settings';
+?>
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='settings' || !isset($_REQUEST['subtab'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=settings';?>"><?php _e('Settings', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='design') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=design';?>"><?php _e('Design', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='settings' ) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=settings';?>"><?php esc_html_e('Settings', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='design') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=design';?>"><?php esc_html_e('Design', 'ihc');?></a>
 	<?php
 	$arr = array(
 			"fb" => "Facebook",
@@ -20,23 +23,21 @@
 	<div class="ihc-clear"></div>
 </div>
 <?php
-if (empty($_GET['subtab'])){
-	$_GET['subtab'] = 'settings';
-}
+
 echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
-if ($_GET['subtab']=='settings'){
+if ( $subtab == 'settings' ){
 	//===================== SETTINGS PAGE
 	if (empty($_GET['item'])){
 		////// GENERAL SETTINGS
 		?>
 			<div class="iump-page-title">Ultimate Membership Pro -
 				<span class="second-text">
-					<?php _e('Social Media Login', 'ihc');?>
+					<?php esc_html_e('Social Media Login', 'ihc');?>
 				</span>
 			</div>
 
@@ -46,7 +47,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=fb';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Facebook</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -58,7 +59,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=tw';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Twitter</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -70,7 +71,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=goo';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Google</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -82,7 +83,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=in';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">LinkedIn</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -94,7 +95,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=vk';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Vkontakte</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -106,7 +107,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=ig';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Instagram</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -118,7 +119,7 @@ if ($_GET['subtab']=='settings'){
 				  	<a href="<?php echo $url.'&tab='.$tab.'&subtab=settings&item=tbr';?>">
 					<div class="iump-sm-box <?php echo $status['active']; ?>">
 						<div class="iump-sm-box-title">Tumblr</div>
-						<div class="iump-sm-box-bottom"><?php _e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
+						<div class="iump-sm-box-bottom"><?php esc_html_e("Settings:", "ihc");?> <span><?php echo $status['settings']; ?></span></div>
 					</div>
 				 	</a>
 				</div>
@@ -126,6 +127,7 @@ if ($_GET['subtab']=='settings'){
 
 		<?php
 	} else {
+		$callbackURL = IHC_URL . 'public/social_handler.php'; // old was site_url()
 		switch ($_GET['item']){
 			case 'fb':
 				if ( isset($_POST['ihc_save'] ) && !empty($_POST['ihc_admin_social_login_nonce']) && wp_verify_nonce( $_POST['ihc_admin_social_login_nonce'], 'ihc_admin_social_login_nonce' ) ){
@@ -136,60 +138,68 @@ if ($_GET['subtab']=='settings'){
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
-						<?php _e('Social Media Login', 'ihc');?>
+						<?php esc_html_e('Social Media Login', 'ihc');?>
 					</span>
 				</div>
-				<form action="" method="post">
+				<form method="post" class="ihc-social-login-settings-wrapper">
 
 					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Facebook Activation:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Facebook Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e("Once everything is set up, activate Facebook login to use it.", "ihc");?></h4>
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<h4><?php esc_html_e("Once everything is set up, activate Facebook login to use it.", "ihc");?></h4>
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 								<?php $checked = ($meta_arr['ihc_fb_status']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_fb_status');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
+								<div class="switch ihc-display-inline"></div>
 							</label>
 							<input type="hidden" value="<?php echo $meta_arr['ihc_fb_status'];?>" name="ihc_fb_status" id="ihc_fb_status" />
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Facebook Settings:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Facebook Settings:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_fb_app_id'];?>" name="ihc_fb_app_id" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_fb_app_id'];?>" name="ihc_fb_app_id" />
 							</div>
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_fb_app_secret'];?>" name="ihc_fb_app_secret" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_fb_app_secret'];?>" name="ihc_fb_app_secret" />
 							</div>
-							<div style="font-size: 11px; color: #333; padding-left: 10px;">
-								<div style="font-size: 14px;"><h4><?php _e("How to create a Facebook App")?></h4></div>
+							<div class="iump-form-line">
+								<div><h4><?php esc_html_e("How to create a Facebook App")?></h4></div>
 
-								<!-- developerr -->
+
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
-								<li><?php _e('Look after \'My Apps\' and \'Create app\'.', 'ihc');?></li>
-								<li><?php _e('After complete the name of the app (make sure not to put facebook or fb in app name) click \'Create App ID\'.', 'ihc');?></li>
-								<li><?php _e('In left side area look after \'Settings > Basic\' and fill App Domains with ' . '<b>'.site_url().'</b>', 'ihc');?></li>
-								<li><?php _e('Create a Privacy Policy page in your website and paste URL in \'Privacy Policy URL\'.', 'ihc');?></li>
-								<li><?php _e('In \'Category\' you may choose a category of your app.', 'ihc');?></li>
-								<li><?php _e('Look after \'Business Use\' and select one of the 2 options and \'Save Changes\'.', 'ihc');?></li>
-								<li><?php _e('In \'Settings > Basic\' in top of the page you will find \'App Id\' and \'App Secret\'.', 'ihc');?></li>
-								<li><?php _e('Look after \'Products\' in left side of the menu page and \'Set Up\' Facebook Login and press \'Settings\' from the \'Facebook Login\' app.', 'ihc');?></li>
-								<li><?php _e('In \'Valid OAuth Redirect URIs\' set ' . '<b>'.IHC_URL.'classes/hybrid_auth/hybridauth/?hauth_done=Facebook'.'</b>', 'ihc');?></li>
-								<li><?php _e('In \'Settings > Basic\' in top of the page you will see that app is \'In Development\'. Switch to live mode.', 'ihc');?></li>
+								<li><?php esc_html_e("Go to ", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
+								<li><?php esc_html_e('Look after \'My Apps\' and \'Add a New App\'.', 'ihc');?></li>
+								<li><?php esc_html_e('After complete the name of the app (make sure not to put facebook or fb in app name) click \'Create App ID\'.', 'ihc');?></li>
+								<li><?php esc_html_e('In left side area look after \'Settings > Basic\' and fill \'App Domains\' with your site domain. (mywebsite.com,  www.mywebsite.com).', 'ihc');?></li>
+								<li><?php esc_html_e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in Privacy Policy URL and Terms of Service URL in your Facebook app.', 'ihc');?></li>
+								<li><?php esc_html_e('Choose a category of the app form \'Category\' list. ');?></li>
+								<li><?php esc_html_e('Click on \'+\' from PRODUCTS and set up Facebook Login product. Choose Web platform and set your Site URL with '. site_url() . '.', 'ihc');?></li>
+								<li><?php esc_html_e('In Facebook Login product from the left side of the menu click on Settings and make sure that Client OAuth Login and Web OAuth Login are \'Yes\'.', 'ihc');?></li>
+								<li><?php esc_html_e('In \' Valid OAuth Redirect URIs\' put the ', 'ihc');?><b><?php  echo $callbackURL; ?></b> <?php esc_html_e(' url. ', 'ihc');?></li>
+								<li><?php esc_html_e('In top of the page your app is in development mode. Switch to Live Mode.', 'ihc');?></li>
+								<li><?php esc_html_e('In Facebook app go to  Settings > Basic and copy \'App ID\' and \'App Secret\' and paste it to \'Facebook Settings\' from your website.', 'ihc');?></li>
+								<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked \'ihc_social_media\' on register page.', 'ihc');?></li>
+								<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the \'Show Social Media Login Buttons\' option.', 'ihc');?></li>
+
 								</ul>
-								<!-- developer -->
+
+							</div>
+							<div class="iump-form-line">
+								<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+								<p><?php esc_html_e("UMP members may synchronized their Facebook account with WP user account from the registration process.", "ihc");?></p>
+								<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the 'Social Plus' tab.", "ihc");?></p>
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
@@ -206,50 +216,60 @@ if ($_GET['subtab']=='settings'){
 				?>
 								<div class="iump-page-title">Ultimate Membership Pro -
 									<span class="second-text">
-										<?php _e('Social Media Login', 'ihc');?>
+										<?php esc_html_e('Social Media Login', 'ihc');?>
 									</span>
 								</div>
-								<form action="" method="post">
+								<form method="post" class="ihc-social-login-settings-wrapper">
 
 									<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 									<div class="ihc-stuffbox">
-										<h3><?php _e('Twitter Activation:', 'ihc');?></h3>
+										<h3><?php esc_html_e('Twitter Activation:', 'ihc');?></h3>
 										<div class="inside">
 											<div class="iump-form-line">
-												<h4><?php _e("Once everything is set up, activate Twitter login to use it.", "ihc");?></h4>
-												<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+												<h4><?php esc_html_e("Once everything is set up, activate Twitter login to use it.", "ihc");?></h4>
+												<label class="iump_label_shiwtch ihc-switch-button-margin">
 												<?php $checked = ($meta_arr['ihc_tw_status']) ? 'checked' : '';?>
 												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_tw_status');" <?php echo $checked;?> />
-												<div class="switch" style="display:inline-block;"></div>
+												<div class="switch ihc-display-inline"></div>
 											</label>
 											<input type="hidden" value="<?php echo $meta_arr['ihc_tw_status'];?>" name="ihc_tw_status" id="ihc_tw_status" />
 											</div>
 											<div class="ihc-wrapp-submit-bttn iump-submit-form">
-												<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+												<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 											</div>
 										</div>
 									</div>
 									<div class="ihc-stuffbox">
-										<h3><?php _e('Twitter Settings:', 'ihc');?></h3>
+										<h3><?php esc_html_e('Twitter Settings:', 'ihc');?></h3>
 										<div class="inside">
 											<div class="iump-form-line">
-												<label class="iump-labels"><?php _e('Application Key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_key'];?>" name="ihc_tw_app_key" style="width: 300px;" />
+												<label class="iump-labels"><?php esc_html_e('API key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_key'];?>" name="ihc_tw_app_key" />
 											</div>
 											<div class="iump-form-line">
-												<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_secret'];?>" name="ihc_tw_app_secret" style="width: 300px;" />
+												<label class="iump-labels"><?php esc_html_e('API secret key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tw_app_secret'];?>" name="ihc_tw_app_secret" />
 											</div>
-											<div style="font-size: 11px; color: #333; padding-left: 10px;">
-												<div style="font-size: 14px;"><h4><?php _e("How to create a Twitter App")?></h4></div>
+											<div class="iump-form-line">
+												<div><h4><?php esc_html_e("How to create a Twitter App")?></h4></div>
 												<ul class="ihc-info-list">
-												<li><?php _e("Go to :", "ihc");?><a href="https://dev.twitter.com/apps" target="_blank">https://dev.twitter.com/apps</a></li>
-												<li><?php _e('Click "Create New App".', 'ihc');?></li>
-												<li><?php _e('Fill out the "Name", "Description", "Site URL". At "Callback URL" you must add: ', 'ihc'); echo '<b>'.site_url().'</b>';?></li>
-												<li><?php _e('You will find the "Consumer Key" (API Key) and "Consumer Secret" (API Secret) in the "Keys and Access Tokens" section.', 'ihc');?></li>
+												<li><?php esc_html_e("Go to ", "ihc");?><a href="https://dev.twitter.com/apps" target="_blank">https://dev.twitter.com/apps</a></li>
+												<li><?php esc_html_e('Create an app.', 'ihc');?></li>
+												<li><?php esc_html_e('Check \'Enable Sign in with Twitter\'.', 'ihc');?></li>
+												<li><?php esc_html_e('At "Callback URL" you must add ', 'ihc'); echo '<b>'.$callbackURL.'</b>';?></li>
+												<li><?php esc_html_e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in \'Terms of Service URL\' and \'Privacy policy URL\' in your app details.', 'ihc');?></li>
+												<li><?php esc_html_e('After app was created, go to \'Keys and tokens \' tab and copy API keys from Consumer API keys.', 'ihc');?></li>
+												<li><?php esc_html_e('In Permissions tab check \'Read-only\' in \'Access permission\' and  check \'Request email address from users\' in \'Additional permissions\'.', 'ihc');?></li>
+												<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked \'ihc_social_media\' on register page.', 'ihc');?></li>
+												<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the \'Show Social Media Login Buttons\' option.', 'ihc');?></li>
 												</ul>
 											</div>
+											<div class="iump-form-line">
+												<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+												<p><?php esc_html_e("UMP members may synchronized their Twitter account with WP user account from the registration process.", "ihc");?></p>
+												<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the \'Social Plus\' tab.", "ihc");?></p>
+											</div>
 											<div class="ihc-wrapp-submit-bttn iump-submit-form">
-												<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+												<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 											</div>
 										</div>
 									</div>
@@ -266,55 +286,61 @@ if ($_GET['subtab']=='settings'){
 				?>
 							<div class="iump-page-title">Ultimate Membership Pro -
 								<span class="second-text">
-									<?php _e('Social Media Login', 'ihc');?>
+									<?php esc_html_e('Social Media Login', 'ihc');?>
 								</span>
 							</div>
-							<form action="" method="post">
+							<form method="post" class="ihc-social-login-settings-wrapper">
 
 								<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 								<div class="ihc-stuffbox">
-									<h3><?php _e('LinkedIn Activation:', 'ihc');?></h3>
+									<h3><?php esc_html_e('LinkedIn Activation:', 'ihc');?></h3>
 									<div class="inside">
 										<div class="iump-form-line">
-											<h4><?php _e("Once everything is set up, activate LinkedIn login to use it.", "ihc");?></h4>
-											<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+											<h4><?php esc_html_e("Once everything is set up, activate LinkedIn login to use it.", "ihc");?></h4>
+											<label class="iump_label_shiwtch ihc-switch-button-margin">
 												<?php $checked = ($meta_arr['ihc_in_status']) ? 'checked' : '';?>
 												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_in_status');" <?php echo $checked;?> />
-												<div class="switch" style="display:inline-block;"></div>
+												<div class="switch ihc-display-inline"></div>
 											</label>
 											<input type="hidden" value="<?php echo $meta_arr['ihc_in_status'];?>" name="ihc_in_status" id="ihc_in_status" />
 										</div>
 										<div class="ihc-wrapp-submit-bttn iump-submit-form">
-											<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+											<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 										</div>
 									</div>
 								</div>
 								<div class="ihc-stuffbox">
-									<h3><?php _e('LinkedIn Settings:', 'ihc');?></h3>
+									<h3><?php esc_html_e('LinkedIn Settings:', 'ihc');?></h3>
 									<div class="inside">
 										<div class="iump-form-line">
-											<label class="iump-labels"><?php _e('Client ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_key'];?>" name="ihc_in_app_key" style="width: 300px;" />
+											<label class="iump-labels"><?php esc_html_e('Client ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_key'];?>" name="ihc_in_app_key" />
 										</div>
 										<div class="iump-form-line">
-											<label class="iump-labels"><?php _e('Client Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_secret'];?>" name="ihc_in_app_secret" style="width: 300px;" />
+											<label class="iump-labels"><?php esc_html_e('Client Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_in_app_secret'];?>" name="ihc_in_app_secret" />
 										</div>
 
-										<div style="font-size: 11px; color: #333; padding-left: 10px;">
-											<div style="font-size: 14px;"><h4><?php _e("How to create a LinkedIn App")?></h4></div>
+										<div class="iump-form-line">
+											<div><h4><?php esc_html_e("How to create a LinkedIn App")?></h4></div>
 											<ul class="ihc-info-list">
-											<li><?php _e("Go to :", "ihc");?><a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a></li>
-											<li><?php _e('Click "Create Application".', 'ihc');?></li>
-											<li><?php _e('Fill the required fields and submit. "Sign In with LinkedIn" must be available.', 'ihc');?></li>
-                      <li><?php _e('Be sure that Company is Verified.', 'ihc');?></li>
-											<li><?php echo __( 'At Redirect URL write the following value: ', 'ihc' ) . IHC_URL . 'classes/hybridAuth-2.9/?hauth.done=LinkedIn';?></li>
-											<li><?php _e('After you verify the Company association, you will find available Permissions added into "Auth" section.', 'ihc');?></li>
-											<li><?php _e('You will find the "Client ID" and "Client Secret" in the "Auth" section.', 'ihc');?></li>
+											<li><?php esc_html_e("Go to ", "ihc");?><a href="https://www.linkedin.com/secure/developer" target="_blank">https://www.linkedin.com/secure/developer</a></li>
+											<li><?php esc_html_e('Click "Create app".', 'ihc');?></li>
+											<li><?php esc_html_e('In \'LinkedIn Page*\' you have to add an existent LinkedIn company name or create a new company page. Complete the field with company name.', 'ihc');?></li>
+                      <li><?php esc_html_e('Once the app has been created in \'Settings\' tab you must verify the company. Clik on ', 'ihc');?> <b><?php esc_html_e(' Verify ', 'ihc');?></b><?php esc_html_e(' and \'Generate URL\'. Open the URL in a browser and click on \'Verify\'.', 'ihc');?></li>
+											<li><?php esc_html_e( 'In \'OAuth 2.0 settings\' add ' , 'ihc' );?> <b><?php echo $callbackURL;?></b> <?php esc_html_e(' redirect URL.' , 'ihc' );?></li>
+											<li><?php esc_html_e('In \'Products\' select \'Sign In with LinkedIn\' product.', 'ihc');?></li>
+											<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ihc_social_media on register page.', 'ihc');?></li>
+											<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the Show Social Media Login Buttons option.', 'ihc');?></li>
 											</ul>
+										</div>
+										<div class="iump-form-line">
+											<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+											<p><?php esc_html_e("UMP members may synchronized their LinkedIn accounts with WP user account from the registration process.", "ihc");?></p>
+											<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the 'Social Plus' tab.", "ihc");?></p>
 										</div>
 
 										<div class="ihc-wrapp-submit-bttn iump-submit-form">
-											<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+											<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 										</div>
 									</div>
 								</div>
@@ -331,53 +357,59 @@ if ($_GET['subtab']=='settings'){
 					?>
 					<div class="iump-page-title">Ultimate Membership Pro -
 						<span class="second-text">
-							<?php _e('Social Media Login', 'ihc');?>
+							<?php esc_html_e('Social Media Login', 'ihc');?>
 						</span>
 					</div>
-					<form action="" method="post">
+					<form method="post" class="ihc-social-login-settings-wrapper">
 
 						<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 						<div class="ihc-stuffbox">
-							<h3><?php _e('Tumblr Activation:', 'ihc');?></h3>
+							<h3><?php esc_html_e('Tumblr Activation:', 'ihc');?></h3>
 							<div class="inside">
 								<div class="iump-form-line">
-									<h4><?php _e("Once everything is set up, activate Tumblr login to use it.", "ihc");?></h4>
-									<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+									<h4><?php esc_html_e("Once everything is set up, activate Tumblr login to use it.", "ihc");?></h4>
+									<label class="iump_label_shiwtch ihc-switch-button-margin">
 										<?php $checked = ($meta_arr['ihc_tbr_status']) ? 'checked' : '';?>
 										<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_tbr_status');" <?php echo $checked;?> />
-										<div class="switch" style="display:inline-block;"></div>
+										<div class="switch ihc-display-inline"></div>
 									</label>
 									<input type="hidden" value="<?php echo $meta_arr['ihc_tbr_status'];?>" name="ihc_tbr_status" id="ihc_tbr_status" />
 								</div>
 								<div class="ihc-wrapp-submit-bttn iump-submit-form">
-									<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 								</div>
 							</div>
 						</div>
 						<div class="ihc-stuffbox">
-							<h3><?php _e('Tumblr Settings:', 'ihc');?></h3>
+							<h3><?php esc_html_e('Tumblr Settings:', 'ihc');?></h3>
 							<div class="inside">
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application Key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_key'];?>" name="ihc_tbr_app_key" style="width: 300px;" />
+									<label class="iump-labels"><?php esc_html_e('OAuth consumer key:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_key'];?>" name="ihc_tbr_app_key" />
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_secret'];?>" name="ihc_tbr_app_secret" style="width: 300px;" />
+									<label class="iump-labels"><?php esc_html_e('OAuth consumer secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_tbr_app_secret'];?>" name="ihc_tbr_app_secret" />
 								</div>
 
-								<div style="font-size: 11px; color: #333; padding-left: 10px;">
-									<div style="font-size: 14px;"><h4><?php _e("How to create a Tumblr App")?></h4></div>
+								<div class="iump-form-line">
+									<div><h4><?php esc_html_e("How to create a Tumblr App")?></h4></div>
 									<ul class="ihc-info-list">
-									<li><?php _e("Go to :", "ihc");?><a href="http://www.tumblr.com/oauth/apps" target="_blank">http://www.tumblr.com/oauth/apps</a></li>
-									<li><?php _e('Register a new application.', 'ihc');?>
-									<li><?php _e("Fill out the required fields and submit.", 'ihc');?></li>
-									<li><?php _e('Set the "Default callback URL" as:', 'ihc');echo site_url();?></li>
-									<li><?php _e('After submitting you will find "Application Key" and "Application Secret" just beside the App Logo.', 'ihc');?></li>
+									<li><?php esc_html_e("Go to ", "ihc");?><a href="http://www.tumblr.com/oauth/apps" target="_blank">http://www.tumblr.com/oauth/apps</a></li>
+									<li><?php esc_html_e('Register a new application.', 'ihc');?>
+									<li><?php esc_html_e("Fill out the required fields and submit.", 'ihc');?></li>
+									<li><?php esc_html_e('Set the "Default callback URL:" as: ', 'ihc'); echo '<b>' . $callbackURL. '</b>';?></li>
+									<li><?php esc_html_e('After submitting you will find "OAuth consumer key" and "OAuth consumer secret" in the right side of the screen.', 'ihc');?></li>
+									<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ihc_social_media on register page.', 'ihc');?></li>
+									<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the Show Social Media Login Buttons option.', 'ihc');?></li>
 									</ul>
 								</div>
-
+								<div class="iump-form-line">
+									<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+									<p><?php esc_html_e("UMP members may synchronized their Tumblr accounts with WP user account from the registration process.", "ihc");?></p>
+									<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the 'Social Plus' tab.", "ihc");?></p>
+								</div>
 								<div class="ihc-wrapp-submit-bttn iump-submit-form">
-									<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+									<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 								</div>
 							</div>
 						</div>
@@ -393,51 +425,69 @@ if ($_GET['subtab']=='settings'){
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
-						<?php _e('Social Media Login', 'ihc');?>
+						<?php esc_html_e('Social Media Login', 'ihc');?>
 					</span>
 				</div>
-				<form action="" method="post">
+				<form method="post" class="ihc-social-login-settings-wrapper">
 
 					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Instagram Activation:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Instagram Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e("Once everything is set up, activate Instagram login to use it.", "ihc");?></h4>
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<h4><?php esc_html_e("Once everything is set up, activate Instagram login to use it.", "ihc");?></h4>
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_ig_status']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ig_status');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" value="<?php echo $meta_arr['ihc_ig_status'];?>" name="ihc_ig_status" id="ihc_ig_status" />
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Instagram Settings:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Instagram Settings:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Client ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_ig_app_id'];?>" name="ihc_ig_app_id" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Client ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_ig_app_id'];?>" name="ihc_ig_app_id" />
 							</div>
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Client Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_ig_app_secret'];?>" name="ihc_ig_app_secret" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Client Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_ig_app_secret'];?>" name="ihc_ig_app_secret" />
 							</div>
-							<div style="font-size: 11px; color: #333; padding-left: 10px;">
-								<div style="font-size: 14px;"><h4><?php _e("How to create a Instagram App")?></h4></div>
+							<div class="iump-form-line">
+								<div><h4><?php esc_html_e("How to create a Instagram App")?></h4></div>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="http://instagr.am/developer/clients/manage/" target="_blank">http://instagr.am/developer/clients/manage/</a></li>
-								<li><?php _e('Register a new application.', 'ihc');?></li>
-								<li><?php _e("Fill out the required fields.", 'ihc')?></li>
-								<li><?php _e('Set the "Callback URL" for your application as: ', 'ihc');echo IHC_URL . 'classes/hybrid_auth/hybridauth/?hauth.done=Instagram';?></li>
-								<li><?php _e('After submitting you will find "Client Id" and "Client Secret" in the "Manage Clients" section.', 'ihc')?></li>
+								<li><?php esc_html_e("Go to ", "ihc");?><a href="https://developers.facebook.com/apps" target="_blank">https://developers.facebook.com/apps</a></li>
+								<li><?php esc_html_e('Create a new App.', 'ihc');?></li>
+								<li><?php esc_html_e('In Dashboard click on Settings > Basic and fill \'App Domains\' with your site domain (mywebsite.com,  www.mywebsite.com).', 'ihc')?></li>
+								<li><?php esc_html_e('Go back to your website and create 2 pages with Privacy Policy and Terms of Service. Put their URL\'s in \'Privacy Policy URL\' and \'Terms of Service URL\' in your Facebook app.', 'ihc');?></li>
+								<li><?php esc_html_e('Choose a category of the app from \'Category\' list.', 'ihc')?></li>
+								<li><?php esc_html_e('Click on \'+ Add Platform\', choose \'Website\' and add ', 'ihc'); echo '<b>' . site_url() . '</b>'; ?></li>
+								<li><?php esc_html_e('Click on \'+\' from \'PRODUCTS\' and set up an \'Instagram Basic Display\' product. Click on \'Create New App\', name the app and create it.', 'ihc')?></li>
+								<li><?php esc_html_e('Go back to the left side of the dashboard and In \'Instagram Basic Display\' > Basic Display you will find \'Instagram App ID\' and \'Instagram App Secret\'.', 'ihc')?></li>
+								<li><?php esc_html_e('In \'Client OAuth Settings\' put the ', 'ihc');?><b><?php echo IHC_URL . 'public/social_handler.php';?></b> </li>
+								<li><?php esc_html_e(' In \'Deauthorize\' and \'Data Deletion Requests\' put the ', 'ihc'); echo '<b>' . $callbackURL . '</b>';?></li>
+								<li><?php esc_html_e('Add to Submission \'instagram_graph_user_profile\' and \'instagram_graph_user_media\' from \'App Review for Instagram Basic Display\'.', 'ihc');?></li>
+
+								<li><?php esc_html_e('In order to test your app go to \'Roles\' and in \'Instagram Testers\' add your instagram username.', 'ihc');?></li>
+								<li><?php esc_html_e('Log in in Instagram, navigate to (Profile Icon) > Edit Profile > \'Apps and Websites\' > Tester Invites and accept the invitation.', 'ihc');?></li>
+								<li><?php esc_html_e('Your Instagram account is now eligible to be accessed by your Facebook app while it is in \'Development Mode\'.', 'ihc');?></li>
+								<li><?php esc_html_e('To get the full access of your app go to Dashboard click on settings > Basic and verify your Business on Facebook.', 'ihc');?></li>
+								<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked \'ihc_social_media\' on register page.', 'ihc')?></li>
+								<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the \'Show Social Media Login Buttons\' option.', 'ihc')?></li>
 								</ul>
 							</div>
+							<div class="iump-form-line">
+								<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+								<p><?php esc_html_e("UMP members may synchronized their Instagram accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the \'Social Plus\' tab.", "ihc");?></p>
+							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
@@ -453,53 +503,61 @@ if ($_GET['subtab']=='settings'){
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
-						<?php _e('Social Media Login', 'ihc');?>
+						<?php esc_html_e('Social Media Login', 'ihc');?>
 					</span>
 				</div>
-				<form action="" method="post">
+				<form method="post" class="ihc-social-login-settings-wrapper">
 
 					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Vkontakte Activation:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Vkontakte Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e("Once everything is set up, activate Vkontakte login to use it.", "ihc");?></h4>
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<h4><?php esc_html_e("Once everything is set up, activate Vkontakte login to use it.", "ihc");?></h4>
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_vk_status']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_vk_status');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" value="<?php echo $meta_arr['ihc_vk_status'];?>" name="ihc_vk_status" id="ihc_vk_status" />
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Vkontakte Settings:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Vkontakte Settings:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_vk_app_id'];?>" name="ihc_vk_app_id" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_vk_app_id'];?>" name="ihc_vk_app_id" />
 							</div>
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_vk_app_secret'];?>" name="ihc_vk_app_secret" style="width: 300px;" />
+								<label class="iump-labels"><?php esc_html_e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_vk_app_secret'];?>" name="ihc_vk_app_secret" />
 							</div>
 
-							<div style="font-size: 11px; color: #333; padding-left: 10px;">
-								<div style="font-size: 14px;"><h4><?php _e("How to create a VK App")?></h4></div>
+							<div class="iump-form-line">
+								<div><h4><?php esc_html_e("How to create a VK App")?></h4></div>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to :", "ihc");?><a href="http://vk.com/developers.php" target="_blank">http://vk.com/developers.php</a></li>
-								<li><?php _e("Create a new application.", 'ihc')?></li>
-								<li><?php _e('For "Category" you must set as "Website".', 'ihc');?></li>
-								<li><?php _e('After submitting go to "Settings" and set the "Authorized redirect URI" as :', 'ihc');echo IHC_URL . 'classes/hybrid_auth/hybridauth/';?></li>
-								<li><?php _e('Be sure "Application status" is set to "Application on and visible to all".', 'ihc')?></li>
-								<li><?php _e('Save settings and copy the "Application ID" and "Application Secret".', 'ihc');?></li>
+								<li><?php esc_html_e("Go to ", "ihc");?><a href="http://vk.com/developers.php" target="_blank">http://vk.com/developers.php</a></li>
+								<li><?php esc_html_e('In top of the page click on ' , 'ihc');?> <b> <?php esc_html_e(' My Apps ', 'ihc');?></b> <?php esc_html_e(" and ", 'ihc');?> <b> <?php esc_html_e("Create app", "ihc");?></b></li>
+								<li><?php esc_html_e('In \'Platform\' section you must select Website.', 'ihc');?></li>
+								<li><?php esc_html_e('Connect website.', 'ihc');?></li>
+								<li><?php esc_html_e('In Contact info section add ', 'ihc');?> <b><?php esc_html_e('Terms and Conditions', 'ihc'); ?></b> <?php esc_html_e('and', 'ihc');?> <b><?php esc_html_e('Privacy Policy ', 'ihc');?></b><?php esc_html_e('pages.', 'ihc');?></li>
+								<li><?php esc_html_e(' Click on Settings menu tab and make sure that ', 'ihc');?>  <b><?php esc_html_e('App status', 'ihc');?></b> <?php esc_html_e(' is \'Application on and visible to all\'', 'ihc');?></li>
+								<li><?php esc_html_e('In Authorized redirect URI add ', 'ihc'); echo '<b>'.$callbackURL.'</b>';?></li>
+								<li><?php esc_html_e('In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ihc_social_media on register page.', 'ihc')?></li>
+								<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the','ihc');?> <b><?php esc_html_e('Show Social Media Login Buttons ', 'ihc')?></b><?php esc_html_e('option', 'ihc'); ?></li>
 								</ul>
 							</div>
+							<div class="iump-form-line">
+								<p><b><?php esc_html_e('Notice:', 'ihc');?></b></p>
+								<p><?php esc_html_e("UMP members may synchronized their Vkontakte accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php esc_html_e('Even after the register step, a user can sync multiple social accounts by going to their profile page, under the \'Social Plus\' ', 'ihc');?></p>
+							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
@@ -516,53 +574,68 @@ if ($_GET['subtab']=='settings'){
 				?>
 				<div class="iump-page-title">Ultimate Membership Pro -
 					<span class="second-text">
-						<?php _e('Social Media Login', 'ihc');?>
+						<?php esc_html_e('Social Media Login', 'ihc');?>
 					</span>
 				</div>
-				<form action="" method="post">
+				<form method="post" class="ihc-social-login-settings-wrapper">
 
 					<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Google Activation:', 'ihc');?></h3>
+						<h3><?php esc_html_e(' Activation:', 'ihc');?></h3>
 						<div class="inside">
 							<div class="iump-form-line">
-								<h4><?php _e("Once everything is set up, activate Google login to use it.", "ihc");?></h4>
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<h4><?php esc_html_e("Once everything is set up, activate Google login to use it.", "ihc");?></h4>
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_goo_status']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_goo_status');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" value="<?php echo $meta_arr['ihc_goo_status'];?>" name="ihc_goo_status" id="ihc_goo_status" />
 							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 						</div>
 					</div>
 					<div class="ihc-stuffbox">
-						<h3><?php _e('Google Settings:', 'ihc');?></h3>
+						<h3><?php esc_html_e('Google Settings:', 'ihc');?></h3>
 							<div class="inside">
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_goo_app_id'];?>" name="ihc_goo_app_id" style="width: 300px;" />
+									<label class="iump-labels"><?php esc_html_e('Application ID:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_goo_app_id'];?>" name="ihc_goo_app_id" />
 								</div>
 								<div class="iump-form-line">
-									<label class="iump-labels"><?php _e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_goo_app_secret'];?>" name="ihc_goo_app_secret" style="width: 300px;" />
+									<label class="iump-labels"><?php esc_html_e('Application Secret:', 'ihc');?></label> <input type="text" value="<?php echo $meta_arr['ihc_goo_app_secret'];?>" name="ihc_goo_app_secret" />
 								</div>
 
-							<div style="font-size: 11px; color: #333; padding-left: 10px;">
-								<div style="font-size: 14px;"><h4><?php _e("How to create a Google App")?></h4></div>
+							<div class="iump-form-line">
+								<div><h4><?php esc_html_e("How to create a Google App")?></h4></div>
+								<?php
+										$siteUrl = site_url();
+						        $siteUrl = trailingslashit($siteUrl);
+								?>
 								<ul class="ihc-info-list">
-								<li><?php _e("Go to: ", "ihc");?><a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a></li>
-								<li><?php _e("Create new project.", 'ihc')?></li>
-								<li><?php _e('Go to "ocial APIs" -> "Google+ API" and enable API.', 'ihc');?></li>
-								<li><?php _e('Go to "Credentials" -> "Credentials", at "add credentials" select "OAuth 2.0 client ID".', 'ihc');?></li>
-								<li><?php _e('Select web application, and set the "Authorized redirect URI" as : ', 'ihc'); echo IHC_URL . 'classes/hybrid_auth/hybridauth/?hauth.done=Google';?></li>
-								<li><?php _e('After submitting a popup will appear with "Application ID" and "Application Secret".', 'ihc');?></li>
+								<li><?php esc_html_e("Go to ", "ihc");?><a href="https://console.developers.google.com" target="_blank">https://console.developers.google.com</a></li>
+								<li><?php esc_html_e("Create new project.", 'ihc')?></li>
+								<li><?php esc_html_e('Click on \'OAuth consent screen\'.', 'ihc');?></li>
+								<li><?php esc_html_e('Choose \'External\' in User Type section.', 'ihc');?></li>
+								<li><?php esc_html_e('Fill all the reqired fields.', 'ihc');?></li>
+								<li><?php esc_html_e('In \'Authorized domains\' you may add your website domain (mywebsite.com).', 'ihc');?></li>
+								<li><?php esc_html_e('Return to Credentials from left sidebar menu, and create an OAuth client ID in \' CREATE CREDENTIALS\'.', 'ihc');?></li>
+								<li><?php esc_html_e('In \'Create OAuth client ID\' select Web application. Add callback URL ', 'ihc');?><b><?php echo $siteUrl . "?ihc_action=social_login"; ?></b><?php esc_html_e(' in \'Authorized redirect URIs\' ', 'ihc'); ?></li>
+								<li><?php esc_html_e('After submitting a popup will appear with \'Your Client ID\' and \'Your Client Secret\'.', 'ihc');?></li>
+								<li><?php esc_html_e("In 'Domain verification' add a domain to configure webhook notifications.", 'ihc')?></li>
+								<li><?php esc_html_e("In order to activate social login field, go to UMP Dashboard > SHOWCASES > Register Form > Custom Fields page. Make sure that you have checked ", "ihc");?> <b>ihc_social_media</b><?php esc_html_e(' on register page.', 'ihc')?></li>
+								<li><?php esc_html_e('Go to UMP Dashboard -> Showcases -> Login Form page. Activate the \'Show Social Media Login Buttons\' option.', 'ihc')?></li>
 								</ul>
 							</div>
+							<div class="iump-form-line">
+								<p><b><?php esc_html_e("Notice:", "ihc");?></b></p>
+								<p><?php esc_html_e("UMP members may synchronized their Google accounts with WP user account from the registration process.", "ihc");?></p>
+								<p><?php esc_html_e("Even after the register step, a user can sync multiple social accounts by going to their profile page, under the 'Social Plus' tab.", "ihc");?></p>
+							</div>
 							<div class="ihc-wrapp-submit-bttn iump-submit-form">
-								<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+								<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 							</div>
 							</div>
 					</div>
@@ -581,18 +654,18 @@ if ($_GET['subtab']=='settings'){
 	?>
 	<div class="iump-page-title">Ultimate Membership Pro -
 		<span class="second-text">
-			<?php _e('Social Media Login', 'ihc');?>
+			<?php esc_html_e('Social Media Login', 'ihc');?>
 		</span>
 	</div>
-		<form action="" method="post">
+		<form method="post" class="ihc-social-login-settings-wrapper">
 
 			<input type="hidden" name="ihc_admin_social_login_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_social_login_nonce' );?>" />
 
 			<div class="ihc-stuffbox">
-				<h3><?php _e("Settings", "ihc");?></h3>
+				<h3><?php esc_html_e("Settings", "ihc");?></h3>
 				<div class="inside">
 					<div class="iump-form-line">
-						<label class="iump-labels"><?php _e("Template", 'ihc');?></label>
+						<label class="iump-labels"><?php esc_html_e("Template", 'ihc');?></label>
 							<select name="ihc_sm_template"><?php
 								$templates = array("ihc-sm-template-1" => "Awesome Template One","ihc-sm-template-2" => "Split Box Template","ihc-sm-template-3" => "Shutter Color Template","ihc-sm-template-4" => "Margarita Template","ihc-sm-template-5" => "Picaso Template");
 								foreach ($templates as $k=>$v){
@@ -604,22 +677,22 @@ if ($_GET['subtab']=='settings'){
 							?></select>
 					</div>
 					<div class="iump-form-line">
-						<label class="iump-labels"><?php _e("Show Label", 'ihc');?></label>
-						<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+						<label class="iump-labels"><?php esc_html_e("Show Label", 'ihc');?></label>
+						<label class="iump_label_shiwtch ihc-switch-button-margin">
 								<?php $checked = (!empty($meta_arr['ihc_sm_show_label'])) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_sm_show_label');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
+								<div class="switch ihc-display-inline"></div>
 						</label>
 						<input type="hidden" value="<?php echo $meta_arr['ihc_sm_show_label'];?>" name="ihc_sm_show_label" id="ihc_sm_show_label" />
 					</div>
 
-					<div style="margin-top: 15px;">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<div class="ihc-wrapp-submit-bttn iump-submit-form">
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>
 			<div class="ihc-stuffbox">
-				<h3><?php _e("Top Content", 'ihc');?></h3>
+				<h3><?php esc_html_e("Top Content", 'ihc');?></h3>
 				<div class="inside">
 					<div>
 						<?php
@@ -634,13 +707,13 @@ if ($_GET['subtab']=='settings'){
 							wp_editor(ihc_correct_text($meta_arr['ihc_sm_top_content']), 'tag-description', $settings);
 						?>
 					</div>
-					<div style="margin-top: 15px;">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<div class="ihc-wrapp-submit-bttn iump-submit-form">
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>
 			<div class="ihc-stuffbox">
-				<h3><?php _e("Bottom Content", 'ihc');?></h3>
+				<h3><?php esc_html_e("Bottom Content", 'ihc');?></h3>
 				<div class="inside">
 					<div>
 						<?php
@@ -655,19 +728,19 @@ if ($_GET['subtab']=='settings'){
 							wp_editor(ihc_correct_text($meta_arr['ihc_sm_bottom_content']), 'tag-description', $settings);
 						?>
 					</div>
-					<div style="margin-top: 15px;">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<div class="ihc-wrapp-submit-bttn iump-submit-form">
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>
 			<div class="ihc-stuffbox">
-				<h3><?php _e("Custom CSS", 'ihc');?></h3>
+				<h3><?php esc_html_e("Custom CSS", 'ihc');?></h3>
 				<div class="inside">
 					<div>
 						<textarea name="ihc_sm_custom_css" class="ihc-dashboard-textarea-full"><?php echo $meta_arr['ihc_sm_custom_css'];?></textarea>
 					</div>
-					<div style="margin-top: 15px;">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+					<div class="ihc-wrapp-submit-bttn iump-submit-form">
+						<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 				</div>
 			</div>

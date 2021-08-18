@@ -1,3 +1,6 @@
+/*
+* Particular style for this section
+*/
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 .ind-clear{
 	clear:both;
@@ -48,7 +51,7 @@
     font-size: 13px;
 }
 .indeed-addons-categories-list{
-    margin: 0;    
+    margin: 0;
 	float: left;
 }
 .indeed-addons-search{
@@ -154,7 +157,7 @@
 	background:rgba(0,0,0,0.75);
 	width:100%;
 	bottom:0px;
-	opacity:0;	
+	opacity:0;
 }
 .indeed-addon-img-wrapper:hover .indeed-addon-img-cover{
 	opacity:1;
@@ -184,7 +187,7 @@
     margin: 6px 0 0 0;
     line-height: 1.4em;
 	word-wrap: break-word;
-	height:22px; 
+	height:22px;
 	overflow:hidden;
 }
 .indeed-addon-author{
@@ -334,16 +337,53 @@
 }
 .indeed-addon-more{
 	color: rgb(0,156,214);
-	text-decoration:underline;	
+	text-decoration:underline;
 }
-
+.indeed-notification-message{
+	display: inline-block;
+	max-width: 80%;
+}
+.indeed_main_notify{
+	padding: 15px 10px;
+}
+.indeed-dissmis-button{
+	float:right;
+	margin-top: -5px;
+	vertical-align: top;
+	text-align:right;
+	cursor: pointer;
+	margin-left: 10px;
+}
+.indeed-checkall-button{
+	float:right;
+	margin-right: 5px;
+	margin-top: -5px;
+}
+.indeed-main-menu-item{
+	color: #fff;
+	background: #d54e21;
+	display: block;
+	padding: 3px;
+}
+.indeed-menu-item{
+	color:#fff;
+	background: #d54e21;
+	padding: 4px 16px 4px 13px;
+	margin: 0 0 0 -13px;
+	width: 100%;
+	display: block;
+	box-sizing: content-box;
+}
+.indeed-display-none{
+	display: none;
+}
 @media only screen and (min-width: 1140px) and (max-width: 1399px){
-.indeed-item-wrapp{	
+.indeed-item-wrapp{
 	width:33%;
 }
 }
 @media only screen and (min-width: 600px) and (max-width: 1139px){
-.indeed-item-wrapp{	
+.indeed-item-wrapp{
 	width:50%;
 }
 .indeed-addons-search input{
@@ -368,7 +408,7 @@
 }
 }
 @media only screen  and (max-width: 599px){
-.indeed-item-wrapp{	
+.indeed-item-wrapp{
 	width:100%;
 }
 
@@ -393,7 +433,7 @@
 @media only screen  and (max-width: 499px){
 .indeed-addons-categories-list li {
 	border-left:none;
-	
+
 }
 .indeed-addons-categories-list li.selected, .indeed-addons-categories-list li:hover{
 	border-left:none;

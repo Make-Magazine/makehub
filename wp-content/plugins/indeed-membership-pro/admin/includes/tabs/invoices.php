@@ -5,39 +5,46 @@ echo ihc_check_default_pages_set();//set default pages message
 echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
+
+$invoiceCss = get_option( 'ihc_invoices_custom_css' );
+if ( $invoiceCss !== false && $invoiceCss != '' ){
+	wp_register_style( 'dummy-handle', false );
+	wp_enqueue_style( 'dummy-handle' );
+	wp_add_inline_style( 'dummy-handle', stripslashes( $invoiceCss ) );
+}
 ?>
-<form action="" method="post" id="invoice_form">
+<form method="post" id="invoice_form">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Invoices', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Invoices', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Invoices module', 'ihc');?></h2>
-				<p><?php _e('Provides printable invoices for each order in the account page or system dashboard.', 'ihc'); ?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold Invoices module', 'ihc');?></h2>
+				<p><?php esc_html_e('Provides printable invoices for each order in the account page or system dashboard.', 'ihc'); ?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_invoices_on']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_invoices_on');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_invoices_on" value="<?php echo $data['metas']['ihc_invoices_on'];?>" id="ihc_invoices_on" />
 			</div>
 
 
 			<div class="iump-form-line">
-				<p><?php _e('Show only for \'Completed\' Payment', 'ihc'); ?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<p><?php esc_html_e('Show only for \'Completed\' Payment', 'ihc'); ?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_invoices_only_completed_payments']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_invoices_only_completed_payments');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_invoices_only_completed_payments" value="<?php echo $data['metas']['ihc_invoices_only_completed_payments'];?>" id="ihc_invoices_only_completed_payments" />
 			</div>
 
-			<div class="iump-register-select-template" style="padding: 30px;margin-top: 30px;">
+			<div class="iump-register-select-template" >
 				<div class="iump-form-line">
-					<h4><?php _e('Invoice Template', 'ihc');?></h4>
+					<h4><?php esc_html_e('Invoice Template', 'ihc');?></h4>
 					<select name="ihc_invoices_template" onChange="iumpAdminPreviewInvoice();"><?php
-						foreach (array('iump-invoice-template-1'=>__('Template 1', 'ihc'), 'iump-invoice-template-2'=>__('Template 2', 'ihc')) as $k=>$v){
+						foreach (array('iump-invoice-template-1'=>esc_html__('Template 1', 'ihc'), 'iump-invoice-template-2'=>esc_html__('Template 2', 'ihc')) as $k=>$v){
 							$selected = ($data['metas']['ihc_invoices_template']==$k) ? 'selected' : '';
 							?>
 							<option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
@@ -47,37 +54,39 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				</div>
 
 				<div class="iump-form-line">
-					<h4><?php _e('Invoice Logo', 'ihc');?></h4>
-					<input type="text" onblur="iumpAdminPreviewInvoice();" style="width: 70%;" name="ihc_invoices_logo" value="<?php echo $data['metas']['ihc_invoices_logo'];?>" onClick="openMediaUp(this);" />	<i class="fa-ihc ihc-icon-remove-e iump-pointer" onClick="jQuery('[name=ihc_invoices_logo]').val('');"></i>
+					<h4><?php esc_html_e('Invoice Logo', 'ihc');?></h4>
+					<input type="text" onblur="iumpAdminPreviewInvoice();" width="400px"  name="ihc_invoices_logo" value="<?php echo $data['metas']['ihc_invoices_logo'];?>" onClick="openMediaUp(this);" />	<i class="fa-ihc ihc-icon-remove-e iump-pointer ihc-js-admin-invoices-delete" ></i>
 				</div>
 
 				<div class="iump-form-line">
-					<h4><?php _e('Invoice main Title', 'ihc');?></h4>
+					<h4><?php esc_html_e('Invoice main Title', 'ihc');?></h4>
 					<input type="text" onblur="iumpAdminPreviewInvoice();" name="ihc_invoices_title" value="<?php echo $data['metas']['ihc_invoices_title'];?>"/>
 				</div>
 			</div>
 
 			<div class="iump-form-line">
-			<h2><?php _e('Additional Invoice Details', 'ihc');?></h2>
+			<h2><?php esc_html_e('Additional Invoice Details', 'ihc');?></h2>
 			</div>
-			<div class="row" style="margin-left:0;">
+			<div class="iump-form-line">
+			<div class="row">
 				<div class="col-xs-5">
-					<h4><?php _e('Company Field', 'ihc');?></h4>
-					<div style="width:60%;">
+					<h4><?php esc_html_e('Company Field', 'ihc');?></h4>
+					<div class="ihc-invoice-settings-company-col">
 						<?php wp_editor( stripslashes($data['metas']['ihc_invoices_company_field']), 'ihc_invoices_company_field', array('textarea_name'=>'ihc_invoices_company_field', 'quicktags'=>TRUE) );?>
 					</div>
 				</div>
 				<div class="col-xs-7">
-					<h4><?php _e('Bill to', 'ihc');?></h4>
-					<div style=" width: 50%; margin-right:1%; display:inline-block;">
+					<h4><?php esc_html_e('Bill to', 'ihc');?></h4>
+					<div class="ihc-invoice-settings-bill-col">
 						<?php wp_editor( stripslashes($data['metas']['ihc_invoices_bill_to']), 'ihc_invoices_bill_to', array('textarea_name'=>'ihc_invoices_bill_to', 'quicktags'=>TRUE) );?>
 					</div>
-					<div style="width: 19%; display: inline-block; vertical-align: top;">
+					<div class="ihc-invoice-settings-constantsone-col" >
 							<?php
-								echo "<h4>".__('Standard Fields constants', 'ihc')."</h4>";
+								echo "<h4>".esc_html__('Standard Fields constants', 'ihc')."</h4>";
 								$constants = array(
 													'{username}'=>'',
 													'{user_email}'=>'',
+													'{user_id}'		=> '',
 													'{first_name}'=>'',
 													'{last_name}'=>'',
 													'{account_page}'=>'',
@@ -98,9 +107,9 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 								}
 								?>
 						</div>
-						<div style="width: 19%; display: inline-block; vertical-align: top;">
+						<div class="ihc-invoice-settings-constantstwo-col" >
 								<?php
-								echo "<h4>".__('Custom Fields constants', 'ihc')."</h4>";
+								echo "<h4>".esc_html__('Custom Fields constants', 'ihc')."</h4>";
 								foreach ($extra_constants as $k=>$v){
 									?>
 									<div><?php echo $k;?></div>
@@ -111,21 +120,22 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 				</div>
 				<div class="ihc-clear"></div>
 			</div>
+		</div>
 			<div class="iump-form-line">
-				<h2><?php _e('Footer Invoice Info', 'ihc');?></h2>
+				<h2><?php esc_html_e('Footer Invoice Info', 'ihc');?></h2>
 			</div>
-			<div style="width:60%; display:inline-block;">
+			<div class="ihc-invoice-settings-footer-col">
 				<?php wp_editor( stripslashes($data['metas']['ihc_invoices_footer']), 'ihc_invoices_footer', array('textarea_name'=>'ihc_invoices_footer', 'quicktags'=>TRUE) );?>
 			</div>
 
 			<div class="iump-form-line">
-				<h2><?php _e('Custom CSS', 'ihc');?></h2>
-				<textarea name="ihc_invoices_custom_css" onblur="iumpAdminPreviewInvoice();" style="width: 100%; height: 150px;"><?php echo stripslashes($data['metas']['ihc_invoices_custom_css']);?></textarea>
+				<h2><?php esc_html_e('Custom CSS', 'ihc');?></h2>
+				<textarea name="ihc_invoices_custom_css" onblur="iumpAdminPreviewInvoice();" class="ihc-custom-css-box"><?php echo stripslashes($data['metas']['ihc_invoices_custom_css']);?></textarea>
 			</div>
 
 
 			<div class="ihc-wrapp-submit-bttn iump-submit-form">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large">
 			</div>
 
 		</div>
@@ -133,12 +143,7 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 </form>
 
 <div class="ihc-stuffbox">
-	<h3 class="ihc-h3"><?php _e('Preview', 'ihc');?></h3>
+	<h3 class="ihc-h3"><?php esc_html_e('Preview', 'ihc');?></h3>
 	<div class="inside" id="preview_container">
 	</div>
 </div>
-<script>
-	jQuery('document').ready(function(){
-		iumpAdminPreviewInvoice();
-	});
-</script>

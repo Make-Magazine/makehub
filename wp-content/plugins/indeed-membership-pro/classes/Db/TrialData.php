@@ -1,6 +1,8 @@
 <?php
 namespace Indeed\Ihc\Db;
-if (!defined('ABSPATH')) exit();
+if (!defined('ABSPATH')){
+   exit();
+}
 class TrialData
 {
 	/// input
@@ -75,7 +77,13 @@ class TrialData
 		else
 				return ihc_format_price_and_currency($this->currency, $this->initalTrialPrice);
 	}
-
+  public function setTaxesAfterDiscount(){
+    $this->taxes = ihc_get_taxes_for_amount_by_country($this->country, $this->state, $this->trialPrice);
+    $this->trialPrice += empty($this->taxes['total']) ? 0 : $this->taxes['total'];
+    if(empty($this->taxes['total'])){
+      $this->taxes = 0;
+    }
+  }
 	public function getTaxes()
 	{
 		return $this->taxes;
@@ -87,20 +95,20 @@ class TrialData
 				return $this->durationType;
 		}	else {
 			if ($this->durationType=='couple_of_cycles'){
-					return __('Cycle/s', 'ihc');
+					return esc_html__('Cycle/s', 'ihc');
 			}
 			switch ($this->durationTimeType){
 				case 'D':
-					return __('Days', 'ihc');
+					return esc_html__('Days', 'ihc');
 					break;
 				case 'W':
-					return __('Weeks', 'ihc');
+					return esc_html__('Weeks', 'ihc');
 					break;
 				case 'M':
-					return __('Months', 'ihc');
+					return esc_html__('Months', 'ihc');
 					break;
 				case 'Y':
-					return __('Years', 'ihc');
+					return esc_html__('Years', 'ihc');
 					break;
 			}
 		}

@@ -5,7 +5,9 @@ function ihc_return_all_cpt( $excluded=array() ){
 	$data = get_post_types($args);
 	if(count($excluded)>0){
 		foreach($excluded as $e){
-			if(in_array($e, $data)) $data = array_diff($data, array($e) );
+			if(in_array($e, $data)){
+				 $data = array_diff($data, array($e) );
+			}
 		}
 	}
 	return $data;
@@ -34,7 +36,9 @@ function ihc_drip_content_return_meta_box(){
 }
 
 function ihc_update_metas(){
-	if(!isset($_REQUEST['ihc_submit'])) return;
+	if(!isset($_REQUEST['ihc_submit'])){
+		 return;
+	}
 	$metas = ihc_get_metas();
 	foreach($metas as $k=>$v){
 		if(isset($_REQUEST[$k])){
@@ -54,12 +58,30 @@ function ihc_delete_template(){
 	if(isset($_REQUEST['i_delete_id']) && $_REQUEST['i_delete_id']!=''){
 		$option_name = 'ihc_lockers';
 		$data = get_option($option_name);
-		if($data===FALSE || !isset($data[$_REQUEST['i_delete_id']])) return;
+		if($data===FALSE || !isset($data[$_REQUEST['i_delete_id']])){
+			 return;
+		}
 		unset($data[$_REQUEST['i_delete_id']]);
 		update_option($option_name, $data);
 		return;
 	}
 }
+
+function ihc_save_update_trimmed_metas($payment_service) {
+	if(isset($_REQUEST['ihc_save'])) {
+		$data = ihc_return_meta_arr($payment_service, true);
+		foreach($data as $k=>$v) {
+			if(isset($_REQUEST[$k]))  {
+				$data_db = get_option($k);
+				if($data_db!==FALSE){
+					 update_option($k, trim($_REQUEST[$k]));
+				}
+				else add_option($k, trim($_REQUEST[$k]));
+			}
+		}
+	}
+}
+
 
 
 function ihc_save_update_metas($group){
@@ -68,7 +90,9 @@ function ihc_save_update_metas($group){
 		foreach ($data as $k=>$v){
 			if (isset($_REQUEST[$k])){
 				$data_db = get_option($k);
-				if($data_db!==FALSE) update_option($k, $_REQUEST[$k]);
+				if($data_db!==FALSE){
+					 update_option($k, $_REQUEST[$k]);
+				}
 				else add_option($k, $_REQUEST[$k]);
 			}
 		}
@@ -96,15 +120,15 @@ function ihc_save_update_metas_general_defaults($post_data=array()){
 
 function ihc_check_default_pages_set($meta_box=false){
 	$arr = array(
-					'ihc_general_redirect_default_page' 			=> __('Default Redirect', 'ihc'),
-					'ihc_general_login_default_page' 					=> __('Login', 'ihc'),
-					'ihc_general_register_default_page' 			=> __('Register', 'ihc'),
-					'ihc_general_lost_pass_page' 							=> __('Lost Password', 'ihc'),
-					'ihc_general_logout_page' 								=> __('LogOut', 'ihc'),
-					'ihc_general_user_page' 									=> __('Account User', 'ihc'),
-					'ihc_general_tos_page' 										=> __('TOS', 'ihc'),
-					'ihc_subscription_plan_page' 							=> __('Subscription Plan', 'ihc'),
-					'ihc_general_register_view_user' 					=> __('Visitor Inside User', 'ihc')
+					'ihc_general_redirect_default_page' 			=>  esc_html__('Default Redirect', 'ihc'),
+					'ihc_general_login_default_page' 					=>  esc_html__('Login', 'ihc'),
+					'ihc_general_register_default_page' 			=>  esc_html__('Register', 'ihc'),
+					'ihc_general_lost_pass_page' 							=>  esc_html__('Lost Password', 'ihc'),
+					'ihc_general_logout_page' 								=>  esc_html__('LogOut', 'ihc'),
+					'ihc_general_user_page' 									=>  esc_html__('Account User', 'ihc'),
+					'ihc_general_tos_page' 										=>  esc_html__('TOS', 'ihc'),
+					'ihc_subscription_plan_page' 							=>  esc_html__('Subscription Plan', 'ihc'),
+					'ihc_general_register_view_user' 					=>  esc_html__('Visitor Inside User', 'ihc')
 				);
 	$str = '';
 
@@ -118,7 +142,7 @@ function ihc_check_default_pages_set($meta_box=false){
 				}
 
 				if($value==FALSE || $value==-1){
-					$str .= '<div class="ihc-not-set">' . __('Default', 'ihc') . ' '.$label.' ' . __('Page', 'ihc') . ' <strong>' . __('Not set!', 'ihc') . '</strong></div>';
+					$str .= '<div class="ihc-not-set">' .  esc_html__('Default', 'ihc') . ' '.$label.' ' .  esc_html__('Page', 'ihc') . ' <strong>' .  esc_html__('Not set!', 'ihc') . '</strong></div>';
 				}
 			}
 			//return string for metabox
@@ -132,13 +156,15 @@ function ihc_check_default_pages_set($meta_box=false){
 				}
 
 				if($value==FALSE || $value==-1){
-					if($str!='') $str .= '<span class="iump-separator"> | </span>';
-					$str .= $label.' ' . __('Page', 'ihc');
+					if($str!=''){
+						 $str .= '<span class="iump-separator"> | </span>';
+					}
+					$str .= $label.' ' .  esc_html__('Page', 'ihc');
 				}
 			}
 			//for general settings
 			if($str){
-				$str = '<div class="ihc-not-set"><strong>' . __('Some of the Default Pages are NOT Set:', 'ihc') . ' </strong>' . $str . '.</div>';
+				$str = '<div class="ihc-not-set"><strong>' .  esc_html__('Some of the Default Pages are NOT Set:', 'ihc') . ' </strong>' . $str . '.</div>';
 			}
 		}
 	return $str;
@@ -150,7 +176,7 @@ function ihc_is_curl_enable(){
 	 * @return string
 	 */
 	if (!function_exists('curl_version')){
-		return '<div class="ihc-not-set"><strong>' . __('Curl is disabled. Contact your hosting provider for more details', 'ihc') . ' </strong></div>';
+		return '<div class="ihc-not-set"><strong>' .  esc_html__('Curl is disabled. Contact your hosting provider for more details', 'ihc') . ' </strong></div>';
 	}
 	return '';
 }
@@ -172,38 +198,38 @@ function ihc_meta_box_page_type_message(){
 
 		switch ($post->ID){
 			case $register_page:
-				$str .= _e('Register Page', 'ihc');
+				$str .= esc_html_e('Register Page', 'ihc');
 			break;
 			case $lost_pass:
-				$str .= _e('Lost Password Page', 'ihc');
+				$str .= esc_html_e('Lost Password Page', 'ihc');
 			break;
 			case $login_page:
-				$str .= _e('Login Page', 'ihc');
+				$str .= esc_html_e('Login Page', 'ihc');
 			break;
 			case $redirect:
-				$str .= __('Redirect Page', 'ihc') . '<div class="ihc-meta-box-err-msg">' . __('You can only Replace the content.', 'ihc') . '</div>';
+				$str .=  esc_html__('Redirect Page', 'ihc') . '<div class="ihc-meta-box-err-msg">' .  esc_html__('You can only Replace the content.', 'ihc') . '</div>';
 			break;
 			case $logout:
-				$str .= __('Logout Page', 'ihc');
+				$str .=  esc_html__('Logout Page', 'ihc');
 			break;
 			case $user_page:
-				$str .= __('User Page', 'ihc');
+				$str .=  esc_html__('User Page', 'ihc');
 			break;
 			case $tos:
-				$str .= __('TOS Page', 'ihc');
+				$str .=  esc_html__('TOS Page', 'ihc');
 			break;
 			case $subscription_plan:
-				$str .= __('Subscription Plan Page', 'ihc');
+				$str .=  esc_html__('Subscription Plan Page', 'ihc');
 			break;
 			case $view_user_page:
-				$str .= __('Visitor Inside User Page', 'ihc');
+				$str .=  esc_html__('Visitor Inside User Page', 'ihc');
 			break;
 			default:
 				return '';
 			break;
 		}
 		if($str){
-			$str = '<div class="ihc-meta-box-message"><span style="color:#333;">' . __('This Page is set as:', 'ihc') . ' </span>'.$str.'</div>';
+			$str = '<div class="ihc-meta-box-message"><span>' .  esc_html__('This Page is set as:', 'ihc') . ' </span>'.$str.'</div>';
 		}
 	}
 	return $str;
@@ -212,15 +238,15 @@ function ihc_meta_box_page_type_message(){
 function ihc_get_default_pages_il($return_set=false){
 	$unset_arr = FALSE;
 	$set_arr = FALSE;
-	$arr_labels = array( 'ihc_general_register_default_page' => __('Register', 'ihc'),
-						 'ihc_general_lost_pass_page' => __('Lost Password', 'ihc'),
-						 'ihc_general_login_default_page' => __('Login', 'ihc'),
-						 'ihc_general_redirect_default_page' => __('Redirect', 'ihc'),
-						 'ihc_general_logout_page' => __('LogOut', 'ihc'),
-						 'ihc_general_user_page' => __('Account User', 'ihc'),
-						 'ihc_general_tos_page' => __('TOS', 'ihc'),
-						 'ihc_subscription_plan_page' => __('Subscription', 'ihc'),
-						 'ihc_general_register_view_user' => __('Visitor Inside User', 'ihc')
+	$arr_labels = array( 'ihc_general_register_default_page' =>  esc_html__('Register', 'ihc'),
+						 'ihc_general_lost_pass_page' =>  esc_html__('Lost Password', 'ihc'),
+						 'ihc_general_login_default_page' =>  esc_html__('Login', 'ihc'),
+						 'ihc_general_redirect_default_page' =>  esc_html__('Redirect', 'ihc'),
+						 'ihc_general_logout_page' =>  esc_html__('LogOut', 'ihc'),
+						 'ihc_general_user_page' =>  esc_html__('Account User', 'ihc'),
+						 'ihc_general_tos_page' =>  esc_html__('TOS', 'ihc'),
+						 'ihc_subscription_plan_page' =>  esc_html__('Subscription', 'ihc'),
+						 'ihc_general_register_view_user' =>  esc_html__('Visitor Inside User', 'ihc')
 						);
 	foreach($arr_labels as $name=>$label){
 		$data = get_option($name);
@@ -239,7 +265,9 @@ function ihc_get_default_pages_il($return_set=false){
 			$set_arr[$name] = $data;
 		}
 	}
-	if($return_set)	return $set_arr;
+	if($return_set){
+			return $set_arr;
+	}
 	return $unset_arr;
 }
 
@@ -253,16 +281,11 @@ function ihc_delete_users($single_id=0, $ids=array()){
 		$ids[] = $single_id;
 	}
 	if ($ids){
-		global $wpdb;
-		$user_levels_table = $wpdb->prefix . "ihc_user_levels";
 		foreach ($ids as $id){
 			do_action('ihc_delete_user_action', $id);
-			//send notification
-			ihc_send_user_notifications($id, 'delete_account');
 			//delete
 			wp_delete_user($id);
-			$q = $wpdb->prepare("DELETE FROM $user_levels_table WHERE user_id=%d", $id);
-			$wpdb->query($q);
+			\Indeed\Ihc\UserSubscriptions::deleteAllForUser( $id );
 		}
 	}
 }
@@ -297,7 +320,8 @@ function ihc_save_block_urls(){
 					$key = ihc_array_value_exists($data, $_REQUEST[$val.'-url'], 'url');
 
 					if ($key===FALSE){
-						$key = end((array_keys($data))) + 1;
+						$arrayKeys = array_keys($data);
+						$key = end( $arrayKeys ) + 1;
 					}
 				} else {
 					$key = 1;
@@ -320,12 +344,16 @@ function ihc_save_block_urls(){
 function ihc_delete_block_urls(){
 	if (isset($_REQUEST['delete_block_url']) && $_REQUEST['delete_block_url']){
 		$data = get_option('ihc_block_url_entire');
-		if (isset($data[$_REQUEST['delete_block_url']])) unset($data[$_REQUEST['delete_block_url']]);
+		if (isset($data[$_REQUEST['delete_block_url']])){
+			 unset($data[$_REQUEST['delete_block_url']]);
+		}
 		update_option('ihc_block_url_entire', $data);
 	}
 	if (isset($_REQUEST['delete_block_regex']) && $_REQUEST['delete_block_regex']){
 		$data = get_option('ihc_block_url_word');
-		if (isset($data[$_REQUEST['delete_block_regex']])) unset($data[$_REQUEST['delete_block_regex']]);
+		if (isset($data[$_REQUEST['delete_block_regex']])){
+			 unset($data[$_REQUEST['delete_block_regex']]);
+		}
 		update_option('ihc_block_url_word', $data);
 	}
 }
@@ -346,19 +374,22 @@ function ihc_get_users_counts($type = 1){
 	$table = $wpdb->base_prefix . 'usermeta';
 	if ($type==1){
 		//all
-		$data = $wpdb->get_row("SELECT COUNT(DISTINCT(user_id)) as c FROM $table WHERE meta_key='$meta_key' AND meta_value NOT LIKE '%administrator%';");
+		$query = $wpdb->prepare( "SELECT COUNT(DISTINCT(user_id)) as c FROM {$wpdb->base_prefix}usermeta WHERE meta_key=%s AND meta_value NOT LIKE '%administrator%';", $meta_key );
+		$data = $wpdb->get_row( $query );
 		if ($data && isset($data->c)){
 			return $data->c;
 		}
 	} else if($type==2){
 		//pending users
-		$data = $wpdb->get_row("SELECT COUNT(DISTINCT(user_id)) as c FROM $table WHERE meta_key='$meta_key' AND meta_value LIKE '%pending_user%';");
+		$query = $wpdb->prepare( "SELECT COUNT(DISTINCT(user_id)) as c FROM {$wpdb->base_prefix}usermeta WHERE meta_key=%s AND meta_value LIKE '%pending_user%';", $meta_key );
+		$data = $wpdb->get_row( $query );
 		if ($data && isset($data->c)){
 			return $data->c;
 		}
 	} else {
 		//approved users
-		$data = $wpdb->get_row("SELECT COUNT(DISTINCT(user_id)) as c FROM $table WHERE meta_key='$meta_key' AND meta_value NOT LIKE '%administrator%' AND meta_value NOT LIKE '%pending_user%';");
+		$query = $wpdb->prepare( "SELECT COUNT(DISTINCT(user_id)) as c FROM {$wpdb->base_prefix}usermeta WHERE meta_key=%s AND meta_value NOT LIKE '%administrator%' AND meta_value NOT LIKE '%pending_user%';", $meta_key );
+		$data = $wpdb->get_row( $query );
 		if ($data && isset($data->c)){
 			return $data->c;
 		}
@@ -381,60 +412,35 @@ function ihc_get_last_five_users(){
 										'order' => 'DESC',
 										'number' => 5,
 				));
-	if (isset($users_obj->results) && count($users_obj->results)) $users = $users_obj->results;
+	if (isset($users_obj->results) && count($users_obj->results)){
+		 $users = $users_obj->results;
+	}
 	return $users;
 }
 
-function ihc_get_top_level(){
-	global $wpdb;
-	$return_value = '';
-	$levels_data = get_option('ihc_levels');
-	$level_arr = array();
-	if ($levels_data){
-		$table = $wpdb->prefix . 'ihc_user_levels';
-		$table_u = $wpdb->base_prefix . 'users';
-		foreach ($levels_data as $lid=>$level_data){
-			$data = $wpdb->get_row("SELECT COUNT(a.id) as num FROM $table a INNER JOIN $table_u u ON a.user_id=u.ID WHERE a.level_id=$lid;");
-			$level_arr[$lid] = isset($data->num) ? $data->num : 0;
-		}
-		asort($level_arr);
-		end($level_arr);
-		$return_value = key($level_arr);
-		$return_value = $levels_data[$return_value]['name'];
-	}
-	return $return_value;
-}
 
-function ihc_get_level_user_counts(){
-	global $wpdb;
-	$levels_data = get_option('ihc_levels');
-	$level_arr = array();
-
-	if ($levels_data){
-
-		$table = $wpdb->prefix . 'ihc_user_levels';
-		$table_u = $wpdb->base_prefix . 'users';
-
-		foreach ($levels_data as $lid=>$level_data){
-			$data = $wpdb->get_row("SELECT COUNT(a.id) as num FROM $table a INNER JOIN $table_u u ON a.user_id=u.ID WHERE a.level_id=$lid;");
-			$level_arr[$level_data['label']] = isset($data->num) ? $data->num : 0;
-
-		}
-	}
-
-	return $level_arr;
-}
-
+/*
+Deprecated, use instead:
+$ordersObject = new \Indeed\Ihc\Db\Orders();
+$ordersObject->getCountAll()
+*/
 function ihc_get_transactions_count(){
 	global $wpdb;
 	$count = 0;
-	$data = $wpdb->get_results( 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments;' );
+	//No query parameters required, Safe query. prepare() method without parameters can not be called
+	$query = 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments;';
+	$data = $wpdb->get_results( $query );
 	if($data && count($data)){
 		$count = count($data);
 	}
 	return $count;
 }
 
+/*
+Deprecated, use instead:
+$ordersObject = new \Indeed\Ihc\Db\Orders();
+$ordersObject->getTotalAmount()
+*/
 function ihc_get_total_amount(){
 	/*
 	 * @param none
@@ -442,11 +448,13 @@ function ihc_get_total_amount(){
 	 */
 	global $wpdb;
 	$count = 0;
-	$data = $wpdb->get_results( 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments;' );
+	//No query parameters required, Safe query. prepare() method without parameters can not be called
+	$query = 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments;';
+	$data = $wpdb->get_results( $query );
 	if ($data && count($data)){
 		foreach ($data as $obj){
 			if (!empty($obj->history)){
-				@$history_data = unserialize($obj->history);
+				$history_data = unserialize((isset($obj->history)) ? $obj->history : '');
 				if ($history_data && is_array($history_data)){
 					// calculating with recurring payments from entire history
 					foreach ($history_data as $arr){
@@ -500,13 +508,15 @@ function ihc_get_levels_top_by_transactions(){
 	global $wpdb;
 	$levels_arr = array();
 	$arr = array();
-	$levels_data = get_option('ihc_levels');
+	$levels_data = \Indeed\Ihc\Db\Memberships::getAll();
 	if ($levels_data && count($levels_data)){
 		$levels_arr = array();
 		foreach ($levels_data as $k=>$v){
 			$levels_arr[$k] = 0;
 		}
-		$data = $wpdb->get_results("SELECT COUNT(lid) as c, lid FROM {$wpdb->prefix}ihc_orders WHERE status='Completed' GROUP BY lid;");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SELECT COUNT(lid) as c, lid FROM {$wpdb->prefix}ihc_orders WHERE status='Completed' GROUP BY lid;";
+		$data = $wpdb->get_results( $query );
 		if ($data){
 			foreach ($data as $object){
 				if (isset($levels_data[$object->lid]['name'])){ /// does level exists
@@ -518,11 +528,20 @@ function ihc_get_levels_top_by_transactions(){
 	return $arr;
 }
 
+/*
+Deprecated, use instead:
+$ordersObject = new \Indeed\Ihc\Db\Orders();
+$ordersObject->getLastOrders( 5 )
+*/
 function ihc_get_last_five_transactions(){
 	global $wpdb;
 	$obj = '';
-	$data = $wpdb->get_results( 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments ORDER BY id DESC LIMIT 5;' );
-	if ($data) $obj = $data;
+	//No query parameters required, Safe query. prepare() method without parameters can not be called
+	$query = 'SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM ' . $wpdb->prefix . 'indeed_members_payments ORDER BY id DESC LIMIT 5;';
+	$data = $wpdb->get_results( $query );
+	if ($data){
+		 $obj = $data;
+	}
 	return $obj;
 }
 
@@ -543,65 +562,23 @@ function ihc_get_notification_metas($id=FALSE){
 	global $wpdb;
 	if ($id){
 		$id = esc_sql($id);
-		return (array)$wpdb->get_row("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM `" . $wpdb->prefix . "ihc_notifications` WHERE id='".$id."';");
+		$query = $wpdb->prepare( "SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status
+																	FROM `{$wpdb->prefix}ihc_notifications` WHERE id=%d;", $id );
+		return (array)$wpdb->get_row( $query );
 	} else {
 		return array('notification_type'=>'', 'level_id'=>-1, 'subject'=>'', 'message'=>'',);
 	}
 
 }
 
-function ihc_save_notification_metas($post_data=array()){
-	/*
-	 * @param array
-	 * @return none
-	 */
-	global $wpdb;
 
-	if(!isset($post_data['level_id'])) $post_data['level_id'] = -1;
 
-	if (isset($post_data['notification_id'])){
-		//update
-		$q = $wpdb->prepare("UPDATE {$wpdb->prefix}ihc_notifications
-						SET notification_type=%s,
-						level_id=%s,
-						subject=%s,
-						message=%s,
-						pushover_message=%s,
-						pushover_status=%s
-						WHERE id=%d
-		", $post_data['notification_type'], $post_data['level_id'], stripslashes_deep($post_data['subject']),
-		stripslashes_deep($post_data['message']), $post_data['pushover_message'], $post_data['pushover_status'],
-		$post_data['notification_id']);
-		$wpdb->query($q);
-	} else {
-		//create
-		$q = $wpdb->prepare("INSERT INTO {$wpdb->prefix}ihc_notifications
-														VALUES(null, %s, %d, %s, %s, %s, %s, '1')",
-														$post_data['notification_type'], $post_data['level_id'], stripslashes_deep($post_data['subject']), stripslashes_deep($post_data['message']),
-														$post_data['pushover_message'], $post_data['pushover_status']
-		);
-		$wpdb->query($q);
-	}
-	do_action( 'ihc_save_notification_action', $post_data );
-}
-
-function ihc_get_all_notification_available(){
-	global $wpdb;
-	$data = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM {$wpdb->prefix}ihc_notifications;" );
-	return $data;
-}
-
-function ihc_delete_notification($id){
-	global $wpdb;
-	$q = $wpdb->prepare("DELETE FROM {$wpdb->prefix}ihc_notifications WHERE id=%d ", $id);
-	$wpdb->query($q);
-}
 
 function ihc_general_options_print_page_links($id=FALSE){
 	if ($id!=-1 && $id!==FALSE){
 		$target_page_link = get_permalink($id);
 		if ($target_page_link) {
-			echo '<div class="ihc-general-options-link-pages">' . __('Link:', 'ihc') . ' <a href="' . $target_page_link . '" target="_blank">' . $target_page_link . '</a></div>';
+			echo '<div class="ihc-general-options-link-pages">' .  esc_html__('Link:', 'ihc') . ' <a href="' . $target_page_link . '" target="_blank">' . $target_page_link . '</a></div>';
 		}
 	}
 	return '';
@@ -619,23 +596,39 @@ function ihc_check_payment_status($p_type=''){
 	switch($p_type){
 		case 'paypal':
 					  $arr = ihc_return_meta_arr('payment_paypal');
-					  if ($arr['ihc_paypal_status'] == 1) { $return['active'] = 'paypal-active'; $return['status'] = 1; }
-					  if ($arr['ihc_paypal_email'] != '') $return['settings'] = 'Completed';
+					  if ($arr['ihc_paypal_status'] == 1){
+							$return['active'] = 'paypal-active'; $return['status'] = 1;
+						}
+					  if ($arr['ihc_paypal_email'] != ''){
+							 $return['settings'] = 'Completed';
+						}
 					  break;
 		case 'stripe':
 					  $arr = ihc_return_meta_arr('payment_stripe');
-					  if ($arr['ihc_stripe_status'] == 1) { $return['active'] = 'stripe-active'; $return['status'] = 1; }
-					  if ($arr['ihc_stripe_secret_key'] != '' && $arr['ihc_stripe_publishable_key'] != '') $return['settings'] = 'Completed';
+					  if ($arr['ihc_stripe_status'] == 1){
+							$return['active'] = 'stripe-active'; $return['status'] = 1;
+						}
+					  if ($arr['ihc_stripe_secret_key'] != '' && $arr['ihc_stripe_publishable_key'] != ''){
+							 $return['settings'] = 'Completed';
+						}
 					  break;
 		case 'stripe_checkout_v2':
 					  $arr = ihc_return_meta_arr('payment_stripe_checkout_v2');
-					  if ($arr['ihc_stripe_checkout_v2_status'] == 1) { $return['active'] = 'stripe-checkout-v2-active'; $return['status'] = 1; }
-					  if ($arr['ihc_stripe_checkout_v2_secret_key'] != '' && $arr['ihc_stripe_checkout_v2_publishable_key'] != '') $return['settings'] = 'Completed';
+					  if ($arr['ihc_stripe_checkout_v2_status'] == 1){
+							$return['active'] = 'stripe-checkout-v2-active'; $return['status'] = 1;
+						}
+					  if ($arr['ihc_stripe_checkout_v2_secret_key'] != '' && $arr['ihc_stripe_checkout_v2_publishable_key'] != ''){
+							 $return['settings'] = 'Completed';
+						}
 			  break;
 		case 'authorize':
 					  $arr = ihc_return_meta_arr('payment_authorize');
-					  if ($arr['ihc_authorize_status'] == 1) { $return['active'] = 'authorize-active'; $return['status'] = 1; }
-					  if ($arr['ihc_authorize_login_id'] != '' && $arr['ihc_authorize_transaction_key'] != '') $return['settings'] = 'Completed';
+					  if ($arr['ihc_authorize_status'] == 1){
+							$return['active'] = 'authorize-active'; $return['status'] = 1;
+						}
+					  if ($arr['ihc_authorize_login_id'] != '' && $arr['ihc_authorize_transaction_key'] != ''){
+							 $return['settings'] = 'Completed';
+						}
 					  break;
 		case 'twocheckout':
 			$arr = ihc_return_meta_arr('payment_twocheckout');
@@ -661,16 +654,6 @@ function ihc_check_payment_status($p_type=''){
 				$return['active'] = 'braintree-active'; $return['status'] = 1;
 			}
 			if (!empty($arr['ihc_braintree_merchant_id']) && !empty($arr['ihc_braintree_public_key']) && !empty($arr['ihc_braintree_private_key'])){
-				$return['settings'] = 'Completed';
-			}
-			break;
-		case 'payza':
-			$arr = ihc_return_meta_arr('payment_payza');
-			if ($arr['ihc_payza_status'] == 1) {
-				$return['active'] = 'payza-active';
-				$return['status'] = 1;
-			}
-			if (!empty($arr['ihc_payza_email'])){
 				$return['settings'] = 'Completed';
 			}
 			break;
@@ -704,7 +687,7 @@ function ihc_check_payment_status($p_type=''){
 			}
 			break;
 	}
-	$return = apply_filters( 'ihc_filter_check_payment_status', $return, $p_type );
+	$return = apply_filters( 'ihc_payment_gateway_box_status', $return, $p_type );
 	// @description
 
 	return $return;
@@ -718,15 +701,15 @@ function ihc_generate_coupon_box($id=0, $settings=array(), $url=''){
 	$div_id = "ihc_coupon_box_" . $id;
 	?>
 	<div class="ihc-coupon-admin-box-wrap" id="<?php echo $div_id;?>">
-		<div class="ihc-coupon-box-wrap" id="" style="background-color: <?php echo $settings['settings']['box_color'];?>">
+		<div class="ihc-coupon-box-wrap ihc-box-background-<?php echo substr($settings['settings']['box_color'],1);?>">
 			<div class="ihc-coupon-box-main">
 				<div class="ihc-coupon-box-title"><?php echo $settings['code'];?></div>
 				<div class="ihc-coupon-box-content">
 					<div class="ihc-coupon-box-levels"><?php
-						_e("Target Levels: ", "ihc");
+						esc_html_e("Target Memberships: ", "ihc");
 						echo '<span>';
 						if ($settings['settings']['target_level']==-1){
-							_e("All", "ihc");
+							esc_html_e("All", "ihc");
 						} else {
 							$level_data = ihc_get_level_by_id($settings['settings']['target_level']);
 							echo $level_data['label'];
@@ -753,7 +736,7 @@ function ihc_generate_coupon_box($id=0, $settings=array(), $url=''){
 						}
 					?></div>
 				<div class="ihc-coupon-box-bottom-submitted"><?php
-					_e("Submited Coupons:", "ihc");
+					esc_html_e("Submited Coupons:", "ihc");
 					echo ' <strong>'.$settings['submited_coupons_count'];
 					if (!empty($settings['settings']['repeat'])){
 						 echo "/" . $settings['settings']['repeat'];
@@ -762,9 +745,10 @@ function ihc_generate_coupon_box($id=0, $settings=array(), $url=''){
 				?></div>
 
 				<div class="ihc-coupon-box-bottom-date"><?php
-						if ($settings['settings']['period_type']=='unlimited'){ echo '<span style="line-height: 37px;">'.__("No Date range", 'ihc').'</span>';
+						if ($settings['settings']['period_type']=='unlimited'){
+							echo '<span>'. esc_html__("No Date range", 'ihc').'</span>';
 						}else if (!empty($settings['settings']['start_time']) && !empty($settings['settings']['end_time'])) {
-							echo __("From ", "ihc") .'<span>'. $settings['settings']['start_time'] . "</span><br/> " . __("to ", "ihc") .'<span>'. $settings['settings']['end_time'].'</span>';
+							echo  esc_html__("From ", "ihc") .'<span>'. $settings['settings']['start_time'] . "</span><br/> " .  esc_html__("to ", "ihc") .'<span>'. $settings['settings']['end_time'].'</span>';
 						} else {
 							echo '-';
 						}
@@ -820,11 +804,11 @@ function ihc_get_redirect_links_as_arr_for_select(){
 	$redirect_links = get_option("ihc_custom_redirect_links_array");
 	if (is_array($redirect_links) && count($redirect_links)){
 		foreach ($redirect_links as $k=>$v){
-			$return[$k] = __("Custom Link: ", 'ihc') . $k;
+			$return[$k] =  esc_html__("Custom Link: ", 'ihc') . $k;
 		}
 	}
 	if (ihc_is_magic_feat_active('individual_page')){
-		$return['#individual_page#'] = __('Individual Page (from Extensions)', 'ihc');
+		$return['#individual_page#'] =  esc_html__('Individual Page (from Extensions)', 'ihc');
 	}
 	return $return;
 }
@@ -834,7 +818,7 @@ function ihc_check_payment_gateways(){
 	 * @param none
 	 * @return string
 	 */
-	$levels = get_option('ihc_levels');
+	$levels = \Indeed\Ihc\Db\Memberships::getAll();
 	if ($levels){
 		$paid_levels = FALSE;
 		foreach ($levels as $level){
@@ -843,20 +827,6 @@ function ihc_check_payment_gateways(){
 			}
 		}
 		if ($paid_levels){
-			/*
-			$payments_gateways = array(
-																		'paypal',
-																		'authorize',
-																		'twocheckout',
-																		'bank_transfer',
-																		'stripe',
-																		'braintree',
-																		'payza',
-																		'mollie',
-																		'pagseguro',
-																		'paypal_express_checkout'
-			);
-			*/
 			$payments_gateways = ihc_list_all_payments();
 			$err_msg = TRUE;
 			foreach ($payments_gateways as $payment_gateway => $label ){
@@ -867,12 +837,12 @@ function ihc_check_payment_gateways(){
 			}
 
 			if ($err_msg){
-				return '<div class="ihc-not-set" style="margin-top:5px;"><strong>' . __('No Payment Gateway was activated or properly set!', 'ihc') . '</strong></div>';
+				return '<div class="ihc-not-set"><strong>' .  esc_html__('No Payment Gateway was activated or properly set!', 'ihc') . '</strong></div>';
 			}
 
 			$default_payment = get_option('ihc_payment_selected');
 			if (!ihc_check_payment_available($default_payment)){
-				return '<div class="ihc-not-set" style="margin-top:5px;"><strong>' . __("Default Payment Gateway it's not activated or properly set!", 'ihc') . '</strong></div>';
+				return '<div class="ihc-not-set"><strong>' .  esc_html__("Default Payment Gateway it's not activated or properly set!", 'ihc') . '</strong></div>';
 			}
 
 		}
@@ -919,4 +889,180 @@ function ihc_delete_block_group($group_name='', $key=0){
 		 }
 		 update_option($group_name, $data);
 	 }
+}
+
+function ihc_return_membership_plan($level = array(), $currency='' ){
+
+$details = '';
+
+if(!isset($level) || empty($level))
+ return $details;
+
+$price = '';
+if(isset($level['price'])){
+		if($level['price'] > 0) {
+				$price = ihc_format_price_and_currency($currency, $level['price']);
+		}else{
+			$price =  esc_html__('Free','ihc');
+		}
+}
+
+$period = '';
+$trialprice = '';
+$trialperiod = '';
+
+	switch($level['access_type']){
+		case 'unlimited':
+			$period .=  esc_html__(' for ','ihc'). esc_html__('Lifetime', 'ihc');
+			break;
+		case 'limited':
+			if(isset($level['access_limited_time_value']) && isset($level['access_limited_time_type']) ){
+				$period .=  esc_html__(' for ','ihc').$level['access_limited_time_value'].' ';
+				switch($level['access_limited_time_type']){
+						case 'D':
+								if($level['access_limited_time_value'] > 1) {
+									$period .=  esc_html__('days', 'ihc');
+								}else{
+									$period .=  esc_html__('day', 'ihc');
+								}
+							break;
+						case 'W':
+								if($level['access_limited_time_value'] > 1) {
+									$period .=  esc_html__('weeks', 'ihc');
+								}else{
+									$period .=  esc_html__('week', 'ihc');
+								}
+							break;
+						case 'M':
+								if($level['access_limited_time_value'] > 1) {
+									$period .=  esc_html__('months', 'ihc');
+								}else{
+									$period .=  esc_html__('month', 'ihc');
+								}
+							break;
+						case 'Y':
+								if($level['access_limited_time_value'] > 1) {
+									$period .=  esc_html__('years', 'ihc');
+								}else{
+									$period .=  esc_html__('year', 'ihc');
+								}
+							break;
+						default:
+								if($level['access_limited_time_value'] > 1) {
+									$period .=  esc_html__('days', 'ihc');
+								}else{
+									$period .=  esc_html__('day', 'ihc');
+								}
+
+				}
+			}
+			break;
+
+		case 'date_interval':
+			if(isset($level['access_interval_start']) && isset($level['access_interval_end']) ){
+				$period .=  esc_html__(' between ','ihc').ihc_convert_date_to_us_format($level['access_interval_start']). esc_html__(' and ', 'ihc').ihc_convert_date_to_us_format($level['access_interval_end']);
+			}
+			break;
+
+		case 'regular_period':
+			$period .=  esc_html__(' on every ', 'ihc');
+			$additional_details = '';
+
+				if($level['access_regular_time_type'] == 'D'){
+					if($level['access_regular_time_value'] == 1){
+						$period .= esc_html__('day', 'ihc');
+					}elseif($level['access_regular_time_value'] > 1){
+						$period .= $level['access_regular_time_value'].  esc_html__(' days', 'ihc');
+					}
+				}
+				if($level['access_regular_time_type'] == 'W'){
+					if($level['access_regular_time_value'] == 1){
+						$period .= esc_html__('week', 'ihc');
+					}elseif($level['access_regular_time_value'] > 1){
+						$period .= $level['access_regular_time_value'].  esc_html__(' weeks', 'ihc');
+					}
+				}
+				if($level['access_regular_time_type'] == 'M'){
+					if($level['access_regular_time_value'] == 1){
+						$period .= esc_html__('month', 'ihc');
+					}elseif($level['access_regular_time_value'] > 1){
+						$period .=$level['access_regular_time_value']. esc_html__(' months', 'ihc');
+					}
+				}
+				if($level['access_regular_time_type'] == 'Y'){
+					if($level['access_regular_time_value'] == 1){
+							$period .= esc_html__('year', 'ihc');
+					}elseif($level['access_regular_time_value'] > 1){
+							$period .= $level['access_regular_time_value']. esc_html__(' years', 'ihc');
+					}
+				}
+
+				if ($level['billing_type'] == 'bl_limited' && $level['billing_limit_num'] > 1){
+					$additional_details = esc_html__(' for ', 'ihc').$level['billing_limit_num']. esc_html__(' installments', 'ihc');
+				}
+
+				$period .= $additional_details;
+
+				if ( !empty( $level['access_trial_type'] )
+        && ( (!empty( $level['access_trial_time_value'] ) && ($level['access_trial_type']==1))
+        || (!empty( $level['access_trial_couple_cycles'] ) && ($level['access_trial_type']==2)) ) ){
+					if ( $level['access_trial_price'] > 0  ) {
+						$trialprice .= ihc_format_price_and_currency($currency, $level['access_trial_price']);
+					}else{
+						$trialprice .=  esc_html__('Free', 'ihc');
+					}
+					$trialperiod .=  esc_html__(' for ', 'ihc');
+
+					if($level['access_trial_type']==1){
+						if($level['access_trial_time_type'] == 'D'){
+							if($level['access_trial_time_value'] == 1){
+								$trialperiod .= esc_html__('1 day', 'ihc');
+							}elseif($level['access_trial_time_value'] > 1){
+								$trialperiod .= $level['access_trial_time_value'].  esc_html__(' days', 'ihc');
+							}
+						}
+						if($level['access_trial_time_type'] == 'W'){
+							if($level['access_trial_time_value'] == 1){
+								$trialperiod .= esc_html__('1 week', 'ihc');
+							}elseif($level['access_trial_time_value'] > 1){
+								$trialperiod .= $level['access_trial_time_value'].  esc_html__(' weeks', 'ihc');
+							}
+						}
+						if($level['access_trial_time_type'] == 'M'){
+							if($level['access_trial_time_value'] == 1){
+								$trialperiod .= esc_html__('1 month', 'ihc');
+							}elseif($level['access_trial_time_value'] > 1){
+								$trialperiod .=$level['access_trial_time_value']. esc_html__(' months', 'ihc');
+							}
+						}
+						if($level['access_trial_time_type'] == 'Y'){
+							if($level['access_trial_time_value'] == 1){
+									$trialperiod .= esc_html__('1 year', 'ihc');
+							}elseif($level['access_trial_time_value'] > 1){
+									$trialperiod .= $level['access_trial_time_value']. esc_html__(' years', 'ihc');
+							}
+						}
+					}
+					if($level['access_trial_type']==2){
+						if($level['access_trial_couple_cycles'] == 1){
+								$trialperiod .= esc_html__('1 cycle', 'ihc');
+						}elseif($level['access_trial_couple_cycles'] > 1){
+								$trialperiod .= $level['access_trial_couple_cycles']. esc_html__(' cycles', 'ihc');
+						}
+					}
+
+					$trialperiod .=  esc_html__(' then ', 'ihc');
+				}
+			break;
+
+		default:
+		$period .=  esc_html__('Life Time', 'ihc');
+	}
+	if($trialprice != '' && $trialperiod != '')
+			$details .= '<span class="ihc-membership-price ihc-membership-trialprice">'.$trialprice.'</span>'.'<span class="ihc-membership-price-period ihc-membership-trialperiod">'.$trialperiod.'</span>';
+
+if($price != '' && $period != '')
+		$details .= '<span class="ihc-membership-price">'.$price.'</span>'.'<span class="ihc-membership-price-period">'.$period.'</span>';
+
+return $details;
 }

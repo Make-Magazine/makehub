@@ -1,6 +1,8 @@
 <?php
 
-if (class_exists('Ihc_Register_Redirects')) return;
+if (class_exists('Ihc_Register_Redirects')){
+   return;
+}
 
 class Ihc_Register_Redirects{
 

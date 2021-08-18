@@ -3,7 +3,6 @@
 		<h3><?php echo do_shortcode($data['title']);?></h3>
 	<?php endif;?>
 	<?php if (!empty($data['content'])):?>
-		<p><?php echo do_shortcode($data['content']);?></p>
+		<?php echo do_shortcode($data['content']);?>
 	<?php endif;?>
 </div>
-

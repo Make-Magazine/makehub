@@ -71,7 +71,7 @@ class Cheat_Off{
 			}
 		}
 		if (empty($link)){
-			///$link = IHC_PROTOCOL . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+			
 			$link = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		}			
 		

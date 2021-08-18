@@ -34,6 +34,7 @@ class ListOfAccessPosts{
 		$this->set_drip_content();
 
 		$total = $this->get_count();
+
 		$current_page = (empty($_GET['ihcdu_page'])) ? 1 : $_GET['ihcdu_page'];
 		if ($current_page>1){
 			$offset = ( $current_page - 1 ) * $limit;
@@ -60,6 +61,7 @@ class ListOfAccessPosts{
 		}
 		$data['metas'] = $this->metas;
 		$data['items'] = $this->get_data($limit, $offset);
+
 
 		$fullPath = IHC_PATH . 'public/views/list_access_posts.php';
 		$searchFilename = 'list_access_posts.php';
@@ -102,14 +104,48 @@ class ListOfAccessPosts{
 		}
 		$q .= "
 				AND
-				( b.post_type IN ({$this->post_types_in}) )
+				( b.post_type IN ({$this->post_types_in}) )";
+
+		if ( $this->levels_conditions !== '' ){
+				$q .= "
 				AND
-				( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
-				AND
-				( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
-				$limit
+				(
+						(
+								( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+								AND
+								( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+						)
+						
+						OR
+						(
+							( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+							AND
+							( c.meta_key='ihc_mb_who' AND c.meta_value != '' )
+							AND
+							( c.meta_key='ihc_mb_who' AND !( {$this->levels_conditions} ) )
+						)
+				)
+				";
+		}
+/*
+OR
+(
+	( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+	AND
+	( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+)
+OR
+(
+	( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+	AND
+	( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+)
+*/
+		$q .= " $limit
 		";
+
 		$data = $wpdb->get_row($q);
+
 		if ($data && isset($data->count_value)){
 			if($data->count_value > $max){
 				return $max;
@@ -169,17 +205,51 @@ class ListOfAccessPosts{
 		}
 		$q .= "
 			AND
-			( b.post_type IN ({$this->post_types_in}) )
-			AND
-			( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
-			AND
-			( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+			( b.post_type IN ({$this->post_types_in}) )";
+
+			if ( $this->levels_conditions !== '' ){
+				$q .= "
+					AND
+					(
+							(
+									( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+									AND
+									( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+							)
+							
+							OR
+							(
+								( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+								AND
+								( c.meta_key='ihc_mb_who' AND c.meta_value != '' )
+								AND
+								( c.meta_key='ihc_mb_who' AND !( {$this->levels_conditions} ) )
+							)
+					)";
+			}
+/*
+OR
+(
+	( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+	AND
+	( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+)
+OR
+(
+	( a.meta_key='ihc_mb_type' AND a.meta_value='block' )
+	AND
+	( c.meta_key='ihc_mb_who' AND c.meta_value='' )
+)
+*/
+
+		$q .= "
 			GROUP BY id
 			ORDER BY b.$order_by $order_type
 		";
 		if ( $limit > -1 ){
 				$q .= "	LIMIT $limit OFFSET $offset ";
 		}
+
 		$db_result = $wpdb->get_results($q);
 
 		foreach ($db_result as $db_object){
@@ -220,7 +290,9 @@ class ListOfAccessPosts{
 			$this->levels_conditions = " FIND_IN_SET('reg', c.meta_value) ";
 		} else if (count($this->levels)==1){
 			$cond_lid = (isset($this->levels[0])) ? $this->levels[0] : '';
-			$this->levels_conditions = " FIND_IN_SET($cond_lid, c.meta_value) ";
+			if ( $cond_lid !== '' ){
+					$this->levels_conditions = " FIND_IN_SET($cond_lid, c.meta_value) ";
+			}
 		} else {
 			$this->levels_conditions .= " ( ";
 			foreach ($this->levels as $lid){
@@ -261,9 +333,9 @@ class ListOfAccessPosts{
 		 global $wpdb;
 		 $table = $wpdb->prefix . 'postmeta';
 		 $post_id = esc_sql($post_id);
-		 $data = $wpdb->get_results("SELECT meta_key, meta_value
+		 $query = $wpdb->prepare( "SELECT meta_key, meta_value
 		 								FROM $table
-		 								WHERE post_id='$post_id'
+		 								WHERE post_id=%d
 		 								AND meta_key IN
 		 								(
 		 								 'ihc_drip_content',
@@ -275,8 +347,8 @@ class ListOfAccessPosts{
 		 								 'ihc_drip_end_numeric_value',
 		 								 'ihc_drip_start_certain_date',
 		 								 'ihc_drip_end_certain_date'
-		 								 );"
-		);
+									 );", $post_id );
+		 $data = $wpdb->get_results( $query );
 		if ($data){
 			foreach ($data as $obj){
 				$array[$obj->meta_key] = $obj->meta_value;
@@ -296,13 +368,13 @@ class ListOfAccessPosts{
 		} else {
 			$limit = 25;
 		}
-		//$this->levels_conditions = " 1=1 ";
-		
+	
+
 		$this->set_level_conditions();
 
 		$this->set_drip_content();
- 
-		
+
+
 		$data = $this->get_data($limit, 0);
 		return $data;
 	}
@@ -360,11 +432,18 @@ class ListOfAccessPosts{
 			ON d.post_id=a.post_id
 			WHERE 1=1
 			AND
-			( b.post_type IN ({$this->post_types_in}) )
-			AND
-			( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
-			AND
-			( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )
+			( b.post_type IN ({$this->post_types_in}) )";
+
+		if ( $this->levels_conditions !== '' ){
+			$q .= "
+				AND
+				( a.meta_key='ihc_mb_type' AND a.meta_value='show' )
+				AND
+				( c.meta_key='ihc_mb_who' AND {$this->levels_conditions} )";
+		}
+
+
+		$q .= "
 			AND
 			( d.meta_key='ihc_drip_content' AND d.meta_value=1 )
 		";

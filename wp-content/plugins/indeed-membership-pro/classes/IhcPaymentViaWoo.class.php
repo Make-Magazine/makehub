@@ -42,7 +42,7 @@ class IhcPaymentViaWoo{
 		 * @return array
 		 */
 		$product_tabs['iump'] = array(
-									'label'  => __('Ultimate Membership Pro Options', 'ihc'),
+									'label'  => esc_html__('Ultimate Membership Pro Options', 'ihc'),
 									'target' => 'iump_options',
 									'class'  => array('hide_if_grouped'),
 		);
@@ -55,15 +55,21 @@ class IhcPaymentViaWoo{
 		 * @return string
 		 */
 		global $woocommerce, $post;
-		$levels = get_option('ihc_levels');
-		@$current_value = get_post_meta(@$post->ID, 'iump_woo_product_level_relation', TRUE);
+		$levels = \Indeed\Ihc\Db\Memberships::getAll();
+		$current_value = '';
+		if(isset($post->ID)){
+			$result = get_post_meta($post->ID, 'iump_woo_product_level_relation', TRUE);
+			if(!empty($result)){
+				$current_value = $result;
+			}
+		}
 		?>
 		<div id="iump_options" class="panel woocommerce_options_panel options_group" >
-			<p><?php _e('Link this product to a Ultimate Membership Pro Level', 'ihc');?></p>
+			<p><?php esc_html_e('Link this product to a Ultimate Membership Pro Level', 'ihc');?></p>
 			<p class="form-field">
-			<label><?php _e('Target Level', 'ihc');?></label>
+			<label><?php esc_html_e('Target Level', 'ihc');?></label>
 			<select name="iump_woo_product_level_relation">
-				<option value="-1" selected><?php _e('None', 'ihc');?></option>
+				<option value="-1" selected><?php esc_html_e('None', 'ihc');?></option>
 				<?php
 				foreach ($levels as $id => $level):?>
 					<?php $selected = ($current_value==$id) ? 'selected' : '';?>
@@ -123,13 +129,14 @@ class IhcPaymentViaWoo{
 						}
 
 						/// save user id, level id relation
-						if (Ihc_Db::user_has_level($uid, $lid)){
-							if (!Ihc_Db::is_user_level_active($uid, $lid)){
-								ihc_do_complete_level_assign_from_ap($uid, $lid);
+						if ( \Indeed\Ihc\UserSubscriptions::userHasSubscription($uid, $lid ) ){
+							if ( !\Indeed\Ihc\UserSubscriptions::isActive( $uid, $lid ) ){
+								// user has subscription but is not active
+								\Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
 							}
-							/// else = user already has this level and it's active
 						} else {
-							ihc_do_complete_level_assign_from_ap($uid, $lid);
+							// user don't have this subscription
+							\Indeed\Ihc\UserSubscriptions::assign( $uid, $lid );
 						}
 						///ORDER
 						ihc_insert_update_order($uid, $lid, $amount, 'pending', 'woocommerce', $extra_order_info);
@@ -155,13 +162,10 @@ class IhcPaymentViaWoo{
 			 		if ($lid!==FALSE && $lid!=-1 && $lid!=''){
 			 			$product_id = $item['product_id'];
 						$level_data = ihc_get_level_by_id($lid);
-						ihc_update_user_level_expire($level_data, $lid, $uid);
-						ihc_send_user_notifications($uid, 'payment', $lid);//send notification to user
-						ihc_send_user_notifications($uid, 'admin_user_payment', $lid);//send notification to admin
+						\Indeed\Ihc\UserSubscriptions::makeComplete( $uid, $lid, false, [ 'payment_gateway' => 'woocommerce' ] );
 						do_action( 'ihc_payment_completed', $uid, $lid );
 						// @description run on payment complete. @param user id (integer), level id (integer)
 
-						ihc_switch_role_for_user($uid);
 						$txn_id = 'woocommerce_order_' . $order_id . '_' . $lid;
 						$ihc_order_id = Ihc_Db::get_order_id_by_meta_value_and_meta_type('txn_id', $txn_id);
 						if ($ihc_order_id){
@@ -185,7 +189,7 @@ class IhcPaymentViaWoo{
 		}
 	}
 
-	public function make_level_expire($post_object=null){ /// $order_id=0
+	public function make_level_expire($post_object=null){
 		/*
 		 * @param int
 		 * @return none

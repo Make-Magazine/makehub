@@ -3,14 +3,15 @@ include_once IHC_PATH . 'admin/includes/functions/register.php';
 wp_enqueue_style( 'ihc_select2_style' );
 wp_enqueue_script( 'ihc-select2' );
 ?>
-<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css' );?>
+<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 9.7 );?>
 <?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
 <?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', array(), null );?>
 <?php wp_enqueue_script( 'ihc-image_croppic', IHC_URL . 'assets/js/image_croppic.js', array(), null );?>
+<?php $subtab = isset( $_GET['subtab'] ) ? $_GET['subtab'] : 'settings';?>
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='settings' || !isset($_REQUEST['subtab'])) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=settings';?>"><?php _e('Register Showcase', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='msg') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=msg';?>"><?php _e('Custom Messages', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['subtab'] =='custom_fields') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=custom_fields';?>"><?php _e('Custom Fields', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='settings' ) ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=settings';?>"><?php esc_html_e('Register Showcase', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='msg') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=msg';?>"><?php esc_html_e('Custom Messages', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item <?php echo ( $subtab =='custom_fields') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab='.$tab.'&subtab=custom_fields';?>"><?php esc_html_e('Custom Fields', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php
@@ -20,8 +21,8 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 
-if (isset($_REQUEST['subtab'])) {
-	$subtab = $_REQUEST['subtab'];
+if (isset($_GET['subtab'])) {
+	$subtab = $_GET['subtab'];
 } else {
 	$subtab = 'settings';
 }
@@ -33,10 +34,11 @@ switch ($subtab){
 		}
 
 		$meta_arr = ihc_return_meta_arr('register');//getting metas
+
 		?>
 		<div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
-								<?php _e('Register Form', 'ihc');?>
+								<?php esc_html_e('Register Form', 'ihc');?>
 							</span>
 						</div>
 			<div class="ihc-stuffbox">
@@ -44,34 +46,34 @@ switch ($subtab){
 					[ihc-register]
 				</div>
 			</div>
-			<form action="" method="post">
+			<form  method="post">
 				<input type="hidden" name="ihc_admin_register_settings_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_settings_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Design', 'ihc');?></h3>
+					<h3><?php esc_html_e('Design', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-register-select-template">
 							<?php
 								$templates = array(
 
-								'ihc-register-14'=>'(#14) '.__('Ultimate Member', 'ihc'),
-								'ihc-register-10'=>'(#10) '.__('BootStrap Theme', 'ihc'),
-								'ihc-register-9'=>'(#9) '.__('Radius Theme', 'ihc'),
-								'ihc-register-8'=>'(#8) '.__('Simple Border Theme', 'ihc'),
-								'ihc-register-13'=>'(#13) '.__('Double BootStrap Theme', 'ihc'),
-								'ihc-register-12'=>'(#12) '.__('Dobule Radius Theme', 'ihc'),
-								'ihc-register-11'=>'(#11) '.__('Double Simple Border Theme', 'ihc'),
-								'ihc-register-7'=>'(#7) '.__('BackBox Theme', 'ihc'),
-								'ihc-register-6'=>'(#6) '.__('Double Strong Theme', 'ihc'),
-								'ihc-register-5'=>'(#5) '.__('Strong Theme', 'ihc'),
-								'ihc-register-4'=>'(#4) '.__('PlaceHolder Theme', 'ihc'),
-								'ihc-register-3'=>'(#3) '.__('Blue Box Theme', 'ihc'),
-								'ihc-register-2'=>'(#2) '.__('Basic Theme', 'ihc'),
-								'ihc-register-1'=>'(#1) '.__('Standard Theme', 'ihc')
+								'ihc-register-14'=>'(#14) '.esc_html__('Ultimate Member', 'ihc'),
+								'ihc-register-10'=>'(#10) '.esc_html__('BootStrap Theme', 'ihc'),
+								'ihc-register-9'=>'(#9) '.esc_html__('Radius Theme', 'ihc'),
+								'ihc-register-8'=>'(#8) '.esc_html__('Simple Border Theme', 'ihc'),
+								'ihc-register-13'=>'(#13) '.esc_html__('Double BootStrap Theme', 'ihc'),
+								'ihc-register-12'=>'(#12) '.esc_html__('Dobule Radius Theme', 'ihc'),
+								'ihc-register-11'=>'(#11) '.esc_html__('Double Simple Border Theme', 'ihc'),
+								'ihc-register-7'=>'(#7) '.esc_html__('BackBox Theme', 'ihc'),
+								'ihc-register-6'=>'(#6) '.esc_html__('Double Strong Theme', 'ihc'),
+								'ihc-register-5'=>'(#5) '.esc_html__('Strong Theme', 'ihc'),
+								'ihc-register-4'=>'(#4) '.esc_html__('PlaceHolder Theme', 'ihc'),
+								'ihc-register-3'=>'(#3) '.esc_html__('Blue Box Theme', 'ihc'),
+								'ihc-register-2'=>'(#2) '.esc_html__('Basic Theme', 'ihc'),
+								'ihc-register-1'=>'(#1) '.esc_html__('Standard Theme', 'ihc')
 								);
 							?>
-							<?php _e('Register Template:', 'ihc');?>
-							<select name="ihc_register_template" id="ihc_register_template" onChange="ihcRegisterLockerPreview();" style="min-width:400px">
+							<?php esc_html_e('Register Template:', 'ihc');?>
+							<select name="ihc_register_template" id="ihc_register_template" onChange="ihcRegisterLockerPreview();" class="ihc-admin-register-register-template">
 							<?php
 								foreach ($templates as $k=>$v){
 								?>
@@ -84,34 +86,34 @@ switch ($subtab){
 							</select>
 						</div>
 
-						<div style="padding: 5px;">
+						<div class="ihc-admin-register-preview-wrapper">
 							<div id="register_preview"></div>
 						</div>
 
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
 
 					</div>
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Settings', 'ihc');?></h3>
+					<h3><?php esc_html_e('Settings', 'ihc');?></h3>
 					<div class="inside">
 						<div class="iump-form-line">
 
-							<h2><?php _e('Level Settings', 'ihc');?></h2>
-							<div style="font-weight:bold"><?php _e('Choose Subscription Type:', 'ihc');?></div>
+							<h2><?php esc_html_e('Subscription Settings', 'ihc');?></h2>
+							<div><strong><?php esc_html_e('Choose Subscription Type:', 'ihc');?></strong></div>
 							<select name="ihc_subscription_type" onClick="ihcSelectShDiv(this, '#level_assign_to_user', 'predifined_level');">
-								<option value="predifined_level" <?php if ('predifined_level'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php _e('Predifined Level', 'ihc');?></option>
-								<option value="subscription_plan" <?php if ('subscription_plan'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php _e('Subscription Plan', 'ihc');?></option>
+								<option value="predifined_level" <?php if ('predifined_level'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php esc_html_e('Predifined Subscription', 'ihc');?></option>
+								<option value="subscription_plan" <?php if ('subscription_plan'==$meta_arr['ihc_subscription_type']) echo 'selected';?> ><?php esc_html_e('Subscription Plan', 'ihc');?></option>
 							</select>
-							<div  class="iump-form-line" id="level_assign_to_user" style="padding:0;border-bottom: none; margin-top:10px; <?php if($meta_arr['ihc_subscription_type']=='predifined_level') echo 'display: block;'; else echo 'display: none;';?>" >
-								<div style="font-weight:bold"><?php _e('Level assigned to new User', 'ihc');?></div>
+							<div  class="iump-form-line  ihc-admin-register-predifined-level <?php if($meta_arr['ihc_subscription_type']=='predifined_level') echo 'ihc-display-block'; else echo 'ihc-display-none';?>" id="level_assign_to_user" >
+								<div><strong><?php esc_html_e('Subscription assigned to new Member', 'ihc');?></strong></div>
 								<select name="ihc_register_new_user_level">
-									<option value="-1" <?php if($meta_arr['ihc_register_new_user_level']==-1)echo 'selected';?> ><?php _e('None', 'ihc');?></option>
+									<option value="-1" <?php if($meta_arr['ihc_register_new_user_level']==-1)echo 'selected';?> ><?php esc_html_e('None', 'ihc');?></option>
 									<?php
-										$levels = get_option('ihc_levels');
+										$levels = \Indeed\Ihc\Db\Memberships::getAll();
 										if ($levels && count($levels)){
 											foreach ($levels as $id=>$v){
 												?>
@@ -123,11 +125,11 @@ switch ($subtab){
 								</select>
 							</div>
 
-							<p><?php _e('If Subscription Plan is selected, the user is redirected to the Subscription Plan Page to choose a level. Be sure that the subscription plan page is properly set up.', 'ihc');?></p>
+							<p><?php esc_html_e('If Subscription Plan is selected, the user is redirected to the Subscription Plan Page to choose a Subscription. Be sure that the subscription plan page is properly set up.', 'ihc');?></p>
 						</div>
 						<div  class="iump-form-line">
-								<h2><?php _e('WP Role', 'ihc');?></h2>
-								<div style="font-weight:bold"><?php _e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></div>
+								<h2><?php esc_html_e('WP Role', 'ihc');?></h2>
+								<div><strong><?php esc_html_e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></strong></div>
 								<select name="ihc_register_new_user_role">
 									<?php
 										$roles = ihc_get_wp_roles_list();
@@ -141,17 +143,17 @@ switch ($subtab){
 										}
 									?>
 								</select>
-								<p><?php _e('If the "Pending" role is set, the user will not able to login until the admin manually approves it.', 'ihc');?></p>
+								<p><?php esc_html_e('If the "Pending" role is set, the user will not able to login until the admin manually approves it.', 'ihc');?></p>
 
 
-							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<label class="iump_label_shiwtch ihc-switch-button-margin">
 								<?php $checked = ($meta_arr['ihc_automatically_switch_role']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_automatically_switch_role');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
+								<div class="switch ihc-display-inline"></div>
 							</label>
-							<?php _e("Automatically Switch Role when the first Payment is confirmed", 'ihc');?>
+							<?php esc_html_e("Automatically Switch Role when the first Payment is confirmed", 'ihc');?>
 							<input type="hidden" name="ihc_automatically_switch_role" value="<?php echo $meta_arr['ihc_automatically_switch_role'];?>" id="ihc_automatically_switch_role" />
-							<div style="font-weight: bold; margin-top: 5px;"><?php _e("New Role after Payment:", 'ihc');?></div>
+							<div><strong><?php esc_html_e("New Role after Payment:", 'ihc');?></strong></div>
 								<select name="ihc_automatically_new_role">
 									<?php
 										if ($roles){
@@ -169,43 +171,43 @@ switch ($subtab){
 
 						<div class="iump-form-line">
 
-								<h2><?php _e('Form Settings', 'ihc');?></h2>
-								<div style="font-weight:bold"><?php _e('Password Minimum Length', 'ihc');?></div>
+								<h2><?php esc_html_e('Form Settings', 'ihc');?></h2>
+								<div><strong><?php esc_html_e('Password Minimum Length', 'ihc');?></strong></div>
 								<input type="number" value="<?php echo $meta_arr['ihc_register_pass_min_length'];?>" name="ihc_register_pass_min_length" min="4"/>
 
-							<div style="margin-top:15px;">
-								<div style="font-weight:bold"><?php _e('Password Strength Options', 'ihc');?></div>
+							<div class="ihc-admin-register-password-format-wrapper">
+								<div><strong><?php esc_html_e('Password Strength Options', 'ihc');?></strong></div>
 								<select name="ihc_register_pass_options">
-									<option value="1" <?php if ($meta_arr['ihc_register_pass_options']==1)echo 'selected';?> ><?php _e('Standard', 'ihc');?></option>
-									<option value="2" <?php if ($meta_arr['ihc_register_pass_options']==2)echo 'selected';?> ><?php _e('Characters and digits', 'ihc');?></option>
-									<option value="3" <?php if ($meta_arr['ihc_register_pass_options']==3)echo 'selected';?> ><?php _e('Characters, digits, minimum one uppercase letter', 'ihc');?></option>
+									<option value="1" <?php if ($meta_arr['ihc_register_pass_options']==1)echo 'selected';?> ><?php esc_html_e('Standard', 'ihc');?></option>
+									<option value="2" <?php if ($meta_arr['ihc_register_pass_options']==2)echo 'selected';?> ><?php esc_html_e('Characters and digits', 'ihc');?></option>
+									<option value="3" <?php if ($meta_arr['ihc_register_pass_options']==3)echo 'selected';?> ><?php esc_html_e('Characters, digits, minimum one uppercase letter', 'ihc');?></option>
 								</select>
 							</div>
 						</div>
 						<div class="iump-form-line">
-						<h2><?php _e('Admin Notification', 'ihc');?></h2>
-							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+						<h2><?php esc_html_e('Admin Notification', 'ihc');?></h2>
+							<label class="iump_label_shiwtch ihc-switch-button-margin">
 								<?php $checked = ($meta_arr['ihc_register_admin_notify']) ? 'checked' : '';?>
 								<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_admin_notify');" <?php echo $checked;?> />
-								<div class="switch" style="display:inline-block;"></div>
+								<div class="switch ihc-display-inline"></div>
 							</label>
 							<input type="hidden" name="ihc_register_admin_notify" value="<?php echo $meta_arr['ihc_register_admin_notify'];?>" id="ihc_register_admin_notify" />
-							<?php _e('Notify the system admin on every new registration', 'ihc');?>
-							<p><?php _e('When a new user registers, the WP admin is notified using the default admin email address set in the current WordPress instance.', 'ihc');?></p>
+							<?php esc_html_e('Notify the system admin on every new registration', 'ihc');?>
+							<p><?php esc_html_e('When a new user registers, the WP admin is notified using the default admin email address set in the current WordPress instance.', 'ihc');?></p>
 						</div>
 
 						<div class="iump-form-line">
-							<h2><?php _e('Opt-In Subscription', 'ihc');?></h2>
+							<h2><?php esc_html_e('Opt-In Subscription', 'ihc');?></h2>
 
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_register_opt-in']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_opt-in');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" name="ihc_register_opt-in" value="<?php echo $meta_arr['ihc_register_opt-in'];?>" id="ihc_register_opt-in" />
-								<?php _e('Enable Opt-In', 'ihc');?>
-								<div style="margin-top:10px;">
-								<div style="font-weight: bold;"><?php _e('Opt-In Destination:', 'ihc');?></div>
+								<?php esc_html_e('Enable Opt-In', 'ihc');?>
+								<div class="ihc-admin-register-optin-wrapper">
+								<div><strong><?php esc_html_e('Opt-In Destination:', 'ihc');?></strong></div>
                                 <select name="ihc_register_opt-in-type">
                                     <?php
                                         $subscribe_types = array(
@@ -213,7 +215,7 @@ switch ($subtab){
                                                                     'aweber' => 'AWeber',
                                                                     'campaign_monitor' => 'CampaignMonitor',
                                                                     'constant_contact' => 'Constant Contact',
-                                                                    'email_list' => __('E-mail List', 'ihc'),
+                                                                    'email_list' => esc_html__('E-mail List', 'ihc'),
                                                                     'get_response' => 'GetResponse',
                                                                     'icontact' => 'IContact',
                                                                     'madmimi' => 'Mad Mimi',
@@ -233,82 +235,77 @@ switch ($subtab){
                                     ?>
                                 </select>
 							</div>
-							<p><?php _e('The user email address is sent to your OptIn destination.', 'ihc');?></p>
+							<p><?php esc_html_e('The user email address is sent to your OptIn destination.', 'ihc');?></p>
 						</div>
 						<div class="iump-form-line">
-							<h2><?php _e('Double Email Verification', 'ihc');?></h2>
-							<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<h2><?php esc_html_e('Double Email Verification', 'ihc');?></h2>
+							<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_register_double_email_verification']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_double_email_verification');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" name="ihc_register_double_email_verification" value="<?php echo $meta_arr['ihc_register_double_email_verification'];?>" id="ihc_register_double_email_verification" />
-								<?php _e('Double E-mail Verification', 'ihc');?>
+								<?php esc_html_e('Double E-mail Verification', 'ihc');?>
 
-							<p><?php _e('Be sure that your notifications for <strong>Double Email Verification</strong> are properly set up. Make sure to check the settings from the General Options tab.', 'ihc');?> <a href="admin.php?page=ihc_manage&tab=general&subtab=double_email_verification" target="_blank"><?php _e('here', 'ihc');?></a></p>
+							<p><?php esc_html_e('Be sure that your notifications for ', 'ihc');?> <strong>Double Email Verification</strong> <?php esc_html_e(' are properly set up. Make sure to check the settings from the General Options tab. ', 'ihc');?> <a href="admin.php?page=ihc_manage&tab=general&subtab=double_email_verification" target="_blank"><?php esc_html_e(' here', 'ihc');?></a></p>
 						</div>
 						<div class="iump-form-line">
-							<h2><?php _e('Other Settings', 'ihc');?></h2>
-							<div style="margin-bottom: 15px;">
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<h2><?php esc_html_e('Other Settings', 'ihc');?></h2>
+							<div class="ihc-admin-register-margin-bottom-space">
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_register_show_level_price']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_show_level_price');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" name="ihc_register_show_level_price" value="<?php echo $meta_arr['ihc_register_show_level_price'];?>" id="ihc_register_show_level_price" />
-								<?php _e('Show Level Price & Data On Register Form', 'ihc');?>
+								<?php esc_html_e('Show Subscription Price & Data On Register Form', 'ihc');?>
 							</div>
 
-							<div style="margin-bottom: 15px;">
-								<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+							<div class="ihc-admin-register-margin-bottom-space">
+								<label class="iump_label_shiwtch ihc-switch-button-margin">
 									<?php $checked = ($meta_arr['ihc_register_auto_login']) ? 'checked' : '';?>
 									<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_register_auto_login');" <?php echo $checked;?> />
-									<div class="switch" style="display:inline-block;"></div>
+									<div class="switch ihc-display-inline"></div>
 								</label>
 								<input type="hidden" name="ihc_register_auto_login" value="<?php echo $meta_arr['ihc_register_auto_login'];?>" id="ihc_register_auto_login" />
-								<?php _e('Auto Login after Registration', 'ihc');?>
+								<?php esc_html_e('Auto Login after Registration', 'ihc');?>
 							</div>
 
 						</div>
 
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Terms & Conditions (TOS) Label', 'ihc');?></h3>
+					<h3><?php esc_html_e('Terms & Conditions (TOS) Label', 'ihc');?></h3>
 					<div class="inside">
 					  <div  class="iump-form-line">
-						<input type="text" name="ihc_register_terms_c" value="<?php echo ihc_correct_text($meta_arr['ihc_register_terms_c']);?>" style="min-width:350px"/>
+						<input type="text" name="ihc_register_terms_c" value="<?php echo ihc_correct_text($meta_arr['ihc_register_terms_c']);?>" class="ihc-admin-register-tos-input"/>
 					  </div>
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" onClick="" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" onClick="" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Custom CSS:', 'ihc');?></h3>
+					<h3><?php esc_html_e('Custom CSS:', 'ihc');?></h3>
 					<div class="inside">
 						<div>
 							<textarea name="ihc_register_custom_css" id="ihc_register_custom_css" class="ihc-dashboard-textarea" onBlur="ihcRegisterLockerPreview();"><?php
 							echo stripslashes($meta_arr['ihc_register_custom_css']);
 							?></textarea>
 						</div>
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
 
 			</form>
-			<script>
-				jQuery(document).ready(function(){
-					ihcRegisterLockerPreview();
-				});
-			</script>
 		<?php
 	break;
 	case 'msg':
@@ -318,98 +315,98 @@ switch ($subtab){
 
 		$meta_arr = ihc_return_meta_arr('register-msg');//getting metas
 		?>
-			<form method="post" action="">
+			<form method="post" >
 				<input type="hidden" name="ihc_admin_register_messages_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_messages_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Custom Messages', 'ihc');?></h3>
+					<h3><?php esc_html_e('Custom Messages', 'ihc');?></h3>
 					<div class="inside">
 
-						<div style="display:inline-block;width: 45%;">
+						<div class="ihc-admin-register-custom-mess-col1">
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - the Username is taken:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - the Username is taken:', 'ihc');?></div>
 								<textarea name="ihc_register_username_taken_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_username_taken_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Invalid Username:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Invalid Username:', 'ihc');?></div>
 								<textarea name="ihc_register_error_username_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_error_username_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Email Address is taken:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Email Address is taken:', 'ihc');?></div>
 								<textarea name="ihc_register_email_is_taken_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_email_is_taken_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Invalid Email Address:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Invalid Email Address:', 'ihc');?></div>
 								<textarea name="ihc_register_invalid_email_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_invalid_email_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Email Address do not match:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Email Address do not match:', 'ihc');?></div>
 								<textarea name="ihc_register_emails_not_match_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_emails_not_match_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Password do not match:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Password do not match:', 'ihc');?></div>
 								<textarea name="ihc_register_pass_not_match_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_pass_not_match_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Password Only Characters and Digits:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Password Only Characters and Digits:', 'ihc');?></div>
 								<textarea name="ihc_register_pass_letter_digits_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_pass_letter_digits_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Unique Field - value already exists:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Unique Field - value already exists:', 'ihc');?></div>
 								<textarea name="ihc_register_unique_value_exists" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_unique_value_exists']);?></textarea>
 							</div>
 
 						</div>
 
-						<div style="display:inline-block;width: 45%;vertical-align:top;">
+						<div class="ihc-admin-register-custom-mess-col2">
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Password Min Length:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Password Min Length:', 'ihc');?></div>
 								<textarea name="ihc_register_pass_min_char_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_pass_min_char_msg']);?></textarea>
-								<div class="ihc-dashboard-mini-msg-alert"><?php _e('Where {X} will be the minimum length of password.', 'ihc');?></div>
+								<div class="ihc-dashboard-mini-msg-alert"><?php esc_html_e('Where {X} will be the minimum length of password.', 'ihc');?></div>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Password Characters, Digits and minimum one uppercase letter:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Password Characters, Digits and minimum one uppercase letter:', 'ihc');?></div>
 								<textarea name="ihc_register_pass_let_dig_up_let_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_pass_let_dig_up_let_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Pending User:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Pending User:', 'ihc');?></div>
 								<textarea name="ihc_register_pending_user_msg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_pending_user_msg']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - Empty Required Fields:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - Empty Required Fields:', 'ihc');?></div>
 								<textarea name="ihc_register_err_req_fields" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_err_req_fields']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - ReCaptcha:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - ReCaptcha:', 'ihc');?></div>
 								<textarea name="ihc_register_err_recaptcha" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_err_recaptcha']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Error - TOS:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Error - TOS:', 'ihc');?></div>
 								<textarea name="ihc_register_err_tos" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_err_tos']);?></textarea>
 							</div>
 
 							<div>
-								<div class="iump-labels-special"><?php _e('Success Message:', 'ihc');?></div>
+								<div class="iump-labels-special"><?php esc_html_e('Success Message:', 'ihc');?></div>
 								<textarea name="ihc_register_success_meg" class="ihc-dashboard-textarea"><?php echo ihc_correct_text($meta_arr['ihc_register_success_meg']);?></textarea>
 							</div>
 
 
 						</div>
 
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" onClick="" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" onClick="" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
@@ -433,7 +430,7 @@ switch ($subtab){
 		$reg_fields = ihc_get_user_reg_fields();
 		ksort($reg_fields);
 
-		$the_levels = get_option('ihc_levels');
+		$the_levels = \Indeed\Ihc\Db\Memberships::getAll();
 		if ($the_levels){
 			foreach ($the_levels as $k=>$v){
 				$levels_arr[$k] = $v['name'];
@@ -456,52 +453,52 @@ switch ($subtab){
 					$global_disabled = 'disabled';
 				}
 			?>
-			<a href="<?php echo $add_new_lnk;?>" class="indeed-add-new-like-wp <?php echo $disabled_lnk;?>" style="display: inline-block; margin: 10px 0px;"><i class="fa-ihc fa-add-ihc"></i><?php
-				_e('Add New Register Form Field', 'ihc');
+			<a href="<?php echo $add_new_lnk;?>" class="indeed-add-new-like-wp ihc-admin-register-add-new-field-wrapper <?php echo $disabled_lnk;?>"><i class="fa-ihc fa-add-ihc"></i><?php
+				esc_html_e('Add New Register Form Field', 'ihc');
 			?></a>
 			<div class="clear"></div>
-			<form action="" method="post">
+			<form  method="post">
 				<input type="hidden" name="ihc_admin_register_form_fields_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_form_fields_nonce' );?>" />
 
 				<div class="ihc-stuffbox">
-					<h3><?php _e('Registration form fields', 'ihc');?></h3>
+					<h3><?php esc_html_e('Registration form fields', 'ihc');?></h3>
 					<div class="inside">
-						<div style="margin-bottom: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save_custom_field" class="button button-primary button-large" />
+						<div class="ihc-admin-register-margin-bottom-space">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save_custom_field" class="button button-primary button-large" />
 						</div>
 								<div class="ihc-sortable-table-wrapp">
 
 									<table class="wp-list-table widefat fixed tags ihc-custom-fields-wrapper" id='ihc-register-fields-table'>
 										    <thead>
 												<tr>
-													<th class="manage-column"><?php _e('Slug', 'ihc');?></th>
-													<th class="manage-column"><?php _e('Label', 'ihc');?></th>
-													<th class="manage-column"><?php _e('Field Type', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Admin', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Register Page', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Account Page', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Modal', 'ihc');?></th>
-													<th class="manage-column"><?php _e("Targeting Levels", 'ihc');?></th>
-													<th class="manage-column"><?php _e('Required', 'ihc');?></th>
-													<th class="manage-column"><?php _e('WP Native', 'ihc');?></th>
-													<th class="manage-column" style="width: 25px;"><?php _e('Edit', 'ihc');?></th>
-													<th class="manage-column" style="width: 35px;"><?php _e('Delete', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Slug', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Label', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Field Type', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Admin', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Register Page', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Account Page', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Modal', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e("Targeting Subscriptions", 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Required', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('WP Native', 'ihc');?></th>
+													<th class="manage-column ihc-admin-register-fields-table-small-col"><?php esc_html_e('Edit', 'ihc');?></th>
+													<th class="manage-column ihc-admin-register-fields-table-small-col"><?php esc_html_e('Delete', 'ihc');?></th>
 												</tr>
 											</thead>
 											<tfoot>
 												<tr>
-													<th class="manage-column"><?php _e('Slug', 'ihc');?></th>
-													<th class="manage-column"><?php _e('Label', 'ihc');?></th>
-													<th class="manage-column"><?php _e('Field Type', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Admin', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Register Page', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Account Page', 'ihc');?></th>
-													<th class="manage-column"><?php _e('On Modal', 'ihc');?></th>
-													<th class="manage-column"><?php _e("Targeting Levels", 'ihc');?></th>
-													<th class="manage-column"><?php _e('Required', 'ihc');?></th>
-													<th class="manage-column"><?php _e('WP Native', 'ihc');?></th>
-													<th class="manage-column" style="width: 25px;"><?php _e('Edit', 'ihc');?></th>
-													<th class="manage-column" style="width: 35px;"><?php _e('Delete', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Slug', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Label', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Field Type', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Admin', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Register Page', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Account Page', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('On Modal', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e("Targeting Subscriptions", 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('Required', 'ihc');?></th>
+													<th class="manage-column"><?php esc_html_e('WP Native', 'ihc');?></th>
+													<th class="manage-column ihc-admin-register-fields-table-small-col"><?php esc_html_e('Edit', 'ihc');?></th>
+													<th class="manage-column ihc-admin-register-fields-table-small-col"><?php esc_html_e('Delete', 'ihc');?></th>
 												</tr>
 											</tfoot>
 											<tbody>
@@ -539,7 +536,7 @@ switch ($subtab){
 											</td>
 											<td class="ihc-custom-fields-label"><?php
 													if ($v['native_wp']){
-														_e($v['label'], 'ihc');
+														esc_html_e($v['label'], 'ihc');
 													} else {
 														echo stripslashes($v['label']);
 													}
@@ -563,7 +560,7 @@ switch ($subtab){
 													if( in_array( $v['name'], $notAvailableForAdminSection ) ){
 														echo '-';
 													} else if ($v['display_admin']==2){
-														_e('Always', 'ihc');
+														esc_html_e('Always', 'ihc');
 													} else {
 														?>
 														<input type="checkbox" onClick="iumpCheckAndH(this, '#ihc-field-display-admin<?php echo $k;?>');ihcReq(this, <?php echo $k;?>);" <?php if($v['display_admin']) echo 'checked';?> <?php echo $global_disabled;?> />
@@ -578,11 +575,11 @@ switch ($subtab){
 													if (ihc_is_magic_feat_active('register_lite') && ($v['name']=='pass1')){
 														$can_be_editable = TRUE;
 													}
-													if ($v['name']=='user_login'){
+													if ( ihc_is_magic_feat_active('register_lite') && $v['name']=='user_login' ){
 														$can_be_editable = TRUE;
 													}
 													if ($v['display_public_reg']==2 && !$can_be_editable){
-														_e('Always', 'ihc');
+														esc_html_e('Always', 'ihc');
 													} else {
 														?>
 														<input type="checkbox" onClick="iumpCheckAndH(this, '#ihc-field-display-public-reg<?php echo $k;?>');ihcReq(this, <?php echo $k;?>);" <?php if($v['display_public_reg']) echo 'checked';?> <?php echo $global_disabled;?> />
@@ -594,7 +591,7 @@ switch ($subtab){
 											<td>
 												<?php
 													if ($v['display_public_ap']==2){
-														_e('Always', 'ihc');
+														esc_html_e('Always', 'ihc');
 													} else if($v['name']=='ihc_social_media' || $v['name']=='ihc_invitation_code_field' || $v['name']=='ihc_dynamic_price'){
 														echo '-';
 													} else {
@@ -611,7 +608,7 @@ switch ($subtab){
 																$v['display_on_modal'] = 0;
 														}
 														if ($v['display_on_modal']==2){
-																_e('Always', 'ihc');
+																esc_html_e('Always', 'ihc');
 														} else if($v['name']=='ihc_avatar' || $v['name']=='ihc_dynamic_price'){
 																echo '-';
 														} else {
@@ -627,7 +624,7 @@ switch ($subtab){
 													$target_levels = explode(',', $v['target_levels']);
 													foreach ($target_levels as $target_value){
 														if ($target_value==-1){
-															echo '<div class="ihc-register-dashboard-level-targeting">' . __('No level selected', 'ihc') . '</div>';
+															echo '<div class="ihc-register-dashboard-level-targeting">' . esc_html__('No Membership selected', 'ihc') . '</div>';
 														} else if (isset($levels_arr[$target_value])){
 															echo '<div class="ihc-register-dashboard-level-targeting-l">' . $levels_arr[$target_value] . '</div>';
 														} else {
@@ -635,20 +632,20 @@ switch ($subtab){
 														}
 													}
 													if (!empty($deleted_level)){
-														_e("Deleted Level", 'ihc');
+														esc_html_e("Deleted Membership", 'ihc');
 														unset($deleted_level);
 													}
 													unset($target_levels);
 												} else {
-													echo '<div class="ihc-register-dashboard-level-targeting">' . __('All', 'ihc') . '</div>';
+													echo '<div class="ihc-register-dashboard-level-targeting">' . esc_html__('All', 'ihc') . '</div>';
 												}
 											?></td>
 											<td>
 												<?php
 													if ($v['display_public_reg']==2){
-														_e('Always', 'ihc');
+														esc_html_e('Always', 'ihc');
 													} else if ($v['req']==2){
-														_e('Required When Selected', 'ihc');
+														esc_html_e('Required When Selected', 'ihc');
 													} else if ($v['name']=='ihc_social_media' || $v['type']=='plain_text'){
 														echo '-';
 													} else {
@@ -662,9 +659,9 @@ switch ($subtab){
 											<td>
 												<?php
 													if ($v['native_wp']){
-														_e('Yes', 'ihc');
+														esc_html_e('Yes', 'ihc');
 													} else {
-														_e('No', 'ihc');
+														esc_html_e('No', 'ihc');
 													}
 												?>
 											</td>
@@ -703,7 +700,7 @@ switch ($subtab){
 														echo '-';
 													} else {
 														?>
-														<div class="ihc-js-delete-register-field" data-id="<?php echo $k;?>" style="display:inline-block;cursor:pointer;" ><i class="fa-ihc ihc-icon-remove-e"></i></div>
+														<div class="ihc-js-delete-register-field ihc-display-inline" data-id="<?php echo $k;?>" ><i class="fa-ihc ihc-icon-remove-e"></i></div>
 														<?php
 													}
 												?>
@@ -715,40 +712,12 @@ switch ($subtab){
 										</tbody>
 									</table>
 								</div>
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save_custom_field" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save_custom_field" class="button button-primary button-large" />
 						</div>
 					</div>
 				</div>
 			</form>
-
-			<script>
-			jQuery( '.ihc-js-delete-register-field' ).on( 'click', function(){
-					var fieldId = jQuery( this ).attr( 'data-id' );
-					swal({
-						title: "<?php _e( 'Are you sure that you want to delete this field?', 'ihc' );?>",
-						text: "",
-						type: "warning",
-						showCancelButton: true,
-						confirmButtonClass: "btn-danger",
-						confirmButtonText: "OK",
-						closeOnConfirm: true
-					},
-					function(){
-							jQuery.ajax({
-									type : 'post',
-									url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-									data : {
-														 action: 'ihc_admin_delete_register_field',
-														 id:			fieldId,
-												 },
-									success: function (response) {
-											location.reload();
-									}
-						 });
-				 });
-			});
-			</script>
 
 		<?php
 	break;
@@ -797,7 +766,7 @@ switch ($subtab){
 			<form method="post" action="<?php echo $url.'&tab=register&subtab=custom_fields';?>">
 				<input type="hidden" name="ihc_admin_register_form_fields_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_register_form_fields_nonce' );?>" />
 				<div class="ihc-stuffbox">
-					<h3><?php _e('User Custom Fields', 'ihc');?></h3>
+					<h3><?php esc_html_e('User Custom Fields', 'ihc');?></h3>
 					<div class="inside">
 						<?php
 							if (isset($_REQUEST['id'])){
@@ -807,7 +776,7 @@ switch ($subtab){
 							}
 						?>
 						<div class="iump-form-line">
-							<label class="iump-labels"><?php _e('Slug:', 'ihc');?> </label> <input type="text" name="name" value="<?php echo $meta_arr['name'];?>" <?php echo $disabled;?>/>
+							<label class="iump-labels"><?php esc_html_e('Slug:', 'ihc');?> </label> <input type="text" name="name" value="<?php echo $meta_arr['name'];?>" <?php echo $disabled;?>/>
                             <?php
 							if($disabled != ''){ ?>
 									<input type="hidden" name="name" value="<?php echo $meta_arr['name'];?>"/>
@@ -815,7 +784,7 @@ switch ($subtab){
 							?>
 						</div>
 						<div class="iump-form-line  iump-no-border">
-							<label class="iump-labels" style="font-weight:bold;"><?php _e('Field Type:', 'ihc');?></label>
+							<label class="iump-labels"><strong><?php esc_html_e('Field Type:', 'ihc');?></strong></label>
 							<select id="ihc_new_field-type" <?php if ($disabled) echo 'disabled'; else echo 'name="type"';?> onChange="ihcRegisterFields(this.value);">
 								<?php
 									$field_types = array('text'=>'Text',
@@ -841,31 +810,31 @@ switch ($subtab){
 							</select>
 						</div>
 						<?php
-							$display = 'none';
+							$display = 'ihc-display-none';
 							if ($meta_arr['type']=='select' || $meta_arr['type']=='checkbox' || $meta_arr['type']=='radio' || $meta_arr['type']=='multi_select'){
 								if ($meta_arr['name']!='tos')
-								$display = 'block';
+								$display = 'ihc-display-block';
 							}
 						?>
-						<div class="iump-form-line" id="ihc-register-field-values" style="display: <?php echo $display;?>">
-							<label class="iump-labels" style="vertical-align: top;"><?php _e('Values:', 'ihc');?></label>
-							<div style="display: inline-block;" class="ihc-register-the-values">
+						<div class="iump-form-line <?php echo $display;?>" id="ihc-register-field-values">
+							<label class="iump-labels ihc-vertical-align-top"><?php esc_html_e('Values:', 'ihc');?></label>
+							<div class="ihc-register-the-values ihc-display-inline">
 								<?php
 									if (isset($meta_arr['values']) && $meta_arr['values']){
 										foreach ($meta_arr['values'] as $value){
 											?>
-											<div style="display: block; margin-bottom: 5px;" class="ihc-custom-field-item-wrapp">
+											<div class="ihc-custom-field-item-wrapp ihc-display-block">
 												<input type="text" name="values[]" value="<?php echo ihc_correct_text($value);?>"/>
-												<i class="fa-ihc ihc-icon-remove-e" style="cursor: pointer;" onclick="jQuery(this).parent().remove();"></i>
+												<i class="fa-ihc ihc-icon-remove-e ihc-js-admin-register-delete-parent" ></i>
 												<i class="fa-ihc fa-arrows-ihc"></i>
 											</div>
 											<?php
 										}
 									} else {
 										?>
-										<div style="display: block; margin-bottom: 5px;" class="ihc-custom-field-item-wrapp">
+										<div class="ihc-custom-field-item-wrapp ihc-display-block">
 											<input type="text" name="values[]" value=""/>
-											<i class="fa-ihc ihc-icon-remove-e" style="cursor: pointer;" onclick="jQuery(this).parent().remove();"></i>
+											<i class="fa-ihc ihc-icon-remove-e ihc-js-admin-register-delete-parent" ></i>
 											<i class="fa-ihc fa-arrows-ihc"></i>
 										</div>
 										<?php
@@ -873,25 +842,25 @@ switch ($subtab){
 								?>
 							</div>
 							<div class="ihc-clear"></div>
-							<div style="display: inline-block; margin-left: 140px; margin-top: 10px; padding: 5px; background-color: #27bebe; color: #fff; cursor: pointer;" onclick="ihcAddNewRegisterFieldValue();">
-							<?php _e('Add New Value', 'ihc');?>
+							<div class="ihc-admin-register-add-new-value" onclick="ihcAddNewRegisterFieldValue();">
+							<?php esc_html_e('Add New Value', 'ihc');?>
 							</div>
 						</div>
 
-						<div id="ihc-register-field-conditional-text" style="display: <?php if ($meta_arr['type']=='conditional_text') echo 'block'; else echo 'none';?>">
+						<div id="ihc-register-field-conditional-text" class="<?php if ($meta_arr['type']=='conditional_text') echo 'ihc-display-block'; else echo 'ihc-display-none';?>">
 							<div class="iump-form-line">
-								<label class="iump-labels" style="vertical-align: top;"><?php _e('Right Answer:', 'ihc');?> </label>
-								<input type="text" value="<?php echo ihc_correct_text(@$meta_arr['conditional_text']);?>" name="conditional_text" />
+								<label class="iump-labels ihc-vertical-align-top"><?php esc_html_e('Right Answer:', 'ihc');?> </label>
+								<input type="text" value="<?php echo ihc_correct_text((isset($meta_arr['conditional_text'])) ? $meta_arr['conditional_text'] : '');?>" name="conditional_text" />
 							</div>
 							<div class="iump-form-line">
-								<label class="iump-labels" style="vertical-align: top;"><?php _e('Error Message:', 'ihc');?> </label>
-								<textarea name="error_message" style="min-width: 250px;"><?php echo ihc_correct_text(@$meta_arr['error_message']);?></textarea>
+								<label class="iump-labels ihc-vertical-align-top"><?php esc_html_e('Error Message:', 'ihc');?> </label>
+								<textarea name="error_message" class="ihc-admin-register-min-width"><?php echo ihc_correct_text((isset($meta_arr['error_message'])) ? $meta_arr['error_message'] : '');?></textarea>
 							</div>
 						</div>
 
-						<div class="iump-no-border" id="ihc-register-field-plain-text" style="display: <?php if ($meta_arr['type']=='plain_text') echo 'block'; else echo 'none';?>">
-							<label class="iump-labels" style="vertical-align: top;"><?php _e('Content:', 'ihc');?> </label>
-							<div style="display: inline-block; max-width: 85%;">
+						<div id="ihc-register-field-plain-text" class="iump-no-border <?php if ($meta_arr['type']=='plain_text') echo 'ihc-display-block'; else echo 'ihc-display-none';?>">
+							<label class="iump-labels ihc-vertical-align-top"><?php esc_html_e('Content:', 'ihc');?> </label>
+							<div class="ihc-admin-register-editor-wrapper">
 							<?php
 							$settings = array(
 									'media_buttons' => true,
@@ -901,15 +870,15 @@ switch ($subtab){
 									'quicktags' => true,
 									'teeny' => true,
 							);
-							wp_editor(ihc_correct_text(@$meta_arr['plain_text_value']), 'plain_text_value', $settings);
+							wp_editor(ihc_correct_text((isset($meta_arr['plain_text_value'])) ? $meta_arr['plain_text_value'] : ''), 'plain_text_value', $settings);
 							?>
 							</div>
 						</div>
 
 						<div class="iump-special-line">
 							<?php
-								$posible_values[-1] = __('No level selected', 'ihc');
-								$levels = get_option('ihc_levels');
+								$posible_values[-1] = esc_html__('No Membership selected', 'ihc');
+								$levels = \Indeed\Ihc\Db\Memberships::getAll();
 								if ($levels){
 									foreach ($levels as $id=>$level){
 										$posible_values[$id] = $level['name'];
@@ -919,9 +888,9 @@ switch ($subtab){
 									$meta_arr['target_levels'] = '';
 								}
 							?>
-							<h2><?php _e('Targeting Levels', 'ihc');?></h2>
-							<label class="iump-labels"><?php _e('to show up for:', 'ihc');?></label>
-							<select name="" id="" class="iump-form-select " onchange="ihcWriteTagValueCfl(this, '#indeed-target-levels-cf', '#ihc_select_levels_cf_view', 'ihc-level-select-v-');" style="min-width: 250px;">
+							<h2><?php esc_html_e('Targeting Memberships', 'ihc');?></h2>
+							<label class="iump-labels"><?php esc_html_e('to show up for:', 'ihc');?></label>
+							<select name="" class="iump-form-select ihc-admin-register-min-width" onchange="ihcWriteTagValueCfl(this, '#indeed-target-levels-cf', '#ihc_select_levels_cf_view', 'ihc-level-select-v-');">
 								<option value="-2" selected="">...</option>
 								<?php
 								foreach ($posible_values as $k=>$v){
@@ -944,15 +913,15 @@ switch ($subtab){
 												if (Ihc_Db::does_level_exists($v)){
 													$temp_data = ihc_get_level_by_id($v);
 												} else {
-													$temp_data['name'] = __('Deleted Level', 'ihc');
+													$temp_data['name'] = esc_html__('Deleted Membership', 'ihc');
 													$temp_class .= ' ihc-expired-level';
 												}
 											} else {
-												$temp_data['name'] = __('No level selected', 'ihc');
+												$temp_data['name'] = esc_html__('No Membership selected', 'ihc');
 											}
 											if ($temp_data){
 												$str .= '<div id="ihc-level-select-v-'.$v.'" class="'.$temp_class.'">'.$temp_data['name']
-												. '<div class="ihc-remove-tag" onclick="ihcremoveTag('.$v.', \'#ihc-level-select-v-\', \'#indeed-target-levels-cf\');" title="'.__('Removing tag', 'ihc').'">'
+												. '<div class="ihc-remove-tag" onclick="ihcremoveTag('.$v.', \'#ihc-level-select-v-\', \'#indeed-target-levels-cf\');" title="'.esc_html__('Removing tag', 'ihc').'">'
 												. 'x</div>'
 												. '</div>';
 											}
@@ -964,22 +933,22 @@ switch ($subtab){
 						</div>
 
 						<div class="iump-form-line iump-no-border">
-						<h2><?php _e("Labels", 'ihc');?></h2>
-							<label class="iump-labels"><?php _e('Field Label:', 'ihc');?> </label> <input type="text" name="label" value="<?php echo ihc_correct_text($meta_arr['label']);?>"/>
+						<h2><?php esc_html_e("Labels", 'ihc');?></h2>
+							<label class="iump-labels"><?php esc_html_e('Field Label:', 'ihc');?> </label> <input type="text" name="label" value="<?php echo ihc_correct_text($meta_arr['label']);?>"/>
 						</div>
 						<div class="iump-form-line">
-							<label class="iump-labels"><?php _e('SubLabel:', 'ihc');?></label>
-							<input type="text" value="<?php echo ihc_correct_text(@$meta_arr['sublabel']);?>" name="sublabel" style="width: 400px;" />
+							<label class="iump-labels"><?php esc_html_e('SubLabel:', 'ihc');?></label>
+							<input type="text" value="<?php echo ihc_correct_text((isset($meta_arr['sublabel'])) ? $meta_arr['sublabel'] : '');?>" name="sublabel" class="ihc-admin-register-sublabel-input" />
 						</div>
 						<?php if (empty($meta_arr['class'])) $meta_arr['class'] = '';?>
 						<div class="iump-form-line iump-no-border">
-							<label class="iump-labels"><?php _e('style Class:', 'ihc');?> </label> <input type="text" name="class" value="<?php echo ihc_correct_text($meta_arr['class']);?>"/>
+							<label class="iump-labels"><?php esc_html_e('style Class:', 'ihc');?> </label> <input type="text" name="class" value="<?php echo ihc_correct_text($meta_arr['class']);?>"/>
 						</div>
 						<?php
 							if ($meta_arr['name']=='payment_select'){
 								?>
 								<div class="iump-form-line iump-no-border">
-									<h2><?php _e("Template", 'ihc');?></h2>
+									<h2><?php esc_html_e("Template", 'ihc');?></h2>
 									<p>Payment selection showcase</p>
 									<select name="theme"><?php
 										if (empty($meta_arr['theme'])) $meta_arr['theme'] = 'ihc-select-payment-theme-1';
@@ -998,17 +967,17 @@ switch ($subtab){
 							if (!in_array($meta_arr['name'], array('payment_select', 'ihc_social_media', 'tos', 'ihc_avatar', 'recaptcha', 'ihc_optin_accept', 'ihc_memberlist_accept'))){
 						?>
 						<div class="iump-special-line">
-							<h2><?php _e("Conditional Logic", 'ihc');?></h2>
+							<h2><?php esc_html_e("Conditional Logic", 'ihc');?></h2>
 							<div class="iump-form-line">
-								<label class="iump-labels"><?php _e('Show:', 'ihc');?></label>
+								<label class="iump-labels"><?php esc_html_e('Show:', 'ihc');?></label>
 								<select name="conditional_logic_show">
-									<option <?php if (@$meta_arr['conditional_logic_show']=='yes') echo 'selected';?> value="yes"><?php _e("Yes", 'ihc');?></option>
-									<option <?php if (@$meta_arr['conditional_logic_show']=='no') echo 'selected';?> value="no"><?php _e("No", 'ihc');?></option>
+									<option <?php if (isset($meta_arr['conditional_logic_show']) && $meta_arr['conditional_logic_show']=='yes') echo 'selected';?> value="yes"><?php esc_html_e("Yes", 'ihc');?></option>
+									<option <?php if (isset($meta_arr['conditional_logic_show']) && $meta_arr['conditional_logic_show']=='no') echo 'selected';?> value="no"><?php esc_html_e("No", 'ihc');?></option>
 								</select>
 							</div>
-							<div class="">
-								<div style="display: inline-block;">
-									<label class="iump-labels"><?php _e('If Field:', 'ihc');?></label>
+							<div>
+								<div class="ihc-display-inline">
+									<label class="iump-labels"><?php esc_html_e('If Field:', 'ihc');?></label>
 									<select name="conditional_logic_corresp_field">
 									<?php
 										if (empty($meta_arr['conditional_logic_corresp_field'])){
@@ -1024,35 +993,28 @@ switch ($subtab){
 									?>
 									</select>
 								</div>
-								<div style="display: inline-block;margin-left: 20px;">
+								<div class="ihc-admin-register-condition-field-sect1">
 									<select name="conditional_logic_cond_type">
-										<option <?php if (@$meta_arr['conditional_logic_cond_type']=='has') echo 'selected';?> value="has"><?php _e("Is", 'ihc');?></option>
-										<option <?php if (@$meta_arr['conditional_logic_cond_type']=='contain') echo 'selected';?> value="contain"><?php _e("Contains", 'ihc');?></option>
+										<option <?php if (isset($meta_arr['conditional_logic_cond_type']) && $meta_arr['conditional_logic_cond_type']=='has') echo 'selected';?> value="has"><?php esc_html_e("Is", 'ihc');?></option>
+										<option <?php if (isset($meta_arr['conditional_logic_cond_type']) && $meta_arr['conditional_logic_cond_type']=='contain') echo 'selected';?> value="contain"><?php esc_html_e("Contains", 'ihc');?></option>
 									</select>
 								</div>
-								<div style="display: inline-block;margin-left: 10px">
-									<label style="display: inline-block;margin-right:10px;"> : </label>
-									<input type="text" name="conditional_logic_corresp_field_value" value="<?php echo ihc_correct_text(@$meta_arr['conditional_logic_corresp_field_value']);?>" style="vertical-align: middle; min-width: 250px;" />
+								<div class="ihc-admin-register-condition-field-sect2">
+									<label class="ihc-admin-register-condition-field-sept"> : </label>
+									<input type="text" name="conditional_logic_corresp_field_value" value="<?php echo ihc_correct_text((isset($meta_arr['conditional_logic_corresp_field_value'])) ? $meta_arr['conditional_logic_corresp_field_value'] : '');?>" class="ihc-admin-register-condition-field-input" />
 								</div>
 							</div>
 						</div>
 						<?php } ?>
 
 
-						<div style="margin-top: 15px;">
-							<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="<?php echo $bttn;?>" class="button button-primary button-large" />
+						<div class="ihc-submit-button-wrapper">
+							<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="<?php echo $bttn;?>" class="button button-primary button-large" />
 						</div>
 
 				</div>
 			</form>
 
-			<script>
-				jQuery(document).ready(function(){
-					jQuery('.ihc-register-the-values').sortable({
-						cursor: 'move'
-					});
-				});
-			</script>
 		<?php
 	break;
 }

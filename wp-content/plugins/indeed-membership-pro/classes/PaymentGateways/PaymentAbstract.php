@@ -1,8 +1,9 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-created @version 7.4
-modified @version 8.4
+Created v.7.4
+Modified  v.7.4
+Deprecated starting with v.9.3
 */
 abstract class PaymentAbstract
 {
@@ -34,7 +35,7 @@ abstract class PaymentAbstract
    */
   protected function setLevelsData()
   {
-      $levelsData = get_option('ihc_levels');
+      $levelsData = \Indeed\Ihc\Db\Memberships::getAll();
       if ( isset( $levelsData[ $this->attributes['lid'] ] ) ){
           return $levelsData[ $this->attributes['lid'] ];
       }
@@ -84,22 +85,22 @@ abstract class PaymentAbstract
    */
   public function initDoPayment()
   {
-      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __( ': Start process', 'ihc'), 'payments');
+      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Start process', 'ihc'), 'payments');
       if ( empty( $this->attributes['uid'] ) ){
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __( ': Error, user id not set.', 'ihc'), 'payments');
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Error, user id not set.', 'ihc'), 'payments');
           $this->stopProcess = true;
       }
       if ( empty( $this->attributes['lid'] ) ){
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __( ': Error, level id not set.', 'ihc'), 'payments');
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__( ': Error, level id not set.', 'ihc'), 'payments');
           $this->stopProcess = true;
       }
       $this->levelData = $this->setLevelsData();
       if ( empty( $this->levelData ) ){
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __('t: Error, level not available.', 'ihc'), 'payments');
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__('t: Error, level not available.', 'ihc'), 'payments');
           $this->stopProcess = true;
       }
       if ( $this->isLevelFree() ){
-          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(': Level is free.', 'ihc'), 'payments');
+          \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__(': Level is free.', 'ihc'), 'payments');
           $this->stopProcess = true;
       }
 
@@ -134,8 +135,7 @@ abstract class PaymentAbstract
   */
   protected function addTaxes($amount=0)
   {
-      $levels = get_option('ihc_levels');
-      $levelData = $levels[$this->attributes['lid']];
+      $levelData = \Indeed\Ihc\Db\Memberships::getOne( $this->attributes['lid'] );
       $country = (isset($this->attributes['ihc_country'])) ? $this->attributes['ihc_country'] : '';
       $state = (isset($this->attributes['ihc_state'])) ? $this->attributes['ihc_state'] : '';
       if ( $amount > 0 ){
@@ -162,7 +162,7 @@ abstract class PaymentAbstract
       $tempAmount = $this->attributes['ihc_dynamic_price'];
       if ( ihc_check_dynamic_price_from_user( $this->attributes['lid'], $tempAmount ) ){
         $amount = $tempAmount;
-        \Ihc_User_Logs::write_log( __( $this->paymentTypeLabel . ': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments' );
+        \Ihc_User_Logs::write_log( esc_html__( $this->paymentTypeLabel . ': Dynamic price on - Amount is set by the user @ ', 'ihc') . $amount . $this->currency, 'payments' );
       }
       return $amount;
   }
@@ -186,8 +186,11 @@ abstract class PaymentAbstract
       if ($url){
           $this->defaultRedirect = $url;
       }
+      if ( !empty( $this->attributes['is_register'] ) ){
+          $this->defaultRedirect = apply_filters('ihc_register_redirect_filter', $this->defaultRedirect, $this->attributes['uid'], $this->attributes['lid']);
+      }
+
       $url = ihc_get_redirect_link_by_label($redirect, $this->attributes['uid']);
-      $url = apply_filters('ihc_register_redirect_filter', $url, $this->attributes['uid'], $this->attributes['lid']);
       if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){
           $this->defaultRedirect = $url;
       }
@@ -213,12 +216,11 @@ abstract class PaymentAbstract
       $this->attributes['lid'] = $paymentData['lid'];
       $this->levelData = $this->setLevelsData();
       if ( $isTrial ){
-          ihc_set_level_trial_time_for_no_pay($paymentData['lid'], $paymentData['uid']);
+          \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], true, [ 'payment_gateway' => $this->paymentType ] );
       } else {
-          ihc_update_user_level_expire( $this->levelData, $paymentData['lid'], $paymentData['uid'] );
+          \Indeed\Ihc\UserSubscriptions::makeComplete( $paymentData['uid'], $paymentData['lid'], false, [ 'payment_gateway' => $this->paymentType ] );
       }
-      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(" Payment Webhook: Updated user (".$paymentData['uid'].") level (".$paymentData['lid'].") expire time.", 'ihc'), 'payments');
-      ihc_switch_role_for_user( $paymentData['uid'] );
+      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__(" Payment Webhook: Updated user (".$paymentData['uid'].") level (".$paymentData['lid'].") expire time.", 'ihc'), 'payments');
 
       /// Order
       if ( empty( $paymentData['orderId'] ) ){
@@ -251,11 +253,7 @@ abstract class PaymentAbstract
                             ->setOrders( $paymentData['orderId'] )
                             ->save();
 
-      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . __(' Payment Webhook: Payment - Completed.', 'ihc'), 'payments');
-
-      /// Notifications
-      ihc_send_user_notifications( $paymentData['uid'], 'payment', $paymentData['lid'] );
-      ihc_send_user_notifications( $paymentData['uid'], 'admin_user_payment', $paymentData['lid'] );//send notification to admin
+      \Ihc_User_Logs::write_log( $this->paymentTypeLabel . esc_html__(' Payment Webhook: Payment - Completed.', 'ihc'), 'payments');
 
       /// Action on payment completed
       do_action( 'ihc_payment_completed', $paymentData['uid'], $paymentData['lid'] );
@@ -266,8 +264,7 @@ abstract class PaymentAbstract
   {
       // Level Expire
       $this->levelData = $this->setLevelsData();
-      ihc_update_user_level_expire( $this->levelData, $this->attributes['lid'], $this->attributes['uid'] );
-      ihc_switch_role_for_user( $this->attributes['uid'] );
+      \Indeed\Ihc\UserSubscriptions::makeComplete( $this->attributes['uid'], $this->attributes['lid'], false, [ 'payment_gateway' => $this->paymentType ] );
       do_action( 'ihc_payment_completed', $this->attributes['uid'], $this->attributes['lid'] );
       // @description run on payment complete. @param user id (integer), level id (integer)
   }

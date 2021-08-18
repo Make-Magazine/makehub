@@ -47,7 +47,7 @@ class LiteRegister extends UserAddEdit{
 			$this->register_template = $this->shortcodes_attr['template'];
 		}
 		$data['email_fields'] = $this->print_fields($this->register_fields[$key]);
-		$data['submit_button'] = indeed_create_form_element(array('type'=>'submit', 'name'=>'Submit', 'value' => __('Register', 'ihc'), 'class' => 'button button-primary button-large',));
+		$data['submit_button'] = indeed_create_form_element(array('type'=>'submit', 'name'=>'Submit', 'value' => esc_html__('Register', 'ihc'), 'class' => 'button button-primary button-large',));
 		$data['hidden_fields'][] = indeed_create_form_element(array('type'=>'hidden', 'name'=>'ihcaction', 'value' => 'register_lite' ));
 		$data['hidden_fields'][] = $this->printNonce();
 		$data['css'] = stripslashes($this->lite_register_metas['ihc_register_lite_custom_css']);
@@ -73,24 +73,30 @@ class LiteRegister extends UserAddEdit{
 		 $this->register_metas = array_merge(ihc_return_meta_arr('register'), ihc_return_meta_arr('register-msg'), ihc_return_meta_arr('register-custom-fields'));
 		 $this->set_register_fields();
 
-		 if ( !$this->checkNonce() ){
-				 return false;
+		 $errors = apply_filters( 'ihc_filter_register_lite_process_check_errors', [], $_POST, $this->register_fields, $this->user_id );
+		 if ( $errors ){
+				 $this->errors = $errors;
 		 }
 
-		 $this->check_email();
 		 $this->errors = apply_filters('ump_before_printing_errors', $this->errors);
+
 		 if ($this->errors){
 			 //print the error and exit
 			 $this->return_errors();
 			 return FALSE;
 		 }
 
-		 $this->fields['user_login'] = @$_POST['user_email'];
+		 $this->fields['user_login'] = (isset($_POST['user_email'])) ? $_POST['user_email'] : '';
 		 $this->fields['user_login'] = sanitize_text_field( $this->fields['user_login'] );
-		 $this->fields['user_email'] = @$_POST['user_email'];
+		 $this->fields['user_email'] = (isset($_POST['user_email'])) ? $_POST['user_email'] : '';
 		 $this->fields['user_email'] = sanitize_email( $this->fields['user_email'] );
 		 $this->fields['user_pass'] = wp_generate_password(10);
-		 $this->set_roles();
+
+		 if ( empty( $this->user_id ) ){
+		 		// we set the role via filter. It's called in classses/RegistrationEvents.php
+			 	$this->fields['role'] = apply_filters( 'ihc_filter_register_role', '', $_POST, $this->shortcodes_attr, 'register_lite' );
+		 }
+
 		 $this->user_id = wp_insert_user($this->fields);
 		 do_action('ump_on_register_action', $this->user_id);
 		 // @description Run on register user. @param user id (integer)
@@ -99,13 +105,20 @@ class LiteRegister extends UserAddEdit{
 		 // @description Run on register user with lite register form. @param user id (integer)
 
 		 //Ihc_Db::increment_dashboard_notification('users');
-		 $this->do_individual_page();
+		 if ( $this->type == 'create' ){
+				 do_action( 'ihc_register_action_after_insert', $this->user_id, $_POST, $this->register_metas, $this->shortcode_atts, 'register_lite' );
+		 }
+
 		 $this->notify_user_send_password();
-		 $this->do_opt_in();
-		 $this->double_email_verification();
 		 $this->do_autologin();
-		 $this->notify_admin();
-		 $this->notify_user();
+
+				if (!empty($this->register_metas['ihc_register_new_user_role']) && $this->register_metas['ihc_register_new_user_role']=='pending_user'){
+					//PENDING
+					do_action( 'ihc_action_create_user_review_request', $this->user_id, (isset($_POST['lid'])) ? $_POST['lid'] : 0 );
+				} else {
+					do_action( 'ihc_action_create_user_register', $this->user_id, (isset($_POST['lid'])) ? $_POST['lid'] : 0  );
+				}
+
 		 if ($this->is_public){
 			$this->succes_message();//this will redirect
 		 }
@@ -123,60 +136,6 @@ class LiteRegister extends UserAddEdit{
 			wp_set_auth_cookie($this->user_id);
 		}
 	}
-
-	protected function do_opt_in(){
-		/*
-		 * @param none
-		 * @return none
-		 */
-		if ($this->lite_register_metas['ihc_register_lite_opt_in'] && $this->type=='create' && empty($this->lite_register_metas['ihc_register_lite_double_email_verification'])){
-			ihc_run_opt_in($_POST['user_email'], get_option('ihc_register_lite_opt_in_type'));
-		}
-	}
-
-
-	protected function double_email_verification(){
-		/*
-		 * @param none
-		 * @return none
-		 */
-		if (isset($this->shortcodes_attr['double_email']) && $this->shortcodes_attr['double_email']!==FALSE){
-			$this->lite_register_metas['ihc_register_lite_double_email_verification'] = $this->shortcodes_attr['double_email'];
-		}
-
-		if ($this->is_public && $this->type=='create' && !empty($this->lite_register_metas['ihc_register_lite_double_email_verification']) ){
-			$hash = ihc_random_str(10);
-			//put the hash into user option
-			update_user_meta($this->user_id, 'ihc_activation_code', $hash);
-			//set ihc_verification_status @ -1
-			update_user_meta($this->user_id, 'ihc_verification_status', -1);
-			///$activation_url_w_hash = IHC_URL . 'user_activation.php?uid=' . $this->user_id . '&ihc_code=' . $hash;
-			$activation_url_w_hash = site_url();
-			$activation_url_w_hash = add_query_arg('ihc_action', 'user_activation', $activation_url_w_hash);
-			$activation_url_w_hash = add_query_arg('uid', $this->user_id, $activation_url_w_hash);
-			$activation_url_w_hash = add_query_arg('ihc_code', $hash, $activation_url_w_hash);
-			//send a nice notification
-			ihc_send_user_notifications($this->user_id, 'email_check', @$_POST['lid'], array('{verify_email_address_link}'=>$activation_url_w_hash));
-		}
-	}
-
-	private function set_roles(){
-		/*
-		 * @param none
-		 * @return none
-		 */
-		if ($this->is_public && $this->type=='create'){
-			if (isset($this->lite_register_metas['ihc_register_lite_user_role'])){
-				$this->fields['role'] = $this->lite_register_metas['ihc_register_lite_user_role'];
-			} else {
-				$this->fields['role'] = 'subscriber';
-			}
-			if (isset($this->shortcodes_attr['role']) && $this->shortcodes_attr['role']!==FALSE){
-				$this->fields['role'] = $this->shortcodes_attr['role'];
-			}
-		}
-	}
-
 
 	protected function succes_message(){
 		/*
@@ -199,7 +158,7 @@ class LiteRegister extends UserAddEdit{
 			$url = get_permalink($redirect);
 			if (!$url){
 				$url = ihc_get_redirect_link_by_label($redirect, $this->user_id);
-				if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){ /// $_SERVER['SERVER_NAME']
+				if (strpos($url, IHC_PROTOCOL . $_SERVER['HTTP_HOST'] )!==0){ 
 					//if it's a external custom redirect we don't want to add extra params in url, so let's redirect from here
 					wp_safe_redirect($url);
 					exit();
@@ -208,7 +167,7 @@ class LiteRegister extends UserAddEdit{
 		}
 
 		if (empty($url)){
-			$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; /// $_SERVER['SERVER_NAME']
+			$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; 
 		}
 
 		if ($this->bank_transfer_message){
@@ -241,6 +200,15 @@ class LiteRegister extends UserAddEdit{
 		}
 		wp_safe_redirect($url);
 		exit();
+	}
+
+	protected function notify_user_send_password(){
+		/*
+		 * @param none
+		 * @return none
+		 */
+		 do_action( 'ihc_register_lite_action', $this->user_id, [ '{NEW_PASSWORD}' => $this->fields['user_pass'] ] );
+
 	}
 
 }

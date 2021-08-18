@@ -13,12 +13,13 @@ class ZapierSendData
         if ( !$this->settings['ihc_zapier_enabled'] ){
             return false;
         }
-        add_action( 'ump_on_register_action', array( $this, 'onUserRegister' ), 99, 1 );
+        add_action( 'ihc_action_create_user_review_request', array( $this, 'onUserRegister' ), 99, 2 );
+        add_action( 'ihc_action_create_user_register', array( $this, 'onUserRegister' ), 99, 2 );
         add_action( 'ihc_action_after_order_placed', array( $this, 'onOrderCreated' ), 99, 2 );
         add_action( 'ihc_payment_completed', array($this, 'onOrderCompleted'), 99, 2 );
     }
 
-    public function onUserRegister($uid=0)
+    public function onUserRegister( $uid=0, $lid=0 )
     {
         if ( !$uid || !$this->settings['ihc_zapier_new_user_enabled'] ){
             return false;

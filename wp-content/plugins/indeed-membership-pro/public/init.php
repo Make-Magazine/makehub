@@ -19,7 +19,7 @@ function ihc_init(){
 
 	$restrictionOn = true;
 	$postid = -1;
-	$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; /// $_SERVER['SERVER_NAME']
+	$url = IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']; 
 	$current_user = false;
 
 	if (!empty($_POST['ihcaction'])){
@@ -28,7 +28,7 @@ function ihc_init(){
 	} else {
 		/// LOGOUT / PAY NEW LEVEL
 		if (!empty($_GET['ihcdologout'])){
-			include_once IHC_PATH . 'public/functions/logout.php';
+			include_once IHC_PATH . 'public/logout.php';
 			ihc_do_logout($url);
 		} else if (!empty($_GET['ihcnewlevel'])){
 			ihc_do_pay_new_level();
@@ -67,9 +67,13 @@ function ihc_init(){
 			} else {
 				//test if its homepage
 				$homepage = get_option('page_on_front');
-				if($url==get_permalink($homepage)) $postid = $homepage;
+				if($url==get_permalink($homepage)){
+					$postid = $homepage;
+				}
 			}
 		}
+
+		do_action( 'ihc_action_general_init', $postid );
 
 		$restrictionOn = apply_filters( 'ihc_filter_restriction', $restrictionOn, $postid );
 		if ( !$restrictionOn ){
@@ -92,7 +96,7 @@ function ihc_init(){
 	ihc_do_block_if_individual_page($postid);
 
 	/////////////BLOCK BY URL
-	ihc_block_url($url, $current_user, $postid);//function available in public/functions.php
+	ihc_block_url($url, $current_user, $postid);
 
 	/// Block Rules
 	ihc_check_block_rules($url, $current_user, $postid);

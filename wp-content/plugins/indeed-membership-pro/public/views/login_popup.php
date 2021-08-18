@@ -1,22 +1,4 @@
-<?php if ( $isLoginPage ):?>
-  <script>
-      jQuery(document).ready(function(){
-          jQuery('.ihc-modal-trigger-login').click(function() {
-              jQuery('html, body').animate({
-                  scrollTop: jQuery( '.ihc-login-form-wrap' ).offset().top
-              }, 1000);
-          });
-      });
-  </script>
-<?php elseif ( !empty( $uid ) ):?>
-  <script>
-      jQuery(document).ready(function(){
-          jQuery('.ihc-modal-trigger-login').click(function() {
-              return false;
-          });
-      });
-  </script>
-<?php else:?>
+<?php if ( !$isLoginPage && empty( $uid ) ):?>
     <?php
         wp_enqueue_style( 'ihc_iziModal' );
         wp_enqueue_script( 'ihc_iziModal_js' );
@@ -29,21 +11,20 @@
         </div>
     <?php endif;?>
 
-    <div class="" id="ihc_login_modal" style="display: none" data-title="<?php _e('Login', 'ihc');?>">
+    <div class="ihc-display-none" id="ihc_login_modal" data-title="<?php esc_html_e('Login', 'ihc');?>">
         <?php echo do_shortcode( '[ihc-login-form]' );?>
     </div>
 
-    <?php
-    $preventDefault = empty($trigger) ? 0 : 1;
-    $triggerSelector = empty($trigger) ? '.ihc-login-modal-trigger' : '.' . $trigger;
-    ?>
-    <script>
-        jQuery(document).ready(function(){
-            IhcLoginModal.init({
-                triggerModalSelector  : '<?php echo $triggerSelector;?>',
-                preventDefault        : <?php echo $preventDefault;?>,
-                autoStart             : <?php echo empty ( $_GET['ihc_login_fail'] )  ? 'false' : 'true';?>
-            });
-        });
-    </script>
 <?php endif;?>
+
+<?php
+$preventDefault = empty($trigger) ? 0 : 1;
+$triggerSelector = empty($trigger) ? '.ihc-login-modal-trigger' : '.' . $trigger;
+?>
+<span class="ihc-js-login-popup-data"
+      data-is_login_page="<?php if ( $isLoginPage ) {echo 1;} else {echo 0;} ?>"
+      data-is_logged="<?php if ( !empty( $uid ) ) {echo 1;} else {echo 0;} ?>"
+      data-trigger_selector="<?php echo $triggerSelector;?>"
+      data-trigger_default="<?php echo $preventDefault;?>"
+      data-autoStart="<?php echo empty ( $_GET['ihc_login_fail'] )  ? 'false' : 'true';?>"
+></span>

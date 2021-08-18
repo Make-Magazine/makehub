@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Gutenberg
+*/
+"use strict";
 var el = wp.element.createElement,
     registerBlockType = wp.blocks.registerBlockType,
     blockStyle = {};

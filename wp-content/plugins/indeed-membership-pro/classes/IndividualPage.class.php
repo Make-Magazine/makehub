@@ -28,7 +28,7 @@ class IndividualPage{
 			$content = stripslashes(self::$metas['ihc_individual_page_default_content']);
 			$content = apply_filters('ihc_insert_individual_page_content', $content, $uid);
 			$title = stripslashes(self::$metas['ihc_individual_page_title']);
-			//$title = str_replace('{username}', $username, $title);
+	
 			$title = ihc_replace_constants($title, $uid, -1, -1);
 			$post_name = self::$metas['ihc_individual_page_slug_prefix'] . $username;
 			$post_id = wp_insert_post(

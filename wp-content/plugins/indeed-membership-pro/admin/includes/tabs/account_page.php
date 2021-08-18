@@ -20,26 +20,31 @@ $font_awesome = Ihc_Db::get_font_awesome_codes();
 
 $custom_tabs = Ihc_Db::account_page_menu_get_custom_items();
 $available_tabs = Ihc_Db::account_page_get_menu();
-?>
-<style>
-<?php foreach ($font_awesome as $base_class => $code):?>
-	<?php echo '.' . $base_class . ':before';?>{
-		content: '\<?php echo $code;?>';
-	}
-<?php endforeach;?>
+$custom_css = '';
 
-<?php if ($available_tabs):?>
-<?php foreach ($available_tabs as $slug => $array):?>
-	<?php echo '.fa-' . $slug . '-account-ihc:before';?>{
-		content: '\<?php echo $array['icon'];?>';
-	}
-<?php endforeach;?>
-<?php endif;?>
+ foreach ($font_awesome as $base_class => $code):
+	$custom_css .= "." . $base_class . ":before{".
+		"content: '\\".$code."';".
+	"}";
+endforeach;
+if ($available_tabs):
+foreach ($available_tabs as $slug => $array):
 
-</style>
+	$custom_css .=  ".fa-" . $slug . "-account-ihc:before{".
+		"content: '\\". $array['icon']."';".
+	"}";
+
+endforeach;
+endif;
+
+wp_register_style( 'dummy-handle', false );
+wp_enqueue_style( 'dummy-handle' );
+wp_add_inline_style( 'dummy-handle', $custom_css );
+ ?>
+
 <div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
-								<?php _e('Account Page', 'ihc');?>
+								<?php esc_html_e('Account Page', 'ihc');?>
 							</span>
 						</div>
 			<div class="ihc-stuffbox">
@@ -47,26 +52,29 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 					[ihc-user-page]
 				</div>
 			</div>
-<div class="metabox-holder indeed">
-<form action="" method="post">
+<div class="metabox-holder indeed ihc-admin-account-page">
+<form  method="post">
 	<input type="hidden" name="ihc_admin_account_page_nonce" value="<?php echo wp_create_nonce( 'ihc_admin_account_page_nonce' );?>" />
 
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Top Section:', 'ihc');?></h3>
+		<h3><?php esc_html_e('Top Section', 'ihc');?></h3>
 		<div class="inside">
 
-			<div class="iump-register-select-template" style="padding:20px 0 35px 20px;">
-				<?php _e('Select Template:', 'ihc');?>
-				<select name="ihc_ap_top_template"  style="min-width:300px; margin-left:10px;"><?php
+			<div class="iump-register-select-template">
+				<?php esc_html_e('Select Template:', 'ihc');?>
+				<select name="ihc_ap_top_template">
+					<?php
 					$themes = array(
-											'ihc-ap-top-theme-1' => '(#1) '.__('Basic Full Background Theme', 'ihc'),
-											'ihc-ap-top-theme-2' => '(#2) '.__('Square Top Image Theme', 'ihc'),
-											'ihc-ap-top-theme-3' => '(#3) '.__('Rounded Big Image Theme', 'ihc'),
-											'ihc-ap-top-theme-4' => '(#4) '.__('Modern OverImage Theme', 'ihc'),
+											'ihc-ap-top-theme-1' => '(#1) '.esc_html__('Basic Full Background Theme', 'ihc'),
+											'ihc-ap-top-theme-2' => '(#2) '.esc_html__('Square Top Image Theme', 'ihc'),
+											'ihc-ap-top-theme-3' => '(#3) '.esc_html__('Rounded Big Image Theme', 'ihc'),
+											'ihc-ap-top-theme-4' => '(#4) '.esc_html__('Modern OverImage Theme', 'ihc'),
 					);
 					foreach ($themes as $k=>$v){
 						?>
-						<option value="<?php echo $k;?>" <?php if ($meta_arr['ihc_ap_top_template']==$k) echo 'selected';?> ><?php echo $v;?></option>
+						<option value="<?php echo $k;?>" <?php if ($meta_arr['ihc_ap_top_template']==$k){
+							 echo 'selected';
+						}?> ><?php echo $v;?></option>
 						<?php
 					}
 				?></select>
@@ -74,37 +82,65 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 
 			<div class="inside">
 
+					<div class="iump-form-line iump-no-border">
+						<h4><?php esc_html_e('Member Banner Image', 'ihc');?></h4>
+						<p><?php esc_html_e('The cover or background image, based on what Template you have chosen. This section is achievable also with ','ihc');?> <strong>[ihc-user-banner]</strong><?php esc_html_e(' shortcode.', 'ihc');?></p>
+						<label class="iump_label_shiwtch ihc-switch-button-margin">
+							<?php if (!isset($meta_arr['ihc_ap_edit_background'])){
+								$meta_arr['ihc_ap_edit_background'] = 1;
+							} ?>
+							<?php $checked = ($meta_arr['ihc_ap_edit_background']==1) ? 'checked' : '';?>
+							<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_edit_background');" <?php echo $checked;?> />
+							<div class="switch ihc-display-inline"></div>
+						</label>
+						<input type="hidden" name="ihc_ap_edit_background" value="<?php echo $meta_arr['ihc_ap_edit_background'];?>" id="ihc_ap_edit_background"/>
 
-				<div>
+						<div class="row">
+						<div class="col-xs-4">
+							<p><?php esc_html_e('Upload a custom Banner image to replace the default one.', 'ihc');?></p>
+							<div class="input-group" >
+								<input type="text" class="form-control ihc-background-image" onClick="openMediaUp(this);" value="<?php  echo $meta_arr['ihc_ap_top_background_image'];?>" name="ihc_ap_top_background_image" id="ihc_ap_top_background_image" />
+								<i class="fa-ihc ihc-icon-remove-e ihc-js-admin-top-bacgrkound-image-delete" title="<?php esc_html_e('Remove Background Image', 'ihc');?>"></i>
+							</div>
+					</div>
+					</div>
+				</div>
 
-					<label class="iump_label_shiwtch iump-onbutton">
+				<div class="iump-form-line iump-no-border">
+					<h4><?php esc_html_e('Member Avatar Image', 'ihc');?></h4>
+					<p><?php esc_html_e('If Members have the option to upload their own Avatar, this one can show on My Account page. You can display the Avatar Image anywhere else by using ', 'ihc');?> <strong>	[ihc-user field="ihc_avatar"]</strong><?php esc_html_e(' shortcode.', 'ihc');?></p>
+					<label class="iump_label_shiwtch iump-onbutton ihc-switch-button-margin">
 						<?php $checked = ($meta_arr['ihc_ap_edit_show_avatar']) ? 'checked' : '';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_edit_show_avatar');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
+						<div class="switch ihc-display-inline"></div>
 					</label>
 					<input type="hidden" value="<?php echo $meta_arr['ihc_ap_edit_show_avatar'];?>" name="ihc_ap_edit_show_avatar" id="ihc_ap_edit_show_avatar" />
-					<label><?php _e('Show Avatar Image:', 'ihc');?></label>
 				</div>
 
-				<div>
-					<label class="iump_label_shiwtch iump-onbutton">
+				<div class="iump-form-line iump-no-border">
+					<h4><?php esc_html_e('Display Member Memberships', 'ihc');?></h4>
+					<p><?php esc_html_e('Members may see their signed Memberships directly the top of My Account page', 'ihc');?></p>
+					<label class="iump_label_shiwtch iump-onbutton ihc-switch-button-margin">
 						<?php $checked = ($meta_arr['ihc_ap_edit_show_level']) ? 'checked' : '';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_edit_show_level');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
+						<div class="switch ihc-display-inline"></div>
 					</label>
 					<input type="hidden" value="<?php echo $meta_arr['ihc_ap_edit_show_level'];?>" name="ihc_ap_edit_show_level" id="ihc_ap_edit_show_level" />
-					<label><?php _e('Show Level:', 'ihc');?></label>
+
 				</div>
-				<br/>
-				<h4><?php _e('Welcome Message:', 'ihc');?></h4>
-				<div class="iump-wp_editor" style="float:left; width: 60%;">
-				<?php wp_editor(stripslashes($meta_arr['ihc_ap_welcome_msg']), 'ihc_ap_welcome_msg', array('textarea_name'=>'ihc_ap_welcome_msg', 'editor_height'=>200));?>
+
+				<div class="iump-form-line iump-no-border">
+				<h2><?php esc_html_e('Welcome Message', 'ihc');?></h2>
+				<p><?php esc_html_e('Customize the Top Message with Member personal information', 'ihc');?></p>
+				<div class="iump-wp_editor">
+				<?php wp_editor(stripslashes($meta_arr['ihc_ap_welcome_msg']), 'ihc_ap_welcome_msg', array('textarea_name'=>'ihc_ap_welcome_msg', 'editor_height'=>300));?>
 				</div>
-				<div style="width: 19%; display: inline-block; vertical-align: top;margin-left: 10px; color: #333;">
-				<h4><?php _e('Regular constants', 'ihc');?></h4>
+				<div class="iump-wp_editor-constants">
+				<h4><?php esc_html_e('Regular constants', 'ihc');?></h4>
 					<?php
 						$constants = array( '{username}'=>'',
 											'{user_email}'=>'',
+											'{user_id}'		=> '',
 											'{first_name}'=>'',
 											'{last_name}'=>'',
 											'{account_page}'=>'',
@@ -125,38 +161,33 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 						}
 						?>
 						</div>
-						<div style="width: 19%; display: inline-block; vertical-align: top; margin-left: 10px; color: #333;">
-							<h4><?php _e('Custom Fields constants', 'uap');?></h4>
+						<div class="iump-wp_editor-constants-coltwo">
+							<h4><?php esc_html_e('Custom Fields constants', 'ihc');?></h4>
+							<div class="iump-wp_editor-constants-colthree">
 						<?php
+						$i = 1;
+						$half = round(count($extra_constants)/2);
 						foreach ($extra_constants as $k=>$v){
 							?>
 							<div><?php echo $k;?></div>
 							<?php
-						}
-					?>
-				</div>
+							$i++;
+							if($i == $half){
+								?>
+								</div>
+								<div class="iump-wp_editor-constants-colfour">
+								<?php
+							}
+							}
+							?>
+							</div>
+						</div>
 				<div class="ihc-clear"></div>
+			</div>
 
 
-				<div class="input-group">
-					<h2><?php _e('Background/Banner Image:', 'ihc');?></h2>
-					<p><?php _e('The cover or background image, based on what theme you have chosen.', 'ihc');?></p>
-					<label class="iump_label_shiwtch  iump-onbutton">
-						<?php if (!isset($meta_arr['ihc_ap_edit_background'])) $meta_arr['ihc_ap_edit_background'] = 1; ?>
-						<?php $checked = ($meta_arr['ihc_ap_edit_background']==1) ? 'checked' : '';?>
-						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_edit_background');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
-					</label>
-					<input type="hidden" name="ihc_ap_edit_background" value="<?php echo $meta_arr['ihc_ap_edit_background'];?>" id="ihc_ap_edit_background"/>
-
-
-				<div class="form-group" style="margin:20px 0 10px 10px">
-					<input type="text" class="form-control" onClick="openMediaUp(this);" value="<?php  echo $meta_arr['ihc_ap_top_background_image'];?>" name="ihc_ap_top_background_image" id="ihc_ap_top_background_image" style="width: 90%;display: inline; float:none; min-width:500px;"/>
-					<i class="fa-ihc ihc-icon-remove-e" onclick="jQuery('#ihc_ap_top_background_image').val('');" title="<?php _e('Remove Background Image', 'ihc');?>"></i>
-				</div>
-				</div>
 				<div class="ihc-wrapp-submit-bttn">
-					<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  style="min-width:50px;" />
+					<input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 
 			</div>
@@ -164,27 +195,33 @@ $available_tabs = Ihc_Db::account_page_get_menu();
 	</div>
 
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Content Section:', 'ihc');?></h3>
+		<h3><?php esc_html_e('Content Section', 'ihc');?></h3>
 			  <div class="inside">
 
-				<div class="iump-register-select-template" style="padding:20px 0 35px 20px;">
-					<?php _e('Select Template:', 'ihc');?>
-					<select name="ihc_ap_theme"  style="min-width:300px; margin-left:10px;"><?php
+				<div class="iump-register-select-template">
+					<?php esc_html_e('Select Template:', 'ihc');?>
+					<select name="ihc_ap_theme" ><?php
 						$themes = array(
-												'ihc-ap-theme-1' => '(#1) '.__('Blue New Theme', 'ihc'),
-												'ihc-ap-theme-2' => '(#2) '.__('Dark Theme', 'ihc'),
-												'ihc-ap-theme-3' => '(#3) '.__('Mega Icons', 'ihc'),
-												'ihc-ap-theme-4' => '(#4) '.__('Ultimate Member', 'ihc'),
+												'ihc-ap-theme-1' => '(#1) '.esc_html__('Blue New Theme', 'ihc'),
+												'ihc-ap-theme-2' => '(#2) '.esc_html__('Dark Theme', 'ihc'),
+												'ihc-ap-theme-3' => '(#3) '.esc_html__('Mega Icons', 'ihc'),
+												'ihc-ap-theme-4' => '(#4) '.esc_html__('Ultimate Member', 'ihc'),
 						);
 						foreach ($themes as $k=>$v){
 							?>
-							<option value="<?php echo $k;?>" <?php if ($meta_arr['ihc_ap_theme']==$k) echo 'selected';?> ><?php echo $v;?></option>
+							<option value="<?php echo $k;?>" <?php if ($meta_arr['ihc_ap_theme']==$k){
+								 echo 'selected';
+							}
+							?> ><?php echo $v;?></option>
 							<?php
 						}
 					?></select>
 				</div>
+				<div class="iump-form-line iump-no-border">
+					<h2 class="ihc-myaccount-title"><?php esc_html_e('My Account Menu', 'ihc');?></h2>
+					<p><?php esc_html_e('Customize the content of each predefined or custom Tab from My Account page. If you want to add extra custom Tabas or reorder them check the ', 'ihc');?> <strong>Extensions->Account Custom Tabs</strong> <?php esc_html_e(' module', 'ihc');?></p>
+				</div>
 
-				<h2 style="font-size:22px;"><?php _e('Menu Tabs:', 'ihc');?></h2>
 				<?php
 					if (!ihc_is_magic_feat_active('gifts')){
 						unset($available_tabs['membeship_gifts']);
@@ -214,14 +251,14 @@ $i = 0;
 					foreach ($available_tabs as $k=>$v){
 						?>
 
-							<div class="ihc-ap-tabs-settings-item" id="<?php echo 'ihc_tab_item_' . $k;?>" style="margin-top:20px;">
+							<div class="ihc-ap-tabs-settings-item iump-form-line iump-no-border inside" id="<?php echo 'ihc_tab_item_' . $k;?>">
 								<h4><?php echo $v['label'];?></h4>
-								<div style="margin: 7px 0px;">
-									<span class="iump-labels-onbutton" style="  min-width:100px;"><?php _e('Activate the Tab:', 'ihc');?></span>
-									<label class="iump_label_shiwtch  iump-onbutton">
+								<div class="ihc-ap-tabs-item">
+									<p><?php esc_html_e('Show/Hide', 'ihc');?> <?php echo $v['label'];?> <?php esc_html_e('from My Account page', 'ihc');?></p>
+									<label class="iump_label_shiwtch ihc-switch-button-margin">
 										<?php $checked = (in_array($k, $tabs)) ? 'checked' : '';?>
 										<input type="checkbox" class="iump-switch" onClick="ihcMakeInputhString(this, '<?php echo $k;?>', '#ihc_ap_tabs');" <?php echo $checked;?> />
-										<div class="switch" style="display:inline-block;"></div>
+										<div class="switch ihc-display-inline"></div>
 									</label>
 								</div>
 
@@ -230,57 +267,46 @@ $i = 0;
 											$meta_arr['ihc_ap_' . $k . '_menu_label'] = '';
 										}
 									?>
-									<div class="input-group" style="max-width:40%;">
-										<span class="input-group-addon" id="basic-addon1"><?php _e('Menu Label', 'uap');?></span>
-										<input type="text" class="form-control" placeholder="" value="<?php echo $meta_arr['ihc_ap_' . $k . '_menu_label'];?>" name="<?php echo 'ihc_ap_' . $k . '_menu_label';?>">
-									</div>
+									<div class="iump-form-line iump-no-border">
+									<div class="row">
+                	<div class="col-xs-4">
 
+										<div class="input-group">
+											<span>
+												<div class="ihc-icon-select-wrapper">
+													<div class="ihc-icon-input">
+														<div id="<?php echo 'indeed_shiny_select_' . $k;?>" class="ihc-shiny-select-html"></div>
+													</div>
+														<div class="ihc-icon-arrow" id="<?php echo 'ihc_icon_arrow_' . $k;?>"><i class="fa-ihc fa-arrow-ihc"></i></div>
+													<div class="ihc-clear"></div>
+												</div>
+											</span>
+											<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Menu Label', 'ihc');?></span>
+											<input type="text" class="form-control" placeholder="" value="<?php echo $meta_arr['ihc_ap_' . $k . '_menu_label'];?>" name="<?php echo 'ihc_ap_' . $k . '_menu_label';?>">
+										</div>
+
+										<span class="ihc-js-data-for-indeed-shinny-select" data-type="<?php echo $k;?>" data-value="<?php echo $meta_arr['ihc_ap_' . $k . '_icon_code'];?>" ></span>
+
+									</div>
+									</div>
+								</div>
 									<?php
 									if (empty($meta_arr['ihc_ap_' . $k . '_title'])){
 										$meta_arr['ihc_ap_' . $k . '_title'] = '';
 									}
 									?>
 									<?php if ($k!='logout'):?>
-										<div class="input-group" style="max-width:40%;">
-											<span class="input-group-addon" id="basic-addon1"><?php _e('Title', 'ihc');?></span>
+										<div class="iump-form-line iump-no-border">
+										<div class="row">
+	                	<div class="col-xs-4">
+										<div class="input-group">
+											<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Tab Title', 'ihc');?></span>
 											<input type="text" class="form-control" placeholder="" value="<?php echo $meta_arr['ihc_ap_' . $k . '_title'];?>" name="<?php echo 'ihc_ap_' . $k . '_title';?>">
 										</div>
-									<?php endif;?>
-
-
-									<!-- ICON SELECT - SHINY -->
-									<div class="row" style="margin-left:0px;">
-										<div class="col-xs-4" style="margin-bottom: 10px;">
-									   		<div class="input-group" style="margin:0px 0 15px 0;">
-												<label><?php _e('Icon', 'ihc');?></label>
-												<!-- div id="<?php echo 'indeed_shiny_select_' . $k;?>" class="ihc-shiny-select-html"></div -->
-
-											<div class="ihc-icon-select-wrapper">
-												<div class="ihc-icon-input">
-													<div id="<?php echo 'indeed_shiny_select_' . $k;?>" class="ihc-shiny-select-html"></div>
-												</div>
-								   				<div class="ihc-icon-arrow" id="<?php echo 'ihc_icon_arrow_' . $k;?>"><i class="fa-ihc fa-arrow-ihc"></i></div>
-												<div class="ihc-clear"></div>
-											</div>
-
-									   		</div>
-										</div>
 									</div>
-									<script>
-									jQuery(document).ready(function(){
-										var <?php echo 'ihc_shiny_object_' . $i;$i++;?> = new indeedShinySelect({
-													selector: '#<?php echo 'indeed_shiny_select_' . $k;?>',
-													item_selector: '.ihc-font-awesome-popup-item',
-													option_name_code: '<?php echo 'ihc_ap_' . $k . '_icon_code';?>',
-													option_name_icon: '<?php echo 'ihc_ap_' . $k . '_icon_class';?>',
-													default_icon: '<?php echo 'fa-ihc fa-' . $k . '-account-ihc';?>',
-													default_code: '<?php echo $meta_arr['ihc_ap_' . $k . '_icon_code'];?>',
-													init_default: true,
-													second_selector: '<?php echo '#ihc_icon_arrow_' . $k;?>'
-										});
-									});
-									</script>
-									<!-- ICON SELECT - SHINY -->
+									</div>
+									</div>
+									<?php endif;?>
 
 									<?php
 										if (empty($meta_arr['ihc_ap_' . $k . '_msg'])){
@@ -288,13 +314,14 @@ $i = 0;
 										}
 									?>
 									<?php if ($k!='logout'):?>
-										<div style="margin-top:20px;">
-											<div style="width: 60%; display: inline-block; vertical-align: top; box-sizing:border-box;"><?php
-												wp_editor(stripslashes($meta_arr['ihc_ap_' . $k . '_msg']), 'uap_tab_' . $k . '_msg', array('textarea_name' => 'ihc_ap_' . $k . '_msg', 'editor_height'=>200));
-											?></div>
-											<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
+										<div class="ihc-ap-tabs-settings-item-content">
+											<div class="ihc-wp_editor">
 												<?php
-													echo "<h4>" . __('Regular constants', 'ihc') . "</h4>";
+												wp_editor(stripslashes($meta_arr['ihc_ap_' . $k . '_msg']), 'ihc_tab_' . $k . '_msg', array('textarea_name' => 'ihc_ap_' . $k . '_msg', 'editor_height'=>300));
+											?></div>
+											<div class="iump-wp_editor-constants">
+												<?php
+													echo "<h4>" . esc_html__('Regular constants', 'ihc') . "</h4>";
 													foreach ($constants as $key=>$val){
 														?>
 														<div><?php echo $key;?></div>
@@ -302,41 +329,164 @@ $i = 0;
 													}
 											?>
 											</div>
-											<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
-												<?php
-													echo "<h4>".__('Custom Fields constants', 'ihc')."</h4>";
-													foreach ($extra_constants as $key=>$val){
-														?>
-														<div><?php echo $key;?></div>
-														<?php
-													}
+											<div class="iump-wp_editor-constants-coltwo">
+												<h4><?php esc_html_e('Custom Fields constants', 'ihc');?></h4>
+												<div class="iump-wp_editor-constants-colthree">
+											<?php
+											$i = 1;
+											$half = round(count($extra_constants)/2);
+											foreach ($extra_constants as $key=>$val){
 												?>
+												<div><?php echo $key;?></div>
+												<?php
+												$i++;
+												if($i == $half){
+													?>
+													</div>
+													<div class="iump-wp_editor-constants-colfour">
+													<?php
+												}
+												}
+												?>
+												</div>
 											</div>
+											<div class="ihc-clear"></div>
+
 										</div>
 									<?php endif;?>
 
-									<?php if ($k=='subscription'):?>
-										<div style="margin: 7px 12px;">
-											<span class="iump-labels-onbutton" style="  min-width:100px;"><?php _e('Display Subscription Details Table:', 'ihc');?></span>
-											<label class="iump_label_shiwtch  iump-onbutton">
-												<?php if (!isset($meta_arr['ihc_ap_subscription_table_enable'])) $meta_arr['ihc_ap_subscription_table_enable'] = 1; ?>
-												<?php $checked = ($meta_arr['ihc_ap_subscription_table_enable']==1) ? 'checked' : '';?>
-												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_subscription_table_enable');" <?php echo $checked;?> />
-												<div class="switch" style="display:inline-block;"></div>
-											</label>
-											<input type="hidden" name="ihc_ap_subscription_table_enable" value="<?php echo $meta_arr['ihc_ap_subscription_table_enable'];?>" id="ihc_ap_subscription_table_enable"/>
-										</div>
-										<div style="margin: 7px 12px;">
-											<span class="iump-labels-onbutton" style="  min-width:100px;"><?php _e('Display Subscription Plan:', 'ihc');?></span>
-											<label class="iump_label_shiwtch  iump-onbutton">
-												<?php if (!isset($meta_arr['ihc_ap_subscription_plan_enable'])) $meta_arr['ihc_ap_subscription_plan_enable'] = 1; ?>
-												<?php $checked = ($meta_arr['ihc_ap_subscription_plan_enable']==1) ? 'checked' : '';?>
-												<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_subscription_plan_enable');" <?php echo $checked;?> />
-												<div class="switch" style="display:inline-block;"></div>
-											</label>
-											<input type="hidden" name="ihc_ap_subscription_plan_enable" value="<?php echo $meta_arr['ihc_ap_subscription_plan_enable'];?>" id="ihc_ap_subscription_plan_enable"/>
-										</div>
-									<?php endif;?>
+									<?php
+											switch ( $k ){
+													case 'orders':
+														?>
+															<div class="iump-form-line iump-no-border">
+																	<h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+																	<p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+															</div>
+																<div class="iump-form-line iump-no-border">
+																	<h4><?php esc_html_e('Show Orders Table', 'ihc');?></h4>
+																	<p><?php esc_html_e('Members can see detailed informations about their Orders. You may replicate this showcase by using ','ihc');?> <strong> [ihc-account-page-orders-table]</strong><?php esc_html_e(' shortcode anywhere else.', 'ihc');?></p>
+																	<label class="iump_label_shiwtch ihc-switch-button-margin">
+																		<?php $checked = $meta_arr['ihc_account_page_orders_show_table'] == 1 ? 'checked' : '';?>
+																		<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_account_page_orders_show_table');" <?php echo $checked;?> />
+																		<div class="switch ihc-display-inline"></div>
+																	</label>
+																	<input type="hidden" value="<?php echo $meta_arr['ihc_account_page_orders_show_table'];?>" id="ihc_account_page_orders_show_table" name="ihc_account_page_orders_show_table" />
+																</div>
+														<?php
+														break;
+													case 'pushover_notifications':
+													?>
+														<div class="iump-form-line iump-no-border">
+																<h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+																<p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+														</div>
+															<div class="iump-form-line iump-no-border">
+																<h4><?php esc_html_e('Show Pushover Form', 'ihc');?></h4>
+																<p><?php esc_html_e('Members can see Pushover Settings Form. You may replicate this showcase by using ', 'ihc');?> <strong> [ihc-account-page-pushover-form]</strong><?php esc_html_e(' shortcode anywhere else.', 'ihc');?></p>
+																<label class="iump_label_shiwtch ihc-switch-button-margin">
+																	<?php $checked = $meta_arr['ihc_account_page_pushover_show_form'] == 1 ? 'checked' : '';?>
+																	<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_account_page_pushover_show_form');" <?php echo $checked;?> />
+																	<div class="switch ihc-display-inline"></div>
+																</label>
+																<input type="hidden" value="<?php echo $meta_arr['ihc_account_page_pushover_show_form'];?>" id="ihc_account_page_pushover_show_form" name="ihc_account_page_pushover_show_form" />
+															</div>
+													<?php
+														break;
+													case 'user_sites':
+													?>
+														<div class="iump-form-line iump-no-border">
+																<h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+																<p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+														</div>
+															<div class="iump-form-line iump-no-border">
+																<h4><?php esc_html_e('Show User Sites Form & Table', 'ihc');?></h4>
+																<p><?php esc_html_e('Members can see User Sites Form & Table. You may replicate this showcase by using ', 'ihc');?> <strong> [ihc-user-sites-table]</strong><?php esc_html_e(' and ', 'ihc');?><strong>[ihc-user-sites-add-new-form]</strong> <?php esc_html_e(' shortcodes anywhere else.', 'ihc');?></p>
+																<label class="iump_label_shiwtch ihc-switch-button-margin">
+																	<?php $checked = $meta_arr['ihc_account_page_user_sites_show_table'] == 1 ? 'checked' : '';?>
+																	<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_account_page_user_sites_show_table');" <?php echo $checked;?> />
+																	<div class="switch ihc-display-inline"></div>
+																</label>
+																<input type="hidden" value="<?php echo $meta_arr['ihc_account_page_user_sites_show_table'];?>" id="ihc_account_page_user_sites_show_table" name="ihc_account_page_user_sites_show_table" />
+															</div>
+														<?php
+														break;
+													case 'social':
+														?>
+														<div class="iump-form-line iump-no-border">
+																<h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+																<p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+														</div>
+															<div class="iump-form-line iump-no-border">
+																<h4><?php esc_html_e('Show Social Links Buttons', 'ihc');?></h4>
+																<p><?php esc_html_e('Members can see Social Links Buttons. You may replicate this showcase by using ', 'ihc');?> <strong> [ihc-social-links-profile]</strong><?php esc_html_e(' shortcode anywhere else.', 'ihc');?></p>
+																<label class="iump_label_shiwtch ihc-switch-button-margin">
+																	<?php $checked = $meta_arr['ihc_account_page_social_plus_show_buttons'] == 1 ? 'checked' : '';?>
+																	<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_account_page_social_plus_show_buttons');" <?php echo $checked;?> />
+																	<div class="switch ihc-display-inline"></div>
+																</label>
+																<input type="hidden" value="<?php echo $meta_arr['ihc_account_page_social_plus_show_buttons'];?>" id="ihc_account_page_social_plus_show_buttons" name="ihc_account_page_social_plus_show_buttons" />
+															</div>
+															<?php
+														break;
+														case 'profile':
+															?>
+															<div class="iump-form-line iump-no-border">
+																	<h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+																	<p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+															</div>
+																<div class="iump-form-line iump-no-border">
+																	<h4><?php esc_html_e('Show Profile Form', 'ihc');?></h4>
+																	<p><?php esc_html_e('Members can see Profile Form. You may replicate this showcase by using ', 'ihc');?> <strong>[ihc-edit-profile-form]</strong> <?php esc_html_e(' shortcode anywhere else.', 'ihc');?></p>
+																	<label class="iump_label_shiwtch ihc-switch-button-margin">
+																		<?php $checked = $meta_arr['ihc_account_page_profile_show_form'] == 1 ? 'checked' : '';?>
+																		<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_account_page_profile_show_form');" <?php echo $checked;?> />
+																		<div class="switch ihc-display-inline"></div>
+																	</label>
+																	<input type="hidden" value="<?php echo $meta_arr['ihc_account_page_profile_show_form'];?>" id="ihc_account_page_profile_show_form" name="ihc_account_page_profile_show_form" />
+																</div>
+															<?php
+															break;
+
+													case 'subscription':?>
+														<div class="iump-form-line iump-no-border">
+															  <h2><?php esc_html_e('Additional Tab Settings', 'ihc');?></h2>
+				                        <p><?php esc_html_e('Manage extra sections inside selected tab', 'ihc');?></p>
+				                    </div>
+														<div class="iump-form-line iump-no-border">
+															<h4><?php esc_html_e('Show Subscription Table', 'ihc');?></h4>
+															<p><?php esc_html_e('Members can see detailed informations about their Memberships. You may replicate this showcase by using ', 'ihc');?> <strong>[ihc-account-page-subscriptions-table]</strong><?php esc_html_e(' shortcode anywhere else.', 'ihc');?></p>
+															<label class="iump_label_shiwtch ihc-switch-button-margin">
+																<?php
+																if (!isset($meta_arr['ihc_ap_subscription_table_enable'])){
+																	 $meta_arr['ihc_ap_subscription_table_enable'] = 1;
+																}
+																?>
+																<?php $checked = ($meta_arr['ihc_ap_subscription_table_enable']==1) ? 'checked' : '';?>
+																<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_subscription_table_enable');" <?php echo $checked;?> />
+																<div class="switch ihc-display-inline"></div>
+															</label>
+															<input type="hidden" name="ihc_ap_subscription_table_enable" value="<?php echo $meta_arr['ihc_ap_subscription_table_enable'];?>" id="ihc_ap_subscription_table_enable"/>
+														</div>
+														<div class="iump-form-line iump-no-border">
+															<h4><?php esc_html_e('Display Subscription Plan Showcase', 'ihc');?></h4>
+															<p><?php esc_html_e('Members can see sign on other Memberships directly from My Account page', 'ihc');?></p>
+															<label class="iump_label_shiwtch ihc-switch-button-margin">
+																<?php
+																if (!isset($meta_arr['ihc_ap_subscription_plan_enable'])){
+																	 $meta_arr['ihc_ap_subscription_plan_enable'] = 1;
+																}
+																?>
+																<?php $checked = ($meta_arr['ihc_ap_subscription_plan_enable']==1) ? 'checked' : '';?>
+																<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_ap_subscription_plan_enable');" <?php echo $checked;?> />
+																<div class="switch ihc-display-inline"></div>
+															</label>
+															<input type="hidden" name="ihc_ap_subscription_plan_enable" value="<?php echo $meta_arr['ihc_ap_subscription_plan_enable'];?>" id="ihc_ap_subscription_plan_enable"/>
+														</div>
+														<?php
+														break;
+											}
+									?>
 
 							</div>
 
@@ -349,7 +499,7 @@ $i = 0;
 					<input type="hidden" value="<?php echo $meta_arr['ihc_ap_tabs'];?>" id="ihc_ap_tabs" name="ihc_ap_tabs" />
 
 					<div class="ihc-wrapp-submit-bttn">
-						<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  style="min-width:50px;" />
+						<input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 					</div>
 
 			   </div>
@@ -358,16 +508,17 @@ $i = 0;
 	</div>
 
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Footer Section:', 'ihc');?></h3>
+		<h3><?php esc_html_e('Bottom Section', 'ihc');?></h3>
 		<div class="inside">
-			<h2><?php _e('Footer Content:', 'ihc');?></h2>
-			<div style="margin-top:20px;">
-				<div style="width: 60%; display: inline-block; vertical-align: top; box-sizing:border-box;"><?php
-					wp_editor(stripslashes($meta_arr['ihc_ap_footer_msg']), 'ihc_ap_footer_msg', array('textarea_name' => 'ihc_ap_footer_msg', 'editor_height'=>200));
+			<h4><?php esc_html_e('Bottom Message', 'ihc');?></h4>
+			<p><?php esc_html_e('Additional information may be placed on the bottom of My Account page', 'ihc');?></p>
+			<div class="ihc-ap-tabs-settings-item-content">
+				<div class="ihc-wp_editor"><?php
+					wp_editor(stripslashes($meta_arr['ihc_ap_footer_msg']), 'ihc_ap_footer_msg', array('textarea_name' => 'ihc_ap_footer_msg', 'editor_height'=>300));
 				?></div>
-				<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
+				<div class="iump-wp_editor-constants">
 					<?php
-						echo "<h4>" . __('Regular constants', 'ihc') . "</h4>";
+						echo "<h4>" . esc_html__('Regular constants', 'ihc') . "</h4>";
 						foreach ($constants as $k=>$v){
 						?>
 							<div><?php echo $k;?></div>
@@ -375,40 +526,47 @@ $i = 0;
 						}
 					?>
 				</div>
-				<div style="width: 19%; display: inline-block; vertical-align: top; padding-left: 10px; box-sizing:border-box; color: #333;">
-					<?php
-						echo "<h4>".__('Custom Fields constants', 'ihc')."</h4>";
-						foreach ($extra_constants as $k=>$v){
-						?>
-							<div><?php echo $k;?></div>
-						<?php
-						}
+				<div class="iump-wp_editor-constants-coltwo">
+					<h4><?php esc_html_e('Custom Fields constants', 'ihc');?></h4>
+					<div class="iump-wp_editor-constants-colthree">
+				<?php
+				$i = 1;
+				$half = round(count($extra_constants)/2);
+				foreach ($extra_constants as $k=>$v){
 					?>
+					<div><?php echo $k;?></div>
+					<?php
+					$i++;
+					if($i == $half){
+						?>
+						</div>
+						<div class="iump-wp_editor-constants-colfour">
+						<?php
+					}
+					}
+					?>
+					</div>
 				</div>
+				<div class="ihc-clear"></div>
 			</div>
 			<div class="ihc-wrapp-submit-bttn">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  style="min-width:50px;" />
+				<input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  />
 			</div>
 		</div>
 	</div>
 
 	<div class="ihc-stuffbox">
-		<h3><?php _e('Additional Settings:', 'ihc');?></h3>
+		<h3><?php esc_html_e('Additional Settings', 'ihc');?></h3>
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php _e('Custom CSS:', 'ihc');?></h2>
-				<textarea id="ihc_account_page_custom_css"  name="ihc_account_page_custom_css" class="ihc-dashboard-textarea-full"  style="max-width:80%;"><?php echo stripslashes($meta_arr['ihc_account_page_custom_css']);?></textarea>
+				<h2><?php esc_html_e('Custom CSS:', 'ihc');?></h2>
+				<textarea id="ihc_account_page_custom_css"  name="ihc_account_page_custom_css" class="ihc-dashboard-textarea-full"><?php echo stripslashes($meta_arr['ihc_account_page_custom_css']);?></textarea>
 			</div>
 			<div class="ihc-wrapp-submit-bttn">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  style="min-width:50px;" />
+				<input type="submit" id="ihc_submit_bttn" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large"  />
 			</div>
 		</div>
 	</div>
 
 </form>
 </div>
-<script>
-jQuery(document).ready(function(){
-	ihcApMakeVisible('overview', '#uap_tab-overview');
-});
-</script>

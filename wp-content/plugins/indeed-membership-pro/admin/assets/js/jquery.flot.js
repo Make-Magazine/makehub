@@ -33,7 +33,7 @@ Licensed under the MIT license.
 
 // the actual Flot code
 (function($) {
-
+"use strict";
 	// Cache the prototype hasOwnProperty for faster access
 
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -706,7 +706,7 @@ Licensed under the MIT license.
 
             $.extend(true, options, opts);
 
-            // $.extend merges arrays, rather than replacing them.  When less
+            
             // colors are provided than the size of the default palette, we
             // end up with those colors plus the remaining defaults, which is
             // not expected behavior; avoid it by replacing them here.
@@ -2386,7 +2386,7 @@ Licensed under the MIT license.
             if (lw > 0 && sw > 0) {
                 // draw shadow as a thick and thin line with transparency
                 ctx.lineWidth = sw;
-                ctx.strokeStyle = "rgba(0,0,0,0.1)";
+                ctx.strokeStyle = " rgba(0,0,0,0.1)";
                 // position shadow at angle from the mid of line
                 var angle = Math.PI/18;
                 plotLine(series.datapoints, Math.sin(angle) * (lw/2 + sw/2), Math.cos(angle) * (lw/2 + sw/2), series.xaxis, series.yaxis);
@@ -2453,11 +2453,11 @@ Licensed under the MIT license.
                 // draw shadow in two steps
                 var w = sw / 2;
                 ctx.lineWidth = w;
-                ctx.strokeStyle = "rgba(0,0,0,0.1)";
+                ctx.strokeStyle = " rgba(0,0,0,0.1)";
                 plotPoints(series.datapoints, radius, null, w + w/2, true,
                            series.xaxis, series.yaxis, symbol);
 
-                ctx.strokeStyle = "rgba(0,0,0,0.2)";
+                ctx.strokeStyle = " rgba(0,0,0,0.2)";
                 plotPoints(series.datapoints, radius, null, w/2, true,
                            series.xaxis, series.yaxis, symbol);
             }
@@ -2689,7 +2689,7 @@ Licensed under the MIT license.
                 }
 
                 fragments.push(
-                    '<td class="legendColorBox"><div style="border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style="width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
+                    '<td class="legendColorBox"><div style = " border:1px solid ' + options.legend.labelBoxBorderColor + ';padding:1px"><div style = " width:4px;height:0;border:5px solid ' + entry.color + ';overflow:hidden"></div></div></td>' +
                     '<td class="legendLabel">' + entry.label + '</td>'
                 );
             }
@@ -2700,7 +2700,7 @@ Licensed under the MIT license.
             if (fragments.length == 0)
                 return;
 
-            var table = '<table style="font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
+            var table = '<table style = " font-size:smaller;color:' + options.grid.color + '">' + fragments.join("") + '</table>';
             if (options.legend.container != null)
                 $(options.legend.container).html(table);
             else {
@@ -2717,7 +2717,7 @@ Licensed under the MIT license.
                     pos += 'right:' + (m[0] + plotOffset.right) + 'px;';
                 else if (p.charAt(1) == "w")
                     pos += 'left:' + (m[0] + plotOffset.left) + 'px;';
-                var legend = $('<div class="legend">' + table.replace('style="', 'style="position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
+                var legend = $('<div class="legend">' + table.replace('style = "', 'style =  position:absolute;' + pos +';') + '</div>').appendTo(placeholder);
                 if (options.legend.backgroundOpacity != 0.0) {
                     // put in the transparent background
                     // separately to avoid blended labels and
@@ -2733,7 +2733,7 @@ Licensed under the MIT license.
                         c = c.toString();
                     }
                     var div = legend.children();
-                    $('<div style="position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
+                    $('<div class="ihc-pie-label" style = " position:absolute;width:' + div.width() + 'px;height:' + div.height() + 'px;' + pos +'background-color:' + c + ';"> </div>').prependTo(legend).css('opacity', options.legend.backgroundOpacity);
                 }
             }
         }

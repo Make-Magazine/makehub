@@ -31,6 +31,7 @@
  * MIT license
  */
 
+"use strict";
 (function(root, factory) {
 	if(typeof define === "function" && define.amd) {
 		define(["jquery"], factory);
@@ -98,7 +99,7 @@
 			// -------------------------- plugin bridge -------------------------- //
 
 			// helper function for logging errors
-			// $.error breaks jQuery chaining
+		
 			var logError = typeof console === 'undefined' ? noop :
 			  function( message ) {
 			    console.error( message );

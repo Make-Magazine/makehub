@@ -10,7 +10,7 @@
            <div class="row">
              <div class="col-xs-6">
             	<div class="input-group">
-             		 <span class="input-group-addon"><?php _e('From', 'ihc');?></span>
+             		 <span class="input-group-addon"><?php esc_html_e('From', 'ihc');?></span>
 	           		 <input type="text" class="form-control" id="indeed_admin_send_mail_from" value="<?php echo $fromEmail;?>"/>
         		</div>
             </div>
@@ -18,7 +18,7 @@
            <div class="row">
              <div class="col-xs-6">
             	<div class="input-group">
-              <span class="input-group-addon"><?php _e('To', 'ihc');?></span>
+              <span class="input-group-addon"><?php esc_html_e('To', 'ihc');?></span>
 	            <input type="text"  class="form-control" id="indeed_admin_send_mail_to" value="<?php echo $toEmail;?>" disabled />
         		</div>
             </div>
@@ -26,14 +26,14 @@
            <div class="row">
              <div class="col-xs-8">
             	<div class="input-group">
-              <span class="input-group-addon"><?php _e('Subject', 'ihc');?></span>
-	            <input type="text" class="form-control" id="indeed_admin_send_mail_subject" value="<?php echo $website . __(' Notification', 'ihc');?>" />
+              <span class="input-group-addon"><?php esc_html_e('Subject', 'ihc');?></span>
+	            <input type="text" class="form-control" id="indeed_admin_send_mail_subject" value="<?php echo $website .esc_html__(' Notification', 'ihc');?>" />
         		</div>
             </div>
            </div>
            <div class="row">
              <div class="col-xs-12">
-              <h4><?php _e('Message:', 'ihc');?></h4>
+              <h4><?php esc_html_e('Message:', 'ihc');?></h4>
               <textarea id="indeed_admin_send_mail_content"><?php echo 'Hi ' . $fullName . ", ";?></textarea>
             </div>
            </div>
@@ -41,7 +41,7 @@
              <div class="col-xs-8">
             	<div class="input-group">
           			<div class="input-group-btn">
-              			<button class="btn btn-primary pointer" type="button" id="indeed_admin_send_mail_submit_bttn"><?php _e('Send Email', 'ihc');?></button>
+              			<button class="btn btn-primary pointer" type="button" id="indeed_admin_send_mail_submit_bttn"><?php esc_html_e('Send Email', 'ihc');?></button>
           			</div>
         		</div>
             </div>

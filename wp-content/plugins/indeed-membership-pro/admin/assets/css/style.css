@@ -15,7 +15,7 @@
 }
 .ihc-dashboard-wrap input[type=checkbox]{
 	border-radius: 0 !important;
-	line-height: 1em;	
+	line-height: 1em;
 }
 .clear{
 	clear: both;
@@ -30,6 +30,11 @@
 	width: 100%;
 	min-height:700px;
 	margin-bottom:40px;
+}
+.ihc-magic-box-wrap:last-child{
+  float: none;
+    clear: both;
+    display: inline-block;
 }
 .ihc-dashboard-wrap .ihc-admin-header{
 	height: 100px;
@@ -86,6 +91,11 @@
 	text-align: center;
 	text-transform: uppercase;
 	line-height: 15px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: capitalize;
+  line-height: 15px;
+  letter-spacing: 0.05em;
 }
 
 .ihc-dashboard-wrap .ihc-stuffbox{
@@ -186,6 +196,9 @@
 	margin-bottom:6%;
 	bottom:10px;
     font-family: "Open Sans",sans-serif;
+    width: 100% !important;
+    max-width: 750px !important;
+    min-width: auto !important;
 }
 .ihc-popup-wrapp .ihc-the-popup .ihc-popup-top{
 	border-bottom: 1px solid #ddd;
@@ -292,7 +305,7 @@ border-bottom: 1px solid #fafafa;
   	-moz-box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
   	-webkit-box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
   	-o-box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
-	width: 150px;
+	width: 170px;
     height: 180px;
 	margin:10px 20px;
 	float:left;
@@ -332,6 +345,7 @@ border-bottom: 1px solid #fafafa;
 	width:250px;
     height: 250px;
 	max-width:20%;
+  min-width: 200px;
 }
 .showcases-wrapp  .ihc-popup-shortcodevalue .fa-ihc{
 	line-height:120px;
@@ -628,6 +642,7 @@ border-bottom: 1px solid #fafafa;
   border-color: #eed3d7;
   padding:4px 12px;
   margin:3px 0;
+  margin-top: 5px;
   display:block;
 }
 .ihc-dashboard-wrap .ihc-not-set{
@@ -648,7 +663,7 @@ border-bottom: 1px solid #fafafa;
 i.mce-i-ihc_btn_locker, i.mce-i-ihc_btn_forms{
   font: 400 20px/1 dashicons;
   padding: 0 2px 0 0;
-  vertical-align: top;
+  vertical-align: bottom;
   speak: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -658,7 +673,7 @@ i.mce-i-ihc_btn_locker, i.mce-i-ihc_btn_forms{
   padding: 1px 5px !important;
   font-size: 15px;
   line-height: 18px;
-  height: 18px !important;
+  height: 20px !important;
   width: initial !important;
 }
 i.mce-i-ihc_btn_locker{
@@ -679,7 +694,7 @@ i.mce-i-ihc_btn_locker:before{
 }
 
 i.mce-i-ihc_btn_locker:after{
-	content: 'MP Locker';
+	content: 'UMP - Inside Locker';
 	font-family: "Open Sans",sans-serif;
   font-size: 12px;
   vertical-align: inherit;
@@ -690,7 +705,7 @@ i.mce-i-ihc_btn_forms:before{
 	content: '\f180';
 }
 i.mce-i-ihc_btn_forms:after{
-	content: 'MP ShortCodes';
+	content: 'UMP - ShortCodes';
 	font-family: "Open Sans",sans-serif;
 	font-size: 12px;
 	vertical-align: inherit;
@@ -785,7 +800,7 @@ i.mce-i-ihc_btn_forms:after{
 	border:1px solid #bbb;
 	color: #333;*/
 }
-.toplevel_page_ihc_manage .update-nag,.toplevel_page_ihc_manage .notice,.toplevel_page_ihc_manage .notice-success,.toplevel_page_ihc_manage div.error,.toplevel_page_ihc_manage div.updated{
+.toplevel_page_ihc_manage .update-nag,.toplevel_page_ihc_manage .notice,.toplevel_page_ihc_manage .notice-success,.toplevel_page_ihc_manage .error,.toplevel_page_ihc_manage .updated{
 	display: none;
 }
 
@@ -818,7 +833,9 @@ i.mce-i-ihc_btn_forms:after{
 	background-color: #fff3cd;
 	border-color: #ffeeba;
 }
-
+#wp-admin-bar-magic_feat, #wp-admin-bar-ihc_dashboard_menu_pages {
+    background: rgba(255,255,255,0.1) !important;
+}
 .ihc-sortable-off{
 	padding: 3px 8px;
 	border: 1px solid #aaa;
@@ -988,6 +1005,7 @@ i.mce-i-ihc_btn_forms:after{
   border: 1px solid #ddd;
   border-radius: 3px;
   text-align:center;
+  margin:2px;
 }
 .subcr-type-list.iump-pending{
 	background-color:rgba(240, 80, 80, 1.0);
@@ -1035,7 +1053,7 @@ i.mce-i-ihc_btn_forms:after{
 	line-height:27px;
     display: inline-block;
     margin: 5px 0;
- 
+
   font-size: 15px;
   font-weight: 700;
 }
@@ -1270,7 +1288,7 @@ i.mce-i-ihc_btn_forms:after{
 	min-width:1px;
 }
 .iump-payment-box-bottom {
-    line-height: 37px; 
+    line-height: 37px;
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
     font-size: 15px;
     font-weight: 400;
@@ -1852,13 +1870,13 @@ input[type="checkbox"].iump-switch + div:after {
 		text-align: right;
 		font-size: 20px;
 		font-weight: bold;
-		cursor: pointer;	
+		cursor: pointer;
     position: absolute;
     right: 5px;
     top: 5px;
 }
 .ihc-license-warning{
-	position:relative;	
+	position:relative;
 }
 .ihc-inactive-tab{
 	color: #CCC !important;
@@ -1948,6 +1966,12 @@ input[type="checkbox"].iump-switch + div:after {
 .fa-user_shortcodes-ihc:before {
     content: "\f121";
 }
+.fa-checkout-ihc:before{
+    content: "\f217";
+}
+.fa-profile-form-ihc:before{
+    content: "\f183";
+}
 .ihc-right-menu .fa-ihc-menu{
 	width:25px;
 	transition: all 0.3s ease-in-out;
@@ -1973,8 +1997,12 @@ input[type="checkbox"].iump-switch + div:after {
 .fa-listing_users-ihc:before{
     content: "\f0c0";
 }
-
-
+.fa-subscription-table-ihc:before{
+    content: "\f0ce";
+}
+.fa-calculator-ihc:before {
+  content: "\f1ec";
+}
 /******************** LIST USERS SHORTCODE GENERATOR ***********************/
 .ihc-user-list-wrap{
     padding: 0px 20px 0px 10px;
@@ -2364,6 +2392,9 @@ input[type="checkbox"].iump-switch + div:after {
     bottom: 50px;
     right: 25px;
 }
+.ihc-additional-help a{
+  margin-right: 5px;
+}
 .ihc-black-button {
 	color:#fff !important;
 	border: 1px solid #353535 !important;
@@ -2386,7 +2417,7 @@ input[type="checkbox"].iump-switch + div:after {
 	    color: #fff !important;
     border: 1px solid #0a9fd8 !important;
     background: #0a9fd8 !important;
-}  
+}
 .ihc-footer-text{
 	display: inline-block;
     vertical-align: middle;
@@ -2551,6 +2582,7 @@ input[type="checkbox"].iump-switch + div:after {
 
 .ihc-icon-select-wrapper{
 	height: 30px;
+  width: 58px;
 	border: 1px solid #CCC;
 	border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -2749,6 +2781,10 @@ color: #21759b;
 	    background: #a1abbc !important;
 		cursor:pointer;
 }
+.ihc_small_lightgrey_button{
+	    background: #eee !important;
+		cursor:pointer;
+}
 .ihc_small_blue_button{
 	    background: #0a9fd8 !important;
 		cursor:pointer;
@@ -2759,6 +2795,10 @@ color: #21759b;
 }
 .ihc_small_yellow_button{
 	    background: #f1c80e !important;
+		cursor:pointer;
+}
+.ihc_small_orange_button{
+	    background: #ffa726 !important;
 		cursor:pointer;
 }
 .ihc-level-skin-wrapper{
@@ -2959,6 +2999,26 @@ color: #21759b;
     background-color: #1fb5ac;
   }
 }
+.ihc-level-skin-bar-grace-period{
+	background-color: #f28334;
+}
+.ihc-level-skin-bar-grace-period-expiresoon{
+  	background-color: #f28334;
+    animation-name: level-color-grace;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+@keyframes level-color-grace {
+  0% {
+    background-color: #f28334;
+  }
+  50% {
+    background-color: transparent;
+  }
+  100 {
+    background-color: #f28334;
+  }
+}
 .ihc-level-skin-hide{
 	display:none;
 }
@@ -3117,148 +3177,6 @@ color: #21759b;
 }
 
 
-
-@media screen and (max-width: 1280px) {
-.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title div{
-	/*display:none;*/
-}
-}
-@media screen and (max-width: 1440px) {
-    .ihc-coupon-admin-box-wrap{
-       width: 33%;
-    }
-}
-@media (max-width: 1500px){
-	.ihc-magic-box-wrap{
-		width: 33%;
-	}
-}
-@media screen and (max-width: 782px){
-
-	.iump-wrapper .ihc-admin-tables tbody td, .iump-wrapper .ihc-admin-tables tbody th{
-		    display: table-cell !important;
-
-	}
-
-
-	.ihc-filters-wrapper .col-xs-8, .ihc-filters-wrapper .col-xs-6, .ihc-filters-wrapper .col-xs-4{
-		float:none;
-		width:100%;
-	}
-	.iump-pagination-wrapper{
-		margin-top:15px;
-	}
-	.ihc-special-buttons-users{
-		margin-top:15px;
-	}
-	.ihc-subtab-menu .ihc-subtab-menu-item:first-child{
-		    margin-left: 0px;
-	}
-	.iump-rsp-table {
-		width: 100%;
-			overflow-x: auto;
-	}
-
-	.ihc-buttons-rsp {
-		visibility: visible !important;
-	}
-	.iump-btns {
-		display: inline-block;
-		position: relative;
-		padding: 2px 10px;
-		margin: 20px 3px;
-		background: #e4edef;
-	}
-
-	.col-xs-6 {
-		min-width: 100%;
-	}
-	.ihc-additional-help {
-		position: absolute;
-		bottom: 0px;
-	}
-	.iump-form-line input, .iump-form-line select{
-		min-width: 100px;
-	}
-}
-
-/*.iump-btns {
-	display: inline-block;
-	position: relative;
-	padding: 2px;
-	margin: 20px 3px;
-	background: #e4edef;
-}*/
-
-
-/*414*/
-@media (max-width: 414px){
-
-	.ihc-admin-mobile-bttn-wrapp{
-		display:block;
-	}
-	.ihc-dashboard-menu-items{
-		/*min-width: 0px !important;*/
-		display: none;
-	}
-	.ihc-dashboard-menu ul{
-		height:auto;
-		background-color: rgba(80,103,107,1.0);
-		margin-top:-10px;
-	}
-	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu ul li{
-		float:none;
-		display:block;
-		width:100%;
-		border-bottom: 1px solid rgba(255,255,255,0.1);
-	}
-	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title{
-		padding: 8px 1px;
-		    line-height: 11px;
-	}
-	.ihc-dashboard-menu-items .fa-ihc-menu{
-		font-size:20px;
-	}
-	.ihc-magic-box-wrap{
-		width: 100%;
-	}
-
-
-	.iump-rsp-table {
-		width: 100%;
-			overflow-x: auto;
-	}
-
-	.manage-column {
-		width: 200px;
-	}
-	.iump-form-select  {
-		max-width: 256px;
-	}
-
-	.ihc-buttons-rsp {
-		visibility: visible !important;
-	}
-	.iump-btns {
-		display: inline-block;
-		position: relative;
-		padding: 2px 10px;
-		margin: 20px 3px;
-		background: #e4edef;
-	}
-	.col-xs-6 {
-		min-width: 100%;
-	}
-	.ihc-additional-help {
-		position: absolute;
-		bottom: 0px;
-	}
-	.iump-form-line input, .iump-form-line select{
-		min-width: 100px;
-	}
-
-}
-
 .ihc-dashboard-wrap .iump-form-line-register .select2.select2-container {
 	/*max-width: 200px;*/
 }
@@ -3267,15 +3185,18 @@ color: #21759b;
 	/*margin-top: 30px;*/
 
 	white-space: nowrap;
-		    transform: translate(-9px, 0) rotate(-60deg);
-				-ms-transform:translate(-9px, 0) rotate(-60deg);
-				-moz-transform:translate(-9px, 0) rotate(-60deg);
-				-webkit-transform:translate(-9px, 0) rotate(-60deg);
-				-o-transform:translate(-9px, 0) rotate(-60deg);
+
 		    text-indent: -100%;
 		    transform-origin: top right;
 		    text-align: right !important;
 
+}
+.flot-tick-label-rotate .flot-tick-label{
+transform: translate(-9px, 0) rotate(-60deg);
+-ms-transform:translate(-9px, 0) rotate(-60deg);
+-moz-transform:translate(-9px, 0) rotate(-60deg);
+-webkit-transform:translate(-9px, 0) rotate(-60deg);
+-o-transform:translate(-9px, 0) rotate(-60deg);
 }
 .flot-tick-label .tickLabel {
 	max-width: 100px;
@@ -3394,8 +3315,9 @@ padding: 10px;
     -o-box-shadow: none;
 }
 .ihc-dashboard-wrap .ihc-form-element-text, .ihc-dashboard-wrap .ihc-form-element-password, .ihc-dashboard-wrap .ihc-form-element-number, .ihc-dashboard-wrap .ihc-form-element-textarea, .ihc-dashboard-wrap .ihc-form-element-select, .ihc-dashboard-wrap .ihc-form-element-multiselect, .ihc-dashboard-wrap .ihc-form-element-ihc_state{
+  max-width: 100%;
     padding: 0 10px;
-    width: 500px;
+    width: 495px;
     min-height: 34px;
 }
 .ihc-dashboard-wrap .ihc-form-checkbox-wrapper,
@@ -3405,7 +3327,26 @@ padding: 10px;
 	display:inline-block;
 }
 .ihc-admin-edit-user .iump-form-line-register .select2.select2-container{
-	width:500px !important;
+	width:495px !important;
+  max-width: 100%;
+}
+.iump-form-checkbox label, .iump-form-radio label, .iump-form-multi_select label{
+  vertical-align: top !important;
+}
+.iump-form-line-register .ihc-form-element-select, .iump-form-line-register .ihc-form-element-multi_select{
+  width: 495px;
+  max-width: 100%;
+}
+.iump-form-line-register .ihc-wrapp-file-upload{
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px dashed #ddd;
+    vertical-align: text-top;
+    width: 495px;
+    min-height: 34px;
+}
+.iump-form-checkbox-wrapper{
+  display: inline-block;
 }
 .ihc-admin-edit-user .ihc-form-sublabel{
 	text-align:right;
@@ -3452,7 +3393,7 @@ padding: 10px;
     height: 45px !important;
 	line-height:26px !important;
 }
-.ihc-dashboard-wrap .ihc-form-element-submit:hover, 
+.ihc-dashboard-wrap .ihc-form-element-submit:hover,
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):focus,
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):hover,
 .ihc-dashboard-wrap .ihc-form-element-submit:not(:disabled):active,
@@ -3467,27 +3408,27 @@ padding: 10px;
     border-color: #4cab6a;
 }
 .ihc-admin-select-level-wrapper{
-	padding-left:40px;	
+	padding-left:40px;
 	border-top: 1px solid #EAEDF1;
     border-top: 2px solid #53ba73;
     margin-top: 30px;
 }
 #ihc-select-level-view-values{
-	margin:10px;	
+	margin:10px;
 	margin-left:0;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire-wrapper{
-	margin: 10px 0px 30px 50px;	
-	max-width:1200px;
+	margin: 10px 0px 30px 50px;
+	max-width:1800px;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire{
 	border: 1px solid #ddd;
 	box-shadow: none;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire thead{
-	background: #f1f4f8 !important;    
+	background: #f1f4f8 !important;
 	border-bottom: 1px solid #ddd;
-	
+
     line-height: 1.4;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire thead th{
@@ -3498,23 +3439,127 @@ padding: 10px;
 	border-color:transparent;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire .ihc-levels-table-access-type{
-	color:#444 !important;	
+	color:#444 !important;
 }
 .ihc-admin-edit-user .ihc-manage-user-expire input[type=text]{
 	border-color:#ddd;
-	box-shadow:none;	
+	box-shadow:none;
 }
+.ihc-manage-user-expire-wrapper  thead {
+    background: #f1f4f8 !important;
+    border-bottom: 1px solid #ddd;
+    line-height: 1.4;
+}
+.ihc-manage-user-expire-wrapper  thead th{
+  line-height: 2;
+}
+.ihc-manage-user-expire-wrapper .start_input_text, .ihc-manage-user-expire-wrapper .expire_input_text{
+  max-width: 135px;
+  color: #11afea !important;
+  max-height: 30px !important;
+  font-size: 13px !important;
+}
+.ihc-manage-user-expire-wrapper .input-group-addon{
+      padding: 5px 8px;
+      font-size: 12px;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-payment{
+  width: 130px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-amount{
+  width: 130px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-trial{
+  width: 100px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-grace{
+  width: 110px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-plan{
+  width: 110px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-starts, .ihc-manage-user-expire-wrapper .ihc-js-membership-table-expires{
+  width: 183px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-paymentdue{
+  width: 150px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-status{
+  width: 100px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper .ihc-js-membership-table-actions{
+  min-width: 180px;
+  box-sizing: border-box;
+}
+.ihc-manage-user-expire-wrapper  tbody .ihc-pointer{
+  display: inline-block;
+  color: #11afea !important;
+  padding: 0 5px;
+  border-right: 1px solid #eee;
+  font-size: 13px;
+  background-color: #eaeaea;
+border-radius: 3px;
+padding: 4px 8px;
+font-family: Open Sans, sans-serif, 'Trebuchet MS';
+font-size: 12px;
+color: #444;
+font-weight: 600;
+cursor: pointer;
+text-align: center;
+margin: 3px 5px;
+color: #333 !important;
+}
+.ihc-manage-user-expire-wrapper  tbody .ihc-pointer:last-child{
+  border-right: none;
+}
+.ihc-manage-user-expire-wrapper .ihc-levels-table-status{
+  color:#222;
+  font-weight: 600;
+}
+.ihc-js-add-new-membership-to-user-bttn i{
+      padding: 8px 11px;
+}
+.ihc-admin-select-level-wrapper select{
+  min-width: 350px;
+  min-height: 35px;
+  vertical-align: top;
+}
+.ihc-manage-user-expire-wrapper  tbody td{
+  padding: 10px 10px;
+}
+.ihc-manage-user-expire-wrapper .ihc-levels-table-name{
+  color: #21759b;
+  color:#11afea !important;
+   font-weight:bold;
+   width:120px;
+   font-size: 14px;
+}
+
 .ihc-admin-edit-user .ihc-tos-wrap{
-	padding-left:240px;	
+	padding-left:240px;
+}
+@media screen and (max-width: 782px){
+  .ihc-admin-edit-user .ihc-tos-wrap{
+  	padding-left:0;
+  }
+
 }
 .ihc-admin-edit-user-additional-settings-wrapper{
-	padding-left:40px;	
+	padding-left:40px;
 	border-top: 1px solid #EAEDF1;
     border-top: 2px solid #ddd;
     margin-top: 30px;
 }
 .ihc-admin-edit-user .iump-submit-form{
-	padding:30px 5px 30px 40px;	
+	padding:30px 5px 30px 40px;
 }
 .ihc-admin-user-form-wrapper{
 	padding: 20px 0 20px 40px;
@@ -3541,12 +3586,13 @@ padding: 10px;
 .ihc-js-delete-level{
 	display:inline-block;
 	}
-	
+
 .iump-wrapper .ihc-admin-tables thead th, .iump-wrapper .ihc-admin-tables tfoot th{
 	 background-color: #f9f9fa;
     border-bottom: 1px solid #cad0d6;
     color: #4b5764;
 font-weight:bold;
+font-size:11px !important;
 }
 .ihc-remove-group-button{
 	border: 1px solid #f1505b !important;
@@ -3559,7 +3605,7 @@ font-weight:bold;
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .ihc-subtab-menu{
-	background-color: #597daa;	
+	background-color: #597daa;
 }
 .ihc-level-access-section .iump-labels{
 	width:180px;
@@ -3572,4 +3618,1563 @@ font-weight:bold;
 }
 .iump-form-line .quicktags-toolbar input, .iump-form-line quicktags-toolbar.select{
 	min-width:inherit;
+}
+.ihc-admin-tables-users{
+	/*min-width:1100px;*/
+}
+/*extra-extension-box*/
+.ihc-magic-box-wrap .ihc-extra-extension-box {
+  background-color: #53ba73;
+}
+.ihc-extra-extension-box .fa-ihc:before {
+    content: "\f085";
+}
+/*extra-extension-box*/
+.ihc-membership-price-wrapper{
+  font-size:14px;
+  color: #888;
+}
+.ihc-membership-price-wrapper .ihc-membership-price{
+  display: block;
+  color:#6cad65;
+  font-weight: 700;
+}
+.ihc-membership-price-wrapper .ihc-membership-price.ihc-membership-trialprice{
+  color:#444;
+  font-weight: 600;
+}
+.ihc-membership-price-wrapper .ihc-membership-price-period{
+  display: block;
+}
+.order-total-amount{
+  color: #222;
+font-weight: bold;
+font-size: 13px;
+text-transform: capitalize;
+}
+.ihc-order-edit-leftside, .ihc-order-edit-rightside{
+  float: left;
+  width: 49%;
+  padding-right: 50px;
+  box-sizing: border-box;
+}
+.ihc-order-edit-box{
+  padding-bottom: 20px;
+  font-size: 15px;
+  line-height: 1.5em;
+  color:#666;
+  font-weight: 300;
+}
+.ihc-order-edit-box h4{
+  color:#222;
+    font-size: 22px;
+    padding-bottom: 0px;
+    margin-bottom: 5px;
+}
+.ihc-order-edit-box .ihc-order-edit-box-title{
+  font-size: 18px;
+  font-weight: 400;
+  color:#444;
+}
+.ihc-order-edit-box-links{
+  padding-top: 5px;
+}
+.ihc-order-edit-box-links span{
+  padding-right: 10px;
+}
+.ihc-order-edit-box-links a{
+  text-decoration: underline;
+}
+.ihc-order-edit-leftside input[type="text"], .ihc-order-edit-leftside input[type="number"], .ihc-order-edit-leftside select{
+  width: 100%;
+}
+.ihc-edit-banner-wrapper .ihc-upload-top-banner-wrapper{
+  margin-bottom:20px;
+  min-width: 584px;
+  display: inline-block;
+  min-height: 150px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: 2px dashed #ddd;
+}
+@media screen and (max-width: 782px){
+  .ihc-edit-banner-wrapper .ihc-upload-top-banner-wrapper{
+    min-width: auto;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+.ihc-edit-banner-wrapper .ihc-upload-image-remove-bttn{
+      width: 120px;
+}
+.ihc-notification-logs-message, .ihc-notification-logs-message p{
+  font-size: 11px !important;
+  line-height: 1.2em !important;
+  margin: 0 !important;
+  color: #888;
+}
+.ihc-admin-user-profile-wrapper{
+  max-width: 1100px;
+  padding: 25px 20px;
+  width: 100%;
+}
+.ihc-admin-user-profile-wrapper .ihc-admin-user-page-top-ap-background {
+    width: 100%;
+    max-width: 1100px;
+    height:250px;
+    left: 0;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-blend-mode: overlay;
+    background-image: url(../../../assets/images/top_ump_bk_4.png);
+  }
+.ihc-admin-user-details-wrapper:after{
+    content: " ";
+    clear:both;
+}
+.ihc-admin-user-details-wrapper .ihc-admin-left-side{
+  float:left;
+  position:relative;
+  top:-50px;
+  width: 200px;
+  padding-left: 20px;
+}
+.ihc-admin-user-details-wrapper .ihc-admin-left-side img {
+    border-radius: 0;
+    box-shadow: none;
+    border: 5px solid #fff;
+    width: 180px;
+  }
+.ihc-admin-user-details-wrapper .ihc-admin-middle-side{
+  float:left;
+  width: 70%;
+  padding: 20px 10px 40px 40px;
+  box-sizing: border-box;
+}
+.ihc-admin-user-edit-profile{
+  text-align: center;
+  margin: 10px 0;
+}
+.ihc-admin-user-edit-profile a{
+border: 1px solid #00b2f0 !important;
+border-radius: 4px;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+-o-border-radius: 4px;
+background-color: #00b2f0 !important;
+font-size: 16px;
+}
+.ihc-admin-user-main-name{
+    font-size: 29px;
+    color: #111;
+    font-weight: 700;
+    line-height: 34px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+}
+.ihc-admin-user-data table{
+  border-collapse: collapse;
+  font-size: 14px;
+  line-height: 24px;
+    color: #5C5C60;
+    font-weight: 400;
+}
+.ihc-admin-user-data .ihc-admin-user-data-label{
+  font-weight: 700!important;
+min-width: auto!important;
+width: 200px;
+word-break: break-word;
+color: #191818;
+text-align: right;
+font-weight: 400;
+vertical-align: top;
+min-width: 240px;
+padding: 15px 10px;
+display: table-cell;
+}
+.ihc-admin-user-data .ihc-admin-user-data-content{
+  word-break: break-word;
+    height: auto!important;
+  padding: 10px;
+  margin: 0;
+  vertical-align: middle;
+  display: table-cell;
+}
+.ihc-admin-user-data-list{
+  margin-top: 40px;
+}
+.ihc-admin-user-data-list table{
+    margin-top: 30px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+}
+.ihc-admin-user-data-list thead{
+background: #f1f4f8 !important;
+border-bottom: 1px solid #ddd;
+line-height: 1.4;
+}
+.ihc-admin-user-data-list thead th {
+    border-bottom: none;
+    line-height: 2;
+}
+.ihc-admin-user-data-list tr {
+   border-color: transparent;
+}
+.ihc-admin-user-profile-status{
+  padding-top: 15px;
+}
+.ihc-admin-user-profile-status span{
+  word-break: break-word;
+    color: #191818;
+  font-weight: 600;
+}
+.ihc-print-buttton-wrapper{
+    text-align: right;
+    max-width: 1100px;
+    width: 100%;
+    padding: 0 20px;
+    bottom: -20px;
+    position: relative;
+    right: 10px;
+}
+.ihc-user-details-showmore-fields{
+  color: #337ab7;
+    text-decoration: underline;
+    padding-left: 142px;
+    text-transform: capitalize;
+}
+.ihc-users-list-fullname{
+  color: #343a40!important;
+      font-size: 14px!important;
+      font-weight: 500;
+    line-height: 1.2;
+}
+.ihc-users-list-username{
+  color: #74788d!important;
+      font-weight: 400;
+  font-size: 13px;
+}
+.ihc-users-list-avatar-wrapper{
+  float: left;
+}
+.ihc-users-list-avatar-wrapper img{
+  width: 35px;
+height: 35px;
+vertical-align: middle;
+-webkit-border-radius: 50%;
+-moz-border-radius: 50%;
+-o-border-radius: 50%;
+border-radius: 50%;
+margin-right: 10px;
+}
+.ihc-users-list-fullname-wrapper{
+
+}
+.ihc-users-list-wpid{
+  color: #74788d!important;
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.toplevel_page_ihc_manage {
+  /*background: #f4f5f7;*/
+}
+.ihc-dashboard-wrapper{
+  margin-bottom: 60px;
+}
+.ihc-dashboard-wrapper:after {
+    clear: both;
+}
+
+.ihc-dashboard-row-title{
+  font-size: 26px;
+  color:#000;
+  font-weight: 700;
+  line-height: 48px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.ihc-dashboard-box-wrapper {
+    width: 100%;
+    min-height: 170px;
+    margin-bottom: 30px;
+    background: #ffffff;
+    padding: 0;
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+    border-radius: 5px;
+    box-shadow: 3px 5px 5px -3px rgba(0,0,0,0.1);
+    -webkit-box-shadow: 3px 5px 5px -3px rgba(0,0,0,0.1);
+    -moz-box-shadow: 3px 5px 5px -3px rgba(0,0,0,0.1);
+}
+.ihc-dashboard-box-top-section {
+  width: 100%;
+  min-height: 110px;
+  background: #ffffff;
+  padding: 15px;
+  box-sizing: border-box;
+  vertical-align: top;
+  -webkit-border-top-left-radius: 5px;
+-webkit-border-top-right-radius: 5px;
+-moz-border-radius-topleft: 5px;
+-moz-border-radius-topright: 5px;
+border-top-left-radius: 5px;
+border-top-right-radius: 5px;
+}
+.ihc-dashboard-box-bottom-section {
+  width: 100%;
+  min-height: 60px;
+  background: #f9fafb;
+  padding: 15px;
+  box-sizing: border-box;
+  vertical-align: top;
+  -webkit-border-bottom-right-radius: 5px;
+-webkit-border-bottom-left-radius: 5px;
+-moz-border-radius-bottomright: 5px;
+-moz-border-radius-bottomleft: 5px;
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
+}
+.ihc-dashboard-box-top-section .fa-ihc-dashboard {
+  margin-right: 0px;
+width: 82px;
+height: 82px;
+text-align: center;
+color: #9fa6b2;
+padding: 20px;
+font-size: 38px;
+float: left!important;
+box-sizing: border-box;
+}
+.ihc-dashboard-box-top-section .ihc-dashboard-stats {
+    padding-left: 85px;
+}
+.ihc-dashboard-stats-title{
+  font-size: 18px;
+line-height: 44px;
+color: #6b7280;
+font-weight: 600;
+}
+.ihc-dashboard-stats-count{
+  color: #505458;
+  font-size: 34px;
+  font-weight: 700;
+  color:#111;
+    line-height: 35px;
+    word-break: break-word;
+}
+.ihc-dashboard-stats-trend{
+  font-size: 16px;
+  font-weight: 600;
+  color:#6b7280;
+  padding-left: 10px;
+}
+.ihc-dashboard-stats-trendup{
+  color:#0e9f6e;
+}
+.ihc-dashboard-stats-trend .fa-ihc{
+  font-size: 16px;
+  font-weight: 300;
+}
+.ihc-dashboard-stats-trendup .fa-arrow-ihc:before{
+  content: "\f176";
+}
+.ihc-dashboard-stats-trenddown{
+  color:#9f0e0e;
+}
+.ihc-dashboard-stats-trenddown .fa-arrow-ihc:before{
+  content: "\f175";
+}
+
+.ihc-dashboard-box-bottom-section a{
+  color:#5075ec;
+  color:#18c1f0;
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  padding-left: 20px;
+}
+.ihc-dashboard-box-bottom-section a:hover{
+  text-decoration: underline;
+}
+.ihc-dashboard-earnings-graph-wrapper{
+  min-height: 400px;
+  background-color: #fff;
+  padding: 20px;
+}
+.ihc-dashboard-earnings-graph-wrapper .flot-text{
+  color: #9fa6b2 !important;
+}
+.ihc-ap-tabs-list{
+  background-color: #23b7e5;
+}
+.ihc-ap-tabs-list .ihc-ap-tabs-list-item{
+  border-bottom: 1px solid #23b7e5;
+border-right: 1px solid #23b7e5;
+}
+.ihc-sortable-off{
+  background: #38cbcb;
+color: #fff;
+border: 0px;
+padding: 8px 15px;
+}
+.ihc-sortable-on{
+color: #fff;
+border: 0px;
+padding: 8px 15px;
+}
+#ihc-reorder-msg{
+  line-height: 41px;
+  font-weight: 500;
+  color:#555;
+}
+.ihc-mycred-box{
+  margin-bottom: 25px;
+  border-bottom: 1px dotted #c0c0c0;
+}
+.ihc-change-target-user-set{
+  width: auto;
+  min-width:80%;
+}
+.ihc-text-aling-right{
+  text-align:right;
+}
+.ihc-text-aling-center{
+  text-align:center;
+}
+.ihc-popup-content .ihc-popup-content-wrapp{
+  margin: 0 auto;
+  display: inline-block;
+}
+.ihc_mb_redirect_to{
+  max-width: 90%;
+}
+.ihc-switch-button-margin{
+  margin:10px 0 10px -10px;
+}
+.ihc_drip_content_meta_box-wrapper{
+  margin-top: 25px;
+}
+.ihc-display-inline{
+  display: inline-block;
+}
+.ihc-display-block{
+  display: block;
+}
+.ihc-drip-content-special-box{
+  margin: 10px -12px;
+  padding: 10px 10px 20px 10px;
+  border-top: 1px solid #efefef;
+  background-color: #f5f5f5;
+  border-bottom: 2px solid rgba(31, 181, 172, 1.0);
+}
+.js-ump-select-drip-content-start-time, .js-ump-select-drip-content-end-time{
+  margin-bottom: 10px;
+}
+.ihc_drip_start_numeric_value{
+  width: 50px;
+}
+.ihc-submit-form .button{
+  margin-top: 20px;
+}
+.ihc-zapier-wrapper input[type="text"]{
+  width: 50%;
+}
+.iump-form-line .row{
+  margin-left: -10px;
+}
+.iump-form-line .row .input-group{
+  margin-bottom: 15px;
+}
+.ihc-date-range-fields{
+  max-width:40%;
+  display:inline-block;
+}
+.ihc-no-margin{
+  margin: 0 !important;
+}
+.ihc-popup-shortcodevalue.ihc-shortcode-visitor span{
+  line-height: 23px;
+}
+.ihc-visibility-hidden{
+  visibility: hidden;
+}
+.ihc-visibility-visible{
+  visibility: visible;
+}
+.ihc-vertical-align-top{
+  vertical-align: text-top;
+}
+.ihc-red{
+  color:red;
+}
+.ihc-taxes-table{
+  margin-top: 25px;
+}
+#ihc_preview_levels{
+  margin: 10px 0;
+}
+.ihc-subscription-delay{
+  height: 34px;
+  padding: 6px 12px;
+}
+.ihc-social-login-settings-wrapper  input[type="text"]{
+  width: 400px;
+}
+.ihc-custom-css-box{
+  width: 90%;
+  height: 150px;
+}
+.iump-register-select-template{
+  padding: 30px;
+}
+.ihc-order-tables{
+  margin-top:20px;
+}
+.ihc-order-tables .ihc-order-id{
+  width:60px;
+}
+.ihc-order-tables .ihc-order-level{
+  width:200px;
+}
+.ihc-order-tables .ihc-order-actions{
+  width:120px;
+}
+.ihc-order-tables .ihc-order-user{
+  color: #21759b; color: #222; font-size: 13px; font-weight:bold;
+}
+.ihc-order-tables .ihc-order-membership{
+  background:none; color: #6eaf0f; font-weight: bold; font-size: 13px;
+}
+.ihc-order-edit-label{
+  min-width:170px;
+  text-align:right !important;
+}
+.ihc-optin-settings-wrapper  input[type="text"], .ihc-optin-settings-wrapper  input[type="password"], .ihc-optin-settings-wrapper  select, .ihc-optin-settings-wrapper  textarea{
+  width: 400px;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+.ihc-notification-edit-available{
+  color: #999;font-size: 10px; font-style: italic;
+}
+.ihc-notification-edit-message{
+  padding-left: 5px; width: 70%;display:inline-block;
+}
+.ihc-notification-edit-constants{
+  width: 25%; display: inline-block; vertical-align: top;margin-left: 10px; color: color: rgba(125,138,157,1.0);
+}
+.ihc-notification-edit-pushmessage{
+  width: 600px;
+  height: 100px;
+}
+.ihc-notification-list-wrapper{
+  vertical-align:top;width: 100% !important;
+}
+.ihc-notification-list-check{
+  display:inline-block; float:right;margin-right:20px;
+}
+.iump-rsp-table .ihc-sortable-table-wrapp{
+  margin: 20px 20px 20px 0px;
+}
+.ihc-delete-link{
+  color: red;
+  cursor: pointer;
+}
+.ihc-approve-link{
+  cursor:pointer;
+  color: #0074a2;
+}
+.ihc-noaitications-logs .ihc-id-col{
+  width: 40px;
+}
+.ihc-noaitications-logs .ihc-notification-col{
+  width: 300px;
+}
+.ihc-noaitications-logs .ihc-sentto-col{
+  width: 200px;
+}
+.ihc-noaitications-logs .ihc-senton-col{
+  width: 120px;
+}
+.ihc-membership-card-settings-levels{
+    margin: 5px 10px;
+    margin-right: 12px;
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    width: 200px;
+}
+.ihc-membership-card-settings-image{
+  width: 100%;
+}
+.ihc-login-security-textarea{
+  width: 40%; height: 100px;
+}
+.ihc-login-showcase-sectionone{
+  display: inline-block; width: 50%;
+}
+.ihc-login-showcase-sectiontwo{
+  display: inline-block; width: 45%; vertical-align: top;
+}
+.ihc-custom-messages-sectionone{
+  display: inline-block; width: 45%;
+}
+.ihc-custom-messages-sectiontwo{
+  display: inline-block; width: 45%;vertical-align: top;
+}
+.ihc-list-access-posts-memberships{
+  margin: 0px 4px; margin-right:12px; display: inline-block; vertical-align: top; font-weight:bold;
+}
+.ihc-payment-services-list{
+  margin:0 14px 0 5px;   width: auto !important; height:35px;
+}
+.ihc-kissmetrics-settings-wrapper .form-control{
+  max-width: 400px;
+}
+.ihc-generate-gift-code-button{
+  font-size: 11px;color: #fff; padding: 6px 9px;-webkit-border-radius: 3px;box-radius: 3px;    background-color: rgba(240, 80, 80, 0.8);cursor: pointer;
+}
+.ihc-invoice-settings-company-col{
+  width:60%;"
+}
+.ihc-invoice-settings-bill-col{
+  width: 50%; margin-right:1%; display:inline-block;
+}
+.ihc-invoice-settings-footer-col{
+  width:60%; display:inline-block;
+}
+.ihc-invoice-settings-constantsone-col{
+  width: 19%; display: inline-block; vertical-align: top;
+}
+.ihc-invoice-settings-constantstwo-col{
+  width: 19%; display: inline-block; vertical-align: top;
+}
+.ihc-user-list-shortcode-wrapp .content-shortcode{
+  padding:15px; text-align:center;
+}
+.ihc-help-settings-licenselabel{
+  width:10%; float:left; box-sizing:border-box; text-align:right; font-weight:bold;
+}
+.ihc-help-settings-licensefield{
+  width:70%; float:left; box-sizing:border-box;
+}
+.ihc-help-settings-licensefield input[type="password"]{
+  width:100%;
+}
+.ihc-help-settings-licensebutton{
+  width:20%; float:right; box-sizing:border-box;
+}
+.ihc-generate-coupon-button{
+  font-size: 11px;color: #fff; padding: 6px 9px;-webkit-border-radius: 3px;box-radius: 3px;    background-color: rgba(240, 80, 80, 0.8);cursor: pointer;
+}
+.ihc-coupon-description{
+  width: 250px;
+}
+.ihc-add-new-order-wrapper .ihc-special-input-label{
+  min-width:170px; text-align:right;
+}
+.ihc-red-color{
+  color: red;
+}
+.ihc-showcase-section-wrapper{
+  margin: 0 auto;
+  max-width: 1200px;
+}
+.ihc-subscription-table-box, .ihc-order-table-box{
+  width: 125px;
+  height: 95px;
+  border:1px solid #ddd;
+  margin:0px;
+  padding: 0 10px !important;
+}
+.ihc-subscription-table-row-box, .ihc-order-table-row-box {
+  border-bottom: 4px solid #33b5e5;
+  background: #f1f4f8 !important;
+}
+.ihc-disabled-opacity{
+  opacity:0.6;
+}
+.ihc-subscription-table-table-box, .ihc-order-table-table-box {
+  border: 1px solid #c3c4c7;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+.ihc-subscription-table-table-box, .ihc-order-table-table-box tbody td{
+  width: 125px;
+  padding: 0 10px;
+  font-size: 11px;
+  color:#999;
+  padding: 10px 10px;
+}
+.ihc-subscription-table-box .iump-form-line{
+  max-width: 125px;
+}
+.ihc-order-table-box .iump-form-line{
+  max-width: 125px;
+}
+.ihc-membership-card-settings-image-type-box-wrapper{
+  margin:10px auto;
+  margin-bottom: 20px;
+}
+.ihc-membership-card-settings-image-type-box{
+  display: inline-block;
+  margin-right: 20px;
+}
+.ihc-membership-card-settings-image-type-box input[type="radio"]{
+  width: 1rem;
+  min-width: 1rem;
+}
+.ihc-membership-card-settings-image-type-box label{
+  font-weight: 500;
+  font-size: 15px;
+  padding-left: 5px;
+}
+.ihc-membership-card-settings-image-example{
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  display: block;
+  margin-left: 20px;
+}
+.ihc-membership-card-size-image-example-wrapper{
+
+}
+.ihc-membership-card-size-image-example-wrapper .membership-card-size-small{
+  width: 300px;
+}
+.ihc-membership-card-size-image-example-wrapper .membership-card-size-medium{
+  width: 350px;
+}
+.ihc-membership-card-size-image-example-wrapper .membership-card-size-large{
+  width: 400px;
+}
+.ihc_membership_card_background_color{
+  max-width: 100px;
+  min-width: initial !important;
+}
+.ihc-pie-label{
+  position:absolute;
+}
+.ihc-pie-label-st{
+  font-size:x-small;
+  text-align:center;
+  padding:2px;
+}
+.ihc-approve-user-span{
+  background-color: #f1f1f1;
+  color: #666;
+  padding: 3px 0px;
+  font-size: 10px;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 70px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  text-align: center;
+  text-transform: capitalize;
+}
+.ihc-approve-email-span{
+  background-color: #f1f1f1;
+  color: #666;
+  padding: 3px 0px;
+  font-size: 10px;
+  font-weight: bold;
+  display: inline-block;
+  min-width: 70px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  text-align: center;
+}
+.ihc-custom-field-item-wrapp-st{
+  display: block;
+  margin-bottom: 5px;
+}
+.ihc-loading-img-wrapper{
+  background:#fff;
+  width: 100%;
+  text-align:center;
+}
+.ihc-loading-img{
+  width: 200px;
+}
+
+.ihc_locker_1-st{
+  max-width:640px;
+  margin:auto;
+}
+.ihc-uploadfile-form{
+  display:block;
+  position:absolute;
+  left: 150px;
+}
+.ihc-aff-search-wrapper{
+  padding-top: 10px;
+}
+.ihc-aff-perpage-wrapper{
+  display: inline-block;
+  float: right;
+  margin: 10px 0px;
+}
+.ihc-aff-affname{
+  color: #21759b;
+  font-weight:bold; width:120px;
+  font-size: 14px;
+}
+.ihc-aff-message{
+  padding:20px 20px;
+}
+.ihc-aff-message-label{
+   font-size:16px;
+   color:#B70B0B;
+ }
+ .ihc-aff-message-st{
+   width:616px;
+   padding-top:20px;
+   margin-top:20px;
+   border-top:1px solid #ddd;
+ }
+ .ihc-gen-span-st{
+   font-weight:bold;
+   display:inline-block;
+   width: 25%;
+    float: none !important;
+    margin-left: 0 !important;
+ }
+ .ihc-gen-wprole-sec{
+   width: 49%;
+   vertical-align: top;
+   display: inline-block;
+ }
+ .ihc_email_blacklist{
+   width: 50%;
+   height: 100px;
+ }
+ .ihc-gen-menu-select{
+   min-width: 400px;
+   margin-bottom: 20px;
+ }
+.ihc-gen-menu-wrap{
+  padding: 5px 0px;
+  margin: 5px 0px;
+  border-top: 1px solid #c3c3c3;
+}
+.ihc-gen-menu-wrap .ihc-padding{
+  margin-bottom:10px;
+}
+.ihc-gen-menu-wrap .ihc-men-select, .ihc-gen-limited-widh{
+  width: 300px;
+}
+.ihc-gen-opacity{
+  opacity: 0.7;
+}
+.ihc-gen-captcha-input{
+  margin:0px 0 15px 0;
+  width: 50%;
+}
+.ihc-gen-default-country{
+  width:100%;
+  max-width: 100%;"
+}
+.ihc-gent-login-logo{
+  width: 90% !important;
+  display: inline !important;
+  float:none;
+  min-width:500px !important;
+}
+.ihc-badge-img{
+  width: 75px;
+}
+.ihc-badge-img-input{
+  width: 90%;
+  display: inline;
+  float:none;
+  min-width:500px;
+}
+.ihc-manage-user-expire-wrapper-edit{
+  position:absolute;
+  top:70px;
+  right:0px;
+}
+.level-type-list-st{
+  margin: 0;"
+}
+.level-type-list-st a{
+  color:#fff;
+}
+.ihc-admin-user-data-list-st{
+  position:relative;
+}
+.ihc-levels-table-name-st{
+  color: #21759b;
+  font-weight:bold;
+  width:120px;
+  font-size: 14px;
+}
+.ihc-userdetails-not-mess{
+  width: 250px;
+}
+.ihc-userdetails-not-sub{
+  font-weight:700;
+  padding-bottom:10px;
+}
+.ihc-userdetails-not-send{
+  width: 120px;
+}
+.ihc-userdetails-mem-mess{
+  width: 150px;
+}
+.ihc-userdetails-mem-date{
+  width: 120px;
+}
+.ihc-small-status-col{
+  width: 50px;
+}
+.ihc-userdetails-pending{
+  color: #9b4449;
+  font-weight:600;
+}
+.ihc_profile_form_template-st{
+  min-width:400px
+}
+.ihc-white-link{
+  color: #fff;
+}
+.ihc-users-list-col1{
+  width: 20px;
+}
+.ihc-users-list-col2{
+  width: 30px;
+}
+.ihc-users-list-col3{
+  width: 250px;
+}
+.ihc-users-list-del-btn{
+  margin-top: 10px;
+}
+.ihc-acc-menu-table{
+  width:100%;
+  position:relative;
+}
+.ihc-acc-menu-table-tr{
+  width: 100%;
+}
+.ihc-acc-menu-table-col1{
+  position:relative;
+  width:30%;
+  min-width:200px;
+}
+.ihc-acc-menu-table-col2{
+  position:relative; min-width:200px; width:30%;color: #21759b; font-size: 14px;
+}
+.ihc-acc-menu-table-col3{
+  position:relative; width:20%; min-width:100px;
+}
+.ihc-acc-menu-table-col4{
+  position:relative; width:20%; min-width:100px;
+}
+.ihc-acc-menu-table-col5{
+  position:relative; width:20%; min-width:100px;
+}
+.ihc-block-url-select{
+  width: auto;
+}
+.ihc-block-url-redirect{
+  color: #21759b;
+  font-weight:bold;
+}
+.ihc-block-url-table{
+  margin-top: 20px
+}
+.ihc-block-url-file-url{
+  width: 75%;
+}
+.ihc-block-url-full-url{
+  width: 500px;
+}
+.ihc-row-no-margin{
+  margin-left: 0 !important;
+}
+.ihc-input-limited-width{
+  width: 300px;
+}
+.ihc-payment-steps-wrapper{
+  font-size: 11px;
+  color: #333;
+  padding-left: 10px;
+}
+.ihc-payment-bank-editor{
+  padding-left: 5px;
+  width: 70%;
+  display:inline-block;
+}
+.ihc-payment-bank-editor-constants{
+  width: 25%; display: inline-block; vertical-align: top;margin-left: 10px; color: #333;
+}
+.ihc-user-avatar-wrapp{
+    width: 150px;
+    height: 150px;
+}
+.sweet-alert {
+    background-color: #ffffff;
+    width: 800px;
+}
+.ihc-admin-account-page{}
+
+.ihc-admin-account-page .iump-register-select-template{
+  padding:20px 0 35px 20px;
+}
+.ihc-admin-account-page .iump-register-select-template select{
+  min-width:300px; margin-left:10px;
+}
+.ihc-admin-account-page .ihc-background-image{
+  width: 90% !important;display: inline !important; float:none !important; min-width:500px !important;
+}
+.ihc-admin-account-page .iump-wp_editor{
+  float:left; width: 55%;
+}
+.ihc-admin-account-page .iump-wp_editor-constants{
+  width: 13%; display: inline-block; vertical-align: top;margin-left: 10px; padding-left: 15px;
+}
+.ihc-admin-account-page .iump-wp_editor-constants-coltwo{
+  width: 30%; display: inline-block; vertical-align: top; margin-left: 10px;
+}
+.ihc-admin-account-page .iump-wp_editor-constants-colthree{
+  width:49%; display: inline-block; vertical-align: top;
+}
+.ihc-admin-account-page .iump-wp_editor-constants-colfour{
+  width:49%; display: inline-block; vertical-align: top;
+}
+.ihc-admin-account-page .ihc-myaccount-title{
+  font-size:22px;
+}
+.ihc-admin-account-page .ihc-ap-tabs-settings-item{
+  margin-top:20px;
+}
+.ihc-admin-account-page .ihc-ap-tabs-settings-item-content{
+  margin-top:20px;
+}
+.ihc-admin-account-page .ihc-ap-tabs-settings-item .ihc-ap-tabs-item{
+  margin: 7px 0px 25px 0px;
+}
+.ihc-admin-account-page .ihc-icon-select-wrapper{
+  margin-right:-30px; height:35px;
+}
+.ihc-admin-account-page .ihc-ap-tabs-settings-item-content .ihc-wp_editor{
+  width: 55%; display: inline-block; vertical-align: top; box-sizing:border-box;
+}
+
+.ihc-admin-memberships{
+  vertical-align:top; width: 100% !important;
+}
+.ihc-admin-memberships .ihc-short_description{
+  min-width: 250px;
+}
+.ihc-admin-memberships .ihc-form-element-select{
+  max-width:400px !important;
+  width:100% !important;
+}
+.ihc-admin-memberships .ihc-membership-type-settings{
+  margin-top: 10px;
+}
+.ihc-admin-memberships .ihc-access_limited_time_value{
+  vertical-align:middle; margin-right:5px; width:97px;
+}
+.ihc-admin-memberships .ihc-access_limited_time_type{
+  min-width:150px;
+}
+.ihc-admin-memberships .ihc-date_interval_access_metas{
+  margin-bottom:10px;
+}
+.ihc-admin-memberships .ihc-access_regular_time_value{
+  vertical-align:middle; margin-right:5px;  width:97px;
+}
+.ihc-admin-memberships .ihc-access_regular_time_type{
+  min-width:150px;
+}
+.ihc-admin-memberships .ihc-specific-message{
+  margin: 5px 0 0 190px;
+}
+.ihc-admin-memberships .ihc-set_expired_level{
+  margin-top: 30px;
+}
+.ihc-admin-memberships .ihc-end-of-term-label{
+  vertical-align: top;
+}
+.ihc-admin-memberships .ihc-assign-after{
+  margin-top: 20px; display: block;
+}
+.ihc-admin-memberships .ihc-assign-after-cancel{
+  margin-top: 20px;
+}
+.ihc-admin-memberships .ihc-additional-settings{
+  margin-bottom:30px;
+}
+.ihc-admin-memberships .ihc-additional-settings-message{
+  font-style:italic; color:#999;
+}
+.ihc-admin-memberships .ihc-price-wrapper{
+  display:inline-block;     max-width: 400px; width:100%; vertical-align: middle;
+}
+.ihc-admin-memberships .ihc-price-message{
+  font-size: 11px; margin-left: 185px;
+}
+.ihc-admin-memberships .ihc-trial_period_billing{
+    margin: 10px 0;
+}
+.ihc-admin-memberships .ihc-trial-price-label{
+  letter-spacing: -0.3px;
+}
+.ihc-admin-memberships .ihc-trial-price-wrapper{
+  display:inline-block;     max-width: 400px; width:100%; vertical-align: middle;
+}
+.ihc-admin-memberships .ihc-trial-price{
+  vertical-align:middle; margin-right:5px;
+}
+.ihc-admin-memberships .ihc-trial-price-message{
+  font-size: 12px;margin-left: 185px;   font-weight: bold; color: #cf414a; margin-bottom:5px;
+}
+.ihc-admin-memberships .ihc-trial-price-messagetwo{
+  font-size: 11px;margin-left: 185px;   font-weight: bold;
+}
+.ihc-admin-memberships .ihc-access_trial_time_value{
+  vertical-align:middle; margin-right:5px; width:97px;
+}
+.ihc-admin-memberships .ihc-access_trial_time_type{
+  min-width:200px;
+}
+.ihc-admin-memberships .ihc-access_trial_couple_cycles{
+  vertical-align:middle; margin-right:5px;
+}
+.ihc-admin-memberships .ihc-grace_period{
+  vertical-align:middle; margin-right:5px;  width:100px; min-width:50px;
+}
+.ihc-admin-memberships .ihc-plan-details-wrapper{
+  margin-bottom:25px;
+}
+.ihc-admin-memberships .ihc-plan-details-editor{
+    max-width:900px;
+}
+.ihc-admin-memberships .ihc-plan-details-price-text{
+  max-width:200px;
+}
+.ihc-admin-memberships .ihc-plan-details-price-message{
+  font-size: 11px;
+}
+.ihc-admin-memberships .ihc-extension-label{
+  color:#222 !important;
+}
+.ihc-admin-memberships .ihc-payment-select-img-selected{
+  margin:0 14px 0 5px;   width: auto !important; height:35px;
+}
+.ihc-admin-memberships .ihc-checkbox-align{
+  vertical-align:bottom;
+}
+.ihc-admin-memberships .ihc-membership-plus-message{
+  margin-top: 24px;
+}
+.ihc-admin-memberships .ihc-membership-plus-checkbox-wrapper{
+  "margin: 0px 4px; margin-right:12px; display: inline-block; vertical-align: top;
+}
+.ihc-admin-memberships .ihc-badge-imag{
+  width: 90% !important;display: inline !important; float:none !important; min-width:500px;
+}
+.ihc-admin-memberships .ihc-memberships-lists-wrapper{
+  margin-top:20px;
+}
+.ihc-admin-memberships .ihc-memberships-lists-wrapper .ihc-membership-table-col-small{
+  width:40px;
+}
+.ihc-admin-memberships .ihc-memberships-lists-wrapper .ihc-membership-name{
+  color: #21759b; font-size: 14px;font-weight: 700;
+}
+.ihc-admin-memberships .ihc-memberships-lists-wrapper .ihc-membership-payment-type{
+  color: #222; font-weight:bold;font-size: 13px; text-transform:capitalize;
+}
+.ihc-admin-memberships .ihc-memberships-lists-wrapper .ihc-membership-recurence-type{
+  color: #888; font-size: 13px;font-weight: 600; text-transform:capitalize;
+}
+.ihc-admin-memberships .indeed-add-new-like-wp{
+  display: inline-block; margin-top: 20px;
+}
+.ihc-admin-listing-users{
+  vertical-align:top; width: 100% !important;
+}
+.ihc-admin-listing-users .ihc-list-user-make-csv{
+  background-color:#38cbcb;
+}
+.ihc-admin-listing-users .ihc-hidden-download-link{
+  display: none;float: right; padding: 20px 20px 0px 0px;
+}
+.ihc-admin-listing-users .ihc-filter-form{
+  margin-top:20px;
+}
+.ihc-admin-listing-users .ihc-delete-button-wrapper{
+  margin: 10px 0px;
+}
+.ihc-admin-listing-users .ihc-delete-button{
+  display: inline-block;float: left;
+}
+.ihc-admin-listing-users .ihc-offset-wrapper{
+  display: inline-block;float: right;margin-right:10px;
+}
+.ihc-admin-listing-users .ihc-users-table-col1{
+  width: 20px;
+}
+.ihc-admin-listing-users .ihc-users-table-col2{
+  width:30px;
+}
+.ihc-admin-listing-users .ihc-users-table-col3{
+  width:10%;
+}
+.ihc-admin-listing-users .ihc-users-table-col4{
+  width:8%;
+}
+.ihc-admin-listing-users .ihc-users-table-col5{
+  width:250px;
+}
+.ihc-admin-listing-users .ihc-users-table-col6{
+  width:80px;
+}
+.ihc-admin-listing-users .ihc-users-table-col7{
+  width:100px;
+}
+.ihc-admin-listing-users .ihc-users-table-col8{
+  width:100px;
+}
+.ihc-admin-listing-users .ihc-users-table-col9{
+  width:6%;
+}
+.ihc-admin-listing-users .ihc-users-table-col10{
+  width:10%;
+}
+.ihc-admin-listing-users .ihc-manage-plan-link-color{
+  color: #333;
+}
+.ihc-add-new-user-wrapper{
+  margin-top: 20px;
+}
+.ihc-vertical-align-bottom{
+  vertical-align:bottom;
+}
+.ihc-admin-list-users{
+
+}
+.ihc-admin-list-users .ihc-small-title{
+  font-size: 18px;
+}
+.ihc-admin-list-users .ihc-small-select{
+  min-width:162px;
+}
+.ihc-admin-list-users .ihc-half-column{
+  width: 50%;
+}
+.ihc-admin-list-users .ihc-spacewp_spec{
+  max-width:500px !important;
+}
+.ihc-admin-list-users .ihc-extra-input{
+  min-width:400px !important;
+}
+.ihc-admin-list-users .ihc-shortcode-text{
+  font-weight:bolder; color: #fff; font-style:italic; font-size:13px;
+}
+.ihc-admin-list-users .ihc-extra-margin{
+  margin-top:10px;
+}
+.ihc-admin-list-users .ihc-special-option{
+  font-size: 18px; padding-left:10px;
+}
+.ihc-admin-list-users .ihc-small-inout{
+  width: 81px;
+}
+.ihc-admin-list-users .ihc-half-opacity{
+  opacity: 0.5;
+}
+.ihc-admin-list-users .ihc-top-background-box1{
+  background-color: rgb(66, 66, 66) !important;
+}
+.ihc-admin-list-users .ihc-top-background-box2{
+  background: #1fb5ac !important;
+}
+.ihc-admin-list-users .ihc-top-background-box3{
+  background: rgba(240, 80, 80, 1.0) !important;
+}
+.ihc-admin-list-users .ihc-full-col{
+  float:none; width:100%;
+}
+.ihc-admin-list-users .ihc-search-bar-field{
+  vertical-align: super;
+}
+.ihc-admin-list-users .ihc-custom-css-textarea{
+  width: 100%; height: 100px;
+}
+.ihc-admin-list-users .ihc-show-custom-fields-wrapper{
+  display: inline-block; vertical-align: top; width: 45%; margin-left: 5%;
+}
+.ihc-admin-list-users .ihc-show-main-details-wrapper{
+  display: inline-block; vertical-align: auto; width:45%;
+}
+.ihc-admin-list-users .ihc-show-custom-fields-title{
+  margin-bottom: 30px;
+}
+.ihc-admin-list-users .ihc-show-custom-fields-content{
+  overflow-y: auto; height: 400px;
+}
+.ihc-admin-list-users .ihc-banner-image-wrapper{
+  margin:20px 0 10px 10px !important;
+}
+.ihc-admin-list-users .ihc-listing_users_inside_page_banner_href{
+  width: 70%;display: inline; float:none;
+}
+.ihc-admin-list-users .ihc-individual-page-wrapper{
+  margin-bottom: 30px; text-align: center;
+}
+.ihc-admin-list-users .ihc-inside-page-editor{
+  float:left; width: 70%;
+}
+.ihc-admin-list-users .ihc-inside-page-content-title{
+  float:left; padding-right:5px; box-sizing:border-box; width:10%;
+}
+.ihc-admin-list-users .ihc-inside-page-constants-wrapper{
+  float:left; width:10%; color:#999; padding-left:10px; box-sizing:border-box;
+}
+.ihc-admin-list-users .ihc-inside-page-colors-wrapper{
+  display: inline-block; vertical-align: top;
+}
+.ihc-submit-button-wrapper{
+  margin-top: 15px;
+}
+.ihc-admin-register-add-new-value{
+  display: inline-block; margin-left: 140px; margin-top: 10px; padding: 5px; background-color: #27bebe; color: #fff; cursor: pointer;
+}
+.ihc-admin-register-min-width{
+  min-width: 250px !important;
+}
+.ihc-admin-register-sublabel-input{
+  width: 400px;
+}
+.ihc-admin-register-condition-field-sect1{
+  display: inline-block;margin-left: 20px;
+}
+.ihc-admin-register-condition-field-sect2{
+  display: inline-block;margin-left: 10px;
+}
+.ihc-admin-register-condition-field-sept{
+  display: inline-block;margin-right:10px;
+}
+.ihc-admin-register-condition-field-input{
+  vertical-align: middle; min-width: 250px;
+}
+.ihc-admin-register-register-template{
+  min-width:400px;
+}
+.ihc-admin-register-preview-wrapper{
+  padding: 5px;
+}
+.ihc-admin-register-predifined-level{
+  padding:0;border-bottom: none; margin-top:10px;
+}
+.ihc-admin-register-password-format-wrapper{
+  margin-top:15px;
+}
+.ihc-admin-register-optin-wrapper{
+  margin-top:10px;
+}
+.ihc-admin-register-margin-bottom-space{
+  margin-bottom: 15px;
+}
+.ihc-admin-register-tos-input{
+  min-width:350px;
+}
+.ihc-admin-register-custom-mess-col1{
+  display:inline-block;width: 45%;
+}
+.ihc-admin-register-custom-mess-col2{
+  display:inline-block;width: 45%;vertical-align:top;
+}
+.ihc-admin-register-add-new-field-wrapper{
+  display: inline-block; margin: 10px 0px;
+}
+.ihc-admin-register-fields-table-small-col{
+  width: 42px;
+}
+.ihc-admin-register-editor-wrapper{
+  display: inline-block; max-width: 85%;
+}
+.ihc-box-background-000{
+	background-color: #000 !important;
+}
+.ihc-box-background-c9c9c9{
+	background-color: #c9c9c9 !important;
+}
+.ihc-box-background-0a9fd8{
+	background-color: #0a9fd8 !important;
+}
+.ihc-box-background-38cbcb{
+	background-color: #38cbcb !important;
+}
+.ihc-box-background-27bebe{
+	background-color: #27bebe !important;
+}
+.ihc-box-background-0bb586{
+	background-color: #0bb586 !important;
+}
+.ihc-box-background-94c523{
+	background-color: #94c523 !important;
+}
+.ihc-box-background-6a3da3{
+	background-color: #6a3da3 !important;
+}
+.ihc-box-background-f1505b{
+	background-color: #f1505b !important;
+}
+.ihc-box-background-ee3733{
+	background-color: #ee3733 !important;
+}
+.ihc-box-background-f36510{
+	background-color: #f36510 !important;
+}
+.ihc-box-background-f8ba01{
+	background-color: #f8ba01 !important;
+}
+
+
+@media screen and (max-width: 1280px) {
+.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title div{
+	/*display:none;*/
+}
+}
+@media screen and (max-width: 1440px) {
+    .ihc-coupon-admin-box-wrap{
+       width: 33%;
+    }
+}
+@media (max-width: 1500px){
+	.ihc-magic-box-wrap{
+		width: 33%;
+	}
+}
+@media screen and (max-width: 782px){
+
+	.iump-wrapper .ihc-admin-tables tbody td, .iump-wrapper .ihc-admin-tables tbody th{
+		    display: table-cell;
+
+	}
+  .iump-wrapper .ihc-admin-tables thead th.column-primary {
+    width: 100% !important;
+}
+.iump-wrapper .ihc-admin-tables tr:not(.inline-edit-row):not(.no-items) td.column-primary~td:not(.check-column) {
+    padding: 3px 8px 3px 3px !important;
+    box-shadow: none;
+}
+
+	.ihc-filters-wrapper .col-xs-8, .ihc-filters-wrapper .col-xs-6, .ihc-filters-wrapper .col-xs-4{
+		float:none;
+		width:100%;
+	}
+	.iump-pagination-wrapper{
+		margin-top:15px;
+	}
+	.ihc-special-buttons-users{
+		margin-top:15px;
+	}
+	.ihc-subtab-menu .ihc-subtab-menu-item:first-child{
+		    margin-left: 0px;
+	}
+	.iump-rsp-table {
+		width: 100%;
+			overflow-x: auto;
+	}
+
+	.ihc-buttons-rsp {
+		visibility: visible !important;
+	}
+	.iump-btns {
+		display: inline-block;
+		position: relative;
+		padding: 2px 10px;
+		margin: 7px 3px;
+		background: #e4edef;
+	}
+
+	.col-xs-6 {
+		min-width: 100%;
+	}
+	.ihc-additional-help {
+		position: absolute;
+		bottom: 0px;
+	}
+	.iump-form-line input, .iump-form-line select{
+		min-width: 100px;
+	}
+}
+
+/*414*/
+@media (max-width: 414px){
+
+	.ihc-admin-mobile-bttn-wrapp{
+		display:block;
+	}
+	.ihc-dashboard-menu-items{
+		/*min-width: 0px !important;*/
+		display: none;
+	}
+	.ihc-dashboard-menu ul{
+		height:auto;
+		background-color: rgba(80,103,107,1.0);
+		margin-top:-10px;
+	}
+	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu ul li{
+		float:none;
+		display:block;
+		width:100%;
+		border-bottom: 1px solid rgba(255,255,255,0.1);
+	}
+	.ihc-dashboard-wrap .ihc-admin-header .ihc-top-menu-section .ihc-dashboard-menu .ihc-page-title{
+		padding: 8px 1px;
+		    line-height: 11px;
+	}
+	.ihc-dashboard-menu-items .fa-ihc-menu{
+		font-size:20px;
+	}
+	.ihc-magic-box-wrap{
+		width: 100%;
+	}
+
+
+	.iump-rsp-table {
+		width: 100%;
+			overflow-x: auto;
+	}
+
+	.manage-column {
+		width: 200px;
+	}
+	.iump-form-select  {
+		max-width: 256px;
+	}
+
+	.ihc-buttons-rsp {
+		visibility: visible !important;
+	}
+	.iump-btns {
+		display: inline-block;
+		position: relative;
+		padding: 2px 10px;
+		margin: 7px 3px;
+		background: #e4edef;
+	}
+	.col-xs-6 {
+		min-width: 100%;
+	}
+	.ihc-additional-help {
+		position: absolute;
+		bottom: 0px;
+	}
+	.iump-form-line input, .iump-form-line select{
+		min-width: 100px;
+	}
+
 }

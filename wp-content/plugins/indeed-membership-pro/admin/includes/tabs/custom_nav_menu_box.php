@@ -4,8 +4,8 @@
       <?php
       $siteUrl = get_option( 'siteurl' );
       $items = array(
-                      'login'         => __( 'Login', 'ihc' ),
-                      'register'      => __( 'Register', 'ihc' )
+                      'login'         => esc_html__( 'Login', 'ihc' ),
+                      'register'      => esc_html__( 'Register', 'ihc' )
       );
       $i = 0;
       ?>

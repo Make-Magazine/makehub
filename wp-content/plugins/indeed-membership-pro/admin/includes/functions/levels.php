@@ -6,11 +6,12 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 	 * @return none
 	 */
 	if (isset($post_data['name']) && $post_data['name']!=''){
+
 		$option_name = 'ihc_levels';
 		$data = get_option($option_name);
 		if ( !empty($data) && is_array( $data ) && count($data)>=3 && (!defined('IHCACTIVATEDMODE') || !IHCACTIVATEDMODE)){
 			if (!$install){
-				echo '<div class="ihc-admin-err-level">' . __("You cannot add more than one level on Trial Version!", 'ihc') . '</div>';
+				echo '<div class="ihc-admin-err-level">' . esc_html__("You cannot add more than one level on Trial Version!", 'ihc') . '</div>';
 			}
 			return;
 		}
@@ -19,6 +20,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 							'payment_type'=>'',
 							'price'=>'',
 						    'label'=>'',
+								'short_description' => '',
 							'description'=>'',
 							'price_text' => '',
 							'order' => '',
@@ -32,7 +34,11 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 							'billing_type' => '',
 							'billing_limit_num' => '2',
 							'show_on' => '1',
+							'afterexpire_action' => 0,
 							'afterexpire_level' => -1,
+							'aftercancel_action' => 0,
+							'aftercancel_level' => -1,
+							'grace_period' => '',
 							'custom_role_level' => '-1',
 							'start_date_content' => '0',
 							'special_weekdays' => '',
@@ -65,9 +71,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 				//update level
 				$id = $post_data['level_id'];
 			} else {
-				/// create level
-				//end($data);
-				//$id = key($data);
+
 				$id = ihc_get_biggest_key_from_array($data);
 				$id++;
 				$arr['name'] = ihc_make_string_simple($arr['name']);
@@ -75,7 +79,7 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 			$check = ihc_array_value_exists($data, $post_data['name'], 'name');
 			if ($check!==FALSE && $check!=$id){
 				if (!$install){
-					echo '<div class="ihc-admin-err-level">' . __("A Level with this name ", 'ihc') . $post_data['name'] . __(" already exists! Please choose another name!", 'ihc') . '</div>';
+					echo '<div class="ihc-admin-err-level">' . esc_html__("A Level with this name ", 'ihc') . $post_data['name'] . esc_html__(" already exists! Please choose another name!", 'ihc') . '</div>';
 				}
 				return 0;
 			}
@@ -91,50 +95,21 @@ function ihc_save_level($post_data=array(), $install=FALSE){
 	}
 }
 
+// Deprecated
 function ihc_delete_level($lid=-1){
-	/*
-	 * delete LEVEL from wp_options, ihc_user_levels and user_meta
-	 * @param none
-	 * @return none
-	 */
+
 	//delete level wp option
 	global $wpdb;
-	$data = get_option('ihc_levels');
-	foreach ($data as $k=>$v){
-		if ($k==$lid){
-			unset($data[$k]);
-		}
-	}
-	update_option('ihc_levels', $data);
+	\Indeed\Ihc\Db\Memberships::deleteOne( $lid );
 	do_action('ihc_delete_level_action', $lid);
 
-	$table = $wpdb->prefix . 'ihc_user_levels';
-	$table_b = $wpdb->base_prefix . 'users';
-	$q = $wpdb->prepare("SELECT a.user_id as uid FROM $table a INNER JOIN $table_b b ON a.user_id=b.ID WHERE 1=1 AND a.level_id=%d", $lid);
-	$users = $wpdb->get_results($q);
-	$q = $wpdb->prepare("DELETE FROM $table WHERE level_id=%d ", $lid);
-	$wpdb->query($q);
-	if ($users){
-		foreach ($users as $object){
-			$u_levels = get_user_meta($object->uid, 'ihc_user_levels', TRUE);
-			if ($u_levels){
-				$u_levels_arr = explode(",", $u_levels);
-				if ($u_levels_arr){
-					foreach ($u_levels_arr as $k=>$u_lid){
-						if ($u_lid==$lid){
-							unset($u_levels_arr[$k]);
-							$level_str = implode(',', $u_levels_arr);
-							update_user_meta($object->uid, 'ihc_user_levels', $level_str);
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
+
+	\Indeed\Ihc\UserSubscriptions::deleteAllForSubscription( $lid );
 
 	$table = $wpdb->prefix . 'postmeta';
-	$data = $wpdb->get_results("SELECT post_id, meta_value FROM $table WHERE meta_key='ihc_mb_who';");
+	//No query parameters required, Safe query. prepare() method without parameters can not be called
+	$query = "SELECT post_id, meta_value FROM $table WHERE meta_key='ihc_mb_who';";
+	$data = $wpdb->get_results( $query );
 	if ($data){
 		foreach ($data as $object){
 			if ($object->meta_value){

@@ -1,0 +1,32 @@
+[
+    {
+        "email": "yirejeh426@noobf.com",
+        "email_verified": false,
+        "user_metadata": { 
+            "first_name": "Abe",
+            "last_name": "Walters"
+        },
+        "custom_password_hash": {
+            "algorithm": "md4",
+            "hash": {
+                "value": "abc123",
+                "encoding": "base64"
+            }
+        }
+    },
+    {
+        "email": "yirejeh789@noobf.com",
+        "email_verified": false,
+        "user_metadata": { 
+            "first_name": "Carmina",
+            "last_name": "Scott"
+        },
+        "custom_password_hash": {
+            "algorithm": "md4",
+            "hash": {
+                "value": "abc123",
+                "encoding": "base64"
+            }
+        }
+    }
+]

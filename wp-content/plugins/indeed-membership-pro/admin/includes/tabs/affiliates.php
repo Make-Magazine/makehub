@@ -4,8 +4,8 @@ $is_uap_active = ihc_is_uap_active();
 if ($is_uap_active):
 ?>
 <div class="ihc-subtab-menu">
-	<a class="ihc-subtab-menu-item" href="<?php echo $url.'&tab='.$tab.'&subtab=list';?>"><?php _e('Affiliates', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item" href="<?php echo $url.'&tab='.$tab.'&subtab=options';?>"><?php _e('Account Page', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo $url.'&tab='.$tab.'&subtab=list';?>"><?php esc_html_e('Affiliates', 'ihc');?></a>
+	<a class="ihc-subtab-menu-item" href="<?php echo $url.'&tab='.$tab.'&subtab=options';?>"><?php esc_html_e('Account Page', 'ihc');?></a>
 	<div class="ihc-clear"></div>
 </div>
 <?php endif;?>
@@ -14,7 +14,7 @@ if ($is_uap_active):
 		<div class="ihc-dashboard-title">
 			Ultimate Membership Pro -
 			<span class="second-text">
-				<?php _e('Affiliates', 'ihc');?>
+				<?php esc_html_e('Affiliates', 'ihc');?>
 			</span>
 		</div>
 
@@ -144,9 +144,11 @@ if ($is_uap_active):
 
 
 					//SEARCH FILTER BY USER LEVELS
-					if ($start==0) $current_page = 1;
-					else $current_page = $_REQUEST['ihcdu_page'];
-
+					if ($start==0){
+						 $current_page = 1;
+					}else{
+						$current_page = $_REQUEST['ihcdu_page'];
+					}
 					if (!isset($total_users)){
 						$total_users = count($all_users);
 					}
@@ -168,39 +170,44 @@ if ($is_uap_active):
 						$indeed_db = new Uap_Db;
 					}
 
-					$hidded = 'style="display:none;"';
-					if (isset($_REQUEST['search_user']) || isset($_REQUEST['filter_role']) || isset($_REQUEST['ordertype_level']) || isset($_REQUEST['orderby_user']) || isset($_REQUEST['ordertype_user']) ) $hidded ='';
+					$hidded = 'ihc-display-none';
+					if (isset($_REQUEST['search_user']) || isset($_REQUEST['filter_role']) || isset($_REQUEST['ordertype_level']) || isset($_REQUEST['orderby_user']) || isset($_REQUEST['ordertype_user']) ){
+						 $hidded ='';
+					}
 
 					?>
 					<div class="ihc-special-buttons-users">
-						<div class="ihc-special-button" onclick="ihcShowHide('.ihc-filters-wrapper');"><i class="fa-ihc fa-export-csv"></i><?php _e('Add Filters', 'uap');?></div>
+						<div class="ihc-special-button" onclick="ihcShowHide('.ihc-filters-wrapper');"><i class="fa-ihc fa-export-csv"></i><?php esc_html_e('Add Filters', 'uap');?></div>
 						<div class="ihc-clear"></div>
 					</div>
-					<div class="ihc-filters-wrapper" <?php echo $hidded;?>>
-						<form method="post" action="">
+					<div class="ihc-filters-wrapper  <?php echo $hidded;?>">
+						<form method="post" >
 							<div class="row-fluid">
 								<div class="span4">
 									<div class="iump-form-line iump-no-border">
-										<input name="search_user" type="text" value="<?php echo (isset($_REQUEST['search_user']) ? $_REQUEST['search_user'] : '') ?>" placeholder="<?php _e('Search by Name or Username', 'ihc');?>..."/>
+										<input name="search_user" type="text" value="<?php echo (isset($_REQUEST['search_user']) ? $_REQUEST['search_user'] : '') ?>" placeholder="<?php esc_html_e('Search by Name or Username', 'ihc');?>..."/>
 									</div>
 								</div>
-								<div class="span2" style="padding:30px 10px 0 0;">
+								<div class="span2 ihc-aff-search-wrapper">
 									<input type="submit" value="Search" name="search" class="button button-primary button-large">
 								</div>
 							</div>
 						</form>
 					</div>
-							<div style="margin: 10px 0px;">
-								<div style="display: inline-block;float: left;" >
-								</div>
+							<div>
 
-								<div style="display: inline-block;float: right;margin-right:10px;">
-									<strong><?php _e('Number of Users to Display:', 'ihc');?></strong>
-									<select name="ihc_limit" onChange="window.location = '<?php echo admin_url('admin.php');?>?page=ihc_manage&tab=affiliates&ihc_limit='+this.value;">
+								<div class="ihc-aff-perpage-wrapper">
+									<strong><?php esc_html_e('Number of Users to Display:', 'ihc');?></strong>
+									<select name="ihc_limit" class="ihc-js-admin-affiliates-limit"
+										data-url='<?php echo admin_url('admin.php?page=ihc_manage&tab=affiliates&ihc_limit=');?>'
+									>
 										<?php
 											foreach (array(5,25,50,100) as $v){
 												?>
-													<option value="<?php echo $v;?>" <?php if($limit==$v) echo 'selected';?> ><?php echo $v;?></option>
+													<option value="<?php echo $v;?>" <?php if($limit==$v){
+														 echo 'selected';
+													}
+													?> ><?php echo $v;?></option>
 												<?php
 											}
 										?>
@@ -214,42 +221,45 @@ if ($is_uap_active):
 							<thead>
 								<tr>
 									  <th class="manage-column">
-											<?php _e('Username', 'ihc');?>
+											<?php esc_html_e('Username', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Name', 'ihc');?>
+											<?php esc_html_e('Name', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('E-mail', 'ihc');?>
+											<?php esc_html_e('E-mail', 'ihc');?>
 									  </th>
-									  <th><?php _e('Affiliate', 'ihc');?></th>
-									  <th><?php _e('Join Date', 'ihc');?></th>
+									  <th><?php esc_html_e('Affiliate', 'ihc');?></th>
+									  <th><?php esc_html_e('Join Date', 'ihc');?></th>
 								</tr>
 							</thead>
 							<tfoot>
 								<tr>
 									  <th class="manage-column">
-											<?php _e('Username', 'ihc');?>
+											<?php esc_html_e('Username', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('Name', 'ihc');?>
+											<?php esc_html_e('Name', 'ihc');?>
 									  </th>
 									  <th class="manage-column">
-											<?php _e('E-mail', 'ihc');?>
+											<?php esc_html_e('E-mail', 'ihc');?>
 									  </th>
-									  <th><?php _e('Affiliate', 'ihc');?></th>
-									  <th><?php _e('Join Date', 'ihc');?></th>
+									  <th><?php esc_html_e('Affiliate', 'ihc');?></th>
+									  <th><?php esc_html_e('Join Date', 'ihc');?></th>
 								</tr>
 							</tfoot>
 							  <?php
 							  		$i = 1;
 							  		foreach ($users as $user){
 							  			?>
-			    						   		<tr id="<?php echo "ihc_user_id_" . $user->data->ID;?>" class="<?php if($i%2==0) echo 'alternate';?>" onMouseOver="ihcDhSelector('#user_tr_<?php echo $user->data->ID;?>', 1);" onMouseOut="ihcDhSelector('#user_tr_<?php echo $user->data->ID;?>', 0);">
+			    						   		<tr id="<?php echo "ihc_user_id_" . $user->data->ID;?>" class="<?php if($i%2==0){
+															 echo 'alternate';
+														}
+														?>" onMouseOver="ihcDhSelector('#user_tr_<?php echo $user->data->ID;?>', 1);" onMouseOut="ihcDhSelector('#user_tr_<?php echo $user->data->ID;?>', 0);">
 			    						   			<td>
 														<?php echo $user->data->user_login;?>
 			    						   			</td>
-			    						   			<td style="color: #21759b; font-weight:bold; width:120px;font-family: 'Oswald', arial, sans-serif !important;font-size: 14px;font-weight: 400;">
+			    						   			<td class="ihc-aff-affname">
 			    						   				<?php
 			    						   					$first_name = get_user_meta($user->data->ID, 'first_name', true);
 			    						   					$last_name = get_user_meta($user->data->ID, 'last_name', true);
@@ -271,11 +281,11 @@ if ($is_uap_active):
 																	$checked = (!empty($indeed_db) && $indeed_db->is_user_affiliate_by_uid($uid)) ? 'checked' : '';
 																?>
 																<input type="checkbox" class="iump-switch" id="uap_checkbox_<?php echo $uid;?>" onClick="ihcChangeUapAffiliate(<?php echo $uid;?>);" <?php echo $checked;?>/>
-																<div class="switch" style="display:inline-block;"></div>
+																<div class="switch ihc-display-inline"></div>
 															</label>
 														</div>
 													</td>
-			    						   			<td style="color: #396;">
+			    						   			<td>
 			    						   				<?php
 			    						   					echo $user->user_registered;
 			    						   				?>
@@ -294,28 +304,28 @@ if ($is_uap_active):
 						}
 						$meta_arr = ihc_return_meta_arr('affiliate_options');
 				?>
-					<form method="post" action="">
+					<form method="post" >
 						<div class="ihc-stuffbox">
-							<h3><?php _e('Account Page - Affiliate Options', 'ihc');?></h3>
+							<h3><?php esc_html_e('Account Page - Affiliate Options', 'ihc');?></h3>
 							<div class="inside">
 								<div>
-									<span class="iump-labels-onbutton"><?php _e('Show Tab', 'ihc');?></span>
+									<span class="iump-labels-onbutton"><?php esc_html_e('Show Tab', 'ihc');?></span>
 									<label class="iump_label_shiwtch iump-onbutton">
 										<?php $checked = ($meta_arr['ihc_ap_show_aff_tab']) ? 'checked' : ''; ?>
 										<input type="checkbox" class="iump-switch" onclick="iumpCheckAndH(this, '#ihc_ap_show_aff_tab');" <?php echo $checked;?>>
-										<div class="switch" style="display:inline-block;"></div>
+										<div class="switch  ihc-display-inline"></div>
 									</label>
 									<input type="hidden" name="ihc_ap_show_aff_tab" id="ihc_ap_show_aff_tab" value="<?php echo $meta_arr['ihc_ap_show_aff_tab'];?>" />
 								</div>
 								<div>
-									<span class="iump-labels-onbutton"><?php _e('Message', 'ihc');?></span>
-									<div  class="iump-wp_editor" style="display: inline-block; vertical-align: top; width:79%;">
+									<span class="iump-labels-onbutton"><?php esc_html_e('Message', 'ihc');?></span>
+									<div  class="iump-wp_editor">
 										<?php wp_editor(stripslashes($meta_arr['ihc_ap_aff_msg']), 'ihc_ap_aff_msg', array('textarea_name'=>'ihc_ap_aff_msg', 'editor_height'=>200));?>
 									</div>
 								</div>
-								<div><?php echo __("You can add 'Become Button' with the following shortcode: ", 'ihc') . '<b>[uap-user-become-affiliate]</b>';?></div>
-								<div style="margin-top: 15px;">
-									<input type="submit" value="Save" name="ihc_save" class="button button-primary button-large">
+								<div><?php echo esc_html__("You can add 'Become Button' with the following shortcode: ", 'ihc') . '<b>[uap-user-become-affiliate]</b>';?></div>
+								<div class="ihc-submit-form">
+									<input type="submit" value="Save Changes" name="ihc_save" class="button button-primary button-large">
 								</div>
 							</div>
 						</div>
@@ -324,21 +334,21 @@ if ($is_uap_active):
 
 		<?php else:?>
 		<div class="metabox-holder indeed">
-		<div class="ihc-stuffbox" style="padding:20px 20px;">
+		<div class="ihc-stuffbox ihc-aff-message">
 			<h2>
-				<label style=" font-size:16px; color:##B70B0B;">
+				<label class="ihc-aff-message-label">
 					To get this section Available the <a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729" target="_blank">Ultimate Affiliate Pro</a> system needs to be activated on your WordPress system.
 				</label>
 			</h2>
-			<p style="max-width:750px;"><strong>Ultimate Affiliate Pro</strong> is the newest and most completed Affiliate WordPress Plugin that allow you provide a premium platform for your Affiliates with different rewards and amounts based on Ranks or special Offers.
+			<p><strong>Ultimate Affiliate Pro</strong> is the newest and most completed Affiliate WordPress Plugin that allow you provide a premium platform for your Affiliates with different rewards and amounts based on Ranks or special Offers.
 			<br/>You can turn on your Website into a REAL business and an income machine where you just need to sit down and let the others to work for you!
 			</p>
 			<p><a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729?ref=azzaroco" target="_blank">
-						<img src="<?php echo IHC_URL;?>admin/assets/images/uap-image-preview.jpg" style=" display: block;"/>
+						<img src="<?php echo IHC_URL;?>admin/assets/images/uap-image-preview.jpg" class="ihc-display-block"/>
 						</a>
 			<br/><h2>You can find more details <a href="http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729" target="_blank">here</a></h2>
 			</p>
-			<div style="width:616px; padding-top:20px; margin-top:20px; border-top:1px solid #ddd;">
+			<div class="ihc-aff-message-st">
 			<?php
 			$url = 'http://codecanyon.net/item/ultimate-affiliate-pro-wordpress-plugin/16527729';
 

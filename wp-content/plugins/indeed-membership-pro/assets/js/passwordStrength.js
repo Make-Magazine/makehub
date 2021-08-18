@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Password Strength
+*/
+"use strict";
 var IhcPasswordStrength = {
   colors: ['#F00', '#F90', '#FF0', '#9F0', '#0F0'],
   labels: [],
@@ -5,9 +9,13 @@ var IhcPasswordStrength = {
   init: function(args){
     var obj = this;
     obj.setAttributes(obj, args);
-    obj.labels = jQuery.parseJSON(window.ihcPasswordStrengthLabels);
+    if ( typeof window.ihcPasswordStrengthLabels === 'string' ){
+        obj.labels = JSON.parse(window.ihcPasswordStrengthLabels);
+    } else {
+        obj.labels = window.ihcPasswordStrengthLabels;
+    }
 
-    jQuery(document).ready(function(){
+    jQuery( window ).on( 'load', function(){
         jQuery(document).on('keyup', jQuery('[name=pass1]'), function (evt) {
             obj.handleTypePassword(obj, evt);
         })
@@ -28,13 +36,16 @@ var IhcPasswordStrength = {
       if ( !rules ){
          return;
       }
+
       rules = rules.split(',');
       var strength = obj.mesureStrength(evt.target.value, rules);
       var color = obj.getColor(strength);
       var ul = jQuery(evt.target).parent().find('ul');
       ul.children('li').css({ "background": "#DDD" }).slice(0, color.idx).css({ "background": color.col });
 
+      var newLabel;
       newLabel = obj.labels[0];
+
       if (strength>10 && strength<21){
           newLabel = obj.labels[1];
       } else if (strength>20 && strength<31){

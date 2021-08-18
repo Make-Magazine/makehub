@@ -10,17 +10,17 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('User Reports', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('User Reports', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold User Reports', 'ihc');?></h2>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold User Reports', 'ihc');?></h2>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_user_reports_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_user_reports_enabled');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_user_reports_enabled" value="<?php echo $data['metas']['ihc_user_reports_enabled'];?>" id="ihc_user_reports_enabled" />
 			</div>
@@ -28,22 +28,22 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 			<?php $we_have_logs = Ihc_User_Logs::get_count_logs('user_logs');?>
 			<?php if ($we_have_logs):?>
 				<div class="iump-form-line">
-					<?php _e('Clean Up Users Reports older then:', 'ihc');?>
+					<?php esc_html_e('Clean Up Users Reports older then:', 'ihc');?>
 					<select id="older_then_select">
 						<option value="">...</option>
-						<option value="1"><?php _e('One Day', 'ihc');?></option>
-						<option value="7"><?php _e('One Week', 'ihc');?></option>
-						<option value="30"><?php _e('One Month', 'ihc');?></option>
+						<option value="1"><?php esc_html_e('One Day', 'ihc');?></option>
+						<option value="7"><?php esc_html_e('One Week', 'ihc');?></option>
+						<option value="30"><?php esc_html_e('One Month', 'ihc');?></option>
 					</select>
-					<div class="button button-primary button-large" onClick="ihcDoCleanUpLogs('<?php echo admin_url('admin.php?page=ihc_manage&tab=user_reports');?>');"><?php _e('Clean Up', 'ihc');?></div>
+					<div class="button button-primary button-large" onClick="ihcDoCleanUpLogs('<?php echo admin_url('admin.php?page=ihc_manage&tab=user_reports');?>');"><?php esc_html_e('Clean Up', 'ihc');?></div>
 				</div>
 				<div class="iump-form-line">
-					<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=view_user_logs&type=user_logs');?>" target="_blank"><?php _e('View All User Reports', 'ihc');?></a>
+					<a href="<?php echo admin_url('admin.php?page=ihc_manage&tab=view_user_logs&type=user_logs');?>" target="_blank"><?php esc_html_e('View All User Reports', 'ihc');?></a>
 				</div>
 			<?php endif;?>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

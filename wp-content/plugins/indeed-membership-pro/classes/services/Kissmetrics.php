@@ -35,7 +35,7 @@ class Kissmetrics
         if ( !$uid ){
             return false;
         }
-        $message = empty($this->settings['ihc_kissmetrics_events_user_register_label']) ? __( 'Registered!', 'ihc' ) : $this->settings['ihc_kissmetrics_events_user_register_label'];
+        $message = empty($this->settings['ihc_kissmetrics_events_user_register_label']) ? esc_html__( 'Registered!', 'ihc' ) : $this->settings['ihc_kissmetrics_events_user_register_label'];
         $email = \Ihc_Db::user_get_email( $uid );
         $kmObject = $this->kmObject();
         $kmObject->identify($email)->record( $message )->submit();
@@ -52,7 +52,7 @@ class Kissmetrics
         $email = \Ihc_Db::user_get_email( $uid );
         $levelName = \Ihc_Db::get_level_name_by_lid( $lid );
 
-        $message = empty( $this->settings['ihc_kissmetrics_events_user_get_level_label'] ) ? __( 'User get level ', 'ihc' ) . '%level%' : $this->settings['ihc_kissmetrics_events_user_get_level_label'] ;
+        $message = empty( $this->settings['ihc_kissmetrics_events_user_get_level_label'] ) ? esc_html__( 'User get level ', 'ihc' ) . '%level%' : $this->settings['ihc_kissmetrics_events_user_get_level_label'] ;
         $message = str_replace( '%level%' , $levelName, $message );
 
         $kmObject = $this->kmObject();
@@ -68,7 +68,7 @@ class Kissmetrics
         $email = \Ihc_Db::user_get_email( $uid );
         $levelName = \Ihc_Db::get_level_name_by_lid( $lid );
 
-        $message = empty( $this->settings['ihc_kissmetrics_events_user_finish_payment_label'] ) ? __( 'User has finish the payment for level ', 'ihc' ) . '%level%' : $this->settings['ihc_kissmetrics_events_user_finish_payment_label'];
+        $message = empty( $this->settings['ihc_kissmetrics_events_user_finish_payment_label'] ) ? esc_html__( 'User has finish the payment for level ', 'ihc' ) . '%level%' : $this->settings['ihc_kissmetrics_events_user_finish_payment_label'];
         $message = str_replace( '%level%' , $levelName, $message );
 
         $kmObject = $this->kmObject();
@@ -81,7 +81,7 @@ class Kissmetrics
             return false;
         }
         $email = \Ihc_Db::user_get_email( $userObject->ID );
-        $message = empty($this->settings['ihc_kissmetrics_events_user_login_label']) ? __( 'Login!', 'ihc' ) : $this->settings['ihc_kissmetrics_events_user_login_label'];
+        $message = empty($this->settings['ihc_kissmetrics_events_user_login_label']) ? esc_html__( 'Login!', 'ihc' ) : $this->settings['ihc_kissmetrics_events_user_login_label'];
         $kmObject = $this->kmObject();
         $kmObject->identify($email)->record( $message )->submit();
     }
@@ -96,7 +96,7 @@ class Kissmetrics
         if ( empty($email) ){
             return false;
         }
-        $message = empty( $this->settings['ihc_kissmetrics_events_remove_user_level_label'] ) ? __( 'Level ', 'ihc') . '%level%' . __( ' has been removed from this user.', 'ihc') : $this->settings['ihc_kissmetrics_events_remove_user_level_label'];
+        $message = empty( $this->settings['ihc_kissmetrics_events_remove_user_level_label'] ) ? esc_html__( 'Level ', 'ihc') . '%level%' . esc_html__( ' has been removed from this user.', 'ihc') : $this->settings['ihc_kissmetrics_events_remove_user_level_label'];
         $message = str_replace( '%level%' , $levelName, $message );
 
         $kmObject = $this->kmObject();

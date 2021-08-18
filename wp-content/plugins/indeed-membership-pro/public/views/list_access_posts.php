@@ -1,8 +1,8 @@
-<?php if (!empty($data['metas']['ihc_list_access_posts_custom_css'])):?>
-	<style>
-		<?php echo stripslashes($data['metas']['ihc_list_access_posts_custom_css']);?>
-	</style>
-<?php endif;?>
+<?php if (!empty($data['metas']['ihc_list_access_posts_custom_css'])):
+	wp_register_style( 'dummy-handle', false );
+	wp_enqueue_style( 'dummy-handle' );
+	wp_add_inline_style( 'dummy-handle', stripslashes($data['metas']['ihc_list_access_posts_custom_css']) );
+ endif;?>
 <div class="iump-list-access-posts-wrapp <?php echo $data['metas']['ihc_list_access_posts_template'];?>">
 
 	<?php if (!empty($data['metas']['ihc_list_access_posts_title'])):?>
@@ -30,7 +30,7 @@
 					<div class="iump-list-details">
 					<?php if (!empty($item['post_date'])):?>
 						<div class="iump-list-access-posts-date">
-						 <?php _e('Posted', 'ihc');?>
+						 <?php esc_html_e('Posted', 'ihc');?>
 						  <a href="<?php echo $item['permalink'];?>">
 							<?php echo $item['post_date'];?>
 						  </a>
@@ -38,7 +38,7 @@
 					<?php endif;?>
 					<?php if (!empty($item['post_author'])):?>
 						<div class="iump-list-access-posts-author">
-					     <?php _e('By', 'ihc');?>
+					     <?php esc_html_e('By', 'ihc');?>
 						 <a href="<?php echo $item['permalink'];?>">
 							<?php echo $item['post_author'];?>
 						</a>

@@ -5,7 +5,7 @@
 	<?php if (!empty($data['content'])):?>
 		<p><?php echo do_shortcode($data['content']);?></p>
 	<?php endif;?>
-	<!--div class="iump-account-content-title"><?php _e('Transactions History', 'ihc');?></div-->
+	<!--div class="iump-account-content-title"><?php esc_html_e('Transactions History', 'ihc');?></div-->
 <?php
 	if (!empty($data['items'])){
 		?>
@@ -14,27 +14,27 @@
 							<tr>
 								<th class="ihc-content-left">
 									<span>
-										<?php _e('Level', 'ihc');?>
+										<?php esc_html_e('Level', 'ihc');?>
 									</span>
 								</th>
 								<th>
 									<span>
-										<?php _e('Amount', 'ihc');?>
+										<?php esc_html_e('Amount', 'ihc');?>
 									</span>
 								</th>
 								<th>
 									<span>
-										<?php _e('Payment Type', 'ihc');?>
+										<?php esc_html_e('Payment Type', 'ihc');?>
 									</span>
 								</th>
 								<th>
 									<span>
-										<?php _e('Status', 'ihc');?>
+										<?php esc_html_e('Status', 'ihc');?>
 									</span>
 								</th>
 								<th class="manage-column ihc-content-right">
 									<span>
-										<?php _e('Date', 'ihc');?>
+										<?php esc_html_e('Date', 'ihc');?>
 									</span>
 								</th>
 							</tr>
@@ -46,9 +46,10 @@
 					} else {
 							$data_payment = [];
 					}
+					$lid = isset( $data_payment->lid ) ? $data_payment->lid : -1;
 					?>
 					<tr>
-						<td class="manage-column ihc-content-left"  data-title="<?php _e('Level', 'ihc');?>">
+						<td class="manage-column ihc-content-left"  data-title="<?php esc_html_e('Level', 'ihc');?>">
 							<div class="level-type-list">
 				 			<?php
 				 				if (isset($data_payment->level)){
@@ -60,12 +61,17 @@
 								} elseif (isset($data_payment->x_description)){
 									echo $data_payment->x_description;
 								} else {
-									echo '--';
+									$levelName = \Ihc_Db::get_level_name_by_lid( $lid );
+									if ( $levelName != '' ){
+											echo $levelName;
+									} else {
+											echo '--';
+									}
 								}
 							?>
 							</div>
 						</td>
-						<td class="manage-column" data-title="<?php _e('Amount', 'ihc');?>">
+						<td class="manage-column" data-title="<?php esc_html_e('Amount', 'ihc');?>">
 							<span class="level-payment-list">
 							<?php
 								$payment_value = ihc_return_transaction_amount_for_user_level($v->history, $v->payment_data);
@@ -96,23 +102,23 @@
 									$payment_type = $data['payment_types'][ $payment_type ];
 							}
 						?>
-						<td class="ihc-content-capitalize"  data-title="<?php _e('Payment Type', 'ihc');?>"><?php echo $payment_type;?></td>
-						<td class="manage-column ihc-content-oswald" data-title="<?php _e('Status', 'ihc');?>">
+						<td class="ihc-content-capitalize"  data-title="<?php esc_html_e('Payment Type', 'ihc');?>"><?php echo $payment_type;?></td>
+						<td class="manage-column ihc-content-oswald" data-title="<?php esc_html_e('Status', 'ihc');?>">
 						 	<?php
 								if (!empty($data_payment->payment_status)){
 									echo $data_payment->payment_status;
 								} else if (isset($data_payment->x_response_code) && ($data_payment->x_response_code == 1)){
-									echo __("Confirmed", "ihc");
+									echo esc_html__("Confirmed", "ihc");
 								} else if (isset($data_payment->code) && ($data_payment->code == 2)){
-									echo __("Confirmed", "ihc");
+									echo esc_html__("Confirmed", "ihc");
 								} else if(isset($data_payment->message) && $data_payment->message=='success'){
-									echo __("Confirmed", "ihc");
+									echo esc_html__("Confirmed", "ihc");
 								}  else {
 									echo '--';
 								}
 							?>
 						</td>
-						<td class="manage-column ihc-content-right" data-title="<?php _e('Date', 'ihc');?>">
+						<td class="manage-column ihc-content-right" data-title="<?php esc_html_e('Date', 'ihc');?>">
 							<span>
 								<?php echo indeed_timestamp_to_date_without_timezone( strtotime($v->paydate), "F j, Y, g:i a" );?>
 							</span>
@@ -124,19 +130,19 @@
 						<tfoot>
 							<tr>
 								<th class="ihc-content-left">
-									<span><?php echo __('Level', 'ihc');?></span>
+									<span><?php echo esc_html__('Level', 'ihc');?></span>
 								</th>
 								<th>
-									<span><?php echo __('Amount', 'ihc');?></span>
+									<span><?php echo esc_html__('Amount', 'ihc');?></span>
 								</th>
 								<th>
-									<span><?php echo __('Payment Type', 'ihc');?></span>
+									<span><?php echo esc_html__('Payment Type', 'ihc');?></span>
 								</th>
 								<th>
-									<span><?php echo __('Status', 'ihc');?></span>
+									<span><?php echo esc_html__('Status', 'ihc');?></span>
 								</th>
 								<th class="manage-column ihc-content-right">
-									<span><?php echo __('Date', 'ihc');?></span>
+									<span><?php echo esc_html__('Date', 'ihc');?></span>
 								</th>
 							</tr>
 						</tfoot>
@@ -151,7 +157,7 @@
 	?>
     <div class="ihc-additional-message">
     <?php
-		_e("No Transactions have been made yet", 'ihc');
+		esc_html_e("No Transactions have been made yet", 'ihc');
 	?>
     </div>
 	<?php

@@ -1,23 +1,4 @@
-<?php if ( $isRegisterPage ):?>
-  <script>
-  jQuery(document).ready(function(){
-      jQuery('.ihc-modal-trigger-register').click(function() {
-          jQuery('html, body').animate({
-              scrollTop: jQuery( '.ihc-form-create-edit' ).offset().top
-          }, 1000);
-      });
-  });
-  </script>
-<?php elseif ( !empty( $uid ) ):?>
-  <script>
-      jQuery(document).ready(function(){
-          jQuery('.ihc-modal-trigger-register').click(function() {
-              return false;
-          });
-      });
-  </script>
-<?php else :?>
-
+<?php if ( !$isRegisterPage && empty( $uid ) ):?>
     <?php
         wp_enqueue_style( 'ihc_iziModal' );
         wp_enqueue_script( 'ihc_iziModal_js' );
@@ -30,22 +11,18 @@
         </div>
     <?php endif;?>
 
-    <div class="" id="ihc_register_modal" style="display: none;" data-title="<?php _e('Register', 'ihc');?>" >
+    <div class="ihc-display-none" id="ihc_register_modal"  data-title="<?php esc_html_e('Register', 'ihc');?>" >
         <?php echo do_shortcode( '[ihc-register-form-for-popup is_modal=true]' );?>
     </div>
 
-    <?php
-    $preventDefault = empty($trigger) ? 0 : 1;
-    $triggerSelector = empty($trigger) ? '.ihc-register-modal-trigger' : '.' . $trigger;
-    ?>
-
-    <script>
-    jQuery(document).ready(function(){
-        IhcRegisterModal.init({
-                  triggerModalSelector  : '<?php echo $triggerSelector;?>',
-                  preventDefault        : <?php echo $preventDefault;?>
-        })
-    })
-    </script>
-
 <?php endif;?>
+<?php
+$preventDefault = empty($trigger) ? 0 : 1;
+$triggerSelector = empty($trigger) ? '.ihc-register-modal-trigger' : '.' . $trigger;
+?>
+<span class="ihc-js-register-popup-data"
+      data-is_register_page="<?php if ( $isRegisterPage ) {echo 1;} else {echo 0;} ?>"
+      data-is_registered="<?php if ( !empty( $uid ) ) {echo 1;} else {echo 0;} ?>"
+      data-trigger_selector="<?php echo $triggerSelector;?>"
+      data-trigger_default="<?php echo $preventDefault;?>"
+></span>

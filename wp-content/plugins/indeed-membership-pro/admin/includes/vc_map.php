@@ -2,16 +2,16 @@
 //register
 vc_map(
 	array(
-		"name" => 'Membership Pro - ' . __('Register Form', 'ihc'),
+		"name" => 'Membership Pro - ' . esc_html__('Register Form', 'ihc'),
 		"base" => 'ihc-register',
 		"icon" => 'ihc_vc_logo',
-		"description" => __('Register Form', 'ihc'),
+		"description" => esc_html__('Register Form', 'ihc'),
 		"class" => 'ihc-register',
-		"category" => __('Content', 'js_composer'),
+		"category" => esc_html__('Content', 'js_composer'),
 		"params" => array(
 							array(
 									"type" => "ihc_print_text_vc",
-									"custom_text" => __("Register Form Shortcode", 'ihc'),
+									"custom_text" => esc_html__("Register Form Shortcode", 'ihc'),
 									'param_name' => 'param1',
 							)
 						),
@@ -22,16 +22,16 @@ vc_map(
 //Login
 vc_map(
 		array(
-				"name" => 'Membership Pro - ' . __('Login Form', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Login Form', 'ihc'),
 				"base" => 'ihc-login-form',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Login Form', 'ihc'),
+				"description" => esc_html__('Login Form', 'ihc'),
 				"class" => 'ihc-login-form',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => "ihc_print_text_vc",
-											"custom_text" => __("Login Form Shortcode", 'ihc'),
+											"custom_text" => esc_html__("Login Form Shortcode", 'ihc'),
 											'param_name' => 'param1',
 									)
 								),
@@ -42,16 +42,16 @@ vc_map(
 //Logout
 vc_map(
 		array(
-				"name" => 'Membership Pro - ' . __('Logout Button', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Logout Button', 'ihc'),
 				"base" => 'ihc-logout-link',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Logout Button', 'ihc'),
+				"description" => esc_html__('Logout Button', 'ihc'),
 				"class" => 'ihc-logout-link',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => "ihc_print_text_vc",
-											"custom_text" => __("Logout Link Shortcode", 'ihc'),
+											"custom_text" => esc_html__("Logout Link Shortcode", 'ihc'),
 											'param_name' => 'param1',
 									)
 								),
@@ -62,16 +62,16 @@ vc_map(
 //Password Recovery
 vc_map(
 		array(
-				"name" => 'Membership Pro - ' . __('Password Recovery', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Password Recovery', 'ihc'),
 				"base" => 'ihc-pass-reset',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Password Recovery', 'ihc'),
+				"description" => esc_html__('Password Recovery', 'ihc'),
 				"class" => 'ihc-pass-reset',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => "ihc_print_text_vc",
-											"custom_text" => __("Password Recovery Shortcode", 'ihc'),
+											"custom_text" => esc_html__("Password Recovery Shortcode", 'ihc'),
 											'param_name' => 'param1',
 									)
 								 ),
@@ -82,16 +82,16 @@ vc_map(
 //User Page
 vc_map(
 		array(
-				"name" => 'Membership Pro - ' . __('Account Page', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Account Page', 'ihc'),
 				"base" => 'ihc-user-page',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Password Recovery', 'ihc'),
+				"description" => esc_html__('Password Recovery', 'ihc'),
 				"class" => 'ihc-user-page',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => "ihc_print_text_vc",
-											"custom_text" => __("User Page Shortcode", 'ihc'),
+											"custom_text" => esc_html__("User Page Shortcode", 'ihc'),
 											'param_name' => 'param1',
 									)
 								 ),
@@ -102,16 +102,16 @@ vc_map(
 //Subscription Plan
 vc_map(
 		array(
-				"name" => 'Membership Pro - ' . __('Subscription Plan', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Subscription Plan', 'ihc'),
 				"base" => 'ihc-select-level',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Password Recovery', 'ihc'),
+				"description" => esc_html__('Password Recovery', 'ihc'),
 				"class" => 'ihc-select-level',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => "ihc_print_text_vc",
-											"custom_text" => __("Subscription Plan Shortcode", 'ihc'),
+											"custom_text" => esc_html__("Subscription Plan Shortcode", 'ihc'),
 											'param_name' => 'param1',
 									)
 								  ),
@@ -124,31 +124,31 @@ vc_map(
 vc_map(
 		array(
 				'admin_enqueue_js' => IHC_URL . 'admin/assets/js/back_end.js',
-				"name" => 'Membership Pro - ' . __('Locker', 'ihc'),
+				"name" => 'Membership Pro - ' . esc_html__('Locker', 'ihc'),
 				"base" => 'ihc-hide-content',
 				"icon" => 'ihc_vc_logo',
-				"description" => __('Locker', 'ihc'),
+				"description" => esc_html__('Locker', 'ihc'),
 				"class" => 'ihc-hide-content',
-				"category" => __('Content', 'js_composer'),
+				"category" => esc_html__('Content', 'js_composer'),
 				"params" => array(
 									array(
 											"type" => 'ihc_custom_dropdown',
-											"heading" => __('Type:', 'ihc'),
+											"heading" => esc_html__('Type:', 'ihc'),
 											"label" => '',
 											"param_name" => 'ihc_mb_type',
-											"values" => array('show' => __('Show Content Only For', 'ihc'), 'block' => __('Hide Content Only For', 'ihc') ),
+											"values" => array('show' => esc_html__('Show Content Only For', 'ihc'), 'block' => esc_html__('Hide Content Only For', 'ihc') ),
 											'value' => '',
 									),
 									array(
 											"type" => 'ihc_select_target_u',
-											"heading" => __('Target Users:', 'ihc'),
+											"heading" => esc_html__('Target Users:', 'ihc'),
 											"label" => '',
 											"param_name" => 'ihc_mb_who',
 											'value' => '',
 									),
 									array(
 											"type" => 'ihc_select_locker',
-											"heading" => __('Choose Locker:', 'ihc'),
+											"heading" => esc_html__('Choose Locker:', 'ihc'),
 											"label" => '',
 											"param_name" => 'ihc_mb_template',
 											"value" => '',
@@ -157,10 +157,10 @@ vc_map(
 											"type" => "textarea_html",
 											"holder" => "div",
 											"class" => "",
-											"heading" => __( "Content", "js_composer" ),
+											"heading" => esc_html__( "Content", "js_composer" ),
 											"param_name" => "content", // Important: Only one textarea_html param per content element allowed and it should have "content" as a "param_name"
-											"value" => __( "<p>I am test text block. Click edit button to change this text.</p>", "js_composer" ),
-											"description" => __( "Enter your content.", "js_composer" )
+											"value" => esc_html__( "<p>I am test text block. Click edit button to change this text.</p>", "js_composer" ),
+											"description" => esc_html__( "Enter your content.", "js_composer" )
 									)
 								)
 		)
@@ -174,15 +174,16 @@ function ihc_print_text_vc_settings_field($settings, $value){
 }
 
 function ihc_select_target_u_settings_field($settings, $value){
-	$posible_values = array( 'all'=>__('All', 'ihc'), 'reg'=>__('Registered Users', 'ihc'), 'unreg'=>__('Unregistered Users', 'ihc') );
-	$levels = get_option('ihc_levels');
+	$posible_values = array( 'all'=>esc_html__('All', 'ihc'), 'reg'=>esc_html__('Registered Users', 'ihc'), 'unreg'=>esc_html__('Unregistered Users', 'ihc') );
+
+	$levels = \Indeed\Ihc\Db\Memberships::getAll();
 	if ($levels){
 		foreach($levels as $id=>$level){
 			$posible_values[$id] = $level['name'];
 		}
 	}
 	$str = '';
-	$str .= '<select id="ihc-change-target-user-set" onChange="ihcWriteTagValue(this, \'#ihc_mb_who-hidden-vc\', \'#ihc_tags_field_vc\', \'ihc_select_tag_vc_\' );" style="width: auto; min-width:80%;">';
+	$str .= '<select id="ihc-change-target-user-set" onChange="ihcWriteTagValue(this, \'#ihc_mb_who-hidden-vc\', \'#ihc_tags_field_vc\', \'ihc_select_tag_vc_\' );" class="ihc-change-target-user-set">';
 	foreach ($posible_values as $k=>$v){
 		$str .= '<option value="'.$k.'" >'.$v.'</option>';
 	}
@@ -201,7 +202,7 @@ function ihc_select_target_u_settings_field($settings, $value){
 				if (isset($posible_values[$val])){
 					$str .= '<div id="ihc_select_tag_vc_'.$val.'" class="ihc-tag-item">';
 					$str .= $posible_values[$val];
-					$str .= '<div class="ihc-remove-tag" onclick="ihcremoveTag(\''.$val.'\', \'#ihc_select_tag_vc_\', \'#ihc_mb_who-hidden-vc\');" title="'.__('Removing tag', 'ihc').'">x</div>';
+					$str .= '<div class="ihc-remove-tag" onclick="ihcremoveTag(\''.$val.'\', \'#ihc_select_tag_vc_\', \'#ihc_mb_who-hidden-vc\');" title="'.esc_html__('Removing tag', 'ihc').'">x</div>';
 					$str .= '</div>';
 				}
 	        }
@@ -225,7 +226,7 @@ function ihc_select_locker_settings_field($settings, $value){
 		}
 		$str .= '</select>';
 	} else {
-		$str .= __('No Lockers Available.', 'ihc');
+		$str .= esc_html__('No Lockers Available.', 'ihc');
 	}
 	return $str;
 }

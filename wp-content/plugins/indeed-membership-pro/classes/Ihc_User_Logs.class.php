@@ -119,17 +119,17 @@ class Ihc_User_Logs{
 		 $offset = esc_sql($offset);
 		 $limit = esc_sql($limit);
 		 if ($type){
-		 	$q = "SELECT id,uid, lid, log_content, create_date FROM $table ";
-			$q .= " WHERE log_type='$type' ";
+		 	$q = "SELECT id,uid, lid, log_content, create_date FROM {$wpdb->prefix}ihc_user_logs ";
+			$q .= $wpdb->prepare( " WHERE log_type=%s ", $type );
 			if ($uid){
-				$q .= " AND uid=$uid ";
+				$q .= $wpdb->prepare( " AND uid=%d ", $uid );
 			}
 			$q .= "ORDER BY create_date DESC"; // id DESC
 			if ($limit){
-				$q .= " LIMIT $limit ";
+				$q .= $wpdb->prepare(" LIMIT %d ", $limit );
 			}
 			if ($offset){
-				$q .= " OFFSET $offset ";
+				$q .= $wpdb->prepare( " OFFSET %d ", $offset );
 			}
 		 	$data = $wpdb->get_results($q);
 			if ($data){
@@ -142,7 +142,7 @@ class Ihc_User_Logs{
 	 }
 
 
-	/*
+	/**
 	 * @param string ($type can be 'payments' 'general')
 	 * @param int ($uid, 0 means all)
 	 * @return int
@@ -152,10 +152,10 @@ class Ihc_User_Logs{
 		 $type = esc_sql($type);
 		 $uid = esc_sql($uid);
 		 $table = $wpdb->prefix . 'ihc_user_logs';
-		 $q = "SELECT COUNT(id) as c FROM $table ";
-		 $q .= " WHERE log_type='$type' ";
+		 $q = "SELECT COUNT(id) as c FROM {$wpdb->prefix}ihc_user_logs ";
+		 $q .= $wpdb->prepare( " WHERE log_type=%s ", $type );
 		 if ($uid){
-		 	$q .= " AND uid=$uid ";
+		 	$q .= $wpdb->prepare( " AND uid=%d ", $uid );
 		 }
 		 $data = $wpdb->get_row($q);
 		 if ($data && isset($data->c)){
@@ -165,20 +165,22 @@ class Ihc_User_Logs{
 	 }
 
 
-	 /*
+	 /**
 	  * Update log with lid or uid
-	  * @param int, string, int
+	  * @param int
+		* @param string
+		* @param int
 	  * @return none
 	  */
-	  private static function do_update_row($id=0, $column='', $new_value=0){
-	  	 if ($id){
-	  	 	global $wpdb;
-	  	 	$table = $wpdb->prefix . 'ihc_user_logs';
-				$column = esc_sql($column);
-				$new_value = esc_sql($new_value);
-				$id = esc_sql($id);
-	  	 	$wpdb->query("UPDATE $table SET $column='$new_value' WHERE id=$id;");
-	  	 }
+	  private static function do_update_row($id=0, $column='', $new_value=0)
+		{
+				 global $wpdb;
+		  	 if ( !$id ){
+					 	return;
+		  	 }
+				 $column = esc_sql( $column );
+				 $query = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_user_logs SET $column=%s WHERE id=%d ;", $new_value, $id );
+				 $wpdb->query( $query );
 	  }
 }
 

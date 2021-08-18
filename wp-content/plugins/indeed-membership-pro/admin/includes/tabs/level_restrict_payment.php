@@ -1,5 +1,5 @@
 <?php
-$levels = get_option('ihc_levels');
+$levels = \Indeed\Ihc\Db\Memberships::getAll();
 //ihc_save_update_metas('level_restrict_payment');//save update metas
 if (!empty($_POST['ihc_save'])){
 	update_option('ihc_level_restrict_payment_enabled', $_POST['ihc_level_restrict_payment_enabled']);
@@ -21,24 +21,24 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 $default_payment = get_option('ihc_payment_selected');
 $payments = ihc_get_active_payments_services();
 ?>
-<form action="" method="post">
+<form method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Level - Payment Gateways restriction', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Membership - Payment Gateways restriction', 'ihc');?></h3>
 		<div class="inside">
 
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold', 'ihc');?></h2>
-				<p><?php _e('Restrict each level to be paid only through a specific payment gateway. For example, you can provide the Bank Transfer payment option only for specific levels or for an identical level but with a higher price.', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+				<p><?php esc_html_e('Restrict each Membership to be paid only through a specific payment gateway. For example, you can provide the Bank Transfer payment option only for specific memberships or for an identical membership but with a higher price.', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_level_restrict_payment_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_level_restrict_payment_enabled');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_level_restrict_payment_enabled" value="<?php echo $data['metas']['ihc_level_restrict_payment_enabled'];?>" id="ihc_level_restrict_payment_enabled" />
 			</div>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>
@@ -63,14 +63,17 @@ $payments = ihc_get_active_payments_services();
 					?>
 
 		<div class="ihc-stuffbox">
-				<h3 class="ihc-h3"><?php echo __('Level: ', 'ihc') . $level['label'];?></h3>
+				<h3 class="ihc-h3"><?php echo esc_html__('Membership: ', 'ihc') . $level['label'];?></h3>
 			<div class="inside">
 				<div class="iump-form-line">
 					<h2></h2>
 					<div>
-						<h4><?php _e('Default Payment:', 'ihc');?></h4>
+						<h4><?php esc_html_e('Default Payment:', 'ihc');?></h4>
 						<select name="ihc_levels_default_payments[<?php echo $id;?>]">
-							<option value="-1" <?php if ($k==-1) echo 'selected';?> ><?php echo __('Current Default Payment ', 'ihc') . '(' . $current_default_label . ')';?></option>
+							<option value="-1" <?php if ($k==-1){
+								 echo 'selected';
+							}
+							?> ><?php echo esc_html__('Current Default Payment ', 'ihc') . '(' . $current_default_label . ')';?></option>
 							<?php foreach ($temp_payments as $k=>$v):?>
 								<?php $selected = ($k==$default_payment_for_level) ? 'selected' : '';?>
 								<option value="<?php echo $k;?>" <?php echo $selected;?> ><?php echo $v;?></option>
@@ -88,19 +91,19 @@ $payments = ihc_get_active_payments_services();
 							$excluded_values_array = array();
 						}
 					?>
-						<h4><?php _e('Payments Available:', 'ihc');?></h4>
+						<h4><?php esc_html_e('Payments Available:', 'ihc');?></h4>
 						<?php foreach ($payments as $k=>$v):?>
 							<?php $checked = (!in_array($k, $excluded_values_array)) ? 'checked' : '';?>
 							<div class="ihc-inline-block-item">
 								<input type="checkbox" onClick="ihcAddToHiddenWhenUncheck(this, '<?php echo $k;?>', '<?php echo '#' . $id . 'excludedforlevel';?>');" <?php echo $checked;?> />
-								<img src="<?php echo IHC_URL . 'assets/images/'.$k.'.png';?>" class="ihc-payment-icon ihc-payment-select-img-selected" style="margin:0 14px 0 5px;   width: auto !important; height:35px;" />
+								<img src="<?php echo IHC_URL . 'assets/images/'.$k.'.png';?>" class="ihc-payment-icon ihc-payment-select-img-selected ihc-payment-services-list" />
 							</div>
 						<?php endforeach;?>
 						<input type="hidden" name="ihc_level_restrict_payment_values[<?php echo $id;?>]" value="<?php echo $excluded_values;?>" id="<?php echo $id . 'excludedforlevel';?>"/>
 				</div>
 
-				<div class="ihc-submit-form" style="margin-top: 20px;">
-					<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-submit-form">
+					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 			</div>
 		</div>

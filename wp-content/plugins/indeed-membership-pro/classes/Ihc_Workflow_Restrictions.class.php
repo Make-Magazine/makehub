@@ -34,8 +34,15 @@ class Ihc_Workflow_Restrictions{
 	 * @return none
 	 */
 	public function set_cookie(){
+		if ( current_user_can('manage_options') || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ){
+			 return;
+		}
+
 		global $current_user;
 		$uid = (isset($current_user->ID)) ? $current_user->ID : 0;
+		if ( !isset( $_SERVER['HTTP_HOST'] ) || !isset( $_SERVER['REQUEST_URI'] ) ){
+				return;
+		}
 		$post_id = url_to_postid(IHC_PROTOCOL . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
 		if ($post_id && $uid){
 			 $this->increment_user_posts_views($uid, $post_id);
@@ -51,10 +58,11 @@ class Ihc_Workflow_Restrictions{
 		 if ($data){
 		 	 global $current_user;
 			 $uid = (isset($current_user->ID)) ? $current_user->ID : 0;
-			 if ($uid && !current_user_can('administrator')){
+			 if ($uid && !current_user_can('manage_options')){
 			 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 			 	 $count_posts = Ihc_Db::user_get_inserted_posts_count($uid, $since);
 				 $limit = $this->get_limit_count_for_user($uid, 'add_posts');
+
 				 if ($limit!==FALSE && $data['post_status']!='auto-draft'){
 				 	 if ($limit<=$count_posts){
 				 	 	$data['post_status'] = 'pending';
@@ -65,19 +73,21 @@ class Ihc_Workflow_Restrictions{
 		 return $data;
 	}
 
-	public function user_can_add_comments($comment_id=0, $comment_approved){
+	public function user_can_add_comments($comment_id=0, $comment_approved=null){
 		/*
 		 * @param int, boolean
 		 * @return none
 		 */
 		 global $current_user;
 		 $uid = (isset($current_user->ID)) ? $current_user->ID : 0;
-		 if ($uid && !current_user_can('administrator')){
+		 if ($uid && !current_user_can('manage_options')){
 		 	 $since = indeed_get_unixtimestamp_with_timezone() - ((int)self::$metas['ihc_workflow_restrictions_timelimit'] * 24 * 3600);
 		 	 $count_comments = Ihc_Db::user_get_inserted_comments_count($uid, $since);
 		 	 $limit = $this->get_limit_count_for_user($uid, 'comments');
-		     if ($limit!==FALSE){
-			  	 if ($limit<=$count_comments){
+			 $count_comments = (int)$count_comments;
+			 $limit = (int)$limit;
+		   if ($limit!==FALSE){
+			   if ($limit<=$count_comments){
 			  	 	 IHc_Db::do_delete_comment($comment_id);
 			 	 }
 			 }
@@ -115,8 +125,9 @@ class Ihc_Workflow_Restrictions{
 				 $count_views = 0;
 			 }
 
-			 if ($uid && !current_user_can('administrator')){
+			 if ($uid && !current_user_can('manage_options')){
 				 $limit = $this->get_limit_count_for_user($uid, 'view_posts');
+
 				 if ($limit!==FALSE && !in_array($post_id, $cookie_post_arr) && $limit<=$count_views){
 					 return 1; /// do block
 				 } else {
@@ -156,7 +167,7 @@ class Ihc_Workflow_Restrictions{
 				return;
 		 }
 
-		 if ($post_id){ /// $uid &&
+		 if ($post_id){
 		 	 $cookie_name = 'ihc_workflow_restrictions_' . $uid;
 		 	 if (isset($_COOKIE[$cookie_name])){
 		 	 	 $array = $_COOKIE[$cookie_name];
@@ -196,17 +207,17 @@ class Ihc_Workflow_Restrictions{
 					$meta_name = 'ihc_workflow_restrictions_post_views';
 					break;
 				case 'comments':
-					$meta_name = 'ihc_workflow_restrictions_posts_created';
-					break;
-				case 'add_posts':
 					$meta_name = 'ihc_workflow_restrictions_comments_created';
 					break;
+				case 'add_posts':
+					$meta_name = 'ihc_workflow_restrictions_posts_created';
+					break;
 			 }
-		 	 $uid_levels = Ihc_Db::get_user_levels($uid, TRUE);
+		 	 $uid_levels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $uid, true );
 			 if ($uid_levels && count($uid_levels)>0 && $meta_name && isset(self::$metas[$meta_name])){
 				 $return_value = FALSE;
 				 foreach ($uid_levels as $level_data){
-					@$lid = $level_data['level_id'];
+					$lid = (isset($level_data['level_id'])) ? $level_data['level_id'] : '';
 					if ($return_value==FALSE){
 						if (isset(self::$metas[$meta_name][$lid]) && self::$metas[$meta_name][$lid]!=''){
 							$return_value = self::$metas[$meta_name][$lid];

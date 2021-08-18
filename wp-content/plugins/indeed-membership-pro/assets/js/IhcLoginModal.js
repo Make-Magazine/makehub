@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Login box Modal
+*/
+"use strict";
 var IhcLoginModal = {
 	modalSelector						     : '#ihc_login_modal',
   triggerModalSelector         : '.ihc-login-modal-trigger',
@@ -11,7 +15,8 @@ var IhcLoginModal = {
 	    jQuery(obj.triggerModalSelector).on('click', function(evt){
 	        obj.handleOpenModal(obj, evt);
 	    });
-			if ( obj.autoStart ){
+
+			if ( obj.autoStart == 'true' ){
 					jQuery(obj.modalSelector).iziModal('open');
 			}
 	},

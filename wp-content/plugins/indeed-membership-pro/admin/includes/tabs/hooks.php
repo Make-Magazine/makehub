@@ -4,16 +4,16 @@
 
 	<div class="col-right">
 
-			<div class="iump-page-title"><?php _e('Ultimate Membership Pro - Filters & Hooks', 'ihc');?></div>
+			<div class="iump-page-title"><?php esc_html_e('Ultimate Membership Pro - Filters & Hooks', 'ihc');?></div>
 
 		        <?php if ( $data ):?>
 		            <table class="wp-list-table widefat fixed tags ihc-admin-tables" >
 										<thead>
 				                <tr>
-				                    <th class="manage-column"><?php _e('Name', 'ihc');?></th>
-						                <th class="manage-column" style="max-width: 10%;"><?php _e('Type', 'ihc');?></th>
-				                    <th class="manage-column"><?php _e('Description', 'ihc');?></th>
-				                    <th class="manage-column"><?php _e('File', 'ihc');?></th>
+				                    <th class="manage-column"><?php esc_html_e('Name', 'ihc');?></th>
+						                <th class="manage-column" width="50px;"><?php esc_html_e('Type', 'ihc');?></th>
+				                    <th class="manage-column"><?php esc_html_e('Description', 'ihc');?></th>
+				                    <th class="manage-column"><?php esc_html_e('File', 'ihc');?></th>
 				                </tr>
 										</thead>
 										<tbody>
@@ -22,7 +22,7 @@
 				                    <td class="manage-column"><?php echo $hookName;?></td>
 						                <td class="manage-column"><?php echo $hookData['type'];?></td>
 				                    <td class="manage-column"><?php echo $hookData['description'];?></td>
-				                    <td class="manage-column" style="font-size: 9px;">
+				                    <td class="manage-column">
 																<?php if ( $hookData['file'] && is_array( $hookData['file'] ) ):?>
 																		<?php foreach ( $hookData['file'] as $file ):?>
 																				<div><?php echo $file;?></div>
@@ -34,10 +34,10 @@
 										</tbody>
 										<tfoot>
 												<tr>
-														<th class="manage-column"><?php _e('Name', 'ihc');?></th>
-														<th class="manage-column" style="max-width: 10%;"><?php _e('Type', 'ihc');?></th>
-														<th class="manage-column"><?php _e('Description', 'ihc');?></th>
-														<th class="manage-column"><?php _e('File', 'ihc');?></th>
+														<th class="manage-column"><?php esc_html_e('Name', 'ihc');?></th>
+														<th class="manage-column"><?php esc_html_e('Type', 'ihc');?></th>
+														<th class="manage-column"><?php esc_html_e('Description', 'ihc');?></th>
+														<th class="manage-column"><?php esc_html_e('File', 'ihc');?></th>
 												</tr>
 										</tfoot>
 								</table>

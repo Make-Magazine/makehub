@@ -15,28 +15,28 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 	$data['metas']['ihc_wp_social_login_redirect_page'] = get_option('ihc_general_user_page');
 }
 ?>
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Wp Social Login Integration', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Wp Social Login Integration', 'ihc');?></h3>
 
 		<div class="inside">
 
 			<?php if (empty($is_set)):?>
-				<?php echo __("Wp Social Login it's not active on Your system. You can find ", 'ihc') . '<a href="https://wordpress.org/plugins/wordpress-social-login/" target="_blank">' . __('here', 'ihc') . '.</a>';?>
+				<?php echo esc_html__("Wp Social Login it's not active on Your system. You can find ", 'ihc') . '<a href="https://wordpress.org/plugins/wordpress-social-login/" target="_blank">' . esc_html__('here', 'ihc') . '.</a>';?>
 			<?php else:?>
 
 				<div class="iump-form-line">
-					<h2><?php _e('Activate/Hold', 'ihc');?></h2>
-					<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+					<h2><?php esc_html_e('Activate/Hold', 'ihc');?></h2>
+					<label class="iump_label_shiwtch ihc-switch-button-margin">
 						<?php $checked = ($data['metas']['ihc_wp_social_login_on']) ? 'checked' : '';?>
 						<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_wp_social_login_on');" <?php echo $checked;?> />
-						<div class="switch" style="display:inline-block;"></div>
+						<div class="switch ihc-display-inline"></div>
 					</label>
 					<input type="hidden" name="ihc_wp_social_login_on" value="<?php echo $data['metas']['ihc_wp_social_login_on'];?>" id="ihc_wp_social_login_on" />
 				</div>
 
 				<div class="iump-form-line">
-					<h2><?php _e('Login/Register Redirect', 'ihc');?></h2>
+					<h2><?php esc_html_e('Login/Register Redirect', 'ihc');?></h2>
 					<div class="iump-form-line">
 						<select name="ihc_wp_social_login_redirect_page">
 							<?php foreach ($pages_arr as $post_id=>$title):?>
@@ -48,8 +48,8 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 				</div>
 
 				<div class="iump-form-line">
-					<h2><?php _e('WP Role', 'ihc');?></h2>
-					<div style="font-weight:bold"><?php _e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></div>
+					<h2><?php esc_html_e('WP Role', 'ihc');?></h2>
+					<div><strong><?php esc_html_e('Predefined Wordpress Role Assign to new Users:', 'ihc');?></strong></div>
 					<select name="ihc_wp_social_login_default_role">
 					<?php
 						if (empty($data['metas']['ihc_wp_social_login_default_role'])){
@@ -74,15 +74,23 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 							$data['metas']['ihc_wp_social_login_default_level'] = get_option('ihc_register_new_user_level');
 						}
 					?>
-					<div style="font-weight:bold"><?php _e('Level assigned to new User', 'ihc');?></div>
+					<div><strong><?php esc_html_e('Level assigned to new User', 'ihc');?></strong></div>
 					<select name="ihc_wp_social_login_default_level">
-						<option value="-1" <?php if ($data['metas']['ihc_wp_social_login_default_level']==-1) echo 'selected';?> ><?php _e('None', 'ihc');?></option>
+						<option value="-1" <?php if ($data['metas']['ihc_wp_social_login_default_level']==-1){
+							 echo 'selected';
+						}
+						?>
+						><?php esc_html_e('None', 'ihc');?></option>
 						<?php
-							$levels = get_option('ihc_levels');
+							$levels = \Indeed\Ihc\Db\Memberships::getAll();
 							if ($levels && count($levels)){
 								foreach ($levels as $id=>$v){
 								?>
-									<option value="<?php echo $id;?>" <?php if ($data['metas']['ihc_wp_social_login_default_level']==$id) echo 'selected';?> ><?php echo $v['name'];?></option>
+									<option value="<?php echo $id;?>" <?php if ($data['metas']['ihc_wp_social_login_default_level']==$id){
+										 echo 'selected';
+									}
+									?>
+									><?php echo $v['name'];?></option>
 								<?php
 								}
 							}
@@ -93,17 +101,17 @@ if (empty($data['metas']['ihc_wp_social_login_redirect_page'])){
 
 				<h4>Wordpress Social Login - Shortocode:</h4>
 				<div class="ihc-user-list-shortcode-wrapp">
-					<div class="content-shortcode" style="padding:15px; text-align:center;">
-						<span class="the-shortcode" style="font-size: 16px;">[wordpress_social_login]</span>
+					<div class="content-shortcode ihc-text-aling-center">
+						<span class="the-shortcode">[wordpress_social_login]</span>
 					</div>
 				</div>
 
 				<div>
-					<a href="<?php echo admin_url('options-general.php?page=wordpress-social-login');?>"><?php _e('Wordpress Social Login - Settings', 'ihc');?></a>
+					<a href="<?php echo admin_url('options-general.php?page=wordpress-social-login');?>"><?php esc_html_e('Wordpress Social Login - Settings', 'ihc');?></a>
 				</div>
 
-				<div class="ihc-submit-form" style="margin-top: 20px;">
-					<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+				<div class="ihc-submit-form">
+					<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 				</div>
 
 			<?php endif;?>

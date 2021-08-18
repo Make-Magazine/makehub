@@ -35,7 +35,9 @@ class UmpRestrictUlp
             $redirectLink = '';
             return $redirectLink;
         }
-        $userLevels = \Ihc_Db::get_user_levels($current_user->ID);
+
+        $userLevels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $current_user->ID );
+
         if (empty($userLevels)){
             return $redirectLink;
         }
@@ -68,7 +70,7 @@ class UmpRestrictUlp
         if (!$courseId){
             return $array;
         }
-        $levelsData = get_option('ihc_levels');
+        $levelsData = \Indeed\Ihc\Db\Memberships::getAll();
         if (empty($levelsData)){
             return $array;
         }

@@ -1,9 +1,3 @@
-<div class="ihc-subtab-menu">
-
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='orders') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=orders';?>"><?php _e('Orders', 'ihc');?></a>
-	<a class="ihc-subtab-menu-item <?php echo ($_REQUEST['tab'] =='payments') ? 'ihc-subtab-selected' : '';?>" href="<?php echo $url.'&tab=payments';?>"><?php _e('Transactions', 'ihc');?></a>
-	<div class="ihc-clear"></div>
-</div>
 <?php
 echo ihc_inside_dashboard_error_license();
 echo ihc_check_default_pages_set();//set default pages message
@@ -18,11 +12,8 @@ $table_name = $wpdb->prefix . 'indeed_members_payments';
 
 if (isset($_REQUEST['details_id'])){
 	?>
-	<div class="ihc-sortable-off" style="float:none; margin-bottom:15px;">
-		<a style="text-decoration:none;" href="<?php echo $url.'&tab=payments';?>"><?php _e('Back to Payment List', 'ihc');?></a>
-	</div>
 	<div class="ihc-stuffbox">
-	<h3><?php _e('Payment Details', 'ihc');?></h3>
+	<h3><?php esc_html_e('Payment Details', 'ihc');?></h3>
 	<div class="inside">
 	<?php
 	$q = $wpdb->prepare("SELECT id,txn_id,u_id,payment_data,history,orders,paydate FROM $table_name WHERE id=%d ", $_REQUEST['details_id']);
@@ -56,7 +47,11 @@ if (isset($_REQUEST['details_id'])){
 							} else if (is_array($value)){
 									echo $key .' : ';
 									foreach ($value as $insideValue){
-											echo $insideValue , '<br/>';
+											if ( is_array( $insideValue ) ){
+													ihc_print_array_in_depth( $insideValue );
+											} else {
+												echo  $insideValue , '<br/>';
+											}
 									}
 									echo '<br/>';
 							}
@@ -79,7 +74,6 @@ if (isset($_REQUEST['details_id'])){
 		$history_str = addcslashes($history_str, "'");
 		$q = $wpdb->prepare("UPDATE $table_name SET history=%s WHERE id=%d ", $history_str, $_REQUEST['details_id']);
 		$wpdb->query($q);
-		//$wpdb->query("UPDATE " . $table_name . " SET history='" . addcslashes($history_str, "'") . "' WHERE id='" . $_REQUEST['details_id'] . "' ;" );
 	}
 	?>
 	</div>
@@ -91,11 +85,13 @@ if (isset($_REQUEST['details_id'])){
 <div class="iump-wrapper">
 <div class="iump-page-title">Ultimate Membership Pro -
 							<span class="second-text">
-								<?php _e('Transactions List', 'ihc');?>
+								<?php esc_html_e('Transactions List', 'ihc');?>
 							</span>
 						</div>
 <?php
-$count_total_items = $wpdb->get_row("SELECT COUNT(id) as c FROM $table_name;");
+//No query parameters required, Safe query. prepare() method without parameters can not be called
+$query = "SELECT COUNT(id) as c FROM $table_name;";
+$count_total_items = $wpdb->get_row( $query );
 $total_items = (empty($count_total_items->c)) ? 0 : $count_total_items->c;
 $url = admin_url('admin.php?page=ihc_manage&tab=payments');
 $limit = 25;
@@ -132,52 +128,43 @@ $data_db = $wpdb->get_results($q);
 									<tr>
 										  <th class="manage-column">
 											  <span>
-												<?php _e('Username', 'ihc');?>
+												<?php esc_html_e('Username', 'ihc');?>
 											  </span>
 										  </th>
-										  <!--th class="manage-column">
+
+										  <th>
 											  <span>
-												<?php _e('Name', 'ihc');?>
-											  </span>
-										  </th-->
-										  <!--th class="manage-column">
-											  <span>
-												<?php _e('E-mail', 'ihc');?>
-											  </span>
-										  </th-->
-										  <th style="width:30%;">
-											  <span>
-												<?php _e('Orders', 'ihc');?>
+												<?php esc_html_e('Orders', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 											  <span>
-												<?php _e('Amount', 'ihc');?>
+												<?php esc_html_e('Amount', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 											  <span>
-												<?php _e('Payment Type', 'ihc');?>
+												<?php esc_html_e('Payment Type', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 										  	  <span>
-										  		<?php _e('Status', 'ihc');?>
+										  		<?php esc_html_e('Status', 'ihc');?>
 										  	  </span>
 										  </th>
 										  <th class="manage-column">
 											  <span>
-												<?php _e('Details', 'ihc');?>
+												<?php esc_html_e('Details', 'ihc');?>
 											  </span>
 										  </th>
 										  <th class="manage-column">
 											  <span>
-												<?php _e('Date', 'ihc');?>
+												<?php esc_html_e('Date', 'ihc');?>
 											  </span>
 										  </th>
-										  <th class="manage-column" style="width:80px; text-align:center;">
+										  <th class="manage-column">
 											  <span>
-												<?php _e('Remove', 'ihc');?>
+												<?php esc_html_e('Remove', 'ihc');?>
 											  </span>
 										  </th>
 								    </tr>
@@ -187,52 +174,43 @@ $data_db = $wpdb->get_results($q);
 									<tr>
 										  <th class="manage-column">
 											  <span>
-													<?php _e('Username', 'ihc');?>
+													<?php esc_html_e('Username', 'ihc');?>
 											  </span>
 										  </th>
-										  <!--th class="manage-column">
-											  <span>
-													<?php _e('Name', 'ihc');?>
-											  </span>
-										  </th-->
-										  <!--th class="manage-column">
-											  <span>
-													<?php _e('E-mail', 'ihc');?>
-											  </span>
-										  </th-->
+
 										  <th>
 											  <span>
-													<?php _e('Orders', 'ihc');?>
+													<?php esc_html_e('Orders', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 											  <span>
-													<?php _e('Amount', 'ihc');?>
+													<?php esc_html_e('Amount', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 											  <span>
-												<?php _e('Payment Type', 'ihc');?>
+												<?php esc_html_e('Payment Type', 'ihc');?>
 											  </span>
 										  </th>
 										  <th>
 										  		<span>
-										  			<?php _e('Status', 'ihc');?>
+										  			<?php esc_html_e('Status', 'ihc');?>
 										  		</span>
 										  </th>
 										  <th class="manage-column">
 											  <span>
-													<?php _e('Details', 'ihc');?>
+													<?php esc_html_e('Details', 'ihc');?>
 											  </span>
 										  </th>
 										  <th class="manage-column">
 											  <span>
-													<?php _e('Date', 'ihc');?>
+													<?php esc_html_e('Date', 'ihc');?>
 											  </span>
 										  </th>
-										  <th class="manage-column" style="width:80px; text-align:center;">
+										  <th class="manage-column">
 											  <span>
-													<?php _e('Remove', 'ihc');?>
+													<?php esc_html_e('Remove', 'ihc');?>
 											  </span>
 										  </th>
 								    </tr>
@@ -248,7 +226,7 @@ $data_db = $wpdb->get_results($q);
 											?>
 												<tr>
 													  <td class="manage-column">
-													  	<span style="color: #21759b; font-weight:bold;">
+													  	<span>
 													  	<?php
 													  		if (isset( $user_info->data->user_login) &&  $user_info->data->user_login){
 													  			echo $user_info->data->user_login;
@@ -256,25 +234,6 @@ $data_db = $wpdb->get_results($q);
 													  	?>
 														</span>
 													  </td>
-													  <!--td class="manage-column">
-														  <span style="color: #21759b; font-weight:bold;">
-															<?php
-																$first_name = get_user_meta($arr->u_id, 'first_name', true);
-																$last_name = get_user_meta($arr->u_id, 'last_name', true);
-																if ($first_name || $last_name){
-																	echo $first_name .' '.$last_name;
-																} else {
-																	if (isset($user_info->user_nicename)){
-																		echo $user_info->user_nicename;
-																	} else {
-																		echo '<span style="color: red;">' . __('Deleted User', 'ihc') . '</span>';
-																	}
-																}
-
-															?>
-														  </span>
-													  </td-->
-													  <!--td class="manage-column">
 													  	<?php
 													  		if (isset($user_info->data->user_email) && $user_info->data->user_email){
 													  			echo $user_info->data->user_email;
@@ -283,20 +242,7 @@ $data_db = $wpdb->get_results($q);
 													  </td-->
 													  <td class="manage-column">
 													  	<?php
-														  	/*if (isset($data->level)){
-														  		//2checkout
-														  		$level_data_arr = ihc_get_level_by_id($data->level);
-														  		echo $level_data_arr['label'];
-														  	} else if (isset($data->item_name)){
-													  			echo $data->item_name;
-													  		} else if (isset($data->x_description)){
-																echo $data->x_description;
-															} else if (isset($data->lid)){
-														  		$level_data_arr = ihc_get_level_by_id($data->lid);
-														  		echo $level_data_arr['label'];
-															} else {
-													  			echo '-';
-													  		}*/
+
 															$tx_orders = array();
 															$tx_orders = unserialize($arr->orders);
 															if(!empty($tx_orders) && is_array($tx_orders) && count($tx_orders)>0){
@@ -339,30 +285,30 @@ $data_db = $wpdb->get_results($q);
 													  			echo $payment_gateways[$gateway_key];
 													  		}
 													  ?></td>
-													  <td class="manage-column" style="font-weight:700;">
+													  <td class="manage-column">
 													  	<?php
 													  		if (!empty($data->payment_status)){
 													  			$pay_sts = $data->payment_status;
 													  		} else if (isset($data->x_response_code) && ($data->x_response_code == 1)){
-															  	$pay_sts = __('Confirmed', 'ihc');
+															  	$pay_sts = esc_html__('Confirmed', 'ihc');
 															} else if (isset($data->code) && ($data->code == 2)){
-															  	$pay_sts = __('Confirmed', 'ihc');
+															  	$pay_sts = esc_html__('Confirmed', 'ihc');
 															} else if(isset($data->message) && $data->message=='success'){
-																$pay_sts = __('Confirmed', 'ihc');
+																$pay_sts = esc_html__('Confirmed', 'ihc');
 															} else if (isset($data->ap_status) && ($data->ap_status=='Success' || $data->ap_status=='Subscription-Payment-Success')){
-																$pay_sts = __('Confirmed', 'ihc');
+																$pay_sts = esc_html__('Confirmed', 'ihc');
 															} else {
 																$pay_sts = '-';
 															}
 															if ($pay_sts=='pending'){
-																$pay_sts = __('Pending', 'ihc');
+																$pay_sts = esc_html__('Pending', 'ihc');
 															}
 															echo $pay_sts;
 													  	?>
 													  </td>
 													  <td class="manage-column">
 														  <span>
-															<a href="<?php echo $url.'&tab=payments&details_id='.$arr->id;?>"><?php _e('View Details', 'ihc');?></a>
+															<a href="<?php echo $url.'&tab=payments&details_id='.$arr->id;?>"><?php esc_html_e('View Details', 'ihc');?></a>
 														  </span>
 													  </td>
 													  <td class="manage-column">
@@ -370,7 +316,7 @@ $data_db = $wpdb->get_results($q);
 															<?php echo ihc_convert_date_time_to_us_format($arr->paydate);?>
 														  </span>
 													  </td>
-												      <td class="column" style="width:80px; text-align:center;">
+												      <td class="column">
 																	<span class="ihc-pointer ihc-js-delete-payment-transaction" data-id="<?php echo $arr->id;?>" >
 																			<i class="fa-ihc ihc-icon-remove-e"></i>
 																	</span>
@@ -381,40 +327,13 @@ $data_db = $wpdb->get_results($q);
 										?>
 								  </tbody>
 						</table>
-						<script>
-						jQuery( '.ihc-js-delete-payment-transaction' ).on( 'click', function(){
-								var transactionId = jQuery( this ).attr( 'data-id' );
-								swal({
-									title: "<?php _e( 'Are you sure that you want to delete this transaction?', 'ihc' );?>",
-									text: "",
-									type: "warning",
-									showCancelButton: true,
-									confirmButtonClass: "btn-danger",
-									confirmButtonText: "OK",
-									closeOnConfirm: true
-								},
-								function(){
-										jQuery.ajax({
-												type : 'post',
-												url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-												data : {
-																	 action: 'ihc_admin_delete_payment_transaction',
-																	 id:			transactionId,
-															 },
-												success: function (response) {
-														location.reload();
-												}
-									 });
-							 });
-						});
-						</script>
 		<?php
 	} else {
 		?>
-		<div class="ihc-warning-message"> <?php _e('No Payments Available to show up!', 'ihc');?></div>
+		<div class="ihc-warning-message"> <?php esc_html_e('No Payments Available to show up!', 'ihc');?></div>
 		<?php
 	}
 } // end of list all payments
 ?>
-</div>
+
 <?php

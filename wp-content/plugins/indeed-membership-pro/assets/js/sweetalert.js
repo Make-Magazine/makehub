@@ -1,3 +1,6 @@
+/*
+* Ultimate Membership Pro - SweetAlert
+*/
 ;(function(window, document, undefined) {
 "use strict";
 

@@ -32,6 +32,7 @@
  *  - the loadCSS will load additional css (with or without @media print) into the iframe, adjusting layout
  */
 ;
+"use strict";
 (function($) {
     var opt;
     $.fn.printThis = function(options) {
@@ -43,7 +44,7 @@
         if (window.location.hostname !== document.domain && navigator.userAgent.match(/msie/i)) {
             // Ugly IE hacks due to IE not inheriting document.domain from parent
             // checks if document.domain is set by comparing the host name against document.domain
-            var iframeSrc = "javascript:document.write(\"<head><script>document.domain=\\\"" + document.domain + "\\\";</script></head><body></body>\")";
+            var iframeSrc = "";
             var printI = document.createElement('iframe');
             printI.name = "printIframe";
             printI.id = strFrameName;
@@ -70,7 +71,7 @@
         });
 
 
-        // $iframe.ready() and $iframe.load were inconsistent between browsers    
+      
         setTimeout(function() {
 
             // Add doctype to fix the style difference between printing and render
@@ -102,11 +103,11 @@
                     $head.append("<link type='text/css' rel='stylesheet' href='" + href + "' media='" + media + "'>")
                 }
             });
-            
+
             // import style tags
             if (opt.importStyle) $("style").each(function() {
                 $(this).clone().appendTo($head);
-                //$head.append($(this));
+             
             });
 
             //add title of the page
@@ -185,7 +186,7 @@
 
             // remove inline styles
             if (opt.removeInline) {
-                // $.removeAttr available jQuery 1.7+
+                
                 if ($.isFunction($.removeAttr)) {
                     $doc.find("body *").removeAttr("style");
                 } else {
@@ -198,7 +199,7 @@
                     // check if the iframe was created with the ugly hack
                     // and perform another ugly hack out of neccessity
                     window.frames["printIframe"].focus();
-                    $head.append("<script>  window.print(); </script>");
+                   
                 } else {
                     // proper method
                     if (document.queryCommandSupported("print")) {
@@ -226,7 +227,7 @@
     $.fn.printThis.defaults = {
         debug: false,           // show the iframe for debugging
         importCSS: true,        // import parent page css
-        importStyle: false,     // import style tags
+        importStyle: true,     // import style tags
         printContainer: true,   // print outer container/$.selector
         loadCSS: "",            // load an additional css file - load multiple stylesheets with an array []
         pageTitle: "",          // add title to print page
@@ -237,7 +238,7 @@
         doctypeString: '<!DOCTYPE html>' // html doctype
     };
 
-    // $.selector container
+ 
     jQuery.fn.outer = function() {
         return $($("<div></div>").html(this.clone())).html()
     }

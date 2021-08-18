@@ -1,6 +1,8 @@
 <?php
 namespace Indeed\Ihc\Db;
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( !defined( 'ABSPATH' ) ){
+   exit;
+}
 
 class SearchUsers
 {
@@ -126,6 +128,7 @@ class SearchUsers
         if ( !$this->query ){
             $this->query = $this->buildQuery();
         }
+        //No query parameters required, Safe query. prepare() method without parameters can not be called
         $query = "SELECT DISTINCT u.ID, u.user_login, u.user_nicename, u.user_email, u.display_name, u.user_url,
                                   um.meta_value as roles, u.user_registered,
                                   IFNULL( GROUP_CONCAT( DISTINCT(ul.level_id), '|', ul.start_time, '|', ul.expire_time ), -1 ) as levels,
@@ -149,6 +152,7 @@ class SearchUsers
         if ( !$this->query ){
             $this->query = $this->buildQuery();
         }
+        //No query parameters required, Safe query. prepare() method without parameters can not be called
         $query = "SELECT COUNT(DISTINCT u.ID) ";
         $query .= $this->query;
         return $wpdb->get_var( $query );
@@ -292,10 +296,10 @@ class SearchUsers
         $roleKey = $wpdb->prefix . 'capabilities';
 
         /// without admin
-        $query .= " AND ( um.meta_key='{$roleKey}' AND um.meta_value NOT LIKE '%administrator%' ) ";
+        $query .= $wpdb->prepare(" AND ( um.meta_key=%s AND um.meta_value NOT LIKE '%administrator%' ) ", $roleKey );
 
         if ( $this->approvelRequest != '' ){
-            $query .= " AND ( um.meta_key='{$roleKey}' AND um.meta_value LIKE '%pending_user%' ) ";
+            $query .= $wpdb->prepare(" AND ( um.meta_key=%s AND um.meta_value LIKE '%pending_user%' ) ", $roleKey );
         }
 
         if ( $this->role == '' ){
@@ -312,9 +316,9 @@ class SearchUsers
                     $query .= " OR ";
                 }
             }
-            $query .= " ) AND um.meta_key='{$roleKey}' ) ";
+            $query .= $wpdb->prepare(" ) AND um.meta_key=%s ) ", $roleKey );
         } else {
-            $query .= " AND ( um.meta_key='{$roleKey}' AND um.meta_value LIKE '%{$this->role}%' ) ";
+            $query .= $wpdb->prepare(" AND ( um.meta_key=%s AND um.meta_value LIKE '%{$this->role}%' ) ", $roleKey );
         }
 
         return $query;

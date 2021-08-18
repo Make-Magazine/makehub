@@ -1,49 +1,17 @@
 <?php
 wp_enqueue_style( 'indeed_sweetalert_css', IHC_URL . 'assets/css/sweetalert.css' );
 wp_enqueue_script( 'indeed_sweetalert_js', IHC_URL . 'assets/js/sweetalert.js' );
+wp_enqueue_script( 'ihc-alerts', IHC_URL . 'assets/js/alerts.js' );
 ?>
-<script>
-jQuery( document ).ready( function(){
-
-  <?php if ( !empty( $error ) ):?>
-    document.cookie = 'ihc_error=; path=/; Max-Age=-999;';
-    swal({
-      title: "<?php _e('Error', 'ihc');?>",
-      text: "<?php echo $error;?>",
-      type: "error",
-      showCancelButton: false,
-      confirmButtonClass: "btn-danger",
-      confirmButtonText: "OK",
-      closeOnConfirm: true
-    });
-  <?php endif;?>
-
-  <?php if ( !empty( $warning ) ):?>
-    document.cookie = 'ihc_warning=; path=/; Max-Age=-999;';
-    swal({
-      title: "<?php _e('Warning', 'ihc');?>",
-      text: "<?php echo $warning;?>",
-      type: "warning",
-      showCancelButton: false,
-      confirmButtonClass: "btn-danger",
-      confirmButtonText: "OK",
-      closeOnConfirm: true
-    });
-  <?php endif;?>
-
-  <?php if ( !empty( $info ) ):?>
-    document.cookie = 'ihc_info=; path=/; Max-Age=-999;';
-    swal({
-      title: "<?php _e('Info', 'ihc');?>",
-      text: "<?php echo $info;?>",
-      type: "info",
-      showCancelButton: false,
-      confirmButtonClass: "btn-info",
-      confirmButtonText: "OK",
-      closeOnConfirm: true
-    });
-  <?php endif;?>
-
-});
-
-</script>
+<span class="ihc-js-public-alerts-data"
+      data-error_title="<?php esc_html_e('Error', 'ihc');?>"
+      data-error_text="<?php echo $error;?>"
+      data-warning_title="<?php esc_html_e('Warning', 'ihc');?>"
+      data-warning_text="<?php echo $warning;?>"
+      data-info_title="<?php esc_html_e('Info', 'ihc');?>"
+      data-info_text="<?php echo $info;?>"
+      data-error="<?php echo empty($error) ? 0 : 1;?>"
+      data-warning="<?php echo empty($warning) ? 0 : 1;?>"
+      data-info="<?php echo empty($info) ? 0 : 1;?>"
+      data-ok="<?php esc_html_e( 'Ok', 'ihc' );?>"
+></span>

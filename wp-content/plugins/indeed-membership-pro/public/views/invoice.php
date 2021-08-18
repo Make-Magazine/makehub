@@ -1,21 +1,6 @@
-<script>
-		var printhisopt = {
-			importCSS: true,
-            importStyle: true,
-            loadCSS: "<?php echo IHC_URL . 'assets/css/style.css';?>",
-         	debug: false,
-        	printContainer: true,
-        	pageTitle: "",
-        	removeInline: true,
-        	printDelay: 333,
-        	header: null,
-        	formValues: false,
-        };
-</script>
-<style><?php echo @$data['css'];?></style>
 
 <div class="iump-invoice-bttn-wrapp">
-	<div class="iump-popup-print-bttn" onClick="jQuery('<?php echo '#' . $data['wrapp_id'];?>').printThis(printhisopt);"><?php _e('Print Invoice', 'ihc');?></div>
+	<div class="iump-popup-print-bttn ihc-js-public-do-print-this" data-id="<?php echo '#' . $data['wrapp_id'];?>" ><?php esc_html_e('Print Invoice', 'ihc');?></div>
 </div>
 
 
@@ -26,13 +11,13 @@
 	<div class="iump-invoice-company-field"><?php echo $data['ihc_invoices_company_field'];?></div>
 	<div class="iump-invoice-invoice-code">
 		<?php if (!empty($data['order_details']['code'])):?>
-			<div><b><?php _e('Invoice ID:', 'ihc');?></b> <?php echo $data['order_details']['code'];?></div>
+			<div><b><?php esc_html_e('Invoice ID:', 'ihc');?></b> <?php echo $data['order_details']['code'];?></div>
 		<?php endif;?>
 		<?php if (!empty($data['order_details']['txn_id'])):?>
-			<div><b><?php _e('Transaction ID:', 'ihc');?></b> <?php echo $data['order_details']['txn_id'];?></div>
+			<div><b><?php esc_html_e('Transaction ID:', 'ihc');?></b> <?php echo $data['order_details']['txn_id'];?></div>
 		<?php endif;?>
 		<?php if (!empty($data['order_details']['create_date'])):?>
-			<div><b><?php _e('Date:', 'ihc');?></b> <?php echo $data['order_details']['create_date'];?></div>
+			<div><b><?php esc_html_e('Date:', 'ihc');?></b> <?php echo $data['order_details']['create_date'];?></div>
 		<?php endif;?>
 	</div>
 	<div class="ihc-clear"></div>
@@ -44,8 +29,8 @@
 			<thead>
 				<tr>
 					<td width="5%">#</td>
-					<td width="75%"><?php _e('Description', 'ihc');?></td>
-					<td width="20%"><?php _e('Amount', 'ihc');?></td>
+					<td width="75%"><?php esc_html_e('Description', 'ihc');?></td>
+					<td width="20%"><?php esc_html_e('Amount', 'ihc');?></td>
 				</tr>
 			</thead>
 			<tbody>
@@ -60,14 +45,14 @@
 				<?php if (!empty($data['total_discount'])):?>
 					<tr <?php echo ($i%2==0) ? 'class="alternate"' : ''; ?> >
 						<td><?php echo $i;$i++;?></td>
-						<td><?php _e('Total Discount:', 'ihc');?></td>
-						<td><?php echo $data['total_discount'];?></td>
+						<td><?php esc_html_e('Total Discount:', 'ihc');?></td>
+						<td><?php echo '- ' . $data['total_discount'];?></td>
 					</tr>
 				<?php endif;?>
 				<?php if (!empty($data['total_taxes'])):?>
 					<tr <?php echo ($i%2==0) ? 'class="alternate"' : ''; ?> >
 						<td><?php echo $i;$i++;?></td>
-						<td><?php _e('Total Taxes:', 'ihc');?></td>
+						<td><?php esc_html_e('Total Taxes:', 'ihc');?></td>
 						<td><?php echo $data['total_taxes'];?></td>
 					</tr>
 				<?php endif;?>
@@ -86,7 +71,7 @@
 				?>
 					<tr class="ihc-invoice-total">
 						<td></td>
-						<td align="right";><?php _e('Total Amount:', 'ihc');?></td>
+						<td align="right";><?php esc_html_e('Total Amount:', 'ihc');?></td>
 						<td><?php echo $data['total_amount'];?></td>
 					</tr>
 				<?php endif;?>

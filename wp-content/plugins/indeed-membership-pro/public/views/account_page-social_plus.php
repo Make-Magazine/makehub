@@ -5,6 +5,7 @@
 	<?php if (!empty($data['content'])):?>
 		<p><?php echo do_shortcode($data['content']);?></p>
 	<?php endif;?>
-	<?php echo ihc_print_social_media_icons('update', $this->users_sm);?>	
+	<?php if ( $data['show_buttons'] ):?>
+			<?php echo do_shortcode( '[ihc-social-links-profile]' );?>
+	<?php endif;?>
 </div>
-

@@ -1,37 +1,32 @@
-<?php if (!empty($data['custom_css'])):?>
-	<style><?php echo $data['custom_css'];?></style>
-<?php endif;?>
+<?php if (!empty($data['custom_css'])):
+	wp_register_style( 'dummy-handle', false );
+	wp_enqueue_style( 'dummy-handle' );
+	wp_add_inline_style( 'dummy-handle', stripslashes($data['custom_css']) );
+ endif;?>
 
-<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css' );?>
+<?php wp_enqueue_style( 'ihc-croppic_css', IHC_URL . 'assets/css/croppic.css', array(), 9.7 );?>
 <?php wp_enqueue_script( 'ihc-jquery_mousewheel', IHC_URL . 'assets/js/jquery.mousewheel.min.js', array(), null );?>
 <?php wp_enqueue_script( 'ihc-croppic', IHC_URL . 'assets/js/croppic.js', array(), null );?>
 <?php wp_enqueue_script( 'ihc-account_page-banner', IHC_URL . 'assets/js/account_page-banner.js', array(), null );?>
 
-<script>
-jQuery( document ).ready( function(){
-		IhcAccountPageBanner.init({
-				triggerId					: 'js_ihc_edit_top_ap_banner',
-				saveImageTarget		: '<?php echo IHC_URL . 'public/ajax-upload.php';?>',
-				cropImageTarget   : '<?php echo IHC_URL . 'public/ajax-upload.php';?>',
-				bannerClass       : 'ihc-user-page-top-ap-background'
-		})
-})
-</script>
+<span class="ihc-js-account-page-account-banner-data"
+			data-url_target="<?php echo IHC_URL . 'public/ajax-upload.php?ihcpublicn=' . wp_create_nonce( 'ihcpublicn' );?>" ></spam>
+
 <div class="ihc-account-page-wrapp" id="ihc_account_page_wrapp">
 
 	<?php
-		$top_style='';
+		$top_styl='';
 		if (empty($this->settings['ihc_ap_edit_background']) && ($this->settings['ihc_ap_top_template'] == 'ihc-ap-top-theme-2' || $this->settings['ihc_ap_top_template'] == 'ihc-ap-top-theme-3' )){
-			$top_style .='style="padding-top:75px;"';
+			$top_styl .='ihc-no-background';
 		}
 	?>
 
-		<div class="ihc-user-page-top-ap-wrapper <?php echo (!empty($this->settings['ihc_ap_top_template']) ? $this->settings['ihc_ap_top_template'] : '');?>" <?php echo $top_style;?> >
+		<div class="ihc-user-page-top-ap-wrapper <?php echo (!empty($this->settings['ihc_ap_top_template']) ? $this->settings['ihc_ap_top_template'] : '');?> <?php echo $top_styl;?>"  >
 
 		  	<div class="ihc-left-side">
 				<div class="ihc-user-page-details">
 					<?php if (!empty($data['avatar'])):?>
-						<div class="ihc-user-page-avatar"><img src="<?php echo $data['avatar'];?>" class="ihc-member-photo"/></div>
+						<div class="ihc-user-page-avatar"><img alt="<?php echo $this->current_user->ID; ?>" src="<?php echo $data['avatar'];?>" class="ihc-member-photo"/></div>
 					<?php endif;?>
 				</div>
 			</div>
@@ -51,7 +46,7 @@ jQuery( document ).ready( function(){
 					<div class="ihc-top-levels">
 						<?php foreach ($data['levels'] as $lid => $level):?>
 							<?php
-				    			$time_arr = ihc_get_start_expire_date_for_user_level($this->current_user->ID, $lid);
+				    			$time_arr = \Indeed\Ihc\UserSubscriptions::getStartAndExpireForSubscription($this->current_user->ID, $lid);
 						    	$is_expired_class = '';
 									if ( !isset( $time_arr['expire_time'] ) ){
 											$time_arr['expire_time'] = '';
@@ -81,7 +76,7 @@ jQuery( document ).ready( function(){
 			<div class="ihc-clear"></div>
 				<?php
 					if (!empty($this->settings['ihc_ap_edit_background'])):
-						$bk_style = '';
+						$bk_styl = '';
 						$banner = '';
 						if (!empty($this->settings['ihc_ap_top_background_image'])):
 								$banner = $this->settings['ihc_ap_top_background_image'];
@@ -90,17 +85,17 @@ jQuery( document ).ready( function(){
 							$banner = $data ['top_banner'];
 						endif;
 						if (!empty($banner)){
-								$bk_style = 'style="background-image:url('.$banner.');"';
+								$bk_styl = ' style = " background-image:url('.$banner.');"';
 						}
 			 	?>
             <div class="ihc-background-overlay"></div>
-				  	<div class="ihc-user-page-top-ap-background" <?php echo $bk_style;?> data-banner="<?php echo $banner;?>" >
+				  	<div class="ihc-user-page-top-ap-background" <?php echo $bk_styl;?> data-banner="<?php echo $banner;?>" >
 
 						</div>
                     <div class="ihc-edit-top-ap-banner" id="js_ihc_edit_top_ap_banner"></div>
 		  <?php endif;?>
 
 		</div>
-		<div class="ihc-user-page-content-wrapper  <?php echo @$this->settings['ihc_ap_theme'];?>">
+		<div class="ihc-user-page-content-wrapper  <?php echo (isset($this->settings['ihc_ap_theme'])) ? $this->settings['ihc_ap_theme'] : '';?>">
 
 <?php

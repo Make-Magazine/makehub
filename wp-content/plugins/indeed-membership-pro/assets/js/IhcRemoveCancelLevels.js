@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Cancel Subscriptions
+*/
+"use strict";
 var IhcRemoveCancelLevels = {
 	modalSelector						    : '#ihc_reasons_modal',
 	formSelector						    : '#ihc_form_ap_subscription_page',
@@ -17,7 +21,11 @@ var IhcRemoveCancelLevels = {
 		var obj = this;
 		obj.setAttributes(obj, args);
 		obj.modalOn = jQuery(obj.formSelector).attr('data-modal');
-		window.ihc_labels = JSON.parse(window.ihc_translated_labels);
+		if ( typeof window.ihc_translated_labels == 'object' ){
+				window.ihc_labels = window.ihc_translated_labels;
+		} else {
+				window.ihc_labels = JSON.parse( window.ihc_translated_labels );
+		}
 
     if (obj.modalOn>0){
         obj.initModal(obj);
@@ -146,6 +154,6 @@ var IhcRemoveCancelLevels = {
 
 }
 
-jQuery(document).ready(function(){
+jQuery( window ).on( 'load', function(){
     IhcRemoveCancelLevels.init();
 });

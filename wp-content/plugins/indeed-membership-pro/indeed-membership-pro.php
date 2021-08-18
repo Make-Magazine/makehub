@@ -3,7 +3,7 @@
 Plugin Name: Indeed Ultimate Membership Pro
 Plugin URI: https://www.wpindeed.com/
 Description: The most complete and easy to use Membership Plugin, ready to allow or restrict your content, Page for certain Users.
-Version: 8.9
+Version: 10.0
 Author: WPIndeed Development
 Author URI: https://www.wpindeed.com
 Text Domain: ihc
@@ -38,14 +38,16 @@ function ihc_load_language(){
 require_once IHC_PATH . 'utilities.php';
 require_once IHC_PATH  . 'autoload.php';
 require_once IHC_PATH . 'classes/Ihc_Db.class.php';
-if (is_admin()){
-	//go to admin
-	require_once IHC_PATH . 'admin/main.php';
+
+if ( is_admin()  ){
+			//go to admin
+			require_once IHC_PATH . 'admin/Main.php';
 } else {
-	//go to public
-	require_once IHC_PATH . 'public/main.php';
+			//go to public
+			require_once IHC_PATH . 'public/Main.php';
 }
-require_once IHC_PATH  . 'public/functions/ihc_countries.php';
+
+require_once IHC_PATH  . 'public/static-data.php';
 
 /************************ MODULES *************************/
 
@@ -97,11 +99,11 @@ $ihcKissmetrics = new \Indeed\Ihc\Services\Kissmetrics();
 
 $ihcFilters = new \Indeed\Ihc\Filters();
 
-$WPMLActions = new \Indeed\Ihc\WPMLActions();
+$WPMLActions = new \Indeed\Ihc\Services\WPMLActions();
 
 require_once IHC_PATH . 'classes/RegisterElementorWidgets.php';
 
-$ihcGutenbergEditorIntegration = new \Indeed\Ihc\GutenbergEditorIntegration();
+$ihcGutenbergEditorIntegration = new \Indeed\Ihc\Services\GutenbergEditorIntegration();
 
 $ihcMediaSecurity = new \Indeed\Ihc\UploadFilesSecurity();
 
@@ -113,6 +115,18 @@ $IhcJsAlerts = new \Indeed\Ihc\JsAlerts();
 
 $ihcElCheck = new \Indeed\Ihc\Services\ElCheck();
 
+$UserSubscriptionsEvents = new \Indeed\Ihc\UserSubscriptionsEvents();
+
+$ihcCheckout = new \Indeed\Ihc\Checkout();
+
+$NotificationTriggers = new \Indeed\Ihc\NotificationTriggers();
+
+$ihcCrons = new \Indeed\Ihc\Crons();
+
+$ihcRegistrationEvents = new \Indeed\Ihc\RegistrationEvents();
+
+$ihcAccountPageShortcodes = new \Indeed\Ihc\AccountPageShortcodes();
+
 /******************** END MODULES **************************/
 
 //on activating the plugin
@@ -123,9 +137,9 @@ function ihc_initiate_plugin(){
 	 */
 
 	/// IF PHP >5.3 don't activate plugin
-	if (defined('PHP_VERSION') && version_compare(PHP_VERSION, 5.3, '<')){
+	if (defined('PHP_VERSION') && version_compare(PHP_VERSION, 5.6, '<')){
 		deactivate_plugins(plugin_basename( __FILE__ ));
-		die('Ultimate Membership Pro requires PHP version greater than 5.3, Your current PHP is v.' . PHP_VERSION . ' . Update Your PHP and try again!');
+		die('Ultimate Membership Pro requires PHP version greater than 5.6, Your current PHP is v.' . PHP_VERSION . ' . Update Your PHP and try again!');
 	}
 
 	require_once IHC_PATH . 'classes/Ihc_Db.class.php';
@@ -139,9 +153,13 @@ function ihc_initiate_plugin(){
 	Ihc_Db::create_default_lockers();
 	Ihc_Db::create_demo_levels();
 
-	$WPMLActions = new \Indeed\Ihc\WPMLActions();
+	$WPMLActions = new \Indeed\Ihc\Services\WPMLActions();
 	$WPMLActions->registerNotifications();
 	$WPMLActions->registerTaxes();
+
+	// register crons
+	$crons = new \Indeed\Ihc\Crons();
+	$crons->registerCrons();
 }
 register_activation_hook( __FILE__, 'ihc_initiate_plugin' );
 
@@ -162,6 +180,7 @@ function ihc_check_plugin_version(){
 	}
 }
 
+
 function ihc_admin_global_notice(){
 	if (current_user_can('manage_options')){
 		echo ihc_inside_dashboard_error_license(TRUE);
@@ -169,233 +188,8 @@ function ihc_admin_global_notice(){
 }
 add_action('admin_notices', 'ihc_admin_global_notice');
 
-function ihc_send_notification_before_after_expire(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	global $wpdb;
-	$table = $wpdb->prefix . "ihc_user_levels";
-	$notification_table = $wpdb->prefix . "ihc_notifications";
-
-	$mail_sent_to_uid = array();
-
-	/// FIRST BEFORE EXPIRE
-	$first_before_expire = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE notification_type='before_expire' ORDER BY id DESC LIMIT 1;");
-	$first_before_expire_admin = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE notification_type='admin_before_user_expire_level' ORDER BY id DESC LIMIT 1;");
-	if ($first_before_expire || $first_before_expire_admin){
-		$days = get_option("ihc_notification_before_time");
-		if (!$days){
-			$days = 5;
-		}
-		$time_diff = $days*24*60*60;
-		$u_ids = $wpdb->get_results("SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM `".$wpdb->prefix."ihc_user_levels`
-										WHERE 1=1
-										AND notification=0
-										AND UNIX_TIMESTAMP(expire_time)<(UNIX_TIMESTAMP(NOW())+".$time_diff.")
-										AND UNIX_TIMESTAMP(expire_time)>0
-		;");
-		if ($u_ids){
-			foreach ($u_ids as $u_data){
-				$sent = FALSE;
-				$uid = $u_data->user_id;
-				if ($first_before_expire){
-					$sent = ihc_send_user_notifications($uid, 'before_expire', $u_data->level_id);
-				}
-				if ($first_before_expire_admin){
-					$sent = ihc_send_user_notifications($uid, 'admin_before_user_expire_level', $u_data->level_id);/// SEND NOTIFICATION TO ADMIN
-				}
-				if ($sent){
-					$wpdb->query("UPDATE " . $wpdb->prefix . "ihc_user_levels SET notification='1' WHERE id=" . $u_data->id . "; ");
-					$mail_sent_to_uid[] = $u_data->user_id;
-				}
-			}
-		}
-	}
-
-	/// SECOND BEFORE EXPIRE
-	$second_before_expire = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE notification_type='second_before_expire' ORDER BY id DESC LIMIT 1;");
-	$second_before_expire_admin = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE notification_type='admin_second_before_user_expire_level' ORDER BY id DESC LIMIT 1;");
-	if ($second_before_expire || $second_before_expire_admin){
-		$days = get_option("ihc_notification_before_time_second");
-		if (!$days){
-			$days = 3;
-		}
-		$condition = "notification>-1"; /// at this point notification can be 0 or 1
-		if (!empty($first_before_expire) || !empty($first_before_expire_admin)){
-			$condition = "notification=1";
-		}
-		$time_diff = $days*24*60*60;
-		$u_ids = $wpdb->get_results("SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM $table
-										WHERE 1=1
-										AND $condition
-										AND UNIX_TIMESTAMP(expire_time)<(UNIX_TIMESTAMP(NOW())+".$time_diff.")
-										AND UNIX_TIMESTAMP(expire_time)>0
-		;");
-		if ($u_ids){
-			foreach ($u_ids as $u_data){
-				$sent = FALSE;
-				$uid = $u_data->user_id;
-				if (in_array($uid, $mail_sent_to_uid)){
-					continue;
-				}
-				if ($second_before_expire){
-					$sent = ihc_send_user_notifications($uid, 'second_before_expire', $u_data->level_id);
-				}
-				if ($second_before_expire_admin){
-					$sent = ihc_send_user_notifications($uid, 'admin_second_before_user_expire_level', $u_data->level_id);
-				}
-				if ($sent){
-					$wpdb->query("UPDATE $table SET notification='-1' WHERE id=" . $u_data->id . ";");
-					$mail_sent_to_uid[] = $uid;
-				}
-			}
-		}
-	}
-
-	/// THIRD BEFORE EXPIRE
-	$third_before_expire = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE `notification_type`='third_before_expire' ORDER BY id DESC LIMIT 1;");
-	$third_before_expire_admin = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE `notification_type`='admin_third_before_user_expire_level' ORDER BY id DESC LIMIT 1;");
-	if ($third_before_expire || $third_before_expire_admin){
-		$days = get_option("ihc_notification_before_time_third");
-		if (!$days){
-			$days = 1;
-		}
-		$condition = "notification>-2"; /// at this point notification can be 0, -1, -2
-		if (!empty($first_before_expire) || !empty($second_before_expire_admin)){
-			$condition = "notification=-1";
-		}
-		$time_diff = $days*24*60*60;
-		$u_ids = $wpdb->get_results("SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM $table
-										WHERE 1=1
-										AND $condition
-										AND UNIX_TIMESTAMP(expire_time)<(UNIX_TIMESTAMP(NOW())+".$time_diff.")
-										AND UNIX_TIMESTAMP(expire_time)>0
-		;");
-		if ($u_ids){
-			foreach ($u_ids as $u_data){
-				$sent = FALSE;
-				$uid = $u_data->user_id;
-				if (in_array($uid, $mail_sent_to_uid)){
-					continue;
-				}
-				if ($third_before_expire){
-					$sent = ihc_send_user_notifications($uid, 'third_before_expire', $u_data->level_id);
-				}
-				if ($third_before_expire_admin){
-					$sent =	ihc_send_user_notifications($uid, 'admin_third_before_user_expire_level', $u_data->level_id);
-				}
-				if ($sent){
-					$wpdb->query("UPDATE $table SET notification='-2' WHERE id=" . $u_data->id . ";");
-					$mail_sent_to_uid[] = $uid;
-				}
-			}
-		}
-	}
-
-	//// LEVEL EXPIRED
-	$expire = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE `notification_type`='expire' ORDER BY id DESC LIMIT 1;");
-	$expire_to_admin = $wpdb->get_results("SELECT id,notification_type,level_id,subject,message,pushover_message,pushover_status,status FROM $notification_table WHERE `notification_type`='admin_user_expire_level' ORDER BY id DESC LIMIT 1;");
-	if ($expire || $expire_to_admin){
-		$u_ids = $wpdb->get_results("SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM `".$wpdb->prefix."ihc_user_levels`
-										WHERE 1=1
-										AND notification<>2
-										AND DATE(expire_time)=DATE(NOW())
-										AND UNIX_TIMESTAMP(expire_time)>0
-		;");
-		if ($u_ids){
-			foreach ($u_ids as $u_data){
-				$sent = FALSE;
-				if ($expire){
-					$sent = ihc_send_user_notifications($u_data->user_id, 'expire', $u_data->level_id);
-				}
-				if ($expire_to_admin){
-					$sent = ihc_send_user_notifications($u_data->user_id, 'admin_user_expire_level', $u_data->level_id);/// SEND NOTIFICATION TO ADMIN
-				}
-				do_action('ihc_action_level_has_expired', $u_data->user_id, $u_data->level_id);
-				// @description run when level has expired. @param user id (integer), level id (integer)
-				if ($sent){
-					$wpdb->query("UPDATE `".$wpdb->prefix."ihc_user_levels` SET notification='2' WHERE id=" . $u_data->id . "; ");
-				}
-			}
-		}
-	}
-}
-add_action( 'ihc_notifications_job', 'ihc_send_notification_before_after_expire', 82 );
 
 
-////downgrade level
-function ihc_check_if_level_expire_downgrade(){
-	/*
-	 * main function for "add another level after expire current level"
-	 * @param none
-	 * @return none
-	 */
-	global $wpdb;
-	$grace_period = get_option('ihc_grace_period');
-	$q = "SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM `" . $wpdb->prefix . "ihc_user_levels`
-			WHERE 1=1
-			AND DATE(expire_time)<=DATE(NOW())
-			AND DATE(expire_time)>DATE('0000-00-00 00:00:00')";
-	$u_ids = $wpdb->get_results($q);
-	if ($u_ids){
-		foreach ($u_ids as $u_data){
-			if ($grace_period){
-				$expire_time_after_grace = strtotime($u_data->expire_time) + $grace_period * 24 * 60 * 60;
-				if ($expire_time_after_grace>indeed_get_unixtimestamp_with_timezone()){
-					continue;
-				}
-			}
-			if (isset($u_data->level_id) && isset($u_data->user_id)){
-				$added = ihc_downgrade_levels_when_expire($u_data->user_id, $u_data->level_id);
-				if ($added){
-					//ihc_delete_user_level_relation($u_data->level_id, $u_data->user_id);//remove the older level
-				}
-			}
-		}
-	}
-}
-add_action( 'ihc_check_level_downgrade', 'ihc_check_if_level_expire_downgrade', 83);
-
-function ihc_run_check_verify_email_status(){
-	/*
-	 * Search for users that not verified their email address, and delete them if it's time.
-	 * @param none
-	 * @return none
-	 */
-	$time_limit = (int)get_option('ihc_double_email_delete_user_not_verified');
-	if ($time_limit>-1){
-		$time_limit = $time_limit * 24 * 60 * 60;
-		global $wpdb;
-		$data = $wpdb->get_results("SELECT user_id FROM " . $wpdb->prefix . "usermeta
-										WHERE meta_key='ihc_verification_status'
-										AND meta_value='-1';");
-		if (!empty($data)){
-
-			if (!function_exists('wp_delete_user')){
-				require_once ABSPATH . 'wp-admin/includes/user.php';
-			}
-
-			foreach ($data as $k=>$v){
-				if (!empty($v->user_id)){
-					$time_data = $wpdb->get_row("SELECT user_registered FROM " . $wpdb->prefix . "users
-							WHERE ID='" . $v->user_id . "';");
-					if (!empty($time_data->user_registered)){
-						$time_to_delete = strtotime($time_data->user_registered)+$time_limit;
-						if ( $time_to_delete < indeed_get_unixtimestamp_with_timezone() ){
-							//delete user
-							wp_delete_user( $v->user_id );
-							$wpdb->query("DELETE FROM " . $wpdb->prefix . "ihc_user_levels WHERE user_id='" . $v->user_id . "';");
-							//send notification
-							ihc_send_user_notifications($v->user_id, 'delete_account');
-						}
-					}
-				}
-			}
-		}
-	}
-}
-add_action( 'ihc_check_verify_email_status', 'ihc_run_check_verify_email_status', 84);
 
 //2checkout ajax ins
 add_action('wp_ajax_ihc_twocheckout_ins', 'twocheckout_ins_ihc');
@@ -430,7 +224,7 @@ function ihc_delete_attachment_ajax_action()
 										die();
 								}
 						}
-			  } else if (current_user_can('administrator')){
+			  } else if (current_user_can('manage_options')){
 					 /// ADMIN, no extra checks
 					 wp_delete_attachment($attachment_id, TRUE);
 					 update_user_meta($uid, $field_name, '');
@@ -488,23 +282,6 @@ function ihc_check_coupon_code_via_ajax(){
 	die();
 }
 
-add_filter('send_password_change_email', 'ihc_update_passowrd_filter', 99, 2);
-function ihc_update_passowrd_filter($return, $user_data){
-	/*
-	 * send custom e-mail notification when user change his password
-	 * @param return - boolean, $user_data - array
-	 * @return boolean
-	 */
-	if (isset($user_data['ID']) && $return){
-		$sent_mail = ihc_send_user_notifications($user_data['ID'], 'change_password');
-		if ($sent_mail){
-			return FALSE;
-		}
-	}
-	return $return;
-}
-
-
 add_action("wp_ajax_nopriv_ihc_check_reg_field_ajax", "ihc_check_reg_field_ajax");
 add_action('wp_ajax_ihc_check_reg_field_ajax', 'ihc_check_reg_field_ajax');
 function ihc_check_reg_field_ajax()
@@ -525,7 +302,7 @@ function ihc_check_reg_field_ajax()
 				if (ihc_meta_value_exists($v['type'], $v['value'])){
 					$unique_msg = get_option('ihc_register_unique_value_exists');
 					if (empty($unique_msg)){
-						$unique_msg = __('This value already exists.', 'ihc');
+						$unique_msg = esc_html__('This value already exists.', 'ihc');
 					}
 					$return_arr[] = array( 'type' => $v['type'], 'value' => $unique_msg );
 				} else {
@@ -541,7 +318,6 @@ function ihc_check_reg_field_ajax()
 }
 
 function ihc_check_value_field($type='', $value='', $val2='', $register_msg=array()){
-    $return = '';
 	if (isset($value) && $value!=''){
 		switch ($type){
 			case 'user_login':
@@ -553,6 +329,7 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 				}
 				break;
 			case 'user_email':
+				$return = 1;
 				if (!is_email($value)) {
 					$return = stripslashes( $register_msg['ihc_register_invalid_email_msg'] );
 				}
@@ -563,7 +340,7 @@ function ihc_check_value_field($type='', $value='', $val2='', $register_msg=arra
 				if(isset($blacklist)){
 					$blacklist = explode(',',preg_replace('/\s+/', '', $blacklist));
 
-					if( count($blacklist) > 0 && in_array($value,$blacklist)){
+					if ( count($blacklist) > 0 && in_array( $value, $blacklist ) ){
 						$return = stripslashes( $register_msg['ihc_register_email_is_taken_msg'] );
 					}
 				}
@@ -679,7 +456,7 @@ function ihc_check_logic_condition_value()
 	if ( !ihcPublicVerifyNonce() ){
   		die;
   }
-	if (isset($_REQUEST['val']) && isset($_REQUEST['field'])){
+	if ( isset( $_REQUEST['val'] ) && isset( $_REQUEST['field'] ) ){
 		$fields_meta = ihc_get_user_reg_fields();
 		$field = esc_sql($_REQUEST['field']);
 		$request_value = esc_sql($_REQUEST['val']);
@@ -745,7 +522,7 @@ function ihc_check_unique_value_field_register()
 	if (ihc_meta_value_exists($meta_key, $meta_value)){
 		$unique_msg = get_option('ihc_register_unique_value_exists');
 		if (empty($unique_msg)){
-			$unique_msg = __('This value already exists.', 'ihc');
+			$unique_msg = esc_html__('This value already exists.', 'ihc');
 		}
 		echo $unique_msg;
 		die();
@@ -765,11 +542,11 @@ function ihc_check_invitation_code_via_ajax()
 	 if ( !ihcPublicVerifyNonce() ){
 				 die;
 		 }
-	$code = esc_sql(@$_REQUEST['c']);
+	$code = esc_sql((isset($_REQUEST['c'])) ? $_REQUEST['c'] : '');
 	if (empty($code) || !Ihc_Db::invitation_code_check($code)){
 		$err_msg = get_option('ihc_invitation_code_err_msg');
 		if (!$err_msg){
-			echo __('Your Invitation Code is wrong.', 'ihc');
+			echo esc_html__('Your Invitation Code is wrong.', 'ihc');
 		} else {
 			echo $err_msg;
 		}
@@ -803,7 +580,7 @@ function ihc_get_amount_plus_taxes()
 		echo $price;
 		die();
 	}
-	echo @$_REQUEST['price'];
+	echo (isset($_REQUEST['price'])) ? $_REQUEST['price'] : '';
 	die();
 }
 
@@ -831,7 +608,7 @@ function ihc_get_amount_plus_taxes_by_uid()
 	 	echo $price;
 		die();
 	 }
-	 echo @$_REQUEST['price'];
+	 echo (isset($_REQUEST['price'])) ? $_REQUEST['price'] : '';
 	 die();
 }
 
@@ -848,7 +625,7 @@ function ihc_get_cart_via_ajax()
   }
 	$currency = get_option("ihc_currency");
  	$data['template'] = '';
-	$lid = esc_sql(@$_REQUEST['lid']);
+	$lid = esc_sql((isset($_REQUEST['lid'])) ? $_REQUEST['lid'] : 0);
 	$country = empty($_REQUEST['country']) ? '' : esc_sql($_REQUEST['country']);
 	$state = (isset($_REQUEST['state'])) ? esc_sql($_REQUEST['state']) : '';
 	$paymentGateway = isset($_POST['payment_type']) ? esc_sql($_POST['payment_type']) : '';
@@ -862,7 +639,7 @@ function ihc_get_cart_via_ajax()
 
  	$level_data = ihc_get_level_by_id($lid);
 	$data['level_label'] = ihc_correct_text($level_data['label']);
-	@$data['final_price'] = $level_data['price'];
+	$data['final_price'] = (isset($level_data['price'])) ? $level_data['price'] : '';
 
 	/*************************** DYNAMIC PRICE ***************************/
 	if (isset($_REQUEST['a']) && $_REQUEST['a']!=-1 && ihc_is_magic_feat_active('level_dynamic_price')){
@@ -873,10 +650,10 @@ function ihc_get_cart_via_ajax()
 	/*************************** DYNAMIC PRICE ***************************/
 
 	/// LEVEL PRICE
-	if ($level_data['payment_type']=='payment'){
+	if (is_array($level_data) && isset($level_data['payment_type']) && $level_data['payment_type']=='payment'){
 		$data['level_price'] = ihc_format_price_and_currency($currency, $data['final_price']);
 	} else {
-		$data['level_price'] = __("Free", "ihc");
+		$data['level_price'] = esc_html__("Free", "ihc");
 		$data['final_price'] = 0;
 	}
 
@@ -889,11 +666,38 @@ function ihc_get_cart_via_ajax()
 				$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
 				$data['discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['discount_value']);
 				if ( (int)$finalPrice==0  && ihc_is_level_reccuring( $lid )){
-						//$data['final_price'] = $finalPrice;
+
 				} else if ( !ihc_is_level_reccuring( $lid ) ){
 						$data['final_price'] = $finalPrice;
 				}
-			} else {
+			}elseif ($coupon_data['reccuring']==0 && $trialObject->isTrialActive()){
+					//recurring with trial
+					$initialTrialPrice = $trialObject->getInitialTrialPrice(true);
+					if(isset($initialTrialPrice) && $initialTrialPrice > 0){
+						$finalTrialPrice = ihc_coupon_return_price_after_decrease($initialTrialPrice , $coupon_data, FALSE);
+
+						$data['trial_price'] = $finalTrialPrice;
+						$trialObject->setVariable('trialPrice',$finalTrialPrice);
+						$trialObject->setTaxesAfterDiscount();
+
+						$data['trial_discount_value'] = ihc_get_discount_value($initialTrialPrice, $coupon_data);
+						$data['trial_discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['trial_discount_value']);
+					}
+
+			}else {
+					if($trialObject->isTrialActive()){
+						$initialTrialPrice = $trialObject->getInitialTrialPrice(true);
+						if(isset($initialTrialPrice) && $initialTrialPrice > 0){
+							$finalTrialPrice = ihc_coupon_return_price_after_decrease($initialTrialPrice , $coupon_data, FALSE);
+
+							$data['trial_price'] = $finalTrialPrice;
+							$trialObject->setVariable('trialPrice',$finalTrialPrice);
+							$trialObject->setTaxesAfterDiscount();
+
+							$data['trial_discount_value'] = ihc_get_discount_value($initialTrialPrice, $coupon_data);
+							$data['trial_discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['trial_discount_value']);
+						}
+					}
 					$data['discount_value'] = ihc_get_discount_value($data['final_price'], $coupon_data);
 					$data['final_price'] = ihc_coupon_return_price_after_decrease($data['final_price'], $coupon_data, FALSE);
 					$data['discount_value']	 = '-' . ihc_format_price_and_currency($currency, $data['discount_value']);
@@ -954,25 +758,6 @@ function ihc_add_custom_admin_bar_item(){
 				break;
 		}
 	}
-	?>
-	<style>
-		.ihc-top-bar-count{
-				    display: inline-block !important;
-				    vertical-align: top !important;
-					padding: 2px 7px !important;
-				    background-color: #d54e21 !important;
-				    color: #fff !important;
-				    font-size: 9px !important;
-				    line-height: 17px !important;
-				    font-weight: 600 !important;
-				    margin: 5px !important;
-				    vertical-align: top !important;
-				    -webkit-border-radius: 10px !important;
-				    border-radius: 10px !important;
-				    z-index: 26 !important;
-		}
-	</style>
-	<?php
 
 	if (!is_super_admin() || !is_admin_bar_showing() || get_option('ihc_admin_workflow_dashboard_notifications')==0){
 		return;
@@ -982,13 +767,13 @@ function ihc_add_custom_admin_bar_item(){
 
 	$wp_admin_bar->add_menu(array(
 				'id'    => 'ihc_users',
-				'title' => '<span class="ihc-top-bar-count">' . $new_users . '</span>' . __('New Users', 'ihc'),
+				'title' => '<span class="ihc-top-bar-count">' . $new_users . '</span>' . esc_html__('New Users', 'ihc'),
 				'href'  => admin_url('admin.php?page=ihc_manage&tab=users'),
 				'meta'  => array('class' => 'ihc-top-notf-admin-menu-bar'),
 	));
 	$wp_admin_bar->add_menu(array(
 				'id'    => 'ihc_orders',
-				'title' => '<span class="ihc-top-bar-count">' . $new_orders . '</span>' . __('New Orders', 'ihc'),
+				'title' => '<span class="ihc-top-bar-count">' . $new_orders . '</span>' . esc_html__('New Orders', 'ihc'),
 				'href'  => admin_url('admin.php?page=ihc_manage&tab=orders'),
 				'meta'  => array('class' => 'ihc-top-notf-admin-menu-bar'),
 	));
@@ -1014,28 +799,27 @@ function ihc_add_custom_top_menu_dashboard(){
 				'meta'  => array(),
 	));
 	///ITEMS
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_pages', 'title'=>__('Membership Pages', 'ihc'), 'href'=>'#', 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_showcases', 'title'=>__('Showcases', 'ihc'), 'href'=>'#', 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_payment_gateways', 'title'=>__('Payment Gateways', 'ihc'), 'href'=>'#', 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'magic_feat', 'title'=>__('Extensions', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=magic_feat'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_levels', 'title'=>__('Levels', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=levels'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_notifications', 'title'=>__('Notifications', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=notifications'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_shortcodes', 'title'=>__('Shortcodes', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=user_shortcodes'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'general', 'title'=>__('General Options', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=general'), 'meta'=>array()));
-		$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'block_url', 'title'=>__('Lock Rules', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=block_url'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_pages', 'title'=>esc_html__('Membership Pages', 'ihc'), 'href'=>'#', 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_showcases', 'title'=>esc_html__('Showcases', 'ihc'), 'href'=>'#', 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_payment_gateways', 'title'=>esc_html__('Payment Gateways', 'ihc'), 'href'=>'#', 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'magic_feat', 'title'=>esc_html__('Extensions', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=magic_feat'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_levels', 'title'=>esc_html__('Memberships', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=levels'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_notifications', 'title'=>esc_html__('Email Notifications', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=notifications'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'ihc_dashboard_menu_shortcodes', 'title'=>esc_html__('Shortcodes', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=user_shortcodes'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'block_url', 'title'=>esc_html__('Access Rules', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=block_url'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu', 'id'=>'general', 'title'=>esc_html__('General Options', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=general'), 'meta'=>array()));
+	
 	/// SHOWCASES
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_rf', 'title'=>__('Register Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=register'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lf', 'title'=>__('Login Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=login'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_sp', 'title'=>__('Subscription Plan', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=subscription_plan'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ap', 'title'=>__('Account Page', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=account_page'), 'meta'=>array()));
-	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lu', 'title'=>__('Members List', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=listing_users'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_rf', 'title'=>esc_html__('Register Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=register'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lf', 'title'=>esc_html__('Login Form', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=login'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_sp', 'title'=>esc_html__('Subscriptions Plan', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=subscription_plan'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ap', 'title'=>esc_html__('My Account Page', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=account_page'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_st', 'title'=>esc_html__('Subscriptions Table', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=manage_subscription_table'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_ot', 'title'=>esc_html__('Orders Table', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=manage_order_table'), 'meta'=>array()));
+	$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_showcases', 'id'=>'ihc_dashboard_menu_showcases_lu', 'title'=>esc_html__('Members Directory', 'ihc'), 'href'=>admin_url('admin.php?page=ihc_manage&tab=listing_users'), 'meta'=>array()));
 
 	/// PAYMENT GATEWAYS
 	$gateways = ihc_get_active_payments_services();
-	if ( isset($gateways['stripe_checkout_v2']) ){
-			unset( $gateways['stripe_checkout_v2'] );
-			$gateways['stripe_checkout'] = __( 'Stripe Checkout', 'ihc' );
-	}
 	foreach ($gateways as $k=>$v){
 		$wp_admin_bar->add_menu(array('parent'=>'ihc_dashboard_menu_payment_gateways', 'id'=>'ihc_dashboard_menu_gateway_' . $k, 'title'=>$v, 'href'=>admin_url('admin.php?page=ihc_manage&tab=payment_settings&subtab=' . $k), 'meta'=>array()));
 	}
@@ -1049,13 +833,13 @@ function ihc_add_custom_top_menu_dashboard(){
 
 	/// DEFAULT PAGES
 	$array = array(
-					'ihc_general_login_default_page' 				=> __('Login', 'ihc'),
-					'ihc_general_register_default_page' 		=> __('Register', 'ihc'),
-					'ihc_subscription_plan_page' 						=> __('Subscription Plan', 'ihc'),
-					'ihc_general_lost_pass_page' 						=> __('Lost Password', 'ihc'),
-					'ihc_general_logout_page' 							=> __('LogOut', 'ihc'),
-					'ihc_general_user_page' 								=> __('User Account Page', 'ihc'),
-					'ihc_general_tos_page' 									=> __('TOS', 'ihc'),
+					'ihc_general_login_default_page' 				=> esc_html__('Login', 'ihc'),
+					'ihc_general_register_default_page' 		=> esc_html__('Register', 'ihc'),
+					'ihc_subscription_plan_page' 						=> esc_html__('Subscription Plan', 'ihc'),
+					'ihc_general_lost_pass_page' 						=> esc_html__('Lost Password', 'ihc'),
+					'ihc_general_logout_page' 							=> esc_html__('LogOut', 'ihc'),
+					'ihc_general_user_page' 								=> esc_html__('User Account Page', 'ihc'),
+					'ihc_general_tos_page' 									=> esc_html__('TOS', 'ihc'),
 	);
 	foreach ($array as $k=>$v){
 		$page = get_option($k);
@@ -1067,67 +851,6 @@ function ihc_add_custom_top_menu_dashboard(){
 }
 
 //// ACTIONS
-
-add_action('ihc_action_after_cancel_subscription', 'ihc_send_notf_after_cancel_subscription', 1, 2);
-function ihc_send_notf_after_cancel_subscription($uid=0, $lid=0){
-	/*
-	 * @param int, int
-	 * @return none
-	 */
-	 ///CANCEL SUBSCRIPTION USER
-	 ihc_send_user_notifications($uid, 'ihc_cancel_subscription_notification-user', $lid);
-	 ///CANCEL SUBSCRIPTION Admin
-	 ihc_send_user_notifications($uid, 'ihc_cancel_subscription_notification-admin', $lid);
-}
-
-add_action('ihc_action_after_subscription_delete', 'ihc_send_notf_after_delete_subscription', 1, 2);
-function ihc_send_notf_after_delete_subscription($uid=0, $lid=0){
-	/*
-	 * @param int, int
-	 * @return none
-	 */
-	 ///DELETE SUBSCRIPTION USER
-	 ihc_send_user_notifications($uid, 'ihc_delete_subscription_notification-user', $lid);
-	 ///DELETE SUBSCRIPTION Admin
-	 ihc_send_user_notifications($uid, 'ihc_delete_subscription_notification-admin', $lid);
-}
-
-add_action('ihc_action_after_order_placed', 'ihc_send_notf_after_order_placed', 1, 2);
-function ihc_send_notf_after_order_placed($uid=0, $lid=0){
-	/*
-	 * @param int, int
-	 * @return none
-	 */
-	 ///ORDER PLACED USER
-	 ihc_send_user_notifications($uid, 'ihc_order_placed_notification-user', $lid);
-	 ///ORDER PLACED Admin
-	 ihc_send_user_notifications($uid, 'ihc_order_placed_notification-admin', $lid);
-}
-
-add_action('ihc_action_after_subscription_activated', 'ihc_send_notf_after_subscription_activated', 1, 2);
-function ihc_send_notf_after_subscription_activated($uid=0, $lid=0){
-	/*
-	 * @param int, int
-	 * @reutnr none
-	 */
-	 /// send notification to user
-	 ihc_send_user_notifications($uid, 'ihc_subscription_activated_notification', $lid);
-	 /// give a gift
-	 if (ihc_is_magic_feat_active('gifts')){
-		 require_once IHC_PATH . 'classes/Ihc_Gifts.class.php';
-		 $gift_object = new Ihc_Gifts($uid, $lid);
-	 }
-}
-
-add_action('ihc_new_subscription_action', 'ihc_send_notf_on_new_subscription', 1, 2);
-function ihc_send_notf_on_new_subscription($uid=0, $lid=0){
-	/*
-	 * @param int, int
-	 * @reutnr none
-	 */
-	 ihc_send_user_notifications($uid, 'ihc_new_subscription_assign_notification-admin', $lid);
-}
-
 
 add_action('wsl_hook_process_login_before_wp_safe_redirect', 'ihc_wp_social_login_do_redirect', 99, 0);
 function ihc_wp_social_login_do_redirect(){
@@ -1170,10 +893,9 @@ function ihc_wp_social_login_after_register_action($user_id=0, $provider='', $hy
 			/// LEVEL
 			$lid = get_option('ihc_wp_social_login_default_level');
 			if ($lid!='' && $lid!=-1){
-				$level_data = get_option('ihc_levels');
-				$level_data = isset($level_data[$lid]) ? $level_data[$lid] : array();
-				ihc_do_complete_level_assign_from_ap($user_id, $lid);/// this will only add the level to user, but expire time is no hold
-				ihc_update_user_level_expire($level_data, $lid, $user_id); /// update expire time
+				$level_data = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+				\Indeed\Ihc\UserSubscriptions::assign( $user_id, $lid );
+				\Indeed\Ihc\UserSubscriptions::makeComplete( $user_id, $lid );
 			}
 		}
 	 }
@@ -1203,60 +925,139 @@ function ihc_payment_gate_check(){
 		$ihc_action = $_GET['ihc_action'];
 	} else {
 		global $wp_query;
-		if (!empty($wp_query)) $ihc_action = get_query_var('ihc_action');
+		if (!empty($wp_query)) {
+			$ihc_action = get_query_var('ihc_action');
+		}
 	}
 	 if (!empty($ihc_action)){
 	 	$no_load = TRUE;
 	 	switch ($ihc_action){
 			case 'paypal':
-				$object = new \Indeed\Ihc\PaymentGateways\PayPalStandard();
-				$object->webhook();
-				// require_once IHC_PATH . 'paypal_ipn.php';
+				// PayPal Standard - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\PayPalStandard();
+					$object->webhookPayment();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\PayPalStandard();
+					$object->webhook();
+				}
 				break;
 			case 'stripe':
-				require_once IHC_PATH . 'stripe_webhook.php';
+				// Stripe Standard - Webhook
+				require_once IHC_PATH . 'classes/PaymentGateways/stripe_webhook.php';
 				break;
 			case 'twocheckout':
-				require_once IHC_PATH . 'twocheckout_ins.php';
+				// TwoCheckout - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\TwoCheckout();
+					$object->webhookPayment();
+				} else {
+					// standard
+					require_once IHC_PATH . 'classes/PaymentGateways/twocheckout_ins.php';
+				}
 				break;
 			case 'authorize':
-				require_once IHC_PATH . 'authorize_response.php';
+				// Authorize - Webhook
+				require_once IHC_PATH . 'classes/PaymentGateways/authorize_response.php';
 				break;
 			case 'braintree':
-				require_once IHC_PATH . 'braintree_webhook.php';
-				break;
-			case 'payza':
-				require_once IHC_PATH . 'payza_webhook.php';
+				// Braintree - Webhook
+				if ( version_compare( phpversion(), '7.2', '>=' ) ){
+						// braintree v2
+						require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook_v2.php';
+				} else {
+						// braintree v1
+						require_once IHC_PATH . 'classes/PaymentGateways/braintree_webhook.php';
+				}
 				break;
 			case 'mollie':
-				$paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\Mollie();
-				$paymentGatewayObject->webhook();
+				// Mollie - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\Mollie();
+					$object->webhookPayment();
+				} else {
+					// standard
+					$paymentGatewayObject = new \Indeed\Ihc\PaymentGateways\Mollie();
+					$paymentGatewayObject->webhook();
+				}
 				break;
 			case 'arrive':
-				require_once IHC_PATH . 'arrive.php';
+				require_once IHC_PATH . 'public/action-reset_password.php';
 				break;
 			case 'user_activation':
-				require_once IHC_PATH . 'user_activation.php';
+				require_once IHC_PATH . 'public/action-user_activation.php';
 				break;
 			case 'paypal_express_complete_payment':
-				$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-				$object->confirmAuthorization()->getExpressCheckoutDetails()->createRecurringProfile()->redirectHome();
+				// PayPal Express - Complete Recurring Payment
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+					$object->confirmAuthorization()
+								 ->getExpressCheckoutDetails()
+								 ->createRecurringProfile()
+								 ->redirectToSuccessPage();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
+					$object->confirmAuthorization()
+								 ->getExpressCheckoutDetails()
+								 ->createRecurringProfile()
+								 ->redirectHome();
+				}
 				break;
 			case 'paypal_express_single_payment_complete_payment':
-				$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-				$object->completeSinglePayment()->redirectHome();
+				// PayPal Express - Complete Single Payment
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+					$object->completeSinglePayment()
+								 ->redirectToSuccessPage();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
+					$object->completeSinglePayment()
+								 ->redirectHome();
+				}
 				break;
 			case 'paypal_express_checkout_ipn':
-				$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckout();
-				$object->webhook();
+				// PayPal Express - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\PayPalExpressCheckout();
+					$object->webhookPayment();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckout();
+					$object->webhook();
+				}
 				break;
 			case 'paypal_express_cancel_payment':
-				$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
-				$object->redirectHome();
+				// PayPal Express - Cancel Payment
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\Libraries\PayPalExpress\PayPalExpressCheckoutNVP();
+					$object->redirectHome();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\PayPalExpressCheckoutNVP();
+					$object->redirectHome();
+				}
 				break;
 			case 'pagseguro':
-				$object = new \Indeed\Ihc\PaymentGateways\Pagseguro();
-				$object->webhook();
+				// Pagseguro - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\Pagseguro();
+					$object->webhookPayment();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\Pagseguro();
+					$object->webhook();
+				}
 				break;
 			case 'dl':
 				$token = isset($_GET['token']) ? $_GET['token'] : '';
@@ -1264,19 +1065,38 @@ function ihc_payment_gate_check(){
 				$directLogin->handleRequest($token);
 				break;
 			case 'stripe_checkout':
-				$object = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
-				$object->webhook();
+				// Stripe Checkout - Webhook
+				if ( ihc_payment_workflow() == 'new' ){
+					// new
+					$object = new \Indeed\Ihc\Gateways\StripeCheckout();
+					$object->webhookPayment();
+				} else {
+					// standard
+					$object = new \Indeed\Ihc\PaymentGateways\StripeCheckoutV2();
+					$object->webhook();
+				}
+				break;
+			case 'social_login':
+				$ihcLoadWp = true;
+				require IHC_PATH . 'public/social_handler.php';
 				break;
 			default:
 				$paymentObject = apply_filters( 'ihc_payment_gateway_create_payment_object', false, $ihc_action );
 				// @description
 
 				if ( $paymentObject ){
+					if ( ihc_payment_workflow() == 'new' ){
+						// new
+						$paymentObject->webhookPayment();
+					} else {
+						// standard
 						$paymentObject->webhook();
+					}
 				} else {
 						$home = get_home_url();
 						wp_safe_redirect($home);
 				}
+
 
 				exit;
 				break;
@@ -1297,8 +1117,8 @@ function ihc_check_coupon_status_via_ajax()
 			die;
 	}
 	$data['is_active'] = 0;
-	$data['success_msg'] = __('Coupon applied successfully.', 'ihc');
-	$data['err_msg'] = __('Coupon code is not valid.', 'ihc');
+	$data['success_msg'] = esc_html__('Coupon applied successfully.', 'ihc');
+	$data['err_msg'] = esc_html__('Coupon code is not valid.', 'ihc');
 	if (!empty($_REQUEST['c']) && isset($_REQUEST['l'])){
 		$check = ihc_check_coupon(esc_sql($_REQUEST['c']), esc_sql($_REQUEST['l']));
 		if (empty($check)){
@@ -1360,7 +1180,7 @@ function ihc_generate_invoice()
 	if (isset($_REQUEST['order_id'])){
 		$order_id = esc_sql($_REQUEST['order_id']);
 		$order_id = (int)$order_id;
-		if (current_user_can('administrator')){
+		if (current_user_can('manage_options')){
 			/// is secure so get the uid from order table
 			if ( !ihcAdminVerifyNonce() ){
 					die;
@@ -1394,36 +1214,6 @@ function ihc_increment_dashboard_user_notification($uid=0){
 	 Ihc_Db::increment_dashboard_notification('users');
 }
 
-if (!function_exists('ihc_do_clean_security_table')):
-function ihc_do_clean_security_table(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	global $wpdb;
-	$table = $wpdb->prefix . 'ihc_security_login';
-	$current_time = indeed_get_unixtimestamp_with_timezone();
-	$expire_hours = get_option('ihc_login_security_extended_lockout_time');
-	if ($expire_hours===FALSE){
-		$expire_hours = 24;
-	}
-	$expire = $expire_hours * 60 * 60;
-	$wpdb->query("UPDATE $table SET attempts_count=0, locked=0 WHERE log_time+$expire<$current_time;");
-}
-endif;
-add_action( 'ihc_clean_security_table', 'ihc_do_clean_security_table', 84);
-
-function ihc_send_drip_content_notifications(){
-	/*
-	 * @param none
-	 * @return none
-	 */
-	require_once IHC_PATH . 'classes/DripContentNotifications.class.php';
-	$object = new DripContentNotifications();
-}
-add_action('ihc_drip_content_notifications', 'ihc_send_drip_content_notifications', 70);
-
-
 add_action('ihc_action_after_subscription_activated', 'increment_user_limit_count', 1, 2);
 function increment_user_limit_count($uid=0, $lid=0){
 	if (get_option('ihc_download_monitor_enabled')){
@@ -1437,22 +1227,21 @@ if (ihc_is_magic_feat_active('mycred')):
 add_filter('mycred_setup_hooks', 'ihc_my_cred_hook');
 function ihc_my_cred_hook($installed){
 	$installed['ihc_mycred'] = array(
-		'title'       => __('Ultimate Membership Pro', 'ihc'),
-		'description' => __('Ultimate Membership Pro - buy level hook.', 'ihc'),
+		'title'       => esc_html__('Ultimate Membership Pro', 'ihc'),
+		'description' => esc_html__('Ultimate Membership Pro - buy level hook.', 'ihc'),
 		'callback'    => array('Ihc_My_Cred')
 	);
 	return $installed;
 }
 add_action('mycred_load_hooks', 'mycredpro_load_custom_hook');
 function mycredpro_load_custom_hook(){
-	require_once IHC_PATH . 'classes/Ihc_My_Cred.class.php';
+	require_once IHC_PATH . 'classes/services/Ihc_My_Cred.class.php';
 }
 endif;
 //===================== END  MyCred Integration Module ============================
 
 
 $ihcAjaxObject = new \Indeed\Ihc\Ajax();
-$ihcRestrictUlp = new \Indeed\Ihc\UmpRestrictUlp();
 $ihcRewriteAvatar = new \Indeed\Ihc\RewriteDefaultWpAvatar();
 $ihcLoadTemplate = new \Indeed\Ihc\LoadTemplates();
 
@@ -1471,3 +1260,38 @@ function ihcPublicNonce()
     $nonce = wp_create_nonce( 'umpPublicNonce' );
     echo "<meta name='ump-token' content='$nonce'>";
 }
+add_action( 'admin_head', 'ihcStyleForTopNotifications' );
+if ( !function_exists( 'ihcStyleForTopNotifications' ) ):
+function ihcStyleForTopNotifications()
+{
+	$custom_css = '
+	.ihc-top-bar-count{
+					display: inline-block !important;
+					vertical-align: top !important;
+				padding: 2px 7px !important;
+					background-color: #d54e21 !important;
+					color: #fff !important;
+					font-size: 9px !important;
+					line-height: 17px !important;
+					font-weight: 600 !important;
+					margin: 5px !important;
+					vertical-align: top !important;
+					-webkit-border-radius: 10px !important;
+					border-radius: 10px !important;
+					z-index: 26 !important;
+	}';
+
+	wp_register_style( 'dummy-handle', false );
+	wp_enqueue_style( 'dummy-handle' );
+	wp_add_inline_style( 'dummy-handle', stripslashes($custom_css) );
+
+}
+endif;
+
+add_filter( 'et_grab_image_setting', 'ihcDiviGrabImage', 999, 1 );
+if ( !function_exists( 'ihcDiviGrabImage' ) ):
+function ihcDiviGrabImage( $bool=true )
+{
+		return false;
+}
+endif;

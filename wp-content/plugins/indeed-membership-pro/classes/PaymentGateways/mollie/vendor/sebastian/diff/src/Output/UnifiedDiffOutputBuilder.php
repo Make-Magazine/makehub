@@ -255,7 +255,7 @@ final class UnifiedDiffOutputBuilder extends AbstractChunkOutputBuilder
             } elseif ($diff[$i][1] === Differ::OLD) {
                 \fwrite($output, ' ' . $diff[$i][0]);
             } elseif ($diff[$i][1] === Differ::NO_LINE_END_EOF_WARNING) {
-                \fwrite($output, "\n"); // $diff[$i][0]
+                \fwrite($output, "\n");
             } else { /* Not changed (old) Differ::OLD or Warning Differ::DIFF_LINE_END_WARNING */
                 \fwrite($output, ' ' . $diff[$i][0]);
             }

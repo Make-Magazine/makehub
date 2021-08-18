@@ -22,6 +22,18 @@ class Ajax
         add_action( 'wp_ajax_nopriv_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
         add_action( 'wp_ajax_ihc_update_list_notification_constants', array( $this, 'ihc_update_list_notification_constants' ) );
         add_action( 'wp_ajax_ihc_admin_list_users_total_spent_values', array( $this, 'usersTotalSpentValues') );
+        add_action( 'wp_ajax_ihc_admin_make_order_completed', array( $this, 'adminMakeOrderCompleted') );
+
+        add_action( 'wp_ajax_ihc_get_membership_details', [ $this, 'adminGetMembershipDetails' ] );
+        add_action( 'wp_ajax_ihc_user_level_get_next_expire_time', [ $this, 'adminGetNextExpireTimeOnUserLevel' ] );
+        add_action( 'wp_ajax_ihc_user_level_pause', [ $this, 'adminUserSubscriptionPause' ] );
+        add_action( 'wp_ajax_ihc_user_level_reactivate', [ $this, 'adminUserSubscriptionReactivate'] );
+
+        add_action( 'wp_ajax_ihc_user_put_subscrition_on_pause', [ $this, 'userPutSubscriptionOnPause' ] );
+        add_action( 'wp_ajax_nopriv_ihc_user_put_subscrition_on_pause', [ $this, 'userPutSubscriptionOnPause' ] );
+
+        add_action( 'wp_ajax_ihc_user_put_subscrition_resume', [ $this, 'userPutSubscriptionResume' ] );
+        add_action( 'wp_ajax_nopriv_ihc_user_put_subscrition_resume', [ $this, 'userPutSubscriptionResume' ] );
     }
 
     /**
@@ -211,9 +223,6 @@ class Ajax
         if ( !indeedIsAdmin() ){
             die;
         }
-        if ( !ihcAdminVerifyNonce() ){
-            die;
-        }
         update_option( 'ihc_hide_admin_license_notice', 1 );
         echo 1;
         die;
@@ -277,16 +286,270 @@ class Ajax
             die;
         }
         $ids = esc_sql( $_POST['users'] );
-        $queryString = $wpdb->prepare( "SELECT SUM(amount_value) AS sum, uid FROM {$wpdb->prefix}ihc_orders WHERE uid IN ($ids) GROUP BY uid" );
+        $queryString = "SELECT SUM(amount_value) AS sum, uid FROM {$wpdb->prefix}ihc_orders WHERE uid IN ($ids) GROUP BY uid";
         $data = $wpdb->get_results( $queryString );
         if ( !$data ){
             die;
         }
         foreach ( $data as $object ){
-            $array[$object->uid] = $object->sum;
+            $array[$object->uid] = ihc_format_price_and_currency( '', $object->sum );
         }
         echo json_encode( $array );
         die;
+    }
+
+    public function adminMakeOrderCompleted()
+    {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
+        if ( empty( $_POST['id'] ) ){
+            die;
+        }
+        $orderId = esc_sql( $_POST['id'] );
+        $orderObject = new \Indeed\Ihc\Db\Orders();
+        $orderObject->setId( $orderId )->update( 'status', 'Completed' );
+        $orderData = $orderObject->fetch()->get();
+        if ( !$orderData ){
+            die;
+        }
+        $orderMeta = new \Indeed\Ihc\Db\OrderMeta();
+        $paymentGateway = $orderMeta->get( $orderId, 'ihc_payment_type' );
+        $levelData = \Indeed\Ihc\Db\Memberships::getOne( $orderData->lid );
+        if (isset($levelData['access_trial_time_value']) && $levelData['access_trial_time_value'] > 0 && \Indeed\Ihc\UserSubscriptions::isFirstTime( $orderData->uid, $orderData->lid )){
+          /// CHECK FOR TRIAL
+            \Indeed\Ihc\UserSubscriptions::makeComplete( $orderData->uid, $orderData->lid, true, [ 'manual' => true, 'payment_gateway' => $paymentGateway ] );
+        } else {
+            \Indeed\Ihc\UserSubscriptions::makeComplete( $orderData->uid, $orderData->lid, false, [ 'manual' => true, 'payment_gateway' => $paymentGateway ] );
+        }
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function adminGetMembershipDetails()
+    {
+        global $wpdb;
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !ihcAdminVerifyNonce() ){
+            die;
+        }
+        if ( !isset( $_POST['levelId'] ) || $_POST['levelId'] == -1 || !isset( $_POST['uid'] ) ){
+            die;
+        }
+        $lid = esc_sql( $_POST['levelId'] );
+        $uid = esc_sql( $_POST['uid'] );
+        if ( \Indeed\Ihc\UserSubscriptions::userHasSubscription( $uid, $lid) ){
+            die;
+        }
+
+        // level data
+        $levelDetails = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+
+        // trial
+        $isTrial = \Indeed\Ihc\Db\Memberships::isTrial( $lid );
+        if ( $isTrial ){
+            $trial = esc_html__( 'Yes - until ', 'ihc' ) . date( 'Y-m-d H:i:s', \Indeed\Ihc\Db\Memberships::getEndTimeForTrial( $lid, indeed_get_unixtimestamp_with_timezone() ) );
+        } else {
+           $trial = esc_html__( 'No', 'ihc' );
+        }
+
+        // grace period
+        $gracePeriod = \Indeed\Ihc\Db\Memberships::getMembershipGracePeriod( $levelDetails['id'] );
+        if ( $gracePeriod ){
+            $gracePeriod = esc_html__( 'Yes - ', 'ihc') . $gracePeriod . ihcGetTimeTypeByCode( 'D', $gracePeriod ) .  esc_html__(' after expires', 'ihc' );
+        } else {
+            $gracePeriod = esc_html__( 'No', 'ihc' );
+        }
+
+        // start time & expire time
+        $startTime = date( 'Y-m-d H:i:s', indeed_get_unixtimestamp_with_timezone() );
+        $endTime = date( 'Y-m-d H:i:s', \Indeed\Ihc\Db\Memberships::getEndTime( $lid, indeed_get_unixtimestamp_with_timezone() ) ) ;
+        if ( $isTrial ){
+            $endTime = date( 'Y-m-d H:i:s', \Indeed\Ihc\Db\Memberships::getEndTimeForTrial( $lid, indeed_get_unixtimestamp_with_timezone() ) );
+        }
+
+        $str = "<tr class='ihc-js-user-level-row-" . $lid . "'>
+                    <td class='ihc-levels-table-name'>"
+                      . $levelDetails['label'] . "<input type='hidden' name='ihc_assign_user_levels[]' value='" . $lid . "' /></td>
+                    <td>" . \Indeed\Ihc\Db\Memberships::getAccessTypeAsLabel( $lid ) . "</td>
+                    <td>" . ihcPaymentPlanDetailsAdmin( $uid, $lid ) . "</td>
+                    <td>-</td>
+                    <td>" . $trial . "</td>
+                    <td>" . $gracePeriod . "</td>
+                    <td>-</td>
+                    <td>
+                      <div class='input-group'>
+                      <input type='text' name='start_time_levels[" . $lid . "]' value='" . $startTime . "' placeholder='' class='start_input_text form-control' />
+                      <div class='input-group-addon'><i class='fa-ihc ihc-icon-edit'></i></div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class='input-group'>
+                      <input type='text' name='expire_levels[" . $lid . "]' value='" . $endTime . "' placeholder='' class='expire_input_text form-control' />
+                      <div class='input-group-addon'><i class='fa-ihc ihc-icon-edit'></i></div>
+                      </div>
+                    </td>
+                    <td class='ihc-levels-table-status'>" . esc_html__( 'Active', 'ihc' ) . "</td>
+                    <td>
+                        <div class='ihc-js-delete-user-level ihc-pointer' data-lid='" . $lid . "' >" . esc_html__( 'Remove', 'ihc' ) . "</div>
+                    </td>
+        </tr>";
+        echo $str;
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function adminGetNextExpireTimeOnUserLevel()
+    {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !isset( $_POST['levelId'] ) || !isset( $_POST['currentExpireTime'] ) ){
+            die;
+        }
+        $endTime = $_POST['currentExpireTime'] == '0000-00-00 00:00:00' ? indeed_get_unixtimestamp_with_timezone() : strtotime( esc_sql( $_POST['currentExpireTime'] ) );
+        $endTime = date( 'Y-m-d H:i:s', \Indeed\Ihc\Db\Memberships::getEndTime( esc_sql( $_POST['levelId'] ), $endTime ) );
+        echo json_encode([
+                'expire_time'   => $endTime,
+                'new_status'    => esc_html__( 'Active', 'ihc' ),
+        ]);
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function adminUserSubscriptionPause()
+    {
+        if ( !indeedIsAdmin() ){
+            die;
+        }
+        if ( !isset( $_POST['levelId'] ) || !isset( $_POST['uid'] ) || !isset( $_POST['currentExpireTime'] ) ){
+            die;
+        }
+        $expireTime = strtotime( $_POST['currentExpireTime'] );
+        if ( indeed_get_unixtimestamp_with_timezone() > $expireTime ){
+            die;
+        }
+        echo json_encode(
+          [
+                  'remain_time'       => $expireTime - indeed_get_unixtimestamp_with_timezone(),
+                  'expire_time'       => date( 'Y-m-d H:i:s', indeed_get_unixtimestamp_with_timezone() ),
+                  'new_status'        => esc_html__( 'Paused', 'ihc' ),
+          ]
+        );
+        die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function adminUserSubscriptionReactivate()
+    {
+          if ( !indeedIsAdmin() ){
+              die;
+          }
+          if ( !isset( $_POST['subscriptionId'] ) ){
+              die;
+          }
+          $currentTime = indeed_get_unixtimestamp_with_timezone();
+          $remainTime = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( esc_sql($_POST['subscriptionId']), 'remain_time' );
+          $expireTime = $currentTime + $remainTime;
+          echo json_encode(
+            [
+                    'start_time'        => date( 'Y-m-d H:i:s', $currentTime ),
+                    'expire_time'       => date( 'Y-m-d H:i:s', $expireTime ),
+                    'new_status'        => esc_html__( 'Active', 'ihc' ),
+            ]
+          );
+          die;
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function userPutSubscriptionOnPause()
+    {
+        global $current_user;
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        if ( !isset( $current_user->ID ) ){
+            die;
+        }
+        if ( !isset( $_POST['subscriptionId'] ) ){
+            die;
+        }
+        if ( !isset( $_POST['lid'] ) ){
+            die;
+        }
+        $uid = $current_user->ID;
+        $subscriptionId = esc_sql($_POST['subscriptionId']);
+        $lid = esc_sql($_POST['lid']);
+        if ( \Indeed\Ihc\UserSubscriptions::userHasSubscription( $uid, $lid ) === false ){
+            die;
+        }
+        $currentTime = indeed_get_unixtimestamp_with_timezone();
+        $subscriptionData = \Indeed\Ihc\UserSubscriptions::getOne( $uid, $lid );
+        if ( $subscriptionData === false || !isset( $subscriptionData['expire_time'] ) ){
+            die;
+        }
+        $remainTime = strtotime( $subscriptionData['expire_time'] ) - $currentTime;
+        if ( $remainTime < 0 ){
+            die;
+        }
+
+        $currentTime = date( 'Y-m-d H:i:s', $currentTime );
+        \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $currentTime, [] );
+        \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 4 );
+        \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', $remainTime );
+    }
+
+    /**
+     * @param none
+     * @return string
+     */
+    public function userPutSubscriptionResume()
+    {
+        global $current_user;
+        if ( !ihcPublicVerifyNonce() ){
+            die;
+        }
+        if ( !isset( $current_user->ID ) ){
+            die;
+        }
+        if ( !isset( $_POST['subscriptionId'] ) ){
+            die;
+        }
+        if ( !isset( $_POST['lid'] ) ){
+            die;
+        }
+        $uid = $current_user->ID;
+        $subscriptionId = esc_sql($_POST['subscriptionId']);
+        $lid = esc_sql($_POST['lid']);
+
+        $currentTime = indeed_get_unixtimestamp_with_timezone();
+        $remainTime = \Indeed\Ihc\Db\UserSubscriptionsMeta::getOne( $subscriptionId, 'remain_time' );
+        $expireTime = $currentTime + $remainTime;
+        $expireTime = date( 'Y-m-d H:i:s', $expireTime );
+
+        \Indeed\Ihc\UserSubscriptions::updateSubscriptionTime( $uid, $lid, '', $expireTime, [] );
+        \Indeed\Ihc\UserSubscriptions::updateStatusBySubscriptionId( $subscriptionId, 1 );
+        \Indeed\Ihc\Db\UserSubscriptionsMeta::save( $subscriptionId, 'remain_time', '' );
     }
 
 }

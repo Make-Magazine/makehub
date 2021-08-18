@@ -40,12 +40,12 @@ class CheckRestriction
         if ( !$this->uid ){
             return $this;
         }
-        if ( current_user_can('administrator') ){
+        if ( current_user_can('manage_options') ){
 						$this->isAdmin = true;
 						return $this;
 				}
         // set levels
-        $this->userLevels = \Ihc_Db::get_user_levels( $this->uid, true );
+        $this->userLevels = \Indeed\Ihc\UserSubscriptions::getAllForUser( $this->uid, true );
         return $this;
     }
 
@@ -103,6 +103,7 @@ class CheckRestriction
         if ( !$this->uid ){
             return $this->checkBlockForUnregistered();
         }
+
 
         // register users with no levels
         if ( !$this->userLevels ){
@@ -196,7 +197,7 @@ class CheckRestriction
                 return true;
             }
         } else { // show for
-            if ( !in_array( 'reg', $this->restrictionTarget ) ){
+            if ( !in_array( 'reg', $this->restrictionTarget ) && count( $this->restrictionTarget ) == 1 &&  $this->restrictionTarget[0]=='reg' ){
                 return true;
             }
         }
@@ -219,6 +220,7 @@ class CheckRestriction
                 }
             }
         }
+
         if ( !$show && $block ){
             return $block;
         } else {

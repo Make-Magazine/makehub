@@ -14,8 +14,8 @@ if (!class_exists('IndeedFeedSystem')){
 		private $main_data = array(); //used in notification
 		private $dir_path = '';
 		private $dir_url = '';
-		private $menu_style = 'color:#fff; background: #d54e21; padding: 4px 16px 4px 13px; margin: 0 0 0 -13px; width: 100%; display: block;    box-sizing: content-box;';
-		private $main_menu_style = 'color: #fff; background: #d54e21;display: block; padding: 3px;';
+		private $menu_styl = '';
+		private $main_menu_styl = '';
 		private $admin_url = '';
 		private static $created_menu_parent_slug_arr=array();
 		private $option_name_data = 'indeed_feed_data'; /// settings, notifications and cats
@@ -78,7 +78,7 @@ if (!class_exists('IndeedFeedSystem')){
 			 * @param none
 			 * @return none
 			 */
-			add_menu_page('Extensions Plus', '<span style=" ' . $this->main_menu_style . ' ">Extensions Plus</span>', 'manage_options',	'indeed_extensions_plus', array($this, 'output') , 'dashicons-cart');
+			add_menu_page('Extensions Plus', '<span class="indeed-main-menu-item" >Extensions Plus</span>', 'manage_options',	'indeed_extensions_plus', array($this, 'output') , 'dashicons-cart');
 		}
 
 		public function add_submenu(){
@@ -87,7 +87,7 @@ if (!class_exists('IndeedFeedSystem')){
 			 * @param none
 			 * @return none
 			 */
-			add_submenu_page( $this->menu_parent, 'AddOns', '<span style=" ' . $this->menu_style . ' ">Extensions Plus</span>', 'manage_options', 'addons-' . $this->menu_parent, array($this, 'output') );
+			add_submenu_page( $this->menu_parent, 'AddOns', '<span class="indeed-menu-item">Extensions Plus</span>', 'manage_options', 'addons-' . $this->menu_parent, array($this, 'output') );
 		}
 
 		public function output(){
@@ -151,9 +151,12 @@ if (!class_exists('IndeedFeedSystem')){
 			 * @param none
 			 * @return string
 			 */
-			@$response = wp_remote_get( $this->url );
+			 if(isset($this->url)){
+				 $response = wp_remote_get( $this->url );
+			 }
+
 			if (wp_remote_retrieve_response_code($response)==200 && !is_wp_error($response) && is_array($response) && !empty($response['body'])){
-				@$data = json_decode(@$response['body'], TRUE);
+				$data = json_decode((isset($response['body'])) ? $response['body'] : '', TRUE);
 				if (!empty($data) && is_array($data) && !empty($data['items']) ){
 					/*
 					 * 	&& !empty($data['cats']) && !empty($data['settings']) && !empty($data['notifications'])
@@ -318,7 +321,9 @@ if (!class_exists('IndeedFeedSystem')){
 					$last_notification = 0;
 				}
 				$arr = $data['notifications'];
-				if (isset($arr[$last_notification])) unset($arr[$last_notification]);
+				if (isset($arr[$last_notification])){
+					 unset($arr[$last_notification]);
+				}
 				end($arr);
 				$last_key = key($arr);
 				$i = $last_notification + 1;
@@ -331,7 +336,9 @@ if (!class_exists('IndeedFeedSystem')){
 						self::$current_notification['message'] = $data['notifications'][$i]['message'];
 						return;
 					}
-					if (isset($arr[$i])) unset($arr[$i]);
+					if (isset($arr[$i])){
+						 unset($arr[$i]);
+					}
 					$i++;
 				}
 
@@ -353,23 +360,14 @@ if (!class_exists('IndeedFeedSystem')){
 				update_option('indeed_last_notification_key_used', self::$current_notification['index']);
 
 				$output = '';
+				wp_enqueue_style( 'ihc-font-awesome', IHC_URL . 'assets/css/font-awesome.css' );
+				wp_enqueue_script( 'ihc-indeed-feed-system', IHC_URL . 'admin/assets/js/indeed-feed-system.js', [], 1.1 );
 				$output .= '<link rel="stylesheet" href="' . $this->dir_url . 'files/font-awesome.css" type="text/css" media="all" />';
-				$output .= '<script>';
-				$output .= 'function indeed_close_notf_div(){
-							   	jQuery.ajax({
-							        type : "post",
-							        url : "' . get_site_url() . '/wp-admin/admin-ajax.php",
-							        data : {
-							                   action: "indeed_update_notify_date_show",
-							        },
-							        success: function (r){jQuery(\'#indeed_main_notify\').fadeOut();}
-							   });
-							}';
-				$output .= '</script>';
-				$output .= '<div class="updated" id="indeed_main_notify" style="padding: 15px 10px;">';
-				$output .= '<div style="display: inline-block;max-width: 80%;">' . self::$current_notification['message'] . '</div>';
-				$output .= '<div class="button" style="float:right;    margin-top: -5px; vertical-align: top;text-align:right;cursor: pointer;margin-left: 10px;" onClick="indeed_close_notf_div();"><i class="fa-ifs ifs-close"></i> Dismiss this message</div>';
-				$output .= '<a class="button button-primary" style="float:right;    margin-right: 5px;    margin-top: -5px;" href="' . $this->admin_url  . '"><i class="fa-ifs ifs-busket-small"></i>Check all Externsion Plus Items</a>';
+				$output .= '<span class="ihc-js-indeed-feed-system-data" data-site_url="' . get_site_url() . '"></span>';
+				$output .= '<div class="updated indeed_main_notify" id="indeed_main_notify">';
+				$output .= '<div class="indeed-notification-message">' . self::$current_notification['message'] . '</div>';
+				$output .= '<div class="button indeed-dissmis-button" onClick="indeed_close_notf_div();"><i class="fa-ifs ifs-close"></i> Dismiss this message</div>';
+				$output .= '<a class="button button-primary indeed-checkall-button" href="' . $this->admin_url  . '"><i class="fa-ifs ifs-busket-small"></i>Check all Externsion Plus Items</a>';
 				$output .= '</div>';
 				echo $output;
 			}
@@ -438,14 +436,16 @@ if (!class_exists('IndeedFeedSystem')){
 			 * @return none
 			 */
 			$output = '';
-			$output .= '<style>';
 			$output .= '#toplevel_page_indeed_extensions_plus .dashicons-cart{padding: 3px 0px;}';
 			$output .= '#toplevel_page_indeed_extensions_plus,#toplevel_page_indeed_extensions_plus a.menu-top{background: #d54e21 !important;}';
 			$output .= '#toplevel_page_indeed_extensions_plus:hover{color: #FFF !important; background-color: #d54e21 !important;}';
 			$output .= '#toplevel_page_indeed_extensions_plus:hover wp-menu-image:before{color: #FFF !important;}';
 			$output .= '#toplevel_page_indeed_extensions_plus div.wp-menu-image:before{color: #FFF !important;}';
-			$output .= '</style>';
-			echo $output;
+
+			wp_register_style( 'dummy-handle', false );
+			wp_enqueue_style( 'dummy-handle' );
+			wp_add_inline_style( 'dummy-handle', $output );
+			//echo $output;
 		}
 
 	}//end of class

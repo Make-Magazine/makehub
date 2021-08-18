@@ -20,7 +20,8 @@ namespace IHC{
 				//get user by user_login
 				global $wpdb;
 				$username_or_email = esc_sql($username_or_email);
-				$data = $wpdb->get_row("SELECT ID, user_email FROM " . $wpdb->base_prefix . "users WHERE `user_login`='$username_or_email';");
+				$query = $wpdb->prepare( "SELECT ID, user_email FROM {$wpdb->base_prefix}users WHERE `user_login`=%s;", $username_or_email );
+				$data = $wpdb->get_row( $query );
 				if (isset($data->ID) && isset($data->user_email)){
 					$uid = $data->ID;
 					$email_addr = $data->user_email;
@@ -31,17 +32,17 @@ namespace IHC{
 				$hash = ihc_random_str(10);
 				$time = indeed_get_unixtimestamp_with_timezone();
 				update_user_meta($uid, 'ihc_reset_password_temp_data', array('code' => $hash, 'time' => $time ));
-				/// $link = IHC_URL . 'arrive.php?do_reset_pass=true&c=' . $hash . '&uid=' . $uid;
 				$link = site_url();
 				$link = add_query_arg('ihc_action', 'arrive', $link);
 				$link = add_query_arg('do_reset_pass', 'true', $link);
 				$link = add_query_arg('c', $hash, $link);
 				$link = add_query_arg('uid', $uid, $link);
+				$link = apply_filters( 'ump_public_filter_reset_password_link', $link, $uid, $hash );
 
-				$sent = ihc_send_user_notifications($uid, 'reset_password_process', FALSE, array('{password_reset_link}' => $link));
+				$sent = apply_filters( 'ihc_filter_reset_password_process', false, $uid, array('{password_reset_link}' => $link) );
 				if (!$sent){
-					$subject = __('Password reset on ', 'ihc') . get_option('blogname');
-					$msg = __('<p>You or someone else has requested to change password for your account.</p></br><p>To change Your Password click on this URL: </p>', 'ihc') . $link;
+					$subject = esc_html__('Password reset on ', 'ihc') . get_option('blogname');
+					$msg = '<p>' . esc_html__('You or someone else has requested to change password for your account', 'ihc'). '</p><br><p>' . esc_html__('To change Your Password click on this URL:', 'ihc') . ' </p>' . $link;
 					wp_mail($email_addr, $subject, $msg);
 				}
 				$ihc_reset_pass = 1;
@@ -78,12 +79,13 @@ namespace IHC{
 				$fields['user_pass'] = wp_generate_password(10, TRUE);
 				$user_id = wp_update_user($fields);
 				if ($user_id==$fields['ID']){
-					$sent = ihc_send_user_notifications($user_id, 'reset_password', FALSE, array('{NEW_PASSWORD}' => $fields['user_pass']));
+
+					$sent = apply_filters( 'ihc_filter_reset_password', false, $user_id, [ '{NEW_PASSWORD}' => $fields['user_pass'] ] );
 					if (!$sent){
 						$email_addr = $this->get_mail_by_uid($user_id);
 						if ($email_addr){
-							$subject = __('Password reset on ', 'ihc') . get_option('blogname');
-							$msg = __('Your new password it\'s: ', 'ihc') . $fields['user_pass'];
+							$subject = esc_html__('Password reset on ', 'ihc') . get_option('blogname');
+							$msg = esc_html__('Your new password it\'s: ', 'ihc') . $fields['user_pass'];
 							$sent = wp_mail( $email_addr, $subject, $msg );
 						}
 					}

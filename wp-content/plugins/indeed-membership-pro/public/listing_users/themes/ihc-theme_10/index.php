@@ -2,13 +2,11 @@
 if (empty($total_items)){
 	die("Direct access not permitted");
 }
-$dir_path = plugin_dir_path (__FILE__);
-$style="<style>".file_get_contents( $dir_path.'style.css')."
-</style>";
+
 $list_item_template = '
 <div class="team-member">
 <div class="member-img">
- <a #POST_LINK#> 
+ <a #POST_LINK#>
         <img title="IHC_FIRST_NAME IHC_LAST_NAME" src="IHC_AVATAR" alt=""/>
  <div class="member-name-wrapper">
   <div class="member-name">
@@ -25,7 +23,7 @@ $list_item_template = '
 <div class="member-extra-fields">
 IHC_EXTRA_FIELDS
 </div>
-<div style="height:21px; width:100%"></div>
+
 <div class="member-social">
 IHC_SOCIAL_MEDIA
 </div>

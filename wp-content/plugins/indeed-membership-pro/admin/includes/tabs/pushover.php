@@ -13,98 +13,103 @@ echo ihc_check_payment_gateways();
 echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
-<form action="" method="post">
+<form  method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Pushover Notifications', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Pushover Notifications', 'ihc');?></h3>
 		<div class="inside">
 
 		  <div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Pushover Notifications', 'ihc');?></h2>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold Pushover Notifications', 'ihc');?></h2>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_pushover_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_pushover_enabled');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_pushover_enabled" value="<?php echo $data['metas']['ihc_pushover_enabled'];?>" id="ihc_pushover_enabled" />
 		  </div>
 		  <div class="iump-form-line">
-			<div class="row" style="margin-left:0px;">
-				<div class="col-xs-4" style="margin-bottom: 10px;">
-			   		<div class="input-group" style="margin:0px 0 15px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('App Token', 'ihc');?></span>
+			<div class="row">
+				<div class="col-xs-4">
+			   		<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('App Token', 'ihc');?></span>
 						<input type="text" name="ihc_pushover_app_token" class="form-control" value="<?php echo $data['metas']['ihc_pushover_app_token'];?>" />
 			   		</div>
 				</div>
 			</div>
-
-			<div class="row" style="margin-left:0px;">
-				<div class="col-xs-4" style="margin-bottom: 10px;margin:0px 0 15px 0;">
+		</div>
+		<div class="iump-form-line">
+			<div class="row">
+				<div class="col-xs-4">
 			   		<div class="input-group">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('Admin Personal User Token', 'ihc');?></span>
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('Admin Personal User Token', 'ihc');?></span>
 						<input type="text" name="ihc_pushover_admin_token" class="form-control" value="<?php echo $data['metas']['ihc_pushover_admin_token'];?>" />
 			   		</div>
-					<div style="font-size: 11px; color: #333; padding-left: 10px;">
-						<?php _e("Use this to get 'Admin Notifications' on Your own device.", 'ihc');?>
+					<div>
+						<?php esc_html_e("Use this to get 'Admin Notifications' on Your own device.", 'ihc');?>
 					</div>
 				</div>
 			</div>
-
-			<div class="row" style="margin-left:0px;">
-				<div class="col-xs-4" style="margin-bottom: 10px;">
-			   		<div class="input-group" style="margin:0px 0 15px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('URL', 'ihc');?></span>
+		</div>
+		<div class="iump-form-line">
+			<div class="row">
+				<div class="col-xs-4">
+			   		<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('URL', 'ihc');?></span>
 						<input type="text" name="ihc_pushover_url" class="form-control" value="<?php echo $data['metas']['ihc_pushover_url'];?>" />
 			   		</div>
 				</div>
 			</div>
-
-			<div class="row" style="margin-left:0px;">
-				<div class="col-xs-4" style="margin-bottom: 10px;">
-			   		<div class="input-group" style="margin:0px 0 15px 0;">
-						<span class="input-group-addon" id="basic-addon1"><?php _e('URL Title', 'ihc');?></span>
+		</div>
+		<div class="iump-form-line">
+			<div class="row">
+				<div class="col-xs-4">
+			   		<div class="input-group">
+						<span class="input-group-addon" id="basic-addon1"><?php esc_html_e('URL Title', 'ihc');?></span>
 						<input type="text" name="ihc_pushover_url_title" class="form-control" value="<?php echo $data['metas']['ihc_pushover_url_title'];?>" />
 			   		</div>
 				</div>
 			</div>
-			<div class="row" style="margin-left:0px;">
-				<div style="font-size: 11px; color: #333; padding-left: 10px;">
+		</div>
+		<div class="iump-form-line">
+			<div class="row">
+				<div>
 					<ul class="ihc-info-list">
-						<li><?php echo __("1. Go to ", 'ihc') . '<a href="https://pushover.net/" target="_blank">https://pushover.net/</a>' . __(" and login with your credentials or sign up for a new account.", 'ihc');?></li>
-						<li><?php echo __("2. After that go to ", 'ihc') . '<a href="https://pushover.net/apps/build" target="_blank">https://pushover.net/apps/build</a>' .  __(" and create a new App.", 'ihc');?></li>
-						<li><?php _e("3. Set the type of App to 'Application'.", 'ihc');?></li>
-						<li><?php _e("4. Copy and paste API Token/Key.", 'ihc');?></li>
+						<li><?php echo esc_html__("1. Go to ", 'ihc') . '<a href="https://pushover.net/" target="_blank">https://pushover.net/</a>' . esc_html__(" and login with your credentials or sign up for a new account.", 'ihc');?></li>
+						<li><?php echo esc_html__("2. After that go to ", 'ihc') . '<a href="https://pushover.net/apps/build" target="_blank">https://pushover.net/apps/build</a>' .  esc_html__(" and create a new App.", 'ihc');?></li>
+						<li><?php esc_html_e("3. Set the type of App to 'Application'.", 'ihc');?></li>
+						<li><?php esc_html_e("4. Copy and paste API Token/Key.", 'ihc');?></li>
 					</ul>
 				</div>
 			</div>
 		 </div>
-		 <div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+		 <div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 	   </div>
 	</div>
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Notification Sound', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Notification Sound', 'ihc');?></h3>
 		<div class="inside">
 		  <div class="iump-form-line">
-				<h4><?php _e('Default Sound for mobile notification', 'ihc');?></h4>
+				<h4><?php esc_html_e('Default Sound for mobile notification', 'ihc');?></h4>
 				<select name="ihc_pushover_sound">
 					<?php
 						$possible = array(
-											'bike' => __('Bike', 'ihc'),
-											'bugle' => __('Bugle', 'ihc'),
-											'cash_register' => __('Cash Register', 'ihc'),
-											'classical' => __('Classical', 'ihc'),
-											'cosmic' => __('Cosmic', 'ihc'),
-											'falling' => __('Falling', 'ihc'),
-											'gamelan' => __('Gamelan', 'ihc'),
-											'incoming' => __('Incoming', 'ihc'),
-											'intermission' => __('Intermission', 'ihc'),
-											'magic' => __('Magic', 'ihc'),
-											'mechanical' => __('Mechanical', 'ihc'),
-											'piano_bar' => __('Piano Bar', 'ihc'),
-											'siren' => __('Siren', 'ihc'),
-											'space_alarm' => __('Space Alarm', 'ihc'),
-											'tug_boat' => __('Tug Boat', 'ihc'),
+											'bike' => esc_html__('Bike', 'ihc'),
+											'bugle' => esc_html__('Bugle', 'ihc'),
+											'cash_register' => esc_html__('Cash Register', 'ihc'),
+											'classical' => esc_html__('Classical', 'ihc'),
+											'cosmic' => esc_html__('Cosmic', 'ihc'),
+											'falling' => esc_html__('Falling', 'ihc'),
+											'gamelan' => esc_html__('Gamelan', 'ihc'),
+											'incoming' => esc_html__('Incoming', 'ihc'),
+											'intermission' => esc_html__('Intermission', 'ihc'),
+											'magic' => esc_html__('Magic', 'ihc'),
+											'mechanical' => esc_html__('Mechanical', 'ihc'),
+											'piano_bar' => esc_html__('Piano Bar', 'ihc'),
+											'siren' => esc_html__('Siren', 'ihc'),
+											'space_alarm' => esc_html__('Space Alarm', 'ihc'),
+											'tug_boat' => esc_html__('Tug Boat', 'ihc'),
 						);
 					?>
 					<?php foreach ($possible as $k=>$v):?>
@@ -116,8 +121,8 @@ do_action( "ihc_admin_dashboard_after_top_menu" );
 
 
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 
 		</div>

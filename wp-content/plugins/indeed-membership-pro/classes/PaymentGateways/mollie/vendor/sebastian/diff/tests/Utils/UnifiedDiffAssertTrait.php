@@ -226,7 +226,7 @@ trait UnifiedDiffAssertTrait
             throw new \UnexpectedValueException(\sprintf('Header line does not match expected pattern, got "%s". %s', $line, $message));
         }
 
-        // $file = $matches[1];
+        
 
         if (\count($matches) > 2) {
             $this->unifiedDiffAssertHeaderDate($matches[2], $message);

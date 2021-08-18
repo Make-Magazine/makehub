@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Main Functions
+*/
+"use strict";
 function ihcDeleteFileViaAjax(id, u_id, parent, name, hidden_id){
     var r = confirm("Are you sure you want to delete?");
 	if (r) {
@@ -46,7 +50,12 @@ function ihcSetFormI(i_id, f_id, l_id, confirm){
 	 * l_id = level id
 	 */
 	if (confirm){
-    var ihc_labels = JSON.parse(window.ihc_translated_labels)
+    if ( typeof window.ihc_translated_labels == 'object' ){
+        var ihc_labels = window.ihc_translated_labels;
+    } else {
+        var ihc_labels = JSON.parse(window.ihc_translated_labels);
+    }
+
 		var c = window.confirm( ihc_labels.delete_level );
 		if (!c){
 			return;
@@ -97,11 +106,6 @@ function ihcBuyNewLevel(href){
 	}
 }
 
-jQuery(document).ready(function(){
-	jQuery('.ihc-mobile-bttn').on('click', function(){
-		jQuery('.ihc-ap-menu').toggle();
-	});
-});
 
 function ihcRegisterCheckViaAjax(the_type){
 	var target_id = '#' + jQuery('.ihc-form-create-edit [name='+the_type+']').parent().attr('id');
@@ -301,12 +305,12 @@ function ihcPaymentGatewayUpdate(v, is_r){
 	//remove authorize block
 	//remove stripe stuff
 	jQuery('[name=ihc_payment_gateway]').val(v);
-	jQuery('#ihc_submit_bttn').unbind('click');
 	jQuery('#ihc_authorize_r_fields').fadeOut(200);
 	jQuery('#ihc_braintree_r_fields').fadeOut(200);
 	switch (v){
 		case 'stripe':
-			jQuery('#ihc_submit_bttn').bind('click', function(e){
+  	jQuery('#ihc_submit_bttn').off('click');
+			jQuery('#ihc_submit_bttn').on('click', function(e){
 				e.preventDefault();
 				var p = jQuery("#iumpfinalglobalp").val();
 				if ((jQuery("#stripeToken").val() && jQuery("#stripeEmail").val()) || p==0){
@@ -318,11 +322,11 @@ function ihcPaymentGatewayUpdate(v, is_r){
 				if ( window.ihcStripeMultiply== 100 && p<50 ){
 					p = 50;
 				}
-				iump_stripe.open({
-								name: jQuery('#iump_site_name').val(),
-								description: jQuery('#iumpfinalglobal_ll').val(),
-								amount: p,
-								currency: jQuery('#iumpfinalglobalc').val(),
+				window.ihcStripeHandler.open({
+								name          : jQuery('#iump_site_name').val(),
+								description   : jQuery('#iumpfinalglobal_ll').val(),
+								amount        : p,
+								currency      : jQuery('#iumpfinalglobalc').val(),
 				});
 			});
 		break;
@@ -370,11 +374,7 @@ function ihcBuyNewLevelFromAp(l_name, l_amount, lid, url){
 		//
 	} else {
 		var c = jQuery('#ihc_coupon').val();
-    /*
-    if ( c!='' ){
-      url = url +'&ihc_coupon=' + c;
-    }
-    */
+
     if (typeof v!='undefined'){
 			url = url +'&ihc_payment_gateway='+v;
 		}
@@ -560,13 +560,13 @@ function ihcUpdateCart(){
 		type : "post",
 	    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 	    data : {
-	            action: "ihc_get_cart_via_ajax",
-	            country: country_val,
-	            lid: lid_val,
-	            coupon: coupon_val,
-	            state: state_val,
-	            a: d_a,
-              payment_type: payment_gateway,
+	            action         : "ihc_get_cart_via_ajax",
+	            country        : country_val,
+	            lid            : lid_val,
+	            coupon         : coupon_val,
+	            state          : state_val,
+	            a              : d_a,
+              payment_type   : payment_gateway,
 	    },
 		success: function (response){
 			jQuery('#ihc_cart_wrapper').remove();
@@ -584,12 +584,12 @@ function ihcHidePrint(i){
 }
 
 function ihcDoPrint(i){
-	var file = jQuery(i).files[0];
+	  var file = jQuery(i).files[0];
     var reader = new FileReader();
     reader.onload = function(event) {
                     var html  = "<html><head>" +
                         "</head>" +
-                        "<body  style ='-webkit-print-color-adjust:exact;'>"+
+                        "<body  style = '-webkit-print-color-adjust:exact;'>"+
                         "<img src=\"" + event.target.result + "\" onload=\"javascript:window.print();\"/>" +
                         "</body>";
                     var win = window.open("about:blank","_blank");
@@ -598,35 +598,6 @@ function ihcDoPrint(i){
     };
     reader.readAsDataURL(file);
 }
-
-jQuery(document).ready(function(){
-	var e = jQuery('.ihc-form-create-edit [name=ihc_coupon]');
-	e.on('blur', function(){
-		ihcUpdateCart();
-		var p = '#' + e.parent().attr('id');
-		jQuery(p+' #ihc_coupon_code_check_div_msg').remove();
-		if (e.val()){
-			jQuery.ajax({
-				type : "post",
-			    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
-			    data : {
-			             action: "ihc_check_coupon_status_via_ajax",
-			             c: e.val(),
-			             l: jQuery('.ihc-form-create-edit [name=lid]').val(),
-			    },
-			    success: function (r) {
-			    	var obj = JSON.parse(r);
-			        if (obj.is_active){
-						jQuery(p).append('<div class="ihc-coupon-valid" id="ihc_coupon_code_check_div_msg">' + obj.success_msg + '</div>');
-			        } else {
-						jQuery(p).append('<div class="ihc-coupon-not-valid" id="ihc_coupon_code_check_div_msg">' + obj.err_msg + '</div>');
-			        }
-			        setTimeout(function(){jQuery('#ihc_coupon_code_check_div_msg').fadeOut(500, function(){this.remove();});},5000);
-			    }
-			});
-		}
-	});
-});
 
 function ihcUpdateStateField( updateCart ){
 	var s = jQuery('.ihc-form-create-edit [name=ihc_state]').length>0;
@@ -676,7 +647,7 @@ function iumpGenerateInvoice(i){
 	    },
 	    success: function (r) {
 	    	if (r){
-				jQuery('body').append(r);
+				   jQuery('body').append(r);
 	    	}
 	    }
 	});
@@ -705,23 +676,353 @@ function ihcDynamicPriceUpdateGlobal(){
 }
 
 function ihcDoUsersiteModuleDelete(i){
-	var c = confirm(window.ihc_current_question);
+  var question = jQuery( '.ihc-js-user-sites-table-data' ).attr( 'data-current_question' );
+	var c = confirm( question );
 	if (c){
 		jQuery.ajax({
 			type : "post",
 		    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
 		    data : {
-		             action: "ihc_do_user_delete_blog",
-					 lid: i
+		             action  : "ihc_do_user_delete_blog",
+					       lid     : i
 		    },
 		    success: function (r){
-		    	window.location.href = window.ihc_current_url;
+          var currentUrl = window.location.href;
+          // do a refresh
+		    	window.location.href = currentUrl;
 		    }
 		});
 	}
 }
 
-jQuery(document).ready( function() {
-    var nonce = jQuery('meta[name="ump-token"]').attr('content');
-    jQuery.ajaxSetup( { headers: {'X-CSRF-UMP-TOKEN': nonce }});
+jQuery(document).ajaxSend(function (event, jqXHR, ajaxOptions) {
+
+    if ( typeof ajaxOptions.data !== 'string' ||  ajaxOptions.data.includes( 'action=ihc' ) === false ){
+        return;
+    }
+
+    if ( typeof ajaxOptions.url === 'string' && ajaxOptions.url.includes('/admin-ajax.php')) {
+       var token = jQuery('meta[name="ump-token"]').attr("content");
+       jqXHR.setRequestHeader('X-CSRF-UMP-TOKEN', token );
+    }
+
+});
+
+function ihcInitiateOwl(selector)
+{
+		var selector = jQuery( selector ).attr( 'data-selector' );
+		var autoHeight = jQuery( selector ).attr( 'data-autoHeight' );
+		var animateOut = jQuery( selector ).attr( 'data-animateOut' );
+		var animateIn = jQuery( selector ).attr( 'data-animateIn' );
+		var lazyLoad = jQuery( selector ).attr( 'data-lazyLoad' );
+		var loop = jQuery( selector ).attr( 'data-loop' );
+		var autoplay = jQuery( selector ).attr( 'data-autoplay' );
+		var autoplayTimeout = jQuery( selector ).attr( 'data-autoplayTimeout' );
+		var autoplayHoverPause = jQuery( selector ).attr( 'data-autoplayHoverPause' );
+		var autoplaySpeed = jQuery( selector ).attr( 'data-autoplaySpeed' );
+		var nav = jQuery( selector ).attr( 'data-nav' );
+		var navSpeed = jQuery( selector ).attr( 'data-navSpeed' );
+		var dots = jQuery( selector ).attr( 'data-dots' );
+		var dotsSpeed = jQuery( selector ).attr( 'data-dotsSpeed' );
+		var responsiveClass = jQuery( selector ).attr( 'data-responsiveClass' );
+		var navigation = jQuery( selector ).attr( 'data-navigation' );
+		var owl = jQuery( selector );
+		owl.owlihcCarousel({
+				items : 1,
+				mouseDrag: true,
+				touchDrag: true,
+
+				autoHeight: autoHeight,
+
+				animateOut: animateOut,
+				animateIn: animateIn,
+
+				lazyLoad : lazyLoad,
+				loop: loop,
+
+				autoplay : autoplay,
+				autoplayTimeout: autoplayTimeout,
+				autoplayHoverPause: autoplayHoverPause,
+				autoplaySpeed: autoplaySpeed,
+
+				nav : nav,
+				navSpeed : navSpeed,
+				navText: [ '', '' ],
+
+				dots: dots,
+				dotsSpeed : dotsSpeed,
+
+				responsiveClass: responsiveClass,
+				responsive:{
+					0:{
+						nav:false
+					},
+					450:{
+						nav : navigation
+					}
+				}
+		});
+}
+
+jQuery( document ).on( 'ready', function(){
+
+        // Listing Members
+        if ( jQuery( '.ihc-js-owl-settings-data' ).length ){
+            jQuery( '.ihc-js-owl-settings-data' ).each(function( e, html ){
+                ihcInitiateOwl( this );
+            });
+        }
+});
+
+jQuery( window ).on( 'load', function(){
+
+      if ( jQuery( '.ihc-js-login-popup-data' ).length ){
+          // login modal
+          if ( jQuery( '.ihc-js-login-popup-data' ).attr('data-is_register_page') == '1' ){
+            jQuery('.ihc-modal-trigger-login').on( 'click', function() {
+                jQuery('html, body').animate({
+                    scrollTop: jQuery( '.ihc-login-form-wrap' ).offset().top
+                }, 1000);
+            });
+          } else if ( jQuery( '.ihc-js-login-popup-data' ).attr('data-is_logged') == '1' ){
+              jQuery('.ihc-modal-trigger-login').on( 'click', function() {
+                  return false;
+              });
+          } else {
+              if ( typeof IhcLoginModal !== 'undefined' ){
+                  var triggerSelector = jQuery( '.ihc-js-login-popup-data' ).attr('data-trigger_selector');
+                  var preventDefault = jQuery( '.ihc-js-login-popup-data' ).attr('data-trigger_default');
+                  var autostart = jQuery( '.ihc-js-login-popup-data' ).attr('data-autoStart');
+                  IhcLoginModal.init({
+                      triggerModalSelector  : triggerSelector,
+                      preventDefault        : preventDefault,
+                      autoStart             : autostart
+                  });
+              }
+          }
+      }
+
+      jQuery('.ihc-mobile-bttn').on('click', function(){
+        jQuery('.ihc-ap-menu').toggle();
+      });
+
+      // invoices
+      if ( jQuery( '.fa-invoice-preview-ihc' ).length ){
+          jQuery( document ).on( 'click', '.ihc-js-public-do-print-this', function(){
+              var id = jQuery( this ).attr( 'data-id' );
+              jQuery( id ).printThis(window.ihcPrintThisOptions);
+          });
+      }
+
+      // account page - banner
+      if ( jQuery( ".ihc-js-account-page-account-banner-data" ).length ){
+          IhcAccountPageBanner.init({
+              triggerId					: 'js_ihc_edit_top_ap_banner',
+              saveImageTarget		: jQuery( '.ihc-js-account-page-account-banner-data' ).attr( 'data-url_target' ),
+              cropImageTarget   : jQuery( '.ihc-js-account-page-account-banner-data' ).attr( 'data-url_target' ),
+              bannerClass       : 'ihc-user-page-top-ap-background'
+          });
+      }
+
+      // Print This Options
+      window.ihcPrintThisOptions = {
+          importCSS: true,
+          importStyle: true,
+          loadCSS: window.ihc_plugin_url + "assets/css/style.css",
+          debug: false,
+          printContainer: true,
+          pageTitle: "",
+          removeInline: true,
+          printDelay: 333,
+          header: null,
+          formValues: false,
+      };
+
+      // Print This
+      if ( jQuery(".fa-print-ihc").length ){
+          jQuery(".fa-print-ihc").on("click", function(e){
+              var idToPrint = jQuery( e.target ).attr( "data-id-to-print" );
+              jQuery( "#" + idToPrint ).printThis( window.ihcPrintThisOptions );
+          });
+      }
+
+      // Coupons
+      var e = jQuery('.ihc-form-create-edit [name=ihc_coupon]');
+    	e.on('blur', function(){
+    		ihcUpdateCart();
+    		var p = '#' + e.parent().attr('id');
+    		jQuery(p+' #ihc_coupon_code_check_div_msg').remove();
+    		if (e.val()){
+    			jQuery.ajax({
+    				type : "post",
+    			    url : decodeURI(window.ihc_site_url)+'/wp-admin/admin-ajax.php',
+    			    data : {
+    			             action: "ihc_check_coupon_status_via_ajax",
+    			             c: e.val(),
+    			             l: jQuery('.ihc-form-create-edit [name=lid]').val(),
+    			    },
+    			    success: function (r) {
+    			    	var obj = JSON.parse(r);
+    			      if (obj.is_active){
+    						    jQuery(p).append('<div class="ihc-coupon-valid" id="ihc_coupon_code_check_div_msg">' + obj.success_msg + '</div>');
+    			      } else {
+    						    jQuery(p).append('<div class="ihc-coupon-not-valid" id="ihc_coupon_code_check_div_msg">' + obj.err_msg + '</div>');
+    			      }
+    			      setTimeout(function(){jQuery('#ihc_coupon_code_check_div_msg').fadeOut(500, function(){this.remove();});},5000);
+    			    }
+    			});
+    		}
+    	});
+
+      if ( jQuery( '.ihc-js-register-popup-data' ).length ){
+          // register modal
+          if ( jQuery( '.ihc-js-register-popup-data' ).attr('data-is_register_page') == '1' ){
+              jQuery('.ihc-modal-trigger-register' ).on( 'click', function() {
+                  jQuery('html, body').animate({
+                      scrollTop: jQuery( '.ihc-form-create-edit' ).offset().top
+                  }, 1000);
+              });
+          } else if ( jQuery( '.ihc-js-register-popup-data' ).attr('data-is_registered') == '1' ){
+              jQuery('.ihc-modal-trigger-register').on( 'click', function() {
+                  return false;
+              });
+          } else {
+              if ( typeof IhcRegisterModal !== 'undefined' ){
+                  var triggerSelector = jQuery( '.ihc-js-register-popup-data' ).attr('data-trigger_selector');
+                  var preventDefault = jQuery( '.ihc-js-register-popup-data' ).attr('data-trigger_default');
+                  IhcRegisterModal.init({
+                            triggerModalSelector  : triggerSelector,
+                            preventDefault        : preventDefault
+                  });
+              }
+          }
+      }
+
+      if ( jQuery( '.ihc-js-upload-image-data' ).length ){
+          // upload image ( avatar )
+          jQuery( '.ihc-js-upload-image-data' ).each( function(e,html){
+              var rand = jQuery( this ).attr( 'data-rand' );
+              var url = jQuery( this ).attr( 'data-url' );
+              var name = jQuery( this ).attr( 'data-name' );
+              var bttn = jQuery( this ).attr( 'data-bttn_label' );
+              IhcAvatarCroppic.init({
+                  triggerId					           : 'js_ihc_trigger_avatar' + rand,
+                  saveImageTarget		           : url,
+                  cropImageTarget              : url,
+                  imageSelectorWrapper         : '.ihc-js-upload-image-wrapp',
+                  hiddenInputSelector          : '[name='+name+']',
+                  imageClass                   : 'ihc-member-photo',
+                  removeImageSelector          : '#ihc_upload_image_remove_bttn_' + rand,
+                  buttonId 					           : 'ihc-avatar-button',
+                  buttonLabel 			           : bttn
+              });
+          });
+      }
+
+      if ( jQuery( '.ihc-js-datepicker-data' ).length ){
+          // datepicker
+          jQuery( '.ihc-js-datepicker-data' ).each( function(e,html){
+              var currentYear = new Date().getFullYear() + 10;
+              jQuery( jQuery(this).attr('data-selector') ).datepicker({
+                  dateFormat        : "dd-mm-yy",
+                  changeMonth       : true,
+                  changeYear        : true,
+                  yearRange         : "1900:"+currentYear,
+                  onClose           : function(r) {
+                        var callback = jQuery(this).attr('data-callback');
+                        if ( typeof callback == 'function' ){
+                            callback();
+                        }
+                  }
+              });
+          });
+
+      }
+
+      if ( jQuery( '.ihc-js-upload-file-public-data' ).length ){
+          /// upload file
+          jQuery( '.ihc-js-upload-file-public-data' ).each( function( e, html ){
+            var rand = jQuery( this ).attr( 'data-rand' );
+            var url = jQuery( this ).attr( 'data-url' );
+            var max_size = jQuery( this ).attr( 'data-max_size' );
+            var allowed_types = jQuery( this ).attr( 'data-allowed_types' );
+            var name = jQuery( this ).attr( 'data-name' );
+            var remove_label = jQuery( this ).attr( 'data-remove_label' );
+            var alert_text = jQuery( this ).attr('data-alert_text');
+            jQuery("#ihc_fileuploader_wrapp_"+ rand +" .ihc-file-upload").uploadFile({
+              onSelect: function (files) {
+                  jQuery("#ihc_fileuploader_wrapp_"+ rand +" .ajax-file-upload-container").css("display", "block");
+                  var check_value = jQuery("#ihc_upload_hidden_" + rand ).val();
+                  if (check_value!="" ){
+                    alert(alertText);
+                    return false;
+                  }
+                  return true;
+              },
+              url: url,
+              fileName: "ihc_file",
+              dragDrop: false,
+              showFileCounter: false,
+              showProgress: true,
+              showFileSize: false,
+              maxFileSize: max_size,
+              allowedTypes: allowed_types,
+              onSuccess: function(a, response, b, c){
+                if (response){
+                  var obj = jQuery.parseJSON(response);
+                  if (typeof obj.secret!="undefined"){
+                      jQuery("#ihc_fileuploader_wrapp_" + rand ).attr("data-h", obj.secret);
+                  }
+                  var theHtml = "<div onClick=\"ihcDeleteFileViaAjax("+obj.id+", -1, '#ihc_fileuploader_wrapp_" + rand + "' , '" + name + "', '#ihc_upload_hidden_" + rand + "' );\" class='ihc-delete-attachment-bttn'>"+remove_label+"</div>";
+                  jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").prepend( theHtml );
+                  switch (obj.type){
+                    case "image":
+                      jQuery("#ihc_fileuploader_wrapp_" + rand + " .ihc-file-upload").prepend("<img src="+obj.url+" class=\'ihc-member-photo\' /><div class=\'ihc-clear\'></div>");
+                    break;
+                    case "other":
+                      jQuery("#ihc_fileuploader_wrapp_"+ rand +" .ihc-file-upload").prepend("<div class=ihc-icon-file-type></div><div class=ihc-file-name-uploaded>"+obj.name+"</div>");
+                    break;
+                  }
+                  jQuery("#ihc_upload_hidden_"+ rand ).val(obj.id);
+                  setTimeout(function(){
+                    jQuery("#ihc_fileuploader_wrapp_"+ rand +" .ajax-file-upload-container").css("display", "none");
+                  }, 3000);
+                }
+              }
+            });
+
+          });
+      }
+
+      if ( jQuery( '.ihc-js-countries-list-data' ).length ){
+    			jQuery( jQuery( '.ihc-js-countries-list-data' ).attr( 'data-selector' ) ).select2({
+    					placeholder: jQuery( '.ihc-js-countries-list-data' ).attr( 'data-placeholder' ),
+    					allowClear: true,
+    					selectionCssClass: "ihc-select2-dropdown"
+    			});
+    	}
+
+      if ( jQuery( '.ihc-js-login-data' ).length ){
+          var user_field = jQuery( '.ihc-js-login-data' ).attr('data-user_field');
+          var password_field = jQuery( '.ihc-js-login-data' ).attr('data-password_field');
+          var error_message = jQuery( '.ihc-js-login-data' ).attr('data-error_message');
+          jQuery( user_field ).on('blur', function(){
+              ihcCheckLoginField('log', error_message );
+          });
+          jQuery( password_field ).on('blur', function(){
+              ihcCheckLoginField('pwd', error_message );
+          });
+          jQuery('#ihc_login_form').on('submit', function(e){
+              e.preventDefault();
+              var u = jQuery('#ihc_login_form [name=log]').val();
+              var p = jQuery('#ihc_login_form [name=pwd]').val();
+              if (u!='' && p!=''){
+                document.getElementById( 'ihc_login_form' ).submit();
+              } else {
+                ihcCheckLoginField('log', error_message );
+                ihcCheckLoginField('pwd', error_message );
+                return false;
+              }
+          });
+      }
 });

@@ -10,7 +10,7 @@ class RewriteDefaultWpAvatar
         add_filter( 'get_avatar' , array($this, 'returnAvatar') , 1 , 5 );
     }
 
-    public function returnAvatar($avatar='', $id_or_email='', $size, $default, $alt)
+    public function returnAvatar($avatar='', $id_or_email='', $size=null, $default=null, $alt=null )
     {
         $user = false;
         if ( is_numeric( $id_or_email ) ) {

@@ -18,6 +18,7 @@ $attributes = [
 ];
 $createOrder = new \Indeed\Ihc\CreateOrder($attributes);
 $orderId = $createOrder->proceed()->getOrderId();
+@deprecated since version 9.3
 */
 
 class CreateOrder
@@ -41,7 +42,7 @@ class CreateOrder
         if (empty($this->attributes['extra_fields'])){
             $this->attributes['extra_fields'] = array();
         }
-      	$levels = get_option('ihc_levels');
+        $levels = \Indeed\Ihc\Db\Memberships::getAll();
       	$amount = $levels[$this->attributes['lid']]['price'];
 
         // check for trial

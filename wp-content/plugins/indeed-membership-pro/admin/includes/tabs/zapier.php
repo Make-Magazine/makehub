@@ -12,77 +12,77 @@ echo ihc_is_curl_enable();
 do_action( "ihc_admin_dashboard_after_top_menu" );
 ?>
 
-<form action="" method="post">
+<form class="ihc-zapier-wrapper" method="post">
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Ultimate Membership Pro - Zapier', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Ultimate Membership Pro - Zapier', 'ihc');?></h3>
 
 		<div class="inside">
 			<div class="iump-form-line">
-				<h2><?php _e('Activate/Hold Zapier', 'ihc');?></h2>
-				<p><?php _e('Connect Ultimate Membership Pro with other apps via Zapier platform. A "Trigger" will send data to Zapier when changes are in action on your website.', 'ihc');?></p>
-				<label class="iump_label_shiwtch" style="margin:10px 0 10px -10px;">
+				<h2><?php esc_html_e('Activate/Hold Zapier', 'ihc');?></h2>
+				<p><?php esc_html_e('Connect Ultimate Membership Pro with other apps via Zapier platform. A "Trigger" will send data to Zapier when changes are in action on your website.', 'ihc');?></p>
+				<label class="iump_label_shiwtch ihc-switch-button-margin">
 					<?php $checked = ($data['metas']['ihc_zapier_enabled']) ? 'checked' : '';?>
 					<input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_zapier_enabled');" <?php echo $checked;?> />
-					<div class="switch" style="display:inline-block;"></div>
+					<div class="switch ihc-display-inline"></div>
 				</label>
 				<input type="hidden" name="ihc_zapier_enabled" value="<?php echo $data['metas']['ihc_zapier_enabled'];?>" id="ihc_zapier_enabled" />
 			</div>
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>
 
 	<div class="ihc-stuffbox">
-		<h3 class="ihc-h3"><?php _e('Zapier Triggers', 'ihc');?></h3>
+		<h3 class="ihc-h3"><?php esc_html_e('Zapier Triggers', 'ihc');?></h3>
 	<div class="inside">
 
       <div class="iump-form-line">
-        <h4><?php _e('New user', 'ihc');?></h4>
-        <p><?php _e('When a new user is registered into your website data are sent to Zapier.', 'ihc');?></p>
+        <h4><?php esc_html_e('New user', 'ihc');?></h4>
+        <p><?php esc_html_e('When a new user is registered into your website data are sent to Zapier.', 'ihc');?></p>
 		<div>
-        <label class="iump_label_shiwtch" style="margin:10px 0 20px -10px;">
+        <label class="iump_label_shiwtch ihc-switch-button-margin">
           <?php $checked = ($data['metas']['ihc_zapier_new_user_enabled']) ? 'checked' : '';?>
           <input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_zapier_new_user_enabled');" <?php echo $checked;?> />
-          <div class="switch" style="display:inline-block;"></div>
+          <div class="switch ihc-display-inline"></div>
         </label>
         </div>
-         <input type="text" name="ihc_zapier_new_user_webhook" style="width: 50%;" value="<?php echo $data['metas']['ihc_zapier_new_user_webhook'];?>" id="ihc_zapier_new_user_webhook" />
+         <input type="text" name="ihc_zapier_new_user_webhook" value="<?php echo $data['metas']['ihc_zapier_new_user_webhook'];?>" id="ihc_zapier_new_user_webhook" />
 		<input type="hidden" name="ihc_zapier_new_user_enabled" value="<?php echo $data['metas']['ihc_zapier_new_user_enabled'];?>" id="ihc_zapier_new_user_enabled" />
       </div>
 
       <div class="iump-form-line">
-        <h4><?php _e('New order', 'ihc');?></h4>
-        <p><?php _e('When a new Order is created on Ultimate Membership Pro data are sent to Zapier.', 'ihc');?></p>
+        <h4><?php esc_html_e('New order', 'ihc');?></h4>
+        <p><?php esc_html_e('When a new Order is created on Ultimate Membership Pro data are sent to Zapier.', 'ihc');?></p>
 		<div>
-        <label class="iump_label_shiwtch" style="margin:10px 0 20px -10px;">
+        <label class="iump_label_shiwtch ihc-switch-button-margin">
           <?php $checked = ($data['metas']['ihc_zapier_new_order_enabled']) ? 'checked' : '';?>
           <input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_zapier_new_order_enabled');" <?php echo $checked;?> />
-          <div class="switch" style="display:inline-block;"></div>
+          <div class="switch ihc-display-inline"></div>
         </label>
 		</div>
 
-        <input type="text" name="ihc_zapier_new_order_webhook" style="width: 50%;" value="<?php echo $data['metas']['ihc_zapier_new_order_webhook'];?>" id="ihc_zapier_new_order_webhook" />
+        <input type="text" name="ihc_zapier_new_order_webhook" value="<?php echo $data['metas']['ihc_zapier_new_order_webhook'];?>" id="ihc_zapier_new_order_webhook" />
 		<input type="hidden" name="ihc_zapier_new_order_enabled" value="<?php echo $data['metas']['ihc_zapier_new_order_enabled'];?>" id="ihc_zapier_new_order_enabled" />
       </div>
 
 
       <div class="iump-form-line">
-        <h4><?php _e('Order completed', 'ihc');?></h4>
-        <p><?php _e('When an exitent Order is set as Completed data are sent to Zapier.', 'ihc');?></p>
+        <h4><?php esc_html_e('Order completed', 'ihc');?></h4>
+        <p><?php esc_html_e('When an exitent Order is set as Completed data are sent to Zapier.', 'ihc');?></p>
         <div>
-        <label class="iump_label_shiwtch" style="margin:10px 0 20px -10px;">
+        <label class="iump_label_shiwtch ihc-switch-button-margin">
           <?php $checked = ($data['metas']['ihc_zapier_order_completed_enabled']) ? 'checked' : '';?>
           <input type="checkbox" class="iump-switch" onClick="iumpCheckAndH(this, '#ihc_zapier_order_completed_enabled');" <?php echo $checked;?> />
-          <div class="switch" style="display:inline-block;"></div>
+          <div class="switch ihc-display-inline"></div>
         </label>
         </div>
-		<input type="text" name="ihc_zapier_order_completed_webhook" style="width: 50%;" value="<?php echo $data['metas']['ihc_zapier_order_completed_webhook'];?>" id="ihc_zapier_order_completed_webhook" />
+		<input type="text" name="ihc_zapier_order_completed_webhook" value="<?php echo $data['metas']['ihc_zapier_order_completed_webhook'];?>" id="ihc_zapier_order_completed_webhook" />
 		<input type="hidden" name="ihc_zapier_order_completed_enabled" value="<?php echo $data['metas']['ihc_zapier_order_completed_enabled'];?>" id="ihc_zapier_order_completed_enabled" />
       </div>
 
-			<div class="ihc-submit-form" style="margin-top: 20px;">
-				<input type="submit" value="<?php _e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
+			<div class="ihc-submit-form">
+				<input type="submit" value="<?php esc_html_e('Save Changes', 'ihc');?>" name="ihc_save" class="button button-primary button-large" />
 			</div>
 		</div>
 	</div>

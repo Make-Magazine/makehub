@@ -5,304 +5,395 @@ class Ihc_Db{
 
 	public function __construct(){}
 
-	public static function create_tables(){
-		/*
-		 * @param none
-		 * @return none
-		 */
-		global $wpdb;
-		$table_name = $wpdb->prefix . "ihc_user_levels";
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-														id int(11) NOT NULL AUTO_INCREMENT,
-														user_id int(11) NOT NULL,
-														level_id int(11) NOT NULL,
-														start_time datetime,
-														update_time datetime,
-														expire_time datetime,
-														notification tinyint(1) DEFAULT 0,
-														status int(3) NOT NULL,
-														PRIMARY KEY (`id`),
-														INDEX idx_ihc_user_levels_user_id (`user_id`)
-			);
-			";
-			dbDelta ( $sql );
-		}
-		//ihc_debug_payments
-		$table_name = $wpdb->prefix . "ihc_debug_payments";
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-						id int(11) NOT NULL AUTO_INCREMENT,
-						source VARCHAR(200),
-						message TEXT,
-						insert_time datetime,
-						PRIMARY KEY (`id`)
-			);";
-			dbDelta ( $sql );
-		}
-		////////// indeed_members_payments
-		$table_name = $wpdb->prefix . 'indeed_members_payments';
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE " . $table_name . " (
-						id int(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-						txn_id VARCHAR(100) DEFAULT NULL,
-						u_id int(9) DEFAULT NULL,
-						payment_data text DEFAULT NULL,
-						history TEXT,
-						orders TEXT DEFAULT NULL,
-						paydate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-						INDEX idx_indeed_members_payments_uid (`u_id`)
-				);";
-			dbDelta($sql);
-		}
+		public static function create_tables(){
+			/*
+			 * @param none
+			 * @return none
+			 */
+			global $wpdb;
+			$prefixes = self::get_all_prefixes();
 
-		//ihc_notifications
-		$table_name = $wpdb->prefix . "ihc_notifications";
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE " . $table_name . " (
-						id int(11) NOT NULL AUTO_INCREMENT,
-						notification_type VARCHAR(200),
-						level_id VARCHAR(200),
-						subject TEXT,
-						message TEXT,
-						pushover_message TEXT,
-						pushover_status TINYINT(1) NOT NULL DEFAULT 0,
-						status TINYINT(1),
-						PRIMARY KEY (`id`)
+			foreach ($prefixes as $the_table_prefix):
+
+			$table_name = $the_table_prefix . "ihc_user_levels";
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+															id int(11) NOT NULL AUTO_INCREMENT,
+															user_id int(11) NOT NULL,
+															level_id int(11) NOT NULL,
+															start_time datetime,
+															update_time datetime,
+															expire_time datetime,
+															notification tinyint(1) DEFAULT 0,
+															status int(3) NOT NULL,
+															PRIMARY KEY (`id`),
+															INDEX idx_ihc_user_levels_user_id (`user_id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;
+				";
+				dbDelta ( $sql );
+			}
+			//ihc_debug_payments
+			$table_name = $the_table_prefix . "ihc_debug_payments";
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+							id int(11) NOT NULL AUTO_INCREMENT,
+							source VARCHAR(200),
+							message TEXT,
+							insert_time datetime,
+							PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta ( $sql );
+			}
+			////////// indeed_members_payments
+			$table_name = $the_table_prefix . 'indeed_members_payments';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE " . $table_name . " (
+							id int(9) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+							txn_id VARCHAR(100) DEFAULT NULL,
+							u_id int(9) DEFAULT NULL,
+							payment_data text DEFAULT NULL,
+							history TEXT,
+							orders TEXT DEFAULT NULL,
+							paydate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+							INDEX idx_indeed_members_payments_uid (`u_id`)
 					)
-					COLLATE utf8_general_ci;
-			";
-			dbDelta($sql);
-		}
+					CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
 
-		//ihc_coupons
-		$table_name = $wpdb->prefix . "ihc_coupons";
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-						id int(11) NOT NULL AUTO_INCREMENT,
-						code varchar(200),
-						settings text,
-						submited_coupons_count int(11),
-						status tinyint(1),
-						PRIMARY KEY (`id`)
-			);";
-			dbDelta ( $sql );
-		}
+			//ihc_notifications
+			$table_name = $the_table_prefix . "ihc_notifications";
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE " . $table_name . " (
+							id int(11) NOT NULL AUTO_INCREMENT,
+							notification_type VARCHAR(200),
+							level_id VARCHAR(200),
+							subject TEXT,
+							message TEXT,
+							pushover_message TEXT,
+							pushover_status TINYINT(1) NOT NULL DEFAULT 0,
+							status TINYINT(1),
+							PRIMARY KEY (`id`)
+						)
+						CHARACTER SET utf8 COLLATE utf8_general_ci;
+				";
+				dbDelta($sql);
+			}
 
-		//ihc_orders
-		$table = $wpdb->prefix . 'ihc_orders';
-		if ($wpdb->get_var( "show tables like '$table'" )!=$table){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE $table(
-										id INT(11) NOT NULL AUTO_INCREMENT,
-										uid INT(11),
-										lid INT(11),
-										amount_type VARCHAR(200),
-										amount_value DECIMAL(12, 2) DEFAULT 0,
-										automated_payment TINYINT(1) DEFAULT NULL,
-										status VARCHAR(100),
-										create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-										PRIMARY KEY (`id`),
-										INDEX idx_ihc_orders_uid (`uid`)
-			);";
-			dbDelta($sql);
-		}
+			//ihc_coupons
+			$table_name = $the_table_prefix . "ihc_coupons";
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+							id int(11) NOT NULL AUTO_INCREMENT,
+							code varchar(200),
+							settings text,
+							submited_coupons_count int(11),
+							status tinyint(1),
+							PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta ( $sql );
+			}
 
-		///ihc_orders_meta
-		$table = $wpdb->prefix . 'ihc_orders_meta';
-		if ($wpdb->get_var("show tables like '$table'")!=$table){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE $table(
-										id INT(11) NOT NULL AUTO_INCREMENT,
-										order_id INT(11),
-										meta_key VARCHAR(200),
-										meta_value TEXT,
-										PRIMARY KEY (`id`),
-										INDEX idx_ihc_orders_meta_order_id (`order_id`)
-			);";
-			dbDelta($sql);
-		}
-
-		//ihc_taxes
-		$table = $wpdb->prefix . 'ihc_taxes';
-		if ($wpdb->get_var( "show tables like '$table'" )!=$table){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE $table(
-										id INT(11) NOT NULL AUTO_INCREMENT,
-										country_code VARCHAR(20),
-										state_code VARCHAR(50) DEFAULT '',
-										amount_value DECIMAL(12, 2) DEFAULT 0,
-										label VARCHAR(200),
-										description TEXT,
-										status TINYINT(1),
-										PRIMARY KEY (`id`)
-			);";
-			dbDelta($sql);
-		}
-
-		/// IHC_DASHBOARD_NOTIFICATIONS
-		$table_name = $wpdb->prefix . 'ihc_dashboard_notifications';
-		if ($wpdb->get_var("show tables like '$table_name'")!=$table_name){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE $table_name (
-						type VARCHAR(40) NOT NULL,
-						value INT(11) DEFAULT 0
-			);";
-			dbDelta($sql);
-
-			/// THIS TABLE WILL CONTAIN ONLY THIS TWO ENTRIES
-			$wpdb->query("INSERT INTO $table_name VALUES('users', 0);");
-			$wpdb->query("INSERT INTO $table_name VALUES('orders', 0);");
-		}
-
-		/// ihc_cheat_off
-		$table_name = $wpdb->prefix . 'ihc_cheat_off';
-		if ($wpdb->get_var("show tables like '$table_name'")!=$table_name){
-			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-			$sql = "CREATE TABLE $table_name (
-						uid INT(11) NOT NULL,
-						hash VARCHAR(40) NOT NULL
-			);";
-			dbDelta($sql);
-		}
-
-		//ihc_invitation_codes
-		$table_name = $wpdb->prefix . "ihc_invitation_codes";
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-						id int(11) NOT NULL AUTO_INCREMENT,
-						code varchar(200),
-						settings text,
-						submited int(11),
-						repeat_limit int(11),
-						status tinyint(1),
-						PRIMARY KEY (`id`)
-			);";
-			dbDelta ( $sql );
-		}
-
-		$table_name = $wpdb->prefix . 'ihc_gift_templates';
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-						id INT(11) NOT NULL AUTO_INCREMENT,
-						lid INT(11),
-						settings TEXT,
-						status TINYINT(2),
-						PRIMARY KEY (`id`)
-			);";
-			dbDelta ( $sql );
-		}
-
-		$table = $wpdb->prefix . 'ihc_security_login';
-		if ($wpdb->get_var("show tables like '$table' ")!=$table){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE $table (
+			//ihc_orders
+			$table = $the_table_prefix . 'ihc_orders';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table'";
+			if ($wpdb->get_var( $query )!=$table){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE $table(
 											id INT(11) NOT NULL AUTO_INCREMENT,
-											username VARCHAR(200),
-											ip VARCHAR(30),
-											log_time INT(11),
-											attempts_count INT(3),
-											locked TINYINT(1),
-											PRIMARY KEY (`id`)
-			);";
-			dbDelta($sql);
-		}
-
-		$table = $wpdb->prefix . 'ihc_user_logs';
-		if ($wpdb->get_var("show tables like '$table' ")!=$table){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE $table (
-											id INT(11) NOT NULL AUTO_INCREMENT,
-											uid INT(9) NOT NULL DEFAULT 0,
-											lid INT(3),
-											log_type VARCHAR(100),
-											log_content TEXT,
-											create_date INT(11),
+											uid INT(11),
+											lid INT(11),
+											amount_type VARCHAR(200),
+											amount_value DECIMAL(12, 2) DEFAULT 0,
+											automated_payment TINYINT(1) DEFAULT NULL,
+											status VARCHAR(100),
+											create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 											PRIMARY KEY (`id`),
-											INDEX idx_ihc_user_logs_uid (`uid`)
-			);";
-			dbDelta($sql);
+											INDEX idx_ihc_orders_uid (`uid`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			///ihc_orders_meta
+			$table = $the_table_prefix . 'ihc_orders_meta';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table'";
+			if ($wpdb->get_var( $query )!=$table){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE $table(
+											id INT(11) NOT NULL AUTO_INCREMENT,
+											order_id INT(11),
+											meta_key VARCHAR(200),
+											meta_value TEXT,
+											PRIMARY KEY (`id`),
+											INDEX idx_ihc_orders_meta_order_id (`order_id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			//ihc_taxes
+			$table = $the_table_prefix . 'ihc_taxes';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table'";
+			if ($wpdb->get_var( $query )!=$table){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE $table(
+											id INT(11) NOT NULL AUTO_INCREMENT,
+											country_code VARCHAR(20),
+											state_code VARCHAR(50) DEFAULT '',
+											amount_value DECIMAL(12, 2) DEFAULT 0,
+											label VARCHAR(200),
+											description TEXT,
+											status TINYINT(1),
+											PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			/// IHC_DASHBOARD_NOTIFICATIONS
+			$table_name = $the_table_prefix . 'ihc_dashboard_notifications';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query )!=$table_name){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE $table_name (
+							type VARCHAR(40) NOT NULL,
+							value INT(11) DEFAULT 0
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+
+				/// THIS TABLE WILL CONTAIN ONLY THIS TWO ENTRIES
+				$query = $wpdb->prepare( "INSERT INTO $table_name VALUES( %s, %d);", 'users', 0 );
+				$wpdb->query( $query );
+				$query = $wpdb->prepare( "INSERT INTO $table_name VALUES( %s, %d );", 'orders', 0 );
+				$wpdb->query( $query );
+			}
+
+			/// ihc_cheat_off
+			$table_name = $the_table_prefix . 'ihc_cheat_off';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query )!=$table_name){
+				require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+				$sql = "CREATE TABLE $table_name (
+							uid INT(11) NOT NULL,
+							hash VARCHAR(40) NOT NULL
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			//ihc_invitation_codes
+			$table_name = $the_table_prefix . "ihc_invitation_codes";
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+							id int(11) NOT NULL AUTO_INCREMENT,
+							code varchar(200),
+							settings text,
+							submited int(11),
+							repeat_limit int(11),
+							status tinyint(1),
+							PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta ( $sql );
+			}
+
+			$table_name = $the_table_prefix . 'ihc_gift_templates';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+							id INT(11) NOT NULL AUTO_INCREMENT,
+							lid INT(11),
+							settings TEXT,
+							status TINYINT(2),
+							PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta ( $sql );
+			}
+
+			$table = $the_table_prefix . 'ihc_security_login';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table' ";
+			if ($wpdb->get_var( $query )!=$table){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE $table (
+												id INT(11) NOT NULL AUTO_INCREMENT,
+												username VARCHAR(200),
+												ip VARCHAR(30),
+												log_time INT(11),
+												attempts_count INT(3),
+												locked TINYINT(1),
+												PRIMARY KEY (`id`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			$table = $the_table_prefix . 'ihc_user_logs';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table' ";
+			if ($wpdb->get_var( $query )!=$table){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE $table (
+												id INT(11) NOT NULL AUTO_INCREMENT,
+												uid INT(9) NOT NULL DEFAULT 0,
+												lid INT(3),
+												log_type VARCHAR(100),
+												log_content TEXT,
+												create_date INT(11),
+												PRIMARY KEY (`id`),
+												INDEX idx_ihc_user_logs_uid (`uid`)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			/// ihc_woo_products
+			$table_name = $wpdb->base_prefix . 'ihc_woo_products';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+											id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+											slug VARCHAR(200) NOT NULL,
+											discount_type VARCHAR(20),
+											discount_value DECIMAL(12, 2),
+											start_date DATETIME,
+											end_date DATETIME,
+											settings TEXT,
+											status TINYINT(1) DEFAULT 0
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			/// ihc_woo_product_level_relations
+			$table_name = $wpdb->base_prefix . 'ihc_woo_product_level_relations';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+											id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+											ihc_woo_product_id INT(11),
+											lid INT(11),
+											woo_item INT(11),
+											woo_item_type VARCHAR(200)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+
+			///ihc_user_sites
+			$table_name = $wpdb->base_prefix . 'ihc_user_sites';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name'";
+			if ($wpdb->get_var( $query ) != $table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+											id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+											site_id INT(11),
+											uid INT(11),
+											lid INT(11)
+				)
+				CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+
+			/// ihc_download_monitor_limit
+			$table_name = $the_table_prefix . 'ihc_download_monitor_limit';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name';";
+			if ($wpdb->get_var( $query )!=$table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE " . $table_name . " (
+											uid INT(11) NOT NULL,
+											lid INT(11) NOT NULL,
+											download_limit INT(11) NOT NULL
+							)
+							CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			$table_name = $the_table_prefix . 'ihc_reason_for_cancel_delete_levels';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name';";
+			if ($wpdb->get_var( $query )!=$table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE $table_name (
+											id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+											uid INT(11) NOT NULL,
+											lid INT(11) NOT NULL,
+											reason VARCHAR(400),
+											action_type VARCHAR(30),
+											action_date INT(10)
+							)
+							CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			$table_name = $the_table_prefix . 'ihc_notifications_logs';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "show tables like '$table_name';";
+			if ($wpdb->get_var( $query )!=$table_name){
+				require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
+				$sql = "CREATE TABLE $table_name (
+											id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+											notification_type VARCHAR( 100 ),
+											email_address VARCHAR( 300 ),
+											subject VARCHAR( 300 ),
+											message TEXT,
+											uid INT(11) NOT NULL,
+											lid INT(11) NOT NULL,
+											create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+							)
+							CHARACTER SET utf8 COLLATE utf8_general_ci;";
+				dbDelta($sql);
+			}
+
+			/// memberships
+			\Indeed\Ihc\Db\Memberships::setTablePrefix( $the_table_prefix );
+			\Indeed\Ihc\Db\Memberships::createTables();
+
+			/// ihc_user_subscription_meta
+			\Indeed\Ihc\Db\UserSubscriptionsMeta::setTablePrefix( $the_table_prefix );
+			\Indeed\Ihc\Db\UserSubscriptionsMeta::createTable();
+
+			endforeach;
 		}
-
-		/// ihc_woo_products
-		$table_name = $wpdb->base_prefix . 'ihc_woo_products';
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-										id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-										slug VARCHAR(200) NOT NULL,
-										discount_type VARCHAR(20),
-										discount_value DECIMAL(12, 2),
-										start_date DATETIME,
-										end_date DATETIME,
-										settings TEXT,
-										status TINYINT(1) DEFAULT 0
-			);";
-			dbDelta($sql);
-		}
-
-		/// ihc_woo_product_level_relations
-		$table_name = $wpdb->base_prefix . 'ihc_woo_product_level_relations';
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-										id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-										ihc_woo_product_id INT(11),
-										lid INT(11),
-										woo_item INT(11),
-										woo_item_type VARCHAR(200)
-			);";
-			dbDelta($sql);
-		}
-
-
-		///ihc_user_sites
-		$table_name = $wpdb->base_prefix . 'ihc_user_sites';
-		if ($wpdb->get_var( "show tables like '$table_name'" ) != $table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-										id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-										site_id INT(11),
-										uid INT(11),
-										lid INT(11)
-			);";
-			dbDelta($sql);
-		}
-
-
-		/// ihc_download_monitor_limit
-		$table_name = $wpdb->prefix . 'ihc_download_monitor_limit';
-		if ($wpdb->get_var("show tables like '$table_name';")!=$table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE " . $table_name . " (
-										uid INT(11) NOT NULL,
-										lid INT(11) NOT NULL,
-										download_limit INT(11) NOT NULL
-						);";
-			dbDelta($sql);
-		}
-
-		$table_name = $wpdb->prefix . 'ihc_reason_for_cancel_delete_levels';
-		if ($wpdb->get_var("show tables like '$table_name';")!=$table_name){
-			require_once (ABSPATH . 'wp-admin/includes/upgrade.php');
-			$sql = "CREATE TABLE $table_name (
-										id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-										uid INT(11) NOT NULL,
-										lid INT(11) NOT NULL,
-										reason VARCHAR(400),
-										action_type VARCHAR(30),
-										action_date INT(10)
-						);";
-			dbDelta($sql);
-		}
-	}
 
 	public static function update_tables_structure(){
 		/*
@@ -311,30 +402,41 @@ class Ihc_Db{
 		 */
 		global $wpdb;
 		$table = $wpdb->prefix . 'indeed_members_payments';
-		$data = $wpdb->get_row("SHOW COLUMNS FROM " . $table . " LIKE 'txn_id';");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SHOW COLUMNS FROM " . $table . " LIKE 'txn_id';";
+		$data = $wpdb->get_row( $query );
 		if (!$data){
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$q = 'ALTER TABLE ' . $wpdb->prefix . 'indeed_members_payments ADD history TEXT AFTER payment_data';
 			$wpdb->query($q);
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$q = 'ALTER TABLE ' . $wpdb->prefix . 'indeed_members_payments ADD txn_id VARCHAR(100) DEFAULT NULL AFTER id';
 			$wpdb->query($q);
 		}
 
-		$data = $wpdb->get_row("SHOW COLUMNS FROM " . $table . " LIKE 'orders';");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SHOW COLUMNS FROM " . $table . " LIKE 'orders';";
+		$data = $wpdb->get_row( $query );
 		if (!$data){
 			$q = "ALTER TABLE $table ADD orders TEXT AFTER history";
 			$wpdb->query($q);
 		}
 
 		$table = $wpdb->prefix . 'ihc_user_levels';
-		$data = $wpdb->get_row("SHOW COLUMNS FROM " . $table . " LIKE 'notification';");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SHOW COLUMNS FROM " . $table . " LIKE 'notification';";
+		$data = $wpdb->get_row( $query );
 		if (!$data){
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$q = 'ALTER TABLE ' . $wpdb->prefix . 'ihc_user_levels ADD notification tinyint(1) DEFAULT 0 AFTER expire_time;';
 			$wpdb->query($q);
 		}
 
 		/// alter ihc_taxes if its case
 		$table = $wpdb->prefix . 'ihc_taxes';
-		$data = $wpdb->get_row("SHOW COLUMNS FROM " . $table . " LIKE 'state_code';");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SHOW COLUMNS FROM " . $table . " LIKE 'state_code';";
+		$data = $wpdb->get_row( $query );
 		if (!$data){
 			$q = "ALTER TABLE $table ADD state_code VARCHAR(50) DEFAULT '' AFTER country_code;";
 			$wpdb->query($q);
@@ -342,14 +444,50 @@ class Ihc_Db{
 
 		/// alter ihc_notifications if its case
 		$table = $wpdb->prefix . 'ihc_notifications';
-		$data = $wpdb->get_row("SHOW COLUMNS FROM " . $table . " LIKE 'pushover_message';");
+		$query = "SHOW COLUMNS FROM " . $table . " LIKE 'pushover_message';";
+		$data = $wpdb->get_row( $query );
 		if (!$data){
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$q = "ALTER TABLE $table ADD pushover_message TEXT AFTER message;";
 			$wpdb->query($q);
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$q = "ALTER TABLE $table ADD pushover_status TINYINT(1) NOT NULL DEFAULT 0 AFTER pushover_message;";
 			$wpdb->query($q);
 		}
 	}
+
+		/**
+		 * @param none
+		 * @return array
+		 */
+		public static function get_all_prefixes()
+		{
+				global $wpdb;
+				$data[] = $wpdb->base_prefix;
+				if (is_multisite() ){
+						if ( is_network_admin() ){
+								// activate on entire network
+								$ids = self::get_all_blog_ids();
+								if ($ids){
+									foreach ($ids as $object){
+											if ( $object->blog_id == 1 ){
+												 continue;
+											}
+											$data[] = $wpdb->base_prefix . $object->blog_id . '_';
+									}
+								}
+						} else {
+							// activate on single site on network
+							$currentSite = get_current_blog_id();
+							$mainSite = 1;
+							if ( $currentSite == $mainSite ){
+									return [ $wpdb->base_prefix ];
+							}
+							return [ $wpdb->base_prefix . $currentSite . '_' ];
+						}
+				}
+				return $data;
+		}
 
 	public static function do_uninstall(){
 		/*
@@ -357,43 +495,75 @@ class Ihc_Db{
 		 * @return none
 		 */
 		$values = self::default_settings_groups();
-		foreach ($values as $value){
-			$data = ihc_return_meta_arr($value, true);
-			foreach ($data as $k=>$v){
-				delete_option($k);
-			}
-		}
 
-		delete_option('ihc_levels');//delete the levels
-		delete_option('ihc_lockers');//delete the lockers
-		delete_option('ihc_dashboard_allowed_roles');
-		delete_option('ihc_custom_redirect_links_array');
+		if (is_multisite()){
+				// multisite
+				$blogs = self::get_all_blog_ids();
+				foreach ( $blogs as $blogObject ){
+						switch_to_blog( $blogObject->blog_id );
+						// do delete
+						foreach ($values as $value){
+								$data = ihc_return_meta_arr($value, true);
+								foreach ($data as $k=>$v){
+									delete_option($k);
+								}
+						}
+						delete_option('ihc_levels');//delete the levels
+						delete_option('ihc_lockers');//delete the lockers
+						delete_option('ihc_dashboard_allowed_roles');
+						delete_option('ihc_custom_redirect_links_array');
+						delete_option( 'ihc_plugin_current_version' );
+				}
+		} else {
+				// single site
+				foreach ($values as $value){
+					$data = ihc_return_meta_arr($value, true);
+					foreach ($data as $k=>$v){
+						delete_option($k);
+					}
+				}
+				delete_option('ihc_levels');//delete the levels
+				delete_option('ihc_lockers');//delete the lockers
+				delete_option('ihc_dashboard_allowed_roles');
+				delete_option('ihc_custom_redirect_links_array');
+				delete_option( 'ihc_plugin_current_version' );
+		}
 
 		//delete table indeed_members_payments
 		global $wpdb;
 		$tables = array(
-						 $wpdb->prefix . "indeed_members_payments",
-						 $wpdb->prefix . "ihc_user_levels",
-						 $wpdb->prefix . "ihc_debug_payments",
-						 $wpdb->prefix . "ihc_notifications",
-						 $wpdb->prefix . "ihc_coupons",
-						 $wpdb->prefix . 'ihc_orders',
-						 $wpdb->prefix . 'ihc_orders_meta',
-						 $wpdb->prefix . 'ihc_taxes',
-						 $wpdb->prefix . 'ihc_dashboard_notifications',
-						 $wpdb->prefix . 'ihc_cheat_off',
-						 $wpdb->prefix . 'ihc_invitation_codes',
-						 $wpdb->prefix . 'ihc_gift_templates',
-						 $wpdb->prefix . 'hc_security_login',
-						 $wpdb->prefix . 'ihc_user_logs',
-						 $wpdb->prefix . 'ihc_woo_products',
-						 $wpdb->prefix . 'ihc_woo_product_level_relations',
-						 $wpdb->prefix . 'ihc_user_sites',
-						 $wpdb->prefix . 'ihc_download_monitor_limit',
-						 $wpdb->prefix . 'ihc_reason_for_cancel_delete_levels',
+						 "indeed_members_payments",
+						 "ihc_user_levels",
+						 "ihc_debug_payments",
+						 "ihc_notifications",
+						 "ihc_coupons",
+						 'ihc_orders',
+						 'ihc_orders_meta',
+						 'ihc_taxes',
+						 'ihc_dashboard_notifications',
+						 'ihc_cheat_off',
+						 'ihc_invitation_codes',
+						 'ihc_gift_templates',
+						 'ihc_security_login',
+						 'ihc_user_logs',
+						 'ihc_woo_products',
+						 'ihc_woo_product_level_relations',
+						 'ihc_user_sites',
+						 'ihc_download_monitor_limit',
+						 'ihc_reason_for_cancel_delete_levels',
+						 'ihc_memberships',
+						 'ihc_memberships_meta',
+						 'ihc_notifications_logs',
+						 'ihc_user_subscriptions_meta',
 		);
-		foreach ($tables as $table){
-			$wpdb->query("DROP TABLE IF EXISTS $table;");
+		$prefixes = self::get_all_prefixes_for_unistall();
+		foreach ($prefixes as $the_table_prefix){
+			foreach ($tables as $table){
+				$table_name = $the_table_prefix . $table;
+				//No query parameters required, Safe query. prepare() method without parameters can not be called
+				$query = "DROP TABLE IF EXISTS $table_name;";
+				$wpdb->query( $query );
+			}
 		}
 
 		//delete user levels
@@ -420,6 +590,37 @@ class Ihc_Db{
 		}
 	}
 
+	/**
+	 * @param none
+	 * @return array
+	 */
+	public static function get_all_prefixes_for_unistall()
+	{
+			global $wpdb;
+			$data[] = $wpdb->base_prefix;
+			if (is_multisite() ){
+					$ids = self::get_all_blog_ids();
+					if ( $ids ){
+							foreach ($ids as $object){
+										$data[] = $wpdb->base_prefix . $object->blog_id . '_';
+							}
+					}
+			}
+			return $data;
+	}
+
+	/**
+	 * @param none
+	 * @return object
+	 */
+	public static function get_all_blog_ids(){
+		global $wpdb;
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SELECT blog_id FROM {$wpdb->blogs};";
+		$data = $wpdb->get_results( $query );
+		return $data;
+	}
+
 	public static function create_notifications(){
 		/*
 		 * @param none
@@ -438,22 +639,22 @@ class Ihc_Db{
 						'approve_account',
 						'bank_transfer',
 						'register_lite_send_pass_to_user',
+
 		);
 		$table = $wpdb->prefix . "ihc_notifications";
-		if (!function_exists('ihc_save_notification_metas')){
-			require_once IHC_PATH . 'admin/includes/functions.php';
-		}
+
+		$notificationObject = new \Indeed\Ihc\Notifications();
 		foreach ($keys as $key){
 			$q = $wpdb->prepare("SELECT id FROM $table WHERE notification_type=%s;", $key);
 			$check = $wpdb->get_row($q);
 			if (empty($check)){
-				$notf_data = ihc_return_notification_pattern($key);
-				$notf_data['message'] = @$notf_data['content'];
+				$notf_data = $notificationObject->getNotificationTemplate( $key );
+				$notf_data['message'] = (isset($notf_data['content'])) ? $notf_data['content'] : '';
 				$notf_data['notification_type'] = $key;
 				$notf_data['level_id'] = -1;
 				$notf_data['pushover_message'] = '';
 				$notf_data['pushover_status'] = '';
-				ihc_save_notification_metas($notf_data);
+				$notificationObject->save($notf_data);
 				unset($notf_data);
 			}
 		}
@@ -466,35 +667,35 @@ class Ihc_Db{
 			 */
 		$insert_array = array(
 						'ihc_general_user_page' => array(
-											'title' => __('My Account', 'ihc'),
+											'title' => esc_html__('My Account', 'ihc'),
 											'content' => '[ihc-user-page]',
 						),
 						'ihc_general_login_default_page' => array(
-											'title' => __('Member Login', 'ihc'),
+											'title' => esc_html__('Member Login', 'ihc'),
 											'content' => '[ihc-login-form]',
 						),
 						'ihc_general_logout_page' => array(
-											'title' => __('Member LogOut', 'ihc'),
+											'title' => esc_html__('Member LogOut', 'ihc'),
 											'content' => '[ihc-logout-link]',
 						),
 						'ihc_general_register_default_page' => array(
-											'title' => __('Register', 'ihc'),
+											'title' => esc_html__('Register', 'ihc'),
 											'content' => '[ihc-register]',
 						),
 						'ihc_general_lost_pass_page' => array(
-											'title' => __('Lost Password', 'ihc'),
+											'title' => esc_html__('Lost Password', 'ihc'),
 											'content' => '[ihc-pass-reset]',
 						),
 						'ihc_subscription_plan_page' => array(
-											'title' => __('Subscription Plan', 'ihc'),
+											'title' => esc_html__('Subscription Plan', 'ihc'),
 											'content' => '[ihc-select-level]',
 						),
 						'ihc_general_tos_page' => array(
-											'title' => __('Member TOS Page', 'ihc'),
+											'title' => esc_html__('Member TOS Page', 'ihc'),
 											'content' => 'Terms of Services',
 						),
 						'ihc_general_register_view_user' => array(
-											'title' => __('Public Individual Page', 'ihc'),
+											'title' => esc_html__('Public Individual Page', 'ihc'),
 											'content' => '[ihc-visitor-inside-user-page]',
 						),
 		);
@@ -674,7 +875,11 @@ class Ihc_Db{
 							'billing_type' => '',
 							'billing_limit_num' => '2',
 							'show_on' => '1',
+							'afterexpire_action' => 0,
 							'afterexpire_level' => -1,
+							'aftercancel_action' => 0,
+							'aftercancel_level' => -1,
+							'grace_period' => '',
 							'custom_role_level' => '-1',
 							'start_date_content' => '0',
 							'special_weekdays' => '',
@@ -705,7 +910,11 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 							'billing_type' => '',
 							'billing_limit_num' => '2',
 							'show_on' => '1',
+							'afterexpire_action' => 0,
 							'afterexpire_level' => -1,
+							'aftercancel_action' => 0,
+							'aftercancel_level' => -1,
+							'grace_period' => '',
 							'custom_role_level' => '-1',
 							'start_date_content' => '0',
 							'special_weekdays' => '',
@@ -736,7 +945,11 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 							'billing_type' => 'bl_ongoing',
 							'billing_limit_num' => '2',
 							'show_on' => '1',
+							'afterexpire_action' => 0,
 							'afterexpire_level' => -1,
+							'aftercancel_action' => 0,
+							'aftercancel_level' => -1,
+							'grace_period' => '',
 							'custom_role_level' => '-1',
 							'start_date_content' => '0',
 							'special_weekdays' => '',
@@ -759,14 +972,17 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			if (is_multisite()){
 				global $wpdb;
 				$table = $wpdb->base_prefix . 'blogs';
-				$data = $wpdb->get_results("SELECT blog_id FROM $table;");
+				//No query parameters required, Safe query. prepare() method without parameters can not be called
+				$query = "SELECT blog_id FROM $table;";
+				$data = $wpdb->get_results( $query );
 				if ($data){
 					foreach ($data as $object){
 						if (!empty($object->blog_id) && $object->blog_id>1){
 							$prefix = $wpdb->base_prefix . $object->blog_id . '_' ;
 							$table = $prefix . 'options';
 							$option = $prefix . 'user_roles';
-							$temp_data = $wpdb->get_row("SELECT option_value FROM $table WHERE option_name='$option';");
+							$query = $wpdb->prepare( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name=%s ;", $option );
+							$temp_data = $wpdb->get_row( $query );
 							if ($temp_data && !empty($temp_data->option_value)){
 								$array_unserialize = unserialize($temp_data->option_value);
 								if (empty($array_unserialize['pending_user'])){
@@ -778,7 +994,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 																				)
 									);
 									$array_serialize = serialize($array_unserialize);
-									$wpdb->query("UPDATE $table SET option_value='$array_serialize' WHERE option_name='$option'; ");
+									$query = $wpdb->prepare( "UPDATE {$wpdb->prefix}options SET option_value=%s WHERE option_name=%s ;", $array_serialize, $option );
+									$wpdb->query( $query );
 								}
 							}
 						}
@@ -789,14 +1006,17 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			if (is_multisite()){
 				global $wpdb;
 				$table = $wpdb->base_prefix . 'blogs';
-				$data = $wpdb->get_results("SELECT blog_id FROM $table;");
+				//No query parameters required, Safe query. prepare() method without parameters can not be called
+				$query = "SELECT blog_id FROM $table;";
+				$data = $wpdb->get_results( $query );
 				if ($data){
 					foreach ($data as $object){
 						if (!empty($object->blog_id) && $object->blog_id>1){
 							$prefix = $wpdb->base_prefix . $object->blog_id . '_' ;
 							$table = $prefix . 'options';
 							$option = $prefix . 'user_roles';
-							$temp_data = $wpdb->get_row("SELECT option_value FROM $table WHERE option_name='$option';");
+							$query = $wpdb->prepare( "SELECT option_value FROM {$wpdb->prefix}options WHERE option_name=%s ;", $option );
+							$temp_data = $wpdb->get_row( $query );
 							if ($temp_data && !empty($temp_data->option_value)){
 								$array_unserialize = unserialize($temp_data->option_value);
 								if (empty($array_unserialize['suspended'])){
@@ -808,7 +1028,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 																				)
 									);
 									$array_serialize = serialize($array_unserialize);
-									$wpdb->query("UPDATE $table SET option_value='$array_serialize' WHERE option_name='$option'; ");
+									$query = $wpdb->prepare( "UPDATE {$wpdb->prefix}options SET option_value=%s WHERE option_name=%s ;", $array_serialize, $option );
+									$wpdb->query( $query );
 								}
 							}
 						}
@@ -830,7 +1051,6 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 						 		 'payment_twocheckout',
 						 		 'payment_bank_transfer',
 						 		 'payment_braintree',
-						 		 'payment_payza',
 						 		 'payment_mollie',
 						 		 'payment_paypal_express_checkout',
 						 		 'payment_pagseguro',
@@ -899,6 +1119,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 						 		 'kissmetrics',
 						 		 'direct_login',
 						 		 'reason_for_cancel',
+								 'security',
 		);
 	}
 
@@ -1152,13 +1373,10 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 * @param int
 		 * @return string
 		 */
-		if ($lid){
-			$levels = get_option('ihc_levels');
-			if (!empty($levels[$lid]) && !empty($levels[$lid]['label'])){
-				return $levels[$lid]['label'];
-			}
+		if ( !$lid ){
+				return '';
 		}
-		return '';
+		return \Indeed\Ihc\Db\Memberships::getMembershipLabel( $lid );
 	}
 
 
@@ -1168,20 +1386,17 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	 */
 	public static function get_lid_by_level_slug($slug=''){
 		if ($slug){
-			$levels = get_option('ihc_levels');
-			if ($levels){
-				foreach ($levels as $lid=>$data){
-					if (strcmp($data['name'], $slug)===0){
-						return $lid;
-					}
-				}
+			$level = \Indeed\Ihc\Db\Memberships::getOneByName( $slug );
+			if ( isset( $level['id'] ) ){
+					return $level['id'];
 			}
 		}
+		return false;
 	}
 
 	public static function getLevelsDetails()
 	{
-			$levels = get_option( 'ihc_levels' );
+			$levels = \Indeed\Ihc\Db\Memberships::getAll();
 			if ( !$levels ){
 					return array();
 			}
@@ -1202,9 +1417,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	 */
 	public static function does_level_exists($lid=-1){
 		if ($lid>-1){
-			$data = get_option('ihc_levels');
-			if (isset($data[$lid])){
-				return TRUE;
+			$data = \Indeed\Ihc\Db\Memberships::getOne( $lid );
+			if ( $data ){
+					return true;
 			}
 		}
 		return FALSE;
@@ -1363,7 +1578,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		$array = array();
 		global $wpdb;
 		$table = $wpdb->prefix . 'ihc_taxes';
-		$data = $wpdb->get_results("SELECT id,country_code,state_code,amount_value,label,description,status FROM $table;");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SELECT id,country_code,state_code,amount_value,label,description,status FROM $table;";
+		$data = $wpdb->get_results( $query );
 		if ($data){
 			foreach ($data as $object){
 					$domain = 'ihc';
@@ -1520,6 +1737,8 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		}
 	}
 
+
+	// Deprecated, use instead \Indeed\Ihc\UserSubscriptions::getAllForUser()
 	public static function get_user_levels($uid=0, $check_expire=FALSE){
 		/*
 		 * @param int, bool
@@ -1528,7 +1747,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 $array = array();
 		 if ($uid){
 		 	 global $wpdb;
-			 $levels = get_option('ihc_levels');
+			 $levels = \Indeed\Ihc\Db\Memberships::getAll();
 			 $table = $wpdb->prefix . "ihc_user_levels";
 			 $q = $wpdb->prepare("SELECT id,user_id,level_id,start_time,update_time,expire_time,notification,status FROM $table WHERE user_id=%d", $uid);
 			 $data = $wpdb->get_results($q);
@@ -1561,7 +1780,27 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 return $array;
 	}
 
+	// Deprecated, use instead : \Indeed\Ihc\UserSubscriptions::getAllForUserAsList( $uid, true );
+	public static function getUserLevelsAsList( $uid=0, $checkExpire=true )
+	{
+			global $wpdb;
+			if ( !$uid ){
+					return '';
+			}
+			$table = $wpdb->prefix . "ihc_user_levels";
+			$q = $wpdb->prepare("SELECT level_id FROM $table WHERE user_id=%d", $uid);
+			$data = $wpdb->get_results( $q );
+			if ( !$data ){
+					return '';
+			}
+			foreach ( $data as $object ){
+					$levels[] = $object->level_id;
+			}
+			return implode( ',', $levels );
+	}
+
 	/**
+	 * Deprecated, use instead \Indeed\Ihc\UserSubscriptions::getOne( $uid, $lid );
 	 * @param int (user id)
 	 * @param int (level id)
 	 * @return array
@@ -1574,13 +1813,18 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		return (array)$data;
 	}
 
+	/**
+			Deprecated, use instead :
+			\Indeed\Ihc\UserSubscriptions::isActive($uid=0, $lid=0);
+	*/
 	public static function is_user_level_active($uid=0, $lid=0){
 		/*
 		 * @param int, int
 		 * @return bool
 		 */
 		global $wpdb;
-		$grace_period = get_option('ihc_grace_period');
+		$grace_period = \Indeed\Ihc\UserSubscriptions::getGracePeriod( $uid, $lid );
+
 		$q = $wpdb->prepare("SELECT expire_time, start_time FROM {$wpdb->prefix}ihc_user_levels WHERE user_id=%d AND level_id=%d;", $uid, $lid);
 		$data = $wpdb->get_row($q);
 		$current_time = indeed_get_unixtimestamp_with_timezone();
@@ -1602,6 +1846,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		return TRUE;
 	}
 
+	// Deprecated, use instead userHasSubscription
 	public static function user_has_level($uid=0, $lid=0){
 		/*
 		 * @param int, int
@@ -1772,7 +2017,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		$array = array();
 		global $wpdb;
 		$table = $wpdb->prefix . 'ihc_invitation_codes';
-		$data = $wpdb->get_results("SELECT id,code,settings,submited,repeat_limit,status FROM $table;");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SELECT id,code,settings,submited,repeat_limit,status FROM $table;";
+		$data = $wpdb->get_results( $query );
 		if ($data){
 			foreach ($data as $object){
 				$array[] = (array)$object;
@@ -1788,7 +2035,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 */
 		global $wpdb;
 		$table = $wpdb->prefix . 'ihc_invitation_codes';
-		$data = $wpdb->get_row("SELECT COUNT( id ) as c FROM $table;");
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "SELECT COUNT( id ) as c FROM $table;";
+		$data = $wpdb->get_row( $query );
 		if ($data && isset($data->c) && $data->c>0){
 			return TRUE;
 		}
@@ -1850,7 +2099,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 						}
 					} else if (isset($array['custom'])){
 						$custom = json_decode($array['custom'], TRUE);
-						if ($lid==$custom['level_id']){
+						if ( isset( $custom['level_id'] ) && $lid==$custom['level_id']){
 							$payment_type = 'paypal';
 							break;
 						}
@@ -1890,7 +2139,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	     $array = array();
 	     global $wpdb;
 	     $table = $wpdb->base_prefix . 'usermeta';
-	     $data = $wpdb->get_results("SELECT DISTINCT user_id, meta_value FROM $table WHERE meta_key='ihc_individual_page' GROUP BY user_id;");
+			 //No query parameters required, Safe query. prepare() method without parameters can not be called
+			 $query = "SELECT DISTINCT user_id, meta_value FROM $table WHERE meta_key='ihc_individual_page' GROUP BY user_id;";
+	     $data = $wpdb->get_results( $query );
 	     $not_in_string = '';
 	     if ($data){
 	         foreach ($data as $object){
@@ -2141,7 +2392,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 if ($data){
 		 	foreach ($data as $object){
 		 		$temp = unserialize($object->settings);
-		 		$temp['username'] = self::get_username_by_wpuid(@$temp['uid']);
+		 		$temp['username'] = self::get_username_by_wpuid((isset($temp['uid'])) ? $temp['uid'] : '');
 				$temp['code'] = $object->code;
 				$temp['is_active'] = self::is_gift_stil_active($object->code);
 				$array[$object->id] = $temp;
@@ -2157,7 +2408,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 */
 		 global $wpdb;
 		 $table = $wpdb->prefix . 'ihc_coupons';
-		 $data = $wpdb->get_row("SELECT COUNT( id ) as c FROM $table WHERE status=2");
+		 //No query parameters required, Safe query. prepare() method without parameters can not be called
+		 $query = "SELECT COUNT( id ) as c FROM $table WHERE status=2";
+		 $data = $wpdb->get_row( $query );
 		 if ($data && isset($data->c)){
 		 	return $data->c;
 		 }
@@ -2353,7 +2606,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 $array = array();
 		 global $wpdb;
 		 $table = $wpdb->prefix . 'postmeta';
-		 $data = $wpdb->get_results("SELECT meta_value, post_id FROM $table WHERE meta_key='iump_woo_product_level_relation' AND meta_value!='' AND meta_value!='-1';");
+		 //No query parameters required, Safe query. prepare() method without parameters can not be called
+		 $query = "SELECT meta_value, post_id FROM $table WHERE meta_key='iump_woo_product_level_relation' AND meta_value!='' AND meta_value!='-1';";
+		 $data = $wpdb->get_results( $query );
 		 if ($data){
 		 	foreach ($data as $object){
 		 		$temp['level_label'] = self::get_level_name_by_lid($object->meta_value);
@@ -2376,13 +2631,15 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			global $wpdb;
 			$table = $wpdb->prefix . 'posts';
 			$search = esc_sql($search);
-			$data = $wpdb->get_results("SELECT post_title, ID
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "SELECT post_title, ID
 											FROM $table
 											WHERE
 											post_title LIKE '%$search%'
 											AND post_type='product'
 											AND post_status='publish'
-			");
+			";
+			$data = $wpdb->get_results( $query );
 			if ($data){
 				foreach ($data as $object){
 					$arr[$object->ID] = $object->post_title;
@@ -2489,11 +2746,11 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 if ($uid){
 		 	 global $wpdb;
 		 	 $table = $wpdb->prefix . 'posts';
-			 $q = "SELECT COUNT(ID) as c FROM $table WHERE post_author=%d AND post_status!='auto-draft' AND post_status!='trash' ";
+			 $q = "SELECT COUNT(ID) as c FROM $table WHERE post_author=%d AND post_status!='auto-draft' AND post_status!='trash' and post_type!='revision' ";
 			 $q = $wpdb->prepare($q, $uid);
 			 if ($since){
 			 	$since = indeed_timestamp_to_date_without_timezone( $since );
-			 	$q .= " AND post_date>'$since' ";
+			 	$q .= $wpdb->prepare(" AND post_date>%s ", $since );
 			 }
 		 	 $data = $wpdb->get_row($q);
 			 if ($data && isset($data->c)){
@@ -2543,7 +2800,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			 $q = $wpdb->prepare("SELECT COUNT(comment_ID) as c FROM $table WHERE user_id=%d ", $uid);
 			 if ($since){
 			 	$since = indeed_timestamp_to_date_without_timezone( $since );
-			 	$q .= " AND comment_date>'$since' ";
+			 	$q .= $wpdb->prepare( " AND comment_date>%s ", $since );
 			 }
 		 	 $data = $wpdb->get_row($q);
 			 if ($data && isset($data->c)){
@@ -2553,6 +2810,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 return 0;
 	}
 
+	// Deprecated, use instead : \Indeed\Ihc\UserSubscriptions::getExpireTimeForSubscription( $uid, $lid )
 	public static function user_get_expire_time_for_level($uid=0, $lid=FALSE){
 		/*
 		 * @param int, int
@@ -2611,7 +2869,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 	 $time_value = get_option('ihc_subscription_delay_time');
 		 	 $time_type = get_option('ihc_subscription_delay_type');
 			 if ($time_value && $time_type){
-			 	 if (isset($time_value[$lid]) && isset($time_type[$lid])){
+			 	 if (isset($time_value[$lid]) && isset($time_type[$lid]) && $time_value[$lid] != '' ){
 			 	 	 if ($time_type[$lid]=='h'){
 			 	 	 	 ///hours
 			 	 	 	 return $time_value[$lid] * 3600;
@@ -2716,18 +2974,18 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	   */
 	   public static function account_page_get_menu($only_standard=FALSE){
 			$available_tabs = array(
-									'overview'=> array('label' => __('Dashboard', 'ihc'), 'icon' => 'f015', 'icon_class' => ''),
-									'profile'=> array('label' => __('Profile', 'ihc'), 'icon' => 'f007', 'icon_class' => ''),
-									'subscription'=> array('label' => __('Subscriptions', 'ihc'), 'icon' => 'f0a1', 'icon_class' => ''),
-									'social' => array('label' => __('Social Plus', 'ihc'), 'icon' => 'f0e6', 'icon_class' => ''),
-									'orders' => array('label' => __('Orders', 'ihc'), 'icon' => 'f0d6', 'icon_class' => ''),
-									'transactions'=> array('label' => __('Transactions', 'ihc'), 'icon' => 'f155', 'icon_class' => ''),
-									'membeship_gifts' => array('label' => __('Membership Gifts', 'ihc'), 'icon' => 'f06b', 'icon_class' => '', 'check_magic_feat' => 'gifts'),
-									'membership_cards' => array('label' => __('Membership Cards', 'ihc'), 'icon' => 'f022', 'icon_class' => '', 'check_magic_feat' => 'pushover'),
-									'pushover_notifications' => array('label' => __('Pushover Notifications', 'ihc'), 'icon' => 'f0f3', 'icon_class' => '', 'check_magic_feat' => 'user_sites'),
-									'user_sites' => array('label' => __('Your Sites', 'ihc'), 'icon' => 'f084', 'icon_class' => '', 'check_magic_feat' => TRUE),
-									'help' => array('label' => __('Help', 'ihc'), 'icon' => 'f059', 'icon_class' => ''),
-									'affiliate' => array('label' => __('Affiliate', 'ihc'), 'icon' => 'f0e8', 'icon_class' => ''),
+									'overview'=> array('label' => esc_html__('Dashboard', 'ihc'), 'icon' => 'f015', 'icon_class' => ''),
+									'profile'=> array('label' => esc_html__('Profile', 'ihc'), 'icon' => 'f007', 'icon_class' => ''),
+									'subscription'=> array('label' => esc_html__('Subscriptions', 'ihc'), 'icon' => 'f0a1', 'icon_class' => ''),
+									'social' => array('label' => esc_html__('Social Plus', 'ihc'), 'icon' => 'f0e6', 'icon_class' => ''),
+									'orders' => array('label' => esc_html__('Orders', 'ihc'), 'icon' => 'f0d6', 'icon_class' => ''),
+									//'transactions'=> array('label' => esc_html__('Transactions', 'ihc'), 'icon' => 'f155', 'icon_class' => ''),
+									'membeship_gifts' => array('label' => esc_html__('Membership Gifts', 'ihc'), 'icon' => 'f06b', 'icon_class' => '', 'check_magic_feat' => 'gifts'),
+									'membership_cards' => array('label' => esc_html__('Membership Cards', 'ihc'), 'icon' => 'f022', 'icon_class' => '', 'check_magic_feat' => 'pushover'),
+									'pushover_notifications' => array('label' => esc_html__('Pushover Notifications', 'ihc'), 'icon' => 'f0f3', 'icon_class' => '', 'check_magic_feat' => 'user_sites'),
+									'user_sites' => array('label' => esc_html__('Your Sites', 'ihc'), 'icon' => 'f084', 'icon_class' => '', 'check_magic_feat' => TRUE),
+									'help' => array('label' => esc_html__('Help', 'ihc'), 'icon' => 'f059', 'icon_class' => ''),
+									'affiliate' => array('label' => esc_html__('Affiliate', 'ihc'), 'icon' => 'f0e8', 'icon_class' => ''),
 									'logout' => array('label' => 'LogOut', 'icon' => 'f08b', 'icon_class' => ''),
 			);
 			foreach ($available_tabs as $slug=>$array_data){
@@ -2814,14 +3072,14 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 			$array = array();
 			if ($uid){
 				$table_users = $wpdb->base_prefix . 'users';
-				$q = "SELECT ID,user_login,user_pass,user_nicename,user_email,user_url,user_registered,user_activation_key,user_status,display_name
-								FROM $table_users WHERE ID=$uid;";
+				$q = $wpdb->prepare( "SELECT ID,user_login,user_pass,user_nicename,user_email,user_url,user_registered,user_activation_key,user_status,display_name
+								FROM $table_users WHERE ID=%d ;", $uid );
 				$data = $wpdb->get_row($q);
 				if ($data){
 					$array = (array)$data;
 				}
 				$table_user_meta = $wpdb->prefix . 'usermeta';
-				$q = "SELECT meta_key, meta_value FROM $table_user_meta WHERE user_id=$uid;";
+				$q = $wpdb->prepare( "SELECT meta_key, meta_value FROM $table_user_meta WHERE user_id=%d ;", $uid );
 				$data = $wpdb->get_results($q);
 				if ($data){
 					foreach ($data as $object){
@@ -3323,6 +3581,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 
 
 	 /*
+	 	* Deprecated, use instead : \Indeed\Ihc\UserSubscriptions::getOne( $uid, $lid );
 	  * @param int, int
 	  * @return array
 	  */
@@ -3340,6 +3599,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 
 
 	 /*
+	  * Deprecated, use instead : \Indeed\Ihc\UserSubscriptions::getSubscriptionsUsersList( $lid=-1, $only_active=FALSE )
 	  * @param int, bool
 	  * @return array
 	  */
@@ -3491,7 +3751,6 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		 							'payment_twocheckout',
 		 							'payment_bank_transfer',
 		 							'payment_braintree',
-		 							'payment_payza',
 		 							'login',
 		 							'login-messages',
 		 							'general-captcha',
@@ -3596,18 +3855,30 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 				$userdata[$key] = esc_sql($userdata[$key]);
 			}
 		}
-		return $wpdb->query("INSERT INTO $table VALUES(
-														'{$userdata['ID']}',
-														'{$userdata['user_login']}',
-														'{$userdata['user_pass']}',
-														'{$userdata['user_nicename']}',
-														'{$userdata['user_email']}',
-														'{$userdata['user_url']}',
-														'{$userdata['user_registered']}',
-														'{$userdata['user_activation_key']}',
-														'{$userdata['user_status']}',
-														'{$userdata['display_name']}'
-		);");
+		$query = $wpdb->prepare( "INSERT INTO $table VALUES(
+																	%d,
+																	%s,
+																	%s,
+																	%s,
+																	%s,
+																	%s,
+																	%s,
+																	%s,
+																	%s,
+																	%s
+		);",
+						$userdata['ID'],
+						$userdata['user_login'],
+						$userdata['user_pass'],
+						$userdata['user_nicename'],
+						$userdata['user_email'],
+						$userdata['user_url'],
+						$userdata['user_registered'],
+						$userdata['user_activation_key'],
+						$userdata['user_status'],
+						$userdata['display_name']
+		);
+		return $wpdb->query( $query );
 	}
 
 
@@ -3668,9 +3939,10 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 										end_date=%s,
 										settings=%s,
 										status=%s
-					WHERE id={$post_data['id']};
+					WHERE id=%d;
 				", $post_data['slug'], $post_data['discount_type'], $post_data['discount_value'],
-					$post_data['start_date'], $post_data['end_date'], $post_data['settings'], $post_data['status']
+					$post_data['start_date'], $post_data['end_date'], $post_data['settings'], $post_data['status'],
+					$post_data['id']
 				);
 				$wpdb->query($q);
 				return $post_data['id'];
@@ -3824,15 +4096,17 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		global $wpdb;
 		$array = array();
 		$table = $wpdb->base_prefix . 'ihc_woo_products';
-		$data = $wpdb->get_results("
+		//No query parameters required, Safe query. prepare() method without parameters can not be called
+		$query = "
 							SELECT id, slug, discount_type, discount_value, start_date, end_date, status, settings
 								FROM $table
-		");
+		";
+		$data = $wpdb->get_results( $query );
 		if ($data){
 			foreach ($data as $object){
 				$temp = (array)$object;
 				$temp['settings'] = unserialize($temp['settings']);
-				//$temp['items'] = self::ihc_woo_product_custom_price_lid_product_get_data($temp['id']);
+
 				$temp['levels'] = self::ihc_woo_product_custom_price_lid_product_get_lid_list($temp['id']);
 				$temp['products'] = self::ihc_woo_product_custom_price_lid_product_get_products_list($temp['id']);
 				$array[$temp['id']] = $temp;
@@ -3856,7 +4130,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 		$product_id = esc_sql($product_id);
 		$lid = esc_sql($lid);
 		$cat_ids = esc_sql($cat_ids);
-		$q = "
+		$q = $wpdb->prepare("
 			SELECT a.discount_type as discount_type, a.discount_value as discount_value , UNIX_TIMESTAMP(a.start_date) as c
 				FROM $table_a a
 				INNER JOIN $table_b b
@@ -3864,13 +4138,13 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 				WHERE
 				1=1
 				AND
-				(b.lid=-1 OR b.lid=$lid)
+				(b.lid=-1 OR b.lid=%d)
 				AND
 				(
-					(b.woo_item=$product_id AND b.woo_item_type='product')
+					(b.woo_item=%d AND b.woo_item_type='product')
 						OR
 					(b.woo_item=-1 AND b.woo_item_type='all')
-		";
+		", $lid, $product_id );
 
 		if (!empty($cat_ids)){
 			$q .= "
@@ -3884,7 +4158,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 				if (!empty($put_or)){
 					$q .= " OR ";
 				}
-				$q .= " b.woo_item=$cat_id ";
+				$q .= $wpdb->prepare(" b.woo_item=%d ", $cat_id );
 				$put_or = TRUE;
 			}
 					$q .= " )";
@@ -4078,104 +4352,6 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 
 
 	/**
-	 * @param boolean ( return only count -> FALSE)
-	 * @param string (name or username to search for)
-	 * @param string (role in)
-	 * @param int (level id)
-	 * @param string (order by user_login, user_email, etc)
-	 * @param string (ASC OR DESC)\
-	 * @param int (limit)
-	 * @param int (offset)
-	 * @return array
-	 */
-	public static function ihc_admin_get_user_with_search($only_count=FALSE, $query_search='', $role='', $lid=-1, $order_by='', $order='', $limit=25, $offset=0){
-		global $wpdb;
-		if ($only_count){
-			$select = "COUNT(DISTINCT u.ID)";
-		} else {
-			$select = "DISTINCT u.ID, u.user_login, u.user_nicename, u.user_email, um.meta_value as roles, user_registered";
-		}
-
-		$users = $wpdb->base_prefix . 'users';
-		$user_meta = $wpdb->base_prefix . 'usermeta';
-		$user_levels = $wpdb->prefix . 'ihc_user_levels';
-
-		$q = "SELECT $select FROM $users u
-					INNER JOIN $user_meta um
-					ON um.user_id=u.ID
-		";
-		if ($query_search){
-			$q .= "
-					INNER JOIN $user_meta um2
-					ON um2.user_id=u.ID
-			";
-		}
-		if ($lid>-1 && $lid!=''){
-			$q .= " INNER JOIN $user_levels ul
-					ON ul.user_id=u.ID
-			";
-		}
-
-		$q .= " WHERE 1=1 ";
-
-		/// search by
-		if ($query_search){
-			$query_search = esc_sql($query_search);
-			$q .= " AND ( ";
-				$q .= " u.display_name LIKE '%{$query_search}%' ";
-				$q .= " OR ";
-				$q .= " u.user_login LIKE '%{$query_search}%' ";
-				$q .= " OR ";
-				$q .= " u.user_email LIKE '%{$query_search}%' ";
-				$q .= " OR ";
-				$q .= " (um2.meta_key='first_name' AND um2.meta_value LIKE '%{$query_search}%') ";
-				$q .= " OR ";
-				$q .= " (um2.meta_key='last_name' AND um2.meta_value LIKE '%{$query_search}%') ";
-				if (strpos($query_search, ' ')!==FALSE){
-						$pieces = str_replace(' ', '|', $query_search);
-						$q .= " OR (um2.meta_key IN ('last_name','first_name') AND um2.meta_value REGEXP '$pieces') ";
-				}
-			$q .= " ) ";
-		}
-
-		$role_key = $wpdb->prefix . 'capabilities';
-
-		if ($role){
-			$role = esc_sql($role);
-			$q .= " AND ( um.meta_key='{$role_key}' AND um.meta_value LIKE '%{$role}%' ) ";
-		}
-
-		/// remove admin from query
-		$q .= " AND ( um.meta_key='{$role_key}' AND um.meta_value NOT LIKE '%administrator%' ) ";
-
-
-		if ($lid>-1 && $lid!=''){
-			$lid = esc_sql($lid);
-			$q .= " AND ( ul.level_id=$lid ) ";
-		}
-
-		if ($order_by && $order && !$only_count){
-			$order_by = esc_sql($order_by);
-			$order = esc_sql($order);
-			$q .= " GROUP BY u.ID ORDER BY u.{$order_by} {$order} ";
-		}
-
-		if ($limit>0 && !$only_count){
-			$limit = esc_sql($limit);
-			$offset = esc_sql($offset);
-			$q .= " LIMIT $limit OFFSET $offset ";
-		}
-
-		if ($only_count){
-			return $wpdb->get_var($q);
-		} else {
-			return $wpdb->get_results($q);
-		}
-
-	}
-
-
-	/**
 	 * @param int
 	 * @param int
 	 * @return int
@@ -4266,7 +4442,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	}
 
 	public static function getUserFulltName($uid=0){
-			if (empty($uid)) return '';
+			if (empty($uid)){
+				 return '';
+			}
 			$uid = esc_sql($uid);
 			$first = get_user_meta($uid, 'first_name', TRUE);
 			$last = get_user_meta($uid, 'last_name', TRUE);
@@ -4487,6 +4665,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	public static function directLoginGettAllItems()
 	{
 			global $wpdb;
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
 			$query = "SELECT a.ID, a.user_login, b.meta_value as token, c.meta_value as timeout
 										FROM {$wpdb->prefix}users a
 										INNER JOIN {$wpdb->prefix}usermeta b
@@ -4521,7 +4700,9 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 					return false;
 			}
 			$query = $wpdb->prepare( "UPDATE {$wpdb->prefix}ihc_orders SET status=%s WHERE id=%d;", $newStatus, $orderId );
-			return $wpdb->query( $query );
+			$result = $wpdb->query( $query );
+			do_action( 'ump_payment_check', $orderId, 'update' );
+			return $result;
 	}
 
 	public static function isSubscriptionTrial( $txnId='', $uid=0, $lid=0 )
@@ -4737,6 +4918,7 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 	}
 
 	/**
+	 * Depreacated, use instead : \Indeed\Ihc\UserSubscriptions::updateStatus( $uid=0, $lid=0, $newStatus=0 );
 	 * @param int
 	 * @param int
 	 * @param int
@@ -4752,6 +4934,132 @@ It is a <strong>one time</strong> payment of a small fee. Just have a test.',
 																				WHERE user_id=%d AND level_id=%d;", $newStatus, $uid, $lid );
 			return $wpdb->query( $queryString );
 	}
+
+	public static function does_user_exists( $uid=0 )
+	{
+			global $wpdb;
+			if ( !$uid ){
+					return false;
+			}
+			$query = $wpdb->prepare( "SELECT ID FROM {$wpdb->users} WHERE ID=%d", $uid );
+			return $wpdb->get_var( $query );
+	}
+
+	/**
+	 * @param string
+	 * @param string
+	 * @param int
+	 * @return int
+	 */
+	public static function doesUserMetaValueExists( $metaKey='', $metaValue='', $excludeUid=0 )
+	{
+			global $wpdb;
+			if ( $metaKey == '' || $metaValue == '' ){
+					return 0;
+			}
+			$query = $wpdb->prepare( "SELECT umeta_id FROM {$wpdb->usermeta} WHERE meta_value=%s AND meta_key=%s ", $metaValue, $metaKey );
+			if ( !empty( $excludeUid ) ){
+					$query .= $wpdb->prepare( " AND user_id != %d;", $excludeUid );
+			}
+			return $wpdb->get_var( $query );
+	}
+
+	public static function deletePostMetaRestrictionsForMembership( $id=0 )
+	{
+			global $wpdb;
+			$table = $wpdb->prefix . 'postmeta';
+			//No query parameters required, Safe query. prepare() method without parameters can not be called
+			$query = "SELECT post_id, meta_value FROM $table WHERE meta_key='ihc_mb_who';";
+			$data = $wpdb->get_results( $query );
+			if ( !$data ){
+					return;
+			}
+			foreach ($data as $object){
+				if ( !$object->meta_value ){
+						continue;
+				}
+				$post_levels = explode(',', $object->meta_value);
+				if ( !$post_levels ){
+						continue;
+				}
+				foreach ($post_levels as $k=>$u_lid){
+					if ($u_lid==$id){
+						unset($post_levels[$k]);
+						$level_str = implode(',', $post_levels);
+						$q = $wpdb->prepare("UPDATE $table SET meta_value=%s WHERE post_id=%d AND meta_key='ihc_mb_who';", $level_str, $object->post_id);
+						$wpdb->query($q);
+						break;
+					}
+				}
+			}
+	}
+
+	public static function getUserRole( $uid=0 )
+	{
+			global $wpdb;
+			if ( !$uid ){
+					return '';
+			}
+			$capability = $wpdb->prefix . 'capabilities';
+			$data = get_user_meta( $uid, $capability, true );
+			return $data;
+	}
+
+	/**
+	 * @param int
+	 * @param int
+	 * @param int
+	 * @return string
+	 */
+	public static function getTransactionIdForUserSubscription( $uid=0, $lid=0, $orderId=0 )
+	{
+			global $wpdb;
+			if ( !$uid || !$lid ){
+					return false;
+			}
+
+			// search into last order meta
+			if ( $orderId ){
+					$orderMetaObject = new \Indeed\Ihc\Db\OrderMeta();
+					$transactionId = $orderMetaObject->get( $orderId, 'transaction_id' );
+					if ( $transactionId !== false || $transactionId !== '' ){
+							return $transactionId;
+					}
+			}
+
+			// serach into first order meta
+			$query = $wpdb->prepare( "SELECT a.meta_value as transaction_id, b.create_date
+											FROM {$wpdb->prefix}ihc_orders_meta a
+											INNER JOIN {$wpdb->prefix}ihc_orders b ON a.order_id=b.id
+											WHERE
+											a.meta_key='transaction_id'
+											AND
+											b.uid=%d
+											AND
+											b.lid=%d
+											ORDER BY b.create_date
+											DESC
+											LIMIT 1
+											", $uid, $lid );
+			$transactionId = $wpdb->get_var( $query );
+			if ( $transactionId !== null || $transactionId !== false ){
+					return $transactionId;
+			}
+
+			// search into indeed_members_payments table
+			$query = $wpdb->prepare( "SELECT txn_id, payment_data FROM {$wpdb->prefix}indeed_members_payments WHERE u_id=%d ORDER BY paydate DESC;", $uid );
+			$results = $wpdb->get_results( $query );
+			if ( !$results ){
+					return false;
+			}
+			foreach ( $results as $result ){
+					$resultData = json_decode( $result->payment_data, true );
+					if ( isset( $resultData['lid'] ) && $resultData['lid'] == $lid ){
+						return $result->txn_id;
+					}
+			}
+	}
+
 
 
 }

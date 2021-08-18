@@ -6,13 +6,19 @@ function ihc_filter_content($content){
 	 */
 	//GETTING POST META
 	global $post;
-	if($post==FALSE || !isset($post->ID)) return do_shortcode($content);
+	if($post==FALSE || !isset($post->ID)){
+		 return do_shortcode($content);
+	}
 	$meta_arr = ihc_post_metas($post->ID);
-	if($meta_arr['ihc_mb_block_type']=='redirect') return do_shortcode($content);///this extra check it's for ihc_list_posts_filter(),
+	if($meta_arr['ihc_mb_block_type']=='redirect'){
+		 return do_shortcode($content);///this extra check it's for ihc_list_posts_filter(),
+	}
 
 	///GETTING USER TYPE
 	$current_user = ihc_get_user_type();
-	if($current_user=='admin') return do_shortcode($content);//show always for admin
+	if($current_user=='admin'){
+		 return do_shortcode($content);//show always for admin
+	}
 
 	// who can access the content
 	if (isset($meta_arr['ihc_mb_who'])){
@@ -26,7 +32,7 @@ function ihc_filter_content($content){
 	}
 
 	////TESTING USER
-	$block = ihc_test_if_must_block($meta_arr['ihc_mb_type'], $current_user, $target_users, @$post->ID);
+	$block = ihc_test_if_must_block($meta_arr['ihc_mb_type'], $current_user, $target_users, (isset($post->ID)) ? $post->ID : -1);
 
 	//IF NOT BLOCKING, RETURN THE CONTENT
 	if(!$block){
@@ -38,7 +44,7 @@ function ihc_filter_content($content){
 		$meta_arr['ihc_replace_content'] = stripslashes($meta_arr['ihc_replace_content']);
 		$meta_arr['ihc_replace_content'] = htmlspecialchars_decode($meta_arr['ihc_replace_content']);
 		$meta_arr['ihc_replace_content'] = ihc_format_str_like_wp($meta_arr['ihc_replace_content']);
-		$meta_arr['ihc_replace_content'] = apply_filters('filter_on_ihc_replace_content', $meta_arr['ihc_replace_content'], @$post->ID);
+		$meta_arr['ihc_replace_content'] = apply_filters('filter_on_ihc_replace_content', $meta_arr['ihc_replace_content'], (isset($post->ID)) ? $post->ID : -1);
 
 		global $wp_embed;
 		$meta_arr['ihc_replace_content'] = $wp_embed->run_shortcode($meta_arr['ihc_replace_content']);
@@ -59,6 +65,7 @@ function ihc_message_update_profile_form_html($content='')
 		return $content;
 }
 
+add_filter('the_content', 'ihc_print_message', 99);
 function ihc_print_message($content){
 	/*
 	 * print success message after register
@@ -77,8 +84,10 @@ function ihc_print_message($content){
 			break;
 		 }
 	 }
-	 if (isset($_REQUEST['ihcbt']) && isset($_REQUEST['ihc_lid']) && isset($_REQUEST['ihc_uid']) ){
+	 global $stop_printing_bt_msg;
+	 if (isset($_REQUEST['ihcbt']) && isset($_REQUEST['ihc_lid']) && isset($_REQUEST['ihc_uid']) && empty( $stop_printing_bt_msg ) ){
 	 	$str .= ihc_print_bank_transfer_order($_REQUEST['ihc_uid'], $_REQUEST['ihc_lid']);
+		$stop_printing_bt_msg = true;
 	 }
 	 $content .= $str;
 	 return do_shortcode($content);
@@ -86,7 +95,6 @@ function ihc_print_message($content){
 
 //////////////// MENU FILTER
 add_action('wp_nav_menu_objects', 'ihc_custom_menu_filter');
-//add_action( 'wp_nav_menu_args', 'ihc_custom_menu_filter' );/////////////
 function ihc_custom_menu_filter($items){
 	global $post;
 	$current_user = ihc_get_user_type();
@@ -96,17 +104,17 @@ function ihc_custom_menu_filter($items){
 
 	$arr = array();
 	foreach ($items as $item){
-		@$for = $item->ihc_mb_who_menu_type;
-		@$type = $item->ihc_menu_mb_type;
+		$for = (isset($item->ihc_mb_who_menu_type)) ? $item->ihc_mb_who_menu_type : '';
+		$type = (isset($item->ihc_menu_mb_type)) ? $item->ihc_menu_mb_type : '';
 		if ($for!=-1 && $for!=''){
 			$for = explode(',', $for);
 		} else {
 			$for = FALSE;
 		}
-		$block = ihc_test_if_must_block($type, $current_user, $for, @$post->ID);//test user
+		$block = ihc_test_if_must_block($type, $current_user, $for, (isset($post->ID)) ? $post->ID : -1);//test user
 		if (!$block){
 			/// individual page check
-			$block = ihc_check_individual_page_block(@$post->ID);
+			$block = ihc_check_individual_page_block((isset($post->ID)) ? $post->ID : 0);
 		}
 		if (!$block){
 			$arr[] = $item;
@@ -221,9 +229,10 @@ function ihc_filter_print_bank_transfer_message($content = ''){
 	 */
 	global $stop_printing_bt_msg;
 	$str = '';
-	if (isset($_GET['ihc_lid']) && empty($stop_printing_bt_msg)){
+	if (isset($_GET['ihc_lid']) ){ // && empty($stop_printing_bt_msg)
 		global $current_user;
 		$str = ihc_print_bank_transfer_order($current_user->ID, esc_sql($_GET['ihc_lid']) );
+		$stop_printing_bt_msg = true;
 	}
 	return do_shortcode ($content) . $str;
 }
@@ -280,7 +289,7 @@ function ihc_download_monitor_filter($do_it){
 
 							$dynamic_limit = Ihc_Db::ihc_download_monitor_get_user_limit($current_user->ID, $level);
 							if ($dynamic_limit==FALSE){
-								$value_to_test = @$values_per_level['level_' . $level];
+								$value_to_test = (isset($values_per_level['level_' . $level])) ? $values_per_level['level_' . $level] : '';
 							} else {
 								$value_to_test = $dynamic_limit;
 							}

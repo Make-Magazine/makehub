@@ -15,7 +15,9 @@ class Ihc_GDPR
 
     public function privacyPolicy()
     {
-        if (!function_exists('wp_add_privacy_policy_content')) return;
+        if (!function_exists('wp_add_privacy_policy_content')){
+           return;
+        }
         $policyText = '';
         wp_add_privacy_policy_content($this->pluginName, $policyText);
     }
@@ -134,30 +136,37 @@ class Ihc_GDPR
         $this->uid = $user->ID;
         global $wpdb;
         /// usermeta
-        $wpdb->query("DELETE FROM {$wpdb->usermeta}
-                          WHERE
-                          user_id={$this->uid}
-                          AND (meta_key LIKE '%ihc_%'
-                          OR meta_key LIKE '%user_levels%') ");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->usermeta}
+                                      WHERE
+                                      user_id=%d
+                                      ", $this->uid );
+        $query .= " AND (meta_key LIKE '%ihc_%' OR meta_key LIKE '%user_levels%')";
+        $wpdb->query( $query );
         /// ihc_user_levels
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_user_levels
-                          WHERE user_id={$this->uid} ");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_user_levels
+                                      WHERE user_id=%d;", $this->uid );
+        $wpdb->query( $query );
         /// ihc_user_logs
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_user_logs
-                          WHERE uid={$this->uid}");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_user_logs
+                                    WHERE uid=%d", $this->uid );
+        $wpdb->query( $query );
         /// ihc_security_login
         $username = \Ihc_Db::get_username_by_wpuid($this->uid);
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_security_login
-                          WHERE username='$username';");
+        $query = $wpdb->prepare("DELETE FROM {$wpdb->prefix}ihc_security_login
+                          WHERE username=%s ;", $username );
+        $wpdb->query( $query );
         /// ihc_download_monitor_limit
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_download_monitor_limit
-                          WHERE uid={$this->uid};");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_download_monitor_limit
+                          WHERE uid=%d ;", $this->uid );
+        $wpdb->query( $query );
         /// ihc_cheat_off
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_cheat_off
-                          WHERE uid={$this->uid};");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_cheat_off
+                          WHERE uid=%d;", $this->uid );
+        $wpdb->query( $query );
         /// ihc_user_sites
-        $wpdb->query("DELETE FROM {$wpdb->prefix}ihc_user_sites
-                          WHERE uid={$this->uid};");
+        $query = $wpdb->prepare( "DELETE FROM {$wpdb->prefix}ihc_user_sites
+                          WHERE uid=%d;", $this->uid );
+        $wpdb->query( $query );
         return array(
             				'items_removed' => true,
             				'items_retained' => false,
@@ -169,7 +178,7 @@ class Ihc_GDPR
     private function getUserMetas()
     {
         global $wpdb;
-        $query = "SELECT meta_key, meta_value
+        $query = $wpdb->prepare( "SELECT meta_key, meta_value
                         FROM {$wpdb->usermeta}
                         WHERE
                         (
@@ -178,7 +187,7 @@ class Ihc_GDPR
                           meta_key LIKE '%user_levels%'
                         )
                         AND
-                        user_id={$this->uid} ";
+                        user_id=%d ", $this->uid );
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -193,7 +202,7 @@ class Ihc_GDPR
 
         return array(
         			'group_id'    => 'ihc_usermetas',
-        			'group_label' => __('UMP user metas'),
+        			'group_label' => esc_html__('UMP user metas'),
         			'item_id'     => 'ihc_usermeta_' . $this->uid,
         			'data'        => $data,
     		);
@@ -202,11 +211,10 @@ class Ihc_GDPR
     private function getUserLevels()
     {
         global $wpdb;
-        $query = "
-            SELECT level_id, start_time, update_time, expire_time, notification, status
-              FROM {$wpdb->prefix}ihc_user_levels
-              WHERE user_id={$this->uid}
-        ";
+        $query = $wpdb->prepare("SELECT level_id, start_time, update_time, expire_time, notification, status
+                                    FROM {$wpdb->prefix}ihc_user_levels
+                                    WHERE user_id=%d
+        ", $this->uid);
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -221,7 +229,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_user_levels',
-              'group_label' => __('UMP user levels'),
+              'group_label' => esc_html__('UMP user levels'),
               'item_id'     => 'ihc_user_levels_' . $this->uid,
               'data'        => $data,
         );
@@ -230,10 +238,9 @@ class Ihc_GDPR
     private function getUserLogs()
     {
         global $wpdb;
-        $query = "
-            SELECT lid, log_type, log_content FROM {$wpdb->prefix}ihc_user_logs
-                WHERE uid={$this->uid};
-        ";
+        $query = $wpdb->prepare("SELECT lid, log_type, log_content FROM {$wpdb->prefix}ihc_user_logs
+                                    WHERE uid=%d ;
+        ", $this->uid);
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -248,7 +255,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_user_logs',
-              'group_label' => __('UMP user levels'),
+              'group_label' => esc_html__('UMP user levels'),
               'item_id'     => 'ihc_user_logs_' . $this->uid,
               'data'        => $data,
         );
@@ -258,11 +265,10 @@ class Ihc_GDPR
     {
         global $wpdb;
         $username = \Ihc_Db::get_username_by_wpuid($this->uid);
-        $query = "
-            SELECT ip, log_time, attempts_count, locked
-                FROM {$wpdb->prefix}ihc_security_login
-                WHERE username='$username';
-        ";
+        $query = $wpdb->prepare( "SELECT ip, log_time, attempts_count, locked
+                                      FROM {$wpdb->prefix}ihc_security_login
+                                      WHERE username=%s;
+                                ", $username );
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -276,7 +282,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_security_login',
-              'group_label' => __('UMP security login'),
+              'group_label' => esc_html__('UMP security login'),
               'item_id'     => 'ihc_security_login' . $this->uid,
               'data'        => $data,
         );
@@ -285,11 +291,10 @@ class Ihc_GDPR
     private function getDownloadMonitorLimit()
     {
         global $wpdb;
-        $query = "
-            SELECT lid, download_limit
-                FROM {$wpdb->prefix}ihc_download_monitor_limit
-                WHERE uid={$this->uid};
-        ";
+        $query = $wpdb->prepare("SELECT lid, download_limit
+                                    FROM {$wpdb->prefix}ihc_download_monitor_limit
+                                    WHERE uid=%d ;
+        ", $this->uid );
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -303,7 +308,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_download_monitor_limit',
-              'group_label' => __('UMP donwload monitor limits'),
+              'group_label' => esc_html__('UMP donwload monitor limits'),
               'item_id'     => 'ihc_download_monitor_limit' . $this->uid,
               'data'        => $data,
         );
@@ -312,11 +317,10 @@ class Ihc_GDPR
     private function getCheatOff()
     {
         global $wpdb;
-        $query = "
-            SELECT hash
-                FROM {$wpdb->prefix}ihc_cheat_off
-                WHERE uid={$this->uid};
-        ";
+        $query = $wpdb->prepare("SELECT hash
+                                    FROM {$wpdb->prefix}ihc_cheat_off
+                                    WHERE uid=%d;
+        ", $this->uid );
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -329,7 +333,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_cheat_off',
-              'group_label' => __('UMP cheat off'),
+              'group_label' => esc_html__('UMP cheat off'),
               'item_id'     => 'ihc_cheat_off' . $this->uid,
               'data'        => $data,
         );
@@ -338,11 +342,10 @@ class Ihc_GDPR
     private function getPayments()
     {
       global $wpdb;
-      $query = "
-          SELECT txn_id, payment_data, history, paydate
-              FROM {$wpdb->prefix}indeed_members_payments
-              WHERE u_id={$this->uid};
-      ";
+      $query = $wpdb->prepare( "SELECT txn_id, payment_data, history, paydate
+                                  FROM {$wpdb->prefix}indeed_members_payments
+                                  WHERE u_id=%d;
+      ", $this->uid );
       $dataDb = $wpdb->get_results($query);
       if (!$dataDb){
           return false;
@@ -356,7 +359,7 @@ class Ihc_GDPR
       }
       return array(
             'group_id'    => 'indeed_members_payments',
-            'group_label' => __('UMP payments'),
+            'group_label' => esc_html__('UMP payments'),
             'item_id'     => 'indeed_members_payments_' . $this->uid,
             'data'        => $data,
       );
@@ -365,11 +368,10 @@ class Ihc_GDPR
     private function getUserSites()
     {
         global $wpdb;
-        $query = "
-            SELECT lid, site_id
-                FROM {$wpdb->prefix}ihc_user_sites
-                WHERE uid={$this->uid};
-        ";
+        $query = $wpdb->prepare("SELECT lid, site_id
+                                    FROM {$wpdb->prefix}ihc_user_sites
+                                    WHERE uid=%d;
+        ", $this->uid );
         $dataDb = $wpdb->get_results($query);
         if (!$dataDb){
             return false;
@@ -383,7 +385,7 @@ class Ihc_GDPR
         }
         return array(
               'group_id'    => 'ihc_user_sites',
-              'group_label' => __('UMP user sites'),
+              'group_label' => esc_html__('UMP user sites'),
               'item_id'     => 'ihc_user_sites' . $this->uid,
               'data'        => $data,
         );
@@ -392,11 +394,10 @@ class Ihc_GDPR
     private function getOrders()
     {
       global $wpdb;
-      $query = "
-          SELECT lid, amount_type, amount_value, automated_payment, status, create_date
-              FROM {$wpdb->prefix}ihc_orders
-              WHERE uid={$this->uid};
-      ";
+      $query = $wpdb->prepare( "SELECT lid, amount_type, amount_value, automated_payment, status, create_date
+                                    FROM {$wpdb->prefix}ihc_orders
+                                    WHERE uid=%d;
+      ", $this->uid );
       $dataDb = $wpdb->get_results($query);
       if (!$dataDb){
           return false;
@@ -414,7 +415,7 @@ class Ihc_GDPR
       }
       return array(
             'group_id'    => 'ihc_orders',
-            'group_label' => __('UMP orders'),
+            'group_label' => esc_html__('UMP orders'),
             'item_id'     => 'ihc_orders' . $this->uid,
             'data'        => $data,
       );
@@ -423,14 +424,13 @@ class Ihc_GDPR
     private function getOrderMetas()
     {
       global $wpdb;
-      $query = "
-          SELECT a.order_id, a.meta_key, a.meta_value
-              FROM {$wpdb->prefix}ihc_orders_meta a
-              INNER JOIN {$wpdb->prefix}ihc_orders b
-              ON a.order_id=b.id
-              WHERE b.uid={$this->uid};
-      ";
-      $dataDb = $wpdb->get_results($query);
+      $query = $wpdb->prepare( "SELECT a.order_id, a.meta_key, a.meta_value
+                                    FROM {$wpdb->prefix}ihc_orders_meta a
+                                    INNER JOIN {$wpdb->prefix}ihc_orders b
+                                    ON a.order_id=b.id
+                                    WHERE b.uid=%d;
+      ", $this->uid );
+      $dataDb = $wpdb->get_results( $query );
       if (!$dataDb){
           return false;
       }
@@ -444,7 +444,7 @@ class Ihc_GDPR
       }
       return array(
             'group_id'    => 'ihc_orders_meta',
-            'group_label' => __('UMP orders meta'),
+            'group_label' => esc_html__('UMP orders meta'),
             'item_id'     => 'ihc_orders_meta' . $this->uid,
             'data'        => $data,
       );

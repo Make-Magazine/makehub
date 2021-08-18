@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Crop Avatar Image
+*/
+"use strict";
 var IhcAvatarCroppic = {
     triggerId                   : '',
     saveImageTarget             : '',
@@ -10,13 +14,11 @@ var IhcAvatarCroppic = {
     init: function(args){
         var obj = this;
         obj.setAttributes(obj, args);
-        jQuery(document).ready(function(){
-            cropperHeader = obj.initCroppic(obj);
-            jQuery( obj.removeImageSelector ).on( 'click', function(){
-      			    cropperHeader.reset();
-      			    obj.handleRemove( obj );
-            })
-        })
+        var cropperHeader = obj.initCroppic(obj);
+        jQuery( obj.removeImageSelector ).on( 'click', function(){
+      	    cropperHeader.reset();
+      	    obj.handleRemove( obj );
+        });
     },
 
     setAttributes: function(obj, args){
@@ -56,7 +58,6 @@ var IhcAvatarCroppic = {
     },
 
     handleAfterImageCrop: function(obj, response){
-        // console.log( response )
         if (response.status=='success'){
             jQuery( obj.imageSelectorWrapper ).html( '' );
             jQuery(obj.hiddenInputSelector).val( response.uploadId );
@@ -65,7 +66,7 @@ var IhcAvatarCroppic = {
         }
     },
 
-    handleRemove: function(obj, isReset){
+    handleRemove: function( obj, isReset ){
         var newUser = jQuery( obj.hiddenInputSelector ).attr( 'data-new_user' );
         if ( newUser ){
             /// ajax remove picture
@@ -94,9 +95,9 @@ var IhcAvatarCroppic = {
         }
     },
 
-    handleImgUpload: function(obj, response){
-        if (typeof(response)!='undefined' && response.uploadId){
-            jQuery(obj.hiddenInputSelector).val( response.uploadId );
+    handleImgUpload: function( obj, response ){
+        if ( typeof( response ) != 'undefined' && response.uploadId ){
+            jQuery( obj.hiddenInputSelector ).val( response.uploadId );
         }
 		    jQuery( obj.removeImageSelector ).css('visibility', 'visible');
     },

@@ -1,10 +1,14 @@
-<div class="iump-register-form  <?php echo @$data['template'];?>">
+<div class="iump-register-form  <?php echo (isset($data['template'])) ? $data['template'] : '';?>">
 	<?php
 			do_action('ihc_print_content_before_register_lite_form');
 			// @description Insert content before register lite form. @param none
 	?>
-	<style><?php echo @$data['css'];?></style>
-	<form action="" method="post" name="createuser" id="createuser" class="ihc-form-create-edit" enctype="multipart/form-data" >
+	<?php if($data['css'] !== ''){
+		wp_register_style( 'dummy-handle', false );
+		wp_enqueue_style( 'dummy-handle' );
+		wp_add_inline_style( 'dummy-handle', stripslashes($data['css']) );
+	} ?>
+	<form method="post" name="createuser" id="createuser" class="ihc-form-create-edit" enctype="multipart/form-data" >
 
 		<?php if ($data['template']=='ihc-register-6'):?>
 			<div class="ihc-register-col">
@@ -36,5 +40,8 @@
 </div>
 
 <?php if (!empty($data['js'])): ?>
-<script><?php echo $data['js'];?></script>
+	<?php
+			wp_add_inline_script( 'ihc-public-dynamic', $data['js'] );
+			wp_enqueue_script( 'ihc-public-dynamic' );
+	?>
 <?php endif;?>

@@ -1,7 +1,8 @@
 <?php
 namespace Indeed\Ihc\PaymentGateways;
 /*
-@since 7.4
+Created v.7.4
+Deprecated starting with v.9.3
 */
 class PayPalExpressCheckoutHandleTemporaryTokens
 {

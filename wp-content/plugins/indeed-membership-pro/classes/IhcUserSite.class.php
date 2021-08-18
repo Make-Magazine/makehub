@@ -53,7 +53,7 @@ class IhcUserSite{
 		require_once ABSPATH . 'wp-includes/ms-functions.php';
 		global $current_site;
 		if (!is_multisite()){
-			$this->error = __('Multisite is not installed.', 'ihc');
+			$this->error = esc_html__('Multisite is not installed.', 'ihc');
 			return 0;
 		}
 		$post_meta['domain'] = sanitize_text_field( $post_meta['domain'] );
@@ -62,7 +62,7 @@ class IhcUserSite{
 		if (preg_match('|^([a-zA-Z0-9-])+$|', $post_meta['domain'])){
 			$domain = strtolower($post_meta['domain']);
 		} else {
-			$this->error = __('Domain Name contains forbidden characters.', 'ihc');
+			$this->error = esc_html__('Domain Name contains forbidden characters.', 'ihc');
 			return 0;
 		}
 		if (!is_subdomain_install()){
@@ -72,7 +72,7 @@ class IhcUserSite{
 				$subdirectory_reserved_names = wp_get_sites();
 			}
 			if (in_array($domain, $subdirectory_reserved_names)){
-				$this->error = __('Site name already exists.', 'ihc');
+				$this->error = esc_html__('Site name already exists.', 'ihc');
 				return 0;
 			}
 			$newdomain = $current_site->domain;
@@ -93,7 +93,7 @@ class IhcUserSite{
 			}
 			return 1;
 		}
-		$this->error = __('An error has occurred.', 'ihc');
+		$this->error = esc_html__('An error has occurred.', 'ihc');
 		return 0;
 	}
 

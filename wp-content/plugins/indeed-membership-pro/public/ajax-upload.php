@@ -5,6 +5,12 @@
 
 require_once("../../../../wp-load.php");
 
+
+if ( !isset( $_GET['ihcpublicn'] ) || !wp_verify_nonce( $_GET['ihcpublicn'], 'ihcpublicn' ) ) {
+		die( "Not allowed" );
+}
+
+
 // security layer
 $uid = indeed_get_uid();
 $access = true;
@@ -40,7 +46,6 @@ if ( $access ){
 	} else if (isset($_FILES['ihc_file'])){
 		//============= handle upload file
 		//debug
-		//file_put_contents( "upload_media.log", $_FILES['ihc_file']['type'], FILE_APPEND | LOCK_EX );
 		require_once ABSPATH . 'wp-admin/includes/image.php';
 		require_once ABSPATH . 'wp-admin/includes/file.php';
 		require_once ABSPATH . 'wp-admin/includes/media.php';

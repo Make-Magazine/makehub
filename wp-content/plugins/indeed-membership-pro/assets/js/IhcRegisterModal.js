@@ -1,3 +1,7 @@
+/*
+* Ultimate Membership Pro - Register Box Modal
+*/
+"use strict";
 var IhcRegisterModal = {
 	modalSelector						     : '#ihc_register_modal',
   triggerModalSelector         : '.ihc-register-modal-trigger',
@@ -30,7 +34,7 @@ var IhcRegisterModal = {
   				borderBottom: true,
   				padding: 20,
   				radius: 3,
-  				zindex: 99999,
+  				zindex: 9999,
   				focusInput: true,
   				autoOpen: 0, // Boolean, Number
   				bodyOverflow: false,

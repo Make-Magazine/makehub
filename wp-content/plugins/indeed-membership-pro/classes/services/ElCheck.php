@@ -95,7 +95,7 @@ class ElCheck
     public function ajax()
     {
         // check if the call was made by admin
-        if ( !current_user_can( 'administrator' ) ){
+        if ( !current_user_can( 'manage_options' ) ){
             die;
         }
         // check nonce
@@ -196,7 +196,7 @@ class ElCheck
      * @param int
      * @return string
      */
-    public function responseCodeToMessage( $code=0, $errorClass='', $successClass='', $langCode )
+    public function responseCodeToMessage( $code=0, $errorClass='', $successClass='', $langCode=null )
     {
         if ( isset( $_GET['response_message'] ) ){
             $class = ( $code > 0 ) ? $successClass : $errorClass;
@@ -204,19 +204,19 @@ class ElCheck
         }
         switch ( $code ){
             case 1:
-              return "<div class='$successClass'>" . __('Your plugin has been successfully activated the License.', $langCode ) . "</div>";
+              return "<div class='$successClass'>" . esc_html__('Your plugin has been successfully activated the License.', $langCode ) . "</div>";
               break;
             case 0:
-              return "<div class='$errorClass'>" . __('Bad input data. Please try again later!', $langCode ) . "</div>";
+              return "<div class='$errorClass'>" . esc_html__('Bad input data. Please try again later!', $langCode ) . "</div>";
               break;
             case -1:
-              return "<div class='$errorClass'>" . __('Envato API Server may be done for a moment. Please try again later', $langCode ) . "</div>";
+              return "<div class='$errorClass'>" . esc_html__('Envato API Server may be done for a moment. Please try again later', $langCode ) . "</div>";
               break;
             case -2:
-              return "<div class='$errorClass'>" . __('Submitted Purchase Code is invalid.', $langCode ) . "</div>";
+              return "<div class='$errorClass'>" . esc_html__('Submitted Purchase Code is invalid.', $langCode ) . "</div>";
               break;
             case -3:
-              return "<div class='$errorClass'>" . __('Submitted Purchase Code does not match with Current product.', $langCode ) . "</div>";
+              return "<div class='$errorClass'>" . esc_html__('Submitted Purchase Code does not match with Current product.', $langCode ) . "</div>";
               break;
         }
     }
@@ -227,7 +227,7 @@ class ElCheck
      */
     public function revoke()
     {
-        if ( !current_user_can( 'administrator' ) ){
+        if ( !current_user_can( 'manage_options' ) ){
             die;
         }
         if ( empty($_POST['nonce']) || !wp_verify_nonce( $_POST['nonce'], $this->nonceName ) ){
